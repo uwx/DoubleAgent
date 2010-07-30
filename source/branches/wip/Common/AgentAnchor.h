@@ -68,6 +68,7 @@ public:
 // Operations
 public:
 	virtual class CDaCmnCharacter * GetInstanceCharacter (long pCharID);
+	virtual class CDaCmnCharacter * GetDefaultCharacter ();
 	virtual long GetActiveClient (long pCharID);
 	virtual long GetNotifyClient (long pCharID);
 };

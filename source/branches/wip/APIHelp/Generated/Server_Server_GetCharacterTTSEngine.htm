@@ -12,17 +12,95 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The GetCharacterTTSEngine Method</h4>
+					<h3>The GetCharacterTTSEngine Method</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Retrieves a <a href="Server_TTSEngine.htm" class="see keyword">Text-To-Speech Engine Object</a> that meets
+					a specific character's requirements.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">server</em>-&gt;<em class="keyword">GetCharacterTTSEngine</em> (<em class="token">Provider</em>, &amp;<em class="token">TTSEngine</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">TTSEngine</em> = ]<em class="token">server</em>.<em class="keyword">GetCharacterTTSEngine</em> (<em class="token">Provider</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">TTSEngine</em> = ]<em class="token">server</em>.<em class="keyword">GetCharacterTTSEngine</em> (<em class="token">Provider</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">TTSEngine</em> = ]<em class="token">server</em>.<em class="keyword">GetCharacterTTSEngine</em> (<em class="token">Provider</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">TTSEngine</em> = ]<em class="token">server</em>.<em class="keyword">GetCharacterTTSEngine</em> (<em class="token">Provider</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Provider</em>
+								</td>
+								<td>
+				A <em class="typename">string</em> value that specifies the character file, or an
+				empty string for the default character.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">TTSEngine</em>
+								</td>
+								<td>
+				The <a href="Server_TTSEngine.htm" class="see typename">TTSEngine Object</a> that
+				matches the character's text-to-speech requirements (if any).
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					This method allows you to query a character's <em>default</em> text-to-speech engine without loading the
+					character.
+				</p>
+				<p>
+			For more information on specifying character file names, see the <a href="Server_Server_Load.htm" class="see keyword">Load</a> method.
+		</p>
+				<p class="note"><span class="note">Note:</span> This method does not support the HTTP protocol for character files.</p>
+			<h4 class="seealso">See Also</h4><a href="Server_TTSEngine.htm">The TTSEngine Object</a><br /><a href="Server_Server_Load.htm">The Load Method</a></td>
 			</tr>
 		</table>
 	</body>

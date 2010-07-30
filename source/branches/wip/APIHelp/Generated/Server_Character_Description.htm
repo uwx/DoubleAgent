@@ -12,17 +12,92 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Description Property</h4>
+					<h3>The Description Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Specifies a string that specifies the description for the specified character.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">get_Description</em> (&amp;<em class="token">Description</em>)</p>
+<p><em class="token">character</em>-&gt;<em class="keyword">put_Description</em> (<em class="token">Description</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Description</em> = ]<em class="token">character</em>.<em class="keyword">Description</em></p>
+<p><em class="token">character</em>.<em class="keyword">Description</em> = "<em class="token">Description</em>"</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Description</em> = ]<em class="token">character</em>.<em class="keyword">Description</em></p>
+<p><em class="token">character</em>.<em class="keyword">Description</em> = "<em class="token">Description</em>"</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">Description</em> = ]<em class="token">character</em>.<em class="keyword">Description</em></p>
+<p><em class="token">character</em>.<em class="keyword">Description</em> = "<em class="token">Description</em>"</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">Description</em> = ]<em class="token">character</em>.<em class="keyword">Description</em></p>
+<p><em class="token">character</em>.<em class="keyword">Description</em> = "<em class="token">Description</em>"</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Description</em>
+								</td>
+								<td>
+				A <em class="typename">string</em> value corresponding to the character's description (in
+				the current language setting).
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					A character's <em class="self keyword">Description</em> may depend on the character's <a href="Server_Character_LanguageID.htm" class="see keyword">LanguageID</a>
+					setting. A character's description in one language may be different or use different characters than
+					in another. The character's default <em class="self keyword">Description</em> for a specific language is defined when the
+					character is compiled with the Microsoft Agent Character Editor.
+				</p>
+				<p class="note"><span class="note">Note:</span> 
+					The <em class="self keyword">Description</em> property is optional and may not be supplied for all characters.
+				</p>
+				<p class="note"><span class="note">Note:</span> This property applies to all clients of the character.</p>
+			</td>
 			</tr>
 		</table>
 	</body>

@@ -1,0 +1,77 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The CtlAgentPropertyChange Event</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h3>The CtlAgentPropertyChange Event</h3>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+				<p>Signalled when the user changes a property in the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a>
+					window.</p>
+			</div>
+					<h4 class="syntax">Syntax</h4>
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="keyword">Event</em> <em class="token">control</em>_<em class="keyword">CtlAgentPropertyChange</em> (<em class="keyword">ByVal</em> <em class="token">Sender</em> <em class="keyword">As Object</em>, <em class="keyword">ByVal</em> <em class="token">E</em> <em class="keyword">As</em> <em class="keyword">EventArgs</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="keyword">delegate void</em> <em class="token">control</em>_<em class="keyword">CtlAgentPropertyChange<token>EventHandler</token></em> (<em class="keyword">object</em> <em class="token">Sender</em>, <em class="keyword">EventArgs</em> <em class="token">E</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Sender</em>
+								</td>
+								<td>
+			The source of the event.
+		</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">E</em>
+								</td>
+								<td>
+				An <em class="typename">EventArgs</em> object that contains no event data.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+				<p>
+					This event indicates that the user has changed and applied any property in the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a>
+					window. You can use the <a href="Control_Settings.htm" class="see keyword">Settings Object</a> to query the specific property settings.
+				</p>
+			<h4 class="seealso">See Also</h4><a href="AxControl_Event_CtlDefaultCharacterChange.htm">The CtlDefaultCharacterChange Event</a></td>
+			</tr>
+		</table>
+	</body>
+</HTML>

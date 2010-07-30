@@ -47,6 +47,7 @@ public:
 	CAgentFile * GetFile () const {return mFile;}
 	BSTR GetName () const;
 
+	bool IsDefault () const {return mIsDefault;}
 	bool IsVisible (bool pOrIsShowing = true) const;
 	bool IsShowing () const;
 	bool IsHiding () const;
@@ -75,7 +76,7 @@ public:
 	bool SetClientActive (bool pActive, bool pInputActive);
 	INT_PTR GetClientCount (int pSkipCharID = 0) const;
 
-	HRESULT OpenFile (CAgentFile * pFile);
+	HRESULT OpenFile (CAgentFile * pFile, bool pIsDefault = false);
 	HRESULT Realize (class CAgentCharacterWnd * pCharacterWnd, DWORD pInitialStyle);
 	HRESULT RealizePopup (DWORD pInitialStyle);
 	HRESULT SetLangID (LANGID pLangID);
@@ -83,7 +84,7 @@ public:
 	HRESULT StartListening (bool pManual);
 	HRESULT StopListening (bool pManual, long pCause);
 
-	static HRESULT GetLoadPath (VARIANT pProvider, CString & pFilePath);
+	static HRESULT GetLoadPath (VARIANT pProvider, CString & pFilePath, bool * pIsDefault = NULL);
 	static HRESULT GetAgentFile (VARIANT pProvider, tPtr <CAgentFile> & pAgentFile);
 	static HRESULT GetAgentFile (LPCTSTR pFilePath, tPtr <CAgentFile> & pAgentFile);
 
@@ -96,7 +97,7 @@ public:
 	virtual bool _OnContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition);
 	virtual bool _OnDefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition);
 	virtual void _OnOptionsChanged ();
-	virtual void _OnDefaultCharacterChanged ();
+	virtual void _OnDefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFilePath);
 
 // Interfaces
 public:
@@ -183,6 +184,7 @@ public:
 	virtual class CAgentListeningWnd * GetListeningWnd (bool pCreateObject);
 
 	virtual bool DoMenuCommand (USHORT pCommandId);
+	virtual bool DoMenuActivate ();
 	virtual bool NotifyVoiceCommand (USHORT pCommandId, interface ISpRecoResult * pRecoResult, bool pGlobalCommand);
 	HRESULT StopAll (long pStopTypes, HRESULT pReqStatus);
 
@@ -219,6 +221,7 @@ protected:
 	bool										mAutoPopupMenu;
 	CAgentIconData								mIconData;
 private:
+	bool										mIsDefault;
 	class CAgentCharacterWnd *					mWnd;
 	IUnknownPtr									mWndRefHolder;
 };

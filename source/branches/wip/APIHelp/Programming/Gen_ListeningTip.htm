@@ -4,6 +4,35 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
 	<title>The Listening Tip</title>
 	<link rel="STYLESHEET" href="../css/dahelp.css">
+	<style type="text/css">
+		div.tiptext
+		{
+			border: solid thin;
+			display: inline-block;
+			padding: 4px 8px 4px 8px;
+			margin-top: 4px;
+			margin-bottom: 2px;
+			font-size: 90%;
+			background-color: #FFFFEF;
+			color: #000000;
+			float: left;
+		}
+		.tiptext_top
+		{
+			text-align: center;
+			font-weight: bold;
+			margin: 0;
+		}
+		.tiptext_bottom
+		{
+			margin: 0;
+		}
+		.tiptext_not
+		{
+			clear: both;
+			margin-top: 8px;
+		}
+	</style>
 </head>
 <body>
 	<table class="pagetable" cellspacing="0" cellpadding="0">
@@ -17,149 +46,188 @@
 		</tr>
 		<tr>
 			<td class="page">
-				<p>The <em class="title">Listening Tip</em> is another speech input service provided by Double Agent. When
+				<p>The <em class="self">Listening tip</em> is another speech input service provided by Double Agent. When
 					speech input is installed, Agent includes a special tooltip window that appears when the user presses
-					the Listening hotkey or calls the Listen method. The <em class="title">Listening Tip</em> appears only
-					when the speech services are available. If no client has authored a voice command or successfully loads
-					a speech engine, the <em class="title">Listening Tip</em> does not appear. Further, both speech input
-					and the Display Listening Tips option in the <a href="Gen_PropSheet.htm">Double Agent Property Sheet</a> must be enabled for the tip
-					to appear.</p>
-				<p>The following table summarizes the display of the <em class="title">Listening Tip</em> when speech recognition
+					the <em class="glossary">Listening key</em> or calls the <em class="keyword">Listen</em> method. The
+					<em class="self">Listening tip</em> appears only when the speech services are available. If no client
+					has authored a voice command or successfully loads a speech engine, the <em class="self">Listening tip</em>
+					does not appear. Further, both speech input and the <em class="literal">&quot;Display listening tips&quot;</em>
+					option in the <a href="../html/UI_PropSheet.htm#SpeechInput">Advanced Character Options</a> window must be enabled
+					for the tip to appear.</p>
+				<p>The following table summarizes the display of the <em class="self">Listening tip</em> when speech recognition
 					is enabled.</p>
+				<br>
 				<table>
-					<tr valign="top">
-						<th align="left" width="31%">Action</th>
-						<th align="left" width="69%">Result</th>
+					<tr>
+						<th colspan="2">
+							<p>The user presses the <em class="self">Listening key</em>, or the <a class="see" href="Gen_Input.htm#Active">
+							input-active</a> client calls the <em class="self">Listen</em> method</p>
+						</th>
 					</tr>
-					<tr valign="top">
-						<td width="31%">
-							<p>User presses the Listening mode hotkey or input-active calls the <s>Listen</s> method</p>
-						</td>
-						<td width="69%">
-							<dl>
-								<dt>The <em class="title">Listening Tip</em> appears below the active client's character and displays:</dt>
-								<dd>
-									<p>-- <i>CharacterName</i> is listening --
-										<br>
-										for "<i>InputActiveClientCommandsVoiceCaption</i>" commands.</p>
-									<p>If the client hasn't defined a <s>VoiceCaption</s> its <s>Commands</s> object, the value of its <s>Caption</s>
-										property is used.</p>
-								</dd>
-								<dt>If an input-active client of the character does not have a caption or defined voice parameters for its
-									Commands object, the <em class="title">Listening Tip</em> displays:</dt>
-								<dd>
-									<p>-- <i>CharacterName</i> is listening --
-										<br>
-										for commands.</p>
-								</dd>
-								<dt>If there are no visible characters, the <em class="title">Listening Tip</em> appears adjacent to the
-									character's taskbar icon and displays:</dt>
-								<dd>
-									<p>-- <i>CharacterName </i>is listening --
-										<br>
-										Say the name of a character to display it.</p>
-								</dd>
-								<dt>If the speech recognition is still initializing, the <em class="title">Listening Tip</em> displays:</dt>
-								<dd>
-									<p>-- <i>CharacterName </i>is preparing to listen --
-										<br>
-										Please wait to speak.</p>
-								</dd>
-								<dt>If the audio channel is busy, as when the character is audibly speaking or some other application is
-									using the audio channel, the <em class="title">Listening Tip</em> displays:</dt>
-								<dd>
-									<p>-- <i>CharacterName </i>is not listening --
-										<br>
-										for <i>InputActiveClientCommandsVoiceCaption</i> commands.</p>
-								</dd>
-								<dt>If there is no language-compatible speech engine installed for the input-active client's character,
-									the <em class="title">Listening Tip</em> displays the following, where <i>Language</i> represents the
-									selected language of the character:</dt>
-								<dd>
-									<p>-- <i>CharacterName</i> is not listening -
-										<br>
-										Speech input is not available in <i>Language</i>.</p>
-								</dd>
-								<dt>If the audio device is not available for other reasons, such as when it is busy or there is some error
-									in attempting to open the audio device, the following tip appears when the Listening mode is activated:</dt>
-								<dd>
-									<p>-- <i>CharacterName</i> is not listening -
-										<br>
-										Speech input not available.</p>
-								</dd>
-								<dt>If the input-active client application has not defined any Voice settings for commands and has also
-									disabled voice parameters for Agent's global commands, this tip appears:</dt>
-								<dd>
-									<p><i>CharacterName</i> is not listening -
-										<br>
-										No voice commands.</p>
-								</dd>
-								<dt>If all characters are hidden, the <em class="title">Listening Tip</em> displays the following text:</dt>
-								<dd>
-									<p><i>CharacterName</i> is listening -
-										<br>
-										Say the name of a character to display it.</p>
-								</dd>
-							</dl>
-							<p>The first line identifying the character is centered. The second line is left justified and breaks to
-								a third line when it exceeds the <em class="title">Listening Tip</em>'s maximum width.</p>
+					<tr>
+						<td width="50%">The <em class="self">Listening tip</em> appears below the active client's character and
+							displays:</td>
+						<td width="50%">
+							<div class="tiptext">
+								<p class="tiptext_top">-- <i>CharacterName</i> is listening --</p>
+								<p class="tiptext_bottom">for "<i>InputActiveClientCommandsVoiceCaption</i>" commands.</p>
+							</div>
+							<p class="mini tiptext_not">If the client hasn't defined a <em class="keyword">VoiceCaption</em> for its
+								<em class="keyword">Commands</em> object, the value of its <em class="keyword">Caption</em> property
+								is used.</p>
 						</td>
 					</tr>
-					<tr valign="top">
-						<td width="31%">
-							<p>User speaks a voice command</p>
+					<tr>
+						<td>If the <a class="see" href="Gen_Input.htm#Active">input-active</a> client of the character does not
+							have a <em class="keyword">Caption</em> or defined <em class="keyword">VoiceGrammar</em> for its <em
+								class="keyword">Commands</em> object, the <em class="self">Listening tip</em> displays:</td>
+						<td>
+							<div class="tiptext">
+								<p class="tiptext_top">-- <i>CharacterName</i> is listening --</p>
+								<p class="tiptext_bottom">for commands.</p>
+							</div>
 						</td>
-						<td width="69%">
-							<dl>
-								<dt>If the spoken text matches a client- or server-defined command, the <em class="title">Listening Tip</em>
-									appears below the active client's character and displays:</dt>
-								<dd>
-									<p>-- <i>CharacterName </i>is listening -
-										<br>
-										Heard "<i>CommandText</i>"</p>
-								</dd>
-								<dt>However, when a recognition is passed back and the Listening mode has timed out, but the <em class="title">
-									Listening Tip</em> time-out has not, or if the Listening mode is still in effect, but the audio channel
-									is not yet available (for example, the user is still holding the Listening key or the Listening mode
-									has not timed out, because the character is speaking), the <em class="title">Listening Tip</em> displays:</dt>
-								<dd>
-									<p><i>CharacterName</i> is not listening -
-										<br>
-										Heard "<i>text heard</i>"</p>
-								</dd>
-								<dt>When the spoken text matches a server-defined command, but Double Agent does not act on it because the
-									command has a low confidence score, the second line of the <em class="title">Listening Tip</em> displays:</dt>
-								<dd>
-									<p>Didn't understand your request.</p>
-								</dd>
-							</dl>
-							<p>The first line is centered. The second line is left-justified and breaks to a third line when it exceeds
-								the <em class="title">Listening Tip</em>'s maximum width.</p>
+					</tr>
+					<tr>
+						<td>If there are no visible characters, the <em class="self">Listening tip</em> appears adjacent to the
+							character's taskbar icon and displays:</td>
+						<td>
+							<div class="tiptext">
+								<p class="tiptext_top">-- <i>CharacterName </i>is listening --</p>
+								<p class="tiptext_bottom">Say the name of a character to display it.</p>
+							</div>
 						</td>
+					</tr>
+					<tr>
+						<td>If the speech recognition is still initializing, the <em class="self">Listening tip</em> displays:
+						</td>
+						<td>
+							<div class="tiptext">
+								<p class="tiptext_top">-- <i>CharacterName </i>is preparing to listen --</p>
+								<p class="tiptext_bottom">Please wait to speak.</p>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>If the audio channel is busy, as when the character is audibly speaking or some other application is
+							using the audio channel, the <em class="self">Listening tip</em> displays:</td>
+						<td>
+							<div class="tiptext">
+								<p class="tiptext_top">-- <i>CharacterName </i>is not listening --</p>
+								<p class="tiptext_bottom">for <i>InputActiveClientCommandsVoiceCaption</i> commands.</p>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>If there is no language-compatible speech engine installed for the <a class="see" href="Gen_Input.htm#Active">
+						input-active</a> client's character, the <em class="self">Listening tip</em> displays the following, where
+							<i>Language</i> represents the selected language of the character:</td>
+						<td>
+							<div class="tiptext">
+								<p class="tiptext_top">-- <i>CharacterName</i> is not listening --</p>
+								<p class="tiptext_bottom">Speech input is not available in <i>Language</i>.</p>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>If the audio device is not available for other reasons, such as when it is busy or there is some error
+							in attempting to open the audio device, the following tip appears when the <em>Listening mode</em> is
+							activated:</td>
+						<td>
+							<div class="tiptext">
+								<p class="tiptext_top">-- <i>CharacterName</i> is not listening --</p>
+								<p class="tiptext_bottom">Speech input not available.</p>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>If the <a class="see" href="Gen_Input.htm#Active">input-active</a> client application has not defined
+							any <em class="keyword">Voice</em> settings for its commands, and has also disabled <em>Global Voice Commands</em>,
+							this tip appears: </td>
+						<td>
+							<div class="tiptext">
+								<p class="tiptext_top">-- <i>CharacterName</i> is not listening --</p>
+								<p class="tiptext_bottom">No voice commands.</p>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>If all characters are hidden, the <em class="self">Listening tip</em> displays the following text:
+						</td>
+						<td>
+							<div class="tiptext">
+								<p class="tiptext_top">-- <i>CharacterName</i> is listening --</p>
+								<p class="tiptext_bottom">Say the name of a character to display it.</p>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<th colspan="2">
+							<p>The user speaks a voice command</p>
+						</th>
+					</tr>
+					<tr>
+						<td>If the spoken text matches a client-defined or pre-defined command, the <em class="self">Listening
+							tip</em> appears below the active client's character and displays:</td>
+						<td>
+							<div class="tiptext">
+								<p class="tiptext_top">-- <i>CharacterName </i>is listening --</p>
+								<p class="tiptext_bottom">Heard "<i>CommandText</i>"</p>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>However, when a recognition is received and the <em>Listening mode</em> has timed out, but the <em
+							class="self">Listening tip</em> has not timed out, or if the <em>Listening mode</em> is still in effect,
+							but the audio channel is not yet available (for example, the user is still holding the <em>Listening key,</em>
+							or the <em>Listening mode</em> has not timed out because the character is speaking), the <em class="self">
+								Listening tip</em> displays:</td>
+						<td>
+							<div class="tiptext">
+								<p class="tiptext_top">-- <i>CharacterName</i> is not listening --</p>
+								<p class="tiptext_bottom">Heard "<i>text heard</i>"</p>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="tiptext_not">When the spoken text matches a defined command, but Double Agent does not act on
+							it because the command has a low confidence score, the the <em class="self">Listening tip</em> displays:
+						</td>
+						<td>
+							<div class="tiptext">
+								<p class="tiptext_top">-- <i>CharacterName </i>is listening --</p>
+								<p class="tiptext_bottom">Didn't understand your request.</p>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td style="font-size: 90%">The first line identifying the character is centered. The second line is left
+							justified and breaks to a third line when it exceeds the <em class="self">Listening tip</em>'s maximum
+							width.</td>
 					</tr>
 				</table>
 				<br>
-				<p>The <em class="title">Listening Tip</em> automatically times out after being presented. If the "Heard"
-					text time-out completes while the user is still holding down the hotkey, the tip reverts to the "listening"
-					text unless Double Agent receives another matching utterance. In this case, the tip displays the new "Heard"
-					text and begins the time-out for that tip text. If the user releases the hotkey and Double Agent is displaying
-					the "Heard" text, the time-out continues and the <em class="title">Listening Tip</em> window is hidden
-					when the time-out interval elapses.</p>
-				<p>If Double Agent has not yet attempted to load a speech recognition engine, the <em class="title">Listening
-					Tip</em> will not display. Similarly, if the user has disabled the display of the <em class="title">Listening
-						Tip</em> or disabled speech input in the <a href="Gen_PropSheet.htm">Double Agent Property Sheet</a>, the <em class="title">Listening Tip</em>
-					will not be displayed.</p>
-				<p>The <em class="title">Listening Tip</em> does not appear when the pointer is over the character's taskbar
-					icon. Instead, the standard notification tip window appears and displays the character's name.</p>
-				<p>Client applications cannot write directly to the <em class="title">Listening Tip</em>, but you can specify
-					alternative text that Double Agent displays on recognition of a matching voice command. To do this, set
-					the <s>Confidence</s> property and the <s>ConfidenceText </s>property for the command. If spoken
-					input matches the command, but the best match does not exceed the confidence setting, Double Agent uses
-					the text set in the <s>ConfidenceText</s> property in the tip window. If the client does not supply
-					this value, Double Agent displays the text (grammar) it matched.</p>
-				<p>The <em class="title">Listening Tip</em> text appears in the language based on the input-active client's
-					character language ID setting, regardless of whether there is a language-compatible speech recognition
-					engine available. </p>
+				<p>The <em class="self">Listening tip</em> automatically times out after being presented. If the "Heard"
+					text time-out completes while the user is still holding down the <em>Listening key</em>, the tip reverts
+					to the "listening" text unless Double Agent receives another matching utterance. In this case, the tip
+					displays the new "Heard" text and begins the time-out for that tip text. If the user releases the <em>Listening
+						key</em> and Double Agent is displaying the "Heard" text, the time-out continues and the <em class="self">
+							Listening tip</em> window is hidden when the time-out interval elapses.</p>
+				<p>If Double Agent has not yet attempted to load a speech recognition engine, the <em class="self">Listening
+					tip</em> will not display. Similarly, if the user has disabled the display of the <em class="self">Listening
+						tip</em> or disabled speech input in the <a href="Gen_Config.htm#PropSheet">Advanced Character Options</a>
+					window, the <em class="self">Listening tip</em> will not be displayed.</p>
+				<p>Client applications cannot write directly to the <em class="self">Listening tip</em>, but you can specify
+					alternative text that Double Agent displays on recognition of a matching voice command. To do this,
+					set the <em class="keyword">Confidence</em> property and the <em class="keyword">ConfidenceText</em>
+					property for the command. If spoken input matches the command, but the best match does not exceed the
+					confidence setting, Double Agent uses the text set in the <em class="keyword">ConfidenceText</em> property
+					in the tip window. If the client does not supply this value, Double Agent displays the text (grammar)
+					it matched.</p>
+				<p>The <em class="self">Listening tip</em> text appears in the language based on the <a class="see"
+				href="Gen_Input.htm#Active">input-active</a> client's character <em class="keyword">LanguageID</em> setting,
+					regardless of whether there is a language-compatible speech recognition engine available.</p>
 			</td>
 		</tr>
 	</table>

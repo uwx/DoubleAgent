@@ -12,78 +12,86 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The DoubleAgentFiles Property</h4>
+					<h3>The DoubleAgentFiles Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>
-					Indicates if the Double Agent install location should be included in the <a href="Control_CharacterFiles_DefaultSearchPath.htm" class="see">DefaultSearchPath</a>.
-				</p>
-					</div>
+				<p>Indicates if the Double Agent install location should be included in the <a href="Control_CharacterFiles_DefaultSearchPath.htm" class="see keyword">DefaultSearchPath</a>.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>DoubleAgentFiles</em> = ]<em>control</em>.<s>CharacterFiles</s>.<s>DoubleAgentFiles</s></p>
-
-<p><em>control</em>.<s>CharacterFiles</s>.<s>DoubleAgentFiles</s> = <em>DoubleAgentFiles</em></p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>DoubleAgentFiles</em> = ]<em>control</em>.<s>CharacterFiles</s>.<s>DoubleAgentFiles</s></p>
-
-<p><em>control</em>.<s>CharacterFiles</s>.<s>DoubleAgentFiles</s> = <em>DoubleAgentFiles</em></p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>DoubleAgentFiles</em> = ]<em>control</em>.<s>CharacterFiles</s>.<s>DoubleAgentFiles</s></p>
-
-<p><em>control</em>.<s>CharacterFiles</s>.<s>DoubleAgentFiles</s> = <em>DoubleAgentFiles</em></p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>DoubleAgentFiles</em> = ]<em>control</em>.<s>CharacterFiles</s>.<s>DoubleAgentFiles</s></p>
-
-<p><em>control</em>.<s>CharacterFiles</s>.<s>DoubleAgentFiles</s> = <em>DoubleAgentFiles</em></p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>characterfiles</em>.<s>get_DoubleAgentFiles</s> (&amp;<em>DoubleAgentFiles</em>)</p>
-
-<p><em>characterfiles</em>.<s>put_DoubleAgentFiles</s> (<em>DoubleAgentFiles</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">DoubleAgentFiles</em> = ]<em class="token">control</em>.<em class="keyword">CharacterFiles</em>.<em class="keyword">DoubleAgentFiles</em></p>
+<p><em class="token">control</em>.<em class="keyword">CharacterFiles</em>.<em class="keyword">DoubleAgentFiles</em> = <em class="token">DoubleAgentFiles</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">DoubleAgentFiles</em> = ]<em class="token">control</em>.<em class="keyword">CharacterFiles</em>.<em class="keyword">DoubleAgentFiles</em></p>
+<p><em class="token">control</em>.<em class="keyword">CharacterFiles</em>.<em class="keyword">DoubleAgentFiles</em> = <em class="token">DoubleAgentFiles</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">DoubleAgentFiles</em> = ]<em class="token">control</em>.<em class="keyword">CharacterFiles</em>.<em class="keyword">DoubleAgentFiles</em></p>
+<p><em class="token">control</em>.<em class="keyword">CharacterFiles</em>.<em class="keyword">DoubleAgentFiles</em> = <em class="token">DoubleAgentFiles</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">DoubleAgentFiles</em> = ]<em class="token">control</em>.<em class="keyword">CharacterFiles</em>.<em class="keyword">DoubleAgentFiles</em></p>
+<p><em class="token">control</em>.<em class="keyword">CharacterFiles</em>.<em class="keyword">DoubleAgentFiles</em> = <em class="token">DoubleAgentFiles</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">characterfiles</em>-&gt;<em class="keyword">get_DoubleAgentFiles</em> (&amp;<em class="token">DoubleAgentFiles</em>)</p>
+<p><em class="token">characterfiles</em>-&gt;<em class="keyword">put_DoubleAgentFiles</em> (<em class="token">DoubleAgentFiles</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>DoubleAgentFiles</i>
+									<em class="token">DoubleAgentFiles</em>
 								</td>
 								<td>
-				A <s>boolean </s>value that indicates if the Double Agent install
-				location should be included in the search for character files.
+				A <em class="typename">boolean</em> value that indicates if the Double Agent
+				install location should be included in the search for character files.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					The path used to find character files is the <s>Chars </s>subdirectory of the Double Agent install location. Typically, this would be <s>C:\Program&nbsp;Files\Double&nbsp;Agent\Chars</s>.
+				<p>
+					The path for Double Agent characters is the <em class="filename">Chars</em> subdirectory of the Double Agent install
+					location. Typically, this would be <em class="filename">C:\Program&nbsp;Files\Double&nbsp;Agent\Chars</em>.
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_CharacterFiles_FilePaths.htm">The FilePaths Property</a>
-					<br />
-					<a href="Control_CharacterFiles_SearchPath.htm">The SearchPath Property</a>
-					<br />
-					<a href="Control_CharacterFiles_DefaultSearchPath.htm">The DefaultSearchPath Property</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_CharacterFiles_FilePaths.htm">The FilePaths Property</a><br /><a href="Control_CharacterFiles_SearchPath.htm">The SearchPath Property</a><br /><a href="Control_CharacterFiles_DefaultSearchPath.htm">The DefaultSearchPath Property</a></td>
 			</tr>
 		</table>
 	</body>

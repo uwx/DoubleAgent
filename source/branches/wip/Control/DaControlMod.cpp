@@ -59,7 +59,7 @@ LPCTSTR __declspec(selectany)	_AtlProfilePath = _LOG_ROOT_PATH;
 CDaControlModule::CDaControlModule ()
 :	CListeningGlobal (*(CGlobalAnchor*)this)
 {
-	mNextCharID = USHRT_MAX+1;
+	mNextCharID = SHRT_MAX+1;
 	CListeningGlobal::Startup ();
 
 #if	ISOLATION_AWARE_ENABLED

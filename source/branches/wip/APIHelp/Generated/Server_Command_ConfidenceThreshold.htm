@@ -12,17 +12,87 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The ConfidenceThreshold Property</h4>
+					<h3>The ConfidenceThreshold Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Specifies if the command's <a href="Server_Command_ConfidenceText.htm" class="see keyword">ConfidenceText</a> appears in the <em class="glossary">Listening tip</em>.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">command</em>-&gt;<em class="keyword">get_ConfidenceThreshold</em> (&amp;<em class="token">ConfidenceThreshold</em>)</p>
+<p><em class="token">command</em>-&gt;<em class="keyword">put_ConfidenceThreshold</em> (<em class="token">ConfidenceThreshold</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">ConfidenceThreshold</em> = ]<em class="token">command</em>.<em class="keyword">ConfidenceThreshold</em></p>
+<p><em class="token">command</em>.<em class="keyword">ConfidenceThreshold</em> = <em class="token">ConfidenceThreshold</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">ConfidenceThreshold</em> = ]<em class="token">command</em>.<em class="keyword">ConfidenceThreshold</em></p>
+<p><em class="token">command</em>.<em class="keyword">ConfidenceThreshold</em> = <em class="token">ConfidenceThreshold</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">ConfidenceThreshold</em> = ]<em class="token">command</em>.<em class="keyword">ConfidenceThreshold</em></p>
+<p><em class="token">command</em>.<em class="keyword">ConfidenceThreshold</em> = <em class="token">ConfidenceThreshold</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">ConfidenceThreshold</em> = ]<em class="token">command</em>.<em class="keyword">ConfidenceThreshold</em></p>
+<p><em class="token">command</em>.<em class="keyword">ConfidenceThreshold</em> = <em class="token">ConfidenceThreshold</em></p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">ConfidenceThreshold</em>
+								</td>
+								<td>
+				A <em class="typename">numeric</em> value that specifies the confidence threshold
+				for the command.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					If the <a href="Server_UserInput_ItemConfidence.htm" class="see keyword">ItemConfidence</a> value of the best match <em>does not exceed</em>
+					the value you set for the <em class="self keyword">ConfidenceThreshold</em> property, the text supplied in <a href="Server_Command_ConfidenceText.htm" class="see keyword">ConfidenceText</a>
+					is displayed in the <em class="glossary">Listening tip</em>.
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Command_ConfidenceText.htm">The ConfidenceText Property</a></td>
 			</tr>
 		</table>
 	</body>

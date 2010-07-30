@@ -12,66 +12,81 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Animations Property</h4>
+					<h3>The Animations Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Returns the names of the character's animations.</p>
-					</div>
+				<p>Returns the names of the character's animations.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>Animations</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Animations</s></p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>Animations</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Animations</s></p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>Animations</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Animations</s></p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>Animations</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Animations</s></p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>character</em>.<s>get_Animations</s> (&amp;<em>Animations</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Animations</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Animations</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">Animations</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Animations</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">Animations</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Animations</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Animations</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Animations</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">get_Animations</em> (&amp;<em class="token">Animations</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Animations</i>
+									<em class="token">Animations</em>
 								</td>
 								<td>
-				An array of <s>string </s>values that name all of the animations the character
-				can play.
+				An array of <em class="typename">string</em> values that name all of the animations the
+				character can play.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					For .ACF characters, the array contains all the animations defined for the character, not just
-					the ones that have been retrieved with the <a href="Control_Character_Prepare.htm" class="see">Prepare</a>
-					method.
+				<p>
+					For <em class="filename">.ACF</em> characters, the array contains all the animations defined for the character,
+					not just the ones that have been retrieved with the <a href="Control_Character_Prepare.htm" class="see keyword">Prepare</a> method.
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Character_Play.htm">The Play Method</a>
-					<br />
-					<a href="Control_Character_Prepare.htm">The Prepare Method</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_Character_Play.htm">The Play Method</a><br /><a href="Control_Character_Prepare.htm">The Prepare Method</a></td>
 			</tr>
 		</table>
 	</body>

@@ -12,60 +12,80 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The LanguageName Property</h4>
+					<h3>The LanguageName Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Returns the speech recognition engine's human-readable primary language name.</p>
-					</div>
+				<p>Returns the speech recognition engine's human-readable primary language name.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>LanguageName</em> = ]<em>srengine</em>.<s>LanguageName</s>[ [<em>EnglishName</em>]]</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>LanguageName</em> = ]<em>srengine</em>.<s>LanguageName</s>[ [<em>EnglishName</em>]]</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>LanguageName</em> = ]<em>srengine</em>.<s>LanguageName</s>[ [<em>EnglishName</em>]]</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>LanguageName</em> = ]<em>srengine</em>.<s>get_LanguageName</s> (<em>EnglishName</em>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>srengine</em>.<s>get_LanguageName</s> (<em>EnglishName</em>, &amp;<em>LanguageName</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">LanguageName</em> = ]<em class="token">srengine</em>.<em class="keyword">LanguageName</em>[ [<em class="token">EnglishName</em>]]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">LanguageName</em> = ]<em class="token">srengine</em>.<em class="keyword">LanguageName</em>[ [<em class="token">EnglishName</em>]]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">LanguageName</em> = ]<em class="token">srengine</em>.<em class="keyword">LanguageName</em>[ [<em class="token">EnglishName</em>]]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">LanguageName</em> = ]<em class="token">srengine</em>.<em class="keyword">get_LanguageName</em> (<em class="token">EnglishName</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">srengine</em>-&gt;<em class="keyword">get_LanguageName</em> (<em class="token">EnglishName</em>, &amp;<em class="token">LanguageName</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>LanguageName</i>
+									<em class="token">LanguageName</em>
 								</td>
 								<td>
-				A <s>string </s>value that identifies the engine's primary language in
-				a form suitable for the user.
+				A <em class="typename">string</em> value that identifies the engine's primary language
+				in a form suitable for the user.
 			</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>EnglishName</i>
+									<em class="token">EnglishName</em>
 								</td>
 								<td>
-				An optional <s>boolean </s>value that specifies if the language name should
-				be in English, or in the user's language. The default value is <s>True</s>.
+				An optional <em class="typename">boolean</em> value that specifies if the language name
+				should be in English, or in the user's language. The default value is <em class="keyword">True</em>.
 			</td>
 							</tr>
 						</table>

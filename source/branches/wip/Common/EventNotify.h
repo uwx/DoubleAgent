@@ -35,7 +35,7 @@ interface _IEventNotify
 	virtual bool _ContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition) {return false;}
 	virtual bool _DefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition) {return false;}
 	virtual void _OptionsChanged () {}
-	virtual void _DefaultCharacterChanged (REFGUID pCharGuid) {}
+	virtual void _DefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFilePath) {}
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -51,7 +51,7 @@ interface _IEventReflect
 	virtual bool _OnContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition) {return false;}
 	virtual bool _OnDefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition) {return false;}
 	virtual void _OnOptionsChanged () {}
-	virtual void _OnDefaultCharacterChanged () {}
+	virtual void _OnDefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFilePath) {}
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -107,7 +107,7 @@ public:
 	virtual bool _ContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition);
 	virtual bool _DefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition);
 	virtual void _OptionsChanged ();
-	virtual void _DefaultCharacterChanged (REFGUID pCharGuid);
+	virtual void _DefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFilePath);
 
 // Implementation
 protected:

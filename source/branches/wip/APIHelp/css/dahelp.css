@@ -8,6 +8,8 @@ body
 	font-size: x-small;
 }
 
+/**********************************************************************/
+
 h1, h2, h3, h4
 {
 	font-family: Segoe UI, Verdana, Arial, Helvetica, sans-serif;
@@ -43,9 +45,43 @@ h4
 	padding-bottom: .1em;
 }
 
-hr
+/*--------------------------------------------------------------------*/
+
+h4.summary
 {
-	color: #3399ff;
+	padding-bottom: 0;
+}
+
+h4.syntax
+{
+}
+
+h4.details
+{
+	margin-top: .8em;
+}
+
+h4.remarks
+{
+	border-top: 2px solid #3399ff;
+	margin-top: 1em;
+	padding-top: .5em;
+}
+
+h4.seealso
+{
+	border-top: 2px solid #3399ff;
+	margin-top: 1em;
+	padding-top: .5em;
+	padding-bottom: .5em;
+}
+
+/**********************************************************************/
+
+p
+{
+	margin-top: .5em;
+	margin-bottom: .5em;
 }
 
 ul p, ol p, dl p
@@ -53,11 +89,222 @@ ul p, ol p, dl p
 	margin-left: 0em;
 }
 
-p
+p.note
+{
+	font-size: 90%;
+}
+
+span.note
+{
+	font-style: italic;
+	color: #2050A0;
+}
+
+/**********************************************************************/
+
+div.summary
+{
+	padding-left: 4ex;
+	padding-right: 0;
+	padding-top: 0;
+	padding-bottom: 0;
+	width: 100%;
+}
+
+div.syntax
+{
+	padding-left: 4ex;
+	padding-right: 0;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+div.syntax p
+{
+	padding-top: 0;
+	padding-bottom: 0;
+	margin-top: 2px;
+	margin-bottom: 0;
+}
+
+div.syntax dt
+{
+	color: #0000A0;
+}
+
+div.example pre.example
+{
+	padding-left: 4ex;
+	padding-right: 4ex;
+}
+
+/**********************************************************************/
+
+pre, code
 {
 	margin-top: .5em;
 	margin-bottom: .5em;
 }
+
+pre, code
+{
+	font: 90% Courier New, Courier, mono;
+	color: #006600;
+}
+
+pre.syntax
+{
+	background: #dddddd;
+	color: #000000;
+	padding: 2pt,4pt;
+}
+
+code.example
+{
+	padding-left: 4ex;
+	padding-right: 4ex;
+}
+
+/**********************************************************************/
+
+a
+{
+	color: #0000A0;
+	text-decoration: underline;
+	display: inline-block;
+}
+a:hover
+{
+	color: #3399ff;
+}
+
+a.see
+{
+	text-decoration: none;
+}
+a.see:hover
+{
+	text-decoration: underline;
+}
+
+a.typename
+{
+	color: #2050A0;
+	font-weight: bolder;
+}
+a.typename:hover
+{
+	color: #3399ff;
+}
+
+a.keyword
+{
+	color: #2050A0;
+	font-weight: bolder;
+}
+a.keyword:hover
+{
+	color: #3399ff;
+}
+
+div.#syntax a.keyword
+{
+	color: #0000A0;
+	font-weight: normal;
+}
+
+/**********************************************************************/
+
+s
+{
+	text-decoration: none;
+	font-style: normal;
+	font-weight: bolder;
+}
+
+em
+{
+	text-decoration: none;
+	font-style: italic;
+}
+
+em.keyword
+{
+	font-style: normal;
+	font-weight: bolder;
+	color: #606060;
+	display: inline-block;
+}
+
+pre em.keyword, code em.keyword
+{
+	color: #006600;
+}
+
+em.token
+{
+	font-style: italic;
+	display: inline-block;
+}
+
+em.self
+{
+	font-style: normal;
+	color: #2050A0;
+}
+
+em.literal
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-style: normal;
+	font-weight: bolder;
+	color: #606060;
+}
+
+em.glossary
+{
+	font-style: normal;
+	color: #2050A0;
+	display: inline-block;
+}
+
+em.typename
+{
+	font-style: normal;
+	font-weight: bolder;
+	display: inline-block;
+}
+
+em.filename
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-style: normal;
+	text-transform: uppercase;
+	display: inline-block;
+}
+
+/*--------------------------------------------------------------------*/
+
+blockquote
+{
+	margin-left: 8ex;
+	margin-right: 8ex;
+	margin-top: .5em;
+	margin-bottom: .5em;
+}
+
+sup
+{
+	text-decoration: none;
+	font-size: smaller;
+}
+
+hr
+{
+	color: #3399ff;
+}
+
+/**********************************************************************/
 
 dl
 {
@@ -75,6 +322,8 @@ dt
 	margin-top: .5em;
 }
 
+/*--------------------------------------------------------------------*/
+
 ul, ol
 {
 	margin-top: .6em;
@@ -83,7 +332,7 @@ ul, ol
 
 ol
 {
-	margin-left: 8ex;
+	margin-left: 4ex;
 }
 
 ul
@@ -113,17 +362,17 @@ li ul li
 	margin-bottom: 0;
 }
 
-pre, code
+ul.close
 {
-	margin-top: .5em;
 	margin-bottom: .5em;
 }
 
-pre, code
+ul.close li
 {
-	font: 90% Courier New, Courier, mono;
-	color: #006600;
+	margin-bottom: .1em;
 }
+
+/**********************************************************************/
 
 table
 {
@@ -148,41 +397,24 @@ td
 	vertical-align: top;
 }
 
-blockquote
+table.syntax
 {
-	margin-left: 8ex;
-	margin-right: 8ex;
-	margin-top: .5em;
-	margin-bottom: .5em;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	table-layout: fixed;
 }
 
-sup
+table.middle td
 {
-	text-decoration: none;
-	font-size: smaller;
+	vertical-align: middle;
 }
 
-s
+td.language
 {
-	text-decoration: none;
-	font-style: normal;
-	font-weight: bolder;
+	color: #0000A0;
 }
 
-em
-{
-	text-decoration: none;
-	font-style: italic;
-	font-weight: normal;
-}
-
-em.title
-{
-	text-decoration: none;
-	font-style: normal;
-	font-weight: normal;
-	color: #2050A0;
-}
+/*--------------------------------------------------------------------*/
 
 table.pagetable
 {
@@ -229,144 +461,7 @@ table.pagetable td.page
 	font-size: 10pt;
 }
 
-h4.summary
-{
-	padding-bottom: 0;
-}
-
-h4.syntax
-{
-}
-
-h4.details
-{
-	margin-top: .8em;
-}
-
-h4.remarks
-{
-	border-top: 2px solid #3399ff;
-	margin-top: 1em;
-	padding-top: .5em;
-}
-
-h4.seealso
-{
-	border-top: 2px solid #3399ff;
-	margin-top: 1em;
-	padding-top: .5em;
-	padding-bottom: .5em;
-}
-
-div.summary
-{
-	padding-left: 4ex;
-	padding-right: 0;
-	padding-top: 0;
-	padding-bottom: 0;
-	width: 100%;
-}
-
-div.syntax
-{
-	padding-left: 4ex;
-	padding-right: 0;
-	padding-top: 0;
-	padding-bottom: 0;
-}
-
-div.syntax p
-{
-	padding-top: 0;
-	padding-bottom: 0;
-	margin-top: 2px;
-	margin-bottom: 0;
-}
-
-div.syntax dt
-{
-	color: #0000A0;
-}
-
-table.syntax
-{
-	margin-top: 1em;
-	margin-bottom: 1em;
-	table-layout: fixed;
-}
-
-pre.syntax
-{
-	background: #dddddd;
-	color: #000000;
-	padding: 2pt,4pt;
-}
-
-code.example
-{
-	padding-left: 4ex;
-	padding-right: 4ex;
-}
-
-div.example pre.example
-{
-	padding-left: 4ex;
-	padding-right: 4ex;
-}
-
-p.note
-{
-	font-size: 90%;
-}
-
-span.note
-{
-	color: #2050A0;
-	font-style: italic;
-}
-
-a
-{
-	color: #0000A0;
-	text-decoration: underline;
-}
-
-a:link
-{
-	color: #0000A0;
-}
-
-a:visited
-{
-	color: #0000A0;
-}
-
-a:hover
-{
-	color: #3399ff;
-}
-
-a.see
-{
-	color: #0000A0;
-	text-decoration: none;
-}
-
-a.see:link
-{
-	color: #0000A0;
-}
-
-a.see:visited
-{
-	color: #0000A0;
-}
-
-a.see:hover
-{
-	color: #3399ff;
-	text-decoration: underline;
-}
+/**********************************************************************/
 
 .version
 {
@@ -382,26 +477,13 @@ a.see:hover
 	font-size: smaller;
 }
 
-.indent
+.minib
 {
-	margin-left: 1.9em;
-	margin-right: 1.9em;
+	font-size: smaller;
+	font-weight: bold;
 }
 
-.indent1
-{
-	margin-left: 12pt;
-}
-
-.indent2
-{
-	margin-left: 24pt;
-}
-
-.indent3
-{
-	margin-left: 36pt;
-}
+/**********************************************************************/
 
 @media print
 {
@@ -411,11 +493,11 @@ a.see:hover
 	}
 	table.pagetable td.runninghead
 	{
-		display:none;
+		display: none;
 	}
 	table.pagetable td.pagehead
 	{
-		display:none;
+		display: none;
 	}
 	table.pagetable td.page
 	{

@@ -12,110 +12,137 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The ListenComplete Event</h4>
+					<h3>The ListenComplete Event</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>
-					Signalled when <em>Listening mode</em> (speech recognition) has ended.
-				</p>
-					</div>
+				<p>Signalled when <em class="glossary">Listening mode</em> (speech recognition) has ended.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p><s>Event</s> <em>control</em>_<s>ListenComplete</s> (<s>ByVal</s> <em>CharacterID</em> <s>As String</s>, <s>ByVal</s> <em>Cause</em> <s>As DoubleAgent.Control.ListenCompleteType</s>)</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>ListenComplete</s> (<s>ByVal</s> <em>CharacterID</em> <s>As String</s>, <s>ByVal</s> <em>Cause</em> <s>As ListenCompleteType</s>)</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>ListenComplete</s> (<s>ByVal</s> <em>CharacterID</em>, <s>ByVal</s> <em>Cause</em>)</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p><s>delegate void</s> <em>control</em>_<s>ListenComplete<em>EventHandler</em></s> (<s>string</s> <em>CharacterID</em>, <s>DoubleAgent.Control.ListenCompleteType</s> <em>Cause</em>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><s>void</s> <em>control</em>_<s>ListenComplete</s> (<s>LPCTSTR</s> <em>CharacterID</em>, <s>ListenCompleteType</s> <em>Cause</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="keyword">Event</em> <em class="token">control</em>_<em class="keyword">ListenComplete</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em> <em class="keyword">As String</em>, <em class="keyword">ByVal</em> <em class="token">Cause</em> <em class="keyword">As DoubleAgent.Control.ListenCompleteType</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">ListenComplete</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em> <em class="keyword">As String</em>, <em class="keyword">ByVal</em> <em class="token">Cause</em> <em class="keyword">As ListenCompleteType</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">ListenComplete</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em>, <em class="keyword">ByVal</em> <em class="token">Cause</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="keyword">delegate void</em> <em class="token">control</em>_<em class="keyword">ListenComplete<token>EventHandler</token></em> (<em class="keyword">string</em> <em class="token">CharacterID</em>, <em class="keyword">DoubleAgent.Control.ListenCompleteType</em> <em class="token">Cause</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="keyword">void</em> <em class="token">control</em>_<em class="keyword">ListenComplete</em> (<em class="keyword">LPCTSTR</em> <em class="token">CharacterID</em>, <em class="keyword">ListenCompleteType</em> <em class="token">Cause</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>CharacterID</i>
+									<em class="token">CharacterID</em>
 								</td>
 								<td>The unique identifier of the listening character.</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Cause</i>
+									<em class="token">Cause</em>
 								</td>
 								<td>
-				The cause of the <s>ListenComplete </s>event.<table><tr><td>
-1&nbsp;=&nbsp;<s>ProgramDisabled</s>
-</td><td>This program turned off the <em>Listening mode </em>with the <a href="Control_Character_Listen.htm" class="see">Listen</a>
-				method.</td></tr><tr><td>
-2&nbsp;=&nbsp;<s>ProgramTimedOut</s>
-</td><td>The <em>Listening mode </em>was started by this program with the <a href="Control_Character_Listen.htm" class="see">Listen</a>
-				method, and it timed out.</td></tr><tr><td>
-3&nbsp;=&nbsp;<s>UserTimedOut</s>
-</td><td>The <em>Listening mode </em>was started with the <em>Listening key</em>, and it timed
-				out.</td></tr><tr><td>
-4&nbsp;=&nbsp;<s>UserReleasedKey</s>
-</td><td>The <em>Listening mode </em>was started with the <em>Listening key</em>, and the key
-				was released.</td></tr><tr><td>
-5&nbsp;=&nbsp;<s>UserSpeechEnded</s>
-</td><td>Speech recognition has produced a result.</td></tr><tr><td>
-6&nbsp;=&nbsp;<s>CharacterClientDeactivated</s>
-</td><td>The character is no longer active or it's active client has changed.</td></tr><tr><td>
-7&nbsp;=&nbsp;<s>DefaultCharacterChanged</s>
-</td><td>The default character was changed in the <a href="Control_PropertySheet.htm" class="see"> Advanced Character Options</a>
-				window.</td></tr><tr><td>
-8&nbsp;=&nbsp;<s>UserDisabled</s>
-</td><td>Speech recognition was disabled in the <a href="Control_PropertySheet.htm" class="see"> Advanced Character Options</a>
-				window.</td></tr></table></td>
+				The cause of the <em class="keyword">ListenComplete</em> event.<table><tr><td xml:space="preserve">
+1&nbsp;=&nbsp;<em class="keyword">ProgramDisabled</em>
+</td><td>
+							This program turned off the <em class="glossary">Listening mode</em> with the <a href="Control_Character_Listen.htm" class="see keyword">Listen</a>
+				method.
+						</td></tr><tr><td xml:space="preserve">
+2&nbsp;=&nbsp;<em class="keyword">ProgramTimedOut</em>
+</td><td>
+							The <em class="glossary">Listening mode</em> was started by this program with the <a href="Control_Character_Listen.htm" class="see keyword">Listen</a>
+				method, and it timed out.
+						</td></tr><tr><td xml:space="preserve">
+3&nbsp;=&nbsp;<em class="keyword">UserTimedOut</em>
+</td><td>
+							The <em class="glossary">Listening mode</em> was started with the <em class="glossary">Listening key</em>,
+				and it timed out.
+						</td></tr><tr><td xml:space="preserve">
+4&nbsp;=&nbsp;<em class="keyword">UserReleasedKey</em>
+</td><td>
+							The <em class="glossary">Listening mode</em> was started with the <em class="glossary">Listening key</em>,
+				and the key was released.
+						</td></tr><tr><td xml:space="preserve">
+5&nbsp;=&nbsp;<em class="keyword">UserSpeechEnded</em>
+</td><td>
+							Speech recognition has produced a result.
+						</td></tr><tr><td xml:space="preserve">
+6&nbsp;=&nbsp;<em class="keyword">CharacterClientDeactivated</em>
+</td><td>
+							The character is no longer active or it's active client has changed.
+						</td></tr><tr><td xml:space="preserve">
+7&nbsp;=&nbsp;<em class="keyword">DefaultCharacterChanged</em>
+</td><td>
+							The default character was changed in the <a class="see" href="../html/UI_PropSheet.htm#Gallery">Advanced Character Options</a>
+				window.
+						</td></tr><tr><td xml:space="preserve">
+8&nbsp;=&nbsp;<em class="keyword">UserDisabled</em>
+</td><td>
+							Speech recognition was disabled in the <a class="see" href="../html/UI_PropSheet.htm#SpeechInput">Advanced Character Options</a>
+				window.
+						</td></tr></table>
+			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					This event is sent to all clients when the <em>Listening mode </em>time-out ends, after the
-					user releases the <em>Listening key</em>, when the input-active client calls the <a href="Control_Character_Listen.htm" class="see">Listen</a>
-					method with <s>False</s>, or the user has finished speaking. You can use this event to determine
-					when to resume spoken output.
+				<p>
+					This event is sent to all clients when the <em class="glossary">Listening mode</em> time-out ends, after the
+					user releases the <em class="glossary">Listening key</em>, when the <em class="glossary">input-active</em> client calls
+					the <a href="Control_Character_Listen.htm" class="see keyword">Listen</a> method with <em class="keyword">False</em>, or the user has finished speaking.
+					You can use this event to determine when to resume spoken output.
 				</p>
-					<p>
-					If you turn on <em>Listening mode </em>using the <a href="Control_Character_Listen.htm" class="see">Listen</a>
-					method and then the user presses the <em>Listening key</em>, the <em>Listening mode </em>resets
-					and continues until the <em>Listening key </em>time-out completes, the <em>Listening key </em>is
-					released, or the user finishes speaking, whichever is later. In this situation, you will not receive
-					a <s>ListenComplete </s>event until the <em>Listening key</em>'s mode completes.
+				<p>
+					If you turn on <em class="glossary">Listening mode</em> using the <a href="Control_Character_Listen.htm" class="see keyword">Listen</a>
+					method and then the user presses the <em class="glossary">Listening key</em>, the <em class="glossary">Listening mode</em>
+					resets and continues until the <em class="glossary">Listening key</em> time-out completes, the <em class="glossary">Listening key</em>
+					is released, or the user finishes speaking, whichever is later. In this situation, you will not receive
+					a <em class="keyword">ListenComplete</em> event until the <em class="glossary">Listening key</em>'s mode completes.
 				</p>
-					<p>
-					The event returns the <em>CharacterID </em>to the clients that currently have this character
-					loaded. All other clients receive a null <em>CharacterID</em> (empty string).
+				<p>
+					The event returns the <em class="token">CharacterID</em> to the clients that currently have this character loaded.
+					All other clients receive a null <em class="token">CharacterID</em> (empty string).
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_ListenCompleteType.htm">The ListenCompleteType Enumeration</a>
-					<br />
-					<a href="Control_Event_ListenStart.htm">The ListenStart Event</a>
-					<br />
-					<a href="Control_Character_Listen.htm">The Listen Method</a>
-					<br />
-					<a href="Control_Settings_SRHotKeyTime.htm">The SRHotKeyTime Property</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_ListenCompleteType.htm">The ListenCompleteType Enumeration</a><br /><a href="Control_Event_ListenStart.htm">The ListenStart Event</a><br /><a href="Control_Character_Listen.htm">The Listen Method</a><br /><a href="Control_Settings_SRHotKeyTime.htm">The SRHotKeyTime Property</a></td>
 			</tr>
 		</table>
 	</body>

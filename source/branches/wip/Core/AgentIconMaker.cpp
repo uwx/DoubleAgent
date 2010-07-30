@@ -137,7 +137,6 @@ HICON CAgentIconMaker::MakeIcon (CAgentFile * pAgentFile, const CSize & pIconSiz
 
 			lImageBuffer.EndBuffer ();
 			lRenderBuffer.EndBuffer ();
-
 #ifdef	_DEBUG_ICONS
 			if	(LogIsActive (_DEBUG_ICONS))
 			{

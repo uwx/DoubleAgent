@@ -12,72 +12,90 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Size Event</h4>
+					<h3>The Size Event</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Signalled when a character's size changes.</p>
-					</div>
+				<p>Signalled when a character's size changes.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p><s>Event</s> <em>control</em>_<s>Size</s> (<s>ByVal</s> <em>CharacterID</em> <s>As String</s>, <s>ByVal</s> <em>Width</em> <s>As Short</s>, <s>ByVal</s> <em>Height</em> <s>As Short</s>)</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>Size</s> (<s>ByVal</s> <em>CharacterID</em> <s>As String</s>, <s>ByVal</s> <em>Width</em> <s>As Integer</s>, <s>ByVal</s> <em>Height</em> <s>As Integer</s>)</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>Size</s> (<s>ByVal</s> <em>CharacterID</em>, <s>ByVal</s> <em>Width</em>, <s>ByVal</s> <em>Height</em>)</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p><s>delegate void</s> <em>control</em>_<s>Size<em>EventHandler</em></s> (<s>string</s> <em>CharacterID</em>, <s>short</s> <em>Width</em>, <s>short</s> <em>Height</em>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><s>void</s> <em>control</em>_<s>Size</s> (<s>LPCTSTR</s> <em>CharacterID</em>, <s>short</s> <em>Width</em>, <s>short</s> <em>Height</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="keyword">Event</em> <em class="token">control</em>_<em class="keyword">Size</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em> <em class="keyword">As String</em>, <em class="keyword">ByVal</em> <em class="token">Width</em> <em class="keyword">As Short</em>, <em class="keyword">ByVal</em> <em class="token">Height</em> <em class="keyword">As Short</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">Size</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em> <em class="keyword">As String</em>, <em class="keyword">ByVal</em> <em class="token">Width</em> <em class="keyword">As Integer</em>, <em class="keyword">ByVal</em> <em class="token">Height</em> <em class="keyword">As Integer</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">Size</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em>, <em class="keyword">ByVal</em> <em class="token">Width</em>, <em class="keyword">ByVal</em> <em class="token">Height</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="keyword">delegate void</em> <em class="token">control</em>_<em class="keyword">Size<token>EventHandler</token></em> (<em class="keyword">string</em> <em class="token">CharacterID</em>, <em class="keyword">short</em> <em class="token">Width</em>, <em class="keyword">short</em> <em class="token">Height</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="keyword">void</em> <em class="token">control</em>_<em class="keyword">Size</em> (<em class="keyword">LPCTSTR</em> <em class="token">CharacterID</em>, <em class="keyword">short</em> <em class="token">Width</em>, <em class="keyword">short</em> <em class="token">Height</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>CharacterID</i>
+									<em class="token">CharacterID</em>
 								</td>
 								<td>The unique identifier of the character that was resized.</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Width</i>
+									<em class="token">Width</em>
 								</td>
 								<td>The character's new width, in pixels.</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Height</i>
+									<em class="token">Height</em>
 								</td>
 								<td>The character's new height, in pixels.</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					This event is signalled when an application changes the size of a character. This event is
-					sent only to the clients of the character (applications that have loaded the character).
+				<p>
+					This event is signalled when an application changes the size of a character. This event is sent only
+					to the clients of the character (applications that have loaded the character).
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Event_Move.htm">The Move Event</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_Event_Move.htm">The Move Event</a></td>
 			</tr>
 		</table>
 	</body>

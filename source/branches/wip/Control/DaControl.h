@@ -143,8 +143,8 @@ public:
 		COM_INTERFACE_ENTRY2(IPersist, IPersistStreamInit)
 		COM_INTERFACE_ENTRY(ISpecifyPropertyPages)
 		COM_INTERFACE_ENTRY(IPerPropertyBrowsing)
-		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IConnectionPointContainer)
+		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 //		COM_INTERFACE_ENTRY(IDataObject)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo2)
@@ -173,8 +173,8 @@ public:
 		PROP_ENTRY_TYPE("BorderStyle", DISPID_BORDERSTYLE, CLSID_NULL, VT_I4)
 		PROP_ENTRY_TYPE("BorderVisible", DISPID_BORDERVISIBLE, CLSID_NULL, VT_BOOL)
 		PROP_ENTRY_TYPE("BorderWidth", DISPID_BORDERWIDTH, CLSID_NULL, VT_I4)
-		PROP_ENTRY_TYPE("MouseIcon", DISPID_MOUSEICON, CLSID_StockPicturePage, VT_DISPATCH)
-		//PROP_ENTRY_TYPE("MousePointer", DISPID_MOUSEPOINTER, CLSID_NULL, VT_UI4)
+		PROP_ENTRY_TYPE("MousePointer", DISPID_MOUSEPOINTER, CLSID_NULL, VT_UI4)
+		//PROP_ENTRY_TYPE("MouseIcon", DISPID_MOUSEICON, CLSID_StockPicturePage, VT_DISPATCH)
 		PROP_PAGE(CLSID_StockColorPage)
 		//PROP_PAGE(CLSID_StockPicturePage)
 	END_PROP_MAP()
@@ -190,7 +190,7 @@ public:
 		PROP_VAL_INT(DISPID_MOUSEPOINTER, 13, "13 - Arrow and Hourglass")
 		PROP_VAL_INT(DISPID_MOUSEPOINTER, 14, "14 - Arrow and Question")
 		PROP_VAL_INT(DISPID_MOUSEPOINTER, 16, "16 - Hand")
-		PROP_VAL_INT(DISPID_MOUSEPOINTER, 99, "99 - Custom")
+		//PROP_VAL_INT(DISPID_MOUSEPOINTER, 99, "99 - Custom")
 	END_PROP_VAL_MAP()
 
 	BEGIN_CONNECTION_POINT_MAP(DaControl)
@@ -209,6 +209,8 @@ public:
 		MESSAGE_HANDLER(WM_TIMER, OnTimer)
 		MESSAGE_HANDLER(WM_HOTKEY, OnHotKey)
 		MESSAGE_HANDLER(mCompleteRequestsMsg, OnCompleteRequests)
+		MESSAGE_HANDLER(mOptionsChangedMsgId, OnBroadcastOptionsChanged)
+		MESSAGE_HANDLER(mDefaultCharacterChangedMsgId, OnBroadcastDefaultCharacterChanged)
 		CHAIN_MSG_MAP_DYNAMIC(1)
 		CHAIN_MSG_MAP(thisClass)
 		DEFAULT_REFLECTION_HANDLER()
@@ -227,6 +229,8 @@ public:
 	LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnHotKey(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnCompleteRequests(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnBroadcastOptionsChanged(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnBroadcastDefaultCharacterChanged(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
 // Interfaces
 public:
@@ -360,7 +364,9 @@ private:
 	CIconHandle								mIcon;
 	CCursorHandle							mCursor;
 	bool									mFinalReleased;
-	static UINT								mCompleteRequestsMsg;
+	static const UINT						mCompleteRequestsMsg;
+	static const UINT						mOptionsChangedMsgId;
+	static const UINT						mDefaultCharacterChangedMsgId;
 };
 
 /////////////////////////////////////////////////////////////////////////////

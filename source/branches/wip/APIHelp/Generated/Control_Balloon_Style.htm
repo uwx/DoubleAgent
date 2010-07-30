@@ -12,132 +12,157 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Style Property</h4>
+					<h3>The Style Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Returns or sets the character's word balloon output style.</p>
-					</div>
+				<p>Specifies the character's word balloon output style.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>Style</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Style</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Style</s> = <em>Style</em></p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>Style</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Style</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Style</s> = <em>Style</em></p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>Style</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Style</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Style</s> = <em>Style</em></p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>Style</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Balloon</s>.<s>Style</s></p>
-
-<p><em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Balloon</s>.<s>Style</s> = <em>Style</em></p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>balloon</em>-&gt;<s>get_Style</s> (<em>&amp;Style</em>)</p>
-
-<p><em>balloon</em>-&gt;<s>put_Style</s> (<em>Style</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Style</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Balloon</em>.<em class="keyword">Style</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Balloon</em>.<em class="keyword">Style</em> = <em class="token">Style</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">Style</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Balloon</em>.<em class="keyword">Style</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Balloon</em>.<em class="keyword">Style</em> = <em class="token">Style</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">Style</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Balloon</em>.<em class="keyword">Style</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Balloon</em>.<em class="keyword">Style</em> = <em class="token">Style</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Style</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Balloon</em>.<em class="keyword">Style</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Balloon</em>.<em class="keyword">Style</em> = <em class="token">Style</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">balloon</em>-&gt;<em class="keyword">get_Style</em> (<em class="token">&amp;Style</em>)</p>
+<p><em class="token">balloon</em>-&gt;<em class="keyword">put_Style</em> (<em class="token">Style</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Style</i>
+									<em class="token">Style</em>
 								</td>
 								<td>
-				An <s>numeric </s>value that represents the balloon's output style. The style
-				value is a bit field with bits defined as follows:
-				<table><tr><td>bit 0 (&amp;H00000001)</td><td><a href="Control_Balloon_Enabled.htm" class="see">Enabled</a></td></tr><tr><td>bit 1 (&amp;H00000002)</td><td><a href="Control_Balloon_SizeToText.htm" class="see">SizeToText</a></td></tr><tr><td>bit 2 (&amp;H00000004)</td><td><a href="Control_Balloon_AutoHide.htm" class="see">AutoHide</a></td></tr><tr><td>bit 3 (&amp;H00000008)</td><td><a href="Control_Balloon_AutoPace.htm" class="see">AutoPace</a></td></tr><tr><td>bit 4 (&amp;H00000010)</td><td><a href="Control_Balloon_ShowPartialLines.htm" class="see">ShowPartialLines</a></td></tr><tr><td>bits 16-23</td><td><a href="Control_Balloon_CharsPerLine.htm" class="see">CharsPerLine</a></td></tr><tr><td>bits 24-31</td><td><a href="Control_Balloon_NumberOfLines.htm" class="see">NumberOfLines</a></td></tr></table></td>
+				An <em class="typename">numeric</em> value that represents the balloon's output style. The
+				style value is a bit field with bits defined as follows:
+				<table><tr><td>bit 0 (&amp;H00000001)</td><td>
+							<a href="Control_Balloon_Enabled.htm" class="see keyword">Enabled</a>
+						</td></tr><tr><td>bit 1 (&amp;H00000002)</td><td>
+							<a href="Control_Balloon_SizeToText.htm" class="see keyword">SizeToText</a>
+						</td></tr><tr><td>bit 2 (&amp;H00000004)</td><td>
+							<a href="Control_Balloon_AutoHide.htm" class="see keyword">AutoHide</a>
+						</td></tr><tr><td>bit 3 (&amp;H00000008)</td><td>
+							<a href="Control_Balloon_AutoPace.htm" class="see keyword">AutoPace</a>
+						</td></tr><tr><td>bit 4 (&amp;H00000010)</td><td>
+							<a href="Control_Balloon_ShowPartialLines.htm" class="see keyword">ShowPartialLines</a>
+						</td></tr><tr><td>bits 16-23</td><td>
+							<a href="Control_Balloon_CharsPerLine.htm" class="see keyword">CharsPerLine</a>
+						</td></tr><tr><td>bits 24-31</td><td>
+							<a href="Control_Balloon_NumberOfLines.htm" class="see keyword">NumberOfLines</a>
+						</td></tr></table>
+			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					All of the settings included in the <s>Style </s>property can be accessed using specific <a href="Control_Balloon.htm" class="see">Balloon</a>
-					object properties. The <s>Style </s>property lets you retrieve or set all of these settings at
+				<p>
+					All of the settings included in the <em class="self keyword">Style</em> property can be accessed using specific <a href="Control_Balloon.htm" class="see keyword">Balloon Object</a>
+					properties. The <em class="self keyword">Style</em> property lets you retrieve or set all of these settings at once.
+				</p>
+				<p>
+					The defaults for the <em class="self keyword">Style</em> property are set when the character is compiled with the Microsoft
+					Agent Character Editor.
+				</p>
+			
+				<ul><li>
+						<p>
+					When the <a href="Control_BalloonStyleFlags_Enabled.htm" class="see keyword">Enabled</a> style is set, the word balloon appears when
+					the <a href="Control_Character_Speak.htm" class="see keyword">Speak</a> or <a href="Control_Character_Think.htm" class="see keyword">Think</a> method is used, unless
+					the user overrides this setting in the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window. When it's not
+					set, the word balloon does not appear.
+				</p>
+					</li><li>
+						<p>
+					When the <a href="Control_BalloonStyleFlags_SizeToText.htm" class="see keyword">SizeToText</a> style is set, the word balloon automatically adjusts
+					the height of the balloon to the current size of the text for the <a href="Control_Character_Speak.htm" class="see keyword">Speak</a>
+					or <a href="Control_Character_Think.htm" class="see keyword">Think</a> request. When it's not set, the balloon's height is based on
+					the <a href="Control_Balloon_NumberOfLines.htm" class="see keyword">NumberOfLines</a> property. If this style is set and you attempt to set
+					the <a href="Control_Balloon_NumberOfLines.htm" class="see keyword">NumberOfLines</a> property, Double Agent raises an error.
+				</p>
+					</li><li>
+						<p>
+					When the <a href="Control_BalloonStyleFlags_AutoHide.htm" class="see keyword">AutoHide</a> style is set, the word balloon automatically hides
+					when spoken output completes. When it's not set, the balloon remains displayed until the next
+					<a href="Control_Character_Speak.htm" class="see keyword">Speak</a> or <a href="Control_Character_Think.htm" class="see keyword">Think</a> call, the character is
+					hidden, or the user clicks or drags the character.
+				</p>
+					</li><li>
+						<p>
+					When the <a href="Control_BalloonStyleFlags_AutoPace.htm" class="see keyword">AutoPace</a> style is set, the word balloon paces its
+					text output based on the current output rate, for example one word at a time. When output exceeds the
+					size of the balloon, the text is automatically scrolled. When it's not set, all text included in
+					a <a href="Control_Character_Speak.htm" class="see keyword">Speak</a> or <a href="Control_Character_Think.htm" class="see keyword">Think</a> request is displayed at
 					once.
 				</p>
-					<ul>
-						<li>When the <a href="Control_BalloonStyleFlags_Enabled.htm" class="see">Enabled</a> style is set, the
-					word balloon appears when the <a href="Control_Character_Speak.htm" class="see">Speak</a> or <a href="Control_Character_Think.htm" class="see">Think</a> method
-					is used, unless the user overrides this setting in the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a>
-					window. When it's not set, the word balloon does not appear.</li>
-						<li>When the <a href="Control_BalloonStyleFlags_SizeToText.htm" class="see">SizeToText</a> style is set, the
-					word balloon automatically adjusts the height of the balloon to the current size of the text for the
-					<a href="Control_Character_Speak.htm" class="see">Speak</a> or <a href="Control_Character_Think.htm" class="see">Think</a>
-					request. When it's not set, the balloon's height is based on the <a href="Control_Balloon_NumberOfLines.htm" class="see">NumberOfLines</a>
-					property. If this style is set and you attempt to set the <a href="Control_Balloon_NumberOfLines.htm" class="see">NumberOfLines</a>
-					property, Double Agent raises an error.</li>
-						<li>When the <a href="Control_BalloonStyleFlags_AutoHide.htm" class="see">AutoHide</a> style is set, the
-					word balloon automatically hides when spoken output completes. When it's not set, the balloon remains
-					displayed until the next <a href="Control_Character_Speak.htm" class="see">Speak</a> or <a href="Control_Character_Think.htm" class="see">Think</a>
-					call, the character is hidden, or the user clicks or drags the character.</li>
-						<li>When the <a href="Control_BalloonStyleFlags_AutoPace.htm" class="see">AutoPace</a> style is set, the
-					word balloon paces its text output based on the current output rate, for example one word at a time.
-					When output exceeds the size of the balloon, the text is automatically scrolled. When it's not set,
-					all text included in a <a href="Control_Character_Speak.htm" class="see">Speak</a> or <a href="Control_Character_Think.htm" class="see">Think</a>
-					request is displayed at once.</li>
-						<li>When the <a href="Control_BalloonStyleFlags_ShowPartialLines.htm" class="see">ShowPartialLines</a> style is
-					set, the word balloon will show partial lines at the bottom as it scrolls its text. When it's not set,
-					only full lines are shown. This style only applies when the <a href="Control_BalloonStyleFlags_SizeToText.htm" class="see">SizeToText</a>
-					style is <em>not </em>set.</li>
-						<li>
-						The <s>Style </s>property also contains the <a href="Control_Balloon_CharsPerLine.htm" class="see">CharsPerLine</a>
-						in the lower byte of the upper word and the <a href="Control_Balloon_NumberOfLines.htm" class="see">NumberOfLines</a>
-						in the high byte of the upper word. The value for the <a href="Control_Balloon_CharsPerLine.htm" class="see">CharsPerLine</a>
-						must be between 8 and 255, and the <a href="Control_Balloon_NumberOfLines.htm" class="see">NumberOfLines</a>
-						must be between 1 and 128. If you provide an invalid value for the <s>Style </s>property, Double
-						Agent will raise an error.
-					</li>
-					</ul>
-					<p>
-					The defaults for the <s>Style </s>property are set when the character is compiled with the
-					Microsoft Agent Character Editor.
+					</li><li>
+						<p>
+					When the <a href="Control_BalloonStyleFlags_ShowPartialLines.htm" class="see keyword">ShowPartialLines</a> style is set, the word balloon will
+					show partial lines at the bottom as it scrolls its text. When it's not set, only full lines are
+					shown. This style only applies when the <a href="Control_BalloonStyleFlags_SizeToText.htm" class="see keyword">SizeToText</a> style is <em>not</em>
+					set.
 				</p>
-					<p class="note">
-						<span class="note">Note:</span> 
-					The <s>Style </s>property can be set even if the user has disabled word balloons in the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a>
-					window.
+					</li><li>
+						<p>
+							The <em class="self keyword">Style</em> property also contains the <a href="Control_Balloon_CharsPerLine.htm" class="see keyword">CharsPerLine</a>
+							in the lower byte of the upper word and the <a href="Control_Balloon_NumberOfLines.htm" class="see keyword">NumberOfLines</a> in the high byte
+							of the upper word. The value for the <a href="Control_Balloon_CharsPerLine.htm" class="see keyword">CharsPerLine</a> must be between 8 and
+							255, and the <a href="Control_Balloon_NumberOfLines.htm" class="see keyword">NumberOfLines</a> must be between 1 and 128. If you provide an
+							invalid value for the <em class="self keyword">Style</em> property, Double Agent will raise an error.
+						</p>
+					</li></ul>
+				<p class="note"><span class="note">Note:</span> 
+					The <em class="self keyword">Style</em> property can be set even if the user has disabled word balloons in the
+					<a class="see" href="../html/UI_PropSheet.htm#Output">Advanced Character Options</a> window.
 				</p>
-					<p class="note">
-						<span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Balloon_AutoHide.htm">The AutoHide Property</a>
-					<br />
-					<a href="Control_Balloon_AutoPace.htm">The AutoPace Property</a>
-					<br />
-					<a href="Control_Balloon_CharsPerLine.htm">The CharsPerLine Property</a>
-					<br />
-					<a href="Control_Balloon_NumberOfLines.htm">The NumberOfLines Property</a>
-					<br />
-					<a href="Control_Balloon_Enabled.htm">The Enabled Property</a>
-					<br />
-					<a href="Control_Balloon_SizeToText.htm">The SizeToText Property</a>
-					<br />
-					<a href="Control_Balloon_ShowPartialLines.htm">The ShowPartialLines Property</a>
-					<br />
-					<a href="Control_BalloonStyleFlags.htm">The BalloonStyleFlags Enumeration</a>
-				</td>
+				<p class="note"><span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
+			<h4 class="seealso">See Also</h4><a href="Control_Balloon_AutoHide.htm">The AutoHide Property</a><br /><a href="Control_Balloon_AutoPace.htm">The AutoPace Property</a><br /><a href="Control_Balloon_CharsPerLine.htm">The CharsPerLine Property</a><br /><a href="Control_Balloon_NumberOfLines.htm">The NumberOfLines Property</a><br /><a href="Control_Balloon_Enabled.htm">The Enabled Property</a><br /><a href="Control_Balloon_SizeToText.htm">The SizeToText Property</a><br /><a href="Control_Balloon_ShowPartialLines.htm">The ShowPartialLines Property</a><br /><a href="Control_BalloonStyleFlags.htm">The BalloonStyleFlags Enumeration</a></td>
 			</tr>
 		</table>
 	</body>

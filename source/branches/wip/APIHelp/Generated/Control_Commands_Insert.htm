@@ -12,150 +12,162 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Insert Method</h4>
+					<h3>The Insert Method</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Inserts a <a href="Control_Command.htm" class="see">Command</a> object in the <a href="Control_Commands.htm" class="see">Commands</a>
-				collection.
+				<p>Inserts a <a href="Control_Command.htm" class="see keyword">Command Object</a> in the <a href="Control_Commands.htm" class="see keyword">Commands Collection</a>.</p>
 			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-[<em>Command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s><s>.Insert</s> ("<em>Name</em>", "<em>RefName</em>", <em>Before</em>, <em>Caption</em>, <em>VoiceGrammar</em>, <em>Enabled</em>, <em>Visible</em>)
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-[<em>Command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s><s>.Insert</s> "<em>Name</em>", "<em>RefName</em>", <em>Before</em>, <em>Caption</em>, <em>VoiceGrammar</em>, <em>Enabled</em>, <em>Visible</em>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-[<em>Command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s><s>.Insert</s> "<em>Name</em>", "<em>RefName</em>", <em>Before</em>, <em>Caption</em>, <em>VoiceGrammar</em>, <em>Enabled</em>, <em>Visible</em>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-[<em>Command</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Commands</s><s>.Insert</s> ("<em>Name</em>", "<em>RefName</em>", <em>Before</em>, <em>Caption</em>, <em>VoiceGrammar</em>, <em>Enabled</em>, <em>Visible</em>)
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<em>commands</em>.<s>Insert</s> (<em>Name</em>, <em>RefName</em>, <em>Before</em>, <em>Caption</em>, <em>VoiceGrammar</em>, <em>Enabled</em>, <em>Visible</em>, &amp;<em>Command</em>)
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Command</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Commands</em><em class="keyword">.Insert</em> ("<em class="token">Name</em>", "<em class="token">RefName</em>", <em class="token">Before</em>, <em class="token">Caption</em>, <em class="token">VoiceGrammar</em>, <em class="token">Enabled</em>, <em class="token">Visible</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">Command</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Commands</em><em class="keyword">.Insert</em> "<em class="token">Name</em>", "<em class="token">RefName</em>", <em class="token">Before</em>, <em class="token">Caption</em>, <em class="token">VoiceGrammar</em>, <em class="token">Enabled</em>, <em class="token">Visible</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">Command</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Commands</em><em class="keyword">.Insert</em> "<em class="token">Name</em>", "<em class="token">RefName</em>", <em class="token">Before</em>, <em class="token">Caption</em>, <em class="token">VoiceGrammar</em>, <em class="token">Enabled</em>, <em class="token">Visible</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Command</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Commands</em><em class="keyword">.Insert</em> ("<em class="token">Name</em>", "<em class="token">RefName</em>", <em class="token">Before</em>, <em class="token">Caption</em>, <em class="token">VoiceGrammar</em>, <em class="token">Enabled</em>, <em class="token">Visible</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">commands</em>-&gt;<em class="keyword">Insert</em> (<em class="token">Name</em>, <em class="token">RefName</em>, <em class="token">Before</em>, <em class="token">Caption</em>, <em class="token">VoiceGrammar</em>, <em class="token">Enabled</em>, <em class="token">Visible</em>, &amp;<em class="token">Command</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Name</i>
+									<em class="token">Name</em>
 								</td>
 								<td>
-				A <s>string </s>value that uniquely identifies the command.
+				A <em class="typename">string</em> value that uniquely identifies the command.
 			</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>RefName</i>
+									<em class="token">RefName</em>
 								</td>
 								<td>
-				A <s>string </s>value that specifies the name of the command just above or
-				below where you want to insert the new command.
+				A <em class="typename">string</em> value that specifies the name of the command just
+				above or below where you want to insert the new command.
 			</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Before</i>
+									<em class="token">Before</em>
 								</td>
 								<td>
-				A <s>boolean </s>value indicating whether to insert the new command <s>before </s>
-				the command specified by <em>RefName</em>.
+				A <em class="typename">boolean</em> value indicating whether to insert the new command <s>before</s>
+				the command specified by <em class="token">RefName</em>.
 			</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Caption</i>
+									<em class="token">Caption</em>
 								</td>
 								<td>
-				A <s>string </s>value specifying the name that will appear in the character's
-				pop-up menu and in the <a href="Control_CommandsWindow.htm" class="see">CommandsWindow</a> when the client application
-				is input-active. For more information, see the <a href="Control_Command.htm" class="see">Command</a> object's
-				<a href="Control_Command_Caption.htm" class="see">Caption</a> property.
-			</td>
-							</tr>
-							<tr>
-								<td width="200ex">
-									<i>VoiceGrammar</i>
-								</td>
-								<td>
-				A <s>string </s>value specifying the words or phrase used by the speech
-				engine for recognizing this command. For more information on formatting alternatives for the string,
-				see the <a href="Control_Command.htm" class="see">Command</a> object's <a href="Control_Command_VoiceGrammar.htm" class="see">VoiceGrammar</a>
+				A <em class="typename">string</em> value specifying the name that will appear in the
+				character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a> and in the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a>
+				window when the client application is <em class="glossary">input-active</em>. For more information, see the <a href="Control_Command.htm" class="see keyword">Command Object's</a> <a href="Control_Command_Caption.htm" class="see keyword">Caption</a>
 				property.
 			</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Enabled</i>
+									<em class="token">VoiceGrammar</em>
 								</td>
 								<td>
-				A <s>boolean </s>value indicating whether the command is enabled. The default
-				value is <s>True</s>. For more information, see the <a href="Control_Command.htm" class="see">Command</a>
-				object's <a href="Control_Command_Enabled.htm" class="see">Enabled</a> property.
-			</td>
-							</tr>
-							<tr>
-								<td width="200ex">
-									<i>Visible</i>
-								</td>
-								<td>
-				A <s>boolean </s>value indicating whether the command is visible in the character's
-				pop-up menu when the client application is input-active. The default value is <s>True</s>. For more
-				information, see the <a href="Control_Command.htm" class="see">Command</a> object's <a href="Control_Command_Visible.htm" class="see">Visible</a>
+				A <em class="typename">string</em> value specifying the words or phrase used by
+				the speech engine for recognizing this command. For more information on formatting alternatives for
+				the string, see the <a href="Control_Command.htm" class="see keyword">Command Object's</a> <a href="Control_Command_VoiceGrammar.htm" class="see keyword">VoiceGrammar</a>
 				property.
 			</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Command</i>
+									<em class="token">Enabled</em>
 								</td>
 								<td>
-				The <s><a href="Control_Command.htm" class="see">Command</a></s> object inserted, if successful.
+				A <em class="typename">boolean</em> value indicating whether the command is enabled. The
+				default value is <em class="keyword">True</em>. For more information, see the <a href="Control_Command.htm" class="see keyword">Command Object's</a> <a href="Control_Command_Enabled.htm" class="see keyword">Enabled</a>
+				property.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Visible</em>
+								</td>
+								<td>
+				A <em class="typename">boolean</em> value indicating whether the command is visible in
+				the character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a> when the client application is <em class="glossary">input-active</em>.
+				The default value is <em class="keyword">True</em>. For more information, see the <a href="Control_Command.htm" class="see keyword">Command Object's</a>
+				<a href="Control_Command_Visible.htm" class="see keyword">Visible</a> property.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Command</em>
+								</td>
+								<td>
+				The <a href="Control_Command.htm" class="see typename">Command Object</a> inserted, if
+				successful.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					The value of a <a href="Control_Command.htm" class="see">Command</a> object's <a href="Control_Command_Name.htm" class="see">Name</a>
-					property must be unique within its <a href="Control_Commands.htm" class="see">Commands</a> collection. You
-					must remove a <a href="Control_Command.htm" class="see">Command</a> before you can create a new <a href="Control_Command.htm" class="see">Command</a>
-					with the same <a href="Control_Command_Name.htm" class="see">Name</a> property setting. Attempting to
-					create a <a href="Control_Command.htm" class="see">Command</a> with a <a href="Control_Command_Name.htm" class="see">Name</a>
-					property that already exists raises an error.
+				<p>
+					The value of a <a href="Control_Command.htm" class="see keyword">Command Object's</a> <a href="Control_Command_Name.htm" class="see keyword">Name</a>
+					property must be unique within its <a href="Control_Commands.htm" class="see keyword">Commands Collection</a>. You must remove a
+					<a href="Control_Command.htm" class="see keyword">Command</a> before you can create a new <a href="Control_Command.htm" class="see keyword">Command</a> with the same
+					<a href="Control_Command_Name.htm" class="see keyword">Name</a> property setting. Attempting to create a <a href="Control_Command.htm" class="see keyword">Command</a>
+					with a <a href="Control_Command_Name.htm" class="see keyword">Name</a> property that already exists raises an error.
 				</p>
-					<p>
-					This method returns a <a href="Control_Command.htm" class="see">Command</a> object. This allows you
-					to declare an object and assign a <a href="Control_Command.htm" class="see">Command</a> to it when you call
-					the <s>Insert </s>method.
+				<p>
+					This method returns a <a href="Control_Command.htm" class="see keyword">Command Object</a>. This allows you to declare an
+					object and assign a <a href="Control_Command.htm" class="see keyword">Command</a> to it when you call the <em class="self keyword">Insert</em> method.
 				</p>
-					<div class="example">
-						<pre class="example">Dim Command2 as DaControl.DaCtlCommand
-Set Command2 = Genie.Commands.Insert ("my second command", "my first command",_ True, "Test", "Test", True, True)
-Command2.VoiceCaption = "this is a test"</pre>
-					</div>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Commands_Add.htm">The Add Method</a>
-					<br />
-					<a href="Control_Commands_Remove.htm">The Remove Method</a>
-					<br />
-					<a href="Control_Commands_RemoveAll.htm">The RemoveAll Method</a>
-				</td>
+				<div class="example">
+					<pre class="example"><em class="keyword">Dim</em> Command2 <em class="keyword">as</em> <em class="keyword">DaControl</em>.<em class="keyword">DaCtlCommand</em>
+<em class="keyword">Set</em> Command2 = Genie.<em class="keyword">Commands</em>.<em class="keyword">Insert</em> ("my second command", "my first command", True, "Test", "Test", True, True)
+Command2.<em class="keyword">VoiceCaption</em> = "this is a test"</pre>
+				</div>
+			<h4 class="seealso">See Also</h4><a href="Control_Commands_Add.htm">The Add Method</a><br /><a href="Control_Commands_Remove.htm">The Remove Method</a><br /><a href="Control_Commands_RemoveAll.htm">The RemoveAll Method</a></td>
 			</tr>
 		</table>
 	</body>

@@ -17,39 +17,63 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<p>
-					The <s>TTSEngine </s>object provides information about an installed text-to-speech engine.
-					You can use it to help choose a character's text-to-speech engine.
+					<h4 class="summary">Description</h4>
+				<p>
+					The <em class="self keyword">TTSEngine Object</em> provides information about an installed text-to-speech engine. You
+					can use it to help choose a character's text-to-speech engine.
 				</p>
-					<ul>
-						<li>
-							<a name="Methods"> </a>
-							The <s>TTSEngine </s>object has the following <s>method</s>:
-						<p><a href="Control_TTSEngine_GetVersion.htm" class="see">GetVersion</a></p></li>
-						<li>
-							<a name="Properties"> </a>
-							The <s>TTSEngine </s>object has the following <s>properties</s>:
-						<p><a href="Control_TTSEngine_DisplayName.htm" class="see">DisplayName</a>,
-							<a href="Control_TTSEngine_Gender.htm" class="see">Gender</a>,
-							<a href="Control_TTSEngine_LanguageID.htm" class="see">LanguageID</a>,
-							<a href="Control_TTSEngine_LanguageName.htm" class="see">LanguageName</a>,
-							<a href="Control_TTSEngine_Manufacturer.htm" class="see">Manufacturer</a>,
-							<a href="Control_TTSEngine_TTSModeID.htm" class="see">TTSModeID</a></p></li>
-					</ul>
-					<h4 class="remarks">Remarks</h4>
-					<p>
-					Some text-to-speech engines support several <em>modes</em>, generally one for each supported
-					language or language variant. In that case, this object represents only one <em>mode</em>, and
-					there will one <s>TTSEngine </s>object for each <em>mode </em>supported by the speech engine, each
-					with a unique <a href="Control_TTSEngine_TTSModeID.htm" class="see">TTSModeID</a> property.
+			<div id="Syntax">
+				<dl><dt>
+							<h4>
+								<a name="Methods"> </a>Methods
+							</h4>
+						</dt><dd>
+							<table class="syntax"><tr><td width="275ex">
+										<a href="Control_TTSEngine_GetVersion.htm" class="see keyword">GetVersion</a>
+									</td><td>
+										Returns the text-to-speech engine's version.
+									</td></tr></table>
+						</dd><dt>
+							<h4>
+								<a name="Properties"> </a>Properties
+							</h4>
+						</dt><dd>
+							<table class="syntax"><tr><td width="275ex">
+										<a href="Control_TTSEngine_DisplayName.htm" class="see keyword">DisplayName</a>
+									</td><td>
+										Returns the text-to-speech engine's human-readable name.
+									</td></tr><tr><td>
+										<a href="Control_TTSEngine_Gender.htm" class="see keyword">Gender</a>
+									</td><td>
+										Returns the text-to-speech engine's gender.
+									</td></tr><tr><td>
+										<a href="Control_TTSEngine_LanguageID.htm" class="see keyword">LanguageID</a>
+									</td><td>
+										Returns the text-to-speech engine's language identifier.
+									</td></tr><tr><td>
+										<a href="Control_TTSEngine_LanguageName.htm" class="see keyword">LanguageName</a>
+									</td><td>
+										Returns the text-to-speech engine's human-readable language name.
+									</td></tr><tr><td>
+										<a href="Control_TTSEngine_Manufacturer.htm" class="see keyword">Manufacturer</a>
+									</td><td>
+										Returns the text-to-speech engine's manufacturer's name.
+									</td></tr><tr><td>
+										<a href="Control_TTSEngine_TTSModeID.htm" class="see keyword">TTSModeID</a>
+									</td><td>
+										Returns the unique identifier used to select this text-to-speech engine.
+									</td></tr></table>
+						</dd></dl>
+			</div><h4 class="remarks">Remarks</h4>
+				<p>
+					Some text-to-speech engines support several <em>modes</em>, generally one for each supported language or
+					language variant. In that case, this object represents only one <em>mode</em>, and there will one <em class="self keyword">
+						TTSEngine
+						Object
+					</em> for each <em>mode</em> supported by the speech engine, each with a unique <a href="Control_TTSEngine_TTSModeID.htm" class="see keyword">TTSModeID</a>
+					property.
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Control_GetCharacterTTSEngine.htm">The GetCharacterTTSEngine Method</a>
-					<br />
-					<a href="Control_Character_TTSEngine.htm">The TTSEngine Property</a>
-					<br />
-					<a href="Control_TTSEngines.htm">The TTSEngines Collection</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_Control_GetCharacterTTSEngine.htm">The GetCharacterTTSEngine Method</a><br /><a href="Control_Character_TTSEngine.htm">The TTSEngine Property</a><br /><a href="Control_TTSEngines.htm">The TTSEngines Collection</a></td>
 			</tr>
 		</table>
 	</body>

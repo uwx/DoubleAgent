@@ -82,6 +82,12 @@
 #include "..\Atl\AtlUtil.h"
 #include "..\Atl\AtlCollEx.h"
 
+/////////////////////////////////////////////////////////////////////////////
+#ifndef	_STRICT_COMPATIBILITY
+#define	_STRICT_COMPATIBILITY
+#endif
+/////////////////////////////////////////////////////////////////////////////
+
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

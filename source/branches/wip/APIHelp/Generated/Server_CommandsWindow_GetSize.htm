@@ -12,17 +12,89 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The GetSize Method</h4>
+					<h3>The GetSize Method</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Returns the current size of the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">commandswindow</em>-&gt;<em class="keyword">GetSize</em> (&amp;<em class="token">Width</em>, &amp;<em class="token">Height</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="token">server</em>.<em class="keyword">CommandsWindow</em>.<em class="keyword">GetSize</em> (<em class="keyword">out</em> <em class="token">Width</em>, <em class="keyword">out</em> <em class="token">Height</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="token">server</em>.<em class="keyword">CommandsWindow</em>.<em class="keyword">GetSize</em> (<em class="token">Width</em>, <em class="token">Height</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="token">server</em>.<em class="keyword">CommandsWindow</em>.<em class="keyword">GetSize</em> <em class="token">Width</em>, <em class="token">Height</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="token">server</em>.<em class="keyword">CommandsWindow</em>.<em class="keyword">GetSize</em> <em class="token">Width</em>, <em class="token">Height</em></p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Width</em>
+								</td>
+								<td>
+				A <em class="typename">numeric</em> value that indicates the width, in pixels, of the
+				<a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Height</em>
+								</td>
+								<td>
+				A <em class="typename">numeric</em> value that indicates the height, in pixels, of the
+				<a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					Double Agent remembers and reuses the window size set by the user.
+				</p>
+			</td>
 			</tr>
 		</table>
 	</body>

@@ -1545,15 +1545,12 @@ List<CustomAttributeBuilder^>^ CopyAssembly::CopyAttributes (Object^ pSource, Ob
 List<CustomAttributeBuilder^>^ CopyAssembly::CopyAttributes (Object^ pSource, Object^ pTarget, CustomAttrDataList^ pAttributes, CopyFixups^ pFixups)
 {
 	List<CustomAttributeBuilder^>^	lRet = gcnew List<CustomAttributeBuilder^>;
+	List<CustomAttributeBuilder^>^	lBuilders = gcnew List<CustomAttributeBuilder^>;
 
-	if	(
-			(pAttributes)
-		&&	(pAttributes->Count > 0)
-		)
+	if	(pAttributes)
 	{
 		try
 		{
-			List<CustomAttributeBuilder^>^	lBuilders = gcnew List<CustomAttributeBuilder^>;
 			CustomAttributeData^			lAttribute = nullptr;
 			int								lAttributeNdx = 0;
 			CustomAttributeBuilder^			lCustomAttrBuilder = nullptr;
@@ -1609,16 +1606,13 @@ List<CustomAttributeBuilder^>^ CopyAssembly::CopyAttributes (Object^ pSource, Ob
 				catch AnyExceptionDebug
 			}
 
+			if	(pFixups)
+			{
+				pFixups->FixupCustomAttributes (pSource, pTarget, lBuilders);
+			}
 			if	(lBuilders->Count > 0)
 			{
-				if	(pFixups)
-				{
-					pFixups->FixupCustomAttributes (pSource, pTarget, lBuilders);
-				}
-				if	(lBuilders->Count > 0)
-				{
-					lRet = lBuilders;
-				}
+				lRet = lBuilders;
 			}
 		}
 		catch AnyExceptionDebug

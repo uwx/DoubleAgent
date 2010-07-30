@@ -34,9 +34,6 @@
 #include "ListeningState.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#ifndef	_STRICT_COMPATIBILITY
-#define	_STRICT_COMPATIBILITY
-#endif
 #ifndef	_TRACE_CHARACTER_ACTIONS
 #define	_TRACE_CHARACTER_ACTIONS
 #endif

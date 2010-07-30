@@ -417,7 +417,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::get__NewEnum (IUnknown **EnumVariant)
 	else
 	{
 		(*EnumVariant) = NULL;
-		
+
 		if	(
 				(SUCCEEDED (lResult = CComObject<CEnumVARIANT>::CreateInstance (lEnumVariant.Free())))
 			&&	(SUCCEEDED (lResult = InitEnumVariant (lEnumVariant)))
@@ -521,11 +521,26 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 		try
 		{
 			CString				lFilePath;
+			bool				lFilePathIsDefault;
 			tPtr <CAgentFile>	lLoadFile;
 			CAgentFile *		lAgentFile = NULL;
 
 			if	(
-					(SUCCEEDED (lResult = CDaCmnCharacter::GetLoadPath (Provider, lFilePath)))
+					(SUCCEEDED (lResult = CDaCmnCharacter::GetLoadPath (Provider, lFilePath, &lFilePathIsDefault)))
+				&&	(
+						(mOwner->GetDefaultCharacter ())
+					||	(
+							(lFilePathIsDefault)
+						&&	(mOwner->GetInstanceCharacter (-1))
+						)
+					)
+				)
+			{
+				lResult = AGENTERR_DEFAULTCHARACTER;
+			}
+
+			if	(
+					(SUCCEEDED (lResult))
 				&&	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (lFilePath, lLoadFile)))
 				)
 			{
@@ -537,9 +552,10 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 			}
 
 			if	(
-					(SUCCEEDED (lResult = CComObject <DaCtlCharacter>::CreateInstance (lCharacter.Free())))
+					(SUCCEEDED (lResult))
+				&&	(SUCCEEDED (lResult = CComObject <DaCtlCharacter>::CreateInstance (lCharacter.Free())))
 				&&	(SUCCEEDED (lResult = lCharacter->SetOwner (mOwner)))
-				&&	(SUCCEEDED (lResult = lCharacter->mLocalObject->OpenFile (lAgentFile)))
+				&&	(SUCCEEDED (lResult = lCharacter->mLocalObject->OpenFile (lAgentFile, lFilePathIsDefault)))
 				&&	(SUCCEEDED (lResult = lCharacter->mLocalObject->RealizePopup (mOwner->mLocalCharacterStyle)))
 				)
 			{

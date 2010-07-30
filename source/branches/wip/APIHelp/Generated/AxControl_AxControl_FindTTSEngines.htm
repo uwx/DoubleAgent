@@ -1,0 +1,99 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The FindTTSEngines Method</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h3>The FindTTSEngines Method</h3>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+				<p>Retrieves a collection of <a href="Control_TTSEngine.htm" class="see keyword">Text-To-Speech Engine Objects</a>
+					for a specific language and gender.</p>
+			</div>
+					<h4 class="syntax">Syntax</h4>
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">TTSEngines</em> = ]<em class="token">control</em>.<em class="keyword">FindTTSEngines</em> (<em class="token">LanguageID</em>, <em class="token">Gender</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">TTSEngines</em> = ]<em class="token">control</em>.<em class="keyword">FindTTSEngines</em> (<em class="token">LanguageID</em>, <em class="token">Gender</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">LanguageID</em>
+								</td>
+								<td>
+				A <em class="typename">numeric</em> value that specifies the language to match, or
+				<em class="keyword">zero</em> for any language.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Gender</em>
+								</td>
+								<td>
+				A <em class="typename">numeric</em> value, or a member of the <a href="Control_SpeechGenderType.htm" class="see typename">SpeechGenderType Enumeration</a>,
+				that specifies the gender to match:<table><tr><td xml:space="preserve">
+1&nbsp;=&nbsp;<em class="keyword">Female</em>
+</td><td>
+							A female voice.
+						</td></tr><tr><td xml:space="preserve">
+2&nbsp;=&nbsp;<em class="keyword">Male</em>
+</td><td>
+							A male voice.
+						</td></tr><tr><td xml:space="preserve">
+0&nbsp;=&nbsp;<em class="keyword">Neutral</em>
+</td><td>
+							Either a female or male voice.
+						</td></tr></table>
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">TTSEngines</em>
+								</td>
+								<td>
+				A <a href="Control_TTSEngines.htm" class="see typename">TTSEngines Collection</a>
+				that matches the the specified <em class="token">LanguageID</em> and <em class="token">Gender</em>.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+				<p>
+					This method allows you to query available text-to-speech engines without loading a character.
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Control_SpeechGenderType.htm">The SpeechGenderType Enumeration</a><br /><a href="Control_TTSEngines.htm">The TTSEngines Collection</a><br /><a href="Control_TTSEngine.htm">The TTSEngine Object</a></td>
+			</tr>
+		</table>
+	</body>
+</HTML>

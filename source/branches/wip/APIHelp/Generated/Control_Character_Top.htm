@@ -12,80 +12,90 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Top Property</h4>
+					<h3>The Top Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Returns or sets the top edge of the specified character's image.</p>
-					</div>
+				<p>Specifies the top edge of the character's image.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>Top</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Top</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Top</s> = <em>Top</em></p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>Top</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Top</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Top</s> = <em>Top</em></p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>Top</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Top</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Top</s> = <em>Top</em></p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>Top</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Top</s></p>
-
-<p><em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Top</s> = <em>Top</em></p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>character</em>.<s>get_Top</s> (&amp;<em>Top</em>)</p>
-
-<p><em>character</em>.<s>put_Top</s> (<em>Top</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Top</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Top</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Top</em> = <em class="token">Top</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">Top</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Top</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Top</em> = <em class="token">Top</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">Top</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Top</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Top</em> = <em class="token">Top</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Top</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Top</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Top</em> = <em class="token">Top</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">get_Top</em> (&amp;<em class="token">Top</em>)</p>
+<p><em class="token">character</em>-&gt;<em class="keyword">put_Top</em> (<em class="token">Top</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Top</i>
+									<em class="token">Top</em>
 								</td>
 								<td>
-				A <s>numeric </s>value that specifies the character's top edge.
+				A <em class="typename">numeric</em> value that specifies the top left edge of the character's image.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					The <s>Top </s>property is always expressed in pixels, relative to screen origin (upper left).
+				<p>
+					The <em class="self keyword">Top</em> property is always expressed in pixels, relative to screen origin (upper left).
 				</p>
-					<p>
-					Even though the character appears in an irregularly shaped region window, the location of the
-					character is based on the external dimensions of the rectangular animation frame used when the character
-					was compiled with the Microsoft Agent Character Editor.
+				<p>
+					Even though the character appears in an irregularly shaped region window, the location of the character is
+					based on the external dimensions of the rectangular animation frame used when the character was compiled
+					with the Microsoft Agent Character Editor.
 				</p>
-					<p class="note">
-						<span class="note">Note:</span> This property applies to all clients of the character.</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Character_Left.htm">The Left Property</a>
-					<br />
-					<a href="Control_Character_MoveTo.htm">The MoveTo Method</a>
-				</td>
+				<p class="note"><span class="note">Note:</span> This property applies to all clients of the character.</p>
+			<h4 class="seealso">See Also</h4><a href="Control_Character_Left.htm">The Left Property</a><br /><a href="Control_Character_MoveTo.htm">The MoveTo Method</a></td>
 			</tr>
 		</table>
 	</body>

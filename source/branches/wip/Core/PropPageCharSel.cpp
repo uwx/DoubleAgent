@@ -100,7 +100,12 @@ LRESULT CPropPageCharSel::OnApply(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 		try
 		{
 			DWORD	lTargets = BSM_APPLICATIONS;
-			BroadcastSystemMessage (BSF_FORCEIFHUNG|BSF_POSTMESSAGE, &lTargets, DA_BROADCAST_DEFCHAR_CHANGED, 0, 0);
+			long	lResult;
+
+			lResult = BroadcastSystemMessage (BSF_FORCEIFHUNG|BSF_POSTMESSAGE, &lTargets, DA_BROADCAST_DEFCHAR_CHANGED, 0, 0);
+#ifdef	_DEBUG
+			LogMessage (LogNormal, _T("DA_BROADCAST_DEFCHAR_CHANGED [%d]"), lResult);
+#endif
 		}
 		catch AnyExceptionSilent
 	}

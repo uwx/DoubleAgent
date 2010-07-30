@@ -12,16 +12,87 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Command Property</h4>
+					<h3>The Command Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Returns a <a href="Server_Command.htm" class="see keyword">Command Object</a> in the collection.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
-					<h4 class="remarks">Remarks</h4>
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">commands</em>-&gt;<em class="keyword">get_Command</em> (<em class="token">CommandID</em>, &amp;<em class="token">Command</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Command</em> = ]<em class="token">character</em>.<em class="keyword">Commands</em>.get_Command (<em class="token">CommandID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Command</em> = ]<em class="token">character</em>.<em class="keyword">Commands</em>.Command (<em class="token">CommandID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">Command</em> = ]<em class="token">character</em>.<em class="keyword">Commands</em>.Command (<em class="token">CommandID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">Command</em> = ]<em class="token">character</em>.<em class="keyword">Commands</em>.Command (<em class="token">CommandID</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">CommandID</em>
+								</td>
+								<td>
+				A <em class="typename">numeric</em> value that specifies the <a href="Server_Command_CommandID.htm" class="see keyword">CommandID</a>
+				given to the command when it was defined.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Command</em>
+								</td>
+								<td>
+				The <a href="Server_Command.htm" class="see keyword">Command Object</a> with the specified <em class="token">CommandID</em>.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="seealso">See Also</h4>
+					<a href="Server_Command_CommandID.htm">The CommandID Property</a>
+					<br />
+					<a href="Server_Commands_Item.htm">The Item Property</a>
 				</td>
 			</tr>
 		</table>

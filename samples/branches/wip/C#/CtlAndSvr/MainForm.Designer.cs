@@ -172,10 +172,10 @@
 			this.TestDaControl.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject ("TestDaControl.OcxState")));
 			this.TestDaControl.Size = new System.Drawing.Size (200, 200);
 			this.TestDaControl.TabIndex = 0;
-			this.TestDaControl.DaShow += new DoubleAgent.AxControl.DaShowEventHandler (this.TestDaControl_DaShow);
-			this.TestDaControl.DaHide += new DoubleAgent.AxControl.DaHideEventHandler (this.TestDaControl_DaHide);
-			this.TestDaControl.DaListenStart += new DoubleAgent.AxControl.DaListenStartEventHandler (this.TestDaControl_DaListenStart);
-			this.TestDaControl.DaListenComplete += new DoubleAgent.AxControl.DaListenCompleteEventHandler (this.TestDaControl_DaListenComplete);
+			this.TestDaControl.CtlShow += new DoubleAgent.AxControl.CtlShowEventHandler (this.TestDaControl_CtlShow);
+			this.TestDaControl.CtlHide += new DoubleAgent.AxControl.CtlHideEventHandler (this.TestDaControl_CtlHide);
+			this.TestDaControl.CtlListenStart += new DoubleAgent.AxControl.CtlListenStartEventHandler (this.TestDaControl_CtlListenStart);
+			this.TestDaControl.CtlListenComplete += new DoubleAgent.AxControl.CtlListenCompleteEventHandler (this.TestDaControl_CtlListenComplete);
 			// 
 			// CharacterFiles
 			// 

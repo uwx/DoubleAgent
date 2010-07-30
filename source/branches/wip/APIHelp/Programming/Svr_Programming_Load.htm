@@ -1,84 +1,93 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
-<HTML DIR="LTR"><HEAD>
-<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
-<TITLE>Loading Character and Animation Data</TITLE>
-<!-- Built on Monday, August 06, 2001 -->
-<SCRIPT SRC="../langref.js"></SCRIPT>
-<LINK REL="STYLESHEET" HREF="../css/dahelp.css"></HEAD>
-<BODY TOPMARGIN="0">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Loading Character and Animation Data</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Loading Character and Animation Data</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>Once you have a pointer to the <em class="keyword">IDaServer2</em> interface, you can use the <a class="see keyword"
+				href="..\Generated\Server_Server_Load.htm">Load</a> method to load a character and retrieve its <em class="keyword">
+					IDaCharacter2</em> interface. There are three different possibilities for the <a class="see keyword"
+					href="..\Generated\Server_Server_Load.htm">Load</a> <em class="token">Provider</em> parameter. The first
+					to specify the full path and filename of a character file. The second possibility is to specify the
+					filename only, in which case Double Agent searches its <em class="filename">Chars</em> directory and
+					the Microsoft<sup>®</sup> Agent <em class="filename">Chars</em> directory. The last possibility is to
+					supply an empty <em class="keyword">VARIANT</em> parameter that causes the <a href="..\html\UI_PropSheet.htm#Gallery">
+					default character</a> to be loaded.</p>
+				<div class="example">
+					<pre class="example">const LPWSTR FileName = L"merlin.acs";
+VARIANT Path;
 
-<TABLE CLASS="buttonbarshade" CELLSPACING=0><TR><TD>&nbsp;</TD></TR></TABLE>
-<TABLE CLASS="buttonbartable" CELLSPACING=0><TR ID="hdr"><TD CLASS="runninghead" NOWRAP>Platform&nbsp;SDK:&nbsp;Agent</TD></TR></TABLE>
+// Create a variant to store the file name of the character to load
 
-<H2><A NAME="_agent_loading_character_and_animation_data_paface"></A>Loading Character and Animation Data</H2>
+<em class="keyword">VariantInit</em> (&amp;Path);
+Path.vt = VT_BSTR;
+Path.bstrVal = <em class="keyword">SysAllocString</em> (FileName);
 
-<P>Once you have a pointer to the <B>IAgentEx</B> interface, you can use the <B>Load</B> method to load a character and retrieve its <B>IAgentCharacterEx</B> interface. There are three different possibilities for the Load path of a character. The first is compatible with Microsoft Agent 1.5 where the specified path is the full path and filename of a character file. The second possibility is to specify the filename only, in which case, Agent looks in its Chars directory. The last possibility is to supply an empty Variant parameter that causes the default character to be loaded.</P>
+// Load the character
 
-<PRE>   // Create a variant to store the filename of the character to load
+<em class="token">Result</em> = <em class="token">server</em>-&gt;<em class="keyword">Load</em> (Path, &amp;<em
+	class="token">CharacterID</em>, &amp;<em class="token">RequestID</em>);
 
-const LPWSTR kpwszCharacter = L"merlin.acs";
+// Get its IDaCharacter2 interface
 
-   VariantInit(&amp;vPath);
+<em class="token">Result</em> = <em class="token">server</em>-&gt;<em class="keyword">get_Character</em> (<em
+	class="token">CharacterID</em>, &amp;<em class="token">character</em>);
 
-   vPath.vt = VT_BSTR;
-   vPath.bstrVal = SysAllocString(kpwszCharacter);
+<em class="keyword">VariantClear</em> (&amp;Path);</pre>
+				</div>
+				<p>You can use this interface to access the character's methods:</p>
+				<div class="example">
+					<pre class="example">// Show the character (the first parameter tells Double Agent to play the "Showing" animation)
 
-   // Load the character
+<em class="token">Result</em> = <em class="token">character</em>-&gt;<em class="keyword">Show</em> (FALSE, &amp;<em
+	class="token">RequestID</em>);
 
-   hRes = pAgentEx-&gt;Load(vPath, &amp;lCharID, &amp;lRequestID);
+// Make the character speak
 
-   // Get its IAgentCharacterEx interface
+<em class="token">Speech</em> = <em class="keyword">SysAllocString</em> (L"Hello World!");
+<em class="token">Result</em> = <em class="token">character</em>-&gt;Speak (<em class="token">Speech</em>, NULL, &amp;<em
+	class="token">RequestID</em>);
+<em class="keyword">SysFreeString</em> (<em class="token">Speech</em>);</pre>
+				</div>
+				<p>When you no longer need Double Agent, such as when your client application shuts down, release its interfaces.
+					Note that releasing the character interface does not unload the character. Call the <a class="see keyword"
+					href="../Generated/Server_Server_Unload.htm">Unload</a> method to do this before releasing the <em class="keyword">
+						IDaServer2</em> interface:</p>
+				<div class="example">
+					<pre class="example">// Clean up
 
-   hRes = pAgentEx-&gt;GetCharacterEx(lCharID, &amp;pCharacterEx);</PRE>
-
-<P>You can use this interface to access the character's methods:</P>
-
-<PRE>   // Show the character.  The first parameter tells Microsoft
-   // Agent to show the character by playing an animation.
-
-   hRes = pCharacterEx-&gt;Show(FALSE, &amp;lRequestID);
-
-   // Make the character speak
-
-   bszSpeak = SysAllocString(L"Hello World!");
-
-   hRes = pCharacterEx-&gt;Speak(bszSpeak, NULL, &amp;lRequestID);
-
-   SysFreeString(bszSpeak);</PRE>
-
-<P>When you no longer need Microsoft Agent services, such as when your client application shuts down, release its interfaces. Note that releasing the character interface does not unload the character. Call the <B>Unload</B> method to do this before releasing the <B>IAgentEx</B> interface:</P>
-
-<PRE>// Clean up
-
-if (pCharacterEx) {
-
+if (<em class="token">character</em>)
+{
    // Release the character interface
 
-   pCharacterEx-&gt;Release();
+   <em class="token">character</em>-&gt;<em class="keyword">Release</em> ();
 
-   // Unload the character.  NOTE:  releasing the character
-   // interface does NOT make the character go away.  You must
-   // call Unload.
+   // Unload the character. NOTE: releasing the character interface
+   // does NOT make the character go away. You must call Unload.
 
-   pAgentEx-&gt;Unload(lCharID);
+   <em class="token">server</em>-&gt;<em class="keyword">Unload</em> (<em class="token">CharacterID</em>);
 }
    
-// Release the Agent
+// Release the Server
 
-pAgentEx-&gt;Release();
-
-VariantClear(&amp;vPath);</PRE>
-<!-- Info Task Footer -->
-<DIV CLASS="itfBorder"><IMG SRC="../tiny.gif" WIDTH="1" HEIGHT="1"></DIV>
-<DIV CLASS="itf"><B>Platform SDK Release: <FONT COLOR="#ddaa00">August 2001</FONT></B>
-<TABLE CELLPADDING="0" CELLSPACING="0"><TR VALIGN="top">
-<TD WIDTH="13" CLASS="itficon"><A HREF="mailto:sdkfdbk@microsoft.com?subject=TITLE:%20Loading%20Character%20and%20Animation%20Data;%20RELEASE:%20August%202001;%20URL:%20paface_9x2d.htm" Title="Send feedback to the Platform SDK team at sdkfdbk@microsoft.com"><IMG SRC="../sendfdbk.gif" BORDER="0" WIDTH="13" HEIGHT="15"/></A></TD>
-<TD WIDTH="47%" CLASS="itf">What did you think of this topic?<BR>
-<A HREF="mailto:sdkfdbk@microsoft.com?subject=TITLE:%20Loading%20Character%20and%20Animation%20Data;%20RELEASE:%20August%202001;%20URL:%20paface_9x2d.htm" Title="Send feedback to the Platform SDK team at sdkfdbk@microsoft.com">Let us know</A>.</TD>
-<TD WIDTH="16" CLASS="itficon"><IMG SRC="../download.gif" BORDER="0" WIDTH="16" HEIGHT="16"/></TD>
-<TD CLASS="itf">Order a Platform SDK CD Online<BR>
-(<A HREF="http://developerstore.com/devstore/product.asp?productID=7639&Store=TOOLBOX_NA&DisplayCode" TARGET="_blank" TITLE="Order a CD online.">U.S/Canada</A>)&nbsp;&nbsp;&nbsp;(<A HREF="http://developerstore.com/devstore/product.asp?productID=7639&Store=TOOLBOX_INTL&DisplayCode" TARGET="_blank" TITLE="Order a CD online.">International</A>)</TD></TR></TABLE></DIV>
-<P>&nbsp;</P>
-
-</BODY>
-</HTML>
+<em class="token">server</em>-&gt;<em class="keyword">Release</em> ();</pre>
+				</div>
+				<h4 class="seealso">See Also</h4>
+				<a href="Svr_Programming.htm">Using the Server in Applications</a> </td>
+		</tr>
+	</table>
+</body>
+</html>

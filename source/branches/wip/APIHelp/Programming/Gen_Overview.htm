@@ -17,43 +17,44 @@
 		</tr>
 		<tr>
 			<td class="page">
-				<p>The Double Agent API reproduces and extends the features of the Microsoft® Agent API.</p>
+				<p>The Double Agent API reproduces and extends the features of the Microsoft<sup>®</sup> Agent API.</p>
 				<p>It consists of two main components:</p>
 				<ul>
 					<li>
-						<p>A <b>C</b>omponent <b>O</b>bject <b>M</b>odel (OLE Automation) <s>server</s> that allows multiple applications,
-							called <em>clients </em>or <em>client applications</em>, to access its animation, input, and output
-							services at the same time. A client can be any application that connects to the Double Agent server's
-							COM interfaces.</p>
+						<p>A <em class="glossary"><b>C</b>omponent <b>O</b>bject <b>M</b>odel</em> <em class="keyword">Server</em>
+							that allows multiple applications, called <em>clients </em>or <em>client applications</em>, to access
+							its animation, input, and output services at the same time. A client can be any application that connects
+							to the Double Agent server's COM interfaces.</p>
 						<p>As a COM server, the Double Agent server automatically starts only when a client application uses its
 							COM interfaces and connects to it. It remains running until all clients close their connections. When
 							no connected clients remain, the Double Agent server automatically shuts down.</p>
 					</li>
 					<li>
-						<p>A Microsoft ActiveX® <s>control</s> that makes it easy to access Double Agent's services from programming
-							languages that support the ActiveX control interface.</p>
+						<p>A <em class="glossary">Microsoft ActiveX<sup>®</sup></em> <em class="keyword">Control</em> that makes
+							it easy to access Double Agent's services from programming languages that support the <em class="glossary">
+								ActiveX<sup>®</sup> Control Interface</em>.</p>
 						<p>The control can be connected to the server, allowing Agent characters to be shared among multiple applications.
 							It can also run standalone, providing Agent characters that are private to a specific application. This
-							is a new feature of Double Agent that is not supported by Microsoft® Agent.</p>
+							is a new feature of Double Agent that is not supported by Microsoft<sup>®</sup> Agent.</p>
 						<p>The control also allows Double Agent to provide it's character animation services within a <em>child</em>
 							window of a <em>client application</em>'s window. This is a new feature of Double Agent that is not
-							supported by Microsoft® Agent.</p>
-					</li>
-					<li>
-						<p>See the Double Agent <a href="Ctl_Programming.htm">control</a> and <a href="Svr_Programming.htm">server</a>
-							interfaces for more information on the specific API.</p>
+							supported by Microsoft<sup>®</sup> Agent.</p>
 					</li>
 				</ul>
-				<p>In addition to supporting stand-alone programs written for Windows®, Double Agent can be scripted to
-					support Web pages, provided that the browser supports OLE Automation or the ActiveX interface. Microsoft
-					Internet Explorer includes support for ActiveX as well as scripting languages that you can use to program
-					Agent. If you're not using Internet Explorer, consult with your vendor or supplier about the browser's
-					support for OLE Automation and ActiveX.</p>
-				<h4 class=seealso>See Also</h4>
+				<p>See the Double Agent <a href="Svr_Programming.htm">Server</a> and <a href="Ctl_Programming.htm">Control</a>
+					interfaces for more information on the specific API.</p>
+				<p>In addition to supporting stand-alone programs written for Windows<sup>®</sup>, Double Agent can be scripted
+					to support Web pages, provided that the browser supports <em class="glossary">OLE Automation</em> or
+					the <em class="glossary">ActiveX<sup>®</sup> Interface</em>. Microsoft Internet Explorer<sup>®</sup>
+					and other browsers include support for ActiveX<sup>®</sup> as well as scripting languages that you can
+					use to program Double Agent.</p>
+				<h4 class="seealso">See Also</h4>
 				<a href="Gen_Animation.htm">Animation Services</a><br>
 				<a href="Gen_Output.htm">Output Services</a><br>
 				<a href="Gen_Input.htm">Input Services</a><br>
-				<a href="Gen_PropSheet.htm">The Double Agent Property Sheet</a> </td>
+				<a href="Gen_Config.htm">Configuration Services</a><br>
+				<a href="Svr_Programming.htm">Programming the Double Agent Server</a><br>
+				<a href="Ctl_Programming.htm">Programming the Double Agent Control</a></td>
 		</tr>
 	</table>
 </body>

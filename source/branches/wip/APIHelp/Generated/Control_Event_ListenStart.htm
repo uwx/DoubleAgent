@@ -12,82 +12,92 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The ListenStart Event</h4>
+					<h3>The ListenStart Event</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>
-					Signalled when <em>Listening mode</em> (speech recognition) begins.
-				</p>
-					</div>
+				<p>Signalled when <em class="glossary">Listening mode</em> (speech recognition) begins.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p><s>Event</s> <em>control</em>_<s>ListenStart</s> (<s>ByVal</s> <em>CharacterID</em> <s>As String</s>)</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>ListenStart</s> (<s>ByVal</s> <em>CharacterID</em> <s>As String</s>)</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>ListenStart</s> (<s>ByVal</s> <em>CharacterID</em>)</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p><s>delegate void</s> <em>control</em>_<s>ListenStart<em>EventHandler</em></s> (<s>string</s> <em>CharacterID</em>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><s>void</s> <em>control</em>_<s>ListenStart</s> (<s>LPCTSTR</s> <em>CharacterID</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="keyword">Event</em> <em class="token">control</em>_<em class="keyword">ListenStart</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em> <em class="keyword">As String</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">ListenStart</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em> <em class="keyword">As String</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">ListenStart</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="keyword">delegate void</em> <em class="token">control</em>_<em class="keyword">ListenStart<token>EventHandler</token></em> (<em class="keyword">string</em> <em class="token">CharacterID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="keyword">void</em> <em class="token">control</em>_<em class="keyword">ListenStart</em> (<em class="keyword">LPCTSTR</em> <em class="token">CharacterID</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>CharacterID</i>
+									<em class="token">CharacterID</em>
 								</td>
 								<td>The unique identifier of the listening character.</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					This event is sent to all clients when <em>Listening mode </em>begins because the user pressed
-					the <em>Listening key </em>or the input-active client called the <a href="Control_Character_Listen.htm" class="see">Listen</a>
-					method with <s>True</s>. You can use this event to avoid having your character speak while <em>
-						Listening
-					</em> mode is active.
+				<p>
+					This event is sent to all clients when <em class="glossary">Listening mode</em> begins because the user pressed
+					the <em class="glossary">Listening key</em> or the <em class="glossary">input-active</em> client called the <a href="Control_Character_Listen.htm" class="see keyword">Listen</a>
+					method with <em class="keyword">True</em>. You can use this event to avoid having your character speak while <em class="glossary">Listening mode</em>
+					is active.
 				</p>
-					<p>
-					If you turn on <em>Listening mode </em>with the <a href="Control_Character_Listen.htm" class="see">Listen</a>
-					method and then the user presses the <em>Listening key</em>, the <em>Listening mode </em>resets
-					and continues until the <em>Listening key </em>time-out completes, the <em>Listening key </em>is
-					released, or the user finishes speaking, whichever is later. In this situation, when <em>
-						Listening
-					</em> mode is already on, you will not get an additional <s>ListenStart </s>event when the user
-					presses the <em>Listening key</em>.
+				<p>
+					If you turn on <em class="glossary">Listening mode</em> with the <a href="Control_Character_Listen.htm" class="see keyword">Listen</a>
+					method and then the user presses the <em class="glossary">Listening key</em>, the <em class="glossary">Listening mode</em>
+					resets and continues until the <em class="glossary">Listening key</em> time-out completes, the <em class="glossary">Listening key</em>
+					is released, or the user finishes speaking, whichever is later. In this situation, when <em class="glossary">Listening mode</em>
+					is already on, you will not get an additional <em class="keyword">ListenStart</em> event when the user presses the
+					<em class="glossary">Listening key</em>.
 				</p>
-					<p>
-					The event returns the <em>CharacterID </em>to the clients that currently have this character
-					loaded. All other clients receive a null <em>CharacterID</em> (empty string).
+				<p>
+					The event returns the <em class="token">CharacterID</em> to the clients that currently have this character loaded.
+					All other clients receive a null <em class="token">CharacterID</em> (empty string).
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Event_ListenComplete.htm">The ListenComplete Event</a>
-					<br />
-					<a href="Control_Character_Listen.htm">The Listen Method</a>
-					<br />
-					<a href="Control_Settings_SRHotKey.htm">The SRHotKey Property</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_Event_ListenComplete.htm">The ListenComplete Event</a><br /><a href="Control_Character_Listen.htm">The Listen Method</a><br /><a href="Control_Settings_SRHotKey.htm">The SRHotKey Property</a></td>
 			</tr>
 		</table>
 	</body>

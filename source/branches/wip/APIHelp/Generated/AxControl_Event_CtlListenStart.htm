@@ -1,0 +1,95 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The CtlListenStart Event</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h3>The CtlListenStart Event</h3>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+				<p>Signalled when <em class="glossary">Listening mode</em> (speech recognition) begins.</p>
+			</div>
+					<h4 class="syntax">Syntax</h4>
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="keyword">Event</em> <em class="token">control</em>_<em class="keyword">CtlListenStart</em> (<em class="keyword">ByVal</em> <em class="token">Sender</em> <em class="keyword">As Object</em>, <em class="keyword">ByVal</em> <em class="token">E</em> <em class="keyword">As</em> <a href="AxControl_CtlListenStartEvent.htm" class="see typename">CtlListenStartEvent</a>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="keyword">delegate void</em> <em class="token">control</em>_<em class="keyword">CtlListenStart<token>EventHandler</token></em> (<em class="keyword">object</em> <em class="token">Sender</em>, <a href="AxControl_CtlListenStartEvent.htm" class="see typename">CtlListenStartEvent</a> <em class="token">E</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Sender</em>
+								</td>
+								<td>
+			The source of the event.
+		</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">E</em>
+								</td>
+								<td>
+				A <a href="AxControl_CtlListenStartEvent.htm" class="see typename">CtlListenStartEvent Object</a>
+				that contains the event data: <dl><dt>
+							<a href="AxControl_CtlListenStartEvent_CharacterID.htm" class="see keyword">CharacterID</a>
+						</dt><dd>
+							The unique identifier of the listening character.
+						</dd></dl>
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+				<p>
+					This event is sent to all clients when <em class="glossary">Listening mode</em> begins because the user pressed
+					the <em class="glossary">Listening key</em> or the <em class="glossary">input-active</em> client called the <a href="Control_Character_Listen.htm" class="see keyword">Listen</a>
+					method with <em class="keyword">True</em>. You can use this event to avoid having your character speak while <em class="glossary">Listening mode</em>
+					is active.
+				</p>
+				<p>
+					If you turn on <em class="glossary">Listening mode</em> with the <a href="Control_Character_Listen.htm" class="see keyword">Listen</a>
+					method and then the user presses the <em class="glossary">Listening key</em>, the <em class="glossary">Listening mode</em>
+					resets and continues until the <em class="glossary">Listening key</em> time-out completes, the <em class="glossary">Listening key</em>
+					is released, or the user finishes speaking, whichever is later. In this situation, when <em class="glossary">Listening mode</em>
+					is already on, you will not get an additional <em class="keyword">ListenStart</em> event when the user presses the
+					<em class="glossary">Listening key</em>.
+				</p>
+				<p>
+					The event returns the <em class="token">CharacterID</em> to the clients that currently have this character loaded.
+					All other clients receive a null <em class="token">CharacterID</em> (empty string).
+				</p>
+			<h4 class="seealso">See Also</h4><a href="AxControl_CtlListenStartEvent.htm">The CtlListenStartEvent Object</a><br /><a href="AxControl_Event_CtlListenComplete.htm">The CtlListenComplete Event</a><br /><a href="Control_Character_Listen.htm">The Listen Method</a><br /><a href="Control_Settings_SRHotKey.htm">The SRHotKey Property</a></td>
+			</tr>
+		</table>
+	</body>
+</HTML>

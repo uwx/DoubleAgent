@@ -12,17 +12,82 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Count Property</h4>
+					<h3>The Count Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Returns the count of <a href="Server_Command.htm" class="see keyword">Command Objects</a> in the <a href="Server_Commands.htm" class="see keyword">Commands Collection</a>.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">command</em>-&gt;<em class="keyword">get_Count</em> (&amp;<em class="token">Count</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Count</em> = ]<em class="token">character</em>.<em class="keyword">Commands</em>.<em class="keyword">Count</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Count</em> = ]<em class="token">character</em>.<em class="keyword">Commands</em>.<em class="keyword">Count</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">Count</em> = ]<em class="token">character</em>.<em class="keyword">Commands</em>.<em class="keyword">Count</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">Count</em> = ]<em class="token">character</em>.<em class="keyword">Commands</em>.<em class="keyword">Count</em></p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Count</em>
+								</td>
+								<td>
+				A <em class="typename">numeric</em> value that indicates the number of <a href="Server_Command.htm" class="see keyword">Command Objects</a>
+				in the collection.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					<em class="self keyword">Count</em> includes only the number of <a href="Server_Command.htm" class="see keyword">Command Objects</a>
+					you define in <em>your</em> <a href="Server_Commands.htm" class="see keyword">Commands Collection</a>. Pre-defined entries or
+					entries defined by other clients are not included.
+				</p>
+			</td>
 			</tr>
 		</table>
 	</body>

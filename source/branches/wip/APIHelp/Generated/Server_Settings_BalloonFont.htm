@@ -12,17 +12,82 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The BalloonFont Property</h4>
+					<h3>The BalloonFont Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Returns the font that will be used for all word balloons, if any.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">settings</em>-&gt;<em class="keyword">get_BalloonFont</em> (<em class="token">&amp;BalloonFont</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">BalloonFont</em> = ]<em class="token">server</em>.<em class="keyword">Settings.BalloonFont</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">BalloonFont</em> = ]<em class="token">server</em>.<em class="keyword">Settings.BalloonFont</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">BalloonFont</em> = ]<em class="token">server</em>.<em class="keyword">Settings.BalloonFont</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">BalloonFont</em> = ]<em class="token">server</em>.<em class="keyword">Settings.BalloonFont</em></p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">BalloonFont</em>
+								</td>
+								<td>
+				An optional <em class="typename">font</em> object that specifies the font the user
+				has chosen to override all word balloon fonts.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					This property reflects the <em class="literal">"A single font for all characters"</em> option on the <a class="see" href="../html/UI_PropSheet.htm#Output">Output</a>
+					page of the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window.
+				</p>
+				<p class="note"><span class="note">Note:</span> The property setting affects all characters and is read-only; only the user can set this property value.</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Event_AgentPropertyChange.htm">The AgentPropertyChange Event</a><br /><a href="Server_Balloon_FontName.htm">The FontName Property</a><br /><a href="Server_Balloon_FontSize.htm">The FontSize Property</a><br /><a href="Server_Balloon_FontBold.htm">The FontBold Property</a><br /><a href="Server_Balloon_FontItalic.htm">The FontItalic Property</a><br /><a href="Server_Balloon_FontUnderline.htm">The FontUnderline Property</a><br /><a href="Server_Balloon_FontStrikethru.htm">The FontStrikethru Property</a><br /><a href="Server_Balloon_FontCharSet.htm">The FontCharSet Property</a></td>
 			</tr>
 		</table>
 	</body>

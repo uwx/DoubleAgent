@@ -12,60 +12,80 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The LanguageNames Property</h4>
+					<h3>The LanguageNames Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Returns the speech recognition engine's human-readable supported language names.</p>
-					</div>
+				<p>Returns the speech recognition engine's human-readable supported language names.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>LanguageNames</em> = ]<em>srengine</em>.<s>LanguageNames</s>[ [<em>EnglishNames</em>]]</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>LanguageNames</em> = ]<em>srengine</em>.<s>LanguageNames</s>[ [<em>EnglishNames</em>]]</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>LanguageNames</em> = ]<em>srengine</em>.<s>LanguageNames</s>[ [<em>EnglishNames</em>]]</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>LanguageNames</em> = ]<em>srengine</em>.<s>get_LanguageNames</s> (<em>EnglishNames</em>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>srengine</em>.<s>get_LanguageNames</s> (<em>EnglishNames</em>, &amp;<em>LanguageNames</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">LanguageNames</em> = ]<em class="token">srengine</em>.<em class="keyword">LanguageNames</em>[ [<em class="token">EnglishNames</em>]]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">LanguageNames</em> = ]<em class="token">srengine</em>.<em class="keyword">LanguageNames</em>[ [<em class="token">EnglishNames</em>]]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">LanguageNames</em> = ]<em class="token">srengine</em>.<em class="keyword">LanguageNames</em>[ [<em class="token">EnglishNames</em>]]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">LanguageNames</em> = ]<em class="token">srengine</em>.<em class="keyword">get_LanguageNames</em> (<em class="token">EnglishNames</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">srengine</em>-&gt;<em class="keyword">get_LanguageNames</em> (<em class="token">EnglishNames</em>, &amp;<em class="token">LanguageNames</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>LanguageNames</i>
+									<em class="token">LanguageNames</em>
 								</td>
 								<td>
-				An array of <s>string </s>values that identify <em>all </em>of the engine's
-				supported languages in a form suitable for the user.
+				An array of <em class="typename">string</em> values that identify <em>all</em>
+				of the engine's supported languages in a form suitable for the user.
 			</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>EnglishNames</i>
+									<em class="token">EnglishNames</em>
 								</td>
 								<td>
-				An optional <s>boolean </s>value that specifies if the language names
-				should be in English, or in the user's language. The default value is <s>True</s>.
+				An optional <em class="typename">boolean</em> value that specifies if the language names
+				should be in English, or in the user's language. The default value is <em class="keyword">True</em>.
 			</td>
 							</tr>
 						</table>

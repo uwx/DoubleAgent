@@ -12,79 +12,92 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Description Property</h4>
+					<h3>The Description Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Returns or sets a string that specifies the description for the specified character.</p>
-					</div>
+				<p>Specifies a string that specifies the description for the specified character.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>Description</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Description</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Description</s> = "<em>Description</em>"</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>Description</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Description</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Description</s> = "<em>Description</em>"</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>Description</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Description</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Description</s> = "<em>Description</em>"</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>Description</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Description</s></p>
-
-<p><em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Description</s> = "<em>Description</em>"</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>character</em>.<s>get_Description</s> (&amp;<em>Description</em>)</p>
-
-<p><em>character</em>.<s>put_Description</s> (<em>Description</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Description</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Description</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Description</em> = "<em class="token">Description</em>"</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">Description</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Description</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Description</em> = "<em class="token">Description</em>"</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">Description</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Description</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Description</em> = "<em class="token">Description</em>"</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Description</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Description</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Description</em> = "<em class="token">Description</em>"</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">get_Description</em> (&amp;<em class="token">Description</em>)</p>
+<p><em class="token">character</em>-&gt;<em class="keyword">put_Description</em> (<em class="token">Description</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Description</i>
+									<em class="token">Description</em>
 								</td>
 								<td>
-				A <s>string </s>value corresponding to the character's description (in
+				A <em class="typename">string</em> value corresponding to the character's description (in
 				the current language setting).
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					A character's <s>Description </s>may depend on the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a>
+				<p>
+					A character's <em class="self keyword">Description</em> may depend on the character's <a href="Control_Character_LanguageID.htm" class="see keyword">LanguageID</a>
 					setting. A character's description in one language may be different or use different characters than
-					in another. The character's default <s>Description </s>for a specific language is defined when the
+					in another. The character's default <em class="self keyword">Description</em> for a specific language is defined when the
 					character is compiled with the Microsoft Agent Character Editor.
 				</p>
-					<p class="note">
-						<span class="note">Note:</span> 
-					The <s>Description </s>property is optional and may not be supplied for all characters.
+				<p class="note"><span class="note">Note:</span> 
+					The <em class="self keyword">Description</em> property is optional and may not be supplied for all characters.
 				</p>
-					<p class="note">
-						<span class="note">Note:</span> This property applies to all clients of the character.</p>
-				</td>
+				<p class="note"><span class="note">Note:</span> This property applies to all clients of the character.</p>
+			</td>
 			</tr>
 		</table>
 	</body>

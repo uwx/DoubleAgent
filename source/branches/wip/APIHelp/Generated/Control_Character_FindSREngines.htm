@@ -12,61 +12,81 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The FindSREngines Method</h4>
+					<h3>The FindSREngines Method</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>
-					Retrieves a collection of <a href="Control_SREngine.htm" class="see">Speech Recognition Engine</a>
-					objects that meet the character's requirements.
-				</p>
-					</div>
+				<p>Retrieves a collection of <a href="Control_SREngine.htm" class="see keyword">Speech Recognition Engine Objects</a>
+					that meet the character's requirements.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>SREngines</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>FindSREngines</s> (<em>LanguageID</em>)</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<s>Set</s> <em>SREngines</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>FindSREngines</s> (<em>LanguageID</em>)</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<s>Set</s> <em>SREngines</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>FindSREngines</s> (<em>LanguageID</em>)</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>SREngines</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>FindSREngines</s> (<em>LanguageID</em>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>character</em>-&gt;<s>FindSREngines</s> (<em>LanguageID</em>, &amp;<em>SREngines</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">SREngines</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">FindSREngines</em> (<em class="token">LanguageID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">SREngines</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">FindSREngines</em> (<em class="token">LanguageID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">SREngines</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">FindSREngines</em> (<em class="token">LanguageID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">SREngines</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">FindSREngines</em> (<em class="token">LanguageID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">FindSREngines</em> (<em class="token">LanguageID</em>, &amp;<em class="token">SREngines</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>LanguageID</i>
+									<em class="token">LanguageID</em>
 								</td>
 								<td>
-				A <s>numeric </s>value that specifies the language to match, or <s>zero </s> for any language.
+				A <em class="typename">numeric</em> value that specifies the language to match, or
+				<em class="keyword">zero</em> for any language.
 			</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>SREngines</i>
+									<em class="token">SREngines</em>
 								</td>
 								<td>
-				A <s><a href="Control_SREngines.htm" class="see">SREngines Collection</a></s> that matches the character's text-to-speech requirements and the specified <em>LanguageID</em>.
+				A <a href="Control_SREngines.htm" class="see typename">SREngines Collection</a>
+				that matches the character's text-to-speech requirements and the specified <em class="token">LanguageID</em>.
 			</td>
 							</tr>
 						</table>

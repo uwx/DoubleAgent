@@ -281,7 +281,7 @@ void CAgentPopupWnd::Closing ()
 DWORD CAgentPopupWnd::GetAlphaSmoothing () const
 {
 	DWORD	lRet = CAgentCharacterWnd::GetAlphaSmoothing ();
-	
+
 	if	(!IsEqualGUID (mVideoRenderType, MEDIASUBTYPE_RGB8))
 	{
 		lRet |= 0x80000000;

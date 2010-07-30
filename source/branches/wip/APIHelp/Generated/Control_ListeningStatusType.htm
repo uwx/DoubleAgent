@@ -17,46 +17,37 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<table>
-						<tr>
-							<td>
-0&nbsp;=&nbsp;<s>Available</s>
-</td>
-							<td>Conditions support speech input.</td>
-						</tr>
-						<tr>
-							<td>
-2&nbsp;=&nbsp;<s>CharacterInactive</s>
-</td>
-							<td>Speech recognition is unavailable because another client is the active client of this character,
-				or the current character is not input-active.</td>
-						</tr>
-						<tr>
-							<td>
-4&nbsp;=&nbsp;<s>InitializeFailed</s>
-</td>
-							<td>Speech recognition is unavailable because it could not be initialized. This includes the
-				possibility that there is no speech engine available matching the character's language setting.</td>
-						</tr>
-						<tr>
-							<td>
-5&nbsp;=&nbsp;<s>InputDisabled</s>
-</td>
-							<td>The user has disabled speech input in the <a href="Control_PropertySheet.htm" class="see"> Advanced Character Options</a>
-				window.</td>
-						</tr>
-						<tr>
-							<td>
-6&nbsp;=&nbsp;<s>Error</s>
-</td>
-							<td>The speech recognition status could not be determined.</td>
-						</tr>
-					</table>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Character_ListeningStatus.htm">The ListeningStatus Property</a>
-					<br />
-					<a href="Control_Settings_SREnabled.htm">The SREnabled Property</a>
-				</td>
+					<h4 class="summary">Description</h4>
+				<p>
+					Indicates if a character can enter <em class="glossary">Listening mode</em>, or why it cannot.
+				</p>
+			<div id="Syntax">
+				<h4>Members</h4>
+				<table><tr><td xml:space="preserve">
+0&nbsp;=&nbsp;<em class="keyword">Available</em>
+</td><td>
+							Conditions support speech input.
+						</td></tr><tr><td xml:space="preserve">
+2&nbsp;=&nbsp;<em class="keyword">CharacterInactive</em>
+</td><td>
+							Speech recognition is unavailable because another client is the active client of this character, or
+				the current character is not <em class="glossary">input-active</em>.
+						</td></tr><tr><td xml:space="preserve">
+4&nbsp;=&nbsp;<em class="keyword">InitializeFailed</em>
+</td><td>
+							Speech recognition is unavailable because it could not be initialized. This includes the possibility
+				that there is no speech engine available matching the character's language setting.
+						</td></tr><tr><td xml:space="preserve">
+5&nbsp;=&nbsp;<em class="keyword">InputDisabled</em>
+</td><td>
+							The user has disabled speech input in the <a class="see" href="../html/UI_PropSheet.htm#SpeechInput">Advanced Character Options</a>
+				window.
+						</td></tr><tr><td xml:space="preserve">
+6&nbsp;=&nbsp;<em class="keyword">Error</em>
+</td><td>
+							The speech recognition status could not be determined.
+						</td></tr></table>
+			</div><h4 class="seealso">See Also</h4><a href="Control_Character_ListeningStatus.htm">The ListeningStatus Property</a><br /><a href="Control_Settings_SREnabled.htm">The SREnabled Property</a></td>
 			</tr>
 		</table>
 	</body>

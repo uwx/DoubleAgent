@@ -255,6 +255,7 @@ Begin VB.Form MsaWithDa
       BorderStyle     =   0
       BorderVisible   =   0   'False
       BorderWidth     =   1
+      MousePointer    =   0
    End
    Begin AgentObjectsCtl.Agent mMsAgentControl 
       Left            =   3840
@@ -270,6 +271,7 @@ Begin VB.Form MsaWithDa
       BorderStyle     =   1
       BorderVisible   =   -1  'True
       BorderWidth     =   1
+      MousePointer    =   0
    End
    Begin VB.Menu Help 
       Caption         =   "Help"
@@ -298,7 +300,9 @@ Dim mMsServer As AgentServerObjects.AgentServer
 Dim mMsServerChar As AgentServerObjects.IAgentCharacterEx
 Dim mMsServerCharId As Long
 
-Dim mDaServer As DoubleAgentSvr.DaServer
+Dim WithEvents mDaServer As DoubleAgentSvr.DaServer
+Attribute mDaServer.VB_VarHelpID = -1
+'Dim mDaServer As DoubleAgentSvr.DaServer
 Dim mDaServerChar As DoubleAgentSvr.DaSvrCharacter
 Dim mDaServerCharId As Long
 
@@ -554,9 +558,13 @@ Private Sub SetDaServerButtons()
     Else
         LoadDaServerChar.Enabled = False
         UnloadDaServerChar.Enabled = True
-        ShowDaServerChar.Enabled = True
-        HideDaServerChar.Enabled = True
+        ShowDaServerChar.Enabled = Not mDaServerChar.Visible
+        HideDaServerChar.Enabled = mDaServerChar.Visible
     End If
+End Sub
+
+Private Sub mDaServer_VisibleState(ByVal CharacterID As Long, ByVal Visible As Long, ByVal Cause As Long)
+    SetDaServerButtons
 End Sub
 
 Private Sub LoadDaServerChar_Click()

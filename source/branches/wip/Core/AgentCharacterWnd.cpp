@@ -393,7 +393,7 @@ CAgentListeningWnd * CAgentCharacterWnd::GetListeningWnd (bool pCreate)
 		&&	(mListeningWnd = CAgentListeningWnd::CreateInstance())
 		)
 	{
-		mListeningWnd->Create (m_hWnd);
+		mListeningWnd->Create (this);
 	}
 	return mListeningWnd;
 }
@@ -461,7 +461,10 @@ bool CAgentCharacterWnd::DoQueuedShow ()
 				mQueue.RemoveHead (); // Wait until window visible so (IsWindowVisible || IsShowingQueued) works
 
 				if	(
-						(lShown)
+						(
+							(lShown)
+						||	(lQueuedShow->mVisibilityCause < 0)
+						)
 					&&	(!lQueuedShow->mFast)
 					&&	(!lQueuedShow->mAnimationShown)
 					)

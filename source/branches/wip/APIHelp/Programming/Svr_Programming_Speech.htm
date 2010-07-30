@@ -1,37 +1,59 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
-<HTML DIR="LTR"><HEAD>
-<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
-<TITLE>Accessing Speech Services</TITLE>
-<!-- Built on Monday, August 06, 2001 -->
-<SCRIPT SRC="../langref.js"></SCRIPT>
-<LINK REL="STYLESHEET" HREF="../css/dahelp.css"></HEAD>
-<BODY TOPMARGIN="0">
-
-<TABLE CLASS="buttonbarshade" CELLSPACING=0><TR><TD>&nbsp;</TD></TR></TABLE>
-<TABLE CLASS="buttonbartable" CELLSPACING=0><TR ID="hdr"><TD CLASS="runninghead" NOWRAP>Platform&nbsp;SDK:&nbsp;Agent</TD></TR></TABLE>
-
-<H2><A NAME="_agent_accessing_speech_services_paface"></A>Accessing Speech Services</H2>
-
-<P>Although Microsoft Agent's services include support for speech input, a compatible command-and-control speech recognition engine must be installed to access Agent's speech input services. Similarly, if you want to use Microsoft Agent's speech services to support synthesized speech output for a character, you must install a compatible text-to-speech (TTS) speech engine for your character. Because Microsoft Agent's speech services are based on the Microsoft Speech API (SAPI), you can use any engines that compatibly support the required speech interfaces. Further information on the availability and use of speech recognition and text-to-speech engines is at the <A HREF="http://www.microsoft.com/msagent/devdownloads.htm">Microsoft Agent Downloads for Developers page</A>.</p>
-
-<P>To enable speech input support in your application, define a <B>Command</B> object and set its <B>Voice</B> property. Microsoft Agent will automatically load speech services, so that when the user presses the Listening key or you call <B>Listen</B>, the speech recognition engine will be loaded. By default the character's language ID will determine which engine is loaded. Agent attempts to load the first engine that SAPI returns as matching this language. Use <B>IAgentCharacterEx::SetSRModeID</B> if you want to load a specific engine.</P>
-
-<P>To enable text-to-speech output, use the <B>Speak</B> method. Microsoft Agent will automatically attempt to load an engine that matches the character's language ID. If the character's definition includes a specific TTS engine mode ID and that engine is available and matches the character's language ID, Agent loads that engine for the character. If not, Agent loads the first TTS engine that SAPI returns as matching the character's language setting. You can also use <B>IAgentCharacterEx::Set</B></P>
-
-<P><B>TTSModeID</B> to load a specific engine.</P>
-
-<P>Typically, Microsoft Agent loads a speech recognition engine when the Listening mode is initiated and loads a text-to-speech engine when <B>Speak</B> is first called. However, if you want to preload the speech engine, you can do this by querying the properties related to the speech interfaces. For example, calling <B>IAgentCharacterEx::GetSRModeID</B> or <B>IAgentCharacterEx::GetTTSModeID</B> will attempt to load that type of engine.</p>
-<!-- Info Task Footer -->
-<DIV CLASS="itfBorder"><IMG SRC="../tiny.gif" WIDTH="1" HEIGHT="1"></DIV>
-<DIV CLASS="itf"><B>Platform SDK Release: <FONT COLOR="#ddaa00">August 2001</FONT></B>
-<TABLE CELLPADDING="0" CELLSPACING="0"><TR VALIGN="top">
-<TD WIDTH="13" CLASS="itficon"><A HREF="mailto:sdkfdbk@microsoft.com?subject=TITLE:%20Accessing%20Speech%20Services;%20RELEASE:%20August%202001;%20URL:%20paface_2k6d.htm" Title="Send feedback to the Platform SDK team at sdkfdbk@microsoft.com"><IMG SRC="../sendfdbk.gif" BORDER="0" WIDTH="13" HEIGHT="15"/></A></TD>
-<TD WIDTH="47%" CLASS="itf">What did you think of this topic?<BR>
-<A HREF="mailto:sdkfdbk@microsoft.com?subject=TITLE:%20Accessing%20Speech%20Services;%20RELEASE:%20August%202001;%20URL:%20paface_2k6d.htm" Title="Send feedback to the Platform SDK team at sdkfdbk@microsoft.com">Let us know</A>.</TD>
-<TD WIDTH="16" CLASS="itficon"><IMG SRC="../download.gif" BORDER="0" WIDTH="16" HEIGHT="16"/></TD>
-<TD CLASS="itf">Order a Platform SDK CD Online<BR>
-(<A HREF="http://developerstore.com/devstore/product.asp?productID=7639&Store=TOOLBOX_NA&DisplayCode" TARGET="_blank" TITLE="Order a CD online.">U.S/Canada</A>)&nbsp;&nbsp;&nbsp;(<A HREF="http://developerstore.com/devstore/product.asp?productID=7639&Store=TOOLBOX_INTL&DisplayCode" TARGET="_blank" TITLE="Order a CD online.">International</A>)</TD></TR></TABLE></DIV>
-<P>&nbsp;</P>
-
-</BODY>
-</HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Using Speech Services</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Using Speech Services</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>Although Double Agent includes support for synthesized speech output, a compatible text-to-speech (TTS)
+					speech engine must be installed to access Double Agent's speech output features. Similarly, if you want
+					to use Double Agent's speech features to support speech input for a character, you must install a compatible
+					command-and-control speech recognition engine.</p>
+				<p>To produce text-to-speech output, use the <a class="see keyword" href="../Generated/Server_Character_Speak.htm">
+				Speak</a> method. Double Agent will automatically attempt to load an engine that matches the character's
+					<a class="see keyword" href="../Generated/Server_Character_LanguageID.htm">LanguageID</a>. If the character's
+					definition includes a specific <a class="see keyword" href="../Generated/Server_Character_TTSModeID.htm">
+					TTSModeID</a> and that engine is available and matches the character's <a class="see keyword" href="../Generated/Server_Character_LanguageID.htm">
+					LanguageID</a>, Double Agent loads that engine for the character. If not, Agent loads the first TTS
+					engine that SAPI returns as matching the character's language setting. You can also use the <a class="see keyword"
+					href="../Generated/Server_Character_TTSModeID.htm">TTSModeID</a> property to load a specific engine.
+					The <a class="see keyword" href="../Generated/Server_TTSEngines.htm">TTSEngines</a> collection will
+					help you determine which engines are available and which ones are compatible with the character.</p>
+				<p>To enable speech input support in your application, define a <a class="see keyword" href="../Generated/Server_Command.htm">
+				Command</a> object and set its <a class="see keyword" href="../Generated/Server_Command_VoiceCaption.htm">
+				Voice Caption</a> property. Double Agent will automatically load speech services, so that when the user
+					presses the <em class="glossary">Listening key</em> or you call <a class="see keyword" href="../Generated/Server_Character_Listen.htm">
+					Listen</a>, the speech recognition engine will be loaded. By default the character's <a class="see keyword"
+					href="../Generated/Server_Character_LanguageID.htm">LanguageID</a> will determine which engine is loaded.
+					Double Agent attempts to load the first engine that the Microsoft<sup>®</sup> Speech API (SAPI) returns
+					as matching this language. Use the <a class="see keyword" href="../Generated/Server_Character_SRModeID.htm">
+					SRModeID</a> property if you want to load a specific engine. The <a class="see keyword" href="../Generated/Server_SREngines.htm">
+					SREngines</a> collection will help you determine which engines are available and which ones are compatible
+					with the character.</p>
+				<p>Typically, Double Agent loads a text-to-speech engine when <a class="see keyword" href="../Generated/Server_Character_Speak.htm">
+				Speak</a> is first called and a speech recognition when the <em class="glossary">Listening mode</em> is
+					initiated. However, if you want to preload the speech engine, you can query the properties related to
+					the speech interfaces. For example, querying <a class="see keyword" href="../Generated/Server_Character_TTSModeID.htm">
+					TTSModeID</a> or <a class="see keyword" href="../Generated/Server_Character_SRModeID.htm">SRModeID</a>
+					will attempt to load that type of engine.</p>
+				<p>Because Double Agent's speech features are based on the Microsoft<sup>®</sup> Speech API, you can use
+					any engines that support the required speech interfaces. The Double Agent 32-bit build supports Microsoft<sup>®</sup>
+					Speech (SAPI) versions 4 and 5 for text-to-speech and version 5 for speech recognition. The Double Agent
+					64-bit build supports only version 5 for both text-to-speech and speech recognition.</p>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

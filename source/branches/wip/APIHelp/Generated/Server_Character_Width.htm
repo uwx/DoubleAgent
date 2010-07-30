@@ -12,17 +12,88 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Width Property</h4>
+					<h3>The Width Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Specifies the width of the character's image.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">get_Width</em> (&amp;<em class="token">Width</em>)</p>
+<p><em class="token">character</em>-&gt;<em class="keyword">put_Width</em> (<em class="token">Width</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Width</em> = ]<em class="token">character</em>.<em class="keyword">Width</em></p>
+<p><em class="token">character</em>.<em class="keyword">Width</em> = <em class="token">Width</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Width</em> = ]<em class="token">character</em>.<em class="keyword">Width</em></p>
+<p><em class="token">character</em>.<em class="keyword">Width</em> = <em class="token">Width</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">Width</em> = ]<em class="token">character</em>.<em class="keyword">Width</em></p>
+<p><em class="token">character</em>.<em class="keyword">Width</em> = <em class="token">Width</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">Width</em> = ]<em class="token">character</em>.<em class="keyword">Width</em></p>
+<p><em class="token">character</em>.<em class="keyword">Width</em> = <em class="token">Width</em></p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Width</em>
+								</td>
+								<td>A <em class="typename">numeric</em> value that specifies the width of the character's image.</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					The <em class="self keyword">Width</em> property is always expressed in pixels.
+				</p>
+				<p>
+					Even though the character appears in an irregularly shaped region window, the dimensions of the character
+					are based on the external dimensions of the rectangular animation frame used when the character
+					was compiled with the Microsoft Agent Character Editor.
+				</p>
+				<p class="note"><span class="note">Note:</span> This property applies to all clients of the character.</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Character_GetSize.htm">The GetSize Method</a><br /><a href="Server_Character_SetSize.htm">The SetSize Method</a></td>
 			</tr>
 		</table>
 	</body>

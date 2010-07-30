@@ -12,79 +12,101 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Show Event</h4>
+					<h3>The Show Event</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary">Signalled when a character is displayed.</div>
+					<div class="summary">
+				<p>Signalled when a character is displayed.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p><s>Event</s> <em>control</em>_<s>Show</s> (<s>ByVal</s> <em>CharacterID</em> <s>As String</s>, <s>ByVal</s> <em>Cause</em> <s>As DoubleAgent.Control.VisibilityCauseType</s>)</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>Show</s> (<s>ByVal</s> <em>CharacterID</em> <s>As String</s>, <s>ByVal</s> <em>Cause</em> <s>As VisibilityCauseType</s>)</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>Show</s> (<s>ByVal</s> <em>CharacterID</em>, <s>ByVal</s> <em>Cause</em>)</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p><s>delegate void</s> <em>control</em>_<s>Show<em>EventHandler</em></s> (<s>string</s> <em>CharacterID</em>, <s>DoubleAgent.Control.VisibilityCauseType</s> <em>Cause</em>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><s>void</s> <em>control</em>_<s>Show</s> (<s>LPCTSTR</s> <em>CharacterID</em>, <s>VisibilityCauseType</s> <em>Cause</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="keyword">Event</em> <em class="token">control</em>_<em class="keyword">Show</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em> <em class="keyword">As String</em>, <em class="keyword">ByVal</em> <em class="token">Cause</em> <em class="keyword">As DoubleAgent.Control.VisibilityCauseType</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">Show</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em> <em class="keyword">As String</em>, <em class="keyword">ByVal</em> <em class="token">Cause</em> <em class="keyword">As VisibilityCauseType</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">Show</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em>, <em class="keyword">ByVal</em> <em class="token">Cause</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="keyword">delegate void</em> <em class="token">control</em>_<em class="keyword">Show<token>EventHandler</token></em> (<em class="keyword">string</em> <em class="token">CharacterID</em>, <em class="keyword">DoubleAgent.Control.VisibilityCauseType</em> <em class="token">Cause</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="keyword">void</em> <em class="token">control</em>_<em class="keyword">Show</em> (<em class="keyword">LPCTSTR</em> <em class="token">CharacterID</em>, <em class="keyword">VisibilityCauseType</em> <em class="token">Cause</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>CharacterID</i>
+									<em class="token">CharacterID</em>
 								</td>
 								<td>The unique identifier of the character that was shown.</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Cause</i>
+									<em class="token">Cause</em>
 								</td>
 								<td>
-				A <s><a href="Control_VisibilityCauseType.htm" class="see">VisibilityCauseType</a></s> value that indicates what caused the character to be shown.
-				<table><tr><td>
-2&nbsp;=&nbsp;<s>UserShowed</s>
-</td><td>The user showed the character using the command on the character's taskbar icon pop-up menu
-				or using speech input.</td></tr><tr><td>
-4&nbsp;=&nbsp;<s>ProgramShowed</s>
-</td><td>Your application showed the character.</td></tr><tr><td>
-6&nbsp;=&nbsp;<s>OtherProgramShowed</s>
-</td><td>Another client application showed the character.</td></tr></table></td>
+				A <a href="Control_VisibilityCauseType.htm" class="see typename">VisibilityCauseType</a> value that indicates what
+				caused the character to be shown.
+				<table><tr><td xml:space="preserve">
+2&nbsp;=&nbsp;<em class="keyword">UserShowed</em>
+</td><td>
+							The user showed the character using the command on the character's taskbar icon <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>
+				or using speech input.
+						</td></tr><tr><td xml:space="preserve">
+4&nbsp;=&nbsp;<em class="keyword">ProgramShowed</em>
+</td><td>
+							Your application showed the character.
+						</td></tr><tr><td xml:space="preserve">
+6&nbsp;=&nbsp;<em class="keyword">OtherProgramShowed</em>
+</td><td>
+							Another client application showed the character.
+						</td></tr></table>
+			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					Double Agent sends this event to all clients of the character. To query the current state of
-					the character, use the <a href="Control_Character_Visible.htm" class="see">Visible</a> property.
+				<p>
+					Double Agent sends this event to all clients of the character. To query the current state of the character,
+					use the <a href="Control_Character_Visible.htm" class="see keyword">Visible</a> property.
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Event_Hide.htm">The Hide Event</a>
-					<br />
-					<a href="Control_Character_Show.htm">The Show Method</a>
-					<br />
-					<a href="Control_Character_VisibilityCause.htm">The VisibilityCause Property</a>
-					<br />
-					<a href="Control_Character_Visible.htm">The Visible Property</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_Event_Hide.htm">The Hide Event</a><br /><a href="Control_Character_Show.htm">The Show Method</a><br /><a href="Control_Character_VisibilityCause.htm">The VisibilityCause Property</a><br /><a href="Control_Character_Visible.htm">The Visible Property</a></td>
 			</tr>
 		</table>
 	</body>

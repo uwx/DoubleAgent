@@ -12,68 +12,87 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Speed Property</h4>
+					<h3>The Speed Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Returns the character's speech output (text-to-speech) speed setting.</p>
-					</div>
+				<p>Returns the character's speech output (text-to-speech) speed setting.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>Speed</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Speed</s></p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>Speed</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Speed</s></p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>Speed</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Speed</s></p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>Speed</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Speed</s></p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>character</em>.<s>get_Speed</s> (&amp;<em>Speed</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Speed</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Speed</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">Speed</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Speed</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">Speed</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Speed</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Speed</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Speed</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">get_Speed</em> (&amp;<em class="token">Speed</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Speed</i>
+									<em class="token">Speed</em>
 								</td>
 								<td>
-				A <s>numeric </s>value that specifies the speed (in words-per-minute) of the
-				character's <em>default </em>text-to-speech engine.
+				A <em class="typename">numeric</em> value that specifies the speed (in words-per-minute) of
+				the character's <em>default</em> text-to-speech engine.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					This property is of limited value since it only supplies the <em>default </em>speed from the
-					character's definition, scaled by the <a href="Control_Settings_TTSSpeed.htm" class="see">TTSSpeed</a> property.
-					It's supported for compatibility.
+				<p>
+					This property is of limited value since it only supplies the <em>default</em> speed from the character's definition,
+					scaled by the <a href="Control_Settings_TTSSpeed.htm" class="see keyword">TTSSpeed</a> property. It's supported for compatibility.
 				</p>
-					<p>
-					Although your application cannot write this value, you can include <s>Spd </s>(speed) tags
+				<p>
+					Although your application cannot write this value, you can include <em class="keyword">Spd</em> (speed) tags
 					in your speech output text that will temporarily change the output speed for a particular utterance.
-					However, using the <s>Spd </s>tag to change the character's spoken output does not affect the <s>Speed </s>
-					property value. For further information, see <a href="MsAgent.chm::/hh/msagent/spoutput_2v1w.htm">Speech Output Tags</a>.
+					However, using the <em class="keyword">Spd</em> tag to change the character's spoken output does not affect the
+					<em class="self keyword">Speed</em> property value. For further information, see <a href="MsAgent.chm::/hh/msagent/spoutput_2v1w.htm">Speech Output Tags</a>.
 				</p>
-				</td>
+			</td>
 			</tr>
 		</table>
 	</body>

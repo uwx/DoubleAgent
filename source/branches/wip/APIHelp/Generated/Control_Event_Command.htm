@@ -12,62 +12,81 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Command Event</h4>
+					<h3>The Command Event</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Signalled when the user chooses a (client's) command.</p>
-					</div>
+				<p>Signalled when the user chooses a (client's) command.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p><s>Event</s> <em>control</em>_<s>Command</s> (<s>ByVal</s> <em>UserInput</em> <s>As <a href="Control_UserInput.htm" class="see">DoubleAgent.Control.UserInput</a></s>)</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>Command</s> (<s>ByVal</s> <em>UserInput</em> <s>As <a href="Control_UserInput.htm" class="see">DaCtlUserInput</a></s>)</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>Command</s> (<s>ByVal</s> <em>UserInput</em>)</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p><s>delegate void</s> <em>control</em>_<s>Command<em>EventHandler</em></s> (<s><a href="Control_UserInput.htm" class="see">DoubleAgent.Control.UserInput</a></s> <em>UserInput</em>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><s>void</s> <em>control</em>_<s>Command (<a href="Control_UserInput.htm" class="see">IDaCtlUserInput</a> *</s> <em>UserInput</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="keyword">Event</em> <em class="token">control</em>_<em class="keyword">Command</em> (<em class="keyword">ByVal</em> <em class="token">UserInput</em> <em class="keyword">As</em> <a href="Control_UserInput.htm" class="see typename">DoubleAgent.Control.UserInput</a>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">Command</em> (<em class="keyword">ByVal</em> <em class="token">UserInput</em> <em class="keyword">As</em> <a href="Control_UserInput.htm" class="see typename">DaCtlUserInput</a>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">Command</em> (<em class="keyword">ByVal</em> <em class="token">UserInput</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="keyword">delegate void</em> <em class="token">control</em>_<em class="keyword">Command<token>EventHandler</token></em> (<a href="Control_UserInput.htm" class="see typename">DoubleAgent.Control.UserInput</a> <em class="token">UserInput</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="keyword">void</em> <em class="token">control</em>_<em class="keyword">Command (<a href="Control_UserInput.htm" class="see typename">IDaCtlUserInput</a> *</em> <em class="token">UserInput</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>UserInput</i>
+									<em class="token">UserInput</em>
 								</td>
 								<td>
-				A <s><a href="Control_UserInput.htm" class="see">UserInput</a></s> object that identifies the chosen command.
+				A <a href="Control_UserInput.htm" class="see typename">UserInput Object</a> that identifies
+				the chosen command.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					Double Agent sends this event when your application is input-active and the user chooses a
-					command from the character's pop-up menu, or by spoken input.
+				<p>
+					Double Agent sends this event when your application is <em class="glossary">input-active</em> and the user
+					chooses a command from the character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>, or by spoken input.
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_UserInput.htm">The UserInput Object</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_UserInput.htm">The UserInput Object</a></td>
 			</tr>
 		</table>
 	</body>

@@ -22,10 +22,12 @@
 #include <sphelper.h>
 #include "DaCore.h"
 #include "AgentListeningWnd.h"
+#include "AgentCharacterWnd.h"
 #include "Localize.h"
 #include "TextSize.h"
 #ifdef	_DEBUG
 #include "DebugStr.h"
+#include "DebugWin.h"
 #endif
 
 #ifdef	_DEBUG
@@ -38,7 +40,8 @@ IMPLEMENT_DLL_OBJECT(CAgentListeningWnd)
 
 CAgentListeningWnd::CAgentListeningWnd ()
 :	mCharID (0),
-	mLangID (LANG_USER_DEFAULT)
+	mLangID (LANG_USER_DEFAULT),
+	mOwnerWnd (NULL)
 {
 }
 
@@ -59,16 +62,19 @@ CAgentListeningWnd * CAgentListeningWnd::CreateInstance ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentListeningWnd::Create (HWND pParentWnd)
+bool CAgentListeningWnd::Create (CWindow * pOwnerWnd)
 {
 	bool			lRet = false;
 	tS <LOGFONT>	lLogFont;
 
 	if	(
-			(::IsWindow (pParentWnd))
-		&&	(SubclassWindow (::CreateWindowEx (0, TOOLTIPS_CLASS, _T(""), WS_POPUP|TTS_ALWAYSTIP|TTS_NOPREFIX, 0,0,0,0, pParentWnd, 0, _AtlBaseModule.GetModuleInstance(), NULL)))
+			(pOwnerWnd)
+		&&	(pOwnerWnd->IsWindow())
+		&&	(SubclassWindow (::CreateWindowEx (0, TOOLTIPS_CLASS, _T(""), WS_POPUP|TTS_ALWAYSTIP|TTS_NOPREFIX, 0,0,0,0, pOwnerWnd->m_hWnd, 0, _AtlBaseModule.GetModuleInstance(), NULL)))
 		)
 	{
+		mOwnerWnd = pOwnerWnd;
+
 		if	(
 				(GetObject (GetStockObject (DEFAULT_GUI_FONT), sizeof(lLogFont), &lLogFont) > 0)
 			&&	(mFont = CreateFontIndirect (&lLogFont))
@@ -78,7 +84,7 @@ bool CAgentListeningWnd::Create (HWND pParentWnd)
 		}
 
 		mToolInfo.uFlags = TTF_CENTERTIP|TTF_TRACK|TTF_ABSOLUTE|TTF_TRANSPARENT;
-		mToolInfo.hwnd = pParentWnd;
+		mToolInfo.hwnd = pOwnerWnd->m_hWnd;
 		mToolInfo.uId = 0;
 		mToolInfo.lpszText = _T("");
 		SendMessage (TTM_ADDTOOL, 0, (LPARAM)&mToolInfo);
@@ -211,6 +217,7 @@ void CAgentListeningWnd::RefreshTipWnd ()
 bool CAgentListeningWnd::CalcWinRect (CRect & pWinRect)
 {
 	CRect						lOldRect (pWinRect);
+	CAgentCharacterWnd *		lOwner;
 	CRect						lOwnerRect;
 	CRect						lBoundsRect (0,0,0,0);
 	tSS <MONITORINFO, DWORD>	lMonitorInfo;
@@ -230,8 +237,19 @@ bool CAgentListeningWnd::CalcWinRect (CRect & pWinRect)
 
 	if	(::IsWindowVisible (GetWindow (GW_OWNER)))
 	{
-		::GetWindowRect (GetWindow (GW_OWNER), &mToolInfo.rect);
-		lOwnerRect.CopyRect (&mToolInfo.rect);
+		mOwnerWnd->GetWindowRect (&lOwnerRect);
+		if	(
+				(mOwnerWnd->GetStyle () & WS_CHILD)
+			&&	(lOwner = dynamic_cast <CAgentCharacterWnd *> ((CAgentWnd*)mOwnerWnd))
+			)
+		{
+			CRect	lVideoRect = lOwner->GetVideoRect ();
+
+			lVideoRect.OffsetRect (lOwnerRect.left, lOwnerRect.top);
+			lOwnerRect = lVideoRect;
+		}
+		::CopyRect (&mToolInfo.rect, &lOwnerRect);
+
 #ifdef	_DEBUG_POSITION
 		LogMessage (_DEBUG_POSITION, _T("  Below  [%s]"), FormatRect(lOwnerRect));
 		LogMessage (_DEBUG_POSITION, _T("  Within [%s]"), FormatRect(lBoundsRect));

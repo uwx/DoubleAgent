@@ -61,6 +61,7 @@ protected:
 	virtual void InterfaceTypeToClassType (PropertyInfo^ pSourceProperty, Type^& pPropertyType);
 	virtual void InterfaceTypeToClassType (FieldInfo^ pSourceField, Type^& pFieldType);
 
+	virtual bool SkipGeneratedMethod (MethodInfo^ pSourceMethod, MethodAttributes & pMethodAttributes) {return false;}
 	virtual bool SkipObsoleteProperty (MethodInfo^ pSourceMethod, MethodAttributes & pMethodAttributes) {return false;}
 	virtual bool SkipObsoleteProperty (PropertyInfo^ pSourceProperty, Reflection::PropertyAttributes & pPropertyAttributes) {return false;}
 	virtual bool SkipObsoleteEvent (MethodInfo^ pSourceMethod, MethodAttributes & pMethodAttributes) {return false;}
@@ -77,6 +78,7 @@ protected:
 	virtual void FixEnumFieldName (FieldInfo^ pSourceField, String^& pFieldName, EnumBuilder^ pEnumBuilder);
 	virtual void FixPropertyName (PropertyInfo^ pSourceProperty, String^& pPropertyName) {}
 	virtual void FixEventName (EventInfo^ pSourceEvent, String^& pEventName) {}
+	virtual void FixEventFieldName (FieldInfo^ pSourceField, String^& pFieldName) {}
 
 	virtual void AllowPartiallyTrustedCallers (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes);
 	virtual void RenameAttributeTypes (Object^ pSource, Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues);
@@ -85,6 +87,7 @@ protected:
 	virtual void SetPropertyBindable (Object^ pSource, Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues);
 	virtual void SetPropertyBindable (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes);
 
+	virtual void SetActiveXMethodVisibility (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) {}
 	virtual void SetActiveXPropertyVisibility (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) {}
 	virtual void SetActiveXPropertyCategory (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) {}
 	virtual void SetActiveXEventCategory (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) {}

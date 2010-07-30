@@ -35,11 +35,14 @@
 #include "DaCtlTTSEngines.h"
 #include "DaCtlSREngine.h"
 #include "DaCtlSREngines.h"
+#include "DaGlobalConfig.h"
 #include "Registry.h"
 #include "RegistrySearch.h"
 #include "ErrorInfo.h"
 #include "GuidStr.h"
+#include "ThreadSecurity.h"
 #include "DebugStr.h"
+#include "DebugWin.h"
 
 #ifdef	_DEBUG
 #define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Control"),LogVerbose,true)&0xFFFF)
@@ -56,7 +59,9 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-UINT	DaControl::mCompleteRequestsMsg = RegisterWindowMessage (_T("1147E530-A208-11DE-ABF2-002421116FB2"));
+const UINT	DaControl::mCompleteRequestsMsg = RegisterWindowMessage (_T("1147E530-A208-11DE-ABF2-002421116FB2"));
+const UINT	DaControl::mOptionsChangedMsgId = DA_BROADCAST_OPTIONS_CHANGED;
+const UINT	DaControl::mDefaultCharacterChangedMsgId = DA_BROADCAST_DEFCHAR_CHANGED;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -1255,11 +1260,34 @@ LRESULT DaControl::OnHotKey(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+LRESULT DaControl::OnBroadcastOptionsChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+#ifdef	_DEBUG_NOTIFY
+	LogMessage (_DEBUG_NOTIFY, _T("DaControl::OnBroadcastOptionsChanged"));
+#endif
+	_AtlModule._OptionsChanged ();
+	bHandled = TRUE;
+	return 0;
+}
+
+LRESULT DaControl::OnBroadcastDefaultCharacterChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+#ifdef	_DEBUG_NOTIFY
+	LogMessage (_DEBUG_NOTIFY, _T("DaControl::OnBroadcastDefaultCharacterChanged"));
+#endif
+	_AtlModule.CEventGlobal::_DefaultCharacterChanged ();
+	bHandled = TRUE;
+	return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
 HWND DaControl::CreateControlWindow(HWND hWndParent, RECT& rcPos)
 {
+	HWND	lWindow = NULL;
 	DWORD	lStyle = WS_CHILD|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
 	DWORD	lExStyle = 0;
 
@@ -1274,7 +1302,11 @@ HWND DaControl::CreateControlWindow(HWND hWndParent, RECT& rcPos)
 		lStyle |= WS_VISIBLE;
 	}
 	CalcWindowStyles (lStyle, lExStyle);
-	return CAgentCharacterWnd::Create (hWndParent, rcPos, NULL, lStyle, lExStyle);
+	if	(lWindow = CAgentCharacterWnd::Create (hWndParent, rcPos, NULL, lStyle, lExStyle))
+	{
+		GetMsgPostingWnd ();
+	}
+	return lWindow;
 }
 
 HRESULT DaControl::CanCreateControlWindow ()
@@ -1698,13 +1730,21 @@ COLORREF DaControl::GetOleColor (OLE_COLOR pColor)
 HWND DaControl::GetMsgPostingWnd ()
 {
 	if	(
-			(
-				(mMsgPostingWnd)
-			&&	(mMsgPostingWnd->IsWindow ())
-			)
-		||	(mMsgPostingWnd = new CMsgPostingWnd <DaControl> (*this))
+			(mMsgPostingWnd)
+		&&	(mMsgPostingWnd->IsWindow ())
 		)
 	{
+		return mMsgPostingWnd->m_hWnd;
+	}
+	else
+	if	(mMsgPostingWnd = new CMsgPostingWnd <DaControl> (*this))
+	{
+		CThreadSecurity::AllowUiPiMessage (mOptionsChangedMsgId);
+		CThreadSecurity::AllowUiPiMessage (mDefaultCharacterChangedMsgId);
+
+		// Recreate as normal window to allow it to receive broadcast messages
+		mMsgPostingWnd->DestroyWindow();
+		mMsgPostingWnd->Create (NULL);
 		return mMsgPostingWnd->m_hWnd;
 	}
 	return NULL;

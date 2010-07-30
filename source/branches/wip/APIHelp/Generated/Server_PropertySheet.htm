@@ -17,8 +17,78 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4 class="remarks">Remarks</h4>
-				</td>
+					<h4 class="summary">Description</h4>
+				<p>
+					The <em class="self keyword">PropertySheet Object</em> provides access to the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a>
+					window. It allows you to show and hide the window, and retrieve and update the window's location and
+					current page.
+				</p>
+			<div id="Syntax">
+				<dl><dt>
+							<h4>
+								<a name="Methods"> </a>Methods
+							</h4>
+						</dt><dd>
+							<table class="syntax"><tr><td width="275ex">
+										<a href="Server_PropertySheet_GetPosition.htm" class="see keyword">GetPosition</a>
+									</td><td>
+										Returns the current position of the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window.
+									</td></tr><tr><td>
+										<a href="Server_PropertySheet_GetSize.htm" class="see keyword">GetSize</a>
+									</td><td>
+										Returns the current size of the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window.
+									</td></tr><tr><td>
+										<a href="Server_PropertySheet_SetPosition.htm" class="see keyword">SetPosition</a>
+									</td><td>
+										Sets the position of the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window.
+									</td></tr></table>
+						</dd><dt>
+							<h4>
+								<a name="Properties"> </a>Properties
+							</h4>
+						</dt><dd>
+							<table class="syntax"><tr><td width="275ex">
+										<a href="Server_PropertySheet_Height.htm" class="see keyword">Height</a>
+									</td><td>
+										Returns the current height, in pixels, of the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window.
+									</td></tr><tr><td>
+										<a href="Server_PropertySheet_Left.htm" class="see keyword">Left</a>
+									</td><td>
+										Specifies the horizontal location, in pixels, of the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a>
+					window.
+									</td></tr><tr><td>
+										<a href="Server_PropertySheet_Page.htm" class="see keyword">Page</a>
+									</td><td>
+										Specifies the page displayed in the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window.
+									</td></tr><tr><td>
+										<a href="Server_PropertySheet_Top.htm" class="see keyword">Top</a>
+									</td><td>
+										Specifies the vertical location, in pixels, of the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a>
+					window.
+									</td></tr><tr><td>
+										<a href="Server_PropertySheet_Visible.htm" class="see keyword">Visible</a>
+									</td><td>
+										Specifies if the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window is visible (open).
+									</td></tr><tr><td>
+										<a href="Server_PropertySheet_Width.htm" class="see keyword">Width</a>
+									</td><td>
+										Returns current width, in pixels, of the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window.
+									</td></tr></table>
+						</dd></dl>
+			</div><h4 class="remarks">Remarks</h4>
+				<p>
+					The <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window is shared among all Double Agent clients. Changes
+					to the window's location and visibility should be made with this in mind.
+				</p>
+				<p>
+					This object can be accessed using the <a href="Server_Server.htm" class="see ">Server Object's</a> <a href="Server_Server_PropertySheet.htm" class="see ">PropertySheet</a>
+					property.
+				</p>
+				<p class="note"><span class="note">Note:</span> 
+					The <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window combines the Microsoft Agent <em class="glossary">Advanced Character Options</em>
+					and <em class="glossary">Default Character Properties</em> windows.
+				</p>
+			</td>
 			</tr>
 		</table>
 	</body>

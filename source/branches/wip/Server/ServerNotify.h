@@ -26,8 +26,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 class CServerNotify :
-	public CComObjectRootEx<CComMultiThreadModel>,
 	public CEventNotify,
+	public CComObjectRootEx<CComMultiThreadModel>,
 	public IConnectionPointContainerImpl<CServerNotify>,
 	public IConnectionPointImpl<CServerNotify, &__uuidof(IDaSvrNotifySink), CComDynamicUnkArray>,
 	public IConnectionPointImpl<CServerNotify, &__uuidof(IAgentNotifySink), CComDynamicUnkArray>,
@@ -57,7 +57,7 @@ public:
 // Declarations
 public:
 	BEGIN_COM_MAP(CServerNotify)
-		COM_INTERFACE_ENTRY(IDaSvrNotifySink)
+		COM_INTERFACE_ENTRY(IConnectionPointContainer)
 	END_COM_MAP()
 
 	BEGIN_CONNECTION_POINT_MAP(CServerNotify)

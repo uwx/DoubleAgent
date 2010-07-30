@@ -27,9 +27,9 @@
 					results in a movable graphic image, or <em>sprite</em>, displayed on top of the desktop and all application
 					windows.</p>
 				<p>If the character's file is stored locally, you can simply call the <a href="../Generated/Control_Character_Play.htm">
-				Play</a> method. In other cases, such as when you've loaded an .ACF character from an HTTP server, you should
-					use the Prepare method to first retrieve the animation data. This will cause Double Agent to request
-					the animation file from the server cache it on the local machine.</p>
+				Play</a> method. In other cases, such as when you've loaded an .ACF character from an <em class="glossary">
+					HTTP</em> server, you should use the Prepare method to first retrieve the animation data. This will
+					cause Double Agent to request the animation file from the server cache it on the local machine.</p>
 				<p>The <a href="../Generated/Control_Character_Speak.htm">Speak</a> method lets you program the character
 					to speak, automatically lip-syncing the output. Further details are covered in the <a href="Gen_Output.htm">
 					Output</a> section of this document.</p>
@@ -45,8 +45,8 @@
 					Visible</a> property.</p>
 				<p>When a character is hidden, the server does not play animations; however, it still queues and processes
 					the animation request and passes a request status back to the client. In the hidden state, the character
-					cannot become <a href="Gen_InputActive.htm">input-active</a>. However, if the user speaks the name of
-					the character (when speech input is enabled), the server automatically shows the character.</p>
+					cannot become <a href="Gen_Input.htm#Active">input-active</a>. However, if the user speaks the name
+					of the character (when speech input is enabled), the server automatically shows the character.</p>
 				<h4>Requests and Synchronization</h4>
 				<p>Double Agent processes all animation calls, or <em>requests</em>, asynchronously. This enables your application's
 					code to continue handling other events while the request is being processed. For example, calls to the

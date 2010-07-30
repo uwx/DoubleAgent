@@ -12,83 +12,91 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The IdleEnabled Property</h4>
+					<h3>The IdleEnabled Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>
-					Returns or sets whether the character will show its <em>Idling </em>animations when it's not
-					busy.
-				</p>
-					</div>
+				<p>Specifies if the character will show its <em class="glossary">Idling</em> animations when it's not busy.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>IdleEnabled</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>IdleEnabled</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>IdleEnabled</s> = <em>IdleEnabled</em></p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>IdleEnabled</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>IdleEnabled</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>IdleEnabled</s> = <em>IdleEnabled</em></p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>IdleEnabled</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>IdleEnabled</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>IdleEnabled</s> = <em>IdleEnabled</em></p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>IdleEnabled</em> =] <em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>IdleEnabled</s></p>
-
-<p><em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>IdleEnabled</s> = <em>IdleEnabled</em></p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>character</em>.<s>get_IdleEnabled</s> (&amp;<em>IdleEnabled</em>)</p>
-
-<p><em>character</em>.<s>put_IdleEnabled</s> (<em>IdleEnabled</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">IdleEnabled</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">IdleEnabled</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">IdleEnabled</em> = <em class="token">IdleEnabled</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">IdleEnabled</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">IdleEnabled</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">IdleEnabled</em> = <em class="token">IdleEnabled</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">IdleEnabled</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">IdleEnabled</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">IdleEnabled</em> = <em class="token">IdleEnabled</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">IdleEnabled</em> =] <em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">IdleEnabled</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">IdleEnabled</em> = <em class="token">IdleEnabled</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">get_IdleEnabled</em> (&amp;<em class="token">IdleEnabled</em>)</p>
+<p><em class="token">character</em>-&gt;<em class="keyword">put_IdleEnabled</em> (<em class="token">IdleEnabled</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>IdleEnabled</i>
+									<em class="token">IdleEnabled</em>
 								</td>
 								<td>
-				A <s>boolean </s>value specifying whether Double Agent manages idle mode.
+				A <em class="typename">boolean</em> value specifying whether Double Agent manages idle
+				mode.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					Double Agent automatically sets a time-out after the last animation played for a character.
-					When this timer's interval is complete, Double Agent begins the <em>Idling </em>state for a character,
-					playing its associated <em>Idling </em>animations at regular intervals. If you want to disable Double
-					Agent from automatically playing the <em>Idling </em>state animations, set the property to <s>False </s>
-					and play an animation or call the <a href="Control_Character_Stop.htm" class="see">Stop</a> method.
-					Setting this value does not affect the current animation state of the character.
+				<p>
+					Double Agent automatically sets a time-out after the last animation played for a character. When this
+					timer's interval is complete, Double Agent begins the <em class="glossary">Idling</em> state for a character, playing
+					its associated <em class="glossary">Idling</em> animations at regular intervals. If you want to disable Double Agent
+					from automatically playing the <em class="glossary">Idling</em> state animations, set the property to <em class="keyword">False</em>
+					and play an animation or call the <a href="Control_Character_Stop.htm" class="see keyword">Stop</a> method. Setting this value does
+					not affect the current animation state of the character.
 				</p>
-					<p class="note">
-						<span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Character_Style.htm">The Style Property</a>
-					<br />
-					<a href="Control_Character_IdleState.htm">The IdleState Property</a>
-				</td>
+				<p class="note"><span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
+			<h4 class="seealso">See Also</h4><a href="Control_Character_Style.htm">The Style Property</a><br /><a href="Control_Character_IdleState.htm">The IdleState Property</a></td>
 			</tr>
 		</table>
 	</body>

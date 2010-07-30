@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Configuration Services</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Configuration Services</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>Double Agent includes support for user preferences. These preferences apply to all client applications
+					and can only be set by the end-user. However, client applications can query the current preference settings.</p>
+				<p>Double Agent also uses some resources that are installed and configured independently, and are therefore
+					not under its control. Specifically, this includes character definition files and speech engines. Double
+					Agent provides services that allow client applications to discover what resources are available.</p>
+				<dl>
+					<dt>
+						<h4><a name="PropSheet"></a>The Advanced Character Options Window</h4>
+					</dt>
+					<dd>
+						<p>The <em class="self">Advanced Character Options</em> window allows users to customize their interactions
+							with all characters. For example, users can disable speech input or change speech input preferences.
+							Users can also change the output settings for the word balloon. These settings override any set by a
+							client application or declared as part of the character definition.</p>
+						<p>Your application cannot change or disable these options, because they are the <em>user's</em> preferences
+							for <em>all</em> characters. However, the server will notify your application with the <em class="keyword">
+								AgentPropertyChange</em> or <em class="keyword">DefaultCharacterChange</em> event when the user
+							applies changes to these settings.</p>
+						<p>The preference settings can be accessed using the <em class="keyword">Settings</em> object. You can also
+							display or close the window using the <em class="keyword">PropertySheet</em> object's <em class="keyword">
+								Visible</em> property, and access its location through its <em class="keyword">Left</em>, <em class="keyword">
+									Top</em>, <em class="keyword">Width</em>, and <em class="keyword">Height</em> properties.</p>
+						<p class="note"><span class="note">Note: </span>The Double Agent <em class="self">Advanced Character Options</em>
+							window combines the Microsoft<sup>®</sup> Agent <em class="self">Advanced Character Options</em>
+							window and the Microsoft Agent <em class="self">Default Character Properties</em> window.</p>
+						<p class="note"><span class="note">Note: </span>The pages in the <em class="self">Advanced Character Options</em>
+							window are also included in the <em class="self">Double Agent Control Panel</em>.</p>
+					</dd>
+					<dt>
+						<h4><a name="InstalledFiles"></a>Local Character Files</h4>
+					</dt>
+					<dd>--- todo ---</dd>
+					<dt>
+						<h4><a name="InstalledSpeech"></a>Installed Speech Engines</h4>
+					</dt>
+					<dd>--- todo ---</dd>
+				</dl>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

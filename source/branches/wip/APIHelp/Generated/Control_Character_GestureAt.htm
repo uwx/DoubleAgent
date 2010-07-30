@@ -12,78 +12,99 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The GestureAt Method</h4>
+					<h3>The GestureAt Method</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Plays a character's gesturing animation towards the specified location.</p>
-					</div>
+				<p>Plays a character's gesturing animation towards the specified location.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>GestureAt</s> (<em>X</em>, <em>Y</em>)</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<s>Set</s> <em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>GestureAt</s> <em>X</em>, <em>Y</em></p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<s>Set</s> <em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>GestureAt</s> <em>X</em>, <em>Y</em></p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>GestureAt</s> (<em>X</em>, <em>Y</em>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>character</em>.<s>GestureAt</s> (<em>X</em>, <em>Y</em>, &amp;<em>Request</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">GestureAt</em> (<em class="token">X</em>, <em class="token">Y</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">GestureAt</em> <em class="token">X</em>, <em class="token">Y</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">GestureAt</em> <em class="token">X</em>, <em class="token">Y</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">GestureAt</em> (<em class="token">X</em>, <em class="token">Y</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">GestureAt</em> (<em class="token">X</em>, <em class="token">Y</em>, &amp;<em class="token">Request</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>X</i>
+									<em class="token">X</em>
 								</td>
 								<td>
-				A <s>numeric </s>value that indicates the horizontal screen coordinate, in pixels,
-				to which the character will gesture.
+				A <em class="typename">numeric</em> value that indicates the horizontal screen coordinate, in
+				pixels, to which the character will gesture.
 			</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Y</i>
+									<em class="token">Y</em>
 								</td>
 								<td>
-				A <s>numeric </s>value that indicates the vertical screen coordinate, in pixels,
-				to which the character will gesture.
+				A <em class="typename">numeric</em> value that indicates the vertical screen coordinate, in
+				pixels, to which the character will gesture.
 			</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Request</i>
+									<em class="token">Request</em>
 								</td>
 								<td>
-				A <s><a href="Control_Request.htm" class="see">Request</a></s> object your application can used to track the method's status.
+				A <a href="Control_Request.htm" class="see typename">Request Object</a> your application can
+				used to track the method's status.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					Double Agent automatically plays the appropriate animation to gesture toward the specified
-					location. The coordinates are always relative to the upper left corner of the screen.
+				<p>
+					Double Agent automatically plays the appropriate animation to gesture toward the specified location. The
+					coordinates are always relative to the upper left corner of the screen.
 				</p>
-				</td>
+			</td>
 			</tr>
 		</table>
 	</body>

@@ -17,522 +17,491 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<p>
-					A <s>Command </s>object is an item in a <a href="Control_Commands.htm" class="see">Commands</a> collection.
-					Double Agent provides the user access to your <s>Command </s>objects when your client application
-					becomes input-active.
+					<h4 class="summary">Description</h4>
+				<p>
+					A <em class="self keyword">Command Object</em> is an item in a <a href="Control_Commands.htm" class="see keyword">Commands Collection</a>.
+					Double Agent provides the user access to your <em class="self keyword">Command Objects</em> when your client application becomes
+					<em class="glossary">input-active</em>.
 				</p>
-					<ul>
-						<li>
-							<a name="Properties"> </a>
-							The <s>Command </s>object has the following <s>properties</s>:
-						<p><a href="Control_Command_Caption.htm" class="see">Caption</a>,
-							<a href="Control_Command_ConfidenceText.htm" class="see">ConfidenceText</a>,
-							<a href="Control_Command_ConfidenceThreshold.htm" class="see">ConfidenceThreshold</a>,
-							<a href="Control_Command_Enabled.htm" class="see">Enabled</a>,
-							<a href="Control_Command_Name.htm" class="see">Name</a>,
-							<a href="Control_Command_Visible.htm" class="see">Visible</a>,
-							<a href="Control_Command_VoiceCaption.htm" class="see">VoiceCaption</a>,
-							<a href="Control_Command_VoiceGrammar.htm" class="see">VoiceGrammar</a></p></li>
-					</ul>
-					<h4 class="remarks">Remarks</h4>
-					<p>
-					A command may appear in either the character's pop-up menu and the <a href="Control_CommandsWindow.htm" class="see">Voice Commands</a>
-					window, or in both. To appear in the pop-up menu it must have a <a href="Control_Command_Caption.htm" class="see">Caption</a>
-					and have the <a href="Control_Command_Visible.htm" class="see">Visible</a> property set to <s>True</s>.
-					In addition, its <a href="Control_Commands.htm" class="see">Commands</a> collection's <a href="Control_Command_Visible.htm" class="see">Visible</a>
-					property must also be set to <s>True</s>. To appear in the <a href="Control_CommandsWindow.htm" class="see">Voice Commands</a>
-					window, a <s>Command </s>must have its <a href="Control_Command_Caption.htm" class="see">Caption</a> and
-					<a href="Control_Command_VoiceGrammar.htm" class="see">VoiceGrammar</a> properties set.
+			<div id="Syntax">
+				<dl><dt>
+							<h4>
+								<a name="Properties"> </a>Properties
+							</h4>
+						</dt><dd>
+							<table class="syntax"><tr><td width="275ex">
+										<a href="Control_Command_Caption.htm" class="see keyword">Caption</a>
+									</td><td>
+										Specifies the text displayed for a <a href="Control_Command.htm" class="see keyword">Command</a> in the character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>.
+									</td></tr><tr><td>
+										<a href="Control_Command_ConfidenceText.htm" class="see keyword">ConfidenceText</a>
+									</td><td>
+										Specifies the text that appears in the <em class="glossary">Listening tip</em>.
+									</td></tr><tr><td>
+										<a href="Control_Command_ConfidenceThreshold.htm" class="see keyword">ConfidenceThreshold</a>
+									</td><td>
+										Specifies if the command's <a href="Control_Command_ConfidenceText.htm" class="see keyword">ConfidenceText</a> appears in the <em class="glossary">Listening tip</em>.
+									</td></tr><tr><td>
+										<a href="Control_Command_Enabled.htm" class="see keyword">Enabled</a>
+									</td><td>
+										Specifies if the <a href="Control_Command.htm" class="see keyword">Command</a> is enabled in the character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>.
+									</td></tr><tr><td>
+										<a href="Control_Command_Name.htm" class="see keyword">Name</a>
+									</td><td>
+										The unique name that identifies the <a href="Control_Command.htm" class="see keyword">Command Object</a> in the <a href="Control_Commands.htm" class="see keyword">Commands Collection</a>.
+									</td></tr><tr><td>
+										<a href="Control_Command_Visible.htm" class="see keyword">Visible</a>
+									</td><td>
+										Specifies if the <a href="Control_Command.htm" class="see keyword">Command</a> is visible in the character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>.
+									</td></tr><tr><td>
+										<a href="Control_Command_VoiceCaption.htm" class="see keyword">VoiceCaption</a>
+									</td><td>
+										Specifies the text displayed for the <a href="Control_Command.htm" class="see keyword">Command Object</a> in the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a>
+					window.
+									</td></tr><tr><td>
+										<a href="Control_Command_VoiceGrammar.htm" class="see keyword">VoiceGrammar</a>
+									</td><td>
+										Specifies the grammar text that is passed to the speech recognition engine for matching this <a href="Control_Command.htm" class="see keyword">Command</a>.
+									</td></tr></table>
+						</dd></dl>
+			</div><h4 class="remarks">Remarks</h4>
+				<p>
+					A command may appear in either the character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a> and the
+					<a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window, or in both. To appear in the <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>
+					it must have a <a href="Control_Command_Caption.htm" class="see keyword">Caption</a> and have the <a href="Control_Command_Visible.htm" class="see keyword">Visible</a>
+					property set to <em class="keyword">True</em>. In addition, its <a href="Control_Commands.htm" class="see keyword">Commands Collection's</a>
+					<a href="Control_Command_Visible.htm" class="see keyword">Visible</a> property must also be set to <em class="keyword">True</em>. To appear in
+					the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window, a <em class="self keyword">Command</em> must have its <a href="Control_Command_Caption.htm" class="see keyword">Caption</a>
+					and <a href="Control_Command_VoiceGrammar.htm" class="see keyword">VoiceGrammar</a> properties set.
 				</p>
-					<p>
-					When Double Agent receives input for one of your commands, it sends a <a href="Control_Event_Command.htm" class="see">Command</a>
-					event, and passes back the name of the <s>Command </s>as an attribute of the <a href="Control_UserInput.htm" class="see">UserInput</a>
-					object. You can then use conditional statements to match and process the <s>Command</s>.
+				<p>
+					When Double Agent receives input for one of your commands, it sends a <a href="Control_Event_Command.htm" class="see keyword">Command</a>
+					event, and passes back the name of the <em class="self keyword">Command</em> as an attribute of the <a href="Control_UserInput.htm" class="see keyword">UserInput Object</a>.
+					You can then use conditional statements to match and process the <em class="self keyword">Command</em>.
 				</p>
-					<p>
-					Note that a character's pop-up menu entries do not change while the menu is displayed. If you
-					add or remove commands or change their properties while the character's pop-up menu is displayed, the
-					menu reflects those changes whenever the user next shows it. However, the <a href="Control_CommandsWindow.htm" class="see">Voice Commands</a>
+				<p>
+					Note that a character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a> entries do not change while the
+					menu is displayed. If you add or remove commands or change their properties while the character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>
+					is displayed, the menu reflects those changes whenever the user next shows it. However, the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a>
 					window dynamically reflects any changes you make.
 				</p>
-					<h4 class="remarks">Referencing the Command Object</h4>
-					<ul>
-						<li>
-							To access the properties of a <s>Command </s>object, you reference it in its collection
-							using its <a href="Control_Command_Name.htm" class="see">Name</a> property. In VBScript and Visual Basic
-							you can use the <a href="Control_Command_Name.htm" class="see">Name</a> property directly:
-						<pre class="example">
-<i>control</i>.Characters("<i>CharacterID</i>").Commands("<i>Name</i>").<i>property</i>[ = <i>value</i>]
-</pre></li>
-						<li>
-							For programming languages that don't support collections, use the <a href="Control_Commands_Command.htm" class="see">Command</a>
+			
+				<h4 class="remarks">Referencing the Command Object</h4>
+				<ul><li>
+							To access the properties of a <em class="self keyword">Command Object</em>, you reference it in its collection using
+							its <a href="Control_Command_Name.htm" class="see keyword">Name</a> property. In VBScript and Visual Basic you can use the <a href="Control_Command_Name.htm" class="see keyword">Name</a>
+							property directly:
+						<p>
+							<pre class="example">
+<em class="token">control</em>.<em class="keyword">Characters</em>("<em class="token">CharacterID</em>").<em class="keyword">Commands</em>("<em class="token">Name</em>&gt;").<em class="token">property</em>[ = <em class="token">value</em>]
+</pre>
+						</p></li><li>
+							For programming languages that don't support collections, use the <a href="Control_Commands_Command.htm" class="see keyword">Command</a>
 							method:
-						<pre class="example">
-<i>control</i>.Characters("<i>CharacterID</i>").Commands.Command("<i>Name</i>").<i>property</i>[ = <i>value</i>]
-</pre></li>
-						<li>
-							You can also use a Command object by creating a reference to it. In Visual Basic, declare
-							an object variable and use the <s>Set </s>statement to create the reference:
-						<pre class="example">Dim Command1 as Object
+						<p>
+							<pre class="example">
+<em class="token">control</em>.<em class="keyword">Characters</em>("<em class="token">CharacterID</em>").<em class="keyword">Commands</em>.<em class="keyword">Command</em>("<em class="token">Name</em>").<em class="token">property</em>[ = <em class="token">value</em>]
+</pre>
+						</p></li><li>
+							You can also use a <em class="self keyword">Command Object</em> by creating a reference to it. In Visual Basic,
+							declare an object variable and use the <em class="keyword">Set</em> statement to create the reference:
+						<p>
+							<pre class="example"><em class="keyword">Dim</em> Command1 <em class="keyword">as</em> <em class="keyword">Object</em>
 ...
-Set Command1 = Agent.Characters("MyCharacterID").Commands("SampleCommand")
+<em class="keyword">Set</em> Command1 = <em class="token">control</em>.<em class="keyword">Characters</em>("MyCharacterID").<em class="keyword">Commands</em>("SampleCommand")
 ...
-Command1.Enabled = True</pre></li>
-						<li>
-							You can also declare the object as type <s>DaCtlCommand </s>and create the reference. This
+Command1.<em class="keyword">Enabled</em> = True</pre>
+						</p></li><li>
+							You can also declare the object as type <em class="keyword">DaCtlCommand</em> and create the reference. This
 							convention enables early syntax checking and binding, which results in better performance:
-						<pre class="example">Dim Command1 as DaControl.DaCtlCommand
+						<p>
+							<pre class="example"><em class="keyword">Dim</em> Command1 <em class="keyword">as</em> <em class="keyword">DaControl</em>.<em class="keyword">DaCtlCommand</em>
 ...
-Set Command1 = Agent.Characters("MyCharacterID").Commands("SampleCommand")
+<em class="keyword">Set</em> Command1 = <em class="token">control</em>.<em class="keyword">Characters</em>("MyCharacterID").<em class="keyword">Commands</em>("SampleCommand")
 ...
-Command1.Enabled = True</pre></li>
-						<li>
-							In VBScript, you can't declare a reference as a particular type, but you can still declare
-							the variable and set it to the <s>Command </s>in the collection:
-						<pre class="example">Dim Command1
+Command1.<em class="keyword">Enabled</em> = True</pre>
+						</p></li><li>
+							In VBScript, you can't declare a reference as a particular type, but you can still declare the
+							variable and set it to the <em class="self keyword">Command</em> in the collection:
+						<p>
+							<pre class="example"><em class="keyword">Dim</em> Command1
 ...
-Set Command1 = Agent.Characters("MyCharacterID").Commands("SampleCommand")
+<em class="keyword">Set</em> Command1 = <em class="token">control</em>.<em class="keyword">Characters</em>("MyCharacterID").<em class="keyword">Commands</em>("SampleCommand")
 ...
-Command1.Enabled = True</pre></li>
-					</ul>
-					<h4 class="remarks">Details</h4>
-					<p>
-					The following table summarizes how the properties of a <s>Command </s>affect its presentation:
+Command1.<em class="keyword">Enabled</em> = True</pre>
+						</p></li></ul>
+			
+				<h4 class="remarks">Details</h4>
+				<p>
+					The following table summarizes how the properties of a <em class="self keyword">Command</em> affect its presentation:
 				</p>
-					<table>
-						<tr valign="top">
-							<th align="left" valign="top" width="12%">
+				<table>
+					<tr valign="top">
+						<th align="left" valign="top" width="12%">
 							Caption<br />Property
 						</th>
-							<th align="left" valign="top" width="12%">
-							Voice Caption<br />Property
+						<th align="left" valign="top" width="12%">
+							Voice
+							Caption<br />Property
 						</th>
-							<th align="left" valign="top" width="13%">
+						<th align="left" valign="top" width="13%">
 							Voice Grammar<br />Property
 						</th>
-							<th align="left" valign="top" width="13%">
+						<th align="left" valign="top" width="13%">
 							Visible<br />Property
 						</th>
-							<th align="left" valign="top" width="12%">
+						<th align="left" valign="top" width="12%">
 							Enabled<br />Property
 						</th>
-							<th align="left" valign="top" width="18%">
-							Appears in Character's Pop-up
-							Menu
+						<th align="left" valign="top" width="18%">
+							Appears
+							in the Character's <a href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>
 						</th>
-							<th align="left" valign="top" width="20%">Appears in Voice Commands Window</th>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Set</td>
-							<td width="12%">Set</td>
-							<td width="13%">Set</td>
-							<td width="13%">True</td>
-							<td width="12%">
-							True
+						<th align="left" valign="top" width="20%">
+							Appears
+							in the <a href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window
+						</th>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Set</td>
+						<td width="12%">Set</td>
+						<td width="13%">Set</td>
+						<td width="13%">True</td>
+						<td width="12%">True</td>
+						<td width="18%">
+							Normal,
+							using <em class="keyword">Caption</em>
 						</td>
-							<td width="18%">
-							Normal, using <s>Caption</s></td>
-							<td width="20%">
-							Yes, using <s>VoiceCaption</s></td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Set</td>
-							<td width="12%">Set</td>
-							<td width="13%">
-							Set
+						<td width="20%">
+							Yes, using <em class="keyword">VoiceCaption</em>
 						</td>
-							<td width="13%">True</td>
-							<td width="12%">False</td>
-							<td width="18%">
-							Disabled, using <s>Caption</s></td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Set</td>
-							<td width="12%">
-							Set
+					</tr>
+					<tr valign="top">
+						<td width="12%">Set</td>
+						<td width="12%">Set</td>
+						<td width="13%">Set</td>
+						<td width="13%">True</td>
+						<td width="12%">False</td>
+						<td width="18%">
+							Disabled,
+							using <em class="keyword">Caption</em>
 						</td>
-							<td width="13%">Set</td>
-							<td width="13%">False</td>
-							<td width="12%">True</td>
-							<td width="18%">
-							No
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Set</td>
+						<td width="12%">Set</td>
+						<td width="13%">Set</td>
+						<td width="13%">False</td>
+						<td width="12%">True</td>
+						<td width="18%">No</td>
+						<td width="20%">
+							Yes,
+							using <em class="keyword">VoiceCaption</em>
 						</td>
-							<td width="20%">
-							Yes, using <s>VoiceCaption</s></td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">
-							Set
+					</tr>
+					<tr valign="top">
+						<td width="12%">Set</td>
+						<td width="12%">Set</td>
+						<td width="13%">Set</td>
+						<td width="13%">False</td>
+						<td width="12%">False</td>
+						<td width="18%">No</td>
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Set</td>
+						<td width="12%">Set</td>
+						<td width="13%">Empty</td>
+						<td width="13%">True</td>
+						<td width="12%">True</td>
+						<td width="18%">
+							Normal,
+							using <em class="keyword">Caption</em>
 						</td>
-							<td width="12%">Set</td>
-							<td width="13%">Set</td>
-							<td width="13%">False</td>
-							<td width="12%">
-							False
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Set</td>
+						<td width="12%">Set</td>
+						<td width="13%">Empty</td>
+						<td width="13%">True</td>
+						<td width="12%">False</td>
+						<td width="18%">
+							Disabled,
+							using <em class="keyword">Caption</em>
 						</td>
-							<td width="18%">No</td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">
-							Set
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Set</td>
+						<td width="12%">Set</td>
+						<td width="13%">Empty</td>
+						<td width="13%">False</td>
+						<td width="12%">True</td>
+						<td width="18%">No</td>
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Set</td>
+						<td width="12%">Set</td>
+						<td width="13%">Empty</td>
+						<td width="13%">False</td>
+						<td width="12%">False</td>
+						<td width="18%">No</td>
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Empty</td>
+						<td width="12%">Set</td>
+						<td width="13%">Set</td>
+						<td width="13%">True</td>
+						<td width="12%">True</td>
+						<td width="18%">No</td>
+						<td width="20%">
+							Yes,
+							using <em class="keyword">VoiceCaption</em>
 						</td>
-							<td width="12%">Set</td>
-							<td width="13%">Empty</td>
-							<td width="13%">True</td>
-							<td width="12%">
-							True
+					</tr>
+					<tr valign="top">
+						<td width="12%">Empty</td>
+						<td width="12%">Set</td>
+						<td width="13%">Set</td>
+						<td width="13%">True</td>
+						<td width="12%">False</td>
+						<td width="18%">No</td>
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Empty</td>
+						<td width="12%">Set</td>
+						<td width="13%">Set</td>
+						<td width="13%">False</td>
+						<td width="12%">True</td>
+						<td width="18%">No</td>
+						<td width="20%">
+							Yes,
+							using <em class="keyword">VoiceCaption</em>
 						</td>
-							<td width="18%">
-							Normal, using <s>Caption</s></td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Set</td>
-							<td width="12%">Set</td>
-							<td width="13%">Empty</td>
-							<td width="13%">True</td>
-							<td width="12%">
-							False
+					</tr>
+					<tr valign="top">
+						<td width="12%">Empty</td>
+						<td width="12%">Set</td>
+						<td width="13%">Set</td>
+						<td width="13%">False</td>
+						<td width="12%">False</td>
+						<td width="18%">No</td>
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Empty</td>
+						<td width="12%">Set</td>
+						<td width="13%">Empty</td>
+						<td width="13%">True</td>
+						<td width="12%">True</td>
+						<td width="18%">No</td>
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Empty</td>
+						<td width="12%">Set</td>
+						<td width="13%">Empty</td>
+						<td width="13%">True</td>
+						<td width="12%">False</td>
+						<td width="18%">No</td>
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Empty</td>
+						<td width="12%">Set</td>
+						<td width="13%">Empty</td>
+						<td width="13%">False</td>
+						<td width="12%">True</td>
+						<td width="18%">No</td>
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Empty</td>
+						<td width="12%">Set</td>
+						<td width="13%">Empty</td>
+						<td width="13%">False</td>
+						<td width="12%">False</td>
+						<td width="18%">No</td>
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Set</td>
+						<td width="12%">Empty</td>
+						<td width="13%">Set</td>
+						<td width="13%">True</td>
+						<td width="12%">True</td>
+						<td width="18%">
+							Normal,
+							using <em class="keyword">Caption</em>
 						</td>
-							<td width="18%">
-							Disabled, using <s>Caption</s></td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Set</td>
-							<td width="12%">Set</td>
-							<td width="13%">Empty</td>
-							<td width="13%">False</td>
-							<td width="12%">True</td>
-							<td width="18%">No</td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">
-							Set
+						<td width="20%">
+							Yes, using <em class="keyword">Caption</em>
 						</td>
-							<td width="12%">Set</td>
-							<td width="13%">Empty</td>
-							<td width="13%">False</td>
-							<td width="12%">
-							False
+					</tr>
+					<tr valign="top">
+						<td width="12%">Set</td>
+						<td width="12%">Empty</td>
+						<td width="13%">Set</td>
+						<td width="13%">True</td>
+						<td width="12%">False</td>
+						<td width="18%">
+							Disabled,
+							using <em class="keyword">Caption</em>
 						</td>
-							<td width="18%">No</td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">
-							Empty
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Set</td>
+						<td width="12%">Empty</td>
+						<td width="13%">Set</td>
+						<td width="13%">False</td>
+						<td width="12%">True</td>
+						<td width="18%">No</td>
+						<td width="20%">
+							Yes,
+							using <em class="keyword">Caption</em>
 						</td>
-							<td width="12%">Set</td>
-							<td width="13%">Set</td>
-							<td width="13%">True </td>
-							<td width="12%">
-							True
+					</tr>
+					<tr valign="top">
+						<td width="12%">Set</td>
+						<td width="12%">Empty</td>
+						<td width="13%">Set</td>
+						<td width="13%">False</td>
+						<td width="12%">False</td>
+						<td width="18%">No</td>
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Set</td>
+						<td width="12%">Empty</td>
+						<td width="13%">Empty</td>
+						<td width="13%">True</td>
+						<td width="12%">True</td>
+						<td width="18%">
+							Normal,
+							using <em class="keyword">Caption</em>
 						</td>
-							<td width="18%">No</td>
-							<td width="20%">
-							Yes, using <s>VoiceCaption</s></td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Empty</td>
-							<td width="12%">Set</td>
-							<td width="13%">Set</td>
-							<td width="13%">True</td>
-							<td width="12%">
-							False
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Set</td>
+						<td width="12%">Empty</td>
+						<td width="13%">Empty</td>
+						<td width="13%">True</td>
+						<td width="12%">False</td>
+						<td width="18%">
+							Disabled,
+							using <em class="keyword">Caption</em>
 						</td>
-							<td width="18%">No</td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">
-							Empty
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Set</td>
+						<td width="12%">Empty</td>
+						<td width="13%">Empty</td>
+						<td width="13%">False</td>
+						<td width="12%">True</td>
+						<td width="18%">No</td>
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Set</td>
+						<td width="12%">Empty</td>
+						<td width="13%">Empty</td>
+						<td width="13%">False</td>
+						<td width="12%">False</td>
+						<td width="18%">No</td>
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Empty</td>
+						<td width="12%">Empty</td>
+						<td width="13%">Set</td>
+						<td width="13%">True</td>
+						<td width="12%">True</td>
+						<td width="18%">No</td>
+						<td width="20%">
+							No<sup>*</sup>
 						</td>
-							<td width="12%">Set</td>
-							<td width="13%">Set</td>
-							<td width="13%">False</td>
-							<td width="12%">
-							True
+					</tr>
+					<tr valign="top">
+						<td width="12%">Empty</td>
+						<td width="12%">Empty</td>
+						<td width="13%">Set</td>
+						<td width="13%">True</td>
+						<td width="12%">False</td>
+						<td width="18%">No</td>
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Empty</td>
+						<td width="12%">Empty</td>
+						<td width="13%">Set</td>
+						<td width="13%">False</td>
+						<td width="12%">True</td>
+						<td width="18%">No</td>
+						<td width="20%">
+							No<sup>*</sup>
 						</td>
-							<td width="18%">No</td>
-							<td width="20%">
-							Yes, using <s>VoiceCaption</s></td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Empty</td>
-							<td width="12%">Set</td>
-							<td width="13%">Set</td>
-							<td width="13%">False</td>
-							<td width="12%">False</td>
-							<td width="18%">No</td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">
-							Empty
-						</td>
-							<td width="12%">Set</td>
-							<td width="13%">Empty</td>
-							<td width="13%">True</td>
-							<td width="12%">
-							True
-						</td>
-							<td width="18%">No</td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">
-							Empty
-						</td>
-							<td width="12%">Set</td>
-							<td width="13%">Empty</td>
-							<td width="13%">True</td>
-							<td width="12%">
-							False
-						</td>
-							<td width="18%">No</td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">
-							Empty
-						</td>
-							<td width="12%">Set</td>
-							<td width="13%">Empty</td>
-							<td width="13%">False</td>
-							<td width="12%">
-							True
-						</td>
-							<td width="18%">No</td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">
-							Empty
-						</td>
-							<td width="12%">Set</td>
-							<td width="13%">Empty</td>
-							<td width="13%">False</td>
-							<td width="12%">
-							False
-						</td>
-							<td width="18%">No</td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">
-							Set
-						</td>
-							<td width="12%">Empty</td>
-							<td width="13%">Set</td>
-							<td width="13%">True</td>
-							<td width="12%">
-							True
-						</td>
-							<td width="18%">
-							Normal, using <s>Caption</s></td>
-							<td width="20%">
-							Yes, using <s>Caption</s></td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Set</td>
-							<td width="12%">Empty</td>
-							<td width="13%">
-							Set
-						</td>
-							<td width="13%">True</td>
-							<td width="12%">False</td>
-							<td width="18%">
-							Disabled, using <s>Caption</s></td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Set</td>
-							<td width="12%">
-							Empty
-						</td>
-							<td width="13%">Set</td>
-							<td width="13%">False</td>
-							<td width="12%">True</td>
-							<td width="18%">
-							No
-						</td>
-							<td width="20%">
-							Yes, using <s>Caption</s></td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">
-							Set
-						</td>
-							<td width="12%">Empty</td>
-							<td width="13%">Set</td>
-							<td width="13%">False</td>
-							<td width="12%">
-							False
-						</td>
-							<td width="18%">No</td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">
-							Set
-						</td>
-							<td width="12%">Empty</td>
-							<td width="13%">Empty</td>
-							<td width="13%">True</td>
-							<td width="12%">
-							True
-						</td>
-							<td width="18%">
-							Normal, using <s>Caption</s></td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Set</td>
-							<td width="12%">Empty</td>
-							<td width="13%">Empty</td>
-							<td width="13%">True</td>
-							<td width="12%">False</td>
-							<td width="18%">
-							Disabled, using <s>Caption</s></td>
-							<td width="20%">
-							No
-						</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Set</td>
-							<td width="12%">Empty</td>
-							<td width="13%">
-							Empty
-						</td>
-							<td width="13%">False</td>
-							<td width="12%">True</td>
-							<td width="18%">No</td>
-							<td width="20%">
-							No
-						</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Set</td>
-							<td width="12%">Empty</td>
-							<td width="13%">
-							Empty
-						</td>
-							<td width="13%">False</td>
-							<td width="12%">False</td>
-							<td width="18%">No</td>
-							<td width="20%">
-							No
-						</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Empty</td>
-							<td width="12%">Empty</td>
-							<td width="13%">
-							Set
-						</td>
-							<td width="13%">True </td>
-							<td width="12%">True</td>
-							<td width="18%">No</td>
-							<td width="20%">
-							No<sup>*</sup></td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Empty</td>
-							<td width="12%">Empty</td>
-							<td width="13%">Set</td>
-							<td width="13%">True</td>
-							<td width="12%">False</td>
-							<td width="18%">No</td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Empty</td>
-							<td width="12%">Empty</td>
-							<td width="13%">Set</td>
-							<td width="13%">False</td>
-							<td width="12%">True</td>
-							<td width="18%">No</td>
-							<td width="20%">
-							No<sup>*</sup></td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Empty</td>
-							<td width="12%">
-							Empty
-						</td>
-							<td width="13%">Set</td>
-							<td width="13%">False</td>
-							<td width="12%">False</td>
-							<td width="18%">
-							No
-						</td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Empty</td>
-							<td width="12%">
-							Empty
-						</td>
-							<td width="13%">Empty</td>
-							<td width="13%">True</td>
-							<td width="12%">True</td>
-							<td width="18%">
-							No
-						</td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Empty</td>
-							<td width="12%">
-							Empty
-						</td>
-							<td width="13%">Empty</td>
-							<td width="13%">True</td>
-							<td width="12%">False</td>
-							<td width="18%">
-							No
-						</td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Empty</td>
-							<td width="12%">
-							Empty
-						</td>
-							<td width="13%">Empty</td>
-							<td width="13%">False</td>
-							<td width="12%">True</td>
-							<td width="18%">
-							No
-						</td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td width="12%">Empty</td>
-							<td width="12%">
-							Empty
-						</td>
-							<td width="13%">Empty</td>
-							<td width="13%">False</td>
-							<td width="12%">False</td>
-							<td width="18%">
-							No
-						</td>
-							<td width="20%">No</td>
-						</tr>
-						<tr valign="top">
-							<td colspan="7" width="100%">
-								<sup>*</sup>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Empty</td>
+						<td width="12%">Empty</td>
+						<td width="13%">Set</td>
+						<td width="13%">False</td>
+						<td width="12%">False</td>
+						<td width="18%">No</td>
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Empty</td>
+						<td width="12%">Empty</td>
+						<td width="13%">Empty</td>
+						<td width="13%">True</td>
+						<td width="12%">True</td>
+						<td width="18%">No</td>
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Empty</td>
+						<td width="12%">Empty</td>
+						<td width="13%">Empty</td>
+						<td width="13%">True</td>
+						<td width="12%">False</td>
+						<td width="18%">No</td>
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Empty</td>
+						<td width="12%">Empty</td>
+						<td width="13%">Empty</td>
+						<td width="13%">False</td>
+						<td width="12%">True</td>
+						<td width="18%">No</td>
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td width="12%">Empty</td>
+						<td width="12%">Empty</td>
+						<td width="13%">Empty</td>
+						<td width="13%">False</td>
+						<td width="12%">False</td>
+						<td width="18%">No</td>
+						<td width="20%">No</td>
+					</tr>
+					<tr valign="top">
+						<td colspan="7" width="100%">
+							<sup>*</sup>
 							The command is still voice-accessible.
 						</td>
-						</tr>
-					</table>
-				</td>
+					</tr>
+				</table>
+			</td>
 			</tr>
 		</table>
 	</body>

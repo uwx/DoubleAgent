@@ -12,17 +12,128 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Activate Method</h4>
+					<h3>The Activate Method</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Sets the active client or character.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">Activate</em> (<em class="token">State</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Activate</em> (<em class="token">State</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Activate</em> (<em class="token">State</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Activate</em>[ <em class="token">State</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Activate</em>[ <em class="token">State</em>]</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">State</em>
+								</td>
+								<td>
+				An optional <em class="typename">numeric</em> value from the <a href="Server_ActiveStateType.htm" class="see typename">ActiveStateType Enumeration</a>:
+				<table><tr><td xml:space="preserve">
+0&nbsp;=&nbsp;<em class="keyword">Inactive</em>
+</td><td>
+							Your client application is <em>not</em> the character's active client.
+						</td></tr><tr><td xml:space="preserve">
+1&nbsp;=&nbsp;<em class="keyword">Active</em>
+</td><td>
+							Your client application is the character's active client.
+						</td></tr><tr><td xml:space="preserve">
+2&nbsp;=&nbsp;<em class="keyword">InputActive</em>
+</td><td>
+							The character is the <em class="glossary">input-active</em> character and will receive user input.
+						</td></tr></table>
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					Avoid calling this method directly after a <a href="Server_Character_Show.htm" class="see keyword">Show</a> method. <a href="Server_Character_Show.htm" class="see keyword">Show</a>
+					automatically sets the <em class="glossary">input-active</em> client. When the character is shown, the <em class="self keyword">Activate</em>
+					call may fail if it gets processed before the <a href="Server_Character_Show.htm" class="see keyword">Show</a> method completes.
+				</p>
+				<p class="note"><span class="note">Note:</span> 
+					Calling this method with <em class="token">State</em> set to <em class="keyword">1</em>
+					(<a href="Server_ActiveStateType_Active.htm" class="see see">Active</a>) does not typically generate an <a href="Server_Event_ActivateInputState.htm" class="see keyword">ActivateInputState</a>
+					event unless there are no other characters loaded or your application is already <em class="glossary">input-active</em>.
+				</p>
+			
+				<h4 class="details">Details</h4>
+				<p>
+					When multiple characters are visible, only one of the characters receives speech input at a time. Similarly,
+					when multiple client applications share the same character, only one of the clients receives
+					mouse input (for example, <a href="Server_Event_Click.htm" class="see keyword">Click</a> or <a href="Server_Event_DragStart.htm" class="see keyword">Drag</a>
+					events). The character set to receive mouse and speech input is the <em class="glossary">input-active</em>
+					character and the client that receives the input is the <em class="glossary">active</em> client of that character. (The
+					<em class="glossary">input-active</em> character's window also appears at the top of the character windows' z-order.)
+					Typically, the user determines the <em class="glossary">input-active</em> character by explicitly selecting the
+					character. However, input activation also changes when a character is shown or hidden (the character
+					becomes or is no longer <em class="glossary">input-active</em>, respectively.)
+				</p>
+				<p>
+					You can also use this method to explicitly manage when your client receives input directed to the character,
+					such as when your application itself becomes active. For example, setting <em class="token">State</em> to <em class="keyword">2</em>
+					(<a href="Server_ActiveStateType_InputActive.htm" class="see see">InputActive</a>) makes the character <em class="glossary">input-active</em>
+					and your client receives all mouse and speech input events generated from user interaction with the
+					character. Therefore, it also makes your client the <em class="glossary">input-active</em> client of the character.
+				</p>
+				<p>
+					However, you can also set yourself to be the <em class="glossary">active</em> client for a character without
+					making the character <em class="glossary">input-active</em>, by setting <em class="token">State</em> to <em class="keyword">1</em>
+					(<a href="Server_ActiveStateType_Active.htm" class="see see">Active</a>). This allows your client to receive input directed
+					to that character when the character does become <em class="glossary">input-active</em>. Similarly, you can set
+					your client to <em>not</em> be the <em class="glossary">active</em> client (not to receive input) when the character
+					becomes <em class="glossary">input-active</em>, by setting <em class="token">State</em> to <em class="keyword">0</em>
+					(<a href="Server_ActiveStateType_Inactive.htm" class="see see">Inactive</a>).
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Event_ActivateInputState.htm">The ActivateInputState Event</a></td>
 			</tr>
 		</table>
 	</body>

@@ -241,7 +241,7 @@ bool FixupAssembly::FixupWrapperAttribute (Object^ pSource, Object^ pTarget, Cus
 		)
 	{
 #ifdef	_LOG_WRAPPERS
-		LogMessage (_LOG_WRAPPERS, _T("***> Type       [%s] skip [%s]"), _BT(lSourceType), _B(pAttribute->ToString()));
+		LogMessage (_LOG_WRAPPERS, _T("===> Type       [%s] skip [%s]"), _BT(lSourceType), _B(pAttribute->ToString()));
 #endif
 		lRet = true;
 	}
@@ -262,6 +262,7 @@ bool FixupAssembly::FixupWrapperAttribute (Object^ pSource, Object^ pTarget, Cus
 	if	(
 			(lSourceMethod)
 		&&	(IsCoClassWrapper (lSourceMethod->DeclaringType))
+		&&	(!TypeLibFuncAttribute::typeid->IsAssignableFrom (pAttribute->Constructor->DeclaringType))
 		)
 	{
 #ifdef	_LOG_WRAPPERS
@@ -273,6 +274,7 @@ bool FixupAssembly::FixupWrapperAttribute (Object^ pSource, Object^ pTarget, Cus
 	if	(
 			(lSourceProperty)
 		&&	(IsCoClassWrapper (lSourceProperty->DeclaringType))
+		&&	(!TypeLibVarAttribute::typeid->IsAssignableFrom (pAttribute->Constructor->DeclaringType))
 		)
 	{
 #ifdef	_LOG_WRAPPERS
@@ -511,7 +513,7 @@ void FixupAssembly::HideNonBrowsableMethod (MethodInfo^ pSourceMethod, MethodAtt
 			pMethodAttributes = (MethodAttributes) ((int)pMethodAttributes & ~(int)MethodAttributes::MemberAccessMask | (int)MethodAttributes::Family);
 		}
 #ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("---> Method     [%s] in [%s] from [%s] to [%s] for [%s]"), _BM(pSourceMethod), _BMT(pSourceMethod), _B(mCopy->MethodAttrsStr(pSourceMethod->Attributes)), _B(mCopy->MethodAttrsStr(pMethodAttributes)), _B(mCopy->TypeLibFuncFlagsStr(lTypeLibFuncFlags)));
+		LogMessage (_LOG_FIXES, _T("---> Method     [%s.%s] from [%s] to [%s] for [%s]"), _BMT(pSourceMethod), _BM(pSourceMethod), _B(mCopy->MethodAttrsStr(pSourceMethod->Attributes)), _B(mCopy->MethodAttrsStr(pMethodAttributes)), _B(mCopy->TypeLibFuncFlagsStr(lTypeLibFuncFlags)));
 #endif
 	}
 #endif
@@ -532,7 +534,7 @@ void FixupAssembly::SealAccessorOverride (MethodInfo^ pSourceMethod, MethodAttri
 	{
 		pMethodAttributes = (MethodAttributes) ((int)pMethodAttributes | (int)MethodAttributes::Final);
 #ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("---> Method     [%s] in [%s] from [%s] to [%s]"), _BM(pSourceMethod), _BMT(pSourceMethod), _B(mCopy->MethodAttrsStr(pSourceMethod->Attributes)), _B(mCopy->MethodAttrsStr(pMethodAttributes)));
+		LogMessage (_LOG_FIXES, _T("---> Method     [%s.%s] from [%s] to [%s]"), _BMT(pSourceMethod), _BM(pSourceMethod), _B(mCopy->MethodAttrsStr(pSourceMethod->Attributes)), _B(mCopy->MethodAttrsStr(pMethodAttributes)));
 #endif
 	}
 #endif
@@ -551,7 +553,7 @@ void FixupAssembly::ProtectHiddenMethod (MethodInfo^ pSourceMethod, MethodAttrib
 	{
 		pMethodAttributes = (MethodAttributes) ((int)pMethodAttributes & ~(int)MethodAttributes::MemberAccessMask | (int)MethodAttributes::Assembly);
 #ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("---> Method     [%s] in [%s] from [%s] to [%s]"), _BM(pSourceMethod), _BMT(pSourceMethod), _B(mCopy->MethodAttrsStr(pSourceMethod->Attributes)), _B(mCopy->MethodAttrsStr(pMethodAttributes)));
+		LogMessage (_LOG_FIXES, _T("---> Method     [%s.%s] from [%s] to [%s]"), _BMT(pSourceMethod), _BM(pSourceMethod), _B(mCopy->MethodAttrsStr(pSourceMethod->Attributes)), _B(mCopy->MethodAttrsStr(pMethodAttributes)));
 #endif
 	}
 #endif
@@ -574,7 +576,7 @@ void FixupAssembly::FixMethodOverride (MethodBase^ pSourceMethod, String^& pMeth
 		{
 			pMethodName = lOverrideMethod->Name;
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("---> Method     [%s] as [%s] in [%s] for override [%s.%s]"), _BM(pSourceMethod), _B(pMethodName), _BMT(pSourceMethod), _BMT(lOverrideMethod), _BM(lOverrideMethod));
+			LogMessage (_LOG_FIXES, _T("---> Method     [%s.%s] as [%s] for override [%s.%s]"), _BMT(pSourceMethod), _BM(pSourceMethod), _B(pMethodName), _BMT(lOverrideMethod), _BM(lOverrideMethod));
 #endif
 		}
 	}
@@ -590,33 +592,36 @@ void FixupAssembly::FixParameterName (MethodBase^ pSourceMethod, ParameterInfo^ 
 {
 	if	(
 			(pParameterName)
-		&&	(pParameterName->Length > 1)
 		&&	(
-				(pParameterName[0] != 'p')
-			||	(!Char::IsUpper (pParameterName, 1))
+				(
+					(pParameterName->Length == 1)
+				&&	(!Char::IsUpper (pParameterName, 0))
+				)
+			||	(
+					(pParameterName->Length > 1)
+				&&	(
+						(pParameterName[0] != 'p')
+					||	(!Char::IsUpper (pParameterName, 1))
+					)
+				)
 			)
 		)
 	{
 		String^	lParameterName;
 
-#if	FALSE
-		if	(
-				(pParameterName->Length > 2)
-			&&	(pParameterName[0] == 'p')
-			)
-		{
-			lParameterName = String::Concat (pParameterName->Substring (0,1) ,pParameterName->Substring (1,1)->ToUpper(),  pParameterName->Substring (2));
-		}
-		else
-#endif
+		if	(pParameterName->Length > 1)
 		{
 			lParameterName = String::Concat (pParameterName->Substring (0,1)->ToUpper(), pParameterName->Substring (1));
+		}
+		else
+		{
+			lParameterName = pParameterName->ToUpper();
 		}
 
 		if	(String::Compare (lParameterName, pParameterName) != 0)
 		{
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("---> Param      [%s] to [%s] in [%s] [%s]"), _B(pParameterName), _B(lParameterName), _BM(pSourceMethod), _BMT(pSourceMethod));
+			LogMessage (_LOG_FIXES, _T("---> Param      [%s] to [%s] in [%s.%s]"), _B(pParameterName), _B(lParameterName), _BMT(pSourceMethod), _BM(pSourceMethod));
 #endif
 			pParameterName = lParameterName;
 		}
@@ -633,7 +638,7 @@ void FixupAssembly::FixFieldName (FieldInfo^ pSourceField, String^& pFieldName)
 	{
 		pFieldName = pFieldName->Substring (4);
 #ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("---> Field      [%s] as [%s] in [%s]"), _B(pSourceField->Name), _B(pFieldName), _BMT(pSourceField));
+		LogMessage (_LOG_FIXES, _T("---> Field      [%s.%s] as [%s]"), _BMT(pSourceField), _B(pSourceField->Name), _B(pFieldName));
 #endif
 	}
 	else
@@ -641,7 +646,7 @@ void FixupAssembly::FixFieldName (FieldInfo^ pSourceField, String^& pFieldName)
 	{
 		pFieldName = pFieldName->Substring (3);
 #ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("---> Field      [%s] as [%s] in [%s]"), _B(pSourceField->Name), _B(pFieldName), _BMT(pSourceField));
+		LogMessage (_LOG_FIXES, _T("---> Field      [%s.%s] as [%s]"), _BMT(pSourceField), _B(pSourceField->Name), _B(pFieldName));
 #endif
 	}
 	else
@@ -649,38 +654,41 @@ void FixupAssembly::FixFieldName (FieldInfo^ pSourceField, String^& pFieldName)
 	{
 		pFieldName = pFieldName->Substring (2);
 #ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("---> Field      [%s] as [%s] in [%s]"), _B(pSourceField->Name), _B(pFieldName), _BMT(pSourceField));
+		LogMessage (_LOG_FIXES, _T("---> Field      [%s.%s] as [%s]"), _BMT(pSourceField), _B(pSourceField->Name), _B(pFieldName));
 #endif
 	}
 
 	if	(
-			(pFieldName->Length > 1)
-		&&	(
-				(pFieldName[0] != 'm')
-			||	(!Char::IsUpper (pFieldName, 1))
+			(
+				(
+					(pFieldName->Length == 1)
+				&&	(!Char::IsUpper (pFieldName, 0))
+				)
+			||	(
+					(pFieldName->Length >= 1)
+				&&	(
+						(pFieldName[0] != 'm')
+					||	(!Char::IsUpper (pFieldName, 1))
+					)
+				)
 			)
 		)
 	{
 		String^	lFieldName;
 
-#if	FALSE
-		if	(
-				(pFieldName->Length > 2)
-			&&	(pFieldName[0] == 'm')
-			)
-		{
-			lFieldName = String::Concat (pFieldName->Substring (0,1), pFieldName->Substring (1,1)->ToUpper(), pFieldName->Substring (2));
-		}
-		else
-#endif
+		if	(pFieldName->Length > 1)
 		{
 			lFieldName = String::Concat (pFieldName->Substring (0,1)->ToUpper(), pFieldName->Substring (1));
+		}
+		else
+		{
+			lFieldName = pFieldName->ToUpper();
 		}
 
 		if	(String::Compare (lFieldName, pFieldName) != 0)
 		{
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("---> Field      [%s] as [%s] in [%s]"), _B(pFieldName), _B(lFieldName), _BMT(pSourceField));
+			LogMessage (_LOG_FIXES, _T("---> Field      [%s.%s] as [%s]"), _BMT(pSourceField), _B(pFieldName), _B(lFieldName));
 #endif
 			pFieldName = lFieldName;
 		}
@@ -711,7 +719,7 @@ void FixupAssembly::FixEnumFieldName (FieldInfo^ pSourceField, String^& pFieldNa
 	{
 		pFieldName = pFieldName->Substring (lNamePrefix->Length+1);
 #ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("---> Field      [%s] as [%s] in [%s]"), _BM(pSourceField), _B(pFieldName), _BT(pEnumBuilder));
+		LogMessage (_LOG_FIXES, _T("---> Field      [%s.%s] as [%s]"), _BT(pEnumBuilder), _BM(pSourceField), _B(pFieldName));
 #endif
 	}
 }
@@ -825,7 +833,7 @@ bool FixupAssembly::UnhideGetEnumerator (Object^ pSource, Object^ pTarget, Custo
 	{
 #ifdef	_LOG_FIXES
 		int	lTypeLibFuncFlags = (Int16) pAttribute->ConstructorArguments [0].Value;
-		LogMessage (_LOG_FIXES, _T("---> Skip       [%s] for [%s]"), _B(mCopy->TypeLibFuncFlagsStr((TypeLibFuncFlags)lTypeLibFuncFlags)), _BM(lTargetMethod));
+		LogMessage (_LOG_FIXES, _T("---> Skip       [%s] for [%s.%s]"), _B(mCopy->TypeLibFuncFlagsStr((TypeLibFuncFlags)lTypeLibFuncFlags)), _BMT(lTargetMethod), _BM(lTargetMethod));
 #endif
 		lRet = true;
 	}
@@ -1079,7 +1087,7 @@ void FixupAssembly::SetDebuggerHiddenMethod (Object^ pSource, Object^ pTarget, L
 			array <Object^>^	lAttrArgValues = gcnew array <Object^> (1);
 
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("---> NoDebug    [%s] in [%s]"), _BM(lTargetMethod), _BMT(lTargetMethod));
+			LogMessage (_LOG_FIXES, _T("---> NoDebug    [%s.%s]"), _BMT(lTargetMethod), _BM(lTargetMethod));
 #endif
 			lAttrArgTypes [0] = System::Diagnostics::DebuggerBrowsableState::typeid;
 			lAttrArgValues [0] = System::Diagnostics::DebuggerBrowsableState::Never;
@@ -1124,7 +1132,7 @@ void FixupAssembly::SetDebuggerHiddenProperty (Object^ pSource, Object^ pTarget,
 			array <Object^>^	lAttrArgValues = gcnew array <Object^> (1);
 
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("---> NoDebug    [%s] in [%s]"), _BM(lTargetProperty), _BMT(lTargetProperty));
+			LogMessage (_LOG_FIXES, _T("---> NoDebug    [%s.%s]"), _BMT(lTargetProperty), _BM(lTargetProperty));
 #endif
 			lAttrArgTypes [0] = System::Diagnostics::DebuggerBrowsableState::typeid;
 			lAttrArgValues [0] = System::Diagnostics::DebuggerBrowsableState::Never;

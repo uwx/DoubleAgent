@@ -12,17 +12,81 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Unload Method</h4>
+					<h3>The Unload Method</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Unloads a <a href="Server_Character.htm" class="see keyword">Character</a> and releases any resources it uses.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">server</em>-&gt;<em class="keyword">Unload</em> (<em class="token">CharacterID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="token">server</em>.<em class="keyword">Unload</em> (<em class="token">CharacterID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="token">server</em>.<em class="keyword">Unload</em> (<em class="token">CharacterID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="token">server</em>.<em class="keyword">Unload</em> <em class="token">CharacterID</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="token">server</em>.<em class="keyword">Unload</em> <em class="token">CharacterID</em></p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">CharacterID</em>
+								</td>
+								<td>
+			The unique <em class="typename">numeric</em> identifier assigned when the character was loaded.
+		</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					When you no longer need a <a href="Server_Character.htm" class="see keyword">Character</a>, use this method to free up memory used
+					to store information about the character. To access the character again, use the <a href="Server_Server_Load.htm" class="see keyword">Load</a>
+					method.
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Server_Load.htm">The Load Method</a></td>
 			</tr>
 		</table>
 	</body>

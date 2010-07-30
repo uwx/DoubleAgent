@@ -561,7 +561,7 @@ HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 DWORD CAgentWnd::GetAlphaSmoothing () const
 {
 	DWORD	lRet = CDirectShowWnd::GetAlphaSmoothing ();
-	
+
 	if	(m_hWnd)
 	{
 		if	(IsEqualGUID (mVideoRenderType, MEDIASUBTYPE_ARGB32))

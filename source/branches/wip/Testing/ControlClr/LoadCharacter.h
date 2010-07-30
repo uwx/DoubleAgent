@@ -173,6 +173,8 @@ private:
 
 		CharacterTree->BeginUpdate();
 
+		lRootNode = CharacterTree->Nodes->Add ("<default>");
+
 		for each (lFilePath in lFiles->FilePaths)
 		{
 			lPathName = Path::GetDirectoryName (lFilePath);
@@ -198,9 +200,12 @@ private:
 	{
 		if	(
 				(e->Node)
-			&&	(e->Node->Level > 0)
+//			&&	(e->Node->Level > 0)
 			&&	(CharacterTree->SelectedNode)
-			&&	(CharacterTree->SelectedNode->Level > 0)
+			&&	(
+					(CharacterTree->SelectedNode->Level > 0)
+				||	(CharacterTree->SelectedNode->PrevNode == nullptr)
+				)
 			)
 		{
 			DialogResult = System::Windows::Forms::DialogResult::OK;
@@ -216,6 +221,15 @@ private:
 			)
 		{
 			CharacterID->Text = Path::GetFileNameWithoutExtension (e->Node->Text);
+			OkButton->Enabled = true;
+		}
+		else
+		if	(
+				(e->Node)
+			&&	(e->Node->PrevNode == nullptr)
+			)
+		{
+			CharacterID->Text = e->Node->Text;
 			OkButton->Enabled = true;
 		}
 		else
@@ -237,6 +251,15 @@ private:
 				OkButton->Enabled = true;
 			}
 			else
+			if	(
+					(CharacterTree->SelectedNode)
+				&&	(CharacterTree->SelectedNode->PrevNode == nullptr)
+				)
+			{
+				CharacterID->Text = CharacterTree->SelectedNode->Text;
+				OkButton->Enabled = true;
+			}
+			else
 			{
 				OkButton->Enabled = false;
 			}
@@ -252,6 +275,14 @@ private: System::Void LoadCharacter_FormClosed(System::Object^  sender, System::
 				)
 			{
 				mFilePath = Path::Combine (CharacterTree->SelectedNode->Parent->Text, CharacterTree->SelectedNode->Text);
+			}
+			else
+			if	(
+					(CharacterTree->SelectedNode)
+				&&	(CharacterTree->SelectedNode->PrevNode == nullptr)
+				)
+			{
+				mFilePath = String::Empty;
 			}
 			mCharacterID = CharacterID->Text;
 		}

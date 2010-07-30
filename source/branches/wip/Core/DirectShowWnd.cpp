@@ -1357,7 +1357,7 @@ DWORD CDirectShowWnd::SetAlphaSmoothing (DWORD pAlphaSmoothing)
 	DWORD	lRet = mAlphaSmoothing;
 
 	if	(!m_hWnd)
-	{	
+	{
 		mAlphaSmoothing = pAlphaSmoothing;
 	}
 	return lRet;

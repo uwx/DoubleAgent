@@ -34,7 +34,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E517-A208-11DE-ABF2-002421116FB2}")) D
 {
 protected:
 	DaSvrAnimationNames ();
-public:	
+public:
 	virtual ~DaSvrAnimationNames ();
 
 // Attributes

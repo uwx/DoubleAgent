@@ -59,6 +59,7 @@
 #define	_DEBUG_REQUESTS			(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_STYLE			(GetProfileDebugInt(_T("DebugStyle"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_NOTIFY_PATH		(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_DEFAULT_CHAR		(GetProfileDebugInt(_T("DebugDefaultChar"),LogVerbose,true)&0xFFFF)
 #define	_LOG_FILE_LOAD			(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF)
 #endif
 
@@ -73,6 +74,7 @@ CDaCmnCharacter::CDaCmnCharacter ()
 	mLangID (LANG_USER_DEFAULT),
 	mFile (NULL),
 	mWnd (NULL),
+	mIsDefault (false),
 	mSapiVoice (NULL),
 	mSapiInput (NULL),
 	mIdleEnabled (true),
@@ -236,7 +238,7 @@ void CDaCmnCharacter::Unrealize (bool pForce)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaCmnCharacter::OpenFile (CAgentFile * pFile)
+HRESULT CDaCmnCharacter::OpenFile (CAgentFile * pFile, bool pIsDefault)
 {
 	HRESULT	lResult = S_OK;
 
@@ -247,6 +249,8 @@ HRESULT CDaCmnCharacter::OpenFile (CAgentFile * pFile)
 	else
 	if	(mFile = pFile)
 	{
+		mIsDefault = pIsDefault;
+
 		if	(!mNotify->mAnchor->AddFileClient (mFile, this))
 		{
 			mNotify->mAnchor->CacheFile (mFile, this);
@@ -419,11 +423,15 @@ BSTR CDaCmnCharacter::GetName () const
 	return NULL;
 }
 
-HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pProvider, CString & pFilePath)
+HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pProvider, CString & pFilePath, bool * pIsDefault)
 {
 	HRESULT	lResult = S_OK;
 
 	pFilePath.Empty ();
+	if	(pIsDefault)
+	{
+		*pIsDefault = false;
+	}
 
 	if	(!IsEmptyParm (&pProvider))
 	{
@@ -444,6 +452,10 @@ HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pProvider, CString & pFilePath)
 	if	(pFilePath.IsEmpty ())
 	{
 		pFilePath = CAgentFiles::GetDefCharPath ();
+		if	(pIsDefault)
+		{
+			*pIsDefault = true;
+		}
 #ifdef	_LOG_FILE_LOAD
 		if	(LogIsActive (_LOG_FILE_LOAD))
 		{
@@ -652,6 +664,7 @@ long CDaCmnCharacter::Hide (bool pFast, bool pImmediate)
 	long					lReqID = 0;
 	CAgentCharacterWnd *	lCharacterWnd;
 	CAgentPopupWnd *		lPopupWnd;
+	CAgentBalloonWnd *		lBalloonWnd;
 
 	StopListening (false, ListenComplete_CharacterClientDeactivated);
 
@@ -662,6 +675,10 @@ long CDaCmnCharacter::Hide (bool pFast, bool pImmediate)
 			lCharacterWnd->ClearQueuedActions (-1, AGENTREQERR_INTERRUPTEDCODE, _T("Hide"));
 			lCharacterWnd->StopIdle (_T("Hide"));
 			lCharacterWnd->Stop ();
+			if	(lBalloonWnd = lCharacterWnd->GetBalloonWnd())
+			{
+				lBalloonWnd->HideBalloon (true);
+			}
 		}
 		if	(lPopupWnd = GetPopupWnd ())
 		{
@@ -2212,9 +2229,9 @@ bool CDaCmnCharacter::_OnDefaultCommand (long pCharID, HWND pOwner, const CPoint
 
 bool CDaCmnCharacter::DoContextMenu (HWND pOwner, const CPoint & pPosition)
 {
-	CDaCmnCommands *		lCommands;
+	CDaCmnCommands *	lCommands;
 	CDaCmnCommand *		lCommand;
-	USHORT				lCommandId;
+	long				lCommandId;
 	CVoiceCommandsWnd *	lVoiceCommandsWnd = NULL;
 
 	if	(mListeningAnchor)
@@ -2226,19 +2243,35 @@ bool CDaCmnCharacter::DoContextMenu (HWND pOwner, const CPoint & pPosition)
 		&&	(lCommandId = lCommands->DoContextMenu (pOwner, pPosition, lVoiceCommandsWnd))
 		)
 	{
-		if	(
-				(!DoMenuCommand (lCommandId))
-			&&	(lCommand = lCommands->GetCommand (lCommandId))
-			&&	(lCommand->mEnabled)
-			)
+		if	(HIWORD (lCommandId))
 		{
-			PreNotify ();
-			try
+			CDaCmnCharacter *	lCharacter;
+
+			if	(
+					(mNotify)
+				&&	(mNotify->mAnchor)
+				&&	(lCharacter = mNotify->mAnchor->mAnchor.GetGlobalCharacter (LOWORD (lCommandId)))
+				)
 			{
-				mNotify->Command ((long)lCommandId, NULL);
+				lCharacter->DoMenuActivate ();
 			}
-			catch AnyExceptionDebug
-			PostNotify ();
+		}
+		else
+		{
+			if	(
+					(!DoMenuCommand (LOWORD (lCommandId)))
+				&&	(lCommand = lCommands->GetCommand (LOWORD (lCommandId)))
+				&&	(lCommand->mEnabled)
+				)
+			{
+				PreNotify ();
+				try
+				{
+					mNotify->Command (lCommandId, NULL);
+				}
+				catch AnyExceptionDebug
+				PostNotify ();
+			}
 		}
 		return true;
 	}
@@ -2338,6 +2371,29 @@ bool CDaCmnCharacter::DoMenuCommand (USHORT pCommandId)
 		}
 	}
 	return lRet;
+}
+
+bool CDaCmnCharacter::DoMenuActivate ()
+{
+	if	(IsVisible ())
+	{
+		if	(
+				(!IsInputActive ())
+			||	(!IsClientActive ())
+			)
+		{
+			SetClientActive (true, true);
+		}
+	}
+	else
+	{
+		if	(!IsClientActive ())
+		{
+			SetClientActive (true, false);
+		}
+		Show (false);
+	}
+	return true;
 }
 
 bool CDaCmnCharacter::NotifyVoiceCommand (USHORT pCommandId, interface ISpRecoResult * pRecoResult, bool pGlobalCommand)
@@ -2463,14 +2519,14 @@ LPVOID CDaCmnCharacter::FindOtherRequest (long pReqID, CDaCmnCharacter *& pOther
 
 	pOtherCharacter = NULL;
 
-	for	(lFileNdx = 0; lFile = mNotify->mAnchor->GetCachedFile (lFileNdx); lFileNdx++)
+	for	(lFileNdx = 0; lFile = mNotify->mAnchor->mAnchor.GetCachedFile (lFileNdx); lFileNdx++)
 	{
 		CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 		INT_PTR								lClientNdx;
 		CDaCmnCharacter *					lCharacter;
 		CAgentCharacterWnd *				lCharacterWnd;
 
-		if	(mNotify->mAnchor->GetFileClients (lFile, lFileClients))
+		if	(mNotify->mAnchor->mAnchor.GetFileClients (lFile, lFileClients))
 		{
 			for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 			{
@@ -2547,9 +2603,163 @@ void CDaCmnCharacter::_OnOptionsChanged ()
 	}
 }
 
-void CDaCmnCharacter::_OnDefaultCharacterChanged ()
+/////////////////////////////////////////////////////////////////////////////
+
+void CDaCmnCharacter::_OnDefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFilePath)
 {
+#ifdef	_DEBUG_DEFAULT_CHAR
+	if	(
+			(IsDefault ())
+		&&	(LogIsActive (_DEBUG_DEFAULT_CHAR))
+		)
+	{
+		LogMessage (_DEBUG_DEFAULT_CHAR, _T("[%p] [%d] CDaCmnCharacter::_OnDefaultCharacterChanged [%s] to [%s]"), this, mCharID, GetName(), pFilePath);
+	}
+#endif
 	StopListening (false, ListenComplete_DefaultCharacterChanged);
+
+	if	(IsDefault ())
+	{
+		try
+		{
+			HRESULT					lResult;
+			CAgentCharacterWnd *	lCharacterWnd = GetCharacterWnd (false);
+			CAgentPopupWnd *		lPopupWnd = GetPopupWnd (false);
+			CAgentFile *			lOldFile = GetFile ();
+			tPtr <CAgentFile>		lLoadFile;
+			CAgentFile *			lNewFile;
+
+			if	(
+					(lCharacterWnd)
+				&&	(lOldFile)
+				&&	(!IsEqualGUID (lOldFile->GetGuid(), pCharGuid))
+				&&	(
+						(lNewFile = mNotify->mAnchor->mAnchor.FindCachedFile (pCharGuid))
+					||	(
+							(lLoadFile = CAgentFile::CreateInstance())
+						&&	(SUCCEEDED (LogComErr (LogNormal, lLoadFile->Open (pFilePath))))
+						&&	(lNewFile = lLoadFile)
+						)
+					)
+				)
+			{
+				try
+				{
+					bool	lVisible = IsVisible ();
+					bool	lClientActive = IsClientActive ();
+					bool	lIsInputActive = IsInputActive ();
+					long	lActiveClient = GetActiveClient ();
+					DWORD	lStyle = GetStyle ();
+					LANGID	lLangID = GetLangID ();
+					CPoint	lPosition;
+					CSize	lSize;
+					CSize	lDefaultSize;
+
+					GetPosition (&lPosition.x, &lPosition.y);
+					GetSize (&lSize.cx, &lSize.cy);
+					GetOriginalSize (&lDefaultSize.cx, &lDefaultSize.cy);
+#ifdef	_DEBUG_DEFAULT_CHAR
+					if	(LogIsActive (_DEBUG_DEFAULT_CHAR))
+					{
+						LogMessage (_DEBUG_DEFAULT_CHAR, _T("[%p] [%d] Reinitialize   [%u %u %u %d %8.8X %4.4X] [%s] [%s] [%s]"), this, mCharID, lVisible, lClientActive, lIsInputActive, lActiveClient, lStyle, lLangID, FormatPoint(lPosition), FormatSize(lSize), FormatSize(lDefaultSize));
+					}
+#endif
+					Terminate (false);
+
+					if	(SUCCEEDED (lResult = LogComErr (LogNormal, OpenFile (lNewFile, true))))
+					{
+						Initialize (mCharID, mNotify, mListeningAnchor);
+						lLoadFile.Detach ();
+					}
+					if	(
+							(SUCCEEDED (lResult))
+						&&	(
+								(lPopupWnd)
+							?	(SUCCEEDED (lResult = LogComErr (LogNormal, RealizePopup (lStyle))))
+							:	(SUCCEEDED (lResult = LogComErr (LogNormal, Realize (lCharacterWnd, lStyle))))
+							)
+						)
+					{
+						CSize	lOldSize (lSize);
+						CSize	lOldDefaultSize (lDefaultSize);
+
+						GetOriginalSize (&lDefaultSize.cx, &lDefaultSize.cy);
+						if	(lSize == lOldDefaultSize)
+						{
+							lSize = lDefaultSize;
+						}
+#ifdef	_DEBUG_DEFAULT_CHAR
+						if	(LogIsActive (_DEBUG_DEFAULT_CHAR))
+						{
+							LogMessage (_DEBUG_DEFAULT_CHAR, _T("[%p] [%d] Reinitializing [%u %u %u %d %8.8X %4.4X] [%s] [%s] [%s]"), this, mCharID, IsVisible(), IsClientActive(), IsInputActive(), GetActiveClient(), GetStyle(), GetLangID(), FormatPoint(lPosition), FormatSize(lSize), FormatSize(lDefaultSize));
+						}
+#endif
+						if	(lPopupWnd)
+						{
+							SetPosition (lPosition.x, lPosition.y);
+							SetSize (lSize.cx, lSize.cy);
+						}
+						else
+						{
+							CRect	lVideoRect (lPosition, lSize);
+							CRect	lOldRect (lPosition, lOldSize);
+							CRect	lClientRect;
+
+							lCharacterWnd->GetClientRect (&lClientRect);
+							lVideoRect.OffsetRect (lOldRect.CenterPoint().x-lVideoRect.CenterPoint().x, lOldRect.CenterPoint().y-lVideoRect.CenterPoint().y);
+							lVideoRect.OffsetRect (min (lClientRect.right-lVideoRect.right, 0), min (lClientRect.bottom-lVideoRect.bottom, 0));
+							lVideoRect.OffsetRect (max (lClientRect.left-lVideoRect.left, 0), max (lClientRect.top-lVideoRect.top, 0));
+							lCharacterWnd->SetVideoRect (lVideoRect);
+						}
+
+						if	(
+								(FAILED (SetLangID (lLangID)))
+							&&	(FAILED (SetLangID (GetUserDefaultUILanguage ())))
+							)
+						{
+							SetLangID (MAKELANGID (LANG_ENGLISH, SUBLANG_DEFAULT));
+						}
+						mNotify->mGlobal->_CharacterNameChanged (mCharID);
+
+						if	(lVisible)
+						{
+							Show (true, true);
+							if	(lIsInputActive)
+							{
+								SetClientActive (true, true);
+							}
+							else
+							if	(lClientActive)
+							{
+								SetClientActive (true, false);
+							}
+							Show (false);
+						}
+#ifdef	_DEBUG_DEFAULT_CHAR
+						if	(LogIsActive (_DEBUG_DEFAULT_CHAR))
+						{
+							GetPosition (&lPosition.x, &lPosition.y);
+							GetSize (&lSize.cx, &lSize.cy);
+							LogMessage (_DEBUG_DEFAULT_CHAR, _T("[%p] [%d] Reinitialized  [%u %u %u %d %8.8X %4.4X] [%s] [%s] [%s]"), this, mCharID, IsVisible(), IsClientActive(), IsInputActive(), GetActiveClient(), GetStyle(), GetLangID(), FormatPoint(lPosition), FormatSize(lSize), FormatSize(lDefaultSize));
+						}
+#endif
+					}
+					else
+					{
+						Terminate (false);
+#ifdef	_DEBUG_DEFAULT_CHAR
+						if	(LogIsActive (_DEBUG_DEFAULT_CHAR))
+						{
+							LogMessage (_DEBUG_DEFAULT_CHAR, _T("[%p] [%d] Reinitialize failed"), this, mCharID);
+						}
+#endif
+					}
+				}
+				catch AnyExceptionDebug
+			}
+		}
+		catch AnyExceptionDebug
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -3185,7 +3395,7 @@ HRESULT CDaCmnCharacter::GetTTSSpeed (long *Speed)
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-#ifndef	_STRICT_COMPATIBILITY	
+#ifndef	_STRICT_COMPATIBILITY
 #ifndef	_WIN64
 	if	(
 			(GetSapiVoice (true))
@@ -3217,7 +3427,7 @@ HRESULT CDaCmnCharacter::GetTTSPitch (short *Pitch)
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-#ifndef	_STRICT_COMPATIBILITY	
+#ifndef	_STRICT_COMPATIBILITY
 #ifndef	_WIN64
 	if	(
 			(GetSapiVoice (true))

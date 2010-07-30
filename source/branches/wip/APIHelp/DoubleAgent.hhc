@@ -14,56 +14,60 @@
 		</OBJECT>
 	<UL>
 		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="The Microsoft Agent User Interface">
-			<param name="Local" value="MsAgent.chm::/hh/msagent/userinterface_3y2a.htm">
+			<param name="Name" value="The Double Agent User Interface">
+			<param name="Local" value="html/UI_Intro.htm">
 			</OBJECT>
 		<UL>
 			<LI> <OBJECT type="text/sitemap">
-				<param name="Name" value="Introduction">
-				<param name="Local" value="MsAgent.chm::/hh/msagent/userinterface_1iuq.htm">
-				</OBJECT>
-			<LI> <OBJECT type="text/sitemap">
 				<param name="Name" value="The Character Window">
-				<param name="Local" value="MsAgent.chm::/hh/msagent/userinterface_6jsi.htm">
+				<param name="Local" value="html/UI_Intro.htm#Character">
 				</OBJECT>
 			<LI> <OBJECT type="text/sitemap">
-				<param name="Name" value="The Character Taskbar Icon">
-				<param name="Local" value="MsAgent.chm::/hh/msagent/userinterface_0oj6.htm">
+				<param name="Name" value="The Pop-up Menu">
+				<param name="Local" value="html/UI_Intro.htm#Menu">
 				</OBJECT>
 			<LI> <OBJECT type="text/sitemap">
-				<param name="Name" value="The Voice Commands Window">
-				<param name="Local" value="MsAgent.chm::/hh/msagent/userinterface_0tgy.htm">
+				<param name="Name" value="The Notification Icon">
+				<param name="Local" value="html/UI_Intro.htm#Icon">
 				</OBJECT>
 			<LI> <OBJECT type="text/sitemap">
 				<param name="Name" value="The Word Balloon">
-				<param name="Local" value="MsAgent.chm::/hh/msagent/userinterface_9pde.htm">
+				<param name="Local" value="html/UI_Intro.htm#Balloon">
 				</OBJECT>
 			<LI> <OBJECT type="text/sitemap">
-				<param name="Name" value="The Listening Tip Window">
-				<param name="Local" value="MsAgent.chm::/hh/msagent/userinterface_9kqa.htm">
+				<param name="Name" value="The Listening Tip">
+				<param name="Local" value="html/UI_Intro.htm#ListeningTip">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="The Voice Commands Window">
+				<param name="Local" value="html/UI_Intro.htm#VoiceCommands">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Image Rendering">
+				<param name="Local" value="html/UI_Rendering.htm">
 				</OBJECT>
 			<LI> <OBJECT type="text/sitemap">
 				<param name="Name" value="The Advanced Character Options Window">
-				<param name="Local" value="MsAgent.chm::/hh/msagent/userinterface_94qa.htm">
+				<param name="Local" value="html/UI_PropSheet.htm">
 				</OBJECT>
 			<UL>
 				<LI> <OBJECT type="text/sitemap">
 					<param name="Name" value="The Output Page">
-					<param name="Local" value="MsAgent.chm::/hh/msagent/userinterface_0kaa.htm">
+					<param name="Local" value="html/UI_PropSheet.htm#Output">
 					</OBJECT>
 				<LI> <OBJECT type="text/sitemap">
 					<param name="Name" value="The Speech Input Page">
-					<param name="Local" value="MsAgent.chm::/hh/msagent/userinterface_481e.htm">
+					<param name="Local" value="html/UI_PropSheet.htm#SpeechInput">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="The Gallery Page">
+					<param name="Local" value="html/UI_PropSheet.htm#Gallery">
 					</OBJECT>
 				<LI> <OBJECT type="text/sitemap">
 					<param name="Name" value="The Copyright Page">
-					<param name="Local" value="MsAgent.chm::/hh/msagent/userinterface_7goi.htm">
+					<param name="Local" value="html/UI_PropSheet.htm#Copyright">
 					</OBJECT>
 			</UL>
-			<LI> <OBJECT type="text/sitemap">
-				<param name="Name" value="The Default Character Properties Window">
-				<param name="Local" value="MsAgent.chm::/hh/msagent/userinterface_144y.htm">
-				</OBJECT>
 		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="Programming Double Agent">
@@ -99,27 +103,27 @@
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="Loading a Character">
 						<param name="Local" value="Programming/Gen_Animation.htm#LoadCharacter">
-						<param name="ImageNumber" value="17">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="Loading the Default Character">
 						<param name="Local" value="Programming/Gen_Animation.htm#LoadDefault">
-						<param name="ImageNumber" value="17">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="Animating a Character">
 						<param name="Local" value="Programming/Gen_Animation.htm#AnimateCharacter">
-						<param name="ImageNumber" value="17">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="Requests and Synchronization">
 						<param name="Local" value="Programming/Gen_Animation.htm#Requests">
-						<param name="ImageNumber" value="17">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="State Animations">
 						<param name="Local" value="Programming/Gen_Animation.htm#States">
-						<param name="ImageNumber" value="17">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 				</UL>
 				<LI> <OBJECT type="text/sitemap">
@@ -130,22 +134,22 @@
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="Animation Sound Effects">
 						<param name="Local" value="Programming/Gen_Output.htm#Effects">
-						<param name="ImageNumber" value="17">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="Synthesized Speech Support">
 						<param name="Local" value="Programming/Gen_Output.htm#Speech">
-						<param name="ImageNumber" value="17">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="Audio Output Support">
 						<param name="Local" value="Programming/Gen_Output.htm#Audio">
-						<param name="ImageNumber" value="17">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="Word Balloon Support">
 						<param name="Local" value="Programming/Gen_Output.htm#Balloon">
-						<param name="ImageNumber" value="17">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 				</UL>
 				<LI> <OBJECT type="text/sitemap">
@@ -156,58 +160,1159 @@
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="Input-Active Client">
 						<param name="Local" value="Programming/Gen_Input.htm#Active">
-						<param name="ImageNumber" value="17">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="Pop-up Menu Support">
 						<param name="Local" value="Programming/Gen_Input.htm#Menu">
-						<param name="ImageNumber" value="17">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="Speech Input Support">
 						<param name="Local" value="Programming/Gen_InputSpeech.htm">
-						<param name="ImageNumber" value="17">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="Speech Engine Selection">
 						<param name="Local" value="Programming/Gen_InputSpeech.htm#Engine">
-						<param name="ImageNumber" value="17">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="Speech Input Events">
 						<param name="Local" value="Programming/Gen_InputSpeech.htm#Events">
-						<param name="ImageNumber" value="17">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Voice Commands Window">
 						<param name="Local" value="Programming/Gen_VoiceCommands.htm">
-						<param name="ImageNumber" value="17">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Listening Tip">
 						<param name="Local" value="Programming/Gen_ListeningTip.htm">
-						<param name="ImageNumber" value="17">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 				</UL>
 				<LI> <OBJECT type="text/sitemap">
-					<param name="Name" value="Information Services">
-					<param name="Local" value="Programming/Gen_Information.htm">
+					<param name="Name" value="Configuration Services">
+					<param name="Local" value="Programming/Gen_Config.htm">
 					</OBJECT>
 				<UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Advanced Character Options Window">
-						<param name="Local" value="Programming/Gen_PropSheet.htm">
-						<param name="ImageNumber" value="17">
+						<param name="Local" value="Programming/Gen_Config.htm#PropSheet">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="Local Character Files">
-						<param name="Local" value="Programming/Gen_InstalledFiles.htm">
-						<param name="ImageNumber" value="17">
+						<param name="Local" value="Programming/Gen_Config.htm#InstalledFiles">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="Installed Speech Engines">
-						<param name="Local" value="Programming/Gen_InstalledSpeech.htm">
-						<param name="ImageNumber" value="17">
+						<param name="Local" value="Programming/Gen_Config.htm#InstalledSpeech">
+						<param name="ImageNumber" value="11">
+						</OBJECT>
+				</UL>
+			</UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Programming the Double Agent Server">
+				<param name="Local" value="Programming/Svr_Programming.htm">
+				</OBJECT>
+			<UL>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Documentation Conventions">
+					<param name="Local" value="Programming/Svr_DocumentationConventions.htm">
+					<param name="ImageNumber" value="11">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Overview">
+					</OBJECT>
+				<UL>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="Using the Server in Applications">
+						<param name="Local" value="Programming/Svr_Programming_Apps.htm">
+						</OBJECT>
+					<UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="Loading Character and Animation Data">
+							<param name="Local" value="Programming/Svr_Programming_Load.htm">
+							<param name="ImageNumber" value="11">
+							</OBJECT>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="Creating a Notification Sink">
+							<param name="Local" value="Programming/Svr_Programming_Sink.htm">
+							<param name="ImageNumber" value="11">
+							</OBJECT>
+					</UL>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="Using Speech Services">
+						<param name="Local" value="Programming/Svr_Programming_Speech.htm">
+						<param name="ImageNumber" value="11">
+						</OBJECT>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="Updating from Previous Versions">
+						<param name="Local" value="Programming/Svr_Programming_Upgrade.htm">
+						<param name="ImageNumber" value="11">
+						</OBJECT>
+				</UL>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Classes">
+					</OBJECT>
+				<UL>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The Server Object">
+						<param name="Local" value="Generated/Server_Server.htm">
+						</OBJECT>
+					<UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="Server Object Methods">
+							<param name="Local" value="Generated/Server_Server.htm#Methods">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FindCharacterSREngines Method">
+								<param name="Local" value="Generated/Server_Server_FindCharacterSREngines.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FindCharacterTTSEngines Method">
+								<param name="Local" value="Generated/Server_Server_FindCharacterTTSEngines.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FindSREngines Method">
+								<param name="Local" value="Generated/Server_Server_FindSREngines.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FindTTSEngines Method">
+								<param name="Local" value="Generated/Server_Server_FindTTSEngines.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GetCharacterSREngine Method">
+								<param name="Local" value="Generated/Server_Server_GetCharacterSREngine.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GetCharacterTTSEngine Method">
+								<param name="Local" value="Generated/Server_Server_GetCharacterTTSEngine.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GetVersion Method">
+								<param name="Local" value="Generated/Server_Server_GetVersion.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Load Method">
+								<param name="Local" value="Generated/Server_Server_Load.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Register Method">
+								<param name="Local" value="Generated/Server_Server_Register.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ShowDefaultCharacterProperties Method">
+								<param name="Local" value="Generated/Server_Server_ShowDefaultCharacterProperties.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Unload Method">
+								<param name="Local" value="Generated/Server_Server_UnLoad.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Unregister Method">
+								<param name="Local" value="Generated/Server_Server_Unregister.htm">
+								</OBJECT>
+						</UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="Server Object Properties">
+							<param name="Local" value="Generated/Server_Server.htm#Properties">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Character Property">
+								<param name="Local" value="Generated/Server_Server_Character.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CharacterFiles Property">
+								<param name="Local" value="Generated/Server_Server_CharacterFiles.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CharacterStyle Property">
+								<param name="Local" value="Generated/Server_Server_CharacterStyle.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CommandsWindow Property">
+								<param name="Local" value="Generated/Server_Server_CommandsWindow.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The PropertySheet Property">
+								<param name="Local" value="Generated/Server_Server_PropertySheet.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Settings Property">
+								<param name="Local" value="Generated/Server_Server_Settings.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SREngines Property">
+								<param name="Local" value="Generated/Server_Server_SREngines.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The TTSEngines Property">
+								<param name="Local" value="Generated/Server_Server_TTSEngines.htm">
+								</OBJECT>
+						</UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="Server Object Events">
+							<param name="Local" value="Generated/Server_Server.htm#Events">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ActivateInputState Event">
+								<param name="Local" value="Generated/Server_Event_ActivateInputState.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ActiveClientChange Event">
+								<param name="Local" value="Generated/Server_Event_ActiveClientChange.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The AgentPropertyChange Event">
+								<param name="Local" value="Generated/Server_Event_AgentPropertyChange.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The BalloonVisibleState Event">
+								<param name="Local" value="Generated/Server_Event_BalloonVisibleState.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Bookmark Event">
+								<param name="Local" value="Generated/Server_Event_Bookmark.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Click Event">
+								<param name="Local" value="Generated/Server_Event_Click.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Command Event">
+								<param name="Local" value="Generated/Server_Event_Command.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The DblClick Event">
+								<param name="Local" value="Generated/Server_Event_DblClick.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The DefaultCharacterChange Event">
+								<param name="Local" value="Generated/Server_Event_DefaultCharacterChange.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The DragComplete Event">
+								<param name="Local" value="Generated/Server_Event_DragComplete.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The DragStart Event">
+								<param name="Local" value="Generated/Server_Event_DragStart.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Idle Event">
+								<param name="Local" value="Generated/Server_Event_Idle.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ListeningState Event">
+								<param name="Local" value="Generated/Server_Event_ListeningState.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Move Event">
+								<param name="Local" value="Generated/Server_Event_Move.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The RequestComplete Event">
+								<param name="Local" value="Generated/Server_Event_RequestComplete.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The RequestStart Event">
+								<param name="Local" value="Generated/Server_Event_RequestStart.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Size Event">
+								<param name="Local" value="Generated/Server_Event_Size.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The VisibleState Event">
+								<param name="Local" value="Generated/Server_Event_VisibleState.htm">
+								</OBJECT>
+						</UL>
+					</UL>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The Character Object">
+						<param name="Local" value="Generated/Server_Character.htm">
+						</OBJECT>
+					<UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="Character Object Methods">
+							<param name="Local" value="Generated/Server_Character.htm#Methods">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Activate Method">
+								<param name="Local" value="Generated/Server_Character_Activate.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FindSREngines Method">
+								<param name="Local" value="Generated/Server_Character_FindSREngines.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FindTTSEngines Method">
+								<param name="Local" value="Generated/Server_Character_FindTTSEngines.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GenerateIcon Method">
+								<param name="Local" value="Generated/Server_Character_GenerateIcon.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GestureAt Method">
+								<param name="Local" value="Generated/Server_Character_GestureAt.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GetIconIdentity Method">
+								<param name="Local" value="Generated/Server_Character_GetIconIdentity.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GetOriginalSize Method">
+								<param name="Local" value="Generated/Server_Character_GetOriginalSize.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GetPosition Method">
+								<param name="Local" value="Generated/Server_Character_GetPosition.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GetSize Method">
+								<param name="Local" value="Generated/Server_Character_GetSize.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GetVersion Method">
+								<param name="Local" value="Generated/Server_Character_GetVersion.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Hide Method">
+								<param name="Local" value="Generated/Server_Character_Hide.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Interrupt Method">
+								<param name="Local" value="Generated/Server_Character_Interrupt.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Listen Method">
+								<param name="Local" value="Generated/Server_Character_Listen.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The MoveTo Method">
+								<param name="Local" value="Generated/Server_Character_MoveTo.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Play Method">
+								<param name="Local" value="Generated/Server_Character_Play.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Prepare Method">
+								<param name="Local" value="Generated/Server_Character_Prepare.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SetIconIdentity Method">
+								<param name="Local" value="Generated/Server_Character_SetIconIdentity.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SetPosition Method">
+								<param name="Local" value="Generated/Server_Character_SetPosition.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SetSize Method">
+								<param name="Local" value="Generated/Server_Character_SetSize.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Show Method">
+								<param name="Local" value="Generated/Server_Character_Show.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ShowPopupMenu Method">
+								<param name="Local" value="Generated/Server_Character_ShowPopupMenu.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Speak Method">
+								<param name="Local" value="Generated/Server_Character_Speak.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Stop Method">
+								<param name="Local" value="Generated/Server_Character_Stop.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The StopAll Method">
+								<param name="Local" value="Generated/Server_Character_StopAll.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Think Method">
+								<param name="Local" value="Generated/Server_Character_Think.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Wait Method">
+								<param name="Local" value="Generated/Server_Character_Wait.htm">
+								</OBJECT>
+						</UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="Character Object Properties">
+							<param name="Local" value="Generated/Server_Character.htm#Properties">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ActiveState Property">
+								<param name="Local" value="Generated/Server_Character_ActiveState.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Animations Property">
+								<param name="Local" value="Generated/Server_Character_Animations.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Balloon Property">
+								<param name="Local" value="Generated/Server_Character_Balloon.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CharacterID Property">
+								<param name="Local" value="Generated/Server_Character_CharacterID.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Commands Property">
+								<param name="Local" value="Generated/Server_Character_Commands.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Description Property">
+								<param name="Local" value="Generated/Server_Character_Description.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ExtraData Property">
+								<param name="Local" value="Generated/Server_Character_ExtraData.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FileName Property">
+								<param name="Local" value="Generated/Server_Character_FileName.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FilePath Property">
+								<param name="Local" value="Generated/Server_Character_FilePath.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The HasIcon Property">
+								<param name="Local" value="Generated/Server_Character_HasIcon.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Height Property">
+								<param name="Local" value="Generated/Server_Character_Height.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The IconIdentity Property">
+								<param name="Local" value="Generated/Server_Character_IconIdentity.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The IconTip Property">
+								<param name="Local" value="Generated/Server_Character_IconTip.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The IconVisible Property">
+								<param name="Local" value="Generated/Server_Character_IconVisible.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The IdleState Property">
+								<param name="Local" value="Generated/Server_Character_IdleState.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The LanguageID Property">
+								<param name="Local" value="Generated/Server_Character_LanguageID.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Left Property">
+								<param name="Local" value="Generated/Server_Character_Left.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ListeningStatus Property">
+								<param name="Local" value="Generated/Server_Character_ListeningStatus.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The MoveCause Property">
+								<param name="Local" value="Generated/Server_Character_MoveCause.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Name Property">
+								<param name="Local" value="Generated/Server_Character_Name.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The OriginalHeight Property">
+								<param name="Local" value="Generated/Server_Character_OriginalHeight.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The OriginalWidth Property">
+								<param name="Local" value="Generated/Server_Character_OriginalWidth.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The OtherClientCount Property">
+								<param name="Local" value="Generated/Server_Character_OtherClientCount.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SREngine Property">
+								<param name="Local" value="Generated/Server_Character_SREngine.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SRModeID Property">
+								<param name="Local" value="Generated/Server_Character_SRModeID.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Style Property">
+								<param name="Local" value="Generated/Server_Character_Style.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Top Property">
+								<param name="Local" value="Generated/Server_Character_Top.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The TTSEngine Property">
+								<param name="Local" value="Generated/Server_Character_TTSEngine.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The TTSModeID Property">
+								<param name="Local" value="Generated/Server_Character_TTSModeID.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The UniqueID Property">
+								<param name="Local" value="Generated/Server_Character_UniqueID.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The VisibilityCause Property">
+								<param name="Local" value="Generated/Server_Character_VisibilityCause.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Visible Property">
+								<param name="Local" value="Generated/Server_Character_Visible.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Width Property">
+								<param name="Local" value="Generated/Server_Character_Width.htm">
+								</OBJECT>
+						</UL>
+					</UL>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The Commands Collection">
+						<param name="Local" value="Generated/Server_Commands.htm">
+						</OBJECT>
+					<UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="The Commands Collection Methods">
+							<param name="Local" value="Generated/Server_Commands.htm#Methods">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Add Method">
+								<param name="Local" value="Generated/Server_Commands_Add.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The AddEx Method">
+								<param name="Local" value="Generated/Server_Commands_AddEx.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Insert Method">
+								<param name="Local" value="Generated/Server_Commands_Insert.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The InsertEx Method">
+								<param name="Local" value="Generated/Server_Commands_InsertEx.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Remove Method">
+								<param name="Local" value="Generated/Server_Commands_Remove.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The RemoveAll Method">
+								<param name="Local" value="Generated/Server_Commands_RemoveAll.htm">
+								</OBJECT>
+						</UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="The Commands Collection Properties">
+							<param name="Local" value="Generated/Server_Commands.htm#Properties">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Caption Property">
+								<param name="Local" value="Generated/Server_Commands_Caption.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Command Property">
+								<param name="Local" value="Generated/Server_Commands_Command.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Count Property">
+								<param name="Local" value="Generated/Server_Commands_Count.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The DefaultCommand Property">
+								<param name="Local" value="Generated/Server_Commands_DefaultCommand.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FontName Property">
+								<param name="Local" value="Generated/Server_Commands_FontName.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FontSize Property">
+								<param name="Local" value="Generated/Server_Commands_FontSize.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GlobalVoiceCommandsEnabled Property">
+								<param name="Local" value="Generated/Server_Commands_GlobalVoiceCommandsEnabled.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Item Property">
+								<param name="Local" value="Generated/Server_Commands_Item.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Visible Property">
+								<param name="Local" value="Generated/Server_Commands_Visible.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The VoiceCaption Property">
+								<param name="Local" value="Generated/Server_Commands_VoiceCaption.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The VoiceGrammar Property">
+								<param name="Local" value="Generated/Server_Commands_VoiceGrammar.htm">
+								</OBJECT>
+						</UL>
+					</UL>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The Command Object">
+						<param name="Local" value="Generated/Server_Command.htm">
+						</OBJECT>
+					<UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="Command Object Properties">
+							<param name="Local" value="Generated/Server_Command.htm#Properties">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Caption Property">
+								<param name="Local" value="Generated/Server_Command_Caption.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CommandID Property">
+								<param name="Local" value="Generated/Server_Command_CommandID.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ConfidenceText Property">
+								<param name="Local" value="Generated/Server_Command_ConfidenceText.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ConfidenceThreshold Property">
+								<param name="Local" value="Generated/Server_Command_ConfidenceThreshold.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Enabled Property">
+								<param name="Local" value="Generated/Server_Command_Enabled.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Visible Property">
+								<param name="Local" value="Generated/Server_Command_Visible.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The VoiceCaption Property">
+								<param name="Local" value="Generated/Server_Command_VoiceCaption.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The VoiceGrammar Property">
+								<param name="Local" value="Generated/Server_Command_VoiceGrammar.htm">
+								</OBJECT>
+						</UL>
+					</UL>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The Balloon Object">
+						<param name="Local" value="Generated/Server_Balloon.htm">
+						</OBJECT>
+					<UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="Balloon Object Properties">
+							<param name="Local" value="Generated/Server_Balloon.htm#Properties">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The BackColor Property">
+								<param name="Local" value="Generated/Server_Balloon_BackColor.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The BorderColor Property">
+								<param name="Local" value="Generated/Server_Balloon_BorderColor.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CharsPerLine Property">
+								<param name="Local" value="Generated/Server_Balloon_CharsPerLine.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Enabled Property">
+								<param name="Local" value="Generated/Server_Balloon_Enabled.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FontBold Property">
+								<param name="Local" value="Generated/Server_Balloon_FontBold.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FontCharSet Property">
+								<param name="Local" value="Generated/Server_Balloon_FontCharSet.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FontItalic Property">
+								<param name="Local" value="Generated/Server_Balloon_FontItalic.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FontName Property">
+								<param name="Local" value="Generated/Server_Balloon_FontName.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FontSize Property">
+								<param name="Local" value="Generated/Server_Balloon_FontSize.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FontStrikethru Property">
+								<param name="Local" value="Generated/Server_Balloon_FontStrikethru.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FontUnderline Property">
+								<param name="Local" value="Generated/Server_Balloon_FontUnderline.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The NumberOfLines Property">
+								<param name="Local" value="Generated/Server_Balloon_NumberOfLines.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Style Property">
+								<param name="Local" value="Generated/Server_Balloon_Style.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The TextColor Property">
+								<param name="Local" value="Generated/Server_Balloon_TextColor.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Visible Property">
+								<param name="Local" value="Generated/Server_Balloon_Visible.htm">
+								</OBJECT>
+						</UL>
+					</UL>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The CommandsWindow Object">
+						<param name="Local" value="Generated/Server_CommandsWindow.htm">
+						</OBJECT>
+					<UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="CommandsWindow Object Methods">
+							<param name="Local" value="Generated/Server_CommandsWindow.htm#Methods">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GetPosition Method">
+								<param name="Local" value="Generated/Server_CommandsWindow_GetPosition.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GetSize Method">
+								<param name="Local" value="Generated/Server_CommandsWindow_GetSize.htm">
+								</OBJECT>
+						</UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="CommandsWindow Object Properties">
+							<param name="Local" value="Generated/Server_CommandsWindow.htm#Properties">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Height Property">
+								<param name="Local" value="Generated/Server_CommandsWindow_Height.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Left Property">
+								<param name="Local" value="Generated/Server_CommandsWindow_Left.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Top Property">
+								<param name="Local" value="Generated/Server_CommandsWindow_Top.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Visible Property">
+								<param name="Local" value="Generated/Server_CommandsWindow_Visible.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Width Property">
+								<param name="Local" value="Generated/Server_CommandsWindow_Width.htm">
+								</OBJECT>
+						</UL>
+					</UL>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The PropertySheet Object">
+						<param name="Local" value="Generated/Server_PropertySheet.htm">
+						</OBJECT>
+					<UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="PropertySheet Object Methods">
+							<param name="Local" value="Generated/Server_PropertySheet.htm#Methods">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GetPosition Method">
+								<param name="Local" value="Generated/Server_PropertySheet_GetPosition.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GetSize Method">
+								<param name="Local" value="Generated/Server_PropertySheet_GetSize.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SetPosition Method">
+								<param name="Local" value="Generated/Server_PropertySheet_SetPosition.htm">
+								</OBJECT>
+						</UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="PropertySheet Object Properties">
+							<param name="Local" value="Generated/Server_PropertySheet.htm#Properties">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Height Property">
+								<param name="Local" value="Generated/Server_PropertySheet_Height.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Left Property">
+								<param name="Local" value="Generated/Server_PropertySheet_Left.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Page Property">
+								<param name="Local" value="Generated/Server_PropertySheet_Page.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Top Property">
+								<param name="Local" value="Generated/Server_PropertySheet_Top.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Visible Property">
+								<param name="Local" value="Generated/Server_PropertySheet_Visible.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Width Property">
+								<param name="Local" value="Generated/Server_PropertySheet_Width.htm">
+								</OBJECT>
+						</UL>
+					</UL>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The UserInput Object">
+						<param name="Local" value="Generated/Server_UserInput.htm">
+						</OBJECT>
+					<UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="UserInput Object Methods">
+							<param name="Local" value="Generated/Server_UserInput.htm#Methods">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GetAllItemData Method">
+								<param name="Local" value="Generated/Server_UserInput_GetAllItemData.htm">
+								</OBJECT>
+						</UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="UserInput Object Properties">
+							<param name="Local" value="Generated/Server_UserInput.htm#Properties">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Count Property">
+								<param name="Local" value="Generated/Server_UserInput_Count.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ItemCommandID Property">
+								<param name="Local" value="Generated/Server_UserInput_ItemCommandID.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ItemConfidence Property">
+								<param name="Local" value="Generated/Server_UserInput_ItemConfidence.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ItemText Property">
+								<param name="Local" value="Generated/Server_UserInput_ItemText.htm">
+								</OBJECT>
+						</UL>
+					</UL>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The Settings Object">
+						<param name="Local" value="Generated/Server_Settings.htm">
+						<param name="New" value="1">
+						</OBJECT>
+					<UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="Settings Object Properties">
+							<param name="Local" value="Generated/Server_Settings.htm#Properties">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The AudioStatus Property">
+								<param name="Local" value="Generated/Server_Settings_AudioStatus.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The BalloonEnabled Property">
+								<param name="Local" value="Generated/Server_Settings_BalloonEnabled.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The BalloonFont Property">
+								<param name="Local" value="Generated/Server_Settings_BalloonFont.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SoundEffectsEnabled Property">
+								<param name="Local" value="Generated/Server_Settings_SoundEffectsEnabled.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SREnabled Property">
+								<param name="Local" value="Generated/Server_Settings_SREnabled.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SRHotKey Property">
+								<param name="Local" value="Generated/Server_Settings_SRHotKey.htm">
+								<param name="New" value="1">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SRListeningTip Property">
+								<param name="Local" value="Generated/Server_Settings_SRListeningTip.htm">
+								<param name="New" value="1">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The TTSEnabled Property">
+								<param name="Local" value="Generated/Server_Settings_TTSEnabled.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The TTSSpeed Property">
+								<param name="Local" value="Generated\Server_Settings_TTSSpeed.htm">
+								<param name="New" value="1">
+								</OBJECT>
+						</UL>
+					</UL>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The CharacterFiles Object">
+						<param name="Local" value="Generated/Server_CharacterFiles.htm">
+						<param name="New" value="1">
+						</OBJECT>
+					<UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="CharacterFiles Object Properties">
+							<param name="Local" value="Generated/Server_CharacterFiles.htm#Properties">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The DefaultFileName Property">
+								<param name="Local" value="Generated\Server_CharacterFiles_DefaultFileName.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The DefaultFilePath Property">
+								<param name="Local" value="Generated\Server_CharacterFiles_DefaultFilePath.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The DefaultSearchPath Property">
+								<param name="Local" value="Generated\Server_CharacterFiles_DefaultSearchPath.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FilePaths Property">
+								<param name="Local" value="Generated\Server_CharacterFiles_FilePaths.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Filter Property">
+								<param name="Local" value="Generated\Server_CharacterFiles_Filter.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SearchPath Property">
+								<param name="Local" value="Generated\Server_CharacterFiles_SearchPath.htm">
+								</OBJECT>
+						</UL>
+					</UL>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The TTSEngines Collection">
+						<param name="Local" value="Generated/Server_TTSEngines.htm">
+						<param name="New" value="1">
+						</OBJECT>
+					<UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="The TTSEngines Collection Properties">
+							<param name="Local" value="Generated/Server_TTSEngines.htm#Properties">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Count Property">
+								<param name="Local" value="Generated\Server_TTSEngines_Count.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Item Property">
+								<param name="Local" value="Generated\Server_TTSEngines_Item.htm">
+								</OBJECT>
+						</UL>
+					</UL>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The TTSEngine Object">
+						<param name="Local" value="Generated/Server_TTSEngine.htm">
+						<param name="New" value="1">
+						</OBJECT>
+					<UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="TTSEngine Object Methods">
+							<param name="Local" value="Generated/Server_TTSEngine.htm#Methods">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GetVersion Method">
+								<param name="Local" value="Generated\Server_TTSEngine_GetVersion.htm">
+								</OBJECT>
+						</UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="TTSEngine Object Properties">
+							<param name="Local" value="Generated/Server_TTSEngine.htm#Properties">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The DisplayName Property">
+								<param name="Local" value="Generated\Server_TTSEngine_DisplayName.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Gender Property">
+								<param name="Local" value="Generated\Server_TTSEngine_Gender.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The LanguageID Property">
+								<param name="Local" value="Generated\Server_TTSEngine_LanguageID.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The LanguageName Property">
+								<param name="Local" value="Generated\Server_TTSEngine_LanguageName.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Manufacturer Property">
+								<param name="Local" value="Generated\Server_TTSEngine_Manufacturer.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The TTSModeID Property">
+								<param name="Local" value="Generated\Server_TTSEngine_TTSModeID.htm">
+								</OBJECT>
+						</UL>
+					</UL>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The SREngines Collection">
+						<param name="Local" value="Generated/Server_SREngines.htm">
+						<param name="New" value="1">
+						</OBJECT>
+					<UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="The SREngines Collection Properties">
+							<param name="Local" value="Generated/Server_SREngines.htm#Properties">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Count Property">
+								<param name="Local" value="Generated\Server_SREngines_Count.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Item Property">
+								<param name="Local" value="Generated\Server_SREngines_Item.htm">
+								</OBJECT>
+						</UL>
+					</UL>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The SREngine Object">
+						<param name="Local" value="Generated/Server_SREngine.htm">
+						<param name="New" value="1">
+						</OBJECT>
+					<UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="SREngine Object Methods">
+							<param name="Local" value="Generated/Server_SREngine.htm#Methods">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GetVersion Method">
+								<param name="Local" value="Generated\Server_SREngine_GetVersion.htm">
+								</OBJECT>
+						</UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="SREngine Object Properties">
+							<param name="Local" value="Generated/Server_SREngine.htm#Properties">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The DisplayName Property">
+								<param name="Local" value="Generated\Server_SREngine_DisplayName.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The LanguageID Property">
+								<param name="Local" value="Generated\Server_SREngine_LanguageID.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The LanguageIDs Property">
+								<param name="Local" value="Generated\Server_SREngine_LanguageIDs.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The LanguageName Property">
+								<param name="Local" value="Generated\Server_SREngine_LanguageName.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The LanguageNames Property">
+								<param name="Local" value="Generated\Server_SREngine_LanguageNames.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Manufacturer Property">
+								<param name="Local" value="Generated\Server_SREngine_Manufacturer.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SRModeID Property">
+								<param name="Local" value="Generated\Server_SREngine_SRModeID.htm">
+								</OBJECT>
+						</UL>
+					</UL>
+				</UL>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Enumerations">
+					</OBJECT>
+				<UL>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The ActiveStateType Enumeration">
+						<param name="Local" value="Generated/Server_ActiveStateType.htm">
+						</OBJECT>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The AudioStatusType Enumeration">
+						<param name="Local" value="Generated/Server_AudioStatusType.htm">
+						</OBJECT>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The BalloonStyleFlags Enumeration">
+						<param name="Local" value="Generated/Server_BalloonStyleFlags.htm">
+						</OBJECT>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The CharacterStyleFlags Enumeration">
+						<param name="Local" value="Generated/Server_CharacterStyleFlags.htm">
+						<param name="New" value="1">
+						</OBJECT>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The FilesFilterFlags Enumeration">
+						<param name="Local" value="Generated/Server_FilesFilterFlags.htm">
+						<param name="New" value="1">
+						</OBJECT>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The ListenCompleteType Enumeration">
+						<param name="Local" value="Generated/Server_ListenCompleteType.htm">
+						</OBJECT>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The ListeningStatusType Enumeration">
+						<param name="Local" value="Generated/Server_ListeningStatusType.htm">
+						</OBJECT>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The MoveCauseType Enumeration">
+						<param name="Local" value="Generated/Server_MoveCauseType.htm">
+						</OBJECT>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The PrepareResourceType Enumeration">
+						<param name="Local" value="Generated/Server_PrepareResourceType.htm">
+						</OBJECT>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The SpeechGenderType Enumeration">
+						<param name="Local" value="Generated/Server_SpeechGenderType.htm">
+						</OBJECT>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The StopAllFlags Enumeration">
+						<param name="Local" value="Generated/Server_StopAllFlags.htm">
+						</OBJECT>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The VisibilityCauseType Enumeration">
+						<param name="Local" value="Generated/Server_VisibilityCauseType.htm">
 						</OBJECT>
 				</UL>
 			</UL>
@@ -228,53 +1333,57 @@
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Double Agent Control Object Model">
 						<param name="Local" value="Programming/Ctl_Objects.htm">
-						<param name="ImageNumber" value="17">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="Accessing the Control from Programming Languages">
-						<param name="Local" value="Programming/Ctl_Programming_Languages.htm">
+						<param name="Name" value="Using the Control in Applications">
+						<param name="Local" value="Programming/Ctl_Programming_Apps.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Creating an Instance of the Control">
 							<param name="Local" value="Programming/Ctl_Programming_Instance.htm">
-							<param name="ImageNumber" value="17">
+							<param name="ImageNumber" value="11">
 							</OBJECT>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="Accessing the Control's Methods, Properties, and Events">
+							<param name="Name" value="Using the Control's Methods, Properties, and Events">
 							<param name="Local" value="Programming/Ctl_Programming_Members.htm">
-							<param name="ImageNumber" value="17">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="Updating from Previous Versions">
-							<param name="Local" value="Programming/Ctl_Programming_Upgrade.htm">
-							<param name="ImageNumber" value="17">
+							<param name="ImageNumber" value="11">
 							</OBJECT>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="Accessing the Control in Web Pages">
+						<param name="Name" value="Using the Control in Web Pages">
 						<param name="Local" value="Programming/Ctl_Programming_Web.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Using VBScript">
 							<param name="Local" value="Programming/Ctl_Programming_VBScript.htm">
-							<param name="ImageNumber" value="17">
+							<param name="ImageNumber" value="11">
 							</OBJECT>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Using JavaScript and JScript">
 							<param name="Local" value="Programming/Ctl_Programming_JScript.htm">
-							<param name="ImageNumber" value="17">
+							<param name="ImageNumber" value="11">
 							</OBJECT>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="Accessing Speech Services">
+						<param name="Name" value="Using Speech Services">
 						<param name="Local" value="Programming/Ctl_Programming_Speech.htm">
-						<param name="ImageNumber" value="17">
+						<param name="ImageNumber" value="11">
+						</OBJECT>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="Connected, Stand-Alone, and Contained">
+						<param name="Local" value="Programming/Ctl_Programming_Modes.htm">
+						</OBJECT>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="Updating from Previous Versions">
+						<param name="Local" value="Programming/Ctl_Programming_Upgrade.htm">
+						<param name="ImageNumber" value="11">
 						</OBJECT>
 				</UL>
 				<LI> <OBJECT type="text/sitemap">
-					<param name="Name" value="Reference">
+					<param name="Name" value="Classes">
 					</OBJECT>
 				<UL>
 					<LI> <OBJECT type="text/sitemap">
@@ -283,7 +1392,7 @@
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The Control Object Methods">
+							<param name="Name" value="Control Object Methods">
 							<param name="Local" value="Generated/Control_Control.htm#Methods">
 							</OBJECT>
 						<UL>
@@ -323,7 +1432,7 @@
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The Control Object Properties">
+							<param name="Name" value="Control Object Properties">
 							<param name="Local" value="Generated/Control_Control.htm#Properties">
 							</OBJECT>
 						<UL>
@@ -423,7 +1532,7 @@
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The Control Object Events">
+							<param name="Name" value="Control Object Events">
 							<param name="Local" value="Generated/Control_Control.htm#Events">
 							</OBJECT>
 						<UL>
@@ -571,7 +1680,7 @@
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The Character Object Methods">
+							<param name="Name" value="Character Object Methods">
 							<param name="Local" value="Generated/Control_Character.htm#Methods">
 							</OBJECT>
 						<UL>
@@ -653,7 +1762,7 @@
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The Character Object Properties">
+							<param name="Name" value="Character Object Properties">
 							<param name="Local" value="Generated/Control_Character.htm#Properties">
 							</OBJECT>
 						<UL>
@@ -939,7 +2048,7 @@
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The Command Object Properties">
+							<param name="Name" value="Command Object Properties">
 							<param name="Local" value="Generated/Control_Command.htm#Properties">
 							</OBJECT>
 						<UL>
@@ -983,7 +2092,7 @@
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The Balloon Object Properties">
+							<param name="Name" value="Balloon Object Properties">
 							<param name="Local" value="Generated/Control_Balloon.htm#Properties">
 							</OBJECT>
 						<UL>
@@ -1075,9 +2184,31 @@
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The CommandsWindow Object Properties">
-							<param name="Local" value="Generated/Control_CommandsWindow_Properties.htm">
+							<param name="Name" value="CommandsWindow Object Properties">
+							<param name="Local" value="Generated/Control_CommandsWindow.htm#Properties">
 							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Height Property">
+								<param name="Local" value="Generated/Control_CommandsWindow_Height.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Left Property">
+								<param name="Local" value="Generated/Control_CommandsWindow_Left.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Top Property">
+								<param name="Local" value="Generated/Control_CommandsWindow_Top.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Visible Property">
+								<param name="Local" value="Generated/Control_CommandsWindow_Visible.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Width Property">
+								<param name="Local" value="Generated/Control_CommandsWindow_Width.htm">
+								</OBJECT>
+						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The PropertySheet Object">
@@ -1085,9 +2216,35 @@
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The PropertySheet Object Properties">
-							<param name="Local" value="Generated/Control_PropertySheet_Properties.htm">
+							<param name="Name" value="PropertySheet Object Properties">
+							<param name="Local" value="Generated/Control_PropertySheet.htm#Properties">
 							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Height Property">
+								<param name="Local" value="Generated/Control_PropertySheet_Height.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Left Property">
+								<param name="Local" value="Generated/Control_PropertySheet_Left.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Page Property">
+								<param name="Local" value="Generated/Control_PropertySheet_Page.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Top Property">
+								<param name="Local" value="Generated/Control_PropertySheet_Top.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Visible Property">
+								<param name="Local" value="Generated/Control_PropertySheet_Visible.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Width Property">
+								<param name="Local" value="Generated/Control_PropertySheet_Width.htm">
+								</OBJECT>
+						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Request Object">
@@ -1095,9 +2252,23 @@
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The Request Object Properties">
-							<param name="Local" value="Generated/Control_Request_Properties.htm">
+							<param name="Name" value="Request Object Properties">
+							<param name="Local" value="Generated/Control_Request.htm#Properties">
 							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Description Property">
+								<param name="Local" value="Generated/Control_Request_Description.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Number Property">
+								<param name="Local" value="Generated/Control_Request_Number.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Status Property">
+								<param name="Local" value="Generated/Control_Request_Status.htm">
+								</OBJECT>
+						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The UserInput Object">
@@ -1105,9 +2276,55 @@
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The UserInput Object Properties">
-							<param name="Local" value="Generated/Control_UserInput_Properties.htm">
+							<param name="Name" value="UserInput Object Properties">
+							<param name="Local" value="Generated/Control_UserInput.htm#Properties">
 							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Alt1Confidence Property">
+								<param name="Local" value="Generated/Control_UserInput_Alt1Confidence.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Alt1Name Property">
+								<param name="Local" value="Generated/Control_UserInput_Alt1Name.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Alt1Voice Property">
+								<param name="Local" value="Generated/Control_UserInput_Alt1Voice.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Alt2Confidence Property">
+								<param name="Local" value="Generated/Control_UserInput_Alt2Confidence.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Alt2Name Property">
+								<param name="Local" value="Generated/Control_UserInput_Alt2Name.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Alt2Voice Property">
+								<param name="Local" value="Generated/Control_UserInput_Alt2Voice.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CharacterID Property">
+								<param name="Local" value="Generated/Control_UserInput_CharacterID.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Confidence Property">
+								<param name="Local" value="Generated/Control_UserInput_Confidence.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Count Property">
+								<param name="Local" value="Generated/Control_UserInput_Count.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Name Property">
+								<param name="Local" value="Generated/Control_UserInput_Name.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Voice Property">
+								<param name="Local" value="Generated/Control_UserInput_Voice.htm">
+								</OBJECT>
+						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Settings Object">
@@ -1116,13 +2333,21 @@
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The Settings Object Properties">
+							<param name="Name" value="Settings Object Properties">
 							<param name="Local" value="Generated/Control_Settings.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The AudioStatus Property">
 								<param name="Local" value="Generated/Control_Settings_AudioStatus.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The BalloonEnabled Property">
+								<param name="Local" value="Generated/Control_Settings_BalloonEnabled.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The BalloonFont Property">
+								<param name="Local" value="Generated/Control_Settings_BalloonFont.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SoundEffectsEnabled Property">
@@ -1160,7 +2385,7 @@
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The CharacterFiles Object Properties">
+							<param name="Name" value="CharacterFiles Object Properties">
 							<param name="Local" value="Generated/Control_CharacterFiles.htm#Properties">
 							</OBJECT>
 						<UL>
@@ -1238,7 +2463,7 @@
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The TTSEngine Object Methods">
+							<param name="Name" value="TTSEngine Object Methods">
 							<param name="Local" value="Generated/Control_TTSEngine.htm#Methods">
 							</OBJECT>
 						<UL>
@@ -1248,7 +2473,7 @@
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The TTSEngine Object Properties">
+							<param name="Name" value="TTSEngine Object Properties">
 							<param name="Local" value="Generated/Control_TTSEngine.htm#Properties">
 							</OBJECT>
 						<UL>
@@ -1306,7 +2531,7 @@
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The SREngine Object Methods">
+							<param name="Name" value="SREngine Object Methods">
 							<param name="Local" value="Generated/Control_SREngine.htm#Methods">
 							</OBJECT>
 						<UL>
@@ -1316,7 +2541,7 @@
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The SREngine Object Properties">
+							<param name="Name" value="SREngine Object Properties">
 							<param name="Local" value="Generated/Control_SREngine.htm#Properties">
 							</OBJECT>
 						<UL>
@@ -1351,872 +2576,314 @@
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="Enumerations">
+						<param name="Name" value="The AxControl Object">
+						<param name="Local" value="Generated/AxControl_AxControl.htm">
+						<param name="New" value="1">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The ActiveStateType Enumeration">
-							<param name="Local" value="Generated/Control_ActiveStateType.htm">
+							<param name="Name" value="AxControl Object Methods">
+							<param name="Local" value="Generated/AxControl_AxControl.htm#Methods">
 							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FindCharacterSREngines Method">
+								<param name="Local" value="Generated/AxControl_AxControl_FindCharacterSREngines.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FindCharacterTTSEngines Method">
+								<param name="Local" value="Generated/AxControl_AxControl_FindCharacterTTSEngines.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FindSREngines Method">
+								<param name="Local" value="Generated/AxControl_AxControl_FindSREngines.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The FindTTSEngines Method">
+								<param name="Local" value="Generated/AxControl_AxControl_FindTTSEngines.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GetCharacterSREngine Method">
+								<param name="Local" value="Generated/AxControl_AxControl_GetCharacterSREngine.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The GetCharacterTTSEngine Method">
+								<param name="Local" value="Generated/AxControl_AxControl_GetCharacterTTSEngine.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ShowDefaultCharacterProperties Method">
+								<param name="Local" value="Generated/AxControl_AxControl_ShowDefaultCharacterProperties.htm">
+								</OBJECT>
+						</UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The AudioStatusType Enumeration">
-							<param name="Local" value="Generated/Control_AudioStatusType.htm">
+							<param name="Name" value="AxControl Object Properties">
+							<param name="Local" value="Generated/AxControl_AxControl.htm#Properties">
 							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The AutoConnect Property">
+								<param name="Local" value="Generated\AxControl_AxControl_AutoConnect.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlAutoSize Property">
+								<param name="Local" value="Generated\AxControl_AxControl_CtlAutoSize.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlBackColor Property">
+								<param name="Local" value="Generated/AxControl_AxControl_CtlBackColor.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlBorderColor Property">
+								<param name="Local" value="Generated/AxControl_AxControl_CtlBorderColor.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlBorderStyle Property">
+								<param name="Local" value="Generated/AxControl_AxControl_CtlBorderStyle.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlBorderVisible Property">
+								<param name="Local" value="Generated/AxControl_AxControl_CtlBorderVisible.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlBorderWidth Property">
+								<param name="Local" value="Generated/AxControl_AxControl_CtlBorderWidth.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlMousePointer Property">
+								<param name="Local" value="Generated/AxControl_AxControl_CtlMousePointer.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CharacterFiles Property">
+								<param name="Local" value="Generated/AxControl_AxControl_CharacterFiles.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Characters Property">
+								<param name="Local" value="Generated/AxControl_AxControl_Characters.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CharacterStyle Property">
+								<param name="Local" value="Generated/AxControl_AxControl_CharacterStyle.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CommandsWindow Property">
+								<param name="Local" value="Generated/AxControl_AxControl_CommandsWindow.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Connected Property">
+								<param name="Local" value="Generated/AxControl_AxControl_Connected.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ControlCharacter Property">
+								<param name="Local" value="Generated/AxControl_AxControl_ControlCharacter.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The PropertySheet Property">
+								<param name="Local" value="Generated/AxControl_AxControl_PropertySheet.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The RaiseRequestErrors Property">
+								<param name="Local" value="Generated/AxControl_AxControl_RaiseRequestErrors.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Settings Property">
+								<param name="Local" value="Generated/AxControl_AxControl_Settings.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SREngines Property">
+								<param name="Local" value="Generated/AxControl_AxControl_SREngines.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The TTSEngines Property">
+								<param name="Local" value="Generated/AxControl_AxControl_TTSEngines.htm">
+								</OBJECT>
+						</UL>
 						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The BalloonStyleFlags Enumeration">
-							<param name="Local" value="Generated/Control_BalloonStyleFlags.htm">
+							<param name="Name" value="AxControl Object Events">
+							<param name="Local" value="Generated/AxControl_AxControl.htm#Events">
 							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The CharacterStyleFlags Enumeration">
-							<param name="Local" value="Generated/Control_CharacterStyleFlags.htm">
-							<param name="New" value="1">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The ListenCompleteType Enumeration">
-							<param name="Local" value="Generated/Control_ListenCompleteType.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The ListeningStatusType Enumeration">
-							<param name="Local" value="Generated/Control_ListeningStatusType.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The MoveCauseType Enumeration">
-							<param name="Local" value="Generated/Control_MoveCauseType.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The PrepareResourceType Enumeration">
-							<param name="Local" value="Generated/Control_PrepareResourceType.htm">
-							<param name="New" value="1">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The RequestStatus Enumeration">
-							<param name="Local" value="Generated/Control_RequestStatus.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The SpeechGenderType Enumeration">
-							<param name="Local" value="Generated/Control_SpeechGenderType.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The StopAllFlags Enumeration">
-							<param name="Local" value="Generated/Control_StopAllFlags.htm">
-							<param name="New" value="1">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="The VisibilityCauseType Enumeration">
-							<param name="Local" value="Generated/Control_VisibilityCauseType.htm">
-							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlActivateInput Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlActivateInput.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlActiveClientChange Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlActiveClientChange.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlAgentPropertyChange Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlAgentPropertyChange.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlBalloonHide Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlBalloonHide.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlBalloonShow Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlBalloonShow.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlBookmark Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlBookmark.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlClick Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlClick.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlCommand Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlCommand.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlDblClick Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlDblClick.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlDeactivateInput Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlDeactivateInput.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlDefaultCharacterChange Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlDefaultCharacterChange.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlDragComplete Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlDragComplete.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlDragStart Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlDragStart.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlHide Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlHide.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlIdleComplete Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlIdleComplete.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlIdleStart Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlIdleStart.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlListenComplete Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlListenComplete.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlListenStart Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlListenStart.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlMove Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlMove.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlRequestComplete Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlRequestComplete.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlRequestStart Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlRequestStart.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlShow Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlShow.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlSize Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlSize.htm">
+								</OBJECT>
+						</UL>
 					</UL>
 				</UL>
-			</UL>
-			<LI> <OBJECT type="text/sitemap">
-				<param name="Name" value="Programming the Double Agent Server">
-				<param name="Local" value="Programming/Svr_Programming.htm">
-				</OBJECT>
-			<UL>
 				<LI> <OBJECT type="text/sitemap">
-					<param name="Name" value="Introduction">
-					<param name="Local" value="Programming/Svr_Programming_Intro.htm">
-					</OBJECT>
-				<LI> <OBJECT type="text/sitemap">
-					<param name="Name" value="Adding Microsoft Agent Functionality to Your Application">
-					<param name="Local" value="Programming/Svr_Programming_Start.htm">
-					</OBJECT>
-				<LI> <OBJECT type="text/sitemap">
-					<param name="Name" value="Loading Character and Animation Data">
-					<param name="Local" value="Programming/Svr_Programming_Load.htm">
-					</OBJECT>
-				<LI> <OBJECT type="text/sitemap">
-					<param name="Name" value="Creating a Notification Sink">
-					<param name="Local" value="Programming/Svr_Programming_Sink.htm">
-					</OBJECT>
-				<LI> <OBJECT type="text/sitemap">
-					<param name="Name" value="Accessing Services Using Java">
-					<param name="Local" value="Programming/Svr_Programming_Java.htm">
-					</OBJECT>
-				<LI> <OBJECT type="text/sitemap">
-					<param name="Name" value="Accessing Speech Services">
-					<param name="Local" value="Programming/Svr_Programming_Speech.htm">
-					</OBJECT>
-				<LI> <OBJECT type="text/sitemap">
-					<param name="Name" value="Reference">
-					<param name="Local" value="Programming/Svr_Programming_Reference.htm">
+					<param name="Name" value="Enumerations">
 					</OBJECT>
 				<UL>
 					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="Interfaces">
-						<param name="Local" value="Programming/Svr_Interfaces.htm">
+						<param name="Name" value="The ActiveStateType Enumeration">
+						<param name="Local" value="Generated/Control_ActiveStateType.htm">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="IDaServer2">
-						<param name="Local" value="Originals/Svr_Server.htm">
+						<param name="Name" value="The AudioStatusType Enumeration">
+						<param name="Local" value="Generated/Control_AudioStatusType.htm">
 						</OBJECT>
-					<UL>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="GetCharacter">
-							<param name="Local" value="Originals/Svr_Server_GetCharacter.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="GetVersion">
-							<param name="Local" value="Originals/Svr_Server_GetVersion.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="Load">
-							<param name="Local" value="Generated/Server_Server_Load.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="Register">
-							<param name="Local" value="Originals/Svr_Server_Register.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="ShowDefaultCharacterProperties">
-							<param name="Local" value="Originals/Svr_Server_ShowDefaultCharacterProperties.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="UnLoad">
-							<param name="Local" value="Originals/Svr_Server_UnLoad.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="Unregister">
-							<param name="Local" value="Originals/Svr_Server_Unregister.htm">
-							</OBJECT>
-					</UL>
 					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="IAgentCharacter">
-						<param name="Local" value="Originals/Svr_Character.htm">
+						<param name="Name" value="The BalloonStyleFlags Enumeration">
+						<param name="Local" value="Generated/Control_BalloonStyleFlags.htm">
 						</OBJECT>
-					<UL>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::Activate">
-							<param name="Local" value="Originals/Svr_Character_Activate.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::GestureAt">
-							<param name="Local" value="Originals/Svr_Character_GestureAt.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::GetDescription">
-							<param name="Local" value="Originals/Svr_Character_GetDescription.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::GetExtraData">
-							<param name="Local" value="Originals/Svr_Character_GetExtraData.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::GetIdleOn">
-							<param name="Local" value="Originals/Svr_Character_GetIdleOn.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::GetMoveCause">
-							<param name="Local" value="Originals/Svr_Character_GetMoveCause.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::GetName">
-							<param name="Local" value="Originals/Svr_Character_GetName.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::GetPosition">
-							<param name="Local" value="Originals/Svr_Character_GetPosition.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::GetSize">
-							<param name="Local" value="Originals/Svr_Character_GetSize.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::GetSoundEffectsOn">
-							<param name="Local" value="Originals/Svr_Character_GetSoundEffectsOn.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::GetTTSPitch">
-							<param name="Local" value="Originals/Svr_Character_GetTTSPitch.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::GetTTSSpeed">
-							<param name="Local" value="Originals/Svr_Character_GetTTSSpeed.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::GetVisibilityCause">
-							<param name="Local" value="Originals/Svr_Character_GetVisibilityCause.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::GetVisible">
-							<param name="Local" value="Originals/Svr_Character_GetVisible.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::HasOtherClients">
-							<param name="Local" value="Originals/Svr_Character_HasOtherClients.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::Hide">
-							<param name="Local" value="Originals/Svr_Character_Hide.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::Interrupt">
-							<param name="Local" value="Originals/Svr_Character_Interrupt.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::MoveTo">
-							<param name="Local" value="Originals/Svr_Character_MoveTo.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::Play">
-							<param name="Local" value="Originals/Svr_Character_Play.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::Prepare">
-							<param name="Local" value="Originals/Svr_Character_Prepare.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::SetDescription">
-							<param name="Local" value="Originals/Svr_Character_SetDescription.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::SetIdleOn">
-							<param name="Local" value="Originals/Svr_Character_SetIdleOn.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::SetName">
-							<param name="Local" value="Originals/Svr_Character_SetName.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::SetPosition">
-							<param name="Local" value="Originals/Svr_Character_SetPosition.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::SetSize">
-							<param name="Local" value="Originals/Svr_Character_SetSize.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::SetSoundEffectsOn">
-							<param name="Local" value="Originals/Svr_Character_SetSoundEffectsOn.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::Show">
-							<param name="Local" value="Originals/Svr_Character_Show.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::Speak">
-							<param name="Local" value="Originals/Svr_Character_Speak.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::Stop">
-							<param name="Local" value="Originals/Svr_Character_Stop.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::StopAll">
-							<param name="Local" value="Originals/Svr_Character_StopAll.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacter::Wait">
-							<param name="Local" value="Originals/Svr_Character_Wait.htm">
-							</OBJECT>
-					</UL>
 					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="IAgentCharacterEx">
-						<param name="Local" value="Originals/Svr_Character_Ex.htm">
+						<param name="Name" value="The CharacterStyleFlags Enumeration">
+						<param name="Local" value="Generated/Control_CharacterStyleFlags.htm">
+						<param name="New" value="1">
 						</OBJECT>
-					<UL>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::GetActive">
-							<param name="Local" value="Originals/Svr_Character_GetActive.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::GetAnimationNames">
-							<param name="Local" value="Originals/Svr_Character_GetAnimationNames.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::GetAutoPopupMenu">
-							<param name="Local" value="Originals/Svr_Character_GetAutoPopupMenu.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::GetGUID">
-							<param name="Local" value="Originals/Svr_Character_GetGUID.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::GetHelpContextID">
-							<param name="Local" value="Originals/Svr_Character_GetHelpContextID.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::GetHelpFileName">
-							<param name="Local" value="Originals/Svr_Character_GetHelpFileName.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::GetHelpModeOn">
-							<param name="Local" value="Originals/Svr_Character_GetHelpModeOn.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::GetLanguageID">
-							<param name="Local" value="Originals/Svr_Character_GetLanguageID.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::GetOriginalSize">
-							<param name="Local" value="Originals/Svr_Character_GetOriginalSize.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::GetSRModeID">
-							<param name="Local" value="Originals/Svr_Character_GetSRModeID.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::GetSRStatus">
-							<param name="Local" value="Originals/Svr_Character_GetSRStatus.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::GetTTSModeID">
-							<param name="Local" value="Originals/Svr_Character_GetTTSModeID.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::GetVersion">
-							<param name="Local" value="Originals/Svr_Character_GetVersion.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::Listen">
-							<param name="Local" value="Originals/Svr_Character_Listen.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::SetAutoPopupMenu">
-							<param name="Local" value="Originals/Svr_Character_SetAutoPopupMenu.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::SetHelpContextID">
-							<param name="Local" value="Originals/Svr_Character_SetHelpContextID.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::SetHelpFileName">
-							<param name="Local" value="Originals/Svr_Character_SetHelpFileName.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::SetHelpModeOn">
-							<param name="Local" value="Originals/Svr_Character_SetHelpModeOn.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::SetLanguageID">
-							<param name="Local" value="Originals/Svr_Character_SetLanguageID.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::SetSRModeID">
-							<param name="Local" value="Originals/Svr_Character_SetSRModeID.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::SetTTSModeID">
-							<param name="Local" value="Originals/Svr_Character_SetTTSModeID.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::ShowPopupMenu">
-							<param name="Local" value="Originals/Svr_Character_ShowPopupMenu.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCharacterEx::Think">
-							<param name="Local" value="Originals/Svr_Character_Think.htm">
-							</OBJECT>
-					</UL>
 					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="IAgentCommands">
-						<param name="Local" value="Originals/Svr_Commands.htm">
+						<param name="Name" value="The ListenCompleteType Enumeration">
+						<param name="Local" value="Generated/Control_ListenCompleteType.htm">
 						</OBJECT>
-					<UL>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommands::Add">
-							<param name="Local" value="Originals/Svr_Commands_Add.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommands::GetCaption">
-							<param name="Local" value="Originals/Svr_Commands_GetCaption.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommands::GetCommand">
-							<param name="Local" value="Originals/Svr_Commands_GetCommand.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommands::GetCount">
-							<param name="Local" value="Originals/Svr_Commands_GetCount.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommands::GetVisible">
-							<param name="Local" value="Originals/Svr_Commands_GetVisible.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommands::GetVoice">
-							<param name="Local" value="Originals/Svr_Commands_GetVoice.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommands::Insert">
-							<param name="Local" value="Originals/Svr_Commands_Insert.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommands::Remove">
-							<param name="Local" value="Originals/Svr_Commands_Remove.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommands::RemoveAll">
-							<param name="Local" value="Originals/Svr_Commands_RemoveAll.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommands::SetCaption">
-							<param name="Local" value="Originals/Svr_Commands_SetCaption.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommands::SetVisible">
-							<param name="Local" value="Originals/Svr_Commands_SetVisible.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommands::SetVoice">
-							<param name="Local" value="Originals/Svr_Commands_SetVoice.htm">
-							</OBJECT>
-					</UL>
 					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="IAgentCommandsEx">
-						<param name="Local" value="Originals/Svr_Commands_Ex.htm">
+						<param name="Name" value="The ListeningStatusType Enumeration">
+						<param name="Local" value="Generated/Control_ListeningStatusType.htm">
 						</OBJECT>
-					<UL>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandsEx::AddEx">
-							<param name="Local" value="Originals/Svr_Commands_AddEx.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandsEx::GetDefaultID">
-							<param name="Local" value="Originals/Svr_Commands_GetDefaultID.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandsEx::GetFontName">
-							<param name="Local" value="Originals/Svr_Commands_GetFontName.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandsEx::GetFontSize">
-							<param name="Local" value="Originals/Svr_Commands_GetFontSize.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandsEx::GetGlobalVoiceCommandsEnabled">
-							<param name="Local" value="Originals/Svr_Commands_GetGlobalVoiceCommandsEnabled.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandsEx::GetHelpContextID">
-							<param name="Local" value="Originals/Svr_Commands_GetHelpContextID.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandsEx::GetVoiceCaption">
-							<param name="Local" value="Originals/Svr_Commands_GetVoiceCaption.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandsEx::InsertEx">
-							<param name="Local" value="Originals/Svr_Commands_InsertEx.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandsEx::SetDefaultID">
-							<param name="Local" value="Originals/Svr_Commands_SetDefaultID.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandsEx::SetFontName">
-							<param name="Local" value="Originals/Svr_Commands_SetFontName.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandsEx::SetFontSize">
-							<param name="Local" value="Originals/Svr_Commands_SetFontSize.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandsEx::SetGlobalVoiceCommandsEnabled">
-							<param name="Local" value="Originals/Svr_Commands_SetGlobalVoiceCommandsEnabled.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandsEx::SetHelpContextID">
-							<param name="Local" value="Originals/Svr_Commands_SetHelpContextID.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandsEx::SetVoiceCaption">
-							<param name="Local" value="Originals/Svr_Commands_SetVoiceCaption.htm">
-							</OBJECT>
-					</UL>
 					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="IAgentCommand">
-						<param name="Local" value="Originals/Svr_Command.htm">
+						<param name="Name" value="The MoveCauseType Enumeration">
+						<param name="Local" value="Generated/Control_MoveCauseType.htm">
 						</OBJECT>
-					<UL>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommand::GetCaption">
-							<param name="Local" value="Originals/Svr_Command_GetCaption.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommand::GetConfidenceText">
-							<param name="Local" value="Originals/Svr_Command_GetConfidenceText.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommand::GetConfidenceThreshold">
-							<param name="Local" value="Originals/Svr_Command_GetConfidenceThreshold.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommand::GetEnabled">
-							<param name="Local" value="Originals/Svr_Command_GetEnabled.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommand::GetID">
-							<param name="Local" value="Originals/Svr_Command_GetID.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommand::GetVisible">
-							<param name="Local" value="Originals/Svr_Command_GetVisible.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommand::GetVoice">
-							<param name="Local" value="Originals/Svr_Command_GetVoice.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommand::SetCaption">
-							<param name="Local" value="Originals/Svr_Command_SetCaption.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommand::SetConfidenceThreshold">
-							<param name="Local" value="Originals/Svr_Command_SetConfidenceThreshold.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommand::SetConfidenceText">
-							<param name="Local" value="Originals/Svr_Command_SetConfidenceText.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommand::SetEnabled">
-							<param name="Local" value="Originals/Svr_Command_SetEnabled.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommand::SetVisible">
-							<param name="Local" value="Originals/Svr_Command_SetVisible.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommand::SetVoice">
-							<param name="Local" value="Originals/Svr_Command_SetVoice.htm">
-							</OBJECT>
-					</UL>
 					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="IAgentCommandEx">
-						<param name="Local" value="Originals/Svr_Command_Ex.htm">
+						<param name="Name" value="The PrepareResourceType Enumeration">
+						<param name="Local" value="Generated/Control_PrepareResourceType.htm">
+						<param name="New" value="1">
 						</OBJECT>
-					<UL>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandEx::GetHelpContextID">
-							<param name="Local" value="Originals/Svr_Command_GetHelpContextID.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandEx::GetVoiceCaption">
-							<param name="Local" value="Originals/Svr_Command_GetVoiceCaption.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandEx::SetHelpContextID">
-							<param name="Local" value="Originals/Svr_Command_SetHelpContextID.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandEx::SetVoiceCaption">
-							<param name="Local" value="Originals/Svr_Command_SetVoiceCaption.htm">
-							</OBJECT>
-					</UL>
 					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="IAgentUserInput">
-						<param name="Local" value="Originals/Svr_UserInput.htm">
+						<param name="Name" value="The RequestStatus Enumeration">
+						<param name="Local" value="Generated/Control_RequestStatus.htm">
 						</OBJECT>
-					<UL>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentUserInput::GetAllItemData">
-							<param name="Local" value="Originals/Svr_UserInput_GetAllItemData.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentUserInput::GetCount">
-							<param name="Local" value="Originals/Svr_UserInput_GetCount.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentUserInput::GetItemConfidence">
-							<param name="Local" value="Originals/Svr_UserInput_GetItemConfidence.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentUserInput::GetItemID">
-							<param name="Local" value="Originals/Svr_UserInput_GetItemID.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentUserInput::GetItemText">
-							<param name="Local" value="Originals/Svr_UserInput_GetItemText.htm">
-							</OBJECT>
-					</UL>
 					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="IAgentBalloon">
-						<param name="Local" value="Originals/Svr_Balloon.htm">
+						<param name="Name" value="The SpeechGenderType Enumeration">
+						<param name="Local" value="Generated/Control_SpeechGenderType.htm">
 						</OBJECT>
-					<UL>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloon::GetBackColor">
-							<param name="Local" value="Originals/Svr_Balloon_GetBackColor.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloon::GetBorderColor">
-							<param name="Local" value="Originals/Svr_Balloon_GetBorderColor.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloon::GetEnabled">
-							<param name="Local" value="Originals/Svr_Balloon_GetEnabled.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloon::GetFontBold">
-							<param name="Local" value="Originals/Svr_Balloon_GetFontBold.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloon::GetFontCharSet">
-							<param name="Local" value="Originals/Svr_Balloon_GetFontCharSet.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloon::GetFontItalic">
-							<param name="Local" value="Originals/Svr_Balloon_GetFontItalic.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloon::GetFontName">
-							<param name="Local" value="Originals/Svr_Balloon_GetFontName.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloon::GetFontSize">
-							<param name="Local" value="Originals/Svr_Balloon_GetFontSize.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloon::GetFontStrikethru">
-							<param name="Local" value="Originals/Svr_Balloon_GetFontStrikethru.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloon::GetFontUnderline">
-							<param name="Local" value="Originals/Svr_Balloon_GetFontUnderline.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloon::GetForeColor">
-							<param name="Local" value="Originals/Svr_Balloon_GetForeColor.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloon::GetNumCharsPerLine">
-							<param name="Local" value="Originals/Svr_Balloon_GetNumCharsPerLine.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloon::GetNumLines">
-							<param name="Local" value="Originals/Svr_Balloon_GetNumLines.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloon::GetVisible">
-							<param name="Local" value="Originals/Svr_Balloon_GetVisible.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloon::SetFontCharSet">
-							<param name="Local" value="Originals/Svr_Balloon_SetFontCharSet.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloon::SetFontName">
-							<param name="Local" value="Originals/Svr_Balloon_SetFontName.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloon::SetFontSize">
-							<param name="Local" value="Originals/Svr_Balloon_SetFontSize.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloon::SetVisible">
-							<param name="Local" value="Originals/Svr_Balloon_SetVisible.htm">
-							</OBJECT>
-					</UL>
 					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="IAgentBalloonEx">
-						<param name="Local" value="Originals/Svr_Balloon_Ex.htm">
+						<param name="Name" value="The StopAllFlags Enumeration">
+						<param name="Local" value="Generated/Control_StopAllFlags.htm">
+						<param name="New" value="1">
 						</OBJECT>
-					<UL>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloonEx::GetStyle">
-							<param name="Local" value="Originals/Svr_Balloon_GetStyle.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloonEx::SetNumCharsPerLine">
-							<param name="Local" value="Originals/Svr_Balloon_SetNumCharsPerLine.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloonEx::SetNumLines">
-							<param name="Local" value="Originals/Svr_Balloon_SetNumLines.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentBalloonEx::SetStyle">
-							<param name="Local" value="Originals/Svr_Balloon_SetStyle.htm">
-							</OBJECT>
-					</UL>
 					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="IAgentCommandWindow">
-						<param name="Local" value="Originals/Svr_CommandsWindow.htm">
+						<param name="Name" value="The VisibilityCauseType Enumeration">
+						<param name="Local" value="Generated/Control_VisibilityCauseType.htm">
 						</OBJECT>
-					<UL>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandWindow::GetPosition">
-							<param name="Local" value="Originals/Svr_CommandsWindow_GetPosition.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandWindow::GetSize">
-							<param name="Local" value="Originals/Svr_CommandsWindow_GetSize.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandWindow::GetVisible">
-							<param name="Local" value="Originals/Svr_CommandsWindow_GetVisible.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentCommandWindow::SetVisible">
-							<param name="Local" value="Originals/Svr_CommandsWindow_SetVisible.htm">
-							</OBJECT>
-					</UL>
-					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="IAgentSpeechInputProperties">
-						<param name="Local" value="Originals/Svr_SpeechInput.htm">
-						</OBJECT>
-					<UL>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentSpeechInputProperties::GetEnabled">
-							<param name="Local" value="Originals/Svr_SpeechInput_GetEnabled.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentSpeechInputProperties::GetHotKey">
-							<param name="Local" value="Originals/Svr_SpeechInput_GetHotKey.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentSpeechInputProperties::GetListeningTip">
-							<param name="Local" value="Originals/Svr_SpeechInput_GetListeningTip.htm">
-							</OBJECT>
-					</UL>
-					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="IAgentAudioOutputProperties">
-						<param name="Local" value="Originals/Svr_AudioOutput.htm">
-						</OBJECT>
-					<UL>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentAudioOutputProperties::GetEnabled">
-							<param name="Local" value="Originals/Svr_AudioOutput_GetEnabled.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentAudioOutputProperties::GetUsingSoundEffects">
-							<param name="Local" value="Originals/Svr_AudioOutput_GetUsingSoundEffects.htm">
-							</OBJECT>
-					</UL>
-					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="IAgentAudioOutputPropertiesEx">
-						<param name="Local" value="Originals/Svr_AudioOutput_Ex.htm">
-						</OBJECT>
-					<UL>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentAudioOutputPropertiesEx::GetStatus">
-							<param name="Local" value="Originals/Svr_AudioOutput_GetStatus.htm">
-							</OBJECT>
-					</UL>
-					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="IAgentPropertySheet">
-						<param name="Local" value="Originals/Svr_PropertySheet.htm">
-						</OBJECT>
-					<UL>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentPropertySheet::GetPage">
-							<param name="Local" value="Originals/Svr_PropertySheet_GetPage.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentPropertySheet::GetPosition">
-							<param name="Local" value="Originals/Svr_PropertySheet_GetPosition.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentPropertySheet::GetSize">
-							<param name="Local" value="Originals/Svr_PropertySheet_GetSize.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentPropertySheet::GetVisible">
-							<param name="Local" value="Originals/Svr_PropertySheet_GetVisible.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentPropertySheet::SetPage">
-							<param name="Local" value="Originals/Svr_PropertySheet_SetPage.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentPropertySheet::SetVisible">
-							<param name="Local" value="Originals/Svr_PropertySheet_SetVisible.htm">
-							</OBJECT>
-					</UL>
-					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="Events">
-						<param name="Local" value="Originals/Svr_Events.htm">
-						</OBJECT>
-					<UL>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySink::ActivateInputState">
-							<param name="Local" value="Originals/Svr_Event_ActivateInputState.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySink:: BalloonVisibleState">
-							<param name="Local" value="Originals/Svr_Event_BalloonVisibleState.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySink::Bookmark">
-							<param name="Local" value="Originals/Svr_Event_Bookmark.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySink::Click">
-							<param name="Local" value="Originals/Svr_Event_Click.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySink::Command">
-							<param name="Local" value="Originals/Svr_Event_Command.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySink::DblClick">
-							<param name="Local" value="Originals/Svr_Event_DblClick.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySink::DragComplete">
-							<param name="Local" value="Originals/Svr_Event_DragComplete.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySink::DragStart">
-							<param name="Local" value="Originals/Svr_Event_DragStart.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySink::Idle">
-							<param name="Local" value="Originals/Svr_Event_Idle.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySink::Move">
-							<param name="Local" value="Originals/Svr_Event_Move.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySink::RequestComplete">
-							<param name="Local" value="Originals/Svr_Event_RequestComplete.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySink::RequestStart">
-							<param name="Local" value="Originals/Svr_Event_RequestStart.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySink:: Size">
-							<param name="Local" value="Originals/Svr_Event_Size.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySink::VisibleState">
-							<param name="Local" value="Originals/Svr_Event_VisibleState.htm">
-							</OBJECT>
-					</UL>
-					<LI> <OBJECT type="text/sitemap">
-						<param name="Name" value="IAgentNotifySinkEx">
-						<param name="Local" value="Originals/Svr_Events_Ex.htm">
-						</OBJECT>
-					<UL>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySinkEx::ActiveClientChange">
-							<param name="Local" value="Originals/Svr_Event_ActiveClientChange.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySinkEx::AgentPropertyChange">
-							<param name="Local" value="Originals/Svr_Event_AgentPropertyChange.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySinkEx::DefaultCharacterChange">
-							<param name="Local" value="Originals/Svr_Event_DefaultCharacterChange.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySinkEx::HelpComplete">
-							<param name="Local" value="Originals/Svr_Event_HelpComplete.htm">
-							</OBJECT>
-						<LI> <OBJECT type="text/sitemap">
-							<param name="Name" value="IAgentNotifySinkEx::ListeningState">
-							<param name="Local" value="Originals/Svr_Event_ListeningState.htm">
-							</OBJECT>
-					</UL>
 				</UL>
 			</UL>
 			<LI> <OBJECT type="text/sitemap">
-				<param name="Name" value="Microsoft Agent Error Codes">
-				<param name="Local" value="MsAgent.chm::/hh/msagent/agenterr_6w36.htm">
+				<param name="Name" value="Reference">
+				</OBJECT>
+			<UL>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Microsoft Agent Error Codes">
+					<param name="Local" value="MsAgent.chm::/hh/msagent/agenterr_6w36.htm">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Microsoft Agent Speech Output Tags">
+					<param name="Local" value="MsAgent.chm::/hh/msagent/spoutput_2v1w.htm">
+					</OBJECT>
+			</UL>
+		</UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="What's New for Version 1.1">
+			<param name="Local" value="html/Version_1_1_New.htm">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="The User Interface">
+				<param name="Local" value="html/Version_1_1_New.htm#UI">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="The Programming Interfaces">
+				<param name="Local" value="html/Version_1_1_New.htm#API">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Refactoring">
+				<param name="Local" value="html/Version_1_1_New.htm#Refactoring">
 				</OBJECT>
 		</UL>
 	</UL>

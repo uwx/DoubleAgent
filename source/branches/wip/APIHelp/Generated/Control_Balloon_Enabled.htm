@@ -12,66 +12,92 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Enabled Property</h4>
+					<h3>The Enabled Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Returns whether the word balloon is enabled for a character.</p>
-					</div>
+				<p>Indicates if the word balloon is enabled for a character.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>Enabled</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Enabled</s></p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>Enabled</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Enabled</s></p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>Enabled</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Enabled</s></p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>Enabled</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Balloon</s>.<s>Enabled</s></p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>balloon</em>-&gt;<s>get_Enabled</s> (<em>&amp;Enabled</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Enabled</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Balloon</em>.<em class="keyword">Enabled</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">Enabled</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Balloon</em>.<em class="keyword">Enabled</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">Enabled</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Balloon</em>.<em class="keyword">Enabled</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Enabled</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Balloon</em>.<em class="keyword">Enabled</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">balloon</em>-&gt;<em class="keyword">get_Enabled</em> (<em class="token">&amp;Enabled</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Enabled</i>
+									<em class="token">Enabled</em>
 								</td>
 								<td>
-				A <s>boolean </s>value that indicates if the <a href="Control_BalloonStyleFlags_Enabled.htm" class="see">Enabled</a>
+				A <em class="typename">boolean</em> value that indicates if the <a href="Control_BalloonStyleFlags_Enabled.htm" class="see keyword">Enabled</a>
 				style is set.
 			</td>
 							</tr>
 						</table>
 					</div>
-					<h4 class="remarks">Remarks</h4>When the <a href="Control_BalloonStyleFlags_Enabled.htm" class="see">Enabled</a> style is set, the
-					word balloon appears when the <a href="Control_Character_Speak.htm" class="see">Speak</a> or <a href="Control_Character_Think.htm" class="see">Think</a> method
-					is used, unless the user overrides this setting in the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a>
-					window. When it's not set, the word balloon does not appear.<p>
-					The default enabled style is set as part of a character's definition when the character is
-					compiled in the Microsoft Agent Character Editor. If a character is defined to not support the word
-					balloon, this property will always be <s>False </s>for the character.
-				</p><p>
-					The user can override the enabled style for <em>all </em>characters in the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a>
+					<h4 class="remarks">Remarks</h4>
+				<p>
+					When the <a href="Control_BalloonStyleFlags_Enabled.htm" class="see keyword">Enabled</a> style is set, the word balloon appears when
+					the <a href="Control_Character_Speak.htm" class="see keyword">Speak</a> or <a href="Control_Character_Think.htm" class="see keyword">Think</a> method is used, unless
+					the user overrides this setting in the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window. When it's not
+					set, the word balloon does not appear.
+				</p>
+				<p>
+					The default enabled style is set as part of a character's definition when the character is compiled in
+					the Microsoft Agent Character Editor. If a character is defined to not support the word balloon, this
+					property will always be <em class="keyword">False</em> for the character.
+				</p>
+				<p>
+					The user can override the enabled style for <em>all</em> characters in the <a class="see" href="../html/UI_PropSheet.htm#Output">Advanced Character Options</a>
 					window.
-				</p><h4 class="seealso">See Also</h4><a href="Control_Balloon_Style.htm">The Style Property</a><br /><a href="Control_Settings_BalloonEnabled.htm">The BalloonEnabled Property</a></td>
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Control_Balloon_Style.htm">The Style Property</a><br /><a href="Control_Settings_BalloonEnabled.htm">The BalloonEnabled Property</a></td>
 			</tr>
 		</table>
 	</body>

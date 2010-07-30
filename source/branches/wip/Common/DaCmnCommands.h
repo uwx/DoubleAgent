@@ -51,7 +51,7 @@ public:
 	void Initialize (long pCharID, CEventNotify * pNotify);
 
 	bool SetLangID (LANGID pLangId);
-	USHORT DoContextMenu (HWND pOwner, const CPoint & pPosition, class CVoiceCommandsWnd * pVoiceCommandsWnd);
+	long DoContextMenu (HWND pOwner, const CPoint & pPosition, class CVoiceCommandsWnd * pVoiceCommandsWnd);
 
 	CDaCmnCommand * GetCommand (USHORT pCommandId);
 	CDaCmnCommand * GetDefaultCommand ();

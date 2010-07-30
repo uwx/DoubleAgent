@@ -12,82 +12,101 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Play Method</h4>
+					<h3>The Play Method</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Plays the specified animation for a character.</p>
-					</div>
+				<p>Plays the specified animation.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>GestureAt</s> ("<em>Animation</em>")</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<s>Set</s> <em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>GestureAt</s> "<em>Animation</em>"</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<s>Set</s> <em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>GestureAt</s> "<em>Animation</em>"</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>GestureAt</s> ("<em>Animation</em>")</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>character</em>.<s>GestureAt</s> ("<em>Animation</em>", &amp;<em>Request</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">GestureAt</em> ("<em class="token">Animation</em>")</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">GestureAt</em> "<em class="token">Animation</em>"</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">GestureAt</em> "<em class="token">Animation</em>"</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">GestureAt</em> ("<em class="token">Animation</em>")</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">GestureAt</em> ("<em class="token">Animation</em>", &amp;<em class="token">Request</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Animation</i>
+									<em class="token">Animation</em>
 								</td>
 								<td>
-				A <s>string </s>value that specifies the name of an animation sequence.
+				A <em class="typename">string</em> value that specifies the name of an animation sequence.
 			</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Request</i>
+									<em class="token">Request</em>
 								</td>
 								<td>
-				A <s><a href="Control_Request.htm" class="see">Request</a></s> object your application can used to track the method's status.
+				A <a href="Control_Request.htm" class="see typename">Request Object</a> your application can
+				used to track the method's status.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					An animation's name is defined when the character is authored. Before playing the specified
-					animation, Double Agent attempts to play the <s>Return </s>animation for the previous animation,
-					if one has been assigned.
+				<p>
+					An animation's name is defined when the character is authored. Before playing the specified animation, Double
+					Agent attempts to play the <em class="glossary">Return</em> animation for the previous animation, if one has
+					been assigned.
 				</p>
-					<p>
-					The <s>Play </s>method does not make the character visible. If the character is not visible,
-					Double Agent plays the animation invisibly, and sets the <a href="Control_Request_Status.htm" class="see">Status</a>
-					property of the <a href="Control_Request.htm" class="see">Request</a> object.
+				<p>
+					The <em class="self keyword">Play</em> method does not make the character visible. If the character is not visible, Double
+					Agent plays the animation invisibly, and sets the <a href="Control_Request_Status.htm" class="see keyword">Status</a> property of the
+					<a href="Control_Request.htm" class="see keyword">Request Object</a>.
 				</p>
-					<p>
-					When accessing a character's animations using a conventional file protocol, you can simply
-					use the <s>Play </s>method specifying the name of the animation. However, if you're using the HTTP
-					protocol to access character animation data, use the <a href="Control_Character_Prepare.htm" class="see">Prepare</a>
-					method to load the animation before calling the <s>Play </s>method.
+				<p>
+					When accessing a character's animations using a conventional file protocol, you can simply use the<em class="self keyword">Play</em>
+					method specifying the name of the animation. However, if you're using the <em class="glossary">HTTP</em> protocol
+					to access character animation data, use the <a href="Control_Character_Prepare.htm" class="see keyword">Prepare</a> method to load the
+					animation before calling the <em class="self keyword">Play</em> method.
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Character_Animations.htm">The Animations Property</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_Character_Animations.htm">The Animations Property</a></td>
 			</tr>
 		</table>
 	</body>

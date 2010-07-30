@@ -78,6 +78,7 @@ public:
 		COM_INTERFACE_ENTRY2(IDaServer, IDaServer2)
 		COM_INTERFACE_ENTRY_IID(__uuidof(IAgent), IDaServer2)
 		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentEx), IDaServer2)
+		COM_INTERFACE_ENTRY_AGGREGATE(__uuidof(IConnectionPointContainer), mNotifyPtr)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo2)
@@ -148,7 +149,7 @@ public:
 // Implementation
 protected:
 	void UnloadAllCharacters (bool pAbandonned = false);
-	HRESULT LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqID);
+	HRESULT LoadCharacter (LPCTSTR pFilePath, bool pIsDefault, long & pCharID, long & pReqID);
 	HRESULT UnloadCharacter (long pCharID);
 
 protected:
@@ -156,6 +157,7 @@ protected:
 private:
 	DWORD								mCharacterStyle;
 	UINT								mUsingHandler;
+	LPUNKNOWN							mNotifyPtr;
 	CAtlTypeArray <long>				mInNotifyUnregister;
 };
 

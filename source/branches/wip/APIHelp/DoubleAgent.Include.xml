@@ -1,4 +1,11 @@
 ﻿<?xml version="1.0"?>
+<!DOCTYPE doc [
+	<!ENTITY dans "&amp;dans;">
+	<!ENTITY darootobj "&amp;darootobj;">
+	<!ENTITY hexprefix "&amp;hexprefix;">
+	<!ENTITY dapsref "&amp;dapsref;">
+	<!ENTITY dapsname "&amp;dapsname;">
+]>
 <doc>
 	<params>
 		<param name="Button">
@@ -9,13 +16,13 @@
 			a taskbar icon, and bit 13 is also set, the click occurred on the taskbar icon.
 		</param>
 		<param name="Shift">
-			A numeric value that corresponds to the state of the <c>SHIFT</c>, <c>CTRL</c>, and <c>ALT</c> keys when the
+			A numeric value that corresponds to the state of the <filename>Shift</filename>, <filename>Ctrl</filename>, and <filename>Alt</filename> keys when the
 			button was pressed or released. A bit is set if the key is down. The
-			shift argument is a bit field with the least-significant bits corresponding to the <c>SHIFT</c> key (bit 0),
-			the <c>CTRL</c> key (bit 1), and the <c>ALT</c> key (bit 2). These bits correspond to the values 1, 2, and 4, respectively.
+			shift argument is a bit field with the least-significant bits corresponding to the <filename>Shift</filename> key (bit 0),
+			the <filename>Ctrl</filename> key (bit 1), and the <filename>Alt</filename> key (bit 2). These bits correspond to the values 1, 2, and 4, respectively.
 			Some, all, or none of the bits can be set, indicating
-			that some, all, or none of the keys are pressed. For example, if both <c>CTRL</c> and <c>ALT</c> were pressed, the
-			value of <em>Shift</em> would be 6.
+			that some, all, or none of the keys are pressed. For example, if both <filename>Ctrl</filename> and <filename>Alt</filename> were pressed, the
+			value of <filename>Shift</filename> would be 6.
 		</param>
 		<param name="X">
 			The current horizontal location of the mouse pointer, in pixels, relative to the left side of the screen.
@@ -23,9 +30,20 @@
 		<param name="Y">
 			The current vertical location of the mouse pointer, in pixels, relative to the top of the screen.
 		</param>
+		<param name="RequestID">
+			An optional unique <typename>numeric</typename> value your application can use to track the method's status.
+		</param>
+		<param name="CharacterID">
+			The unique <typename>numeric</typename> identifier assigned when the character was loaded.
+		</param>
+		<param name="Sender">
+			The source of the event.
+		</param>
 	</params>
 	<methods>
-		<para name="Provider">For more information on specifying character file names, see the <see cref="M:DoubleAgent.Control.Characters.Load"/> method.</para>
+		<para name="Provider">
+			For more information on specifying character file names, see the <see cref="M:&dans;.Characters.Load"/> method.
+		</para>
 		<note name="Provider">This method does not support the HTTP protocol for character files.</note>
 	</methods>
 	<properties>
@@ -35,11 +53,15 @@
 		<note name="NoSoundSupport">This property also returns the empty string if you have no compatible sound support installed on your system.</note>
 		<note name="SlowSoundLoad">Querying this property does not typically return an error. However, if the speech engine takes an abnormally long time to load, you may get an error indicating that the query timed out.</note>
 		<note name="ReadOnlySetting">The property setting affects all characters and is read-only; only the user can set this property value.</note>
+		<note name="ContainedOnly">This property is relevant only when the control is visible (i.e. when it's used in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm">contained</a> mode).</note>
 		<para name="Color">
-			The valid range for a normal RGB color is 0 to 16,777,215 (&amp;HFFFFFF). The high byte of a number in this range equals 0; the lower 3 bytes, from least to most significant byte, determine the amount of red, green, and blue, respectively. The red, green, and blue components are each represented by a number between 0 and 255 (&amp;HFF).
+			The valid range for a normal RGB color is 0 to 16,777,215 (&hexprefix;FFFFFF). The high byte of a number in this range equals 0; the lower 3 bytes, from least to most significant byte, determine the amount of red, green, and blue, respectively. The red, green, and blue components are each represented by a number between 0 and 255 (&hexprefix;FF).
+		</para>
+		<para name="OleColor">
+			If the high byte of an OLECOLOR is &hexprefix;80, the lower 3 bytes contain a <glossary>system color index</glossary>.
 		</para>
 		<para name="DefaultBalloonFont">
-			The default values for the font of a character's word balloon are set in the Microsoft Agent Character Editor. In addition, the user can override font settings for all characters in the <see cref="T:DoubleAgent.Control.PropertySheet" text="Double Agent Property Sheet"/>.
+			The default values for the font of a character's word balloon are set in the Microsoft Agent Character Editor. In addition, the user can override font settings for all characters in the <a class="see" href="&dapsref;#Output">&dapsname;</a> window.
 		</para>
 		<details name="VoiceCaption">
 			<h4 class="details">Format</h4>
@@ -56,29 +78,39 @@
 				For example, the following results in a grammar that supports "try this", "please try this",
 				"please please try this", with unlimited iterations of "please":
 			</para>
-			<example><code xml:space="preserve">"please* try this"</code></example>
+			<example>
+				<code xml:space="preserve">"please* try this"</code>
+			</example>
 			<para>
 				The following grammar format excludes "try this" because the + operator defines at least one instance
 				of "please":
 			</para>
-			<example><code xml:space="preserve">"please+ try this"</code></example>
+			<example>
+				<code xml:space="preserve">"please+ try this"</code>
+			</example>
 			<para>
 				The repetition operators follow normal rules of precedence and apply to the immediately preceding text
 				item. For example, the following grammar results in "New York" and "New York York", but not "New York
 				New York":
 			</para>
-			<example><code xml:space="preserve">"New York+"</code></example>
+			<example>
+				<code xml:space="preserve">"New York+"</code>
+			</example>
 			<para>
 				Therefore, you typically want to use these operators with the grouping characters. For example, the following
 				grammar includes both "New York" and "New York New York":
 			</para>
-			<example><code xml:space="preserve">"(New York)+"</code></example>
+			<example>
+				<code xml:space="preserve">"(New York)+"</code>
+			</example>
 			<para>
 				Repetition operators are useful when you want to compose a grammar that includes a repeated sequence
 				such as a phone number or specification of a list of items:
 			</para>
-			<example><code xml:space="preserve">"call (one|two|three|four|five|six|seven|eight|nine|zero|oh)*"
-"I'd like (cheese|pepperoni|pineapple|canadian bacon|mushrooms|and)+"</code></example>
+			<example>
+				<code xml:space="preserve">"call (one|two|three|four|five|six|seven|eight|nine|zero|oh)*"
+"I'd like (cheese|pepperoni|pineapple|canadian bacon|mushrooms|and)+"</code>
+			</example>
 			<para>
 				Although the operators can also be used with the optional square-brackets grouping character, doing so
 				may reduce the efficiency of Agent's processing of the grammar.
@@ -109,7 +141,7 @@
 			<para>
 				You can include in your grammar words in the form of "<em>text\pronunciation</em>", where <em>text</em> is
 				the text displayed and <em>pronunciation</em> is text that clarifies the pronunciation. For example, the
-				grammar, "1st\first", would be recognized when the user says "first", but the <see cref="E:DoubleAgent.Control.Control.Command"/> event will
+				grammar, "1st\first", would be recognized when the user says "first", but the <see cref="E:&darootobj;.Command"/> event will
 				return the text, "1st\first". You can also use IPA (International Phonetic Alphabet) to specify a pronunciation
 				by beginning the pronunciation with a pound sign character ("#"), then the text representing the IPA
 				pronunciation.
@@ -126,8 +158,12 @@
 				designate word breaks, insert a Unicode zero-width space character (0x200B) to indicate logical word
 				breaks.
 			</para>
-			<note>Except for errors using the grouping or repetition formatting characters, Double Agent will not report errors in your grammar, unless the engine itself reports the error. If you pass text in your grammar that the engine fails to compile, but the engine does not handle and return as an error, Double Agent cannot report the error. Therefore, the client application must be carefully define grammar for the <c>VoiceGrammar</c> property.</note>
-			<note>The grammar features available may depend on the speech recognition engine. You may want to check with the engine's vendor to determine what grammar options are supported. Use the <see cref="P:DoubleAgent.Control.Character.SRModeID"/> to use a specific engine.</note>
+			<note>
+				Except for errors using the grouping or repetition formatting characters, Double Agent will not report errors in your grammar, unless the engine itself reports the error. If you pass text in your grammar that the engine fails to compile, but the engine does not handle and return as an error, Double Agent cannot report the error. Therefore, the client application must be carefully define grammar for the <keyword>VoiceGrammar</keyword> property.
+			</note>
+			<note>
+				The grammar features available may depend on the speech recognition engine. You may want to check with the engine's vendor to determine what grammar options are supported. Use the <see cref="P:&dans;.Character.SRModeID"/> property to use a specific engine.
+			</note>
 			<note>The use of this property depends on the state of Double Agent's speech recognition properties. For example, if speech recognition is disabled or not installed, this property has no effect.</note>
 		</details>
 	</properties>

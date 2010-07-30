@@ -1231,7 +1231,6 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::DefaultCharacterChange (BSTR CharGU
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DefaultCharacterChange [%ls]"), mOwner, max(mOwner->m_dwRef,-1), CharGUID);
 #endif
-//TODO - Only for clients using the default character, and reload character if default was used.
 	if	(PreFireEvent ())
 	{
 		try

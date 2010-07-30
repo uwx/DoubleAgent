@@ -12,77 +12,89 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The RaiseRequestErrors Property</h4>
+					<h3>The RaiseRequestErrors Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>
-					Returns or sets whether an error condition is raised (an exception thrown) for failed requests.
-				</p>
-					</div>
+				<p>Specifies if an error condition is raised (an exception thrown) for failed requests.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>RaiseErrors</em> = ]<em>control</em>.<s>RaiseRequestErrors</s></p>
-
-<p><em>control</em>.<s>RaiseRequestErrors</s> = <em>RaiseErrors</em></p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>RaiseErrors</em> = ]<em>control</em>.<s>RaiseRequestErrors</s></p>
-
-<p><em>control</em>.<s>RaiseRequestErrors</s> = <em>RaiseErrors</em></p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>RaiseErrors</em> = ]<em>control</em>.<s>RaiseRequestErrors</s></p>
-
-<p><em>control</em>.<s>RaiseRequestErrors</s> = <em>RaiseErrors</em></p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>RaiseErrors</em> = ]<em>control</em>.<s>RaiseRequestErrors</s></p>
-
-<p><em>control</em>.<s>RaiseRequestErrors</s> = <em>RaiseErrors</em></p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>control</em>-&gt;<s>get_RaiseRequestErrors</s> (&amp;<em>RaiseErrors</em>)</p>
-
-<p><em>control</em>-&gt;<s>put_RaiseRequestErrors</s> (<em>RaiseErrors</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">RaiseErrors</em> = ]<em class="token">control</em>.<em class="keyword">RaiseRequestErrors</em></p>
+<p><em class="token">control</em>.<em class="keyword">RaiseRequestErrors</em> = <em class="token">RaiseErrors</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">RaiseErrors</em> = ]<em class="token">control</em>.<em class="keyword">RaiseRequestErrors</em></p>
+<p><em class="token">control</em>.<em class="keyword">RaiseRequestErrors</em> = <em class="token">RaiseErrors</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">RaiseErrors</em> = ]<em class="token">control</em>.<em class="keyword">RaiseRequestErrors</em></p>
+<p><em class="token">control</em>.<em class="keyword">RaiseRequestErrors</em> = <em class="token">RaiseErrors</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">RaiseErrors</em> = ]<em class="token">control</em>.<em class="keyword">RaiseRequestErrors</em></p>
+<p><em class="token">control</em>.<em class="keyword">RaiseRequestErrors</em> = <em class="token">RaiseErrors</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">control</em>-&gt;<em class="keyword">get_RaiseRequestErrors</em> (&amp;<em class="token">RaiseErrors</em>)</p>
+<p><em class="token">control</em>-&gt;<em class="keyword">put_RaiseRequestErrors</em> (<em class="token">RaiseErrors</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>RaiseErrors</i>
+									<em class="token">RaiseErrors</em>
 								</td>
 								<td>
-				A <s>boolean </s>value that determines whether errors are raised for failed
-				requests. The default value is <s>True</s>.
+				A <em class="typename">boolean</em> value that determines whether errors are raised
+				for failed requests. The default value is <em class="keyword">True</em>.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					When a method that returns a <a href="Control_Request.htm" class="see">Request</a> object fails, there
-					are two ways to detect the error. If <s>RaiseRequestErrors </s>is set, the Double Agent control
-					will raise an error condition. If it's not set, you can check the <a href="Control_Request.htm" class="see">Request</a>
-					object's <a href="Control_Request_Status.htm" class="see">Status</a> property. An example of a request
-					error is when you specify an animation name that doesn't exist for the <a href="Control_Character_Play.htm" class="see">Play</a>
-					method.
+				<p>
+					When a method that returns a <a href="Control_Request.htm" class="see keyword">Request Object</a> fails, there are two ways
+					to detect the error. If <em class="self keyword">RaiseRequestErrors</em> is set, the Double Agent control will raise an
+					error condition. If it's not set, you can check the <a href="Control_Request.htm" class="see keyword">Request Object's</a> <a href="Control_Request_Status.htm" class="see keyword">Status</a>
+					property. An example of a request error is when you specify an animation name that doesn't exist for
+					the <a href="Control_Character_Play.htm" class="see keyword">Play</a> method.
 				</p>
-				</td>
+			</td>
 			</tr>
 		</table>
 	</body>

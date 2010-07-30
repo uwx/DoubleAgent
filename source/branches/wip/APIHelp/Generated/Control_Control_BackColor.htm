@@ -12,14 +12,88 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The BackColor Property</h4>
+					<h3>The BackColor Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
-				</td>
+					<div class="summary">
+				<p>Specifies the ActiveX<sup>®</sup> control's background color.</p>
+			</div>
+					<h4 class="syntax">Syntax</h4>
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">BackColor</em> = ]<em class="token">control</em>.<em class="keyword">BackColor</em></p>
+<p><em class="token">control</em>.<em class="keyword">BackColor</em> = <em class="token">BackColor</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">BackColor</em> = ]<em class="token">control</em>.<em class="keyword">BackColor</em></p>
+<p><em class="token">control</em>.<em class="keyword">BackColor</em> = <em class="token">BackColor</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">BackColor</em> = ]<em class="token">control</em>.<em class="keyword">BackColor</em></p>
+<p><em class="token">control</em>.<em class="keyword">BackColor</em> = <em class="token">BackColor</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">BackColor</em> = ]<em class="token">control</em>.<em class="keyword">BackColor</em></p>
+<p><em class="token">control</em>.<em class="keyword">BackColor</em> = <em class="token">BackColor</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">control</em>-&gt;<em class="keyword">get_BackColor</em> (&amp;<em class="token">BackColor</em>)</p>
+<p><em class="token">control</em>-&gt;<em class="keyword">put_BackColor</em> (<em class="token">BackColor</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">BackColor</em>
+								</td>
+								<td>
+				An <em class="typename">OLECOLOR</em> value for the control's background color.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+				<p>
+			The valid range for a normal RGB color is 0 to 16,777,215 (&amp;HFFFFFF). The high byte of a number in this range equals 0; the lower 3 bytes, from least to most significant byte, determine the amount of red, green, and blue, respectively. The red, green, and blue components are each represented by a number between 0 and 255 (&amp;HFF).
+		</p>
+				<p>
+			If the high byte of an OLECOLOR is &amp;H80, the lower 3 bytes contain a <em class="glossary">system color index</em>.
+		</p>
+				<p class="note"><span class="note">Note:</span> This property is relevant only when the control is visible (i.e. when it's used in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm">contained</a> mode).</p>
+			</td>
 			</tr>
 		</table>
 	</body>

@@ -12,76 +12,93 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The ActivateInput Event</h4>
+					<h3>The ActivateInput Event</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Signalled when a client becomes input-active.</p>
-					</div>
+				<p>Signalled when a client becomes <em class="glossary">input-active</em>.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p><s>Event</s> <em>control</em>_<s>ActivateInput</s> (<s>ByVal</s> <em>CharacterID</em> <s>As String</s>)</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>ActivateInput</s> (<s>ByVal</s> <em>CharacterID</em> <s>As String</s>)</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>ActivateInput</s> (<s>ByVal</s> <em>CharacterID</em>)</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p><s>delegate void</s> <em>control</em>_<s>ActivateInput<em>EventHandler</em></s> (<s>string</s> <em>CharacterID</em>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><s>void</s> <em>control</em>_<s>ActivateInput (LPCTSTR</s> <em>CharacterID</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="keyword">Event</em> <em class="token">control</em>_<em class="keyword">ActivateInput</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em> <em class="keyword">As String</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">ActivateInput</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em> <em class="keyword">As String</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">ActivateInput</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="keyword">delegate void</em> <em class="token">control</em>_<em class="keyword">ActivateInput<token>EventHandler</token></em> (<em class="keyword">string</em> <em class="token">CharacterID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="keyword">void</em> <em class="token">control</em>_<em class="keyword">ActivateInput (LPCTSTR</em> <em class="token">CharacterID</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>CharacterID</i>
+									<em class="token">CharacterID</em>
 								</td>
-								<td>The unique identifier of the character that has become input-active.</td>
+								<td>
+				The unique identifier of the character that has become <em class="glossary">input-active</em>.
+			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					The input-active client receives mouse and speech input events for the character. Double Agent
-					sends this event only to the client that becomes input-active.
+				<p>
+					The <em class="glossary">input-active</em> client receives mouse and speech input events for the character. Double
+					Agent sends this event only to the client that becomes <em class="glossary">input-active</em>.
 				</p>
-					<p>
-					This event can occur when the user uses your <a href="Control_Commands.htm" class="see">Commands</a>
-					object, for example, by choosing a <a href="Control_Commands.htm" class="see">Commands</a> object entry in
-					the <a href="Control_CommandsWindow.htm" class="see">CommandsWindow</a> or in the pop-up menu for a character.
-					It can also occur when the user selects a character (by clicking or speaking its name), when a character
-					becomes visible, or when the character of another client application becomes hidden.
+				<p>
+					This event can occur when the user uses your <a href="Control_Commands.htm" class="see keyword">Commands Collection</a>,
+					for example, by choosing a <a href="Control_Commands.htm" class="see keyword">Commands Collection</a> entry in the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a>
+					window or in the <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a> window for a character. It can also occur
+					when the user selects a character (by clicking or speaking its name), when a character becomes visible,
+					or when the character of another client application becomes hidden.
 				</p>
-					<p>
-					You can also call the <a href="Control_Character_Activate.htm" class="see">Activate</a> method (with
-					<s>State </s>set to 2) to explicitly make the character topmost, which results in your client application
-					becoming input-active and triggers this event. However, this event does not occur if you use the
-					<a href="Control_Character_Activate.htm" class="see">Activate</a> method only to specify whether or not your
-					client is the active client of the character.
+				<p>
+					You can also call the <a href="Control_Character_Activate.htm" class="see keyword">Activate</a> method (with <em class="token">State</em>
+					set to 2) to explicitly make the character topmost, which results in your client application becoming <em class="glossary">input-active</em>
+					and triggers this event. However, this event does not occur if you use the <a href="Control_Character_Activate.htm" class="see keyword">Activate</a>
+					method only to specify whether or not your client is the active client of the character.
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Event_DeactivateInput.htm">The DeactivateInput Event</a>
-					<br />
-					<a href="Control_Character_Activate.htm">The Activate Method</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_Event_DeactivateInput.htm">The DeactivateInput Event</a><br /><a href="Control_Character_Activate.htm">The Activate Method</a></td>
 			</tr>
 		</table>
 	</body>

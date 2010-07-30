@@ -12,76 +12,90 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The TTSEngine Property</h4>
+					<h3>The TTSEngine Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>
-					Retrieves the character's current or default <a href="Control_TTSEngine.htm" class="see">Text-To-Speech Engine</a>
-					object.
-				</p>
-					</div>
+				<p>Returns the character's current or default <a href="Control_TTSEngine.htm" class="see keyword">Text-To-Speech Engine Object</a>.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>TTSEngine</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>TTSEngine</s>[ [<em>GetDefault</em>]]</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<s>Set</s> <em>TTSEngine</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>TTSEngine</s>[ [<em>GetDefault</em>]]</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<s>Set</s> <em>TTSEngine</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>TTSEngine</s>[ [<em>GetDefault</em>]]</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>TTSEngine</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>get_TTSEngine</s> (<em>GetDefault</em>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>character</em>-&gt;<s>get_TTSEngine</s> (<em>GetDefault</em>, &amp;<em>TTSEngine</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">TTSEngine</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">TTSEngine</em>[ [<em class="token">GetDefault</em>]]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">TTSEngine</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">TTSEngine</em>[ [<em class="token">GetDefault</em>]]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">TTSEngine</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">TTSEngine</em>[ [<em class="token">GetDefault</em>]]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">TTSEngine</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">get_TTSEngine</em> (<em class="token">GetDefault</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">get_TTSEngine</em> (<em class="token">GetDefault</em>, &amp;<em class="token">TTSEngine</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>GetDefault</i>
+									<em class="token">GetDefault</em>
 								</td>
 								<td>
-				An optional <s>boolean </s>value that indicates if you want the character's
-				current or default text-to-speech engine. The default value is <s>False</s>.
+				An optional <em class="typename">boolean</em> value that indicates if you want the
+				character's current or default text-to-speech engine. The default value is <em class="keyword">False</em>.
 			</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>TTSEngine</i>
+									<em class="token">TTSEngine</em>
 								</td>
 								<td>
-				A <s><a href="Control_TTSEngine.htm" class="see">TTSEngine Object</a></s> that corresponds to the character's current or default <a href="Control_Character_TTSModeID.htm" class="see">TTSModeID</a>.
+				A <a href="Control_TTSEngine.htm" class="see typename">TTSEngine Object</a> that corresponds
+				to the character's current or default <a href="Control_Character_TTSModeID.htm" class="see typename">TTSModeID</a>.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					If you change the character's <a href="Control_Character_TTSModeID.htm" class="see">TTSModeID</a> you
-					must re-access this property to get the correct current <a href="Control_TTSEngine.htm" class="see">TTSEngine Object</a>.
+				<p>
+					If you change the character's <a href="Control_Character_TTSModeID.htm" class="see keyword">TTSModeID</a> you must re-access this property
+					to get the correct current <a href="Control_TTSEngine.htm" class="see keyword">TTSEngine Object</a>.
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_TTSEngine.htm">The TTSEngine Object</a>
-					<br />
-					<a href="Control_Character_TTSModeID.htm">The TTSModeID Property</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_TTSEngine.htm">The TTSEngine Object</a><br /><a href="Control_Character_TTSModeID.htm">The TTSModeID Property</a></td>
 			</tr>
 		</table>
 	</body>

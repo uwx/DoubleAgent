@@ -12,78 +12,107 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Status Property</h4>
+					<h3>The Status Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>
-					You can use the <s>Status </s>property to check the status of your request.
-				</p>
-					</div>
+				<p>You can use the <em class="self keyword">Status</em> property to check the status of your request.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-								<p>[<em>Status</em> = ]<em>request</em>.<s>Status</s></p>
-							</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-								<p>[<em>Status</em> = ]<em>request</em>.<s>Status</s></p>
-							</dd>
-							<dt>VBScript</dt>
-							<dd>
-								<p>[<em>Status</em> = ]<em>request</em>.<s>Status</s></p>
-							</dd>
-							<dt>Visual C#</dt>
-							<dd>
-								<p>[<em>Status</em> = ]<em>request</em>.<s>Status</s></p>
-							</dd>
-							<dt>Visual C++</dt>
-							<dd>
-								<p>
-									<em>request</em>-&gt;<s>get_Status</s> (<em>&amp;Status</em>)</p>
-							</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Status</em> = ]<em class="token">request</em>.<em class="keyword">Status</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">Status</em> = ]<em class="token">request</em>.<em class="keyword">Status</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">Status</em> = ]<em class="token">request</em>.<em class="keyword">Status</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Status</em> = ]<em class="token">request</em>.<em class="keyword">Status</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">request</em>-&gt;<em class="keyword">get_Status</em> (<em class="token">&amp;Status</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Status</i>
+									<em class="token">Status</em>
 								</td>
-								<td>The current status of the request:<table><tr><td>
-0&nbsp;=&nbsp;<s>Success</s>
-</td><td>The request was successfully completed.</td></tr><tr><td>
-1&nbsp;=&nbsp;<s>Failed</s>
-</td><td>The request failed and an error code is available in the <a href="Control_Request.htm" class="see">Request</a>
-				object's <a href="Control_Request_Number.htm" class="see">Number</a> property.</td></tr><tr><td>
-2&nbsp;=&nbsp;<s>Pending</s>
-</td><td>The request is on the queue.</td></tr><tr><td>
-3&nbsp;=&nbsp;<s>Interrupted</s>
-</td><td>The request was interrupted and an error code is available in the <a href="Control_Request.htm" class="see">Request</a>
-				object's <a href="Control_Request_Number.htm" class="see">Number</a> property.</td></tr><tr><td>
-4&nbsp;=&nbsp;<s>InProgress</s>
-</td><td>The request is currently in progress.</td></tr></table></td>
+								<td>
+				The current status of the request:<table><tr><td xml:space="preserve">
+0&nbsp;=&nbsp;<em class="keyword">Success</em>
+</td><td>
+							The request was successfully completed.
+						</td></tr><tr><td xml:space="preserve">
+1&nbsp;=&nbsp;<em class="keyword">Failed</em>
+</td><td>
+							The request failed and an error code is available in the <a href="Control_Request.htm" class="see keyword">Request Object's</a>
+				<a href="Control_Request_Number.htm" class="see keyword">Number</a> property.
+						</td></tr><tr><td xml:space="preserve">
+2&nbsp;=&nbsp;<em class="keyword">Pending</em>
+</td><td>
+							The request is on the queue.
+						</td></tr><tr><td xml:space="preserve">
+3&nbsp;=&nbsp;<em class="keyword">Interrupted</em>
+</td><td>
+							The request was interrupted and an error code is available in the <a href="Control_Request.htm" class="see keyword">Request Object's</a>
+				<a href="Control_Request_Number.htm" class="see keyword">Number</a> property.
+						</td></tr><tr><td xml:space="preserve">
+4&nbsp;=&nbsp;<em class="keyword">InProgress</em>
+</td><td>
+							The request is currently in progress.
+						</td></tr></table>
+			</td>
 							</tr>
 						</table>
 					</div>
-					<h4 class="details">Example</h4>
-					<pre class="example">Dim MyRequest
+				<h4 class="details">Example</h4>
+				<pre class="example"><em class="keyword">Dim</em> MyRequest
 
-Set MyRequest = AgentControl.Characters("Genie").Play ("GetAttention")
+<em class="keyword">Set</em> MyRequest = <em class="token">control</em>.<em class="keyword">Characters</em>("Genie").<em class="keyword">Play</em> ("GetAttention")
 
-If (MyRequest.Status = 2) then
+<em class="keyword">If</em> (MyRequest.<em class="keyword">Status</em> = 2) <em class="keyword">Then</em>
     'do something
-Else If (MyRequest.Status = 0) then
+<em class="keyword">Else If</em> (MyRequest.<em class="keyword">Status</em> = 0) <em class="keyword">Then</em>
     'do something right away
-End If</pre>
-				</td>
+<em class="keyword">End If</em></pre>
+			</td>
 			</tr>
 		</table>
 	</body>

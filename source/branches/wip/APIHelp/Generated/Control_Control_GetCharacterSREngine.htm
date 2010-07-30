@@ -12,79 +12,95 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The GetCharacterSREngine Method</h4>
+					<h3>The GetCharacterSREngine Method</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>
-					Retrieves a <a href="Control_SREngine.htm" class="see">Speech Recognition Engine</a>
-					object thats meet a specific character's requirements.
-				</p>
-					</div>
+				<p>Retrieves a <a href="Control_SREngine.htm" class="see keyword">Speech Recognition Engine Object</a> thats meet
+					a specific character's requirements.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>SREngine</em> = ]<em>control</em>.<s>GetCharacterSREngine</s> (<em>Provider</em>)</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<s>Set</s> <em>SREngine</em> = ]<em>control</em>.<s>GetCharacterSREngine</s> (<em>Provider</em>)</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<s>Set</s> <em>SREngine</em> = ]<em>control</em>.<s>GetCharacterSREngine</s> (<em>Provider</em>)</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>SREngine</em> = ]<em>control</em>.<s>GetCharacterSREngine</s> (<em>Provider</em>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>control</em>-&gt;<s>GetCharacterSREngine</s> (<em>Provider</em>, &amp;<em>SREngine</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">SREngine</em> = ]<em class="token">control</em>.<em class="keyword">GetCharacterSREngine</em> (<em class="token">Provider</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">SREngine</em> = ]<em class="token">control</em>.<em class="keyword">GetCharacterSREngine</em> (<em class="token">Provider</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">SREngine</em> = ]<em class="token">control</em>.<em class="keyword">GetCharacterSREngine</em> (<em class="token">Provider</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">SREngine</em> = ]<em class="token">control</em>.<em class="keyword">GetCharacterSREngine</em> (<em class="token">Provider</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">control</em>-&gt;<em class="keyword">GetCharacterSREngine</em> (<em class="token">Provider</em>, &amp;<em class="token">SREngine</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Provider</i>
+									<em class="token">Provider</em>
 								</td>
 								<td>
-				A <s>string </s>value that specifies the character file, or an empty string
-				for the default character.
+				A <em class="typename">string</em> value that specifies the character file, or an
+				empty string for the default character.
 			</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>SREngine</i>
+									<em class="token">SREngine</em>
 								</td>
 								<td>
-				The <s><a href="Control_SREngine.htm" class="see">SREngine Object</a></s> that matches the character's speech recognition requirements (if any).
+				The <a href="Control_SREngine.htm" class="see typename">SREngine Object</a> that matches
+				the character's speech recognition requirements (if any).
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					This method allows you to query a character's <em>default </em>speech recognition engine without
-					loading the character.
+				<p>
+					This method allows you to query a character's <em>default</em> speech recognition engine without loading
+					the character.
 				</p>
-					<p>For more information on specifying character file names, see the <a href="Control_Characters_Load.htm" class="see">Load</a> method.</p>
-					<p class="note">
-						<span class="note">Note:</span> This method does not support the HTTP protocol for character files.</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_SREngine.htm">The SREngine Object</a>
-					<br />
-					<a href="Control_Characters_Load.htm">The Load Method</a>
-				</td>
+				<p>
+			For more information on specifying character file names, see the <a href="Control_Characters_Load.htm" class="see keyword">Load</a> method.
+		</p>
+				<p class="note"><span class="note">Note:</span> This method does not support the HTTP protocol for character files.</p>
+			<h4 class="seealso">See Also</h4><a href="Control_SREngine.htm">The SREngine Object</a><br /><a href="Control_Characters_Load.htm">The Load Method</a></td>
 			</tr>
 		</table>
 	</body>

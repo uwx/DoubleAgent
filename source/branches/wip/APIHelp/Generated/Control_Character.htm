@@ -17,192 +17,402 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<p>
-					The <s>Character </s>object provides the methods and properties your application will use
-					to access the bulk of Double Agent's features.
+					<h4 class="summary">Description</h4>
+				<p>
+					The <em class="self keyword">Character Object</em> provides the methods and properties your application will use to
+					access the bulk of Double Agent's features.
 				</p>
-					<ul>
-						<li>
-							<a name="Methods"> </a>
-							The <s>Character </s>object has the following <s>methods</s>:
-						<p><a href="Control_Character_Activate.htm" class="see">Activate</a>,
-							<a href="Control_Character_FindSREngines.htm" class="see">FindSREngines</a>,
-							<a href="Control_Character_FindTTSEngines.htm" class="see">FindTTSEngines</a>,
-							<a href="Control_Character_GenerateIcon.htm" class="see">GenerateIcon</a>,
-							<a href="Control_Character_GestureAt.htm" class="see">GestureAt</a>,
-							<a href="Control_Character_Prepare.htm" class="see">Prepare</a>,
-							<a href="Control_Character_Hide.htm" class="see">Hide</a>,
-							<a href="Control_Character_Interrupt.htm" class="see">Interrupt</a>,
-							<a href="Control_Character_Listen.htm" class="see">Listen</a>,
-							<a href="Control_Character_MoveTo.htm" class="see">MoveTo</a>,
-							<a href="Control_Character_Play.htm" class="see">Play</a>,
-							<a href="Control_Character_Show.htm" class="see">Show</a>,
-							<a href="Control_Character_ShowPopupMenu.htm" class="see">ShowPopupMenu</a>,
-							<a href="Control_Character_Speak.htm" class="see">Speak</a>,
-							<a href="Control_Character_Stop.htm" class="see">Stop</a>,
-							<a href="Control_Character_StopAll.htm" class="see">StopAll</a>,
-							<a href="Control_Character_Think.htm" class="see">Think</a>,
-							<a href="Control_Character_Wait.htm" class="see">Wait</a></p></li>
-						<li>
-							<a name="Properties"> </a>
-							The <s>Character </s>object has the following <s>properties</s>:
-						<p><a href="Control_Character_ActiveState.htm" class="see">ActiveState</a>,
-							<a href="Control_Character_Animations.htm" class="see">Animations</a>,
-							<a href="Control_Character_AutoPopupMenu.htm" class="see">AutoPopupMenu</a>,
-							<a href="Control_Character_Balloon.htm" class="see">Balloon</a>,
-							<a href="Control_Character_CharacterID.htm" class="see">CharacterID</a>,
-							<a href="Control_Character_Commands.htm" class="see">Commands</a>,
-							<a href="Control_Character_Connected.htm" class="see">Connected</a>,
-							<a href="Control_Character_Description.htm" class="see">Description</a>,
-							<a href="Control_Character_ExtraData.htm" class="see">ExtraData</a>,
-							<a href="Control_Character_FileName.htm" class="see">FileName</a>,
-							<a href="Control_Character_FilePath.htm" class="see">FilePath</a>,
-							<a href="Control_Character_HasIcon.htm" class="see">HasIcon</a>,
-							<a href="Control_Character_HasOtherClients.htm" class="see">HasOtherClients</a>,
-							<a href="Control_Character_Height.htm" class="see">Height</a>,
-							<a href="Control_Character_IconIdentity.htm" class="see">IconIdentity</a>,
-							<a href="Control_Character_IconShown.htm" class="see">IconShown</a>,
-							<a href="Control_Character_IconTip.htm" class="see">IconTip</a>,
-							<a href="Control_Character_IconVisible.htm" class="see">IconVisible</a>,
-							<a href="Control_Character_IdleEnabled.htm" class="see">IdleEnabled</a>,
-							<a href="Control_Character_IdleState.htm" class="see">IdleState</a>,
-							<a href="Control_Character_LanguageID.htm" class="see">LanguageID</a>,
-							<a href="Control_Character_Left.htm" class="see">Left</a>,
-							<a href="Control_Character_ListeningStatus.htm" class="see">ListeningStatus</a>,
-							<a href="Control_Character_MoveCause.htm" class="see">MoveCause</a>,
-							<a href="Control_Character_Name.htm" class="see">Name</a>,
-							<a href="Control_Character_OriginalHeight.htm" class="see">OriginalHeight</a>,
-							<a href="Control_Character_OriginalWidth.htm" class="see">OriginalWidth</a>,
-							<a href="Control_Character_Pitch.htm" class="see">Pitch</a>,
-							<a href="Control_Character_Smoothed.htm" class="see">Smoothed</a>,
-							<a href="Control_Character_SmoothEdges.htm" class="see">SmoothEdges</a>,
-							<a href="Control_Character_SoundEffectsEnabled.htm" class="see">SoundEffectsEnabled</a>,
-							<a href="Control_Character_Speed.htm" class="see">Speed</a>,
-							<a href="Control_Character_SREngine.htm" class="see">SREngine</a>,
-							<a href="Control_Character_SRModeID.htm" class="see">SRModeID</a>,
-							<a href="Control_Character_States.htm" class="see">States</a>,
-							<a href="Control_Character_Style.htm" class="see">Style</a>,
-							<a href="Control_Character_Top.htm" class="see">Top</a>,
-							<a href="Control_Character_TTSEngine.htm" class="see">TTSEngine</a>,
-							<a href="Control_Character_TTSModeID.htm" class="see">TTSModeID</a>,
-							<a href="Control_Character_UniqueID.htm" class="see">UniqueID</a>,
-							<a href="Control_Character_Version.htm" class="see">Version</a>,
-							<a href="Control_Character_VisibilityCause.htm" class="see">VisibilityCause</a>,
-							<a href="Control_Character_Visible.htm" class="see">Visible</a>,
-							<a href="Control_Character_Width.htm" class="see">Width</a></p><p class="note"><span class="note">Note:</span> 
-								The <a href="Control_Character_Height.htm" class="see">Height</a>, <a href="Control_Character_Left.htm" class="see">Left</a>,
-								<a href="Control_Character_Top.htm" class="see">Top</a>, and <a href="Control_Character_Width.htm" class="see">Width</a>
-								properties refer to the position and size of the <s>Character</s>, not the location of the Double
-								Agent control.
-							</p></li>
-					</ul>
-					<h4 class="remarks">Remarks</h4>
-					<p>
-					Because the server loads an HTTP character asynchronously, ensure that the character has been
-					loaded before querying its properties, for example, using the <a href="Control_Event_RequestComplete.htm" class="see">RequestComplete</a>
+			<div id="Syntax">
+				<dl><dt>
+							<h4>
+								<a name="Methods"> </a>Methods
+							</h4>
+						</dt><dd>
+							<table class="syntax"><tr><td width="275ex">
+										<a href="Control_Character_Activate.htm" class="see keyword">Activate</a>
+									</td><td>
+										Sets the active client or character.
+									</td></tr><tr><td>
+										<a href="Control_Character_FindSREngines.htm" class="see keyword">FindSREngines</a>
+									</td><td>
+										Retrieves a collection of <a href="Control_SREngine.htm" class="see keyword">Speech Recognition Engine Objects</a>
+					that meet the character's requirements.
+									</td></tr><tr><td>
+										<a href="Control_Character_FindTTSEngines.htm" class="see keyword">FindTTSEngines</a>
+									</td><td>
+										Retrieves a collection of <a href="Control_TTSEngine.htm" class="see keyword">Text-To-Speech Engine Objects</a>
+					that meet the character's requirements.
+									</td></tr><tr><td>
+										<a href="Control_Character_GenerateIcon.htm" class="see keyword">GenerateIcon</a>
+									</td><td>
+										Generates a notification icon from one frame of the character's animations.
+									</td></tr><tr><td>
+										<a href="Control_Character_GestureAt.htm" class="see keyword">GestureAt</a>
+									</td><td>
+										Plays a character's gesturing animation towards the specified location.
+									</td></tr><tr><td>
+										<a href="Control_Character_Prepare.htm" class="see keyword">Prepare</a>
+									</td><td>
+										Retrieves the specified animation data for the a remote character.
+									</td></tr><tr><td>
+										<a href="Control_Character_Hide.htm" class="see keyword">Hide</a>
+									</td><td>
+										Hides the character.
+									</td></tr><tr><td>
+										<a href="Control_Character_Interrupt.htm" class="see keyword">Interrupt</a>
+									</td><td>
+										Interrupts an animation for another character.
+									</td></tr><tr><td>
+										<a href="Control_Character_Listen.htm" class="see keyword">Listen</a>
+									</td><td>
+										Turns on <em class="glossary">Listening mode</em> (speech recognition) for a timed period.
+									</td></tr><tr><td>
+										<a href="Control_Character_MoveTo.htm" class="see keyword">MoveTo</a>
+									</td><td>
+										Moves the character to the specified location.
+									</td></tr><tr><td>
+										<a href="Control_Character_Play.htm" class="see keyword">Play</a>
+									</td><td>
+										Plays the specified animation.
+									</td></tr><tr><td>
+										<a href="Control_Character_Show.htm" class="see keyword">Show</a>
+									</td><td>
+										Shows the character and optionally plays its associated <em class="glossary">Showing</em> animation.
+									</td></tr><tr><td>
+										<a href="Control_Character_ShowPopupMenu.htm" class="see keyword">ShowPopupMenu</a>
+									</td><td>
+										Displays the character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a> at the specified location.
+									</td></tr><tr><td>
+										<a href="Control_Character_Speak.htm" class="see keyword">Speak</a>
+									</td><td>
+										Speaks the specified text or sound file.
+									</td></tr><tr><td>
+										<a href="Control_Character_Stop.htm" class="see keyword">Stop</a>
+									</td><td>
+										Stops an animation.
+									</td></tr><tr><td>
+										<a href="Control_Character_StopAll.htm" class="see keyword">StopAll</a>
+									</td><td>
+										Stops all animation requests or specified types of requests.
+									</td></tr><tr><td>
+										<a href="Control_Character_Think.htm" class="see keyword">Think</a>
+									</td><td>
+										Displays the specified text in the character's <em class="glossary">thought</em> balloon.
+									</td></tr><tr><td>
+										<a href="Control_Character_Wait.htm" class="see keyword">Wait</a>
+									</td><td>
+										Causes the character's animation queue to wait until the specified animation request completes.
+									</td></tr></table>
+						</dd><dt>
+							<h4>
+								<a name="Properties"> </a>Properties
+							</h4>
+						</dt><dd>
+							<table class="syntax"><tr><td width="275ex">
+										<a href="Control_Character_ActiveState.htm" class="see keyword">ActiveState</a>
+									</td><td>
+										Indicates if your application is the character's active client and if the character is<em class="glossary">input-active</em>.
+									</td></tr><tr><td>
+										<a href="Control_Character_Animations.htm" class="see keyword">Animations</a>
+									</td><td>
+										Returns the names of the character's animations.
+									</td></tr><tr><td>
+										<a href="Control_Character_AutoPopupMenu.htm" class="see keyword">AutoPopupMenu</a>
+									</td><td>
+										Specifies if right-clicking the character or its taskbar icon automatically displays the character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>.
+									</td></tr><tr><td>
+										<a href="Control_Character_Balloon.htm" class="see keyword">Balloon</a>
+									</td><td>
+										Returns the character's <a href="Control_Balloon.htm" class="see keyword">Balloon Object</a>.
+									</td></tr><tr><td>
+										<a href="Control_Character_CharacterID.htm" class="see keyword">CharacterID</a>
+									</td><td>
+										Returns the unique string that identifies the <a href="Control_Character.htm" class="see keyword">Character Object</a>
+					in the <a href="Control_Characters.htm" class="see keyword">Characters Collection</a>.
+									</td></tr><tr><td>
+										<a href="Control_Character_Commands.htm" class="see keyword">Commands</a>
+									</td><td>
+										Returns the character's <a href="Control_Commands.htm" class="see keyword">Commands Collection</a>.
+									</td></tr><tr><td>
+										<a href="Control_Character_Connected.htm" class="see keyword">Connected</a>
+									</td><td>
+										Indicates if the <a href="Control_Character.htm" class="see keyword">Character Object</a> is connected to the
+					Double Agent server.
+									</td></tr><tr><td>
+										<a href="Control_Character_Description.htm" class="see keyword">Description</a>
+									</td><td>
+										Specifies a string that specifies the description for the specified character.
+									</td></tr><tr><td>
+										<a href="Control_Character_ExtraData.htm" class="see keyword">ExtraData</a>
+									</td><td>
+										Returns a string that specifies additional data stored as part of the character.
+									</td></tr><tr><td>
+										<a href="Control_Character_FileName.htm" class="see keyword">FileName</a>
+									</td><td>
+										Returns the name of the character's definition file.
+									</td></tr><tr><td>
+										<a href="Control_Character_FilePath.htm" class="see keyword">FilePath</a>
+									</td><td>
+										Returns the full path (<em class="glossary">UNC</em> or <em class="glossary">HTTP</em>) of the character's definition
+					file.
+									</td></tr><tr><td>
+										<a href="Control_Character_HasIcon.htm" class="see keyword">HasIcon</a>
+									</td><td>
+										Indicates if the character has a notification icon in its definition.
+									</td></tr><tr><td>
+										<a href="Control_Character_HasOtherClients.htm" class="see keyword">HasOtherClients</a>
+									</td><td>
+										Indicates if the specified character is in use by other applications.
+									</td></tr><tr><td>
+										<a href="Control_Character_Height.htm" class="see keyword">Height</a>
+									</td><td>
+										Specifies the height of the character's image.
+									</td></tr><tr><td>
+										<a href="Control_Character_IconIdentity.htm" class="see keyword">IconIdentity</a>
+									</td><td>
+										Specifies the identity that Windows will use to remember the character's notification icon.
+									</td></tr><tr><td>
+										<a href="Control_Character_IconShown.htm" class="see keyword">IconShown</a>
+									</td><td>
+										Specifies if the character's notification icon is shown in the Windows notification area.
+									</td></tr><tr><td>
+										<a href="Control_Character_IconTip.htm" class="see keyword">IconTip</a>
+									</td><td>
+										Specifies the tip text associated with the character's notification icon.
+									</td></tr><tr><td>
+										<a href="Control_Character_IconVisible.htm" class="see keyword">IconVisible</a>
+									</td><td>
+										Indicates if the character has an icon in the Windows notification area.
+									</td></tr><tr><td>
+										<a href="Control_Character_IdleEnabled.htm" class="see keyword">IdleEnabled</a>
+									</td><td>
+										Specifies if the character will show its <em class="glossary">Idling</em> animations when it's not busy.
+									</td></tr><tr><td>
+										<a href="Control_Character_IdleState.htm" class="see keyword">IdleState</a>
+									</td><td>
+										Indicates if the character is currently playing its <em class="glossary">Idling</em> animations.
+									</td></tr><tr><td>
+										<a href="Control_Character_LanguageID.htm" class="see keyword">LanguageID</a>
+									</td><td>
+										Specifies the character's language identifier.
+									</td></tr><tr><td>
+										<a href="Control_Character_Left.htm" class="see keyword">Left</a>
+									</td><td>
+										Specifies the left edge of the character's image.
+									</td></tr><tr><td>
+										<a href="Control_Character_ListeningStatus.htm" class="see keyword">ListeningStatus</a>
+									</td><td>
+										Indicates if speech input can be started for the character.
+									</td></tr><tr><td>
+										<a href="Control_Character_MoveCause.htm" class="see keyword">MoveCause</a>
+									</td><td>
+										Returns the cause of the character's last move.
+									</td></tr><tr><td>
+										<a href="Control_Character_Name.htm" class="see keyword">Name</a>
+									</td><td>
+										Specifies the specified character's displayed name.
+									</td></tr><tr><td>
+										<a href="Control_Character_OriginalHeight.htm" class="see keyword">OriginalHeight</a>
+									</td><td>
+										Returns the character's default height.
+									</td></tr><tr><td>
+										<a href="Control_Character_OriginalWidth.htm" class="see keyword">OriginalWidth</a>
+									</td><td>
+										Returns the character's default width.
+									</td></tr><tr><td>
+										<a href="Control_Character_Pitch.htm" class="see keyword">Pitch</a>
+									</td><td>
+										Returns the character's default speech output (text-to-speech) pitch setting.
+									</td></tr><tr><td>
+										<a href="Control_Character_Smoothed.htm" class="see keyword">Smoothed</a>
+									</td><td>
+										Indicates if image smoothing is being applied to the character's animations.
+									</td></tr><tr><td>
+										<a href="Control_Character_SmoothEdges.htm" class="see keyword">SmoothEdges</a>
+									</td><td>
+										Indicates if image smoothing is being applied to the edges of the character's animations.
+									</td></tr><tr><td>
+										<a href="Control_Character_SoundEffectsEnabled.htm" class="see keyword">SoundEffectsEnabled</a>
+									</td><td>
+										Specifies if sound effects are enabled for your character.
+									</td></tr><tr><td>
+										<a href="Control_Character_Speed.htm" class="see keyword">Speed</a>
+									</td><td>
+										Returns the character's speech output (text-to-speech) speed setting.
+									</td></tr><tr><td>
+										<a href="Control_Character_SREngine.htm" class="see keyword">SREngine</a>
+									</td><td>
+										Returns the character's current or default <a href="Control_SREngine.htm" class="see keyword">Speech Recognition Engine Object</a>.
+									</td></tr><tr><td>
+										<a href="Control_Character_SRModeID.htm" class="see keyword">SRModeID</a>
+									</td><td>
+										Specifies the speech recognition engine the character uses.
+									</td></tr><tr><td>
+										<a href="Control_Character_States.htm" class="see keyword">States</a>
+									</td><td>
+										Returns the names of the character's <em class="glossary">state</em> animations.
+									</td></tr><tr><td>
+										<a href="Control_Character_Style.htm" class="see keyword">Style</a>
+									</td><td>
+										Specifies a group of settings that affect the character's appearence.
+									</td></tr><tr><td>
+										<a href="Control_Character_Top.htm" class="see keyword">Top</a>,
+									</td><td>
+										Specifies the top edge of the character's image.
+									</td></tr><tr><td>
+										<a href="Control_Character_TTSEngine.htm" class="see keyword">TTSEngine</a>
+									</td><td>
+										Returns the character's current or default <a href="Control_TTSEngine.htm" class="see keyword">Text-To-Speech Engine Object</a>.
+									</td></tr><tr><td>
+										<a href="Control_Character_TTSModeID.htm" class="see keyword">TTSModeID</a>
+									</td><td>
+										Specifies the text-to-speech engine used for the character.
+									</td></tr><tr><td>
+										<a href="Control_Character_UniqueID.htm" class="see keyword">UniqueID</a>
+									</td><td>
+										Returns the unique identifier given to the character when it was defined.
+									</td></tr><tr><td>
+										<a href="Control_Character_Version.htm" class="see keyword">Version</a>
+									</td><td>
+										Returns the character's version.
+									</td></tr><tr><td>
+										<a href="Control_Character_VisibilityCause.htm" class="see keyword">VisibilityCause</a>
+									</td><td>
+										Returns a <a href="Control_VisibilityCauseType.htm" class="see keyword">VisibilityCauseType Enumeration</a> value that specifies what
+					caused the character's visible state to change.
+									</td></tr><tr><td>
+										<a href="Control_Character_Visible.htm" class="see keyword">Visible</a>
+									</td><td>
+										Returns a boolean indicating whether or not the character is visible.
+									</td></tr><tr><td>
+										<a href="Control_Character_Width.htm" class="see keyword">Width</a>
+									</td><td>
+										Specifies the width of the character's image.
+									</td></tr></table>
+							<p class="note"><span class="note">Note:</span> 
+								The <a href="Control_Character_Height.htm" class="see keyword">Height</a>, <a href="Control_Character_Left.htm" class="see keyword">Left</a>, <a href="Control_Character_Top.htm" class="see keyword">Top</a>,
+								and <a href="Control_Character_Width.htm" class="see keyword">Width</a> properties refer to the position and size of the <em>Character</em>,
+								not the location of the Double Agent control.
+							</p>
+						</dd></dl>
+			</div><h4 class="remarks">Remarks</h4>
+				<p>
+					Because the server loads an <em class="glossary">HTTP</em> character asynchronously, ensure that the character
+					has been loaded before querying its properties, for example, using the <a href="Control_Event_RequestComplete.htm" class="see keyword">RequestComplete</a>
 					event. Otherwise, the properties may return incorrect values.
 				</p>
-					<h4 class="remarks">Referencing the Character Object</h4>
-					<ul>
-						<li>
-							To use a method or property, reference the character in the <a href="Control_Characters.htm" class="see">Characters</a>
-							collection. In VBScript and Visual Basic, you do this by specifying the unique identifier you assigned
-							when you loaded the character:
-						<pre class="example">Sub FormLoad
+			
+				<h4 class="remarks">Referencing the Character Object</h4>
+				<ul><li>
+							To use a method or property, reference the character in the <a href="Control_Characters.htm" class="see keyword">Characters Collection</a>.
+							In VBScript and Visual Basic, you do this by specifying the unique identifier you assigned when you
+							loaded the character:
+						<p>
+							<pre class="example"><em class="keyword">Sub</em> <em class="token">form</em>_<em class="keyword">Load</em>
     'Load the genie character into the Characters collection
-    AgentControl.Characters.Load "Genie", "Genie.acs"
+    <em class="token">control</em>.<em class="keyword">Characters</em>.<em class="keyword">Load</em> "Genie", "Genie.acs"
 
     'Display the character
-    AgentControl.Characters("Genie").Show
-    AgentControl.Characters("Genie").Play "Greet"
-    AgentControl.Characters("Genie").Speak "Hello."
-End Sub</pre></li>
-						<li>
-							To simplify the syntax of your code, you can define an object variable and set it to reference
-							a character object in the <a href="Control_Characters.htm" class="see">Characters</a> collection. Then you
-							can use your variable to reference methods or properties of the character. The following example demonstrates
-							how you can do this using the Visual Basic <s>Set </s>statement:
-						<pre class="example">'Define a global object variable
-Dim Genie as Object
+    <em class="token">control</em>.<em class="keyword">Characters</em>("Genie").<em class="keyword">Show</em>
+    <em class="token">control</em>.<em class="keyword">Characters</em>("Genie").<em class="keyword">Play</em> "Greet"
+    <em class="token">control</em>.<em class="keyword">Characters</em>("Genie").<em class="keyword">Speak</em> "Hello."
+<em class="keyword">End Sub</em></pre>
+						</p></li><li>
+							To simplify the syntax of your code, you can define an object variable and set it to reference a<em class="self keyword">
+								Character
+								Object
+							</em> in the <a href="Control_Characters.htm" class="see keyword">Characters Collection</a>. Then you can use your variable to
+							reference methods or properties of the character. The following example demonstrates how you can
+							do this using the Visual Basic <em class="keyword">Set</em> statement:
+						<p>
+							<pre class="example">'Define a global object variable
+<em class="keyword">Dim</em> Genie <em class="keyword">as</em> <em class="keyword">Object</em>
 
-Sub FormLoad
+<em class="keyword">Sub</em> <em class="token">form</em>_<em class="keyword">Load</em>
     'Load the genie character into the Characters collection
-    AgentControl.Characters.Load "Genie", "Genie.acs"
+    <em class="token">control</em>.<em class="keyword">Characters</em>.<em class="keyword">Load</em> "Genie", "Genie.acs"
 
     'Create a reference to the character
-    Set Genie = AgentControl.Characters("Genie")
+    <em class="keyword">Set</em> Genie = <em class="token">control</em>.<em class="keyword">Characters</em>("Genie")
 
     'Display the character
-    Genie.Show
+    Genie.<em class="keyword">Show</em>
 
     'Make the character say Hello
-    Genie.Speak "Hello."
-End Sub</pre></li>
-						<li>
-							In Visual Basic, you can also create your reference by declaring your variable as a <a href="Control_Character.htm" class="see">Character</a>
-							object:
-						<pre class="example">Dim Genie as DaControl.DaCtlCharacter
+    Genie.<em class="keyword">Speak</em> "Hello."
+<em class="keyword">End Sub</em></pre>
+						</p></li><li>
+							In Visual Basic, you can also create your reference by declaring your variable as a<em class="self keyword">
+								Character
+								Object
+							</em>:
+						<p>
+							<pre class="example"><em class="keyword">Dim</em> Genie <em class="keyword">as</em> <em class="keyword">DaControl</em>.<em class="keyword">DaCtlCharacter</em>
 
-Sub FormLoad
+<em class="keyword">Sub</em> <em class="token">form</em>_<em class="keyword">Load</em>
     'Load the genie character into the Characters collection
-    AgentControl.Characters.Load "Genie", "Genie.acs"
+    <em class="token">control</em>.<em class="keyword">Characters</em>.<em class="keyword">Load</em> "Genie", "Genie.acs"
 
     'Create a reference to the character
-    Set Genie = AgentControl.Characters("Genie")
+    <em class="keyword">Set</em> Genie = <em class="token">control</em>.<em class="keyword">Characters</em>("Genie")
 
     'Display the character
-    Genie.Show
-End Sub</pre><p>
-								Declaring an object of type <s>DaCtlCharacter </s>enables early binding on the object,
-								which allows immediate syntax checking and results in better performance.
-							</p></li>
-						<li>
-							In VBScript, you cannot declare a reference as a particular type. However, you can simply
-							declare the variable reference:
-						<pre class="example">&lt;SCRIPT LANGUAGE = "VBScript"&gt;
+    Genie.<em class="keyword">Show</em>
+<em class="keyword">End Sub</em></pre>
+							
+						</p><p>
+								Declaring an object of type <em class="keyword">DaCtlCharacter</em> enables early binding on the object, which
+								allows immediate syntax checking and results in better performance.
+							</p></li><li>
+							In VBScript, you cannot declare a reference as a particular type. However, you can simply declare
+							the variable reference:
+						<p>
+							<pre class="example">&lt;SCRIPT LANGUAGE = "VBScript"&gt;
 &lt;!--
-Dim Genie
+<em class="keyword">Dim</em> Genie
 
-Sub window_OnLoad
+<em class="keyword">Sub</em> <em class="token">window</em>_<em class="keyword">OnLoad</em>
     'Load the character
-    AgentCtl.Characters.Load "Genie", "http://agent.microsoft.com/characters/v2/genie/genie.acf"
+    <em class="token">control</em>.<em class="keyword">Characters</em>.<em class="keyword">Load</em> "Genie", "http://agent.microsoft.com/characters/v2/genie/genie.acf"
 
     'Create an object reference to the character in the collection
-    set Genie= AgentCtl.Characters ("Genie")
+    <em class="keyword">Set</em> Genie= <em class="token">control</em>.<em class="keyword">Characters</em> ("Genie")
 
     'Prepare the Showing state animation
-    Genie.Prepare "state", "Showing"
+    Genie.<em class="keyword">Prepare</em> "state", "Showing"
 
     'Display the character
-    Genie.Show
-End Sub
+    Genie.<em class="keyword">Show</em>
+<em class="keyword">End Sub</em>
 --&gt;
-&lt;/SCRIPT&gt;</pre></li>
-						<li>
-							Some programming languages do not support collections. However, you can access a <a href="Control_Character.htm" class="see">Character</a>
-							object's methods with the <a href="Control_Characters_Character.htm" class="see">Character</a> method:
-						<pre class="example">
-<em>control</em>.Characters.Character("<em>CharacterID</em>").<em>method</em></pre></li>
-						<li>
-							In addition, you can create a reference to the <s>Character </s>object to make your script
+&lt;/SCRIPT&gt;</pre>
+						</p></li><li>
+							Some programming languages do not support collections. However, you can access a<em class="self keyword">Character Object</em>'s
+							methods with the <a href="Control_Characters_Character.htm" class="see keyword">Character</a> method:
+						<p>
+							<pre class="example">
+<em class="token">control</em>.<em class="keyword">Characters</em>.<em class="keyword">Character</em>("<em class="token">CharacterID</em>").<em class="token">method</em></pre>
+						</p></li><li>
+							In addition, you can create a reference to the <em class="self keyword">Character Object</em> to make your script
 							code easier to follow:
-						<pre class="example">&lt;SCRIPT LANGUAGE="JScript" FOR="window" EVENT="onLoad()"&gt;
+						<p>
+							<pre class="example">&lt;SCRIPT LANGUAGE="JScript" FOR="window" EVENT="onLoad()"&gt;
 &lt;!--
 //Load the character's data
-AgentControl.Characters.Load ("Genie", "http://agent.microsoft.com/characters/v2/genie/genie.acf");
+<em class="token">control</em>.<em class="keyword">Characters</em>.<em class="keyword">Load</em> ("Genie", "http://agent.microsoft.com/characters/v2/genie/genie.acf");
 
 //Create a reference to this object
-Genie = AgentControl.Characters.Character("Genie");
+Genie = <em class="token">control</em>.<em class="keyword">Characters</em>.<em class="keyword">Character</em>("Genie");
 
 //Prepare the Showing state animation
-Genie.Prepare("state", "Showing");
+Genie.<em class="keyword">Prepare</em>("state", "Showing");
 
 //Display the character
-Genie.Show();
+Genie.<em class="keyword">Show</em>();
 --&gt;
-&lt;/SCRIPT&gt;</pre></li>
-					</ul>
-				</td>
+&lt;/SCRIPT&gt;</pre>
+						</p></li></ul>
+			</td>
 			</tr>
 		</table>
 	</body>

@@ -12,17 +12,158 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Load Method</h4>
+					<h3>The Load Method</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Loads a <a href="Server_Character.htm" class="see keyword">Character</a> from it's definition file, if it's not already loaded.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">server</em>-&gt;<em class="keyword">Load</em> (<em class="token">Provider</em>, &amp;<em class="token">CharacterID</em>, &amp;<em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="token">server</em>.<em class="keyword">Load</em> (<em class="token">Provider</em>, <em class="keyword">out</em> <em class="token">CharacterID</em>, <em class="keyword">out</em> <em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="token">server</em>.<em class="keyword">Load</em> (<em class="token">Provider</em>, <em class="token">CharacterID</em>, <em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="token">server</em>.<em class="keyword">Load</em> <em class="token">Provider</em>, <em class="token">CharacterID</em>[, <em class="token">RequestID</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="token">server</em>.<em class="keyword">Load</em> <em class="token">Provider</em>, <em class="token">CharacterID</em>[, <em class="token">RequestID</em>]</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Provider</em>
+								</td>
+								<td>
+				One of the following:
+				<table><tr><td>
+							<em class="token">Filespec</em>
+						</td><td>
+							The location of a local character definition file (<em class="filename">.ACS</em> format)
+						</td></tr><tr><td>
+							<em class="token">URL</em>
+						</td><td>
+							The <em class="glossary">HTTP</em> address of the character's definition file (<em class="filename">.ACF</em>
+							format)
+						</td></tr></table>
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">CharacterID</em>
+								</td>
+								<td>
+				A <numeric>value</numeric> that the server uses to uniquely identify the loaded
+				<a href="Server_Character.htm" class="see keyword">Character Object</a>.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">RequestID</em>
+								</td>
+								<td>
+			An optional unique <em class="typename">numeric</em> value your application can use to track the method's status.
+		</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					You can load characters from the default location(s) by specifying only a file name. For example, specifying
+					the following would search for Genie.acs using the default search path.
+				</p>
+				<div class="example">
+					<pre class="example"><em class="token">server</em>-&gt;<em class="keyword">Load</em> ("Genie.acs", &amp;<em class="token">CharacterID</em>, &amp;<em class="token">RequestID</em>)</pre>
+					<p>
+						You can also specify an absolute location,
+					</p>
+					<pre class="example"><em class="token">server</em>-&gt;<em class="keyword">Load</em> ("C:\\MyCharacters\\Genie.acs", &amp;<em class="token">CharacterID</em>, &amp;<em class="token">RequestID</em>)</pre>
+					<p>
+						or specify your own subdirectory by using a relative path.
+					</p>
+					<pre class="example"><em class="token">server</em>-&gt;<em class="keyword">Load</em> ("MyCharacters\\Genie.acs, &amp;<em class="token">CharacterID</em>, &amp;<em class="token">RequestID</em>)"</pre>
+				</div>
+				<p>
+					You can load the default character by passing an empty <em class="keyword">VARIANT</em> for the <em class="token">Provider</em>
+					parameter. This will load the <a class="see" href="../html/UI_PropSheet.htm#Gallery">default character</a> from the <a href="Server_CharacterFiles_DefaultFilePath.htm" class="see see">default file path</a>.
+				</p>
+				<div class="example">
+					<pre class="example">VARIANT EmptyProvider;
+VariantInit (&amp;EmptyProvider);
+<em class="token">server</em>-&gt;<em class="keyword">Load</em> (EmptyProvider, &amp;<em class="token">CharacterID</em>, &amp;<em class="token">RequestID</em>)</pre>
+				</div>
+				<p>
+					You <s>cannot</s> load the same character (a character having the same <a href="Server_Character_UniqueID.htm" class="see keyword">UniqueID</a>)
+					more than once from a single instance of the <a href="Server_Server.htm" class="see keyword">Server Object</a>. Similarly, you
+					cannot load the default character and other characters at the same time from a single instance of
+					the <a href="Server_Server.htm" class="see keyword">Server Object</a> because the default character could be the same as the
+					other character. If you attempt to do this, Double Agent raises an error. However, you can create
+					another instance of the <a href="Server_Server.htm" class="see keyword">Server Object</a> and load the same character, because each
+					<a href="Server_Server.htm" class="see keyword">Server Object</a> instance is treated as an individual server client.
+				</p>
+				<p>
+					Loading a character does not automatically display the character. Use the <a href="Server_Character_Show.htm" class="see keyword">Show</a>
+					method first to make the character visible.
+				</p>
+			
+				<h4 class="details">Data Providers</h4>
+				<p>
+					Character data can be loaded from a single structured file (<em class="filename">.ACS</em>) with character data
+					and animation data together, or from separate character data (<em class="filename">.ACF</em>) and animation (<em class="filename">.ACA</em>)
+					files. Use a single structured <em class="filename">.ACS</em> file to load a character that's stored on a local
+					disk or network and accessed using a conventional file protocol (such as <em class="glossary">UNC</em> path names).
+					Use separate <em class="filename">.ACF</em> and <em class="filename">.ACA</em> files when you want to load the animation
+					files individually from a remote site where they're accessed using the <em class="glossary">HTTP</em> protocol. The
+					<em class="self keyword">Load</em> method does not support downloading <em class="filename">.ACS</em> files from an <em class="glossary">HTTP</em>
+					site.
+				</p>
+				<p>
+					For <em class="filename">.ACS</em> files, using the <em class="self keyword">Load</em> method provides access to a character's animations.
+					For <em class="filename">.ACF</em> files, you should also use the <a href="Server_Character_Prepare.htm" class="see keyword">Prepare</a>
+					method to load animation data. Using <a href="Server_Character_Prepare.htm" class="see keyword">Prepare</a> is optional, but it will prevent
+					unexpected delays when playing animations.
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Server_Unload.htm">The Unload Method</a><br /><a href="Server_Server_Character.htm">The Character Property</a></td>
 			</tr>
 		</table>
 	</body>

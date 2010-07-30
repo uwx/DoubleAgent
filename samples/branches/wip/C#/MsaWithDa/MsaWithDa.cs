@@ -108,8 +108,8 @@ namespace MsaWithDa
 			{
 				mLoadDaServerChar.Enabled = false;
 				mUnloadDaServerChar.Enabled = true;
-				mShowDaServerChar.Enabled = true;
-				mHideDaServerChar.Enabled = true;
+				mShowDaServerChar.Enabled = !mDaServerChar.Visible;
+				mHideDaServerChar.Enabled = mDaServerChar.Visible;
 			}
 		}
 
@@ -131,6 +131,11 @@ namespace MsaWithDa
 		private void mDaControl_Hide (string CharacterID, DoubleAgent.Control.VisibilityCauseType Cause)
         {
 			SetDaControlButtons();
+		}
+
+		private void mDaServer_VisibleState (int CharacterID, int Visible, int Cause)
+		{
+			SetDaServerButtons();
 		}
 
 		private void LoadMsServerChar_Click(object sender, EventArgs e)
@@ -271,6 +276,7 @@ namespace MsaWithDa
 			if (mDaServer == null)
 			{
 				mDaServer = new DoubleAgent.Server.Server();
+				mDaServer.VisibleState += new DoubleAgent.Server.VisibleStateEventHandler (mDaServer_VisibleState);
 			}
 
 			if (mDaServerChar == null)
@@ -326,6 +332,7 @@ namespace MsaWithDa
 			if (mDaServer == null)
 			{
 				mDaServer = new DoubleAgent.Server.Server();
+				mDaServer.VisibleState += new DoubleAgent.Server.VisibleStateEventHandler (mDaServer_VisibleState);
 			}
 			lServerProps = mDaServer.PropertySheet;
 			lServerProps.SetVisible(1);
@@ -336,6 +343,7 @@ namespace MsaWithDa
 			if (mDaServer == null)
 			{
 				mDaServer = new DoubleAgent.Server.Server();
+				mDaServer.VisibleState += new DoubleAgent.Server.VisibleStateEventHandler (mDaServer_VisibleState);
 			}
 			mDaServer.ShowDefaultCharacterProperties(0, 0, 1);
 		}

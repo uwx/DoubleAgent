@@ -118,7 +118,7 @@ HRESULT DaCtlAnimationNames::SetOwner (DaCtlCharacter * pOwner)
 		if	(mOwner->mServerObject)
 		{
 			IUnknownPtr	lEnumVariant;
-			
+
 			lResult = mOwner->mServerObject->GetAnimationNames (&lEnumVariant);
 			mServerObject = lEnumVariant;
 			if	(

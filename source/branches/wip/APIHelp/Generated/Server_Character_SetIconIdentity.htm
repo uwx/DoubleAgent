@@ -12,17 +12,93 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The SetIconIdentity Method</h4>
+					<h3>The SetIconIdentity Method</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Sets the identity that Windows will use to remember the character's notification icon.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">GetIconIdentity</em> (<em class="token">IconIdentity</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">GetIconIdentity</em> (<em class="token">IconIdentity</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">GetIconIdentity</em> (<em class="token">IconIdentity</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">GetIconIdentity</em> <em class="token">IconIdentity</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">GetIconIdentity</em> <em class="token">IconIdentity</em></p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">IconIdentity</em>
+								</td>
+								<td>
+				A <em class="typename">GUID</em> value that allows Windows to uniquely identify this
+				character's notification icon. It must be either a value <em class="typename">GUID</em> or <em class="keyword">GUID_NULL</em>.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					Every notification icon has an identity that allows Windows to remember it's state (shown, hidden, active,
+					etc.). By default, Windows associates a notification icon with the application that creates it.
+				</p>
+				<p>
+					You can supply either a <em class="typename">GUID</em> identifier, or <em class="keyword">GUID_NULL</em> to use
+					the default identity.
+				</p>
+				<ul><li>A character's notification will be associated with the Double Agent server by default.</li><li>
+						You can supply a <em>single</em> GUID for all characters you load. All of their notification icons
+						will be associated with that single identity.
+					</li><li>
+						You can supply a <em>unique</em> GUID for each character you load. Windows will then identify each
+						character's notification icon uniquely.
+					</li></ul>
+				<p class="note"><span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Character_GetIconIdentity.htm">The GetIconIdentity Method</a><br /><a href="Server_Character_IconIdentity.htm">The IconIdentity Property</a></td>
 			</tr>
 		</table>
 	</body>

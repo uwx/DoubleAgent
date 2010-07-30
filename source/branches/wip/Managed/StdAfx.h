@@ -230,3 +230,10 @@ static inline tBstrPtr _BM (System::Reflection::MethodInfo^ pMethod)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+static inline System::String^ DebugStr (System::String^ pString)
+{
+	return pString->Replace("\t","\\t")->Replace("\n","\\n")->Replace("\r","\\r");
+}
+
+/////////////////////////////////////////////////////////////////////////////

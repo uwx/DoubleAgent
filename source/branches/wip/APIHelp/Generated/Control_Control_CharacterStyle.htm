@@ -12,104 +12,123 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The CharacterStyle Property</h4>
+					<h3>The CharacterStyle Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>
-					Specifies the initial style to use when a <a href="Control_Character.htm" class="see">Character</a> is
-					loaded.
-				</p>
-					</div>
+				<p>Specifies the initial style to use when a <a href="Control_Character.htm" class="see keyword">Character</a> is loaded.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>CharacterStyle</em> = ]<em>control</em>.<s>CharacterStyle</s></p>
-
-<p><em>control</em>.<s>CharacterStyle</s> = <em>CharacterStyle</em></p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>CharacterStyle</em> = ]<em>control</em>.<s>CharacterStyle</s></p>
-
-<p><em>control</em>.<s>CharacterStyle</s> = <em>CharacterStyle</em></p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>CharacterStyle</em> = ]<em>control</em>.<s>CharacterStyle</s></p>
-
-<p><em>control</em>.<s>CharacterStyle</s> = <em>CharacterStyle</em></p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>CharacterStyle</em> = ]<em>control</em>.<s>CharacterStyle</s></p>
-
-<p><em>control</em>.<s>CharacterStyle</s> = <em>CharacterStyle</em></p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>control</em>-&gt;<s>get_CharacterStyle</s> (&amp;<em>CharacterStyle</em>)</p>
-
-<p><em>control</em>-&gt;<s>put_CharacterStyle</s> (<em>CharacterStyle</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">CharacterStyle</em> = ]<em class="token">control</em>.<em class="keyword">CharacterStyle</em></p>
+<p><em class="token">control</em>.<em class="keyword">CharacterStyle</em> = <em class="token">CharacterStyle</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">CharacterStyle</em> = ]<em class="token">control</em>.<em class="keyword">CharacterStyle</em></p>
+<p><em class="token">control</em>.<em class="keyword">CharacterStyle</em> = <em class="token">CharacterStyle</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">CharacterStyle</em> = ]<em class="token">control</em>.<em class="keyword">CharacterStyle</em></p>
+<p><em class="token">control</em>.<em class="keyword">CharacterStyle</em> = <em class="token">CharacterStyle</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">CharacterStyle</em> = ]<em class="token">control</em>.<em class="keyword">CharacterStyle</em></p>
+<p><em class="token">control</em>.<em class="keyword">CharacterStyle</em> = <em class="token">CharacterStyle</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">control</em>-&gt;<em class="keyword">get_CharacterStyle</em> (&amp;<em class="token">CharacterStyle</em>)</p>
+<p><em class="token">control</em>-&gt;<em class="keyword">put_CharacterStyle</em> (<em class="token">CharacterStyle</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>CharacterStyle</i>
+									<em class="token">CharacterStyle</em>
 								</td>
 								<td>
-				A <s>numeric </s>bit-field value that specifies the <a href="Control_Character_Style.htm" class="see">Style</a>
-				to apply when a <a href="Control_Character.htm" class="see">Character</a> is loaded.<table><tr><td>
-&amp;H00000001&nbsp;=&nbsp;<s>SoundEffects</s>
-</td><td>The animation sound effects are played.</td></tr><tr><td>
-&amp;H00000002&nbsp;=&nbsp;<s>IdleEnabled</s>
-</td><td>The character enters idle mode and shows it's idling animations when it's not doing anything
-				else.</td></tr><tr><td>
-&amp;H00000004&nbsp;=&nbsp;<s>AutoPopupMenu</s>
-</td><td>A right-click on the character or it's notification icon automatically shows a pop-up menu.</td></tr><tr><td>
-&amp;H00000008&nbsp;=&nbsp;<s>IconShown</s>
-</td><td>The character has an icon in the taskbar notification area.</td></tr><tr><td>
-&amp;H00000020&nbsp;=&nbsp;<s>SmoothEdges</s>
-</td><td>Image smoothing (antialiasing) is applied to the edges of the character's animations.</td></tr><tr><td>
-&amp;H00000030&nbsp;=&nbsp;<s>Smoothed</s>
-</td><td>Image smoothing (antialiasing) is applied to the character's animations.</td></tr></table></td>
+				A <em class="typename">numeric</em> bit-field value that specifies the <a href="Control_Character_Style.htm" class="see keyword">Style</a>
+				to apply when a <a href="Control_Character.htm" class="see keyword">Character</a> is loaded:<table><tr><td xml:space="preserve">
+&amp;H00000001&nbsp;=&nbsp;<em class="keyword">SoundEffects</em>
+</td><td>
+							The animation sound effects are played.
+						</td></tr><tr><td xml:space="preserve">
+&amp;H00000002&nbsp;=&nbsp;<em class="keyword">IdleEnabled</em>
+</td><td>
+							The character enters idle mode and shows it's idling animations when it's not doing anything else.
+						</td></tr><tr><td xml:space="preserve">
+&amp;H00000004&nbsp;=&nbsp;<em class="keyword">AutoPopupMenu</em>
+</td><td>
+							A right-click on the character or it's notification icon automatically shows a <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>.
+						</td></tr><tr><td xml:space="preserve">
+&amp;H00000008&nbsp;=&nbsp;<em class="keyword">IconShown</em>
+</td><td>
+							The character has an icon in the taskbar notification area.
+						</td></tr><tr><td xml:space="preserve">
+&amp;H00000020&nbsp;=&nbsp;<em class="keyword">SmoothEdges</em>
+</td><td>
+							Image smoothing (antialiasing) is applied to the edges of the character's animations.
+						</td></tr><tr><td xml:space="preserve">
+&amp;H00000030&nbsp;=&nbsp;<em class="keyword">Smoothed</em>
+</td><td>
+							Image smoothing (antialiasing) is applied to the character's animations.
+						</td></tr></table>
+			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					Setting this property allows you to establish a default <a href="Control_Character.htm" class="see">Character</a>.
-					<a href="Control_Character_Style.htm" class="see">Style</a> for you application.
+				<p>
+					Setting this property allows you to establish a default<a href="Control_Character.htm" class="see keyword">Character</a>.<a href="Control_Character_Style.htm" class="see keyword">Style</a>
+					for you application.
 				</p>
-					<p>
-					The <a href="Control_CharacterStyleFlags_Smoothed.htm" class="see">Smoothed</a> and <a href="Control_CharacterStyleFlags_SmoothEdges.htm" class="see">SmoothEdges</a>
-					bits can only be changed here. Once a <a href="Control_Character.htm" class="see">Character</a> is loaded,
-					these bits <s>cannot </s>be changed in it's <a href="Control_Character_Style.htm" class="see">Style</a>
-					property. Also, these two settings are only used the first time the character is loaded. If another
-					client has already loaded the character, it's smoothing settings will not change. If your client application
-					is the first client to load the character, then your smoothing settings will apply to all clients.
+				<p>
+					The <a href="Control_CharacterStyleFlags_Smoothed.htm" class="see keyword">Smoothed</a> and <a href="Control_CharacterStyleFlags_SmoothEdges.htm" class="see keyword">SmoothEdges</a>
+					bits can only be changed here. Once a <a href="Control_Character.htm" class="see keyword">Character</a> is loaded, these bits <s>cannot</s>
+					be changed in it's <a href="Control_Character_Style.htm" class="see keyword">Style</a> property. Also, these two settings are only used
+					the first time the character is loaded. If another client has already loaded the character, it's
+					smoothing settings will not change. If your client application is the first client to load the
+					character, then your smoothing settings will apply to all clients.
 				</p>
-					<p>
-					For compatibility with Microsoft Agent, the <a href="Control_CharacterStyleFlags_IconShown.htm" class="see">IconShown</a>
-					bit is set to 1 by default. To load a <a href="Control_Character.htm" class="see">Character</a> without showing
-					it's notification icon, set the <a href="Control_CharacterStyleFlags_IconShown.htm" class="see">IconShown</a>
-					bit to 0.
+				<p class="note"><span class="note">Note:</span> 
+					For compatibility with Microsoft Agent, the <a href="Control_CharacterStyleFlags_IconShown.htm" class="see keyword">IconShown</a>
+					bit is set to 1 by default. To load a <a href="Control_Character.htm" class="see keyword">Character</a> without showing it's notification icon,
+					set the <a href="Control_CharacterStyleFlags_IconShown.htm" class="see keyword">IconShown</a> bit to 0.
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Character_Style.htm">The Style Property</a>
-					<br />
-					<a href="Control_CharacterStyleFlags.htm">The CharacterStyleFlags Enumeration</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_Character_Style.htm">The Style Property</a><br /><a href="Control_CharacterStyleFlags.htm">The CharacterStyleFlags Enumeration</a></td>
 			</tr>
 		</table>
 	</body>

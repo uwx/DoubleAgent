@@ -12,17 +12,117 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The SRModeID Property</h4>
+					<h3>The SRModeID Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Specifies the speech recognition engine the character uses.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">get_SRModeID</em> (&amp;<em class="token">SRModeID</em>)</p>
+<p><em class="token">character</em>-&gt;<em class="keyword">put_SRModeID</em> (<em class="token">SRModeID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">SRModeID</em> = ]<em class="token">character</em>.<em class="keyword">SRModeID</em></p>
+<p><em class="token">character</em>.<em class="keyword">SRModeID</em> = "<em class="token">SRModeID</em>"</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">SRModeID</em> = ]<em class="token">character</em>.<em class="keyword">SRModeID</em></p>
+<p><em class="token">character</em>.<em class="keyword">SRModeID</em> = "<em class="token">SRModeID</em>"</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">SRModeID</em> = ]<em class="token">character</em>.<em class="keyword">SRModeID</em></p>
+<p><em class="token">character</em>.<em class="keyword">SRModeID</em> = "<em class="token">SRModeID</em>"</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">SRModeID</em> = ]<em class="token">character</em>.<em class="keyword">SRModeID</em></p>
+<p><em class="token">character</em>.<em class="keyword">SRModeID</em> = "<em class="token">SRModeID</em>"</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">SRModeID</em>
+								</td>
+								<td>
+				A <em class="typename">string</em> value that identifies a speech recognition engine.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					This property determines the speech recognition engine used by the character for speech input. The<em class="self keyword">SRModeID</em>
+					for a speech recognition engine is a formatted string defined by the vendor that uniquely identifies the
+					engine.
+				</p>
+			
+				<h4 class="details">Details</h4>
+				<p>
+					If you specify the <em class="self keyword">SRModeID</em> for a speech engine that isn't installed, if the user has
+					disabled speech recognition, or if the language of the specified speech engine doesn't match the
+					character's <a href="Server_Character_LanguageID.htm" class="see keyword">LanguageID</a> setting, Double Agent raises an error.
+				</p>
+				<p>
+					If you query this property and haven't already (successfully) set the speech recognition engine, the
+					server returns the <em class="self keyword">SRModeID</em> of the engine that SAPI returns based on the character's <a href="Server_Character_LanguageID.htm" class="see keyword">LanguageID</a>
+					setting. If you haven't set the character's <a href="Server_Character_LanguageID.htm" class="see keyword">LanguageID</a>, then Double Agent
+					returns the <em class="self keyword">SRModeID</em> of the engine that SAPI returns based on the user's default language setting.
+					If there is no matching engine, Double Agent returns an empty string ("").
+				</p>
+				<p>
+					Querying this property does not require that <a href="Server_Settings_SREnabled.htm" class="see keyword">SREnabled</a> be set to
+					<em class="keyword">True</em>. However, if you query the property when speech input is disabled, Double Agent returns
+					an empty string.
+				</p>
+				<p>
+					When speech input is enabled, querying or setting this property will load the associated engine (if
+					it is not already loaded), and start speech services. That is, the <em class="glossary">Listening key</em>
+					is available, and the <em class="glossary">Listening tip</em> is displayable. (The <em class="glossary">Listening key</em>
+					and <em class="glossary">Listening tip</em> are enabled only if they are also enabled in the <a class="see" href="../html/UI_PropSheet.htm#SpeechInput">Advanced Character Options</a>
+					window.) However, if you query the property when speech is disabled, Double Agent does not start speech
+					services.
+				</p>
+				<p class="note"><span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
+				<p class="note"><span class="note">Note:</span> Double Agent's speech engine requirements are based on the Microsoft Speech API. Engines supporting Microsoft Agent's SAPI requirements can be installed and used with Double Agent.</p>
+				<p class="note"><span class="note">Note:</span> This property also returns the empty string if you have no compatible sound support installed on your system.</p>
+				<p class="note"><span class="note">Note:</span> Querying this property does not typically return an error. However, if the speech engine takes an abnormally long time to load, you may get an error indicating that the query timed out.</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Character_LanguageID.htm">The LanguageID Property</a><br /><a href="Server_Character_Listen.htm">The Listen Method</a><br /><a href="Server_Character_SREngine.htm">The SREngine Property</a></td>
 			</tr>
 		</table>
 	</body>

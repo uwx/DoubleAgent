@@ -17,19 +17,203 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<p>Summary Info</p>Syntax Info<h4 class="remarks">Remarks</h4><p>
-					Microsoft Agent supports textual captioning of the <a href="Server_Character_Speak.htm" class="see">Speak</a> method using a cartoon word balloon. The
-					<s>Think</s> method enables you to display text without audio output in a "thought" word balloon.
-				</p><p>
-					A character's initial word balloon window defaults are defined and compiled in the Microsoft Agent Character
-					Editor. Once running, the balloon's <s>Enabled</s> and <s>Font</s> properties may be overridden by the
-					user. If a user changes the word balloon's properties, they affect all characters. Both the <b>Speak</b>
-					and <s>Think</s> word balloons use the same property settings for size. You can access the properties
-					for a character's word balloon through the <s>Balloon</s> object, which is a child of the <b>Character</b>
-					object.
-				</p><p>
-					The <s>Balloon</s> object supports the following properties:
-				</p>Detail Info</td>
+					<h4 class="summary">Description</h4>
+				<p>
+					The <em class="self keyword">Server Object</em> establishes a connection with the Double Agent server. It allows applications
+					to load characters, receive events, and check the current state of the server.
+				</p>
+			<div id="Syntax">
+				<dl><dt>
+							<h4>
+								<a name="Methods"> </a>Methods
+							</h4>
+						</dt><dd>
+							<table class="syntax"><tr><td width="275ex">
+										<a href="Server_Server_FindCharacterSREngines.htm" class="see keyword">FindCharacterSREngines</a>
+									</td><td>
+										Retrieves a collection of <a href="Server_SREngine.htm" class="see keyword">Speech Recognition Engine Objects</a>
+					that meet a specific character's requirements.
+									</td></tr><tr><td>
+										<a href="Server_Server_FindCharacterTTSEngines.htm" class="see keyword">FindCharacterTTSEngines</a>
+									</td><td>
+										Retrieves a collection of <a href="Server_TTSEngine.htm" class="see keyword">Text-To-Speech Engine Objects</a>
+					that meet a specific character's requirements.
+									</td></tr><tr><td>
+										<a href="Server_Server_FindSREngines.htm" class="see keyword">FindSREngines</a>
+									</td><td>
+										Retrieves a collection of <a href="Server_SREngine.htm" class="see keyword">Speech Recognition Engine Objects</a>
+					for a specific language.
+									</td></tr><tr><td>
+										<a href="Server_Server_FindTTSEngines.htm" class="see keyword">FindTTSEngines</a>
+									</td><td>
+										Retrieves a collection of <a href="Server_TTSEngine.htm" class="see keyword">Text-To-Speech Engine Objects</a>
+					for a specific language and gender.
+									</td></tr><tr><td>
+										<a href="Server_Server_GetCharacterSREngine.htm" class="see keyword">GetCharacterSREngine</a>
+									</td><td>
+										Retrieves a <a href="Server_SREngine.htm" class="see keyword">Speech Recognition Engine Object</a> thats meet
+					a specific character's requirements.
+									</td></tr><tr><td>
+										<a href="Server_Server_GetCharacterTTSEngine.htm" class="see keyword">GetCharacterTTSEngine</a>
+									</td><td>
+										Retrieves a <a href="Server_TTSEngine.htm" class="see keyword">Text-To-Speech Engine Object</a> that meets
+					a specific character's requirements.
+									</td></tr><tr><td>
+										<a href="Server_Server_GetVersion.htm" class="see keyword">GetVersion</a>
+									</td><td>
+										Retrieves the Double Agent Server's version number.
+									</td></tr><tr><td>
+										<a href="Server_Server_Load.htm" class="see keyword">Load</a>
+									</td><td>
+										Loads a <a href="Server_Character.htm" class="see keyword">Character</a> from it's definition file, if it's not already loaded.
+									</td></tr><tr><td>
+										<a href="Server_Server_Register.htm" class="see keyword">Register</a>
+									</td><td>
+										Registers a <em class="glossary">notification sink</em> for the client application.
+									</td></tr><tr><td>
+										<a href="Server_Server_ShowDefaultCharacterProperties.htm" class="see keyword">ShowDefaultCharacterProperties</a>
+									</td><td>
+										Shows the <a class="see" href="../html/UI_PropSheet.htm#Gallery">Gallery</a> page of the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a>
+					window.
+									</td></tr><tr><td>
+										<a href="Server_Server_Unload.htm" class="see keyword">Unload</a>
+									</td><td>
+										Unloads a <a href="Server_Character.htm" class="see keyword">Character</a> and releases any resources it uses.
+									</td></tr><tr><td>
+										<a href="Server_Server_Unregister.htm" class="see keyword">Unregister</a>
+									</td><td>
+										Unregisters a <em class="glossary">notification sink</em> for the client application.
+									</td></tr></table>
+						</dd><dt>
+							<h4>
+								<a name="Properties"> </a>Properties
+							</h4>
+						</dt><dd>
+							<table class="syntax"><tr><td width="275ex">
+										<a href="Server_Server_Character.htm" class="see keyword">Character</a>
+									</td><td>
+										Retrieves a <a href="Server_Character.htm" class="see keyword">Character Object</a> for a loaded character.
+									</td></tr><tr><td>
+										<a href="Server_Server_CharacterFiles.htm" class="see keyword">CharacterFiles</a>
+									</td><td>
+										Returns the control's <a href="Server_CharacterFiles.htm" class="see keyword">CharacterFiles Object</a>.
+									</td></tr><tr><td>
+										<a href="Server_Server_CharacterStyle.htm" class="see keyword">CharacterStyle</a>
+									</td><td>
+										Specifies the initial style to use when a <a href="Server_Character.htm" class="see keyword">Character</a> is loaded.
+									</td></tr><tr><td>
+										<a href="Server_Server_CommandsWindow.htm" class="see keyword">CommandsWindow</a>
+									</td><td>
+										Returns the control's <a href="Server_CommandsWindow.htm" class="see keyword">CommandsWindow Object</a>.
+									</td></tr><tr><td>
+										<a href="Server_Server_PropertySheet.htm" class="see keyword">PropertySheet</a>
+									</td><td>
+										Returns the control's <a href="Server_PropertySheet.htm" class="see keyword">PropertySheet Object</a>.
+									</td></tr><tr><td>
+										<a href="Server_Server_Settings.htm" class="see keyword">Settings</a>
+									</td><td>
+										Returns the control's <a href="Server_Settings.htm" class="see keyword">Settings Object</a>.
+									</td></tr><tr><td>
+										<a href="Server_Server_SREngines.htm" class="see keyword">SREngines</a>
+									</td><td>
+										Returns a collection of <a href="Server_SREngine.htm" class="see keyword">Speech Recognition Engine Objects</a>
+					for all available speech recognition engines.
+									</td></tr><tr><td>
+										<a href="Server_Server_TTSEngines.htm" class="see keyword">TTSEngines</a>
+									</td><td>
+										Returns a collection of <a href="Server_TTSEngine.htm" class="see keyword">Text-To-Speech Engine Objects</a>
+					for all available text-to-speech engines.
+									</td></tr></table>
+						</dd><dt>
+							<h4>
+								<a name="Events"> </a>Events
+							</h4>
+						</dt><dd>
+							<table class="syntax"><tr><td width="275ex">
+										<a href="Server_Event_ActivateInputState.htm" class="see keyword">ActivateInputState</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Event_ActiveClientChange.htm" class="see keyword">ActiveClientChange</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Event_AgentPropertyChange.htm" class="see keyword">AgentPropertyChange</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Event_BalloonVisibleState.htm" class="see keyword">BalloonVisibleState</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Event_BookMark.htm" class="see keyword">BookMark</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Event_Click.htm" class="see keyword">Click</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Event_Command.htm" class="see keyword">Command</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Event_DblClick.htm" class="see keyword">DblClick</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Event_DefaultCharacterChange.htm" class="see keyword">DefaultCharacterChange</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Event_DragComplete.htm" class="see keyword">DragComplete</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Event_DragStart.htm" class="see keyword">DragStart</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Event_Idle.htm" class="see keyword">Idle</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Event_ListeningState.htm" class="see keyword">ListeningState</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Event_Move.htm" class="see keyword">Move</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Event_RequestComplete.htm" class="see keyword">RequestComplete</a>,
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Event_RequestStart.htm" class="see keyword">RequestStart</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Event_Size.htm" class="see keyword">Size</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Event_VisibleState.htm" class="see keyword">VisibleState</a>
+									</td><td>
+										---todo---
+									</td></tr></table>
+							<p class="note"><span class="note">Note:</span> 
+								Double Agent does not support the <em class="keyword">Restart</em>, <em class="keyword">Shutdown</em>
+								or <em class="keyword">HelpComplete</em> events.
+							</p>
+						</dd></dl>
+			</div><h4 class="remarks">Remarks</h4>
+				<p>
+					Creating an instance of the <em class="self keyword">Server Object</em> will start the Double Agent server if it's not
+					already running. When the last <em class="self keyword">Server Object</em> is released, the Double Agent server will automatically
+					shut down.
+				</p>
+			</td>
 			</tr>
 		</table>
 	</body>

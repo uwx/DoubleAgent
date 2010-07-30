@@ -12,68 +12,82 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The DefaultCharacterChange Event</h4>
+					<h3>The DefaultCharacterChange Event</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Signalled when the user changes the default character.</p>
-					</div>
+				<p>Signalled when the user changes the default character.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p><s>Event</s> <em>control</em>_<s>DefaultCharacterChange</s> (<s>ByVal</s> <em>CharGUID</em> <s>As String)</s></p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>DefaultCharacterChange</s> (<s>ByVal</s> <em>CharGUID</em> <s>As String)</s></p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>DefaultCharacterChange</s> (<s>ByVal</s> <em>CharGUID</em>)</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p><s>delegate void</s> <em>control</em>_<s>DefaultCharacterChange<em>EventHandler</em></s><s> (string</s> <em>CharGUID</em>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><s>void</s> <em>control</em>_<s>DefaultCharacterChange</s> (<s>LPCTSTR</s> <em>CharGUID</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="keyword">Event</em> <em class="token">control</em>_<em class="keyword">DefaultCharacterChange</em> (<em class="keyword">ByVal</em> <em class="token">CharGUID</em> <em class="keyword">As String)</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">DefaultCharacterChange</em> (<em class="keyword">ByVal</em> <em class="token">CharGUID</em> <em class="keyword">As String)</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">DefaultCharacterChange</em> (<em class="keyword">ByVal</em> <em class="token">CharGUID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="keyword">delegate void</em> <em class="token">control</em>_<em class="keyword">DefaultCharacterChange<token>EventHandler</token></em><em class="keyword"> (string</em> <em class="token">CharGUID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="keyword">void</em> <em class="token">control</em>_<em class="keyword">DefaultCharacterChange</em> (<em class="keyword">LPCTSTR</em> <em class="token">CharGUID</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>CharacterID</i>
+									<em class="token">CharGUID</em>
 								</td>
 								<td>The unique identifier of the new default character.</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					This event indicates that the user has changed the character assigned as the user's default
-					character. Double Agent sends this only to clients that have loaded the default character.
+				<p>
+					This event indicates that the user has changed the character assigned as the user's default character. Double
+					Agent sends this only to clients that have loaded the default character.
 				</p>
-					<p>
-					When the new character appears, it assumes the same size as any already loaded instance of
-					the character, or the previous default character (in that order).
+				<p>
+					When the new character appears, it assumes the same size as any already loaded instance of the character,
+					or the previous default character (in that order).
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Control_ShowDefaultCharacterProperties.htm">The ShowDefaultCharacterProperties Method</a>
-					<br />
-					<a href="Control_Characters_Load.htm">The Load Method</a>
-					<br />
-					<a href="Control_CharacterFiles_DefaultFilePath.htm">The DefaultFilePath Property</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_Control_ShowDefaultCharacterProperties.htm">The ShowDefaultCharacterProperties Method</a><br /><a href="Control_Characters_Load.htm">The Load Method</a><br /><a href="Control_CharacterFiles_DefaultFilePath.htm">The DefaultFilePath Property</a></td>
 			</tr>
 		</table>
 	</body>

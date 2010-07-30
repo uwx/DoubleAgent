@@ -196,6 +196,7 @@ void CSpeechTestDlg::ShowCharacters ()
 		}
 	}
 
+	mCharacterList.InsertItem (0, _T("<default>"));
 	mCharacterList.SetColumnWidth (0, lClientRect.Width());
 }
 
@@ -295,10 +296,15 @@ bool CSpeechTestDlg::ShowAgentCharacter (INT_PTR pCharNdx)
 		&&	(pCharNdx >= 0)
 		&&	(pCharNdx <= 1)
 		&&	(mCharacterId[pCharNdx] == 0)
-		&&	(!mCharacterPath[pCharNdx].IsEmpty ())
 		)
 	{
-		lResult = mServer->Load (_variant_t(mCharacterPath[pCharNdx]), &mCharacterId[pCharNdx], &mLoadReqID);
+		variant_t	lProvider;
+
+		if	(!mCharacterPath[pCharNdx].IsEmpty ())
+		{
+			lProvider = mCharacterPath[pCharNdx];
+		}
+		lResult = mServer->Load (lProvider, &mCharacterId[pCharNdx], &mLoadReqID);
 		LogComErr (_LOG_AGENT_CALLS, lResult, _T("Load [%d] [%s] as [%d]"), mLoadReqID, mCharacterPath[pCharNdx], mCharacterId[pCharNdx]);
 	}
 
@@ -355,24 +361,28 @@ bool CSpeechTestDlg::LoadedAgentCharacter (INT_PTR pCharNdx)
 				tBstrPtr			lConfidenceText;
 				tBstrPtr			lFontName;
 				long				lFontSize;
+				long				lClientCount = 0;
+
+				mCharacter[pCharNdx]->get_OtherClientCount (&lClientCount);
 
 				if	(pCharNdx == 0)
 				{
 					LogComErr (_LOG_AGENT_CALLS, mCharacter[pCharNdx]->put_LanguageID (MAKELANGID(LANG_ENGLISH,SUBLANG_ENGLISH_CAN)));
-					lCommands->SetCaption (_bstr_t("Test Speech"));
+					lCommands->SetCaption ((lClientCount==0)?_bstr_t("My Application"):_bstr_t("Another Application **"));
 					lCommands->SetVoice (_bstr_t("test speech"));
 					lCommands->SetGlobalVoiceCommandsEnabled (TRUE);
 					lCommands->GetFontName (lFontName.Free());
 					lCommands->GetFontSize (&lFontSize);
 					//lCommands->SetVisible (FALSE);
 					//LogMessage (LogDebug, _T("Font [%s] [%d]"), (BSTR)lFontName, lFontSize);
-					lCommands->SetFontSize (10);
+					//lCommands->SetFontSize (10);
 				}
 				else
 				{
 					//lCommands->SetGlobalVoiceCommandsEnabled (FALSE);
 				}
-				lCommandName.Format (_T("Test %d"), mCharacterId[pCharNdx]);
+				//lCommandName.Format (_T("Test %d"), mCharacterId[pCharNdx]);
+				lCommandName = _T("My First Command *");
 				lCommands->AddEx (_bstr_t(lCommandName), _bstr_t("test* command"), _bstr_t(lCommandName), TRUE, TRUE, 0, &lCommandId);
 				lCommands->get_Command (lCommandId, &lCommand);
 				lCommand->get_ConfidenceThreshold (&lConfidenceThreshold);
@@ -382,7 +392,7 @@ bool CSpeechTestDlg::LoadedAgentCharacter (INT_PTR pCharNdx)
 #endif
 				if	(pCharNdx == 0)
 				{
-					lCommands->Add (_bstr_t("Two"), _bstr_t("command test+ two"), TRUE, FALSE, &lCommandId);
+					lCommands->Add (_bstr_t("My Second Command"), _bstr_t("command test+ two"), TRUE, TRUE/*, FALSE*/, &lCommandId);
 					lCommands->get_Command (lCommandId, &lCommand);
 					lCommand->put_ConfidenceThreshold (50);
 					lCommand->put_ConfidenceText (_bstr_t("I thought I heard..."));
@@ -391,20 +401,20 @@ bool CSpeechTestDlg::LoadedAgentCharacter (INT_PTR pCharNdx)
 #ifdef	_LOG_COMMANDS
 					LogMessage (_LOG_COMMANDS, _T("[%d] Command [%d] added [%d %ls]"), pCharNdx, lCommandId, lConfidenceThreshold, (BSTR)lConfidenceText);
 #endif
-					lCommands->Add (_bstr_t("Three"), _bstr_t("command … three"), TRUE, FALSE, &lCommandId);
+					lCommands->Add (_bstr_t("My Third Command"), _bstr_t("command … three"), TRUE, TRUE/*, FALSE*/, &lCommandId);
 					lCommands->get_Command (lCommandId, &lCommand);
 					lCommand->get_ConfidenceThreshold (&lConfidenceThreshold);
 					lCommand->get_ConfidenceText (lConfidenceText.Free());
 #ifdef	_LOG_COMMANDS
 					LogMessage (_LOG_COMMANDS, _T("[%d] Command [%d] added [%d %ls]"), pCharNdx, lCommandId, lConfidenceThreshold, (BSTR)lConfidenceText);
 #endif
-					lCommands->Add (_bstr_t("Four"), _bstr_t("(command number)* four"), TRUE, FALSE, &lCommandId);
-					lCommands->get_Command (lCommandId, &lCommand);
-					lCommand->get_ConfidenceThreshold (&lConfidenceThreshold);
-					lCommand->get_ConfidenceText (lConfidenceText.Free());
-#ifdef	_LOG_COMMANDS
-					LogMessage (_LOG_COMMANDS, _T("[%d] Command [%d] added [%d %ls]"), pCharNdx, lCommandId, lConfidenceThreshold, (BSTR)lConfidenceText);
-#endif
+//					lCommands->Add (_bstr_t("Four"), _bstr_t("(command number)* four"), TRUE, FALSE, &lCommandId);
+//					lCommands->get_Command (lCommandId, &lCommand);
+//					lCommand->get_ConfidenceThreshold (&lConfidenceThreshold);
+//					lCommand->get_ConfidenceText (lConfidenceText.Free());
+//#ifdef	_LOG_COMMANDS
+//					LogMessage (_LOG_COMMANDS, _T("[%d] Command [%d] added [%d %ls]"), pCharNdx, lCommandId, lConfidenceThreshold, (BSTR)lConfidenceText);
+//#endif
 				}
 			}
 
@@ -453,7 +463,7 @@ bool CSpeechTestDlg::LoadedAgentCharacter (INT_PTR pCharNdx)
 //			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->GetCharacterTTSEngine (_variant_t(mCharacterPath[pCharNdx]), &lTTSEngine))))
 			{
 				LogComErr (_LOG_CHAR_CALLS_EX, lTTSEngine->get_TTSModeID (lTTSMode.Free ()));
-		}
+			}
 			mCharacter[pCharNdx]->GetTTSSpeed (&lTTSSpeed);
 			mCharacter[pCharNdx]->GetTTSPitch (&lTTSPitch);
 
@@ -1196,10 +1206,17 @@ void CSpeechTestDlg::LoadConfig ()
 		tS <LVFINDINFO>	lFindInfo;
 		int				lFoundNdx;
 
-		lFindInfo.flags = LVFI_STRING;
-		lFindInfo.psz = mCharacterPath[0];
-		lFindInfo.vkDirection = VK_NEXT;
-		lFoundNdx = ListView_FindItem (mCharacterList.m_hWnd, -1, &lFindInfo);
+		if	(mCharacterPath[0].IsEmpty ())
+		{
+			lFoundNdx = 0;
+		}
+		else
+		{
+			lFindInfo.flags = LVFI_STRING;
+			lFindInfo.psz = mCharacterPath[0];
+			lFindInfo.vkDirection = VK_NEXT;
+			lFoundNdx = ListView_FindItem (mCharacterList.m_hWnd, -1, &lFindInfo);
+		}
 		if	(lFoundNdx >= 0)
 		{
 			mCharacterList.SetItemState (lFoundNdx, LVIS_SELECTED|LVIS_FOCUSED, LVIS_SELECTED|LVIS_FOCUSED);
@@ -1471,7 +1488,7 @@ void CSpeechTestDlg::OnShowChar()
 
 		if	(lItem >= 0)
 		{
-			ShowCharacter (0, mCharacterList.GetItemText (lItem, 0));
+			ShowCharacter (0, (lItem > 0) ? mCharacterList.GetItemText (lItem, 0) : _T(""));
 			if	(ShowAgentCharacter (0))
 			{
 #ifdef	_DEBUG_NOT
@@ -1504,7 +1521,7 @@ void CSpeechTestDlg::OnShowChar2()
 		{
 			if	(
 					(
-						(!ShowCharacter (1, mCharacterList.GetItemText (lItem, 0)))
+						(!ShowCharacter (1, (lItem > 0) ? mCharacterList.GetItemText (lItem, 0) : _T("")))
 					||	(!ShowAgentCharacter (1))
 					)
 				&&	(
@@ -1514,7 +1531,7 @@ void CSpeechTestDlg::OnShowChar2()
 				&&	(lItem > 0)
 				)
 			{
-				ShowCharacter (1, mCharacterList.GetItemText (lItem-1, 0));
+				ShowCharacter (1, (lItem > 1) ? mCharacterList.GetItemText (lItem-1, 0) : _T(""));
 			}
 			if	(ShowAgentCharacter (1))
 			{

@@ -19,8 +19,8 @@ protected:
 	static String^ CmdArg (array <String^>^ pCmdArgs, int pCmdArgNdx);
 
 	System::Object^ LoadTypeLibrary (System::String^ pTypeLibPath);
-	System::Xml::XmlDocument^ LoadXmlFile (System::String^ pXmlPath);
-	void LoadXmlIncludes (System::Xml::XmlDocument^ pXmlDocument, String^ pXmlPath);
+	System::Xml::XmlDocument^ LoadXmlFile (System::String^ pXmlPath, bool pPreserveWhitespace);
+	void LoadXmlIncludes (System::Xml::XmlDocument^ pXmlDocument, String^ pXmlPath, bool pPreserveWhitespace);
 	System::Xml::XmlDocument^ LoadTypeTemplate ();
 	System::Xml::XmlDocument^ LoadMethodTemplate ();
 	System::Xml::XmlDocument^ LoadPropertyTemplate ();
@@ -58,11 +58,12 @@ protected:
 	void PutMemberSeeAlso (System::Xml::XmlElement^ pRootElement, System::Xml::XmlNode^ pMemberSeeAlso);
 
 	System::Xml::XmlNode^ FormatSummary (System::Xml::XmlNode^ pXmlNode);
-	System::Xml::XmlNode^ FormatDetails (System::Xml::XmlNode^ pXmlNode);
+	System::Xml::XmlNode^ FormatDetails (System::Xml::XmlNodeList^ pXmlNodeList);
 	System::Xml::XmlNode^ FormatRemarks (System::Xml::XmlNode^ pXmlNode);
 	System::Xml::XmlNode^ FormatInnerXml (System::Xml::XmlNode^ pXmlNode);
 	System::Xml::XmlNode^ FormatInnerXml (System::Xml::XmlNode^ pXmlNode, String^ pCodeClass);
 	System::Xml::XmlNode^ FormatSyntax (System::Xml::XmlNode^ pXmlNode);
+	System::Xml::XmlNode^ FormatSyntaxLanguage (System::Xml::XmlNode^ pLanguagesNode, System::String^ pLanguageName, System::Xml::XmlNodeList^ pSyntaxNodes);
 	System::Xml::XmlNode^ FormatParameters (System::Xml::XmlNodeList^ pXmlNodeList);
 	System::Xml::XmlNode^ FormatExamples (System::Xml::XmlNodeList^ pXmlNodeList);
 	System::Xml::XmlNode^ FormatSeeAlso (System::Xml::XmlNodeList^ pXmlNodeList);
@@ -96,6 +97,8 @@ protected:
 	void RemoveMemberDetails (System::Xml::XmlDocument^ pXmlDocument);
 	void RemoveCompositeMembers (System::Xml::XmlDocument^ pXmlDocument);
 	void AdjustXmlFormat (System::Xml::XmlDocument^ pXmlDocument);
+	void ResolveEntities (System::Xml::XmlDocument^ pXmlDocument);
+	void ResolveEntities (System::Xml::XmlNode^ pXmlNode);
 
 protected:
 	Generic::List<System::Xml::XmlNode^>^ NodeList (System::Xml::XmlNodeList^ pNodeList);
@@ -108,7 +111,7 @@ protected:
 	System::Xml::XmlNode^ MakeNewNode (String^ pInnerXml, System::Xml::XmlDocument^ pDocument);
 	System::Xml::XmlNode^ MakeNewNode (String^ pNodeName, String^ pInnerText, System::Xml::XmlDocument^ pDocument);
 	System::Xml::XmlAttribute^ MakeNewAttribute (String^ pAttributeName, String^ pAttributeText, System::Xml::XmlDocument^ pDocument);
-	
+
 	void PutParagraphNode (System::Xml::XmlNode^ pParagraphNode, System::Xml::XmlNode^ pTargetNode);
 	System::Xml::XmlNode^ PreserveNodeSpace (System::Xml::XmlNode^ pXmlNode);
 
@@ -117,11 +120,13 @@ public:
 	String^	mOutputPath;
 	String^	mHtmlPath;
 	String^	mTemplatePath;
+	bool	mFormatServer;
 
 protected:
 	bool																							mOutputHtml;
 	bool																							mOutputIntellisense;
 	bool																							mOutputSandcastle;
+	Generic::Dictionary<String^, System::Xml::XmlDocument^>^										mLoadedIncludes;
 	System::Reflection::Assembly^																	mSourceAssembly;
 	System::Collections::Generic::SortedDictionary <String^, System::Type^>^						mSourceTypes;
 	System::Collections::Generic::SortedDictionary <String^, System::Reflection::MethodInfo^>^		mSourceMethods;

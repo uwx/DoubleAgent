@@ -12,103 +12,114 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Style Property</h4>
+					<h3>The Style Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Specifies a group of settings that affect the character's appearence.</p>
-					</div>
+				<p>Specifies a group of settings that affect the character's appearence.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>Style</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Style</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Style</s> = "<em>Style</em>"</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>Style</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Style</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Style</s> = "<em>Style</em>"</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>Style</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Style</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Style</s> = "<em>Style</em>"</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>Style</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Style</s></p>
-
-<p><em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Style</s> = "<em>Style</em>"</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>character</em>.<s>get_Style</s> (&amp;<em>Style</em>)</p>
-
-<p><em>character</em>.<s>put_Style</s> (<em>Style</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Style</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Style</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Style</em> = <em class="token">Style</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">Style</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Style</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Style</em> = <em class="token">Style</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">Style</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Style</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Style</em> = <em class="token">Style</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Style</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Style</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Style</em> = <em class="token">Style</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">get_Style</em> (&amp;<em class="token">Style</em>)</p>
+<p><em class="token">character</em>-&gt;<em class="keyword">put_Style</em> (<em class="token">Style</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Style</i>
+									<em class="token">Style</em>
 								</td>
 								<td>
-				A <s>numeric </s>bit-field value that has one or more of the following:<table><tr><td>
-&amp;H00000001&nbsp;=&nbsp;<s>SoundEffects</s>
-</td><td>The animation sound effects are played.</td></tr><tr><td>
-&amp;H00000002&nbsp;=&nbsp;<s>IdleEnabled</s>
-</td><td>The character enters idle mode and shows it's idling animations when it's not doing anything
-				else.</td></tr><tr><td>
-&amp;H00000004&nbsp;=&nbsp;<s>AutoPopupMenu</s>
-</td><td>A right-click on the character or it's notification icon automatically shows a pop-up menu.</td></tr><tr><td>
-&amp;H00000008&nbsp;=&nbsp;<s>IconShown</s>
-</td><td>The character has an icon in the taskbar notification area.</td></tr><tr><td>
-&amp;H00000020&nbsp;=&nbsp;<s>SmoothEdges</s>
-</td><td>Image smoothing (antialiasing) is applied to the edges of the character's animations.</td></tr><tr><td>
-&amp;H00000030&nbsp;=&nbsp;<s>Smoothed</s>
-</td><td>Image smoothing (antialiasing) is applied to the character's animations.</td></tr></table></td>
+				A <em class="typename">numeric</em> bit-field value that has one or more of the following:<table><tr><td xml:space="preserve">
+&amp;H00000001&nbsp;=&nbsp;<em class="keyword">SoundEffects</em>
+</td><td>
+							The animation sound effects are played.
+						</td></tr><tr><td xml:space="preserve">
+&amp;H00000002&nbsp;=&nbsp;<em class="keyword">IdleEnabled</em>
+</td><td>
+							The character enters idle mode and shows it's idling animations when it's not doing anything else.
+						</td></tr><tr><td xml:space="preserve">
+&amp;H00000004&nbsp;=&nbsp;<em class="keyword">AutoPopupMenu</em>
+</td><td>
+							A right-click on the character or it's notification icon automatically shows a <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>.
+						</td></tr><tr><td xml:space="preserve">
+&amp;H00000008&nbsp;=&nbsp;<em class="keyword">IconShown</em>
+</td><td>
+							The character has an icon in the taskbar notification area.
+						</td></tr><tr><td xml:space="preserve">
+&amp;H00000020&nbsp;=&nbsp;<em class="keyword">SmoothEdges</em>
+</td><td>
+							Image smoothing (antialiasing) is applied to the edges of the character's animations.
+						</td></tr><tr><td xml:space="preserve">
+&amp;H00000030&nbsp;=&nbsp;<em class="keyword">Smoothed</em>
+</td><td>
+							Image smoothing (antialiasing) is applied to the character's animations.
+						</td></tr></table>
+			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					Each style bit corresponds to a specific <a href="Control_Character.htm" class="see">Character Object</a>
-					property. You can use this property to query or modify all of the style settings at once.
+				<p>
+					Each style bit corresponds to a specific <a href="Control_Character.htm" class="see keyword">Character Object</a> property. You
+					can use this property to query or modify all of the style settings at once.
 				</p>
-					<p>
-					The <a href="Control_CharacterStyleFlags_Smoothed.htm" class="see">Smoothed</a> and <a href="Control_CharacterStyleFlags_SmoothEdges.htm" class="see">SmoothEdges</a>
-					bits are read-only. They can only be set in the <a href="Control_Control.htm" class="see">Control</a>.<a href="Control_Control_CharacterStyle.htm" class="see">CharacterStyle</a>
-					property before the <a href="Control_Character.htm" class="see">Character</a> is loaded.
+				<p>
+					The <a href="Control_CharacterStyleFlags_Smoothed.htm" class="see keyword">Smoothed</a> and <a href="Control_CharacterStyleFlags_SmoothEdges.htm" class="see keyword">SmoothEdges</a>
+					bits are read-only. They can only be set in the <a href="Control_Control.htm" class="see keyword">Control</a>.<a href="Control_Control_CharacterStyle.htm" class="see keyword">CharacterStyle</a>
+					property before the <a href="Control_Character.htm" class="see keyword">Character</a> is loaded.
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Character_AutoPopupMenu.htm">The AutoPopupMenu Property</a>
-					<br />
-					<a href="Control_Character_IconShown.htm">The IconShown Property</a>
-					<br />
-					<a href="Control_Character_IdleEnabled.htm">The IdleEnabled Property</a>
-					<br />
-					<a href="Control_Character_Smoothed.htm">The Smoothed Property</a>
-					<br />
-					<a href="Control_Character_SmoothEdges.htm">The SmoothEdges Property</a>
-					<br />
-					<a href="Control_Character_SoundEffectsEnabled.htm">The SoundEffectsEnabled Property</a>
-					<br />
-					<a href="Control_Control_CharacterStyle.htm">The CharacterStyle Property</a>
-					<br />
-					<a href="Control_CharacterStyleFlags.htm">The CharacterStyleFlags Enumeration</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_Character_AutoPopupMenu.htm">The AutoPopupMenu Property</a><br /><a href="Control_Character_IconShown.htm">The IconShown Property</a><br /><a href="Control_Character_IdleEnabled.htm">The IdleEnabled Property</a><br /><a href="Control_Character_Smoothed.htm">The Smoothed Property</a><br /><a href="Control_Character_SmoothEdges.htm">The SmoothEdges Property</a><br /><a href="Control_Character_SoundEffectsEnabled.htm">The SoundEffectsEnabled Property</a><br /><a href="Control_Control_CharacterStyle.htm">The CharacterStyle Property</a><br /><a href="Control_CharacterStyleFlags.htm">The CharacterStyleFlags Enumeration</a></td>
 			</tr>
 		</table>
 	</body>

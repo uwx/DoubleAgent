@@ -12,17 +12,92 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Visible Property</h4>
+					<h3>The Visible Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Specifies if the <a href="Server_Command.htm" class="see keyword">Command</a> is visible in the character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">command</em>-&gt;<em class="keyword">get_Visible</em> (&amp;<em class="token">Visible</em>)</p>
+<p><em class="token">command</em>-&gt;<em class="keyword">put_Visible</em> (<em class="token">Visible</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Visible</em>] = <em class="token">command</em>.<em class="keyword">Visible</em></p>
+<p><em class="token">command</em>.<em class="keyword">Visible</em>[ = <em class="token">Visible</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Visible</em>] = <em class="token">command</em>.<em class="keyword">Visible</em></p>
+<p><em class="token">command</em>.<em class="keyword">Visible</em>[ = <em class="token">Visible</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">Visible</em>] = <em class="token">command</em>.<em class="keyword">Visible</em></p>
+<p><em class="token">command</em>.<em class="keyword">Visible</em>[ = <em class="token">Visible</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">Visible</em>] = <em class="token">command</em>.<em class="keyword">Visible</em></p>
+<p><em class="token">command</em>.<em class="keyword">Visible</em>[ = <em class="token">Visible</em>]</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Visible</em>
+								</td>
+								<td>
+				A <em class="typename">boolean</em> value that indicates if the command is visible.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					Set this property to <em class="keyword">False</em> when you want to include voice input for your command without
+					having it appear in the <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a> for the character. If you set a
+					<a href="Server_Command.htm" class="see keyword">Command Object's</a> <a href="Server_Command_Caption.htm" class="see keyword">Caption</a> property to the
+					empty string (""), the caption text will not appear in the <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>
+					(for example, as a blank line), regardless of its <em class="self keyword">Visible</em> property setting.
+				</p>
+				<p>
+					The <em class="self keyword">Visible</em> property of a <a href="Server_Command.htm" class="see keyword">Command Object's</a> parent <a href="Server_Commands.htm" class="see keyword">Commands Collection</a>
+					does not affect the <em class="self keyword">Visible</em> property of the <a href="Server_Command.htm" class="see keyword">Command</a>.
+				</p>
+			</td>
 			</tr>
 		</table>
 	</body>

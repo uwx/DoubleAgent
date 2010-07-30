@@ -12,17 +12,88 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Enabled Property</h4>
+					<h3>The Enabled Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Specifies if the <a href="Server_Command.htm" class="see keyword">Command</a> is enabled in the character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">command</em>-&gt;<em class="keyword">get_Enabled</em> (&amp;<em class="token">Enabled</em>)</p>
+<p><em class="token">command</em>-&gt;<em class="keyword">put_Enabled</em> (<em class="token">Enabled</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Enabled</em> = ]<em class="token">command</em>.<em class="keyword">Enabled</em></p>
+<p><em class="token">command</em>.<em class="keyword">Enabled</em> = <em class="token">Enabled</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Enabled</em> = ]<em class="token">command</em>.<em class="keyword">Enabled</em></p>
+<p><em class="token">command</em>.<em class="keyword">Enabled</em> = <em class="token">Enabled</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">Enabled</em> = ]<em class="token">command</em>.<em class="keyword">Enabled</em></p>
+<p><em class="token">command</em>.<em class="keyword">Enabled</em> = <em class="token">Enabled</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">Enabled</em> = ]<em class="token">command</em>.<em class="keyword">Enabled</em></p>
+<p><em class="token">command</em>.<em class="keyword">Enabled</em> = <em class="token">Enabled</em></p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Enabled</em>
+								</td>
+								<td>
+				A <em class="typename">boolean</em> value that indicates if the command is enabled.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					If the <em class="self keyword">Enabled</em> property is set to <em class="keyword">True</em>, the <a href="Server_Command.htm" class="see keyword">Command Object's</a> <a href="Server_Command_Caption.htm" class="see keyword">Caption</a>
+					appears as normal text in the character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a> when the client application
+					is <em class="glossary">input-active</em>. If the <em class="self keyword">Enabled</em> property is <em class="keyword">False</em>,
+					the <a href="Server_Command_Caption.htm" class="see keyword">Caption</a> appears as unavailable (disabled) text. A disabled <a href="Server_Command.htm" class="see keyword">Command</a>
+					is also not accessible for voice input.
+				</p>
+			</td>
 			</tr>
 		</table>
 	</body>

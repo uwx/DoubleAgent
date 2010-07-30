@@ -17,30 +17,34 @@
 		</tr>
 		<tr>
 			<td class="page">
-				<p>VBScript is a programming language included with Microsoft Internet Explorer. For other browsers, contact
-					your vendor about support.</p>
-				<p>To program Microsoft Agent from VBScript, use the HTML &lt;SCRIPT&gt; tags. To access the programming
-					interface, use the name of control you assign in the &lt;OBJECT&gt; tag, followed by the sub object (if
-					any), the name of the method or property, and any parameters or values supported by the method or property:
-				</p>
+				<p>VBScript is a programming language included with Microsoft Internet Explorer<sup>®</sup>. For other browsers,
+					contact your vendor about support.</p>
+				<p>To program Double Agent from VBScript, use the HTML &lt;SCRIPT&gt; tags. To access the programming interface,
+					use the name of control you assign in the &lt;OBJECT&gt; tag, followed by the sub object (if any), the
+					name of the method or property, and any parameters or values supported by the method or property:</p>
 				<div class="example">
-					<pre class="example"><em>control</em>[.<em>object</em>].<em>Method</em> <em>parameter</em>, [<em>parameter</em>]
-<em>control</em>[.<em>object</em>].<em>Property</em> = <em>value</em></pre>
+					<pre class="example"><em class="token">control</em>[.<em class="token">object</em>].<em class="token">Method</em> <em
+						class="token">parameter</em>, [<em class="token">parameter</em>]
+<em class="token">control</em>[.<em class="token">object</em>].<em class="token">Property</em> = <em
+	class="token">value</em></pre>
 				</div>
 				<p>For events, include the name of the control followed by the name of the event and any parameters:</p>
 				<div class="example">
-					<pre class="example">Sub <i>control</i>_event (ByVal parameter[,ByVal parameter])
-statements…
-End Sub</pre>
+					<pre class="example"><em class="keyword">Sub</em> <em class="token">control</em>_event (<em class="keyword">ByVal</em> <em
+						class="token">parameter</em>[, <em class="keyword">ByVal</em> <em class="token">parameter</em>])
+<em class="token">statements</em>…
+<em class="keyword">End Sub</em></pre>
 				</div>
-				<p>You can also specify an event handler using the &lt;SCRIPT&gt; tag's <b>For…Event</b> syntax:</p>
+				<p>You can also specify an event handler using the &lt;SCRIPT&gt; tag's <em class="keyword">For…Event</em>
+					syntax:</p>
 				<div class="example">
-					<pre class="example">&lt;SCRIPT LANGUAGE=VBScript For=<i>control</i> Event=<i>event</i>[(<i>parameter</i>[,<i>parameter</i>])]&gt;
-<i>statements</i>…
+					<pre class="example">&lt;SCRIPT LANGUAGE=VBScript <em class="keyword">For</em>=<em class="token">control</em> <em
+						class="keyword">Event</em>=<em class="token">event</em>[(<em class="token">parameter</em>[, <em class="token">parameter</em>])]&gt;
+<em class="token">statements</em>…
 &lt;/SCRIPT&gt;</pre>
 				</div>
-				<p>Although Microsoft Internet Explorer supports this latter syntax, not all browsers do. For compatibility,
-					use only the former syntax for events.</p>
+				<p>Although Microsoft Internet Explorer<sup>®</sup> supports this latter syntax, not all browsers do. For
+					compatibility, use only the former syntax for events.</p>
 				<p>You can verify whether Double Agent is installed by trying to create the object and checking to see if
 					it exists. The following sample demonstrates how to check for the Double Agent control without triggering
 					an error (as would happen if you included an &lt;OBJECT&gt; tag for the control on the page):</p>
@@ -69,7 +73,8 @@ Function HaveDoubleAgent()
 End Function
 &lt;/SCRIPT&gt;</pre>
 				</div>
-			</td>
+				<h4 class="seealso">See Also</h4>
+				<a href="Ctl_Programming_Web.htm">Using the Control in Web Pages</a> </td>
 		</tr>
 	</table>
 </body>

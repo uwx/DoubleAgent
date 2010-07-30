@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Image Rendering</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Image Rendering</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>Animation frames can be rendered without or with <em>image smoothing</em>. The difference is subtle,
+					but <em>edge smoothing</em> can have a particularly noticable effect in moving animations. These options
+					only apply when animation frames are rendered at their normal size. When an animation is stretched or
+					shrunk, Double Agent uses <em>bicubic interpolation</em> to resize its frames.</p>
+				<p>The table below shows examples of animation frames rendered using the smoothing options, and also at
+					different sizes. You can see that a character shown at half-size or even iconic size (32 by 32 pixels)
+					is still recognizable. </p>
+				<br />
+				<table>
+					<tr>
+						<th style="text-align: center">Normal</th>
+						<th style="text-align: center">Smooth Edges</th>
+						<th style="text-align: center">Smoothed</th>
+						<th style="text-align: center">Half Size</th>
+						<th style="text-align: center">Icon</th>
+					</tr>
+					<tr>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Genie%20Normal.Png" style="width: 128px; height: 128px" title="Normal" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Genie%20Edged.Png" style="width: 128px; height: 128px" title="Smooth Edges" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Genie%20Smoothed.Png" style="width: 128px; height: 128px" title="Smoothed" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Genie%20Half.Png" style="width: 85px; height: 85px" title="Half size" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Genie%20Icon.Png" style="width: 40px; height: 40px" title="Generated icon" />
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Merlin%20Normal.Png" style="width: 128px; height: 128px" title="Normal" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Merlin%20Edged.Png" style="width: 128px; height: 128px" title="Smooth Edges" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Merlin%20Smoothed.Png" style="width: 128px; height: 128px" title="Smoothed" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Merlin%20Half.Png" style="width: 85px; height: 85px" title="Half size" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Merlin%20Icon.Png" style="width: 40px; height: 40px" title="Generated icon" />
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Peedy%20Normal.Png" style="width: 160px; height: 128px" title="Normal" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Peedy%20Edged.Png" style="width: 160px; height: 128px" title="Smooth Edges" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Peedy%20Smoothed.Png" style="width: 160px; height: 128px" title="Smoothed" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Peedy%20Half.Png" style="width: 107px; height: 85px" title="Half size" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Peedy%20Icon.Png" style="width: 40px; height: 40px" title="Generated icon" />
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Robby%20Normal.Png" style="width: 128px; height: 128px" title="Normal" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Robby%20Edged.Png" style="width: 128px; height: 128px" title="Smooth Edges" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Robby%20Smoothed.Png" style="width: 128px; height: 128px" title="Smoothed" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Robby%20Half.Png" style="width: 85px; height: 85px" title="Half size" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Robby%20Icon.Png" style="width: 40px; height: 40px" title="Generated icon" />
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Ben%20Normal.Png" style="width: 168px; height: 168px" title="Normal" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Ben%20Edged.Png" style="width: 168px; height: 168px" title="Smooth Edges" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Ben%20Smoothed.Png" style="width: 168px; height: 168px" title="Smoothed" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Ben%20Half.Png" style="width: 112px; height: 112px" title="Half size" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Ben%20Icon.Png" style="width: 40px; height: 40px" title="Generated icon" />
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Dogbert%20Normal.Png" style="width: 114px; height: 138px" title="Normal" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Dogbert%20Edged.Png" style="width: 114px; height: 138px" title="Smooth Edges" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Dogbert%20Smoothed.Png" style="width: 114px; height: 138px" title="Smoothed" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Dogbert%20Half.Png" style="width: 76px; height: 92px" title="Half size" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Dogbert%20Icon.Png" style="width: 40px; height: 40px" title="Generated icon" />
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Audie%20Normal.Png" style="width: 128px; height: 128px" title="Normal" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Audie%20Edged.Png" style="width: 128px; height: 128px" title="Smooth Edges" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Audie%20Smoothed.Png" style="width: 128px; height: 128px" title="Smoothed" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Audie%20Half.Png" style="width: 85px; height: 85px" title="Half size" />
+						</td>
+						<td style="vertical-align: bottom; text-align: center">
+							<img src="../images/Audie%20Icon.Png" style="width: 40px; height: 40px" title="Generated icon" />
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

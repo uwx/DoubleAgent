@@ -12,17 +12,106 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The AudioStatus Property</h4>
+					<h3>The AudioStatus Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Returns the status of the audio output channel.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">settings</em>-&gt;<em class="keyword">get_AudioStatus</em> (<em class="token">&amp;AudioStatus</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">AudioStatus</em> = ]<em class="token">server</em>.<em class="keyword">Settings.AudioStatus</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">AudioStatus</em> = ]<em class="token">server</em>.<em class="keyword">Settings.AudioStatus</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">AudioStatus</em> = ]<em class="token">server</em>.<em class="keyword">Settings.AudioStatus</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">AudioStatus</em> = ]<em class="token">server</em>.<em class="keyword">Settings.AudioStatus</em></p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">AudioStatus</em>
+								</td>
+								<td>
+				A member of the <a href="Server_AudioStatusType.htm" class="see typename">AudioStatusType Enumeration</a>
+				that indicates the current audio output status: <table><tr><td xml:space="preserve">
+0&nbsp;=&nbsp;<em class="keyword">Available</em>
+</td><td>
+							Text-to-speech is available.
+						</td></tr><tr><td xml:space="preserve">
+1&nbsp;=&nbsp;<em class="keyword">Disabled</em>
+</td><td>
+							Text-to-speech is disabled in the <a class="see" href="../html/UI_PropSheet.htm#Output">Advanced Character Options</a> window.
+						</td></tr><tr><td xml:space="preserve">
+3&nbsp;=&nbsp;<em class="keyword">UserSpeaking</em>
+</td><td>
+							<em class="glossary">Listening mode</em> is active and the user is currently speaking.
+						</td></tr><tr><td xml:space="preserve">
+4&nbsp;=&nbsp;<em class="keyword">CharacterSpeaking</em>
+</td><td>
+							A character is currently speaking.
+						</td></tr><tr><td xml:space="preserve">
+5&nbsp;=&nbsp;<em class="keyword">CharacterListening</em>
+</td><td>
+							<em class="glossary">Listening mode</em> is active.
+						</td></tr><tr><td xml:space="preserve">
+6&nbsp;=&nbsp;<em class="keyword">Error</em>
+</td><td>
+							The audio status could not be determined.
+						</td></tr></table>
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					Your client application can use this property to determine whether it is appropriate to have your character
+					speak or whether it is appropriate to try to turn on <em class="glossary">Listening mode</em> (using the <a href="Server_Character_Listen.htm" class="see keyword">Listen</a>
+					method).
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Server_AudioStatusType.htm">The AudioStatusType Enumeration</a><br /><a href="Server_Character_Listen.htm">The Listen Method</a><br /><a href="Server_Event_ListeningState.htm">The ListeningState Event</a></td>
 			</tr>
 		</table>
 	</body>

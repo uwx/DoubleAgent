@@ -12,70 +12,89 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The DeactivateInput Event</h4>
+					<h3>The DeactivateInput Event</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Signalled when a client becomes non-input-active.</p>
-					</div>
+				<p>Signalled when a client becomes <em class="glossary">non-input-active</em>.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p><s>Event</s> <em>control</em>_<s>DeactivateInput</s> (<s>ByVal</s> <em>CharacterID</em> <s>As String</s>)</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>DeactivateInput</s> (<s>ByVal</s> <em>CharacterID</em> <s>As String</s>)</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>DeactivateInput</s> (<s>ByVal</s> <em>CharacterID</em>)</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p><s>delegate void</s> <em>control</em>_<s>DeactivateInput<em>EventHandler</em></s><s> (string</s> <em>CharacterID</em>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><s>void</s> <em>control</em>_<s>DeactivateInput</s> (<s>LPCTSTR</s> <em>CharacterID</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="keyword">Event</em> <em class="token">control</em>_<em class="keyword">DeactivateInput</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em> <em class="keyword">As String</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">DeactivateInput</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em> <em class="keyword">As String</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">DeactivateInput</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="keyword">delegate void</em> <em class="token">control</em>_<em class="keyword">DeactivateInput<token>EventHandler</token></em><em class="keyword"> (string</em> <em class="token">CharacterID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="keyword">void</em> <em class="token">control</em>_<em class="keyword">DeactivateInput</em> (<em class="keyword">LPCTSTR</em> <em class="token">CharacterID</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>CharacterID</i>
+									<em class="token">CharacterID</em>
 								</td>
 								<td>
-				The unique identifier of the character that has become non-input-active.
+				The unique identifier of the character that has become <em class="glossary">non-input-active</em>.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					A non-input-active client no longer receives mouse or speech events from Double Agent (unless
-					it becomes input-active again). Double Agent sends this event only to the client that becomes non-input-active.
+				<p>
+					A <em class="glossary">non-input-active</em> client no longer receives mouse or speech events from Double Agent
+					(unless it becomes <em class="glossary">input-active</em> again). Double Agent sends this event only to the client
+					that becomes <em class="glossary">non-input-active</em>.
 				</p>
-					<p>
-					This event is signalled when your client application is input-active and the user chooses a
-					another client's <a href="Control_Command.htm" class="see">Command</a> in a character's pop-up menu or the
-					<a href="Control_CommandsWindow.htm" class="see">CommandsWindow</a>, or you call the <a href="Control_Character_Activate.htm" class="see">Activate</a>
-					method and set the <s>State </s>parameter to 0. It may also occur when the user selects the name
-					of another character by clicking or speaking. You also get this event when your character is hidden
-					or another character becomes visible.
+				<p>
+					This event is signalled when your client application is <em class="glossary">input-active</em> and the user
+					chooses a another client's <a href="Control_Command.htm" class="see keyword">Command</a> in a character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>
+					or the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window, or you call the <a href="Control_Character_Activate.htm" class="see keyword">Activate</a>
+					method and set the <em class="token">State</em> parameter to 0. It may also occur when the user selects the
+					name of another character by clicking or speaking. You also get this event when your character is
+					hidden or another character becomes visible.
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Event_ActivateInput.htm">The ActivateInput Event</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_Event_ActivateInput.htm">The ActivateInput Event</a></td>
 			</tr>
 		</table>
 	</body>

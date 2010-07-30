@@ -12,17 +12,82 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The FilePaths Property</h4>
+					<h3>The FilePaths Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Returns a list of character file paths that satisfy the filtering criteria defined by other properties in
+					the <a href="Server_CharacterFiles.htm" class="see keyword">CharacterFiles Object</a>.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">characterfiles</em>-&gt;<em class="keyword">get_FilePaths</em> (&amp;<em class="token">FilePaths</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">FilePaths</em> = ]<em class="token">server</em>.<em class="keyword">CharacterFiles</em>.<em class="keyword">FilePaths</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">FilePaths</em> = ]<em class="token">server</em>.<em class="keyword">CharacterFiles</em>.<em class="keyword">FilePaths</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">FilePaths</em> = ]<em class="token">server</em>.<em class="keyword">CharacterFiles</em>.<em class="keyword">FilePaths</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">FilePaths</em> = ]<em class="token">server</em>.<em class="keyword">CharacterFiles</em>.<em class="keyword">FilePaths</em></p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">FilePaths</em>
+								</td>
+								<td>
+				An array of <em class="typename">string</em> values that identify locally available character
+				definition files.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					This property is the raison d'être of the <a href="Server_CharacterFiles.htm" class="see keyword">CharacterFiles Object</a>.
+					As you change the other properties in this object, the contents of this array will change accordingly.
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Server_CharacterFiles_Filter.htm">The Filter Property</a><br /><a href="Server_CharacterFiles_SearchPath.htm">The SearchPath Property</a><br /><a href="Server_CharacterFiles_DefaultSearchPath.htm">The DefaultSearchPath Property</a></td>
 			</tr>
 		</table>
 	</body>

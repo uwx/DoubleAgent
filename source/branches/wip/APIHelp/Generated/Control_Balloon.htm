@@ -17,50 +17,114 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<p>
-					Double Agent supports textual captioning of the <a href="Control_Character_Speak.htm" class="see">Speak</a>
-					method using a cartoon word balloon. The <a href="Control_Character_Think.htm" class="see">Think</a> method
-					lets you display text without audio output in a <em>thought </em>balloon.
+					<h4 class="summary">Description</h4>
+				<p>
+					Double Agent supports textual captioning of the <a href="Control_Character_Speak.htm" class="see keyword">Speak</a> method using
+					a cartoon word balloon. The <a href="Control_Character_Think.htm" class="see keyword">Think</a> method lets you display text without audio
+					output in a <em>thought</em> balloon.
 				</p>
-					<p>
-					The <s>Balloon </s>object allows you to customize the appearance and behaviour of a character's
-					word balloon. It can be accessed using the <a href="Control_Character.htm" class="see">Character</a>'s <a href="Control_Character_Balloon.htm" class="see">Balloon</a>
+				<p>
+					The <em class="self keyword">Balloon Object</em> allows you to customize the appearance and behaviour of a character's word
+					balloon.
+				</p>
+			<div id="Syntax">
+				<dl><dt>
+							<h4>
+								<a name="Properties"> </a>Properties
+							</h4>
+						</dt><dd>
+							<table class="syntax"><tr><td width="275ex">
+										<a href="Control_Balloon_AutoHide.htm" class="see keyword">AutoHide</a>
+									</td><td>
+										Indicates if the word balloon will be automatically hidden after all of its text has been shown.
+									</td></tr><tr><td>
+										<a href="Control_Balloon_AutoPace.htm" class="see keyword">AutoPace</a>
+									</td><td>
+										Indicates if the word balloon paces its text display to the speech output.
+									</td></tr><tr><td>
+										<a href="Control_Balloon_BackColor.htm" class="see keyword">BackColor</a>
+									</td><td>
+										Specifies the background color of a character's word balloon.
+									</td></tr><tr><td>
+										<a href="Control_Balloon_BorderColor.htm" class="see keyword">BorderColor</a>
+									</td><td>
+										Specifies the border color of a character's word balloon.
+									</td></tr><tr><td>
+										<a href="Control_Balloon_CharsPerLine.htm" class="see keyword">CharsPerLine</a>
+									</td><td>
+										Specifies the characters per line used for a character's word balloon.
+									</td></tr><tr><td>
+										<a href="Control_Balloon_Enabled.htm" class="see keyword">Enabled</a>
+									</td><td>
+										Indicates if the word balloon is enabled for a character.
+									</td></tr><tr><td>
+										<a href="Control_Balloon_FontBold.htm" class="see keyword">FontBold</a>
+									</td><td>
+										Specifies the font style of a character's the word balloon.
+									</td></tr><tr><td>
+										<a href="Control_Balloon_FontCharSet.htm" class="see keyword">FontCharSet</a>
+									</td><td>
+										Specifies the character set for the font used in a character's word balloon.
+									</td></tr><tr><td>
+										<a href="Control_Balloon_FontItalic.htm" class="see keyword">FontItalic</a>
+									</td><td>
+										Specifies the font style of a character's the word balloon.
+									</td></tr><tr><td>
+										<a href="Control_Balloon_FontName.htm" class="see keyword">FontName</a>
+									</td><td>
+										Specifies the font used in the word balloon for the specified character.
+									</td></tr><tr><td>
+										<a href="Control_Balloon_FontSize.htm" class="see keyword">FontSize</a>
+									</td><td>
+										Specifies the font size supported for the word balloon for the specified character.
+									</td></tr><tr><td>
+										<a href="Control_Balloon_FontStrikethru.htm" class="see keyword">FontStrikethru</a>
+									</td><td>
+										Specifies the font style of a character's the word balloon.
+									</td></tr><tr><td>
+										<a href="Control_Balloon_FontUnderline.htm" class="see keyword">FontUnderline</a>
+									</td><td>
+										Specifies the font style of a character's word balloon.
+									</td></tr><tr><td>
+										<a href="Control_Balloon_NumberOfLines.htm" class="see keyword">NumberOfLines</a>
+									</td><td>
+										Specifies the number of lines used for a character's word balloon.
+									</td></tr><tr><td>
+										<a href="Control_Balloon_ShowPartialLines.htm" class="see keyword">ShowPartialLines</a>
+									</td><td>
+										Indicates if the word balloon shows partial lines when it scrolls.
+									</td></tr><tr><td>
+										<a href="Control_Balloon_SizeToText.htm" class="see keyword">SizeToText</a>
+									</td><td>
+										Indicates if the word balloon is automatically resized to fit it's contents.
+									</td></tr><tr><td>
+										<a href="Control_Balloon_Style.htm" class="see keyword">Style</a>
+									</td><td>
+										Specifies the character's word balloon output style.
+									</td></tr><tr><td>
+										<a href="Control_Balloon_TextColor.htm" class="see keyword">TextColor</a>
+									</td><td>
+										Returns the text color displayed in a character's word balloon.
+									</td></tr><tr><td>
+										<a href="Control_Balloon_Visible.htm" class="see keyword">Visible</a>
+									</td><td>
+										Specifies the visiblity of a character's word balloon.
+									</td></tr></table>
+						</dd></dl>
+			</div><h4 class="remarks">Remarks</h4>
+				<p>
+					A character's initial word balloon defaults are defined and compiled in the Microsoft Agent Character Editor.
+					Once running, the balloon's <em class="keyword">Enabled</em> and <em class="keyword">Font</em> properties may be overridden
+					by the user. If a user changes the word balloon's properties, they affect all characters. Both
+					the <a href="Control_Character_Speak.htm" class="see keyword">Speak</a> and <a href="Control_Character_Think.htm" class="see keyword">Think</a> word balloons use
+					the same property settings for size. You can access the properties for a character's word balloon through
+					the <em class="self keyword">Balloon Object</em>, which is a child of the <a href="Control_Character.htm" class="see keyword">Character Object</a>.
+				</p>
+				<p>
+					This object can be accessed using the <a href="Control_Character.htm" class="see ">Character Object's</a> <a href="Control_Character_Balloon.htm" class="see ">Balloon</a>
 					property.
 				</p>
-					<ul>
-						<li>
-							<a name="Properties"> </a>
-							The <s>Balloon </s>object has the following <s>properties</s>:
-						<p><a href="Control_Balloon_AutoHide.htm" class="see">AutoHide</a>,
-							<a href="Control_Balloon_AutoPace.htm" class="see">AutoPace</a>,
-							<a href="Control_Balloon_BackColor.htm" class="see">BackColor</a>,
-							<a href="Control_Balloon_BorderColor.htm" class="see">BorderColor</a>,
-							<a href="Control_Balloon_CharsPerLine.htm" class="see">CharsPerLine</a>,
-							<a href="Control_Balloon_Enabled.htm" class="see">Enabled</a>,
-							<a href="Control_Balloon_FontBold.htm" class="see">FontBold</a>,
-							<a href="Control_Balloon_FontCharSet.htm" class="see">FontCharSet</a>,
-							<a href="Control_Balloon_FontItalic.htm" class="see">FontItalic</a>,
-							<a href="Control_Balloon_FontName.htm" class="see">FontName</a>,
-							<a href="Control_Balloon_FontSize.htm" class="see">FontSize</a>,
-							<a href="Control_Balloon_FontStrikethru.htm" class="see">FontStrikethru</a>,
-							<a href="Control_Balloon_FontUnderline.htm" class="see">FontUnderline</a>,
-							<a href="Control_Balloon_NumberOfLines.htm" class="see">NumberOfLines</a>,
-							<a href="Control_Balloon_ShowPartialLines.htm" class="see">ShowPartialLines</a>,
-							<a href="Control_Balloon_SizeToText.htm" class="see">SizeToText</a>,
-							<a href="Control_Balloon_Style.htm" class="see">Style</a>,
-							<a href="Control_Balloon_TextColor.htm" class="see">TextColor</a>,
-							<a href="Control_Balloon_Visible.htm" class="see">Visible</a></p></li>
-					</ul>
-					<h4 class="remarks">Remarks</h4>
-					<p>
-					A character's initial word balloon window defaults are defined and compiled in the Microsoft
-					Agent Character Editor. Once running, the balloon's <s>Enabled </s>and <s>Font </s>properties may
-					be overridden by the user. If a user changes the word balloon's properties, they affect all characters.
-					Both the <a href="Control_Character_Speak.htm" class="see">Speak</a> and <a href="Control_Character_Think.htm" class="see">Think</a>
-					word balloons use the same property settings for size. You can access the properties for a character's
-					word balloon through the <s>Balloon </s>object, which is a child of the <a href="Control_Character.htm" class="see">Character</a> object.
-				</p>
-				</td>
+			</td>
 			</tr>
 		</table>
 	</body>

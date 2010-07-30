@@ -1164,6 +1164,7 @@ bool CAgentBalloonWnd::AbortSpeechText ()
 bool CAgentBalloonWnd::CalcLayoutRects (CRect & pTextRect, CRect & pOwnerRect, CRect & pBounds)
 {
 	bool						lRet = false;
+	CAgentCharacterWnd *		lOwner;
 	HMONITOR					lMonitor;
 	tSS <MONITORINFO, DWORD>	lMonitorInfo;
 
@@ -1174,6 +1175,17 @@ bool CAgentBalloonWnd::CalcLayoutRects (CRect & pTextRect, CRect & pOwnerRect, C
 		)
 	{
 		mOwnerWnd->GetWindowRect (&pOwnerRect);
+
+		if	(
+				(mOwnerWnd->GetStyle () & WS_CHILD)
+			&&	(lOwner = dynamic_cast <CAgentCharacterWnd *> ((CAgentWnd*)mOwnerWnd))
+			)
+		{
+			CRect	lVideoRect = lOwner->GetVideoRect ();
+
+			lVideoRect.OffsetRect (pOwnerRect.left, pOwnerRect.top);
+			pOwnerRect = lVideoRect;
+		}
 
 		if	(
 				(IsAutoSize ())

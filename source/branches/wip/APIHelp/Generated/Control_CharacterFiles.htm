@@ -17,29 +17,78 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<p>
-					The <s>CharacterFiles </s>object provides information that allows you to locate locally installed
-					character definition files. It includes a number of filtering properties that specify where to look
-					for character files, and what kind of files to find. The results are returned in its <a href="Control_CharacterFiles_FilePaths.htm" class="see">FilePaths</a>
+					<h4 class="summary">Description</h4>
+				<p>
+					The <em class="self keyword">CharacterFiles Object</em> provides information that allows you to locate locally installed character
+					definition files. It includes a number of filtering properties that specify where to look
+					for character files, and what kind of files to find. The results are returned in its <a href="Control_CharacterFiles_FilePaths.htm" class="see keyword">FilePaths</a>
 					property.
 				</p>
-					<ul>
-						<li>
-							<a name="Properties"> </a>
-							The <s>CharacterFiles </s>object has the following <s>properties</s>:
-						<p><a href="Control_CharacterFiles_DefaultFileName.htm" class="see">DefaultFileName</a>,
-							<a href="Control_CharacterFiles_DefaultFilePath.htm" class="see">DefaultFilePath</a>,
-							<a href="Control_CharacterFiles_DefaultSearchPath.htm" class="see">DefaultSearchPath</a>,
-							<a href="Control_CharacterFiles_DoubleAgentFiles.htm" class="see">DoubleAgentFiles</a>,
-							<s><a href="Control_CharacterFiles_FilePaths.htm" class="see">FilePaths</a></s>,
-							<a href="Control_CharacterFiles_MsAgentFiles.htm" class="see">MsAgentFiles</a>,
-							<a href="Control_CharacterFiles_MsOfficeFiles.htm" class="see">MsOfficeFiles</a>,
-							<a href="Control_CharacterFiles_NonSpeakingCharacters.htm" class="see">NonSpeakingCharacters</a>,
-							<a href="Control_CharacterFiles_SearchPath.htm" class="see">SearchPath</a>,
-							<a href="Control_CharacterFiles_SpeakingCharacters.htm" class="see">SpeakingCharacters</a>,
-							<a href="Control_CharacterFiles_VerifyVersion.htm" class="see">VerifyVersion</a></p></li>
-					</ul>
-				</td>
+			<div id="Syntax">
+				<dl><dt>
+							<h4>
+								<a name="Properties"> </a>Properties
+							</h4>
+						</dt><dd>
+							<table class="syntax"><tr><td width="275ex">
+										<a href="Control_CharacterFiles_DefaultFileName.htm" class="see keyword">DefaultFileName</a>
+									</td><td>
+										Returns the name of the <em>default</em> character's definition file.
+									</td></tr><tr><td>
+										<a href="Control_CharacterFiles_DefaultFilePath.htm" class="see keyword">DefaultFilePath</a>
+									</td><td>
+										Returns the full path of the <em>default</em> character's definition file.
+									</td></tr><tr><td>
+										<a href="Control_CharacterFiles_DefaultSearchPath.htm" class="see keyword">DefaultSearchPath</a>
+									</td><td>
+										Identifies the <em>default</em> search path used to fill the <a href="Control_CharacterFiles_FilePaths.htm" class="see keyword">FilePaths</a>
+					property.
+									</td></tr><tr><td>
+										<a href="Control_CharacterFiles_DoubleAgentFiles.htm" class="see keyword">DoubleAgentFiles</a>
+									</td><td>
+										Indicates if the Double Agent install location should be included in the <a href="Control_CharacterFiles_DefaultSearchPath.htm" class="see keyword">DefaultSearchPath</a>.
+									</td></tr><tr><td>
+										<a href="Control_CharacterFiles_FilePaths.htm" class="see keyword">FilePaths</a>
+									</td><td>
+										Returns a list of character file paths that satisfy the filtering criteria defined by other properties in
+					the <a href="Control_CharacterFiles.htm" class="see keyword">CharacterFiles Object</a>.
+									</td></tr><tr><td>
+										<a href="Control_CharacterFiles_MsAgentFiles.htm" class="see keyword">MsAgentFiles</a>
+									</td><td>
+										Indicates if the Microsoft Agent install location should be included in the <a href="Control_CharacterFiles_DefaultSearchPath.htm" class="see keyword">DefaultSearchPath</a>.
+									</td></tr><tr><td>
+										<a href="Control_CharacterFiles_MsOfficeFiles.htm" class="see keyword">MsOfficeFiles</a>
+									</td><td>
+										Indicates if the Microsoft Office install location should be included in the <a href="Control_CharacterFiles_DefaultSearchPath.htm" class="see keyword">DefaultSearchPath</a>.
+									</td></tr><tr><td>
+										<a href="Control_CharacterFiles_NonSpeakingCharacters.htm" class="see keyword">NonSpeakingCharacters</a>
+									</td><td>
+										Indicates if the <a href="Control_CharacterFiles_FilePaths.htm" class="see keyword">FilePaths</a> property should include characters that
+					are <em>not</em> designed to speak.
+									</td></tr><tr><td>
+										<a href="Control_CharacterFiles_SearchPath.htm" class="see keyword">SearchPath</a>
+									</td><td>
+										Identifies the <em>actual</em> search path used to fill the <a href="Control_CharacterFiles_FilePaths.htm" class="see keyword">FilePaths</a>
+					property. Unless you have special requirements, this is usually the same as the <a href="Control_CharacterFiles_DefaultSearchPath.htm" class="see keyword">DefaultSearchPath</a>
+					property.
+									</td></tr><tr><td>
+										<a href="Control_CharacterFiles_SpeakingCharacters.htm" class="see keyword">SpeakingCharacters</a>
+									</td><td>
+										Indicates if the <a href="Control_CharacterFiles_FilePaths.htm" class="see keyword">FilePaths</a> property should include characters that
+					are designed to speak.
+									</td></tr><tr><td>
+										<a href="Control_CharacterFiles_VerifyVersion.htm" class="see keyword">VerifyVersion</a>
+									</td><td>
+										Indicates if the the <a href="Control_CharacterFiles_FilePaths.htm" class="see keyword">FilePaths</a> property should be limited to
+					version 2.x characters.
+									</td></tr></table>
+						</dd></dl>
+			</div><h4 class="remarks">Remarks</h4>
+				<p>
+					This object can be accessed using the <a href="Control_Control.htm" class="see ">Control Object's</a> <a href="Control_Control_CharacterFiles.htm" class="see ">CharacterFiles</a>
+					property.
+				</p>
+			</td>
 			</tr>
 		</table>
 	</body>

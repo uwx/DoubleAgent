@@ -12,17 +12,111 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Style Property</h4>
+					<h3>The Style Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Specifies the character's word balloon output style.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">balloon</em>-&gt;<em class="keyword">get_Style</em> (<em class="token">&amp;Style</em>)</p>
+<p><em class="token">balloon</em>-&gt;<em class="keyword">put_Style</em> (<em class="token">Style</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Style</em> = ]<em class="token">character</em>.<em class="keyword">Balloon</em>.<em class="keyword">Style</em></p>
+<p><em class="token">character</em>.<em class="keyword">Balloon</em>.<em class="keyword">Style</em> = <em class="token">Style</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Style</em> = ]<em class="token">character</em>.<em class="keyword">Balloon</em>.<em class="keyword">Style</em></p>
+<p><em class="token">character</em>.<em class="keyword">Balloon</em>.<em class="keyword">Style</em> = <em class="token">Style</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">Style</em> = ]<em class="token">character</em>.<em class="keyword">Balloon</em>.<em class="keyword">Style</em></p>
+<p><em class="token">character</em>.<em class="keyword">Balloon</em>.<em class="keyword">Style</em> = <em class="token">Style</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">Style</em> = ]<em class="token">character</em>.<em class="keyword">Balloon</em>.<em class="keyword">Style</em></p>
+<p><em class="token">character</em>.<em class="keyword">Balloon</em>.<em class="keyword">Style</em> = <em class="token">Style</em></p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex" />
+								<td>
+				An <em class="typename">numeric</em> value that represents the balloon's output style. The style value
+				is a bit field that contains values from the <a href="Server_BalloonStyleFlags.htm" class="see keyword">BalloonStyleFlags Enumeration</a>:
+				<h4>Members</h4><table><tr><td xml:space="preserve">
+0x00000001&nbsp;=&nbsp;<em class="keyword">Enabled</em>
+</td><td>
+							The word balloon is enabled.
+						</td></tr><tr><td xml:space="preserve">
+0x00000002&nbsp;=&nbsp;<em class="keyword">SizeToText</em>
+</td><td>
+							The word balloon is automatically resized to fit the speech or thought text.
+						</td></tr><tr><td xml:space="preserve">
+0x00000004&nbsp;=&nbsp;<em class="keyword">AutoHide</em>
+</td><td>
+							The word balloon is hidden automatically after a short delay.
+						</td></tr><tr><td xml:space="preserve">
+0x00000008&nbsp;=&nbsp;<em class="keyword">AutoPace</em>
+</td><td>
+							The text in the word balloon is shown one word at a time.
+						</td></tr><tr><td xml:space="preserve">
+0x00000010&nbsp;=&nbsp;<em class="keyword">ShowPartialLines</em>
+</td><td>
+							Partial lines are shown when the balloon text scrolls (for a word balloon that's <em>not</em>
+				<em class="keyword">SizeToText</em>).
+						</td></tr></table>
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					The defaults for the <em class="self keyword">Style</em> property are set when the character is compiled with the Microsoft
+					Agent Character Editor.
+				</p>
+				<p class="note"><span class="note">Note:</span> 
+					The <em class="self keyword">Style</em> property can be set even if the user has disabled word balloons in the
+					<a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window.
+				</p>
+				<p class="note"><span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Balloon_NumberOfLines.htm">The NumberOfLines Property</a><br /><a href="Server_BalloonStyleFlags.htm">The BalloonStyleFlags Enumeration</a></td>
 			</tr>
 		</table>
 	</body>

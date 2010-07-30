@@ -393,7 +393,7 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSEngines::get__NewEnum (IUnknown **EnumVariant)
 	else
 	{
 		(*EnumVariant) = NULL;
-		
+
 		if	(
 				(SUCCEEDED (lResult = CComObject<CEnumVARIANT>::CreateInstance (lEnumVariant.Free())))
 			&&	(SUCCEEDED (lResult = InitEnumVariant (lEnumVariant)))

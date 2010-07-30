@@ -12,17 +12,88 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The IconVisible Property</h4>
+					<h3>The IconVisible Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Indicates if the character has an icon in the Windows notification area.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">get_IconVisible</em> (&amp;<em class="token">IconVisible</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">IconVisible</em> = ]<em class="token">character</em>.<em class="keyword">IconVisible</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">IconVisible</em> = ]<em class="token">character</em>.<em class="keyword">IconVisible</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">IconVisible</em> = ]<em class="token">character</em>.<em class="keyword">IconVisible</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">IconVisible</em> = ]<em class="token">character</em>.<em class="keyword">IconVisible</em></p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">IconVisible</em>
+								</td>
+								<td>
+				A <em class="typename">boolean</em> value that indicates if the character is showing
+				a notification icon.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					This property only indicates if the notification icon has been created. The user decides if the icon
+					is actually visible or hidden.
+				</p>
+				<p>
+					The <a href="Server_CharacterStyleFlags_IconShown.htm" class="see keyword">IconShown</a> style only applies to your client application, so
+					it is only in effect when you application is the character's active client. When your application is
+					<em>not</em> the character's active client, you can use this property to determine if another client has
+					shown or hidden the notification icon.
+				</p>
+				<p class="note"><span class="note">Note:</span> This property applies to all clients of the character.</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Character_Style.htm">The Style Property</a><br /><a href="Server_Character_IconIdentity.htm">The IconIdentity Property</a><br /><a href="Server_Character_IconTip.htm">The IconTip Property</a></td>
 			</tr>
 		</table>
 	</body>

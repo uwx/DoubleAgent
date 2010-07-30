@@ -12,176 +12,181 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Speak Method</h4>
+					<h3>The Speak Method</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Speaks the specified text or sound file for a character.</p>
-					</div>
+				<p>Speaks the specified text or sound file.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Speak</s> (<em>Text</em>, <em>Url</em>)</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<s>Set</s> <em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Speak</s> [<em>Text</em>], [<em>Url</em>]</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<s>Set</s> <em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Speak</s> [<em>Text</em>], [<em>Url</em>]</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Speak</s> (<em>Text</em>, <em>Url</em>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>character</em>.<s>Speak</s> (<em>Text</em>, <em>Url</em>, &amp;<em>Request</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Speak</em> (<em class="token">Text</em>, <em class="token">Url</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Speak</em> [<em class="token">Text</em>], [<em class="token">Url</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Speak</em> [<em class="token">Text</em>], [<em class="token">Url</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Speak</em> (<em class="token">Text</em>, <em class="token">Url</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">Speak</em> (<em class="token">Text</em>, <em class="token">Url</em>, &amp;<em class="token">Request</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Text</i>
+									<em class="token">Text</em>
 								</td>
 								<td>
-				A <s>string </s>value that specifies what the character says.
+				A <em class="typename">string</em> value that specifies what the character says.
 			</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Url</i>
+									<em class="token">Url</em>
 								</td>
 								<td>
-				A <s>string </s>value specifying the location of an audio file (.WAV format). The
-				location can be specified as a file (including a UNC path specification) or URL (when character animation
-				data is also being retrieved via HTTP protocol).
+				A <em class="typename">string</em> value specifying the location of an audio file (.WAV format).
+				The location can be specified as a file (including a <em class="glossary">UNC</em> path specification) or URL
+				(when character animation data is also being retrieved via <em class="glossary">HTTP</em> protocol).
 			</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Request</i>
+									<em class="token">Request</em>
 								</td>
 								<td>
-				A <s><a href="Control_Request.htm" class="see">Request</a></s> object your application can used to track the method's status.
+				A <a href="Control_Request.htm" class="see typename">Request Object</a> your application can
+				used to track the method's status.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					At least one of the <em>Text </em>and <em>Url </em>parameters must be supplied. To use this
-					method with a character configured to speak only in its word balloon or using a text-to-speech (TTS)
-					engine, simply provide the <em>Text </em>parameter. Include a space between words to define appropriate
+				<p>
+					At least one of the <em class="token">Text</em> and <em class="token">Url</em> parameters must be supplied. To
+					use this method with a character configured to speak only in its word balloon or using a text-to-speech (TTS)
+					engine, simply provide the <em class="token">Text</em> parameter. Include a space between words to define appropriate
 					word breaks in the word balloon, even for languages that do not traditionally include spaces.
 				</p>
-					<p>
-					You can also include vertical bar '|' characters in the <em>Text </em>parameter to designate
-					alternative strings, so that Double Agent randomly chooses a different string each time it processes
-					the method.
+				<p>
+					You can also include vertical bar '|' characters in the <em class="token">Text</em> parameter to designate alternative
+					strings, so that Double Agent randomly chooses a different string each time it processes the
+					method.
 				</p>
-					<h4 class="details">Text-To-Speech</h4>
-					<p>
-					Support for TTS output is defined when the character is authored. To generate TTS output, a
-					compatible TTS engine must already be installed before calling this method. For further information,
-					see <a href="Ctl_Programming_Speech.htm">Accessing Speech Services</a>.
+			
+				<h4 class="details">Text-To-Speech</h4>
+				<p>
+					Support for TTS output is defined when the character is authored. To generate TTS output, a compatible TTS
+					engine must already be installed before calling this method. For further information, see <a href="../Programming/Ctl_Programming_Speech.htm">Using Speech Services</a>.
 				</p>
-					<p>
-					Unlike Microsoft Agent, Double Agents supports the <s>Speak </s>method for characters that
-					are not designed to speak. However, there won't be any mouth animations because they aren't included
-					in the character design.
+				<p>
+					Unlike Microsoft Agent, Double Agents supports the <em class="self keyword">Speak</em> method for characters that are
+					not designed to speak. However, there won't be any mouth animations because they aren't included in
+					the character design.
 				</p>
-					<p>
-					You can vary parameters of the speech output with special tags that you include in the <em>
-						Text
-					</em>parameter. For more information, see <a href="MsAgent.chm::/hh/msagent/spoutput_2v1w.htm">
-						Microsoft Agent Speech Output Tags
-					</a>.
+				<p>
+					You can vary parameters of the speech output with special tags that you include in the <em class="token">Text</em>
+					parameter. For more information, see <a href="MsAgent.chm::/hh/msagent/spoutput_2v1w.htm">Microsoft Agent Speech Output Tags</a>.
 				</p>
-					<div class="example">
-						<p>
-						You can also include bookmark speech tags in your <s>Speak </s>text to synchronize your code:
+				<div class="example">
+					<p>
+						You can also include bookmark speech tags in your <em class="self keyword">Speak</em> text to synchronize your code:
 					</p>
-						<pre class="example">Dim SpeakRequest as Object
+					<pre class="example"><em class="keyword">Dim</em> SpeakRequest <em class="keyword">as</em> <em class="keyword">Object</em>
 ...
-Set SpeakRequest = Genie.Speak ("And here \mrk=100\it is.")
+<em class="keyword">Set</em> SpeakRequest = Genie.<em class="keyword">Speak</em> ("And here \mrk=100\it is.")
 ...
-Sub AgentControl_Bookmark (ByVal BookmarkID As Long)
-   If BookmarkID = 100 Then
+<em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">Bookmark</em> (<em class="keyword">ByVal</em> BookmarkID <em class="keyword">as</em> <em class="keyword">Long</em>)
+   <em class="keyword">If</em> BookmarkID = 100 <em class="keyword">Then</em>
        ' Display the message box 
-       Msgbox "Tada!"
-    End If
-End Sub</pre>For
-					more information on the bookmark speech tag, see <a href="MsAgent.chm::/hh/msagent/spoutput_2v1w.htm">
-						Speech Output Tags
-					</a>.
+       <em class="keyword">Msgbox</em> "Tada!"
+    <em class="keyword">End If</em>
+<em class="keyword">End Sub</em></pre>
+					For more information on the bookmark speech tag, see <a href="MsAgent.chm::/hh/msagent/spoutput_2v1w.htm">Speech Output Tags</a>.
 				</div>
-					<p>
-					Agent's automatic word breaking in the word balloon breaks words using white-space characters
-					(for example, Space or Tab). However, if it cannot, it may break a word to fit the balloon. In languages
-					like Japanese, Chinese, and Thai, where spaces are not used to break words, insert a Unicode zero-width
-					space character (0x200B) between characters to define logical word breaks.
+				<p>
+					Agent's automatic word breaking in the word balloon breaks words using white-space characters (for example,
+					Space or Tab). However, if it cannot, it may break a word to fit the balloon. In languages like
+					Japanese, Chinese, and Thai, where spaces are not used to break words, insert a Unicode zero-width space
+					character (0x200B) between characters to define logical word breaks.
 				</p>
-					<h4 class="details">Sound Files</h4>
-					<p>
-					If you use recorded sound file (.WAV format only) output for the character, specify the file's
-					location in the <em>Url </em>parameter. This file specification can include a local (absolute or
-					relative) or universal naming convention (UNC) path. The filename cannot include any characters not
-					included in the US code page 1252. However, if you are using the HTTP protocol to access the character
-					data, use the <a href="Control_Character_Prepare.htm" class="see">Prepare</a> method to load the sound file
-					before calling the <s>Speak </s>method.
+				<h4 class="details">Sound Files</h4>
+				<p>
+					If you use recorded sound file (.WAV format only) output for the character, specify the file's location
+					in the <em class="token">Url</em> parameter. This file specification can include a local (absolute or relative) or
+					<em class="glossary">universal naming convention (UNC)</em> path. The filename cannot include any characters not
+					included in the US code page 1252. However, if you are using the <em class="glossary">HTTP</em> protocol to
+					access the character data, use the <a href="Control_Character_Prepare.htm" class="see keyword">Prepare</a> method to load the sound file
+					before calling the <em class="self keyword">Speak</em> method.
 				</p>
-					<p>
-					When using recorded sound file output, you can still use the <em>Text </em>parameter to specify
-					the words that appear in the character's word balloon.
+				<p>
+					When using recorded sound file output, you can still use the <em class="token">Text</em> parameter to
+					specify the words that appear in the character's word balloon.
 				</p>
-					<p>
-					If you call <s>Speak </s>and the audio channel is busy, the character's audio output will
-					not be heard, but the text will display in the word balloon.
+				<p>
+					If you call <em class="self keyword">Speak</em> and the audio channel is busy, the character's audio output will not
+					be heard, but the text will display in the word balloon.
 				</p>
-					<h4 class="details">Animation</h4>
-					<p>
-					The <s>Speak </s>method uses the last action played to determine which speaking animation
-					to play. For example, if you preceded the <s>Speak </s>command with <s>Play</s>"GestureRight",
-					Double Agent will play <em>GestureRight </em>and then the <em>GestureRight </em>speaking animation.
-					If the last animation played has no speaking animation, Double Agent plays the animation assigned to
-					the character's <em>Speaking </em>state.
+				<h4 class="details">Animation</h4>
+				<p>
+					The <em class="self keyword">Speak</em> method uses the last action played to determine which speaking animation to
+					play. For example, if you preceded the <em class="self keyword">Speak</em> command with <em class="keyword">Play</em> <em class="literal">"GestureRight"</em>,
+					Double Agent will play <em class="glossary">GestureRight</em> and then the <em class="glossary">GestureRight</em>
+					speaking animation. If the last animation played has no speaking animation, Double Agent plays the
+					animation assigned to the character's <em class="glossary">Speaking</em> state.
 				</p>
-					<br />
-					<p class="note">
-						<span class="note">Note:</span> 
-					To track the method's status, you can declare an object reference and set it to the method's
-					<a href="Control_Request.htm" class="see">Request</a> object return value.
+				<br />
+				<p class="note"><span class="note">Note:</span> 
+					To track the method's status, you can declare an object reference and set it to the method's<a href="Control_Request.htm" class="see keyword">Request Object</a>
+					return value.
 				</p>
-					<p class="note">
-						<span class="note">Note:</span> 
-					The word balloon's <a href="Control_Balloon_Enabled.htm" class="see">Enabled</a> property must also
-					be <s>True </s>for text to display.
+				<p class="note"><span class="note">Note:</span> 
+					The word balloon's <a href="Control_Balloon_Enabled.htm" class="see keyword">Enabled</a> property must also be <em class="keyword">True</em>
+					for text to display.
 				</p>
-					<p class="note">
-						<span class="note">Note:</span> 
-					Set the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> before using
-					the <s>Speak </s>method to ensure appropriate text display within the word balloon.
+				<p class="note"><span class="note">Note:</span> 
+					Set the character's <a href="Control_Character_LanguageID.htm" class="see keyword">LanguageID</a> before using the <em class="self keyword">Speak</em>
+					method to ensure appropriate text display within the word balloon.
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Character_LanguageID.htm">The LanguageID Property</a>
-					<br />
-					<a href="Control_Event_Bookmark.htm">The Bookmark Event</a>
-					<br />
-					<a href="Control_Event_RequestStart.htm">The RequestStart Event</a>
-					<br />
-					<a href="Control_Event_RequestComplete.htm">The RequestComplete Event</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_Character_LanguageID.htm">The LanguageID Property</a><br /><a href="Control_Character_Think.htm">The Think Method</a><br /><a href="Control_Event_Bookmark.htm">The Bookmark Event</a><br /><a href="Control_Event_RequestStart.htm">The RequestStart Event</a><br /><a href="Control_Event_RequestComplete.htm">The RequestComplete Event</a></td>
 			</tr>
 		</table>
 	</body>

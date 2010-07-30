@@ -12,17 +12,100 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The ActiveState Property</h4>
+					<h3>The ActiveState Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Indicates if your application is the character's active client and if the character is<em class="glossary">input-active</em>.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">get_ActiveState</em> (&amp;<em class="token">ActiveState</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">ActiveState</em> = ]<em class="token">character</em>.<em class="keyword">ActiveState</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">ActiveState</em> = ]<em class="token">character</em>.<em class="keyword">ActiveState</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">ActiveState</em> = ]<em class="token">character</em>.<em class="keyword">ActiveState</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">ActiveState</em> = ]<em class="token">character</em>.<em class="keyword">ActiveState</em></p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">ActiveState</em>
+								</td>
+								<td>
+				A member of the <a href="Server_ActiveStateType.htm" class="see typename">ActiveStateType Enumeration</a>
+				indicating the state of the character and your client application: <table><tr><td xml:space="preserve">
+0&nbsp;=&nbsp;<em class="keyword">Inactive</em>
+</td><td>
+							Your client application is <em>not</em> the character's active client.
+						</td></tr><tr><td xml:space="preserve">
+1&nbsp;=&nbsp;<em class="keyword">Active</em>
+</td><td>
+							Your client application is the character's active client.
+						</td></tr><tr><td xml:space="preserve">
+2&nbsp;=&nbsp;<em class="keyword">InputActive</em>
+</td><td>
+							The character is the <em class="glossary">input-active</em> character and will receive user input.
+						</td></tr></table>
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					When multiple client applications share the same character, the character's active client receives mouse
+					input (for example, Double Agent control <em class="keyword">Click</em> or <em class="keyword">Drag</em> events). Similarly,
+					when multiple characters are displayed, the active client of the topmost character (also known
+					as the <em class="glossary">input-active</em> client) receives Command events.
+				</p>
+				<p>
+					You can use the <a href="Server_Character_Activate.htm" class="see keyword">Activate</a> method to set whether your application is
+					the character's active client or to make your application the <em class="glossary">input-active</em> client (which
+					also makes the character topmost).
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Character_Activate.htm">The Activate Method</a></td>
 			</tr>
 		</table>
 	</body>

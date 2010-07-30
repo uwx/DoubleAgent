@@ -12,79 +12,92 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Visible Property</h4>
+					<h3>The Visible Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Returns or sets whether the <a href="Control_Command.htm" class="see">Command</a> is visible in the
-				character's pop-up menu.
+				<p>Specifies if the <a href="Control_Command.htm" class="see keyword">Command</a> is visible in the character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>.</p>
 			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>Visible</em>] = <em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>Visible</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>Visible</s>[ = <em>Visible</em>]</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>Visible</em>] = <em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>Visible</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>Visible</s>[ = <em>Visible</em>]</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>Visible</em>] = <em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>Visible</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>Visible</s>[ = <em>Visible</em>]</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>Visible</em>] = <em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Commands</s>("<em>Name</em>").<s>Visible</s></p>
-
-<p><em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Commands</s>("<em>Name</em>").<s>Visible</s>[ = <em>Visible</em>]</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>command</em>.<s>get_Visible</s> (&amp;<em>Visible</em>)</p>
-
-<p><em>command</em>.<s>put_Visible</s> (<em>Visible</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Visible</em>] = <em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Commands</em> ("<em class="token">Name</em>").<em class="keyword">Visible</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Commands</em> ("<em class="token">Name</em>").<em class="keyword">Visible</em>[ = <em class="token">Visible</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">Visible</em>] = <em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Commands</em> ("<em class="token">Name</em>").<em class="keyword">Visible</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Commands</em> ("<em class="token">Name</em>").<em class="keyword">Visible</em>[ = <em class="token">Visible</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">Visible</em>] = <em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Commands</em> ("<em class="token">Name</em>").<em class="keyword">Visible</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Commands</em> ("<em class="token">Name</em>").<em class="keyword">Visible</em>[ = <em class="token">Visible</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Visible</em>] = <em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Commands</em>.this ["<em class="token">Name</em>"].<em class="keyword">Visible</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Commands</em>.this ["<em class="token">Name</em>"].<em class="keyword">Visible</em>[ = <em class="token">Visible</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">command</em>-&gt;<em class="keyword">get_Visible</em> (&amp;<em class="token">Visible</em>)</p>
+<p><em class="token">command</em>-&gt;<em class="keyword">put_Visible</em> (<em class="token">Visible</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Visible</i>
+									<em class="token">Visible</em>
 								</td>
 								<td>
-				A <s>boolean </s>value that indicates if the command is visible.
+				A <em class="typename">boolean</em> value that indicates if the command is visible.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					Set this property to <s>False </s>when you want to include voice input for your command without
-					having it appear in the pop-up menu for the character. If you set a <a href="Control_Command.htm" class="see">Command</a>
-					object's <a href="Control_Command_Caption.htm" class="see">Caption</a> property to the empty string (""),
-					the caption text will not appear in the pop-up menu (for example, as a blank line), regardless of its
-					<s>Visible </s>property setting.
+				<p>
+					Set this property to <em class="keyword">False</em> when you want to include voice input for your command without
+					having it appear in the <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a> for the character. If you set a
+					<a href="Control_Command.htm" class="see keyword">Command Object's</a> <a href="Control_Command_Caption.htm" class="see keyword">Caption</a> property to the
+					empty string (""), the caption text will not appear in the <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>
+					(for example, as a blank line), regardless of its <em class="self keyword">Visible</em> property setting.
 				</p>
-					<p>
-					The <s>Visible </s>property of a <a href="Control_Command.htm" class="see">Command</a> object's parent
-					<a href="Control_Commands.htm" class="see">Commands</a> collection does not affect the <s>Visible </s>property
-					of the <a href="Control_Command.htm" class="see">Command</a>.
+				<p>
+					The <em class="self keyword">Visible</em> property of a <a href="Control_Command.htm" class="see keyword">Command Object's</a> parent <a href="Control_Commands.htm" class="see keyword">Commands Collection</a>
+					does not affect the <em class="self keyword">Visible</em> property of the <a href="Control_Command.htm" class="see keyword">Command</a>.
 				</p>
-				</td>
+			</td>
 			</tr>
 		</table>
 	</body>

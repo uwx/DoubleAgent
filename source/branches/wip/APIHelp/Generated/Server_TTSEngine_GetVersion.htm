@@ -12,17 +12,89 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The GetVersion Method</h4>
+					<h3>The GetVersion Method</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Returns the text-to-speech engine's version.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">ttsengine</em>-&gt;<em class="keyword">GetVersion</em> (&amp;<em class="token">MajorVersion</em>, &amp;<em class="token">MinorVersion</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="token">ttsengine</em>.<em class="keyword">GetVersion</em> (<em class="keyword">out</em> <em class="token">MajorVersion</em>, <em class="keyword">out</em> <em class="token">MinorVersion</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="token">ttsengine</em>.<em class="keyword">GetVersion</em> (<em class="token">MajorVersion</em>, <em class="token">MinorVersion</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="keyword">Call</em> <em class="token">ttsengine</em>.<em class="keyword">GetVersion</em> (<em class="token">MajorVersion</em>, <em class="token">MinorVersion</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="keyword">Call</em> <em class="token">ttsengine</em>.<em class="keyword">GetVersion</em> (<em class="token">MajorVersion</em>, <em class="token">MinorVersion</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">MajorVersion</em>
+								</td>
+								<td>
+				A <em class="typename">numeric</em> values that identifies the engine's major version
+				(always 4 or 5 at this time).
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">MinorVersion</em>
+								</td>
+								<td>
+				A <em class="typename">numeric</em> values that identifies the engine's minor version
+				(always 0 at this time).
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					You can use this property to determine if the text-to-speech engine is a SAPI4 or SAPI5 engine.
+				</p>
+			</td>
 			</tr>
 		</table>
 	</body>

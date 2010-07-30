@@ -16,7 +16,7 @@ Friend Class MsaWithDa
     Dim mMsServerChar As AgentServerObjects.IAgentCharacterEx
     Dim mMsServerCharId As Integer
 
-    Dim mDaServer As DoubleAgent.Server.Server
+    Dim WithEvents mDaServer As DoubleAgent.Server.Server
     Dim mDaServerChar As DoubleAgent.Server.Character
     Dim mDaServerCharId As Integer
 
@@ -111,11 +111,11 @@ Friend Class MsaWithDa
         End If
     End Sub
 
-    Private Sub mDaAgentControl_Hide(ByVal eventSender As System.Object, ByVal eventArgs As DoubleAgent.AxControl.DaHideEvent) Handles mDaAgentControl.DaHide
+    Private Sub mDaAgentControl_Hide(ByVal eventSender As System.Object, ByVal eventArgs As DoubleAgent.AxControl.CtlHideEvent) Handles mDaAgentControl.CtlHide
         SetDaControlButtons()
     End Sub
 
-    Private Sub mDaAgentControl_Show(ByVal eventSender As System.Object, ByVal eventArgs As DoubleAgent.AxControl.DaShowEvent) Handles mDaAgentControl.DaShow
+    Private Sub mDaAgentControl_Show(ByVal eventSender As System.Object, ByVal eventArgs As DoubleAgent.AxControl.CtlShowEvent) Handles mDaAgentControl.CtlShow
         SetDaControlButtons()
     End Sub
 
@@ -251,9 +251,13 @@ Friend Class MsaWithDa
         Else
             LoadDaServerChar.Enabled = False
             UnloadDaServerChar.Enabled = True
-            ShowDaServerChar.Enabled = True
-            HideDaServerChar.Enabled = True
+            ShowDaServerChar.Enabled = Not mDaServerChar.Visible
+            HideDaServerChar.Enabled = mDaServerChar.Visible
         End If
+    End Sub
+
+    Private Sub mDaServer_VisibleState(ByVal CharacterID As Integer, ByVal Visible As Integer, ByVal Cause As Integer) Handles mDaServer.VisibleState
+        SetDaServerButtons()
     End Sub
 
     Private Sub LoadDaServerChar_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles LoadDaServerChar.Click

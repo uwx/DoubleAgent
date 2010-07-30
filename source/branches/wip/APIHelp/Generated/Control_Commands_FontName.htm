@@ -12,76 +12,87 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The FontName Property</h4>
+					<h3>The FontName Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>
-					Returns or sets the font used in the <a href="Control_CommandsWindow.htm" class="see">Voice Commands</a>
-					window.
-				</p>
-					</div>
+				<p>Specifies the font used in the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>FontName</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands.FontName</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands.FontName</s> = <em>FontName</em></p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>FontName</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands.FontName</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands.FontName</s> = <em>FontName</em></p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>FontName</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands.FontName</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands.FontName</s> = <em>FontName</em></p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>FontName</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Commands.FontName</s></p>
-
-<p><em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Commands.FontName</s> = <em>FontName</em></p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>commands</em>-&gt;<s>get_FontName</s> (<em>&amp;FontName</em>)</p>
-
-<p><em>commands</em>-&gt;<s>put_FontName</s> (<em>FontName</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">FontName</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Commands.FontName</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Commands.FontName</em> = <em class="token">FontName</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">FontName</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Commands.FontName</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Commands.FontName</em> = <em class="token">FontName</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">FontName</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Commands.FontName</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Commands.FontName</em> = <em class="token">FontName</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">FontName</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Commands.FontName</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Commands.FontName</em> = <em class="token">FontName</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">commands</em>-&gt;<em class="keyword">get_FontName</em> (<em class="token">&amp;FontName</em>)</p>
+<p><em class="token">commands</em>-&gt;<em class="keyword">put_FontName</em> (<em class="token">FontName</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>FontName</i>
+									<em class="token">FontName</em>
 								</td>
 								<td>
-				A <s>string </s>value specifying the font name.
+				A <em class="typename">string</em> value specifying the font name.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					The <s>FontName </s>property defines the font used to display text in the <a href="Control_CommandsWindow.htm" class="see">CommandsWindow</a>.
-					The default value for the font setting is based on the <em>menu font </em>for the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> or,
-					if that's not set, the user default language.
+				<p>
+					The <em class="self keyword">FontName</em> property defines the font used to display text in the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a>
+					window. The default value for the font setting is based on the <em>menu font</em> for the character's <a href="Control_Character_LanguageID.htm" class="see keyword">LanguageID</a>
+					or, if that's not set, the user default language.
 				</p>
-					<p class="note">
-						<span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
-				</td>
+				<p class="note"><span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
+			</td>
 			</tr>
 		</table>
 	</body>

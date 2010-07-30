@@ -523,7 +523,7 @@ cpp_quote("#endif")
 			id(DISPID_IAgentCharacterEx_GetSRModeID), hidden] HRESULT GetSRModeID([out] BSTR* ModeID);
 		[helpstring("deprecated - use the SRModeID property"), helpcontext(APIHELP_Svr_Character_SetSRModeID),
 			id(DISPID_IAgentCharacterEx_SetSRModeID), hidden] HRESULT SetSRModeID([in] BSTR ModeID);
-		[helpstring("deprecated - use the GUID property"), helpcontext(APIHELP_Svr_Character_GetGUID),
+		[helpstring("deprecated - use the UniqueID property"), helpcontext(APIHELP_Svr_Character_GetGUID),
 			id(DISPID_IAgentCharacterEx_GetGUID), hidden] HRESULT GetGUID([out] BSTR* CharGUID);
 		[helpstring("The character's dimensions as defined in the character file (in pixels)"), helpcontext(APIHELP_Svr_Character_GetOriginalSize),
 			id(DISPID_IAgentCharacterEx_GetOriginalSize)] HRESULT GetOriginalSize ([out] long* Width, [out] long* Height);
@@ -1575,7 +1575,6 @@ cpp_quote("#endif")
 	{
 		[default] interface IDaServer2;
 		[default, source] dispinterface _DaSvrEvents;
-		//[defaultvtable, source] interface IDaSvrNotifySink;
 	};
 
 	[

@@ -26,6 +26,7 @@
 
 #ifdef	_DEBUG
 #define	_LOG_INSTANCE	(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF)
+#define	_LOG_ABANDONED	MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF,_LOG_INSTANCE)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -105,10 +106,10 @@ void DaSvrAnimationNames::FinalRelease()
 
 void DaSvrAnimationNames::OnClientEnded()
 {
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+#ifdef	_LOG_ABANDONED
+	if	(LogIsActive (_LOG_ABANDONED))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAnimationNames::OnClientEnded"), this, max(m_dwRef,-1));
+		LogMessage (_LOG_ABANDONED, _T("[%p(%d)] DaSvrAnimationNames::OnClientEnded"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (true, true);

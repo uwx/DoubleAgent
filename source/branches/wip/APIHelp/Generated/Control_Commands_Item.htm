@@ -12,62 +12,80 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Item Property</h4>
+					<h3>The Item Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>
-					Returns a <a href="Control_Command.htm" class="see">Command Object</a> in the collection.
-				</p>
-					</div>
+				<p>Returns a <a href="Control_Command.htm" class="see keyword">Command Object</a> in the collection.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>Command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s> (<em>Name</em>)</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<s>Set</s> <em>Command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s> (<em>Name</em>)</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<s>Set</s> <em>Command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s> (<em>Name</em>)</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>Command</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Commands</s>.this [<em>Name</em>]</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>commands</em>.<s>get_Item</s> (<em>Name</em>, &amp;<em>Command</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Command</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Commands</em> (<em class="token">Name</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">Command</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Commands</em> (<em class="token">Name</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">Command</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Commands</em> (<em class="token">Name</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Command</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Commands</em>.this [<em class="token">Name</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">commands</em>-&gt;<em class="keyword">get_Item</em> (<em class="token">Name</em>, &amp;<em class="token">Command</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Name</i>
+									<em class="token">Name</em>
 								</td>
 								<td>
-				A <s>string </s>value that specifies the <a href="Control_Command_Name.htm" class="see">Name</a>
+				A <em class="typename">string</em> value that specifies the <a href="Control_Command_Name.htm" class="see keyword">Name</a>
 				given to the command when it was defined.
 			</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Command</i>
+									<em class="token">Command</em>
 								</td>
 								<td>
-				The <a href="Control_Command.htm" class="see">Command Object</a> with the
-				specified <em>Name</em>.
+				The <a href="Control_Command.htm" class="see typename">Command Object</a> with the
+				specified <em class="token">Name</em>.
 			</td>
 							</tr>
 						</table>

@@ -54,6 +54,7 @@
 #define	_DEBUG_LISTEN			(GetProfileDebugInt(_T("DebugListen"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_REQUESTS			(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Character"),LogDetails,true)&0xFFFF)
+#define	_LOG_ABANDONED			MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF,_LOG_INSTANCE)
 #define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
 #endif
 
@@ -237,10 +238,10 @@ bool DaSvrCharacter::CanFinalRelease ()
 
 void DaSvrCharacter::OnClientEnded()
 {
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+#ifdef	_LOG_ABANDONED
+	if	(LogIsActive (_LOG_ABANDONED))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%d] DaSvrCharacter::OnClientEnded [%u]"), this, max(m_dwRef,-1), mCharID, IsInNotify());
+		LogMessage (_LOG_ABANDONED, _T("[%p(%d)] [%d] DaSvrCharacter::OnClientEnded [%u]"), this, max(m_dwRef,-1), mCharID, IsInNotify());
 	}
 #endif
 	Terminate (true, true);

@@ -291,96 +291,96 @@ public:
 	EventData (String^ pName) : mName (pName), mCharacterID (String::Empty), mData (String::Empty)
 	{}
 
-	EventData (DoubleAgent::AxControl::DaActivateInputEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlActivateInputEvent^ e)
 	:	mName ("ActivateInput"), mCharacterID (e->CharacterID), mData (String::Empty)
 	{}
 
-	EventData (DoubleAgent::AxControl::DaDeactivateInputEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlDeactivateInputEvent^ e)
 	:	mName ("DeactivateInput"), mCharacterID (e->CharacterID), mData (String::Empty)
 	{}
 
-	EventData (DoubleAgent::AxControl::DaShowEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlShowEvent^ e)
 	:	mName ("Show"), mCharacterID (e->CharacterID), mData (e->Cause.ToString())
 	{}
 
-	EventData (DoubleAgent::AxControl::DaHideEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlHideEvent^ e)
 	:	mName ("Hide"), mCharacterID (e->CharacterID), mData (e->Cause.ToString())
 	{}
 
-	EventData (DoubleAgent::AxControl::DaMoveEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlMoveEvent^ e)
 	:	mName ("Move"), mCharacterID (e->CharacterID)
 	{
-		mData = String::Format ("{0:D}, {1:D} ({2})", e->x, e->y, e->Cause.ToString());
+		mData = String::Format ("{0:D}, {1:D} ({2})", e->X, e->Y, e->Cause.ToString());
 	}
 
-	EventData (DoubleAgent::AxControl::DaSizeEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlSizeEvent^ e)
 	:	mName ("Size"), mCharacterID (e->CharacterID)
 	{
 		mData = String::Format ("{0:D}, {1:D}", e->Width, e->Height);
 	}
 
-	EventData (DoubleAgent::AxControl::DaClickEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlClickEvent^ e)
 	:	mName ("Click"), mCharacterID (e->CharacterID)
 	{
-		mData = String::Format ("{0:D}, {1:D} (button {2:D})", e->x, e->y, e->Button);
+		mData = String::Format ("{0:D}, {1:D} (button {2:D})", e->X, e->Y, e->Button);
 	}
 
-	EventData (DoubleAgent::AxControl::DaDblClickEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlDblClickEvent^ e)
 	:	mName ("DblClick"), mCharacterID (e->CharacterID)
 	{
-		mData = String::Format ("{0:D}, {1:D} (button {2:D})", e->x, e->y, e->Button);
+		mData = String::Format ("{0:D}, {1:D} (button {2:D})", e->X, e->Y, e->Button);
 	}
 
-	EventData (DoubleAgent::AxControl::DaDragStartEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlDragStartEvent^ e)
 	:	mName ("DragStart"), mCharacterID (e->CharacterID)
 	{
-		mData = String::Format ("{0:D}, {1:D} (button {2:D})", e->x, e->y, e->Button);
+		mData = String::Format ("{0:D}, {1:D} (button {2:D})", e->X, e->Y, e->Button);
 	}
 
-	EventData (DoubleAgent::AxControl::DaDragCompleteEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlDragCompleteEvent^ e)
 	:	mName ("DragComplete"), mCharacterID (e->CharacterID)
 	{
-		mData = String::Format ("{0:D}, {1:D} (button {2:D})", e->x, e->y, e->Button);
+		mData = String::Format ("{0:D}, {1:D} (button {2:D})", e->X, e->Y, e->Button);
 	}
 
-	EventData (DoubleAgent::AxControl::DaListenStartEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlListenStartEvent^ e)
 	:	mName ("ListenStart"), mCharacterID (e->CharacterID), mData (String::Empty)
 	{}
 
-	EventData (DoubleAgent::AxControl::DaListenCompleteEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlListenCompleteEvent^ e)
 	:	mName ("ListenComplete"), mCharacterID (e->CharacterID), mData (e->Cause.ToString())
 	{}
 
-	EventData (DoubleAgent::AxControl::DaIdleStartEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlIdleStartEvent^ e)
 	:	mName ("IdleStart"), mCharacterID (e->CharacterID), mData (String::Empty)
 	{}
 
-	EventData (DoubleAgent::AxControl::DaIdleCompleteEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlIdleCompleteEvent^ e)
 	:	mName ("IdleComplete"), mCharacterID (e->CharacterID), mData (String::Empty)
 	{}
 
-	EventData (DoubleAgent::AxControl::DaBalloonShowEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlBalloonShowEvent^ e)
 	:	mName ("BalloonShow"), mCharacterID (e->CharacterID), mData (String::Empty)
 	{}
 
-	EventData (DoubleAgent::AxControl::DaBalloonHideEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlBalloonHideEvent^ e)
 	:	mName ("BalloonHide"), mCharacterID (e->CharacterID), mData (String::Empty)
 	{}
 
-	EventData (DoubleAgent::AxControl::DaBookmarkEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlBookmarkEvent^ e)
 	:	mName ("Bookmark"), mCharacterID (String::Empty), mData (e->BookmarkID.ToString())
 	{}
 
-	EventData (DoubleAgent::AxControl::DaCommandEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlCommandEvent^ e)
 	:	mName ("Command"), mCharacterID (e->UserInput->CharacterID), mData (e->UserInput->Name)
 	{}
 
-	EventData (DoubleAgent::AxControl::DaRequestStartEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlRequestStartEvent^ e)
 	:	mName ("RequestStart"), mCharacterID (e->Request->default.ToString()), mData (((DoubleAgent::Control::RequestStatus)e->Request->Status).ToString())
 	{
 	}
 
-	EventData (DoubleAgent::AxControl::DaRequestCompleteEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlRequestCompleteEvent^ e)
 	:	mName ("RequestComplete"), mCharacterID (e->Request->default.ToString())
 	{
 		if	(String::IsNullOrEmpty (e->Request->Description))
@@ -393,11 +393,11 @@ public:
 		}
 	}
 
-	EventData (DoubleAgent::AxControl::DaActiveClientChangeEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlActiveClientChangeEvent^ e)
 	:	mName ("ActiveClientChange"), mCharacterID (e->CharacterID), mData (String::Empty)
 	{}
 
-	EventData (DoubleAgent::AxControl::DaDefaultCharacterChangeEvent^ e)
+	EventData (DoubleAgent::AxControl::CtlDefaultCharacterChangeEvent^ e)
 	:	mName ("DefaultCharacterChange"), mCharacterID (String::Empty), mData (e->CharGUID)
 	{}
 

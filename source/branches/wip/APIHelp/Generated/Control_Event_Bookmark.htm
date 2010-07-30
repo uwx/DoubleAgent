@@ -12,62 +12,78 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Bookmark Event</h4>
+					<h3>The Bookmark Event</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Signalled when a bookmark defined by your application in a speech text string is reached.</p>
-					</div>
+				<p>Signalled when a bookmark defined by your application in a speech text string is reached.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p><s>Event</s> <em>control</em>_<s>Bookmark</s> (<s>ByVal</s> <em>BookmarkID</em> <s>As Integer</s>)</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>Bookmark</s> (<s>ByVal</s> <em>BookmarkID</em> <s>As Long</s>)</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>Bookmark</s> (<s>ByVal</s> <em>BookmarkID</em>)</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p><s>delegate void</s> <em>control</em>_<s>Bookmark<em>EventHandler</em></s> (<s>int</s> <em>BookmarkID</em>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><s>void</s> <em>control</em>_<s>Bookmark</s> (<s>long</s> <em>BookmarkID</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="keyword">Event</em> <em class="token">control</em>_<em class="keyword">Bookmark</em> (<em class="keyword">ByVal</em> <em class="token">BookmarkID</em> <em class="keyword">As Integer</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">Bookmark</em> (<em class="keyword">ByVal</em> <em class="token">BookmarkID</em> <em class="keyword">As Long</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">Bookmark</em> (<em class="keyword">ByVal</em> <em class="token">BookmarkID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="keyword">delegate void</em> <em class="token">control</em>_<em class="keyword">Bookmark<token>EventHandler</token></em> (<em class="keyword">int</em> <em class="token">BookmarkID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="keyword">void</em> <em class="token">control</em>_<em class="keyword">Bookmark</em> (<em class="keyword">long</em> <em class="token">BookmarkID</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>BookmarkID</i>
+									<em class="token">BookmarkID</em>
 								</td>
 								<td>The bookmark's unique identifier.</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					To specify a bookmark event, use the <a href="Control_Character_Speak.htm" class="see">Speak</a>
-					method with a <s>Mrk </s>tag in your supplied text. For more information about tags, see <a href="MsAgent.chm::/hh/msagent/guidlin_2my6.htm">
-						Speech Output Tags
-					</a>.
+				<p>
+					To specify a bookmark event, use the <a href="Control_Character_Speak.htm" class="see keyword">Speak</a> method with a <em class="keyword">Mrk</em>
+					tag in your supplied text. For more information about tags, see <a href="MsAgent.chm::/hh/msagent/guidlin_2my6.htm">Speech Output Tags</a>.
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Character_Speak.htm">The Speak Method</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_Character_Speak.htm">The Speak Method</a></td>
 			</tr>
 		</table>
 	</body>

@@ -240,6 +240,10 @@ HRESULT DaCtlCharacter::SetContained (bool pContained, DWORD pInitialStyle)
 
 	try
 	{
+		CSize			lCharacterSize;
+		DaCtlBalloon *	lBalloon;
+		bool			lRealized = false;
+
 		if	(pContained)
 		{
 			if	(mOwner->GetAgentFile ())
@@ -253,12 +257,11 @@ HRESULT DaCtlCharacter::SetContained (bool pContained, DWORD pInitialStyle)
 			}
 			else
 			{
-				CSize	lCharacterSize;
-
 				mLocalObject->GetOriginalSize (&lCharacterSize.cx, &lCharacterSize.cy);
 				mLocalObject->Unrealize (true);
 				if	(SUCCEEDED (lResult = mLocalObject->Realize (mOwner, pInitialStyle)))
 				{
+					lRealized = true;
 					mOwner->CenterVideo (&lCharacterSize);
 				}
 			}
@@ -270,14 +273,24 @@ HRESULT DaCtlCharacter::SetContained (bool pContained, DWORD pInitialStyle)
 				&&	(mLocalObject->GetCharacterWnd () == mOwner)
 				)
 			{
-				CSize	lCharacterSize;
-
 				mLocalObject->GetOriginalSize (&lCharacterSize.cx, &lCharacterSize.cy);
 				mLocalObject->Unrealize (true);
 				if	(SUCCEEDED (lResult = mLocalObject->RealizePopup (pInitialStyle)))
 				{
+					lRealized = true;
 					mLocalObject->SetSize (lCharacterSize.cx, lCharacterSize.cy);
 				}
+			}
+		}
+
+		if	(lRealized)
+		{
+			if	(
+					(mBalloon)
+				&&	(lBalloon = GetBalloon ())
+				)
+			{
+				lBalloon->SetOwner (this);
 			}
 		}
 	}
@@ -2082,8 +2095,8 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::StopAll (VARIANT Types)
 	{
 		try
 		{
-			_variant_t	lTypes (Types);	
-			
+			_variant_t	lTypes (Types);
+
 			lTypes.ChangeType (VT_I4);
 			if	(V_VT (&lTypes) == VT_I4)
 			{

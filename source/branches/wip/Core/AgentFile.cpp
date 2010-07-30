@@ -616,7 +616,7 @@ SAFEARRAY * CAgentFile::GetStateNames ()
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return lRet.Detach();
 }
 

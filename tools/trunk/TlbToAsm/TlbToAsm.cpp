@@ -376,15 +376,15 @@ AssemblyBuilder^ TlbToAsm::FixAssembly (Assembly^ pAssembly, String^ pAssemblyNa
 				{
 					MarkPrimaryAssembly (lAssemblyBuilder);
 
-#if	FALSE					
+#if	FALSE
 					if	(pFriendAssemblies)
 					{
 						String^	lFriendAssembly;
 
 						for each (lFriendAssembly in pFriendAssemblies)
-						{			
+						{
 							try
-							{		
+							{
 								CustomAttributeBuilder^	lAttributeBuilder;
 								array<Type^>^			lConstructorTypes = gcnew array<Type^> (1);
 								array<Object^>^			lConstructorArgs = gcnew array<Object^> (1);
@@ -402,23 +402,23 @@ AssemblyBuilder^ TlbToAsm::FixAssembly (Assembly^ pAssembly, String^ pAssemblyNa
 
 								lConstructorTypes[0] = System::Security::Permissions::SecurityAction::typeid;
 								lConstructorArgs[0] = System::Security::Permissions::SecurityAction::Assert;
-								
+
 								for each (lProperty in lProperties)
 								{
 									if	(lProperty->Name == "Name")
 									{
 										lPropertyTypes[0] = lProperty;
-									}			
+									}
 									else
 									if	(lProperty->Name == "PublicKey")
 									{
 										lPropertyTypes[1] = lProperty;
-									}			
+									}
 									else
 									if	(lProperty->Name == "Unrestricted")
 									{
 										lPropertyTypes[2] = lProperty;
-									}			
+									}
 								}
 								lPropertyArgs[0] = lFriendAssembly;
 								lPropertyArgs[1] = lPublicKey->ToString();
@@ -432,7 +432,7 @@ AssemblyBuilder^ TlbToAsm::FixAssembly (Assembly^ pAssembly, String^ pAssemblyNa
 							catch AnyExceptionDebug
 						}
 					}
-#endif					
+#endif
 #if	FALSE
 					if	(pFriendAssemblies)
 					{
@@ -452,7 +452,7 @@ AssemblyBuilder^ TlbToAsm::FixAssembly (Assembly^ pAssembly, String^ pAssemblyNa
 							mCopyAssembly->mAssemblyBuilder->SetCustomAttribute (lAttributeBuilder);
 						}
 					}
-#endif					
+#endif
 				}
 
 				if	(pSaveAssembly)

@@ -51,7 +51,7 @@ public:
 
 // Operations
 public:
-	bool Create (HWND pParentWnd);
+	bool Create (CWindow * pOwnerWnd);
 	bool Attach (long pCharID, LPCTSTR pCharacterName);
 	bool Detach (long pCharID);
 	bool SetLangID (LANGID pLangID);
@@ -73,7 +73,7 @@ protected:
 	LRESULT OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 	LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 
-	BEGIN_MSG_MAP(CAgentBalloonWnd)
+	BEGIN_MSG_MAP(CAgentListeningWnd)
 		MESSAGE_HANDLER(WM_WINDOWPOSCHANGING, OnWindowPosChanging)
 		MESSAGE_HANDLER(WM_WINDOWPOSCHANGED, OnWindowPosChanged)
 		MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest)
@@ -96,6 +96,7 @@ protected:
 	CAtlString				mCaption;
 	CAtlString				mDetail;
 	tSS <TOOLINFO, UINT>	mToolInfo;
+	CWindow *				mOwnerWnd;
 	CFontHandle				mFont;
 };
 

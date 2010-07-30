@@ -19,7 +19,10 @@ using namespace DoubleAgent::XmlToHtml;
 //#define	_DEBUG_ASSEMBLY_MEMBERS		LogNormal|LogHighVolume
 //#define	_DEBUG_MEMBER_FILES			LogNormal
 //#define	_DEBUG_INCLUDES				LogNormal
+//#define	_DEBUG_ENTITIES				LogNormal|LogHighVolume
 #endif
+
+#define	_SYNTAX_TABLE
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma managed(push,off)
@@ -73,11 +76,19 @@ int XmlToHtml::ProcessCmdLine (array <String^>^ pCmdArgs)
 		Assembly^			lAssembly = nullptr;
 		XmlDocument^		lXmlDocument = nullptr;
 
-		mHtmlPath = nullptr;		
+		mHtmlPath = nullptr;
 		mOutputPath = nullptr;
 		mOutputHtml = false;
 		mOutputIntellisense = false;
 		mOutputSandcastle = false;
+		mFormatServer = false;
+
+		mSourceTypes = gcnew Generic::SortedDictionary <String^, System::Type^>;
+		mSourceMethods = gcnew Generic::SortedDictionary <String^, System::Reflection::MethodInfo^>;
+		mSourceConstructors = gcnew Generic::SortedDictionary <String^, System::Reflection::ConstructorInfo^>;
+		mSourceProperties = gcnew Generic::SortedDictionary <String^, System::Reflection::PropertyInfo^>;
+		mSourceEvents = gcnew Generic::SortedDictionary <String^, System::Reflection::EventInfo^>;
+		mSourceFields = gcnew Generic::SortedDictionary <String^, System::Reflection::FieldInfo^>;
 
 		for	(lCmdArgNdx = 1; lCmdArgNdx < pCmdArgs->Length; lCmdArgNdx++)
 		{
@@ -108,16 +119,32 @@ int XmlToHtml::ProcessCmdLine (array <String^>^ pCmdArgs)
 			{
 				try
 				{
-					if	(lAssemblyPath = CmdArg (pCmdArgs, lCmdArgNdx+1))
+					if	(lAssembly)
 					{
-						lCmdArgNdx++;
+						String^		lRefAssemblyPath;
+						Assembly^	lRefAssembly;
+
+						if	(
+								(lRefAssemblyPath = CmdArg (pCmdArgs, lCmdArgNdx+1))
+							&&	(lRefAssembly = Assembly::LoadFrom (lRefAssemblyPath))
+							)
+						{
+							LoadAssemblyMembers (lRefAssembly);
+						}
 					}
 					else
 					{
-						lRet = 8;
-						break;
+						if	(lAssemblyPath = CmdArg (pCmdArgs, lCmdArgNdx+1))
+						{
+							lCmdArgNdx++;
+						}
+						else
+						{
+							lRet = 8;
+							break;
+						}
+						lAssembly = Assembly::LoadFrom (lAssemblyPath);
 					}
-					lAssembly = Assembly::LoadFrom (lAssemblyPath);
 				}
 				catch AnyExceptionDebug
 			}
@@ -222,13 +249,21 @@ int XmlToHtml::ProcessCmdLine (array <String^>^ pCmdArgs)
 				}
 				catch AnyExceptionDebug
 			}
+			else
+			if	(
+					(String::Compare (lCmdOpt, "server", true) == 0)
+				||	(String::Compare (lCmdOpt, "svr", true) == 0)
+				)
+			{
+				mFormatServer = true;
+			}
 
 			if	(
 					(lAssembly)
 				&&	(lXmlPath)
 				&&	(!String::IsNullOrEmpty (mHtmlPath))
 				&&	(System::IO::Directory::Exists (mHtmlPath))
-				&&	(lXmlDocument = LoadXmlFile (lXmlPath))
+				&&	(lXmlDocument = LoadXmlFile (lXmlPath, true))
 				)
 			{
 				try
@@ -238,11 +273,12 @@ int XmlToHtml::ProcessCmdLine (array <String^>^ pCmdArgs)
 
 					mOutputHtml = true;
 					mTemplatePath = System::IO::Path::Combine (System::IO::Path::GetDirectoryName (lXmlPath), "Templates");
-					LoadXmlIncludes (lXmlDocument,lXmlPath);
+					ResolveEntities (lXmlDocument);
+					LoadXmlIncludes (lXmlDocument, lXmlPath, true);
 					ConvertXmlToHtml (lXmlDocument, lAssembly);
 				}
 				catch AnyExceptionDebug
-				
+
 				mHtmlPath = nullptr;
 				mOutputHtml = false;
 			}
@@ -251,7 +287,7 @@ int XmlToHtml::ProcessCmdLine (array <String^>^ pCmdArgs)
 					(lAssembly)
 				&&	(lXmlPath)
 				&&	(!String::IsNullOrEmpty (mOutputPath))
-				&&	(lXmlDocument = LoadXmlFile (lXmlPath))
+				&&	(lXmlDocument = LoadXmlFile (lXmlPath, true))
 				)
 			{
 				try
@@ -264,7 +300,9 @@ int XmlToHtml::ProcessCmdLine (array <String^>^ pCmdArgs)
 						||	(mOutputSandcastle)
 						)
 					{
-						LoadXmlIncludes (lXmlDocument,lXmlPath);
+						ResolveEntities (lXmlDocument);
+						LoadXmlIncludes (lXmlDocument, lXmlPath, false);
+						ResolveEntities (lXmlDocument);
 					}
 					if	(!CopyXmlToXml (lXmlDocument, lAssembly))
 					{
@@ -274,7 +312,7 @@ int XmlToHtml::ProcessCmdLine (array <String^>^ pCmdArgs)
 					}
 				}
 				catch AnyExceptionDebug
-				
+
 				mOutputPath = nullptr;
 				mOutputIntellisense = false;
 				mOutputSandcastle = false;
@@ -390,7 +428,7 @@ void XmlToHtml::CopyNodeChildren (XmlNode^ pSrcNode, XmlNode^ pTrgNode, XmlSpace
 				XmlAttribute^	lSrcAttribute;
 
 				if	(
-						(pSrcNode->Attributes)			
+						(pSrcNode->Attributes)
 					&&	(lSrcAttribute = pSrcNode->Attributes ["xml:space"])
 					&&	(lSrcAttribute->Value == "preserve")
 					)
@@ -401,6 +439,54 @@ void XmlToHtml::CopyNodeChildren (XmlNode^ pSrcNode, XmlNode^ pTrgNode, XmlSpace
 
 			if	(pSrcNode->NodeType == XmlNodeType::EntityReference)
 			{
+				XmlDocumentType^	lDocType;
+				XmlNamedNodeMap^	lEntities;
+				XmlNode^			lEntity = nullptr;
+
+				if	(
+						(lDocType = pTrgNode->OwnerDocument->DocumentType)
+					&&	(lEntities = lDocType->Entities)
+					)
+				{
+					lEntity = lEntities->GetNamedItem (pSrcNode->Name);
+				}
+				if	(
+						(!lEntity)
+					&&	(lDocType = pSrcNode->OwnerDocument->DocumentType)
+					&&	(lEntities = lDocType->Entities)
+					)
+				{
+					lEntity = lEntities->GetNamedItem (pSrcNode->Name);
+				}
+
+				if	(lEntity)
+				{
+					try
+					{
+						if	(lTrgNode = pTrgNode->OwnerDocument->CreateNode (XmlNodeType::DocumentFragment, nullptr, nullptr))
+						{
+							lTrgNode->InnerXml = lEntity->InnerText;
+#ifdef	_DEBUG_ENTITIES
+							LogMessage (_DEBUG_ENTITIES, _T("Entity [%s] to [%s] (Xml)"), _B(pSrcNode->Name), _B(lTrgNode->InnerXml));
+#endif
+							pTrgNode->ParentNode->ReplaceChild (lTrgNode, pTrgNode);
+						}
+					}
+					catch (...)
+					{
+						try
+						{
+							if	(lTrgNode = pTrgNode->OwnerDocument->CreateTextNode (lEntity->InnerText))
+							{
+#ifdef	_DEBUG_ENTITIES
+								LogMessage (_DEBUG_ENTITIES, _T("Entity [%s] to [%s] (Text)"), _B(pSrcNode->Name), _B(lTrgNode->InnerText));
+#endif
+								pTrgNode->ParentNode->ReplaceChild (lTrgNode, pTrgNode);
+							}
+						}
+						catch AnyExceptionSilent
+					}
+				}
 			}
 			else
 			if	(pSrcNode->FirstChild)
@@ -430,8 +516,16 @@ void XmlToHtml::CopyNodeChildren (XmlNode^ pSrcNode, XmlNode^ pTrgNode, XmlSpace
 					&&	(lTrgNode = pTrgNode->OwnerDocument->CreateNode (XmlNodeType::DocumentFragment, nullptr, nullptr))
 					)
 				{
-					lTrgNode->InnerXml = pSrcNode->InnerText->Replace (" ", "&nbsp;");
-					pTrgNode->ParentNode->ReplaceChild (lTrgNode, pTrgNode);
+					try
+					{
+						lTrgNode->InnerXml = pSrcNode->OuterXml->Replace (" ", "&nbsp;");
+						pTrgNode->ParentNode->ReplaceChild (lTrgNode, pTrgNode);
+					}
+					catch (...)
+					{
+						LogMessage (LogNormal, _T("Error? [%s] [%s] in [%s]"), _B(DebugStr(pSrcNode->OuterXml)), _B(DebugStr(pSrcNode->InnerText)), _B(DebugStr(pSrcNode->ParentNode->InnerXml)));
+						pTrgNode->InnerText = pSrcNode->InnerText;
+					}
 				}
 				else
 				{
@@ -534,7 +628,7 @@ XmlAttribute^ XmlToHtml::MakeNewAttribute (String^ pAttributeName, String^ pAttr
 void XmlToHtml::PutParagraphNode (XmlNode^ pParagraphNode, XmlNode^ pTargetNode)
 {
 	XmlNode^	lParentNode;
-	
+
 	for	(lParentNode = pTargetNode->ParentNode; lParentNode; lParentNode = lParentNode->ParentNode)
 	{
 		if	(lParentNode->Name == "p")
@@ -597,7 +691,11 @@ bool XmlToHtml::ConvertXmlToHtml (XmlDocument^ pXmlDocument, System::Reflection:
 
 			if	(String::Compare (lMemberNode->Name, "Member", true) != 0)
 			{
-				if	(lMemberNode->NodeType != XmlNodeType::Comment)
+				if	(
+						(lMemberNode->NodeType != XmlNodeType::Comment)
+					&&	(lMemberNode->NodeType != XmlNodeType::Whitespace)
+					&&	(lMemberNode->NodeType != XmlNodeType::SignificantWhitespace)
+					)
 				{
 					LogMessage (LogNormal, _T("  Unknown member node [%s]"), _B(lMemberNode->Name));
 				}
@@ -677,7 +775,7 @@ Object^ XmlToHtml::LoadTypeLibrary (String^ pTypeLibPath)
 	return Marshal::GetObjectForIUnknown ((IntPtr)(LPUNKNOWN)lTypeLib.GetInterfacePtr());
 }
 
-XmlDocument^ XmlToHtml::LoadXmlFile (String^ pXmlPath)
+XmlDocument^ XmlToHtml::LoadXmlFile (String^ pXmlPath, bool pPreserveWhitespace)
 {
 	XmlDocument^	lRet;
 	XmlDocument^	lXmlLoad;
@@ -686,6 +784,7 @@ XmlDocument^ XmlToHtml::LoadXmlFile (String^ pXmlPath)
 	{
 		if	(lXmlLoad = gcnew XmlDocument)
 		{
+			lXmlLoad->PreserveWhitespace = pPreserveWhitespace;
 			lXmlLoad->Load (pXmlPath);
 			lRet = lXmlLoad;
 		}
@@ -695,12 +794,17 @@ XmlDocument^ XmlToHtml::LoadXmlFile (String^ pXmlPath)
 	return lRet;
 }
 
-void XmlToHtml::LoadXmlIncludes (XmlDocument^ pXmlDocument, String^ pXmlPath)
+void XmlToHtml::LoadXmlIncludes (XmlDocument^ pXmlDocument, String^ pXmlPath, bool pPreserveWhitespace)
 {
 	Generic::List<XmlNode^>^	lIncludeNodes;
 	XmlNode^					lIncludeNode;
 
-	while	(lIncludeNodes = NodeList (pXmlDocument->SelectNodes (".//include")))
+	if	(!mLoadedIncludes)
+	{
+		mLoadedIncludes = gcnew Generic::Dictionary<String^, XmlDocument^>;
+	}
+
+	while	(lIncludeNodes = NodeList (pXmlDocument->SelectNodes (".//include | .//copy")))
 	{
 		for each (lIncludeNode in lIncludeNodes)
 		{
@@ -708,21 +812,16 @@ void XmlToHtml::LoadXmlIncludes (XmlDocument^ pXmlDocument, String^ pXmlPath)
 			{
 				XmlAttribute^				lIncludeFile;
 				XmlAttribute^				lIncludePath;
-				XmlDocument^				lIncludeDoc;
-				Generic::List<XmlNode^>^	lPathNodes;
+				XmlAttribute^				lIncludeReplace;
+				String^						lIncludeDocName = nullptr;
+				XmlDocument^				lIncludeDoc = nullptr;
+				Generic::List<XmlNode^>^	lPathNodes = nullptr;
 				XmlNode^					lPathNode;
 				XmlNode^					lParentNode;
 
-				try
-				{
-					lIncludeFile = lIncludeNode->Attributes["file"];
-				}
-				catch AnyExceptionSilent
-				try
-				{
-					lIncludePath = lIncludeNode->Attributes["path"];
-				}
-				catch AnyExceptionSilent
+				lIncludeFile = lIncludeNode->Attributes["file"];
+				lIncludePath = lIncludeNode->Attributes["path"];
+				lIncludeReplace = lIncludeNode->Attributes["replace"];
 
 				if	(
 						(lIncludeFile)
@@ -731,11 +830,21 @@ void XmlToHtml::LoadXmlIncludes (XmlDocument^ pXmlDocument, String^ pXmlPath)
 				{
 					if	(System::IO::Path::IsPathRooted (lIncludeFile->Value))
 					{
-						lIncludeDoc = LoadXmlFile (lIncludeFile->Value);
+						lIncludeDocName = lIncludeFile->Value;
 					}
 					else
 					{
-						lIncludeDoc = LoadXmlFile (System::IO::Path::Combine (System::IO::Path::GetDirectoryName (pXmlPath), lIncludeFile->Value));
+						lIncludeDocName = System::IO::Path::Combine (System::IO::Path::GetDirectoryName (pXmlPath), lIncludeFile->Value);
+					}
+
+					if	(mLoadedIncludes->TryGetValue (lIncludeDocName, lIncludeDoc))
+					{
+						lIncludeDocName = nullptr;
+					}
+					else
+					if	(lIncludeDoc = LoadXmlFile (lIncludeDocName, pPreserveWhitespace))
+					{
+						mLoadedIncludes[lIncludeDocName] = lIncludeDoc;
 					}
 				}
 				else
@@ -743,36 +852,121 @@ void XmlToHtml::LoadXmlIncludes (XmlDocument^ pXmlDocument, String^ pXmlPath)
 					lIncludeDoc = pXmlDocument;
 				}
 
+				if	(
+						(lIncludeDoc)
+					&&	(lIncludeDocName)
+					)
+				{
+					LoadXmlIncludes (lIncludeDoc, lIncludeDocName, pPreserveWhitespace);
+				}
+
 #ifdef	_DEBUG_INCLUDES
 				LogMessage (_DEBUG_INCLUDES, _T("Include [%s]"), _B(lIncludePath->Value));
 #endif
+				if	(lIncludeDoc)
+				{
+					try
+					{
+						lPathNodes = NodeList (lIncludeDoc->SelectNodes (lIncludePath->Value));
+					}
+					catch (...)
+					{
+						LogMessage (LogNormal, _T("Invalid IncludePath [%s]"), _B(lIncludePath->Value));
+					}
+				}
+
 				if	(
 						(lIncludeDoc)
-					&&	(lPathNodes = NodeList (lIncludeDoc->SelectNodes (lIncludePath->Value)))
+					&&	(lPathNodes)
 					&&	(lParentNode = lIncludeNode->ParentNode)
 					)
 				{
+					XmlNode^	lIncludedPrev = nullptr;
 					XmlNode^	lIncludedNode = nullptr;
-					
+
 #ifdef	_DEBUG_INCLUDES
 					LogMessage (_DEBUG_INCLUDES, _T("        [%s] [%d]"), _B(lIncludePath->Value), lPathNodes->Count);
 #endif
 					for each (lPathNode in lPathNodes)
 					{
-						lPathNode->InnerXml = lPathNode->InnerXml->Trim(String("\t\r\n").ToCharArray());
+						lIncludedPrev = lIncludedNode;
+						lIncludedNode = nullptr;
 
-						if	(lIncludedNode)
+						if	(lIncludeNode->Name == "copy")
 						{
-							lIncludeNode = lIncludedNode;
-							lParentNode->InsertAfter (lIncludedNode = CopyNodeInnerXml (lPathNode, pXmlDocument), lIncludeNode);
+							XmlNode^	lChildNode;
+
+							lPathNode->InnerXml = lPathNode->InnerXml->Trim(String("\t\r\n").ToCharArray());
+
+							if	(
+									(lPathNode->FirstChild)
+								&&	(lIncludedNode = pXmlDocument->CreateNode (XmlNodeType::DocumentFragment, nullptr, nullptr))
+								)
+							{
+								for (lChildNode = lPathNode->FirstChild; lChildNode; lChildNode = lChildNode->NextSibling)
+								{
+									lIncludedNode->AppendChild (pXmlDocument->ImportNode (lChildNode, true));
+								}
+							}
 						}
 						else
 						{
-							lParentNode->ReplaceChild (lIncludedNode = CopyNodeInnerXml (lPathNode, pXmlDocument), lIncludeNode);
+							lIncludedNode = pXmlDocument->ImportNode (lPathNode, true);
+						}
+
+						if	(
+								(lIncludedNode)
+							&&	(lIncludeReplace)
+							)
+						{
+							array<String^>^	lPairs;
+							array<String^>^	lPair;
+							int				lNdx;
+
+							if	(lPairs = lIncludeReplace->Value->Replace("\\|","\x01")->Split(String("|").ToCharArray(), StringSplitOptions::RemoveEmptyEntries))
+							{
+								for	(lNdx = 0; lNdx < lPairs->Length; lNdx++)
+								{
+									if	(
+											(lPair = lPairs[lNdx]->Replace('\x01','|')->Replace("\\=","\x02")->Split('='))
+										&&	(lPair->Length == 2)
+										&&	(!String::IsNullOrEmpty (lPair[0]))
+										)
+									{
+										XmlAttribute^	lAttribute;
+
+										lPair[0] = lPair[0]->Replace('\x02','=');
+										lPair[1] = lPair[1]->Replace('\x02','=');
+#ifdef	_DEBUG_INCLUDES
+										LogMessage (_DEBUG_INCLUDES, _T("        Replace [%s] [%s]"), _B(lPair[0]), _B(lPair[1]));
+#endif
+										lIncludedNode->InnerXml = lIncludedNode->InnerXml->Replace (lPair[0], lPair[1]);
+										if	(lIncludedNode->Attributes)
+										{
+											for each (lAttribute in lIncludedNode->Attributes)
+											{
+												lAttribute->InnerXml = lAttribute->InnerXml->Replace (lPair[0], lPair[1]);
+											}
+										}
+									}
+								}
+							}
+						}
+
+						if	(lIncludedNode)
+						{
+							if	(lIncludedPrev)
+							{
+								lParentNode->InsertAfter (lIncludedNode, lIncludedPrev);
+							}
+							else
+							{
+								lParentNode->ReplaceChild (lIncludedNode, lIncludeNode);
+							}
 						}
 #ifdef	_DEBUG_INCLUDES_NOT
-						LogMessage (_DEBUG_INCLUDES, _T("          [%s]"), _B(lPathNode->InnerXml->Replace("\t","\\t")/*->Replace("\n","\\n")->Replace("\r","\\r")*/));
-						LogMessage (_DEBUG_INCLUDES, _T("          [%s]"), _B(lParentNode->OuterXml->Replace("\t","\\t")/*->Replace("\n","\\n")->Replace("\r","\\r")*/));
+						LogMessage (_DEBUG_INCLUDES, _T("          [%s]"), _B(DebugStr(lPathNode->InnerXml)));
+						LogMessage (_DEBUG_INCLUDES, _T("          [%s]"), _B(DebugStr(lParentNode->OuterXml)));
 #endif
 					}
 				}
@@ -921,12 +1115,6 @@ void XmlToHtml::LoadAssemblyMembers (System::Reflection::Assembly^ pAssembly)
 #endif
 
 	mSourceAssembly = pAssembly;
-	mSourceTypes = gcnew Generic::SortedDictionary <String^, System::Type^>;
-	mSourceMethods = gcnew Generic::SortedDictionary <String^, System::Reflection::MethodInfo^>;
-	mSourceConstructors = gcnew Generic::SortedDictionary <String^, System::Reflection::ConstructorInfo^>;
-	mSourceProperties = gcnew Generic::SortedDictionary <String^, System::Reflection::PropertyInfo^>;
-	mSourceEvents = gcnew Generic::SortedDictionary <String^, System::Reflection::EventInfo^>;
-	mSourceFields = gcnew Generic::SortedDictionary <String^, System::Reflection::FieldInfo^>;
 
 	LogMessage (LogNormal, _T("LoadAssemblyMembers [%s]"), _B(mSourceAssembly->GetName()->Name));
 
@@ -1185,7 +1373,7 @@ String^ XmlToHtml::PutTypeMember (String^ pMemberName, XmlNode^ pMemberNode, Typ
 		PutMemberName (lTargetRoot, pMemberNode, pAssemblyType);
 		PutMemberSummary (lTargetRoot, FormatSummary (pMemberNode ["summary"]));
 		PutMemberSyntax (lTargetRoot, FormatInnerXml (pMemberNode ["syntax"]), nullptr, nullptr);
-		PutMemberRemarks (lTargetRoot, FormatRemarks (pMemberNode ["remarks"]), FormatDetails (pMemberNode->SelectSingleNode ("./detail | ./details")));
+		PutMemberRemarks (lTargetRoot, FormatRemarks (pMemberNode ["remarks"]), FormatDetails (pMemberNode->SelectNodes ("./detail | ./details")));
 		PutMemberSeeAlso (lTargetRoot, FormatSeeAlso (pMemberNode->SelectNodes ("seealso")));
 
 		lRet = PutMemberFile (TypeFileName (pAssemblyType), lTargetRoot);
@@ -1207,7 +1395,7 @@ String^ XmlToHtml::PutMethodMember (String^ pMemberName, XmlNode^ pMemberNode, M
 		PutMemberName (lTargetRoot, pMemberNode, pAssemblyMethod);
 		PutMemberSummary (lTargetRoot, FormatSummary (pMemberNode ["summary"]));
 		PutMemberSyntax (lTargetRoot, FormatSyntax (pMemberNode ["syntax"]), FormatParameters (pMemberNode->SelectNodes ("./param | ./returns | ./value")), FormatExamples (pMemberNode->SelectNodes ("./example")));
-		PutMemberRemarks (lTargetRoot, FormatRemarks (pMemberNode ["remarks"]), FormatDetails (pMemberNode->SelectSingleNode ("./detail | ./details")));
+		PutMemberRemarks (lTargetRoot, FormatRemarks (pMemberNode ["remarks"]), FormatDetails (pMemberNode->SelectNodes ("./detail | ./details")));
 		PutMemberSeeAlso (lTargetRoot, FormatSeeAlso (pMemberNode->SelectNodes ("seealso")));
 
 		lRet = PutMemberFile (MethodFileName (pAssemblyMethod), lTargetRoot);
@@ -1245,7 +1433,7 @@ String^ XmlToHtml::PutPropertyMember (String^ pMemberName, XmlNode^ pMemberNode,
 		}
 		PutMemberSummary (lTargetRoot, FormatSummary (pMemberNode ["summary"]));
 		PutMemberSyntax (lTargetRoot, FormatSyntax (pMemberNode ["syntax"]), FormatParameters (pMemberNode->SelectNodes ("./param | ./returns | ./value")), FormatExamples (pMemberNode->SelectNodes ("./example")));
-		PutMemberRemarks (lTargetRoot, FormatRemarks (pMemberNode ["remarks"]), FormatDetails (pMemberNode->SelectSingleNode ("./detail | ./details")));
+		PutMemberRemarks (lTargetRoot, FormatRemarks (pMemberNode ["remarks"]), FormatDetails (pMemberNode->SelectNodes ("./detail | ./details")));
 		PutMemberSeeAlso (lTargetRoot, FormatSeeAlso (pMemberNode->SelectNodes ("seealso")));
 
 		lRet = PutMemberFile (lFileName, lTargetRoot);
@@ -1267,7 +1455,7 @@ String^ XmlToHtml::PutEventMember (String^ pMemberName, XmlNode^ pMemberNode, Ev
 		PutMemberName (lTargetRoot, pMemberNode, pAssemblyEvent);
 		PutMemberSummary (lTargetRoot, FormatSummary (pMemberNode ["summary"]));
 		PutMemberSyntax (lTargetRoot, FormatSyntax (pMemberNode ["syntax"]), FormatParameters (pMemberNode->SelectNodes ("./param | ./returns")), FormatExamples (pMemberNode->SelectNodes ("./example")));
-		PutMemberRemarks (lTargetRoot, FormatRemarks (pMemberNode ["remarks"]), FormatDetails (pMemberNode->SelectSingleNode ("./detail | ./details")));
+		PutMemberRemarks (lTargetRoot, FormatRemarks (pMemberNode ["remarks"]), FormatDetails (pMemberNode->SelectNodes ("./detail | ./details")));
 		PutMemberSeeAlso (lTargetRoot, FormatSeeAlso (pMemberNode->SelectNodes ("seealso")));
 
 		lRet = PutMemberFile (EventFileName (pAssemblyEvent), lTargetRoot);
@@ -1437,6 +1625,7 @@ void XmlToHtml::PutMemberSyntax (XmlElement^ pRootElement, XmlNode^ pMemberSynta
 {
 	Generic::List<XmlNode^>^	lNodeList;
 	XmlNode^					lNode;
+	XmlNode^					lNewNode;
 
 	if	(pMemberParameters)
 	{
@@ -1473,7 +1662,8 @@ void XmlToHtml::PutMemberSyntax (XmlElement^ pRootElement, XmlNode^ pMemberSynta
 				}
 				if	(pMemberSyntax->Name == "syntax")
 				{
-					lNode->ParentNode->ReplaceChild (CopyNodeInnerXml (pMemberSyntax, lNode->OwnerDocument), lNode);
+					lNode->ParentNode->ReplaceChild (lNewNode = ChangeNodeName (CopyNodeOuterXml (pMemberSyntax, lNode->OwnerDocument), "div"), lNode);
+					lNewNode->Attributes->Append (MakeNewAttribute ("id", "Syntax", lNewNode->OwnerDocument));
 				}
 				else
 				{
@@ -1516,6 +1706,7 @@ void XmlToHtml::PutMemberValues (XmlElement^ pRootElement, XmlNodeList^ pMemberV
 					lNode->AppendChild (CopyNodeOuterXml (ChangeNodeName (lValue, "p"), lNode->OwnerDocument));
 				}
 				lNode->ParentNode->ReplaceChild (lValue = ChangeNodeName (lNode, "div"), lNode);
+				lValue->Attributes->Append (MakeNewAttribute ("id", "Value", lNode->OwnerDocument));
 				lValue->Attributes->Append (MakeNewAttribute ("class", "syntax", lNode->OwnerDocument));
 			}
 			else
@@ -1560,9 +1751,27 @@ XmlNode^ XmlToHtml::FormatSummary (XmlNode^ pXmlNode)
 	return FormatInnerXml (pXmlNode);
 }
 
-XmlNode^ XmlToHtml::FormatDetails (XmlNode^ pXmlNode)
+XmlNode^ XmlToHtml::FormatDetails (System::Xml::XmlNodeList^ pXmlNodeList)
 {
-	return FormatInnerXml (pXmlNode, "example");
+	if	(pXmlNodeList)
+	{
+		if	(pXmlNodeList->Count > 1)
+		{
+			XmlNode^	lRet = pXmlNodeList[0]->OwnerDocument->CreateNode (XmlNodeType::DocumentFragment, nullptr, nullptr);
+			XmlNode^	lNode;
+
+			for each (lNode in pXmlNodeList)
+			{
+				lRet->AppendChild (CopyNodeInnerXml (FormatInnerXml (lNode, "example"), lNode->OwnerDocument));
+			}
+			return lRet;
+		}
+		else
+		{
+			return FormatInnerXml (pXmlNodeList[0], "example");
+		}
+	}
+	return nullptr;
 }
 
 XmlNode^ XmlToHtml::FormatRemarks (XmlNode^ pXmlNode)
@@ -1588,6 +1797,7 @@ XmlNode^ XmlToHtml::FormatInnerXml (XmlNode^ pXmlNode, String^ pCodeClass)
 	{
 		Generic::List<XmlNode^>^	lNodeList;
 		XmlNode^					lNode;
+		XmlNode^					lNewNode;
 
 		if	(lNodeList = NodeList (lRet->SelectNodes (".//list")))
 		{
@@ -1615,52 +1825,56 @@ XmlNode^ XmlToHtml::FormatInnerXml (XmlNode^ pXmlNode, String^ pCodeClass)
 		{
 			for each (lNode in lNodeList)
 			{
-				XmlNode^	lNoteNode;
-				
-				PutParagraphNode (lNoteNode = ChangeNodeName (lNode, "p"), lNode);
-				lNoteNode->InsertAfter (MakeNewNode ("<span class=\"note\">Note:</span> ", lNoteNode->OwnerDocument), nullptr);
-				lNoteNode->Attributes->Append (MakeNewAttribute ("class", "note", lNoteNode->OwnerDocument));
+				PutParagraphNode (lNewNode = ChangeNodeName (lNode, "p"), lNode);
+				lNewNode->InsertAfter (MakeNewNode ("<span class=\"note\">Note:</span> ", lNewNode->OwnerDocument), nullptr);
+				lNewNode->Attributes->Append (MakeNewAttribute ("class", "note", lNewNode->OwnerDocument));
 			}
 		}
-		if	(lNodeList = NodeList (lRet->SelectNodes (".//code")))
-		{
-			for each (lNode in lNodeList)
-			{
-				XmlNode^	lCodeNode;
 
-				lCodeNode = ChangeNodeName (lNode, "pre");
-				if	(
-						(lNode->NextSibling == nullptr)
-					&&	(lNode->PreviousSibling == nullptr)
-					&&	(lNode->ParentNode->Name == "p")
-					)
-				{
-					lNode->ParentNode->ParentNode->ReplaceChild (lCodeNode, lNode->ParentNode);
-				}
-				else
-				{
-					lNode->ParentNode->ReplaceChild (lCodeNode, lNode);
-				}
-				if	(pCodeClass)
-				{
-					lCodeNode->Attributes->Append (MakeNewAttribute ("class", pCodeClass, lCodeNode->OwnerDocument));
-				}
-			}
-		}
-		if	(lNodeList = NodeList (lRet->SelectNodes (".//c")))
+		if	(lNodeList = NodeList (lRet->SelectNodes (".//c | .//strong")))
 		{
 			for each (lNode in lNodeList)
 			{
 				lNode->ParentNode->ReplaceChild (ChangeNodeName (lNode, "s"), lNode);
 			}
 		}
+		if	(lNodeList = NodeList (lRet->SelectNodes (".//keyword | .//token | .//typename | .//filename | .//self | .//literal | .//glossary")))
+		{
+			for each (lNode in lNodeList)
+			{
+				XmlAttribute^	lClassAttr = lNode->Attributes ["class"];
+				String^			lClassName = (lClassAttr) ? String::Concat (lNode->Name, " ", lClassAttr->Value) : (lNode->Name == "self") ? "self keyword" : lNode->Name;
+
+				lNode->ParentNode->ReplaceChild (lNewNode = ChangeNodeName (lNode, "em"), lNode);
+				lNewNode->Attributes->Append (MakeNewAttribute ("class", lClassName, lNewNode->OwnerDocument));
+			}
+		}
+
+		if	(lNodeList = NodeList (lRet->SelectNodes (".//paramref")))
+		{
+			for each (lNode in lNodeList)
+			{
+				XmlAttribute^	lParamName;
+				XmlNode^		lParamNode;
+
+				if	(
+						(lParamName = lNode->Attributes ["name"])
+					&&	(lParamNode = MakeNewNode ("em", lParamName->Value, pXmlNode->OwnerDocument))
+					)
+				{
+					lParamNode->Attributes->Append (MakeNewAttribute ("class", "token", lParamNode->OwnerDocument));
+					lNode->ParentNode->ReplaceChild (lParamNode, lNode);
+				}
+			}
+		}
+
 		if	(lNodeList = NodeList (lRet->SelectNodes (".//bookmark")))
 		{
 			for each (lNode in lNodeList)
 			{
 				XmlAttribute^	lBookmarkName;
 				XmlNode^		lBookmarkNode;
-				
+
 				if	(
 						(lBookmarkName = lNode->Attributes ["name"])
 					&&	(lBookmarkNode = MakeNewNode ("a", " ", pXmlNode->OwnerDocument))
@@ -1672,6 +1886,29 @@ XmlNode^ XmlToHtml::FormatInnerXml (XmlNode^ pXmlNode, String^ pCodeClass)
 				else
 				{
 					lNode->ParentNode->RemoveChild (lNode);
+				}
+			}
+		}
+		if	(lNodeList = NodeList (lRet->SelectNodes (".//code")))
+		{
+			for each (lNode in lNodeList)
+			{
+				lNewNode = ChangeNodeName (lNode, "pre");
+				if	(
+						(lNode->NextSibling == nullptr)
+					&&	(lNode->PreviousSibling == nullptr)
+					&&	(lNode->ParentNode->Name == "p")
+					)
+				{
+					lNode->ParentNode->ParentNode->ReplaceChild (lNewNode, lNode->ParentNode);
+				}
+				else
+				{
+					lNode->ParentNode->ReplaceChild (lNewNode, lNode);
+				}
+				if	(pCodeClass)
+				{
+					lNewNode->Attributes->Append (MakeNewAttribute ("class", pCodeClass, lNewNode->OwnerDocument));
 				}
 			}
 		}
@@ -1700,12 +1937,13 @@ XmlNode^ XmlToHtml::FormatInnerXml (XmlNode^ pXmlNode, String^ pCodeClass)
 		{
 			for each (lNode in lNodeList)
 			{
-				XmlNode^	lRefNode;
-
-				if	(lRefNode = FormatSee (lNode))
+				if	(lNewNode = FormatSee (lNode))
 				{
-					lRefNode->Attributes->Append (MakeNewAttribute ("class", "see", lRefNode->OwnerDocument));
-					lNode->ParentNode->ReplaceChild (lRefNode, lNode);
+					XmlAttribute^	lClassAttr = lNode->Attributes ["class"];
+					String^			lClassName = (lClassAttr) ? String::Concat ("see ", lClassAttr->Value) : "see keyword";
+
+					lNewNode->Attributes->Append (MakeNewAttribute ("class", lClassName, lNewNode->OwnerDocument));
+					lNode->ParentNode->ReplaceChild (lNewNode, lNode);
 				}
 			}
 		}
@@ -1719,93 +1957,147 @@ XmlNode^ XmlToHtml::FormatSyntax (XmlNode^ pXmlNode)
 {
 	XmlNode^		lRet;
 	XmlNodeList^	lLanguageNodes;
-	XmlNode^		lCppNode;
-	XmlNode^		lCsharpNode;
-	XmlNode^		lVbNode;
-	XmlNode^		lVb6Node;
-	XmlNode^		lVbscriptNode;
+	XmlNodeList^	lCppNodes;
+	XmlNodeList^	lCsharpNodes;
+	XmlNodeList^	lVbNodes;
+	XmlNodeList^	lVb6Nodes;
+	XmlNodeList^	lVbscriptNodes;
 	XmlNode^		lLanguagesNode;
-	XmlNode^		lLanguageNode;
 
 	if	(pXmlNode)
 	{
 		if	(
-				(lLanguageNodes = pXmlNode->SelectNodes ("child::*[self::cpp or self::cplusplus or self::csharp or self::vb or self::vbnet or self::vb6 or self::vbscript]"))
+				(lLanguageNodes = pXmlNode->SelectNodes ("./cpp | ./cplusplus | ./csharp | ./vb | ./vbnet | ./vb6 | ./vbscript"))
 			&&	(lLanguageNodes->Count > 0)
 			)
 		{
-			lCppNode = pXmlNode->SelectSingleNode ("child::*[self::cpp or self::cplusplus]");
-			lCsharpNode = pXmlNode->SelectSingleNode ("child::csharp");
-			lVbNode = pXmlNode->SelectSingleNode ("child::*[self::vbnet or self::vb]");
-			lVb6Node = pXmlNode->SelectSingleNode ("child::*[self::vb6 or self::vb]");
-			lVbscriptNode = pXmlNode->SelectSingleNode ("child::*[self::vbscript or self::vb]");
+			lCppNodes = pXmlNode->SelectNodes ("./cpp | ./cplusplus");
+			lCsharpNodes = pXmlNode->SelectNodes ("./csharp");
+			lVbNodes = pXmlNode->SelectNodes ("./vbnet");
+			lVb6Nodes = pXmlNode->SelectNodes ("./vb6");
+			lVbscriptNodes = pXmlNode->SelectNodes ("./vbscript");
+			if	(
+					(!lVbNodes)
+				||	(lVbNodes->Count <= 0)
+				)
+			{
+				lVbNodes = pXmlNode->SelectNodes ("./vb");
+			}
+			if	(
+					(!lVb6Nodes)
+				||	(lVb6Nodes->Count <= 0)
+				)
+			{
+				lVb6Nodes = pXmlNode->SelectNodes ("./vb");
+			}
+			if	(
+					(!lVbscriptNodes)
+				||	(lVbscriptNodes->Count <= 0)
+				)
+			{
+				lVbscriptNodes = pXmlNode->SelectNodes ("./vb");
+			}
 
 			if	(
 					(lRet = pXmlNode->OwnerDocument->CreateNode (XmlNodeType::Element, "div", nullptr))
+#ifdef	_SYNTAX_TABLE
+				&&	(lLanguagesNode = pXmlNode->OwnerDocument->CreateNode (XmlNodeType::Element, "table", nullptr))
+#else
 				&&	(lLanguagesNode = pXmlNode->OwnerDocument->CreateNode (XmlNodeType::Element, "dl", nullptr))
+#endif
 				)
 			{
+#ifdef	_SYNTAX_TABLE
+				lLanguagesNode->Attributes->Append (MakeNewAttribute ("id", "Languages", lLanguagesNode->OwnerDocument));
+				lLanguagesNode->Attributes->Append (MakeNewAttribute ("class", "syntax", lLanguagesNode->OwnerDocument));
+#endif
 				lRet->AppendChild (lLanguagesNode);
 
-				if	(
-						(lVbNode)
-					&&	(lLanguageNode = pXmlNode->OwnerDocument->CreateNode (XmlNodeType::Element, "dt", nullptr))
-					)
+				if	(mFormatServer)
 				{
-					lLanguageNode->InnerText = "Visual Basic .NET";
-					lLanguagesNode->AppendChild (lLanguageNode);
-					lLanguagesNode->AppendChild (ChangeNodeName (lVbNode, "dd"));
+					FormatSyntaxLanguage (lLanguagesNode, "Visual C++", lCppNodes);
+					FormatSyntaxLanguage (lLanguagesNode, "Visual C#", lCsharpNodes);
+					FormatSyntaxLanguage (lLanguagesNode, "Visual Basic .NET", lVbNodes);
+					FormatSyntaxLanguage (lLanguagesNode, "Visual Basic 6", lVb6Nodes);
+					FormatSyntaxLanguage (lLanguagesNode, "VBScript", lVbscriptNodes);
 				}
-				if	(
-						(lVb6Node)
-					&&	(lLanguageNode = pXmlNode->OwnerDocument->CreateNode (XmlNodeType::Element, "dt", nullptr))
-					)
+				else
 				{
-					lLanguageNode->InnerText = "Visual Basic 6";
-					lLanguagesNode->AppendChild (lLanguageNode);
-					lLanguagesNode->AppendChild (ChangeNodeName (lVb6Node, "dd"));
-				}
-				if	(
-						(lVbscriptNode)
-					&&	(lLanguageNode = pXmlNode->OwnerDocument->CreateNode (XmlNodeType::Element, "dt", nullptr))
-					)
-				{
-					lLanguageNode->InnerText = "VBScript";
-					lLanguagesNode->AppendChild (lLanguageNode);
-					lLanguagesNode->AppendChild (ChangeNodeName (lVbscriptNode, "dd"));
-				}
-				if	(
-						(lCsharpNode)
-					&&	(lLanguageNode = pXmlNode->OwnerDocument->CreateNode (XmlNodeType::Element, "dt", nullptr))
-					)
-				{
-					lLanguageNode->InnerText = "Visual C#";
-					lLanguagesNode->AppendChild (lLanguageNode);
-					lLanguagesNode->AppendChild (ChangeNodeName (lCsharpNode, "dd"));
-				}
-				if	(
-						(lCppNode)
-					&&	(lLanguageNode = pXmlNode->OwnerDocument->CreateNode (XmlNodeType::Element, "dt", nullptr))
-					)
-				{
-					lLanguageNode->InnerText = "Visual C++";
-					lLanguagesNode->AppendChild (lLanguageNode);
-					lLanguagesNode->AppendChild (ChangeNodeName (lCppNode, "dd"));
+					FormatSyntaxLanguage (lLanguagesNode, "Visual Basic .NET", lVbNodes);
+					FormatSyntaxLanguage (lLanguagesNode, "Visual Basic 6", lVb6Nodes);
+					FormatSyntaxLanguage (lLanguagesNode, "VBScript", lVbscriptNodes);
+					FormatSyntaxLanguage (lLanguagesNode, "Visual C#", lCsharpNodes);
+					FormatSyntaxLanguage (lLanguagesNode, "Visual C++", lCppNodes);
 				}
 			}
 		}
 		else
+		if	(pXmlNode->FirstChild)
 		{
 			lRet = ChangeNodeName (pXmlNode, "div");
 		}
 
 		if	(lRet)
 		{
-			lRet = FormatInnerXml (lRet);
+			lRet->Attributes->Append (MakeNewAttribute ("id", "Syntax", lRet->OwnerDocument));
 			lRet->Attributes->Append (MakeNewAttribute ("class", "syntax", lRet->OwnerDocument));
 		}
 	}
 	return lRet;
+}
+
+XmlNode^ XmlToHtml::FormatSyntaxLanguage (XmlNode^ pLanguagesNode, String^ pLanguageName, XmlNodeList^ pSyntaxNodes)
+{
+	XmlNode^		lLanguageNode = nullptr;
+	XmlDocument^	lXmlDocument = pLanguagesNode->OwnerDocument;
+
+	if	(
+			(pSyntaxNodes)
+		&&	(pSyntaxNodes->Count > 0)
+#ifdef	_SYNTAX_TABLE
+		&&	(lLanguageNode = lXmlDocument->CreateNode (XmlNodeType::Element, "tr", nullptr))
+#else
+		&&	(lLanguageNode = lXmlDocument->CreateNode (XmlNodeType::Element, "dt", nullptr))
+#endif
+		)
+	{
+#ifdef	_SYNTAX_TABLE
+		pLanguagesNode->AppendChild (lLanguageNode);
+		pLanguagesNode = lLanguageNode;
+		pLanguagesNode->AppendChild (lLanguageNode = lXmlDocument->CreateNode (XmlNodeType::Element, "td", nullptr));
+		lLanguageNode->Attributes->Append (MakeNewAttribute ("align", "left", lXmlDocument));
+		lLanguageNode->Attributes->Append (MakeNewAttribute ("width", "200ex", lXmlDocument));
+		lLanguageNode->Attributes->Append (MakeNewAttribute ("class", "language", lXmlDocument));
+		lLanguageNode->AppendChild (MakeNewNode ("p", pLanguageName, lXmlDocument));
+#else
+		lLanguageNode->InnerText = pLanguageName;
+		pLanguagesNode->AppendChild (lLanguageNode);
+#endif
+
+		if	(pSyntaxNodes->Count == 1)
+		{
+#ifdef	_SYNTAX_TABLE
+			pLanguagesNode->AppendChild (FormatInnerXml (ChangeNodeName (pSyntaxNodes[0], "td")));
+#else
+			pLanguagesNode->AppendChild (FormatInnerXml (ChangeNodeName (pSyntaxNodes[0], "dd")));
+#endif
+		}
+		else
+		{
+			XmlNode^	lSyntaxNode;
+
+#ifdef	_SYNTAX_TABLE
+			pLanguagesNode->AppendChild (lLanguageNode = MakeNewNode ("td", nullptr, lXmlDocument));
+#else
+			pLanguagesNode->AppendChild (lLanguageNode = MakeNewNode ("dd", nullptr, lXmlDocument));
+#endif
+			for each (lSyntaxNode in pSyntaxNodes)
+			{
+				lLanguageNode->AppendChild (FormatInnerXml (CopyNodeInnerXml (lSyntaxNode, lXmlDocument)));
+			}
+		}
+	}
+	return lLanguageNode;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1817,6 +2109,7 @@ XmlNode^ XmlToHtml::FormatParameters (XmlNodeList^ pXmlNodeList)
 	XmlNode^					lNode;
 	XmlNode^					lRowNode;
 	XmlNode^					lColNode;
+	XmlNode^					lNameNode;
 	XmlAttribute^				lParamName;
 
 	if	(
@@ -1825,6 +2118,7 @@ XmlNode^ XmlToHtml::FormatParameters (XmlNodeList^ pXmlNodeList)
 		&&	(lRet = lNode->OwnerDocument->CreateNode (XmlNodeType::Element, "table", nullptr))
 		)
 	{
+		lRet->Attributes->Append (MakeNewAttribute ("id", "Parameters", lRet->OwnerDocument));
 		lRet->Attributes->Append (MakeNewAttribute ("class", "syntax", lRet->OwnerDocument));
 
 		lRet->AppendChild (lRowNode = lRet->OwnerDocument->CreateNode (XmlNodeType::Element, "tr", nullptr));
@@ -1841,7 +2135,8 @@ XmlNode^ XmlToHtml::FormatParameters (XmlNodeList^ pXmlNodeList)
 			if	(lParamName)
 			{
 				lRowNode->AppendChild (lColNode = lRet->OwnerDocument->CreateNode (XmlNodeType::Element, "td", nullptr));
-				lColNode->AppendChild (MakeNewNode ("i", lParamName->Value, lRet->OwnerDocument));
+				lColNode->AppendChild (lNameNode = MakeNewNode ("em", lParamName->Value, lRet->OwnerDocument));
+				lNameNode->Attributes->Append (MakeNewAttribute ("class", "token", lRet->OwnerDocument));
 			}
 			else
 			{
@@ -1982,7 +2277,24 @@ XmlNode^ XmlToHtml::FormatSee (XmlNode^ pXmlNode)
 			}
 			else
 			{
-				LogMessage (LogNormal, _T("  Unknown Reference [%s]"), _B(pXmlNode->OuterXml));
+				XmlNode^	lMemberNode;
+				String^		lMemberName = "unknown";
+
+				for	(lMemberNode = pXmlNode; lMemberNode; lMemberNode = lMemberNode->ParentNode)
+				{
+					if	(lMemberNode->Name == "member")
+					{
+						break;
+					}
+				}
+				if	(
+						(lMemberNode)
+					&&	(lMemberNode->Attributes["name"])
+					)
+				{
+					lMemberName = lMemberNode->Attributes["name"]->Value;
+				}
+				LogMessage (LogNormal, _T("  Unknown Reference [%s] in [%s]"), _B(pXmlNode->OuterXml), _B(lMemberName));
 			}
 
 			if	(lRefValue)
@@ -2066,6 +2378,7 @@ XmlNode^ XmlToHtml::FormatList (XmlNode^ pXmlNode, String^ pCodeClass)
 XmlNode^ XmlToHtml::FormatListDefault (XmlNode^ pXmlNode)
 {
 	XmlNode^		lRet;
+	XmlAttribute^	lAttribute;
 	XmlNodeList^	lHeaderNodes;
 	XmlNodeList^	lItemNodes;
 	XmlNode^		lItemNode;
@@ -2085,6 +2398,11 @@ XmlNode^ XmlToHtml::FormatListDefault (XmlNode^ pXmlNode)
 		)
 	{
 		lRet = pXmlNode->OwnerDocument->CreateNode (XmlNodeType::Element, "dl", nullptr);
+
+		if	(lAttribute = pXmlNode->Attributes ["class"])
+		{
+			lRet->Attributes->Append (MakeNewAttribute ("class", lAttribute->Value, lRet->OwnerDocument));
+		}
 
 		for each (lItemNode in lItemNodes)
 		{
@@ -2112,6 +2430,7 @@ XmlNode^ XmlToHtml::FormatListDefault (XmlNode^ pXmlNode)
 XmlNode^ XmlToHtml::FormatListBullet (XmlNode^ pXmlNode)
 {
 	XmlNode^		lRet;
+	XmlAttribute^	lAttribute;
 	XmlNodeList^	lHeaderNodes;
 	XmlNodeList^	lItemNodes;
 	XmlNodeList^	lDescriptionNodes;
@@ -2132,6 +2451,11 @@ XmlNode^ XmlToHtml::FormatListBullet (XmlNode^ pXmlNode)
 		)
 	{
 		lRet = pXmlNode->OwnerDocument->CreateNode (XmlNodeType::Element, "ul", nullptr);
+
+		if	(lAttribute = pXmlNode->Attributes ["class"])
+		{
+			lRet->Attributes->Append (MakeNewAttribute ("class", lAttribute->Value, lRet->OwnerDocument));
+		}
 
 		for each (lItemNode in lItemNodes)
 		{
@@ -2199,6 +2523,7 @@ XmlNode^ XmlToHtml::FormatListBullet (XmlNode^ pXmlNode)
 XmlNode^ XmlToHtml::FormatListNumber (XmlNode^ pXmlNode)
 {
 	XmlNode^		lRet;
+	XmlAttribute^	lAttribute;
 	XmlNodeList^	lHeaderNodes;
 	XmlNodeList^	lItemNodes;
 	XmlNodeList^	lDescriptionNodes;
@@ -2219,6 +2544,11 @@ XmlNode^ XmlToHtml::FormatListNumber (XmlNode^ pXmlNode)
 		)
 	{
 		lRet = pXmlNode->OwnerDocument->CreateNode (XmlNodeType::Element, "ol", nullptr);
+
+		if	(lAttribute = pXmlNode->Attributes ["class"])
+		{
+			lRet->Attributes->Append (MakeNewAttribute ("class", lAttribute->Value, lRet->OwnerDocument));
+		}
 
 		for each (lItemNode in lItemNodes)
 		{
@@ -2287,14 +2617,21 @@ XmlNode^ XmlToHtml::FormatListNumber (XmlNode^ pXmlNode)
 XmlNode^ XmlToHtml::FormatListTable (XmlNode^ pXmlNode)
 {
 	XmlNode^		lRet;
+	XmlAttribute^	lAttribute;
 	XmlNodeList^	lHeaderNodes;
 	XmlNodeList^	lItemNodes;
 	XmlNode^		lItemNode;
 	XmlNode^		lTermNode;
 	XmlNode^		lDescriptionNode;
 	XmlNode^		lRowNode;
+	XmlNode^		lColNode;
 
 	lRet = pXmlNode->OwnerDocument->CreateNode (XmlNodeType::Element, "table", nullptr);
+
+	if	(lAttribute = pXmlNode->Attributes ["class"])
+	{
+		lRet->Attributes->Append (MakeNewAttribute ("class", lAttribute->Value, lRet->OwnerDocument));
+	}
 
 	if	(
 			(lHeaderNodes = pXmlNode->SelectNodes ("child::listheader"))
@@ -2307,11 +2644,13 @@ XmlNode^ XmlToHtml::FormatListTable (XmlNode^ pXmlNode)
 
 			if	(lTermNode = lItemNode ["term"])
 			{
-				lRowNode->AppendChild (ChangeNodeName (lTermNode, "th"));
+				lRowNode->AppendChild (lColNode = ChangeNodeName (lTermNode, "th"));
+				CopyNodeAttributes (lTermNode, lColNode);
 			}
 			if	(lDescriptionNode = lItemNode ["description"])
 			{
-				lRowNode->AppendChild (ChangeNodeName (lDescriptionNode, "th"));
+				lRowNode->AppendChild (lColNode = ChangeNodeName (lDescriptionNode, "th"));
+				CopyNodeAttributes (lDescriptionNode, lColNode);
 			}
 		}
 	}
@@ -2327,11 +2666,13 @@ XmlNode^ XmlToHtml::FormatListTable (XmlNode^ pXmlNode)
 
 			if	(lTermNode = lItemNode ["term"])
 			{
-				lRowNode->AppendChild (ChangeNodeName (lTermNode, "td"));
+				lRowNode->AppendChild (lColNode = ChangeNodeName (lTermNode, "td"));
+				CopyNodeAttributes (lTermNode, lColNode);
 			}
 			if	(lDescriptionNode = lItemNode ["description"])
 			{
-				lRowNode->AppendChild (ChangeNodeName (lDescriptionNode, "td"));
+				lRowNode->AppendChild (lColNode = ChangeNodeName (lDescriptionNode, "td"));
+				CopyNodeAttributes (lDescriptionNode, lColNode);
 			}
 		}
 	}
@@ -2426,7 +2767,7 @@ bool XmlToHtml::IsAllPropertiesName (String^ pMemberName)
 	if	(
 			(pMemberName)
 		&&	(pMemberName->StartsWith ("P:"+mSourceAssembly->GetName()->Name))
-		&&	(lNameParts = pMemberName->Substring(2)->Split (String(".").ToCharArray()))
+		&&	(lNameParts = pMemberName->Substring(2)->Split ('.'))
 		&&	(lNameParts->Length == 3)
 		)
 	{
@@ -2437,13 +2778,13 @@ bool XmlToHtml::IsAllPropertiesName (String^ pMemberName)
 
 String^ XmlToHtml::AllPropertiesName (String^ pMemberName)
 {
-	array<String^>^	lNameParts = pMemberName->Substring(2)->Split (String(".").ToCharArray());
+	array<String^>^	lNameParts = pMemberName->Substring(2)->Split ('.');
 	return String::Format ("{0} Object Properties", lNameParts[2]);
 }
 
 String^ XmlToHtml::AllPropertiesFileName (String^ pMemberName)
 {
-	array<String^>^	lNameParts = pMemberName->Substring(2)->Split (String(".").ToCharArray());
+	array<String^>^	lNameParts = pMemberName->Substring(2)->Split ('.');
 	return MemberFileName (String::Format ("{0}_Properties", lNameParts[2]));
 }
 
@@ -2457,7 +2798,7 @@ bool XmlToHtml::IsAllFieldsName (String^ pMemberName)
 	if	(
 			(pMemberName)
 		&&	(pMemberName->StartsWith ("F:"))
-		&&	(lNameParts = pMemberName->Substring(2)->Split (String(".").ToCharArray()))
+		&&	(lNameParts = pMemberName->Substring(2)->Split ('.'))
 		&&	(lNameParts->Length == 3)
 		)
 	{
@@ -2468,13 +2809,13 @@ bool XmlToHtml::IsAllFieldsName (String^ pMemberName)
 
 String^ XmlToHtml::AllFieldsName (String^ pMemberName)
 {
-	array<String^>^	lNameParts = pMemberName->Substring(2)->Split (String(".").ToCharArray());
+	array<String^>^	lNameParts = pMemberName->Substring(2)->Split ('.');
 	return String::Format ("{0} Object Fields", lNameParts[2]);
 }
 
 String^ XmlToHtml::AllFieldsFileName (String^ pMemberName)
 {
-	array<String^>^	lNameParts = pMemberName->Substring(2)->Split (String(".").ToCharArray());
+	array<String^>^	lNameParts = pMemberName->Substring(2)->Split ('.');
 	return MemberFileName (String::Format ("{0}_Fields", lNameParts[2]));
 }
 
@@ -2487,28 +2828,20 @@ bool XmlToHtml::CopyXmlToXml (XmlDocument^ pXmlDocument, System::Reflection::Ass
 	bool				lRet = false;
 	XmlFormatWriter^	lWriter;
 
+	pXmlDocument->Normalize ();
 	LoadAssemblyMembers (pAssembly);
 
-	if	(mOutputIntellisense)
-	{
-		RemoveMemberDetails (pXmlDocument);
-		FixListFormats (pXmlDocument);
-	}
-	if	(
-			(mOutputIntellisense)
-		||	(mOutputSandcastle)
-		)
-	{
-		RemoveCompositeMembers (pXmlDocument);
-		AdjustXmlFormat (pXmlDocument);
-		FixMethodSignatures (pXmlDocument);
-		FixMemberReferences (pXmlDocument);
-	}
+	RemoveMemberDetails (pXmlDocument);
+	FixListFormats (pXmlDocument);
+	RemoveCompositeMembers (pXmlDocument);
+	AdjustXmlFormat (pXmlDocument);
+	FixMethodSignatures (pXmlDocument);
+	FixMemberReferences (pXmlDocument);
 
 	if	(lWriter = gcnew XmlFormatWriter)
 	{
 		lWriter->mOutputPath = mOutputPath;
-		
+
 		if	(
 				(mOutputIntellisense)
 			||	(mOutputSandcastle)
@@ -2516,6 +2849,7 @@ bool XmlToHtml::CopyXmlToXml (XmlDocument^ pXmlDocument, System::Reflection::Ass
 		{
 			lWriter->mEndParagraphs	= true;
 			lWriter->mIndentLines = false;
+			lWriter->mKeepDocType = false;
 			lWriter->mKeepComments = false;
 			lWriter->mMaxLineLength = 0;
 		}
@@ -2523,6 +2857,7 @@ bool XmlToHtml::CopyXmlToXml (XmlDocument^ pXmlDocument, System::Reflection::Ass
 		{
 			lWriter->mEndParagraphs	= false;
 			lWriter->mIndentLines = true;
+			lWriter->mKeepDocType = true;
 			lWriter->mKeepComments = true;
 			lWriter->mMaxLineLength = 100;
 		}
@@ -2552,63 +2887,72 @@ bool XmlToHtml::CopyXmlToXml (XmlDocument^ pXmlDocument, System::Reflection::Ass
 
 void XmlToHtml::FixMethodSignatures (XmlDocument^ pXmlDocument)
 {
-	Generic::List<XmlNode^>^	lMemberNodes;
-	XmlNode^					lMemberNode;
-	String^						lMemberName;
-
 	if	(
-			(mSourceMethods)
-		&&	(lMemberNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes ("members/member")))
+			(mOutputIntellisense)
+		||	(mOutputSandcastle)
 		)
 	{
-		for each (lMemberNode in lMemberNodes)
+		Generic::List<XmlNode^>^	lMemberNodes;
+		XmlNode^					lMemberNode;
+		String^						lMemberName;
+
+		if	(
+				(mSourceMethods)
+			&&	(lMemberNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes ("members/member")))
+			)
 		{
-			lMemberName = lMemberNode->Attributes["name"]->Value;
+			for each (lMemberNode in lMemberNodes)
+			{
+				lMemberName = lMemberNode->Attributes["name"]->Value;
 #ifdef	_DEBUG_XML_MEMBERS
-			LogMessage (_DEBUG_XML_MEMBERS, _T("  Member [%s]"), _B(lMemberName));
+				LogMessage (_DEBUG_XML_MEMBERS, _T("  Member [%s]"), _B(lMemberName));
 #endif
-			if	(lMemberName->StartsWith ("M:"))
-			{
-				Generic::KeyValuePair<String^, MethodInfo^>^	lMethod;
-
-				for each (lMethod in mSourceMethods)
+				if	(lMemberName->StartsWith ("M:"))
 				{
-					if	(lMethod->Key->StartsWith (lMemberName))
-					{
-						lMemberNode->Attributes["name"]->Value = lMethod->Key;
-						break;
-					}
-				}
-			}
-			else
-			if	(
-					(mSourceProperties)
-				&&	(lMemberName->StartsWith ("P:"))
-				)
-			{
-				PropertyInfo^									lProperty;
-				MethodInfo^										lAccessor;
-				array<ParameterInfo^>^							lParameters;
-				Generic::KeyValuePair<String^, MethodInfo^>^	lMethod;
-				int												lStringStart;
+					Generic::KeyValuePair<String^, MethodInfo^>^	lMethod;
 
-				if	(
-						(lProperty = FindAssemblyProperty (lMemberName))
-					&&	(lAccessor = lProperty->GetGetMethod ())
-					&&	(lParameters = lAccessor->GetParameters ())
-					&&	(lParameters->Length > 0)
-					)
-				{
 					for each (lMethod in mSourceMethods)
 					{
 						if	(
-								(lMethod->Value->Name == lAccessor->Name)
-							&&	(lMethod->Value->DeclaringType->FullName == lAccessor->DeclaringType->FullName)
-							&&	((lStringStart = lMethod->Key->IndexOf ('(')) > 0)
+								(lMethod->Key->StartsWith (lMemberName))
+							&&	(!lMethod->Key->EndsWith ("()"))
 							)
 						{
-							lMemberNode->Attributes["name"]->Value += lMethod->Key->Substring (lStringStart, lMethod->Key->Length-lStringStart);
+							lMemberNode->Attributes["name"]->Value = lMethod->Key;
 							break;
+						}
+					}
+				}
+				else
+				if	(
+						(mSourceProperties)
+					&&	(lMemberName->StartsWith ("P:"))
+					)
+				{
+					PropertyInfo^									lProperty;
+					MethodInfo^										lAccessor;
+					array<ParameterInfo^>^							lParameters;
+					Generic::KeyValuePair<String^, MethodInfo^>^	lMethod;
+					int												lStringStart;
+
+					if	(
+							(lProperty = FindAssemblyProperty (lMemberName))
+						&&	(lAccessor = lProperty->GetGetMethod ())
+						&&	(lParameters = lAccessor->GetParameters ())
+						&&	(lParameters->Length > 0)
+						)
+					{
+						for each (lMethod in mSourceMethods)
+						{
+							if	(
+									(lMethod->Value->Name == lAccessor->Name)
+								&&	(lMethod->Value->DeclaringType->FullName == lAccessor->DeclaringType->FullName)
+								&&	((lStringStart = lMethod->Key->IndexOf ('(')) > 0)
+								)
+							{
+								lMemberNode->Attributes["name"]->Value += lMethod->Key->Substring (lStringStart, lMethod->Key->Length-lStringStart);
+								break;
+							}
 						}
 					}
 				}
@@ -2619,59 +2963,68 @@ void XmlToHtml::FixMethodSignatures (XmlDocument^ pXmlDocument)
 
 void XmlToHtml::FixMemberReferences (XmlDocument^ pXmlDocument)
 {
-	Generic::List<XmlNode^>^	lNodeList;
-	XmlNode^					lNode;
-	String^						lAssemblyName = mSourceAssembly->GetName()->Name;
-
-	if	(lNodeList = NodeList (pXmlDocument->DocumentElement->SelectNodes (".//see | .//seealso")))
+	if	(
+			(mOutputIntellisense)
+		||	(mOutputSandcastle)
+		)
 	{
-		for each (lNode in lNodeList)
+		Generic::List<XmlNode^>^	lNodeList;
+		XmlNode^					lNode;
+		String^						lAssemblyName = mSourceAssembly->GetName()->Name;
+
+		if	(lNodeList = NodeList (pXmlDocument->DocumentElement->SelectNodes (".//see | .//seealso")))
 		{
-			if	(
-					(mOutputSandcastle)
-				&&	(mSourceMethods)
-				)
+			for each (lNode in lNodeList)
 			{
-				try
+				if	(
+						(mOutputSandcastle)
+					&&	(mSourceMethods)
+					)
 				{
-					XmlAttribute^	lRefName;
-
-					if	(
-							(lRefName = lNode->Attributes ["cref"])
-						&&	(lRefName->Value->StartsWith ("M:"))
-						)
+					try
 					{
-						Generic::KeyValuePair<String^, MethodInfo^>^	lMethod;
+						XmlAttribute^	lRefName;
 
-						for each (lMethod in mSourceMethods)
+						if	(
+								(lRefName = lNode->Attributes ["cref"])
+							&&	(lRefName->Value->StartsWith ("M:"))
+							)
 						{
-							if	(lMethod->Key->StartsWith (lRefName->Value))
+							Generic::KeyValuePair<String^, MethodInfo^>^	lMethod;
+
+							for each (lMethod in mSourceMethods)
 							{
-								lRefName->Value = lMethod->Key;
-								break;
+								if	(
+										(lMethod->Key->StartsWith (lRefName->Value))
+									&&	(!lMethod->Key->EndsWith ("()"))
+									)
+								{
+									lRefName->Value = lMethod->Key;
+									break;
+								}
 							}
 						}
 					}
+					catch AnyExceptionSilent
 				}
-				catch AnyExceptionSilent
-			}
 
-			if	(mOutputIntellisense)
-			{
-				try
+				if	(mOutputIntellisense)
 				{
-					XmlAttribute^	lRefName;
-
-					if	(
-							(lRefName = lNode->Attributes ["cref"])
-						&&	(lRefName->Value [1] == ':')
-						&&	(lRefName->Value->Substring (2)->StartsWith (lAssemblyName))
-						)
+					try
 					{
-						lRefName->Value = lRefName->Value->Substring(0,2) + lRefName->Value->Substring(lAssemblyName->Length+3,lRefName->Value->Length-lAssemblyName->Length-3);
+						XmlAttribute^	lRefName;
+
+						if	(
+								(lRefName = lNode->Attributes ["cref"])
+							&&	(lRefName->Value [1] == ':')
+							&&	(lRefName->Value->Substring (2)->StartsWith (lAssemblyName))
+							)
+						{
+							lRefName->Value = lRefName->Value->Substring(0,2) + lRefName->Value->Substring(lAssemblyName->Length+3,lRefName->Value->Length-lAssemblyName->Length-3);
+						}
 					}
+					catch AnyExceptionSilent
 				}
-				catch AnyExceptionSilent
 			}
 		}
 	}
@@ -2681,196 +3034,185 @@ void XmlToHtml::FixMemberReferences (XmlDocument^ pXmlDocument)
 
 void XmlToHtml::FixListFormats (System::Xml::XmlDocument^ pXmlDocument)
 {
-	try
+	if	(mOutputIntellisense)
 	{
-		Generic::List<XmlNode^>^	lParamNodes;
-		XmlNode^					lParamNode;
-		Generic::List<XmlNode^>^	lListNodes;
-		XmlNode^					lListNode;
-		Generic::List<XmlNode^>^	lItemNodes;
-		XmlNode^					lItemNode;
-		XmlNode^					lTermNode;
-		XmlNode^					lDescNode;
-		String^						lInnerXml;
-
-		if	(lParamNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes (".//param | .//returns | .//value | .//remarks")))
+		try
 		{
-			for each (lParamNode in lParamNodes)
+			Generic::List<XmlNode^>^	lParamNodes;
+			XmlNode^					lParamNode;
+			Generic::List<XmlNode^>^	lListNodes;
+			XmlNode^					lListNode;
+			Generic::List<XmlNode^>^	lItemNodes;
+			XmlNode^					lItemNode;
+			XmlNode^					lTermNode;
+			XmlNode^					lDescNode;
+			String^						lInnerXml;
+
+			if	(lParamNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes (".//param | .//returns | .//value | .//remarks")))
 			{
-				if	(lListNodes = NodeList (lParamNode->SelectNodes (".//list")))
+				for each (lParamNode in lParamNodes)
 				{
-					for each (lListNode in lListNodes)
+					if	(lListNodes = NodeList (lParamNode->SelectNodes (".//list")))
 					{
-						if	(lItemNodes = NodeList (lListNode->SelectNodes ("./item")))
+						for each (lListNode in lListNodes)
 						{
-							for each (lItemNode in lItemNodes)
+							if	(lItemNodes = NodeList (lListNode->SelectNodes ("./item")))
 							{
-								lTermNode = lItemNode->SelectSingleNode ("term");
-								lDescNode = lItemNode->SelectSingleNode ("description");
-								
-								if	(
-										(lTermNode)
-									&&	(lDescNode)
-									)
+								for each (lItemNode in lItemNodes)
 								{
-									lInnerXml = lTermNode->InnerXml + " <b>…</b> " + lDescNode->InnerXml;
+									lTermNode = lItemNode->SelectSingleNode ("term");
+									lDescNode = lItemNode->SelectSingleNode ("description");
+
+									if	(
+											(lTermNode)
+										&&	(lDescNode)
+										)
+									{
+										lInnerXml = lTermNode->InnerXml + " <b>…</b> " + lDescNode->InnerXml;
+									}
+									else
+									if	(lTermNode)
+									{
+										lInnerXml = lTermNode->InnerXml;
+									}
+									else
+									if	(lDescNode)
+									{
+										lInnerXml = lDescNode->InnerXml;
+									}
+									else
+									{
+										lInnerXml = lItemNode->InnerXml;
+									}
+									lInnerXml = "<para/>" + lInnerXml;
+									lListNode->ReplaceChild (MakeNewNode (lInnerXml, pXmlDocument), lItemNode);
 								}
-								else
-								if	(lTermNode)
-								{
-									lInnerXml = lTermNode->InnerXml;
-								}
-								else
-								if	(lDescNode)
-								{
-									lInnerXml = lDescNode->InnerXml;
-								}
-								else
-								{
-									lInnerXml = lItemNode->InnerXml;
-								}
-								lInnerXml = "<para/>" + lInnerXml;
-								lListNode->ReplaceChild (MakeNewNode (lInnerXml, pXmlDocument), lItemNode);
 							}
+
+							lListNode->ParentNode->ReplaceChild (CopyNodeInnerXml (lListNode, pXmlDocument), lListNode);
 						}
-						
-						lListNode->ParentNode->ReplaceChild (CopyNodeInnerXml (lListNode, pXmlDocument), lListNode);
 					}
 				}
 			}
 		}
+		catch AnyExceptionDebug
 	}
-	catch AnyExceptionDebug
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
 void XmlToHtml::RemoveMemberDetails (System::Xml::XmlDocument^ pXmlDocument)
 {
-	try
+	if	(
+			(mOutputIntellisense)
+		||	(mOutputSandcastle)
+		)
 	{
-		Generic::List<XmlNode^>^	lDetailsNodes;
-		XmlNode^					lDetailsNode;
-
-		if	(lDetailsNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes (".//syntax | .//detail | .//details | .//example | .//seealso")))
+		try
 		{
-			for each (lDetailsNode in lDetailsNodes)
+			Generic::List<XmlNode^>^	lDetailsNodes;
+			XmlNode^					lDetailsNode;
+
+			if	(
+					(mOutputIntellisense)
+				?	(lDetailsNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes (".//syntax | .//detail | .//details | .//example | .//seealso")))
+				:	(lDetailsNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes (".//syntax | .//detail | .//details")))
+				)
 			{
-				lDetailsNode->ParentNode->RemoveChild (lDetailsNode);
+				for each (lDetailsNode in lDetailsNodes)
+				{
+					lDetailsNode->ParentNode->RemoveChild (lDetailsNode);
+				}
 			}
 		}
+		catch AnyExceptionDebug
 	}
-	catch AnyExceptionDebug
 }
 
 void XmlToHtml::RemoveCompositeMembers (System::Xml::XmlDocument^ pXmlDocument)
 {
-	try
+	if	(
+			(mOutputIntellisense)
+		||	(mOutputSandcastle)
+		)
 	{
-		Generic::List<XmlNode^>^	lMemberNodes;
-		XmlNode^					lMemberNode;
-		String^						lMemberName;
-
-		if	(lMemberNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes ("members/member")))
+		try
 		{
-			for each (lMemberNode in lMemberNodes)
+			Generic::List<XmlNode^>^	lMemberNodes;
+			XmlNode^					lMemberNode;
+			String^						lMemberName;
+
+			if	(lMemberNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes ("members/member")))
 			{
-				lMemberName = lMemberNode->Attributes["name"]->Value;
-				
-				if	(
-						(IsAllPropertiesName (lMemberName))
-					||	(IsAllFieldsName (lMemberName))
-					)
+				for each (lMemberNode in lMemberNodes)
 				{
-					lMemberNode->ParentNode->RemoveChild (lMemberNode);
+					lMemberName = lMemberNode->Attributes["name"]->Value;
+
+					if	(
+							(IsAllPropertiesName (lMemberName))
+						||	(IsAllFieldsName (lMemberName))
+						)
+					{
+						lMemberNode->ParentNode->RemoveChild (lMemberNode);
+					}
 				}
 			}
 		}
+		catch AnyExceptionDebug
 	}
-	catch AnyExceptionDebug
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
 void XmlToHtml::AdjustXmlFormat (System::Xml::XmlDocument^ pXmlDocument)
 {
-	try
+	if	(
+			(mOutputIntellisense)
+		||	(mOutputSandcastle)
+		)
 	{
-		Generic::List<XmlNode^>^	lMemberNodes;
-		XmlNode^					lMemberNode;
-		XmlAttribute^				lMemberName;
-		XmlNode^					lSummaryNode;
-		XmlNode^					lRemarksNode;
-		Generic::List<XmlNode^>^	lParamNodes;
-		XmlNode^					lParamNode;
-		Generic::List<XmlNode^>^	lSeeNodes;
-		XmlNode^					lSeeNode;
-		Generic::List<XmlNode^>^	lNodes;
-		XmlNode^					lNode;
-		XmlAttribute^				lAttribute;
-
-		if	(lMemberNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes ("members/member")))
+		try
 		{
-			for each (lMemberNode in lMemberNodes)
+			Generic::List<XmlNode^>^	lMemberNodes;
+			XmlNode^					lMemberNode;
+			XmlAttribute^				lMemberName;
+			XmlNode^					lSummaryNode;
+			XmlNode^					lRemarksNode;
+			Generic::List<XmlNode^>^	lParamNodes;
+			XmlNode^					lParamNode;
+			Generic::List<XmlNode^>^	lSeeNodes;
+			XmlNode^					lSeeNode;
+			Generic::List<XmlNode^>^	lNodes;
+			XmlNode^					lNode;
+			XmlAttribute^				lAttribute;
+
+			if	(lMemberNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes ("members/member")))
 			{
-				if	(lMemberName = lMemberNode->Attributes["name"])
+				for each (lMemberNode in lMemberNodes)
 				{
-					if	(lSummaryNode = lMemberNode->SelectSingleNode ("summary"))
+					if	(lMemberName = lMemberNode->Attributes["name"])
 					{
-						if	(
-								(lMemberName->Value->StartsWith ("M:"))
-							||	(lMemberName->Value->StartsWith ("P:"))
-							||	(lMemberName->Value->StartsWith ("E:"))
-							||	(lMemberName->Value->StartsWith ("F:"))
-							)
+						if	(lSummaryNode = lMemberNode->SelectSingleNode ("summary"))
 						{
-							if	(lNodes = NodeList (lSummaryNode->SelectNodes ("para")))
+							if	(
+									(lMemberName->Value->StartsWith ("M:"))
+								||	(lMemberName->Value->StartsWith ("P:"))
+								||	(lMemberName->Value->StartsWith ("E:"))
+								||	(lMemberName->Value->StartsWith ("F:"))
+								)
 							{
-								for each (lNode in lNodes)
+								if	(lNodes = NodeList (lSummaryNode->SelectNodes ("para")))
 								{
-									if	(lNode->FirstChild != nullptr)
+									for each (lNode in lNodes)
 									{
-										lSummaryNode->ReplaceChild (CopyNodeInnerXml (lNode, lNode->OwnerDocument), lNode);
+										if	(lNode->FirstChild != nullptr)
+										{
+											lSummaryNode->ReplaceChild (CopyNodeInnerXml (lNode, lNode->OwnerDocument), lNode);
+										}
 									}
 								}
 							}
-						}
-						if	(lNodes = NodeList (lSummaryNode->SelectNodes (".//c")))
-						{
-							for each (lNode in lNodes)
-							{
-								lNode->ParentNode->ReplaceChild (ChangeNodeName (lNode, "b"), lNode);
-							}
-						}
-					}
-
-					if	(lRemarksNode = lMemberNode->SelectSingleNode ("remarks"))
-					{
-						if	(lNodes = NodeList (lRemarksNode->SelectNodes (".//c")))
-						{
-							for each (lNode in lNodes)
-							{
-								lNode->ParentNode->ReplaceChild (ChangeNodeName (lNode, "b"), lNode);
-							}
-						}
-					}
-
-					if	(
-							(mOutputIntellisense)
-						&&	(lParamNodes = NodeList (lMemberNode->SelectNodes ("value")))
-						)
-					{
-						for each (lParamNode in lParamNodes)
-						{
-							lParamNode->ParentNode->ReplaceChild (ChangeNodeName (lParamNode, "returns"), lParamNode);
-						}
-					}
-
-					if	(lParamNodes = NodeList (lMemberNode->SelectNodes ("param | returns | value")))
-					{
-						for each (lParamNode in lParamNodes)
-						{
-							if	(lNodes = NodeList (lParamNode->SelectNodes (".//c")))
+							if	(lNodes = NodeList (lSummaryNode->SelectNodes (".//c")))
 							{
 								for each (lNode in lNodes)
 								{
@@ -2878,55 +3220,178 @@ void XmlToHtml::AdjustXmlFormat (System::Xml::XmlDocument^ pXmlDocument)
 								}
 							}
 						}
-					}
 
-					if	(
-							(mOutputIntellisense)
-						&&	(lSeeNodes = NodeList (lMemberNode->SelectNodes (".//see")))
-						)
-					{
-						for each (lSeeNode in lSeeNodes)
+						if	(lRemarksNode = lMemberNode->SelectSingleNode ("remarks"))
 						{
-							if	(lAttribute = lSeeNode->Attributes["prefix"])
+							if	(lNodes = NodeList (lRemarksNode->SelectNodes (".//c")))
 							{
-								lSeeNode->ParentNode->InsertBefore (MakeNewNode (lAttribute->Value+" ", lSeeNode->OwnerDocument), lSeeNode);
-								lSeeNode->Attributes->Remove (lAttribute);
-							}
-							if	(lAttribute = lSeeNode->Attributes["suffix"])
-							{
-								lSeeNode->ParentNode->InsertAfter (MakeNewNode (" "+lAttribute->Value, lSeeNode->OwnerDocument), lSeeNode);
-								lSeeNode->Attributes->Remove (lAttribute);
-							}
-							if	(lAttribute = lSeeNode->Attributes["text"])
-							{
-								lSeeNode->ParentNode->ReplaceChild (MakeNewNode ("&quot;"+lAttribute->Value+"&quot;", lSeeNode->OwnerDocument), lSeeNode);
+								for each (lNode in lNodes)
+								{
+									lNode->ParentNode->ReplaceChild (ChangeNodeName (lNode, "b"), lNode);
+								}
 							}
 						}
-					}
 
-					if	(lSeeNodes = NodeList (lMemberNode->SelectNodes (".//seealso")))
-					{
-						for each (lSeeNode in lSeeNodes)
+						if	(
+								(mOutputIntellisense)
+							&&	(lParamNodes = NodeList (lMemberNode->SelectNodes ("value")))
+							)
 						{
-							if	(lAttribute = lSeeNode->Attributes["prefix"])
+							for each (lParamNode in lParamNodes)
 							{
-								lSeeNode->Attributes->Remove (lAttribute);
+								if	(lParamNode->Attributes["name"])
+								{
+									lParamNode->ParentNode->ReplaceChild (ChangeNodeName (lParamNode, "returns"), lParamNode);
+								}
 							}
-							if	(lAttribute = lSeeNode->Attributes["suffix"])
+						}
+
+						if	(lParamNodes = NodeList (lMemberNode->SelectNodes ("param | returns | value")))
+						{
+							for each (lParamNode in lParamNodes)
 							{
-								lSeeNode->Attributes->Remove (lAttribute);
+								if	(lNodes = NodeList (lParamNode->SelectNodes (".//c")))
+								{
+									for each (lNode in lNodes)
+									{
+										lNode->ParentNode->ReplaceChild (ChangeNodeName (lNode, "b"), lNode);
+									}
+								}
 							}
-							if	(lAttribute = lSeeNode->Attributes["text"])
+						}
+
+						if	(lSeeNodes = NodeList (lMemberNode->SelectNodes (".//see")))
+						{
+							for each (lSeeNode in lSeeNodes)
 							{
-								lSeeNode->Attributes->Remove (lAttribute);
+								if	(lAttribute = lSeeNode->Attributes["prefix"])
+								{
+									lSeeNode->ParentNode->InsertBefore (MakeNewNode (lAttribute->Value+" ", lSeeNode->OwnerDocument), lSeeNode);
+									lSeeNode->Attributes->Remove (lAttribute);
+								}
+								if	(lAttribute = lSeeNode->Attributes["suffix"])
+								{
+									lSeeNode->ParentNode->InsertAfter (MakeNewNode (" "+lAttribute->Value, lSeeNode->OwnerDocument), lSeeNode);
+									lSeeNode->Attributes->Remove (lAttribute);
+								}
+								if	(lAttribute = lSeeNode->Attributes["text"])
+								{
+									if	(mOutputIntellisense)
+									{
+										lSeeNode->ParentNode->ReplaceChild (MakeNewNode ("&quot;"+lAttribute->Value+"&quot;", lSeeNode->OwnerDocument), lSeeNode);
+									}
+									else
+									{
+										lSeeNode->Attributes->Remove (lAttribute);
+									}
+								}
+							}
+						}
+
+						if	(lSeeNodes = NodeList (lMemberNode->SelectNodes (".//seealso")))
+						{
+							for each (lSeeNode in lSeeNodes)
+							{
+								if	(lAttribute = lSeeNode->Attributes["prefix"])
+								{
+									lSeeNode->Attributes->Remove (lAttribute);
+								}
+								if	(lAttribute = lSeeNode->Attributes["suffix"])
+								{
+									lSeeNode->Attributes->Remove (lAttribute);
+								}
+								if	(lAttribute = lSeeNode->Attributes["text"])
+								{
+									lSeeNode->Attributes->Remove (lAttribute);
+								}
 							}
 						}
 					}
 				}
 			}
 		}
+		catch AnyExceptionDebug
 	}
-	catch AnyExceptionDebug
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void XmlToHtml::ResolveEntities (XmlDocument^ pXmlDocument)
+{
+	ResolveEntities (pXmlDocument->DocumentElement);
+}
+
+void XmlToHtml::ResolveEntities (XmlNode^ pXmlNode)
+{
+	Generic::List<XmlNode^>^	lNodeList;
+	XmlNode^					lXmlNode;
+	XmlAttribute^				lXmlAttribute;
+
+	if	(pXmlNode->NodeType == XmlNodeType::EntityReference)
+	{
+		XmlDocumentType^	lDocType;
+		XmlNamedNodeMap^	lEntities;
+		XmlNode^			lEntity = nullptr;
+
+#ifdef	_DEBUG_ENTITIES_NOT
+		LogMessage (_DEBUG_ENTITIES, _T("Entity [%s]"), _B(pXmlNode->Name));
+#endif
+		if	(
+				(lDocType = pXmlNode->OwnerDocument->DocumentType)
+			&&	(lEntities = lDocType->Entities)
+			&&	(lEntity = lEntities->GetNamedItem (pXmlNode->Name))
+			)
+		{
+#ifdef	_DEBUG_ENTITIES_NOT
+			LogMessage (_DEBUG_ENTITIES, _T("Entity [%s] to [%s]"), _B(pXmlNode->Name), _B(lEntity->InnerText));
+#endif
+			try
+			{
+				if	(lXmlNode = pXmlNode->OwnerDocument->CreateNode (XmlNodeType::DocumentFragment, nullptr, nullptr))
+				{
+					lXmlNode->InnerXml = lEntity->InnerText;
+#ifdef	_DEBUG_ENTITIES
+					LogMessage (_DEBUG_ENTITIES, _T("Entity [%s] to [%s] (Xml)"), _B(pXmlNode->Name), _B(lXmlNode->InnerXml));
+#endif
+					pXmlNode->ParentNode->ReplaceChild (lXmlNode, pXmlNode);
+					pXmlNode = lXmlNode;
+				}
+			}
+			catch (...)
+			{
+				try
+				{
+					if	(lXmlNode = pXmlNode->OwnerDocument->CreateTextNode (lEntity->InnerText))
+					{
+#ifdef	_DEBUG_ENTITIES
+						LogMessage (_DEBUG_ENTITIES, _T("Entity [%s] to [%s] (Text)"), _B(pXmlNode->Name), _B(lXmlNode->InnerText));
+#endif
+						pXmlNode->ParentNode->ReplaceChild (lXmlNode, pXmlNode);
+						pXmlNode = lXmlNode;
+					}
+				}
+				catch AnyExceptionSilent
+			}
+		}
+	}
+
+	if	(pXmlNode)
+	{
+		if	(lNodeList = NodeList (pXmlNode->ChildNodes))
+		{
+			for each (lXmlNode in lNodeList)
+			{
+				ResolveEntities (lXmlNode);
+			}
+		}
+		if	(pXmlNode->Attributes)
+		{
+			for each (lXmlAttribute in pXmlNode->Attributes)
+			{
+				ResolveEntities (lXmlAttribute);
+			}
+		}
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

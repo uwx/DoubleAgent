@@ -12,69 +12,85 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The BackColor Property</h4>
+					<h3>The BackColor Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Returns or sets the background color of a character's word balloon.</p>
-					</div>
+				<p>Specifies the background color of a character's word balloon.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>BackColor</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>BackColor</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>BackColor</s> = <em>BackColor</em></p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>BackColor</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>BackColor</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>BackColor</s> = <em>BackColor</em></p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>BackColor</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>BackColor</s></p>
-
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>BackColor</s> = <em>BackColor</em></p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>BackColor</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Balloon</s>.<s>BackColor</s></p>
-
-<p><em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Balloon</s>.<s>BackColor</s> = <em>BackColor</em></p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>balloon</em>-&gt;<s>get_BackColor</s> (<em>&amp;BackColor</em>)</p>
-
-<p><em>balloon</em>-&gt;<s>put_BackColor</s> (<em>BackColor</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">BackColor</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Balloon</em>.<em class="keyword">BackColor</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Balloon</em>.<em class="keyword">BackColor</em> = <em class="token">BackColor</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">BackColor</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Balloon</em>.<em class="keyword">BackColor</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Balloon</em>.<em class="keyword">BackColor</em> = <em class="token">BackColor</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">BackColor</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Balloon</em>.<em class="keyword">BackColor</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Balloon</em>.<em class="keyword">BackColor</em> = <em class="token">BackColor</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">BackColor</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Balloon</em>.<em class="keyword">BackColor</em></p>
+<p><em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Balloon</em>.<em class="keyword">BackColor</em> = <em class="token">BackColor</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">balloon</em>-&gt;<em class="keyword">get_BackColor</em> (<em class="token">&amp;BackColor</em>)</p>
+<p><em class="token">balloon</em>-&gt;<em class="keyword">put_BackColor</em> (<em class="token">BackColor</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>BackColor</i>
+									<em class="token">BackColor</em>
 								</td>
 								<td>
-				A <s>numeric </s>value that specifies the background color.
+				A <em class="typename">numeric</em> value that specifies the background color.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>The valid range for a normal RGB color is 0 to 16,777,215 (&amp;HFFFFFF). The high byte of a number in this range equals 0; the lower 3 bytes, from least to most significant byte, determine the amount of red, green, and blue, respectively. The red, green, and blue components are each represented by a number between 0 and 255 (&amp;HFF).</p>
-					<p class="note">
-						<span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
-				</td>
+				<p>
+			The valid range for a normal RGB color is 0 to 16,777,215 (&amp;HFFFFFF). The high byte of a number in this range equals 0; the lower 3 bytes, from least to most significant byte, determine the amount of red, green, and blue, respectively. The red, green, and blue components are each represented by a number between 0 and 255 (&amp;HFF).
+		</p>
+				<p class="note"><span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
+			</td>
 			</tr>
 		</table>
 	</body>

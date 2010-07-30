@@ -1,45 +1,81 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
-<HTML DIR="LTR"><HEAD>
-<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
-<TITLE>Programming the Microsoft Agent Server Interface</TITLE>
-<!-- Built on Monday, August 06, 2001 -->
-<SCRIPT SRC="../langref.js"></SCRIPT>
-<LINK REL="STYLESHEET" HREF="../css/dahelp.css"></HEAD>
-<BODY TOPMARGIN="0">
-
-<TABLE CLASS="buttonbarshade" CELLSPACING=0><TR><TD>&nbsp;</TD></TR></TABLE>
-<TABLE CLASS="buttonbartable" CELLSPACING=0><TR ID="hdr"><TD CLASS="runninghead" NOWRAP>Platform&nbsp;SDK:&nbsp;Agent</TD></TR></TABLE>
-
-<H1><A NAME="_agent_programming_the_microsoft_agent_server_interface_paface"></A>Programming the Microsoft Agent Server Interface</H1>
-
-<P><B>Contents</B>
-
-<UL>
-	<LI><A HREF="Svr_Programming_Intro.htm">Introduction</A></LI>
-
-	<LI><A HREF="Svr_Programming_Start.htm">Adding Microsoft Agent Functionality to Your Application</A></LI>
-
-	<LI><A HREF="Svr_Programming_Load.htm">Loading Character and Animation Data</A></LI>
-
-	<LI><A HREF="Svr_Programming_Sink.htm">Creating a Notification Sink</A></LI>
-
-	<LI><A HREF="Svr_Programming_Java.htm">Accessing Services Using Java</A></LI>
-
-	<LI><A HREF="Svr_Programming_Speech.htm">Accessing Speech Services</A></LI>
-
-	<LI><A HREF="Svr_Programming_Reference.htm">Reference</A></LI>
-</UL>
-<!-- Info Task Footer -->
-<DIV CLASS="itfBorder"><IMG SRC="../tiny.gif" WIDTH="1" HEIGHT="1"></DIV>
-<DIV CLASS="itf"><B>Platform SDK Release: <FONT COLOR="#ddaa00">August 2001</FONT></B>
-<TABLE CELLPADDING="0" CELLSPACING="0"><TR VALIGN="top">
-<TD WIDTH="13" CLASS="itficon"><A HREF="mailto:sdkfdbk@microsoft.com?subject=TITLE:%20Programming%20the%20Microsoft%20Agent%20Server%20Interface;%20RELEASE:%20August%202001;%20URL:%20paface_6d2d.htm" Title="Send feedback to the Platform SDK team at sdkfdbk@microsoft.com"><IMG SRC="../sendfdbk.gif" BORDER="0" WIDTH="13" HEIGHT="15"/></A></TD>
-<TD WIDTH="47%" CLASS="itf">What did you think of this topic?<BR>
-<A HREF="mailto:sdkfdbk@microsoft.com?subject=TITLE:%20Programming%20the%20Microsoft%20Agent%20Server%20Interface;%20RELEASE:%20August%202001;%20URL:%20paface_6d2d.htm" Title="Send feedback to the Platform SDK team at sdkfdbk@microsoft.com">Let us know</A>.</TD>
-<TD WIDTH="16" CLASS="itficon"><IMG SRC="../download.gif" BORDER="0" WIDTH="16" HEIGHT="16"/></TD>
-<TD CLASS="itf">Order a Platform SDK CD Online<BR>
-(<A HREF="http://developerstore.com/devstore/product.asp?productID=7639&Store=TOOLBOX_NA&DisplayCode" TARGET="_blank" TITLE="Order a CD online.">U.S/Canada</A>)&nbsp;&nbsp;&nbsp;(<A HREF="http://developerstore.com/devstore/product.asp?productID=7639&Store=TOOLBOX_INTL&DisplayCode" TARGET="_blank" TITLE="Order a CD online.">International</A>)</TD></TR></TABLE></DIV>
-<P>&nbsp;</P>
-
-</BODY>
-</HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Programming the Double Agent Server</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h1>Programming the Double Agent Server</h1>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>Double Agent includes a <em class="glossary">COM (Component Object Model)</em> <em class="keyword">Server</em>
+					that allows applications to access its services through <em class="glossary">COM Interfaces</em>. The
+					server allows characters to be shared among applications. As a standard COM server, it only runs when
+					it's required.</p>
+				<hr />
+				<dl>
+					<dt><a href="Svr_DocumentationConventions.htm">Documentation Conventions</a></dt>
+					<dt><a href="Svr_Programming_Apps.htm">Using the Server in Applications</a></dt>
+					<dd>
+						<dl>
+							<dt><a href="Svr_Programming_Load.htm">Loading Character and Animation Data</a></dt>
+							<dt><a href="Svr_Programming_Sink.htm">Creating a Notification Sink</a></dt>
+						</dl>
+					</dd>
+					<dt><a href="Svr_Programming_Speech.htm">Using Speech Services</a></dt>
+					<dt><a href="Svr_Programming_Upgrade.htm">Updating from Previous Versions</a></dt>
+				</dl>
+				<hr />
+				<p>The Double Agent server implements the following object classes:</p>
+				<dl>
+					<dt>
+						<h4>User Interface Objects</h4>
+					</dt>
+					<dd>
+						<dl>
+							<dt><a href="../Generated/Server_Character.htm">The Character Object</a></dt>
+							<dt><a href="../Generated/Server_Commands.htm">The Commands Collection</a></dt>
+							<dt><a href="../Generated/Server_Command.htm">The Command Object</a></dt>
+							<dt><a href="../Generated/Server_Balloon.htm">The Balloon Object</a></dt>
+							<dt><a href="../Generated/Server_CommandsWindow.htm">The CommandsWindow Object</a></dt>
+							<dt><a href="../Generated/Server_PropertySheet.htm">The PropertySheet Object</a></dt>
+						</dl>
+					</dd>
+					<dt>
+						<h4>Operational Objects</h4>
+					</dt>
+					<dd>
+						<dl>
+							<dt><a href="../Generated/Server_Server.htm">The Server Object</a></dt>
+							<dt><a href="../Generated/Server_UserInput.htm">The UserInput Object</a></dt>
+						</dl>
+					</dd>
+					<dt>
+						<h4>Information Objects</h4>
+					</dt>
+					<dd>
+						<dl>
+							<dt><a href="../Generated/Server_Settings.htm">The Settings Object</a></dt>
+							<dt><a href="../Generated/Server_CharacterFiles.htm">The CharacterFiles Object</a></dt>
+							<dt><a href="../Generated/Server_TTSEngines.htm">The TTSEngines Collection</a></dt>
+							<dt><a href="../Generated/Server_TTSEngine.htm">The TTSEngine Object</a></dt>
+							<dt><a href="../Generated/Server_SREngines.htm">The SREngines Collection</a></dt>
+							<dt><a href="../Generated/Server_SREngine.htm">The SREngine Object</a></dt>
+						</dl>
+					</dd>
+				</dl>
+				<h4 class="seealso">See Also</h4>
+				<a href="Ctl_Programming.htm">Programming the Double Agent Control</a> </td>
+		</tr>
+	</table>
+</body>
+</html>

@@ -12,89 +12,98 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The ActiveClientChange Event</h4>
+					<h3>The ActiveClientChange Event</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Signalled when the active client of the character changes.</p>
-					</div>
+				<p>Signalled when the active client of the character changes.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p><s>Event</s> <em>control</em>_<s>ActiveClientChange</s> (<s>ByVal</s> <em>CharacterID</em> <s>As String<c>, </c> <c>ByVal</c></s> <em>Active</em> <s>As Boolean</s>)</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>ActiveClientChange</s> (<s>ByVal</s> <em>CharacterID</em> <s>As String<c>, </c> <c>ByVal</c></s> <em>Active</em> <s>As Boolean</s>)</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p><s>Sub</s> <em>control</em>_<s>ActiveClientChange</s> (<s>ByVal</s> <em>CharacterID</em>, <s>ByVal</s> <em>Active</em>)</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p><s>delegate void</s> <em>control</em>_<s>ActiveClientChange<em>EventHandler</em></s> (<s>string</s> <em>CharacterID</em>, <s>bool</s>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><s>void</s> <em>control</em>_<s>ActiveClientChange</s> (<s>LPCTSTR</s> <em>CharacterID</em>, <s>VARIANT_BOOL</s> <em>Active</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="keyword">Event</em> <em class="token">control</em>_<em class="keyword">ActiveClientChange</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em> <em class="keyword">As String<keyword>,</keyword> <keyword>ByVal</keyword></em> <em class="token">Active</em> <em class="keyword">As Boolean</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">ActiveClientChange</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em> <em class="keyword">As String<keyword>,</keyword> <keyword>ByVal</keyword></em> <em class="token">Active</em> <em class="keyword">As Boolean</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="keyword">Sub</em> <em class="token">control</em>_<em class="keyword">ActiveClientChange</em> (<em class="keyword">ByVal</em> <em class="token">CharacterID</em>, <em class="keyword">ByVal</em> <em class="token">Active</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="keyword">delegate void</em> <em class="token">control</em>_<em class="keyword">ActiveClientChange<token>EventHandler</token></em> (<em class="keyword">string</em> <em class="token">CharacterID</em>, <em class="keyword">bool</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="keyword">void</em> <em class="token">control</em>_<em class="keyword">ActiveClientChange</em> (<em class="keyword">LPCTSTR</em> <em class="token">CharacterID</em>, <em class="keyword">VARIANT_BOOL</em> <em class="token">Active</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>CharacterID</i>
+									<em class="token">CharacterID</em>
 								</td>
-								<td>
-				The unique identifier of the character that has become active or inactive.
-			</td>
+								<td>The unique identifier of the character that has become active or inactive.</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Active</i>
+									<em class="token">Active</em>
 								</td>
 								<td>
-									<s>True </s>if the character has become the active client or <s>False </s>if
-				it's no longer the active client.
+				<em class="keyword">True</em> if the character has become the active client or <em class="keyword">False</em>
+				if it's no longer the active client.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					When multiple clients (<a href="Control_Control.htm" class="see">Control</a> instances) share the same
-					character, the active client of the character receives mouse input (for example, click or drag events).
-					Similarly, when multiple characters are displayed, the active client of the topmost character (also
-					known as the input-active client) receives <a href="Control_Event_Command.htm" class="see">Command</a>
-					events.
+				<p>
+					When multiple clients (<a href="Control_Control.htm" class="see keyword">Control</a> instances) share the same character, the active client
+					of the character receives mouse input (for example, click or drag events). Similarly, when multiple
+					characters are displayed, the active client of the topmost character (also known as the <em class="glossary">input-active</em>
+					client) receives <a href="Control_Event_Command.htm" class="see keyword">Command</a> events.
 				</p>
-					<p>
-					A client application may receive this event when the user selects one of the client's entries
-					in the character's pop-up menu or by voice command, when the client application changes its active status,
-					or when another client terminates.
+				<p>
+					A client application may receive this event when the user selects one of the client's entries in the
+					character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a> or by voice command, when the client application changes
+					its active status, or when another client terminates.
 				</p>
-					<p>
-					Double Agent sends this event only to the clients that are directly affected; that either become
-					the active client or stop being the active client.
+				<p>
+					Double Agent sends this event only to the clients that are directly affected; that either become the
+					active client or stop being the active client.
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Event_ActivateInput.htm">The ActivateInput Event</a>
-					<br />
-					<a href="Control_Event_DeactivateInput.htm">The DeactivateInput Event</a>
-					<br />
-					<a href="Control_Character_Activate.htm">The Activate Method</a>
-					<br />
-					<a href="Control_Character_Active.htm">The Active Property</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_Event_ActivateInput.htm">The ActivateInput Event</a><br /><a href="Control_Event_DeactivateInput.htm">The DeactivateInput Event</a><br /><a href="Control_Character_Activate.htm">The Activate Method</a><br /><a href="Control_Character_Active.htm">The Active Property</a></td>
 			</tr>
 		</table>
 	</body>

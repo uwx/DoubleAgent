@@ -177,7 +177,10 @@ CDaCmnCharacter * CGlobalAnchor::_GetCharacter (long pCharID, CAgentFileCache & 
 				{
 					if	(
 							(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
-						&&	(lCharacter->GetCharID() == pCharID)
+						&&	(
+								(pCharID < 0)
+							||	(lCharacter->GetCharID() == pCharID)
+							)
 						)
 					{
 						lRet = lCharacter;
@@ -307,9 +310,49 @@ CInstanceAnchor::~CInstanceAnchor ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CDaCmnCharacter * CInstanceAnchor::GetInstanceCharacter (long pCharID)
+CDaCmnCharacter * CInstanceAnchor::GetInstanceCharacter (long pCharID)
 {
 	return CGlobalAnchor::_GetCharacter (pCharID, *this);
+}
+
+CDaCmnCharacter * CInstanceAnchor::GetDefaultCharacter ()
+{
+	CDaCmnCharacter *	lRet = NULL;
+
+	try
+	{
+		INT_PTR			lFileNdx;
+		CAgentFile *	lFile;
+
+		for	(lFileNdx = 0; lFile = GetCachedFile (lFileNdx); lFileNdx++)
+		{
+			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
+			INT_PTR								lClientNdx;
+			CDaCmnCharacter *					lCharacter;
+
+			if	(GetFileClients (lFile, lFileClients))
+			{
+				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
+				{
+					if	(
+							(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+						&&	(lCharacter->IsDefault ())
+						)
+					{
+						lRet = lCharacter;
+						break;
+					}
+				}
+				if	(lClientNdx >= 0)
+				{
+					break;
+				}
+			}
+		}
+	}
+	catch AnyExceptionSilent
+
+	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////

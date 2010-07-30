@@ -12,30 +12,84 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The MousePointer Property</h4>
+					<h3>The MousePointer Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Specifies the pointer to show when the mouse moves over the ActiveX<sup>®</sup> control.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd />
-							<dt>Visual Basic 6</dt>
-							<dd />
-							<dt>VBScript</dt>
-							<dd />
-							<dt>Visual C#</dt>
-							<dd />
-							<dt>Visual C++</dt>
-							<dd />
-						</dl>
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">MousePointer</em> = ]<em class="token">control</em>.<em class="keyword">MousePointer</em></p>
+<p><em class="token">control</em>.<em class="keyword">MousePointer</em> = <em class="token">MousePointer</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">MousePointer</em> = ]<em class="token">control</em>.<em class="keyword">MousePointer</em></p>
+<p><em class="token">control</em>.<em class="keyword">MousePointer</em> = <em class="token">MousePointer</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">MousePointer</em> = ]<em class="token">control</em>.<em class="keyword">MousePointer</em></p>
+<p><em class="token">control</em>.<em class="keyword">MousePointer</em> = <em class="token">MousePointer</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">MousePointer</em> = ]<em class="token">control</em>.<em class="keyword">MousePointer</em></p>
+<p><em class="token">control</em>.<em class="keyword">MousePointer</em> = <em class="token">MousePointer</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">control</em>-&gt;<em class="keyword">get_MousePointer</em> (&amp;<em class="token">MousePointer</em>)</p>
+<p><em class="token">control</em>-&gt;<em class="keyword">put_MousePointer</em> (<em class="token">MousePointer</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">MousePointer</em>
+								</td>
+								<td>
+				A <em class="typename">numeric</em> value that specifies the pointer style as
+				follows:
+				<table><tr><td xml:space="preserve">0&nbsp;=&nbsp;Default</td><td>The default pointer style (default for the target environment)</td></tr><tr><td xml:space="preserve">1&nbsp;=&nbsp;Arrow</td><td>The arrow-shaped pointer</td></tr><tr><td xml:space="preserve">2&nbsp;=&nbsp;Cross</td><td>The cross-shaped pointer</td></tr><tr><td xml:space="preserve">11&nbsp;=&nbsp;Hourglass</td><td>The "wait" pointer</td></tr><tr><td xml:space="preserve">12&nbsp;=&nbsp;No&nbsp;Drop</td><td>The pointer that indicates that drag-and-drop is not possible here</td></tr><tr><td xml:space="preserve">13&nbsp;=&nbsp;Arrow&nbsp;and&nbsp;Hourglass</td><td>The pointer that indicates that an application is starting</td></tr><tr><td xml:space="preserve">14&nbsp;=&nbsp;Arrow&nbsp;and&nbsp;Question</td><td>The pointer used for "What's this?" help</td></tr><tr><td xml:space="preserve">16&nbsp;=&nbsp;Hand</td><td>The hand-shaped pointer</td></tr></table>
+			</td>
+							</tr>
+						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p class="note"><span class="note">Note:</span> This property is relevant only when the control is visible (i.e. when it's used in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm">contained</a> mode).</p>
+			</td>
 			</tr>
 		</table>
 	</body>

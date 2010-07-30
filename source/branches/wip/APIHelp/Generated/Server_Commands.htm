@@ -17,8 +17,109 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4 class="remarks">Remarks</h4>
-				</td>
+					<h4 class="summary">Description</h4>
+				<p>
+					The <em class="self keyword">Commands Collection</em> defines the <a href="Server_Command.htm" class="see keyword">Commands</a>
+					that the user can apply to a <a href="Server_Character.htm" class="see keyword">Character</a>.
+				</p>
+			<div id="Syntax">
+				<dl><dt>
+							<h4>
+								<a name="Methods"> </a>Methods
+							</h4>
+						</dt><dd>
+							<table class="syntax"><tr><td width="275ex">
+										<a href="Server_Commands_Add.htm" class="see keyword">Add</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Commands_AddEx.htm" class="see keyword">AddEx</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Commands_Insert.htm" class="see keyword">Insert</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Commands_InsertEx.htm" class="see keyword">InsertEx</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Commands_Remove.htm" class="see keyword">Remove</a>
+									</td><td>
+										---todo---
+									</td></tr><tr><td>
+										<a href="Server_Commands_RemoveAll.htm" class="see keyword">RemoveAll</a>
+									</td><td>
+										---todo---
+									</td></tr></table>
+						</dd><dt>
+							<h4>
+								<a name="Properties"> </a>Properties
+							</h4>
+						</dt><dd>
+							<table class="syntax"><tr><td width="275ex">
+										<a href="Server_Commands_Caption.htm" class="see keyword">Caption</a>
+									</td><td>
+										Specifies the text displayed for the <a href="Server_Commands.htm" class="see keyword">Commands Collection</a> in the character's
+					<a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>.
+									</td></tr><tr><td>
+										<a href="Server_Commands_Command.htm" class="see keyword">Command</a>
+									</td><td>
+										Returns a <a href="Server_Command.htm" class="see keyword">Command Object</a> in the collection.
+									</td></tr><tr><td>
+										<a href="Server_Commands_Count.htm" class="see keyword">Count</a>
+									</td><td>
+										Returns the count of <a href="Server_Command.htm" class="see keyword">Command Objects</a> in the <a href="Server_Commands.htm" class="see keyword">Commands Collection</a>.
+									</td></tr><tr><td>
+										<a href="Server_Commands_DefaultCommand.htm" class="see keyword">DefaultCommand</a>
+									</td><td>
+										Specifies the default command of the <a href="Server_Commands.htm" class="see keyword">Commands Collection</a>.
+									</td></tr><tr><td>
+										<a href="Server_Commands_FontName.htm" class="see keyword">FontName</a>
+									</td><td>
+										Specifies the font used in the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window.
+									</td></tr><tr><td>
+										<a href="Server_Commands_FontSize.htm" class="see keyword">FontSize</a>
+									</td><td>
+										Specifies the font size used in the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window.
+									</td></tr><tr><td>
+										<a href="Server_Commands_GlobalVoiceCommandsEnabled.htm" class="see keyword">GlobalVoiceCommandsEnabled</a>
+									</td><td>
+										Specifies if pre-defined commands appear in the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window.
+									</td></tr><tr><td>
+										<a href="Server_Commands_Item.htm" class="see keyword">Item</a>
+									</td><td>
+										Returns a <a href="Server_Command.htm" class="see keyword">Command Object</a> in the collection.
+									</td></tr><tr><td>
+										<a href="Server_Commands_Visible.htm" class="see keyword">Visible</a>
+									</td><td>
+										Specifies if the <a href="Server_Commands.htm" class="see keyword">Commands Collection</a> appears in the character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>.
+									</td></tr><tr><td>
+										<a href="Server_Commands_VoiceCaption.htm" class="see keyword">VoiceCaption</a>
+									</td><td>
+										Specifies the text displayed for the <a href="Server_Commands.htm" class="see keyword">Commands Collection</a> in the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a>
+					window.
+									</td></tr><tr><td>
+										<a href="Server_Commands_VoiceGrammar.htm" class="see keyword">VoiceGrammar</a>
+									</td><td>
+										Specifies the text that is passed to the speech engine for recognition.
+									</td></tr></table>
+						</dd></dl>
+			</div><h4 class="remarks">Remarks</h4>
+				<p>
+					The <em class="self keyword">Commands Collection</em> can appear in both the <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>
+					and the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window for a character. To include commands in the
+					<a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>, set its <a href="Server_Commands_Caption.htm" class="see keyword">Caption</a> property. To
+					include commands in the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window, set its <a href="Server_Commands_VoiceCaption.htm" class="see keyword">VoiceCaption</a>
+					property (for backward compatibility, if there is no <a href="Server_Commands_VoiceCaption.htm" class="see keyword">VoiceCaption</a>, the
+					<a href="Server_Commands_Caption.htm" class="see keyword">Caption</a> setting is used).
+				</p>
+				<p>
+					This object can be accessed using the <a href="Server_Character.htm" class="see ">Character's</a> <a href="Server_Character_Commands.htm" class="see ">Commands</a>
+					property.
+				</p>
+			</td>
 			</tr>
 		</table>
 	</body>

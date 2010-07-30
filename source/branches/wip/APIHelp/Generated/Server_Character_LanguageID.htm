@@ -12,17 +12,111 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The LanguageID Property</h4>
+					<h3>The LanguageID Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Specifies the character's language identifier.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">get_LanguageID</em> (&amp;<em class="token">LanguageID</em>)</p>
+<p><em class="token">character</em>-&gt;<em class="keyword">put_LanguageID</em> (<em class="token">LanguageID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">LanguageID</em> = ]<em class="token">character</em>.<em class="keyword">LanguageID</em></p>
+<p><em class="token">character</em>.<em class="keyword">LanguageID</em> = <em class="token">LanguageID</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">LanguageID</em> = ]<em class="token">character</em>.<em class="keyword">LanguageID</em></p>
+<p><em class="token">character</em>.<em class="keyword">LanguageID</em> = <em class="token">LanguageID</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">LanguageID</em> = ]<em class="token">character</em>.<em class="keyword">LanguageID</em></p>
+<p><em class="token">character</em>.<em class="keyword">LanguageID</em> = <em class="token">LanguageID</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">LanguageID</em> = ]<em class="token">character</em>.<em class="keyword">LanguageID</em></p>
+<p><em class="token">character</em>.<em class="keyword">LanguageID</em> = <em class="token">LanguageID</em></p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">LanguageID</em>
+								</td>
+								<td>
+				A <em class="typename">numeric</em> value specifying the character's language ID.
+				A character's language ID (LANGID) is a 16-bit value defined by Windows, consisting of a primary language
+				ID and a secondary language ID.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					If you do not set the character's <em class="self keyword">LanguageID</em>, its language will be the current system language,
+					if the corresponding Agent language DLL is installed. Otherwise, the character's language will
+					be English (US).
+				</p>
+				<p>
+					This property also determines the language for word balloon text, the commands in the character's<a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a>,
+					and the speech recognition engine. It also determines the default language for text-to-speech output.
+				</p>
+			
+				<h4 class="details">Details</h4>
+				<p>
+					If you try to set a character's <em class="self keyword">LanguageID</em> and the Agent language DLL for that language is
+					not installed or a display font for the language is not available, Agent raises an error and <em class="self keyword">LanguageID</em>
+					remains at its last setting.
+				</p>
+				<p>
+					Setting this property does not raise an error if there are no matching speech engines for the language. To
+					determine if there is a compatible speech engine available for the <em class="self keyword">LanguageID</em>, check <a href="Server_Character_SRModeID.htm" class="see keyword">SRModeID</a>
+					or <a href="Server_Character_TTSModeID.htm" class="see keyword">TTSModeID</a>. If you do not set <em class="self keyword">LanguageID</em>, it will be set
+					to the user default language.
+				</p>
+				<p class="note"><span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
+				<p class="note"><span class="note">Note:</span> 
+					If you set <em class="self keyword">LanguageID</em> to a language that supports bidirectional text (such as Arabic
+					or Hebrew), but the system running your application does not have bidirectional support installed, text
+					in the word balloon may appear in logical rather than display order.
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Character_TTSModeID.htm">The TTSModeID Property</a><br /><a href="Server_Character_SRModeID.htm">The SRModeID Property</a></td>
 			</tr>
 		</table>
 	</body>

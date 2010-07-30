@@ -12,130 +12,159 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Activate Method</h4>
+					<h3>The Activate Method</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Sets the active client or character.</p>
-					</div>
+				<p>Sets the active client or character.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>Success</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Activate</s> (<em>State</em>)</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>Success</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Activate</s>[ <em>State</em>]</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>Success</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Activate</s>[ <em>State</em>]</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>Success</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Activate</s> (<em>State</em>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>character</em>.<s>Activate</s> (<em>State</em>, &amp;<em>Success</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Success</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Activate</em> (<em class="token">State</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">Success</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Activate</em>[ <em class="token">State</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">Success</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Activate</em>[ <em class="token">State</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Success</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Activate</em> (<em class="token">State</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">Activate</em> (<em class="token">State</em>, &amp;<em class="token">Success</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>State</i>
+									<em class="token">State</em>
 								</td>
 								<td>
-				An optional <s>numeric </s>value from the <a href="Control_ActiveStateType.htm" class="see">ActiveStateType</a>
-				enumeration:<table><tr><td>
-0&nbsp;=&nbsp;<s>Inactive</s>
-</td><td>Your client application is <em>not </em>the character's active client.</td></tr><tr><td>
-1&nbsp;=&nbsp;<s>Active</s>
-</td><td>Your client application is the character's active client.</td></tr><tr><td>
-2&nbsp;=&nbsp;<s>InputActive</s>
-</td><td>The character is the input-active character and will receive user input.</td></tr></table></td>
+				An optional <em class="typename">numeric</em> value from the <a href="Control_ActiveStateType.htm" class="see typename">ActiveStateType Enumeration</a>:
+				<table><tr><td xml:space="preserve">
+0&nbsp;=&nbsp;<em class="keyword">Inactive</em>
+</td><td>
+							Your client application is <em>not</em> the character's active client.
+						</td></tr><tr><td xml:space="preserve">
+1&nbsp;=&nbsp;<em class="keyword">Active</em>
+</td><td>
+							Your client application is the character's active client.
+						</td></tr><tr><td xml:space="preserve">
+2&nbsp;=&nbsp;<em class="keyword">InputActive</em>
+</td><td>
+							The character is the <em class="glossary">input-active</em> character and will receive user input.
+						</td></tr></table>
+			</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Success</i>
+									<em class="token">Success</em>
 								</td>
 								<td>
-									<s>True </s>if the method succeeded.
+				<em class="keyword">True</em> if the method succeeded.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					Avoid calling this method directly after a <a href="Control_Character_Show.htm" class="see">Show</a>
-					method.<a href="Control_Character_Show.htm" class="see">Show</a> automatically sets the input-active
-					client. When the character is shown, the <s>Activate </s>call may fail if it gets processed before
-					the <a href="Control_Character_Show.htm" class="see">Show</a> method completes.
+				<p>
+					Avoid calling this method directly after a <a href="Control_Character_Show.htm" class="see keyword">Show</a> method. <a href="Control_Character_Show.htm" class="see keyword">Show</a>
+					automatically sets the <em class="glossary">input-active</em> client. When the character is shown, the <em class="self keyword">Activate</em>
+					call may fail if it gets processed before the <a href="Control_Character_Show.htm" class="see keyword">Show</a> method completes.
 				</p>
-					<p class="note">
-						<span class="note">Note:</span> 
-					Calling this method with <s>State </s>set to 1 does not typically generate an <a href="Control_Event_ActivateInput.htm" class="see">ActivateInput</a>
-					event unless there are no other characters loaded or your application is already input-active.
+				<p class="note"><span class="note">Note:</span> 
+					Calling this method with <em class="token">State</em> set to <em class="keyword">1</em>
+					(<a href="Control_ActiveStateType_Active.htm" class="see see">Active</a>) does not typically generate an <a href="Control_Event_ActivateInput.htm" class="see keyword">ActivateInput</a>
+					event unless there are no other characters loaded or your application is already <em class="glossary">input-active</em>.
 				</p>
-					<h4 class="details">Details</h4>
-					<p>
-					When multiple characters are visible, only one of the characters receives speech input at a
-					time. Similarly, when multiple client applications share the same character, only one of the clients
-					receives mouse input (for example, <a href="Control_Event_Click.htm" class="see">Click</a> or <a href="Control_Event_DragStart.htm" class="see">Drag</a>
-					events). The character set to receive mouse and speech input is the input-active character and the client
-					that receives the input is the active client of that character. (The input-active character's window
-					also appears at the top of the character window's z-order.) Typically, the user determines the input-active
-					character by explicitly selecting the character. However, input activation also changes when a character
-					is shown or hidden (the character becomes or is no longer input-active, respectively.)
+			
+				<h4 class="details">Details</h4>
+				<p>
+					When multiple characters are visible, only one of the characters receives speech input at a time. Similarly,
+					when multiple client applications share the same character, only one of the clients receives
+					mouse input (for example, <a href="Control_Event_Click.htm" class="see keyword">Click</a> or <a href="Control_Event_DragStart.htm" class="see keyword">Drag</a>
+					events). The character set to receive mouse and speech input is the <em class="glossary">input-active</em>
+					character and the client that receives the input is the <em class="glossary">active</em> client of that character. (The
+					<em class="glossary">input-active</em> character's window also appears at the top of the character windows' z-order.)
+					Typically, the user determines the <em class="glossary">input-active</em> character by explicitly selecting the
+					character. However, input activation also changes when a character is shown or hidden (the character
+					becomes or is no longer <em class="glossary">input-active</em>, respectively.)
 				</p>
-					<p>
-					You can also use this method to explicitly manage when your client receives input directed
-					to the character such as when your application itself becomes active. For example, setting <s>State </s>
-					to 2 makes the character input-active and your client receives all mouse and speech input events
-					generated from user interaction with the character. Therefore, it also makes your client the input-active
-					client of the character.
+				<p>
+					You can also use this method to explicitly manage when your client receives input directed to the character,
+					such as when your application itself becomes active. For example, setting <em class="token">State</em> to <em class="keyword">2</em>
+					(<a href="Control_ActiveStateType_InputActive.htm" class="see see">InputActive</a>) makes the character <em class="glossary">input-active</em>
+					and your client receives all mouse and speech input events generated from user interaction with the
+					character. Therefore, it also makes your client the <em class="glossary">input-active</em> client of the character.
 				</p>
-					<p>
-					However, you can also set yourself to be the active client for a character without making the
-					character input-active, by setting <s>State </s>to 1. This allows your client to receive input
-					directed to that character when the character does become input-active. Similarly, you can set your
-					client to <em>not </em>be the active client (not to receive input) when the character becomes input-active,
-					by setting <s>State </s>to 0.
+				<p>
+					However, you can also set yourself to be the <em class="glossary">active</em> client for a character without
+					making the character <em class="glossary">input-active</em>, by setting <em class="token">State</em> to <em class="keyword">1</em>
+					(<a href="Control_ActiveStateType_Active.htm" class="see see">Active</a>). This allows your client to receive input directed
+					to that character when the character does become <em class="glossary">input-active</em>. Similarly, you can set
+					your client to <em>not</em> be the <em class="glossary">active</em> client (not to receive input) when the character
+					becomes <em class="glossary">input-active</em>, by setting <em class="token">State</em> to <em class="keyword">0</em>
+					(<a href="Control_ActiveStateType_Inactive.htm" class="see see">Inactive</a>).
 				</p>
-					<p>
-					If you call this method as a function, it returns a boolean value that indicates whether the
-					method succeeded. Attempting to call this method with the <s>State </s>parameter set to 2 when
-					the specified character is hidden will fail. Similarly, if you set <s>State </s>to 0 and your application
-					is the only client, this call fails because a character must always have a input-active client.
+			
+				<p>
+					If you call this method as a function, it returns a boolean value that indicates whether the method succeeded.
+					Attempting to call this method with the <em class="token">State</em> parameter set to <em class="keyword">2</em>
+					(<a href="Control_ActiveStateType_InputActive.htm" class="see see">InputActive</a>) when the specified character is hidden will
+					fail. Similarly, if you set <em class="token">State</em> to <em class="keyword">0</em>
+					(<a href="Control_ActiveStateType_Inactive.htm" class="see see">Inactive</a>) and your application is the only client, this
+					call fails because a character must always have a <em class="glossary">input-active</em> client.
 				</p>
-					<h4 class="details">Example</h4>
-					<pre class="example">Dim Genie as Object
+				<h4 class="details">Example</h4>
+				<pre class="example"><em class="keyword">Dim</em> Genie <em class="keyword">as</em> <em class="keyword">Object</em>
 
-Sub FormLoad()
-    AgentControl.Characters.Load "Genie", "Genie.acs"
+<em class="keyword">Sub</em> <em class="token">form</em>_<em class="keyword">Load</em>()
+    <em class="token">control</em>.<em class="keyword">Characters</em>.<em class="keyword">Load</em> "Genie", "Genie.acs"
 
-    Set Genie = AgentControl.Characters ("Genie")
+    <em class="keyword">Set</em> Genie = <em class="token">control</em>.<em class="keyword">Characters</em> ("Genie")
 
-    If (Genie.Activate = True) Then
+    <em class="keyword">If</em> (Genie.<em class="keyword">Activate</em> = True) <em class="keyword">Then</em>
       ' I'm active
-    Else
+    <em class="keyword">Else</em>
       ' I must be hidden or something
-    End If 
-End Sub</pre>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Event_ActivateInput.htm">The ActivateInput Event</a>
-					<br />
-					<a href="Control_Event_DeactivateInput.htm">The DeactivateInput Event</a>
-				</td>
+    <em class="keyword">End If</em> 
+<em class="keyword">End Sub</em></pre>
+			<h4 class="seealso">See Also</h4><a href="Control_Event_ActivateInput.htm">The ActivateInput Event</a><br /><a href="Control_Event_DeactivateInput.htm">The DeactivateInput Event</a></td>
 			</tr>
 		</table>
 	</body>

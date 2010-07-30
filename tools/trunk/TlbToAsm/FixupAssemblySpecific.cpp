@@ -2,6 +2,9 @@
 #include <corhdr.h>
 #include "FixupAssemblySpecific.h"
 
+#define	AX_PROPERTY_PREFIX	"Ctl"
+#define	AX_EVENT_PREFIX		"Ctl"
+
 namespace DoubleAgent {
 namespace TlbToAsm {
 /////////////////////////////////////////////////////////////////////////////
@@ -122,14 +125,17 @@ String^ FixupAssemblySpecific::RenameControlClass (Type^ pSourceType, String^ pT
 	{
 		if	(pTypeName->EndsWith ("Event"))
 		{
-			lNewName = pTypeName->Replace ("_DaCtlEvents_", "Da");
+			if	(mCopy->mAssemblyBuilder->FullName->Contains ("AxControl"))
+			{
+				lNewName = pTypeName->Replace ("_DaCtlEvents_", AX_EVENT_PREFIX);
+			}
 		}
 		else
 		if	(pTypeName->EndsWith ("EventHandler"))
 		{
 			if	(mCopy->mAssemblyBuilder->FullName->Contains ("AxControl"))
 			{
-				lNewName = pTypeName->Replace ("_DaCtlEvents_", "Da");
+				lNewName = pTypeName->Replace ("_DaCtlEvents_", AX_EVENT_PREFIX);
 			}
 			else
 			{
@@ -290,6 +296,7 @@ void FixupAssemblySpecific::HideInternalClass (Object^ pSource, Object^ pTarget,
 		&&	(
 				(lSourceType->Name->EndsWith ("SinkHelper"))
 			||	(lSourceType->Name->EndsWith ("EventMulticaster"))
+			||	(lSourceType->Name->Contains ("HelpComplete"))
 			)
 		)
 	{
@@ -312,6 +319,51 @@ void FixupAssemblySpecific::HideInternalClass (Object^ pSource, Object^ pTarget,
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
+/////////////////////////////////////////////////////////////////////////////
+//
+//	For now - skip the methods that the ActiveX interop imported created
+//	to handle default parameters.
+//
+bool FixupAssemblySpecific::SkipGeneratedMethod (MethodInfo^ pSourceMethod, MethodAttributes & pMethodAttributes)
+{
+	bool	lRet = false;
+
+#if	TRUE
+	try
+	{
+		array<MethodInfo^>^		lMethods;
+		MethodInfo^				lMethod;
+		array<ParameterInfo^>^	lParameters;
+		array<ParameterInfo^>^	lOtherParameters;
+
+		if	(
+				(lMethods = pSourceMethod->DeclaringType->GetMethods (BindingFlags::Instance|BindingFlags::DeclaredOnly|BindingFlags::Public|BindingFlags::NonPublic))
+			&&	(lParameters = pSourceMethod->GetParameters ())
+			)
+		{
+			for each (lMethod in lMethods)
+			{
+				if	(
+						(String::Compare (lMethod->Name, pSourceMethod->Name) == 0)
+					&&	(lOtherParameters = lMethod->GetParameters ())
+					&&	(lOtherParameters->Length > lParameters->Length)
+					)
+				{
+#ifdef	_LOG_FIXES
+					LogMessage (_LOG_FIXES, _T("---> Skip       [%s.%s] for [%s]"), _BMT(pSourceMethod), _B(mCopy->GetMethodSignature (pSourceMethod)), _B(mCopy->GetMethodSignature (lMethod)));
+#endif
+					lRet = true;
+					break;
+				}
+			}
+		}
+	}
+	catch AnyExceptionSilent
+#endif
+
+	return lRet;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Skip ActiveX properties that don't work with Windows Forms
@@ -344,7 +396,7 @@ bool FixupAssemblySpecific::SkipObsoleteProperty (MethodInfo^ pSourceMethod, Met
 			)
 		{
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("---> Skip       [%s] in [%s] for [%s]"), _BM(pSourceMethod), _BMT(pSourceMethod), _BM(lMethodProperty));
+			LogMessage (_LOG_FIXES, _T("---> Skip       [%s.%s] for [%s]"), _BMT(pSourceMethod), _BM(pSourceMethod), _BM(lMethodProperty));
 #endif
 			lRet = true;
 		}
@@ -373,7 +425,7 @@ bool FixupAssemblySpecific::SkipObsoleteProperty (PropertyInfo^ pSourceProperty,
 			)
 		{
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("---> Skip       [%s] in [%s]"), _BM(pSourceProperty), _BMT(pSourceProperty));
+			LogMessage (_LOG_FIXES, _T("---> Skip       [%s.%s]"), _BMT(pSourceProperty), _BM(pSourceProperty));
 #endif
 			lRet = true;
 		}
@@ -414,7 +466,7 @@ bool FixupAssemblySpecific::SkipObsoleteEvent (MethodInfo^ pSourceMethod, Method
 			)
 		{
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("---> Skip       [%s] in [%s] for [%s]"), _BM(pSourceMethod), _BMT(pSourceMethod), _BM(lMethodEvent));
+			LogMessage (_LOG_FIXES, _T("---> Skip       [%s.%s] for [%s]"), _BMT(pSourceMethod), _BM(pSourceMethod), _BM(lMethodEvent));
 #endif
 			lRet = true;
 		}
@@ -437,7 +489,7 @@ bool FixupAssemblySpecific::SkipObsoleteEvent (EventInfo^ pSourceEvent, EventAtt
 			)
 		{
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("---> Skip       [%s] in [%s]"), _BM(pSourceEvent), _BMT(pSourceEvent));
+			LogMessage (_LOG_FIXES, _T("---> Skip       [%s.%s]"), _BMT(pSourceEvent), _BM(pSourceEvent));
 #endif
 			lRet = true;
 		}
@@ -456,89 +508,103 @@ bool FixupAssemblySpecific::SkipObsoleteEvent (EventInfo^ pSourceEvent, EventAtt
 //
 void FixupAssemblySpecific::FixMethodName (MethodBase^ pSourceMethod, String^& pMethodName)
 {
-#if	TRUE
 	try
 	{
 		PropertyInfo^		lMethodProperty;
 		DispIdAttribute^	lDispIdAttribute = nullptr;
 
-		if	(
-				(pSourceMethod->DeclaringType->IsSubclassOf (System::Windows::Forms::AxHost::typeid))
-			&&	(pSourceMethod->IsSpecialName)
-			&&	(
-					(pMethodName->StartsWith ("get_"))
-				||	(pMethodName->StartsWith ("set_"))
-				)
-			&&	(lMethodProperty = pSourceMethod->DeclaringType->GetProperty (pSourceMethod->Name->Substring(4), BindingFlags::Instance|BindingFlags::DeclaredOnly|BindingFlags::Public|BindingFlags::NonPublic))
-			&&	(lDispIdAttribute = mCopy->GetDispId (lMethodProperty))
-			&&	(
-					(lDispIdAttribute->Value == DISPID_AUTOSIZE)
-				||	(lDispIdAttribute->Value == DISPID_BACKCOLOR)
-				||	(lDispIdAttribute->Value == DISPID_BORDERCOLOR)
-				||	(lDispIdAttribute->Value == DISPID_BORDERSTYLE)
-				||	(lDispIdAttribute->Value == DISPID_BORDERWIDTH)
-				||	(lDispIdAttribute->Value == DISPID_BORDERVISIBLE)
-				||	(lDispIdAttribute->Value == DISPID_MOUSEPOINTER)
-				||	(lDispIdAttribute->Value == DISPID_MOUSEICON)
-				)
-			)
+		if	(pSourceMethod->DeclaringType->IsSubclassOf (System::Windows::Forms::AxHost::typeid))
 		{
-			if	(pMethodName->EndsWith ("CtlAutoSize"))
+			if	(
+					(pSourceMethod->IsSpecialName)
+				&&	(
+						(pMethodName->StartsWith ("get_"))
+					||	(pMethodName->StartsWith ("set_"))
+					)
+				&&	(lMethodProperty = pSourceMethod->DeclaringType->GetProperty (pSourceMethod->Name->Substring(4), BindingFlags::Instance|BindingFlags::DeclaredOnly|BindingFlags::Public|BindingFlags::NonPublic))
+				&&	(lDispIdAttribute = mCopy->GetDispId (lMethodProperty))
+				&&	(
+						(lDispIdAttribute->Value == DISPID_AUTOSIZE)
+					||	(lDispIdAttribute->Value == DISPID_BACKCOLOR)
+					||	(lDispIdAttribute->Value == DISPID_BORDERCOLOR)
+					||	(lDispIdAttribute->Value == DISPID_BORDERSTYLE)
+					||	(lDispIdAttribute->Value == DISPID_BORDERWIDTH)
+					||	(lDispIdAttribute->Value == DISPID_BORDERVISIBLE)
+					||	(lDispIdAttribute->Value == DISPID_MOUSEPOINTER)
+					||	(lDispIdAttribute->Value == DISPID_MOUSEICON)
+					)
+				)
 			{
-				pMethodName = pMethodName->Replace ("CtlAutoSize", "AutoSize");
-			}
-			if	(pMethodName->StartsWith ("get_"))
-			{
-				pMethodName = pMethodName->Replace ("get_", "get_Ax");
+#if	TRUE
+				if	(pMethodName->EndsWith ("CtlAutoSize"))
+				{
+					pMethodName = pMethodName->Replace ("CtlAutoSize", "AutoSize");
+				}
+				if	(pMethodName->StartsWith ("get_"))
+				{
+					pMethodName = pMethodName->Replace ("get_", "get_"AX_PROPERTY_PREFIX);
+				}
+				else
+				if	(pMethodName->StartsWith ("set_"))
+				{
+					pMethodName = pMethodName->Replace ("set_", "set_"AX_PROPERTY_PREFIX);
+				}
+#ifdef	_LOG_FIXES
+				LogMessage (_LOG_FIXES, _T("---> Method     [%s.%s] as [%s]"), _BMT(pSourceMethod), _BM(pSourceMethod), _B(pMethodName));
+#endif
+#endif
 			}
 			else
-			if	(pMethodName->StartsWith ("set_"))
+			if	(pMethodName->StartsWith ("RaiseOn"))
 			{
-				pMethodName = pMethodName->Replace ("set_", "set_Ax");
-			}
+				pMethodName = pMethodName->Replace ("RaiseOn", "Raise"AX_EVENT_PREFIX);
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("---> Method     [%s] as [%s] in [%s]"), _BM(pSourceMethod), _B(pMethodName), _BMT(pSourceMethod));
+				LogMessage (_LOG_FIXES, _T("---> Method     [%s.%s] as [%s]"), _BMT(pSourceMethod), _BM(pSourceMethod), _B(pMethodName));
 #endif
+			}
 		}
 	}
 	catch AnyExceptionSilent
-#endif
 }
-
+//
+//	Rename ActiveX properties to highlight them and avoid naming collisions
+//
 void FixupAssemblySpecific::FixPropertyName (PropertyInfo^ pSourceProperty, String^& pPropertyName)
 {
-#if	TRUE
 	try
 	{
 		DispIdAttribute^	lDispIdAttribute = nullptr;
 
-		if	(
-				(pSourceProperty->DeclaringType->IsSubclassOf (System::Windows::Forms::AxHost::typeid))
-			&&	(lDispIdAttribute = mCopy->GetDispId (pSourceProperty))
-			&&	(
-					(lDispIdAttribute->Value == DISPID_AUTOSIZE)
-				||	(lDispIdAttribute->Value == DISPID_BACKCOLOR)
-				||	(lDispIdAttribute->Value == DISPID_BORDERCOLOR)
-				||	(lDispIdAttribute->Value == DISPID_BORDERSTYLE)
-				||	(lDispIdAttribute->Value == DISPID_BORDERWIDTH)
-				||	(lDispIdAttribute->Value == DISPID_BORDERVISIBLE)
-				||	(lDispIdAttribute->Value == DISPID_MOUSEPOINTER)
-				||	(lDispIdAttribute->Value == DISPID_MOUSEICON)
-				)
-			)
+		if	(pSourceProperty->DeclaringType->IsSubclassOf (System::Windows::Forms::AxHost::typeid))
 		{
-			if	(pPropertyName->EndsWith ("CtlAutoSize"))
+			if	(
+					(lDispIdAttribute = mCopy->GetDispId (pSourceProperty))
+				&&	(
+						(lDispIdAttribute->Value == DISPID_AUTOSIZE)
+					||	(lDispIdAttribute->Value == DISPID_BACKCOLOR)
+					||	(lDispIdAttribute->Value == DISPID_BORDERCOLOR)
+					||	(lDispIdAttribute->Value == DISPID_BORDERSTYLE)
+					||	(lDispIdAttribute->Value == DISPID_BORDERWIDTH)
+					||	(lDispIdAttribute->Value == DISPID_BORDERVISIBLE)
+					||	(lDispIdAttribute->Value == DISPID_MOUSEPOINTER)
+					||	(lDispIdAttribute->Value == DISPID_MOUSEICON)
+					)
+				)
 			{
-				pPropertyName = pPropertyName->Replace ("CtlAutoSize", "AutoSize");
-			}
-			pPropertyName = String::Concat ("Ax", pPropertyName);
+#if	TRUE
+				if	(pPropertyName->EndsWith ("CtlAutoSize"))
+				{
+					pPropertyName = pPropertyName->Replace ("CtlAutoSize", "AutoSize");
+				}
+				pPropertyName = String::Concat (AX_PROPERTY_PREFIX, pPropertyName);
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("---> Property   [%s] as [%s] in [%s]"), _BM(pSourceProperty), _B(pPropertyName), _BMT(pSourceProperty));
+				LogMessage (_LOG_FIXES, _T("---> Property   [%s.%s] as [%s]"), _BMT(pSourceProperty), _BM(pSourceProperty), _B(pPropertyName));
 #endif
+#endif
+			}
 		}
 	}
 	catch AnyExceptionSilent
-#endif
 }
 //
 //	Apply consistent naming conventions to event names
@@ -551,18 +617,98 @@ void FixupAssemblySpecific::FixEventName (EventInfo^ pSourceEvent, String^& pEve
 		{
 			pEventName = pEventName->Substring (0, pEventName->Length-5);
 		}
-		if	(!pEventName->StartsWith ("Da"))
+		if	(!pEventName->StartsWith (AX_EVENT_PREFIX))
 		{
-			pEventName = String::Concat ("Da", pEventName);
+			pEventName = String::Concat (AX_EVENT_PREFIX, pEventName);
 		}
 #ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("---> Event      [%s] as [%s] in [%s]"), _BM(pSourceEvent), _B(pEventName), _BMT(pSourceEvent));
+		LogMessage (_LOG_FIXES, _T("---> Event      [%s.%s] as [%s]"), _BMT(pSourceEvent), _BM(pSourceEvent), _B(pEventName));
 #endif
+	}
+}
+//
+//	Reflect event name changes in multicast delegate fields
+//
+void FixupAssemblySpecific::FixEventFieldName (FieldInfo^ pSourceField, String^& pFieldName)
+{
+	if	(pSourceField->DeclaringType->IsSubclassOf (System::Windows::Forms::AxHost::typeid))
+	{
+		if	(pSourceField->FieldType->Name->EndsWith ("EventHandler"))
+		{
+			pFieldName = String::Concat (AX_PROPERTY_PREFIX, pFieldName);
+#ifdef	_LOG_FIXES
+			LogMessage (_LOG_FIXES, _T("---> Field      [%s.%s] as [%s]"), _BMT(pSourceField), _BM(pSourceField), _B(pFieldName));
+#endif
+		}
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+void FixupAssemblySpecific::SetActiveXMethodVisibility (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes)
+{
+	MethodInfo^			lSourceMethod = nullptr;
+	MethodBuilder^		lTargetMethod = nullptr;
+	DispIdAttribute^	lDispIdAttribute = nullptr;
+
+	try
+	{
+		lSourceMethod = safe_cast <MethodInfo^> (pSource);
+		lTargetMethod = safe_cast <MethodBuilder^> (pTarget);
+		lDispIdAttribute = mCopy->GetDispId (lSourceMethod);
+
+		if	(
+				(!lDispIdAttribute)
+			&&	(lSourceMethod->DeclaringType->IsSubclassOf (System::Windows::Forms::AxHost::typeid))
+			&&	(lSourceMethod->IsSpecialName)
+			&&	(
+					(lSourceMethod->Name->StartsWith ("get_"))
+				||	(lSourceMethod->Name->StartsWith ("set_"))
+				)
+			)
+		{
+			PropertyInfo^	lMethodProperty;
+
+			if	(lMethodProperty = lSourceMethod->DeclaringType->GetProperty (lSourceMethod->Name->Substring(4), BindingFlags::Instance|BindingFlags::DeclaredOnly|BindingFlags::Public|BindingFlags::NonPublic))
+			{
+				lDispIdAttribute = mCopy->GetDispId (lMethodProperty);
+			}
+		}
+	}
+	catch AnyExceptionSilent
+
+	if	(
+			(lSourceMethod)
+		&&	(lSourceMethod->DeclaringType->IsSubclassOf (System::Windows::Forms::AxHost::typeid))
+		&&	(lTargetMethod)
+		&&	(lDispIdAttribute)
+		)
+	{
+		try
+		{
+			array <Type^>^		lAttrArgTypes = gcnew array <Type^> (1);
+			array <Object^>^	lAttrArgValues = gcnew array <Object^> (1);
+
+			if	(
+					(lDispIdAttribute->Value == 4) //AudioOutput
+				||	(lDispIdAttribute->Value == 5) //SpeechInput
+				)
+			{
+#ifdef	_LOG_FIXES
+				LogMessage (_LOG_FIXES, _T("---> Hide       [%s.%s]"), _BMT(lSourceMethod), _BM(lSourceMethod));
+#endif
+				lAttrArgTypes [0] = TypeLibFuncFlags::typeid;
+				lAttrArgValues [0] = (TypeLibFuncFlags)((int)TypeLibFuncFlags::FHidden | (int)TypeLibFuncFlags::FRestricted);
+				pCustomAttributes->Add (gcnew CustomAttributeBuilder (TypeLibFuncAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
+			}
+		}
+		catch AnyExceptionSilent
+		{}
+	}
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 void FixupAssemblySpecific::SetActiveXPropertyVisibility (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes)
@@ -575,7 +721,7 @@ void FixupAssemblySpecific::SetActiveXPropertyVisibility (Object^ pSource, Objec
 	{
 		lSourceProperty = safe_cast <PropertyInfo^> (pSource);
 		lTargetProperty = safe_cast <PropertyBuilder^> (pTarget);
-		lDispIdAttribute = safe_cast <DispIdAttribute^> (Attribute::GetCustomAttribute (lSourceProperty, DispIdAttribute::typeid));
+		lDispIdAttribute = mCopy->GetDispId (lSourceProperty);
 	}
 	catch AnyExceptionSilent
 
@@ -613,6 +759,20 @@ void FixupAssemblySpecific::SetActiveXPropertyVisibility (Object^ pSource, Objec
 				lAttrArgValues [0] = System::ComponentModel::EditorBrowsableState::Advanced;
 				pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::EditorBrowsableAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
 			}
+
+			if	(
+					(lDispIdAttribute->Value == 4) //AudioOutput
+				||	(lDispIdAttribute->Value == 5) //SpeechInput
+				)
+			{
+#ifdef	_LOG_FIXES
+				LogMessage (_LOG_FIXES, _T("---> Hide       [%s.%s]"), _BMT(lSourceProperty), _BM(lSourceProperty));
+#endif
+				lAttrArgTypes [0] = TypeLibVarFlags::typeid;
+				lAttrArgValues [0] = (TypeLibVarFlags)((int)TypeLibVarFlags::FHidden | (int)TypeLibVarFlags::FRestricted);
+				pCustomAttributes->Add (gcnew CustomAttributeBuilder (TypeLibVarAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
+			}
+
 #if	TRUE
 			if	(
 					(lDispIdAttribute->Value == DISPID_AUTOSIZE)
@@ -743,7 +903,7 @@ void FixupAssemblySpecific::SetActiveXPropertyCategory (Object^ pSource, Object^
 			if	(lAttrArgValues [0])
 			{
 #ifdef	_LOG_FIXES
-				LogMessage (_LOG_FIXES, _T("---> Category   [%s] for [%s] in [%s]"), _B((String^)lAttrArgValues[0]), _BM(lSourceProperty), _BMT(lSourceProperty));
+				LogMessage (_LOG_FIXES, _T("---> Category   [%s] for [%s.%s]"), _B((String^)lAttrArgValues[0]), _BMT(lSourceProperty), _BM(lSourceProperty));
 #endif
 				lAttrArgTypes [0] = String::typeid;
 				pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::CategoryAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
@@ -831,7 +991,7 @@ void FixupAssemblySpecific::SetActiveXEventCategory (Object^ pSource, Object^ pT
 			if	(lAttrArgValues [0])
 			{
 #ifdef	_LOG_FIXES
-				LogMessage (_LOG_FIXES, _T("---> Category   [%s] for [%s] in [%s]"), _B((String^)lAttrArgValues[0]), _BM(lSourceEvent), _BMT(lSourceEvent));
+				LogMessage (_LOG_FIXES, _T("---> Category   [%s] for [%s.%s]"), _B((String^)lAttrArgValues[0]), _BMT(lSourceEvent), _BM(lSourceEvent));
 #endif
 				lAttrArgTypes [0] = String::typeid;
 				pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::CategoryAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));

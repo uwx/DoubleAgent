@@ -12,17 +12,81 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The FilePath Property</h4>
+					<h3>The FilePath Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Returns the full path (<em class="glossary">UNC</em> or <em class="glossary">HTTP</em>) of the character's definition
+					file.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">get_FilePath</em> (&amp;<em class="token">FilePath</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">FilePath</em> = ]<em class="token">character</em>.<em class="keyword">FilePath</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">FilePath</em> = ]<em class="token">character</em>.<em class="keyword">FilePath</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">FilePath</em> = ]<em class="token">character</em>.<em class="keyword">FilePath</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">FilePath</em> = ]<em class="token">character</em>.<em class="keyword">FilePath</em></p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">FilePath</em>
+								</td>
+								<td>
+				A <em class="typename">string</em> value that contains the character's definition file
+				path.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					This is the full path of the file that was used to <a href="Server_Server_Load.htm" class="see keyword">Load</a> the character.
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Server_Load.htm">The Load Method</a></td>
 			</tr>
 		</table>
 	</body>

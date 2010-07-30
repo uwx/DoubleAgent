@@ -1,0 +1,59 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The FilesFilterFlags Enumeration</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h3>The FilesFilterFlags Enumeration</h3>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+				<p>
+					Specifies the filter that is applied to the <a href="Server_CharacterFiles.htm" class="see keyword">CharacterFiles</a>.<a href="Server_CharacterFiles_FilePaths.htm" class="see keyword">FilePaths</a>
+					property.
+				</p>
+			<div id="Syntax">
+				<h4>Members</h4>
+				<table><tr><td xml:space="preserve">
+0x00000001&nbsp;=&nbsp;<em class="keyword">PathDoubleAgent</em>
+</td><td>
+							Indicates if the Double Agent install location should be included in the <a href="Server_CharacterFiles_DefaultSearchPath.htm" class="see keyword">DefaultSearchPath</a>.
+						</td></tr><tr><td xml:space="preserve">
+0x00000002&nbsp;=&nbsp;<em class="keyword">PathMsAgent</em>
+</td><td>
+							Indicates if the Microsoft Agent install location should be included in the <a href="Server_CharacterFiles_DefaultSearchPath.htm" class="see keyword">DefaultSearchPath</a>.
+						</td></tr><tr><td xml:space="preserve">
+0x00000004&nbsp;=&nbsp;<em class="keyword">PathMsOffice</em>
+</td><td>
+							Indicates if the Microsoft Office install location should be included in the <a href="Server_CharacterFiles_DefaultSearchPath.htm" class="see keyword">DefaultSearchPath</a>.
+						</td></tr><tr><td xml:space="preserve">
+0x00000010&nbsp;=&nbsp;<em class="keyword">ExcludeNonSpeaking</em>
+</td><td>
+							Indicates if the <a href="Server_CharacterFiles_FilePaths.htm" class="see keyword">FilePaths</a> property should exclude characters
+				that are <em>not </em>designed to speak.
+						</td></tr><tr><td xml:space="preserve">
+0x00000020&nbsp;=&nbsp;<em class="keyword">ExcludeSpeaking</em>
+</td><td>
+							Indicates if the <a href="Server_CharacterFiles_FilePaths.htm" class="see keyword">FilePaths</a> property should exclude characters
+				that are designed to speak.
+						</td></tr><tr><td xml:space="preserve">
+0x00010000&nbsp;=&nbsp;<em class="keyword">NoValidateVersion</em>
+</td><td>
+							Indicates if the the <a href="Server_CharacterFiles_FilePaths.htm" class="see keyword">FilePaths</a> property should include all
+				character files, regardless of version.
+						</td></tr></table>
+			</div><h4 class="seealso">See Also</h4><a href="Server_CharacterFiles_Filter.htm">The Filter Property</a></td>
+			</tr>
+		</table>
+	</body>
+</HTML>

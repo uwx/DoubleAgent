@@ -341,12 +341,19 @@ bool CVoiceCommandsWnd::ShowTheseCommands (long pCharID, LPCTSTR pCaption, const
 #endif
 					if	(lCmdItem)
 					{
+						if	(pCaptions [lNdx].IsEmpty ())
+						{
+							lCmdItem = (lPrevItem == TVI_FIRST) ? TreeView_GetChild (mCommandTree, lCharRoot) : (lPrevItem == TVI_LAST) ? NULL : lPrevItem;
+							continue;
+						}
+						else
 						if	(GetTreeItemText (mCommandTree, lCmdItem) != pCaptions [lNdx])
 						{
 							SetTreeItemText (mCommandTree, lCmdItem, pCaptions [lNdx]);
 						}
 					}
 					else
+					if	(!pCaptions [lNdx].IsEmpty ())
 					{
 						lCmdItem = InsertTreeItem (mCommandTree, pCaptions [lNdx], lCharRoot, lPrevItem);
 					}

@@ -12,17 +12,61 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Register Method</h4>
+					<h3>The Register Method</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Registers a <em class="glossary">notification sink</em> for the client application.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">server</em>-&gt;<em class="keyword">Register</em> (<em class="token">NotifySink</em>, &amp;<em class="token">Cookie</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">NotifySink</em>
+								</td>
+								<td>
+				The <em class="typename">IUnknown</em> interface of an event <em class="glossary">notification sink</em>
+				object that implements <em class="keyword">IDaSvrNotifySink</em>.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Cookie</em>
+								</td>
+								<td>
+				A <em class="typename">long</em> value that identifies the connection.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+					<p>
+					The <a href="Server_Server.htm" class="see keyword">Server Object</a> also implements the standard <em class="glossary">COM</em>
+					<em class="keyword">IConnectionPoint</em> protocol for <em class="glossary">notification sinks</em>.
+				</p>
+				<p>
+					For languages that support ActiveX<sup>®</sup> controls, you can use the language's default mechanism for
+					receiving events (eg. <em class="keyword">WithEvents</em>). For managed languages, the control's <em class="glossary">Interop Assembly</em>
+					supports event delegates.
+				</p><h4 class="seealso">See Also</h4><a href="Server_Server_Unregister.htm">The Unregister Method</a></td>
 			</tr>
 		</table>
 	</body>

@@ -57,6 +57,7 @@
 #define	_DEBUG_HANDLER			(GetProfileDebugInt(_T("DebugInterface_Handler"),LogVerbose,true)&0xFFFF)
 #define	_LOG_CHARACTER			(GetProfileDebugInt(_T("LogInstance_Character"),LogDetails,true)&0xFFFF)
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Server"),LogNormal,true)&0xFFFF)
+#define	_LOG_ABANDONED			MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF,_LOG_INSTANCE)
 #define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
 //#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
@@ -69,6 +70,7 @@
 DaServer::DaServer()
 :	CInstanceAnchor (_AtlModule),
 	mUsingHandler (0),
+	mNotifyPtr ((CEventNotify*)&mNotify),
 	mCharacterStyle (CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_AutoPopupMenu|CharacterStyle_IconShown)
 {
 #ifdef	_TRACE_RESOURCES
@@ -202,10 +204,10 @@ bool DaServer::CanFinalRelease ()
 
 void DaServer::OnClientEnded ()
 {
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+#ifdef	_LOG_ABANDONED
+	if	(LogIsActive (_LOG_ABANDONED))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::OnClientEnded [%u]"), this, max(m_dwRef,-1), IsInNotify());
+		LogMessage (_LOG_ABANDONED, _T("[%p(%d)] DaServer::OnClientEnded [%u]"), this, max(m_dwRef,-1), IsInNotify());
 	}
 #endif
 	Terminate (true, true);
@@ -543,7 +545,7 @@ void DaServer::UnloadAllCharacters (bool pAbandonned)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqID)
+HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, bool pIsDefault, long & pCharID, long & pReqID)
 {
 	HRESULT	lResult = S_OK;
 	CString	lFilePath (pFilePath);
@@ -569,6 +571,17 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 	if	(!CAgentFile::IsProperFilePath (lFilePath))
 	{
 		lResult = AGENTPROVERROR_PROTOCOL;
+	}
+	else
+	if	(
+			(GetDefaultCharacter ())
+		||	(
+				(pIsDefault)
+			&&	(GetInstanceCharacter (-1))
+			)
+		)
+	{
+		lResult = AGENTERR_DEFAULTCHARACTER;
 	}
 	else
 	if	(
@@ -651,7 +664,7 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 				{
 					lSvrCharacter->AddRef ();
 					if	(
-							(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile)))
+							(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile, pIsDefault)))
 						&&	(SUCCEEDED (lResult = lSvrCharacter->RealizePopup (mCharacterStyle)))
 						)
 					{
@@ -936,6 +949,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Load (VARIANT Provider, long * pdwCharID, lo
 #endif
 	HRESULT	lResult = S_OK;
 	CString	lFilePath;
+	bool	lFilePathIsDefault = false;
 	long	lReqID = 0;
 
 	if	(pdwCharID == NULL)
@@ -943,13 +957,13 @@ HRESULT STDMETHODCALLTYPE DaServer::Load (VARIANT Provider, long * pdwCharID, lo
 		lResult = E_POINTER;
 	}
 	else
-	if	(SUCCEEDED (lResult = CDaCmnCharacter::GetLoadPath (Provider, lFilePath)))
+	if	(SUCCEEDED (lResult = CDaCmnCharacter::GetLoadPath (Provider, lFilePath, &lFilePathIsDefault)))
 	{
 		if	(RequestID)
 		{
 			lReqID = mNotify.NextReqID ();
 		}
-		lResult = LoadCharacter (lFilePath, *pdwCharID, lReqID);
+		lResult = LoadCharacter (lFilePath, lFilePathIsDefault, *pdwCharID, lReqID);
 	}
 
 	if	(RequestID)
@@ -961,7 +975,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Load (VARIANT Provider, long * pdwCharID, lo
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] DaServer::Load [%d] [%s]"), this, max(m_dwRef,-1), (pdwCharID?*pdwCharID:-1), lFilePath);
+		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] DaServer::Load [%d] [%s] Default [%u]"), this, max(m_dwRef,-1), (pdwCharID?*pdwCharID:-1), lFilePath, lFilePathIsDefault);
 	}
 #endif
 	return lResult;

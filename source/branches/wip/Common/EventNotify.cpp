@@ -28,6 +28,7 @@
 
 #ifdef	_DEBUG
 #define	_DEBUG_NOTIFY_PATH		(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_DEFAULT_CHAR		(GetProfileDebugInt(_T("DebugDefaultChar"),LogVerbose,true)&0xFFFF)
 //#define	_DEBUG_INTERNAL		LogDebug
 //#define	_DEBUG_ACTIVATE		LogNormal
 #endif
@@ -575,7 +576,7 @@ void CEventNotify::_OptionsChanged ()
 	catch AnyExceptionSilent
 }
 
-void CEventNotify::_DefaultCharacterChanged (REFGUID pCharGuid)
+void CEventNotify::_DefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFilePath)
 {
 	try
 	{
@@ -589,7 +590,7 @@ void CEventNotify::_DefaultCharacterChanged (REFGUID pCharGuid)
 #ifdef	_DEBUG_INTERNAL
 				LogMessage (_DEBUG_INTERNAL, _T("[%p] _OnDefaultCharacterChanged"), lReflect);
 #endif
-				lReflect->_OnDefaultCharacterChanged ();
+				lReflect->_OnDefaultCharacterChanged (pCharGuid, pFilePath);
 			}
 			catch AnyExceptionDebug
 		}
@@ -743,9 +744,24 @@ void CEventGlobal::_DefaultCharacterChanged ()
 			&&	(SUCCEEDED (lFile->Open (lDefCharPath)))
 			)
 		{
+#ifdef	_DEBUG_DEFAULT_CHAR
+			LogMessage (_DEBUG_DEFAULT_CHAR, _T("CEventGlobal::_DefaultCharacterChanged [%s] [%s]"), CGuidStr::GuidName(lFile->GetGuid()), (BSTR)lFile->GetFileName());
+#endif
 			for	(lNotifyNdx = 0; lNotify = mInstanceNotify (lNotifyNdx); lNotifyNdx++)
 			{
-				lNotify->_DefaultCharacterChanged (lFile->GetGuid());
+				if	(lNotify->mAnchor->GetDefaultCharacter ())
+				{
+#ifdef	_DEBUG_DEFAULT_CHAR
+					LogMessage (_DEBUG_DEFAULT_CHAR, _T("[%p] CEventNotify::_DefaultCharacterChanged [%s] [%s]"), lNotify, CGuidStr::GuidName(lFile->GetGuid()), (BSTR)lFile->GetFileName());
+#endif
+					lNotify->_DefaultCharacterChanged (lFile->GetGuid(), lDefCharPath);
+				}
+#ifdef	_DEBUG_DEFAULT_CHAR
+				else
+				{
+					LogMessage (_DEBUG_DEFAULT_CHAR, _T("[%p] CEventNotify::_DefaultCharacterChanged Skipped"), lNotify);
+				}
+#endif
 			}
 		}
 	}

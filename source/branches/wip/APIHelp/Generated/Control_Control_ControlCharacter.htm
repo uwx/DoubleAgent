@@ -12,50 +12,99 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The ControlCharacter Property</h4>
+					<h3>The ControlCharacter Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+				<p>Specifies the control's <a class="see" href="..\Programming\Ctl_Programming_Modes.htm">contained</a> <a href="Control_Character.htm" class="see keyword">Character</a>.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>ControlCharacter</em> = ]<em>control</em>.<s>ControlCharacter</s></p>
-
-<p><em>control</em>.<s>ControlCharacter</s> = <em>ControlCharacter</em>|<s>Nothing</s></p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<s>Set</s> <em>ControlCharacter</em> = ]<em>control</em>.<s>ControlCharacter</s></p>
-
-<p><s>Set</s> <em>control</em>.<s>ControlCharacter</s> = <em>ControlCharacter</em>|<s>Nothing</s></p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<s>Set</s> <em>ControlCharacter</em> = ]<em>control</em>.<s>ControlCharacter</s></p>
-
-<p><s>Set</s> <em>control</em>.<s>ControlCharacter</s> = <em>ControlCharacter</em>|<s>Nothing</s></p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>ControlCharacter</em> = ]<em>control</em>.<s>ControlCharacter</s></p>
-
-<p><em>control</em>.<s>ControlCharacter</s> = <em>ControlCharacter</em>|<s>null</s></p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>control</em>-&gt;<s>get_ControlCharacter</s> (&amp;<em>ControlCharacter</em>)</p>
-
-<p><em>control</em>-&gt;<s>put_ControlCharacter</s> (<em>ControlCharacter</em>|<s>NULL</s>)</p>
-</dd>
-						</dl>
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">ControlCharacter</em> = ]<em class="token">control</em>.<em class="keyword">ControlCharacter</em></p>
+<p><em class="token">control</em>.<em class="keyword">ControlCharacter</em> = <em class="token">ControlCharacter</em>|<em class="keyword">Nothing</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">ControlCharacter</em> = ]<em class="token">control</em>.<em class="keyword">ControlCharacter</em></p>
+<p><em class="keyword">Set</em> <em class="token">control</em>.<em class="keyword">ControlCharacter</em> = <em class="token">ControlCharacter</em>|<em class="keyword">Nothing</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">ControlCharacter</em> = ]<em class="token">control</em>.<em class="keyword">ControlCharacter</em></p>
+<p><em class="keyword">Set</em> <em class="token">control</em>.<em class="keyword">ControlCharacter</em> = <em class="token">ControlCharacter</em>|<em class="keyword">Nothing</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">ControlCharacter</em> = ]<em class="token">control</em>.<em class="keyword">ControlCharacter</em></p>
+<p><em class="token">control</em>.<em class="keyword">ControlCharacter</em> = <em class="token">ControlCharacter</em>|<em class="keyword">null</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">control</em>-&gt;<em class="keyword">get_ControlCharacter</em> (&amp;<em class="token">ControlCharacter</em>)</p>
+<p><em class="token">control</em>-&gt;<em class="keyword">put_ControlCharacter</em> (<em class="token">ControlCharacter</em>|<em class="keyword">NULL</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">ControlCharacter</em>
+								</td>
+								<td>
+				The <a href="Control_Character.htm" class="see typename">Character Object</a>
+				object that's contained within the visible area of the control, or an empty reference (<em class="keyword">Nothing</em>).
+			</td>
+							</tr>
+						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					Setting the <em class="self keyword">ControlCharacter</em> property to a <a href="Control_Character.htm" class="see keyword">Character Object</a>
+					changes the control from <a class="see" href="..\Programming\Ctl_Programming_Modes.htm">stand-alone</a>
+					mode to <a class="see" href="..\Programming\Ctl_Programming_Modes.htm">contained</a> mode. Setting <em class="self keyword">ControlCharacter</em>
+					to an empty reference changes the control from <a class="see" href="..\Programming\Ctl_Programming_Modes.htm">contained</a>
+					mode back to <a class="see" href="..\Programming\Ctl_Programming_Modes.htm">stand-alone</a> mode.
+				</p>
+				<p>
+					Normally, the control isn't visible at runtime, but when it has a <em class="self keyword">ControlCharacter</em>
+					it will become visible as a child window of its containing form. This is the only time the ActiveX<sup>®</sup>
+					<em class="glossary">appearence</em> properties, such as <a href="Control_Control_BackColor.htm" class="see keyword">BackColor</a> and <a href="Control_Control_BorderColor.htm" class="see keyword">BorderColor</a>,
+					are used.
+				</p>
+				<p class="note"><span class="note">Note:</span> 
+					You cannot set the <em class="self keyword">ControlCharacter</em> property if the control is <a href="Control_Control_Connected.htm" class="see keyword">Connected</a>
+					to the server.
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Control_Control_Connected.htm">The Connected Property</a><br /><a href="Control_Control_AutoSize.htm">The AutoSize Property</a></td>
 			</tr>
 		</table>
 	</body>

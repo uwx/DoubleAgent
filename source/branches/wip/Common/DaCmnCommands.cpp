@@ -20,6 +20,8 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "DaCmnCommands.h"
+#include "DaCmnCharacter.h"
+#include "AgentAnchor.h"
 #include "AgentCharacterWnd.h"
 #include "VoiceCommandsWnd.h"
 #include "Sapi5Input.h"
@@ -87,9 +89,9 @@ bool CDaCmnCommands::SetLangID (LANGID pLangID)
 
 /////////////////////////////////////////////////////////////////////////////
 
-USHORT CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition, CVoiceCommandsWnd * pVoiceCommandsWnd)
+long CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition, CVoiceCommandsWnd * pVoiceCommandsWnd)
 {
-	USHORT					lRet = 0;
+	long					lRet = 0;
 	CMenuHandle				lMenu;
 	CString					lMenuText;
 	CAgentCharacterWnd *	lOwner;
@@ -130,14 +132,16 @@ USHORT CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition, CVo
 
 					for	(lCommandNdx = 0; lCommand = mCommands (lCommandNdx); lCommandNdx++)
 					{
-						if	(lCommand->mVisible)
+						if	(
+								(lCommand->mVisible)
+							&&	(!lCommand->mCaption.IsEmpty ())
+							)
 						{
 							if	(lFirstCommand)
 							{
 								::AppendMenu (lMenu, MF_SEPARATOR, 0, NULL);
 								lFirstCommand = false;
 							}
-
 							::AppendMenu (lMenu, MF_BYCOMMAND | (lCommand->mEnabled ? MF_ENABLED : MF_DISABLED|MF_GRAYED), lCommand->mCommandId, lCommand->mCaption);
 						}
 					}
@@ -145,6 +149,65 @@ USHORT CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition, CVo
 					if	(mDefaultId)
 					{
 						::SetMenuDefaultItem (lMenu, mDefaultId, FALSE);
+					}
+				}
+			}
+
+			if	(
+					(mNotify)
+				&&	(mNotify->mAnchor)
+				)
+			{
+				CAgentFile *	lFile;
+				INT_PTR			lFileNdx;
+
+				for	(lFileNdx = 0; lFile = mNotify->mAnchor->mAnchor.GetCachedFile (lFileNdx); lFileNdx++)
+				{
+					CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
+					INT_PTR								lClientNdx;
+					CDaCmnCharacter *					lCharacter;
+
+					if	(mNotify->mAnchor->mAnchor.GetFileClients (lFile, lFileClients))
+					{
+						for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
+						{
+							if	(
+									(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+								&&	(lCharacter->GetCharID() == mCharID)
+								)
+							{
+								break;
+							}
+							if	(lClientNdx > 0)
+							{
+								CDaCmnCommands *	lCommands;
+								bool				lFirstCommand = true;
+
+								for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
+								{
+									if	(
+											(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+										&&	(lCharacter->GetCharID() != mCharID)
+										)
+									{
+										if	(
+												(lCommands = lCharacter->GetCommands (false))
+											&&	(lCommands->mVisible)
+											&&	(!lCommands->mCaption.IsEmpty ())
+											)
+										{
+											if	(lFirstCommand)
+											{
+												::AppendMenu (lMenu, MF_SEPARATOR, 0, NULL);
+												lFirstCommand = false;
+											}
+											::AppendMenu (lMenu, MF_BYCOMMAND | MF_ENABLED, MAKELONG(lCharacter->GetCharID(),1), lCommands->mCaption);
+										}
+									}
+								}
+								break;
+							}
+						}
 					}
 				}
 			}
@@ -171,7 +234,7 @@ USHORT CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition, CVo
 
 		_AtlBaseModule.SetResourceInstance (lResourceInstance);
 		::SetForegroundWindow (pOwner);
-		lRet = (USHORT)::TrackPopupMenu (lMenu, TPM_LEFTALIGN|TPM_TOPALIGN|TPM_NONOTIFY|TPM_RETURNCMD|TPM_RIGHTBUTTON, pPosition.x, pPosition.y, 0, pOwner, NULL);
+		lRet = (long)::TrackPopupMenu (lMenu, TPM_LEFTALIGN|TPM_TOPALIGN|TPM_NONOTIFY|TPM_RETURNCMD|TPM_RIGHTBUTTON, pPosition.x, pPosition.y, 0, pOwner, NULL);
 	}
 	return lRet;
 }
@@ -290,7 +353,18 @@ bool CDaCmnCommands::ShowVoiceCommands (CVoiceCommandsWnd * pVoiceCommandsWnd)
 		{
 			for	(lCommandNdx = 0; lCommand = mCommands (lCommandNdx); lCommandNdx++)
 			{
-				if	(lCommand->mEnabled)
+				int lLength = lCommand->mVoiceGrammar.GetLength();
+
+				if	(
+						(lCommand->mEnabled)
+					&&	(
+							(!lCommand->mVoiceGrammar.IsEmpty ())
+#ifndef	_STRICT_COMPATIBILITY
+						||	(!lCommand->mVoiceCaption.IsEmpty())
+						||	(!lCommand->mCaption.IsEmpty())
+#endif
+						)
+					)
 				{
 					lCmdId.Add (lCommand->mCommandId);
 					if	(!lCommand->mVoiceCaption.IsEmpty())
@@ -338,7 +412,10 @@ bool CDaCmnCommands::SetupVoiceContext (class CSapi5InputContext * pInputContext
 		{
 			for	(lCommandNdx = 0; lCommand = mCommands (lCommandNdx); lCommandNdx++)
 			{
-				if	(lCommand->mEnabled)
+				if	(
+						(lCommand->mEnabled)
+					&&	(!lCommand->mVoiceGrammar.IsEmpty())
+					)
 				{
 					lCmdId.Add (lCommand->mCommandId);
 					if	(!lCommand->mVoiceCaption.IsEmpty())
@@ -350,22 +427,33 @@ bool CDaCmnCommands::SetupVoiceContext (class CSapi5InputContext * pInputContext
 						lCmdName.Add (lCommand->mCaption);
 					}
 
-					if	(!lCommand->mVoiceGrammar.IsEmpty())
-					{
-						lCmdVoice.Add (lCommand->mVoiceGrammar);
-					}
-					else
+					lCmdVoice.Add (lCommand->mVoiceGrammar);
+				}
+#ifndef	_STRICT_COMPATIBILITY
+				else
+				if	(
+						(lCommand->mEnabled)
+					&&	(
+							(!lCommand->mVoiceCaption.IsEmpty())
+						||	(!lCommand->mCaption.IsEmpty())
+						)
+					)
+				{
+					lCmdId.Add (lCommand->mCommandId);
 					if	(!lCommand->mVoiceCaption.IsEmpty())
 					{
+						lCmdName.Add (lCommand->mVoiceCaption);
 						lCmdVoice.Add (lCommand->mVoiceCaption);
 						lCmdVoice [lCmdVoice.GetCount()-1].MakeLower ();
 					}
 					else
 					{
+						lCmdName.Add (lCommand->mCaption);
 						lCmdVoice.Add (lCommand->mCaption);
 						lCmdVoice [lCmdVoice.GetCount()-1].MakeLower ();
 					}
 				}
+#endif
 			}
 		}
 
@@ -384,10 +472,6 @@ bool CDaCmnCommands::SetupVoiceContext (class CSapi5InputContext * pInputContext
 	}
 	return lRet;
 }
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()

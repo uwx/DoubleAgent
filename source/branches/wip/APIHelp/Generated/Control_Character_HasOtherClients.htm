@@ -12,66 +12,85 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The HasOtherClients Property</h4>
+					<h3>The HasOtherClients Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Returns whether the specified character is in use by other applications.</p>
-					</div>
+				<p>Indicates if the specified character is in use by other applications.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>HasOtherClients</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>HasOtherClients</s></p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>HasOtherClients</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>HasOtherClients</s></p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>HasOtherClients</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>HasOtherClients</s></p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>HasOtherClients</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>HasOtherClients</s></p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>character</em>.<s>get_HasOtherClients</s> (&amp;<em>HasOtherClients</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">HasOtherClients</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">HasOtherClients</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">HasOtherClients</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">HasOtherClients</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">HasOtherClients</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">HasOtherClients</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">HasOtherClients</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">HasOtherClients</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">get_HasOtherClients</em> (&amp;<em class="token">HasOtherClients</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>HasOtherClients</i>
+									<em class="token">HasOtherClients</em>
 								</td>
 								<td>
-				A <s>boolean </s>value that indicates if another client application
+				A <em class="typename">boolean</em> value that indicates if another client application
 				is using this character.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					You can use this property to determine if your application is the character's only client,
-					or if another application is sharing (has loaded) the same character.
+				<p>
+					You can use this property to determine if your application is the character's only client, or if another
+					application is sharing (has loaded) the same character.
 				</p>
-					<p class="note">
-						<span class="note">Note:</span> 
-					If your application uses multiple instances of the <a href="Control_Control.htm" class="see">Control Object</a>,
-					each instance is a treated as a different client and this property will return <s>True</s>.
+				<p class="note"><span class="note">Note:</span> 
+					If your application uses multiple instances of the <a href="Control_Control.htm" class="see keyword">Control Object</a>,
+					each instance is a treated as a different client and this property will return <em class="keyword">True</em>.
 				</p>
-				</td>
+			</td>
 			</tr>
 		</table>
 	</body>

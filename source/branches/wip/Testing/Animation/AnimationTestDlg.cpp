@@ -2,7 +2,7 @@
 #include <shlwapi.h>
 #include "AnimationTest.h"
 #include "AnimationTestDlg.h"
-#include "AgentPreviewWnd.h"
+#include "AgentFiles.h"
 #include "UiState.h"
 #include "NotifyLock.h"
 #include "GuidStr.h"
@@ -19,7 +19,7 @@ static char THIS_FILE[] = __FILE__;
 //#define	_LOG_AGENT_CALLS	LogAlways|LogTimeMs|LogHighVolume
 //#define	_LOG_CHAR_CALLS		LogAlways|LogTimeMs|LogHighVolume
 //#define	_LOG_CHAR_CALLS_EX	LogAlways|LogTimeMs|LogHighVolume
-#define	_LOG_NOTIFY			LogNormal|LogTimeMs
+#define	_LOG_NOTIFY				LogNormal|LogTimeMs
 #endif
 
 #ifndef	_LOG_AGENT_CALLS
@@ -219,6 +219,7 @@ void CAnimationTestDlg::ShowCharacters ()
 		}
 
 //**/	mCharacterList.InsertItem (0, _T("http://www.trurons.com/jess/agent/Jess.acf"));
+		mCharacterList.InsertItem (0, _T("<default>"));
 	}
 
 	mCharacterList.SetColumnWidth (0, lClientRect.Width());
@@ -236,16 +237,17 @@ bool CAnimationTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 		CharacterIsVisible (false);
 	}
 
-	if	(
-			(pCharacterPath)
-		&&	(pCharacterPath[0])
-		)
+	if	(pCharacterPath)
 	{
-		if	(PathIsURL (pCharacterPath))
+		if	(
+				(pCharacterPath[0])
+			&&	(PathIsURL (pCharacterPath))
+			)
 		{
 			lRet = true;
 		}
 		else
+		if	(pCharacterPath[0])
 		{
 			try
 			{
@@ -290,6 +292,11 @@ bool CAnimationTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 			}
 			catch AnyExceptionDebug
 		}
+		else
+		{
+			SafeFreeSafePtr (mAgentWnd);
+			lRet = true;
+		}
 	}
 
 	if	(lRet)
@@ -321,23 +328,19 @@ bool CAnimationTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 
 void CAnimationTestDlg::ShowCharacterDetails ()
 {
-	CString	lName;
-	CString	lDesc;
+	CString				lName;
+	CString				lDesc;
+	CAgentFileName *	lFileName;
 
-	if	(!mCharacterPath.IsEmpty ())
+	if	(
+			(mAgentWnd)
+		&&	(mAgentWnd->IsWindow ())
+		&&	(mAgentWnd->GetAgentFile())
+		&&	(lFileName = mAgentWnd->GetAgentFile()->FindName ())
+		)
 	{
-		CAgentFileName *	lFileName;
-
-		if	(
-				(mAgentWnd)
-			&&	(mAgentWnd->IsWindow ())
-			&&	(mAgentWnd->GetAgentFile())
-			&&	(lFileName = mAgentWnd->GetAgentFile()->FindName ())
-			)
-		{
-			lName = lFileName->mName;
-			lDesc = lFileName->mDesc1;
-		}
+		lName = lFileName->mName;
+		lDesc = lFileName->mDesc1;
 	}
 
 	mCharacterNameEdit.SetWindowText (lName);
@@ -355,16 +358,21 @@ void CAnimationTestDlg::ShowGestures ()
 
 	try
 	{
+		CString				lCharacterPath (mCharacterPath);
 		tPtr <CAgentFile>	lAgentFile;
 
+		if	(lCharacterPath.IsEmpty ())
+		{
+			lCharacterPath = CAgentFiles::GetDefCharPath ();
+		}
 		if	(
-				(!mCharacterPath.IsEmpty ())
+				(!lCharacterPath.IsEmpty ())
 			&&	(
 					(mCharacter != NULL)
 				||	(!PathIsURL (mCharacterPath))
 				)
 			&&	(lAgentFile = CAgentFile::CreateInstance())
-			&&	(SUCCEEDED (lAgentFile->Open (mCharacterPath)))
+			&&	(SUCCEEDED (lAgentFile->Open (lCharacterPath)))
 			)
 		{
 			INT_PTR	lNdx;
@@ -426,16 +434,21 @@ void CAnimationTestDlg::ShowStates ()
 
 	try
 	{
+		CString				lCharacterPath (mCharacterPath);
 		tPtr <CAgentFile>	lAgentFile;
 
+		if	(lCharacterPath.IsEmpty ())
+		{
+			lCharacterPath = CAgentFiles::GetDefCharPath ();
+		}
 		if	(
-				(!mCharacterPath.IsEmpty ())
+				(!lCharacterPath.IsEmpty ())
 			&&	(
 					(mCharacter != NULL)
 				||	(!PathIsURL (mCharacterPath))
 				)
 			&&	(lAgentFile = CAgentFile::CreateInstance())
-			&&	(SUCCEEDED (lAgentFile->Open (mCharacterPath)))
+			&&	(SUCCEEDED (lAgentFile->Open (lCharacterPath)))
 			)
 		{
 			INT_PTR	lNdx;
@@ -869,10 +882,15 @@ bool CAnimationTestDlg::ShowAgentCharacter ()
 	if	(
 			(mServer != NULL)
 		&&	(mCharacterId == 0)
-		&&	(!mCharacterPath.IsEmpty ())
 		)
 	{
-		lResult = mServer->Load (_variant_t(mCharacterPath), &mCharacterId, &mLoadReqID);
+		_variant_t	lProvider;
+
+		if	(!mCharacterPath.IsEmpty ())
+		{
+			lProvider = mCharacterPath;
+		}
+		lResult = mServer->Load (lProvider, &mCharacterId, &mLoadReqID);
 		LogComErr (_LOG_AGENT_CALLS, lResult, _T("Load [%d] [%s] as [%d]"), mLoadReqID, mCharacterPath, mCharacterId);
 	}
 
@@ -1213,10 +1231,17 @@ void CAnimationTestDlg::LoadConfig ()
 		tS <LVFINDINFO>	lFindInfo;
 		int				lFoundNdx;
 
-		lFindInfo.flags = LVFI_STRING;
-		lFindInfo.psz = mCharacterPath;
-		lFindInfo.vkDirection = VK_NEXT;
-		lFoundNdx = ListView_FindItem (mCharacterList.m_hWnd, -1, &lFindInfo);
+		if	(mCharacterPath.IsEmpty ())
+		{
+			lFoundNdx = 0;
+		}
+		else
+		{
+			lFindInfo.flags = LVFI_STRING;
+			lFindInfo.psz = mCharacterPath;
+			lFindInfo.vkDirection = VK_NEXT;
+			lFoundNdx = ListView_FindItem (mCharacterList.m_hWnd, -1, &lFindInfo);
+		}
 		if	(lFoundNdx >= 0)
 		{
 			mCharacterList.SetItemState (lFoundNdx, LVIS_SELECTED|LVIS_FOCUSED, LVIS_SELECTED|LVIS_FOCUSED);
@@ -1347,7 +1372,14 @@ void CAnimationTestDlg::OnItemChangedCharacterList(NMHDR* pNMHDR, LRESULT* pResu
 		&&	(lNotify->uNewState & LVIS_SELECTED)
 		)
 	{
-		lCharacterPath = mCharacterList.GetItemText (lNotify->iItem, 0);
+		if	(lNotify->iItem == 0)
+		{
+			lCharacterPath.Empty ();
+		}
+		else
+		{
+			lCharacterPath = mCharacterList.GetItemText (lNotify->iItem, 0);
+		}
 		if	(
 				(lCharacterPath.CompareNoCase (mCharacterPath) != 0)
 			&&	(ShowCharacter (lCharacterPath))
@@ -1361,8 +1393,17 @@ void CAnimationTestDlg::OnItemChangedCharacterList(NMHDR* pNMHDR, LRESULT* pResu
 void CAnimationTestDlg::OnItemActivateCharacterList(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	NMITEMACTIVATE*	lNotify = (NMITEMACTIVATE*)pNMHDR;
+	CString			lCharacterPath;
 
-	if	(ShowCharacter (mCharacterList.GetItemText (lNotify->iItem, 0)))
+	if	(lNotify->iItem == 0)
+	{
+		lCharacterPath.Empty ();
+	}
+	else
+	{
+		lCharacterPath = mCharacterList.GetItemText (lNotify->iItem, 0);
+	}
+	if	(ShowCharacter (lCharacterPath))
 	{
 		ShowSelectedAnimation ();
 	}

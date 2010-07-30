@@ -12,55 +12,74 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Count Property</h4>
+					<h3>The Count Property</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Returns the number of possible matching commands.</p>
-					</div>
+				<p>Returns the number of possible matching commands.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-								<p>[<em>Count</em> = ]<em>userinput</em>.<s>Count</s></p>
-							</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-								<p>[<em>Count</em> = ]<em>userinput</em>.<s>Count</s></p>
-							</dd>
-							<dt>VBScript</dt>
-							<dd>
-								<p>[<em>Count</em> = ]<em>userinput</em>.<s>Count</s></p>
-							</dd>
-							<dt>Visual C#</dt>
-							<dd>
-								<p>[<em>Count</em> = ]<em>userinput</em>.<s>Count</s></p>
-							</dd>
-							<dt>Visual C++</dt>
-							<dd>
-								<p>
-									<em>userinput</em>-&gt;<s>get_Count</s> (<em>&amp;Count</em>)</p>
-							</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Count</em> = ]<em class="token">userinput</em>.<em class="keyword">Count</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">Count</em> = ]<em class="token">userinput</em>.<em class="keyword">Count</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">Count</em> = ]<em class="token">userinput</em>.<em class="keyword">Count</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Count</em> = ]<em class="token">userinput</em>.<em class="keyword">Count</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">userinput</em>-&gt;<em class="keyword">get_Count</em> (<em class="token">&amp;Count</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Count</i>
+									<em class="token">Count</em>
 								</td>
 								<td>The number of possible matching commands, from 0 to 3.</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-				Even if the <s>Count </s>is zero (no commands were matched), the <a href="Control_UserInput_Voice.htm" class="see">Voice</a>
+				Even if the <em class="self keyword">Count</em> is zero (no commands were matched), the <a href="Control_UserInput_Voice.htm" class="see keyword">Voice</a>
 				property will still return the spoken text.
 			<h4 class="seealso">See Also</h4><a href="Control_Event_Command.htm">The Command Event</a></td>
 			</tr>

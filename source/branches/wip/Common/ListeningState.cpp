@@ -809,8 +809,8 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 		CAgentListeningWnd *	lListeningWnd;
 		ISpRecoResultPtr		lRecoResult = pEvent.RecoResult();
 		tMallocPtr <SPPHRASE>	lPhrase;
-		CDaCmnCharacter *			lCharacter;
-		CDaCmnCommands *			lCommands;
+		CDaCmnCharacter *		lCharacter;
+		CDaCmnCommands *		lCommands;
 		CDaCmnCommand *			lCommand = NULL;
 
 		if	(
@@ -910,24 +910,7 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 #ifdef	_DEBUG_SPEECH
 					LogMessage (_DEBUG_SPEECH, _T("[%p] Heard Character name [%d] IsVisible [%d] IsClientActive [%d] IsInputActive [%d]"), this, lCharacter->GetCharID(), lCharacter->IsVisible (), lCharacter->IsClientActive (), lCharacter->IsInputActive ());
 #endif
-					if	(lCharacter->IsVisible ())
-					{
-						if	(
-								(!lCharacter->IsInputActive ())
-							||	(!lCharacter->IsClientActive ())
-							)
-						{
-							lCharacter->SetClientActive (true, true);
-						}
-					}
-					else
-					{
-						if	(!lCharacter->IsClientActive ())
-						{
-							lCharacter->SetClientActive (true, false);
-						}
-						lCharacter->Show (false);
-					}
+					lCharacter->DoMenuActivate ();
 				}
 			}
 			else

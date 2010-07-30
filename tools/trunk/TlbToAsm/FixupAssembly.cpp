@@ -93,6 +93,13 @@ bool FixupAssembly::FixupMethod (MethodInfo^ pSourceMethod, String^& pMethodName
 
 	if	(
 			(!lRet)
+		&&	(SkipGeneratedMethod (pSourceMethod, pMethodAttributes))
+		)
+	{
+		lRet = true;
+	}
+	if	(
+			(!lRet)
 		&&	(SkipObsoleteProperty (pSourceMethod, pMethodAttributes))
 		)
 	{
@@ -194,6 +201,7 @@ bool FixupAssembly::FixupField (FieldInfo^ pSourceField, String^& pFieldName, Fi
 	if	(!lRet)
 	{
 		FixFieldName (pSourceField, pFieldName);
+		FixEventFieldName (pSourceField, pFieldName);
 	}
 	if	(
 			(!lRet)
@@ -305,6 +313,11 @@ void FixupAssembly::FixupCustomAttributes (Object^ pSource, Object^ pTarget, Lis
 	if	(TypeBuilder::typeid->IsInstanceOfType (pTarget))
 	{
 		HideInternalClass (pSource, pTarget, pCustomAttributes);
+	}
+
+	if	(MethodBuilder::typeid->IsInstanceOfType (pTarget))
+	{
+		SetActiveXMethodVisibility (pSource, pTarget, pCustomAttributes);
 	}
 
 	if	(PropertyBuilder::typeid->IsInstanceOfType (pTarget))

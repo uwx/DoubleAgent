@@ -377,7 +377,7 @@ System::Void ControlTestForm::LoadButton_Click(System::Object^  sender, System::
 
 	if	(
 			(lLoad->ShowDialog () == System::Windows::Forms::DialogResult::OK)
-		&&	(!String::IsNullOrEmpty (lLoad->mFilePath))
+//		&&	(!String::IsNullOrEmpty (lLoad->mFilePath))
 		&&	(!String::IsNullOrEmpty (lLoad->mCharacterID))
 		)
 	{

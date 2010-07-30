@@ -12,77 +12,95 @@
 			</tr>
 			<tr>
 				<td class="pagehead">
-					<h4>The Show Method</h4>
+					<h3>The Show Method</h3>
 				</td>
 			</tr>
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>
-					Makes the specified character visible and optionally plays its associated <s>Showing </s>animation.
-				</p>
-					</div>
+				<p>Shows the character and optionally plays its associated <em class="glossary">Showing</em> animation.</p>
+			</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Show</s> (<em>Fast</em>)</p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<s>Set</s> <em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Show</s>[ <em>Fast</em>]</p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<s>Set</s> <em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Show</s>[ <em>Fast</em>]</p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Show</s> (<em>Fast</em>)</p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>character</em>.<s>Show</s> (<em>Fast</em>, &amp;<em>Request</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Show</em> (<em class="token">Fast</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Show</em>[ <em class="token">Fast</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="keyword">Set</em> <em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Show</em>[ <em class="token">Fast</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em>.this ["<em class="token">CharacterID</em>"].<em class="keyword">Show</em> (<em class="token">Fast</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">Show</em> (<em class="token">Fast</em>, &amp;<em class="token">Request</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
 							<tr>
 								<th align="left" width="200ex">Part</th>
 								<th align="left">Description</th>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Fast</i>
+									<em class="token">Fast</em>
 								</td>
 								<td>
-				A <s>boolean </s>value specifying whether or not the <em>Showing </em>state animation
-				is played.
+				A <em class="typename">boolean</em> value specifying whether or not the <em class="glossary">Showing</em>
+				state animation is played.
 			</td>
 							</tr>
 							<tr>
 								<td width="200ex">
-									<i>Request</i>
+									<em class="token">Request</em>
 								</td>
 								<td>
-				A <s><a href="Control_Request.htm" class="see">Request</a></s> object your application can used to track the method's status.
+				A <a href="Control_Request.htm" class="see typename">Request Object</a> your application can
+				used to track the method's status.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
-					<p>
-					Avoid setting the <s>Fast </s>parameter to <s>True </s>without first playing an animation;
-					otherwise, the character may be shown with no image. In particular, note that if you call <a href="Control_Character_MoveTo.htm" class="see">MoveTo</a> when
-					the character is not visible, it <em>does not </em>play any animation. Therefore, if you call the
-					<s>Show </s>method with <s>Fast </s>set to <s>True</s>, no image will display. Similarly, if you
-					call <a href="Control_Character_Hide.htm" class="see">Hide</a>, then <s>Show </s>with <s>Fast </s>set
-					to <s>True</s>, there will be no visible image.
+				<p>
+					Avoid setting the <em class="token">Fast</em> parameter to <em class="keyword">True</em> without first playing an
+					animation; otherwise, the character may be shown with no image. In particular, note that if you
+					call <a href="Control_Character_MoveTo.htm" class="see keyword">MoveTo</a> when the character is not visible, it <em>does not</em>
+					play any animation. Therefore, if you call the <em class="self keyword">Show</em> method with <em class="token">Fast</em>
+					set to <em class="keyword">True</em>, no image will display. Similarly, if you call <a href="Control_Character_Hide.htm" class="see keyword">Hide</a>,
+					then <em class="self keyword">Show</em> with <em class="token">Fast</em> set to <em class="keyword">True</em>, there will be no visible
+					image.
 				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Character_Hide.htm">The Hide Method</a>
-				</td>
+			<h4 class="seealso">See Also</h4><a href="Control_Character_Hide.htm">The Hide Method</a></td>
 			</tr>
 		</table>
 	</body>

@@ -464,10 +464,10 @@ void MakeILWrapper::GenerateConstructor (Type^ pSourceType, TypeBuilder^ pTarget
 		lConstructor->DefineParameter (1, ParameterAttributes::In, "Interface");
 
 		try
-		{	
+		{
 			array <Type^>^		lAttrArgTypes = gcnew array <Type^> (1);
 			array <Object^>^	lAttrArgValues = gcnew array <Object^> (1);
-			
+
 			lAttrArgTypes [0] = TypeLibFuncFlags::typeid;
 			lAttrArgValues [0] = (TypeLibFuncFlags)((int)TypeLibFuncFlags::FHidden | (int)TypeLibFuncFlags::FRestricted);
 			lConstructor->SetCustomAttribute (gcnew CustomAttributeBuilder (TypeLibFuncAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
@@ -513,14 +513,14 @@ void MakeILWrapper::GenerateAccessor (System::Reflection::Emit::TypeBuilder^ pTa
 	lProperty->SetGetMethod (lMethod);
 
 	try
-	{	
+	{
 		array <Type^>^		lAttrArgTypes = gcnew array <Type^> (1);
 		array <Object^>^	lAttrArgValues = gcnew array <Object^> (1);
-		
+
 		lAttrArgTypes [0] = TypeLibFuncFlags::typeid;
 		lAttrArgValues [0] = (TypeLibFuncFlags)((int)TypeLibFuncFlags::FHidden | (int)TypeLibFuncFlags::FRestricted);
 		lMethod->SetCustomAttribute (gcnew CustomAttributeBuilder (TypeLibFuncAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
-		
+
 		lAttrArgTypes [0] = TypeLibVarFlags::typeid;
 		lAttrArgValues [0] = (TypeLibVarFlags)((int)TypeLibVarFlags::FHidden | (int)TypeLibVarFlags::FRestricted);
 		lProperty->SetCustomAttribute (gcnew CustomAttributeBuilder (TypeLibVarAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
@@ -577,7 +577,7 @@ ConstructorInfo^ MakeILWrapper::GetWrapperConstructor (Type^ pWrapperType, Type^
 	{
 		LogMessage (LogNormal, _T("*** GetWrapperConstructor [%s]"), _BT(pWrapperType));
 	}
-#endif		
+#endif
 	return lConstructor;
 }
 
@@ -603,7 +603,7 @@ MethodInfo^ MakeILWrapper::GetWrapperAccessor (Type^ pWrapperType, Type^ pInterf
 	{
 		LogMessage (LogNormal, _T("*** GetWrapperAccessor [%s]"), _BT(pWrapperType));
 	}
-#endif		
+#endif
 	return lMethod;
 }
 

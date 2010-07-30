@@ -184,7 +184,7 @@ static inline void FillSolidRect (HDC pDC, int x, int y, int cx, int cy, COLORRE
 ////////////////////////////////////////////////////////////////////////
 
 template <class T>
-class CMsgPostingWnd : public CWindowImpl <CMsgPostingWnd <T> >
+class CMsgPostingWnd : public CWindowImpl <CMsgPostingWnd <T>, CWindow, CNullTraits>
 {
 public:
 	CMsgPostingWnd (T & pOwner)

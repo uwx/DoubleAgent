@@ -17,42 +17,79 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<p>
-					The <s>Settings </s>object provides access to various settings maintained by Double Agent.
-					The properties are read-only for client applications, but the user can change them in the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a>
+					<h4 class="summary">Description</h4>
+				<p>
+					The <em class="self keyword">Settings Object</em> provides access to various settings maintained by Double Agent. The
+					properties are read-only for client applications, but the user can change them in the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a>
 					window.
 				</p>
-					<p>
-					This object can be accessed using the <a href="Control_Control.htm" class="see">Control</a>'s <a href="Control_Control_Settings.htm" class="see">Settings</a>
+			<div id="Syntax">
+				<dl><dt>
+							<h4>
+								<a name="Properties"> </a>Properties
+							</h4>
+						</dt><dd>
+							<table class="syntax"><tr><td width="275ex">
+										<a href="Control_Settings_AudioStatus.htm" class="see keyword">AudioStatus</a>
+									</td><td>
+										Returns the status of the audio output channel.
+									</td></tr><tr><td>
+										<a href="Control_Settings_BalloonEnabled.htm" class="see keyword">BalloonEnabled</a>
+									</td><td>
+										Indicates if the word balloon for the <a href="Control_Character_Speak.htm" class="see keyword">Speak</a> and <a href="Control_Character_Think.htm" class="see keyword">Think</a>
+					methods is enabled.
+									</td></tr><tr><td>
+										<a href="Control_Settings_BalloonFont.htm" class="see keyword">BalloonFont</a>
+									</td><td>
+										Returns the font that will be used for all word balloons, if any.
+									</td></tr><tr><td>
+										<a href="Control_Settings_SoundEffectsEnabled.htm" class="see keyword">SoundEffectsEnabled</a>
+									</td><td>
+										Indicates if sound effects associated with a character's animations will play.
+									</td></tr><tr><td>
+										<a href="Control_Settings_SREnabled.htm" class="see keyword">SREnabled</a>
+									</td><td>
+										Indicates if speech input is enabled.
+									</td></tr><tr><td>
+										<a href="Control_Settings_SRHotKey.htm" class="see keyword">SRHotKey</a>
+									</td><td>
+										Returns the user's current setting for the <em class="glossary">Listening key</em>.
+									</td></tr><tr><td>
+										<a href="Control_Settings_SRHotKeyTime.htm" class="see keyword">SRHotKeyTime</a>
+									</td><td>
+										Returns the current timeout delay for the <em class="glossary">Listening key</em>.
+									</td></tr><tr><td>
+										<a href="Control_Settings_SRListeningPrompt.htm" class="see keyword">SRListeningPrompt</a>
+									</td><td>
+										Indicates if a sound is played when <em class="glossary">Listening mode</em> is activated or deactivated.
+									</td></tr><tr><td>
+										<a href="Control_Settings_SRListeningTip.htm" class="see keyword">SRListeningTip</a>
+									</td><td>
+										Indicates if the <em class="glossary">Listening tip</em> is shown when <em class="glossary">Listening mode</em>
+					is active.
+									</td></tr><tr><td>
+										<a href="Control_Settings_TTSEnabled.htm" class="see keyword">TTSEnabled</a>
+									</td><td>
+										Indicates if spoken audio output is enabled.
+									</td></tr><tr><td>
+										<a href="Control_Settings_TTSSpeed.htm" class="see keyword">TTSSpeed</a>
+									</td><td>
+										Returns the text-to-speech rate configured by the user.
+									</td></tr></table>
+						</dd></dl>
+			</div><h4 class="remarks">Remarks</h4>
+				<p>
+					The <em class="self keyword">Settings Object</em> replaces and extends the <a href="Control_AudioOutput.htm" class="see keyword">AudioOutput</a> and <a href="Control_SpeechInput.htm" class="see keyword">SpeechInput Objects</a>.
+				</p>
+				<p>
+					This object can be accessed using the <a href="Control_Control.htm" class="see ">Control Object's</a> <a href="Control_Control_Settings.htm" class="see ">Settings</a>
 					property.
 				</p>
-					<ul>
-						<li>
-							<a name="Properties"> </a>
-							The <s>Settings </s>object has the following <s>properties</s>:
-						<p><a href="Control_Settings_AudioStatus.htm" class="see">AudioStatus</a>,
-							<a href="Control_Settings_BalloonEnabled.htm" class="see">BalloonEnabled</a>,
-							<a href="Control_Settings_BalloonFont.htm" class="see">BalloonFont</a>,
-							<a href="Control_Settings_SoundEffectsEnabled.htm" class="see">SoundEffectsEnabled</a>,
-							<a href="Control_Settings_SREnabled.htm" class="see">SREnabled</a>,
-							<a href="Control_Settings_SRHotKey.htm" class="see">SRHotKey</a>,
-							<a href="Control_Settings_SRHotKeyTime.htm" class="see">SRHotKeyTime</a>,
-							<a href="Control_Settings_SRListeningPrompt.htm" class="see">SRListeningPrompt</a>,
-							<a href="Control_Settings_SRListeningTip.htm" class="see">SRListeningTip</a>,
-							<a href="Control_Settings_TTSEnabled.htm" class="see">TTSEnabled</a>,
-							<a href="Control_Settings_TTSSpeed.htm" class="see">TTSSpeed</a></p></li>
-					</ul>
-					<h4 class="remarks">Remarks</h4>
-					<p>
-					The <s>Settings </s>object replaces and extends the <a href="Control_AudioOutput.htm" class="see">AudioOutput</a>
-					and <a href="Control_SpeechInput.htm" class="see">SpeechInput</a> objects.
+				<p class="note"><span class="note">Note:</span> 
+					For some properties, Double Agent returns a relevant value only if a compatible speech engine has
+					been installed and is enabled.
 				</p>
-					<p class="note">
-						<span class="note">Note:</span> 
-					For some properties, Double Agent returns a relevant value only if a compatible speech engine
-					has been installed and is enabled.
-				</p>
-				</td>
+			</td>
 			</tr>
 		</table>
 	</body>
