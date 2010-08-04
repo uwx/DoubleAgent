@@ -1,24 +1,9 @@
 #pragma once
-#include "DaServerOdl.h"
+#include "DaServerInterface.h"
 #include "AgentPreviewWnd.h"
 
-_COM_SMARTPTR_TYPEDEF (IDaServer, __uuidof(IDaServer));
-_COM_SMARTPTR_TYPEDEF (IDaServer2, __uuidof(IDaServer2));
-_COM_SMARTPTR_TYPEDEF (IDaSvrCharacter, __uuidof(IDaSvrCharacter));
-_COM_SMARTPTR_TYPEDEF (IDaSvrCharacter2, __uuidof(IDaSvrCharacter2));
-_COM_SMARTPTR_TYPEDEF (IDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles));
-_COM_SMARTPTR_TYPEDEF (IDaSvrBalloon2, __uuidof(IDaSvrBalloon2));
-_COM_SMARTPTR_TYPEDEF (IDaSvrCommands2, __uuidof(IDaSvrCommands2));
-_COM_SMARTPTR_TYPEDEF (IDaSvrCommand2, __uuidof(IDaSvrCommand2));
-_COM_SMARTPTR_TYPEDEF (IDaSvrPropertySheet, __uuidof(IDaSvrPropertySheet));
-_COM_SMARTPTR_TYPEDEF (IDaSvrPropertySheet2, __uuidof(IDaSvrPropertySheet2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrAudioOutput, __uuidof(IDaSvrAudioOutput));
 _COM_SMARTPTR_TYPEDEF (IDaSvrSpeechInput, __uuidof(IDaSvrSpeechInput));
-_COM_SMARTPTR_TYPEDEF (IDaSvrUserInput2, __uuidof(IDaSvrUserInput2));
-_COM_SMARTPTR_TYPEDEF (IDaSvrTTSEngine, __uuidof(IDaSvrTTSEngine));
-_COM_SMARTPTR_TYPEDEF (IDaSvrTTSEngines, __uuidof(IDaSvrTTSEngines));
-_COM_SMARTPTR_TYPEDEF (IDaSvrSREngine, __uuidof(IDaSvrSREngine));
-_COM_SMARTPTR_TYPEDEF (IDaSvrSREngines, __uuidof(IDaSvrSREngines));
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -48,6 +33,7 @@ public:
 	CButton	mShowCharButton;
 	CButton	mShowChar2Button;
 	CButton	mCancelButton;
+	CButton	mFormattedButton;
 	CComboBox mTTSModes;
 	CComboBox mSRModes;
 	CStatic mTTSStatus;
@@ -89,7 +75,7 @@ protected:
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
-	BEGIN_INTERFACE_PART(DaSvrNotifySink, IDaSvrNotifySink)
+	BEGIN_INTERFACE_PART(DaSvrNotifySink, IDaSvrNotifySink2)
 		HRESULT STDMETHODCALLTYPE GetTypeInfoCount (unsigned int*);
 		HRESULT STDMETHODCALLTYPE GetTypeInfo (unsigned int, LCID, ITypeInfo**);
 		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*);
@@ -116,6 +102,9 @@ protected:
 		HRESULT STDMETHODCALLTYPE DefaultCharacterChange (BSTR CharGUID);
 		HRESULT STDMETHODCALLTYPE AgentPropertyChange(void);
 		HRESULT STDMETHODCALLTYPE ActiveClientChange (long CharacterID, long Status);
+		HRESULT STDMETHODCALLTYPE SpeechStart (long CharacterID, IDaSvrFormattedText *FormattedText);
+		HRESULT STDMETHODCALLTYPE SpeechEnd (long CharacterID, IDaSvrFormattedText *FormattedText, VARIANT_BOOL Stopped);
+		HRESULT STDMETHODCALLTYPE SpeechWord (long CharacterID, IDaSvrFormattedText *FormattedText, long WordIndex);
 	END_INTERFACE_PART(DaSvrNotifySink)
 
 	DECLARE_INTERFACE_MAP()

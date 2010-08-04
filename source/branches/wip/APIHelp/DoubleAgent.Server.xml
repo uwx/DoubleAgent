@@ -20,7 +20,9 @@
 	<!ENTITY davcref "../html/UI_Intro.htm#VoiceCommands">
 	<!ENTITY davcname "Voice Commands">
 	<!ENTITY dacmref "../html/UI_Intro.htm#Menu">
-	<!ENTITY dacmname "Pop-up Menu">
+	<!ENTITY dacmname "pop-up menu">
+	<!ENTITY dawbref "../html/UI_Intro.htm#Balloon">
+	<!ENTITY dawbname "word balloon">
 ]>
 
 <doc>
@@ -225,15 +227,15 @@ VariantInit (&amp;EmptyProvider);
 </syntax>
 			<param name="NotifySink">
 				The <typename>IUnknown</typename> interface of an event <glossary>notification sink</glossary>
-				object that implements <keyword>IDaSvrNotifySink</keyword>.
+				object that implements <keyword>IDaSvrNotifySink2</keyword>.
 			</param>
 			<param name="Cookie">
 				A <typename>long</typename> value that identifies the connection.
 			</param>
 			<remarks>
 				<para>
-					The <see cref="T:&darootobj;" suffix="Object" /> also implements the standard <glossary>COM</glossary>
-					<keyword>IConnectionPoint</keyword> protocol for <glossary>notification sinks</glossary>.
+					The <see cref="T:&darootobj;" suffix="Object" /> also implements the standard <glossary>COM</glossary> <keyword>IConnectionPoint</keyword>
+					protocol for <glossary>notification sinks</glossary>.
 				</para>
 				<para>
 					For languages that support ActiveX<sup>®</sup> controls, you can use the language's default mechanism for
@@ -647,6 +649,42 @@ VariantInit (&amp;EmptyProvider);
 		</member>
 
 		<!--=============================================================================================-->
+
+		<member name="E:&darootobj;.SpeechStart">
+			<summary>
+				<para>
+					---todo---
+				</para>
+			</summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:&darootobj;.SpeechEnd">
+			<summary>
+				<para>
+					---todo---
+				</para>
+			</summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:&darootobj;.SpeechWord">
+			<summary>
+				<para>
+					---todo---
+				</para>
+			</summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
 		<!--=============================================================================================-->
 
 		<member name="T:&darootobj;">
@@ -979,6 +1017,30 @@ VariantInit (&amp;EmptyProvider);
 								<item>
 									<term>
 										<see cref="E:&darootobj;.Size" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='E:&darootobj;.Size']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
+										<see cref="E:&darootobj;.SpeechEnd" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='E:&darootobj;.SpeechEnd']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
+										<see cref="E:&darootobj;.SpeechStart" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='E:&darootobj;.SpeechStart']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
+										<see cref="E:&darootobj;.SpeechWord" />
 									</term>
 									<description>
 										<copy path="/doc/members/member[@name='E:&darootobj;.Size']/summary/para[1]" />
@@ -1386,7 +1448,7 @@ VariantInit (&amp;EmptyProvider);
 			<remarks>
 				<para>
 					The <self>CharsPerLine</self> property is the average number of characters (letters) displayed in
-					the word balloon.
+					the <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
 			</remarks>
@@ -1449,7 +1511,7 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Balloon.NumberOfLines']/value" />
 			<remarks>
 				<para>
-					The <self>NumberOfLines</self> property is only used if the word balloon doesn't have the <keyword>AutoSize</keyword>
+					The <self>NumberOfLines</self> property is only used if the <a class="see" href="&dawbref;">&dawbname;</a> doesn't have the <keyword>AutoSize</keyword>
 					style.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
@@ -1473,7 +1535,7 @@ VariantInit (&amp;EmptyProvider);
 					Agent Character Editor.
 				</para>
 				<note>
-					The <self>Style</self> property can be set even if the user has disabled word balloons in the
+					The <self>Style</self> property can be set even if the user has disabled <a class="see" href="&dawbref;">&dawbname;</a>s in the
 					<a class="see" href="&dapsref;">&dapsname;</a> window.
 				</note>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
@@ -1512,8 +1574,8 @@ VariantInit (&amp;EmptyProvider);
 					methods automatically makes the balloon visible, setting the <self>Visible</self> property to <keyword>True</keyword>.
 					If the balloon's <see cref="F:&dans;.BalloonStyleFlags.AutoHide" /> <see cref="P:&dans;.Balloon.Style" />
 					is set, the balloon is automatically hidden after the text output is complete. Clicking or dragging a
-					character that is not currently speaking also automatically hides the balloon, even if its <see cref="F:&dans;.BalloonStyleFlags.AutoHide" /> <see cref="P:&dans;.Balloon.Style" />
-					is not set.
+					character that is not currently speaking also automatically hides the balloon, even if its <see cref="F:&dans;.BalloonStyleFlags.AutoHide" />
+					<see cref="P:&dans;.Balloon.Style" /> is not set.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.Balloon.Style" prefix="The" suffix="Property" />
@@ -1730,8 +1792,8 @@ VariantInit (&amp;EmptyProvider);
 </vb>
 </syntax>
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.GestureAt']/param" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.GestureAt']/remarks" />
 			<include file="&dainclude;" path="/doc/params/param[@name='RequestID']" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.GestureAt']/remarks" />
 			<seealso cref="E:&darootobj;.RequestStart" prefix="The" suffix="Event" />
 			<seealso cref="E:&darootobj;.RequestComplete" prefix="The" suffix="Event" />
 		</member>
@@ -2096,11 +2158,31 @@ VariantInit (&amp;EmptyProvider);
 		<member name="M:&dans;.Character.GetVersion">
 			<summary>
 				<para>
-					---todo---
+					Retrieves the character's version number.
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>GetVersion</keyword> (&amp;<token>MajorVersion</token>, &amp;<token>MinorVersion</token>)</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>GetVersion</keyword> (<keyword>out</keyword> <token>MajorVersion</token>, <keyword>out</keyword> <token>MinorVersion</token>)</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>GetVersion</keyword> (<token>MajorVersion</token>, <token>MinorVersion</token>)</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>GetVersion</keyword> <token>MajorVersion</token>, <token>MinorVersion</token></para>
+</vb>
+</syntax>
+			<param name="MajorVersion">
+				A <typename>numeric</typename> value that indicates the character's major
+				version number (e.g. the <keyword>1</keyword> in <keyword>1.0</keyword>).
+			</param>
+			<param name="MinorVersion">
+				A <typename>numeric</typename> value that indicates the character's minor
+				version number (e.g. the <keyword>0</keyword> in <keyword>1.0</keyword>).
+			</param>
 		</member>
 
 		<!--=============================================================================================-->
@@ -2143,9 +2225,24 @@ VariantInit (&amp;EmptyProvider);
 
 		<member name="M:&dans;.Character.Hide">
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Hide']/summary" />
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>Hide</keyword> (<token>Fast</token>, &amp;<token>RequestID</token>)</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>Hide</keyword> (<token>Fast</token>, <keyword>out</keyword> <token>RequestID</token>)</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>Hide</keyword> (<token>Fast</token>, <token>RequestID</token>)</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>Hide</keyword> [<token>Fast</token>][, <token>RequestID</token>]</para>
+</vb>
+</syntax>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Hide']/param" />
 			<include file="&dainclude;" path="/doc/params/param[@name='RequestID']" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Hide']/remarks" replace="ActivateInput=ActivateInputState" />
+			<seealso cref="M:&dans;.Character.Show" prefix="The" suffix="Method" />
 			<seealso cref="E:&darootobj;.RequestStart" prefix="The" suffix="Event" />
 			<seealso cref="E:&darootobj;.RequestComplete" prefix="The" suffix="Event" />
 		</member>
@@ -2154,40 +2251,140 @@ VariantInit (&amp;EmptyProvider);
 
 		<member name="M:&dans;.Character.Interrupt">
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Interrupt']/summary" />
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>Interrupt</keyword> (<token>InterruptRequestID</token>, &amp;<token>RequestID</token>)</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>Interrupt</keyword> (<token>InterruptRequestID</token>, <keyword>out</keyword> <token>RequestID</token>)</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>Interrupt</keyword> (<token>InterruptRequestID</token>, <token>RequestID</token>)</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>Interrupt</keyword> <token>InterruptRequestID</token>[, <token>RequestID</token>]</para>
+</vb>
+</syntax>
+			<param name="InterruptRequestID">
+				The <paramref name="RequestID"/> for the animation call
+				you want to interrupt.
+			</param>
+			<include file="&dainclude;" path="/doc/params/param[@name='RequestID']" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Interrupt']/remarks" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Interrupt']/details[@name='Details']" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Interrupt']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="M:&dans;.Character.Listen">
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Listen']/summary" />
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>Listen</keyword> (<token>Listen</token>)</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>Listen</keyword> (<token>Listen</token>)</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>Listen</keyword> (<token>Listen</token>)</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>Listen</keyword> <token>Listen</token></para>
+</vb>
+</syntax>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Listen']/param" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Listen']/remarks" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Listen']/details[@name='Details']" replace="ListenStart=ListeningState|ListenComplete=ListeningState" />
+			<seealso cref="P:&dans;.Character.ListeningStatus" prefix="The" suffix="Property" />
+			<seealso cref="E:&darootobj;.ListeningState" prefix="The" suffix="Event" />
+			<seealso cref="P:&dans;.Character.LanguageID" prefix="The" suffix="Property" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="M:&dans;.Character.MoveTo">
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.MoveTo']/summary" />
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>MoveTo</keyword> (<token>X</token>, <token>Y</token>, <token>Speed</token>, &amp;<token>RequestID</token>)</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>MoveTo</keyword> (<token>X</token>, <token>Y</token>, <token>Speed</token>, <keyword>out</keyword> <token>RequestID</token>)</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>MoveTo</keyword> (<token>X</token>, <token>Y</token>, <token>Speed</token>, <token>RequestID</token>)</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>MoveTo</keyword> <token>X</token>, <token>Y</token>[, <token>Speed</token>][, <token>RequestID</token>]</para>
+</vb>
+</syntax>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.MoveTo']/param" />
+			<include file="&dainclude;" path="/doc/params/param[@name='RequestID']" />
+			<remarks>
+				<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.MoveTo']/remarks/para" />
+				<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.MoveTo']/remarks/note[1]" />
+			</remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.MoveTo']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="M:&dans;.Character.Play">
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Play']/summary" />
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>Play</keyword> (<token>Animation</token>, &amp;<token>RequestID</token>)</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>Play</keyword> (<token>Animation</token>, <keyword>out</keyword> <token>RequestID</token>)</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>Play</keyword> (<token>Animation</token>, <token>RequestID</token>)</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>Play</keyword> <token>Animation</token>[, <token>RequestID</token>]</para>
+</vb>
+</syntax>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Play']/param" />
+			<include file="&dainclude;" path="/doc/params/param[@name='RequestID']" />
+			<remarks>
+				<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Play']/remarks/para[1]" />
+				<para>
+					The <self>Play</self> method does not make the character visible. If the character is not visible, Double
+					Agent plays the animation invisibly, and sets the <paramref name="Result" /> parameter of the
+					<see cref="E:&darootobj;.RequestComplete" suffix="Event" />.
+				</para>
+				<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Play']/remarks/para[3]" />
+			</remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Play']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="M:&dans;.Character.Prepare">
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Prepare']/summary" />
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>Prepare</keyword> (<token>Type</token>, <token>Name</token>, <token>Queue</token>, &amp;<token>RequestID</token>)</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>Prepare</keyword> (<token>Type</token>, <token>Name</token>, <token>Queue</token>, <keyword>out</keyword> <token>RequestID</token>)</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>Prepare</keyword> (<token>Type</token>, <token>Name</token>, <token>Queue</token>, <token>RequestID</token>)</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>Prepare</keyword> <token>Type</token>, <token>Name</token>[, <token>Queue</token>][, <token>RequestID</token>]</para>
+</vb>
+</syntax>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Prepare']/param" replace="Characters.Load=Server.Load" />
+			<include file="&dainclude;" path="/doc/params/param[@name='RequestID']" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Prepare']/remarks" />
+			<details>
+				<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Prepare']/details/para[2]" />
+			</details>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Prepare']/seealso" replace="Characters.Load=Server.Load" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -2242,16 +2439,16 @@ VariantInit (&amp;EmptyProvider);
 			</summary>
 			<syntax xml:space="preserve">
 <cpp>
-<para><token>character</token>-&gt;<keyword>GetIconIdentity</keyword> (<token>IconIdentity</token>)</para>
+<para><token>character</token>-&gt;<keyword>SetIconIdentity</keyword> (<token>IconIdentity</token>)</para>
 </cpp>
 <csharp>
-<para>&dacharref_csharp;.<keyword>GetIconIdentity</keyword> (<token>IconIdentity</token>)</para>
+<para>&dacharref_csharp;.<keyword>SetIconIdentity</keyword> (<token>IconIdentity</token>)</para>
 </csharp>
 <vbnet>
-<para>&dacharref_vb;.<keyword>GetIconIdentity</keyword> (<token>IconIdentity</token>)</para>
+<para>&dacharref_vb;.<keyword>SetIconIdentity</keyword> (<token>IconIdentity</token>)</para>
 </vbnet>
 <vb>
-<para>&dacharref_vb;.<keyword>GetIconIdentity</keyword> <token>IconIdentity</token></para>
+<para>&dacharref_vb;.<keyword>SetIconIdentity</keyword> <token>IconIdentity</token></para>
 </vb>
 </syntax>
 			<value name="IconIdentity">
@@ -2414,56 +2611,210 @@ VariantInit (&amp;EmptyProvider);
 
 		<member name="M:&dans;.Character.Show">
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Show']/summary" />
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>Show</keyword> (<token>Fast</token>, &amp;<token>RequestID</token>)</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>Show</keyword> (<token>Fast</token>, <keyword>out</keyword> <token>RequestID</token>)</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>Show</keyword> (<token>Fast</token>, <token>RequestID</token>)</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>Show</keyword> [<token>Fast</token>][, <token>RequestID</token>]</para>
+</vb>
+</syntax>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Show']/param" />
+			<include file="&dainclude;" path="/doc/params/param[@name='RequestID']" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Show']/remarks" replace="ActivateInput=ActivateInputState" />
+			<seealso cref="M:&dans;.Character.Hide" prefix="The" suffix="Method" />
+			<seealso cref="E:&darootobj;.RequestStart" prefix="The" suffix="Event" />
+			<seealso cref="E:&darootobj;.RequestComplete" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="M:&dans;.Character.ShowPopupMenu">
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.ShowPopupMenu']/summary" />
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>ShowPopupMenu</keyword> (<token>X</token>, <token>Y</token>)</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>ShowPopupMenu</keyword> (<token>X</token>, <token>Y</token>)</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>ShowPopupMenu</keyword> (<token>X</token>, <token>Y</token>)</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>ShowPopupMenu</keyword> <token>X</token>, <token>Y</token></para>
+</vb>
+</syntax>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.ShowPopupMenu']/param" />
+			<remarks>
+				<para>
+					If the character's <see cref="P:&dans;.Character.Style" /> property includes <see cref="F:&dans;.CharacterStyleFlags.AutoPopupMenu"/>,
+					Double Agent automatically displays the character's <a class="see" href="&dacmref;">&dacmname;</a> when the
+					user right-clicks the character. If you set the <see cref="P:&dans;.Character.Style" /> property without <see cref="F:&dans;.CharacterStyleFlags.AutoPopupMenu"/>,
+					you can use <self>ShowPopupMenu</self> to display the menu.
+				</para>
+				<para>
+					The menu remains displayed until the user selects a command or displays another menu. Only one pop-up
+					menu can be displayed at a time; therefore, calls to this method will cancel (remove) the former
+					menu.
+				</para>
+				<para>
+					This method should be called only when your client application is the active client of the character; otherwise
+					it fails.
+				</para>
+			</remarks>
+			<seealso cref="P:&dans;.Character.Style" prefix="The" suffix="Property" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="M:&dans;.Character.Speak">
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Speak']/summary" />
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>Speak</keyword> (<token>Text</token>, <token>Url</token>, &amp;<token>RequestID</token>)</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>Speak</keyword> (<token>Text</token>, <token>Url</token>, <keyword>out</keyword> <token>RequestID</token>)</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>Speak</keyword> (<token>Text</token>, <token>Url</token>, <token>RequestID</token>)</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>Speak</keyword> [<token>Text</token>][, <token>Url</token>][, <token>RequestID</token>]</para>
+</vb>
+</syntax>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Speak']/param" />
+			<include file="&dainclude;" path="/doc/params/param[@name='RequestID']" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Speak']/remarks" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Speak']/seealso" replace="Bookmark=BookMark"/>
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="M:&dans;.Character.Stop">
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Stop']/summary" />
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>Stop</keyword> (<token>RequestID</token>)</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>Stop</keyword> (<token>RequestID</token>)</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>Stop</keyword> (<token>RequestID</token>)</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>Stop</keyword> <token>RequestID</token></para>
+</vb>
+</syntax>
+			<param name="RequestID">
+				A <typename>numeric</typename> value that identifies a particular animation call.
+			</param>
+			<remarks>
+				<para>
+					To specify the <paramref name="RequestID"/> parameter, you must save the <paramref name="RequestID"/> value returned by the animation call.
+				</para>
+				<note>
+					This method <em>does not</em> stop non-queued <see cref="M:&dans;.Character.Prepare" /> calls.
+				</note>
+			</remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Stop']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="M:&dans;.Character.StopAll">
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.StopAll']/summary" />
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>StopAll</keyword> (<token>Types</token>)</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>StopAll</keyword> (<token>Types</token>)</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>StopAll</keyword> (<token>Types</token>)</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>StopAll</keyword>[ <token>Types</token>]</para>
+</vb>
+</syntax>
+			<param name="Types">
+				A <typename>numeric</typename> value specifying the types of actions to stop.
+				You can use any combination of the following members of
+				the <see class="typename" cref="T:&dans;.StopAllFlags" suffix="Enumeration" />:<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.StopAllFlags']/syntax/list" />
+			</param>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.StopAll']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="M:&dans;.Character.Think">
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Think']/summary" />
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>Think</keyword> (<token>Text</token>, &amp;<token>RequestID</token>)</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>Think</keyword> (<token>Text</token>, <keyword>out</keyword> <token>RequestID</token>)</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>Think</keyword> (<token>Text</token>, <token>RequestID</token>)</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>Think</keyword> <token>Text</token>[, <token>RequestID</token>]</para>
+</vb>
+</syntax>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Think']/param" />
+			<include file="&dainclude;" path="/doc/params/param[@name='RequestID']" />
+			<remarks>
+				<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Think']/remarks/para" />
+				<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Think']/remarks/note[2]" />
+			</remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Think']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="M:&dans;.Character.Wait">
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Wait']/summary" />
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>Wait</keyword> (<token>WaitForRequestID</token>, &amp;<token>RequestID</token>)</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>Wait</keyword> (<token>WaitForRequestID</token>, <keyword>out</keyword> <token>RequestID</token>)</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>Wait</keyword> (<token>WaitForRequestID</token>, <token>RequestID</token>)</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>Wait</keyword> <token>WaitForRequestID</token>[, <token>RequestID</token>]</para>
+</vb>
+</syntax>
+			<param name="WaitForRequestID">
+				A <typename>numeric</typename> value specifying the animation to wait for.
+			</param>
+			<include file="&dainclude;" path="/doc/params/param[@name='RequestID']" />
+			<remarks>
+				<para>
+					Use this method only when you are using multiple (simultaneous) characters and are trying to sequence the
+					interaction of characters. (For a single character, each animation request is played sequentially--after the
+					previous request completes.)
+				</para>
+				<para>
+					If you have two characters and you want one character's animation request to wait until the other character's
+					animation completes, use the <self>Wait</self> method with the other character's animation <paramref name="RequestID" /> value.
+				</para>
+			</remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Wait']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -2786,6 +3137,62 @@ VariantInit (&amp;EmptyProvider);
 		</member>
 
 		<!--=============================================================================================-->
+
+		<member name="M:&dans;.Character.NewFormattedText">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.NewFormattedText']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+
+		<member name="M:&dans;.Character.SpeakFormatted">
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.SpeakFormatted']/summary" />
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>SpeakFormatted</keyword> (<token>FormattedText</token>, &amp;<token>RequestID</token>)</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>SpeakFormatted</keyword> (<token>FormattedText</token>, <keyword>out</keyword> <token>RequestID</token>)</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>SpeakFormatted</keyword> (<token>FormattedText</token>, <token>RequestID</token>)</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>SpeakFormatted</keyword> <token>FormattedText</token>[, <token>RequestID</token>]</para>
+</vb>
+</syntax>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.SpeakFormatted']/param" />
+			<include file="&dainclude;" path="/doc/params/param[@name='RequestID']" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.SpeakFormatted']/remarks" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.SpeakFormatted']/seealso" />
+		</member>
+
+		<!--=============================================================================================-->
+
+
+		<member name="M:&dans;.Character.ThinkFormatted">
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.ThinkFormatted']/summary" />
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>ThinkFormatted</keyword> (<token>FormattedText</token>, &amp;<token>RequestID</token>)</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>ThinkFormatted</keyword> (<token>FormattedText</token>, <keyword>out</keyword> <token>RequestID</token>)</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>ThinkFormatted</keyword> (<token>FormattedText</token>, <token>RequestID</token>)</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>ThinkFormatted</keyword> <token>FormattedText</token>[, <token>RequestID</token>]</para>
+</vb>
+</syntax>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.ThinkFormatted']/param" />
+			<include file="&dainclude;" path="/doc/params/param[@name='RequestID']" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.ThinkFormatted']/remarks" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.ThinkFormatted']/seealso" />
+		</member>
+
+		<!--=============================================================================================-->
 		<!--=============================================================================================-->
 
 		<member name="T:&dans;.Character">
@@ -2914,6 +3321,14 @@ VariantInit (&amp;EmptyProvider);
 								</item>
 								<item>
 									<term>
+										<see cref="M:&dans;.Character.NewFormattedText" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='M:&dans;.Character.NewFormattedText']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
 										<see cref="M:&dans;.Character.Play" />
 									</term>
 									<description>
@@ -2978,6 +3393,14 @@ VariantInit (&amp;EmptyProvider);
 								</item>
 								<item>
 									<term>
+										<see cref="M:&dans;.Character.SpeakFormatted" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='M:&dans;.Character.SpeakFormatted']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
 										<see cref="M:&dans;.Character.Stop" />
 									</term>
 									<description>
@@ -2998,6 +3421,14 @@ VariantInit (&amp;EmptyProvider);
 									</term>
 									<description>
 										<copy path="/doc/members/member[@name='M:&dans;.Character.Think']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
+										<see cref="M:&dans;.Character.ThinkFormatted" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='M:&dans;.Character.ThinkFormatted']/summary/para[1]" />
 									</description>
 								</item>
 								<item>
@@ -3290,6 +3721,69 @@ VariantInit (&amp;EmptyProvider);
 			</syntax>
 			<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.Character']/remarks" />
 			<details></details>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="M:&dans;.FormattedText.Append">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.FormattedText.Append']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:&dans;.FormattedText.Parse">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.FormattedText.Parse']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:&dans;.FormattedText.DisplayText">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.FormattedText.DisplayText']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:&dans;.FormattedText.DisplayWord">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.FormattedText.DisplayWord']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:&dans;.FormattedText.ParsedText">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.FormattedText.ParsedText']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:&dans;.FormattedText.RawText">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.FormattedText.RawText']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:&dans;.FormattedText.SpeechText">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.FormattedText.SpeechText']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:&dans;.FormattedText.WordCount">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.FormattedText.WordCount']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:&dans;.FormattedText.WordIndex">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.FormattedText.WordIndex']" />
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="T:&dans;.FormattedText">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.FormattedText']" />
 		</member>
 
 		<!--=============================================================================================-->

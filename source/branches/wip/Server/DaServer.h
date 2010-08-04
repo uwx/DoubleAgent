@@ -29,7 +29,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E500-A208-11DE-ABF2-002421116FB2}")) D
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public CComCoClass<DaServer, &__uuidof(DaServer)>,
 	public IDispatchImpl<IDaServer2, &__uuidof(IDaServer2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
-	public IProvideClassInfo2Impl<&__uuidof(DaServer), &__uuidof(_DaSvrEvents), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
+	public IProvideClassInfo2Impl<&__uuidof(DaServer), &__uuidof(_DaSvrEvents2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
 	public IStdMarshalInfo,
 	public CSvrObjLifetime,

@@ -19,7 +19,7 @@
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-				<p>Displays the specified text in the character's <em class="glossary">thought</em> balloon.</p>
+				<p>Displays the specified text in the character's <em class="glossary">thought</em> <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>.</p>
 			</div>
 					<h4 class="syntax">Syntax</h4>
 					<div id="Syntax" class="syntax">
@@ -84,7 +84,7 @@
 								</td>
 								<td>
 				A <a href="Control_Request.htm" class="see typename">Request Object</a> your application can
-				used to track the method's status.
+				use to track the method's status.
 			</td>
 							</tr>
 						</table>
@@ -92,10 +92,10 @@
 					<h4 class="remarks">Remarks</h4>
 				<p>
 					Like the <a href="Control_Character_Speak.htm" class="see keyword">Speak</a> method, the <em class="self keyword">Think</em> method is a queued request
-					that displays text in a word balloon, except that the <em class="self keyword">Think</em> word balloon differs visually. In
-					addition, the balloon supports only the Bookmark speech control tag (<em class="keyword">\Mrk</em>) and ignores any
-					other speech control tags. Unlike <a href="Control_Character_Speak.htm" class="see keyword">Speak</a>, the <em class="self keyword">Think</em> method does
-					not change the character's animation state.
+					that displays text in a <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>, except that the <em class="self keyword">Think</em> <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>
+					differs visually. In addition, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> supports only the Bookmark
+					speech control tag (<em class="keyword">\Mrk</em>) and ignores any other speech control tags. Unlike <a href="Control_Character_Speak.htm" class="see keyword">Speak</a>,
+					the <em class="self keyword">Think</em> method does not change the character's animation state.
 				</p>
 				<p>
 					The <a href="Control_Balloon.htm" class="see keyword">Balloon Object's</a> properties affect the output of both the <a href="Control_Character_Speak.htm" class="see keyword">Speak</a>
@@ -103,20 +103,21 @@
 					property must be <em class="keyword">True</em> for text to display.
 				</p>
 				<p>
-					Agent's automatic word breaking in the word balloon breaks words using white-space characters (for example,
-					SPACE or TAB). However, if it cannot, it may break a word to fit the balloon. In languages like
-					Japanese, Chinese, and Thai where spaces are not used to break words, insert a Unicode zero-width space
-					character (0x200B) between characters to define logical word breaks.
+					Agent's automatic word breaking in the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> breaks words using
+					<em class="glossary">white-space</em> characters (for example, SPACE or TAB). However, if it cannot, it may break a word
+					to fit the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>. In languages like Japanese, Chinese, and Thai
+					where spaces are not used to break words, insert a Unicode zero-width space character (0x200B) between
+					characters to define logical word breaks.
 				</p>
 				<p class="note"><span class="note">Note:</span> 
-					To track the method's status, you can declare an object reference and set it to the method's<a href="Control_Request.htm" class="see keyword">Request Object</a>
+					To track the method's status, you can declare an object reference and set it to the method's <a href="Control_Request.htm" class="see keyword">Request Object</a>
 					return value.
 				</p>
 				<p class="note"><span class="note">Note:</span> 
 					Set the character's <a href="Control_Character_LanguageID.htm" class="see keyword">LanguageID</a> before using the <em class="self keyword">Think</em>
-					method to ensure appropriate text display within the word balloon.
+					method to ensure appropriate text display within the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>.
 				</p>
-			<h4 class="seealso">See Also</h4><a href="Control_Character_LanguageID.htm">The LanguageID Property</a><br /><a href="Control_Character_Speak.htm">The Speak Method</a></td>
+			<h4 class="seealso">See Also</h4><a href="Control_Character_LanguageID.htm">The LanguageID Property</a><br /><a href="Control_Character_Speak.htm">The Speak Method</a><br /><a href="Control_Event_RequestStart.htm">The RequestStart Event</a><br /><a href="Control_Event_RequestComplete.htm">The RequestComplete Event</a></td>
 			</tr>
 		</table>
 	</body>

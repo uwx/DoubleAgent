@@ -592,13 +592,16 @@ System::Void ControlTestForm::CharGestureAt_Click(System::Object^  sender, Syste
 
 System::Void ControlTestForm::CharSpeak_Click(System::Object^  sender, System::EventArgs^  e)
 {
-	DoubleAgent::Control::Character^	lCharacter;
+	DoubleAgent::Control::Character^		lCharacter;
+	DoubleAgent::Control::FormattedText^	lFormattedText;
 
 	if	(lCharacter = CharacterPageData->Character)
 	{
 		try
 		{
-			CharacterPageData->mLastRequest = lCharacter->Speak (CharSpeakText->Text, nullptr);
+			lFormattedText = lCharacter->NewFormattedText ();
+			lFormattedText->Parse (CharSpeakText->Text);
+			CharacterPageData->mLastRequest = lCharacter->SpeakFormatted (lFormattedText);
 		}
 		catch AnyExceptionDebug
 	}

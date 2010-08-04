@@ -40,6 +40,7 @@ public:
 	UINT SafeIsValid () const;
 	bool SafeIsPrepared () const;
 	bool SafeIsSpeaking () const;
+	bool SafeIsPaused () const;
 
 	virtual tBstrPtr GetUniqueId ();
 	virtual tBstrPtr GetDisplayName ();
@@ -51,6 +52,8 @@ public:
 	virtual HRESULT PrepareToSpeak (bool pHighPriority = false) = 0;
 	virtual HRESULT Speak (LPCTSTR pMessage, bool pAsync = true) = 0;
 	virtual HRESULT Stop () = 0;
+	virtual HRESULT Pause () = 0;
+	virtual HRESULT Resume () = 0;
 
 	virtual HRESULT GetUniqueId (tBstrPtr & pUniqueId);
 	virtual HRESULT GetDisplayName (tBstrPtr & pDisplayName);
@@ -76,6 +79,7 @@ protected:
 	virtual UINT _IsValid () const = 0;
 	virtual bool _IsPrepared () const = 0;
 	virtual bool _IsSpeaking () const = 0;
+	virtual bool _IsPaused () const = 0;
 
 protected:
 	long									mEventCharID;

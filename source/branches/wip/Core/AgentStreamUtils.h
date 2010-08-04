@@ -49,15 +49,14 @@ public:
 	long CalcFileFrameCount () const;
 	long CalcFileDuration () const;
 
-// Implementation
-protected:
-	void SetAgentFile (CAgentFile * pAgentFile, CAgentFileClient * pClient);
-
 	const CAgentFileStates & GetFileStates (UINT pLogLevel = 15) const;
 	const CAgentFileGestures & GetFileGestures (UINT pLogLevel = 15) const;
 	bool GetFileImages (UINT pLogLevel = 15) const;
 	bool GetFileSounds (UINT pLogLevel = 15) const;
 
+// Implementation
+protected:
+	void SetAgentFile (CAgentFile * pAgentFile, CAgentFileClient * pClient);
 	void SetAgentStreamInfo (_IAgentStreamInfo * pStreamInfo);
 	void SetAgentStreamInfo (CAgentStreamInfo * pStreamInfo);
 

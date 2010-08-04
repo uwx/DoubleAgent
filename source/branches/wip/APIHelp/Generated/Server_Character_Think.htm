@@ -19,10 +19,98 @@
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-				<p>Displays the specified text in the character's <em class="glossary">thought</em> balloon.</p>
+				<p>Displays the specified text in the character's <em class="glossary">thought</em> <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>.</p>
 			</div>
+					<h4 class="syntax">Syntax</h4>
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">Think</em> (<em class="token">Text</em>, &amp;<em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Think</em> (<em class="token">Text</em>, <em class="keyword">out</em> <em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Think</em> (<em class="token">Text</em>, <em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Think</em> <em class="token">Text</em>[, <em class="token">RequestID</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Think</em> <em class="token">Text</em>[, <em class="token">RequestID</em>]</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Text</em>
+								</td>
+								<td>
+				A <em class="typename">string</em> value that specifies the character's thought output.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">RequestID</em>
+								</td>
+								<td>
+			An optional unique <em class="typename">numeric</em> value your application can use to track the method's status.
+		</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					Like the <a href="Server_Character_Speak.htm" class="see keyword">Speak</a> method, the <em class="self keyword">Think</em> method is a queued request
+					that displays text in a <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>, except that the <em class="self keyword">Think</em> <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>
+					differs visually. In addition, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> supports only the Bookmark
+					speech control tag (<em class="keyword">\Mrk</em>) and ignores any other speech control tags. Unlike <a href="Server_Character_Speak.htm" class="see keyword">Speak</a>,
+					the <em class="self keyword">Think</em> method does not change the character's animation state.
+				</p><p>
+					The <a href="Server_Balloon.htm" class="see keyword">Balloon Object's</a> properties affect the output of both the <a href="Server_Character_Speak.htm" class="see keyword">Speak</a>
+					and <em class="self keyword">Think</em> methods. For example, the <a href="Server_Balloon.htm" class="see keyword">Balloon Object's</a> <a href="Server_Balloon_Enabled.htm" class="see keyword">Enabled</a>
+					property must be <em class="keyword">True</em> for text to display.
+				</p><p>
+					Agent's automatic word breaking in the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> breaks words using
+					<em class="glossary">white-space</em> characters (for example, SPACE or TAB). However, if it cannot, it may break a word
+					to fit the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>. In languages like Japanese, Chinese, and Thai
+					where spaces are not used to break words, insert a Unicode zero-width space character (0x200B) between
+					characters to define logical word breaks.
+				</p>
+				<p class="note"><span class="note">Note:</span> 
+					Set the character's <a href="Server_Character_LanguageID.htm" class="see keyword">LanguageID</a> before using the <em class="self keyword">Think</em>
+					method to ensure appropriate text display within the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>.
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Character_LanguageID.htm">The LanguageID Property</a><br /><a href="Server_Character_Speak.htm">The Speak Method</a><br /><a href="Server_Event_RequestStart.htm">The RequestStart Event</a><br /><a href="Server_Event_RequestComplete.htm">The RequestComplete Event</a></td>
 			</tr>
 		</table>
 	</body>

@@ -19,7 +19,7 @@
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-				<p>Specifies the character's word balloon output style.</p>
+				<p>Specifies the character's <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> output style.</p>
 			</div>
 					<h4 class="syntax">Syntax</h4>
 					<div id="Syntax" class="syntax">
@@ -80,8 +80,8 @@
 									<em class="token">Style</em>
 								</td>
 								<td>
-				An <em class="typename">numeric</em> value that represents the balloon's output style. The
-				style value is a bit field with bits defined as follows:
+				An <em class="typename">numeric</em> value that represents the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon's</a>
+				output style. The style value is a bit field with bits defined as follows:
 				<table><tr><td>bit 0 (&amp;H00000001)</td><td>
 							<a href="Control_Balloon_Enabled.htm" class="see keyword">Enabled</a>
 						</td></tr><tr><td>bit 1 (&amp;H00000002)</td><td>
@@ -113,38 +113,39 @@
 			
 				<ul><li>
 						<p>
-					When the <a href="Control_BalloonStyleFlags_Enabled.htm" class="see keyword">Enabled</a> style is set, the word balloon appears when
-					the <a href="Control_Character_Speak.htm" class="see keyword">Speak</a> or <a href="Control_Character_Think.htm" class="see keyword">Think</a> method is used, unless
-					the user overrides this setting in the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window. When it's not
-					set, the word balloon does not appear.
+					When the <a href="Control_BalloonStyleFlags_Enabled.htm" class="see keyword">Enabled</a> style is set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>
+					appears when the <a href="Control_Character_Speak.htm" class="see keyword">Speak</a> or <a href="Control_Character_Think.htm" class="see keyword">Think</a> method
+					is used, unless the user overrides this setting in the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a>
+					window. When it's not set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> does not appear.
 				</p>
 					</li><li>
 						<p>
-					When the <a href="Control_BalloonStyleFlags_SizeToText.htm" class="see keyword">SizeToText</a> style is set, the word balloon automatically adjusts
-					the height of the balloon to the current size of the text for the <a href="Control_Character_Speak.htm" class="see keyword">Speak</a>
-					or <a href="Control_Character_Think.htm" class="see keyword">Think</a> request. When it's not set, the balloon's height is based on
-					the <a href="Control_Balloon_NumberOfLines.htm" class="see keyword">NumberOfLines</a> property. If this style is set and you attempt to set
-					the <a href="Control_Balloon_NumberOfLines.htm" class="see keyword">NumberOfLines</a> property, Double Agent raises an error.
+					When the <a href="Control_BalloonStyleFlags_SizeToText.htm" class="see keyword">SizeToText</a> style is set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>
+					automatically adjusts the height of the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> to the current size
+					of the text for the <a href="Control_Character_Speak.htm" class="see keyword">Speak</a> or <a href="Control_Character_Think.htm" class="see keyword">Think</a>
+					request. When it's not set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon's</a> height is based on the
+					<a href="Control_Balloon_NumberOfLines.htm" class="see keyword">NumberOfLines</a> property. If this style is set and you attempt to set the
+					<a href="Control_Balloon_NumberOfLines.htm" class="see keyword">NumberOfLines</a> property, Double Agent raises an error.
 				</p>
 					</li><li>
 						<p>
-					When the <a href="Control_BalloonStyleFlags_AutoHide.htm" class="see keyword">AutoHide</a> style is set, the word balloon automatically hides
-					when spoken output completes. When it's not set, the balloon remains displayed until the next
-					<a href="Control_Character_Speak.htm" class="see keyword">Speak</a> or <a href="Control_Character_Think.htm" class="see keyword">Think</a> call, the character is
-					hidden, or the user clicks or drags the character.
+					When the <a href="Control_BalloonStyleFlags_AutoHide.htm" class="see keyword">AutoHide</a> style is set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>
+					automatically hides when spoken output completes. When it's not set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>
+					remains displayed until the next <a href="Control_Character_Speak.htm" class="see keyword">Speak</a> or <a href="Control_Character_Think.htm" class="see keyword">Think</a>
+					call, the character is hidden, or the user clicks or drags the character.
 				</p>
 					</li><li>
 						<p>
-					When the <a href="Control_BalloonStyleFlags_AutoPace.htm" class="see keyword">AutoPace</a> style is set, the word balloon paces its
-					text output based on the current output rate, for example one word at a time. When output exceeds the
-					size of the balloon, the text is automatically scrolled. When it's not set, all text included in
-					a <a href="Control_Character_Speak.htm" class="see keyword">Speak</a> or <a href="Control_Character_Think.htm" class="see keyword">Think</a> request is displayed at
-					once.
+					When the <a href="Control_BalloonStyleFlags_AutoPace.htm" class="see keyword">AutoPace</a> style is set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>
+					paces its text output based on the current output rate, for example one word at a time. When output exceeds
+					the size of the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>, the text is automatically scrolled. When
+					it's not set, all text included in a <a href="Control_Character_Speak.htm" class="see keyword">Speak</a> or <a href="Control_Character_Think.htm" class="see keyword">Think</a>
+					request is displayed at once.
 				</p>
 					</li><li>
 						<p>
-					When the <a href="Control_BalloonStyleFlags_ShowPartialLines.htm" class="see keyword">ShowPartialLines</a> style is set, the word balloon will
-					show partial lines at the bottom as it scrolls its text. When it's not set, only full lines are
+					When the <a href="Control_BalloonStyleFlags_ShowPartialLines.htm" class="see keyword">ShowPartialLines</a> style is set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>
+					will show partial lines at the bottom as it scrolls its text. When it's not set, only full lines are
 					shown. This style only applies when the <a href="Control_BalloonStyleFlags_SizeToText.htm" class="see keyword">SizeToText</a> style is <em>not</em>
 					set.
 				</p>
@@ -158,8 +159,8 @@
 						</p>
 					</li></ul>
 				<p class="note"><span class="note">Note:</span> 
-					The <em class="self keyword">Style</em> property can be set even if the user has disabled word balloons in the
-					<a class="see" href="../html/UI_PropSheet.htm#Output">Advanced Character Options</a> window.
+					The <em class="self keyword">Style</em> property can be set even if the user has disabled <a class="see" href="../html/UI_Intro.htm#Balloon">word balloons</a>
+					in the <a class="see" href="../html/UI_PropSheet.htm#Output">Advanced Character Options</a> window.
 				</p>
 				<p class="note"><span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
 			<h4 class="seealso">See Also</h4><a href="Control_Balloon_AutoHide.htm">The AutoHide Property</a><br /><a href="Control_Balloon_AutoPace.htm">The AutoPace Property</a><br /><a href="Control_Balloon_CharsPerLine.htm">The CharsPerLine Property</a><br /><a href="Control_Balloon_NumberOfLines.htm">The NumberOfLines Property</a><br /><a href="Control_Balloon_Enabled.htm">The Enabled Property</a><br /><a href="Control_Balloon_SizeToText.htm">The SizeToText Property</a><br /><a href="Control_Balloon_ShowPartialLines.htm">The ShowPartialLines Property</a><br /><a href="Control_BalloonStyleFlags.htm">The BalloonStyleFlags Enumeration</a></td>

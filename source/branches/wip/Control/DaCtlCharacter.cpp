@@ -24,6 +24,7 @@
 #include "DaCtlBalloon.h"
 #include "DaCtlCommands.h"
 #include "DaCtlAnimationNames.h"
+#include "DaCtlFormattedText.h"
 #include "DaCtlTTSEngine.h"
 #include "DaCtlTTSEngines.h"
 #include "DaCtlSREngine.h"
@@ -1689,7 +1690,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Speak (VARIANT Text, VARIANT Url, IDaC
 	{
 		try
 		{
-			lResult = mLocalObject->Speak (lText, lUrl, &lReqID);
+			lResult = mLocalObject->Speak (lText, NULL, lUrl, &lReqID);
 		}
 		catch AnyExceptionDebug
 	}
@@ -3256,7 +3257,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Think (BSTR Text, IDaCtlRequest **Requ
 	{
 		try
 		{
-			lResult = mLocalObject->Think (Text, &lReqID);
+			lResult = mLocalObject->Think (Text, NULL, &lReqID);
 		}
 		catch AnyExceptionDebug
 	}
@@ -3948,6 +3949,222 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_IconTip (BSTR IconTip)
 	if	(LogIsActive (_LOG_RESULTS))
 	{
 		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::put_IconTip"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::SpeakFormatted (IDaCtlFormattedText * FormattedText, IDaCtlRequest **Request)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::SpeakFormatted"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+#endif
+	HRESULT					lResult = E_INVALIDARG;
+	DaCtlFormattedText *	lFormattedText = NULL;
+	long					lReqID = 0;
+	IDaCtlRequestPtr		lRequest;
+
+	if	(Request)
+	{
+		(*Request) = NULL;
+	}
+	mOwner->CompleteRequests ();
+
+	try
+	{
+		lFormattedText = dynamic_cast <CComObject <DaCtlFormattedText> *> (FormattedText);
+	}
+	catch AnyExceptionSilent
+
+	if	(lFormattedText)
+	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				if	(lFormattedText->mLocalObject)
+				{
+					lResult = mLocalObject->Speak (NULL, &lFormattedText->mLocalObject->mText, NULL, &lReqID);
+				}
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(
+				(lFormattedText->mServerObject)
+			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+			)
+		{
+			try
+			{
+				lResult = mServerObject->SpeakFormatted (lFormattedText->mServerObject, &lReqID);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+	}
+
+	if	(
+			(lReqID)
+		&&	(Request)
+		)
+	{
+		lRequest.Attach (mOwner->PutRequest (DaRequestSpeak, lReqID, lResult));
+		(*Request) = lRequest.Detach();
+	}
+	if	(
+			(FAILED (lResult))
+		&&	(!mOwner->mRaiseRequestErrors)
+		)
+	{
+		lResult = S_FALSE;
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::SpeakFormatted"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::ThinkFormatted (IDaCtlFormattedText * FormattedText, IDaCtlRequest **Request)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::ThinkFormatted"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+#endif
+	HRESULT					lResult = E_INVALIDARG;
+	DaCtlFormattedText *	lFormattedText = NULL;
+	long					lReqID = 0;
+	IDaCtlRequestPtr		lRequest;
+
+	if	(Request)
+	{
+		(*Request) = NULL;
+	}
+	mOwner->CompleteRequests ();
+
+	try
+	{
+		lFormattedText = dynamic_cast <CComObject <DaCtlFormattedText> *> (FormattedText);
+	}
+	catch AnyExceptionSilent
+
+	if	(lFormattedText)
+	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				if	(lFormattedText->mLocalObject)
+				{
+					lResult = mLocalObject->Think (NULL, &lFormattedText->mLocalObject->mText, &lReqID);
+				}
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(
+				(lFormattedText->mServerObject)
+			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+			)
+		{
+			try
+			{
+				lResult = mServerObject->ThinkFormatted (lFormattedText->mServerObject, &lReqID);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+	}
+
+	if	(
+			(lReqID)
+		&&	(Request)
+		)
+	{
+		lRequest.Attach (mOwner->PutRequest (DaRequestSpeak, lReqID, lResult));
+		(*Request) = lRequest.Detach();
+	}
+	if	(
+			(FAILED (lResult))
+		&&	(!mOwner->mRaiseRequestErrors)
+		)
+	{
+		lResult = S_FALSE;
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::ThinkFormatted"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::NewFormattedText (IDaCtlFormattedText **FormattedText)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::NewFormattedText"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+#endif
+	HRESULT									lResult = E_POINTER;
+	tPtr <CComObject <DaCtlFormattedText> >	lObject;
+	IDaCtlFormattedTextPtr					lInterface;
+
+	if	(FormattedText)
+	{
+		(*FormattedText) = NULL;
+
+		if	(mLocalObject)
+		{
+			if	(
+					(SUCCEEDED (lResult = CComObject <DaCtlFormattedText>::CreateInstance (lObject.Free())))
+				&&	(SUCCEEDED (lResult = lObject->SetOwner (mOwner)))
+				&&	(SUCCEEDED (lResult = lObject->mLocalObject->Initialize (lObject->GetControllingUnknown(), mLocalObject->GetSapiVoice(true))))
+				)
+			{
+				lInterface = lObject.Detach ();
+				(*FormattedText) = lInterface.Detach ();
+			}
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				if	(
+						(SUCCEEDED (lResult = CComObject <DaCtlFormattedText>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = mServerObject->NewFormattedText (&lObject->mServerObject)))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (mOwner)))
+					)
+				{
+					lInterface = lObject.Detach ();
+					(*FormattedText) = lInterface.Detach ();
+				}
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::NewFormattedText"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

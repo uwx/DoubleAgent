@@ -297,7 +297,7 @@ static inline int GetProfileDebugInt (LPCTSTR pProfileKey, int pDefault = 0, boo
 #else
 __if_exists(_AtlProfileName)
 {
-	static inline int GetProfileDebugInt (LPCTSTR pProfileKey, int pDefault = 0, bool pIgnoreNegative = false)
+	static inline int GetProfileDebugInt (LPCTSTR pProfileKey, int pDefault = 0, bool pIgnoreNegative = false, LPCTSTR pProfileName = NULL)
 	{
 #if defined (_DEBUG) || defined (_LOG_H)
 		int	lRet = pDefault;
@@ -309,6 +309,7 @@ __if_exists(_AtlProfileName)
 			{
 				CString	lIniPath;
 				CString	lRootName (_AtlProfilePath);
+				LPCTSTR lProfileName = (pProfileName) ? pProfileName : _AtlProfileName;
 
 				PathRemoveBackslash (lRootName.GetBuffer(lRootName.GetLength()));
 				PathStripPath (lRootName.GetBuffer(lRootName.GetLength()));
@@ -319,7 +320,7 @@ __if_exists(_AtlProfileName)
 				PathAppend (lIniPath.GetBuffer(MAX_PATH), _T("Debug.ini"));
 				lIniPath.ReleaseBuffer ();
 
-				lRet = (int) ::GetPrivateProfileInt (_AtlProfileName, pProfileKey, pDefault, lIniPath);
+				lRet = (int) ::GetPrivateProfileInt (lProfileName, pProfileKey, pDefault, lIniPath);
 				if	(
 						(pIgnoreNegative)
 					&&	(lRet < 0)

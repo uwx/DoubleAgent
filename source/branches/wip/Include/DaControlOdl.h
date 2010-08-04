@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Thu Jul 15 22:38:33 2010
+/* at Tue Aug 03 19:03:55 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
-    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
+    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -131,6 +131,12 @@ typedef interface IDaCtlCharacterFiles IDaCtlCharacterFiles;
 #endif 	/* __IDaCtlCharacterFiles_FWD_DEFINED__ */
 
 
+#ifndef __IDaCtlFormattedText_FWD_DEFINED__
+#define __IDaCtlFormattedText_FWD_DEFINED__
+typedef interface IDaCtlFormattedText IDaCtlFormattedText;
+#endif 	/* __IDaCtlFormattedText_FWD_DEFINED__ */
+
+
 #ifndef __IDaCtlTTSEngine_FWD_DEFINED__
 #define __IDaCtlTTSEngine_FWD_DEFINED__
 typedef interface IDaCtlTTSEngine IDaCtlTTSEngine;
@@ -201,6 +207,12 @@ typedef interface IDaCtlCommand2 IDaCtlCommand2;
 #define __IDaCtlPropertySheet2_FWD_DEFINED__
 typedef interface IDaCtlPropertySheet2 IDaCtlPropertySheet2;
 #endif 	/* __IDaCtlPropertySheet2_FWD_DEFINED__ */
+
+
+#ifndef ___DaCtlEvents2_FWD_DEFINED__
+#define ___DaCtlEvents2_FWD_DEFINED__
+typedef interface _DaCtlEvents2 _DaCtlEvents2;
+#endif 	/* ___DaCtlEvents2_FWD_DEFINED__ */
 
 
 #ifndef __DaControl_FWD_DEFINED__
@@ -383,6 +395,18 @@ typedef struct DaCtlCharacterFiles DaCtlCharacterFiles;
 #endif 	/* __DaCtlCharacterFiles_FWD_DEFINED__ */
 
 
+#ifndef __DaCtlFormattedText_FWD_DEFINED__
+#define __DaCtlFormattedText_FWD_DEFINED__
+
+#ifdef __cplusplus
+typedef class DaCtlFormattedText DaCtlFormattedText;
+#else
+typedef struct DaCtlFormattedText DaCtlFormattedText;
+#endif /* __cplusplus */
+
+#endif 	/* __DaCtlFormattedText_FWD_DEFINED__ */
+
+
 #ifndef __DaCtlTTSEngine_FWD_DEFINED__
 #define __DaCtlTTSEngine_FWD_DEFINED__
 
@@ -470,6 +494,8 @@ extern "C"{
 
 
 
+
+
 #ifndef _DA_COMMON_TYPES_
 #define _DA_COMMON_TYPES_
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E569-A208-11DE-ABF2-002421116FB2") 
@@ -495,7 +521,10 @@ typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56B-A208-11DE-ABF2-0024211
 enum ActiveStateType
     {	ActiveState_Inactive	= 0,
 	ActiveState_Active	= 1,
-	ActiveState_InputActive	= 2
+	ActiveState_InputActive	= 2,
+	ActiveState_Suspended	= 4,
+	ActiveState_Suspended_Active	= 5,
+	ActiveState_Suspended_InputActive	= 6
     } 	ActiveStateType;
 
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56C-A208-11DE-ABF2-002421116FB2") 
@@ -697,6 +726,12 @@ enum RequestStatus
 
 #define	DISPID_AgentEvents_ActiveClientChange	( 32 )
 
+#define	DISPID_DaCtlEvents2_SpeechStart	( 33 )
+
+#define	DISPID_DaCtlEvents2_SpeechEnd	( 34 )
+
+#define	DISPID_DaCtlEvents2_SpeechWord	( 35 )
+
 #define	DISPID_IAgentCtlCharacters_Load	( 1 )
 
 #define	DISPID_IAgentCtlCharacters_Unload	( 2 )
@@ -850,6 +885,12 @@ enum RequestStatus
 #define	DISPID_IDaCtlCharacter2_Animations	( 84 )
 
 #define	DISPID_IDaCtlCharacter2_States	( 85 )
+
+#define	DISPID_IDaCtlCharacter2_SpeakFormatted	( 86 )
+
+#define	DISPID_IDaCtlCharacter2_ThinkFormatted	( 87 )
+
+#define	DISPID_IDaCtlCharacter2_NewFormattedText	( 88 )
 
 #define	DISPID_IAgentCtlRequest_Status	( 1 )
 
@@ -1058,6 +1099,24 @@ enum RequestStatus
 #define	DISPID_IDaCtlCharacterFiles_DefaultFilePath	( 0x60020009 )
 
 #define	DISPID_IDaCtlCharacterFiles_DefaultFileName	( 0x6002000a )
+
+#define	DISPID_IDaCtlFormattedText_RawText	( DISPID_VALUE )
+
+#define	DISPID_IDaCtlFormattedText_ParsedText	( 0x60020001 )
+
+#define	DISPID_IDaCtlFormattedText_SpeechText	( 0x60020002 )
+
+#define	DISPID_IDaCtlFormattedText_WordCount	( 0x60020003 )
+
+#define	DISPID_IDaCtlFormattedText_DisplayWord	( 0x60020004 )
+
+#define	DISPID_IDaCtlFormattedText_WordIndex	( 0x60020005 )
+
+#define	DISPID_IDaCtlFormattedText_DisplayText	( 0x60020006 )
+
+#define	DISPID_IDaCtlFormattedText_Parse	( 0x60020007 )
+
+#define	DISPID_IDaCtlFormattedText_Append	( 0x60020008 )
 
 #define	DISPID_IDaCtlTTSEngine_TTSModeID	( DISPID_VALUE )
 
@@ -4799,6 +4858,219 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
 #endif 	/* __IDaCtlCharacterFiles_INTERFACE_DEFINED__ */
 
 
+#ifndef __IDaCtlFormattedText_INTERFACE_DEFINED__
+#define __IDaCtlFormattedText_INTERFACE_DEFINED__
+
+/* interface IDaCtlFormattedText */
+/* [object][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaCtlFormattedText;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E581-A208-11DE-ABF2-002421116FB2")
+    IDaCtlFormattedText : public IDispatch
+    {
+    public:
+        virtual /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_RawText( 
+            /* [retval][out] */ BSTR *RawText) = 0;
+        
+        virtual /* [defaultbind][displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_RawText( 
+            /* [in] */ BSTR RawText) = 0;
+        
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ParsedText( 
+            /* [retval][out] */ BSTR *ParsedText) = 0;
+        
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SpeechText( 
+            /* [retval][out] */ BSTR *SpeechText) = 0;
+        
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_WordCount( 
+            /* [retval][out] */ long *WordCount) = 0;
+        
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_DisplayWord( 
+            /* [in] */ long WordIndex,
+            /* [retval][out] */ BSTR *DisplayWord) = 0;
+        
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_WordIndex( 
+            /* [retval][out] */ long *WordIndex) = 0;
+        
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_DisplayText( 
+            /* [retval][out] */ BSTR *DisplayText) = 0;
+        
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Parse( 
+            /* [in] */ BSTR RawText) = 0;
+        
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Append( 
+            /* [in] */ IDaCtlFormattedText *FormattedText) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaCtlFormattedTextVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaCtlFormattedText * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaCtlFormattedText * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaCtlFormattedText * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaCtlFormattedText * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaCtlFormattedText * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaCtlFormattedText * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaCtlFormattedText * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_RawText )( 
+            IDaCtlFormattedText * This,
+            /* [retval][out] */ BSTR *RawText);
+        
+        /* [defaultbind][displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_RawText )( 
+            IDaCtlFormattedText * This,
+            /* [in] */ BSTR RawText);
+        
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ParsedText )( 
+            IDaCtlFormattedText * This,
+            /* [retval][out] */ BSTR *ParsedText);
+        
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SpeechText )( 
+            IDaCtlFormattedText * This,
+            /* [retval][out] */ BSTR *SpeechText);
+        
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_WordCount )( 
+            IDaCtlFormattedText * This,
+            /* [retval][out] */ long *WordCount);
+        
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayWord )( 
+            IDaCtlFormattedText * This,
+            /* [in] */ long WordIndex,
+            /* [retval][out] */ BSTR *DisplayWord);
+        
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_WordIndex )( 
+            IDaCtlFormattedText * This,
+            /* [retval][out] */ long *WordIndex);
+        
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayText )( 
+            IDaCtlFormattedText * This,
+            /* [retval][out] */ BSTR *DisplayText);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Parse )( 
+            IDaCtlFormattedText * This,
+            /* [in] */ BSTR RawText);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Append )( 
+            IDaCtlFormattedText * This,
+            /* [in] */ IDaCtlFormattedText *FormattedText);
+        
+        END_INTERFACE
+    } IDaCtlFormattedTextVtbl;
+
+    interface IDaCtlFormattedText
+    {
+        CONST_VTBL struct IDaCtlFormattedTextVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaCtlFormattedText_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaCtlFormattedText_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaCtlFormattedText_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaCtlFormattedText_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaCtlFormattedText_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaCtlFormattedText_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaCtlFormattedText_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaCtlFormattedText_get_RawText(This,RawText)	\
+    ( (This)->lpVtbl -> get_RawText(This,RawText) ) 
+
+#define IDaCtlFormattedText_put_RawText(This,RawText)	\
+    ( (This)->lpVtbl -> put_RawText(This,RawText) ) 
+
+#define IDaCtlFormattedText_get_ParsedText(This,ParsedText)	\
+    ( (This)->lpVtbl -> get_ParsedText(This,ParsedText) ) 
+
+#define IDaCtlFormattedText_get_SpeechText(This,SpeechText)	\
+    ( (This)->lpVtbl -> get_SpeechText(This,SpeechText) ) 
+
+#define IDaCtlFormattedText_get_WordCount(This,WordCount)	\
+    ( (This)->lpVtbl -> get_WordCount(This,WordCount) ) 
+
+#define IDaCtlFormattedText_get_DisplayWord(This,WordIndex,DisplayWord)	\
+    ( (This)->lpVtbl -> get_DisplayWord(This,WordIndex,DisplayWord) ) 
+
+#define IDaCtlFormattedText_get_WordIndex(This,WordIndex)	\
+    ( (This)->lpVtbl -> get_WordIndex(This,WordIndex) ) 
+
+#define IDaCtlFormattedText_get_DisplayText(This,DisplayText)	\
+    ( (This)->lpVtbl -> get_DisplayText(This,DisplayText) ) 
+
+#define IDaCtlFormattedText_Parse(This,RawText)	\
+    ( (This)->lpVtbl -> Parse(This,RawText) ) 
+
+#define IDaCtlFormattedText_Append(This,FormattedText)	\
+    ( (This)->lpVtbl -> Append(This,FormattedText) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaCtlFormattedText_INTERFACE_DEFINED__ */
+
+
 #ifndef __IDaCtlTTSEngine_INTERFACE_DEFINED__
 #define __IDaCtlTTSEngine_INTERFACE_DEFINED__
 
@@ -6046,6 +6318,17 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_IconTip( 
             /* [in] */ BSTR IconTip) = 0;
         
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SpeakFormatted( 
+            /* [in] */ IDaCtlFormattedText *FormattedText,
+            /* [retval][out] */ IDaCtlRequest **Request) = 0;
+        
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE ThinkFormatted( 
+            /* [in] */ IDaCtlFormattedText *FormattedText,
+            /* [retval][out] */ IDaCtlRequest **Request) = 0;
+        
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE NewFormattedText( 
+            /* [retval][out] */ IDaCtlFormattedText **FormattedText) = 0;
+        
         virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSEngine( 
             /* [optional][in] */ VARIANT GetDefault,
             /* [retval][out] */ IDaCtlTTSEngine **TTSEngine) = 0;
@@ -6479,6 +6762,20 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [in] */ BSTR IconTip);
         
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SpeakFormatted )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ IDaCtlFormattedText *FormattedText,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ThinkFormatted )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ IDaCtlFormattedText *FormattedText,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *NewFormattedText )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ IDaCtlFormattedText **FormattedText);
+        
         /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSEngine )( 
             IDaCtlCharacter2 * This,
             /* [optional][in] */ VARIANT GetDefault,
@@ -6826,6 +7123,15 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
 
 #define IDaCtlCharacter2_put_IconTip(This,IconTip)	\
     ( (This)->lpVtbl -> put_IconTip(This,IconTip) ) 
+
+#define IDaCtlCharacter2_SpeakFormatted(This,FormattedText,Request)	\
+    ( (This)->lpVtbl -> SpeakFormatted(This,FormattedText,Request) ) 
+
+#define IDaCtlCharacter2_ThinkFormatted(This,FormattedText,Request)	\
+    ( (This)->lpVtbl -> ThinkFormatted(This,FormattedText,Request) ) 
+
+#define IDaCtlCharacter2_NewFormattedText(This,FormattedText)	\
+    ( (This)->lpVtbl -> NewFormattedText(This,FormattedText) ) 
 
 #define IDaCtlCharacter2_get_TTSEngine(This,GetDefault,TTSEngine)	\
     ( (This)->lpVtbl -> get_TTSEngine(This,GetDefault,TTSEngine) ) 
@@ -8631,6 +8937,113 @@ EXTERN_C const IID IID_IDaCtlPropertySheet2;
 #endif 	/* __IDaCtlPropertySheet2_INTERFACE_DEFINED__ */
 
 
+#ifndef ___DaCtlEvents2_DISPINTERFACE_DEFINED__
+#define ___DaCtlEvents2_DISPINTERFACE_DEFINED__
+
+/* dispinterface _DaCtlEvents2 */
+/* [helpcontext][hidden][uuid] */ 
+
+
+EXTERN_C const IID DIID__DaCtlEvents2;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+
+    MIDL_INTERFACE("1147E582-A208-11DE-ABF2-002421116FB2")
+    _DaCtlEvents2 : public IDispatch
+    {
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct _DaCtlEvents2Vtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            _DaCtlEvents2 * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            _DaCtlEvents2 * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            _DaCtlEvents2 * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            _DaCtlEvents2 * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            _DaCtlEvents2 * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            _DaCtlEvents2 * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            _DaCtlEvents2 * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        END_INTERFACE
+    } _DaCtlEvents2Vtbl;
+
+    interface _DaCtlEvents2
+    {
+        CONST_VTBL struct _DaCtlEvents2Vtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define _DaCtlEvents2_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define _DaCtlEvents2_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define _DaCtlEvents2_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define _DaCtlEvents2_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define _DaCtlEvents2_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define _DaCtlEvents2_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define _DaCtlEvents2_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+#endif 	/* ___DaCtlEvents2_DISPINTERFACE_DEFINED__ */
+
+
 EXTERN_C const CLSID CLSID_DaControl;
 
 #ifdef __cplusplus
@@ -8749,6 +9162,14 @@ EXTERN_C const CLSID CLSID_DaCtlCharacterFiles;
 
 class DECLSPEC_UUID("1147E558-A208-11DE-ABF2-002421116FB2")
 DaCtlCharacterFiles;
+#endif
+
+EXTERN_C const CLSID CLSID_DaCtlFormattedText;
+
+#ifdef __cplusplus
+
+class DECLSPEC_UUID("1147E580-A208-11DE-ABF2-002421116FB2")
+DaCtlFormattedText;
 #endif
 
 EXTERN_C const CLSID CLSID_DaCtlTTSEngine;

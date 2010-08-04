@@ -236,9 +236,9 @@ protected:
 	CImageBuffer						mDrawBuffer;
 	long								mCharID;
 	LANGID								mLangID;
-	static UINT							mVoiceStartMsg;
-	static UINT							mVoiceEndMsg;
-	static UINT							mVoiceWordMsg;
+	static const UINT					mVoiceStartMsg;
+	static const UINT					mVoiceEndMsg;
+	static const UINT					mVoiceWordMsg;
 private:
 	CWindow *							mOwnerWnd;
 	bool								mPacingSpeech;

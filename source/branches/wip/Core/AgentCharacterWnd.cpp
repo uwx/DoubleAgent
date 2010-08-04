@@ -55,31 +55,31 @@
 
 #ifdef	_DEBUG
 //#define	_DEBUG_MOUSE		LogNormal
-//#define	_DEBUG_ACTIVATE		LogNormal
+#define	_DEBUG_ACTIVE			(GetProfileDebugInt(_T("DebugActive"),LogDetails,true)&0xFFFF)
 #define	_DEBUG_SPEECH			(GetProfileDebugInt(_T("DebugSpeech"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_DEBUG_SPEECH_EVENTS	(GetProfileDebugInt(_T("DebugSpeechEvents"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Popup"),LogDetails,true)&0xFFFF)
-#define	_LOG_POPUP_OPS			(GetProfileDebugInt(_T("LogPopupOps"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_LOG_QUEUE_OPS			(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
+#define	_LOG_POPUP_OPS			MinLogLevel(GetProfileDebugInt(_T("LogPopupOps"),LogVerbose,true)&0xFFFF|LogTimeMs,_LOG_QUEUE_OPS)
 #endif
 
 #ifndef	_LOG_INSTANCE
 #define	_LOG_INSTANCE		LogDetails
 #endif
-#ifndef	_LOG_POPUP_OPS
-#define	_LOG_POPUP_OPS		LogDetails
-#endif
 #ifndef	_LOG_QUEUE_OPS
 #define	_LOG_QUEUE_OPS		LogDetails
+#endif
+#ifndef	_LOG_POPUP_OPS
+#define	_LOG_POPUP_OPS		LogDetails
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
 
-HWND	CAgentCharacterWnd::mLastActive = NULL;
-UINT	CAgentCharacterWnd::mVoiceStartMsg = RegisterWindowMessage (_T("A444DB92-39D0-4677-8D6D-1C4032BC9DED"));
-UINT	CAgentCharacterWnd::mVoiceEndMsg = RegisterWindowMessage (_T("AD44294A-BC10-43e5-94A7-C9C392863A79"));
-UINT	CAgentCharacterWnd::mVoiceBookMarkMsg = RegisterWindowMessage (_T("8FC08C6D-E6EB-4d53-B115-8378AB001571"));
-UINT	CAgentCharacterWnd::mVoiceVisualMsg = RegisterWindowMessage (_T("242D8583-6BAC-44d5-8CF8-F6DD020F701C"));
+HWND		CAgentCharacterWnd::mLastActive = NULL;
+const UINT	CAgentCharacterWnd::mVoiceStartMsg = RegisterWindowMessage (_T("A444DB92-39D0-4677-8D6D-1C4032BC9DED"));
+const UINT	CAgentCharacterWnd::mVoiceEndMsg = RegisterWindowMessage (_T("AD44294A-BC10-43e5-94A7-C9C392863A79"));
+const UINT	CAgentCharacterWnd::mVoiceBookMarkMsg = RegisterWindowMessage (_T("8FC08C6D-E6EB-4d53-B115-8378AB001571"));
+const UINT	CAgentCharacterWnd::mVoiceVisualMsg = RegisterWindowMessage (_T("242D8583-6BAC-44d5-8CF8-F6DD020F701C"));
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -310,8 +310,11 @@ bool CAgentCharacterWnd::SetLastActive ()
 		{
 			try
 			{
-#ifdef	_DEBUG_ACTIVATE
-				LogMessage (_DEBUG_ACTIVATE, _T("[%p] SetNotInputActive [%d] (Activate)"), this, lLastActiveCharID);
+#ifdef	_DEBUG_ACTIVE
+				if	(LogIsActive (_DEBUG_ACTIVE))
+				{
+					LogMessage (_DEBUG_ACTIVE, _T("[%p] SetNotInputActive [%d] (Activate)"), this, lLastActiveCharID);
+				}
 #endif
 				for	(lNotifyNdx = 0; lNotify = lLastActive->mNotify (lNotifyNdx); lNotifyNdx++)
 				{
@@ -326,8 +329,11 @@ bool CAgentCharacterWnd::SetLastActive ()
 		{
 			try
 			{
-#ifdef	_DEBUG_ACTIVATE
-				LogMessage (_DEBUG_ACTIVATE, _T("[%p] SetInputActive [%d] (Activate)"), this, mCharID);
+#ifdef	_DEBUG_ACTIVE
+				if	(LogIsActive (_DEBUG_ACTIVE))
+				{
+					LogMessage (_DEBUG_ACTIVE, _T("[%p] SetInputActive [%d] (Activate)"), this, mCharID);
+				}
 #endif
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
@@ -437,136 +443,23 @@ long CAgentCharacterWnd::QueueShow (long pCharID, bool pFast, int pVisibilityCau
 	return lReqID;
 }
 
-bool CAgentCharacterWnd::DoQueuedShow ()
-{
-	tPtr <CQueuedShow>	lQueuedShow;
-
-	if	(lQueuedShow = (CQueuedShow *) mQueue.GetNextAction (QueueActionShow))
-	{
-		bool	lShown = true;
-
-		if	(!lQueuedShow->mStarted)
-		{
-			lQueuedShow->NotifyStarted (mNotify);
-		}
-		if	(mQueue.GetNextAction (QueueActionShow) == lQueuedShow)
-		{
-			if	(!lQueuedShow->mAnimationShown)
-			{
-				lShown = ShowQueued (lQueuedShow);
-			}
-
-			if	(mQueue.GetNextAction (QueueActionShow) == lQueuedShow)
-			{
-				mQueue.RemoveHead (); // Wait until window visible so (IsWindowVisible || IsShowingQueued) works
-
-				if	(
-						(
-							(lShown)
-						||	(lQueuedShow->mVisibilityCause < 0)
-						)
-					&&	(!lQueuedShow->mFast)
-					&&	(!lQueuedShow->mAnimationShown)
-					)
-				{
-					CAtlOwnPtrList <CQueuedAction>	lQueue;
-
-					lQueuedShow->mAnimationShown = true;
-					ClearAnimations ();
-					mQueue.PushQueue (lQueue);
-					if	(ShowState (_T("SHOWING")))
-					{
-						mQueue.AddTail (lQueuedShow.Detach());
-#ifdef	_LOG_QUEUE_OPS
-						if	(LogIsActive (_LOG_QUEUE_OPS))
-						{
-							LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] Requeue show to end of queue"), this, mCharID);
-						}
-#endif
-					}
-					mQueue.PopQueue (lQueue);
-				}
-				else
-				{
-					lQueuedShow->mAnimationShown = true;
-				}
-
-				if	(lQueuedShow)
-				{
-					lQueuedShow->NotifyComplete (mNotify);
-				}
-			}
-			else
-			{
-				lQueuedShow.Detach (); // Was deleted during ShowPopup
-			}
-		}
-		else
-		{
-			lQueuedShow.Detach (); // Was deleted during NotifyStarted
-		}
-		return true;
-	}
-	return false;
-}
-
-void CAgentCharacterWnd::AbortQueuedShow (CQueuedAction * pQueuedAction, HRESULT pReqStatus, LPCTSTR pReason)
-{
-	CQueuedShow *	lQueuedShow;
-	CQueuedState *	lQueuedState;
-
-	if	(
-			(lQueuedShow = (CQueuedShow *) pQueuedAction)
-		&&	(!lQueuedShow->mFast)
-		&&	(lQueuedState = (CQueuedState *) mQueue.GetNextAction (QueueActionState))
-		&&	(lQueuedState->mStateName.CompareNoCase (_T("SHOWING")) == 0)
-		)
-	{
-		RemoveQueuedAction (lQueuedState, pReqStatus, pReason);
-	}
-}
-
 /////////////////////////////////////////////////////////////////////////////
-
-CQueuedAction * CAgentCharacterWnd::IsShowQueued (long pCharID)
-{
-	return mQueue.GetCharAction (QueueActionShow, pCharID);
-}
 
 long CAgentCharacterWnd::IsShowingQueued ()
 {
+	CQueuedAction *	lQueuedShow;
+
 	if	(
 			(this)
 		&&	(IsWindow ())
-		&&	(IsShowQueued ())
-		&&	(IsShowQueued () == mQueue.FindNextAction ())
+		&&	(lQueuedShow = mQueue.GetCharAction (QueueActionShow, -1))
+		&&	(lQueuedShow == mQueue.FindNextAction ())
 		)
 	{
 		return mCharID;
 	}
 	return 0;
 }
-
-bool CAgentCharacterWnd::RemoveQueuedShow (long pCharID, HRESULT pReqStatus, LPCTSTR pReason, bool pExcludeActive)
-{
-	bool			lRet = false;
-	CQueuedShow *	lQueuedShow;
-
-	while	(
-				(lQueuedShow = (CQueuedShow *) mQueue.GetCharAction (QueueActionShow, pCharID, true))
-			&&	(
-					(!pExcludeActive)
-				||	(!lQueuedShow->mStarted)
-				)
-			&&	(RemoveQueuedAction (lQueuedShow, pReqStatus, pReason))
-			)
-	{
-		lRet = true;
-	}
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
 
 bool CAgentCharacterWnd::ShowQueued (CQueuedShow * pQueuedShow)
 {
@@ -643,154 +536,23 @@ long CAgentCharacterWnd::QueueHide (long pCharID, bool pFast, int pVisibilityCau
 	return lReqID;
 }
 
-bool CAgentCharacterWnd::DoQueuedHide ()
-{
-	tPtr <CQueuedHide>	lQueuedHide;
-
-	if	(lQueuedHide = (CQueuedHide *) mQueue.GetNextAction (QueueActionHide))
-	{
-		if	(!lQueuedHide->mStarted)
-		{
-			if	(
-					(mBalloonWnd)
-				&&	(mBalloonWnd->IsWindow ())
-				)
-			{
-				mBalloonWnd->HideBalloon ();
-			}
-			if	(
-					(mListeningWnd)
-				&&	(mListeningWnd->IsWindow ())
-				&&	(mListeningWnd->GetCharID() == mCharID)
-				)
-			{
-				mListeningWnd->HideTipWnd ();
-			}
-
-			lQueuedHide->NotifyStarted (mNotify);
-		}
-		if	(mQueue.GetNextAction (QueueActionHide) == lQueuedHide)
-		{
-			if	(
-					(!lQueuedHide->mFast)
-				&&	(!lQueuedHide->mAnimationShown)
-				)
-			{
-				lQueuedHide->mAnimationShown = true;
-
-				if	(IsWindowVisible ())
-				{
-					CAtlOwnPtrList <CQueuedAction>	lQueue;
-
-					mQueue.PushQueue (lQueue);
-					if	(ShowState (_T("HIDING")))
-					{
-						lQueue.RemoveHead ();
-						mQueue.AddTail (lQueuedHide.Detach());
-#ifdef	_LOG_QUEUE_OPS
-						if	(LogIsActive (_LOG_QUEUE_OPS))
-						{
-							LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] Requeue hide to end of queue"), this, mCharID);
-						}
-#endif
-					}
-					mQueue.PopQueue (lQueue);
-				}
-			}
-			else
-			{
-				lQueuedHide->mAnimationShown = true;
-			}
-			if	(
-					(lQueuedHide)
-				&&	(lQueuedHide->mAnimationShown)
-				)
-			{
-#ifdef	_LOG_QUEUE_OPS
-				if	(LogIsActive (_LOG_QUEUE_OPS))
-				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] Queued hide"), this, mCharID);
-				}
-#endif
-				HideQueued (lQueuedHide);
-
-				if	(mQueue.GetNextAction (QueueActionHide) == lQueuedHide)
-				{
-					mQueue.RemoveHead ();
-					lQueuedHide->NotifyComplete (mNotify);
-				}
-				else
-				{
-					lQueuedHide.Detach (); // Was deleted during HidePopup
-				}
-			}
-		}
-		else
-		{
-			lQueuedHide.Detach (); // Was deleted during NotifyStarted
-		}
-		return true;
-	}
-	return false;
-}
-
-void CAgentCharacterWnd::AbortQueuedHide (CQueuedAction * pQueuedAction, HRESULT pReqStatus, LPCTSTR pReason)
-{
-	CQueuedHide *	lQueuedHide;
-	CQueuedState *	lQueuedState;
-
-	if	(
-			(lQueuedHide = (CQueuedHide *) pQueuedAction)
-		&&	(lQueuedHide->mAnimationShown)
-		&&	(lQueuedState = (CQueuedState *) mQueue.GetNextAction (QueueActionState))
-		&&	(lQueuedState->mStateName.CompareNoCase (_T("HIDING")) == 0)
-		)
-	{
-		RemoveQueuedAction (lQueuedState, pReqStatus, pReason);
-	}
-}
-
 /////////////////////////////////////////////////////////////////////////////
-
-CQueuedAction * CAgentCharacterWnd::IsHideQueued (long pCharID)
-{
-	return mQueue.GetCharAction (QueueActionHide, pCharID);
-}
 
 long CAgentCharacterWnd::IsHidingQueued ()
 {
+	CQueuedAction *	lQueuedHide;
+
 	if	(
 			(this)
 		&&	(IsWindow ())
-		&&	(IsHideQueued ())
-		&&	(IsHideQueued () == mQueue.FindNextAction ())
+		&&	(lQueuedHide = mQueue.GetCharAction (QueueActionHide, -1))
+		&&	(lQueuedHide == mQueue.FindNextAction ())
 		)
 	{
 		return mCharID;
 	}
 	return 0;
 }
-
-bool CAgentCharacterWnd::RemoveQueuedHide (long pCharID, HRESULT pReqStatus, LPCTSTR pReason, bool pExcludeActive)
-{
-	bool			lRet = false;
-	CQueuedHide *	lQueuedHide;
-
-	while	(
-				(lQueuedHide = (CQueuedHide *) mQueue.GetCharAction (QueueActionHide, pCharID, true))
-			&&	(
-					(!pExcludeActive)
-				||	(!lQueuedHide->mStarted)
-				)
-			&&	(RemoveQueuedAction (lQueuedHide, pReqStatus, pReason))
-			)
-	{
-		lRet = true;
-	}
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
 
 bool CAgentCharacterWnd::HideQueued (CQueuedHide * pQueuedHide)
 {
@@ -849,7 +611,7 @@ bool CAgentCharacterWnd::NotifyHidden (long pForCharID, VisibilityCauseType pVis
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-long CAgentCharacterWnd::QueueThink (long pCharID, LPCTSTR pText)
+long CAgentCharacterWnd::QueueThink (long pCharID, LPCTSTR pText, class CAgentTextObject * pTextObject, UINT pSapiVersion)
 {
 	long			lReqID = 0;
 	CQueuedThink *	lQueuedThink = NULL;
@@ -859,7 +621,41 @@ long CAgentCharacterWnd::QueueThink (long pCharID, LPCTSTR pText)
 		&&	(lQueuedThink = new CQueuedThink (pCharID, lReqID=NextReqID()))
 		)
 	{
-		lQueuedThink->mText = pText;
+		if	(pTextObject)
+		{
+			lQueuedThink->Initialize (pTextObject);
+		}
+		else
+		{
+			CAtlString		lText;
+			CAtlStringArray	lTextParts;
+
+			if	(MakeStringArray (pText, lTextParts, _T("|")) > 1)
+			{
+				lText = lTextParts [((rand() / lTextParts.GetCount()) * lTextParts.GetCount()) % lTextParts.GetCount()];
+			}
+			else
+			{
+				lText = pText;
+			}
+
+			if	(lText.CompareNoCase (_T("\\lst\\")) == 0)
+			{
+				lQueuedThink->Initialize (mLastSpeech);
+			}
+			else
+			{
+				CAgentTextParse	lTextParse;
+
+				if	(pSapiVersion)
+				{
+					lTextParse.SetSapiVersion (pSapiVersion);
+				}
+				lTextParse = lText;
+				lQueuedThink->Initialize (lTextParse);
+			}
+		}
+
 		if	(GetBalloonWnd (true))
 		{
 			lQueuedThink->mBalloonOptions = mBalloonWnd->GetNextOptions ();
@@ -873,223 +669,69 @@ long CAgentCharacterWnd::QueueThink (long pCharID, LPCTSTR pText)
 #ifdef	_LOG_QUEUE_OPS
 	if	(LogIsActive (_LOG_QUEUE_OPS))
 	{
-		LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueueThink [%p] [%d] [%d] [%s]"), this, mCharID, lQueuedThink, pCharID, lReqID, (lQueuedThink ? (LPCTSTR)DebugStr(lQueuedThink->mText) : NULL));
+		LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueueThink [%p] [%d] [%d] [%s] [%p]"), this, mCharID, lQueuedThink, pCharID, lReqID, (lQueuedThink ? (LPCTSTR)DebugStr(lQueuedThink->GetFullText()) : NULL), pTextObject);
 	}
 #endif
 	return lReqID;
-}
-
-bool CAgentCharacterWnd::DoQueuedThink ()
-{
-	tPtr <CQueuedThink>	lQueuedThink;
-
-	if	(lQueuedThink = (CQueuedThink *) mQueue.GetNextAction (QueueActionThink))
-	{
-#ifdef	_LOG_QUEUE_OPS
-		if	(LogIsActive (_LOG_QUEUE_OPS))
-		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedThink [%p] [%d] [%d] [%s]"), this, mCharID, lQueuedThink.Ptr(), lQueuedThink->mCharID, lQueuedThink->mReqID, DebugStr(lQueuedThink->mText));
-		}
-#endif
-		if	(!lQueuedThink->mStarted)
-		{
-			if	(
-					(mBalloonWnd)
-				&&	(mBalloonWnd->IsWindow ())
-				&&	(mBalloonWnd->IsBusy (true))
-				)
-			{
-#ifdef	_LOG_QUEUE_OPS
-				if	(LogIsActive (_LOG_QUEUE_OPS))
-				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedThink [%p] [%d] [%d] is still busy"), this, mCharID, lQueuedThink.Ptr(), lQueuedThink->mCharID, lQueuedThink->mReqID);
-				}
-#endif
-				lQueuedThink.Detach();
-			}
-			else
-			{
-				lQueuedThink->NotifyStarted (mNotify);
-
-				if	(mQueue.GetNextAction (QueueActionThink) == lQueuedThink)
-				{
-					if	(!IsCharShown ())
-					{
-						mQueue.RemoveHead ();
-						lQueuedThink->NotifyComplete (mNotify, AGENTERR_CHARACTERNOTVISIBLE);
-					}
-					else
-					if	(
-							(GetBalloonWnd (true))
-						&&	(mBalloonWnd->IsWindow ())
-						)
-					{
-//
-//	MS Agent doesn't do this
-//
-//						ShowGesture (_T("Think"));
-#ifdef	_LOG_QUEUE_OPS
-						if	(LogIsActive (_LOG_QUEUE_OPS))
-						{
-							LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] Show QueuedThink [%p] [%d] [%d] [%s]"), this, mCharID, lQueuedThink.Ptr(), lQueuedThink->mCharID, lQueuedThink->mReqID, DebugStr(lQueuedThink->mText));
-						}
-#endif
-						mBalloonWnd->ApplyOptions (lQueuedThink->mBalloonOptions);
-						if	(mBalloonWnd->ShowBalloonThought (lQueuedThink->mText))
-						{
-							mBalloonWnd->ShowBalloonAuto ();
-						}
-						lQueuedThink.Detach ();
-					}
-					else
-					{
-						mQueue.RemoveHead ();
-						lQueuedThink->NotifyComplete (mNotify, AGENTERR_NOBALLOON);
-					}
-				}
-				else
-				{
-					lQueuedThink.Detach (); // Was deleted during NotifyStarted
-				}
-			}
-		}
-		else
-		{
-			if	(
-					(mBalloonWnd)
-				&&	(mBalloonWnd->IsWindow ())
-				&&	(mBalloonWnd->IsBusy (false))
-				)
-			{
-#ifdef	_LOG_QUEUE_OPS
-				if	(LogIsActive (_LOG_QUEUE_OPS))
-				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedThink [%p] [%d] [%d] is busy"), this, mCharID, lQueuedThink.Ptr(), lQueuedThink->mCharID, lQueuedThink->mReqID);
-				}
-#endif
-				lQueuedThink.Detach();
-			}
-			else
-			{
-				mQueue.RemoveHead ();
-
-				if	(
-						(mBalloonWnd)
-					&&	(mBalloonWnd->IsWindow ())
-					)
-				{
-					mBalloonWnd->AbortSpeechText ();
-				}
-#ifdef	_LOG_QUEUE_OPS
-				if	(LogIsActive (_LOG_QUEUE_OPS))
-				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] Done QueuedThink [%p] [%d] [%d]"), this, mCharID, lQueuedThink.Ptr(), lQueuedThink->mCharID, lQueuedThink->mReqID);
-				}
-#endif
-				lQueuedThink->NotifyComplete (mNotify);
-			}
-		}
-		return true;
-	}
-	return false;
-}
-
-void CAgentCharacterWnd::AbortQueuedThink (CQueuedAction * pQueuedAction, HRESULT pReqStatus, LPCTSTR pReason)
-{
-	CQueuedThink *	lQueuedThink;
-
-	if	(
-			(lQueuedThink = (CQueuedThink *) pQueuedAction)
-		&&	(lQueuedThink->mStarted)
-		&&	(mBalloonWnd)
-		&&	(mBalloonWnd->IsWindow ())
-		)
-	{
-#ifdef	_STRICT_COMPATIBILITY
-		mBalloonWnd->HideBalloon (true);
-#else
-		mBalloonWnd->AbortSpeechText ();
-#endif
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CQueuedAction * CAgentCharacterWnd::IsThinkQueued (long pCharID)
-{
-	return mQueue.GetCharAction (QueueActionThink, pCharID);
-}
-
-bool CAgentCharacterWnd::RemoveQueuedThink (long pCharID, HRESULT pReqStatus, LPCTSTR pReason, bool pExcludeActive)
-{
-	bool			lRet = false;
-	CQueuedThink *	lQueuedThink;
-
-	while	(
-				(lQueuedThink = (CQueuedThink *) mQueue.GetCharAction (QueueActionThink, pCharID, true))
-			&&	(
-					(!pExcludeActive)
-				||	(!lQueuedThink->mStarted)
-				)
-			&&	(RemoveQueuedAction (lQueuedThink, pReqStatus, pReason))
-			)
-	{
-		lRet = true;
-	}
-	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-long CAgentCharacterWnd::QueueSpeak (long pCharID, LPCTSTR pText, LPCTSTR pSoundUrl, CSapiVoice * pVoice, bool pShowBalloon)
+long CAgentCharacterWnd::QueueSpeak (long pCharID, LPCTSTR pText, CAgentTextObject * pTextObject, LPCTSTR pSoundUrl, CSapiVoice * pVoice, bool pShowBalloon)
 {
 	long			lReqID = 0;
 	CQueuedSpeak *	lQueuedSpeak = NULL;
-	CAtlString		lText;
-	CAtlStringArray	lTextParts;
 #ifdef	DebugTimeStart
 	DebugTimeStart
 #endif
 
 	if	(
 			(IsWindow ())
-		&&	(lQueuedSpeak = new CQueuedSpeak (pVoice, pShowBalloon, pCharID, lReqID=NextReqID()))
+		&&	(lQueuedSpeak = new CQueuedSpeak (pShowBalloon, pCharID, lReqID=NextReqID()))
 		)
 	{
 		lQueuedSpeak->mSoundUrl = pSoundUrl;
 
-		if	(MakeStringArray (pText, lTextParts, _T("|")) > 1)
+		if	(pTextObject)
 		{
-			lText = lTextParts [((rand() / lTextParts.GetCount()) * lTextParts.GetCount()) % lTextParts.GetCount()];
+			lQueuedSpeak->Initialize (pTextObject, pVoice);
 		}
 		else
 		{
-			lText = pText;
-		}
+			CAtlString		lText;
+			CAtlStringArray	lTextParts;
+			CAgentTextParse	lTextParse (pText, pVoice->SafeIsValid());
 
-		if	(!lQueuedSpeak->mSoundUrl.IsEmpty ())
-		{
-			lTextParts.RemoveAll ();
-			lQueuedSpeak->mText.SplitText (lText, lTextParts);
-			lQueuedSpeak->mText = lTextParts;
-		}
-		else
-		{
-			if	(lText.CompareNoCase (_T("\\lst\\")) == 0)
+			if	(MakeStringArray (pText, lTextParts, _T("|")) > 1)
 			{
-				lQueuedSpeak->mText = mLastSpeech;
+				lText = lTextParts [((rand() / lTextParts.GetCount()) * lTextParts.GetCount()) % lTextParts.GetCount()];
 			}
 			else
 			{
-				lQueuedSpeak->mText = lText;
+				lText = pText;
+			}
+
+			if	(!lQueuedSpeak->mSoundUrl.IsEmpty ())
+			{
+				lTextParts.RemoveAll ();
+				lTextParse.SplitText (lText, lTextParts);
+				lTextParse = lTextParts;
+				lQueuedSpeak->Initialize (lTextParse, pVoice);
+			}
+			else
+			if	(lText.CompareNoCase (_T("\\lst\\")) == 0)
+			{
+				lQueuedSpeak->Initialize (mLastSpeech, pVoice);
+			}
+			else
+			{
+				lTextParse = lText;
+				lQueuedSpeak->Initialize (lTextParse, pVoice);
 			}
 		}
-		if	(lQueuedSpeak->mText.GetFullText().IsEmpty ())
-		{
-			lQueuedSpeak->mShowBalloon = false;
-		}
+
 		if	(
 				(lQueuedSpeak->mShowBalloon)
 			&&	(GetBalloonWnd (true))
@@ -1104,9 +746,9 @@ long CAgentCharacterWnd::QueueSpeak (long pCharID, LPCTSTR pText, LPCTSTR pSound
 			&&	(LogIsActive (_DEBUG_SPEECH))
 			)
 		{
-			LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] CAgentCharacterWnd Queue   [%s]"), this, mCharID, DebugStr(pText));
-			LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]                    Speech  [%s]"), this, mCharID, DebugStr(lQueuedSpeak->mText.GetSpeechText()));
-			LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]                    Text    [%s]"), this, mCharID, DebugStr(lQueuedSpeak->mText.GetFullText()));
+			LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] CAgentCharacterWnd Queue   [%s] [%p]"), this, mCharID, DebugStr(pText), pTextObject);
+			LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]                    Speech  [%s]"), this, mCharID, DebugStr(lQueuedSpeak->GetSpeechText()));
+			LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]                    Text    [%s]"), this, mCharID, DebugStr(lQueuedSpeak->GetFullText()));
 			LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]                    Voice   [%u] Busy [%u] Balloon [%u] Busy [%u]"), this, mCharID, lQueuedSpeak->mVoice->SafeIsValid(), lQueuedSpeak->mVoice->SafeIsSpeaking (), (mBalloonWnd!=NULL), ((mBalloonWnd!= NULL) && mBalloonWnd->IsBusy (false)));
 			LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]                    Queue   [%u] Busy [%u %u]"), this, mCharID, mQueue.GetCount(), IsQueueBusy(), !IsAnimationComplete());
 		}
@@ -1120,7 +762,7 @@ long CAgentCharacterWnd::QueueSpeak (long pCharID, LPCTSTR pText, LPCTSTR pSound
 #ifdef	_LOG_QUEUE_OPS
 	if	(LogIsActive (_LOG_QUEUE_OPS))
 	{
-		LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueueSpeak [%p] [%d] [%d] [%s] [%s]"), this, mCharID, lQueuedSpeak, pCharID, lReqID, DebugStr(pText), DebugStr(pSoundUrl));
+		LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueueSpeak [%p] [%d] [%d] [%s] [%p] [%s]"), this, mCharID, lQueuedSpeak, pCharID, lReqID, DebugStr(pText), pTextObject, DebugStr(pSoundUrl));
 	}
 #endif
 
@@ -1131,646 +773,51 @@ long CAgentCharacterWnd::QueueSpeak (long pCharID, LPCTSTR pText, LPCTSTR pSound
 	return lReqID;
 }
 
-bool CAgentCharacterWnd::DoQueuedSpeak ()
+/////////////////////////////////////////////////////////////////////////////
+
+CQueuedAction * CAgentCharacterWnd::IsSpeakQueued (long pCharID)
 {
-	tPtr <CQueuedSpeak>	lQueuedSpeak;
-	HRESULT				lResult = S_OK;
-
-	if	(lQueuedSpeak = (CQueuedSpeak *) mQueue.GetNextAction (QueueActionSpeak))
-	{
-#ifdef	DebugTimeStart
-		DebugTimeStart
-#endif
-#ifdef	_LOG_QUEUE_OPS
-		if	(LogIsActive (_LOG_QUEUE_OPS))
-		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedSpeak [%p] [%d] [%d] [%s] [%s]"), this, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, DebugStr(lQueuedSpeak->mText.GetFullText()), DebugStr(lQueuedSpeak->mSoundUrl));
-		}
-#endif
-		if	(!lQueuedSpeak->mStarted)
-		{
-			lResult = SpeechIsReady (lQueuedSpeak);
-
-			if	(lResult == S_FALSE)
-			{
-				lQueuedSpeak.Detach();
-			}
-		}
-
-		if	(
-				(lResult == S_OK)
-			&&	(lQueuedSpeak->mStarted)
-			)
-		{
-			if	(SpeechIsBusy (lQueuedSpeak))
-			{
-#ifdef	_LOG_QUEUE_OPS
-				if	(LogIsActive (_LOG_QUEUE_OPS))
-				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedSpeak [%p] [%d] [%d] is busy"), this, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID);
-				}
-#endif
-				lQueuedSpeak.Detach();
-			}
-		}
-		else
-		if	(
-				(lResult == S_OK)
-			&&	(!lQueuedSpeak->mStarted)
-			)
-		{
-			if	(SpeechIsBusy (lQueuedSpeak))
-			{
-#ifdef	_LOG_QUEUE_OPS
-				if	(LogIsActive (_LOG_QUEUE_OPS))
-				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedSpeak [%p] [%d] [%d] still busy"), this, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID);
-				}
-#endif
-				lQueuedSpeak.Detach();
-			}
-			else
-			if	(
-					(!lQueuedSpeak->mAnimated)
-				&&	(ShowSpeechAnimation (lQueuedSpeak))
-				)
-			{
-#ifdef	_LOG_QUEUE_OPS
-				if	(LogIsActive (_LOG_QUEUE_OPS))
-				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedSpeak [%p] [%d] [%d] animated"), this, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID);
-				}
-#endif
-				lQueuedSpeak.Detach();
-			}
-			else
-			if	(
-					(lQueuedSpeak->mAnimated)
-				&&	(FAILED (lResult = PrepareSpeech (lQueuedSpeak)))
-				)
-			{
-#ifdef	_LOG_QUEUE_OPS
-				if	(LogIsActive (_LOG_QUEUE_OPS))
-				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedSpeak [%p] [%d] [%d] failed"), this, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID);
-				}
-#endif
-			}
-			else
-			{
-				lQueuedSpeak->NotifyStarted (mNotify);
-
-				if	(mQueue.GetNextAction (QueueActionSpeak) == lQueuedSpeak)
-				{
-					if	(!IsCharShown ())
-					{
-						lResult = AGENTERR_CHARACTERNOTVISIBLE;
-					}
-					else
-					{
-#ifdef	_LOG_QUEUE_OPS
-						if	(LogIsActive (_LOG_QUEUE_OPS))
-						{
-							LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] Show QueuedSpeak [%p] [%d] [%d] [%s] [%s]"), this, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, DebugStr(lQueuedSpeak->mText.GetFullText()), DebugStr(lQueuedSpeak->mSoundUrl));
-						}
-#endif
-						mLastSpeech = lQueuedSpeak->mText;
-						if	(SUCCEEDED (lResult = StartSpeech (lQueuedSpeak)))
-						{
-							lQueuedSpeak.Detach();
-						}
-					}
-				}
-				else
-				{
-					lQueuedSpeak.Detach (); // Was deleted during NotifyStarted
-				}
-			}
-		}
-
-		if	(
-				(lQueuedSpeak)
-			&&	(mQueue.GetNextAction (QueueActionSpeak) == lQueuedSpeak)
-			)
-		{
-			CDirectSoundLipSync *	lLipSync;
-#ifdef	_DEBUG_SPEECH
-			if	(LogIsActive (_DEBUG_SPEECH))
-			{
-				LogMessage (_DEBUG_SPEECH, _T("[%p] EndQueuedSpeak [%d] [%d] Started [%u] Animated [%u] Balloon [%u]"), this, lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, lQueuedSpeak->mStarted, lQueuedSpeak->mAnimated, lQueuedSpeak->mShowBalloon);
-			}
-#endif
-			mQueue.RemoveHead ();
-
-			if	(lQueuedSpeak->mVoice)
-			{
-				lQueuedSpeak->mVoice->RemoveEventSink (this);
-			}
-			if	(
-					(!lQueuedSpeak->mSoundUrl.IsEmpty ())
-				&&	(lLipSync = static_cast <CDirectSoundLipSync *> (lQueuedSpeak->mSoundFilter.GetInterfacePtr()))
-				)
-			{
-				lLipSync->Disconnect ();
-			}
-			if	(
-					(lQueuedSpeak->mShowBalloon)
-				&&	(mBalloonWnd)
-				&&	(mBalloonWnd->IsWindow ())
-				)
-			{
-				mBalloonWnd->AbortSpeechText ();
-			}
-			StopMouthAnimation ();
-
-#ifdef	_LOG_QUEUE_OPS
-			if	(LogIsActive (_LOG_QUEUE_OPS))
-			{
-				LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] Done QueuedSpeak [%p] [%d] [%d] [%s] [%s] [%8.8X]"), this, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, DebugStr(lQueuedSpeak->mText.GetFullText()), DebugStr(lQueuedSpeak->mSoundUrl), lResult);
-			}
-#endif
-			lQueuedSpeak->NotifyComplete (mNotify, lResult);
-		}
-#ifdef	DebugTimeStart
-		DebugTimeStop
-		LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f CAgentCharacterWnd::DoQueuedSpeak"), DebugTimeElapsed);
-#endif
-		return true;
-	}
-	return false;
+	return mQueue.GetCharAction (QueueActionSpeak, pCharID);
 }
 
-void CAgentCharacterWnd::AbortQueuedSpeak (CQueuedAction * pQueuedAction, HRESULT pReqStatus, LPCTSTR pReason)
+bool CAgentCharacterWnd::UpdateQueuedSpeak (long pCharID, CSapiVoice * pVoice)
 {
+	bool			lRet = false;
+	POSITION		lPos;
+	CQueuedAction *	lQueuedAction;
 	CQueuedSpeak *	lQueuedSpeak;
 
-	if	(lQueuedSpeak = (CQueuedSpeak *) pQueuedAction)
+	if	(pVoice)
 	{
-#ifdef	_DEBUG_SPEECH
-		if	(LogIsActive (_DEBUG_SPEECH))
+		for	(lPos = mQueue.GetHeadPosition(); lPos;)
 		{
-			LogMessage (_DEBUG_SPEECH, _T("[%p] AbortQueuedSpeak [%d] [%d] Started [%u] Animated [%u] Balloon [%u]"), this, lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, lQueuedSpeak->mStarted, lQueuedSpeak->mAnimated, lQueuedSpeak->mShowBalloon);
-		}
-#endif
-		if	(lQueuedSpeak->mStarted)
-		{
-			CDirectSoundLipSync *	lLipSync;
-
-			if	(lQueuedSpeak->mVoice->SafeIsValid())
-			{
-				lQueuedSpeak->mVoice->Stop ();
-				lQueuedSpeak->mVoice->ClearEventSinks ();
-			}
 			if	(
-					(!lQueuedSpeak->mSoundUrl.IsEmpty ())
-				&&	(lLipSync = static_cast <CDirectSoundLipSync *> (lQueuedSpeak->mSoundFilter.GetInterfacePtr()))
+					(lQueuedAction = mQueue.GetNext (lPos))
+				&&	(lQueuedAction->mAction == QueueActionSpeak)
+				&&	(lQueuedAction->mCharID == pCharID)
 				)
 			{
-				lLipSync->Stop ();
-				lLipSync->Disconnect ();
-			}
-			StopMouthAnimation ();
-
-			if	(
-					(lQueuedSpeak->mShowBalloon)
-				&&	(mBalloonWnd)
-				&&	(mBalloonWnd->IsWindow ())
-				)
-			{
-#ifdef	_STRICT_COMPATIBILITY
-				mBalloonWnd->HideBalloon (true);
-#else
-				mBalloonWnd->AbortSpeechText ();
-#endif
-			}
-		}
-		else
-		if	(lQueuedSpeak->mAnimated)
-		{
-			if	(!ShowGesture (NULL))
-			{
-				Stop ();
+				lQueuedSpeak = (CQueuedSpeak *) lQueuedAction;
+				if	(
+						(!lQueuedSpeak->mStarted)
+					&&	(lQueuedSpeak->SetVoice (pVoice))
+					)
+				{
+					lRet = true;
+				}
 			}
 		}
 	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-bool CAgentCharacterWnd::SpeechIsBusy (CQueuedSpeak * pQueuedSpeak)
-{
-	bool	lRet = false;
-#ifdef	DebugTimeStart
-	DebugTimeStart
-#endif
-
-	if	(pQueuedSpeak)
-	{
-		if	(pQueuedSpeak->mStarted)
-		{
-			if	(
-					(
-						(pQueuedSpeak->mSoundUrl.IsEmpty ())
-					&&	(pQueuedSpeak->mVoice->SafeIsValid ())
-					&&	(pQueuedSpeak->mVoice->SafeIsSpeaking ())
-					)
-				||	(
-						(pQueuedSpeak->mShowBalloon)
-					&&	(mBalloonWnd)
-					&&	(mBalloonWnd->IsWindow ())
-					&&	(mBalloonWnd->IsBusy (false))
-					)
-				)
-			{
-				lRet = true;
-			}
-		}
-		else
-		{
-			if	(
-					(
-						(pQueuedSpeak->mVoice->SafeIsValid ())
-					&&	(pQueuedSpeak->mVoice->SafeIsSpeaking ())
-					)
-				||	(
-						(!pQueuedSpeak->mSoundUrl.IsEmpty ())
-					&&	(PathIsURL (pQueuedSpeak->mSoundUrl))
-					)
-				||	(
-						(pQueuedSpeak->mShowBalloon)
-					&&	(mBalloonWnd)
-					&&	(mBalloonWnd->IsWindow ())
-#ifdef	_STRICT_COMPATIBILITY
-					&&	(mBalloonWnd->IsBusy (false))
-#else
-					&&	(mBalloonWnd->IsBusy (mBalloonWnd->IsAutoSize()))
-#endif
-					)
-				)
-			{
-				lRet = true;
-			}
-		}
-	}
-
-#ifdef	DebugTimeStart
-	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f   CAgentCharacterWnd::SpeechIsBusy [%u]"), DebugTimeElapsed, lRet);
-#endif
 	return lRet;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT CAgentCharacterWnd::SpeechIsReady (CQueuedSpeak * pQueuedSpeak)
+void CAgentCharacterWnd::SetLastSpeech (CAgentText & pSpeech)
 {
-	HRESULT	lResult = S_OK;
-#ifdef	DebugTimeStart
-	DebugTimeStart
-#endif
-
-	if	(pQueuedSpeak)
-	{
-		if	(!pQueuedSpeak->mSoundUrl.IsEmpty ())
-		{
-			if	(PathIsURL (pQueuedSpeak->mSoundUrl))
-			{
-				INT_PTR				lNotifyNdx;
-				CEventNotify *		lNotify;
-				CFileDownload *		lSoundDownload = NULL;
-
-				for	(lNotifyNdx = 0; lNotifyNdx < (INT_PTR)mNotify.GetCount(); lNotifyNdx++)
-				{
-					if	(
-							(lNotify = mNotify [lNotifyNdx])
-						&&	(lSoundDownload = lNotify->_FindSoundDownload (pQueuedSpeak->mSoundUrl))
-						)
-					{
-						break;
-					}
-				}
-
-				if	(
-						(lSoundDownload)
-					&&	(lSoundDownload->IsDownloadComplete () == S_OK)
-					)
-				{
-					pQueuedSpeak->mSoundUrl = lSoundDownload->GetCacheName ();
-				}
-				else
-				if	(
-						(lSoundDownload)
-					&&	(
-							(lSoundDownload->IsDownloadStarted ())
-						||	(lSoundDownload->IsDownloadStarting ())
-						)
-					&&	(!lSoundDownload->IsDownloadCancelling ())
-					)
-				{
-#ifdef	_LOG_QUEUE_OPS
-					if	(LogIsActive (_LOG_QUEUE_OPS))
-					{
-						LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedSpeak [%p] [%d] [%d] waiting for [%s]"), this, mCharID, pQueuedSpeak, pQueuedSpeak->mCharID, pQueuedSpeak->mReqID, DebugStr(pQueuedSpeak->mSoundUrl));
-					}
-#endif
-					lResult = S_FALSE;
-				}
-				else
-				{
-#ifdef	_LOG_QUEUE_OPS
-					if	(LogIsActive (_LOG_QUEUE_OPS))
-					{
-						LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedSpeak [%p] [%d] [%d] failed for [%s]"), this, mCharID, pQueuedSpeak, pQueuedSpeak->mCharID, pQueuedSpeak->mReqID, DebugStr(pQueuedSpeak->mSoundUrl));
-					}
-#endif
-					lResult = AGENTPROVERROR_WAVEINVALID;
-				}
-			}
-		}
-		else
-		if	(!pQueuedSpeak->mVoice->SafeIsValid())
-		{
-			lResult = AGENTWARNING_TTSENGINENOTFOUND;
-		}
-	}
-
-#ifdef	DebugTimeStart
-	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f   CAgentCharacterWnd::SpeechIsReady [%8.8X]"), DebugTimeElapsed, lResult);
-#endif
-	return lResult;
-}
-
-HRESULT CAgentCharacterWnd::PrepareSpeech (CQueuedSpeak * pQueuedSpeak)
-{
-	HRESULT	lResult = S_FALSE;
-#ifdef	DebugTimeStart
-	DebugTimeStart
-#endif
-
-	if	(pQueuedSpeak)
-	{
-		if	(!pQueuedSpeak->mSoundUrl.IsEmpty ())
-		{
-			if	(!pQueuedSpeak->mSoundFilter)
-			{
-				tPtr <CComObject <CDirectSoundLipSync> >	lLipSync;
-
-				if	(SUCCEEDED (CComObject <CDirectSoundLipSync>::CreateInstance (lLipSync.Free())))
-				{
-					lResult = lLipSync->Connect (mGraphBuilder, pQueuedSpeak->mSoundUrl, GetAgentStreamInfo());
-					if	(SUCCEEDED (lResult))
-					{
-						pQueuedSpeak->mSoundFilter = lLipSync.Detach ();
-					}
-				}
-				else
-				{
-					lResult = E_OUTOFMEMORY;
-				}
-			}
-		}
-		else
-		if	(pQueuedSpeak->mVoice->SafeIsValid())
-		{
-#ifndef	_WIN64
-			CSapi4Voice *	lSapi4Voice;
-			CAgentFile *	lAgentFile;
-
-			if	(lSapi4Voice = dynamic_cast <CSapi4Voice *> (pQueuedSpeak->mVoice))
-			{
-				if	(
-						(lAgentFile = GetAgentFile())
-					&&	(lAgentFile->GetTts().mPitch > 0)
-					)
-				{
-					LogSapi4Err (LogNormal, lSapi4Voice->SetPitch (lAgentFile->GetTts().mPitch));
-				}
-				if	(
-						(lAgentFile)
-					&&	(lAgentFile->GetTts().mSpeed > 0)
-					)
-				{
-					LogSapi4Err (LogNormal, lSapi4Voice->SetRate (CDaSettingsConfig().ApplyVoiceRate (lAgentFile->GetTts().mSpeed, 4)));
-				}
-				else
-				{
-					LogSapi4Err (LogNormal, lSapi4Voice->SetRate (CDaSettingsConfig().ApplyVoiceRate (lSapi4Voice->GetDefaultRate(), 4)));
-				}
-			}
-			else
-#endif
-			{
-				LogSapi5Err (LogNormal, pQueuedSpeak->mVoice->SetRate (CDaSettingsConfig().CalcVoiceRate()));
-			}
-			lResult = S_OK;
-		}
-	}
-
-#ifdef	DebugTimeStart
-	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f   CAgentCharacterWnd::PrepareSpeech"), DebugTimeElapsed);
-#endif
-	return lResult;
-}
-
-HRESULT CAgentCharacterWnd::StartSpeech (CQueuedSpeak * pQueuedSpeak)
-{
-	HRESULT	lResult = S_FALSE;
-#ifdef	DebugTimeStart
-	DebugTimeStart
-#endif
-
-	if	(pQueuedSpeak)
-	{
-		bool					lBalloonShown = false;
-		CDirectSoundLipSync *	lLipSync;
-
-		if	(!pQueuedSpeak->mSoundUrl.IsEmpty ())
-		{
-			if	(lLipSync = static_cast <CDirectSoundLipSync *> (pQueuedSpeak->mSoundFilter.GetInterfacePtr()))
-			{
-				StartMouthAnimation ((long)(lLipSync->GetDuration() / MsPer100Ns));
-			}
-			if	(
-					(mQueue.GetNextAction (QueueActionSpeak) == pQueuedSpeak)
-				&&	(pQueuedSpeak->mShowBalloon)
-				&&	(GetBalloonWnd (true))
-				&&	(mBalloonWnd->IsWindow ())
-				)
-			{
-				mBalloonWnd->ApplyOptions (pQueuedSpeak->mBalloonOptions);
-				lBalloonShown = mBalloonWnd->ShowBalloonSpeech (pQueuedSpeak->mText, true);
-			}
-
-			if	(mQueue.GetNextAction (QueueActionSpeak) == pQueuedSpeak)
-			{
-#ifdef	_DEBUG_SPEECH
-				if	(LogIsActive (_DEBUG_SPEECH))
-				{
-					LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] CAgentCharacterWnd Speak [%s] [%s]"), this, mCharID, DebugStr(pQueuedSpeak->mText.GetFullText()), DebugStr(pQueuedSpeak->mSoundUrl));
-				}
-#endif
-				lResult = PlayFromTo (0, GetDurationMs(), true);
-			}
-		}
-		else
-		if	(pQueuedSpeak->mVoice->SafeIsValid())
-		{
-			pQueuedSpeak->mVoice->ClearEventSinks ();
-			pQueuedSpeak->mVoice->AddEventSink (this);
-			pQueuedSpeak->mVoice->SetEventCharID (pQueuedSpeak->mCharID);
-
-			if	(
-					(mQueue.GetNextAction (QueueActionSpeak) == pQueuedSpeak)
-				&&	(pQueuedSpeak->mShowBalloon)
-				&&	(GetBalloonWnd (true))
-				&&	(mBalloonWnd->IsWindow ())
-				)
-			{
-				pQueuedSpeak->mVoice->AddEventSink (mBalloonWnd);
-				mBalloonWnd->ApplyOptions (pQueuedSpeak->mBalloonOptions);
-				lBalloonShown = mBalloonWnd->ShowBalloonSpeech (pQueuedSpeak->mText);
-			}
-
-			if	(mQueue.GetNextAction (QueueActionSpeak) == pQueuedSpeak)
-			{
-#ifdef	_DEBUG_SPEECH
-				if	(LogIsActive (_DEBUG_SPEECH))
-				{
-					LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] CAgentCharacterWnd Speak   [%s]"), this, mCharID, DebugStr(pQueuedSpeak->mText.GetSpeechText()));
-					LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]                    Text    [%s]"), this, mCharID, DebugStr(pQueuedSpeak->mText.GetFullText()));
-					LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]                    Voice   [%u] Rate [%u]"), this, mCharID, pQueuedSpeak->mVoice->SafeIsValid (), pQueuedSpeak->mVoice->GetRate());
-					if	(
-							(pQueuedSpeak->mShowBalloon)
-						&&	(mBalloonWnd)
-						&&	(mBalloonWnd->IsWindow ())
-						)
-					{
-						LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]                    Balloon [%u] AutoSize [%u] AutoPace [%u] AutoHide [%u]"), this, mCharID, mBalloonWnd->IsWindowVisible(), mBalloonWnd->IsAutoSize(), mBalloonWnd->IsAutoPace(), mBalloonWnd->IsAutoHide());
-					}
-				}
-#endif
-				lResult = LogComErr (LogNormal, pQueuedSpeak->mVoice->Speak (pQueuedSpeak->mText.GetSpeechText()));
-			}
-		}
-		else
-		{
-			lResult = E_FAIL;
-		}
-
-		if	(FAILED (lResult))
-		{
-			if	(
-					(mBalloonWnd)
-				&&	(mBalloonWnd->IsWindow ())
-				)
-			{
-				mBalloonWnd->AbortSpeechText ();
-				mBalloonWnd->HideBalloon (true);
-			}
-		}
-		else
-		if	(lBalloonShown)
-		{
-			mBalloonWnd->ShowBalloonAuto ();
-		}
-	}
-
-#ifdef	DebugTimeStart
-	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f   CAgentCharacterWnd::StartSpeech"), DebugTimeElapsed);
-#endif
-	return lResult;
+	mLastSpeech = pSpeech;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-
-bool CAgentCharacterWnd::ShowSpeechAnimation (CQueuedSpeak * pQueuedSpeak)
-{
-	bool	lRet = false;
-#ifdef	DebugTimeStart
-	DebugTimeStart
-#endif
-
-	if	(
-			(pQueuedSpeak)
-		&&	(!pQueuedSpeak->mAnimated)
-		)
-	{
-		CAgentStreamInfo *		lStreamInfo;
-		long					lAnimationNdx = -1;
-		long					lSpeakingFrameNdx = -1;
-		const CAtlStringArray *	lGestures;
-		LPCTSTR					lGesture;
-
-		mQueue.RemoveHead ();
-		pQueuedSpeak->mAnimated = true;
-
-		if	(
-				(lStreamInfo = GetAgentStreamInfo())
-			&&	(lStreamInfo->GetAnimationIndex (&lAnimationNdx) == S_OK)
-			&&	(lAnimationNdx >= 0)
-			&&	(lStreamInfo->FindAnimationSpeakingFrame (&lSpeakingFrameNdx, lAnimationNdx) == S_OK)
-			&&	(lSpeakingFrameNdx >= 0)
-			)
-		{
-			mQueue.AddHead (pQueuedSpeak);
-#ifdef	_DEBUG_SPEECH
-			if	(LogIsActive (_DEBUG_SPEECH))
-			{
-				LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]   Speech Animation [%d] [%ls] Frame [%d]"), this, mCharID, lAnimationNdx, (BSTR)(GetAgentFile()->GetAnimation (lAnimationNdx)->mName), lSpeakingFrameNdx);
-			}
-#endif
-		}
-		else
-		if	(
-				(lGestures = GetFileStates() (_T("SPEAKING")))
-			&&	(lGestures->GetCount() > 0)
-			)
-		{
-			CAtlOwnPtrList <CQueuedAction>	lQueue;
-
-			mQueue.PushQueue (lQueue);
-			ShowState (_T("SPEAKING"));
-			mQueue.AddTail (pQueuedSpeak);
-			mQueue.PopQueue (lQueue);
-#ifdef	_DEBUG_SPEECH
-			if	(LogIsActive (_DEBUG_SPEECH))
-			{
-				LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]   Showed SPEAKING state"), this, mCharID);
-			}
-#endif
-			lRet = true;
-		}
-		else
-		if	(
-				(ShowGesture (lGesture = _T("RestPose")))
-			||	(ShowGesture (lGesture = _T("Explain")))
-			)
-		{
-			mQueue.AddHead (pQueuedSpeak);
-#ifdef	_DEBUG_SPEECH
-			if	(LogIsActive (_DEBUG_SPEECH))
-			{
-				LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]   Showed %s for speech"), this, mCharID, lGesture);
-			}
-#endif
-			lRet = true;
-		}
-		else
-		{
-			mQueue.AddHead (pQueuedSpeak);
-		}
-	}
-
-#ifdef	DebugTimeStart
-	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f   CAgentCharacterWnd::ShowSpeechAnimation"), DebugTimeElapsed);
-#endif
-	return lRet;
-}
-
+#pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
 bool CAgentCharacterWnd::StartMouthAnimation (long pSpeakingDuration)
@@ -1895,69 +942,6 @@ bool CAgentCharacterWnd::PlayMouthAnimation (short pMouthOverlayNdx, bool pPlayA
 	DebugTimeStop
 	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f   CAgentCharacterWnd::PlayMouthAnimation"), DebugTimeElapsed);
 #endif
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CQueuedAction * CAgentCharacterWnd::IsSpeakQueued (long pCharID)
-{
-	return mQueue.GetCharAction (QueueActionSpeak, pCharID);
-}
-
-bool CAgentCharacterWnd::RemoveQueuedSpeak (long pCharID, HRESULT pReqStatus, LPCTSTR pReason, bool pExcludeActive)
-{
-	bool			lRet = false;
-	CQueuedSpeak *	lQueuedSpeak;
-
-#ifdef	_DEBUG_SPEECH
-	if	(LogIsActive (_DEBUG_SPEECH))
-	{
-		LogMessage (_DEBUG_SPEECH, _T("[%p] RemoveQueuedSpeak for [%d] [%8.8X] [%s]"), this, pCharID, pReqStatus, pReason);
-	}
-#endif
-	while	(
-				(lQueuedSpeak = (CQueuedSpeak *) mQueue.GetCharAction (QueueActionSpeak, pCharID, true))
-			&&	(
-					(!pExcludeActive)
-				||	(!lQueuedSpeak->mStarted)
-				)
-			&&	(RemoveQueuedAction (lQueuedSpeak, pReqStatus, pReason))
-			)
-	{
-		lRet = true;
-	}
-	return lRet;
-}
-
-bool CAgentCharacterWnd::UpdateQueuedSpeak (long pCharID, CSapiVoice * pVoice)
-{
-	bool			lRet = false;
-	POSITION		lPos;
-	CQueuedAction *	lQueuedAction;
-	CQueuedSpeak *	lQueuedSpeak;
-
-	if	(pVoice)
-	{
-		for	(lPos = mQueue.GetHeadPosition(); lPos;)
-		{
-			if	(
-					(lQueuedAction = mQueue.GetNext (lPos))
-				&&	(lQueuedAction->mAction == QueueActionSpeak)
-				&&	(lQueuedAction->mCharID == pCharID)
-				)
-			{
-				lQueuedSpeak = (CQueuedSpeak *) lQueuedAction;
-				if	(
-						(!lQueuedSpeak->mStarted)
-					&&	(lQueuedSpeak->SetVoice (pVoice))
-					)
-				{
-					lRet = true;
-				}
-			}
-		}
-	}
 	return lRet;
 }
 
@@ -2110,15 +1094,11 @@ LRESULT CAgentCharacterWnd::OnVoiceBookMarkMsg (UINT uMsg, WPARAM wParam, LPARAM
 	{
 		try
 		{
-			int				lNotifyNdx;
 			CEventNotify *	lNotify;
 
-			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+			if	(lNotify = GetNotifyClientNotify (lCharID))
 			{
-				if	(lNotify->GetNotifyClient (mCharID) == lCharID)
-				{
-					lNotify->BookMark (lBookMarkId);
-				}
+				lNotify->BookMark (lBookMarkId);
 			}
 		}
 		catch AnyExceptionDebug
@@ -2169,105 +1149,6 @@ long CAgentCharacterWnd::QueueWait (long pCharID, long pOtherCharID, long pOther
 	return lReqID;
 }
 
-bool CAgentCharacterWnd::DoQueuedWait ()
-{
-	tPtr <CQueuedWait>	lQueuedWait;
-
-	if	(lQueuedWait = (CQueuedWait *) mQueue.GetNextAction (QueueActionWait))
-	{
-		CQueuedAction *		lOtherRequest;
-		CAgentCharacterWnd *	lRequestOwner = NULL;
-
-#ifdef	_LOG_QUEUE_OPS
-		if	(LogIsActive (_LOG_QUEUE_OPS))
-		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedWait [%p] [%d] [%d] Other [%d] [%d]"), this, mCharID, lQueuedWait.Ptr(), lQueuedWait->mCharID, lQueuedWait->mReqID, lQueuedWait->mOtherCharID, lQueuedWait->mOtherReqID);
-		}
-#endif
-
-		if	(!lQueuedWait->mStarted)
-		{
-			lQueuedWait->NotifyStarted (mNotify);
-		}
-		if	(mQueue.GetNextAction (QueueActionWait) == lQueuedWait)
-		{
-			mQueue.RemoveHead ();
-
-			if	(
-					(lOtherRequest = FindOtherRequest (lQueuedWait->mOtherReqID, lRequestOwner))
-				&&	(lRequestOwner)
-				)
-			{
-#ifdef	_LOG_QUEUE_OPS
-					if	(LogIsActive (_LOG_QUEUE_OPS))
-					{
-						LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d]   Waiting for [%p] [%d] [%d]"), this, mCharID, lOtherRequest, lQueuedWait->mOtherCharID, lQueuedWait->mOtherReqID);
-					}
-#endif
-				lQueuedWait->mStarted = true;
-				mQueue.AddHead (lQueuedWait.Detach ());
-			}
-			else
-			if	(lQueuedWait->mStarted)
-			{
-#ifdef	_LOG_QUEUE_OPS
-				if	(LogIsActive (_LOG_QUEUE_OPS))
-				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d]   Wait done for [%p] [%d] [%d]"), this, mCharID, lOtherRequest, lQueuedWait->mOtherCharID, lQueuedWait->mOtherReqID);
-				}
-#endif
-				if	(mNotify.GetCount() > 0)
-				{
-					lQueuedWait->NotifyComplete (mNotify);
-				}
-			}
-			else
-			{
-				if	(mNotify.GetCount() > 0)
-				{
-					lQueuedWait->NotifyComplete (mNotify, AGENTREQERR_REMOVED);
-				}
-			}
-		}
-		else
-		{
-			lQueuedWait.Detach (); // Was deleted during NotifyStarted
-		}
-		return true;
-	}
-	return false;
-}
-
-void CAgentCharacterWnd::AbortQueuedWait (CQueuedAction * pQueuedAction, HRESULT pReqStatus, LPCTSTR pReason)
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CQueuedAction * CAgentCharacterWnd::IsWaitQueued (long pCharID)
-{
-	return mQueue.GetCharAction (QueueActionWait, pCharID);
-}
-
-bool CAgentCharacterWnd::RemoveQueuedWait (long pCharID, HRESULT pReqStatus, LPCTSTR pReason, bool pExcludeActive)
-{
-	bool			lRet = false;
-	CQueuedWait *	lQueuedWait;
-
-	while	(
-				(lQueuedWait = (CQueuedWait *) mQueue.GetCharAction (QueueActionWait, pCharID, true))
-			&&	(
-					(!pExcludeActive)
-				||	(!lQueuedWait->mStarted)
-				)
-			&&	(RemoveQueuedAction (lQueuedWait, pReqStatus, pReason))
-			)
-	{
-		lRet = true;
-	}
-	return lRet;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 
 long CAgentCharacterWnd::QueueInterrupt (long pCharID, long pOtherCharID, long pOtherReqID)
@@ -2295,100 +1176,13 @@ long CAgentCharacterWnd::QueueInterrupt (long pCharID, long pOtherCharID, long p
 	return lReqID;
 }
 
-bool CAgentCharacterWnd::DoQueuedInterrupt ()
-{
-	tPtr <CQueuedInterrupt>	lQueuedInterrupt;
-
-	if	(lQueuedInterrupt = (CQueuedInterrupt *) mQueue.GetNextAction (QueueActionInterrupt))
-	{
-		CQueuedAction *		lOtherRequest;
-		CAgentCharacterWnd *	lRequestOwner = NULL;
-		HRESULT				Status;
-
-#ifdef	_LOG_QUEUE_OPS
-		if	(LogIsActive (_LOG_QUEUE_OPS))
-		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedInterrupt [%p] [%d] [%d] Other [%d] [%d]"), this, mCharID, lQueuedInterrupt.Ptr(), lQueuedInterrupt->mCharID, lQueuedInterrupt->mReqID, lQueuedInterrupt->mOtherCharID, lQueuedInterrupt->mOtherReqID);
-		}
-#endif
-		if	(!lQueuedInterrupt->mStarted)
-		{
-			lQueuedInterrupt->NotifyStarted (mNotify);
-		}
-		if	(mQueue.GetNextAction (QueueActionInterrupt) == lQueuedInterrupt)
-		{
-			mQueue.RemoveHead ();
-
-			if	(
-					(lOtherRequest = FindOtherRequest (lQueuedInterrupt->mOtherReqID, lRequestOwner))
-				&&	(lRequestOwner)
-				&&	(lRequestOwner->RemoveQueuedAction (lOtherRequest, AGENTREQERR_INTERRUPTEDCODE, _T("Interrupt")))
-				)
-			{
-#ifdef	_LOG_QUEUE_OPS
-				if	(LogIsActive (_LOG_QUEUE_OPS))
-				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d]   Interrupted [%p] [%d] [%d]"), this, mCharID, lOtherRequest, lQueuedInterrupt->mOtherCharID, lQueuedInterrupt->mOtherReqID);
-				}
-#endif
-				Status = S_OK;
-			}
-			else
-			{
-				Status = AGENTREQERR_REMOVED;
-			}
-
-			if	(mNotify.GetCount() > 0)
-			{
-				lQueuedInterrupt->NotifyComplete (mNotify, Status);
-			}
-		}
-		else
-		{
-			lQueuedInterrupt.Detach (); // Was deleted during NotifyStarted
-		}
-		return true;
-	}
-	return false;
-}
-
-void CAgentCharacterWnd::AbortQueuedInterrupt (CQueuedAction * pQueuedAction, HRESULT pReqStatus, LPCTSTR pReason)
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CQueuedAction * CAgentCharacterWnd::IsInterruptQueued (long pCharID)
-{
-	return mQueue.GetCharAction (QueueActionInterrupt, pCharID);
-}
-
-bool CAgentCharacterWnd::RemoveQueuedInterrupt (long pCharID, HRESULT pReqStatus, LPCTSTR pReason, bool pExcludeActive)
-{
-	bool				lRet = false;
-	CQueuedInterrupt *	lQueuedInterrupt;
-
-	while	(
-				(lQueuedInterrupt = (CQueuedInterrupt *) mQueue.GetCharAction (QueueActionInterrupt, pCharID, true))
-			&&	(
-					(!pExcludeActive)
-				||	(!lQueuedInterrupt->mStarted)
-				)
-			&&	(RemoveQueuedAction (lQueuedInterrupt, pReqStatus, pReason))
-			)
-	{
-		lRet = true;
-	}
-	return lRet;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 
 CQueuedAction * CAgentCharacterWnd::FindOtherRequest (long pReqID, CAgentCharacterWnd *& pRequestOwner)
 {
-	CQueuedAction *		lRet = NULL;
-	INT_PTR				lNotifyNdx;
-	CEventNotify *		lNotify;
+	CQueuedAction *			lRet = NULL;
+	INT_PTR					lNotifyNdx;
+	CEventNotify *			lNotify;
 	CAgentCharacterWnd *	lRequestOwner;
 
 	pRequestOwner = NULL;
@@ -2403,171 +1197,6 @@ CQueuedAction * CAgentCharacterWnd::FindOtherRequest (long pReqID, CAgentCharact
 			pRequestOwner = lRequestOwner;
 			break;
 		}
-	}
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-bool CAgentCharacterWnd::DoQueuedPrepare ()
-{
-	tPtr <CQueuedPrepare>	lQueuedPrepare;
-
-	if	(lQueuedPrepare = (CQueuedPrepare *) mQueue.GetNextAction (QueueActionPrepare))
-	{
-		if	(!lQueuedPrepare->IsStarted ())
-		{
-			lQueuedPrepare->NotifyStarted (mNotify);
-		}
-		if	(mQueue.GetNextAction (QueueActionPrepare) == lQueuedPrepare)
-		{
-			if	(lQueuedPrepare->IsSoundDownload ())
-			{
-				lQueuedPrepare->FinishDownloads ();
-			}
-			else
-			{
-				lQueuedPrepare->PutAnimations (GetAgentFile ());
-			}
-
-			if	(lQueuedPrepare->IsComplete ())
-			{
-				mQueue.RemoveHead ();
-
-				if	(mNotify.GetCount() > 0)
-				{
-					HRESULT			lPrepareResult = S_OK;
-					CFileDownload *	lFileDownload;
-
-					if	(lFileDownload = lQueuedPrepare->GetDownload ())
-					{
-						lPrepareResult = lFileDownload->IsDownloadComplete ();
-					}
-					lQueuedPrepare->NotifyComplete (mNotify, lPrepareResult);
-				}
-			}
-			else
-			{
-				lQueuedPrepare->StartDownloads ();
-				lQueuedPrepare.Detach ();
-			}
-		}
-		else
-		{
-			lQueuedPrepare.Detach (); // Was deleted during NotifyStarted
-		}
-
-		return true;
-	}
-	return false;
-}
-
-void CAgentCharacterWnd::AbortQueuedPrepare (CQueuedAction * pQueuedAction, HRESULT pReqStatus, LPCTSTR pReason)
-{
-	CQueuedPrepare *	lQueuedPrepare;
-
-	if	(lQueuedPrepare = (CQueuedPrepare *) pQueuedAction)
-	{
-		lQueuedPrepare->CancelDownloads ();
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CQueuedAction * CAgentCharacterWnd::IsPrepareQueued (long pCharID)
-{
-	return mQueue.GetCharAction (QueueActionPrepare, pCharID);
-}
-
-bool CAgentCharacterWnd::RemoveQueuedPrepare (long pCharID, HRESULT pReqStatus, LPCTSTR pReason, bool pExcludeActive)
-{
-	bool				lRet = false;
-	CQueuedPrepare *	lQueuedPrepare;
-
-	while	(
-				(lQueuedPrepare = (CQueuedPrepare *) mQueue.GetCharAction (QueueActionPrepare, pCharID, true))
-			&&	(
-					(!pExcludeActive)
-				||	(!lQueuedPrepare->IsStarted ())
-				)
-			&&	(RemoveQueuedAction (lQueuedPrepare, pReqStatus, pReason))
-			)
-	{
-		lRet = true;
-	}
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-void CAgentCharacterWnd::AbortQueuedAction (CQueuedAction * pQueuedAction, HRESULT pReqStatus, LPCTSTR pReason)
-{
-	CAgentWnd::AbortQueuedAction (pQueuedAction, pReqStatus, pReason);
-
-	if	(pQueuedAction)
-	{
-		if	(pQueuedAction->mAction == QueueActionShow)
-		{
-			AbortQueuedShow (pQueuedAction, pReqStatus, pReason);
-		}
-		else
-		if	(pQueuedAction->mAction == QueueActionHide)
-		{
-			AbortQueuedHide (pQueuedAction, pReqStatus, pReason);
-		}
-		else
-		if	(pQueuedAction->mAction == QueueActionThink)
-		{
-			AbortQueuedThink (pQueuedAction, pReqStatus, pReason);
-		}
-		else
-		if	(pQueuedAction->mAction == QueueActionSpeak)
-		{
-			AbortQueuedSpeak (pQueuedAction, pReqStatus, pReason);
-		}
-		else
-		if	(pQueuedAction->mAction == QueueActionWait)
-		{
-			AbortQueuedWait (pQueuedAction, pReqStatus, pReason);
-		}
-		else
-		if	(pQueuedAction->mAction == QueueActionInterrupt)
-		{
-			AbortQueuedInterrupt (pQueuedAction, pReqStatus, pReason);
-		}
-		else
-		if	(pQueuedAction->mAction == QueueActionPrepare)
-		{
-			AbortQueuedPrepare (pQueuedAction, pReqStatus, pReason);
-		}
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-bool CAgentCharacterWnd::DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime)
-{
-	bool			lRet = CAgentWnd::DoAnimationQueue (pNextActivateImmediate, pNextQueueTime);
-	CQueuedAction *	lNextAction = mQueue.GetNextAction ();
-
-	if	(
-			(!lRet)
-		&&	(
-				(DoQueuedShow ())
-			||	(DoQueuedHide ())
-			||	(DoQueuedThink ())
-			||	(DoQueuedSpeak ())
-			||	(DoQueuedWait ())
-			||	(DoQueuedInterrupt ())
-			||	(DoQueuedPrepare ())
-			)
-		)
-	{
-		pNextActivateImmediate = (mQueue.GetNextAction () != lNextAction);
-		pNextQueueTime = mQueueTime;
-		lRet = true;
 	}
 	return lRet;
 }
@@ -2696,15 +1325,11 @@ void CAgentCharacterWnd::NotifyClick (short pButton, const CPoint & pPoint)
 	{
 		try
 		{
-			INT_PTR			lNotifyNdx;
 			CEventNotify *	lNotify;
 
-			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+			if	(lNotify = GetNotifyClientNotify (mCharID))
 			{
-				if	(lNotify->GetNotifyClient (mCharID) == mCharID)
-				{
-					lNotify->Click (mCharID, pButton|NotifyKeyState(), pPoint.x, pPoint.y);
-				}
+				lNotify->Click (mCharID, pButton|NotifyKeyState(), pPoint.x, pPoint.y);
 			}
 		}
 		catch AnyExceptionDebug
@@ -2718,15 +1343,11 @@ void CAgentCharacterWnd::NotifyDblClick (short pButton, const CPoint & pPoint)
 	{
 		try
 		{
-			INT_PTR			lNotifyNdx;
 			CEventNotify *	lNotify;
 
-			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+			if	(lNotify = GetNotifyClientNotify (mCharID))
 			{
-				if	(lNotify->GetNotifyClient (mCharID) == mCharID)
-				{
-					lNotify->DblClick (mCharID, pButton|NotifyKeyState(), pPoint.x, pPoint.y);
-				}
+				lNotify->DblClick (mCharID, pButton|NotifyKeyState(), pPoint.x, pPoint.y);
 			}
 		}
 		catch AnyExceptionDebug
@@ -2917,18 +1538,11 @@ LRESULT CAgentCharacterWnd::OnContextMenu (UINT uMsg, WPARAM wParam, LPARAM lPar
 	{
 		try
 		{
-			INT_PTR			lNotifyNdx;
 			CEventNotify *	lNotify;
 
-			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+			if	(lNotify = GetNotifyClientNotify (mCharID))
 			{
-				if	(
-						(lNotify->GetNotifyClient (mCharID) == mCharID)
-					&&	(lNotify->_ContextMenu (mCharID, m_hWnd, CPoint (GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam))))
-					)
-				{
-					break;
-				}
+				lNotify->_ContextMenu (mCharID, m_hWnd, CPoint (GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
 			}
 		}
 		catch AnyExceptionDebug

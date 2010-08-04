@@ -32,6 +32,7 @@ library DoubleAgentCtl
 	dispinterface _DaCtlEvents;
 
 	interface IDaCtlCharacterFiles;
+	interface IDaCtlFormattedText;
 	interface IDaCtlTTSEngine;
 	interface IDaCtlTTSEngines;
 	interface IDaCtlSREngine;
@@ -44,6 +45,7 @@ library DoubleAgentCtl
 	interface IDaCtlCommands2;
 	interface IDaCtlCommand2;
 	interface IDaCtlPropertySheet2;
+	dispinterface _DaCtlEvents2;
 
 	/////////////////////////////////////////////////////////////////////////////
 	// Types
@@ -240,59 +242,25 @@ library DoubleAgentCtl
 	{
 		properties:
 		methods:
-		[helpstring("A character has become input-active"), helpcontext(APIHELP_Ctl_Event_ActivateInput),
-			id(DISPID_AgentEvents_ActivateInput)] void ActivateInput ([in] BSTR CharacterID);
-		[helpstring("A character is no longer input-active"), helpcontext(APIHELP_Ctl_Event_DeactivateInput),
-			id(DISPID_AgentEvents_DeactivateInput)] void DeactivateInput ([in] BSTR CharacterID);
-		[helpstring("The user has clicked on a character"), helpcontext(APIHELP_Ctl_Event_Click),
-			id(DISPID_AgentEvents_Click)] void Click ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short X, [in] short y);
-		[helpstring("The user has double-clicked on a character"), helpcontext(APIHELP_Ctl_Event_DblClick),
-			id(DISPID_AgentEvents_DblClick)] void DblClick ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short X, [in] short y);
-		[helpstring("The user has started dragging a character"), helpcontext(APIHELP_Ctl_Event_DragStart),
-			id(DISPID_AgentEvents_DragStart)] void DragStart ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short X, [in] short y);
-		[helpstring("The user has finished dragging a character"), helpcontext(APIHELP_Ctl_Event_DragComplete),
-			id(DISPID_AgentEvents_DragComplete)] void DragComplete ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short X, [in] short y);
-		[helpstring("A character was shown"), helpcontext(APIHELP_Ctl_Event_Show),
-			id(DISPID_AgentEvents_Show)] void Show ([in] BSTR CharacterID, [in] VisibilityCauseType Cause);
-		[helpstring("A character was hidden"), helpcontext(APIHELP_Ctl_Event_Hide),
-			id(DISPID_AgentEvents_Hide)] void Hide ([in] BSTR CharacterID, [in] VisibilityCauseType Cause);
-		[helpstring("A server request has started"), helpcontext(APIHELP_Ctl_Event_RequestStart),
-			id(DISPID_AgentEvents_RequestStart)] void RequestStart ([in] IDaCtlRequest* Request);
-		[helpstring("A server request is complete (with or without errors)"), helpcontext(APIHELP_Ctl_Event_RequestComplete),
-			id(DISPID_AgentEvents_RequestComplete)] void RequestComplete ([in] IDaCtlRequest* Request);
-		[helpstring("deprecated"), helpcontext(APIHELP_Ctl_Event_Restart),
-			id(DISPID_AgentEvents_Restart), hidden, restricted, nonbrowsable] void Restart ();
-		[helpstring("deprecated"), helpcontext(APIHELP_Ctl_Event_Shutdown),
-			id(DISPID_AgentEvents_Shutdown), hidden, restricted, nonbrowsable] void Shutdown ();
-		[helpstring("A text-to-speech bookmark was reached"), helpcontext(APIHELP_Ctl_Event_Bookmark),
-			id(DISPID_AgentEvents_Bookmark)] void Bookmark ([in] long BookmarkID);
-		[helpstring("A command was selected"), helpcontext(APIHELP_Ctl_Event_Command),
-			id(DISPID_AgentEvents_Command)] void Command ([in] IDaCtlUserInput* UserInput);
-		[helpstring("A character has started idling"), helpcontext(APIHELP_Ctl_Event_IdleStart),
-			id(DISPID_AgentEvents_IdleStart)] void IdleStart ([in] BSTR CharacterID);
-		[helpstring("A character has stopped idling"), helpcontext(APIHELP_Ctl_Event_IdleComplete),
-			id(DISPID_AgentEvents_IdleComplete)] void IdleComplete ([in] BSTR CharacterID);
-		[helpstring("A character was moved"), helpcontext(APIHELP_Ctl_Event_Move),
-			id(DISPID_AgentEvents_Move)] void Move ([in] BSTR CharacterID, [in] short X, [in] short y, [in] MoveCauseType Cause);
-		[helpstring("A character was resized"), helpcontext(APIHELP_Ctl_Event_Size),
-			id(DISPID_AgentEvents_Size)] void Size ([in] BSTR CharacterID, [in] short Width, [in] short Height);
-		[helpstring("A character's word balloon was shown"), helpcontext(APIHELP_Ctl_Event_BalloonShow),
-			id(DISPID_AgentEvents_BalloonShow)] void BalloonShow([in] BSTR CharacterID);
-		[helpstring("A character's word balloon was hidden"), helpcontext(APIHELP_Ctl_Event_BalloonHide),
-			id(DISPID_AgentEvents_BalloonHide)] void BalloonHide([in] BSTR CharacterID);
-		[helpstring("deprecated"), helpcontext(APIHELP_Ctl_Event_HelpComplete),
-			id(DISPID_AgentEvents_HelpComplete), hidden, restricted, nonbrowsable] void HelpComplete ([in] BSTR CharacterID, [in] BSTR Name, [in] short Cause);
-		[helpstring("A character has started listening for speech recognition"), helpcontext(APIHELP_Ctl_Event_ListenStart),
-			id(DISPID_AgentEvents_ListenStart)] void ListenStart ([in] BSTR CharacterID);
-		[helpstring("A character has stopped listening for speech recognition"), helpcontext(APIHELP_Ctl_Event_ListenComplete),
-			id(DISPID_AgentEvents_ListenComplete)] void ListenComplete ([in] BSTR CharacterID, [in] ListenCompleteType Cause);
-		[helpstring("The default character has changed"), helpcontext(APIHELP_Ctl_Event_DefaultCharacterChange),
-			id(DISPID_AgentEvents_DefaultCharacterChange)] void DefaultCharacterChange ([in] BSTR CharGUID);
-		[helpstring("A global property has changed"), helpcontext(APIHELP_Ctl_Event_AgentPropertyChange),
-			id(DISPID_AgentEvents_AgentPropertyChange)] void AgentPropertyChange (void);
-		[helpstring("A character's active client has changed."), helpcontext(APIHELP_Ctl_Event_ActiveClientChange),
-			id(DISPID_AgentEvents_ActiveClientChange)] void ActiveClientChange ([in] BSTR CharacterID, [in] VARIANT_BOOL Active);
+#include "DaCtlEvents1.odl.inl"
 	};
+
+	const DISPID DISPID_DaCtlEvents2_SpeechStart = 33;
+	const DISPID DISPID_DaCtlEvents2_SpeechEnd = 34;
+	const DISPID DISPID_DaCtlEvents2_SpeechWord = 35;
+
+	[
+		uuid(1147E582-A208-11DE-ABF2-002421116FB2),
+		hidden,
+		helpcontext(APIHELP_Ctl_Event)
+	]
+	dispinterface _DaCtlEvents2
+	{
+		properties:
+		methods:
+#include "DaCtlEvents1.odl.inl"
+#include "DaCtlEvents2.odl.inl"
+	}
 
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -548,6 +516,9 @@ library DoubleAgentCtl
 	const DISPID DISPID_IDaCtlCharacter2_SmoothEdges = 83;
 	const DISPID DISPID_IDaCtlCharacter2_Animations = 84;
 	const DISPID DISPID_IDaCtlCharacter2_States = 85;
+	const DISPID DISPID_IDaCtlCharacter2_SpeakFormatted = 86;
+	const DISPID DISPID_IDaCtlCharacter2_ThinkFormatted = 87;
+	const DISPID DISPID_IDaCtlCharacter2_NewFormattedText = 88;
 
 	[
 		odl,
@@ -579,13 +550,20 @@ library DoubleAgentCtl
 		[helpstring("The tip associated with the task bar icon (if empty, the chracter's name is used)"), helpcontext(APIHELP_Ctl_Character),
 			id(DISPID_IDaCtlCharacter2_IconTip), propget, bindable, displaybind] HRESULT IconTip ([out, retval] BSTR * IconTip);
 			[id(DISPID_IDaCtlCharacter2_IconTip), propput, bindable, displaybind] HRESULT IconTip ([in] BSTR IconTip);
-		[helpstring("The character's current or default Text-to-Speech Engine"), helpcontext(APIHELP_Ctl_Character),
+
+		[helpstring("Speak formatted text"), helpcontext(APIHELP_Ctl_Character_SpeakFormatted),
+			id(DISPID_IDaCtlCharacter2_SpeakFormatted)] HRESULT SpeakFormatted ([in] IDaCtlFormattedText * FormattedText, [out, retval] IDaCtlRequest** Request);
+		[helpstring("Think formatted text"), helpcontext(APIHELP_Ctl_Character_ThinkFormatted),
+			id(DISPID_IDaCtlCharacter2_ThinkFormatted)] HRESULT ThinkFormatted ([in] IDaCtlFormattedText * FormattedText, [out, retval] IDaCtlRequest** Request);
+		[helpstring("Get a new formatted text object"), helpcontext(APIHELP_Ctl_Character_NewFormattedText),
+			id(DISPID_IDaCtlCharacter2_NewFormattedText)] HRESULT NewFormattedText ([out, retval] IDaCtlFormattedText ** FormattedText);
+		[helpstring("The character's current or default Text-to-Speech Engine"), helpcontext(APIHELP_Ctl_Character_TTSEngine),
 			id(DISPID_IDaCtlCharacter2_TTSEngine), propget] HRESULT TTSEngine ([in, optional] VARIANT GetDefault, [out, retval] IDaCtlTTSEngine** TTSEngine);
-		[helpstring("Retrieve a filtered collection of Text-to-Speech Engines that match the character's requirements"), helpcontext(APIHELP_Ctl_Character),
+		[helpstring("Retrieve a filtered collection of Text-to-Speech Engines that match the character's requirements"), helpcontext(APIHELP_Ctl_Character_FindTTSEngines),
 			id(DISPID_IDaCtlCharacter2_FindTTSEngines)] HRESULT FindTTSEngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlTTSEngines** TTSEngines);
-		[helpstring("The character's current or default Speech Recognition Engine"), helpcontext(APIHELP_Ctl_Character),
+		[helpstring("The character's current or default Speech Recognition Engine"), helpcontext(APIHELP_Ctl_Character_SREngine),
 			id(DISPID_IDaCtlCharacter2_SREngine), propget] HRESULT SREngine ([in, optional] VARIANT GetDefault, [out, retval] IDaCtlSREngine** SREngine);
-		[helpstring("Retrieve a filtered collection of Speech Recognition Engines that match the character's requirements"), helpcontext(APIHELP_Ctl_Character),
+		[helpstring("Retrieve a filtered collection of Speech Recognition Engines that match the character's requirements"), helpcontext(APIHELP_Ctl_Character_FindSREngines),
 			id(DISPID_IDaCtlCharacter2_FindSREngines)] HRESULT FindSREngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlSREngines** SREngines);
 
 		[helpstring("The character's unique identifier"), helpcontext(APIHELP_Ctl_Character),
@@ -1274,6 +1252,52 @@ library DoubleAgentCtl
 
 	/////////////////////////////////////////////////////////////////////////////
 
+	const DISPID DISPID_IDaCtlFormattedText_RawText = DISPID_VALUE;
+	const DISPID DISPID_IDaCtlFormattedText_ParsedText = 0x60020001;
+	const DISPID DISPID_IDaCtlFormattedText_SpeechText = 0x60020002;
+	const DISPID DISPID_IDaCtlFormattedText_WordCount = 0x60020003;
+	const DISPID DISPID_IDaCtlFormattedText_DisplayWord = 0x60020004;
+	const DISPID DISPID_IDaCtlFormattedText_WordIndex = 0x60020005;
+	const DISPID DISPID_IDaCtlFormattedText_DisplayText = 0x60020006;
+	const DISPID DISPID_IDaCtlFormattedText_Parse = 0x60020007;
+	const DISPID DISPID_IDaCtlFormattedText_Append = 0x60020008;
+
+	[
+		odl,
+		uuid(1147E581-A208-11DE-ABF2-002421116FB2),
+		pointer_default(unique),
+		dual,
+		oleautomation,
+		nonextensible,
+		helpcontext(APIHELP_Ctl_FormattedText)
+	]
+	interface IDaCtlFormattedText : IDispatch
+	{
+		[helpstring("The unformatted RawText"), helpcontext(APIHELP_Ctl_FormattedText_RawText),
+			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
+			id(DISPID_IDaCtlFormattedText_RawText), propget, bindable, displaybind, defaultbind] HRESULT RawText ([out, retval] BSTR *RawText);
+			[id(DISPID_IDaCtlFormattedText_RawText), propput, bindable, displaybind, defaultbind] HRESULT RawText ([in] BSTR RawText);
+		[helpstring("The full display text"), helpcontext(APIHELP_Ctl_FormattedText_ParsedText),
+			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
+			id(DISPID_IDaCtlFormattedText_ParsedText), propget, readonly, bindable, displaybind, defaultbind] HRESULT ParsedText ([out, retval] BSTR *ParsedText);
+		[helpstring("The full speech text"), helpcontext(APIHELP_Ctl_FormattedText_SpeechText),
+			id(DISPID_IDaCtlFormattedText_SpeechText), propget, readonly, bindable, displaybind] HRESULT SpeechText ([out, retval] BSTR *SpeechText);
+		[helpstring("The count of parsed words"), helpcontext(APIHELP_Ctl_FormattedText_WordCount),
+			id(DISPID_IDaCtlFormattedText_WordCount), propget, readonly, bindable, displaybind] HRESULT WordCount ([out, retval] long *WordCount);
+		[helpstring("A parsed word"), helpcontext(APIHELP_Ctl_FormattedText_DisplayWord),
+			id(DISPID_IDaCtlFormattedText_DisplayWord), propget, readonly, bindable, displaybind] HRESULT DisplayWord ([in] long WordIndex, [out, retval] BSTR *DisplayWord);
+		[helpstring("The current word being displayed"), helpcontext(APIHELP_Ctl_FormattedText_WordIndex),
+			id(DISPID_IDaCtlFormattedText_WordIndex), propget, readonly, bindable, displaybind] HRESULT WordIndex ([out, retval] long *WordIndex);
+		[helpstring("The text currently displayed"), helpcontext(APIHELP_Ctl_FormattedText_DisplayText),
+			id(DISPID_IDaCtlFormattedText_DisplayText), propget, readonly, bindable, displaybind] HRESULT DisplayText ([out, retval] BSTR *DisplayText);
+		[helpstring("Parse text with speech markups"), helpcontext(APIHELP_Ctl_FormattedText_Parse),
+			id(DISPID_IDaCtlFormattedText_Parse)] HRESULT Parse ([in] BSTR RawText);
+		[helpstring("Append formatted text"), helpcontext(APIHELP_Ctl_FormattedText_Append),
+			id(DISPID_IDaCtlFormattedText_Append)] HRESULT Append ([in] IDaCtlFormattedText * FormattedText);
+	}
+
+	/////////////////////////////////////////////////////////////////////////////
+
 	const DISPID DISPID_IDaCtlTTSEngine_TTSModeID = DISPID_VALUE;
 	const DISPID DISPID_IDaCtlTTSEngine_DisplayName = 1;
 	const DISPID DISPID_IDaCtlTTSEngine_Manufacturer = 2;
@@ -1322,9 +1346,9 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlTTSEngines : IDispatch
 	{
-		[helpstring("A Text-to-Speech Engine"), helpcontext(APIHELP_Ctl_TTSEngines),
+		[helpstring("A Text-to-Speech Engine"), helpcontext(APIHELP_Ctl_TTSEngines_Index),
 			id(DISPID_VALUE), propget] HRESULT Item ([in] VARIANT Index, [out, retval] IDaCtlTTSEngine ** TTSEngine);
-		[helpstring("The count of Text-to-Speech Engines in the collection"), helpcontext(APIHELP_Ctl_TTSEngines),
+		[helpstring("The count of Text-to-Speech Engines in the collection"), helpcontext(APIHELP_Ctl_TTSEngines_Count),
 			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
 			id(DISPID_COLLECT), propget, readonly, bindable, displaybind, defaultbind] HRESULT Count ([out, retval] long * Value);
 		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown ** Enum);
@@ -1381,9 +1405,9 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlSREngines : IDispatch
 	{
-		[helpstring("A Speech Recognition Engine"), helpcontext(APIHELP_Ctl_SREngines),
+		[helpstring("A Speech Recognition Engine"), helpcontext(APIHELP_Ctl_SREngines_Index),
 			id(DISPID_VALUE), propget] HRESULT Item ([in] VARIANT Index, [out, retval] IDaCtlSREngine ** SREngine);
-		[helpstring("The count of Speech Recognition Engines in the collection"), helpcontext(APIHELP_Ctl_SREngines),
+		[helpstring("The count of Speech Recognition Engines in the collection"), helpcontext(APIHELP_Ctl_SREngines_Count),
 			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
 			id(DISPID_COLLECT), propget, readonly, bindable, displaybind, defaultbind] HRESULT Count ([out, retval] long * Value);
 		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown ** Enum);
@@ -1403,7 +1427,7 @@ library DoubleAgentCtl
 	coclass DaControl
 	{
 		[default] interface IDaControl2;
-		[default, source] dispinterface _DaCtlEvents;
+		[default, source] dispinterface _DaCtlEvents2;
 	};
 
 	[
@@ -1579,6 +1603,18 @@ library DoubleAgentCtl
 	coclass DaCtlCharacterFiles
 	{
 		[default] interface IDaCtlCharacterFiles;
+	};
+
+	[
+		uuid(1147E580-A208-11DE-ABF2-002421116FB2),
+		helpstring("Formatted speech text"),
+		helpcontext(APIHELP_Ctl_FormattedText),
+		noncreatable
+		//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.Control.FormattedText")
+	]
+	coclass DaCtlFormattedText
+	{
+		[default] interface IDaCtlFormattedText;
 	};
 
 	[

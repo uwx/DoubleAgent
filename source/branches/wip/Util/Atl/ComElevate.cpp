@@ -145,7 +145,7 @@ HRESULT CoCreateInstanceElevated (REFCLSID pClassId, LPUNKNOWN* pUnknown, HWND p
 	{
 		try
 		{
-			CString					lMonikerName;
+			CAtlString				lMonikerName;
 			tSS <BIND_OPTS3, DWORD>	lBindOpts;
 			IUnknownPtr				lUnknown;
 

@@ -201,8 +201,8 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetHotKey (BSTR *HotKey)
 	if	(HotKey)
 	{
 		CDaSettingsConfig	lConfig;
-		CString				lKeyName;
-		CString				lModName;
+		CAtlString			lKeyName;
+		CAtlString			lModName;
 		UINT				lHotKeyCode;
 		long				lHotKeyScan;
 
@@ -291,7 +291,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetEngine (BSTR *Engine)
 
 	if	(Engine)
 	{
-		(*Engine) = CString().AllocSysString();
+		(*Engine) = CAtlString().AllocSysString();
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrSpeechInput));

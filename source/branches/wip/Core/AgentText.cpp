@@ -96,7 +96,12 @@ CAgentText & CAgentText::operator+= (const CAgentText & pText)
 	return *this;
 }
 
-void CAgentText::Append (const CAtlStringArray & pTextWords, const CAtlStringArray & pSpeechWords)
+void CAgentText::Append (const CAgentText & pText, bool pAppendSpeech)
+{
+	Append (pText.mTextWords, pText.mSpeechWords, pAppendSpeech);
+}
+
+void CAgentText::Append (const CAtlStringArray & pTextWords, const CAtlStringArray & pSpeechWords, bool pAppendSpeech)
 {
 	if	(
 			(mTextWords.GetCount() > 0)
@@ -116,12 +121,34 @@ void CAgentText::Append (const CAtlStringArray & pTextWords, const CAtlStringArr
 
 	if	(pSpeechWords.GetCount() > 0)
 	{
-		mSpeechWords.Copy (pSpeechWords);
+		if	(
+				(pAppendSpeech)
+			&&	(mSpeechWords.GetCount() > 0)
+			)
+		{
+			mSpeechWords.Add (_T("\n"));
+			mSpeechWords.Append (pSpeechWords);
+		}
+		else
+		{
+			mSpeechWords.Copy (pSpeechWords);
+		}
 	}
 	else
 	if	(pTextWords.GetCount() > 0)
 	{
-		mSpeechWords.Copy (pTextWords);
+		if	(
+				(pAppendSpeech)
+			&&	(mSpeechWords.GetCount() > 0)
+			)
+		{
+			mSpeechWords.Add (_T("\n"));
+			mSpeechWords.Append (pTextWords);
+		}
+		else
+		{
+			mSpeechWords.Copy (pTextWords);
+		}
 	}
 
 #ifdef	_DEBUG_TEXT

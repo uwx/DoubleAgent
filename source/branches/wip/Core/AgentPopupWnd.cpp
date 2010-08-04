@@ -33,7 +33,6 @@
 #include "FileDownload.h"
 #include "VfwErr.h"
 #include "StringArrayEx.h"
-#include "Elapsed.h"
 #include "MallocPtr.h"
 #include "Sapi5Voice.h"
 #include "Sapi5Err.h"
@@ -55,23 +54,23 @@
 
 #ifdef	_DEBUG
 //#define	_DEBUG_MOUSE		LogNormal
-//#define	_DEBUG_ACTIVATE		LogNormal
+#define	_DEBUG_ACTIVE			(GetProfileDebugInt(_T("DebugActive"),LogDetails,true)&0xFFFF)
 #define	_DEBUG_SPEECH			(GetProfileDebugInt(_T("DebugSpeech"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_DEBUG_SPEECH_EVENTS	(GetProfileDebugInt(_T("DebugSpeechEvents"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Popup"),LogDetails,true)&0xFFFF)
-#define	_LOG_POPUP_OPS			(GetProfileDebugInt(_T("LogPopupOps"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_LOG_QUEUE_OPS			(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
+#define	_LOG_POPUP_OPS			MinLogLevel(GetProfileDebugInt(_T("LogPopupOps"),LogVerbose,true)&0xFFFF|LogTimeMs,_LOG_QUEUE_OPS)
 //#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
 
 #ifndef	_LOG_INSTANCE
 #define	_LOG_INSTANCE		LogDetails
 #endif
-#ifndef	_LOG_POPUP_OPS
-#define	_LOG_POPUP_OPS		LogDetails
-#endif
 #ifndef	_LOG_QUEUE_OPS
 #define	_LOG_QUEUE_OPS		LogDetails
+#endif
+#ifndef	_LOG_POPUP_OPS
+#define	_LOG_POPUP_OPS		LogDetails
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -342,8 +341,11 @@ bool CAgentPopupWnd::Attach (long pCharID, CEventNotify * pNotify, const CAgentI
 				{
 					lInputInactiveCharID = lPrevCharID;
 				}
-#ifdef	_DEBUG_ACTIVATE
-				LogMessage (_DEBUG_ACTIVATE, _T("[%p(%d)] SetInactive [%d] InputActive [%d] (Attach)"), this, max(m_dwRef,-1), lPrevCharID, lInputInactiveCharID);
+#ifdef	_DEBUG_ACTIVE
+				if	(LogIsActive (_DEBUG_ACTIVE))
+				{
+					LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)] SetInactive [%d] InputActive [%d] (Attach)"), this, max(m_dwRef,-1), lPrevCharID, lInputInactiveCharID);
+				}
 #endif
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
@@ -358,8 +360,11 @@ bool CAgentPopupWnd::Attach (long pCharID, CEventNotify * pNotify, const CAgentI
 			{
 				lInputActiveCharID = mCharID;
 			}
-#ifdef	_DEBUG_ACTIVATE
-			LogMessage (_DEBUG_ACTIVATE, _T("[%p(%d)] SetActive [%d] InputActive [%d] (Attach)"), this, max(m_dwRef,-1), mCharID, lInputActiveCharID);
+#ifdef	_DEBUG_ACTIVE
+			if	(LogIsActive (_DEBUG_ACTIVE))
+			{
+				LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)] SetActive [%d] InputActive [%d] (Attach)"), this, max(m_dwRef,-1), mCharID, lInputActiveCharID);
+			}
 #endif
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
@@ -416,8 +421,11 @@ bool CAgentPopupWnd::Detach (long pCharID, CEventNotify * pNotify)
 				lInputActiveCharID = pCharID;
 			}
 
-#ifdef	_DEBUG_ACTIVATE
-			LogMessage (_DEBUG_ACTIVATE, _T("[%p(%d)] SetInactive [%d] InputActive [%d] (Detach)"), this, max(m_dwRef,-1), pCharID, lInputActiveCharID);
+#ifdef	_DEBUG_ACTIVE
+			if	(LogIsActive (_DEBUG_ACTIVE))
+			{
+				LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)] SetInactive [%d] InputActive [%d] (Detach)"), this, max(m_dwRef,-1), pCharID, lInputActiveCharID);
+			}
 #endif
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
@@ -803,13 +811,14 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, VisibilityCauseType pVisiblityC
 		||	(pAlwaysNotify)
 		)
 	{
-#ifdef	_DEBUG_ACTIVATE
+#ifdef	_DEBUG_ACTIVE
 		if	(
 				(lRet)
+			&&	(LogIsActive (_DEBUG_ACTIVE))
 			&&	(GetLastActive() == m_hWnd)
 			)
 		{
-			LogMessage (_DEBUG_ACTIVATE, _T("[%p(%d)] SetNotInputActive [%d] (Hide)"), this, max(m_dwRef,-1), mCharID);
+			LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)] SetNotInputActive [%d] (Hide)"), this, max(m_dwRef,-1), mCharID);
 		}
 #endif
 		NotifyHidden (pForCharID, pVisiblityCause);
@@ -1020,315 +1029,32 @@ long CAgentPopupWnd::QueueMove (long pCharID, const CPoint & pPosition, DWORD pS
 		lReqID = 0;
 	}
 
-#ifdef	_LOG_POPUP_OPS
-	if	(LogIsActive (_LOG_POPUP_OPS))
+#ifdef	_LOG_QUEUE_OPS
+	if	(LogIsActive (_LOG_QUEUE_OPS))
 	{
-		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)] [%d] QueueMove [%p] [%d] [%d] to [%d %d] speed [%u]"), this, max(m_dwRef,-1), mCharID, lQueuedMove, pCharID, lReqID, lQueuedMove->mPosition.x, lQueuedMove->mPosition.y, lQueuedMove->mTimeAllowed);
+		LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] QueueMove [%p] [%d] [%d] to [%d %d] speed [%u]"), this, max(m_dwRef,-1), mCharID, lQueuedMove, pCharID, lReqID, lQueuedMove->mPosition.x, lQueuedMove->mPosition.y, lQueuedMove->mTimeAllowed);
 	}
 #endif
 	return lReqID;
 }
 
-bool CAgentPopupWnd::DoQueuedMove ()
-{
-	tPtr <CQueuedMove>	lQueuedMove;
-
-	if	(lQueuedMove = (CQueuedMove *) mQueue.GetNextAction (QueueActionMove))
-	{
-		CPoint	lOffset;
-		CRect	lWinRect;
-
-		GetWindowRect (&lWinRect);
-		lOffset.x = lQueuedMove->mPosition.x - lWinRect.left;
-		lOffset.y = lQueuedMove->mPosition.y - lWinRect.top;
-
-		if	(!lQueuedMove->mStarted)
-		{
-			lQueuedMove->NotifyStarted (mNotify);
-		}
-		if	(mQueue.GetNextAction (QueueActionMove) == lQueuedMove)
-		{
-			if	(
-					(!lQueuedMove->mAnimationShown)
-				&&	(
-						(!IsWindowVisible ())
-					||	(
-							(lOffset.x == 0)
-						&&	(lOffset.y == 0)
-						)
-					)
-				)
-			{
-				lQueuedMove->mTimeAllowed = 0;
-			}
-
-			if	(!lQueuedMove->mAnimationShown)
-			{
-				lQueuedMove->mAnimationShown = true;
-
-				if	(lQueuedMove->mTimeAllowed > 0)
-				{
-					CAtlOwnPtrList <CQueuedAction>	lQueue;
-
-					if	(lOffset.x < 0)
-					{
-						if	(lOffset.y < lOffset.x)
-						{
-							lQueuedMove->mAnimationState = _T("MOVINGUP");
-						}
-						else
-						if	(lOffset.y > -lOffset.x)
-						{
-							lQueuedMove->mAnimationState = _T("MOVINGDOWN");
-						}
-						else
-						{
-							lQueuedMove->mAnimationState = _T("MOVINGRIGHT");
-						}
-					}
-					else
-					{
-						if	(lOffset.y > lOffset.x)
-						{
-							lQueuedMove->mAnimationState = _T("MOVINGDOWN");
-						}
-						else
-						if	(lOffset.y < -lOffset.x)
-						{
-							lQueuedMove->mAnimationState = _T("MOVINGUP");
-						}
-						else
-						{
-							lQueuedMove->mAnimationState = _T("MOVINGLEFT");
-						}
-					}
-
-					mQueue.PushQueue (lQueue);
-					if	(ShowState (lQueuedMove->mAnimationState))
-					{
-						lQueue.RemoveHead ();
-						mQueue.AddTail (lQueuedMove.Detach());
-#ifdef	_LOG_QUEUE_OPS
-						if	(LogIsActive (_LOG_QUEUE_OPS))
-						{
-							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] Requeue move to end of queue"), this, max(m_dwRef,-1), mCharID);
-						}
-#endif
-					}
-					mQueue.PopQueue (lQueue);
-				}
-			}
-
-			if	(
-					(lQueuedMove)
-				&&	(mQueue.GetNextAction (QueueActionMove) == lQueuedMove)
-				)
-			{
-				mQueue.RemoveHead ();
-
-				if	(
-						(lQueuedMove)
-					&&	(!lQueuedMove->mMoveStarted)
-					)
-				{
-					lQueuedMove->mMoveStarted = new CPoint (lWinRect.TopLeft());
-					if	(lQueuedMove->mTimeAllowed > 0)
-					{
-						lQueuedMove->mTimeStarted = GetTickCount();
-						lQueuedMove->mTimeAllowed = MulDiv (max (max (labs (lOffset.x), labs (lOffset.y)), 10), lQueuedMove->mTimeAllowed, 500);
-					}
-				}
-
-				if	(
-						(lQueuedMove)
-					&&	(lQueuedMove->mMoveStarted)
-					)
-				{
-					if	(DoQueuedMoveCycle (lQueuedMove))
-					{
-						mQueue.AddHead (lQueuedMove.Detach());
-					}
-
-					if	(lQueuedMove)
-					{
-						if	(!lQueuedMove->mEndAnimationShown)
-						{
-							MovePopup (lQueuedMove->mPosition, lQueuedMove->mCharID, MoveCause_ProgramMoved, true);
-						}
-						if	(
-								(lQueuedMove->mTimeAllowed > 0)
-							&&	(!lQueuedMove->mEndAnimationShown)
-							&&	(ShowGesture (NULL))
-							)
-						{
-							lQueuedMove->mEndAnimationShown = true;
-							mQueue.AddHead (lQueuedMove.Detach());
-						}
-						if	(lQueuedMove)
-						{
-#ifdef	_STRICT_COMPATIBILITY
-							if	(!IsCharShown ())
-							{
-								lQueuedMove->NotifyComplete (mNotify, AGENTERR_CHARACTERNOTVISIBLE);
-							}
-							else
-#endif
-							{
-								lQueuedMove->NotifyComplete (mNotify);
-							}
-						}
-					}
-				}
-			}
-			else
-			{
-				lQueuedMove.Detach ();
-			}
-		}
-		else
-		{
-			lQueuedMove.Detach (); // Was deleted during NotifyStarted
-		}
-		return true;
-	}
-	return false;
-}
-
-bool CAgentPopupWnd::DoQueuedMoveCycle (CQueuedMove * pQueuedMove)
+bool CAgentPopupWnd::DoQueuedMoveCycle ()
 {
 	bool			lRet = false;
 	CQueuedMove *	lQueuedMove;
 
 	if	(
-			(
-				(lQueuedMove = pQueuedMove)
-			||	(lQueuedMove = (CQueuedMove *) mQueue.GetNextAction (QueueActionMove))
-			)
-		&&	(lQueuedMove->mMoveStarted)
-		&&	(lQueuedMove->mTimeAllowed > 0)
+			(lQueuedMove = (CQueuedMove *) mQueue.GetNextAction (QueueActionMove))
+		&&	(lQueuedMove->IsCycling ())
+		&&	(PreDoQueue () > 0)
 		)
 	{
-		if	(
-				(pQueuedMove)
-			||	(PreDoQueue () > 0)
-			)
-		{
-			long	lElapsed = ElapsedTicks (lQueuedMove->mTimeStarted);
-			CPoint	lOffset;
-			CRect	lWinRect;
-
-			GetWindowRect (&lWinRect);
-			lOffset.x = lQueuedMove->mPosition.x - lWinRect.left;
-			lOffset.y = lQueuedMove->mPosition.y - lWinRect.top;
-
-			if	(mQueueTime != mQueueTimeMin)
-			{
-				ActivateQueue (false, mQueueTimeMin);
-			}
-			if	(lElapsed < (long)lQueuedMove->mTimeAllowed)
-			{
-				lOffset.x = lQueuedMove->mMoveStarted->x + MulDiv (lQueuedMove->mPosition.x - lQueuedMove->mMoveStarted->x, lElapsed, (long)lQueuedMove->mTimeAllowed) - lWinRect.left;
-				lOffset.y = lQueuedMove->mMoveStarted->y + MulDiv (lQueuedMove->mPosition.y - lQueuedMove->mMoveStarted->y, lElapsed, (long)lQueuedMove->mTimeAllowed) - lWinRect.top;
-				lRet = true;
-			}
-			else
-			if	(mQueueTime != mQueueTimeDefault)
-			{
-				ActivateQueue (false, mQueueTimeDefault);
-			}
-
-			if	(lRet)
-			{
-#ifdef	_LOG_QUEUE_OPS
-				if	(LogIsActive (_LOG_QUEUE_OPS))
-				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] Queued move [%d %d] to [%d %d] by [%d %d] Elapsed [%d of %u] Remaining [%d %d] [%d]"), this, max(m_dwRef,-1), mCharID, lWinRect.left, lWinRect.top, lQueuedMove->mPosition.x, lQueuedMove->mPosition.y, lOffset.x, lOffset.y, lElapsed, lQueuedMove->mTimeAllowed, lQueuedMove->mPosition.x-lWinRect.left-lOffset.x, lQueuedMove->mPosition.y-lWinRect.top-lOffset.y, (long)lQueuedMove->mTimeAllowed-lElapsed);
-				}
-#endif
-				lWinRect.OffsetRect (lOffset);
-				MoveWindow (lWinRect);
-			}
-			if	(!pQueuedMove)
-			{
-				PostDoQueue ();
-			}
-		}
+		lQueuedMove->Cycle (mQueue, this);
+		PostDoQueue ();
 	}
 	return lRet;
 }
 
-void CAgentPopupWnd::AbortQueuedMove (CQueuedAction * pQueuedAction, HRESULT pReqStatus, LPCTSTR pReason)
-{
-	CQueuedMove *	lQueuedMove;
-	CQueuedState *	lQueuedState;
-
-	if	(lQueuedMove = (CQueuedMove *) pQueuedAction)
-	{
-		if	(
-				(lQueuedMove->mAnimationShown)
-			&&	(!lQueuedMove->mEndAnimationShown)
-			)
-		{
-			if	(!ShowGesture (NULL))
-			{
-				Stop ();
-			}
-		}
-		if	(
-				(!lQueuedMove->mAnimationState.IsEmpty ())
-			&&	(lQueuedState = (CQueuedState *) mQueue.GetNextAction (QueueActionState))
-			&&	(lQueuedState->mStateName.CompareNoCase (lQueuedMove->mAnimationState) == 0)
-			)
-		{
-			RemoveQueuedAction (lQueuedState, pReqStatus, pReason);
-		}
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CQueuedAction * CAgentPopupWnd::IsMoveQueued (long pCharID)
-{
-	return mQueue.GetCharAction (QueueActionMove, pCharID);
-}
-
-bool CAgentPopupWnd::RemoveQueuedMove (long pCharID, HRESULT pReqStatus, LPCTSTR pReason, bool pExcludeActive)
-{
-	bool			lRet = false;
-	CQueuedMove *	lQueuedMove;
-
-	while	(
-				(lQueuedMove = (CQueuedMove *) mQueue.GetCharAction (QueueActionMove, pCharID, true))
-			&&	(
-					(!pExcludeActive)
-				||	(!lQueuedMove->mStarted)
-				)
-			&&	(RemoveQueuedAction (lQueuedMove, pReqStatus, pReason))
-			)
-	{
-		lRet = true;
-	}
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-void CAgentPopupWnd::AbortQueuedAction (CQueuedAction * pQueuedAction, HRESULT pReqStatus, LPCTSTR pReason)
-{
-	CQueuedAction *	lQueuedAction;
-
-	CAgentCharacterWnd::AbortQueuedAction (pQueuedAction, pReqStatus, pReason);
-
-	if	(lQueuedAction = (CQueuedAction *) pQueuedAction)
-	{
-		if	(lQueuedAction->mAction == QueueActionMove)
-		{
-			AbortQueuedMove (pQueuedAction, pReqStatus, pReason);
-		}
-	}
-}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -1342,23 +1068,6 @@ bool CAgentPopupWnd::CanDoAnimationQueue ()
 		return false;
 	}
 	return CAgentCharacterWnd::CanDoAnimationQueue ();
-}
-
-bool CAgentPopupWnd::DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime)
-{
-	bool			lRet = CAgentCharacterWnd::DoAnimationQueue (pNextActivateImmediate, pNextQueueTime);
-	CQueuedAction *	lNextAction = mQueue.GetNextAction ();
-
-	if	(
-			(!lRet)
-		&&	(DoQueuedMove ())
-		)
-	{
-		pNextActivateImmediate = (mQueue.GetNextAction () != lNextAction);
-		pNextQueueTime = mQueueTime;
-		lRet = true;
-	}
-	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1389,8 +1098,11 @@ LRESULT CAgentPopupWnd::OnActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 	}
 	if	(wParam)
 	{
-#ifdef	_DEBUG_ACTIVATE
-		LogMessage (_DEBUG_ACTIVATE, _T("[%p(%d)] CAgentPopupWnd OnActivate [%d] Activate [%p] Last [%p]"), this, max(m_dwRef,-1), mCharID, m_hWnd, mLastActive);
+#ifdef	_DEBUG_ACTIVE
+		if	(LogIsActive (_DEBUG_ACTIVE))
+		{
+			LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)] CAgentPopupWnd OnActivate [%d] Activate [%p] Last [%p]"), this, max(m_dwRef,-1), mCharID, m_hWnd, mLastActive);
+		}
 #endif
 		SetLastActive ();
 	}
@@ -1580,12 +1292,9 @@ LRESULT CAgentPopupWnd::OnExitSizeMove (UINT uMsg, WPARAM wParam, LPARAM lParam,
 
 			if	(mIsDragging)
 			{
-				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+				if	(lNotify = GetNotifyClientNotify (mCharID))
 				{
-					if	(lNotify->GetNotifyClient (mCharID) == mCharID)
-					{
-						lNotify->DragComplete (mCharID, NotifyKeyState(), lWinRect.left, lWinRect.top);
-					}
+					lNotify->DragComplete (mCharID, NotifyKeyState(), lWinRect.left, lWinRect.top);
 				}
 			}
 			if	(
@@ -1640,15 +1349,11 @@ LRESULT CAgentPopupWnd::OnMoving (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL 
 		{
 			try
 			{
-				INT_PTR			lNotifyNdx;
 				CEventNotify *	lNotify;
 
-				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+				if	(lNotify = GetNotifyClientNotify (mCharID))
 				{
-					if	(lNotify->GetNotifyClient (mCharID) == mCharID)
-					{
-						lNotify->DragStart (mCharID, NotifyKeyState(), mSizeMoveStart->x, mSizeMoveStart->y);
-					}
+					lNotify->DragStart (mCharID, NotifyKeyState(), mSizeMoveStart->x, mSizeMoveStart->y);
 				}
 			}
 			catch AnyExceptionDebug
@@ -1787,18 +1492,11 @@ void CAgentPopupWnd::OnIconDblClick (const CPoint & pPoint)
 	{
 		try
 		{
-			INT_PTR			lNotifyNdx;
 			CEventNotify *	lNotify;
 
-			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+			if	(lNotify = GetNotifyClientNotify (mCharID))
 			{
-				if	(
-						(lNotify->GetNotifyClient (mCharID) == mCharID)
-					&&	(lNotify->_DefaultCommand (mCharID, m_hWnd, pPoint))
-					)
-				{
-					break;
-				}
+				lNotify->_DefaultCommand (mCharID, m_hWnd, pPoint);
 			}
 		}
 		catch AnyExceptionDebug

@@ -36,7 +36,7 @@ void CDaSvrEventDispatch::FireCommand(long CommandID, IDaSvrUserInput2* UserInpu
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke2 (DISPID_IAgentNotifySink_Command, &lCommandID, &lUserInput);
+			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_IAgentNotifySink_Command, &lCommandID, &lUserInput));
 		}
 	}
 }
@@ -53,7 +53,7 @@ void CDaSvrEventDispatch::FireActivateInputState(long CharacterID, long Activate
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke2 (DISPID_IAgentNotifySink_ActivateInputState, &lCharacterId, &lActivated);
+			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_IAgentNotifySink_ActivateInputState, &lCharacterId, &lActivated));
 		}
 	}
 }
@@ -69,7 +69,7 @@ void CDaSvrEventDispatch::FireVisibleState(long CharacterID, long Visible, long 
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.InvokeN (DISPID_IAgentNotifySink_VisibleState, lParams, 3);
+			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IAgentNotifySink_VisibleState, lParams, 3));
 		}
 	}
 }
@@ -85,7 +85,7 @@ void CDaSvrEventDispatch::FireClick(long CharacterID, short Keys, long X, long Y
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.InvokeN (DISPID_IAgentNotifySink_Click, lParams, 4);
+			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IAgentNotifySink_Click, lParams, 4));
 		}
 	}
 }
@@ -101,7 +101,7 @@ void CDaSvrEventDispatch::FireDblClick(long CharacterID, short Keys, long X, lon
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.InvokeN (DISPID_IAgentNotifySink_DblClick, lParams, 4);
+			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IAgentNotifySink_DblClick, lParams, 4));
 		}
 	}
 }
@@ -117,7 +117,7 @@ void CDaSvrEventDispatch::FireDragStart(long CharacterID, short Keys, long X, lo
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.InvokeN (DISPID_IAgentNotifySink_DragStart, lParams, 4);
+			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IAgentNotifySink_DragStart, lParams, 4));
 		}
 	}
 }
@@ -133,7 +133,7 @@ void CDaSvrEventDispatch::FireDragComplete(long CharacterID, short Keys, long X,
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.InvokeN (DISPID_IAgentNotifySink_DragComplete, lParams, 4);
+			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IAgentNotifySink_DragComplete, lParams, 4));
 		}
 	}
 }
@@ -149,7 +149,7 @@ void CDaSvrEventDispatch::FireRequestStart(long RequestID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke1 (DISPID_IAgentNotifySink_RequestStart, &lRequest);
+			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_IAgentNotifySink_RequestStart, &lRequest));
 		}
 	}
 }
@@ -166,7 +166,7 @@ void CDaSvrEventDispatch::FireRequestComplete(long RequestID, long Result)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke2 (DISPID_IAgentNotifySink_RequestComplete, &lRequest, &lResult);
+			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_IAgentNotifySink_RequestComplete, &lRequest, &lResult));
 		}
 	}
 }
@@ -182,7 +182,7 @@ void CDaSvrEventDispatch::FireBookMark(long BookMarkID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke1 (DISPID_IAgentNotifySink_BookMark, &lBookMarkID);
+			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_IAgentNotifySink_BookMark, &lBookMarkID));
 		}
 	}
 }
@@ -199,7 +199,7 @@ void CDaSvrEventDispatch::FireIdle(long CharacterID, long Start)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke2 (DISPID_IAgentNotifySink_Idle, &lCharacterID, &lStart);
+			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_IAgentNotifySink_Idle, &lCharacterID, &lStart));
 		}
 	}
 }
@@ -215,7 +215,7 @@ void CDaSvrEventDispatch::FireMove(long CharacterID, long X, long Y, long Cause)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.InvokeN (DISPID_IAgentNotifySink_Move, lParams, 4);
+			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IAgentNotifySink_Move, lParams, 4));
 		}
 	}
 }
@@ -231,7 +231,7 @@ void CDaSvrEventDispatch::FireSize(long CharacterID, long Width, long Height)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.InvokeN (DISPID_IAgentNotifySink_Size, lParams, 3);
+			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IAgentNotifySink_Size, lParams, 3));
 		}
 	}
 }
@@ -248,7 +248,7 @@ void CDaSvrEventDispatch::FireBalloonVisibleState(long CharacterID, long Visible
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke2 (DISPID_IAgentNotifySink_BalloonVisibleState, &lCharacterID, &lVisible);
+			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_IAgentNotifySink_BalloonVisibleState, &lCharacterID, &lVisible));
 		}
 	}
 }
@@ -264,7 +264,7 @@ void CDaSvrEventDispatch::FireListeningState(long CharacterID, long Listening, l
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.InvokeN (DISPID_IAgentNotifySinkEx_ListeningState, lParams, 3);
+			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IAgentNotifySinkEx_ListeningState, lParams, 3));
 		}
 	}
 }
@@ -280,7 +280,7 @@ void CDaSvrEventDispatch::FireDefaultCharacterChange(LPCTSTR CharGUID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke1 (DISPID_IAgentNotifySinkEx_DefaultCharacterChange, &lGUID);
+			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_IAgentNotifySinkEx_DefaultCharacterChange, &lGUID));
 		}
 	}
 }
@@ -295,7 +295,7 @@ void CDaSvrEventDispatch::FireAgentPropertyChange()
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke0 (DISPID_IAgentNotifySinkEx_AgentPropertyChange);
+			LogComErr (LogNormal, lEventSink.Invoke0 (DISPID_IAgentNotifySinkEx_AgentPropertyChange));
 		}
 	}
 }
@@ -312,7 +312,58 @@ void CDaSvrEventDispatch::FireActiveClientChange(long CharacterID, long Status)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke2 (DISPID_IAgentNotifySinkEx_ActiveClientChange, &lCharacterID, &lStatus);
+			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_IAgentNotifySinkEx_ActiveClientChange, &lCharacterID, &lStatus));
+		}
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CDaSvrEventDispatch::FireSpeechStart(long CharacterID, IDaSvrFormattedText* FormattedText)
+{
+	_variant_t				lCharacterID (CharacterID);
+	_variant_t				lFormattedText ((LPDISPATCH)FormattedText);
+	int 					lNdx;
+	CComQIPtr <IDispatch>	lEventSink;
+
+	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	{
+		lEventSink = mUnkArray.GetAt (lNdx);
+		if	(lEventSink != NULL)
+		{
+			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_IDaSvrNotifySink2_SpeechStart, &lCharacterID, &lFormattedText));
+		}
+	}
+}
+
+void CDaSvrEventDispatch::FireSpeechEnd(long CharacterID, IDaSvrFormattedText* FormattedText, VARIANT_BOOL Stopped)
+{
+	_variant_t				lParams [3] = {CharacterID, (LPDISPATCH)FormattedText, Stopped};
+	int 					lNdx;
+	CComQIPtr <IDispatch>	lEventSink;
+
+	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	{
+		lEventSink = mUnkArray.GetAt (lNdx);
+		if	(lEventSink != NULL)
+		{
+			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IDaSvrNotifySink2_SpeechEnd, lParams, 3));
+		}
+	}
+}
+
+void CDaSvrEventDispatch::FireSpeechWord(long CharacterID, IDaSvrFormattedText* FormattedText, long WordIndex)
+{
+	_variant_t				lParams [3] = {CharacterID, (LPDISPATCH)FormattedText, WordIndex};
+	int 					lNdx;
+	CComQIPtr <IDispatch>	lEventSink;
+
+	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	{
+		lEventSink = mUnkArray.GetAt (lNdx);
+		if	(lEventSink != NULL)
+		{
+			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IDaSvrNotifySink2_SpeechWord, lParams, 3));
 		}
 	}
 }

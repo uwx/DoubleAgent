@@ -34,6 +34,7 @@ interface _IEventNotify
 	virtual class CFileDownload * _FindSoundDownload (LPCTSTR pSoundUrl) {return NULL;}
 	virtual bool _ContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition) {return false;}
 	virtual bool _DefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition) {return false;}
+	virtual void _AppActivated (bool pActive) {}
 	virtual void _OptionsChanged () {}
 	virtual void _DefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFilePath) {}
 };
@@ -50,6 +51,7 @@ interface _IEventReflect
 	virtual class CFileDownload * _FindSoundDownload (LPCTSTR pSoundUrl) {return NULL;}
 	virtual bool _OnContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition) {return false;}
 	virtual bool _OnDefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition) {return false;}
+	virtual void _OnAppActivated (bool pActive) {}
 	virtual void _OnOptionsChanged () {}
 	virtual void _OnDefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFilePath) {}
 };
@@ -66,7 +68,7 @@ interface _IEventLock
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-class CEventNotify : public IDaSvrNotifySink, public _IEventNotify
+class CEventNotify : public IDaSvrNotifySink2, public _IEventNotify
 {
 public:
 	CEventNotify ();
@@ -95,6 +97,10 @@ public:
 	virtual MoveCauseType _GetMoveCause (long pCharID);
 	virtual void _PutMoveCause (long pCharID, MoveCauseType pMoveCause);
 
+	virtual HRESULT OnSpeechStart (long CharacterID, LPUNKNOWN FormattedText) = 0;
+	virtual HRESULT OnSpeechEnd (long CharacterID, LPUNKNOWN FormattedText, VARIANT_BOOL Stopped) = 0;
+	virtual HRESULT OnSpeechWord (long CharacterID, LPUNKNOWN FormattedText, long WordIndex) = 0;
+
 // Overrides
 public:
 	virtual void _CharacterLoaded (long pCharID);
@@ -106,6 +112,7 @@ public:
 	virtual class CFileDownload * _FindSoundDownload (LPCTSTR pSoundUrl);
 	virtual bool _ContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition);
 	virtual bool _DefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition);
+	virtual void _AppActivated (bool pActive);
 	virtual void _OptionsChanged ();
 	virtual void _DefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFilePath);
 
@@ -140,6 +147,7 @@ public:
 	virtual void _CharacterNameChanged (long pCharID);
 	virtual void _CharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
 	virtual void _CharacterListening (long pCharID, bool pListening, long pCause);
+	virtual void _AppActivated (bool pActive);
 	virtual void _OptionsChanged ();
 	virtual void _DefaultCharacterChanged ();
 };
@@ -198,6 +206,9 @@ public:
 // Operations
 public:
 	bool PreNotify ();
+	
+	CEventNotify * GetActiveClientNotify (long pCharID, bool pUseDefault = true);
+	CEventNotify * GetNotifyClientNotify (long pCharID, bool pUseDefault = true);
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -294,6 +305,38 @@ bool CEventNotifiesClient<aBase>::PreNotify ()
 		return true;
 	}
 	return false;
+}
+
+template <class aBase>
+CEventNotify * CEventNotifiesClient<aBase>::GetActiveClientNotify (long pCharID, bool pUseDefault)
+{
+	int				lNotifyNdx;
+	CEventNotify *	lNotify;
+
+	for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+	{
+		if	(lNotify->GetActiveClient (pCharID, pUseDefault) == pCharID)
+		{
+			return lNotify;
+		}
+	}
+	return NULL;
+}
+
+template <class aBase>
+CEventNotify * CEventNotifiesClient<aBase>::GetNotifyClientNotify (long pCharID, bool pUseDefault)
+{
+	int				lNotifyNdx;
+	CEventNotify *	lNotify;
+
+	for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+	{
+		if	(lNotify->GetNotifyClient (pCharID, pUseDefault) == pCharID)
+		{
+			return lNotify;
+		}
+	}
+	return NULL;
 }
 
 /////////////////////////////////////////////////////////////////////////////

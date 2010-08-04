@@ -119,6 +119,7 @@ IDR_DACTLSPEECHINPUT    REGISTRY                "DaCtlSpeechInput.rgs"
 IDR_DACTLUSERINPUT      REGISTRY                "DaCtlUserInput.rgs"
 IDR_DACONTROL           REGISTRY                "DaControl.rgs"
 IDR_DACTLSETTINGS		REGISTRY                "DaCtlSettings.rgs"
+IDR_DACTLFORMATTEDTEXT	REGISTRY                "DaCtlFormattedText.rgs"
 #endif    // English (Canada) resources
 /////////////////////////////////////////////////////////////////////////////
 

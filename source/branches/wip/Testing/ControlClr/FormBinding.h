@@ -376,7 +376,7 @@ public:
 	{}
 
 	EventData (DoubleAgent::AxControl::CtlRequestStartEvent^ e)
-	:	mName ("RequestStart"), mCharacterID (e->Request->default.ToString()), mData (((DoubleAgent::Control::RequestStatus)e->Request->Status).ToString())
+	:	mName ("RequestStart"), mCharacterID (e->Request->default.ToString()), mData (e->Request->Status.ToString())
 	{
 	}
 
@@ -385,11 +385,11 @@ public:
 	{
 		if	(String::IsNullOrEmpty (e->Request->Description))
 		{
-			mData = ((DoubleAgent::Control::RequestStatus)e->Request->Status).ToString();
+			mData = e->Request->Status.ToString();
 		}
 		else
 		{
-			mData = String::Format ("{0} ({1:X8} {2})", ((DoubleAgent::Control::RequestStatus)e->Request->Status).ToString(), e->Request->Number, e->Request->Description);
+			mData = String::Format ("{0} ({1:X8} {2})", e->Request->Status.ToString(), e->Request->Number, e->Request->Description);
 		}
 	}
 
@@ -400,6 +400,24 @@ public:
 	EventData (DoubleAgent::AxControl::CtlDefaultCharacterChangeEvent^ e)
 	:	mName ("DefaultCharacterChange"), mCharacterID (String::Empty), mData (e->CharGUID)
 	{}
+
+	EventData (DoubleAgent::AxControl::CtlSpeechStartEvent^ e)
+	:	mName ("SpeechStart"), mCharacterID (e->CharacterID)
+	{
+		mData = String::Format ("{0:D} \"{1}\"", e->FormattedText->WordCount, e->FormattedText->ParsedText);
+	}
+
+	EventData (DoubleAgent::AxControl::CtlSpeechEndEvent^ e)
+	:	mName ("SpeechEnd"), mCharacterID (e->CharacterID)
+	{
+		mData = String::Format ("{0:D} of {1:D}", e->FormattedText->WordIndex, e->FormattedText->WordCount);
+	}
+
+	EventData (DoubleAgent::AxControl::CtlSpeechWordEvent^ e)
+	:	mName ("SpeechWord"), mCharacterID (e->CharacterID)
+	{
+		mData = String::Format ("{0:D} of {1:D} \"{2}\"", e->FormattedText->WordIndex, e->FormattedText->WordCount, e->FormattedText->DisplayWord[e->FormattedText->WordIndex]);
+	}
 
 protected:
 	String^	mName;

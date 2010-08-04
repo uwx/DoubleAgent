@@ -193,6 +193,7 @@ public:
 	virtual void _CharacterUnloaded (long pCharID);
 	virtual void _CharacterNameChanged (long pCharID);
 	virtual void _CharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
+	virtual void _AppActivated (bool pActive);
 	virtual void _OptionsChanged ();
 
 // Implementation

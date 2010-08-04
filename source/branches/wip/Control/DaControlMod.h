@@ -66,10 +66,12 @@ public:
 
 // Overrides
 public:
+	virtual bool IsAppActive () const;
 	virtual void _CharacterLoaded (long pCharID);
 	virtual void _CharacterUnloaded (long pCharID);
 	virtual void _CharacterNameChanged (long pCharID);
 	virtual void _CharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
+	virtual void _AppActivated (bool pActive);
 	virtual void _OptionsChanged ();
 
 // Implementation
@@ -80,6 +82,7 @@ protected:
 	void EndMessageFilter (bool pFinal);
 
 private:
+	bool								mAppActive;
 	CAtlOwnPtrArray <class DaControl>	mControls;
 	int									mServerCallLevel;
 	int									mNotifyLevel;
@@ -116,6 +119,7 @@ _COM_SMARTPTR_TYPEDEF (IDaCtlCommandsWindow, __uuidof(IDaCtlCommandsWindow));
 _COM_SMARTPTR_TYPEDEF (IDaCtlAnimationNames, __uuidof(IDaCtlAnimationNames));
 
 _COM_SMARTPTR_TYPEDEF (IDaCtlCharacterFiles, __uuidof(IDaCtlCharacterFiles));
+_COM_SMARTPTR_TYPEDEF (IDaCtlFormattedText, __uuidof(IDaCtlFormattedText));
 _COM_SMARTPTR_TYPEDEF (IDaCtlTTSEngine, __uuidof(IDaCtlTTSEngine));
 _COM_SMARTPTR_TYPEDEF (IDaCtlTTSEngines, __uuidof(IDaCtlTTSEngines));
 _COM_SMARTPTR_TYPEDEF (IDaCtlSREngine, __uuidof(IDaCtlSREngine));
@@ -140,9 +144,11 @@ _COM_SMARTPTR_TYPEDEF (IDaSvrCommandsWindow2, __uuidof(IDaSvrCommandsWindow2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrUserInput, __uuidof(IDaSvrUserInput));
 _COM_SMARTPTR_TYPEDEF (IDaSvrUserInput2, __uuidof(IDaSvrUserInput2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrNotifySink, __uuidof(IDaSvrNotifySink));
+_COM_SMARTPTR_TYPEDEF (IDaSvrNotifySink2, __uuidof(IDaSvrNotifySink2));
 
 _COM_SMARTPTR_TYPEDEF (IDaSvrSettings, __uuidof(IDaSvrSettings));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles));
+_COM_SMARTPTR_TYPEDEF (IDaSvrFormattedText, __uuidof(IDaSvrFormattedText));
 _COM_SMARTPTR_TYPEDEF (IDaSvrTTSEngine, __uuidof(IDaSvrTTSEngine));
 _COM_SMARTPTR_TYPEDEF (IDaSvrTTSEngines, __uuidof(IDaSvrTTSEngines));
 _COM_SMARTPTR_TYPEDEF (IDaSvrSREngine, __uuidof(IDaSvrSREngine));

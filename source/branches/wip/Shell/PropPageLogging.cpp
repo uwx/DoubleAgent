@@ -746,7 +746,7 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrTTSEngines), _T("IDaSvrTTSEngines"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSREngine), _T("IDaSvrSREngine"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSREngines), _T("IDaSvrSREngines"));
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrNotifySink), _T("IDaSvrNotifySink"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrNotifySink2), _T("IDaSvrNotifySink2"));
 #endif
 			_LogTypeLibAny (pLogLevel, __uuidof(DaControlTypeLib), _T(_CONTROL_PROGID_NAME));
 #ifdef	_DEBUG
@@ -776,7 +776,7 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlTTSEngines), _T("IDaCtlTTSEngines"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlSREngine), _T("IDaCtlSREngine"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlSREngines), _T("IDaCtlSREngines"));
-			_LogInterfaceAny (pLogLevel, __uuidof(_DaCtlEvents), _T("_DaCtlEvents"));
+			_LogInterfaceAny (pLogLevel, __uuidof(_DaCtlEvents2), _T("_DaCtlEvents2"));
 #endif
 		}
 		catch AnyExceptionSilent

@@ -79,6 +79,21 @@ bool CSapiVoice::SafeIsSpeaking () const
 	return lRet;
 }
 
+bool CSapiVoice::SafeIsPaused () const
+{
+	bool	lRet = false;
+
+	if	(this)
+	{
+		try
+		{
+			lRet = _IsPaused ();
+		}
+		catch AnyExceptionSilent
+	}
+	return lRet;
+}
+
 //////////////////////////////////////////////////////////////////////
 
 tBstrPtr CSapiVoice::GetDisplayName ()

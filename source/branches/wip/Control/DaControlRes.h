@@ -24,6 +24,7 @@
 #define	IDR_DACTLSPEECHINPUT	120
 #define	IDR_DACTLUSERINPUT	121
 #define	IDR_DACTLSETTINGS	122
+#define	IDR_DACTLFORMATTEDTEXT	123
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED

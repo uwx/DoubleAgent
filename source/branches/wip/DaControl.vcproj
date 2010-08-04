@@ -365,6 +365,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Core\AgentText.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\AgentTextObject.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Common\DaCmnAnimationNames.cpp"
 				>
 			</File>
@@ -390,6 +398,10 @@
 			</File>
 			<File
 				RelativePath=".\Common\DaCmnCommandsWindow.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnFormattedText.cpp"
 				>
 			</File>
 			<File
@@ -510,6 +522,18 @@
 			</File>
 			<File
 				RelativePath=".\Control\DaCtlEvents.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlEvents1.odl.inl"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlEvents2.odl.inl"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlFormattedText.cpp"
 				>
 			</File>
 			<File
@@ -651,6 +675,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Common\DaCmnFormattedText.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Common\DaCmnPropertySheet.h"
 				>
 			</File>
@@ -724,6 +752,10 @@
 			</File>
 			<File
 				RelativePath=".\Control\DaCtlEvents.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlFormattedText.h"
 				>
 			</File>
 			<File

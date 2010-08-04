@@ -33,10 +33,10 @@ public:
 // Attributes
 public:
 	bool							mVisible;
-	CString							mCaption;
-	CString							mVoiceGrammar;
-	CString							mVoiceCaption;
-	CString							mFontName;
+	CAtlString						mCaption;
+	CAtlString						mVoiceGrammar;
+	CAtlString						mVoiceCaption;
+	CAtlString						mFontName;
 	long							mFontSize;
 	bool							mGlobalVoiceCommandsEnabled;
 	CAtlOwnPtrArray <CDaCmnCommand>	mCommands;
@@ -56,7 +56,7 @@ public:
 	CDaCmnCommand * GetCommand (USHORT pCommandId);
 	CDaCmnCommand * GetDefaultCommand ();
 
-	CString GetVoiceCommandsCaption () const;
+	CAtlString GetVoiceCommandsCaption () const;
 	bool ShowVoiceCommands (class CVoiceCommandsWnd * pVoiceCommandsWnd);
 	bool SetupVoiceContext (class CSapi5InputContext * pInputContext);
 

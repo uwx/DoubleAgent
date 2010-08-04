@@ -445,9 +445,9 @@ HRESULT CDaServerModule::RegisterAppId ()
 #ifdef	_DEBUG
 			if	(LogIsActive (LogNormal))
 			{
-				CString	lAccessStr;
-				CString	lByteStr;
-				INT_PTR	lNdx;
+				CAtlString	lAccessStr;
+				CAtlString	lByteStr;
+				INT_PTR		lNdx;
 
 				for	(lNdx = 0; lNdx < (INT_PTR)lLaunchPermission.Value().GetCount(); lNdx++)
 				{
@@ -483,9 +483,9 @@ HRESULT CDaServerModule::RegisterAppId ()
 #ifdef	_DEBUG
 			if	(LogIsActive (LogNormal))
 			{
-				CString	lAccessStr;
-				CString	lByteStr;
-				INT_PTR	lNdx;
+				CAtlString	lAccessStr;
+				CAtlString	lByteStr;
+				INT_PTR		lNdx;
 
 				for	(lNdx = 0; lNdx < (INT_PTR)lAccessPermission.Value().GetCount(); lNdx++)
 				{
@@ -509,8 +509,8 @@ HRESULT CDaServerModule::RegisterAppId ()
 	{
 		CRegKeyEx	lPolicyKey (HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Internet Explorer\\Low Rights\\ElevationPolicy"), true);
 		CRegKeyEx	lAppKey (lPolicyKey, CGuidStr(__uuidof(DaServer)), false, true);
-		CString		lModuleName;
-		CString		lModulePath;
+		CAtlString	lModuleName;
+		CAtlString	lModulePath;
 
 		GetModuleFileName (_AtlBaseModule.GetModuleInstance(), lModulePath.GetBuffer(MAX_PATH), MAX_PATH);
 		lModuleName = PathFindFileName (lModulePath);
@@ -778,6 +778,14 @@ void CDaServerModule::_CharacterActivated (long pActiveCharID, long pInputActive
 #endif
 	CListeningGlobal::_CharacterActivated (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
 	CEventGlobal::_CharacterActivated (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
+}
+
+void CDaServerModule::_AppActivated (bool pActive)
+{
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaServerModule::_AppActivated [%u]"), pActive);
+#endif
+	// Intentionally ignored - the server is always active
 }
 
 void CDaServerModule::_OptionsChanged ()

@@ -22,7 +22,7 @@
 #define IDC_TTS_MODE                    1017
 #define IDC_TTS_STATUS                  1018
 #define IDD_SPEECHTEST_DIALOG           1019
-#define IDC_BALLOON_AUTOSIZE2           1019
+#define IDC_TEST_FORMATTED              1019
 #define IDC_BALLOON_PARTIAL             1020
 
 // Next default values for new objects

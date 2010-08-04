@@ -43,6 +43,11 @@ CGlobalAnchor::~CGlobalAnchor ()
 
 /////////////////////////////////////////////////////////////////////////////
 
+bool CGlobalAnchor::IsAppActive () const
+{
+	return true;
+}
+
 long CGlobalAnchor::NextCharID ()
 {
 	return mNextCharID++;
@@ -286,6 +291,7 @@ long CGlobalAnchor::_GetListenCharacter (CAgentFileCache & pFileCache)
 			lRet = lActiveCharacter->GetCharID();
 		}
 		else
+		if	(lClientActiveCharacter)
 		{
 			lRet = lClientActiveCharacter->GetCharID();
 		}

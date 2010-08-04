@@ -1887,7 +1887,7 @@ void LogAnimationSequenceAudio (UINT pLogLevel, const CAnimationSequence * pSequ
 				lTitle.ReleaseBuffer ();
 				lIndent = lTitle;
 				lTitle.TrimLeft ();
-				lIndent = CString (_T(' '), lIndent.GetLength()-lTitle.GetLength());
+				lIndent = CAtlString (_T(' '), lIndent.GetLength()-lTitle.GetLength());
 			}
 			else
 			{

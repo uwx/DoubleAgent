@@ -548,6 +548,28 @@ bool CEventNotify::_DefaultCommand (long pCharID, HWND pOwner, const CPoint & pP
 
 /////////////////////////////////////////////////////////////////////////////
 
+void CEventNotify::_AppActivated (bool pActive)
+{
+	try
+	{
+		INT_PTR				lReflectNdx;
+		_IEventReflect *	lReflect;
+
+		for	(lReflectNdx = 0; lReflect = mEventReflect (lReflectNdx); lReflectNdx++)
+		{
+			try
+			{
+#ifdef	_DEBUG_INTERNAL
+				LogMessage (_DEBUG_INTERNAL, _T("[%p] _OnAppActivated"), lReflect);
+#endif
+				lReflect->_OnAppActivated (pActive);
+			}
+			catch AnyExceptionDebug
+		}
+	}
+	catch AnyExceptionDebug
+}
+
 void CEventNotify::_OptionsChanged ()
 {
 	try
@@ -713,6 +735,21 @@ void CEventGlobal::_CharacterListening (long pCharID, bool pListening, long pCau
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+void CEventGlobal::_AppActivated (bool pActive)
+{
+	try
+	{
+		INT_PTR			lNotifyNdx;
+		CEventNotify *	lNotify;
+
+		for	(lNotifyNdx = 0; lNotify = mInstanceNotify (lNotifyNdx); lNotifyNdx++)
+		{
+			lNotify->_AppActivated (pActive);
+		}
+	}
+	catch AnyExceptionDebug
+}
 
 void CEventGlobal::_OptionsChanged ()
 {

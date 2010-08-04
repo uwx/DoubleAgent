@@ -264,7 +264,7 @@ HRESULT CListeningState::StopListening (bool pManual, long pCause)
 	else
 	{
 #ifdef	_DEBUG_SPEECH
-		CString	lCauseStr;
+		CAtlString	lCauseStr;
 		switch (pCause)
 		{
 			case ListenComplete_ProgramDisabled:			lCauseStr = _T("ProgramDisabled"); break;
@@ -549,7 +549,7 @@ HRESULT CListeningState::ShowListeningTip (bool pShow, bool pListening, LPCTSTR 
 		if	(pShow)
 		{
 			CDaCmnCommands *	lCommands;
-			CString			lCommandsCaption;
+			CAtlString			lCommandsCaption;
 
 			if	(lCommands = mCharacter.GetCommands (true))
 			{
@@ -831,7 +831,7 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 				&&	(lListeningWnd->GetCharID() == GetCharID())
 				)
 			{
-				CString				lHeardText;
+				CAtlString			lHeardText;
 				tMallocPtr <WCHAR>	lPhraseText;
 				BYTE				lPhraseDisplay;
 
@@ -1119,7 +1119,7 @@ void CListeningState::SetSapiInputNames (long pCharID)
 							)
 						{
 							lCommands = lCharacter->GetCommands (true);
-							mSapi5InputContext->SetCharacterName (lCharacter->GetCharID(), CString (lName), (lCommands ? (LPCTSTR)lCommands->GetVoiceCommandsCaption() : NULL));
+							mSapi5InputContext->SetCharacterName (lCharacter->GetCharID(), CAtlString (lName), (lCommands ? (LPCTSTR)lCommands->GetVoiceCommandsCaption() : NULL));
 							if	(pCharID > 0)
 							{
 								break;
@@ -1353,8 +1353,7 @@ void CListeningGlobal::Startup ()
 		Shutdown ();
 	}
 	mStarted = true;
-	mSuspended = false;
-	RegisterHotKeys ();
+	mSuspended = true;
 }
 
 void CListeningGlobal::Shutdown ()
@@ -1628,20 +1627,23 @@ bool CListeningGlobal::UnregisterHotKey (HWND pHotKeyWnd)
 
 void CListeningGlobal::RegisterHotKeys ()
 {
-	bool	lGlobalRegistered = false;
-	INT_PTR	lNdx;
-
-	for	(lNdx = 0; lNdx < (INT_PTR)mHotKeyWnds.GetCount(); lNdx++)
+	if	(mAnchor.IsAppActive ())
 	{
-		if	(mHotKeyWnds [lNdx])
+		bool	lGlobalRegistered = false;
+		INT_PTR	lNdx;
+
+		for	(lNdx = 0; lNdx < (INT_PTR)mHotKeyWnds.GetCount(); lNdx++)
 		{
-			RegisterHotKey (mHotKeyWnds [lNdx]);
-		}
-		else
-		if	(!lGlobalRegistered)
-		{
-			RegisterHotKey (NULL);
-			lGlobalRegistered = true;
+			if	(mHotKeyWnds [lNdx])
+			{
+				RegisterHotKey (mHotKeyWnds [lNdx]);
+			}
+			else
+			if	(!lGlobalRegistered)
+			{
+				RegisterHotKey (NULL);
+				lGlobalRegistered = true;
+			}
 		}
 	}
 	mLastHotKey = 0;
@@ -1773,6 +1775,18 @@ void CListeningGlobal::_CharacterActivated (long pActiveCharID, long pInputActiv
 	if	(pInactiveCharID > 0)
 	{
 		SetVoiceCommandClients (pInactiveCharID);
+	}
+}
+
+void CListeningGlobal::_AppActivated (bool pActive)
+{
+	if	(pActive)
+	{
+		Resume ();
+	}
+	else
+	{
+		Suspend ();
 	}
 }
 

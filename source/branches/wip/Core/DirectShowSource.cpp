@@ -469,13 +469,13 @@ HRESULT CDirectShowSource::OnStateChanged (FILTER_STATE pOldState, FILTER_STATE 
 {
 	HRESULT	lResult = CDirectShowFilter::OnStateChanged (pOldState, pNewState);
 
-#ifdef	_LOG_DIRECT_SHOW
+#ifdef	_DEBUG_DIRECT_SHOW
 	if	(
 			(pNewState == State_Stopped)
 		&&	(pOldState != State_Stopped)
 		)
 	{
-		LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Source <Stopped> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+		LogMessage (_DEBUG_DIRECT_SHOW, _T("  [%f] DirectShow Source <Stopped> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 	}
 	else
 	if	(
@@ -483,7 +483,7 @@ HRESULT CDirectShowSource::OnStateChanged (FILTER_STATE pOldState, FILTER_STATE 
 		&&	(pOldState == State_Stopped)
 		)
 	{
-		LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Source <Started> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+		LogMessage (_DEBUG_DIRECT_SHOW, _T("  [%f] DirectShow Source <Started> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 	}
 	else
 	if	(
@@ -491,7 +491,7 @@ HRESULT CDirectShowSource::OnStateChanged (FILTER_STATE pOldState, FILTER_STATE 
 		&&	(pOldState == State_Paused)
 		)
 	{
-		LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Source <Running> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+		LogMessage (_DEBUG_DIRECT_SHOW, _T("  [%f] DirectShow Source <Running> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 	}
 #endif
 	return lResult;
@@ -561,8 +561,8 @@ void CDirectShowSource::OnClockPulse ()
 			mVideoOutPin->EndOutputStream ();
 		}
 
-#ifdef	_LOG_DIRECT_SHOW
-		LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Source <Complete> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+#ifdef	_DEBUG_DIRECT_SHOW
+		LogMessage (_DEBUG_DIRECT_SHOW, _T("  [%f] DirectShow Source <Complete> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 #endif
 		StopClock ();
 	}
@@ -979,13 +979,13 @@ void CDirectShowSource::ConnectSequenceAudio (CAnimationSequence * pAnimationSeq
 		IGraphBuilderPtr lGraphBuilder (mFilterGraph);
 		LogFilterStates (_DEBUG_AUDIO_FILTERS, lGraphBuilder, true, _T("CueSequenceAudio"));
 #endif
-#ifdef	_LOG_DIRECT_SHOW
+#ifdef	_DEBUG_DIRECT_SHOW
 		if	(
 				(pAnimationSequence)
 			&&	(pAnimationSequence->mAudio.GetCount() > 0)
 			)
 		{
-			LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Sounds <%d Ready> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), mAudioOutPins.GetCount(), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+			LogMessage (_DEBUG_DIRECT_SHOW, _T("  [%f] DirectShow Sounds <%d Ready> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), mAudioOutPins.GetCount(), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 		}
 #endif
 	}
@@ -1282,8 +1282,8 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::SegmentDurationChanged ()
 #ifdef	_DEBUG_SAMPLES
 		LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] SegmentDurationChanged [%f - %f] of [%f] Speaking [%d]"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), RefTimeSec(lDuration), CAgentStreamUtils::GetAgentStreamInfo()->GetSpeakingDuration());
 #endif
-#ifdef	_LOG_DIRECT_SHOW
-		LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Source <Ready> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+#ifdef	_DEBUG_DIRECT_SHOW
+		LogMessage (_DEBUG_DIRECT_SHOW, _T("  [%f] DirectShow Source <Ready> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 #endif
 #ifdef	_TRACE_RESOURCES
 		if	(LogIsActive (_TRACE_RESOURCES))

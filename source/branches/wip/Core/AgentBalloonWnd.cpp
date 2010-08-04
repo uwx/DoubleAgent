@@ -66,9 +66,9 @@ const USHORT	CAgentBalloonWnd::mMinPerLine = 8;
 const USHORT	CAgentBalloonWnd::mMaxPerLine = 255;
 const USHORT	CAgentBalloonWnd::mDefPerLine = 32;
 
-UINT			CAgentBalloonWnd::mVoiceStartMsg = RegisterWindowMessage (_T("7781F0DC-B3CD-4ce9-8828-95C4FB56BBE2"));
-UINT			CAgentBalloonWnd::mVoiceEndMsg = RegisterWindowMessage (_T("0BEA4D03-95C6-4c2f-A5BF-EFFE63D24D8F"));
-UINT			CAgentBalloonWnd::mVoiceWordMsg = RegisterWindowMessage (_T("82C73827-F1B8-4223-824B-BC0953892D56"));
+const UINT		CAgentBalloonWnd::mVoiceStartMsg = RegisterWindowMessage (_T("7781F0DC-B3CD-4ce9-8828-95C4FB56BBE2"));
+const UINT		CAgentBalloonWnd::mVoiceEndMsg = RegisterWindowMessage (_T("0BEA4D03-95C6-4c2f-A5BF-EFFE63D24D8F"));
+const UINT		CAgentBalloonWnd::mVoiceWordMsg = RegisterWindowMessage (_T("82C73827-F1B8-4223-824B-BC0953892D56"));
 
 static const int	sSpeechPacingLookAhead = 2;
 
@@ -185,7 +185,7 @@ void CAgentBalloonWnd::OnFinalMessage (HWND)
 #ifdef	_DEBUG
 UINT CAgentBalloonWnd::EnterRecursion () const {return ++mDebugRecursionLevel;}
 UINT CAgentBalloonWnd::ExitRecursion () const {mDebugRecursionLevel=max(mDebugRecursionLevel,1); return --mDebugRecursionLevel;}
-CString CAgentBalloonWnd::RecursionIndent () const {return CAtlString(_T(' '), (int)mDebugRecursionLevel*2);}
+CAtlString CAgentBalloonWnd::RecursionIndent () const {return CAtlString(_T(' '), (int)mDebugRecursionLevel*2);}
 #else
 UINT CAgentBalloonWnd::EnterRecursion () const {return 0;}
 UINT CAgentBalloonWnd::ExitRecursion () const {return 0;}

@@ -51,6 +51,8 @@ public:
 	HRESULT PrepareToSpeak (bool pHighPriority = false);
 	HRESULT Speak (LPCTSTR pMessage, bool pAsync = true);
 	HRESULT Stop ();
+	HRESULT Pause ();
+	HRESULT Resume ();
 
 	tBstrPtr GetVoiceId ();
 	HRESULT GetVoiceId (tBstrPtr & pVoiceId);
@@ -72,6 +74,7 @@ protected:
 	virtual UINT _IsValid () const;
 	virtual bool _IsPrepared () const;
 	virtual bool _IsSpeaking () const;
+	virtual bool _IsPaused () const;
 public:
 	virtual tBstrPtr GetUniqueId ();
 	virtual HRESULT GetUniqueId (tBstrPtr & pUniqueId);
@@ -93,6 +96,7 @@ protected:
 	ULONG		mVoiceStreamNum;
 	SPEVENTENUM	mLastVoiceEvent;
 	bool		mPrepared;
+	bool		mPaused;
 };
 
 #pragma warning (pop)

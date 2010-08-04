@@ -69,6 +69,9 @@
 #define	APIHELP_Svr_Event_DefaultCharacterChange			0x00020013
 #define	APIHELP_Svr_Event_AgentPropertyChange				0x00020014
 #define	APIHELP_Svr_Event_ActiveClientChange				0x00020015
+#define	APIHELP_Svr_Event_SpeechStart						0x00020016
+#define	APIHELP_Svr_Event_SpeechEnd							0x00020017
+#define	APIHELP_Svr_Event_SpeechWord						0x00020018
 
 #define	APIHELP_Svr_Character								0x00030000
 #define	APIHELP_Svr_Character_GetVisible					0x00030001
@@ -164,6 +167,9 @@
 #define	APIHELP_Svr_Character_ListeningStatus				0x0003005B
 #define	APIHELP_Svr_Character_Animations					0x0003005C
 #define	APIHELP_Svr_Character_States						0x0003005D
+#define	APIHELP_Svr_Character_SpeakFormatted				0x0003005E
+#define	APIHELP_Svr_Character_ThinkFormatted				0x0003005F
+#define	APIHELP_Svr_Character_NewFormattedText				0x00030060
 
 #define	APIHELP_Svr_Balloon									0x00040000
 #define	APIHELP_Svr_Balloon_GetEnabled						0x00040001
@@ -222,13 +228,15 @@
 
 #define	APIHELP_Svr_CharacterFiles							0x000E0000
 
-#define	APIHELP_Svr_TTSEngines								0x000F0000
+#define	APIHELP_Svr_FormattedText								0x000F0000
 
-#define	APIHELP_Svr_TTSEngine								0x00100000
+#define	APIHELP_Svr_TTSEngines								0x00100000
 
-#define	APIHELP_Svr_SREngines								0x00100000
+#define	APIHELP_Svr_TTSEngine								0x00110000
 
-#define	APIHELP_Svr_SREngine								0x00110000
+#define	APIHELP_Svr_SREngines								0x00120000
+
+#define	APIHELP_Svr_SREngine								0x00130000
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -282,7 +290,10 @@
 #define	APIHELP_Ctl_Event_ListenComplete					0x01020017
 #define	APIHELP_Ctl_Event_DefaultCharacterChange			0x01020018
 #define	APIHELP_Ctl_Event_AgentPropertyChange				0x01020019
-#define	APIHELP_Ctl_Event_ActiveClientChange				0x01020011
+#define	APIHELP_Ctl_Event_ActiveClientChange				0x01020020
+#define	APIHELP_Ctl_Event_SpeechStart						0x01020021
+#define	APIHELP_Ctl_Event_SpeechEnd							0x01020022
+#define	APIHELP_Ctl_Event_SpeechWord							0x01020023
 
 #define	APIHELP_Ctl_Characters								0x01030000
 #define	APIHELP_Ctl_Characters_Load							0x01030001
@@ -363,6 +374,9 @@
 #define	APIHELP_Ctl_Character_ListeningStatus				0x01040044
 #define	APIHELP_Ctl_Character_Smoothed						0x01040045
 #define	APIHELP_Ctl_Character_SmoothEdges					0x01040046
+#define	APIHELP_Ctl_Character_SpeakFormatted				0x01040047
+#define	APIHELP_Ctl_Character_ThinkFormatted				0x01040048
+#define	APIHELP_Ctl_Character_NewFormattedText				0x01040049
 
 #define	APIHELP_Ctl_Request									0x01050000
 #define	APIHELP_Ctl_Request_ID								0x01050001
@@ -482,28 +496,43 @@
 #define	APIHELP_Ctl_CharacterFiles_DefaultFilePath			0x0110000A
 #define	APIHELP_Ctl_CharacterFiles_DefaultFileName			0x0110000B
 
-#define	APIHELP_Ctl_TTSEngine								0x01110000
-#define	APIHELP_Ctl_TTSEngine_TTSModeID						0x01110001
-#define	APIHELP_Ctl_TTSEngine_DisplayName					0x01110002
-#define	APIHELP_Ctl_TTSEngine_Manufacturer					0x01110003
-#define	APIHELP_Ctl_TTSEngine_GetVersion					0x01110004
-#define	APIHELP_Ctl_TTSEngine_Gender						0x01110005
-#define	APIHELP_Ctl_TTSEngine_LanguageID					0x01110006
-#define	APIHELP_Ctl_TTSEngine_LanguageName					0x01110007
+#define	APIHELP_Ctl_FormattedText							0x01110000
+#define	APIHELP_Ctl_FormattedText_RawText					0x01110001
+#define	APIHELP_Ctl_FormattedText_ParsedText				0x01110002
+#define	APIHELP_Ctl_FormattedText_SpeechText				0x01110003
+#define	APIHELP_Ctl_FormattedText_WordCount					0x01110004
+#define	APIHELP_Ctl_FormattedText_DisplayWord				0x01110005
+#define	APIHELP_Ctl_FormattedText_WordIndex					0x01110006
+#define	APIHELP_Ctl_FormattedText_DisplayText				0x01110007
+#define	APIHELP_Ctl_FormattedText_Parse						0x01110008
+#define	APIHELP_Ctl_FormattedText_Append					0x01110009
 
-#define	APIHELP_Ctl_TTSEngines								0x01120000
+#define	APIHELP_Ctl_TTSEngine								0x01120000
+#define	APIHELP_Ctl_TTSEngine_TTSModeID						0x01120001
+#define	APIHELP_Ctl_TTSEngine_DisplayName					0x01120002
+#define	APIHELP_Ctl_TTSEngine_Manufacturer					0x01120003
+#define	APIHELP_Ctl_TTSEngine_GetVersion					0x01120004
+#define	APIHELP_Ctl_TTSEngine_Gender						0x01120005
+#define	APIHELP_Ctl_TTSEngine_LanguageID					0x01120006
+#define	APIHELP_Ctl_TTSEngine_LanguageName					0x01120007
 
-#define	APIHELP_Ctl_SREngine								0x01130000
-#define	APIHELP_Ctl_SREngine_SRModeID						0x01130001
-#define	APIHELP_Ctl_SREngine_DisplayName					0x01130002
-#define	APIHELP_Ctl_SREngine_Manufacturer					0x01130003
-#define	APIHELP_Ctl_SREngine_GetVersion						0x01130004
-#define	APIHELP_Ctl_SREngine_LanguageID						0x01130005
-#define	APIHELP_Ctl_SREngine_LanguageName					0x01130006
-#define	APIHELP_Ctl_SREngine_LanguageIDs					0x01130007
-#define	APIHELP_Ctl_SREngine_LanguageNames					0x01130008
+#define	APIHELP_Ctl_TTSEngines								0x01130000
+#define	APIHELP_Ctl_TTSEngines_Index						0x01130001
+#define	APIHELP_Ctl_TTSEngines_Count						0x01130002
 
-#define	APIHELP_Ctl_SREngines								0x01140000
+#define	APIHELP_Ctl_SREngine								0x01140000
+#define	APIHELP_Ctl_SREngine_SRModeID						0x01140001
+#define	APIHELP_Ctl_SREngine_DisplayName					0x01140002
+#define	APIHELP_Ctl_SREngine_Manufacturer					0x01140003
+#define	APIHELP_Ctl_SREngine_GetVersion						0x01140004
+#define	APIHELP_Ctl_SREngine_LanguageID						0x01140005
+#define	APIHELP_Ctl_SREngine_LanguageName					0x01140006
+#define	APIHELP_Ctl_SREngine_LanguageIDs					0x01140007
+#define	APIHELP_Ctl_SREngine_LanguageNames					0x01140008
+
+#define	APIHELP_Ctl_SREngines								0x01150000
+#define	APIHELP_Ctl_SREngines_Index							0x01150001
+#define	APIHELP_Ctl_SREngines_Count							0x01150002
 
 /////////////////////////////////////////////////////////////////////////////
 #endif // _DAAPIHELP_H

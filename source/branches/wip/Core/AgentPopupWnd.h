@@ -78,8 +78,6 @@ public:
 	bool SizePopup (const CSize & pSize, long pForCharID, bool pAlwaysNotify = false);
 
 	long QueueMove (long pCharID, const CPoint & pPosition, DWORD pSpeed);
-	CQueuedAction * IsMoveQueued (long pCharID = -1);
-	bool RemoveQueuedMove (long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL, bool pExcludeActive = false);
 
 	bool IsNotifyIconValid () const;
 	bool IsIconVisible () const;
@@ -91,13 +89,11 @@ public:
 	virtual DWORD GetAlphaSmoothing () const;
 protected:
 	virtual bool CanDoAnimationQueue ();
-	virtual bool DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime);
 	virtual void Opened ();
 	virtual void Closing ();
 	virtual void IsLastActive (bool pLastActive);
 	virtual bool ShowQueued (CQueuedShow * pQueuedShow);
 	virtual bool HideQueued (CQueuedHide * pQueuedHide);
-	virtual void AbortQueuedAction (CQueuedAction * pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 	virtual int _PreDoQueue ();
 	virtual int _PostDoQueue ();
 	virtual bool _PreNotify ();
@@ -150,10 +146,7 @@ protected:
 	END_MSG_MAP()
 
 protected:
-	bool DoQueuedMove ();
-	bool DoQueuedMoveCycle (CQueuedMove * pQueuedMove = NULL);
-	void AbortQueuedMove (CQueuedAction * pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
-
+	bool DoQueuedMoveCycle ();
 	void OnIconDblClick (const CPoint & pPoint);
 
 protected:

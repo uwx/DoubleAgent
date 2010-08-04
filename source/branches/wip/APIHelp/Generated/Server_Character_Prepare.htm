@@ -21,8 +21,134 @@
 					<div class="summary">
 				<p>Retrieves the specified animation data for the a remote character.</p>
 			</div>
+					<h4 class="syntax">Syntax</h4>
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">Prepare</em> (<em class="token">Type</em>, <em class="token">Name</em>, <em class="token">Queue</em>, &amp;<em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Prepare</em> (<em class="token">Type</em>, <em class="token">Name</em>, <em class="token">Queue</em>, <em class="keyword">out</em> <em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Prepare</em> (<em class="token">Type</em>, <em class="token">Name</em>, <em class="token">Queue</em>, <em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Prepare</em> <em class="token">Type</em>, <em class="token">Name</em>[, <em class="token">Queue</em>][, <em class="token">RequestID</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Prepare</em> <em class="token">Type</em>, <em class="token">Name</em>[, <em class="token">Queue</em>][, <em class="token">RequestID</em>]</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">ResourceType</em>
+								</td>
+								<td>
+				One of the following members of the <a href="Server_PrepareResourceType.htm" class="see typename">PrepareResourceType Enumeration</a>:
+				<table><tr><td xml:space="preserve">
+0&nbsp;=&nbsp;<em class="keyword">Animation</em>
+</td><td>
+							Download an animation.
+						</td></tr><tr><td xml:space="preserve">
+1&nbsp;=&nbsp;<em class="keyword">State</em>
+</td><td>
+							Download all animations for a state.
+						</td></tr><tr><td xml:space="preserve">
+2&nbsp;=&nbsp;<em class="keyword">Wave</em>
+</td><td>
+							Download a sound file.
+						</td></tr></table>
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Name</em>
+								</td>
+								<td>
+				A <em class="typename">string</em> that indicates the name of the animation resource.
+				<ul><li>For animations, the name is one of those defined for the character when it was authored.</li><li>
+						For states, the name is one of those defined for the character when it was authored. See the<a href="Server_Character_States.htm" class="see keyword">States</a>
+						property for details.
+					</li><li>
+						For audio files, specify the location of the .WAV file. If an incomplete path is specified, it's
+						interpreted as being relative to the location used in the <a href="Server_Server_Load.htm" class="see keyword">Load</a> method.
+					</li><li>
+						You can specify multiple animations and states by separating them with commas. However, you cannot
+						mix types in the same <em class="self keyword">Prepare</em> call.
+					</li></ul>
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Queue</em>
+								</td>
+								<td>
+				A <em class="typename">boolean</em> value specifying whether the Double Agent queues the
+				<em class="self keyword">Prepare</em>, or starts it immediately.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">RequestID</em>
+								</td>
+								<td>
+			An optional unique <em class="typename">numeric</em> value your application can use to track the method's status.
+		</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					If you load a character using the <em class="glossary">HTTP</em> protocol (an <em class="filename">.ACF</em>
+					file), you should use the <em class="self keyword">Prepare</em> method to retrieve animation data before you play the animation.
+					You do not use this method if you loaded the character using the <em class="glossary">UNC</em> protocol (an <em class="filename">.ACS</em>
+					file).
+				</p>
+				<p>
+					Using the <em class="self keyword">Prepare</em> method is <s>not</s> mandatory. If Double Agent requires an
+					animation from an <em class="filename">.ACS</em> file, it will load the file automatically (from the same location
+					the <em class="filename">.ACF</em> file was loaded). However, this may cause unexpected delays when using the
+					<em class="glossary">HTTP</em> protocol.
+				</p>
+			
+				<p>
+					Animation or sound data retrieved with the <em class="self keyword">Prepare</em> method is cached locally. Subsequent calls
+					will check the cache, and if the animation data is already there, the control loads the data directly
+					from the cache. Once loaded, the animation or sound data can be played with the <a href="Server_Character_Play.htm" class="see keyword">Play</a>
+					or <a href="Server_Character_Speak.htm" class="see keyword">Speak</a> methods.
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Server_PrepareResourceType.htm">The PrepareResourceType Enumeration</a><br /><a href="Server_Server_Load.htm">The Load Method</a><br /><a href="Server_Character_Animations.htm">The Animations Property</a><br /><a href="Server_Character_States.htm">The States Property</a><br /><a href="Server_Event_RequestStart.htm">The RequestStart Event</a><br /><a href="Server_Event_RequestComplete.htm">The RequestComplete Event</a></td>
 			</tr>
 		</table>
 	</body>

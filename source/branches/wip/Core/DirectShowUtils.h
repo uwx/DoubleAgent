@@ -241,7 +241,7 @@ _COM_SMARTPTR_TYPEDEF (ISampleGrabber, __uuidof(ISampleGrabber));
 #ifdef	_DEBUG
 
 #include "Registry.h"
-#define	_LOG_DIRECT_SHOW	(GetProfileDebugInt(_T("LogDirectShow"),LogVerbose,true)&0xFFFF|LogHighVolume|LogTimeMs)
+#define	_DEBUG_DIRECT_SHOW	(GetProfileDebugInt(_T("DebugDirectShow"),LogVerbose,true)&0xFFFF|LogHighVolume|LogTimeMs)
 
 #endif
 /////////////////////////////////////////////////////////////////////////////

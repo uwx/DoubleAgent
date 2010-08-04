@@ -93,7 +93,7 @@ long CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition, CVoic
 {
 	long					lRet = 0;
 	CMenuHandle				lMenu;
-	CString					lMenuText;
+	CAtlString				lMenuText;
 	CAgentCharacterWnd *	lOwner;
 	HINSTANCE				lResourceInstance;
 
@@ -319,9 +319,9 @@ bool CDaCmnCommands::RemoveCommand (INT_PTR pCommandNdx)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CString CDaCmnCommands::GetVoiceCommandsCaption () const
+CAtlString CDaCmnCommands::GetVoiceCommandsCaption () const
 {
-	CString	lCaption (mVoiceCaption);
+	CAtlString	lCaption (mVoiceCaption);
 	if	(lCaption.IsEmpty ())
 	{
 		lCaption = mCaption;
@@ -487,7 +487,7 @@ HRESULT CDaCmnCommands::Add (BSTR Caption, BSTR VoiceGrammar, BSTR VoiceCaption,
 		(*CommandID) = 0;
 	}
 
-	if	(lCommand = NewCommand (CString (Caption), CString (VoiceGrammar), CString (VoiceCaption), (Enabled != FALSE), (Visible != FALSE)))
+	if	(lCommand = NewCommand (CAtlString (Caption), CAtlString (VoiceGrammar), CAtlString (VoiceCaption), (Enabled != FALSE), (Visible != FALSE)))
 	{
 		mCommands.Add (lCommand);
 
@@ -516,7 +516,7 @@ HRESULT CDaCmnCommands::Insert (BSTR Caption, BSTR VoiceGrammar, BSTR VoiceCapti
 		(*CommandID) = 0;
 	}
 
-	if	(lCommand = NewCommand (CString (Caption), CString (VoiceGrammar), CString (VoiceCaption), (Enabled != FALSE), (Visible != FALSE)))
+	if	(lCommand = NewCommand (CAtlString (Caption), CAtlString (VoiceGrammar), CAtlString (VoiceCaption), (Enabled != FALSE), (Visible != FALSE)))
 	{
 		lInsertNdx = FindCommand ((USHORT)RefCommandID);
 		if	(lInsertNdx < 0)
@@ -620,8 +620,8 @@ HRESULT CDaCmnCommands::get_Caption (BSTR *Caption)
 
 HRESULT CDaCmnCommands::put_Caption (BSTR Caption)
 {
-	HRESULT	lResult = S_OK;
-	CString	lCaption (Caption);
+	HRESULT		lResult = S_OK;
+	CAtlString	lCaption (Caption);
 
 	if	(lCaption.IsEmpty ())
 	{
@@ -658,8 +658,8 @@ HRESULT CDaCmnCommands::get_VoiceGrammar (BSTR *VoiceGrammar)
 
 HRESULT CDaCmnCommands::put_VoiceGrammar (BSTR VoiceGrammar)
 {
-	HRESULT	lResult = S_OK;
-	CString	lVoiceGrammar (VoiceGrammar);
+	HRESULT		lResult = S_OK;
+	CAtlString	lVoiceGrammar (VoiceGrammar);
 
 	if	(lVoiceGrammar == mVoiceGrammar)
 	{
@@ -751,8 +751,8 @@ HRESULT CDaCmnCommands::get_FontName (BSTR *FontName)
 
 HRESULT CDaCmnCommands::put_FontName (BSTR FontName)
 {
-	HRESULT	lResult = S_OK;
-	CString	lFontName (FontName);
+	HRESULT		lResult = S_OK;
+	CAtlString	lFontName (FontName);
 
 	if	(mFontName == lFontName)
 	{
@@ -816,8 +816,8 @@ HRESULT CDaCmnCommands::get_VoiceCaption (BSTR *VoiceCaption)
 
 HRESULT CDaCmnCommands::put_VoiceCaption (BSTR VoiceCaption)
 {
-	HRESULT	lResult = S_OK;
-	CString	lVoiceCaption (VoiceCaption);
+	HRESULT		lResult = S_OK;
+	CAtlString	lVoiceCaption (VoiceCaption);
 
 	if	(lVoiceCaption == mVoiceCaption)
 	{

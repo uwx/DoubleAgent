@@ -98,7 +98,7 @@
 								</td>
 								<td>
 				A <a href="Control_Request.htm" class="see typename">Request Object</a> your application can
-				used to track the method's status.
+				use to track the method's status.
 			</td>
 							</tr>
 						</table>
@@ -109,16 +109,16 @@
 					the appropriate animation assigned to the <em class="glossary">Moving</em> states.
 				</p>
 				<p class="note"><span class="note">Note:</span> 
+					The <em class="token">Speed</em> parameter's actual effect may vary based on the computer's processor speed
+					and the priority of other tasks running on the system.
+				</p>
+				<p class="note"><span class="note">Note:</span> 
 					If you call <em class="self keyword">MoveTo</em> with a non-zero <em class="token">Speed</em> before the character is
 					shown, it will return a failure status if you assigned a <a href="Control_Request.htm" class="see keyword">Request Object</a>,
 					because the non-zero value indicates that you're attempting to play an animation when the character isn't
 					visible.
 				</p>
-				<p class="note"><span class="note">Note:</span> 
-					The <em class="token">Speed</em> parameter's actual effect may vary based on the computer's processor speed
-					and the priority of other tasks running on the system.
-				</p>
-			</td>
+			<h4 class="seealso">See Also</h4><a href="Control_Event_RequestStart.htm">The RequestStart Event</a><br /><a href="Control_Event_RequestComplete.htm">The RequestComplete Event</a></td>
 			</tr>
 		</table>
 	</body>

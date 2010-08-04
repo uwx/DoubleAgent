@@ -1,0 +1,116 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The SpeakFormatted Method</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h3>The SpeakFormatted Method</h3>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+				<p>Speaks the specified text.</p>
+			</div>
+					<h4 class="syntax">Syntax</h4>
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">SpeakFormatted</em> (<em class="token">FormattedText</em>, &amp;<em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">SpeakFormatted</em> (<em class="token">FormattedText</em>, <em class="keyword">out</em> <em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">SpeakFormatted</em> (<em class="token">FormattedText</em>, <em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">SpeakFormatted</em> <em class="token">FormattedText</em>[, <em class="token">RequestID</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">SpeakFormatted</em> <em class="token">FormattedText</em>[, <em class="token">RequestID</em>]</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">FormattedText</em>
+								</td>
+								<td>
+				A <a href="Server_FormattedText.htm" class="see typename">FormattedText Object</a>
+				object containing the text to be spoken.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">RequestID</em>
+								</td>
+								<td>
+			An optional unique <em class="typename">numeric</em> value your application can use to track the method's status.
+		</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+				<p>
+					This method is the same as the <a href="Server_Character_Speak.htm" class="see keyword">Speak</a> method, except that the input
+					text is already parsed and formatted, and using this method triggers the <a href="Server_Event_SpeechStart.htm" class="see keyword">SpeechStart</a>,
+					<a href="Server_Event_SpeechEnd.htm" class="see keyword">SpeechEnd</a>, and <a href="Server_Event_SpeechWord.htm" class="see keyword">SpeechWord</a> events.
+				</p>
+				<p>
+					Calling the <a href="Server_Character_Speak.htm" class="see keyword">Speak</a> method with a specific text string is equivalent to:
+
+					<ol><li>
+							calling <a href="Server_Character_NewFormattedText.htm" class="see keyword">NewFormattedText</a> to get a <a href="Server_FormattedText.htm" class="see keyword">FormattedText</a>
+							object;
+						</li><li>
+							calling the <a href="Server_FormattedText.htm" class="see keyword">FormattedText</a> object's <a href="Server_FormattedText_Parse.htm" class="see keyword">Parse</a>
+							method with the same text string;
+						</li><li>
+							calling <em class="self keyword">SpeakFormatted</em> with the <a href="Server_FormattedText.htm" class="see keyword">FormattedText</a> object.
+						</li></ol>
+
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Server_FormattedText.htm">The FormattedText Object</a><br /><a href="Server_Event_SpeechStart.htm">The SpeechStart Event</a><br /><a href="Server_Event_SpeechEnd.htm">The SpeechEnd Event</a><br /><a href="Server_Event_SpeechWord.htm">The SpeechWord Event</a><br /><a href="Server_Character_Speak.htm">The Speak Method</a><br /><a href="Server_Character_ThinkFormatted.htm">The ThinkFormatted Method</a><br /><a href="Server_Character_NewFormattedText.htm">The NewFormattedText Method</a></td>
+			</tr>
+		</table>
+	</body>
+</HTML>

@@ -30,14 +30,14 @@ public:
 
 // Attributes
 public:
-	USHORT	mCommandId;
-	bool	mEnabled;
-	bool	mVisible;
-	CString	mCaption;
-	CString	mVoiceGrammar;
-	CString	mVoiceCaption;
-	short	mConfidenceThreshold;
-	CString	mConfidenceText;
+	USHORT		mCommandId;
+	bool		mEnabled;
+	bool		mVisible;
+	CAtlString	mCaption;
+	CAtlString	mVoiceGrammar;
+	CAtlString	mVoiceCaption;
+	short		mConfidenceThreshold;
+	CAtlString	mConfidenceText;
 
 // Operations
 public:

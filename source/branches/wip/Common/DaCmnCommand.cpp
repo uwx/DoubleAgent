@@ -71,8 +71,8 @@ HRESULT CDaCmnCommand::get_Caption (BSTR *Caption)
 
 HRESULT CDaCmnCommand::put_Caption (BSTR Caption)
 {
-	HRESULT	lResult = S_OK;
-	CString	lCaption (Caption);
+	HRESULT		lResult = S_OK;
+	CAtlString	lCaption (Caption);
 
 	if	(lCaption.IsEmpty ())
 	{
@@ -163,8 +163,8 @@ HRESULT CDaCmnCommand::get_VoiceCaption (BSTR *VoiceCaption)
 
 HRESULT CDaCmnCommand::put_VoiceCaption (BSTR VoiceCaption)
 {
-	HRESULT	lResult = S_OK;
-	CString	lVoiceCaption (VoiceCaption);
+	HRESULT		lResult = S_OK;
+	CAtlString	lVoiceCaption (VoiceCaption);
 
 	if	(mVoiceCaption == lVoiceCaption)
 	{
@@ -196,8 +196,8 @@ HRESULT CDaCmnCommand::get_VoiceGrammar (BSTR *VoiceGrammar)
 
 HRESULT CDaCmnCommand::put_VoiceGrammar (BSTR VoiceGrammar)
 {
-	HRESULT	lResult = S_OK;
-	CString	lVoice (VoiceGrammar);
+	HRESULT		lResult = S_OK;
+	CAtlString	lVoice (VoiceGrammar);
 
 	if	(lVoice == mVoiceGrammar)
 	{
@@ -269,8 +269,8 @@ HRESULT CDaCmnCommand::get_ConfidenceText (BSTR *ConfidenceText)
 
 HRESULT CDaCmnCommand::put_ConfidenceText (BSTR ConfidenceText)
 {
-	HRESULT	lResult = S_OK;
-	CString	lConfidenceText (ConfidenceText);
+	HRESULT		lResult = S_OK;
+	CAtlString	lConfidenceText (ConfidenceText);
 
 	if	(mConfidenceText == lConfidenceText)
 	{

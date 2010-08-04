@@ -26,6 +26,7 @@
 #include "DaSvrCommands.h"
 #include "DaSvrAnimationNames.h"
 #include "DaSvrUserInput.h"
+#include "DaSvrFormattedText.h"
 #include "DaSvrTTSEngine.h"
 #include "DaSvrTTSEngines.h"
 #include "DaSvrSREngine.h"
@@ -1065,7 +1066,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Play (BSTR Animation, long *RequestID)
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Play [%s]"), this, max(m_dwRef,-1), mCharID, DebugStr(CString(Animation)));
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Play [%s]"), this, max(m_dwRef,-1), mCharID, DebugStr(CAtlString(Animation)));
 	}
 #endif
 	HRESULT	lResult = CDaCmnCharacter::Play (Animation, RequestID);
@@ -1208,7 +1209,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Think (BSTR Text, long *RequestID)
 		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Think [%s]"), this, max(m_dwRef,-1), mCharID, DebugStr(Text));
 	}
 #endif
-	HRESULT	lResult = CDaCmnCharacter::Think (Text, RequestID);
+	HRESULT	lResult = CDaCmnCharacter::Think (Text, NULL, RequestID);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
 	_AtlModule.TraceCharacterAction (mCharID, _T("Think"), _T("%s\t%d"), EncodeTraceString(Text), (RequestID?*RequestID:0));
@@ -1579,14 +1580,14 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Speak (BSTR Text, BSTR Url, long *Requ
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Speak [%s] [%s]"), this, max(m_dwRef,-1), mCharID, DebugStr(CString(Text)), DebugStr(CString(Url)));
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Speak [%s] [%s]"), this, max(m_dwRef,-1), mCharID, DebugStr(CAtlString(Text)), DebugStr(CAtlString(Url)));
 	}
 #endif
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		_AtlModule.TraceCharacterAction (mCharID, _T("PreSpeak"), _T("%s\t%s"), EncodeTraceString(Text), DebugStr(Url));
 #endif
 
-	HRESULT	lResult = CDaCmnCharacter::Speak (Text, Url, RequestID);
+	HRESULT	lResult = CDaCmnCharacter::Speak (Text, NULL, Url, RequestID);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
 	_AtlModule.TraceCharacterAction (mCharID, _T("Speak"), _T("%s\t%s\t%d"), EncodeTraceString(Text), DebugStr(Url), (RequestID?*RequestID:0));
@@ -2574,7 +2575,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::put_IconIdentity (BSTR IconIdentity)
 	HRESULT	lResult = CDaCmnCharacter::put_IconIdentity (IconIdentity);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (mCharID, _T("put_IconIdentity"), _T("%s"), CString(IconIdentity));
+	_AtlModule.TraceCharacterAction (mCharID, _T("put_IconIdentity"), _T("%s"), CAtlString(IconIdentity));
 #endif
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -2618,7 +2619,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::put_IconTip (BSTR IconTip)
 	HRESULT	lResult = CDaCmnCharacter::put_IconTip (IconTip);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (mCharID, _T("put_IconTip"), _T("%s"), CString(IconTip));
+	_AtlModule.TraceCharacterAction (mCharID, _T("put_IconTip"), _T("%s"), CAtlString(IconTip));
 #endif
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -2626,6 +2627,118 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::put_IconTip (BSTR IconTip)
 	if	(LogIsActive (_LOG_RESULTS))
 	{
 		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::put_IconTip"), this, max(m_dwRef,-1), mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::SpeakFormatted (IDaSvrFormattedText * FormattedText, long *RequestID)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::SpeakFormatted"), this, max(m_dwRef,-1), mCharID);
+	}
+#endif
+	HRESULT					lResult = E_INVALIDARG;
+	DaSvrFormattedText *	lFormattedText = NULL;
+
+	try
+	{
+		lFormattedText = dynamic_cast <CComObject <DaSvrFormattedText> *> (FormattedText);
+	}
+	catch AnyExceptionSilent
+
+	if	(lFormattedText)
+	{
+		lResult = CDaCmnCharacter::Speak (NULL, &lFormattedText->mText, NULL, RequestID);
+
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("SpeakFormatted"), _T("%s\t%d"), EncodeTraceString(lFormattedText->GetOriginal()), (RequestID?*RequestID:0));
+#endif
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::SpeakFormatted"), this, max(m_dwRef,-1), mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::ThinkFormatted (IDaSvrFormattedText * FormattedText, long *RequestID)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::ThinkFormatted"), this, max(m_dwRef,-1), mCharID);
+	}
+#endif
+	HRESULT					lResult = E_INVALIDARG;
+	DaSvrFormattedText *	lFormattedText = NULL;
+
+	try
+	{
+		lFormattedText = dynamic_cast <CComObject <DaSvrFormattedText> *> (FormattedText);
+	}
+	catch AnyExceptionSilent
+
+	if	(lFormattedText)
+	{
+		lResult = CDaCmnCharacter::Think (NULL, &lFormattedText->mText, RequestID);
+
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("ThinkFormatted"), _T("%s\t%d"), EncodeTraceString(lFormattedText->GetOriginal()), (RequestID?*RequestID:0));
+#endif
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::ThinkFormatted"), this, max(m_dwRef,-1), mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::NewFormattedText (IDaSvrFormattedText **FormattedText)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::NewFormattedText"), this, max(m_dwRef,-1), mCharID);
+	}
+#endif
+	HRESULT									lResult = E_POINTER;
+	tPtr <CComObject <DaSvrFormattedText> >	lObject;
+	IDaSvrFormattedTextPtr					lInterface;
+
+	if	(FormattedText)
+	{
+		(*FormattedText) = NULL;
+
+		if	(
+				(SUCCEEDED (lResult = CComObject <DaSvrFormattedText>::CreateInstance (lObject.Free())))
+			&&	(SUCCEEDED (lResult = lObject->Initialize (lObject->GetControllingUnknown(), GetSapiVoice (true))))
+			)
+		{
+			lInterface = lObject.Detach ();
+			(*FormattedText) = lInterface.Detach ();
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::NewFormattedText"), this, max(m_dwRef,-1), mCharID);
 	}
 #endif
 	return lResult;

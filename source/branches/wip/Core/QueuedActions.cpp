@@ -25,6 +25,11 @@
 //////////////////////////////////////////////////////////////////////
 
 CQueuedActions::CQueuedActions ()
+:	mTimer (0),
+	mTime (0),
+	mTimeMin (10),
+	mTimeMax (200),
+	mTimeDefault (100)
 {
 }
 

@@ -343,6 +343,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Common\AgentTextObject.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\AgentWnd.cpp"
 				>
 			</File>
@@ -472,6 +476,10 @@
 			</File>
 			<File
 				RelativePath=".\Core\QueuedPrepare.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Core\QueuedSpeech.cpp"
 				>
 			</File>
 			<File
@@ -670,6 +678,10 @@
 			</File>
 			<File
 				RelativePath=".\Core\AgentText.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\AgentTextObject.h"
 				>
 			</File>
 			<File

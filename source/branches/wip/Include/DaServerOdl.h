@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Tue Jul 27 01:50:52 2010
+/* at Tue Aug 03 19:00:51 2010
  */
 /* Compiler settings for .\Server\DaServer.odl:
-    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
+    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -119,6 +119,12 @@ typedef interface IDaSvrCharacterFiles IDaSvrCharacterFiles;
 #endif 	/* __IDaSvrCharacterFiles_FWD_DEFINED__ */
 
 
+#ifndef __IDaSvrFormattedText_FWD_DEFINED__
+#define __IDaSvrFormattedText_FWD_DEFINED__
+typedef interface IDaSvrFormattedText IDaSvrFormattedText;
+#endif 	/* __IDaSvrFormattedText_FWD_DEFINED__ */
+
+
 #ifndef __IDaSvrTTSEngine_FWD_DEFINED__
 #define __IDaSvrTTSEngine_FWD_DEFINED__
 typedef interface IDaSvrTTSEngine IDaSvrTTSEngine;
@@ -197,10 +203,16 @@ typedef interface IDaSvrCommands2 IDaSvrCommands2;
 #endif 	/* __IDaSvrCommands2_FWD_DEFINED__ */
 
 
-#ifndef ___DaSvrEvents_FWD_DEFINED__
-#define ___DaSvrEvents_FWD_DEFINED__
-typedef interface _DaSvrEvents _DaSvrEvents;
-#endif 	/* ___DaSvrEvents_FWD_DEFINED__ */
+#ifndef __IDaSvrNotifySink2_FWD_DEFINED__
+#define __IDaSvrNotifySink2_FWD_DEFINED__
+typedef interface IDaSvrNotifySink2 IDaSvrNotifySink2;
+#endif 	/* __IDaSvrNotifySink2_FWD_DEFINED__ */
+
+
+#ifndef ___DaSvrEvents2_FWD_DEFINED__
+#define ___DaSvrEvents2_FWD_DEFINED__
+typedef interface _DaSvrEvents2 _DaSvrEvents2;
+#endif 	/* ___DaSvrEvents2_FWD_DEFINED__ */
 
 
 #ifndef __DaServer_FWD_DEFINED__
@@ -359,6 +371,18 @@ typedef struct DaSvrCharacterFiles DaSvrCharacterFiles;
 #endif 	/* __DaSvrCharacterFiles_FWD_DEFINED__ */
 
 
+#ifndef __DaSvrFormattedText_FWD_DEFINED__
+#define __DaSvrFormattedText_FWD_DEFINED__
+
+#ifdef __cplusplus
+typedef class DaSvrFormattedText DaSvrFormattedText;
+#else
+typedef struct DaSvrFormattedText DaSvrFormattedText;
+#endif /* __cplusplus */
+
+#endif 	/* __DaSvrFormattedText_FWD_DEFINED__ */
+
+
 #ifndef __DaSvrTTSEngine_FWD_DEFINED__
 #define __DaSvrTTSEngine_FWD_DEFINED__
 
@@ -446,6 +470,8 @@ extern "C"{
 
 
 
+
+
 #ifndef _DA_COMMON_TYPES_
 #define _DA_COMMON_TYPES_
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E569-A208-11DE-ABF2-002421116FB2") 
@@ -471,7 +497,10 @@ typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56B-A208-11DE-ABF2-0024211
 enum ActiveStateType
     {	ActiveState_Inactive	= 0,
 	ActiveState_Active	= 1,
-	ActiveState_InputActive	= 2
+	ActiveState_InputActive	= 2,
+	ActiveState_Suspended	= 4,
+	ActiveState_Suspended_Active	= 5,
+	ActiveState_Suspended_InputActive	= 6
     } 	ActiveStateType;
 
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56C-A208-11DE-ABF2-002421116FB2") 
@@ -795,6 +824,12 @@ enum FilesFilterFlags
 
 #define	DISPID_IAgentNotifySinkEx_ActiveClientChange	( 0x60030004 )
 
+#define	DISPID_IDaSvrNotifySink2_SpeechStart	( 0x60030005 )
+
+#define	DISPID_IDaSvrNotifySink2_SpeechEnd	( 0x60030006 )
+
+#define	DISPID_IDaSvrNotifySink2_SpeechWord	( 0x60030007 )
+
 #define	DISPID_IAgentCharacter_GetVisible	( 0x60020000 )
 
 #define	DISPID_IAgentCharacter_SetPosition	( 0x60020001 )
@@ -980,6 +1015,12 @@ enum FilesFilterFlags
 #define	DISPID_IDaSvrCharacter2_Animations	( 0x60040027 )
 
 #define	DISPID_IDaSvrCharacter2_States	( 0x60040028 )
+
+#define	DISPID_IDaSvrCharacter2_SpeakFormatted	( 0x60040030 )
+
+#define	DISPID_IDaSvrCharacter2_ThinkFormatted	( 0x60040031 )
+
+#define	DISPID_IDaSvrCharacter2_NewFormattedText	( 0x60040032 )
 
 #define	DISPID_IAgentBalloon_GetEnabled	( 0x60020000 )
 
@@ -1292,6 +1333,24 @@ enum FilesFilterFlags
 #define	DISPID_IDaSvrCharacterFiles_DefaultFilePath	( 0x60020004 )
 
 #define	DISPID_IDaSvrCharacterFiles_DefaultFileName	( 0x60020005 )
+
+#define	DISPID_IDaSvrFormattedText_RawText	( DISPID_VALUE )
+
+#define	DISPID_IDaSvrFormattedText_ParsedText	( 0x60020001 )
+
+#define	DISPID_IDaSvrFormattedText_SpeechText	( 0x60020002 )
+
+#define	DISPID_IDaSvrFormattedText_WordCount	( 0x60020003 )
+
+#define	DISPID_IDaSvrFormattedText_DisplayWord	( 0x60020004 )
+
+#define	DISPID_IDaSvrFormattedText_WordIndex	( 0x60020005 )
+
+#define	DISPID_IDaSvrFormattedText_DisplayText	( 0x60020006 )
+
+#define	DISPID_IDaSvrFormattedText_Parse	( 0x60020007 )
+
+#define	DISPID_IDaSvrFormattedText_Append	( 0x60020008 )
 
 #define	DISPID_IDaSvrTTSEngine_TTSModeID	( DISPID_VALUE )
 
@@ -4697,6 +4756,219 @@ EXTERN_C const IID IID_IDaSvrCharacterFiles;
 #endif 	/* __IDaSvrCharacterFiles_INTERFACE_DEFINED__ */
 
 
+#ifndef __IDaSvrFormattedText_INTERFACE_DEFINED__
+#define __IDaSvrFormattedText_INTERFACE_DEFINED__
+
+/* interface IDaSvrFormattedText */
+/* [object][helpcontext][nonextensible][oleautomation][dual][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaSvrFormattedText;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E52F-A208-11DE-ABF2-002421116FB2")
+    IDaSvrFormattedText : public IDispatch
+    {
+    public:
+        virtual /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_RawText( 
+            /* [retval][out] */ BSTR *RawText) = 0;
+        
+        virtual /* [defaultbind][displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_RawText( 
+            /* [in] */ BSTR RawText) = 0;
+        
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ParsedText( 
+            /* [retval][out] */ BSTR *ParsedText) = 0;
+        
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SpeechText( 
+            /* [retval][out] */ BSTR *SpeechText) = 0;
+        
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_WordCount( 
+            /* [retval][out] */ long *WordCount) = 0;
+        
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_DisplayWord( 
+            /* [in] */ long WordIndex,
+            /* [retval][out] */ BSTR *DisplayWord) = 0;
+        
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_WordIndex( 
+            /* [retval][out] */ long *WordIndex) = 0;
+        
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_DisplayText( 
+            /* [retval][out] */ BSTR *DisplayText) = 0;
+        
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Parse( 
+            /* [in] */ BSTR RawText) = 0;
+        
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Append( 
+            /* [in] */ IDaSvrFormattedText *FormattedText) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaSvrFormattedTextVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaSvrFormattedText * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaSvrFormattedText * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaSvrFormattedText * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaSvrFormattedText * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaSvrFormattedText * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaSvrFormattedText * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaSvrFormattedText * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_RawText )( 
+            IDaSvrFormattedText * This,
+            /* [retval][out] */ BSTR *RawText);
+        
+        /* [defaultbind][displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_RawText )( 
+            IDaSvrFormattedText * This,
+            /* [in] */ BSTR RawText);
+        
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ParsedText )( 
+            IDaSvrFormattedText * This,
+            /* [retval][out] */ BSTR *ParsedText);
+        
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SpeechText )( 
+            IDaSvrFormattedText * This,
+            /* [retval][out] */ BSTR *SpeechText);
+        
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_WordCount )( 
+            IDaSvrFormattedText * This,
+            /* [retval][out] */ long *WordCount);
+        
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayWord )( 
+            IDaSvrFormattedText * This,
+            /* [in] */ long WordIndex,
+            /* [retval][out] */ BSTR *DisplayWord);
+        
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_WordIndex )( 
+            IDaSvrFormattedText * This,
+            /* [retval][out] */ long *WordIndex);
+        
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayText )( 
+            IDaSvrFormattedText * This,
+            /* [retval][out] */ BSTR *DisplayText);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Parse )( 
+            IDaSvrFormattedText * This,
+            /* [in] */ BSTR RawText);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Append )( 
+            IDaSvrFormattedText * This,
+            /* [in] */ IDaSvrFormattedText *FormattedText);
+        
+        END_INTERFACE
+    } IDaSvrFormattedTextVtbl;
+
+    interface IDaSvrFormattedText
+    {
+        CONST_VTBL struct IDaSvrFormattedTextVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaSvrFormattedText_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaSvrFormattedText_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaSvrFormattedText_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaSvrFormattedText_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaSvrFormattedText_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaSvrFormattedText_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaSvrFormattedText_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaSvrFormattedText_get_RawText(This,RawText)	\
+    ( (This)->lpVtbl -> get_RawText(This,RawText) ) 
+
+#define IDaSvrFormattedText_put_RawText(This,RawText)	\
+    ( (This)->lpVtbl -> put_RawText(This,RawText) ) 
+
+#define IDaSvrFormattedText_get_ParsedText(This,ParsedText)	\
+    ( (This)->lpVtbl -> get_ParsedText(This,ParsedText) ) 
+
+#define IDaSvrFormattedText_get_SpeechText(This,SpeechText)	\
+    ( (This)->lpVtbl -> get_SpeechText(This,SpeechText) ) 
+
+#define IDaSvrFormattedText_get_WordCount(This,WordCount)	\
+    ( (This)->lpVtbl -> get_WordCount(This,WordCount) ) 
+
+#define IDaSvrFormattedText_get_DisplayWord(This,WordIndex,DisplayWord)	\
+    ( (This)->lpVtbl -> get_DisplayWord(This,WordIndex,DisplayWord) ) 
+
+#define IDaSvrFormattedText_get_WordIndex(This,WordIndex)	\
+    ( (This)->lpVtbl -> get_WordIndex(This,WordIndex) ) 
+
+#define IDaSvrFormattedText_get_DisplayText(This,DisplayText)	\
+    ( (This)->lpVtbl -> get_DisplayText(This,DisplayText) ) 
+
+#define IDaSvrFormattedText_Parse(This,RawText)	\
+    ( (This)->lpVtbl -> Parse(This,RawText) ) 
+
+#define IDaSvrFormattedText_Append(This,FormattedText)	\
+    ( (This)->lpVtbl -> Append(This,FormattedText) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaSvrFormattedText_INTERFACE_DEFINED__ */
+
+
 #ifndef __IDaSvrTTSEngine_INTERFACE_DEFINED__
 #define __IDaSvrTTSEngine_INTERFACE_DEFINED__
 
@@ -5775,6 +6047,17 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_IconTip( 
             /* [in] */ BSTR IconTip) = 0;
         
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SpeakFormatted( 
+            /* [in] */ IDaSvrFormattedText *FormattedText,
+            /* [out] */ long *RequestID) = 0;
+        
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE ThinkFormatted( 
+            /* [in] */ IDaSvrFormattedText *FormattedText,
+            /* [out] */ long *RequestID) = 0;
+        
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE NewFormattedText( 
+            /* [retval][out] */ IDaSvrFormattedText **FormattedText) = 0;
+        
         virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSEngine( 
             /* [defaultvalue][in] */ VARIANT_BOOL GetDefault,
             /* [retval][out] */ IDaSvrTTSEngine **TTSEngine) = 0;
@@ -6239,6 +6522,20 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             IDaSvrCharacter2 * This,
             /* [in] */ BSTR IconTip);
         
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SpeakFormatted )( 
+            IDaSvrCharacter2 * This,
+            /* [in] */ IDaSvrFormattedText *FormattedText,
+            /* [out] */ long *RequestID);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ThinkFormatted )( 
+            IDaSvrCharacter2 * This,
+            /* [in] */ IDaSvrFormattedText *FormattedText,
+            /* [out] */ long *RequestID);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *NewFormattedText )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ IDaSvrFormattedText **FormattedText);
+        
         /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSEngine )( 
             IDaSvrCharacter2 * This,
             /* [defaultvalue][in] */ VARIANT_BOOL GetDefault,
@@ -6636,6 +6933,15 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
 
 #define IDaSvrCharacter2_put_IconTip(This,IconTip)	\
     ( (This)->lpVtbl -> put_IconTip(This,IconTip) ) 
+
+#define IDaSvrCharacter2_SpeakFormatted(This,FormattedText,RequestID)	\
+    ( (This)->lpVtbl -> SpeakFormatted(This,FormattedText,RequestID) ) 
+
+#define IDaSvrCharacter2_ThinkFormatted(This,FormattedText,RequestID)	\
+    ( (This)->lpVtbl -> ThinkFormatted(This,FormattedText,RequestID) ) 
+
+#define IDaSvrCharacter2_NewFormattedText(This,FormattedText)	\
+    ( (This)->lpVtbl -> NewFormattedText(This,FormattedText) ) 
 
 #define IDaSvrCharacter2_get_TTSEngine(This,GetDefault,TTSEngine)	\
     ( (This)->lpVtbl -> get_TTSEngine(This,GetDefault,TTSEngine) ) 
@@ -9121,52 +9427,335 @@ EXTERN_C const IID IID_IDaSvrCommands2;
 #endif 	/* __IDaSvrCommands2_INTERFACE_DEFINED__ */
 
 
-#ifndef ___DaSvrEvents_DISPINTERFACE_DEFINED__
-#define ___DaSvrEvents_DISPINTERFACE_DEFINED__
+#ifndef __IDaSvrNotifySink2_INTERFACE_DEFINED__
+#define __IDaSvrNotifySink2_INTERFACE_DEFINED__
 
-/* dispinterface _DaSvrEvents */
-/* [helpcontext][hidden][uuid] */ 
+/* interface IDaSvrNotifySink2 */
+/* [object][helpcontext][nonextensible][oleautomation][uuid] */ 
 
 
-EXTERN_C const IID DIID__DaSvrEvents;
+EXTERN_C const IID IID_IDaSvrNotifySink2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-
-    MIDL_INTERFACE("1147E52E-A208-11DE-ABF2-002421116FB2")
-    _DaSvrEvents : public IDispatch
+    
+    MIDL_INTERFACE("1147E571-A208-11DE-ABF2-002421116FB2")
+    IDaSvrNotifySink2 : public IDaSvrNotifySink
     {
+    public:
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SpeechStart( 
+            /* [in] */ long CharacterID,
+            /* [in] */ IDaSvrFormattedText *FormattedText) = 0;
+        
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SpeechEnd( 
+            /* [in] */ long CharacterID,
+            /* [in] */ IDaSvrFormattedText *FormattedText,
+            /* [in] */ VARIANT_BOOL Stopped) = 0;
+        
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SpeechWord( 
+            /* [in] */ long CharacterID,
+            /* [in] */ IDaSvrFormattedText *FormattedText,
+            /* [in] */ long WordIndex) = 0;
+        
     };
     
 #else 	/* C style interface */
 
-    typedef struct _DaSvrEventsVtbl
+    typedef struct IDaSvrNotifySink2Vtbl
     {
         BEGIN_INTERFACE
         
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            _DaSvrEvents * This,
+            IDaSvrNotifySink2 * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            _DaSvrEvents * This);
+            IDaSvrNotifySink2 * This);
         
         ULONG ( STDMETHODCALLTYPE *Release )( 
-            _DaSvrEvents * This);
+            IDaSvrNotifySink2 * This);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Command )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long CommandID,
+            /* [in] */ IDaSvrUserInput2 *UserInput);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ActivateInputState )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long CharacterID,
+            /* [in] */ long Activated);
+        
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Restart )( 
+            IDaSvrNotifySink2 * This);
+        
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Shutdown )( 
+            IDaSvrNotifySink2 * This);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *VisibleState )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long CharacterID,
+            /* [in] */ long Visible,
+            /* [in] */ long Cause);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Click )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long CharacterID,
+            /* [in] */ short Keys,
+            /* [in] */ long X,
+            /* [in] */ long Y);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DblClick )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long CharacterID,
+            /* [in] */ short Keys,
+            /* [in] */ long X,
+            /* [in] */ long Y);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DragStart )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long CharacterID,
+            /* [in] */ short Keys,
+            /* [in] */ long X,
+            /* [in] */ long Y);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DragComplete )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long CharacterID,
+            /* [in] */ short Keys,
+            /* [in] */ long X,
+            /* [in] */ long Y);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RequestStart )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long RequestID);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RequestComplete )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long RequestID,
+            /* [in] */ long Result);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *BookMark )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long BookMarkID);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Idle )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long CharacterID,
+            /* [in] */ long Start);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Move )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long CharacterID,
+            /* [in] */ long X,
+            /* [in] */ long Y,
+            /* [in] */ long Cause);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Size )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long CharacterID,
+            /* [in] */ long Width,
+            /* [in] */ long Height);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *BalloonVisibleState )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long CharacterID,
+            /* [in] */ long Visible);
+        
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *HelpComplete )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long CharacterID,
+            /* [in] */ long CommandID,
+            /* [in] */ long Cause);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ListeningState )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long CharacterID,
+            /* [in] */ long Listening,
+            /* [in] */ long Cause);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DefaultCharacterChange )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ BSTR CharGUID);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *AgentPropertyChange )( 
+            IDaSvrNotifySink2 * This);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ActiveClientChange )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long CharacterID,
+            /* [in] */ long Status);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SpeechStart )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long CharacterID,
+            /* [in] */ IDaSvrFormattedText *FormattedText);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SpeechEnd )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long CharacterID,
+            /* [in] */ IDaSvrFormattedText *FormattedText,
+            /* [in] */ VARIANT_BOOL Stopped);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SpeechWord )( 
+            IDaSvrNotifySink2 * This,
+            /* [in] */ long CharacterID,
+            /* [in] */ IDaSvrFormattedText *FormattedText,
+            /* [in] */ long WordIndex);
+        
+        END_INTERFACE
+    } IDaSvrNotifySink2Vtbl;
+
+    interface IDaSvrNotifySink2
+    {
+        CONST_VTBL struct IDaSvrNotifySink2Vtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaSvrNotifySink2_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaSvrNotifySink2_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaSvrNotifySink2_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaSvrNotifySink2_Command(This,CommandID,UserInput)	\
+    ( (This)->lpVtbl -> Command(This,CommandID,UserInput) ) 
+
+#define IDaSvrNotifySink2_ActivateInputState(This,CharacterID,Activated)	\
+    ( (This)->lpVtbl -> ActivateInputState(This,CharacterID,Activated) ) 
+
+#define IDaSvrNotifySink2_Restart(This)	\
+    ( (This)->lpVtbl -> Restart(This) ) 
+
+#define IDaSvrNotifySink2_Shutdown(This)	\
+    ( (This)->lpVtbl -> Shutdown(This) ) 
+
+#define IDaSvrNotifySink2_VisibleState(This,CharacterID,Visible,Cause)	\
+    ( (This)->lpVtbl -> VisibleState(This,CharacterID,Visible,Cause) ) 
+
+#define IDaSvrNotifySink2_Click(This,CharacterID,Keys,X,Y)	\
+    ( (This)->lpVtbl -> Click(This,CharacterID,Keys,X,Y) ) 
+
+#define IDaSvrNotifySink2_DblClick(This,CharacterID,Keys,X,Y)	\
+    ( (This)->lpVtbl -> DblClick(This,CharacterID,Keys,X,Y) ) 
+
+#define IDaSvrNotifySink2_DragStart(This,CharacterID,Keys,X,Y)	\
+    ( (This)->lpVtbl -> DragStart(This,CharacterID,Keys,X,Y) ) 
+
+#define IDaSvrNotifySink2_DragComplete(This,CharacterID,Keys,X,Y)	\
+    ( (This)->lpVtbl -> DragComplete(This,CharacterID,Keys,X,Y) ) 
+
+#define IDaSvrNotifySink2_RequestStart(This,RequestID)	\
+    ( (This)->lpVtbl -> RequestStart(This,RequestID) ) 
+
+#define IDaSvrNotifySink2_RequestComplete(This,RequestID,Result)	\
+    ( (This)->lpVtbl -> RequestComplete(This,RequestID,Result) ) 
+
+#define IDaSvrNotifySink2_BookMark(This,BookMarkID)	\
+    ( (This)->lpVtbl -> BookMark(This,BookMarkID) ) 
+
+#define IDaSvrNotifySink2_Idle(This,CharacterID,Start)	\
+    ( (This)->lpVtbl -> Idle(This,CharacterID,Start) ) 
+
+#define IDaSvrNotifySink2_Move(This,CharacterID,X,Y,Cause)	\
+    ( (This)->lpVtbl -> Move(This,CharacterID,X,Y,Cause) ) 
+
+#define IDaSvrNotifySink2_Size(This,CharacterID,Width,Height)	\
+    ( (This)->lpVtbl -> Size(This,CharacterID,Width,Height) ) 
+
+#define IDaSvrNotifySink2_BalloonVisibleState(This,CharacterID,Visible)	\
+    ( (This)->lpVtbl -> BalloonVisibleState(This,CharacterID,Visible) ) 
+
+#define IDaSvrNotifySink2_HelpComplete(This,CharacterID,CommandID,Cause)	\
+    ( (This)->lpVtbl -> HelpComplete(This,CharacterID,CommandID,Cause) ) 
+
+#define IDaSvrNotifySink2_ListeningState(This,CharacterID,Listening,Cause)	\
+    ( (This)->lpVtbl -> ListeningState(This,CharacterID,Listening,Cause) ) 
+
+#define IDaSvrNotifySink2_DefaultCharacterChange(This,CharGUID)	\
+    ( (This)->lpVtbl -> DefaultCharacterChange(This,CharGUID) ) 
+
+#define IDaSvrNotifySink2_AgentPropertyChange(This)	\
+    ( (This)->lpVtbl -> AgentPropertyChange(This) ) 
+
+#define IDaSvrNotifySink2_ActiveClientChange(This,CharacterID,Status)	\
+    ( (This)->lpVtbl -> ActiveClientChange(This,CharacterID,Status) ) 
+
+
+#define IDaSvrNotifySink2_SpeechStart(This,CharacterID,FormattedText)	\
+    ( (This)->lpVtbl -> SpeechStart(This,CharacterID,FormattedText) ) 
+
+#define IDaSvrNotifySink2_SpeechEnd(This,CharacterID,FormattedText,Stopped)	\
+    ( (This)->lpVtbl -> SpeechEnd(This,CharacterID,FormattedText,Stopped) ) 
+
+#define IDaSvrNotifySink2_SpeechWord(This,CharacterID,FormattedText,WordIndex)	\
+    ( (This)->lpVtbl -> SpeechWord(This,CharacterID,FormattedText,WordIndex) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaSvrNotifySink2_INTERFACE_DEFINED__ */
+
+
+#ifndef ___DaSvrEvents2_DISPINTERFACE_DEFINED__
+#define ___DaSvrEvents2_DISPINTERFACE_DEFINED__
+
+/* dispinterface _DaSvrEvents2 */
+/* [helpcontext][hidden][uuid] */ 
+
+
+EXTERN_C const IID DIID__DaSvrEvents2;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+
+    MIDL_INTERFACE("1147E52E-A208-11DE-ABF2-002421116FB2")
+    _DaSvrEvents2 : public IDispatch
+    {
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct _DaSvrEvents2Vtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            _DaSvrEvents2 * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            _DaSvrEvents2 * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            _DaSvrEvents2 * This);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
-            _DaSvrEvents * This,
+            _DaSvrEvents2 * This,
             /* [out] */ UINT *pctinfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
-            _DaSvrEvents * This,
+            _DaSvrEvents2 * This,
             /* [in] */ UINT iTInfo,
             /* [in] */ LCID lcid,
             /* [out] */ ITypeInfo **ppTInfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
-            _DaSvrEvents * This,
+            _DaSvrEvents2 * This,
             /* [in] */ REFIID riid,
             /* [size_is][in] */ LPOLESTR *rgszNames,
             /* [range][in] */ UINT cNames,
@@ -9174,7 +9763,7 @@ EXTERN_C const IID DIID__DaSvrEvents;
             /* [size_is][out] */ DISPID *rgDispId);
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
-            _DaSvrEvents * This,
+            _DaSvrEvents2 * This,
             /* [in] */ DISPID dispIdMember,
             /* [in] */ REFIID riid,
             /* [in] */ LCID lcid,
@@ -9185,11 +9774,11 @@ EXTERN_C const IID DIID__DaSvrEvents;
             /* [out] */ UINT *puArgErr);
         
         END_INTERFACE
-    } _DaSvrEventsVtbl;
+    } _DaSvrEvents2Vtbl;
 
-    interface _DaSvrEvents
+    interface _DaSvrEvents2
     {
-        CONST_VTBL struct _DaSvrEventsVtbl *lpVtbl;
+        CONST_VTBL struct _DaSvrEvents2Vtbl *lpVtbl;
     };
 
     
@@ -9197,26 +9786,26 @@ EXTERN_C const IID DIID__DaSvrEvents;
 #ifdef COBJMACROS
 
 
-#define _DaSvrEvents_QueryInterface(This,riid,ppvObject)	\
+#define _DaSvrEvents2_QueryInterface(This,riid,ppvObject)	\
     ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
 
-#define _DaSvrEvents_AddRef(This)	\
+#define _DaSvrEvents2_AddRef(This)	\
     ( (This)->lpVtbl -> AddRef(This) ) 
 
-#define _DaSvrEvents_Release(This)	\
+#define _DaSvrEvents2_Release(This)	\
     ( (This)->lpVtbl -> Release(This) ) 
 
 
-#define _DaSvrEvents_GetTypeInfoCount(This,pctinfo)	\
+#define _DaSvrEvents2_GetTypeInfoCount(This,pctinfo)	\
     ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
 
-#define _DaSvrEvents_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+#define _DaSvrEvents2_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
     ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
 
-#define _DaSvrEvents_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+#define _DaSvrEvents2_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
     ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
 
-#define _DaSvrEvents_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+#define _DaSvrEvents2_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 #endif /* COBJMACROS */
@@ -9225,7 +9814,7 @@ EXTERN_C const IID DIID__DaSvrEvents;
 #endif 	/* C style interface */
 
 
-#endif 	/* ___DaSvrEvents_DISPINTERFACE_DEFINED__ */
+#endif 	/* ___DaSvrEvents2_DISPINTERFACE_DEFINED__ */
 
 
 EXTERN_C const CLSID CLSID_DaServer;
@@ -9330,6 +9919,14 @@ EXTERN_C const CLSID CLSID_DaSvrCharacterFiles;
 
 class DECLSPEC_UUID("1147E524-A208-11DE-ABF2-002421116FB2")
 DaSvrCharacterFiles;
+#endif
+
+EXTERN_C const CLSID CLSID_DaSvrFormattedText;
+
+#ifdef __cplusplus
+
+class DECLSPEC_UUID("1147E570-A208-11DE-ABF2-002421116FB2")
+DaSvrFormattedText;
 #endif
 
 EXTERN_C const CLSID CLSID_DaSvrTTSEngine;

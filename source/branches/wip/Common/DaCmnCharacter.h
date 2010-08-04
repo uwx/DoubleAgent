@@ -84,7 +84,7 @@ public:
 	HRESULT StartListening (bool pManual);
 	HRESULT StopListening (bool pManual, long pCause);
 
-	static HRESULT GetLoadPath (VARIANT pProvider, CString & pFilePath, bool * pIsDefault = NULL);
+	static HRESULT GetLoadPath (VARIANT pProvider, CAtlString & pFilePath, bool * pIsDefault = NULL);
 	static HRESULT GetAgentFile (VARIANT pProvider, tPtr <CAgentFile> & pAgentFile);
 	static HRESULT GetAgentFile (LPCTSTR pFilePath, tPtr <CAgentFile> & pAgentFile);
 
@@ -96,6 +96,7 @@ public:
 	virtual class CFileDownload * _FindSoundDownload (LPCTSTR pSoundUrl);
 	virtual bool _OnContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition);
 	virtual bool _OnDefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition);
+	virtual void _OnAppActivated (bool pActive);
 	virtual void _OnOptionsChanged ();
 	virtual void _OnDefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFilePath);
 
@@ -116,11 +117,11 @@ public:
 	HRESULT Interrupt (long InterruptRequestID, long *RequestID);
 	HRESULT Show (long Fast, long *RequestID);
 	HRESULT Hide (long Fast, long *RequestID);
-	HRESULT Speak (BSTR Text, BSTR Url, long *RequestID);
+	HRESULT Speak (BSTR Text, class CAgentTextObject * pTextObject, BSTR Url, long *RequestID);
 	HRESULT MoveTo (short X, short Y, long Speed, long *RequestID);
 	HRESULT GestureAt (short X, short Y, long *RequestID);
 	HRESULT Listen (long Listen);
-	HRESULT Think (BSTR Text, long *RequestID);
+	HRESULT Think (BSTR Text, class CAgentTextObject * pTextObject, long *RequestID);
 	HRESULT ShowPopupMenu (short X, short Y);
 	HRESULT GetTTSSpeed (long *Speed);
 	HRESULT GetTTSPitch (short *Pitch);

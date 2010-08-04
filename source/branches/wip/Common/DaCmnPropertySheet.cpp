@@ -309,7 +309,7 @@ HRESULT CDaCmnPropertySheet::get_Visible (VARIANT_BOOL *Visible)
 HRESULT CDaCmnPropertySheet::put_Page (BSTR Page)
 {
 	HRESULT				lResult = S_OK;
-	CString				lPageName (Page);
+	CAtlString			lPageName (Page);
 	int					lPageNdx = -1;
 	static CAtlString	lPageNameOutput (PropertySheet_PageName_Output);
 	static CAtlString	lPageNameSpeech (PropertySheet_PageName_Speech);

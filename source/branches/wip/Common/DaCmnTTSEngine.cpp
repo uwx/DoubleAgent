@@ -68,7 +68,7 @@ bool CDaCmnTTSEngine::Initialize (CSapi5Voice * pVoice)
 			(pVoice)
 		&&	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
 		&&	(lSapi5Voices = lVoiceCache->GetSapi5Voices ())
-		&&	(mSapi5Voice = lSapi5Voices->GetVoiceId (CString (pVoice->GetUniqueId ())))
+		&&	(mSapi5Voice = lSapi5Voices->GetVoiceId (CAtlString (pVoice->GetUniqueId ())))
 		)
 	{
 		lRet = true;
@@ -111,7 +111,7 @@ bool CDaCmnTTSEngine::Initialize (CSapiVoice * pVoice)
 		&&	(
 				(
 					(lSapi5Voices = lVoiceCache->GetSapi5Voices ())
-				&&	(mSapi5Voice = lSapi5Voices->GetVoiceId (CString (pVoice->GetUniqueId ())))
+				&&	(mSapi5Voice = lSapi5Voices->GetVoiceId (CAtlString (pVoice->GetUniqueId ())))
 				)
 #ifndef	_WIN64
 			||	(
@@ -165,7 +165,7 @@ HRESULT CDaCmnTTSEngine::get_TTSModeID (BSTR *TTSModeID)
 	else
 	if	(mSapi4Voice)
 	{
-		CString	lTTSModeId = (CString) CGuidStr (mSapi4Voice->mModeId);
+		CAtlString	lTTSModeId = (CString) CGuidStr (mSapi4Voice->mModeId);
 		(*TTSModeID) = lTTSModeId.AllocSysString ();
 	}
 #endif
@@ -331,9 +331,9 @@ HRESULT CDaCmnTTSEngine::get_LanguageName (VARIANT_BOOL EnglishName, BSTR *Langu
 	else
 	if	(mSapi5Voice)
 	{
-		LCTYPE	lInfoType = EnglishName ? LOCALE_SLANGUAGE : LOCALE_SNATIVELANGNAME;
-		int 	lInfoSize;
-		CString lInfoValue;
+		LCTYPE		lInfoType = EnglishName ? LOCALE_SLANGUAGE : LOCALE_SNATIVELANGNAME;
+		int 		lInfoSize;
+		CAtlString	lInfoValue;
 
 		if	(lInfoSize = GetLocaleInfo (MAKELCID (mSapi5Voice->mLangId, SORT_DEFAULT), lInfoType, NULL, 0))
 		{
@@ -350,9 +350,9 @@ HRESULT CDaCmnTTSEngine::get_LanguageName (VARIANT_BOOL EnglishName, BSTR *Langu
 	else
 	if	(mSapi4Voice)
 	{
-		LCTYPE	lInfoType = EnglishName ? LOCALE_SLANGUAGE : LOCALE_SNATIVELANGNAME;
-		int 	lInfoSize;
-		CString lInfoValue;
+		LCTYPE		lInfoType = EnglishName ? LOCALE_SLANGUAGE : LOCALE_SNATIVELANGNAME;
+		int			lInfoSize;
+		CAtlString	lInfoValue;
 
 		if	(lInfoSize = GetLocaleInfo (MAKELCID (mSapi4Voice->mLangId, SORT_DEFAULT), lInfoType, NULL, 0))
 		{

@@ -22,6 +22,7 @@
 #include "DaControlMod.h"
 #include "DaControl.h"
 #include "DaCtlUserInput.h"
+#include "DaCtlFormattedText.h"
 #include "DaCtlCommands.h"
 #include "Registry.h"
 
@@ -80,7 +81,7 @@ void CDaCtlEventDispatch::FireActivateInput(LPCTSTR CharacterID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke1 (DISPID_AgentEvents_ActivateInput, &lCharacterId);
+			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_ActivateInput, &lCharacterId));
 		}
 	}
 }
@@ -102,7 +103,7 @@ void CDaCtlEventDispatch::FireDeactivateInput(LPCTSTR CharacterID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke1 (DISPID_AgentEvents_DeactivateInput, &lCharacterId);
+			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_DeactivateInput, &lCharacterId));
 		}
 	}
 }
@@ -124,7 +125,7 @@ void CDaCtlEventDispatch::FireClick(LPCTSTR CharacterID, short Button, short Shi
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.InvokeN (DISPID_AgentEvents_Click, lParams, 5);
+			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_AgentEvents_Click, lParams, 5));
 		}
 	}
 }
@@ -146,7 +147,7 @@ void CDaCtlEventDispatch::FireDblClick(LPCTSTR CharacterID, short Button, short 
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.InvokeN (DISPID_AgentEvents_DblClick, lParams, 5);
+			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_AgentEvents_DblClick, lParams, 5));
 		}
 	}
 }
@@ -168,7 +169,7 @@ void CDaCtlEventDispatch::FireDragStart(LPCTSTR CharacterID, short Button, short
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.InvokeN (DISPID_AgentEvents_DragStart, lParams, 5);
+			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_AgentEvents_DragStart, lParams, 5));
 		}
 	}
 }
@@ -190,7 +191,7 @@ void CDaCtlEventDispatch::FireDragComplete(LPCTSTR CharacterID, short Button, sh
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.InvokeN (DISPID_AgentEvents_DragComplete, lParams, 5);
+			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_AgentEvents_DragComplete, lParams, 5));
 		}
 	}
 }
@@ -213,7 +214,7 @@ void CDaCtlEventDispatch::FireShow(LPCTSTR CharacterID, VisibilityCauseType Caus
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke2 (DISPID_AgentEvents_Show, &lCharacterId, &lCause);
+			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_AgentEvents_Show, &lCharacterId, &lCause));
 		}
 	}
 }
@@ -236,7 +237,7 @@ void CDaCtlEventDispatch::FireHide(LPCTSTR CharacterID, VisibilityCauseType Caus
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke2 (DISPID_AgentEvents_Hide, &lCharacterId, &lCause);
+			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_AgentEvents_Hide, &lCharacterId, &lCause));
 		}
 	}
 }
@@ -258,7 +259,7 @@ void CDaCtlEventDispatch::FireRequestStart(LPDISPATCH Request)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke1 (DISPID_AgentEvents_RequestStart, &lRequest);
+			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_RequestStart, &lRequest));
 		}
 	}
 }
@@ -280,7 +281,7 @@ void CDaCtlEventDispatch::FireRequestComplete(LPDISPATCH Request)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke1 (DISPID_AgentEvents_RequestComplete, &lRequest);
+			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_RequestComplete, &lRequest));
 		}
 	}
 }
@@ -302,7 +303,7 @@ void CDaCtlEventDispatch::FireBookmark(long BookmarkID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke1 (DISPID_AgentEvents_Bookmark, &lBookmarkID);
+			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_Bookmark, &lBookmarkID));
 		}
 	}
 }
@@ -324,7 +325,7 @@ void CDaCtlEventDispatch::FireCommand(LPDISPATCH UserInput)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke1 (DISPID_AgentEvents_Command, &lUserInput);
+			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_Command, &lUserInput));
 		}
 	}
 }
@@ -346,7 +347,7 @@ void CDaCtlEventDispatch::FireIdleStart(LPCTSTR CharacterID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke1 (DISPID_AgentEvents_IdleStart, &lCharacterID);
+			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_IdleStart, &lCharacterID));
 		}
 	}
 }
@@ -368,7 +369,7 @@ void CDaCtlEventDispatch::FireIdleComplete(LPCTSTR CharacterID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke1 (DISPID_AgentEvents_IdleComplete, &lCharacterID);
+			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_IdleComplete, &lCharacterID));
 		}
 	}
 }
@@ -390,7 +391,7 @@ void CDaCtlEventDispatch::FireMove(LPCTSTR CharacterID, short X, short Y, MoveCa
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.InvokeN (DISPID_AgentEvents_Move, lParams, 4);
+			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_AgentEvents_Move, lParams, 4));
 		}
 	}
 }
@@ -412,7 +413,7 @@ void CDaCtlEventDispatch::FireSize(LPCTSTR CharacterID, short Width, short Heigh
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.InvokeN (DISPID_AgentEvents_Size, lParams, 3);
+			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_AgentEvents_Size, lParams, 3));
 		}
 	}
 }
@@ -434,7 +435,7 @@ void CDaCtlEventDispatch::FireBalloonShow(LPCTSTR CharacterID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke1 (DISPID_AgentEvents_BalloonShow, &lCharacterID);
+			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_BalloonShow, &lCharacterID));
 		}
 	}
 }
@@ -456,7 +457,7 @@ void CDaCtlEventDispatch::FireBalloonHide(LPCTSTR CharacterID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke1 (DISPID_AgentEvents_BalloonHide, &lCharacterID);
+			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_BalloonHide, &lCharacterID));
 		}
 	}
 }
@@ -478,7 +479,7 @@ void CDaCtlEventDispatch::FireListenStart(LPCTSTR CharacterID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke1 (DISPID_AgentEvents_ListenStart, &lCharacterID);
+			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_ListenStart, &lCharacterID));
 		}
 	}
 }
@@ -501,7 +502,7 @@ void CDaCtlEventDispatch::FireListenComplete(LPCTSTR CharacterID, ListenComplete
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke2 (DISPID_AgentEvents_ListenComplete, &lCharacterID, &lCause);
+			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_AgentEvents_ListenComplete, &lCharacterID, &lCause));
 		}
 	}
 }
@@ -523,7 +524,7 @@ void CDaCtlEventDispatch::FireDefaultCharacterChange(LPCTSTR CharGUID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke1 (DISPID_AgentEvents_DefaultCharacterChange, &lGUID);
+			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_DefaultCharacterChange, &lGUID));
 		}
 	}
 }
@@ -544,7 +545,7 @@ void CDaCtlEventDispatch::FireAgentPropertyChange()
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke0 (DISPID_AgentEvents_AgentPropertyChange);
+			LogComErr (LogNormal, lEventSink.Invoke0 (DISPID_AgentEvents_AgentPropertyChange));
 		}
 	}
 }
@@ -567,7 +568,77 @@ void CDaCtlEventDispatch::FireActiveClientChange(LPCTSTR CharacterID, BOOL Activ
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			lEventSink.Invoke2 (DISPID_AgentEvents_ActiveClientChange, &lCharacterID, &lActive);
+			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_AgentEvents_ActiveClientChange, &lCharacterID, &lActive));
+		}
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CDaCtlEventDispatch::FireSpeechStart(LPCTSTR CharacterID, LPDISPATCH FormattedText)
+{
+	_variant_t				lCharacterID (CharacterID);
+	_variant_t				lFormattedText (FormattedText);
+	int						lNdx;
+	CComQIPtr <IDispatch>	lEventSink;
+
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireSpeechStart [%s] [%p]"), CountUnk(mUnkArray), CharacterID, FormattedText);
+	}
+#endif
+	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	{
+		lEventSink = mUnkArray.GetAt (lNdx);
+		if	(lEventSink != NULL)
+		{
+			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_DaCtlEvents2_SpeechStart, &lCharacterID, &lFormattedText));
+		}
+	}
+}
+
+void CDaCtlEventDispatch::FireSpeechEnd(LPCTSTR CharacterID, LPDISPATCH FormattedText, VARIANT_BOOL Stopped)
+{
+	_variant_t				lParams [3] = {Stopped, FormattedText, CharacterID};
+	_variant_t				lStopped (Stopped);
+	int						lNdx;
+	CComQIPtr <IDispatch>	lEventSink;
+
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireSpeechEnd [%s] [%p] [%d]"), CountUnk(mUnkArray), CharacterID, FormattedText, Stopped);
+	}
+#endif
+	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	{
+		lEventSink = mUnkArray.GetAt (lNdx);
+		if	(lEventSink != NULL)
+		{
+			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_DaCtlEvents2_SpeechEnd, lParams, 3));
+		}
+	}
+}
+
+void CDaCtlEventDispatch::FireSpeechWord(LPCTSTR CharacterID, LPDISPATCH FormattedText, long WordIndex)
+{
+	_variant_t				lParams [3] = {WordIndex, FormattedText, CharacterID};
+	int						lNdx;
+	CComQIPtr <IDispatch>	lEventSink;
+
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireSpeechWord [%s] [%p] {%d]"), CountUnk(mUnkArray), CharacterID, FormattedText, WordIndex);
+	}
+#endif
+	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	{
+		lEventSink = mUnkArray.GetAt (lNdx);
+		if	(lEventSink != NULL)
+		{
+			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_DaCtlEvents2_SpeechWord, lParams, 3));
 		}
 	}
 }
@@ -579,139 +650,179 @@ void CDaCtlEventDispatch::FireActiveClientChange(LPCTSTR CharacterID, BOOL Activ
 void DaControl::FireActivateInput(LPCTSTR CharacterID)
 {
 	CProxy_DaCtlEvents<DaControl>::FireActivateInput (CharacterID);
+	CProxy_DaCtlEvents2<DaControl>::FireActivateInput (CharacterID);
 	CProxy_AgentEvents<DaControl>::FireActivateInput (CharacterID);
 }
 
 void DaControl::FireDeactivateInput(LPCTSTR CharacterID)
 {
 	CProxy_DaCtlEvents<DaControl>::FireDeactivateInput (CharacterID);
+	CProxy_DaCtlEvents2<DaControl>::FireDeactivateInput (CharacterID);
 	CProxy_AgentEvents<DaControl>::FireDeactivateInput (CharacterID);
 }
 
 void DaControl::FireClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
 	CProxy_DaCtlEvents<DaControl>::FireClick (CharacterID, Button, Shift, X, Y);
+	CProxy_DaCtlEvents2<DaControl>::FireClick (CharacterID, Button, Shift, X, Y);
 	CProxy_AgentEvents<DaControl>::FireClick (CharacterID, Button, Shift, X, Y);
 }
 
 void DaControl::FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
 	CProxy_DaCtlEvents<DaControl>::FireDblClick (CharacterID, Button, Shift, X, Y);
+	CProxy_DaCtlEvents2<DaControl>::FireDblClick (CharacterID, Button, Shift, X, Y);
 	CProxy_AgentEvents<DaControl>::FireDblClick (CharacterID, Button, Shift, X, Y);
 }
 
 void DaControl::FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
 	CProxy_DaCtlEvents<DaControl>::FireDragStart (CharacterID, Button, Shift, X, Y);
+	CProxy_DaCtlEvents2<DaControl>::FireDragStart (CharacterID, Button, Shift, X, Y);
 	CProxy_AgentEvents<DaControl>::FireDragStart (CharacterID, Button, Shift, X, Y);
 }
 
 void DaControl::FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
 	CProxy_DaCtlEvents<DaControl>::FireDragComplete (CharacterID, Button, Shift, X, Y);
+	CProxy_DaCtlEvents2<DaControl>::FireDragComplete (CharacterID, Button, Shift, X, Y);
 	CProxy_AgentEvents<DaControl>::FireDragComplete (CharacterID, Button, Shift, X, Y);
 }
 
 void DaControl::FireShow(LPCTSTR CharacterID, VisibilityCauseType Cause)
 {
 	CProxy_DaCtlEvents<DaControl>::FireShow (CharacterID, Cause);
+	CProxy_DaCtlEvents2<DaControl>::FireShow (CharacterID, Cause);
 	CProxy_AgentEvents<DaControl>::FireShow (CharacterID, Cause);
 }
 
 void DaControl::FireHide(LPCTSTR CharacterID, VisibilityCauseType Cause)
 {
 	CProxy_DaCtlEvents<DaControl>::FireHide (CharacterID, Cause);
+	CProxy_DaCtlEvents2<DaControl>::FireHide (CharacterID, Cause);
 	CProxy_AgentEvents<DaControl>::FireHide (CharacterID, Cause);
 }
 
 void DaControl::FireRequestStart(LPDISPATCH Request)
 {
 	CProxy_DaCtlEvents<DaControl>::FireRequestStart (Request);
+	CProxy_DaCtlEvents2<DaControl>::FireRequestStart (Request);
 	CProxy_AgentEvents<DaControl>::FireRequestStart (Request);
 }
 
 void DaControl::FireRequestComplete(LPDISPATCH Request)
 {
 	CProxy_DaCtlEvents<DaControl>::FireRequestComplete (Request);
+	CProxy_DaCtlEvents2<DaControl>::FireRequestComplete (Request);
 	CProxy_AgentEvents<DaControl>::FireRequestComplete (Request);
 }
 
 void DaControl::FireBookmark(long BookmarkID)
 {
 	CProxy_DaCtlEvents<DaControl>::FireBookmark (BookmarkID);
+	CProxy_DaCtlEvents2<DaControl>::FireBookmark (BookmarkID);
 	CProxy_AgentEvents<DaControl>::FireBookmark (BookmarkID);
 }
 
 void DaControl::FireCommand(LPDISPATCH UserInput)
 {
 	CProxy_DaCtlEvents<DaControl>::FireCommand (UserInput);
+	CProxy_DaCtlEvents2<DaControl>::FireCommand (UserInput);
 	CProxy_AgentEvents<DaControl>::FireCommand (UserInput);
 }
 
 void DaControl::FireIdleStart(LPCTSTR CharacterID)
 {
 	CProxy_DaCtlEvents<DaControl>::FireIdleStart (CharacterID);
+	CProxy_DaCtlEvents2<DaControl>::FireIdleStart (CharacterID);
 	CProxy_AgentEvents<DaControl>::FireIdleStart (CharacterID);
 }
 
 void DaControl::FireIdleComplete(LPCTSTR CharacterID)
 {
 	CProxy_DaCtlEvents<DaControl>::FireIdleComplete (CharacterID);
+	CProxy_DaCtlEvents2<DaControl>::FireIdleComplete (CharacterID);
 	CProxy_AgentEvents<DaControl>::FireIdleComplete (CharacterID);
 }
 
 void DaControl::FireMove(LPCTSTR CharacterID, short X, short Y, MoveCauseType Cause)
 {
 	CProxy_DaCtlEvents<DaControl>::FireMove (CharacterID, X, Y, Cause);
+	CProxy_DaCtlEvents2<DaControl>::FireMove (CharacterID, X, Y, Cause);
 	CProxy_AgentEvents<DaControl>::FireMove (CharacterID, X, Y, Cause);
 }
 
 void DaControl::FireSize(LPCTSTR CharacterID, short Width, short Height)
 {
 	CProxy_DaCtlEvents<DaControl>::FireSize (CharacterID, Width, Height);
+	CProxy_DaCtlEvents2<DaControl>::FireSize (CharacterID, Width, Height);
 	CProxy_AgentEvents<DaControl>::FireSize (CharacterID, Width, Height);
 }
 
 void DaControl::FireBalloonShow(LPCTSTR CharacterID)
 {
 	CProxy_DaCtlEvents<DaControl>::FireBalloonShow (CharacterID);
+	CProxy_DaCtlEvents2<DaControl>::FireBalloonShow (CharacterID);
 	CProxy_AgentEvents<DaControl>::FireBalloonShow (CharacterID);
 }
 
 void DaControl::FireBalloonHide(LPCTSTR CharacterID)
 {
 	CProxy_DaCtlEvents<DaControl>::FireBalloonHide (CharacterID);
+	CProxy_DaCtlEvents2<DaControl>::FireBalloonHide (CharacterID);
 	CProxy_AgentEvents<DaControl>::FireBalloonHide (CharacterID);
 }
 
 void DaControl::FireListenStart(LPCTSTR CharacterID)
 {
 	CProxy_DaCtlEvents<DaControl>::FireListenStart (CharacterID);
+	CProxy_DaCtlEvents2<DaControl>::FireListenStart (CharacterID);
 	CProxy_AgentEvents<DaControl>::FireListenStart (CharacterID);
 }
 
 void DaControl::FireListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause)
 {
 	CProxy_DaCtlEvents<DaControl>::FireListenComplete (CharacterID, Cause);
+	CProxy_DaCtlEvents2<DaControl>::FireListenComplete (CharacterID, Cause);
 	CProxy_AgentEvents<DaControl>::FireListenComplete (CharacterID, Cause);
 }
 
 void DaControl::FireDefaultCharacterChange(LPCTSTR CharGUID)
 {
 	CProxy_DaCtlEvents<DaControl>::FireDefaultCharacterChange (CharGUID);
+	CProxy_DaCtlEvents2<DaControl>::FireDefaultCharacterChange (CharGUID);
 	CProxy_AgentEvents<DaControl>::FireDefaultCharacterChange (CharGUID);
 }
 
 void DaControl::FireAgentPropertyChange()
 {
 	CProxy_DaCtlEvents<DaControl>::FireAgentPropertyChange ();
+	CProxy_DaCtlEvents2<DaControl>::FireAgentPropertyChange ();
 	CProxy_AgentEvents<DaControl>::FireAgentPropertyChange ();
 }
 
 void DaControl::FireActiveClientChange(LPCTSTR CharacterID, BOOL Active)
 {
 	CProxy_DaCtlEvents<DaControl>::FireActiveClientChange (CharacterID, Active);
+	CProxy_DaCtlEvents2<DaControl>::FireActiveClientChange (CharacterID, Active);
 	CProxy_AgentEvents<DaControl>::FireActiveClientChange (CharacterID, Active);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void DaControl::FireSpeechStart(LPCTSTR CharacterID, IDaCtlFormattedText* FormattedText)
+{
+	CProxy_DaCtlEvents2<DaControl>::FireSpeechStart (CharacterID, FormattedText);
+}
+
+void DaControl::FireSpeechEnd(LPCTSTR CharacterID, IDaCtlFormattedText* FormattedText, VARIANT_BOOL Stopped)
+{
+	CProxy_DaCtlEvents2<DaControl>::FireSpeechEnd (CharacterID, FormattedText, Stopped);
+}
+
+void DaControl::FireSpeechWord(LPCTSTR CharacterID, IDaCtlFormattedText* FormattedText, long WordIndex)
+{
+	CProxy_DaCtlEvents2<DaControl>::FireSpeechWord (CharacterID, FormattedText, WordIndex);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1294,6 +1405,146 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::ActiveClientChange (long CharacterI
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CServerNotifySink::SpeechStart (long CharacterID, IDaSvrFormattedText* FormattedText)
+{
+#ifdef	_DEBUG_NOTIFY
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::SpeechStart [%d] [%p]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, FormattedText);
+#endif
+	HRESULT									lResult = S_OK;
+	tPtr <CComObject <DaCtlFormattedText> >	lObject;
+	IDaCtlFormattedTextPtr					lFormattedText;
+
+	if	(FormattedText)
+	{	
+		try
+		{
+			if	(SUCCEEDED (lResult = CComObject <DaCtlFormattedText>::CreateInstance (lObject.Free())))
+			{
+				lObject->mServerObject = FormattedText;
+				if	(SUCCEEDED (lResult = lObject->SetOwner (mOwner)))
+				{
+					lFormattedText = lObject.Detach ();
+				}
+			}
+		}
+		catch AnyExceptionSilent
+	}
+
+	if	(
+			(SUCCEEDED (lResult))	
+		&&	(PreFireEvent ())
+		)
+	{
+		try
+		{
+			mOwner->FireSpeechStart (mOwner->GetControlCharacterID (CharacterID), lFormattedText);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent ();
+	}
+#ifdef	_DEBUG_NOTIFY_NOT
+	if	(LogIsActive (_DEBUG_NOTIFY))
+	{
+		LogComErrAnon (MinLogLevel(_DEBUG_NOTIFY,LogAlways), lResult, _T("[%p(%d)] CServerNotifySink::SpeechStart [%d] [%p]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, lFormattedText.GetInterfacePtr());
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CServerNotifySink::SpeechEnd (long CharacterID, IDaSvrFormattedText* FormattedText, VARIANT_BOOL Stopped)
+{
+#ifdef	_DEBUG_NOTIFY
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::SpeechEnd [%d] [%p] [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, FormattedText, Stopped);
+#endif
+	HRESULT									lResult = S_OK;
+	tPtr <CComObject <DaCtlFormattedText> >	lObject;
+	IDaCtlFormattedTextPtr					lFormattedText;
+
+	if	(FormattedText)
+	{	
+		try
+		{
+			if	(SUCCEEDED (lResult = CComObject <DaCtlFormattedText>::CreateInstance (lObject.Free())))
+			{
+				lObject->mServerObject = FormattedText;
+				if	(SUCCEEDED (lResult = lObject->SetOwner (mOwner)))
+				{
+					lFormattedText = lObject.Detach ();
+				}
+			}
+		}
+		catch AnyExceptionSilent
+	}
+
+	if	(
+			(SUCCEEDED (lResult))	
+		&&	(PreFireEvent ())
+		)
+	{
+		try
+		{
+			mOwner->FireSpeechEnd (mOwner->GetControlCharacterID (CharacterID), lFormattedText, Stopped);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent ();
+	}
+#ifdef	_DEBUG_NOTIFY_NOT
+	if	(LogIsActive (_DEBUG_NOTIFY))
+	{
+		LogComErrAnon (MinLogLevel(_DEBUG_NOTIFY,LogAlways), lResult, _T("[%p(%d)] CServerNotifySink::SpeechEnd [%d] [%p] [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, lFormattedText.GetInterfacePtr(), Stopped);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CServerNotifySink::SpeechWord (long CharacterID, IDaSvrFormattedText* FormattedText, long WordIndex)
+{
+#ifdef	_DEBUG_NOTIFY
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::SpeechWord [%d] [%p] [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, FormattedText, WordIndex);
+#endif
+	HRESULT									lResult = S_OK;
+	tPtr <CComObject <DaCtlFormattedText> >	lObject;
+	IDaCtlFormattedTextPtr					lFormattedText;
+
+	if	(FormattedText)
+	{	
+		try
+		{
+			if	(SUCCEEDED (lResult = CComObject <DaCtlFormattedText>::CreateInstance (lObject.Free())))
+			{
+				lObject->mServerObject = FormattedText;
+				if	(SUCCEEDED (lResult = lObject->SetOwner (mOwner)))
+				{
+					lFormattedText = lObject.Detach ();
+				}
+			}
+		}
+		catch AnyExceptionSilent
+	}
+
+	if	(
+			(SUCCEEDED (lResult))	
+		&&	(PreFireEvent ())
+		)
+	{
+		try
+		{
+			mOwner->FireSpeechWord (mOwner->GetControlCharacterID (CharacterID), lFormattedText, WordIndex);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent ();
+	}
+#ifdef	_DEBUG_NOTIFY_NOT
+	if	(LogIsActive (_DEBUG_NOTIFY))
+	{
+		LogComErrAnon (MinLogLevel(_DEBUG_NOTIFY,LogAlways), lResult, _T("[%p(%d)] CServerNotifySink::SpeechWord [%d] [%p] [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, lFormattedText.GetInterfacePtr(), WordIndex);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
@@ -1324,6 +1575,68 @@ bool CEventNotifyReflect::PostFireEvent (LPCTSTR pEventName)
 {
 	CEventNotify::PostFireEvent (pEventName);
 	return CServerNotifySink::PostFireEvent (pEventName);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT CEventNotifyReflect::OnSpeechStart (long CharacterID, LPUNKNOWN FormattedText)
+{
+#ifdef	_DEBUG_NOTIFY
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CEventNotifyReflect::OnSpeechStart [%d] [%p]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, FormattedText);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(PreFireEvent (_T("SpeechStart")))
+	{
+		try
+		{
+			IDaCtlFormattedTextPtr	lFormattedText (FormattedText);
+			mOwner->FireSpeechStart (mOwner->GetControlCharacterID (CharacterID), lFormattedText);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_T("SpeechStart"));
+	}
+	return lResult;
+}
+
+HRESULT CEventNotifyReflect::OnSpeechEnd (long CharacterID, LPUNKNOWN FormattedText, VARIANT_BOOL Stopped)
+{
+#ifdef	_DEBUG_NOTIFY
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CEventNotifyReflect::OnSpeechEnd [%d] [%p] [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, FormattedText, Stopped);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(PreFireEvent (_T("SpeechEnd")))
+	{
+		try
+		{
+			IDaCtlFormattedTextPtr	lFormattedText (FormattedText);
+			mOwner->FireSpeechEnd (mOwner->GetControlCharacterID (CharacterID), lFormattedText, Stopped);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_T("SpeechEnd"));
+	}
+	return lResult;
+}
+
+HRESULT CEventNotifyReflect::OnSpeechWord (long CharacterID, LPUNKNOWN FormattedText, long WordIndex)
+{
+#ifdef	_DEBUG_NOTIFY
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CEventNotifyReflect::OnSpeechWord [%d] [%p] [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, FormattedText, WordIndex);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(PreFireEvent (_T("SpeechWord")))
+	{
+		try
+		{
+			IDaCtlFormattedTextPtr	lFormattedText (FormattedText);
+			mOwner->FireSpeechWord (mOwner->GetControlCharacterID (CharacterID), lFormattedText, WordIndex);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_T("SpeechWord"));
+	}
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////

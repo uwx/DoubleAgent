@@ -596,6 +596,7 @@ void FixupAssembly::FixParameterName (MethodBase^ pSourceMethod, ParameterInfo^ 
 				(
 					(pParameterName->Length == 1)
 				&&	(!Char::IsUpper (pParameterName, 0))
+				&&	(pParameterName != "e")
 				)
 			||	(
 					(pParameterName->Length > 1)

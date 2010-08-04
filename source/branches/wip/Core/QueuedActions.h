@@ -31,6 +31,12 @@ public:
 
 // Attributes
 public:
+	UINT_PTR	mTimer;
+	DWORD		mTime;
+	const DWORD	mTimeMin;
+	const DWORD	mTimeMax;
+	const DWORD	mTimeDefault;
+
 	UINT HasActions (long pCharID = -1) const;
 
 // Operations

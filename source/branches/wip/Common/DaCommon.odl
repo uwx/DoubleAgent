@@ -56,7 +56,13 @@ typedef enum ActiveStateType
 	[helpstring("This program is the character's active client")]
 		ActiveState_Active = 1,
 	[helpstring("The character is the input-active character and will receive user input")]
-		ActiveState_InputActive = 2
+		ActiveState_InputActive = 2,
+	[helpstring("The application is inactive and the character is suspended")]
+		ActiveState_Suspended = 4,
+	[helpstring("The application is inactive and this program is the character's active client")]
+		ActiveState_Suspended_Active = 5,
+	[helpstring("The application is inactive and the character will the input-active when the application becomes active")]
+		ActiveState_Suspended_InputActive = 6
 }	ActiveStateType;
 
 [

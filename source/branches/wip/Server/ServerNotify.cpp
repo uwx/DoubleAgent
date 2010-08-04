@@ -89,17 +89,29 @@ static INT_PTR CountUnk (CComDynamicUnkArray & pUnkArray)
 HRESULT CServerNotify::Register (IUnknown * punkNotifySink, long * pdwSinkID)
 {
 	HRESULT					lResult = S_FALSE;
-	IDaSvrNotifySinkPtr		lDaSinkEx (punkNotifySink);
+	IDaSvrNotifySink2Ptr	lDaSink2 (punkNotifySink);
+	IDaSvrNotifySinkPtr		lDaSink (punkNotifySink);
 	IAgentNotifySinkPtr		lMsSink (punkNotifySink);
 	IAgentNotifySinkExPtr	lMsSinkEx (punkNotifySink);
 
-	if	(lDaSinkEx != NULL)
+	if	(lDaSink2 != NULL)
+	{
+		lResult = tDaSvrNotifySink2::Advise (punkNotifySink, (DWORD*)pdwSinkID);
+#ifdef	_DEBUG_CONNECTIONS
+		if	(SUCCEEDED (lResult))
+		{
+			LogMessage (_DEBUG_CONNECTIONS, _T("[%p] Register2 (DA) [%p] [%u]"), this, punkNotifySink, *pdwSinkID);
+		}
+#endif
+	}
+	else
+	if	(lDaSink != NULL)
 	{
 		lResult = tDaSvrNotifySink::Advise (punkNotifySink, (DWORD*)pdwSinkID);
 #ifdef	_DEBUG_CONNECTIONS
 		if	(SUCCEEDED (lResult))
 		{
-			LogMessage (_DEBUG_CONNECTIONS, _T("[%p] RegisterEx (DA) [%p] [%u]"), this, punkNotifySink, *pdwSinkID);
+			LogMessage (_DEBUG_CONNECTIONS, _T("[%p] Register (DA) [%p] [%u]"), this, punkNotifySink, *pdwSinkID);
 		}
 #endif
 	}
@@ -136,13 +148,23 @@ HRESULT CServerNotify::Unregister (long dwSinkID)
 {
 	HRESULT	lResult = S_FALSE;
 
-	lResult = tDaSvrNotifySink::Unadvise ((DWORD)dwSinkID);
+	lResult = tDaSvrNotifySink2::Unadvise ((DWORD)dwSinkID);
 #ifdef	_DEBUG_CONNECTIONS
 	if	(SUCCEEDED (lResult))
 	{
-		LogMessage (_DEBUG_CONNECTIONS, _T("[%p] UnregisterEx (DA) [%u]"), this, dwSinkID);
+		LogMessage (_DEBUG_CONNECTIONS, _T("[%p] Unregister2 (DA) [%u]"), this, dwSinkID);
 	}
 #endif
+	if	(lResult == CONNECT_E_NOCONNECTION)
+	{
+		lResult = tDaSvrNotifySink::Unadvise ((DWORD)dwSinkID);
+#ifdef	_DEBUG_CONNECTIONS
+		if	(SUCCEEDED (lResult))
+		{
+			LogMessage (_DEBUG_CONNECTIONS, _T("[%p] Unregister (DA) [%u]"), this, dwSinkID);
+		}
+#endif
+	}
 	if	(lResult == CONNECT_E_NOCONNECTION)
 	{
 		lResult = tAgentNotifySinkEx::Unadvise ((DWORD)dwSinkID);
@@ -169,9 +191,24 @@ HRESULT CServerNotify::Unregister (long dwSinkID)
 void CServerNotify::UnregisterAll ()
 {
 #ifdef	_DEBUG_CONNECTIONS
-	LogMessage (_DEBUG_CONNECTIONS, _T("[%p] UnregisterAll [%d] [%d] [%d]"), this, CountUnk(tDaSvrNotifySink::m_vec), CountUnk(tAgentNotifySinkEx::m_vec), CountUnk(tAgentNotifySink::m_vec));
+	LogMessage (_DEBUG_CONNECTIONS, _T("[%p] UnregisterAll [%d] [%d] [%d] [%d]"), this, CountUnk(tDaSvrNotifySink2::m_vec), CountUnk(tDaSvrNotifySink::m_vec), CountUnk(tAgentNotifySinkEx::m_vec), CountUnk(tAgentNotifySink::m_vec));
 #endif
 	int	lNdx;
+
+	for	(lNdx = tDaSvrNotifySink2::m_vec.GetSize()-1; lNdx >= 0; lNdx--)
+	{
+		try
+		{
+			if	(tDaSvrNotifySink2::m_vec.GetAt (lNdx))
+			{
+				tDaSvrNotifySink2::Unadvise ((DWORD)lNdx);
+#ifdef	_DEBUG_CONNECTIONS
+				LogMessage (_DEBUG_CONNECTIONS, _T("[%p] Unregister2 (DA) [%u] (All)"), this, lNdx);
+#endif
+			}
+		}
+		catch AnyExceptionSilent
+	}
 
 	for	(lNdx = tDaSvrNotifySink::m_vec.GetSize()-1; lNdx >= 0; lNdx--)
 	{
@@ -181,7 +218,7 @@ void CServerNotify::UnregisterAll ()
 			{
 				tDaSvrNotifySink::Unadvise ((DWORD)lNdx);
 #ifdef	_DEBUG_CONNECTIONS
-				LogMessage (_DEBUG_CONNECTIONS, _T("[%p] UnregisterEx (DA) [%u] (All)"), this, lNdx);
+				LogMessage (_DEBUG_CONNECTIONS, _T("[%p] Unregister (DA) [%u] (All)"), this, lNdx);
 #endif
 			}
 		}
@@ -224,8 +261,9 @@ void CServerNotify::UnregisterAll ()
 void CServerNotify::AbandonAll ()
 {
 #ifdef	_DEBUG_CONNECTIONS
-	LogMessage (_DEBUG_CONNECTIONS, _T("[%p] AbandonAll [%d] {%d] [%d]"), this, CountUnk(tDaSvrNotifySink::m_vec), CountUnk(tAgentNotifySinkEx::m_vec), CountUnk(tAgentNotifySink::m_vec));
+	LogMessage (_DEBUG_CONNECTIONS, _T("[%p] AbandonAll [%d] [%d] {%d] [%d]"), this, CountUnk(tDaSvrNotifySink2::m_vec), CountUnk(tDaSvrNotifySink::m_vec), CountUnk(tAgentNotifySinkEx::m_vec), CountUnk(tAgentNotifySink::m_vec));
 #endif
+	tDaSvrNotifySink2::m_vec.clear ();
 	tDaSvrNotifySink::m_vec.clear ();
 	tAgentNotifySinkEx::m_vec.clear ();
 	tAgentNotifySink::m_vec.clear ();
@@ -269,6 +307,18 @@ HRESULT CServerNotify::Fire##n e \
 		try \
 		{ \
 			int lNdx; \
+			IDaSvrNotifySink2 * lDaSink2; \
+			for	(lNdx = 0; lNdx < tDaSvrNotifySink2::m_vec.GetSize(); lNdx++) \
+			{ \
+				if	(lDaSink2 = (IDaSvrNotifySink2 *) tDaSvrNotifySink2::m_vec.GetAt (lNdx)) \
+				{ \
+					try \
+					{ \
+						lDaSink2->n c; \
+					} \
+					catch AnyExceptionDebug \
+				} \
+			} \
 			IDaSvrNotifySink * lDaSink; \
 			for	(lNdx = 0; lNdx < tDaSvrNotifySink::m_vec.GetSize(); lNdx++) \
 			{ \
@@ -321,6 +371,18 @@ HRESULT CServerNotify::Fire##n e \
 		try \
 		{ \
 			int lNdx; \
+			IDaSvrNotifySink2 * lDaSink2; \
+			for	(lNdx = 0; lNdx < tDaSvrNotifySink2::m_vec.GetSize(); lNdx++) \
+			{ \
+				if	(lDaSink2 = (IDaSvrNotifySink2 *) tDaSvrNotifySink2::m_vec.GetAt (lNdx)) \
+				{ \
+					try \
+					{ \
+						lDaSink2->n c; \
+					} \
+					catch AnyExceptionDebug \
+				} \
+			} \
 			IDaSvrNotifySink * lDaSink; \
 			for	(lNdx = 0; lNdx < tDaSvrNotifySink::m_vec.GetSize(); lNdx++) \
 			{ \
@@ -341,6 +403,34 @@ HRESULT CServerNotify::Fire##n e \
 					try \
 					{ \
 						lMsSinkEx->n c; \
+					} \
+					catch AnyExceptionDebug \
+				} \
+			} \
+			mEventDispatch.Fire##n c; \
+		} \
+		catch AnyExceptionDebug \
+		PostFireEvent (_T(#n)); \
+	} \
+	return S_OK; \
+}
+
+#define	FIRE_EVENT_2(n,e,c)\
+HRESULT CServerNotify::Fire##n e \
+{ \
+	if	(PreFireEvent (_T(#n))) \
+	{ \
+		try \
+		{ \
+			int lNdx; \
+			IDaSvrNotifySink2 * lDaSink2; \
+			for	(lNdx = 0; lNdx < tDaSvrNotifySink2::m_vec.GetSize(); lNdx++) \
+			{ \
+				if	(lDaSink2 = (IDaSvrNotifySink2 *) tDaSvrNotifySink2::m_vec.GetAt (lNdx)) \
+				{ \
+					try \
+					{ \
+						lDaSink2->n c; \
 					} \
 					catch AnyExceptionDebug \
 				} \
@@ -374,6 +464,10 @@ FIRE_EVENT_EX(ListeningState, (long CharacterID, long Listening, long Cause), (C
 FIRE_EVENT_EX(DefaultCharacterChange, (BSTR CharGUID), (CharGUID))
 FIRE_EVENT_EX(AgentPropertyChange, (), ())
 FIRE_EVENT_EX(ActiveClientChange, (long CharacterID, long Status), (CharacterID, Status))
+
+FIRE_EVENT_2(SpeechStart, (long CharacterID, IDaSvrFormattedText* FormattedText), (CharacterID, FormattedText))
+FIRE_EVENT_2(SpeechEnd, (long CharacterID, IDaSvrFormattedText* FormattedText, VARIANT_BOOL Stopped), (CharacterID, FormattedText, Stopped))
+FIRE_EVENT_2(SpeechWord, (long CharacterID, IDaSvrFormattedText* FormattedText, long WordIndex), (CharacterID, FormattedText, WordIndex))
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -467,4 +561,39 @@ HRESULT STDMETHODCALLTYPE CServerNotify::AgentPropertyChange (void)
 HRESULT STDMETHODCALLTYPE CServerNotify::ActiveClientChange (long CharacterID, long Status)
 {
 	return FireActiveClientChange (CharacterID, Status);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CServerNotify::SpeechStart (long CharacterID, IDaSvrFormattedText* FormattedText)
+{
+	return FireSpeechStart (CharacterID, FormattedText);
+}
+
+HRESULT STDMETHODCALLTYPE CServerNotify::SpeechEnd (long CharacterID, IDaSvrFormattedText* FormattedText, VARIANT_BOOL Stopped)
+{
+	return FireSpeechEnd (CharacterID, FormattedText, Stopped);
+}
+
+HRESULT STDMETHODCALLTYPE CServerNotify::SpeechWord (long CharacterID, IDaSvrFormattedText* FormattedText, long WordIndex)
+{
+	return FireSpeechWord (CharacterID, FormattedText, WordIndex);
+}
+
+HRESULT CServerNotify::OnSpeechStart (long CharacterID, LPUNKNOWN FormattedText)
+{
+	IDaSvrFormattedTextPtr	lFormattedText (FormattedText);
+	return FireSpeechStart (CharacterID, lFormattedText);
+}
+
+HRESULT CServerNotify::OnSpeechEnd (long CharacterID, LPUNKNOWN FormattedText, VARIANT_BOOL Stopped)
+{
+	IDaSvrFormattedTextPtr	lFormattedText (FormattedText);
+	return FireSpeechEnd (CharacterID, lFormattedText, Stopped);
+}
+
+HRESULT CServerNotify::OnSpeechWord (long CharacterID, LPUNKNOWN FormattedText, long WordIndex)
+{
+	IDaSvrFormattedTextPtr	lFormattedText (FormattedText);
+	return FireSpeechWord (CharacterID, lFormattedText, WordIndex);
 }

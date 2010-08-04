@@ -47,6 +47,7 @@ IMPLEMENT_DLL_OBJECT(CSapi5Voice)
 CSapi5Voice::CSapi5Voice ()
 :	mVoiceStreamNum (0),
 	mPrepared (false),
+	mPaused (false),
 	mLastVoiceEvent (SPEI_UNDEFINED)
 {
 	LogComErr (LogIfActive, CoCreateInstance (CLSID_SpVoice, NULL, CLSCTX_SERVER, __uuidof (ISpVoice), (void **) &mVoice));
@@ -105,6 +106,11 @@ bool CSapi5Voice::_IsSpeaking () const
 		return true;
 	}
 	return false;
+}
+
+bool CSapi5Voice::_IsPaused () const
+{
+	return ((mVoice != NULL) && mPaused);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -242,15 +248,22 @@ HRESULT CSapi5Voice::Speak (LPCTSTR pMessage, bool pAsync)
 
 	if	(_IsValid ())
 	{
-		DWORD				lFlags = SPF_PURGEBEFORESPEAK|SPF_IS_XML;
-		tMallocPtr <WCHAR>	lMessage = AtlAllocTaskWideString (pMessage);
-
-		if	(pAsync)
+		if	(_IsPaused ())
 		{
-			lFlags |= SPF_ASYNC;
+			lResult = SPERR_VOICE_PAUSED;
 		}
-		mLastVoiceEvent = SPEI_UNDEFINED;
-		lResult = mVoice->Speak (lMessage, lFlags, &mVoiceStreamNum);
+		else
+		{
+			DWORD				lFlags = SPF_PURGEBEFORESPEAK|SPF_IS_XML;
+			tMallocPtr <WCHAR>	lMessage = AtlAllocTaskWideString (pMessage);
+
+			if	(pAsync)
+			{
+				lFlags |= SPF_ASYNC;
+			}
+			mLastVoiceEvent = SPEI_UNDEFINED;
+			lResult = mVoice->Speak (lMessage, lFlags, &mVoiceStreamNum);
+		}
 	}
 	if	(LogIsActive ())
 	{
@@ -277,6 +290,40 @@ HRESULT CSapi5Voice::Stop ()
 			lTotalSkipped += lSkipped;
 		}
 		lResult = MAKE_HRESULT (SEVERITY_SUCCESS, FACILITY_WIN32, lTotalSkipped);
+
+		LogSapi5Err (LogNormal, mVoice->Resume ());
+	}
+	if	(LogIsActive ())
+	{
+		LogSapi5Err (LogNormal, lResult);
+	}
+	return lResult;
+}
+
+HRESULT CSapi5Voice::Pause ()
+{
+	HRESULT	lResult = E_UNEXPECTED;
+
+	if	(_IsValid ())
+	{
+		lResult = mVoice->Pause ();
+		mPaused = true;
+	}
+	if	(LogIsActive ())
+	{
+		LogSapi5Err (LogNormal, lResult);
+	}
+	return lResult;
+}
+
+HRESULT CSapi5Voice::Resume ()
+{
+	HRESULT	lResult = E_UNEXPECTED;
+
+	if	(_IsValid ())
+	{
+		lResult = mVoice->Resume ();
+		mPaused = false;
 	}
 	if	(LogIsActive ())
 	{

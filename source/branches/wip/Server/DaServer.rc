@@ -73,6 +73,7 @@ IDR_DASERVER            REGISTRY                "DaServer.rgs"
 IDR_DASERVERAPP         REGISTRY                "DaServerApp.rgs"
 IDR_DAEMULATION         REGISTRY                "DaEmulation.rgs"
 IDR_DASVRSETTINGS		REGISTRY                "DaSvrSettings.rgs"
+IDR_DASVRFORMATTEDTEXT	REGISTRY                "DaSvrFormattedText.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //

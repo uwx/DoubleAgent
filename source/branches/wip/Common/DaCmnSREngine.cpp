@@ -54,7 +54,7 @@ bool CDaCmnSREngine::Initialize (CSapi5Input * pInput)
 			(pInput)
 		&&	(lInputCache = CSapiInputCache::GetStaticInstance ())
 		&&	(lSapi5Inputs = lInputCache->GetSapi5Inputs ())
-		&&	(mSapi5Input = lSapi5Inputs->GetEngineId (CString (pInput->GetEngineId ())))
+		&&	(mSapi5Input = lSapi5Inputs->GetEngineId (CAtlString (pInput->GetEngineId ())))
 		)
 	{
 		lRet = true;
@@ -78,7 +78,7 @@ bool CDaCmnSREngine::Initialize (CAgentFile * pFile)
 		if	(
 				(lSapiInput = lInputCache->GetAgentInput (pFile->GetTts().mLanguage, true, false))
 			&&	(lSapi5Inputs = lInputCache->GetSapi5Inputs ())
-			&&	(mSapi5Input = lSapi5Inputs->GetEngineId (CString (lSapiInput->GetEngineId ())))
+			&&	(mSapi5Input = lSapi5Inputs->GetEngineId (CAtlString (lSapiInput->GetEngineId ())))
 			)
 		{
 			lRet = true;
@@ -204,9 +204,9 @@ HRESULT CDaCmnSREngine::get_LanguageName (VARIANT_BOOL EnglishName, BSTR *Langua
 
 		if	(mSapi5Input)
 		{
-			LCTYPE	lInfoType = EnglishName ? LOCALE_SLANGUAGE : LOCALE_SNATIVELANGNAME;
-			int 	lInfoSize;
-			CString lInfoValue;
+			LCTYPE		lInfoType = EnglishName ? LOCALE_SLANGUAGE : LOCALE_SNATIVELANGNAME;
+			int			lInfoSize;
+			CAtlString	lInfoValue;
 
 			if	(lInfoSize = GetLocaleInfo (MAKELCID (mSapi5Input->mLangId, SORT_DEFAULT), lInfoType, NULL, 0))
 			{
@@ -289,8 +289,8 @@ HRESULT CDaCmnSREngine::get_LanguageNames (VARIANT_BOOL EnglishNames, SAFEARRAY 
 
 				for	(lNdx = 0; lNdx < (long)mSapi5Input->mLangIdCount; lNdx++)
 				{
-					int 	lInfoSize;
-					CString lInfoValue;
+					int			lInfoSize;
+					CAtlString	lInfoValue;
 
 					if	(lInfoSize = GetLocaleInfo (MAKELCID (mSapi5Input->mLangIdSupported [lNdx], SORT_DEFAULT), lInfoType, NULL, 0))
 					{

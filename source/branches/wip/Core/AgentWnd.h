@@ -39,7 +39,7 @@ class _DACORE_IMPEXP ATL_NO_VTABLE CAgentWnd :
 	public CDirectShowWnd,
 	public CAgentFileClient,
 	public CEventNotifiesClient<CAgentWnd>,
-	protected CAgentStreamUtils
+	public CAgentStreamUtils
 {
 	DECLARE_DLL_OBJECT(CAgentWnd)
 protected:
@@ -72,28 +72,30 @@ public:
 	tBstrPtr GetQueuedState (CQueuedAction * pQueuedState);
 	bool RemoveQueuedState (CQueuedAction * pQueuedState, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 	bool RemoveQueuedState (long pCharID, LPCTSTR pStateName, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+	bool ShowStateGestures (long pCharID, LPCTSTR pStateName, bool pQueuedState);
 
 	long QueueGesture (long pCharID, LPCTSTR pGestureName, LPCTSTR pForState = NULL);
 	CQueuedAction * FindQueuedGesture (long pCharID, LPCTSTR pGestureName, LPCTSTR pForState = NULL);
 	tBstrPtr GetQueuedGesture (CQueuedAction * pQueuedGesture);
 	bool RemoveQueuedGesture (CQueuedAction * pQueuedGesture, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 
+	bool PutQueuedAction (CQueuedAction * pQueuedAction);
+	bool RemoveQueuedAction (CQueuedAction * pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 	CQueuedAction * FindQueuedAction (long pReqID);
 	CQueuedAction * NextQueuedAction (long pCharID = -1);
 	UINT HasQueuedActions (long pCharID = -1);
-	bool HasQueuedStates (long pCharID = -1);
-	bool HasQueuedGestures (long pCharID = -1);
 
-	bool PutQueuedAction (CQueuedAction * pQueuedAction);
-	bool RemoveQueuedAction (CQueuedAction * pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+	bool RemoveQueuedActions (QueueAction pAction, long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL, bool pExcludeActive = false);
 	bool ClearQueuedActions (long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 	bool ClearQueuedStates (long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL, bool pExcludeActive = false, LPCTSTR pExcludeState = NULL, ...);
 	bool ClearQueuedGestures (long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL, bool pExcludeActive = false, LPCTSTR pExcludeState = NULL, ...);
 
 	UINT IsQueueBusy () const;
+	UINT IsQueuePaused () const;
 	UINT_PTR IsQueueActive () const;
 	UINT_PTR ActivateQueue (bool pImmediate, DWORD pQueueTime = 0);
 	UINT_PTR SuspendQueue ();
+	UINT_PTR PauseQueue (bool pPause);
 
 	bool IsSoundEnabled (bool pIgnoreGlobalConfig = false) const;
 	bool EnableSound (bool pEnable);
@@ -108,6 +110,7 @@ public:
 	virtual bool StopIdle (LPCTSTR pReason = NULL);
 
 	bool IsAnimationComplete (bool pPauseAtEndOfStream = false);
+	bool ClearAnimations ();
 	bool UpdateActiveMedia ();
 	bool MakeActiveMedia (bool pActive);
 
@@ -145,22 +148,18 @@ protected:
 	virtual int _PreDoQueue ();
 	virtual int _PostDoQueue ();
 
-	bool DoQueuedState ();
-	bool DoQueuedGesture ();
-	bool DoAnimationLoop ();
 	virtual bool CanDoAnimationQueue ();
 	virtual bool DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime);
+	bool DoAnimationLoop ();
 	virtual bool DoIdle ();
 
+	virtual void PauseQueuedAction (CQueuedAction * pQueuedAction, bool pPause);
 	virtual void AbortQueuedAction (CQueuedAction * pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
-	void AbortQueuedState (CQueuedAction * pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
-	void AbortQueuedGesture (CQueuedAction * pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 
-	bool ShowStateGestures (long pCharID, LPCTSTR pStateName, bool pQueuedState);
 	bool AnimationSequenceChanging (bool pStopNow = false, bool pStopAtEndOfStream = true);
 	void AnimationSequenceChanged ();
-	bool ClearAnimations ();
 
+public:
 	long GetCurrPosMs ();
 	long GetStopPosMs ();
 	long GetDurationMs ();
@@ -170,11 +169,6 @@ protected:
 
 protected:
 	CQueuedActions								mQueue;
-	UINT_PTR									mQueueTimer;
-	DWORD										mQueueTime;
-	const DWORD									mQueueTimeMin;
-	const DWORD									mQueueTimeMax;
-	const DWORD									mQueueTimeDefault;
 	int											mIdleLevel;
 	UINT_PTR									mIdleTimer;
 	bool										mIdleStarted;

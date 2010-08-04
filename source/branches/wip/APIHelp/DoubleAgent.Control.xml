@@ -18,7 +18,9 @@
 	<!ENTITY davcref "../html/UI_Intro.htm#VoiceCommands">
 	<!ENTITY davcname "Voice Commands">
 	<!ENTITY dacmref "../html/UI_Intro.htm#Menu">
-	<!ENTITY dacmname "Pop-up Menu">
+	<!ENTITY dacmname "pop-up menu">
+	<!ENTITY dawbref "../html/UI_Intro.htm#Balloon">
+	<!ENTITY dawbname "word balloon">
 ]>
 
 <doc>
@@ -66,8 +68,8 @@
 				<para>
 					This method allows you to choose a speech recognition engine without loading the character.
 				</para>
-				<include file="&dainclude;" path="/doc/methods/para[@name='Provider']" />
-				<include file="&dainclude;" path="/doc/methods/note[@name='Provider']" />
+				<include file="&dainclude;" path="/doc/remarks/para[@name='Provider']" />
+				<include file="&dainclude;" path="/doc/remarks/note[@name='Provider']" />
 			</remarks>
 			<seealso cref="T:&dans;.SREngines" suffix="Collection" prefix="The" />
 			<seealso cref="T:&dans;.SREngine" suffix="Object" prefix="The" />
@@ -114,8 +116,8 @@
 				<para>
 					This method allows you to choose a text-to-speech engine without loading the character.
 				</para>
-				<include file="&dainclude;" path="/doc/methods/para[@name='Provider']" />
-				<include file="&dainclude;" path="/doc/methods/note[@name='Provider']" />
+				<include file="&dainclude;" path="/doc/remarks/para[@name='Provider']" />
+				<include file="&dainclude;" path="/doc/remarks/note[@name='Provider']" />
 			</remarks>
 			<seealso cref="T:&dans;.TTSEngines" suffix="Collection" prefix="The" />
 			<seealso cref="T:&dans;.TTSEngine" suffix="Object" prefix="The" />
@@ -247,8 +249,8 @@
 					This method allows you to query a character's <em>default</em> speech recognition engine without loading
 					the character.
 				</para>
-				<include file="&dainclude;" path="/doc/methods/para[@name='Provider']" />
-				<include file="&dainclude;" path="/doc/methods/note[@name='Provider']" />
+				<include file="&dainclude;" path="/doc/remarks/para[@name='Provider']" />
+				<include file="&dainclude;" path="/doc/remarks/note[@name='Provider']" />
 			</remarks>
 			<seealso cref="T:&dans;.SREngine" suffix="Object" prefix="The" />
 			<seealso cref="M:&dans;.Characters.Load" suffix="Method" prefix="The" />
@@ -290,8 +292,8 @@
 					This method allows you to query a character's <em>default</em> text-to-speech engine without loading the
 					character.
 				</para>
-				<include file="&dainclude;" path="/doc/methods/para[@name='Provider']" />
-				<include file="&dainclude;" path="/doc/methods/note[@name='Provider']" />
+				<include file="&dainclude;" path="/doc/remarks/para[@name='Provider']" />
+				<include file="&dainclude;" path="/doc/remarks/note[@name='Provider']" />
 			</remarks>
 			<seealso cref="T:&dans;.TTSEngine" suffix="Object" prefix="The" />
 			<seealso cref="M:&dans;.Characters.Load" suffix="Method" prefix="The" />
@@ -1316,7 +1318,7 @@
 		<member name="E:&darootobj;.BalloonHide">
 			<summary>
 				<para>
-					Signalled when a character's word balloon is hidden.
+					Signalled when a character's <a class="see" href="&dawbref;">&dawbname;</a> is hidden.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -1336,11 +1338,14 @@
 <para><keyword>Sub</keyword> &darootref;_<keyword>BalloonHide</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>)</para>
 </vbscript>
 </syntax>
-			<param name="CharacterID">The unique identifier of the character who's balloon was hidden.</param>
+			<param name="CharacterID">
+				The unique identifier of the character who's <a class="see" href="&dawbref;">&dawbname;</a>
+				was hidden.
+			</param>
 			<remarks>
 				<para>
 					Double Agent sends this event only to the clients of the character (applications that have loaded the
-					character) that use the word balloon.
+					character) that use the <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 			</remarks>
 			<seealso cref="E:&darootobj;.BalloonShow" prefix="The" suffix="Event" />
@@ -1351,7 +1356,7 @@
 		<member name="E:&darootobj;.BalloonShow">
 			<summary>
 				<para>
-					Signalled when a character's word balloon is shown.
+					Signalled when a character's <a class="see" href="&dawbref;">&dawbname;</a> is shown.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -1371,11 +1376,14 @@
 <para><keyword>Sub</keyword> &darootref;_<keyword>BalloonShow</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>)</para>
 </vbscript>
 </syntax>
-			<param name="CharacterID">The unique identifier of the character who's balloon was shown.</param>
+			<param name="CharacterID">
+				The unique identifier of the character who's <a class="see" href="&dawbref;">&dawbname;</a>
+				was shown.
+			</param>
 			<remarks>
 				<para>
 					Double Agent sends this event only to the clients of the character (applications that have loaded the
-					character) that use the word balloon.
+					character) that use the <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 			</remarks>
 			<seealso cref="E:&darootobj;.BalloonHide" prefix="The" suffix="Event" />
@@ -1409,11 +1417,12 @@
 			<param name="BookmarkID">The bookmark's unique identifier.</param>
 			<remarks>
 				<para>
-					To specify a bookmark event, use the <see cref="M:&dans;.Character.Speak" /> method with a <keyword>Mrk</keyword>
-					tag in your supplied text. For more information about tags, see <a href="MsAgent.chm::/hh/msagent/guidlin_2my6.htm">Speech Output Tags</a>.
+					To specify a bookmark event, use the <see cref="M:&dans;.Character.Speak" /> or <see cref="M:&dans;.Character.SpeakFormatted" />
+					method with a <keyword>Mrk</keyword> tag in your supplied text. For more information about tags, see <a href="MsAgent.chm::/hh/msagent/guidlin_2my6.htm">Speech Output Tags</a>.
 				</para>
 			</remarks>
 			<seealso cref="M:&dans;.Character.Speak" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Character.SpeakFormatted" prefix="The" suffix="Method" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -2248,6 +2257,91 @@
 		</member>
 
 		<!--=============================================================================================-->
+
+		<member name="E:&darootobj;.SpeechStart">
+			<summary>
+				<para>
+					Signalled when the character starts speaking for the <see cref="M:&dans;.Character.SpeakFormatted" />
+					method.
+				</para>
+			</summary>
+			<syntax xml:space="preserve"></syntax>
+			<param name="CharacterID">The unique identifier of the speaking character.</param>
+			<param name="FormattedText">
+				The <see class="typename" cref="T:&dans;.FormattedText" /> that's being spoken.
+			</param>
+			<remarks>
+				<include file="&dainclude;" path="/doc/remarks/note[@name='FormattedText']" />
+			</remarks>
+			<seealso cref="E:&darootobj;.SpeechEnd" prefix="The" suffix="Event" />
+			<seealso cref="E:&darootobj;.SpeechWord" prefix="The" suffix="Event" />
+			<seealso cref="T:&dans;.FormattedText" suffix="Object" prefix="The" />
+			<seealso cref="M:&dans;.Character.SpeakFormatted" suffix="Method" prefix="The" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:&darootobj;.SpeechEnd">
+			<summary>
+				<para>
+					Signalled when the character stops speaking for the <see cref="M:&dans;.Character.SpeakFormatted" />
+					method.
+				</para>
+			</summary>
+			<syntax xml:space="preserve"></syntax>
+			<param name="CharacterID">The unique identifier of the speaking character.</param>
+			<param name="FormattedText">
+				The <see class="typename" cref="T:&dans;.FormattedText" /> that's being spoken.
+			</param>
+			<param name="Stopped">
+				A <typename>boolean</typename> value that indicates if the speech was stopped before
+				completion.
+			</param>
+			<remarks>
+				<include file="&dainclude;" path="/doc/remarks/note[@name='FormattedText']" />
+			</remarks>
+			<seealso cref="E:&darootobj;.SpeechStart" prefix="The" suffix="Event" />
+			<seealso cref="E:&darootobj;.SpeechWord" prefix="The" suffix="Event" />
+			<seealso cref="T:&dans;.FormattedText" suffix="Object" prefix="The" />
+			<seealso cref="M:&dans;.Character.SpeakFormatted" suffix="Method" prefix="The" />
+			<seealso cref="M:&dans;.Character.Stop" suffix="Method" prefix="The" />
+			<seealso cref="M:&dans;.Character.StopAll" suffix="Method" prefix="The" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:&darootobj;.SpeechWord">
+			<summary>
+				<para>
+					Signalled when the character reaches a new word for the <see cref="M:&dans;.Character.SpeakFormatted" />
+					method.
+				</para>
+			</summary>
+			<syntax xml:space="preserve"></syntax>
+			<param name="CharacterID">The unique identifier of the speaking character.</param>
+			<param name="FormattedText">
+				The <see class="typename" cref="T:&dans;.FormattedText" /> that's being spoken.
+			</param>
+			<param name="WordIndex">
+				A <typename>numeric</typename> value that identifies the word that is currently being
+				spoken.
+			</param>
+			<remarks>
+				<para>
+					Because events are signalled asynchronously, the synchronization between the speech output and the
+					receipt of this event cannot be exact. However, <paramref name="WordIndex" /> will generally identify the
+					<em>next</em> word to be spoken.
+				</para>
+				<include file="&dainclude;" path="/doc/remarks/note[@name='FormattedText']" />
+			</remarks>
+			<seealso cref="E:&darootobj;.SpeechStart" prefix="The" suffix="Event" />
+			<seealso cref="E:&darootobj;.SpeechEnd" prefix="The" suffix="Event" />
+			<seealso cref="T:&dans;.FormattedText" suffix="Object" prefix="The" />
+			<seealso cref="P:&dans;.FormattedText.WordIndex" suffix="Property" prefix="The" />
+			<seealso cref="M:&dans;.Character.SpeakFormatted" suffix="Method" prefix="The" />
+		</member>
+
+		<!--=============================================================================================-->
 		<!--=============================================================================================-->
 
 		<member name="T:&darootobj;">
@@ -2707,6 +2801,30 @@
 									</term>
 									<description>
 										<copy path="/doc/members/member[@name='E:&darootobj;.Size']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
+										<see cref="E:&darootobj;.SpeechEnd" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='E:&darootobj;.SpeechEnd']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
+										<see cref="E:&darootobj;.SpeechStart" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='E:&darootobj;.SpeechStart']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
+										<see cref="E:&darootobj;.SpeechWord" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='E:&darootobj;.SpeechWord']/summary/para[1]" />
 									</description>
 								</item>
 							</list>
@@ -3424,7 +3542,7 @@
 			</param>
 			<returns name="Request">
 				A <see class="typename" cref="T:&dans;.Request" suffix="Object" /> your application can
-				used to track the method's status.
+				use to track the method's status.
 			</returns>
 			<remarks>
 				<para>
@@ -3432,6 +3550,8 @@
 					coordinates are always relative to the upper left corner of the screen.
 				</para>
 			</remarks>
+			<seealso cref="E:&darootobj;.RequestStart" prefix="The" suffix="Event" />
+			<seealso cref="E:&darootobj;.RequestComplete" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -3478,7 +3598,7 @@
 			</param>
 			<returns name="Request">
 				A <see class="typename" cref="T:&dans;.Request" suffix="Object" /> your application can
-				used to track the method's status.
+				use to track the method's status.
 			</returns>
 			<remarks>
 				<para>
@@ -3496,6 +3616,8 @@
 				</note>
 			</remarks>
 			<seealso cref="M:&dans;.Character.Show" prefix="The" suffix="Method" />
+			<seealso cref="E:&darootobj;.RequestStart" prefix="The" suffix="Event" />
+			<seealso cref="E:&darootobj;.RequestComplete" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -3526,7 +3648,7 @@
 			</param>
 			<returns name="Request">
 				A <see class="typename" cref="T:&dans;.Request" suffix="Object" /> your application can
-				used to track the method's status.
+				use to track the method's status.
 			</returns>
 			<remarks>
 				<para>
@@ -3535,7 +3657,7 @@
 					queue.
 				</para>
 			</remarks>
-			<details>
+			<details name="Example">
 				<h4 class="details">Example</h4>
 				<para>
 					To specify the request parameter, create a variable for the animation request you want to interrupt:
@@ -3563,6 +3685,8 @@
 
     Genie.<keyword>Speak</keyword> "I was just checking on something."
 <keyword>End Sub</keyword></code>
+			</details>
+			<details name="Details">
 				<h4 class="details">Details</h4>
 				<para>
 					You can only use the <self>Interrupt</self> method to interrupt <em>another</em> character. To stop
@@ -3576,6 +3700,8 @@
 				<note>You cannot interrupt a character animation that you didn't start (that was started by another client).</note>
 			</details>
 			<seealso cref="M:&dans;.Character.Stop" prefix="The" suffix="Method" />
+			<seealso cref="E:&darootobj;.RequestStart" prefix="The" suffix="Event" />
+			<seealso cref="E:&darootobj;.RequestComplete" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -3621,6 +3747,8 @@
 					the method succeeds, but the time-out is ignored and <glossary>Listening mode</glossary> ends based on
 					the user's interaction with the <glossary>Listening key</glossary>.
 				</para>
+			</remarks>
+			<details name="Example">
 				<para>
 					This method succeeds only when called by the <glossary>input-active</glossary> client and only if
 					speech services are available. To detect the success of this method, call it as a function and it
@@ -3633,11 +3761,11 @@
     ' The method failed
 <keyword>End If</keyword></code>
 				</example>
-			</remarks>
-			<details>
+			</details>
+			<details name="Details">
 				<h4 class="details">Details</h4>
 				<para>
-					The method also fails if the user is pressing the <glossary>Listening key</glossary> and you attempt to
+					This method fails if the user is pressing the <glossary>Listening key</glossary> and you attempt to
 					set <paramref name="Listen" /> to <keyword>False</keyword>. However, if the user has released the <glossary>Listening key</glossary>
 					and <glossary>Listening mode</glossary> has not timed out, it will succeed.
 				</para>
@@ -3647,8 +3775,8 @@
 					the <a class="see" href="&dapsref;#SpeechInput">&dapsname;</a> window, or the audio device is busy.
 				</para>
 				<para>
-					When you successfully set this method to <keyword>True</keyword>, the Double Agent triggers the <see cref="E:&darootobj;.ListenStart" />
-					event. Double Agent sends <see cref="E:&darootobj;.ListenComplete" /> when the <glossary>Listening mode</glossary>
+					When you successfully set this method to <keyword>True</keyword>, the Double Agent signals the <see cref="E:&darootobj;.ListenStart" />
+					event. Double Agent also signals the <see cref="E:&darootobj;.ListenComplete" /> event when the <glossary>Listening mode</glossary>
 					time-out completes or when you set <paramref name="Listen" /> to <keyword>False</keyword>.
 				</para>
 				<para>
@@ -3697,7 +3825,7 @@
 			</param>
 			<returns name="Request">
 				A <see class="typename" cref="T:&dans;.Request" suffix="Object" /> your application can
-				used to track the method's status.
+				use to track the method's status.
 			</returns>
 			<remarks>
 				<para>
@@ -3705,16 +3833,18 @@
 					the appropriate animation assigned to the <glossary>Moving</glossary> states.
 				</para>
 				<note>
+					The <paramref name="Speed" /> parameter's actual effect may vary based on the computer's processor speed
+					and the priority of other tasks running on the system.
+				</note>
+				<note>
 					If you call <self>MoveTo</self> with a non-zero <paramref name="Speed" /> before the character is
 					shown, it will return a failure status if you assigned a <see cref="T:&dans;.Request" suffix="Object" />,
 					because the non-zero value indicates that you're attempting to play an animation when the character isn't
 					visible.
 				</note>
-				<note>
-					The <paramref name="Speed" /> parameter's actual effect may vary based on the computer's processor speed
-					and the priority of other tasks running on the system.
-				</note>
 			</remarks>
+			<seealso cref="E:&darootobj;.RequestStart" prefix="The" suffix="Event" />
+			<seealso cref="E:&darootobj;.RequestComplete" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -3744,7 +3874,7 @@
 			</param>
 			<returns name="Request">
 				A <see class="typename" cref="T:&dans;.Request" suffix="Object" /> your application can
-				used to track the method's status.
+				use to track the method's status.
 			</returns>
 			<remarks>
 				<para>
@@ -3758,13 +3888,15 @@
 					<see cref="T:&dans;.Request" suffix="Object" />.
 				</para>
 				<para>
-					When accessing a character's animations using a conventional file protocol, you can simply use the<self>Play</self>
+					When accessing a character's animations using a conventional file protocol, you can simply use the <self>Play</self>
 					method specifying the name of the animation. However, if you're using the <glossary>HTTP</glossary> protocol
 					to access character animation data, use the <see cref="M:&dans;.Character.Prepare" /> method to load the
 					animation before calling the <self>Play</self> method.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.Character.Animations" prefix="The" suffix="Property" />
+			<seealso cref="E:&darootobj;.RequestStart" prefix="The" suffix="Event" />
+			<seealso cref="E:&darootobj;.RequestComplete" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -3817,7 +3949,7 @@
 			</param>
 			<returns name="Request">
 				A <see class="typename" cref="T:&dans;.Request" suffix="Object" /> your application can
-				used to track the method's status.
+				use to track the method's status.
 			</returns>
 			<remarks>
 				<para>
@@ -3832,6 +3964,8 @@
 					the <filename>.ACF</filename> file was loaded). However, this may cause unexpected delays when using the
 					<glossary>HTTP</glossary> protocol.
 				</para>
+			</remarks>
+			<details>
 				<para>
 					You can declare an object reference and set it to the method's <see cref="T:&dans;.Request" suffix="Object" />
 					return value. If the associated animation fails to load, Double Agent sets the <see cref="T:&dans;.Request" suffix="Object's" /> <see cref="P:&dans;.Request.Status" />
@@ -3844,11 +3978,13 @@
 					from the cache. Once loaded, the animation or sound data can be played with the <see cref="M:&dans;.Character.Play" />
 					or <see cref="M:&dans;.Character.Speak" /> methods.
 				</para>
-			</remarks>
+			</details>
 			<seealso cref="T:&dans;.PrepareResourceType" suffix="Enumeration" prefix="The" />
 			<seealso cref="M:&dans;.Characters.Load" prefix="The" suffix="Method" />
 			<seealso cref="P:&dans;.Character.Animations" prefix="The" suffix="Property" />
 			<seealso cref="P:&dans;.Character.States" prefix="The" suffix="Property" />
+			<seealso cref="E:&darootobj;.RequestStart" prefix="The" suffix="Event" />
+			<seealso cref="E:&darootobj;.RequestComplete" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -3879,7 +4015,7 @@
 			</param>
 			<returns name="Request">
 				A <see class="typename" cref="T:&dans;.Request" suffix="Object" /> your application can
-				used to track the method's status.
+				use to track the method's status.
 			</returns>
 			<remarks>
 				<para>
@@ -3893,6 +4029,8 @@
 				</para>
 			</remarks>
 			<seealso cref="M:&dans;.Character.Hide" prefix="The" suffix="Method" />
+			<seealso cref="E:&darootobj;.RequestStart" prefix="The" suffix="Event" />
+			<seealso cref="E:&darootobj;.RequestComplete" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -3939,6 +4077,8 @@
 					it fails. To determine the success of this method you can call it as a function and it will
 					return a boolean value indicating whether the method succeeded.
 				</para>
+			</remarks>
+			<details>
 				<example>
 					<code xml:space="preserve"><keyword>If</keyword> Genie.<keyword>ShowPopupMenu</keyword> (10,10) = True <keyword>Then</keyword>
     ' The menu was displayed
@@ -3946,7 +4086,7 @@
     ' The menu was not displayed
 <keyword>End If</keyword></code>
 				</example>
-			</remarks>
+			</details>
 			<seealso cref="P:&dans;.Character.AutoPopupMenu" prefix="The" suffix="Property" />
 		</member>
 
@@ -3969,7 +4109,7 @@
 <para>[<token>Request</token> = ]&dacharref_vb;.<keyword>Speak</keyword> (<token>Text</token>, <token>Url</token>)</para>
 </vbnet>
 <vb>
-<para>[<keyword>Set</keyword> <token>Request</token> = ]&dacharref_vb;.<keyword>Speak</keyword> [<token>Text</token>], [<token>Url</token>]</para>
+<para>[<keyword>Set</keyword> <token>Request</token> = ]&dacharref_vb;.<keyword>Speak</keyword> [<token>Text</token>][, <token>Url</token>]</para>
 </vb>
 </syntax>
 			<param name="Text">
@@ -3982,14 +4122,15 @@
 			</param>
 			<returns name="Request">
 				A <see class="typename" cref="T:&dans;.Request" suffix="Object" /> your application can
-				used to track the method's status.
+				use to track the method's status.
 			</returns>
 			<remarks>
 				<para>
 					At least one of the <paramref name="Text" /> and <paramref name="Url" /> parameters must be supplied. To
-					use this method with a character configured to speak only in its word balloon or using a text-to-speech (TTS)
-					engine, simply provide the <paramref name="Text" /> parameter. Include a space between words to define appropriate
-					word breaks in the word balloon, even for languages that do not traditionally include spaces.
+					use this method with a character configured to speak only in its <a class="see" href="&dawbref;">&dawbname;</a>
+					or using a text-to-speech (TTS) engine, simply provide the <paramref name="Text" /> parameter. Include a
+					space between words to define appropriate word breaks in the <a class="see" href="&dawbref;">&dawbname;</a>,
+					even for languages that do not traditionally include spaces.
 				</para>
 				<para>
 					You can also include vertical bar '|' characters in the <paramref name="Text" /> parameter to designate alternative
@@ -4029,10 +4170,11 @@
 					For more information on the bookmark speech tag, see <a href="MsAgent.chm::/hh/msagent/spoutput_2v1w.htm">Speech Output Tags</a>.
 				</example>
 				<para>
-					Agent's automatic word breaking in the word balloon breaks words using white-space characters (for example,
-					Space or Tab). However, if it cannot, it may break a word to fit the balloon. In languages like
-					Japanese, Chinese, and Thai, where spaces are not used to break words, insert a Unicode zero-width space
-					character (0x200B) between characters to define logical word breaks.
+					Agent's automatic word breaking in the <a class="see" href="&dawbref;">&dawbname;</a> breaks words using
+					<glossary>white-space</glossary> characters (for example, Space or Tab). However, if it cannot, it may break a word
+					to fit the <a class="see" href="&dawbref;">&dawbname;</a>. In languages like Japanese, Chinese, and Thai,
+					where spaces are not used to break words, insert a Unicode zero-width space character (0x200B) between
+					characters to define logical word breaks.
 				</para>
 				<h4 class="details">Sound Files</h4>
 				<para>
@@ -4045,11 +4187,11 @@
 				</para>
 				<para>
 					When using recorded sound file output, you can still use the <paramref name="Text" /> parameter to
-					specify the words that appear in the character's word balloon.
+					specify the words that appear in the character's <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 				<para>
 					If you call <self>Speak</self> and the audio channel is busy, the character's audio output will not
-					be heard, but the text will display in the word balloon.
+					be heard, but the text will display in the <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 				<h4 class="details">Animation</h4>
 				<para>
@@ -4061,16 +4203,16 @@
 				</para>
 				<br />
 				<note>
-					To track the method's status, you can declare an object reference and set it to the method's<see cref="T:&dans;.Request" suffix="Object" />
+					To track the method's status, you can declare an object reference and set it to the method's <see cref="T:&dans;.Request" suffix="Object" />
 					return value.
 				</note>
 				<note>
-					The word balloon's <see cref="P:&dans;.Balloon.Enabled" /> property must also be <keyword>True</keyword>
-					for text to display.
+					The <a class="see" href="&dawbref;">&dawbname;'s</a> <see cref="P:&dans;.Balloon.Enabled" />
+					property must also be <keyword>True</keyword> for text to display.
 				</note>
 				<note>
 					Set the character's <see cref="P:&dans;.Character.LanguageID" /> before using the <self>Speak</self>
-					method to ensure appropriate text display within the word balloon.
+					method to ensure appropriate text display within the <a class="see" href="&dawbref;">&dawbname;</a>.
 				</note>
 			</details>
 			<seealso cref="P:&dans;.Character.LanguageID" prefix="The" suffix="Property" />
@@ -4108,12 +4250,20 @@
 			</param>
 			<remarks>
 				<para>
-					To specify the request parameter, you must create a variable and assign the animation request you want
+					To specify the <paramref name="Request"/> parameter, you must create a variable and assign the animation request you want
 					to stop. If you don't set the <paramref name="Request" /> parameter, Double Agent stops all animations for
 					the character, including queued <see cref="M:&dans;.Character.Prepare" /> calls, and clears its animation queue
 					(unless the character is currently playing its <glossary>Hiding</glossary> or <glossary>Showing</glossary>
-					animation). This method <em>does not</em> stop non-queued <see cref="M:&dans;.Character.Prepare" /> calls.
+					animation).
 				</para>
+				<note>
+					This method is performed immediately and does not generate a <see cref="T:&dans;.Request" suffix="Object" />.
+				</note>
+				<note>
+					This method <em>does not</em> stop non-queued <see cref="M:&dans;.Character.Prepare" /> calls.
+				</note>
+			</remarks>
+			<details>
 				<example>
 					<para>
 						To stop a specific animation or <see cref="M:&dans;.Character.Prepare" /> call, declare an object variable
@@ -4132,10 +4282,7 @@ Genie.<keyword>Show</keyword>
 
 Genie.<keyword>Stop</keyword> MyRequest</code>
 				</example>
-				<para>
-					This method is performed immediately and does not generate a <see cref="T:&dans;.Request" suffix="Object" />.
-				</para>
-			</remarks>
+			</details>
 			<seealso cref="M:&dans;.Character.StopAll" prefix="The" suffix="Method" />
 		</member>
 
@@ -4219,7 +4366,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 		<member name="M:&dans;.Character.Think">
 			<summary>
 				<para>
-					Displays the specified text in the character's <glossary>thought</glossary> balloon.
+					Displays the specified text in the character's <glossary>thought</glossary> <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -4241,15 +4388,15 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 			</param>
 			<returns name="Request">
 				A <see class="typename" cref="T:&dans;.Request" suffix="Object" /> your application can
-				used to track the method's status.
+				use to track the method's status.
 			</returns>
 			<remarks>
 				<para>
 					Like the <see cref="M:&dans;.Character.Speak" /> method, the <self>Think</self> method is a queued request
-					that displays text in a word balloon, except that the <self>Think</self> word balloon differs visually. In
-					addition, the balloon supports only the Bookmark speech control tag (<keyword>\Mrk</keyword>) and ignores any
-					other speech control tags. Unlike <see cref="M:&dans;.Character.Speak" />, the <self>Think</self> method does
-					not change the character's animation state.
+					that displays text in a <a class="see" href="&dawbref;">&dawbname;</a>, except that the <self>Think</self> <a class="see" href="&dawbref;">&dawbname;</a>
+					differs visually. In addition, the <a class="see" href="&dawbref;">&dawbname;</a> supports only the Bookmark
+					speech control tag (<keyword>\Mrk</keyword>) and ignores any other speech control tags. Unlike <see cref="M:&dans;.Character.Speak" />,
+					the <self>Think</self> method does not change the character's animation state.
 				</para>
 				<para>
 					The <see cref="T:&dans;.Balloon" suffix="Object's" /> properties affect the output of both the <see cref="M:&dans;.Character.Speak" />
@@ -4257,22 +4404,25 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 					property must be <keyword>True</keyword> for text to display.
 				</para>
 				<para>
-					Agent's automatic word breaking in the word balloon breaks words using white-space characters (for example,
-					SPACE or TAB). However, if it cannot, it may break a word to fit the balloon. In languages like
-					Japanese, Chinese, and Thai where spaces are not used to break words, insert a Unicode zero-width space
-					character (0x200B) between characters to define logical word breaks.
+					Agent's automatic word breaking in the <a class="see" href="&dawbref;">&dawbname;</a> breaks words using
+					<glossary>white-space</glossary> characters (for example, SPACE or TAB). However, if it cannot, it may break a word
+					to fit the <a class="see" href="&dawbref;">&dawbname;</a>. In languages like Japanese, Chinese, and Thai
+					where spaces are not used to break words, insert a Unicode zero-width space character (0x200B) between
+					characters to define logical word breaks.
 				</para>
 				<note>
-					To track the method's status, you can declare an object reference and set it to the method's<see cref="T:&dans;.Request" suffix="Object" />
+					To track the method's status, you can declare an object reference and set it to the method's <see cref="T:&dans;.Request" suffix="Object" />
 					return value.
 				</note>
 				<note>
 					Set the character's <see cref="P:&dans;.Character.LanguageID" /> before using the <self>Think</self>
-					method to ensure appropriate text display within the word balloon.
+					method to ensure appropriate text display within the <a class="see" href="&dawbref;">&dawbname;</a>.
 				</note>
 			</remarks>
 			<seealso cref="P:&dans;.Character.LanguageID" prefix="The" suffix="Property" />
 			<seealso cref="M:&dans;.Character.Speak" prefix="The" suffix="Method" />
+			<seealso cref="E:&darootobj;.RequestStart" prefix="The" suffix="Event" />
+			<seealso cref="E:&darootobj;.RequestComplete" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -4303,7 +4453,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 			</param>
 			<returns name="Request">
 				A <see class="typename" cref="T:&dans;.Request" suffix="Object" /> your application can
-				used to track the method's status.
+				use to track the method's status.
 			</returns>
 			<remarks>
 				<para>
@@ -4315,6 +4465,8 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 					If you have two characters and you want one character's animation request to wait until the other character's
 					animation completes, use the <self>Wait</self> method with the other character's animation <see cref="T:&dans;.Request" suffix="Object" />.
 				</para>
+			</remarks>
+			<details>
 				<example>
 					<para>
 						To specify the request parameter, create a variable for the animation request you want to wait for:
@@ -4365,7 +4517,9 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 						This avoids having to explicitly declare a <see cref="T:&dans;.Request" suffix="Object" />.
 					</para>
 				</example>
-			</remarks>
+			</details>
+			<seealso cref="E:&darootobj;.RequestStart" prefix="The" suffix="Event" />
+			<seealso cref="E:&darootobj;.RequestComplete" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -5208,8 +5362,9 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 					be English (US).
 				</para>
 				<para>
-					This property also determines the language for word balloon text, the commands in the character's<a class="see" href="&dacmref;">&dacmname;</a>,
-					and the speech recognition engine. It also determines the default language for text-to-speech output.
+					This property also determines the language for <a class="see" href="&dawbref;">&dawbname;</a> text, the
+					commands in the character's<a class="see" href="&dacmref;">&dacmname;</a>, and the speech recognition engine.
+					It also determines the default language for text-to-speech output.
 				</para>
 			</remarks>
 			<details>
@@ -5228,8 +5383,8 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
 				<note>
 					If you set <self>LanguageID</self> to a language that supports bidirectional text (such as Arabic
-					or Hebrew), but the system running your application does not have bidirectional support installed, text
-					in the word balloon may appear in logical rather than display order.
+					or Hebrew), but the system running your application does not have bidirectional support installed,
+					text in the <a class="see" href="&dawbref;">&dawbname;</a> may appear in logical rather than display order.
 				</note>
 			</details>
 			<seealso cref="P:&dans;.Character.TTSModeID" prefix="The" suffix="Property" />
@@ -6209,6 +6364,175 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 		</member>
 
 		<!--=============================================================================================-->
+
+		<member name="M:&dans;.Character.NewFormattedText">
+			<summary>
+				<para>
+					Returns an initialized, empty <see cref="T:&dans;.FormattedText" suffix="Object" />.
+				</para>
+			</summary>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>NewFormattedText</keyword> (&amp;<token>FormattedText</token>)</para>
+</cpp>
+<csharp>
+<para><token>FormattedText</token> = &dacharref_csharp;.<keyword>NewFormattedText</keyword> ()</para>
+</csharp>
+<vbnet>
+<para><token>FormattedText</token> = &dacharref_vb;.<keyword>NewFormattedText</keyword> ()</para>
+</vbnet>
+<vb>
+<para><keyword>Set</keyword> <token>FormattedText</token> = &dacharref_vb;.<keyword>NewFormattedText</keyword> ()</para>
+</vb>
+</syntax>
+			<returns name="FormattedText">
+				A <see class="typename" cref="T:&dans;.FormattedText" suffix="Object" />.
+			</returns>
+			<remarks>
+				<para>
+					The returned <see cref="T:&dans;.FormattedText" suffix="Object" /> is initialized to handle speech tags
+					consistent with the <see cref="T:&dans;.Character" text="Character's" /> current Text-to-Speech engine.
+				</para>
+				<para>
+					Once you have completed the <see cref="T:&dans;.FormattedText" suffix="Object" />, you can pass it
+					to either the <see cref="M:&dans;.Character.SpeakFormatted" /> or <see cref="M:&dans;.Character.ThinkFormatted" />
+					method. If you plan to use the same text more than once, keep a reference to the
+					<see cref="T:&dans;.FormattedText" suffix="Object" />
+					and reuse it. This can improve the performance of your application.
+				</para>
+			</remarks>
+			<seealso cref="T:&dans;.FormattedText" prefix="The" suffix="Object" />
+			<seealso cref="M:&dans;.Character.SpeakFormatted" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Character.ThinkFormatted" prefix="The" suffix="Method" />
+			<seealso cref="P:&dans;.Character.TTSModeID" prefix="The" suffix="Property" />
+			<seealso cref="P:&dans;.Character.TTSEngine" prefix="The" suffix="Property" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:&dans;.Character.SpeakFormatted">
+			<summary>
+				<para>
+					Speaks the specified text.
+				</para>
+			</summary>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>SpeakFormatted</keyword> (<token>FormattedText</token>, &amp;<token>Request</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>Request</token> = ]&dacharref_csharp;.<keyword>SpeakFormatted</keyword> (<token>FormattedText</token>)</para>
+</csharp>
+<vbnet>
+<para>[<token>Request</token> = ]&dacharref_vb;.<keyword>SpeakFormatted</keyword> (<token>FormattedText</token>)</para>
+</vbnet>
+<vb>
+<para>[<keyword>Set</keyword> <token>Request</token> = ]&dacharref_vb;.<keyword>SpeakFormatted</keyword> <token>FormattedText</token></para>
+</vb>
+</syntax>
+			<param name="FormattedText">
+				A <see class="typename" cref="T:&dans;.FormattedText" suffix="Object" />
+				object containing the text to be spoken.
+			</param>
+			<returns name="Request">
+				A <see class="typename" cref="T:&dans;.Request" suffix="Object" /> your application can
+				use to track the method's status.
+			</returns>
+			<remarks>
+				<para>
+					This method is the same as the <see cref="M:&dans;.Character.Speak" /> method, except that the input
+					text is already parsed and formatted, and using this method triggers the <see cref="E:&darootobj;.SpeechStart" />,
+					<see cref="E:&darootobj;.SpeechEnd" />, and <see cref="E:&darootobj;.SpeechWord" /> events.
+				</para>
+				<para>
+					Calling the <see cref="M:&dans;.Character.Speak" /> method with a specific text string is equivalent to:
+
+					<list type="number">
+						<item>
+							calling <see cref="M:&dans;.Character.NewFormattedText" /> to get a <see cref="T:&dans;.FormattedText" />
+							object;
+						</item>
+						<item>
+							calling the <see cref="T:&dans;.FormattedText" /> object's <see cref="M:&dans;.FormattedText.Parse" />
+							method with the same text string;
+						</item>
+						<item>
+							calling <self>SpeakFormatted</self> with the <see cref="T:&dans;.FormattedText" /> object.
+						</item>
+					</list>
+
+				</para>
+			</remarks>
+			<seealso cref="T:&dans;.FormattedText" prefix="The" suffix="Object" />
+			<seealso cref="E:&darootobj;.SpeechStart" suffix="Event" prefix="The" />
+			<seealso cref="E:&darootobj;.SpeechEnd" suffix="Event" prefix="The" />
+			<seealso cref="E:&darootobj;.SpeechWord" suffix="Event" prefix="The" />
+			<seealso cref="M:&dans;.Character.Speak" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Character.ThinkFormatted" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Character.NewFormattedText" prefix="The" suffix="Method" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:&dans;.Character.ThinkFormatted">
+			<summary>
+				<para>
+					Displays the specified text in the character's <glossary>thought</glossary> <a class="see" href="&dawbref;">&dawbname;</a>.
+				</para>
+			</summary>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>ThinkFormatted</keyword> (<token>FormattedText</token>, &amp;<token>Request</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>Request</token> = ]&dacharref_csharp;.<keyword>ThinkFormatted</keyword> (<token>FormattedText</token>)</para>
+</csharp>
+<vbnet>
+<para>[<token>Request</token> = ]&dacharref_vb;.<keyword>ThinkFormatted</keyword> (<token>FormattedText</token>)</para>
+</vbnet>
+<vb>
+<para>[<keyword>Set</keyword> <token>Request</token> = ]&dacharref_vb;.<keyword>ThinkFormatted</keyword> <token>FormattedText</token></para>
+</vb>
+</syntax>
+			<param name="FormattedText">
+				A <see class="typename" cref="T:&dans;.FormattedText" suffix="Object" />
+				object containing the text to be displayed.
+			</param>
+			<returns name="Request">
+				A <see class="typename" cref="T:&dans;.Request" suffix="Object" /> your application can
+				use to track the method's status.
+			</returns>
+			<remarks>
+				<para>
+					Calling the <see cref="M:&dans;.Character.Think" /> method with a specific text string is equivalent to:
+
+					<list type="number">
+						<item>
+							calling <see cref="M:&dans;.Character.NewFormattedText" /> to get a <see cref="T:&dans;.FormattedText" />
+							object;
+						</item>
+						<item>
+							calling the <see cref="T:&dans;.FormattedText" suffix="" /> object's <see cref="M:&dans;.FormattedText.Parse" />
+							method with the same text string;
+						</item>
+						<item>
+							calling <self>ThinkFormatted</self> with the <see cref="T:&dans;.FormattedText" /> object.
+						</item>
+					</list>
+
+				</para>
+				<note>
+					This methods <em>does not</em> trigger the <keyword>SpeechStart</keyword>, <keyword>SpeechEnd</keyword>,
+					and <keyword>SpeechWord</keyword> events.
+				</note>
+			</remarks>
+			<seealso cref="T:&dans;.FormattedText" prefix="The" suffix="Object" />
+			<seealso cref="M:&dans;.Character.Think" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Character.SpeakFormatted" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Character.NewFormattedText" prefix="The" suffix="Method" />
+		</member>
+
+		<!--=============================================================================================-->
 		<!--=============================================================================================-->
 
 		<member name="T:&dans;.Character">
@@ -6310,6 +6634,14 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 								</item>
 								<item>
 									<term>
+										<see cref="M:&dans;.Character.NewFormattedText" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='M:&dans;.Character.NewFormattedText']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
 										<see cref="M:&dans;.Character.Play" />
 									</term>
 									<description>
@@ -6342,6 +6674,14 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 								</item>
 								<item>
 									<term>
+										<see cref="M:&dans;.Character.SpeakFormatted" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='M:&dans;.Character.SpeakFormatted']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
 										<see cref="M:&dans;.Character.Stop" />
 									</term>
 									<description>
@@ -6362,6 +6702,14 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 									</term>
 									<description>
 										<copy path="/doc/members/member[@name='M:&dans;.Character.Think']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
+										<see cref="M:&dans;.Character.ThinkFormatted" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='M:&dans;.Character.ThinkFormatted']/summary/para[1]" />
 									</description>
 								</item>
 								<item>
@@ -8662,7 +9010,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.BackColor">
 			<summary>
 				<para>
-					Specifies the background color of a character's word balloon.
+					Specifies the background color of a character's <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -8693,7 +9041,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.BorderColor">
 			<summary>
 				<para>
-					Specifies the border color of a character's word balloon.
+					Specifies the border color of a character's <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -8724,7 +9072,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.CharsPerLine">
 			<summary>
 				<para>
-					Specifies the characters per line used for a character's word balloon.
+					Specifies the characters per line used for a character's <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -8748,8 +9096,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			<remarks>
 				<para>
 					The <self>CharsPerLine</self> property is the average number of characters (letters) displayed in
-					the word balloon. For backward compatibility, you can also set the value using the <see cref="P:&dans;.Balloon.Style" />
-					property.
+					the <a class="see" href="&dawbref;">&dawbname;</a>. For backward compatibility, you can also set the value
+					using the <see cref="P:&dans;.Balloon.Style" /> property.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
 			</remarks>
@@ -8761,7 +9109,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.Enabled">
 			<summary>
 				<para>
-					Indicates if the word balloon is enabled for a character.
+					Indicates if the <a class="see" href="&dawbref;">&dawbname;</a> is enabled for a character.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -8783,8 +9131,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 				<include path="/doc/members/member[@name='F:&dans;.BalloonStyleFlags.Enabled']/remarks/para" />
 				<para>
 					The default enabled style is set as part of a character's definition when the character is compiled in
-					the Microsoft Agent Character Editor. If a character is defined to not support the word balloon, this
-					property will always be <keyword>False</keyword> for the character.
+					the Microsoft Agent Character Editor. If a character is defined to not support the <a class="see" href="&dawbref;">&dawbname;</a>,
+					this property will always be <keyword>False</keyword> for the character.
 				</para>
 				<para>
 					The user can override the enabled style for <em>all</em> characters in the <a class="see" href="&dapsref;#Output">&dapsname;</a>
@@ -8800,7 +9148,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.FontCharSet">
 			<summary>
 				<para>
-					Specifies the character set for the font used in a character's word balloon.
+					Specifies the character set for the font used in a character's <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -8827,7 +9175,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 					If you're using a character that you didn't compile, check the <see cref="P:&dans;.Balloon.FontName" />
 					and <self>FontCharSet</self> properties for the character to determine whether they are appropriate for
 					your locale. You may need to set these values before using the <see cref="M:&dans;.Character.Speak" />
-					method to ensure appropriate text display within the word balloon.
+					method to ensure appropriate text display within the <a class="see" href="&dawbref;">&dawbname;</a>.
 				</note>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
 			</remarks>
@@ -8840,7 +9188,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.FontName">
 			<summary>
 				<para>
-					Specifies the font used in the word balloon for the specified character.
+					Specifies the font used in the <a class="see" href="&dawbref;">&dawbname;</a> for the specified character.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -8866,7 +9214,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 					If you're using a character that you didn't compile, check the <self>FontName</self> and <see cref="P:&dans;.Balloon.FontCharSet" />
 					properties for the character to determine whether they are appropriate for your locale. You may need
 					to set these values before using the <see cref="M:&dans;.Character.Speak" /> method to ensure appropriate text
-					display within the word balloon.
+					display within the <a class="see" href="&dawbref;">&dawbname;</a>.
 				</note>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
 			</remarks>
@@ -8879,7 +9227,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.FontBold">
 			<summary>
 				<para>
-					Specifies the font style of a character's the word balloon.
+					Specifies the font style of a character's the <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -8911,7 +9259,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.FontItalic">
 			<summary>
 				<para>
-					Specifies the font style of a character's the word balloon.
+					Specifies the font style of a character's the <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -8943,7 +9291,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.FontSize">
 			<summary>
 				<para>
-					Specifies the font size supported for the word balloon for the specified character.
+					Specifies the font size supported for the <a class="see" href="&dawbref;">&dawbname;</a> for the specified
+					character.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -8975,7 +9324,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.FontStrikethru">
 			<summary>
 				<para>
-					Specifies the font style of a character's the word balloon.
+					Specifies the font style of a character's the <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -9008,7 +9357,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.FontUnderline">
 			<summary>
 				<para>
-					Specifies the font style of a character's word balloon.
+					Specifies the font style of a character's <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -9056,7 +9405,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.TextColor">
 			<summary>
 				<para>
-					Returns the text color displayed in a character's word balloon.
+					Returns the text color displayed in a character's <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -9086,7 +9435,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.NumberOfLines">
 			<summary>
 				<para>
-					Specifies the number of lines used for a character's word balloon.
+					Specifies the number of lines used for a character's <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -9105,13 +9454,13 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="NumberOfLines">
 				A <typename>numeric</typename> value that specifies the number of lines in
-				a fixed-size word balloon.
+				a fixed-size <a class="see" href="&dawbref;">&dawbname;</a>.
 			</value>
 			<remarks>
 				<para>
-					The <self>NumberOfLines</self> property is only used if the word balloon doesn't have the <keyword>AutoSize</keyword>
-					style. For backward compatibility, you can also set the value using the <see cref="P:&dans;.Balloon.Style" />
-					property.
+					The <self>NumberOfLines</self> property is only used if the <a class="see" href="&dawbref;">&dawbname;</a>
+					doesn't have the <keyword>AutoSize</keyword> style. For backward compatibility, you can also set the value
+					using the <see cref="P:&dans;.Balloon.Style" /> property.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
 			</remarks>
@@ -9123,7 +9472,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.Style">
 			<summary>
 				<para>
-					Specifies the character's word balloon output style.
+					Specifies the character's <a class="see" href="&dawbref;">&dawbname;</a> output style.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -9141,8 +9490,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </vb>
 </syntax>
 			<value name="Style">
-				An <typename>numeric</typename> value that represents the balloon's output style. The
-				style value is a bit field with bits defined as follows:
+				An <typename>numeric</typename> value that represents the <a class="see" href="&dawbref;">&dawbname;'s</a>
+				output style. The style value is a bit field with bits defined as follows:
 				<list type="table">
 					<item>
 						<term>bit 0 (&hexprefix;00000001)</term>
@@ -9226,8 +9575,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 					</item>
 				</list>
 				<note>
-					The <self>Style</self> property can be set even if the user has disabled word balloons in the
-					<a class="see" href="&dapsref;#Output">&dapsname;</a> window.
+					The <self>Style</self> property can be set even if the user has disabled <a class="see" href="&dawbref;">&dawbname;s</a>
+					in the <a class="see" href="&dapsref;#Output">&dapsname;</a> window.
 				</note>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
 			</details>
@@ -9246,7 +9595,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.Visible">
 			<summary>
 				<para>
-					Specifies the visiblity of a character's word balloon.
+					Specifies the visiblity of a character's <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -9264,16 +9613,16 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </vb>
 </syntax>
 			<value name="Visible">
-				A <typename>boolean</typename> value that indicates if the balloon is visible.
+				A <typename>boolean</typename> value that indicates if the <a class="see" href="&dawbref;">&dawbname;</a>
+				is visible.
 			</value>
 			<remarks>
 				<para>
 					If you follow a <see cref="M:&dans;.Character.Speak" /> or <see cref="M:&dans;.Character.Think" />
-					call with a statement that changes this property, it may not affect the balloon's <self>Visible</self>
-					state because the <see cref="M:&dans;.Character.Speak" /> or <see cref="M:&dans;.Character.Think" />
-					call gets queued, but the call to set this property does not. Therefore, only set this value when no
-					<see cref="M:&dans;.Character.Speak" /> or <see cref="M:&dans;.Character.Think" /> calls are in the character's
-					queue.
+					call with a statement that changes this property, it may not affect the  <self>Visible</self> state because
+					the <see cref="M:&dans;.Character.Speak" /> or <see cref="M:&dans;.Character.Think" /> call gets queued, but
+					the call to set this property does not. Therefore, only set this value when no <see cref="M:&dans;.Character.Speak" />
+					or <see cref="M:&dans;.Character.Think" /> calls are in the character's queue.
 				</para>
 				<para>
 					If you attempt to set this property while the character is speaking, moving, or being dragged, the
@@ -9281,10 +9630,12 @@ Command1.<keyword>Enabled</keyword> = True</code>
 				</para>
 				<para>
 					Calling the <see cref="M:&dans;.Character.Speak" /> and <see cref="M:&dans;.Character.Think" />
-					methods automatically makes the balloon visible, setting the <self>Visible</self> property to <keyword>True</keyword>.
-					If the balloon's <see cref="P:&dans;.Balloon.AutoHide" /> property is enabled, the balloon is automatically hidden
-					after the text output is complete. Clicking or dragging a character that is not currently speaking
-					also automatically hides the balloon, even if its <see cref="P:&dans;.Balloon.AutoHide" /> setting is disabled.
+					methods automatically makes the <a class="see" href="&dawbref;">&dawbname;</a> visible, setting the <self>Visible</self>
+					property to <keyword>True</keyword>. If the <see cref="T:&dans;.Balloon" text="Balloon's" /> <see cref="P:&dans;.Balloon.AutoHide" />
+					property is enabled, the <a class="see" href="&dawbref;">&dawbname;</a> is automatically hidden after the
+					text output is complete. Clicking or dragging a character that is not currently speaking also automatically
+					hides the <a class="see" href="&dawbref;">&dawbname;</a>, even if its <see cref="P:&dans;.Balloon.AutoHide" />
+					setting is disabled.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.Balloon.AutoHide" prefix="The" suffix="Property" />
@@ -9296,7 +9647,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.AutoHide">
 			<summary>
 				<para>
-					Indicates if the word balloon will be automatically hidden after all of its text has been shown.
+					Indicates if the <a class="see" href="&dawbref;">&dawbname;</a> will be automatically hidden after all
+					of its text has been shown.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -9328,7 +9680,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.AutoPace">
 			<summary>
 				<para>
-					Indicates if the word balloon paces its text display to the speech output.
+					Indicates if the <a class="see" href="&dawbref;">&dawbname;</a> paces its text display to the speech output.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -9360,7 +9712,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.ShowPartialLines">
 			<summary>
 				<para>
-					Indicates if the word balloon shows partial lines when it scrolls.
+					Indicates if the <a class="see" href="&dawbref;">&dawbname;</a> shows partial lines when it scrolls.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -9392,7 +9744,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.SizeToText">
 			<summary>
 				<para>
-					Indicates if the word balloon is automatically resized to fit it's contents.
+					Indicates if the <a class="see" href="&dawbref;">&dawbname;</a> is automatically resized to fit it's
+					contents.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -9426,12 +9779,11 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			<summary>
 				<para>
 					Double Agent supports textual captioning of the <see cref="M:&dans;.Character.Speak" /> method using
-					a cartoon word balloon. The <see cref="M:&dans;.Character.Think" /> method lets you display text without audio
-					output in a <em>thought</em> balloon.
+					a cartoon <a class="see" href="&dawbref;">&dawbname;</a>. The <see cref="M:&dans;.Character.Think" />
+					method lets you display text without audio output in a <glossary>thought</glossary> <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 				<para>
-					The <self>Balloon Object</self> allows you to customize the appearance and behaviour of a character's word
-					balloon.
+					The <self>Balloon Object</self> allows you to customize the appearance and behaviour of a character's <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
 			</summary>
 			<syntax>
@@ -9603,12 +9955,12 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</syntax>
 			<remarks>
 				<para>
-					A character's initial word balloon defaults are defined and compiled in the Microsoft Agent Character Editor.
-					Once running, the balloon's <keyword>Enabled</keyword> and <keyword>Font</keyword> properties may be overridden
-					by the user. If a user changes the word balloon's properties, they affect all characters. Both
-					the <see cref="M:&dans;.Character.Speak" /> and <see cref="M:&dans;.Character.Think" /> word balloons use
-					the same property settings for size. You can access the properties for a character's word balloon through
-					the <self>Balloon Object</self>, which is a child of the <see cref="T:&dans;.Character" suffix="Object" />.
+					A character's initial <a class="see" href="&dawbref;">&dawbname;</a> defaults are defined and compiled in
+					the Microsoft Agent Character Editor. Once running, the <self>Balloon Object's</self> <keyword>Enabled</keyword>
+					and <keyword>Font</keyword> properties may be overridden by the user. If a user changes the <a class="see" href="&dawbref;">&dawbname;'s</a>
+					properties, they affect all characters. Both the <see cref="M:&dans;.Character.Speak" /> and <see cref="M:&dans;.Character.Think" /> <a class="see" href="&dawbref;">&dawbname;s</a>
+					use the same property settings for size. You can access the properties for a character's <a class="see" href="&dawbref;">&dawbname;</a>
+					through the <self>Balloon Object</self>, which is a child of the <see cref="T:&dans;.Character" suffix="Object" />.
 				</para>
 				<para>
 					This object can be accessed using the <see class="" cref="T:&dans;.Character" suffix="Object's" /> <see class="" cref="P:&dans;.Character.Balloon" />
@@ -10855,8 +11207,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Settings.BalloonEnabled">
 			<summary>
 				<para>
-					Indicates if the word balloon for the <see cref="M:&dans;.Character.Speak" /> and <see cref="M:&dans;.Character.Think" />
-					methods is enabled.
+					Indicates if the <a class="see" href="&dawbref;">&dawbname;</a> for the <see cref="M:&dans;.Character.Speak" />
+					and <see cref="M:&dans;.Character.Think" /> methods is enabled.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -10871,8 +11223,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </vb>
 </syntax>
 			<value name="BalloonEnabled">
-				A <typename>boolean</typename> value that indicates if the word balloon is
-				enabled.
+				A <typename>boolean</typename> value that indicates if the <a class="see" href="&dawbref;">&dawbname;</a>
+				is enabled.
 			</value>
 			<remarks>
 				<para>
@@ -10892,7 +11244,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Settings.BalloonFont">
 			<summary>
 				<para>
-					Returns the font that will be used for all word balloons, if any.
+					Returns the font that will be used for all <a class="see" href="&dawbref;">&dawbname;s</a>, if any.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -10908,7 +11260,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="BalloonFont">
 				An optional <typename>font</typename> object that specifies the font the user
-				has chosen to override all word balloon fonts.
+				has chosen to override all <a class="see" href="&dawbref;">&dawbname;</a> fonts.
 			</value>
 			<remarks>
 				<para>
@@ -11330,20 +11682,6 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<!--=============================================================================================-->
 		<!--=============================================================================================-->
 
-		<member name="T:&dans;.AudioOutput">
-			<summary>
-				<para>
-					deprecated
-				</para>
-			</summary>
-			<remarks>
-				<para>
-					This object has been replaced by the <see cref="T:&dans;.Settings" suffix="Object" />, but is still supported
-					for backward compatibility.
-				</para>
-			</remarks>
-		</member>
-
 		<member name="P:&dans;.AudioOutput.Enabled">
 			<summary>
 				<para>
@@ -11386,11 +11724,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</remarks>
 		</member>
 
-		<!--=============================================================================================-->
-		<!--=============================================================================================-->
-		<!--=============================================================================================-->
-
-		<member name="T:&dans;.SpeechInput">
+		<member name="T:&dans;.AudioOutput">
 			<summary>
 				<para>
 					deprecated
@@ -11403,6 +11737,10 @@ Command1.<keyword>Enabled</keyword> = True</code>
 				</para>
 			</remarks>
 		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
 
 		<member name="P:&dans;.SpeechInput.Enabled">
 			<summary>
@@ -11456,6 +11794,475 @@ Command1.<keyword>Enabled</keyword> = True</code>
 					property, but is still supported for backward compatibility.
 				</para>
 			</remarks>
+		</member>
+
+		<member name="T:&dans;.SpeechInput">
+			<summary>
+				<para>
+					deprecated
+				</para>
+			</summary>
+			<remarks>
+				<para>
+					This object has been replaced by the <see cref="T:&dans;.Settings" suffix="Object" />, but is still supported
+					for backward compatibility.
+				</para>
+			</remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="M:&dans;.FormattedText.Append">
+			<summary>
+				<para>
+					Appends one <see cref="T:&dans;.FormattedText" suffix=" Object" /> to another <see cref="T:&dans;.FormattedText" suffix=" Object" />.
+				</para>
+			</summary>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>formattedtext</token>-&gt;<keyword>Append</keyword> (<token>FormattedText</token>)</para>
+</cpp>
+<csharp>
+<para><token>formattedtext</token>.<keyword>Append</keyword> (<token>FormattedText</token>)</para>
+</csharp>
+<vbnet>
+<para><token>formattedtext</token>.<keyword>Append</keyword> <token>FormattedText</token></para>
+</vbnet>
+<vb>
+<para><token>formattedtext</token>.<keyword>Append</keyword> <token>FormattedText</token></para>
+</vb>
+</syntax>
+			<param name="FormattedText">
+				The <see class="typename" cref="T:&dans;.FormattedText" suffix=" Object" />
+				to append.
+			</param>
+			<remarks>
+				<para>
+					The appended text starts a new paragraph; a <filename>return</filename> character separates the existing
+					and appended text.
+				</para>
+				<note>
+					This method will fail if the <see cref="T:&dans;.FormattedText" suffix=" Object" /> is currently being
+					used by a queued speech or thought action.
+				</note>
+			</remarks>
+			<seealso cref="M:&dans;.Character.SpeakFormatted" suffix="Method" prefix="The" />
+			<seealso cref="M:&dans;.Character.ThinkFormatted" suffix="Method" prefix="The" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:&dans;.FormattedText.Parse">
+			<summary>
+				<para>
+					Parses text containing speech tags.
+				</para>
+			</summary>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>formattedtext</token>-&gt;<keyword>Parse</keyword> (<token>RawText</token>)</para>
+</cpp>
+<csharp>
+<para><token>formattedtext</token>.<keyword>Parse</keyword> (<token>RawText</token>)</para>
+</csharp>
+<vbnet>
+<para><token>formattedtext</token>.<keyword>Parse</keyword> <token>RawText</token></para>
+</vbnet>
+<vb>
+<para><token>formattedtext</token>.<keyword>Parse</keyword> <token>RawText</token></para>
+</vb>
+</syntax>
+			<param name="RawText">
+				A <typename>string</typename> value containing text with optional speech output tags.
+			</param>
+			<remarks>
+				<para>
+					The kind of speech tags accepted depends on the Text-to-Speech engine selected for the <see cref="T:&dans;.Character" />
+					when the <see cref="T:&dans;.FormattedText" suffix=" Object" /> was created. If the <see cref="T:&dans;.Character" />
+					is using a SAPI4 speech engine, then SAPI4 speech tags are accepted. If the <see cref="T:&dans;.Character" />
+					is using a SAPI5 speech engine, then SAPI5 speech tags and <em>supported</em> SAPI4 speech tags are accepted.
+					Any supported SAPI4 tags are converted to SAPI5 tags.
+				</para>
+				<para>
+					For more information about speech tags, see <a href="MsAgent.chm::/hh/msagent/guidlin_2my6.htm">Speech Output Tags</a>.
+				</para>
+				<note>
+					This method will fail if the <see cref="T:&dans;.FormattedText" suffix=" Object" /> is currently being
+					used by a queued speech or thought action.
+				</note>
+			</remarks>
+			<seealso cref="M:&dans;.Character.SpeakFormatted" suffix="Method" prefix="The" />
+			<seealso cref="M:&dans;.Character.ThinkFormatted" suffix="Method" prefix="The" />
+			<seealso cref="M:&dans;.Character.NewFormattedText" suffix="Method" prefix="The" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:&dans;.FormattedText.DisplayText">
+			<summary>
+				<para>
+					Returns the text displayed in the <a class="see" href="&dawbref;">&dawbname;</a>.
+				</para>
+			</summary>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>formattedtext</token>-&gt;<keyword>get_DisplayText</keyword> (&amp;<token>DisplayText</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>DisplayText</token> = ]<token>formattedtext</token>.<keyword>DisplayText</keyword></para>
+</csharp>
+<vb>
+<para>[<token>DisplayText</token> = ]<token>formattedtext</token>.<keyword>DisplayText</keyword></para>
+</vb>
+</syntax>
+			<value name="DisplayText">
+				A <typename>string</typename> value that contains the <see cref="P:&dans;.FormattedText.ParsedText" />
+				up to and including the current <see cref="P:&dans;.FormattedText.WordIndex" />.
+			</value>
+			<remarks>
+				<para>
+					The value of this property does <em>not</em> depend on the <see cref="T:&dans;.Balloon" text="Balloon's" /> <see cref="P:&dans;.Balloon.Style" />,
+					or even if a <a class="see" href="&dawbref;">&dawbname;</a> is shown. It reflects what <em>would</em>
+					be displayed in a <a class="see" href="&dawbref;">&dawbname;</a> with the <see cref="F:&dans;.BalloonStyleFlags.SizeToText" />
+					and <see cref="F:&dans;.BalloonStyleFlags.AutoPace" /> styles.
+				</para>
+			</remarks>
+			<seealso cref="P:&dans;.FormattedText.ParsedText" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.FormattedText.WordIndex" suffix="Property" prefix="The" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:&dans;.FormattedText.DisplayWord">
+			<summary>
+				<para>
+					Returns the <see cref="P:&dans;.FormattedText.ParsedText" /> for a specific <see cref="P:&dans;.FormattedText.WordIndex" />.
+				</para>
+			</summary>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>formattedtext</token>-&gt;<keyword>get_DisplayWord</keyword> (<token>WordIndex</token>, &amp;<token>DisplayWord</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>DisplayWord</token> = ]<token>formattedtext</token>.<keyword>DisplayWord</keyword> [<token>WordIndex</token>]</para>
+</csharp>
+<vb>
+<para>[<token>DisplayWord</token> = ]<token>formattedtext</token>.<keyword>DisplayWord</keyword> (<token>WordIndex</token>)</para>
+</vb>
+</syntax>
+			<param name="WordIndex">
+				A <typename>numeric</typename> value specifying the zero-based index of the word
+				to return. Must be less than <see cref="P:&dans;.FormattedText.WordCount" />.
+			</param>
+			<value name="DisplayWord">
+				A <typename>string</typename> value that contains the <see cref="P:&dans;.FormattedText.ParsedText" />
+				at the specified <paramref name="WordIndex" />.
+			</value>
+			<remarks>
+				<para>
+					The returned string includes trailing <glossary>white-space</glossary>, but <em>not</em> leading <glossary>white-space</glossary>.
+				</para>
+			</remarks>
+			<seealso cref="P:&dans;.FormattedText.ParsedText" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.FormattedText.WordIndex" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.FormattedText.WordCount" suffix="Property" prefix="The" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:&dans;.FormattedText.ParsedText">
+			<summary>
+				<para>
+					Returns the text formatted for display.
+				</para>
+			</summary>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>formattedtext</token>-&gt;<keyword>get_ParsedText</keyword> (&amp;<token>ParsedText</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>ParsedText</token> = ]<token>formattedtext</token>.<keyword>ParsedText</keyword></para>
+</csharp>
+<vb>
+<para>[<token>ParsedText</token> = ]<token>formattedtext</token>.<keyword>ParsedText</keyword></para>
+</vb>
+</syntax>
+			<value name="ParsedText">
+				A <typename>string</typename> value containing the text formatted for displaying in
+				a <a class="see" href="&dawbref;">&dawbname;</a>.
+			</value>
+			<seealso cref="P:&dans;.FormattedText.RawText" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.FormattedText.SpeechText" suffix="Property" prefix="The" />
+			<seealso cref="M:&dans;.FormattedText.Parse" suffix="Method" prefix="The" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:&dans;.FormattedText.RawText">
+			<summary>
+				<para>
+					Returns the unformatted text.
+				</para>
+			</summary>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>formattedtext</token>-&gt;<keyword>get_RawText</keyword> (&amp;<token>RawText</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>RawText</token> = ]<token>formattedtext</token>.<keyword>RawText</keyword></para>
+</csharp>
+<vb>
+<para>[<token>RawText</token> = ]<token>formattedtext</token>.<keyword>RawText</keyword></para>
+</vb>
+</syntax>
+			<value name="RawText">
+				A <typename>string</typename> value containing the unformatted text.
+			</value>
+			<remarks>
+				<para>
+					After you use the <see cref="M:&dans;.FormattedText.Parse" suffix="Method" />, this property will return
+					the text passed in the <token>RawText</token> parameter.
+				</para>
+				<para>
+					If you use this property to set the <self>RawText</self> value, it does not get parsed. The <self>RawText</self>
+					value will be used for both the <see cref="P:&dans;.FormattedText.ParsedText" /> and the <see cref="P:&dans;.FormattedText.SpeechText" />.
+				</para>
+			</remarks>
+			<seealso cref="P:&dans;.FormattedText.ParsedText" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.FormattedText.SpeechText" suffix="Property" prefix="The" />
+			<seealso cref="M:&dans;.FormattedText.Parse" suffix="Method" prefix="The" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:&dans;.FormattedText.SpeechText">
+			<summary>
+				<para>
+					Returns the text formatted for the Text-to-Speech engine.
+				</para>
+			</summary>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>formattedtext</token>-&gt;<keyword>get_SpeechText</keyword> (&amp;<token>SpeechText</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>SpeechText</token> = ]<token>formattedtext</token>.<keyword>SpeechText</keyword></para>
+</csharp>
+<vb>
+<para>[<token>SpeechText</token> = ]<token>formattedtext</token>.<keyword>SpeechText</keyword></para>
+</vb>
+</syntax>
+			<value name="SpeechText">
+				A <typename>string</typename> value containing the text formatted for sending to
+				the Text-to-Speech engine.
+			</value>
+			<remarks>
+				<para>
+					This property contains speech tags formatted for the Text-to-Speech engine selected for the <see cref="T:&dans;.Character" />
+					when the <see cref="T:&dans;.FormattedText" suffix=" Object" /> was created.
+				</para>
+				<para>
+					For more information about speech tags, see <a href="MsAgent.chm::/hh/msagent/guidlin_2my6.htm">Speech Output Tags</a>.
+				</para>
+			</remarks>
+			<seealso cref="P:&dans;.FormattedText.RawText" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.FormattedText.ParsedText" suffix="Property" prefix="The" />
+			<seealso cref="M:&dans;.FormattedText.Parse" suffix="Method" prefix="The" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:&dans;.FormattedText.WordCount">
+			<summary>
+				<para>
+					Returns the number of words in the <see cref="P:&dans;.FormattedText.ParsedText" /> and <see cref="P:&dans;.FormattedText.SpeechText" />
+					properties.
+				</para>
+			</summary>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>formattedtext</token>-&gt;<keyword>get_WordCount</keyword> (&amp;<token>WordCount</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>WordCount</token> = ]<token>formattedtext</token>.<keyword>WordCount</keyword></para>
+</csharp>
+<vb>
+<para>[<token>WordCount</token> = ]<token>formattedtext</token>.<keyword>WordCount</keyword></para>
+</vb>
+</syntax>
+			<value name="WordCount">
+				A <typename>numeric</typename> value that indicates how many words are in the
+				parsed text.
+			</value>
+			<remarks>
+				<para>
+					The <self>WordCount</self> reflects how text is displayed in the <a class="see" href="&dawbref;">&dawbname;</a>
+					and how the <see cref="P:&dans;.FormattedText.DisplayText" /> is synchronized with the speech output.
+				</para>
+			</remarks>
+			<seealso cref="P:&dans;.FormattedText.WordIndex" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.FormattedText.DisplayText" suffix="Property" prefix="The" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:&dans;.FormattedText.WordIndex">
+			<summary>
+				<para>
+					Returns the index of the word currently being spoken and/or displayed.
+				</para>
+			</summary>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>formattedtext</token>-&gt;<keyword>get_WordIndex</keyword> (&amp;<token>WordIndex</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>WordIndex</token> = ]<token>formattedtext</token>.<keyword>WordIndex</keyword></para>
+</csharp>
+<vb>
+<para>[<token>WordIndex</token> = ]<token>formattedtext</token>.<keyword>WordIndex</keyword></para>
+</vb>
+</syntax>
+			<value name="WordCount">
+				A <typename>numeric</typename> value that indicates the zero-based index of
+				the current word.
+			</value>
+			<remarks>
+				<note>
+					If speech or thought output has not yet begun, this property's value will be <keyword>-1</keyword>.
+				</note>
+			</remarks>
+			<seealso cref="P:&dans;.FormattedText.WordCount" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.FormattedText.DisplayText" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.FormattedText.DisplayWord" suffix="Property" prefix="The" />
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="T:&dans;.FormattedText">
+			<summary>
+				<para>
+					The <self>FormattedText</self> object is used to pre-format text that is to be spoken, or shown in
+					a <glossary>thought</glossary> <a class="see" href="&dawbref;">&dawbname;</a>.
+				</para>
+			</summary>
+			<syntax>
+				<list>
+					<item>
+						<term>
+							<h4>
+								<bookmark name="Methods"></bookmark>Methods
+							</h4>
+						</term>
+						<description>
+							<list type="&typelisttype;" class="syntax">
+								<item>
+									<term width="&typelistwidth;">
+										<see cref="M:&dans;.FormattedText.Append" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='M:&dans;.FormattedText.Append']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
+										<see cref="M:&dans;.FormattedText.Parse" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='M:&dans;.FormattedText.Parse']/summary/para[1]" />
+									</description>
+								</item>
+							</list>
+						</description>
+					</item>
+					<item>
+						<term>
+							<h4>
+								<bookmark name="Properties"></bookmark>Properties
+							</h4>
+						</term>
+						<description>
+							<list type="&typelisttype;" class="syntax">
+								<item>
+									<term width="&typelistwidth;">
+										<see cref="P:&dans;.FormattedText.DisplayText" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='P:&dans;.FormattedText.DisplayText']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
+										<see cref="P:&dans;.FormattedText.DisplayWord" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='P:&dans;.FormattedText.DisplayWord']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
+										<see cref="P:&dans;.FormattedText.ParsedText" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='P:&dans;.FormattedText.ParsedText']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
+										<see cref="P:&dans;.FormattedText.RawText" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='P:&dans;.FormattedText.RawText']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
+										<see cref="P:&dans;.FormattedText.SpeechText" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='P:&dans;.FormattedText.SpeechText']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
+										<see cref="P:&dans;.FormattedText.WordCount" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='P:&dans;.FormattedText.WordCount']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
+										<see cref="P:&dans;.FormattedText.WordIndex" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='P:&dans;.FormattedText.WordIndex']/summary/para[1]" />
+									</description>
+								</item>
+							</list>
+						</description>
+					</item>
+				</list>
+			</syntax>
+			<remarks>
+				<para>
+					If your application uses the same text for multiple calls to the <see cref="M:&dans;.Character.Speak" />
+					or <see cref="M:&dans;.Character.Think" /> method, it can be more efficient to pre-format the text in a
+					<self>FormattedText</self> object and use the <see cref="M:&dans;.Character.SpeakFormatted" /> or <see cref="M:&dans;.Character.ThinkFormatted" />
+					method instead.
+				</para>
+				<para>
+					Also, if you want to receive the <see cref="E:&darootobj;.SpeechStart" />, <see cref="E:&darootobj;.SpeechEnd" />,
+					and <see cref="E:&darootobj;.SpeechWord" /> events, you must use the <see cref="M:&dans;.Character.SpeakFormatted" />
+					method.
+				</para>
+			</remarks>
+			<seealso cref="M:&dans;.Character.SpeakFormatted" suffix="Method" prefix="The" />
+			<seealso cref="M:&dans;.Character.ThinkFormatted" suffix="Method" prefix="The" />
+			<seealso cref="M:&dans;.Character.NewFormattedText" suffix="Method" prefix="The" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -11586,8 +12393,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</value>
 			<remarks>
 				<para>
-					The path for Double Agent characters is the <filename>Chars</filename> subdirectory of the Double Agent install
-					location. Typically, this would be <filename xml:space="preserve">C:\Program Files\Double Agent\Chars</filename>.
+					The path for Double Agent characters is the <filename>Chars</filename> subdirectory of the Double Agent install location. Typically, this would be <filename xml:space="preserve">C:\Program Files\Double Agent\Chars</filename>.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.CharacterFiles.FilePaths" suffix="Property" prefix="The" />
@@ -11663,8 +12469,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</value>
 			<remarks>
 				<para>
-					The path for Microsoft Agent characters is the <filename>Chars</filename> subdirectory of the Microsoft Agent install
-					location. Typically, this would be <filename xml:space="preserve">C:\Windows\MsAgent\Chars</filename>.
+					The path for Microsoft Agent characters is the <filename>Chars</filename> subdirectory of the Microsoft Agent install location. Typically, this would be <filename xml:space="preserve">C:\Windows\MsAgent\Chars</filename>.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.CharacterFiles.FilePaths" suffix="Property" prefix="The" />
@@ -13039,43 +13844,49 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<!--=============================================================================================-->
 
 		<member name="F:&dans;.BalloonStyleFlags.AutoHide">
-			<summary>The word balloon is hidden automatically after a short delay.</summary>
+			<summary>
+				The <a class="see" href="&dawbref;">&dawbname;</a> is hidden automatically after a short delay.
+			</summary>
 			<value>&hexprefix;00000004</value>
 			<remarks>
 				<para>
-					When the <see cref="F:&dans;.BalloonStyleFlags.AutoHide" /> style is set, the word balloon automatically hides
-					when spoken output completes. When it's not set, the balloon remains displayed until the next
-					<see cref="M:&dans;.Character.Speak" /> or <see cref="M:&dans;.Character.Think" /> call, the character is
-					hidden, or the user clicks or drags the character.
+					When the <see cref="F:&dans;.BalloonStyleFlags.AutoHide" /> style is set, the <a class="see" href="&dawbref;">&dawbname;</a>
+					automatically hides when spoken output completes. When it's not set, the <a class="see" href="&dawbref;">&dawbname;</a>
+					remains displayed until the next <see cref="M:&dans;.Character.Speak" /> or <see cref="M:&dans;.Character.Think" />
+					call, the character is hidden, or the user clicks or drags the character.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.Balloon.AutoHide" suffix="Property" prefix="The" />
 		</member>
 
 		<member name="F:&dans;.BalloonStyleFlags.AutoPace">
-			<summary>The text in the word balloon is shown one word at a time.</summary>
+			<summary>
+				The text in the <a class="see" href="&dawbref;">&dawbname;</a> is shown one word at a time.
+			</summary>
 			<value>&hexprefix;00000008</value>
 			<remarks>
 				<para>
-					When the <see cref="F:&dans;.BalloonStyleFlags.AutoPace" /> style is set, the word balloon paces its
-					text output based on the current output rate, for example one word at a time. When output exceeds the
-					size of the balloon, the text is automatically scrolled. When it's not set, all text included in
-					a <see cref="M:&dans;.Character.Speak" /> or <see cref="M:&dans;.Character.Think" /> request is displayed at
-					once.
+					When the <see cref="F:&dans;.BalloonStyleFlags.AutoPace" /> style is set, the <a class="see" href="&dawbref;">&dawbname;</a>
+					paces its text output based on the current output rate, for example one word at a time. When output exceeds
+					the size of the <a class="see" href="&dawbref;">&dawbname;</a>, the text is automatically scrolled. When
+					it's not set, all text included in a <see cref="M:&dans;.Character.Speak" /> or <see cref="M:&dans;.Character.Think" />
+					request is displayed at once.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.Balloon.AutoPace" suffix="Property" prefix="The" />
 		</member>
 
 		<member name="F:&dans;.BalloonStyleFlags.Enabled">
-			<summary>The word balloon is enabled.</summary>
+			<summary>
+				The <a class="see" href="&dawbref;">&dawbname;</a> is enabled.
+			</summary>
 			<value>&hexprefix;00000001</value>
 			<remarks>
 				<para>
-					When the <see cref="F:&dans;.BalloonStyleFlags.Enabled" /> style is set, the word balloon appears when
-					the <see cref="M:&dans;.Character.Speak" /> or <see cref="M:&dans;.Character.Think" /> method is used, unless
-					the user overrides this setting in the <a class="see" href="&dapsref;">&dapsname;</a> window. When it's not
-					set, the word balloon does not appear.
+					When the <see cref="F:&dans;.BalloonStyleFlags.Enabled" /> style is set, the <a class="see" href="&dawbref;">&dawbname;</a>
+					appears when the <see cref="M:&dans;.Character.Speak" /> or <see cref="M:&dans;.Character.Think" /> method
+					is used, unless the user overrides this setting in the <a class="see" href="&dapsref;">&dapsname;</a>
+					window. When it's not set, the <a class="see" href="&dawbref;">&dawbname;</a> does not appear.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.Balloon.Enabled" suffix="Property" prefix="The" />
@@ -13083,14 +13894,14 @@ Command1.<keyword>Enabled</keyword> = True</code>
 
 		<member name="F:&dans;.BalloonStyleFlags.ShowPartialLines">
 			<summary>
-				Partial lines are shown when the balloon text scrolls (for a word balloon that's <em>not</em>
-				<keyword>SizeToText</keyword>).
+				Partial lines are shown when the <a class="see" href="&dawbref;">&dawbname;</a> text scrolls (for
+				a <a class="see" href="&dawbref;">&dawbname;</a> that's <em>not</em> <keyword>SizeToText</keyword>).
 			</summary>
 			<value>&hexprefix;00000010</value>
 			<remarks>
 				<para>
-					When the <see cref="F:&dans;.BalloonStyleFlags.ShowPartialLines" /> style is set, the word balloon will
-					show partial lines at the bottom as it scrolls its text. When it's not set, only full lines are
+					When the <see cref="F:&dans;.BalloonStyleFlags.ShowPartialLines" /> style is set, the <a class="see" href="&dawbref;">&dawbname;</a>
+					will show partial lines at the bottom as it scrolls its text. When it's not set, only full lines are
 					shown. This style only applies when the <see cref="F:&dans;.BalloonStyleFlags.SizeToText" /> style is <em>not</em>
 					set.
 				</para>
@@ -13099,15 +13910,19 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		</member>
 
 		<member name="F:&dans;.BalloonStyleFlags.SizeToText">
-			<summary>The word balloon is automatically resized to fit the speech or thought text.</summary>
+			<summary>
+				The <a class="see" href="&dawbref;">&dawbname;</a> is automatically resized to fit the speech or
+				thought text.
+			</summary>
 			<value>&hexprefix;00000002</value>
 			<remarks>
 				<para>
-					When the <see cref="F:&dans;.BalloonStyleFlags.SizeToText" /> style is set, the word balloon automatically adjusts
-					the height of the balloon to the current size of the text for the <see cref="M:&dans;.Character.Speak" />
-					or <see cref="M:&dans;.Character.Think" /> request. When it's not set, the balloon's height is based on
-					the <see cref="P:&dans;.Balloon.NumberOfLines" /> property. If this style is set and you attempt to set
-					the <see cref="P:&dans;.Balloon.NumberOfLines" /> property, Double Agent raises an error.
+					When the <see cref="F:&dans;.BalloonStyleFlags.SizeToText" /> style is set, the <a class="see" href="&dawbref;">&dawbname;</a>
+					automatically adjusts the height of the <a class="see" href="&dawbref;">&dawbname;</a> to the current size
+					of the text for the <see cref="M:&dans;.Character.Speak" /> or <see cref="M:&dans;.Character.Think" />
+					request. When it's not set, the <a class="see" href="&dawbref;">&dawbname;'s</a> height is based on the
+					<see cref="P:&dans;.Balloon.NumberOfLines" /> property. If this style is set and you attempt to set the
+					<see cref="P:&dans;.Balloon.NumberOfLines" /> property, Double Agent raises an error.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.Balloon.SizeToText" suffix="Property" prefix="The" />
@@ -13118,7 +13933,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="T:&dans;.BalloonStyleFlags" kind="Enumeration">
 			<summary>
 				<para>
-					Specifies settings that affect a word balloon's appearence and behaviour.
+					Specifies settings that affect a <a class="see" href="&dawbref;">&dawbname;'s</a> appearence and behaviour.
 				</para>
 			</summary>
 			<syntax>

@@ -547,8 +547,8 @@ void DaServer::UnloadAllCharacters (bool pAbandonned)
 
 HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, bool pIsDefault, long & pCharID, long & pReqID)
 {
-	HRESULT	lResult = S_OK;
-	CString	lFilePath (pFilePath);
+	HRESULT		lResult = S_OK;
+	CAtlString	lFilePath (pFilePath);
 
 #ifdef	_TRACE_RESOURCES
 	if	(LogIsActive (_TRACE_RESOURCES))
@@ -947,10 +947,10 @@ HRESULT STDMETHODCALLTYPE DaServer::Load (VARIANT Provider, long * pdwCharID, lo
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::Load [%s]"), this, max(m_dwRef,-1), DebugVariant(Provider));
 #endif
-	HRESULT	lResult = S_OK;
-	CString	lFilePath;
-	bool	lFilePathIsDefault = false;
-	long	lReqID = 0;
+	HRESULT		lResult = S_OK;
+	CAtlString	lFilePath;
+	bool		lFilePathIsDefault = false;
+	long		lReqID = 0;
 
 	if	(pdwCharID == NULL)
 	{

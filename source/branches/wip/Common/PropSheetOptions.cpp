@@ -52,14 +52,21 @@ CPropSheetOptions::~CPropSheetOptions()
 INT_PTR CPropSheetOptions::DoModal ()
 {
 	INT_PTR	lRet = -1;
+	bool	lListeningSuspended = mListeningGlobal.IsSuspended ();
 
-	mListeningGlobal.Suspend ();
+	if	(!lListeningSuspended)
+	{
+		mListeningGlobal.Suspend ();
+	}
 	try
 	{
 		lRet = CAtlPropertySheet::DoModal ();
 	}
 	catch AnyExceptionDebug
-	mListeningGlobal.Resume ();
+	if	(!lListeningSuspended)
+	{
+		mListeningGlobal.Resume ();
+	}
 
 	return lRet;
 }

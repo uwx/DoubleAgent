@@ -262,7 +262,7 @@ template <typename TYPE> static CAtlString AtlTypeName (TYPE const * pObject, bo
 		{
 			try
 			{
-				lTypeName = CString (typeid(pObject).name());
+				lTypeName = CAtlString (typeid(pObject).name());
 			}
 			catch (...)
 			{

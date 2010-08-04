@@ -57,7 +57,8 @@ LPCTSTR __declspec(selectany)	_AtlProfilePath = _LOG_ROOT_PATH;
 /////////////////////////////////////////////////////////////////////////////
 
 CDaControlModule::CDaControlModule ()
-:	CListeningGlobal (*(CGlobalAnchor*)this)
+:	CListeningGlobal (*(CGlobalAnchor*)this),
+	mAppActive (false)
 {
 	mNextCharID = SHRT_MAX+1;
 	CListeningGlobal::Startup ();
@@ -410,10 +411,24 @@ void CDaControlModule::_CharacterActivated (long pActiveCharID, long pInputActiv
 	CEventGlobal::_CharacterActivated (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
 }
 
+void CDaControlModule::_AppActivated (bool pActive)
+{
+	mAppActive = pActive;
+	CListeningGlobal::_AppActivated (pActive);
+	CEventGlobal::_AppActivated (pActive);
+}
+
 void CDaControlModule::_OptionsChanged ()
 {
 	CListeningGlobal::_OptionsChanged ();
 	CEventGlobal::_OptionsChanged ();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool CDaControlModule::IsAppActive () const
+{
+	return mAppActive;
 }
 
 /////////////////////////////////////////////////////////////////////////////

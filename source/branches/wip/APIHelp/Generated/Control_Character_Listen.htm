@@ -103,6 +103,7 @@
 					the method succeeds, but the time-out is ignored and <em class="glossary">Listening mode</em> ends based on
 					the user's interaction with the <em class="glossary">Listening key</em>.
 				</p>
+			
 				<p>
 					This method succeeds only when called by the <em class="glossary">input-active</em> client and only if
 					speech services are available. To detect the success of this method, call it as a function and it
@@ -118,7 +119,7 @@
 			
 				<h4 class="details">Details</h4>
 				<p>
-					The method also fails if the user is pressing the <em class="glossary">Listening key</em> and you attempt to
+					This method fails if the user is pressing the <em class="glossary">Listening key</em> and you attempt to
 					set <em class="token">Listen</em> to <em class="keyword">False</em>. However, if the user has released the <em class="glossary">Listening key</em>
 					and <em class="glossary">Listening mode</em> has not timed out, it will succeed.
 				</p>
@@ -128,8 +129,8 @@
 					the <a class="see" href="../html/UI_PropSheet.htm#SpeechInput">Advanced Character Options</a> window, or the audio device is busy.
 				</p>
 				<p>
-					When you successfully set this method to <em class="keyword">True</em>, the Double Agent triggers the <a href="Control_Event_ListenStart.htm" class="see keyword">ListenStart</a>
-					event. Double Agent sends <a href="Control_Event_ListenComplete.htm" class="see keyword">ListenComplete</a> when the <em class="glossary">Listening mode</em>
+					When you successfully set this method to <em class="keyword">True</em>, the Double Agent signals the <a href="Control_Event_ListenStart.htm" class="see keyword">ListenStart</a>
+					event. Double Agent also signals the <a href="Control_Event_ListenComplete.htm" class="see keyword">ListenComplete</a> event when the <em class="glossary">Listening mode</em>
 					time-out completes or when you set <em class="token">Listen</em> to <em class="keyword">False</em>.
 				</p>
 				<p>

@@ -19,10 +19,88 @@
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-				<p>Displays the character's <a class="see" href="../html/UI_Intro.htm#Menu">Pop-up Menu</a> at the specified location.</p>
+				<p>Displays the character's <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a> at the specified location.</p>
 			</div>
+					<h4 class="syntax">Syntax</h4>
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">ShowPopupMenu</em> (<em class="token">X</em>, <em class="token">Y</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">ShowPopupMenu</em> (<em class="token">X</em>, <em class="token">Y</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">ShowPopupMenu</em> (<em class="token">X</em>, <em class="token">Y</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">ShowPopupMenu</em> <em class="token">X</em>, <em class="token">Y</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">ShowPopupMenu</em> <em class="token">X</em>, <em class="token">Y</em></p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">X</em>
+								</td>
+								<td>The horizontal screen coordinate to display the menu, in pixels.</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Y</em>
+								</td>
+								<td>The vertical screen coordinate to display the menu, in pixels.</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					If the character's <a href="Server_Character_Style.htm" class="see keyword">Style</a> property includes <a href="Server_CharacterStyleFlags_AutoPopupMenu.htm" class="see keyword">AutoPopupMenu</a>,
+					Double Agent automatically displays the character's <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a> when the
+					user right-clicks the character. If you set the <a href="Server_Character_Style.htm" class="see keyword">Style</a> property without <a href="Server_CharacterStyleFlags_AutoPopupMenu.htm" class="see keyword">AutoPopupMenu</a>,
+					you can use <em class="self keyword">ShowPopupMenu</em> to display the menu.
+				</p>
+				<p>
+					The menu remains displayed until the user selects a command or displays another menu. Only one pop-up
+					menu can be displayed at a time; therefore, calls to this method will cancel (remove) the former
+					menu.
+				</p>
+				<p>
+					This method should be called only when your client application is the active client of the character; otherwise
+					it fails.
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Character_Style.htm">The Style Property</a></td>
 			</tr>
 		</table>
 	</body>

@@ -144,7 +144,7 @@ public:
 	HRESULT STDMETHODCALLTYPE get_GUID (BSTR * CharGUID);
 	HRESULT STDMETHODCALLTYPE get_OriginalHeight (short * Height);
 	HRESULT STDMETHODCALLTYPE get_OriginalWidth (short * Width);
-	HRESULT STDMETHODCALLTYPE Think (BSTR Text,  IDaCtlRequest ** Request);
+	HRESULT STDMETHODCALLTYPE Think (BSTR Text, IDaCtlRequest ** Request);
 	HRESULT STDMETHODCALLTYPE get_Version (BSTR * Version);
 	HRESULT STDMETHODCALLTYPE get_AnimationNames (IDaCtlAnimationNames ** Names);
 	HRESULT STDMETHODCALLTYPE get_SRStatus (long * Status);
@@ -161,6 +161,10 @@ public:
 	HRESULT STDMETHODCALLTYPE put_IconIdentity (BSTR IconIdentity);
 	HRESULT STDMETHODCALLTYPE get_IconTip (BSTR * IconTip);
 	HRESULT STDMETHODCALLTYPE put_IconTip (BSTR IconTip);
+
+	HRESULT STDMETHODCALLTYPE SpeakFormatted (IDaCtlFormattedText * FormattedText, IDaCtlRequest ** Request);
+	HRESULT STDMETHODCALLTYPE ThinkFormatted (IDaCtlFormattedText * FormattedText, IDaCtlRequest ** Request);
+	HRESULT STDMETHODCALLTYPE NewFormattedText (IDaCtlFormattedText **FormattedText);
 	HRESULT STDMETHODCALLTYPE get_TTSEngine (VARIANT GetDefault,  IDaCtlTTSEngine ** TTSEngine);
 	HRESULT STDMETHODCALLTYPE FindTTSEngines (VARIANT LanguageID,  IDaCtlTTSEngines ** TTSEngines);
 	HRESULT STDMETHODCALLTYPE get_SREngine (VARIANT GetDefault,  IDaCtlSREngine ** SREngine);

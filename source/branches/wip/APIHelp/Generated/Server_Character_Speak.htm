@@ -21,8 +21,97 @@
 					<div class="summary">
 				<p>Speaks the specified text or sound file.</p>
 			</div>
+					<h4 class="syntax">Syntax</h4>
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">Speak</em> (<em class="token">Text</em>, <em class="token">Url</em>, &amp;<em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Speak</em> (<em class="token">Text</em>, <em class="token">Url</em>, <em class="keyword">out</em> <em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Speak</em> (<em class="token">Text</em>, <em class="token">Url</em>, <em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Speak</em> [<em class="token">Text</em>][, <em class="token">Url</em>][, <em class="token">RequestID</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Speak</em> [<em class="token">Text</em>][, <em class="token">Url</em>][, <em class="token">RequestID</em>]</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Text</em>
+								</td>
+								<td>
+				A <em class="typename">string</em> value that specifies what the character says.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Url</em>
+								</td>
+								<td>
+				A <em class="typename">string</em> value specifying the location of an audio file (.WAV format).
+				The location can be specified as a file (including a <em class="glossary">UNC</em> path specification) or URL
+				(when character animation data is also being retrieved via <em class="glossary">HTTP</em> protocol).
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">RequestID</em>
+								</td>
+								<td>
+			An optional unique <em class="typename">numeric</em> value your application can use to track the method's status.
+		</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					At least one of the <em class="token">Text</em> and <em class="token">Url</em> parameters must be supplied. To
+					use this method with a character configured to speak only in its <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>
+					or using a text-to-speech (TTS) engine, simply provide the <em class="token">Text</em> parameter. Include a
+					space between words to define appropriate word breaks in the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>,
+					even for languages that do not traditionally include spaces.
+				</p>
+				<p>
+					You can also include vertical bar '|' characters in the <em class="token">Text</em> parameter to designate alternative
+					strings, so that Double Agent randomly chooses a different string each time it processes the
+					method.
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Character_LanguageID.htm">The LanguageID Property</a><br /><a href="Server_Character_Think.htm">The Think Method</a><br /><a href="Server_Event_BookMark.htm">The BookMark Event</a><br /><a href="Server_Event_RequestStart.htm">The RequestStart Event</a><br /><a href="Server_Event_RequestComplete.htm">The RequestComplete Event</a></td>
 			</tr>
 		</table>
 	</body>

@@ -247,7 +247,6 @@ bool CAnimationTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 			lRet = true;
 		}
 		else
-		if	(pCharacterPath[0])
 		{
 			try
 			{
@@ -255,47 +254,46 @@ bool CAnimationTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 				CRect				lClientRect;
 				CRect				lWindowRect;
 
-				SafeFreeSafePtr (mAgentWnd);
+				SafeFreeSafePtr (mAgentPreviewWnd);
 
 				if	(
-						(mAgentWnd = CAgentPreviewWnd::CreateInstance())
-					&&	(mAgentWnd->Create (mPreviewWnd.m_hWnd))
-					&&	(mAgentWnd->IsWindow ())
+						(mAgentPreviewWnd = CAgentPreviewWnd::CreateInstance())
+					&&	(mAgentPreviewWnd->Create (mPreviewWnd.m_hWnd))
+					&&	(mAgentPreviewWnd->IsWindow ())
 					)
 				{
-					mAgentWnd->ShowWindow (SW_HIDE);
+					mAgentPreviewWnd->ShowWindow (SW_HIDE);
 
-					if	(mAgentWnd->Open (pCharacterPath))
+					if	(
+							(pCharacterPath[0])
+						?	(mAgentPreviewWnd->Open (pCharacterPath))
+						:	(mAgentPreviewWnd->Open (CAgentFiles::GetDefCharPath()))
+						)
 					{
-						if	(lPreview = dynamic_cast <CAgentPreviewWnd *> (mAgentWnd.Ptr()))
+						if	(lPreview = dynamic_cast <CAgentPreviewWnd *> (mAgentPreviewWnd.Ptr()))
 						{
 							lPreview->SetBkColor (GetSysColor (COLOR_WINDOW));
 						}
 
 						mPreviewWnd.GetClientRect (&lClientRect);
-						mAgentWnd->GetWindowRect (&lWindowRect);
+						mAgentPreviewWnd->GetWindowRect (&lWindowRect);
 						mPreviewWnd.ScreenToClient (&lWindowRect);
 						lWindowRect.OffsetRect (lClientRect.CenterPoint().x - lWindowRect.CenterPoint().x, lClientRect.CenterPoint().y - lWindowRect.CenterPoint().y);
-						mAgentWnd->MoveWindow (&lWindowRect);
-						mAgentWnd->ShowWindow (SW_SHOWNA);
+						mAgentPreviewWnd->MoveWindow (&lWindowRect);
+						mAgentPreviewWnd->ShowWindow (SW_SHOWNA);
 						lRet = true;
 					}
 					else
 					{
-						SafeFreeSafePtr (mAgentWnd);
+						SafeFreeSafePtr (mAgentPreviewWnd);
 					}
 				}
 				else
 				{
-					SafeFreeSafePtr (mAgentWnd);
+					SafeFreeSafePtr (mAgentPreviewWnd);
 				}
 			}
 			catch AnyExceptionDebug
-		}
-		else
-		{
-			SafeFreeSafePtr (mAgentWnd);
-			lRet = true;
 		}
 	}
 
@@ -333,10 +331,10 @@ void CAnimationTestDlg::ShowCharacterDetails ()
 	CAgentFileName *	lFileName;
 
 	if	(
-			(mAgentWnd)
-		&&	(mAgentWnd->IsWindow ())
-		&&	(mAgentWnd->GetAgentFile())
-		&&	(lFileName = mAgentWnd->GetAgentFile()->FindName ())
+			(mAgentPreviewWnd)
+		&&	(mAgentPreviewWnd->IsWindow ())
+		&&	(mAgentPreviewWnd->GetAgentFile())
+		&&	(lFileName = mAgentPreviewWnd->GetAgentFile()->FindName ())
 		)
 	{
 		lName = lFileName->mName;
@@ -595,6 +593,12 @@ bool CAnimationTestDlg::ShowSelGesture (bool pStopFirst)
 			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Play [%s] [%d]"), mCharacterId, lSelGesture, mLastAnimationReqID)))
 			{
 				lRet = true;
+#if	TRUE
+				if	(lSelGesture.CompareNoCase (_T("DoMagic2")) == 0)
+				{
+					mCharacter->Play (_bstr_t("RestPose"), &mLastAnimationReqID);
+				}
+#endif				
 			}
 		}
 
@@ -603,16 +607,16 @@ bool CAnimationTestDlg::ShowSelGesture (bool pStopFirst)
 					(!IsCharacterVisible ())
 				||	(mAnimateBoth.GetCheck())
 				)
-			&&	(mAgentWnd)
-			&&	(mAgentWnd->IsWindow ())
+			&&	(mAgentPreviewWnd)
+			&&	(mAgentPreviewWnd->IsWindow ())
 			)
 		{
-			lRet = mAgentWnd->ShowGesture (lSelGesture, NULL, true, pStopFirst);
+			lRet = mAgentPreviewWnd->ShowGesture (lSelGesture, NULL, true, pStopFirst);
 
 			if	(
 					(!lRet)
-				||	(mAgentWnd->IsPaused())
-				||	(mAgentWnd->IsStopped())
+				||	(mAgentPreviewWnd->IsPaused())
+				||	(mAgentPreviewWnd->IsStopped())
 				)
 			{
 				MessageBeep (MB_OK);
@@ -736,11 +740,14 @@ bool CAnimationTestDlg::ShowSelState (bool pStopFirst)
 		}
 
 		if	(
-				(!lCharacterVisible)
-			||	(mAnimateBoth.GetCheck())
+				(
+					(!lCharacterVisible)
+				||	(mAnimateBoth.GetCheck())
+				)
+			&&	(mAgentPreviewWnd)
 			)
 		{
-			lRet = mAgentWnd->ShowState (lSelState, true, pStopFirst);
+			lRet = mAgentPreviewWnd->ShowState (lSelState, true, pStopFirst);
 		}
 	}
 	ShowCharacterState ();
@@ -787,9 +794,9 @@ bool CAnimationTestDlg::IsAnimating ()
 		return true;;
 	}
 	if	(
-			(mAgentWnd)
-		&&	(mAgentWnd->IsWindow ())
-		&&	(!mAgentWnd->IsAnimationComplete ())
+			(mAgentPreviewWnd)
+		&&	(mAgentPreviewWnd->IsWindow ())
+		&&	(!mAgentPreviewWnd->IsAnimationComplete ())
 		)
 	{
 		return true;
@@ -824,9 +831,9 @@ bool CAnimationTestDlg::Stop ()
 	}
 
 	if	(
-			(mAgentWnd)
-		&&	(mAgentWnd->IsWindow ())
-		&&	(mAgentWnd->Stop () == S_OK)
+			(mAgentPreviewWnd)
+		&&	(mAgentPreviewWnd->IsWindow ())
+		&&	(mAgentPreviewWnd->Stop () == S_OK)
 		)
 	{
 		lRet = true;
@@ -1179,11 +1186,11 @@ void CAnimationTestDlg::CharacterIsVisible (bool pVisible)
 void CAnimationTestDlg::ShowCharacterState ()
 {
 	if	(
-			(mAgentWnd)
-		&&	(mAgentWnd->IsWindow ())
+			(mAgentPreviewWnd)
+		&&	(mAgentPreviewWnd->IsWindow ())
 		)
 	{
-		mAgentWnd->EnableSound (mCharacter == NULL);
+		mAgentPreviewWnd->EnableSound (mCharacter == NULL);
 	}
 	CharacterIsVisible (IsCharacterVisible ());
 }
@@ -1305,11 +1312,11 @@ void CAnimationTestDlg::OnOK()
 void CAnimationTestDlg::OnClose()
 {
 	if	(
-			(mAgentWnd)
-		&&	(mAgentWnd->IsWindow ())
+			(mAgentPreviewWnd)
+		&&	(mAgentPreviewWnd->IsWindow ())
 		)
 	{
-		mAgentWnd->Close ();
+		mAgentPreviewWnd->Close ();
 	}
 	CDialog::EndDialog (IDOK);
 }
@@ -1333,11 +1340,11 @@ void CAnimationTestDlg::OnDestroy()
 	SafeFreeSafePtr (mServer);
 
 	if	(
-			(mAgentWnd)
-		&&	(mAgentWnd->IsWindow ())
+			(mAgentPreviewWnd)
+		&&	(mAgentPreviewWnd->IsWindow ())
 		)
 	{
-		mAgentWnd->Close ();
+		mAgentPreviewWnd->Close ();
 	}
 	CDialog::OnDestroy();
 }
@@ -1779,11 +1786,11 @@ void CAnimationTestDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwTh
 		}
 	}
 	if	(
-			(mAgentWnd)
-		&&	(mAgentWnd->IsWindow ())
+			(mAgentPreviewWnd)
+		&&	(mAgentPreviewWnd->IsWindow ())
 		)
 	{
-		mAgentWnd->MakeActiveMedia (bActive!=FALSE);
+		mAgentPreviewWnd->MakeActiveMedia (bActive!=FALSE);
 	}
 }
 

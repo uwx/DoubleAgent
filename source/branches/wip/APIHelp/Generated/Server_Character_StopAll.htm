@@ -21,7 +21,101 @@
 					<div class="summary">
 				<p>Stops all animation requests or specified types of requests.</p>
 			</div>
-					<h4 class="remarks">Remarks</h4>
+					<h4 class="syntax">Syntax</h4>
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">StopAll</em> (<em class="token">Types</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">StopAll</em> (<em class="token">Types</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">StopAll</em> (<em class="token">Types</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">StopAll</em>[ <em class="token">Types</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">StopAll</em>[ <em class="token">Types</em>]</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Types</em>
+								</td>
+								<td>
+				A <em class="typename">numeric</em> value specifying the types of actions to stop.
+				You can use any combination of the following members of
+				the <a href="Server_StopAllFlags.htm" class="see typename">StopAllFlags Enumeration</a>:<table><tr><td xml:space="preserve">
+0x00000001&nbsp;=&nbsp;<em class="keyword">Play</em>
+</td><td>
+							Stop any pending or running animations.
+						</td></tr><tr><td xml:space="preserve">
+0x00000002&nbsp;=&nbsp;<em class="keyword">Move</em>
+</td><td>
+							Stop any pending or running move requests.
+						</td></tr><tr><td xml:space="preserve">
+0x00000004&nbsp;=&nbsp;<em class="keyword">Speak</em>
+</td><td>
+							Stop any pending or running speech requests.
+						</td></tr><tr><td xml:space="preserve">
+0x00000008&nbsp;=&nbsp;<em class="keyword">QueuedPrepare</em>
+</td><td>
+							Stop any queued animation or file downloads (<em class="keyword">Prepare</em> method with <em class="token">Queue</em>
+				parameter set to <em class="keyword">True</em>).
+						</td></tr><tr><td xml:space="preserve">
+0x00000010&nbsp;=&nbsp;<em class="keyword">ImmediatePrepare</em>
+</td><td>
+							Stop any non-queued animation or file downloads (<em class="keyword">Prepare</em> method with <em class="token">Queue</em>
+				parameter set to <em class="keyword">False</em>)
+						</td></tr><tr><td xml:space="preserve">
+0x00000020&nbsp;=&nbsp;<em class="keyword">Visibility</em>
+</td><td>
+							Stop any pending show or hide requests.
+						</td></tr><tr><td xml:space="preserve">
+0xFFFFFFFF&nbsp;=&nbsp;<em class="keyword">Everything</em>
+</td><td>
+							Stop all pending actions.
+						</td></tr></table>
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="seealso">See Also</h4>
+					<a href="Server_Character_Stop.htm">The Stop Method</a>
+					<br />
+					<a href="Server_StopAllFlags.htm">The StopAllFlags Enumeration</a>
 				</td>
 			</tr>
 		</table>

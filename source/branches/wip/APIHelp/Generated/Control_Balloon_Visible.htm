@@ -19,7 +19,7 @@
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-				<p>Specifies the visiblity of a character's word balloon.</p>
+				<p>Specifies the visiblity of a character's <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>.</p>
 			</div>
 					<h4 class="syntax">Syntax</h4>
 					<div id="Syntax" class="syntax">
@@ -80,7 +80,8 @@
 									<em class="token">Visible</em>
 								</td>
 								<td>
-				A <em class="typename">boolean</em> value that indicates if the balloon is visible.
+				A <em class="typename">boolean</em> value that indicates if the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>
+				is visible.
 			</td>
 							</tr>
 						</table>
@@ -88,11 +89,10 @@
 					<h4 class="remarks">Remarks</h4>
 				<p>
 					If you follow a <a href="Control_Character_Speak.htm" class="see keyword">Speak</a> or <a href="Control_Character_Think.htm" class="see keyword">Think</a>
-					call with a statement that changes this property, it may not affect the balloon's <em class="self keyword">Visible</em>
-					state because the <a href="Control_Character_Speak.htm" class="see keyword">Speak</a> or <a href="Control_Character_Think.htm" class="see keyword">Think</a>
-					call gets queued, but the call to set this property does not. Therefore, only set this value when no
-					<a href="Control_Character_Speak.htm" class="see keyword">Speak</a> or <a href="Control_Character_Think.htm" class="see keyword">Think</a> calls are in the character's
-					queue.
+					call with a statement that changes this property, it may not affect the  <em class="self keyword">Visible</em> state because
+					the <a href="Control_Character_Speak.htm" class="see keyword">Speak</a> or <a href="Control_Character_Think.htm" class="see keyword">Think</a> call gets queued, but
+					the call to set this property does not. Therefore, only set this value when no <a href="Control_Character_Speak.htm" class="see keyword">Speak</a>
+					or <a href="Control_Character_Think.htm" class="see keyword">Think</a> calls are in the character's queue.
 				</p>
 				<p>
 					If you attempt to set this property while the character is speaking, moving, or being dragged, the
@@ -100,10 +100,12 @@
 				</p>
 				<p>
 					Calling the <a href="Control_Character_Speak.htm" class="see keyword">Speak</a> and <a href="Control_Character_Think.htm" class="see keyword">Think</a>
-					methods automatically makes the balloon visible, setting the <em class="self keyword">Visible</em> property to <em class="keyword">True</em>.
-					If the balloon's <a href="Control_Balloon_AutoHide.htm" class="see keyword">AutoHide</a> property is enabled, the balloon is automatically hidden
-					after the text output is complete. Clicking or dragging a character that is not currently speaking
-					also automatically hides the balloon, even if its <a href="Control_Balloon_AutoHide.htm" class="see keyword">AutoHide</a> setting is disabled.
+					methods automatically makes the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> visible, setting the <em class="self keyword">Visible</em>
+					property to <em class="keyword">True</em>. If the <a href="Control_Balloon.htm" class="see keyword">Balloon's</a> <a href="Control_Balloon_AutoHide.htm" class="see keyword">AutoHide</a>
+					property is enabled, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> is automatically hidden after the
+					text output is complete. Clicking or dragging a character that is not currently speaking also automatically
+					hides the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>, even if its <a href="Control_Balloon_AutoHide.htm" class="see keyword">AutoHide</a>
+					setting is disabled.
 				</p>
 			<h4 class="seealso">See Also</h4><a href="Control_Balloon_AutoHide.htm">The AutoHide Property</a><br /><a href="Control_Balloon_Style.htm">The Style Property</a></td>
 			</tr>

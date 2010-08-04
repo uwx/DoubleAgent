@@ -22,6 +22,7 @@
 #include "AgentWnd.h"
 #include "AgentNotifyIcon.h"
 #include "AgentListeningWnd.h"
+#include "AgentText.h"
 #include "SapiVoiceEventSink.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -55,43 +56,23 @@ public:
 	class CAgentListeningWnd * GetListeningWnd (bool pCreate = false);
 
 	long QueueShow (long pCharID, bool pFast = false, int pVisibilityCause = -1);
-	CQueuedAction * IsShowQueued (long pCharID = -1);
-	long IsShowingQueued ();
-	bool RemoveQueuedShow (long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL, bool pExcludeActive = false);
-
 	long QueueHide (long pCharID, bool pFast = false, int pVisibilityCause = -1);
-	CQueuedAction * IsHideQueued (long pCharID = -1);
-	long IsHidingQueued ();
-	bool RemoveQueuedHide (long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL, bool pExcludeActive = false);
-
-	long QueueThink (long pCharID, LPCTSTR pText);
-	CQueuedAction * IsThinkQueued (long pCharID = -1);
-	bool RemoveQueuedThink (long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL, bool pExcludeActive = false);
-
-	long QueueSpeak (long pCharID, LPCTSTR pText, LPCTSTR pSoundUrl, class CSapiVoice * pVoice, bool pShowBalloon);
-	CQueuedAction * IsSpeakQueued (long pCharID = -1);
-	bool RemoveQueuedSpeak (long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL, bool pExcludeActive = false);
-	bool UpdateQueuedSpeak (long pCharID, class CSapiVoice * pVoice);
-
+	long QueueThink (long pCharID, LPCTSTR pText, class CAgentTextObject * pTextObject, UINT pSapiVersion = 5);
+	long QueueSpeak (long pCharID, LPCTSTR pText, class CAgentTextObject * pTextObject, LPCTSTR pSoundUrl, class CSapiVoice * pVoice, bool pShowBalloon);
 	long QueueWait (long pCharID, long pOtherCharID, long pOtherReqID);
-	CQueuedAction * IsWaitQueued (long pCharID = -1);
-	bool RemoveQueuedWait (long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL, bool pExcludeActive = false);
-
 	long QueueInterrupt (long pCharID, long pOtherCharID, long pOtherReqID);
-	CQueuedAction * IsInterruptQueued (long pCharID = -1);
-	bool RemoveQueuedInterrupt (long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL, bool pExcludeActive = false);
 
-	CQueuedAction * IsPrepareQueued (long pCharID = -1);
-	bool RemoveQueuedPrepare (long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL, bool pExcludeActive = false);
+	long IsShowingQueued ();
+	long IsHidingQueued ();
+	CQueuedAction * IsSpeakQueued (long pCharID = -1);
+	bool UpdateQueuedSpeak (long pCharID, class CSapiVoice * pVoice);
 
 // Overrides
 public:
 	virtual int IsIdle () const;
 	virtual bool StopIdle (LPCTSTR pReason = NULL);
 protected:
-	virtual bool DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime);
 	virtual bool DoIdle ();
-	virtual void AbortQueuedAction (CQueuedAction * pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 	virtual void OnVoiceStart (long pCharID);
 	virtual void OnVoiceEnd (long pCharID);
 	virtual void OnVoiceBookMark (long pCharID, long pBookMarkId);
@@ -141,40 +122,20 @@ protected:
 public:
 	bool KeepBalloonVisible (class CAgentBalloonWnd * pBalloon);
 
-protected:
-	virtual void IsLastActive (bool pLastActive);
-
-	bool DoQueuedShow ();
-	bool DoQueuedHide ();
-	bool DoQueuedThink ();
-	bool DoQueuedSpeak ();
-	bool DoQueuedWait ();
-	bool DoQueuedInterrupt ();
-	bool DoQueuedPrepare ();
-
-	void AbortQueuedShow (CQueuedAction * pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
-	void AbortQueuedHide (CQueuedAction * pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
-	void AbortQueuedThink (CQueuedAction * pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
-	void AbortQueuedSpeak (CQueuedAction * pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
-	void AbortQueuedWait (CQueuedAction * pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
-	void AbortQueuedInterrupt (CQueuedAction * pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
-	void AbortQueuedPrepare (CQueuedAction * pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
-
 	virtual bool ShowQueued (CQueuedShow * pQueuedShow);
 	virtual bool NotifyShown (long pForCharID, VisibilityCauseType pVisiblityCause);
 	virtual bool HideQueued (CQueuedHide * pQueuedHide);
 	virtual bool NotifyHidden (long pForCharID, VisibilityCauseType pVisiblityCause);
 
-	bool SpeechIsBusy (CQueuedSpeak * pQueuedSpeak);
-	HRESULT SpeechIsReady (CQueuedSpeak * pQueuedSpeak);
-	HRESULT PrepareSpeech (CQueuedSpeak * pQueuedSpeak);
-	HRESULT StartSpeech (CQueuedSpeak * pQueuedSpeak);
-	bool ShowSpeechAnimation (CQueuedSpeak * pQueuedSpeak);
+	void SetLastSpeech (CAgentText & pSpeech);
 	bool StartMouthAnimation (long pSpeakingDuration = -1);
 	bool StopMouthAnimation ();
 	bool PlayMouthAnimation (short pMouthOverlayNdx, bool pPlayAlways);
 
 	CQueuedAction * FindOtherRequest (long pReqID, CAgentCharacterWnd *& pRequestOwner);
+
+protected:
+	virtual void IsLastActive (bool pLastActive);
 
 	short NotifyKeyState () const;
 	void NotifyClick (short pButton, const CPoint & pPoint);
@@ -189,10 +150,10 @@ protected:
 	CAgentText						mLastSpeech;
 	UINT							mLastButtonMsg;
 	static HWND						mLastActive;
-	static UINT						mVoiceStartMsg;
-	static UINT						mVoiceEndMsg;
-	static UINT						mVoiceBookMarkMsg;
-	static UINT						mVoiceVisualMsg;
+	static const UINT				mVoiceStartMsg;
+	static const UINT				mVoiceEndMsg;
+	static const UINT				mVoiceBookMarkMsg;
+	static const UINT				mVoiceVisualMsg;
 };
 
 #pragma warning (pop)

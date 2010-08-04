@@ -121,13 +121,16 @@ String^ FixupAssemblySpecific::RenameControlClass (Type^ pSourceType, String^ pT
 		}
 	}
 	else
-	if	(pTypeName->StartsWith ("_DaCtlEvents_"))
+	if	(
+			(pTypeName->StartsWith ("_DaCtlEvents_"))
+		||	(pTypeName->StartsWith ("_DaCtlEvents2_"))
+		)
 	{
 		if	(pTypeName->EndsWith ("Event"))
 		{
 			if	(mCopy->mAssemblyBuilder->FullName->Contains ("AxControl"))
 			{
-				lNewName = pTypeName->Replace ("_DaCtlEvents_", AX_EVENT_PREFIX);
+				lNewName = pTypeName->Replace ("_DaCtlEvents2_", AX_EVENT_PREFIX)->Replace ("_DaCtlEvents_", AX_EVENT_PREFIX);
 			}
 		}
 		else
@@ -135,11 +138,11 @@ String^ FixupAssemblySpecific::RenameControlClass (Type^ pSourceType, String^ pT
 		{
 			if	(mCopy->mAssemblyBuilder->FullName->Contains ("AxControl"))
 			{
-				lNewName = pTypeName->Replace ("_DaCtlEvents_", AX_EVENT_PREFIX);
+				lNewName = pTypeName->Replace ("_DaCtlEvents2_", AX_EVENT_PREFIX)->Replace ("_DaCtlEvents_", AX_EVENT_PREFIX);
 			}
 			else
 			{
-				lNewName = pTypeName->Substring (13);
+				lNewName = pTypeName->Replace ("_DaCtlEvents2_", "")->Replace ("_DaCtlEvents_", "");
 			}
 		}
 		else
@@ -148,11 +151,11 @@ String^ FixupAssemblySpecific::RenameControlClass (Type^ pSourceType, String^ pT
 			||	(pTypeName->EndsWith ("SinkHelper"))
 			)
 		{
-			lNewName = pTypeName->Substring (13);
+			lNewName = pTypeName->Replace ("_DaCtlEvents2_", "")->Replace ("_DaCtlEvents_", "");
 		}
 		else
 		{
-			lNewName = pTypeName->Replace ("_DaCtlEvents_", "Event");
+			lNewName = pTypeName->Replace ("_DaCtlEvents2_", "Event")->Replace ("_DaCtlEvents_", "Event");
 		}
 	}
 	return lNewName;
@@ -170,7 +173,7 @@ String^ FixupAssemblySpecific::RenameServerClass (Type^ pSourceType, String^ pTy
 		lNewName = pTypeName->Substring (5, pTypeName->Length-10);
 	}
 	else
-	if	(pTypeName->StartsWith ("_DaSvrEvents_"))
+	if	(pTypeName->StartsWith ("_DaSvrEvents2_"))
 	{
 		if	(
 				(pTypeName->EndsWith ("Event"))
@@ -178,11 +181,11 @@ String^ FixupAssemblySpecific::RenameServerClass (Type^ pSourceType, String^ pTy
 			||	(pTypeName->EndsWith ("EventProvider"))
 			)
 		{
-			lNewName = pTypeName->Substring (13);
+			lNewName = pTypeName->Replace ("_DaSvrEvents2_", "");
 		}
 		else
 		{
-			lNewName = pTypeName->Replace ("_DaSvrEvents_", "Event");
+			lNewName = pTypeName->Replace ("_DaSvrEvents2_", "Event");
 		}
 	}
 	return lNewName;
@@ -201,16 +204,26 @@ String^ FixupAssemblySpecific::RenameControlInterface (Type^ pSourceType, String
 	else
 	if	(
 			(!pSourceType->IsImport)
-		&&	(pTypeName->StartsWith ("_DaCtlEvents_"))
+		&&	(	
+				(pTypeName->StartsWith ("_DaCtlEvents_"))
+			||	(pTypeName->StartsWith ("_DaCtlEvents2_"))
+			)
 		)
 	{
 		if	(pTypeName->EndsWith ("_Event"))
 		{
-			lNewName = "IEvents";
+			if	(pTypeName->StartsWith ("_DaCtlEvents2_"))
+			{
+				lNewName = "IEvents2";
+			}
+			else
+			{
+				lNewName = "IEvents";
+			}
 		}
 		else
 		{
-			lNewName = pTypeName->Replace ("_DaCtlEvents_", "IEvents_");
+			lNewName = pTypeName->Replace ("_DaCtlEvents2_", "IEvents2_")->Replace ("_DaCtlEvents_", "IEvents_");
 		}
 	}
 	return lNewName;
@@ -227,7 +240,7 @@ String^ FixupAssemblySpecific::RenameServerInterface (Type^ pSourceType, String^
 	else
 	if	(
 			(!pSourceType->IsImport)
-		&&	(pTypeName->StartsWith ("_DaSvrEvents_"))
+		&&	(pTypeName->StartsWith ("_DaSvrEvents2_"))
 		)
 	{
 		if	(pTypeName->EndsWith ("_Event"))
@@ -236,7 +249,7 @@ String^ FixupAssemblySpecific::RenameServerInterface (Type^ pSourceType, String^
 		}
 		else
 		{
-			lNewName = pTypeName->Replace ("_DaSvrEvents_", "IEvents_");
+			lNewName = pTypeName->Replace ("_DaSvrEvents2_", "IEvents_");
 		}
 	}
 	return lNewName;
@@ -451,7 +464,10 @@ bool FixupAssemblySpecific::SkipObsoleteEvent (MethodInfo^ pSourceMethod, Method
 				(
 					(pSourceMethod->Name->EndsWith ("Restart"))
 				||	(pSourceMethod->Name->EndsWith ("Shutdown"))
-//				||	(pSourceMethod->Name->EndsWith ("HelpComplete"))
+				||	(
+						(pSourceMethod->DeclaringType->IsSubclassOf (System::Windows::Forms::AxHost::typeid))
+					&&	(pSourceMethod->Name->EndsWith ("HelpComplete"))
+					)
 				)
 			&&	(
 					(
@@ -485,7 +501,10 @@ bool FixupAssemblySpecific::SkipObsoleteEvent (EventInfo^ pSourceEvent, EventAtt
 		if	(
 				(pSourceEvent->Name->EndsWith ("Restart"))
 			||	(pSourceEvent->Name->EndsWith ("Shutdown"))
-//			||	(pSourceEvent->Name->EndsWith ("HelpComplete"))
+			||	(
+					(pSourceEvent->DeclaringType->IsSubclassOf (System::Windows::Forms::AxHost::typeid))
+				&&	(pSourceEvent->Name->EndsWith ("HelpComplete"))
+				)
 			)
 		{
 #ifdef	_LOG_FIXES
@@ -932,7 +951,6 @@ void FixupAssemblySpecific::SetActiveXEventCategory (Object^ pSource, Object^ pT
 
 	if	(
 			(lSourceEvent)
-		&&	(lSourceEvent->DeclaringType->IsSubclassOf (System::Windows::Forms::AxHost::typeid))
 		&&	(lTargetEvent)
 		)
 	{
@@ -941,60 +959,83 @@ void FixupAssemblySpecific::SetActiveXEventCategory (Object^ pSource, Object^ pT
 			array <Type^>^		lAttrArgTypes = gcnew array <Type^> (1);
 			array <Object^>^	lAttrArgValues = gcnew array <Object^> (1);
 
-			if	(
-					(lSourceEvent->Name->StartsWith ("ActivateInput"))
-				||	(lSourceEvent->Name->StartsWith ("DeactivateInput"))
-				)
+			if	(lSourceEvent->DeclaringType->IsSubclassOf (System::Windows::Forms::AxHost::typeid))
 			{
-				lAttrArgValues [0] = gcnew String("Focus");
-			}
-			else
-			if	(
-					(lSourceEvent->Name->StartsWith ("Click"))
-				||	(lSourceEvent->Name->StartsWith ("DblClick"))
-				||	(lSourceEvent->Name->StartsWith ("Show"))
-				||	(lSourceEvent->Name->StartsWith ("Hide"))
-				||	(lSourceEvent->Name->StartsWith ("RequestStart"))
-				||	(lSourceEvent->Name->StartsWith ("RequestComplete"))
-				||	(lSourceEvent->Name->StartsWith ("Bookmark"))
-				||	(lSourceEvent->Name->StartsWith ("Command"))
-				||	(lSourceEvent->Name->StartsWith ("BalloonShow"))
-				||	(lSourceEvent->Name->StartsWith ("BalloonHide"))
-				||	(lSourceEvent->Name->StartsWith ("ListenStart"))
-				||	(lSourceEvent->Name->StartsWith ("ListenComplete"))
-				)
-			{
-				lAttrArgValues [0] = gcnew String("Action");
-			}
-			else
-			if	(
-					(lSourceEvent->Name->StartsWith ("DragStart"))
-				||	(lSourceEvent->Name->StartsWith ("DragComplete"))
-				||	(lSourceEvent->Name->StartsWith ("Move"))
-				||	(lSourceEvent->Name->StartsWith ("Size"))
-				)
-			{
-				lAttrArgValues [0] = gcnew String("Layout");
-			}
-			else
-			if	(
-					(lSourceEvent->Name->StartsWith ("IdleStart"))
-				||	(lSourceEvent->Name->StartsWith ("IdleComplete"))
-				||	(lSourceEvent->Name->StartsWith ("DefaultCharacterChange"))
-				||	(lSourceEvent->Name->StartsWith ("AgentPropertyChange"))
-				||	(lSourceEvent->Name->StartsWith ("ActiveClientChange"))
-				)
-			{
-				lAttrArgValues [0] = gcnew String("Behavior");
-			}
+				if	(
+						(lSourceEvent->Name->StartsWith ("ActivateInput"))
+					||	(lSourceEvent->Name->StartsWith ("DeactivateInput"))
+					)
+				{
+					lAttrArgValues [0] = gcnew String("Focus");
+				}
+				else
+				if	(
+						(lSourceEvent->Name->StartsWith ("Click"))
+					||	(lSourceEvent->Name->StartsWith ("DblClick"))
+					||	(lSourceEvent->Name->StartsWith ("Show"))
+					||	(lSourceEvent->Name->StartsWith ("Hide"))
+					||	(lSourceEvent->Name->StartsWith ("RequestStart"))
+					||	(lSourceEvent->Name->StartsWith ("RequestComplete"))
+					||	(lSourceEvent->Name->StartsWith ("Command"))
+					||	(lSourceEvent->Name->StartsWith ("BalloonShow"))
+					||	(lSourceEvent->Name->StartsWith ("BalloonHide"))
+					)
+				{
+					lAttrArgValues [0] = gcnew String("Action");
+				}
+				else
+				if	(
+						(lSourceEvent->Name->StartsWith ("DragStart"))
+					||	(lSourceEvent->Name->StartsWith ("DragComplete"))
+					||	(lSourceEvent->Name->StartsWith ("Move"))
+					||	(lSourceEvent->Name->StartsWith ("Size"))
+					)
+				{
+					lAttrArgValues [0] = gcnew String("Layout");
+				}
+				else
+				if	(
+						(lSourceEvent->Name->StartsWith ("IdleStart"))
+					||	(lSourceEvent->Name->StartsWith ("IdleComplete"))
+					||	(lSourceEvent->Name->StartsWith ("DefaultCharacterChange"))
+					||	(lSourceEvent->Name->StartsWith ("AgentPropertyChange"))
+					||	(lSourceEvent->Name->StartsWith ("ActiveClientChange"))
+					)
+				{
+					lAttrArgValues [0] = gcnew String("Behavior");
+				}
+				else
+				if	(
+						(lSourceEvent->Name->StartsWith ("Bookmark"))
+					||	(lSourceEvent->Name->StartsWith ("ListenStart"))
+					||	(lSourceEvent->Name->StartsWith ("ListenComplete"))
+					||	(lSourceEvent->Name->StartsWith ("Voice"))
+					)
+				{
+					lAttrArgValues [0] = gcnew String("Speech");
+				}
 
-			if	(lAttrArgValues [0])
+				if	(lAttrArgValues [0])
+				{
+#ifdef	_LOG_FIXES
+					LogMessage (_LOG_FIXES, _T("---> Category   [%s] for [%s.%s]"), _B((String^)lAttrArgValues[0]), _BMT(lSourceEvent), _BM(lSourceEvent));
+#endif
+					lAttrArgTypes [0] = String::typeid;
+					pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::CategoryAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
+				}
+			}
+			else
+			if	(
+					(lSourceEvent->DeclaringType->IsClass)
+				&&	(lSourceEvent->Name->EndsWith ("HelpComplete"))
+				)
 			{
 #ifdef	_LOG_FIXES
-				LogMessage (_LOG_FIXES, _T("---> Category   [%s] for [%s.%s]"), _B((String^)lAttrArgValues[0]), _BMT(lSourceEvent), _BM(lSourceEvent));
+				LogMessage (_LOG_FIXES, _T("---> Hide       [%s.%s"), _BMT(lSourceEvent), _BM(lSourceEvent));
 #endif
-				lAttrArgTypes [0] = String::typeid;
-				pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::CategoryAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
+				lAttrArgTypes [0] = TypeLibFuncFlags::typeid;
+				lAttrArgValues [0] = (TypeLibFuncFlags)((int)TypeLibFuncFlags::FHidden | (int)TypeLibFuncFlags::FRestricted);
+				pCustomAttributes->Add (gcnew CustomAttributeBuilder (TypeLibFuncAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
 			}
 		}
 		catch AnyExceptionSilent

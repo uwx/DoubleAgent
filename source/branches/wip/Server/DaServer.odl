@@ -25,6 +25,7 @@ library DoubleAgentSvr
 	interface IDaSvrNotifySink;
 
 	interface IDaSvrCharacterFiles;
+	interface IDaSvrFormattedText;
 	interface IDaSvrTTSEngine;
 	interface IDaSvrTTSEngines;
 	interface IDaSvrSREngine;
@@ -38,7 +39,8 @@ library DoubleAgentSvr
 	interface IDaSvrUserInput2;
 	interface IDaSvrCommand2;
 	interface IDaSvrCommands2;
-	interface IDaSvrAnimationNames;
+	interface IDaSvrNotifySink2;
+	dispinterface _DaSvrEvents2;
 
 	/////////////////////////////////////////////////////////////////////////////
 	// Types
@@ -347,14 +349,35 @@ cpp_quote("#endif")
 			id(DISPID_IAgentNotifySinkEx_ActiveClientChange)] HRESULT ActiveClientChange ([in] long CharacterID, [in] long Status);
 	};
 
+	const DISPID DISPID_IDaSvrNotifySink2_SpeechStart = 0x60030005;
+	const DISPID DISPID_IDaSvrNotifySink2_SpeechEnd = 0x60030006;
+	const DISPID DISPID_IDaSvrNotifySink2_SpeechWord = 0x60030007;
+
+	[
+		odl,
+		uuid(1147E571-A208-11DE-ABF2-002421116FB2),
+		oleautomation,
+		nonextensible,
+		helpcontext(APIHELP_Svr_Event)
+	]
+	interface IDaSvrNotifySink2 : IDaSvrNotifySink
+	{
+		[helpstring("Speech output started"), helpcontext(APIHELP_Svr_Event_SpeechStart),
+			id(DISPID_IDaSvrNotifySink2_SpeechStart)] HRESULT SpeechStart ([in] long CharacterID, [in] IDaSvrFormattedText* FormattedText);
+		[helpstring("Speech output ended"), helpcontext(APIHELP_Svr_Event_SpeechEnd),
+			id(DISPID_IDaSvrNotifySink2_SpeechEnd)] HRESULT SpeechEnd ([in] long CharacterID, [in] IDaSvrFormattedText* FormattedText, [in] VARIANT_BOOL Stopped);
+		[helpstring("Speech output reached a word boundary"), helpcontext(APIHELP_Svr_Event_SpeechWord),
+			id(DISPID_IDaSvrNotifySink2_SpeechWord)] HRESULT SpeechWord ([in] long CharacterID, [in] IDaSvrFormattedText* FormattedText, [in] long WordIndex);
+	}
+
 	[
 		uuid(1147E52E-A208-11DE-ABF2-002421116FB2),
 		hidden,
 		helpcontext(APIHELP_Svr_Event)
 	]
-	dispinterface _DaSvrEvents
+	dispinterface _DaSvrEvents2
 	{
-		interface IDaSvrNotifySink;
+		interface IDaSvrNotifySink2;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -579,6 +602,9 @@ cpp_quote("#endif")
 	const DISPID DISPID_IDaSvrCharacter2_ListeningStatus = 0x60040026;
 	const DISPID DISPID_IDaSvrCharacter2_Animations = 0x60040027;
 	const DISPID DISPID_IDaSvrCharacter2_States = 0x60040028;
+	const DISPID DISPID_IDaSvrCharacter2_SpeakFormatted = 0x60040030;
+	const DISPID DISPID_IDaSvrCharacter2_ThinkFormatted = 0x60040031;
+	const DISPID DISPID_IDaSvrCharacter2_NewFormattedText = 0x60040032;
 
 	[
 		odl,
@@ -613,6 +639,13 @@ cpp_quote("#endif")
 		[helpstring("The tip associated with the task bar icon (if empty, the chracter's name is used)"), helpcontext(APIHELP_Svr_Character_IconTip),
 			id(DISPID_IDaSvrCharacter2_IconTip), propget, bindable, displaybind] HRESULT IconTip ([out, retval] BSTR * IconTip);
 			[id(DISPID_IDaSvrCharacter2_IconTip), propput, bindable, displaybind] HRESULT IconTip ([in] BSTR IconTip);
+
+		[helpstring("Speak formatted text"), helpcontext(APIHELP_Svr_Character_SpeakFormatted),
+			id(DISPID_IDaSvrCharacter2_SpeakFormatted)] HRESULT SpeakFormatted ([in] IDaSvrFormattedText * FormattedText, [out] long* RequestID);
+		[helpstring("Think formatted text"), helpcontext(APIHELP_Svr_Character_ThinkFormatted),
+			id(DISPID_IDaSvrCharacter2_ThinkFormatted)] HRESULT ThinkFormatted ([in] IDaSvrFormattedText * FormattedText, [out] long* RequestID);
+		[helpstring("Get a new formatted text object"), helpcontext(APIHELP_Svr_Character_NewFormattedText),
+			id(DISPID_IDaSvrCharacter2_NewFormattedText)] HRESULT NewFormattedText ([out, retval] IDaSvrFormattedText ** FormattedText);
 		[helpstring("The character's current or default Text-to-Speech Engine"), helpcontext(APIHELP_Svr_Character_TTSEngine),
 			id(DISPID_IDaSvrCharacter2_TTSEngine), propget] HRESULT TTSEngine ([in, defaultvalue(FALSE)] VARIANT_BOOL GetDefault, [out, retval] IDaSvrTTSEngine** TTSEngine);
 		[helpstring("Retrieve a filtered collection of Text-to-Speech Engines that match the character's requirements"), helpcontext(APIHELP_Svr_Character_FindTTSEngines),
@@ -1444,6 +1477,51 @@ cpp_quote("#endif")
 
 	/////////////////////////////////////////////////////////////////////////////
 
+	const DISPID DISPID_IDaSvrFormattedText_RawText = DISPID_VALUE;
+	const DISPID DISPID_IDaSvrFormattedText_ParsedText = 0x60020001;
+	const DISPID DISPID_IDaSvrFormattedText_SpeechText = 0x60020002;
+	const DISPID DISPID_IDaSvrFormattedText_WordCount = 0x60020003;
+	const DISPID DISPID_IDaSvrFormattedText_DisplayWord = 0x60020004;
+	const DISPID DISPID_IDaSvrFormattedText_WordIndex = 0x60020005;
+	const DISPID DISPID_IDaSvrFormattedText_DisplayText = 0x60020006;
+	const DISPID DISPID_IDaSvrFormattedText_Parse = 0x60020007;
+	const DISPID DISPID_IDaSvrFormattedText_Append = 0x60020008;
+
+	[
+		odl,
+		uuid(1147E52F-A208-11DE-ABF2-002421116FB2),
+		dual,
+		oleautomation,
+		nonextensible,
+		helpcontext(APIHELP_Svr_FormattedText)
+	]
+	interface IDaSvrFormattedText : IDispatch
+	{
+		[helpstring("The unformatted text"), helpcontext(APIHELP_Svr_FormattedText),
+			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
+			id(DISPID_IDaSvrFormattedText_RawText), propget, bindable, displaybind, defaultbind] HRESULT RawText ([out, retval] BSTR *RawText);
+			[id(DISPID_IDaSvrFormattedText_RawText), propput, bindable, displaybind, defaultbind] HRESULT RawText ([in] BSTR RawText);
+		[helpstring("The full display text"), helpcontext(APIHELP_Svr_FormattedText),
+			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
+			id(DISPID_IDaSvrFormattedText_ParsedText), propget, readonly, bindable, displaybind, defaultbind] HRESULT ParsedText ([out, retval] BSTR *ParsedText);
+		[helpstring("The full speech text"), helpcontext(APIHELP_Svr_FormattedText),
+			id(DISPID_IDaSvrFormattedText_SpeechText), propget, readonly, bindable, displaybind] HRESULT SpeechText ([out, retval] BSTR *SpeechText);
+		[helpstring("The count of parsed words"), helpcontext(APIHELP_Svr_FormattedText),
+			id(DISPID_IDaSvrFormattedText_WordCount), propget, readonly, bindable, displaybind] HRESULT WordCount ([out, retval] long *WordCount);
+		[helpstring("A parsed word"), helpcontext(APIHELP_Svr_FormattedText),
+			id(DISPID_IDaSvrFormattedText_DisplayWord), propget, readonly, bindable, displaybind] HRESULT DisplayWord ([in] long WordIndex, [out, retval] BSTR *DisplayWord);
+		[helpstring("The current word being displayed"), helpcontext(APIHELP_Svr_FormattedText),
+			id(DISPID_IDaSvrFormattedText_WordIndex), propget, readonly, bindable, displaybind] HRESULT WordIndex ([out, retval] long *WordIndex);
+		[helpstring("The text currently displayed"), helpcontext(APIHELP_Svr_FormattedText),
+			id(DISPID_IDaSvrFormattedText_DisplayText), propget, readonly, bindable, displaybind] HRESULT DisplayText ([out, retval] BSTR *DisplayText);
+		[helpstring("Parse text with speech markups"), helpcontext(APIHELP_Svr_FormattedText),
+			id(DISPID_IDaSvrFormattedText_Parse)] HRESULT Parse ([in] BSTR RawText);
+		[helpstring("Append formatted text"), helpcontext(APIHELP_Svr_FormattedText),
+			id(DISPID_IDaSvrFormattedText_Append)] HRESULT Append ([in] IDaSvrFormattedText * FormattedText);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+
 	const DISPID DISPID_IDaSvrTTSEngine_TTSModeID = DISPID_VALUE;
 	const DISPID DISPID_IDaSvrTTSEngine_DisplayName = 0x60020001;
 	const DISPID DISPID_IDaSvrTTSEngine_Manufacturer = 0x60020002;
@@ -1574,7 +1652,7 @@ cpp_quote("#endif")
 	coclass DaServer
 	{
 		[default] interface IDaServer2;
-		[default, source] dispinterface _DaSvrEvents;
+		[default, source] dispinterface _DaSvrEvents2;
 	};
 
 	[
@@ -1726,6 +1804,18 @@ cpp_quote("#endif")
 	coclass DaSvrCharacterFiles
 	{
 		[default] interface IDaSvrCharacterFiles;
+	};
+
+	[
+		uuid(1147E570-A208-11DE-ABF2-002421116FB2),
+		helpstring("Formatted speech text"),
+		helpcontext(APIHELP_Svr_FormattedText),
+		noncreatable
+		//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.Server.FormattedText")
+	]
+	coclass DaSvrFormattedText
+	{
+		[default] interface IDaSvrFormattedText;
 	};
 
 	[

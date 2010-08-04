@@ -53,6 +53,8 @@ public:
 	HRESULT PrepareToSpeak (bool pHighPriority = false);
 	HRESULT Speak (LPCTSTR pMessage, bool pAsync = true);
 	HRESULT Stop ();
+	HRESULT Pause ();
+	HRESULT Resume ();
 
 	HRESULT GetEngineId (GUID & pEngineId);
 	HRESULT GetModeId (GUID & pModeId);
@@ -66,6 +68,7 @@ protected:
 	virtual UINT _IsValid () const;
 	virtual bool _IsPrepared () const;
 	virtual bool _IsSpeaking () const;
+	virtual bool _IsPaused () const;
 public:
 	virtual tBstrPtr GetUniqueId ();
 	virtual HRESULT GetUniqueId (tBstrPtr & pUniqueId);
@@ -164,6 +167,7 @@ protected:
 	ULONG						mDefaultRate;
 	USHORT						mDefaultVolume;
 	USHORT						mDefaultPitch;
+	bool						mPaused;
 	tPtr <DWORD>				mIsQueueing;
 	tPtr <DWORD>				mIsSpeaking;
 	tPtr <DWORD>				mResetPending;

@@ -50,6 +50,10 @@ public:
 	void FireAgentPropertyChange();
 	void FireActiveClientChange(LPCTSTR CharacterID, BOOL Active);
 
+	void FireSpeechStart(LPCTSTR CharacterID, LPDISPATCH FormattedText);
+	void FireSpeechEnd(LPCTSTR CharacterID, LPDISPATCH FormattedText, VARIANT_BOOL Stopped);
+	void FireSpeechWord(LPCTSTR CharacterID, LPDISPATCH FormattedText, long WordIndex);
+
 protected:
 	CDaCtlEventDispatch (CComDynamicUnkArray & pUnkArray) : mUnkArray (pUnkArray) {}
 
@@ -66,6 +70,13 @@ public:
 };
 
 template <class T>
+class CProxy_DaCtlEvents2 : public IConnectionPointImpl<T, &__uuidof(_DaCtlEvents2), CComDynamicUnkArray>, public CDaCtlEventDispatch
+{
+public:
+	CProxy_DaCtlEvents2 () : CDaCtlEventDispatch (m_vec) {}
+};
+
+template <class T>
 class CProxy_AgentEvents : public IConnectionPointImpl<T, &__uuidof(_AgentEvents), CComDynamicUnkArray>, public CDaCtlEventDispatch
 {
 public:
@@ -78,7 +89,7 @@ public:
 
 class ATL_NO_VTABLE CServerNotifySink :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<IDaSvrNotifySink, &__uuidof(IDaSvrNotifySink), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>
+	public IDispatchImpl<IDaSvrNotifySink2, &__uuidof(IDaSvrNotifySink2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>
 {
 public:
 	CServerNotifySink ();
@@ -92,7 +103,7 @@ public:
 // Declarations
 public:
 	BEGIN_COM_MAP(CServerNotifySink)
-		COM_INTERFACE_ENTRY(IDaSvrNotifySink)
+		COM_INTERFACE_ENTRY(IDaSvrNotifySink2)
 	END_COM_MAP()
 
 	HRESULT STDMETHODCALLTYPE Command (long CommandID, IDaSvrUserInput2 *UserInput);
@@ -117,6 +128,10 @@ public:
 	HRESULT STDMETHODCALLTYPE AgentPropertyChange ();
 	HRESULT STDMETHODCALLTYPE ActiveClientChange (long CharacterID, long Status);
 
+	HRESULT STDMETHODCALLTYPE SpeechStart (long CharacterID, IDaSvrFormattedText* FormattedText);
+	HRESULT STDMETHODCALLTYPE SpeechEnd (long CharacterID, IDaSvrFormattedText* FormattedText, VARIANT_BOOL Stopped);
+	HRESULT STDMETHODCALLTYPE SpeechWord (long CharacterID, IDaSvrFormattedText* FormattedText, long WordIndex);
+
 // Implementation
 protected:
 	virtual bool PreFireEvent (LPCTSTR pEventName = NULL);
@@ -137,9 +152,18 @@ public:
 	CEventNotifyReflect (DaControl * pOwner);
 	virtual ~CEventNotifyReflect ();
 
+// Attributes
 public:
 	typedef CComObjectStack <CServerNotifySink> _NotifyBase;
 
+// Operations
+public:
+	HRESULT OnSpeechStart (long CharacterID, LPUNKNOWN FormattedText);
+	HRESULT OnSpeechEnd (long CharacterID, LPUNKNOWN FormattedText, VARIANT_BOOL Stopped);
+	HRESULT OnSpeechWord (long CharacterID, LPUNKNOWN FormattedText, long WordIndex);
+
+// Interface
+public:
 	STDMETHOD_(ULONG, AddRef) () {return _NotifyBase::AddRef ();}
 	STDMETHOD_(ULONG, Release) () {return _NotifyBase::Release ();}
 	STDMETHOD(QueryInterface) (REFIID iid, void ** ppvObject) {return _NotifyBase::QueryInterface (iid, ppvObject);}
@@ -165,6 +189,10 @@ public:
 	HRESULT STDMETHODCALLTYPE DefaultCharacterChange (BSTR CharGUID) {return _NotifyBase::DefaultCharacterChange (CharGUID);}
 	HRESULT STDMETHODCALLTYPE AgentPropertyChange () {return _NotifyBase::AgentPropertyChange ();}
 	HRESULT STDMETHODCALLTYPE ActiveClientChange (long CharacterID, long Status) {return _NotifyBase::ActiveClientChange (CharacterID, Status);}
+
+	HRESULT STDMETHODCALLTYPE SpeechStart (long CharacterID, IDaSvrFormattedText* FormattedText) {return E_NOTIMPL;}
+	HRESULT STDMETHODCALLTYPE SpeechEnd (long CharacterID, IDaSvrFormattedText* FormattedText, VARIANT_BOOL Stopped) {return  E_NOTIMPL;}
+	HRESULT STDMETHODCALLTYPE SpeechWord (long CharacterID, IDaSvrFormattedText* FormattedText, long WordIndex) {return E_NOTIMPL;}
 
 // Implementation
 protected:

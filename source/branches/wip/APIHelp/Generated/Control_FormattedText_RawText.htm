@@ -1,0 +1,96 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The RawText Property</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h3>The RawText Property</h3>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+				<p>Returns the unformatted text.</p>
+			</div>
+					<h4 class="syntax">Syntax</h4>
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p>[<em class="token">RawText</em> = ]<em class="token">formattedtext</em>.<em class="keyword">RawText</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p>[<em class="token">RawText</em> = ]<em class="token">formattedtext</em>.<em class="keyword">RawText</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p>[<em class="token">RawText</em> = ]<em class="token">formattedtext</em>.<em class="keyword">RawText</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p>[<em class="token">RawText</em> = ]<em class="token">formattedtext</em>.<em class="keyword">RawText</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">formattedtext</em>-&gt;<em class="keyword">get_RawText</em> (&amp;<em class="token">RawText</em>)</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">RawText</em>
+								</td>
+								<td>
+				A <em class="typename">string</em> value containing the unformatted text.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+				<p>
+					After you use the <a href="Control_FormattedText_Parse.htm" class="see keyword">Parse Method</a>, this property will return
+					the text passed in the <em class="token">RawText</em> parameter.
+				</p>
+				<p>
+					If you use this property to set the <em class="self keyword">RawText</em> value, it does not get parsed. The <em class="self keyword">RawText</em>
+					value will be used for both the <a href="Control_FormattedText_ParsedText.htm" class="see keyword">ParsedText</a> and the <a href="Control_FormattedText_SpeechText.htm" class="see keyword">SpeechText</a>.
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Control_FormattedText_ParsedText.htm">The ParsedText Property</a><br /><a href="Control_FormattedText_SpeechText.htm">The SpeechText Property</a><br /><a href="Control_FormattedText_Parse.htm">The Parse Method</a></td>
+			</tr>
+		</table>
+	</body>
+</HTML>

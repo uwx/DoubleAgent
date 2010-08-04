@@ -83,12 +83,19 @@
 					</div>
 					<h4 class="remarks">Remarks</h4>
 				<p>
-					To specify the request parameter, you must create a variable and assign the animation request you want
+					To specify the <em class="token">Request</em> parameter, you must create a variable and assign the animation request you want
 					to stop. If you don't set the <em class="token">Request</em> parameter, Double Agent stops all animations for
 					the character, including queued <a href="Control_Character_Prepare.htm" class="see keyword">Prepare</a> calls, and clears its animation queue
 					(unless the character is currently playing its <em class="glossary">Hiding</em> or <em class="glossary">Showing</em>
-					animation). This method <em>does not</em> stop non-queued <a href="Control_Character_Prepare.htm" class="see keyword">Prepare</a> calls.
+					animation).
 				</p>
+				<p class="note"><span class="note">Note:</span> 
+					This method is performed immediately and does not generate a <a href="Control_Request.htm" class="see keyword">Request Object</a>.
+				</p>
+				<p class="note"><span class="note">Note:</span> 
+					This method <em>does not</em> stop non-queued <a href="Control_Character_Prepare.htm" class="see keyword">Prepare</a> calls.
+				</p>
+			
 				<div class="example">
 					<p>
 						To stop a specific animation or <a href="Control_Character_Prepare.htm" class="see keyword">Prepare</a> call, declare an object variable
@@ -107,9 +114,6 @@ Genie.<em class="keyword">Show</em>
 
 Genie.<em class="keyword">Stop</em> MyRequest</pre>
 				</div>
-				<p>
-					This method is performed immediately and does not generate a <a href="Control_Request.htm" class="see keyword">Request Object</a>.
-				</p>
 			<h4 class="seealso">See Also</h4><a href="Control_Character_StopAll.htm">The StopAll Method</a></td>
 			</tr>
 		</table>

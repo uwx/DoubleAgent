@@ -31,7 +31,7 @@
 
 class ATL_NO_VTABLE __declspec(uuid("{1147E530-A208-11DE-ABF2-002421116FB2}")) DaControl :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IProvideClassInfo2Impl<&__uuidof(DaControl), &__uuidof(_DaCtlEvents), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IProvideClassInfo2Impl<&__uuidof(DaControl), &__uuidof(_DaCtlEvents2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
 	public ISupportErrorInfo,
 	public IObjectSafetyImpl<DaControl, INTERFACESAFE_FOR_UNTRUSTED_CALLER|INTERFACESAFE_FOR_UNTRUSTED_DATA>,
 	public CStockPropImpl<DaControl, IDaControl2, &__uuidof(IDaControl2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
@@ -49,6 +49,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E530-A208-11DE-ABF2-002421116FB2}")) D
 	public IConnectionPointContainerImpl<DaControl>,
 	public IPropertyNotifySinkCP<DaControl>,
 	public CProxy_DaCtlEvents<DaControl>,
+	public CProxy_DaCtlEvents2<DaControl>,
 	public CProxy_AgentEvents<DaControl>,
 //	public IDataObjectImpl<DaControl>,
 	public CComCoClass<DaControl, &__uuidof(DaControl)>,
@@ -196,6 +197,7 @@ public:
 	BEGIN_CONNECTION_POINT_MAP(DaControl)
 		CONNECTION_POINT_ENTRY(IID_IPropertyNotifySink)
 		CONNECTION_POINT_ENTRY(__uuidof(_DaCtlEvents))
+		CONNECTION_POINT_ENTRY(__uuidof(_DaCtlEvents2))
 		CONNECTION_POINT_ENTRY(__uuidof(_AgentEvents))
 	END_CONNECTION_POINT_MAP()
 
@@ -208,6 +210,7 @@ public:
 		MESSAGE_HANDLER(WM_SHOWWINDOW, OnShowWindow)
 		MESSAGE_HANDLER(WM_TIMER, OnTimer)
 		MESSAGE_HANDLER(WM_HOTKEY, OnHotKey)
+		MESSAGE_HANDLER(WM_ACTIVATEAPP, OnActivateApp)
 		MESSAGE_HANDLER(mCompleteRequestsMsg, OnCompleteRequests)
 		MESSAGE_HANDLER(mOptionsChangedMsgId, OnBroadcastOptionsChanged)
 		MESSAGE_HANDLER(mDefaultCharacterChangedMsgId, OnBroadcastDefaultCharacterChanged)
@@ -228,6 +231,7 @@ public:
 	LRESULT OnShowWindow(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnHotKey(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnActivateApp(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnCompleteRequests(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnBroadcastOptionsChanged(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnBroadcastDefaultCharacterChanged(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
@@ -330,6 +334,10 @@ public:
 	void FireAgentPropertyChange();
 	void FireActiveClientChange(LPCTSTR CharacterID, BOOL Active);
 
+	void FireSpeechStart(LPCTSTR CharacterID, IDaCtlFormattedText* FormattedText);
+	void FireSpeechEnd(LPCTSTR CharacterID, IDaCtlFormattedText* FormattedText, VARIANT_BOOL Stopped);
+	void FireSpeechWord(LPCTSTR CharacterID, IDaCtlFormattedText* FormattedText, long WordIndex);
+
 // Implementation
 public:
 	CAtlString GetControlCharacterID (long pServerCharID);
@@ -354,6 +362,7 @@ protected:
 
 protected:
 	friend class CServerNotifySink;
+
 	tPtr <CComObject <CServerNotifySink> >	mServerNotifySink;
 	IDaCtlCharacter2Ptr						mControlCharacter;
 	CAtlMap <long, DaCtlRequest *>			mActiveRequests;

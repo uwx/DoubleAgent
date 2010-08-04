@@ -116,9 +116,9 @@ HRESULT WINAPI CDaElevatedSettings::UpdateRegistryOverride (BOOL bRegister)
 #ifdef	_DEBUG
 			if	(LogIsActive (LogNormal))
 			{
-				CString	lAccessStr;
-				CString	lByteStr;
-				INT_PTR	lNdx;
+				CAtlString	lAccessStr;
+				CAtlString	lByteStr;
+				INT_PTR		lNdx;
 
 				for	(lNdx = 0; lNdx < (INT_PTR)lLaunchPermission.Value().GetCount(); lNdx++)
 				{
@@ -154,9 +154,9 @@ HRESULT WINAPI CDaElevatedSettings::UpdateRegistryOverride (BOOL bRegister)
 #ifdef	_DEBUG
 			if	(LogIsActive (LogNormal))
 			{
-				CString	lAccessStr;
-				CString	lByteStr;
-				INT_PTR	lNdx;
+				CAtlString	lAccessStr;
+				CAtlString	lByteStr;
+				INT_PTR		lNdx;
 
 				for	(lNdx = 0; lNdx < (INT_PTR)lAccessPermission.Value().GetCount(); lNdx++)
 				{
@@ -326,9 +326,9 @@ HRESULT CDaElevatedSettings::SetTreatAs (HKEY pClassesRoot, REFGUID pClassId, RE
 		&&	(lClassIds.IsValid ())
 		)
 	{
-		long	lError;
-		CString	lClassIdStr = (CString)CGuidStr (pClassId);
-		CString	lTreatAsStr = (CString)CGuidStr (pTreatAs);
+		long		lError;
+		CAtlString	lClassIdStr = (CString)CGuidStr (pClassId);
+		CAtlString	lTreatAsStr = (CString)CGuidStr (pTreatAs);
 
 		if	(IsEqualGUID (pTreatAs, GUID_NULL))
 		{

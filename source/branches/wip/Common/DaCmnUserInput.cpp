@@ -53,7 +53,7 @@ void CDaCmnUserInput::Initialize (ISpRecoResult * pRecoResult, bool pGlobalComma
 		{
 			mItemId.Add (pGlobalCommand ? 0 : lPhrase->Rule.ulId);
 			mItemConfidence.Add ((long)lPhrase->Rule.Confidence*100);
-			mItemText.Add (CString ((LPCWSTR)lPhraseText));
+			mItemText.Add (CAtlString ((LPCWSTR)lPhraseText));
 
 			if	(SUCCEEDED (pRecoResult->GetAlternates (0, SPPR_ALL_ELEMENTS, 100, (ISpPhraseAlt**)lAlternates, &lAlternateCount)))
 			{
@@ -72,7 +72,7 @@ void CDaCmnUserInput::Initialize (ISpRecoResult * pRecoResult, bool pGlobalComma
 					{
 						mItemId.Add (pGlobalCommand ? 0 : lPhrase->Rule.ulId);
 						mItemConfidence.Add ((long)lPhrase->Rule.Confidence*100);
-						mItemText.Add (CString ((LPCWSTR)lPhraseText));
+						mItemText.Add (CAtlString ((LPCWSTR)lPhraseText));
 					}
 				}
 			}

@@ -37,7 +37,7 @@
 									<p>Visual Basic 6</p>
 								</td>
 								<td>
-<p>[<em class="keyword">Set</em> <em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Speak</em> [<em class="token">Text</em>], [<em class="token">Url</em>]</p>
+<p>[<em class="keyword">Set</em> <em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Speak</em> [<em class="token">Text</em>][, <em class="token">Url</em>]</p>
 </td>
 							</tr>
 							<tr>
@@ -45,7 +45,7 @@
 									<p>VBScript</p>
 								</td>
 								<td>
-<p>[<em class="keyword">Set</em> <em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Speak</em> [<em class="token">Text</em>], [<em class="token">Url</em>]</p>
+<p>[<em class="keyword">Set</em> <em class="token">Request</em> = ]<em class="token">control</em>.<em class="keyword">Characters</em> ("<em class="token">CharacterID</em>").<em class="keyword">Speak</em> [<em class="token">Text</em>][, <em class="token">Url</em>]</p>
 </td>
 							</tr>
 							<tr>
@@ -94,7 +94,7 @@
 								</td>
 								<td>
 				A <a href="Control_Request.htm" class="see typename">Request Object</a> your application can
-				used to track the method's status.
+				use to track the method's status.
 			</td>
 							</tr>
 						</table>
@@ -102,9 +102,10 @@
 					<h4 class="remarks">Remarks</h4>
 				<p>
 					At least one of the <em class="token">Text</em> and <em class="token">Url</em> parameters must be supplied. To
-					use this method with a character configured to speak only in its word balloon or using a text-to-speech (TTS)
-					engine, simply provide the <em class="token">Text</em> parameter. Include a space between words to define appropriate
-					word breaks in the word balloon, even for languages that do not traditionally include spaces.
+					use this method with a character configured to speak only in its <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>
+					or using a text-to-speech (TTS) engine, simply provide the <em class="token">Text</em> parameter. Include a
+					space between words to define appropriate word breaks in the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>,
+					even for languages that do not traditionally include spaces.
 				</p>
 				<p>
 					You can also include vertical bar '|' characters in the <em class="token">Text</em> parameter to designate alternative
@@ -143,10 +144,11 @@
 					For more information on the bookmark speech tag, see <a href="MsAgent.chm::/hh/msagent/spoutput_2v1w.htm">Speech Output Tags</a>.
 				</div>
 				<p>
-					Agent's automatic word breaking in the word balloon breaks words using white-space characters (for example,
-					Space or Tab). However, if it cannot, it may break a word to fit the balloon. In languages like
-					Japanese, Chinese, and Thai, where spaces are not used to break words, insert a Unicode zero-width space
-					character (0x200B) between characters to define logical word breaks.
+					Agent's automatic word breaking in the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> breaks words using
+					<em class="glossary">white-space</em> characters (for example, Space or Tab). However, if it cannot, it may break a word
+					to fit the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>. In languages like Japanese, Chinese, and Thai,
+					where spaces are not used to break words, insert a Unicode zero-width space character (0x200B) between
+					characters to define logical word breaks.
 				</p>
 				<h4 class="details">Sound Files</h4>
 				<p>
@@ -159,11 +161,11 @@
 				</p>
 				<p>
 					When using recorded sound file output, you can still use the <em class="token">Text</em> parameter to
-					specify the words that appear in the character's word balloon.
+					specify the words that appear in the character's <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>.
 				</p>
 				<p>
 					If you call <em class="self keyword">Speak</em> and the audio channel is busy, the character's audio output will not
-					be heard, but the text will display in the word balloon.
+					be heard, but the text will display in the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>.
 				</p>
 				<h4 class="details">Animation</h4>
 				<p>
@@ -175,16 +177,16 @@
 				</p>
 				<br />
 				<p class="note"><span class="note">Note:</span> 
-					To track the method's status, you can declare an object reference and set it to the method's<a href="Control_Request.htm" class="see keyword">Request Object</a>
+					To track the method's status, you can declare an object reference and set it to the method's <a href="Control_Request.htm" class="see keyword">Request Object</a>
 					return value.
 				</p>
 				<p class="note"><span class="note">Note:</span> 
-					The word balloon's <a href="Control_Balloon_Enabled.htm" class="see keyword">Enabled</a> property must also be <em class="keyword">True</em>
-					for text to display.
+					The <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon's</a> <a href="Control_Balloon_Enabled.htm" class="see keyword">Enabled</a>
+					property must also be <em class="keyword">True</em> for text to display.
 				</p>
 				<p class="note"><span class="note">Note:</span> 
 					Set the character's <a href="Control_Character_LanguageID.htm" class="see keyword">LanguageID</a> before using the <em class="self keyword">Speak</em>
-					method to ensure appropriate text display within the word balloon.
+					method to ensure appropriate text display within the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>.
 				</p>
 			<h4 class="seealso">See Also</h4><a href="Control_Character_LanguageID.htm">The LanguageID Property</a><br /><a href="Control_Character_Think.htm">The Think Method</a><br /><a href="Control_Event_Bookmark.htm">The Bookmark Event</a><br /><a href="Control_Event_RequestStart.htm">The RequestStart Event</a><br /><a href="Control_Event_RequestComplete.htm">The RequestComplete Event</a></td>
 			</tr>

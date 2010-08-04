@@ -39,11 +39,12 @@
 							Listening key</em>. The user can adjust the time-out for this mode using the <a href="Gen_Config.htm#PropSheet">
 							Advanced Character Options</a> window. You cannot set this time-out from your client application code.</p>
 						<p>If a character attempts to speak while the user is speaking, the character's audible output fails though
-							text may still be displayed in its word balloon. If the character has the audio channel while the <em
-								class="glossary">Listening key</em> is pressed, the server automatically transfers control back
-							to the user after processing the text in the <em class="keyword">Speak</em> method. An optional tone
-							is played to cue the user to begin speaking. This allows the user to provide input even if the application
-							driving the character failed to provide logical pauses in its output.</p>
+							text may still be displayed in its <a class="see" href="Gen_Output.htm#Balloon">word balloon</a>. If
+							the character has the audio channel while the <em class="glossary">Listening key</em> is pressed, the
+							server automatically transfers control back to the user after processing the text in the <em class="keyword">
+								Speak</em> method. An optional tone is played to cue the user to begin speaking. This allows the
+							user to provide input even if the application driving the character failed to provide logical pauses
+							in its output.</p>
 						<p>You can also use the <em class="keyword">Listen</em> method to initiate speech input. Calling this method
 							turns on the speech recognition for a pre-defined period of time. If there is no input during this interval,
 							Double Agent automatically turns off the speech recognition engine and frees up the audio channel. This
@@ -93,9 +94,9 @@
 							input-active</a> client calls the <em class="keyword">Listen</em> method. However, an engine may also
 							be loaded when setting or querying its <em class="keyword">SRModeID</em>, setting or querying the properties
 							of the <a href="Gen_VoiceCommands.htm">Voice Commands</a> window, querying <em class="keyword">ListeningStatus</em>,
-							or when speech is enabled and the user displays the <a href="../html/UI_PropSheet.htm#SpeechInput">Speech Input</a> page of the
-							<a href="../html/UI_PropSheet.htm">Advanced Character Options</a> window. However, Double Agent only
-							keeps loaded the speech engines that clients are using.</p>
+							or when speech is enabled and the user displays the <a class="see" href="../html/UI_PropSheet.htm#SpeechInput">
+							Speech Input</a> page of the <a href="../html/UI_PropSheet.htm">Advanced Character Options</a> window.
+							However, Double Agent only keeps loaded the speech engines that clients are using.</p>
 					</dd>
 					<dt>
 						<h4><a name="Events"></a>Speech Input Events</h4>

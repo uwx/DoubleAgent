@@ -168,6 +168,9 @@ public:
 	HRESULT STDMETHODCALLTYPE get_IconTip (BSTR *IconTip);
 	HRESULT STDMETHODCALLTYPE put_IconTip (BSTR IconTip);
 
+	HRESULT STDMETHODCALLTYPE SpeakFormatted (IDaSvrFormattedText * FormattedText, long *RequestID);
+	HRESULT STDMETHODCALLTYPE ThinkFormatted (IDaSvrFormattedText * FormattedText, long *RequestID);
+	HRESULT STDMETHODCALLTYPE NewFormattedText (IDaSvrFormattedText **FormattedText);
 	HRESULT STDMETHODCALLTYPE get_TTSEngine (VARIANT_BOOL GetDefault, IDaSvrTTSEngine **TTSEngine);
 	HRESULT STDMETHODCALLTYPE FindTTSEngines (long LanguageID, IDaSvrTTSEngines **TTSEngines);
 	HRESULT STDMETHODCALLTYPE get_SREngine (VARIANT_BOOL GetDefault, IDaSvrSREngine **SREngine);

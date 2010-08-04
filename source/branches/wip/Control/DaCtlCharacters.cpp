@@ -287,7 +287,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::get_Item (BSTR CharacterID, IDaCtlCha
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::get_Item"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::get_Item [%s]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), CAtlString(CharacterID));
 #endif
 	HRESULT				lResult = S_OK;
 	CAtlString			lCharacterId (CharacterID);
@@ -492,7 +492,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::Load"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::Load [%s]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), CAtlString(CharacterID));
 #endif
 	HRESULT								lResult = S_OK;
 	CAtlString							lCharacterId (CharacterID);
@@ -520,7 +520,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 	{
 		try
 		{
-			CString				lFilePath;
+			CAtlString			lFilePath;
 			bool				lFilePathIsDefault;
 			tPtr <CAgentFile>	lLoadFile;
 			CAgentFile *		lAgentFile = NULL;

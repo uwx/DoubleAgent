@@ -125,7 +125,9 @@ protected:
 	virtual bool PaintWindow (HDC pDC);
 
 public:
+	IGraphBuilder * GetGraphBuilder () const {return mGraphBuilder;}
 	FILTER_STATE GetState (CAtlString * pStateStr);
+
 	void LogState (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
 	void LogStatus (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
 	void LogFilters (UINT pLogLevel, bool pEnumPinTypes = false, LPCTSTR pFormat = NULL, ...);

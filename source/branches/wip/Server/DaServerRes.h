@@ -22,6 +22,7 @@
 #define	IDR_DASVRSPEECHINPUT	18
 #define	IDR_DASVRUSERINPUT	19
 #define	IDR_DASVRSETTINGS	21
+#define	IDR_DASVRFORMATTEDTEXT	22
 #define	IDS_CPL_ELEVATED_DESC	20
 // Next default values for new objects
 //

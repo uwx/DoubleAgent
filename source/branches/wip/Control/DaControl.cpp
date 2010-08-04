@@ -49,6 +49,7 @@
 #define	_DEBUG_NOTIFY			(GetProfileDebugInt(_T("DebugNotify"),LogVerbose,true)&0xFFFF)
 #define	_DEBUG_REQUEST			(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF)
 #define	_DEBUG_ATTRIBUTES		(GetProfileDebugInt(_T("DebugAttributes"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_ACTIVE			(GetProfileDebugInt(_T("DebugActive"),LogVerbose,true)&0xFFFF|LogTimeMs)
 //#define	_DEBUG_PERSIST		LogNormal
 //#define	_TRACE_PERSIST		LogNormal
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Control"),LogNormal,true)&0xFFFF)
@@ -462,6 +463,23 @@ void DaControl::DisconnectNotify (bool pForce)
 				}
 			}
 			catch AnyExceptionDebug
+
+			try
+			{
+				if	(CProxy_DaCtlEvents2<DaControl>::m_vec.GetSize() > 0)
+				{
+					LogMessage (_LOG_INSTANCE, _T("--- _DaCtlEvents2 Connections [%d] ---"), CProxy_DaCtlEvents2<DaControl>::m_vec.GetSize());
+				}
+				for	(lNdx = 0; lNdx < CProxy_DaCtlEvents2<DaControl>::m_vec.GetSize(); lNdx++)
+				{
+					if	(lConnection = CProxy_DaCtlEvents2<DaControl>::m_vec.GetAt (lNdx))
+					{
+						LogMessage (_LOG_INSTANCE, _T("--- _DaCtlEvents2 Connection [%d] [%p] ---"), lNdx, lConnection);
+					}
+				}
+			}
+			catch AnyExceptionDebug
+
 			try
 			{
 				if	(CProxy_AgentEvents<DaControl>::m_vec.GetSize() > 0)
@@ -1259,12 +1277,22 @@ LRESULT DaControl::OnHotKey(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 	return 0;
 }
 
+LRESULT DaControl::OnActivateApp(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+#ifdef	_DEBUG_ACTIVE
+	LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)] DaControl::OnActivateApp [%u]"), this, max(m_dwRef,-1), wParam);
+#endif
+	_AtlModule._AppActivated (wParam?true:false);
+	bHandled = FALSE;
+	return 0;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 LRESULT DaControl::OnBroadcastOptionsChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("DaControl::OnBroadcastOptionsChanged"));
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::OnBroadcastOptionsChanged"), this, max(m_dwRef,-1));
 #endif
 	_AtlModule._OptionsChanged ();
 	bHandled = TRUE;
@@ -1274,7 +1302,7 @@ LRESULT DaControl::OnBroadcastOptionsChanged (UINT uMsg, WPARAM wParam, LPARAM l
 LRESULT DaControl::OnBroadcastDefaultCharacterChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("DaControl::OnBroadcastDefaultCharacterChanged"));
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::OnBroadcastDefaultCharacterChanged"), this, max(m_dwRef,-1));
 #endif
 	_AtlModule.CEventGlobal::_DefaultCharacterChanged ();
 	bHandled = TRUE;
@@ -1341,10 +1369,10 @@ HRESULT DaControl::CanCreateControlWindow ()
 HRESULT DaControl::OnPreVerbInPlaceActivate()
 {
 	HRESULT	lResult = CanCreateControlWindow ();
-#ifdef	_LOG_INSTANCE_NOT
-	if	(LogIsActive(_LOG_INSTANCE))
+#ifdef	_DEBUG_ACTIVE
+	if	(LogIsActive(_DEBUG_ACTIVE))
 	{
-		LogComErrAnon (MinLogLevel(LogAlways,_LOG_INSTANCE), lResult, _T("[%p(%d)] DaControl::OnPreVerbInPlaceActivate NegotiatedWnd [%d] IsDesigning [%u]"), this, max(m_dwRef,-1), m_bNegotiatedWnd, IsDesigning());
+		LogComErrAnon (MinLogLevel(LogAlways,_DEBUG_ACTIVE), lResult, _T("[%p(%d)] DaControl::OnPreVerbInPlaceActivate NegotiatedWnd [%d] IsDesigning [%u]"), this, max(m_dwRef,-1), m_bNegotiatedWnd, IsDesigning());
 	}
 #endif
 	return lResult;
@@ -1353,10 +1381,10 @@ HRESULT DaControl::OnPreVerbInPlaceActivate()
 HRESULT DaControl::OnPreVerbUIActivate()
 {
 	HRESULT	lResult = CanCreateControlWindow ();
-#ifdef	_LOG_INSTANCE_NOT
-	if	(LogIsActive(_LOG_INSTANCE))
+#ifdef	_DEBUG_ACTIVE
+	if	(LogIsActive(_DEBUG_ACTIVE))
 	{
-		LogComErrAnon (MinLogLevel(LogAlways,_LOG_INSTANCE), lResult, _T("[%p(%d)] DaControl::OnPreVerbUIActivate NegotiatedWnd [%d] IsDesigning [%u]"), this, max(m_dwRef,-1), m_bNegotiatedWnd, IsDesigning());
+		LogComErrAnon (MinLogLevel(LogAlways,_DEBUG_ACTIVE), lResult, _T("[%p(%d)] DaControl::OnPreVerbUIActivate NegotiatedWnd [%d] IsDesigning [%u]"), this, max(m_dwRef,-1), m_bNegotiatedWnd, IsDesigning());
 	}
 #endif
 	return lResult;
@@ -1365,10 +1393,10 @@ HRESULT DaControl::OnPreVerbUIActivate()
 HRESULT DaControl::OnPreVerbShow()
 {
 	HRESULT	lResult = CanCreateControlWindow ();
-#ifdef	_LOG_INSTANCE_NOT
-	if	(LogIsActive(_LOG_INSTANCE))
+#ifdef	_DEBUG_ACTIVE
+	if	(LogIsActive(_DEBUG_ACTIVE))
 	{
-		LogComErrAnon (MinLogLevel(LogAlways,_LOG_INSTANCE), lResult, _T("[%p(%d)] DaControl::OnPreVerbShow NegotiatedWnd [%d] IsDesigning [%u]"), this, max(m_dwRef,-1), m_bNegotiatedWnd, IsDesigning());
+		LogComErrAnon (MinLogLevel(LogAlways,_DEBUG_ACTIVE), lResult, _T("[%p(%d)] DaControl::OnPreVerbShow NegotiatedWnd [%d] IsDesigning [%u]"), this, max(m_dwRef,-1), m_bNegotiatedWnd, IsDesigning());
 	}
 #endif
 	return lResult;
@@ -1378,6 +1406,12 @@ HRESULT DaControl::OnPreVerbShow()
 
 HRESULT DaControl::OnPostVerbUIActivate ()
 {
+#ifdef	_DEBUG_ACTIVE
+	if	(LogIsActive(_DEBUG_ACTIVE))
+	{
+		LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)] DaControl::OnPostVerbUIActivate NegotiatedWnd [%d] IsDesigning [%u]"), this, max(m_dwRef,-1), m_bNegotiatedWnd, IsDesigning());
+	}
+#endif
 	if	(mControlCharacter)
 	{
 		SetLastActive ();

@@ -56,8 +56,8 @@
 						<h4><a name="Menu"></a>Pop-up Menu Support</h4>
 					</dt>
 					<dd>
-						<p>Double Agent includes a <em class="self">Pop-up Menu</em> (also known as a context menu) for each character.
-							Double Agent displays this <em class="self">Pop-up Menu</em> automatically when a user right-clicks
+						<p>Double Agent includes a <em class="self">pop-up menu</em> (also known as a context menu) for each character.
+							Double Agent displays this <em class="self">pop-up menu</em> automatically when a user right-clicks
 							the character. You can add commands for your client application to the menu by defining a <em class="keyword">
 								Commands</em> collection. For each command in the collection that you define, you can specify <em class="keyword">
 									Caption</em> and <em class="keyword">Visible</em> properties. The <em class="keyword">Caption</em>
@@ -73,14 +73,14 @@
 						<p>To remove commands from a menu, use the <em class="keyword">Remove</em> method. Note that menu entries
 							do not change while the menu displays. If you add or remove commands or change their properties, the
 							menu displays the changes when the user redisplays the menu.</p>
-						<p>If you prefer to provide your own <em class="self">Pop-up Menu</em> services for a character, you can
+						<p>If you prefer to provide your own <em class="self">pop-up menu</em> services for a character, you can
 							use the <em class="keyword">AutoPopupMenu</em> property to turn off automatic handling of the right-click
 							action. You can then use the <em class="keyword">Click</em> event notification to author your own menu
 							handling behaviour.</p>
-						<p>When the user selects a command from a character's <em class="self">Pop-up Menu</em> or the <a href="Gen_VoiceCommands.htm">
+						<p>When the user selects a command from a character's <em class="self">pop-up menu</em> or the <a href="Gen_VoiceCommands.htm">
 						Voice Commands</a> window, Double Agent triggers the <em class="keyword">Command</em> event of the associated
 							client and passes back the parameters of the input using the <em class="keyword">UserInput</em> object.</p>
-						<p>Double Agent also provides a <em class="self">Pop-up Menu</em> for the character's notification icon.
+						<p>Double Agent also provides a <em class="self">pop-up menu</em> for the character's notification icon.
 							When the character is visible, right-clicking this menu displays the same commands as those displayed
 							by right-clicking the character. However, when the character is hidden, only the pre-defined commands
 							are included.</p>

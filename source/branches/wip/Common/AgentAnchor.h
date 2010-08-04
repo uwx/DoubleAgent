@@ -31,6 +31,7 @@ public:
 	virtual ~CGlobalAnchor ();
 
 // Attributes
+	virtual bool IsAppActive () const;
 
 // Operations
 public:

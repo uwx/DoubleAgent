@@ -30,9 +30,10 @@ class CServerNotify :
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public IConnectionPointContainerImpl<CServerNotify>,
 	public IConnectionPointImpl<CServerNotify, &__uuidof(IDaSvrNotifySink), CComDynamicUnkArray>,
+	public IConnectionPointImpl<CServerNotify, &__uuidof(IDaSvrNotifySink2), CComDynamicUnkArray>,
 	public IConnectionPointImpl<CServerNotify, &__uuidof(IAgentNotifySink), CComDynamicUnkArray>,
 	public IConnectionPointImpl<CServerNotify, &__uuidof(IAgentNotifySinkEx), CComDynamicUnkArray>,
-	public IConnectionPointImpl<CServerNotify, &__uuidof(_DaSvrEvents), CComDynamicUnkArray>
+	public IConnectionPointImpl<CServerNotify, &__uuidof(_DaSvrEvents2), CComDynamicUnkArray>
 {
 public:
 	CServerNotify ();
@@ -54,6 +55,10 @@ public:
 	virtual bool PreFireEvent (LPCTSTR pEventName);
 	virtual bool PostFireEvent (LPCTSTR pEventName);
 
+	HRESULT OnSpeechStart (long CharacterID, LPUNKNOWN FormattedText);
+	HRESULT OnSpeechEnd (long CharacterID, LPUNKNOWN FormattedText, VARIANT_BOOL Stopped);
+	HRESULT OnSpeechWord (long CharacterID, LPUNKNOWN FormattedText, long WordIndex);
+
 // Declarations
 public:
 	BEGIN_COM_MAP(CServerNotify)
@@ -62,12 +67,13 @@ public:
 
 	BEGIN_CONNECTION_POINT_MAP(CServerNotify)
 		CONNECTION_POINT_ENTRY(__uuidof(IDaSvrNotifySink))
+		CONNECTION_POINT_ENTRY(__uuidof(IDaSvrNotifySink2))
 		CONNECTION_POINT_ENTRY(__uuidof(IAgentNotifySink))
 		CONNECTION_POINT_ENTRY(__uuidof(IAgentNotifySinkEx))
-		CONNECTION_POINT_ENTRY(__uuidof(_DaSvrEvents))
+		CONNECTION_POINT_ENTRY(__uuidof(_DaSvrEvents2))
 	END_CONNECTION_POINT_MAP()
 
-// IDaSvrNotifySink
+// IDaSvrNotifySink2
 public:
 	HRESULT STDMETHODCALLTYPE Command (long CommandID, IDaSvrUserInput2 *UserInput);
 	HRESULT STDMETHODCALLTYPE ActivateInputState (long CharacterID, long Activated);
@@ -87,6 +93,11 @@ public:
 	HRESULT STDMETHODCALLTYPE DefaultCharacterChange (BSTR CharGUID);
 	HRESULT STDMETHODCALLTYPE AgentPropertyChange (void);
 	HRESULT STDMETHODCALLTYPE ActiveClientChange (long CharacterID, long Status);
+
+	HRESULT STDMETHODCALLTYPE SpeechStart (long CharacterID, IDaSvrFormattedText* FormattedText);
+	HRESULT STDMETHODCALLTYPE SpeechEnd (long CharacterID, IDaSvrFormattedText* FormattedText, VARIANT_BOOL Stopped);
+	HRESULT STDMETHODCALLTYPE SpeechWord (long CharacterID, IDaSvrFormattedText* FormattedText, long WordIndex);
+
 private:
 	HRESULT STDMETHODCALLTYPE Restart (void) {return E_NOTIMPL;}
 	HRESULT STDMETHODCALLTYPE Shutdown (void) {return E_NOTIMPL;}
@@ -118,11 +129,16 @@ protected:
 	HRESULT FireAgentPropertyChange();
 	HRESULT FireActiveClientChange(long CharacterID, long Status);
 
+	HRESULT FireSpeechStart(long CharacterID, IDaSvrFormattedText* FormattedText);
+	HRESULT FireSpeechEnd(long CharacterID, IDaSvrFormattedText* FormattedText, VARIANT_BOOL Stopped);
+	HRESULT FireSpeechWord(long CharacterID, IDaSvrFormattedText* FormattedText, long WordNdx);
+
 protected:
 	typedef IConnectionPointImpl<CServerNotify, &__uuidof(IDaSvrNotifySink), CComDynamicUnkArray> tDaSvrNotifySink;
+	typedef IConnectionPointImpl<CServerNotify, &__uuidof(IDaSvrNotifySink2), CComDynamicUnkArray> tDaSvrNotifySink2;
 	typedef IConnectionPointImpl<CServerNotify, &__uuidof(IAgentNotifySink), CComDynamicUnkArray> tAgentNotifySink;
 	typedef IConnectionPointImpl<CServerNotify, &__uuidof(IAgentNotifySinkEx), CComDynamicUnkArray> tAgentNotifySinkEx;
-	typedef IConnectionPointImpl<CServerNotify, &__uuidof(_DaSvrEvents), CComDynamicUnkArray> tDaSvrEvents;
+	typedef IConnectionPointImpl<CServerNotify, &__uuidof(_DaSvrEvents2), CComDynamicUnkArray> tDaSvrEvents;
 
 protected:
 	CDaSvrEventDispatch	mEventDispatch;

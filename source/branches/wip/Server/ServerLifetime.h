@@ -43,7 +43,7 @@ protected:
 	void UnmanageObjectLifetime (CComObjectRootBase * pObject);
 
 protected:
-	CString				mClientMutexName;
+	CAtlString			mClientMutexName;
 private:
 	tPtr <CAutoMutex>	mClientMutex;
 };

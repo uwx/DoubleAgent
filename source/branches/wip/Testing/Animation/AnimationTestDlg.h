@@ -156,7 +156,7 @@ protected:
 	void SaveConfig ();
 
 protected:
-	tPtr <CAgentPreviewWnd>	mAgentWnd;
+	tPtr <CAgentPreviewWnd>	mAgentPreviewWnd;
 	CString					mWinTitle;
 	CString					mCharacterPath;
 	IDaServer2Ptr			mServer;

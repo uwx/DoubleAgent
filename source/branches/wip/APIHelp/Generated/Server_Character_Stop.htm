@@ -21,8 +21,73 @@
 					<div class="summary">
 				<p>Stops an animation.</p>
 			</div>
+					<h4 class="syntax">Syntax</h4>
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">Stop</em> (<em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Stop</em> (<em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Stop</em> (<em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Stop</em> <em class="token">RequestID</em></p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Stop</em> <em class="token">RequestID</em></p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">RequestID</em>
+								</td>
+								<td>
+				A <em class="typename">numeric</em> value that identifies a particular animation call.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					To specify the <em class="token">RequestID</em> parameter, you must save the <em class="token">RequestID</em> value returned by the animation call.
+				</p>
+				<p class="note"><span class="note">Note:</span> 
+					This method <em>does not</em> stop non-queued <a href="Server_Character_Prepare.htm" class="see keyword">Prepare</a> calls.
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Character_StopAll.htm">The StopAll Method</a></td>
 			</tr>
 		</table>
 	</body>

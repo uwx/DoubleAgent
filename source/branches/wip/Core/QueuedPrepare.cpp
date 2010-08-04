@@ -22,10 +22,12 @@
 #include "DaCore.h"
 #include "QueuedPrepare.h"
 #include "FileDownload.h"
+#include "AgentWnd.h"
 #include "StringArrayEx.h"
+#include "Registry.h"
 
 #ifdef	_DEBUG
-//#define	_DEBUG_PREPARE	LogNormal
+#define	_DEBUG_PREPARE	(GetProfileDebugInt(_T("DebugPrepare"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -71,6 +73,86 @@ bool CQueuedPrepare::IsSoundDownload () const
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+bool CQueuedPrepare::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
+{
+	bool	lRet = false;
+
+	if	(!IsStarted ())
+	{
+		NotifyStarted (pAgentWnd->mNotify);
+	}
+	if	(pQueue.GetNextAction (QueueActionPrepare) == this)
+	{
+#ifdef	_DEBUG_PREPARE
+		if	(LogIsActive (_DEBUG_PREPARE))
+		{
+			LogMessage (_DEBUG_PREPARE, _T("[%p] Advance [%ls]"), this, (BSTR)GetAnimationNames());
+		}
+#endif
+		if	(IsSoundDownload ())
+		{
+			FinishDownloads ();
+		}
+		else
+		{
+			PutAnimations (pAgentWnd->GetAgentFile ());
+		}
+
+		if	(IsComplete ())
+		{
+#ifdef	_DEBUG_PREPARE
+			if	(LogIsActive (_DEBUG_PREPARE))
+			{
+				LogMessage (_DEBUG_PREPARE, _T("[%p] Complete [%ls]"), this, (BSTR)GetAnimationNames());
+			}
+#endif
+			if	(pQueue.GetNextAction (QueueActionPrepare) == this)
+			{
+				pQueue.RemoveHead ();
+			}
+			if	(pAgentWnd->mNotify.GetCount() > 0)
+			{
+				HRESULT			lPrepareResult = S_OK;
+				CFileDownload *	lFileDownload;
+
+				if	(lFileDownload = GetDownload ())
+				{
+					lPrepareResult = lFileDownload->IsDownloadComplete ();
+				}
+				NotifyComplete (pAgentWnd->mNotify, lPrepareResult);
+			}
+		}
+		else
+		{
+			StartDownloads ();
+			lRet = true;
+		}
+	}
+	else
+	{
+		lRet = true; // Was deleted during NotifyStarted
+	}
+	return lRet;
+}
+
+bool CQueuedPrepare::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pPause)
+{
+	return false;
+}
+
+bool CQueuedPrepare::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
+{
+	if	(CancelDownloads () == S_OK)
+	{
+		return true;
+	}
+	return false;
+}
+
+//////////////////////////////////////////////////////////////////////
+#pragma page()
+//////////////////////////////////////////////////////////////////////
+
 HRESULT CQueuedPrepare::PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAnimationNames, CEventNotify * pDownloadNotify, LPUNKNOWN pDownloadActiveXContext)
 {
 	HRESULT	lResult = E_INVALIDARG;
@@ -88,7 +170,10 @@ HRESULT CQueuedPrepare::PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAni
 		tPtr <CFileDownload>	lDownload;
 
 #ifdef	_DEBUG_PREPARE
-		LogMessage (_DEBUG_PREPARE, _T("[%p] PutAnimationNames [%s] [%p] for [%p] [%ls]"), this, pAnimationNames, pDownloadNotify, pAgentFile, (BSTR)pAgentFile->GetPath());
+		if	(LogIsActive (_DEBUG_PREPARE))
+		{
+			LogMessage (_DEBUG_PREPARE, _T("[%p] PutAnimationNames [%s] [%p] for [%p] [%ls]"), this, pAnimationNames, pDownloadNotify, pAgentFile, (BSTR)pAgentFile->GetPath());
+		}
 #endif
 		lResult = S_FALSE;
 		mDownloadNotify = pDownloadNotify;
@@ -125,7 +210,10 @@ HRESULT CQueuedPrepare::PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAni
 		}
 
 #ifdef	_DEBUG_PREPARE
-		LogComErrAnon (MinLogLevel(_DEBUG_PREPARE,LogAlways), lResult, _T("[%p] PutAnimationNames [%s]"), this, pAnimationNames);
+		if	(LogIsActive (_DEBUG_PREPARE))
+		{
+			LogComErrAnon (MinLogLevel(_DEBUG_PREPARE,LogAlways), lResult, _T("[%p] PutAnimationNames [%s]"), this, pAnimationNames);
+		}
 #endif
 	}
 	return lResult;
@@ -150,7 +238,10 @@ HRESULT CQueuedPrepare::PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNa
 		tPtr <CFileDownload>	lDownload;
 
 #ifdef	_DEBUG_PREPARE
-		LogMessage (_DEBUG_PREPARE, _T("[%p] PutStateNames [%s] [%p] for [%p] [%ls]"), this, pStateNames, pDownloadNotify, pAgentFile, (BSTR)pAgentFile->GetPath());
+		if	(LogIsActive (_DEBUG_PREPARE))
+		{
+			LogMessage (_DEBUG_PREPARE, _T("[%p] PutStateNames [%s] [%p] for [%p] [%ls]"), this, pStateNames, pDownloadNotify, pAgentFile, (BSTR)pAgentFile->GetPath());
+		}
 #endif
 		lResult = S_FALSE;
 		mDownloadNotify = pDownloadNotify;
@@ -196,7 +287,10 @@ HRESULT CQueuedPrepare::PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNa
 		}
 
 #ifdef	_DEBUG_PREPARE
-		LogComErrAnon (MinLogLevel(_DEBUG_PREPARE,LogAlways), lResult, _T("[%p] PutStateNames [%s]"), this, pStateNames);
+		if	(LogIsActive (_DEBUG_PREPARE))
+		{
+			LogComErrAnon (MinLogLevel(_DEBUG_PREPARE,LogAlways), lResult, _T("[%p] PutStateNames [%s]"), this, pStateNames);
+		}
 #endif
 	}
 	return lResult;
@@ -218,7 +312,10 @@ HRESULT CQueuedPrepare::PutSoundUrl (CAgentFile * pAgentFile, LPCTSTR pSoundUrl,
 		tPtr <CFileDownload>	lDownload;
 
 #ifdef	_DEBUG_PREPARE
-		LogMessage (_DEBUG_PREPARE, _T("[%p] PutSoundUrl [%s] [%p] for [%p] [%ls]"), this, pSoundUrl, pDownloadNotify, pAgentFile, (BSTR)pAgentFile->GetPath());
+		if	(LogIsActive (_DEBUG_PREPARE))
+		{
+			LogMessage (_DEBUG_PREPARE, _T("[%p] PutSoundUrl [%s] [%p] for [%p] [%ls]"), this, pSoundUrl, pDownloadNotify, pAgentFile, (BSTR)pAgentFile->GetPath());
+		}
 #endif
 		mDownloadNotify = pDownloadNotify;
 		mDownloadActiveXContext = pDownloadActiveXContext;
@@ -249,7 +346,10 @@ HRESULT CQueuedPrepare::PutSoundUrl (CAgentFile * pAgentFile, LPCTSTR pSoundUrl,
 			lResult = E_INVALIDARG;
 		}
 #ifdef	_DEBUG_PREPARE
-		LogComErrAnon (MinLogLevel(_DEBUG_PREPARE,LogAlways), lResult, _T("[%p] PutSoundUrl [%s]"), this, pSoundUrl);
+		if	(LogIsActive (_DEBUG_PREPARE))
+		{
+			LogComErrAnon (MinLogLevel(_DEBUG_PREPARE,LogAlways), lResult, _T("[%p] PutSoundUrl [%s]"), this, pSoundUrl);
+		}
 #endif
 	}
 	return lResult;
@@ -265,7 +365,10 @@ HRESULT CQueuedPrepare::StartDownloads ()
 	POSITION	lPos;
 
 #ifdef	_DEBUG_PREPARE
-	LogMessage (_DEBUG_PREPARE, _T("[%p] StartDownloads [%ls] Downloads [%d] Running [%d] Done [%d]"), this, (BSTR)GetAnimationNames(), mDownloads.GetSize(), mDownloadsRunning.GetSize(), mDownloadsDone.GetSize());
+	if	(LogIsActive (_DEBUG_PREPARE))
+	{
+		LogMessage (_DEBUG_PREPARE, _T("[%p] StartDownloads [%ls] Downloads [%d] Running [%d] Done [%d]"), this, (BSTR)GetAnimationNames(), mDownloads.GetCount(), mDownloadsRunning.GetCount(), mDownloadsDone.GetCount());
+	}
 #endif
 
 	if	((int)mDownloadsRunning.GetCount() < (int)mMaxConcurrentDownloads)
@@ -287,7 +390,10 @@ HRESULT CQueuedPrepare::StartDownloads ()
 
 			lResult = lDownload->Download (mDownloadActiveXContext, mDownloadNotify);
 #ifdef	_DEBUG_PREPARE
-			LogComErrAnon (MinLogLevel(_DEBUG_PREPARE,LogAlways), lResult, _T("[%p] Download [%ls]"), this, (BSTR)lDownload->GetURL());
+			if	(LogIsActive (_DEBUG_PREPARE))
+			{
+				LogComErrAnon (MinLogLevel(_DEBUG_PREPARE,LogAlways), lResult, _T("[%p] Download [%ls]"), this, (BSTR)lDownload->GetURL());
+			}
 #endif
 			if	(SUCCEEDED (lResult))
 			{
@@ -307,7 +413,10 @@ HRESULT CQueuedPrepare::StartDownloads ()
 	}
 
 #ifdef	_DEBUG_PREPARE
-	LogComErrAnon (MinLogLevel(_DEBUG_PREPARE,LogAlways), lResult, _T("[%p] StartDownloads [%ls] Downloads [%d] Running [%d] Done [%d]"), this, (BSTR)GetAnimationNames(), mDownloads.GetSize(), mDownloadsRunning.GetSize(), mDownloadsDone.GetSize());
+	if	(LogIsActive (_DEBUG_PREPARE))
+	{
+		LogComErrAnon (MinLogLevel(_DEBUG_PREPARE,LogAlways), lResult, _T("[%p] StartDownloads [%ls] Downloads [%d] Running [%d] Done [%d]"), this, (BSTR)GetAnimationNames(), mDownloads.GetCount(), mDownloadsRunning.GetCount(), mDownloadsDone.GetCount());
+	}
 #endif
 	return lResult;
 }
@@ -320,7 +429,10 @@ HRESULT CQueuedPrepare::FinishDownloads ()
 	INT_PTR			lNdx;
 
 #ifdef	_DEBUG_PREPARE
-	LogMessage (_DEBUG_PREPARE, _T("[%p] FinishDownloads [%d] Running [%d] Done [%d]"), this, mDownloads.GetSize(), mDownloadsRunning.GetSize(), mDownloadsDone.GetSize());
+	if	(LogIsActive (_DEBUG_PREPARE))
+	{
+		LogMessage (_DEBUG_PREPARE, _T("[%p] FinishDownloads [%d] Running [%d] Done [%d]"), this, mDownloads.GetCount(), mDownloadsRunning.GetCount(), mDownloadsDone.GetCount());
+	}
 #endif
 
 	for	(lNdx = mDownloadsRunning.GetCount()-1; lNdx >= 0; lNdx--)
@@ -374,7 +486,10 @@ HRESULT CQueuedPrepare::CancelDownloads ()
 	INT_PTR			lNdx;
 
 #ifdef	_DEBUG_PREPARE
-	LogMessage (_DEBUG_PREPARE, _T("[%p] CancelDownloads [%ls] Downloads [%d] Running [%d] Done [%d]"), this, (BSTR)GetAnimationNames(), mDownloads.GetSize(), mDownloadsRunning.GetSize(), mDownloadsDone.GetSize());
+	if	(LogIsActive (_DEBUG_PREPARE))
+	{
+		LogMessage (_DEBUG_PREPARE, _T("[%p] CancelDownloads [%ls] Downloads [%d] Running [%d] Done [%d]"), this, (BSTR)GetAnimationNames(), mDownloads.GetCount(), mDownloadsRunning.GetCount(), mDownloadsDone.GetCount());
+	}
 #endif
 
 	for	(lNdx = mDownloadsRunning.GetCount()-1; lNdx >= 0; lNdx--)
@@ -479,7 +594,10 @@ bool CQueuedPrepare::PutAnimations (CAgentFile * pAgentFile)
 			}
 		}
 #ifdef	_DEBUG_PREPARE
-		LogMessage (_DEBUG_PREPARE, _T("[%p] PutAnimations [%ls] Downloads [%d] Running [%d] Done [%d]"), this, (BSTR)GetAnimationNames(), mDownloads.GetSize(), mDownloadsRunning.GetSize(), mDownloadsDone.GetSize());
+		if	(LogIsActive (_DEBUG_PREPARE))
+		{
+			LogMessage (_DEBUG_PREPARE, _T("[%p] PutAnimations [%ls] Downloads [%d] Running [%d] Done [%d]"), this, (BSTR)GetAnimationNames(), mDownloads.GetCount(), mDownloadsRunning.GetCount(), mDownloadsDone.GetCount());
+		}
 #endif
 	}
 	return lRet;
@@ -503,13 +621,20 @@ HRESULT CQueuedPrepare::PutAnimation (CAgentFile * pAgentFile, CFileDownload * p
 			lResult = pAgentFile->LoadAnimationAca (lAnimationName, pDownload);
 		}
 #ifdef	_DEBUG_PREPARE
-		LogComErrAnon (MinLogLevel(_DEBUG_PREPARE,LogAlways), lResult, _T("[%p] PutAnimation [%s] [%ls] [%ls] for [%ls]"), this, lAnimationName, (BSTR)pDownload->GetURL(), (BSTR)pDownload->GetCacheName(), (BSTR)pAgentFile->GetPath());
+		if	(LogIsActive (_DEBUG_PREPARE))
+		{
+			LogComErrAnon (MinLogLevel(_DEBUG_PREPARE,LogAlways), lResult, _T("[%p] PutAnimation [%s] [%ls] [%ls] for [%ls]"), this, lAnimationName, (BSTR)pDownload->GetURL(), (BSTR)pDownload->GetCacheName(), (BSTR)pAgentFile->GetPath());
+		}
 #endif
 
 		mDownloadsRunning.RemoveSortedQS (pDownload);
 		mDownloadsDone.AddSortedQS (pDownload);
+
 #ifdef	_DEBUG_PREPARE
-		if	(mDownloadsDone.GetSize() == mDownloads.GetSize())
+		if	(
+				(LogIsActive (_DEBUG_PREPARE))
+			&&	(mDownloadsDone.GetCount() == mDownloads.GetCount())
+			)
 		{
 			LogMessage (_DEBUG_PREPARE, _T("[%p] PrepareComplete [%ls]"), this, (BSTR)GetAnimationNames());
 		}

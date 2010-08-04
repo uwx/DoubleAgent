@@ -19,9 +19,9 @@ static char THIS_FILE[] = __FILE__;
 #ifdef	_DEBUG
 //#define	_DEBUG_COM			LogNormal|LogHighVolume
 //#define	_LOG_AGENT_CALLS	LogNormal|LogTimeMs
-//#define	_LOG_CHAR_CALLS		LogAlways|LogTimeMs|LogHighVolume
+#define	_LOG_CHAR_CALLS		LogAlways|LogTimeMs|LogHighVolume
 //#define	_LOG_CHAR_CALLS_EX	LogAlways|LogTimeMs|LogHighVolume
-#define	_LOG_NOTIFY			LogNormal|LogTimeMs
+#define	_LOG_NOTIFY			LogNormal|LogTimeMs|LogHighVolume
 //#define	_LOG_COMMANDS		LogNormal|LogTimeMs
 #endif
 
@@ -47,6 +47,8 @@ static char THIS_FILE[] = __FILE__;
 #ifndef	_LOG_COMMANDS
 #define	_LOG_COMMANDS			LogDetails|LogTimeMs
 #endif
+
+#define	_APPEND_FORMATTED
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -79,7 +81,7 @@ END_MESSAGE_MAP()
 #include "InterfaceMap.inl"
 
 BEGIN_INTERFACE_MAP(CSpeechTestDlg, CDialog)
-	INTERFACE_PART(CSpeechTestDlg, __uuidof(IDaSvrNotifySink), DaSvrNotifySink)
+	INTERFACE_PART(CSpeechTestDlg, __uuidof(IDaSvrNotifySink2), DaSvrNotifySink)
 END_INTERFACE_MAP()
 
 IMPLEMENT_IUNKNOWN (CSpeechTestDlg, DaSvrNotifySink)
@@ -127,6 +129,7 @@ void CSpeechTestDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHARACTER_LIST, mCharacterList);
 	DDX_Control(pDX, IDC_SHOW_CHAR, mShowCharButton);
 	DDX_Control(pDX, IDC_SHOW_CHAR2, mShowChar2Button);
+	DDX_Control(pDX, IDC_TEST_FORMATTED, mFormattedButton);
 	DDX_Control(pDX, IDC_TTS_MODE, mTTSModes);
 	DDX_Control(pDX, IDC_TTS_STATUS, mTTSStatus);
 	DDX_Control(pDX, IDC_SR_MODE, mSRModes);
@@ -167,16 +170,14 @@ void CSpeechTestDlg::ShowCharacters ()
 	mCharacterList.GetClientRect (&lClientRect);
 	lClientRect.right -= GetSystemMetrics (SM_CXVSCROLL);
 
-	if	(
-			(mServer != NULL)
-		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->get_CharacterFiles (&lCharacterFiles))))
-		)
+	if	(mServer != NULL)
 	{
+		lCharacterFiles = mServer.CharacterFiles;
 #if	TRUE
-		lCharacterFiles->put_Filter (FilesFilter_PathMask);
+		lCharacterFiles.Filter = FilesFilter_PathMask;
 #endif
 #if	FALSE
-		lCharacterFiles->put_Filter (FilesFilter_PathMask|FilesFilter_ExcludeNonSpeaking);
+		lCharacterFiles.Filter = (FilesFilter_PathMask|FilesFilter_ExcludeNonSpeaking);
 #endif
 		if	(
 				(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, lCharacterFiles->get_FilePaths (lFilePaths.Free()))))
@@ -349,33 +350,27 @@ bool CSpeechTestDlg::LoadedAgentCharacter (INT_PTR pCharNdx)
 			&&	(mCharacter[pCharNdx] == NULL)
 			)
 		{
-			LogComErr (_LOG_AGENT_CALLS, mServer->get_Character (mCharacterId[pCharNdx], &mCharacter[pCharNdx]), _T("GetCharacterEx"));
+			//LogComErr (_LOG_AGENT_CALLS, mServer->get_Character (mCharacterId[pCharNdx], &mCharacter[pCharNdx]), _T("GetCharacterEx"));
+			mCharacter[pCharNdx] = mServer.Character [mCharacterId[pCharNdx]];
 
 			if	(mCharacter[pCharNdx] != NULL)
 			{
-				IDaSvrCommands2Ptr	lCommands (mCharacter[pCharNdx]);
+				IDaSvrCommands2Ptr	lCommands  = mCharacter[pCharNdx].Commands;
 				IDaSvrCommand2Ptr	lCommand;
 				CString				lCommandName;
 				long				lCommandId;
-				long				lConfidenceThreshold;
-				tBstrPtr			lConfidenceText;
-				tBstrPtr			lFontName;
-				long				lFontSize;
 				long				lClientCount = 0;
 
-				mCharacter[pCharNdx]->get_OtherClientCount (&lClientCount);
+				lClientCount = mCharacter[pCharNdx].OtherClientCount;
 
 				if	(pCharNdx == 0)
 				{
-					LogComErr (_LOG_AGENT_CALLS, mCharacter[pCharNdx]->put_LanguageID (MAKELANGID(LANG_ENGLISH,SUBLANG_ENGLISH_CAN)));
-					lCommands->SetCaption ((lClientCount==0)?_bstr_t("My Application"):_bstr_t("Another Application **"));
-					lCommands->SetVoice (_bstr_t("test speech"));
-					lCommands->SetGlobalVoiceCommandsEnabled (TRUE);
-					lCommands->GetFontName (lFontName.Free());
-					lCommands->GetFontSize (&lFontSize);
-					//lCommands->SetVisible (FALSE);
-					//LogMessage (LogDebug, _T("Font [%s] [%d]"), (BSTR)lFontName, lFontSize);
-					//lCommands->SetFontSize (10);
+					mCharacter[pCharNdx].LanguageID = MAKELANGID(LANG_ENGLISH,SUBLANG_ENGLISH_CAN);
+					lCommands.Caption = (lClientCount==0)?_bstr_t("My Application"):_bstr_t("Another Application **");
+					lCommands.VoiceGrammar = _bstr_t("test speech");
+					lCommands.GlobalVoiceCommandsEnabled = VARIANT_TRUE;
+					//lCommands.Visible = FALSE;
+					//lCommands.FontSize = 10;
 				}
 				else
 				{
@@ -384,37 +379,24 @@ bool CSpeechTestDlg::LoadedAgentCharacter (INT_PTR pCharNdx)
 				//lCommandName.Format (_T("Test %d"), mCharacterId[pCharNdx]);
 				lCommandName = _T("My First Command *");
 				lCommands->AddEx (_bstr_t(lCommandName), _bstr_t("test* command"), _bstr_t(lCommandName), TRUE, TRUE, 0, &lCommandId);
-				lCommands->get_Command (lCommandId, &lCommand);
-				lCommand->get_ConfidenceThreshold (&lConfidenceThreshold);
-				lCommand->get_ConfidenceText (lConfidenceText.Free());
+				lCommand = lCommands.Command [lCommandId];
 #ifdef	_LOG_COMMANDS
-				LogMessage (_LOG_COMMANDS, _T("[%d] Command [%d] added [%d %ls]"), pCharNdx, lCommandId, lConfidenceThreshold, (BSTR)lConfidenceText);
+				LogMessage (_LOG_COMMANDS, _T("[%d] Command [%d] added [%d %ls]"), pCharNdx, lCommandId, lCommand.ConfidenceThreshold, (BSTR)lCommand.ConfidenceText);
 #endif
 				if	(pCharNdx == 0)
 				{
 					lCommands->Add (_bstr_t("My Second Command"), _bstr_t("command test+ two"), TRUE, TRUE/*, FALSE*/, &lCommandId);
-					lCommands->get_Command (lCommandId, &lCommand);
-					lCommand->put_ConfidenceThreshold (50);
-					lCommand->put_ConfidenceText (_bstr_t("I thought I heard..."));
-					lCommand->get_ConfidenceThreshold (&lConfidenceThreshold);
-					lCommand->get_ConfidenceText (lConfidenceText.Free());
+					lCommand = lCommands.Command [lCommandId];
+					lCommand.ConfidenceThreshold = 50;
+					lCommand.ConfidenceText = _bstr_t("I thought I heard...");
 #ifdef	_LOG_COMMANDS
-					LogMessage (_LOG_COMMANDS, _T("[%d] Command [%d] added [%d %ls]"), pCharNdx, lCommandId, lConfidenceThreshold, (BSTR)lConfidenceText);
+					LogMessage (_LOG_COMMANDS, _T("[%d] Command [%d] added [%d %ls]"), pCharNdx, lCommandId, lCommand.ConfidenceThreshold, (BSTR)lCommand.ConfidenceText);
 #endif
 					lCommands->Add (_bstr_t("My Third Command"), _bstr_t("command … three"), TRUE, TRUE/*, FALSE*/, &lCommandId);
-					lCommands->get_Command (lCommandId, &lCommand);
-					lCommand->get_ConfidenceThreshold (&lConfidenceThreshold);
-					lCommand->get_ConfidenceText (lConfidenceText.Free());
+					lCommand = lCommands.Command [lCommandId];
 #ifdef	_LOG_COMMANDS
-					LogMessage (_LOG_COMMANDS, _T("[%d] Command [%d] added [%d %ls]"), pCharNdx, lCommandId, lConfidenceThreshold, (BSTR)lConfidenceText);
+					LogMessage (_LOG_COMMANDS, _T("[%d] Command [%d] added [%d %ls]"), pCharNdx, lCommandId, lCommand.ConfidenceThreshold, (BSTR)lCommand.ConfidenceText);
 #endif
-//					lCommands->Add (_bstr_t("Four"), _bstr_t("(command number)* four"), TRUE, FALSE, &lCommandId);
-//					lCommands->get_Command (lCommandId, &lCommand);
-//					lCommand->get_ConfidenceThreshold (&lConfidenceThreshold);
-//					lCommand->get_ConfidenceText (lConfidenceText.Free());
-//#ifdef	_LOG_COMMANDS
-//					LogMessage (_LOG_COMMANDS, _T("[%d] Command [%d] added [%d %ls]"), pCharNdx, lCommandId, lConfidenceThreshold, (BSTR)lConfidenceText);
-//#endif
 				}
 			}
 
@@ -455,36 +437,31 @@ bool CSpeechTestDlg::LoadedAgentCharacter (INT_PTR pCharNdx)
 		{
 			IDaSvrTTSEnginePtr	lTTSEngine;
 			IDaSvrTTSEnginesPtr	lTTSEngines;
-			tBstrPtr			lTTSMode;
-			long				lTTSSpeed = 0;
-			short				lTTSPitch = 0;
+			long				lNdx;
 
-			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->get_TTSEngine (TRUE, &lTTSEngine))))
-//			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->GetCharacterTTSEngine (_variant_t(mCharacterPath[pCharNdx]), &lTTSEngine))))
+			lTTSEngine = mCharacter[pCharNdx].TTSEngine;
+//			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->get_TTSEngine (TRUE, &lTTSEngine))
+//			LogComErr (_LOG_CHAR_CALLS_EX, mServer->GetCharacterTTSEngine (_variant_t(mCharacterPath[pCharNdx]), &lTTSEngine));
+			if	(lTTSEngine)
 			{
-				LogComErr (_LOG_CHAR_CALLS_EX, lTTSEngine->get_TTSModeID (lTTSMode.Free ()));
+				long	lTTSSpeed = 0;
+				short	lTTSPitch = 0;
+
+				mCharacter[pCharNdx]->GetTTSSpeed (&lTTSSpeed);
+				mCharacter[pCharNdx]->GetTTSPitch (&lTTSPitch);
+				LogMessage (LogNormal, _T("Character [%d] Default TTSModeID [%s] TTSSpeed [%d] TTSPitch [%hd]"), mCharacterId[pCharNdx], (BSTR)lTTSEngine.TTSModeID, lTTSSpeed, lTTSPitch);
 			}
-			mCharacter[pCharNdx]->GetTTSSpeed (&lTTSSpeed);
-			mCharacter[pCharNdx]->GetTTSPitch (&lTTSPitch);
 
-			LogMessage (LogNormal, _T("Character [%d] Default TTSModeID [%s] TTSSpeed [%d] TTSPitch [%hd]"), mCharacterId[pCharNdx], (LPOLESTR)lTTSMode, lTTSSpeed, lTTSPitch);
-
-			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->FindTTSEngines (0, &lTTSEngines))))
-//			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->FindCharacterTTSEngines (_variant_t(mCharacterPath[pCharNdx]), 0x040C, &lTTSEngines))))
-//			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->FindTTSEngines (0x040C, SpeechGender_Female, &lTTSEngines))))
+			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->FindTTSEngines (0, &lTTSEngines));
+//			LogComErr (_LOG_CHAR_CALLS_EX, mServer->FindCharacterTTSEngines (_variant_t(mCharacterPath[pCharNdx]), 0x040C, &lTTSEngines));
+//			LogComErr (_LOG_CHAR_CALLS_EX, mServer->FindTTSEngines (0x040C, SpeechGender_Female, &lTTSEngines));
+			if	(lTTSEngines)
 			{
-				long		lCount = -1;
-				long		lNdx;
-				tBstrPtr	lDisplayName;
-
-				LogComErr (_LOG_CHAR_CALLS_EX, lTTSEngines->get_Count (&lCount));
-				LogMessage (LogNormal, _T("Character [%d] TTSEngines [%d]"), mCharacterId[pCharNdx], lCount);
-
-				for	(lNdx = 0; (lTTSEngines->get_Item (lNdx, &lTTSEngine) == S_OK); lNdx++)
+				LogMessage (LogNormal, _T("Character [%d] TTSEngines [%d]"), mCharacterId[pCharNdx], lTTSEngines.Count);
+				for	(lNdx = 0; lNdx < lTTSEngines.Count; lNdx++)
 				{
-					LogComErr (_LOG_CHAR_CALLS_EX, lTTSEngine->get_DisplayName (lDisplayName.Free ()));
-					LogComErr (_LOG_CHAR_CALLS_EX, lTTSEngine->get_TTSModeID (lTTSMode.Free ()));
-					LogMessage (LogNormal, _T("  TTSEngines [%ls] [%ls]"), (LPOLESTR)lTTSMode, (LPOLESTR)lDisplayName);
+					lTTSEngine =  lTTSEngines.Item [lNdx];
+					LogMessage (LogNormal, _T("  TTSEngine [%ls] [%ls]"), (BSTR)lTTSEngine.TTSModeID, (BSTR)lTTSEngine.DisplayName);
 				}
 			}
 		}
@@ -493,39 +470,33 @@ bool CSpeechTestDlg::LoadedAgentCharacter (INT_PTR pCharNdx)
 		{
 			IDaSvrSREnginePtr	lSREngine;
 			IDaSvrSREnginesPtr	lSREngines;
-			tBstrPtr			lSRMode;
+			long				lNdx;
 
-			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->get_SREngine (TRUE, &lSREngine))))
-//			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->GetCharacterSREngine (_variant_t(mCharacterPath[pCharNdx]), &lSREngine))))
+			lSREngine = mCharacter[pCharNdx].SREngine;
+//			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->get_SREngine (TRUE, &lSREngine));
+//			LogComErr (_LOG_CHAR_CALLS_EX, mServer->GetCharacterSREngine (_variant_t(mCharacterPath[pCharNdx]), &lSREngine));
+			if	(lSREngine)
 			{
-				LogComErr (_LOG_CHAR_CALLS_EX, lSREngine->get_SRModeID (lSRMode.Free ()));
+				LogMessage (LogNormal, _T("Character [%d] Default SRModeID [%s]"), mCharacterId[pCharNdx], (BSTR)lSREngine.SRModeID);
 			}
 
-			LogMessage (LogNormal, _T("Character [%d] Default SRModeID [%s]"), mCharacterId[pCharNdx], (LPOLESTR)lSRMode);
-
-			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->FindSREngines (0, &lSREngines))))
-//			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->FindCharacterSREngines (_variant_t(mCharacterPath[pCharNdx]), 0x0809, &lSREngines))))
-//			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->FindSREngines (0x0809, &lSREngines))))
+			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->FindSREngines (0, &lSREngines));
+//			LogComErr (_LOG_CHAR_CALLS_EX, mServer->FindCharacterSREngines (_variant_t(mCharacterPath[pCharNdx]), 0x0809, &lSREngines));
+//			LogComErr (_LOG_CHAR_CALLS_EX, mServer->FindSREngines (0x0809, &lSREngines));
+			if	(lSREngines)
 			{
-				long		lCount = -1;
-				long		lNdx;
-				tBstrPtr	lDisplayName;
-
-				LogComErr (_LOG_CHAR_CALLS_EX, lSREngines->get_Count (&lCount));
-				LogMessage (LogNormal, _T("Character [%d] SREngines [%d]"), mCharacterId[pCharNdx], lCount);
-
-				for	(lNdx = 0; (lSREngines->get_Item (lNdx, &lSREngine) == S_OK); lNdx++)
+				LogMessage (LogNormal, _T("Character [%d] SREngines [%d]"), mCharacterId[pCharNdx], lSREngines.Count);
+				for	(lNdx = 0; lNdx < lSREngines.Count; lNdx++)
 				{
-					LogComErr (_LOG_CHAR_CALLS_EX, lSREngine->get_DisplayName (lDisplayName.Free ()));
-					LogComErr (_LOG_CHAR_CALLS_EX, lSREngine->get_SRModeID (lSRMode.Free ()));
-					LogMessage (LogNormal, _T("  SREngines [%ls] [%ls]"), (LPOLESTR)lSRMode, (LPOLESTR)lDisplayName);
+					lSREngine = lSREngines.Item [lNdx];
+					LogMessage (LogNormal, _T("  SREngine [%ls] [%ls]"), (BSTR)lSREngine.SRModeID, (BSTR)lSREngine.DisplayName);
 				}
 			}
 		}
 
 		if	(mCharacter[pCharNdx] != NULL)
 		{
-			LogComErr (_LOG_CHAR_CALLS, mCharacter[pCharNdx]->SetIdleOn (TRUE));
+			mCharacter[pCharNdx].Style |= CharacterStyle_IdleEnabled;
 			lResult = mCharacter[pCharNdx]->Show (FALSE, &lReqID);
 			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Show [%d]"), mCharacterId[pCharNdx], lReqID)))
 			{
@@ -616,8 +587,7 @@ bool CSpeechTestDlg::ReleaseAgentCharacter (INT_PTR pCharNdx)
 
 bool CSpeechTestDlg::IsCharacterVisible (INT_PTR pCharNdx)
 {
-	bool			lRet = false;
-	VARIANT_BOOL	lVisible = VARIANT_FALSE;
+	bool	lRet = false;
 
 	if	(pCharNdx < 0)
 	{
@@ -635,8 +605,7 @@ bool CSpeechTestDlg::IsCharacterVisible (INT_PTR pCharNdx)
 			(pCharNdx >= 0)
 		&&	(pCharNdx <= 1)
 		&&	(mCharacter[pCharNdx] != NULL)
-		&&	(SUCCEEDED (mCharacter[pCharNdx]->get_Visible (&lVisible)))
-		&&	(lVisible)
+		&&	(mCharacter[pCharNdx].Visible)
 		)
 	{
 		lRet = true;
@@ -672,10 +641,8 @@ void CSpeechTestDlg::CharacterIsVisible (INT_PTR pCharNdx, bool pVisible)
 
 	if	(pCharNdx >= 0)
 	{
-		IDaSvrBalloon2Ptr	lBalloon (mCharacter[pCharNdx]);
-		tBstrPtr			lTTSMode;
+		IDaSvrBalloon2Ptr	lBalloon = mCharacter[pCharNdx].Balloon;
 		CString				lTTSModeStr;
-		tBstrPtr			lSRMode;
 		CString				lSRModeStr;
 
 		mBalloonTextEdit1.EnableWindow (TRUE);
@@ -693,17 +660,12 @@ void CSpeechTestDlg::CharacterIsVisible (INT_PTR pCharNdx, bool pVisible)
 
 		if	(lBalloon != NULL)
 		{
-			long			lStyle;
-			VARIANT_BOOL	lVisible;
-
-			LogComErr (_LOG_CHAR_CALLS_EX, lBalloon->get_Style (&lStyle), _T("[%d] Balloon->GetStyle"), mCharacterId[pCharNdx]);
-			mBalloonAutoHide.SetCheck ((lStyle & BalloonStyle_AutoHide) != 0);
-			mBalloonAutoPace.SetCheck ((lStyle & BalloonStyle_AutoPace) != 0);
-			mBalloonAutoSize.SetCheck ((lStyle & BalloonStyle_SizeToText) != 0);
-			mBalloonPartialLines.SetCheck ((lStyle & BalloonStyle_ShowPartialLines) != 0);
-			LogComErr (_LOG_CHAR_CALLS_EX, lBalloon->get_Visible (&lVisible), _T("[%d] Balloon->GetVisible"), mCharacterId[pCharNdx]);
-			mBalloonVisible.SetCheck (lVisible ? TRUE : FALSE);
-			mBalloonPartialLines.EnableWindow ((lStyle & BalloonStyle_SizeToText) == 0);
+			mBalloonAutoHide.SetCheck ((lBalloon.Style & BalloonStyle_AutoHide) != 0);
+			mBalloonAutoPace.SetCheck ((lBalloon.Style & BalloonStyle_AutoPace) != 0);
+			mBalloonAutoSize.SetCheck ((lBalloon.Style & BalloonStyle_SizeToText) != 0);
+			mBalloonPartialLines.SetCheck ((lBalloon.Style & BalloonStyle_ShowPartialLines) != 0);
+			mBalloonVisible.SetCheck (lBalloon.Visible ? TRUE : FALSE);
+			mBalloonPartialLines.EnableWindow ((lBalloon.Style & BalloonStyle_SizeToText) == 0);
 		}
 		else
 		{
@@ -716,11 +678,7 @@ void CSpeechTestDlg::CharacterIsVisible (INT_PTR pCharNdx, bool pVisible)
 		}
 
 		mTTSModes.EnableWindow (TRUE);
-
-		if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->get_TTSModeID (lTTSMode.Free()))))
-		{
-			lTTSModeStr = (BSTR)lTTSMode;
-		}
+		lTTSModeStr = (BSTR)mCharacter[pCharNdx].TTSModeID;
 		LogMessage (LogNormal, _T("Character [%d] TTSModeID [%s] [%d]"), mCharacterId[pCharNdx], lTTSModeStr, FindTTSModeID (lTTSModeStr));
 
 		if	(lTTSModeStr.IsEmpty())
@@ -766,11 +724,7 @@ void CSpeechTestDlg::CharacterIsVisible (INT_PTR pCharNdx, bool pVisible)
 		}
 
 		mSRModes.EnableWindow (TRUE);
-
-		if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->get_SRModeID (lSRMode.Free()))))
-		{
-			lSRModeStr = (BSTR)lSRMode;
-		}
+		lSRModeStr = (BSTR)mCharacter[pCharNdx].SRModeID;
 		LogMessage (LogNormal, _T("Character [%d] SRModeID [%s] [%d]"), mCharacterId[pCharNdx], lSRModeStr, FindSRModeID (lSRModeStr));
 
 		if	(lSRModeStr.IsEmpty ())
@@ -868,55 +822,37 @@ void CSpeechTestDlg::ShowTTSModes ()
 	{
 		mTTSModes.ResetContent ();
 		mTTSModeAdded = -1;
-
-		if	(
-				(mServer != NULL)
-			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->get_TTSEngines (&mTTSEngines))))
-			)
+		mTTSEngines = mServer.TTSEngines;
+	
+		if	(mTTSEngines)
 		{
 			IDaSvrTTSEnginePtr	lTTSEngine;
 			long				lNdx;
 
-#ifdef	_LOG_TTS_MODE
+#ifdef	_LOG_TTS_MODES
 			if	(LogIsActive (_LOG_TTS_MODES))
 			{
-				long	lCount = 0;
-
-				mTTSEngines->get_Count (&lCount);
-				LogMessage (_LOG_TTS_MODES, _T("TTSEngines [%d]"), lCount);
+				LogMessage (_LOG_TTS_MODES, _T("TTSEngines [%d]"), mTTSEngines.Count);
 			}
 #endif
-			for	(lNdx = 0; (mTTSEngines->get_Item (lNdx, &lTTSEngine) == S_OK); lNdx++)
+			for	(lNdx = 0; lNdx < mTTSEngines.Count; lNdx++)
 			{
-				CString				lModeName;
-				CString				lGenderName;
-				tBstrPtr			lDisplayName;
-				SpeechGenderType	lGender = SpeechGender_Neutral;
-				long				lLanguageID = 0;
-				tBstrPtr			lLanguageName;
+				CString	lModeName;
+				CString	lGenderName;
 
-				lTTSEngine->get_DisplayName (lDisplayName.Free());
-				lTTSEngine->get_Gender (&lGender);
-				lTTSEngine->get_LanguageID (&lLanguageID);
-				lTTSEngine->get_LanguageName (VARIANT_TRUE, lLanguageName.Free());
-
-				lGenderName = (lGender==SpeechGender_Male)?_T("Male"):(lGender==SpeechGender_Female)?_T("Female"):_T("Neutral");
-				lModeName.Format (_T("%-30ls (%s) %ls"), (LPOLESTR)lDisplayName, lGenderName, (LPOLESTR)lLanguageName);
+				lTTSEngine = mTTSEngines.Item [lNdx];
+				lGenderName = (lTTSEngine.Gender==SpeechGender_Male)?_T("Male"):(lTTSEngine.Gender==SpeechGender_Female)?_T("Female"):_T("Neutral");
+				lModeName.Format (_T("%-30ls (%s) %ls"), (BSTR)lTTSEngine.DisplayName, lGenderName, (BSTR)lTTSEngine.LanguageName);
 				mTTSModes.AddString (lModeName);
 
-#ifdef	_LOG_TTS_MODE
+#ifdef	_LOG_TTS_MODES
 				if	(LogIsActive (_LOG_TTS_MODES))
 				{
-					tBstrPtr	lTTSModeID;
-					tBstrPtr	lManufacturer;
-					short		lVersionMajor;
-					short		lVersionMinor;
+					short	lVersionMajor;
+					short	lVersionMinor;
 
-					lTTSEngine->GetTTSModeID (lTTSModeID.Free());
-					lTTSEngine->GetManufacturer (lManufacturer.Free());
 					lTTSEngine->GetVersion (&lVersionMajor, &lVersionMinor);
-
-					LogMessage (_LOG_TTS_MODES, _T("  TTSEngine [%2d] [%ls] [%ls] [%hd.%hd] [%s] [%4.4X (%ls)] [%ls]"), lNdx, (LPOLESTR)lTTSModeID, (LPOLESTR)lDisplayName, lVersionMajor, lVersionMinor, lGenderName, lLanguageID, (LPOLESTR)lLanguageName, (LPOLESTR)lManufacturer);
+					LogMessage (_LOG_TTS_MODES, _T("  TTSEngine [%2d] [%ls] [%ls] [%hd.%hd] [%s] [%4.4X (%ls)] [%ls]"), lNdx, (BSTR)lTTSEngine.TTSModeID, (BSTR)lTTSEngine.DisplayName, lVersionMajor, lVersionMinor, lGenderName, lTTSEngine.LanguageID, (BSTR)lTTSEngine.LanguageName, (BSTR)lTTSEngine.Manufacturer);
 				}
 #endif
 			}
@@ -961,23 +897,16 @@ int CSpeechTestDlg::FindTTSModeID (LPCTSTR pTTSModeID)
 {
 	CString				lFindModeID (pTTSModeID);
 	IDaSvrTTSEnginePtr	lTTSEngine;
-	tBstrPtr			lDisplayName;
-	tBstrPtr			lTTSModeID;
 	long				lNdx;
 
 	if	(mTTSEngines != NULL)
 	{
-		for	(lNdx = 0; (mTTSEngines->get_Item (lNdx, &lTTSEngine) == S_OK); lNdx++)
+		for	(lNdx = 0; lNdx < mTTSEngines.Count; lNdx++)
 		{
+			lTTSEngine = mTTSEngines.Item [lNdx];
 			if	(
-					(
-						(SUCCEEDED (lTTSEngine->get_TTSModeID (lTTSModeID.Free())))
-					&&	(lFindModeID.CompareNoCase (CString (lTTSModeID)) == 0)
-					)
-				||	(
-						(SUCCEEDED (lTTSEngine->get_DisplayName (lDisplayName.Free())))
-					&&	(lFindModeID.CompareNoCase (CString (lDisplayName)) == 0)
-					)
+					(lFindModeID.CompareNoCase (CString ((BSTR)lTTSEngine.TTSModeID)) == 0)
+				||	(lFindModeID.CompareNoCase (CString ((BSTR)lTTSEngine.DisplayName)) == 0)
 				)
 			{
 				return lNdx;
@@ -990,15 +919,14 @@ int CSpeechTestDlg::FindTTSModeID (LPCTSTR pTTSModeID)
 CString CSpeechTestDlg::GetTTSModeID (INT_PTR pTTSModeNdx)
 {
 	IDaSvrTTSEnginePtr	lTTSEngine;
-	tBstrPtr			lTTSModeID;
 
-	if	(
-			(mTTSEngines != NULL)
-		&&	(SUCCEEDED (mTTSEngines->get_Item ((long)pTTSModeNdx, &lTTSEngine)))
-		&&	(SUCCEEDED (lTTSEngine->get_TTSModeID (lTTSModeID.Free())))
-		)
+	if	(mTTSEngines != NULL)
 	{
-		return CString (lTTSModeID);
+		lTTSEngine = mTTSEngines.Item [(long)pTTSModeNdx];
+		if	(lTTSEngine != NULL)
+		{
+			return CString ((BSTR)lTTSEngine.TTSModeID);
+		}
 	}
 	return CString();
 }
@@ -1013,49 +941,33 @@ void CSpeechTestDlg::ShowSRModes ()
 	{
 		mSRModes.ResetContent ();
 		mSRModeAdded = -1;
+		mSREngines = mServer.SREngines;
 
-		if	(
-				(mServer != NULL)
-			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->get_SREngines (&mSREngines))))
-			)
+		if	(mSREngines)
 		{
 			IDaSvrSREnginePtr	lSREngine;
 			long				lNdx;
 
-#ifdef	_LOG_TTS_MODE
-			if	(LogIsActive (_LOG_TTS_MODES))
+#ifdef	_LOG_SR_MODES
+			if	(LogIsActive (_LOG_SR_MODES))
 			{
-				long	lCount = 0;
-
-				mSREngines->get_Count (&lCount);
-				LogMessage (_LOG_TTS_MODES, _T("SREngines [%d]"), lCount);
+				LogMessage (_LOG_SR_MODES, _T("SREngines [%d]"), mSREngines.Count);
 			}
 #endif
 
-			for	(lNdx = 0; (mSREngines->get_Item (lNdx, &lSREngine) == S_OK); lNdx++)
+			for	(lNdx = 0; lNdx < mSREngines.Count; lNdx++)
 			{
-				tBstrPtr	lDisplayName;
+				lSREngine = mSREngines.Item [lNdx];
+				mSRModes.AddString (CString ((BSTR)lSREngine.DisplayName));
 
-				lSREngine->get_DisplayName (lDisplayName.Free());
-				mSRModes.AddString (CString (lDisplayName));
-
-#ifdef	_LOG_SR_MODE
+#ifdef	_LOG_SR_MODES
 				if	(LogIsActive (_LOG_SR_MODES))
 				{
-					tBstrPtr	lSRModeID;
-					tBstrPtr	lManufacturer;
-					short		lVersionMajor;
-					short		lVersionMinor;
-					long		lLanguageID = 0;
-					tBstrPtr	lLanguageName;
+					short	lVersionMajor;
+					short	lVersionMinor;
 
-					lSREngine->GetSRModeID (lSRModeID.Free());
-					lSREngine->GetManufacturer (lManufacturer.Free());
 					lSREngine->GetVersion (&lVersionMajor, &lVersionMinor);
-					lSREngine->GetLanguageID (&lLanguageID);
-					lSREngine->GetLanguageName (lLanguageName.Free());
-
-					LogMessage (_LOG_SR_MODES, _T("  SREngine [%2d] [%ls] [%ls] [%hd.%hd] [%4.4X (%ls)] [%ls]"), lNdx, (LPOLESTR)lSRModeID, (LPOLESTR)lDisplayName, lVersionMajor, lVersionMinor, lLanguageID, (LPOLESTR)lLanguageName, (LPOLESTR)lManufacturer);
+					LogMessage (_LOG_SR_MODES, _T("  SREngine [%2d] [%ls] [%ls] [%hd.%hd] [%4.4X (%ls)] [%ls]"), lNdx, (BSTR)lSREngine.SRModeID, (BSTR)lSREngine.DisplayName, lVersionMajor, lVersionMinor, lSREngine.LanguageID, (BSTR)lSREngine.LanguageName, (BSTR)lSREngine.Manufacturer);
 		}
 #endif
 			}
@@ -1157,15 +1069,14 @@ int CSpeechTestDlg::FindSRModeID (LPCTSTR pSRModeID)
 CString CSpeechTestDlg::GetSRModeID (INT_PTR pSRModeNdx)
 {
 	IDaSvrSREnginePtr	lSREngine;
-	tBstrPtr			lSRModeID;
 
-	if	(
-			(mSREngines != NULL)
-		&&	(SUCCEEDED (mSREngines->get_Item ((long)pSRModeNdx, &lSREngine)))
-		&&	(SUCCEEDED (lSREngine->get_SRModeID (lSRModeID.Free())))
-		)
+	if	(mSREngines != NULL)
 	{
-		return CString (lSRModeID);
+		lSREngine = mSREngines.Item [(long)pSRModeNdx];
+		if	(lSREngine != NULL)
+		{
+			return CString ((BSTR)lSREngine.SRModeID);
+		}
 	}
 	return CString();
 }
@@ -1179,6 +1090,7 @@ static LPCTSTR	sProfilePosX = _T("Left");
 static LPCTSTR	sProfilePosY = _T("Top");
 static LPCTSTR	sProfileCharacter = _T("Character");
 static LPCTSTR	sProfileShowChar = _T("Show");
+static LPCTSTR	sProfileFormatted = _T("Formatted");
 static LPCTSTR	sProfileText1 = _T("Text");
 static LPCTSTR	sProfileText2 = _T("Text2");
 static LPCTSTR	sProfileWaveFile = _T("WavFile");
@@ -1228,6 +1140,8 @@ void CSpeechTestDlg::LoadConfig ()
 		}
 	}
 
+	mFormattedButton.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileFormatted, mFormattedButton.GetCheck()) ? TRUE : FALSE);
+
 	mBalloonTextEdit1.GetWindowText (lBalloonText);
 	lBalloonText = lApp->GetProfileString (sProfileKey, sProfileText1, lBalloonText);
 	mBalloonTextEdit1.SetWindowText (lBalloonText);
@@ -1269,6 +1183,7 @@ void CSpeechTestDlg::SaveConfig ()
 
 	lApp->WriteProfileInt (sProfileKey, sProfileShowChar, mShowCharButton.GetCheck());
 	lApp->WriteProfileString (sProfileKey, sProfileCharacter, mCharacterPath[0]);
+	lApp->WriteProfileInt (sProfileKey, sProfileFormatted, mFormattedButton.GetCheck());
 
 	mBalloonTextEdit1.GetWindowText (lBalloonText);
 	lApp->WriteProfileString (sProfileKey, sProfileText1, lBalloonText);
@@ -1420,22 +1335,22 @@ void CSpeechTestDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwThrea
 		{
 			if	(mActiveChar == mCharacterId[1])
 			{
-				LogComErr (_LOG_CHAR_CALLS, mCharacter[0]->Activate (ActiveState_Active), _T("[%d] Activate ActiveState_Active"), mCharacterId[0]);
+				LogComErrAnon (_LOG_CHAR_CALLS, mCharacter[0]->Activate (ActiveState_Active), _T("[%d] Activate ActiveState_Active"), mCharacterId[0]);
 			}
 			else
 			{
-				LogComErr (_LOG_CHAR_CALLS, mCharacter[0]->Activate (ActiveState_InputActive), _T("[%d] Activate ActiveState_InputActive"), mCharacterId[0]);
+				LogComErrAnon (_LOG_CHAR_CALLS, mCharacter[0]->Activate (ActiveState_InputActive), _T("[%d] Activate ActiveState_InputActive"), mCharacterId[0]);
 			}
 		}
 		if	(mCharacter[1] != NULL)
 		{
 			if	(mActiveChar == mCharacterId[1])
 			{
-				LogComErr (_LOG_CHAR_CALLS, mCharacter[1]->Activate (ActiveState_InputActive), _T("[%d] Activate ActiveState_InputActive"), mCharacterId[1]);
+				LogComErrAnon (_LOG_CHAR_CALLS, mCharacter[1]->Activate (ActiveState_InputActive), _T("[%d] Activate ActiveState_InputActive"), mCharacterId[1]);
 			}
 			else
 			{
-				LogComErr (_LOG_CHAR_CALLS, mCharacter[1]->Activate (ActiveState_Active), _T("[%d] Activate ActiveState_Active"), mCharacterId[1]);
+				LogComErrAnon (_LOG_CHAR_CALLS, mCharacter[1]->Activate (ActiveState_Active), _T("[%d] Activate ActiveState_Active"), mCharacterId[1]);
 			}
 		}
 	}
@@ -1555,21 +1470,85 @@ void CSpeechTestDlg::OnThink()
 		&&	(IsCharacterVisible (lCharNdx))
 		)
 	{
-		CString	lText;
-		HRESULT	lResult;
-		long	lReqID;
+		CString					lText;
+		IDaSvrFormattedTextPtr	lFormattedText;
+		HRESULT					lResult;
+		long					lReqID;
 
 		mBalloonTextEdit1.GetWindowText (lText);
 		if	(!lText.IsEmpty())
 		{
-			lResult = mCharacter[lCharNdx]->Think (_bstr_t(lText), &lReqID);
-			LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Think [%d] [%s]"), mCharacterId[lCharNdx], lReqID, DebugStr(lText));
+			if	(mFormattedButton.GetCheck())
+			{
+				if	(
+						(SUCCEEDED (lResult = mCharacter[lCharNdx]->NewFormattedText (&lFormattedText)))
+					&&	(SUCCEEDED (lResult = lFormattedText->Parse (_bstr_t(lText))))
+					)
+				{
+#ifdef	_APPEND_FORMATTED
+					{
+						CString					lText2;
+						IDaSvrFormattedTextPtr	lFormattedText2;
+
+						mBalloonTextEdit2.GetWindowText (lText2);
+						if	(
+								(!lText2.IsEmpty())
+							&&	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, mCharacter[lCharNdx]->NewFormattedText (&lFormattedText2), _T("NewFormattedText"))))
+							&&	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lFormattedText2->Parse (_bstr_t(lText2)), _T("Parse"))))
+							)
+						{
+							LogComErr (_LOG_CHAR_CALLS, lFormattedText->Append (lFormattedText2), _T("Append"));
+						}
+					}
+#endif
+					lResult = mCharacter[lCharNdx]->ThinkFormatted (lFormattedText, &lReqID);
+					LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] ThinkFormatted [%d] [%s]"), mCharacterId[lCharNdx], lReqID, DebugStr(lText));
+					if	(LogIsActive (_LOG_CHAR_CALLS))
+					{ 
+						LogMessage (_LOG_CHAR_CALLS, _T("   Count     [%d] Index [%d] Word [%ls]"), lFormattedText.WordCount, lFormattedText.WordIndex, (BSTR)lFormattedText.DisplayWord[lFormattedText.WordIndex]);
+						LogMessage (_LOG_CHAR_CALLS, _T("   Display   [%ls]"), DebugStr((BSTR)lFormattedText.DisplayText));
+						LogMessage (_LOG_CHAR_CALLS, _T("   Raw       [%ls]"), DebugStr((BSTR)lFormattedText.RawText));
+						LogMessage (_LOG_CHAR_CALLS, _T("   Parsed    [%ls]"), DebugStr((BSTR)lFormattedText.ParsedText));
+						LogMessage (_LOG_CHAR_CALLS, _T("   Speech    [%ls]"), DebugStr((BSTR)lFormattedText.SpeechText));
+					}
+				}
+			}
+			else
+			{
+				lResult = mCharacter[lCharNdx]->Think (_bstr_t(lText), &lReqID);
+				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Think [%d] [%s]"), mCharacterId[lCharNdx], lReqID, DebugStr(lText));
+			}
 		}
+
 		mBalloonTextEdit2.GetWindowText (lText);
 		if	(!lText.IsEmpty())
 		{
-			lResult = mCharacter[lCharNdx]->Think (_bstr_t(lText), &lReqID);
-			LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Think [%d] [%s]"), mCharacterId[lCharNdx], lReqID, DebugStr(lText));
+			if	(mFormattedButton.GetCheck())
+			{
+#ifndef	_APPEND_FORMATTED
+				if	(
+						(SUCCEEDED (lResult = mCharacter[lCharNdx]->NewFormattedText (&lFormattedText)))
+					&&	(SUCCEEDED (lResult = lFormattedText->Parse (_bstr_t(lText))))
+					)
+				{
+					lResult = mCharacter[lCharNdx]->ThinkFormatted (lFormattedText, &lReqID);
+					LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] ThinkFormatted [%d] [%s]"), mCharacterId[lCharNdx], lReqID, DebugStr(lText));
+					if	(LogIsActive (_LOG_CHAR_CALLS))
+					{ 
+						LogMessage (_LOG_CHAR_CALLS, _T("   Count [%d] Index [%d] Word [%ls]"), lFormattedText.WordCount, lFormattedText.WordIndex, (BSTR)lFormattedText.DisplayWord[lFormattedText.WordIndex]);
+						LogMessage (_LOG_CHAR_CALLS, _T("   Display   [%ls]"), DebugStr((BSTR)lFormattedText.DisplayText));
+						LogMessage (_LOG_CHAR_CALLS, _T("   Text      [%ls]"), DebugStr((BSTR)lFormattedText.Text));
+						LogMessage (_LOG_CHAR_CALLS, _T("   Formatted [%ls]"), DebugStr((BSTR)lFormattedText.FormattedText));
+						LogMessage (_LOG_CHAR_CALLS, _T("   Speech    [%ls]"), DebugStr((BSTR)lFormattedText.SpeechText));
+					}
+				}
+#endif
+			}
+			else
+			{
+				lResult = mCharacter[lCharNdx]->Think (_bstr_t(lText), &lReqID);
+				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Think [%d] [%s]"), mCharacterId[lCharNdx], lReqID, DebugStr(lText));
+			}
 		}
 	}
 	else
@@ -1587,22 +1566,86 @@ void CSpeechTestDlg::OnSpeak()
 		&&	(IsCharacterVisible (lCharNdx))
 		)
 	{
-		CString	lText;
-		CString	lWaveFile = GetWaveFile ();
-		HRESULT	lResult;
-		long	lReqID;
+		CString					lText;
+		CString					lWaveFile = GetWaveFile ();
+		IDaSvrFormattedTextPtr	lFormattedText;
+		HRESULT					lResult;
+		long					lReqID;
 
 		mBalloonTextEdit1.GetWindowText (lText);
 		if	(!lText.IsEmpty())
 		{
-			lResult = mCharacter[lCharNdx]->Speak (_bstr_t(lText), _bstr_t(lWaveFile), &lReqID);
-			LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Speak [%d] [%s] [%s]"), mCharacterId[lCharNdx], lReqID, DebugStr(lText), lWaveFile);
+			if	(mFormattedButton.GetCheck())
+			{
+				if	(
+						(SUCCEEDED (lResult = mCharacter[lCharNdx]->NewFormattedText (&lFormattedText)))
+					&&	(SUCCEEDED (lResult = lFormattedText->Parse (_bstr_t(lText))))
+					)
+				{
+#ifdef	_APPEND_FORMATTED
+					{
+						CString					lText2;
+						IDaSvrFormattedTextPtr	lFormattedText2;
+
+						mBalloonTextEdit2.GetWindowText (lText2);
+						if	(
+								(!lText2.IsEmpty())
+							&&	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, mCharacter[lCharNdx]->NewFormattedText (&lFormattedText2), _T("NewFormattedText"))))
+							&&	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lFormattedText2->Parse (_bstr_t(lText2)), _T("Parse"))))
+							)
+						{
+							LogComErr (_LOG_CHAR_CALLS, lFormattedText->Append (lFormattedText2), _T("Append"));
+						}
+					}
+#endif
+					lResult = mCharacter[lCharNdx]->SpeakFormatted (lFormattedText, &lReqID);
+					LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] SpeakFormatted [%d] [%s]"), mCharacterId[lCharNdx], lReqID, DebugStr(lText));
+					if	(LogIsActive (_LOG_CHAR_CALLS))
+					{ 
+						LogMessage (_LOG_CHAR_CALLS, _T("   Count     [%d] Index [%d] Word [%ls]"), lFormattedText.WordCount, lFormattedText.WordIndex, (BSTR)lFormattedText.DisplayWord[lFormattedText.WordIndex]);
+						LogMessage (_LOG_CHAR_CALLS, _T("   Display   [%ls]"), DebugStr((BSTR)lFormattedText.DisplayText));
+						LogMessage (_LOG_CHAR_CALLS, _T("   Raw       [%ls]"), DebugStr((BSTR)lFormattedText.RawText));
+						LogMessage (_LOG_CHAR_CALLS, _T("   Parsed    [%ls]"), DebugStr((BSTR)lFormattedText.ParsedText));
+						LogMessage (_LOG_CHAR_CALLS, _T("   Speech    [%ls]"), DebugStr((BSTR)lFormattedText.SpeechText));
+					}
+				}
+			}
+			else
+			{
+				lResult = mCharacter[lCharNdx]->Speak (_bstr_t(lText), _bstr_t(lWaveFile), &lReqID);
+				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Speak [%d] [%s] [%s]"), mCharacterId[lCharNdx], lReqID, DebugStr(lText), lWaveFile);
+			}
 		}
+
 		mBalloonTextEdit2.GetWindowText (lText);
 		if	(!lText.IsEmpty())
 		{
-			lResult = mCharacter[lCharNdx]->Speak (_bstr_t(lText), NULL, &lReqID);
-			LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Speak [%d] [%s]"), mCharacterId[lCharNdx], lReqID, DebugStr(lText));
+			if	(mFormattedButton.GetCheck())
+			{
+#ifndef	_APPEND_FORMATTED
+				if	(
+						(SUCCEEDED (lResult = mCharacter[lCharNdx]->NewFormattedText (&lFormattedText)))
+					&&	(SUCCEEDED (lResult = lFormattedText->Parse (_bstr_t(lText))))
+					)
+				{
+					lResult = mCharacter[lCharNdx]->SpeakFormatted (lFormattedText, &lReqID);
+					LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] SpeakFormatted [%d] [%s]"), mCharacterId[lCharNdx], lReqID, DebugStr(lText));
+					if	(LogIsActive (_LOG_CHAR_CALLS))
+					{ 
+						LogMessage (_LOG_CHAR_CALLS, _T("   Count [%d] Index [%d] Word [%ls]"), lFormattedText.WordCount, lFormattedText.WordIndex, (BSTR)lFormattedText.DisplayWord[lFormattedText.WordIndex]);
+						LogMessage (_LOG_CHAR_CALLS, _T("   Display   [%ls]"), DebugStr((BSTR)lFormattedText.DisplayText));
+						LogMessage (_LOG_CHAR_CALLS, _T("   Text      [%ls]"), DebugStr((BSTR)lFormattedText.Text));
+						LogMessage (_LOG_CHAR_CALLS, _T("   Formatted [%ls]"), DebugStr((BSTR)lFormattedText.FormattedText));
+						LogMessage (_LOG_CHAR_CALLS, _T("   Speech    [%ls]"), DebugStr((BSTR)lFormattedText.SpeechText));
+					}
+				}
+#endif
+			}
+			else
+			{
+				lResult = mCharacter[lCharNdx]->Speak (_bstr_t(lText), NULL, &lReqID);
+				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Speak [%d] [%s]"), mCharacterId[lCharNdx], lReqID, DebugStr(lText));
+			}
 		}
 	}
 	else
@@ -1625,19 +1668,8 @@ void CSpeechTestDlg::OnBalloonAutoPace()
 
 	if	(lCharNdx >= 0)
 	{
-		IDaSvrBalloon2Ptr	lBalloon (mCharacter[lCharNdx]);
-
-		if	(lBalloon != NULL)
-		{
-			long	lStyle;
-
-			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, lBalloon->get_Style (&lStyle), _T("[%d] Balloon->GetStyle"), mCharacterId[lCharNdx])))
-			{
-				lStyle ^= BalloonStyle_AutoPace;
-				LogComErr (_LOG_CHAR_CALLS, lBalloon->put_Style (lStyle), _T("[%d] Balloon->SetStyle"), mCharacterId[lCharNdx]);
-			}
-			ShowCharacterState ();
-		}
+		mCharacter[lCharNdx].Balloon.Style ^= BalloonStyle_AutoPace;
+		ShowCharacterState ();
 	}
 }
 
@@ -1647,19 +1679,8 @@ void CSpeechTestDlg::OnBalloonAutoHide()
 
 	if	(lCharNdx >= 0)
 	{
-		IDaSvrBalloon2Ptr	lBalloon (mCharacter[lCharNdx]);
-
-		if	(lBalloon != NULL)
-		{
-			long	lStyle;
-
-			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, lBalloon->get_Style (&lStyle), _T("[%d] Balloon->GetStyle"), mCharacterId[lCharNdx])))
-			{
-				lStyle ^= BalloonStyle_AutoHide;
-				LogComErr (_LOG_CHAR_CALLS, lBalloon->put_Style (lStyle), _T("[%d] Balloon->SetStyle"), mCharacterId[lCharNdx]);
-			}
-			ShowCharacterState ();
-		}
+		mCharacter[lCharNdx].Balloon.Style ^= BalloonStyle_AutoHide;
+		ShowCharacterState ();
 	}
 }
 
@@ -1669,19 +1690,8 @@ void CSpeechTestDlg::OnBalloonAutoSize()
 
 	if	(lCharNdx >= 0)
 	{
-		IDaSvrBalloon2Ptr	lBalloon (mCharacter[lCharNdx]);
-
-		if	(lBalloon != NULL)
-		{
-			long	lStyle;
-
-			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, lBalloon->get_Style (&lStyle), _T("[%d] Balloon->GetStyle"), mCharacterId[lCharNdx])))
-			{
-				lStyle ^= BalloonStyle_SizeToText;
-				LogComErr (_LOG_CHAR_CALLS, lBalloon->put_Style (lStyle), _T("[%d] Balloon->SetStyle"), mCharacterId[lCharNdx]);
-			}
-			ShowCharacterState ();
-		}
+		mCharacter[lCharNdx].Balloon.Style ^= BalloonStyle_SizeToText;
+		ShowCharacterState ();
 	}
 }
 
@@ -1691,19 +1701,8 @@ void CSpeechTestDlg::OnBalloonPartialLines()
 
 	if	(lCharNdx >= 0)
 	{
-		IDaSvrBalloon2Ptr	lBalloon (mCharacter[lCharNdx]);
-
-		if	(lBalloon != NULL)
-		{
-			long	lStyle;
-
-			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, lBalloon->get_Style (&lStyle), _T("[%d] Balloon->GetStyle"), mCharacterId[lCharNdx])))
-			{
-				lStyle ^= BalloonStyle_ShowPartialLines;
-				LogComErr (_LOG_CHAR_CALLS, lBalloon->put_Style (lStyle), _T("[%d] Balloon->SetStyle"), mCharacterId[lCharNdx]);
-			}
-			ShowCharacterState ();
-		}
+		mCharacter[lCharNdx].Balloon.Style ^= BalloonStyle_ShowPartialLines;
+		ShowCharacterState ();
 	}
 }
 
@@ -1713,17 +1712,7 @@ void CSpeechTestDlg::OnBalloonVisible()
 
 	if	(lCharNdx >= 0)
 	{
-		IDaSvrBalloon2Ptr	lBalloon (mCharacter[lCharNdx]);
-
-		if	(lBalloon != NULL)
-		{
-			VARIANT_BOOL	lVisible;
-
-			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, lBalloon->get_Visible (&lVisible), _T("[%d] Balloon->GetVisible"), mCharacterId[lCharNdx])))
-			{
-				LogComErr (_LOG_CHAR_CALLS, lBalloon->put_Visible (lVisible?VARIANT_FALSE:VARIANT_TRUE), _T("[%d] Balloon->SetVisible"), mCharacterId[lCharNdx]);
-			}
-		}
+		mCharacter[lCharNdx].Balloon.Visible = mCharacter[lCharNdx].Balloon.Visible ? VARIANT_FALSE : VARIANT_TRUE;
 	}
 }
 
@@ -2193,6 +2182,47 @@ HRESULT STDMETHODCALLTYPE CSpeechTestDlg::XDaSvrNotifySink::ActiveClientChange (
 	METHOD_PROLOGUE(CSpeechTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
 	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSpeechTestDlg::XDaSvrNotifySink::ActiveClientChange [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Status);
+#endif
+	return S_OK;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CSpeechTestDlg::XDaSvrNotifySink::SpeechStart (long CharacterID, IDaSvrFormattedText *FormattedText)
+{
+	METHOD_PROLOGUE(CSpeechTestDlg, DaSvrNotifySink)
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSpeechTestDlg::XDaSvrNotifySink::SpeechStart [%d] [%p]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, FormattedText);
+	IDaSvrFormattedTextPtr	lText (FormattedText);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u]   Count     [%d] Index [%d] Word [%ls]"), pThis->mCharacterId, pThis->m_dwRef, lText.WordCount, lText.WordIndex, (BSTR)lText.DisplayWord[lText.WordIndex]);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u]   Display   [%ls]"), pThis->mCharacterId, pThis->m_dwRef, DebugStr((BSTR)lText.DisplayText));
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u]   Raw       [%ls]"), pThis->mCharacterId, pThis->m_dwRef, DebugStr((BSTR)lText.RawText));
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u]   Parsed    [%ls]"), pThis->mCharacterId, pThis->m_dwRef, DebugStr((BSTR)lText.ParsedText));
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u]   Speech    [%ls]"), pThis->mCharacterId, pThis->m_dwRef, DebugStr((BSTR)lText.SpeechText));
+#endif
+	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE CSpeechTestDlg::XDaSvrNotifySink::SpeechEnd (long CharacterID, IDaSvrFormattedText *FormattedText, VARIANT_BOOL Stopped)
+{
+	METHOD_PROLOGUE(CSpeechTestDlg, DaSvrNotifySink)
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSpeechTestDlg::XDaSvrNotifySink::SpeechEnd   [%d] [%p] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, FormattedText, Stopped);
+	IDaSvrFormattedTextPtr	lText (FormattedText);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u]   Count     [%d] Index [%d] Word [%ls]"), pThis->mCharacterId, pThis->m_dwRef, lText.WordCount, lText.WordIndex, (BSTR)lText.DisplayWord[lText.WordIndex]);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u]   Display   [%ls]"), pThis->mCharacterId, pThis->m_dwRef, DebugStr((BSTR)lText.DisplayText));
+#endif
+	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE CSpeechTestDlg::XDaSvrNotifySink::SpeechWord (long CharacterID, IDaSvrFormattedText *FormattedText, long WordIndex)
+{
+	METHOD_PROLOGUE(CSpeechTestDlg, DaSvrNotifySink)
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSpeechTestDlg::XDaSvrNotifySink::SpeechWord  [%d] [%p] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, FormattedText, WordIndex);
+	IDaSvrFormattedTextPtr	lText (FormattedText);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u]   Count     [%d] Index [%d] Word [%ls]"), pThis->mCharacterId, pThis->m_dwRef, lText.WordCount, lText.WordIndex, (BSTR)lText.DisplayWord[lText.WordIndex]);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u]   Display   [%ls]"), pThis->mCharacterId, pThis->m_dwRef, DebugStr((BSTR)lText.DisplayText));
 #endif
 	return S_OK;
 }

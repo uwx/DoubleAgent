@@ -20,7 +20,6 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "AgentFile.h"
-#include "AgentText.h"
 #include "SapiVoiceCache.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -56,12 +55,14 @@ public:
 
 // Operations
 public:
+	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd) = 0;
+	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause) = 0;
+	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL) = 0;
+
 	void NotifyStarted (class CEventNotify * pNotify);
 	void NotifyStarted (CAtlPtrTypeArray <class CEventNotify> & pNotify);
 	void NotifyComplete (class CEventNotify * pNotify, HRESULT pReqStatus = S_OK);
 	void NotifyComplete (CAtlPtrTypeArray <class CEventNotify> & pNotify, HRESULT pReqStatus = S_OK);
-
-// Overrides
 
 // Implementation
 protected:
@@ -72,12 +73,18 @@ protected:
 class CQueuedState : public CQueuedAction
 {
 public:
-	CQueuedState (LPCTSTR pStateName, long pCharID, long pReqID = -1) : mStateName (pStateName), CQueuedAction (QueueActionState, pCharID, pReqID) {}
+	CQueuedState (LPCTSTR pStateName, long pCharID, long pReqID = -1);
+	virtual ~CQueuedState ();
 
 // Attributes
 public:
 	CAtlString		mStateName;
 	CAtlStringArray	mGestures;
+
+// Overrides
+	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
+	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -85,12 +92,18 @@ public:
 class CQueuedGesture : public CQueuedAction
 {
 public:
-	CQueuedGesture (LPCTSTR pGestureName, long pCharID, long pReqID = -1) : mGestureName (pGestureName), CQueuedAction (QueueActionGesture, pCharID, pReqID) {}
+	CQueuedGesture (LPCTSTR pGestureName, long pCharID, long pReqID = -1);
+	virtual ~CQueuedGesture ();
 
 // Attributes
 public:
 	CAtlString	mStateName;
 	CAtlString	mGestureName;
+
+// Overrides
+	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
+	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -98,13 +111,19 @@ public:
 class CQueuedShow : public CQueuedAction
 {
 public:
-	CQueuedShow (long pCharID, long pReqID = -1) : CQueuedAction (QueueActionShow, pCharID, pReqID), mFast (false), mVisibilityCause (-1), mAnimationShown (false) {}
+	CQueuedShow (long pCharID, long pReqID = -1);
+	virtual ~CQueuedShow ();
 
 // Attributes
 public:
 	bool	mFast;
 	int		mVisibilityCause;
 	bool	mAnimationShown;
+
+// Overrides
+	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
+	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -112,13 +131,19 @@ public:
 class CQueuedHide : public CQueuedAction
 {
 public:
-	CQueuedHide (long pCharID, long pReqID = -1) : CQueuedAction (QueueActionHide, pCharID, pReqID), mFast (false), mVisibilityCause (-1), mAnimationShown (false) {}
+	CQueuedHide (long pCharID, long pReqID = -1);
+	virtual ~CQueuedHide ();
 
 // Attributes
 public:
 	bool	mFast;
 	int		mVisibilityCause;
 	bool	mAnimationShown;
+
+// Overrides
+	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
+	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -126,7 +151,8 @@ public:
 class CQueuedMove : public CQueuedAction
 {
 public:
-	CQueuedMove (long pCharID, long pReqID = -1) : CQueuedAction (QueueActionMove, pCharID, pReqID), mAnimationShown (false), mEndAnimationShown (false), mMoveStarted (false) {}
+	CQueuedMove (long pCharID, long pReqID = -1);
+	virtual ~CQueuedMove ();
 
 // Attributes
 public:
@@ -137,6 +163,15 @@ public:
 	tPtr <CPoint>	mMoveStarted;
 	DWORD			mTimeStarted;
 	DWORD			mTimeAllowed;
+
+// Operations
+	bool IsCycling () const;
+	bool Cycle (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
+
+// Overrides
+	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
+	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -149,8 +184,21 @@ public:
 
 // Attributes
 public:
-	CAtlString							mText;
+	tPtr <class CAgentText>				mText;
+	class CAgentTextObject *			mTextObject;
+	IUnknownPtr							mTextObjectRef;
 	tPtr <struct CAgentBalloonOptions>	mBalloonOptions;
+
+// Operations
+	void Initialize (class CAgentText & pText);
+	void Initialize (class CAgentTextObject * pTextObject);
+
+	CAtlString GetFullText ();
+
+// Overrides
+	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
+	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -158,13 +206,15 @@ public:
 class CQueuedSpeak : public CQueuedAction, public CSapiVoiceClient
 {
 public:
-	CQueuedSpeak (class CSapiVoice * pVoice, bool pShowBalloon, long pCharID, long pReqID = -1);
+	CQueuedSpeak (bool pShowBalloon, long pCharID, long pReqID = -1);
 	virtual ~CQueuedSpeak ();
 
 // Attributes
 public:
 	class CSapiVoice *					mVoice;
-	CAgentTextParse						mText;
+	tPtr <class CAgentText>				mText;
+	class CAgentTextObject *			mTextObject;
+	IUnknownPtr							mTextObjectRef;
 	CAtlString							mSoundUrl;
 	bool								mShowBalloon;
 	tPtr <struct CAgentBalloonOptions>	mBalloonOptions;
@@ -172,7 +222,25 @@ public:
 	IUnknownPtr							mSoundFilter;
 
 // Operations
+	void Initialize (class CAgentText & pText, class CSapiVoice * pVoice);
+	void Initialize (class CAgentTextObject * pTextObject, class CSapiVoice * pVoice);
 	bool SetVoice (class CSapiVoice * pVoice);
+
+	CAtlString GetFullText ();
+	CAtlString GetSpeechText ();
+
+// Overrides
+	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
+	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+
+// Implementation
+protected:
+	bool SpeechIsBusy (class CAgentWnd * pAgentWnd);
+	HRESULT SpeechIsReady (class CAgentWnd * pAgentWnd);
+	HRESULT PrepareSpeech (class CAgentWnd * pAgentWnd);
+	HRESULT StartSpeech (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
+	bool ShowSpeechAnimation (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -180,12 +248,18 @@ public:
 class CQueuedWait : public CQueuedAction
 {
 public:
-	CQueuedWait (long pOtherCharID, long pOtherReqID, long pCharID, long pReqID = -1) : CQueuedAction (QueueActionWait, pCharID, pReqID), mOtherCharID (pOtherCharID), mOtherReqID (pOtherReqID) {}
+	CQueuedWait (long pOtherCharID, long pOtherReqID, long pCharID, long pReqID = -1);
+	virtual ~CQueuedWait ();
 
 // Attributes
 public:
 	long	mOtherCharID;
 	long	mOtherReqID;
+
+// Overrides
+	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
+	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -193,12 +267,18 @@ public:
 class CQueuedInterrupt : public CQueuedAction
 {
 public:
-	CQueuedInterrupt (long pOtherCharID, long pOtherReqID, long pCharID, long pReqID = -1) : CQueuedAction (QueueActionInterrupt, pCharID, pReqID), mOtherCharID (pOtherCharID), mOtherReqID (pOtherReqID) {}
+	CQueuedInterrupt (long pOtherCharID, long pOtherReqID, long pCharID, long pReqID = -1);
+	virtual ~CQueuedInterrupt ();
 
 // Attributes
 public:
 	long	mOtherCharID;
 	long	mOtherReqID;
+
+// Overrides
+	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
+	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 };
 
 /////////////////////////////////////////////////////////////////////////////

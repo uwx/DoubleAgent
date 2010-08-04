@@ -273,26 +273,32 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindCharacterSREngines Method">
 								<param name="Local" value="Generated/Server_Server_FindCharacterSREngines.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindCharacterTTSEngines Method">
 								<param name="Local" value="Generated/Server_Server_FindCharacterTTSEngines.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindSREngines Method">
 								<param name="Local" value="Generated/Server_Server_FindSREngines.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindTTSEngines Method">
 								<param name="Local" value="Generated/Server_Server_FindTTSEngines.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetCharacterSREngine Method">
 								<param name="Local" value="Generated/Server_Server_GetCharacterSREngine.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetCharacterTTSEngine Method">
 								<param name="Local" value="Generated/Server_Server_GetCharacterTTSEngine.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetVersion Method">
@@ -331,10 +337,12 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CharacterFiles Property">
 								<param name="Local" value="Generated/Server_Server_CharacterFiles.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CharacterStyle Property">
 								<param name="Local" value="Generated/Server_Server_CharacterStyle.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CommandsWindow Property">
@@ -351,10 +359,12 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SREngines Property">
 								<param name="Local" value="Generated/Server_Server_SREngines.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The TTSEngines Property">
 								<param name="Local" value="Generated/Server_Server_TTSEngines.htm">
+								<param name="New" value="1">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
@@ -431,6 +441,18 @@
 								<param name="Local" value="Generated/Server_Event_Size.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SpeechEnd Event">
+								<param name="Local" value="Generated/Server_Event_SpeechEnd.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SpeechStart Event">
+								<param name="Local" value="Generated/Server_Event_SpeechStart.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SpeechWord Event">
+								<param name="Local" value="Generated/Server_Event_SpeechWord.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The VisibleState Event">
 								<param name="Local" value="Generated/Server_Event_VisibleState.htm">
 								</OBJECT>
@@ -453,14 +475,17 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindSREngines Method">
 								<param name="Local" value="Generated/Server_Character_FindSREngines.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindTTSEngines Method">
 								<param name="Local" value="Generated/Server_Character_FindTTSEngines.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GenerateIcon Method">
 								<param name="Local" value="Generated/Server_Character_GenerateIcon.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GestureAt Method">
@@ -469,6 +494,7 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetIconIdentity Method">
 								<param name="Local" value="Generated/Server_Character_GetIconIdentity.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetOriginalSize Method">
@@ -503,6 +529,11 @@
 								<param name="Local" value="Generated/Server_Character_MoveTo.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The NewFormattedText Method">
+								<param name="Local" value="Generated\Server_Character_NewFormattedText.htm">
+								<param name="New" value="1">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Play Method">
 								<param name="Local" value="Generated/Server_Character_Play.htm">
 								</OBJECT>
@@ -513,6 +544,7 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SetIconIdentity Method">
 								<param name="Local" value="Generated/Server_Character_SetIconIdentity.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SetPosition Method">
@@ -535,6 +567,11 @@
 								<param name="Local" value="Generated/Server_Character_Speak.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SpeakFormatted Method">
+								<param name="Local" value="Generated\Server_Character_SpeakFormatted.htm">
+								<param name="New" value="1">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Stop Method">
 								<param name="Local" value="Generated/Server_Character_Stop.htm">
 								</OBJECT>
@@ -545,6 +582,11 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Think Method">
 								<param name="Local" value="Generated/Server_Character_Think.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ThinkFormatted Method">
+								<param name="Local" value="Generated\Server_Character_ThinkFormatted.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Wait Method">
@@ -571,6 +613,7 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CharacterID Property">
 								<param name="Local" value="Generated/Server_Character_CharacterID.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Commands Property">
@@ -587,14 +630,17 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FileName Property">
 								<param name="Local" value="Generated/Server_Character_FileName.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FilePath Property">
 								<param name="Local" value="Generated/Server_Character_FilePath.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The HasIcon Property">
 								<param name="Local" value="Generated/Server_Character_HasIcon.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Height Property">
@@ -603,18 +649,22 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The IconIdentity Property">
 								<param name="Local" value="Generated/Server_Character_IconIdentity.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The IconTip Property">
 								<param name="Local" value="Generated/Server_Character_IconTip.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The IconVisible Property">
 								<param name="Local" value="Generated/Server_Character_IconVisible.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The IdleState Property">
 								<param name="Local" value="Generated/Server_Character_IdleState.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The LanguageID Property">
@@ -651,6 +701,7 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SREngine Property">
 								<param name="Local" value="Generated/Server_Character_SREngine.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SRModeID Property">
@@ -659,6 +710,7 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Style Property">
 								<param name="Local" value="Generated/Server_Character_Style.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Top Property">
@@ -667,6 +719,7 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The TTSEngine Property">
 								<param name="Local" value="Generated/Server_Character_TTSEngine.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The TTSModeID Property">
@@ -793,6 +846,7 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CommandID Property">
 								<param name="Local" value="Generated/Server_Command_CommandID.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ConfidenceText Property">
@@ -893,6 +947,57 @@
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The Formatted Text Object">
+						<param name="Local" value="Generated/Server_FormattedText.htm">
+						<param name="New" value="1">
+						</OBJECT>
+					<UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="Formatted Text Methods">
+							<param name="Local" value="Generated/Server_FormattedText.htm#Methods">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Append Method">
+								<param name="Local" value="Generated/Server_FormattedText_Append.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Parse Method">
+								<param name="Local" value="Generated\Server_FormattedText_Parse.htm">
+								</OBJECT>
+						</UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="Formatted Text Properties">
+							<param name="Local" value="Generated/Server_FormattedText.htm#Properties">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The DisplayText Property">
+								<param name="Local" value="Generated/Server_FormattedText_DisplayText.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The DisplayWord Property">
+								<param name="Local" value="Generated/Server_FormattedText_DisplayWord.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ParsedText Property">
+								<param name="Local" value="Generated/Server_FormattedText_ParsedText.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SpeechText Property">
+								<param name="Local" value="Generated/Server_FormattedText_SpeechText.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The WordCount Property">
+								<param name="Local" value="Generated/Server_FormattedText_WordCount.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The WordIndex Property">
+								<param name="Local" value="Generated/Server_FormattedText_WordIndex.htm">
+								</OBJECT>
+						</UL>
+					</UL>
+					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The CommandsWindow Object">
 						<param name="Local" value="Generated/Server_CommandsWindow.htm">
 						</OBJECT>
@@ -959,6 +1064,7 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SetPosition Method">
 								<param name="Local" value="Generated/Server_PropertySheet_SetPosition.htm">
+								<param name="New" value="1">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
@@ -1628,6 +1734,18 @@
 								<param name="Name" value="The Size Event">
 								<param name="Local" value="Generated/Control_Event_Size.htm">
 								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SpeechEnd Event">
+								<param name="Local" value="Generated/Control_Event_SpeechEnd.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SpeechStart Event">
+								<param name="Local" value="Generated/Control_Event_SpeechStart.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SpeechWord Event">
+								<param name="Local" value="Generated/Control_Event_SpeechWord.htm">
+								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
@@ -1724,13 +1842,17 @@
 								<param name="Local" value="Generated/Control_Character_MoveTo.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The NewFormattedText Method">
+								<param name="Local" value="Generated\Control_Character_NewFormattedText.htm">
+								<param name="New" value="1">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Play Method">
 								<param name="Local" value="Generated/Control_Character_Play.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Prepare Method">
 								<param name="Local" value="Generated/Control_Character_Prepare.htm">
-								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Show Method">
@@ -1745,6 +1867,11 @@
 								<param name="Local" value="Generated/Control_Character_Speak.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SpeakFormatted Method">
+								<param name="Local" value="Generated/Control_Character_SpeakFormatted.htm">
+								<param name="New" value="1">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Stop Method">
 								<param name="Local" value="Generated/Control_Character_Stop.htm">
 								</OBJECT>
@@ -1755,6 +1882,11 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Think Method">
 								<param name="Local" value="Generated/Control_Character_Think.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ThinkFormatted Method">
+								<param name="Local" value="Generated/Control_Character_ThinkFormatted.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Wait Method">
@@ -2071,6 +2203,7 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Name Property">
 								<param name="Local" value="Generated/Control_Command_Name.htm">
+								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Visible Property">
@@ -2175,6 +2308,57 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Visible Property">
 								<param name="Local" value="Generated/Control_Balloon_Visible.htm">
+								</OBJECT>
+						</UL>
+					</UL>
+					<LI> <OBJECT type="text/sitemap">
+						<param name="Name" value="The Formatted Text Object">
+						<param name="Local" value="Generated/Control_FormattedText.htm">
+						<param name="New" value="1">
+						</OBJECT>
+					<UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="Formatted Text Methods">
+							<param name="Local" value="Generated/Control_FormattedText.htm#Methods">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Append Method">
+								<param name="Local" value="Generated/Control_FormattedText_Append.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The Parse Method">
+								<param name="Local" value="Generated\Server_FormattedText_Parse.htm">
+								</OBJECT>
+						</UL>
+						<LI> <OBJECT type="text/sitemap">
+							<param name="Name" value="Formatted Text Properties">
+							<param name="Local" value="Generated/Control_FormattedText.htm#Properties">
+							</OBJECT>
+						<UL>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The DisplayText Property">
+								<param name="Local" value="Generated/Control_FormattedText_DisplayText.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The DisplayWord Property">
+								<param name="Local" value="Generated/Control_FormattedText_DisplayWord.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The ParsedText Property">
+								<param name="Local" value="Generated/Control_FormattedText_ParsedText.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SpeechText Property">
+								<param name="Local" value="Generated/Control_FormattedText_SpeechText.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The WordCount Property">
+								<param name="Local" value="Generated/Control_FormattedText_WordCount.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The WordIndex Property">
+								<param name="Local" value="Generated/Control_FormattedText_WordIndex.htm">
 								</OBJECT>
 						</UL>
 					</UL>
@@ -2793,6 +2977,18 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlSize Event">
 								<param name="Local" value="Generated/AxControl_Event_CtlSize.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlSpeechEnd Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlSpeechEnd.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlSpeechStart Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlSpeechStart.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The CtlSpeechWord Event">
+								<param name="Local" value="Generated/AxControl_Event_CtlSpeechWord.htm">
 								</OBJECT>
 						</UL>
 					</UL>

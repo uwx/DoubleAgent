@@ -266,13 +266,13 @@ HRESULT CDirectShowRender::OnStateChanged (FILTER_STATE pOldState, FILTER_STATE 
 {
 	HRESULT	lResult = CDirectShowFilter::OnStateChanged (pOldState, pNewState);
 
-#ifdef	_LOG_DIRECT_SHOW
+#ifdef	_DEBUG_DIRECT_SHOW
 	if	(
 			(pNewState == State_Stopped)
 		&&	(pOldState != State_Stopped)
 		)
 	{
-		LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Stopped> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+		LogMessage (_DEBUG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Stopped> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 	}
 	else
 	if	(
@@ -280,7 +280,7 @@ HRESULT CDirectShowRender::OnStateChanged (FILTER_STATE pOldState, FILTER_STATE 
 		&&	(pOldState == State_Stopped)
 		)
 	{
-		LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Started> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+		LogMessage (_DEBUG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Started> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 	}
 	else
 	if	(
@@ -288,7 +288,7 @@ HRESULT CDirectShowRender::OnStateChanged (FILTER_STATE pOldState, FILTER_STATE 
 		&&	(pOldState == State_Paused)
 		)
 	{
-		LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Running> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+		LogMessage (_DEBUG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Running> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 	}
 #endif
 	return lResult;
@@ -362,8 +362,8 @@ void CDirectShowRender::OnEndInputStream (INT_PTR pPendingSamples)
 
 	if	(pPendingSamples <= 0)
 	{
-#ifdef	_LOG_DIRECT_SHOW
-		LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <EndOfStream> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+#ifdef	_DEBUG_DIRECT_SHOW
+		LogMessage (_DEBUG_DIRECT_SHOW, _T("  [%f] DirectShow Render <EndOfStream> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 #endif
 		try
 		{
@@ -453,8 +453,8 @@ void CDirectShowRender::OnClockPulse ()
 #ifdef	_DEBUG_STREAM
 			LogMessage (_DEBUG_STREAM, _T("[%s] [%p] [%f] EndOfStream"), AtlTypeName(this), this, RefTimeSec(lStreamTime));
 #endif
-#ifdef	_LOG_DIRECT_SHOW
-			LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Complete> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+#ifdef	_DEBUG_DIRECT_SHOW
+			LogMessage (_DEBUG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Complete> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 #endif
 		}
 		else
@@ -463,8 +463,8 @@ void CDirectShowRender::OnClockPulse ()
 			&&	(!IsClockStarted ())
 			)
 		{
-#ifdef	_LOG_DIRECT_SHOW
-			LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Start> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+#ifdef	_DEBUG_DIRECT_SHOW
+			LogMessage (_DEBUG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Start> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 #endif
 			StartClock (sDefaultClockInterval);
 		}

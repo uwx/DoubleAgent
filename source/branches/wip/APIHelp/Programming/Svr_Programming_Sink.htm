@@ -17,24 +17,56 @@
 		</tr>
 		<tr>
 			<td class="page">
-				<p>To be notified of events by Microsoft Agent, you must implement either the <b>IAgentNotifySink </b>or
-					the <b>IAgentNotifySinkEx</b> interface, and create and register an object of that type following COM
-					conventions:</p>
-				<pre>// Create a notification sink
+				<p>To be notified of events by Double Agent, you must create and register an object that implements either
+					the <em class="keyword">IDaSvrNotifySink2</em> or <em class="keyword">_DaSvrEvents2</em> interface.</p>
+				<ul>
+					<li>
+						<p>The <em class="keyword">IDaSvrNotifySink2</em> interface derives from <em class="keyword">IUnknown</em>
+							and is intended for C/C++ programming:</p>
+						<div class="example">
+							<pre class="example">// Create a notification sink
+<em class="token">MyNotifySink</em> = <em class="keyword">new</em> <em class="token">ServerNotifySink</em>;
+<em class="token">MyNotifySink</em>&gt;<em class="keyword">AddRef</em> ();
 
-pSinkEx = new AgentNotifySinkEx;
-
-pSinkEx-&gt;AddRef();
-
-// And register it with Microsoft Agent
-
-hRes = pAgentEx-&gt;Register((IUnknown *)pSinkEx, &amp;lNotifySinkID);</pre>
-				<p>Remember to unregister your notification sink when your application shuts down and releases Microsoft
-					Agent's interfaces.</p>
-				<p>---todo---</p>
-				<p>IConnectionPoint</p>
-				<p>WithEvents</p>
-			</td>
+// And register it with Double Agent
+<em class="token">result</em> = <em class="token">server</em>-&gt;<em class="keyword">Register</em> ((<em
+	class="keyword">IUnknown</em> *)<em class="token">MyNotifySink</em>, &amp;<em class="token">MyNotifySinkID</em>);</pre>
+						</div>
+						<p>Remember to unregister your notification sink when your application shuts down and releases Double Agent's
+							interfaces.</p>
+						<div class="example">
+							<pre class="example"><em class="token">server</em>-&gt;<em class="keyword">Unregister</em> (<em class="token">MyNotifySinkID</em>);</pre>
+						</div>
+						<p>If you're using a class library that implements <em class="glossary">COM</em> connection points (such
+							as <em class="glossary">MFC</em> or <em class="glossary">ATL</em>), you can use the <em class="keyword">
+								IConnectionPoint</em> mechanism instead of the <em class="keyword">Register</em> and <em class="keyword">
+									Unregister</em> methods.</p>
+						<p class="note"><span class="note">Note:</span> Double Agent also supports the <em class="keyword">IDaSvrNotifySink</em>,
+							<em class="keyword">IAgentNotifySink</em> and <em class="keyword">IAgentNotifySinkEx</em> interfaces.</p>
+					</li>
+					<li>
+						<p>The <em class="keyword">_DaSvrEvents2</em> interface is a an <em class="keyword">IDispatch</em> version
+							of <em class="keyword">IDaSvrNotifySink2</em> that is intended for other programming and scripting languages.
+							It's declared as the server object's default outgoing interface, so the standard <em class="glossary">COM</em>
+							event sink protocol can be used:</p>
+						<div class="example">
+							<pre class="example"><em class="keyword">Dim WithEvents</em> <em class="token">MyServer</em> <em class="keyword">as</em> <em
+								class="keyword">DoubleAgentSvr.DaServer</em>
+<em class="keyword">Set</em> <em class="token">MyServer</em> = <em class="keyword">New</em> <em class="keyword">DoubleAgentSvr.DaServer</em></pre>
+						</div>
+					</li>
+					<li>
+						<p>For <em class="glossary">.NET</em> (managed) lanaguages, the server's <em class="glossary">Interop Assembly</em>
+							supports event delegates. Each event is separately registered and unregistered:</p>
+						<div class="example">
+							<pre class="example"><em class="token">MyServer</em>.<em class="keyword">Show</em> += <em class="keyword">new</em> <em
+								class="keyword">DoubleAgent.Server.ShowEventHandler</em> (<em class="token">MyServer_Show</em>);
+<em class="token">MyServer</em>.<em class="keyword">Show</em> -= <em class="token">MyServer_Show</em>;</pre>
+						</div>
+					</li>
+				</ul>
+				<h4 class="seealso">See Also</h4>
+				<a href="Svr_Programming.htm">Using the Server in Applications</a></td>
 		</tr>
 	</table>
 </body>

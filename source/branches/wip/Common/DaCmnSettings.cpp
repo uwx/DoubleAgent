@@ -218,8 +218,8 @@ HRESULT CDaCmnSettings::get_SRHotKey (BSTR *SRHotKey)
 	if	(SRHotKey)
 	{
 		CDaSettingsConfig	lSettingsConfig;
-		CString				lKeyName;
-		CString				lModName;
+		CAtlString			lKeyName;
+		CAtlString			lModName;
 		UINT				lHotKeyCode;
 		long				lHotKeyScan;
 

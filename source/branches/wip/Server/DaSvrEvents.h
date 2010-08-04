@@ -42,6 +42,10 @@ public:
 	void FireAgentPropertyChange();
 	void FireActiveClientChange(long CharacterID, long Status);
 
+	void FireSpeechStart(long CharacterID, IDaSvrFormattedText* FormattedText);
+	void FireSpeechEnd(long CharacterID, IDaSvrFormattedText* FormattedText, VARIANT_BOOL Stopped);
+	void FireSpeechWord(long CharacterID, IDaSvrFormattedText* FormattedText, long WordNdx);
+
 public:
 	CDaSvrEventDispatch (CComDynamicUnkArray & pUnkArray) : mUnkArray (pUnkArray) {}
 protected:

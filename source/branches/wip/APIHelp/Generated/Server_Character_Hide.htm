@@ -22,26 +22,88 @@
 				<p>Hides the character.</p>
 			</div>
 					<h4 class="syntax">Syntax</h4>
-					<table id="Parameters" class="syntax">
-						<tr>
-							<th align="left" width="200ex">Part</th>
-							<th align="left">Description</th>
-						</tr>
-						<tr>
-							<td width="200ex">
-								<em class="token">RequestID</em>
-							</td>
-							<td>
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">Hide</em> (<em class="token">Fast</em>, &amp;<em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Hide</em> (<em class="token">Fast</em>, <em class="keyword">out</em> <em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Hide</em> (<em class="token">Fast</em>, <em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Hide</em> [<em class="token">Fast</em>][, <em class="token">RequestID</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">Hide</em> [<em class="token">Fast</em>][, <em class="token">RequestID</em>]</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Fast</em>
+								</td>
+								<td>
+				A <em class="typename">boolean</em> value that indicates whether to skip the character's <em class="glossary">Hiding</em>
+				state animation.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">RequestID</em>
+								</td>
+								<td>
 			An optional unique <em class="typename">numeric</em> value your application can use to track the method's status.
 		</td>
-						</tr>
-					</table>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-					<h4 class="seealso">See Also</h4>
-					<a href="Server_Event_RequestStart.htm">The RequestStart Event</a>
-					<br />
-					<a href="Server_Event_RequestComplete.htm">The RequestComplete Event</a>
-				</td>
+				<p>
+					Double Agent queues the actions of the <em class="self keyword">Hide</em> method in the character's queue, so you can
+					use it to hide the character after a sequence of other animations. You can play the action immediately
+					by using the <a href="Server_Character_Stop.htm" class="see keyword">Stop</a> or <a href="Server_Character_StopAll.htm" class="see keyword">StopAll</a> method before
+					calling this method.
+				</p>
+				<p class="note"><span class="note">Note:</span> 
+					Hiding a character can trigger the <a href="Server_Event_ActivateInputState.htm" class="see keyword">ActivateInputState</a> event of another client.
+				</p>
+				<p class="note"><span class="note">Note:</span> 
+					Hidden characters cannot access the screen or the audio channel. Double Agent will pass a failure status
+					in the <a href="Server_Event_RequestComplete.htm" class="see keyword">RequestComplete</a> event if you attempt to animate a hidden character.
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Character_Show.htm">The Show Method</a><br /><a href="Server_Event_RequestStart.htm">The RequestStart Event</a><br /><a href="Server_Event_RequestComplete.htm">The RequestComplete Event</a></td>
 			</tr>
 		</table>
 	</body>

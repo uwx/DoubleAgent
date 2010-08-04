@@ -21,8 +21,97 @@
 					<div class="summary">
 				<p>Moves the character to the specified location.</p>
 			</div>
+					<h4 class="syntax">Syntax</h4>
+					<div id="Syntax" class="syntax">
+						<table id="Languages" class="syntax">
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C++</p>
+								</td>
+								<td>
+<p><em class="token">character</em>-&gt;<em class="keyword">MoveTo</em> (<em class="token">X</em>, <em class="token">Y</em>, <em class="token">Speed</em>, &amp;<em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual C#</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">MoveTo</em> (<em class="token">X</em>, <em class="token">Y</em>, <em class="token">Speed</em>, <em class="keyword">out</em> <em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic .NET</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">MoveTo</em> (<em class="token">X</em>, <em class="token">Y</em>, <em class="token">Speed</em>, <em class="token">RequestID</em>)</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>Visual Basic 6</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">MoveTo</em> <em class="token">X</em>, <em class="token">Y</em>[, <em class="token">Speed</em>][, <em class="token">RequestID</em>]</p>
+</td>
+							</tr>
+							<tr>
+								<td align="left" width="200ex" class="language">
+									<p>VBScript</p>
+								</td>
+								<td>
+<p><em class="token">character</em>.<em class="keyword">MoveTo</em> <em class="token">X</em>, <em class="token">Y</em>[, <em class="token">Speed</em>][, <em class="token">RequestID</em>]</p>
+</td>
+							</tr>
+						</table>
+						<table id="Parameters" class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">X</em>
+								</td>
+								<td>The horizontal location, in pixels, relative to the left side of the screen.</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Y</em>
+								</td>
+								<td>The vertical location, in pixels, relative to the top of the screen.</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">Speed</em>
+								</td>
+								<td>
+				An optional <em class="typename">numeric</em> value specifying how quickly the character's image
+				moves, in milliseconds. The default value is 1000. Specifying zero moves the image without playing
+				an animation.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<em class="token">RequestID</em>
+								</td>
+								<td>
+			An optional unique <em class="typename">numeric</em> value your application can use to track the method's status.
+		</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
-				</td>
+				<p>
+					The location of a character is based on the upper left corner of its image. Double Agent automatically plays
+					the appropriate animation assigned to the <em class="glossary">Moving</em> states.
+				</p>
+				<p class="note"><span class="note">Note:</span> 
+					The <em class="token">Speed</em> parameter's actual effect may vary based on the computer's processor speed
+					and the priority of other tasks running on the system.
+				</p>
+			<h4 class="seealso">See Also</h4><a href="Server_Event_RequestStart.htm">The RequestStart Event</a><br /><a href="Server_Event_RequestComplete.htm">The RequestComplete Event</a></td>
 			</tr>
 		</table>
 	</body>

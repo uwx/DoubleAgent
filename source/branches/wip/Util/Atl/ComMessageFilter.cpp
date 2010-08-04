@@ -129,9 +129,9 @@ void CComMessageFilter::CheckOut ()
 #ifdef	_DEBUG
 /////////////////////////////////////////////////////////////////////////////
 
-static CString CallTypeStr (DWORD pCallType)
+static CAtlString CallTypeStr (DWORD pCallType)
 {
-	CString	lCallTypeStr;
+	CAtlString	lCallTypeStr;
 
 	switch (pCallType)
 	{
@@ -145,9 +145,9 @@ static CString CallTypeStr (DWORD pCallType)
 	return lCallTypeStr;
 }
 
-static CString ServerCallStr (DWORD pServerCall)
+static CAtlString ServerCallStr (DWORD pServerCall)
 {
-	CString	lServerCallStr;
+	CAtlString	lServerCallStr;
 
 	switch (pServerCall)
 	{
@@ -159,9 +159,9 @@ static CString ServerCallStr (DWORD pServerCall)
 	return lServerCallStr;
 }
 
-static CString PendingTypeStr (DWORD pPendingType)
+static CAtlString PendingTypeStr (DWORD pPendingType)
 {
-	CString	lPendingTypeStr;
+	CAtlString	lPendingTypeStr;
 
 	switch (pPendingType)
 	{
@@ -172,9 +172,9 @@ static CString PendingTypeStr (DWORD pPendingType)
 	return lPendingTypeStr;
 }
 
-static CString PendingMsgStr (DWORD pPendingMsg)
+static CAtlString PendingMsgStr (DWORD pPendingMsg)
 {
-	CString	lPendingMsgStr;
+	CAtlString	lPendingMsgStr;
 
 	switch (pPendingMsg)
 	{
@@ -186,9 +186,9 @@ static CString PendingMsgStr (DWORD pPendingMsg)
 	return lPendingMsgStr;
 }
 
-static CString InterfaceInfoStr (const INTERFACEINFO * pInterfaceInfo)
+static CAtlString InterfaceInfoStr (const INTERFACEINFO * pInterfaceInfo)
 {
-	CString	lInterfaceInfoStr;
+	CAtlString	lInterfaceInfoStr;
 
 	if	(pInterfaceInfo)
 	{
@@ -201,9 +201,9 @@ static CString InterfaceInfoStr (const INTERFACEINFO * pInterfaceInfo)
 	return lInterfaceInfoStr;
 }
 
-static CString OleUiResultStr (UINT pResult)
+static CAtlString OleUiResultStr (UINT pResult)
 {
-	CString	lOleUiResultStr;
+	CAtlString	lOleUiResultStr;
 
 	switch (pResult)
 	{

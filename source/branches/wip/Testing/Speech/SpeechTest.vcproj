@@ -319,6 +319,10 @@
 			UniqueIdentifier="{6F61A507-0AF4-48b8-9B51-3434F624F5B1}"
 			>
 			<File
+				RelativePath="..\..\Include\DaServerInterface.h"
+				>
+			</File>
+			<File
 				RelativePath=".\SpeechTest.h"
 				>
 			</File>

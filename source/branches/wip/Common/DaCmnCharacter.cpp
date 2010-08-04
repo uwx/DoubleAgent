@@ -423,7 +423,7 @@ BSTR CDaCmnCharacter::GetName () const
 	return NULL;
 }
 
-HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pProvider, CString & pFilePath, bool * pIsDefault)
+HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pProvider, CAtlString & pFilePath, bool * pIsDefault)
 {
 	HRESULT	lResult = S_OK;
 
@@ -466,8 +466,8 @@ HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pProvider, CString & pFilePath, bo
 	else
 	if	(CAgentFile::IsRelativeFilePath (pFilePath))
 	{
-		UINT	lPathNum;
-		CString	lFilePath;
+		UINT		lPathNum;
+		CAtlString	lFilePath;
 
 		lFilePath = CAgentFile::ParseFilePath (pFilePath);
 
@@ -533,8 +533,8 @@ HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pProvider, CString & pFilePath, bo
 
 HRESULT CDaCmnCharacter::GetAgentFile (VARIANT pProvider, tPtr <CAgentFile> & pAgentFile)
 {
-	HRESULT	lResult;
-	CString	lFilePath;
+	HRESULT		lResult;
+	CAtlString	lFilePath;
 
 	if	(SUCCEEDED (lResult = GetLoadPath (pProvider, lFilePath)))
 	{
@@ -545,8 +545,8 @@ HRESULT CDaCmnCharacter::GetAgentFile (VARIANT pProvider, tPtr <CAgentFile> & pA
 
 HRESULT CDaCmnCharacter::GetAgentFile (LPCTSTR pFilePath, tPtr <CAgentFile> & pAgentFile)
 {
-	HRESULT	lResult;
-	CString	lFilePath (pFilePath);
+	HRESULT		lResult;
+	CAtlString	lFilePath (pFilePath);
 
 	if	(lFilePath.IsEmpty ())
 	{
@@ -1120,8 +1120,8 @@ HRESULT CDaCmnCharacter::SetLangID (LANGID pLangID)
 			&&	(lCharacterWnd->GetCharID() == mCharID)
 			)
 		{
-			lCharacterWnd->RemoveQueuedSpeak (mCharID, AGENTREQERR_INTERRUPTEDCODE, _T("SetLangID"));
-			lCharacterWnd->RemoveQueuedThink (mCharID, AGENTREQERR_INTERRUPTEDCODE, _T("SetLangID"));
+			lCharacterWnd->RemoveQueuedActions (QueueActionSpeak, mCharID, AGENTREQERR_INTERRUPTEDCODE, _T("SetLangID"));
+			lCharacterWnd->RemoveQueuedActions (QueueActionThink, mCharID, AGENTREQERR_INTERRUPTEDCODE, _T("SetLangID"));
 		}
 		ReleaseSapiVoice ();
 		ReleaseSapiInput ();
@@ -1330,7 +1330,7 @@ CSapiVoice * CDaCmnCharacter::GetSapiVoice (bool pCreateObject, LPCTSTR pVoiceNa
 		try
 		{
 			CSapiVoiceCache *	lVoiceCache;
-			CString				lVoiceName (pVoiceName);
+			CAtlString			lVoiceName (pVoiceName);
 
 			if	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
 			{
@@ -1650,7 +1650,7 @@ CSapi5Input * CDaCmnCharacter::GetSapiInput (bool pCreateObject, LPCTSTR pEngine
 		try
 		{
 			CSapiInputCache *	lInputCache;
-			CString				lEngineName (pEngineName);
+			CAtlString			lEngineName (pEngineName);
 
 			if	(lInputCache = CSapiInputCache::GetStaticInstance ())
 			{
@@ -1710,7 +1710,6 @@ HRESULT CDaCmnCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 {
 	HRESULT					lResult = S_FALSE;
 	CAgentCharacterWnd *	lCharacterWnd;
-	CAgentPopupWnd *		lPopupWnd;
 	bool					lExcludeActive = false;
 
 	if	(lCharacterWnd = GetCharacterWnd ())
@@ -1729,11 +1728,11 @@ HRESULT CDaCmnCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 
 		if	(pStopTypes & StopAll_Speak)
 		{
-			if	(lCharacterWnd->RemoveQueuedSpeak (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
+			if	(lCharacterWnd->RemoveQueuedActions (QueueActionSpeak, mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
 			{
 				lResult = S_OK;
 			}
-			if	(lCharacterWnd->RemoveQueuedThink (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
+			if	(lCharacterWnd->RemoveQueuedActions (QueueActionThink, mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
 			{
 				lResult = S_OK;
 			}
@@ -1748,16 +1747,13 @@ HRESULT CDaCmnCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 //				&&	(lBalloonWnd->IsAutoHide ())
 //				)
 //			{
-//			lBalloonWnd->HideBalloon (true);
+//				lBalloonWnd->HideBalloon (true);
 //			}
 		}
 
 		if	(pStopTypes & StopAll_Move)
 		{
-			if	(
-					(lPopupWnd = GetPopupWnd ())
-				&&	(lPopupWnd->RemoveQueuedMove (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
-				)
+			if	(lCharacterWnd->RemoveQueuedActions (QueueActionMove, mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
 			{
 				lResult = S_OK;
 			}
@@ -1765,11 +1761,11 @@ HRESULT CDaCmnCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 
 		if	(pStopTypes & StopAll_Visibility)
 		{
-			if	(lCharacterWnd->RemoveQueuedShow (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
+			if	(lCharacterWnd->RemoveQueuedActions (QueueActionShow, mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
 			{
 				lResult = S_OK;
 			}
-			if	(lCharacterWnd->RemoveQueuedHide (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
+			if	(lCharacterWnd->RemoveQueuedActions (QueueActionHide, mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
 			{
 				lResult = S_OK;
 			}
@@ -1777,7 +1773,7 @@ HRESULT CDaCmnCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 
 		if	(pStopTypes & StopAll_QueuedPrepare)
 		{
-			if	(lCharacterWnd->RemoveQueuedPrepare (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
+			if	(lCharacterWnd->RemoveQueuedActions (QueueActionPrepare, mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
 			{
 				lResult = S_OK;
 			}
@@ -2064,7 +2060,7 @@ CFileDownload * CDaCmnCharacter::_FindSoundDownload (LPCTSTR pSoundUrl)
 					(lPrepare)
 				&&	(lPrepare->IsSoundDownload ())
 				&&	(lDownload = lPrepare->GetDownload ())
-				&&	(CString (lDownload->GetURL()).CompareNoCase (pSoundUrl) == 0)
+				&&	(CAtlString (lDownload->GetURL()).CompareNoCase (pSoundUrl) == 0)
 				)
 			{
 				lRet = lDownload;
@@ -2193,6 +2189,21 @@ void CDaCmnCharacter::_OnCharacterActivated (long pActiveCharID, long pInputActi
 			}
 		}
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CDaCmnCharacter::_OnAppActivated (bool pActive)
+{
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaCmnCharacter::_OnAppActivated [%u]"), pActive);
+#endif
+#ifdef	_DEBUG_ACTIVE
+	if	(LogIsActive (_DEBUG_ACTIVE))
+	{
+		LogMessage (_DEBUG_ACTIVE, _T("[%d] OnAppActivated [%u] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ActiveClient [%d] InputActive [%d] Listen [%d]"), mCharID, pActive, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), GetActiveClient(), mNotify->mAnchor->mAnchor.GetActiveCharacter(), mNotify->mAnchor->mAnchor.GetListenCharacter());
+	}
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2497,7 +2508,7 @@ CAgentListeningWnd * CDaCmnCharacter::GetListeningWnd (bool pCreateObject)
 		{
 			if	(pCreateObject)
 			{
-				lListeningWnd->Attach (mCharID, CString (GetName()));
+				lListeningWnd->Attach (mCharID, CAtlString (GetName()));
 				lListeningWnd->SetLangID (mLangID);
 			}
 		}
@@ -2596,7 +2607,7 @@ void CDaCmnCharacter::_OnOptionsChanged ()
 			lBalloonWnd->HideBalloon (true);
 			if	(lCharacterWnd = GetCharacterWnd ())
 			{
-				lCharacterWnd->RemoveQueuedThink (mCharID, AGENTREQERR_INTERRUPTEDCODE, _T("OptionsChanged"));
+				lCharacterWnd->RemoveQueuedActions (QueueActionThink, mCharID, AGENTREQERR_INTERRUPTEDCODE, _T("OptionsChanged"));
 			}
 		}
 		lBalloon->SetBalloonWndOptions (mLangID);
@@ -2993,7 +3004,7 @@ HRESULT CDaCmnCharacter::Prepare (long Type, BSTR Name, long Queue, long *Reques
 	else
 	if	(GetCharacterWnd ())
 	{
-		lResult = DoPrepare (Type, CString (Name), (Queue != 0), lReqID);
+		lResult = DoPrepare (Type, CAtlString (Name), (Queue != 0), lReqID);
 	}
 	else
 	{
@@ -3154,9 +3165,9 @@ HRESULT CDaCmnCharacter::GestureAt (short X, short Y, long *RequestID)
 
 	if	(lCharacterWnd = GetCharacterWnd ())
 	{
-		CPoint	lOffset (X, Y);
-		CRect	lWinRect;
-		CString	lStateName;
+		CPoint		lOffset (X, Y);
+		CRect		lWinRect;
+		CAtlString	lStateName;
 
 		lCharacterWnd->GetWindowRect (&lWinRect);
 		lOffset -= lWinRect.CenterPoint ();
@@ -3219,7 +3230,7 @@ HRESULT CDaCmnCharacter::GestureAt (short X, short Y, long *RequestID)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaCmnCharacter::Think (BSTR Text, long *RequestID)
+HRESULT CDaCmnCharacter::Think (BSTR Text, class CAgentTextObject * pTextObject, long *RequestID)
 {
 	HRESULT					lResult = S_OK;
 	CAgentCharacterWnd *	lCharacterWnd;
@@ -3232,7 +3243,7 @@ HRESULT CDaCmnCharacter::Think (BSTR Text, long *RequestID)
 		if	(lBalloon->get_Enabled (NULL) == S_OK)
 		{
 			GetBalloonWnd (true);
-			lReqID = lCharacterWnd->QueueThink (mCharID, CString (Text));
+			lReqID = lCharacterWnd->QueueThink (mCharID, CAtlString (Text), pTextObject, GetSapiVoice(true)->SafeIsValid());
 			lCharacterWnd->ActivateQueue (true);
 		}
 		else
@@ -3445,7 +3456,7 @@ HRESULT CDaCmnCharacter::GetTTSPitch (short *Pitch)
 	return lResult;
 }
 
-HRESULT CDaCmnCharacter::Speak (BSTR Text, BSTR Url, long *RequestID)
+HRESULT CDaCmnCharacter::Speak (BSTR Text, class CAgentTextObject * pTextObject, BSTR Url, long *RequestID)
 {
 	HRESULT					lResult = S_OK;
 	CAgentCharacterWnd *	lCharacterWnd;
@@ -3476,8 +3487,8 @@ HRESULT CDaCmnCharacter::Speak (BSTR Text, BSTR Url, long *RequestID)
 	{
 		CDaCmnBalloon *		lBalloon = GetBalloon (true);
 		bool				lShowBalloon = (lBalloon->get_Enabled (NULL) == S_OK);
-		CString				lText (Text);
-		CString				lSoundUrl (Url);
+		CAtlString			lText (Text);
+		CAtlString			lSoundUrl (Url);
 		CSapiVoice *		lVoice = NULL;
 //
 //	MS Agent shows the speech balloon silently when the character is listening.
@@ -3531,7 +3542,7 @@ HRESULT CDaCmnCharacter::Speak (BSTR Text, BSTR Url, long *RequestID)
 			{
 				GetBalloonWnd (true);
 			}
-			lReqID = lCharacterWnd->QueueSpeak (mCharID, lText, lSoundUrl, lVoice, lShowBalloon);
+			lReqID = lCharacterWnd->QueueSpeak (mCharID, lText, pTextObject, lSoundUrl, lVoice, lShowBalloon);
 			lCharacterWnd->ActivateQueue (true);
 		}
 	}
@@ -3645,7 +3656,7 @@ HRESULT CDaCmnCharacter::get_Name (BSTR *Name)
 HRESULT CDaCmnCharacter::put_Name (BSTR Name)
 {
 	HRESULT				lResult = S_OK;
-	CString				lName (Name);
+	CAtlString			lName (Name);
 	CAgentFileName *	lFileName;
 
 	lName.TrimLeft ();
@@ -3664,7 +3675,7 @@ HRESULT CDaCmnCharacter::put_Name (BSTR Name)
 	{
 		if	(lFileName = mFile->FindName (mLangID))
 		{
-			if	(CString ((BSTR)lFileName->mName) != lName)
+			if	(CAtlString ((BSTR)lFileName->mName) != lName)
 			{
 				lFileName->mName = lName.AllocSysString ();
 				mNotify->mGlobal->_CharacterNameChanged (mCharID);
@@ -3721,7 +3732,7 @@ HRESULT CDaCmnCharacter::get_Description (BSTR *Description)
 HRESULT CDaCmnCharacter::put_Description (BSTR Description)
 {
 	HRESULT				lResult = S_OK;
-	CString				lDescription (Description);
+	CAtlString			lDescription (Description);
 	CAgentFileName *	lFileName;
 
 	lDescription.TrimLeft ();
@@ -3970,7 +3981,7 @@ HRESULT CDaCmnCharacter::get_TTSModeID (BSTR *TTSModeID)
 	}
 	else
 	{
-		(*TTSModeID) = CString().AllocSysString();
+		(*TTSModeID) = CAtlString().AllocSysString();
 		lResult = S_FALSE;
 	}
 	return lResult;
@@ -4013,7 +4024,7 @@ HRESULT CDaCmnCharacter::put_TTSModeID (BSTR TTSModeID)
 #endif
 			mSapiVoice = NULL;
 
-			if	(GetSapiVoice (true, CString (TTSModeID)))
+			if	(GetSapiVoice (true, CAtlString (TTSModeID)))
 			{
 				if	(lCharacterWnd = GetCharacterWnd ())
 				{
@@ -4060,7 +4071,7 @@ HRESULT CDaCmnCharacter::get_SRModeID (BSTR *SRModeID)
 	}
 	else
 	{
-		(*SRModeID) = CString().AllocSysString();
+		(*SRModeID) = CAtlString().AllocSysString();
 		lResult = S_FALSE;
 	}
 	return lResult;
@@ -4084,7 +4095,7 @@ HRESULT CDaCmnCharacter::put_SRModeID (BSTR SRModeID)
 
 			mSapiInput = NULL;
 
-			if	(GetSapiInput (true, CString (SRModeID)))
+			if	(GetSapiInput (true, CAtlString (SRModeID)))
 			{
 				StopListening (false, ListenComplete_CharacterClientDeactivated);
 				SafeFreeSafePtr (mListeningState);
@@ -4798,7 +4809,7 @@ HRESULT CDaCmnCharacter::put_IconIdentity (BSTR IconIdentity)
 {
 	HRESULT	lResult;
 
-	lResult = SetIconIdentity (&CGuidStr::Parse (CString (IconIdentity)));
+	lResult = SetIconIdentity (&CGuidStr::Parse (CAtlString (IconIdentity)));
 	return lResult;
 }
 

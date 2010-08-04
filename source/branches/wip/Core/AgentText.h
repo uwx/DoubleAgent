@@ -54,7 +54,8 @@ public:
 
 // Implementation
 public:
-	void Append (const CAtlStringArray & pTextWords, const CAtlStringArray & pSpeechWords);
+	void Append (const CAgentText & pText, bool pAppendSpeech = false);
+	void Append (const CAtlStringArray & pTextWords, const CAtlStringArray & pSpeechWords, bool pAppendSpeech = false);
 
 protected:
 	UINT			mSapiVersion;

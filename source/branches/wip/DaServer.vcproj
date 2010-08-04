@@ -351,6 +351,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Core\AgentText.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\AgentTextObject.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Common\DaCmnAnimationNames.cpp"
 				>
 			</File>
@@ -376,6 +384,10 @@
 			</File>
 			<File
 				RelativePath=".\Common\DaCmnCommandsWindow.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnFormattedText.cpp"
 				>
 			</File>
 			<File
@@ -500,6 +512,10 @@
 			</File>
 			<File
 				RelativePath=".\Server\DaSvrEvents.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrFormattedText.cpp"
 				>
 			</File>
 			<File
@@ -641,6 +657,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Common\DaCmnFormattedText.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Common\DaCmnPropertySheet.h"
 				>
 			</File>
@@ -718,6 +738,10 @@
 			</File>
 			<File
 				RelativePath=".\Server\DaSvrEvents.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrFormattedText.h"
 				>
 			</File>
 			<File

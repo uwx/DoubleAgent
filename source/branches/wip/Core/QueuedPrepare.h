@@ -61,6 +61,9 @@ public:
 	tBstrPtr GetAnimationNames (LPCTSTR pDelimiter = _T(","));
 
 // Overrides
+	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
+	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 
 // Implementation
 protected:
