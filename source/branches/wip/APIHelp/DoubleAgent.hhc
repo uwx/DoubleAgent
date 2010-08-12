@@ -227,6 +227,7 @@
 					</OBJECT>
 				<LI> <OBJECT type="text/sitemap">
 					<param name="Name" value="Overview">
+					<param name="Local" value="Programming/Svr_Programming_Overview.htm">
 					</OBJECT>
 				<UL>
 					<LI> <OBJECT type="text/sitemap">
@@ -1434,6 +1435,7 @@
 					</OBJECT>
 				<LI> <OBJECT type="text/sitemap">
 					<param name="Name" value="Overview">
+						<param name="Local" value="Programming/Ctl_Programming_Overview.htm">
 					</OBJECT>
 				<UL>
 					<LI> <OBJECT type="text/sitemap">
@@ -2054,6 +2056,21 @@
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Style Property">
 								<param name="Local" value="Generated/Control_Character_Style.htm">
+								<param name="New" value="1">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SuspendHide Property">
+								<param name="Local" value="Generated/Control_Character_SuspendHide.htm">
+								<param name="New" value="1">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SuspendPause Property">
+								<param name="Local" value="Generated/Control_Character_SuspendPause.htm">
+								<param name="New" value="1">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SuspendStop Property">
+								<param name="Local" value="Generated/Control_Character_SuspendStop.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">

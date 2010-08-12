@@ -3,6 +3,441 @@
 <assembly> <name>Double Agent Server</name></assembly>
 <members>
 
+<member name="F:DoubleAgent.Server.ActiveStateType.Active">
+<summary>Your client application is the character's active client.</summary>
+<value>1</value>
+</member>
+
+<member name="F:DoubleAgent.Server.ActiveStateType.Inactive">
+<summary>Your client application is <em>not</em> the character's active client.</summary>
+<value>0</value>
+</member>
+
+<member name="F:DoubleAgent.Server.ActiveStateType.InputActive">
+<summary>The character is the <glossary>input-active</glossary> character and will receive user input.</summary>
+<value>2</value>
+</member>
+
+<member name="T:DoubleAgent.Server.ActiveStateType" kind="Enumeration">
+<summary>
+<para>Enumerates a character's possible activation states.
+</para>
+</summary>
+</member>
+
+<member name="F:DoubleAgent.Server.FilesFilterFlags.PathDoubleAgent">
+<summary>Indicates if the Double Agent install location should be included in the <see cref="P:DoubleAgent.Server.CharacterFiles.DefaultSearchPath" />.</summary>
+<value>0x00000001</value>
+</member>
+
+<member name="F:DoubleAgent.Server.FilesFilterFlags.PathMsAgent">
+<summary>Indicates if the Microsoft Agent install location should be included in the <see cref="P:DoubleAgent.Server.CharacterFiles.DefaultSearchPath" />.</summary>
+<value>0x00000002</value>
+</member>
+
+<member name="F:DoubleAgent.Server.FilesFilterFlags.PathMsOffice">
+<summary>Indicates if the Microsoft Office install location should be included in the <see cref="P:DoubleAgent.Server.CharacterFiles.DefaultSearchPath" />.</summary>
+<value>0x00000004</value>
+</member>
+
+<member name="F:DoubleAgent.Server.FilesFilterFlags.ExcludeNonSpeaking">
+<summary>Indicates if the <see cref="P:DoubleAgent.Server.CharacterFiles.FilePaths" /> property should exclude characters that are <em>not </em>designed to speak.</summary>
+<value>0x00000010</value>
+</member>
+
+<member name="F:DoubleAgent.Server.FilesFilterFlags.ExcludeSpeaking">
+<summary>Indicates if the <see cref="P:DoubleAgent.Server.CharacterFiles.FilePaths" /> property should exclude characters that are designed to speak.</summary>
+<value>0x00000020</value>
+</member>
+
+<member name="F:DoubleAgent.Server.FilesFilterFlags.NoValidateVersion">
+<summary>Indicates if the the <see cref="P:DoubleAgent.Server.CharacterFiles.FilePaths" /> property should include all character files, regardless of version.</summary>
+<remarks>
+<para>Double Agent can only use version 2.x characters.
+</para>
+<note>If the <see cref="F:DoubleAgent.Server.FilesFilterFlags.ExcludeNonSpeaking" /> or <see cref="F:DoubleAgent.Server.FilesFilterFlags.ExcludeSpeaking" /> flag is set, this flag is ignored.</note>
+</remarks>
+<value>0x00010000</value>
+</member>
+
+<member name="T:DoubleAgent.Server.FilesFilterFlags" kind="Enumeration">
+<summary>
+<para>Specifies the filter that is applied to the <see cref="T:DoubleAgent.Server.CharacterFiles" />.<see cref="P:DoubleAgent.Server.CharacterFiles.FilePaths" /> property.
+</para>
+</summary>
+<seealso cref="P:DoubleAgent.Server.CharacterFiles.Filter" />
+</member>
+
+<member name="F:DoubleAgent.Server.AudioStatusType.Available">
+<summary>Text-to-speech is available.</summary>
+<value>0</value>
+</member>
+
+<member name="F:DoubleAgent.Server.AudioStatusType.CharacterListening">
+<summary><glossary>Listening mode</glossary> is active.</summary>
+<value>5</value>
+</member>
+
+<member name="F:DoubleAgent.Server.AudioStatusType.CharacterSpeaking">
+<summary>A character is currently speaking.</summary>
+<value>4</value>
+</member>
+
+<member name="F:DoubleAgent.Server.AudioStatusType.Disabled">
+<summary>Text-to-speech is disabled in the <a class="see" href="../html/UI_PropSheet.htm#Output">Advanced Character Options</a> window.</summary>
+<value>1</value>
+</member>
+
+<member name="F:DoubleAgent.Server.AudioStatusType.Error">
+<summary>The audio status could not be determined.</summary>
+<value>6</value>
+</member>
+
+<member name="F:DoubleAgent.Server.AudioStatusType.UserSpeaking">
+<summary><glossary>Listening mode</glossary> is active and the user is currently speaking.</summary>
+<value>3</value>
+</member>
+
+<member name="T:DoubleAgent.Server.AudioStatusType" kind="Enumeration">
+<summary>
+<para>Enumerates the possible states of the audio device.
+</para>
+</summary>
+<seealso cref="P:DoubleAgent.Server.Settings.AudioStatus" />
+</member>
+
+<member name="F:DoubleAgent.Server.BalloonStyleFlags.AutoHide">
+<summary>The <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> is hidden automatically after a short delay.</summary>
+<value>0x00000004</value>
+<remarks>
+<para>When the <see cref="F:DoubleAgent.Server.BalloonStyleFlags.AutoHide" /> style is set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> automatically hides when spoken output completes. When it's not set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> remains displayed until the next <see cref="M:DoubleAgent.Server.Character.Speak(System.String,System.String,System.Int32&amp;)" /> or <see cref="M:DoubleAgent.Server.Character.Think(System.String,System.Int32&amp;)" /> call, the character is hidden, or the user clicks or drags the character.
+</para>
+</remarks>
+</member>
+
+<member name="F:DoubleAgent.Server.BalloonStyleFlags.AutoPace">
+<summary>The text in the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> is shown one word at a time.</summary>
+<value>0x00000008</value>
+<remarks>
+<para>When the <see cref="F:DoubleAgent.Server.BalloonStyleFlags.AutoPace" /> style is set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> paces its text output based on the current output rate, for example one word at a time. When output exceeds the size of the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>, the text is automatically scrolled. When it's not set, all text included in a <see cref="M:DoubleAgent.Server.Character.Speak(System.String,System.String,System.Int32&amp;)" /> or <see cref="M:DoubleAgent.Server.Character.Think(System.String,System.Int32&amp;)" /> request is displayed at once.
+</para>
+</remarks>
+</member>
+
+<member name="F:DoubleAgent.Server.BalloonStyleFlags.Enabled">
+<summary>The <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> is enabled.</summary>
+<value>0x00000001</value>
+<remarks>
+<para>When the <see cref="F:DoubleAgent.Server.BalloonStyleFlags.Enabled" /> style is set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> appears when the <see cref="M:DoubleAgent.Server.Character.Speak(System.String,System.String,System.Int32&amp;)" /> or <see cref="M:DoubleAgent.Server.Character.Think(System.String,System.Int32&amp;)" /> method is used, unless the user overrides this setting in the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window. When it's not set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> does not appear.
+</para>
+</remarks>
+</member>
+
+<member name="F:DoubleAgent.Server.BalloonStyleFlags.ShowPartialLines">
+<summary>Partial lines are shown when the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> text scrolls (for a <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> that's <em>not</em> <keyword>SizeToText</keyword>).</summary>
+<value>0x00000010</value>
+<remarks>
+<para>When the <see cref="F:DoubleAgent.Server.BalloonStyleFlags.ShowPartialLines" /> style is set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> will show partial lines at the bottom as it scrolls its text. When it's not set, only full lines are shown. This style only applies when the <see cref="F:DoubleAgent.Server.BalloonStyleFlags.SizeToText" /> style is <em>not</em> set.
+</para>
+</remarks>
+</member>
+
+<member name="F:DoubleAgent.Server.BalloonStyleFlags.SizeToText">
+<summary>The <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> is automatically resized to fit the speech or thought text.</summary>
+<value>0x00000002</value>
+<remarks>
+<para>When the <see cref="F:DoubleAgent.Server.BalloonStyleFlags.SizeToText" /> style is set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> automatically adjusts the height of the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> to the current size of the text for the <see cref="M:DoubleAgent.Server.Character.Speak(System.String,System.String,System.Int32&amp;)" /> or <see cref="M:DoubleAgent.Server.Character.Think(System.String,System.Int32&amp;)" /> request. When it's not set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon's</a> height is based on the <see cref="P:DoubleAgent.Server.Balloon.NumberOfLines" /> property. If this style is set and you attempt to set the <see cref="P:DoubleAgent.Server.Balloon.NumberOfLines" /> property, Double Agent raises an error.
+</para>
+</remarks>
+</member>
+
+<member name="T:DoubleAgent.Server.BalloonStyleFlags" kind="Enumeration">
+<summary>
+<para>Specifies settings that affect a <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon's</a> appearance and behaviour.
+</para>
+</summary>
+<seealso cref="P:DoubleAgent.Server.Balloon.Style" />
+</member>
+
+<member name="F:DoubleAgent.Server.CharacterStyleFlags.AutoPopupMenu">
+<summary>A right-click on the character or it's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> automatically shows a <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a>.</summary>
+<value>0x00000004</value>
+</member>
+
+<member name="F:DoubleAgent.Server.CharacterStyleFlags.IconShown">
+<summary>The character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> in the taskbar notification area.</summary>
+<value>0x00000008</value>
+</member>
+
+<member name="F:DoubleAgent.Server.CharacterStyleFlags.IdleEnabled">
+<summary>The character enters idle mode and shows it's idling animations when it's not doing anything else.</summary>
+<value>0x00000002</value>
+</member>
+
+<member name="F:DoubleAgent.Server.CharacterStyleFlags.Smoothed">
+<summary>Image smoothing (antialiasing) is applied to the character's animations.</summary>
+<value>0x00000030</value>
+</member>
+
+<member name="F:DoubleAgent.Server.CharacterStyleFlags.SmoothEdges">
+<summary>Image smoothing (antialiasing) is applied to the edges of the character's animations.</summary>
+<value>0x00000020</value>
+</member>
+
+<member name="F:DoubleAgent.Server.CharacterStyleFlags.SoundEffects">
+<summary>The animation sound effects are played.</summary>
+<value>0x00000001</value>
+</member>
+
+<member name="T:DoubleAgent.Server.CharacterStyleFlags" kind="Enumeration">
+<summary>
+<para>Specifies settings that affect a character's appearance and behaviour.
+</para>
+</summary>
+</member>
+
+<member name="F:DoubleAgent.Server.ListenCompleteType.CharacterClientDeactivated">
+<summary>The character is no longer active or it's active client has changed.</summary>
+<value>6</value>
+</member>
+
+<member name="F:DoubleAgent.Server.ListenCompleteType.DefaultCharacterChanged">
+<summary>The default character was changed in the <a class="see" href="../html/UI_PropSheet.htm#Gallery">Advanced Character Options</a> window.</summary>
+<value>7</value>
+</member>
+
+<member name="F:DoubleAgent.Server.ListenCompleteType.ProgramDisabled">
+<summary>This program turned off the <glossary>Listening mode</glossary> with the <see cref="M:DoubleAgent.Server.Character.Listen(System.Int32)" /> method.</summary>
+<value>1</value>
+</member>
+
+<member name="F:DoubleAgent.Server.ListenCompleteType.ProgramTimedOut">
+<summary>The <glossary>Listening mode</glossary> was started by this program with the <see cref="M:DoubleAgent.Server.Character.Listen(System.Int32)" /> method, and it timed out.</summary>
+<value>2</value>
+</member>
+
+<member name="F:DoubleAgent.Server.ListenCompleteType.UserDisabled">
+<summary>Speech recognition was disabled in the <a class="see" href="../html/UI_PropSheet.htm#SpeechInput">Advanced Character Options</a> window.</summary>
+<value>8</value>
+</member>
+
+<member name="F:DoubleAgent.Server.ListenCompleteType.UserReleasedKey">
+<summary>The <glossary>Listening mode</glossary> was started with the <glossary>Listening key</glossary>, and the key was released.</summary>
+<value>4</value>
+</member>
+
+<member name="F:DoubleAgent.Server.ListenCompleteType.UserSpeechEnded">
+<summary>Speech recognition has produced a result.</summary>
+<value>5</value>
+</member>
+
+<member name="F:DoubleAgent.Server.ListenCompleteType.UserTimedOut">
+<summary>The <glossary>Listening mode</glossary> was started with the <glossary>Listening key</glossary>, and it timed out.</summary>
+<value>3</value>
+</member>
+
+<member name="T:DoubleAgent.Server.ListenCompleteType" kind="Enumeration">
+<summary>
+<para>Enumerates the possible reasons that <glossary>Listening mode</glossary> could end.
+</para>
+</summary>
+<seealso cref="E:DoubleAgent.Server.Server.ListeningState" />
+</member>
+
+<member name="F:DoubleAgent.Server.ListeningStatusType.CharacterInactive">
+<summary>Speech recognition is unavailable because another client is the active client of this character, or the current character is not <glossary>input-active</glossary>.</summary>
+<value>2</value>
+</member>
+
+<member name="F:DoubleAgent.Server.ListeningStatusType.CharacterInactive">
+<summary>Speech recognition is unavailable because another client is the active client of this character, or the current character is not <glossary>input-active</glossary>.</summary>
+<value>2</value>
+</member>
+
+<member name="F:DoubleAgent.Server.ListeningStatusType.Error">
+<summary>The speech recognition status could not be determined.</summary>
+<value>6</value>
+</member>
+
+<member name="F:DoubleAgent.Server.ListeningStatusType.InitializeFailed">
+<summary>Speech recognition is unavailable because it could not be initialized. This includes the possibility that there is no speech engine available matching the character's language setting.</summary>
+<value>4</value>
+</member>
+
+<member name="F:DoubleAgent.Server.ListeningStatusType.InputDisabled">
+<summary>The user has disabled speech input in the <a class="see" href="../html/UI_PropSheet.htm#SpeechInput">Advanced Character Options</a> window.</summary>
+<value>5</value>
+</member>
+
+<member name="T:DoubleAgent.Server.ListeningStatusType" kind="Enumeration">
+<summary>
+<para>Indicates if a character can enter <glossary>Listening mode</glossary>, or why it cannot.
+</para>
+</summary>
+<seealso cref="P:DoubleAgent.Server.Character.ListeningStatus" />
+<seealso cref="P:DoubleAgent.Server.Settings.SREnabled" />
+</member>
+
+<member name="F:DoubleAgent.Server.MoveCauseType.NeverMoved">
+<summary>The character hasn't moved.</summary>
+<value>0</value>
+</member>
+
+<member name="F:DoubleAgent.Server.MoveCauseType.OtherProgramMoved">
+<summary>Another client application moved the character.</summary>
+<value>3</value>
+</member>
+
+<member name="F:DoubleAgent.Server.MoveCauseType.ProgramMoved">
+<summary>Your client application moved the character.</summary>
+<value>2</value>
+</member>
+
+<member name="F:DoubleAgent.Server.MoveCauseType.UserMoved">
+<summary>The user dragged the character.</summary>
+<value>1</value>
+</member>
+
+<member name="T:DoubleAgent.Server.MoveCauseType" kind="Enumeration">
+<summary>
+<para>Enumerates the possible reasons that a character moved.
+</para>
+</summary>
+<seealso cref="P:DoubleAgent.Server.Character.MoveCause" />
+<seealso cref="E:DoubleAgent.Server.Server.Move" />
+</member>
+
+<member name="F:DoubleAgent.Server.PrepareResourceType.Animation">
+<summary>Download an animation.</summary>
+<value>0</value>
+</member>
+
+<member name="F:DoubleAgent.Server.PrepareResourceType.State">
+<summary>Download all animations for a state.</summary>
+<value>1</value>
+</member>
+
+<member name="F:DoubleAgent.Server.PrepareResourceType.Wave">
+<summary>Download a sound file.</summary>
+<value>2</value>
+</member>
+
+<member name="T:DoubleAgent.Server.PrepareResourceType" kind="Enumeration">
+<summary>
+<para>Specifies the type of resource that is being requested with the <see cref="M:DoubleAgent.Server.Character.Prepare(System.Int32,System.String,System.Int32,System.Int32&amp;)" /> method.
+</para>
+</summary>
+<seealso cref="M:DoubleAgent.Server.Character.Prepare(System.Int32,System.String,System.Int32,System.Int32&amp;)" />
+</member>
+
+<member name="F:DoubleAgent.Server.SpeechGenderType.Female">
+<summary>A female voice.</summary>
+<value>1</value>
+</member>
+
+<member name="F:DoubleAgent.Server.SpeechGenderType.Male">
+<summary>A male voice.</summary>
+<value>2</value>
+</member>
+
+<member name="F:DoubleAgent.Server.SpeechGenderType.Neutral">
+<summary>Either a female or male voice.</summary>
+<value>0</value>
+</member>
+
+<member name="T:DoubleAgent.Server.SpeechGenderType" kind="Enumeration">
+<summary>
+<para>Specifies the gender of a text-to-speech voice.
+</para>
+</summary>
+</member>
+
+<member name="F:DoubleAgent.Server.StopAllFlags.Everything">
+<summary>Stop all pending requests.</summary>
+<value>0xFFFFFFFF</value>
+</member>
+
+<member name="F:DoubleAgent.Server.StopAllFlags.ImmediatePrepare">
+<summary>Stop any non-queued animation or file downloads (<keyword>Prepare</keyword> method with <token>Queue</token> parameter set to <keyword>False</keyword>)</summary>
+<value>0x00000010</value>
+</member>
+
+<member name="F:DoubleAgent.Server.StopAllFlags.Move">
+<summary>Stop any pending or running move requests.</summary>
+<value>0x00000002</value>
+</member>
+
+<member name="F:DoubleAgent.Server.StopAllFlags.Play">
+<summary>Stop any pending or running animations.</summary>
+<value>0x00000001</value>
+</member>
+
+<member name="F:DoubleAgent.Server.StopAllFlags.QueuedPrepare">
+<summary>Stop any queued animation or file downloads (<keyword>Prepare</keyword> method with <token>Queue</token> parameter set to <keyword>True</keyword>).</summary>
+<value>0x00000008</value>
+</member>
+
+<member name="F:DoubleAgent.Server.StopAllFlags.Speak">
+<summary>Stop any pending or running speech requests.</summary>
+<value>0x00000004</value>
+</member>
+
+<member name="F:DoubleAgent.Server.StopAllFlags.Visibility">
+<summary>Stop any pending show or hide requests.</summary>
+<value>0x00000020</value>
+</member>
+
+<member name="T:DoubleAgent.Server.StopAllFlags" kind="Enumeration">
+<summary>
+<para>Defines the scope of the <see cref="M:DoubleAgent.Server.Character.StopAll(System.Int32)" /> method.
+</para>
+</summary>
+</member>
+
+<member name="F:DoubleAgent.Server.VisibilityCauseType.NeverShown">
+<summary>The character has not been shown.</summary>
+<value>0</value>
+</member>
+
+<member name="F:DoubleAgent.Server.VisibilityCauseType.OtherProgramHid">
+<summary>Another client application hid the character.</summary>
+<value>5</value>
+</member>
+
+<member name="F:DoubleAgent.Server.VisibilityCauseType.OtherProgramShowed">
+<summary>Another client application showed the character.</summary>
+<value>6</value>
+</member>
+
+<member name="F:DoubleAgent.Server.VisibilityCauseType.ProgramHid">
+<summary>Your application hid the character.</summary>
+<value>3</value>
+</member>
+
+<member name="F:DoubleAgent.Server.VisibilityCauseType.ProgramShowed">
+<summary>Your application showed the character.</summary>
+<value>4</value>
+</member>
+
+<member name="F:DoubleAgent.Server.VisibilityCauseType.UserHid">
+<summary>The user hid the character using the command on the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> or using speech input.</summary>
+<value>1</value>
+</member>
+
+<member name="F:DoubleAgent.Server.VisibilityCauseType.UserShowed">
+<summary>The user showed the character using the command on the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> or using speech input.</summary>
+<value>2</value>
+</member>
+
+<member name="T:DoubleAgent.Server.VisibilityCauseType" kind="Enumeration">
+<summary>
+<para>Enumerates the possible reasons that a character was shown or hidden.
+</para>
+</summary>
+<seealso cref="P:DoubleAgent.Server.Character.VisibilityCause" />
+<seealso cref="E:DoubleAgent.Server.Server.VisibleState" />
+</member>
+
 <member name="M:DoubleAgent.Server.Server.FindCharacterSREngines(System.Object,System.Int32)">
 <summary> Retrieves a collection of <see cref="T:DoubleAgent.Server.SREngine" /> Objects that meet a specific character's requirements.</summary>
 <param name="Provider">A <typename>string</typename> value that specifies the character file, or an empty string for the default character.</param>
@@ -99,7 +534,7 @@
 </member>
 
 <member name="M:DoubleAgent.Server.Server.GetCharacterSREngine(System.Object)">
-<summary> Retrieves a <see cref="T:DoubleAgent.Server.SREngine" /> Object thats meet a specific character's requirements.</summary>
+<summary> Retrieves a <see cref="T:DoubleAgent.Server.SREngine" /> Object that meets a specific character's requirements.</summary>
 <param name="Provider">A <typename>string</typename> value that specifies the character file, or an empty string for the default character.</param>
 <returns name="SREngine">The <see class="typename" cref="T:DoubleAgent.Server.SREngine" /> Object that matches the character's speech recognition requirements (if any).</returns>
 <remarks>
@@ -247,44 +682,59 @@ VariantInit (&amp;EmptyProvider);
 <summary> Specifies the initial style to use when a <see cref="T:DoubleAgent.Server.Character" /> is loaded.</summary>
 <value name="CharacterStyle">A <typename>numeric</typename> bit-field value that specifies the <see cref="P:DoubleAgent.Server.Character.Style" /> to apply when a <see cref="T:DoubleAgent.Server.Character" /> is loaded:
 <list type="table">
-<item><term xml:space="preserve">
+<item name="SoundEffects"><term xml:space="preserve">
 0x00000001 = <keyword>SoundEffects</keyword>
 </term>
 <description>The animation sound effects are played.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="IdleEnabled"><term xml:space="preserve">
 0x00000002 = <keyword>IdleEnabled</keyword>
 </term>
 <description>The character enters idle mode and shows it's idling animations when it's not doing anything else.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="AutoPopupMenu"><term xml:space="preserve">
 0x00000004 = <keyword>AutoPopupMenu</keyword>
 </term>
-<description>A right-click on the character or it's notification icon automatically shows a <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a>.</description>
+<description>A right-click on the character or it's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> automatically shows a <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a>.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="IconShown"><term xml:space="preserve">
 0x00000008 = <keyword>IconShown</keyword>
 </term>
-<description>The character has an icon in the taskbar notification area.</description>
+<description>The character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> in the taskbar notification area.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="SmoothEdges"><term xml:space="preserve">
 0x00000020 = <keyword>SmoothEdges</keyword>
 </term>
 <description>Image smoothing (antialiasing) is applied to the edges of the character's animations.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="Smoothed"><term xml:space="preserve">
 0x00000030 = <keyword>Smoothed</keyword>
 </term>
 <description>Image smoothing (antialiasing) is applied to the character's animations.</description>
 </item>
+<item name="SuspendPause"><term xml:space="preserve">
+0x00000100 = <keyword>SuspendPause</keyword>
+</term>
+<description>All requests are paused when the client is not in the foreground.</description>
+</item>
+<item name="SuspendStop"><term xml:space="preserve">
+0x00000200 = <keyword>SuspendStop</keyword>
+</term>
+<description>All requests are stopped when the client is not in the foreground.</description>
+</item>
+<item name="SuspendHide"><term xml:space="preserve">
+0x00000400 = <keyword>SuspendHide</keyword>
+</term>
+<description>All floating windows are hidden when the client is not in the foreground.</description>
+</item>
 </list>
 </value>
 <remarks>
-<para>Setting this property allows you to establish a default<see cref="T:DoubleAgent.Server.Character" />.<see cref="P:DoubleAgent.Server.Character.Style" /> for you application.
+<para>Setting this property allows you to establish a default <see cref="T:DoubleAgent.Server.Character" />.<see cref="P:DoubleAgent.Server.Character.Style" /> for you application. It's initial value is <see class="" cref="F:DoubleAgent.Server.CharacterStyleFlags.AutoPopupMenu" />, <see class="" cref="F:DoubleAgent.Server.CharacterStyleFlags.IdleEnabled" />, <see class="" cref="F:DoubleAgent.Server.CharacterStyleFlags.IconShown" />, <see class="" cref="F:DoubleAgent.Server.CharacterStyleFlags.SoundEffects" />.
 </para>
-<para>The <see cref="F:DoubleAgent.Server.CharacterStyleFlags.Smoothed" /> and <see cref="F:DoubleAgent.Server.CharacterStyleFlags.SmoothEdges" /> bits can only be changed here. Once a <see cref="T:DoubleAgent.Server.Character" /> is loaded, these bits <strong>cannot</strong> be changed in it's <see cref="P:DoubleAgent.Server.Character.Style" /> property. Also, these two settings are only used the first time the character is loaded. If another client has already loaded the character, it's smoothing settings will not change. If your client application is the first client to load the character, then your smoothing settings will apply to all clients.
+<para>The <see class="" cref="F:DoubleAgent.Server.CharacterStyleFlags.Smoothed" /> and <see class="" cref="F:DoubleAgent.Server.CharacterStyleFlags.SmoothEdges" /> flags can only be changed here. Once a <see cref="T:DoubleAgent.Server.Character" /> is loaded, these bits <strong>cannot</strong> be changed in it's <see cref="P:DoubleAgent.Server.Character.Style" /> property. Also, these two settings are only used the first time the character is loaded. If another client has already loaded the character, it's smoothing settings will not change. If your client application is the first client to load the character, then your smoothing settings will apply to all clients.
 </para>
-<note>For compatibility with Microsoft Agent, the <see cref="F:DoubleAgent.Server.CharacterStyleFlags.IconShown" /> bit is set to 1 by default. To load a <see cref="T:DoubleAgent.Server.Character" /> without showing it's notification icon, set the <see cref="F:DoubleAgent.Server.CharacterStyleFlags.IconShown" /> bit to 0.</note>
+<note>For compatibility with Microsoft Agent, the <see class="" cref="F:DoubleAgent.Server.CharacterStyleFlags.IconShown" /> flag is set by default. To load a <see cref="T:DoubleAgent.Server.Character" /> without showing it's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, set the <see class="" cref="F:DoubleAgent.Server.CharacterStyleFlags.IconShown" /> flag off.</note>
 </remarks>
 <seealso cref="P:DoubleAgent.Server.Character.Style" />
 <seealso cref="T:DoubleAgent.Server.CharacterStyleFlags" />
@@ -328,108 +778,465 @@ VariantInit (&amp;EmptyProvider);
 </member>
 
 <member name="E:DoubleAgent.Server.Server.ActivateInputState">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when a client's <glossary>input-active</glossary> state changes.</summary>
+<param name="CharacterID">The unique identifier of the character who's <glossary>input-active</glossary> state has changed.</param>
+<param name="Activated"> <keyword>True</keyword> if the character has become <glossary>input-active</glossary> or <keyword>False</keyword> it is has become <glossary>non-input-active</glossary>.</param>
+<remarks>
+<para>The <glossary>input-active</glossary> client receives mouse and speech input events for the character. Double Agent sends this event only to the client that becomes <glossary>input-active</glossary> and the client that becomes <glossary>non-input-active</glossary>.
+</para>
+ This event can occur when the user uses your <see cref="T:DoubleAgent.Server.Commands" /> Collection, for example, by choosing a <see cref="T:DoubleAgent.Server.Commands" /> Collection entry in the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window or in the <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a> window for a character. It can also occur when the user selects a character (by clicking or speaking its name), when a character becomes visible, or when the character of another client application becomes hidden. You can also call the <see cref="M:DoubleAgent.Server.Character.Activate(System.Int16)" /> method with <paramref name="State" /> set to <keyword xml:space="preserve">2</keyword> (<see class="see" cref="F:DoubleAgent.Server.ActiveStateType.InputActive" />) to explicitly make the character topmost, which results in your client application becoming <glossary>input-active</glossary> and triggers this event. However, this event does not occur if you use the <see cref="M:DoubleAgent.Server.Character.Activate(System.Int16)" /> method only to specify whether or not your client is the active client of the character.</remarks>
+<seealso cref="M:DoubleAgent.Server.Character.Activate(System.Int16)" />
+<seealso cref="E:DoubleAgent.Server.Server.ActiveClientChange" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.ActiveClientChange">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when the active client of the character changes.</summary>
+<param name="CharacterID">The unique identifier of the character that has become active or inactive.</param>
+<value name="Status">A member of the <see class="typename" cref="T:DoubleAgent.Server.ActiveStateType" /> Enumeration indicating the state of the character and your client application:
+<list type="table">
+<item name="Inactive"><term xml:space="preserve">
+0 = <keyword>Inactive</keyword>
+</term>
+<description>Your client application is <em>not</em> the character's active client.</description>
+</item>
+<item name="Active"><term xml:space="preserve">
+1 = <keyword>Active</keyword>
+</term>
+<description>Your client application is the character's active client.</description>
+</item>
+<item name="InputActive"><term xml:space="preserve">
+2 = <keyword>InputActive</keyword>
+</term>
+<description>The character is the <glossary>input-active</glossary> character and will receive user input.</description>
+</item>
+</list>
+</value>
+<remarks>
+<para>When multiple clients (<see cref="T:DoubleAgent.Server.Server" /> instances) share the same character, the active client of the character receives mouse input (for example, click or drag events). Similarly, when multiple characters are displayed, the active client of the topmost character (also known as the <glossary>input-active</glossary> client) receives <see cref="E:DoubleAgent.Server.Server.Command" /> events.
+</para>
+<para>A client application may receive this event when the user selects one of the client's entries in the character's <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a> or by voice command, when the client application changes its active status, or when another client terminates.
+</para>
+<para>Double Agent sends this event only to the clients that are directly affected; that either become the active client or stop being the active client.
+</para>
+</remarks>
+<seealso cref="M:DoubleAgent.Server.Character.Activate(System.Int16)" />
+<seealso cref="P:DoubleAgent.Server.Character.ActiveState" />
+<seealso cref="E:DoubleAgent.Server.Server.ActivateInputState" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.AgentPropertyChange">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when the user changes a property in the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window.</summary>
+<remarks>
+<para>This event indicates that the user has changed and applied any property in the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window. You can use the <see cref="T:DoubleAgent.Server.Settings" /> Object to query the specific property settings.
+</para>
+</remarks>
+<seealso cref="E:DoubleAgent.Server.Server.DefaultCharacterChange" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.BalloonVisibleState">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when a character's <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> is shown or hidden.</summary>
+<param name="CharacterID">The unique identifier of the character who's <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> was shown or hidden.</param>
+<param name="Visible"> <keyword>True</keyword> if the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> was shown or <keyword>False</keyword> it was hidden.</param>
+<remarks>
+<para>Double Agent sends this event only to all clients of the character (applications that have loaded the character).
+</para>
+</remarks>
 </member>
 
 <member name="E:DoubleAgent.Server.Server.BookMark">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when a bookmark defined by your application in a speech text string is reached.</summary>
+<param name="BookmarkID">The bookmark's unique identifier.</param>
+<remarks>
+<para>To specify a bookmark event, use the <see cref="M:DoubleAgent.Server.Character.Speak(System.String,System.String,System.Int32&amp;)" /> or <see cref="M:DoubleAgent.Server.Character.SpeakFormatted(DoubleAgent.Server.FormattedText,System.Int32&amp;)" /> method with a <keyword>Mrk</keyword> tag in your supplied text. For more information about tags, see <a href="MsAgent.chm::/hh/msagent/guidlin_2my6.htm">Speech Output Tags</a>.
+</para>
+</remarks>
+<seealso cref="M:DoubleAgent.Server.Character.Speak(System.String,System.String,System.Int32&amp;)" />
+<seealso cref="M:DoubleAgent.Server.Character.SpeakFormatted(DoubleAgent.Server.FormattedText,System.Int32&amp;)" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.Click">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when the user clicks a character, or the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</summary>
+<param name="CharacterID">The unique identifier of the character that was clicked.</param>
+<param name="Keys">A <typename>numeric</typename> value that identifies which mouse button caused the event, and which modifier keys were down at the time. The <paramref name="Keys" /> parameter is a bit field with bits as follows: 
+<list type="table">
+<item>
+<term>bit 0 (0x0001)</term>
+<description>The <filename>left</filename> button</description>
+</item>
+<item>
+<term>bit 1 (0x0002)</term>
+<description>The <filename>right</filename> button</description>
+</item>
+<item>
+<term>bit 2 (0x0004)</term>
+<description>the <filename>Shift</filename> key is down</description>
+</item>
+<item>
+<term>bit 3 (0x0004)</term>
+<description>the <filename>Ctrl</filename> key is down</description>
+</item>
+<item>
+<term>bit 4 (0x0010)</term>
+<description>The <filename>middle</filename> button</description>
+</item>
+<item>
+<term>bit 5 (0x0020)</term>
+<description>the <filename>Alt</filename> key is down</description>
+</item>
+<item>
+<term>bit 13 (0x1000)</term>
+<description>the click occurred on the  <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a></description>
+</item>
+</list>
+ Only one of the button bits is set, indicating the mouse button that caused the event. Some, all, or none of the modifier bits can be set, indicating that some, all, or none of the modifier keys are down.</param>
+<param name="X">The current horizontal location of the mouse pointer, in pixels, relative to the left side of the screen.</param>
+<param name="Y">The current vertical location of the mouse pointer, in pixels, relative to the top of the screen.</param>
+<remarks>
+<para>This event is sent only to the <glossary>input-active</glossary> client of a character. When the user clicks a character or its <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> with no <glossary>input-active</glossary> client, Double Agent sends the event to its active client. If the character is visible (<see cref="P:DoubleAgent.Server.Character.Visible" /> is <keyword>True</keyword>), the user's action also sets the character's current <glossary>input-active</glossary> client as the last <glossary>input-active</glossary> client, sending the <see cref="E:DoubleAgent.Server.Server.ActivateInputState" /> event to that client, and then sending the <keyword>Click</keyword> event. If the character is hidden (<see cref="P:DoubleAgent.Server.Character.Visible" /> is <keyword>False</keyword>), and the user clicks the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> using button 1, the character is also automatically shown.
+</para>
+</remarks>
+<seealso cref="E:DoubleAgent.Server.Server.DblClick" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.Command">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when the user chooses a (client's) command.</summary>
+<param name="CharacterID">The unique identifier of the character that was clicked.</param>
+<param name="UserInput">A <see class="typename" cref="T:DoubleAgent.Server.UserInput" /> Object that identifies the chosen command.</param>
+<remarks>
+<para>Double Agent sends this event when your application is <glossary>input-active</glossary> and the user chooses a command from the character's <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a>, or by spoken input.
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.Server.UserInput" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.DblClick">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when the user double-clicks a character.</summary>
+<param name="CharacterID">The unique identifier of the character that was double-clicked.</param>
+<param name="Keys">A <typename>numeric</typename> value that identifies which mouse button caused the event, and which modifier keys were down at the time. The <paramref name="Keys" /> parameter is a bit field with bits as follows: 
+<list type="table">
+<item>
+<term>bit 0 (0x0001)</term>
+<description>The <filename>left</filename> button</description>
+</item>
+<item>
+<term>bit 1 (0x0002)</term>
+<description>The <filename>right</filename> button</description>
+</item>
+<item>
+<term>bit 2 (0x0004)</term>
+<description>the <filename>Shift</filename> key is down</description>
+</item>
+<item>
+<term>bit 3 (0x0004)</term>
+<description>the <filename>Ctrl</filename> key is down</description>
+</item>
+<item>
+<term>bit 4 (0x0010)</term>
+<description>The <filename>middle</filename> button</description>
+</item>
+<item>
+<term>bit 5 (0x0020)</term>
+<description>the <filename>Alt</filename> key is down</description>
+</item>
+<item>
+<term>bit 13 (0x1000)</term>
+<description>the click occurred on the  <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a></description>
+</item>
+</list>
+ Only one of the button bits is set, indicating the mouse button that caused the event. Some, all, or none of the modifier bits can be set, indicating that some, all, or none of the modifier keys are down.</param>
+<param name="X">The current horizontal location of the mouse pointer, in pixels, relative to the left side of the screen.</param>
+<param name="Y">The current vertical location of the mouse pointer, in pixels, relative to the top of the screen.</param>
+<remarks>
+<para>This event is sent only to the <glossary>input-active</glossary> client of a character. When the user double-clicks a character or its <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> with no <glossary>input-active</glossary> client, Double Agent sends the event to its active client. If the character is visible (<see cref="P:DoubleAgent.Server.Character.Visible" /> is <keyword>True</keyword>), the user's action also sets the character's current <glossary>input-active</glossary> client as the last <glossary>input-active</glossary> client, sending the <see cref="E:DoubleAgent.Server.Server.ActivateInputState" /> event to that client, and then sending the <keyword>DblClick</keyword> event. If the character is hidden (<see cref="P:DoubleAgent.Server.Character.Visible" /> is <keyword>False</keyword>), and the user double-clicks the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> using button 1, the character is also automatically shown.
+</para>
+</remarks>
+<seealso cref="E:DoubleAgent.Server.Server.Click" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.DefaultCharacterChange">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when the user changes the default character.</summary>
+<param name="CharGUID">The unique identifier of the new default character.</param>
+<remarks>
+<para>This event indicates that the user has changed the character assigned as the user's default character. Double Agent sends this only to clients that have loaded the default character.
+</para>
+<para>When the new character appears, it assumes the same size as any already loaded instance of the character, or the size of the previous default character (in that order).
+</para>
+</remarks>
+<seealso cref="M:DoubleAgent.Server.Server.ShowDefaultCharacterProperties(System.Int16,System.Int16,System.Int32)" />
+<seealso cref="M:DoubleAgent.Server.Server.Load(System.Object,System.Int32&amp;,System.Int32&amp;)" />
+<seealso cref="P:DoubleAgent.Server.CharacterFiles.DefaultFilePath" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.DragComplete">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when the user stops dragging a character.</summary>
+<param name="CharacterID">The unique identifier of the character that was dragged.</param>
+<param name="Keys">A <typename>numeric</typename> value that identifies which mouse button caused the event, and which modifier keys were down at the time. The <paramref name="Keys" /> parameter is a bit field with bits as follows: 
+<list type="table">
+<item>
+<term>bit 0 (0x0001)</term>
+<description>The <filename>left</filename> button</description>
+</item>
+<item>
+<term>bit 1 (0x0002)</term>
+<description>The <filename>right</filename> button</description>
+</item>
+<item>
+<term>bit 2 (0x0004)</term>
+<description>the <filename>Shift</filename> key is down</description>
+</item>
+<item>
+<term>bit 3 (0x0004)</term>
+<description>the <filename>Ctrl</filename> key is down</description>
+</item>
+<item>
+<term>bit 4 (0x0010)</term>
+<description>The <filename>middle</filename> button</description>
+</item>
+<item>
+<term>bit 5 (0x0020)</term>
+<description>the <filename>Alt</filename> key is down</description>
+</item>
+<item>
+<term>bit 13 (0x1000)</term>
+<description>the click occurred on the  <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a></description>
+</item>
+</list>
+ Only one of the button bits is set, indicating the mouse button that caused the event. Some, all, or none of the modifier bits can be set, indicating that some, all, or none of the modifier keys are down.</param>
+<param name="X">The current horizontal location of the mouse pointer, in pixels, relative to the left side of the screen.</param>
+<param name="Y">The current vertical location of the mouse pointer, in pixels, relative to the top of the screen.</param>
+<remarks>
+<para>This event is sent only to the <glossary>input-active</glossary> client of a character. When the user drags a character with no <glossary>input-active</glossary> client, Double Agent sets its current <glossary>input-active</glossary> client as the last <glossary>input-active</glossary> client, sending the <see cref="E:DoubleAgent.Server.Server.ActivateInputState" /> event to that client, and then sending the <see cref="E:DoubleAgent.Server.Server.DragStart" /> and <keyword>DragComplete</keyword> events.
+</para>
+</remarks>
+<seealso cref="E:DoubleAgent.Server.Server.DragStart" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.DragStart">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when the user starts dragging a character.</summary>
+<param name="CharacterID">The unique identifier of the character that's being dragged.</param>
+<param name="Keys">A <typename>numeric</typename> value that identifies which mouse button caused the event, and which modifier keys were down at the time. The <paramref name="Keys" /> parameter is a bit field with bits as follows: 
+<list type="table">
+<item>
+<term>bit 0 (0x0001)</term>
+<description>The <filename>left</filename> button</description>
+</item>
+<item>
+<term>bit 1 (0x0002)</term>
+<description>The <filename>right</filename> button</description>
+</item>
+<item>
+<term>bit 2 (0x0004)</term>
+<description>the <filename>Shift</filename> key is down</description>
+</item>
+<item>
+<term>bit 3 (0x0004)</term>
+<description>the <filename>Ctrl</filename> key is down</description>
+</item>
+<item>
+<term>bit 4 (0x0010)</term>
+<description>The <filename>middle</filename> button</description>
+</item>
+<item>
+<term>bit 5 (0x0020)</term>
+<description>the <filename>Alt</filename> key is down</description>
+</item>
+<item>
+<term>bit 13 (0x1000)</term>
+<description>the click occurred on the  <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a></description>
+</item>
+</list>
+ Only one of the button bits is set, indicating the mouse button that caused the event. Some, all, or none of the modifier bits can be set, indicating that some, all, or none of the modifier keys are down.</param>
+<param name="X">The current horizontal location of the mouse pointer, in pixels, relative to the left side of the screen.</param>
+<param name="Y">The current vertical location of the mouse pointer, in pixels, relative to the top of the screen.</param>
+<remarks>
+<para>This event is sent only to the <glossary>input-active</glossary> client of a character. When the user drags a character with no <glossary>input-active</glossary> client, Double Agent sets its current <glossary>input-active</glossary> client as the last <glossary>input-active</glossary> client, sending the <see cref="E:DoubleAgent.Server.Server.ActivateInputState" /> event to that client, and then sending the <keyword>DragStart</keyword> event.
+</para>
+</remarks>
+<seealso cref="E:DoubleAgent.Server.Server.DragComplete" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.Idle">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when a character's <glossary>Idling</glossary> state changes.</summary>
+<param name="CharacterID">The unique identifier of the <glossary>Idling</glossary> character.</param>
+<param name="Start"> <keyword>True</keyword> if the character has started idling, or <keyword>False</keyword> if it has stopped idling.</param>
+<remarks>
+<para>Double Agent sends this event to all clients of the character.
+</para>
+</remarks>
+<seealso cref="F:DoubleAgent.Server.CharacterStyleFlags.IdleEnabled" />
+<seealso cref="P:DoubleAgent.Server.Character.IdleState" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.ListeningState">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when <glossary>Listening mode</glossary> (speech recognition) begins or ends.</summary>
+<param name="CharacterID">The unique identifier of the <glossary>Listening</glossary> character.</param>
+<param name="Start"> <keyword>True</keyword> if the character has started listening, or <keyword>False</keyword> if it has stopped listening.</param>
+<remarks>
+<para>This event is sent to all clients when <glossary>Listening mode</glossary> begins or ends because the user pressed or released the <glossary>Listening key</glossary>, or when the <glossary>input-active</glossary> client called the <see cref="M:DoubleAgent.Server.Character.Listen(System.Int32)" /> method, or when the <glossary>Listening mode</glossary> time-out ends, or when the user has finished speaking. You can use this event to avoid having your character speak while <glossary>Listening mode</glossary> is active.
+</para>
+<para>If you turn on <glossary>Listening mode</glossary> using the <see cref="M:DoubleAgent.Server.Character.Listen(System.Int32)" /> method and then the user presses the <glossary>Listening key</glossary>, the <glossary>Listening mode</glossary> resets and continues until the <glossary>Listening key</glossary> time-out completes, the <glossary>Listening key</glossary> is released, or the user finishes speaking, whichever is later. In this situation, when <glossary>Listening mode</glossary> is already on, you will <em>not</em> get an additional <self>ListeningState</self> event with <paramref name="Start" />=<keyword>True</keyword> when the user presses the <glossary>Listening key</glossary>, and you will not receive a <self>ListeningState</self> event with <paramref name="Start" />=<keyword>False</keyword> until the <glossary>Listening key</glossary>'s mode completes.
+</para>
+</remarks>
+<seealso cref="M:DoubleAgent.Server.Character.Listen(System.Int32)" />
+<seealso cref="P:DoubleAgent.Server.Settings.SRHotKey" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.Move">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when a character has moved.</summary>
+<param name="CharacterID">The unique identifier of the character that was moved.</param>
+<param name="X">The character's new horizontal location, in pixels, relative to the left side of the screen.</param>
+<param name="Y">The character's new vertical location, in pixels, relative to the top of the screen.</param>
+<param name="Cause">The reason the character moved:
+<list type="table">
+<item name="UserMoved"><term xml:space="preserve">
+1 = <keyword>UserMoved</keyword>
+</term>
+<description>The user dragged the character.</description>
+</item>
+<item name="ProgramMoved"><term xml:space="preserve">
+2 = <keyword>ProgramMoved</keyword>
+</term>
+<description>Your client application moved the character.</description>
+</item>
+<item name="OtherProgramMoved"><term xml:space="preserve">
+3 = <keyword>OtherProgramMoved</keyword>
+</term>
+<description>Another client application moved the character.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>This event is signalled when the user or an application changes the character's position. Coordinates are relevant to the upper left corner of the screen. This event is sent only to the clients of the character (applications that have loaded the character).
+</para>
+</remarks>
+<seealso cref="E:DoubleAgent.Server.Server.Size" />
+<seealso cref="M:DoubleAgent.Server.Character.MoveTo(System.Int16,System.Int16,System.Int32,System.Int32&amp;)" />
+<seealso cref="P:DoubleAgent.Server.Character.MoveCause" />
+<seealso cref="T:DoubleAgent.Server.MoveCauseType" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.RequestComplete">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when Double Agent completes a queued request.</summary>
+<param name="RequestID">The <typename>numeric</typename> value that uniquely identifies the request.</param>
+<remarks>
+<para>Because requests are processed asynchronously, you can use this event to determine when Double Agent finishes processing a request (such as a <see cref="M:DoubleAgent.Server.Character.GetActive(System.Int16&amp;)" />, <see cref="M:DoubleAgent.Server.Character.Play(System.String,System.Int32&amp;)" />, or <see cref="M:DoubleAgent.Server.Character.Speak(System.String,System.String,System.Int32&amp;)" /> method) to synchronize this event with other requests generated by your application. Double Agent sends the event only to the client that created the request.
+</para>
+</remarks>
+<seealso cref="E:DoubleAgent.Server.Server.RequestStart" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.RequestStart">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when Double Agent begins a queued request.</summary>
+<param name="RequestID">The <typename>numeric</typename> value that uniquely identifies the request.</param>
+<remarks>
+<para>Because requests are processed asynchronously, you can use this event to determine when Double Agent finishes processing a request (such as a <see cref="M:DoubleAgent.Server.Character.GetActive(System.Int16&amp;)" />, <see cref="M:DoubleAgent.Server.Character.Play(System.String,System.Int32&amp;)" />, or <see cref="M:DoubleAgent.Server.Character.Speak(System.String,System.String,System.Int32&amp;)" /> method) to synchronize this event with other requests generated by your application. Double Agent sends the event only to the client that created the request.
+</para>
+</remarks>
+<seealso cref="E:DoubleAgent.Server.Server.RequestComplete" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.Size">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when a character's size changes.</summary>
+<param name="CharacterID">The unique identifier of the character that was resized.</param>
+<param name="Width">The character's new width, in pixels.</param>
+<param name="Height">The character's new height, in pixels.</param>
+<remarks>
+<para>This event is signalled when an application changes the size of a character. This event is sent only to the clients of the character (applications that have loaded the character).
+</para>
+</remarks>
+<seealso cref="E:DoubleAgent.Server.Server.Move" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.VisibleState">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when a character is shown or hidden.</summary>
+<param name="CharacterID">The unique identifier of the character that was shown or hidden.</param>
+<param name="Visible"> <keyword>True</keyword> if the character was shown, or <keyword>False</keyword> if it was hidden.</param>
+<param name="Cause">A <see class="typename" cref="T:DoubleAgent.Server.VisibilityCauseType" /> value that indicates what caused the character to be shown or hidden. 
+<list type="table">
+<item name="UserHid"><term xml:space="preserve">
+1 = <keyword>UserHid</keyword>
+</term>
+<description>The user hid the character using the command on the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
+</item>
+<item name="UserShowed"><term xml:space="preserve">
+2 = <keyword>UserShowed</keyword>
+</term>
+<description>The user showed the character using the command on the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
+</item>
+<item name="ProgramHid"><term xml:space="preserve">
+3 = <keyword>ProgramHid</keyword>
+</term>
+<description>Your application hid the character.</description>
+</item>
+<item name="ProgramShowed"><term xml:space="preserve">
+4 = <keyword>ProgramShowed</keyword>
+</term>
+<description>Your application showed the character.</description>
+</item>
+<item name="OtherProgramHid"><term xml:space="preserve">
+5 = <keyword>OtherProgramHid</keyword>
+</term>
+<description>Another client application hid the character.</description>
+</item>
+<item name="OtherProgramShowed"><term xml:space="preserve">
+6 = <keyword>OtherProgramShowed</keyword>
+</term>
+<description>Another client application showed the character.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>Double Agent sends this event to all clients of the character. To query the current state of the character, use the <see cref="P:DoubleAgent.Server.Character.Visible" /> property.
+</para>
+</remarks>
+<seealso cref="P:DoubleAgent.Server.Character.VisibilityCause" />
+<seealso cref="P:DoubleAgent.Server.Character.Visible" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.SpeechStart">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when the character starts speaking for the <see cref="M:DoubleAgent.Server.Character.SpeakFormatted(DoubleAgent.Server.FormattedText,System.Int32&amp;)" /> method.</summary>
+<param name="CharacterID">The unique identifier of the speaking character.</param>
+<param name="FormattedText">The <see class="typename" cref="T:DoubleAgent.Server.FormattedText" /> that's being spoken.</param>
+<remarks>
+<note name="FormattedText">The <paramref name="FormattedText" /> parameter may not contain the same <glossary>reference pointer</glossary> as the <paramref name="FormattedText" /> parameter passed to the <see cref="M:DoubleAgent.Server.Character.SpeakFormatted(DoubleAgent.Server.FormattedText,System.Int32&amp;)" /> method, but the underlying data is the same.</note>
+</remarks>
+<seealso cref="E:DoubleAgent.Server.Server.SpeechEnd" />
+<seealso cref="E:DoubleAgent.Server.Server.SpeechWord" />
+<seealso cref="T:DoubleAgent.Server.FormattedText" />
+<seealso cref="M:DoubleAgent.Server.Character.SpeakFormatted(DoubleAgent.Server.FormattedText,System.Int32&amp;)" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.SpeechEnd">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when the character stops speaking for the <see cref="M:DoubleAgent.Server.Character.SpeakFormatted(DoubleAgent.Server.FormattedText,System.Int32&amp;)" /> method.</summary>
+<param name="CharacterID">The unique identifier of the speaking character.</param>
+<param name="FormattedText">The <see class="typename" cref="T:DoubleAgent.Server.FormattedText" /> that's being spoken.</param>
+<param name="Stopped">A <typename>boolean</typename> value that indicates if the speech was stopped before completion.</param>
+<remarks>
+<note name="FormattedText">The <paramref name="FormattedText" /> parameter may not contain the same <glossary>reference pointer</glossary> as the <paramref name="FormattedText" /> parameter passed to the <see cref="M:DoubleAgent.Server.Character.SpeakFormatted(DoubleAgent.Server.FormattedText,System.Int32&amp;)" /> method, but the underlying data is the same.</note>
+</remarks>
+<seealso cref="E:DoubleAgent.Server.Server.SpeechStart" />
+<seealso cref="E:DoubleAgent.Server.Server.SpeechWord" />
+<seealso cref="T:DoubleAgent.Server.FormattedText" />
+<seealso cref="M:DoubleAgent.Server.Character.SpeakFormatted(DoubleAgent.Server.FormattedText,System.Int32&amp;)" />
+<seealso cref="M:DoubleAgent.Server.Character.Stop(System.Int32)" />
+<seealso cref="M:DoubleAgent.Server.Character.StopAll(System.Int32)" />
 </member>
 
 <member name="E:DoubleAgent.Server.Server.SpeechWord">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> Signalled when the character reaches a new word for the <see cref="M:DoubleAgent.Server.Character.SpeakFormatted(DoubleAgent.Server.FormattedText,System.Int32&amp;)" /> method.</summary>
+<param name="CharacterID">The unique identifier of the speaking character.</param>
+<param name="FormattedText">The <see class="typename" cref="T:DoubleAgent.Server.FormattedText" /> that's being spoken.</param>
+<param name="WordIndex">A <typename>numeric</typename> value that identifies the word that is currently being spoken.</param>
+<remarks>
+<para>Because events are signalled asynchronously, the synchronization between the speech output and the receipt of this event cannot be exact. However, <paramref name="WordIndex" /> will generally identify the <em>next</em> word to be spoken.
+</para>
+<note name="FormattedText">The <paramref name="FormattedText" /> parameter may not contain the same <glossary>reference pointer</glossary> as the <paramref name="FormattedText" /> parameter passed to the <see cref="M:DoubleAgent.Server.Character.SpeakFormatted(DoubleAgent.Server.FormattedText,System.Int32&amp;)" /> method, but the underlying data is the same.</note>
+</remarks>
+<seealso cref="E:DoubleAgent.Server.Server.SpeechStart" />
+<seealso cref="E:DoubleAgent.Server.Server.SpeechEnd" />
+<seealso cref="T:DoubleAgent.Server.FormattedText" />
+<seealso cref="P:DoubleAgent.Server.FormattedText.WordIndex" />
+<seealso cref="M:DoubleAgent.Server.Character.SpeakFormatted(DoubleAgent.Server.FormattedText,System.Int32&amp;)" />
 </member>
 
 <member name="T:DoubleAgent.Server.Server">
@@ -808,7 +1615,7 @@ VariantInit (&amp;EmptyProvider);
 </member>
 
 <member name="P:DoubleAgent.Server.Balloon.Visible">
-<summary> Specifies the visiblity of a character's <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>.</summary>
+<summary> Specifies the visibility of a character's <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>.</summary>
 <value name="Visible">A <typename>boolean</typename> value that indicates if the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> is visible.</value>
 <remarks>
 <para>If you follow a <see cref="M:DoubleAgent.Server.Character.Speak(System.String,System.String,System.Int32&amp;)" /> or <see cref="M:DoubleAgent.Server.Character.Think(System.String,System.Int32&amp;)" /> call with a statement that changes this property, it may not affect the balloon's <self>Visible</self> state because the <see cref="M:DoubleAgent.Server.Character.Speak(System.String,System.String,System.Int32&amp;)" /> or <see cref="M:DoubleAgent.Server.Character.Think(System.String,System.Int32&amp;)" /> call gets queued, but the call to set this property does not. Therefore, only set this value when no <see cref="M:DoubleAgent.Server.Character.Speak(System.String,System.String,System.Int32&amp;)" /> or <see cref="M:DoubleAgent.Server.Character.Think(System.String,System.Int32&amp;)" /> calls are in the character's queue.
@@ -840,17 +1647,17 @@ VariantInit (&amp;EmptyProvider);
 <summary> Sets the active client or character.</summary>
 <param name="State">An optional <typename>numeric</typename> value from the <see class="typename" cref="T:DoubleAgent.Server.ActiveStateType" /> Enumeration: 
 <list type="table">
-<item><term xml:space="preserve">
+<item name="Inactive"><term xml:space="preserve">
 0 = <keyword>Inactive</keyword>
 </term>
 <description>Your client application is <em>not</em> the character's active client.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="Active"><term xml:space="preserve">
 1 = <keyword>Active</keyword>
 </term>
 <description>Your client application is the character's active client.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="InputActive"><term xml:space="preserve">
 2 = <keyword>InputActive</keyword>
 </term>
 <description>The character is the <glossary>input-active</glossary> character and will receive user input.</description>
@@ -882,7 +1689,7 @@ VariantInit (&amp;EmptyProvider);
 </member>
 
 <member name="M:DoubleAgent.Server.Character.GenerateIcon(System.Int32,System.Int32,System.Int32,System.Int32)">
-<summary> Generates a notification icon from one frame of the character's animations.</summary>
+<summary> Generates a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> from one frame of the character's animations.</summary>
 <param name="ClipLeft">An optional <typename>numeric</typename> value that specifies the left side of the clipping area. The default value is 0.</param>
 <param name="ClipTop">An optional <typename>numeric</typename> value that specifies the top of the clipping area. The default value is 0.</param>
 <param name="ClipWidth">An optional <typename>numeric</typename> value that specifies the width of the clipping area. The default value is -1, meaning the full width of the animation frame.</param>
@@ -894,8 +1701,8 @@ VariantInit (&amp;EmptyProvider);
 </para>
 <para>If you don't specify a clipping area, the entire image is used (with any empty space around the edges removed).
 </para>
-<note>You can only use this method once per character. Once a notification icon has been generated, it cannot be changed.</note>
-<note>If you use this method for a character that has a notification icon in its definition, the defined icon is replaced by the generated icon for as long as the character is loaded.</note>
+<note>You can only use this method once per character. Once a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> has been generated, it cannot be changed.</note>
+<note>If you use this method for a character that has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> in its definition, the defined icon is replaced by the generated icon for as long as the character is loaded.</note>
 </remarks>
 <seealso cref="P:DoubleAgent.Server.Character.HasIcon" />
 <seealso cref="P:DoubleAgent.Server.Character.Style" />
@@ -975,10 +1782,10 @@ VariantInit (&amp;EmptyProvider);
 </member>
 
 <member name="M:DoubleAgent.Server.Character.GetIconIdentity(System.Guid&amp;)">
-<summary> Retrieves the identity that Windows will use to remember the character's notification icon.</summary>
-<value name="IconIdentity">The <typename>GUID</typename> value that Windows uses to uniquely identify this character's notification icon.</value>
+<summary> Retrieves the identity that Windows will use to remember the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</summary>
+<value name="IconIdentity">The <typename>GUID</typename> value that Windows uses to uniquely identify this character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</value>
 <remarks>
-<para>Every notification icon has an identity that allows Windows to remember it's state (shown, hidden, active, etc.). By default, Windows associates a notification icon with the application that creates it.
+<para>Every <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> has an identity that allows Windows to remember it's state (shown, hidden, active, etc.). By default, Windows associates a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> with the application that creates it.
 </para>
 <note name="ThisClientOnly">This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</note>
 </remarks>
@@ -1190,6 +1997,7 @@ VariantInit (&amp;EmptyProvider);
 </para>
 <note>The <paramref name="Speed" /> parameter's actual effect may vary based on the computer's processor speed and the priority of other tasks running on the system.</note>
 </remarks>
+<seealso cref="E:DoubleAgent.Server.Server.Move" />
 <seealso cref="E:DoubleAgent.Server.Server.RequestStart" />
 <seealso cref="E:DoubleAgent.Server.Server.RequestComplete" />
 </member>
@@ -1203,7 +2011,7 @@ VariantInit (&amp;EmptyProvider);
 </para>
 <para>The <self>Play</self> method does not make the character visible. If the character is not visible, Double Agent plays the animation invisibly, and sets the <paramref name="Result" /> parameter of the <see cref="E:DoubleAgent.Server.Server.RequestComplete" /> Event.
 </para>
-<para>When accessing a character's animations using a conventional file protocol, you can simply use the <self>Play</self> method specifying the name of the animation. However, if you're using the <glossary>HTTP</glossary> protocol to access character animation data, use the <see cref="M:DoubleAgent.Server.Character.Prepare(System.Int32,System.String,System.Int32,System.Int32&amp;)" /> method to load the animation before calling the <self>Play</self> method.
+<para>When accessing a character's animations using a conventional file protocol, you can simply use the<self>Play</self> method specifying the name of the animation. However, if you're using the <glossary>HTTP</glossary> protocol to access character animation data, use the <see cref="M:DoubleAgent.Server.Character.Prepare(System.Int32,System.String,System.Int32,System.Int32&amp;)" /> method to load the animation before calling the <self>Play</self> method.
 </para>
 </remarks>
 <seealso cref="P:DoubleAgent.Server.Character.Animations" />
@@ -1235,7 +2043,7 @@ VariantInit (&amp;EmptyProvider);
 <param name="Name">A <typename>string</typename> that indicates the name of the animation resource. 
 <list type="bullet">
 <item>For animations, the name is one of those defined for the character when it was authored.</item>
-<item>For states, the name is one of those defined for the character when it was authored. See the<see cref="P:DoubleAgent.Server.Character.States" /> property for details.</item>
+<item>For states, the name is one of those defined for the character when it was authored. See the <see cref="P:DoubleAgent.Server.Character.States" /> property for details.</item>
 <item>For audio files, specify the location of the .WAV file. If an incomplete path is specified, it's interpreted as being relative to the location used in the <see cref="M:DoubleAgent.Server.Server.Load(System.Object,System.Int32&amp;,System.Int32&amp;)" /> method.</item>
 <item>You can specify multiple animations and states by separating them with commas. However, you cannot mix types in the same <self>Prepare</self> call.</item>
 </list>
@@ -1285,17 +2093,17 @@ VariantInit (&amp;EmptyProvider);
 </member>
 
 <member name="M:DoubleAgent.Server.Character.SetIconIdentity(System.Guid&amp;)">
-<summary> Sets the identity that Windows will use to remember the character's notification icon.</summary>
-<value name="IconIdentity">A <typename>GUID</typename> value that allows Windows to uniquely identify this character's notification icon. It must be either a value <typename>GUID</typename> or <keyword>GUID_NULL</keyword>.</value>
+<summary> Sets the identity that Windows will use to remember the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</summary>
+<value name="IconIdentity">A <typename>GUID</typename> value that allows Windows to uniquely identify this character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>. It must be either a value <typename>GUID</typename> or <keyword>GUID_NULL</keyword>.</value>
 <remarks>
-<para>Every notification icon has an identity that allows Windows to remember it's state (shown, hidden, active, etc.). By default, Windows associates a notification icon with the application that creates it.
+<para>Every <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> has an identity that allows Windows to remember it's state (shown, hidden, active, etc.). By default, Windows associates a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> with the application that creates it.
 </para>
 <para>You can supply either a <typename>GUID</typename> identifier, or <keyword>GUID_NULL</keyword> to use the default identity.
 </para>
 <list type="bullet">
-<item>A character's notification will be associated with the Double Agent server by default.</item>
-<item>You can supply a <em>single</em> GUID for all characters you load. All of their notification icons will be associated with that single identity.</item>
-<item>You can supply a <em>unique</em> GUID for each character you load. Windows will then identify each character's notification icon uniquely.</item>
+<item>A character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> will be associated with the Double Agent server by default.</item>
+<item>You can supply a <em>single</em> GUID for all characters you load. All of their <a class="see" href="../html/UI_Intro.htm#Icon">notification icons</a> will be associated with that single identity.</item>
+<item>You can supply a <em>unique</em> GUID for each character you load. Windows will then identify each character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> uniquely.</item>
 </list>
 <note name="ThisClientOnly">This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</note>
 </remarks>
@@ -1480,7 +2288,7 @@ VariantInit (&amp;EmptyProvider);
 <item><term xml:space="preserve">
 0xFFFFFFFF = <keyword>Everything</keyword>
 </term>
-<description>Stop all pending actions.</description>
+<description>Stop all pending requests.</description>
 </item>
 </list>
 </param>
@@ -1522,20 +2330,20 @@ VariantInit (&amp;EmptyProvider);
 </member>
 
 <member name="P:DoubleAgent.Server.Character.ActiveState">
-<summary> Indicates if your application is the character's active client and if the character is<glossary>input-active</glossary>.</summary>
-<value name="ActiveState">A member of the <see class="typename" cref="T:DoubleAgent.Server.ActiveStateType" /> Enumeration indicating the state of the character and your client application: 
+<summary> Indicates if your application is the character's active client and if the character is <glossary>input-active</glossary>.</summary>
+<value name="ActiveState">A member of the <see class="typename" cref="T:DoubleAgent.Server.ActiveStateType" /> Enumeration indicating the state of the character and your client application:
 <list type="table">
-<item><term xml:space="preserve">
+<item name="Inactive"><term xml:space="preserve">
 0 = <keyword>Inactive</keyword>
 </term>
 <description>Your client application is <em>not</em> the character's active client.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="Active"><term xml:space="preserve">
 1 = <keyword>Active</keyword>
 </term>
 <description>Your client application is the character's active client.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="InputActive"><term xml:space="preserve">
 2 = <keyword>InputActive</keyword>
 </term>
 <description>The character is the <glossary>input-active</glossary> character and will receive user input.</description>
@@ -1622,10 +2430,10 @@ VariantInit (&amp;EmptyProvider);
 </member>
 
 <member name="P:DoubleAgent.Server.Character.HasIcon">
-<summary> Indicates if the character has a notification icon in its definition.</summary>
-<value name="HasIcon">A <typename>boolean</typename> value that indicates if the character definition includes a notification icon.</value>
+<summary> Indicates if the character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> in its definition.</summary>
+<value name="HasIcon">A <typename>boolean</typename> value that indicates if the character definition includes a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</value>
 <remarks>
-<para>If the character definition does not include an icon (or even if it does) you can use the<see cref="M:DoubleAgent.Server.Character.GenerateIcon(System.Int32,System.Int32,System.Int32,System.Int32)" /> method to create an icon from the character's animations.
+<para>If the character definition does not include an icon (or even if it does) you can use the <see cref="M:DoubleAgent.Server.Character.GenerateIcon(System.Int32,System.Int32,System.Int32,System.Int32)" /> method to create an icon from the character's animations.
 </para>
 </remarks>
 <seealso cref="P:DoubleAgent.Server.Character.Style" />
@@ -1648,17 +2456,17 @@ VariantInit (&amp;EmptyProvider);
 </member>
 
 <member name="P:DoubleAgent.Server.Character.IconIdentity">
-<summary> Specifies the identity that Windows will use to remember the character's notification icon.</summary>
-<value name="IconIdentity">A <typename>string</typename> value that allows Windows to uniquely identify this character's notification icon. It must be either a valid GUID string or an empty string.</value>
+<summary> Specifies the identity that Windows will use to remember the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</summary>
+<value name="IconIdentity">A <typename>string</typename> value that allows Windows to uniquely identify this character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>. It must be either a valid GUID string or an empty string.</value>
 <remarks>
-<para>Every notification icon has an identity that allows Windows to remember it's state (shown, hidden, active, etc.). By default, Windows associates a notification icon with the application that creates it.
+<para>Every <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> has an identity that allows Windows to remember it's state (shown, hidden, active, etc.). By default, Windows associates a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> with the application that creates it.
 </para>
 <para>You can supply either a GUID identifier, or an empty string to use the default identity.
 </para>
 <list type="bullet">
-<item>A character's notification will be associated with the Double Agent server by default.</item>
-<item>You can supply a <em>single</em> GUID for all characters you load. All of their notification icons will be associated with that single identity.</item>
-<item>You can supply a <em>unique</em> GUID for each character you load. Windows will then identify each character's notification icon uniquely.</item>
+<item>A character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> will be associated with the Double Agent server by default.</item>
+<item>You can supply a <em>single</em> GUID for all characters you load. All of their <a class="see" href="../html/UI_Intro.htm#Icon">notification icons</a> will be associated with that single identity.</item>
+<item>You can supply a <em>unique</em> GUID for each character you load. Windows will then identify each character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> uniquely.</item>
 </list>
 <note name="ThisClientOnly">This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</note>
 </remarks>
@@ -1669,10 +2477,10 @@ VariantInit (&amp;EmptyProvider);
 </member>
 
 <member name="P:DoubleAgent.Server.Character.IconTip">
-<summary> Specifies the tip text associated with the character's notification icon.</summary>
-<value name="IconTip">A <typename>string</typename> value that specifies the icon's tip text. An empty string means that the default tip (the character's name) is used.</value>
+<summary> Specifies the tip text associated with the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</summary>
+<value name="IconTip">A <typename>string</typename> value that specifies the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon's</a> tip text. An empty string means that the default tip (the character's name) is used.</value>
 <remarks>
-<para>By default, the character's <see cref="P:DoubleAgent.Server.Character.Name" /> is shown in the notification icon tip. You can use <em>this</em> property to show your own tip.
+<para>By default, the character's <see cref="P:DoubleAgent.Server.Character.Name" /> is shown in the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> tip. You can use <em>this</em> property to show your own tip.
 </para>
 <note name="ThisClientOnly">This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</note>
 </remarks>
@@ -1682,12 +2490,12 @@ VariantInit (&amp;EmptyProvider);
 </member>
 
 <member name="P:DoubleAgent.Server.Character.IconVisible">
-<summary> Indicates if the character has an icon in the Windows notification area.</summary>
-<value name="IconVisible">A <typename>boolean</typename> value that indicates if the character is showing a notification icon.</value>
+<summary> Indicates if the character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> in the Windows notification area.</summary>
+<value name="IconVisible">A <typename>boolean</typename> value that indicates if the character is showing a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</value>
 <remarks>
-<para>This property only indicates if the notification icon has been created. The user decides if the icon is actually visible or hidden.
+<para>This property only indicates if the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> has been created. The user decides if the icon is actually visible or hidden.
 </para>
-<para>The <see cref="F:DoubleAgent.Server.CharacterStyleFlags.IconShown" /> style only applies to your client application, so it is only in effect when you application is the character's active client. When your application is <em>not</em> the character's active client, you can use this property to determine if another client has shown or hidden the notification icon.
+<para>The <see cref="F:DoubleAgent.Server.CharacterStyleFlags.IconShown" /> style only applies to your client application, so it is only in effect when you application is the character's active client. When your application is <em>not</em> the character's active client, you can use this property to determine if another client has shown or hidden the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.
 </para>
 <note name="AllClients">This property applies to all clients of the character.</note>
 </remarks>
@@ -1711,7 +2519,7 @@ VariantInit (&amp;EmptyProvider);
 <remarks>
 <para>If you do not set the character's <self>LanguageID</self>, its language will be the current system language, if the corresponding Agent language DLL is installed. Otherwise, the character's language will be English (US).
 </para>
-<para>This property also determines the language for <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> text, the commands in the character's<a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a>, and the speech recognition engine. It also determines the default language for text-to-speech output.
+<para>This property also determines the language for <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> text, the commands in the character's <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a>, and the speech recognition engine. It also determines the default language for text-to-speech output.
 </para>
 </remarks>
 <seealso cref="P:DoubleAgent.Server.Character.TTSModeID" />
@@ -1840,6 +2648,7 @@ VariantInit (&amp;EmptyProvider);
 
 <member name="P:DoubleAgent.Server.Character.OtherClientCount">
 <summary> ---todo---</summary>
+<value name="OtherClientCount"></value>
 <remarks></remarks>
 </member>
 
@@ -1859,7 +2668,7 @@ VariantInit (&amp;EmptyProvider);
 <summary> Specifies the speech recognition engine the character uses.</summary>
 <value name="SRModeID">A <typename>string</typename> value that identifies a speech recognition engine.</value>
 <remarks>
-<para>This property determines the speech recognition engine used by the character for speech input. The<self>SRModeID</self> for a speech recognition engine is a formatted string defined by the vendor that uniquely identifies the engine.
+<para>This property determines the speech recognition engine used by the character for speech input. The <self>SRModeID</self> for a speech recognition engine is a formatted string defined by the vendor that uniquely identifies the engine.
 </para>
 </remarks>
 <seealso cref="P:DoubleAgent.Server.Character.LanguageID" />
@@ -1868,38 +2677,53 @@ VariantInit (&amp;EmptyProvider);
 </member>
 
 <member name="P:DoubleAgent.Server.Character.Style">
-<summary> Specifies a group of settings that affect the character's appearence.</summary>
+<summary> Specifies a group of settings that affect the character's appearance.</summary>
 <value name="Style">A <typename>numeric</typename> bit-field value that has one or more of the following:
 <list type="table">
-<item><term xml:space="preserve">
+<item name="SoundEffects"><term xml:space="preserve">
 0x00000001 = <keyword>SoundEffects</keyword>
 </term>
 <description>The animation sound effects are played.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="IdleEnabled"><term xml:space="preserve">
 0x00000002 = <keyword>IdleEnabled</keyword>
 </term>
 <description>The character enters idle mode and shows it's idling animations when it's not doing anything else.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="AutoPopupMenu"><term xml:space="preserve">
 0x00000004 = <keyword>AutoPopupMenu</keyword>
 </term>
-<description>A right-click on the character or it's notification icon automatically shows a <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a>.</description>
+<description>A right-click on the character or it's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> automatically shows a <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a>.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="IconShown"><term xml:space="preserve">
 0x00000008 = <keyword>IconShown</keyword>
 </term>
-<description>The character has an icon in the taskbar notification area.</description>
+<description>The character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> in the taskbar notification area.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="SmoothEdges"><term xml:space="preserve">
 0x00000020 = <keyword>SmoothEdges</keyword>
 </term>
 <description>Image smoothing (antialiasing) is applied to the edges of the character's animations.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="Smoothed"><term xml:space="preserve">
 0x00000030 = <keyword>Smoothed</keyword>
 </term>
 <description>Image smoothing (antialiasing) is applied to the character's animations.</description>
+</item>
+<item name="SuspendPause"><term xml:space="preserve">
+0x00000100 = <keyword>SuspendPause</keyword>
+</term>
+<description>All requests are paused when the client is not in the foreground.</description>
+</item>
+<item name="SuspendStop"><term xml:space="preserve">
+0x00000200 = <keyword>SuspendStop</keyword>
+</term>
+<description>All requests are stopped when the client is not in the foreground.</description>
+</item>
+<item name="SuspendHide"><term xml:space="preserve">
+0x00000400 = <keyword>SuspendHide</keyword>
+</term>
+<description>All floating windows are hidden when the client is not in the foreground.</description>
 </item>
 </list>
 </value>
@@ -1954,6 +2778,7 @@ VariantInit (&amp;EmptyProvider);
 
 <member name="P:DoubleAgent.Server.Character.UniqueID">
 <summary> ---todo---</summary>
+<value name="UniqueID"></value>
 <remarks></remarks>
 </member>
 
@@ -1969,12 +2794,12 @@ VariantInit (&amp;EmptyProvider);
 <item name="UserHid"><term xml:space="preserve">
 1 = <keyword>UserHid</keyword>
 </term>
-<description>The user hid the character using the command on the character's taskbar icon <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a> or using speech input.</description>
+<description>The user hid the character using the command on the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
 </item>
 <item name="UserShowed"><term xml:space="preserve">
 2 = <keyword>UserShowed</keyword>
 </term>
-<description>The user showed the character using the command on the character's taskbar icon <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a> or using speech input.</description>
+<description>The user showed the character using the command on the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
 </item>
 <item name="ProgramHid"><term xml:space="preserve">
 3 = <keyword>ProgramHid</keyword>
@@ -2115,7 +2940,7 @@ VariantInit (&amp;EmptyProvider);
 <summary> Appends one <see cref="T:DoubleAgent.Server.FormattedText" />  Object to another <see cref="T:DoubleAgent.Server.FormattedText" />  Object.</summary>
 <param name="FormattedText">The <see class="typename" cref="T:DoubleAgent.Server.FormattedText" />  Object to append.</param>
 <remarks>
-<para>The appended text starts a new paragraph; a <filename>return</filename> character separates the existing and appended text.
+<para>The appended text starts a new paragraph; a <glossary>new-line</glossary> character separates the existing and appended text.
 </para>
 <note>This method will fail if the <see cref="T:DoubleAgent.Server.FormattedText" />  Object is currently being used by a queued speech or thought action.</note>
 </remarks>
@@ -2488,24 +3313,25 @@ VariantInit (&amp;EmptyProvider);
 
 <member name="P:DoubleAgent.Server.Command.CommandID">
 <summary> ---todo---</summary>
+<value name="CommandID"></value>
 <remarks></remarks>
 </member>
 
 <member name="P:DoubleAgent.Server.Command.ConfidenceText">
-<summary> Specifies the text that appears in the <glossary>Listening tip</glossary>.</summary>
-<value name="ConfidenceText">A <typename>string</typename> value that specifies the text displayed in the <glossary>Listening Tip</glossary>.</value>
+<summary> Specifies the text that appears in the <a class="see" href="../html/UI_Intro.htm#ListeningTip">Listening tip</a>.</summary>
+<value name="ConfidenceText">A <typename>string</typename> value that specifies the text displayed in the <a class="see" href="../html/UI_Intro.htm#ListeningTip">Listening tip</a>.</value>
 <remarks>
-<para>When the <see cref="P:DoubleAgent.Server.UserInput.ItemConfidence" /> value of the best match <em>does not exceed</em> the command's <see cref="P:DoubleAgent.Server.Command.ConfidenceThreshold" /> property, Double Agent displays the text specified in <self>ConfidenceText</self> in the <glossary>Listening tip</glossary>.
+<para>When the <see cref="P:DoubleAgent.Server.UserInput.ItemConfidence" /> value of the best match <em>does not exceed</em> the command's <see cref="P:DoubleAgent.Server.Command.ConfidenceThreshold" /> property, Double Agent displays the text specified in <self>ConfidenceText</self> in the <a class="see" href="../html/UI_Intro.htm#ListeningTip">Listening tip</a>.
 </para>
 </remarks>
 <seealso cref="P:DoubleAgent.Server.Command.ConfidenceThreshold" />
 </member>
 
 <member name="P:DoubleAgent.Server.Command.ConfidenceThreshold">
-<summary> Specifies if the command's <see cref="P:DoubleAgent.Server.Command.ConfidenceText" /> appears in the <glossary>Listening tip</glossary>.</summary>
+<summary> Specifies if the command's <see cref="P:DoubleAgent.Server.Command.ConfidenceText" /> appears in the <a class="see" href="../html/UI_Intro.htm#ListeningTip">Listening tip</a>.</summary>
 <value name="ConfidenceThreshold">A <typename>numeric</typename> value that specifies the confidence threshold for the command.</value>
 <remarks>
-<para>If the <see cref="P:DoubleAgent.Server.UserInput.ItemConfidence" /> value of the best match <em>does not exceed</em> the value you set for the <self>ConfidenceThreshold</self> property, the text supplied in <see cref="P:DoubleAgent.Server.Command.ConfidenceText" /> is displayed in the <glossary>Listening tip</glossary>.
+<para>If the <see cref="P:DoubleAgent.Server.UserInput.ItemConfidence" /> value of the best match <em>does not exceed</em> the value you set for the <self>ConfidenceThreshold</self> property, the text supplied in <see cref="P:DoubleAgent.Server.Command.ConfidenceText" /> is displayed in the <a class="see" href="../html/UI_Intro.htm#ListeningTip">Listening tip</a>.
 </para>
 </remarks>
 <seealso cref="P:DoubleAgent.Server.Command.ConfidenceText" />
@@ -2566,13 +3392,25 @@ VariantInit (&amp;EmptyProvider);
 </remarks>
 </member>
 
-<member name="M:DoubleAgent.Server.Commands.Add(System.String,System.String,System.Int32,System.Int32,System.Int32&amp;)">
+<member name="M:DoubleAgent.Server.Commands.Add(System.String,System.String,System.Int32,System.Int32)">
 <summary> ---todo---</summary>
+<param name="Caption"></param>
+<param name="VoiceGrammar"></param>
+<param name="Enabled"></param>
+<param name="Visible"></param>
+<returns name="CommandID"></returns>
 <remarks></remarks>
 </member>
 
-<member name="M:DoubleAgent.Server.Commands.AddEx(System.String,System.String,System.String,System.Int32,System.Int32,System.Int32,System.Int32&amp;)">
+<member name="M:DoubleAgent.Server.Commands.AddEx(System.String,System.String,System.String,System.Int32,System.Int32,System.Int32)">
 <summary> ---todo---</summary>
+<param name="Caption"></param>
+<param name="VoiceGrammar"></param>
+<param name="VoiceCaption"></param>
+<param name="Enabled"></param>
+<param name="Visible"></param>
+<param name="HelpContextID"></param>
+<returns name="CommandID"></returns>
 <remarks></remarks>
 </member>
 
@@ -2668,18 +3506,35 @@ VariantInit (&amp;EmptyProvider);
 </remarks>
 </member>
 
-<member name="M:DoubleAgent.Server.Commands.Insert(System.String,System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32&amp;)">
+<member name="M:DoubleAgent.Server.Commands.Insert(System.String,System.String,System.Int32,System.Int32,System.Int32,System.Int32)">
 <summary> ---todo---</summary>
+<param name="Caption"></param>
+<param name="VoiceGrammar"></param>
+<param name="Enabled"></param>
+<param name="Visible"></param>
+<param name="RefCommandID"></param>
+<param name="Before"></param>
+<returns name="CommandID"></returns>
 <remarks></remarks>
 </member>
 
-<member name="M:DoubleAgent.Server.Commands.InsertEx(System.String,System.String,System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32&amp;)">
+<member name="M:DoubleAgent.Server.Commands.InsertEx(System.String,System.String,System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
 <summary> ---todo---</summary>
+<param name="Caption"></param>
+<param name="VoiceGrammar"></param>
+<param name="VoiceCaption"></param>
+<param name="Enabled"></param>
+<param name="Visible"></param>
+<param name="HelpContextID"></param>
+<param name="RefCommandID"></param>
+<param name="Before"></param>
+<returns name="CommandID"></returns>
 <remarks></remarks>
 </member>
 
 <member name="M:DoubleAgent.Server.Commands.Remove(System.Int32)">
 <summary> ---todo---</summary>
+<param name="CommandID"></param>
 <remarks></remarks>
 </member>
 
@@ -2851,7 +3706,7 @@ VariantInit (&amp;EmptyProvider);
 <remarks>
 <para>The <self>VoiceCaption</self> text appears in the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window when your client application is <glossary>input-active</glossary> and the character is visible. If this property is not set, the <see cref="P:DoubleAgent.Server.Commands.Caption" /> property is used instead. When neither the <self>VoiceCaption</self> nor <see cref="P:DoubleAgent.Server.Commands.Caption" /> property is set, then commands in the collection appear in the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window under an <em>(undefined command)</em> title when your client application becomes <glossary>input-active</glossary>.
 </para>
-<para>The <self>VoiceCaption</self> setting also determines the text displayed in the <glossary>Listening Tip</glossary> to indicate the commands for which the character listens.
+<para>The <self>VoiceCaption</self> setting also determines the text displayed in the <a class="see" href="../html/UI_Intro.htm#ListeningTip">Listening tip</a> to indicate the commands for which the character listens.
 </para>
 <para>If you set the <see cref="P:DoubleAgent.Server.Commands.VoiceGrammar" /> property of your <see cref="T:DoubleAgent.Server.Commands" /> Collection, you will typically also set its <self>VoiceCaption</self> property.
 </para>
@@ -2902,13 +3757,19 @@ VariantInit (&amp;EmptyProvider);
 </member>
 
 <member name="M:DoubleAgent.Server.CommandsWindow.GetVisible(System.Int32&amp;)">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> deprecated</summary>
+<remarks>
+<para>This method has been replaced by the <see cref="P:DoubleAgent.Server.CommandsWindow.Visible" /> property, but is still supported for backward compatibility.
+</para>
+</remarks>
 </member>
 
 <member name="M:DoubleAgent.Server.CommandsWindow.SetVisible(System.Int32)">
-<summary> ---todo---</summary>
-<remarks></remarks>
+<summary> deprecated</summary>
+<remarks>
+<para>This method has been replaced by the <see cref="P:DoubleAgent.Server.CommandsWindow.Visible" /> property, but is still supported for backward compatibility.
+</para>
+</remarks>
 </member>
 
 <member name="P:DoubleAgent.Server.CommandsWindow.Height">
@@ -3236,8 +4097,8 @@ VariantInit (&amp;EmptyProvider);
 </member>
 
 <member name="P:DoubleAgent.Server.Settings.SRListeningTip">
-<summary> Indicates if the <glossary>Listening tip</glossary> is shown when <glossary>Listening mode</glossary> is active.</summary>
-<value name="SRListeningTip">A <typename>boolean</typename> value that indicates if the <glossary>Listening tip</glossary> is enabled.</value>
+<summary> Indicates if the <a class="see" href="../html/UI_Intro.htm#ListeningTip">Listening tip</a> is shown when <glossary>Listening mode</glossary> is active.</summary>
+<value name="SRListeningTip">A <typename>boolean</typename> value that indicates if the <a class="see" href="../html/UI_Intro.htm#ListeningTip">Listening tip</a> is enabled.</value>
 <remarks>
 <para>This property reflects the <literal>"Display listening tips"</literal> option on the <a class="see" href="../html/UI_PropSheet.htm#SpeechInput">Speech Input</a> page of the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window.
 </para>
@@ -3560,6 +4421,9 @@ VariantInit (&amp;EmptyProvider);
 
 <member name="M:DoubleAgent.Server.UserInput.GetAllItemData(System.Object&amp;,System.Object&amp;,System.Object&amp;)">
 <summary> ---todo---</summary>
+<param name="ItemIndices"></param>
+<param name="ItemConfidences"></param>
+<param name="ItemText"></param>
 <remarks></remarks>
 </member>
 
@@ -3588,7 +4452,7 @@ VariantInit (&amp;EmptyProvider);
 </member>
 
 <member name="M:DoubleAgent.Server.UserInput.GetItemText(System.Int32,System.String&amp;)">
-<summary> ---todo---</summary>
+<summary> deprecated</summary>
 <remarks>
 <para>This method has been replaced by the <see cref="P:DoubleAgent.Server.UserInput.ItemText" /> property, but is still supported for backward compatibility.
 </para>
@@ -3597,21 +4461,28 @@ VariantInit (&amp;EmptyProvider);
 
 <member name="P:DoubleAgent.Server.UserInput.Count">
 <summary> ---todo---</summary>
+<value name="Count"></value>
 <remarks></remarks>
 </member>
 
 <member name="P:DoubleAgent.Server.UserInput.ItemConfidence(System.Int32)">
 <summary> ---todo---</summary>
+<param name="ItemIndex"></param>
+<value name="ItemConfidence"></value>
 <remarks></remarks>
 </member>
 
 <member name="P:DoubleAgent.Server.UserInput.ItemCommandID(System.Int32)">
 <summary> ---todo---</summary>
+<param name="ItemIndex"></param>
+<value name="ItemCommandID"></value>
 <remarks></remarks>
 </member>
 
 <member name="P:DoubleAgent.Server.UserInput.ItemText(System.Int32)">
 <summary> ---todo---</summary>
+<param name="ItemIndex"></param>
+<value name="ItemConfidence"></value>
 <remarks></remarks>
 </member>
 
@@ -3626,443 +4497,6 @@ VariantInit (&amp;EmptyProvider);
 </remarks>
 <seealso cref="E:DoubleAgent.Server.Server.Command" />
 <seealso cref="T:DoubleAgent.Server.Command" />
-</member>
-
-<member name="F:DoubleAgent.Server.FilesFilterFlags.PathDoubleAgent">
-<summary>Indicates if the Double Agent install location should be included in the <see cref="P:DoubleAgent.Server.CharacterFiles.DefaultSearchPath" />.</summary>
-<value>0x00000001</value>
-</member>
-
-<member name="F:DoubleAgent.Server.FilesFilterFlags.PathMsAgent">
-<summary>Indicates if the Microsoft Agent install location should be included in the <see cref="P:DoubleAgent.Server.CharacterFiles.DefaultSearchPath" />.</summary>
-<value>0x00000002</value>
-</member>
-
-<member name="F:DoubleAgent.Server.FilesFilterFlags.PathMsOffice">
-<summary>Indicates if the Microsoft Office install location should be included in the <see cref="P:DoubleAgent.Server.CharacterFiles.DefaultSearchPath" />.</summary>
-<value>0x00000004</value>
-</member>
-
-<member name="F:DoubleAgent.Server.FilesFilterFlags.ExcludeNonSpeaking">
-<summary>Indicates if the <see cref="P:DoubleAgent.Server.CharacterFiles.FilePaths" /> property should exclude characters that are <em>not </em>designed to speak.</summary>
-<value>0x00000010</value>
-</member>
-
-<member name="F:DoubleAgent.Server.FilesFilterFlags.ExcludeSpeaking">
-<summary>Indicates if the <see cref="P:DoubleAgent.Server.CharacterFiles.FilePaths" /> property should exclude characters that are designed to speak.</summary>
-<value>0x00000020</value>
-</member>
-
-<member name="F:DoubleAgent.Server.FilesFilterFlags.NoValidateVersion">
-<summary>Indicates if the the <see cref="P:DoubleAgent.Server.CharacterFiles.FilePaths" /> property should include all character files, regardless of version.</summary>
-<remarks>
-<para>Double Agent can only use version 2.x characters.
-</para>
-<note>If the <see cref="F:DoubleAgent.Server.FilesFilterFlags.ExcludeNonSpeaking" /> or <see cref="F:DoubleAgent.Server.FilesFilterFlags.ExcludeSpeaking" /> flag is set, this flag is ignored.</note>
-</remarks>
-<value>0x00010000</value>
-</member>
-
-<member name="T:DoubleAgent.Server.FilesFilterFlags" kind="Enumeration">
-<summary>
-<para>Specifies the filter that is applied to the <see cref="T:DoubleAgent.Server.CharacterFiles" />.<see cref="P:DoubleAgent.Server.CharacterFiles.FilePaths" /> property.
-</para>
-</summary>
-<seealso cref="P:DoubleAgent.Server.CharacterFiles.Filter" />
-</member>
-
-<member name="F:DoubleAgent.Server.ActiveStateType.Active">
-<summary>Your client application is the character's active client.</summary>
-<value>1</value>
-</member>
-
-<member name="F:DoubleAgent.Server.ActiveStateType.Inactive">
-<summary>Your client application is <em>not</em> the character's active client.</summary>
-<value>0</value>
-</member>
-
-<member name="F:DoubleAgent.Server.ActiveStateType.InputActive">
-<summary>The character is the <glossary>input-active</glossary> character and will receive user input.</summary>
-<value>2</value>
-</member>
-
-<member name="T:DoubleAgent.Server.ActiveStateType" kind="Enumeration">
-<summary>
-<para>Enumerates a character's possible activation states.
-</para>
-</summary>
-</member>
-
-<member name="F:DoubleAgent.Server.AudioStatusType.Available">
-<summary>Text-to-speech is available.</summary>
-<value>0</value>
-</member>
-
-<member name="F:DoubleAgent.Server.AudioStatusType.CharacterListening">
-<summary><glossary>Listening mode</glossary> is active.</summary>
-<value>5</value>
-</member>
-
-<member name="F:DoubleAgent.Server.AudioStatusType.CharacterSpeaking">
-<summary>A character is currently speaking.</summary>
-<value>4</value>
-</member>
-
-<member name="F:DoubleAgent.Server.AudioStatusType.Disabled">
-<summary>Text-to-speech is disabled in the <a class="see" href="../html/UI_PropSheet.htm#Output">Advanced Character Options</a> window.</summary>
-<value>1</value>
-</member>
-
-<member name="F:DoubleAgent.Server.AudioStatusType.Error">
-<summary>The audio status could not be determined.</summary>
-<value>6</value>
-</member>
-
-<member name="F:DoubleAgent.Server.AudioStatusType.UserSpeaking">
-<summary><glossary>Listening mode</glossary> is active and the user is currently speaking.</summary>
-<value>3</value>
-</member>
-
-<member name="T:DoubleAgent.Server.AudioStatusType" kind="Enumeration">
-<summary>
-<para>Enumerates the possible states of the audio device.
-</para>
-</summary>
-<seealso cref="P:DoubleAgent.Server.Settings.AudioStatus" />
-</member>
-
-<member name="F:DoubleAgent.Server.BalloonStyleFlags.AutoHide">
-<summary>The <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> is hidden automatically after a short delay.</summary>
-<value>0x00000004</value>
-<remarks>
-<para>When the <see cref="F:DoubleAgent.Server.BalloonStyleFlags.AutoHide" /> style is set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> automatically hides when spoken output completes. When it's not set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> remains displayed until the next <see cref="M:DoubleAgent.Server.Character.Speak(System.String,System.String,System.Int32&amp;)" /> or <see cref="M:DoubleAgent.Server.Character.Think(System.String,System.Int32&amp;)" /> call, the character is hidden, or the user clicks or drags the character.
-</para>
-</remarks>
-</member>
-
-<member name="F:DoubleAgent.Server.BalloonStyleFlags.AutoPace">
-<summary>The text in the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> is shown one word at a time.</summary>
-<value>0x00000008</value>
-<remarks>
-<para>When the <see cref="F:DoubleAgent.Server.BalloonStyleFlags.AutoPace" /> style is set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> paces its text output based on the current output rate, for example one word at a time. When output exceeds the size of the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>, the text is automatically scrolled. When it's not set, all text included in a <see cref="M:DoubleAgent.Server.Character.Speak(System.String,System.String,System.Int32&amp;)" /> or <see cref="M:DoubleAgent.Server.Character.Think(System.String,System.Int32&amp;)" /> request is displayed at once.
-</para>
-</remarks>
-</member>
-
-<member name="F:DoubleAgent.Server.BalloonStyleFlags.Enabled">
-<summary>The <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> is enabled.</summary>
-<value>0x00000001</value>
-<remarks>
-<para>When the <see cref="F:DoubleAgent.Server.BalloonStyleFlags.Enabled" /> style is set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> appears when the <see cref="M:DoubleAgent.Server.Character.Speak(System.String,System.String,System.Int32&amp;)" /> or <see cref="M:DoubleAgent.Server.Character.Think(System.String,System.Int32&amp;)" /> method is used, unless the user overrides this setting in the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window. When it's not set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> does not appear.
-</para>
-</remarks>
-</member>
-
-<member name="F:DoubleAgent.Server.BalloonStyleFlags.ShowPartialLines">
-<summary>Partial lines are shown when the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> text scrolls (for a <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> that's <em>not</em> <keyword>SizeToText</keyword>).</summary>
-<value>0x00000010</value>
-<remarks>
-<para>When the <see cref="F:DoubleAgent.Server.BalloonStyleFlags.ShowPartialLines" /> style is set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> will show partial lines at the bottom as it scrolls its text. When it's not set, only full lines are shown. This style only applies when the <see cref="F:DoubleAgent.Server.BalloonStyleFlags.SizeToText" /> style is <em>not</em> set.
-</para>
-</remarks>
-</member>
-
-<member name="F:DoubleAgent.Server.BalloonStyleFlags.SizeToText">
-<summary>The <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> is automatically resized to fit the speech or thought text.</summary>
-<value>0x00000002</value>
-<remarks>
-<para>When the <see cref="F:DoubleAgent.Server.BalloonStyleFlags.SizeToText" /> style is set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> automatically adjusts the height of the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> to the current size of the text for the <see cref="M:DoubleAgent.Server.Character.Speak(System.String,System.String,System.Int32&amp;)" /> or <see cref="M:DoubleAgent.Server.Character.Think(System.String,System.Int32&amp;)" /> request. When it's not set, the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon's</a> height is based on the <see cref="P:DoubleAgent.Server.Balloon.NumberOfLines" /> property. If this style is set and you attempt to set the <see cref="P:DoubleAgent.Server.Balloon.NumberOfLines" /> property, Double Agent raises an error.
-</para>
-</remarks>
-</member>
-
-<member name="T:DoubleAgent.Server.BalloonStyleFlags" kind="Enumeration">
-<summary>
-<para>Specifies settings that affect a <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon's</a> appearence and behaviour.
-</para>
-</summary>
-<seealso cref="P:DoubleAgent.Server.Balloon.Style" />
-</member>
-
-<member name="F:DoubleAgent.Server.CharacterStyleFlags.AutoPopupMenu">
-<summary>A right-click on the character or it's notification icon automatically shows a <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a>.</summary>
-<value>0x00000004</value>
-</member>
-
-<member name="F:DoubleAgent.Server.CharacterStyleFlags.IconShown">
-<summary>The character has an icon in the taskbar notification area.</summary>
-<value>0x00000008</value>
-</member>
-
-<member name="F:DoubleAgent.Server.CharacterStyleFlags.IdleEnabled">
-<summary>The character enters idle mode and shows it's idling animations when it's not doing anything else.</summary>
-<value>0x00000002</value>
-</member>
-
-<member name="F:DoubleAgent.Server.CharacterStyleFlags.Smoothed">
-<summary>Image smoothing (antialiasing) is applied to the character's animations.</summary>
-<value>0x00000030</value>
-</member>
-
-<member name="F:DoubleAgent.Server.CharacterStyleFlags.SmoothEdges">
-<summary>Image smoothing (antialiasing) is applied to the edges of the character's animations.</summary>
-<value>0x00000020</value>
-</member>
-
-<member name="F:DoubleAgent.Server.CharacterStyleFlags.SoundEffects">
-<summary>The animation sound effects are played.</summary>
-<value>0x00000001</value>
-</member>
-
-<member name="T:DoubleAgent.Server.CharacterStyleFlags" kind="Enumeration">
-<summary>
-<para>Specifies settings that affect a character's appearence and behaviour.
-</para>
-</summary>
-<seealso cref="P:DoubleAgent.Server.Character.Style" />
-<seealso cref="P:DoubleAgent.Server.Server.CharacterStyle" />
-</member>
-
-<member name="F:DoubleAgent.Server.ListenCompleteType.CharacterClientDeactivated">
-<summary>The character is no longer active or it's active client has changed.</summary>
-<value>6</value>
-</member>
-
-<member name="F:DoubleAgent.Server.ListenCompleteType.DefaultCharacterChanged">
-<summary>The default character was changed in the <a class="see" href="../html/UI_PropSheet.htm#Gallery">Advanced Character Options</a> window.</summary>
-<value>7</value>
-</member>
-
-<member name="F:DoubleAgent.Server.ListenCompleteType.ProgramDisabled">
-<summary>This program turned off the <glossary>Listening mode</glossary> with the <see cref="M:DoubleAgent.Server.Character.Listen(System.Int32)" /> method.</summary>
-<value>1</value>
-</member>
-
-<member name="F:DoubleAgent.Server.ListenCompleteType.ProgramTimedOut">
-<summary>The <glossary>Listening mode</glossary> was started by this program with the <see cref="M:DoubleAgent.Server.Character.Listen(System.Int32)" /> method, and it timed out.</summary>
-<value>2</value>
-</member>
-
-<member name="F:DoubleAgent.Server.ListenCompleteType.UserDisabled">
-<summary>Speech recognition was disabled in the <a class="see" href="../html/UI_PropSheet.htm#SpeechInput">Advanced Character Options</a> window.</summary>
-<value>8</value>
-</member>
-
-<member name="F:DoubleAgent.Server.ListenCompleteType.UserReleasedKey">
-<summary>The <glossary>Listening mode</glossary> was started with the <glossary>Listening key</glossary>, and the key was released.</summary>
-<value>4</value>
-</member>
-
-<member name="F:DoubleAgent.Server.ListenCompleteType.UserSpeechEnded">
-<summary>Speech recognition has produced a result.</summary>
-<value>5</value>
-</member>
-
-<member name="F:DoubleAgent.Server.ListenCompleteType.UserTimedOut">
-<summary>The <glossary>Listening mode</glossary> was started with the <glossary>Listening key</glossary>, and it timed out.</summary>
-<value>3</value>
-</member>
-
-<member name="T:DoubleAgent.Server.ListenCompleteType" kind="Enumeration">
-<summary>
-<para>Enumerates the possible reasons that <glossary>Listening mode</glossary> could end.
-</para>
-</summary>
-<seealso cref="E:DoubleAgent.Server.Server.ListeningState" />
-</member>
-
-<member name="F:DoubleAgent.Server.ListeningStatusType.CharacterInactive">
-<summary>Speech recognition is unavailable because another client is the active client of this character, or the current character is not <glossary>input-active</glossary>.</summary>
-<value>2</value>
-</member>
-
-<member name="F:DoubleAgent.Server.ListeningStatusType.CharacterInactive">
-<summary>Speech recognition is unavailable because another client is the active client of this character, or the current character is not <glossary>input-active</glossary>.</summary>
-<value>2</value>
-</member>
-
-<member name="F:DoubleAgent.Server.ListeningStatusType.Error">
-<summary>The speech recognition status could not be determined.</summary>
-<value>6</value>
-</member>
-
-<member name="F:DoubleAgent.Server.ListeningStatusType.InitializeFailed">
-<summary>Speech recognition is unavailable because it could not be initialized. This includes the possibility that there is no speech engine available matching the character's language setting.</summary>
-<value>4</value>
-</member>
-
-<member name="F:DoubleAgent.Server.ListeningStatusType.InputDisabled">
-<summary>The user has disabled speech input in the <a class="see" href="../html/UI_PropSheet.htm#SpeechInput">Advanced Character Options</a> window.</summary>
-<value>5</value>
-</member>
-
-<member name="T:DoubleAgent.Server.ListeningStatusType" kind="Enumeration">
-<summary>
-<para>Indicates if a character can enter <glossary>Listening mode</glossary>, or why it cannot.
-</para>
-</summary>
-<seealso cref="P:DoubleAgent.Server.Character.ListeningStatus" />
-<seealso cref="P:DoubleAgent.Server.Settings.SREnabled" />
-</member>
-
-<member name="F:DoubleAgent.Server.MoveCauseType.NeverMoved">
-<summary>The character hasn't moved.</summary>
-<value>0</value>
-</member>
-
-<member name="F:DoubleAgent.Server.MoveCauseType.OtherProgramMoved">
-<summary>Another client application moved the character.</summary>
-<value>3</value>
-</member>
-
-<member name="F:DoubleAgent.Server.MoveCauseType.ProgramMoved">
-<summary>Your client application moved the character.</summary>
-<value>2</value>
-</member>
-
-<member name="F:DoubleAgent.Server.MoveCauseType.UserMoved">
-<summary>The user dragged the character.</summary>
-<value>1</value>
-</member>
-
-<member name="T:DoubleAgent.Server.MoveCauseType" kind="Enumeration">
-<summary>
-<para>Enumerates the possible reasons that a character moved.
-</para>
-</summary>
-<seealso cref="P:DoubleAgent.Server.Character.MoveCause" />
-<seealso cref="E:DoubleAgent.Server.Server.Move" />
-</member>
-
-<member name="F:DoubleAgent.Server.PrepareResourceType.Animation">
-<summary>Download an animation.</summary>
-<value>0</value>
-</member>
-
-<member name="F:DoubleAgent.Server.PrepareResourceType.State">
-<summary>Download all animations for a state.</summary>
-<value>1</value>
-</member>
-
-<member name="F:DoubleAgent.Server.PrepareResourceType.Wave">
-<summary>Download a sound file.</summary>
-<value>2</value>
-</member>
-
-<member name="T:DoubleAgent.Server.PrepareResourceType" kind="Enumeration">
-<summary>
-<para>Specifies the type of resource that is being requested with the <see cref="M:DoubleAgent.Server.Character.Prepare(System.Int32,System.String,System.Int32,System.Int32&amp;)" /> method.
-</para>
-</summary>
-<seealso cref="M:DoubleAgent.Server.Character.Prepare(System.Int32,System.String,System.Int32,System.Int32&amp;)" />
-</member>
-
-<member name="F:DoubleAgent.Server.SpeechGenderType.Female">
-<summary>A female voice.</summary>
-<value>1</value>
-</member>
-
-<member name="F:DoubleAgent.Server.SpeechGenderType.Male">
-<summary>A male voice.</summary>
-<value>2</value>
-</member>
-
-<member name="F:DoubleAgent.Server.SpeechGenderType.Neutral">
-<summary>Either a female or male voice.</summary>
-<value>0</value>
-</member>
-
-<member name="T:DoubleAgent.Server.SpeechGenderType" kind="Enumeration">
-<summary>
-<para>Specifies the gender of a text-to-speech voice.
-</para>
-</summary>
-</member>
-
-<member name="F:DoubleAgent.Server.StopAllFlags.Everything">
-<summary>Stop all pending actions.</summary>
-<value>0xFFFFFFFF</value>
-</member>
-
-<member name="F:DoubleAgent.Server.StopAllFlags.ImmediatePrepare">
-<summary>Stop any non-queued animation or file downloads (<keyword>Prepare</keyword> method with <token>Queue</token> parameter set to <keyword>False</keyword>)</summary>
-<value>0x00000010</value>
-</member>
-
-<member name="F:DoubleAgent.Server.StopAllFlags.Move">
-<summary>Stop any pending or running move requests.</summary>
-<value>0x00000002</value>
-</member>
-
-<member name="F:DoubleAgent.Server.StopAllFlags.Play">
-<summary>Stop any pending or running animations.</summary>
-<value>0x00000001</value>
-</member>
-
-<member name="F:DoubleAgent.Server.StopAllFlags.QueuedPrepare">
-<summary>Stop any queued animation or file downloads (<keyword>Prepare</keyword> method with <token>Queue</token> parameter set to <keyword>True</keyword>).</summary>
-<value>0x00000008</value>
-</member>
-
-<member name="F:DoubleAgent.Server.StopAllFlags.Speak">
-<summary>Stop any pending or running speech requests.</summary>
-<value>0x00000004</value>
-</member>
-
-<member name="F:DoubleAgent.Server.StopAllFlags.Visibility">
-<summary>Stop any pending show or hide requests.</summary>
-<value>0x00000020</value>
-</member>
-
-<member name="T:DoubleAgent.Server.StopAllFlags" kind="Enumeration">
-<summary>
-<para>Defines the scope of the <see cref="M:DoubleAgent.Server.Character.StopAll(System.Int32)" /> method.
-</para>
-</summary>
-</member>
-
-<member name="F:DoubleAgent.Server.VisibilityCauseType.NeverShown">
-<summary>The character has not been shown.</summary>
-<value>0</value>
-</member>
-
-<member name="F:DoubleAgent.Server.VisibilityCauseType.OtherProgramHid">
-<summary>Another client application hid the character.</summary>
-<value>5</value>
-</member>
-
-<member name="F:DoubleAgent.Server.VisibilityCauseType.OtherProgramShowed">
-<summary>Another client application showed the character.</summary>
-<value>6</value>
-</member>
-
-<member name="F:DoubleAgent.Server.VisibilityCauseType.ProgramHid">
-<summary>Your application hid the character.</summary>
-<value>3</value>
-</member>
-
-<member name="F:DoubleAgent.Server.VisibilityCauseType.ProgramShowed">
-<summary>Your application showed the character.</summary>
-<value>4</value>
-</member>
-
-<member name="F:DoubleAgent.Server.VisibilityCauseType.UserHid">
-<summary>The user hid the character using the command on the character's taskbar icon <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a> or using speech input.</summary>
-<value>1</value>
-</member>
-
-<member name="F:DoubleAgent.Server.VisibilityCauseType.UserShowed">
-<summary>The user showed the character using the command on the character's taskbar icon <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a> or using speech input.</summary>
-<value>2</value>
-</member>
-
-<member name="T:DoubleAgent.Server.VisibilityCauseType" kind="Enumeration">
-<summary>
-<para>Enumerates the possible reasons that a character was shown or hidden.
-</para>
-</summary>
-<seealso cref="P:DoubleAgent.Server.Character.VisibilityCause" />
-<seealso cref="E:DoubleAgent.Server.Server.VisibleState" />
 </member>
 
 </members>

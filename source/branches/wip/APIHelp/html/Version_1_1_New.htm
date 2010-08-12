@@ -27,10 +27,10 @@
 							the quality of the visual presentation.</p>
 						<ul>
 							<li>Animations can be smoothed with a bicubic interpolation algorithm.</li>
-							<li>The application has more control over the notification icon:
+							<li>The application has more control over the <a class="see" href="UI_Intro.htm#Icon">notification icon</a>:
 								<ul>
-									<li>It can control if and when the notification icon is shown.</li>
-									<li>It can set it&#39;s own notification icon tip text.</li>
+									<li>It can control if and when the <a class="see" href="UI_Intro.htm#Icon">notification icon</a> is shown.</li>
+									<li>It can set it&#39;s own <a class="see" href="UI_Intro.htm#Icon">notification icon</a> tip text.</li>
 									<li>Characters without pre-defined icons can have icons generated for them.</li>
 									<li>Characters with pre-defined icons can also have icons generated for them. The pre-defined icons have
 										a color depth of 4 bits (16 colors). The generated icons are higher quality.</li>
@@ -56,7 +56,7 @@
 								<ul>
 									<li>Some functionality was present in Server interfaces but not the Control interfaces. Both interfaces
 										now include all functionality.</li>
-									<li>A lot of functionality was implemented as properies in the Control interfaces and Get/Set methods in
+									<li>A lot of functionality was implemented as properties in the Control interfaces and Get/Set methods in
 										the Server interfaces. The Server interfaces have been changed to use properties.</li>
 									<li>There were some naming differences (such as the Prepare method for the Server and the Get method for
 										the Control). These differences have been resolved.</li>
@@ -123,8 +123,9 @@
 							to use. Changes to the <s>Control</s> make it a first-class component rather than just a portal to the
 							<s>Server</s>.</p>
 						<ul>
-							<li>The Double Agent <s>Control</s> can now operate in three different <a href="..\Programming\Ctl_Programming_Modes.htm">
-							modes</a>:
+							<li>
+								<p>The Double Agent <s>Control</s> can now operate in three different <a href="../Programming/Ctl_Programming_Modes.htm">
+								modes:</a></p>
 								<ul>
 									<li>It can act as a portal to the <s>Server</s>, as in previous versions. </li>
 									<li>It can now run <s>stand-alone</s>, providing full functionality without any connection to the Server.</li>
@@ -132,15 +133,16 @@
 										the control window.</li>
 								</ul>
 							</li>
-							<li>The <a href="..\Programming\Ctl_Programming_Modes.htm">mode</a> a developer chooses depends on the application&#39;s
-								requirements:
+							<li>
+								<p>The <a href="../Programming/Ctl_Programming_Modes.htm">mode</a> a developer chooses depends on the application&#39;s
+									requirements:</p>
 								<ul>
 									<li>In <em class="glossary">connected</em> mode, a character belongs to the <s>Server</s> and is shared
 										among all applications using it. A particular character will only have a single instance, with multiple
 										client applications.</li>
 									<li>In <em class="glossary">stand-alone</em> mode, a character belongs to the <s>Control</s> (and thus the
 										application that created the Control). Each application that uses the Control in <em class="glossary">stand-alone</em>
-										mode has its own <i>private</i> instance of a charcter. If another application is using the same character
+										mode has its own <i>private</i> instance of a character. If another application is using the same character
 										at the same time, there will be two copies of the character on the screen and two notification icons,
 										one for each application.</li>
 									<li>In <em class="glossary">contained</em> mode (which is also stand-alone), a character belongs to the
@@ -150,16 +152,8 @@
 								</ul>
 							</li>
 						</ul>
-						<p><em class="glossary">Stand-alone</em> mode is tempting for developers because they no longer have to
-							worry about a character being a shared resource. Also, it doesn&#39;t require a connection to the server,
-							so there is no dependency on an external process. In fact, in <em class="glossary">stand-alone</em>
-							mode the server doesn&#39;t even have to be installed.</p>
-						<p>However, Microsoft<sup>®</sup> Agent was implemented as a server for a very good reason. Having more
-							than one copy of the same character on the screen at the same time can confuse the user. The character
-							is a <em class="glossary">floating</em> window, on top of all other windows, and does not obviously
-							belong to <i>any</i> application. Thus the decision to make it shared by <i>all</i> applications.</p>
-						<p>When the character is <em class="glossary">contained</em> rather than <em class="glossary">floating</em>,
-							it becomes obvious to which application it belongs.</p>
+						<p>For more information, see <a href="../Programming/Ctl_Programming_Modes.htm">Connected, Stand-Alone,
+						and Contained</a>.</p>
 					</dd>
 				</dl>
 			</td>

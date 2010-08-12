@@ -24,6 +24,10 @@
 	<!ENTITY dacmname "pop-up menu">
 	<!ENTITY dawbref "../html/UI_Intro.htm#Balloon">
 	<!ENTITY dawbname "word balloon">
+	<!ENTITY daniref "../html/UI_Intro.htm#Icon">
+	<!ENTITY daniname "notification icon">
+	<!ENTITY daltref "../html/UI_Intro.htm#ListeningTip">
+	<!ENTITY daltname "Listening tip">
 ]>
 
 <doc>
@@ -347,9 +351,9 @@
 				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlActivateInputEvent" suffix="Object" />
 				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlActivateInputEvent']/syntax/list" />
 			</param>
-			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ActivateInput']/remarks" replace="ActivateInput=CtlActivateInput|DeactivateInput=CtlDeactivateInput" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ActivateInput']/remarks" replace="ActiveClientChange=CtlActiveClientChange|ActivateInput=CtlActivateInput|DeactivateInput=CtlDeactivateInput" />
 			<seealso cref="T:DoubleAgent.AxControl.CtlActivateInputEvent" prefix="The" suffix="Object" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ActivateInput']/seealso" replace="ActivateInput=CtlActivateInput|DeactivateInput=CtlDeactivateInput" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ActivateInput']/seealso" replace="ActiveClientChange=CtlActiveClientChange|ActivateInput=CtlActivateInput|DeactivateInput=CtlDeactivateInput" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -543,9 +547,9 @@
 				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlDeactivateInputEvent" suffix="Object" />
 				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlDeactivateInputEvent']/syntax/list" />
 			</param>
-			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DeactivateInput']/remarks" replace="DeactivateInput=CtlDeactivateInput|ActivateInput=CtlActivateInput" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DeactivateInput']/remarks" replace="ActiveClientChange=CtlActiveClientChange|DeactivateInput=CtlDeactivateInput|ActivateInput=CtlActivateInput" />
 			<seealso cref="T:DoubleAgent.AxControl.CtlDeactivateInputEvent" prefix="The" suffix="Object" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DeactivateInput']/seealso" replace="DeactivateInput=CtlDeactivateInput|ActivateInput=CtlActivateInput" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DeactivateInput']/seealso" replace="ActiveClientChange=CtlActiveClientChange|DeactivateInput=CtlDeactivateInput|ActivateInput=CtlActivateInput" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -2311,7 +2315,7 @@
 					The <self>AxControl Object</self> implements the same methods, properties, and events as the <see class="keyword" cref="T:&dactlroot;" suffix="Object" />.
 				</para>
 				<para>
-					The ActiveX<sup>®</sup> <glossary>appearence</glossary> property names and the event names are prefixed
+					The ActiveX<sup>®</sup> <glossary>appearance</glossary> property names and the event names are prefixed
 					with "<keyword>Ctl</keyword>", to avoid name collisions and to make them stand out. Also, the events receive
 					their event data according to the pattern for <glossary>Windows Forms</glossary> controls.
 				</para>
@@ -2508,7 +2512,7 @@
 					<item>
 						<description>
 							<para>
-								The <self>AxControl Object</self> supports the following ActiveX<sup>®</sup> <glossary>appearence</glossary>
+								The <self>AxControl Object</self> supports the following ActiveX<sup>®</sup> <glossary>appearance</glossary>
 								properties when the control is used in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm">contained</a>
 								mode:
 							</para>

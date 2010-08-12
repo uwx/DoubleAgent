@@ -23,6 +23,10 @@
 	<!ENTITY dacmname "pop-up menu">
 	<!ENTITY dawbref "../html/UI_Intro.htm#Balloon">
 	<!ENTITY dawbname "word balloon">
+	<!ENTITY daniref "../html/UI_Intro.htm#Icon">
+	<!ENTITY daniname "notification icon">
+	<!ENTITY daltref "../html/UI_Intro.htm#ListeningTip">
+	<!ENTITY daltname "Listening tip">
 ]>
 
 <doc>
@@ -30,6 +34,497 @@
 		<name>Double Agent Server</name>
 	</assembly>
 	<members>
+		<!--=============================================================================================-->
+
+		<member name="F:&dans;.ActiveStateType.Active">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ActiveStateType.Active']" />
+		</member>
+
+		<member name="F:&dans;.ActiveStateType.Inactive">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ActiveStateType.Inactive']" />
+		</member>
+
+		<member name="F:&dans;.ActiveStateType.InputActive">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ActiveStateType.InputActive']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="T:&dans;.ActiveStateType" kind="Enumeration">
+			<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.ActiveStateType']/summary" />
+			<syntax>
+				<h4>Members</h4>
+				<list type="table">
+					<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.ActiveStateType']/syntax/list/item[1]" />
+					<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.ActiveStateType']/syntax/list/item[2]" />
+					<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.ActiveStateType']/syntax/list/item[3]" />
+				</list>
+			</syntax>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="F:&dans;.FilesFilterFlags.PathDoubleAgent">
+			<summary>
+				Indicates if the Double Agent install location should be included in the <see cref="P:&dans;.CharacterFiles.DefaultSearchPath" />.
+			</summary>
+			<value>0x00000001</value>
+		</member>
+
+		<member name="F:&dans;.FilesFilterFlags.PathMsAgent">
+			<summary>
+				Indicates if the Microsoft Agent install location should be included in the <see cref="P:&dans;.CharacterFiles.DefaultSearchPath" />.
+			</summary>
+			<value>0x00000002</value>
+		</member>
+
+		<member name="F:&dans;.FilesFilterFlags.PathMsOffice">
+			<summary>
+				Indicates if the Microsoft Office install location should be included in the <see cref="P:&dans;.CharacterFiles.DefaultSearchPath" />.
+			</summary>
+			<value>0x00000004</value>
+		</member>
+
+		<member name="F:&dans;.FilesFilterFlags.ExcludeNonSpeaking">
+			<summary>
+				Indicates if the <see cref="P:&dans;.CharacterFiles.FilePaths" /> property should exclude characters
+				that are <em>not </em>designed to speak.
+			</summary>
+			<value>0x00000010</value>
+		</member>
+
+		<member name="F:&dans;.FilesFilterFlags.ExcludeSpeaking">
+			<summary>
+				Indicates if the <see cref="P:&dans;.CharacterFiles.FilePaths" /> property should exclude characters
+				that are designed to speak.
+			</summary>
+			<value>0x00000020</value>
+		</member>
+
+		<member name="F:&dans;.FilesFilterFlags.NoValidateVersion">
+			<summary>
+				Indicates if the the <see cref="P:&dans;.CharacterFiles.FilePaths" /> property should include all
+				character files, regardless of version.
+			</summary>
+			<remarks>
+				<para>
+					Double Agent can only use version 2.x characters.
+				</para>
+				<note>
+					If the <see cref="F:&dans;.FilesFilterFlags.ExcludeNonSpeaking" /> or <see cref="F:&dans;.FilesFilterFlags.ExcludeSpeaking" />
+					flag is set, this flag is ignored.
+				</note>
+			</remarks>
+			<value>0x00010000</value>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="T:&dans;.FilesFilterFlags" kind="Enumeration">
+			<summary>
+				<para>
+					Specifies the filter that is applied to the <see cref="T:&dans;.CharacterFiles" />.<see cref="P:&dans;.CharacterFiles.FilePaths" />
+					property.
+				</para>
+			</summary>
+			<syntax>
+				<h4>Members</h4>
+				<list type="table">
+					<item>
+						<term xml:space="preserve">
+<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.PathDoubleAgent']/value" /> = <keyword>PathDoubleAgent</keyword>
+</term>
+						<description>
+							<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.PathDoubleAgent']/summary" />
+						</description>
+					</item>
+					<item>
+						<term xml:space="preserve">
+<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.PathMsAgent']/value" /> = <keyword>PathMsAgent</keyword>
+</term>
+						<description>
+							<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.PathMsAgent']/summary" />
+						</description>
+					</item>
+					<item>
+						<term xml:space="preserve">
+<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.PathMsOffice']/value" /> = <keyword>PathMsOffice</keyword>
+</term>
+						<description>
+							<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.PathMsOffice']/summary" />
+						</description>
+					</item>
+					<item>
+						<term xml:space="preserve">
+<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.ExcludeNonSpeaking']/value" /> = <keyword>ExcludeNonSpeaking</keyword>
+</term>
+						<description>
+							<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.ExcludeNonSpeaking']/summary" />
+						</description>
+					</item>
+					<item>
+						<term xml:space="preserve">
+<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.ExcludeSpeaking']/value" /> = <keyword>ExcludeSpeaking</keyword>
+</term>
+						<description>
+							<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.ExcludeSpeaking']/summary" />
+						</description>
+					</item>
+					<item>
+						<term xml:space="preserve">
+<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.NoValidateVersion']/value" /> = <keyword>NoValidateVersion</keyword>
+</term>
+						<description>
+							<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.NoValidateVersion']/summary" />
+						</description>
+					</item>
+				</list>
+			</syntax>
+			<seealso cref="P:&dans;.CharacterFiles.Filter" prefix="The" suffix="Property" />
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="F:&dans;.AudioStatusType.Available">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.AudioStatusType.Available']" />
+		</member>
+
+		<member name="F:&dans;.AudioStatusType.CharacterListening">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.AudioStatusType.CharacterListening']" />
+		</member>
+
+		<member name="F:&dans;.AudioStatusType.CharacterSpeaking">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.AudioStatusType.CharacterSpeaking']" />
+		</member>
+
+		<member name="F:&dans;.AudioStatusType.Disabled">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.AudioStatusType.Disabled']" />
+		</member>
+
+		<member name="F:&dans;.AudioStatusType.Error">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.AudioStatusType.Error']" />
+		</member>
+
+		<member name="F:&dans;.AudioStatusType.UserSpeaking">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.AudioStatusType.UserSpeaking']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="T:&dans;.AudioStatusType" kind="Enumeration">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.AudioStatusType']" />
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="F:&dans;.BalloonStyleFlags.AutoHide">
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.AutoHide']/summary" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.AutoHide']/value" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.AutoHide']/remarks" />
+		</member>
+
+		<member name="F:&dans;.BalloonStyleFlags.AutoPace">
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.AutoPace']/summary" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.AutoPace']/value" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.AutoPace']/remarks" />
+		</member>
+
+		<member name="F:&dans;.BalloonStyleFlags.Enabled">
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.Enabled']/summary" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.Enabled']/value" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.Enabled']/remarks" />
+		</member>
+
+		<member name="F:&dans;.BalloonStyleFlags.ShowPartialLines">
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.ShowPartialLines']/summary" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.ShowPartialLines']/value" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.ShowPartialLines']/remarks" />
+		</member>
+
+		<member name="F:&dans;.BalloonStyleFlags.SizeToText">
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.SizeToText']/summary" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.SizeToText']/value" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.SizeToText']/remarks" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="T:&dans;.BalloonStyleFlags" kind="Enumeration">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.BalloonStyleFlags']" />
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="F:&dans;.CharacterStyleFlags.AutoPopupMenu">
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.AutoPopupMenu']/summary" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.AutoPopupMenu']/value" />
+		</member>
+
+		<member name="F:&dans;.CharacterStyleFlags.IconShown">
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.IconShown']/summary" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.IconShown']/value" />
+		</member>
+
+		<member name="F:&dans;.CharacterStyleFlags.IdleEnabled">
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.IdleEnabled']/summary" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.IdleEnabled']/value" />
+		</member>
+
+		<member name="F:&dans;.CharacterStyleFlags.Smoothed">
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.Smoothed']/summary" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.Smoothed']/value" />
+		</member>
+
+		<member name="F:&dans;.CharacterStyleFlags.SmoothEdges">
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.SmoothEdges']/summary" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.SmoothEdges']/value" />
+		</member>
+
+		<member name="F:&dans;.CharacterStyleFlags.SoundEffects">
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.SoundEffects']/summary" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.SoundEffects']/value" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="T:&dans;.CharacterStyleFlags" kind="Enumeration">
+			<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.CharacterStyleFlags']/summary" />
+			<syntax>
+				<h4>Members</h4>
+				<list type="table">
+					<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.CharacterStyleFlags']/syntax/list/item[1]" />
+					<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.CharacterStyleFlags']/syntax/list/item[2]" />
+					<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.CharacterStyleFlags']/syntax/list/item[3]" />
+					<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.CharacterStyleFlags']/syntax/list/item[4]" />
+					<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.CharacterStyleFlags']/syntax/list/item[5]" />
+					<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.CharacterStyleFlags']/syntax/list/item[6]" />
+				</list>
+			</syntax>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="F:&dans;.ListenCompleteType.CharacterClientDeactivated">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListenCompleteType.CharacterClientDeactivated']" />
+		</member>
+
+		<member name="F:&dans;.ListenCompleteType.DefaultCharacterChanged">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListenCompleteType.DefaultCharacterChanged']" />
+		</member>
+
+		<member name="F:&dans;.ListenCompleteType.ProgramDisabled">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListenCompleteType.ProgramDisabled']" />
+		</member>
+
+		<member name="F:&dans;.ListenCompleteType.ProgramTimedOut">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListenCompleteType.ProgramTimedOut']" />
+		</member>
+
+		<member name="F:&dans;.ListenCompleteType.UserDisabled">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListenCompleteType.UserDisabled']" />
+		</member>
+
+		<member name="F:&dans;.ListenCompleteType.UserReleasedKey">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListenCompleteType.UserReleasedKey']" />
+		</member>
+
+		<member name="F:&dans;.ListenCompleteType.UserSpeechEnded">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListenCompleteType.UserSpeechEnded']" />
+		</member>
+
+		<member name="F:&dans;.ListenCompleteType.UserTimedOut">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListenCompleteType.UserTimedOut']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="T:&dans;.ListenCompleteType" kind="Enumeration">
+			<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.ListenCompleteType']/summary" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.ListenCompleteType']/syntax" />
+			<seealso cref="E:&darootobj;.ListeningState" suffix="Event" prefix="The" />
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="F:&dans;.ListeningStatusType.CharacterInactive">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListeningStatusType.CharacterInactive']" />
+		</member>
+
+		<member name="F:&dans;.ListeningStatusType.CharacterInactive">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListeningStatusType.CharacterInactive']" />
+		</member>
+
+		<member name="F:&dans;.ListeningStatusType.Error">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListeningStatusType.Error']" />
+		</member>
+
+		<member name="F:&dans;.ListeningStatusType.InitializeFailed">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListeningStatusType.InitializeFailed']" />
+		</member>
+
+		<member name="F:&dans;.ListeningStatusType.InputDisabled">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListeningStatusType.InputDisabled']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="T:&dans;.ListeningStatusType" kind="Enumeration">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.ListeningStatusType']" />
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="F:&dans;.MoveCauseType.NeverMoved">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.MoveCauseType.NeverMoved']" />
+		</member>
+
+		<member name="F:&dans;.MoveCauseType.OtherProgramMoved">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.MoveCauseType.OtherProgramMoved']" />
+		</member>
+
+		<member name="F:&dans;.MoveCauseType.ProgramMoved">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.MoveCauseType.ProgramMoved']" />
+		</member>
+
+		<member name="F:&dans;.MoveCauseType.UserMoved">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.MoveCauseType.UserMoved']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="T:&dans;.MoveCauseType" kind="Enumeration">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.MoveCauseType']" />
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="F:&dans;.PrepareResourceType.Animation">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.PrepareResourceType.Animation']" />
+		</member>
+
+		<member name="F:&dans;.PrepareResourceType.State">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.PrepareResourceType.State']" />
+		</member>
+
+		<member name="F:&dans;.PrepareResourceType.Wave">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.PrepareResourceType.Wave']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="T:&dans;.PrepareResourceType" kind="Enumeration">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.PrepareResourceType']" />
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="F:&dans;.SpeechGenderType.Female">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.SpeechGenderType.Female']" />
+		</member>
+
+		<member name="F:&dans;.SpeechGenderType.Male">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.SpeechGenderType.Male']" />
+		</member>
+
+		<member name="F:&dans;.SpeechGenderType.Neutral">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.SpeechGenderType.Neutral']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="T:&dans;.SpeechGenderType" kind="Enumeration">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.SpeechGenderType']" />
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="F:&dans;.StopAllFlags.Everything">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.StopAllFlags.Everything']" />
+		</member>
+
+		<member name="F:&dans;.StopAllFlags.ImmediatePrepare">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.StopAllFlags.ImmediatePrepare']" />
+		</member>
+
+		<member name="F:&dans;.StopAllFlags.Move">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.StopAllFlags.Move']" />
+		</member>
+
+		<member name="F:&dans;.StopAllFlags.Play">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.StopAllFlags.Play']" />
+		</member>
+
+		<member name="F:&dans;.StopAllFlags.QueuedPrepare">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.StopAllFlags.QueuedPrepare']" />
+		</member>
+
+		<member name="F:&dans;.StopAllFlags.Speak">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.StopAllFlags.Speak']" />
+		</member>
+
+		<member name="F:&dans;.StopAllFlags.Visibility">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.StopAllFlags.Visibility']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="T:&dans;.StopAllFlags" kind="Enumeration">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.StopAllFlags']" />
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="F:&dans;.VisibilityCauseType.NeverShown">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.VisibilityCauseType.NeverShown']" />
+		</member>
+
+		<member name="F:&dans;.VisibilityCauseType.OtherProgramHid">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.VisibilityCauseType.OtherProgramHid']" />
+		</member>
+
+		<member name="F:&dans;.VisibilityCauseType.OtherProgramShowed">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.VisibilityCauseType.OtherProgramShowed']" />
+		</member>
+
+		<member name="F:&dans;.VisibilityCauseType.ProgramHid">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.VisibilityCauseType.ProgramHid']" />
+		</member>
+
+		<member name="F:&dans;.VisibilityCauseType.ProgramShowed">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.VisibilityCauseType.ProgramShowed']" />
+		</member>
+
+		<member name="F:&dans;.VisibilityCauseType.UserHid">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.VisibilityCauseType.UserHid']" />
+		</member>
+
+		<member name="F:&dans;.VisibilityCauseType.UserShowed">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.VisibilityCauseType.UserShowed']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="T:&dans;.VisibilityCauseType" kind="Enumeration">
+			<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.VisibilityCauseType']/summary" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.VisibilityCauseType']/syntax" />
+			<seealso cref="P:&dans;.Character.VisibilityCause" suffix="Property" prefix="The" />
+			<seealso cref="E:&darootobj;.VisibleState" prefix="The" suffix="Event" />
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
 		<!--=============================================================================================-->
 
 		<member name="M:&darootobj;.FindCharacterSREngines">
@@ -234,8 +729,8 @@ VariantInit (&amp;EmptyProvider);
 			</param>
 			<remarks>
 				<para>
-					The <see cref="T:&darootobj;" suffix="Object" /> also implements the standard <glossary>COM</glossary> <keyword>IConnectionPoint</keyword>
-					protocol for <glossary>notification sinks</glossary>.
+					The <see cref="T:&darootobj;" suffix="Object" /> also implements the standard <glossary>COM</glossary>
+					<keyword>IConnectionPoint</keyword> protocol for <glossary>notification sinks</glossary>.
 				</para>
 				<para>
 					For languages that support ActiveX<sup>®</sup> controls, you can use the language's default mechanism for
@@ -437,35 +932,83 @@ VariantInit (&amp;EmptyProvider);
 		<member name="E:&darootobj;.ActivateInputState">
 			<summary>
 				<para>
-					---todo---
+					Signalled when a client's <glossary>input-active</glossary> state changes.
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><keyword>void</keyword> &darootref;_<keyword>ActivateInputState</keyword> (<keyword>long</keyword> <token>CharacterID</token>, <keyword>long</keyword> <token>Activated</token>)</para>
+</cpp>
+<csharp>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>ActivateInputState<token>EventHandler</token></keyword> (<keyword>int</keyword> <token>CharacterID</token>, <keyword>int</keyword> <token>Activated</token>)</para>
+</csharp>
+<vbnet>
+<para><keyword>Event</keyword> &darootref;_<keyword>ActivateInputState</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Activated</token> <keyword>As Integer</keyword>)</para>
+</vbnet>
+<vb6>
+<para><keyword>Sub</keyword> &darootref;_<keyword>ActivateInputState</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Activated</token> <keyword>As Long</keyword>)</para>
+</vb6>
+<vbscript>
+<para><keyword>Sub</keyword> &darootref;_<keyword>ActivateInputState</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>, <keyword>ByVal</keyword> <token>Activated</token>)</para>
+</vbscript>
+</syntax>
+			<param name="CharacterID">
+				The unique identifier of the character who's <glossary>input-active</glossary>
+				state has changed.
+			</param>
+			<param name="Activated">
+				<keyword>True</keyword> if the character has become <glossary>input-active</glossary>
+				or <keyword>False</keyword> it is has become <glossary>non-input-active</glossary>.
+			</param>
+			<remarks>
+				<para>
+					The <glossary>input-active</glossary> client receives mouse and speech input events for the character. Double
+					Agent sends this event only to the client that becomes <glossary>input-active</glossary> and the client that
+					becomes <glossary>non-input-active</glossary>.
+				</para>
+				<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.ActivateInput']/remarks/para[2]" />
+				<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.ActivateInput']/remarks/para[3]" />
+			</remarks>
+			<seealso cref="M:&dans;.Character.Activate" prefix="The" suffix="Method" />
+			<seealso cref="E:&darootobj;.ActiveClientChange" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.ActiveClientChange">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.ActiveClientChange']/summary" />
+			<syntax xml:space="preserve">
+<cpp>
+<para><keyword>void</keyword> &darootref;_<keyword>ActiveClientChange</keyword> (<keyword>long</keyword> <token>CharacterID</token>, <keyword>long</keyword> <token>Status</token>)</para>
+</cpp>
+<csharp>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>ActiveClientChange<token>EventHandler</token></keyword> (<keyword>int</keyword> <token>CharacterID</token>, <keyword>int</keyword> <token>Status</token>)</para>
+</csharp>
+<vbnet>
+<para><keyword>Event</keyword> &darootref;_<keyword>ActiveClientChange</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Status</token> <keyword>As Integer</keyword>)</para>
+</vbnet>
+<vb6>
+<para><keyword>Sub</keyword> &darootref;_<keyword>ActiveClientChange</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Status</token> <keyword>As Long</keyword>)</para>
+</vb6>
+<vbscript>
+<para><keyword>Sub</keyword> &darootref;_<keyword>ActiveClientChange</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>, <keyword>ByVal</keyword> <token>Status</token>)</para>
+</vbscript>
+</syntax>
+			<param name="CharacterID">The unique identifier of the character that has become active or inactive.</param>
+			<value name="Status">
+				A member of the <see class="typename" cref="T:&dans;.ActiveStateType" suffix="Enumeration" />
+				indicating the state of the character and your client application:<include path="/doc/members/member[@name='T:&dans;.ActiveStateType']/syntax/list" />
+			</value>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.ActiveClientChange']/remarks" />
+			<seealso cref="M:&dans;.Character.Activate" prefix="The" suffix="Method" />
+			<seealso cref="P:&dans;.Character.ActiveState" prefix="The" suffix="Property" />
+			<seealso cref="E:&darootobj;.ActivateInputState" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.AgentPropertyChange">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.AgentPropertyChange']" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -473,95 +1016,194 @@ VariantInit (&amp;EmptyProvider);
 		<member name="E:&darootobj;.BalloonVisibleState">
 			<summary>
 				<para>
-					---todo---
+					Signalled when a character's <a class="see" href="&dawbref;">&dawbname;</a> is shown or hidden.
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><keyword>void</keyword> &darootref;_<keyword>ActiveClientChange</keyword> (<keyword>long</keyword> <token>CharacterID</token>, <keyword>long</keyword> <token>Visible</token>)</para>
+</cpp>
+<csharp>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>ActiveClientChange<token>EventHandler</token></keyword> (<keyword>int</keyword> <token>CharacterID</token>, <keyword>int</keyword> <token>Visible</token>)</para>
+</csharp>
+<vbnet>
+<para><keyword>Event</keyword> &darootref;_<keyword>ActiveClientChange</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Visible</token> <keyword>As Integer</keyword>)</para>
+</vbnet>
+<vb6>
+<para><keyword>Sub</keyword> &darootref;_<keyword>ActiveClientChange</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Visible</token> <keyword>As Long</keyword>)</para>
+</vb6>
+<vbscript>
+<para><keyword>Sub</keyword> &darootref;_<keyword>ActiveClientChange</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>, <keyword>ByVal</keyword> <token>Visible</token>)</para>
+</vbscript>
+</syntax>
+			<param name="CharacterID">
+				The unique identifier of the character who's <a class="see" href="&dawbref;">&dawbname;</a>
+				was shown or hidden.
+			</param>
+			<param name="Visible">
+				<keyword>True</keyword> if the <a class="see" href="&dawbref;">&dawbname;</a>
+				was shown or <keyword>False</keyword> it was hidden.
+			</param>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.BalloonShow']/remarks" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.BookMark">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Bookmark']" replace="Bookmark|BookMark" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.Click">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Click']/summary" />
+			<syntax xml:space="preserve">
+<cpp>
+<para><keyword>void</keyword> &darootref;_<keyword>Click</keyword> (<keyword>long</keyword> <token>CharacterID</token>, <keyword>short</keyword> <token>Keys</token>, <keyword>long</keyword> <token>X</token>, <keyword>long</keyword> <token>Y</token>)</para>
+</cpp>
+<csharp>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>Click<token>EventHandler</token></keyword> (<keyword>int</keyword> <token>CharacterID</token>, <keyword>short</keyword> <token>Keys</token>, <keyword>int</keyword> <token>X</token>, <keyword>int</keyword> <token>Y</token>)</para>
+</csharp>
+<vbnet>
+<para><keyword>Event</keyword> &darootref;_<keyword>Click</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Keys</token> <keyword>As Short</keyword>, <keyword>ByVal</keyword> <token>X</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Y</token> <keyword>As Integer</keyword>)</para>
+</vbnet>
+<vb6>
+<para><keyword>Sub</keyword> &darootref;_<keyword>Click</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Keys</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>X</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Y</token> <keyword>As Long</keyword>)</para>
+</vb6>
+<vbscript>
+<para><keyword>Sub</keyword> &darootref;_<keyword>Click</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>, <keyword>ByVal</keyword> <token>Keys</token>, <keyword>ByVal</keyword> <token>X</token>, <keyword>ByVal</keyword> <token>Y</token>)</para>
+</vbscript>
+</syntax>
+			<param name="CharacterID">The unique identifier of the character that was clicked.</param>
+			<include file="&dainclude;" path="/doc/params/param[@name='Keys']" />
+			<include file="&dainclude;" path="/doc/params/param[@name='X']" />
+			<include file="&dainclude;" path="/doc/params/param[@name='Y']" />
+			<remarks>
+				<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Click']/remarks/para[1]" replace="ActivateInput=ActivateInputState" />
+			</remarks>
+			<seealso cref="E:&darootobj;.DblClick" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.Command">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Command']/summary" />
+			<syntax xml:space="preserve">
+<cpp>
+<para><keyword>void</keyword> &darootref;_<keyword>Command</keyword> (<keyword>long</keyword> <token>CharacterID</token>, <see class="typename" cref="T:&dans;.UserInput" text="IDaSvrUserInput2" /> <keyword>*</keyword> <token>UserInput</token>)</para>
+</cpp>
+<csharp>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>Command<token>EventHandler</token></keyword> (<keyword>int</keyword> <token>CharacterID</token>, <see class="typename" cref="T:&dans;.UserInput" text="&dans;.UserInput" /> <token>UserInput</token>)</para>
+</csharp>
+<vbnet>
+<para><keyword>Event</keyword> &darootref;_<keyword>Command</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>UserInput</token> <keyword>As</keyword> <see class="typename" cref="T:&dans;.UserInput" text="&dans;.UserInput" />)</para>
+</vbnet>
+<vb6>
+<para><keyword>Sub</keyword> &darootref;_<keyword>Command</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>UserInput</token> <keyword>As</keyword> <see class="typename" cref="T:&dans;.UserInput" text="DaSvrUserInput" />)</para>
+</vb6>
+<vbscript>
+<para><keyword>Sub</keyword> &darootref;_<keyword>Command</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>, <keyword>ByVal</keyword> <token>UserInput</token>)</para>
+</vbscript>
+</syntax>
+			<param name="CharacterID">The unique identifier of the character that was clicked.</param>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Command']/param" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Command']/remarks" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Command']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.DblClick">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.DblClick']/summary" />
+			<syntax xml:space="preserve">
+<cpp>
+<para><keyword>void</keyword> &darootref;_<keyword>DblClick</keyword> (<keyword>long</keyword> <token>CharacterID</token>, <keyword>short</keyword> <token>Keys</token>, <keyword>long</keyword> <token>X</token>, <keyword>long</keyword> <token>Y</token>)</para>
+</cpp>
+<csharp>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>DblClick<token>EventHandler</token></keyword> (<keyword>int</keyword> <token>CharacterID</token>, <keyword>short</keyword> <token>Keys</token>, <keyword>int</keyword> <token>X</token>, <keyword>int</keyword> <token>Y</token>)</para>
+</csharp>
+<vbnet>
+<para><keyword>Event</keyword> &darootref;_<keyword>DblClick</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Keys</token> <keyword>As Short</keyword>, <keyword>ByVal</keyword> <token>X</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Y</token> <keyword>As Integer</keyword>)</para>
+</vbnet>
+<vb6>
+<para><keyword>Sub</keyword> &darootref;_<keyword>DblClick</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Keys</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>X</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Y</token> <keyword>As Long</keyword>)</para>
+</vb6>
+<vbscript>
+<para><keyword>Sub</keyword> &darootref;_<keyword>DblClick</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>, <keyword>ByVal</keyword> <token>Keys</token>, <keyword>ByVal</keyword> <token>X</token>, <keyword>ByVal</keyword> <token>Y</token>)</para>
+</vbscript>
+</syntax>
+			<param name="CharacterID">The unique identifier of the character that was double-clicked.</param>
+			<include file="&dainclude;" path="/doc/params/param[@name='Keys']" />
+			<include file="&dainclude;" path="/doc/params/param[@name='X']" />
+			<include file="&dainclude;" path="/doc/params/param[@name='Y']" />
+			<remarks>
+				<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.DblClick']/remarks/para[1]" replace="ActivateInput=ActivateInputState" />
+			</remarks>
+			<seealso cref="E:&darootobj;.Click" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.DefaultCharacterChange">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.DefaultCharacterChange']" replace="Characters.Load=Server.Load" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.DragComplete">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.DragComplete']/summary" />
+			<syntax xml:space="preserve">
+<cpp>
+<para><keyword>void</keyword> &darootref;_<keyword>DragComplete</keyword> (<keyword>long</keyword> <token>CharacterID</token>, <keyword>short</keyword> <token>Keys</token>, <keyword>long</keyword> <token>X</token>, <keyword>long</keyword> <token>Y</token>)</para>
+</cpp>
+<csharp>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>DragComplete<token>EventHandler</token></keyword> (<keyword>int</keyword> <token>CharacterID</token>, <keyword>short</keyword> <token>Keys</token>, <keyword>int</keyword> <token>X</token>, <keyword>int</keyword> <token>Y</token>)</para>
+</csharp>
+<vbnet>
+<para><keyword>Event</keyword> &darootref;_<keyword>DragComplete</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Keys</token> <keyword>As Short</keyword>, <keyword>ByVal</keyword> <token>X</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Y</token> <keyword>As Integer</keyword>)</para>
+</vbnet>
+<vb6>
+<para><keyword>Sub</keyword> &darootref;_<keyword>DragComplete</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Keys</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>X</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Y</token> <keyword>As Long</keyword>)</para>
+</vb6>
+<vbscript>
+<para><keyword>Sub</keyword> &darootref;_<keyword>DragComplete</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>, <keyword>ByVal</keyword> <token>Keys</token>, <keyword>ByVal</keyword> <token>X</token>, <keyword>ByVal</keyword> <token>Y</token>)</para>
+</vbscript>
+</syntax>
+			<param name="CharacterID">The unique identifier of the character that was dragged.</param>
+			<include file="&dainclude;" path="/doc/params/param[@name='Keys']" />
+			<include file="&dainclude;" path="/doc/params/param[@name='X']" />
+			<include file="&dainclude;" path="/doc/params/param[@name='Y']" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.DragComplete']/remarks" replace="ActivateInput=ActivateInputState" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.DragComplete']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.DragStart">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.DragStart']/summary" />
+			<syntax xml:space="preserve">
+<cpp>
+<para><keyword>void</keyword> &darootref;_<keyword>DragStart</keyword> (<keyword>long</keyword> <token>CharacterID</token>, <keyword>short</keyword> <token>Keys</token>, <keyword>long</keyword> <token>X</token>, <keyword>long</keyword> <token>Y</token>)</para>
+</cpp>
+<csharp>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>DragStart<token>EventHandler</token></keyword> (<keyword>int</keyword> <token>CharacterID</token>, <keyword>short</keyword> <token>Keys</token>, <keyword>int</keyword> <token>X</token>, <keyword>int</keyword> <token>Y</token>)</para>
+</csharp>
+<vbnet>
+<para><keyword>Event</keyword> &darootref;_<keyword>DragStart</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Keys</token> <keyword>As Short</keyword>, <keyword>ByVal</keyword> <token>X</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Y</token> <keyword>As Integer</keyword>)</para>
+</vbnet>
+<vb6>
+<para><keyword>Sub</keyword> &darootref;_<keyword>DragStart</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Keys</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>X</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Y</token> <keyword>As Long</keyword>)</para>
+</vb6>
+<vbscript>
+<para><keyword>Sub</keyword> &darootref;_<keyword>DragStart</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>, <keyword>ByVal</keyword> <token>Keys</token>, <keyword>ByVal</keyword> <token>X</token>, <keyword>ByVal</keyword> <token>Y</token>)</para>
+</vbscript>
+</syntax>
+			<param name="CharacterID">The unique identifier of the character that's being dragged.</param>
+			<include file="&dainclude;" path="/doc/params/param[@name='Keys']" />
+			<include file="&dainclude;" path="/doc/params/param[@name='X']" />
+			<include file="&dainclude;" path="/doc/params/param[@name='Y']" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.DragStart']/remarks" replace="ActivateInput=ActivateInputState" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.DragStart']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -569,11 +1211,36 @@ VariantInit (&amp;EmptyProvider);
 		<member name="E:&darootobj;.Idle">
 			<summary>
 				<para>
-					---todo---
+					Signalled when a character's <glossary>Idling</glossary> state changes.
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><keyword>void</keyword> &darootref;_<keyword>Idle</keyword> (<keyword>long</keyword> <token>CharacterID</token>, <keyword>long</keyword> <token>Start</token>)</para>
+</cpp>
+<csharp>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>Idle<token>EventHandler</token></keyword> (<keyword>int</keyword> <token>CharacterID</token>, <keyword>int</keyword> <token>Start</token>)</para>
+</csharp>
+<vbnet>
+<para><keyword>Event</keyword> &darootref;_<keyword>Idle</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Start</token> <keyword>As Integer</keyword>)</para>
+</vbnet>
+<vb6>
+<para><keyword>Sub</keyword> &darootref;_<keyword>Idle</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Start</token> <keyword>As Long</keyword>)</para>
+</vb6>
+<vbscript>
+<para><keyword>Sub</keyword> &darootref;_<keyword>Idle</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>, <keyword>ByVal</keyword> <token>Start</token>)</para>
+</vbscript>
+</syntax>
+			<param name="CharacterID">
+				The unique identifier of the <glossary>Idling</glossary> character.
+			</param>
+			<param name="Start">
+				<keyword>True</keyword> if the character has started idling, or <keyword>False</keyword>
+				if it has stopped idling.
+			</param>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.IdleStart']/remarks" />
+			<seealso cref="F:&dans;.CharacterStyleFlags.IdleEnabled" prefix="The" suffix="Member" />
+			<seealso cref="P:&dans;.Character.IdleState" prefix="The" suffix="Property" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -581,59 +1248,178 @@ VariantInit (&amp;EmptyProvider);
 		<member name="E:&darootobj;.ListeningState">
 			<summary>
 				<para>
-					---todo---
+					Signalled when <glossary>Listening mode</glossary> (speech recognition) begins or ends.
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><keyword>void</keyword> &darootref;_<keyword>Idle</keyword> (<keyword>long</keyword> <token>CharacterID</token>, <keyword>long</keyword> <token>Listening</token>, <keyword>long</keyword> <token>Cause</token>)</para>
+</cpp>
+<csharp>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>Idle<token>EventHandler</token></keyword> (<keyword>int</keyword> <token>CharacterID</token>, <keyword>int</keyword> <token>Listening</token>, <keyword>int</keyword> <token>Cause</token>)</para>
+</csharp>
+<vbnet>
+<para><keyword>Event</keyword> &darootref;_<keyword>Idle</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Listening</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Cause</token> <keyword>As Integer</keyword>)</para>
+</vbnet>
+<vb6>
+<para><keyword>Sub</keyword> &darootref;_<keyword>Idle</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Listening</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Cause</token> <keyword>As Long</keyword>)</para>
+</vb6>
+<vbscript>
+<para><keyword>Sub</keyword> &darootref;_<keyword>Idle</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>, <keyword>ByVal</keyword> <token>Listening</token>, <keyword>ByVal</keyword> <token>Cause</token>)</para>
+</vbscript>
+</syntax>
+			<param name="CharacterID">
+				The unique identifier of the <glossary>Listening</glossary> character.
+			</param>
+			<param name="Start">
+				<keyword>True</keyword> if the character has started listening, or <keyword>False</keyword>
+				if it has stopped listening.
+			</param>
+			<remarks>
+				<para>
+					This event is sent to all clients when <glossary>Listening mode</glossary> begins or ends because the
+					user pressed or released the <glossary>Listening key</glossary>, or when the <glossary>input-active</glossary>
+					client called the <see cref="M:&dans;.Character.Listen" /> method, or when the <glossary>Listening mode</glossary>
+					time-out ends, or when the user has finished speaking. You can use this event to avoid having your character
+					speak while <glossary>Listening mode</glossary> is active.
+				</para>
+				<para>
+					If you turn on <glossary>Listening mode</glossary> using the <see cref="M:&dans;.Character.Listen" />
+					method and then the user presses the <glossary>Listening key</glossary>, the <glossary>Listening mode</glossary>
+					resets and continues until the <glossary>Listening key</glossary> time-out completes, the <glossary>Listening key</glossary>
+					is released, or the user finishes speaking, whichever is later. In this situation, when
+					<glossary>Listening mode</glossary> is already on, you will <em>not</em> get an additional <self>ListeningState</self>
+					event with <paramref name="Start" />=<keyword>True</keyword> when the user presses the <glossary>Listening key</glossary>,
+					and you will not receive a <self>ListeningState</self> event with <paramref name="Start" />=<keyword>False</keyword>
+					until the <glossary>Listening key</glossary>'s mode completes.
+				</para>
+			</remarks>
+			<seealso cref="M:&dans;.Character.Listen" prefix="The" suffix="Method" />
+			<seealso cref="P:&dans;.Settings.SRHotKey" prefix="The" suffix="Property" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.Move">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Move']/summary" />
+			<syntax xml:space="preserve">
+<cpp>
+<para><keyword>void</keyword> &darootref;_<keyword>Size</keyword> (<keyword>long</keyword> <token>CharacterID</token>, <keyword>long</keyword> <token>X</token>, <keyword>long</keyword> <token>Y</token>)</para>
+</cpp>
+<csharp>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>Size<token>EventHandler</token></keyword> (<keyword>int</keyword> <token>CharacterID</token>, <keyword>int</keyword> <token>X</token>, <keyword>int</keyword> <token>Y</token>)</para>
+</csharp>
+<vbnet>
+<para><keyword>Event</keyword> &darootref;_<keyword>Size</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>X</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Y</token> <keyword>As Integer</keyword>)</para>
+</vbnet>
+<vb6>
+<para><keyword>Sub</keyword> &darootref;_<keyword>Size</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>X</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Y</token> <keyword>As Long</keyword>)</para>
+</vb6>
+<vbscript>
+<para><keyword>Sub</keyword> &darootref;_<keyword>Size</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>, <keyword>ByVal</keyword> <token>X</token>, <keyword>ByVal</keyword> <token>Y</token>)</para>
+</vbscript>
+</syntax>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Move']/param" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Move']/remarks" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Move']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.RequestComplete">
-			<summary>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.RequestComplete']/summary" />
+			<syntax xml:space="preserve">
+<cpp>
+<para><keyword>void</keyword> &darootref;_<keyword>RequestComplete</keyword> (<keyword>long</keyword> <token>RequestID</token>, <keyword>long</keyword> <token>Result</token>)</para>
+</cpp>
+<csharp>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>RequestComplete<token>EventHandler</token></keyword> (<keyword>int</keyword> <token>RequestID</token>, <keyword>int</keyword> <token>Result</token>)</para>
+</csharp>
+<vbnet>
+<para><keyword>Event</keyword> &darootref;_<keyword>RequestComplete</keyword> (<keyword>ByVal</keyword> <token>RequestID</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Result</token> <keyword>As Integer</keyword>)</para>
+</vbnet>
+<vb6>
+<para><keyword>Sub</keyword> &darootref;_<keyword>RequestComplete</keyword> (<keyword>ByVal</keyword> <token>RequestID</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Result</token> <keyword>As Long</keyword>)</para>
+</vb6>
+<vbscript>
+<para><keyword>Sub</keyword> &darootref;_<keyword>RequestComplete</keyword> (<keyword>ByVal</keyword> <token>RequestID</token>, <keyword>ByVal</keyword> <token>Result</token>)</para>
+</vbscript>
+</syntax>
+			<param name="RequestID">
+				The <typename>numeric</typename> value that uniquely identifies the request.
+			</param>
+			<remarks>
 				<para>
-					---todo---
+					Because requests are processed asynchronously,
+					you can use this event to determine when Double Agent finishes processing a request (such
+					as a <see cref="M:&dans;.Character.Get" />, <see cref="M:&dans;.Character.Play" />, or <see cref="M:&dans;.Character.Speak" />
+					method) to synchronize this event with other requests generated by your application. Double Agent sends
+					the event only to the client that created the request.
 				</para>
-			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			</remarks>
+			<seealso cref="E:&darootobj;.RequestStart" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.RequestStart">
-			<summary>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.RequestStart']/summary" />
+			<syntax xml:space="preserve">
+<cpp>
+<para><keyword>void</keyword> &darootref;_<keyword>RequestStart</keyword> (<keyword>long</keyword> <token>RequestID</token>)</para>
+</cpp>
+<csharp>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>RequestStart<token>EventHandler</token></keyword> (<keyword>int</keyword> <token>RequestID</token>)</para>
+</csharp>
+<vbnet>
+<para><keyword>Event</keyword> &darootref;_<keyword>RequestStart</keyword> (<keyword>ByVal</keyword> <token>RequestID</token> <keyword>As Integer</keyword>)</para>
+</vbnet>
+<vb6>
+<para><keyword>Sub</keyword> &darootref;_<keyword>RequestStart</keyword> (<keyword>ByVal</keyword> <token>RequestID</token> <keyword>As Long</keyword>)</para>
+</vb6>
+<vbscript>
+<para><keyword>Sub</keyword> &darootref;_<keyword>RequestStart</keyword> (<keyword>ByVal</keyword> <token>RequestID</token>)</para>
+</vbscript>
+</syntax>
+			<param name="RequestID">
+				The <typename>numeric</typename> value that uniquely identifies the request.
+			</param>
+			<remarks>
 				<para>
-					---todo---
+					Because requests are processed asynchronously,
+					you can use this event to determine when Double Agent finishes processing a request (such
+					as a <see cref="M:&dans;.Character.Get" />, <see cref="M:&dans;.Character.Play" />, or <see cref="M:&dans;.Character.Speak" />
+					method) to synchronize this event with other requests generated by your application. Double Agent sends
+					the event only to the client that created the request.
 				</para>
-			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			</remarks>
+			<seealso cref="E:&darootobj;.RequestComplete" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.Size">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Size']/summary" />
+			<syntax xml:space="preserve">
+<cpp>
+<para><keyword>void</keyword> &darootref;_<keyword>Size</keyword> (<keyword>long</keyword> <token>CharacterID</token>, <keyword>long</keyword> <token>Width</token>, <keyword>long</keyword> <token>Height</token>, <keyword>long</keyword> <token>Cause</token>)</para>
+</cpp>
+<csharp>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>Size<token>EventHandler</token></keyword> (<keyword>int</keyword> <token>CharacterID</token>, <keyword>int</keyword> <token>Width</token>, <keyword>int</keyword> <token>Height</token>, <keyword>int</keyword> <token>Cause</token>)</para>
+</csharp>
+<vbnet>
+<para><keyword>Event</keyword> &darootref;_<keyword>Size</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Width</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Height</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Cause</token> <keyword>As Integer</keyword>)</para>
+</vbnet>
+<vb6>
+<para><keyword>Sub</keyword> &darootref;_<keyword>Size</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Width</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Height</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Cause</token> <keyword>As Long</keyword>)</para>
+</vb6>
+<vbscript>
+<para><keyword>Sub</keyword> &darootref;_<keyword>Size</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>, <keyword>ByVal</keyword> <token>X</token>, <keyword>ByVal</keyword> <token>Y</token>, <keyword>ByVal</keyword> <token>Cause</token>)</para>
+</vbscript>
+</syntax>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Size']/param" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Size']/remarks" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Size']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -641,47 +1427,126 @@ VariantInit (&amp;EmptyProvider);
 		<member name="E:&darootobj;.VisibleState">
 			<summary>
 				<para>
-					---todo---
+					Signalled when a character is shown or hidden.
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<syntax xml:space="preserve">
+<cpp>
+<para><keyword>void</keyword> &darootref;_<keyword>Idle</keyword> (<keyword>long</keyword> <token>CharacterID</token>, <keyword>long</keyword> <token>Visible</token>, <keyword>long</keyword> <token>Cause</token>)</para>
+</cpp>
+<csharp>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>Idle<token>EventHandler</token></keyword> (<keyword>int</keyword> <token>CharacterID</token>, <keyword>int</keyword> <token>Visible</token>, <keyword>int</keyword> <token>Cause</token>)</para>
+</csharp>
+<vbnet>
+<para><keyword>Event</keyword> &darootref;_<keyword>Idle</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Visible</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>Cause</token> <keyword>As Integer</keyword>)</para>
+</vbnet>
+<vb6>
+<para><keyword>Sub</keyword> &darootref;_<keyword>Idle</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Visible</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>Cause</token> <keyword>As Long</keyword>)</para>
+</vb6>
+<vbscript>
+<para><keyword>Sub</keyword> &darootref;_<keyword>Idle</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>, <keyword>ByVal</keyword> <token>Visible</token>, <keyword>ByVal</keyword> <token>Cause</token>)</para>
+</vbscript>
+</syntax>
+			<param name="CharacterID">
+				The unique identifier of the character that was shown or hidden.
+			</param>
+			<param name="Visible">
+				<keyword>True</keyword> if the character was shown, or <keyword>False</keyword>
+				if it was hidden.
+			</param>
+			<param name="Cause">
+				A <see class="typename" cref="T:&dans;.VisibilityCauseType" /> value that indicates what
+				caused the character to be shown or hidden.
+				<list type="table">
+					<include path="/doc/members/member[@name='T:&dans;.VisibilityCauseType']/syntax/list/item[@name='UserHid']" />
+					<include path="/doc/members/member[@name='T:&dans;.VisibilityCauseType']/syntax/list/item[@name='UserShowed']" />
+					<include path="/doc/members/member[@name='T:&dans;.VisibilityCauseType']/syntax/list/item[@name='ProgramHid']" />
+					<include path="/doc/members/member[@name='T:&dans;.VisibilityCauseType']/syntax/list/item[@name='ProgramShowed']" />
+					<include path="/doc/members/member[@name='T:&dans;.VisibilityCauseType']/syntax/list/item[@name='OtherProgramHid']" />
+					<include path="/doc/members/member[@name='T:&dans;.VisibilityCauseType']/syntax/list/item[@name='OtherProgramShowed']" />
+				</list>
+			</param>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Show']/remarks" />
+			<seealso cref="P:&dans;.Character.VisibilityCause" prefix="The" suffix="Property" />
+			<seealso cref="P:&dans;.Character.Visible" prefix="The" suffix="Property" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.SpeechStart">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.SpeechStart']/summary" />
+			<syntax xml:space="preserve">
+<cpp>
+<para><keyword>void</keyword> &darootref;_<keyword>SpeechStart</keyword> (<keyword>long</keyword> <token>CharacterID</token>, <see class="typename" cref="T:&dans;.FormattedText" text="IDaSvrFormattedText" /> <keyword>*</keyword> <token>FormattedText</token>)</para>
+</cpp>
+<csharp>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>SpeechStart<token>EventHandler</token></keyword> (<keyword>int</keyword> <token>CharacterID</token>, <see class="typename" cref="T:&dans;.FormattedText" text="&dans;.FormattedText" /> <token>FormattedText</token>)</para>
+</csharp>
+<vbnet>
+<para><keyword>Event</keyword> &darootref;_<keyword>SpeechStart</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>FormattedText</token> <keyword>As</keyword> <see class="typename" cref="T:&dans;.FormattedText" text="&dans;.FormattedText" />)</para>
+</vbnet>
+<vb6>
+<para><keyword>Sub</keyword> &darootref;_<keyword>SpeechStart</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>FormattedText</token> <keyword>As</keyword> <see class="typename" cref="T:&dans;.FormattedText" text="DaSvrFormattedText" />)</para>
+</vb6>
+<vbscript>
+<para><keyword>Sub</keyword> &darootref;_<keyword>SpeechStart</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>, <keyword>ByVal</keyword> <token>FormattedText</token>)</para>
+</vbscript>
+</syntax>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.SpeechStart']/param" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.SpeechStart']/remarks" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.SpeechStart']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.SpeechEnd">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.SpeechEnd']/summary" />
+			<syntax xml:space="preserve">
+<cpp>
+<para><keyword>void</keyword> &darootref;_<keyword>SpeechEnd</keyword> (<keyword>long</keyword> <token>CharacterID</token>, <see class="typename" cref="T:&dans;.FormattedText" text="IDaSvrFormattedText" /> <keyword>*</keyword> <token>FormattedText</token>, <keyword>VARIANT_BOOL</keyword> <token>Stopped</token>)</para>
+</cpp>
+<csharp>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>SpeechEnd<token>EventHandler</token></keyword> (<keyword>int</keyword> <token>CharacterID</token>, <see class="typename" cref="T:&dans;.FormattedText" text="&dans;.FormattedText" /> <token>FormattedText</token>, <keyword>bool</keyword> <token>Stopped</token>)</para>
+</csharp>
+<vbnet>
+<para><keyword>Event</keyword> &darootref;_<keyword>SpeechEnd</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>FormattedText</token> <keyword>As</keyword> <see class="typename" cref="T:&dans;.FormattedText" text="&dans;.FormattedText" />, <keyword>ByVal</keyword> <token>Stopped</token> <keyword>As Boolean</keyword>)</para>
+</vbnet>
+<vb6>
+<para><keyword>Sub</keyword> &darootref;_<keyword>SpeechEnd</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>FormattedText</token> <keyword>As</keyword> <see class="typename" cref="T:&dans;.FormattedText" text="DaSvrFormattedText" />, <keyword>ByVal</keyword> <token>Stopped</token> <keyword>As Boolean</keyword>)</para>
+</vb6>
+<vbscript>
+<para><keyword>Sub</keyword> &darootref;_<keyword>SpeechEnd</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>, <keyword>ByVal</keyword> <token>FormattedText</token>, <keyword>ByVal</keyword> <token>Stopped</token>)</para>
+</vbscript>
+</syntax>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.SpeechEnd']/param" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.SpeechEnd']/remarks" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.SpeechEnd']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.SpeechWord">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.SpeechWord']/summary" />
+			<syntax xml:space="preserve">
+<cpp>
+<para><keyword>void</keyword> &darootref;_<keyword>SpeechWord</keyword> (<keyword>long</keyword> <token>CharacterID</token>, <see class="typename" cref="T:&dans;.FormattedText" text="IDaSvrFormattedText" /> <keyword>*</keyword> <token>FormattedText</token>, <keyword>long</keyword> <token>WordIndex</token>)</para>
+</cpp>
+<csharp>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>SpeechWord<token>EventHandler</token></keyword> (<keyword>int</keyword> <token>CharacterID</token>, <see class="typename" cref="T:&dans;.FormattedText" text="&dans;.FormattedText" /> <token>FormattedText</token>, <keyword>int</keyword> <token>WordIndex</token>)</para>
+</csharp>
+<vbnet>
+<para><keyword>Event</keyword> &darootref;_<keyword>SpeechWord</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Integer</keyword>, <keyword>ByVal</keyword> <token>FormattedText</token> <keyword>As</keyword> <see class="typename" cref="T:&dans;.FormattedText" text="&dans;.FormattedText" />, <keyword>ByVal</keyword> <token>WordIndex</token> <keyword>As Integer</keyword>)</para>
+</vbnet>
+<vb6>
+<para><keyword>Sub</keyword> &darootref;_<keyword>SpeechWord</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token> <keyword>As Long</keyword>, <keyword>ByVal</keyword> <token>FormattedText</token> <keyword>As</keyword> <see class="typename" cref="T:&dans;.FormattedText" text="DaSvrFormattedText" />, <keyword>ByVal</keyword> <token>WordIndex</token> <keyword>As Long</keyword>)</para>
+</vb6>
+<vbscript>
+<para><keyword>Sub</keyword> &darootref;_<keyword>SpeechWord</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>, <keyword>ByVal</keyword> <token>FormattedText</token>, <keyword>ByVal</keyword> <token>WordIndex</token>)</para>
+</vbscript>
+</syntax>
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.SpeechWord']/param" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.SpeechWord']/remarks" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.SpeechWord']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -1511,8 +2376,8 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Balloon.NumberOfLines']/value" />
 			<remarks>
 				<para>
-					The <self>NumberOfLines</self> property is only used if the <a class="see" href="&dawbref;">&dawbname;</a> doesn't have the <keyword>AutoSize</keyword>
-					style.
+					The <self>NumberOfLines</self> property is only used if the <a class="see" href="&dawbref;">&dawbname;</a>
+					doesn't have the <keyword>AutoSize</keyword> style.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
 			</remarks>
@@ -1535,8 +2400,8 @@ VariantInit (&amp;EmptyProvider);
 					Agent Character Editor.
 				</para>
 				<note>
-					The <self>Style</self> property can be set even if the user has disabled <a class="see" href="&dawbref;">&dawbname;</a>s in the
-					<a class="see" href="&dapsref;">&dapsname;</a> window.
+					The <self>Style</self> property can be set even if the user has disabled <a class="see" href="&dawbref;">&dawbname;</a>s
+					in the <a class="see" href="&dapsref;">&dapsname;</a> window.
 				</note>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
 			</remarks>
@@ -1574,8 +2439,8 @@ VariantInit (&amp;EmptyProvider);
 					methods automatically makes the balloon visible, setting the <self>Visible</self> property to <keyword>True</keyword>.
 					If the balloon's <see cref="F:&dans;.BalloonStyleFlags.AutoHide" /> <see cref="P:&dans;.Balloon.Style" />
 					is set, the balloon is automatically hidden after the text output is complete. Clicking or dragging a
-					character that is not currently speaking also automatically hides the balloon, even if its <see cref="F:&dans;.BalloonStyleFlags.AutoHide" />
-					<see cref="P:&dans;.Balloon.Style" /> is not set.
+					character that is not currently speaking also automatically hides the balloon, even if its <see cref="F:&dans;.BalloonStyleFlags.AutoHide" /> <see cref="P:&dans;.Balloon.Style" />
+					is not set.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.Balloon.Style" prefix="The" suffix="Property" />
@@ -1744,7 +2609,10 @@ VariantInit (&amp;EmptyProvider);
 <para>&dacharref_vb;.<keyword>Activate</keyword>[ <token>State</token>]</para>
 </vb>
 </syntax>
-			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Activate']/param" />
+			<param name="State">
+				An optional <typename>numeric</typename> value from the <see class="typename" cref="T:&dans;.ActiveStateType" suffix="Enumeration" />:
+				<include path="/doc/members/member[@name='T:&dans;.ActiveStateType']/syntax/list" />
+			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Activate']/details[@name='Text']" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Activate']/remarks" replace="ActivateInput=ActivateInputState" />
 			<seealso cref="E:&darootobj;.ActivateInputState" prefix="The" suffix="Event" />
@@ -1893,7 +2761,7 @@ VariantInit (&amp;EmptyProvider);
 		<member name="M:&dans;.Character.GetIconIdentity">
 			<summary>
 				<para>
-					Retrieves the identity that Windows will use to remember the character's notification icon.
+					Retrieves the identity that Windows will use to remember the character's <a class="see" href="&daniref;">&daniname;</a>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -1912,7 +2780,7 @@ VariantInit (&amp;EmptyProvider);
 </syntax>
 			<value name="IconIdentity">
 				The <typename>GUID</typename> value that Windows uses to uniquely identify this
-				character's notification icon.
+				character's <a class="see" href="&daniref;">&daniname;</a>.
 			</value>
 			<remarks>
 				<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.IconIdentity']/remarks/para[1]" />
@@ -2176,12 +3044,12 @@ VariantInit (&amp;EmptyProvider);
 </vb>
 </syntax>
 			<param name="MajorVersion">
-				A <typename>numeric</typename> value that indicates the character's major
-				version number (e.g. the <keyword>1</keyword> in <keyword>1.0</keyword>).
+				A <typename>numeric</typename> value that indicates the character's major version
+				number (e.g. the <keyword>1</keyword> in <keyword>1.0</keyword>).
 			</param>
 			<param name="MinorVersion">
-				A <typename>numeric</typename> value that indicates the character's minor
-				version number (e.g. the <keyword>0</keyword> in <keyword>1.0</keyword>).
+				A <typename>numeric</typename> value that indicates the character's minor version
+				number (e.g. the <keyword>0</keyword> in <keyword>1.0</keyword>).
 			</param>
 		</member>
 
@@ -2266,8 +3134,8 @@ VariantInit (&amp;EmptyProvider);
 </vb>
 </syntax>
 			<param name="InterruptRequestID">
-				The <paramref name="RequestID"/> for the animation call
-				you want to interrupt.
+				The <paramref name="RequestID" /> for the animation call you want to
+				interrupt.
 			</param>
 			<include file="&dainclude;" path="/doc/params/param[@name='RequestID']" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Interrupt']/remarks" />
@@ -2352,8 +3220,7 @@ VariantInit (&amp;EmptyProvider);
 				<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Play']/remarks/para[1]" />
 				<para>
 					The <self>Play</self> method does not make the character visible. If the character is not visible, Double
-					Agent plays the animation invisibly, and sets the <paramref name="Result" /> parameter of the
-					<see cref="E:&darootobj;.RequestComplete" suffix="Event" />.
+					Agent plays the animation invisibly, and sets the <paramref name="Result" /> parameter of the <see cref="E:&darootobj;.RequestComplete" suffix="Event" />.
 				</para>
 				<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Play']/remarks/para[3]" />
 			</remarks>
@@ -2434,7 +3301,7 @@ VariantInit (&amp;EmptyProvider);
 		<member name="M:&dans;.Character.SetIconIdentity">
 			<summary>
 				<para>
-					Sets the identity that Windows will use to remember the character's notification icon.
+					Sets the identity that Windows will use to remember the character's <a class="see" href="&daniref;">&daniname;</a>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -2453,7 +3320,8 @@ VariantInit (&amp;EmptyProvider);
 </syntax>
 			<value name="IconIdentity">
 				A <typename>GUID</typename> value that allows Windows to uniquely identify this
-				character's notification icon. It must be either a value <typename>GUID</typename> or <keyword>GUID_NULL</keyword>.
+				character's <a class="see" href="&daniref;">&daniname;</a>. It must be either a value <typename>GUID</typename>
+				or <keyword>GUID_NULL</keyword>.
 			</value>
 			<remarks>
 				<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.IconIdentity']/remarks/para[1]" />
@@ -2654,9 +3522,9 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.ShowPopupMenu']/param" />
 			<remarks>
 				<para>
-					If the character's <see cref="P:&dans;.Character.Style" /> property includes <see cref="F:&dans;.CharacterStyleFlags.AutoPopupMenu"/>,
+					If the character's <see cref="P:&dans;.Character.Style" /> property includes <see cref="F:&dans;.CharacterStyleFlags.AutoPopupMenu" />,
 					Double Agent automatically displays the character's <a class="see" href="&dacmref;">&dacmname;</a> when the
-					user right-clicks the character. If you set the <see cref="P:&dans;.Character.Style" /> property without <see cref="F:&dans;.CharacterStyleFlags.AutoPopupMenu"/>,
+					user right-clicks the character. If you set the <see cref="P:&dans;.Character.Style" /> property without <see cref="F:&dans;.CharacterStyleFlags.AutoPopupMenu" />,
 					you can use <self>ShowPopupMenu</self> to display the menu.
 				</para>
 				<para>
@@ -2693,7 +3561,7 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Speak']/param" />
 			<include file="&dainclude;" path="/doc/params/param[@name='RequestID']" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Speak']/remarks" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Speak']/seealso" replace="Bookmark=BookMark"/>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Speak']/seealso" replace="Bookmark=BookMark" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -2719,7 +3587,8 @@ VariantInit (&amp;EmptyProvider);
 			</param>
 			<remarks>
 				<para>
-					To specify the <paramref name="RequestID"/> parameter, you must save the <paramref name="RequestID"/> value returned by the animation call.
+					To specify the <paramref name="RequestID" /> parameter, you must save the <paramref name="RequestID" />
+					value returned by the animation call.
 				</para>
 				<note>
 					This method <em>does not</em> stop non-queued <see cref="M:&dans;.Character.Prepare" /> calls.
@@ -2747,9 +3616,8 @@ VariantInit (&amp;EmptyProvider);
 </vb>
 </syntax>
 			<param name="Types">
-				A <typename>numeric</typename> value specifying the types of actions to stop.
-				You can use any combination of the following members of
-				the <see class="typename" cref="T:&dans;.StopAllFlags" suffix="Enumeration" />:<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.StopAllFlags']/syntax/list" />
+				A <typename>numeric</typename> value specifying the types of actions to stop. You
+				can use any combination of the following members of the <see class="typename" cref="T:&dans;.StopAllFlags" suffix="Enumeration" />:<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.StopAllFlags']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.StopAll']/seealso" />
 		</member>
@@ -2811,7 +3679,8 @@ VariantInit (&amp;EmptyProvider);
 				</para>
 				<para>
 					If you have two characters and you want one character's animation request to wait until the other character's
-					animation completes, use the <self>Wait</self> method with the other character's animation <paramref name="RequestID" /> value.
+					animation completes, use the <self>Wait</self> method with the other character's animation <paramref name="RequestID" />
+					value.
 				</para>
 			</remarks>
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Wait']/seealso" />
@@ -2821,7 +3690,14 @@ VariantInit (&amp;EmptyProvider);
 		<!--=============================================================================================-->
 
 		<member name="P:&dans;.Character.ActiveState">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.ActiveState']" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.ActiveState']/summary" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.ActiveState']/syntax" />
+			<value name="ActiveState">
+				A member of the <see class="typename" cref="T:&dans;.ActiveStateType" suffix="Enumeration" />
+				indicating the state of the character and your client application:<include path="/doc/members/member[@name='T:&dans;.ActiveStateType']/syntax/list" />
+			</value>
+			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.ActiveState']/remarks" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.ActiveState']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -2859,7 +3735,7 @@ VariantInit (&amp;EmptyProvider);
 				A <typename>numeric</typename> value that identifies the <see cref="T:&dans;.Character" suffix="Object" />.
 			</value>
 			<remarks>
-				The <see cref="T:DoubleAgent.Server.Server" /> assigns a unique <em class="self">CharacterID</em>
+				The <see cref="T:&dans;.Server" /> assigns a unique <em class="self">CharacterID</em>
 				to each <see cref="T:&dans;.Character" suffix="Object" /> instance it creates.
 			</remarks>
 			<seealso cref="M:&darootobj;.Load" suffix="Method" prefix="The" />
@@ -2933,14 +3809,17 @@ VariantInit (&amp;EmptyProvider);
 			<remarks>
 				<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.IconIdentity']/remarks/para" />
 				<list type="bullet">
-					<item>A character's notification will be associated with the Double Agent server by default.</item>
 					<item>
-						You can supply a <em>single</em> GUID for all characters you load. All of their notification icons
+						A character's <a class="see" href="&daniref;">&daniname;</a> will be associated with the Double
+						Agent server by default.
+					</item>
+					<item>
+						You can supply a <em>single</em> GUID for all characters you load. All of their <a class="see" href="&daniref;">&daniname;s</a>
 						will be associated with that single identity.
 					</item>
 					<item>
 						You can supply a <em>unique</em> GUID for each character you load. Windows will then identify each
-						character's notification icon uniquely.
+						character's <a class="see" href="&daniref;">&daniname;</a> uniquely.
 					</item>
 				</list>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
@@ -3040,7 +3919,18 @@ VariantInit (&amp;EmptyProvider);
 					---todo---
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>get_OtherClientCount</keyword> (&amp;<token>OtherClientCount</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>OtherClientCount</token> = ]<token>character</token>.<keyword>OtherClientCount</keyword></para>
+</csharp>
+<vb>
+<para>[<token>OtherClientCount</token> = ]<token>character</token>.<keyword>OtherClientCount</keyword></para>
+</vb>
+</syntax>
+			<value name="OtherClientCount"></value>
 			<remarks></remarks>
 		</member>
 
@@ -3098,7 +3988,18 @@ VariantInit (&amp;EmptyProvider);
 					---todo---
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>get_UniqueID</keyword> (&amp;<token>UniqueID</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>UniqueID</token> = ]<token>character</token>.<keyword>UniqueID</keyword></para>
+</csharp>
+<vb>
+<para>[<token>UniqueID</token> = ]<token>character</token>.<keyword>UniqueID</keyword></para>
+</vb>
+</syntax>
+			<value name="UniqueID"></value>
 			<remarks></remarks>
 		</member>
 
@@ -3144,7 +4045,6 @@ VariantInit (&amp;EmptyProvider);
 
 		<!--=============================================================================================-->
 
-
 		<member name="M:&dans;.Character.SpeakFormatted">
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.SpeakFormatted']/summary" />
 			<syntax xml:space="preserve">
@@ -3168,7 +4068,6 @@ VariantInit (&amp;EmptyProvider);
 		</member>
 
 		<!--=============================================================================================-->
-
 
 		<member name="M:&dans;.Character.ThinkFormatted">
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.ThinkFormatted']/summary" />
@@ -4218,7 +5117,19 @@ VariantInit (&amp;EmptyProvider);
 					---todo---
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>command</token>-&gt;<keyword>get_CommandID</keyword> (&amp;<token>CommandID</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>CommandID</token> = ]<token>command</token>.<keyword>CommandID</keyword></para>
+</csharp>
+<vb>
+<para>[<token>CommandID</token> = ]<token>command</token>.<keyword>CommandID</keyword></para>
+</vb>
+</syntax>
+			<value name="CommandID">
+			</value>
 			<remarks></remarks>
 		</member>
 
@@ -4358,7 +5269,25 @@ VariantInit (&amp;EmptyProvider);
 					---todo---
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>commands</token>-&gt;<keyword>Add</keyword> (<token>Caption</token>, <token>VoiceGrammar</token>, <token>Enabled</token>, <token>Visible</token>, &amp;<token>CommandID</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>CommandID</token> = ]&dacharref_csharp;.<keyword>Commands</keyword><keyword>.Add</keyword> (<token>Caption</token>, <token>VoiceGrammar</token>, <token>Enabled</token>, <token>Visible</token>)</para>
+</csharp>
+<vbnet>
+<para>[<token>CommandID</token> = ]&dacharref_vb;.<keyword>Commands</keyword><keyword>.Add</keyword> (<token>Caption</token>, <token>VoiceGrammar</token>, <token>Enabled</token>, <token>Visible</token>)</para>
+</vbnet>
+<vb>
+<para>[<token>CommandID</token> = ]&dacharref_vb;.<keyword>Commands</keyword><keyword>.Add</keyword> <token>Caption</token>, <token>VoiceGrammar</token>, <token>Enabled</token>, <token>Visible</token></para>
+</vb>
+</syntax>
+			<param name="Caption"></param>
+			<param name="VoiceGrammar"></param>
+			<param name="Enabled"></param>
+			<param name="Visible"></param>
+			<returns name="CommandID"></returns>
 			<remarks></remarks>
 		</member>
 
@@ -4370,7 +5299,27 @@ VariantInit (&amp;EmptyProvider);
 					---todo---
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>commands</token>-&gt;<keyword>Add</keyword> (<token>Caption</token>, <token>VoiceGrammar</token>, <token>VoiceCaption</token>, <token>Enabled</token>, <token>Visible</token>, <token>HelpContextID</token>, &amp;<token>CommandID</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>CommandID</token> = ]&dacharref_csharp;.<keyword>Commands</keyword><keyword>.Add</keyword> (<token>Caption</token>, <token>VoiceGrammar</token>, <token>VoiceCaption</token>, <token>Enabled</token>, <token>Visible</token>, <token>HelpContextID</token>)</para>
+</csharp>
+<vbnet>
+<para>[<token>CommandID</token> = ]&dacharref_vb;.<keyword>Commands</keyword><keyword>.Add</keyword> (<token>Caption</token>, <token>VoiceGrammar</token>, <token>VoiceCaption</token>, <token>Enabled</token>, <token>Visible</token>, <token>HelpContextID</token>)</para>
+</vbnet>
+<vb>
+<para>[<token>CommandID</token> = ]&dacharref_vb;.<keyword>Commands</keyword><keyword>.Add</keyword> <token>Caption</token>, <token>VoiceGrammar</token>, <token>VoiceCaption</token>, <token>Enabled</token>, <token>Visible</token>, <token>HelpContextID</token></para>
+</vb>
+</syntax>
+			<param name="Caption"></param>
+			<param name="VoiceGrammar"></param>
+			<param name="VoiceCaption"></param>
+			<param name="Enabled"></param>
+			<param name="Visible"></param>
+			<param name="HelpContextID"></param>
+			<returns name="CommandID"></returns>
 			<remarks></remarks>
 		</member>
 
@@ -4564,7 +5513,27 @@ VariantInit (&amp;EmptyProvider);
 					---todo---
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>commands</token>-&gt;<keyword>Insert</keyword> (<token>Caption</token>, <token>VoiceGrammar</token>, <token>Enabled</token>, <token>Visible</token>, <token>RefCommandID</token>, <token>Before</token>, &amp;<token>CommandID</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>CommandID</token> = ]&dacharref_csharp;.<keyword>Commands</keyword><keyword>.Insert</keyword> (<token>Caption</token>, <token>VoiceGrammar</token>, <token>Enabled</token>, <token>Visible</token>, <token>RefCommandID</token>, <token>Before</token>)</para>
+</csharp>
+<vbnet>
+<para>[<token>CommandID</token> = ]&dacharref_vb;.<keyword>Commands</keyword><keyword>.Insert</keyword> (<token>Caption</token>, <token>VoiceGrammar</token>, <token>Enabled</token>, <token>Visible</token>, <token>RefCommandID</token>, <token>Before</token>)</para>
+</vbnet>
+<vb>
+<para>[<token>CommandID</token> = ]&dacharref_vb;.<keyword>Commands</keyword><keyword>.Insert</keyword> <token>Caption</token>, <token>VoiceGrammar</token>, <token>Enabled</token>, <token>Visible</token>, <token>RefCommandID</token>, <token>Before</token></para>
+</vb>
+</syntax>
+			<param name="Caption"></param>
+			<param name="VoiceGrammar"></param>
+			<param name="Enabled"></param>
+			<param name="Visible"></param>
+			<param name="RefCommandID"></param>
+			<param name="Before"></param>
+			<returns name="CommandID"></returns>
 			<remarks></remarks>
 		</member>
 
@@ -4576,7 +5545,29 @@ VariantInit (&amp;EmptyProvider);
 					---todo---
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>commands</token>-&gt;<keyword>Insert</keyword> (<token>Caption</token>, <token>VoiceGrammar</token>, <token>VoiceCaption</token>, <token>Enabled</token>, <token>Visible</token>, <token>HelpContextID</token>, <token>RefCommandID</token>, <token>Before</token>, &amp;<token>CommandID</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>CommandID</token> = ]&dacharref_csharp;.<keyword>Commands</keyword><keyword>.Insert</keyword> (<token>Caption</token>, <token>VoiceGrammar</token>, <token>VoiceCaption</token>, <token>Enabled</token>, <token>Visible</token>, <token>HelpContextID</token>, <token>RefCommandID</token>, <token>Before</token>)</para>
+</csharp>
+<vbnet>
+<para>[<token>CommandID</token> = ]&dacharref_vb;.<keyword>Commands</keyword><keyword>.Insert</keyword> (<token>Caption</token>, <token>VoiceGrammar</token>, <token>VoiceCaption</token>, <token>Enabled</token>, <token>Visible</token>, <token>HelpContextID</token>, <token>RefCommandID</token>, <token>Before</token>)</para>
+</vbnet>
+<vb>
+<para>[<token>CommandID</token> = ]&dacharref_vb;.<keyword>Commands</keyword><keyword>.Insert</keyword> <token>Caption</token>, <token>VoiceGrammar</token>, <token>VoiceCaption</token>, <token>Enabled</token>, <token>Visible</token>, <token>HelpContextID</token>, <token>RefCommandID</token>, <token>Before</token></para>
+</vb>
+</syntax>
+			<param name="Caption"></param>
+			<param name="VoiceGrammar"></param>
+			<param name="VoiceCaption"></param>
+			<param name="Enabled"></param>
+			<param name="Visible"></param>
+			<param name="HelpContextID"></param>
+			<param name="RefCommandID"></param>
+			<param name="Before"></param>
+			<returns name="CommandID"></returns>
 			<remarks></remarks>
 		</member>
 
@@ -4588,7 +5579,21 @@ VariantInit (&amp;EmptyProvider);
 					---todo---
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>commands</token>-&gt;<keyword>Remove</keyword> (<token>CommandID</token>)</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>Commands</keyword><keyword>.Remove</keyword> (<token>CommandID</token>)</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>Commands</keyword><keyword>.Remove</keyword> (<token>CommandID</token>)</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>Commands</keyword><keyword>.Remove</keyword> <token>CommandID</token></para>
+</vb>
+</syntax>
+			<param name="CommandID"></param>
 			<remarks></remarks>
 		</member>
 
@@ -4600,7 +5605,20 @@ VariantInit (&amp;EmptyProvider);
 					---todo---
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>commands</token>-&gt;<keyword>RemoveAll</keyword> ()</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>Commands</keyword><keyword>.RemoveAll</keyword> ()</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>Commands</keyword><keyword>.RemoveAll</keyword> ()</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>Commands</keyword><keyword>.RemoveAll</keyword></para>
+</vb>
+</syntax>
 			<remarks></remarks>
 		</member>
 
@@ -5109,11 +6127,15 @@ VariantInit (&amp;EmptyProvider);
 		<member name="M:&dans;.CommandsWindow.GetVisible">
 			<summary>
 				<para>
-					---todo---
+					deprecated
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<remarks>
+				<para>
+					This method has been replaced by the <see cref="P:&dans;.CommandsWindow.Visible" /> property, but is
+					still supported for backward compatibility.
+				</para>
+			</remarks>
 		</member>
 
 		<!--=============================================================================================-->
@@ -5121,11 +6143,15 @@ VariantInit (&amp;EmptyProvider);
 		<member name="M:&dans;.CommandsWindow.SetVisible">
 			<summary>
 				<para>
-					---todo---
+					deprecated
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
-			<remarks></remarks>
+			<remarks>
+				<para>
+					This method has been replaced by the <see cref="P:&dans;.CommandsWindow.Visible" /> property, but is
+					still supported for backward compatibility.
+				</para>
+			</remarks>
 		</member>
 
 		<!--=============================================================================================-->
@@ -5922,7 +6948,23 @@ VariantInit (&amp;EmptyProvider);
 					---todo---
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>userinput</token>-&gt;<keyword>GetAllItemData</keyword> (&amp;<token>ItemIndices</token>, &amp;<token>ItemConfidences</token>, &amp;<token>ItemText</token>)</para>
+</cpp>
+<csharp>
+<para><token>userinput</token>.<keyword>GetAllItemData</keyword> (<keyword>out</keyword> <token>ItemIndices</token>, <keyword>out</keyword> <token>ItemConfidences</token>, <keyword>out</keyword> <token>ItemText</token>)</para>
+</csharp>
+<vbnet>
+<para><token>userinput</token>.<keyword>GetAllItemData</keyword> (<token>ItemIndices</token>, <token>ItemConfidences</token>, <token>ItemText</token>)</para>
+</vbnet>
+<vb>
+<para><token>userinput</token>.<keyword>GetAllItemData</keyword> <token>ItemIndices</token>, <token>ItemConfidences</token>, <token>ItemText</token></para>
+</vb>
+</syntax>
+			<param name="ItemIndices"></param>
+			<param name="ItemConfidences"></param>
+			<param name="ItemText"></param>
 			<remarks></remarks>
 		</member>
 
@@ -5979,7 +7021,7 @@ VariantInit (&amp;EmptyProvider);
 		<member name="M:&dans;.UserInput.GetItemText">
 			<summary>
 				<para>
-					---todo---
+					deprecated
 				</para>
 			</summary>
 			<remarks>
@@ -5999,7 +7041,18 @@ VariantInit (&amp;EmptyProvider);
 					---todo---
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>userinput</token>-&gt;<keyword>get_Count</keyword> (&amp;<token>Count</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>Count</token> =]<token>userinput</token>.<keyword>Count</keyword></para>
+</csharp>
+<vb>
+<para>[<token>Count</token> =]<token>userinput</token>.<keyword>Count</keyword></para>
+</vb>
+</syntax>
+			<value name="Count"></value>
 			<remarks></remarks>
 		</member>
 
@@ -6009,7 +7062,19 @@ VariantInit (&amp;EmptyProvider);
 					---todo---
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>userinput</token>-&gt;<keyword>get_ItemConfidence</keyword> (<token>ItemIndex</token>, &amp;<token>ItemConfidence</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>ItemConfidence</token> =]<token>userinput</token>.<keyword>ItemConfidence</keyword> (<token>ItemIndex</token>)</para>
+</csharp>
+<vb>
+<para>[<token>ItemConfidence</token> =]<token>userinput</token>.<keyword>ItemConfidence</keyword> (<token>ItemIndex</token>)</para>
+</vb>
+</syntax>
+			<param name="ItemIndex"></param>
+			<value name="ItemConfidence"></value>
 			<remarks></remarks>
 		</member>
 
@@ -6019,7 +7084,19 @@ VariantInit (&amp;EmptyProvider);
 					---todo---
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>userinput</token>-&gt;<keyword>get_ItemCommandID</keyword> (<token>ItemIndex</token>, &amp;<token>ItemCommandID</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>ItemCommandID</token> =]<token>userinput</token>.<keyword>ItemCommandID</keyword> (<token>ItemIndex</token>)</para>
+</csharp>
+<vb>
+<para>[<token>ItemCommandID</token> =]<token>userinput</token>.<keyword>ItemCommandID</keyword> (<token>ItemIndex</token>)</para>
+</vb>
+</syntax>
+			<param name="ItemIndex"></param>
+			<value name="ItemCommandID"></value>
 			<remarks></remarks>
 		</member>
 
@@ -6029,7 +7106,19 @@ VariantInit (&amp;EmptyProvider);
 					---todo---
 				</para>
 			</summary>
-			<syntax xml:space="preserve"></syntax>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>userinput</token>-&gt;<keyword>get_ItemText</keyword> (<token>ItemIndex</token>, &amp;<token>ItemText</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>ItemText</token> =]<token>userinput</token>.<keyword>ItemText</keyword> (<token>ItemIndex</token>)</para>
+</csharp>
+<vb>
+<para>[<token>ItemText</token> =]<token>userinput</token>.<keyword>ItemText</keyword> (<token>ItemIndex</token>)</para>
+</vb>
+</syntax>
+			<param name="ItemIndex"></param>
+			<value name="ItemConfidence"></value>
 			<remarks></remarks>
 		</member>
 
@@ -6108,477 +7197,6 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.UserInput']/remarks" />
 			<seealso cref="E:&darootobj;.Command" prefix="The" suffix="Event" />
 			<seealso cref="T:&dans;.Command" prefix="The" suffix="Object" />
-		</member>
-
-		<!--=============================================================================================-->
-		<!--=============================================================================================-->
-		<!--=============================================================================================-->
-
-		<member name="F:&dans;.FilesFilterFlags.PathDoubleAgent">
-			<summary>
-				Indicates if the Double Agent install location should be included in the <see cref="P:&dans;.CharacterFiles.DefaultSearchPath" />.
-			</summary>
-			<value>0x00000001</value>
-		</member>
-
-		<member name="F:&dans;.FilesFilterFlags.PathMsAgent">
-			<summary>
-				Indicates if the Microsoft Agent install location should be included in the <see cref="P:&dans;.CharacterFiles.DefaultSearchPath" />.
-			</summary>
-			<value>0x00000002</value>
-		</member>
-
-		<member name="F:&dans;.FilesFilterFlags.PathMsOffice">
-			<summary>
-				Indicates if the Microsoft Office install location should be included in the <see cref="P:&dans;.CharacterFiles.DefaultSearchPath" />.
-			</summary>
-			<value>0x00000004</value>
-		</member>
-
-		<member name="F:&dans;.FilesFilterFlags.ExcludeNonSpeaking">
-			<summary>
-				Indicates if the <see cref="P:&dans;.CharacterFiles.FilePaths" /> property should exclude characters
-				that are <em>not </em>designed to speak.
-			</summary>
-			<value>0x00000010</value>
-		</member>
-
-		<member name="F:&dans;.FilesFilterFlags.ExcludeSpeaking">
-			<summary>
-				Indicates if the <see cref="P:&dans;.CharacterFiles.FilePaths" /> property should exclude characters
-				that are designed to speak.
-			</summary>
-			<value>0x00000020</value>
-		</member>
-
-		<member name="F:&dans;.FilesFilterFlags.NoValidateVersion">
-			<summary>
-				Indicates if the the <see cref="P:&dans;.CharacterFiles.FilePaths" /> property should include all
-				character files, regardless of version.
-			</summary>
-			<remarks>
-				<para>
-					Double Agent can only use version 2.x characters.
-				</para>
-				<note>
-					If the <see cref="F:&dans;.FilesFilterFlags.ExcludeNonSpeaking" /> or <see cref="F:&dans;.FilesFilterFlags.ExcludeSpeaking" />
-					flag is set, this flag is ignored.
-				</note>
-			</remarks>
-			<value>0x00010000</value>
-		</member>
-
-		<!--=============================================================================================-->
-
-		<member name="T:&dans;.FilesFilterFlags" kind="Enumeration">
-			<summary>
-				<para>
-					Specifies the filter that is applied to the <see cref="T:&dans;.CharacterFiles" />.<see cref="P:&dans;.CharacterFiles.FilePaths" />
-					property.
-				</para>
-			</summary>
-			<syntax>
-				<h4>Members</h4>
-				<list type="table">
-					<item>
-						<term xml:space="preserve">
-<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.PathDoubleAgent']/value" /> = <keyword>PathDoubleAgent</keyword>
-</term>
-						<description>
-							<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.PathDoubleAgent']/summary" />
-						</description>
-					</item>
-					<item>
-						<term xml:space="preserve">
-<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.PathMsAgent']/value" /> = <keyword>PathMsAgent</keyword>
-</term>
-						<description>
-							<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.PathMsAgent']/summary" />
-						</description>
-					</item>
-					<item>
-						<term xml:space="preserve">
-<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.PathMsOffice']/value" /> = <keyword>PathMsOffice</keyword>
-</term>
-						<description>
-							<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.PathMsOffice']/summary" />
-						</description>
-					</item>
-					<item>
-						<term xml:space="preserve">
-<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.ExcludeNonSpeaking']/value" /> = <keyword>ExcludeNonSpeaking</keyword>
-</term>
-						<description>
-							<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.ExcludeNonSpeaking']/summary" />
-						</description>
-					</item>
-					<item>
-						<term xml:space="preserve">
-<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.ExcludeSpeaking']/value" /> = <keyword>ExcludeSpeaking</keyword>
-</term>
-						<description>
-							<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.ExcludeSpeaking']/summary" />
-						</description>
-					</item>
-					<item>
-						<term xml:space="preserve">
-<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.NoValidateVersion']/value" /> = <keyword>NoValidateVersion</keyword>
-</term>
-						<description>
-							<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.NoValidateVersion']/summary" />
-						</description>
-					</item>
-				</list>
-			</syntax>
-			<seealso cref="P:&dans;.CharacterFiles.Filter" prefix="The" suffix="Property" />
-		</member>
-
-		<!--=============================================================================================-->
-		<!--=============================================================================================-->
-
-		<member name="F:&dans;.ActiveStateType.Active">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ActiveStateType.Active']" />
-		</member>
-
-		<member name="F:&dans;.ActiveStateType.Inactive">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ActiveStateType.Inactive']" />
-		</member>
-
-		<member name="F:&dans;.ActiveStateType.InputActive">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ActiveStateType.InputActive']" />
-		</member>
-
-		<!--=============================================================================================-->
-
-		<member name="T:&dans;.ActiveStateType" kind="Enumeration">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.ActiveStateType']" />
-		</member>
-
-		<!--=============================================================================================-->
-		<!--=============================================================================================-->
-
-		<member name="F:&dans;.AudioStatusType.Available">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.AudioStatusType.Available']" />
-		</member>
-
-		<member name="F:&dans;.AudioStatusType.CharacterListening">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.AudioStatusType.CharacterListening']" />
-		</member>
-
-		<member name="F:&dans;.AudioStatusType.CharacterSpeaking">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.AudioStatusType.CharacterSpeaking']" />
-		</member>
-
-		<member name="F:&dans;.AudioStatusType.Disabled">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.AudioStatusType.Disabled']" />
-		</member>
-
-		<member name="F:&dans;.AudioStatusType.Error">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.AudioStatusType.Error']" />
-		</member>
-
-		<member name="F:&dans;.AudioStatusType.UserSpeaking">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.AudioStatusType.UserSpeaking']" />
-		</member>
-
-		<!--=============================================================================================-->
-
-		<member name="T:&dans;.AudioStatusType" kind="Enumeration">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.AudioStatusType']" />
-		</member>
-
-		<!--=============================================================================================-->
-		<!--=============================================================================================-->
-
-		<member name="F:&dans;.BalloonStyleFlags.AutoHide">
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.AutoHide']/summary" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.AutoHide']/value" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.AutoHide']/remarks" />
-		</member>
-
-		<member name="F:&dans;.BalloonStyleFlags.AutoPace">
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.AutoPace']/summary" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.AutoPace']/value" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.AutoPace']/remarks" />
-		</member>
-
-		<member name="F:&dans;.BalloonStyleFlags.Enabled">
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.Enabled']/summary" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.Enabled']/value" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.Enabled']/remarks" />
-		</member>
-
-		<member name="F:&dans;.BalloonStyleFlags.ShowPartialLines">
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.ShowPartialLines']/summary" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.ShowPartialLines']/value" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.ShowPartialLines']/remarks" />
-		</member>
-
-		<member name="F:&dans;.BalloonStyleFlags.SizeToText">
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.SizeToText']/summary" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.SizeToText']/value" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.SizeToText']/remarks" />
-		</member>
-
-		<!--=============================================================================================-->
-
-		<member name="T:&dans;.BalloonStyleFlags" kind="Enumeration">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.BalloonStyleFlags']" />
-		</member>
-
-		<!--=============================================================================================-->
-		<!--=============================================================================================-->
-
-		<member name="F:&dans;.CharacterStyleFlags.AutoPopupMenu">
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.AutoPopupMenu']/summary" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.AutoPopupMenu']/value" />
-		</member>
-
-		<member name="F:&dans;.CharacterStyleFlags.IconShown">
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.IconShown']/summary" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.IconShown']/value" />
-		</member>
-
-		<member name="F:&dans;.CharacterStyleFlags.IdleEnabled">
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.IdleEnabled']/summary" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.IdleEnabled']/value" />
-		</member>
-
-		<member name="F:&dans;.CharacterStyleFlags.Smoothed">
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.Smoothed']/summary" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.Smoothed']/value" />
-		</member>
-
-		<member name="F:&dans;.CharacterStyleFlags.SmoothEdges">
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.SmoothEdges']/summary" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.SmoothEdges']/value" />
-		</member>
-
-		<member name="F:&dans;.CharacterStyleFlags.SoundEffects">
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.SoundEffects']/summary" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.CharacterStyleFlags.SoundEffects']/value" />
-		</member>
-
-		<!--=============================================================================================-->
-
-		<member name="T:&dans;.CharacterStyleFlags" kind="Enumeration">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.CharacterStyleFlags']" />
-		</member>
-
-		<!--=============================================================================================-->
-		<!--=============================================================================================-->
-
-		<member name="F:&dans;.ListenCompleteType.CharacterClientDeactivated">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListenCompleteType.CharacterClientDeactivated']" />
-		</member>
-
-		<member name="F:&dans;.ListenCompleteType.DefaultCharacterChanged">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListenCompleteType.DefaultCharacterChanged']" />
-		</member>
-
-		<member name="F:&dans;.ListenCompleteType.ProgramDisabled">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListenCompleteType.ProgramDisabled']" />
-		</member>
-
-		<member name="F:&dans;.ListenCompleteType.ProgramTimedOut">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListenCompleteType.ProgramTimedOut']" />
-		</member>
-
-		<member name="F:&dans;.ListenCompleteType.UserDisabled">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListenCompleteType.UserDisabled']" />
-		</member>
-
-		<member name="F:&dans;.ListenCompleteType.UserReleasedKey">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListenCompleteType.UserReleasedKey']" />
-		</member>
-
-		<member name="F:&dans;.ListenCompleteType.UserSpeechEnded">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListenCompleteType.UserSpeechEnded']" />
-		</member>
-
-		<member name="F:&dans;.ListenCompleteType.UserTimedOut">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListenCompleteType.UserTimedOut']" />
-		</member>
-
-		<!--=============================================================================================-->
-
-		<member name="T:&dans;.ListenCompleteType" kind="Enumeration">
-			<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.ListenCompleteType']/summary" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.ListenCompleteType']/syntax" />
-			<seealso cref="E:&darootobj;.ListeningState" suffix="Event" prefix="The" />
-		</member>
-
-		<!--=============================================================================================-->
-		<!--=============================================================================================-->
-
-		<member name="F:&dans;.ListeningStatusType.CharacterInactive">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListeningStatusType.CharacterInactive']" />
-		</member>
-
-		<member name="F:&dans;.ListeningStatusType.CharacterInactive">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListeningStatusType.CharacterInactive']" />
-		</member>
-
-		<member name="F:&dans;.ListeningStatusType.Error">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListeningStatusType.Error']" />
-		</member>
-
-		<member name="F:&dans;.ListeningStatusType.InitializeFailed">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListeningStatusType.InitializeFailed']" />
-		</member>
-
-		<member name="F:&dans;.ListeningStatusType.InputDisabled">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.ListeningStatusType.InputDisabled']" />
-		</member>
-
-		<!--=============================================================================================-->
-
-		<member name="T:&dans;.ListeningStatusType" kind="Enumeration">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.ListeningStatusType']" />
-		</member>
-
-		<!--=============================================================================================-->
-		<!--=============================================================================================-->
-
-		<member name="F:&dans;.MoveCauseType.NeverMoved">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.MoveCauseType.NeverMoved']" />
-		</member>
-
-		<member name="F:&dans;.MoveCauseType.OtherProgramMoved">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.MoveCauseType.OtherProgramMoved']" />
-		</member>
-
-		<member name="F:&dans;.MoveCauseType.ProgramMoved">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.MoveCauseType.ProgramMoved']" />
-		</member>
-
-		<member name="F:&dans;.MoveCauseType.UserMoved">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.MoveCauseType.UserMoved']" />
-		</member>
-
-		<!--=============================================================================================-->
-
-		<member name="T:&dans;.MoveCauseType" kind="Enumeration">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.MoveCauseType']" />
-		</member>
-
-		<!--=============================================================================================-->
-		<!--=============================================================================================-->
-
-		<member name="F:&dans;.PrepareResourceType.Animation">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.PrepareResourceType.Animation']" />
-		</member>
-
-		<member name="F:&dans;.PrepareResourceType.State">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.PrepareResourceType.State']" />
-		</member>
-
-		<member name="F:&dans;.PrepareResourceType.Wave">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.PrepareResourceType.Wave']" />
-		</member>
-
-		<!--=============================================================================================-->
-
-		<member name="T:&dans;.PrepareResourceType" kind="Enumeration">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.PrepareResourceType']" />
-		</member>
-
-		<!--=============================================================================================-->
-		<!--=============================================================================================-->
-
-		<member name="F:&dans;.SpeechGenderType.Female">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.SpeechGenderType.Female']" />
-		</member>
-
-		<member name="F:&dans;.SpeechGenderType.Male">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.SpeechGenderType.Male']" />
-		</member>
-
-		<member name="F:&dans;.SpeechGenderType.Neutral">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.SpeechGenderType.Neutral']" />
-		</member>
-
-		<!--=============================================================================================-->
-
-		<member name="T:&dans;.SpeechGenderType" kind="Enumeration">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.SpeechGenderType']" />
-		</member>
-
-		<!--=============================================================================================-->
-		<!--=============================================================================================-->
-
-		<member name="F:&dans;.StopAllFlags.Everything">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.StopAllFlags.Everything']" />
-		</member>
-
-		<member name="F:&dans;.StopAllFlags.ImmediatePrepare">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.StopAllFlags.ImmediatePrepare']" />
-		</member>
-
-		<member name="F:&dans;.StopAllFlags.Move">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.StopAllFlags.Move']" />
-		</member>
-
-		<member name="F:&dans;.StopAllFlags.Play">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.StopAllFlags.Play']" />
-		</member>
-
-		<member name="F:&dans;.StopAllFlags.QueuedPrepare">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.StopAllFlags.QueuedPrepare']" />
-		</member>
-
-		<member name="F:&dans;.StopAllFlags.Speak">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.StopAllFlags.Speak']" />
-		</member>
-
-		<member name="F:&dans;.StopAllFlags.Visibility">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.StopAllFlags.Visibility']" />
-		</member>
-
-		<!--=============================================================================================-->
-
-		<member name="T:&dans;.StopAllFlags" kind="Enumeration">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.StopAllFlags']" />
-		</member>
-
-		<!--=============================================================================================-->
-		<!--=============================================================================================-->
-
-		<member name="F:&dans;.VisibilityCauseType.NeverShown">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.VisibilityCauseType.NeverShown']" />
-		</member>
-
-		<member name="F:&dans;.VisibilityCauseType.OtherProgramHid">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.VisibilityCauseType.OtherProgramHid']" />
-		</member>
-
-		<member name="F:&dans;.VisibilityCauseType.OtherProgramShowed">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.VisibilityCauseType.OtherProgramShowed']" />
-		</member>
-
-		<member name="F:&dans;.VisibilityCauseType.ProgramHid">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.VisibilityCauseType.ProgramHid']" />
-		</member>
-
-		<member name="F:&dans;.VisibilityCauseType.ProgramShowed">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.VisibilityCauseType.ProgramShowed']" />
-		</member>
-
-		<member name="F:&dans;.VisibilityCauseType.UserHid">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.VisibilityCauseType.UserHid']" />
-		</member>
-
-		<member name="F:&dans;.VisibilityCauseType.UserShowed">
-			<copy file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.VisibilityCauseType.UserShowed']" />
-		</member>
-
-		<!--=============================================================================================-->
-
-		<member name="T:&dans;.VisibilityCauseType" kind="Enumeration">
-			<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.VisibilityCauseType']/summary" />
-			<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.VisibilityCauseType']/syntax" />
-			<seealso cref="P:&dans;.Character.VisibilityCause" suffix="Property" prefix="The" />
-			<seealso cref="E:&darootobj;.VisibleState" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->

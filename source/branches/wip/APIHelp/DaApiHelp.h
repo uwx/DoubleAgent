@@ -377,6 +377,9 @@
 #define	APIHELP_Ctl_Character_SpeakFormatted				0x01040047
 #define	APIHELP_Ctl_Character_ThinkFormatted				0x01040048
 #define	APIHELP_Ctl_Character_NewFormattedText				0x01040049
+#define	APIHELP_Ctl_Character_SuspendPause					0x0104004A
+#define	APIHELP_Ctl_Character_SuspendStop					0x0104004B
+#define	APIHELP_Ctl_Character_SuspendHide					0x0104004C
 
 #define	APIHELP_Ctl_Request									0x01050000
 #define	APIHELP_Ctl_Request_ID								0x01050001

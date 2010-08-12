@@ -43,6 +43,10 @@
 							a specific client application. It can produce Text-to-Speech output and receive mouse, keyboard, and
 							Speech Recognition input even if the client application's window is inactive (not in the foreground)
 							or disabled. It can even be used by a client application that has no visible window.</p>
+						<p>The <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>, the <a class="see" href="../html/UI_Intro.htm#ListeningTip">
+						listening tip</a>, and the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window
+							are also <em class="glossary">topmost</em> windows, and the <em class="glossary">Listening key</em>
+							is always available.</p>
 					</dd>
 					<dt>
 						<h4><a name="standalone"></a>Stand-alone Mode</h4>
@@ -57,8 +61,15 @@
 							<a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window and the <a class="see"
 							href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window.</p>
 						<p>If the control is contained in a form, it will <em>not</em> be visible at run-time.</p>
-						<p>A character window floats on top of all application windows and is <em>not</em> visually associated with
-							the client application to which it belongs. ---todo---</p>
+						<p>A character window floats on top of the application window containing the Double Agent control, but <em>
+							not</em> other application windows. It is visually associated with your client application as an <em
+								class="glossary">owned popup</em> of the control's parent window - that is, it's hidden when the
+							control's parent window is minimized. However, the <a class="see" href="../html/UI_Intro.htm#Icon">notification
+							icon</a> remains visible.</p>
+						<p>The <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>, the <a class="see" href="../html/UI_Intro.htm#ListeningTip">
+						listening tip</a>, and the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window
+							are also <em class="glossary">owned popups</em> of the control's parent window, and the <em class="glossary">
+								Listening key</em> is available only when your application is in the foreground.</p>
 					</dd>
 					<dt>
 						<h4><a name="contained"></a>Contained Mode</h4>
@@ -75,11 +86,12 @@
 							be visible.</p>
 						<p>The <em class="glossary">contained</em> character is set by the client application at run-time, so the
 							control can dynamically change to and from <em class="glossary">contained</em> mode. Also, even when
-							there is a <em class="glossary">contained</em> character, other characters can be shown as floating
-							(uncontained) windows.</p>
+							there's a <em class="glossary">contained</em> character, other characters can be shown as floating (uncontained)
+							windows.</p>
 					</dd>
 				</dl>
-			</td>
+				<h4 class="seealso">See Also</h4>
+				<a href="Ctl_Programming_Overview.htm">Control Programming Overview</a> </td>
 		</tr>
 	</table>
 </body>

@@ -83,7 +83,7 @@
 </member>
 
 <member name="M:DoubleAgent.AxControl.AxControl.GetCharacterSREngine(System.Object)">
-<summary> Retrieves a <see cref="T:DoubleAgent.Control.SREngine" /> Object thats meet a specific character's requirements.</summary>
+<summary> Retrieves a <see cref="T:DoubleAgent.Control.SREngine" /> Object that meets a specific character's requirements.</summary>
 <param name="Provider">A <typename>string</typename> value that specifies the character file, or an empty string for the default character.</param>
 <returns name="SREngine">The <see class="typename" cref="T:DoubleAgent.Control.SREngine" /> Object that matches the character's speech recognition requirements (if any).</returns>
 <remarks>
@@ -137,9 +137,42 @@
 
 <member name="P:DoubleAgent.AxControl.AxControl.AutoConnect">
 <summary> Specifies if the Double Agent control will automatically connect to the Double Agent server.</summary>
-<value name="AutoConnect">A <typename>boolean</typename> value specifying whether automatic connection is enabled.</value>
+<value name="AutoConnect">A <typename>numeric</typename> value specifying whether automatic connection is enabled. 
+<para>On a 32-bit system:
+</para>
+<list type="table">
+<item>
+<term width="150ex">0</term>
+<description>The control will <em>not</em> automatically connect to the server.</description>
+</item>
+<item>
+<term width="150ex">Any non-zero value</term>
+<description>The control will automatically connect to the server.</description>
+</item>
+</list>
+<para>On a 64-bit system:
+</para>
+<list type="table">
+<item>
+<term width="150ex">0</term>
+<description>The control will <em>not</em> automatically connect to the server.</description>
+</item>
+<item>
+<term width="150ex">32</term>
+<description>The control will automatically connect to the 32-bit server. If the 32-bit server is not installed, the 64-bit server will be used.</description>
+</item>
+<item>
+<term width="150ex">64</term>
+<description>The control will automatically connect to the 64-bit server. If the 64-bit server is not installed, the 32-bit server will be used.</description>
+</item>
+<item>
+<term width="150ex">Any other non-zero value</term>
+<description>The control will automatically connect to server with the same architecture as the calling process. If the matching server is not installed, then the other server will be used.</description>
+</item>
+</list>
+</value>
 <remarks>
-<para>If this property is <keyword>True</keyword>, then the control will automatically establish a connection with the server the first time it's required. To use the control in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm">stand-alone</a> mode, you must set this property to <keyword>False</keyword>.
+<para>If this property is <keyword>non-zero</keyword>, then the control will automatically establish a connection with the server the first time it's required. To use the control in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a> mode, you must set this property to <keyword>zero</keyword>.
 </para>
 <para>For compatibility with Microsoft Agent, the default value for this property is <keyword>True</keyword>.
 </para>
@@ -265,44 +298,59 @@
 <summary> Specifies the initial style to use when a <see cref="T:DoubleAgent.Control.Character" /> is loaded.</summary>
 <value name="CharacterStyle">A <typename>numeric</typename> bit-field value that specifies the <see cref="P:DoubleAgent.Control.Character.Style" /> to apply when a <see cref="T:DoubleAgent.Control.Character" /> is loaded:
 <list type="table">
-<item><term xml:space="preserve">
+<item name="SoundEffects"><term xml:space="preserve">
 &amp;H00000001 = <keyword>SoundEffects</keyword>
 </term>
 <description>The animation sound effects are played.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="IdleEnabled"><term xml:space="preserve">
 &amp;H00000002 = <keyword>IdleEnabled</keyword>
 </term>
 <description>The character enters idle mode and shows it's idling animations when it's not doing anything else.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="AutoPopupMenu"><term xml:space="preserve">
 &amp;H00000004 = <keyword>AutoPopupMenu</keyword>
 </term>
-<description>A right-click on the character or it's notification icon automatically shows a <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a>.</description>
+<description>A right-click on the character or it's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> automatically shows a <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a>.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="IconShown"><term xml:space="preserve">
 &amp;H00000008 = <keyword>IconShown</keyword>
 </term>
-<description>The character has an icon in the taskbar notification area.</description>
+<description>The character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> in the taskbar notification area.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="SmoothEdges"><term xml:space="preserve">
 &amp;H00000020 = <keyword>SmoothEdges</keyword>
 </term>
 <description>Image smoothing (antialiasing) is applied to the edges of the character's animations.</description>
 </item>
-<item><term xml:space="preserve">
+<item name="Smoothed"><term xml:space="preserve">
 &amp;H00000030 = <keyword>Smoothed</keyword>
 </term>
 <description>Image smoothing (antialiasing) is applied to the character's animations.</description>
 </item>
+<item name="SuspendPause"><term xml:space="preserve">
+&amp;H00000100 = <keyword>SuspendPause</keyword>
+</term>
+<description>All requests are paused when the client is not in the foreground.</description>
+</item>
+<item name="SuspendStop"><term xml:space="preserve">
+&amp;H00000200 = <keyword>SuspendStop</keyword>
+</term>
+<description>All requests are stopped when the client is not in the foreground.</description>
+</item>
+<item name="SuspendHide"><term xml:space="preserve">
+&amp;H00000400 = <keyword>SuspendHide</keyword>
+</term>
+<description>All floating windows are hidden when the client is not in the foreground.</description>
+</item>
 </list>
 </value>
 <remarks>
-<para>Setting this property allows you to establish a default<see cref="T:DoubleAgent.Control.Character" />.<see cref="P:DoubleAgent.Control.Character.Style" /> for you application.
+<para>Setting this property allows you to establish a default <see cref="T:DoubleAgent.Control.Character" />.<see cref="P:DoubleAgent.Control.Character.Style" /> for you application. It's initial value is <see class="" cref="F:DoubleAgent.Control.CharacterStyleFlags.AutoPopupMenu" />, <see class="" cref="F:DoubleAgent.Control.CharacterStyleFlags.IdleEnabled" />, <see class="" cref="F:DoubleAgent.Control.CharacterStyleFlags.IconShown" />, <see class="" cref="F:DoubleAgent.Control.CharacterStyleFlags.SoundEffects" />.
 </para>
-<para>The <see cref="F:DoubleAgent.Control.CharacterStyleFlags.Smoothed" /> and <see cref="F:DoubleAgent.Control.CharacterStyleFlags.SmoothEdges" /> bits can only be changed here. Once a <see cref="T:DoubleAgent.Control.Character" /> is loaded, these bits <strong>cannot</strong> be changed in it's <see cref="P:DoubleAgent.Control.Character.Style" /> property. Also, these two settings are only used the first time the character is loaded. If another client has already loaded the character, it's smoothing settings will not change. If your client application is the first client to load the character, then your smoothing settings will apply to all clients.
+<para>The <see class="" cref="F:DoubleAgent.Control.CharacterStyleFlags.Smoothed" /> and <see class="" cref="F:DoubleAgent.Control.CharacterStyleFlags.SmoothEdges" /> flags can only be changed here. Once a <see cref="T:DoubleAgent.Control.Character" /> is loaded, these bits <strong>cannot</strong> be changed in it's <see cref="P:DoubleAgent.Control.Character.Style" /> property. Also, these two settings are only used the first time the character is loaded. If another client has already loaded the character, it's smoothing settings will not change. If your client application is the first client to load the character, then your smoothing settings will apply to all clients.
 </para>
-<note>For compatibility with Microsoft Agent, the <see cref="F:DoubleAgent.Control.CharacterStyleFlags.IconShown" /> bit is set to 1 by default. To load a <see cref="T:DoubleAgent.Control.Character" /> without showing it's notification icon, set the <see cref="F:DoubleAgent.Control.CharacterStyleFlags.IconShown" /> bit to 0.</note>
+<note>For compatibility with Microsoft Agent, the <see class="" cref="F:DoubleAgent.Control.CharacterStyleFlags.IconShown" /> flag is set by default. To load a <see cref="T:DoubleAgent.Control.Character" /> without showing it's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, set the <see class="" cref="F:DoubleAgent.Control.CharacterStyleFlags.IconShown" /> flag off.</note>
 </remarks>
 <seealso cref="P:DoubleAgent.Control.Character.Style" />
 <seealso cref="T:DoubleAgent.Control.CharacterStyleFlags" />
@@ -324,12 +372,12 @@
 </member>
 
 <member name="P:DoubleAgent.AxControl.AxControl.ControlCharacter">
-<summary> Specifies the control's <a class="see" href="..\Programming\Ctl_Programming_Modes.htm">contained</a> <see cref="T:DoubleAgent.Control.Character" />.</summary>
+<summary> Specifies the control's <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a> <see cref="T:DoubleAgent.Control.Character" />.</summary>
 <value name="ControlCharacter">The <see class="typename" cref="T:DoubleAgent.Control.Character" /> Object object that's contained within the visible area of the control, or an empty reference (<keyword>Nothing</keyword>).</value>
 <remarks>
-<para>Setting the <self>ControlCharacter</self> property to a <see cref="T:DoubleAgent.Control.Character" /> Object changes the control from <a class="see" href="..\Programming\Ctl_Programming_Modes.htm">stand-alone</a> mode to <a class="see" href="..\Programming\Ctl_Programming_Modes.htm">contained</a> mode. Setting <self>ControlCharacter</self> to an empty reference changes the control from <a class="see" href="..\Programming\Ctl_Programming_Modes.htm">contained</a> mode back to <a class="see" href="..\Programming\Ctl_Programming_Modes.htm">stand-alone</a> mode.
+<para>Setting the <self>ControlCharacter</self> property to a <see cref="T:DoubleAgent.Control.Character" /> Object changes the control from <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a> mode to <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a> mode. Setting <self>ControlCharacter</self> to an empty reference changes the control from <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a> mode back to <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a> mode.
 </para>
-<para>Normally, the control isn't visible at runtime, but when it has a <self>ControlCharacter</self> it will become visible as a child window of its containing form. This is the only time the ActiveX<sup>®</sup> <glossary>appearence</glossary> properties, such as <see cref="P:DoubleAgent.AxControl.AxControl.CtlBackColor" /> and <see cref="P:DoubleAgent.AxControl.AxControl.CtlBorderColor" />, are used.
+<para>Normally, the control isn't visible at runtime, but when it has a <self>ControlCharacter</self> it will become visible as a child window of its containing form. This is the only time the ActiveX<sup>®</sup> <glossary>appearance</glossary> properties, such as <see cref="P:DoubleAgent.AxControl.AxControl.CtlBackColor" /> and <see cref="P:DoubleAgent.AxControl.AxControl.CtlBorderColor" />, are used.
 </para>
 <note>You cannot set the <self>ControlCharacter</self> property if the control is <see cref="P:DoubleAgent.AxControl.AxControl.Connected" /> to the server.</note>
 </remarks>
@@ -344,7 +392,7 @@
 
 <member name="P:DoubleAgent.AxControl.AxControl.RaiseRequestErrors">
 <summary> Specifies if an error condition is raised (an exception thrown) for failed requests.</summary>
-<value name="RaiseErrors">A <typename>boolean</typename> value that determines whether errors are raised for failed requests. The default value is <keyword>True</keyword>.</value>
+<value name="RaiseRequestErrors">A <typename>boolean</typename> value that determines whether errors are raised for failed requests. The default value is <keyword>True</keyword>.</value>
 <remarks>
 <para>When a method that returns a <see cref="T:DoubleAgent.Control.Request" /> Object fails, there are two ways to detect the error. If <self>RaiseRequestErrors</self> is set, the Double Agent control will raise an error condition. If it's not set, you can check the <see cref="T:DoubleAgent.Control.Request" /> Object's <see cref="P:DoubleAgent.Control.Request.Status" /> property. An example of a request error is when you specify an animation name that doesn't exist for the <see cref="M:DoubleAgent.Control.Character.Play(System.String)" /> method.
 </para>
@@ -402,12 +450,13 @@
 </para>
 <para>This event can occur when the user uses your <see cref="T:DoubleAgent.Control.Commands" /> Collection, for example, by choosing a <see cref="T:DoubleAgent.Control.Commands" /> Collection entry in the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window or in the <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a> window for a character. It can also occur when the user selects a character (by clicking or speaking its name), when a character becomes visible, or when the character of another client application becomes hidden.
 </para>
-<para>You can also call the <see cref="M:DoubleAgent.Control.Character.Activate(System.Object)" /> method (with <paramref name="State" /> set to 2) to explicitly make the character topmost, which results in your client application becoming <glossary>input-active</glossary> and triggers this event. However, this event does not occur if you use the <see cref="M:DoubleAgent.Control.Character.Activate(System.Object)" /> method only to specify whether or not your client is the active client of the character.
+<para>You can also call the <see cref="M:DoubleAgent.Control.Character.Activate(System.Object)" /> method with <paramref name="State" /> set to <keyword xml:space="preserve">2</keyword> (<see class="see" cref="F:DoubleAgent.Control.ActiveStateType.InputActive" />) to explicitly make the character topmost, which results in your client application becoming <glossary>input-active</glossary> and triggers this event. However, this event does not occur if you use the <see cref="M:DoubleAgent.Control.Character.Activate(System.Object)" /> method only to specify whether or not your client is the active client of the character.
 </para>
 </remarks>
 <seealso cref="T:DoubleAgent.AxControl.CtlActivateInputEvent" />
-<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDeactivateInput" />
 <seealso cref="M:DoubleAgent.Control.Character.Activate(System.Object)" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDeactivateInput" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlActiveClientChange" />
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlActiveClientChange">
@@ -434,10 +483,10 @@
 </para>
 </remarks>
 <seealso cref="T:DoubleAgent.AxControl.CtlActiveClientChangeEvent" />
+<seealso cref="M:DoubleAgent.Control.Character.Activate(System.Object)" />
+<seealso cref="P:DoubleAgent.Control.Character.ActiveState" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDeactivateInput" />
-<seealso cref="M:DoubleAgent.Control.Character.Activate(System.Object)" />
-<seealso cref="P:DoubleAgent.Control.Character.Active" />
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlAgentPropertyChange">
@@ -463,7 +512,7 @@
 </list>
 </param>
 <remarks>
-<para>Double Agent sends this event only to the clients of the character (applications that have loaded the character) that use the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>.
+<para>Double Agent sends this event only to all clients of the character (applications that have loaded the character).
 </para>
 </remarks>
 <seealso cref="T:DoubleAgent.AxControl.CtlBalloonHideEvent" />
@@ -482,7 +531,7 @@
 </list>
 </param>
 <remarks>
-<para>Double Agent sends this event only to the clients of the character (applications that have loaded the character) that use the <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a>.
+<para>Double Agent sends this event only to all clients of the character (applications that have loaded the character).
 </para>
 </remarks>
 <seealso cref="T:DoubleAgent.AxControl.CtlBalloonShowEvent" />
@@ -510,7 +559,7 @@
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlClick">
-<summary> Signalled when the user clicks a character, or the character's icon.</summary>
+<summary> Signalled when the user clicks a character, or the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</summary>
 <param name="Sender">The source of the event.</param>
 <param name="E">A <see class="typename" cref="T:DoubleAgent.AxControl.CtlClickEvent" /> Object that contains the event data: 
 <list>
@@ -520,11 +569,11 @@
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlClickEvent.Button" /></term>
-<description>A numeric value that identifies which button was pressed and released to cause the event. The button argument is a bit field with bits corresponding to the left button (bit 0), right button (bit 1), and middle button (bit 2). These bits correspond to the values 1, 2, and 4, respectively. Only one of the bits is set, indicating the button that caused the event. If the character includes a taskbar icon, and bit 13 is also set, the click occurred on the taskbar icon.</description>
+<description>A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</description>
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlClickEvent.Shift" /></term>
-<description>A numeric value that corresponds to the state of the <filename>Shift</filename>, <filename>Ctrl</filename>, and <filename>Alt</filename> keys when the button was pressed or released. A bit is set if the key is down. The shift argument is a bit field with the least-significant bits corresponding to the <filename>Shift</filename> key (bit 0), the <filename>Ctrl</filename> key (bit 1), and the <filename>Alt</filename> key (bit 2). These bits correspond to the values 1, 2, and 4, respectively. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are pressed. For example, if both <filename>Ctrl</filename> and <filename>Alt</filename> were pressed, the value of <filename>Shift</filename> would be 6.</description>
+<description>A <typename>numeric</typename> value that corresponds to the state of the <filename>Shift</filename>, <filename>Ctrl</filename>, and <filename>Alt</filename> keys when the mouse button was pressed or released. The <paramref name="Shift" /> parameter is a bit field with bits corresponding to the <filename>Shift</filename> key (bit 0) (&amp;H0001), the <filename>Ctrl</filename> key (bit 1) (&amp;H0002), and the <filename>Alt</filename> key (bit 2) (&amp;H0004). A bit is set if the key is down. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are down. For example, if both <filename>Ctrl</filename> and <filename>Alt</filename> were down, the  value of <paramref name="Shift" /> would be 6.</description>
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlClickEvent.X" /></term>
@@ -537,7 +586,7 @@
 </list>
 </param>
 <remarks>
-<para>This event is sent only to the <glossary>input-active</glossary> client of a character. When the user clicks a character or its taskbar icon with no <glossary>input-active</glossary> client, Double Agent sends the event to its active client. If the character is visible (<see cref="P:DoubleAgent.Control.Character.Visible" /> is <keyword>True</keyword>), the user's action also sets the character's current <glossary>input-active</glossary> client as the last <glossary>input-active</glossary> client, sending the <see cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" /> event to that client, and then sending the <keyword>CtlClick</keyword> event. If the character is hidden (<see cref="P:DoubleAgent.Control.Character.Visible" /> is <keyword>False</keyword>), and the user clicks the character's taskbar icon using button 1, the character is also automatically shown.
+<para>This event is sent only to the <glossary>input-active</glossary> client of a character. When the user clicks a character or its <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> with no <glossary>input-active</glossary> client, Double Agent sends the event to its active client. If the character is visible (<see cref="P:DoubleAgent.Control.Character.Visible" /> is <keyword>True</keyword>), the user's action also sets the character's current <glossary>input-active</glossary> client as the last <glossary>input-active</glossary> client, sending the <see cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" /> event to that client, and then sending the <keyword>CtlClick</keyword> event. If the character is hidden (<see cref="P:DoubleAgent.Control.Character.Visible" /> is <keyword>False</keyword>), and the user clicks the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> using button 1, the character is also automatically shown.
 </para>
 <note>Clicking a character does not disable all other character output. However, pressing the <glossary>Listening key</glossary> <em>does</em> flush the <glossary>input-active</glossary> character's output and triggers the <see cref="E:DoubleAgent.AxControl.AxControl.CtlRequestComplete" /> event, passing a <see cref="P:DoubleAgent.Control.Request.Status" /> that indicates that the client's queue was interrupted.</note>
 </remarks>
@@ -575,11 +624,11 @@
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlDblClickEvent.Button" /></term>
-<description>A numeric value that identifies which button was pressed and released to cause the event. The button argument is a bit field with bits corresponding to the left button (bit 0), right button (bit 1), and middle button (bit 2). These bits correspond to the values 1, 2, and 4, respectively. Only one of the bits is set, indicating the button that caused the event. If the character includes a taskbar icon, and bit 13 is also set, the click occurred on the taskbar icon.</description>
+<description>A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</description>
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlDblClickEvent.Shift" /></term>
-<description>A numeric value that corresponds to the state of the <filename>Shift</filename>, <filename>Ctrl</filename>, and <filename>Alt</filename> keys when the button was pressed or released. A bit is set if the key is down. The shift argument is a bit field with the least-significant bits corresponding to the <filename>Shift</filename> key (bit 0), the <filename>Ctrl</filename> key (bit 1), and the <filename>Alt</filename> key (bit 2). These bits correspond to the values 1, 2, and 4, respectively. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are pressed. For example, if both <filename>Ctrl</filename> and <filename>Alt</filename> were pressed, the value of <filename>Shift</filename> would be 6.</description>
+<description>A <typename>numeric</typename> value that corresponds to the state of the <filename>Shift</filename>, <filename>Ctrl</filename>, and <filename>Alt</filename> keys when the mouse button was pressed or released. The <paramref name="Shift" /> parameter is a bit field with bits corresponding to the <filename>Shift</filename> key (bit 0) (&amp;H0001), the <filename>Ctrl</filename> key (bit 1) (&amp;H0002), and the <filename>Alt</filename> key (bit 2) (&amp;H0004). A bit is set if the key is down. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are down. For example, if both <filename>Ctrl</filename> and <filename>Alt</filename> were down, the  value of <paramref name="Shift" /> would be 6.</description>
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlDblClickEvent.X" /></term>
@@ -592,7 +641,7 @@
 </list>
 </param>
 <remarks>
-<para>This event is sent only to the <glossary>input-active</glossary> client of a character. When the user double-clicks a character or its taskbar icon with no <glossary>input-active</glossary> client, Double Agent sends the event to its active client. If the character is visible (<see cref="P:DoubleAgent.Control.Character.Visible" /> is <keyword>True</keyword>), the user's action also sets the character's current <glossary>input-active</glossary> client as the last <glossary>input-active</glossary> client, sending the <see cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" /> event to that client, and then sending the <keyword>CtlDblClick</keyword> event. If the character is hidden (<see cref="P:DoubleAgent.Control.Character.Visible" /> is <keyword>False</keyword>), and the user double-clicks the character's taskbar icon using button 1, the character is also automatically shown.
+<para>This event is sent only to the <glossary>input-active</glossary> client of a character. When the user double-clicks a character or its <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> with no <glossary>input-active</glossary> client, Double Agent sends the event to its active client. If the character is visible (<see cref="P:DoubleAgent.Control.Character.Visible" /> is <keyword>True</keyword>), the user's action also sets the character's current <glossary>input-active</glossary> client as the last <glossary>input-active</glossary> client, sending the <see cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" /> event to that client, and then sending the <keyword>CtlDblClick</keyword> event. If the character is hidden (<see cref="P:DoubleAgent.Control.Character.Visible" /> is <keyword>False</keyword>), and the user double-clicks the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> using button 1, the character is also automatically shown.
 </para>
 </remarks>
 <seealso cref="T:DoubleAgent.AxControl.CtlDblClickEvent" />
@@ -613,11 +662,12 @@
 <remarks>
 <para>A <glossary>non-input-active</glossary> client no longer receives mouse or speech events from Double Agent (unless it becomes <glossary>input-active</glossary> again). Double Agent sends this event only to the client that becomes <glossary>non-input-active</glossary>.
 </para>
-<para>This event is signalled when your client application is <glossary>input-active</glossary> and the user chooses a another client's <see cref="T:DoubleAgent.Control.Command" /> in a character's <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a> or the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window, or you call the <see cref="M:DoubleAgent.Control.Character.Activate(System.Object)" /> method and set the <paramref name="State" /> parameter to 0. It may also occur when the user selects the name of another character by clicking or speaking. You also get this event when your character is hidden or another character becomes visible.
+<para>This event is signalled when your client application is <glossary>input-active</glossary> and the user chooses a another client's <see cref="T:DoubleAgent.Control.Command" /> in a character's <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a> or the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window, or you call the <see cref="M:DoubleAgent.Control.Character.Activate(System.Object)" /> method and set the <paramref name="State" /> parameter to <keyword xml:space="preserve">0</keyword> (<see class="see" cref="F:DoubleAgent.Control.ActiveStateType.Inactive" />). It may also occur when the user selects the name of another character by clicking or speaking. You also get this event when your character is hidden or another character becomes visible.
 </para>
 </remarks>
 <seealso cref="T:DoubleAgent.AxControl.CtlDeactivateInputEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlActiveClientChange" />
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlDefaultCharacterChange">
@@ -634,7 +684,7 @@
 <remarks>
 <para>This event indicates that the user has changed the character assigned as the user's default character. Double Agent sends this only to clients that have loaded the default character.
 </para>
-<para>When the new character appears, it assumes the same size as any already loaded instance of the character, or the previous default character (in that order).
+<para>When the new character appears, it assumes the same size as any already loaded instance of the character, or the size of the previous default character (in that order).
 </para>
 </remarks>
 <seealso cref="T:DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent" />
@@ -654,11 +704,11 @@
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Button" /></term>
-<description>A numeric value that identifies which button was pressed and released to cause the event. The button argument is a bit field with bits corresponding to the left button (bit 0), right button (bit 1), and middle button (bit 2). These bits correspond to the values 1, 2, and 4, respectively. Only one of the bits is set, indicating the button that caused the event. If the character includes a taskbar icon, and bit 13 is also set, the click occurred on the taskbar icon.</description>
+<description>A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</description>
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Shift" /></term>
-<description>A numeric value that corresponds to the state of the <filename>Shift</filename>, <filename>Ctrl</filename>, and <filename>Alt</filename> keys when the button was pressed or released. A bit is set if the key is down. The shift argument is a bit field with the least-significant bits corresponding to the <filename>Shift</filename> key (bit 0), the <filename>Ctrl</filename> key (bit 1), and the <filename>Alt</filename> key (bit 2). These bits correspond to the values 1, 2, and 4, respectively. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are pressed. For example, if both <filename>Ctrl</filename> and <filename>Alt</filename> were pressed, the value of <filename>Shift</filename> would be 6.</description>
+<description>A <typename>numeric</typename> value that corresponds to the state of the <filename>Shift</filename>, <filename>Ctrl</filename>, and <filename>Alt</filename> keys when the mouse button was pressed or released. The <paramref name="Shift" /> parameter is a bit field with bits corresponding to the <filename>Shift</filename> key (bit 0) (&amp;H0001), the <filename>Ctrl</filename> key (bit 1) (&amp;H0002), and the <filename>Alt</filename> key (bit 2) (&amp;H0004). A bit is set if the key is down. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are down. For example, if both <filename>Ctrl</filename> and <filename>Alt</filename> were down, the  value of <paramref name="Shift" /> would be 6.</description>
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragCompleteEvent.X" /></term>
@@ -689,11 +739,11 @@
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragStartEvent.Button" /></term>
-<description>A numeric value that identifies which button was pressed and released to cause the event. The button argument is a bit field with bits corresponding to the left button (bit 0), right button (bit 1), and middle button (bit 2). These bits correspond to the values 1, 2, and 4, respectively. Only one of the bits is set, indicating the button that caused the event. If the character includes a taskbar icon, and bit 13 is also set, the click occurred on the taskbar icon.</description>
+<description>A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</description>
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragStartEvent.Shift" /></term>
-<description>A numeric value that corresponds to the state of the <filename>Shift</filename>, <filename>Ctrl</filename>, and <filename>Alt</filename> keys when the button was pressed or released. A bit is set if the key is down. The shift argument is a bit field with the least-significant bits corresponding to the <filename>Shift</filename> key (bit 0), the <filename>Ctrl</filename> key (bit 1), and the <filename>Alt</filename> key (bit 2). These bits correspond to the values 1, 2, and 4, respectively. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are pressed. For example, if both <filename>Ctrl</filename> and <filename>Alt</filename> were pressed, the value of <filename>Shift</filename> would be 6.</description>
+<description>A <typename>numeric</typename> value that corresponds to the state of the <filename>Shift</filename>, <filename>Ctrl</filename>, and <filename>Alt</filename> keys when the mouse button was pressed or released. The <paramref name="Shift" /> parameter is a bit field with bits corresponding to the <filename>Shift</filename> key (bit 0) (&amp;H0001), the <filename>Ctrl</filename> key (bit 1) (&amp;H0002), and the <filename>Alt</filename> key (bit 2) (&amp;H0004). A bit is set if the key is down. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are down. For example, if both <filename>Ctrl</filename> and <filename>Alt</filename> were down, the  value of <paramref name="Shift" /> would be 6.</description>
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragStartEvent.X" /></term>
@@ -729,7 +779,7 @@
 <item name="UserHid"><term xml:space="preserve">
 1 = <keyword>UserHid</keyword>
 </term>
-<description>The user hid the character using the command on the character's taskbar icon <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a> or using speech input.</description>
+<description>The user hid the character using the command on the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
 </item>
 <item name="ProgramHid"><term xml:space="preserve">
 3 = <keyword>ProgramHid</keyword>
@@ -753,8 +803,8 @@
 <seealso cref="T:DoubleAgent.AxControl.CtlHideEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlShow" />
 <seealso cref="M:DoubleAgent.Control.Character.Hide(System.Object)" />
-<seealso cref="P:DoubleAgent.Control.Character.VisibilityCause" />
 <seealso cref="P:DoubleAgent.Control.Character.Visible" />
+<seealso cref="P:DoubleAgent.Control.Character.VisibilityCause" />
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlIdleComplete">
@@ -775,6 +825,7 @@
 <seealso cref="T:DoubleAgent.AxControl.CtlIdleCompleteEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlIdleStart" />
 <seealso cref="P:DoubleAgent.Control.Character.IdleEnabled" />
+<seealso cref="P:DoubleAgent.Control.Character.IdleState" />
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlIdleStart">
@@ -795,6 +846,7 @@
 <seealso cref="T:DoubleAgent.AxControl.CtlIdleStartEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlIdleComplete" />
 <seealso cref="P:DoubleAgent.Control.Character.IdleEnabled" />
+<seealso cref="P:DoubleAgent.Control.Character.IdleState" />
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlListenComplete">
@@ -856,9 +908,9 @@
 </list>
 </param>
 <remarks>
-<para>This event is sent to all clients when the <glossary>Listening mode</glossary> time-out ends, after the user releases the <glossary>Listening key</glossary>, when the <glossary>input-active</glossary> client calls the <see cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" /> method with <keyword>False</keyword>, or the user has finished speaking. You can use this event to determine when to resume spoken output.
+<para>This event is sent to all clients when the <glossary>Listening mode</glossary> time-out ends, after the user releases the <glossary>Listening key</glossary>, when the <glossary>input-active</glossary> client calls the <see cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" /> method with <keyword>False</keyword>, or when the user has finished speaking. You can use this event to determine when to resume spoken output.
 </para>
-<para>If you turn on <glossary>Listening mode</glossary> using the <see cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" /> method and then the user presses the <glossary>Listening key</glossary>, the <glossary>Listening mode</glossary> resets and continues until the <glossary>Listening key</glossary> time-out completes, the <glossary>Listening key</glossary> is released, or the user finishes speaking, whichever is later. In this situation, you will not receive a <keyword>ListenComplete</keyword> event until the <glossary>Listening key</glossary>'s mode completes.
+<para>If you turn on <glossary>Listening mode</glossary> using the <see cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" /> method and then the user presses the <glossary>Listening key</glossary>, the <glossary>Listening mode</glossary> resets and continues until the <glossary>Listening key</glossary> time-out completes, the <glossary>Listening key</glossary> is released, or the user finishes speaking, whichever is later. In this situation, you will <em>not</em> receive a <self>ListenComplete</self> event until the <glossary>Listening key</glossary>'s mode completes.
 </para>
 <para>The event returns the <paramref name="CharacterID" /> to the clients that currently have this character loaded. All other clients receive a null <paramref name="CharacterID" /> (empty string).
 </para>
@@ -884,7 +936,7 @@
 <remarks>
 <para>This event is sent to all clients when <glossary>Listening mode</glossary> begins because the user pressed the <glossary>Listening key</glossary> or the <glossary>input-active</glossary> client called the <see cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" /> method with <keyword>True</keyword>. You can use this event to avoid having your character speak while <glossary>Listening mode</glossary> is active.
 </para>
-<para>If you turn on <glossary>Listening mode</glossary> with the <see cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" /> method and then the user presses the <glossary>Listening key</glossary>, the <glossary>Listening mode</glossary> resets and continues until the <glossary>Listening key</glossary> time-out completes, the <glossary>Listening key</glossary> is released, or the user finishes speaking, whichever is later. In this situation, when <glossary>Listening mode</glossary> is already on, you will not get an additional <keyword>ListenStart</keyword> event when the user presses the <glossary>Listening key</glossary>.
+<para>If you turn on <glossary>Listening mode</glossary> with the <see cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" /> method and then the user presses the <glossary>Listening key</glossary>, the <glossary>Listening mode</glossary> resets and continues until the <glossary>Listening key</glossary> time-out completes, the <glossary>Listening key</glossary> is released, or the user finishes speaking, whichever is later. In this situation, when <glossary>Listening mode</glossary> is already on, you will <em>not</em> get an additional <self>ListenStart</self> event when the user presses the <glossary>Listening key</glossary>.
 </para>
 <para>The event returns the <paramref name="CharacterID" /> to the clients that currently have this character loaded. All other clients receive a null <paramref name="CharacterID" /> (empty string).
 </para>
@@ -941,10 +993,10 @@
 </para>
 </remarks>
 <seealso cref="T:DoubleAgent.AxControl.CtlMoveEvent" />
-<seealso cref="T:DoubleAgent.Control.MoveCauseType" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSize" />
 <seealso cref="M:DoubleAgent.Control.Character.MoveTo(System.Int16,System.Int16,System.Object)" />
 <seealso cref="P:DoubleAgent.Control.Character.MoveCause" />
+<seealso cref="T:DoubleAgent.Control.MoveCauseType" />
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlRequestComplete">
@@ -959,7 +1011,7 @@
 </list>
 </param>
 <remarks>
-<para>This event provides a <see cref="T:DoubleAgent.Control.Request" /> Object. Because requests are processed asynchronously, you can use this event to determine when Double Agent finishes processing a request (such as a <see cref="M:DoubleAgent.Control.Character.Get(System.String,System.String,System.Object)" />, <see cref="M:DoubleAgent.Control.Character.Play(System.String)" />, or <see cref="M:DoubleAgent.Control.Character.Speak(System.Object,System.Object)" /> method) to synchronize this event with other actions generated by your application. Double Agent sends the event only to the client that created the reference to the <see cref="T:DoubleAgent.Control.Request" /> Object, and only if you defined a global variable for the request reference.
+<para>This event provides a <see cref="T:DoubleAgent.Control.Request" /> Object. Because requests are processed asynchronously, you can use this event to determine when Double Agent finishes processing a request (such as a <see cref="M:DoubleAgent.Control.Character.Get(System.String,System.String,System.Object)" />, <see cref="M:DoubleAgent.Control.Character.Play(System.String)" />, or <see cref="M:DoubleAgent.Control.Character.Speak(System.Object,System.Object)" /> method) to synchronize this event with other requests generated by your application. Double Agent sends the event only to the client that created the reference to the <see cref="T:DoubleAgent.Control.Request" /> Object, and only if you defined a global variable for the request reference.
 </para>
 <example><code xml:space="preserve"><keyword>Dim</keyword> MyRequest 
 <keyword>Dim</keyword> Genie
@@ -1004,7 +1056,7 @@
 </list>
 </param>
 <remarks>
-<para>The event provides a <see cref="T:DoubleAgent.Control.Request" /> Object. Because requests are processed asynchronously, you can use this event to determine when Double Agent begins processing a request (such as a <see cref="M:DoubleAgent.Control.Character.Get(System.String,System.String,System.Object)" />, <see cref="M:DoubleAgent.Control.Character.Play(System.String)" />, or <see cref="M:DoubleAgent.Control.Character.Speak(System.Object,System.Object)" /> method) and thereby synchronize this with other actions generated by your application. The event is sent only to the client that created the reference to the <see cref="T:DoubleAgent.Control.Request" /> Object, and only if you defined a global variable for the request reference.
+<para>The event provides a <see cref="T:DoubleAgent.Control.Request" /> Object. Because requests are processed asynchronously, you can use this event to determine when Double Agent begins processing a request (such as a <see cref="M:DoubleAgent.Control.Character.Get(System.String,System.String,System.Object)" />, <see cref="M:DoubleAgent.Control.Character.Play(System.String)" />, or <see cref="M:DoubleAgent.Control.Character.Speak(System.Object,System.Object)" /> method) and thereby synchronize this with other requests generated by your application. The event is sent only to the client that created the reference to the <see cref="T:DoubleAgent.Control.Request" /> Object, and only if you defined a global variable for the request reference.
 </para>
 <example><code xml:space="preserve"><keyword>Dim</keyword> MyRequest 
 <keyword>Dim</keyword> Genie 
@@ -1056,7 +1108,7 @@
 <item name="UserShowed"><term xml:space="preserve">
 2 = <keyword>UserShowed</keyword>
 </term>
-<description>The user showed the character using the command on the character's taskbar icon <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a> or using speech input.</description>
+<description>The user showed the character using the command on the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
 </item>
 <item name="ProgramShowed"><term xml:space="preserve">
 4 = <keyword>ProgramShowed</keyword>
@@ -1080,8 +1132,8 @@
 <seealso cref="T:DoubleAgent.AxControl.CtlShowEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlHide" />
 <seealso cref="M:DoubleAgent.Control.Character.Show(System.Object)" />
-<seealso cref="P:DoubleAgent.Control.Character.VisibilityCause" />
 <seealso cref="P:DoubleAgent.Control.Character.Visible" />
+<seealso cref="P:DoubleAgent.Control.Character.VisibilityCause" />
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlSize">
@@ -1273,7 +1325,7 @@
 </member>
 
 <member name="F:DoubleAgent.AxControl.CtlClickEvent.Button">
-<summary> A numeric value that identifies which button was pressed and released to cause the event. The button argument is a bit field with bits corresponding to the left button (bit 0), right button (bit 1), and middle button (bit 2). These bits correspond to the values 1, 2, and 4, respectively. Only one of the bits is set, indicating the button that caused the event. If the character includes a taskbar icon, and bit 13 is also set, the click occurred on the taskbar icon.</summary>
+<summary> A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</summary>
 <seealso cref="T:DoubleAgent.AxControl.CtlClickEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlClick" />
 </member>
@@ -1285,7 +1337,7 @@
 </member>
 
 <member name="F:DoubleAgent.AxControl.CtlClickEvent.Shift">
-<summary> A numeric value that corresponds to the state of the <filename>Shift</filename>, <filename>Ctrl</filename>, and <filename>Alt</filename> keys when the button was pressed or released. A bit is set if the key is down. The shift argument is a bit field with the least-significant bits corresponding to the <filename>Shift</filename> key (bit 0), the <filename>Ctrl</filename> key (bit 1), and the <filename>Alt</filename> key (bit 2). These bits correspond to the values 1, 2, and 4, respectively. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are pressed. For example, if both <filename>Ctrl</filename> and <filename>Alt</filename> were pressed, the value of <filename>Shift</filename> would be 6.</summary>
+<summary> A <typename>numeric</typename> value that corresponds to the state of the <filename>Shift</filename>, <filename>Ctrl</filename>, and <filename>Alt</filename> keys when the mouse button was pressed or released. The <paramref name="Shift" /> parameter is a bit field with bits corresponding to the <filename>Shift</filename> key (bit 0) (&amp;H0001), the <filename>Ctrl</filename> key (bit 1) (&amp;H0002), and the <filename>Alt</filename> key (bit 2) (&amp;H0004). A bit is set if the key is down. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are down. For example, if both <filename>Ctrl</filename> and <filename>Alt</filename> were down, the  value of <paramref name="Shift" /> would be 6.</summary>
 <seealso cref="T:DoubleAgent.AxControl.CtlClickEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlClick" />
 </member>
@@ -1325,7 +1377,7 @@
 </member>
 
 <member name="F:DoubleAgent.AxControl.CtlDblClickEvent.Button">
-<summary> A numeric value that identifies which button was pressed and released to cause the event. The button argument is a bit field with bits corresponding to the left button (bit 0), right button (bit 1), and middle button (bit 2). These bits correspond to the values 1, 2, and 4, respectively. Only one of the bits is set, indicating the button that caused the event. If the character includes a taskbar icon, and bit 13 is also set, the click occurred on the taskbar icon.</summary>
+<summary> A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</summary>
 <seealso cref="T:DoubleAgent.AxControl.CtlDblClickEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDblClick" />
 </member>
@@ -1337,7 +1389,7 @@
 </member>
 
 <member name="F:DoubleAgent.AxControl.CtlDblClickEvent.Shift">
-<summary> A numeric value that corresponds to the state of the <filename>Shift</filename>, <filename>Ctrl</filename>, and <filename>Alt</filename> keys when the button was pressed or released. A bit is set if the key is down. The shift argument is a bit field with the least-significant bits corresponding to the <filename>Shift</filename> key (bit 0), the <filename>Ctrl</filename> key (bit 1), and the <filename>Alt</filename> key (bit 2). These bits correspond to the values 1, 2, and 4, respectively. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are pressed. For example, if both <filename>Ctrl</filename> and <filename>Alt</filename> were pressed, the value of <filename>Shift</filename> would be 6.</summary>
+<summary> A <typename>numeric</typename> value that corresponds to the state of the <filename>Shift</filename>, <filename>Ctrl</filename>, and <filename>Alt</filename> keys when the mouse button was pressed or released. The <paramref name="Shift" /> parameter is a bit field with bits corresponding to the <filename>Shift</filename> key (bit 0) (&amp;H0001), the <filename>Ctrl</filename> key (bit 1) (&amp;H0002), and the <filename>Alt</filename> key (bit 2) (&amp;H0004). A bit is set if the key is down. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are down. For example, if both <filename>Ctrl</filename> and <filename>Alt</filename> were down, the  value of <paramref name="Shift" /> would be 6.</summary>
 <seealso cref="T:DoubleAgent.AxControl.CtlDblClickEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDblClick" />
 </member>
@@ -1391,7 +1443,7 @@
 </member>
 
 <member name="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Button">
-<summary> A numeric value that identifies which button was pressed and released to cause the event. The button argument is a bit field with bits corresponding to the left button (bit 0), right button (bit 1), and middle button (bit 2). These bits correspond to the values 1, 2, and 4, respectively. Only one of the bits is set, indicating the button that caused the event. If the character includes a taskbar icon, and bit 13 is also set, the click occurred on the taskbar icon.</summary>
+<summary> A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</summary>
 <seealso cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragComplete" />
 </member>
@@ -1403,7 +1455,7 @@
 </member>
 
 <member name="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Shift">
-<summary> A numeric value that corresponds to the state of the <filename>Shift</filename>, <filename>Ctrl</filename>, and <filename>Alt</filename> keys when the button was pressed or released. A bit is set if the key is down. The shift argument is a bit field with the least-significant bits corresponding to the <filename>Shift</filename> key (bit 0), the <filename>Ctrl</filename> key (bit 1), and the <filename>Alt</filename> key (bit 2). These bits correspond to the values 1, 2, and 4, respectively. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are pressed. For example, if both <filename>Ctrl</filename> and <filename>Alt</filename> were pressed, the value of <filename>Shift</filename> would be 6.</summary>
+<summary> A <typename>numeric</typename> value that corresponds to the state of the <filename>Shift</filename>, <filename>Ctrl</filename>, and <filename>Alt</filename> keys when the mouse button was pressed or released. The <paramref name="Shift" /> parameter is a bit field with bits corresponding to the <filename>Shift</filename> key (bit 0) (&amp;H0001), the <filename>Ctrl</filename> key (bit 1) (&amp;H0002), and the <filename>Alt</filename> key (bit 2) (&amp;H0004). A bit is set if the key is down. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are down. For example, if both <filename>Ctrl</filename> and <filename>Alt</filename> were down, the  value of <paramref name="Shift" /> would be 6.</summary>
 <seealso cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragComplete" />
 </member>
@@ -1429,7 +1481,7 @@
 </member>
 
 <member name="F:DoubleAgent.AxControl.CtlDragStartEvent.Button">
-<summary> A numeric value that identifies which button was pressed and released to cause the event. The button argument is a bit field with bits corresponding to the left button (bit 0), right button (bit 1), and middle button (bit 2). These bits correspond to the values 1, 2, and 4, respectively. Only one of the bits is set, indicating the button that caused the event. If the character includes a taskbar icon, and bit 13 is also set, the click occurred on the taskbar icon.</summary>
+<summary> A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</summary>
 <seealso cref="T:DoubleAgent.AxControl.CtlDragStartEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragStart" />
 </member>
@@ -1441,7 +1493,7 @@
 </member>
 
 <member name="F:DoubleAgent.AxControl.CtlDragStartEvent.Shift">
-<summary> A numeric value that corresponds to the state of the <filename>Shift</filename>, <filename>Ctrl</filename>, and <filename>Alt</filename> keys when the button was pressed or released. A bit is set if the key is down. The shift argument is a bit field with the least-significant bits corresponding to the <filename>Shift</filename> key (bit 0), the <filename>Ctrl</filename> key (bit 1), and the <filename>Alt</filename> key (bit 2). These bits correspond to the values 1, 2, and 4, respectively. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are pressed. For example, if both <filename>Ctrl</filename> and <filename>Alt</filename> were pressed, the value of <filename>Shift</filename> would be 6.</summary>
+<summary> A <typename>numeric</typename> value that corresponds to the state of the <filename>Shift</filename>, <filename>Ctrl</filename>, and <filename>Alt</filename> keys when the mouse button was pressed or released. The <paramref name="Shift" /> parameter is a bit field with bits corresponding to the <filename>Shift</filename> key (bit 0) (&amp;H0001), the <filename>Ctrl</filename> key (bit 1) (&amp;H0002), and the <filename>Alt</filename> key (bit 2) (&amp;H0004). A bit is set if the key is down. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are down. For example, if both <filename>Ctrl</filename> and <filename>Alt</filename> were down, the  value of <paramref name="Shift" /> would be 6.</summary>
 <seealso cref="T:DoubleAgent.AxControl.CtlDragStartEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragStart" />
 </member>
@@ -1472,7 +1524,7 @@
 <item name="UserHid"><term xml:space="preserve">
 1 = <keyword>UserHid</keyword>
 </term>
-<description>The user hid the character using the command on the character's taskbar icon <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a> or using speech input.</description>
+<description>The user hid the character using the command on the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
 </item>
 <item name="ProgramHid"><term xml:space="preserve">
 3 = <keyword>ProgramHid</keyword>
@@ -1693,7 +1745,7 @@
 <item name="UserShowed"><term xml:space="preserve">
 2 = <keyword>UserShowed</keyword>
 </term>
-<description>The user showed the character using the command on the character's taskbar icon <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a> or using speech input.</description>
+<description>The user showed the character using the command on the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
 </item>
 <item name="ProgramShowed"><term xml:space="preserve">
 4 = <keyword>ProgramShowed</keyword>
@@ -1831,7 +1883,7 @@
 <remarks>
 <para>The <self>AxControl Object</self> implements the same methods, properties, and events as the <see class="keyword" cref="T:DoubleAgent.Control.Control" /> Object.
 </para>
-<para>The ActiveX<sup>®</sup> <glossary>appearence</glossary> property names and the event names are prefixed with "<keyword>Ctl</keyword>", to avoid name collisions and to make them stand out. Also, the events receive their event data according to the pattern for <glossary>Windows Forms</glossary> controls.
+<para>The ActiveX<sup>®</sup> <glossary>appearance</glossary> property names and the event names are prefixed with "<keyword>Ctl</keyword>", to avoid name collisions and to make them stand out. Also, the events receive their event data according to the pattern for <glossary>Windows Forms</glossary> controls.
 </para>
 </remarks>
 </member>
