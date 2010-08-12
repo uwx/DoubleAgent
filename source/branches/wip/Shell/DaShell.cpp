@@ -49,15 +49,18 @@ static tPtr <CComAutoCriticalSection>	sLogCriticalSection = new CComAutoCritical
 
 CDaShellModule::CDaShellModule ()
 {
-#if	ISOLATION_AWARE_ENABLED
-	IsolationAwareInit ();
-#endif
 #ifdef	_DEBUG
 	LogStart (GetProfileDebugInt(_T("LogRestart"))!=0);
 	LogDebugRuntime ();
 #else
 	LogStart (false);
 #endif
+	if	(InitModuleTheme ())
+	{
+#ifdef	_DEBUG
+		LogModuleTheme (LogNormal);
+#endif
+	}
 	LogProcessUser (GetCurrentProcess(), LogIfActive);
 	LogProcessOwner (GetCurrentProcess(), LogIfActive);
 	LogProcessIntegrity (GetCurrentProcess(), LogIfActive);
@@ -67,9 +70,7 @@ CDaShellModule::~CDaShellModule ()
 {
 	SafeFreeSafePtr (mCplPropSheet);
 	CLocalize::FreeMuiModules ();
-#if	ISOLATION_AWARE_ENABLED
-	IsolationAwareCleanup ();
-#endif
+	EndModuleTheme ();
 	LogStop (LogIfActive);
 }
 
@@ -108,15 +109,27 @@ LONG APIENTRY CPlApplet (HWND hwndCPl, UINT uMsg, LPARAM lParam1, LPARAM lParam2
 	{
 		case CPL_INIT:
 		{
-			if	(!_AtlModule.mCplPropSheet)
+			ULONG_PTR	lCookie = _AtlModule.ActivateModuleTheme ();
+			
+			try
 			{
-				_AtlModule.mCplPropSheet = new CPropSheetCpl;
+				if	(!_AtlModule.mCplPropSheet)
+				{
+					_AtlModule.mCplPropSheet = new CPropSheetCpl;
+				}
 			}
+			catch AnyExceptionDebug
+			
+			_AtlModule.DeactivateModuleTheme (lCookie);
 			lRet = TRUE;
 		}	break;
 		case CPL_EXIT:
 		{
+			ULONG_PTR	lCookie = _AtlModule.ActivateModuleTheme ();
+			
 			SafeFreeSafePtr (_AtlModule.mCplPropSheet);
+			
+			_AtlModule.DeactivateModuleTheme (lCookie);
 		}	break;
 		case CPL_GETCOUNT:
 		{
@@ -143,18 +156,25 @@ LONG APIENTRY CPlApplet (HWND hwndCPl, UINT uMsg, LPARAM lParam1, LPARAM lParam2
 		}	break;
 		case CPL_DBLCLK:
 		{
-			UINT	lAppNum = (UINT)lParam1;
-			bool	lElevatedPages = (_AtlModule.mCplStartPage.CompareNoCase (CPropSheetCpl::mPageNameRegistry) == 0);
-
-			if	(_AtlModule.mCplPropSheet)
+			UINT		lAppNum = (UINT)lParam1;
+			bool		lElevatedPages = (_AtlModule.mCplStartPage.CompareNoCase (CPropSheetCpl::mPageNameRegistry) == 0);
+			ULONG_PTR	lCookie = _AtlModule.ActivateModuleTheme ();
+			
+			try
 			{
-				_AtlModule.mCplPropSheet->SetModalParent (hwndCPl);
-				if	(_AtlModule.mCplPropSheet->InitPages (lElevatedPages))
+				if	(_AtlModule.mCplPropSheet)
 				{
-					_AtlModule.mCplPropSheet->SetStartPage (_AtlModule.mCplStartPage);
-					_AtlModule.mCplPropSheet->DoModal ();
+					_AtlModule.mCplPropSheet->SetModalParent (hwndCPl);
+					if	(_AtlModule.mCplPropSheet->InitPages (lElevatedPages))
+					{
+						_AtlModule.mCplPropSheet->SetStartPage (_AtlModule.mCplStartPage);
+						_AtlModule.mCplPropSheet->DoModal ();
+					}
 				}
 			}
+			catch AnyExceptionDebug
+			
+			_AtlModule.DeactivateModuleTheme (lCookie);
 		}	break;
 		case CPL_STOP:
 		{

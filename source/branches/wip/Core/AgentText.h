@@ -177,6 +177,7 @@ public:
 	bool DisplayFirstWord (bool pForSpeech = false);
 	bool DisplayNextWord (bool pForSpeech = false);
 	bool DisplayThisWord (long pWordPos, long pWordLength, bool pForSpeech = true);
+	bool DisplayThisWord (INT_PTR pWordNdx, bool pForSpeech = true);
 	bool DisplayAllWords (bool pForSpeech = false);
 
 	CSize CalcTextSize (HFONT pFont, USHORT pPerLine, USHORT pLines);

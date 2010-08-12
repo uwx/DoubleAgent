@@ -705,6 +705,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Include\DaServerInterface.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\DaSvrAnimationNames.h"
 				>
 			</File>

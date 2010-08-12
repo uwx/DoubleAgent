@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by ControlTest.rc
+// Used by ControlClr.rc
 //
 
 // Next default values for new objects

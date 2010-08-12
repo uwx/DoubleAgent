@@ -22,7 +22,12 @@
 #include "AgentFile.h"
 #include "AtlCollEx.h"
 
-//////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+//
+//	Note - all public methods are virtual so that this file can be in multiple
+//	modules and still work properly.
+//
+/////////////////////////////////////////////////////////////////////////////
 
 class CAgentFileClient
 {
@@ -41,21 +46,23 @@ public:
 
 // Attributes
 public:
-	INT_PTR CachedFileCount () const;
+	virtual INT_PTR CachedFileCount () const;
 
 // Operations
 public:
-	bool CacheFile (CAgentFile * pFile, CAgentFileClient * pClient);
-	bool UncacheFile (CAgentFile * pFile);
-	bool AddFileClient (CAgentFile * pFile, CAgentFileClient * pClient);
-	bool RemoveFileClient (CAgentFile * pFile, CAgentFileClient * pClient, bool pDeleteUnusedFile = true);
+	virtual bool CacheFile (CAgentFile * pFile, CAgentFileClient * pClient);
+	virtual bool UncacheFile (CAgentFile * pFile);
+	virtual bool AddFileClient (CAgentFile * pFile, CAgentFileClient * pClient);
+	virtual bool RemoveFileClient (CAgentFile * pFile, CAgentFileClient * pClient, bool pDeleteUnusedFile = true);
 
-	CAgentFile * GetCachedFile (INT_PTR pFileNdx);
-	CAgentFile * FindCachedFile (LPCTSTR pFileName);
-	CAgentFile * FindCachedFile (const GUID & pFileGuid);
-	bool GetFileClients (CAgentFile * pFile, CAtlPtrTypeArray <CAgentFileClient> & pClients);
+	virtual CAgentFile * GetCachedFile (INT_PTR pFileNdx);
+	virtual CAgentFile * FindCachedFile (LPCTSTR pFileName);
+	virtual CAgentFile * FindCachedFile (const GUID & pFileGuid);
+	virtual bool GetFileClients (CAgentFile * pFile, CAtlPtrTypeArray <CAgentFileClient> & pClients);
 
 // Implementation
+public:
+	UINT																mIdCode;
 protected:
 	mutable CComAutoCriticalSection										mCritSec;
 	CAtlOwnPtrArray <CAgentFile>										mCachedFiles;

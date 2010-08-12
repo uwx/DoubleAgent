@@ -22,6 +22,7 @@
 #include <shlwapi.h>
 #include "AgentFileCache.h"
 #include "Registry.h"
+#include "GuidStr.h"
 #include "DebugStr.h"
 
 #ifdef	_DEBUG
@@ -31,6 +32,7 @@
 //////////////////////////////////////////////////////////////////////
 
 CAgentFileCache::CAgentFileCache ()
+:	mIdCode (0)
 {
 }
 
@@ -39,7 +41,7 @@ CAgentFileCache::~CAgentFileCache ()
 #ifdef	_DEBUG_CACHE
 	try
 	{
-		LogMessage (_DEBUG_CACHE, _T("[%p] CAgentFileCache::~CAgentFileCache Files [%d] Clients [%d]"), this, mCachedFiles.GetCount(), mFileClients.GetCount());
+		LogMessage (_DEBUG_CACHE, _T("[%p(%u)] CAgentFileCache::~CAgentFileCache Files [%d] Clients [%d]"), this, mIdCode, mCachedFiles.GetCount(), mFileClients.GetCount());
 	}
 	catch AnyExceptionSilent
 #endif
@@ -95,13 +97,13 @@ bool CAgentFileCache::CacheFile (CAgentFile * pFile, CAgentFileClient * pClient)
 			{
 				mCachedFiles.Add (pFile);
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("[%p] Cache file [%p] [%s] for Client [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("[%p(%u)] Cache file [%p] [%s] for Client [%p] [%s]"), this, mIdCode, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient));
 #endif
 			}
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("[%p] Duplicate file [%p] [%s] for Client [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("[%p(%u)] Duplicate file [%p] [%s] for Client [%p] [%s]"), this, mIdCode, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient));
 			}
 #endif
 
@@ -115,14 +117,14 @@ bool CAgentFileCache::CacheFile (CAgentFile * pFile, CAgentFileClient * pClient)
 				)
 			{
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Client [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("[%p(%u)] File [%p] [%s] Client [%p] [%s]"), this, mIdCode, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient));
 #endif
 				lClients->Add (pClient);
 			}
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Duplicate Client [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("[%p(%u)] File [%p] [%s] Duplicate Client [%p] [%s]"), this, mIdCode, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient));
 			}
 #endif
 			lRet = true;
@@ -130,7 +132,7 @@ bool CAgentFileCache::CacheFile (CAgentFile * pFile, CAgentFileClient * pClient)
 #ifdef	_DEBUG_CACHE
 		else
 		{
-			LogMessage (_DEBUG_CACHE, _T("[%p] CacheFile failed for File [%p] Client [%p] [%s]"), this, pFile, pClient, AtlTypeName(pClient));
+			LogMessage (_DEBUG_CACHE, _T("[%p(%u)] CacheFile failed for File [%p] Client [%p] [%s]"), this, mIdCode, pFile, pClient, AtlTypeName(pClient));
 		}
 #endif
 	}
@@ -155,7 +157,7 @@ bool CAgentFileCache::UncacheFile (CAgentFile * pFile)
 			if	(lFileNdx >= 0)
 			{
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("[%p] Uncache file [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath());
+				LogMessage (_DEBUG_CACHE, _T("[%p(%u)] Uncache file [%p] [%s]"), this, mIdCode, pFile, (BSTR)pFile->GetPath());
 #endif
 				mCachedFiles.RemoveAt (lFileNdx);
 				mFileClients.RemoveKey (pFile);
@@ -233,6 +235,9 @@ CAgentFile * CAgentFileCache::FindCachedFile (const GUID & pFileGuid)
 	}
 	catch AnyExceptionDebug
 
+#ifdef	_DEBUG_CACHE
+	LogMessage (_DEBUG_CACHE, _T("[%p(%u)] FindCachedFile [%p] [%s]"), this, mIdCode, lRet, CGuidStr::GuidName (pFileGuid));
+#endif
 	return lRet;
 }
 
@@ -261,7 +266,7 @@ bool CAgentFileCache::AddFileClient (CAgentFile * pFile, CAgentFileClient * pCli
 				)
 			{
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Client [%p] [%s] Clients [%d]"), this, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient), lClients->GetCount());
+				LogMessage (_DEBUG_CACHE, _T("[%p(%u)] File [%p] [%s] Client [%p] [%s] Clients [%d]"), this, mIdCode, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient), lClients->GetCount());
 #endif
 				lClients->Add (pClient);
 				lRet = true;
@@ -269,14 +274,14 @@ bool CAgentFileCache::AddFileClient (CAgentFile * pFile, CAgentFileClient * pCli
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Duplicate Client [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("[%p(%u)] File [%p] [%s] Duplicate Client [%p] [%s]"), this, mIdCode, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient));
 			}
 #endif
 		}
 #ifdef	_DEBUG_CACHE
 		else
 		{
-			LogMessage (_DEBUG_CACHE, _T("[%p] AddClient failed for File [%p] Client [%p] [%s]"), this, pFile, pClient, AtlTypeName(pClient));
+			LogMessage (_DEBUG_CACHE, _T("[%p(%u)] AddClient failed for File [%p] Client [%p] [%s]"), this, mIdCode, pFile, pClient, AtlTypeName(pClient));
 		}
 #endif
 	}
@@ -309,7 +314,7 @@ bool CAgentFileCache::RemoveFileClient (CAgentFile * pFile, CAgentFileClient * p
 			{
 				lClients->Remove (pClient);
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Remove client [%p] [%s] Clients [%d]"), this, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient), lClients->GetCount());
+				LogMessage (_DEBUG_CACHE, _T("[%p(%u)] File [%p] [%s] Remove client [%p] [%s] Clients [%d]"), this, mIdCode, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient), lClients->GetCount());
 #endif
 				lRet = true;
 
@@ -319,17 +324,17 @@ bool CAgentFileCache::RemoveFileClient (CAgentFile * pFile, CAgentFileClient * p
 					if	(pDeleteUnusedFile)
 					{
 #ifdef	_DEBUG_CACHE
-						LogMessage (_DEBUG_CACHE, _T("[%p] Delete cached File [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath());
+						LogMessage (_DEBUG_CACHE, _T("[%p(%u)] Delete cached File [%p] [%s]"), this, mIdCode, pFile, (BSTR)pFile->GetPath());
 #endif
 						mCachedFiles.DeleteAt (lFileNdx);
 #ifdef	_DEBUG_CACHE
-						LogMessage (_DEBUG_CACHE, _T("[%p] Deleted cached File [%p]"), this, pFile);
+						LogMessage (_DEBUG_CACHE, _T("[%p(%u)] Deleted cached File [%p]"), this, mIdCode, pFile);
 #endif
 					}
 					else
 					{
 #ifdef	_DEBUG_CACHE
-						LogMessage (_DEBUG_CACHE, _T("[%p] Unused cached File [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath());
+						LogMessage (_DEBUG_CACHE, _T("[%p(%u)] Unused cached File [%p] [%s]"), this, mIdCode, pFile, (BSTR)pFile->GetPath());
 #endif
 						mCachedFiles.RemoveAt (lFileNdx);
 					}
@@ -338,14 +343,14 @@ bool CAgentFileCache::RemoveFileClient (CAgentFile * pFile, CAgentFileClient * p
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] No Client [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("[%p(%u)] File [%p] [%s] No Client [%p] [%s]"), this, mIdCode, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient));
 			}
 #endif
 		}
 #ifdef	_DEBUG_CACHE
 		else
 		{
-			LogMessage (_DEBUG_CACHE, _T("[%p] RemoveClient failed for [%p] Client [%p] [%s]"), this, pFile, pClient, AtlTypeName(pClient));
+			LogMessage (_DEBUG_CACHE, _T("[%p(%u)] RemoveClient failed for [%p] Client [%p] [%s]"), this, mIdCode, pFile, pClient, AtlTypeName(pClient));
 		}
 #endif
 	}

@@ -57,14 +57,13 @@ DaSvrBalloon::~DaSvrBalloon ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrBalloon * DaSvrBalloon::CreateInstance (long pCharID, CAgentFile * pFile, CAgentCharacterWnd * pOwner, LPCTSTR pClientMutexName)
+DaSvrBalloon * DaSvrBalloon::CreateInstance (long pCharID, CInstanceAnchor * pAnchor, CAgentFile * pFile, CAgentCharacterWnd * pOwner, LPCTSTR pClientMutexName)
 {
 	CComObject<DaSvrBalloon> *	lInstance = NULL;
 
 	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrBalloon>::CreateInstance (&lInstance))))
 	{
-		lInstance->CDaCmnBalloon::Initialize (pCharID, pFile, pOwner);
-		_AtlModule.AddFileClient (lInstance->CDaCmnBalloon::mFile, lInstance);
+		lInstance->CDaCmnBalloon::Initialize (pCharID, pAnchor, pFile, pOwner);
 		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
 	}
 	return lInstance;
@@ -74,6 +73,11 @@ void DaSvrBalloon::Terminate (bool pFinal, bool pAbandonned)
 {
 	if	(this)
 	{
+		if	(pFinal)
+		{
+			UnmanageObjectLifetime (this);
+		}
+
 		if	(
 				(pFinal)
 			&&	(m_dwRef > 0)
@@ -88,17 +92,6 @@ void DaSvrBalloon::Terminate (bool pFinal, bool pAbandonned)
 				catch AnyExceptionDebug
 			}
 			m_dwRef = 0;
-		}
-
-		try
-		{
-			_AtlModule.RemoveFileClient (CDaCmnBalloon::mFile, this);
-		}
-		catch AnyExceptionSilent
-
-		if	(pFinal)
-		{
-			UnmanageObjectLifetime (this);
 		}
 	}
 }
@@ -134,7 +127,7 @@ void DaSvrBalloon::OnClientEnded()
 
 long DaSvrBalloon::GetCharID () const
 {
-	return CDaCmnBalloon::mCharID;
+	return mCharID;
 }
 
 LANGID DaSvrBalloon::GetLangID () const
@@ -387,7 +380,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetStyle (long *Style)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_Enabled (VARIANT_BOOL *Enabled)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_Enabled"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::get_Enabled"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::get_Enabled (Enabled);
 
@@ -395,7 +388,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_Enabled (VARIANT_BOOL *Enabled)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_Enabled"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::get_Enabled"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -406,7 +399,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_Enabled (VARIANT_BOOL *Enabled)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_Style (long *Style)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_Style"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::get_Style"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::get_Style (Style);
 
@@ -414,7 +407,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_Style (long *Style)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_Style"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::get_Style"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -423,19 +416,19 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_Style (long *Style)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_Style (long Style)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_Style [%8.8X]"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID, Style);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::put_Style [%8.8X]"), this, mCharID, max(m_dwRef,-1), Style);
 #endif
 	HRESULT	lResult = CDaCmnBalloon::put_Style (Style);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (CDaCmnBalloon::mCharID, _T("Balloon:put_Style"), _T("0x%8.8X"), Style);
+	_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_Style"), _T("0x%8.8X"), Style);
 #endif
 
 	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_Style"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::put_Style"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -446,7 +439,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_Style (long Style)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_Visible (VARIANT_BOOL *Visible)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_Visible"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::get_Visible"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::get_Visible (Visible);
 
@@ -454,7 +447,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_Visible (VARIANT_BOOL *Visible)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_Visible"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::get_Visible"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -463,19 +456,19 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_Visible (VARIANT_BOOL *Visible)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_Visible (VARIANT_BOOL Visible)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_Visible"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::put_Visible"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::put_Visible (Visible);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (CDaCmnBalloon::mCharID, _T("Balloon:put_Visible"), _T("%d"), Visible);
+	_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_Visible"), _T("%d"), Visible);
 #endif
 
 	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_Visible"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::put_Visible"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -486,7 +479,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_Visible (VARIANT_BOOL Visible)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_NumberOfLines (long *NumberOfLines)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_NumberOfLines"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::get_NumberOfLines"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::get_NumberOfLines (NumberOfLines);
 
@@ -494,7 +487,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_NumberOfLines (long *NumberOfLines)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_NumberOfLines"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::get_NumberOfLines"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -503,19 +496,19 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_NumberOfLines (long *NumberOfLines)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_NumberOfLines (long NumberOfLines)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_NumberOfLines [%d]"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID, NumberOfLines);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::put_NumberOfLines [%d]"), this, mCharID, max(m_dwRef,-1), NumberOfLines);
 #endif
 	HRESULT	lResult = CDaCmnBalloon::put_NumberOfLines (NumberOfLines);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (CDaCmnBalloon::mCharID, _T("Balloon:put_NumberOfLines"), _T("%d"), NumberOfLines);
+	_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_NumberOfLines"), _T("%d"), NumberOfLines);
 #endif
 
 	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_NumberOfLines [%d]"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID, NumberOfLines);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::put_NumberOfLines [%d]"), this, mCharID, max(m_dwRef,-1), NumberOfLines);
 	}
 #endif
 	return lResult;
@@ -526,7 +519,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_NumberOfLines (long NumberOfLines)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_CharsPerLine (long *CharsPerLine)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_CharsPerLine"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::get_CharsPerLine"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::get_CharsPerLine (CharsPerLine);
 
@@ -534,7 +527,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_CharsPerLine (long *CharsPerLine)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_CharsPerLine"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::get_CharsPerLine"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -543,19 +536,19 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_CharsPerLine (long *CharsPerLine)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_CharsPerLine (long CharsPerLine)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_CharsPerLine [%d]"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID, CharsPerLine);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::put_CharsPerLine [%d]"), this, mCharID, max(m_dwRef,-1), CharsPerLine);
 #endif
 	HRESULT	lResult = CDaCmnBalloon::put_CharsPerLine (CharsPerLine);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (CDaCmnBalloon::mCharID, _T("Balloon:put_CharsPerLine"), _T("%d"), CharsPerLine);
+	_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_CharsPerLine"), _T("%d"), CharsPerLine);
 #endif
 
 	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_CharsPerLine [%d]"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID, CharsPerLine);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::put_CharsPerLine [%d]"), this, mCharID, max(m_dwRef,-1), CharsPerLine);
 	}
 #endif
 	return lResult;
@@ -566,7 +559,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_CharsPerLine (long CharsPerLine)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_TextColor (OLE_COLOR *TextColor)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_TextColor"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::get_TextColor"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::get_TextColor (TextColor);
 
@@ -574,7 +567,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_TextColor (OLE_COLOR *TextColor)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_TextColor"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::get_TextColor"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -583,19 +576,19 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_TextColor (OLE_COLOR *TextColor)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_TextColor (OLE_COLOR TextColor)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_TextColor"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::put_TextColor"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::put_TextColor (TextColor);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (CDaCmnBalloon::mCharID, _T("Balloon:put_TextColor"), _T("%0x8.8X"), TextColor);
+	_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_TextColor"), _T("%0x8.8X"), TextColor);
 #endif
 
 	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_TextColor"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::put_TextColor"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -606,7 +599,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_TextColor (OLE_COLOR TextColor)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_BackColor (OLE_COLOR *BackColor)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_BackColor"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::get_BackColor"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::get_BackColor (BackColor);
 
@@ -614,7 +607,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_BackColor (OLE_COLOR *BackColor)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_BackColor"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::get_BackColor"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -623,19 +616,19 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_BackColor (OLE_COLOR *BackColor)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_BackColor (OLE_COLOR BackColor)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_BackColor"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::put_BackColor"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::put_BackColor (BackColor);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (CDaCmnBalloon::mCharID, _T("Balloon:put_BackColor"), _T("%0x8.8X"), BackColor);
+	_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_BackColor"), _T("%0x8.8X"), BackColor);
 #endif
 
 	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_BackColor"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::put_BackColor"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -646,7 +639,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_BackColor (OLE_COLOR BackColor)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_BorderColor (OLE_COLOR *BorderColor)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_BorderColor"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::get_BorderColor"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::get_BorderColor (BorderColor);
 
@@ -654,7 +647,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_BorderColor (OLE_COLOR *BorderColor)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_BorderColor"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::get_BorderColor"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -663,19 +656,19 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_BorderColor (OLE_COLOR *BorderColor)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_BorderColor (OLE_COLOR BorderColor)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_BorderColor"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::put_BorderColor"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::put_BorderColor (BorderColor);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (CDaCmnBalloon::mCharID, _T("Balloon:put_BorderColor"), _T("%0x8.8X"), BorderColor);
+	_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_BorderColor"), _T("%0x8.8X"), BorderColor);
 #endif
 
 	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_BorderColor"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::put_BorderColor"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -686,7 +679,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_BorderColor (OLE_COLOR BorderColor)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontName (BSTR *FontName)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontName"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::get_FontName"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::get_FontName (FontName);
 
@@ -694,7 +687,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontName (BSTR *FontName)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontName"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::get_FontName"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -703,19 +696,19 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontName (BSTR *FontName)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontName (BSTR FontName)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontName"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::put_FontName"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::put_FontName (FontName);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (CDaCmnBalloon::mCharID, _T("Balloon:put_FontName"), _T("%ls"), FontName);
+	_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_FontName"), _T("%ls"), FontName);
 #endif
 
 	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontName"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::put_FontName"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -726,7 +719,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontName (BSTR FontName)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontSize (long *FontSize)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontSize"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::get_FontSize"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::get_FontSize (FontSize);
 
@@ -734,7 +727,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontSize (long *FontSize)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontSize"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::get_FontSize"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -743,19 +736,19 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontSize (long *FontSize)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontSize (long FontSize)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontSize"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::put_FontSize"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::put_FontSize (FontSize);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (CDaCmnBalloon::mCharID, _T("Balloon:put_FontSize"), _T("%d"), FontSize);
+	_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_FontSize"), _T("%d"), FontSize);
 #endif
 
 	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontSize"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::put_FontSize"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -766,7 +759,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontSize (long FontSize)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontBold (VARIANT_BOOL *FontBold)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontBold"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::get_FontBold"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::get_FontBold (FontBold);
 
@@ -774,7 +767,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontBold (VARIANT_BOOL *FontBold)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontBold"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::get_FontBold"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -783,19 +776,19 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontBold (VARIANT_BOOL *FontBold)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontBold (VARIANT_BOOL FontBold)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontBold"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::put_FontBold"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::put_FontBold (FontBold);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (CDaCmnBalloon::mCharID, _T("Balloon:put_FontBold"), _T("%d"), FontBold);
+	_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_FontBold"), _T("%d"), FontBold);
 #endif
 
 	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontBold"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::put_FontBold"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -806,7 +799,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontBold (VARIANT_BOOL FontBold)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontItalic (VARIANT_BOOL *FontItalic)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontItalic"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::get_FontItalic"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::get_FontItalic (FontItalic);
 
@@ -814,7 +807,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontItalic (VARIANT_BOOL *FontItalic
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontItalic"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::get_FontItalic"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -823,19 +816,19 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontItalic (VARIANT_BOOL *FontItalic
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontItalic (VARIANT_BOOL FontItalic)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontItalic"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::put_FontItalic"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::put_FontItalic (FontItalic);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (CDaCmnBalloon::mCharID, _T("Balloon:put_FontItalic"), _T("%d"), FontItalic);
+	_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_FontItalic"), _T("%d"), FontItalic);
 #endif
 
 	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontItalic"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::put_FontItalic"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -846,7 +839,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontItalic (VARIANT_BOOL FontItalic)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontStrikethru (VARIANT_BOOL *FontStrikethru)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontStrikethru"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::get_FontStrikethru"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::get_FontStrikethru (FontStrikethru);
 
@@ -854,7 +847,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontStrikethru (VARIANT_BOOL *FontSt
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontStrikethru"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::get_FontStrikethru"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -863,19 +856,19 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontStrikethru (VARIANT_BOOL *FontSt
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontStrikethru (VARIANT_BOOL FontStrikethru)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontStrikethru"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::put_FontStrikethru"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::put_FontStrikethru (FontStrikethru);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (CDaCmnBalloon::mCharID, _T("Balloon:put_FontStrikethru"), _T("%d"), FontStrikethru);
+	_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_FontStrikethru"), _T("%d"), FontStrikethru);
 #endif
 
 	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontStrikethru"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::put_FontStrikethru"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -886,7 +879,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontStrikethru (VARIANT_BOOL FontStr
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontUnderline (VARIANT_BOOL *FontUnderline)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontUnderline"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::get_FontUnderline"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::get_FontUnderline (FontUnderline);
 
@@ -894,7 +887,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontUnderline (VARIANT_BOOL *FontUnd
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontUnderline"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::get_FontUnderline"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -903,7 +896,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontUnderline (VARIANT_BOOL *FontUnd
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontUnderline (VARIANT_BOOL FontUnderline)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontUnderline"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::put_FontUnderline"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::put_FontUnderline (FontUnderline);
 
@@ -911,7 +904,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontUnderline (VARIANT_BOOL FontUnde
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontUnderline"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::put_FontUnderline"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -922,7 +915,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontUnderline (VARIANT_BOOL FontUnde
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontCharSet (short *FontCharSet)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontCharSet"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::get_FontCharSet"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::get_FontCharSet (FontCharSet);
 
@@ -930,7 +923,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontCharSet (short *FontCharSet)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontCharSet"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::get_FontCharSet"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -939,19 +932,19 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontCharSet (short *FontCharSet)
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontCharSet (short FontCharSet)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontCharSet"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrBalloon::put_FontCharSet"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnBalloon::put_FontCharSet (FontCharSet);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (CDaCmnBalloon::mCharID, _T("Balloon:put_FontCharSet"), _T("%hd"), FontCharSet);
+	_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_FontCharSet"), _T("%hd"), FontCharSet);
 #endif
 
 	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontCharSet"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrBalloon::put_FontCharSet"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

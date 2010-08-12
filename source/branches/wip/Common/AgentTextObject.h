@@ -25,6 +25,11 @@
 #include "SapiVoiceEventSink.h"
 
 /////////////////////////////////////////////////////////////////////////////
+//
+//	Note - all public methods are virtual so that this file can be in multiple
+//	modules and still work properly.
+//
+/////////////////////////////////////////////////////////////////////////////
 
 class ATL_NO_VTABLE CAgentTextObject :
 	public CComObjectRootEx<CComMultiThreadModel>,
@@ -43,8 +48,8 @@ public:
 
 // Operations
 public:
-	void Attach (long pCharID, CEventNotify * pNotify, CSapiVoice * pVoice);
-	void Detach (bool pCancelled = false);
+	virtual void Attach (long pCharID, CEventNotify * pNotify, CSapiVoice * pVoice);
+	virtual void Detach (bool pCancelled = false);
 
 // Overrides
 public:

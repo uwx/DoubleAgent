@@ -20,11 +20,14 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "AgentFile.h"
+#include "AgentAnchor.h"
+#include "AgentFileCache.h"
 #include "DaGlobalConfig.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CDaCmnBalloon
+class CDaCmnBalloon :
+	public CAgentFileClient
 {
 public:
 	CDaCmnBalloon ();
@@ -32,7 +35,7 @@ public:
 
 // Operations
 public:
-	void Initialize (long pCharID, CAgentFile * pFile, class CAgentCharacterWnd * pOwnerWnd);
+	void Initialize (long pCharID, CInstanceAnchor * pAnchor, CAgentFile * pFile, class CAgentCharacterWnd * pOwnerWnd);
 	bool SetLangID (LANGID pLangID);
 	bool SetBalloonWndOptions (LANGID pLangID = 0);
 
@@ -78,6 +81,7 @@ public:
 	static COLORREF GetOleColor (OLE_COLOR pColor);
 
 protected:
+	CInstanceAnchor *			mAnchor;
 	long						mCharID;
 	LANGID						mLangID;
 	CAgentFile *				mFile;

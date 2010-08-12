@@ -28,10 +28,9 @@
 class ATL_NO_VTABLE __declspec(uuid("{1147E512-A208-11DE-ABF2-002421116FB2}")) DaSvrBalloon :
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public CComCoClass<DaSvrBalloon, &__uuidof(DaSvrBalloon)>,
-	public IDispatchImpl<IDaSvrBalloon2, &__uuidof(IDaSvrBalloon2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
-	public IProvideClassInfoImpl<&__uuidof(DaSvrBalloon), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
+	public IDispatchImpl<IDaSvrBalloon2, &__uuidof(IDaSvrBalloon2), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>,
+	public IProvideClassInfoImpl<&__uuidof(DaSvrBalloon), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>,
 	public ISupportErrorInfo,
-	public CAgentFileClient,
 	public CDaCmnBalloon,
 	public CSvrObjLifetime
 {
@@ -46,7 +45,7 @@ public:
 
 // Operations
 public:
-	static DaSvrBalloon * CreateInstance (long pCharID, CAgentFile * pFile, class CAgentCharacterWnd * pOwner, LPCTSTR pClientMutexName = NULL);
+	static DaSvrBalloon * CreateInstance (long pCharID, CInstanceAnchor * pAnchor, CAgentFile * pFile, class CAgentCharacterWnd * pOwner, LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
 

@@ -2073,19 +2073,19 @@ LPDISPATCH IDaControl2::GetSettings()
 	return result;
 }
 
-BOOL IDaControl2::GetAutoConnect()
+short IDaControl2::GetAutoConnect()
 {
-	BOOL result;
-	InvokeHelper(0x29, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	short result;
+	InvokeHelper(0x29, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
 	return result;
 }
 
-void IDaControl2::SetAutoConnect(BOOL bNewValue)
+void IDaControl2::SetAutoConnect(short nNewValue)
 {
 	static BYTE parms[] =
-		VTS_BOOL;
+		VTS_I2;
 	InvokeHelper(0x29, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+		 nNewValue);
 }
 
 LPDISPATCH IDaControl2::GetControlCharacter()

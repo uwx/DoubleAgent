@@ -14,6 +14,9 @@
 ]
 library DoubleAgentCtl
 {
+cpp_quote("class __declspec(uuid(\"{1147E550-A208-11DE-ABF2-002421116FB2}\")) DoubleAgentCtl_TypeLib;")
+	const int DoubleAgentCtl_MajorVer = _CONTROL_VER_MAJOR;
+	const int DoubleAgentCtl_MinorVer = _CONTROL_VER_MINOR;
 	importlib("stdole2.tlb");
 
 	interface IDaCtlCharacters;
@@ -52,6 +55,60 @@ library DoubleAgentCtl
 	/////////////////////////////////////////////////////////////////////////////
 
 #include "DaCommon.odl"
+
+cpp_quote("#ifndef _ActiveStateType_Defined")
+cpp_quote("#define _ActiveStateType_Defined")
+	[
+		uuid(1147E56B-A208-11DE-ABF2-002421116FB2),
+		helpstring("An Agent Character's active state")
+		//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.Control.ActiveStateType")
+	]
+	typedef enum ActiveStateType
+	{
+		[helpstring("This program is not the character's active client")]
+			ActiveState_Inactive = 0,
+		[helpstring("This program is the character's active client")]
+			ActiveState_Active = 1,
+		[helpstring("The character is the input-active character and will receive user input")]
+			ActiveState_InputActive = 2,
+		[helpstring("The application is inactive and the character is suspended")]
+			ActiveState_Suspended = 4,
+		[helpstring("The application is inactive and this program is the character's active client")]
+			ActiveState_Suspended_Active = 5,
+		[helpstring("The application is inactive and the character will the input-active when the application becomes active")]
+			ActiveState_Suspended_InputActive = 6
+	}	ActiveStateType;
+cpp_quote("#endif")
+
+cpp_quote("#ifndef _CharacterStyleFlags_Defined")
+cpp_quote("#define _CharacterStyleFlags_Defined")
+	[
+		uuid(1147E569-A208-11DE-ABF2-002421116FB2),
+		helpstring("Style settings for a character, or the default settings used when a character is loaded")
+		//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.CharacterStyleFlags")
+	]
+	typedef enum CharacterStyleFlags
+	{
+		[helpstring("The animation sound effects are played")]
+			CharacterStyle_SoundEffects = 0x00000001,
+		[helpstring("The character enters idle mode and shows it's idling animations when it's not doing anything else")]
+			CharacterStyle_IdleEnabled = 0x00000002,
+		[helpstring("A right-click on the character or it's notification icon automatically shows a pop-up menu")]
+			CharacterStyle_AutoPopupMenu = 0x00000004,
+		[helpstring("The character has an icon in the taskbar notification area")]
+			CharacterStyle_IconShown = 0x00000008,
+		[helpstring("Image smoothing (antialiasing) is applied to the character's animations")]
+			CharacterStyle_Smoothed = 0x00000030,
+		[helpstring("Image smoothing (antialiasing) is applied to the edges of the character's animations")]
+			CharacterStyle_SmoothEdges = 0x00000020,
+		[helpstring("All actions are paused when the client is not foreground")]
+			CharacterStyle_SuspendPause = 0x00000100,
+		[helpstring("All actions are stopped when the client is not foreground")]
+			CharacterStyle_SuspendStop = 0x00000200,
+		[helpstring("All popup windows are hidden when the client is not foreground")]
+			CharacterStyle_SuspendHide = 0x00000400
+	}	CharacterStyleFlags;
+cpp_quote("#endif")
 
 	[
 		uuid(1147E594-A208-11DE-ABF2-002421116FB2),
@@ -197,8 +254,8 @@ library DoubleAgentCtl
 		[helpstring("The Agent Server's global settings"), helpcontext(APIHELP_Ctl_Control_Settings),
 			id(DISPID_IDaControl2_Settings), propget] HRESULT Settings ([out, retval] IDaCtlSettings** Settings);
 		[helpstring("Does the control automatically connect to the Agent Server?"), helpcontext(APIHELP_Ctl_Control_AutoConnect),
-			id(DISPID_IDaControl2_AutoConnect), propget, bindable, displaybind] HRESULT AutoConnect ([out, retval] VARIANT_BOOL* AutoConnect);
-			[id(DISPID_IDaControl2_AutoConnect), propput, bindable, displaybind] HRESULT AutoConnect ([in] VARIANT_BOOL AutoConnect);
+			id(DISPID_IDaControl2_AutoConnect), propget, bindable, displaybind] HRESULT AutoConnect ([out, retval] short* AutoConnect);
+			[id(DISPID_IDaControl2_AutoConnect), propput, bindable, displaybind] HRESULT AutoConnect ([in] short AutoConnect);
 		[helpstring("The character shown in the control's window"), helpcontext(APIHELP_Ctl_Control_ControlCharacter),
 			id(DISPID_IDaControl2_ControlCharacter), propget] HRESULT ControlCharacter ([out, retval] IDaCtlCharacter2** ControlCharacter);
 			[id(DISPID_IDaControl2_ControlCharacter), propput] HRESULT ControlCharacter ([in] IDaCtlCharacter2* ControlCharacter);
@@ -519,6 +576,9 @@ library DoubleAgentCtl
 	const DISPID DISPID_IDaCtlCharacter2_SpeakFormatted = 86;
 	const DISPID DISPID_IDaCtlCharacter2_ThinkFormatted = 87;
 	const DISPID DISPID_IDaCtlCharacter2_NewFormattedText = 88;
+	const DISPID DISPID_IDaCtlCharacter2_SuspendPause = 89;
+	const DISPID DISPID_IDaCtlCharacter2_SuspendStop = 90;
+	const DISPID DISPID_IDaCtlCharacter2_SuspendHide = 91;
 
 	[
 		odl,
@@ -600,6 +660,15 @@ library DoubleAgentCtl
 			id(DISPID_IDaCtlCharacter2_Animations), propget] HRESULT Animations ([out, retval] SAFEARRAY(BSTR) *Animations);
 		[helpstring("The names of the state animations the character can play"), helpcontext(APIHELP_Ctl_Character),
 			id(DISPID_IDaCtlCharacter2_States), propget] HRESULT States ([out, retval] SAFEARRAY(BSTR) *States);
+		[helpstring("Are all actions paused when the client is not foreground?"), helpcontext(APIHELP_Ctl_Character),
+			id(DISPID_IDaCtlCharacter2_SuspendPause), propput, bindable, displaybind] HRESULT SuspendPause ([in] VARIANT_BOOL SuspendPause);
+			[id(DISPID_IDaCtlCharacter2_SuspendPause), propget, bindable, displaybind] HRESULT SuspendPause ([out, retval] VARIANT_BOOL* SuspendPause);
+		[helpstring("Are all actions stopped when the client is not foreground?"), helpcontext(APIHELP_Ctl_Character),
+			id(DISPID_IDaCtlCharacter2_SuspendStop), propput, bindable, displaybind] HRESULT SuspendStop ([in] VARIANT_BOOL SuspendStop);
+			[id(DISPID_IDaCtlCharacter2_SuspendStop), propget, bindable, displaybind] HRESULT SuspendStop ([out, retval] VARIANT_BOOL* SuspendStop);
+		[helpstring("Are all windows hidden when the client is not foreground?"), helpcontext(APIHELP_Ctl_Character),
+			id(DISPID_IDaCtlCharacter2_SuspendHide), propput, bindable, displaybind] HRESULT SuspendHide ([in] VARIANT_BOOL SuspendHide);
+			[id(DISPID_IDaCtlCharacter2_SuspendHide), propget, bindable, displaybind] HRESULT SuspendHide ([out, retval] VARIANT_BOOL* SuspendHide);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

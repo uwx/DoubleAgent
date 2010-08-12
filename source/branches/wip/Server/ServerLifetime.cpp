@@ -242,8 +242,8 @@ void CServerLifetime::VerifyObjectLifetimes ()
 		{
 			INT_PTR				lNdx;
 			CSvrObjLifetime *	lObject;
-
-			for	(lNdx = mObjectLifetimes.GetCount()-1; lNdx >= 0; lNdx--)
+			
+			for	(lNdx = 0; lNdx < (INT_PTR)mObjectLifetimes.GetCount(); lNdx++)
 			{
 				lObject = mObjectLifetimes [lNdx];
 
@@ -251,7 +251,7 @@ void CServerLifetime::VerifyObjectLifetimes ()
 				{
 					if	(!lObject->VerifyClientLifetime ())
 					{
-						mObjectLifetimes.RemoveAt (lNdx);
+						mObjectLifetimes.RemoveAt (lNdx--);
 						lObject->OnClientEnded ();
 					}
 				}

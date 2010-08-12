@@ -62,6 +62,7 @@ public:
 public:
 	bool IsManual () const;
 	bool IsAutomatic () const;
+	bool IsSuspended () const;
 	bool IsActive () const;
 	bool IsListening () const;
 	bool IsHearing () const;
@@ -74,6 +75,7 @@ public:
 	HRESULT StartListening (bool pManual);
 	HRESULT StopListening (bool pManual, long pCause);
 	HRESULT KeepListening (bool pManual);
+	HRESULT SuspendListening (bool pSuspend);
 	HRESULT TransferState (CListeningState * pToState);
 
 	bool PlaySapiInputPrompt (bool pManualListen, LPCTSTR pSoundName);
@@ -104,6 +106,7 @@ protected:
 	CSapi5Input *				mSapi5Input;
 	tPtr <CSapi5InputContext>	mSapi5InputContext;
 	bool						mHearingStateShown;
+	bool						mListenSuspended;
 	const DWORD					mListenDelayManual;
 	const DWORD					mListenDelayHeard;
 	UINT_PTR					mListenTimerManual;
@@ -130,6 +133,7 @@ public:
 // Attributes
 public:
 	class CListeningGlobal &	mGlobal;
+	CWindow *					mOwnerWnd;
 
 	bool IsStarted () const {return mStarted;}
 
@@ -179,7 +183,7 @@ public:
 	void Suspend ();
 	void Resume ();
 
-	CVoiceCommandsWnd * GetVoiceCommandsWnd (bool pCreate);
+	CVoiceCommandsWnd * GetVoiceCommandsWnd (bool pCreate = false, CWindow * pOwnerWnd = NULL);
 
 	void SetVoiceCommandCharacter (long pCharID);
 	void SetVoiceCommandClients (long pCharID);

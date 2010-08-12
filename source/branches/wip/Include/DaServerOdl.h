@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Tue Aug 03 19:00:51 2010
+/* at Mon Aug 09 13:03:29 2010
  */
 /* Compiler settings for .\Server\DaServer.odl:
-    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -443,6 +443,11 @@ extern "C"{
 /* library DoubleAgentSvr */
 /* [helpfile][helpstring][version][uuid] */ 
 
+class __declspec(uuid("{1147E501-A208-11DE-ABF2-002421116FB2}")) DoubleAgentSvr_TypeLib;
+#define	DoubleAgentSvr_MajorVer	( 1 )
+
+#define	DoubleAgentSvr_MinorVer	( 1 )
+
 
 
 
@@ -474,16 +479,6 @@ extern "C"{
 
 #ifndef _DA_COMMON_TYPES_
 #define _DA_COMMON_TYPES_
-typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E569-A208-11DE-ABF2-002421116FB2") 
-enum CharacterStyleFlags
-    {	CharacterStyle_SoundEffects	= 0x1,
-	CharacterStyle_IdleEnabled	= 0x2,
-	CharacterStyle_AutoPopupMenu	= 0x4,
-	CharacterStyle_IconShown	= 0x8,
-	CharacterStyle_Smoothed	= 0x30,
-	CharacterStyle_SmoothEdges	= 0x20
-    } 	CharacterStyleFlags;
-
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56A-A208-11DE-ABF2-002421116FB2") 
 enum BalloonStyleFlags
     {	BalloonStyle_Enabled	= 0x1,
@@ -492,16 +487,6 @@ enum BalloonStyleFlags
 	BalloonStyle_AutoPace	= 0x8,
 	BalloonStyle_ShowPartialLines	= 0x10
     } 	BalloonStyleFlags;
-
-typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56B-A208-11DE-ABF2-002421116FB2") 
-enum ActiveStateType
-    {	ActiveState_Inactive	= 0,
-	ActiveState_Active	= 1,
-	ActiveState_InputActive	= 2,
-	ActiveState_Suspended	= 4,
-	ActiveState_Suspended_Active	= 5,
-	ActiveState_Suspended_InputActive	= 6
-    } 	ActiveStateType;
 
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56C-A208-11DE-ABF2-002421116FB2") 
 enum StopAllFlags
@@ -587,6 +572,29 @@ enum SpeechGenderType
 #define	PropertySheet_PageName_Copyright	( "Copyright" )
 
 #endif // _DA_COMMON_TYPES_
+#ifndef _ActiveStateType_Defined
+#define _ActiveStateType_Defined
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56B-A208-11DE-ABF2-002421116FB2") 
+enum ActiveStateType
+    {	ActiveState_Inactive	= 0,
+	ActiveState_Active	= 1,
+	ActiveState_InputActive	= 2
+    } 	ActiveStateType;
+
+#endif
+#ifndef _CharacterStyleFlags_Defined
+#define _CharacterStyleFlags_Defined
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E569-A208-11DE-ABF2-002421116FB2") 
+enum CharacterStyleFlags
+    {	CharacterStyle_SoundEffects	= 0x1,
+	CharacterStyle_IdleEnabled	= 0x2,
+	CharacterStyle_AutoPopupMenu	= 0x4,
+	CharacterStyle_IconShown	= 0x8,
+	CharacterStyle_Smoothed	= 0x30,
+	CharacterStyle_SmoothEdges	= 0x20
+    } 	CharacterStyleFlags;
+
+#endif
 typedef /* [uuid] */  DECLSPEC_UUID("1147E595-A208-11DE-ABF2-002421116FB2") 
 enum FilesFilterFlags
     {	FilesFilter_PathDoubleAgent	= 0x1,
@@ -1928,7 +1936,7 @@ EXTERN_C const IID IID_IDaSvrCommands;
             /* [in] */ BSTR VoiceGrammar,
             /* [in] */ long Enabled,
             /* [in] */ long Visible,
-            /* [out] */ long *CommandID) = 0;
+            /* [retval][out] */ long *CommandID) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Insert( 
             /* [in] */ BSTR Caption,
@@ -1937,7 +1945,7 @@ EXTERN_C const IID IID_IDaSvrCommands;
             /* [in] */ long Visible,
             /* [in] */ long RefCommandID,
             /* [in] */ long Before,
-            /* [out] */ long *CommandID) = 0;
+            /* [retval][out] */ long *CommandID) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Remove( 
             /* [in] */ long CommandID) = 0;
@@ -1985,7 +1993,7 @@ EXTERN_C const IID IID_IDaSvrCommands;
             /* [in] */ long Enabled,
             /* [in] */ long Visible,
             /* [in] */ long HelpContextID,
-            /* [out] */ long *CommandID) = 0;
+            /* [retval][out] */ long *CommandID) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE InsertEx( 
             /* [in] */ BSTR Caption,
@@ -1996,7 +2004,7 @@ EXTERN_C const IID IID_IDaSvrCommands;
             /* [in] */ long HelpContextID,
             /* [in] */ long RefCommandID,
             /* [in] */ long Before,
-            /* [out] */ long *CommandID) = 0;
+            /* [retval][out] */ long *CommandID) = 0;
         
         virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetGlobalVoiceCommandsEnabled( 
             /* [in] */ long Enabled) = 0;
@@ -2092,7 +2100,7 @@ EXTERN_C const IID IID_IDaSvrCommands;
             /* [in] */ BSTR VoiceGrammar,
             /* [in] */ long Enabled,
             /* [in] */ long Visible,
-            /* [out] */ long *CommandID);
+            /* [retval][out] */ long *CommandID);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Insert )( 
             IDaSvrCommands * This,
@@ -2102,7 +2110,7 @@ EXTERN_C const IID IID_IDaSvrCommands;
             /* [in] */ long Visible,
             /* [in] */ long RefCommandID,
             /* [in] */ long Before,
-            /* [out] */ long *CommandID);
+            /* [retval][out] */ long *CommandID);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Remove )( 
             IDaSvrCommands * This,
@@ -2164,7 +2172,7 @@ EXTERN_C const IID IID_IDaSvrCommands;
             /* [in] */ long Enabled,
             /* [in] */ long Visible,
             /* [in] */ long HelpContextID,
-            /* [out] */ long *CommandID);
+            /* [retval][out] */ long *CommandID);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *InsertEx )( 
             IDaSvrCommands * This,
@@ -2176,7 +2184,7 @@ EXTERN_C const IID IID_IDaSvrCommands;
             /* [in] */ long HelpContextID,
             /* [in] */ long RefCommandID,
             /* [in] */ long Before,
-            /* [out] */ long *CommandID);
+            /* [retval][out] */ long *CommandID);
         
         /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetGlobalVoiceCommandsEnabled )( 
             IDaSvrCommands * This,
@@ -9062,7 +9070,7 @@ EXTERN_C const IID IID_IDaSvrCommands2;
             /* [in] */ BSTR VoiceGrammar,
             /* [in] */ long Enabled,
             /* [in] */ long Visible,
-            /* [out] */ long *CommandID);
+            /* [retval][out] */ long *CommandID);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Insert )( 
             IDaSvrCommands2 * This,
@@ -9072,7 +9080,7 @@ EXTERN_C const IID IID_IDaSvrCommands2;
             /* [in] */ long Visible,
             /* [in] */ long RefCommandID,
             /* [in] */ long Before,
-            /* [out] */ long *CommandID);
+            /* [retval][out] */ long *CommandID);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Remove )( 
             IDaSvrCommands2 * This,
@@ -9134,7 +9142,7 @@ EXTERN_C const IID IID_IDaSvrCommands2;
             /* [in] */ long Enabled,
             /* [in] */ long Visible,
             /* [in] */ long HelpContextID,
-            /* [out] */ long *CommandID);
+            /* [retval][out] */ long *CommandID);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *InsertEx )( 
             IDaSvrCommands2 * This,
@@ -9146,7 +9154,7 @@ EXTERN_C const IID IID_IDaSvrCommands2;
             /* [in] */ long HelpContextID,
             /* [in] */ long RefCommandID,
             /* [in] */ long Before,
-            /* [out] */ long *CommandID);
+            /* [retval][out] */ long *CommandID);
         
         /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetGlobalVoiceCommandsEnabled )( 
             IDaSvrCommands2 * This,

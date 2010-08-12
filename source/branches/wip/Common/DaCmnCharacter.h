@@ -62,8 +62,9 @@ public:
 	bool IsIconShown () const;
 	bool IsIconVisible () const;
 
-	DWORD GetStyle () const;
+	virtual DWORD GetStyle () const;
 	long GetActiveClient () const;
+	virtual short GetActiveState () const;
 
 // Operations
 public:
@@ -73,14 +74,15 @@ public:
 
 	long Show (bool pFast, bool pImmediate = false);
 	long Hide (bool pFast, bool pImmediate = false);
-	bool SetClientActive (bool pActive, bool pInputActive);
+	bool SetActiveClient (bool pActive, bool pInputActive);
+	virtual HRESULT SetActiveState (short pActiveState);
 	INT_PTR GetClientCount (int pSkipCharID = 0) const;
 
 	HRESULT OpenFile (CAgentFile * pFile, bool pIsDefault = false);
 	HRESULT Realize (class CAgentCharacterWnd * pCharacterWnd, DWORD pInitialStyle);
-	HRESULT RealizePopup (DWORD pInitialStyle);
+	HRESULT RealizePopup (CWindow * pParentWnd, DWORD pInitialStyle, DWORD pExStyle = 0);
 	HRESULT SetLangID (LANGID pLangID);
-	HRESULT SetStyle (DWORD pRemoveStyle, DWORD pAddStyle);
+	virtual HRESULT SetStyle (DWORD pRemoveStyle, DWORD pAddStyle);
 	HRESULT StartListening (bool pManual);
 	HRESULT StopListening (bool pManual, long pCause);
 
@@ -96,7 +98,6 @@ public:
 	virtual class CFileDownload * _FindSoundDownload (LPCTSTR pSoundUrl);
 	virtual bool _OnContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition);
 	virtual bool _OnDefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition);
-	virtual void _OnAppActivated (bool pActive);
 	virtual void _OnOptionsChanged ();
 	virtual void _OnDefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFilePath);
 

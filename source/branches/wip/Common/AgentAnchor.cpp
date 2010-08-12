@@ -35,6 +35,7 @@ CGlobalAnchor::CGlobalAnchor ()
 :	mNextCharID (256),
 	mNextReqID (100)
 {
+	CAgentFileCache::mIdCode = 1;
 }
 
 CGlobalAnchor::~CGlobalAnchor ()
@@ -306,8 +307,11 @@ long CGlobalAnchor::_GetListenCharacter (CAgentFileCache & pFileCache)
 /////////////////////////////////////////////////////////////////////////////
 
 CInstanceAnchor::CInstanceAnchor (CGlobalAnchor & pAnchor)
-:	mAnchor (pAnchor)
+:	mAnchor (pAnchor),
+	mOwnerWnd (NULL)
 {
+	static UINT lCacheId = 1;
+	CAgentFileCache::mIdCode = ++lCacheId;
 }
 
 CInstanceAnchor::~CInstanceAnchor ()

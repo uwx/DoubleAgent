@@ -97,6 +97,7 @@ public:
 	bool IsSpeechShape () const;
 	bool IsThoughtShape () const;
 	bool IsBusy (bool pForIdle) const;
+	bool IsPaused () const;
 	bool IsDrawingLayered () const;
 
 	bool IsAutoSize () const;
@@ -119,7 +120,7 @@ public:
 	CAgentBalloonOptions * GetNextOptions () const;
 	bool ApplyOptions (CAgentBalloonOptions * pOptions = NULL);
 
-	bool Create (CWindow * pOwnerWnd);
+	bool Create (CWindow * pOwnerWnd, DWORD pExStyle = 0);
 	bool Attach (long pCharID, class CEventNotify * pNotify, bool pSetActiveCharID);
 	bool Detach (long pCharID, class CEventNotify * pNotify);
 	void FinalRelease ();
@@ -136,11 +137,14 @@ public:
 	CAtlString GetDisplayText ();
 	CAtlString GetSpeechText ();
 	bool AbortSpeechText ();
+	bool Pause (bool pPause);
 
 	static bool CopyBalloonFont (const CAgentFileBalloon & pFileBalloon, LOGFONT & pFont);
 	static bool CopyBalloonFont (const LOGFONT & pFont, CAgentFileBalloon & pFileBalloon);
 	static bool SetFontLangID (LOGFONT & pFont, LANGID pLangID);
 	static bool GetActualFont (const LOGFONT & pFont, LOGFONT & pActualFont, bool pUpdateSize = true, bool pUpdateStyle = true);
+	static bool FontEqual (HFONT pFont1, HFONT pFont2);
+	static bool FontEqual (const LOGFONT & pFont1, const LOGFONT & pFont2);
 
 // Overrides
 protected:
@@ -162,6 +166,9 @@ protected:
 	LRESULT OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 	LRESULT OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 	LRESULT OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnSetRedraw (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnNcPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 	LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 	LRESULT OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 	LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
@@ -184,6 +191,9 @@ protected:
 		MESSAGE_HANDLER(WM_WINDOWPOSCHANGING, OnWindowPosChanging)
 		MESSAGE_HANDLER(WM_WINDOWPOSCHANGED, OnWindowPosChanged)
 		MESSAGE_HANDLER(WM_SIZE, OnSize)
+		MESSAGE_HANDLER(WM_SHOWWINDOW, OnShowWindow)
+		MESSAGE_HANDLER(WM_SETREDRAW, OnSetRedraw)
+		MESSAGE_HANDLER(WM_NCPAINT, OnNcPaint)
 		MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest)
 		MESSAGE_HANDLER(WM_TIMER, OnTimer)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
@@ -241,10 +251,12 @@ protected:
 	static const UINT					mVoiceWordMsg;
 private:
 	CWindow *							mOwnerWnd;
+	bool								mRedrawDisabled;
 	bool								mPacingSpeech;
-	bool								mPacingWord;
 	bool								mApplyingLayout;
 	bool								mApplyingRegion;
+	bool								mPaused;
+	INT_PTR								mPausedWord;
 
 private:
 	UINT EnterRecursion () const;

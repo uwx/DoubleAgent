@@ -1584,8 +1584,7 @@ bool CAgentTextDraw::DisplayNextWord (bool pForSpeech)
 
 bool CAgentTextDraw::DisplayThisWord (long pWordPos, long pWordLength, bool pForSpeech)
 {
-	bool	lRet = false;
-	int		lWordNdx;
+	INT_PTR	lWordNdx;
 	long	lWordEnd = pWordPos + pWordLength;
 
 	if	(pForSpeech)
@@ -1600,12 +1599,6 @@ bool CAgentTextDraw::DisplayThisWord (long pWordPos, long pWordLength, bool pFor
 		}
 		lWordNdx += (int)(mTextWords.GetCount() - mSpeechWords.GetCount());
 		lWordNdx = min (lWordNdx, (INT_PTR)mTextWords.GetCount()-1);
-
-		if	(mWordDisplayed != lWordNdx)
-		{
-			mWordDisplayed = lWordNdx;
-			lRet = true;
-		}
 	}
 	else
 	{
@@ -1618,14 +1611,26 @@ bool CAgentTextDraw::DisplayThisWord (long pWordPos, long pWordLength, bool pFor
 			}
 		}
 		lWordNdx = min (lWordNdx, (INT_PTR)mTextWords.GetCount()-1);
-
-		if	(mWordDisplayed != lWordNdx)
-		{
-			mWordDisplayed = lWordNdx;
-			lRet = true;
-		}
 	}
-	return lRet;
+
+	if	(mWordDisplayed != lWordNdx)
+	{
+		return DisplayThisWord (lWordNdx, pForSpeech);
+	}
+	return false;
+}
+
+bool CAgentTextDraw::DisplayThisWord (INT_PTR pWordNdx, bool pForSpeech)
+{
+	if	(
+			(pWordNdx >= 0)
+		&&	(pWordNdx < (INT_PTR)mTextWords.GetCount())
+		)
+	{
+		mWordDisplayed = pWordNdx;
+		return true;
+	}
+	return false;
 }
 
 bool CAgentTextDraw::DisplayAllWords (bool pForSpeech)

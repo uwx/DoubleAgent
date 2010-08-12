@@ -50,6 +50,7 @@
 #include "DebugProcess.h"
 #endif
 
+#pragma comment (lib,"comctl32.lib")
 #pragma warning (disable : 4722)
 
 #ifdef	_DEBUG
@@ -259,7 +260,7 @@ HRESULT CDaServerModule::PostMessageLoop ()
 void CDaServerModule::_PreMessageLoop (bool pForModal)
 {
 	tSS <INITCOMMONCONTROLSEX, DWORD> lInitControls;
-	lInitControls.dwICC = ICC_WIN95_CLASSES;
+	lInitControls.dwICC = ICC_WIN95_CLASSES|ICC_STANDARD_CLASSES|ICC_LINK_CLASS;
 	InitCommonControlsEx (&lInitControls);
 
 	_AtlBaseModule.SetResourceInstance (GetModuleHandle (_T("DaCore")));
@@ -380,27 +381,20 @@ void CDaServerModule::RunMessageLoop ()
 
 HRESULT CDaServerModule::RegisterServer(BOOL bRegTypeLib, const CLSID* pCLSID)
 {
-	HRESULT	lResult = CAtlExeModuleT<CDaServerModule>::RegisterServer (bRegTypeLib, pCLSID);
-
-	if	(
-			(SUCCEEDED (lResult))
-		&&	(bRegTypeLib)
-		)
+	if	(bRegTypeLib)
 	{
 		_AtlComModule.RegisterTypeLib (_T("\\3"));
 	}
-	return lResult;
+	return CAtlExeModuleT<CDaServerModule>::RegisterServer (bRegTypeLib, pCLSID);
 }
 
 HRESULT CDaServerModule::UnregisterServer(BOOL bUnRegTypeLib, const CLSID* pCLSID)
 {
-	HRESULT	lResult = CAtlExeModuleT<CDaServerModule>::RegisterServer (bUnRegTypeLib, pCLSID);
-
 	if	(bUnRegTypeLib)
 	{
 		_AtlComModule.UnRegisterTypeLib (_T("\\3"));
 	}
-	return lResult;
+	return CAtlExeModuleT<CDaServerModule>::UnregisterServer (bUnRegTypeLib, pCLSID);
 }
 
 HRESULT CDaServerModule::RegisterAppId ()

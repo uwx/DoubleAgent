@@ -28,8 +28,8 @@
 class ATL_NO_VTABLE __declspec(uuid("{1147E533-A208-11DE-ABF2-002421116FB2}")) DaCtlBalloon :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlBalloon, &__uuidof(DaCtlBalloon)>,
-	public IDispatchImpl<IDaCtlBalloon2, &__uuidof(IDaCtlBalloon2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlBalloon), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlBalloon2, &__uuidof(IDaCtlBalloon2), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer>,
+	public IProvideClassInfoImpl<&__uuidof(DaCtlBalloon), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer>,
 	public ISupportErrorInfo
 {
 public:

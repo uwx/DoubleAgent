@@ -52,8 +52,8 @@ public:
 
 // Operations
 public:
-	bool Create ();
-	bool Show ();
+	bool Create (CWindow * pOwnerWnd);
+	bool Show (bool pActivate);
 	bool Hide ();
 
 	bool ShowTheseCommands (long pCharID, LPCTSTR pCaption, const CAtlTypeArray <long> & pIds, const CAtlStringArray & pCaptions);

@@ -28,8 +28,8 @@
 class ATL_NO_VTABLE __declspec(uuid("{1147E553-A208-11DE-ABF2-002421116FB2}")) DaCtlTTSEngine :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlTTSEngine, &__uuidof(DaCtlTTSEngine)>,
-	public IDispatchImpl<IDaCtlTTSEngine, &__uuidof(IDaCtlTTSEngine), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlTTSEngine), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlTTSEngine, &__uuidof(IDaCtlTTSEngine), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer>,
+	public IProvideClassInfoImpl<&__uuidof(DaCtlTTSEngine), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer>,
 	public ISupportErrorInfo
 {
 public:
@@ -39,7 +39,7 @@ public:
 #ifdef	_DEBUG_NOT
 	STDMETHOD(GetClassInfo)(ITypeInfo** pptinfo)
 	{
-		return LogComErrAnon (LogAlways, IProvideClassInfoImpl<&__uuidof(DaCtlTTSEngine), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>::GetClassInfo(pptinfo), _T("DaCtlTTSEngine::GetClassInfo"));
+		return LogComErrAnon (LogAlways, IProvideClassInfoImpl<&__uuidof(DaCtlTTSEngine), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer>::GetClassInfo(pptinfo), _T("DaCtlTTSEngine::GetClassInfo"));
 	}
 #endif
 

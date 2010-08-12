@@ -67,7 +67,7 @@ public:
 
 // Operations
 public:
-	bool Create (HWND pParentWnd, CRect * pInitialRect = NULL);
+	bool Create (CWindow * pParentWnd, CRect * pInitialRect = NULL, DWORD pExStyle = 0);
 	virtual bool Attach (long pCharID, CEventNotify * pNotify, const CAgentIconData * pIconData, bool pSetActiveCharID);
 	virtual bool Detach (long pCharID, CEventNotify * pNotify);
 	void FinalRelease ();

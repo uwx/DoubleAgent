@@ -65,7 +65,7 @@ public:
 	CDaServerModule();
 	~CDaServerModule();
 
-	DECLARE_LIBID(__uuidof(DaServerTypeLib))
+	DECLARE_LIBID(__uuidof(DoubleAgentSvr_TypeLib))
 	DECLARE_REGISTRY_APPID_RESOURCEID(IDR_DASERVERAPP, "{1147E500-A208-11DE-ABF2-002421116FB2}")
 
 // Attributes

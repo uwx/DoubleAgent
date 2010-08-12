@@ -31,10 +31,10 @@
 
 class ATL_NO_VTABLE __declspec(uuid("{1147E530-A208-11DE-ABF2-002421116FB2}")) DaControl :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IProvideClassInfo2Impl<&__uuidof(DaControl), &__uuidof(_DaCtlEvents2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IProvideClassInfo2Impl<&__uuidof(DaControl), &__uuidof(_DaCtlEvents2), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer>,
 	public ISupportErrorInfo,
 	public IObjectSafetyImpl<DaControl, INTERFACESAFE_FOR_UNTRUSTED_CALLER|INTERFACESAFE_FOR_UNTRUSTED_DATA>,
-	public CStockPropImpl<DaControl, IDaControl2, &__uuidof(IDaControl2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public CStockPropImpl<DaControl, IDaControl2, &__uuidof(IDaControl2), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer>,
 	public ISpecifyPropertyPagesImpl<DaControl>,
 	public IPerPropertyBrowsingImpl<DaControl>,
 	public IPersistStreamInitImpl<DaControl>,
@@ -75,7 +75,7 @@ public:
 	IDispatchPtr			mTTSEngines;
 	IDispatchPtr			mSREngines;
 	bool					mRaiseRequestErrors;
-	bool					mAutoConnect;
+	USHORT					mAutoConnect;
 	CEventNotifyReflect		mLocalEventNotify;
 	DWORD					mLocalCharacterStyle;
 
@@ -167,7 +167,7 @@ public:
 		PROP_DATA_ENTRY("_ExtentX", m_sizeExtent.cx, VT_UI4)
 		PROP_DATA_ENTRY("_ExtentY", m_sizeExtent.cy, VT_UI4)
 		PROP_ENTRY_TYPE("RaiseRequestErrors", DISPID_IAgentCtlEx_RaiseRequestErrors, CLSID_NULL, VT_BOOL)
-		PROP_ENTRY_TYPE("AutoConnect", DISPID_IDaControl2_AutoConnect, CLSID_NULL, VT_BOOL)
+		PROP_ENTRY_TYPE("AutoConnect", DISPID_IDaControl2_AutoConnect, CLSID_NULL, VT_UI2)
 		PROP_ENTRY_TYPE("AutoSize", DISPID_AUTOSIZE, CLSID_NULL, VT_BOOL)
 		PROP_ENTRY_TYPE("BackColor", DISPID_BACKCOLOR, CLSID_StockColorPage, VT_UI4)
 		PROP_ENTRY_TYPE("BorderColor", DISPID_BORDERCOLOR, CLSID_StockColorPage, VT_UI4)
@@ -303,8 +303,8 @@ public:
 	HRESULT STDMETHODCALLTYPE FindSREngines (VARIANT LanguageID,  IDaCtlSREngines ** SREngines);
 	HRESULT STDMETHODCALLTYPE GetCharacterSREngine (VARIANT Provider,  IDaCtlSREngine ** SREngine);
 	HRESULT STDMETHODCALLTYPE FindCharacterSREngines (VARIANT Provider,  VARIANT LanguageID,  IDaCtlSREngines ** SREngines);
-	HRESULT STDMETHODCALLTYPE get_AutoConnect (VARIANT_BOOL * AutoConnect);
-	HRESULT STDMETHODCALLTYPE put_AutoConnect (VARIANT_BOOL AutoConnect);
+	HRESULT STDMETHODCALLTYPE get_AutoConnect (short * AutoConnect);
+	HRESULT STDMETHODCALLTYPE put_AutoConnect (short AutoConnect);
 	HRESULT STDMETHODCALLTYPE get_ControlCharacter (IDaCtlCharacter2 **ControlCharacter);
 	HRESULT STDMETHODCALLTYPE put_ControlCharacter (IDaCtlCharacter2 *ControlCharacter);
 

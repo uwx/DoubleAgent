@@ -16,7 +16,7 @@ namespace DoubleAgent {
 /////////////////////////////////////////////////////////////////////////////
 
 /// <summary>
-/// Summary for ControlTestForm
+/// Summary for ControlClrForm
 ///
 /// WARNING: If you change the name of this class, you will need to change the
 ///          'Resource File Name' property for the managed resource compiler tool
@@ -24,12 +24,12 @@ namespace DoubleAgent {
 ///          the designers will not be able to interact properly with localized
 ///          resources associated with this form.
 /// </summary>
-public ref class ControlTestForm : public System::Windows::Forms::Form
+public ref class ControlClrForm : public System::Windows::Forms::Form
 {
 public:
-	ControlTestForm (void);
+	ControlClrForm (void);
 protected:
-	~ControlTestForm ();
+	~ControlClrForm ();
 
 //===========================================================================
 
@@ -73,6 +73,9 @@ private: System::Windows::Forms::CheckBox^  CharAutoPopupMenu;
 private: System::Windows::Forms::CheckBox^  CharIdleState;
 private: System::Windows::Forms::CheckBox^  CharIdleEnabled;
 private: System::Windows::Forms::CheckBox^  CharSoundEffects;
+private: System::Windows::Forms::CheckBox^  CharSuspendHide;
+private: System::Windows::Forms::CheckBox^  CharSuspendStop;
+private: System::Windows::Forms::CheckBox^  CharSuspendPause;
 private: System::Windows::Forms::CheckBox^  CharSmoothed;
 private: System::Windows::Forms::CheckBox^  CharSmoothEdges;
 private: System::Windows::Forms::CheckBox^  CharIconVisible;
@@ -178,6 +181,9 @@ private: System::Windows::Forms::CheckBox^  CtlSoundEffects;
 private: System::Windows::Forms::CheckBox^  CtlIconShown;
 private: System::Windows::Forms::CheckBox^  CtlSmoothEdges;
 private: System::Windows::Forms::CheckBox^  CtlSmoothed;
+private: System::Windows::Forms::CheckBox^  CtlSuspendHide;
+private: System::Windows::Forms::CheckBox^  CtlSuspendStop;
+private: System::Windows::Forms::CheckBox^  CtlSuspendPause;
 #pragma endregion
 
 #pragma region Characters Page Fields
@@ -370,7 +376,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		System::Windows::Forms::Label^  label17;
 		System::Windows::Forms::Label^  label18;
 		System::Windows::Forms::Label^  label22;
-		System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(ControlTestForm::typeid));
+		System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(ControlClrForm::typeid));
 		this->CharacterPageBinding = (gcnew System::Windows::Forms::BindingSource(this->components));
 		this->SettingsPageBinding = (gcnew System::Windows::Forms::BindingSource(this->components));
 		this->PropertySheetPageBinding = (gcnew System::Windows::Forms::BindingSource(this->components));
@@ -393,6 +399,9 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CtlAutoPopupMenu = (gcnew System::Windows::Forms::CheckBox());
 		this->CtlIdleEnabled = (gcnew System::Windows::Forms::CheckBox());
 		this->CtlSoundEffects = (gcnew System::Windows::Forms::CheckBox());
+		this->CtlSuspendHide = (gcnew System::Windows::Forms::CheckBox());
+		this->CtlSuspendStop = (gcnew System::Windows::Forms::CheckBox());
+		this->CtlSuspendPause = (gcnew System::Windows::Forms::CheckBox());
 		this->CtlSmoothEdges = (gcnew System::Windows::Forms::CheckBox());
 		this->CtlSmoothed = (gcnew System::Windows::Forms::CheckBox());
 		this->CtlIconShown = (gcnew System::Windows::Forms::CheckBox());
@@ -577,6 +586,9 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->SetCurrentButton = (gcnew System::Windows::Forms::Button());
 		this->CollectButton = (gcnew System::Windows::Forms::Button());
 		this->SetContainedButton = (gcnew System::Windows::Forms::Button());
+		this->CharSuspendPause = (gcnew System::Windows::Forms::CheckBox());
+		this->CharSuspendStop = (gcnew System::Windows::Forms::CheckBox());
+		this->CharSuspendHide = (gcnew System::Windows::Forms::CheckBox());
 		CharBalloonCharsPerLineLabel = (gcnew System::Windows::Forms::Label());
 		CharIconTipLabel = (gcnew System::Windows::Forms::Label());
 		CharMoveCauseLabel = (gcnew System::Windows::Forms::Label());
@@ -726,37 +738,37 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		// 
 		CharIconTipLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
 		CharIconTipLabel->AutoSize = true;
-		CharIconTipLabel->Location = System::Drawing::Point(371, 306);
+		CharIconTipLabel->Location = System::Drawing::Point(371, 365);
 		CharIconTipLabel->Name = L"CharIconTipLabel";
 		CharIconTipLabel->Size = System::Drawing::Size(54, 17);
-		CharIconTipLabel->TabIndex = 34;
+		CharIconTipLabel->TabIndex = 39;
 		CharIconTipLabel->Text = L"IconTip";
 		// 
 		// CharMoveCauseLabel
 		// 
 		CharMoveCauseLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
 		CharMoveCauseLabel->AutoSize = true;
-		CharMoveCauseLabel->Location = System::Drawing::Point(297, 431);
+		CharMoveCauseLabel->Location = System::Drawing::Point(297, 490);
 		CharMoveCauseLabel->Name = L"CharMoveCauseLabel";
 		CharMoveCauseLabel->Size = System::Drawing::Size(82, 17);
-		CharMoveCauseLabel->TabIndex = 51;
+		CharMoveCauseLabel->TabIndex = 58;
 		CharMoveCauseLabel->Text = L"MoveCause";
 		// 
 		// CharVisibilityCauseLabel
 		// 
 		CharVisibilityCauseLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
 		CharVisibilityCauseLabel->AutoSize = true;
-		CharVisibilityCauseLabel->Location = System::Drawing::Point(297, 384);
+		CharVisibilityCauseLabel->Location = System::Drawing::Point(297, 443);
 		CharVisibilityCauseLabel->Name = L"CharVisibilityCauseLabel";
 		CharVisibilityCauseLabel->Size = System::Drawing::Size(98, 17);
-		CharVisibilityCauseLabel->TabIndex = 49;
+		CharVisibilityCauseLabel->TabIndex = 56;
 		CharVisibilityCauseLabel->Text = L"VisibilityCause";
 		// 
 		// CharFilePathLabel
 		// 
 		CharFilePathLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
 		CharFilePathLabel->AutoSize = true;
-		CharFilePathLabel->Location = System::Drawing::Point(255, 121);
+		CharFilePathLabel->Location = System::Drawing::Point(255, 154);
 		CharFilePathLabel->Name = L"CharFilePathLabel";
 		CharFilePathLabel->Size = System::Drawing::Size(59, 17);
 		CharFilePathLabel->TabIndex = 14;
@@ -766,10 +778,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		// 
 		CharHeightLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
 		CharHeightLabel->AutoSize = true;
-		CharHeightLabel->Location = System::Drawing::Point(459, 348);
+		CharHeightLabel->Location = System::Drawing::Point(459, 407);
 		CharHeightLabel->Name = L"CharHeightLabel";
 		CharHeightLabel->Size = System::Drawing::Size(49, 17);
-		CharHeightLabel->TabIndex = 41;
+		CharHeightLabel->TabIndex = 49;
 		CharHeightLabel->Text = L"Height";
 		CharHeightLabel->TextAlign = System::Drawing::ContentAlignment::MiddleRight;
 		// 
@@ -777,20 +789,20 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		// 
 		CharListeningStatusLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
 		CharListeningStatusLabel->AutoSize = true;
-		CharListeningStatusLabel->Location = System::Drawing::Point(6, 431);
+		CharListeningStatusLabel->Location = System::Drawing::Point(6, 490);
 		CharListeningStatusLabel->Name = L"CharListeningStatusLabel";
 		CharListeningStatusLabel->Size = System::Drawing::Size(105, 17);
-		CharListeningStatusLabel->TabIndex = 47;
+		CharListeningStatusLabel->TabIndex = 54;
 		CharListeningStatusLabel->Text = L"ListeningStatus";
 		// 
 		// CharWidthLabel
 		// 
 		CharWidthLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
 		CharWidthLabel->AutoSize = true;
-		CharWidthLabel->Location = System::Drawing::Point(297, 348);
+		CharWidthLabel->Location = System::Drawing::Point(297, 407);
 		CharWidthLabel->Name = L"CharWidthLabel";
 		CharWidthLabel->Size = System::Drawing::Size(44, 17);
-		CharWidthLabel->TabIndex = 40;
+		CharWidthLabel->TabIndex = 46;
 		CharWidthLabel->Text = L"Width";
 		CharWidthLabel->TextAlign = System::Drawing::ContentAlignment::MiddleRight;
 		// 
@@ -798,7 +810,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		// 
 		CharSRModeIDLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
 		CharSRModeIDLabel->AutoSize = true;
-		CharSRModeIDLabel->Location = System::Drawing::Point(6, 177);
+		CharSRModeIDLabel->Location = System::Drawing::Point(6, 210);
 		CharSRModeIDLabel->Name = L"CharSRModeIDLabel";
 		CharSRModeIDLabel->Size = System::Drawing::Size(75, 17);
 		CharSRModeIDLabel->TabIndex = 18;
@@ -808,10 +820,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		// 
 		CharTopLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
 		CharTopLabel->AutoSize = true;
-		CharTopLabel->Location = System::Drawing::Point(177, 348);
+		CharTopLabel->Location = System::Drawing::Point(177, 407);
 		CharTopLabel->Name = L"CharTopLabel";
 		CharTopLabel->Size = System::Drawing::Size(33, 17);
-		CharTopLabel->TabIndex = 38;
+		CharTopLabel->TabIndex = 44;
 		CharTopLabel->Text = L"Top";
 		CharTopLabel->TextAlign = System::Drawing::ContentAlignment::MiddleRight;
 		// 
@@ -819,7 +831,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		// 
 		CharActiveStateLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
 		CharActiveStateLabel->AutoSize = true;
-		CharActiveStateLabel->Location = System::Drawing::Point(6, 384);
+		CharActiveStateLabel->Location = System::Drawing::Point(6, 443);
 		CharActiveStateLabel->Name = L"CharActiveStateLabel";
 		CharActiveStateLabel->Size = System::Drawing::Size(79, 17);
 		CharActiveStateLabel->TabIndex = 44;
@@ -829,10 +841,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		// 
 		CharLeftLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
 		CharLeftLabel->AutoSize = true;
-		CharLeftLabel->Location = System::Drawing::Point(57, 348);
+		CharLeftLabel->Location = System::Drawing::Point(57, 407);
 		CharLeftLabel->Name = L"CharLeftLabel";
 		CharLeftLabel->Size = System::Drawing::Size(32, 17);
-		CharLeftLabel->TabIndex = 36;
+		CharLeftLabel->TabIndex = 42;
 		CharLeftLabel->Text = L"Left";
 		CharLeftLabel->TextAlign = System::Drawing::ContentAlignment::MiddleRight;
 		// 
@@ -840,17 +852,17 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		// 
 		CharIconIdentityLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
 		CharIconIdentityLabel->AutoSize = true;
-		CharIconIdentityLabel->Location = System::Drawing::Point(6, 306);
+		CharIconIdentityLabel->Location = System::Drawing::Point(6, 365);
 		CharIconIdentityLabel->Name = L"CharIconIdentityLabel";
 		CharIconIdentityLabel->Size = System::Drawing::Size(79, 17);
-		CharIconIdentityLabel->TabIndex = 32;
+		CharIconIdentityLabel->TabIndex = 37;
 		CharIconIdentityLabel->Text = L"IconIdentity";
 		// 
 		// CharTTSModeIDLabel
 		// 
 		CharTTSModeIDLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
 		CharTTSModeIDLabel->AutoSize = true;
-		CharTTSModeIDLabel->Location = System::Drawing::Point(6, 149);
+		CharTTSModeIDLabel->Location = System::Drawing::Point(6, 182);
 		CharTTSModeIDLabel->Name = L"CharTTSModeIDLabel";
 		CharTTSModeIDLabel->Size = System::Drawing::Size(83, 17);
 		CharTTSModeIDLabel->TabIndex = 16;
@@ -860,7 +872,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		// 
 		CharFileNameLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
 		CharFileNameLabel->AutoSize = true;
-		CharFileNameLabel->Location = System::Drawing::Point(6, 121);
+		CharFileNameLabel->Location = System::Drawing::Point(6, 154);
 		CharFileNameLabel->Name = L"CharFileNameLabel";
 		CharFileNameLabel->Size = System::Drawing::Size(67, 17);
 		CharFileNameLabel->TabIndex = 12;
@@ -1294,7 +1306,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			| System::Windows::Forms::AnchorStyles::Right));
 		label3->BackColor = System::Drawing::SystemColors::ActiveCaption;
 		label3->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-		label3->Location = System::Drawing::Point(6, 201);
+		label3->Location = System::Drawing::Point(6, 234);
 		label3->Name = L"label3";
 		label3->Size = System::Drawing::Size(620, 3);
 		label3->TabIndex = 20;
@@ -1305,10 +1317,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			| System::Windows::Forms::AnchorStyles::Right));
 		label4->BackColor = System::Drawing::SystemColors::ActiveCaption;
 		label4->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-		label4->Location = System::Drawing::Point(6, 332);
+		label4->Location = System::Drawing::Point(6, 391);
 		label4->Name = L"label4";
 		label4->Size = System::Drawing::Size(620, 3);
-		label4->TabIndex = 53;
+		label4->TabIndex = 41;
 		// 
 		// label5
 		// 
@@ -1316,10 +1328,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			| System::Windows::Forms::AnchorStyles::Right));
 		label5->BackColor = System::Drawing::SystemColors::ActiveCaption;
 		label5->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-		label5->Location = System::Drawing::Point(6, 264);
+		label5->Location = System::Drawing::Point(6, 323);
 		label5->Name = L"label5";
 		label5->Size = System::Drawing::Size(620, 3);
-		label5->TabIndex = 27;
+		label5->TabIndex = 32;
 		// 
 		// label6
 		// 
@@ -1327,10 +1339,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			| System::Windows::Forms::AnchorStyles::Right));
 		label6->BackColor = System::Drawing::SystemColors::ActiveCaption;
 		label6->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-		label6->Location = System::Drawing::Point(6, 377);
+		label6->Location = System::Drawing::Point(6, 436);
 		label6->Name = L"label6";
 		label6->Size = System::Drawing::Size(620, 3);
-		label6->TabIndex = 45;
+		label6->TabIndex = 52;
 		// 
 		// label7
 		// 
@@ -1485,7 +1497,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->PropertySheetPage->Location = System::Drawing::Point(4, 25);
 		this->PropertySheetPage->Name = L"PropertySheetPage";
 		this->PropertySheetPage->Padding = System::Windows::Forms::Padding(3);
-		this->PropertySheetPage->Size = System::Drawing::Size(640, 481);
+		this->PropertySheetPage->Size = System::Drawing::Size(640, 540);
 		this->PropertySheetPage->TabIndex = 1;
 		this->PropertySheetPage->Text = L"Property Sheet";
 		this->PropertySheetPage->UseVisualStyleBackColor = true;
@@ -1526,7 +1538,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->ShowDefaultCharacter->TabIndex = 29;
 		this->ShowDefaultCharacter->Text = L"ShowDefaultCharacter";
 		this->ShowDefaultCharacter->UseVisualStyleBackColor = true;
-		this->ShowDefaultCharacter->Click += gcnew System::EventHandler(this, &ControlTestForm::ShowDefaultCharacter_Click);
+		this->ShowDefaultCharacter->Click += gcnew System::EventHandler(this, &ControlClrForm::ShowDefaultCharacter_Click);
 		// 
 		// PropertySheetBound
 		// 
@@ -1641,7 +1653,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->TabsControl->Location = System::Drawing::Point(3, 6);
 		this->TabsControl->Name = L"TabsControl";
 		this->TabsControl->SelectedIndex = 0;
-		this->TabsControl->Size = System::Drawing::Size(648, 510);
+		this->TabsControl->Size = System::Drawing::Size(648, 569);
 		this->TabsControl->TabIndex = 0;
 		// 
 		// PageControl
@@ -1650,6 +1662,9 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->PageControl->Controls->Add(this->CtlAutoPopupMenu);
 		this->PageControl->Controls->Add(this->CtlIdleEnabled);
 		this->PageControl->Controls->Add(this->CtlSoundEffects);
+		this->PageControl->Controls->Add(this->CtlSuspendHide);
+		this->PageControl->Controls->Add(this->CtlSuspendStop);
+		this->PageControl->Controls->Add(this->CtlSuspendPause);
 		this->PageControl->Controls->Add(this->CtlSmoothEdges);
 		this->PageControl->Controls->Add(this->CtlSmoothed);
 		this->PageControl->Controls->Add(this->CtlIconShown);
@@ -1658,7 +1673,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->PageControl->Location = System::Drawing::Point(4, 25);
 		this->PageControl->Name = L"PageControl";
 		this->PageControl->Padding = System::Windows::Forms::Padding(3);
-		this->PageControl->Size = System::Drawing::Size(640, 481);
+		this->PageControl->Size = System::Drawing::Size(640, 540);
 		this->PageControl->TabIndex = 0;
 		this->PageControl->Text = L"Control";
 		this->PageControl->UseVisualStyleBackColor = true;
@@ -1698,6 +1713,42 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CtlSoundEffects->TabIndex = 3;
 		this->CtlSoundEffects->Text = L"SoundEffects";
 		this->CtlSoundEffects->UseVisualStyleBackColor = true;
+		// 
+		// CtlSuspendHide
+		// 
+		this->CtlSuspendHide->AutoSize = true;
+		this->CtlSuspendHide->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Checked", this, L"CharStyleSuspendHide", true, 
+			System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
+		this->CtlSuspendHide->Location = System::Drawing::Point(6, 290);
+		this->CtlSuspendHide->Name = L"CtlSuspendHide";
+		this->CtlSuspendHide->Size = System::Drawing::Size(115, 21);
+		this->CtlSuspendHide->TabIndex = 11;
+		this->CtlSuspendHide->Text = L"SuspendHide";
+		this->CtlSuspendHide->UseVisualStyleBackColor = true;
+		// 
+		// CtlSuspendStop
+		// 
+		this->CtlSuspendStop->AutoSize = true;
+		this->CtlSuspendStop->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Checked", this, L"CharStyleSuspendStop", true, 
+			System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
+		this->CtlSuspendStop->Location = System::Drawing::Point(6, 263);
+		this->CtlSuspendStop->Name = L"CtlSuspendStop";
+		this->CtlSuspendStop->Size = System::Drawing::Size(115, 21);
+		this->CtlSuspendStop->TabIndex = 10;
+		this->CtlSuspendStop->Text = L"SuspendStop";
+		this->CtlSuspendStop->UseVisualStyleBackColor = true;
+		// 
+		// CtlSuspendPause
+		// 
+		this->CtlSuspendPause->AutoSize = true;
+		this->CtlSuspendPause->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Checked", this, L"CharStyleSuspendPause", true, 
+			System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
+		this->CtlSuspendPause->Location = System::Drawing::Point(6, 236);
+		this->CtlSuspendPause->Name = L"CtlSuspendPause";
+		this->CtlSuspendPause->Size = System::Drawing::Size(126, 21);
+		this->CtlSuspendPause->TabIndex = 9;
+		this->CtlSuspendPause->Text = L"SuspendPause";
+		this->CtlSuspendPause->UseVisualStyleBackColor = true;
 		// 
 		// CtlSmoothEdges
 		// 
@@ -1758,32 +1809,32 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->TestDaControl->OcxState = (cli::safe_cast<System::Windows::Forms::AxHost::State^  >(resources->GetObject(L"TestDaControl.OcxState")));
 		this->TestDaControl->Size = System::Drawing::Size(200, 200);
 		this->TestDaControl->TabIndex = 0;
-		this->TestDaControl->CtlShow += gcnew DoubleAgent::AxControl::CtlShowEventHandler(this, &ControlTestForm::TestDaControl_AgentShow);
-		this->TestDaControl->CtlIdleStart += gcnew DoubleAgent::AxControl::CtlIdleStartEventHandler(this, &ControlTestForm::TestDaControl_IdleStart);
-		this->TestDaControl->CtlBalloonShow += gcnew DoubleAgent::AxControl::CtlBalloonShowEventHandler(this, &ControlTestForm::TestDaControl_BalloonShow);
-		this->TestDaControl->CtlMove += gcnew DoubleAgent::AxControl::CtlMoveEventHandler(this, &ControlTestForm::TestDaControl_MoveEvent);
-		this->TestDaControl->CtlDefaultCharacterChange += gcnew DoubleAgent::AxControl::CtlDefaultCharacterChangeEventHandler(this, &ControlTestForm::TestDaControl_DefaultCharacterChange);
-		this->TestDaControl->CtlListenComplete += gcnew DoubleAgent::AxControl::CtlListenCompleteEventHandler(this, &ControlTestForm::TestDaControl_ListenComplete);
-		this->TestDaControl->CtlSpeechEnd += gcnew DoubleAgent::AxControl::CtlSpeechEndEventHandler(this, &ControlTestForm::TestDaControl_CtlSpeechEnd);
-		this->TestDaControl->CtlDragStart += gcnew DoubleAgent::AxControl::CtlDragStartEventHandler(this, &ControlTestForm::TestDaControl_PopupDragStart);
-		this->TestDaControl->CtlRequestStart += gcnew DoubleAgent::AxControl::CtlRequestStartEventHandler(this, &ControlTestForm::TestDaControl_RequestStart);
-		this->TestDaControl->CtlSize += gcnew DoubleAgent::AxControl::CtlSizeEventHandler(this, &ControlTestForm::TestDaControl_SizeEvent);
-		this->TestDaControl->CtlDeactivateInput += gcnew DoubleAgent::AxControl::CtlDeactivateInputEventHandler(this, &ControlTestForm::TestDaControl_PopupDeactivateInput);
-		this->TestDaControl->CtlListenStart += gcnew DoubleAgent::AxControl::CtlListenStartEventHandler(this, &ControlTestForm::TestDaControl_ListenStart);
-		this->TestDaControl->CtlActiveClientChange += gcnew DoubleAgent::AxControl::CtlActiveClientChangeEventHandler(this, &ControlTestForm::TestDaControl_ActiveClientChange);
-		this->TestDaControl->CtlBalloonHide += gcnew DoubleAgent::AxControl::CtlBalloonHideEventHandler(this, &ControlTestForm::TestDaControl_BalloonHide);
-		this->TestDaControl->CtlRequestComplete += gcnew DoubleAgent::AxControl::CtlRequestCompleteEventHandler(this, &ControlTestForm::TestDaControl_RequestComplete);
-		this->TestDaControl->CtlBookmark += gcnew DoubleAgent::AxControl::CtlBookmarkEventHandler(this, &ControlTestForm::TestDaControl_Bookmark);
-		this->TestDaControl->CtlDblClick += gcnew DoubleAgent::AxControl::CtlDblClickEventHandler(this, &ControlTestForm::TestDaControl_PopupDblClick);
-		this->TestDaControl->CtlSpeechStart += gcnew DoubleAgent::AxControl::CtlSpeechStartEventHandler(this, &ControlTestForm::TestDaControl_CtlSpeechStart);
-		this->TestDaControl->CtlIdleComplete += gcnew DoubleAgent::AxControl::CtlIdleCompleteEventHandler(this, &ControlTestForm::TestDaControl_IdleComplete);
-		this->TestDaControl->CtlCommand += gcnew DoubleAgent::AxControl::CtlCommandEventHandler(this, &ControlTestForm::TestDaControl_Command);
-		this->TestDaControl->CtlActivateInput += gcnew DoubleAgent::AxControl::CtlActivateInputEventHandler(this, &ControlTestForm::TestDaControl_PopupActivateInput);
-		this->TestDaControl->CtlHide += gcnew DoubleAgent::AxControl::CtlHideEventHandler(this, &ControlTestForm::TestDaControl_HideEvent);
-		this->TestDaControl->CtlDragComplete += gcnew DoubleAgent::AxControl::CtlDragCompleteEventHandler(this, &ControlTestForm::TestDaControl_PopupDragComplete);
-		this->TestDaControl->CtlAgentPropertyChange += gcnew System::EventHandler(this, &ControlTestForm::TestDaControl_AgentPropertyChange);
-		this->TestDaControl->CtlClick += gcnew DoubleAgent::AxControl::CtlClickEventHandler(this, &ControlTestForm::TestDaControl_PopupClick);
-		this->TestDaControl->CtlSpeechWord += gcnew DoubleAgent::AxControl::CtlSpeechWordEventHandler(this, &ControlTestForm::TestDaControl_CtlSpeechWord);
+		this->TestDaControl->CtlCommand += gcnew DoubleAgent::AxControl::CtlCommandEventHandler(this, &ControlClrForm::TestDaControl_Command);
+		this->TestDaControl->CtlShow += gcnew DoubleAgent::AxControl::CtlShowEventHandler(this, &ControlClrForm::TestDaControl_AgentShow);
+		this->TestDaControl->CtlListenStart += gcnew DoubleAgent::AxControl::CtlListenStartEventHandler(this, &ControlClrForm::TestDaControl_ListenStart);
+		this->TestDaControl->CtlSpeechWord += gcnew DoubleAgent::AxControl::CtlSpeechWordEventHandler(this, &ControlClrForm::TestDaControl_CtlSpeechWord);
+		this->TestDaControl->CtlDragComplete += gcnew DoubleAgent::AxControl::CtlDragCompleteEventHandler(this, &ControlClrForm::TestDaControl_PopupDragComplete);
+		this->TestDaControl->CtlDefaultCharacterChange += gcnew DoubleAgent::AxControl::CtlDefaultCharacterChangeEventHandler(this, &ControlClrForm::TestDaControl_DefaultCharacterChange);
+		this->TestDaControl->CtlDragStart += gcnew DoubleAgent::AxControl::CtlDragStartEventHandler(this, &ControlClrForm::TestDaControl_PopupDragStart);
+		this->TestDaControl->CtlSize += gcnew DoubleAgent::AxControl::CtlSizeEventHandler(this, &ControlClrForm::TestDaControl_SizeEvent);
+		this->TestDaControl->CtlActivateInput += gcnew DoubleAgent::AxControl::CtlActivateInputEventHandler(this, &ControlClrForm::TestDaControl_PopupActivateInput);
+		this->TestDaControl->CtlAgentPropertyChange += gcnew System::EventHandler(this, &ControlClrForm::TestDaControl_AgentPropertyChange);
+		this->TestDaControl->CtlBookmark += gcnew DoubleAgent::AxControl::CtlBookmarkEventHandler(this, &ControlClrForm::TestDaControl_Bookmark);
+		this->TestDaControl->CtlHide += gcnew DoubleAgent::AxControl::CtlHideEventHandler(this, &ControlClrForm::TestDaControl_HideEvent);
+		this->TestDaControl->CtlBalloonShow += gcnew DoubleAgent::AxControl::CtlBalloonShowEventHandler(this, &ControlClrForm::TestDaControl_BalloonShow);
+		this->TestDaControl->CtlRequestStart += gcnew DoubleAgent::AxControl::CtlRequestStartEventHandler(this, &ControlClrForm::TestDaControl_RequestStart);
+		this->TestDaControl->CtlIdleStart += gcnew DoubleAgent::AxControl::CtlIdleStartEventHandler(this, &ControlClrForm::TestDaControl_IdleStart);
+		this->TestDaControl->CtlIdleComplete += gcnew DoubleAgent::AxControl::CtlIdleCompleteEventHandler(this, &ControlClrForm::TestDaControl_IdleComplete);
+		this->TestDaControl->CtlDblClick += gcnew DoubleAgent::AxControl::CtlDblClickEventHandler(this, &ControlClrForm::TestDaControl_PopupDblClick);
+		this->TestDaControl->CtlListenComplete += gcnew DoubleAgent::AxControl::CtlListenCompleteEventHandler(this, &ControlClrForm::TestDaControl_ListenComplete);
+		this->TestDaControl->CtlActiveClientChange += gcnew DoubleAgent::AxControl::CtlActiveClientChangeEventHandler(this, &ControlClrForm::TestDaControl_ActiveClientChange);
+		this->TestDaControl->CtlRequestComplete += gcnew DoubleAgent::AxControl::CtlRequestCompleteEventHandler(this, &ControlClrForm::TestDaControl_RequestComplete);
+		this->TestDaControl->CtlClick += gcnew DoubleAgent::AxControl::CtlClickEventHandler(this, &ControlClrForm::TestDaControl_PopupClick);
+		this->TestDaControl->CtlMove += gcnew DoubleAgent::AxControl::CtlMoveEventHandler(this, &ControlClrForm::TestDaControl_MoveEvent);
+		this->TestDaControl->CtlBalloonHide += gcnew DoubleAgent::AxControl::CtlBalloonHideEventHandler(this, &ControlClrForm::TestDaControl_BalloonHide);
+		this->TestDaControl->CtlSpeechStart += gcnew DoubleAgent::AxControl::CtlSpeechStartEventHandler(this, &ControlClrForm::TestDaControl_CtlSpeechStart);
+		this->TestDaControl->CtlDeactivateInput += gcnew DoubleAgent::AxControl::CtlDeactivateInputEventHandler(this, &ControlClrForm::TestDaControl_PopupDeactivateInput);
+		this->TestDaControl->CtlSpeechEnd += gcnew DoubleAgent::AxControl::CtlSpeechEndEventHandler(this, &ControlClrForm::TestDaControl_CtlSpeechEnd);
 		// 
 		// RaiseRequestErrorsButton
 		// 
@@ -1806,7 +1857,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharactersPage->Location = System::Drawing::Point(4, 25);
 		this->CharactersPage->Name = L"CharactersPage";
 		this->CharactersPage->Padding = System::Windows::Forms::Padding(3);
-		this->CharactersPage->Size = System::Drawing::Size(640, 481);
+		this->CharactersPage->Size = System::Drawing::Size(640, 540);
 		this->CharactersPage->TabIndex = 0;
 		this->CharactersPage->Text = L"Characters";
 		this->CharactersPage->UseVisualStyleBackColor = true;
@@ -1835,11 +1886,11 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharacterList->RowHeadersVisible = false;
 		this->CharacterList->RowTemplate->Height = 24;
 		this->CharacterList->SelectionMode = System::Windows::Forms::DataGridViewSelectionMode::FullRowSelect;
-		this->CharacterList->Size = System::Drawing::Size(628, 436);
+		this->CharacterList->Size = System::Drawing::Size(628, 495);
 		this->CharacterList->StandardTab = true;
 		this->CharacterList->TabIndex = 2;
-		this->CharacterList->DataBindingComplete += gcnew System::Windows::Forms::DataGridViewBindingCompleteEventHandler(this, &ControlTestForm::CharacterList_DataBindingComplete);
-		this->CharacterList->SelectionChanged += gcnew System::EventHandler(this, &ControlTestForm::CharacterList_SelectionChanged);
+		this->CharacterList->DataBindingComplete += gcnew System::Windows::Forms::DataGridViewBindingCompleteEventHandler(this, &ControlClrForm::CharacterList_DataBindingComplete);
+		this->CharacterList->SelectionChanged += gcnew System::EventHandler(this, &ControlClrForm::CharacterList_SelectionChanged);
 		// 
 		// CharListID
 		// 
@@ -1935,7 +1986,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->SettingsPage->Location = System::Drawing::Point(4, 25);
 		this->SettingsPage->Name = L"SettingsPage";
 		this->SettingsPage->Padding = System::Windows::Forms::Padding(3);
-		this->SettingsPage->Size = System::Drawing::Size(640, 481);
+		this->SettingsPage->Size = System::Drawing::Size(640, 540);
 		this->SettingsPage->TabIndex = 0;
 		this->SettingsPage->Text = L"Settings";
 		this->SettingsPage->UseVisualStyleBackColor = true;
@@ -2207,7 +2258,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharacterFilesPage->Location = System::Drawing::Point(4, 25);
 		this->CharacterFilesPage->Name = L"CharacterFilesPage";
 		this->CharacterFilesPage->Padding = System::Windows::Forms::Padding(3);
-		this->CharacterFilesPage->Size = System::Drawing::Size(640, 481);
+		this->CharacterFilesPage->Size = System::Drawing::Size(640, 540);
 		this->CharacterFilesPage->TabIndex = 2;
 		this->CharacterFilesPage->Text = L"Files";
 		this->CharacterFilesPage->UseVisualStyleBackColor = true;
@@ -2375,7 +2426,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->FilesListBox->ItemHeight = 16;
 		this->FilesListBox->Location = System::Drawing::Point(6, 186);
 		this->FilesListBox->Name = L"FilesListBox";
-		this->FilesListBox->Size = System::Drawing::Size(626, 289);
+		this->FilesListBox->Size = System::Drawing::Size(626, 348);
 		this->FilesListBox->TabIndex = 13;
 		// 
 		// TTSEnginesPage
@@ -2385,7 +2436,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->TTSEnginesPage->Location = System::Drawing::Point(4, 25);
 		this->TTSEnginesPage->Name = L"TTSEnginesPage";
 		this->TTSEnginesPage->Padding = System::Windows::Forms::Padding(3);
-		this->TTSEnginesPage->Size = System::Drawing::Size(640, 481);
+		this->TTSEnginesPage->Size = System::Drawing::Size(640, 540);
 		this->TTSEnginesPage->TabIndex = 3;
 		this->TTSEnginesPage->Text = L"TTS Engines";
 		this->TTSEnginesPage->UseVisualStyleBackColor = true;
@@ -2428,7 +2479,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->TTSEngineList->RowHeadersVisible = false;
 		this->TTSEngineList->RowTemplate->Height = 24;
 		this->TTSEngineList->SelectionMode = System::Windows::Forms::DataGridViewSelectionMode::FullRowSelect;
-		this->TTSEngineList->Size = System::Drawing::Size(628, 436);
+		this->TTSEngineList->Size = System::Drawing::Size(628, 495);
 		this->TTSEngineList->StandardTab = true;
 		this->TTSEngineList->TabIndex = 1;
 		// 
@@ -2483,7 +2534,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->SREnginesPage->Location = System::Drawing::Point(4, 25);
 		this->SREnginesPage->Name = L"SREnginesPage";
 		this->SREnginesPage->Padding = System::Windows::Forms::Padding(3);
-		this->SREnginesPage->Size = System::Drawing::Size(640, 481);
+		this->SREnginesPage->Size = System::Drawing::Size(640, 540);
 		this->SREnginesPage->TabIndex = 4;
 		this->SREnginesPage->Text = L"SR Engines";
 		this->SREnginesPage->UseVisualStyleBackColor = true;
@@ -2526,7 +2577,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->SREngineList->RowHeadersVisible = false;
 		this->SREngineList->RowTemplate->Height = 24;
 		this->SREngineList->SelectionMode = System::Windows::Forms::DataGridViewSelectionMode::FullRowSelect;
-		this->SREngineList->Size = System::Drawing::Size(628, 436);
+		this->SREngineList->Size = System::Drawing::Size(628, 495);
 		this->SREngineList->StandardTab = true;
 		this->SREngineList->TabIndex = 1;
 		// 
@@ -2601,7 +2652,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->LoadButton->TabIndex = 4;
 		this->LoadButton->Text = L"Load...";
 		this->LoadButton->UseVisualStyleBackColor = true;
-		this->LoadButton->Click += gcnew System::EventHandler(this, &ControlTestForm::LoadButton_Click);
+		this->LoadButton->Click += gcnew System::EventHandler(this, &ControlClrForm::LoadButton_Click);
 		// 
 		// TabsMain
 		// 
@@ -2615,7 +2666,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->TabsMain->Location = System::Drawing::Point(218, 12);
 		this->TabsMain->Name = L"TabsMain";
 		this->TabsMain->SelectedIndex = 0;
-		this->TabsMain->Size = System::Drawing::Size(664, 551);
+		this->TabsMain->Size = System::Drawing::Size(664, 610);
 		this->TabsMain->TabIndex = 9;
 		// 
 		// CharacterMainPage
@@ -2624,7 +2675,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharacterMainPage->Location = System::Drawing::Point(4, 25);
 		this->CharacterMainPage->Name = L"CharacterMainPage";
 		this->CharacterMainPage->Padding = System::Windows::Forms::Padding(3);
-		this->CharacterMainPage->Size = System::Drawing::Size(656, 522);
+		this->CharacterMainPage->Size = System::Drawing::Size(656, 581);
 		this->CharacterMainPage->TabIndex = 0;
 		this->CharacterMainPage->Text = L"Character";
 		this->CharacterMainPage->UseVisualStyleBackColor = true;
@@ -2641,7 +2692,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->TabsCharacter->Location = System::Drawing::Point(6, 6);
 		this->TabsCharacter->Name = L"TabsCharacter";
 		this->TabsCharacter->SelectedIndex = 0;
-		this->TabsCharacter->Size = System::Drawing::Size(644, 510);
+		this->TabsCharacter->Size = System::Drawing::Size(644, 569);
 		this->TabsCharacter->TabIndex = 0;
 		// 
 		// CharacterPage
@@ -2666,6 +2717,9 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharacterPage->Controls->Add(this->CharAutoPopupMenu);
 		this->CharacterPage->Controls->Add(this->CharIdleState);
 		this->CharacterPage->Controls->Add(this->CharIdleEnabled);
+		this->CharacterPage->Controls->Add(this->CharSuspendHide);
+		this->CharacterPage->Controls->Add(this->CharSuspendStop);
+		this->CharacterPage->Controls->Add(this->CharSuspendPause);
 		this->CharacterPage->Controls->Add(this->CharSoundEffects);
 		this->CharacterPage->Controls->Add(this->CharSmoothEdges);
 		this->CharacterPage->Controls->Add(this->CharSmoothed);
@@ -2707,7 +2761,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharacterPage->Location = System::Drawing::Point(4, 25);
 		this->CharacterPage->Name = L"CharacterPage";
 		this->CharacterPage->Padding = System::Windows::Forms::Padding(3);
-		this->CharacterPage->Size = System::Drawing::Size(636, 481);
+		this->CharacterPage->Size = System::Drawing::Size(636, 540);
 		this->CharacterPage->TabIndex = 0;
 		this->CharacterPage->Text = L"Character";
 		this->CharacterPage->UseVisualStyleBackColor = true;
@@ -2715,13 +2769,13 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		// CharGenerateIcon
 		// 
 		this->CharGenerateIcon->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
-		this->CharGenerateIcon->Location = System::Drawing::Point(484, 272);
+		this->CharGenerateIcon->Location = System::Drawing::Point(484, 331);
 		this->CharGenerateIcon->Name = L"CharGenerateIcon";
 		this->CharGenerateIcon->Size = System::Drawing::Size(142, 26);
-		this->CharGenerateIcon->TabIndex = 31;
+		this->CharGenerateIcon->TabIndex = 36;
 		this->CharGenerateIcon->Text = L"GenerateIcon";
 		this->CharGenerateIcon->UseVisualStyleBackColor = true;
-		this->CharGenerateIcon->Click += gcnew System::EventHandler(this, &ControlTestForm::CharGenerateIcon_Click);
+		this->CharGenerateIcon->Click += gcnew System::EventHandler(this, &ControlClrForm::CharGenerateIcon_Click);
 		// 
 		// CharHeightDefault
 		// 
@@ -2730,14 +2784,14 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
 		this->CharHeightDefault->Enabled = false;
 		this->CharHeightDefault->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"CharHeightDefault.Image")));
-		this->CharHeightDefault->Location = System::Drawing::Point(595, 345);
+		this->CharHeightDefault->Location = System::Drawing::Point(595, 404);
 		this->CharHeightDefault->Name = L"CharHeightDefault";
 		this->CharHeightDefault->Padding = System::Windows::Forms::Padding(3);
 		this->CharHeightDefault->Size = System::Drawing::Size(22, 22);
-		this->CharHeightDefault->TabIndex = 44;
+		this->CharHeightDefault->TabIndex = 51;
 		this->CharHeightDefault->UseMnemonic = false;
 		this->CharHeightDefault->UseVisualStyleBackColor = true;
-		this->CharHeightDefault->Click += gcnew System::EventHandler(this, &ControlTestForm::CharHeightDefault_Click);
+		this->CharHeightDefault->Click += gcnew System::EventHandler(this, &ControlClrForm::CharHeightDefault_Click);
 		// 
 		// CharWidthDefault
 		// 
@@ -2746,14 +2800,14 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
 		this->CharWidthDefault->Enabled = false;
 		this->CharWidthDefault->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"CharWidthDefault.Image")));
-		this->CharWidthDefault->Location = System::Drawing::Point(431, 346);
+		this->CharWidthDefault->Location = System::Drawing::Point(431, 405);
 		this->CharWidthDefault->Name = L"CharWidthDefault";
 		this->CharWidthDefault->Padding = System::Windows::Forms::Padding(3);
 		this->CharWidthDefault->Size = System::Drawing::Size(22, 22);
-		this->CharWidthDefault->TabIndex = 42;
+		this->CharWidthDefault->TabIndex = 48;
 		this->CharWidthDefault->UseMnemonic = false;
 		this->CharWidthDefault->UseVisualStyleBackColor = true;
-		this->CharWidthDefault->Click += gcnew System::EventHandler(this, &ControlTestForm::CharWidthDefault_Click);
+		this->CharWidthDefault->Click += gcnew System::EventHandler(this, &ControlClrForm::CharWidthDefault_Click);
 		// 
 		// CharHeight
 		// 
@@ -2763,12 +2817,12 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharHeight->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
 		this->CharHeight->Increment = System::Decimal(gcnew cli::array< System::Int32 >(4) {5, 0, 0, 0});
-		this->CharHeight->Location = System::Drawing::Point(514, 346);
+		this->CharHeight->Location = System::Drawing::Point(514, 405);
 		this->CharHeight->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {500, 0, 0, 0});
 		this->CharHeight->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) {20, 0, 0, 0});
 		this->CharHeight->Name = L"CharHeight";
 		this->CharHeight->Size = System::Drawing::Size(75, 22);
-		this->CharHeight->TabIndex = 43;
+		this->CharHeight->TabIndex = 50;
 		this->CharHeight->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) {20, 0, 0, 0});
 		// 
 		// CharWidth
@@ -2778,12 +2832,12 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharWidth->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", true, 
 			System::Windows::Forms::DataSourceUpdateMode::Never)));
 		this->CharWidth->Increment = System::Decimal(gcnew cli::array< System::Int32 >(4) {5, 0, 0, 0});
-		this->CharWidth->Location = System::Drawing::Point(347, 346);
+		this->CharWidth->Location = System::Drawing::Point(347, 405);
 		this->CharWidth->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {500, 0, 0, 0});
 		this->CharWidth->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) {20, 0, 0, 0});
 		this->CharWidth->Name = L"CharWidth";
 		this->CharWidth->Size = System::Drawing::Size(75, 22);
-		this->CharWidth->TabIndex = 41;
+		this->CharWidth->TabIndex = 47;
 		this->CharWidth->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) {20, 0, 0, 0});
 		// 
 		// CharTop
@@ -2793,11 +2847,11 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharTop->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", true, 
 			System::Windows::Forms::DataSourceUpdateMode::Never)));
 		this->CharTop->Increment = System::Decimal(gcnew cli::array< System::Int32 >(4) {5, 0, 0, 0});
-		this->CharTop->Location = System::Drawing::Point(216, 346);
+		this->CharTop->Location = System::Drawing::Point(216, 405);
 		this->CharTop->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {2000, 0, 0, 0});
 		this->CharTop->Name = L"CharTop";
 		this->CharTop->Size = System::Drawing::Size(75, 22);
-		this->CharTop->TabIndex = 39;
+		this->CharTop->TabIndex = 45;
 		// 
 		// CharLeft
 		// 
@@ -2806,11 +2860,11 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharLeft->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", true, 
 			System::Windows::Forms::DataSourceUpdateMode::Never)));
 		this->CharLeft->Increment = System::Decimal(gcnew cli::array< System::Int32 >(4) {5, 0, 0, 0});
-		this->CharLeft->Location = System::Drawing::Point(96, 346);
+		this->CharLeft->Location = System::Drawing::Point(96, 405);
 		this->CharLeft->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {2000, 0, 0, 0});
 		this->CharLeft->Name = L"CharLeft";
 		this->CharLeft->Size = System::Drawing::Size(75, 22);
-		this->CharLeft->TabIndex = 37;
+		this->CharLeft->TabIndex = 43;
 		// 
 		// CharMoveCause
 		// 
@@ -2821,10 +2875,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharMoveCause->DisplayMember = L"MoveCause";
 		this->CharMoveCause->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
 		this->CharMoveCause->FormattingEnabled = true;
-		this->CharMoveCause->Location = System::Drawing::Point(297, 451);
+		this->CharMoveCause->Location = System::Drawing::Point(297, 510);
 		this->CharMoveCause->Name = L"CharMoveCause";
 		this->CharMoveCause->Size = System::Drawing::Size(330, 24);
-		this->CharMoveCause->TabIndex = 52;
+		this->CharMoveCause->TabIndex = 59;
 		this->CharMoveCause->TabStop = false;
 		// 
 		// CharVisibilityCause
@@ -2836,10 +2890,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharVisibilityCause->DisplayMember = L"VisibilityCause";
 		this->CharVisibilityCause->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
 		this->CharVisibilityCause->FormattingEnabled = true;
-		this->CharVisibilityCause->Location = System::Drawing::Point(300, 404);
+		this->CharVisibilityCause->Location = System::Drawing::Point(300, 463);
 		this->CharVisibilityCause->Name = L"CharVisibilityCause";
 		this->CharVisibilityCause->Size = System::Drawing::Size(327, 24);
-		this->CharVisibilityCause->TabIndex = 50;
+		this->CharVisibilityCause->TabIndex = 57;
 		this->CharVisibilityCause->TabStop = false;
 		// 
 		// CharListeningStatus
@@ -2851,10 +2905,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharListeningStatus->DisplayMember = L"ListeningStatus";
 		this->CharListeningStatus->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
 		this->CharListeningStatus->FormattingEnabled = true;
-		this->CharListeningStatus->Location = System::Drawing::Point(6, 451);
+		this->CharListeningStatus->Location = System::Drawing::Point(6, 510);
 		this->CharListeningStatus->Name = L"CharListeningStatus";
 		this->CharListeningStatus->Size = System::Drawing::Size(285, 24);
-		this->CharListeningStatus->TabIndex = 48;
+		this->CharListeningStatus->TabIndex = 55;
 		this->CharListeningStatus->TabStop = false;
 		// 
 		// CharActiveState
@@ -2866,10 +2920,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharActiveState->DisplayMember = L"ActiveState";
 		this->CharActiveState->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
 		this->CharActiveState->FormattingEnabled = true;
-		this->CharActiveState->Location = System::Drawing::Point(6, 404);
+		this->CharActiveState->Location = System::Drawing::Point(6, 463);
 		this->CharActiveState->Name = L"CharActiveState";
 		this->CharActiveState->Size = System::Drawing::Size(285, 24);
-		this->CharActiveState->TabIndex = 46;
+		this->CharActiveState->TabIndex = 53;
 		this->CharActiveState->TabStop = false;
 		// 
 		// CharHasOtherClients
@@ -2882,10 +2936,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
 		this->CharHasOtherClients->Enabled = false;
 		this->CharHasOtherClients->ForeColor = System::Drawing::SystemColors::GrayText;
-		this->CharHasOtherClients->Location = System::Drawing::Point(239, 238);
+		this->CharHasOtherClients->Location = System::Drawing::Point(258, 271);
 		this->CharHasOtherClients->Name = L"CharHasOtherClients";
 		this->CharHasOtherClients->Size = System::Drawing::Size(133, 21);
-		this->CharHasOtherClients->TabIndex = 25;
+		this->CharHasOtherClients->TabIndex = 26;
 		this->CharHasOtherClients->TabStop = false;
 		this->CharHasOtherClients->Text = L"HasOtherClients";
 		this->CharHasOtherClients->UseVisualStyleBackColor = true;
@@ -2900,10 +2954,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			System::Windows::Forms::DataSourceUpdateMode::Never)));
 		this->CharHasIcon->Enabled = false;
 		this->CharHasIcon->ForeColor = System::Drawing::SystemColors::GrayText;
-		this->CharHasIcon->Location = System::Drawing::Point(9, 276);
+		this->CharHasIcon->Location = System::Drawing::Point(9, 335);
 		this->CharHasIcon->Name = L"CharHasIcon";
 		this->CharHasIcon->Size = System::Drawing::Size(81, 21);
-		this->CharHasIcon->TabIndex = 28;
+		this->CharHasIcon->TabIndex = 33;
 		this->CharHasIcon->TabStop = false;
 		this->CharHasIcon->Text = L"HasIcon";
 		this->CharHasIcon->UseVisualStyleBackColor = true;
@@ -2916,10 +2970,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
 		this->CharAutoPopupMenu->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
-		this->CharAutoPopupMenu->Location = System::Drawing::Point(239, 211);
+		this->CharAutoPopupMenu->Location = System::Drawing::Point(258, 244);
 		this->CharAutoPopupMenu->Name = L"CharAutoPopupMenu";
 		this->CharAutoPopupMenu->Size = System::Drawing::Size(135, 21);
-		this->CharAutoPopupMenu->TabIndex = 24;
+		this->CharAutoPopupMenu->TabIndex = 23;
 		this->CharAutoPopupMenu->Text = L"AutoPopupMenu";
 		this->CharAutoPopupMenu->UseVisualStyleBackColor = true;
 		// 
@@ -2933,10 +2987,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
 		this->CharIdleState->Enabled = false;
 		this->CharIdleState->ForeColor = System::Drawing::SystemColors::GrayText;
-		this->CharIdleState->Location = System::Drawing::Point(129, 238);
+		this->CharIdleState->Location = System::Drawing::Point(137, 271);
 		this->CharIdleState->Name = L"CharIdleState";
 		this->CharIdleState->Size = System::Drawing::Size(85, 21);
-		this->CharIdleState->TabIndex = 26;
+		this->CharIdleState->TabIndex = 25;
 		this->CharIdleState->TabStop = false;
 		this->CharIdleState->Text = L"IdleState";
 		this->CharIdleState->UseVisualStyleBackColor = true;
@@ -2949,10 +3003,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
 		this->CharIdleEnabled->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
-		this->CharIdleEnabled->Location = System::Drawing::Point(129, 211);
+		this->CharIdleEnabled->Location = System::Drawing::Point(137, 244);
 		this->CharIdleEnabled->Name = L"CharIdleEnabled";
 		this->CharIdleEnabled->Size = System::Drawing::Size(104, 21);
-		this->CharIdleEnabled->TabIndex = 23;
+		this->CharIdleEnabled->TabIndex = 22;
 		this->CharIdleEnabled->Text = L"IdleEnabled";
 		this->CharIdleEnabled->UseVisualStyleBackColor = true;
 		// 
@@ -2964,10 +3018,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
 		this->CharSoundEffects->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
-		this->CharSoundEffects->Location = System::Drawing::Point(9, 211);
+		this->CharSoundEffects->Location = System::Drawing::Point(9, 244);
 		this->CharSoundEffects->Name = L"CharSoundEffects";
 		this->CharSoundEffects->Size = System::Drawing::Size(114, 21);
-		this->CharSoundEffects->TabIndex = 22;
+		this->CharSoundEffects->TabIndex = 21;
 		this->CharSoundEffects->Text = L"SoundEffects";
 		this->CharSoundEffects->UseVisualStyleBackColor = true;
 		// 
@@ -2981,10 +3035,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
 		this->CharSmoothEdges->Enabled = false;
 		this->CharSmoothEdges->ForeColor = System::Drawing::SystemColors::GrayText;
-		this->CharSmoothEdges->Location = System::Drawing::Point(484, 238);
+		this->CharSmoothEdges->Location = System::Drawing::Point(484, 271);
 		this->CharSmoothEdges->Name = L"CharSmoothEdges";
 		this->CharSmoothEdges->Size = System::Drawing::Size(118, 21);
-		this->CharSmoothEdges->TabIndex = 30;
+		this->CharSmoothEdges->TabIndex = 31;
 		this->CharSmoothEdges->TabStop = false;
 		this->CharSmoothEdges->Text = L"SmoothEdges";
 		this->CharSmoothEdges->UseVisualStyleBackColor = true;
@@ -2999,7 +3053,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
 		this->CharSmoothed->Enabled = false;
 		this->CharSmoothed->ForeColor = System::Drawing::SystemColors::GrayText;
-		this->CharSmoothed->Location = System::Drawing::Point(484, 211);
+		this->CharSmoothed->Location = System::Drawing::Point(484, 244);
 		this->CharSmoothed->Name = L"CharSmoothed";
 		this->CharSmoothed->Size = System::Drawing::Size(94, 21);
 		this->CharSmoothed->TabIndex = 30;
@@ -3017,10 +3071,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
 		this->CharIconVisible->Enabled = false;
 		this->CharIconVisible->ForeColor = System::Drawing::SystemColors::GrayText;
-		this->CharIconVisible->Location = System::Drawing::Point(239, 276);
+		this->CharIconVisible->Location = System::Drawing::Point(258, 335);
 		this->CharIconVisible->Name = L"CharIconVisible";
 		this->CharIconVisible->Size = System::Drawing::Size(97, 21);
-		this->CharIconVisible->TabIndex = 30;
+		this->CharIconVisible->TabIndex = 35;
 		this->CharIconVisible->TabStop = false;
 		this->CharIconVisible->Text = L"IconVisible";
 		this->CharIconVisible->UseVisualStyleBackColor = true;
@@ -3033,10 +3087,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
 		this->CharIconShown->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
-		this->CharIconShown->Location = System::Drawing::Point(129, 276);
+		this->CharIconShown->Location = System::Drawing::Point(137, 335);
 		this->CharIconShown->Name = L"CharIconShown";
 		this->CharIconShown->Size = System::Drawing::Size(98, 21);
-		this->CharIconShown->TabIndex = 29;
+		this->CharIconShown->TabIndex = 34;
 		this->CharIconShown->Text = L"IconShown";
 		this->CharIconShown->UseVisualStyleBackColor = true;
 		// 
@@ -3049,10 +3103,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			System::Windows::Forms::DataSourceUpdateMode::Never)));
 		this->CharVisible->Enabled = false;
 		this->CharVisible->ForeColor = System::Drawing::SystemColors::GrayText;
-		this->CharVisible->Location = System::Drawing::Point(9, 238);
+		this->CharVisible->Location = System::Drawing::Point(9, 271);
 		this->CharVisible->Name = L"CharVisible";
 		this->CharVisible->Size = System::Drawing::Size(71, 21);
-		this->CharVisible->TabIndex = 21;
+		this->CharVisible->TabIndex = 24;
 		this->CharVisible->TabStop = false;
 		this->CharVisible->Text = L"Visible";
 		this->CharVisible->UseVisualStyleBackColor = true;
@@ -3064,10 +3118,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharIconTip->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Text", this->CharacterBinding, L"IconTip", true)));
 		this->CharIconTip->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
-		this->CharIconTip->Location = System::Drawing::Point(431, 303);
+		this->CharIconTip->Location = System::Drawing::Point(431, 362);
 		this->CharIconTip->Name = L"CharIconTip";
 		this->CharIconTip->Size = System::Drawing::Size(196, 22);
-		this->CharIconTip->TabIndex = 35;
+		this->CharIconTip->TabIndex = 40;
 		// 
 		// CharFilePath
 		// 
@@ -3078,7 +3132,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharFilePath->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
 		this->CharFilePath->ForeColor = System::Drawing::SystemColors::GrayText;
-		this->CharFilePath->Location = System::Drawing::Point(320, 118);
+		this->CharFilePath->Location = System::Drawing::Point(320, 151);
 		this->CharFilePath->Name = L"CharFilePath";
 		this->CharFilePath->ReadOnly = true;
 		this->CharFilePath->Size = System::Drawing::Size(307, 22);
@@ -3092,7 +3146,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharSRModeID->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Text", this->CharacterBinding, L"SRModeID", true)));
 		this->CharSRModeID->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
-		this->CharSRModeID->Location = System::Drawing::Point(95, 174);
+		this->CharSRModeID->Location = System::Drawing::Point(95, 207);
 		this->CharSRModeID->Name = L"CharSRModeID";
 		this->CharSRModeID->Size = System::Drawing::Size(532, 22);
 		this->CharSRModeID->TabIndex = 19;
@@ -3105,7 +3159,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			true)));
 		this->CharTTSModeID->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
-		this->CharTTSModeID->Location = System::Drawing::Point(95, 146);
+		this->CharTTSModeID->Location = System::Drawing::Point(95, 179);
 		this->CharTTSModeID->Name = L"CharTTSModeID";
 		this->CharTTSModeID->Size = System::Drawing::Size(532, 22);
 		this->CharTTSModeID->TabIndex = 17;
@@ -3119,11 +3173,11 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharIconIdentity->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
 		this->CharIconIdentity->ForeColor = System::Drawing::SystemColors::GrayText;
-		this->CharIconIdentity->Location = System::Drawing::Point(96, 303);
+		this->CharIconIdentity->Location = System::Drawing::Point(96, 362);
 		this->CharIconIdentity->Name = L"CharIconIdentity";
 		this->CharIconIdentity->ReadOnly = true;
 		this->CharIconIdentity->Size = System::Drawing::Size(269, 22);
-		this->CharIconIdentity->TabIndex = 33;
+		this->CharIconIdentity->TabIndex = 38;
 		this->CharIconIdentity->TabStop = false;
 		// 
 		// CharFileName
@@ -3134,7 +3188,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharFileName->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
 		this->CharFileName->ForeColor = System::Drawing::SystemColors::GrayText;
-		this->CharFileName->Location = System::Drawing::Point(95, 118);
+		this->CharFileName->Location = System::Drawing::Point(95, 151);
 		this->CharFileName->Name = L"CharFileName";
 		this->CharFileName->ReadOnly = true;
 		this->CharFileName->Size = System::Drawing::Size(154, 22);
@@ -3153,7 +3207,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharDescription->Location = System::Drawing::Point(95, 72);
 		this->CharDescription->Multiline = true;
 		this->CharDescription->Name = L"CharDescription";
-		this->CharDescription->Size = System::Drawing::Size(532, 40);
+		this->CharDescription->Size = System::Drawing::Size(532, 72);
 		this->CharDescription->TabIndex = 11;
 		// 
 		// CharLanguageID
@@ -3266,7 +3320,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->PageActions->Location = System::Drawing::Point(4, 25);
 		this->PageActions->Name = L"PageActions";
 		this->PageActions->Padding = System::Windows::Forms::Padding(3);
-		this->PageActions->Size = System::Drawing::Size(636, 481);
+		this->PageActions->Size = System::Drawing::Size(636, 540);
 		this->PageActions->TabIndex = 4;
 		this->PageActions->Text = L"Actions";
 		this->PageActions->UseVisualStyleBackColor = true;
@@ -3284,9 +3338,9 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharPlayAnimation->ItemHeight = 16;
 		this->CharPlayAnimation->Location = System::Drawing::Point(152, 314);
 		this->CharPlayAnimation->Name = L"CharPlayAnimation";
-		this->CharPlayAnimation->Size = System::Drawing::Size(478, 161);
+		this->CharPlayAnimation->Size = System::Drawing::Size(478, 220);
 		this->CharPlayAnimation->TabIndex = 28;
-		this->CharPlayAnimation->DoubleClick += gcnew System::EventHandler(this, &ControlTestForm::CharPlayAnimation_DoubleClick);
+		this->CharPlayAnimation->DoubleClick += gcnew System::EventHandler(this, &ControlClrForm::CharPlayAnimation_DoubleClick);
 		// 
 		// AnimationsBinding
 		// 
@@ -3421,13 +3475,13 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharStopAll->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
 		this->CharStopAll->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
-		this->CharStopAll->Location = System::Drawing::Point(6, 443);
+		this->CharStopAll->Location = System::Drawing::Point(6, 502);
 		this->CharStopAll->Name = L"CharStopAll";
 		this->CharStopAll->Size = System::Drawing::Size(120, 32);
 		this->CharStopAll->TabIndex = 29;
 		this->CharStopAll->Text = L"StopAll";
 		this->CharStopAll->UseVisualStyleBackColor = true;
-		this->CharStopAll->Click += gcnew System::EventHandler(this, &ControlTestForm::CharStopAll_Click);
+		this->CharStopAll->Click += gcnew System::EventHandler(this, &ControlClrForm::CharStopAll_Click);
 		// 
 		// CharPlay
 		// 
@@ -3439,7 +3493,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharPlay->TabIndex = 27;
 		this->CharPlay->Text = L"Play";
 		this->CharPlay->UseVisualStyleBackColor = true;
-		this->CharPlay->Click += gcnew System::EventHandler(this, &ControlTestForm::CharPlay_Click);
+		this->CharPlay->Click += gcnew System::EventHandler(this, &ControlClrForm::CharPlay_Click);
 		// 
 		// CharShowPopupMenu
 		// 
@@ -3451,7 +3505,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharShowPopupMenu->TabIndex = 22;
 		this->CharShowPopupMenu->Text = L"ShowMenu";
 		this->CharShowPopupMenu->UseVisualStyleBackColor = true;
-		this->CharShowPopupMenu->Click += gcnew System::EventHandler(this, &ControlTestForm::CharShowPopupMenu_Click);
+		this->CharShowPopupMenu->Click += gcnew System::EventHandler(this, &ControlClrForm::CharShowPopupMenu_Click);
 		// 
 		// CharListenStop
 		// 
@@ -3464,7 +3518,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharListenStop->TabIndex = 21;
 		this->CharListenStop->Text = L"Stop Listening";
 		this->CharListenStop->UseVisualStyleBackColor = true;
-		this->CharListenStop->Click += gcnew System::EventHandler(this, &ControlTestForm::CharListenStop_Click);
+		this->CharListenStop->Click += gcnew System::EventHandler(this, &ControlClrForm::CharListenStop_Click);
 		// 
 		// CharListen
 		// 
@@ -3476,7 +3530,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharListen->TabIndex = 20;
 		this->CharListen->Text = L"Listen";
 		this->CharListen->UseVisualStyleBackColor = true;
-		this->CharListen->Click += gcnew System::EventHandler(this, &ControlTestForm::CharListen_Click);
+		this->CharListen->Click += gcnew System::EventHandler(this, &ControlClrForm::CharListen_Click);
 		// 
 		// CharThink
 		// 
@@ -3488,7 +3542,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharThink->TabIndex = 17;
 		this->CharThink->Text = L"Think";
 		this->CharThink->UseVisualStyleBackColor = true;
-		this->CharThink->Click += gcnew System::EventHandler(this, &ControlTestForm::CharThink_Click);
+		this->CharThink->Click += gcnew System::EventHandler(this, &ControlClrForm::CharThink_Click);
 		// 
 		// CharSpeak
 		// 
@@ -3500,7 +3554,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharSpeak->TabIndex = 14;
 		this->CharSpeak->Text = L"Speak";
 		this->CharSpeak->UseVisualStyleBackColor = true;
-		this->CharSpeak->Click += gcnew System::EventHandler(this, &ControlTestForm::CharSpeak_Click);
+		this->CharSpeak->Click += gcnew System::EventHandler(this, &ControlClrForm::CharSpeak_Click);
 		// 
 		// CharGestureAt
 		// 
@@ -3512,7 +3566,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharGestureAt->TabIndex = 9;
 		this->CharGestureAt->Text = L"GestureAt";
 		this->CharGestureAt->UseVisualStyleBackColor = true;
-		this->CharGestureAt->Click += gcnew System::EventHandler(this, &ControlTestForm::CharGestureAt_Click);
+		this->CharGestureAt->Click += gcnew System::EventHandler(this, &ControlClrForm::CharGestureAt_Click);
 		// 
 		// CharMoveTo
 		// 
@@ -3524,7 +3578,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharMoveTo->TabIndex = 4;
 		this->CharMoveTo->Text = L"MoveTo";
 		this->CharMoveTo->UseVisualStyleBackColor = true;
-		this->CharMoveTo->Click += gcnew System::EventHandler(this, &ControlTestForm::CharMoveTo_Click);
+		this->CharMoveTo->Click += gcnew System::EventHandler(this, &ControlClrForm::CharMoveTo_Click);
 		// 
 		// CharHide
 		// 
@@ -3536,7 +3590,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharHide->TabIndex = 2;
 		this->CharHide->Text = L"Hide";
 		this->CharHide->UseVisualStyleBackColor = true;
-		this->CharHide->Click += gcnew System::EventHandler(this, &ControlTestForm::CharHide_Click);
+		this->CharHide->Click += gcnew System::EventHandler(this, &ControlClrForm::CharHide_Click);
 		// 
 		// CharShow
 		// 
@@ -3548,7 +3602,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharShow->TabIndex = 0;
 		this->CharShow->Text = L"Show";
 		this->CharShow->UseVisualStyleBackColor = true;
-		this->CharShow->Click += gcnew System::EventHandler(this, &ControlTestForm::CharShow_Click);
+		this->CharShow->Click += gcnew System::EventHandler(this, &ControlClrForm::CharShow_Click);
 		// 
 		// PageBalloon
 		// 
@@ -3583,7 +3637,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->PageBalloon->Location = System::Drawing::Point(4, 25);
 		this->PageBalloon->Name = L"PageBalloon";
 		this->PageBalloon->Padding = System::Windows::Forms::Padding(3);
-		this->PageBalloon->Size = System::Drawing::Size(636, 481);
+		this->PageBalloon->Size = System::Drawing::Size(636, 540);
 		this->PageBalloon->TabIndex = 1;
 		this->PageBalloon->Text = L"Balloon";
 		this->PageBalloon->UseVisualStyleBackColor = true;
@@ -3846,7 +3900,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->PageCommands->Location = System::Drawing::Point(4, 25);
 		this->PageCommands->Name = L"PageCommands";
 		this->PageCommands->Padding = System::Windows::Forms::Padding(3);
-		this->PageCommands->Size = System::Drawing::Size(636, 481);
+		this->PageCommands->Size = System::Drawing::Size(636, 540);
 		this->PageCommands->TabIndex = 2;
 		this->PageCommands->Text = L"Commands";
 		this->PageCommands->UseVisualStyleBackColor = true;
@@ -3873,7 +3927,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharCommands->RowHeadersWidthSizeMode = System::Windows::Forms::DataGridViewRowHeadersWidthSizeMode::DisableResizing;
 		this->CharCommands->RowTemplate->Height = 24;
 		this->CharCommands->SelectionMode = System::Windows::Forms::DataGridViewSelectionMode::FullRowSelect;
-		this->CharCommands->Size = System::Drawing::Size(619, 313);
+		this->CharCommands->Size = System::Drawing::Size(619, 372);
 		this->CharCommands->TabIndex = 14;
 		// 
 		// CharCommandsNameCol
@@ -4059,7 +4113,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->ControlMainPage->Location = System::Drawing::Point(4, 25);
 		this->ControlMainPage->Name = L"ControlMainPage";
 		this->ControlMainPage->Padding = System::Windows::Forms::Padding(3);
-		this->ControlMainPage->Size = System::Drawing::Size(656, 522);
+		this->ControlMainPage->Size = System::Drawing::Size(656, 581);
 		this->ControlMainPage->TabIndex = 1;
 		this->ControlMainPage->Text = L"Control";
 		this->ControlMainPage->UseVisualStyleBackColor = true;
@@ -4087,7 +4141,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->EventsGridClear->TabIndex = 0;
 		this->EventsGridClear->Text = L"Clear";
 		this->EventsGridClear->UseVisualStyleBackColor = true;
-		this->EventsGridClear->Click += gcnew System::EventHandler(this, &ControlTestForm::EventsGridClear_Click);
+		this->EventsGridClear->Click += gcnew System::EventHandler(this, &ControlClrForm::EventsGridClear_Click);
 		// 
 		// EventsGrid
 		// 
@@ -4141,7 +4195,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		// 
 		// EventsBinding
 		// 
-		this->EventsBinding->ListChanged += gcnew System::ComponentModel::ListChangedEventHandler(this, &ControlTestForm::EventsBindingSource_ListChanged);
+		this->EventsBinding->ListChanged += gcnew System::ComponentModel::ListChangedEventHandler(this, &ControlClrForm::EventsBindingSource_ListChanged);
 		// 
 		// UnloadButton
 		// 
@@ -4152,7 +4206,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->UnloadButton->TabIndex = 5;
 		this->UnloadButton->Text = L"Unload";
 		this->UnloadButton->UseVisualStyleBackColor = true;
-		this->UnloadButton->Click += gcnew System::EventHandler(this, &ControlTestForm::UnloadButton_Click);
+		this->UnloadButton->Click += gcnew System::EventHandler(this, &ControlClrForm::UnloadButton_Click);
 		// 
 		// SetCurrentButton
 		// 
@@ -4163,18 +4217,18 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->SetCurrentButton->TabIndex = 6;
 		this->SetCurrentButton->Text = L"Select";
 		this->SetCurrentButton->UseVisualStyleBackColor = true;
-		this->SetCurrentButton->Click += gcnew System::EventHandler(this, &ControlTestForm::SetCurrentButton_Click);
+		this->SetCurrentButton->Click += gcnew System::EventHandler(this, &ControlClrForm::SetCurrentButton_Click);
 		// 
 		// CollectButton
 		// 
 		this->CollectButton->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
-		this->CollectButton->Location = System::Drawing::Point(12, 509);
+		this->CollectButton->Location = System::Drawing::Point(12, 568);
 		this->CollectButton->Name = L"CollectButton";
 		this->CollectButton->Size = System::Drawing::Size(108, 54);
 		this->CollectButton->TabIndex = 8;
 		this->CollectButton->Text = L"Collect garbage";
 		this->CollectButton->UseVisualStyleBackColor = true;
-		this->CollectButton->Click += gcnew System::EventHandler(this, &ControlTestForm::CollectButton_Click);
+		this->CollectButton->Click += gcnew System::EventHandler(this, &ControlClrForm::CollectButton_Click);
 		// 
 		// SetContainedButton
 		// 
@@ -4185,14 +4239,59 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->SetContainedButton->TabIndex = 7;
 		this->SetContainedButton->Text = L"Contain";
 		this->SetContainedButton->UseVisualStyleBackColor = true;
-		this->SetContainedButton->Click += gcnew System::EventHandler(this, &ControlTestForm::SetContainedButton_Click);
+		this->SetContainedButton->Click += gcnew System::EventHandler(this, &ControlClrForm::SetContainedButton_Click);
 		// 
-		// ControlTestForm
+		// CharSuspendPause
+		// 
+		this->CharSuspendPause->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
+		this->CharSuspendPause->AutoSize = true;
+		this->CharSuspendPause->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Checked", this->CharacterBinding, L"SuspendPause", 
+			true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
+		this->CharSuspendPause->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->CharSuspendPause->Location = System::Drawing::Point(9, 298);
+		this->CharSuspendPause->Name = L"CharSuspendPause";
+		this->CharSuspendPause->Size = System::Drawing::Size(126, 21);
+		this->CharSuspendPause->TabIndex = 27;
+		this->CharSuspendPause->Text = L"SuspendPause";
+		this->CharSuspendPause->UseVisualStyleBackColor = true;
+		// 
+		// CharSuspendStop
+		// 
+		this->CharSuspendStop->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
+		this->CharSuspendStop->AutoSize = true;
+		this->CharSuspendStop->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Checked", this->CharacterBinding, L"SuspendStop", 
+			true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
+		this->CharSuspendStop->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->CharSuspendStop->Location = System::Drawing::Point(137, 298);
+		this->CharSuspendStop->Name = L"CharSuspendStop";
+		this->CharSuspendStop->Size = System::Drawing::Size(115, 21);
+		this->CharSuspendStop->TabIndex = 28;
+		this->CharSuspendStop->Text = L"SuspendStop";
+		this->CharSuspendStop->UseVisualStyleBackColor = true;
+		// 
+		// CharSuspendHide
+		// 
+		this->CharSuspendHide->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
+		this->CharSuspendHide->AutoSize = true;
+		this->CharSuspendHide->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Checked", this->CharacterBinding, L"SuspendHide", 
+			true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
+		this->CharSuspendHide->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->CharSuspendHide->Location = System::Drawing::Point(258, 298);
+		this->CharSuspendHide->Name = L"CharSuspendHide";
+		this->CharSuspendHide->Size = System::Drawing::Size(115, 21);
+		this->CharSuspendHide->TabIndex = 29;
+		this->CharSuspendHide->Text = L"SuspendHide";
+		this->CharSuspendHide->UseVisualStyleBackColor = true;
+		// 
+		// ControlClrForm
 		// 
 		this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 		this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 		this->AutoValidate = System::Windows::Forms::AutoValidate::EnableAllowFocusChange;
-		this->ClientSize = System::Drawing::Size(894, 575);
+		this->ClientSize = System::Drawing::Size(894, 634);
 		this->Controls->Add(this->CollectButton);
 		this->Controls->Add(this->TabsMain);
 		this->Controls->Add(this->SetContainedButton);
@@ -4205,11 +4304,11 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Location", ::settings::Default, L"Location", true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
 		this->Icon = (cli::safe_cast<System::Drawing::Icon^  >(resources->GetObject(L"$this.Icon")));
 		this->MinimumSize = System::Drawing::Size(912, 620);
-		this->Name = L"ControlTestForm";
+		this->Name = L"ControlClrForm";
 		this->Text = L"Control Test";
-		this->Load += gcnew System::EventHandler(this, &ControlTestForm::ControlTestForm_Load);
-		this->BindingContextChanged += gcnew System::EventHandler(this, &ControlTestForm::FormBindingContextChanged);
-		this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &ControlTestForm::ControlTestForm_FormClosing);
+		this->Load += gcnew System::EventHandler(this, &ControlClrForm::ControlClrForm_Load);
+		this->BindingContextChanged += gcnew System::EventHandler(this, &ControlClrForm::FormBindingContextChanged);
+		this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &ControlClrForm::ControlClrForm_FormClosing);
 		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->CharacterPageBinding))->EndInit();
 		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->SettingsPageBinding))->EndInit();
 		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->PropertySheetPageBinding))->EndInit();
@@ -4302,6 +4401,9 @@ public: property System::Boolean CharStyleAutoPopupMenu {System::Boolean get ();
 public: property System::Boolean CharStyleIconShown {System::Boolean get (); System::Void set (System::Boolean value);}
 public: property System::Boolean CharStyleSmoothed {System::Boolean get (); System::Void set (System::Boolean value);}
 public: property System::Boolean CharStyleSmoothEdges {System::Boolean get (); System::Void set (System::Boolean value);}
+public: property System::Boolean CharStyleSuspendPause {System::Boolean get (); System::Void set (System::Boolean value);}
+public: property System::Boolean CharStyleSuspendStop {System::Boolean get (); System::Void set (System::Boolean value);}
+public: property System::Boolean CharStyleSuspendHide {System::Boolean get (); System::Void set (System::Boolean value);}
 
 //===========================================================================
 
@@ -4311,13 +4413,13 @@ private: System::Void CollectButton_Click(System::Object^  Sender, System::Event
 		GC::Collect ();
 		LogMessage (LogNormal, _T("GC::Collect done"));
 	}
-private: System::Void ControlTestForm_Load(System::Object^  Sender, System::EventArgs^  e)
+private: System::Void ControlClrForm_Load(System::Object^  Sender, System::EventArgs^  e)
 	{
 		TabsMain->SelectTab (::settings::Default->MainPage);
 		TabsControl->SelectTab (::settings::Default->ControlPage);
 		TabsCharacter->SelectTab (::settings::Default->CharacterPage);
 	}
-private: System::Void ControlTestForm_FormClosing(System::Object^  Sender, System::Windows::Forms::FormClosingEventArgs^  e)
+private: System::Void ControlClrForm_FormClosing(System::Object^  Sender, System::Windows::Forms::FormClosingEventArgs^  e)
 	{
 		::settings::Default->MainPage = TabsMain->SelectedIndex;
 		::settings::Default->ControlPage = TabsControl->SelectedIndex;

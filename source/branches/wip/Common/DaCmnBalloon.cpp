@@ -28,7 +28,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 CDaCmnBalloon::CDaCmnBalloon ()
-:	mCharID (0),
+:	mAnchor (NULL),
+	mCharID (0),
 	mLangID (GetUserDefaultUILanguage ()),
 	mFile (NULL),
 	mOwnerWnd (NULL)
@@ -37,13 +38,39 @@ CDaCmnBalloon::CDaCmnBalloon ()
 
 CDaCmnBalloon::~CDaCmnBalloon ()
 {
+	if	(
+			(mAnchor)
+		&&	(mFile)
+		)
+	{	
+		try
+		{
+			mAnchor->RemoveFileClient (mFile, this, false);
+		}
+		catch AnyExceptionSilent
+		try
+		{
+			mAnchor->mAnchor.RemoveFileClient (mFile, this);
+		}
+		catch AnyExceptionSilent
+	}
 }
 
-void CDaCmnBalloon::Initialize (long pCharID, CAgentFile * pFile, CAgentCharacterWnd * pOwnerWnd)
+void CDaCmnBalloon::Initialize (long pCharID, CInstanceAnchor * pAnchor, CAgentFile * pFile, CAgentCharacterWnd * pOwnerWnd)
 {
+	mAnchor = pAnchor;
 	mCharID = pCharID;
 	mFile = pFile;
 	mOwnerWnd = pOwnerWnd;
+
+	if	(
+			(mAnchor)
+		&&	(mFile)
+		)
+	{	
+		mAnchor->AddFileClient (mFile, this);
+		mAnchor->mAnchor.AddFileClient (mFile, this);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -374,6 +401,11 @@ HRESULT CDaCmnBalloon::put_Visible (VARIANT_BOOL Visible)
 
 	if	(lBalloonWnd = GetBalloonWnd ())
 	{
+		if	(lBalloonWnd->IsPaused ())
+		{
+			lResult = AGENTERR_CHARACTERNOTACTIVE;
+		}
+		else
 		if	(Visible)
 		{
 			if	(!lBalloonWnd->ShowBalloonNow ())

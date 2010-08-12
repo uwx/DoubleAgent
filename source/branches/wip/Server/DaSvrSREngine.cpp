@@ -75,6 +75,11 @@ void DaSvrSREngine::Terminate (bool pFinal, bool pAbandonned)
 {
 	if	(this)
 	{
+		if	(pFinal)
+		{
+			UnmanageObjectLifetime (this);
+		}
+
 		if	(
 				(pFinal)
 			&&	(m_dwRef > 0)
@@ -89,11 +94,6 @@ void DaSvrSREngine::Terminate (bool pFinal, bool pAbandonned)
 				catch AnyExceptionDebug
 			}
 			m_dwRef = 0;
-		}
-
-		if	(pFinal)
-		{
-			UnmanageObjectLifetime (this);
 		}
 	}
 }

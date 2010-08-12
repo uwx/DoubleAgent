@@ -15,7 +15,7 @@
 #pragma managed(pop)
 /////////////////////////////////////////////////////////////////////////////
 
-#include "ControlTestForm.h"
+#include "ControlClrForm.h"
 using namespace DoubleAgent;
 using namespace DoubleAgent::Control;
 
@@ -25,7 +25,7 @@ int main(array<System::String ^> ^args)
 	LogStart (true);
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false);
-	Application::Run(gcnew ControlTestForm());
+	Application::Run(gcnew ControlClrForm());
 	LogStop (LogIfActive);
 	return 0;
 }

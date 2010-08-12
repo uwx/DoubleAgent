@@ -26,6 +26,7 @@
 #include "Registry.h"
 #ifdef	_DEBUG
 #include "DebugStr.h"
+#include "DebugWin.h"
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -74,15 +75,18 @@ CVoiceCommandsWnd * CVoiceCommandsWnd::CreateInstance ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CVoiceCommandsWnd::Create ()
+bool CVoiceCommandsWnd::Create (CWindow * pOwnerWnd)
 {
 	bool			lRet = false;
+	HWND			lOwnerWnd = (pOwnerWnd) ? pOwnerWnd->m_hWnd : NULL;
+	DWORD			lStyle = WS_POPUP|WS_CAPTION|WS_THICKFRAME|WS_SYSMENU;
+	DWORD			lExStyle = WS_EX_TOOLWINDOW | ((pOwnerWnd) ? 0 : WS_EX_TOPMOST);
 	CRect			lInitialRect (0,0,200,200);
 	tS <LOGFONT>	lLogFont;
 
 	if	(
 			(!IsWindow ())
-		&&	(CVoiceCommandsWndBase::Create (NULL, lInitialRect, CLocalize::LoadString (IDS_COMMANDS_VOICE_TITLE, mLangID), WS_POPUP|WS_CAPTION|WS_THICKFRAME|WS_SYSMENU, WS_EX_TOOLWINDOW|WS_EX_TOPMOST))
+		&&	(CVoiceCommandsWndBase::Create (lOwnerWnd, lInitialRect, CLocalize::LoadString (IDS_COMMANDS_VOICE_TITLE, mLangID), lStyle, lExStyle))
 		)
 	{
 		mCommandTree.Attach (::CreateWindowEx (0, WC_TREEVIEW, NULL, WS_CHILD|WS_VISIBLE|WS_TABSTOP|TVS_HASLINES|TVS_DISABLEDRAGDROP|TVS_SHOWSELALWAYS, lInitialRect.left, lInitialRect.top, lInitialRect.Width(), lInitialRect.Height(), m_hWnd, (HMENU)IDS_FOR_COMMANDS, _AtlBaseModule.GetModuleInstance(), NULL));
@@ -105,7 +109,7 @@ bool CVoiceCommandsWnd::Create ()
 	return lRet;
 }
 
-bool CVoiceCommandsWnd::Show ()
+bool CVoiceCommandsWnd::Show (bool pActivate)
 {
 	bool	lRet = false;
 
@@ -114,7 +118,7 @@ bool CVoiceCommandsWnd::Show ()
 		&&	(!IsWindowVisible ())
 		)
 	{
-		ShowWindow (SW_SHOW);
+		ShowWindow (pActivate ? SW_SHOW : SW_SHOWNA);
 		lRet = true;
 	}
 	return lRet;

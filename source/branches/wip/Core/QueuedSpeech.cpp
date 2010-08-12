@@ -204,199 +204,264 @@ bool CQueuedSpeak::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 	CAgentCharacterWnd *	lCharacterWnd;
 	HRESULT					lResult = S_OK;
 
-#ifdef	DebugTimeStart
-	DebugTimeStart
-#endif
-#ifdef	_LOG_QUEUE_OPS
-	if	(LogIsActive (_LOG_QUEUE_OPS))
+	if	(mPaused)
 	{
-		LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedSpeak [%p] [%d] [%s] [%s]"), pAgentWnd, mCharID, this, mReqID, DebugStr(GetFullText()), DebugStr(mSoundUrl));
-	}
-#endif
-	if	(!mStarted)
-	{
-		lResult = SpeechIsReady (pAgentWnd);
-
-		if	(lResult == S_FALSE)
-		{
-			lRet = true;
-		}
-	}
-
-	if	(
-			(!lRet)
-		&&	(lResult == S_OK)
-		&&	(mStarted)
-		)
-	{
-		if	(SpeechIsBusy (pAgentWnd))
-		{
-#ifdef	_LOG_QUEUE_OPS
-			if	(LogIsActive (_LOG_QUEUE_OPS))
-			{
-				LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedSpeak [%p] [%d] is busy"), pAgentWnd, mCharID, this, mReqID);
-			}
-#endif
-			lRet = true;
-		}
+		lRet = true;
 	}
 	else
-	if	(
-			(!lRet)
-		&&	(lResult == S_OK)
-		&&	(!mStarted)
-		)
 	{
-		if	(SpeechIsBusy (pAgentWnd))
-		{
-#ifdef	_LOG_QUEUE_OPS
-			if	(LogIsActive (_LOG_QUEUE_OPS))
-			{
-				LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedSpeak [%p] [%d] still busy"), pAgentWnd, mCharID, this, mReqID);
-			}
+#ifdef	DebugTimeStart
+		DebugTimeStart
 #endif
-			lRet = true;
-		}
-		else
-		if	(
-				(!mAnimated)
-			&&	(ShowSpeechAnimation (pQueue, pAgentWnd))
-			)
-		{
-#ifdef	_LOG_QUEUE_OPS
-			if	(LogIsActive (_LOG_QUEUE_OPS))
-			{
-				LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedSpeak [%p] [%d] animated"), pAgentWnd, mCharID, this, mReqID);
-			}
-#endif
-			lRet = true;
-		}
-		else
-		if	(
-				(mAnimated)
-			&&	(FAILED (lResult = PrepareSpeech (pAgentWnd)))
-			)
-		{
-#ifdef	_LOG_QUEUE_OPS
-			if	(LogIsActive (_LOG_QUEUE_OPS))
-			{
-				LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedSpeak [%p] [%d] failed"), pAgentWnd, mCharID, this, mReqID);
-			}
-#endif
-		}
-		else
-		{
-			NotifyStarted (pAgentWnd->mNotify);
-
-			if	(pQueue.GetNextAction (QueueActionSpeak) == this)
-			{
-				if	(
-						(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
-					&&	(!lCharacterWnd->IsCharShown ())
-					)
-				{
-					lResult = AGENTERR_CHARACTERNOTVISIBLE;
-				}
-				else
-				{
-#ifdef	_LOG_QUEUE_OPS
-					if	(LogIsActive (_LOG_QUEUE_OPS))
-					{
-						LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] Show QueuedSpeak [%p] [%d] [%s] [%s]"), pAgentWnd, mCharID, this, mReqID, DebugStr(GetFullText()), DebugStr(mSoundUrl));
-					}
-#endif
-					if	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
-					{
-						if	(mText)
-						{
-							lCharacterWnd->SetLastSpeech (*mText);
-						}
-						else
-						if	(mTextObject)
-						{
-							lCharacterWnd->SetLastSpeech (mTextObject->mText);
-						}
-					}
-					if	(SUCCEEDED (lResult = StartSpeech (pQueue, pAgentWnd)))
-					{
-						lRet = true;
-					}
-				}
-			}
-			else
-			{
-				lRet = true; // Was deleted during NotifyStarted
-			}
-		}
-	}
-
-	if	(
-			(!lRet)
-		&&	(pQueue.GetNextAction (QueueActionSpeak) == this)
-		)
-	{
-		CDirectSoundLipSync *	lLipSync;
-		CAgentBalloonWnd *		lBalloonWnd;
-
-#ifdef	_DEBUG_SPEECH
-		if	(LogIsActive (_DEBUG_SPEECH))
-		{
-			LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] EndQueuedSpeak [%p] [%d] Started [%u] Animated [%u] Balloon [%u]"), pAgentWnd, mCharID, this, mReqID, mStarted, mAnimated, mShowBalloon);
-		}
-#endif
-		pQueue.RemoveHead ();
-
-		if	(mTextObject)
-		{
-			mTextObject->Detach ();
-		}
-		if	(
-				(mVoice)
-			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
-			)
-		{
-			mVoice->RemoveEventSink (lCharacterWnd);
-		}
-		if	(
-				(!mSoundUrl.IsEmpty ())
-			&&	(lLipSync = static_cast <CDirectSoundLipSync *> (mSoundFilter.GetInterfacePtr()))
-			)
-		{
-			lLipSync->Disconnect ();
-		}
-		if	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
-		{
-			lCharacterWnd->StopMouthAnimation ();
-
-			if	(
-					(mShowBalloon)
-				&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
-				&&	(lBalloonWnd->IsWindow ())
-				)
-			{
-				lBalloonWnd->AbortSpeechText ();
-			}
-		}
-
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] Done QueuedSpeak [%p] [%d] [%s] [%s] [%8.8X]"), pAgentWnd, mCharID, this, mReqID, DebugStr(GetFullText()), DebugStr(mSoundUrl), lResult);
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueuedSpeak [%p(%d)] [%s] [%s]"), pAgentWnd, mCharID, this, mReqID, DebugStr(GetFullText()), DebugStr(mSoundUrl));
 		}
 #endif
-		NotifyComplete (pAgentWnd->mNotify, lResult);
-	}
+		if	(!mStarted)
+		{
+			lResult = SpeechIsReady (pAgentWnd);
+
+			if	(lResult == S_FALSE)
+			{
+				lRet = true;
+			}
+		}
+
+		if	(
+				(!lRet)
+			&&	(lResult == S_OK)
+			&&	(mStarted)
+			)
+		{
+			if	(SpeechIsBusy (pAgentWnd))
+			{
+#ifdef	_LOG_QUEUE_OPS
+				if	(LogIsActive (_LOG_QUEUE_OPS))
+				{
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p{%d}] QueuedSpeak [%p{%d)] is busy"), pAgentWnd, mCharID, this, mReqID);
+				}
+#endif
+				lRet = true;
+			}
+		}
+		else
+		if	(
+				(!lRet)
+			&&	(lResult == S_OK)
+			&&	(!mStarted)
+			)
+		{
+			if	(SpeechIsBusy (pAgentWnd))
+			{
+#ifdef	_LOG_QUEUE_OPS
+				if	(LogIsActive (_LOG_QUEUE_OPS))
+				{
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueuedSpeak [%p{%d)] still busy"), pAgentWnd, mCharID, this, mReqID);
+				}
+#endif
+				lRet = true;
+			}
+			else
+			if	(
+					(!mAnimated)
+				&&	(ShowSpeechAnimation (pQueue, pAgentWnd))
+				)
+			{
+#ifdef	_LOG_QUEUE_OPS
+				if	(LogIsActive (_LOG_QUEUE_OPS))
+				{
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueuedSpeak [%p(%d)] animated"), pAgentWnd, mCharID, this, mReqID);
+				}
+#endif
+				lRet = true;
+			}
+			else
+			if	(
+					(mAnimated)
+				&&	(FAILED (lResult = PrepareSpeech (pAgentWnd)))
+				)
+			{
+#ifdef	_LOG_QUEUE_OPS
+				if	(LogIsActive (_LOG_QUEUE_OPS))
+				{
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueuedSpeak [%p(%d)] failed"), pAgentWnd, mCharID, this, mReqID);
+				}
+#endif
+			}
+			else
+			{
+				NotifyStarted (pAgentWnd->mNotify);
+
+				if	(pQueue.GetNextAction (QueueActionSpeak) == this)
+				{
+					if	(
+							(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+						&&	(!lCharacterWnd->IsCharShown ())
+						)
+					{
+						lResult = AGENTERR_CHARACTERNOTVISIBLE;
+					}
+					else
+					{
+#ifdef	_LOG_QUEUE_OPS
+						if	(LogIsActive (_LOG_QUEUE_OPS))
+						{
+							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] Show QueuedSpeak [%p(%d)] [%s] [%s]"), pAgentWnd, mCharID, this, mReqID, DebugStr(GetFullText()), DebugStr(mSoundUrl));
+						}
+#endif
+						if	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+						{
+							if	(mText)
+							{
+								lCharacterWnd->SetLastSpeech (*mText);
+							}
+							else
+							if	(mTextObject)
+							{
+								lCharacterWnd->SetLastSpeech (mTextObject->mText);
+							}
+						}
+						if	(SUCCEEDED (lResult = StartSpeech (pQueue, pAgentWnd)))
+						{
+							lRet = true;
+						}
+					}
+				}
+				else
+				{
+					lRet = true; // Was deleted during NotifyStarted
+				}
+			}
+		}
+
+		if	(
+				(!lRet)
+			&&	(pQueue.GetNextAction (QueueActionSpeak) == this)
+			)
+		{
+			CDirectSoundLipSync *	lLipSync;
+			CAgentBalloonWnd *		lBalloonWnd;
+
+#ifdef	_DEBUG_SPEECH
+			if	(LogIsActive (_DEBUG_SPEECH))
+			{
+				LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] EndQueuedSpeak [%p] [%d] Started [%u] Animated [%u] Balloon [%u]"), pAgentWnd, mCharID, this, mReqID, mStarted, mAnimated, mShowBalloon);
+			}
+#endif
+			pQueue.RemoveHead ();
+
+			if	(mTextObject)
+			{
+				mTextObject->Detach ();
+			}
+			if	(
+					(mVoice)
+				&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+				)
+			{
+				mVoice->RemoveEventSink (lCharacterWnd);
+			}
+			if	(
+					(!mSoundUrl.IsEmpty ())
+				&&	(lLipSync = static_cast <CDirectSoundLipSync *> (mSoundFilter.GetInterfacePtr()))
+				)
+			{
+				lLipSync->Disconnect ();
+			}
+			if	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+			{
+				lCharacterWnd->StopMouthAnimation ();
+
+				if	(
+						(mShowBalloon)
+					&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
+					&&	(lBalloonWnd->IsWindow ())
+					)
+				{
+					lBalloonWnd->AbortSpeechText ();
+				}
+			}
+
+#ifdef	_LOG_QUEUE_OPS
+			if	(LogIsActive (_LOG_QUEUE_OPS))
+			{
+				LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] Done QueuedSpeak [%p(%d)] [%s] [%s] [%8.8X]"), pAgentWnd, mCharID, this, mReqID, DebugStr(GetFullText()), DebugStr(mSoundUrl), lResult);
+			}
+#endif
+			NotifyComplete (pAgentWnd->mNotify, lResult);
+		}
 
 #ifdef	DebugTimeStart
-	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f CQueuedSpeak::Advance"), DebugTimeElapsed);
+		DebugTimeStop
+		LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f CQueuedSpeak::Advance"), DebugTimeElapsed);
 #endif
+	}
 	return lRet;
 }
 
 bool CQueuedSpeak::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pPause)
 {
-	return false;
+	bool					lRet = false;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentBalloonWnd *		lBalloonWnd;
+
+#ifdef	_LOG_QUEUE_OPS
+	if	(LogIsActive (_LOG_QUEUE_OPS))
+	{
+		LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] Pause [%u] QueuedSpeech [%p(%d)] Started [%u]"), pAgentWnd, mCharID, pPause, this, mReqID, mStarted);
+	}
+#endif
+	if	(pPause)
+	{
+		if	(!mPaused)
+		{
+			lRet = true;
+		}
+		if	(
+				(mStarted)
+			&&	(mVoice->SafeIsValid ())
+			)
+		{
+			mVoice->Pause ();
+		}
+		if	(
+				(mStarted)
+			&&	(mShowBalloon)
+			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
+			)
+		{
+			lBalloonWnd->Pause (true);			
+		}
+	}
+	else
+	{
+		if	(mPaused)
+		{
+			lRet = true;
+		}
+		if	(
+				(mStarted)
+			&&	(mShowBalloon)
+			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
+			)
+		{
+			lBalloonWnd->Pause (false);			
+		}
+		if	(
+				(mStarted)
+			&&	(mVoice->SafeIsValid ())
+			)
+		{
+			mVoice->Resume ();
+		}
+	}
+	mPaused = pPause;
+	
+	return lRet;
 }
 
 bool CQueuedSpeak::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
@@ -962,126 +1027,133 @@ bool CQueuedThink::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 	CAgentCharacterWnd *	lCharacterWnd;
 	CAgentBalloonWnd *		lBalloonWnd;
 
-#ifdef	_LOG_QUEUE_OPS
-	if	(LogIsActive (_LOG_QUEUE_OPS))
+	if	(mPaused)
 	{
-		LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedThink [%p] [%d] [%s]"), pAgentWnd, mCharID, this, mReqID, DebugStr(GetFullText()));
+		lRet = true;
 	}
-#endif
-	if	(!mStarted)
+	else
 	{
-		if	(
-				(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
-			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
-			&&	(lBalloonWnd->IsWindow ())
-			&&	(lBalloonWnd->IsBusy (true))
-			)
-		{
 #ifdef	_LOG_QUEUE_OPS
-			if	(LogIsActive (_LOG_QUEUE_OPS))
-			{
-				LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedThink [%p] [%d] is still busy"), pAgentWnd, mCharID, this, mReqID);
-			}
-#endif
-			lRet = true;
-		}
-		else
+		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			NotifyStarted (pAgentWnd->mNotify);
-
-			if	(pQueue.GetNextAction (QueueActionThink) == this)
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedThink [%p] [%d] [%s]"), pAgentWnd, mCharID, this, mReqID, DebugStr(GetFullText()));
+		}
+#endif
+		if	(!mStarted)
+		{
+			if	(
+					(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+				&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
+				&&	(lBalloonWnd->IsWindow ())
+				&&	(lBalloonWnd->IsBusy (true))
+				)
 			{
-				if	(
-						(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
-					&&	(!lCharacterWnd->IsCharShown ())
-					)
+#ifdef	_LOG_QUEUE_OPS
+				if	(LogIsActive (_LOG_QUEUE_OPS))
 				{
-					pQueue.RemoveHead ();
-					NotifyComplete (pAgentWnd->mNotify, AGENTERR_CHARACTERNOTVISIBLE);
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedThink [%p] [%d] is still busy"), pAgentWnd, mCharID, this, mReqID);
 				}
-				else
-				if	(
-						(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
-					&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (true))
-					&&	(lBalloonWnd->IsWindow ())
-					)
+#endif
+				lRet = true;
+			}
+			else
+			{
+				NotifyStarted (pAgentWnd->mNotify);
+
+				if	(pQueue.GetNextAction (QueueActionThink) == this)
 				{
+					if	(
+							(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+						&&	(!lCharacterWnd->IsCharShown ())
+						)
+					{
+						pQueue.RemoveHead ();
+						NotifyComplete (pAgentWnd->mNotify, AGENTERR_CHARACTERNOTVISIBLE);
+					}
+					else
+					if	(
+							(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+						&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (true))
+						&&	(lBalloonWnd->IsWindow ())
+						)
+					{
 //
 //	MS Agent doesn't do this
 //
 //						pAgentWnd->ShowGesture (_T("Think"));
 #ifdef	_LOG_QUEUE_OPS
-					if	(LogIsActive (_LOG_QUEUE_OPS))
-					{
-						LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] Show QueuedThink [%p] [%d] [%s]"), pAgentWnd, mCharID, this, mReqID, DebugStr(GetFullText()));
-					}
+						if	(LogIsActive (_LOG_QUEUE_OPS))
+						{
+							LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] Show QueuedThink [%p] [%d] [%s]"), pAgentWnd, mCharID, this, mReqID, DebugStr(GetFullText()));
+						}
 #endif
-					lBalloonWnd->ApplyOptions (mBalloonOptions);
-					if	(
-							(mText)
-						?	(lBalloonWnd->ShowBalloonThought (*mText))
-						:	(mTextObject)
-						?	(lBalloonWnd->ShowBalloonThought (mTextObject->mText))
-						:	(false)
-						)
-					{
-						lBalloonWnd->ShowBalloonAuto ();
+						lBalloonWnd->ApplyOptions (mBalloonOptions);
+						if	(
+								(mText)
+							?	(lBalloonWnd->ShowBalloonThought (*mText))
+							:	(mTextObject)
+							?	(lBalloonWnd->ShowBalloonThought (mTextObject->mText))
+							:	(false)
+							)
+						{
+							lBalloonWnd->ShowBalloonAuto ();
+						}
+						lRet = true;
 					}
-					lRet = true;
+					else
+					{
+						pQueue.RemoveHead ();
+						NotifyComplete (pAgentWnd->mNotify, AGENTERR_NOBALLOON);
+					}
 				}
 				else
 				{
-					pQueue.RemoveHead ();
-					NotifyComplete (pAgentWnd->mNotify, AGENTERR_NOBALLOON);
+					lRet = true; // Was deleted during NotifyStarted
 				}
 			}
-			else
-			{
-				lRet = true; // Was deleted during NotifyStarted
-			}
-		}
-	}
-	else
-	{
-		if	(
-				(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
-			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
-			&&	(lBalloonWnd->IsWindow ())
-			&&	(lBalloonWnd->IsBusy (false))
-			)
-		{
-#ifdef	_LOG_QUEUE_OPS
-			if	(LogIsActive (_LOG_QUEUE_OPS))
-			{
-				LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedThink [%p] [%d] is busy"), pAgentWnd, mCharID, this, mReqID);
-			}
-#endif
-			lRet = true;
 		}
 		else
-		if	(pQueue.GetNextAction (QueueActionThink) == this)
 		{
-			pQueue.RemoveHead ();
-
 			if	(
 					(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
 				&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
 				&&	(lBalloonWnd->IsWindow ())
+				&&	(lBalloonWnd->IsBusy (false))
 				)
 			{
-				lBalloonWnd->AbortSpeechText ();
-			}
 #ifdef	_LOG_QUEUE_OPS
-			if	(LogIsActive (_LOG_QUEUE_OPS))
-			{
-				LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] Done QueuedThink [%p] [%d]"), pAgentWnd, mCharID, this, mReqID);
-			}
+				if	(LogIsActive (_LOG_QUEUE_OPS))
+				{
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueuedThink [%p] [%d] is busy"), pAgentWnd, mCharID, this, mReqID);
+				}
 #endif
-			NotifyComplete (pAgentWnd->mNotify);
-		}
-		else
-		{
-			lRet = true;
+				lRet = true;
+			}
+			else
+			if	(pQueue.GetNextAction (QueueActionThink) == this)
+			{
+				pQueue.RemoveHead ();
+
+				if	(
+						(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+					&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
+					&&	(lBalloonWnd->IsWindow ())
+					)
+				{
+					lBalloonWnd->AbortSpeechText ();
+				}
+#ifdef	_LOG_QUEUE_OPS
+				if	(LogIsActive (_LOG_QUEUE_OPS))
+				{
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] Done QueuedThink [%p] [%d]"), pAgentWnd, mCharID, this, mReqID);
+				}
+#endif
+				NotifyComplete (pAgentWnd->mNotify);
+			}
+			else
+			{
+				lRet = true;
+			}
 		}
 	}
 	return lRet;
@@ -1089,7 +1161,49 @@ bool CQueuedThink::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 
 bool CQueuedThink::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pPause)
 {
-	return false;
+	bool					lRet = false;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentBalloonWnd *		lBalloonWnd;
+
+#ifdef	_LOG_QUEUE_OPS
+	if	(LogIsActive (_LOG_QUEUE_OPS))
+	{
+		LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] Pause [%u] QueuedThink [%p(%d)] Started [%u]"), pAgentWnd, mCharID, pPause, this, mReqID, mStarted);
+	}
+#endif
+	if	(pPause)
+	{
+		if	(!mPaused)
+		{
+			lRet = true;
+		}
+		if	(
+				(mStarted)
+			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
+			)
+		{
+			lBalloonWnd->Pause (true);			
+		}
+	}
+	else
+	{
+		if	(mPaused)
+		{
+			lRet = true;
+		}
+		if	(
+				(mStarted)
+			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
+			)
+		{
+			lBalloonWnd->Pause (false);			
+		}
+	}
+	mPaused = pPause;
+	
+	return lRet;
 }
 
 bool CQueuedThink::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)

@@ -43,7 +43,7 @@ public:
 	CDaControlModule ();
 	virtual ~CDaControlModule ();
 
-	DECLARE_LIBID(__uuidof(DaControlTypeLib))
+	DECLARE_LIBID(__uuidof(DoubleAgentCtl_TypeLib))
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACONTROLMOD)
 
 	HRESULT RegisterServer (BOOL bRegTypeLib = FALSE, const CLSID* pCLSID = NULL);
@@ -63,6 +63,8 @@ public:
 	HRESULT PostServerCall (LPUNKNOWN pServerInterface);
 	bool PreNotify ();
 	void PostNotify ();
+
+	bool VerifyAppActive () const;
 
 // Overrides
 public:

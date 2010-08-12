@@ -23,6 +23,11 @@
 #include "EventNotify.h"
 
 /////////////////////////////////////////////////////////////////////////////
+//
+//	Note - all public methods are virtual so that this file can be in multiple
+//	modules and still work properly.
+//
+/////////////////////////////////////////////////////////////////////////////
 
 class CGlobalAnchor : public CAgentFileCache
 {
@@ -65,6 +70,7 @@ public:
 
 // Attributes
 	CGlobalAnchor &	mAnchor;
+	CWindow *		mOwnerWnd;
 
 // Operations
 public:

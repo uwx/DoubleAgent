@@ -752,7 +752,9 @@ bool XmlToHtml::ConvertXmlToHtml (XmlDocument^ pXmlDocument, System::Reflection:
 #ifdef	_DEBUG_MEMBER_FILES
 				LogMessage (_DEBUG_MEMBER_FILES, _T("  Wrote  [%s]"), _B(lMemberFileName));
 #endif
+#if	FALSE
 				Console::WriteLine ("Wrote {0}", lMemberFileName);
+#endif				
 			}
 		}
 		lRet = true;
@@ -1077,6 +1079,9 @@ static String^ ParametersStr (array<ParameterInfo^>^ pParameters)
 			if	(lParameter->ParameterType->IsArray)
 			{
 				lRet->Append ("[]");
+			}
+			if	(lParameter->ParameterType->IsByRef)
+			{
 			}
 		}
 	}
@@ -2295,6 +2300,7 @@ XmlNode^ XmlToHtml::FormatSee (XmlNode^ pXmlNode)
 					lMemberName = lMemberNode->Attributes["name"]->Value;
 				}
 				LogMessage (LogNormal, _T("  Unknown Reference [%s] in [%s]"), _B(pXmlNode->OuterXml), _B(lMemberName));
+				Console::WriteLine ("Unknown Reference {0} in {1}", pXmlNode->OuterXml, lMemberName);
 			}
 
 			if	(lRefValue)

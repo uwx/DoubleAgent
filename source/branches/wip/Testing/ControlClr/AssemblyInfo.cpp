@@ -11,7 +11,7 @@ using namespace System::Security::Permissions;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly:AssemblyTitleAttribute("ControlTest")];
+[assembly:AssemblyTitleAttribute("ControlClr")];
 [assembly:AssemblyDescriptionAttribute("")];
 [assembly:AssemblyCompanyAttribute(_DOUBLEAGENT_COMPANY)];
 [assembly:AssemblyProductAttribute(_DOUBLEAGENT_NAME)];

@@ -169,12 +169,14 @@ void DaServer::Terminate (bool pFinal, bool pAbandonned)
 			{
 				mNotify.UnregisterAll ();
 			}
+			mNotify.RegisterEventReflect (this, false);
+
+			UnloadAllCharacters (pAbandonned);
+
 			if	(pFinal)
 			{
 				mNotify.RegisterEventLock (this, false);
 			}
-			mNotify.RegisterEventReflect (this, false);
-			UnloadAllCharacters (pAbandonned);
 		}
 		catch AnyExceptionDebug
 
@@ -488,7 +490,7 @@ void DaServer::UnloadAllCharacters (bool pAbandonned)
 #ifdef	_LOG_INSTANCE
 	if	(
 			(GetCachedFile (0))
-		&&	(LogIsActive())
+		&&	(LogIsActive (_LOG_INSTANCE))
 		)
 	{
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::UnloadAllCharacters [%d] Abandonned [%u]"), this, max(m_dwRef,-1), CachedFileCount(), pAbandonned);
@@ -498,45 +500,62 @@ void DaServer::UnloadAllCharacters (bool pAbandonned)
 	{
 		CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 		INT_PTR								lClientNdx;
-		DaSvrCharacter *					lCharacter;
 
 		if	(GetFileClients (lFile, lFileClients))
 		{
-			for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
+			try
 			{
-				if	(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
+				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
+					DaSvrCharacter *	lCharacter = NULL;
+					
 					try
 					{
-						if	(pAbandonned)
-						{
-							lCharacter->Terminate (true, pAbandonned);
-							try
-							{
-								delete lCharacter;
-							}
-							catch AnyExceptionSilent
-						}
-						else
-						{
-							lCharacter->Terminate (false);
-#ifdef	_STRICT_COMPATIBILITY
-							lCharacter->Terminate (true);
-							try
-							{
-								delete lCharacter;
-							}
-							catch AnyExceptionSilent
-#else
-							lCharacter->Release ();
-#endif
-						}
+						lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]);
 					}
 					catch AnyExceptionDebug
+					
+					if	(lCharacter)
+					{
+						try
+						{
+							if	(pAbandonned)
+							{
+#ifdef	_LOG_ABANDONED
+								if	(LogIsActive (_LOG_ABANDONED))
+								{
+									LogMessage (_LOG_ABANDONED, _T("[%p(%d)] AbandonCharacter [%p(%d)(%d)]"), this, max(m_dwRef,-1), lCharacter, lCharacter->GetCharID(), max(lCharacter->m_dwRef,-1));
+								}
+#endif
+								lCharacter->Terminate (true, pAbandonned);
+								try
+								{
+									delete lCharacter;
+								}
+								catch AnyExceptionSilent
+							}
+							else
+							{
+								lCharacter->Terminate (false);
+#ifdef	_STRICT_COMPATIBILITY
+								lCharacter->Terminate (true);
+								try
+								{
+									delete lCharacter;
+								}
+								catch AnyExceptionSilent
+#else
+								lCharacter->Release ();
+#endif
+							}
+						}
+						catch AnyExceptionDebug
 
-					lFileNdx--;
+						lFileNdx--;
+					}
 				}
 			}
+			catch AnyExceptionDebug
 		}
 	}
 }
@@ -559,7 +578,7 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, bool pIsDefault, long & pCha
 #ifdef	_LOG_CHARACTER
 	if	(LogIsActive (_LOG_CHARACTER))
 	{
-		LogMessage (_LOG_CHARACTER, _T("[%p(%u)] LoadCharacter [%s]"), this, max(m_dwRef,-1), pFilePath);
+		LogMessage (_LOG_CHARACTER, _T("[%p(%d)] LoadCharacter [%s]"), this, max(m_dwRef,-1), pFilePath);
 	}
 #endif
 
@@ -603,7 +622,7 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, bool pIsDefault, long & pCha
 #ifdef	_LOG_CHARACTER
 			if	(LogIsActive (_LOG_CHARACTER))
 			{
-				LogMessage (_LOG_CHARACTER, _T("[%p(%u)] Character [%d] Loading [%d]"), this, max(m_dwRef,-1), pCharID, pReqID);
+				LogMessage (_LOG_CHARACTER, _T("[%p(%d)] Character [%d] Loading [%d]"), this, max(m_dwRef,-1), pCharID, pReqID);
 			}
 #endif
 			lResult = lDownload.Detach()->Download (GetControllingUnknown(), &mNotify);
@@ -665,7 +684,7 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, bool pIsDefault, long & pCha
 					lSvrCharacter->AddRef ();
 					if	(
 							(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile, pIsDefault)))
-						&&	(SUCCEEDED (lResult = lSvrCharacter->RealizePopup (mCharacterStyle)))
+						&&	(SUCCEEDED (lResult = lSvrCharacter->RealizePopup (NULL, mCharacterStyle, WS_EX_TOPMOST)))
 						)
 					{
 						if	(lLoadFile == lAgentFile)
@@ -677,7 +696,7 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, bool pIsDefault, long & pCha
 #ifdef	_LOG_CHARACTER
 						if	(LogIsActive (_LOG_CHARACTER))
 						{
-							LogMessage (_LOG_CHARACTER, _T("[%p(%u)] Character [%d] Loaded [%p(%d)]"), this, max(m_dwRef,-1), pCharID, lSvrCharacter, lSvrCharacter->m_dwRef);
+							LogMessage (_LOG_CHARACTER, _T("[%p(%d)] Character [%d] Loaded [%p(%d)]"), this, max(m_dwRef,-1), pCharID, lSvrCharacter, lSvrCharacter->m_dwRef);
 						}
 #endif
 #ifdef	_TRACE_CHARACTER_ACTIONS
@@ -758,7 +777,7 @@ bool DaServer::_OnDownloadComplete (CFileDownload * pDownload)
 						lSvrCharacter->AddRef ();
 						if	(
 								(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile)))
-							&&	(SUCCEEDED (lResult = lSvrCharacter->RealizePopup (mCharacterStyle)))
+							&&	(SUCCEEDED (lResult = lSvrCharacter->RealizePopup (NULL, mCharacterStyle, WS_EX_TOPMOST)))
 							)
 						{
 							if	(lAgentFile == lLoadFile)
@@ -769,7 +788,7 @@ bool DaServer::_OnDownloadComplete (CFileDownload * pDownload)
 #ifdef	_LOG_CHARACTER
 							if	(LogIsActive (_LOG_CHARACTER))
 							{
-								LogMessage (_LOG_CHARACTER, _T("[%p(%u)] Character [%d] Loaded [%p(%d)]"), this, max(m_dwRef,-1), lSvrCharacter->GetCharID(), lSvrCharacter, lSvrCharacter->m_dwRef);
+								LogMessage (_LOG_CHARACTER, _T("[%p(%d)] Character [%d] Loaded [%p(%d)]"), this, max(m_dwRef,-1), lSvrCharacter->GetCharID(), lSvrCharacter, lSvrCharacter->m_dwRef);
 							}
 #endif
 #ifdef	_TRACE_CHARACTER_ACTIONS
@@ -823,7 +842,7 @@ HRESULT DaServer::UnloadCharacter (long pCharID)
 #ifdef	_LOG_CHARACTER
 	if	(LogIsActive (_LOG_CHARACTER))
 	{
-		LogMessage (_LOG_CHARACTER, _T("[%p(%u)] UnloadCharacter [%d]"), this, max(m_dwRef,-1), pCharID);
+		LogMessage (_LOG_CHARACTER, _T("[%p(%d)] UnloadCharacter [%d]"), this, max(m_dwRef,-1), pCharID);
 	}
 #endif
 	try
@@ -835,7 +854,7 @@ HRESULT DaServer::UnloadCharacter (long pCharID)
 #ifdef	_LOG_CHARACTER
 			if	(LogIsActive (_LOG_CHARACTER))
 			{
-				LogMessage (_LOG_CHARACTER, _T("[%p(%u)] Character [%d] IsClientActive [%d] Clients [%d]"), this, max(m_dwRef,-1), pCharID, lCharacter->IsClientActive (), lCharacter->GetClientCount (lCharacter->GetCharID()));
+				LogMessage (_LOG_CHARACTER, _T("[%p(%d)] Character [%d] IsClientActive [%d] Clients [%d]"), this, max(m_dwRef,-1), pCharID, lCharacter->IsClientActive (), lCharacter->GetClientCount (lCharacter->GetCharID()));
 			}
 #endif
 			try
@@ -863,7 +882,7 @@ HRESULT DaServer::UnloadCharacter (long pCharID)
 #ifdef	_LOG_CHARACTER
 			if	(LogIsActive (_LOG_CHARACTER))
 			{
-				LogMessage (_LOG_CHARACTER, _T("[%p(%u)] Character [%d] Unloaded [%p]"), this, max(m_dwRef,-1), pCharID, lCharacter);
+				LogMessage (_LOG_CHARACTER, _T("[%p(%d)] Character [%d] Unloaded [%p]"), this, max(m_dwRef,-1), pCharID, lCharacter);
 			}
 #endif
 		}
@@ -1239,11 +1258,11 @@ HRESULT STDMETHODCALLTYPE DaServer::GetVersion (short *MajorVersion, short *Mino
 
 	if	(MajorVersion)
 	{
-		(*MajorVersion) = (short)_SERVER_VER_MAJOR;
+		(*MajorVersion) = (short)DoubleAgentSvr_MajorVer;
 	}
 	if	(MinorVersion)
 	{
-		(*MinorVersion) = (short)_SERVER_VER_MINOR;
+		(*MinorVersion) = (short)DoubleAgentSvr_MinorVer;
 	}
 
 	PutServerError (lResult, __uuidof(IDaServer));

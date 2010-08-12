@@ -30,8 +30,8 @@ class CVoiceCommandsWnd;
 class ATL_NO_VTABLE __declspec(uuid("{1147E510-A208-11DE-ABF2-002421116FB2}")) DaSvrCommandsWindow :
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public CComCoClass<DaSvrCommandsWindow, &__uuidof(DaSvrCommandsWindow)>,
-	public IDispatchImpl<IDaSvrCommandsWindow2, &__uuidof(IDaSvrCommandsWindow2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
-	public IProvideClassInfoImpl<&__uuidof(DaSvrCommandsWindow), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
+	public IDispatchImpl<IDaSvrCommandsWindow2, &__uuidof(IDaSvrCommandsWindow2), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>,
+	public IProvideClassInfoImpl<&__uuidof(DaSvrCommandsWindow), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>,
 	public ISupportErrorInfo,
 	public IOleWindow,
 	public CDaCmnCommandsWindow,

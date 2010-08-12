@@ -48,19 +48,19 @@ public:
 	}
 
 	[UserScopedSetting()]
-	property System::Boolean AutoConnect
+	property System::Int16 AutoConnect
 	{
-		System::Boolean get ()
+		System::Int16 get ()
 		{
 			try
 			{
-				return (System::Boolean) this["AutoConnect"];
+				return (System::Int16) this["AutoConnect"];
 			}
 			catch (...)
 			{}
 			return true;
 		}
-		Void set (System::Boolean value)
+		Void set (System::Int16 value)
 		{
 			this["AutoConnect"] = value;
 		}

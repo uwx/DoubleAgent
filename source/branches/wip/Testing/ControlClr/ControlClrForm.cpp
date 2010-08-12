@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "ControlTestForm.h"
+#include "ControlClrForm.h"
 #include "LoadCharacter.h"
 
 using namespace System::Configuration;
@@ -7,7 +7,7 @@ using namespace System::Configuration;
 namespace DoubleAgent {
 /////////////////////////////////////////////////////////////////////////////
 
-ControlTestForm::ControlTestForm ()
+ControlClrForm::ControlClrForm ()
 {
 	try
 	{
@@ -16,7 +16,7 @@ ControlTestForm::ControlTestForm ()
 	catch AnyExceptionDebug
 }
 
-ControlTestForm::~ControlTestForm ()
+ControlClrForm::~ControlClrForm ()
 {
 	if	(components)
 	{
@@ -29,7 +29,7 @@ ControlTestForm::~ControlTestForm ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-System::Boolean ControlTestForm::CharStyleSoundEffects::get ()
+System::Boolean ControlClrForm::CharStyleSoundEffects::get ()
 {
 	if	(
 			(TestDaControl)
@@ -40,7 +40,7 @@ System::Boolean ControlTestForm::CharStyleSoundEffects::get ()
 	}
 	return false;
 }
-System::Void ControlTestForm::CharStyleSoundEffects::set (System::Boolean value)
+System::Void ControlClrForm::CharStyleSoundEffects::set (System::Boolean value)
 {
 	if	(TestDaControl)
 	{
@@ -55,7 +55,7 @@ System::Void ControlTestForm::CharStyleSoundEffects::set (System::Boolean value)
 	}
 }
 
-System::Boolean ControlTestForm::CharStyleIdleEnabled::get ()
+System::Boolean ControlClrForm::CharStyleIdleEnabled::get ()
 {
 	if	(
 			(TestDaControl)
@@ -66,7 +66,7 @@ System::Boolean ControlTestForm::CharStyleIdleEnabled::get ()
 	}
 	return false;
 }
-System::Void ControlTestForm::CharStyleIdleEnabled::set (System::Boolean value)
+System::Void ControlClrForm::CharStyleIdleEnabled::set (System::Boolean value)
 {
 	if	(TestDaControl)
 	{
@@ -81,7 +81,7 @@ System::Void ControlTestForm::CharStyleIdleEnabled::set (System::Boolean value)
 	}
 }
 
-System::Boolean ControlTestForm::CharStyleAutoPopupMenu::get ()
+System::Boolean ControlClrForm::CharStyleAutoPopupMenu::get ()
 {
 	if	(
 			(TestDaControl)
@@ -92,7 +92,7 @@ System::Boolean ControlTestForm::CharStyleAutoPopupMenu::get ()
 	}
 	return false;
 }
-System::Void ControlTestForm::CharStyleAutoPopupMenu::set (System::Boolean value)
+System::Void ControlClrForm::CharStyleAutoPopupMenu::set (System::Boolean value)
 {
 	if	(TestDaControl)
 	{
@@ -107,7 +107,7 @@ System::Void ControlTestForm::CharStyleAutoPopupMenu::set (System::Boolean value
 	}
 }
 
-System::Boolean ControlTestForm::CharStyleIconShown::get ()
+System::Boolean ControlClrForm::CharStyleIconShown::get ()
 {
 	if	(
 			(TestDaControl)
@@ -118,7 +118,7 @@ System::Boolean ControlTestForm::CharStyleIconShown::get ()
 	}
 	return false;
 }
-System::Void ControlTestForm::CharStyleIconShown::set (System::Boolean value)
+System::Void ControlClrForm::CharStyleIconShown::set (System::Boolean value)
 {
 	if	(TestDaControl)
 	{
@@ -133,7 +133,7 @@ System::Void ControlTestForm::CharStyleIconShown::set (System::Boolean value)
 	}
 }
 
-System::Boolean ControlTestForm::CharStyleSmoothed::get ()
+System::Boolean ControlClrForm::CharStyleSmoothed::get ()
 {
 	if	(
 			(TestDaControl)
@@ -144,7 +144,7 @@ System::Boolean ControlTestForm::CharStyleSmoothed::get ()
 	}
 	return false;
 }
-System::Void ControlTestForm::CharStyleSmoothed::set (System::Boolean value)
+System::Void ControlClrForm::CharStyleSmoothed::set (System::Boolean value)
 {
 	if	(TestDaControl)
 	{
@@ -159,7 +159,7 @@ System::Void ControlTestForm::CharStyleSmoothed::set (System::Boolean value)
 	}
 }
 
-System::Boolean ControlTestForm::CharStyleSmoothEdges::get ()
+System::Boolean ControlClrForm::CharStyleSmoothEdges::get ()
 {
 	if	(
 			(TestDaControl)
@@ -170,7 +170,7 @@ System::Boolean ControlTestForm::CharStyleSmoothEdges::get ()
 	}
 	return false;
 }
-System::Void ControlTestForm::CharStyleSmoothEdges::set (System::Boolean value)
+System::Void ControlClrForm::CharStyleSmoothEdges::set (System::Boolean value)
 {
 	if	(TestDaControl)
 	{
@@ -185,9 +185,87 @@ System::Void ControlTestForm::CharStyleSmoothEdges::set (System::Boolean value)
 	}
 }
 
+System::Boolean ControlClrForm::CharStyleSuspendPause::get ()
+{
+	if	(
+			(TestDaControl)
+		&&	(TestDaControl->CharacterStyle & (int)CharacterStyleFlags::SuspendPause)
+		)
+	{
+		return true;
+	}
+	return false;
+}
+System::Void ControlClrForm::CharStyleSuspendPause::set (System::Boolean value)
+{
+	if	(TestDaControl)
+	{
+		if	(value)
+		{
+			TestDaControl->CharacterStyle |= (int)CharacterStyleFlags::SuspendPause;
+		}
+		else
+		{
+			TestDaControl->CharacterStyle &= (int)CharacterStyleFlags::SuspendPause;
+		}
+	}
+}
+
+System::Boolean ControlClrForm::CharStyleSuspendStop::get ()
+{
+	if	(
+			(TestDaControl)
+		&&	(TestDaControl->CharacterStyle & (int)CharacterStyleFlags::SuspendStop)
+		)
+	{
+		return true;
+	}
+	return false;
+}
+System::Void ControlClrForm::CharStyleSuspendStop::set (System::Boolean value)
+{
+	if	(TestDaControl)
+	{
+		if	(value)
+		{
+			TestDaControl->CharacterStyle |= (int)CharacterStyleFlags::SuspendStop;
+		}
+		else
+		{
+			TestDaControl->CharacterStyle &= ~(int)CharacterStyleFlags::SuspendStop;
+		}
+	}
+}
+
+System::Boolean ControlClrForm::CharStyleSuspendHide::get ()
+{
+	if	(
+			(TestDaControl)
+		&&	(TestDaControl->CharacterStyle & (int)CharacterStyleFlags::SuspendHide)
+		)
+	{
+		return true;
+	}
+	return false;
+}
+System::Void ControlClrForm::CharStyleSuspendHide::set (System::Boolean value)
+{
+	if	(TestDaControl)
+	{
+		if	(value)
+		{
+			TestDaControl->CharacterStyle |= (int)CharacterStyleFlags::SuspendHide;
+		}
+		else
+		{
+			TestDaControl->CharacterStyle &= ~(int)CharacterStyleFlags::SuspendHide;
+		}
+	}
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
-System::Void ControlTestForm::ShowConnected ()
+System::Void ControlClrForm::ShowConnected ()
 {
 	try
 	{
@@ -200,7 +278,7 @@ System::Void ControlTestForm::ShowConnected ()
 #endif
 }
 
-System::Void ControlTestForm::SelectCharacter (DoubleAgent::Control::Character^ pCharacter)
+System::Void ControlClrForm::SelectCharacter (DoubleAgent::Control::Character^ pCharacter)
 {
 	try
 	{
@@ -274,7 +352,7 @@ System::Void ControlTestForm::SelectCharacter (DoubleAgent::Control::Character^ 
 
 /////////////////////////////////////////////////////////////////////////////
 
-System::Void ControlTestForm::FormBindingContextChanged(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::FormBindingContextChanged(System::Object^  sender, System::EventArgs^  e)
 {
 	if	(!CharacterPageData)
 	{
@@ -293,7 +371,7 @@ System::Void ControlTestForm::FormBindingContextChanged(System::Object^  sender,
 	{
 		CharactersPageData = gcnew DoubleAgent::CharactersPageData;
 		CharactersPageData->Control = TestDaControl;
-		CharactersPageData->BoundChanged += gcnew System::EventHandler(this, &ControlTestForm::DataBoundChanged);
+		CharactersPageData->BoundChanged += gcnew System::EventHandler(this, &ControlClrForm::DataBoundChanged);
 		CharactersPageData->BindingSource = CharactersBinding;
 		CharactersPageBinding->DataSource = CharactersPageData;
 	}
@@ -301,7 +379,7 @@ System::Void ControlTestForm::FormBindingContextChanged(System::Object^  sender,
 	{
 		SettingsPageData = gcnew DoubleAgent::SettingsPageData;
 		SettingsPageData->Control = TestDaControl;
-		SettingsPageData->BoundChanged += gcnew System::EventHandler(this, &ControlTestForm::DataBoundChanged);
+		SettingsPageData->BoundChanged += gcnew System::EventHandler(this, &ControlClrForm::DataBoundChanged);
 		SettingsPageData->BindingSource = SettingsBinding;
 		SettingsPageBinding->DataSource = SettingsPageData;
 	}
@@ -309,7 +387,7 @@ System::Void ControlTestForm::FormBindingContextChanged(System::Object^  sender,
 	{
 		PropertySheetPageData = gcnew DoubleAgent::PropertySheetPageData;
 		PropertySheetPageData->Control = TestDaControl;
-		PropertySheetPageData->BoundChanged += gcnew System::EventHandler(this, &ControlTestForm::DataBoundChanged);
+		PropertySheetPageData->BoundChanged += gcnew System::EventHandler(this, &ControlClrForm::DataBoundChanged);
 		PropertySheetPageData->BindingSource = PropertySheetBinding;
 		PropertySheetPageBinding->DataSource = PropertySheetPageData;
 	}
@@ -317,14 +395,14 @@ System::Void ControlTestForm::FormBindingContextChanged(System::Object^  sender,
 	{
 		CharacterFilesPageData = gcnew DoubleAgent::CharacterFilesPageData;
 		CharacterFilesPageData->Control = TestDaControl;
-		CharacterFilesPageData->BoundChanged += gcnew System::EventHandler(this, &ControlTestForm::DataBoundChanged);
+		CharacterFilesPageData->BoundChanged += gcnew System::EventHandler(this, &ControlClrForm::DataBoundChanged);
 		CharacterFilesPageBinding->DataSource = CharacterFilesPageData;
 	}
 	if	(!TTSEnginesPageData)
 	{
 		TTSEnginesPageData = gcnew DoubleAgent::TTSEnginesPageData;
 		TTSEnginesPageData->Control = TestDaControl;
-		TTSEnginesPageData->BoundChanged += gcnew System::EventHandler(this, &ControlTestForm::DataBoundChanged);
+		TTSEnginesPageData->BoundChanged += gcnew System::EventHandler(this, &ControlClrForm::DataBoundChanged);
 		TTSEnginesPageData->BindingSource = TTSEnginesBinding;
 		TTSEnginesPageBinding->DataSource = TTSEnginesPageData;
 	}
@@ -332,7 +410,7 @@ System::Void ControlTestForm::FormBindingContextChanged(System::Object^  sender,
 	{
 		SREnginesPageData = gcnew DoubleAgent::SREnginesPageData;
 		SREnginesPageData->Control = TestDaControl;
-		SREnginesPageData->BoundChanged += gcnew System::EventHandler(this, &ControlTestForm::DataBoundChanged);
+		SREnginesPageData->BoundChanged += gcnew System::EventHandler(this, &ControlClrForm::DataBoundChanged);
 		SREnginesPageData->BindingSource = SREnginesBinding;
 		SREnginesPageBinding->DataSource = SREnginesPageData;
 	}
@@ -361,7 +439,7 @@ System::Void ControlTestForm::FormBindingContextChanged(System::Object^  sender,
 
 /////////////////////////////////////////////////////////////////////////////
 
-System::Void ControlTestForm::DataBoundChanged(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::DataBoundChanged(System::Object^  sender, System::EventArgs^  e)
 {
 	ShowConnected ();
 }
@@ -370,7 +448,7 @@ System::Void ControlTestForm::DataBoundChanged(System::Object^  sender, System::
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-System::Void ControlTestForm::LoadButton_Click(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::LoadButton_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	LoadCharacter^						lLoad = gcnew LoadCharacter (TestDaControl);
 	DoubleAgent::Control::Character^	lCharacter;
@@ -417,7 +495,7 @@ System::Void ControlTestForm::LoadButton_Click(System::Object^  sender, System::
 
 /////////////////////////////////////////////////////////////////////////////
 
-System::Void ControlTestForm::UnloadButton_Click(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::UnloadButton_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	if	(
 			(CharacterList->RowCount > 1)
@@ -451,7 +529,7 @@ System::Void ControlTestForm::UnloadButton_Click(System::Object^  sender, System
 	}
 }
 
-System::Void ControlTestForm::SetCurrentButton_Click(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::SetCurrentButton_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	int									lCharacterNdx;
 	DoubleAgent::Control::Character^	lCharacter;
@@ -469,7 +547,7 @@ System::Void ControlTestForm::SetCurrentButton_Click(System::Object^  sender, Sy
 	}
 }
 
-System::Void ControlTestForm::SetContainedButton_Click(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::SetContainedButton_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	DoubleAgent::Control::Character^	lCharacter;
 
@@ -500,7 +578,7 @@ System::Void ControlTestForm::SetContainedButton_Click(System::Object^  sender, 
 
 /////////////////////////////////////////////////////////////////////////////
 
-System::Void ControlTestForm::CharacterList_SelectionChanged(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::CharacterList_SelectionChanged(System::Object^  sender, System::EventArgs^  e)
 {
 	DoubleAgent::Control::Character^	lCharacter = nullptr;
 
@@ -525,7 +603,7 @@ System::Void ControlTestForm::CharacterList_SelectionChanged(System::Object^  se
 	}
 }
 
-System::Void ControlTestForm::CharacterList_DataBindingComplete(System::Object^  sender, System::Windows::Forms::DataGridViewBindingCompleteEventArgs^  e)
+System::Void ControlClrForm::CharacterList_DataBindingComplete(System::Object^  sender, System::Windows::Forms::DataGridViewBindingCompleteEventArgs^  e)
 {
 	CharacterList_SelectionChanged (sender, e);
 }
@@ -534,7 +612,7 @@ System::Void ControlTestForm::CharacterList_DataBindingComplete(System::Object^ 
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-System::Void ControlTestForm::CharShow_Click(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::CharShow_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	DoubleAgent::Control::Character^	lCharacter;
 
@@ -548,7 +626,7 @@ System::Void ControlTestForm::CharShow_Click(System::Object^  sender, System::Ev
 	}
 }
 
-System::Void ControlTestForm::CharHide_Click(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::CharHide_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	DoubleAgent::Control::Character^	lCharacter;
 
@@ -562,7 +640,7 @@ System::Void ControlTestForm::CharHide_Click(System::Object^  sender, System::Ev
 	}
 }
 
-System::Void ControlTestForm::CharMoveTo_Click(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::CharMoveTo_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	DoubleAgent::Control::Character^	lCharacter;
 
@@ -576,7 +654,7 @@ System::Void ControlTestForm::CharMoveTo_Click(System::Object^  sender, System::
 	}
 }
 
-System::Void ControlTestForm::CharGestureAt_Click(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::CharGestureAt_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	DoubleAgent::Control::Character^	lCharacter;
 
@@ -590,7 +668,7 @@ System::Void ControlTestForm::CharGestureAt_Click(System::Object^  sender, Syste
 	}
 }
 
-System::Void ControlTestForm::CharSpeak_Click(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::CharSpeak_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	DoubleAgent::Control::Character^		lCharacter;
 	DoubleAgent::Control::FormattedText^	lFormattedText;
@@ -607,7 +685,7 @@ System::Void ControlTestForm::CharSpeak_Click(System::Object^  sender, System::E
 	}
 }
 
-System::Void ControlTestForm::CharThink_Click(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::CharThink_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	DoubleAgent::Control::Character^	lCharacter;
 
@@ -621,7 +699,7 @@ System::Void ControlTestForm::CharThink_Click(System::Object^  sender, System::E
 	}
 }
 
-System::Void ControlTestForm::CharListen_Click(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::CharListen_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	DoubleAgent::Control::Character^	lCharacter;
 
@@ -635,7 +713,7 @@ System::Void ControlTestForm::CharListen_Click(System::Object^  sender, System::
 	}
 }
 
-System::Void ControlTestForm::CharListenStop_Click(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::CharListenStop_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	DoubleAgent::Control::Character^	lCharacter;
 
@@ -649,7 +727,7 @@ System::Void ControlTestForm::CharListenStop_Click(System::Object^  sender, Syst
 	}
 }
 
-System::Void ControlTestForm::CharShowPopupMenu_Click(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::CharShowPopupMenu_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	DoubleAgent::Control::Character^	lCharacter;
 
@@ -663,7 +741,7 @@ System::Void ControlTestForm::CharShowPopupMenu_Click(System::Object^  sender, S
 	}
 }
 
-System::Void ControlTestForm::CharPlay_Click(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::CharPlay_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	DoubleAgent::Control::Character^	lCharacter;
 
@@ -677,7 +755,7 @@ System::Void ControlTestForm::CharPlay_Click(System::Object^  sender, System::Ev
 	}
 }
 
-System::Void ControlTestForm::CharStopAll_Click(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::CharStopAll_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	DoubleAgent::Control::Character^	lCharacter;
 
@@ -693,7 +771,7 @@ System::Void ControlTestForm::CharStopAll_Click(System::Object^  sender, System:
 
 /////////////////////////////////////////////////////////////////////////////
 
-System::Void ControlTestForm::CharWidthDefault_Click(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::CharWidthDefault_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	DoubleAgent::Control::Character^	lCharacter;
 
@@ -708,7 +786,7 @@ System::Void ControlTestForm::CharWidthDefault_Click(System::Object^  sender, Sy
 	}
 }
 
-System::Void ControlTestForm::CharHeightDefault_Click(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::CharHeightDefault_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	DoubleAgent::Control::Character^	lCharacter;
 
@@ -723,7 +801,7 @@ System::Void ControlTestForm::CharHeightDefault_Click(System::Object^  sender, S
 	}
 }
 
-System::Void ControlTestForm::CharGenerateIcon_Click(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlClrForm::CharGenerateIcon_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	DoubleAgent::Control::Character^	lCharacter;
 

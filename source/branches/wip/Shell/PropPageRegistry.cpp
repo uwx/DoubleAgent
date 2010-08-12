@@ -31,6 +31,8 @@
 #include "PropPageLogging.h"
 #endif
 
+#pragma comment (lib,"comctl32.lib")
+
 #ifdef	_DEBUG
 //#define	_DEBUG_INSTANCE		LogNormal
 #define	_DEBUG_EMULATION	LogDebugFast
@@ -55,6 +57,9 @@ CPropPageRegistry::CPropPageRegistry()
 #ifdef	_DEBUG_INSTANCE
 	LogMessage (_DEBUG_INSTANCE, _T("[%p] CPropPageRegistry::CPropPageRegistry"), this);
 #endif
+	tSS <INITCOMMONCONTROLSEX, DWORD> lInitControls;
+	lInitControls.dwICC = ICC_WIN95_CLASSES|ICC_LINK_CLASS;
+	InitCommonControlsEx (&lInitControls);
 }
 
 CPropPageRegistry::~CPropPageRegistry()
@@ -177,16 +182,16 @@ void CPropPageRegistry::ShowDaRegistry ()
 
 	mDaInstalled.mControlName = _T(_CONTROL_PROGID_NAME);
 #ifdef	_WIN64
-	if	(mDaInstalled.mControlItem = ShowClassId (mDaInstalled.mControlName, sNameFormat64, __uuidof(CDaAgentCtl), mDaTree))
+	if	(mDaInstalled.mControlItem = ShowClassId (mDaInstalled.mControlName, sNameFormat64, __uuidof(DaControl), mDaTree))
 #else
-	if	(mDaInstalled.mControlItem = ShowClassId (mDaInstalled.mControlName, (IsWow64()?sNameFormat32:NULL), __uuidof(CDaAgentCtl), mDaTree))
+	if	(mDaInstalled.mControlItem = ShowClassId (mDaInstalled.mControlName, (IsWow64()?sNameFormat32:NULL), __uuidof(DaControl), mDaTree))
 #endif
 	{
 		mDaInstalled.mItemCount++;
 	}
 #ifdef	_WIN64
 	mDaInstalled32.mControlName = _T(_CONTROL_PROGID_NAME);
-	if	(mDaInstalled32.mControlItem = ShowClassId (mDaInstalled32.mControlName, sNameFormat32, __uuidof(CDaAgentCtl), mDaTree, true, true))
+	if	(mDaInstalled32.mControlItem = ShowClassId (mDaInstalled32.mControlName, sNameFormat32, __uuidof(DaControl), mDaTree, true, true))
 	{
 		mDaInstalled32.mItemCount++;
 	}
@@ -671,7 +676,7 @@ bool CPropPageRegistry::ShowInstallStatus ()
 	bool	lRet = false;
 
 	mEmulationStatus.mServerStatus = ShowTreatAs (mDaInstalled.mServerItem, mDaInstalled.mServerName, mDaInstalled.mServerTreatAs, mMaInstalled.mServerItem, mMaInstalled.mServerName, mMaInstalled.mServerTreatAs, __uuidof(AgentServer), __uuidof(DaServer));
-	mEmulationStatus.mControlStatus = ShowTreatAs (mDaInstalled.mControlItem, mDaInstalled.mControlName, mDaInstalled.mControlTreatAs, mMaInstalled.mControlItem, mMaInstalled.mControlName, mMaInstalled.mControlTreatAs, __uuidof(AgentControl), __uuidof(CDaAgentCtl));
+	mEmulationStatus.mControlStatus = ShowTreatAs (mDaInstalled.mControlItem, mDaInstalled.mControlName, mDaInstalled.mControlTreatAs, mMaInstalled.mControlItem, mMaInstalled.mControlName, mMaInstalled.mControlTreatAs, __uuidof(AgentControl), __uuidof(DaControl));
 	mEmulationStatus.mCharPropsStatus = ShowTreatAs (mDaInstalled.mCharPropsItem, mDaInstalled.mCharPropsName, mDaInstalled.mCharPropsTreatAs, mMaInstalled.mCharPropsItem, mMaInstalled.mCharPropsName, mMaInstalled.mCharPropsTreatAs, __uuidof(AgentCharacterProps), __uuidof(CDaCharacterProps));
 #ifdef	_WIN64
 	if	(mMaInstalled.mServerItemAlt)
@@ -679,7 +684,7 @@ bool CPropPageRegistry::ShowInstallStatus ()
 		mEmulationStatus.mServerStatusAlt = ShowTreatAs (mDaInstalled.mServerItem, mDaInstalled.mServerName, mDaInstalled.mServerTreatAsAlt, mMaInstalled.mServerItemAlt, mMaInstalled.mServerNameAlt, mMaInstalled.mServerTreatAsAlt, __uuidof(AgentServer64), __uuidof(DaServer));
 	}
 	mEmulationStatus32.mServerStatus = ShowTreatAs (mDaInstalled32.mServerItem, mDaInstalled32.mServerName, mDaInstalled32.mServerTreatAs, mMaInstalled32.mServerItem, mMaInstalled32.mServerName, mMaInstalled32.mServerTreatAs, __uuidof(AgentServer), __uuidof(DaServer), true);
-	mEmulationStatus32.mControlStatus = ShowTreatAs (mDaInstalled32.mControlItem, mDaInstalled32.mControlName, mDaInstalled32.mControlTreatAs, mMaInstalled32.mControlItem, mMaInstalled32.mControlName, mMaInstalled32.mControlTreatAs, __uuidof(AgentControl), __uuidof(CDaAgentCtl), true);
+	mEmulationStatus32.mControlStatus = ShowTreatAs (mDaInstalled32.mControlItem, mDaInstalled32.mControlName, mDaInstalled32.mControlTreatAs, mMaInstalled32.mControlItem, mMaInstalled32.mControlName, mMaInstalled32.mControlTreatAs, __uuidof(AgentControl), __uuidof(DaControl), true);
 #endif
 
 	if	(ShowDaInstallStatus ())
@@ -1367,7 +1372,7 @@ LRESULT CPropPageRegistry::OnUseDa(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOO
 		{
 			lChanged = true;
 		}
-		if	(UpdateTreatAs (__uuidof(AgentControl), __uuidof(CDaAgentCtl)))
+		if	(UpdateTreatAs (__uuidof(AgentControl), __uuidof(DaControl)))
 		{
 			lChanged = true;
 		}

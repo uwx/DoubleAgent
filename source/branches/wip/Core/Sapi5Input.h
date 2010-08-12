@@ -92,6 +92,7 @@ public:
 	bool IsInitialized () const;
 	bool IsListening () const;
 	bool IsHearing () const;
+	bool IsPaused () const;
 
 	const ULONGLONG	mGrammarIdCommands;
 	const ULONGLONG	mGrammarIdGlobal;
@@ -108,8 +109,9 @@ public:
 	bool SetCharacterName (long pCharID, LPCTSTR pCharName, LPCTSTR pCommandsCaption = NULL);
 	bool RemoveCharacter (long pCharID);
 
-	HRESULT StartListening ();
+	HRESULT StartListening (ULONG pMaxCommandAlternates = 2);
 	HRESULT StopListening ();
+	HRESULT PauseListening (bool pPause);
 
 	bool AddEventSink (ISapi5InputEventSink * pEventSink, CSapi5InputContext * pPrevSourceContext = NULL);
 	bool RemoveEventSink (ISapi5InputEventSink * pEventSink);
@@ -148,6 +150,7 @@ protected:
 	CAtlPtrTypeArray <ISapi5InputEventSink>												mEventSinks;
 	ULONG																				mEventLastStream;
 	bool																				mEventSoundStarted;
+	bool																				mPaused;
 };
 
 #pragma warning (pop)

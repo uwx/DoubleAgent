@@ -62,7 +62,7 @@ CAgentListeningWnd * CAgentListeningWnd::CreateInstance ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentListeningWnd::Create (CWindow * pOwnerWnd)
+bool CAgentListeningWnd::Create (CWindow * pOwnerWnd, DWORD pExStyle)
 {
 	bool			lRet = false;
 	tS <LOGFONT>	lLogFont;
@@ -70,7 +70,7 @@ bool CAgentListeningWnd::Create (CWindow * pOwnerWnd)
 	if	(
 			(pOwnerWnd)
 		&&	(pOwnerWnd->IsWindow())
-		&&	(SubclassWindow (::CreateWindowEx (0, TOOLTIPS_CLASS, _T(""), WS_POPUP|TTS_ALWAYSTIP|TTS_NOPREFIX, 0,0,0,0, pOwnerWnd->m_hWnd, 0, _AtlBaseModule.GetModuleInstance(), NULL)))
+		&&	(SubclassWindow (::CreateWindowEx (pExStyle, TOOLTIPS_CLASS, _T(""), WS_POPUP|TTS_ALWAYSTIP|TTS_NOPREFIX, 0,0,0,0, pOwnerWnd->m_hWnd, 0, _AtlBaseModule.GetModuleInstance(), NULL)))
 		)
 	{
 		mOwnerWnd = pOwnerWnd;
@@ -89,7 +89,7 @@ bool CAgentListeningWnd::Create (CWindow * pOwnerWnd)
 		mToolInfo.lpszText = _T("");
 		SendMessage (TTM_ADDTOOL, 0, (LPARAM)&mToolInfo);
 
-		ModifyStyleEx (0, WS_EX_TOPMOST);
+		ModifyStyleEx (WS_EX_TOPMOST, pExStyle);
 		lRet = true;
 	}
 	return lRet;
@@ -162,7 +162,7 @@ bool CAgentListeningWnd::ShowTipWnd ()
 	{
 		SendMessage (TTM_ACTIVATE, TRUE);
 		PositionTipWnd ();
-		SetWindowPos (HWND_TOPMOST, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE);
+		SetWindowPos ((GetExStyle() & WS_EX_TOPMOST) ? HWND_TOPMOST : HWND_TOP, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE);
 		lRet = true;
 	}
 	return lRet;

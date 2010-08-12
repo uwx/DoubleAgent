@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Tue Aug 03 19:03:55 2010
+/* at Wed Aug 11 00:16:16 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
-    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -467,6 +467,11 @@ extern "C"{
 /* library DoubleAgentCtl */
 /* [control][helpfile][helpstring][version][uuid] */ 
 
+class __declspec(uuid("{1147E550-A208-11DE-ABF2-002421116FB2}")) DoubleAgentCtl_TypeLib;
+#define	DoubleAgentCtl_MajorVer	( 1 )
+
+#define	DoubleAgentCtl_MinorVer	( 1 )
+
 
 
 
@@ -498,16 +503,6 @@ extern "C"{
 
 #ifndef _DA_COMMON_TYPES_
 #define _DA_COMMON_TYPES_
-typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E569-A208-11DE-ABF2-002421116FB2") 
-enum CharacterStyleFlags
-    {	CharacterStyle_SoundEffects	= 0x1,
-	CharacterStyle_IdleEnabled	= 0x2,
-	CharacterStyle_AutoPopupMenu	= 0x4,
-	CharacterStyle_IconShown	= 0x8,
-	CharacterStyle_Smoothed	= 0x30,
-	CharacterStyle_SmoothEdges	= 0x20
-    } 	CharacterStyleFlags;
-
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56A-A208-11DE-ABF2-002421116FB2") 
 enum BalloonStyleFlags
     {	BalloonStyle_Enabled	= 0x1,
@@ -516,16 +511,6 @@ enum BalloonStyleFlags
 	BalloonStyle_AutoPace	= 0x8,
 	BalloonStyle_ShowPartialLines	= 0x10
     } 	BalloonStyleFlags;
-
-typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56B-A208-11DE-ABF2-002421116FB2") 
-enum ActiveStateType
-    {	ActiveState_Inactive	= 0,
-	ActiveState_Active	= 1,
-	ActiveState_InputActive	= 2,
-	ActiveState_Suspended	= 4,
-	ActiveState_Suspended_Active	= 5,
-	ActiveState_Suspended_InputActive	= 6
-    } 	ActiveStateType;
 
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56C-A208-11DE-ABF2-002421116FB2") 
 enum StopAllFlags
@@ -611,6 +596,35 @@ enum SpeechGenderType
 #define	PropertySheet_PageName_Copyright	( "Copyright" )
 
 #endif // _DA_COMMON_TYPES_
+#ifndef _ActiveStateType_Defined
+#define _ActiveStateType_Defined
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56B-A208-11DE-ABF2-002421116FB2") 
+enum ActiveStateType
+    {	ActiveState_Inactive	= 0,
+	ActiveState_Active	= 1,
+	ActiveState_InputActive	= 2,
+	ActiveState_Suspended	= 4,
+	ActiveState_Suspended_Active	= 5,
+	ActiveState_Suspended_InputActive	= 6
+    } 	ActiveStateType;
+
+#endif
+#ifndef _CharacterStyleFlags_Defined
+#define _CharacterStyleFlags_Defined
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E569-A208-11DE-ABF2-002421116FB2") 
+enum CharacterStyleFlags
+    {	CharacterStyle_SoundEffects	= 0x1,
+	CharacterStyle_IdleEnabled	= 0x2,
+	CharacterStyle_AutoPopupMenu	= 0x4,
+	CharacterStyle_IconShown	= 0x8,
+	CharacterStyle_Smoothed	= 0x30,
+	CharacterStyle_SmoothEdges	= 0x20,
+	CharacterStyle_SuspendPause	= 0x100,
+	CharacterStyle_SuspendStop	= 0x200,
+	CharacterStyle_SuspendHide	= 0x400
+    } 	CharacterStyleFlags;
+
+#endif
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E594-A208-11DE-ABF2-002421116FB2") 
 enum RequestStatus
     {	RequestStatus_Success	= 0,
@@ -891,6 +905,12 @@ enum RequestStatus
 #define	DISPID_IDaCtlCharacter2_ThinkFormatted	( 87 )
 
 #define	DISPID_IDaCtlCharacter2_NewFormattedText	( 88 )
+
+#define	DISPID_IDaCtlCharacter2_SuspendPause	( 89 )
+
+#define	DISPID_IDaCtlCharacter2_SuspendStop	( 90 )
+
+#define	DISPID_IDaCtlCharacter2_SuspendHide	( 91 )
 
 #define	DISPID_IAgentCtlRequest_Status	( 1 )
 
@@ -5848,10 +5868,10 @@ EXTERN_C const IID IID_IDaControl2;
             /* [retval][out] */ IDaCtlSettings **Settings) = 0;
         
         virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_AutoConnect( 
-            /* [retval][out] */ VARIANT_BOOL *AutoConnect) = 0;
+            /* [retval][out] */ short *AutoConnect) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_AutoConnect( 
-            /* [in] */ VARIANT_BOOL AutoConnect) = 0;
+            /* [in] */ short AutoConnect) = 0;
         
         virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ControlCharacter( 
             /* [retval][out] */ IDaCtlCharacter2 **ControlCharacter) = 0;
@@ -6076,11 +6096,11 @@ EXTERN_C const IID IID_IDaControl2;
         
         /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AutoConnect )( 
             IDaControl2 * This,
-            /* [retval][out] */ VARIANT_BOOL *AutoConnect);
+            /* [retval][out] */ short *AutoConnect);
         
         /* [displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_AutoConnect )( 
             IDaControl2 * This,
-            /* [in] */ VARIANT_BOOL AutoConnect);
+            /* [in] */ short AutoConnect);
         
         /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ControlCharacter )( 
             IDaControl2 * This,
@@ -6401,6 +6421,24 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
         
         virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_States( 
             /* [retval][out] */ SAFEARRAY * *States) = 0;
+        
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_SuspendPause( 
+            /* [in] */ VARIANT_BOOL SuspendPause) = 0;
+        
+        virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_SuspendPause( 
+            /* [retval][out] */ VARIANT_BOOL *SuspendPause) = 0;
+        
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_SuspendStop( 
+            /* [in] */ VARIANT_BOOL SuspendStop) = 0;
+        
+        virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_SuspendStop( 
+            /* [retval][out] */ VARIANT_BOOL *SuspendStop) = 0;
+        
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_SuspendHide( 
+            /* [in] */ VARIANT_BOOL SuspendHide) = 0;
+        
+        virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_SuspendHide( 
+            /* [retval][out] */ VARIANT_BOOL *SuspendHide) = 0;
         
     };
     
@@ -6871,6 +6909,30 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [retval][out] */ SAFEARRAY * *States);
         
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_SuspendPause )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ VARIANT_BOOL SuspendPause);
+        
+        /* [displaybind][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SuspendPause )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *SuspendPause);
+        
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_SuspendStop )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ VARIANT_BOOL SuspendStop);
+        
+        /* [displaybind][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SuspendStop )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *SuspendStop);
+        
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_SuspendHide )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ VARIANT_BOOL SuspendHide);
+        
+        /* [displaybind][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SuspendHide )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *SuspendHide);
+        
         END_INTERFACE
     } IDaCtlCharacter2Vtbl;
 
@@ -7198,6 +7260,24 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
 
 #define IDaCtlCharacter2_get_States(This,States)	\
     ( (This)->lpVtbl -> get_States(This,States) ) 
+
+#define IDaCtlCharacter2_put_SuspendPause(This,SuspendPause)	\
+    ( (This)->lpVtbl -> put_SuspendPause(This,SuspendPause) ) 
+
+#define IDaCtlCharacter2_get_SuspendPause(This,SuspendPause)	\
+    ( (This)->lpVtbl -> get_SuspendPause(This,SuspendPause) ) 
+
+#define IDaCtlCharacter2_put_SuspendStop(This,SuspendStop)	\
+    ( (This)->lpVtbl -> put_SuspendStop(This,SuspendStop) ) 
+
+#define IDaCtlCharacter2_get_SuspendStop(This,SuspendStop)	\
+    ( (This)->lpVtbl -> get_SuspendStop(This,SuspendStop) ) 
+
+#define IDaCtlCharacter2_put_SuspendHide(This,SuspendHide)	\
+    ( (This)->lpVtbl -> put_SuspendHide(This,SuspendHide) ) 
+
+#define IDaCtlCharacter2_get_SuspendHide(This,SuspendHide)	\
+    ( (This)->lpVtbl -> get_SuspendHide(This,SuspendHide) ) 
 
 #endif /* COBJMACROS */
 

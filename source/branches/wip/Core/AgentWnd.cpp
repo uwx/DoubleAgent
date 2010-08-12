@@ -67,6 +67,7 @@ IMPLEMENT_DLL_OBJECT(CAgentWnd)
 
 CAgentWnd::CAgentWnd ()
 :	mQueueBusy (0),
+	mQueuePaused (false),
 	mIdleLevel (-1),
 	mIdleTimer (0),
 	mIdleStarted (false),
@@ -1378,7 +1379,25 @@ bool CAgentWnd::ClearAnimations ()
 	if	(lStreamInfo = GetAgentStreamInfo())
 	{
 		lStreamInfo->ClearAnimationSequences();
-		lStreamInfo->SetAnimationIndex (-1);
+		if	(lStreamInfo->SetAnimationIndex (-1) == S_OK)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool CAgentWnd::DidAnimations ()
+{
+	CAgentStreamInfo *	lStreamInfo;
+	long				lAnimationNdx = -1;
+
+	if	(
+			(lStreamInfo = GetAgentStreamInfo())
+		&&	(SUCCEEDED (lStreamInfo->GetAnimationIndex (&lAnimationNdx)))
+		&&	(lAnimationNdx >= 0)
+		)
+	{
 		return true;
 	}
 	return false;
@@ -1581,7 +1600,7 @@ long CAgentWnd::QueueState (long pCharID, LPCTSTR pStateName)
 #ifdef	_LOG_QUEUE_OPS
 	if	(LogIsActive (_LOG_QUEUE_OPS))
 	{
-		LogMessage (_LOG_QUEUE_OPS, _T("[%p] QueueState [%d] [%s]"), this, pCharID, lStateName);
+		LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueueState [%s]"), this, pCharID, lStateName);
 	}
 #endif
 
@@ -1597,7 +1616,7 @@ long CAgentWnd::QueueState (long pCharID, LPCTSTR pStateName)
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p] QueueState [%d] [%s] as [%p] [%d]"), this, pCharID, lStateName, lQueuedState, lReqID);
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueueState [%p(%d)] [%s]"), this, pCharID, lQueuedState, lReqID, lStateName);
 		}
 #endif
 	}
@@ -1607,7 +1626,7 @@ long CAgentWnd::QueueState (long pCharID, LPCTSTR pStateName)
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p] QueueState [%d] [%s] failed"), this, pCharID, lStateName);
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueueState [%s] failed"), this, pCharID, lStateName);
 		}
 #endif
 	}
@@ -1746,7 +1765,7 @@ bool CAgentWnd::ClearQueuedStates (long pCharID, HRESULT pReqStatus, LPCTSTR pRe
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p] ClearQueuedStates for [%d] [%8.8X] [%s] exclude [%u] [%s]"), this, pCharID, pReqStatus, pReason, pExcludeActive, JoinStringArray(lExcludeStates,_T(", ")));
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] ClearQueuedStates for [%8.8X] [%s] exclude [%u] [%s]"), this, pCharID, pReqStatus, pReason, pExcludeActive, JoinStringArray(lExcludeStates,_T(", ")));
 		}
 #endif
 		do
@@ -1813,7 +1832,7 @@ long CAgentWnd::QueueGesture (long pCharID, LPCTSTR pGestureName, LPCTSTR pForSt
 #ifdef	_LOG_QUEUE_OPS
 	if	(LogIsActive (_LOG_QUEUE_OPS))
 	{
-		LogMessage (_LOG_QUEUE_OPS, _T("[%p] QueueGesture [%d] [%s]"), this, pCharID, lGestureName);
+		LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueueGesture [%s]"), this, pCharID, lGestureName);
 	}
 #endif
 
@@ -1830,11 +1849,11 @@ long CAgentWnd::QueueGesture (long pCharID, LPCTSTR pGestureName, LPCTSTR pForSt
 		{
 			if	(lQueuedGesture->mStateName.IsEmpty())
 			{
-				LogMessage (_LOG_QUEUE_OPS, _T("[%p] QueueGesture [%d] [%s] as [%p] [%d]"), this, pCharID, lGestureName, lQueuedGesture, lReqID);
+				LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueueGesture [%p(%d)] [%s]"), this, pCharID, lQueuedGesture, lReqID, lGestureName);
 			}
 			else
 			{
-				LogMessage (_LOG_QUEUE_OPS, _T("[%p] QueueGesture [%d] [%s] State [%s] as [%p] [%d]"), this, pCharID, lGestureName, lQueuedGesture->mStateName, lQueuedGesture, lReqID);
+				LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueueGesture [%p(%d)] [%s] State [%s]"), this, pCharID, lQueuedGesture, lReqID, lGestureName, lQueuedGesture->mStateName);
 			}
 		}
 #endif
@@ -1845,7 +1864,7 @@ long CAgentWnd::QueueGesture (long pCharID, LPCTSTR pGestureName, LPCTSTR pForSt
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p] QueueGesture [%d] [%s] failed"), this, pCharID, lGestureName);
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueueGesture [%s] failed"), this, pCharID, lGestureName);
 		}
 #endif
 	}
@@ -1958,7 +1977,7 @@ bool CAgentWnd::ClearQueuedGestures (long pCharID, HRESULT pReqStatus, LPCTSTR p
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p] ClearQueuedGestures for [%d] [%8.8X] [%s] exclude [%u] [%s]"), this, pCharID, pReqStatus, pReason, pExcludeActive, JoinStringArray(lExcludeStates,_T(", ")));
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] ClearQueuedGestures for [%8.8X] [%s] exclude [%u] [%s]"), this, pCharID, pReqStatus, pReason, pExcludeActive, JoinStringArray(lExcludeStates,_T(", ")));
 		}
 #endif
 		do
@@ -2100,7 +2119,7 @@ bool CAgentWnd::RemoveQueuedAction (CQueuedAction * pQueuedAction, HRESULT pReqS
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p] RemoveQueuedAction [%p] [%d] [%d] [%d] for [%p] [%s] left [%d]"), this, pQueuedAction, lQueuedAction->mAction, lQueuedAction->mCharID, lQueuedAction->mReqID, pReqStatus, pReason, mQueue.GetCount()-1);
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] RemoveQueuedAction [%p(%d)] [%d] for [%8.8X] [%s] left [%d]"), this, lQueuedAction->mCharID, pQueuedAction, lQueuedAction->mReqID, lQueuedAction->mAction, pReqStatus, pReason, mQueue.GetCount()-1);
 		}
 #endif
 		mQueue.RemoveAt (lPos);
@@ -2174,7 +2193,7 @@ bool CAgentWnd::ClearQueuedActions (long pCharID, HRESULT pReqStatus, LPCTSTR pR
 #ifdef	_LOG_QUEUE_OPS
 			if	(LogIsActive (_LOG_QUEUE_OPS))
 			{
-				LogMessage (_LOG_QUEUE_OPS, _T("[%p] ClearQueuedActions for [%d] [%8.8X] [%s]"), this, pCharID, pReqStatus, pReason);
+				LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] ClearQueuedActions for [%8.8X] [%s]"), this, pCharID, pReqStatus, pReason);
 			}
 #endif
 			do
@@ -2203,7 +2222,7 @@ bool CAgentWnd::ClearQueuedActions (long pCharID, HRESULT pReqStatus, LPCTSTR pR
 #ifdef	_LOG_QUEUE_OPS
 			if	(LogIsActive (_LOG_QUEUE_OPS))
 			{
-				LogMessage (_LOG_QUEUE_OPS, _T("[%p] Clear [%d] QueuedActions [%8.8X] [%s]"), this, mQueue.GetCount(), pReqStatus, pReason);
+				LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] Clear [%d] QueuedActions [%8.8X] [%s]"), this, pCharID, mQueue.GetCount(), pReqStatus, pReason);
 			}
 #endif
 			mQueue.DeleteAll ();
@@ -2234,11 +2253,6 @@ UINT CAgentWnd::IsQueueBusy () const
 #endif
 	}
 	return lRet;
-}
-
-UINT CAgentWnd::IsQueuePaused () const
-{
-	return 0;
 }
 
 int CAgentWnd::_PreDoQueue ()
@@ -2291,7 +2305,10 @@ int CAgentWnd::_PostDoQueue ()
 
 int CAgentWnd::PreDoQueue ()
 {
-	if	(this)
+	if	(
+			(this)
+		&&	(!IsQueuePaused ())
+		)
 	{
 		return _PreDoQueue ();
 	}
@@ -2345,6 +2362,21 @@ UINT_PTR CAgentWnd::ActivateQueue (bool pImmediate, DWORD pQueueTime)
 			lQueueTime = mQueue.mTimeDefault;
 		}
 
+		if	(IsQueuePaused ())
+		{
+			if	(lQueueTime)
+			{
+				mQueue.mTime = lQueueTime;
+#ifdef	_DEBUG_QUEUE_CYCLES
+				if	(LogIsActive (_DEBUG_QUEUE_CYCLES))
+				{
+					LogMessage (_DEBUG_QUEUE_CYCLES, _T("Queue [%u] Paused [%u]"), mQueue.mTimer, mQueue.mTime);
+				}
+#endif
+			}
+			SuspendQueue ();
+		}
+		else
 		if	(lQueueTime)
 		{
 			if	(
@@ -2434,9 +2466,48 @@ UINT_PTR CAgentWnd::SuspendQueue ()
 	return lRet;
 }
 
-UINT_PTR CAgentWnd::PauseQueue (bool pPause)
+/////////////////////////////////////////////////////////////////////////////
+
+bool CAgentWnd::IsQueuePaused () const
 {
-	return mQueue.mTimer;
+	return mQueuePaused;
+}
+
+bool CAgentWnd::PauseQueue (bool pPause)
+{
+	bool			lRet = false;
+	POSITION		lPos;
+	CQueuedAction *	lQueuedAction;
+
+#ifdef	_DEBUG_QUEUE_CYCLES
+	if	(LogIsActive (_DEBUG_QUEUE_CYCLES))
+	{
+		LogMessage (_DEBUG_QUEUE_CYCLES, _T("Queue [%u] Pause [%u]"), mQueue.mTimer, pPause);
+	}
+#endif
+	if	(pPause != IsPaused ())
+	{
+		lRet = true;
+	}
+	if	(mQueuePaused = pPause)
+	{
+		SuspendQueue ();
+	}
+	if	(!mQueue.IsEmpty ())
+	{	
+		for (lPos = mQueue.GetHeadPosition (); lPos;)
+		{
+			if	(lQueuedAction = mQueue.GetNext (lPos))
+			{
+				PauseQueuedAction (lQueuedAction, mQueuePaused);
+			}
+		}
+	}
+	if	(!IsPaused ())
+	{
+		ActivateQueue (false);
+	}
+	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2445,7 +2516,14 @@ UINT_PTR CAgentWnd::PauseQueue (bool pPause)
 
 bool CAgentWnd::CanDoAnimationQueue ()
 {
-	return IsAnimationComplete (true);
+	if	(
+			(!IsQueuePaused ())
+		&&	(IsAnimationComplete (true))
+		)
+	{
+		return true;
+	}
+	return false;
 }
 
 bool CAgentWnd::DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime)
@@ -2769,7 +2847,7 @@ bool CAgentWnd::StopIdle (LPCTSTR pReason)
 			if	(
 					(lIdleStarted)
 				&&	(IsWindow ())
-				&&	(IsWindowVisible ())
+				&&	(GetStyle() & WS_VISIBLE)
 				&&	(mQueue.IsEmpty ())
 				)
 			{
@@ -2803,7 +2881,7 @@ int CAgentWnd::IsIdle () const
 	if	(
 			(mIdleLevel >= 0)
 		&&	(IsWindow ())
-		&&	(IsWindowVisible ())
+		&&	(GetStyle() & WS_VISIBLE)
 		&&	(mQueue.IsEmpty ())
 		&&	(
 				(mIdleLevel > 0)

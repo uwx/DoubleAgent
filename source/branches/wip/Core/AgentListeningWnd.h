@@ -51,7 +51,7 @@ public:
 
 // Operations
 public:
-	bool Create (CWindow * pOwnerWnd);
+	bool Create (CWindow * pOwnerWnd, DWORD pExStyle = 0);
 	bool Attach (long pCharID, LPCTSTR pCharacterName);
 	bool Detach (long pCharID);
 	bool SetLangID (LANGID pLangID);

@@ -135,7 +135,7 @@ HRESULT CDaCmnCommandsWindow::put_Visible (VARIANT_BOOL Visible)
 			}
 			else
 			{
-				mVoiceCommandsWnd->Show ();
+				mVoiceCommandsWnd->Show (true);
 			}
 		}
 		else

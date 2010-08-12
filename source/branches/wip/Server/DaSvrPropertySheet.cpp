@@ -80,6 +80,11 @@ void DaSvrPropertySheet::Terminate (bool pFinal, bool pAbandonned)
 {
 	if	(this)
 	{
+		if	(pFinal)
+		{
+			UnmanageObjectLifetime (this);
+		}
+
 		if	(
 				(pFinal)
 			&&	(m_dwRef > 0)
@@ -94,11 +99,6 @@ void DaSvrPropertySheet::Terminate (bool pFinal, bool pAbandonned)
 				catch AnyExceptionDebug
 			}
 			m_dwRef = 0;
-		}
-
-		if	(pFinal)
-		{
-			UnmanageObjectLifetime (this);
 		}
 	}
 }
@@ -137,6 +137,7 @@ void DaSvrPropertySheet::OnFinalMessage (HWND pWnd)
 	}
 #endif
 	CPropSheetOptions::OnFinalMessage (pWnd);
+	Release ();
 }
 
 void DaSvrPropertySheet::OnClientEnded()

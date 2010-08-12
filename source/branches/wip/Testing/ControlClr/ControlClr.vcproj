@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="X_ControlTest"
+	Name="X_ControlClr"
 	ProjectGUID="{248BA69E-A24A-49CD-A67D-31E8DB4506C7}"
 	RootNamespace="DoubleAgent"
 	Keyword="ManagedCProj"
@@ -201,7 +201,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AssemblyIdentity="DoubleAgent.ControlTestForm"
+				AssemblyIdentity="DoubleAgent.ControlClrForm"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -270,7 +270,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AssemblyIdentity="DoubleAgent.ControlTestForm"
+				AssemblyIdentity="DoubleAgent.ControlClrForm"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -350,11 +350,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ControlTest.cpp"
+				RelativePath=".\ControlClr.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\ControlTestForm.cpp"
+				RelativePath=".\ControlClrForm.cpp"
 				>
 			</File>
 			<File
@@ -408,11 +408,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\ControlTestForm.h"
+				RelativePath=".\ControlClrForm.h"
 				FileType="3"
 				>
 				<File
-					RelativePath=".\ControlTestForm.resX"
+					RelativePath=".\ControlClrForm.resX"
 					SubType="Designer"
 					>
 				</File>
@@ -481,11 +481,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\ControlTest.rc"
+				RelativePath=".\ControlClr.rc"
 				>
 			</File>
 			<File
-				RelativePath=".\ControlTestRes.h"
+				RelativePath=".\ControlClrRes.h"
 				>
 			</File>
 			<File
@@ -498,6 +498,7 @@
 			>
 			<FileConfiguration
 				Name="Debug|Win32"
+				ExcludedFromBuild="true"
 				>
 				<Tool
 					Name="VCCustomBuildTool"

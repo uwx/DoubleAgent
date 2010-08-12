@@ -9,6 +9,9 @@
 ]
 library DoubleAgentSvr
 {
+cpp_quote("class __declspec(uuid(\"{1147E501-A208-11DE-ABF2-002421116FB2}\")) DoubleAgentSvr_TypeLib;")
+	const int DoubleAgentSvr_MajorVer = _SERVER_VER_MAJOR;
+	const int DoubleAgentSvr_MinorVer = _SERVER_VER_MINOR;
 	importlib("stdole2.tlb");
 
 	interface IDaServer;
@@ -47,6 +50,48 @@ library DoubleAgentSvr
 	/////////////////////////////////////////////////////////////////////////////
 
 #include "DaCommon.odl"
+
+cpp_quote("#ifndef _ActiveStateType_Defined")
+cpp_quote("#define _ActiveStateType_Defined")
+	[
+		uuid(1147E56B-A208-11DE-ABF2-002421116FB2),
+		helpstring("An Agent Character's active state")
+		//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.Server.ActiveStateType")
+	]
+	typedef enum ActiveStateType
+	{
+		[helpstring("This program is not the character's active client")]
+			ActiveState_Inactive = 0,
+		[helpstring("This program is the character's active client")]
+			ActiveState_Active = 1,
+		[helpstring("The character is the input-active character and will receive user input")]
+			ActiveState_InputActive = 2
+	}	ActiveStateType;
+cpp_quote("#endif")
+
+cpp_quote("#ifndef _CharacterStyleFlags_Defined")
+cpp_quote("#define _CharacterStyleFlags_Defined")
+	[
+		uuid(1147E569-A208-11DE-ABF2-002421116FB2),
+		helpstring("Style settings for a character, or the default settings used when a character is loaded")
+		//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.CharacterStyleFlags")
+	]
+	typedef enum CharacterStyleFlags
+	{
+		[helpstring("The animation sound effects are played")]
+			CharacterStyle_SoundEffects = 0x00000001,
+		[helpstring("The character enters idle mode and shows it's idling animations when it's not doing anything else")]
+			CharacterStyle_IdleEnabled = 0x00000002,
+		[helpstring("A right-click on the character or it's notification icon automatically shows a pop-up menu")]
+			CharacterStyle_AutoPopupMenu = 0x00000004,
+		[helpstring("The character has an icon in the taskbar notification area")]
+			CharacterStyle_IconShown = 0x00000008,
+		[helpstring("Image smoothing (antialiasing) is applied to the character's animations")]
+			CharacterStyle_Smoothed = 0x00000030,
+		[helpstring("Image smoothing (antialiasing) is applied to the edges of the character's animations")]
+			CharacterStyle_SmoothEdges = 0x00000020
+	}	CharacterStyleFlags;
+cpp_quote("#endif")
 
 	[
 		uuid(1147E595-A208-11DE-ABF2-002421116FB2)
@@ -936,9 +981,9 @@ cpp_quote("#endif")
 		[helpstring("deprecated - use the Visible property"), helpcontext(APIHELP_Svr_Commands),
 			id(DISPID_IAgentCommands_GetVisible), hidden] HRESULT GetVisible ([out] long* Visible);
 		[helpstring("Add a command at the end of the collection"), helpcontext(APIHELP_Svr_Commands),
-			id(DISPID_IAgentCommands_Add)] HRESULT Add ([in] BSTR Caption, [in] BSTR VoiceGrammar, [in] long Enabled, [in] long Visible, [out] long* CommandID);
+			id(DISPID_IAgentCommands_Add)] HRESULT Add ([in] BSTR Caption, [in] BSTR VoiceGrammar, [in] long Enabled, [in] long Visible, [out, retval] long* CommandID);
 		[helpstring("Insert a command into the collection"), helpcontext(APIHELP_Svr_Commands),
-			id(DISPID_IAgentCommands_Insert)] HRESULT Insert ([in] BSTR Caption, [in] BSTR VoiceGrammar, [in] long Enabled, [in] long Visible, [in] long RefCommandID, [in] long Before, [out] long* CommandID);
+			id(DISPID_IAgentCommands_Insert)] HRESULT Insert ([in] BSTR Caption, [in] BSTR VoiceGrammar, [in] long Enabled, [in] long Visible, [in] long RefCommandID, [in] long Before, [out, retval] long* CommandID);
 		[helpstring("Remove a command from the collection"), helpcontext(APIHELP_Svr_Commands),
 			id(DISPID_IAgentCommands_Remove)] HRESULT Remove ([in] long CommandID);
 		[helpstring("Remove all commands from the collection"), helpcontext(APIHELP_Svr_Commands),
@@ -967,9 +1012,9 @@ cpp_quote("#endif")
 		[helpstring("deprecated - use the VoiceCaption property"), helpcontext(APIHELP_Svr_Commands),
 			id(DISPID_IAgentCommandsEx_GetVoiceCaption), hidden] HRESULT GetVoiceCaption ([out] BSTR* VoiceCaption);
 		[helpstring("Add a command at the end of the collection"), helpcontext(APIHELP_Svr_Commands),
-			id(DISPID_IAgentCommandsEx_AddEx)] HRESULT AddEx ([in] BSTR Caption, [in] BSTR VoiceGrammar, [in] BSTR VoiceCaption, [in] long Enabled, [in] long Visible, [in] long HelpContextID, [out] long* CommandID);
+			id(DISPID_IAgentCommandsEx_AddEx)] HRESULT AddEx ([in] BSTR Caption, [in] BSTR VoiceGrammar, [in] BSTR VoiceCaption, [in] long Enabled, [in] long Visible, [in] long HelpContextID, [out, retval] long* CommandID);
 		[helpstring("Insert a command into the collection"), helpcontext(APIHELP_Svr_Commands),
-			id(DISPID_IAgentCommandsEx_InsertEx)] HRESULT InsertEx ([in] BSTR Caption, [in] BSTR VoiceGrammar, [in] BSTR VoiceCaption, [in] long Enabled, [in] long Visible, [in] long HelpContextID, [in] long RefCommandID, [in] long Before, [out] long* CommandID);
+			id(DISPID_IAgentCommandsEx_InsertEx)] HRESULT InsertEx ([in] BSTR Caption, [in] BSTR VoiceGrammar, [in] BSTR VoiceCaption, [in] long Enabled, [in] long Visible, [in] long HelpContextID, [in] long RefCommandID, [in] long Before, [out, retval] long* CommandID);
 		[helpstring("deprecated - use the GlobalVoiceCommandsEnabled property"), helpcontext(APIHELP_Svr_Commands),
 			id(DISPID_IAgentCommandsEx_SetGlobalVoiceCommandsEnabled), hidden] HRESULT SetGlobalVoiceCommandsEnabled ([in] long Enabled);
 		[helpstring("deprecated - use the GlobalVoiceCommandsEnabled property"), helpcontext(APIHELP_Svr_Commands),

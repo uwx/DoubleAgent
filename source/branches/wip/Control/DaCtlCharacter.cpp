@@ -29,6 +29,7 @@
 #include "DaCtlTTSEngines.h"
 #include "DaCtlSREngine.h"
 #include "DaCtlSREngines.h"
+#include "LocalCharacter.h"
 #include "ErrorInfo.h"
 #include "Registry.h"
 #include "StringArrayEx.h"
@@ -36,6 +37,7 @@
 
 #ifdef	_DEBUG
 #define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Character"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_ACTIVE		(GetProfileDebugInt(_T("DebugActive"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Character"),LogDetails,true)&0xFFFF)
 #define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
 #endif
@@ -53,7 +55,7 @@ DaCtlCharacter::DaCtlCharacter ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::DaCtlCharacter (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::DaCtlCharacter (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended(), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -66,7 +68,7 @@ DaCtlCharacter::~DaCtlCharacter ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::~DaCtlCharacter (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::~DaCtlCharacter (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended(), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -83,7 +85,7 @@ void DaCtlCharacter::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended(), mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (false);
@@ -99,7 +101,7 @@ HRESULT DaCtlCharacter::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Terminate [%u] [%p(%u)] [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject), mServerCharID);
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Terminate [%u] [%p(%d)] [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended(), pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject), mServerCharID);
 		}
 #endif
 #endif
@@ -168,12 +170,55 @@ HRESULT DaCtlCharacter::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended(), pFinal, mServerObject.GetInterfacePtr(), _AtlModule.GetLockCount());
 		}
 #endif
 #endif
 	}
 	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT DaCtlCharacter::SetOwner (DaControl * pOwner)
+{
+	HRESULT	lResult = S_OK;
+
+	if	(mOwner = pOwner)
+	{
+		if	(mOwner->mServer == NULL)
+		{
+			if	(mLocalObject = new CLocalCharacter (*this))
+			{
+				mLocalObject->Initialize (_AtlModule.NextCharID(), &mOwner->mLocalEventNotify, mOwner);
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+	}
+	else
+	{
+		lResult = E_FAIL;
+	}
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended(), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+	}
+#endif
+	return lResult;
+}
+
+DaControl * DaCtlCharacter::SafeGetOwner () const
+{
+	return (this ? mOwner : NULL);
+}
+
+int DaCtlCharacter::SafeGetOwnerUsed () const
+{
+	return ((this) && (mOwner)) ? max(mOwner->m_dwRef,-1) : -1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -192,48 +237,19 @@ long DaCtlCharacter::GetCharID () const
 	return 0;
 }
 
-HRESULT DaCtlCharacter::SetOwner (DaControl * pOwner)
-{
-	HRESULT	lResult = S_OK;
-
-	if	(mOwner = pOwner)
-	{
-		if	(mOwner->mServer == NULL)
-		{
-			if	(mLocalObject = new CLocalWrapper (*this))
-			{
-				mLocalObject->Initialize (_AtlModule.NextCharID(), &mOwner->mLocalEventNotify, mOwner);
-			}
-			else
-			{
-				lResult = E_OUTOFMEMORY;
-			}
-		}
-	}
-	else
-	{
-		lResult = E_FAIL;
-	}
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
-	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
-	}
-#endif
-	return lResult;
-}
-
-DaControl * DaCtlCharacter::SafeGetOwner () const
-{
-	return (this ? mOwner : NULL);
-}
-
-int DaCtlCharacter::SafeGetOwnerUsed () const
-{
-	return ((this) && (mOwner)) ? max(mOwner->m_dwRef,-1) : -1;
-}
-
 /////////////////////////////////////////////////////////////////////////////
+
+bool DaCtlCharacter::IsContained () const
+{
+	if	(
+			(mLocalObject)
+		&&	(mLocalObject->GetCharacterWnd () == mOwner)
+		)
+	{
+		return true;
+	}
+	return false;
+}
 
 HRESULT DaCtlCharacter::SetContained (bool pContained, DWORD pInitialStyle)
 {
@@ -276,7 +292,7 @@ HRESULT DaCtlCharacter::SetContained (bool pContained, DWORD pInitialStyle)
 			{
 				mLocalObject->GetOriginalSize (&lCharacterSize.cx, &lCharacterSize.cy);
 				mLocalObject->Unrealize (true);
-				if	(SUCCEEDED (lResult = mLocalObject->RealizePopup (pInitialStyle)))
+				if	(SUCCEEDED (lResult = mLocalObject->RealizePopup (mOwner, pInitialStyle)))
 				{
 					lRealized = true;
 					mLocalObject->SetSize (lCharacterSize.cx, lCharacterSize.cy);
@@ -300,7 +316,7 @@ HRESULT DaCtlCharacter::SetContained (bool pContained, DWORD pInitialStyle)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive())
 	{
-		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::SetContained [%u]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pContained);
+		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::SetContained [%u]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended(), pContained);
 	}
 #endif
 	return lResult;
@@ -308,18 +324,41 @@ HRESULT DaCtlCharacter::SetContained (bool pContained, DWORD pInitialStyle)
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaCtlCharacter::InterfaceSupportsErrorInfo(REFIID riid)
+bool DaCtlCharacter::IsSuspended () const
 {
-	if	(
-			(InlineIsEqualGUID (__uuidof(IDaCtlCharacter2), riid))
-		||	(InlineIsEqualGUID (__uuidof(IDaCtlCharacter), riid))
-		||	(InlineIsEqualGUID (__uuidof(IAgentCtlCharacter), riid))
-		||	(InlineIsEqualGUID (__uuidof(IAgentCtlCharacterEx), riid))
-		)
+	if	(mLocalObject)
 	{
-		return S_OK;
+		return ((mLocalObject->GetActiveState() & ActiveState_Suspended) != 0);
 	}
-	return S_FALSE;
+	return false;
+}
+
+bool DaCtlCharacter::SetSuspended (bool pSuspended)
+{
+	bool	lRet = false;
+
+	if	(mLocalObject)
+	{
+		try
+		{
+			if	(pSuspended)
+			{
+				if	(mLocalObject->SetActiveState (mLocalObject->GetActiveState() | ActiveState_Suspended) == S_OK)
+				{
+					lRet = true;
+				}
+			}
+			else
+			{
+				if	(mLocalObject->SetActiveState (mLocalObject->GetActiveState() &~ ActiveState_Suspended) == S_OK)
+				{
+					lRet = true;
+				}
+			}
+		}
+		catch AnyExceptionSilent
+	}
+	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -418,30 +457,20 @@ DaCtlCommands * DaCtlCharacter::GetCommands ()
 	return lRet;
 }
 
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 
-CDaCmnCommands * DaCtlCharacter::CLocalWrapper::GetCommands (bool pCreateObject)
+STDMETHODIMP DaCtlCharacter::InterfaceSupportsErrorInfo(REFIID riid)
 {
-	CDaCmnCommands *	lRet = NULL;
-	DaCtlCommands *		lCommands;
-
-	if	(lCommands = mCharacter.GetCommands ())
+	if	(
+			(InlineIsEqualGUID (__uuidof(IDaCtlCharacter2), riid))
+		||	(InlineIsEqualGUID (__uuidof(IDaCtlCharacter), riid))
+		||	(InlineIsEqualGUID (__uuidof(IAgentCtlCharacter), riid))
+		||	(InlineIsEqualGUID (__uuidof(IAgentCtlCharacterEx), riid))
+		)
 	{
-		lRet = lCommands->mLocalObject;
+		return S_OK;
 	}
-	return lRet;
-}
-
-CDaCmnBalloon * DaCtlCharacter::CLocalWrapper::GetBalloon (bool pCreateObject)
-{
-	CDaCmnBalloon *	lRet = NULL;
-	DaCtlBalloon *	lBalloon;
-
-	if	(lBalloon = mCharacter.GetBalloon ())
-	{
-		lRet = lBalloon->mLocalObject;
-	}
-	return lRet;
+	return S_FALSE;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -452,7 +481,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Balloon (IDaCtlBalloon2 **Balloon)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Balloon"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Balloon"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT				lResult = S_OK;
 	IDaCtlBalloon2Ptr	lInterface;
@@ -475,7 +504,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Balloon (IDaCtlBalloon2 **Balloon)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Balloon"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Balloon"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -485,7 +514,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Commands (IDaCtlCommands2 **Comman
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Commands"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Commands"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT				lResult = S_OK;
 	IDaCtlCommands2Ptr	lInterface;
@@ -508,7 +537,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Commands (IDaCtlCommands2 **Comman
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Commands"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Commands"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -520,7 +549,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Visible (VARIANT_BOOL *Visible)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Visible"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Visible"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -547,7 +576,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Visible (VARIANT_BOOL *Visible)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Visible"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Visible"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -559,7 +588,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Left (short Left)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_Left"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_Left"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -586,7 +615,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Left (short Left)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_Left"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_Left"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -596,7 +625,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Left (short *Left)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Left"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Left"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -630,7 +659,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Left (short *Left)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Left"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Left"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -640,7 +669,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Top (short Top)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_Top"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_Top"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -667,7 +696,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Top (short Top)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_Top"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_Top"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -677,7 +706,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Top (short *Top)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Top"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Top"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -711,7 +740,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Top (short *Top)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Top"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Top"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -721,7 +750,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Height (short Height)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_Height"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_Height"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -748,7 +777,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Height (short Height)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_Height"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_Height"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -758,7 +787,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Height (short *Height)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Height"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Height"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -792,7 +821,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Height (short *Height)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Height"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Height"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -802,7 +831,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Width (short Width)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_Width"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_Width"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -829,7 +858,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Width (short Width)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_Width"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_Width"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -839,7 +868,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Width (short *Width)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Width"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Width"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -873,7 +902,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Width (short *Width)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Width"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Width"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -885,7 +914,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Speed (long *Speed)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Speed"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Speed"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -917,7 +946,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Speed (long *Speed)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Speed"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Speed"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -927,7 +956,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Pitch (long *Pitch)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Pitch"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Pitch"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 	short	lPitch = 0;
@@ -963,7 +992,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Pitch (long *Pitch)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Pitch"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Pitch"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -975,31 +1004,36 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_ActiveState (ActiveStateType *Acti
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_ActiveState"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_ActiveState"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
-	HRESULT			lResult;
+	HRESULT			lResult = S_OK;
 	ActiveStateType	lState = ActiveState_Inactive;
 
-	if	(mLocalObject)
+	if	(!ActiveState)
 	{
-		try
-		{
-			lResult = mLocalObject->get_ActiveState (&lState);
-		}
-		catch AnyExceptionDebug
+		lResult = E_POINTER;
 	}
 	else
-	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
-		try
+		if	(mLocalObject)
 		{
-			lResult = mServerObject->get_ActiveState (&lState);
+			try
+			{
+				lResult = mLocalObject->get_ActiveState (&lState);
+			}
+			catch AnyExceptionDebug
 		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
-	}
-	if	(ActiveState)
-	{
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_ActiveState (&lState);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+
 		(*ActiveState) = (ActiveStateType)lState;
 	}
 
@@ -1007,7 +1041,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_ActiveState (ActiveStateType *Acti
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_ActiveState"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_ActiveState"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -1017,15 +1051,28 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_ActiveState (ActiveStateType Activ
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_ActiveState"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_ActiveState"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
-	HRESULT	lResult;
+	HRESULT	lResult = S_OK;
 
 	if	(mLocalObject)
 	{
 		try
 		{
-			lResult = mLocalObject->put_ActiveState (ActiveState);
+			if	(mLocalObject->GetActiveState() & ActiveState_Suspended)
+			{
+				lResult = mLocalObject->put_ActiveState ((ActiveStateType) (ActiveState|ActiveState_Suspended));
+			}
+			else
+			if	(ActiveState & ActiveState_Suspended)
+			{
+//TODO - Allow manual suspend?			
+				lResult = E_INVALIDARG;
+			}
+			else
+			{
+				lResult = mLocalObject->put_ActiveState (ActiveState);
+			}
 		}
 		catch AnyExceptionDebug
 	}
@@ -1044,7 +1091,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_ActiveState (ActiveStateType Activ
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_ActiveState"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_ActiveState"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -1056,7 +1103,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IdleState (VARIANT_BOOL *IdleState
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_IdleState"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_IdleState"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -1099,31 +1146,36 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IdleEnabled (VARIANT_BOOL *Enabled
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_IdleEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_IdleEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 	long	lStyle = 0;
 
-	if	(mLocalObject)
+	if	(!Enabled)
 	{
-		try
-		{
-			lResult = mLocalObject->get_Style (&lStyle);
-		}
-		catch AnyExceptionDebug
+		lResult = E_POINTER;
 	}
 	else
-	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
-		try
+		if	(mLocalObject)
 		{
-			lResult = mServerObject->get_Style (&lStyle);
+			try
+			{
+				lResult = mLocalObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
 		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
-	}
-	if	(Enabled)
-	{
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+
 		(*Enabled) = (lStyle & CharacterStyle_IdleEnabled) ? VARIANT_TRUE : VARIANT_FALSE;
 	}
 
@@ -1131,7 +1183,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IdleEnabled (VARIANT_BOOL *Enabled
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_IdleEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_IdleEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -1146,7 +1198,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_IdleEnabled (VARIANT_BOOL Enabled)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_IdleEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_IdleEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 	long	lStyle = 0;
@@ -1196,7 +1248,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_IdleEnabled (VARIANT_BOOL Enabled)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_IdleEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_IdleEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -1208,7 +1260,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Activate (VARIANT State, VARIANT_BOOL 
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Activate"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Activate"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT			lResult;
 	ActiveStateType	lState = ActiveState_InputActive;
@@ -1232,7 +1284,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Activate (VARIANT State, VARIANT_BOOL 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Activate"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Activate"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -1242,7 +1294,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Play (BSTR Animation, IDaCtlRequest **
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Play [%s]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), DebugStr(CAtlString(Animation)));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Play [%s]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended(), DebugStr(CAtlString(Animation)));
 #endif
 	HRESULT				lResult;
 	long				lReqID = 0;
@@ -1293,7 +1345,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Play (BSTR Animation, IDaCtlRequest **
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Play"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Play"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -1335,7 +1387,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Prepare (PrepareResourceType ResourceT
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Get"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Get"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT				lResult = S_OK;
 	long				lPrepareQueue = TRUE;
@@ -1407,7 +1459,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Prepare (PrepareResourceType ResourceT
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Get"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Get"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -1417,7 +1469,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Stop (VARIANT Request)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Stop [%u] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), V_VT (&Request), V_DISPATCH (&Request));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Stop [%u] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended(), V_VT (&Request), V_DISPATCH (&Request));
 #endif
 
 	HRESULT				lResult = S_OK;
@@ -1488,7 +1540,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Stop (VARIANT Request)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Stop"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Stop"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -1507,7 +1559,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Wait (IDaCtlRequest *WaitForRequest, I
 		{
 			LogComErr (_DEBUG_INTERFACE, lWaitForRequest->get_ID (&lWaitForReqID));
 		}
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Wait [%p] [%p] [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), WaitForRequest, lWaitForRequest.GetInterfacePtr(), lWaitForReqID);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Wait [%p] [%p] [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended(), WaitForRequest, lWaitForRequest.GetInterfacePtr(), lWaitForReqID);
 	}
 #endif
 	HRESULT				lResult;
@@ -1569,7 +1621,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Wait (IDaCtlRequest *WaitForRequest, I
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Wait"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Wait"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -1579,7 +1631,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Interrupt (IDaCtlRequest *InterruptReq
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Interrupt"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Interrupt"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 
 	HRESULT				lResult;
@@ -1641,7 +1693,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Interrupt (IDaCtlRequest *InterruptReq
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Interrupt"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Interrupt"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -1683,7 +1735,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Speak (VARIANT Text, VARIANT Url, IDaC
 		catch AnyExceptionSilent
 	}
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Speak [%s] [%s]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), DebugStr(CAtlString((BSTR)lText)), DebugStr(CAtlString((BSTR)lUrl)));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Speak [%s] [%s]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended(), DebugStr(CAtlString((BSTR)lText)), DebugStr(CAtlString((BSTR)lUrl)));
 #endif
 
 	if	(mLocalObject)
@@ -1725,7 +1777,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Speak (VARIANT Text, VARIANT Url, IDaC
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Speak"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Speak"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -1735,7 +1787,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::GestureAt (short X, short Y, IDaCtlReq
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::GestureAt"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::GestureAt"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT				lResult;
 	long				lReqID = 0;
@@ -1786,7 +1838,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::GestureAt (short X, short Y, IDaCtlReq
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::GestureAt"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::GestureAt"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -1796,7 +1848,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::MoveTo (short X, short Y, VARIANT Spee
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::MoveTo"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::MoveTo"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT				lResult;
 	long				lSpeed = 1000;
@@ -1857,7 +1909,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::MoveTo (short X, short Y, VARIANT Spee
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::MoveTo"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::MoveTo"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -1887,7 +1939,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Hide (VARIANT Fast, IDaCtlRequest **Re
 		catch AnyExceptionSilent
 	}
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Hide [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), lFast);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Hide [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended(), lFast);
 #endif
 
 	if	(mLocalObject)
@@ -1929,7 +1981,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Hide (VARIANT Fast, IDaCtlRequest **Re
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Hide"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Hide"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -1959,7 +2011,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Show (VARIANT Fast, IDaCtlRequest **Re
 		catch AnyExceptionSilent
 	}
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Show [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), lFast);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Show [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended(), lFast);
 #endif
 
 	if	(mLocalObject)
@@ -2001,7 +2053,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Show (VARIANT Fast, IDaCtlRequest **Re
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Show"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Show"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2011,7 +2063,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::StopAll (VARIANT Types)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::StopAll"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::StopAll"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT			lResult = S_OK;
 	long			lStopTypes = 0;
@@ -2098,14 +2150,24 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::StopAll (VARIANT Types)
 		{
 			_variant_t	lTypes (Types);
 
-			lTypes.ChangeType (VT_I4);
-			if	(V_VT (&lTypes) == VT_I4)
+			if	(
+					(V_VT (&lTypes) == VT_ERROR)
+				||	(V_VT (&lTypes) == VT_EMPTY)
+				)
 			{
-				lStopTypes = V_I4 (&lTypes);
+				lStopTypes = StopAll_Everything;
 			}
 			else
 			{
-				lResult = E_INVALIDARG;
+				lTypes.ChangeType (VT_I4);
+				if	(V_VT (&lTypes) == VT_I4)
+				{
+					lStopTypes = V_I4 (&lTypes);
+				}
+				else
+				{
+					lResult = E_INVALIDARG;
+				}
 			}
 		}
 		catch AnyExceptionSilent
@@ -2144,7 +2206,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::StopAll (VARIANT Types)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::StopAll"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::StopAll"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2156,7 +2218,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_MoveCause (MoveCauseType *MoveCaus
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_MoveCause"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_MoveCause"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -2190,7 +2252,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_MoveCause (MoveCauseType *MoveCaus
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_MoveCause"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_MoveCause"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2200,7 +2262,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_VisibilityCause (VisibilityCauseTy
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_VisibilityCause"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_VisibilityCause"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -2234,7 +2296,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_VisibilityCause (VisibilityCauseTy
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_VisibilityCause"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_VisibilityCause"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2244,7 +2306,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HasOtherClients (VARIANT_BOOL *Has
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_HasOtherClients"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_HasOtherClients"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 
 	HRESULT	lResult;
@@ -2281,7 +2343,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HasOtherClients (VARIANT_BOOL *Has
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_HasOtherClients"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_HasOtherClients"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2298,7 +2360,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_SoundEffectsEnabled (VARIANT_BOOL 
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_SoundEffectsEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_SoundEffectsEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 	long	lStyle = 0;
@@ -2348,7 +2410,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_SoundEffectsEnabled (VARIANT_BOOL 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_SoundEffectsEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_SoundEffectsEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2363,31 +2425,36 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SoundEffectsEnabled (VARIANT_BOOL 
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SoundEffectsEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_SoundEffectsEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 	long	lStyle = 0;
 
-	if	(mLocalObject)
+	if	(!Enabled)
 	{
-		try
-		{
-			lResult = mLocalObject->get_Style (&lStyle);
-		}
-		catch AnyExceptionDebug
+		lResult = E_POINTER;
 	}
 	else
-	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
-		try
+		if	(mLocalObject)
 		{
-			lResult = mServerObject->get_Style (&lStyle);
+			try
+			{
+				lResult = mLocalObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
 		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
-	}
-	if	(Enabled)
-	{
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+
 		(*Enabled) = (lStyle & CharacterStyle_SoundEffects) ? VARIANT_TRUE : VARIANT_FALSE;
 	}
 
@@ -2395,7 +2462,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SoundEffectsEnabled (VARIANT_BOOL 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SoundEffectsEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_SoundEffectsEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2407,7 +2474,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Name (BSTR *Name)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Name"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Name"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -2434,7 +2501,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Name (BSTR *Name)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Name"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Name"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2444,7 +2511,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Name (BSTR Name)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_Name"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_Name"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -2471,7 +2538,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Name (BSTR Name)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_Name"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_Name"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2483,7 +2550,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Description (BSTR *Description)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Description"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Description"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -2510,7 +2577,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Description (BSTR *Description)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Description"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Description"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2520,7 +2587,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Description (BSTR Description)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_Description"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_Description"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -2547,7 +2614,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Description (BSTR Description)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_Description"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_Description"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2559,7 +2626,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_ExtraData (BSTR *ExtraData)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_ExtraData"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_ExtraData"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -2586,7 +2653,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_ExtraData (BSTR *ExtraData)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_ExtraData"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_ExtraData"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2600,7 +2667,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::ShowPopupMenu (short X, short Y, VARIA
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::ShowPopupMenu"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::ShowPopupMenu"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -2631,7 +2698,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::ShowPopupMenu (short X, short Y, VARIA
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::ShowPopupMenu"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::ShowPopupMenu"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2641,7 +2708,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_AutoPopupMenu (VARIANT_BOOL Enable
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_AutoPopupMenu"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_AutoPopupMenu"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 	long	lStyle = 0;
@@ -2691,7 +2758,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_AutoPopupMenu (VARIANT_BOOL Enable
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_AutoPopupMenu"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_AutoPopupMenu"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2701,7 +2768,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_AutoPopupMenu (VARIANT_BOOL *Enabl
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_AutoPopupMenu"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_AutoPopupMenu"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 	long	lStyle = 0;
@@ -2733,7 +2800,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_AutoPopupMenu (VARIANT_BOOL *Enabl
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_AutoPopupMenu"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_AutoPopupMenu"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2745,7 +2812,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_HelpModeOn (VARIANT_BOOL On)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_HelpModeOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_HelpModeOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -2753,7 +2820,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_HelpModeOn (VARIANT_BOOL On)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_HelpModeOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_HelpModeOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2763,7 +2830,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HelpModeOn (VARIANT_BOOL *On)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_HelpModeOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_HelpModeOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -2776,7 +2843,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HelpModeOn (VARIANT_BOOL *On)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_HelpModeOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_HelpModeOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2786,7 +2853,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_HelpContextID (long ID)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_HelpContextID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_HelpContextID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -2794,7 +2861,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_HelpContextID (long ID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_HelpContextID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_HelpContextID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2804,7 +2871,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HelpContextID (long *ID)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_HelpContextID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_HelpContextID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -2817,7 +2884,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HelpContextID (long *ID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_HelpContextID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_HelpContextID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2836,7 +2903,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Listen (VARIANT_BOOL Listen, VARIANT_B
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Listen"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Listen"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -2867,7 +2934,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Listen (VARIANT_BOOL Listen, VARIANT_B
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Listen"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Listen"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2879,7 +2946,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_LanguageID (long LanguageID)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_LanguageID [%4.4X]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), LanguageID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_LanguageID [%4.4X]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended(), LanguageID);
 #endif
 	HRESULT	lResult;
 
@@ -2906,7 +2973,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_LanguageID (long LanguageID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_LanguageID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_LanguageID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2916,7 +2983,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_LanguageID (long *LanguageID)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_LanguageID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_LanguageID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -2943,7 +3010,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_LanguageID (long *LanguageID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_LanguageID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_LanguageID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2953,7 +3020,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SRModeID (BSTR *EngineModeId)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SRModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_SRModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -2980,7 +3047,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SRModeID (BSTR *EngineModeId)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SRModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_SRModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -2990,7 +3057,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_SRModeID (BSTR EngineModeId)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_SRModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_SRModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -3017,7 +3084,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_SRModeID (BSTR EngineModeId)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_SRModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_SRModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3027,7 +3094,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_TTSModeID (BSTR *EngineModeId)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_TTSModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_TTSModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -3054,7 +3121,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_TTSModeID (BSTR *EngineModeId)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_TTSModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_TTSModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3064,7 +3131,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_TTSModeID (BSTR EngineModeId)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_TTSModeID [%ls]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), EngineModeId);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_TTSModeID [%ls]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended(), EngineModeId);
 #endif
 	HRESULT	lResult;
 
@@ -3091,7 +3158,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_TTSModeID (BSTR EngineModeId)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_TTSModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_TTSModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3103,7 +3170,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HelpFile (BSTR *File)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_HelpFile"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_HelpFile"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -3116,7 +3183,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HelpFile (BSTR *File)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_HelpFile"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_HelpFile"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3126,7 +3193,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_HelpFile (BSTR File)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_HelpFile"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_HelpFile"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -3134,7 +3201,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_HelpFile (BSTR File)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_HelpFile"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_HelpFile"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3151,7 +3218,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_OriginalHeight (short *Height)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_OriginalHeight"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_OriginalHeight"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -3185,7 +3252,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_OriginalHeight (short *Height)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_OriginalHeight"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_OriginalHeight"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3195,7 +3262,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_OriginalWidth (short *Width)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_OriginalWidth"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_OriginalWidth"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -3229,7 +3296,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_OriginalWidth (short *Width)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_OriginalWidth"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_OriginalWidth"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3241,7 +3308,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Think (BSTR Text, IDaCtlRequest **Requ
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Think"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Think"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT				lResult;
 	long				lReqID = 0;
@@ -3292,7 +3359,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Think (BSTR Text, IDaCtlRequest **Requ
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Think"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::Think"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3304,7 +3371,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Version (BSTR *Version)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Version"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Version"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT		lResult;
 	short		lVerMaj = 0;
@@ -3343,7 +3410,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Version (BSTR *Version)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Version"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Version"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3353,7 +3420,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_AnimationNames (IDaCtlAnimationNam
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_AnimationNames"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_AnimationNames"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT									lResult = S_OK;
 	tPtr <CComObject<DaCtlAnimationNames> >	lObject;
@@ -3405,7 +3472,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_AnimationNames (IDaCtlAnimationNam
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_AnimationNames"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_AnimationNames"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3427,7 +3494,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_ListeningStatus (ListeningStatusTy
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SRStatus"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_SRStatus"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -3454,7 +3521,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_ListeningStatus (ListeningStatusTy
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SRStatus"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_SRStatus"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3468,7 +3535,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Style (long *Style)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::get_Style"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Style"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -3504,7 +3571,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Style (long *Style)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::get_Style"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Style"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3514,7 +3581,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Style (long Style)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::put_Style"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_Style"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -3531,7 +3598,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Style (long Style)
 	{
 		try
 		{
-			lResult = mServerObject->put_Style (Style);
+			lResult = mServerObject->put_Style (Style &~LocalCharacterStyle);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -3541,7 +3608,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Style (long Style)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::put_Style"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_Style"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3552,7 +3619,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HasIcon (VARIANT_BOOL *HasIcon)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::get_HasIcon"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_HasIcon"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -3588,7 +3655,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HasIcon (VARIANT_BOOL *HasIcon)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::get_HasIcon"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_HasIcon"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3598,7 +3665,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::GenerateIcon (long ClipLeft, long Clip
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::GenerateIcon"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::GenerateIcon"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -3625,7 +3692,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::GenerateIcon (long ClipLeft, long Clip
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::GenerateIcon"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::GenerateIcon"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3635,7 +3702,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IconShown (VARIANT_BOOL *IconShown
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::get_IconShown"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_IconShown"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 	long	lStyle = 0;
@@ -3674,7 +3741,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IconShown (VARIANT_BOOL *IconShown
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::get_IconShown"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_IconShown"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3684,7 +3751,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_IconShown (VARIANT_BOOL IconShown)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::put_IconShown"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_IconShown"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 	long	lStyle = 0;
@@ -3734,7 +3801,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_IconShown (VARIANT_BOOL IconShown)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::put_IconShown"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_IconShown"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3744,7 +3811,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IconVisible (VARIANT_BOOL *IconVis
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::get_IconVisible"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_IconVisible"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -3780,7 +3847,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IconVisible (VARIANT_BOOL *IconVis
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::get_IconVisible"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_IconVisible"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3792,7 +3859,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IconIdentity (BSTR *IconIdentity)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::get_IconIdentity"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_IconIdentity"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -3828,7 +3895,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IconIdentity (BSTR *IconIdentity)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::get_IconIdentity"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_IconIdentity"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3838,7 +3905,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_IconIdentity (BSTR IconIdentity)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::put_IconIdentity"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_IconIdentity"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -3865,7 +3932,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_IconIdentity (BSTR IconIdentity)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::put_IconIdentity"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_IconIdentity"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3875,7 +3942,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IconTip (BSTR *IconTip)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::get_IconTip"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_IconTip"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -3911,7 +3978,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IconTip (BSTR *IconTip)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::get_IconTip"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_IconTip"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3921,7 +3988,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_IconTip (BSTR IconTip)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::put_IconTip"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_IconTip"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -3948,7 +4015,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_IconTip (BSTR IconTip)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::put_IconTip"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_IconTip"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -3962,7 +4029,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::SpeakFormatted (IDaCtlFormattedText * 
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::SpeakFormatted"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::SpeakFormatted"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT					lResult = E_INVALIDARG;
 	DaCtlFormattedText *	lFormattedText = NULL;
@@ -4029,7 +4096,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::SpeakFormatted (IDaCtlFormattedText * 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::SpeakFormatted"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::SpeakFormatted"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -4039,7 +4106,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::ThinkFormatted (IDaCtlFormattedText * 
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::ThinkFormatted"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::ThinkFormatted"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT					lResult = E_INVALIDARG;
 	DaCtlFormattedText *	lFormattedText = NULL;
@@ -4106,7 +4173,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::ThinkFormatted (IDaCtlFormattedText * 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::ThinkFormatted"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::ThinkFormatted"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -4118,7 +4185,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::NewFormattedText (IDaCtlFormattedText 
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::NewFormattedText"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::NewFormattedText"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT									lResult = E_POINTER;
 	tPtr <CComObject <DaCtlFormattedText> >	lObject;
@@ -4164,7 +4231,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::NewFormattedText (IDaCtlFormattedText 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::NewFormattedText"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::NewFormattedText"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -4178,7 +4245,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_TTSEngine (VARIANT GetDefault, IDa
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_TTSEngine"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_TTSEngine"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT								lResult = S_OK;
 	VARIANT_BOOL						lGetDefault = VARIANT_FALSE;
@@ -4252,7 +4319,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_TTSEngine (VARIANT GetDefault, IDa
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_TTSEngine"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_TTSEngine"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -4262,7 +4329,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::FindTTSEngines (VARIANT LanguageID, ID
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::FindTTSEngines"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::FindTTSEngines"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT									lResult = S_OK;
 	long									lLanguageID = 0;
@@ -4337,7 +4404,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::FindTTSEngines (VARIANT LanguageID, ID
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::FindTTSEngines"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::FindTTSEngines"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -4349,7 +4416,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SREngine (VARIANT GetDefault, IDaC
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SREngine"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_SREngine"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT								lResult = S_OK;
 	VARIANT_BOOL						lGetDefault = VARIANT_FALSE;
@@ -4423,7 +4490,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SREngine (VARIANT GetDefault, IDaC
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SREngine"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_SREngine"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -4433,7 +4500,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::FindSREngines (VARIANT LanguageID, IDa
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::FindSREngines"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::FindSREngines"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT								lResult = S_OK;
 	long								lLanguageID = 0;
@@ -4508,7 +4575,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::FindSREngines (VARIANT LanguageID, IDa
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::FindSREngines"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::FindSREngines"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -4520,7 +4587,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_UniqueID (BSTR *CharGUID)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_UniqueID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_UniqueID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult;
 
@@ -4547,7 +4614,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_UniqueID (BSTR *CharGUID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_UniqueID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_UniqueID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -4557,7 +4624,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_CharacterID (BSTR *CharacterID)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_CharacterID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_CharacterID"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -4585,7 +4652,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Connected (VARIANT_BOOL *Connected
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Connected"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Connected"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult = (mServerObject == NULL) ? S_FALSE : S_OK;
 
@@ -4600,7 +4667,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_FileName (BSTR *FileName)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_FileName"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_FileName"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -4636,7 +4703,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_FileName (BSTR *FileName)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_FileName"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_FileName"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -4646,7 +4713,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_FilePath (BSTR *FilePath)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_FilePath"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_FilePath"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -4682,7 +4749,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_FilePath (BSTR *FilePath)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_FilePath"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_FilePath"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -4727,7 +4794,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Smoothed (VARIANT_BOOL *Smoothed)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Smoothed"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Smoothed"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -4770,7 +4837,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SmoothEdges (VARIANT_BOOL *SmoothE
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SmoothEdges"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_SmoothEdges"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -4782,7 +4849,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Animations (SAFEARRAY **Animations
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Animations"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Animations"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -4818,7 +4885,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Animations (SAFEARRAY **Animations
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Animations"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_Animations"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;
@@ -4828,7 +4895,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_States (SAFEARRAY **States)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_States"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_States"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -4864,7 +4931,249 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_States (SAFEARRAY **States)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_States"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_States"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_SuspendPause (VARIANT_BOOL SuspendPause)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_SuspendPause"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
+#endif
+	HRESULT	lResult = E_NOTIMPL;
+
+	if	(mLocalObject)
+	{
+		try
+		{
+			long	lStyle = 0;
+
+			if	(SUCCEEDED (lResult = mLocalObject->get_Style (&lStyle)))
+			{
+				if	(SuspendPause)
+				{
+					lStyle |= CharacterStyle_SuspendPause;
+				}
+				else
+				{
+					lStyle &= ~CharacterStyle_SuspendPause;
+				}
+				lResult = mLocalObject->put_Style (lStyle);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_SuspendPause"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SuspendPause (VARIANT_BOOL *SuspendPause)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_SuspendPause"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
+#endif
+	HRESULT	lResult;
+
+	if	(!SuspendPause)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		long	lStyle = 0;
+
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+		}
+
+		(*SuspendPause) = (lStyle & CharacterStyle_SuspendPause) ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_SuspendPause"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_SuspendStop (VARIANT_BOOL SuspendStop)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_SuspendStop"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
+#endif
+	HRESULT	lResult = E_NOTIMPL;
+
+	if	(mLocalObject)
+	{
+		try
+		{
+			long	lStyle = 0;
+
+			if	(SUCCEEDED (lResult = mLocalObject->get_Style (&lStyle)))
+			{
+				if	(SuspendStop)
+				{
+					lStyle |= CharacterStyle_SuspendStop;
+				}
+				else
+				{
+					lStyle &= ~CharacterStyle_SuspendStop;
+				}
+				lResult = mLocalObject->put_Style (lStyle);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_SuspendStop"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SuspendStop (VARIANT_BOOL *SuspendStop)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_SuspendStop"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
+#endif
+	HRESULT	lResult;
+
+	if	(!SuspendStop)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		long	lStyle = 0;
+
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+		}
+
+		(*SuspendStop) = (lStyle & CharacterStyle_SuspendStop) ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_SuspendStop"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_SuspendHide (VARIANT_BOOL SuspendHide)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_SuspendHide"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
+#endif
+	HRESULT	lResult = E_NOTIMPL;
+
+	if	(mLocalObject)
+	{
+		try
+		{
+			long	lStyle = 0;
+
+			if	(SUCCEEDED (lResult = mLocalObject->get_Style (&lStyle)))
+			{
+				if	(SuspendHide)
+				{
+					lStyle |= CharacterStyle_SuspendHide;
+				}
+				else
+				{
+					lStyle &= ~CharacterStyle_SuspendHide;
+				}
+				lResult = mLocalObject->put_Style (lStyle);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::put_SuspendHide"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SuspendHide (VARIANT_BOOL *SuspendHide)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_SuspendHide"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
+#endif
+	HRESULT	lResult;
+
+	if	(!SuspendHide)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		long	lStyle = 0;
+
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+		}
+
+		(*SuspendHide) = (lStyle & CharacterStyle_SuspendHide) ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_SuspendHide"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;

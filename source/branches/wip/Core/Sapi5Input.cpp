@@ -354,7 +354,8 @@ CSapi5InputContext::CSapi5InputContext ()
 	mGrammarIdCommands ((ULONGLONG)&mGrammarIdCommands),
 	mGrammarIdGlobal ((ULONGLONG)&mGrammarIdGlobal),
 	mEventLastStream (0),
-	mEventSoundStarted (false)
+	mEventSoundStarted (false),
+	mPaused (false)
 {
 }
 
@@ -450,6 +451,11 @@ bool CSapi5InputContext::IsHearing () const
 		lRet = true;
 	}
 	return lRet;
+}
+
+bool CSapi5InputContext::IsPaused () const
+{
+	return mPaused;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -800,7 +806,7 @@ HRESULT CSapi5InputContext::MakeCharacterCommands ()
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-HRESULT CSapi5InputContext::StartListening ()
+HRESULT CSapi5InputContext::StartListening (ULONG pMaxCommandAlternates)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
@@ -848,6 +854,18 @@ HRESULT CSapi5InputContext::StartListening ()
 		}
 
 		if	(
+				(
+					(mRecoGrammarCommands != NULL)
+				||	(mRecoGrammarGlobal != NULL)
+				)
+			&&	(FAILED (lTempResult = mRecoContext->SetMaxAlternates (pMaxCommandAlternates)))
+			&&	(LogIsActive ())
+			)
+		{
+			LogSapi5Err (LogNormal, lTempResult, _T("SetMaxAlternates"));
+		}
+
+		if	(
 				(FAILED (lResult = mRecoContext->SetContextState (SPCS_ENABLED)))
 			&&	(LogIsActive ())
 			)
@@ -869,6 +887,7 @@ HRESULT CSapi5InputContext::StartListening ()
 #ifdef	_DEBUG_STATUS
 		LogStatus (_DEBUG_STATUS, _T("StartListening"));
 #endif
+		mPaused = false;
 	}
 	return lResult;
 }
@@ -930,8 +949,40 @@ HRESULT CSapi5InputContext::StopListening ()
 		}
 
 		mEventSoundStarted = false;
+		mPaused = false;
 #ifdef	_DEBUG_STATUS
 		LogStatus (_DEBUG_STATUS, _T("StopListening"));
+#endif
+	}
+	return lResult;
+}
+
+HRESULT CSapi5InputContext::PauseListening (bool pPause)
+{
+	HRESULT	lResult = E_UNEXPECTED;
+
+	if	(SafeIsValid ())
+	{
+		if	(pPause)
+		{
+			lResult = mInput->SafeGetRecognizer()->SetRecoState (SPRST_INACTIVE);
+		}
+		else
+		{
+			lResult = mInput->SafeGetRecognizer()->SetRecoState (SPRST_ACTIVE);
+		}
+
+		if	(SUCCEEDED (lResult))
+		{
+			mPaused = pPause;
+		}
+		else
+		if	(LogIsActive ())
+		{
+			LogSapi5Err (LogNormal, lResult, _T("PauseListening [%u]"), pPause);
+		}
+#ifdef	_DEBUG_STATUS
+		LogStatus (_DEBUG_STATUS, _T("PauseListening [%u]"), pPause);
 #endif
 	}
 	return lResult;

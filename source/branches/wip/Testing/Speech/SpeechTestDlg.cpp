@@ -368,7 +368,7 @@ bool CSpeechTestDlg::LoadedAgentCharacter (INT_PTR pCharNdx)
 					mCharacter[pCharNdx].LanguageID = MAKELANGID(LANG_ENGLISH,SUBLANG_ENGLISH_CAN);
 					lCommands.Caption = (lClientCount==0)?_bstr_t("My Application"):_bstr_t("Another Application **");
 					lCommands.VoiceGrammar = _bstr_t("test speech");
-					lCommands.GlobalVoiceCommandsEnabled = VARIANT_TRUE;
+					lCommands.GlobalVoiceCommandsEnabled = true;
 					//lCommands.Visible = FALSE;
 					//lCommands.FontSize = 10;
 				}
@@ -1712,7 +1712,7 @@ void CSpeechTestDlg::OnBalloonVisible()
 
 	if	(lCharNdx >= 0)
 	{
-		mCharacter[lCharNdx].Balloon.Visible = mCharacter[lCharNdx].Balloon.Visible ? VARIANT_FALSE : VARIANT_TRUE;
+		mCharacter[lCharNdx].Balloon.Visible = !mCharacter[lCharNdx].Balloon.Visible;
 	}
 }
 

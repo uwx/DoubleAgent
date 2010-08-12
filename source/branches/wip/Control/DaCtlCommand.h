@@ -28,8 +28,8 @@
 class ATL_NO_VTABLE __declspec(uuid("{1147E535-A208-11DE-ABF2-002421116FB2}")) DaCtlCommand :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlCommand, &__uuidof(DaCtlCommand)>,
-	public IDispatchImpl<IDaCtlCommand2, &__uuidof(IDaCtlCommand2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlCommand), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlCommand2, &__uuidof(IDaCtlCommand2), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer>,
+	public IProvideClassInfoImpl<&__uuidof(DaCtlCommand), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer>,
 	public ISupportErrorInfo
 {
 public:

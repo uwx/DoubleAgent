@@ -43,9 +43,9 @@
 #include "Sapi4Err.h"
 #endif
 #include "DebugStr.h"
+#include "DebugWin.h"
 #ifdef	_DEBUG
 #include "ImageDebugger.h"
-#include "DebugWin.h"
 #include "DebugProcess.h"
 #endif
 #ifdef	_DEBUG_NOT
@@ -190,9 +190,10 @@ HRESULT STDMETHODCALLTYPE CAgentPopupWnd::ContextSensitiveHelp (BOOL fEnterMode)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentPopupWnd::Create (HWND pParentWnd, CRect * pInitialRect)
+bool CAgentPopupWnd::Create (CWindow * pParentWnd, CRect * pInitialRect, DWORD pExStyle)
 {
 	bool				lRet = false;
+	HWND				lParentWnd = (pParentWnd) ? pParentWnd->m_hWnd : NULL;
 	CRect				lInitialRect (0,0,0,0);
 	DWORD				lStyle = WS_POPUP;
 	CAgentFile *		lAgentFile;
@@ -218,12 +219,14 @@ bool CAgentPopupWnd::Create (HWND pParentWnd, CRect * pInitialRect)
 #ifdef	_TRACE_RESOURCES
 	if	(LogIsActive (_TRACE_RESOURCES))
 	{
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::Create [%p]"), this, m_hWnd);
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p(%d)] CAgentPopupWnd::Create [%p]"), this, max(m_dwRef,-1), m_hWnd);
 	}
 #endif
 
-	if	(CAgentWnd::Create (pParentWnd, lInitialRect, NULL, lStyle, WS_EX_TOPMOST|WS_EX_LAYERED))
+	if	(CAgentWnd::Create (lParentWnd, lInitialRect, NULL, lStyle, pExStyle|WS_EX_LAYERED))
 	{
+		ModifyStyle (WS_CAPTION|WS_THICKFRAME|WS_SYSMENU, 0, SWP_FRAMECHANGED);
+
 		if	(
 				(lAgentFile = GetAgentFile ())
 			&&	(lAgentFileName = lAgentFile->FindName ())
@@ -234,7 +237,7 @@ bool CAgentPopupWnd::Create (HWND pParentWnd, CRect * pInitialRect)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::Create [%p] Parent [%p] [%p] Owner [%p]"), this, max(m_dwRef,-1), m_hWnd, pParentWnd, ::GetParent(m_hWnd), ::GetWindow(m_hWnd, GW_OWNER));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::Create [%p] Parent [%p] [%p] Owner [%p]"), this, max(m_dwRef,-1), m_hWnd, lParentWnd, ::GetParent(m_hWnd), ::GetWindow(m_hWnd, GW_OWNER));
 		}
 #endif
 		lRet = true;
@@ -248,7 +251,7 @@ bool CAgentPopupWnd::Create (HWND pParentWnd, CRect * pInitialRect)
 #ifdef	_TRACE_RESOURCES
 	if	(LogIsActive (_TRACE_RESOURCES))
 	{
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::Create [%p] Done"), this, m_hWnd);
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p(%d)] CAgentPopupWnd::Create [%p] Done"), this, max(m_dwRef,-1), m_hWnd);
 	}
 #endif
 	return lRet;
@@ -300,7 +303,7 @@ bool CAgentPopupWnd::Attach (long pCharID, CEventNotify * pNotify, const CAgentI
 #ifdef	_TRACE_RESOURCES
 	if	(LogIsActive (_TRACE_RESOURCES))
 	{
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::Attach [%d] [%u]"), this, pCharID, pSetActiveCharID);
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p(%d)(%d)] CAgentPopupWnd::Attach [%d] [%u]"), this, mCharID, max(m_dwRef,-1), pCharID, pSetActiveCharID);
 	}
 #endif
 	lRet = CAgentCharacterWnd::Attach (pCharID, pNotify, pIconData, pSetActiveCharID);
@@ -344,7 +347,7 @@ bool CAgentPopupWnd::Attach (long pCharID, CEventNotify * pNotify, const CAgentI
 #ifdef	_DEBUG_ACTIVE
 				if	(LogIsActive (_DEBUG_ACTIVE))
 				{
-					LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)] SetInactive [%d] InputActive [%d] (Attach)"), this, max(m_dwRef,-1), lPrevCharID, lInputInactiveCharID);
+					LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)(%d)] SetInactive [%d] InputActive [%d] (Attach)"), this, mCharID, max(m_dwRef,-1), lPrevCharID, lInputInactiveCharID);
 				}
 #endif
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
@@ -363,7 +366,7 @@ bool CAgentPopupWnd::Attach (long pCharID, CEventNotify * pNotify, const CAgentI
 #ifdef	_DEBUG_ACTIVE
 			if	(LogIsActive (_DEBUG_ACTIVE))
 			{
-				LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)] SetActive [%d] InputActive [%d] (Attach)"), this, max(m_dwRef,-1), mCharID, lInputActiveCharID);
+				LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)(%d)] SetActive [%d] InputActive [%d] (Attach)"), this, mCharID, max(m_dwRef,-1), pCharID, lInputActiveCharID);
 			}
 #endif
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
@@ -383,7 +386,7 @@ bool CAgentPopupWnd::Attach (long pCharID, CEventNotify * pNotify, const CAgentI
 #ifdef	_TRACE_RESOURCES
 	if	(LogIsActive (_TRACE_RESOURCES))
 	{
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::Attach [%d] [%u] Done"), this, pCharID, pSetActiveCharID);
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p(%d)(%d)] CAgentPopupWnd::Attach [%d] [%u] Done"), this, mCharID, max(m_dwRef,-1), pCharID, pSetActiveCharID);
 	}
 #endif
 	return lRet;
@@ -399,7 +402,7 @@ bool CAgentPopupWnd::Detach (long pCharID, CEventNotify * pNotify)
 #ifdef	_TRACE_RESOURCES
 		if	(LogIsActive (_TRACE_RESOURCES))
 		{
-			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::Detach [%d]"), this, pCharID);
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p(%d)(%d)] CAgentPopupWnd::Detach [%d]"), this, mCharID, max(m_dwRef,-1), pCharID);
 		}
 #endif
 		lRet = CAgentCharacterWnd::Detach (pCharID, pNotify);
@@ -424,7 +427,7 @@ bool CAgentPopupWnd::Detach (long pCharID, CEventNotify * pNotify)
 #ifdef	_DEBUG_ACTIVE
 			if	(LogIsActive (_DEBUG_ACTIVE))
 			{
-				LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)] SetInactive [%d] InputActive [%d] (Detach)"), this, max(m_dwRef,-1), pCharID, lInputActiveCharID);
+				LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)(%d)] SetInactive [%d] InputActive [%d] (Detach)"), this, mCharID, max(m_dwRef,-1), pCharID, lInputActiveCharID);
 			}
 #endif
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
@@ -448,7 +451,7 @@ bool CAgentPopupWnd::Detach (long pCharID, CEventNotify * pNotify)
 #ifdef	_TRACE_RESOURCES
 		if	(LogIsActive (_TRACE_RESOURCES))
 		{
-			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::Detach [%d] Done"), this, pCharID);
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p(%d)(%d)] CAgentPopupWnd::Detach [%d] Done"), this, mCharID, max(m_dwRef,-1), pCharID);
 		}
 #endif
 	}
@@ -568,7 +571,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, VisibilityCauseType pVisiblityC
 #ifdef	_TRACE_RESOURCES
 	if	(LogIsActive (_TRACE_RESOURCES))
 	{
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::ShowPopup [%p] [%d]"), this, m_hWnd, pForCharID);
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p(%d)(%d)] CAgentPopupWnd::ShowPopup [%p] for [%d]"), this, mCharID, max(m_dwRef,-1), m_hWnd, pForCharID);
 	}
 #endif
 #ifdef	_LOG_POPUP_OPS
@@ -576,7 +579,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, VisibilityCauseType pVisiblityC
 	{
 		CRect lWinRect;
 		GetWindowRect (&lWinRect);
-		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)] [%d] ShowPopup for [%d] visible [%d %d] cause [%d] at [%d %d %d %d (%d %d)]"), this, max(m_dwRef,-1), mCharID, pForCharID, IsWindowVisible(), IsCharShown(), pVisiblityCause, lWinRect.left, lWinRect.top, lWinRect.right, lWinRect.bottom, lWinRect.Width(), lWinRect.Height());
+		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)(%d)] ShowPopup for [%d] visible [%d %d] cause [%d] at [%d %d %d %d (%d %d)]"), this, mCharID, max(m_dwRef,-1), pForCharID, IsWindowVisible(), IsCharShown(), pVisiblityCause, lWinRect.left, lWinRect.top, lWinRect.right, lWinRect.bottom, lWinRect.Width(), lWinRect.Height());
 	}
 #endif
 
@@ -675,18 +678,22 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, VisibilityCauseType pVisiblityC
 		}
 
 		SetLastError(0);
-		if	(!::SetWindowPos (m_hWnd, HWND_TOPMOST, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE))
+		if	(
+				(GetExStyle () & WS_EX_TOPMOST)
+			&&	(!::SetWindowPos (m_hWnd, HWND_TOPMOST, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE))
+			)
 		{
 			LogWinErr (LogDebug, GetLastError());
 		}
 
 		if	(
-				(!(GetExStyle () & WS_EX_TOPMOST))
-			||	(!(GetExStyle () & WS_EX_LAYERED))
+				(!(GetExStyle () & WS_EX_LAYERED))
 			||	(LogIsActive (LogDetails))
 			)
 		{
-			LogMessage (LogIfActive, _T("[%p] CAgentPopupWnd::ShowPopup [%p] Parent [%p] Owner [%p] [%s %s %s %s]"), this, m_hWnd, ::GetParent(m_hWnd), ::GetWindow(m_hWnd, GW_OWNER), ((GetExStyle () & WS_EX_TOPMOST) ? _T("Topmost") : _T("NOT Topmost")), ((GetExStyle () & WS_EX_LAYERED) ? _T("Layered") : _T("NOT Layered")), ((GetExStyle () & WS_EX_TOOLWINDOW) ? _T("ToolWindow") : _T("NOT ToolWindow")), ((GetExStyle () & WS_EX_TRANSPARENT) ? _T("Transparent") : _T("NOT Transparent")));
+			CAtlString	lTitle;
+			lTitle.Format (_T("[%p(%d)(%d)] CAgentPopupWnd::ShowPopup"), this, mCharID, max(m_dwRef,-1));
+			LogWindow (LogIfActive, m_hWnd, lTitle); 
 		}
 	}
 
@@ -736,13 +743,13 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, VisibilityCauseType pVisiblityC
 		&&	(LogIsActive (_LOG_POPUP_OPS))
 		)
 	{
-		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)] [%d] ShowPopup false"), this, max(m_dwRef,-1), mCharID);
+		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)(%d)] ShowPopup false"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 #ifdef	_TRACE_RESOURCES
 	if	(LogIsActive (_TRACE_RESOURCES))
 	{
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::ShowPopup [%p] [%d] Done"), this, m_hWnd, pForCharID);
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p(%d)(%d)] CAgentPopupWnd::ShowPopup [%p] [%d] Done"), this, mCharID, max(m_dwRef,-1), m_hWnd, pForCharID);
 	}
 #endif
 	return lRet;
@@ -762,13 +769,13 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, VisibilityCauseType pVisiblityC
 #ifdef	_TRACE_RESOURCES
 	if	(LogIsActive (_TRACE_RESOURCES))
 	{
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::HidePopup [%p] [%d]"), this, m_hWnd, pForCharID);
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p(%d)(%d)] CAgentPopupWnd::HidePopup [%p] for [%d]"), this, mCharID, max(m_dwRef,-1), m_hWnd, pForCharID);
 	}
 #endif
 #ifdef	_LOG_POPUP_OPS
 	if	(LogIsActive (_LOG_POPUP_OPS))
 	{
-		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)] [%d] HidePopup for [%d] visible [%d %d] cause [%d]"), this, max(m_dwRef,-1), mCharID, pForCharID, IsWindowVisible(), IsCharShown(), pVisiblityCause);
+		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)(%d)] HidePopup for [%d] visible [%d %d] cause [%d]"), this, mCharID, max(m_dwRef,-1), pForCharID, IsWindowVisible(), IsCharShown(), pVisiblityCause);
 	}
 #endif
 
@@ -818,7 +825,7 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, VisibilityCauseType pVisiblityC
 			&&	(GetLastActive() == m_hWnd)
 			)
 		{
-			LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)] SetNotInputActive [%d] (Hide)"), this, max(m_dwRef,-1), mCharID);
+			LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)(%d)] SetNotInputActive (Hide)"), this, mCharID, max(m_dwRef,-1));
 		}
 #endif
 		NotifyHidden (pForCharID, pVisiblityCause);
@@ -834,13 +841,13 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, VisibilityCauseType pVisiblityC
 		&&	(LogIsActive (_LOG_POPUP_OPS))
 		)
 	{
-		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)] [%d] HidePopup false"), this, max(m_dwRef,-1), mCharID);
+		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)(%d)] HidePopup false"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 #ifdef	_TRACE_RESOURCES
 	if	(LogIsActive (_TRACE_RESOURCES))
 	{
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::HidePopup [%p] [%d] Done"), this, m_hWnd, pForCharID);
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p(%d)(%d)] CAgentPopupWnd::HidePopup [%p] [%d] Done"), this, mCharID, max(m_dwRef,-1), m_hWnd, pForCharID);
 	}
 #endif
 	return lRet;
@@ -1032,7 +1039,7 @@ long CAgentPopupWnd::QueueMove (long pCharID, const CPoint & pPosition, DWORD pS
 #ifdef	_LOG_QUEUE_OPS
 	if	(LogIsActive (_LOG_QUEUE_OPS))
 	{
-		LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] QueueMove [%p] [%d] [%d] to [%d %d] speed [%u]"), this, max(m_dwRef,-1), mCharID, lQueuedMove, pCharID, lReqID, lQueuedMove->mPosition.x, lQueuedMove->mPosition.y, lQueuedMove->mTimeAllowed);
+		LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)(%d)] QueueMove [%p(%d)] to [%d %d] speed [%u]"), this, max(m_dwRef,-1), pCharID, lQueuedMove, lReqID, lQueuedMove->mPosition.x, lQueuedMove->mPosition.y, lQueuedMove->mTimeAllowed);
 	}
 #endif
 	return lReqID;
@@ -1061,7 +1068,8 @@ bool CAgentPopupWnd::DoQueuedMoveCycle ()
 bool CAgentPopupWnd::CanDoAnimationQueue ()
 {
 	if	(
-			(!mQueue.IsEmpty ())
+			(!IsQueuePaused ())
+		&&	(!mQueue.IsEmpty ())
 		&&	(DoQueuedMoveCycle ())
 		)
 	{
@@ -1101,7 +1109,7 @@ LRESULT CAgentPopupWnd::OnActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 #ifdef	_DEBUG_ACTIVE
 		if	(LogIsActive (_DEBUG_ACTIVE))
 		{
-			LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)] CAgentPopupWnd OnActivate [%d] Activate [%p] Last [%p]"), this, max(m_dwRef,-1), mCharID, m_hWnd, mLastActive);
+			LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)(%d)] CAgentPopupWnd OnActivate Activate [%p] Last [%p]"), this, mCharID, max(m_dwRef,-1), m_hWnd, mLastActive);
 		}
 #endif
 		SetLastActive ();

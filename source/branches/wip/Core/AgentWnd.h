@@ -91,11 +91,11 @@ public:
 	bool ClearQueuedGestures (long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL, bool pExcludeActive = false, LPCTSTR pExcludeState = NULL, ...);
 
 	UINT IsQueueBusy () const;
-	UINT IsQueuePaused () const;
+	bool IsQueuePaused () const;
 	UINT_PTR IsQueueActive () const;
 	UINT_PTR ActivateQueue (bool pImmediate, DWORD pQueueTime = 0);
 	UINT_PTR SuspendQueue ();
-	UINT_PTR PauseQueue (bool pPause);
+	bool PauseQueue (bool pPause);
 
 	bool IsSoundEnabled (bool pIgnoreGlobalConfig = false) const;
 	bool EnableSound (bool pEnable);
@@ -111,6 +111,7 @@ public:
 
 	bool IsAnimationComplete (bool pPauseAtEndOfStream = false);
 	bool ClearAnimations ();
+	bool DidAnimations ();
 	bool UpdateActiveMedia ();
 	bool MakeActiveMedia (bool pActive);
 
@@ -182,6 +183,7 @@ protected:
 
 private:
 	mutable volatile UINT						mQueueBusy;
+	bool										mQueuePaused;
 	IUnknownPtr									mSystemClock;
 };
 

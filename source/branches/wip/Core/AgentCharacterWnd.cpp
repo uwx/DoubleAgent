@@ -399,7 +399,7 @@ CAgentListeningWnd * CAgentCharacterWnd::GetListeningWnd (bool pCreate)
 		&&	(mListeningWnd = CAgentListeningWnd::CreateInstance())
 		)
 	{
-		mListeningWnd->Create (this);
+		mListeningWnd->Create (this, GetExStyle() & WS_EX_TOPMOST);
 	}
 	return mListeningWnd;
 }
@@ -437,7 +437,7 @@ long CAgentCharacterWnd::QueueShow (long pCharID, bool pFast, int pVisibilityCau
 #ifdef	_LOG_POPUP_OPS
 	if	(LogIsActive (_LOG_POPUP_OPS))
 	{
-		LogMessage (_LOG_POPUP_OPS, _T("[%p] [%d] QueueShow [%p] [%d] [%d]"), this, mCharID, lQueuedShow, pCharID, lReqID);
+		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)] QueueShow [%p(%d)] [%u]"), this, pCharID, lQueuedShow, lReqID, pFast);
 	}
 #endif
 	return lReqID;
@@ -463,15 +463,17 @@ long CAgentCharacterWnd::IsShowingQueued ()
 
 bool CAgentCharacterWnd::ShowQueued (CQueuedShow * pQueuedShow)
 {
+	mCharShown = true;
+	NotifyShown (pQueuedShow->mCharID, (VisibilityCauseType)pQueuedShow->mVisibilityCause);
 	if	(IsWindowVisible ())
 	{
-		mCharShown = true;
 		Invalidate ();
-		NotifyShown (pQueuedShow->mCharID, (VisibilityCauseType)pQueuedShow->mVisibilityCause);
-		SetLastActive ();
-		return true;
 	}
-	return false;
+	if	(GetStyle() & WS_VISIBLE)
+	{
+		SetLastActive ();
+	}
+	return true;
 }
 
 bool CAgentCharacterWnd::NotifyShown (long pForCharID, VisibilityCauseType pVisiblityCause)
@@ -530,7 +532,7 @@ long CAgentCharacterWnd::QueueHide (long pCharID, bool pFast, int pVisibilityCau
 #ifdef	_LOG_POPUP_OPS
 	if	(LogIsActive (_LOG_POPUP_OPS))
 	{
-		LogMessage (_LOG_POPUP_OPS, _T("[%p] [%d] QueueHide [%p] [%d] [%d]"), this, mCharID, lQueuedHide, pCharID, lReqID);
+		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)] QueueHide [%p(%d)] [%u]"), this, pCharID, lQueuedHide, lReqID, pFast);
 	}
 #endif
 	return lReqID;
@@ -669,7 +671,7 @@ long CAgentCharacterWnd::QueueThink (long pCharID, LPCTSTR pText, class CAgentTe
 #ifdef	_LOG_QUEUE_OPS
 	if	(LogIsActive (_LOG_QUEUE_OPS))
 	{
-		LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueueThink [%p] [%d] [%d] [%s] [%p]"), this, mCharID, lQueuedThink, pCharID, lReqID, (lQueuedThink ? (LPCTSTR)DebugStr(lQueuedThink->GetFullText()) : NULL), pTextObject);
+		LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueueThink [%p(%d)] [%s] [%p]"), this, pCharID, lQueuedThink, lReqID, (lQueuedThink ? (LPCTSTR)DebugStr(lQueuedThink->GetFullText()) : NULL), pTextObject);
 	}
 #endif
 	return lReqID;
@@ -762,7 +764,7 @@ long CAgentCharacterWnd::QueueSpeak (long pCharID, LPCTSTR pText, CAgentTextObje
 #ifdef	_LOG_QUEUE_OPS
 	if	(LogIsActive (_LOG_QUEUE_OPS))
 	{
-		LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueueSpeak [%p] [%d] [%d] [%s] [%p] [%s]"), this, mCharID, lQueuedSpeak, pCharID, lReqID, DebugStr(pText), pTextObject, DebugStr(pSoundUrl));
+		LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueueSpeak [%p(%d)] [%s] [%p] [%s]"), this, pCharID, lQueuedSpeak, lReqID, DebugStr(pText), pTextObject, DebugStr(pSoundUrl));
 	}
 #endif
 
@@ -1138,7 +1140,7 @@ long CAgentCharacterWnd::QueueWait (long pCharID, long pOtherCharID, long pOther
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueueWait [%p] [%d] [%d] Other [%d] [%d]"), this, mCharID, lQueuedWait, pCharID, lReqID, pOtherCharID, pOtherReqID);
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueueWait [%p(%d)] Other [%d] [%d]"), this, pCharID, lQueuedWait, lReqID, pOtherCharID, pOtherReqID);
 		}
 #endif
 	}
@@ -1165,7 +1167,7 @@ long CAgentCharacterWnd::QueueInterrupt (long pCharID, long pOtherCharID, long p
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] QueueInterrupt [%p] [%d] [%d] Other [%d] [%d]"), this, mCharID, lQueuedInterrupt, pCharID, lReqID, pOtherCharID, pOtherReqID);
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueueInterrupt [%p(%d)] Other [%d] [%d]"), this, pCharID, lQueuedInterrupt, lReqID, pOtherCharID, pOtherReqID);
 		}
 #endif
 	}

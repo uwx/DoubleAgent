@@ -39,8 +39,8 @@
 
 #ifdef	_DEBUG
 //#define	_DEBUG_LAYOUT		LogNormal|LogHighVolume|LogTimeMs
-//#define	_DEBUG_DRAW			LogNormal|LogHighVolume|LogTimeMs
 //#define	_DEBUG_RTL			LogNormal|LogHighVolume|LogTimeMs
+//#define	_DEBUG_DRAW			LogNormal|LogTimeMs
 #define	_DEBUG_SHOW_HIDE		(GetProfileDebugInt(_T("DebugBalloonShow"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_AUTO_HIDE		(GetProfileDebugInt(_T("DebugBalloonHide"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_AUTO_SIZE		(GetProfileDebugInt(_T("DebugBalloonSize"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
@@ -87,9 +87,11 @@ CAgentBalloonWnd::CAgentBalloonWnd ()
 	mAutoHideTime (0),
 	mAutoScrollTimer (0),
 	mPacingSpeech (false),
-	mPacingWord (false),
+	mRedrawDisabled (false),
 	mApplyingLayout (false),
 	mApplyingRegion (false),
+	mPaused (false),
+	mPausedWord (-1),
 	mDebugRecursionLevel (0),
 	mOwnerWnd (NULL)
 {
@@ -291,6 +293,8 @@ bool CAgentBalloonWnd::ApplyOptions (CAgentBalloonOptions * pOptions)
 
 	if	(IsWindow ())
 	{
+		CFontHandle	lFont;
+
 #ifdef	_DEBUG_OPTIONS
 		if	(LogIsActive (_DEBUG_OPTIONS))
 		{
@@ -298,20 +302,41 @@ bool CAgentBalloonWnd::ApplyOptions (CAgentBalloonOptions * pOptions)
 			LogMessage (_DEBUG_OPTIONS, _T("[%p]               Lines [%hu] PerLine [%hu] BkColor [%8.8X] FgColor [%8.8X] BrColor [%8.8X]"), this, mOptions.mLines, mOptions.mPerLine, mOptions.mBkColor, mOptions.mFgColor, mOptions.mBrColor);
 		}
 #endif
-		SendMessage (TTM_SETTIPBKCOLOR, (WPARAM)mOptions.mBkColor);
-		SendMessage (TTM_SETTIPTEXTCOLOR, (WPARAM)mOptions.mFgColor);
-
-		mFont.Close ();
+		if	(mOptions.mFont.lfHeight)
+		{
+			lFont = CreateFontIndirect (&mOptions.mFont);
+		}
+		
 		if	(
-				(mOptions.mFont.lfHeight)
-			&&	(mFont = CreateFontIndirect (&mOptions.mFont))
+				((COLORREF) SendMessage (TTM_GETTIPBKCOLOR) != mOptions.mBkColor)
+			||	((COLORREF) SendMessage (TTM_GETTIPTEXTCOLOR) != mOptions.mFgColor)
+			||	(!FontEqual (mFont, lFont))
 			)
 		{
-			SetFont (mFont);
-		}
-		else
-		{
-			SetFont (NULL);
+			EnterRecursion ();
+
+			try
+			{
+				if	(IsWindowVisible ())
+				{
+#ifdef	_DEBUG_SHOW_HIDE
+					if	(LogIsActive (_DEBUG_SHOW_HIDE))
+					{
+						LogMessage (_DEBUG_SHOW_HIDE, _T("[%p(%u)] Hide Balloon for ApplyOptions"), this, IsPaused());
+					}
+#endif
+					ShowWindow (SW_HIDE);
+					SendMessage (TTM_ACTIVATE, FALSE);
+				}
+				SendMessage (TTM_SETTIPBKCOLOR, (WPARAM)mOptions.mBkColor);
+				SendMessage (TTM_SETTIPTEXTCOLOR, (WPARAM)mOptions.mFgColor);
+				mFont = lFont.Detach ();
+				SetFont (mFont.GetSafeHandle());
+				mShapeBuffer.EndBuffer (true);
+			}
+			catch AnyExceptionDebug
+
+			ExitRecursion ();
 		}
 		lRet = true;
 	}
@@ -482,17 +507,54 @@ bool CAgentBalloonWnd::GetActualFont (const LOGFONT & pFont, LOGFONT & pActualFo
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+bool CAgentBalloonWnd::FontEqual (HFONT pFont1, HFONT pFont2)
+{
+	tS <LOGFONT>	lFont1;
+	tS <LOGFONT>	lFont2;
+	
+	if	(
+			(pFont1)
+		&&	(GetObject (pFont1, sizeof(LOGFONT), &lFont1))
+		&&	(pFont2)
+		&&	(GetObject (pFont2, sizeof(LOGFONT), &lFont2))
+		)
+	{
+		return FontEqual (lFont1, lFont2);
+	}
+	return false;
+}
+
+bool CAgentBalloonWnd::FontEqual (const LOGFONT & pFont1, const LOGFONT & pFont2)
+{
+	if	(
+			(pFont1.lfWidth == pFont2.lfWidth)
+		&&	(pFont1.lfHeight == pFont2.lfHeight)
+		&&	(pFont1.lfWeight == pFont2.lfWeight)
+		&&	(pFont1.lfItalic == pFont2.lfItalic)
+		&&	(pFont1.lfUnderline == pFont2.lfUnderline)
+		&&	(pFont1.lfStrikeOut == pFont2.lfStrikeOut)
+		&&	(pFont1.lfCharSet == pFont2.lfCharSet)
+		&&	(_tcscmp (pFont1.lfFaceName, pFont2.lfFaceName) == 0)
+		)
+	{
+		return true;
+	}
+	return false;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentBalloonWnd::Create (CWindow * pOwnerWnd)
+bool CAgentBalloonWnd::Create (CWindow * pOwnerWnd, DWORD pExStyle)
 {
 	bool	lRet = false;
 
 	if	(
 			(pOwnerWnd)
 		&&	(pOwnerWnd->IsWindow ())
-		&&	(CAgentBalloonWndObj::Create (pOwnerWnd->m_hWnd, CRect(0,0,0,0), _T(""), WS_POPUP|TTS_ALWAYSTIP|TTS_NOPREFIX|TTS_NOANIMATE|TTS_NOFADE, 0, 0U, NULL))
+		&&	(CAgentBalloonWndObj::Create (pOwnerWnd->m_hWnd, CRect(0,0,0,0), _T(""), WS_POPUP|TTS_ALWAYSTIP|TTS_NOPREFIX|TTS_NOANIMATE|TTS_NOFADE, pExStyle, 0U, NULL))
 		)
 	{
 		mOwnerWnd = pOwnerWnd;
@@ -507,7 +569,7 @@ bool CAgentBalloonWnd::Create (CWindow * pOwnerWnd)
 		}
 #endif
 		ModifyStyle (WS_BORDER, 0, SWP_FRAMECHANGED);
-		ModifyStyleEx (0, WS_EX_TOPMOST);
+		ModifyStyleEx (WS_EX_TOPMOST, pExStyle);
 
 		mToolInfo.uFlags = TTF_ABSOLUTE|TTF_TRACK|TTF_TRANSPARENT;
 		mToolInfo.hwnd = pOwnerWnd->m_hWnd;
@@ -678,6 +740,11 @@ bool CAgentBalloonWnd::IsBusy (bool pForIdle) const
 	return false;
 }
 
+bool CAgentBalloonWnd::IsPaused () const
+{
+	return mPaused;
+}
+
 bool CAgentBalloonWnd::IsDrawingLayered () const
 {
 #ifdef	_DRAW_LAYERED
@@ -730,7 +797,10 @@ bool CAgentBalloonWnd::ShowBalloonSpeech (const CAgentText & pText, bool pNoAuto
 {
 	bool	lRet = false;
 
-	if	(IsWindow ())
+	if	(
+			(IsWindow ())
+		&&	(!IsPaused ())
+		)
 	{
 		bool	lWasVisible;
 		bool	lTextChanged;
@@ -758,7 +828,10 @@ bool CAgentBalloonWnd::ShowBalloonThought (const CAgentText & pText, bool pNoAut
 {
 	bool	lRet = false;
 
-	if	(IsWindow ())
+	if	(
+			(IsWindow ())
+		&&	(!IsPaused ())
+		)
 	{
 		bool	lWasVisible;
 		bool	lTextChanged;
@@ -827,7 +900,10 @@ bool CAgentBalloonWnd::ShowingBalloon ()
 		{
 			lRet = true;
 		}
-		StopAutoHide ();
+		if	(!IsPaused ())
+		{
+			StopAutoHide ();
+		}
 	}
 	return lRet;
 }
@@ -859,7 +935,7 @@ bool CAgentBalloonWnd::ShowBalloonText (const CAgentText & pText, UINT pForSpeec
 				&&	(mText.GetWordCount() > 0)
 				)
 			{
-				LogMessage (_DEBUG_AUTO_PACE, _T("[%p] ResetText"), this);
+				LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%u)] ResetText"), this, IsPaused());
 			}
 #endif
 #ifdef	_DEBUG_AUTO_SCROLL
@@ -868,7 +944,7 @@ bool CAgentBalloonWnd::ShowBalloonText (const CAgentText & pText, UINT pForSpeec
 				&&	(mText.GetScrollMax() > 0)
 				)
 			{
-				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p] ResetScroll [%+d] in [%+d - %+d] by [%d]"), this, mText.GetScrollPos(), mText.GetScrollMin(), mText.GetScrollMax(), mText.GetScrollInc());
+				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%u)] ResetScroll [%+d] in [%+d - %+d] by [%d]"), this, IsPaused(), mText.GetScrollPos(), mText.GetScrollMin(), mText.GetScrollMax(), mText.GetScrollInc());
 			}
 #endif
 			mText = pText;
@@ -897,82 +973,81 @@ bool CAgentBalloonWnd::ShowBalloon (bool pForSpeech, bool pTextChanged)
 
 	if	(IsWindow ())
 	{
-#if	TRUE
+		CRect	lWinRect;
+
 		if	(
-				(pTextChanged)
-			&&	(mShape.Ptr())
-			&&	(IsWindowsVista_AtLeast ())
+				(IsWindowVisible ())
 			&&	(
-					(IsAutoSize ())
-				||	(!IsWindowVisible())
-				||	(
-						(pForSpeech)
-					?	(!IsSpeechShape ())
-					:	(!IsThoughtShape ())
-					)
+					(pForSpeech)
+				?	(IsThoughtShape())
+				:	(IsSpeechShape())
 				)
 			)
 		{
-//
-//	On Vista or later, we recreate the window.  This stops the previous window image from being
-//	flashed on the screen before the new window image is displayed.
-//
 #ifdef	_DEBUG_SHOW_HIDE
 			if	(LogIsActive (_DEBUG_SHOW_HIDE))
 			{
-				LogMessage (_DEBUG_SHOW_HIDE, _T("[%p] Recreate Balloon"), this);
+				LogMessage (_DEBUG_SHOW_HIDE, _T("[%p(%u)] Hide Balloon for shape change"), this, IsPaused());
 			}
 #endif
+			ShowWindow (SW_HIDE);
+		}
+
+		if	(
+				(IsWindowsVista_AtLeast ())
+			&&	(IsDrawingLayered ())
+			&&	(
+					(IsAutoSize ())
+				||	(!IsWindowVisible ())
+				)
+			)
+		{
+			//
+			//	On Vista or later, recreate the window to stop DWM from showing a blank window or the previous window image.
+			//
 #ifdef	_DEBUG_LAYOUT
 			LogMessage (_DEBUG_LAYOUT, _T("%sBalloon Recreate"), RecursionIndent());
 #endif
-
 			EnterRecursion ();
 			DestroyWindow ();
-			Create (mOwnerWnd);
+			Create (mOwnerWnd, mOwnerWnd->GetExStyle() & WS_EX_TOPMOST);
 			ExitRecursion ();
-
-#ifdef	_DEBUG_LAYOUT
-			LogMessage (_DEBUG_LAYOUT, _T("%sBalloon Recreate Done"), RecursionIndent());
-#endif
 		}
 		else
-#endif
 		{
 			ApplyOptions ();
 		}
 
-		if	(IsWindow ())
+		if	(
+				(pForSpeech)
+			?	(mShape = new CAgentBalloonSpeak)
+			:	(mShape = new CAgentBalloonThink)
+			)
 		{
-			CRect	lWinRect;
+#ifdef	_DRAW_LAYERED
+			if	(IsDrawingLayered ())
+			{
+				mShape->mUseGdiplus = new CUseGdiplus;
+			}
+#endif
+		}
 
-			if	(mText.GetFullText().IsEmpty ())
-			{
-				mToolInfo.lpszText = _T(" ");
-			}
-			else
-			{
-				mToolInfo.lpszText = (LPTSTR)(LPCTSTR)mText.GetFullText();
-			}
+		if	(mText.GetFullText().IsEmpty ())
+		{
+			mToolInfo.lpszText = _T(" ");
+		}
+		else
+		{
+			mToolInfo.lpszText = (LPTSTR)(LPCTSTR)mText.GetFullText();
+		}
 
 #ifdef	_DEBUG_LAYOUT
-			LogMessage (_DEBUG_LAYOUT, _T("%sBalloon ShowBalloon [%u]"), RecursionIndent(), IsWindowVisible());
+		LogMessage (_DEBUG_LAYOUT, _T("%sBalloon ShowBalloon [%u]"), RecursionIndent(), IsWindowVisible());
 #endif
-			EnterRecursion ();
-
-			if	(
-					(pForSpeech)
-				?	(mShape = new CAgentBalloonSpeak)
-				:	(mShape = new CAgentBalloonThink)
-				)
-			{
-#ifdef	_DRAW_LAYERED
-				if	(IsDrawingLayered ())
-				{
-					mShape->mUseGdiplus = new CUseGdiplus;
-				}
-#endif
-			}
+		EnterRecursion ();
+		
+		try
+		{
 			if	(
 					(mShape)
 				&&	(CalcWinRect (lWinRect))
@@ -986,7 +1061,7 @@ bool CAgentBalloonWnd::ShowBalloon (bool pForSpeech, bool pTextChanged)
 #ifdef	_DEBUG_SHOW_HIDE
 				if	(LogIsActive (_DEBUG_SHOW_HIDE))
 				{
-					LogMessage (_DEBUG_SHOW_HIDE, _T("[%p] Show Balloon [%u %u] [%s]"), this, pForSpeech, pTextChanged, DebugStr(mText.GetFullText()));
+					LogMessage (_DEBUG_SHOW_HIDE, _T("[%p(%u)] Show Balloon [%u %u] [%s]"), this, IsPaused(), pForSpeech, pTextChanged, DebugStr(mText.GetFullText()));
 				}
 #endif
 				SendMessage (TTM_ACTIVATE, TRUE);
@@ -1000,19 +1075,20 @@ bool CAgentBalloonWnd::ShowBalloon (bool pForSpeech, bool pTextChanged)
 			if	(IsWindowVisible())
 			{
 #ifdef	_DEBUG_LAYOUT
-				LogMessage (_DEBUG_LAYOUT, _T("%sBalloon HWND_TOPMOST"), RecursionIndent());
+				LogMessage (_DEBUG_LAYOUT, _T("%sBalloon HWND_TOP"), RecursionIndent());
 #endif
 				EnterRecursion ();
-				SetWindowPos (HWND_TOPMOST, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE);
+				SetWindowPos ((GetExStyle() & WS_EX_TOPMOST) ? HWND_TOPMOST : HWND_TOP, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE);
 				ExitRecursion ();
 				lRet = true;
 			}
-
-			ExitRecursion ();
-#ifdef	_DEBUG_LAYOUT
-			LogMessage (_DEBUG_LAYOUT, _T("%sBalloon ShowBalloon Done"), RecursionIndent());
-#endif
 		}
+		catch AnyExceptionDebug
+
+		ExitRecursion ();
+#ifdef	_DEBUG_LAYOUT
+		LogMessage (_DEBUG_LAYOUT, _T("%sBalloon ShowBalloon Done"), RecursionIndent());
+#endif
 	}
 	return lRet;
 }
@@ -1022,6 +1098,7 @@ void CAgentBalloonWnd::ShowedBalloon (bool pWasVisible)
 	if	(
 			(!pWasVisible)
 		&&	(IsWindow ())
+		&&	(!IsPaused ())
 		&&	(PreNotify ())
 		)
 	{
@@ -1052,7 +1129,7 @@ bool CAgentBalloonWnd::HideBalloon (bool pFast)
 #ifdef	_DEBUG_SHOW_HIDE
 		if	(LogIsActive (_DEBUG_SHOW_HIDE))
 		{
-			LogMessage (_DEBUG_SHOW_HIDE, _T("[%p] Hide Balloon [%u %u]"), this, pFast, IsWindowVisible());
+			LogMessage (_DEBUG_SHOW_HIDE, _T("[%p(%u)] Hide Balloon [%u %u]"), this, IsPaused(), pFast, IsWindowVisible());
 		}
 #endif
 #ifdef	_DEBUG_LAYOUT
@@ -1071,14 +1148,19 @@ bool CAgentBalloonWnd::HideBalloon (bool pFast)
 			SendMessage (TTM_POP);
 		}
 		SendMessage (TTM_ACTIVATE, FALSE);
-		StopAutoHide ();
-		mPacingSpeech = false;
+
+		if	(!IsPaused ())
+		{
+			StopAutoHide ();
+			mPacingSpeech = false;
+		}
 		lRet = true;
 	}
 
 	if	(
 			(lRet)
 		&&	(lWasVisible)
+		&&	(!IsPaused ())
 		&&	(PreNotify ())
 		)
 	{
@@ -1111,7 +1193,7 @@ bool CAgentBalloonWnd::MoveBalloon ()
 #ifdef	_DEBUG_SHOW_HIDE
 		if	(LogIsActive (_DEBUG_SHOW_HIDE))
 		{
-			LogMessage (_DEBUG_SHOW_HIDE, _T("[%p]   MoveBalloon [%s]"), this, FormatRect(lWinRect));
+			LogMessage (_DEBUG_SHOW_HIDE, _T("[%p(%u)]   MoveBalloon [%s]"), this, IsPaused(), FormatRect(lWinRect));
 		}
 #endif
 		SendMessage (TTM_TRACKPOSITION, 0, MAKELPARAM (lWinRect.left, lWinRect.top));
@@ -1157,6 +1239,41 @@ bool CAgentBalloonWnd::AbortSpeechText ()
 	return lRet;
 }
 
+bool CAgentBalloonWnd::Pause (bool pPause)
+{
+	bool	lRet = false;
+
+	if	(mPaused != pPause)
+	{
+		if	(mPaused = pPause)
+		{
+			mPausedWord = mText.GetWordDisplayed ();
+#ifdef	_DEBUG_AUTO_PACE
+			if	(LogIsActive (_DEBUG_AUTO_PACE))
+			{
+				LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%u)] AutoPacePause  word [%d] of [%d] [%s]"), this, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+			}
+#endif
+		}
+		else
+		{
+			if	(
+					(mPausedWord > 0)
+				&&	(mPausedWord != mText.GetWordDisplayed ())
+				)
+			{
+				ShowedVoiceWord (false);
+			}
+			if	(mAutoHideTimer)
+			{
+				StartAutoHide (); // Restart for full AutoHide time
+			}
+		}
+		lRet = true;
+	}
+	return lRet;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -1192,18 +1309,18 @@ bool CAgentBalloonWnd::CalcLayoutRects (CRect & pTextRect, CRect & pOwnerRect, C
 			||	(mOptions.mLines < mMinLines)
 			)
 		{
-			pTextRect = CRect (CPoint (0,0), mText.CalcTextSize (GetFont(), min(max(mOptions.mPerLine,mMinPerLine),mMaxPerLine)));
+			pTextRect = CRect (CPoint (0,0), mText.CalcTextSize (mFont.GetSafeHandle()?mFont.GetSafeHandle():GetFont(), min(max(mOptions.mPerLine,mMinPerLine),mMaxPerLine)));
 		}
 		else
 		{
-			pTextRect = CRect (CPoint (0,0), mText.CalcTextSize (GetFont(), min(max(mOptions.mPerLine,mMinPerLine),mMaxPerLine), min(max(mOptions.mLines,mMinLines),mMaxLines)));
+			pTextRect = CRect (CPoint (0,0), mText.CalcTextSize (mFont.GetSafeHandle()?mFont.GetSafeHandle():GetFont(), min(max(mOptions.mPerLine,mMinPerLine),mMaxPerLine), min(max(mOptions.mLines,mMinLines),mMaxLines)));
 		}
 		pTextRect.OffsetRect (pOwnerRect.CenterPoint().x - pTextRect.CenterPoint().x, pOwnerRect.top - pTextRect.bottom);
 
 #ifdef	_DEBUG_AUTO_SIZE
 		if	(LogIsActive (_DEBUG_AUTO_SIZE))
 		{
-			LogMessage (_DEBUG_AUTO_SIZE, _T("[%p]   CalcLayout [%s] for [%s]"), this, FormatSize(pTextRect.Size()), DebugStr(mText.GetFullText()));
+			LogMessage (_DEBUG_AUTO_SIZE, _T("[%p(%u)]   CalcLayout [%s] for [%s]"), this, IsPaused(), FormatSize(pTextRect.Size()), DebugStr(mText.GetFullText()));
 		}
 #endif
 
@@ -1298,7 +1415,10 @@ bool CAgentBalloonWnd::ApplyRegion (bool pRedraw)
 {
 	bool	lRet = false;
 
-	if	(!mApplyingRegion)
+	if	(
+			(!mApplyingRegion)
+		&&	(!IsDrawingLayered ())
+		)
 	{
 		mApplyingRegion = true;
 		try
@@ -1383,7 +1503,7 @@ bool CAgentBalloonWnd::StartAutoPace ()
 #ifdef	_DEBUG_AUTO_PACE
 		if	(LogIsActive (_DEBUG_AUTO_PACE))
 		{
-			LogMessage (_DEBUG_AUTO_PACE, _T("[%p] AutoPace [%u] started for [%u] at [%d] of [%d]"), this, mAutoPaceTimer, mAutoPaceTime, mText.GetWordDisplayed(), mText.GetWordCount());
+			LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%u)] AutoPace [%u] started for [%u] at [%d] of [%d]"), this, IsPaused(), mAutoPaceTimer, mAutoPaceTime, mText.GetWordDisplayed(), mText.GetWordCount());
 		}
 #endif
 		lRet = true;
@@ -1407,7 +1527,7 @@ bool CAgentBalloonWnd::StopAutoPace ()
 #ifdef	_DEBUG_AUTO_PACE
 		if	(LogIsActive (_DEBUG_AUTO_PACE))
 		{
-			LogMessage (_DEBUG_AUTO_PACE, _T("[%p] AutoPace [%u] stopped"), this, mAutoPaceTimer);
+			LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%u)] AutoPace [%u] stopped"), this, IsPaused(), mAutoPaceTimer);
 		}
 #endif
 #ifdef	_TRACE_RESOURCES_EX
@@ -1504,7 +1624,7 @@ bool CAgentBalloonWnd::StartAutoHide ()
 #ifdef	_DEBUG_AUTO_HIDE
 		if	(LogIsActive (_DEBUG_AUTO_HIDE))
 		{
-			LogMessage (_DEBUG_AUTO_HIDE, _T("[%p] AutoHide [%u] started with [%u]"), this, mAutoHideTimer, mAutoHideTime);
+			LogMessage (_DEBUG_AUTO_HIDE, _T("[%p(%u)] AutoHide [%u] started with [%u]"), this, IsPaused(), mAutoHideTimer, mAutoHideTime);
 		}
 #endif
 		lRet = true;
@@ -1543,7 +1663,7 @@ bool CAgentBalloonWnd::StopAutoHide ()
 #ifdef	_DEBUG_AUTO_HIDE
 		if	(LogIsActive (_DEBUG_AUTO_HIDE))
 		{
-			LogMessage (_DEBUG_AUTO_HIDE, _T("[%p] AutoHide [%u] stopped"), this, mAutoHideTimer);
+			LogMessage (_DEBUG_AUTO_HIDE, _T("[%p(%u)] AutoHide [%u] stopped"), this, IsPaused(), mAutoHideTimer);
 		}
 #endif
 		lRet = true;
@@ -1584,7 +1704,7 @@ bool CAgentBalloonWnd::StartAutoScroll ()
 #ifdef	_DEBUG_AUTO_SCROLL
 			if	(LogIsActive (_DEBUG_AUTO_SCROLL))
 			{
-				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p] AutoScroll [%u] started [%u] at [%+d] in [%+d - %+d] by [%d]"), this, mAutoScrollTimer, lScrollTime, mText.GetScrollPos(), mText.GetScrollMin(), mText.GetScrollMax(), mText.GetScrollInc());
+				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%u)] AutoScroll [%u] started [%u] at [%+d] in [%+d - %+d] by [%d]"), this, IsPaused(), mAutoScrollTimer, lScrollTime, mText.GetScrollPos(), mText.GetScrollMin(), mText.GetScrollMax(), mText.GetScrollInc());
 			}
 #endif
 			return true;
@@ -1598,7 +1718,7 @@ bool CAgentBalloonWnd::StartAutoScroll ()
 			&&	(mText.GetScrollMax() > 0)
 			)
 		{
-			LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p] StopScroll [%+d] in [%+d - %+d] by [%d]"), this, mText.GetScrollPos(), mText.GetScrollMin(), mText.GetScrollMax(), mText.GetScrollInc());
+			LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%u)] StopScroll [%+d] in [%+d - %+d] by [%d]"), this, IsPaused(), mText.GetScrollPos(), mText.GetScrollMin(), mText.GetScrollMax(), mText.GetScrollInc());
 		}
 #endif
 		StopAutoScroll ();
@@ -1618,7 +1738,7 @@ bool CAgentBalloonWnd::StopAutoScroll ()
 #ifdef	_DEBUG_AUTO_SCROLL
 		if	(LogIsActive (_DEBUG_AUTO_SCROLL))
 		{
-			LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p] AutoScroll [%u] stopped"), this, mAutoScrollTimer);
+			LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%u)] AutoScroll [%u] stopped"), this, IsPaused(), mAutoScrollTimer);
 		}
 #endif
 #ifdef	_TRACE_RESOURCES_EX
@@ -1651,7 +1771,7 @@ void CAgentBalloonWnd::OnVoiceStart (long pCharID)
 #ifdef	_DEBUG_SPEECH
 	if	(LogIsActive (_DEBUG_SPEECH))
 	{
-		LogMessage (_DEBUG_SPEECH, _T("[%p] CAgentBalloonWnd OnVoiceStart [%s] IsAutoPace [%u] IsAutoSize [%u]"), this, DebugStr(mText.GetSpeechText()), IsAutoPace (), IsAutoSize ());
+		LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] CAgentBalloonWnd OnVoiceStart [%s] IsAutoPace [%u] IsAutoSize [%u]"), this, IsPaused(), DebugStr(mText.GetSpeechText()), IsAutoPace (), IsAutoSize ());
 	}
 #endif
 	PostMessage (mVoiceStartMsg, pCharID);
@@ -1662,7 +1782,7 @@ void CAgentBalloonWnd::OnVoiceEnd (long pCharID)
 #ifdef	_DEBUG_SPEECH
 	if	(LogIsActive (_DEBUG_SPEECH))
 	{
-		LogMessage (_DEBUG_SPEECH, _T("[%p] CAgentBalloonWnd OnVoiceEnd [%s] IsAutoPace [%u] IsAutoSize [%u]"), this, DebugStr(mText.GetSpeechText()), IsAutoPace (), IsAutoSize ());
+		LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] CAgentBalloonWnd OnVoiceEnd [%s] IsAutoPace [%u] IsAutoSize [%u]"), this, IsPaused(), DebugStr(mText.GetSpeechText()), IsAutoPace (), IsAutoSize ());
 	}
 #endif
 	PostMessage (mVoiceEndMsg, pCharID);
@@ -1673,7 +1793,7 @@ void CAgentBalloonWnd::OnVoiceWord (long pCharID, UINT pWordPos, int pWordLength
 #ifdef	_DEBUG_SPEECH
 	if	(LogIsActive (_DEBUG_SPEECH))
 	{
-		LogMessage (_DEBUG_SPEECH, _T("[%p] CAgentBalloonWnd   OnVoiceWord [%u (%d)] [%s] IsAutoPace [%u] IsAutoSize [%u]"), this, pWordPos, pWordLength, DebugStr(mText.GetSpeechText().Mid (pWordPos, pWordLength)), IsAutoPace (), IsAutoSize ());
+		LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] CAgentBalloonWnd   OnVoiceWord [%u (%d)] [%s] IsAutoPace [%u] IsAutoSize [%u]"), this, IsPaused(), pWordPos, pWordLength, DebugStr(mText.GetSpeechText().Mid (pWordPos, pWordLength)), IsAutoPace (), IsAutoSize ());
 	}
 #endif
 	PostMessage (mVoiceWordMsg, pCharID, MAKELPARAM (pWordPos, pWordLength));
@@ -1686,26 +1806,51 @@ LRESULT CAgentBalloonWnd::OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lPar
 #ifdef	_DEBUG_SPEECH
 	if	(LogIsActive (_DEBUG_SPEECH))
 	{
-		LogMessage (_DEBUG_SPEECH, _T("[%p] CAgentBalloonWnd OnVoiceStartMsg [%s] IsAutoPace [%u] IsAutoSize [%u]"), this, DebugStr(mText.GetSpeechText()), IsAutoPace (), IsAutoSize ());
+		LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] CAgentBalloonWnd OnVoiceStartMsg [%s] IsAutoPace [%u] IsAutoSize [%u] Word [%d] of [%d]"), this, IsPaused(), DebugStr(mText.GetSpeechText()), IsAutoPace (), IsAutoSize (), mText.GetWordDisplayed(), mText.GetWordCount());
 	}
 #endif
-	mPacingSpeech = true;
-	StopAutoPace ();
 	StopAutoHide ();
 
-	if	(
-			(IsAutoPace ())
-		||	(!IsAutoSize ())
-		)
+	if	(!IsPaused ())
 	{
-		if	(mText.DisplayFirstWord (true))
+		mPacingSpeech = true;
+		StopAutoPace ();
+	
+		if	(
+				(IsAutoPace ())
+			||	(!IsAutoSize ())
+			)
 		{
-			ShowedVoiceWord (false);
+			if	(
+					(mPausedWord > 0)
+				&&	(mText.DisplayThisWord (mPausedWord, true))
+				)
+			{
+#ifdef	_DEBUG_AUTO_PACE
+				if	(LogIsActive (_DEBUG_AUTO_PACE))
+				{
+					LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%u)] AutoPaceResume word [%d] of [%d] [%s]"), this, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+				}
+#endif
+				ShowedVoiceWord (false);
+			}
+			else
+			if	(mText.DisplayFirstWord (true))
+			{
+#ifdef	_DEBUG_AUTO_PACE
+				if	(LogIsActive (_DEBUG_AUTO_PACE))
+				{
+					LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%u)] AutoPaceSpeech word [%d] of [%d] [%s]"), this, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+				}
+#endif
+				ShowedVoiceWord (false);
+			}
+			mPausedWord = -1;
 		}
-	}
-	else
-	{
-		mPacingSpeech = false;
+		else
+		{
+			mPacingSpeech = false;
+		}
 	}
 	return 0;
 }
@@ -1715,42 +1860,57 @@ LRESULT CAgentBalloonWnd::OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam
 #ifdef	_DEBUG_SPEECH
 	if	(LogIsActive (_DEBUG_SPEECH))
 	{
-		LogMessage (_DEBUG_SPEECH, _T("[%p] CAgentBalloonWnd OnVoiceEndMsg [%s] IsAutoPace [%u] IsAutoSize [%u]"), this, DebugStr(mText.GetSpeechText()), IsAutoPace (), IsAutoSize ());
+		LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] CAgentBalloonWnd OnVoiceEndMsg [%s] IsAutoPace [%u] IsAutoSize [%u] Word [%d] of [%d]"), this, IsPaused(), DebugStr(mText.GetSpeechText()), IsAutoPace (), IsAutoSize (), mText.GetWordDisplayed(), mText.GetWordCount());
 	}
 #endif
-	mPacingSpeech = false;
-
-	if	(
-			(IsAutoPace ())
-		||	(!IsAutoSize ())
-		)
+	if	(!IsPaused ())
 	{
-		if	(mText.GetWordDisplayed() >= mText.GetWordCount()-2)
+		mPacingSpeech = false;
+
+		if	(
+				(IsAutoPace ())
+			||	(!IsAutoSize ())
+			)
 		{
-			if	(mText.DisplayAllWords (true))
+			if	(mText.GetWordDisplayed() >= mText.GetWordCount()-2)
 			{
-				ShowedVoiceWord (false);
+				if	(mText.DisplayAllWords (true))
+				{
+#ifdef	_DEBUG_AUTO_PACE
+					if	(LogIsActive (_DEBUG_AUTO_PACE))
+					{
+						LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%u)] AutoPaceSpeech word [%d] of [%d] [%s]"), this, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+					}
+#endif
+					ShowedVoiceWord (false);
+				}
+				StopAutoPace ();
 			}
-			StopAutoPace ();
+			else
+			{
+				if	(mText.DisplayNextWord (true))
+				{
+#ifdef	_DEBUG_AUTO_PACE
+					if	(LogIsActive (_DEBUG_AUTO_PACE))
+					{
+						LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%u)] AutoPaceSpeech word [%d] of [%d] [%s]"), this, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+					}
+#endif
+					ShowedVoiceWord (false);
+				}
+				StartAutoPace ();
+			}
 		}
 		else
 		{
-			if	(mText.DisplayNextWord (true))
-			{
-				ShowedVoiceWord (false);
-			}
-			StartAutoPace ();
+			StopAutoPace ();
 		}
-	}
-	else
-	{
-		StopAutoPace ();
-	}
-
+  	}
 	if	(!mAutoPaceTimer)
 	{
 		StartAutoHide ();
 	}
+
 	return 0;
 }
 
@@ -1761,7 +1921,7 @@ LRESULT CAgentBalloonWnd::OnVoiceWordMsg (UINT uMsg, WPARAM wParam, LPARAM lPara
 #ifdef	_DEBUG_SPEECH
 	if	(LogIsActive (_DEBUG_SPEECH))
 	{
-		LogMessage (_DEBUG_SPEECH, _T("[%p] CAgentBalloonWnd   OnVoiceWordMsg [%u (%d)] [%s] IsAutoPace [%u] IsAutoSize [%u]"), this, lWordPos, lWordLength, DebugStr(mText.GetSpeechText().Mid (lWordPos, lWordLength)), IsAutoPace (), IsAutoSize ());
+		LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] CAgentBalloonWnd   OnVoiceWordMsg [%u (%d)] [%s] IsAutoPace [%u] IsAutoSize [%u] Word [%d] of [%d]"), this, IsPaused(), lWordPos, lWordLength, DebugStr(mText.GetSpeechText().Mid (lWordPos, lWordLength)), IsAutoPace (), IsAutoSize (), mText.GetWordDisplayed(), mText.GetWordCount());
 	}
 #endif
 	if	(
@@ -1775,9 +1935,13 @@ LRESULT CAgentBalloonWnd::OnVoiceWordMsg (UINT uMsg, WPARAM wParam, LPARAM lPara
 #ifdef	_DEBUG_AUTO_PACE
 		if	(LogIsActive (_DEBUG_AUTO_PACE))
 		{
-			LogMessage (_DEBUG_AUTO_PACE, _T("[%p] AutoPaceSpeech word [%d] of [%d] [%s]"), this, mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+			LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%u)] AutoPaceSpeech word [%d] of [%d] [%s]"), this, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
 		}
 #endif
+		if	(IsPaused ())
+		{
+			mPausedWord = mText.GetWordDisplayed ();
+		}
 		ShowedVoiceWord (true);
 	}
 	return 0;
@@ -1787,7 +1951,10 @@ LRESULT CAgentBalloonWnd::OnVoiceWordMsg (UINT uMsg, WPARAM wParam, LPARAM lPara
 
 void CAgentBalloonWnd::ShowedVoiceWord (bool pFastRefresh)
 {
-	if	(IsWindowVisible ())
+	if	(
+			(IsWindowVisible ())
+		&&	(!mRedrawDisabled)
+		)
 	{
 		bool	lTextDrawn = false;
 
@@ -1858,9 +2025,9 @@ void CAgentBalloonWnd::ShowedVoiceWord (bool pFastRefresh)
 
 		if	(!lTextDrawn)
 		{
-			mPacingWord = true;
+			mRedrawDisabled = true;
 			SendMessage (TTM_UPDATE);
-			mPacingWord = false;
+			mRedrawDisabled = false;
 #ifdef	_DEBUG_DRAW
 			LogMessage (_DEBUG_DRAW, _T("%sBalloon RedrawWindow (AutoPaceWord)"), RecursionIndent());
 #endif
@@ -1880,6 +2047,7 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 	if	(
 			(mAutoPaceTimer)
 		&&	(wParam == mAutoPaceTimer)
+		&&	(!IsPaused ())
 		)
 	{
 		if	(mText.DisplayNextWord ())
@@ -1887,7 +2055,7 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 #ifdef	_DEBUG_AUTO_PACE
 			if	(LogIsActive (_DEBUG_AUTO_PACE))
 			{
-				LogMessage (_DEBUG_AUTO_PACE, _T("[%p] AutoPace [%u] word [%d] of [%d] [%s]"), this, mAutoPaceTimer, mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+				LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%u)] AutoPace [%u] word [%d] of [%d] [%s]"), this, IsPaused(), mAutoPaceTimer, mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
 			}
 #endif
 			if	(IsWindowVisible ())
@@ -1914,6 +2082,7 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 	if	(
 			(mAutoScrollTimer)
 		&&	(wParam == mAutoScrollTimer)
+		&&	(!IsPaused ())
 		)
 	{
 		if	(
@@ -1924,7 +2093,7 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 #ifdef	_DEBUG_AUTO_SCROLL
 			if	(LogIsActive (_DEBUG_AUTO_SCROLL))
 			{
-				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p] StopScroll [%d] no scrolling"), this, mAutoScrollTimer);
+				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%u)] StopScroll [%d] no scrolling"), this, IsPaused(), mAutoScrollTimer);
 			}
 #endif
 			StopAutoScroll ();
@@ -1935,7 +2104,7 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 #ifdef	_DEBUG_AUTO_SCROLL
 			if	(LogIsActive (_DEBUG_AUTO_SCROLL))
 			{
-				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p] AutoScroll [%u] at [%+d] in [%+d - %+d] by [%d]"), this, mAutoScrollTimer, mText.GetScrollPos(), mText.GetScrollMin(), mText.GetScrollMax(), mText.GetScrollInc());
+				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%u)] AutoScroll [%u] at [%+d] in [%+d - %+d] by [%d]"), this, IsPaused(), mAutoScrollTimer, mText.GetScrollPos(), mText.GetScrollMin(), mText.GetScrollMax(), mText.GetScrollInc());
 			}
 #endif
 			if	(IsWindowVisible ())
@@ -1973,7 +2142,7 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 #ifdef	_DEBUG_AUTO_SCROLL
 			if	(LogIsActive (_DEBUG_AUTO_SCROLL))
 			{
-				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p] StopScroll [%d] at [%+d] of [%+d - %+d]"), this, mAutoScrollTimer, mText.GetScrollPos(), mText.GetScrollMin(), mText.GetScrollMax());
+				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%u)] StopScroll [%d] at [%+d] of [%+d - %+d]"), this, IsPaused(), mAutoScrollTimer, mText.GetScrollPos(), mText.GetScrollMin(), mText.GetScrollMax());
 			}
 #endif
 			StopAutoScroll ();
@@ -1983,6 +2152,7 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 	if	(
 			(mAutoHideTimer)
 		&&	(wParam == mAutoHideTimer)
+		&&	(!IsPaused ())
 		)
 	{
 		CAgentCharacterWnd *	lOwner;
@@ -1990,7 +2160,7 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 #ifdef	_DEBUG_AUTO_HIDE
 		if	(LogIsActive (_DEBUG_AUTO_HIDE))
 		{
-			LogMessage (_DEBUG_AUTO_HIDE, _T("[%p] AutoHide [%u] hide [%u]"), this, mAutoHideTimer, IsAutoHide());
+			LogMessage (_DEBUG_AUTO_HIDE, _T("[%p(%u)] AutoHide [%u] hide [%u]"), this, IsPaused(), mAutoHideTimer, IsAutoHide());
 		}
 #endif
 		StopAutoHide ();
@@ -2006,7 +2176,7 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 		else
 		if	(LogIsActive (_DEBUG_AUTO_HIDE))
 		{
-			LogMessage (_DEBUG_AUTO_HIDE, _T("[%p] AutoHide [%u] skipped"), this, mAutoHideTimer);
+			LogMessage (_DEBUG_AUTO_HIDE, _T("[%p(%u)] AutoHide [%u] skipped"), this, IsPaused(), mAutoHideTimer);
 		}
 #endif
 	}
@@ -2015,10 +2185,11 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 
 LRESULT CAgentBalloonWnd::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	bHandled = FALSE;
 #ifdef	_DEBUG_SHOW_HIDE
 	if	(LogIsActive (_DEBUG_SHOW_HIDE))
 	{
-		LogMessage (_DEBUG_SHOW_HIDE, _T("[%p] OnDestroy"), this);
+		LogMessage (_DEBUG_SHOW_HIDE, _T("[%p(%u)] OnDestroy"), this, IsPaused());
 	}
 #endif
 	mToolInfo.Clear ();
@@ -2033,10 +2204,9 @@ LRESULT CAgentBalloonWnd::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CAgentBalloonWnd [%p] Parent [%p] OnDestroy"), this, m_hWnd, ::GetParent(m_hWnd));
+		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CAgentBalloonWnd [%p] Parent [%p] OnDestroy"), this, IsPaused(), m_hWnd, ::GetParent(m_hWnd));
 	}
 #endif
-	bHandled = FALSE;
 	return 0;
 }
 
@@ -2050,10 +2220,13 @@ LRESULT CAgentBalloonWnd::OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 	CMemDCHandle		lPaintDC;
 	CRect				lClientRect;
 
-	if	(lPaintDC = BeginPaint (&lPaintStruct))
+	if	(
+			(!mRedrawDisabled)
+		&&	(lPaintDC = BeginPaint (&lPaintStruct))
+		)
 	{
 #ifdef	_DEBUG_DRAW
-		LogMessage (_DEBUG_DRAW, _T("%sBalloon OnPaint [%p] [%p] Visible [%u]"), RecursionIndent(), (HDC)lPaintDC, m_hWnd, IsWindowVisible());
+		LogMessage (_DEBUG_DRAW, _T("%sBalloon OnPaint [%p] [%p] Visible [%u %u]"), RecursionIndent(), (HDC)lPaintDC, m_hWnd, IsWindowVisible(), mRedrawDisabled);
 #endif
 		GetClientRect (&lClientRect);
 
@@ -2079,7 +2252,7 @@ LRESULT CAgentBalloonWnd::OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 				if	(!::UpdateLayeredWindow (m_hWnd, NULL, &lWinRect.TopLeft(), &lWinRect.Size(), mDrawBuffer.GetDC(), &CPoint (0,0), 0, &lBlendFunc, ULW_ALPHA))
 				{
 #ifdef	_DEBUG_DRAW
-					LogMessage (_DEBUG_DRAW, _T("%sBalloon Reset WS_EX_LAYERED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"), RecursionIndent());
+					LogMessage (_DEBUG_DRAW, _T("%sBalloon Reset WS_EX_LAYERED (OnPaint)"), RecursionIndent());
 #endif
 					ModifyStyleEx (WS_EX_LAYERED, 0);
 					ModifyStyleEx (0, WS_EX_LAYERED);
@@ -2109,21 +2282,32 @@ LRESULT CAgentBalloonWnd::OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 
 LRESULT CAgentBalloonWnd::OnEraseBkgnd (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	bHandled = FALSE;
 	if	(IsDrawingLayered ())
 	{
+#ifdef	_DEBUG_DRAW
+		LogMessage (_DEBUG_DRAW, _T("%sBalloon OnEraseBkgnd Visible [%u %u]"), RecursionIndent(), IsWindowVisible(), mRedrawDisabled);
+#endif
+		bHandled = TRUE;
 		return TRUE;
 	}
-	if	(IsWindowsVista_AtLeast ())
+	if	(
+			(mRedrawDisabled)
+		||	(IsWindowsVista_AtLeast ())
+		)
 	{
+		bHandled = TRUE;
 		return TRUE;
 	}
-	bHandled = FALSE;
 	return 0;
 }
 
 LRESULT CAgentBalloonWnd::OnPrint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 	bHandled = FALSE;
+#ifdef	_DEBUG_DRAW
+	LogMessage (_DEBUG_DRAW, _T("%sBalloon OnPrint Visible [%u %u]"), RecursionIndent(), IsWindowVisible(), mRedrawDisabled);
+#endif
 	return 0;
 }
 
@@ -2135,7 +2319,7 @@ LRESULT CAgentBalloonWnd::OnPrintClient (UINT uMsg, WPARAM wParam, LPARAM lParam
 
 		GetClientRect (&lClientRect);
 #ifdef	_DEBUG_DRAW
-		LogMessage (_DEBUG_DRAW, _T("%sBalloon OnPrintClient [%p] [%p] Visible [%u]"), RecursionIndent(), (HDC)wParam, ::WindowFromDC((HDC)wParam), IsWindowVisible());
+		LogMessage (_DEBUG_DRAW, _T("%sBalloon OnPrintClient [%p] [%p] Visible [%u %u]"), RecursionIndent(), (HDC)wParam, ::WindowFromDC((HDC)wParam), IsWindowVisible(), mRedrawDisabled);
 #endif
 		DrawBalloon ((HDC)wParam, &lClientRect);
 	}
@@ -2148,7 +2332,7 @@ LRESULT CAgentBalloonWnd::OnCustomDraw(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 	LPNMCUSTOMDRAW	lNotify = (LPNMCUSTOMDRAW) pnmh;
 
 #ifdef	_DEBUG_DRAW
-	LogMessage (_DEBUG_DRAW, _T("%sBalloon %s [%s] DC [%p] DCWin [%p] Win [%p] Visible [%u]"), RecursionIndent(), CustomDrawStage(lNotify), FormatRect(lNotify->rc), lNotify->hdc, ::WindowFromDC(lNotify->hdc), m_hWnd, IsWindowVisible());
+	LogMessage (_DEBUG_DRAW, _T("%sBalloon %s [%s] DC [%p] DCWin [%p] Win [%p] Visible [%u %u]"), RecursionIndent(), CustomDrawStage(lNotify), FormatRect(lNotify->rc), lNotify->hdc, ::WindowFromDC(lNotify->hdc), m_hWnd, IsWindowVisible(), mRedrawDisabled);
 #endif
 
 	if	(lNotify->dwDrawStage == CDDS_PREPAINT)
@@ -2156,8 +2340,24 @@ LRESULT CAgentBalloonWnd::OnCustomDraw(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 		CRect	lClientRect;
 
 		GetClientRect (&lClientRect);
-		lClientRect.OffsetRect (lNotify->rc.left-lClientRect.left, lNotify->rc.top-lClientRect.top);
-		DrawBalloon (lNotify->hdc, &lClientRect);
+
+		if	(
+				(
+					(mDrawBuffer.GetImageSize () == lClientRect.Size ())
+				||	(mDrawBuffer.CreateBuffer (lClientRect.Size(), true, true))
+				)
+			&&	(mDrawBuffer.StartBuffer ())
+			)
+		{
+			DrawBalloon (mDrawBuffer.GetDC(), lClientRect);
+			BitBlt (lNotify->hdc, lNotify->rc.left, lNotify->rc.top, lClientRect.Width(), lClientRect.Height(), mDrawBuffer.GetDC(), 0, 0, SRCCOPY);
+			mDrawBuffer.EndBuffer ();
+		}
+		else
+		{
+			lClientRect.OffsetRect (lNotify->rc.left-lClientRect.left, lNotify->rc.top-lClientRect.top);
+			DrawBalloon (lNotify->hdc, &lClientRect);
+		}
 		lResult |= CDRF_SKIPDEFAULT;
 	}
 	return lResult;
@@ -2176,7 +2376,7 @@ void CAgentBalloonWnd::DrawBalloon (HDC pDC, const CRect & pDrawRect)
 		CRect	lWinRect;
 		GetWindowRect (&lWinRect);
 		SendMessage (TTM_GETMARGIN, 0, (LPARAM)&lMargin);
-		LogMessage (_DEBUG_DRAW, _T("%sBalloon Draw [%s] In [%p] [%s] Margin [%s] Visible [%u]"), RecursionIndent(), FormatRect(pDrawRect), ::WindowFromDC(pDC), FormatSize(lWinRect.Size()), FormatMargin(lMargin), IsWindowVisible());
+		LogMessage (_DEBUG_DRAW, _T("%sBalloon Draw [%s] In [%p] [%s] Margin [%s] Visible [%u %u]"), RecursionIndent(), FormatRect(pDrawRect), ::WindowFromDC(pDC), FormatSize(lWinRect.Size()), FormatMargin(lMargin), IsWindowVisible(), mRedrawDisabled);
 	}
 #endif
 
@@ -2286,7 +2486,7 @@ void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect & pDrawRect)
 #ifdef	_DEBUG_AUTO_SCROLL_NOT
 			if	(LogIsActive (_DEBUG_AUTO_SCROLL))
 			{
-				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p] Clip [%d] Text [%d (%d)] Lines [%d]"), this, mShape->mTextRect.Height(), mText.GetSize().cy, mText.mBounds.Height(), mText.GetLineCount());
+				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%u)] Clip [%d] Text [%d (%d)] Lines [%d]"), this, IsPaused(), mShape->mTextRect.Height(), mText.GetSize().cy, mText.mBounds.Height(), mText.GetLineCount());
 			}
 #endif
 		}
@@ -2301,7 +2501,7 @@ void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect & pDrawRect)
 #ifdef	_DEBUG_AUTO_SCROLL_NOT
 		if	(LogIsActive (_DEBUG_AUTO_SCROLL))
 		{
-			LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p] Clip [%d] Text [%d (%d)] Scroll [%d (%d)]"), this, mShape->mTextRect.Height(), mText.GetSize().cy, mText.mBounds.Height(), mText.GetScrollPos(), mShape->mTextRect.top - mText.mBounds.top);
+			LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%u)] Clip [%d] Text [%d (%d)] Scroll [%d (%d)]"), this, IsPaused(), mShape->mTextRect.Height(), mText.GetSize().cy, mText.mBounds.Height(), mText.GetScrollPos(), mShape->mTextRect.top - mText.mBounds.top);
 		}
 #endif
 	}
@@ -2424,14 +2624,15 @@ DWORD CAgentBalloonWnd::ApplyFontLayout (HDC pDC)
 LRESULT CAgentBalloonWnd::OnShow(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 {
 	LRESULT	lResult = FALSE;
-	if	(!mPacingWord)
+
+	if	(!mRedrawDisabled)
 	{
 		CRect	lWinRect;
 
 #ifdef	_DEBUG_SHOW_HIDE
 		if	(LogIsActive (_DEBUG_SHOW_HIDE))
 		{
-			LogMessage (_DEBUG_SHOW_HIDE, _T("[%p]   OnShow Balloon"), this);
+			LogMessage (_DEBUG_SHOW_HIDE, _T("[%p(%u)]   OnShow Balloon [%u %u]"), this, IsPaused(), IsWindowVisible(), mRedrawDisabled);
 		}
 #endif
 #ifdef	_DEBUG_LAYOUT
@@ -2448,7 +2649,7 @@ LRESULT CAgentBalloonWnd::OnShow(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 #ifdef	_DEBUG_SHOW_HIDE
 			if	(LogIsActive (_DEBUG_SHOW_HIDE))
 			{
-				LogMessage (_DEBUG_SHOW_HIDE, _T("[%p]   OnShow [%s]"), this, FormatRect(lWinRect));
+				LogMessage (_DEBUG_SHOW_HIDE, _T("[%p(%u)]   OnShow [%s]"), this, IsPaused(), FormatRect(lWinRect));
 			}
 #endif
 			ApplyLayout (lWinRect, true);
@@ -2474,6 +2675,21 @@ LRESULT CAgentBalloonWnd::OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM 
 		LogMessage (_DEBUG_LAYOUT, _T("%sBalloon OnWindowPosChanging [%s] Actual [%s]"), RecursionIndent(), WindowPosStr(*lWindowPos), FormatRect(lWinRect));
 	}
 #endif
+#ifdef	_DEBUG_DRAW
+	if	(
+			(mRedrawDisabled)
+		||	(lWindowPos->flags & SWP_SHOWWINDOW)
+		)
+	{
+		LogMessage (_DEBUG_DRAW, _T("%sBalloon OnWindowPosChanging [%s] Visible [%u %u]"), RecursionIndent(),  WindowPosStr(*lWindowPos), IsWindowVisible(), mRedrawDisabled);
+	}
+#endif
+	
+	if	(mRedrawDisabled)
+	{
+		lWindowPos->flags &= ~SWP_SHOWWINDOW;
+		lWindowPos->flags &= ~SWP_NOREDRAW;
+	}
 
 	if	((lWindowPos->flags & SWP_NOSIZE) == 0)
 	{
@@ -2500,6 +2716,7 @@ LRESULT CAgentBalloonWnd::OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM 
 
 LRESULT CAgentBalloonWnd::OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	bHandled = FALSE;
 #ifdef	_DEBUG_LAYOUT
 	if	(LogIsActive (_DEBUG_LAYOUT))
 	{
@@ -2509,12 +2726,27 @@ LRESULT CAgentBalloonWnd::OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM l
 		LogMessage (_DEBUG_LAYOUT, _T("%sBalloon OnWindowPosChanged  [%s] Actual [%s]"), RecursionIndent(), WindowPosStr(*lWindowPos), FormatRect(lWinRect));
 	}
 #endif
-	bHandled = FALSE;
+#ifdef	_DEBUG_DRAW
+	if	(
+			(mRedrawDisabled)
+		||	(((LPWINDOWPOS)lParam)->flags & SWP_SHOWWINDOW)
+		)
+	{
+		LogMessage (_DEBUG_DRAW, _T("%sBalloon OnWindowPosChanged [%s] Visible [%u %u]"), RecursionIndent(),  WindowPosStr(*((LPWINDOWPOS)lParam)), IsWindowVisible(), mRedrawDisabled);
+	}
+	EnterRecursion ();
+	LRESULT lResult = DefWindowProc (uMsg, wParam, lParam);
+	ExitRecursion ();
+	bHandled = TRUE;
+#endif
 	return 0;
 }
 
+/////////////////////////////////////////////////////////////////////////////
+
 LRESULT CAgentBalloonWnd::OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	bHandled = FALSE;
 #ifdef	_DEBUG_LAYOUT
 	if	(LogIsActive (_DEBUG_LAYOUT))
 	{
@@ -2524,14 +2756,44 @@ LRESULT CAgentBalloonWnd::OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL 
 	}
 #endif
 	mShapeBuffer.EndBuffer (true);
+	return 0;
+}
+
+LRESULT CAgentBalloonWnd::OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+{
 	bHandled = FALSE;
+#ifdef	_DEBUG_DRAW
+	LogMessage (_DEBUG_DRAW, _T("%sBalloon OnShowWindow [%d] Visible [%u %u]"), RecursionIndent(), wParam, IsWindowVisible(), mRedrawDisabled);
+#endif
+	mShapeBuffer.EndBuffer (true);
+	return 0;
+}
+
+LRESULT CAgentBalloonWnd::OnSetRedraw (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+{
+	bHandled = FALSE;
+#ifdef	_DEBUG_DRAW
+	LogMessage (_DEBUG_DRAW, _T("%sBalloon OnSetRedraw [%d] Visible [%u %u]"), RecursionIndent(), wParam, IsWindowVisible(), mRedrawDisabled);
+#endif
+	mShapeBuffer.EndBuffer (true);
+	mRedrawDisabled = (wParam == 0);
 	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
+LRESULT CAgentBalloonWnd::OnNcPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+{
+	bHandled = (mRedrawDisabled || IsDrawingLayered ()) ? TRUE : FALSE;
+#ifdef	_DEBUG_DRAW
+	LogMessage (_DEBUG_DRAW, _T("%sBalloon OnNcPaint Visible [%u %u]"), RecursionIndent(), IsWindowVisible(), mRedrawDisabled);
+#endif
+	return 0;
+}
+
 LRESULT CAgentBalloonWnd::OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	bHandled = TRUE;
 	return HTTRANSPARENT;
 }
 
@@ -2545,10 +2807,23 @@ LRESULT CAgentBalloonWnd::OnTtmActivate (UINT uMsg, WPARAM wParam, LPARAM lParam
 #ifdef	_DEBUG_LAYOUT
 	LogMessage (_DEBUG_LAYOUT, _T("%sBalloon TTM_ACTIVATE [%u]"), RecursionIndent(), wParam);
 #endif
+#ifdef	_DEBUG_DRAW
+	LogMessage (_DEBUG_DRAW, _T("%sBalloon OnTtmActivate [%d] Visible [%u %u]"), RecursionIndent(), wParam, IsWindowVisible(), mRedrawDisabled);
+#endif
+	mShapeBuffer.EndBuffer (true);
+	if	(
+			(wParam)
+		&&	(mRedrawDisabled)
+		)
+	{
+		SetRedraw (TRUE);
+	}
 	EnterRecursion ();
 	lResult = DefWindowProc (uMsg, wParam, lParam);
 	ExitRecursion ();
-
+#ifdef	_DEBUG_DRAW
+	LogMessage (_DEBUG_DRAW, _T("%sBalloon OnTtmActivate [%d] Visible [%u %u] Done"), RecursionIndent(), wParam, IsWindowVisible(), mRedrawDisabled);
+#endif
 	bHandled = TRUE;
 	return lResult;
 }
@@ -2559,10 +2834,16 @@ LRESULT CAgentBalloonWnd::OnTtmTrackPosition (UINT uMsg, WPARAM wParam, LPARAM l
 #ifdef	_DEBUG_LAYOUT
 	LogMessage (_DEBUG_LAYOUT, _T("%sBalloon TTM_TRACKPOSITION [%d %d]"), RecursionIndent(), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 #endif
+#ifdef	_DEBUG_DRAW
+	LogMessage (_DEBUG_DRAW, _T("%sBalloon OnTtmTrackPosition [%d] Visible [%u %u]"), RecursionIndent(), wParam, IsWindowVisible(), mRedrawDisabled);
+#endif
+	mShapeBuffer.EndBuffer (true);
 	EnterRecursion ();
 	lResult = DefWindowProc (uMsg, wParam, lParam);
 	ExitRecursion ();
-
+#ifdef	_DEBUG_DRAW
+	LogMessage (_DEBUG_DRAW, _T("%sBalloon OnTtmTrackPosition [%d] Visible [%u %u] Done"), RecursionIndent(), wParam, IsWindowVisible(), mRedrawDisabled);
+#endif
 	bHandled = TRUE;
 	return lResult;
 }
@@ -2573,38 +2854,85 @@ LRESULT CAgentBalloonWnd::OnTtmTrackActivate (UINT uMsg, WPARAM wParam, LPARAM l
 #ifdef	_DEBUG_LAYOUT
 	LogMessage (_DEBUG_LAYOUT, _T("%sBalloon TTM_TRACKACTIVATE [%d]"), RecursionIndent(), wParam);
 #endif
+#ifdef	_DEBUG_DRAW
+	LogMessage (_DEBUG_DRAW, _T("%sBalloon OnTtmTrackActivate [%d] Visible [%u %u]"), RecursionIndent(), wParam, IsWindowVisible(), mRedrawDisabled);
+#endif
+	mShapeBuffer.EndBuffer (true);
+	if	(
+			(wParam)
+		&&	(mRedrawDisabled)
+		)
+	{
+		SetRedraw (TRUE);
+	}
+	if	(
+			(wParam)
+		&&	(!IsWindowVisible())
+		&&	(IsDrawingLayered ())
+		)
+	{
+		//
+		//	Initially set to transparent until first WM_PAINT is received.
+		//
+		SetLayeredWindowAttributes (m_hWnd, 0, 0, LWA_ALPHA);
+	}
 	EnterRecursion ();
 	lResult = DefWindowProc (uMsg, wParam, lParam);
 	ExitRecursion ();
-
+#ifdef	_DEBUG_DRAW
+	LogMessage (_DEBUG_DRAW, _T("%sBalloon OnTtmTrackActivate [%d] Visible [%u %u] Done"), RecursionIndent(), wParam, IsWindowVisible(), mRedrawDisabled);
+#endif
 	bHandled = TRUE;
 	return lResult;
 }
 
 LRESULT CAgentBalloonWnd::OnTtmUpdateTipText (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	LRESULT	lResult;
+	LRESULT	lResult = 0;
 #ifdef	_DEBUG_LAYOUT
 	LogMessage (_DEBUG_LAYOUT, _T("%sBalloon TTM_UPDATETIPTEXT [%s]"), RecursionIndent(), DebugStr(((TOOLINFO*)lParam)->lpszText));
 #endif
-	EnterRecursion ();
-	lResult = DefWindowProc (uMsg, wParam, lParam);
-	ExitRecursion ();
-
+#ifdef	_DEBUG_DRAW
+	LogMessage (_DEBUG_DRAW, _T("%sBalloon OnTtmUpdateTipText Visible [%u %u]"), RecursionIndent(), IsWindowVisible(), mRedrawDisabled);
+#endif
+	if	(
+			(!mRedrawDisabled)
+		&&	(!IsDrawingLayered ())
+		)
+	{
+		EnterRecursion ();
+		lResult = DefWindowProc (uMsg, wParam, lParam);
+		ExitRecursion ();
+	}
+#ifdef	_DEBUG_DRAW
+	LogMessage (_DEBUG_DRAW, _T("%sBalloon OnTtmUpdateTipText Visible [%u %u] Done"), RecursionIndent(), IsWindowVisible(), mRedrawDisabled);
+#endif
 	bHandled = TRUE;
 	return lResult;
 }
 
 LRESULT CAgentBalloonWnd::OnTtmUpdate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	LRESULT	lResult;
+	LRESULT	lResult = 0;
 #ifdef	_DEBUG_LAYOUT
 	LogMessage (_DEBUG_LAYOUT, _T("%sBalloon TTM_UPDATE"), RecursionIndent());
 #endif
+#ifdef	_DEBUG_DRAW
+	LogMessage (_DEBUG_DRAW, _T("%sBalloon OnTtmUpdate Visible [%u %u]"), RecursionIndent(), IsWindowVisible(), mRedrawDisabled);
+#endif
 	EnterRecursion ();
-	lResult = DefWindowProc (uMsg, wParam, lParam);
+	if	(IsDrawingLayered ())
+	{
+		RedrawWindow ();
+	}
+	else
+	{
+		lResult = DefWindowProc (uMsg, wParam, lParam);
+	}
 	ExitRecursion ();
-
+#ifdef	_DEBUG_DRAW
+	LogMessage (_DEBUG_DRAW, _T("%sBalloon OnTtmUpdate Visible [%u %u] Done"), RecursionIndent(), IsWindowVisible(), mRedrawDisabled);
+#endif
 	bHandled = TRUE;
 	return lResult;
 }

@@ -475,125 +475,269 @@ FIRE_EVENT_2(SpeechWord, (long CharacterID, IDaSvrFormattedText* FormattedText, 
 
 HRESULT STDMETHODCALLTYPE CServerNotify::Command (long CommandID, IDaSvrUserInput2 *UserInput)
 {
-	return FireCommand (CommandID, UserInput);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireCommand (CommandID, UserInput);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::ActivateInputState (long CharacterID, long Activated)
 {
-	return FireActivateInputState (CharacterID, Activated);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireActivateInputState (CharacterID, Activated);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::VisibleState (long CharacterID, long Visible, long Cause)
 {
-	return FireVisibleState (CharacterID, Visible, Cause);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireVisibleState (CharacterID, Visible, Cause);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::Click (long CharacterID, short Keys, long X, long Y)
 {
-	return FireClick (CharacterID, Keys, X, Y);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireClick (CharacterID, Keys, X, Y);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::DblClick (long CharacterID, short Keys, long X, long Y)
 {
-	return FireDblClick (CharacterID, Keys, X, Y);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireDblClick (CharacterID, Keys, X, Y);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::DragStart (long CharacterID, short Keys, long X, long Y)
 {
-	return FireDragStart (CharacterID, Keys, X, Y);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireDragStart (CharacterID, Keys, X, Y);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::DragComplete (long CharacterID, short Keys, long X, long Y)
 {
-	return FireDragComplete (CharacterID, Keys, X, Y);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireDragComplete (CharacterID, Keys, X, Y);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::RequestStart (long RequestID)
 {
-	return FireRequestStart (RequestID);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireRequestStart (RequestID);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::RequestComplete (long RequestID, long Result)
 {
-	return FireRequestComplete (RequestID, Result);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireRequestComplete (RequestID, Result);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::BookMark (long BookMarkID)
 {
-	return FireBookMark (BookMarkID);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireBookMark (BookMarkID);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::Idle (long CharacterID, long Start)
 {
-	return FireIdle (CharacterID, Start);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireIdle (CharacterID, Start);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::Move (long CharacterID, long X, long Y, long Cause)
 {
-	return FireMove (CharacterID, X, Y, Cause);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireMove (CharacterID, X, Y, Cause);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::Size (long CharacterID, long Width, long Height)
 {
-	return FireSize (CharacterID, Width, Height);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireSize (CharacterID, Width, Height);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::BalloonVisibleState (long CharacterID, long Visible)
 {
-	return FireBalloonVisibleState (CharacterID, Visible);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireBalloonVisibleState (CharacterID, Visible);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::ListeningState (long CharacterID, long Listening, long Cause)
 {
-	return FireListeningState (CharacterID, Listening, Cause);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireListeningState (CharacterID, Listening, Cause);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::DefaultCharacterChange (BSTR CharGUID)
 {
-	return FireDefaultCharacterChange (CharGUID);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireDefaultCharacterChange (CharGUID);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::AgentPropertyChange (void)
 {
-	return FireAgentPropertyChange ();
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireAgentPropertyChange ();
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::ActiveClientChange (long CharacterID, long Status)
 {
-	return FireActiveClientChange (CharacterID, Status);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireActiveClientChange (CharacterID, Status);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
 HRESULT STDMETHODCALLTYPE CServerNotify::SpeechStart (long CharacterID, IDaSvrFormattedText* FormattedText)
 {
-	return FireSpeechStart (CharacterID, FormattedText);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireSpeechStart (CharacterID, FormattedText);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::SpeechEnd (long CharacterID, IDaSvrFormattedText* FormattedText, VARIANT_BOOL Stopped)
 {
-	return FireSpeechEnd (CharacterID, FormattedText, Stopped);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireSpeechEnd (CharacterID, FormattedText, Stopped);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::SpeechWord (long CharacterID, IDaSvrFormattedText* FormattedText, long WordIndex)
 {
-	return FireSpeechWord (CharacterID, FormattedText, WordIndex);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		lResult = FireSpeechWord (CharacterID, FormattedText, WordIndex);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT CServerNotify::OnSpeechStart (long CharacterID, LPUNKNOWN FormattedText)
 {
-	IDaSvrFormattedTextPtr	lFormattedText (FormattedText);
-	return FireSpeechStart (CharacterID, lFormattedText);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		IDaSvrFormattedTextPtr	lFormattedText (FormattedText);
+		lResult = FireSpeechStart (CharacterID, lFormattedText);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT CServerNotify::OnSpeechEnd (long CharacterID, LPUNKNOWN FormattedText, VARIANT_BOOL Stopped)
 {
-	IDaSvrFormattedTextPtr	lFormattedText (FormattedText);
-	return FireSpeechEnd (CharacterID, lFormattedText, Stopped);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		IDaSvrFormattedTextPtr	lFormattedText (FormattedText);
+		lResult = FireSpeechEnd (CharacterID, lFormattedText, Stopped);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }
 
 HRESULT CServerNotify::OnSpeechWord (long CharacterID, LPUNKNOWN FormattedText, long WordIndex)
 {
-	IDaSvrFormattedTextPtr	lFormattedText (FormattedText);
-	return FireSpeechWord (CharacterID, lFormattedText, WordIndex);
+	HRESULT	lResult = E_FAIL;
+	try
+	{
+		IDaSvrFormattedTextPtr	lFormattedText (FormattedText);
+		lResult = FireSpeechWord (CharacterID, lFormattedText, WordIndex);
+	}
+	catch AnyExceptionSilent
+	return lResult;
 }

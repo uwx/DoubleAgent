@@ -142,7 +142,7 @@ HRESULT DaCtlBalloon::SetOwner (DaCtlCharacter * pOwner)
 		{
 			if	(mLocalObject = new CDaCmnBalloon)
 			{
-				mLocalObject->Initialize (mOwner->mLocalObject->GetCharID(), mOwner->mLocalObject->GetFile(), mOwner->mLocalObject->GetCharacterWnd(false));
+				mLocalObject->Initialize (mOwner->mLocalObject->GetCharID(), mOwner->mLocalObject->mNotify->mAnchor, mOwner->mLocalObject->GetFile(), mOwner->mLocalObject->GetCharacterWnd(false));
 			}
 			else
 			{

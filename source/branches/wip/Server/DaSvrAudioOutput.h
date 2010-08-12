@@ -27,8 +27,8 @@
 class ATL_NO_VTABLE __declspec(uuid("{1147E514-A208-11DE-ABF2-002421116FB2}")) DaSvrAudioOutput :
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public CComCoClass<DaSvrAudioOutput, &__uuidof(DaSvrAudioOutput)>,
-	public IDispatchImpl<IDaSvrAudioOutput, &__uuidof(IDaSvrAudioOutput), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
-	public IProvideClassInfoImpl<&__uuidof(DaSvrAudioOutput), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
+	public IDispatchImpl<IDaSvrAudioOutput, &__uuidof(IDaSvrAudioOutput), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>,
+	public IProvideClassInfoImpl<&__uuidof(DaSvrAudioOutput), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>,
 	public ISupportErrorInfo,
 	public CSvrObjLifetime
 {

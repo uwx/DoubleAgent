@@ -27,8 +27,8 @@
 class ATL_NO_VTABLE __declspec(uuid("{1147E511-A208-11DE-ABF2-002421116FB2}")) DaSvrUserInput :
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public CComCoClass<DaSvrUserInput, &__uuidof(DaSvrUserInput)>,
-	public IDispatchImpl<IDaSvrUserInput2, &__uuidof(IDaSvrUserInput2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
-	public IProvideClassInfoImpl<&__uuidof(DaSvrUserInput), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
+	public IDispatchImpl<IDaSvrUserInput2, &__uuidof(IDaSvrUserInput2), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>,
+	public IProvideClassInfoImpl<&__uuidof(DaSvrUserInput), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>,
 	public ISupportErrorInfo,
 	public CDaCmnUserInput,
 	public CSvrObjLifetime

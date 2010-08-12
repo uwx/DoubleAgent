@@ -585,6 +585,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Control\LocalCharacter.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Common\PropSheetOptions.cpp"
 				>
 			</File>
@@ -711,6 +715,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Include\DaControlInterface.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Control\DaControlMod.h"
 				>
 			</File>
@@ -808,6 +816,10 @@
 			</File>
 			<File
 				RelativePath=".\Common\ListeningState.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\LocalCharacter.h"
 				>
 			</File>
 			<File

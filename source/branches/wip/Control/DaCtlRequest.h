@@ -44,8 +44,8 @@ enum DaRequestCategory
 class ATL_NO_VTABLE __declspec(uuid("{1147E536-A208-11DE-ABF2-002421116FB2}")) DaCtlRequest :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlRequest, &__uuidof(DaCtlRequest)>,
-	public IDispatchImpl<IDaCtlRequest, &__uuidof(IDaCtlRequest), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlRequest), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlRequest, &__uuidof(IDaCtlRequest), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer>,
+	public IProvideClassInfoImpl<&__uuidof(DaCtlRequest), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer>,
 	public ISupportErrorInfo
 {
 public:

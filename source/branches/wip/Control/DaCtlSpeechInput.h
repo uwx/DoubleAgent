@@ -27,8 +27,8 @@
 class ATL_NO_VTABLE __declspec(uuid("{1147E538-A208-11DE-ABF2-002421116FB2}")) DaCtlSpeechInput :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlSpeechInput, &__uuidof(DaCtlSpeechInput)>,
-	public IDispatchImpl<IDaCtlSpeechInput, &__uuidof(IDaCtlSpeechInput), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlSpeechInput), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlSpeechInput, &__uuidof(IDaCtlSpeechInput), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer>,
+	public IProvideClassInfoImpl<&__uuidof(DaCtlSpeechInput), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer>,
 	public ISupportErrorInfo
 {
 public:

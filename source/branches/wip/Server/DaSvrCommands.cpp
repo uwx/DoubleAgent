@@ -43,7 +43,7 @@ DaSvrCommands::DaSvrCommands ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%d] DaSvrCommands::DaSvrCommands (%d)"), this, max(m_dwRef,-1), mCharID, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)(%d)] DaSvrCommands::DaSvrCommands (%d)"), this, mCharID, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -53,7 +53,7 @@ DaSvrCommands::~DaSvrCommands ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%d] DaSvrCommands::~DaSvrCommands (%d)"), this, max(m_dwRef,-1), mCharID, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)(%d)] DaSvrCommands::~DaSvrCommands (%d)"), this, mCharID, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 	Terminate (true);
@@ -81,6 +81,11 @@ void DaSvrCommands::Terminate (bool pFinal, bool pAbandonned)
 		INT_PTR			lNdx;
 
 		SafeFreeSafePtr (mCachedEnum);
+
+		if	(pFinal)
+		{
+			UnmanageObjectLifetime (this);
+		}
 
 		if	(
 				(pFinal)
@@ -141,11 +146,6 @@ void DaSvrCommands::Terminate (bool pFinal, bool pAbandonned)
 			}
 		}
 		catch AnyExceptionSilent
-
-		if	(pFinal)
-		{
-			UnmanageObjectLifetime (this);
-		}
 	}
 }
 
@@ -154,7 +154,7 @@ void DaSvrCommands::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%d] DaSvrCommands::FinalRelease"), this, max(m_dwRef,-1), mCharID);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)(%d)] DaSvrCommands::FinalRelease"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (false);
@@ -165,7 +165,7 @@ void DaSvrCommands::OnClientEnded()
 #ifdef	_LOG_ABANDONED
 	if	(LogIsActive (_LOG_ABANDONED))
 	{
-		LogMessage (_LOG_ABANDONED, _T("[%p(%d)] [%d] DaSvrCommands::OnClientEnded"), this, max(m_dwRef,-1), mCharID);
+		LogMessage (_LOG_ABANDONED, _T("[%p(%d)(%d)] DaSvrCommands::OnClientEnded"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (true, true);
@@ -344,7 +344,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::SetHelpContextID (long HelpContextID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::SetHelpContextID"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::SetHelpContextID"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -358,7 +358,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::GetHelpContextID (long *HelpContextID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::GetHelpContextID"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::GetHelpContextID"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -417,7 +417,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::GetCount (long *Count)
 HRESULT STDMETHODCALLTYPE DaSvrCommands::GetCommand (long CommandID, IUnknown **Command)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::GetCommand"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::GetCommand"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT			lResult = S_OK;
 	DaSvrCommand *	lCommand;
@@ -445,7 +445,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::GetCommand (long CommandID, IUnknown **
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::GetCommand"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::GetCommand"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -454,7 +454,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::GetCommand (long CommandID, IUnknown **
 HRESULT STDMETHODCALLTYPE DaSvrCommands::GetCommandEx (long CommandID, IDaSvrCommand **Command)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::GetCommandEx"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::GetCommandEx"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT			lResult = S_OK;
 	DaSvrCommand *	lCommand;
@@ -482,7 +482,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::GetCommandEx (long CommandID, IDaSvrCom
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::GetCommandEx"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::GetCommandEx"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -493,7 +493,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::GetCommandEx (long CommandID, IDaSvrCom
 HRESULT STDMETHODCALLTYPE DaSvrCommands::Add (BSTR Caption, BSTR VoiceGrammar, long Enabled, long Visible, long *CommandID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::Add [%ls] [%ls] [%d] [%d]"), this, max(m_dwRef,-1), mCharID, Caption, VoiceGrammar, Enabled, Visible);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::Add [%ls] [%ls] [%d] [%d]"), this, mCharID, max(m_dwRef,-1), Caption, VoiceGrammar, Enabled, Visible);
 #endif
 	HRESULT	lResult = CDaCmnCommands::Add (Caption, VoiceGrammar, Caption, Enabled, Visible, CommandID);
 
@@ -501,7 +501,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::Add (BSTR Caption, BSTR VoiceGrammar, l
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::Add"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::Add"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -510,7 +510,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::Add (BSTR Caption, BSTR VoiceGrammar, l
 HRESULT STDMETHODCALLTYPE DaSvrCommands::AddEx (BSTR Caption, BSTR VoiceGrammar, BSTR VoiceCaption, long Enabled, long Visible, long HelpContextID, long *CommandID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::AddEx"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::AddEx"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::Add (Caption, VoiceGrammar, VoiceCaption, Enabled, Visible, CommandID);
 
@@ -518,7 +518,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::AddEx (BSTR Caption, BSTR VoiceGrammar,
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::AddEx"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::AddEx"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -529,7 +529,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::AddEx (BSTR Caption, BSTR VoiceGrammar,
 HRESULT STDMETHODCALLTYPE DaSvrCommands::Insert (BSTR Caption, BSTR VoiceGrammar, long Enabled, long Visible, long RefCommandID, long Before, long *CommandID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::Insert"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::Insert"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::Insert (Caption, VoiceGrammar, Caption, Enabled, Visible, RefCommandID, Before, CommandID);
 
@@ -537,7 +537,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::Insert (BSTR Caption, BSTR VoiceGrammar
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::Insert"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::Insert"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -546,7 +546,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::Insert (BSTR Caption, BSTR VoiceGrammar
 HRESULT STDMETHODCALLTYPE DaSvrCommands::InsertEx (BSTR Caption, BSTR VoiceGrammar, BSTR VoiceCaption, long Enabled, long Visible, long HelpContextID, long RefCommandID, long Before, long *CommandID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::InsertEx"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::InsertEx"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::Insert (Caption, VoiceGrammar, VoiceCaption, Enabled, Visible, RefCommandID, Before, CommandID);
 
@@ -554,7 +554,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::InsertEx (BSTR Caption, BSTR VoiceGramm
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::InsertEx"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::InsertEx"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -565,7 +565,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::InsertEx (BSTR Caption, BSTR VoiceGramm
 HRESULT STDMETHODCALLTYPE DaSvrCommands::Remove (long CommandID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::Remove"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::Remove"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::Remove (CommandID);
 
@@ -573,7 +573,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::Remove (long CommandID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::Remove"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::Remove"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -582,7 +582,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::Remove (long CommandID)
 HRESULT STDMETHODCALLTYPE DaSvrCommands::RemoveAll (void)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::RemoveAll"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::RemoveAll"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::RemoveAll ();
 
@@ -590,7 +590,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::RemoveAll (void)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::RemoveAll"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::RemoveAll"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -603,7 +603,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::RemoveAll (void)
 HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Item (long Index, IDaSvrCommand2 **Command)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_Item"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::get_Item"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT			lResult = S_OK;
 	DaSvrCommand *	lCommand;
@@ -631,7 +631,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Item (long Index, IDaSvrCommand2 **
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (((lResult==E_INVALIDARG)?MaxLogLevel(_LOG_RESULTS,LogDetails):_LOG_RESULTS), lResult, _T("[%p(%d)] [%d] DaSvrCommands::get_Item"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (((lResult==E_INVALIDARG)?MaxLogLevel(_LOG_RESULTS,LogDetails):_LOG_RESULTS), lResult, _T("[%p(%d)(%d)] DaSvrCommands::get_Item"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -640,7 +640,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Item (long Index, IDaSvrCommand2 **
 HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Count (long *Count)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_Count"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::get_Count"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::get_Count (Count);
 
@@ -648,7 +648,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Count (long *Count)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::get_Count"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::get_Count"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -657,7 +657,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Count (long *Count)
 HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Command (long CommandID, IDaSvrCommand2 **Command)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_Command"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::get_Command"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT			lResult = S_OK;
 	DaSvrCommand *	lCommand;
@@ -685,7 +685,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Command (long CommandID, IDaSvrComm
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::get_Command"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::get_Command"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -698,7 +698,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Command (long CommandID, IDaSvrComm
 HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Caption (BSTR *Caption)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_Caption"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::get_Caption"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::get_Caption (Caption);
 
@@ -706,7 +706,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Caption (BSTR *Caption)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::get_Caption"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::get_Caption"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -715,7 +715,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Caption (BSTR *Caption)
 HRESULT STDMETHODCALLTYPE DaSvrCommands::put_Caption (BSTR Caption)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::put_Caption [%ls]"), this, max(m_dwRef,-1), mCharID, Caption);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::put_Caption [%ls]"), this, mCharID, max(m_dwRef,-1), Caption);
 #endif
 	HRESULT	lResult = CDaCmnCommands::put_Caption (Caption);
 
@@ -723,7 +723,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_Caption (BSTR Caption)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::put_Caption"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::put_Caption"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -734,7 +734,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_Caption (BSTR Caption)
 HRESULT STDMETHODCALLTYPE DaSvrCommands::get_VoiceGrammar (BSTR *VoiceGrammar)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_VoiceGrammar"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::get_VoiceGrammar"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::get_VoiceGrammar (VoiceGrammar);
 
@@ -742,7 +742,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_VoiceGrammar (BSTR *VoiceGrammar)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::get_VoiceGrammar"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::get_VoiceGrammar"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -751,7 +751,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_VoiceGrammar (BSTR *VoiceGrammar)
 HRESULT STDMETHODCALLTYPE DaSvrCommands::put_VoiceGrammar (BSTR VoiceGrammar)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::put_VoiceGrammar"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::put_VoiceGrammar"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::put_VoiceGrammar (VoiceGrammar);
 
@@ -759,7 +759,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_VoiceGrammar (BSTR VoiceGrammar)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::put_VoiceGrammar"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::put_VoiceGrammar"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -770,7 +770,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_VoiceGrammar (BSTR VoiceGrammar)
 HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Visible (VARIANT_BOOL *Visible)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_Visible"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::get_Visible"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::get_Visible (Visible);
 
@@ -778,7 +778,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Visible (VARIANT_BOOL *Visible)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::get_Visible"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::get_Visible"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -787,7 +787,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Visible (VARIANT_BOOL *Visible)
 HRESULT STDMETHODCALLTYPE DaSvrCommands::put_Visible (VARIANT_BOOL Visible)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::SetVisible [%d]"), this, max(m_dwRef,-1), mCharID, Visible);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::SetVisible [%d]"), this, mCharID, max(m_dwRef,-1), Visible);
 #endif
 	HRESULT	lResult = CDaCmnCommands::put_Visible (Visible);
 
@@ -795,7 +795,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_Visible (VARIANT_BOOL Visible)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::SetVisible"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::SetVisible"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -806,7 +806,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_Visible (VARIANT_BOOL Visible)
 HRESULT STDMETHODCALLTYPE DaSvrCommands::get_DefaultCommand (long *CommandID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_DefaultCommand"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::get_DefaultCommand"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::get_DefaultCommand (CommandID);
 
@@ -814,7 +814,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_DefaultCommand (long *CommandID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::get_DefaultCommand"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::get_DefaultCommand"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -823,7 +823,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_DefaultCommand (long *CommandID)
 HRESULT STDMETHODCALLTYPE DaSvrCommands::put_DefaultCommand (long CommandID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::put_DefaultCommand"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::put_DefaultCommand"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::put_DefaultCommand (CommandID);
 
@@ -831,7 +831,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_DefaultCommand (long CommandID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::put_DefaultCommand"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::put_DefaultCommand"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -842,7 +842,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_DefaultCommand (long CommandID)
 HRESULT STDMETHODCALLTYPE DaSvrCommands::get_FontName (BSTR *FontName)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_FontName"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::get_FontName"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::get_FontName (FontName);
 
@@ -850,7 +850,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_FontName (BSTR *FontName)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::get_FontName"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::get_FontName"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -859,7 +859,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_FontName (BSTR *FontName)
 HRESULT STDMETHODCALLTYPE DaSvrCommands::put_FontName (BSTR FontName)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::SetFontName"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::SetFontName"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::put_FontName (FontName);
 
@@ -867,7 +867,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_FontName (BSTR FontName)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::SetFontName"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::SetFontName"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -878,7 +878,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_FontName (BSTR FontName)
 HRESULT STDMETHODCALLTYPE DaSvrCommands::get_FontSize (long *FontSize)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_FontSize"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::get_FontSize"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::get_FontSize (FontSize);
 
@@ -886,7 +886,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_FontSize (long *FontSize)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::get_FontSize"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::get_FontSize"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -895,7 +895,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_FontSize (long *FontSize)
 HRESULT STDMETHODCALLTYPE DaSvrCommands::put_FontSize (long FontSize)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::put_FontSize"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::put_FontSize"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::put_FontSize (FontSize);
 
@@ -903,7 +903,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_FontSize (long FontSize)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::put_FontSize"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::put_FontSize"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -914,7 +914,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_FontSize (long FontSize)
 HRESULT STDMETHODCALLTYPE DaSvrCommands::get_VoiceCaption (BSTR *VoiceCaption)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_VoiceCaption"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::get_VoiceCaption"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::get_VoiceCaption (VoiceCaption);
 
@@ -922,7 +922,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_VoiceCaption (BSTR *VoiceCaption)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::get_VoiceCaption"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::get_VoiceCaption"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -931,7 +931,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_VoiceCaption (BSTR *VoiceCaption)
 HRESULT STDMETHODCALLTYPE DaSvrCommands::put_VoiceCaption (BSTR VoiceCaption)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::put_VoiceCaption"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::put_VoiceCaption"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::put_VoiceCaption (VoiceCaption);
 
@@ -939,7 +939,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_VoiceCaption (BSTR VoiceCaption)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::put_VoiceCaption"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::put_VoiceCaption"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -950,7 +950,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_VoiceCaption (BSTR VoiceCaption)
 HRESULT STDMETHODCALLTYPE DaSvrCommands::get_GlobalVoiceCommandsEnabled (VARIANT_BOOL *Enabled)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_GlobalVoiceCommandsEnabled"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::get_GlobalVoiceCommandsEnabled"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::get_GlobalVoiceCommandsEnabled (Enabled);
 
@@ -958,7 +958,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_GlobalVoiceCommandsEnabled (VARIANT
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::get_GlobalVoiceCommandsEnabled"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::get_GlobalVoiceCommandsEnabled"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -967,7 +967,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_GlobalVoiceCommandsEnabled (VARIANT
 HRESULT STDMETHODCALLTYPE DaSvrCommands::put_GlobalVoiceCommandsEnabled (VARIANT_BOOL Enabled)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::put_GlobalVoiceCommandsEnabled"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::put_GlobalVoiceCommandsEnabled"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommands::put_GlobalVoiceCommandsEnabled (Enabled);
 
@@ -975,7 +975,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_GlobalVoiceCommandsEnabled (VARIANT
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::put_GlobalVoiceCommandsEnabled"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::put_GlobalVoiceCommandsEnabled"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -988,7 +988,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_GlobalVoiceCommandsEnabled (VARIANT
 HRESULT STDMETHODCALLTYPE DaSvrCommands::get__NewEnum (IUnknown **EnumVariant)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get__NewEnum"), this, max(m_dwRef,-1), mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCommands::get__NewEnum"), this, mCharID, max(m_dwRef,-1));
 #endif
 	HRESULT								lResult = S_OK;
 	tPtr <CComObject<CEnumVARIANT> >	lEnumVariant;
@@ -1016,7 +1016,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get__NewEnum (IUnknown **EnumVariant)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::get__NewEnum"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCommands::get__NewEnum"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

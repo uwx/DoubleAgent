@@ -28,8 +28,8 @@
 class ATL_NO_VTABLE __declspec(uuid("{1147E532-A208-11DE-ABF2-002421116FB2}")) DaCtlCharacter :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlCharacter, &__uuidof(DaCtlCharacter)>,
-	public IDispatchImpl<IDaCtlCharacter2, &__uuidof(IDaCtlCharacter2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlCharacter), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlCharacter2, &__uuidof(IDaCtlCharacter2), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer>,
+	public IProvideClassInfoImpl<&__uuidof(DaCtlCharacter), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer>,
 	public ISupportErrorInfo
 {
 public:
@@ -41,10 +41,10 @@ public:
 	IDaSvrCharacter2Ptr		mServerObject;
 	long					mServerCharID;
 	tPtr <CDaCmnCharacter>	mLocalObject;
-	IDispatchPtr			mBalloon;
-	IDispatchPtr			mCommands;
 
 	long GetCharID () const;
+	bool IsContained () const;
+	bool IsSuspended () const;
 
 // Operations
 public:
@@ -56,6 +56,7 @@ public:
 	int SafeGetOwnerUsed () const;
 
 	HRESULT SetContained (bool pContained, DWORD pInitialStyle);
+	bool SetSuspended (bool pSuspended);
 
 	class DaCtlBalloon * GetBalloon ();
 	class DaCtlCommands * GetCommands ();
@@ -188,22 +189,19 @@ public:
 	HRESULT STDMETHODCALLTYPE get_SmoothEdges (VARIANT_BOOL *SmoothEdges);
 	HRESULT STDMETHODCALLTYPE get_Animations (SAFEARRAY **Animations);
 	HRESULT STDMETHODCALLTYPE get_States (SAFEARRAY **States);
+	HRESULT STDMETHODCALLTYPE put_SuspendPause (VARIANT_BOOL SuspendPause);
+	HRESULT STDMETHODCALLTYPE get_SuspendPause (VARIANT_BOOL *SuspendPause);
+	HRESULT STDMETHODCALLTYPE put_SuspendStop (VARIANT_BOOL Enabled);
+	HRESULT STDMETHODCALLTYPE get_SuspendStop (VARIANT_BOOL *Enabled);
+	HRESULT STDMETHODCALLTYPE put_SuspendHide (VARIANT_BOOL Enabled);
+	HRESULT STDMETHODCALLTYPE get_SuspendHide (VARIANT_BOOL *Enabled);
 
 // Implementation
+public:
+	IDispatchPtr	mBalloon;
+	IDispatchPtr	mCommands;
 private:
-	class CLocalWrapper : public CDaCmnCharacter
-	{
-	public:
-		CLocalWrapper (class DaCtlCharacter & pCharacter) : mCharacter (pCharacter) {}
-
-		virtual class CDaCmnCommands * GetCommands (bool pCreateObject);
-		virtual class CDaCmnBalloon * GetBalloon (bool pCreateObject);
-	private:
-		class DaCtlCharacter &	mCharacter;
-	};
-
-private:
-	DaControl *	mOwner;
+	DaControl *		mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////

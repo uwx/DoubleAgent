@@ -89,7 +89,7 @@ public:
 
 class ATL_NO_VTABLE CServerNotifySink :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<IDaSvrNotifySink2, &__uuidof(IDaSvrNotifySink2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>
+	public IDispatchImpl<IDaSvrNotifySink2, &__uuidof(IDaSvrNotifySink2), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>
 {
 public:
 	CServerNotifySink ();

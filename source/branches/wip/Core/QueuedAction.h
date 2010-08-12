@@ -51,7 +51,8 @@ public:
 	QueueAction	mAction;
 	long		mCharID;
 	long		mReqID;
-	bool		mStarted;
+	bool		mStarted:2;
+	bool		mPaused:2;
 
 // Operations
 public:
@@ -163,6 +164,7 @@ public:
 	tPtr <CPoint>	mMoveStarted;
 	DWORD			mTimeStarted;
 	DWORD			mTimeAllowed;
+	DWORD			mTimePaused;
 
 // Operations
 	bool IsCycling () const;

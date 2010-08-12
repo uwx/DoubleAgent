@@ -28,6 +28,7 @@
 
 #ifdef	_DEBUG
 #define	_DEBUG_PREPARE	(GetProfileDebugInt(_T("DebugPrepare"),LogVerbose,true)&0xFFFF|LogTimeMs)
+#define	_LOG_QUEUE_OPS	(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -137,6 +138,12 @@ bool CQueuedPrepare::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 
 bool CQueuedPrepare::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pPause)
 {
+#ifdef	_LOG_QUEUE_OPS
+	if	(LogIsActive (_LOG_QUEUE_OPS))
+	{
+		LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] Pause [%u] QueuedPrepare [%p(%d)] Started [%u]"), pAgentWnd, mCharID, pPause, this, mReqID, mStarted);
+	}
+#endif
 	return false;
 }
 

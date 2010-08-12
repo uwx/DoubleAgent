@@ -514,8 +514,8 @@ public:
 	LPDISPATCH GetCharacterSREngine(const VARIANT& Provider);
 	LPDISPATCH FindCharacterSREngines(const VARIANT& Provider, const VARIANT& LanguageID);
 	LPDISPATCH GetSettings();
-	BOOL GetAutoConnect();
-	void SetAutoConnect(BOOL bNewValue);
+	short GetAutoConnect();
+	void SetAutoConnect(short nNewValue);
 	LPDISPATCH GetControlCharacter();
 	void SetControlCharacter(LPDISPATCH newValue);
 };

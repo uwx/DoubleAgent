@@ -342,6 +342,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\Util\ThemedModule.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -410,12 +414,12 @@
 				RelativePath=".\Resources\DoubleAgent.ico"
 				>
 			</File>
+			<File
+				RelativePath=".\Resources\EmulationDetails.htm"
+				DeploymentContent="true"
+				>
+			</File>
 		</Filter>
-		<File
-			RelativePath=".\Resources\EmulationDetails.htm"
-			DeploymentContent="true"
-			>
-		</File>
 		<File
 			RelativePath=".\Shell\GPLicenseHeader.txt"
 			>

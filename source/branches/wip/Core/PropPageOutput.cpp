@@ -24,6 +24,7 @@
 #include "PropPageOutput.h"
 #include "Localize.h"
 
+#pragma comment (lib,"comdlg32.lib")
 #ifdef	_DEBUG
 //#define	_DEBUG_INSTANCE		LogNormal
 #endif

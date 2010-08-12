@@ -24,6 +24,7 @@
 #include "DaCtlCharacter.h"
 #include "ErrorInfo.h"
 #include "Registry.h"
+#include "GuidStr.h"
 #include "DebugStr.h"
 
 #ifdef	_DEBUG
@@ -544,7 +545,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 				&&	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (lFilePath, lLoadFile)))
 				)
 			{
-				lAgentFile = mOwner->FindCachedFile (lLoadFile->GetGuid());
+				lAgentFile = mOwner->mAnchor.FindCachedFile (lLoadFile->GetGuid());
 				if	(!lAgentFile)
 				{
 					lAgentFile = lLoadFile;
@@ -556,7 +557,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 				&&	(SUCCEEDED (lResult = CComObject <DaCtlCharacter>::CreateInstance (lCharacter.Free())))
 				&&	(SUCCEEDED (lResult = lCharacter->SetOwner (mOwner)))
 				&&	(SUCCEEDED (lResult = lCharacter->mLocalObject->OpenFile (lAgentFile, lFilePathIsDefault)))
-				&&	(SUCCEEDED (lResult = lCharacter->mLocalObject->RealizePopup (mOwner->mLocalCharacterStyle)))
+				&&	(SUCCEEDED (lResult = lCharacter->mLocalObject->RealizePopup (mOwner, mOwner->mLocalCharacterStyle)))
 				)
 			{
 				if	(lLoadFile == lAgentFile)

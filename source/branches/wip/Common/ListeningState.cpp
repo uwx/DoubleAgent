@@ -38,10 +38,10 @@
 #pragma comment(lib, "winmm.lib")
 
 #ifdef	_DEBUG
+#define	_DEBUG_LISTEN			(GetProfileDebugInt(_T("DebugListen"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_DEBUG_NOTIFY_PATH		(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF)
 //#define	_DEBUG_START_STOP	LogNormal
 //#define	_DEBUG_HOT_KEY		LogNormal
-//#define	_DEBUG_SPEECH		LogNormal|LogTime|LogHighVolume
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -57,6 +57,7 @@ CListeningState::CListeningState (CDaCmnCharacter & pCharacter)
 :	mCharacter (pCharacter),
 	mSapi5Input (NULL),
 	mHearingStateShown (false),
+	mListenSuspended (false),
 	mListenDelayManual (10000),
 	mListenDelayHeard (3000),
 	mListenTimerManual (0),
@@ -111,6 +112,11 @@ bool CListeningState::IsManual () const
 bool CListeningState::IsAutomatic () const
 {
 	return (mListenTimerAuto != 0);
+}
+
+bool CListeningState::IsSuspended () const
+{
+	return mListenSuspended;
 }
 
 bool CListeningState::IsActive () const
@@ -173,8 +179,8 @@ HRESULT CListeningState::StartListening (bool pManual)
 	HRESULT				lResult = S_OK;
 	CDaSettingsConfig	lSettingsConfig;
 
-#ifdef	_DEBUG_SPEECH
-	LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] StartListening Manual [%u] Enabled [%u] Active [%u] Listening [%u %u] CharActive [%u]"), this, GetCharID(), pManual, CDaSettingsConfig().LoadConfig().mSrEnabled, IsActive(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->mAnchor->mAnchor._GetActiveCharacter()==GetCharID()));
+#ifdef	_DEBUG_LISTEN
+	LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] StartListening Manual [%u] Enabled [%u] IsAuto [%u] Active [%u %u] Listening [%u %u] CharActive [%u]"), this, GetCharID(), pManual, CDaSettingsConfig().LoadConfig().mSrEnabled, IsAutomatic(), IsActive(), IsSuspended(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->mAnchor->mAnchor.GetActiveCharacter()==GetCharID()));
 #endif
 
 	lSettingsConfig.LoadConfig ();
@@ -182,6 +188,11 @@ HRESULT CListeningState::StartListening (bool pManual)
 	if	(!lSettingsConfig.mSrEnabled)
 	{
 		lResult = AGENTVOICEERROR_SPEECHDISABLED;
+	}
+	else
+	if	(IsSuspended ())
+	{
+		lResult = AGENTERR_CHARACTERNOTACTIVE;
 	}
 	else
 	{
@@ -241,8 +252,8 @@ HRESULT CListeningState::StartListening (bool pManual)
 			ShowListeningTip (true, false);
 		}
 	}
-#ifdef	_DEBUG_SPEECH
-	LogComErr (_DEBUG_SPEECH, lResult, _T("[%p] [%d] StartListening"), this, GetCharID());
+#ifdef	_DEBUG_LISTEN
+	LogComErr (_DEBUG_LISTEN, lResult, _T("[%p(%d)] StartListening"), this, GetCharID());
 #endif
 	return lResult;
 }
@@ -263,7 +274,7 @@ HRESULT CListeningState::StopListening (bool pManual, long pCause)
 	}
 	else
 	{
-#ifdef	_DEBUG_SPEECH
+#ifdef	_DEBUG_LISTEN
 		CAtlString	lCauseStr;
 		switch (pCause)
 		{
@@ -277,7 +288,7 @@ HRESULT CListeningState::StopListening (bool pManual, long pCause)
 			case ListenComplete_UserDisabled:				lCauseStr = _T("UserDisabled"); break;
 			default:										lCauseStr.Format (_T("%d"), pCause); break;
 		}
-		LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] StopListening Manual [%u] Active [%u] Listening [%u %u] CharActive [%u] Cause[%s]"), this, GetCharID(), pManual, IsActive(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->mAnchor->mAnchor._GetActiveCharacter()==GetCharID()), lCauseStr);
+		LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] StopListening Manual [%u] IsAuto [%u] Active [%u %u] Listening [%u %u] CharActive [%u] Cause[%s]"), this, GetCharID(), pManual, IsAutomatic(), IsActive(), IsSuspended(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->mAnchor->mAnchor.GetActiveCharacter()==GetCharID()), lCauseStr);
 #endif
 
 		if	(
@@ -326,8 +337,8 @@ HRESULT CListeningState::StopListening (bool pManual, long pCause)
 				catch AnyExceptionSilent
 			}
 		}
-#ifdef	_DEBUG_SPEECH
-		LogComErr (_DEBUG_SPEECH, lResult, _T("[%p] [%d] StopListening"), this, GetCharID());
+#ifdef	_DEBUG_LISTEN
+		LogComErr (_DEBUG_LISTEN, lResult, _T("[%p(%d)] StopListening"), this, GetCharID());
 #endif
 	}
 	return lResult;
@@ -339,6 +350,9 @@ HRESULT CListeningState::KeepListening (bool pManual)
 {
 	HRESULT	lResult = S_FALSE;
 
+#ifdef	_DEBUG_LISTEN
+	LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] KeepListening Manual [%u] Enabled [%u] IsAuto [%u] Active [%u %u] Listening [%u %u] CharActive [%u]"), this, GetCharID(), pManual, CDaSettingsConfig().LoadConfig().mSrEnabled, IsAutomatic(), IsActive(), IsSuspended(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->mAnchor->mAnchor.GetActiveCharacter()==GetCharID()));
+#endif
 	if	(
 			(!pManual)
 		&&	(IsAutomatic ())
@@ -361,6 +375,43 @@ HRESULT CListeningState::KeepListening (bool pManual)
 	return lResult;
 }
 
+HRESULT CListeningState::SuspendListening (bool pSuspend)
+{
+	HRESULT	lResult = S_FALSE;
+#ifdef	_DEBUG_LISTEN
+	LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] SuspendListening [%u] Enabled [%u] IsAuto [%u] Active [%u %u] Listening [%u %u] CharActive [%u]"), this, GetCharID(), pSuspend, CDaSettingsConfig().LoadConfig().mSrEnabled, IsAutomatic(), IsActive(), IsSuspended(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->mAnchor->mAnchor.GetActiveCharacter()==GetCharID()));
+#endif
+
+	if	(pSuspend)
+	{
+		if	(mSapi5InputContext->SafeIsValid ())
+		{
+			mSapi5InputContext->PauseListening (true);
+		}
+		if	(!mListenSuspended)
+		{
+			ShowListeningTip (true, false);
+		}
+	}
+	else
+	{
+		if	(mListenSuspended)
+		{
+			ShowListeningTip (true, true);
+			StartListenTimers (IsManual());
+		}
+		if	(mSapi5InputContext->SafeIsValid ())
+		{
+			mSapi5InputContext->PauseListening (false);
+		}
+	}
+	if	(SUCCEEDED (lResult))
+	{
+		mListenSuspended = pSuspend;
+	}
+	return lResult;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 HRESULT CListeningState::TransferState (CListeningState * pToState)
@@ -373,8 +424,8 @@ HRESULT CListeningState::TransferState (CListeningState * pToState)
 	}
 	else
 	{
-#ifdef _DEBUG_SPEECH
-		LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] TransferState [%p] [%d] Manual [%u] Automatic [%u]"), this, GetCharID(), pToState, pToState->GetCharID(), IsManual(), IsAutomatic());
+#ifdef _DEBUG_LISTEN
+		LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] TransferState [%p] [%d] Manual [%u] Automatic [%u]"), this, GetCharID(), pToState, pToState->GetCharID(), IsManual(), IsAutomatic());
 #endif
 		if	(
 				(!IsListening ())
@@ -423,8 +474,8 @@ HRESULT CListeningState::TransferState (CListeningState * pToState)
 				ShowListeningTip (true, false);
 			}
 		}
-#ifdef	_DEBUG_SPEECH
-		LogComErr (_DEBUG_SPEECH, lResult, _T("[%p] [%d] TransferState [%d]"), this, GetCharID(), pToState->GetCharID());
+#ifdef	_DEBUG_LISTEN
+		LogComErr (_DEBUG_LISTEN, lResult, _T("[%p(%d)] TransferState [%d]"), this, GetCharID(), pToState->GetCharID());
 #endif
 	}
 	return lResult;
@@ -488,7 +539,7 @@ HRESULT CListeningState::GetInputContext ()
 
 HRESULT CListeningState::StartInputContext (CSapi5InputContext * pPrevInputContext)
 {
-	HRESULT			lResult = S_FALSE;
+	HRESULT				lResult = S_FALSE;
 	CDaCmnCommands *	lCommands;
 
 	if	(
@@ -693,80 +744,92 @@ void CListeningState::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 	{
 		if	(pTimerId == mListenTimerManual)
 		{
-#ifdef	_DEBUG_SPEECH
-			LogMessage (_DEBUG_SPEECH, _T("[%p] Listening Manual timeout"), this);
+#ifdef	_DEBUG_LISTEN
+			LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] Listening Manual timeout"), this, GetCharID());
 #endif
-			if	(mListenTimerAuto)
+			if	(!IsSuspended ())
 			{
-				mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerManual);
-				mListenTimerManual = 0;
-			}
-			else
-			{
-				StopListening (false, ListenComplete_ProgramTimedOut);
+				if	(mListenTimerAuto)
+				{
+					mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerManual);
+					mListenTimerManual = 0;
+				}
+				else
+				{
+					StopListening (false, ListenComplete_ProgramTimedOut);
+				}
 			}
 		}
 		else
 		if	(pTimerId == mListenTimerAuto)
 		{
-#ifdef	_DEBUG_SPEECH_NOT
-			LogMessage (_DEBUG_SPEECH|LogHighVolume, _T("[%p] Hotkey Held [%u]"), this, mCharacter.mListeningAnchor->IsHotKeyStillPressed ());
+#ifdef	_DEBUG_LISTEN_NOT
+			LogMessage (_DEBUG_LISTEN|LogHighVolume, _T("[%p(%d)] Hotkey Held [%u]"), this, GetCharID(), mCharacter.mListeningAnchor->IsHotKeyStillPressed ());
 #endif
-			if	(
-					(!mListenTimerHotkey)
-				&&	(!mCharacter.mListeningAnchor->IsHotKeyStillPressed ())
-				)
+			if	(!IsSuspended ())
 			{
-#ifdef	_DEBUG_SPEECH
-				LogMessage (_DEBUG_SPEECH, _T("[%p] Listening AutoTimer timeout"), this);
+				if	(
+						(!mListenTimerHotkey)
+					&&	(!mCharacter.mListeningAnchor->IsHotKeyStillPressed ())
+					)
+				{
+#ifdef	_DEBUG_LISTEN
+					LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] Listening AutoTimer timeout"), this, GetCharID());
 #endif
-				mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerAuto);
-				mListenTimerAuto = 0;
-				StopListening (false, ListenComplete_UserReleasedKey);
+					mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerAuto);
+					mListenTimerAuto = 0;
+					StopListening (false, ListenComplete_UserReleasedKey);
+				}
 			}
 		}
 		else
 		if	(pTimerId == mListenTimerHotkey)
 		{
-#ifdef	_DEBUG_SPEECH
-			LogMessage (_DEBUG_SPEECH, _T("[%p] Listening Hotkey timeout [%u]"), this, mCharacter.mListeningAnchor->IsHotKeyStillPressed ());
+#ifdef	_DEBUG_LISTEN
+			LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] Listening Hotkey timeout [%u]"), this, GetCharID(), mCharacter.mListeningAnchor->IsHotKeyStillPressed ());
 #endif
-			mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerHotkey);
-			mListenTimerHotkey = 0;
-			if	(!mCharacter.mListeningAnchor->IsHotKeyStillPressed ())
+			if	(!IsSuspended ())
 			{
-				mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerAuto);
-				mListenTimerAuto = 0;
-				StopListening (false, ListenComplete_UserTimedOut);
+				mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerHotkey);
+				mListenTimerHotkey = 0;
+				if	(!mCharacter.mListeningAnchor->IsHotKeyStillPressed ())
+				{
+					mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerAuto);
+					mListenTimerAuto = 0;
+					StopListening (false, ListenComplete_UserTimedOut);
+				}
 			}
 		}
 		else
 		if	(pTimerId == mListenTimerHeard)
 		{
 			CAgentListeningWnd *	lListeningWnd;
-#ifdef	_DEBUG_SPEECH
-			LogMessage (_DEBUG_SPEECH, _T("[%p] Listening Heard timeout"), this);
+#ifdef	_DEBUG_LISTEN
+			LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] Listening Heard timeout"), this, GetCharID());
 #endif
-			mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerHeard);
-			mListenTimerHeard = 0;
-
-			if	(IsActive ())
+			if	(!IsSuspended ())
 			{
+				mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerHeard);
+				mListenTimerHeard = 0;
+
+				if	(IsActive ())
+				{
+					if	(
+							(!IsAutomatic ())
+						||	(!mCharacter.mListeningAnchor->IsHotKeyStillPressed ())
+						)
+					{
+						StopListening (false, ListenComplete_UserSpeechEnded);
+					}
+				}
+				else
 				if	(
-						(!IsAutomatic ())
-					||	(!mCharacter.mListeningAnchor->IsHotKeyStillPressed ())
+						(lListeningWnd = mCharacter.GetListeningWnd (false))
+					&&	(lListeningWnd->GetCharID() == GetCharID())
 					)
 				{
-					StopListening (false, ListenComplete_UserSpeechEnded);
+					lListeningWnd->Detach (GetCharID());
 				}
-			}
-			else
-			if	(
-					(lListeningWnd = mCharacter.GetListeningWnd (false))
-				&&	(lListeningWnd->GetCharID() == GetCharID())
-				)
-			{
-				lListeningWnd->Detach (GetCharID());
 			}
 		}
 	}
@@ -776,34 +839,41 @@ void CListeningState::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 
 void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 {
-#ifdef	_DEBUG_SPEECH_NOT
+#ifdef	_DEBUG_LISTEN_NOT
 	if	(pEvent.eEventId == SPEI_INTERFERENCE)
 	{
-		LogMessage (_DEBUG_SPEECH, _T("[%p] Interference [%s]"), this, InterferenceStr (pEvent.Interference()));
+		LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] Interference [%s]"), this, GetCharID(), InterferenceStr (pEvent.Interference()));
 	}
 #endif
-#ifdef	_DEBUG_SPEECH_NOT
+#ifdef	_DEBUG_LISTEN_NOT
 	if	(pEvent.eEventId == SPEI_HYPOTHESIS)
 	{
-		LogRecoResult (_DEBUG_SPEECH, pEvent.RecoResult(), _T("[%p] Hypothesis"), this);
+		LogRecoResult (_DEBUG_LISTEN, pEvent.RecoResult(), _T("[%p(%d)] Hypothesis"), this, GetCharID());
 	}
 #endif
-#ifdef	_DEBUG_SPEECH
+#ifdef	_DEBUG_LISTEN
 	if	(pEvent.eEventId == SPEI_RECOGNITION)
 	{
-		LogRecoResult (_DEBUG_SPEECH, pEvent.RecoResult(), _T("[%p] Recognition"), this);
+		LogRecoResult (_DEBUG_LISTEN, pEvent.RecoResult(), _T("[%p(%d)] Recognition"), this, GetCharID());
 	}
 #endif
-#ifdef	_DEBUG_SPEECH
+#ifdef	_DEBUG_LISTEN
 	if	(
 			(pEvent.eEventId == SPEI_FALSE_RECOGNITION)
 		&&	(pEvent.RecoResult())
 		)
 	{
-		LogRecoResult (_DEBUG_SPEECH, pEvent.RecoResult(), _T("[%p] False Recognition"), this);
+		LogRecoResult (_DEBUG_LISTEN, pEvent.RecoResult(), _T("[%p(%d)] False Recognition"), this, GetCharID());
 	}
 #endif
 
+	if	(IsSuspended ())
+	{
+#ifdef	_DEBUG_LISTEN
+		LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] OnSapi5InputEvent - Suspended"), this, GetCharID());
+#endif	
+	}
+	else
 	if	(pEvent.eEventId == SPEI_RECOGNITION)
 	{
 		CAgentListeningWnd *	lListeningWnd;
@@ -866,8 +936,8 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 
 			if	(lPhrase->ullGrammarID == mSapi5InputContext->mGrammarIdGlobal)
 			{
-#ifdef	_DEBUG_SPEECH
-				LogMessage (_DEBUG_SPEECH, _T("[%p] Heard Global command [%d]"), this, lPhrase->Rule.ulId);
+#ifdef	_DEBUG_LISTEN
+				LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] Heard Global command [%d]"), this, GetCharID(), lPhrase->Rule.ulId);
 #endif
 				lCharacter = &mCharacter;
 
@@ -907,8 +977,8 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 					&&	(lCharacter = mCharacter.mNotify->mAnchor->mAnchor.GetGlobalCharacter (LOWORD(lPhrase->Rule.ulId)))
 					)
 				{
-#ifdef	_DEBUG_SPEECH
-					LogMessage (_DEBUG_SPEECH, _T("[%p] Heard Character name [%d] IsVisible [%d] IsClientActive [%d] IsInputActive [%d]"), this, lCharacter->GetCharID(), lCharacter->IsVisible (), lCharacter->IsClientActive (), lCharacter->IsInputActive ());
+#ifdef	_DEBUG_LISTEN
+					LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] Heard Character name [%d] IsVisible [%d] IsClientActive [%d] IsInputActive [%d]"), this, GetCharID(), lCharacter->GetCharID(), lCharacter->IsVisible (), lCharacter->IsClientActive (), lCharacter->IsInputActive ());
 #endif
 					lCharacter->DoMenuActivate ();
 				}
@@ -925,8 +995,8 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 #endif
 				)
 			{
-#ifdef	_DEBUG_SPEECH
-				LogMessage (_DEBUG_SPEECH, _T("[%p] Heard Character [%d] command [%d]"), this, GetCharID(), lPhrase->Rule.ulId);
+#ifdef	_DEBUG_LISTEN
+				LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] Heard Character [%d] command [%d]"), this, GetCharID(), GetCharID(), lPhrase->Rule.ulId);
 #endif
 				lCharacter = &mCharacter;
 
@@ -970,8 +1040,8 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 	{
 		CAgentListeningWnd *	lListeningWnd;
 
-#ifdef	_DEBUG_SPEECH
-		LogMessage (_DEBUG_SPEECH, _T("[%p] SPEI_START_SR_STREAM"), this);
+#ifdef	_DEBUG_LISTEN
+		LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] SPEI_START_SR_STREAM"), this, GetCharID());
 #endif
 		if	(
 				(lListeningWnd = mCharacter.GetListeningWnd (false))
@@ -986,8 +1056,8 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 	{
 		CAgentListeningWnd *	lListeningWnd;
 
-#ifdef	_DEBUG_SPEECH
-		LogMessage (_DEBUG_SPEECH, _T("[%p] SPEI_END_SR_STREAM"), this);
+#ifdef	_DEBUG_LISTEN
+		LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] SPEI_END_SR_STREAM"), this, GetCharID());
 #endif
 		if	(
 				(lListeningWnd = mCharacter.GetListeningWnd (false))
@@ -1196,6 +1266,7 @@ void CListeningState::_OnCharacterActivated (long pActiveCharID, long pInputActi
 
 CListeningAnchor::CListeningAnchor (CListeningGlobal & pGlobal)
 :	mGlobal (pGlobal),
+	mOwnerWnd (NULL),
 	mHotKeyWnd (NULL),
 	mStarted (false)
 {
@@ -1245,7 +1316,7 @@ void CListeningAnchor::Shutdown ()
 
 CVoiceCommandsWnd * CListeningAnchor::GetVoiceCommandsWnd (bool pCreate, long pCharID)
 {
-	CVoiceCommandsWnd *	lRet = mGlobal.GetVoiceCommandsWnd (pCreate);
+	CVoiceCommandsWnd *	lRet = mGlobal.GetVoiceCommandsWnd (pCreate, mOwnerWnd);
 
 	if	(pCharID > 0)
 	{
@@ -1396,7 +1467,7 @@ void CListeningGlobal::Resume ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-CVoiceCommandsWnd * CListeningGlobal::GetVoiceCommandsWnd (bool pCreate)
+CVoiceCommandsWnd * CListeningGlobal::GetVoiceCommandsWnd (bool pCreate, CWindow * pOwnerWnd)
 {
 	if	(
 			(!mVoiceCommandsWnd)
@@ -1404,7 +1475,7 @@ CVoiceCommandsWnd * CListeningGlobal::GetVoiceCommandsWnd (bool pCreate)
 		&&	(mVoiceCommandsWnd = CVoiceCommandsWnd::CreateInstance ())
 		)
 	{
-		if	(mVoiceCommandsWnd->Create ())
+		if	(mVoiceCommandsWnd->Create (pOwnerWnd))
 		{
 			SetVoiceCommandClients (-1);
 			SetVoiceCommandNames (-1);

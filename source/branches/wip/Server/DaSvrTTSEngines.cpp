@@ -80,6 +80,11 @@ void DaSvrTTSEngines::Terminate (bool pFinal, bool pAbandonned)
 	{
 		SafeFreeSafePtr (mCachedEnum);
 
+		if	(pFinal)
+		{
+			UnmanageObjectLifetime (this);
+		}
+
 		if	(
 				(pFinal)
 			&&	(m_dwRef > 0)
@@ -94,11 +99,6 @@ void DaSvrTTSEngines::Terminate (bool pFinal, bool pAbandonned)
 				catch AnyExceptionDebug
 			}
 			m_dwRef = 0;
-		}
-
-		if	(pFinal)
-		{
-			UnmanageObjectLifetime (this);
 		}
 	}
 }

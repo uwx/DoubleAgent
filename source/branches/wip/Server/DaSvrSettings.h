@@ -28,8 +28,8 @@
 class ATL_NO_VTABLE __declspec(uuid("{1147E528-A208-11DE-ABF2-002421116FB2}")) DaSvrSettings :
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public CComCoClass<DaSvrSettings, &__uuidof(DaSvrSettings)>,
-	public IDispatchImpl<IDaSvrSettings, &__uuidof(IDaSvrSettings), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
-	public IProvideClassInfoImpl<&__uuidof(DaSvrSettings), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
+	public IDispatchImpl<IDaSvrSettings, &__uuidof(IDaSvrSettings), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>,
+	public IProvideClassInfoImpl<&__uuidof(DaSvrSettings), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>,
 	public ISupportErrorInfo,
 	public CDaCmnSettings,
 	public CSvrObjLifetime

@@ -23,16 +23,13 @@
 /////////////////////////////////////////////////////////////////////////////
 
 class __declspec(uuid("{1147E500-A208-11DE-ABF2-002421116FB2}")) DaServer;
-class __declspec(uuid("{1147E530-A208-11DE-ABF2-002421116FB2}")) CDaAgentCtl;
+class __declspec(uuid("{1147E518-A208-11DE-ABF2-002421116FB2}")) DaServerHandler;
+class __declspec(uuid("{1147E530-A208-11DE-ABF2-002421116FB2}")) DaControl;
 class __declspec(uuid("{1147E563-A208-11DE-ABF2-002421116FB2}")) CDirectShowSource;
 class __declspec(uuid("{1147E561-A208-11DE-ABF2-002421116FB2}")) CAgentPreviewWnd;
 class __declspec(uuid("{1147E564-A208-11DE-ABF2-002421116FB2}")) CDaShellApp;
 class __declspec(uuid("{1147E565-A208-11DE-ABF2-002421116FB2}")) CDaCharacterProps;
 class __declspec(uuid("{1147E566-A208-11DE-ABF2-002421116FB2}")) CDaElevatedSettings;
-
-class __declspec(uuid("{1147E518-A208-11DE-ABF2-002421116FB2}")) DaServerHandler;
-class __declspec(uuid("{1147E501-A208-11DE-ABF2-002421116FB2}")) DaServerTypeLib;
-class __declspec(uuid("{1147E550-A208-11DE-ABF2-002421116FB2}")) DaControlTypeLib;
 
 /////////////////////////////////////////////////////////////////////////////
 

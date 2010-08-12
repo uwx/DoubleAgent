@@ -27,7 +27,7 @@
 class ATL_NO_VTABLE __declspec(uuid("{1147E517-A208-11DE-ABF2-002421116FB2}")) DaSvrAnimationNames :
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public CComCoClass<DaSvrAnimationNames, &__uuidof(DaSvrAnimationNames)>,
-	public IProvideClassInfoImpl<&__uuidof(DaSvrAnimationNames), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
+	public IProvideClassInfoImpl<&__uuidof(DaSvrAnimationNames), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>,
 	public IEnumVARIANT,
 	public CDaCmnAnimationNames,
 	public CSvrObjLifetime

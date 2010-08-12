@@ -118,7 +118,7 @@ void CDaCmnCharacter::Terminate (bool pFinal)
 		{
 			if	(IsClientActive ())
 			{
-				SetClientActive (false, false);
+				SetActiveClient (false, false);
 			}
 		}
 		catch AnyExceptionDebug
@@ -138,8 +138,6 @@ void CDaCmnCharacter::Terminate (bool pFinal)
 			catch AnyExceptionDebug
 		}
 
-		Unrealize (pFinal);
-
 		if	(mNotify)
 		{
 			try
@@ -156,11 +154,8 @@ void CDaCmnCharacter::Terminate (bool pFinal)
 			catch AnyExceptionDebug
 
 			if	(
-					(mFile)
-				&&	(
-						(pFinal)
-					||	(!IsInNotify ())
-					)
+					(pFinal)
+				&&	(mFile)
 				)
 			{
 				try
@@ -176,9 +171,11 @@ void CDaCmnCharacter::Terminate (bool pFinal)
 			}
 		}
 
+		Unrealize (pFinal);
+
 		if	(
 				(pFinal)
-			||	(!IsInNotify ())
+			&&	(!IsInNotify ())
 			)
 		{
 			mFile = NULL;
@@ -195,22 +192,32 @@ void CDaCmnCharacter::Unrealize (bool pForce)
 		if	(
 				(mFile)
 			&&	(mNotify)
-			&&	(GetClientCount (mCharID) <= 0)
 			)
 		{
+			INT_PTR	lClientCount = GetClientCount (mCharID);
+			
 			try
 			{
+				mNotify->mAnchor->RemoveFileClient (mFile, mWnd, false);
 				if	(mWnd->GetBalloonWnd())
 				{
-					mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, mWnd->GetBalloonWnd());
+					mNotify->mAnchor->RemoveFileClient (mFile, mWnd->GetBalloonWnd(), false);
 				}
 			}
 			catch AnyExceptionDebug
-			try
+
+			if	(lClientCount <= 0)
 			{
-				mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, mWnd);
+				try
+				{
+					mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, mWnd);
+					if	(mWnd->GetBalloonWnd())
+					{
+						mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, mWnd->GetBalloonWnd());
+					}
+				}
+				catch AnyExceptionDebug
 			}
-			catch AnyExceptionDebug
 		}
 
 		if	(
@@ -299,6 +306,7 @@ HRESULT CDaCmnCharacter::Realize (CAgentCharacterWnd * pCharacterWnd, DWORD pIni
 			)
 		{
 			mWnd = pCharacterWnd;
+			mNotify->mAnchor->AddFileClient (mFile, pCharacterWnd);
 			mNotify->mAnchor->mAnchor.AddFileClient (mFile, pCharacterWnd);
 
 			SetStyle (~pInitialStyle, pInitialStyle);
@@ -311,7 +319,7 @@ HRESULT CDaCmnCharacter::Realize (CAgentCharacterWnd * pCharacterWnd, DWORD pIni
 			}
 			if	(GetActiveClient () <= 0)
 			{
-				SetClientActive (true, false);
+				SetActiveClient (true, false);
 			}
 			else
 			{
@@ -330,7 +338,7 @@ HRESULT CDaCmnCharacter::Realize (CAgentCharacterWnd * pCharacterWnd, DWORD pIni
 	return lResult;
 }
 
-HRESULT CDaCmnCharacter::RealizePopup (DWORD pInitialStyle)
+HRESULT CDaCmnCharacter::RealizePopup (CWindow * pParentWnd, DWORD pInitialStyle, DWORD pExStyle)
 {
 	HRESULT								lResult = S_OK;
 	CAgentPopupWnd *					lPopupWnd;
@@ -364,6 +372,7 @@ HRESULT CDaCmnCharacter::RealizePopup (DWORD pInitialStyle)
 		&&	(lPopupWnd)
 		)
 	{
+		lPopupWnd->ModifyStyleEx (WS_EX_TOPMOST, pExStyle|WS_EX_TOOLWINDOW);
 		lResult = Realize (lPopupWnd, pInitialStyle);
 	}
 	else
@@ -376,10 +385,8 @@ HRESULT CDaCmnCharacter::RealizePopup (DWORD pInitialStyle)
 		{
 			SetStyle (~pInitialStyle, pInitialStyle);
 
-			if	(lPopupWnd->Create (NULL))
+			if	(lPopupWnd->Create (pParentWnd, NULL, pExStyle|WS_EX_TOOLWINDOW))
 			{
-				lPopupWnd->ModifyStyle (WS_CAPTION|WS_THICKFRAME|WS_SYSMENU, 0, SWP_FRAMECHANGED);
-				lPopupWnd->ModifyStyleEx (0, WS_EX_TOOLWINDOW);
 				lResult = Realize (lPopupWnd, pInitialStyle);
 			}
 			else
@@ -645,7 +652,10 @@ long CDaCmnCharacter::Show (bool pFast, bool pImmediate)
 
 	if	(pImmediate)
 	{
-		if	(lPopupWnd = GetPopupWnd ())
+		if	(
+				(lPopupWnd = GetPopupWnd ())
+			&&	(lPopupWnd->GetCharID() == mCharID)
+			)
 		{
 			lPopupWnd->ShowPopup (mCharID, VisibilityCause_ProgramShowed);
 		}
@@ -680,7 +690,10 @@ long CDaCmnCharacter::Hide (bool pFast, bool pImmediate)
 				lBalloonWnd->HideBalloon (true);
 			}
 		}
-		if	(lPopupWnd = GetPopupWnd ())
+		if	(
+				(lPopupWnd = GetPopupWnd ())
+			&&	(lPopupWnd->GetCharID() == mCharID)
+			)
 		{
 			lPopupWnd->HidePopup (mCharID, VisibilityCause_ProgramHid);
 		}
@@ -705,6 +718,7 @@ bool CDaCmnCharacter::IsInputActive () const
 
 	if	(
 			(lCharacterWnd = GetCharacterWnd ())
+		&&	(lCharacterWnd->GetStyle () & WS_VISIBLE)
 		&&	(lCharacterWnd->GetCharID () == GetCharID())
 		&&	(lCharacterWnd->GetLastActive () == lCharacterWnd->m_hWnd)
 		)
@@ -741,9 +755,32 @@ long CDaCmnCharacter::GetActiveClient () const
 	return lRet;
 }
 
+short CDaCmnCharacter::GetActiveState () const
+{
+	short	lActiveState = ActiveState_Inactive;
+
+	if	(IsClientActive ())
+	{
+		CAgentCharacterWnd *	lCharacterWnd;
+	
+		if	(
+				(lCharacterWnd = GetCharacterWnd ())
+			&&	(lCharacterWnd->m_hWnd == CAgentCharacterWnd::GetLastActive())
+			)
+		{
+			lActiveState = ActiveState_InputActive;
+		}
+		else
+		{
+			lActiveState = ActiveState_Active;
+		}
+	}
+	return lActiveState;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
-bool CDaCmnCharacter::SetClientActive (bool pActive, bool pInputActive)
+bool CDaCmnCharacter::SetActiveClient (bool pActive, bool pInputActive)
 {
 	bool					lRet = false;
 	long					lPrevCharId = 0;
@@ -754,7 +791,7 @@ bool CDaCmnCharacter::SetClientActive (bool pActive, bool pInputActive)
 #ifdef	_DEBUG_ACTIVE
 	if	(LogIsActive (_DEBUG_ACTIVE))
 	{
-		LogMessage (_DEBUG_ACTIVE, _T("[%d] SetClientActive [%u] InputActive [%u] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ClientActive [%d] InputActive [%d] Listen [%d]"), mCharID, pActive, pInputActive, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), GetActiveClient(), mNotify->mAnchor->mAnchor.GetActiveCharacter(), mNotify->mAnchor->mAnchor.GetListenCharacter());
+		LogMessage (_DEBUG_ACTIVE, _T("[%d] SetActiveClient [%u] InputActive [%u] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ClientActive [%d] InputActive [%d] Listen [%d]"), mCharID, pActive, pInputActive, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), GetActiveClient(), mNotify->mAnchor->mAnchor.GetActiveCharacter(), mNotify->mAnchor->mAnchor.GetListenCharacter());
 	}
 #endif
 	if	(lCharacterWnd = GetCharacterWnd ())
@@ -848,6 +885,63 @@ bool CDaCmnCharacter::SetClientActive (bool pActive, bool pInputActive)
 	}
 #endif
 	return lRet;
+}
+
+HRESULT CDaCmnCharacter::SetActiveState (short pActiveState)
+{
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+
+	if	(pActiveState == ActiveState_Inactive)
+	{
+		if	(!SetActiveClient (false, false))
+		{
+			if	(GetCharacterWnd ())
+			{
+				lResult = S_FALSE;
+			}
+			else
+			{
+				lResult = E_INVALIDARG;
+			}
+		}
+	}
+	else
+	if	(pActiveState == ActiveState_Active)
+	{
+		if	(lCharacterWnd = GetCharacterWnd ())
+		{
+			SetActiveClient (true, false);
+		}
+		else
+		{
+			lResult = AGENTERR_CLIENTINVALID;
+		}
+	}
+	else
+	if	(pActiveState == ActiveState_InputActive)
+	{
+		if	(lCharacterWnd = GetCharacterWnd ())
+		{
+			if	(lCharacterWnd->IsCharShown ())
+			{
+				SetActiveClient (true, true);
+			}
+			else
+			{
+				lResult = S_FALSE;
+			}
+		}
+		else
+		{
+			lResult = AGENTERR_CLIENTINVALID;
+		}
+	}
+	else
+	{
+		lResult = E_INVALIDARG;
+	}
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1449,7 +1543,7 @@ HRESULT CDaCmnCharacter::StartListening (bool pManual)
 		else
 		if	(!GetCharacterWnd ())
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTERR_CLIENTINVALID;
 		}
 		else
 		if	(
@@ -2192,21 +2286,6 @@ void CDaCmnCharacter::_OnCharacterActivated (long pActiveCharID, long pInputActi
 }
 
 /////////////////////////////////////////////////////////////////////////////
-
-void CDaCmnCharacter::_OnAppActivated (bool pActive)
-{
-#ifdef	_DEBUG_NOTIFY_PATH
-	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaCmnCharacter::_OnAppActivated [%u]"), pActive);
-#endif
-#ifdef	_DEBUG_ACTIVE
-	if	(LogIsActive (_DEBUG_ACTIVE))
-	{
-		LogMessage (_DEBUG_ACTIVE, _T("[%d] OnAppActivated [%u] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ActiveClient [%d] InputActive [%d] Listen [%d]"), mCharID, pActive, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), GetActiveClient(), mNotify->mAnchor->mAnchor.GetActiveCharacter(), mNotify->mAnchor->mAnchor.GetListenCharacter());
-	}
-#endif
-}
-
-/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
@@ -2376,7 +2455,7 @@ bool CDaCmnCharacter::DoMenuCommand (USHORT pCommandId)
 				lVoiceCommandsWnd->SetLangID (mLangID);
 				lCommands->ShowVoiceCommands (lVoiceCommandsWnd);
 				lVoiceCommandsWnd->ShowOtherClients (mCharID);
-				lVoiceCommandsWnd->Show ();
+				lVoiceCommandsWnd->Show (true);
 			}
 			lRet = true;
 		}
@@ -2393,14 +2472,14 @@ bool CDaCmnCharacter::DoMenuActivate ()
 			||	(!IsClientActive ())
 			)
 		{
-			SetClientActive (true, true);
+			SetActiveClient (true, true);
 		}
 	}
 	else
 	{
 		if	(!IsClientActive ())
 		{
-			SetClientActive (true, false);
+			SetActiveClient (true, false);
 		}
 		Show (false);
 	}
@@ -2686,7 +2765,7 @@ void CDaCmnCharacter::_OnDefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFi
 							(SUCCEEDED (lResult))
 						&&	(
 								(lPopupWnd)
-							?	(SUCCEEDED (lResult = LogComErr (LogNormal, RealizePopup (lStyle))))
+							?	(SUCCEEDED (lResult = LogComErr (LogNormal, RealizePopup (mNotify->mAnchor->mOwnerWnd, lStyle))))
 							:	(SUCCEEDED (lResult = LogComErr (LogNormal, Realize (lCharacterWnd, lStyle))))
 							)
 						)
@@ -2737,12 +2816,12 @@ void CDaCmnCharacter::_OnDefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFi
 							Show (true, true);
 							if	(lIsInputActive)
 							{
-								SetClientActive (true, true);
+								SetActiveClient (true, true);
 							}
 							else
 							if	(lClientActive)
 							{
-								SetClientActive (true, false);
+								SetActiveClient (true, false);
 							}
 							Show (false);
 						}
@@ -2801,7 +2880,7 @@ HRESULT CDaCmnCharacter::SetPosition (long Left, long Top)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	return lResult;
 }
@@ -2824,7 +2903,7 @@ HRESULT CDaCmnCharacter::GetPosition (long *Left, long *Top)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	if	(Left)
 	{
@@ -2861,7 +2940,7 @@ HRESULT CDaCmnCharacter::SetSize (long Width, long Height)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	return lResult;
 }
@@ -2884,7 +2963,7 @@ HRESULT CDaCmnCharacter::GetSize (long *Width, long *Height)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	if	(Width)
 	{
@@ -2904,7 +2983,7 @@ HRESULT CDaCmnCharacter::GetOriginalSize (long *Width, long *Height)
 
 	if	(!mFile)
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	else
 	{
@@ -2930,7 +3009,7 @@ HRESULT CDaCmnCharacter::GetVersion(short *MajorVersion, short *MinorVersion)
 
 	if	(!mFile)
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	else
 	{
@@ -2961,7 +3040,7 @@ HRESULT CDaCmnCharacter::Show (long Fast, long *RequestID)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	if	(RequestID)
 	{
@@ -2981,7 +3060,7 @@ HRESULT CDaCmnCharacter::Hide (long Fast, long *RequestID)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	if	(RequestID)
 	{
@@ -3008,7 +3087,7 @@ HRESULT CDaCmnCharacter::Prepare (long Type, BSTR Name, long Queue, long *Reques
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 
 	if	(RequestID)
@@ -3043,7 +3122,7 @@ HRESULT CDaCmnCharacter::Play (BSTR Animation, long *RequestID)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	if	(RequestID)
 	{
@@ -3092,7 +3171,7 @@ HRESULT CDaCmnCharacter::Stop (long RequestID)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	return lResult;
 }
@@ -3107,7 +3186,7 @@ HRESULT CDaCmnCharacter::StopAll (long Types)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	return lResult;
 }
@@ -3146,7 +3225,7 @@ HRESULT CDaCmnCharacter::MoveTo (short X, short Y, long Speed, long *RequestID)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	if	(RequestID)
 	{
@@ -3219,7 +3298,7 @@ HRESULT CDaCmnCharacter::GestureAt (short X, short Y, long *RequestID)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	if	(RequestID)
 	{
@@ -3253,7 +3332,7 @@ HRESULT CDaCmnCharacter::Think (BSTR Text, class CAgentTextObject * pTextObject,
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	if	(RequestID)
 	{
@@ -3303,7 +3382,7 @@ HRESULT CDaCmnCharacter::Wait (long WaitForRequestID, long *RequestID)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	if	(RequestID)
 	{
@@ -3351,7 +3430,7 @@ HRESULT CDaCmnCharacter::Interrupt (long InterruptRequestID, long *RequestID)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	if	(RequestID)
 	{
@@ -3383,7 +3462,7 @@ HRESULT CDaCmnCharacter::ShowPopupMenu (short X, short Y)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	return lResult;
 }
@@ -3403,7 +3482,7 @@ HRESULT CDaCmnCharacter::GetTTSSpeed (long *Speed)
 	else
 	if	(!mFile)
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	else
 #ifndef	_STRICT_COMPATIBILITY
@@ -3435,7 +3514,7 @@ HRESULT CDaCmnCharacter::GetTTSPitch (short *Pitch)
 	else
 	if	(!mFile)
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	else
 #ifndef	_STRICT_COMPATIBILITY
@@ -3548,7 +3627,7 @@ HRESULT CDaCmnCharacter::Speak (BSTR Text, class CAgentTextObject * pTextObject,
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	if	(RequestID)
 	{
@@ -3604,7 +3683,7 @@ HRESULT CDaCmnCharacter::get_UniqueID (BSTR *CharGUID)
 	else
 	if	(!mFile)
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	else
 	{
@@ -3630,7 +3709,7 @@ HRESULT CDaCmnCharacter::get_Name (BSTR *Name)
 
 		if	(!mFile)
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTERR_CLIENTINVALID;
 		}
 		else
 		if	(
@@ -3638,7 +3717,7 @@ HRESULT CDaCmnCharacter::get_Name (BSTR *Name)
 			&&	(!mFile->ReadNames ())
 			)
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTPROVERROR_CHARACTERVERSION;
 		}
 		else
 		if	(lFileName = mFile->FindName (mLangID))
@@ -3647,7 +3726,7 @@ HRESULT CDaCmnCharacter::get_Name (BSTR *Name)
 		}
 		else
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTPROVERROR_CHARACTERVERSION;
 		}
 	}
 	return lResult;
@@ -3664,7 +3743,7 @@ HRESULT CDaCmnCharacter::put_Name (BSTR Name)
 
 	if	(!mFile)
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	else
 	if	(lName.IsEmpty ())
@@ -3706,7 +3785,7 @@ HRESULT CDaCmnCharacter::get_Description (BSTR *Description)
 
 		if	(!mFile)
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTERR_CLIENTINVALID;
 		}
 		else
 		if	(
@@ -3714,7 +3793,7 @@ HRESULT CDaCmnCharacter::get_Description (BSTR *Description)
 			&&	(!mFile->ReadNames ())
 			)
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTPROVERROR_CHARACTERVERSION;
 		}
 		else
 		if	(lFileName = mFile->FindName (mLangID))
@@ -3723,7 +3802,7 @@ HRESULT CDaCmnCharacter::get_Description (BSTR *Description)
 		}
 		else
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTPROVERROR_CHARACTERVERSION;
 		}
 	}
 	return lResult;
@@ -3740,7 +3819,7 @@ HRESULT CDaCmnCharacter::put_Description (BSTR Description)
 
 	if	(!mFile)
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	else
 	{
@@ -3773,7 +3852,7 @@ HRESULT CDaCmnCharacter::get_ExtraData (BSTR *ExtraData)
 
 		if	(!mFile)
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTERR_CLIENTINVALID;
 		}
 		else
 		if	(
@@ -3781,7 +3860,7 @@ HRESULT CDaCmnCharacter::get_ExtraData (BSTR *ExtraData)
 			&&	(!mFile->ReadNames ())
 			)
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTPROVERROR_CHARACTERVERSION;
 		}
 		else
 		if	(lFileName = mFile->FindName (mLangID))
@@ -3790,7 +3869,7 @@ HRESULT CDaCmnCharacter::get_ExtraData (BSTR *ExtraData)
 		}
 		else
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTPROVERROR_CHARACTERVERSION;
 		}
 	}
 	return lResult;
@@ -3810,7 +3889,7 @@ HRESULT CDaCmnCharacter::get_FileName (BSTR *FileName)
 
 		if	(!mFile)
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTERR_CLIENTINVALID;
 		}
 		else
 		{
@@ -3834,7 +3913,7 @@ HRESULT CDaCmnCharacter::get_FilePath (BSTR *FilePath)
 
 		if	(!mFile)
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTERR_CLIENTINVALID;
 		}
 		else
 		{
@@ -3860,7 +3939,7 @@ HRESULT CDaCmnCharacter::get_Animations (SAFEARRAY **Animations)
 
 		if	(!mFile)
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTERR_CLIENTINVALID;
 		}
 		else
 		{
@@ -3889,7 +3968,7 @@ HRESULT CDaCmnCharacter::get_States (SAFEARRAY **States)
 
 		if	(!mFile)
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTERR_CLIENTINVALID;
 		}
 		else
 		{
@@ -3919,7 +3998,7 @@ HRESULT CDaCmnCharacter::get_LanguageID (long *LanguageID)
 	else
 	if	(!mFile)
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	else
 	{
@@ -3942,7 +4021,7 @@ HRESULT CDaCmnCharacter::put_LanguageID (long LanguageID)
 
 	if	(!mFile)
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	else
 	{
@@ -4148,7 +4227,7 @@ HRESULT CDaCmnCharacter::get_Left (short *Left)
 		}
 		else
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTERR_CLIENTINVALID;
 		}
 		(*Left) = (short)lRect.left;
 	}
@@ -4179,7 +4258,7 @@ HRESULT CDaCmnCharacter::put_Left (short Left)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	return lResult;
 }
@@ -4210,7 +4289,7 @@ HRESULT CDaCmnCharacter::get_Top (short *Top)
 		}
 		else
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTERR_CLIENTINVALID;
 		}
 		(*Top) = (short)lRect.top;
 	}
@@ -4241,7 +4320,7 @@ HRESULT CDaCmnCharacter::put_Top (short Top)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	return lResult;
 }
@@ -4272,7 +4351,7 @@ HRESULT CDaCmnCharacter::get_Width (short *Width)
 		}
 		else
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTERR_CLIENTINVALID;
 		}
 		(*Width) = (short)lRect.Width();
 	}
@@ -4303,7 +4382,7 @@ HRESULT CDaCmnCharacter::put_Width (short Width)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	return lResult;
 }
@@ -4334,7 +4413,7 @@ HRESULT CDaCmnCharacter::get_Height (short *Height)
 		}
 		else
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTERR_CLIENTINVALID;
 		}
 		(*Height) = (short)lRect.Height();
 	}
@@ -4365,7 +4444,7 @@ HRESULT CDaCmnCharacter::put_Height (short Height)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	return lResult;
 }
@@ -4384,7 +4463,7 @@ HRESULT CDaCmnCharacter::get_OriginalWidth (short *OriginalWidth)
 	if	(!mFile)
 	{
 		(*OriginalWidth) = 0;
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	else
 	{
@@ -4405,7 +4484,7 @@ HRESULT CDaCmnCharacter::get_OriginalHeight (short *OriginalHeight)
 	if	(!mFile)
 	{
 		(*OriginalHeight) = 0;
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	else
 	{
@@ -4436,7 +4515,7 @@ HRESULT CDaCmnCharacter::get_Visible (VARIANT_BOOL *Visible)
 		}
 		else
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTERR_CLIENTINVALID;
 		}
 	}
 	return lResult;
@@ -4444,29 +4523,18 @@ HRESULT CDaCmnCharacter::get_Visible (VARIANT_BOOL *Visible)
 
 HRESULT CDaCmnCharacter::get_ActiveState (ActiveStateType *ActiveState)
 {
-	HRESULT					lResult = S_OK;
-	CAgentCharacterWnd *	lCharacterWnd;
-	ActiveStateType			lActiveState = ActiveState_Inactive;
+	HRESULT	lResult = S_OK;
+	short	lActiveState = ActiveState_Inactive;
 
 	if	(!mFile)
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	else
 	{
 		if	(IsClientActive ())
 		{
-			if	(
-					(lCharacterWnd = GetCharacterWnd ())
-				&&	(lCharacterWnd->m_hWnd == CAgentCharacterWnd::GetLastActive())
-				)
-			{
-				lActiveState = ActiveState_InputActive;
-			}
-			else
-			{
-				lActiveState = ActiveState_Active;
-			}
+			lActiveState = GetActiveState ();
 		}
 		else
 		{
@@ -4475,68 +4543,27 @@ HRESULT CDaCmnCharacter::get_ActiveState (ActiveStateType *ActiveState)
 	}
 	if	(ActiveState)
 	{
-		(*ActiveState) = lActiveState;
+		(*ActiveState) = (ActiveStateType)lActiveState;
 	}
 	return lResult;
 }
 
 HRESULT CDaCmnCharacter::put_ActiveState (ActiveStateType ActiveState)
 {
-	HRESULT					lResult = S_OK;
-	CAgentCharacterWnd *	lCharacterWnd;
 #ifdef	_DEBUG_ACTIVE
 	if	(LogIsActive (_DEBUG_ACTIVE))
 	{
 		LogMessage (_DEBUG_ACTIVE, _T("[%d] put_ActiveState [%hd]"), mCharID, ActiveState);
 	}
 #endif
+	HRESULT	lResult = SetActiveState ((short)ActiveState);
 
-	if	(ActiveState == ActiveState_Inactive)
-	{
-		if	(!SetClientActive (false, false))
-		{
-			if	(GetCharacterWnd ())
-			{
-				lResult = S_FALSE;
-			}
-			else
-			{
-				lResult = E_INVALIDARG;
-			}
-		}
-	}
-	else
-	if	(lCharacterWnd = GetCharacterWnd ())
-	{
-		if	(ActiveState == ActiveState_Active)
-		{
-			SetClientActive (true, false);
-		}
-		else
-		if	(ActiveState == ActiveState_InputActive)
-		{
-			if	(lCharacterWnd->IsCharShown ())
-			{
-				SetClientActive (true, true);
-			}
-			else
-			{
-				lResult = S_FALSE;
-			}
-		}
-		else
-		{
-			lResult = E_INVALIDARG;
-		}
-	}
-	else
-	{
 #ifdef	_STRICT_COMPATIBILITY
+	if	(lResult == AGENTERR_CLIENTINVALID)
+	{
 		lResult = E_INVALIDARG;
-#else
-		lResult = AGENTERR_CHARACTERINVALID;
-#endif
 	}
+#endif
 	return lResult;
 }
 
@@ -4553,7 +4580,7 @@ HRESULT CDaCmnCharacter::get_IdleState (VARIANT_BOOL *IdleState)
 	}
 	else
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	if	(IdleState)
 	{
@@ -4571,7 +4598,7 @@ HRESULT CDaCmnCharacter::get_OtherClientCount (long *OtherClientCount)
 
 	if	(!mFile)
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CLIENTINVALID;
 	}
 	else
 	{
@@ -4614,7 +4641,7 @@ HRESULT CDaCmnCharacter::get_MoveCause (MoveCauseType *MoveCause)
 		}
 		else
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTERR_CLIENTINVALID;
 		}
 	}
 	return lResult;
@@ -4638,7 +4665,7 @@ HRESULT CDaCmnCharacter::get_VisibilityCause (VisibilityCauseType *VisibilityCau
 		}
 		else
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lResult = AGENTERR_CLIENTINVALID;
 		}
 	}
 	return lResult;

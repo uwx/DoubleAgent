@@ -265,15 +265,15 @@ public:
 		InvokeHelper(0x28, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
 		return result;
 	}
-	BOOL get_AutoConnect()
+	short get_AutoConnect()
 	{
-		BOOL result;
-		InvokeHelper(0x29, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		short result;
+		InvokeHelper(0x29, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
 		return result;
 	}
-	void put_AutoConnect(BOOL newValue)
+	void put_AutoConnect(short newValue)
 	{
-		static BYTE parms[] = VTS_BOOL ;
+		static BYTE parms[] = VTS_I2 ;
 		InvokeHelper(0x29, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 	}
 	LPDISPATCH get_ControlCharacter()

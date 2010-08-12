@@ -26,6 +26,8 @@
 #include "FileVersionEx.h"
 #include "ImageBuffer.h"
 
+#pragma comment (lib,"comctl32.lib")
+
 #ifdef	_DEBUG
 //#define	_DEBUG_INSTANCE		LogDebug
 #endif
@@ -40,6 +42,9 @@ CPropPageCopyright::CPropPageCopyright()
 #ifdef	_DEBUG_INSTANCE
 	LogMessage (_DEBUG_INSTANCE, _T("[%p] CPropPageCopyright::CPropPageCopyright"), this);
 #endif
+	tSS <INITCOMMONCONTROLSEX, DWORD> lInitControls;
+	lInitControls.dwICC = ICC_WIN95_CLASSES|ICC_LINK_CLASS|ICC_INTERNET_CLASSES;
+	InitCommonControlsEx (&lInitControls);
 }
 
 CPropPageCopyright::~CPropPageCopyright()

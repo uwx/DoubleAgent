@@ -22,10 +22,11 @@
 #include "DaShellRes.h"
 #include "DaGuid.h"
 #include "DaVersion.h"
+#include "ThemedModule.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class __declspec(uuid("{1147E564-A208-11DE-ABF2-002421116FB2}")) CDaShellModule : public CAtlDllModuleT <CDaShellModule>
+class __declspec(uuid("{1147E564-A208-11DE-ABF2-002421116FB2}")) CDaShellModule : public CAtlDllModuleT <CDaShellModule>, public CThemedModule
 {
 public:
 	CDaShellModule ();

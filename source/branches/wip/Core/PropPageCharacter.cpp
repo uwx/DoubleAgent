@@ -309,7 +309,8 @@ void CPropPageCharacter::ShowPreview ()
 		&&	(mPreviewWnd->Open (CAtlString ((BSTR)mAgentFile->GetPath())))
 		)
 	{
-		mCharPreview.ModifyStyleEx (WS_EX_CLIENTEDGE, WS_EX_STATICEDGE, SWP_FRAMECHANGED);
+		mCharPreview.ModifyStyleEx (WS_EX_STATICEDGE|WS_EX_CLIENTEDGE, 0, SWP_FRAMECHANGED);
+		mCharPreview.ModifyStyle (0, WS_BORDER, SWP_FRAMECHANGED);
 		mCharPreview.ShowWindow (SW_SHOWNA);
 
 		mPreviewWnd->GetWindowRect (&lPreviewRect);

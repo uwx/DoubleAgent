@@ -31,6 +31,7 @@
 #include "DebugStr.h"
 
 #ifdef	_DEBUG
+#define	_DEBUG_ACTIVE			(GetProfileDebugInt(_T("DebugActive"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_NOTIFY_PATH		(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF)
 #define	_DEBUG_SERVER_LEVEL		LogNormal
 #define	_DEBUG_DLL_UNLOAD		LogNormal
@@ -431,6 +432,83 @@ bool CDaControlModule::IsAppActive () const
 	return mAppActive;
 }
 
+bool CDaControlModule::VerifyAppActive () const
+{
+	bool	lRet = false;
+	
+#ifdef	_DEBUG_ACTIVE_NOT
+	if	(LogIsActive (_DEBUG_ACTIVE))
+	{
+		try
+		{
+			BOOL						lIsGUIThread = IsGUIThread (FALSE);
+			HWND						lForegroundWnd = GetForegroundWindow ();
+			DWORD						lForegroundProcess = 0;
+			tSS <GUITHREADINFO, DWORD>	lForegroundInfo;
+			tSS <GUITHREADINFO, DWORD>	lThreadInfo;
+
+			if	(lForegroundWnd)
+			{
+				GetWindowThreadProcessId (lForegroundWnd, &lForegroundProcess);
+			}
+			LogMessage (_DEBUG_ACTIVE, _T("IsAppActive IsGUIDThread [%d] ForegroundWnd [%u] [%p]"), lIsGUIThread, lForegroundProcess);
+			if	(GetGUIThreadInfo (NULL, &lForegroundInfo))
+			{
+				lForegroundProcess = 0;
+				if	(lForegroundInfo.hwndActive)
+				{
+					GetWindowThreadProcessId (lForegroundInfo.hwndActive, &lForegroundProcess);
+				}
+				LogMessage (_DEBUG_ACTIVE, _T("  Foreground Active [%u] [%p]"), lForegroundProcess, lForegroundInfo.hwndActive);  
+			}		
+			if	(
+					(lIsGUIThread)
+				&&	(GetGUIThreadInfo (GetCurrentThreadId(), &lThreadInfo))
+				)
+			{
+				lForegroundProcess = 0;
+				if	(lForegroundInfo.hwndActive)
+				{
+					GetWindowThreadProcessId (lThreadInfo.hwndActive, &lForegroundProcess);
+				}
+				LogMessage (_DEBUG_ACTIVE, _T("  Thread Active [%u] [%p]"), lForegroundProcess, lThreadInfo.hwndActive);  
+			}
+		}
+		catch AnyExceptionSilent
+	}
+#endif
+	try
+	{
+		BOOL						lIsGUIThread = IsGUIThread (FALSE);
+		HWND						lForegroundWnd = GetForegroundWindow ();
+		DWORD						lForegroundProcess = 0;
+		tSS <GUITHREADINFO, DWORD>	lForegroundInfo;
+
+		if	(
+				(lForegroundWnd = GetForegroundWindow ())
+			&&	(GetWindowThreadProcessId (lForegroundInfo.hwndActive, &lForegroundProcess))
+			&&	(GetCurrentProcessId () == lForegroundProcess)
+			)
+		{
+			lRet = true;
+		}
+		else
+		if	(
+				(lIsGUIThread)
+			&&	(GetGUIThreadInfo (NULL, &lForegroundInfo))
+			&&	(lForegroundInfo.hwndActive)
+			&&	(GetWindowThreadProcessId (lForegroundInfo.hwndActive, &lForegroundProcess))
+			&&	(GetCurrentProcessId () == lForegroundProcess)
+			)
+		{
+			lRet = true;
+		}
+	}
+	catch AnyExceptionSilent
+	
+	return lRet;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -478,14 +556,14 @@ STDAPI DllRegisterServer(void)
 		||	(CUserSecurity::IsUserAdministrator ())
 		)
 	{
-		_AtlModule.DllUnregisterServer();
 		AtlUnRegisterTypeLib (_AtlBaseModule.GetModuleInstance(), _T("\\2"));
+		_AtlModule.DllUnregisterServer();
 
+		if	(SUCCEEDED (lResult))
+		{
+			AtlRegisterTypeLib (_AtlBaseModule.GetModuleInstance(), _T("\\2"));
+		}
 		lResult = _AtlModule.DllRegisterServer();
-		//if	(SUCCEEDED (lResult))
-		//{
-		//	AtlRegisterTypeLib (_AtlBaseModule.GetModuleInstance(), _T("\\2"));
-		//}
 	}
 	else
 	{

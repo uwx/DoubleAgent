@@ -27,8 +27,8 @@
 class ATL_NO_VTABLE __declspec(uuid("{1147E51F-A208-11DE-ABF2-002421116FB2}")) DaSvrTTSEngine :
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public CComCoClass<DaSvrTTSEngine, &__uuidof(DaSvrTTSEngine)>,
-	public IDispatchImpl<IDaSvrTTSEngine, &__uuidof(IDaSvrTTSEngine), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
-	public IProvideClassInfoImpl<&__uuidof(DaSvrTTSEngine), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
+	public IDispatchImpl<IDaSvrTTSEngine, &__uuidof(IDaSvrTTSEngine), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>,
+	public IProvideClassInfoImpl<&__uuidof(DaSvrTTSEngine), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>,
 	public ISupportErrorInfo,
 	public CDaCmnTTSEngine,
 	public CSvrObjLifetime

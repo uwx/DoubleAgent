@@ -5,9 +5,6 @@
     <Setting Name="RaiseRequestErrors" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="AutoConnect" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="MainPage" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
@@ -17,14 +14,17 @@
     <Setting Name="CharacterPage" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="AutoConnect" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
     <Setting Name="SpeakText" Type="System.String" Scope="User">
-      <Value Profile="(Default)"> Say something</Value>
+      <Value Profile="(Default)">Say something and then something else</Value>
     </Setting>
     <Setting Name="ThinkText" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Think something</Value>
+      <Value Profile="(Default)">Think something and then something else</Value>
     </Setting>
     <Setting Name="Location" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">100, 100</Value>
+      <Value Profile="(Default)">200, 150</Value>
     </Setting>
   </Settings>
 </SettingsFile>

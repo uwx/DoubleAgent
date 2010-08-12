@@ -36,6 +36,7 @@
 #include "DaCtlSREngine.h"
 #include "DaCtlSREngines.h"
 #include "DaGlobalConfig.h"
+#include "LocalCharacter.h"
 #include "Registry.h"
 #include "RegistrySearch.h"
 #include "ErrorInfo.h"
@@ -71,7 +72,7 @@ DaControl::DaControl()
 	CListeningAnchor (_AtlModule),
 	mPropDataVer (_PROP_DATA_VER),
 	mRaiseRequestErrors (true),
-	mAutoConnect (true),
+	mAutoConnect (1),
 	mLocalEventNotify (this),
 	mLocalCharacterStyle (CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_AutoPopupMenu|CharacterStyle_IconShown),
 	mFinalReleased (false)
@@ -83,6 +84,51 @@ DaControl::DaControl()
 	}
 #endif
 
+#ifdef	_DEBUG
+	if	(GetProfileDebugInt(_T("ForceStandAlone")) > 0)
+	{
+		mAutoConnect = 0;
+	}
+
+	if	(GetProfileDebugInt(_T("ForceSuspendPause")) > 0)
+	{
+		mLocalCharacterStyle |= CharacterStyle_SuspendPause;
+	}
+	else
+	if	(GetProfileDebugInt(_T("ForceSuspendStop")) > 0)
+	{
+		mLocalCharacterStyle |= CharacterStyle_SuspendStop;
+	}
+	if	(GetProfileDebugInt(_T("ForceSuspendHide")) > 0)
+	{
+		if	(mLocalCharacterStyle & (CharacterStyle_SuspendPause|CharacterStyle_SuspendStop))
+		{
+			mLocalCharacterStyle |= CharacterStyle_SuspendHide;
+		}
+	}
+
+	if	(GetProfileDebugInt(_T("ForceSmoothed")) > 0)
+	{
+		mLocalCharacterStyle |= CharacterStyle_Smoothed;
+	}
+	else
+	if	(GetProfileDebugInt(_T("ForceSmoothEdges")) > 0)
+	{
+		mLocalCharacterStyle |= CharacterStyle_SmoothEdges;
+	}
+
+	if	(GetProfileDebugInt(_T("ForceIconShown")) < 0)
+	{
+		mLocalCharacterStyle &= ~CharacterStyle_IconShown;
+	}
+	if	(GetProfileDebugInt(_T("ForceSoundEffects")) < 0)
+	{
+		mLocalCharacterStyle &= ~CharacterStyle_SoundEffects;
+	}
+#endif
+
+	CInstanceAnchor::mOwnerWnd = this;
+	CListeningAnchor::mOwnerWnd = this;
 	_AtlModule.OnControlCreated (this);
 #ifdef	_DEBUG
 	_AtlModule.mComObjects.Add ((LPDISPATCH)this);
@@ -357,7 +403,35 @@ HRESULT DaControl::ConnectServer ()
 		mServerNotifySink->Terminate ();
 		SafeFreeSafePtr (mServerNotifySink);
 
-		lResult = LogComErr (LogNormal, CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server"));
+#ifdef	_WIN64
+		if	(
+				(mAutoConnect != 32)
+			||	(LogComErr (LogNormal, lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server (32)")) == REGDB_E_CLASSNOTREG)
+			)
+		{
+			if	(
+					(LogComErr (LogNormal, lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server (64)")) == REGDB_E_CLASSNOTREG)
+				&&	(mAutoConnect != 32)
+				)
+			{
+				LogComErr (LogNormal, lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server (32)"));
+			}
+		}
+#else
+		if	(
+				(mAutoConnect != 64)
+			||	(LogComErr (LogNormal, lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server (64)")) == REGDB_E_CLASSNOTREG)
+			)
+		{
+			if	(
+					(LogComErr (LogNormal, lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server (32)")) == REGDB_E_CLASSNOTREG)
+				&&	(mAutoConnect != 64)
+				)
+			{
+				LogComErr (LogNormal, lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server (64)"));
+			}
+		}
+#endif		
 
 		if	(
 				(SUCCEEDED (lResult))
@@ -368,7 +442,7 @@ HRESULT DaControl::ConnectServer ()
 		}
 		if	(mServer)
 		{
-			mServer->put_CharacterStyle (mLocalCharacterStyle);
+			mServer->put_CharacterStyle (mLocalCharacterStyle &~LocalCharacterStyle);
 		}
 
 #ifdef	_LOG_INSTANCE
@@ -397,7 +471,7 @@ HRESULT DaControl::DisconnectServer (bool pForce)
 		&&	(LogIsActive())
 		)
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::DisconnectServer [%p(%u)] Force [%u] Sink [%u]"), this, max(m_dwRef,-1), mServer.GetInterfacePtr(), CoIsHandlerConnected(mServer), pForce, (mServerNotifySink ? mServerNotifySink->mServerNotifyId : 0));
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::DisconnectServer [%p(%d)] Force [%u] Sink [%u]"), this, max(m_dwRef,-1), mServer.GetInterfacePtr(), CoIsHandlerConnected(mServer), pForce, (mServerNotifySink ? mServerNotifySink->mServerNotifyId : 0));
 	}
 #endif
 	DisconnectNotify (pForce);
@@ -906,7 +980,7 @@ IDaCtlRequest * DaControl::PutRequest (DaRequestCategory pCategory, long pReqID,
 				lRequest->mCategory = pCategory;
 			}
 #ifdef	_DEBUG_REQUEST
-			LogMessage (_DEBUG_REQUEST, _T("  Reuse Request   [%p(%d)] [%d] Status [%s] Category [%s]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr(), lRequest->CategoryStr());
+			LogMessage (_DEBUG_REQUEST, _T("  Reuse Request   [%p(%d)(%d)] Status [%s] Category [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr(), lRequest->CategoryStr());
 #endif
 		}
 
@@ -931,7 +1005,7 @@ IDaCtlRequest * DaControl::PutRequest (DaRequestCategory pCategory, long pReqID,
 			{
 				lRequest->mStatus = IS_INTERRUPT_ERROR (lRequest->mResult) ? RequestStatus_Interrupted : RequestStatus_Failed;
 #ifdef	_DEBUG_REQUEST
-				LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)] [%d] Status [%s]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr());
+				LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)(%d)] Status [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr());
 #endif
 			}
 			else
@@ -939,7 +1013,7 @@ IDaCtlRequest * DaControl::PutRequest (DaRequestCategory pCategory, long pReqID,
 			{
 				lRequest->mStatus = RequestStatus_Success;
 #ifdef	_DEBUG_REQUEST
-				LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)] [%d] Status [%s]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr());
+				LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)(%d)] Status [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr());
 #endif
 			}
 			else
@@ -947,7 +1021,7 @@ IDaCtlRequest * DaControl::PutRequest (DaRequestCategory pCategory, long pReqID,
 			{
 				lRequest->mStatus = RequestStatus_InProgress;
 #ifdef	_DEBUG_REQUEST
-				LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)] [%d] Status [%s]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr());
+				LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)(%d)] Status [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr());
 #endif
 			}
 		}
@@ -971,7 +1045,7 @@ IDaCtlRequest * DaControl::PutRequest (DaRequestCategory pCategory, long pReqID,
 		else
 		if	(lRequest)
 		{
-			LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)] [%d] Status [%s] Category [%s] Deferred [%p]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr(), lRequest->CategoryStr(), m_hWnd);
+			LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)(%d)] Status [%s] Category [%s] Deferred [%p]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr(), lRequest->CategoryStr(), m_hWnd);
 		}
 #endif
 
@@ -1047,7 +1121,7 @@ void DaControl::CompleteRequests (bool pIdleTime)
 					//	is complete, but the application did not use the returned request object.
 					//
 #ifdef	_DEBUG_REQUEST
-					LogMessage (_DEBUG_REQUEST, _T("  Release Request [%p(%d)] [%d] Status [%s] Category [%s]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr(), lRequest->CategoryStr());
+					LogMessage (_DEBUG_REQUEST, _T("  Release Request [%p(%d)(%d)] Status [%s] Category [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr(), lRequest->CategoryStr());
 #endif
 					mActiveRequests.RemoveKey (lRequest->mReqID);
 					mCompletedRequests.Add (lRequest);
@@ -1060,7 +1134,7 @@ void DaControl::CompleteRequests (bool pIdleTime)
 #ifdef	_DEBUG_REQUEST
 						if	(lRequest->mCategory & (DaRequestNotifyStart|DaRequestNotifyComplete))
 						{
-							LogMessage (_DEBUG_REQUEST, _T("  Deferred Request [%p(%d)] [%d] Status [%s] Category [%s]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr(), lRequest->CategoryStr());
+							LogMessage (_DEBUG_REQUEST, _T("  Deferred Request [%p(%d)(%d)] Status [%s] Category [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr(), lRequest->CategoryStr());
 						}
 #endif
 						lRequest->mCategory = (DaRequestCategory)(lRequest->mCategory & ~(DaRequestNotifyStart|DaRequestNotifyComplete));
@@ -1083,7 +1157,7 @@ void DaControl::CompleteRequests (bool pIdleTime)
 							lRequest->mCategory = (DaRequestCategory)(lRequest->mCategory | DaRequestNotifyStart);
 
 #ifdef	_DEBUG_REQUEST
-							LogMessage (_DEBUG_REQUEST, _T("  Queued Request [%p(%d)] [%d] Status [%s] Category [%s]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr(), lRequest->CategoryStr());
+							LogMessage (_DEBUG_REQUEST, _T("  Queued Request [%p(%d)(%d)] Status [%s] Category [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr(), lRequest->CategoryStr());
 #endif
 #ifdef	_DEBUG_NOTIFY
 							LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CompleteRequests::RequestStart [%d]"), this, max(m_dwRef,-1), lRequest->mReqID);
@@ -1116,7 +1190,7 @@ void DaControl::CompleteRequests (bool pIdleTime)
 							lRequest->mCategory = (DaRequestCategory)(lRequest->mCategory | DaRequestNotifyComplete);
 
 #ifdef	_DEBUG_REQUEST
-							LogMessage (_DEBUG_REQUEST, _T("  Queued Request [%p(%d)] [%d] Status [%s] Category [%s]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr(), lRequest->CategoryStr());
+							LogMessage (_DEBUG_REQUEST, _T("  Queued Request [%p(%d)(%d)] Status [%s] Category [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr(), lRequest->CategoryStr());
 #endif
 #ifdef	_DEBUG_NOTIFY
 							LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CompleteRequests::RequestComplete [%d]"), this, max(m_dwRef,-1), lRequest->mReqID);
@@ -1133,7 +1207,7 @@ void DaControl::CompleteRequests (bool pIdleTime)
 							}
 						}
 #ifdef	_DEBUG_REQUEST
-						LogMessage (_DEBUG_REQUEST, _T("  Release Request [%p(%d)] [%d] Status [%s] Category [%s]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr(), lRequest->CategoryStr());
+						LogMessage (_DEBUG_REQUEST, _T("  Release Request [%p(%d)(%d)] Status [%s] Category [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr(), lRequest->CategoryStr());
 #endif
 						mActiveRequests.RemoveKey (lRequest->mReqID);
 						mCompletedRequests.Add (lRequest);
@@ -1143,7 +1217,7 @@ void DaControl::CompleteRequests (bool pIdleTime)
 					else
 					if	(lRequest->mStatus == RequestStatus_Pending)
 					{
-						LogMessage (_DEBUG_REQUEST, _T("  Pending Request [%p(%d)] [%d] Status [%s] Category [%s]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr(), lRequest->CategoryStr());
+						LogMessage (_DEBUG_REQUEST, _T("  Pending Request [%p(%d)(%d)] Status [%s] Category [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr(), lRequest->CategoryStr());
 					}
 #endif
 				}
@@ -1208,7 +1282,7 @@ void DaControl::RequestCreated (DaCtlRequest * pRequest)
 		pRequest->AddRef ();
 		mActiveRequests.SetAt (pRequest->mReqID, pRequest);
 #ifdef	_DEBUG_REQUEST
-		LogMessage (_DEBUG_REQUEST, _T("  New Request     [%p(%d)] [%d] Status [%s] Category [%s] Count [%d]"), pRequest, pRequest->m_dwRef, pRequest->mReqID, pRequest->StatusStr(), pRequest->CategoryStr(), mActiveRequests.GetCount());
+		LogMessage (_DEBUG_REQUEST, _T("  New Request     [%p(%d)(%d)] Status [%s] Category [%s] Count [%d]"), pRequest, pRequest->mReqID, pRequest->m_dwRef, pRequest->StatusStr(), pRequest->CategoryStr(), mActiveRequests.GetCount());
 #endif
 	}
 }
@@ -1223,7 +1297,7 @@ void DaControl::RequestDeleted (DaCtlRequest * pRequest)
 		mActiveRequests.RemoveKey (pRequest->mReqID);
 		mCompletedRequests.Remove (pRequest);
 #ifdef	_DEBUG_REQUEST
-		LogMessage (_DEBUG_REQUEST, _T("  Deleted Request [%p(%d)] [%d] Status [%s] Category [%s] Count [%d]"), pRequest, pRequest->m_dwRef, pRequest->mReqID, pRequest->StatusStr(), pRequest->CategoryStr(), mActiveRequests.GetCount());
+		LogMessage (_DEBUG_REQUEST, _T("  Deleted Request [%p(%d)(%d)] Status [%s] Category [%s] Count [%d]"), pRequest, pRequest->mReqID, pRequest->m_dwRef, pRequest->StatusStr(), pRequest->CategoryStr(), mActiveRequests.GetCount());
 #endif
 	}
 }
@@ -1280,7 +1354,7 @@ LRESULT DaControl::OnHotKey(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 LRESULT DaControl::OnActivateApp(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 #ifdef	_DEBUG_ACTIVE
-	LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)] DaControl::OnActivateApp [%u]"), this, max(m_dwRef,-1), wParam);
+	LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)] DaControl::OnActivateApp [%u %u]"), this, max(m_dwRef,-1), wParam, _AtlModule.VerifyAppActive());
 #endif
 	_AtlModule._AppActivated (wParam?true:false);
 	bHandled = FALSE;
@@ -1322,7 +1396,7 @@ HWND DaControl::CreateControlWindow(HWND hWndParent, RECT& rcPos)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::CreateControlWindow [%p] [%p] [%s] IsDesigning [%u]"), this, max(m_dwRef,-1), m_spInPlaceSite.p, hWndParent, FormatRect(rcPos), IsDesigning());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::CreateControlWindow [%p] [%p] [%s] IsDesigning [%u] IsAppActive [%u %u]"), this, max(m_dwRef,-1), m_spInPlaceSite.p, hWndParent, FormatRect(rcPos), IsDesigning(), _AtlModule.IsAppActive(), _AtlModule.VerifyAppActive());
 	}
 #endif
 	if	(IsDesigning ())
@@ -2126,7 +2200,7 @@ STDMETHODIMP DaControl::put_Connected (VARIANT_BOOL Connected)
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaControl::get_AutoConnect (VARIANT_BOOL *AutoConnect)
+STDMETHODIMP DaControl::get_AutoConnect (short *AutoConnect)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -2136,7 +2210,11 @@ STDMETHODIMP DaControl::get_AutoConnect (VARIANT_BOOL *AutoConnect)
 
 	if	(AutoConnect)
 	{
-		(*AutoConnect) = mAutoConnect ? VARIANT_TRUE : VARIANT_FALSE;
+#ifdef	_WIN64
+		(*AutoConnect) = (mAutoConnect==32) ? 32 : (mAutoConnect) ? 64 : 0;
+#else	
+		(*AutoConnect) = (mAutoConnect==64) ? 64 : (mAutoConnect) ? 32 : 0;
+#endif		
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl));
@@ -2149,7 +2227,7 @@ STDMETHODIMP DaControl::get_AutoConnect (VARIANT_BOOL *AutoConnect)
 	return lResult;
 }
 
-STDMETHODIMP DaControl::put_AutoConnect (VARIANT_BOOL AutoConnect)
+STDMETHODIMP DaControl::put_AutoConnect (short AutoConnect)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -2157,7 +2235,7 @@ STDMETHODIMP DaControl::put_AutoConnect (VARIANT_BOOL AutoConnect)
 #endif
 	HRESULT	lResult = S_OK;
 
-	mAutoConnect = (AutoConnect!=VARIANT_FALSE);
+	mAutoConnect = (AutoConnect==32) ? 32 : (AutoConnect==64) ? 64 : (AutoConnect) ? 1 : 0;
 
 	PutControlError (lResult, __uuidof(IDaControl));
 #ifdef	_LOG_RESULTS
@@ -2712,8 +2790,20 @@ STDMETHODIMP DaControl::ShowDefaultCharacterProperties (VARIANT X, VARIANT Y)
 
 		try
 		{
-			lXPos.ChangeType (VT_I2);
-			lYPos.ChangeType (VT_I2);
+			if	(
+					(V_VT (&lXPos) != VT_EMPTY)
+				&&	(V_VT (&lXPos) != VT_ERROR)
+				)
+			{
+				lXPos.ChangeType (VT_I2);
+			}
+			if	(
+					(V_VT (&lYPos) != VT_EMPTY)
+				&&	(V_VT (&lYPos) != VT_ERROR)
+				)
+			{
+				lYPos.ChangeType (VT_I2);
+			}
 		}
 		catch AnyExceptionSilent
 
@@ -2948,7 +3038,7 @@ STDMETHODIMP DaControl::put_CharacterStyle (long CharacterStyle)
 		{
 			try
 			{
-				lResult = mServer->put_CharacterStyle (CharacterStyle);
+				lResult = mServer->put_CharacterStyle (CharacterStyle &~LocalCharacterStyle);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServer);
@@ -3908,7 +3998,7 @@ STDMETHODIMP DaControl::put_ControlCharacter (IDaCtlCharacter2 *ControlCharacter
 //
 /////////////////////////////////////////////////////////////////////////////
 
-typedef CStockPropImpl<DaControl, IDaControl2, &__uuidof(IDaControl2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR> thisStockProp;
+typedef CStockPropImpl<DaControl, IDaControl2, &__uuidof(IDaControl2), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer> thisStockProp;
 
 HRESULT STDMETHODCALLTYPE DaControl::put_AutoSize (VARIANT_BOOL AutoSize)
 {

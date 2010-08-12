@@ -700,7 +700,7 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 			_LogProgIdPlatform (pLogLevel, _T(_SERVER_PROGID_VER), _T(_SERVER_PROGID_VER));
 			_LogAppIdPlatform (pLogLevel, __uuidof(DaServer), _T(_SERVER_PROGID_NAME))
 
-			_LogClassIdPlatform (pLogLevel, __uuidof(CDaAgentCtl), _T(_CONTROL_PROGID_NAME))
+			_LogClassIdPlatform (pLogLevel, __uuidof(DaControl), _T(_CONTROL_PROGID_NAME))
 			_LogProgIdPlatform (pLogLevel, _T(_CONTROL_PROGID), _T(_CONTROL_PROGID));
 			_LogProgIdPlatform (pLogLevel, _T(_CONTROL_PROGID_VER), _T(_CONTROL_PROGID_VER));
 
@@ -720,7 +720,7 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 				_LogAppIdAny (pLogLevel, __uuidof(CDaElevatedSettings), _T("Double Agent Emulation Management"))
 			}
 
-			_LogTypeLibAny (pLogLevel, __uuidof(DaServerTypeLib), _T(_SERVER_PROGID_NAME));
+			_LogTypeLibAny (pLogLevel, __uuidof(DoubleAgentSvr_TypeLib), _T(_SERVER_PROGID_NAME));
 #ifdef	_DEBUG
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaServer), _T("IDaServer"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaServer2), _T("IDaServer2"));
@@ -748,7 +748,7 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSREngines), _T("IDaSvrSREngines"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrNotifySink2), _T("IDaSvrNotifySink2"));
 #endif
-			_LogTypeLibAny (pLogLevel, __uuidof(DaControlTypeLib), _T(_CONTROL_PROGID_NAME));
+			_LogTypeLibAny (pLogLevel, __uuidof(DoubleAgentCtl_TypeLib), _T(_CONTROL_PROGID_NAME));
 #ifdef	_DEBUG
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaControl), _T("IDaControl"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaControl2), _T("IDaControl2"));
