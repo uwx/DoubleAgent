@@ -112,7 +112,7 @@
 	<properties>
 		<note name="ThisClientOnly">This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</note>
 		<note name="AllClients">This property applies to all clients of the character.</note>
-		<note name="UsesSapi">Double Agent's speech engine requirements are based on the Microsoft Speech API. Engines supporting Microsoft Agent's SAPI requirements can be installed and used with Double Agent.</note>
+		<note name="UsesSapi">Double Agent's speech engine requirements are based on the Microsoft<sup>®</sup> Speech API. Engines supporting Microsoft<sup>®</sup> Agent's SAPI requirements can be installed and used with Double Agent.</note>
 		<note name="NoSoundSupport">This property also returns the empty string if you have no compatible sound support installed on your system.</note>
 		<note name="SlowSoundLoad">Querying this property does not typically return an error. However, if the speech engine takes an abnormally long time to load, you may get an error indicating that the query timed out.</note>
 		<note name="ReadOnlySetting">The property setting affects all characters and is read-only; only the user can set this property value.</note>
@@ -129,7 +129,7 @@
 			If the high byte of an OLECOLOR is &hexprefix;80, the lower 3 bytes contain a <glossary>system color index</glossary>.
 		</para>
 		<para name="DefaultBalloonFont">
-			The default values for the font of a character's <a class="see" href="&dawbref;">&dawbname;</a> are set in the Microsoft Agent Character Editor. In addition, the user can override font settings for all characters in the <a class="see" href="&dapsref;#Output">&dapsname;</a> window.
+			The default values for the font of a character's <a class="see" href="&dawbref;">&dawbname;</a> are set in the Microsoft<sup>®</sup> Agent Character Editor. In addition, the user can override font settings for all characters in the <a class="see" href="&dapsref;#Output">&dapsname;</a> window.
 		</para>
 		<details name="VoiceCaption">
 			<h4 class="details">Format</h4>

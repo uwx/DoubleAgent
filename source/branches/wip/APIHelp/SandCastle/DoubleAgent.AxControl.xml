@@ -113,11 +113,11 @@
 </member>
 
 <member name="M:DoubleAgent.AxControl.AxControl.ShowDefaultCharacterProperties(System.Object,System.Object)">
-<summary> Shows the <a class="see" href="../html/UI_PropSheet.htm#Gallery">Gallery</a> page of the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window.</summary>
+<summary> Shows the <a class="see" href="../Reference/UI_PropSheet.htm#Gallery">Gallery</a> page of the <a class="see" href="../Reference/UI_PropSheet.htm">Advanced Character Options</a> window.</summary>
 <param name="X">The horizontal position, in pixels, of the <see cref="P:DoubleAgent.Control.PropertySheet.Left" /> window. This parameter is optional. For programming languages that don't support optional parameters, a negative value will be ignored.</param>
 <param name="Y">The vertical position, in pixels, of the <see cref="P:DoubleAgent.Control.PropertySheet.Top" /> window. This parameter is optional. For programming languages that don't support optional parameters, a negative value will be ignored.</param>
 <remarks>
-<para>This method is obsolete, but is still supported for backward compatibility. Calling it shows the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window. New applications should use the <see cref="T:DoubleAgent.Control.PropertySheet" /> Object instead.
+<para>This method is obsolete, but is still supported for backward compatibility. Calling it shows the <a class="see" href="../Reference/UI_PropSheet.htm">Advanced Character Options</a> window. New applications should use the <see cref="T:DoubleAgent.Control.PropertySheet" /> Object instead.
 </para>
 <para>If you don't specify the <paramref name="X" /> and <paramref name="Y" /> coordinates (or use a negative value for programming languages that don't support optional parameters), the window appears at the last location it was displayed.
 </para>
@@ -174,7 +174,7 @@
 <remarks>
 <para>If this property is <keyword>non-zero</keyword>, then the control will automatically establish a connection with the server the first time it's required. To use the control in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a> mode, you must set this property to <keyword>zero</keyword>.
 </para>
-<para>For compatibility with Microsoft Agent, the default value for this property is <keyword>True</keyword>.
+<para>For compatibility with Microsoft<sup>®</sup> Agent, the default value for this property is <keyword>True</keyword>.
 </para>
 </remarks>
 <seealso cref="P:DoubleAgent.AxControl.AxControl.Connected" />
@@ -311,12 +311,12 @@
 <item name="AutoPopupMenu"><term xml:space="preserve">
 &amp;H00000004 = <keyword>AutoPopupMenu</keyword>
 </term>
-<description>A right-click on the character or it's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> automatically shows a <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a>.</description>
+<description>A right-click on the character or it's <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a> automatically shows a <a class="see" href="../Reference/UI_Intro.htm#Menu">pop-up menu</a>.</description>
 </item>
 <item name="IconShown"><term xml:space="preserve">
 &amp;H00000008 = <keyword>IconShown</keyword>
 </term>
-<description>The character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> in the taskbar notification area.</description>
+<description>The character has a <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a> in the taskbar notification area.</description>
 </item>
 <item name="SmoothEdges"><term xml:space="preserve">
 &amp;H00000020 = <keyword>SmoothEdges</keyword>
@@ -350,7 +350,7 @@
 </para>
 <para>The <see class="" cref="F:DoubleAgent.Control.CharacterStyleFlags.Smoothed" /> and <see class="" cref="F:DoubleAgent.Control.CharacterStyleFlags.SmoothEdges" /> flags can only be changed here. Once a <see cref="T:DoubleAgent.Control.Character" /> is loaded, these bits <strong>cannot</strong> be changed in it's <see cref="P:DoubleAgent.Control.Character.Style" /> property. Also, these two settings are only used the first time the character is loaded. If another client has already loaded the character, it's smoothing settings will not change. If your client application is the first client to load the character, then your smoothing settings will apply to all clients.
 </para>
-<note>For compatibility with Microsoft Agent, the <see class="" cref="F:DoubleAgent.Control.CharacterStyleFlags.IconShown" /> flag is set by default. To load a <see cref="T:DoubleAgent.Control.Character" /> without showing it's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, set the <see class="" cref="F:DoubleAgent.Control.CharacterStyleFlags.IconShown" /> flag off.</note>
+<note>For compatibility with Microsoft<sup>®</sup> Agent, the <see class="" cref="F:DoubleAgent.Control.CharacterStyleFlags.IconShown" /> flag is set by default. To load a <see cref="T:DoubleAgent.Control.Character" /> without showing it's <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>, set the <see class="" cref="F:DoubleAgent.Control.CharacterStyleFlags.IconShown" /> flag off.</note>
 </remarks>
 <seealso cref="P:DoubleAgent.Control.Character.Style" />
 <seealso cref="T:DoubleAgent.Control.CharacterStyleFlags" />
@@ -448,7 +448,7 @@
 <remarks>
 <para>The <glossary>input-active</glossary> client receives mouse and speech input events for the character. Double Agent sends this event only to the client that becomes <glossary>input-active</glossary>.
 </para>
-<para>This event can occur when the user uses your <see cref="T:DoubleAgent.Control.Commands" /> Collection, for example, by choosing a <see cref="T:DoubleAgent.Control.Commands" /> Collection entry in the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window or in the <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a> window for a character. It can also occur when the user selects a character (by clicking or speaking its name), when a character becomes visible, or when the character of another client application becomes hidden.
+<para>This event can occur when the user uses your <see cref="T:DoubleAgent.Control.Commands" /> Collection, for example, by choosing a <see cref="T:DoubleAgent.Control.Commands" /> Collection entry in the <a class="see" href="../Reference/UI_Intro.htm#VoiceCommands">Voice Commands</a> window or in the <a class="see" href="../Reference/UI_Intro.htm#Menu">pop-up menu</a> window for a character. It can also occur when the user selects a character (by clicking or speaking its name), when a character becomes visible, or when the character of another client application becomes hidden.
 </para>
 <para>You can also call the <see cref="M:DoubleAgent.Control.Character.Activate(System.Object)" /> method with <paramref name="State" /> set to <keyword xml:space="preserve">2</keyword> (<see class="see" cref="F:DoubleAgent.Control.ActiveStateType.InputActive" />) to explicitly make the character topmost, which results in your client application becoming <glossary>input-active</glossary> and triggers this event. However, this event does not occur if you use the <see cref="M:DoubleAgent.Control.Character.Activate(System.Object)" /> method only to specify whether or not your client is the active client of the character.
 </para>
@@ -457,6 +457,13 @@
 <seealso cref="M:DoubleAgent.Control.Character.Activate(System.Object)" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDeactivateInput" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlActiveClientChange" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlActivateInputEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" /> event.
+</para>
+</summary>
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlActiveClientChange">
@@ -477,7 +484,7 @@
 <remarks>
 <para>When multiple clients (<see cref="T:DoubleAgent.AxControl.AxControl" /> instances) share the same character, the active client of the character receives mouse input (for example, click or drag events). Similarly, when multiple characters are displayed, the active client of the topmost character (also known as the <glossary>input-active</glossary> client) receives <see cref="E:DoubleAgent.AxControl.AxControl.CtlCommand" /> events.
 </para>
-<para>A client application may receive this event when the user selects one of the client's entries in the character's <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a> or by voice command, when the client application changes its active status, or when another client terminates.
+<para>A client application may receive this event when the user selects one of the client's entries in the character's <a class="see" href="../Reference/UI_Intro.htm#Menu">pop-up menu</a> or by voice command, when the client application changes its active status, or when another client terminates.
 </para>
 <para>Double Agent sends this event only to the clients that are directly affected; that either become the active client or stop being the active client.
 </para>
@@ -489,25 +496,39 @@
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDeactivateInput" />
 </member>
 
+<member name="T:DoubleAgent.AxControl.CtlActiveClientChangeEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlActiveClientChange" /> event.
+</para>
+</summary>
+</member>
+
 <member name="E:DoubleAgent.AxControl.AxControl.CtlAgentPropertyChange">
-<summary> Signalled when the user changes a property in the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window.</summary>
+<summary> Signalled when the user changes a property in the <a class="see" href="../Reference/UI_PropSheet.htm">Advanced Character Options</a> window.</summary>
 <param name="Sender">The source of the event.</param>
 <param name="E">An <typename>EventArgs</typename> object that contains no event data.</param>
 <remarks>
-<para>This event indicates that the user has changed and applied any property in the <a class="see" href="../html/UI_PropSheet.htm">Advanced Character Options</a> window. You can use the <see cref="T:DoubleAgent.Control.Settings" /> Object to query the specific property settings.
+<para>This event indicates that the user has changed and applied any property in the <a class="see" href="../Reference/UI_PropSheet.htm">Advanced Character Options</a> window. You can use the <see cref="T:DoubleAgent.Control.Settings" /> Object to query the specific property settings.
 </para>
 </remarks>
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDefaultCharacterChange" />
 </member>
 
+<member name="T:DoubleAgent.AxControl.CtlAgentPropertyChangeEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlAgentPropertyChange" /> event.
+</para>
+</summary>
+</member>
+
 <member name="E:DoubleAgent.AxControl.AxControl.CtlBalloonHide">
-<summary> Signalled when a character's <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> is hidden.</summary>
+<summary> Signalled when a character's <a class="see" href="../Reference/UI_Intro.htm#Balloon">word balloon</a> is hidden.</summary>
 <param name="Sender">The source of the event.</param>
 <param name="E">A <see class="typename" cref="T:DoubleAgent.AxControl.CtlBalloonHideEvent" /> Object that contains the event data: 
 <list>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlBalloonHideEvent.CharacterID" /></term>
-<description>The unique identifier of the character who's <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> was hidden.</description>
+<description>The unique identifier of the character who's <a class="see" href="../Reference/UI_Intro.htm#Balloon">word balloon</a> was hidden.</description>
 </item>
 </list>
 </param>
@@ -519,14 +540,21 @@
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlBalloonShow" />
 </member>
 
+<member name="T:DoubleAgent.AxControl.CtlBalloonHideEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlBalloonHide" /> event.
+</para>
+</summary>
+</member>
+
 <member name="E:DoubleAgent.AxControl.AxControl.CtlBalloonShow">
-<summary> Signalled when a character's <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> is shown.</summary>
+<summary> Signalled when a character's <a class="see" href="../Reference/UI_Intro.htm#Balloon">word balloon</a> is shown.</summary>
 <param name="Sender">The source of the event.</param>
 <param name="E">A <see class="typename" cref="T:DoubleAgent.AxControl.CtlBalloonShowEvent" /> Object that contains the event data: 
 <list>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlBalloonShowEvent.CharacterID" /></term>
-<description>The unique identifier of the character who's <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> was shown.</description>
+<description>The unique identifier of the character who's <a class="see" href="../Reference/UI_Intro.htm#Balloon">word balloon</a> was shown.</description>
 </item>
 </list>
 </param>
@@ -536,6 +564,13 @@
 </remarks>
 <seealso cref="T:DoubleAgent.AxControl.CtlBalloonShowEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlBalloonHide" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlBalloonShowEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlBalloonShow" /> event.
+</para>
+</summary>
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlBookmark">
@@ -550,7 +585,7 @@
 </list>
 </param>
 <remarks>
-<para>To specify a bookmark event, use the <see cref="M:DoubleAgent.Control.Character.Speak(System.Object,System.Object)" /> or <see cref="M:DoubleAgent.Control.Character.SpeakFormatted(DoubleAgent.Control.FormattedText)" /> method with a <keyword>Mrk</keyword> tag in your supplied text. For more information about tags, see <a href="MsAgent.chm::/hh/msagent/guidlin_2my6.htm">Speech Output Tags</a>.
+<para>To specify a bookmark event, use the <see cref="M:DoubleAgent.Control.Character.Speak(System.Object,System.Object)" /> or <see cref="M:DoubleAgent.Control.Character.SpeakFormatted(DoubleAgent.Control.FormattedText)" /> method with a <keyword>Mrk</keyword> tag in your supplied text. For more information about tags, see <a href="../Reference/Ref_SpeechTags.htm">Speech Output Tags</a>.
 </para>
 </remarks>
 <seealso cref="T:DoubleAgent.AxControl.CtlBookmarkEvent" />
@@ -558,8 +593,15 @@
 <seealso cref="M:DoubleAgent.Control.Character.SpeakFormatted(DoubleAgent.Control.FormattedText)" />
 </member>
 
+<member name="T:DoubleAgent.AxControl.CtlBookmarkEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlBookmark" /> event.
+</para>
+</summary>
+</member>
+
 <member name="E:DoubleAgent.AxControl.AxControl.CtlClick">
-<summary> Signalled when the user clicks a character, or the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</summary>
+<summary> Signalled when the user clicks a character, or the character's <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>.</summary>
 <param name="Sender">The source of the event.</param>
 <param name="E">A <see class="typename" cref="T:DoubleAgent.AxControl.CtlClickEvent" /> Object that contains the event data: 
 <list>
@@ -569,7 +611,7 @@
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlClickEvent.Button" /></term>
-<description>A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</description>
+<description>A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>.</description>
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlClickEvent.Shift" /></term>
@@ -586,12 +628,19 @@
 </list>
 </param>
 <remarks>
-<para>This event is sent only to the <glossary>input-active</glossary> client of a character. When the user clicks a character or its <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> with no <glossary>input-active</glossary> client, Double Agent sends the event to its active client. If the character is visible (<see cref="P:DoubleAgent.Control.Character.Visible" /> is <keyword>True</keyword>), the user's action also sets the character's current <glossary>input-active</glossary> client as the last <glossary>input-active</glossary> client, sending the <see cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" /> event to that client, and then sending the <keyword>CtlClick</keyword> event. If the character is hidden (<see cref="P:DoubleAgent.Control.Character.Visible" /> is <keyword>False</keyword>), and the user clicks the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> using button 1, the character is also automatically shown.
+<para>This event is sent only to the <glossary>input-active</glossary> client of a character. When the user clicks a character or its <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a> with no <glossary>input-active</glossary> client, Double Agent sends the event to its active client. If the character is visible (<see cref="P:DoubleAgent.Control.Character.Visible" /> is <keyword>True</keyword>), the user's action also sets the character's current <glossary>input-active</glossary> client as the last <glossary>input-active</glossary> client, sending the <see cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" /> event to that client, and then sending the <keyword>CtlClick</keyword> event. If the character is hidden (<see cref="P:DoubleAgent.Control.Character.Visible" /> is <keyword>False</keyword>), and the user clicks the character's <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a> using button 1, the character is also automatically shown.
 </para>
 <note>Clicking a character does not disable all other character output. However, pressing the <glossary>Listening key</glossary> <em>does</em> flush the <glossary>input-active</glossary> character's output and triggers the <see cref="E:DoubleAgent.AxControl.AxControl.CtlRequestComplete" /> event, passing a <see cref="P:DoubleAgent.Control.Request.Status" /> that indicates that the client's queue was interrupted.</note>
 </remarks>
 <seealso cref="T:DoubleAgent.AxControl.CtlClickEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDblClick" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlClickEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlClick" /> event.
+</para>
+</summary>
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlCommand">
@@ -606,11 +655,18 @@
 </list>
 </param>
 <remarks>
-<para>Double Agent sends this event when your application is <glossary>input-active</glossary> and the user chooses a command from the character's <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a>, or by spoken input.
+<para>Double Agent sends this event when your application is <glossary>input-active</glossary> and the user chooses a command from the character's <a class="see" href="../Reference/UI_Intro.htm#Menu">pop-up menu</a>, or by spoken input.
 </para>
 </remarks>
 <seealso cref="T:DoubleAgent.AxControl.CtlCommandEvent" />
 <seealso cref="T:DoubleAgent.Control.UserInput" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlCommandEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlCommand" /> event.
+</para>
+</summary>
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlDblClick">
@@ -624,7 +680,7 @@
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlDblClickEvent.Button" /></term>
-<description>A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</description>
+<description>A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>.</description>
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlDblClickEvent.Shift" /></term>
@@ -641,11 +697,18 @@
 </list>
 </param>
 <remarks>
-<para>This event is sent only to the <glossary>input-active</glossary> client of a character. When the user double-clicks a character or its <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> with no <glossary>input-active</glossary> client, Double Agent sends the event to its active client. If the character is visible (<see cref="P:DoubleAgent.Control.Character.Visible" /> is <keyword>True</keyword>), the user's action also sets the character's current <glossary>input-active</glossary> client as the last <glossary>input-active</glossary> client, sending the <see cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" /> event to that client, and then sending the <keyword>CtlDblClick</keyword> event. If the character is hidden (<see cref="P:DoubleAgent.Control.Character.Visible" /> is <keyword>False</keyword>), and the user double-clicks the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> using button 1, the character is also automatically shown.
+<para>This event is sent only to the <glossary>input-active</glossary> client of a character. When the user double-clicks a character or its <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a> with no <glossary>input-active</glossary> client, Double Agent sends the event to its active client. If the character is visible (<see cref="P:DoubleAgent.Control.Character.Visible" /> is <keyword>True</keyword>), the user's action also sets the character's current <glossary>input-active</glossary> client as the last <glossary>input-active</glossary> client, sending the <see cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" /> event to that client, and then sending the <keyword>CtlDblClick</keyword> event. If the character is hidden (<see cref="P:DoubleAgent.Control.Character.Visible" /> is <keyword>False</keyword>), and the user double-clicks the character's <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a> using button 1, the character is also automatically shown.
 </para>
 </remarks>
 <seealso cref="T:DoubleAgent.AxControl.CtlDblClickEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlClick" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlDblClickEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlDblClick" /> event.
+</para>
+</summary>
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlDeactivateInput">
@@ -662,12 +725,19 @@
 <remarks>
 <para>A <glossary>non-input-active</glossary> client no longer receives mouse or speech events from Double Agent (unless it becomes <glossary>input-active</glossary> again). Double Agent sends this event only to the client that becomes <glossary>non-input-active</glossary>.
 </para>
-<para>This event is signalled when your client application is <glossary>input-active</glossary> and the user chooses a another client's <see cref="T:DoubleAgent.Control.Command" /> in a character's <a class="see" href="../html/UI_Intro.htm#Menu">pop-up menu</a> or the <a class="see" href="../html/UI_Intro.htm#VoiceCommands">Voice Commands</a> window, or you call the <see cref="M:DoubleAgent.Control.Character.Activate(System.Object)" /> method and set the <paramref name="State" /> parameter to <keyword xml:space="preserve">0</keyword> (<see class="see" cref="F:DoubleAgent.Control.ActiveStateType.Inactive" />). It may also occur when the user selects the name of another character by clicking or speaking. You also get this event when your character is hidden or another character becomes visible.
+<para>This event is signalled when your client application is <glossary>input-active</glossary> and the user chooses a another client's <see cref="T:DoubleAgent.Control.Command" /> in a character's <a class="see" href="../Reference/UI_Intro.htm#Menu">pop-up menu</a> or the <a class="see" href="../Reference/UI_Intro.htm#VoiceCommands">Voice Commands</a> window, or you call the <see cref="M:DoubleAgent.Control.Character.Activate(System.Object)" /> method and set the <paramref name="State" /> parameter to <keyword xml:space="preserve">0</keyword> (<see class="see" cref="F:DoubleAgent.Control.ActiveStateType.Inactive" />). It may also occur when the user selects the name of another character by clicking or speaking. You also get this event when your character is hidden or another character becomes visible.
 </para>
 </remarks>
 <seealso cref="T:DoubleAgent.AxControl.CtlDeactivateInputEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlActiveClientChange" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlDeactivateInputEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlDeactivateInput" /> event.
+</para>
+</summary>
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlDefaultCharacterChange">
@@ -693,6 +763,13 @@
 <seealso cref="P:DoubleAgent.Control.CharacterFiles.DefaultFilePath" />
 </member>
 
+<member name="T:DoubleAgent.AxControl.CtlDefaultCharacterChangeEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlDefaultCharacterChange" /> event.
+</para>
+</summary>
+</member>
+
 <member name="E:DoubleAgent.AxControl.AxControl.CtlDragComplete">
 <summary> Signalled when the user stops dragging a character.</summary>
 <param name="Sender">The source of the event.</param>
@@ -704,7 +781,7 @@
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Button" /></term>
-<description>A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</description>
+<description>A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>.</description>
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Shift" /></term>
@@ -728,6 +805,13 @@
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragStart" />
 </member>
 
+<member name="T:DoubleAgent.AxControl.CtlDragCompleteEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlDragComplete" /> event.
+</para>
+</summary>
+</member>
+
 <member name="E:DoubleAgent.AxControl.AxControl.CtlDragStart">
 <summary> Signalled when the user starts dragging a character.</summary>
 <param name="Sender">The source of the event.</param>
@@ -739,7 +823,7 @@
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragStartEvent.Button" /></term>
-<description>A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</description>
+<description>A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>.</description>
 </item>
 <item>
 <term> <see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragStartEvent.Shift" /></term>
@@ -763,6 +847,13 @@
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragComplete" />
 </member>
 
+<member name="T:DoubleAgent.AxControl.CtlDragStartEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlDragStart" /> event.
+</para>
+</summary>
+</member>
+
 <member name="E:DoubleAgent.AxControl.AxControl.CtlHide">
 <summary> Signalled when a character is hidden.</summary>
 <param name="Sender">The source of the event.</param>
@@ -779,7 +870,7 @@
 <item name="UserHid"><term xml:space="preserve">
 1 = <keyword>UserHid</keyword>
 </term>
-<description>The user hid the character using the command on the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
+<description>The user hid the character using the command on the character's <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
 </item>
 <item name="ProgramHid"><term xml:space="preserve">
 3 = <keyword>ProgramHid</keyword>
@@ -807,6 +898,13 @@
 <seealso cref="P:DoubleAgent.Control.Character.VisibilityCause" />
 </member>
 
+<member name="T:DoubleAgent.AxControl.CtlHideEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlHide" /> event.
+</para>
+</summary>
+</member>
+
 <member name="E:DoubleAgent.AxControl.AxControl.CtlIdleComplete">
 <summary> Signalled when Double Agent ends the <glossary>Idling</glossary> state of a character.</summary>
 <param name="Sender">The source of the event.</param>
@@ -828,6 +926,13 @@
 <seealso cref="P:DoubleAgent.Control.Character.IdleState" />
 </member>
 
+<member name="T:DoubleAgent.AxControl.CtlIdleCompleteEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlIdleComplete" /> event.
+</para>
+</summary>
+</member>
+
 <member name="E:DoubleAgent.AxControl.AxControl.CtlIdleStart">
 <summary> Signalled when Double Agent sets a character to the <glossary>Idling</glossary> state.</summary>
 <param name="Sender">The source of the event.</param>
@@ -847,6 +952,13 @@
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlIdleComplete" />
 <seealso cref="P:DoubleAgent.Control.Character.IdleEnabled" />
 <seealso cref="P:DoubleAgent.Control.Character.IdleState" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlIdleStartEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlIdleStart" /> event.
+</para>
+</summary>
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlListenComplete">
@@ -895,12 +1007,12 @@
 <item><term xml:space="preserve">
 7 = <keyword>DefaultCharacterChanged</keyword>
 </term>
-<description>The default character was changed in the <a class="see" href="../html/UI_PropSheet.htm#Gallery">Advanced Character Options</a> window.</description>
+<description>The default character was changed in the <a class="see" href="../Reference/UI_PropSheet.htm#Gallery">Advanced Character Options</a> window.</description>
 </item>
 <item><term xml:space="preserve">
 8 = <keyword>UserDisabled</keyword>
 </term>
-<description>Speech recognition was disabled in the <a class="see" href="../html/UI_PropSheet.htm#SpeechInput">Advanced Character Options</a> window.</description>
+<description>Speech recognition was disabled in the <a class="see" href="../Reference/UI_PropSheet.htm#SpeechInput">Advanced Character Options</a> window.</description>
 </item>
 </list>
 </description>
@@ -920,6 +1032,13 @@
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlListenStart" />
 <seealso cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" />
 <seealso cref="P:DoubleAgent.Control.Settings.SRHotKeyTime" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlListenCompleteEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlListenComplete" /> event.
+</para>
+</summary>
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlListenStart">
@@ -945,6 +1064,13 @@
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlListenComplete" />
 <seealso cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" />
 <seealso cref="P:DoubleAgent.Control.Settings.SRHotKey" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlListenStartEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlListenStart" /> event.
+</para>
+</summary>
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlMove">
@@ -999,6 +1125,13 @@
 <seealso cref="T:DoubleAgent.Control.MoveCauseType" />
 </member>
 
+<member name="T:DoubleAgent.AxControl.CtlMoveEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlMove" /> event.
+</para>
+</summary>
+</member>
+
 <member name="E:DoubleAgent.AxControl.AxControl.CtlRequestComplete">
 <summary> Signalled when Double Agent completes a queued request.</summary>
 <param name="Sender">The source of the event.</param>
@@ -1011,7 +1144,7 @@
 </list>
 </param>
 <remarks>
-<para>This event provides a <see cref="T:DoubleAgent.Control.Request" /> Object. Because requests are processed asynchronously, you can use this event to determine when Double Agent finishes processing a request (such as a <see cref="M:DoubleAgent.Control.Character.Get(System.String,System.String,System.Object)" />, <see cref="M:DoubleAgent.Control.Character.Play(System.String)" />, or <see cref="M:DoubleAgent.Control.Character.Speak(System.Object,System.Object)" /> method) to synchronize this event with other requests generated by your application. Double Agent sends the event only to the client that created the reference to the <see cref="T:DoubleAgent.Control.Request" /> Object, and only if you defined a global variable for the request reference.
+<para>This event provides a <see cref="T:DoubleAgent.Control.Request" /> Object. Because requests are processed asynchronously, you can use this event to determine when Double Agent finishes processing a request (such as a <see cref="M:DoubleAgent.Control.Character.Prepare(DoubleAgent.Control.PrepareResourceType,System.String,System.Object)" />, <see cref="M:DoubleAgent.Control.Character.Play(System.String)" />, or <see cref="M:DoubleAgent.Control.Character.Speak(System.Object,System.Object)" /> method) to synchronize this event with other requests generated by your application. Double Agent sends the event only to the client that created the reference to the <see cref="T:DoubleAgent.Control.Request" /> Object, and only if you defined a global variable for the request reference.
 </para>
 <example><code xml:space="preserve"><keyword>Dim</keyword> MyRequest 
 <keyword>Dim</keyword> Genie
@@ -1044,6 +1177,13 @@
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlRequestStart" />
 </member>
 
+<member name="T:DoubleAgent.AxControl.CtlRequestCompleteEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlRequestComplete" /> event.
+</para>
+</summary>
+</member>
+
 <member name="E:DoubleAgent.AxControl.AxControl.CtlRequestStart">
 <summary> Signalled when Double Agent begins a queued request.</summary>
 <param name="Sender">The source of the event.</param>
@@ -1056,7 +1196,7 @@
 </list>
 </param>
 <remarks>
-<para>The event provides a <see cref="T:DoubleAgent.Control.Request" /> Object. Because requests are processed asynchronously, you can use this event to determine when Double Agent begins processing a request (such as a <see cref="M:DoubleAgent.Control.Character.Get(System.String,System.String,System.Object)" />, <see cref="M:DoubleAgent.Control.Character.Play(System.String)" />, or <see cref="M:DoubleAgent.Control.Character.Speak(System.Object,System.Object)" /> method) and thereby synchronize this with other requests generated by your application. The event is sent only to the client that created the reference to the <see cref="T:DoubleAgent.Control.Request" /> Object, and only if you defined a global variable for the request reference.
+<para>The event provides a <see cref="T:DoubleAgent.Control.Request" /> Object. Because requests are processed asynchronously, you can use this event to determine when Double Agent begins processing a request (such as a <see cref="M:DoubleAgent.Control.Character.Prepare(DoubleAgent.Control.PrepareResourceType,System.String,System.Object)" />, <see cref="M:DoubleAgent.Control.Character.Play(System.String)" />, or <see cref="M:DoubleAgent.Control.Character.Speak(System.Object,System.Object)" /> method) and thereby synchronize this with other requests generated by your application. The event is sent only to the client that created the reference to the <see cref="T:DoubleAgent.Control.Request" /> Object, and only if you defined a global variable for the request reference.
 </para>
 <example><code xml:space="preserve"><keyword>Dim</keyword> MyRequest 
 <keyword>Dim</keyword> Genie 
@@ -1092,6 +1232,13 @@
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlRequestComplete" />
 </member>
 
+<member name="T:DoubleAgent.AxControl.CtlRequestStartEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlRequestStart" /> event.
+</para>
+</summary>
+</member>
+
 <member name="E:DoubleAgent.AxControl.AxControl.CtlShow">
 <summary> Signalled when a character is displayed.</summary>
 <param name="Sender">The source of the event.</param>
@@ -1108,7 +1255,7 @@
 <item name="UserShowed"><term xml:space="preserve">
 2 = <keyword>UserShowed</keyword>
 </term>
-<description>The user showed the character using the command on the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
+<description>The user showed the character using the command on the character's <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
 </item>
 <item name="ProgramShowed"><term xml:space="preserve">
 4 = <keyword>ProgramShowed</keyword>
@@ -1134,6 +1281,13 @@
 <seealso cref="M:DoubleAgent.Control.Character.Show(System.Object)" />
 <seealso cref="P:DoubleAgent.Control.Character.Visible" />
 <seealso cref="P:DoubleAgent.Control.Character.VisibilityCause" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlShowEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlShow" /> event.
+</para>
+</summary>
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlSize">
@@ -1163,6 +1317,13 @@
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlMove" />
 </member>
 
+<member name="T:DoubleAgent.AxControl.CtlSizeEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlSize" /> event.
+</para>
+</summary>
+</member>
+
 <member name="E:DoubleAgent.AxControl.AxControl.CtlSpeechStart">
 <summary> Signalled when the character starts speaking for the <see cref="M:DoubleAgent.Control.Character.SpeakFormatted(DoubleAgent.Control.FormattedText)" /> method.</summary>
 <param name="Sender">The source of the event.</param>
@@ -1185,6 +1346,13 @@
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechWord" />
 <seealso cref="T:DoubleAgent.Control.FormattedText" />
 <seealso cref="M:DoubleAgent.Control.Character.SpeakFormatted(DoubleAgent.Control.FormattedText)" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlSpeechStartEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechStart" /> event.
+</para>
+</summary>
 </member>
 
 <member name="E:DoubleAgent.AxControl.AxControl.CtlSpeechEnd">
@@ -1217,6 +1385,13 @@
 <seealso cref="M:DoubleAgent.Control.Character.StopAll(System.Object)" />
 </member>
 
+<member name="T:DoubleAgent.AxControl.CtlSpeechEndEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechEnd" /> event.
+</para>
+</summary>
+</member>
+
 <member name="E:DoubleAgent.AxControl.AxControl.CtlSpeechWord">
 <summary> Signalled when the character reaches a new word for the <see cref="M:DoubleAgent.Control.Character.SpeakFormatted(DoubleAgent.Control.FormattedText)" /> method.</summary>
 <param name="Sender">The source of the event.</param>
@@ -1246,6 +1421,13 @@
 <seealso cref="T:DoubleAgent.Control.FormattedText" />
 <seealso cref="P:DoubleAgent.Control.FormattedText.WordIndex" />
 <seealso cref="M:DoubleAgent.Control.Character.SpeakFormatted(DoubleAgent.Control.FormattedText)" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlSpeechWordEventHandler">
+<summary>
+<para>See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechWord" /> event.
+</para>
+</summary>
 </member>
 
 <member name="T:DoubleAgent.AxControl.CtlActivateInputEvent">
@@ -1291,7 +1473,7 @@
 </member>
 
 <member name="F:DoubleAgent.AxControl.CtlBalloonHideEvent.CharacterID">
-<summary> The unique identifier of the character who's <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> was hidden.</summary>
+<summary> The unique identifier of the character who's <a class="see" href="../Reference/UI_Intro.htm#Balloon">word balloon</a> was hidden.</summary>
 <seealso cref="T:DoubleAgent.AxControl.CtlBalloonHideEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlBalloonHide" />
 </member>
@@ -1305,7 +1487,7 @@
 </member>
 
 <member name="F:DoubleAgent.AxControl.CtlBalloonShowEvent.CharacterID">
-<summary> The unique identifier of the character who's <a class="see" href="../html/UI_Intro.htm#Balloon">word balloon</a> was shown.</summary>
+<summary> The unique identifier of the character who's <a class="see" href="../Reference/UI_Intro.htm#Balloon">word balloon</a> was shown.</summary>
 <seealso cref="T:DoubleAgent.AxControl.CtlBalloonShowEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlBalloonShow" />
 </member>
@@ -1325,7 +1507,7 @@
 </member>
 
 <member name="F:DoubleAgent.AxControl.CtlClickEvent.Button">
-<summary> A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</summary>
+<summary> A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>.</summary>
 <seealso cref="T:DoubleAgent.AxControl.CtlClickEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlClick" />
 </member>
@@ -1377,7 +1559,7 @@
 </member>
 
 <member name="F:DoubleAgent.AxControl.CtlDblClickEvent.Button">
-<summary> A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</summary>
+<summary> A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>.</summary>
 <seealso cref="T:DoubleAgent.AxControl.CtlDblClickEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDblClick" />
 </member>
@@ -1443,7 +1625,7 @@
 </member>
 
 <member name="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Button">
-<summary> A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</summary>
+<summary> A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>.</summary>
 <seealso cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragComplete" />
 </member>
@@ -1481,7 +1663,7 @@
 </member>
 
 <member name="F:DoubleAgent.AxControl.CtlDragStartEvent.Button">
-<summary> A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a>.</summary>
+<summary> A <typename>numeric</typename> value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the <filename>left</filename> button (bit 0) (&amp;H0001), <filename>right</filename> button (bit 1) (&amp;H0002), and <filename>middle</filename> button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>.</summary>
 <seealso cref="T:DoubleAgent.AxControl.CtlDragStartEvent" />
 <seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragStart" />
 </member>
@@ -1524,7 +1706,7 @@
 <item name="UserHid"><term xml:space="preserve">
 1 = <keyword>UserHid</keyword>
 </term>
-<description>The user hid the character using the command on the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
+<description>The user hid the character using the command on the character's <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
 </item>
 <item name="ProgramHid"><term xml:space="preserve">
 3 = <keyword>ProgramHid</keyword>
@@ -1620,12 +1802,12 @@
 <item><term xml:space="preserve">
 7 = <keyword>DefaultCharacterChanged</keyword>
 </term>
-<description>The default character was changed in the <a class="see" href="../html/UI_PropSheet.htm#Gallery">Advanced Character Options</a> window.</description>
+<description>The default character was changed in the <a class="see" href="../Reference/UI_PropSheet.htm#Gallery">Advanced Character Options</a> window.</description>
 </item>
 <item><term xml:space="preserve">
 8 = <keyword>UserDisabled</keyword>
 </term>
-<description>Speech recognition was disabled in the <a class="see" href="../html/UI_PropSheet.htm#SpeechInput">Advanced Character Options</a> window.</description>
+<description>Speech recognition was disabled in the <a class="see" href="../Reference/UI_PropSheet.htm#SpeechInput">Advanced Character Options</a> window.</description>
 </item>
 </list>
 </summary>
@@ -1745,7 +1927,7 @@
 <item name="UserShowed"><term xml:space="preserve">
 2 = <keyword>UserShowed</keyword>
 </term>
-<description>The user showed the character using the command on the character's <a class="see" href="../html/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
+<description>The user showed the character using the command on the character's <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
 </item>
 <item name="ProgramShowed"><term xml:space="preserve">
 4 = <keyword>ProgramShowed</keyword>

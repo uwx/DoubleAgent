@@ -167,6 +167,8 @@ private:
 		lFiles->DoubleAgentFiles = true;
 		lFiles->MsAgentFiles = true;
 		lFiles->MsOfficeFiles = true;
+		lFiles->CompliantCharacters = true;
+		lFiles->NonCompliantCharacters = true;
 		lFiles->SpeakingCharacters = true;
 		lFiles->NonSpeakingCharacters = true;
 		lFiles->VerifyVersion = true;

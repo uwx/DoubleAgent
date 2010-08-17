@@ -1,9 +1,9 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 	<title>The Listening Tip</title>
-	<link rel="STYLESHEET" href="../css/dahelp.css">
+	<link rel="STYLESHEET" href="../css/dahelp.css" />
 	<style type="text/css">
 		div.tiptext
 		{
@@ -52,11 +52,11 @@
 					<em class="self">Listening tip</em> appears only when the speech services are available. If no client
 					has authored a voice command or successfully loads a speech engine, the <em class="self">Listening tip</em>
 					does not appear. Further, both speech input and the <em class="literal">&quot;Display listening tips&quot;</em>
-					option in the <a href="../html/UI_PropSheet.htm#SpeechInput">Advanced Character Options</a> window must be enabled
+					option in the <a href="../Reference/UI_PropSheet.htm#SpeechInput">Advanced Character Options</a> window must be enabled
 					for the tip to appear.</p>
 				<p>The following table summarizes the display of the <em class="self">Listening tip</em> when speech recognition
 					is enabled.</p>
-				<br>
+				<br/>
 				<table>
 					<tr>
 						<th colspan="2">
@@ -153,6 +153,8 @@
 					</tr>
 					<tr>
 						<td>If all characters are hidden, the <em class="self">Listening tip</em> displays the following text:
+						
+						
 						</td>
 						<td>
 							<div class="tiptext">
@@ -167,8 +169,8 @@
 						</th>
 					</tr>
 					<tr>
-						<td>If the spoken text matches a client-defined or pre-defined command, the <em class="self">Listening
-							tip</em> appears below the active client's character and displays:</td>
+						<td>If the spoken text matches a client-defined or pre-defined command, the <em class="self">Listening tip</em>
+							appears below the active client's character and displays:</td>
 						<td>
 							<div class="tiptext">
 								<p class="tiptext_top">-- <i>CharacterName </i>is listening --</p>
@@ -207,7 +209,7 @@
 							width.</td>
 					</tr>
 				</table>
-				<br>
+				<br />
 				<p>The <em class="self">Listening tip</em> automatically times out after being presented. If the "Heard"
 					text time-out completes while the user is still holding down the <em>Listening key</em>, the tip reverts
 					to the "listening" text unless Double Agent receives another matching utterance. In this case, the tip
@@ -225,9 +227,9 @@
 					confidence setting, Double Agent uses the text set in the <em class="keyword">ConfidenceText</em> property
 					in the tip window. If the client does not supply this value, Double Agent displays the text (grammar)
 					it matched.</p>
-				<p>The <em class="self">Listening tip</em> text appears in the language based on the <a class="see"
-				href="Gen_Input.htm#Active">input-active</a> client's character <em class="keyword">LanguageID</em> setting,
-					regardless of whether there is a language-compatible speech recognition engine available.</p>
+				<p>The <em class="self">Listening tip</em> text appears in the language based on the <a class="see" href="Gen_Input.htm#Active">
+				input-active</a> client's character <em class="keyword">LanguageID</em> setting, regardless of whether there
+					is a language-compatible speech recognition engine available.</p>
 			</td>
 		</tr>
 	</table>

@@ -274,7 +274,11 @@ int XmlToHtml::ProcessCmdLine (array <String^>^ pCmdArgs)
 					mOutputHtml = true;
 					mTemplatePath = System::IO::Path::Combine (System::IO::Path::GetDirectoryName (lXmlPath), "Templates");
 					ResolveEntities (lXmlDocument);
-					LoadXmlIncludes (lXmlDocument, lXmlPath, true);
+					if	(!LoadXmlIncludes (lXmlDocument, lXmlPath, true))
+					{
+						lRet = 4;
+						break;
+					}
 					ConvertXmlToHtml (lXmlDocument, lAssembly);
 				}
 				catch AnyExceptionDebug
@@ -301,7 +305,11 @@ int XmlToHtml::ProcessCmdLine (array <String^>^ pCmdArgs)
 						)
 					{
 						ResolveEntities (lXmlDocument);
-						LoadXmlIncludes (lXmlDocument, lXmlPath, false);
+						if	(!LoadXmlIncludes (lXmlDocument, lXmlPath, false))
+						{
+							lRet = 4;
+							break;
+						}
 						ResolveEntities (lXmlDocument);
 					}
 					if	(!CopyXmlToXml (lXmlDocument, lAssembly))
@@ -395,6 +403,13 @@ void XmlToHtml::CopyNodeAttributes (XmlNode^ pSrcNode, XmlNode^ pTrgNode)
 
 			for each (lSrcAttribute in pSrcNode->Attributes)
 			{
+				if	(
+						(lSrcAttribute->Name == "xmlns")
+					&&	(String::IsNullOrEmpty (lSrcAttribute->Value))
+					)
+				{
+					continue;
+				}
 				if	(lTrgAttribute = pTrgNode->OwnerDocument->CreateAttribute (lSrcAttribute->Name, lSrcAttribute->NamespaceURI))
 				{
 					lTrgAttribute->Value = lSrcAttribute->Value;
@@ -549,11 +564,21 @@ XmlNode^ XmlToHtml::CopyNodeOuterXml (XmlNode^ pXmlNode, XmlDocument^ pDocument)
 
 	if	(
 			(pXmlNode)
-		&&	(lRet = pDocument->CreateNode (pXmlNode->NodeType, pXmlNode->Name, pXmlNode->NamespaceURI))
+		&&	(pDocument)
 		)
 	{
-		CopyNodeAttributes (pXmlNode, lRet);
-		CopyNodeChildren (pXmlNode, lRet, XmlSpace::Default);
+		if	(pXmlNode->OwnerDocument->BaseURI == pDocument->BaseURI)
+		{
+			if	(lRet = pDocument->CreateNode (pXmlNode->NodeType, pXmlNode->Name, pXmlNode->NamespaceURI))
+			{
+				CopyNodeAttributes (pXmlNode, lRet);
+				CopyNodeChildren (pXmlNode, lRet, XmlSpace::Default);
+			}
+		}
+		else
+		{
+			lRet = pDocument->ImportNode (pXmlNode, true);
+		}
 	}
 	return lRet;
 }
@@ -701,6 +726,10 @@ bool XmlToHtml::ConvertXmlToHtml (XmlDocument^ pXmlDocument, System::Reflection:
 				}
 				continue;
 			}
+			if	(IsInheritDoc (lMemberNode))
+			{
+				continue;
+			}
 
 			lMemberName = lMemberNode->Attributes["name"]->Value;
 #ifdef	_DEBUG_XML_MEMBERS
@@ -796,8 +825,9 @@ XmlDocument^ XmlToHtml::LoadXmlFile (String^ pXmlPath, bool pPreserveWhitespace)
 	return lRet;
 }
 
-void XmlToHtml::LoadXmlIncludes (XmlDocument^ pXmlDocument, String^ pXmlPath, bool pPreserveWhitespace)
+bool XmlToHtml::LoadXmlIncludes (XmlDocument^ pXmlDocument, String^ pXmlPath, bool pPreserveWhitespace)
 {
+	bool						lRet = true;
 	Generic::List<XmlNode^>^	lIncludeNodes;
 	XmlNode^					lIncludeNode;
 
@@ -859,7 +889,11 @@ void XmlToHtml::LoadXmlIncludes (XmlDocument^ pXmlDocument, String^ pXmlPath, bo
 					&&	(lIncludeDocName)
 					)
 				{
-					LoadXmlIncludes (lIncludeDoc, lIncludeDocName, pPreserveWhitespace);
+					if	(!LoadXmlIncludes (lIncludeDoc, lIncludeDocName, pPreserveWhitespace))
+					{
+						lRet = false;
+						break;
+					}
 				}
 
 #ifdef	_DEBUG_INCLUDES
@@ -972,36 +1006,46 @@ void XmlToHtml::LoadXmlIncludes (XmlDocument^ pXmlDocument, String^ pXmlPath, bo
 #endif
 					}
 				}
-#ifdef	_DEBUG
 				else
-				if	(
-						(lIncludeNode)
-					&&	(lParentNode = lIncludeNode->ParentNode)
-					)
 				{
-					if	(lIncludePath)
+#ifdef	_DEBUG
+					if	(
+							(lIncludeNode)
+						&&	(lParentNode = lIncludeNode->ParentNode)
+						)
 					{
-						if	(lIncludeFile)
+						if	(lIncludePath)
 						{
-							LogMessage (LogNormal, _T("Include [%s] [%s] not found"), _B(lIncludeFile->Value), _B(lIncludePath->Value));
+							if	(lIncludeFile)
+							{
+								LogMessage (LogNormal, _T("Include [%s] [%s] not found"), _B(lIncludeFile->Value), _B(lIncludePath->Value));
+							}
+							else
+							{
+								LogMessage (LogNormal, _T("Include [%s] not found"), _B(lIncludePath->Value));
+							}
 						}
 						else
 						{
-							LogMessage (LogNormal, _T("Include [%s] not found"), _B(lIncludePath->Value));
+							LogMessage (LogNormal, _T("Invalid Include [%s]"), _B(lIncludeNode->OuterXml));
 						}
-					}
-					else
-					{
-						LogMessage (LogNormal, _T("Invalid Include [%s]"), _B(lIncludeNode->OuterXml));
-					}
 
-					lIncludeNode->ParentNode->ReplaceChild (MakeNewNode ("span", lIncludeNode->OuterXml, pXmlDocument), lIncludeNode);
-				}
+						lIncludeNode->ParentNode->ReplaceChild (MakeNewNode ("span", lIncludeNode->OuterXml, pXmlDocument), lIncludeNode);
+					}
 #endif
+					Console::WriteLine ("Unknown Include {0}", lIncludePath->Value);
+					lRet = false;
+					break;
+				}
 			}
 			catch AnyExceptionDebug
 		}
+		if	(!lRet)
+		{
+			break;
+		}
 	}
+	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1082,6 +1126,7 @@ static String^ ParametersStr (array<ParameterInfo^>^ pParameters)
 			}
 			if	(lParameter->ParameterType->IsByRef)
 			{
+				lRet->Replace ("&","@");
 			}
 		}
 	}
@@ -1672,7 +1717,7 @@ void XmlToHtml::PutMemberSyntax (XmlElement^ pRootElement, XmlNode^ pMemberSynta
 				}
 				else
 				{
-					lNode->ParentNode->ReplaceChild (CopyNodeOuterXml (pMemberSyntax, lNode->OwnerDocument), lNode);
+					lNode->ParentNode->ReplaceChild (lNewNode = CopyNodeOuterXml (pMemberSyntax, lNode->OwnerDocument), lNode);
 				}
 			}
 			else
@@ -2826,6 +2871,35 @@ String^ XmlToHtml::AllFieldsFileName (String^ pMemberName)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+bool XmlToHtml::IsInheritDoc (XmlNode^ pXmlNode)
+{
+	bool		lRet = false;
+	XmlNode^	lChildNode;
+
+	if	(
+			(pXmlNode)
+		&&	(pXmlNode->ChildNodes)
+		)
+	{
+		lRet = true;
+		
+		for each (lChildNode in pXmlNode->ChildNodes)
+		{
+			if	(
+					(lChildNode->NodeType == XmlNodeType::Element)
+				&&	(lChildNode->Name != "inheritdoc")
+				)
+			{
+				lRet = false;
+				break;
+			}
+		}
+	}
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
@@ -2935,11 +3009,9 @@ void XmlToHtml::FixMethodSignatures (XmlDocument^ pXmlDocument)
 					&&	(lMemberName->StartsWith ("P:"))
 					)
 				{
-					PropertyInfo^									lProperty;
-					MethodInfo^										lAccessor;
-					array<ParameterInfo^>^							lParameters;
-					Generic::KeyValuePair<String^, MethodInfo^>^	lMethod;
-					int												lStringStart;
+					PropertyInfo^			lProperty;
+					MethodInfo^				lAccessor;
+					array<ParameterInfo^>^	lParameters;
 
 					if	(
 							(lProperty = FindAssemblyProperty (lMemberName))
@@ -2948,6 +3020,9 @@ void XmlToHtml::FixMethodSignatures (XmlDocument^ pXmlDocument)
 						&&	(lParameters->Length > 0)
 						)
 					{
+						Generic::KeyValuePair<String^, MethodInfo^>^	lMethod;
+						int												lStringStart;
+						
 						for each (lMethod in mSourceMethods)
 						{
 							if	(
@@ -3006,6 +3081,47 @@ void XmlToHtml::FixMemberReferences (XmlDocument^ pXmlDocument)
 									)
 								{
 									lRefName->Value = lMethod->Key;
+									break;
+								}
+							}
+						}
+					}
+					catch AnyExceptionSilent
+				}
+
+				if	(
+						(mOutputSandcastle)
+					&&	(mSourceProperties)
+					)
+				{
+					try
+					{
+						XmlAttribute^			lRefName;
+						PropertyInfo^			lProperty;
+						MethodInfo^				lAccessor;
+						array<ParameterInfo^>^	lParameters;
+
+						if	(
+								(lRefName = lNode->Attributes ["cref"])
+							&&	(lRefName->Value->StartsWith ("P:"))
+							&&	(lProperty = FindAssemblyProperty (lRefName->Value))
+							&&	(lAccessor = lProperty->GetGetMethod ())
+							&&	(lParameters = lAccessor->GetParameters ())
+							&&	(lParameters->Length > 0)
+							)
+						{
+							Generic::KeyValuePair<String^, MethodInfo^>^	lMethod;
+							int												lStringStart;
+
+							for each (lMethod in mSourceMethods)
+							{
+								if	(
+										(lMethod->Value->Name == lAccessor->Name)
+									&&	(lMethod->Value->DeclaringType->FullName == lAccessor->DeclaringType->FullName)
+									&&	((lStringStart = lMethod->Key->IndexOf ('(')) > 0)
+									)
+								{
+									lRefName->Value += lMethod->Key->Substring (lStringStart, lMethod->Key->Length-lStringStart);
 									break;
 								}
 							}

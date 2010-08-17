@@ -172,26 +172,26 @@ HRESULT CDaCmnUserInput::get_ItemText (long ItemIndex, BSTR *ItemText)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaCmnUserInput::GetAllItemData (VARIANT *ItemIndices, VARIANT *ItemConfidences, VARIANT *ItemText)
+HRESULT CDaCmnUserInput::GetAllItemData (VARIANT *ItemCommandIDs, VARIANT *ItemConfidences, VARIANT *ItemTexts)
 {
 	HRESULT	lResult = S_OK;
 	long	lNdx;
 
-	if	(ItemIndices)
+	if	(ItemCommandIDs)
 	{
 		try
 		{
-			VariantClear (ItemIndices);
+			VariantClear (ItemCommandIDs);
 		}
 		catch AnyExceptionSilent
 
-		if	(V_ARRAY(ItemIndices) = SafeArrayCreateVector (VT_I4, 0, (long)mItemId.GetCount()))
+		if	(V_ARRAY(ItemCommandIDs) = SafeArrayCreateVector (VT_I4, 0, (long)mItemId.GetCount()))
 		{
-			V_VT(ItemIndices) = VT_I4|VT_ARRAY;
+			V_VT(ItemCommandIDs) = VT_I4|VT_ARRAY;
 
 			for	(lNdx = 0; lNdx < (long)mItemId.GetCount(); lNdx++)
 			{
-				SafeArrayPutElement (V_ARRAY(ItemIndices), &lNdx, ((long*)mItemId.GetData())+lNdx);
+				SafeArrayPutElement (V_ARRAY(ItemCommandIDs), &lNdx, ((long*)mItemId.GetData())+lNdx);
 			}
 		}
 	}
@@ -215,21 +215,21 @@ HRESULT CDaCmnUserInput::GetAllItemData (VARIANT *ItemIndices, VARIANT *ItemConf
 		}
 	}
 
-	if	(ItemText)
+	if	(ItemTexts)
 	{
 		try
 		{
-			VariantClear (ItemText);
+			VariantClear (ItemTexts);
 		}
 		catch AnyExceptionSilent
 
-		if	(V_ARRAY(ItemText) = SafeArrayCreateVector (VT_BSTR, 0, (long)mItemText.GetCount()))
+		if	(V_ARRAY(ItemTexts) = SafeArrayCreateVector (VT_BSTR, 0, (long)mItemText.GetCount()))
 		{
-			V_VT(ItemText) = VT_BSTR|VT_ARRAY;
+			V_VT(ItemTexts) = VT_BSTR|VT_ARRAY;
 
 			for	(lNdx = 0; lNdx < (long)mItemText.GetCount(); lNdx++)
 			{
-				SafeArrayPutElement (V_ARRAY(ItemText), &lNdx, mItemText [lNdx].AllocSysString());
+				SafeArrayPutElement (V_ARRAY(ItemTexts), &lNdx, mItemText [lNdx].AllocSysString());
 			}
 		}
 	}

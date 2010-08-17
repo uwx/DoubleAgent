@@ -13,17 +13,17 @@
 	<!ENTITY typelisttype "table">
 	<!ENTITY typelistwidth "275ex">
 
-	<!ENTITY dapsref "../html/UI_PropSheet.htm">
+	<!ENTITY dapsref "../Reference/UI_PropSheet.htm">
 	<!ENTITY dapsname "Advanced Character Options">
-	<!ENTITY davcref "../html/UI_Intro.htm#VoiceCommands">
+	<!ENTITY davcref "../Reference/UI_Intro.htm#VoiceCommands">
 	<!ENTITY davcname "Voice Commands">
-	<!ENTITY dacmref "../html/UI_Intro.htm#Menu">
+	<!ENTITY dacmref "../Reference/UI_Intro.htm#Menu">
 	<!ENTITY dacmname "pop-up menu">
-	<!ENTITY dawbref "../html/UI_Intro.htm#Balloon">
+	<!ENTITY dawbref "../Reference/UI_Intro.htm#Balloon">
 	<!ENTITY dawbname "word balloon">
-	<!ENTITY daniref "../html/UI_Intro.htm#Icon">
+	<!ENTITY daniref "../Reference/UI_Intro.htm#Icon">
 	<!ENTITY daniname "notification icon">
-	<!ENTITY daltref "../html/UI_Intro.htm#ListeningTip">
+	<!ENTITY daltref "../Reference/UI_Intro.htm#ListeningTip">
 	<!ENTITY daltname "Listening tip">
 ]>
 
@@ -954,8 +954,8 @@
 
 		<member name="F:&dans;.RequestStatus.Failed">
 			<summary>
-				The request failed and an error code is available in the <see cref="T:&dans;.Request" suffix="Object's" /> <see cref="P:&dans;.Request.Number" />
-				property.
+				The request failed and an error code is available in the <see cref="T:&dans;.Request" suffix="Object's" />
+				<see cref="P:&dans;.Request.Number" /> property.
 			</summary>
 			<value>1</value>
 		</member>
@@ -967,8 +967,8 @@
 
 		<member name="F:&dans;.RequestStatus.Interrupted">
 			<summary>
-				The request was interrupted and an error code is available in the <see cref="T:&dans;.Request" suffix="Object's" /> <see cref="P:&dans;.Request.Number" />
-				property.
+				The request was interrupted and an error code is available in the <see cref="T:&dans;.Request" suffix="Object's" />
+				<see cref="P:&dans;.Request.Number" /> property.
 			</summary>
 			<value>3</value>
 		</member>
@@ -1697,7 +1697,9 @@
 			<value name="AutoConnect">
 				A <typename>numeric</typename> value specifying whether automatic connection is
 				enabled.
-				<para>On a 32-bit system:</para>
+				<para>
+					On a 32-bit system:
+				</para>
 				<list type="table">
 					<item>
 						<term width="150ex">0</term>
@@ -1707,12 +1709,12 @@
 					</item>
 					<item>
 						<term width="150ex">Any non-zero value</term>
-						<description>
-							The control will automatically connect to the server.
-						</description>
+						<description>The control will automatically connect to the server.</description>
 					</item>
 				</list>
-				<para>On a 64-bit system:</para>
+				<para>
+					On a 64-bit system:
+				</para>
 				<list type="table">
 					<item>
 						<term width="150ex">0</term>
@@ -1723,31 +1725,34 @@
 					<item>
 						<term width="150ex">32</term>
 						<description>
-							The control will automatically connect to the 32-bit server. If the 32-bit server is not installed, the 64-bit server will be used.
+							The control will automatically connect to the 32-bit server. If the 32-bit server is
+							not installed, the 64-bit server will be used.
 						</description>
 					</item>
 					<item>
 						<term width="150ex">64</term>
 						<description>
-							The control will automatically connect to the 64-bit server. If the 64-bit server is not installed, the 32-bit server will be used.
+							The control will automatically connect to the 64-bit server. If the 64-bit server is
+							not installed, the 32-bit server will be used.
 						</description>
 					</item>
 					<item>
 						<term width="150ex">Any other non-zero value</term>
 						<description>
-							The control will automatically connect to server with the same architecture as the calling process. If the matching server is not installed, then the other server will be used.
+							The control will automatically connect to server with the same architecture as the calling
+							process. If the matching server is not installed, then the other server will be used.
 						</description>
 					</item>
 				</list>
 			</value>
 			<remarks>
 				<para>
-					If this property is <keyword>non-zero</keyword>, then the control will automatically establish a connection with
-					the server the first time it's required. To use the control in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a>
+					If this property is <keyword>non-zero</keyword>, then the control will automatically establish a
+					connection with the server the first time it's required. To use the control in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a>
 					mode, you must set this property to <keyword>zero</keyword>.
 				</para>
 				<para>
-					For compatibility with Microsoft Agent, the default value for this property is <keyword>True</keyword>.
+					For compatibility with Microsoft<sup>®</sup> Agent, the default value for this property is <keyword>True</keyword>.
 				</para>
 			</remarks>
 			<seealso cref="P:&darootobj;.Connected" suffix="Property" prefix="The" />
@@ -2157,7 +2162,7 @@
 					character, then your smoothing settings will apply to all clients.
 				</para>
 				<note>
-					For compatibility with Microsoft Agent, the <see class="" cref="F:&dans;.CharacterStyleFlags.IconShown" />
+					For compatibility with Microsoft<sup>®</sup> Agent, the <see class="" cref="F:&dans;.CharacterStyleFlags.IconShown" />
 					flag is set by default. To load a <see cref="T:&dans;.Character" /> without showing it's <a class="see" href="&daniref;">&daniname;</a>,
 					set the <see class="" cref="F:&dans;.CharacterStyleFlags.IconShown" /> flag off.
 				</note>
@@ -2289,8 +2294,7 @@
 		<member name="P:&darootobj;.ControlCharacter">
 			<summary>
 				<para>
-					Specifies the control's <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a>
-					<see cref="T:&dans;.Character" />.
+					Specifies the control's <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a> <see cref="T:&dans;.Character" />.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -2326,8 +2330,8 @@
 				</para>
 				<para>
 					Normally, the control isn't visible at runtime, but when it has a <self>ControlCharacter</self>
-					it will become visible as a child window of its containing form. This is the only time the ActiveX<sup>®</sup> <glossary>appearance</glossary>
-					properties, such as <see cref="P:&darootobj;.BackColor" /> and <see cref="P:&darootobj;.BorderColor" />,
+					it will become visible as a child window of its containing form. This is the only time the ActiveX<sup>®</sup>
+					<glossary>appearance</glossary> properties, such as <see cref="P:&darootobj;.BackColor" /> and <see cref="P:&darootobj;.BorderColor" />,
 					are used.
 				</para>
 				<note>
@@ -2393,16 +2397,16 @@
 </vb>
 </syntax>
 			<value name="RaiseRequestErrors">
-				A <typename>boolean</typename> value that determines whether errors are raised
-				for failed requests. The default value is <keyword>True</keyword>.
+				A <typename>boolean</typename> value that determines whether errors are
+				raised for failed requests. The default value is <keyword>True</keyword>.
 			</value>
 			<remarks>
 				<para>
 					When a method that returns a <see cref="T:&dans;.Request" suffix="Object" /> fails, there are two ways
 					to detect the error. If <self>RaiseRequestErrors</self> is set, the Double Agent control will raise an
-					error condition. If it's not set, you can check the <see cref="T:&dans;.Request" suffix="Object's" />
-					<see cref="P:&dans;.Request.Status" /> property. An example of a request error is when you specify an animation
-					name that doesn't exist for the <see cref="M:&dans;.Character.Play" /> method.
+					error condition. If it's not set, you can check the <see cref="T:&dans;.Request" suffix="Object's" /> <see cref="P:&dans;.Request.Status" />
+					property. An example of a request error is when you specify an animation name that doesn't exist for
+					the <see cref="M:&dans;.Character.Play" /> method.
 				</para>
 			</remarks>
 		</member>
@@ -2576,6 +2580,14 @@
 			<seealso cref="E:&darootobj;.ActiveClientChange" prefix="The" suffix="Event" />
 		</member>
 
+		<member name="T:&dans;.ActivateInputEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.ActivateInput" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.ActiveClientChange">
@@ -2629,6 +2641,14 @@
 			<seealso cref="E:&darootobj;.DeactivateInput" prefix="The" suffix="Event" />
 		</member>
 
+		<member name="T:&dans;.ActiveClientChangeEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.ActiveClientChange" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.AgentPropertyChange">
@@ -2662,6 +2682,14 @@
 				</para>
 			</remarks>
 			<seealso cref="E:&darootobj;.DefaultCharacterChange" prefix="The" suffix="Event" />
+		</member>
+
+		<member name="T:&dans;.AgentPropertyChangeEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.AgentPropertyChange" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -2702,6 +2730,14 @@
 			<seealso cref="E:&darootobj;.BalloonShow" prefix="The" suffix="Event" />
 		</member>
 
+		<member name="T:&dans;.BalloonHideEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.BalloonHide" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.BalloonShow">
@@ -2740,6 +2776,14 @@
 			<seealso cref="E:&darootobj;.BalloonHide" prefix="The" suffix="Event" />
 		</member>
 
+		<member name="T:&dans;.BalloonShowEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.BalloonShow" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.Bookmark">
@@ -2769,11 +2813,19 @@
 			<remarks>
 				<para>
 					To specify a bookmark event, use the <see cref="M:&dans;.Character.Speak" /> or <see cref="M:&dans;.Character.SpeakFormatted" />
-					method with a <keyword>Mrk</keyword> tag in your supplied text. For more information about tags, see <a href="MsAgent.chm::/hh/msagent/guidlin_2my6.htm">Speech Output Tags</a>.
+					method with a <keyword>Mrk</keyword> tag in your supplied text. For more information about tags, see <a href="../Reference/Ref_SpeechTags.htm">Speech Output Tags</a>.
 				</para>
 			</remarks>
 			<seealso cref="M:&dans;.Character.Speak" prefix="The" suffix="Method" />
 			<seealso cref="M:&dans;.Character.SpeakFormatted" prefix="The" suffix="Method" />
+		</member>
+
+		<member name="T:&dans;.BookmarkEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.Bookmark" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -2818,12 +2870,20 @@
 					using button 1, the character is also automatically shown.
 				</para>
 				<note>
-					Clicking a character does not disable all other character output. However, pressing the <glossary>Listening key</glossary>
-					<em>does</em> flush the <glossary>input-active</glossary> character's output and triggers the <see cref="E:&darootobj;.RequestComplete" />
+					Clicking a character does not disable all other character output. However, pressing the <glossary>Listening key</glossary> <em>does</em>
+					flush the <glossary>input-active</glossary> character's output and triggers the <see cref="E:&darootobj;.RequestComplete" />
 					event, passing a <see cref="P:&dans;.Request.Status" /> that indicates that the client's queue was interrupted.
 				</note>
 			</remarks>
 			<seealso cref="E:&darootobj;.DblClick" prefix="The" suffix="Event" />
+		</member>
+
+		<member name="T:&dans;.ClickEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.Click" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -2862,6 +2922,14 @@
 				</para>
 			</remarks>
 			<seealso cref="T:&dans;.UserInput" prefix="The" suffix="Object" />
+		</member>
+
+		<member name="T:&dans;.CommandEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.Command" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -2907,6 +2975,14 @@
 				</para>
 			</remarks>
 			<seealso cref="E:&darootobj;.Click" prefix="The" suffix="Event" />
+		</member>
+
+		<member name="T:&dans;.DblClickEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.DblClick" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -2957,6 +3033,14 @@
 			<seealso cref="E:&darootobj;.ActiveClientChange" prefix="The" suffix="Event" />
 		</member>
 
+		<member name="T:&dans;.DeactivateInputEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.DeactivateInput" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.DefaultCharacterChange">
@@ -2996,6 +3080,14 @@
 			<seealso cref="M:&darootobj;.ShowDefaultCharacterProperties" prefix="The" suffix="Method" />
 			<seealso cref="M:&dans;.Characters.Load" prefix="The" suffix="Method" />
 			<seealso cref="P:&dans;.CharacterFiles.DefaultFilePath" prefix="The" suffix="Property" />
+		</member>
+
+		<member name="T:&dans;.DefaultCharacterChangeEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.DefaultCharacterChange" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -3040,6 +3132,14 @@
 			<seealso cref="E:&darootobj;.DragStart" prefix="The" suffix="Event" />
 		</member>
 
+		<member name="T:&dans;.DragCompleteEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.DragComplete" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.DragStart">
@@ -3079,6 +3179,14 @@
 				</para>
 			</remarks>
 			<seealso cref="E:&darootobj;.DragComplete" prefix="The" suffix="Event" />
+		</member>
+
+		<member name="T:&dans;.DragStartEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.DragStart" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -3128,6 +3236,14 @@
 			<seealso cref="P:&dans;.Character.VisibilityCause" prefix="The" suffix="Property" />
 		</member>
 
+		<member name="T:&dans;.HideEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.Hide" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.IdleComplete">
@@ -3166,6 +3282,14 @@
 			<seealso cref="P:&dans;.Character.IdleState" prefix="The" suffix="Property" />
 		</member>
 
+		<member name="T:&dans;.IdleCompleteEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.IdleComplete" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.IdleStart">
@@ -3202,6 +3326,14 @@
 			<seealso cref="E:&darootobj;.IdleComplete" prefix="The" suffix="Event" />
 			<seealso cref="P:&dans;.Character.IdleEnabled" prefix="The" suffix="Property" />
 			<seealso cref="P:&dans;.Character.IdleState" prefix="The" suffix="Property" />
+		</member>
+
+		<member name="T:&dans;.IdleStartEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.IdleStart" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -3254,8 +3386,8 @@
 					If you turn on <glossary>Listening mode</glossary> using the <see cref="M:&dans;.Character.Listen" />
 					method and then the user presses the <glossary>Listening key</glossary>, the <glossary>Listening mode</glossary>
 					resets and continues until the <glossary>Listening key</glossary> time-out completes, the <glossary>Listening key</glossary>
-					is released, or the user finishes speaking, whichever is later. In this situation, you will <em>not</em> receive
-					a <self>ListenComplete</self> event until the <glossary>Listening key</glossary>'s mode completes.
+					is released, or the user finishes speaking, whichever is later. In this situation, you will <em>not</em>
+					receive a <self>ListenComplete</self> event until the <glossary>Listening key</glossary>'s mode completes.
 				</para>
 				<para>
 					The event returns the <paramref name="CharacterID" /> to the clients that currently have this character loaded.
@@ -3266,6 +3398,14 @@
 			<seealso cref="E:&darootobj;.ListenStart" prefix="The" suffix="Event" />
 			<seealso cref="M:&dans;.Character.Listen" prefix="The" suffix="Method" />
 			<seealso cref="P:&dans;.Settings.SRHotKeyTime" prefix="The" suffix="Property" />
+		</member>
+
+		<member name="T:&dans;.ListenCompleteEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.ListenComplete" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -3319,6 +3459,14 @@
 			<seealso cref="P:&dans;.Settings.SRHotKey" prefix="The" suffix="Property" />
 		</member>
 
+		<member name="T:&dans;.ListenStartEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.ListenStart" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.Move">
@@ -3368,6 +3516,14 @@
 			<seealso cref="T:&dans;.MoveCauseType" suffix="Enumeration" prefix="The" />
 		</member>
 
+		<member name="T:&dans;.MoveEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.Move" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.RequestComplete">
@@ -3401,7 +3557,7 @@
 				<para>
 					This event provides a <see cref="T:&dans;.Request" suffix="Object" />. Because requests are processed asynchronously,
 					you can use this event to determine when Double Agent finishes processing a request (such
-					as a <see cref="M:&dans;.Character.Get" />, <see cref="M:&dans;.Character.Play" />, or <see cref="M:&dans;.Character.Speak" />
+					as a <see cref="M:&dans;.Character.Prepare" />, <see cref="M:&dans;.Character.Play" />, or <see cref="M:&dans;.Character.Speak" />
 					method) to synchronize this event with other requests generated by your application. Double Agent sends
 					the event only to the client that created the reference to the <see cref="T:&dans;.Request" suffix="Object" />,
 					and only if you defined a global variable for the request reference.
@@ -3445,6 +3601,14 @@
 			<seealso cref="E:&darootobj;.RequestStart" prefix="The" suffix="Event" />
 		</member>
 
+		<member name="T:&dans;.RequestCompleteEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.RequestComplete" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.RequestStart">
@@ -3478,7 +3642,7 @@
 				<para>
 					The event provides a <see cref="T:&dans;.Request" suffix="Object" />. Because requests are processed asynchronously,
 					you can use this event to determine when Double Agent begins processing a request (such
-					as a <see cref="M:&dans;.Character.Get" />, <see cref="M:&dans;.Character.Play" />, or <see cref="M:&dans;.Character.Speak" />
+					as a <see cref="M:&dans;.Character.Prepare" />, <see cref="M:&dans;.Character.Play" />, or <see cref="M:&dans;.Character.Speak" />
 					method) and thereby synchronize this with other requests generated by your application. The event is
 					sent only to the client that created the reference to the <see cref="T:&dans;.Request" suffix="Object" />,
 					and only if you defined a global variable for the request reference.
@@ -3525,6 +3689,14 @@
 				</example>
 			</remarks>
 			<seealso cref="E:&darootobj;.RequestComplete" prefix="The" suffix="Event" />
+		</member>
+
+		<member name="T:&dans;.RequestStartEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.RequestStart" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -3574,6 +3746,14 @@
 			<seealso cref="P:&dans;.Character.VisibilityCause" prefix="The" suffix="Property" />
 		</member>
 
+		<member name="T:&dans;.ShowEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.Show" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.Size">
@@ -3609,6 +3789,14 @@
 				</para>
 			</remarks>
 			<seealso cref="E:&darootobj;.Move" prefix="The" suffix="Event" />
+		</member>
+
+		<member name="T:&dans;.SizeEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.Size" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -3648,6 +3836,14 @@
 			<seealso cref="E:&darootobj;.SpeechWord" prefix="The" suffix="Event" />
 			<seealso cref="T:&dans;.FormattedText" suffix="Object" prefix="The" />
 			<seealso cref="M:&dans;.Character.SpeakFormatted" suffix="Method" prefix="The" />
+		</member>
+
+		<member name="T:&dans;.SpeechStartEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.SpeechStart" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -3693,6 +3889,14 @@
 			<seealso cref="M:&dans;.Character.SpeakFormatted" suffix="Method" prefix="The" />
 			<seealso cref="M:&dans;.Character.Stop" suffix="Method" prefix="The" />
 			<seealso cref="M:&dans;.Character.StopAll" suffix="Method" prefix="The" />
+		</member>
+
+		<member name="T:&dans;.SpeechEndEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.SpeechEnd" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -3742,6 +3946,14 @@
 			<seealso cref="T:&dans;.FormattedText" suffix="Object" prefix="The" />
 			<seealso cref="P:&dans;.FormattedText.WordIndex" suffix="Property" prefix="The" />
 			<seealso cref="M:&dans;.Character.SpeakFormatted" suffix="Method" prefix="The" />
+		</member>
+
+		<member name="T:&dans;.SpeechWordEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.SpeechWord" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -4489,6 +4701,13 @@
 
 		<!--=============================================================================================-->
 
+		<member name="M:&dans;.Characters.GetEnumerator">
+			<inheritdoc/>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
 		<member name="P:&dans;.Characters.Count">
 			<summary>
 				<para>
@@ -4538,10 +4757,10 @@
 				A <typename>numeric</typename> value that specifies the zero-based index of the item
 				to retrieve.
 			</param>
-			<returns name="Character">
+			<value name="Character">
 				The <see class="typename" cref="T:&dans;.Character" suffix="Object" /> at
 				the spedified <paramref name="Index" />.
-			</returns>
+			</value>
 			<remarks>
 				<para>
 					When you want to use the <see cref="T:&dans;.Characters" suffix="Collection" /> as an <em>ordered</em>
@@ -4579,10 +4798,10 @@
 				A <typename>string</typename> value that specifies the <see cref="P:&dans;.Character.CharacterID" />
 				assigned to the character when it was loaded.
 			</param>
-			<returns name="Character">
+			<value name="Character">
 				The <see class="typename" cref="T:&dans;.Character" suffix="Object" /> with
 				the specified <paramref name="CharacterID" />.
-			</returns>
+			</value>
 			<seealso cref="P:&dans;.Character.CharacterID" suffix="Property" prefix="The" />
 			<seealso cref="P:&dans;.Characters.Index" suffix="Property" prefix="The" />
 		</member>
@@ -5293,10 +5512,10 @@
 					<see cref="T:&dans;.Request" suffix="Object" />.
 				</para>
 				<para>
-					When accessing a character's animations using a conventional file protocol, you can simply use the
-					<self>Play</self> method specifying the name of the animation. However, if you're using the <glossary>HTTP</glossary>
-					protocol to access character animation data, use the <see cref="M:&dans;.Character.Prepare" /> method to
-					load the animation before calling the <self>Play</self> method.
+					When accessing a character's animations using a conventional file protocol, you can simply use the<self>Play</self>
+					method specifying the name of the animation. However, if you're using the <glossary>HTTP</glossary> protocol
+					to access character animation data, use the <see cref="M:&dans;.Character.Prepare" /> method to load the
+					animation before calling the <self>Play</self> method.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.Character.Animations" prefix="The" suffix="Property" />
@@ -5373,10 +5592,9 @@
 			<details>
 				<para>
 					You can declare an object reference and set it to the method's <see cref="T:&dans;.Request" suffix="Object" />
-					return value. If the associated animation fails to load, Double Agent sets the <see cref="T:&dans;.Request" suffix="Object's" />
-					<see cref="P:&dans;.Request.Status" /> property to 1 (Failed) with an appropriate error <see cref="P:&dans;.Request.Number" />.
-					You can use the <see cref="E:&darootobj;.RequestComplete" /> event to check the status and determine what
-					action to take.
+					return value. If the associated animation fails to load, Double Agent sets the <see cref="T:&dans;.Request" suffix="Object's" /> <see cref="P:&dans;.Request.Status" />
+					property to 1 (Failed) with an appropriate error <see cref="P:&dans;.Request.Number" />. You can use the
+					<see cref="E:&darootobj;.RequestComplete" /> event to check the status and determine what action to take.
 				</para>
 				<para>
 					Animation or sound data retrieved with the <self>Prepare</self> method is cached locally. Subsequent calls
@@ -5551,13 +5769,13 @@
 					engine must already be installed before calling this method. For further information, see <a href="../Programming/Ctl_Programming_Speech.htm">Using Speech Services</a>.
 				</para>
 				<para>
-					Unlike Microsoft Agent, Double Agents supports the <self>Speak</self> method for characters that are
-					not designed to speak. However, there won't be any mouth animations because they aren't included in
-					the character design.
+					Unlike Microsoft<sup>®</sup> Agent, Double Agents supports the <self>Speak</self> method for characters that
+					are not designed to speak. However, there won't be any mouth animations because they aren't included
+					in the character design.
 				</para>
 				<para>
 					You can vary parameters of the speech output with special tags that you include in the <paramref name="Text" />
-					parameter. For more information, see <a href="MsAgent.chm::/hh/msagent/spoutput_2v1w.htm">Microsoft Agent Speech Output Tags</a>.
+					parameter. For more information, see <a href="../Reference/Ref_SpeechTags.htm">Speech Output Tags</a>.
 				</para>
 				<example>
 					<para>
@@ -5573,7 +5791,7 @@
        <keyword>Msgbox</keyword> "Tada!"
     <keyword>End If</keyword>
 <keyword>End Sub</keyword></code>
-					For more information on the bookmark speech tag, see <a href="MsAgent.chm::/hh/msagent/spoutput_2v1w.htm">Speech Output Tags</a>.
+					For more information on the bookmark speech tag, see <a href="../Reference/Ref_SpeechTags.htm#Mrk">Speech Output Tags</a>.
 				</example>
 				<para>
 					Agent's automatic word breaking in the <a class="see" href="&dawbref;">&dawbname;</a> breaks words using
@@ -5799,11 +6017,10 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 			<remarks>
 				<para>
 					Like the <see cref="M:&dans;.Character.Speak" /> method, the <self>Think</self> method is a queued request
-					that displays text in a <a class="see" href="&dawbref;">&dawbname;</a>, except that the <self>Think</self>
-					<a class="see" href="&dawbref;">&dawbname;</a> differs visually. In addition, the <a class="see" href="&dawbref;">&dawbname;</a>
-					supports only the Bookmark speech control tag (<keyword>\Mrk</keyword>) and ignores any other speech control
-					tags. Unlike <see cref="M:&dans;.Character.Speak" />, the <self>Think</self> method does not change the
-					character's animation state.
+					that displays text in a <a class="see" href="&dawbref;">&dawbname;</a>, except that the <self>Think</self> <a class="see" href="&dawbref;">&dawbname;</a>
+					differs visually. In addition, the <a class="see" href="&dawbref;">&dawbname;</a> supports only the bookmark
+					speech control tag (<keyword>Mrk</keyword>) and ignores any other speech control tags. Unlike <see cref="M:&dans;.Character.Speak" />,
+					the <self>Think</self> method does not change the character's animation state.
 				</para>
 				<para>
 					The <see cref="T:&dans;.Balloon" suffix="Object's" /> properties affect the output of both the <see cref="M:&dans;.Character.Speak" />
@@ -5842,19 +6059,19 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 			</summary>
 			<syntax xml:space="preserve">
 <cpp>
-<para><token>character</token>-&gt;<keyword>Wait</keyword> (<token>WaitRequest</token>, &amp;<token>Request</token>)</para>
+<para><token>character</token>-&gt;<keyword>Wait</keyword> (<token>WaitForRequest</token>, &amp;<token>Request</token>)</para>
 </cpp>
 <csharp>
-<para>[<token>Request</token> = ]&dacharref_csharp;.<keyword>Wait</keyword> (<token>WaitRequest</token>)</para>
+<para>[<token>Request</token> = ]&dacharref_csharp;.<keyword>Wait</keyword> (<token>WaitForRequest</token>)</para>
 </csharp>
 <vbnet>
-<para>[<token>Request</token> = ]&dacharref_vb;.<keyword>Wait</keyword> (<token>WaitRequest</token>)</para>
+<para>[<token>Request</token> = ]&dacharref_vb;.<keyword>Wait</keyword> (<token>WaitForRequest</token>)</para>
 </vbnet>
 <vb>
-<para>[<keyword>Set</keyword> <token>Request</token> = ]&dacharref_vb;.<keyword>Wait</keyword> <token>WaitRequest</token></para>
+<para>[<keyword>Set</keyword> <token>Request</token> = ]&dacharref_vb;.<keyword>Wait</keyword> <token>WaitForRequest</token></para>
 </vb>
 </syntax>
-			<param name="WaitRequest">
+			<param name="WaitForRequest">
 				A <see class="typename" cref="T:&dans;.Request" suffix="Object" /> specifying the
 				animation to wait for.
 			</param>
@@ -6188,8 +6405,8 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 			<remarks>
 				<para>
 					When the control is being used in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a>
-					mode, any <see cref="T:&dans;.Character" /> you load <em>will</em> be <self>Connected</self>.
-					When the control is being used in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a>
+					mode, any <see cref="T:&dans;.Character" /> you load <em>will</em> be <self>Connected</self>. When the control
+					is being used in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a>
 					mode, any <see cref="T:&dans;.Character" /> you load <em>will not</em> be <self>Connected</self>.
 				</para>
 			</remarks>
@@ -6226,7 +6443,7 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 					A character's <self>Description</self> may depend on the character's <see cref="P:&dans;.Character.LanguageID" />
 					setting. A character's description in one language may be different or use different characters than
 					in another. The character's default <self>Description</self> for a specific language is defined when the
-					character is compiled with the Microsoft Agent Character Editor.
+					character is compiled with the Microsoft<sup>®</sup> Agent Character Editor.
 				</para>
 				<note>
 					The <self>Description</self> property is optional and may not be supplied for all characters.
@@ -6261,7 +6478,8 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 			<remarks>
 				<para>
 					The default value for a character's <self>ExtraData</self> property is defined when the character is
-					compiled with the Microsoft Agent Character Editor. It cannot be changed or specified at run time.
+					compiled with the Microsoft<sup>®</sup> Agent Character Editor. It cannot be changed or specified at run
+					time.
 				</para>
 				<note>
 					The <self>ExtraData</self> property setting is optional and may not be supplied for all characters.
@@ -6411,10 +6629,15 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 					application is sharing (has loaded) the same character.
 				</para>
 				<note>
+					Double Agent uses the <see cref="P:&dans;.Character.UniqueID" /> property, not the <see cref="P:&dans;.Character.FilePath" />
+					property, to determine if the same character is being used by more than one client application.
+				</note>
+				<note>
 					If your application uses multiple instances of the <see cref="T:&darootobj;" suffix="Object" />,
 					each instance is a treated as a different client and this property will return <keyword>True</keyword>.
 				</note>
 			</remarks>
+			<seealso cref="P:&dans;.Character.UniqueID" suffix="Property" prefix="The" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -6449,7 +6672,7 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 				<para>
 					Even though the character appears in an irregularly shaped region window, the dimensions of the character
 					are based on the external dimensions of the rectangular animation frame used when the character
-					was compiled with the Microsoft Agent Character Editor.
+					was compiled with the Microsoft<sup>®</sup> Agent Character Editor.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='AllClients']" />
 			</remarks>
@@ -6840,8 +7063,8 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 				</para>
 				<para>
 					Even though the character appears in an irregularly shaped region window, the location of the character is
-					based on the external dimensions of the rectangular animation frame used when the character was compiled
-					with the Microsoft Agent Character Editor.
+					based on the external dimensions of the rectangular animation frame used when the character was
+					compiled with the Microsoft<sup>®</sup> Agent Character Editor.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='AllClients']" />
 			</remarks>
@@ -6962,7 +7185,7 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 					A character's <self>Name</self> may depend on the character's <see cref="P:&dans;.Character.LanguageID" />
 					setting. A character's name in one language may be different or use different characters than in
 					another. The character's default <self>Name</self> for a specific language is defined when the character is
-					compiled with the Microsoft Agent Character Editor.
+					compiled with the Microsoft<sup>®</sup> Agent Character Editor.
 				</para>
 				<para>
 					Avoid renaming a character, especially when using it in a scenario where other client applications may
@@ -6992,7 +7215,10 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 <para>[<token>OriginalHeight</token> = ]&dacharref_vb;.<keyword>OriginalHeight</keyword></para>
 </vb>
 </syntax>
-			<value name="OriginalHeight">The character's image height as defined with the Microsoft Agent Character Editor.</value>
+			<value name="OriginalHeight">
+				The character's image height as defined with the Microsoft<sup>®</sup>
+				Agent Character Editor.
+			</value>
 			<seealso cref="P:&dans;.Character.Height" prefix="The" suffix="Property" />
 			<seealso cref="P:&dans;.Character.OriginalWidth" prefix="The" suffix="Property" />
 		</member>
@@ -7016,7 +7242,10 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 <para>[<token>OriginalWidth</token> = ]&dacharref_vb;.<keyword>OriginalWidth</keyword></para>
 </vb>
 </syntax>
-			<value name="OriginalWidth">The character's image width as defined with the Microsoft Agent Character Editor.</value>
+			<value name="OriginalWidth">
+				The character's image width as defined with the Microsoft<sup>®</sup>
+				Agent Character Editor.
+			</value>
 			<seealso cref="P:&dans;.Character.Width" prefix="The" suffix="Property" />
 			<seealso cref="P:&dans;.Character.OriginalHeight" prefix="The" suffix="Property" />
 		</member>
@@ -7053,7 +7282,7 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 					Although your application cannot write this value, you can include <keyword>Pit</keyword> (pitch) tags
 					in your speech output text that will temporarily change the pitch for a particular utterance. However,
 					using the <keyword>Pit</keyword> tag to change the pitch will not change the <self>Pitch</self> property value.
-					For further information, see <a href="MsAgent.chm::/hh/msagent/spoutput_2v1w.htm">Speech Output Tags</a>.
+					For further information, see <a href="../Reference/Ref_SpeechTags.htm#Pit">Speech Output Tags</a>.
 				</para>
 			</remarks>
 		</member>
@@ -7229,7 +7458,7 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 					Although your application cannot write this value, you can include <keyword>Spd</keyword> (speed) tags
 					in your speech output text that will temporarily change the output speed for a particular utterance.
 					However, using the <keyword>Spd</keyword> tag to change the character's spoken output does not affect the
-					<self>Speed</self> property value. For further information, see <a href="MsAgent.chm::/hh/msagent/spoutput_2v1w.htm">Speech Output Tags</a>.
+					<self>Speed</self> property value. For further information, see <a href="../Reference/Ref_SpeechTags.htm#Spd">Speech Output Tags</a>.
 				</para>
 			</remarks>
 		</member>
@@ -7301,9 +7530,9 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 			</value>
 			<remarks>
 				<para>
-					This property determines the speech recognition engine used by the character for speech input. The <self>SRModeID</self>
-					for a speech recognition engine is a formatted string defined by the vendor that uniquely identifies the
-					engine.
+					This property determines the speech recognition engine used by the character for speech input. The
+					<self>SRModeID</self> for a speech recognition engine is a formatted string defined by the vendor that uniquely
+					identifies the engine.
 				</para>
 			</remarks>
 			<details>
@@ -7482,8 +7711,8 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 				</para>
 				<para>
 					Even though the character appears in an irregularly shaped region window, the location of the character is
-					based on the external dimensions of the rectangular animation frame used when the character was compiled
-					with the Microsoft Agent Character Editor.
+					based on the external dimensions of the rectangular animation frame used when the character was
+					compiled with the Microsoft<sup>®</sup> Agent Character Editor.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='AllClients']" />
 			</remarks>
@@ -7608,23 +7837,23 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 			</summary>
 			<syntax xml:space="preserve">
 <cpp>
-<para><token>character</token>-&gt;<keyword>get_UniqueID</keyword> (&amp;<token>UniqueID</token>)</para>
+<para><token>character</token>-&gt;<keyword>get_UniqueID</keyword> (&amp;<token>CharGUID</token>)</para>
 </cpp>
 <csharp>
-<para>[<token>UniqueID</token> = ]&dacharref_csharp;.<keyword>UniqueID</keyword></para>
+<para>[<token>CharGUID</token> = ]&dacharref_csharp;.<keyword>UniqueID</keyword></para>
 </csharp>
 <vb>
-<para>[<token>UniqueID</token> = ]&dacharref_vb;.<keyword>UniqueID</keyword></para>
+<para>[<token>CharGUID</token> = ]&dacharref_vb;.<keyword>UniqueID</keyword></para>
 </vb>
 </syntax>
-			<value name="UniqueID">
+			<value name="CharGUID">
 				A <typename>string</typename> value containing the the character's unique (GUID)
 				identifier.
 			</value>
 			<remarks>
 				<para>
 					This property returns a string representing the internal identifier that Double Agent uses to uniquely identify
-					the character. A character identifier is set when it is compiled with the Microsoft Agent Character
+					the character. A character identifier is set when it is compiled with the Microsoft<sup>®</sup> Agent Character
 					Editor.
 				</para>
 				<note>
@@ -7654,14 +7883,14 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 </vb>
 </syntax>
 			<value name="Version">
-				A <typename>string</typename> that identifies the Microsoft Agent version for which
-				the character was built.
+				A <typename>string</typename> that identifies the Microsoft<sup>®</sup> Agent version
+				for which the character was built.
 			</value>
 			<remarks>
 				<para>
 					The <self>Version</self> property returns a string that corresponds to the version of the standard animation
 					set definition for which the character was compiled. The character's version number is automatically
-					set when you build it with the Microsoft Agent Character Editor.
+					set when you build it with the Microsoft<sup>®</sup> Agent Character Editor.
 				</para>
 			</remarks>
 		</member>
@@ -7778,7 +8007,7 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 				<para>
 					Even though the character appears in an irregularly shaped region window, the dimensions of the character
 					are based on the external dimensions of the rectangular animation frame used when the character
-					was compiled with the Microsoft Agent Character Editor.
+					was compiled with the Microsoft<sup>®</sup> Agent Character Editor.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='AllClients']" />
 			</remarks>
@@ -8892,8 +9121,8 @@ Genie.<keyword>Show</keyword>();
 			<param name="Caption">
 				A <typename>string</typename> value specifying the name that will appear in the
 				character's <a class="see" href="&dacmref;">&dacmname;</a> and in the <a class="see" href="&davcref;">&davcname;</a>
-				window when the client application is <glossary>input-active</glossary>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" />
-				<see cref="P:&dans;.Command.Caption" /> property.
+				window when the client application is <glossary>input-active</glossary>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.Caption" />
+				property.
 			</param>
 			<param name="VoiceGrammar">
 				A <typename>string</typename> value specifying the words or phrase used by
@@ -8903,14 +9132,14 @@ Genie.<keyword>Show</keyword>();
 			</param>
 			<param name="Enabled">
 				A <typename>boolean</typename> value indicating whether the command is enabled. The
-				default value is <keyword>True</keyword>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" />
-				<see cref="P:&dans;.Command.Enabled" /> property.
+				default value is <keyword>True</keyword>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.Enabled" />
+				property.
 			</param>
 			<param name="Visible">
 				A <typename>boolean</typename> value indicating whether the command is visible in
 				the character's <a class="see" href="&dacmref;">&dacmname;</a> when the client application is <glossary>input-active</glossary>.
-				The default value is <keyword>True</keyword>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.Visible" />
-				property.
+				The default value is <keyword>True</keyword>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" />
+				<see cref="P:&dans;.Command.Visible" /> property.
 			</param>
 			<returns name="Command">
 				The <see class="typename" cref="T:&dans;.Command" suffix="Object" /> added, if
@@ -8937,6 +9166,7 @@ Command1.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			<seealso cref="M:&dans;.Commands.Insert" prefix="The" suffix="Method" />
 			<seealso cref="M:&dans;.Commands.Remove" prefix="The" suffix="Method" />
 			<seealso cref="M:&dans;.Commands.RemoveAll" prefix="The" suffix="Method" />
+			<seealso cref="P:&dans;.Commands.Item" prefix="The" suffix="Property" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -8985,7 +9215,7 @@ Command1.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 		<member name="M:&dans;.Commands.Insert">
 			<summary>
 				<para>
-					Inserts a <see cref="T:&dans;.Command" suffix="Object" /> in the <see cref="T:&dans;.Commands" suffix="Collection" />.
+					Inserts a <see cref="T:&dans;.Command" suffix="Object" /> into the <see cref="T:&dans;.Commands" suffix="Collection" />.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -9006,8 +9236,8 @@ Command1.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 				A <typename>string</typename> value that uniquely identifies the command.
 			</param>
 			<param name="RefName">
-				A <typename>string</typename> value that specifies the name of the command just
-				above or below where you want to insert the new command.
+				A <typename>string</typename> value that specifies the <see cref="P:&dans;.Command.Name" />
+				of the command just above or below where you want to insert the new command.
 			</param>
 			<param name="Before">
 				A <typename>boolean</typename> value indicating whether to insert the new command <strong>before</strong>
@@ -9016,8 +9246,8 @@ Command1.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			<param name="Caption">
 				A <typename>string</typename> value specifying the name that will appear in the
 				character's <a class="see" href="&dacmref;">&dacmname;</a> and in the <a class="see" href="&davcref;">&davcname;</a>
-				window when the client application is <glossary>input-active</glossary>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" />
-				<see cref="P:&dans;.Command.Caption" /> property.
+				window when the client application is <glossary>input-active</glossary>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.Caption" />
+				property.
 			</param>
 			<param name="VoiceGrammar">
 				A <typename>string</typename> value specifying the words or phrase used by
@@ -9027,14 +9257,14 @@ Command1.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			</param>
 			<param name="Enabled">
 				A <typename>boolean</typename> value indicating whether the command is enabled. The
-				default value is <keyword>True</keyword>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" />
-				<see cref="P:&dans;.Command.Enabled" /> property.
+				default value is <keyword>True</keyword>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.Enabled" />
+				property.
 			</param>
 			<param name="Visible">
 				A <typename>boolean</typename> value indicating whether the command is visible in
 				the character's <a class="see" href="&dacmref;">&dacmname;</a> when the client application is <glossary>input-active</glossary>.
-				The default value is <keyword>True</keyword>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.Visible" />
-				property.
+				The default value is <keyword>True</keyword>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" />
+				<see cref="P:&dans;.Command.Visible" /> property.
 			</param>
 			<returns name="Command">
 				The <see class="typename" cref="T:&dans;.Command" suffix="Object" /> inserted, if
@@ -9061,6 +9291,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			<seealso cref="M:&dans;.Commands.Add" prefix="The" suffix="Method" />
 			<seealso cref="M:&dans;.Commands.Remove" prefix="The" suffix="Method" />
 			<seealso cref="M:&dans;.Commands.RemoveAll" prefix="The" suffix="Method" />
+			<seealso cref="P:&dans;.Commands.Item" prefix="The" suffix="Property" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -9086,7 +9317,8 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 </vb>
 </syntax>
 			<param name="Name">
-				The name of the <see cref="T:&dans;.Command" suffix="Object" /> to remove.
+				The <see cref="P:&dans;.Command.Name" /> of the <see cref="T:&dans;.Command" suffix="Object" />
+				to remove.
 			</param>
 			<remarks>
 				<para>
@@ -9128,6 +9360,12 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 				</para>
 			</remarks>
 			<seealso cref="M:&dans;.Commands.Remove" prefix="The" suffix="Method" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:&dans;.Commands.GetEnumerator">
+			<inheritdoc/>
 		</member>
 
 		<!--=============================================================================================-->
@@ -9384,10 +9622,10 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 				A <typename>numeric</typename> value that specifies the zero-based index of the item
 				to retrieve.
 			</param>
-			<returns name="Command">
+			<value name="Command">
 				The <see class="typename" cref="T:&dans;.Command" suffix="Object" /> at the specified
 				<paramref name="Index" />.
-			</returns>
+			</value>
 			<remarks>
 				<para>
 					When you want to use the <see cref="T:&dans;.Commands" suffix="Collection" /> as an <em>ordered</em>
@@ -9425,10 +9663,10 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 				A <typename>string</typename> value that specifies the <see cref="P:&dans;.Command.Name" />
 				given to the command when it was defined.
 			</param>
-			<returns name="Command">
+			<value name="Command">
 				The <see class="typename" cref="T:&dans;.Command" suffix="Object" /> with the
 				specified <paramref name="Name" />.
-			</returns>
+			</value>
 			<seealso cref="P:&dans;.Command.Name" suffix="Property" prefix="The" />
 			<seealso cref="P:&dans;.Commands.Index" suffix="Property" prefix="The" />
 		</member>
@@ -9456,8 +9694,8 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 </vb>
 </syntax>
 			<value name="Visible">
-				A <typename>boolean</typename> value that indiciates if the <see cref="T:&dans;.Commands" />
-				<see cref="P:&dans;.Commands.Caption" /> is visible.
+				A <typename>boolean</typename> value that indiciates if the <see cref="T:&dans;.Commands" /> <see cref="P:&dans;.Commands.Caption" />
+				is visible.
 			</value>
 			<remarks>
 				<para>
@@ -9733,8 +9971,8 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 					<see cref="P:&dans;.Commands.Caption" /> setting is used).
 				</para>
 				<para>
-					This object can be accessed using the <see class="" cref="T:&dans;.Character" text="Character's" />
-					<see class="" cref="P:&dans;.Character.Commands" /> property.
+					This object can be accessed using the <see class="" cref="T:&dans;.Character" text="Character's" /> <see class="" cref="P:&dans;.Character.Commands" />
+					property.
 				</para>
 			</remarks>
 		</member>
@@ -9893,11 +10131,11 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			</value>
 			<remarks>
 				<para>
-					If the <self>Enabled</self> property is set to <keyword>True</keyword>, the <see cref="T:&dans;.Command" suffix="Object's" />
-					<see cref="P:&dans;.Command.Caption" /> appears as normal text in the character's <a class="see" href="&dacmref;">&dacmname;</a>
-					when the client application is <glossary>input-active</glossary>. If the <self>Enabled</self> property is
-					<keyword>False</keyword>, the <see cref="P:&dans;.Command.Caption" /> appears as unavailable (disabled) text.
-					A disabled <see cref="T:&dans;.Command" /> is also not accessible for voice input.
+					If the <self>Enabled</self> property is set to <keyword>True</keyword>, the <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.Caption" />
+					appears as normal text in the character's <a class="see" href="&dacmref;">&dacmname;</a> when the client application
+					is <glossary>input-active</glossary>. If the <self>Enabled</self> property is <keyword>False</keyword>,
+					the <see cref="P:&dans;.Command.Caption" /> appears as unavailable (disabled) text. A disabled <see cref="T:&dans;.Command" />
+					is also not accessible for voice input.
 				</para>
 			</remarks>
 		</member>
@@ -10020,6 +10258,9 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 <para>&dacmdref_vb;.<keyword>VoiceCaption</keyword> = <token>VoiceCaption</token></para>
 </vb>
 </syntax>
+			<value name="VoiceCaption">
+				A <typename>string</typename> value that specifies the <a class="see" href="&davcref;">&davcname;</a> window text.
+			</value>
 			<remarks>
 				<para>
 					This text will appear in the <a class="see" href="&davcref;">&davcname;</a> window when your client application
@@ -10168,10 +10409,10 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 					A command may appear in either the character's <a class="see" href="&dacmref;">&dacmname;</a> and the
 					<a class="see" href="&davcref;">&davcname;</a> window, or in both. To appear in the <a class="see" href="&dacmref;">&dacmname;</a>
 					it must have a <see cref="P:&dans;.Command.Caption" /> and have the <see cref="P:&dans;.Command.Visible" />
-					property set to <keyword>True</keyword>. In addition, its <see cref="T:&dans;.Commands" suffix="Collection's" /> <see cref="P:&dans;.Command.Visible" />
-					property must also be set to <keyword>True</keyword>. To appear in the <a class="see" href="&davcref;">&davcname;</a>
-					window, a <self>Command</self> must have its <see cref="P:&dans;.Command.Caption" /> and <see cref="P:&dans;.Command.VoiceGrammar" />
-					properties set.
+					property set to <keyword>True</keyword>. In addition, its <see cref="T:&dans;.Commands" suffix="Collection's" />
+					<see cref="P:&dans;.Command.Visible" /> property must also be set to <keyword>True</keyword>. To appear in
+					the <a class="see" href="&davcref;">&davcname;</a> window, a <self>Command</self> must have its <see cref="P:&dans;.Command.Caption" />
+					and <see cref="P:&dans;.Command.VoiceGrammar" /> properties set.
 				</para>
 				<para>
 					When Double Agent receives input for one of your commands, it sends a <see cref="E:&darootobj;.Command" />
@@ -10754,7 +10995,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 				<include path="/doc/members/member[@name='F:&dans;.BalloonStyleFlags.Enabled']/remarks/para" />
 				<para>
 					The default enabled style is set as part of a character's definition when the character is compiled in
-					the Microsoft Agent Character Editor. If a character is defined to not support the <a class="see" href="&dawbref;">&dawbname;</a>,
+					the Microsoft<sup>®</sup> Agent Character Editor. If a character is defined to not support the <a class="see" href="&dawbref;">&dawbname;</a>,
 					this property will always be <keyword>False</keyword> for the character.
 				</para>
 				<para>
@@ -11166,7 +11407,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 					properties. The <self>Style</self> property lets you retrieve or set all of these settings at once.
 				</para>
 				<para>
-					The defaults for the <self>Style</self> property are set when the character is compiled with the Microsoft
+					The defaults for the <self>Style</self> property are set when the character is compiled with the Microsoft<sup>®</sup>
 					Agent Character Editor.
 				</para>
 			</remarks>
@@ -11579,16 +11820,15 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			<remarks>
 				<para>
 					A character's initial <a class="see" href="&dawbref;">&dawbname;</a> defaults are defined and compiled in
-					the Microsoft Agent Character Editor. Once running, the <self>Balloon Object's</self> <keyword>Enabled</keyword>
+					the Microsoft<sup>®</sup> Agent Character Editor. Once running, the <self>Balloon Object's</self> <keyword>Enabled</keyword>
 					and <keyword>Font</keyword> properties may be overridden by the user. If a user changes the <a class="see" href="&dawbref;">&dawbname;'s</a>
-					properties, they affect all characters. Both the <see cref="M:&dans;.Character.Speak" /> and <see cref="M:&dans;.Character.Think" />
-					<a class="see" href="&dawbref;">&dawbname;s</a> use the same property settings for size. You can access the
-					properties for a character's <a class="see" href="&dawbref;">&dawbname;</a> through the <self>Balloon Object</self>,
-					which is a child of the <see cref="T:&dans;.Character" suffix="Object" />.
+					properties, they affect all characters. Both the <see cref="M:&dans;.Character.Speak" /> and <see cref="M:&dans;.Character.Think" /> <a class="see" href="&dawbref;">&dawbname;s</a>
+					use the same property settings for size. You can access the properties for a character's <a class="see" href="&dawbref;">&dawbname;</a>
+					through the <self>Balloon Object</self>, which is a child of the <see cref="T:&dans;.Character" suffix="Object" />.
 				</para>
 				<para>
-					This object can be accessed using the <see class="" cref="T:&dans;.Character" suffix="Object's" />
-					<see class="" cref="P:&dans;.Character.Balloon" /> property.
+					This object can be accessed using the <see class="" cref="T:&dans;.Character" suffix="Object's" /> <see class="" cref="P:&dans;.Character.Balloon" />
+					property.
 				</para>
 			</remarks>
 		</member>
@@ -11645,7 +11885,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</value>
 			<remarks>
 				<para>
-					For the values and meanings of the <self>Number</self> property, see <a href="MsAgent.chm::/hh/msagent/agenterr_6w36.htm">Microsoft Agent Error Codes</a>.
+					For the values and meanings of the <self>Number</self> property, see <a href="../Reference/Ref_Errors.htm">Double Agent Error Codes</a>.
 				</para>
 			</remarks>
 		</member>
@@ -11850,7 +12090,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </vb>
 </syntax>
 			<value name="Alt1Name">
-				The name of the second-best matching <see cref="T:&dans;.Command" />.
+				The <see cref="P:&dans;.Command.Name" /> of the second-best matching <see cref="T:&dans;.Command" />.
 			</value>
 			<seealso cref="E:&darootobj;.Command" prefix="The" suffix="Event" />
 		</member>
@@ -11924,7 +12164,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </vb>
 </syntax>
 			<value name="Alt2Name">
-				The name of the third-best matching <see cref="T:&dans;.Command" />.
+				The <see cref="P:&dans;.Command.Name" /> of the third-best matching <see cref="T:&dans;.Command" />.
 			</value>
 			<seealso cref="E:&darootobj;.Command" prefix="The" suffix="Event" />
 		</member>
@@ -11999,8 +12239,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </vb>
 </syntax>
 			<value name="Confidence">
-				The relative confidence scoring of best match, from -100 to 100 (100 if the <see cref="T:&dans;.Command" />
-				was chosen from the <a class="see" href="&dacmref;">&dacmname;</a>)
+				The relative confidence scoring of the best match, from -100 to 100 (100 if
+				the <see cref="T:&dans;.Command" /> was chosen from the <a class="see" href="&dacmref;">&dacmname;</a>).
 			</value>
 			<seealso cref="E:&darootobj;.Command" prefix="The" suffix="Event" />
 		</member>
@@ -12026,8 +12266,14 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="Count">The number of possible matching commands, from 0 to 3.</value>
 			<remarks>
-				Even if the <self>Count</self> is zero (no commands were matched), the <see cref="P:&dans;.UserInput.Voice" />
-				property will still return the spoken text.
+				<para>
+					A count of zero indicates that the command was chosen from the character's <a class="see" href="&dacmref;">&dacmname;</a>.
+					The <see cref="P:&dans;.UserInput.Name" /> property returns the chosen command's <see cref="P:&dans;.Command.Name" />.
+				</para>
+				<para>
+					Even if the <self>Count</self> is zero (no commands were matched), the <see cref="P:&dans;.UserInput.Voice" />
+					property will still return the spoken text.
+				</para>
 			</remarks>
 			<seealso cref="E:&darootobj;.Command" prefix="The" suffix="Event" />
 		</member>
@@ -12054,8 +12300,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </vb>
 </syntax>
 			<value name="Name">
-				The name of the chosen <see cref="T:&dans;.Command" />, or an empty string if the
-				chose command was pre-defined (for example, the <keyword>Hide</keyword> command).
+				The <see cref="P:&dans;.Command.Name" /> of the chosen <see cref="T:&dans;.Command" />,
+				or an empty string if the chosen command was pre-defined (for example, the <keyword>Hide</keyword> command).
 			</value>
 			<seealso cref="E:&darootobj;.Command" prefix="The" suffix="Event" />
 		</member>
@@ -12065,7 +12311,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.UserInput.Voice">
 			<summary>
 				<para>
-					Returns the voice text the speech recognition engine matched for the best matching <see cref="T:&dans;.Command" />.
+					Returns the voice text that the speech recognition engine matched for the best matching <see cref="T:&dans;.Command" />.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -12081,9 +12327,13 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="Voice">
 				The best matching voice text (or an empty string if the <see cref="T:&dans;.Command" />
-				was chosen from the <a class="see" href="&dacmref;">&dacmname;</a>)
+				was chosen from the <a class="see" href="&dacmref;">&dacmname;</a>).
 			</value>
-			<remarks>Even if no command was matched, the text that the speech engine heard is returned.</remarks>
+			<remarks>
+				<para>
+					Even if no command was matched, the text that the speech engine heard is returned.
+				</para>
+			</remarks>
 			<seealso cref="E:&darootobj;.Command" prefix="The" suffix="Event" />
 		</member>
 
@@ -12235,7 +12485,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			<remarks>
 				<para>
 					Not all speech recognition engines may return all the values for all the properties of this object. Check
-					with your engine vendor to determine whether the engine supports the Microsoft Speech API interface
+					with your engine vendor to determine whether the engine supports the Microsoft<sup>®</sup> Speech API interface
 					for returning alternatives and confidence scores.
 				</para>
 			</remarks>
@@ -12774,8 +13024,9 @@ Command1.<keyword>Enabled</keyword> = True</code>
 					property.
 				</para>
 				<note>
-					The <a class="see" href="&dapsref;">&dapsname;</a> window combines the Microsoft Agent <glossary>Advanced Character Options</glossary>
-					and <glossary>Default Character Properties</glossary> windows.
+					The <a class="see" href="&dapsref;">&dapsname;</a> window combines the Microsoft<sup>®</sup>
+					Agent <glossary>Advanced Character Options</glossary> and <glossary>Default Character Properties</glossary>
+					windows.
 				</note>
 			</remarks>
 		</member>
@@ -13502,7 +13753,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 					Any supported SAPI4 tags are converted to SAPI5 tags.
 				</para>
 				<para>
-					For more information about speech tags, see <a href="MsAgent.chm::/hh/msagent/guidlin_2my6.htm">Speech Output Tags</a>.
+					For more information about speech tags, see <a href="../Reference/Ref_SpeechTags.htm">Speech Output Tags</a>.
 				</para>
 				<note>
 					This method will fail if the <see cref="T:&dans;.FormattedText" suffix=" Object" /> is currently being
@@ -13539,11 +13790,10 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</value>
 			<remarks>
 				<para>
-					The value of this property does <em>not</em> depend on the <see cref="T:&dans;.Balloon" text="Balloon's" />
-					<see cref="P:&dans;.Balloon.Style" />, or even if a <a class="see" href="&dawbref;">&dawbname;</a> is shown.
-					It reflects what <em>would</em> be displayed in a <a class="see" href="&dawbref;">&dawbname;</a> with the
-					<see cref="F:&dans;.BalloonStyleFlags.SizeToText" /> and <see cref="F:&dans;.BalloonStyleFlags.AutoPace" />
-					styles.
+					The value of this property does <em>not</em> depend on the <see cref="T:&dans;.Balloon" text="Balloon's" /> <see cref="P:&dans;.Balloon.Style" />,
+					or even if a <a class="see" href="&dawbref;">&dawbname;</a> is shown. It reflects what <em>would</em>
+					be displayed in a <a class="see" href="&dawbref;">&dawbname;</a> with the <see cref="F:&dans;.BalloonStyleFlags.SizeToText" />
+					and <see cref="F:&dans;.BalloonStyleFlags.AutoPace" /> styles.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.FormattedText.ParsedText" suffix="Property" prefix="The" />
@@ -13681,7 +13931,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 					when the <see cref="T:&dans;.FormattedText" suffix=" Object" /> was created.
 				</para>
 				<para>
-					For more information about speech tags, see <a href="MsAgent.chm::/hh/msagent/guidlin_2my6.htm">Speech Output Tags</a>.
+					For more information about speech tags, see <a href="../Reference/Ref_SpeechTags.htm">Speech Output Tags</a>.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.FormattedText.RawText" suffix="Property" prefix="The" />
@@ -13886,6 +14136,43 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<!--=============================================================================================-->
 		<!--=============================================================================================-->
 
+		<member name="P:&dans;.CharacterFiles.CompliantCharacters">
+			<summary>
+				<para>
+					Indicates if the <see cref="P:&dans;.CharacterFiles.FilePaths" /> property should include characters that
+					conform to Microsoft<sup>®</sup> Agent design guidelines.
+				</para>
+			</summary>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>characterfiles</token>-&gt;<keyword>get_CompliantCharacters</keyword> (&amp;<token>CompliantCharacters</token>)</para>
+<para><token>characterfiles</token>-&gt;<keyword>put_CompliantCharacters</keyword> (<token>CompliantCharacters</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>CompliantCharacters</token> = ]&darootref;.<keyword>CharacterFiles</keyword>.<keyword>CompliantCharacters</keyword></para>
+<para>&darootref;.<keyword>CharacterFiles</keyword>.<keyword>CompliantCharacters</keyword> = <token>CompliantCharacters</token></para>
+</csharp>
+<vb>
+<para>[<token>CompliantCharacters</token> = ]&darootref;.<keyword>CharacterFiles</keyword>.<keyword>CompliantCharacters</keyword></para>
+<para>&darootref;.<keyword>CharacterFiles</keyword>.<keyword>CompliantCharacters</keyword> = <token>CompliantCharacters</token></para>
+</vb>
+</syntax>
+			<value name="CompliantCharacters">
+				A <typename>boolean</typename> value that indicates if compliant characters
+				should be included.
+			</value>
+			<remarks>
+				<para>
+					A character that supports the <glossary>standard animation set</glossary> is marked as <self>compliant</self>
+					when it's compiled with the Microsoft<sup>®</sup> Agent Character Editor.
+				</para>
+			</remarks>
+			<seealso cref="P:&dans;.CharacterFiles.NonCompliantCharacters" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.CharacterFiles.FilePaths" suffix="Property" prefix="The" />
+		</member>
+
+		<!--=============================================================================================-->
+
 		<member name="P:&dans;.CharacterFiles.DefaultFileName">
 			<summary>
 				<para>
@@ -14051,6 +14338,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			<seealso cref="P:&dans;.CharacterFiles.DoubleAgentFiles" suffix="Property" prefix="The" />
 			<seealso cref="P:&dans;.CharacterFiles.MsAgentFiles" suffix="Property" prefix="The" />
 			<seealso cref="P:&dans;.CharacterFiles.MsOfficeFiles" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.CharacterFiles.CompliantCharacters" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.CharacterFiles.NonCompliantCharacters" suffix="Property" prefix="The" />
 			<seealso cref="P:&dans;.CharacterFiles.SpeakingCharacters" suffix="Property" prefix="The" />
 			<seealso cref="P:&dans;.CharacterFiles.NonSpeakingCharacters" suffix="Property" prefix="The" />
 			<seealso cref="P:&dans;.CharacterFiles.VerifyVersion" suffix="Property" prefix="The" />
@@ -14063,7 +14352,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.CharacterFiles.MsAgentFiles">
 			<summary>
 				<para>
-					Indicates if the Microsoft Agent install location should be included in the <see cref="P:&dans;.CharacterFiles.DefaultSearchPath" />.
+					Indicates if the Microsoft<sup>®</sup> Agent install location should be included in the <see cref="P:&dans;.CharacterFiles.DefaultSearchPath" />.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -14081,12 +14370,13 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </vb>
 </syntax>
 			<value name="MsAgentFiles">
-				A <typename>boolean</typename> value that indicates if the Microsoft Agent install
-				location should be included in the search for character files.
+				A <typename>boolean</typename> value that indicates if the Microsoft<sup>®</sup>
+				Agent install location should be included in the search for character files.
 			</value>
 			<remarks>
 				<para>
-					The path for Microsoft Agent characters is the <filename>Chars</filename> subdirectory of the Microsoft Agent install location. Typically, this would be <filename xml:space="preserve">C:\Windows\MsAgent\Chars</filename>.
+					The path for Microsoft<sup>®</sup> Agent characters is the <filename>Chars</filename> subdirectory of
+					the Microsoft<sup>®</sup> Agent install location. Typically, this would be <filename xml:space="preserve">C:\Windows\MsAgent\Chars</filename>.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.CharacterFiles.FilePaths" suffix="Property" prefix="The" />
@@ -14099,7 +14389,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.CharacterFiles.MsOfficeFiles">
 			<summary>
 				<para>
-					Indicates if the Microsoft Office install location should be included in the <see cref="P:&dans;.CharacterFiles.DefaultSearchPath" />.
+					Indicates if the Microsoft<sup>®</sup> Office install location should be included in the <see cref="P:&dans;.CharacterFiles.DefaultSearchPath" />.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -14117,18 +14407,55 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </vb>
 </syntax>
 			<value name="MsOfficeFiles">
-				A <typename>boolean</typename> value that indicates if the Microsoft Office
-				install location should be included in the search for character files.
+				A <typename>boolean</typename> value that indicates if the Microsoft<sup>®</sup>
+				Office install location should be included in the search for character files.
 			</value>
 			<remarks>
 				<para>
-					Typically, Microsoft Office characters would be in <filename xml:space="preserve">C:\Program Files\Microsoft Office\Office10</filename>.
+					Typically, Microsoft<sup>®</sup> Office characters would be in <filename xml:space="preserve">C:\Program Files\Microsoft Office\Office10</filename>.
 				</para>
 				<note>Only older versions of Microsoft Office include Agent character files.</note>
 			</remarks>
 			<seealso cref="P:&dans;.CharacterFiles.FilePaths" suffix="Property" prefix="The" />
 			<seealso cref="P:&dans;.CharacterFiles.SearchPath" suffix="Property" prefix="The" />
 			<seealso cref="P:&dans;.CharacterFiles.DefaultSearchPath" suffix="Property" prefix="The" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:&dans;.CharacterFiles.NonCompliantCharacters">
+			<summary>
+				<para>
+					Indicates if the <see cref="P:&dans;.CharacterFiles.FilePaths" /> property should include characters that
+					<em>do not</em> conform to Microsoft<sup>®</sup> Agent design guidelines.
+				</para>
+			</summary>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>characterfiles</token>-&gt;<keyword>get_NonCompliantCharacters</keyword> (&amp;<token>NonCompliantCharacters</token>)</para>
+<para><token>characterfiles</token>-&gt;<keyword>put_NonCompliantCharacters</keyword> (<token>NonCompliantCharacters</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>NonCompliantCharacters</token> = ]&darootref;.<keyword>CharacterFiles</keyword>.<keyword>NonCompliantCharacters</keyword></para>
+<para>&darootref;.<keyword>CharacterFiles</keyword>.<keyword>NonCompliantCharacters</keyword> = <token>NonCompliantCharacters</token></para>
+</csharp>
+<vb>
+<para>[<token>NonCompliantCharacters</token> = ]&darootref;.<keyword>CharacterFiles</keyword>.<keyword>NonCompliantCharacters</keyword></para>
+<para>&darootref;.<keyword>CharacterFiles</keyword>.<keyword>NonCompliantCharacters</keyword> = <token>NonCompliantCharacters</token></para>
+</vb>
+</syntax>
+			<value name="NonCompliantCharacters">
+				A <typename>boolean</typename> value that indicates if non-compliant characters
+				should be included.
+			</value>
+			<remarks>
+				<para>
+					A character that supports the <glossary>standard animation set</glossary> is marked as <self>compliant</self>
+					when it's compiled with the Microsoft<sup>®</sup> Agent Character Editor.
+				</para>
+			</remarks>
+			<seealso cref="P:&dans;.CharacterFiles.CompliantCharacters" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.CharacterFiles.FilePaths" suffix="Property" prefix="The" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -14160,11 +14487,12 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</value>
 			<remarks>
 				<para>
-					Unlike Microsoft Agent, Double Agents supports the <see cref="M:&dans;.Character.Speak" /> method for
-					characters that are not designed to speak. However, there won't be any mouth animations because they
-					aren't included in the character design.
+					Unlike Microsoft<sup>®</sup> Agent, Double Agents supports the <see cref="M:&dans;.Character.Speak" />
+					method for characters that are not designed to speak. However, there won't be any mouth animations because
+					they aren't included in the character design.
 				</para>
 			</remarks>
+			<seealso cref="P:&dans;.CharacterFiles.SpeakingCharacters" suffix="Property" prefix="The" />
 			<seealso cref="P:&dans;.CharacterFiles.FilePaths" suffix="Property" prefix="The" />
 		</member>
 
@@ -14236,6 +14564,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 				A <typename>boolean</typename> value that indicates if speaking characters
 				should be included.
 			</value>
+			<seealso cref="P:&dans;.CharacterFiles.NonSpeakingCharacters" suffix="Property" prefix="The" />
 			<seealso cref="P:&dans;.CharacterFiles.FilePaths" suffix="Property" prefix="The" />
 		</member>
 
@@ -14271,7 +14600,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 					Double Agent can only use version 2.x characters.
 				</para>
 				<note>
-					Setting the <see cref="P:&dans;.CharacterFiles.SpeakingCharacters" /> or <see cref="P:&dans;.CharacterFiles.NonSpeakingCharacters" />
+					Setting the <see cref="P:&dans;.CharacterFiles.CompliantCharacters" />, <see cref="P:&dans;.CharacterFiles.NonCompliantCharacters" />,
+					<see cref="P:&dans;.CharacterFiles.SpeakingCharacters" /> or <see cref="P:&dans;.CharacterFiles.NonSpeakingCharacters" />
 					filters will automatically set this property to <keyword>True</keyword>.
 				</note>
 			</remarks>
@@ -14300,6 +14630,14 @@ Command1.<keyword>Enabled</keyword> = True</code>
 						</term>
 						<description>
 							<list type="&typelisttype;" class="syntax">
+								<item>
+									<term>
+										<see cref="P:&dans;.CharacterFiles.CompliantCharacters" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='P:&dans;.CharacterFiles.CompliantCharacters']/summary/para[1]" />
+									</description>
+								</item>
 								<item>
 									<term width="&typelistwidth;">
 										<see cref="P:&dans;.CharacterFiles.DefaultFileName" />
@@ -14354,6 +14692,14 @@ Command1.<keyword>Enabled</keyword> = True</code>
 									</term>
 									<description>
 										<copy path="/doc/members/member[@name='P:&dans;.CharacterFiles.MsOfficeFiles']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
+										<see cref="P:&dans;.CharacterFiles.NonCompliantCharacters" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='P:&dans;.CharacterFiles.NonCompliantCharacters']/summary/para[1]" />
 									</description>
 								</item>
 								<item>
@@ -14789,9 +15135,9 @@ Command1.<keyword>Enabled</keyword> = True</code>
 				or a <typename>string</typename> value that specifies the <see cref="P:&dans;.SREngine.SRModeID" />
 				of the item to retrieve.
 			</param>
-			<returns name="SREngine">
+			<value name="SREngine">
 				The <see cref="T:&dans;.SREngine" suffix="Object" /> identified by <paramref name="Index" />.
-			</returns>
+			</value>
 			<remarks>
 				<para name="Ordering">
 					When the <see cref="T:&dans;.SREngines" suffix="Collection" /> is retrieved using <strong>matching criteria</strong>
@@ -14800,6 +15146,12 @@ Command1.<keyword>Enabled</keyword> = True</code>
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.SREngines.Count" suffix="Property" prefix="The" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:&dans;.SREngines.GetEnumerator">
+			<inheritdoc/>
 		</member>
 
 		<!--=============================================================================================-->
@@ -15226,9 +15578,9 @@ Command1.<keyword>Enabled</keyword> = True</code>
 				or a <typename>string</typename> value that specifies the <see cref="P:&dans;.TTSEngine.TTSModeID" />
 				of the item to retrieve.
 			</param>
-			<returns name="TTSEngine">
+			<value name="TTSEngine">
 				The <see cref="T:&dans;.TTSEngine" suffix="Object" /> identified by <paramref name="Index" />.
-			</returns>
+			</value>
 			<remarks>
 				<para name="Ordering">
 					When the <see cref="T:&dans;.TTSEngines" suffix="Collection" /> is retrieved using <strong>matching criteria</strong>
@@ -15237,6 +15589,12 @@ Command1.<keyword>Enabled</keyword> = True</code>
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.TTSEngines.Count" suffix="Property" prefix="The" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:&dans;.TTSEngines.GetEnumerator">
+			<inheritdoc/>
 		</member>
 
 		<!--=============================================================================================-->

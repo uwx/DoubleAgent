@@ -15,17 +15,17 @@
 	<!ENTITY typelisttype "table">
 	<!ENTITY typelistwidth "275ex">
 
-	<!ENTITY dapsref "../html/UI_PropSheet.htm">
+	<!ENTITY dapsref "../Reference/UI_PropSheet.htm">
 	<!ENTITY dapsname "Advanced Character Options">
-	<!ENTITY davcref "../html/UI_Intro.htm#VoiceCommands">
+	<!ENTITY davcref "../Reference/UI_Intro.htm#VoiceCommands">
 	<!ENTITY davcname "Voice Commands">
-	<!ENTITY dacmref "../html/UI_Intro.htm#Menu">
+	<!ENTITY dacmref "../Reference/UI_Intro.htm#Menu">
 	<!ENTITY dacmname "pop-up menu">
-	<!ENTITY dawbref "../html/UI_Intro.htm#Balloon">
+	<!ENTITY dawbref "../Reference/UI_Intro.htm#Balloon">
 	<!ENTITY dawbname "word balloon">
-	<!ENTITY daniref "../html/UI_Intro.htm#Icon">
+	<!ENTITY daniref "../Reference/UI_Intro.htm#Icon">
 	<!ENTITY daniname "notification icon">
-	<!ENTITY daltref "../html/UI_Intro.htm#ListeningTip">
+	<!ENTITY daltref "../Reference/UI_Intro.htm#ListeningTip">
 	<!ENTITY daltname "Listening tip">
 ]>
 
@@ -75,24 +75,43 @@
 
 		<member name="F:&dans;.FilesFilterFlags.PathMsAgent">
 			<summary>
-				Indicates if the Microsoft Agent install location should be included in the <see cref="P:&dans;.CharacterFiles.DefaultSearchPath" />.
+				Indicates if the Microsoft<sup>®</sup> Agent install location should be included in the <see cref="P:&dans;.CharacterFiles.DefaultSearchPath" />.
 			</summary>
 			<value>0x00000002</value>
 		</member>
 
 		<member name="F:&dans;.FilesFilterFlags.PathMsOffice">
 			<summary>
-				Indicates if the Microsoft Office install location should be included in the <see cref="P:&dans;.CharacterFiles.DefaultSearchPath" />.
+				Indicates if the Microsoft<sup>®</sup> Office install location should be included in the <see cref="P:&dans;.CharacterFiles.DefaultSearchPath" />.
 			</summary>
 			<value>0x00000004</value>
+		</member>
+
+		<member name="F:&dans;.FilesFilterFlags.ExcludeNonCompliant">
+			<summary>
+				Indicates if the <see cref="P:&dans;.CharacterFiles.FilePaths" /> property should exclude characters
+				that <em>do not</em> conform to Microsoft<sup>®</sup> Agent design guidelines.
+			</summary>
+			<value>0x00000010</value>
+			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.CharacterFiles.NonCompliantCharacters']/remarks" />
+		</member>
+
+		<member name="F:&dans;.FilesFilterFlags.ExcludeCompliant">
+			<summary>
+				Indicates if the <see cref="P:&dans;.CharacterFiles.FilePaths" /> property should exclude characters
+				that conform to Microsoft<sup>®</sup> Agent design guidelines.
+			</summary>
+			<value>0x00000020</value>
+			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.CharacterFiles.CompliantCharacters']/remarks" />
 		</member>
 
 		<member name="F:&dans;.FilesFilterFlags.ExcludeNonSpeaking">
 			<summary>
 				Indicates if the <see cref="P:&dans;.CharacterFiles.FilePaths" /> property should exclude characters
-				that are <em>not </em>designed to speak.
+				that are <em>not</em> designed to speak.
 			</summary>
-			<value>0x00000010</value>
+			<value>0x00000040</value>
+			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.CharacterFiles.NonSpeakingCharacters']/remarks" />
 		</member>
 
 		<member name="F:&dans;.FilesFilterFlags.ExcludeSpeaking">
@@ -100,7 +119,7 @@
 				Indicates if the <see cref="P:&dans;.CharacterFiles.FilePaths" /> property should exclude characters
 				that are designed to speak.
 			</summary>
-			<value>0x00000020</value>
+			<value>0x00000080</value>
 		</member>
 
 		<member name="F:&dans;.FilesFilterFlags.NoValidateVersion">
@@ -113,7 +132,8 @@
 					Double Agent can only use version 2.x characters.
 				</para>
 				<note>
-					If the <see cref="F:&dans;.FilesFilterFlags.ExcludeNonSpeaking" /> or <see cref="F:&dans;.FilesFilterFlags.ExcludeSpeaking" />
+					If the <see cref="F:&dans;.FilesFilterFlags.ExcludeNonCompliant" />, <see cref="F:&dans;.FilesFilterFlags.ExcludeCompliant" />,
+					<see cref="F:&dans;.FilesFilterFlags.ExcludeNonSpeaking" /> or <see cref="F:&dans;.FilesFilterFlags.ExcludeSpeaking" />
 					flag is set, this flag is ignored.
 				</note>
 			</remarks>
@@ -154,6 +174,22 @@
 </term>
 						<description>
 							<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.PathMsOffice']/summary" />
+						</description>
+					</item>
+					<item>
+						<term xml:space="preserve">
+<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.ExcludeNonCompliant']/value" /> = <keyword>ExcludeNonCompliant</keyword>
+</term>
+						<description>
+							<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.ExcludeNonCompliant']/summary" />
+						</description>
+					</item>
+					<item>
+						<term xml:space="preserve">
+<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.ExcludeCompliant']/value" /> = <keyword>ExcludeCompliant</keyword>
+</term>
+						<description>
+							<copy path="/doc/members/member[@name='F:&dans;.FilesFilterFlags.ExcludeCompliant']/summary" />
 						</description>
 					</item>
 					<item>
@@ -729,8 +765,8 @@ VariantInit (&amp;EmptyProvider);
 			</param>
 			<remarks>
 				<para>
-					The <see cref="T:&darootobj;" suffix="Object" /> also implements the standard <glossary>COM</glossary>
-					<keyword>IConnectionPoint</keyword> protocol for <glossary>notification sinks</glossary>.
+					The <see cref="T:&darootobj;" suffix="Object" /> also implements the standard <glossary>COM</glossary> <keyword>IConnectionPoint</keyword>
+					protocol for <glossary>notification sinks</glossary>.
 				</para>
 				<para>
 					For languages that support ActiveX<sup>®</sup> controls, you can use the language's default mechanism for
@@ -973,6 +1009,14 @@ VariantInit (&amp;EmptyProvider);
 			<seealso cref="E:&darootobj;.ActiveClientChange" prefix="The" suffix="Event" />
 		</member>
 
+		<member name="T:&dans;.ActivateInputStateEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.ActivateInputState" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.ActiveClientChange">
@@ -995,20 +1039,36 @@ VariantInit (&amp;EmptyProvider);
 </vbscript>
 </syntax>
 			<param name="CharacterID">The unique identifier of the character that has become active or inactive.</param>
-			<value name="Status">
+			<param name="Status">
 				A member of the <see class="typename" cref="T:&dans;.ActiveStateType" suffix="Enumeration" />
 				indicating the state of the character and your client application:<include path="/doc/members/member[@name='T:&dans;.ActiveStateType']/syntax/list" />
-			</value>
+			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.ActiveClientChange']/remarks" />
 			<seealso cref="M:&dans;.Character.Activate" prefix="The" suffix="Method" />
 			<seealso cref="P:&dans;.Character.ActiveState" prefix="The" suffix="Property" />
 			<seealso cref="E:&darootobj;.ActivateInputState" prefix="The" suffix="Event" />
 		</member>
 
+		<member name="T:&dans;.ActiveClientChangeEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.ActiveClientChange" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.AgentPropertyChange">
 			<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.AgentPropertyChange']" />
+		</member>
+
+		<member name="T:&dans;.AgentPropertyChangeEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.AgentPropertyChange" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -1047,10 +1107,26 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.BalloonShow']/remarks" />
 		</member>
 
+		<member name="T:&dans;.BalloonVisibleStateEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.BalloonVisibleState" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.BookMark">
 			<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Bookmark']" replace="Bookmark|BookMark" />
+		</member>
+
+		<member name="T:&dans;.BookMarkEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.BookMark" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -1084,6 +1160,14 @@ VariantInit (&amp;EmptyProvider);
 			<seealso cref="E:&darootobj;.DblClick" prefix="The" suffix="Event" />
 		</member>
 
+		<member name="T:&dans;.ClickEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.Click" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.Command">
@@ -1109,6 +1193,14 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Command']/param" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Command']/remarks" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Command']/seealso" />
+		</member>
+
+		<member name="T:&dans;.CommandEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.Command" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -1142,10 +1234,26 @@ VariantInit (&amp;EmptyProvider);
 			<seealso cref="E:&darootobj;.Click" prefix="The" suffix="Event" />
 		</member>
 
+		<member name="T:&dans;.DblClickEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.DblClick" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.DefaultCharacterChange">
 			<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.DefaultCharacterChange']" replace="Characters.Load=Server.Load" />
+		</member>
+
+		<member name="T:&dans;.DefaultCharacterChangeEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.DefaultCharacterChange" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -1177,6 +1285,14 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.DragComplete']/seealso" />
 		</member>
 
+		<member name="T:&dans;.DragCompleteEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.DragComplete" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.DragStart">
@@ -1204,6 +1320,14 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dainclude;" path="/doc/params/param[@name='Y']" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.DragStart']/remarks" replace="ActivateInput=ActivateInputState" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.DragStart']/seealso" />
+		</member>
+
+		<member name="T:&dans;.DragStartEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.DragStart" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -1243,6 +1367,14 @@ VariantInit (&amp;EmptyProvider);
 			<seealso cref="P:&dans;.Character.IdleState" prefix="The" suffix="Property" />
 		</member>
 
+		<member name="T:&dans;.IdleEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.Idle" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.ListeningState">
@@ -1280,22 +1412,30 @@ VariantInit (&amp;EmptyProvider);
 					This event is sent to all clients when <glossary>Listening mode</glossary> begins or ends because the
 					user pressed or released the <glossary>Listening key</glossary>, or when the <glossary>input-active</glossary>
 					client called the <see cref="M:&dans;.Character.Listen" /> method, or when the <glossary>Listening mode</glossary>
-					time-out ends, or when the user has finished speaking. You can use this event to avoid having your character
-					speak while <glossary>Listening mode</glossary> is active.
+					time-out ends, or when the user has finished speaking. You can use this event to avoid having your
+					character speak while <glossary>Listening mode</glossary> is active.
 				</para>
 				<para>
 					If you turn on <glossary>Listening mode</glossary> using the <see cref="M:&dans;.Character.Listen" />
 					method and then the user presses the <glossary>Listening key</glossary>, the <glossary>Listening mode</glossary>
 					resets and continues until the <glossary>Listening key</glossary> time-out completes, the <glossary>Listening key</glossary>
-					is released, or the user finishes speaking, whichever is later. In this situation, when
-					<glossary>Listening mode</glossary> is already on, you will <em>not</em> get an additional <self>ListeningState</self>
-					event with <paramref name="Start" />=<keyword>True</keyword> when the user presses the <glossary>Listening key</glossary>,
-					and you will not receive a <self>ListeningState</self> event with <paramref name="Start" />=<keyword>False</keyword>
-					until the <glossary>Listening key</glossary>'s mode completes.
+					is released, or the user finishes speaking, whichever is later. In this situation, when <glossary>Listening mode</glossary>
+					is already on, you will <em>not</em> get an additional <self>ListeningState</self> event with <paramref name="Start" />=<keyword>True</keyword>
+					when the user presses the <glossary>Listening key</glossary>, and you will not receive a <self>ListeningState</self>
+					event with <paramref name="Start" />=<keyword>False</keyword> until the <glossary>Listening key</glossary>'s
+					mode completes.
 				</para>
 			</remarks>
 			<seealso cref="M:&dans;.Character.Listen" prefix="The" suffix="Method" />
 			<seealso cref="P:&dans;.Settings.SRHotKey" prefix="The" suffix="Property" />
+		</member>
+
+		<member name="T:&dans;.ListeningStateEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.ListeningState" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -1324,6 +1464,14 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Move']/seealso" />
 		</member>
 
+		<member name="T:&dans;.MoveEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.Move" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.RequestComplete">
@@ -1350,14 +1498,21 @@ VariantInit (&amp;EmptyProvider);
 			</param>
 			<remarks>
 				<para>
-					Because requests are processed asynchronously,
-					you can use this event to determine when Double Agent finishes processing a request (such
-					as a <see cref="M:&dans;.Character.Get" />, <see cref="M:&dans;.Character.Play" />, or <see cref="M:&dans;.Character.Speak" />
-					method) to synchronize this event with other requests generated by your application. Double Agent sends
-					the event only to the client that created the request.
+					Because requests are processed asynchronously, you can use this event to determine when Double Agent
+					finishes processing a request (such as a <see cref="M:&dans;.Character.Prepare" />, <see cref="M:&dans;.Character.Play" />,
+					or <see cref="M:&dans;.Character.Speak" /> method) to synchronize this event with other requests generated by
+					your application. Double Agent sends the event only to the client that created the request.
 				</para>
 			</remarks>
 			<seealso cref="E:&darootobj;.RequestStart" prefix="The" suffix="Event" />
+		</member>
+
+		<member name="T:&dans;.RequestCompleteEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.RequestComplete" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -1386,14 +1541,21 @@ VariantInit (&amp;EmptyProvider);
 			</param>
 			<remarks>
 				<para>
-					Because requests are processed asynchronously,
-					you can use this event to determine when Double Agent finishes processing a request (such
-					as a <see cref="M:&dans;.Character.Get" />, <see cref="M:&dans;.Character.Play" />, or <see cref="M:&dans;.Character.Speak" />
-					method) to synchronize this event with other requests generated by your application. Double Agent sends
-					the event only to the client that created the request.
+					Because requests are processed asynchronously, you can use this event to determine when Double Agent
+					finishes processing a request (such as a <see cref="M:&dans;.Character.Prepare" />, <see cref="M:&dans;.Character.Play" />,
+					or <see cref="M:&dans;.Character.Speak" /> method) to synchronize this event with other requests generated by
+					your application. Double Agent sends the event only to the client that created the request.
 				</para>
 			</remarks>
 			<seealso cref="E:&darootobj;.RequestComplete" prefix="The" suffix="Event" />
+		</member>
+
+		<member name="T:&dans;.RequestStartEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.RequestStart" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -1422,6 +1584,14 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Size']/seealso" />
 		</member>
 
+		<member name="T:&dans;.SizeEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.Size" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.VisibleState">
@@ -1447,9 +1617,7 @@ VariantInit (&amp;EmptyProvider);
 <para><keyword>Sub</keyword> &darootref;_<keyword>Idle</keyword> (<keyword>ByVal</keyword> <token>CharacterID</token>, <keyword>ByVal</keyword> <token>Visible</token>, <keyword>ByVal</keyword> <token>Cause</token>)</para>
 </vbscript>
 </syntax>
-			<param name="CharacterID">
-				The unique identifier of the character that was shown or hidden.
-			</param>
+			<param name="CharacterID">The unique identifier of the character that was shown or hidden.</param>
 			<param name="Visible">
 				<keyword>True</keyword> if the character was shown, or <keyword>False</keyword>
 				if it was hidden.
@@ -1469,6 +1637,14 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.Show']/remarks" />
 			<seealso cref="P:&dans;.Character.VisibilityCause" prefix="The" suffix="Property" />
 			<seealso cref="P:&dans;.Character.Visible" prefix="The" suffix="Property" />
+		</member>
+
+		<member name="T:&dans;.VisibleStateEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.VisibleState" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -1497,6 +1673,14 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.SpeechStart']/seealso" />
 		</member>
 
+		<member name="T:&dans;.SpeechStartEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.SpeechStart" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.SpeechEnd">
@@ -1523,6 +1707,14 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.SpeechEnd']/seealso" />
 		</member>
 
+		<member name="T:&dans;.SpeechEndEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.SpeechEnd" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.SpeechWord">
@@ -1547,6 +1739,14 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.SpeechWord']/param" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.SpeechWord']/remarks" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.SpeechWord']/seealso" />
+		</member>
+
+		<member name="T:&dans;.SpeechWordEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.SpeechWord" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -2396,7 +2596,7 @@ VariantInit (&amp;EmptyProvider);
 			</value>
 			<remarks>
 				<para>
-					The defaults for the <self>Style</self> property are set when the character is compiled with the Microsoft
+					The defaults for the <self>Style</self> property are set when the character is compiled with the Microsoft<sup>®</sup>
 					Agent Character Editor.
 				</para>
 				<note>
@@ -2439,8 +2639,8 @@ VariantInit (&amp;EmptyProvider);
 					methods automatically makes the balloon visible, setting the <self>Visible</self> property to <keyword>True</keyword>.
 					If the balloon's <see cref="F:&dans;.BalloonStyleFlags.AutoHide" /> <see cref="P:&dans;.Balloon.Style" />
 					is set, the balloon is automatically hidden after the text output is complete. Clicking or dragging a
-					character that is not currently speaking also automatically hides the balloon, even if its <see cref="F:&dans;.BalloonStyleFlags.AutoHide" /> <see cref="P:&dans;.Balloon.Style" />
-					is not set.
+					character that is not currently speaking also automatically hides the balloon, even if its <see cref="F:&dans;.BalloonStyleFlags.AutoHide" />
+					<see cref="P:&dans;.Balloon.Style" /> is not set.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.Balloon.Style" prefix="The" suffix="Property" />
@@ -2778,10 +2978,10 @@ VariantInit (&amp;EmptyProvider);
 <para>&dacharref_vb;.<keyword>GetIconIdentity</keyword> <token>IconIdentity</token></para>
 </vb>
 </syntax>
-			<value name="IconIdentity">
+			<param name="IconIdentity">
 				The <typename>GUID</typename> value that Windows uses to uniquely identify this
 				character's <a class="see" href="&daniref;">&daniname;</a>.
-			</value>
+			</param>
 			<remarks>
 				<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.IconIdentity']/remarks/para[1]" />
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
@@ -2860,12 +3060,12 @@ VariantInit (&amp;EmptyProvider);
 <para>&dacharref_vb;.<keyword>GetOriginalSize</keyword> <token>Width</token>, <token>Height</token></para>
 </vb>
 </syntax>
-			<value name="Width">
+			<param name="Width">
 				<copy file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.OriginalWidth']/value" />
-			</value>
-			<value name="Height">
+			</param>
+			<param name="Height">
 				<copy file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.OriginalHeight']/value" />
-			</value>
+			</param>
 			<seealso cref="P:&dans;.Character.OriginalWidth" suffix="Property" prefix="The" />
 			<seealso cref="P:&dans;.Character.OriginalHeight" suffix="Property" prefix="The" />
 		</member>
@@ -2892,12 +3092,12 @@ VariantInit (&amp;EmptyProvider);
 <para>&dacharref_vb;.<keyword>GetPosition</keyword> <token>Left</token>, <token>Top</token></para>
 </vb>
 </syntax>
-			<value name="Left">
+			<param name="Left">
 				<copy file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.Left']/value" />
-			</value>
-			<value name="Top">
+			</param>
+			<param name="Top">
 				<copy file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.Top']/value" />
-			</value>
+			</param>
 			<remarks>
 				<para>
 					The character's position is always expressed in pixels, relative to screen origin (upper left).
@@ -2933,12 +3133,12 @@ VariantInit (&amp;EmptyProvider);
 <para>&dacharref_vb;.<keyword>GetSize</keyword> <token>Width</token>, <token>Height</token></para>
 </vb>
 </syntax>
-			<value name="Width">
+			<param name="Width">
 				<copy file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.Width']/value" />
-			</value>
-			<value name="Height">
+			</param>
+			<param name="Height">
 				<copy file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.Height']/value" />
-			</value>
+			</param>
 			<remarks>
 				<para>
 					The character's dimensions are always expressed in pixels.
@@ -3245,7 +3445,11 @@ VariantInit (&amp;EmptyProvider);
 <para>&dacharref_vb;.<keyword>Prepare</keyword> <token>Type</token>, <token>Name</token>[, <token>Queue</token>][, <token>RequestID</token>]</para>
 </vb>
 </syntax>
-			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Prepare']/param" replace="Characters.Load=Server.Load" />
+			<param name="Type">
+				<copy file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Prepare']/param[@name='ResourceType']" />
+			</param>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Prepare']/param[@name='Name']" replace="Characters.Load=Server.Load" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Prepare']/param[@name='Queue']" />
 			<include file="&dainclude;" path="/doc/params/param[@name='RequestID']" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Character.Prepare']/remarks" />
 			<details>
@@ -3318,11 +3522,11 @@ VariantInit (&amp;EmptyProvider);
 <para>&dacharref_vb;.<keyword>SetIconIdentity</keyword> <token>IconIdentity</token></para>
 </vb>
 </syntax>
-			<value name="IconIdentity">
+			<param name="IconIdentity">
 				A <typename>GUID</typename> value that allows Windows to uniquely identify this
 				character's <a class="see" href="&daniref;">&daniname;</a>. It must be either a value <typename>GUID</typename>
 				or <keyword>GUID_NULL</keyword>.
-			</value>
+			</param>
 			<remarks>
 				<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.IconIdentity']/remarks/para[1]" />
 				<para>
@@ -3394,7 +3598,7 @@ VariantInit (&amp;EmptyProvider);
 <para>&dacharref_vb;.<keyword>SetPosition</keyword> <token>Left</token>, <token>Top</token></para>
 </vb>
 </syntax>
-			<include path="/doc/members/member[@name='M:&dans;.Character.GetPosition']/value" />
+			<include path="/doc/members/member[@name='M:&dans;.Character.GetPosition']/param" />
 			<remarks>
 				<include path="/doc/members/member[@name='M:&dans;.Character.GetPosition']/remarks/para" />
 				<para>
@@ -3432,7 +3636,7 @@ VariantInit (&amp;EmptyProvider);
 <para>&dacharref_vb;.<keyword>SetSize</keyword> <token>Width</token>, <token>Height</token></para>
 </vb>
 </syntax>
-			<include path="/doc/members/member[@name='M:&dans;.Character.GetSize']/value" />
+			<include path="/doc/members/member[@name='M:&dans;.Character.GetSize']/param" />
 			<include path="/doc/members/member[@name='M:&dans;.Character.GetSize']/remarks" />
 			<seealso cref="P:&dans;.Character.Width" suffix="Property" prefix="The" />
 			<seealso cref="P:&dans;.Character.Height" suffix="Property" prefix="The" />
@@ -3735,8 +3939,8 @@ VariantInit (&amp;EmptyProvider);
 				A <typename>numeric</typename> value that identifies the <see cref="T:&dans;.Character" suffix="Object" />.
 			</value>
 			<remarks>
-				The <see cref="T:&dans;.Server" /> assigns a unique <em class="self">CharacterID</em>
-				to each <see cref="T:&dans;.Character" suffix="Object" /> instance it creates.
+				The <see cref="T:&dans;.Server" /> assigns a unique <em class="self">CharacterID</em> to each
+				<see cref="T:&dans;.Character" suffix="Object" /> instance it creates.
 			</remarks>
 			<seealso cref="M:&darootobj;.Load" suffix="Method" prefix="The" />
 			<seealso cref="P:&darootobj;.Character" suffix="Property" prefix="The" />
@@ -3916,7 +4120,7 @@ VariantInit (&amp;EmptyProvider);
 		<member name="P:&dans;.Character.OtherClientCount">
 			<summary>
 				<para>
-					---todo---
+					Returns the number of other client applications that are using this character.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -3930,8 +4134,26 @@ VariantInit (&amp;EmptyProvider);
 <para>[<token>OtherClientCount</token> = ]<token>character</token>.<keyword>OtherClientCount</keyword></para>
 </vb>
 </syntax>
-			<value name="OtherClientCount"></value>
-			<remarks></remarks>
+			<value name="OtherClientCount">
+				A <typename>numeric</typename> value that indicates the number of other
+				client applications that have loaded this character.
+			</value>
+			<remarks>
+				<para>
+					You can use this property to determine if your application is the character's only client, or if another
+					application is sharing (has loaded) the same character.
+				</para>
+				<note>
+					Double Agent uses the <see cref="P:&dans;.Character.UniqueID" /> property, not the <see cref="P:&dans;.Character.FilePath" />
+					property, to determine if the same character is being used by more than one client application.
+				</note>
+				<note>
+					If your application uses multiple instances of the <see cref="T:&darootobj;" suffix="Object" />,
+					each instance is a treated as a different client and this property will return a <keyword>non-zero</keyword>
+					value.
+				</note>
+			</remarks>
+			<seealso cref="P:&dans;.Character.UniqueID" suffix="Property" prefix="The" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -3944,6 +4166,12 @@ VariantInit (&amp;EmptyProvider);
 
 		<member name="P:&dans;.Character.SRModeID">
 			<copy file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.SRModeID']" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:&dans;.Character.States">
+			<copy file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.States']" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -3983,24 +4211,7 @@ VariantInit (&amp;EmptyProvider);
 		<!--=============================================================================================-->
 
 		<member name="P:&dans;.Character.UniqueID">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
-			<syntax xml:space="preserve">
-<cpp>
-<para><token>character</token>-&gt;<keyword>get_UniqueID</keyword> (&amp;<token>UniqueID</token>)</para>
-</cpp>
-<csharp>
-<para>[<token>UniqueID</token> = ]<token>character</token>.<keyword>UniqueID</keyword></para>
-</csharp>
-<vb>
-<para>[<token>UniqueID</token> = ]<token>character</token>.<keyword>UniqueID</keyword></para>
-</vb>
-</syntax>
-			<value name="UniqueID"></value>
-			<remarks></remarks>
+			<copy file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.UniqueID']" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -4551,6 +4762,14 @@ VariantInit (&amp;EmptyProvider);
 								</item>
 								<item>
 									<term>
+										<see cref="P:&dans;.Character.States" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='P:&dans;.Character.States']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
 										<see cref="P:&dans;.Character.Style" />
 									</term>
 									<description>
@@ -4707,8 +4926,8 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.CharacterFiles.DefaultSearchPath']/value" />
 			<remarks>
 				<para>
-					This property returns the <em>default </em>search path, based on the selection criteria specified by
-					the <see cref="P:&dans;.CharacterFiles.Filter" /> property. The <em>actual </em> search path can be set
+					This property returns the <em>default</em> search path, based on the selection criteria specified by
+					the <see cref="P:&dans;.CharacterFiles.Filter" /> property. The <em>actual</em>  search path can be set
 					with the <see cref="P:&dans;.CharacterFiles.SearchPath" /> property.
 				</para>
 			</remarks>
@@ -5114,7 +5333,7 @@ VariantInit (&amp;EmptyProvider);
 		<member name="P:&dans;.Command.CommandID">
 			<summary>
 				<para>
-					---todo---
+					Returns the <see cref="T:&dans;.Command" suffix="Object's" /> unique identifier.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -5129,8 +5348,14 @@ VariantInit (&amp;EmptyProvider);
 </vb>
 </syntax>
 			<value name="CommandID">
+				A <keyword>numeric</keyword> value that uniquely identifies the <see cref="T:&dans;.Command" suffix="Object" />
+				in the <see cref="T:&dans;.Commands" suffix="Collection" />.
 			</value>
-			<remarks></remarks>
+			<seealso cref="M:&dans;.Commands.Add" suffix="Method" prefix="The" />
+			<seealso cref="M:&dans;.Commands.AddEx" suffix="Method" prefix="The" />
+			<seealso cref="M:&dans;.Commands.Insert" suffix="Method" prefix="The" />
+			<seealso cref="M:&dans;.Commands.InsertEx" suffix="Method" prefix="The" />
+			<seealso cref="P:&dans;.Commands.Command" suffix="Property" prefix="The" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -5264,11 +5489,7 @@ VariantInit (&amp;EmptyProvider);
 		<!--=============================================================================================-->
 
 		<member name="M:&dans;.Commands.Add">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.Add']/summary" />
 			<syntax xml:space="preserve">
 <cpp>
 <para><token>commands</token>-&gt;<keyword>Add</keyword> (<token>Caption</token>, <token>VoiceGrammar</token>, <token>Enabled</token>, <token>Visible</token>, &amp;<token>CommandID</token>)</para>
@@ -5283,22 +5504,27 @@ VariantInit (&amp;EmptyProvider);
 <para>[<token>CommandID</token> = ]&dacharref_vb;.<keyword>Commands</keyword><keyword>.Add</keyword> <token>Caption</token>, <token>VoiceGrammar</token>, <token>Enabled</token>, <token>Visible</token></para>
 </vb>
 </syntax>
-			<param name="Caption"></param>
-			<param name="VoiceGrammar"></param>
-			<param name="Enabled"></param>
-			<param name="Visible"></param>
-			<returns name="CommandID"></returns>
-			<remarks></remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.Add']/param[@name='Caption']" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.Add']/param[@name='VoiceGrammar']" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.Add']/param[@name='Enabled']" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.Add']/param[@name='Visible']" />
+			<returns name="CommandID">
+				A <typename>numeric</typename> value that uniquely identifies the <see cref="T:&dans;.Command" suffix="Object" />
+				in the <see cref="T:&dans;.Commands" suffix="Collection" />.
+			</returns>
+			<seealso cref="T:&dans;.Command" prefix="The" suffix="Object" />
+			<seealso cref="P:&dans;.Commands.Command" prefix="The" suffix="Property" />
+			<seealso cref="M:&dans;.Commands.AddEx" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Commands.Insert" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Commands.InsertEx" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Commands.Remove" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Commands.RemoveAll" prefix="The" suffix="Method" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="M:&dans;.Commands.AddEx">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.Add']/summary" />
 			<syntax xml:space="preserve">
 <cpp>
 <para><token>commands</token>-&gt;<keyword>Add</keyword> (<token>Caption</token>, <token>VoiceGrammar</token>, <token>VoiceCaption</token>, <token>Enabled</token>, <token>Visible</token>, <token>HelpContextID</token>, &amp;<token>CommandID</token>)</para>
@@ -5313,14 +5539,29 @@ VariantInit (&amp;EmptyProvider);
 <para>[<token>CommandID</token> = ]&dacharref_vb;.<keyword>Commands</keyword><keyword>.Add</keyword> <token>Caption</token>, <token>VoiceGrammar</token>, <token>VoiceCaption</token>, <token>Enabled</token>, <token>Visible</token>, <token>HelpContextID</token></para>
 </vb>
 </syntax>
-			<param name="Caption"></param>
-			<param name="VoiceGrammar"></param>
-			<param name="VoiceCaption"></param>
-			<param name="Enabled"></param>
-			<param name="Visible"></param>
-			<param name="HelpContextID"></param>
-			<returns name="CommandID"></returns>
-			<remarks></remarks>
+			<param name="Caption">
+				A <typename>string</typename> value specifying the name that will appear in the
+				character's <a class="see" href="&dacmref;">&dacmname;</a>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.Caption" />
+				property.
+			</param>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.Add']/param[@name='VoiceGrammar']" />
+			<param name="VoiceCaption">
+				A <typename>string</typename> value specifying the name that will appear in
+				the <a class="see" href="&davcref;">&davcname;</a> window when the client application is <glossary>input-active</glossary>.
+				For more information, see the <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.VoiceCaption" />
+				property.
+			</param>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.Add']/param[@name='Enabled']" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.Add']/param[@name='Visible']" />
+			<param name="HelpContextID">Not supported.</param>
+			<include path="/doc/members/member[@name='M:&dans;.Commands.Add']/returns" />
+			<seealso cref="T:&dans;.Command" prefix="The" suffix="Object" />
+			<seealso cref="P:&dans;.Commands.Command" prefix="The" suffix="Property" />
+			<seealso cref="M:&dans;.Commands.Add" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Commands.Insert" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Commands.InsertEx" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Commands.Remove" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Commands.RemoveAll" prefix="The" suffix="Method" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -5508,11 +5749,7 @@ VariantInit (&amp;EmptyProvider);
 		<!--=============================================================================================-->
 
 		<member name="M:&dans;.Commands.Insert">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.Insert']/summary" />
 			<syntax xml:space="preserve">
 <cpp>
 <para><token>commands</token>-&gt;<keyword>Insert</keyword> (<token>Caption</token>, <token>VoiceGrammar</token>, <token>Enabled</token>, <token>Visible</token>, <token>RefCommandID</token>, <token>Before</token>, &amp;<token>CommandID</token>)</para>
@@ -5527,24 +5764,32 @@ VariantInit (&amp;EmptyProvider);
 <para>[<token>CommandID</token> = ]&dacharref_vb;.<keyword>Commands</keyword><keyword>.Insert</keyword> <token>Caption</token>, <token>VoiceGrammar</token>, <token>Enabled</token>, <token>Visible</token>, <token>RefCommandID</token>, <token>Before</token></para>
 </vb>
 </syntax>
-			<param name="Caption"></param>
-			<param name="VoiceGrammar"></param>
-			<param name="Enabled"></param>
-			<param name="Visible"></param>
-			<param name="RefCommandID"></param>
-			<param name="Before"></param>
-			<returns name="CommandID"></returns>
-			<remarks></remarks>
+			<include path="/doc/members/member[@name='M:&dans;.Commands.Add']/param[@name='Caption']" />
+			<include path="/doc/members/member[@name='M:&dans;.Commands.Add']/param[@name='VoiceGrammar']" />
+			<include path="/doc/members/member[@name='M:&dans;.Commands.Add']/param[@name='Enabled']" />
+			<include path="/doc/members/member[@name='M:&dans;.Commands.Add']/param[@name='Visible']" />
+			<param name="RefCommandID">
+				A <typename>numeric</typename> value that specifies the <see cref="P:&dans;.Command.CommandID" />
+				of the command just above or below where you want to insert the new command.
+			</param>
+			<param name="Before">
+				A <typename>boolean</typename> value indicating whether to insert the new command <strong>before</strong>
+				the command specified by <paramref name="RefCommandID" />.
+			</param>
+			<include path="/doc/members/member[@name='M:&dans;.Commands.Add']/returns" />
+			<seealso cref="T:&dans;.Command" prefix="The" suffix="Object" />
+			<seealso cref="P:&dans;.Commands.Command" prefix="The" suffix="Property" />
+			<seealso cref="M:&dans;.Commands.Add" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Commands.AddEx" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Commands.InsertEx" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Commands.Remove" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Commands.RemoveAll" prefix="The" suffix="Method" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="M:&dans;.Commands.InsertEx">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.Insert']/summary" />
 			<syntax xml:space="preserve">
 <cpp>
 <para><token>commands</token>-&gt;<keyword>Insert</keyword> (<token>Caption</token>, <token>VoiceGrammar</token>, <token>VoiceCaption</token>, <token>Enabled</token>, <token>Visible</token>, <token>HelpContextID</token>, <token>RefCommandID</token>, <token>Before</token>, &amp;<token>CommandID</token>)</para>
@@ -5559,26 +5804,28 @@ VariantInit (&amp;EmptyProvider);
 <para>[<token>CommandID</token> = ]&dacharref_vb;.<keyword>Commands</keyword><keyword>.Insert</keyword> <token>Caption</token>, <token>VoiceGrammar</token>, <token>VoiceCaption</token>, <token>Enabled</token>, <token>Visible</token>, <token>HelpContextID</token>, <token>RefCommandID</token>, <token>Before</token></para>
 </vb>
 </syntax>
-			<param name="Caption"></param>
-			<param name="VoiceGrammar"></param>
-			<param name="VoiceCaption"></param>
-			<param name="Enabled"></param>
-			<param name="Visible"></param>
-			<param name="HelpContextID"></param>
-			<param name="RefCommandID"></param>
-			<param name="Before"></param>
-			<returns name="CommandID"></returns>
-			<remarks></remarks>
+			<include path="/doc/members/member[@name='M:&dans;.Commands.AddEx']/param[@name='Caption']" />
+			<include path="/doc/members/member[@name='M:&dans;.Commands.AddEx']/param[@name='VoiceGrammar']" />
+			<include path="/doc/members/member[@name='M:&dans;.Commands.AddEx']/param[@name='VoiceCaption']" />
+			<include path="/doc/members/member[@name='M:&dans;.Commands.AddEx']/param[@name='Enabled']" />
+			<include path="/doc/members/member[@name='M:&dans;.Commands.AddEx']/param[@name='Visible']" />
+			<include path="/doc/members/member[@name='M:&dans;.Commands.AddEx']/param[@name='HelpContextID']" />
+			<include path="/doc/members/member[@name='M:&dans;.Commands.Insert']/param[@name='RefCommandID']" />
+			<include path="/doc/members/member[@name='M:&dans;.Commands.Insert']/param[@name='Before']" />
+			<include path="/doc/members/member[@name='M:&dans;.Commands.Add']/returns" />
+			<seealso cref="T:&dans;.Command" prefix="The" suffix="Object" />
+			<seealso cref="P:&dans;.Commands.Command" prefix="The" suffix="Property" />
+			<seealso cref="M:&dans;.Commands.Add" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Commands.AddEx" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Commands.Insert" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Commands.Remove" prefix="The" suffix="Method" />
+			<seealso cref="M:&dans;.Commands.RemoveAll" prefix="The" suffix="Method" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="M:&dans;.Commands.Remove">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.Remove']/summary" />
 			<syntax xml:space="preserve">
 <cpp>
 <para><token>commands</token>-&gt;<keyword>Remove</keyword> (<token>CommandID</token>)</para>
@@ -5593,18 +5840,18 @@ VariantInit (&amp;EmptyProvider);
 <para>&dacharref_vb;.<keyword>Commands</keyword><keyword>.Remove</keyword> <token>CommandID</token></para>
 </vb>
 </syntax>
-			<param name="CommandID"></param>
-			<remarks></remarks>
+			<param name="CommandID">
+				The <see cref="P:&dans;.Command.CommandID" /> of the <see cref="T:&dans;.Command" suffix="Object" />
+				to remove.
+			</param>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.Remove']/remarks" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.Remove']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->
 
 		<member name="M:&dans;.Commands.RemoveAll">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.RemoveAll']/summary" />
 			<syntax xml:space="preserve">
 <cpp>
 <para><token>commands</token>-&gt;<keyword>RemoveAll</keyword> ()</para>
@@ -5619,7 +5866,8 @@ VariantInit (&amp;EmptyProvider);
 <para>&dacharref_vb;.<keyword>Commands</keyword><keyword>.RemoveAll</keyword></para>
 </vb>
 </syntax>
-			<remarks></remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.RemoveAll']/remarks" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.RemoveAll']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -5757,6 +6005,12 @@ VariantInit (&amp;EmptyProvider);
 		</member>
 
 		<!--=============================================================================================-->
+
+		<member name="M:&dans;.Commands.GetEnumerator">
+			<inheritdoc/>
+		</member>
+
+		<!--=============================================================================================-->
 		<!--=============================================================================================-->
 
 		<member name="P:&dans;.Commands.Caption">
@@ -5783,11 +6037,11 @@ VariantInit (&amp;EmptyProvider);
 </syntax>
 			<param name="CommandID">
 				A <typename>numeric</typename> value that specifies the <see cref="P:&dans;.Command.CommandID" />
-				given to the command when it was defined.
+				assigned to the command when it was defined.
 			</param>
-			<returns name="Command">
+			<value name="Command">
 				The <see cref="T:&dans;.Command" suffix="Object" /> with the specified <paramref name="CommandID" />.
-			</returns>
+			</value>
 			<seealso cref="P:&dans;.Command.CommandID" suffix="Property" prefix="The" />
 			<seealso cref="P:&dans;.Commands.Item" suffix="Property" prefix="The" />
 		</member>
@@ -5860,10 +6114,12 @@ VariantInit (&amp;EmptyProvider);
 </vb>
 </syntax>
 			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Commands.Index']/param" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Commands.Index']/value" />
 			<remarks>
 				<para>
-					When you want to use the <see cref="T:&dans;.Commands" suffix="Collection" /> as an <em>ordered </em>collection,
-					you can use the <self>Item</self> property instead of the <see cref="P:&dans;.Commands.Command" /> property.
+					When you want to use the <see cref="T:&dans;.Commands" suffix="Collection" /> as an <em>ordered</em>
+					collection, you can use the <self>Item</self> property instead of the <see cref="P:&dans;.Commands.Command" />
+					property.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.Commands.Count" suffix="Property" prefix="The" />
@@ -6860,6 +7116,12 @@ VariantInit (&amp;EmptyProvider);
 		</member>
 
 		<!--=============================================================================================-->
+
+		<member name="M:&dans;.SREngines.GetEnumerator">
+			<inheritdoc/>
+		</member>
+
+		<!--=============================================================================================-->
 		<!--=============================================================================================-->
 
 		<member name="T:&dans;.SREngines" kind="Collection">
@@ -6932,6 +7194,12 @@ VariantInit (&amp;EmptyProvider);
 		</member>
 
 		<!--=============================================================================================-->
+
+		<member name="M:&dans;.TTSEngines.GetEnumerator">
+			<inheritdoc/>
+		</member>
+
+		<!--=============================================================================================-->
 		<!--=============================================================================================-->
 
 		<member name="T:&dans;.TTSEngines" kind="Collection">
@@ -6945,7 +7213,7 @@ VariantInit (&amp;EmptyProvider);
 		<member name="M:&dans;.UserInput.GetAllItemData">
 			<summary>
 				<para>
-					---todo---
+					Returns all of the information contained in the <see cref="T:&dans;.UserInput" suffix="Object" />.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -6962,10 +7230,28 @@ VariantInit (&amp;EmptyProvider);
 <para><token>userinput</token>.<keyword>GetAllItemData</keyword> <token>ItemIndices</token>, <token>ItemConfidences</token>, <token>ItemText</token></para>
 </vb>
 </syntax>
-			<param name="ItemIndices"></param>
-			<param name="ItemConfidences"></param>
-			<param name="ItemText"></param>
-			<remarks></remarks>
+			<param name="ItemCommandIDs">
+				An <typename>array</typename> of <see cref="P:&dans;.UserInput.ItemCommandID" />
+				property values.
+			</param>
+			<param name="ItemConfidences">
+				An <typename>array</typename> of <see cref="P:&dans;.UserInput.ItemConfidence" />
+				property values.
+			</param>
+			<param name="ItemTexts">
+				An <typename>array</typename> of <see cref="P:&dans;.UserInput.ItemText" />
+				property values.
+			</param>
+			<remarks>
+				<para>
+					The <see cref="P:&dans;.UserInput.Count" /> property indicates the number of returned values. If <see cref="P:&dans;.UserInput.Count" />
+					is zero, there might still be returned values depending on the command chosen.
+				</para>
+			</remarks>
+			<seealso cref="P:&dans;.UserInput.ItemCommandID" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.UserInput.ItemConfidence" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.UserInput.ItemText" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.UserInput.Count" suffix="Property" prefix="The" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -7036,11 +7322,7 @@ VariantInit (&amp;EmptyProvider);
 		<!--=============================================================================================-->
 
 		<member name="P:&dans;.UserInput.Count">
-			<summary>
-				<para>
-					---todo---
-				</para>
-			</summary>
+			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.UserInput.Count']/summary" />
 			<syntax xml:space="preserve">
 <cpp>
 <para><token>userinput</token>-&gt;<keyword>get_Count</keyword> (&amp;<token>Count</token>)</para>
@@ -7052,14 +7334,24 @@ VariantInit (&amp;EmptyProvider);
 <para>[<token>Count</token> =]<token>userinput</token>.<keyword>Count</keyword></para>
 </vb>
 </syntax>
-			<value name="Count"></value>
-			<remarks></remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.UserInput.Count']/value" />
+			<remarks>
+				<para>
+					A count of zero indicates that the command was chosen from the character's <a class="see" href="&dacmref;">&dacmname;</a>
+					The first <see cref="P:&dans;.UserInput.ItemCommandID" /> property returns the chosen command's <see cref="P:&dans;.Command.CommandID" />.
+				</para>
+				<para>
+					Even if the <self>Count</self> is zero (no commands were matched), the first <see cref="P:&dans;.UserInput.ItemText" />
+					property will still return the spoken text.
+				</para>
+			</remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.UserInput.Count']/seealso" />
 		</member>
 
 		<member name="P:&dans;.UserInput.ItemConfidence">
 			<summary>
 				<para>
-					---todo---
+					Returns the speech recognition confidence scoring for a matching <see cref="T:&dans;.Command" />.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -7073,15 +7365,23 @@ VariantInit (&amp;EmptyProvider);
 <para>[<token>ItemConfidence</token> =]<token>userinput</token>.<keyword>ItemConfidence</keyword> (<token>ItemIndex</token>)</para>
 </vb>
 </syntax>
-			<param name="ItemIndex"></param>
-			<value name="ItemConfidence"></value>
-			<remarks></remarks>
+			<param name="ItemIndex">
+				A <numeric>value</numeric> that specifies the zero-based index of the item to
+				retrieve. Must be less than <see cref="P:&dans;.UserInput.Count" />.
+			</param>
+			<value name="ItemConfidence">
+				The relative confidence scoring of the <keyword>Nth</keyword> best match, from
+				-100 to 100 (where <keyword>N</keyword> is <paramref name="ItemIndex" />+1).
+			</value>
+			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.UserInput.Confidence']/seealso" />
 		</member>
 
 		<member name="P:&dans;.UserInput.ItemCommandID">
 			<summary>
 				<para>
-					---todo---
+					Identifies the chosen <see cref="T:&dans;.Command" />, if chosen from the <a class="see" href="&dacmref;">&dacmname;</a>,
+					or a matching <see cref="T:&dans;.Command" />, if voice input triggers the <see cref="E:&darootobj;.Command" />
+					event.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -7095,15 +7395,36 @@ VariantInit (&amp;EmptyProvider);
 <para>[<token>ItemCommandID</token> =]<token>userinput</token>.<keyword>ItemCommandID</keyword> (<token>ItemIndex</token>)</para>
 </vb>
 </syntax>
-			<param name="ItemIndex"></param>
-			<value name="ItemCommandID"></value>
-			<remarks></remarks>
+			<include path="/doc/members/member[@name='P:&dans;.UserInput.ItemConfidence']/param[@name='ItemIndex']" />
+			<value name="ItemCommandID">
+				<list>
+					<item>
+						<term>
+							If the <see cref="P:&dans;.UserInput.Count" /> property is zero:
+						</term>
+						<description>
+							The <see cref="P:&dans;.Command.CommandID" /> of the chosen <see cref="T:&dans;.Command" />,
+							or zero if the chosen command was pre-defined (for example, the <keyword>Hide</keyword> command).
+						</description>
+					</item>
+					<item>
+						<term>
+							If the <see cref="P:&dans;.UserInput.Count" /> property is non-zero:
+						</term>
+						<description>
+							The <see cref="P:&dans;.Command.CommandID" /> of the <keyword>Nth</keyword> best matching
+							<see cref="T:&dans;.Command" /> (where <keyword>N</keyword> is <paramref name="ItemIndex" />+1).
+						</description>
+					</item>
+				</list>
+			</value>
+			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.UserInput.Name']/seealso" />
 		</member>
 
 		<member name="P:&dans;.UserInput.ItemText">
 			<summary>
 				<para>
-					---todo---
+					Returns the voice text that the speech recognition engine matched for a <see cref="T:&dans;.Command" />.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -7117,9 +7438,18 @@ VariantInit (&amp;EmptyProvider);
 <para>[<token>ItemText</token> =]<token>userinput</token>.<keyword>ItemText</keyword> (<token>ItemIndex</token>)</para>
 </vb>
 </syntax>
-			<param name="ItemIndex"></param>
-			<value name="ItemConfidence"></value>
-			<remarks></remarks>
+			<include path="/doc/members/member[@name='P:&dans;.UserInput.ItemConfidence']/param[@name='ItemIndex']" />
+			<value name="ItemText">
+				The <keyword>Nth</keyword> best matching voice text (where <keyword>N</keyword>
+				is <paramref name="ItemIndex" />+1).
+			</value>
+			<remarks>
+				<para>
+					Even if no command was matched, the text that the speech engine heard is returned at <paramref name="ItemIndex" />
+					zero.
+				</para>
+			</remarks>
+			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.UserInput.Voice']/seealso" />
 		</member>
 
 		<!--=============================================================================================-->

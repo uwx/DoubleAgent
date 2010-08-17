@@ -85,6 +85,10 @@ public:
 	HRESULT STDMETHODCALLTYPE put_MsAgentFiles (VARIANT_BOOL MsAgentFiles);
 	HRESULT STDMETHODCALLTYPE get_MsOfficeFiles (VARIANT_BOOL * MsOfficeFiles);
 	HRESULT STDMETHODCALLTYPE put_MsOfficeFiles (VARIANT_BOOL MsOfficeFiles);
+	HRESULT STDMETHODCALLTYPE get_CompliantCharacters (VARIANT_BOOL * CompliantCharacters);
+	HRESULT STDMETHODCALLTYPE put_CompliantCharacters (VARIANT_BOOL CompliantCharacters);
+	HRESULT STDMETHODCALLTYPE get_NonCompliantCharacters (VARIANT_BOOL * NonCompliantCharacters);
+	HRESULT STDMETHODCALLTYPE put_NonCompliantCharacters (VARIANT_BOOL NonCompliantCharacters);
 	HRESULT STDMETHODCALLTYPE get_SpeakingCharacters (VARIANT_BOOL * SpeakingCharacters);
 	HRESULT STDMETHODCALLTYPE put_SpeakingCharacters (VARIANT_BOOL SpeakingCharacters);
 	HRESULT STDMETHODCALLTYPE get_NonSpeakingCharacters (VARIANT_BOOL * NonSpeakingCharacters);

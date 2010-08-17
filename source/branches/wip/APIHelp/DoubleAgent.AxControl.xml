@@ -5,6 +5,7 @@
 	<!ENTITY dactlns "DoubleAgent.Control">
 	<!ENTITY dactlroot "DoubleAgent.Control.Control">
 	<!ENTITY dans "DoubleAgent.Control">
+	<!ENTITY darootns "DoubleAgent.AxControl">
 	<!ENTITY darootobj "DoubleAgent.AxControl.AxControl">
 
 	<!ENTITY darootref "&lt;token&gt;control&lt;/token&gt;">
@@ -16,17 +17,17 @@
 	<!ENTITY typelisttype "table">
 	<!ENTITY typelistwidth "275ex">
 
-	<!ENTITY dapsref "../html/UI_PropSheet.htm">
+	<!ENTITY dapsref "../Reference/UI_PropSheet.htm">
 	<!ENTITY dapsname "Advanced Character Options">
-	<!ENTITY davcref "../html/UI_Intro.htm#VoiceCommands">
+	<!ENTITY davcref "../Reference/UI_Intro.htm#VoiceCommands">
 	<!ENTITY davcname "Voice Commands">
-	<!ENTITY dacmref "../html/UI_Intro.htm#Menu">
+	<!ENTITY dacmref "../Reference/UI_Intro.htm#Menu">
 	<!ENTITY dacmname "pop-up menu">
-	<!ENTITY dawbref "../html/UI_Intro.htm#Balloon">
+	<!ENTITY dawbref "../Reference/UI_Intro.htm#Balloon">
 	<!ENTITY dawbname "word balloon">
-	<!ENTITY daniref "../html/UI_Intro.htm#Icon">
+	<!ENTITY daniref "../Reference/UI_Intro.htm#Icon">
 	<!ENTITY daniname "notification icon">
-	<!ENTITY daltref "../html/UI_Intro.htm#ListeningTip">
+	<!ENTITY daltref "../Reference/UI_Intro.htm#ListeningTip">
 	<!ENTITY daltname "Listening tip">
 ]>
 
@@ -340,20 +341,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ActivateInput']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlActivateInput<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlActivateInputEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlActivateInput<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlActivateInputEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlActivateInput</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlActivateInputEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlActivateInput</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlActivateInputEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlActivateInputEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlActivateInputEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlActivateInputEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlActivateInputEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ActivateInput']/remarks" replace="ActiveClientChange=CtlActiveClientChange|ActivateInput=CtlActivateInput|DeactivateInput=CtlDeactivateInput" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlActivateInputEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlActivateInputEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ActivateInput']/seealso" replace="ActiveClientChange=CtlActiveClientChange|ActivateInput=CtlActivateInput|DeactivateInput=CtlDeactivateInput" />
+		</member>
+
+		<member name="T:&darootns;.CtlActivateInputEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlActivateInput" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -362,20 +371,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ActiveClientChange']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlActiveClientChange<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlActiveClientChangeEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlActiveClientChange<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlActiveClientChangeEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlActiveClientChange</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlActiveClientChangeEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlActiveClientChange</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlActiveClientChangeEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlActiveClientChangeEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlActiveClientChangeEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlActiveClientChangeEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlActiveClientChangeEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ActiveClientChange']/remarks" replace="ActiveClientChange=CtlActiveClientChange|ActivateInput=CtlActivateInput|DeactivateInput=CtlDeactivateInput|Command=CtlCommand" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlActiveClientChangeEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlActiveClientChangeEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ActiveClientChange']/seealso" replace="ActiveClientChange=CtlActiveClientChange|ActivateInput=CtlActivateInput|DeactivateInput=CtlDeactivateInput|Command=CtlCommand" />
+		</member>
+
+		<member name="T:&darootns;.CtlActiveClientChangeEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlActiveClientChange" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -398,26 +415,42 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.AgentPropertyChange']/seealso" replace="AgentPropertyChange=CtlAgentPropertyChange|DefaultCharacterChange=CtlDefaultCharacterChange" />
 		</member>
 
+		<member name="T:&darootns;.CtlAgentPropertyChangeEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlAgentPropertyChange" prefix="the" suffix="event" />.
+				</para>
+			</summary>
+		</member>
+
 		<!--=============================================================================================-->
 
 		<member name="E:&darootobj;.CtlBalloonHide">
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.BalloonHide']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlBalloonHide<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlBalloonHideEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlBalloonHide<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlBalloonHideEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlBalloonHide</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlBalloonHideEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlBalloonHide</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlBalloonHideEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlBalloonHideEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlBalloonHideEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlBalloonHideEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlBalloonHideEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.BalloonHide']/remarks" replace="BalloonHide=CtlBalloonHide|BalloonShow=CtlBalloonShow" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlBalloonHideEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlBalloonHideEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.BalloonHide']/seealso" replace="BalloonHide=CtlBalloonHide|BalloonShow=CtlBalloonShow" />
+		</member>
+
+		<member name="T:&darootns;.CtlBalloonHideEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlBalloonHide" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -426,20 +459,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.BalloonShow']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlBalloonShow<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlBalloonShowEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlBalloonShow<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlBalloonShowEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlBalloonShow</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlBalloonShowEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlBalloonShow</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlBalloonShowEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlBalloonShowEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlBalloonShowEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlBalloonShowEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlBalloonShowEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.BalloonShow']/remarks" replace="BalloonShow=CtlBalloonShow|BalloonHide=CtlBalloonHide" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlBalloonShowEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlBalloonShowEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.BalloonShow']/seealso" replace="BalloonShow=CtlBalloonShow|BalloonHide=CtlBalloonHide" />
+		</member>
+
+		<member name="T:&darootns;.CtlBalloonShowEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlBalloonShow" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -448,20 +489,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Bookmark']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlBookmark<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlBookmarkEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlBookmark<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlBookmarkEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlBookmark</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlBookmarkEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlBookmark</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlBookmarkEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlBookmarkEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlBookmarkEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlBookmarkEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlBookmarkEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Bookmark']/remarks" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlBookmarkEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlBookmarkEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Bookmark']/seealso" />
+		</member>
+
+		<member name="T:&darootns;.CtlBookmarkEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlBookmark" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -470,20 +519,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Click']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlClick<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlClickEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlClick<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlClickEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlClick</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlClickEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlClick</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlClickEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlClickEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlClickEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlClickEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlClickEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Click']/remarks" replace="Click=CtlClick|DblCtlClick=CtlDblClick|CtlClicking=Clicking|ActivateInput=CtlActivateInput|RequestComplete=CtlRequestComplete" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlClickEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlClickEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Click']/seealso" replace="Click=CtlClick|DblCtlClick=CtlDblClick|ActivateInput=CtlActivateInput|RequestComplete=CtlRequestComplete" />
+		</member>
+
+		<member name="T:&darootns;.CtlClickEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlClick" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -492,20 +549,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Command']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlCommand<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlCommandEvent" text="DoubleAgent.AxControl.CtlCommandEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlCommand<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlCommandEvent" text="&darootns;.CtlCommandEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlCommand</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlCommandEvent" text="DoubleAgent.AxControl.CtlCommandEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlCommand</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlCommandEvent" text="&darootns;.CtlCommandEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlCommandEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlCommandEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlCommandEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlCommandEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Command']/remarks" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlCommandEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlCommandEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Command']/seealso" />
+		</member>
+
+		<member name="T:&darootns;.CtlCommandEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlCommand" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -514,20 +579,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DblClick']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlDblClick<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlDblClickEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlDblClick<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlDblClickEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlDblClick</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlDblClickEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlDblClick</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlDblClickEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlDblClickEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlDblClickEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlDblClickEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlDblClickEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DblClick']/remarks" replace="Click=CtlClick|DblCtlClick=CtlDblClick|ActivateInput=CtlActivateInput|RequestComplete=CtlRequestComplete" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlDblClickEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDblClickEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DblClick']/seealso" replace="Click=CtlClick|DblCtlClick=CtlDblClick|ActivateInput=CtlActivateInput|RequestComplete=CtlRequestComplete" />
+		</member>
+
+		<member name="T:&darootns;.CtlDblClickEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlDblClick" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -536,20 +609,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DeactivateInput']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlDeactivateInput<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlDeactivateInputEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlDeactivateInput<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlDeactivateInputEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlDeactivateInput</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlDeactivateInputEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlDeactivateInput</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlDeactivateInputEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlDeactivateInputEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlDeactivateInputEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlDeactivateInputEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlDeactivateInputEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DeactivateInput']/remarks" replace="ActiveClientChange=CtlActiveClientChange|DeactivateInput=CtlDeactivateInput|ActivateInput=CtlActivateInput" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlDeactivateInputEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDeactivateInputEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DeactivateInput']/seealso" replace="ActiveClientChange=CtlActiveClientChange|DeactivateInput=CtlDeactivateInput|ActivateInput=CtlActivateInput" />
+		</member>
+
+		<member name="T:&darootns;.CtlDeactivateInputEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlDeactivateInput" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -558,20 +639,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DefaultCharacterChange']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlDefaultCharacterChange<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlDefaultCharacterChange<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlDefaultCharacterChangeEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlDefaultCharacterChange</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlDefaultCharacterChange</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlDefaultCharacterChangeEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlDefaultCharacterChangeEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlDefaultCharacterChangeEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DefaultCharacterChange']/remarks" replace="DefaultCharacterChange=CtlDefaultCharacterChange" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDefaultCharacterChangeEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DefaultCharacterChange']/seealso" replace="DefaultCharacterChange=CtlDefaultCharacterChange" />
+		</member>
+
+		<member name="T:&darootns;.CtlDefaultCharacterChangeEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlDefaultCharacterChange" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -580,20 +669,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragComplete']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlDragComplete<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlDragComplete<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlDragCompleteEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlDragComplete</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlDragComplete</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlDragCompleteEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlDragCompleteEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlDragCompleteEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlDragCompleteEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragComplete']/remarks" replace="DragComplete=CtlDragComplete|DragStart=CtlDragStart|ActivateInput=CtlActivateInput" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDragCompleteEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragComplete']/seealso" replace="DragComplete=CtlDragComplete|DragStart=CtlDragStart|ActivateInput=CtlActivateInput" />
+		</member>
+
+		<member name="T:&darootns;.CtlDragCompleteEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlDragComplete" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -602,20 +699,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragStart']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlDragStart<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlDragStartEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlDragStart<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlDragStartEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlDragStart</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlDragStartEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlDragStart</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlDragStartEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlDragStartEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlDragStartEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlDragStartEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlDragStartEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragStart']/remarks" replace="DragStart=CtlDragStart|DragComplete=CtlDragComplete|ActivateInput=CtlActivateInput" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlDragStartEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDragStartEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragStart']/seealso" replace="DragStart=CtlDragStart|DragComplete=CtlDragComplete|ActivateInput=CtlActivateInput" />
+		</member>
+
+		<member name="T:&darootns;.CtlDragStartEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlDragStart" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -624,20 +729,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Hide']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlHide<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlHideEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlHide<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlHideEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlHide</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlHideEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlHide</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlHideEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlHideEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlHideEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlHideEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlHideEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Hide']/remarks" replace="Show=CtlShow" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlHideEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlHideEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Hide']/seealso" replace="Show=CtlShow" />
+		</member>
+
+		<member name="T:&darootns;.CtlHideEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlHide" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -646,20 +759,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.IdleComplete']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlIdleComplete<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlIdleCompleteEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlIdleComplete<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlIdleCompleteEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlIdleComplete</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlIdleCompleteEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlIdleComplete</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlIdleCompleteEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlIdleCompleteEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlIdleCompleteEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlIdleCompleteEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlIdleCompleteEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.IdleComplete']/remarks" replace="IdleComplete=CtlIdleComplete|IdleStart=CtlIdleStart" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlIdleCompleteEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlIdleCompleteEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.IdleComplete']/seealso" replace="IdleComplete=CtlIdleComplete|IdleStart=CtlIdleStart" />
+		</member>
+
+		<member name="T:&darootns;.CtlIdleCompleteEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlIdleComplete" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -668,20 +789,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.IdleStart']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlIdleStart<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlIdleStartEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlIdleStart<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlIdleStartEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlIdleStart</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlIdleStartEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlIdleStart</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlIdleStartEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlIdleStartEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlIdleStartEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlIdleStartEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlIdleStartEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.IdleStart']/remarks" replace="IdleStart=CtlIdleStart|IdleComplete=CtlIdleComplete" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlIdleStartEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlIdleStartEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.IdleStart']/seealso" replace="IdleStart=CtlIdleStart|IdleComplete=CtlIdleComplete" />
+		</member>
+
+		<member name="T:&darootns;.CtlIdleStartEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlIdleStart" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -690,20 +819,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ListenComplete']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlListenComplete<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlListenCompleteEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlListenComplete<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlListenCompleteEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlListenComplete</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlListenCompleteEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlListenComplete</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlListenCompleteEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlListenCompleteEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlListenCompleteEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlListenCompleteEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlListenCompleteEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ListenComplete']/remarks" replace="ListenStart=CtlListenStart" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlListenCompleteEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlListenCompleteEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ListenComplete']/seealso" replace="ListenStart=CtlListenStart" />
+		</member>
+
+		<member name="T:&darootns;.CtlListenCompleteEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlListenComplete" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -712,20 +849,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ListenStart']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlListenStart<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlListenStartEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlListenStart<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlListenStartEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlListenStart</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlListenStartEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlListenStart</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlListenStartEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlListenStartEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlListenStartEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlListenStartEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlListenStartEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ListenStart']/remarks" replace="ListenComplete=CtlListenComplete" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlListenStartEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlListenStartEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ListenStart']/seealso" replace="ListenComplete=CtlListenComplete" />
+		</member>
+
+		<member name="T:&darootns;.CtlListenStartEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlListenStart" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -734,20 +879,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Move']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlMove<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlMoveEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlMove<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlMoveEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlMove</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlMoveEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlMove</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlMoveEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlMoveEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlMoveEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlMoveEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlMoveEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Move']/remarks" replace="Size=CtlSize" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlMoveEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlMoveEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Move']/seealso" replace="Size=CtlSize" />
+		</member>
+
+		<member name="T:&darootns;.CtlMoveEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlMove" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -756,20 +909,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.RequestComplete']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlRequestComplete<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlRequestCompleteEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlRequestComplete<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlRequestCompleteEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlRequestComplete</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlRequestCompleteEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlRequestComplete</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlRequestCompleteEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlRequestCompleteEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlRequestCompleteEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlRequestCompleteEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlRequestCompleteEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.RequestComplete']/remarks" replace="RequestComplete=CtlRequestComplete|RequestStart=CtlRequestStart" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlRequestCompleteEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlRequestCompleteEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.RequestComplete']/seealso" replace="RequestComplete=CtlRequestComplete|RequestStart=CtlRequestStart" />
+		</member>
+
+		<member name="T:&darootns;.CtlRequestCompleteEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlRequestComplete" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -778,20 +939,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.RequestStart']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlRequestStart<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlRequestStartEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlRequestStart<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlRequestStartEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlRequestStart</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlRequestStartEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlRequestStart</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlRequestStartEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlRequestStartEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlRequestStartEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlRequestStartEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlRequestStartEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.RequestStart']/remarks" replace="RequestStart=CtlRequestStart|RequestComplete=CtlRequestComplete" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlRequestStartEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlRequestStartEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.RequestStart']/seealso" replace="RequestStart=CtlRequestStart|RequestComplete=CtlRequestComplete" />
+		</member>
+
+		<member name="T:&darootns;.CtlRequestStartEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlRequestStart" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -800,20 +969,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Show']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlShow<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlShowEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlShow<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlShowEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlShow</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlShowEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlShow</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlShowEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlShowEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlShowEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlShowEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlShowEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Show']/remarks" replace="Hide=CtlHide" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlShowEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlShowEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Show']/seealso" replace="Hide=CtlHide" />
+		</member>
+
+		<member name="T:&darootns;.CtlShowEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlShow" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -822,20 +999,28 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Size']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlSize<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlSizeEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlSize<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlSizeEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlSize</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlSizeEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlSize</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlSizeEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlSizeEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlSizeEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlSizeEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlSizeEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Size']/remarks" replace="Move=CtlMove" />
-			<seealso cref="T:DoubleAgent.AxControl.CtlSizeEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlSizeEvent" prefix="The" suffix="Object" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Size']/seealso" replace="Move=CtlMove" />
+		</member>
+
+		<member name="T:&darootns;.CtlSizeEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlSize" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -844,19 +1029,27 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechStart']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlSpeechStart<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlSpeechStartEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlSpeechStart<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlSpeechStartEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlSpeechStart</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlSpeechStartEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlSpeechStart</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlSpeechStartEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlSpeechStartEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlSpeechStartEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlSpeechStartEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlSpeechStartEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechStart']/remarks" replace="SpeechStart=CtlSpeechStart|SpeechEnd=CtlSpeechEnd|SpeechWord=CtlSpeechWord" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechStart']/seealso" replace="SpeechStart=CtlSpeechStart|SpeechEnd=CtlSpeechEnd|SpeechWord=CtlSpeechWord" />
+		</member>
+
+		<member name="T:&darootns;.CtlSpeechStartEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlSpeechStart" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -865,19 +1058,27 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechEnd']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlSpeechEnd<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlSpeechEndEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlSpeechEnd<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlSpeechEndEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlSpeechEnd</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlSpeechEndEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlSpeechEnd</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlSpeechEndEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlSpeechEndEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlSpeechEndEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlSpeechEndEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlSpeechEndEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechEnd']/remarks" replace="SpeechStart=CtlSpeechStart|SpeechEnd=CtlSpeechEnd|SpeechWord=CtlSpeechWord" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechEnd']/seealso" replace="SpeechStart=CtlSpeechStart|SpeechEnd=CtlSpeechEnd|SpeechWord=CtlSpeechWord" />
+		</member>
+
+		<member name="T:&darootns;.CtlSpeechEndEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlSpeechEnd" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
@@ -886,26 +1087,34 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechWord']/summary" />
 			<syntax xml:space="preserve">
 <csharp>
-<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlSpeechWord<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:DoubleAgent.AxControl.CtlSpeechWordEvent" /> <token>E</token>)</para>
+<para><keyword>delegate void</keyword> &darootref;_<keyword>CtlSpeechWord<token>EventHandler</token></keyword> (<keyword>object</keyword> <token>Sender</token>, <see class="typename" cref="T:&darootns;.CtlSpeechWordEvent" /> <token>E</token>)</para>
 </csharp>
 <vbnet>
-<para><keyword>Event</keyword> &darootref;_<keyword>CtlSpeechWord</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:DoubleAgent.AxControl.CtlSpeechWordEvent" />)</para>
+<para><keyword>Event</keyword> &darootref;_<keyword>CtlSpeechWord</keyword> (<keyword>ByVal</keyword> <token>Sender</token> <keyword>As Object</keyword>, <keyword>ByVal</keyword> <token>E</token> <keyword>As</keyword> <see class="typename" cref="T:&darootns;.CtlSpeechWordEvent" />)</para>
 </vbnet>
 </syntax>
 			<include file="&dainclude;" path="/doc/params/param[@name='Sender']" />
 			<param name="E">
-				A <see class="typename" cref="T:DoubleAgent.AxControl.CtlSpeechWordEvent" suffix="Object" />
-				that contains the event data: <include path="/doc/members/member[@name='T:DoubleAgent.AxControl.CtlSpeechWordEvent']/syntax/list" />
+				A <see class="typename" cref="T:&darootns;.CtlSpeechWordEvent" suffix="Object" />
+				that contains the event data: <include path="/doc/members/member[@name='T:&darootns;.CtlSpeechWordEvent']/syntax/list" />
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechWord']/remarks" replace="SpeechStart=CtlSpeechStart|SpeechEnd=CtlSpeechEnd|SpeechWord=CtlSpeechWord" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechWord']/seealso" replace="SpeechStart=CtlSpeechStart|SpeechEnd=CtlSpeechEnd|SpeechWord=CtlSpeechWord" />
+		</member>
+
+		<member name="T:&darootns;.CtlSpeechWordEventHandler">
+			<summary>
+				<para>
+					See <see cref="E:&darootobj;.CtlSpeechWord" prefix="the" suffix="event" />.
+				</para>
+			</summary>
 		</member>
 
 		<!--=============================================================================================-->
 		<!--=============================================================================================-->
 		<!--=============================================================================================-->
 
-		<member name="T:DoubleAgent.AxControl.CtlActivateInputEvent">
+		<member name="T:&darootns;.CtlActivateInputEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlActivateInput" suffix="Event" />.
@@ -916,7 +1125,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlActivateInputEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlActivateInputEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ActivateInput']/param[@name='CharacterID']" />
@@ -927,19 +1136,19 @@
 			<seealso cref="E:&darootobj;.CtlActivateInput" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlActivateInputEvent.CharacterID">
+		<member name="F:&darootns;.CtlActivateInputEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ActivateInput']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlActivateInputEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlActivateInputEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlActivateInput" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
 
-		<member name="T:DoubleAgent.AxControl.CtlActiveClientChangeEvent">
+		<member name="T:&darootns;.CtlActiveClientChangeEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlActiveClientChange" suffix="Event" />.
@@ -950,7 +1159,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlActiveClientChangeEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlActiveClientChangeEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ActiveClientChange']/param[@name='CharacterID']" />
@@ -958,7 +1167,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlActiveClientChangeEvent.Active" />
+							<see class="keyword" cref="F:&darootns;.CtlActiveClientChangeEvent.Active" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ActiveClientChange']/param[@name='Active']" />
@@ -969,29 +1178,29 @@
 			<seealso cref="E:&darootobj;.CtlActiveClientChange" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlActiveClientChangeEvent.Active">
+		<member name="F:&darootns;.CtlActiveClientChangeEvent.Active">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ActiveClientChange']/param[@name='Active']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlActiveClientChangeEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlActiveClientChangeEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlActiveClientChange" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlActiveClientChangeEvent.CharacterID">
+		<member name="F:&darootns;.CtlActiveClientChangeEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ActiveClientChange']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlActiveClientChangeEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlActiveClientChangeEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlActiveClientChange" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
 
-		<member name="T:DoubleAgent.AxControl.CtlBalloonHideEvent">
+		<member name="T:&darootns;.CtlBalloonHideEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlBalloonHide" suffix="Event" />.
@@ -1002,7 +1211,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlBalloonHideEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlBalloonHideEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.BalloonHide']/param[@name='CharacterID']" />
@@ -1013,19 +1222,19 @@
 			<seealso cref="E:&darootobj;.CtlBalloonHide" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlBalloonHideEvent.CharacterID">
+		<member name="F:&darootns;.CtlBalloonHideEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.BalloonHide']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlBalloonHideEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlBalloonHideEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlBalloonHide" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
 
-		<member name="T:DoubleAgent.AxControl.CtlBalloonShowEvent">
+		<member name="T:&darootns;.CtlBalloonShowEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlBalloonShow" suffix="Event" />.
@@ -1036,7 +1245,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlBalloonShowEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlBalloonShowEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.BalloonShow']/param[@name='CharacterID']" />
@@ -1047,29 +1256,29 @@
 			<seealso cref="E:&darootobj;.CtlBalloonShow" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlBalloonShowEvent.CharacterID">
+		<member name="F:&darootns;.CtlBalloonShowEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.BalloonShow']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlBalloonShowEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlBalloonShowEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlBalloonShow" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
 
-		<member name="F:DoubleAgent.AxControl.CtlBookmarkEvent.BookmarkID">
+		<member name="F:&darootns;.CtlBookmarkEvent.BookmarkID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Bookmark']/param[@name='BookmarkID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlBookmarkEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlBookmarkEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlBookmark" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="T:DoubleAgent.AxControl.CtlBookmarkEvent">
+		<member name="T:&darootns;.CtlBookmarkEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlBookmark" suffix="Event" />.
@@ -1080,7 +1289,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlBookmarkEvent.BookmarkID" />
+							<see class="keyword" cref="F:&darootns;.CtlBookmarkEvent.BookmarkID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Bookmark']/param[@name='BookmarkID']" />
@@ -1093,57 +1302,57 @@
 
 		<!--=============================================================================================-->
 
-		<member name="F:DoubleAgent.AxControl.CtlClickEvent.Button">
+		<member name="F:&darootns;.CtlClickEvent.Button">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Click']/param[@name='Button']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlClickEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlClickEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlClick" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlClickEvent.CharacterID">
+		<member name="F:&darootns;.CtlClickEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Click']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlClickEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlClickEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlClick" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlClickEvent.Shift">
+		<member name="F:&darootns;.CtlClickEvent.Shift">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Click']/param[@name='Shift']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlClickEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlClickEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlClick" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlClickEvent.X">
+		<member name="F:&darootns;.CtlClickEvent.X">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Click']/param[@name='X']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlClickEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlClickEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlClick" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlClickEvent.Y">
+		<member name="F:&darootns;.CtlClickEvent.Y">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Click']/param[@name='Y']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlClickEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlClickEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlClick" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="T:DoubleAgent.AxControl.CtlClickEvent">
+		<member name="T:&darootns;.CtlClickEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlClick" suffix="Event" />.
@@ -1154,7 +1363,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlClickEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlClickEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Click']/param[@name='CharacterID']" />
@@ -1162,7 +1371,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlClickEvent.Button" />
+							<see class="keyword" cref="F:&darootns;.CtlClickEvent.Button" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Click']/param[@name='Button']" />
@@ -1170,7 +1379,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlClickEvent.Shift" />
+							<see class="keyword" cref="F:&darootns;.CtlClickEvent.Shift" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Click']/param[@name='Shift']" />
@@ -1178,7 +1387,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlClickEvent.X" />
+							<see class="keyword" cref="F:&darootns;.CtlClickEvent.X" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Click']/param[@name='X']" />
@@ -1186,7 +1395,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlClickEvent.Y" />
+							<see class="keyword" cref="F:&darootns;.CtlClickEvent.Y" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Click']/param[@name='Y']" />
@@ -1199,17 +1408,17 @@
 
 		<!--=============================================================================================-->
 
-		<member name="F:DoubleAgent.AxControl.CtlCommandEvent.UserInput">
+		<member name="F:&darootns;.CtlCommandEvent.UserInput">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Command']/param[@name='UserInput']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlCommandEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlCommandEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlCommand" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="T:DoubleAgent.AxControl.CtlCommandEvent">
+		<member name="T:&darootns;.CtlCommandEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlCommand" suffix="Event" />.
@@ -1220,7 +1429,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlCommandEvent.UserInput" />
+							<see class="keyword" cref="F:&darootns;.CtlCommandEvent.UserInput" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Command']/param[@name='UserInput']" />
@@ -1233,57 +1442,57 @@
 
 		<!--=============================================================================================-->
 
-		<member name="F:DoubleAgent.AxControl.CtlDblClickEvent.Button">
+		<member name="F:&darootns;.CtlDblClickEvent.Button">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DblClick']/param[@name='Button']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlDblClickEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDblClickEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlDblClick" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlDblClickEvent.CharacterID">
+		<member name="F:&darootns;.CtlDblClickEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DblClick']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlDblClickEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDblClickEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlDblClick" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlDblClickEvent.Shift">
+		<member name="F:&darootns;.CtlDblClickEvent.Shift">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DblClick']/param[@name='Shift']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlDblClickEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDblClickEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlDblClick" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlDblClickEvent.X">
+		<member name="F:&darootns;.CtlDblClickEvent.X">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DblClick']/param[@name='X']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlDblClickEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDblClickEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlDblClick" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlDblClickEvent.Y">
+		<member name="F:&darootns;.CtlDblClickEvent.Y">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DblClick']/param[@name='Y']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlDblClickEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDblClickEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlDblClick" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="T:DoubleAgent.AxControl.CtlDblClickEvent">
+		<member name="T:&darootns;.CtlDblClickEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlDblClick" suffix="Event" />.
@@ -1294,7 +1503,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlDblClickEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlDblClickEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DblClick']/param[@name='CharacterID']" />
@@ -1302,7 +1511,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlDblClickEvent.Button" />
+							<see class="keyword" cref="F:&darootns;.CtlDblClickEvent.Button" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DblClick']/param[@name='Button']" />
@@ -1310,7 +1519,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlDblClickEvent.Shift" />
+							<see class="keyword" cref="F:&darootns;.CtlDblClickEvent.Shift" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DblClick']/param[@name='Shift']" />
@@ -1318,7 +1527,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlDblClickEvent.X" />
+							<see class="keyword" cref="F:&darootns;.CtlDblClickEvent.X" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DblClick']/param[@name='X']" />
@@ -1326,7 +1535,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlDblClickEvent.Y" />
+							<see class="keyword" cref="F:&darootns;.CtlDblClickEvent.Y" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DblClick']/param[@name='Y']" />
@@ -1339,17 +1548,17 @@
 
 		<!--=============================================================================================-->
 
-		<member name="F:DoubleAgent.AxControl.CtlDeactivateInputEvent.CharacterID">
+		<member name="F:&darootns;.CtlDeactivateInputEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DeactivateInput']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlDeactivateInputEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDeactivateInputEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlDeactivateInput" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="T:DoubleAgent.AxControl.CtlDeactivateInputEvent">
+		<member name="T:&darootns;.CtlDeactivateInputEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlDeactivateInput" suffix="Event" />.
@@ -1360,7 +1569,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlDeactivateInputEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlDeactivateInputEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DeactivateInput']/param[@name='CharacterID']" />
@@ -1373,17 +1582,17 @@
 
 		<!--=============================================================================================-->
 
-		<member name="F:DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent.CharGUID">
+		<member name="F:&darootns;.CtlDefaultCharacterChangeEvent.CharGUID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DefaultCharacterChange']/param[@name='CharGUID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDefaultCharacterChangeEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlDefaultCharacterChange" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="T:DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent">
+		<member name="T:&darootns;.CtlDefaultCharacterChangeEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlDefaultCharacterChange" suffix="Event" />.
@@ -1394,7 +1603,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent.CharGUID" />
+							<see class="keyword" cref="F:&darootns;.CtlDefaultCharacterChangeEvent.CharGUID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DefaultCharacterChange']/param[@name='CharGUID']" />
@@ -1407,57 +1616,57 @@
 
 		<!--=============================================================================================-->
 
-		<member name="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Button">
+		<member name="F:&darootns;.CtlDragCompleteEvent.Button">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragComplete']/param[@name='Button']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDragCompleteEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlDragComplete" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlDragCompleteEvent.CharacterID">
+		<member name="F:&darootns;.CtlDragCompleteEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragComplete']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDragCompleteEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlDragComplete" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Shift">
+		<member name="F:&darootns;.CtlDragCompleteEvent.Shift">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragComplete']/param[@name='Shift']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDragCompleteEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlDragComplete" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlDragCompleteEvent.X">
+		<member name="F:&darootns;.CtlDragCompleteEvent.X">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragComplete']/param[@name='X']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDragCompleteEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlDragComplete" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Y">
+		<member name="F:&darootns;.CtlDragCompleteEvent.Y">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragComplete']/param[@name='Y']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDragCompleteEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlDragComplete" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="T:DoubleAgent.AxControl.CtlDragCompleteEvent">
+		<member name="T:&darootns;.CtlDragCompleteEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlDragComplete" suffix="Event" />.
@@ -1468,7 +1677,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragCompleteEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlDragCompleteEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragComplete']/param[@name='CharacterID']" />
@@ -1476,7 +1685,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Button" />
+							<see class="keyword" cref="F:&darootns;.CtlDragCompleteEvent.Button" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragComplete']/param[@name='Button']" />
@@ -1484,7 +1693,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Shift" />
+							<see class="keyword" cref="F:&darootns;.CtlDragCompleteEvent.Shift" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragComplete']/param[@name='Shift']" />
@@ -1492,7 +1701,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragCompleteEvent.X" />
+							<see class="keyword" cref="F:&darootns;.CtlDragCompleteEvent.X" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragComplete']/param[@name='X']" />
@@ -1500,7 +1709,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Y" />
+							<see class="keyword" cref="F:&darootns;.CtlDragCompleteEvent.Y" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragComplete']/param[@name='Y']" />
@@ -1513,57 +1722,57 @@
 
 		<!--=============================================================================================-->
 
-		<member name="F:DoubleAgent.AxControl.CtlDragStartEvent.Button">
+		<member name="F:&darootns;.CtlDragStartEvent.Button">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragStart']/param[@name='Button']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlDragStartEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDragStartEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlDragStart" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlDragStartEvent.CharacterID">
+		<member name="F:&darootns;.CtlDragStartEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragStart']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlDragStartEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDragStartEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlDragStart" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlDragStartEvent.Shift">
+		<member name="F:&darootns;.CtlDragStartEvent.Shift">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragStart']/param[@name='Shift']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlDragStartEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDragStartEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlDragStart" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlDragStartEvent.X">
+		<member name="F:&darootns;.CtlDragStartEvent.X">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragStart']/param[@name='X']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlDragStartEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDragStartEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlDragStart" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlDragStartEvent.Y">
+		<member name="F:&darootns;.CtlDragStartEvent.Y">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragStart']/param[@name='Y']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlDragStartEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlDragStartEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlDragStart" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="T:DoubleAgent.AxControl.CtlDragStartEvent">
+		<member name="T:&darootns;.CtlDragStartEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlDragStart" suffix="Event" />.
@@ -1574,7 +1783,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragStartEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlDragStartEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragStart']/param[@name='CharacterID']" />
@@ -1582,7 +1791,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragStartEvent.Button" />
+							<see class="keyword" cref="F:&darootns;.CtlDragStartEvent.Button" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragStart']/param[@name='Button']" />
@@ -1590,7 +1799,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragStartEvent.Shift" />
+							<see class="keyword" cref="F:&darootns;.CtlDragStartEvent.Shift" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragStart']/param[@name='Shift']" />
@@ -1598,7 +1807,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragStartEvent.X" />
+							<see class="keyword" cref="F:&darootns;.CtlDragStartEvent.X" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragStart']/param[@name='X']" />
@@ -1606,7 +1815,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlDragStartEvent.Y" />
+							<see class="keyword" cref="F:&darootns;.CtlDragStartEvent.Y" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.DragStart']/param[@name='Y']" />
@@ -1619,27 +1828,27 @@
 
 		<!--=============================================================================================-->
 
-		<member name="F:DoubleAgent.AxControl.CtlHideEvent.Cause">
+		<member name="F:&darootns;.CtlHideEvent.Cause">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Hide']/param[@name='Cause']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlHideEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlHideEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlHide" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlHideEvent.CharacterID">
+		<member name="F:&darootns;.CtlHideEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Hide']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlHideEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlHideEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlHide" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="T:DoubleAgent.AxControl.CtlHideEvent">
+		<member name="T:&darootns;.CtlHideEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlHide" suffix="Event" />.
@@ -1650,7 +1859,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlHideEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlHideEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Hide']/param[@name='CharacterID']" />
@@ -1658,7 +1867,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlHideEvent.Cause" />
+							<see class="keyword" cref="F:&darootns;.CtlHideEvent.Cause" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Hide']/param[@name='Cause']" />
@@ -1671,17 +1880,17 @@
 
 		<!--=============================================================================================-->
 
-		<member name="F:DoubleAgent.AxControl.CtlIdleCompleteEvent.CharacterID">
+		<member name="F:&darootns;.CtlIdleCompleteEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.IdleComplete']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlIdleCompleteEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlIdleCompleteEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlIdleComplete" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="T:DoubleAgent.AxControl.CtlIdleCompleteEvent">
+		<member name="T:&darootns;.CtlIdleCompleteEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlIdleComplete" suffix="Event" />.
@@ -1692,7 +1901,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlIdleCompleteEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlIdleCompleteEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.IdleComplete']/param[@name='CharacterID']" />
@@ -1705,17 +1914,17 @@
 
 		<!--=============================================================================================-->
 
-		<member name="F:DoubleAgent.AxControl.CtlIdleStartEvent.CharacterID">
+		<member name="F:&darootns;.CtlIdleStartEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.IdleStart']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlIdleStartEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlIdleStartEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlIdleStart" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="T:DoubleAgent.AxControl.CtlIdleStartEvent">
+		<member name="T:&darootns;.CtlIdleStartEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlIdleStart" suffix="Event" />.
@@ -1726,7 +1935,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlIdleStartEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlIdleStartEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.IdleStart']/param[@name='CharacterID']" />
@@ -1739,27 +1948,27 @@
 
 		<!--=============================================================================================-->
 
-		<member name="F:DoubleAgent.AxControl.CtlListenCompleteEvent.Cause">
+		<member name="F:&darootns;.CtlListenCompleteEvent.Cause">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ListenComplete']/param[@name='Cause']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlListenCompleteEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlListenCompleteEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlListenComplete" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlListenCompleteEvent.CharacterID">
+		<member name="F:&darootns;.CtlListenCompleteEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ListenComplete']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlListenCompleteEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlListenCompleteEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlListenComplete" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="T:DoubleAgent.AxControl.CtlListenCompleteEvent">
+		<member name="T:&darootns;.CtlListenCompleteEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlListenComplete" suffix="Event" />.
@@ -1770,7 +1979,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlListenCompleteEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlListenCompleteEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ListenComplete']/param[@name='CharacterID']" />
@@ -1778,7 +1987,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlListenCompleteEvent.Cause" />
+							<see class="keyword" cref="F:&darootns;.CtlListenCompleteEvent.Cause" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ListenComplete']/param[@name='Cause']" />
@@ -1791,17 +2000,17 @@
 
 		<!--=============================================================================================-->
 
-		<member name="F:DoubleAgent.AxControl.CtlListenStartEvent.CharacterID">
+		<member name="F:&darootns;.CtlListenStartEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ListenStart']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlListenStartEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlListenStartEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlListenStart" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="T:DoubleAgent.AxControl.CtlListenStartEvent">
+		<member name="T:&darootns;.CtlListenStartEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlListenStart" suffix="Event" />.
@@ -1812,7 +2021,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlListenStartEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlListenStartEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.ListenStart']/param[@name='CharacterID']" />
@@ -1825,47 +2034,47 @@
 
 		<!--=============================================================================================-->
 
-		<member name="F:DoubleAgent.AxControl.CtlMoveEvent.Cause">
+		<member name="F:&darootns;.CtlMoveEvent.Cause">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Move']/param[@name='Cause']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlMoveEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlMoveEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlMove" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlMoveEvent.CharacterID">
+		<member name="F:&darootns;.CtlMoveEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Move']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlMoveEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlMoveEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlMove" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlMoveEvent.X">
+		<member name="F:&darootns;.CtlMoveEvent.X">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Move']/param[@name='X']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlMoveEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlMoveEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlMove" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlMoveEvent.Y">
+		<member name="F:&darootns;.CtlMoveEvent.Y">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Move']/param[@name='Y']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlMoveEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlMoveEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlMove" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="T:DoubleAgent.AxControl.CtlMoveEvent">
+		<member name="T:&darootns;.CtlMoveEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlMove" suffix="Event" />.
@@ -1876,7 +2085,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlMoveEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlMoveEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Move']/param[@name='CharacterID']" />
@@ -1884,7 +2093,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlMoveEvent.X" />
+							<see class="keyword" cref="F:&darootns;.CtlMoveEvent.X" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Move']/param[@name='X']" />
@@ -1892,7 +2101,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlMoveEvent.Y" />
+							<see class="keyword" cref="F:&darootns;.CtlMoveEvent.Y" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Move']/param[@name='Y']" />
@@ -1900,7 +2109,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlMoveEvent.Cause" />
+							<see class="keyword" cref="F:&darootns;.CtlMoveEvent.Cause" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Move']/param[@name='Cause']" />
@@ -1913,17 +2122,17 @@
 
 		<!--=============================================================================================-->
 
-		<member name="F:DoubleAgent.AxControl.CtlRequestCompleteEvent.Request">
+		<member name="F:&darootns;.CtlRequestCompleteEvent.Request">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.RequestComplete']/param[@name='Request']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlRequestCompleteEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlRequestCompleteEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlRequestComplete" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="T:DoubleAgent.AxControl.CtlRequestCompleteEvent">
+		<member name="T:&darootns;.CtlRequestCompleteEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlRequestComplete" suffix="Event" />.
@@ -1934,7 +2143,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlRequestCompleteEvent.Request" />
+							<see class="keyword" cref="F:&darootns;.CtlRequestCompleteEvent.Request" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.RequestComplete']/param[@name='Request']" />
@@ -1947,17 +2156,17 @@
 
 		<!--=============================================================================================-->
 
-		<member name="F:DoubleAgent.AxControl.CtlRequestStartEvent.Request">
+		<member name="F:&darootns;.CtlRequestStartEvent.Request">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.RequestStart']/param[@name='Request']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlRequestStartEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlRequestStartEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlRequestStart" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="T:DoubleAgent.AxControl.CtlRequestStartEvent">
+		<member name="T:&darootns;.CtlRequestStartEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlRequestStart" suffix="Event" />.
@@ -1968,7 +2177,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlRequestStartEvent.Request" />
+							<see class="keyword" cref="F:&darootns;.CtlRequestStartEvent.Request" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.RequestStart']/param[@name='Request']" />
@@ -1981,27 +2190,27 @@
 
 		<!--=============================================================================================-->
 
-		<member name="F:DoubleAgent.AxControl.CtlShowEvent.Cause">
+		<member name="F:&darootns;.CtlShowEvent.Cause">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Show']/param[@name='Cause']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlShowEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlShowEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlShow" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlShowEvent.CharacterID">
+		<member name="F:&darootns;.CtlShowEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Show']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlShowEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlShowEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlShow" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="T:DoubleAgent.AxControl.CtlShowEvent">
+		<member name="T:&darootns;.CtlShowEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlShow" suffix="Event" />.
@@ -2012,7 +2221,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlShowEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlShowEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Show']/param[@name='CharacterID']" />
@@ -2020,7 +2229,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlShowEvent.Cause" />
+							<see class="keyword" cref="F:&darootns;.CtlShowEvent.Cause" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Show']/param[@name='Cause']" />
@@ -2033,37 +2242,37 @@
 
 		<!--=============================================================================================-->
 
-		<member name="F:DoubleAgent.AxControl.CtlSizeEvent.CharacterID">
+		<member name="F:&darootns;.CtlSizeEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Size']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlSizeEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlSizeEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlSize" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlSizeEvent.Height">
+		<member name="F:&darootns;.CtlSizeEvent.Height">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Size']/param[@name='Height']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlSizeEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlSizeEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlSize" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlSizeEvent.Width">
+		<member name="F:&darootns;.CtlSizeEvent.Width">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Size']/param[@name='Width']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlSizeEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlSizeEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlSize" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="T:DoubleAgent.AxControl.CtlSizeEvent">
+		<member name="T:&darootns;.CtlSizeEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlSize" suffix="Event" />.
@@ -2074,7 +2283,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlSizeEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlSizeEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Size']/param[@name='CharacterID']" />
@@ -2082,7 +2291,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlSizeEvent.Width" />
+							<see class="keyword" cref="F:&darootns;.CtlSizeEvent.Width" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Size']/param[@name='Width']" />
@@ -2090,7 +2299,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlSizeEvent.Height" />
+							<see class="keyword" cref="F:&darootns;.CtlSizeEvent.Height" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.Size']/param[@name='Height']" />
@@ -2105,7 +2314,7 @@
 		<!--=============================================================================================-->
 		<!--=============================================================================================-->
 
-		<member name="T:DoubleAgent.AxControl.CtlSpeechStartEvent">
+		<member name="T:&darootns;.CtlSpeechStartEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlSpeechStart" suffix="Event" />.
@@ -2116,7 +2325,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlSpeechStartEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlSpeechStartEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechStart']/param[@name='CharacterID']" />
@@ -2124,7 +2333,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlSpeechStartEvent.FormattedText" />
+							<see class="keyword" cref="F:&darootns;.CtlSpeechStartEvent.FormattedText" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechStart']/param[@name='FormattedText']" />
@@ -2135,23 +2344,23 @@
 			<seealso cref="E:&darootobj;.CtlSpeechStart" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlSpeechStartEvent.CharacterID">
+		<member name="F:&darootns;.CtlSpeechStartEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechStart']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlSpeechStartEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlSpeechStartEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlSpeechStart" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlSpeechStartEvent.FormattedText">
+		<member name="F:&darootns;.CtlSpeechStartEvent.FormattedText">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechStart']/param[@name='FormattedText']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlSpeechStartEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlSpeechStartEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlSpeechStart" prefix="The" suffix="Event" />
 		</member>
 
@@ -2159,7 +2368,7 @@
 		<!--=============================================================================================-->
 		<!--=============================================================================================-->
 
-		<member name="T:DoubleAgent.AxControl.CtlSpeechEndEvent">
+		<member name="T:&darootns;.CtlSpeechEndEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlSpeechEnd" suffix="Event" />.
@@ -2170,7 +2379,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlSpeechEndEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlSpeechEndEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechEnd']/param[@name='CharacterID']" />
@@ -2178,7 +2387,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlSpeechEndEvent.FormattedText" />
+							<see class="keyword" cref="F:&darootns;.CtlSpeechEndEvent.FormattedText" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechEnd']/param[@name='FormattedText']" />
@@ -2186,7 +2395,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlSpeechEndEvent.Stopped" />
+							<see class="keyword" cref="F:&darootns;.CtlSpeechEndEvent.Stopped" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechEnd']/param[@name='Stopped']" />
@@ -2197,33 +2406,33 @@
 			<seealso cref="E:&darootobj;.CtlSpeechEnd" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlSpeechEndEvent.CharacterID">
+		<member name="F:&darootns;.CtlSpeechEndEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechEnd']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlSpeechEndEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlSpeechEndEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlSpeechEnd" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlSpeechEndEvent.FormattedText">
+		<member name="F:&darootns;.CtlSpeechEndEvent.FormattedText">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechEnd']/param[@name='FormattedText']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlSpeechEndEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlSpeechEndEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlSpeechEnd" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlSpeechEndEvent.Stopped">
+		<member name="F:&darootns;.CtlSpeechEndEvent.Stopped">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechEnd']/param[@name='Stopped']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlSpeechEndEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlSpeechEndEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlSpeechEnd" prefix="The" suffix="Event" />
 		</member>
 
@@ -2231,7 +2440,7 @@
 		<!--=============================================================================================-->
 		<!--=============================================================================================-->
 
-		<member name="T:DoubleAgent.AxControl.CtlSpeechWordEvent">
+		<member name="T:&darootns;.CtlSpeechWordEvent">
 			<summary>
 				<para>
 					Event arguments for the <see cref="E:&darootobj;.CtlSpeechWord" suffix="Event" />.
@@ -2242,7 +2451,7 @@
 				<list>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlSpeechWordEvent.CharacterID" />
+							<see class="keyword" cref="F:&darootns;.CtlSpeechWordEvent.CharacterID" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechWord']/param[@name='CharacterID']" />
@@ -2250,7 +2459,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlSpeechWordEvent.FormattedText" />
+							<see class="keyword" cref="F:&darootns;.CtlSpeechWordEvent.FormattedText" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechWord']/param[@name='FormattedText']" />
@@ -2258,7 +2467,7 @@
 					</item>
 					<item>
 						<term>
-							<see class="keyword" cref="F:DoubleAgent.AxControl.CtlSpeechWordEvent.WordIndex" />
+							<see class="keyword" cref="F:&darootns;.CtlSpeechWordEvent.WordIndex" />
 						</term>
 						<description>
 							<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechWord']/param[@name='WordIndex']" />
@@ -2269,33 +2478,33 @@
 			<seealso cref="E:&darootobj;.CtlSpeechWord" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlSpeechWordEvent.CharacterID">
+		<member name="F:&darootns;.CtlSpeechWordEvent.CharacterID">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechWord']/param[@name='CharacterID']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlSpeechWordEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlSpeechWordEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlSpeechWord" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlSpeechWordEvent.FormattedText">
+		<member name="F:&darootns;.CtlSpeechWordEvent.FormattedText">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechWord']/param[@name='FormattedText']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlSpeechWordEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlSpeechWordEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlSpeechWord" prefix="The" suffix="Event" />
 		</member>
 
-		<member name="F:DoubleAgent.AxControl.CtlSpeechWordEvent.WordIndex">
+		<member name="F:&darootns;.CtlSpeechWordEvent.WordIndex">
 			<summary>
 				<para>
 					<copy file="&dactlxml;" path="/doc/members/member[@name='E:&dactlroot;.SpeechWord']/param[@name='WordIndex']" />
 				</para>
 			</summary>
-			<seealso cref="T:DoubleAgent.AxControl.CtlSpeechWordEvent" prefix="The" suffix="Object" />
+			<seealso cref="T:&darootns;.CtlSpeechWordEvent" prefix="The" suffix="Object" />
 			<seealso cref="E:&darootobj;.CtlSpeechWord" prefix="The" suffix="Event" />
 		</member>
 

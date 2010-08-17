@@ -249,6 +249,8 @@ private: System::Windows::Forms::CheckBox^  FilesBound;
 private: System::Windows::Forms::CheckBox^  ShowDaFiles;
 private: System::Windows::Forms::CheckBox^  ShowMaFiles;
 private: System::Windows::Forms::CheckBox^  ShowOfficeFiles;
+private: System::Windows::Forms::CheckBox^  ShowCompliantFiles;
+private: System::Windows::Forms::CheckBox^  ShowNonCompliantFiles;
 private: System::Windows::Forms::CheckBox^  ShowSpeakingFiles;
 private: System::Windows::Forms::CheckBox^  ShowSilentFiles;
 private: System::Windows::Forms::CheckBox^  VerifyFileVersion;
@@ -491,6 +493,9 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharAutoPopupMenu = (gcnew System::Windows::Forms::CheckBox());
 		this->CharIdleState = (gcnew System::Windows::Forms::CheckBox());
 		this->CharIdleEnabled = (gcnew System::Windows::Forms::CheckBox());
+		this->CharSuspendHide = (gcnew System::Windows::Forms::CheckBox());
+		this->CharSuspendStop = (gcnew System::Windows::Forms::CheckBox());
+		this->CharSuspendPause = (gcnew System::Windows::Forms::CheckBox());
 		this->CharSoundEffects = (gcnew System::Windows::Forms::CheckBox());
 		this->CharSmoothEdges = (gcnew System::Windows::Forms::CheckBox());
 		this->CharSmoothed = (gcnew System::Windows::Forms::CheckBox());
@@ -586,9 +591,8 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->SetCurrentButton = (gcnew System::Windows::Forms::Button());
 		this->CollectButton = (gcnew System::Windows::Forms::Button());
 		this->SetContainedButton = (gcnew System::Windows::Forms::Button());
-		this->CharSuspendPause = (gcnew System::Windows::Forms::CheckBox());
-		this->CharSuspendStop = (gcnew System::Windows::Forms::CheckBox());
-		this->CharSuspendHide = (gcnew System::Windows::Forms::CheckBox());
+		this->ShowNonCompliantFiles = (gcnew System::Windows::Forms::CheckBox());
+		this->ShowCompliantFiles = (gcnew System::Windows::Forms::CheckBox());
 		CharBalloonCharsPerLineLabel = (gcnew System::Windows::Forms::Label());
 		CharIconTipLabel = (gcnew System::Windows::Forms::Label());
 		CharMoveCauseLabel = (gcnew System::Windows::Forms::Label());
@@ -1238,10 +1242,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		DefaultFileLabel->AutoSize = true;
 		DefaultFileLabel->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterFilesPageBinding, L"Bound", 
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
-		DefaultFileLabel->Location = System::Drawing::Point(3, 83);
+		DefaultFileLabel->Location = System::Drawing::Point(3, 111);
 		DefaultFileLabel->Name = L"DefaultFileLabel";
 		DefaultFileLabel->Size = System::Drawing::Size(119, 17);
-		DefaultFileLabel->TabIndex = 7;
+		DefaultFileLabel->TabIndex = 10;
 		DefaultFileLabel->Text = L"Default Character";
 		// 
 		// DefaultSearchLabel
@@ -1249,10 +1253,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		DefaultSearchLabel->AutoSize = true;
 		DefaultSearchLabel->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterFilesPageBinding, L"Bound", 
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
-		DefaultSearchLabel->Location = System::Drawing::Point(3, 115);
+		DefaultSearchLabel->Location = System::Drawing::Point(3, 143);
 		DefaultSearchLabel->Name = L"DefaultSearchLabel";
 		DefaultSearchLabel->Size = System::Drawing::Size(102, 17);
-		DefaultSearchLabel->TabIndex = 9;
+		DefaultSearchLabel->TabIndex = 12;
 		DefaultSearchLabel->Text = L"Default Search";
 		// 
 		// CurrentSearchLabel
@@ -1260,10 +1264,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		CurrentSearchLabel->AutoSize = true;
 		CurrentSearchLabel->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterFilesPageBinding, L"Bound", 
 			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
-		CurrentSearchLabel->Location = System::Drawing::Point(3, 145);
+		CurrentSearchLabel->Location = System::Drawing::Point(3, 173);
 		CurrentSearchLabel->Name = L"CurrentSearchLabel";
 		CurrentSearchLabel->Size = System::Drawing::Size(104, 17);
-		CurrentSearchLabel->TabIndex = 11;
+		CurrentSearchLabel->TabIndex = 14;
 		CurrentSearchLabel->Text = L"Current Search";
 		// 
 		// CharBalloonNumberOfLinesLabel
@@ -1383,10 +1387,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			| System::Windows::Forms::AnchorStyles::Right));
 		label11->BackColor = System::Drawing::SystemColors::ActiveCaption;
 		label11->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-		label11->Location = System::Drawing::Point(6, 65);
+		label11->Location = System::Drawing::Point(6, 93);
 		label11->Name = L"label11";
 		label11->Size = System::Drawing::Size(624, 3);
-		label11->TabIndex = 28;
+		label11->TabIndex = 9;
 		// 
 		// label12
 		// 
@@ -1394,10 +1398,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			| System::Windows::Forms::AnchorStyles::Right));
 		label12->BackColor = System::Drawing::SystemColors::ActiveCaption;
 		label12->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-		label12->Location = System::Drawing::Point(6, 174);
+		label12->Location = System::Drawing::Point(6, 202);
 		label12->Name = L"label12";
 		label12->Size = System::Drawing::Size(624, 3);
-		label12->TabIndex = 28;
+		label12->TabIndex = 16;
 		// 
 		// label13
 		// 
@@ -2245,7 +2249,9 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharacterFilesPage->Controls->Add(this->ShowDaFiles);
 		this->CharacterFilesPage->Controls->Add(this->ShowMaFiles);
 		this->CharacterFilesPage->Controls->Add(this->ShowOfficeFiles);
+		this->CharacterFilesPage->Controls->Add(this->ShowCompliantFiles);
 		this->CharacterFilesPage->Controls->Add(this->ShowSpeakingFiles);
+		this->CharacterFilesPage->Controls->Add(this->ShowNonCompliantFiles);
 		this->CharacterFilesPage->Controls->Add(this->ShowSilentFiles);
 		this->CharacterFilesPage->Controls->Add(this->VerifyFileVersion);
 		this->CharacterFilesPage->Controls->Add(DefaultFileLabel);
@@ -2326,10 +2332,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			L"Bound", true, System::Windows::Forms::DataSourceUpdateMode::Never)));
 		this->ShowSpeakingFiles->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Checked", this->CharacterFilesPageBinding, 
 			L"ShowSpeakingFiles", true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
-		this->ShowSpeakingFiles->Location = System::Drawing::Point(6, 37);
+		this->ShowSpeakingFiles->Location = System::Drawing::Point(6, 64);
 		this->ShowSpeakingFiles->Name = L"ShowSpeakingFiles";
 		this->ShowSpeakingFiles->Size = System::Drawing::Size(162, 21);
-		this->ShowSpeakingFiles->TabIndex = 4;
+		this->ShowSpeakingFiles->TabIndex = 7;
 		this->ShowSpeakingFiles->Text = L"Speaking Characters";
 		this->ShowSpeakingFiles->UseVisualStyleBackColor = true;
 		// 
@@ -2340,10 +2346,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			L"Bound", true, System::Windows::Forms::DataSourceUpdateMode::Never)));
 		this->ShowSilentFiles->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Checked", this->CharacterFilesPageBinding, 
 			L"ShowSilentFiles", true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
-		this->ShowSilentFiles->Location = System::Drawing::Point(174, 37);
+		this->ShowSilentFiles->Location = System::Drawing::Point(174, 64);
 		this->ShowSilentFiles->Name = L"ShowSilentFiles";
 		this->ShowSilentFiles->Size = System::Drawing::Size(191, 21);
-		this->ShowSilentFiles->TabIndex = 5;
+		this->ShowSilentFiles->TabIndex = 8;
 		this->ShowSilentFiles->Text = L"Non-speaking Characters";
 		this->ShowSilentFiles->UseVisualStyleBackColor = true;
 		// 
@@ -2354,10 +2360,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 			L"Bound", true, System::Windows::Forms::DataSourceUpdateMode::Never)));
 		this->VerifyFileVersion->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Checked", this->CharacterFilesPageBinding, 
 			L"VerifyFileVersion", true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
-		this->VerifyFileVersion->Location = System::Drawing::Point(371, 37);
+		this->VerifyFileVersion->Location = System::Drawing::Point(421, 10);
 		this->VerifyFileVersion->Name = L"VerifyFileVersion";
 		this->VerifyFileVersion->Size = System::Drawing::Size(118, 21);
-		this->VerifyFileVersion->TabIndex = 6;
+		this->VerifyFileVersion->TabIndex = 4;
 		this->VerifyFileVersion->Text = L"Verify Version";
 		this->VerifyFileVersion->UseVisualStyleBackColor = true;
 		// 
@@ -2371,11 +2377,11 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->DefaultFilePath->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Text", this->CharacterFilesPageBinding, L"DefaultFilePath", 
 			true)));
 		this->DefaultFilePath->ForeColor = System::Drawing::SystemColors::GrayText;
-		this->DefaultFilePath->Location = System::Drawing::Point(143, 80);
+		this->DefaultFilePath->Location = System::Drawing::Point(143, 108);
 		this->DefaultFilePath->Name = L"DefaultFilePath";
 		this->DefaultFilePath->ReadOnly = true;
 		this->DefaultFilePath->Size = System::Drawing::Size(489, 22);
-		this->DefaultFilePath->TabIndex = 8;
+		this->DefaultFilePath->TabIndex = 11;
 		this->DefaultFilePath->TabStop = false;
 		// 
 		// DefaultSearchPath
@@ -2388,11 +2394,11 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->DefaultSearchPath->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Text", this->CharacterFilesPageBinding, L"DefaultSearchPath", 
 			true)));
 		this->DefaultSearchPath->ForeColor = System::Drawing::SystemColors::GrayText;
-		this->DefaultSearchPath->Location = System::Drawing::Point(142, 112);
+		this->DefaultSearchPath->Location = System::Drawing::Point(142, 140);
 		this->DefaultSearchPath->Name = L"DefaultSearchPath";
 		this->DefaultSearchPath->ReadOnly = true;
 		this->DefaultSearchPath->Size = System::Drawing::Size(490, 22);
-		this->DefaultSearchPath->TabIndex = 10;
+		this->DefaultSearchPath->TabIndex = 13;
 		this->DefaultSearchPath->TabStop = false;
 		// 
 		// CurrentSearchPath
@@ -2405,11 +2411,11 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CurrentSearchPath->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Text", this->CharacterFilesPageBinding, L"CurrentSearchPath", 
 			true)));
 		this->CurrentSearchPath->ForeColor = System::Drawing::SystemColors::GrayText;
-		this->CurrentSearchPath->Location = System::Drawing::Point(143, 142);
+		this->CurrentSearchPath->Location = System::Drawing::Point(143, 170);
 		this->CurrentSearchPath->Name = L"CurrentSearchPath";
 		this->CurrentSearchPath->ReadOnly = true;
 		this->CurrentSearchPath->Size = System::Drawing::Size(489, 22);
-		this->CurrentSearchPath->TabIndex = 12;
+		this->CurrentSearchPath->TabIndex = 15;
 		this->CurrentSearchPath->TabStop = false;
 		// 
 		// FilesListBox
@@ -2424,10 +2430,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->FilesListBox->FormattingEnabled = true;
 		this->FilesListBox->IntegralHeight = false;
 		this->FilesListBox->ItemHeight = 16;
-		this->FilesListBox->Location = System::Drawing::Point(6, 186);
+		this->FilesListBox->Location = System::Drawing::Point(6, 216);
 		this->FilesListBox->Name = L"FilesListBox";
-		this->FilesListBox->Size = System::Drawing::Size(626, 348);
-		this->FilesListBox->TabIndex = 13;
+		this->FilesListBox->Size = System::Drawing::Size(626, 318);
+		this->FilesListBox->TabIndex = 17;
 		// 
 		// TTSEnginesPage
 		// 
@@ -3009,6 +3015,51 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharIdleEnabled->TabIndex = 22;
 		this->CharIdleEnabled->Text = L"IdleEnabled";
 		this->CharIdleEnabled->UseVisualStyleBackColor = true;
+		// 
+		// CharSuspendHide
+		// 
+		this->CharSuspendHide->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
+		this->CharSuspendHide->AutoSize = true;
+		this->CharSuspendHide->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Checked", this->CharacterBinding, L"SuspendHide", 
+			true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
+		this->CharSuspendHide->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->CharSuspendHide->Location = System::Drawing::Point(258, 298);
+		this->CharSuspendHide->Name = L"CharSuspendHide";
+		this->CharSuspendHide->Size = System::Drawing::Size(115, 21);
+		this->CharSuspendHide->TabIndex = 29;
+		this->CharSuspendHide->Text = L"SuspendHide";
+		this->CharSuspendHide->UseVisualStyleBackColor = true;
+		// 
+		// CharSuspendStop
+		// 
+		this->CharSuspendStop->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
+		this->CharSuspendStop->AutoSize = true;
+		this->CharSuspendStop->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Checked", this->CharacterBinding, L"SuspendStop", 
+			true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
+		this->CharSuspendStop->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->CharSuspendStop->Location = System::Drawing::Point(137, 298);
+		this->CharSuspendStop->Name = L"CharSuspendStop";
+		this->CharSuspendStop->Size = System::Drawing::Size(115, 21);
+		this->CharSuspendStop->TabIndex = 28;
+		this->CharSuspendStop->Text = L"SuspendStop";
+		this->CharSuspendStop->UseVisualStyleBackColor = true;
+		// 
+		// CharSuspendPause
+		// 
+		this->CharSuspendPause->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
+		this->CharSuspendPause->AutoSize = true;
+		this->CharSuspendPause->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Checked", this->CharacterBinding, L"SuspendPause", 
+			true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
+		this->CharSuspendPause->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->CharSuspendPause->Location = System::Drawing::Point(9, 298);
+		this->CharSuspendPause->Name = L"CharSuspendPause";
+		this->CharSuspendPause->Size = System::Drawing::Size(126, 21);
+		this->CharSuspendPause->TabIndex = 27;
+		this->CharSuspendPause->Text = L"SuspendPause";
+		this->CharSuspendPause->UseVisualStyleBackColor = true;
 		// 
 		// CharSoundEffects
 		// 
@@ -4125,7 +4176,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->EventsPage->Location = System::Drawing::Point(4, 25);
 		this->EventsPage->Name = L"EventsPage";
 		this->EventsPage->Padding = System::Windows::Forms::Padding(3);
-		this->EventsPage->Size = System::Drawing::Size(656, 522);
+		this->EventsPage->Size = System::Drawing::Size(656, 581);
 		this->EventsPage->TabIndex = 5;
 		this->EventsPage->Text = L"Events";
 		this->EventsPage->UseVisualStyleBackColor = true;
@@ -4241,50 +4292,33 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->SetContainedButton->UseVisualStyleBackColor = true;
 		this->SetContainedButton->Click += gcnew System::EventHandler(this, &ControlClrForm::SetContainedButton_Click);
 		// 
-		// CharSuspendPause
+		// ShowNonCompliantFiles
 		// 
-		this->CharSuspendPause->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
-		this->CharSuspendPause->AutoSize = true;
-		this->CharSuspendPause->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Checked", this->CharacterBinding, L"SuspendPause", 
-			true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
-		this->CharSuspendPause->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
-			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
-		this->CharSuspendPause->Location = System::Drawing::Point(9, 298);
-		this->CharSuspendPause->Name = L"CharSuspendPause";
-		this->CharSuspendPause->Size = System::Drawing::Size(126, 21);
-		this->CharSuspendPause->TabIndex = 27;
-		this->CharSuspendPause->Text = L"SuspendPause";
-		this->CharSuspendPause->UseVisualStyleBackColor = true;
+		this->ShowNonCompliantFiles->AutoSize = true;
+		this->ShowNonCompliantFiles->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterFilesPageBinding, 
+			L"Bound", true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->ShowNonCompliantFiles->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Checked", this->CharacterFilesPageBinding, 
+			L"ShowNonCompliantFiles", true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
+		this->ShowNonCompliantFiles->Location = System::Drawing::Point(174, 37);
+		this->ShowNonCompliantFiles->Name = L"ShowNonCompliantFiles";
+		this->ShowNonCompliantFiles->Size = System::Drawing::Size(194, 21);
+		this->ShowNonCompliantFiles->TabIndex = 6;
+		this->ShowNonCompliantFiles->Text = L"Non-compliant Characters";
+		this->ShowNonCompliantFiles->UseVisualStyleBackColor = true;
 		// 
-		// CharSuspendStop
+		// ShowCompliantFiles
 		// 
-		this->CharSuspendStop->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
-		this->CharSuspendStop->AutoSize = true;
-		this->CharSuspendStop->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Checked", this->CharacterBinding, L"SuspendStop", 
-			true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
-		this->CharSuspendStop->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
-			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
-		this->CharSuspendStop->Location = System::Drawing::Point(137, 298);
-		this->CharSuspendStop->Name = L"CharSuspendStop";
-		this->CharSuspendStop->Size = System::Drawing::Size(115, 21);
-		this->CharSuspendStop->TabIndex = 28;
-		this->CharSuspendStop->Text = L"SuspendStop";
-		this->CharSuspendStop->UseVisualStyleBackColor = true;
-		// 
-		// CharSuspendHide
-		// 
-		this->CharSuspendHide->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
-		this->CharSuspendHide->AutoSize = true;
-		this->CharSuspendHide->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Checked", this->CharacterBinding, L"SuspendHide", 
-			true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
-		this->CharSuspendHide->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
-			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
-		this->CharSuspendHide->Location = System::Drawing::Point(258, 298);
-		this->CharSuspendHide->Name = L"CharSuspendHide";
-		this->CharSuspendHide->Size = System::Drawing::Size(115, 21);
-		this->CharSuspendHide->TabIndex = 29;
-		this->CharSuspendHide->Text = L"SuspendHide";
-		this->CharSuspendHide->UseVisualStyleBackColor = true;
+		this->ShowCompliantFiles->AutoSize = true;
+		this->ShowCompliantFiles->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterFilesPageBinding, 
+			L"Bound", true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->ShowCompliantFiles->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Checked", this->CharacterFilesPageBinding, 
+			L"ShowCompliantFiles", true, System::Windows::Forms::DataSourceUpdateMode::OnPropertyChanged)));
+		this->ShowCompliantFiles->Location = System::Drawing::Point(6, 37);
+		this->ShowCompliantFiles->Name = L"ShowCompliantFiles";
+		this->ShowCompliantFiles->Size = System::Drawing::Size(165, 21);
+		this->ShowCompliantFiles->TabIndex = 5;
+		this->ShowCompliantFiles->Text = L"Compliant Characters";
+		this->ShowCompliantFiles->UseVisualStyleBackColor = true;
 		// 
 		// ControlClrForm
 		// 

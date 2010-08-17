@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="animate;animating">
+		<param name="Name" value="Animation Services">
+		<param name="Local" value="Programming\Gen_Animation.htm">
+		<param name="Name" value="The Play Method (Server)">
+		<param name="Local" value="Generated\Server_Character_Play.htm">
+		<param name="Name" value="The Play Method (Control)">
+		<param name="Local" value="Generated\Control_Character_Play.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="configure;configuration">
+		<param name="Name" value="Configuration Services">
+		<param name="Local" value="Programming\Gen_Config.htm">
+		<param name="Name" value="The PropertySheet Object (Server)">
+		<param name="Local" value="Generated\Server_PropertySheet.htm">
+		<param name="Name" value="The Settings Object (Server)">
+		<param name="Local" value="Generated\Server_Settings.htm">
+		<param name="Name" value="The CharacterFiles Object (Server)">
+		<param name="Local" value="Generated\Server_CharacterFiles.htm">
+		<param name="Name" value="The TTSEngines Collection (Server)">
+		<param name="Local" value="Generated\Server_TTSEngines.htm">
+		<param name="Name" value="The SREngines Collection (Server)">
+		<param name="Local" value="Generated\Server_SREngines.htm">
+		<param name="Name" value="The PropertySheet Object (Control)">
+		<param name="Local" value="Generated\Control_PropertySheet.htm">
+		<param name="Name" value="The Settings Object (Control)">
+		<param name="Local" value="Generated\Control_Settings.htm">
+		<param name="Name" value="The CharacterFiles Object (Control)">
+		<param name="Local" value="Generated\Control_CharacterFiles.htm">
+		<param name="Name" value="The TTSEngines Collection (Control)">
+		<param name="Local" value="Generated\Control_TTSEngines.htm">
+		<param name="Name" value="The SREngines Collection (Control)">
+		<param name="Local" value="Generated\Control_SREngines.htm">
+		</OBJECT>
+</UL>
+</BODY></HTML>

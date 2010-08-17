@@ -206,6 +206,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\APIHelp\DoubleAgent.hhk"
+				>
+			</File>
+			<File
 				RelativePath=".\ApiHelp\DoubleAgent.hhp"
 				>
 				<FileConfiguration
@@ -215,7 +219,7 @@
 						Name="VCCustomBuildTool"
 						Description="Compiling API Help"
 						CommandLine="hhc $(InputPath) &gt; $(OutDir)$(InputName).log&#x0D;&#x0A;type $(OutDir)$(InputName).log&#x0D;&#x0A;del  $(OutDir)$(InputName).log&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)$(InputName).hhc;$(InputDir)DoubleAgent.Control.xml;$(InputDir)DoubleAgent.Server.xml;$(InputDir)DoubleAgent.AxControl.xml;$(InputDir)Generated\Control_Control.htm;$(InputDir)Generated\Server_Server.htm;$(InputDir)Generated\AxControl_AxControl.htm;$(InputDir)css\DaHelp.css"
+						AdditionalDependencies="$(InputDir)$(InputName).hhc;$(InputDir)$(InputName).hhk;$(InputDir)DoubleAgent.Control.xml;$(InputDir)DoubleAgent.Server.xml;$(InputDir)DoubleAgent.AxControl.xml;$(InputDir)Generated\Control_Control.htm;$(InputDir)Generated\Server_Server.htm;$(InputDir)Generated\AxControl_AxControl.htm;$(InputDir)css\DaHelp.css"
 						Outputs="$(BinDir)$(InputName).chm"
 					/>
 				</FileConfiguration>
@@ -226,7 +230,7 @@
 						Name="VCCustomBuildTool"
 						Description="Compiling API Help"
 						CommandLine="hhc $(InputPath) &gt; $(OutDir)$(InputName).log&#x0D;&#x0A;type $(OutDir)$(InputName).log&#x0D;&#x0A;del  $(OutDir)$(InputName).log&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)$(InputName).hhc;$(InputDir)DoubleAgent.Control.xml;$(InputDir)DoubleAgent.Server.xml;$(InputDir)DoubleAgent.AxControl.xml;$(InputDir)Generated\Control_Control.htm;$(InputDir)Generated\Server_Server.htm;$(InputDir)Generated\AxControl_AxControl.htm;$(InputDir)css\DaHelp.css"
+						AdditionalDependencies="$(InputDir)$(InputName).hhc;$(InputDir)$(InputName).hhk;$(InputDir)DoubleAgent.Control.xml;$(InputDir)DoubleAgent.Server.xml;$(InputDir)DoubleAgent.AxControl.xml;$(InputDir)Generated\Control_Control.htm;$(InputDir)Generated\Server_Server.htm;$(InputDir)Generated\AxControl_AxControl.htm;$(InputDir)css\DaHelp.css"
 						Outputs="$(BinDir)$(InputName).chm"
 					/>
 				</FileConfiguration>
@@ -237,7 +241,7 @@
 						Name="VCCustomBuildTool"
 						Description="Compiling API Help"
 						CommandLine="hhc $(InputPath) &gt; $(OutDir)$(InputName).log&#x0D;&#x0A;type $(OutDir)$(InputName).log&#x0D;&#x0A;del  $(OutDir)$(InputName).log&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)$(InputName).hhc;$(InputDir)DoubleAgent.Control.xml;$(InputDir)DoubleAgent.Server.xml;$(InputDir)DoubleAgent.AxControl.xml;$(InputDir)Generated\Control_Control.htm;$(InputDir)Generated\Server_Server.htm;$(InputDir)Generated\AxControl_AxControl.htm;$(InputDir)css\DaHelp.css"
+						AdditionalDependencies="$(InputDir)$(InputName).hhc;$(InputDir)$(InputName).hhk;$(InputDir)DoubleAgent.Control.xml;$(InputDir)DoubleAgent.Server.xml;$(InputDir)DoubleAgent.AxControl.xml;$(InputDir)Generated\Control_Control.htm;$(InputDir)Generated\Server_Server.htm;$(InputDir)Generated\AxControl_AxControl.htm;$(InputDir)css\DaHelp.css"
 						Outputs="$(BinDir)$(InputName).chm"
 					/>
 				</FileConfiguration>
@@ -248,7 +252,7 @@
 						Name="VCCustomBuildTool"
 						Description="Compiling API Help"
 						CommandLine="hhc $(InputPath) &gt; $(OutDir)$(InputName).log&#x0D;&#x0A;type $(OutDir)$(InputName).log&#x0D;&#x0A;del  $(OutDir)$(InputName).log&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)$(InputName).hhc;$(InputDir)DoubleAgent.Control.xml;$(InputDir)DoubleAgent.Server.xml;$(InputDir)DoubleAgent.AxControl.xml;$(InputDir)Generated\Control_Control.htm;$(InputDir)Generated\Server_Server.htm;$(InputDir)Generated\AxControl_AxControl.htm;$(InputDir)css\DaHelp.css"
+						AdditionalDependencies="$(InputDir)$(InputName).hhc;$(InputDir)$(InputName).hhk;$(InputDir)DoubleAgent.Control.xml;$(InputDir)DoubleAgent.Server.xml;$(InputDir)DoubleAgent.AxControl.xml;$(InputDir)Generated\Control_Control.htm;$(InputDir)Generated\Server_Server.htm;$(InputDir)Generated\AxControl_AxControl.htm;$(InputDir)css\DaHelp.css"
 						Outputs="$(BinDir)$(InputName).chm"
 					/>
 				</FileConfiguration>

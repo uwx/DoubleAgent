@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Wed Aug 11 00:16:16 2010
+/* at Sat Aug 14 14:32:13 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
@@ -1119,6 +1119,10 @@ enum RequestStatus
 #define	DISPID_IDaCtlCharacterFiles_DefaultFilePath	( 0x60020009 )
 
 #define	DISPID_IDaCtlCharacterFiles_DefaultFileName	( 0x6002000a )
+
+#define	DISPID_IDaCtlCharacterFiles_CompliantCharacters	( 0x6002000b )
+
+#define	DISPID_IDaCtlCharacterFiles_NonCompliantCharacters	( 0x6002000c )
 
 #define	DISPID_IDaCtlFormattedText_RawText	( DISPID_VALUE )
 
@@ -4656,6 +4660,18 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
         virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultFileName( 
             /* [retval][out] */ BSTR *DefaultFileName) = 0;
         
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_CompliantCharacters( 
+            /* [retval][out] */ VARIANT_BOOL *CompliantCharacters) = 0;
+        
+        virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_CompliantCharacters( 
+            /* [in] */ VARIANT_BOOL CompliantCharacters) = 0;
+        
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_NonCompliantCharacters( 
+            /* [retval][out] */ VARIANT_BOOL *NonCompliantCharacters) = 0;
+        
+        virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_NonCompliantCharacters( 
+            /* [in] */ VARIANT_BOOL NonCompliantCharacters) = 0;
+        
     };
     
 #else 	/* C style interface */
@@ -4777,6 +4793,22 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
             IDaCtlCharacterFiles * This,
             /* [retval][out] */ BSTR *DefaultFileName);
         
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CompliantCharacters )( 
+            IDaCtlCharacterFiles * This,
+            /* [retval][out] */ VARIANT_BOOL *CompliantCharacters);
+        
+        /* [displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_CompliantCharacters )( 
+            IDaCtlCharacterFiles * This,
+            /* [in] */ VARIANT_BOOL CompliantCharacters);
+        
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_NonCompliantCharacters )( 
+            IDaCtlCharacterFiles * This,
+            /* [retval][out] */ VARIANT_BOOL *NonCompliantCharacters);
+        
+        /* [displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_NonCompliantCharacters )( 
+            IDaCtlCharacterFiles * This,
+            /* [in] */ VARIANT_BOOL NonCompliantCharacters);
+        
         END_INTERFACE
     } IDaCtlCharacterFilesVtbl;
 
@@ -4866,6 +4898,18 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
 
 #define IDaCtlCharacterFiles_get_DefaultFileName(This,DefaultFileName)	\
     ( (This)->lpVtbl -> get_DefaultFileName(This,DefaultFileName) ) 
+
+#define IDaCtlCharacterFiles_get_CompliantCharacters(This,CompliantCharacters)	\
+    ( (This)->lpVtbl -> get_CompliantCharacters(This,CompliantCharacters) ) 
+
+#define IDaCtlCharacterFiles_put_CompliantCharacters(This,CompliantCharacters)	\
+    ( (This)->lpVtbl -> put_CompliantCharacters(This,CompliantCharacters) ) 
+
+#define IDaCtlCharacterFiles_get_NonCompliantCharacters(This,NonCompliantCharacters)	\
+    ( (This)->lpVtbl -> get_NonCompliantCharacters(This,NonCompliantCharacters) ) 
+
+#define IDaCtlCharacterFiles_put_NonCompliantCharacters(This,NonCompliantCharacters)	\
+    ( (This)->lpVtbl -> put_NonCompliantCharacters(This,NonCompliantCharacters) ) 
 
 #endif /* COBJMACROS */
 

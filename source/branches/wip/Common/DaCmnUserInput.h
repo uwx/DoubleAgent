@@ -40,7 +40,7 @@ public:
 	HRESULT get_ItemCommandID (long ItemIndex, long *ItemCommandID);
 	HRESULT get_ItemConfidence (long ItemIndex, long *ItemConfidence);
 	HRESULT get_ItemText (long ItemIndex, BSTR *ItemText);
-	HRESULT GetAllItemData (VARIANT *ItemIndices, VARIANT *ItemConfidences, VARIANT *ItemText);
+	HRESULT GetAllItemData (VARIANT *ItemCommandIDs, VARIANT *ItemConfidences, VARIANT *ItemTexts);
 
 // Implementation
 protected:

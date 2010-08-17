@@ -103,12 +103,14 @@ cpp_quote("#endif")
 		FilesFilter_PathMsAgent = 0x00000002,
 		FilesFilter_PathMsOffice = 0x00000004,
 		FilesFilter_PathMask = 0x00000007,
-		FilesFilter_ExcludeNonSpeaking = 0x00000010,
-		FilesFilter_ExcludeSpeaking = 0x00000020,
-		FilesFilter_ExcludeMask = 0x00000030,
+		FilesFilter_ExcludeNonCompliant = 0x00000010,
+		FilesFilter_ExcludeCompliant = 0x00000020,
+		FilesFilter_ExcludeNonSpeaking = 0x00000040,
+		FilesFilter_ExcludeSpeaking = 0x00000080,
+		FilesFilter_ExcludeMask = 0x000000F0,
 		FilesFilter_NoValidateVersion = 0x00010000,
-		FilesFilter_FilterMask = 0x00010030,
-		FilesFilter_ValidMask = 0x00010037
+		FilesFilter_FilterMask = 0x000100F0,
+		FilesFilter_ValidMask = 0x000100F7
 	}   FilesFilterFlags;
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -964,60 +966,60 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrCommands : IDispatch
 	{
-		[helpstring("deprecated - use the Item property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the Item property"), helpcontext(APIHELP_Svr_Commands_GetCommand),
 			id(DISPID_IAgentCommands_GetCommand), hidden] HRESULT GetCommand ([in] long CommandID, [out] IUnknown** Command);
-		[helpstring("deprecated - use the Count property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the Count property"), helpcontext(APIHELP_Svr_Commands_GetCount),
 			id(DISPID_IAgentCommands_GetCount), hidden] HRESULT GetCount ([out] long* Count);
-		[helpstring("deprecated - use the Caption property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the Caption property"), helpcontext(APIHELP_Svr_Commands_SetCaption),
 			id(DISPID_IAgentCommands_SetCaption), hidden] HRESULT SetCaption ([in] BSTR Caption);
-		[helpstring("deprecated - use the Caption property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the Caption property"), helpcontext(APIHELP_Svr_Commands_GetCaption),
 			id(DISPID_IAgentCommands_GetCaption), hidden] HRESULT GetCaption ([out] BSTR* Caption);
-		[helpstring("deprecated - use the VoiceGrammar property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the VoiceGrammar property"), helpcontext(APIHELP_Svr_Commands_SetVoice),
 			id(DISPID_IAgentCommands_SetVoice), hidden] HRESULT SetVoice ([in] BSTR Voice);
-		[helpstring("deprecated - use the VoiceGrammar property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the VoiceGrammar property"), helpcontext(APIHELP_Svr_Commands_GetVoice),
 			id(DISPID_IAgentCommands_GetVoice), hidden] HRESULT GetVoice ([out] BSTR* Voice);
-		[helpstring("deprecated - use the Visible property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the Visible property"), helpcontext(APIHELP_Svr_Commands_SetVisible),
 			id(DISPID_IAgentCommands_SetVisible), hidden] HRESULT SetVisible ([in] long Visible);
-		[helpstring("deprecated - use the Visible property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the Visible property"), helpcontext(APIHELP_Svr_Commands_GetVisible),
 			id(DISPID_IAgentCommands_GetVisible), hidden] HRESULT GetVisible ([out] long* Visible);
-		[helpstring("Add a command at the end of the collection"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("Add a command at the end of the collection"), helpcontext(APIHELP_Svr_Commands_Add),
 			id(DISPID_IAgentCommands_Add)] HRESULT Add ([in] BSTR Caption, [in] BSTR VoiceGrammar, [in] long Enabled, [in] long Visible, [out, retval] long* CommandID);
-		[helpstring("Insert a command into the collection"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("Insert a command into the collection"), helpcontext(APIHELP_Svr_Commands_Insert),
 			id(DISPID_IAgentCommands_Insert)] HRESULT Insert ([in] BSTR Caption, [in] BSTR VoiceGrammar, [in] long Enabled, [in] long Visible, [in] long RefCommandID, [in] long Before, [out, retval] long* CommandID);
-		[helpstring("Remove a command from the collection"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("Remove a command from the collection"), helpcontext(APIHELP_Svr_Commands_Remove),
 			id(DISPID_IAgentCommands_Remove)] HRESULT Remove ([in] long CommandID);
-		[helpstring("Remove all commands from the collection"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("Remove all commands from the collection"), helpcontext(APIHELP_Svr_Commands_RemoveAll),
 			id(DISPID_IAgentCommands_RemoveAll)] HRESULT RemoveAll ();
 
-		[helpstring("deprecated - use the Item property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the Item property"), helpcontext(APIHELP_Svr_Commands_GetCommandEx),
 			id(DISPID_IAgentCommandsEx_GetCommandEx), hidden] HRESULT GetCommandEx ([in] long CommandID, [out] IDaSvrCommand** Command);
-		[helpstring("deprecated - use the DefaultCommand property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the DefaultCommand property"), helpcontext(APIHELP_Svr_Commands_SetDefaultID),
 			id(DISPID_IAgentCommandsEx_SetDefaultID), hidden] HRESULT SetDefaultID([in] long CommandID);
-		[helpstring("deprecated - use the DefaultCommand property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the DefaultCommand property"), helpcontext(APIHELP_Svr_Commands_GetDefaultID),
 			id(DISPID_IAgentCommandsEx_GetDefaultID), hidden] HRESULT GetDefaultID([out] long* CommandID);
-		[helpstring("deprecated"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated"), helpcontext(APIHELP_Svr_Commands_SetHelpContextID),
 			id(DISPID_IAgentCommandsEx_SetHelpContextID), hidden, restricted, nonbrowsable] HRESULT SetHelpContextID([in] long HelpContextID);
-		[helpstring("deprecated"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated"), helpcontext(APIHELP_Svr_Commands_GetHelpContextID),
 			id(DISPID_IAgentCommandsEx_GetHelpContextID), hidden, restricted, nonbrowsable] HRESULT GetHelpContextID([out] long* HelpContextID);
-		[helpstring("deprecated - use the FontName property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the FontName property"), helpcontext(APIHELP_Svr_Commands_SetFontName),
 			id(DISPID_IAgentCommandsEx_SetFontName), hidden] HRESULT SetFontName ([in] BSTR FontName);
-		[helpstring("deprecated - use the FontName property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the FontName property"), helpcontext(APIHELP_Svr_Commands_GetFontName),
 			id(DISPID_IAgentCommandsEx_GetFontName), hidden] HRESULT GetFontName ([out] BSTR* FontName);
-		[helpstring("deprecated - use the FontSize property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the FontSize property"), helpcontext(APIHELP_Svr_Commands_SetFontSize),
 			id(DISPID_IAgentCommandsEx_SetFontSize), hidden] HRESULT SetFontSize ([in] long FontSize);
-		[helpstring("deprecated - use the FontSize property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the FontSize property"), helpcontext(APIHELP_Svr_Commands_GetFontSize),
 			id(DISPID_IAgentCommandsEx_GetFontSize), hidden] HRESULT GetFontSize ([out] long* FontSize);
-		[helpstring("deprecated - use the VoiceCaption property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the VoiceCaption property"), helpcontext(APIHELP_Svr_Commands_SetVoiceCaption),
 			id(DISPID_IAgentCommandsEx_SetVoiceCaption), hidden] HRESULT SetVoiceCaption ([in] BSTR VoiceCaption);
-		[helpstring("deprecated - use the VoiceCaption property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the VoiceCaption property"), helpcontext(APIHELP_Svr_Commands_GetVoiceCaption),
 			id(DISPID_IAgentCommandsEx_GetVoiceCaption), hidden] HRESULT GetVoiceCaption ([out] BSTR* VoiceCaption);
-		[helpstring("Add a command at the end of the collection"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("Add a command at the end of the collection"), helpcontext(APIHELP_Svr_Commands_AddEx),
 			id(DISPID_IAgentCommandsEx_AddEx)] HRESULT AddEx ([in] BSTR Caption, [in] BSTR VoiceGrammar, [in] BSTR VoiceCaption, [in] long Enabled, [in] long Visible, [in] long HelpContextID, [out, retval] long* CommandID);
-		[helpstring("Insert a command into the collection"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("Insert a command into the collection"), helpcontext(APIHELP_Svr_Commands_InsertEx),
 			id(DISPID_IAgentCommandsEx_InsertEx)] HRESULT InsertEx ([in] BSTR Caption, [in] BSTR VoiceGrammar, [in] BSTR VoiceCaption, [in] long Enabled, [in] long Visible, [in] long HelpContextID, [in] long RefCommandID, [in] long Before, [out, retval] long* CommandID);
-		[helpstring("deprecated - use the GlobalVoiceCommandsEnabled property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the GlobalVoiceCommandsEnabled property"), helpcontext(APIHELP_Svr_Commands_SetGlobalVoiceCommandsEnabled),
 			id(DISPID_IAgentCommandsEx_SetGlobalVoiceCommandsEnabled), hidden] HRESULT SetGlobalVoiceCommandsEnabled ([in] long Enabled);
-		[helpstring("deprecated - use the GlobalVoiceCommandsEnabled property"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("deprecated - use the GlobalVoiceCommandsEnabled property"), helpcontext(APIHELP_Svr_Commands_GetGlobalVoiceCommandsEnabled),
 			id(DISPID_IAgentCommandsEx_GetGlobalVoiceCommandsEnabled), hidden] HRESULT GetGlobalVoiceCommandsEnabled ([out] long* Enabled);
 	};
 
@@ -1042,35 +1044,35 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrCommands2 : IDaSvrCommands
 	{
-		[helpstring("A Command object (by index)"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("A Command object (by index)"), helpcontext(APIHELP_Svr_Commands_Item),
 			id(DISPID_VALUE), propget] HRESULT Item ([in] long Index, [out, retval] IDaSvrCommand2 ** Command);
-		[helpstring("The count of Command objects in the collection"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("The count of Command objects in the collection"), helpcontext(APIHELP_Svr_Commands_Count),
 			id(DISPID_COLLECT), propget, readonly, bindable, displaybind] HRESULT Count ([out, retval] long * Count);
-		[helpstring("A Command object (by CommandID)"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("A Command object (by CommandID)"), helpcontext(APIHELP_Svr_Commands_Command),
 			id(DISPID_IDaSvrCommands2_Command), propget] HRESULT Command ([in] long CommandID, [out, retval] IDaSvrCommand2** Command);
-		[helpstring("The commands' title"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("The commands' title"), helpcontext(APIHELP_Svr_Commands_Caption),
 			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
 			id(DISPID_IDaSvrCommands2_Caption), propget, bindable, displaybind, defaultbind] HRESULT Caption ([out, retval] BSTR* Caption);
 			[id(DISPID_IDaSvrCommands2_Caption), propput, bindable, displaybind, defaultbind] HRESULT Caption ([in] BSTR Caption);
-		[helpstring("The commands' speech recognition grammar"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("The commands' speech recognition grammar"), helpcontext(APIHELP_Svr_Commands_VoiceGrammar),
 			id(DISPID_IDaSvrCommands2_VoiceGrammar), propget, bindable, displaybind] HRESULT VoiceGrammar ([out, retval] BSTR* VoiceGrammar);
 			[id(DISPID_IDaSvrCommands2_VoiceGrammar), propput, bindable, displaybind] HRESULT VoiceGrammar ([in] BSTR VoiceGrammar);
-		[helpstring("Are the commands visible?"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("Are the commands visible?"), helpcontext(APIHELP_Svr_Commands_Visible),
 			id(DISPID_IDaSvrCommands2_Visible), propget, bindable, displaybind] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
 			[id(DISPID_IDaSvrCommands2_Visible), propput, bindable, displaybind] HRESULT Visible ([in] VARIANT_BOOL Visible);
-		[helpstring("The default command (bold in the pop-up menu)"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("The default command (bold in the pop-up menu)"), helpcontext(APIHELP_Svr_Commands_DefaultCommand),
 			id(DISPID_IDaSvrCommands2_DefaultCommand), propget, bindable, displaybind] HRESULT DefaultCommand ([out, retval] long* CommandID);
 			[id(DISPID_IDaSvrCommands2_DefaultCommand), propput, bindable, displaybind] HRESULT DefaultCommand ([in] long CommandID);
-		[helpstring("The name of the commands' title font, in the Voice Commands Window"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("The name of the commands' title font, in the Voice Commands Window"), helpcontext(APIHELP_Svr_Commands_FontName),
 			id(DISPID_IDaSvrCommands2_FontName), propget, bindable, displaybind] HRESULT FontName ([out, retval] BSTR* FontName);
 			[id(DISPID_IDaSvrCommands2_FontName), propput, bindable, displaybind] HRESULT FontName ([in] BSTR FontName);
-		[helpstring("The size of the commands' title font, in the Voice Commands Window (in points)"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("The size of the commands' title font, in the Voice Commands Window (in points)"), helpcontext(APIHELP_Svr_Commands_FontSize),
 			id(DISPID_IDaSvrCommands2_FontSize), propget, bindable, displaybind] HRESULT FontSize ([out, retval] long* FontSize);
 			[id(DISPID_IDaSvrCommands2_FontSize), propput, bindable, displaybind] HRESULT FontSize ([in] long FontSize);
-		[helpstring("The commands' title in the Voice Commands Window (if different from the Caption)"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("The commands' title in the Voice Commands Window (if different from the Caption)"), helpcontext(APIHELP_Svr_Commands_VoiceCaption),
 			id(DISPID_IDaSvrCommands2_VoiceCaption), propget, bindable, displaybind] HRESULT VoiceCaption ([out, retval] BSTR* VoiceCaption);
 			[id(DISPID_IDaSvrCommands2_VoiceCaption), propput, bindable, displaybind] HRESULT VoiceCaption ([in] BSTR VoiceCaption);
-		[helpstring("Do global commands appear in the Voice Commands Window?"), helpcontext(APIHELP_Svr_Commands),
+		[helpstring("Do global commands appear in the Voice Commands Window?"), helpcontext(APIHELP_Svr_Commands_GlobalVoiceCommandsEnabled),
 			id(DISPID_IDaSvrCommands2_GlobalVoiceCommandsEnabled), propget, bindable, displaybind] HRESULT GlobalVoiceCommandsEnabled ([out, retval] VARIANT_BOOL* Enabled);
 			[id(DISPID_IDaSvrCommands2_GlobalVoiceCommandsEnabled), propput, bindable, displaybind] HRESULT GlobalVoiceCommandsEnabled ([in] VARIANT_BOOL Enabled);
 		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** EnumVariant);
@@ -1107,40 +1109,40 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrCommand : IDispatch
 	{
-		[helpstring("deprecated - use the Caption property"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("deprecated - use the Caption property"), helpcontext(APIHELP_Svr_Command_SetCaption),
 			id(DISPID_IAgentCommand_SetCaption), hidden] HRESULT SetCaption ([in] BSTR Caption);
-		[helpstring("deprecated - use the Caption property"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("deprecated - use the Caption property"), helpcontext(APIHELP_Svr_Command_GetCaption),
 			id(DISPID_IAgentCommand_GetCaption), hidden] HRESULT GetCaption ([out] BSTR* Caption);
-		[helpstring("deprecated - use the VoiceGrammar property"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("deprecated - use the VoiceGrammar property"), helpcontext(APIHELP_Svr_Command_SetVoice),
 			id(DISPID_IAgentCommand_SetVoice), hidden] HRESULT SetVoice ([in] BSTR Voice);
-		[helpstring("deprecated - use the VoiceGrammar property"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("deprecated - use the VoiceGrammar property"), helpcontext(APIHELP_Svr_Command_GetVoice),
 			id(DISPID_IAgentCommand_GetVoice), hidden] HRESULT GetVoice ([out] BSTR* Voice);
-		[helpstring("deprecated - use the Enabled property"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("deprecated - use the Enabled property"), helpcontext(APIHELP_Svr_Command_SetEnabled),
 			id(DISPID_IAgentCommand_SetEnabled), hidden] HRESULT SetEnabled ([in] long Enabled);
-		[helpstring("deprecated - use the Enabled property"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("deprecated - use the Enabled property"), helpcontext(APIHELP_Svr_Command_GetEnabled),
 			id(DISPID_IAgentCommand_GetEnabled), hidden] HRESULT GetEnabled ([out] long* Enabled);
-		[helpstring("deprecated - use the Visible property"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("deprecated - use the Visible property"), helpcontext(APIHELP_Svr_Command_SetVisible),
 			id(DISPID_IAgentCommand_SetVisible), hidden] HRESULT SetVisible ([in] long Visible);
-		[helpstring("deprecated - use the Visible property"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("deprecated - use the Visible property"), helpcontext(APIHELP_Svr_Command_GetVisible),
 			id(DISPID_IAgentCommand_GetVisible), hidden] HRESULT GetVisible ([out] long* Visible);
-		[helpstring("deprecated - use the ConfidenceThreshold property"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("deprecated - use the ConfidenceThreshold property"), helpcontext(APIHELP_Svr_Command_SetConfidenceThreshold),
 			id(DISPID_IAgentCommand_SetConfidenceThreshold), hidden] HRESULT SetConfidenceThreshold ([in] long Threshold);
-		[helpstring("deprecated - use the ConfidenceThreshold property"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("deprecated - use the ConfidenceThreshold property"), helpcontext(APIHELP_Svr_Command_GetConfidenceThreshold),
 			id(DISPID_IAgentCommand_GetConfidenceThreshold), hidden] HRESULT GetConfidenceThreshold ([out] long* Threshold);
-		[helpstring("deprecated - use the ConfidenceText property"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("deprecated - use the ConfidenceText property"), helpcontext(APIHELP_Svr_Command_SetConfidenceText),
 			id(DISPID_IAgentCommand_SetConfidenceText), hidden] HRESULT SetConfidenceText ([in] BSTR TipText);
-		[helpstring("deprecated - use the ConfidenceText property"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("deprecated - use the ConfidenceText property"), helpcontext(APIHELP_Svr_Command_GetConfidenceText),
 			id(DISPID_IAgentCommand_GetConfidenceText), hidden] HRESULT GetConfidenceText ([out] BSTR* TipText);
-		[helpstring("deprecated - use the CommandID property"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("deprecated - use the CommandID property"), helpcontext(APIHELP_Svr_Command_GetID),
 			id(DISPID_IAgentCommand_GetID), hidden] HRESULT GetID([out] long* CommandID);
 
-		[helpstring("deprecated"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("deprecated"), helpcontext(APIHELP_Svr_Command_SetHelpContextID),
 			id(DISPID_IAgentCommandEx_SetHelpContextID), hidden, restricted, nonbrowsable] HRESULT SetHelpContextID([in] long ContextID);
-		[helpstring("deprecated"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("deprecated"), helpcontext(APIHELP_Svr_Command_GetHelpContextID),
 			id(DISPID_IAgentCommandEx_GetHelpContextID), hidden, restricted, nonbrowsable] HRESULT GetHelpContextID([out] long* ContextID);
-		[helpstring("deprecated - use the VoiceCaption property"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("deprecated - use the VoiceCaption property"), helpcontext(APIHELP_Svr_Command_SetVoiceCaption),
 			id(DISPID_IAgentCommandEx_SetVoiceCaption), hidden] HRESULT SetVoiceCaption ([in] BSTR VoiceCaption);
-		[helpstring("deprecated - use the VoiceCaption property"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("deprecated - use the VoiceCaption property"), helpcontext(APIHELP_Svr_Command_GetVoiceCaption),
 			id(DISPID_IAgentCommandEx_GetVoiceCaption), hidden] HRESULT GetVoiceCaption ([out] BSTR* VoiceCaption);
 	};
 
@@ -1163,28 +1165,28 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrCommand2 : IDaSvrCommand
 	{
-		[helpstring("The command's title in the pop-up menu or Voice Commands Window"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("The command's title in the pop-up menu or Voice Commands Window"), helpcontext(APIHELP_Svr_Command_Caption),
 			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
 			id(DISPID_IDaSvrCommand2_Caption), propget, bindable, displaybind, defaultbind] HRESULT Caption ([out, retval] BSTR* Caption);
 			[id(DISPID_IDaSvrCommand2_Caption), propput, bindable, displaybind, defaultbind] HRESULT Caption ([in] BSTR Caption);
-		[helpstring("Is the command enabled?"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("Is the command enabled?"), helpcontext(APIHELP_Svr_Command_Enabled),
 			id(DISPID_IDaSvrCommand2_Enabled), propget, bindable, displaybind] HRESULT Enabled ([out, retval] VARIANT_BOOL* Enabled);
 			[id(DISPID_IDaSvrCommand2_Enabled), propput, bindable, displaybind] HRESULT Enabled ([in] VARIANT_BOOL Enabled);
-		[helpstring("Is the command visible?"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("Is the command visible?"), helpcontext(APIHELP_Svr_Command_Visible),
 			id(DISPID_IDaSvrCommand2_Visible), propget, bindable, displaybind] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
 			[id(DISPID_IDaSvrCommand2_Visible), propput, bindable, displaybind] HRESULT Visible ([in] VARIANT_BOOL Visible);
-		[helpstring("The unique id assigned to the command when it was added"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("The unique id assigned to the command when it was added"), helpcontext(APIHELP_Svr_Command_CommandID),
 			id(DISPID_IDaSvrCommand2_CommandID), propget, bindable, displaybind] HRESULT CommandID ([out, retval] long* CommandID);
-		[helpstring("The command's title in the Voice Commands Window (if different from the Caption)"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("The command's title in the Voice Commands Window (if different from the Caption)"), helpcontext(APIHELP_Svr_Command_VoiceCaption),
 			id(DISPID_IDaSvrCommand2_VoiceCaption), propget, bindable, displaybind] HRESULT VoiceCaption ([out, retval] BSTR* VoiceCaption);
 			[id(DISPID_IDaSvrCommand2_VoiceCaption), propput, bindable, displaybind] HRESULT VoiceCaption ([in] BSTR VoiceCaption);
-		[helpstring("The command's speech recognition grammar"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("The command's speech recognition grammar"), helpcontext(APIHELP_Svr_Command_VoiceGrammar),
 			id(DISPID_IDaSvrCommand2_VoiceGrammar), propget, bindable, displaybind] HRESULT VoiceGrammar ([out, retval] BSTR* VoiceGrammar);
 			[id(DISPID_IDaSvrCommand2_VoiceGrammar), propput, bindable, displaybind] HRESULT VoiceGrammar ([in] BSTR VoiceGrammar);
-		[helpstring("If the confidence value of the best match doesn't exceed this value, the ConfidenceText is displayed in the Listening Tip"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("If the confidence value of the best match doesn't exceed this value, the ConfidenceText is displayed in the Listening Tip"), helpcontext(APIHELP_Svr_Command_ConfidenceThreshold),
 			id(DISPID_IDaSvrCommand2_ConfidenceThreshold), propget, bindable, displaybind] HRESULT ConfidenceThreshold ([out, retval] long* ConfidenceThreshold);
 			[id(DISPID_IDaSvrCommand2_ConfidenceThreshold), propput, bindable, displaybind] HRESULT ConfidenceThreshold ([in] long ConfidenceThreshold);
-		[helpstring("The text to display in the Listening Tip"), helpcontext(APIHELP_Svr_Command),
+		[helpstring("The text to display in the Listening Tip"), helpcontext(APIHELP_Svr_Command_ConfidenceText),
 			id(DISPID_IDaSvrCommand2_ConfidenceText), propget, bindable, displaybind] HRESULT ConfidenceText ([out, retval] BSTR* ConfidenceText);
 			[id(DISPID_IDaSvrCommand2_ConfidenceText), propput, bindable, displaybind] HRESULT ConfidenceText ([in] BSTR ConfidenceText);
 	};
@@ -1208,16 +1210,16 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrUserInput : IDispatch
 	{
-		[helpstring("deprecated - use the Count property"), helpcontext(APIHELP_Svr_UserInput),
+		[helpstring("deprecated - use the Count property"), helpcontext(APIHELP_Svr_UserInput_GetCount),
 			id(DISPID_IAgentUserInput_GetCount), hidden] HRESULT GetCount ([out] long* Count);
-		[helpstring("deprecated - use the ItemID property"), helpcontext(APIHELP_Svr_UserInput),
+		[helpstring("deprecated - use the ItemID property"), helpcontext(APIHELP_Svr_UserInput_GetItemID),
 			id(DISPID_IAgentUserInput_GetItemID), hidden] HRESULT GetItemID ([in] long ItemIndex, [out] long* CommandID);
-		[helpstring("deprecated - use the ItemConfidence property"), helpcontext(APIHELP_Svr_UserInput),
+		[helpstring("deprecated - use the ItemConfidence property"), helpcontext(APIHELP_Svr_UserInput_GetItemConfidence),
 			id(DISPID_IAgentUserInput_GetItemConfidence), hidden] HRESULT GetItemConfidence ([in] long ItemIndex, [out] long* Confidence);
-		[helpstring("deprecated - use the ItemText property"), helpcontext(APIHELP_Svr_UserInput),
+		[helpstring("deprecated - use the ItemText property"), helpcontext(APIHELP_Svr_UserInput_GetItemText),
 			id(DISPID_IAgentUserInput_GetItemText), hidden] HRESULT GetItemText ([in] long ItemIndex, [out] BSTR* Text);
-		[helpstring("Retrieve all data abount the commands that were matched"), helpcontext(APIHELP_Svr_UserInput),
-			id(DISPID_IAgentUserInput_GetAllItemData)] HRESULT GetAllItemData ([out] VARIANT* ItemIndices, [out] VARIANT* ItemConfidences, [out] VARIANT* ItemText);
+		[helpstring("Retrieve all data abount the commands that were matched"), helpcontext(APIHELP_Svr_UserInput_GetAllItemData),
+			id(DISPID_IAgentUserInput_GetAllItemData)] HRESULT GetAllItemData ([out] VARIANT* ItemCommandIDs, [out] VARIANT* ItemConfidences, [out] VARIANT* ItemTexts);
 	};
 
 	const DISPID DISPID_IDaSvrUserInput2_Count = 0x60030000;
@@ -1235,14 +1237,14 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrUserInput2 : IDaSvrUserInput
 	{
-		[helpstring("The number of possible matching commands returned (1 if the command was selected from the pop-up menu) (0 if speech recognition couldn't find a match)"), helpcontext(APIHELP_Svr_UserInput),
+		[helpstring("The number of possible matching commands returned (1 if the command was selected from the pop-up menu) (0 if speech recognition couldn't find a match)"), helpcontext(APIHELP_Svr_UserInput_Count),
 			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
 			id(DISPID_IDaSvrUserInput2_Count), propget, readonly, bindable, displaybind, defaultbind] HRESULT Count ([out, retval] long* pCount);
-		[helpstring("The unique identifier of a matching command"), helpcontext(APIHELP_Svr_UserInput),
+		[helpstring("The unique identifier of a matching command"), helpcontext(APIHELP_Svr_UserInput_ItemCommandID),
 			id(DISPID_IDaSvrUserInput2_ItemCommandID), propget, readonly] HRESULT ItemCommandID ([in] long ItemIndex, [out, retval] long* ItemCommandID);
-		[helpstring("The confidence value of a matching command"), helpcontext(APIHELP_Svr_UserInput),
+		[helpstring("The confidence value of a matching command"), helpcontext(APIHELP_Svr_UserInput_ItemConfidence),
 			id(DISPID_IDaSvrUserInput2_ItemConfidence), propget, readonly] HRESULT ItemConfidence ([in] long ItemIndex, [out, retval] long* ItemConfidence);
-		[helpstring("The recognized text of a matching command"), helpcontext(APIHELP_Svr_UserInput),
+		[helpstring("The recognized text of a matching command"), helpcontext(APIHELP_Svr_UserInput_ItemText),
 			id(DISPID_IDaSvrUserInput2_ItemText), propget, readonly] HRESULT ItemText ([in] long ItemIndex, [out, retval] BSTR* ItemText);
 	}
 
@@ -1264,13 +1266,13 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrCommandsWindow : IDispatch
 	{
-		[helpstring("deprecated - use the Visible property"), helpcontext(APIHELP_Svr_CommandsWindow),
+		[helpstring("deprecated - use the Visible property"), helpcontext(APIHELP_Svr_CommandsWindow_SetVisible),
 			id(DISPID_IAgentCommandWindow_SetVisible), hidden] HRESULT SetVisible ([in] long Visible);
-		[helpstring("deprecated - use the Visible property"), helpcontext(APIHELP_Svr_CommandsWindow),
+		[helpstring("deprecated - use the Visible property"), helpcontext(APIHELP_Svr_CommandsWindow_GetVisible),
 			id(DISPID_IAgentCommandWindow_GetVisible), hidden] HRESULT GetVisible ([out] long* Visible);
-		[helpstring("The Voice Commands Windows's position on the desktop (in pixels)"), helpcontext(APIHELP_Svr_CommandsWindow),
+		[helpstring("The Voice Commands Windows's position on the desktop (in pixels)"), helpcontext(APIHELP_Svr_CommandsWindow_GetPosition),
 			id(DISPID_IAgentCommandWindow_GetPosition)] HRESULT GetPosition ([out] long* Left, [out] long* Top);
-		[helpstring("The Voice Commands Windows's dimensions (in pixels)"), helpcontext(APIHELP_Svr_CommandsWindow),
+		[helpstring("The Voice Commands Windows's dimensions (in pixels)"), helpcontext(APIHELP_Svr_CommandsWindow_GetSize),
 			id(DISPID_IAgentCommandWindow_GetSize)] HRESULT GetSize ([out] long* Width, [out] long* Height);
 	};
 
@@ -1291,18 +1293,18 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrCommandsWindow2 : IDaSvrCommandsWindow
 	{
-		[helpstring("Is the Voice Commands Window visible?"), helpcontext(APIHELP_Svr_CommandsWindow),
+		[helpstring("Is the Voice Commands Window visible?"), helpcontext(APIHELP_Svr_CommandsWindow_Visible),
 			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
 			id(DISPID_IDaSvrCommandsWindow2_Visible), propget, bindable, displaybind, defaultbind] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
 			[id(DISPID_IDaSvrCommandsWindow2_Visible), propput, bindable, displaybind, defaultbind] HRESULT Visible ([in] VARIANT_BOOL Visible);
-		[helpstring("The Voice Commands Windows's horizontal position on the desktop (in pixels)"), helpcontext(APIHELP_Svr_CommandsWindow),
+		[helpstring("The Voice Commands Windows's horizontal position on the desktop (in pixels)"), helpcontext(APIHELP_Svr_CommandsWindow_Left),
 			id(DISPID_IDaSvrCommandsWindow2_Left), propget, readonly, bindable, displaybind] HRESULT Left ([out, retval] short* Left);
-		[helpstring("The Voice Commands Windows's vertical position on the desktop (in pixels)"), helpcontext(APIHELP_Svr_CommandsWindow),
+		[helpstring("The Voice Commands Windows's vertical position on the desktop (in pixels)"), helpcontext(APIHELP_Svr_CommandsWindow_Top),
 			id(DISPID_IDaSvrCommandsWindow2_Top), propget, readonly, bindable, displaybind] HRESULT Top ([out, retval] short* Top);
 		[helpstring("The Voice Commands Windows's height (in pixels)"), helpcontext(APIHELP_Svr_CommandsWindow),
-			id(DISPID_IDaSvrCommandsWindow2_Height), propget, readonly, bindable, displaybind] HRESULT Height ([out, retval] short* Height);
+			id(DISPID_IDaSvrCommandsWindow2_Height), propget, readonly, bindable, displaybind] HRESULT Height ([out, retval] short* Height_Height);
 		[helpstring("The Voice Commands Windows's width (in pixels)"), helpcontext(APIHELP_Svr_CommandsWindow),
-			id(DISPID_IDaSvrCommandsWindow2_Width), propget, readonly, bindable, displaybind] HRESULT Width ([out, retval] short* Width);
+			id(DISPID_IDaSvrCommandsWindow2_Width), propget, readonly, bindable, displaybind] HRESULT Width ([out, retval] short* Width_Width);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1325,17 +1327,17 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrPropertySheet : IDispatch
 	{
-		[helpstring("deprecated - use the Visible property"), helpcontext(APIHELP_Svr_PropertySheet),
+		[helpstring("deprecated - use the Visible property"), helpcontext(APIHELP_Svr_PropertySheet_GetVisible),
 			id(DISPID_IAgentPropertySheet_GetVisible), hidden] HRESULT GetVisible ([out] long* Visible);
-		[helpstring("deprecated - use the Visible property"), helpcontext(APIHELP_Svr_PropertySheet),
+		[helpstring("deprecated - use the Visible property"), helpcontext(APIHELP_Svr_PropertySheet_SetVisible),
 			id(DISPID_IAgentPropertySheet_SetVisible), hidden] HRESULT SetVisible ([in] long Visible);
-		[helpstring("Get the Property Sheet's position on the desktop (in pixels)"), helpcontext(APIHELP_Svr_PropertySheet),
+		[helpstring("Get the Property Sheet's position on the desktop (in pixels)"), helpcontext(APIHELP_Svr_PropertySheet_GetPosition),
 			id(DISPID_IAgentPropertySheet_GetPosition)] HRESULT GetPosition ([out] long* Left, [out] long* Top);
-		[helpstring("Get the Property Sheet's dimensions (in pixels)"), helpcontext(APIHELP_Svr_PropertySheet),
+		[helpstring("Get the Property Sheet's dimensions (in pixels)"), helpcontext(APIHELP_Svr_PropertySheet_GetSize),
 			id(DISPID_IAgentPropertySheet_GetSize)] HRESULT GetSize ([out] long* Width, [out] long* Height);
-		[helpstring("deprecated - use the Page property"), helpcontext(APIHELP_Svr_PropertySheet),
+		[helpstring("deprecated - use the Page property"), helpcontext(APIHELP_Svr_PropertySheet_GetPage),
 			id(DISPID_IAgentPropertySheet_GetPage), hidden] HRESULT GetPage ([out] BSTR* Page);
-		[helpstring("deprecated - use the Page property"), helpcontext(APIHELP_Svr_PropertySheet),
+		[helpstring("deprecated - use the Page property"), helpcontext(APIHELP_Svr_PropertySheet_SetPage),
 			id(DISPID_IAgentPropertySheet_SetPage), hidden] HRESULT SetPage ([in] BSTR Page);
 	};
 
@@ -1359,24 +1361,24 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrPropertySheet2 : IDaSvrPropertySheet
 	{
-		[helpstring("The Property Sheet's horizontal position on the desktop (in pixels)"), helpcontext(APIHELP_Svr_PropertySheet),
+		[helpstring("The Property Sheet's horizontal position on the desktop (in pixels)"), helpcontext(APIHELP_Svr_PropertySheet_Left),
 			id(DISPID_IDaSvrPropertySheet2_Left), propput, bindable, displaybind] HRESULT Left ([in] short Left);
 			[id(DISPID_IDaSvrPropertySheet2_Left), propget, bindable, displaybind] HRESULT Left ([out, retval] short* Left);
-		[helpstring("The Property Sheet's vertical position on the desktop (in pixels)"), helpcontext(APIHELP_Svr_PropertySheet),
+		[helpstring("The Property Sheet's vertical position on the desktop (in pixels)"), helpcontext(APIHELP_Svr_PropertySheet_Top),
 			id(DISPID_IDaSvrPropertySheet2_Top), propput, bindable, displaybind] HRESULT Top ([in] short Top);
 			[id(DISPID_IDaSvrPropertySheet2_Top), propget, bindable, displaybind] HRESULT Top ([out, retval] short* Top);
-		[helpstring("The Property Sheet's height (in pixels)"), helpcontext(APIHELP_Svr_PropertySheet),
+		[helpstring("The Property Sheet's height (in pixels)"), helpcontext(APIHELP_Svr_PropertySheet_Height),
 			id(DISPID_IDaSvrPropertySheet2_Height), propget, readonly, bindable, displaybind] HRESULT Height ([out, retval] short* Height);
-		[helpstring("The Property Sheet's width (in pixels)"), helpcontext(APIHELP_Svr_PropertySheet),
+		[helpstring("The Property Sheet's width (in pixels)"), helpcontext(APIHELP_Svr_PropertySheet_Width),
 			id(DISPID_IDaSvrPropertySheet2_Width), propget, readonly, bindable, displaybind] HRESULT Width ([out, retval] short* Width);
-		[helpstring("Is the Property Sheet visible?"), helpcontext(APIHELP_Svr_PropertySheet),
+		[helpstring("Is the Property Sheet visible?"), helpcontext(APIHELP_Svr_PropertySheet_Visible),
 			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
 			id(DISPID_IDaSvrPropertySheet2_Visible), propput, bindable, displaybind, defaultbind] HRESULT Visible ([in] VARIANT_BOOL Visible);
 			[id(DISPID_IDaSvrPropertySheet2_Visible), propget, bindable, displaybind, defaultbind] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
-		[helpstring("The Property Sheet's active page"), helpcontext(APIHELP_Svr_PropertySheet),
+		[helpstring("The Property Sheet's active page"), helpcontext(APIHELP_Svr_PropertySheet_Page),
 			id(DISPID_IDaSvrPropertySheet2_Page), propput, bindable, displaybind] HRESULT Page ([in] BSTR Page);
 			[id(DISPID_IDaSvrPropertySheet2_Page), propget, bindable, displaybind] HRESULT Page ([out, retval] BSTR* Page);
-		[helpstring("Set the Property Sheet's position on the desktop (in pixels)"), helpcontext(APIHELP_Svr_PropertySheet),
+		[helpstring("Set the Property Sheet's position on the desktop (in pixels)"), helpcontext(APIHELP_Svr_PropertySheet_SetPosition),
 			id(DISPID_IDaSvrPropertySheet2_SetPosition)] HRESULT SetPosition (long Left, long Top);
 	};
 
@@ -1458,27 +1460,27 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrSettings : IDispatch
 	{
-		[helpstring("Are animation sound effects enabled?"), helpcontext(APIHELP_Svr_Settings),
+		[helpstring("Are animation sound effects enabled?"), helpcontext(APIHELP_Svr_Settings_SoundEffectsEnabled),
 			id(DISPID_IDaSvrSettings_SoundEffectsEnabled), propget, readonly, bindable, displaybind] HRESULT SoundEffectsEnabled ([out, retval] VARIANT_BOOL* SoundEffectsEnabled);
-		[helpstring("Is the word balloon enabled?"), helpcontext(APIHELP_Svr_Settings),
+		[helpstring("Is the word balloon enabled?"), helpcontext(APIHELP_Svr_Settings_BalloonEnabled),
 			id(DISPID_IDaSvrSettings_BalloonEnabled), propget, readonly, bindable, displaybind] HRESULT BalloonEnabled ([out, retval] VARIANT_BOOL* BalloonEnabled);
-		[helpstring("The global word balloon font, if any"), helpcontext(APIHELP_Svr_Settings),
+		[helpstring("The global word balloon font, if any"), helpcontext(APIHELP_Svr_Settings_BalloonFont),
 			id(DISPID_IDaSvrSettings_BalloonFont), propget, readonly, bindable] HRESULT BalloonFont ([out, retval] IFontDisp** BalloonFont);
-		[helpstring("Is text-to-speech enabled?"), helpcontext(APIHELP_Svr_Settings),
+		[helpstring("Is text-to-speech enabled?"), helpcontext(APIHELP_Svr_Settings_TTSEnabled),
 			id(DISPID_IDaSvrSettings_TTSEnabled), propget, readonly, bindable, displaybind] HRESULT TTSEnabled ([out, retval] VARIANT_BOOL* TTSEnabled);
-		[helpstring("The text-to-speech speed"), helpcontext(APIHELP_Svr_Settings),
+		[helpstring("The text-to-speech speed"), helpcontext(APIHELP_Svr_Settings_TTSSpeed),
 			id(DISPID_IDaSvrSettings_TTSSpeed), propget, readonly, bindable, displaybind] HRESULT TTSSpeed ([out, retval] short* TTSSpeed);
-		[helpstring("Is speech recognition enabled?"), helpcontext(APIHELP_Svr_Settings),
+		[helpstring("Is speech recognition enabled?"), helpcontext(APIHELP_Svr_Settings_SREnabled),
 			id(DISPID_IDaSvrSettings_SREnabled), propget, readonly, bindable, displaybind] HRESULT SREnabled ([out, retval] VARIANT_BOOL* SREnabled);
-		[helpstring("The hot key for starting speech recognition, if any"), helpcontext(APIHELP_Svr_Settings),
+		[helpstring("The hot key for starting speech recognition, if any"), helpcontext(APIHELP_Svr_Settings_SRHotKey),
 			id(DISPID_IDaSvrSettings_SRHotKey), propget, readonly, bindable, displaybind] HRESULT SRHotKey ([out, retval] BSTR* SRHotKey);
-		[helpstring("The timeout for the speech recognition hot key"), helpcontext(APIHELP_Svr_Settings),
+		[helpstring("The timeout for the speech recognition hot key"), helpcontext(APIHELP_Svr_Settings_SRHotKeyTime),
 			id(DISPID_IDaSvrSettings_SRHotKeyTime), propget, readonly, bindable, displaybind] HRESULT SRHotKeyTime ([out, retval] short* SRHotKeyTime);
-		[helpstring("Is the Listening Tip shown when speech recognition is active?"), helpcontext(APIHELP_Svr_Settings),
+		[helpstring("Is the Listening Tip shown when speech recognition is active?"), helpcontext(APIHELP_Svr_Settings_SRListeningTip),
 			id(DISPID_IDaSvrSettings_SRListeningTip), propget, readonly, bindable, displaybind] HRESULT SRListeningTip ([out, retval] VARIANT_BOOL* SRListeningTip);
-		[helpstring("Is an audible prompt sounded when speech recognition is active?"), helpcontext(APIHELP_Svr_Settings),
+		[helpstring("Is an audible prompt sounded when speech recognition is active?"), helpcontext(APIHELP_Svr_Settings_SRListeningPrompt),
 			id(DISPID_IDaSvrSettings_SRListeningPrompt), propget, readonly, bindable, displaybind] HRESULT SRListeningPrompt ([out, retval] VARIANT_BOOL* SRListeningPrompt);
-		[helpstring("The current text-to-speech and speech recognition status"), helpcontext(APIHELP_Svr_Settings),
+		[helpstring("The current text-to-speech and speech recognition status"), helpcontext(APIHELP_Svr_Settings_AudioStatus),
 			id(DISPID_IDaSvrSettings_AudioStatus), propget, readonly, bindable, displaybind] HRESULT AudioStatus ([out, retval] AudioStatusType* AudioStatus);
 	};
 
@@ -1503,20 +1505,20 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrCharacterFiles : IDispatch
 	{
-		[helpstring("The paths of the installed character files"), helpcontext(APIHELP_Svr_CharacterFiles),
+		[helpstring("The paths of the installed character files"), helpcontext(APIHELP_Svr_CharacterFiles_FilePaths),
 			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
 			id(DISPID_IDaSvrCharacterFiles_FilePaths), propget, readonly, bindable, displaybind, defaultbind] HRESULT FilePaths ([out, retval] SAFEARRAY(BSTR) *FilePaths);
-		[helpstring("The search path used for finding installed character files"), helpcontext(APIHELP_Svr_CharacterFiles),
+		[helpstring("The search path used for finding installed character files"), helpcontext(APIHELP_Svr_CharacterFiles_SearchPath),
 			id(DISPID_IDaSvrCharacterFiles_SearchPath), propget, bindable, displaybind] HRESULT SearchPath ([out, retval] BSTR *SearchPath);
 			[id(DISPID_IDaSvrCharacterFiles_SearchPath), propput, bindable, displaybind] HRESULT SearchPath ([in] BSTR SearchPath);
-		[helpstring("The default search path for finding installed character files"), helpcontext(APIHELP_Svr_CharacterFiles),
+		[helpstring("The default search path for finding installed character files"), helpcontext(APIHELP_Svr_CharacterFiles_DefaultSearchPath),
 			id(DISPID_IDaSvrCharacterFiles_DefaultSearchPath), propget, readonly, bindable, displaybind] HRESULT DefaultSearchPath ([out, retval] BSTR *DefaultSearchPath);
-		[helpstring("The filter used for finding installed character files (see: FilesFilterFlags)"), helpcontext(APIHELP_Svr_CharacterFiles),
+		[helpstring("The filter used for finding installed character files (see: FilesFilterFlags)"), helpcontext(APIHELP_Svr_CharacterFiles_Filter),
 			id(DISPID_IDaSvrCharacterFiles_Filter), propget, bindable] HRESULT Filter ([out, retval] long *Filter);
 			[id(DISPID_IDaSvrCharacterFiles_Filter), propput, bindable] HRESULT Filter ([in] long Filter);
-		[helpstring("The path of the default character file"), helpcontext(APIHELP_Svr_CharacterFiles),
+		[helpstring("The path of the default character file"), helpcontext(APIHELP_Svr_CharacterFiles_DefaultFilePath),
 			id(DISPID_IDaSvrCharacterFiles_DefaultFilePath), propget, readonly, bindable, displaybind] HRESULT DefaultFilePath ([out, retval] BSTR *DefaultFilePath);
-		[helpstring("The name of the default character file"), helpcontext(APIHELP_Svr_CharacterFiles),
+		[helpstring("The name of the default character file"), helpcontext(APIHELP_Svr_CharacterFiles_DefaultFileName),
 			id(DISPID_IDaSvrCharacterFiles_DefaultFileName), propget, readonly, bindable, displaybind] HRESULT DefaultFileName ([out, retval] BSTR *DefaultFileName);
 	};
 
@@ -1542,26 +1544,26 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrFormattedText : IDispatch
 	{
-		[helpstring("The unformatted text"), helpcontext(APIHELP_Svr_FormattedText),
+		[helpstring("The unformatted text"), helpcontext(APIHELP_Svr_FormattedText_RawText),
 			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
 			id(DISPID_IDaSvrFormattedText_RawText), propget, bindable, displaybind, defaultbind] HRESULT RawText ([out, retval] BSTR *RawText);
 			[id(DISPID_IDaSvrFormattedText_RawText), propput, bindable, displaybind, defaultbind] HRESULT RawText ([in] BSTR RawText);
-		[helpstring("The full display text"), helpcontext(APIHELP_Svr_FormattedText),
+		[helpstring("The full display text"), helpcontext(APIHELP_Svr_FormattedText_ParsedText),
 			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
 			id(DISPID_IDaSvrFormattedText_ParsedText), propget, readonly, bindable, displaybind, defaultbind] HRESULT ParsedText ([out, retval] BSTR *ParsedText);
-		[helpstring("The full speech text"), helpcontext(APIHELP_Svr_FormattedText),
+		[helpstring("The full speech text"), helpcontext(APIHELP_Svr_FormattedText_SpeechText),
 			id(DISPID_IDaSvrFormattedText_SpeechText), propget, readonly, bindable, displaybind] HRESULT SpeechText ([out, retval] BSTR *SpeechText);
-		[helpstring("The count of parsed words"), helpcontext(APIHELP_Svr_FormattedText),
+		[helpstring("The count of parsed words"), helpcontext(APIHELP_Svr_FormattedText_WordCount),
 			id(DISPID_IDaSvrFormattedText_WordCount), propget, readonly, bindable, displaybind] HRESULT WordCount ([out, retval] long *WordCount);
-		[helpstring("A parsed word"), helpcontext(APIHELP_Svr_FormattedText),
+		[helpstring("A parsed word"), helpcontext(APIHELP_Svr_FormattedText_DisplayWord),
 			id(DISPID_IDaSvrFormattedText_DisplayWord), propget, readonly, bindable, displaybind] HRESULT DisplayWord ([in] long WordIndex, [out, retval] BSTR *DisplayWord);
-		[helpstring("The current word being displayed"), helpcontext(APIHELP_Svr_FormattedText),
+		[helpstring("The current word being displayed"), helpcontext(APIHELP_Svr_FormattedText_WordIndex),
 			id(DISPID_IDaSvrFormattedText_WordIndex), propget, readonly, bindable, displaybind] HRESULT WordIndex ([out, retval] long *WordIndex);
-		[helpstring("The text currently displayed"), helpcontext(APIHELP_Svr_FormattedText),
+		[helpstring("The text currently displayed"), helpcontext(APIHELP_Svr_FormattedText_DisplayText),
 			id(DISPID_IDaSvrFormattedText_DisplayText), propget, readonly, bindable, displaybind] HRESULT DisplayText ([out, retval] BSTR *DisplayText);
-		[helpstring("Parse text with speech markups"), helpcontext(APIHELP_Svr_FormattedText),
+		[helpstring("Parse text with speech markups"), helpcontext(APIHELP_Svr_FormattedText_Parse),
 			id(DISPID_IDaSvrFormattedText_Parse)] HRESULT Parse ([in] BSTR RawText);
-		[helpstring("Append formatted text"), helpcontext(APIHELP_Svr_FormattedText),
+		[helpstring("Append formatted text"), helpcontext(APIHELP_Svr_FormattedText_Append),
 			id(DISPID_IDaSvrFormattedText_Append)] HRESULT Append ([in] IDaSvrFormattedText * FormattedText);
 	};
 
@@ -1585,20 +1587,20 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrTTSEngine : IDispatch
 	{
-		[helpstring("The TTSModeID that uniquely identifies this Text-to-Speech Engine"), helpcontext(APIHELP_Svr_TTSEngine),
+		[helpstring("The TTSModeID that uniquely identifies this Text-to-Speech Engine"), helpcontext(APIHELP_Svr_TTSEngine_TTSModeID),
 			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
 			id(DISPID_IDaSvrTTSEngine_TTSModeID), propget, readonly, bindable, displaybind, defaultbind] HRESULT TTSModeID ([out, retval] BSTR* TTSModeID);
-		[helpstring("The Text-to-Speech Engine's display name"), helpcontext(APIHELP_Svr_TTSEngine),
+		[helpstring("The Text-to-Speech Engine's display name"), helpcontext(APIHELP_Svr_TTSEngine_DisplayName),
 			id(DISPID_IDaSvrTTSEngine_DisplayName), propget, readonly, bindable, displaybind] HRESULT DisplayName ([out, retval] BSTR* DisplayName);
-		[helpstring("The Text-to-Speech Engine's manufacturer name (if known)"), helpcontext(APIHELP_Svr_TTSEngine),
+		[helpstring("The Text-to-Speech Engine's manufacturer name (if known)"), helpcontext(APIHELP_Svr_TTSEngine_Manufacturer),
 			id(DISPID_IDaSvrTTSEngine_Manufacturer), propget, readonly, bindable, displaybind] HRESULT Manufacturer ([out, retval] BSTR* Manufacturer);
-		[helpstring("The Text-to-Speech Engine's version (currently 4.0 and 5.0 are valid)"), helpcontext(APIHELP_Svr_TTSEngine),
+		[helpstring("The Text-to-Speech Engine's version (currently 4.0 and 5.0 are valid)"), helpcontext(APIHELP_Svr_TTSEngine_GetVersion),
 			id(DISPID_IDaSvrTTSEngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
-		[helpstring("The Text-to-Speech Engine's gender"), helpcontext(APIHELP_Svr_TTSEngine),
+		[helpstring("The Text-to-Speech Engine's gender"), helpcontext(APIHELP_Svr_TTSEngine_Gender),
 			id(DISPID_IDaSvrTTSEngine_Gender), propget, readonly, bindable, displaybind] HRESULT Gender ([out, retval] SpeechGenderType* Gender);
-		[helpstring("The Text-to-Speech Engine's language identifier"), helpcontext(APIHELP_Svr_TTSEngine),
+		[helpstring("The Text-to-Speech Engine's language identifier"), helpcontext(APIHELP_Svr_TTSEngine_LanguageID),
 			id(DISPID_IDaSvrTTSEngine_LanguageID), propget, readonly, bindable, displaybind] HRESULT LanguageID ([out, retval] long* LanguageID);
-		[helpstring("The Text-to-Speech Engine's language name"), helpcontext(APIHELP_Svr_TTSEngine),
+		[helpstring("The Text-to-Speech Engine's language name"), helpcontext(APIHELP_Svr_TTSEngine_LanguageName),
 			id(DISPID_IDaSvrTTSEngine_LanguageName), propget, readonly, bindable, displaybind] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
 	};
 
@@ -1615,9 +1617,9 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrTTSEngines : IDispatch
 	{
-		[helpstring("A Text-to-Speech Engine"), helpcontext(APIHELP_Svr_TTSEngines),
+		[helpstring("A Text-to-Speech Engine"), helpcontext(APIHELP_Svr_TTSEngines_Item),
 			id(DISPID_VALUE), propget] HRESULT Item ([in] long Index, [out, retval] IDaSvrTTSEngine ** TTSEngine);
-		[helpstring("The count of Text-to-Speech Engines in the collection"), helpcontext(APIHELP_Svr_TTSEngines),
+		[helpstring("The count of Text-to-Speech Engines in the collection"), helpcontext(APIHELP_Svr_TTSEngines_Count),
 			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
 			id(DISPID_COLLECT), propget, readonly, bindable, displaybind, defaultbind] HRESULT Count ([out, retval] long * Count);
 		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** EnumVariant);
@@ -1644,22 +1646,22 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrSREngine : IDispatch
 	{
-		[helpstring("The SRModeID that uniquely identifies this Speech Recognition Engine"), helpcontext(APIHELP_Svr_SREngine),
+		[helpstring("The SRModeID that uniquely identifies this Speech Recognition Engine"), helpcontext(APIHELP_Svr_SREngine_SRModeID),
 			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
 			id(DISPID_IDaSvrSREngine_SRModeID), propget, readonly, bindable, displaybind, defaultbind] HRESULT SRModeID ([out, retval] BSTR* SRModeID);
-		[helpstring("The Speech Recognition Engine's display name"), helpcontext(APIHELP_Svr_SREngine),
+		[helpstring("The Speech Recognition Engine's display name"), helpcontext(APIHELP_Svr_SREngine_DisplayName),
 			id(DISPID_IDaSvrSREngine_DisplayName), propget, readonly, bindable, displaybind] HRESULT DisplayName ([out, retval] BSTR* DisplayName);
-		[helpstring("The Speech Recognition Engine's manufacturer (if known)"), helpcontext(APIHELP_Svr_SREngine),
+		[helpstring("The Speech Recognition Engine's manufacturer (if known)"), helpcontext(APIHELP_Svr_SREngine_Manufacturer),
 			id(DISPID_IDaSvrSREngine_Manufacturer), propget, readonly, bindable, displaybind] HRESULT Manufacturer ([out, retval] BSTR* Manufacturer);
-		[helpstring("The Speech Recognition Engine's version (currently 5.0 is valid)"), helpcontext(APIHELP_Svr_SREngine),
+		[helpstring("The Speech Recognition Engine's version (currently 5.0 is valid)"), helpcontext(APIHELP_Svr_SREngine_GetVersion),
 			id(DISPID_IDaSvrSREngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
-		[helpstring("The Speech Recognition Engine's primary language identifier"), helpcontext(APIHELP_Svr_SREngine),
+		[helpstring("The Speech Recognition Engine's primary language identifier"), helpcontext(APIHELP_Svr_SREngine_LanguageID),
 			id(DISPID_IDaSvrSREngine_LanguageID), propget, readonly, bindable, displaybind] HRESULT LanguageID ([out, retval] long* LanguageID);
-		[helpstring("The Speech Recognition Engine's primary language name"), helpcontext(APIHELP_Svr_SREngine),
+		[helpstring("The Speech Recognition Engine's primary language name"), helpcontext(APIHELP_Svr_SREngine_LanguageName),
 			id(DISPID_IDaSvrSREngine_LanguageName), propget, readonly, bindable, displaybind] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
-		[helpstring("The Speech Recognition Engine's supported language identifiers"), helpcontext(APIHELP_Svr_SREngine),
+		[helpstring("The Speech Recognition Engine's supported language identifiers"), helpcontext(APIHELP_Svr_SREngine_LanguageIDs),
 			id(DISPID_IDaSvrSREngine_LanguageIDs), propget, readonly, bindable, displaybind] HRESULT LanguageIDs ([out, retval] SAFEARRAY(long)* LanguageIDs);
-		[helpstring("The Speech Recognition Engine's supported language names"), helpcontext(APIHELP_Svr_SREngine),
+		[helpstring("The Speech Recognition Engine's supported language names"), helpcontext(APIHELP_Svr_SREngine_LanguageNames),
 			id(DISPID_IDaSvrSREngine_LanguageNames), propget, readonly, bindable, displaybind] HRESULT LanguageNames ([in, defaultvalue(-1)] VARIANT_BOOL EnglishNames, [out, retval] SAFEARRAY(BSTR)* LanguageNames);
 	};
 
@@ -1676,9 +1678,9 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrSREngines : IDispatch
 	{
-		[helpstring("A Speech Recognition Engine"), helpcontext(APIHELP_Svr_SREngines),
+		[helpstring("A Speech Recognition Engine"), helpcontext(APIHELP_Svr_SREngines_Item),
 			id(DISPID_VALUE), propget] HRESULT Item ([in] long Index, [out, retval] IDaSvrSREngine ** SREngine);
-		[helpstring("The count of Speech Recognition Engines in the collection"), helpcontext(APIHELP_Svr_SREngines),
+		[helpstring("The count of Speech Recognition Engines in the collection"), helpcontext(APIHELP_Svr_SREngines_Count),
 			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
 			id(DISPID_COLLECT), propget, readonly, bindable, displaybind, defaultbind] HRESULT Count ([out, retval] long * Count);
 		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** EnumVariant);

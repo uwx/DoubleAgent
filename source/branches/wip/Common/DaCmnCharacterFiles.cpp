@@ -133,7 +133,7 @@ void CDaCmnCharacterFiles::GetFilePaths ()
 				lFoundPath.ReleaseBuffer ();
 
 				if	(
-						(mFilter & (FilesFilter_ExcludeNonSpeaking|FilesFilter_ExcludeSpeaking))
+						(mFilter & FilesFilter_ExcludeMask)
 					||	(!(mFilter & FilesFilter_NoValidateVersion))
 					)
 				{
@@ -144,11 +144,22 @@ void CDaCmnCharacterFiles::GetFilePaths ()
 						if	(SUCCEEDED (lFile->Open (lFoundPath)))
 						{
 							if	(
-									(mFilter & FilesFilter_ExcludeNonSpeaking)
-								?	(!IsEqualGUID (lFile->GetTts().mMode, GUID_NULL))
-								:	(mFilter & FilesFilter_ExcludeSpeaking)
-								?	(IsEqualGUID (lFile->GetTts().mMode, GUID_NULL))
-								:	(true)
+									(
+										(!(mFilter & FilesFilter_ExcludeNonCompliant))
+									||	(lFile->GetStyle() & CharStyleStandard)
+									)
+								&&	(
+										(!(mFilter & FilesFilter_ExcludeCompliant))
+									||	(!(lFile->GetStyle() & CharStyleStandard))
+									)
+								&&	(
+										(!(mFilter & FilesFilter_ExcludeNonSpeaking))
+									||	(!IsEqualGUID (lFile->GetTts().mMode, GUID_NULL))
+									)
+								&&	(
+										(!(mFilter & FilesFilter_ExcludeSpeaking))
+									||	(IsEqualGUID (lFile->GetTts().mMode, GUID_NULL))
+									)
 								)
 							{
 								mFilePaths.Add (lFoundPath);
@@ -188,6 +199,10 @@ void CDaCmnCharacterFiles::UpdateFilter (DWORD pNewFilter)
 		}
 	}
 
+	if	(mFilter & FilesFilter_ExcludeNonCompliant)
+	{
+		mFilter &= ~FilesFilter_ExcludeCompliant;
+	}
 	if	(mFilter & FilesFilter_ExcludeNonSpeaking)
 	{
 		mFilter &= ~FilesFilter_ExcludeSpeaking;

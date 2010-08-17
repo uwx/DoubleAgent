@@ -833,6 +833,34 @@ public:
 			}
 		}
 	}
+	property System::Boolean ShowCompliantFiles
+	{
+		System::Boolean get ()
+		{
+			return mCharacterFiles ? mCharacterFiles->CompliantCharacters : false;
+		}
+		System::Void set (System::Boolean value)
+		{
+			if	(mCharacterFiles)
+			{
+				mCharacterFiles->CompliantCharacters = value;
+			}
+		}
+	}
+	property System::Boolean ShowNonCompliantFiles
+	{
+		System::Boolean get ()
+		{
+			return mCharacterFiles ? mCharacterFiles->NonCompliantCharacters : false;
+		}
+		System::Void set (System::Boolean value)
+		{
+			if	(mCharacterFiles)
+			{
+				mCharacterFiles->NonCompliantCharacters = value;
+			}
+		}
+	}
 	property System::Boolean ShowSpeakingFiles
 	{
 		System::Boolean get ()

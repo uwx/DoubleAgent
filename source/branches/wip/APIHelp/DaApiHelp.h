@@ -211,32 +211,171 @@
 #define	APIHELP_Svr_Balloon_FontCharSet						0x00040025
 
 #define	APIHELP_Svr_Commands								0x00050000
+#define	APIHELP_Svr_Commands_Item							0x00050001
+#define	APIHELP_Svr_Commands_Count							0x00050002
+#define	APIHELP_Svr_Commands_GetCommand						0x00050003
+#define	APIHELP_Svr_Commands_GetCount						0x00050004
+#define	APIHELP_Svr_Commands_SetCaption						0x00050005
+#define	APIHELP_Svr_Commands_GetCaption						0x00050006
+#define	APIHELP_Svr_Commands_SetVoice						0x00050007
+#define	APIHELP_Svr_Commands_GetVoice						0x00050008
+#define	APIHELP_Svr_Commands_SetVisible						0x00050009
+#define	APIHELP_Svr_Commands_GetVisible						0x0005000A
+#define	APIHELP_Svr_Commands_Add							0x0005000B
+#define	APIHELP_Svr_Commands_Insert							0x0005000C
+#define	APIHELP_Svr_Commands_Remove							0x0005000D
+#define	APIHELP_Svr_Commands_RemoveAll						0x0005000E
+#define	APIHELP_Svr_Commands_GetCommandEx					0x0005000F
+#define	APIHELP_Svr_Commands_SetDefaultID					0x00050010
+#define	APIHELP_Svr_Commands_GetDefaultID					0x00050011
+#define	APIHELP_Svr_Commands_SetHelpContextID				0x00050012
+#define	APIHELP_Svr_Commands_GetHelpContextID				0x00050013
+#define	APIHELP_Svr_Commands_SetFontName					0x00050014
+#define	APIHELP_Svr_Commands_GetFontName					0x00050015
+#define	APIHELP_Svr_Commands_SetFontSize					0x00050016
+#define	APIHELP_Svr_Commands_GetFontSize					0x00050017
+#define	APIHELP_Svr_Commands_SetVoiceCaption				0x00050018
+#define	APIHELP_Svr_Commands_GetVoiceCaption				0x00050019
+#define	APIHELP_Svr_Commands_AddEx							0x0005001A
+#define	APIHELP_Svr_Commands_InsertEx						0x0005001B
+#define	APIHELP_Svr_Commands_SetGlobalVoiceCommandsEnabled	0x0005001C
+#define	APIHELP_Svr_Commands_GetGlobalVoiceCommandsEnabled	0x0005001D
+#define	APIHELP_Svr_Commands_Command						0x0005001E
+#define	APIHELP_Svr_Commands_Caption						0x0005001F
+#define	APIHELP_Svr_Commands_VoiceGrammar					0x00050020
+#define	APIHELP_Svr_Commands_Visible						0x00050021
+#define	APIHELP_Svr_Commands_DefaultCommand					0x00050022
+#define	APIHELP_Svr_Commands_FontName						0x00050023
+#define	APIHELP_Svr_Commands_FontSize						0x00050024
+#define	APIHELP_Svr_Commands_VoiceCaption					0x00050025
+#define	APIHELP_Svr_Commands_GlobalVoiceCommandsEnabled		0x00050026
 
 #define	APIHELP_Svr_Command									0x00060000
+#define	APIHELP_Svr_Command_SetCaption						0x00060001
+#define	APIHELP_Svr_Command_GetCaption						0x00060002
+#define	APIHELP_Svr_Command_SetVoice						0x00060003
+#define	APIHELP_Svr_Command_GetVoice						0x00060004
+#define	APIHELP_Svr_Command_SetEnabled						0x00060005
+#define	APIHELP_Svr_Command_GetEnabled						0x00060006
+#define	APIHELP_Svr_Command_SetVisible						0x00060007
+#define	APIHELP_Svr_Command_GetVisible						0x00060008
+#define	APIHELP_Svr_Command_SetConfidenceThreshold			0x00060009
+#define	APIHELP_Svr_Command_GetConfidenceThreshold			0x00060000
+#define	APIHELP_Svr_Command_SetConfidenceText				0x0006000A
+#define	APIHELP_Svr_Command_GetConfidenceText				0x0006000B
+#define	APIHELP_Svr_Command_GetID							0x0006000C
+#define	APIHELP_Svr_Command_SetHelpContextID				0x0006000D
+#define	APIHELP_Svr_Command_GetHelpContextID				0x0006000E
+#define	APIHELP_Svr_Command_SetVoiceCaption					0x0006000F
+#define	APIHELP_Svr_Command_GetVoiceCaption					0x00060010
+#define	APIHELP_Svr_Command_Caption							0x00060011
+#define	APIHELP_Svr_Command_Enabled							0x00060012
+#define	APIHELP_Svr_Command_Visible							0x00060013
+#define	APIHELP_Svr_Command_CommandID						0x00060014
+#define	APIHELP_Svr_Command_VoiceCaption					0x00060015
+#define	APIHELP_Svr_Command_VoiceGrammar					0x00060016
+#define	APIHELP_Svr_Command_ConfidenceThreshold				0x00060017
+#define	APIHELP_Svr_Command_ConfidenceText					0x00060018
 
 #define	APIHELP_Svr_UserInput								0x00070000
+#define	APIHELP_Svr_UserInput_GetCount						0x00070001
+#define	APIHELP_Svr_UserInput_GetItemID						0x00070002
+#define	APIHELP_Svr_UserInput_GetItemConfidence				0x00070003
+#define	APIHELP_Svr_UserInput_GetItemText					0x00070004
+#define	APIHELP_Svr_UserInput_GetAllItemData				0x00070005
+#define	APIHELP_Svr_UserInput_Count							0x00070006
+#define	APIHELP_Svr_UserInput_ItemCommandID					0x00070007
+#define	APIHELP_Svr_UserInput_ItemConfidence				0x00070008
+#define	APIHELP_Svr_UserInput_ItemText						0x00070009
 
 #define	APIHELP_Svr_CommandsWindow							0x00080000
+#define	APIHELP_Svr_CommandsWindow_SetVisible				0x00080001
+#define	APIHELP_Svr_CommandsWindow_GetVisible				0x00080002
+#define	APIHELP_Svr_CommandsWindow_GetPosition				0x00080003
+#define	APIHELP_Svr_CommandsWindow_GetSize					0x00080004
+#define	APIHELP_Svr_CommandsWindow_Visible					0x00080005
+#define	APIHELP_Svr_CommandsWindow_Left						0x00080006
+#define	APIHELP_Svr_CommandsWindow_Top						0x00080007
+#define	APIHELP_Svr_CommandsWindow_Height					0x00080008
+#define	APIHELP_Svr_CommandsWindow_Width					0x00080009
 
 #define	APIHELP_Svr_PropertySheet							0x00090000
+#define	APIHELP_Svr_PropertySheet_GetVisible				0x00090001
+#define	APIHELP_Svr_PropertySheet_SetVisible				0x00090002
+#define	APIHELP_Svr_PropertySheet_GetPosition				0x00090003
+#define	APIHELP_Svr_PropertySheet_GetSize					0x00090004
+#define	APIHELP_Svr_PropertySheet_GetPage					0x00090005
+#define	APIHELP_Svr_PropertySheet_SetPage					0x00090006
+#define	APIHELP_Svr_PropertySheet_Left						0x00090007
+#define	APIHELP_Svr_PropertySheet_Top						0x00090008
+#define	APIHELP_Svr_PropertySheet_Height					0x00090009
+#define	APIHELP_Svr_PropertySheet_Width						0x0009000A
+#define	APIHELP_Svr_PropertySheet_Page						0x0009000B
+#define	APIHELP_Svr_PropertySheet_Visible					0x0009000C
+#define	APIHELP_Svr_PropertySheet_SetPosition				0x0009000D
 
 #define	APIHELP_Svr_AudioOutput								0x000A0000
 #define	APIHELP_Svr_SpeechInput								0x000B0000
 #define	APIHELP_Svr_AnimationNames							0x000C0000
 
 #define	APIHELP_Svr_Settings								0x000D0000
+#define	APIHELP_Svr_Settings_SoundEffectsEnabled			0x000D0001
+#define	APIHELP_Svr_Settings_BalloonEnabled					0x000D0002
+#define	APIHELP_Svr_Settings_BalloonFont					0x000D0003
+#define	APIHELP_Svr_Settings_TTSEnabled						0x000D0004
+#define	APIHELP_Svr_Settings_TTSSpeed						0x000D0005
+#define	APIHELP_Svr_Settings_SREnabled						0x000D0006
+#define	APIHELP_Svr_Settings_SRHotKey						0x000D0007
+#define	APIHELP_Svr_Settings_SRHotKeyTime					0x000D0008
+#define	APIHELP_Svr_Settings_SRListeningTip					0x000D0009
+#define	APIHELP_Svr_Settings_SRListeningPrompt				0x000D000A
+#define	APIHELP_Svr_Settings_AudioStatus					0x000D000B
 
 #define	APIHELP_Svr_CharacterFiles							0x000E0000
+#define	APIHELP_Svr_CharacterFiles_FilePaths				0x000E0001
+#define	APIHELP_Svr_CharacterFiles_SearchPath				0x000E0002
+#define	APIHELP_Svr_CharacterFiles_DefaultSearchPath		0x000E0003
+#define	APIHELP_Svr_CharacterFiles_Filter					0x000E0004
+#define	APIHELP_Svr_CharacterFiles_DefaultFilePath			0x000E0005
+#define	APIHELP_Svr_CharacterFiles_DefaultFileName			0x000E0006
 
-#define	APIHELP_Svr_FormattedText								0x000F0000
+#define	APIHELP_Svr_FormattedText							0x000F0000
+#define	APIHELP_Svr_FormattedText_RawText					0x000F0001
+#define	APIHELP_Svr_FormattedText_ParsedText				0x000F0002
+#define	APIHELP_Svr_FormattedText_SpeechText				0x000F0003
+#define	APIHELP_Svr_FormattedText_WordCount					0x000F0004
+#define	APIHELP_Svr_FormattedText_DisplayWord				0x000F0005
+#define	APIHELP_Svr_FormattedText_WordIndex					0x000F0006
+#define	APIHELP_Svr_FormattedText_DisplayText				0x000F0007
+#define	APIHELP_Svr_FormattedText_Parse						0x000F0008
+#define	APIHELP_Svr_FormattedText_Append					0x000F0009
 
 #define	APIHELP_Svr_TTSEngines								0x00100000
+#define	APIHELP_Svr_TTSEngines_Item							0x00100001
+#define	APIHELP_Svr_TTSEngines_Count						0x00100002
 
 #define	APIHELP_Svr_TTSEngine								0x00110000
+#define	APIHELP_Svr_TTSEngine_TTSModeID						0x00110001
+#define	APIHELP_Svr_TTSEngine_DisplayName					0x00110002
+#define	APIHELP_Svr_TTSEngine_Manufacturer					0x00110003
+#define	APIHELP_Svr_TTSEngine_GetVersion					0x00110004
+#define	APIHELP_Svr_TTSEngine_Gender						0x00110005
+#define	APIHELP_Svr_TTSEngine_LanguageID					0x00110006
+#define	APIHELP_Svr_TTSEngine_LanguageName					0x00110007
 
 #define	APIHELP_Svr_SREngines								0x00120000
+#define	APIHELP_Svr_SREngines_Item							0x00120001
+#define	APIHELP_Svr_SREngines_Count							0x00120002
 
 #define	APIHELP_Svr_SREngine								0x00130000
+#define	APIHELP_Svr_SREngine_SRModeID						0x00130001
+#define	APIHELP_Svr_SREngine_DisplayName					0x00130002
+#define	APIHELP_Svr_SREngine_Manufacturer					0x00130003
+#define	APIHELP_Svr_SREngine_GetVersion						0x00130004
+#define	APIHELP_Svr_SREngine_LanguageID						0x00130005
+#define	APIHELP_Svr_SREngine_LanguageName					0x00130006
+#define	APIHELP_Svr_SREngine_LanguageIDs					0x00130007
+#define	APIHELP_Svr_SREngine_LanguageNames					0x00130008
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -380,6 +519,8 @@
 #define	APIHELP_Ctl_Character_SuspendPause					0x0104004A
 #define	APIHELP_Ctl_Character_SuspendStop					0x0104004B
 #define	APIHELP_Ctl_Character_SuspendHide					0x0104004C
+#define	APIHELP_Ctl_Character_Animations					0x0104004D
+#define	APIHELP_Ctl_Character_States						0x0104004E
 
 #define	APIHELP_Ctl_Request									0x01050000
 #define	APIHELP_Ctl_Request_ID								0x01050001
@@ -410,23 +551,24 @@
 #define	APIHELP_Ctl_Balloon_ShowPartialLines				0x01060014
 
 #define	APIHELP_Ctl_Commands								0x01070000
-#define	APIHELP_Ctl_Commands_Count							0x01070001
-#define	APIHELP_Ctl_Commands_Caption						0x01070002
-#define	APIHELP_Ctl_Commands_Voice							0x01070003
-#define	APIHELP_Ctl_Commands_Visible						0x01070004
-#define	APIHELP_Ctl_Commands_Add							0x01070005
-#define	APIHELP_Ctl_Commands_Insert							0x01070006
-#define	APIHELP_Ctl_Commands_Remove							0x01070007
-#define	APIHELP_Ctl_Commands_RemoveAll						0x01070008
-#define	APIHELP_Ctl_Commands_Command						0x01070009
-#define	APIHELP_Ctl_Commands_Commands_DefaultCommand		0x0107000A
-#define	APIHELP_Ctl_Commands_HelpContextID					0x0107000B
-#define	APIHELP_Ctl_Commands_FontName						0x0107000C
-#define	APIHELP_Ctl_Commands_FontSize						0x0107000D
-#define	APIHELP_Ctl_Commands_VoiceCaption					0x0107000E
-#define	APIHELP_Ctl_Commands_GlobalVoiceCommandsEnabled		0x0107000F
-#define	APIHELP_Ctl_Commands_Commands_VoiceGrammar			0x01070000
-#define	APIHELP_Ctl_Commands_Index							0x01070011
+#define	APIHELP_Ctl_Commands_Item							0x01070001
+#define	APIHELP_Ctl_Commands_Count							0x01070002
+#define	APIHELP_Ctl_Commands_Caption						0x01070003
+#define	APIHELP_Ctl_Commands_Voice							0x01070004
+#define	APIHELP_Ctl_Commands_Visible						0x01070005
+#define	APIHELP_Ctl_Commands_Add							0x01070006
+#define	APIHELP_Ctl_Commands_Insert							0x01070007
+#define	APIHELP_Ctl_Commands_Remove							0x01070008
+#define	APIHELP_Ctl_Commands_RemoveAll						0x01070009
+#define	APIHELP_Ctl_Commands_Command						0x0107000A
+#define	APIHELP_Ctl_Commands_DefaultCommand					0x0107000B
+#define	APIHELP_Ctl_Commands_HelpContextID					0x0107000C
+#define	APIHELP_Ctl_Commands_FontName						0x0107000D
+#define	APIHELP_Ctl_Commands_FontSize						0x0107000E
+#define	APIHELP_Ctl_Commands_VoiceCaption					0x0107000F
+#define	APIHELP_Ctl_Commands_GlobalVoiceCommandsEnabled		0x01070000
+#define	APIHELP_Ctl_Commands_VoiceGrammar					0x01070011
+#define	APIHELP_Ctl_Commands_Index							0x01070012
 
 #define	APIHELP_Ctl_Command									0x01080000
 #define	APIHELP_Ctl_Command_Voice							0x01080001
@@ -498,6 +640,8 @@
 #define	APIHELP_Ctl_CharacterFiles_VerifyVersion			0x01100009
 #define	APIHELP_Ctl_CharacterFiles_DefaultFilePath			0x0110000A
 #define	APIHELP_Ctl_CharacterFiles_DefaultFileName			0x0110000B
+#define	APIHELP_Ctl_CharacterFiles_CompliantCharacters		0x0110000C
+#define	APIHELP_Ctl_CharacterFiles_NonCompliantCharacters	0x0110000D
 
 #define	APIHELP_Ctl_FormattedText							0x01110000
 #define	APIHELP_Ctl_FormattedText_RawText					0x01110001
@@ -520,7 +664,7 @@
 #define	APIHELP_Ctl_TTSEngine_LanguageName					0x01120007
 
 #define	APIHELP_Ctl_TTSEngines								0x01130000
-#define	APIHELP_Ctl_TTSEngines_Index						0x01130001
+#define	APIHELP_Ctl_TTSEngines_Item						0x01130001
 #define	APIHELP_Ctl_TTSEngines_Count						0x01130002
 
 #define	APIHELP_Ctl_SREngine								0x01140000
@@ -534,7 +678,7 @@
 #define	APIHELP_Ctl_SREngine_LanguageNames					0x01140008
 
 #define	APIHELP_Ctl_SREngines								0x01150000
-#define	APIHELP_Ctl_SREngines_Index							0x01150001
+#define	APIHELP_Ctl_SREngines_Item							0x01150001
 #define	APIHELP_Ctl_SREngines_Count							0x01150002
 
 /////////////////////////////////////////////////////////////////////////////

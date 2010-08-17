@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
@@ -17,55 +17,46 @@
 		</tr>
 		<tr>
 			<td class="page">
-				<dl>
-					<dt>
-						<h4>Declaring Objects</h4>
-					</dt>
-					<dd>
-						<p>Programming languages that provide access to the object types exposed by the Double Agent control, like
-							Visual Basic, allow you to use these in your object declarations. For example, instead of declaring
-							an object as a generic type:</p>
-						<code class="example">Dim Genie as <em class="keyword">Object</em></code>
-						<p>you can declare an object as a specific type:</p>
-						<code class="example">Dim Genie as <em class="keyword">DoubleAgentCtl.DaCtlCharacter</em></code>
-						<p>or, when using the control's <em>Primary Interop Assembly</em>:</p>
-						<code class="example">Dim Genie as <em class="keyword">DoubleAgent.Control.Character</em></code>
-						<p>This allows the programming environment to identify the object's methods, properties, and events, and
-							may improve the overall performance of your application.</p>
-					</dd>
-					<dt>
-						<h4>Using Collections</h4>
-					</dt>
-					<dd>
-						<p>Most programming languages that support ActiveX<sup>®</sup> controls follow indexing conventions similar
-							to Visual Basic. For programming languages that don't support object collections, you can use the <a
-							class="see keyword" href="../Generated/Control_Characters_Item.htm">get_Item</a> method to access methods
-							and properties of items in the collection.</p>
-					</dd>
-					<dt>
-						<h4>Initializing Properties</h4>
-					</dt>
-					<dd>
-						<p>By default, the Double Agent control will automatically create a connection to the Double Agent server
-							when the application runs. If you want the control to run in <a class="see" href="Ctl_Programming_Modes.htm">
-							stand-alone</a> mode, initialize the control's <a class="see keyword" href="../Generated/Control_Control_AutoConnect.htm">
-							AutoConnect</a> property to <em class="keyword">False</em>.</p>
-						<p>You should also initialize the <a class="see keyword" href="../Generated/Control_Control_RaiseRequestErrors.htm">
-						RaiseRequestErrors</a> property depending on how you want to handle errors.</p>
-					</dd>
-					<dt>
-						<h4>Receiving Events</h4>
-					</dt>
-					<dd>
-						<p>When using a programming language that supports ActiveX<sup>®</sup> controls or <em class="glossary">
-							Windows Forms</em> controls, adding the Double Agent control to a form will automatically make the control's
-							events available, with their appropriate parameters.</p>
-						<p>You may also be able to use your programming language's object creation syntax to create an instance
-							of the control at runtime. For example, in Visual Basic 6, if you include the Double Agent control in
-							your project's references, you can use a <em class="keyword">With Events...New</em> declaration (if
-							you don't include the reference, VB raises an error).</p>
-						<div class="example">
-							<pre class="example">' Declare a global variable for the control
+				<h4>Declaring Objects</h4>
+				<div class="indent">
+					<p>Programming languages that provide access to the object types exposed by the Double Agent control, like
+						Visual Basic, allow you to use these in your object declarations. For example, instead of declaring
+						an object as a generic type:</p>
+					<code class="example">Dim Genie as <em class="keyword">Object</em></code>
+					<p>you can declare an object as a specific type:</p>
+					<code class="example">Dim Genie as <em class="keyword">DoubleAgentCtl.DaCtlCharacter</em></code>
+					<p>or, when using the control's <em>Primary Interop Assembly</em>:</p>
+					<code class="example">Dim Genie as <em class="keyword">DoubleAgent.Control.Character</em></code>
+					<p>This allows the programming environment to identify the object's methods, properties, and events, and
+						may improve the overall performance of your application.</p>
+				</div>
+				<h4>Using Collections</h4>
+				<div class="indent">
+					<p>Most programming languages that support ActiveX<sup>®</sup> controls follow indexing conventions similar
+						to Visual Basic. For programming languages that don't support object collections, you can use the <a
+						class="see keyword" href="../Generated/Control_Characters_Item.htm">get_Item</a> method to access methods
+						and properties of items in the collection.</p>
+				</div>
+				<h4>Initializing Properties</h4>
+				<div class="indent">
+					<p>By default, the Double Agent control will automatically create a connection to the Double Agent server
+						when the application runs. If you want the control to run in <a class="see" href="Ctl_Programming_Modes.htm">
+						stand-alone</a> mode, initialize the control's <a class="see keyword" href="../Generated/Control_Control_AutoConnect.htm">
+						AutoConnect</a> property to <em class="keyword">False</em>.</p>
+					<p>You should also initialize the <a class="see keyword" href="../Generated/Control_Control_RaiseRequestErrors.htm">
+					RaiseRequestErrors</a> property depending on how you want to handle errors.</p>
+				</div>
+				<h4>Receiving Events</h4>
+				<div class="indent">
+					<p>When using a programming language that supports ActiveX<sup>®</sup> controls or <em class="glossary">
+						Windows Forms</em> controls, adding the Double Agent control to a form will automatically make the control's
+						events available, with their appropriate parameters.</p>
+					<p>You may also be able to use your programming language's object creation syntax to create an instance
+						of the control at runtime. For example, in Visual Basic 6, if you include the Double Agent control in
+						your project's references, you can use a <em class="keyword">With Events...New</em> declaration (if
+						you don't include the reference, VB raises an error).</p>
+					<div class="example">
+						<pre class="example">' Declare a global variable for the control
 <em class="keyword">Dim WithEvents</em> MyAgentControl <em class="keyword">as DoubleAgentCtl.DaControl</em>
 
 ' Create an instance of the control using New
@@ -76,9 +67,8 @@ MyAgentControl.<em class="keyword">Characters</em>.<em class="keyword">Load</em>
 
 ' Display the character
 MyAgentControl.<em class="keyword">Characters</em>("Genie").<em class="keyword">Show</em></pre>
-						</div>
-					</dd>
-				</dl>
+					</div>
+				</div>
 				<h4 class="seealso">See Also</h4>
 				<a href="Ctl_Programming_Apps.htm">Using the Control in Applications</a> </td>
 		</tr>

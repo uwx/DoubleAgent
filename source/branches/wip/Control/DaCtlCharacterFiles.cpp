@@ -454,6 +454,8 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_DoubleAgentFiles (VARIANT_BOO
 	return lResult;
 }
 
+/////////////////////////////////////////////////////////////////////////////
+
 HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_MsAgentFiles (VARIANT_BOOL *MsAgentFiles)
 {
 	ClearControlError ();
@@ -677,6 +679,238 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_MsOfficeFiles (VARIANT_BOOL M
 #endif
 	return lResult;
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_CompliantCharacters (VARIANT_BOOL *CompliantCharacters)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::get_CompliantCharacters"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+#endif
+	HRESULT	lResult;
+	long	lFilter = 0;
+
+	if	(!CompliantCharacters)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*CompliantCharacters) = VARIANT_TRUE;
+
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Filter (&lFilter);
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_Filter (&lFilter);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+
+		if	(SUCCEEDED (lResult))
+		{
+			(*CompliantCharacters) = (lFilter & FilesFilter_ExcludeCompliant) ? VARIANT_FALSE : VARIANT_TRUE;
+		}
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::get_CompliantCharacters"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_CompliantCharacters (VARIANT_BOOL CompliantCharacters)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::put_CompliantCharacters [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), CompliantCharacters);
+#endif
+	HRESULT	lResult;
+	long	lFilter = 0;
+
+	if	(mLocalObject)
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mLocalObject->get_Filter (&lFilter)))
+			{
+				if	(CompliantCharacters)
+				{
+					lFilter &= ~FilesFilter_ExcludeCompliant;
+				}
+				else
+				{
+					lFilter |= FilesFilter_ExcludeCompliant;
+					lFilter &= ~FilesFilter_ExcludeNonCompliant;
+				}
+				lResult = mLocalObject->put_Filter (lFilter);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
+	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mServerObject->get_Filter (&lFilter)))
+			{
+				if	(CompliantCharacters)
+				{
+					lFilter &= ~FilesFilter_ExcludeCompliant;
+				}
+				else
+				{
+					lFilter |= FilesFilter_ExcludeCompliant;
+					lFilter &= ~FilesFilter_ExcludeNonCompliant;
+				}
+				lResult = mServerObject->put_Filter (lFilter);
+			}
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServerObject);
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::put_CompliantCharacters"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_NonCompliantCharacters (VARIANT_BOOL *NonCompliantCharacters)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::get_NonCompliantCharacters"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+#endif
+	HRESULT	lResult;
+	long	lFilter = 0;
+
+	if	(!NonCompliantCharacters)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*NonCompliantCharacters) = VARIANT_TRUE;
+
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Filter (&lFilter);
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_Filter (&lFilter);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+
+		if	(SUCCEEDED (lResult))
+		{
+			(*NonCompliantCharacters) = (lFilter & FilesFilter_ExcludeNonCompliant) ? VARIANT_FALSE : VARIANT_TRUE;
+		}
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::get_NonCompliantCharacters"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_NonCompliantCharacters (VARIANT_BOOL NonCompliantCharacters)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::put_NonCompliantCharacters [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), NonCompliantCharacters);
+#endif
+	HRESULT	lResult;
+	long	lFilter = 0;
+
+	if	(mLocalObject)
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mLocalObject->get_Filter (&lFilter)))
+			{
+				if	(NonCompliantCharacters)
+				{
+					lFilter &= ~FilesFilter_ExcludeNonCompliant;
+				}
+				else
+				{
+					lFilter |= FilesFilter_ExcludeNonCompliant;
+					lFilter &= ~FilesFilter_ExcludeCompliant;
+				}
+				lResult = mLocalObject->put_Filter (lFilter);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
+	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mServerObject->get_Filter (&lFilter)))
+			{
+				if	(NonCompliantCharacters)
+				{
+					lFilter &= ~FilesFilter_ExcludeNonCompliant;
+				}
+				else
+				{
+					lFilter |= FilesFilter_ExcludeNonCompliant;
+					lFilter &= ~FilesFilter_ExcludeCompliant;
+				}
+				lResult = mServerObject->put_Filter (lFilter);
+			}
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServerObject);
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::put_NonCompliantCharacters"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 
 HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_SpeakingCharacters (VARIANT_BOOL *SpeakingCharacters)
 {
@@ -905,6 +1139,8 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_NonSpeakingCharacters (VARIAN
 #endif
 	return lResult;
 }
+
+/////////////////////////////////////////////////////////////////////////////
 
 HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_VerifyVersion (VARIANT_BOOL *VerifyVersion)
 {

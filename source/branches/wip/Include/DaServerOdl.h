@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Mon Aug 09 13:03:29 2010
+/* at Sat Aug 14 18:27:45 2010
  */
 /* Compiler settings for .\Server\DaServer.odl:
-    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
+    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -601,12 +601,14 @@ enum FilesFilterFlags
 	FilesFilter_PathMsAgent	= 0x2,
 	FilesFilter_PathMsOffice	= 0x4,
 	FilesFilter_PathMask	= 0x7,
-	FilesFilter_ExcludeNonSpeaking	= 0x10,
-	FilesFilter_ExcludeSpeaking	= 0x20,
-	FilesFilter_ExcludeMask	= 0x30,
+	FilesFilter_ExcludeNonCompliant	= 0x10,
+	FilesFilter_ExcludeCompliant	= 0x20,
+	FilesFilter_ExcludeNonSpeaking	= 0x40,
+	FilesFilter_ExcludeSpeaking	= 0x80,
+	FilesFilter_ExcludeMask	= 0xf0,
 	FilesFilter_NoValidateVersion	= 0x10000,
-	FilesFilter_FilterMask	= 0x10030,
-	FilesFilter_ValidMask	= 0x10037
+	FilesFilter_FilterMask	= 0x100f0,
+	FilesFilter_ValidMask	= 0x100f7
     } 	FilesFilterFlags;
 
 #define	NeverMoved	( MoveCause_NeverMoved )
@@ -2353,9 +2355,9 @@ EXTERN_C const IID IID_IDaSvrUserInput;
             /* [out] */ BSTR *Text) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetAllItemData( 
-            /* [out] */ VARIANT *ItemIndices,
+            /* [out] */ VARIANT *ItemCommandIDs,
             /* [out] */ VARIANT *ItemConfidences,
-            /* [out] */ VARIANT *ItemText) = 0;
+            /* [out] */ VARIANT *ItemTexts) = 0;
         
     };
     
@@ -2427,9 +2429,9 @@ EXTERN_C const IID IID_IDaSvrUserInput;
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetAllItemData )( 
             IDaSvrUserInput * This,
-            /* [out] */ VARIANT *ItemIndices,
+            /* [out] */ VARIANT *ItemCommandIDs,
             /* [out] */ VARIANT *ItemConfidences,
-            /* [out] */ VARIANT *ItemText);
+            /* [out] */ VARIANT *ItemTexts);
         
         END_INTERFACE
     } IDaSvrUserInputVtbl;
@@ -2479,8 +2481,8 @@ EXTERN_C const IID IID_IDaSvrUserInput;
 #define IDaSvrUserInput_GetItemText(This,ItemIndex,Text)	\
     ( (This)->lpVtbl -> GetItemText(This,ItemIndex,Text) ) 
 
-#define IDaSvrUserInput_GetAllItemData(This,ItemIndices,ItemConfidences,ItemText)	\
-    ( (This)->lpVtbl -> GetAllItemData(This,ItemIndices,ItemConfidences,ItemText) ) 
+#define IDaSvrUserInput_GetAllItemData(This,ItemCommandIDs,ItemConfidences,ItemTexts)	\
+    ( (This)->lpVtbl -> GetAllItemData(This,ItemCommandIDs,ItemConfidences,ItemTexts) ) 
 
 #endif /* COBJMACROS */
 
@@ -8152,10 +8154,10 @@ EXTERN_C const IID IID_IDaSvrCommandsWindow2;
             /* [retval][out] */ short *Top) = 0;
         
         virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Height( 
-            /* [retval][out] */ short *Height) = 0;
+            /* [retval][out] */ short *Height_Height) = 0;
         
         virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Width( 
-            /* [retval][out] */ short *Width) = 0;
+            /* [retval][out] */ short *Width_Width) = 0;
         
     };
     
@@ -8242,11 +8244,11 @@ EXTERN_C const IID IID_IDaSvrCommandsWindow2;
         
         /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
             IDaSvrCommandsWindow2 * This,
-            /* [retval][out] */ short *Height);
+            /* [retval][out] */ short *Height_Height);
         
         /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
             IDaSvrCommandsWindow2 * This,
-            /* [retval][out] */ short *Width);
+            /* [retval][out] */ short *Width_Width);
         
         END_INTERFACE
     } IDaSvrCommandsWindow2Vtbl;
@@ -8309,11 +8311,11 @@ EXTERN_C const IID IID_IDaSvrCommandsWindow2;
 #define IDaSvrCommandsWindow2_get_Top(This,Top)	\
     ( (This)->lpVtbl -> get_Top(This,Top) ) 
 
-#define IDaSvrCommandsWindow2_get_Height(This,Height)	\
-    ( (This)->lpVtbl -> get_Height(This,Height) ) 
+#define IDaSvrCommandsWindow2_get_Height(This,Height_Height)	\
+    ( (This)->lpVtbl -> get_Height(This,Height_Height) ) 
 
-#define IDaSvrCommandsWindow2_get_Width(This,Width)	\
-    ( (This)->lpVtbl -> get_Width(This,Width) ) 
+#define IDaSvrCommandsWindow2_get_Width(This,Width_Width)	\
+    ( (This)->lpVtbl -> get_Width(This,Width_Width) ) 
 
 #endif /* COBJMACROS */
 
@@ -8426,9 +8428,9 @@ EXTERN_C const IID IID_IDaSvrUserInput2;
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetAllItemData )( 
             IDaSvrUserInput2 * This,
-            /* [out] */ VARIANT *ItemIndices,
+            /* [out] */ VARIANT *ItemCommandIDs,
             /* [out] */ VARIANT *ItemConfidences,
-            /* [out] */ VARIANT *ItemText);
+            /* [out] */ VARIANT *ItemTexts);
         
         /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
             IDaSvrUserInput2 * This,
@@ -8497,8 +8499,8 @@ EXTERN_C const IID IID_IDaSvrUserInput2;
 #define IDaSvrUserInput2_GetItemText(This,ItemIndex,Text)	\
     ( (This)->lpVtbl -> GetItemText(This,ItemIndex,Text) ) 
 
-#define IDaSvrUserInput2_GetAllItemData(This,ItemIndices,ItemConfidences,ItemText)	\
-    ( (This)->lpVtbl -> GetAllItemData(This,ItemIndices,ItemConfidences,ItemText) ) 
+#define IDaSvrUserInput2_GetAllItemData(This,ItemCommandIDs,ItemConfidences,ItemTexts)	\
+    ( (This)->lpVtbl -> GetAllItemData(This,ItemCommandIDs,ItemConfidences,ItemTexts) ) 
 
 
 #define IDaSvrUserInput2_get_Count(This,pCount)	\

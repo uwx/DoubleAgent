@@ -20,7 +20,7 @@ protected:
 
 	System::Object^ LoadTypeLibrary (System::String^ pTypeLibPath);
 	System::Xml::XmlDocument^ LoadXmlFile (System::String^ pXmlPath, bool pPreserveWhitespace);
-	void LoadXmlIncludes (System::Xml::XmlDocument^ pXmlDocument, String^ pXmlPath, bool pPreserveWhitespace);
+	bool LoadXmlIncludes (System::Xml::XmlDocument^ pXmlDocument, String^ pXmlPath, bool pPreserveWhitespace);
 	System::Xml::XmlDocument^ LoadTypeTemplate ();
 	System::Xml::XmlDocument^ LoadMethodTemplate ();
 	System::Xml::XmlDocument^ LoadPropertyTemplate ();
@@ -90,6 +90,8 @@ protected:
 	bool IsAllFieldsName (String^ pMemberName);
 	String^ AllFieldsName (String^ pMemberName);
 	String^ AllFieldsFileName (String^ pMemberName);
+
+	bool IsInheritDoc (System::Xml::XmlNode^ pXmlNode);
 
 	void FixMethodSignatures (System::Xml::XmlDocument^ pXmlDocument);
 	void FixMemberReferences (System::Xml::XmlDocument^ pXmlDocument);

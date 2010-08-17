@@ -81,7 +81,7 @@ public:
 	HRESULT STDMETHODCALLTYPE GetItemID (long ItemIndex, long *CommandID);
 	HRESULT STDMETHODCALLTYPE GetItemConfidence (long ItemIndex, long *Confidence);
 	HRESULT STDMETHODCALLTYPE GetItemText (long ItemIndex, BSTR *Text);
-	HRESULT STDMETHODCALLTYPE GetAllItemData (VARIANT *ItemIndices, VARIANT *ItemConfidences, VARIANT *ItemText);
+	HRESULT STDMETHODCALLTYPE GetAllItemData (VARIANT *ItemCommandIDs, VARIANT *ItemConfidences, VARIANT *ItemTexts);
 
 	HRESULT STDMETHODCALLTYPE get_Count (long *Count);
 	HRESULT STDMETHODCALLTYPE get_ItemCommandID (long ItemIndex, long *ItemCommandID);

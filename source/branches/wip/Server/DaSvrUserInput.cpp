@@ -237,12 +237,12 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_ItemText (long ItemIndex, BSTR *It
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetAllItemData (VARIANT *ItemIndices, VARIANT *ItemConfidences, VARIANT *ItemText)
+HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetAllItemData (VARIANT *ItemCommandIDs, VARIANT *ItemConfidences, VARIANT *ItemTexts)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::GetAllItemData"), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = CDaCmnUserInput::GetAllItemData (ItemIndices, ItemConfidences, ItemText);
+	HRESULT	lResult = CDaCmnUserInput::GetAllItemData (ItemCommandIDs, ItemConfidences, ItemTexts);
 
 	PutServerError (lResult, __uuidof(IDaSvrUserInput2));
 #ifdef	_LOG_RESULTS
