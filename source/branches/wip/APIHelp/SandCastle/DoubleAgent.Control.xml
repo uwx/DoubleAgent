@@ -879,7 +879,7 @@
 </member>
 
 <member name="P:DoubleAgent.Control.Control.ControlCharacter">
-<summary> Specifies the control's <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a> <see cref="T:DoubleAgent.Control.Character" />.</summary>
+<summary> Specifies the control's <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a> character.</summary>
 <value name="ControlCharacter">The <see class="typename" cref="T:DoubleAgent.Control.Character" /> Object object that's contained within the visible area of the control, or an empty reference (<keyword>Nothing</keyword>).</value>
 <remarks>
 <para>Setting the <self>ControlCharacter</self> property to a <see cref="T:DoubleAgent.Control.Character" /> Object changes the control from <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a> mode to <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a> mode. Setting <self>ControlCharacter</self> to an empty reference changes the control from <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a> mode back to <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a> mode.

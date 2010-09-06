@@ -2294,7 +2294,7 @@
 		<member name="P:&darootobj;.ControlCharacter">
 			<summary>
 				<para>
-					Specifies the control's <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a> <see cref="T:&dans;.Character" />.
+					Specifies the control's <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a> character.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">

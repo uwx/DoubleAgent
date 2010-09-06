@@ -114,9 +114,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Generating AxControl Documentation"
-						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /asm $(OutDir)Interop\DoubleAgent.Control.dll /html $(InputDir)Generated /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
+						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /asm $(OutDir)Interop\DoubleAgent.Control.dll /html $(InputDir)html /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)DoubleAgent.Include.xml;$(InputDir)DoubleAgent.Control.xml"
-						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)Generated\AxControl_AxControl.htm"
+						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)html\T_DoubleAgent_AxControl_AxControl.htm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -125,9 +125,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Generating AxControl Documentation"
-						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /asm $(OutDir)Interop\DoubleAgent.Control.dll /html $(InputDir)Generated /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
+						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /asm $(OutDir)Interop\DoubleAgent.Control.dll /html $(InputDir)html /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)DoubleAgent.Include.xml;$(InputDir)DoubleAgent.Control.xml"
-						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)Generated\AxControl_AxControl.htm"
+						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)html\T_DoubleAgent_AxControl_AxControl.htm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -136,9 +136,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Generating AxControl Documentation"
-						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /asm $(OutDir)Interop\DoubleAgent.Control.dll /html $(InputDir)Generated /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
+						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /asm $(OutDir)Interop\DoubleAgent.Control.dll /html $(InputDir)html /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)DoubleAgent.Include.xml;$(InputDir)DoubleAgent.Control.xml"
-						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)Generated\AxControl_AxControl.htm"
+						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)html\T_DoubleAgent_AxControl_AxControl.htm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -147,9 +147,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Generating AxControl Documentation"
-						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /asm $(OutDir)Interop\DoubleAgent.Control.dll /html $(InputDir)Generated /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
+						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /asm $(OutDir)Interop\DoubleAgent.Control.dll /html $(InputDir)html /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)DoubleAgent.Include.xml;$(InputDir)DoubleAgent.Control.xml"
-						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)Generated\AxControl_AxControl.htm"
+						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)html\T_DoubleAgent_AxControl_AxControl.htm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -162,9 +162,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Generating Control Documentation"
-						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /html $(InputDir)Generated /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
+						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /html $(InputDir)html /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)DoubleAgent.Include.xml"
-						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)Generated\Control_Control.htm"
+						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)html\T_DoubleAgent_Control_Control.htm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -173,9 +173,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Generating Control Documentation"
-						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /html $(InputDir)Generated /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
+						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /html $(InputDir)html /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)DoubleAgent.Include.xml"
-						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)Generated\Control_Control.htm"
+						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)html\T_DoubleAgent_Control_Control.htm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -184,9 +184,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Generating Control Documentation"
-						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /html $(InputDir)Generated /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
+						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /html $(InputDir)html /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)DoubleAgent.Include.xml"
-						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)Generated\Control_Control.htm"
+						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)html\T_DoubleAgent_Control_Control.htm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -195,9 +195,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Generating Control Documentation"
-						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /html $(InputDir)Generated /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
+						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /html $(InputDir)html /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)DoubleAgent.Include.xml"
-						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)Generated\Control_Control.htm"
+						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)html\T_DoubleAgent_Control_Control.htm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -219,7 +219,7 @@
 						Name="VCCustomBuildTool"
 						Description="Compiling API Help"
 						CommandLine="hhc $(InputPath) &gt; $(OutDir)$(InputName).log&#x0D;&#x0A;type $(OutDir)$(InputName).log&#x0D;&#x0A;del  $(OutDir)$(InputName).log&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)$(InputName).hhc;$(InputDir)$(InputName).hhk;$(InputDir)DoubleAgent.Control.xml;$(InputDir)DoubleAgent.Server.xml;$(InputDir)DoubleAgent.AxControl.xml;$(InputDir)Generated\Control_Control.htm;$(InputDir)Generated\Server_Server.htm;$(InputDir)Generated\AxControl_AxControl.htm;$(InputDir)css\DaHelp.css"
+						AdditionalDependencies="$(InputDir)$(InputName).hhc;$(InputDir)$(InputName).hhk;$(InputDir)DoubleAgent.Control.xml;$(InputDir)DoubleAgent.Server.xml;$(InputDir)DoubleAgent.AxControl.xml;$(InputDir)html\T_DoubleAgent_Control_Control.htm;$(InputDir)html\T_DoubleAgent_Server_Server.htm;$(InputDir)html\T_DoubleAgent_AxControl_AxControl.htm;$(InputDir)css\DaHelp.css"
 						Outputs="$(BinDir)$(InputName).chm"
 					/>
 				</FileConfiguration>
@@ -230,7 +230,7 @@
 						Name="VCCustomBuildTool"
 						Description="Compiling API Help"
 						CommandLine="hhc $(InputPath) &gt; $(OutDir)$(InputName).log&#x0D;&#x0A;type $(OutDir)$(InputName).log&#x0D;&#x0A;del  $(OutDir)$(InputName).log&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)$(InputName).hhc;$(InputDir)$(InputName).hhk;$(InputDir)DoubleAgent.Control.xml;$(InputDir)DoubleAgent.Server.xml;$(InputDir)DoubleAgent.AxControl.xml;$(InputDir)Generated\Control_Control.htm;$(InputDir)Generated\Server_Server.htm;$(InputDir)Generated\AxControl_AxControl.htm;$(InputDir)css\DaHelp.css"
+						AdditionalDependencies="$(InputDir)$(InputName).hhc;$(InputDir)$(InputName).hhk;$(InputDir)DoubleAgent.Control.xml;$(InputDir)DoubleAgent.Server.xml;$(InputDir)DoubleAgent.AxControl.xml;$(InputDir)html\T_DoubleAgent_Control_Control.htm;$(InputDir)html\T_DoubleAgent_Server_Server.htm;$(InputDir)html\T_DoubleAgent_AxControl_AxControl.htm;$(InputDir)css\DaHelp.css"
 						Outputs="$(BinDir)$(InputName).chm"
 					/>
 				</FileConfiguration>
@@ -241,7 +241,7 @@
 						Name="VCCustomBuildTool"
 						Description="Compiling API Help"
 						CommandLine="hhc $(InputPath) &gt; $(OutDir)$(InputName).log&#x0D;&#x0A;type $(OutDir)$(InputName).log&#x0D;&#x0A;del  $(OutDir)$(InputName).log&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)$(InputName).hhc;$(InputDir)$(InputName).hhk;$(InputDir)DoubleAgent.Control.xml;$(InputDir)DoubleAgent.Server.xml;$(InputDir)DoubleAgent.AxControl.xml;$(InputDir)Generated\Control_Control.htm;$(InputDir)Generated\Server_Server.htm;$(InputDir)Generated\AxControl_AxControl.htm;$(InputDir)css\DaHelp.css"
+						AdditionalDependencies="$(InputDir)$(InputName).hhc;$(InputDir)$(InputName).hhk;$(InputDir)DoubleAgent.Control.xml;$(InputDir)DoubleAgent.Server.xml;$(InputDir)DoubleAgent.AxControl.xml;$(InputDir)html\T_DoubleAgent_Control_Control.htm;$(InputDir)html\T_DoubleAgent_Server_Server.htm;$(InputDir)html\T_DoubleAgent_AxControl_AxControl.htm;$(InputDir)css\DaHelp.css"
 						Outputs="$(BinDir)$(InputName).chm"
 					/>
 				</FileConfiguration>
@@ -252,7 +252,7 @@
 						Name="VCCustomBuildTool"
 						Description="Compiling API Help"
 						CommandLine="hhc $(InputPath) &gt; $(OutDir)$(InputName).log&#x0D;&#x0A;type $(OutDir)$(InputName).log&#x0D;&#x0A;del  $(OutDir)$(InputName).log&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)$(InputName).hhc;$(InputDir)$(InputName).hhk;$(InputDir)DoubleAgent.Control.xml;$(InputDir)DoubleAgent.Server.xml;$(InputDir)DoubleAgent.AxControl.xml;$(InputDir)Generated\Control_Control.htm;$(InputDir)Generated\Server_Server.htm;$(InputDir)Generated\AxControl_AxControl.htm;$(InputDir)css\DaHelp.css"
+						AdditionalDependencies="$(InputDir)$(InputName).hhc;$(InputDir)$(InputName).hhk;$(InputDir)DoubleAgent.Control.xml;$(InputDir)DoubleAgent.Server.xml;$(InputDir)DoubleAgent.AxControl.xml;$(InputDir)html\T_DoubleAgent_Control_Control.htm;$(InputDir)html\T_DoubleAgent_Server_Server.htm;$(InputDir)html\T_DoubleAgent_AxControl_AxControl.htm;$(InputDir)css\DaHelp.css"
 						Outputs="$(BinDir)$(InputName).chm"
 					/>
 				</FileConfiguration>
@@ -266,9 +266,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Generating Server Documentation"
-						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /server /html $(InputDir)Generated /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
+						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /server /html $(InputDir)html /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)DoubleAgent.Include.xml;$(InputDir)DoubleAgent.Control.xml"
-						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)Generated\Server_Server.htm"
+						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)html\T_DoubleAgent_Server_Server.htm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -277,9 +277,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Generating Server Documentation"
-						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /server /html $(InputDir)Generated /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
+						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /server /html $(InputDir)html /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)DoubleAgent.Include.xml;$(InputDir)DoubleAgent.Control.xml"
-						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)Generated\Server_Server.htm"
+						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)html\T_DoubleAgent_Server_Server.htm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -288,9 +288,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Generating Server Documentation"
-						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /server /html $(InputDir)Generated /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
+						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /server /html $(InputDir)html /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)DoubleAgent.Include.xml;$(InputDir)DoubleAgent.Control.xml"
-						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)Generated\Server_Server.htm"
+						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)html\T_DoubleAgent_Server_Server.htm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -299,9 +299,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Generating Server Documentation"
-						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /server /html $(InputDir)Generated /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
+						CommandLine="&quot;$(OutDir)\XmlToHtml&quot; /xml $(InputPath) /asm $(OutDir)Interop\$(InputName).dll /server /html $(InputDir)html /is $(OutDir)\Interop\$(InputFileName) /sc $(InputDir)SandCastle\$(InputFileName) /out $(InputDir)$(InputName).Formatted$(InputExt)&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)DoubleAgent.Include.xml;$(InputDir)DoubleAgent.Control.xml"
-						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)Generated\Server_Server.htm"
+						Outputs="$(OutDir)\Interop\$(InputFileName);$(InputDir)html\T_DoubleAgent_Server_Server.htm"
 					/>
 				</FileConfiguration>
 			</File>

@@ -69,21 +69,20 @@ CSapi4Voice::CSapi4Voice ()
 
 CSapi4Voice::~CSapi4Voice ()
 {
+#ifdef	_TRACE_STOP
+	if	(LogIsActive (_TRACE_STOP))
+	{
+		LogMessage (_TRACE_STOP, _T("[%p] Destructor IsResetting [%u] Queuing [%u] Speaking [%u]"), this, CheckIsResetting(), CheckIsQueueing(), CheckIsSpeaking());
+	}
+#endif
+
 	try
 	{
 		Stop ();
 	}
 	catch AnyExceptionDebug
 
-#ifdef	_TRACE_STOP
-	if	(
-			(LogIsActive (_TRACE_STOP))
-		&&	(CheckIsResetting ())
-		)
-	{
-		LogMessage (_TRACE_STOP, _T("[%p] Destructor ResetPending"), this);
-	}
-#endif
+	SafeFreeSafePtr (mBufNotifySink);
 	SafeFreeSafePtr (mNotifySink);
 	SafeFreeSafePtr (mEngine);
 }
@@ -307,10 +306,6 @@ HRESULT CSapi4Voice::PrepareToSpeak (bool pHighPriority)
 	{
 		lResult = S_OK;
 
-		if	(!mBufNotifySink)
-		{
-			mBufNotifySink = new CTTSBufNotifySink (*this);
-		}
 		if	(
 				(!mNotifySink->SafeIsConnected ())
 			&&	(mNotifySink = new CTTSNotifySink (*this))
@@ -328,6 +323,13 @@ HRESULT CSapi4Voice::PrepareToSpeak (bool pHighPriority)
 			)
 		{
 			Stop ();
+		}
+		if	(
+				(SUCCEEDED (lResult))
+			&&	(!mBufNotifySink)
+			)
+		{
+			mBufNotifySink = new CTTSBufNotifySink (*this);
 		}
 		if	(SUCCEEDED (lResult))
 		{
@@ -430,15 +432,17 @@ HRESULT CSapi4Voice::Stop ()
 				}
 #endif
 				SetIsResetting (CheckIsQueueing ());
-				SetIsQueueing (false);
-				SetIsSpeaking (false);
 			}
+
 			lResult = mEngine->AudioReset ();
 		}
 		catch AnyExceptionDebug
 
-		SetIsQueueing (false);
-		SetIsSpeaking (false);
+		if	(FAILED (lResult))
+		{
+			SetIsQueueing (false);
+			SetIsSpeaking (false);
+		}
 	}
 	if	(LogIsActive ())
 	{

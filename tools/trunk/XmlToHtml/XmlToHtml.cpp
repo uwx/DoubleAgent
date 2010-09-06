@@ -2780,32 +2780,32 @@ String^ XmlToHtml::MemberFileName (String^ pMemberName)
 
 String^ XmlToHtml::TypeFileName (System::Type^ pAssemblyType)
 {
-	return System::IO::Path::GetExtension (pAssemblyType->Namespace)->Substring(1) + "_" + pAssemblyType->Name + ".htm";
+	return "T_" + pAssemblyType->Namespace->Replace('.','_') + "_" + pAssemblyType->Name + ".htm";
 }
 
 String^ XmlToHtml::MethodFileName (System::Reflection::MethodInfo^ pAssemblyMethod)
 {
-	return System::IO::Path::GetExtension (pAssemblyMethod->DeclaringType->Namespace)->Substring(1) + "_" + pAssemblyMethod->DeclaringType->Name + "_" + pAssemblyMethod->Name + ".htm";
+	return "M_" + pAssemblyMethod->DeclaringType->Namespace->Replace('.','_') + "_" + pAssemblyMethod->DeclaringType->Name + "_" + pAssemblyMethod->Name + ".htm";
 }
 
 String^ XmlToHtml::MethodFileName (System::Reflection::ConstructorInfo^ pAssemblyConstructor)
 {
-	return System::IO::Path::GetExtension (pAssemblyConstructor->DeclaringType->Namespace)->Substring(1) + "_" + pAssemblyConstructor->DeclaringType->Name + "_ctor" + ".htm";
+	return "M_" + pAssemblyConstructor->DeclaringType->Namespace->Replace('.','_') + "_" + pAssemblyConstructor->DeclaringType->Name + "_ctor" + ".htm";
 }
 
 String^ XmlToHtml::PropertyFileName (System::Reflection::PropertyInfo^ pAssemblyProperty)
 {
-	return System::IO::Path::GetExtension (pAssemblyProperty->DeclaringType->Namespace)->Substring(1) + "_" + pAssemblyProperty->DeclaringType->Name + "_" + pAssemblyProperty->Name + ".htm";
+	return "P_" + pAssemblyProperty->DeclaringType->Namespace->Replace('.','_') + "_" + pAssemblyProperty->DeclaringType->Name + "_" + pAssemblyProperty->Name + ".htm";
 }
 
 String^ XmlToHtml::FieldFileName (System::Reflection::FieldInfo^ pAssemblyField)
 {
-	return System::IO::Path::GetExtension (pAssemblyField->DeclaringType->Namespace)->Substring(1) + "_" + pAssemblyField->DeclaringType->Name + "_" + pAssemblyField->Name + ".htm";
+	return "F_" + pAssemblyField->DeclaringType->Namespace->Replace('.','_') + "_" + pAssemblyField->DeclaringType->Name + "_" + pAssemblyField->Name + ".htm";
 }
 
 String^ XmlToHtml::EventFileName (System::Reflection::EventInfo^ pAssemblyEvent)
 {
-	return System::IO::Path::GetExtension (pAssemblyEvent->DeclaringType->Namespace)->Substring(1) + "_Event_" + pAssemblyEvent->Name + ".htm";
+	return "E_" + pAssemblyEvent->DeclaringType->Namespace->Replace('.','_') + "_" + pAssemblyEvent->DeclaringType->Name + "_" + pAssemblyEvent->Name + ".htm";
 }
 
 /////////////////////////////////////////////////////////////////////////////

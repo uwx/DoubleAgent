@@ -268,1106 +268,1106 @@
 				<UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Server Object">
-						<param name="Local" value="Generated/Server_Server.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_Server.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Server Object Methods">
-							<param name="Local" value="Generated/Server_Server.htm#Methods">
+							<param name="Local" value="html/T_DoubleAgent_Server_Server.htm#Methods">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindCharacterSREngines Method">
-								<param name="Local" value="Generated/Server_Server_FindCharacterSREngines.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Server_FindCharacterSREngines.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindCharacterTTSEngines Method">
-								<param name="Local" value="Generated/Server_Server_FindCharacterTTSEngines.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Server_FindCharacterTTSEngines.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindSREngines Method">
-								<param name="Local" value="Generated/Server_Server_FindSREngines.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Server_FindSREngines.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindTTSEngines Method">
-								<param name="Local" value="Generated/Server_Server_FindTTSEngines.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Server_FindTTSEngines.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetCharacterSREngine Method">
-								<param name="Local" value="Generated/Server_Server_GetCharacterSREngine.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Server_GetCharacterSREngine.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetCharacterTTSEngine Method">
-								<param name="Local" value="Generated/Server_Server_GetCharacterTTSEngine.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Server_GetCharacterTTSEngine.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetVersion Method">
-								<param name="Local" value="Generated/Server_Server_GetVersion.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Server_GetVersion.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Load Method">
-								<param name="Local" value="Generated/Server_Server_Load.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Server_Load.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Register Method">
-								<param name="Local" value="Generated/Server_Server_Register.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Server_Register.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ShowDefaultCharacterProperties Method">
-								<param name="Local" value="Generated/Server_Server_ShowDefaultCharacterProperties.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Server_ShowDefaultCharacterProperties.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Unload Method">
-								<param name="Local" value="Generated/Server_Server_UnLoad.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Server_UnLoad.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Unregister Method">
-								<param name="Local" value="Generated/Server_Server_Unregister.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Server_Unregister.htm">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Server Object Properties">
-							<param name="Local" value="Generated/Server_Server.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Server_Server.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Character Property">
-								<param name="Local" value="Generated/Server_Server_Character.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Server_Character.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CharacterFiles Property">
-								<param name="Local" value="Generated/Server_Server_CharacterFiles.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Server_CharacterFiles.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CharacterStyle Property">
-								<param name="Local" value="Generated/Server_Server_CharacterStyle.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Server_CharacterStyle.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CommandsWindow Property">
-								<param name="Local" value="Generated/Server_Server_CommandsWindow.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Server_CommandsWindow.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The PropertySheet Property">
-								<param name="Local" value="Generated/Server_Server_PropertySheet.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Server_PropertySheet.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Settings Property">
-								<param name="Local" value="Generated/Server_Server_Settings.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Server_Settings.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SREngines Property">
-								<param name="Local" value="Generated/Server_Server_SREngines.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Server_SREngines.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The TTSEngines Property">
-								<param name="Local" value="Generated/Server_Server_TTSEngines.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Server_TTSEngines.htm">
 								<param name="New" value="1">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Server Object Events">
-							<param name="Local" value="Generated/Server_Server.htm#Events">
+							<param name="Local" value="html/T_DoubleAgent_Server_Server.htm#Events">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ActivateInputState Event">
-								<param name="Local" value="Generated/Server_Event_ActivateInputState.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_ActivateInputState.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ActiveClientChange Event">
-								<param name="Local" value="Generated/Server_Event_ActiveClientChange.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_ActiveClientChange.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The AgentPropertyChange Event">
-								<param name="Local" value="Generated/Server_Event_AgentPropertyChange.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_AgentPropertyChange.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The BalloonVisibleState Event">
-								<param name="Local" value="Generated/Server_Event_BalloonVisibleState.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_BalloonVisibleState.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Bookmark Event">
-								<param name="Local" value="Generated/Server_Event_Bookmark.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_Bookmark.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Click Event">
-								<param name="Local" value="Generated/Server_Event_Click.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_Click.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Command Event">
-								<param name="Local" value="Generated/Server_Event_Command.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_Command.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DblClick Event">
-								<param name="Local" value="Generated/Server_Event_DblClick.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_DblClick.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DefaultCharacterChange Event">
-								<param name="Local" value="Generated/Server_Event_DefaultCharacterChange.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_DefaultCharacterChange.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DragComplete Event">
-								<param name="Local" value="Generated/Server_Event_DragComplete.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_DragComplete.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DragStart Event">
-								<param name="Local" value="Generated/Server_Event_DragStart.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_DragStart.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Idle Event">
-								<param name="Local" value="Generated/Server_Event_Idle.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_Idle.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ListeningState Event">
-								<param name="Local" value="Generated/Server_Event_ListeningState.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_ListeningState.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Move Event">
-								<param name="Local" value="Generated/Server_Event_Move.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_Move.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The RequestComplete Event">
-								<param name="Local" value="Generated/Server_Event_RequestComplete.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_RequestComplete.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The RequestStart Event">
-								<param name="Local" value="Generated/Server_Event_RequestStart.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_RequestStart.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Size Event">
-								<param name="Local" value="Generated/Server_Event_Size.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_Size.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SpeechEnd Event">
-								<param name="Local" value="Generated/Server_Event_SpeechEnd.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_SpeechEnd.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SpeechStart Event">
-								<param name="Local" value="Generated/Server_Event_SpeechStart.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_SpeechStart.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SpeechWord Event">
-								<param name="Local" value="Generated/Server_Event_SpeechWord.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_SpeechWord.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The VisibleState Event">
-								<param name="Local" value="Generated/Server_Event_VisibleState.htm">
+								<param name="Local" value="html/E_DoubleAgent_Server_Server_VisibleState.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Character Object">
-						<param name="Local" value="Generated/Server_Character.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_Character.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Character Object Methods">
-							<param name="Local" value="Generated/Server_Character.htm#Methods">
+							<param name="Local" value="html/T_DoubleAgent_Server_Character.htm#Methods">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Activate Method">
-								<param name="Local" value="Generated/Server_Character_Activate.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_Activate.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindSREngines Method">
-								<param name="Local" value="Generated/Server_Character_FindSREngines.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_FindSREngines.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindTTSEngines Method">
-								<param name="Local" value="Generated/Server_Character_FindTTSEngines.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_FindTTSEngines.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GenerateIcon Method">
-								<param name="Local" value="Generated/Server_Character_GenerateIcon.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_GenerateIcon.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GestureAt Method">
-								<param name="Local" value="Generated/Server_Character_GestureAt.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_GestureAt.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetIconIdentity Method">
-								<param name="Local" value="Generated/Server_Character_GetIconIdentity.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_GetIconIdentity.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetOriginalSize Method">
-								<param name="Local" value="Generated/Server_Character_GetOriginalSize.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_GetOriginalSize.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetPosition Method">
-								<param name="Local" value="Generated/Server_Character_GetPosition.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_GetPosition.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetSize Method">
-								<param name="Local" value="Generated/Server_Character_GetSize.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_GetSize.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetVersion Method">
-								<param name="Local" value="Generated/Server_Character_GetVersion.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_GetVersion.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Hide Method">
-								<param name="Local" value="Generated/Server_Character_Hide.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_Hide.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Interrupt Method">
-								<param name="Local" value="Generated/Server_Character_Interrupt.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_Interrupt.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Listen Method">
-								<param name="Local" value="Generated/Server_Character_Listen.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_Listen.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The MoveTo Method">
-								<param name="Local" value="Generated/Server_Character_MoveTo.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_MoveTo.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The NewFormattedText Method">
-								<param name="Local" value="Generated\Server_Character_NewFormattedText.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_NewFormattedText.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Play Method">
-								<param name="Local" value="Generated/Server_Character_Play.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_Play.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Prepare Method">
-								<param name="Local" value="Generated/Server_Character_Prepare.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_Prepare.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SetIconIdentity Method">
-								<param name="Local" value="Generated/Server_Character_SetIconIdentity.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_SetIconIdentity.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SetPosition Method">
-								<param name="Local" value="Generated/Server_Character_SetPosition.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_SetPosition.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SetSize Method">
-								<param name="Local" value="Generated/Server_Character_SetSize.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_SetSize.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Show Method">
-								<param name="Local" value="Generated/Server_Character_Show.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_Show.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ShowPopupMenu Method">
-								<param name="Local" value="Generated/Server_Character_ShowPopupMenu.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_ShowPopupMenu.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Speak Method">
-								<param name="Local" value="Generated/Server_Character_Speak.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_Speak.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SpeakFormatted Method">
-								<param name="Local" value="Generated\Server_Character_SpeakFormatted.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_SpeakFormatted.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Stop Method">
-								<param name="Local" value="Generated/Server_Character_Stop.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_Stop.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The StopAll Method">
-								<param name="Local" value="Generated/Server_Character_StopAll.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_StopAll.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Think Method">
-								<param name="Local" value="Generated/Server_Character_Think.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_Think.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ThinkFormatted Method">
-								<param name="Local" value="Generated\Server_Character_ThinkFormatted.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_ThinkFormatted.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Wait Method">
-								<param name="Local" value="Generated/Server_Character_Wait.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Character_Wait.htm">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Character Object Properties">
-							<param name="Local" value="Generated/Server_Character.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Server_Character.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ActiveState Property">
-								<param name="Local" value="Generated/Server_Character_ActiveState.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_ActiveState.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Animations Property">
-								<param name="Local" value="Generated/Server_Character_Animations.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_Animations.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Balloon Property">
-								<param name="Local" value="Generated/Server_Character_Balloon.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_Balloon.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CharacterID Property">
-								<param name="Local" value="Generated/Server_Character_CharacterID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_CharacterID.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Commands Property">
-								<param name="Local" value="Generated/Server_Character_Commands.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_Commands.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Description Property">
-								<param name="Local" value="Generated/Server_Character_Description.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_Description.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ExtraData Property">
-								<param name="Local" value="Generated/Server_Character_ExtraData.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_ExtraData.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FileName Property">
-								<param name="Local" value="Generated/Server_Character_FileName.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_FileName.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FilePath Property">
-								<param name="Local" value="Generated/Server_Character_FilePath.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_FilePath.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The HasIcon Property">
-								<param name="Local" value="Generated/Server_Character_HasIcon.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_HasIcon.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Height Property">
-								<param name="Local" value="Generated/Server_Character_Height.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_Height.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The IconIdentity Property">
-								<param name="Local" value="Generated/Server_Character_IconIdentity.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_IconIdentity.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The IconTip Property">
-								<param name="Local" value="Generated/Server_Character_IconTip.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_IconTip.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The IconVisible Property">
-								<param name="Local" value="Generated/Server_Character_IconVisible.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_IconVisible.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The IdleState Property">
-								<param name="Local" value="Generated/Server_Character_IdleState.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_IdleState.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The LanguageID Property">
-								<param name="Local" value="Generated/Server_Character_LanguageID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_LanguageID.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Left Property">
-								<param name="Local" value="Generated/Server_Character_Left.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_Left.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ListeningStatus Property">
-								<param name="Local" value="Generated/Server_Character_ListeningStatus.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_ListeningStatus.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The MoveCause Property">
-								<param name="Local" value="Generated/Server_Character_MoveCause.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_MoveCause.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Name Property">
-								<param name="Local" value="Generated/Server_Character_Name.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_Name.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The OriginalHeight Property">
-								<param name="Local" value="Generated/Server_Character_OriginalHeight.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_OriginalHeight.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The OriginalWidth Property">
-								<param name="Local" value="Generated/Server_Character_OriginalWidth.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_OriginalWidth.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The OtherClientCount Property">
-								<param name="Local" value="Generated/Server_Character_OtherClientCount.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_OtherClientCount.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SREngine Property">
-								<param name="Local" value="Generated/Server_Character_SREngine.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_SREngine.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SRModeID Property">
-								<param name="Local" value="Generated/Server_Character_SRModeID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_SRModeID.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Style Property">
-								<param name="Local" value="Generated/Server_Character_Style.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_Style.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Top Property">
-								<param name="Local" value="Generated/Server_Character_Top.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_Top.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The TTSEngine Property">
-								<param name="Local" value="Generated/Server_Character_TTSEngine.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_TTSEngine.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The TTSModeID Property">
-								<param name="Local" value="Generated/Server_Character_TTSModeID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_TTSModeID.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The UniqueID Property">
-								<param name="Local" value="Generated/Server_Character_UniqueID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_UniqueID.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The VisibilityCause Property">
-								<param name="Local" value="Generated/Server_Character_VisibilityCause.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_VisibilityCause.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Visible Property">
-								<param name="Local" value="Generated/Server_Character_Visible.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_Visible.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Width Property">
-								<param name="Local" value="Generated/Server_Character_Width.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Character_Width.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Commands Collection">
-						<param name="Local" value="Generated/Server_Commands.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_Commands.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="The Commands Collection Methods">
-							<param name="Local" value="Generated/Server_Commands.htm#Methods">
+							<param name="Local" value="html/T_DoubleAgent_Server_Commands.htm#Methods">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Add Method">
-								<param name="Local" value="Generated/Server_Commands_Add.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Commands_Add.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The AddEx Method">
-								<param name="Local" value="Generated/Server_Commands_AddEx.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Commands_AddEx.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Insert Method">
-								<param name="Local" value="Generated/Server_Commands_Insert.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Commands_Insert.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The InsertEx Method">
-								<param name="Local" value="Generated/Server_Commands_InsertEx.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Commands_InsertEx.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Remove Method">
-								<param name="Local" value="Generated/Server_Commands_Remove.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Commands_Remove.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The RemoveAll Method">
-								<param name="Local" value="Generated/Server_Commands_RemoveAll.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_Commands_RemoveAll.htm">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="The Commands Collection Properties">
-							<param name="Local" value="Generated/Server_Commands.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Server_Commands.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Caption Property">
-								<param name="Local" value="Generated/Server_Commands_Caption.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Commands_Caption.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Command Property">
-								<param name="Local" value="Generated/Server_Commands_Command.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Commands_Command.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Count Property">
-								<param name="Local" value="Generated/Server_Commands_Count.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Commands_Count.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DefaultCommand Property">
-								<param name="Local" value="Generated/Server_Commands_DefaultCommand.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Commands_DefaultCommand.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FontName Property">
-								<param name="Local" value="Generated/Server_Commands_FontName.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Commands_FontName.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FontSize Property">
-								<param name="Local" value="Generated/Server_Commands_FontSize.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Commands_FontSize.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GlobalVoiceCommandsEnabled Property">
-								<param name="Local" value="Generated/Server_Commands_GlobalVoiceCommandsEnabled.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Commands_GlobalVoiceCommandsEnabled.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Item Property">
-								<param name="Local" value="Generated/Server_Commands_Item.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Commands_Item.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Visible Property">
-								<param name="Local" value="Generated/Server_Commands_Visible.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Commands_Visible.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The VoiceCaption Property">
-								<param name="Local" value="Generated/Server_Commands_VoiceCaption.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Commands_VoiceCaption.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The VoiceGrammar Property">
-								<param name="Local" value="Generated/Server_Commands_VoiceGrammar.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Commands_VoiceGrammar.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Command Object">
-						<param name="Local" value="Generated/Server_Command.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_Command.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Command Object Properties">
-							<param name="Local" value="Generated/Server_Command.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Server_Command.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Caption Property">
-								<param name="Local" value="Generated/Server_Command_Caption.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Command_Caption.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CommandID Property">
-								<param name="Local" value="Generated/Server_Command_CommandID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Command_CommandID.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ConfidenceText Property">
-								<param name="Local" value="Generated/Server_Command_ConfidenceText.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Command_ConfidenceText.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ConfidenceThreshold Property">
-								<param name="Local" value="Generated/Server_Command_ConfidenceThreshold.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Command_ConfidenceThreshold.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Enabled Property">
-								<param name="Local" value="Generated/Server_Command_Enabled.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Command_Enabled.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Visible Property">
-								<param name="Local" value="Generated/Server_Command_Visible.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Command_Visible.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The VoiceCaption Property">
-								<param name="Local" value="Generated/Server_Command_VoiceCaption.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Command_VoiceCaption.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The VoiceGrammar Property">
-								<param name="Local" value="Generated/Server_Command_VoiceGrammar.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Command_VoiceGrammar.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Balloon Object">
-						<param name="Local" value="Generated/Server_Balloon.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_Balloon.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Balloon Object Properties">
-							<param name="Local" value="Generated/Server_Balloon.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Server_Balloon.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The BackColor Property">
-								<param name="Local" value="Generated/Server_Balloon_BackColor.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Balloon_BackColor.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The BorderColor Property">
-								<param name="Local" value="Generated/Server_Balloon_BorderColor.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Balloon_BorderColor.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CharsPerLine Property">
-								<param name="Local" value="Generated/Server_Balloon_CharsPerLine.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Balloon_CharsPerLine.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Enabled Property">
-								<param name="Local" value="Generated/Server_Balloon_Enabled.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Balloon_Enabled.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FontBold Property">
-								<param name="Local" value="Generated/Server_Balloon_FontBold.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Balloon_FontBold.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FontCharSet Property">
-								<param name="Local" value="Generated/Server_Balloon_FontCharSet.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Balloon_FontCharSet.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FontItalic Property">
-								<param name="Local" value="Generated/Server_Balloon_FontItalic.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Balloon_FontItalic.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FontName Property">
-								<param name="Local" value="Generated/Server_Balloon_FontName.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Balloon_FontName.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FontSize Property">
-								<param name="Local" value="Generated/Server_Balloon_FontSize.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Balloon_FontSize.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FontStrikethru Property">
-								<param name="Local" value="Generated/Server_Balloon_FontStrikethru.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Balloon_FontStrikethru.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FontUnderline Property">
-								<param name="Local" value="Generated/Server_Balloon_FontUnderline.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Balloon_FontUnderline.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The NumberOfLines Property">
-								<param name="Local" value="Generated/Server_Balloon_NumberOfLines.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Balloon_NumberOfLines.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Style Property">
-								<param name="Local" value="Generated/Server_Balloon_Style.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Balloon_Style.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The TextColor Property">
-								<param name="Local" value="Generated/Server_Balloon_TextColor.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Balloon_TextColor.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Visible Property">
-								<param name="Local" value="Generated/Server_Balloon_Visible.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Balloon_Visible.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Formatted Text Object">
-						<param name="Local" value="Generated/Server_FormattedText.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_FormattedText.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Formatted Text Methods">
-							<param name="Local" value="Generated/Server_FormattedText.htm#Methods">
+							<param name="Local" value="html/T_DoubleAgent_Server_FormattedText.htm#Methods">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Append Method">
-								<param name="Local" value="Generated/Server_FormattedText_Append.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_FormattedText_Append.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Parse Method">
-								<param name="Local" value="Generated\Server_FormattedText_Parse.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_FormattedText_Parse.htm">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Formatted Text Properties">
-							<param name="Local" value="Generated/Server_FormattedText.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Server_FormattedText.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DisplayText Property">
-								<param name="Local" value="Generated/Server_FormattedText_DisplayText.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_FormattedText_DisplayText.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DisplayWord Property">
-								<param name="Local" value="Generated/Server_FormattedText_DisplayWord.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_FormattedText_DisplayWord.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ParsedText Property">
-								<param name="Local" value="Generated/Server_FormattedText_ParsedText.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_FormattedText_ParsedText.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SpeechText Property">
-								<param name="Local" value="Generated/Server_FormattedText_SpeechText.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_FormattedText_SpeechText.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The WordCount Property">
-								<param name="Local" value="Generated/Server_FormattedText_WordCount.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_FormattedText_WordCount.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The WordIndex Property">
-								<param name="Local" value="Generated/Server_FormattedText_WordIndex.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_FormattedText_WordIndex.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The CommandsWindow Object">
-						<param name="Local" value="Generated/Server_CommandsWindow.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_CommandsWindow.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="CommandsWindow Object Methods">
-							<param name="Local" value="Generated/Server_CommandsWindow.htm#Methods">
+							<param name="Local" value="html/T_DoubleAgent_Server_CommandsWindow.htm#Methods">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetPosition Method">
-								<param name="Local" value="Generated/Server_CommandsWindow_GetPosition.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_CommandsWindow_GetPosition.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetSize Method">
-								<param name="Local" value="Generated/Server_CommandsWindow_GetSize.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_CommandsWindow_GetSize.htm">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="CommandsWindow Object Properties">
-							<param name="Local" value="Generated/Server_CommandsWindow.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Server_CommandsWindow.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Height Property">
-								<param name="Local" value="Generated/Server_CommandsWindow_Height.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_CommandsWindow_Height.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Left Property">
-								<param name="Local" value="Generated/Server_CommandsWindow_Left.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_CommandsWindow_Left.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Top Property">
-								<param name="Local" value="Generated/Server_CommandsWindow_Top.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_CommandsWindow_Top.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Visible Property">
-								<param name="Local" value="Generated/Server_CommandsWindow_Visible.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_CommandsWindow_Visible.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Width Property">
-								<param name="Local" value="Generated/Server_CommandsWindow_Width.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_CommandsWindow_Width.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The PropertySheet Object">
-						<param name="Local" value="Generated/Server_PropertySheet.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_PropertySheet.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="PropertySheet Object Methods">
-							<param name="Local" value="Generated/Server_PropertySheet.htm#Methods">
+							<param name="Local" value="html/T_DoubleAgent_Server_PropertySheet.htm#Methods">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetPosition Method">
-								<param name="Local" value="Generated/Server_PropertySheet_GetPosition.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_PropertySheet_GetPosition.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetSize Method">
-								<param name="Local" value="Generated/Server_PropertySheet_GetSize.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_PropertySheet_GetSize.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SetPosition Method">
-								<param name="Local" value="Generated/Server_PropertySheet_SetPosition.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_PropertySheet_SetPosition.htm">
 								<param name="New" value="1">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="PropertySheet Object Properties">
-							<param name="Local" value="Generated/Server_PropertySheet.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Server_PropertySheet.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Height Property">
-								<param name="Local" value="Generated/Server_PropertySheet_Height.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_PropertySheet_Height.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Left Property">
-								<param name="Local" value="Generated/Server_PropertySheet_Left.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_PropertySheet_Left.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Page Property">
-								<param name="Local" value="Generated/Server_PropertySheet_Page.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_PropertySheet_Page.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Top Property">
-								<param name="Local" value="Generated/Server_PropertySheet_Top.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_PropertySheet_Top.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Visible Property">
-								<param name="Local" value="Generated/Server_PropertySheet_Visible.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_PropertySheet_Visible.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Width Property">
-								<param name="Local" value="Generated/Server_PropertySheet_Width.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_PropertySheet_Width.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The UserInput Object">
-						<param name="Local" value="Generated/Server_UserInput.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_UserInput.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="UserInput Object Methods">
-							<param name="Local" value="Generated/Server_UserInput.htm#Methods">
+							<param name="Local" value="html/T_DoubleAgent_Server_UserInput.htm#Methods">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetAllItemData Method">
-								<param name="Local" value="Generated/Server_UserInput_GetAllItemData.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_UserInput_GetAllItemData.htm">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="UserInput Object Properties">
-							<param name="Local" value="Generated/Server_UserInput.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Server_UserInput.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Count Property">
-								<param name="Local" value="Generated/Server_UserInput_Count.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_UserInput_Count.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ItemCommandID Property">
-								<param name="Local" value="Generated/Server_UserInput_ItemCommandID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_UserInput_ItemCommandID.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ItemConfidence Property">
-								<param name="Local" value="Generated/Server_UserInput_ItemConfidence.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_UserInput_ItemConfidence.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ItemText Property">
-								<param name="Local" value="Generated/Server_UserInput_ItemText.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_UserInput_ItemText.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Settings Object">
-						<param name="Local" value="Generated/Server_Settings.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_Settings.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Settings Object Properties">
-							<param name="Local" value="Generated/Server_Settings.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Server_Settings.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The AudioStatus Property">
-								<param name="Local" value="Generated/Server_Settings_AudioStatus.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Settings_AudioStatus.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The BalloonEnabled Property">
-								<param name="Local" value="Generated/Server_Settings_BalloonEnabled.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Settings_BalloonEnabled.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The BalloonFont Property">
-								<param name="Local" value="Generated/Server_Settings_BalloonFont.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Settings_BalloonFont.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SoundEffectsEnabled Property">
-								<param name="Local" value="Generated/Server_Settings_SoundEffectsEnabled.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Settings_SoundEffectsEnabled.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SREnabled Property">
-								<param name="Local" value="Generated/Server_Settings_SREnabled.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Settings_SREnabled.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SRHotKey Property">
-								<param name="Local" value="Generated/Server_Settings_SRHotKey.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Settings_SRHotKey.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SRListeningTip Property">
-								<param name="Local" value="Generated/Server_Settings_SRListeningTip.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Settings_SRListeningTip.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The TTSEnabled Property">
-								<param name="Local" value="Generated/Server_Settings_TTSEnabled.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Settings_TTSEnabled.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The TTSSpeed Property">
-								<param name="Local" value="Generated\Server_Settings_TTSSpeed.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_Settings_TTSSpeed.htm">
 								<param name="New" value="1">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The CharacterFiles Object">
-						<param name="Local" value="Generated/Server_CharacterFiles.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_CharacterFiles.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="CharacterFiles Object Properties">
-							<param name="Local" value="Generated/Server_CharacterFiles.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Server_CharacterFiles.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DefaultFileName Property">
-								<param name="Local" value="Generated\Server_CharacterFiles_DefaultFileName.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_CharacterFiles_DefaultFileName.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DefaultFilePath Property">
-								<param name="Local" value="Generated\Server_CharacterFiles_DefaultFilePath.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_CharacterFiles_DefaultFilePath.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DefaultSearchPath Property">
-								<param name="Local" value="Generated\Server_CharacterFiles_DefaultSearchPath.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_CharacterFiles_DefaultSearchPath.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FilePaths Property">
-								<param name="Local" value="Generated\Server_CharacterFiles_FilePaths.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_CharacterFiles_FilePaths.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Filter Property">
-								<param name="Local" value="Generated\Server_CharacterFiles_Filter.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_CharacterFiles_Filter.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SearchPath Property">
-								<param name="Local" value="Generated\Server_CharacterFiles_SearchPath.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_CharacterFiles_SearchPath.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The TTSEngines Collection">
-						<param name="Local" value="Generated/Server_TTSEngines.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_TTSEngines.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="The TTSEngines Collection Properties">
-							<param name="Local" value="Generated/Server_TTSEngines.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Server_TTSEngines.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Count Property">
-								<param name="Local" value="Generated\Server_TTSEngines_Count.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_TTSEngines_Count.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Item Property">
-								<param name="Local" value="Generated\Server_TTSEngines_Item.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_TTSEngines_Item.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The TTSEngine Object">
-						<param name="Local" value="Generated/Server_TTSEngine.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_TTSEngine.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="TTSEngine Object Methods">
-							<param name="Local" value="Generated/Server_TTSEngine.htm#Methods">
+							<param name="Local" value="html/T_DoubleAgent_Server_TTSEngine.htm#Methods">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetVersion Method">
-								<param name="Local" value="Generated\Server_TTSEngine_GetVersion.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_TTSEngine_GetVersion.htm">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="TTSEngine Object Properties">
-							<param name="Local" value="Generated/Server_TTSEngine.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Server_TTSEngine.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DisplayName Property">
-								<param name="Local" value="Generated\Server_TTSEngine_DisplayName.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_TTSEngine_DisplayName.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Gender Property">
-								<param name="Local" value="Generated\Server_TTSEngine_Gender.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_TTSEngine_Gender.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The LanguageID Property">
-								<param name="Local" value="Generated\Server_TTSEngine_LanguageID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_TTSEngine_LanguageID.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The LanguageName Property">
-								<param name="Local" value="Generated\Server_TTSEngine_LanguageName.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_TTSEngine_LanguageName.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Manufacturer Property">
-								<param name="Local" value="Generated\Server_TTSEngine_Manufacturer.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_TTSEngine_Manufacturer.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The TTSModeID Property">
-								<param name="Local" value="Generated\Server_TTSEngine_TTSModeID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_TTSEngine_TTSModeID.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The SREngines Collection">
-						<param name="Local" value="Generated/Server_SREngines.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_SREngines.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="The SREngines Collection Properties">
-							<param name="Local" value="Generated/Server_SREngines.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Server_SREngines.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Count Property">
-								<param name="Local" value="Generated\Server_SREngines_Count.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_SREngines_Count.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Item Property">
-								<param name="Local" value="Generated\Server_SREngines_Item.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_SREngines_Item.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The SREngine Object">
-						<param name="Local" value="Generated/Server_SREngine.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_SREngine.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="SREngine Object Methods">
-							<param name="Local" value="Generated/Server_SREngine.htm#Methods">
+							<param name="Local" value="html/T_DoubleAgent_Server_SREngine.htm#Methods">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetVersion Method">
-								<param name="Local" value="Generated\Server_SREngine_GetVersion.htm">
+								<param name="Local" value="html/M_DoubleAgent_Server_SREngine_GetVersion.htm">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="SREngine Object Properties">
-							<param name="Local" value="Generated/Server_SREngine.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Server_SREngine.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DisplayName Property">
-								<param name="Local" value="Generated\Server_SREngine_DisplayName.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_SREngine_DisplayName.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The LanguageID Property">
-								<param name="Local" value="Generated\Server_SREngine_LanguageID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_SREngine_LanguageID.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The LanguageIDs Property">
-								<param name="Local" value="Generated\Server_SREngine_LanguageIDs.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_SREngine_LanguageIDs.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The LanguageName Property">
-								<param name="Local" value="Generated\Server_SREngine_LanguageName.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_SREngine_LanguageName.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The LanguageNames Property">
-								<param name="Local" value="Generated\Server_SREngine_LanguageNames.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_SREngine_LanguageNames.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Manufacturer Property">
-								<param name="Local" value="Generated\Server_SREngine_Manufacturer.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_SREngine_Manufacturer.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SRModeID Property">
-								<param name="Local" value="Generated\Server_SREngine_SRModeID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Server_SREngine_SRModeID.htm">
 								</OBJECT>
 						</UL>
 					</UL>
@@ -1378,53 +1378,53 @@
 				<UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The ActiveStateType Enumeration">
-						<param name="Local" value="Generated/Server_ActiveStateType.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_ActiveStateType.htm">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The AudioStatusType Enumeration">
-						<param name="Local" value="Generated/Server_AudioStatusType.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_AudioStatusType.htm">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The BalloonStyleFlags Enumeration">
-						<param name="Local" value="Generated/Server_BalloonStyleFlags.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_BalloonStyleFlags.htm">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The CharacterStyleFlags Enumeration">
-						<param name="Local" value="Generated/Server_CharacterStyleFlags.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_CharacterStyleFlags.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The FilesFilterFlags Enumeration">
-						<param name="Local" value="Generated/Server_FilesFilterFlags.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_FilesFilterFlags.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The ListenCompleteType Enumeration">
-						<param name="Local" value="Generated/Server_ListenCompleteType.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_ListenCompleteType.htm">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The ListeningStatusType Enumeration">
-						<param name="Local" value="Generated/Server_ListeningStatusType.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_ListeningStatusType.htm">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The MoveCauseType Enumeration">
-						<param name="Local" value="Generated/Server_MoveCauseType.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_MoveCauseType.htm">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The PrepareResourceType Enumeration">
-						<param name="Local" value="Generated/Server_PrepareResourceType.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_PrepareResourceType.htm">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The SpeechGenderType Enumeration">
-						<param name="Local" value="Generated/Server_SpeechGenderType.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_SpeechGenderType.htm">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The StopAllFlags Enumeration">
-						<param name="Local" value="Generated/Server_StopAllFlags.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_StopAllFlags.htm">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The VisibilityCauseType Enumeration">
-						<param name="Local" value="Generated/Server_VisibilityCauseType.htm">
+						<param name="Local" value="html/T_DoubleAgent_Server_VisibilityCauseType.htm">
 						</OBJECT>
 				</UL>
 			</UL>
@@ -1501,114 +1501,114 @@
 				<UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Control Object">
-						<param name="Local" value="Generated/Control_Control.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_Control.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Control Object Methods">
-							<param name="Local" value="Generated/Control_Control.htm#Methods">
+							<param name="Local" value="html/T_DoubleAgent_Control_Control.htm#Methods">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindCharacterSREngines Method">
-								<param name="Local" value="Generated/Control_Control_FindCharacterSREngines.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Control_FindCharacterSREngines.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindCharacterTTSEngines Method">
-								<param name="Local" value="Generated/Control_Control_FindCharacterTTSEngines.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Control_FindCharacterTTSEngines.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindSREngines Method">
-								<param name="Local" value="Generated/Control_Control_FindSREngines.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Control_FindSREngines.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindTTSEngines Method">
-								<param name="Local" value="Generated/Control_Control_FindTTSEngines.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Control_FindTTSEngines.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetCharacterSREngine Method">
-								<param name="Local" value="Generated/Control_Control_GetCharacterSREngine.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Control_GetCharacterSREngine.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetCharacterTTSEngine Method">
-								<param name="Local" value="Generated/Control_Control_GetCharacterTTSEngine.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Control_GetCharacterTTSEngine.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ShowDefaultCharacterProperties Method">
-								<param name="Local" value="Generated/Control_Control_ShowDefaultCharacterProperties.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Control_ShowDefaultCharacterProperties.htm">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Control Object Properties">
-							<param name="Local" value="Generated/Control_Control.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Control_Control.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The AutoConnect Property">
-								<param name="Local" value="Generated\Control_Control_AutoConnect.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_AutoConnect.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The AutoSize Property">
-								<param name="Local" value="Generated\Control_Control_AutoSize.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_AutoSize.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The BackColor Property">
-								<param name="Local" value="Generated/Control_Control_BackColor.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_BackColor.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The BorderColor Property">
-								<param name="Local" value="Generated/Control_Control_BorderColor.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_BorderColor.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The BorderStyle Property">
-								<param name="Local" value="Generated/Control_Control_BorderStyle.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_BorderStyle.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The BorderVisible Property">
-								<param name="Local" value="Generated/Control_Control_BorderVisible.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_BorderVisible.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The BorderWidth Property">
-								<param name="Local" value="Generated/Control_Control_BorderWidth.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_BorderWidth.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CharacterFiles Property">
-								<param name="Local" value="Generated/Control_Control_CharacterFiles.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_CharacterFiles.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Characters Property">
-								<param name="Local" value="Generated/Control_Control_Characters.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_Characters.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CharacterStyle Property">
-								<param name="Local" value="Generated/Control_Control_CharacterStyle.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_CharacterStyle.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CommandsWindow Property">
-								<param name="Local" value="Generated/Control_Control_CommandsWindow.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_CommandsWindow.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Connected Property">
-								<param name="Local" value="Generated/Control_Control_Connected.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_Connected.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ControlCharacter Property">
-								<param name="Local" value="Generated/Control_Control_ControlCharacter.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_ControlCharacter.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
@@ -1617,1408 +1617,1408 @@
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The MousePointer Property">
-								<param name="Local" value="Generated/Control_Control_MousePointer.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_MousePointer.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The PropertySheet Property">
-								<param name="Local" value="Generated/Control_Control_PropertySheet.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_PropertySheet.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The RaiseRequestErrors Property">
-								<param name="Local" value="Generated/Control_Control_RaiseRequestErrors.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_RaiseRequestErrors.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Settings Property">
-								<param name="Local" value="Generated/Control_Control_Settings.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_Settings.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SREngines Property">
-								<param name="Local" value="Generated/Control_Control_SREngines.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_SREngines.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The TTSEngines Property">
-								<param name="Local" value="Generated/Control_Control_TTSEngines.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Control_TTSEngines.htm">
 								<param name="New" value="1">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Control Object Events">
-							<param name="Local" value="Generated/Control_Control.htm#Events">
+							<param name="Local" value="html/T_DoubleAgent_Control_Control.htm#Events">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ActivateInput Event">
-								<param name="Local" value="Generated/Control_Event_ActivateInput.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_ActivateInput.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ActiveClientChange Event">
-								<param name="Local" value="Generated/Control_Event_ActiveClientChange.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_ActiveClientChange.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The AgentPropertyChange Event">
-								<param name="Local" value="Generated/Control_Event_AgentPropertyChange.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_AgentPropertyChange.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The BalloonHide Event">
-								<param name="Local" value="Generated/Control_Event_BalloonHide.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_BalloonHide.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The BalloonShow Event">
-								<param name="Local" value="Generated/Control_Event_BalloonShow.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_BalloonShow.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Bookmark Event">
-								<param name="Local" value="Generated/Control_Event_Bookmark.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_Bookmark.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Click Event">
-								<param name="Local" value="Generated/Control_Event_Click.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_Click.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Command Event">
-								<param name="Local" value="Generated/Control_Event_Command.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_Command.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DblClick Event">
-								<param name="Local" value="Generated/Control_Event_DblClick.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_DblClick.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DeactivateInput Event">
-								<param name="Local" value="Generated/Control_Event_DeactivateInput.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_DeactivateInput.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DefaultCharacterChange Event">
-								<param name="Local" value="Generated/Control_Event_DefaultCharacterChange.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_DefaultCharacterChange.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DragComplete Event">
-								<param name="Local" value="Generated/Control_Event_DragComplete.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_DragComplete.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DragStart Event">
-								<param name="Local" value="Generated/Control_Event_DragStart.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_DragStart.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Hide Event">
-								<param name="Local" value="Generated/Control_Event_Hide.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_Hide.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The IdleComplete Event">
-								<param name="Local" value="Generated/Control_Event_IdleComplete.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_IdleComplete.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The IdleStart Event">
-								<param name="Local" value="Generated/Control_Event_IdleStart.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_IdleStart.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ListenComplete Event">
-								<param name="Local" value="Generated/Control_Event_ListenComplete.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_ListenComplete.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ListenStart Event">
-								<param name="Local" value="Generated/Control_Event_ListenStart.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_ListenStart.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Move Event">
-								<param name="Local" value="Generated/Control_Event_Move.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_Move.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The RequestComplete Event">
-								<param name="Local" value="Generated/Control_Event_RequestComplete.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_RequestComplete.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The RequestStart Event">
-								<param name="Local" value="Generated/Control_Event_RequestStart.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_RequestStart.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Show Event">
-								<param name="Local" value="Generated/Control_Event_Show.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_Show.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Size Event">
-								<param name="Local" value="Generated/Control_Event_Size.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_Size.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SpeechEnd Event">
-								<param name="Local" value="Generated/Control_Event_SpeechEnd.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_SpeechEnd.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SpeechStart Event">
-								<param name="Local" value="Generated/Control_Event_SpeechStart.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_SpeechStart.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SpeechWord Event">
-								<param name="Local" value="Generated/Control_Event_SpeechWord.htm">
+								<param name="Local" value="html/E_DoubleAgent_Control_Control_SpeechWord.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Characters Collection">
-						<param name="Local" value="Generated/Control_Characters.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_Characters.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="The Characters Collection Methods">
-							<param name="Local" value="Generated/Control_Characters.htm#Methods">
+							<param name="Local" value="html/T_DoubleAgent_Control_Characters.htm#Methods">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Character Method">
-								<param name="Local" value="Generated/Control_Characters_Character.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Characters_Character.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Load Method">
-								<param name="Local" value="Generated/Control_Characters_Load.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Characters_Load.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Unload Method">
-								<param name="Local" value="Generated/Control_Characters_Unload.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Characters_Unload.htm">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="The Characters Collection Properties">
-							<param name="Local" value="Generated/Control_Characters.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Control_Characters.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Count Property">
-								<param name="Local" value="Generated/Control_Characters_Count.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Characters_Count.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Index Property">
-								<param name="Local" value="Generated/Control_Characters_Index.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Characters_Index.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Item Property">
-								<param name="Local" value="Generated/Control_Characters_Item.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Characters_Item.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Character Object">
-						<param name="Local" value="Generated/Control_Character.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_Character.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Character Object Methods">
-							<param name="Local" value="Generated/Control_Character.htm#Methods">
+							<param name="Local" value="html/T_DoubleAgent_Control_Character.htm#Methods">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Activate Method">
-								<param name="Local" value="Generated/Control_Character_Activate.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_Activate.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindSREngines Method">
-								<param name="Local" value="Generated/Control_Character_FindSREngines.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_FindSREngines.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindTTSEngines Method">
-								<param name="Local" value="Generated/Control_Character_FindTTSEngines.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_FindTTSEngines.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GenerateIcon Method">
-								<param name="Local" value="Generated/Control_Character_GenerateIcon.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_GenerateIcon.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GestureAt Method">
-								<param name="Local" value="Generated/Control_Character_GestureAt.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_GestureAt.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Hide Method">
-								<param name="Local" value="Generated/Control_Character_Hide.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_Hide.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Interrupt Method">
-								<param name="Local" value="Generated/Control_Character_Interrupt.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_Interrupt.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Listen Method">
-								<param name="Local" value="Generated/Control_Character_Listen.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_Listen.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The MoveTo Method">
-								<param name="Local" value="Generated/Control_Character_MoveTo.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_MoveTo.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The NewFormattedText Method">
-								<param name="Local" value="Generated\Control_Character_NewFormattedText.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_NewFormattedText.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Play Method">
-								<param name="Local" value="Generated/Control_Character_Play.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_Play.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Prepare Method">
-								<param name="Local" value="Generated/Control_Character_Prepare.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_Prepare.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Show Method">
-								<param name="Local" value="Generated/Control_Character_Show.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_Show.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ShowPopupMenu Method">
-								<param name="Local" value="Generated/Control_Character_ShowPopupMenu.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_ShowPopupMenu.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Speak Method">
-								<param name="Local" value="Generated/Control_Character_Speak.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_Speak.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SpeakFormatted Method">
-								<param name="Local" value="Generated/Control_Character_SpeakFormatted.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_SpeakFormatted.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Stop Method">
-								<param name="Local" value="Generated/Control_Character_Stop.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_Stop.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The StopAll Method">
-								<param name="Local" value="Generated/Control_Character_StopAll.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_StopAll.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Think Method">
-								<param name="Local" value="Generated/Control_Character_Think.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_Think.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ThinkFormatted Method">
-								<param name="Local" value="Generated/Control_Character_ThinkFormatted.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_ThinkFormatted.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Wait Method">
-								<param name="Local" value="Generated/Control_Character_Wait.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_Wait.htm">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Character Object Properties">
-							<param name="Local" value="Generated/Control_Character.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Control_Character.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ActiveState Property">
-								<param name="Local" value="Generated/Control_Character_ActiveState.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_ActiveState.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Animations Property">
-								<param name="Local" value="Generated/Control_Character_Animations.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_Animations.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The AutoPopupMenu Property">
-								<param name="Local" value="Generated/Control_Character_AutoPopupMenu.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_AutoPopupMenu.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Balloon Property">
-								<param name="Local" value="Generated/Control_Character_Balloon.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_Balloon.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CharacterID Property">
-								<param name="Local" value="Generated/Control_Character_CharacterID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_CharacterID.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Commands Property">
-								<param name="Local" value="Generated/Control_Character_Commands.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_Commands.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Connected Property">
-								<param name="Local" value="Generated/Control_Character_Connected.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_Connected.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Description Property">
-								<param name="Local" value="Generated/Control_Character_Description.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_Description.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ExtraData Property">
-								<param name="Local" value="Generated/Control_Character_ExtraData.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_ExtraData.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FileName Property">
-								<param name="Local" value="Generated/Control_Character_FileName.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_FileName.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FilePath Property">
-								<param name="Local" value="Generated/Control_Character_FilePath.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_FilePath.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The HasIcon Property">
-								<param name="Local" value="Generated/Control_Character_HasIcon.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_HasIcon.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The HasOtherClients Property">
-								<param name="Local" value="Generated/Control_Character_HasOtherClients.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_HasOtherClients.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Height Property">
-								<param name="Local" value="Generated/Control_Character_Height.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_Height.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The IconIdentity Property">
-								<param name="Local" value="Generated/Control_Character_IconIdentity.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_IconIdentity.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The IconShown Property">
-								<param name="Local" value="Generated/Control_Character_IconShown.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_IconShown.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The IconTip Property">
-								<param name="Local" value="Generated/Control_Character_IconTip.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_IconTip.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The IconVisible Property">
-								<param name="Local" value="Generated/Control_Character_IconVisible.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_IconVisible.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The IdleEnabled Property">
-								<param name="Local" value="Generated/Control_Character_IdleEnabled.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_IdleEnabled.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The IdleState Property">
-								<param name="Local" value="Generated/Control_Character_IdleState.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_IdleState.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The LanguageID Property">
-								<param name="Local" value="Generated/Control_Character_LanguageID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_LanguageID.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Left Property">
-								<param name="Local" value="Generated/Control_Character_Left.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_Left.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ListeningStatus Property">
-								<param name="Local" value="Generated/Control_Character_ListeningStatus.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_ListeningStatus.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The MoveCause Property">
-								<param name="Local" value="Generated/Control_Character_MoveCause.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_MoveCause.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Name Property">
-								<param name="Local" value="Generated/Control_Character_Name.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_Name.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The OriginalHeight Property">
-								<param name="Local" value="Generated/Control_Character_OriginalHeight.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_OriginalHeight.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The OriginalWidth Property">
-								<param name="Local" value="Generated/Control_Character_OriginalWidth.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_OriginalWidth.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Pitch Property">
-								<param name="Local" value="Generated/Control_Character_Pitch.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_Pitch.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Smoothed Property">
-								<param name="Local" value="Generated/Control_Character_Smoothed.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_Smoothed.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SmoothEdges Property">
-								<param name="Local" value="Generated/Control_Character_SmoothEdges.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_SmoothEdges.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SoundEffectsEnabled Property">
-								<param name="Local" value="Generated/Control_Character_SoundEffectsEnabled.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_SoundEffectsEnabled.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Speed Property">
-								<param name="Local" value="Generated/Control_Character_Speed.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_Speed.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SREngine Property">
-								<param name="Local" value="Generated/Control_Character_SREngine.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_SREngine.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SRModeID Property">
-								<param name="Local" value="Generated/Control_Character_SRModeID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_SRModeID.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The States Property">
-								<param name="Local" value="Generated/Control_Character_States.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_States.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Style Property">
-								<param name="Local" value="Generated/Control_Character_Style.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_Style.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SuspendHide Property">
-								<param name="Local" value="Generated/Control_Character_SuspendHide.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_SuspendHide.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SuspendPause Property">
-								<param name="Local" value="Generated/Control_Character_SuspendPause.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_SuspendPause.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SuspendStop Property">
-								<param name="Local" value="Generated/Control_Character_SuspendStop.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_SuspendStop.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Top Property">
-								<param name="Local" value="Generated/Control_Character_Top.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_Top.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The TTSEngine Property">
-								<param name="Local" value="Generated/Control_Character_TTSEngine.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_TTSEngine.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The TTSModeID Property">
-								<param name="Local" value="Generated/Control_Character_TTSModeID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_TTSModeID.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The UniqueID Property">
-								<param name="Local" value="Generated/Control_Character_UniqueID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_UniqueID.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Version Property">
-								<param name="Local" value="Generated/Control_Character_Version.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_Version.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The VisibilityCause Property">
-								<param name="Local" value="Generated/Control_Character_VisibilityCause.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_VisibilityCause.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Visible Property">
-								<param name="Local" value="Generated/Control_Character_Visible.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_Visible.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Width Property">
-								<param name="Local" value="Generated/Control_Character_Width.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Character_Width.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Commands Collection">
-						<param name="Local" value="Generated/Control_Commands.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_Commands.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="The Commands Collection Methods">
-							<param name="Local" value="Generated/Control_Commands.htm#Methods">
+							<param name="Local" value="html/T_DoubleAgent_Control_Commands.htm#Methods">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Add Method">
-								<param name="Local" value="Generated/Control_Commands_Add.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Commands_Add.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Command Method">
-								<param name="Local" value="Generated/Control_Commands_Command.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Commands_Command.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Insert Method">
-								<param name="Local" value="Generated/Control_Commands_Insert.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Commands_Insert.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Remove Method">
-								<param name="Local" value="Generated/Control_Commands_Remove.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Commands_Remove.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The RemoveAll Method">
-								<param name="Local" value="Generated/Control_Commands_RemoveAll.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_Commands_RemoveAll.htm">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="The Commands Collection Properties">
-							<param name="Local" value="Generated/Control_Commands.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Control_Commands.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Caption Property">
-								<param name="Local" value="Generated/Control_Commands_Caption.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Commands_Caption.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Count Property">
-								<param name="Local" value="Generated/Control_Commands_Count.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Commands_Count.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DefaultCommand Property">
-								<param name="Local" value="Generated/Control_Commands_DefaultCommand.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Commands_DefaultCommand.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FontName Property">
-								<param name="Local" value="Generated/Control_Commands_FontName.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Commands_FontName.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FontSize Property">
-								<param name="Local" value="Generated/Control_Commands_FontSize.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Commands_FontSize.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GlobalVoiceCommandsEnabled Property">
-								<param name="Local" value="Generated/Control_Commands_GlobalVoiceCommandsEnabled.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Commands_GlobalVoiceCommandsEnabled.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Index Property">
-								<param name="Local" value="Generated/Control_Commands_Index.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Commands_Index.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Item Property">
-								<param name="Local" value="Generated/Control_Commands_Item.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Commands_Item.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Visible Property">
-								<param name="Local" value="Generated/Control_Commands_Visible.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Commands_Visible.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The VoiceCaption Property">
-								<param name="Local" value="Generated/Control_Commands_VoiceCaption.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Commands_VoiceCaption.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The VoiceGrammar Property">
-								<param name="Local" value="Generated/Control_Commands_VoiceGrammar.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Commands_VoiceGrammar.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Command Object">
-						<param name="Local" value="Generated/Control_Command.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_Command.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Command Object Properties">
-							<param name="Local" value="Generated/Control_Command.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Control_Command.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Caption Property">
-								<param name="Local" value="Generated/Control_Command_Caption.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Command_Caption.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ConfidenceText Property">
-								<param name="Local" value="Generated/Control_Command_ConfidenceText.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Command_ConfidenceText.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ConfidenceThreshold Property">
-								<param name="Local" value="Generated/Control_Command_ConfidenceThreshold.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Command_ConfidenceThreshold.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Enabled Property">
-								<param name="Local" value="Generated/Control_Command_Enabled.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Command_Enabled.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Name Property">
-								<param name="Local" value="Generated/Control_Command_Name.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Command_Name.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Visible Property">
-								<param name="Local" value="Generated/Control_Command_Visible.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Command_Visible.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The VoiceCaption Property">
-								<param name="Local" value="Generated/Control_Command_VoiceCaption.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Command_VoiceCaption.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The VoiceGrammar Property">
-								<param name="Local" value="Generated/Control_Command_VoiceGrammar.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Command_VoiceGrammar.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Balloon Object">
-						<param name="Local" value="Generated/Control_Balloon.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_Balloon.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Balloon Object Properties">
-							<param name="Local" value="Generated/Control_Balloon.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Control_Balloon.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The AutoHide Property">
-								<param name="Local" value="Generated/Control_Balloon_AutoHide.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_AutoHide.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The AutoPace Property">
-								<param name="Local" value="Generated/Control_Balloon_AutoPace.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_AutoPace.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The BackColor Property">
-								<param name="Local" value="Generated/Control_Balloon_BackColor.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_BackColor.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The BorderColor Property">
-								<param name="Local" value="Generated/Control_Balloon_BorderColor.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_BorderColor.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CharsPerLine Property">
-								<param name="Local" value="Generated/Control_Balloon_CharsPerLine.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_CharsPerLine.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Enabled Property">
-								<param name="Local" value="Generated/Control_Balloon_Enabled.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_Enabled.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FontBold Property">
-								<param name="Local" value="Generated/Control_Balloon_FontBold.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_FontBold.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FontCharSet Property">
-								<param name="Local" value="Generated/Control_Balloon_FontCharSet.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_FontCharSet.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FontItalic Property">
-								<param name="Local" value="Generated/Control_Balloon_FontItalic.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_FontItalic.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FontName Property">
-								<param name="Local" value="Generated/Control_Balloon_FontName.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_FontName.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FontSize Property">
-								<param name="Local" value="Generated/Control_Balloon_FontSize.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_FontSize.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FontStrikethru Property">
-								<param name="Local" value="Generated/Control_Balloon_FontStrikeThru.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_FontStrikeThru.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FontUnderline Property">
-								<param name="Local" value="Generated/Control_Balloon_FontUnderline.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_FontUnderline.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The NumberOfLines Property">
-								<param name="Local" value="Generated/Control_Balloon_NumberOfLines.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_NumberOfLines.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ShowPartialLines Property">
-								<param name="Local" value="Generated/Control_Balloon_ShowPartialLines.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_ShowPartialLines.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SizeToText Property">
-								<param name="Local" value="Generated/Control_Balloon_SizeToText.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_SizeToText.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Style Property">
-								<param name="Local" value="Generated/Control_Balloon_Style.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_Style.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The TextColor Property">
-								<param name="Local" value="Generated/Control_Balloon_TextColor.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_TextColor.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Visible Property">
-								<param name="Local" value="Generated/Control_Balloon_Visible.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_Visible.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Formatted Text Object">
-						<param name="Local" value="Generated/Control_FormattedText.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_FormattedText.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Formatted Text Methods">
-							<param name="Local" value="Generated/Control_FormattedText.htm#Methods">
+							<param name="Local" value="html/T_DoubleAgent_Control_FormattedText.htm#Methods">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Append Method">
-								<param name="Local" value="Generated/Control_FormattedText_Append.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_FormattedText_Append.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Parse Method">
-								<param name="Local" value="Generated\Server_FormattedText_Parse.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_FormattedText_Parse.htm">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Formatted Text Properties">
-							<param name="Local" value="Generated/Control_FormattedText.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Control_FormattedText.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DisplayText Property">
-								<param name="Local" value="Generated/Control_FormattedText_DisplayText.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_FormattedText_DisplayText.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DisplayWord Property">
-								<param name="Local" value="Generated/Control_FormattedText_DisplayWord.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_FormattedText_DisplayWord.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ParsedText Property">
-								<param name="Local" value="Generated/Control_FormattedText_ParsedText.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_FormattedText_ParsedText.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SpeechText Property">
-								<param name="Local" value="Generated/Control_FormattedText_SpeechText.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_FormattedText_SpeechText.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The WordCount Property">
-								<param name="Local" value="Generated/Control_FormattedText_WordCount.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_FormattedText_WordCount.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The WordIndex Property">
-								<param name="Local" value="Generated/Control_FormattedText_WordIndex.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_FormattedText_WordIndex.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The CommandsWindow Object">
-						<param name="Local" value="Generated/Control_CommandsWindow.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_CommandsWindow.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="CommandsWindow Object Properties">
-							<param name="Local" value="Generated/Control_CommandsWindow.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Control_CommandsWindow.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Height Property">
-								<param name="Local" value="Generated/Control_CommandsWindow_Height.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_CommandsWindow_Height.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Left Property">
-								<param name="Local" value="Generated/Control_CommandsWindow_Left.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_CommandsWindow_Left.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Top Property">
-								<param name="Local" value="Generated/Control_CommandsWindow_Top.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_CommandsWindow_Top.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Visible Property">
-								<param name="Local" value="Generated/Control_CommandsWindow_Visible.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_CommandsWindow_Visible.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Width Property">
-								<param name="Local" value="Generated/Control_CommandsWindow_Width.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_CommandsWindow_Width.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The PropertySheet Object">
-						<param name="Local" value="Generated/Control_PropertySheet.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_PropertySheet.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="PropertySheet Object Properties">
-							<param name="Local" value="Generated/Control_PropertySheet.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Control_PropertySheet.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Height Property">
-								<param name="Local" value="Generated/Control_PropertySheet_Height.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_PropertySheet_Height.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Left Property">
-								<param name="Local" value="Generated/Control_PropertySheet_Left.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_PropertySheet_Left.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Page Property">
-								<param name="Local" value="Generated/Control_PropertySheet_Page.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_PropertySheet_Page.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Top Property">
-								<param name="Local" value="Generated/Control_PropertySheet_Top.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_PropertySheet_Top.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Visible Property">
-								<param name="Local" value="Generated/Control_PropertySheet_Visible.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_PropertySheet_Visible.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Width Property">
-								<param name="Local" value="Generated/Control_PropertySheet_Width.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_PropertySheet_Width.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Request Object">
-						<param name="Local" value="Generated/Control_Request.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_Request.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Request Object Properties">
-							<param name="Local" value="Generated/Control_Request.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Control_Request.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Description Property">
-								<param name="Local" value="Generated/Control_Request_Description.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Request_Description.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Number Property">
-								<param name="Local" value="Generated/Control_Request_Number.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Request_Number.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Status Property">
-								<param name="Local" value="Generated/Control_Request_Status.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Request_Status.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The UserInput Object">
-						<param name="Local" value="Generated/Control_UserInput.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_UserInput.htm">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="UserInput Object Properties">
-							<param name="Local" value="Generated/Control_UserInput.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Control_UserInput.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Alt1Confidence Property">
-								<param name="Local" value="Generated/Control_UserInput_Alt1Confidence.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_UserInput_Alt1Confidence.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Alt1Name Property">
-								<param name="Local" value="Generated/Control_UserInput_Alt1Name.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_UserInput_Alt1Name.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Alt1Voice Property">
-								<param name="Local" value="Generated/Control_UserInput_Alt1Voice.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_UserInput_Alt1Voice.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Alt2Confidence Property">
-								<param name="Local" value="Generated/Control_UserInput_Alt2Confidence.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_UserInput_Alt2Confidence.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Alt2Name Property">
-								<param name="Local" value="Generated/Control_UserInput_Alt2Name.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_UserInput_Alt2Name.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Alt2Voice Property">
-								<param name="Local" value="Generated/Control_UserInput_Alt2Voice.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_UserInput_Alt2Voice.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CharacterID Property">
-								<param name="Local" value="Generated/Control_UserInput_CharacterID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_UserInput_CharacterID.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Confidence Property">
-								<param name="Local" value="Generated/Control_UserInput_Confidence.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_UserInput_Confidence.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Count Property">
-								<param name="Local" value="Generated/Control_UserInput_Count.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_UserInput_Count.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Name Property">
-								<param name="Local" value="Generated/Control_UserInput_Name.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_UserInput_Name.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Voice Property">
-								<param name="Local" value="Generated/Control_UserInput_Voice.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_UserInput_Voice.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The Settings Object">
-						<param name="Local" value="Generated/Control_Settings.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_Settings.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="Settings Object Properties">
-							<param name="Local" value="Generated/Control_Settings.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Control_Settings.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The AudioStatus Property">
-								<param name="Local" value="Generated/Control_Settings_AudioStatus.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Settings_AudioStatus.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The BalloonEnabled Property">
-								<param name="Local" value="Generated/Control_Settings_BalloonEnabled.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Settings_BalloonEnabled.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The BalloonFont Property">
-								<param name="Local" value="Generated/Control_Settings_BalloonFont.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Settings_BalloonFont.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SoundEffectsEnabled Property">
-								<param name="Local" value="Generated/Control_Settings_SoundEffectsEnabled.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Settings_SoundEffectsEnabled.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SREnabled Property">
-								<param name="Local" value="Generated/Control_Settings_SREnabled.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Settings_SREnabled.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SRHotKey Property">
-								<param name="Local" value="Generated/Control_Settings_SRHotKey.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Settings_SRHotKey.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SRListeningTip Property">
-								<param name="Local" value="Generated/Control_Settings_SRListeningTip.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Settings_SRListeningTip.htm">
 								<param name="New" value="1">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The TTSEnabled Property">
-								<param name="Local" value="Generated/Control_Settings_TTSEnabled.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Settings_TTSEnabled.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The TTSSpeed Property">
-								<param name="Local" value="Generated\Control_Settings_TTSSpeed.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_Settings_TTSSpeed.htm">
 								<param name="New" value="1">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The CharacterFiles Object">
-						<param name="Local" value="Generated/Control_CharacterFiles.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_CharacterFiles.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="CharacterFiles Object Properties">
-							<param name="Local" value="Generated/Control_CharacterFiles.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Control_CharacterFiles.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CompliantCharacters Property">
-								<param name="Local" value="Generated\Control_CharacterFiles_CompliantCharacters.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_CharacterFiles_CompliantCharacters.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DefaultFileName Property">
-								<param name="Local" value="Generated\Control_CharacterFiles_DefaultFileName.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_CharacterFiles_DefaultFileName.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DefaultFilePath Property">
-								<param name="Local" value="Generated\Control_CharacterFiles_DefaultFilePath.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_CharacterFiles_DefaultFilePath.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DefaultSearchPath Property">
-								<param name="Local" value="Generated\Control_CharacterFiles_DefaultSearchPath.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_CharacterFiles_DefaultSearchPath.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DoubleAgentFiles Property">
-								<param name="Local" value="Generated\Control_CharacterFiles_DoubleAgentFiles.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_CharacterFiles_DoubleAgentFiles.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FilePaths Property">
-								<param name="Local" value="Generated\Control_CharacterFiles_FilePaths.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_CharacterFiles_FilePaths.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The MsAgentFiles Property">
-								<param name="Local" value="Generated\Control_CharacterFiles_MsAgentFiles.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_CharacterFiles_MsAgentFiles.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The MsOfficeFiles Property">
-								<param name="Local" value="Generated\Control_CharacterFiles_MsOfficeFiles.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_CharacterFiles_MsOfficeFiles.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The NonCompliantCharacters Property">
-								<param name="Local" value="Generated\Control_CharacterFiles_NonCompliantCharacters.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_CharacterFiles_NonCompliantCharacters.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The NonSpeakingCharacters Property">
-								<param name="Local" value="Generated\Control_CharacterFiles_NonSpeakingCharacters.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_CharacterFiles_NonSpeakingCharacters.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SearchPath Property">
-								<param name="Local" value="Generated\Control_CharacterFiles_SearchPath.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_CharacterFiles_SearchPath.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SpeakingCharacters Property">
-								<param name="Local" value="Generated\Control_CharacterFiles_SpeakingCharacters.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_CharacterFiles_SpeakingCharacters.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The VerifyVersion Property">
-								<param name="Local" value="Generated\Control_CharacterFiles_VerifyVersion.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_CharacterFiles_VerifyVersion.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The TTSEngines Collection">
-						<param name="Local" value="Generated/Control_TTSEngines.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_TTSEngines.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="The TTSEngines Collection Properties">
-							<param name="Local" value="Generated/Control_TTSEngines.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Control_TTSEngines.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Count Property">
-								<param name="Local" value="Generated\Control_TTSEngines_Count.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_TTSEngines_Count.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Item Property">
-								<param name="Local" value="Generated\Control_TTSEngines_Item.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_TTSEngines_Item.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The TTSEngine Object">
-						<param name="Local" value="Generated/Control_TTSEngine.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_TTSEngine.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="TTSEngine Object Methods">
-							<param name="Local" value="Generated/Control_TTSEngine.htm#Methods">
+							<param name="Local" value="html/T_DoubleAgent_Control_TTSEngine.htm#Methods">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetVersion Method">
-								<param name="Local" value="Generated\Control_TTSEngine_GetVersion.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_TTSEngine_GetVersion.htm">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="TTSEngine Object Properties">
-							<param name="Local" value="Generated/Control_TTSEngine.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Control_TTSEngine.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DisplayName Property">
-								<param name="Local" value="Generated\Control_TTSEngine_DisplayName.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_TTSEngine_DisplayName.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Gender Property">
-								<param name="Local" value="Generated\Control_TTSEngine_Gender.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_TTSEngine_Gender.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The LanguageID Property">
-								<param name="Local" value="Generated\Control_TTSEngine_LanguageID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_TTSEngine_LanguageID.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The LanguageName Property">
-								<param name="Local" value="Generated\Control_TTSEngine_LanguageName.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_TTSEngine_LanguageName.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Manufacturer Property">
-								<param name="Local" value="Generated\Control_TTSEngine_Manufacturer.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_TTSEngine_Manufacturer.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The TTSModeID Property">
-								<param name="Local" value="Generated\Control_TTSEngine_TTSModeID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_TTSEngine_TTSModeID.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The SREngines Collection">
-						<param name="Local" value="Generated/Control_SREngines.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_SREngines.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="The SREngines Collection Properties">
-							<param name="Local" value="Generated/Control_SREngines.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Control_SREngines.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Count Property">
-								<param name="Local" value="Generated\Control_SREngines_Count.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_SREngines_Count.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Item Property">
-								<param name="Local" value="Generated\Control_SREngines_Item.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_SREngines_Item.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The SREngine Object">
-						<param name="Local" value="Generated/Control_SREngine.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_SREngine.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="SREngine Object Methods">
-							<param name="Local" value="Generated/Control_SREngine.htm#Methods">
+							<param name="Local" value="html/T_DoubleAgent_Control_SREngine.htm#Methods">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetVersion Method">
-								<param name="Local" value="Generated\Control_SREngine_GetVersion.htm">
+								<param name="Local" value="html/M_DoubleAgent_Control_SREngine_GetVersion.htm">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="SREngine Object Properties">
-							<param name="Local" value="Generated/Control_SREngine.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_Control_SREngine.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The DisplayName Property">
-								<param name="Local" value="Generated\Control_SREngine_DisplayName.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_SREngine_DisplayName.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The LanguageID Property">
-								<param name="Local" value="Generated\Control_SREngine_LanguageID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_SREngine_LanguageID.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The LanguageIDs Property">
-								<param name="Local" value="Generated\Control_SREngine_LanguageIDs.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_SREngine_LanguageIDs.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The LanguageName Property">
-								<param name="Local" value="Generated\Control_SREngine_LanguageName.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_SREngine_LanguageName.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The LanguageNames Property">
-								<param name="Local" value="Generated\Control_SREngine_LanguageNames.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_SREngine_LanguageNames.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Manufacturer Property">
-								<param name="Local" value="Generated\Control_SREngine_Manufacturer.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_SREngine_Manufacturer.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SRModeID Property">
-								<param name="Local" value="Generated\Control_SREngine_SRModeID.htm">
+								<param name="Local" value="html/P_DoubleAgent_Control_SREngine_SRModeID.htm">
 								</OBJECT>
 						</UL>
 					</UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The AxControl Object">
-						<param name="Local" value="Generated/AxControl_AxControl.htm">
+						<param name="Local" value="html/T_DoubleAgent_AxControl_AxControl.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="AxControl Object Methods">
-							<param name="Local" value="Generated/AxControl_AxControl.htm#Methods">
+							<param name="Local" value="html/T_DoubleAgent_AxControl_AxControl.htm#Methods">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindCharacterSREngines Method">
-								<param name="Local" value="Generated/AxControl_AxControl_FindCharacterSREngines.htm">
+								<param name="Local" value="html/M_DoubleAgent_AxControl_AxControl_FindCharacterSREngines.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindCharacterTTSEngines Method">
-								<param name="Local" value="Generated/AxControl_AxControl_FindCharacterTTSEngines.htm">
+								<param name="Local" value="html/M_DoubleAgent_AxControl_AxControl_FindCharacterTTSEngines.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindSREngines Method">
-								<param name="Local" value="Generated/AxControl_AxControl_FindSREngines.htm">
+								<param name="Local" value="html/M_DoubleAgent_AxControl_AxControl_FindSREngines.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The FindTTSEngines Method">
-								<param name="Local" value="Generated/AxControl_AxControl_FindTTSEngines.htm">
+								<param name="Local" value="html/M_DoubleAgent_AxControl_AxControl_FindTTSEngines.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetCharacterSREngine Method">
-								<param name="Local" value="Generated/AxControl_AxControl_GetCharacterSREngine.htm">
+								<param name="Local" value="html/M_DoubleAgent_AxControl_AxControl_GetCharacterSREngine.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The GetCharacterTTSEngine Method">
-								<param name="Local" value="Generated/AxControl_AxControl_GetCharacterTTSEngine.htm">
+								<param name="Local" value="html/M_DoubleAgent_AxControl_AxControl_GetCharacterTTSEngine.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ShowDefaultCharacterProperties Method">
-								<param name="Local" value="Generated/AxControl_AxControl_ShowDefaultCharacterProperties.htm">
+								<param name="Local" value="html/M_DoubleAgent_AxControl_AxControl_ShowDefaultCharacterProperties.htm">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="AxControl Object Properties">
-							<param name="Local" value="Generated/AxControl_AxControl.htm#Properties">
+							<param name="Local" value="html/T_DoubleAgent_AxControl_AxControl.htm#Properties">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The AutoConnect Property">
-								<param name="Local" value="Generated\AxControl_AxControl_AutoConnect.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_AutoConnect.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlAutoSize Property">
-								<param name="Local" value="Generated\AxControl_AxControl_CtlAutoSize.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_CtlAutoSize.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlBackColor Property">
-								<param name="Local" value="Generated/AxControl_AxControl_CtlBackColor.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_CtlBackColor.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlBorderColor Property">
-								<param name="Local" value="Generated/AxControl_AxControl_CtlBorderColor.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_CtlBorderColor.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlBorderStyle Property">
-								<param name="Local" value="Generated/AxControl_AxControl_CtlBorderStyle.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_CtlBorderStyle.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlBorderVisible Property">
-								<param name="Local" value="Generated/AxControl_AxControl_CtlBorderVisible.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_CtlBorderVisible.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlBorderWidth Property">
-								<param name="Local" value="Generated/AxControl_AxControl_CtlBorderWidth.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_CtlBorderWidth.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlMousePointer Property">
-								<param name="Local" value="Generated/AxControl_AxControl_CtlMousePointer.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_CtlMousePointer.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CharacterFiles Property">
-								<param name="Local" value="Generated/AxControl_AxControl_CharacterFiles.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_CharacterFiles.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Characters Property">
-								<param name="Local" value="Generated/AxControl_AxControl_Characters.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_Characters.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CharacterStyle Property">
-								<param name="Local" value="Generated/AxControl_AxControl_CharacterStyle.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_CharacterStyle.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CommandsWindow Property">
-								<param name="Local" value="Generated/AxControl_AxControl_CommandsWindow.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_CommandsWindow.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Connected Property">
-								<param name="Local" value="Generated/AxControl_AxControl_Connected.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_Connected.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The ControlCharacter Property">
-								<param name="Local" value="Generated/AxControl_AxControl_ControlCharacter.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_ControlCharacter.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The PropertySheet Property">
-								<param name="Local" value="Generated/AxControl_AxControl_PropertySheet.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_PropertySheet.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The RaiseRequestErrors Property">
-								<param name="Local" value="Generated/AxControl_AxControl_RaiseRequestErrors.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_RaiseRequestErrors.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Settings Property">
-								<param name="Local" value="Generated/AxControl_AxControl_Settings.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_Settings.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The SREngines Property">
-								<param name="Local" value="Generated/AxControl_AxControl_SREngines.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_SREngines.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The TTSEngines Property">
-								<param name="Local" value="Generated/AxControl_AxControl_TTSEngines.htm">
+								<param name="Local" value="html/P_DoubleAgent_AxControl_AxControl_TTSEngines.htm">
 								</OBJECT>
 						</UL>
 						<LI> <OBJECT type="text/sitemap">
 							<param name="Name" value="AxControl Object Events">
-							<param name="Local" value="Generated/AxControl_AxControl.htm#Events">
+							<param name="Local" value="html/T_DoubleAgent_AxControl_AxControl.htm#Events">
 							</OBJECT>
 						<UL>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlActivateInput Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlActivateInput.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlActivateInput.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlActiveClientChange Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlActiveClientChange.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlActiveClientChange.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlAgentPropertyChange Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlAgentPropertyChange.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlAgentPropertyChange.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlBalloonHide Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlBalloonHide.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlBalloonHide.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlBalloonShow Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlBalloonShow.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlBalloonShow.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlBookmark Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlBookmark.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlBookmark.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlClick Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlClick.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlClick.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlCommand Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlCommand.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlCommand.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlDblClick Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlDblClick.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlDblClick.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlDeactivateInput Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlDeactivateInput.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlDeactivateInput.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlDefaultCharacterChange Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlDefaultCharacterChange.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlDefaultCharacterChange.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlDragComplete Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlDragComplete.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlDragComplete.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlDragStart Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlDragStart.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlDragStart.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlHide Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlHide.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlHide.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlIdleComplete Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlIdleComplete.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlIdleComplete.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlIdleStart Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlIdleStart.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlIdleStart.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlListenComplete Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlListenComplete.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlListenComplete.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlListenStart Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlListenStart.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlListenStart.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlMove Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlMove.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlMove.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlRequestComplete Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlRequestComplete.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlRequestComplete.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlRequestStart Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlRequestStart.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlRequestStart.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlShow Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlShow.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlShow.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlSize Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlSize.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlSize.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlSpeechEnd Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlSpeechEnd.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlSpeechEnd.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlSpeechStart Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlSpeechStart.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlSpeechStart.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The CtlSpeechWord Event">
-								<param name="Local" value="Generated/AxControl_Event_CtlSpeechWord.htm">
+								<param name="Local" value="html/E_DoubleAgent_AxControl_AxControl_CtlSpeechWord.htm">
 								</OBJECT>
 						</UL>
 					</UL>
@@ -3029,54 +3029,54 @@
 				<UL>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The ActiveStateType Enumeration">
-						<param name="Local" value="Generated/Control_ActiveStateType.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_ActiveStateType.htm">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The AudioStatusType Enumeration">
-						<param name="Local" value="Generated/Control_AudioStatusType.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_AudioStatusType.htm">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The BalloonStyleFlags Enumeration">
-						<param name="Local" value="Generated/Control_BalloonStyleFlags.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_BalloonStyleFlags.htm">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The CharacterStyleFlags Enumeration">
-						<param name="Local" value="Generated/Control_CharacterStyleFlags.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_CharacterStyleFlags.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The ListenCompleteType Enumeration">
-						<param name="Local" value="Generated/Control_ListenCompleteType.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_ListenCompleteType.htm">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The ListeningStatusType Enumeration">
-						<param name="Local" value="Generated/Control_ListeningStatusType.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_ListeningStatusType.htm">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The MoveCauseType Enumeration">
-						<param name="Local" value="Generated/Control_MoveCauseType.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_MoveCauseType.htm">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The PrepareResourceType Enumeration">
-						<param name="Local" value="Generated/Control_PrepareResourceType.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_PrepareResourceType.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The RequestStatus Enumeration">
-						<param name="Local" value="Generated/Control_RequestStatus.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_RequestStatus.htm">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The SpeechGenderType Enumeration">
-						<param name="Local" value="Generated/Control_SpeechGenderType.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_SpeechGenderType.htm">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The StopAllFlags Enumeration">
-						<param name="Local" value="Generated/Control_StopAllFlags.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_StopAllFlags.htm">
 						<param name="New" value="1">
 						</OBJECT>
 					<LI> <OBJECT type="text/sitemap">
 						<param name="Name" value="The VisibilityCauseType Enumeration">
-						<param name="Local" value="Generated/Control_VisibilityCauseType.htm">
+						<param name="Local" value="html/T_DoubleAgent_Control_VisibilityCauseType.htm">
 						</OBJECT>
 				</UL>
 			</UL>

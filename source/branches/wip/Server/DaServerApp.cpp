@@ -36,6 +36,7 @@
 #include "DaSvrCommandsWindow.h"
 #include "DaSvrCharacterFiles.h"
 #include "VoiceCommandsWnd.h"
+#include "SapiVoiceCache.h"
 #include "ComMessageFilter.h"
 #include "Localize.h"
 #include "ThreadSecurity.h"
@@ -292,6 +293,7 @@ void CDaServerModule::_PostMessageLoop (bool pForModal)
 	SafeFreeSafePtr (mSvrCommandsWindow);
 	SafeFreeSafePtr (mSvrCharacterFiles);
 	SafeFreeSafePtr (mMessageFilter);
+	CSapiVoiceCache::TerminateStaticInstance ();
 }
 
 ////////////////////////////////////////////////////////////////////////////

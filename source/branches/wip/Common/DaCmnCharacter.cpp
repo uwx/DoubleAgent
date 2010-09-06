@@ -123,11 +123,8 @@ void CDaCmnCharacter::Terminate (bool pFinal)
 		}
 		catch AnyExceptionDebug
 
-		if	(GetClientCount (mCharID) <= 0)
-		{
-			ReleaseSapiVoice ();
-			ReleaseSapiInput ();
-		}
+		ReleaseSapiVoice ();
+		ReleaseSapiInput ();
 
 		if	(!mPrepares.IsEmpty ())
 		{

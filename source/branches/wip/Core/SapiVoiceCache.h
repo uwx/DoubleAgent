@@ -59,6 +59,11 @@ public:
 	bool RestrictSapiVersion (UINT pSapiVersion);
 	bool PreferSapiVersion (UINT pSapiVersion);
 
+#ifndef	_WIN64
+	CSapi4Voices * GetSapi4Voices ();
+#endif
+	CSapi5Voices * GetSapi5Voices ();
+
 // Operations
 public:
 	CSapiVoice * GetAgentVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, bool pCached = true);
@@ -73,11 +78,8 @@ public:
 	CSapiVoice * FindCachedVoice (LPCTSTR pVoiceId);
 	bool GetVoiceClients (CSapiVoice * pVoice, CAtlPtrTypeArray <CSapiVoiceClient> & pClients);
 
-#ifndef	_WIN64
-	CSapi4Voices * GetSapi4Voices ();
-#endif
-	CSapi5Voices * GetSapi5Voices ();
-
+	void Terminate ();
+	static void TerminateStaticInstance ();
 // Implementation
 protected:
 	CSapi5Voice * GetAgentSapi5Voice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, bool pCached = true);

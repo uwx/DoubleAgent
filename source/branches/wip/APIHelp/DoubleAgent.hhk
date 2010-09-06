@@ -10,34 +10,34 @@
 		<param name="Name" value="Animation Services">
 		<param name="Local" value="Programming\Gen_Animation.htm">
 		<param name="Name" value="The Play Method (Server)">
-		<param name="Local" value="Generated\Server_Character_Play.htm">
+		<param name="Local" value="html\M_DoubleAgent_Server_Character_Play.htm">
 		<param name="Name" value="The Play Method (Control)">
-		<param name="Local" value="Generated\Control_Character_Play.htm">
+		<param name="Local" value="html\M_DoubleAgent_Control_Character_Play.htm">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="configure;configuration">
 		<param name="Name" value="Configuration Services">
 		<param name="Local" value="Programming\Gen_Config.htm">
 		<param name="Name" value="The PropertySheet Object (Server)">
-		<param name="Local" value="Generated\Server_PropertySheet.htm">
+		<param name="Local" value="html\T_DoubleAgent_Server_PropertySheet.htm">
 		<param name="Name" value="The Settings Object (Server)">
-		<param name="Local" value="Generated\Server_Settings.htm">
+		<param name="Local" value="html\T_DoubleAgent_Server_Settings.htm">
 		<param name="Name" value="The CharacterFiles Object (Server)">
-		<param name="Local" value="Generated\Server_CharacterFiles.htm">
+		<param name="Local" value="html\T_DoubleAgent_Server_CharacterFiles.htm">
 		<param name="Name" value="The TTSEngines Collection (Server)">
-		<param name="Local" value="Generated\Server_TTSEngines.htm">
+		<param name="Local" value="html\T_DoubleAgent_Server_TTSEngines.htm">
 		<param name="Name" value="The SREngines Collection (Server)">
-		<param name="Local" value="Generated\Server_SREngines.htm">
+		<param name="Local" value="html\T_DoubleAgent_Server_SREngines.htm">
 		<param name="Name" value="The PropertySheet Object (Control)">
-		<param name="Local" value="Generated\Control_PropertySheet.htm">
+		<param name="Local" value="html\T_DoubleAgent_Control_PropertySheet.htm">
 		<param name="Name" value="The Settings Object (Control)">
-		<param name="Local" value="Generated\Control_Settings.htm">
+		<param name="Local" value="html\T_DoubleAgent_Control_Settings.htm">
 		<param name="Name" value="The CharacterFiles Object (Control)">
-		<param name="Local" value="Generated\Control_CharacterFiles.htm">
+		<param name="Local" value="html\T_DoubleAgent_Control_CharacterFiles.htm">
 		<param name="Name" value="The TTSEngines Collection (Control)">
-		<param name="Local" value="Generated\Control_TTSEngines.htm">
+		<param name="Local" value="html\T_DoubleAgent_Control_TTSEngines.htm">
 		<param name="Name" value="The SREngines Collection (Control)">
-		<param name="Local" value="Generated\Control_SREngines.htm">
+		<param name="Local" value="html\T_DoubleAgent_Control_SREngines.htm">
 		</OBJECT>
 </UL>
 </BODY></HTML>

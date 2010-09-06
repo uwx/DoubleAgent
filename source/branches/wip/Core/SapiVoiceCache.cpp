@@ -58,6 +58,42 @@ CSapiVoiceCache::~CSapiVoiceCache ()
 	}
 	catch AnyExceptionSilent
 #endif
+	Terminate ();
+}
+
+//////////////////////////////////////////////////////////////////////
+#pragma page()
+//////////////////////////////////////////////////////////////////////
+
+CSapiVoiceCache * CSapiVoiceCache::GetStaticInstance ()
+{
+	return &_AtlModule;
+}
+
+void CSapiVoiceCache::TerminateStaticInstance ()
+{
+	try
+	{
+		_AtlModule.CSapiVoiceCache::Terminate ();
+	}
+	catch AnyExceptionSilent
+}
+
+void CSapiVoiceCache::Terminate ()
+{
+#ifdef	_DEBUG_CACHE
+	try
+	{
+		if	(
+				(mCachedVoices.GetCount() > 0)
+			||	(mVoiceClients.GetCount() > 0)
+			)
+		{
+			LogMessage (_DEBUG_CACHE, _T("CSapiVoiceCache::Terminate Voices [%d] Clients [%d]"), mCachedVoices.GetCount(), mVoiceClients.GetCount());
+		}
+	}
+	catch AnyExceptionSilent
+#endif
 	try
 	{
 		mVoiceClients.RemoveAll ();
@@ -71,13 +107,6 @@ CSapiVoiceCache::~CSapiVoiceCache ()
 }
 
 //////////////////////////////////////////////////////////////////////
-#pragma page()
-//////////////////////////////////////////////////////////////////////
-
-CSapiVoiceCache * CSapiVoiceCache::GetStaticInstance ()
-{
-	return &_AtlModule;
-}
 
 CSapi5Voices * CSapiVoiceCache::GetSapi5Voices ()
 {
@@ -473,7 +502,7 @@ bool CSapiVoiceCache::CacheVoice (CSapiVoice * pVoice, CSapiVoiceClient * pClien
 				)
 			{
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, AtlTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Client [%p] [%s] Clients [%d]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, AtlTypeName(pClient), lClients->GetCount());
 #endif
 				lClients->Add (pClient);
 			}
