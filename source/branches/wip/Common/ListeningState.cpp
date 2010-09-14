@@ -1660,6 +1660,10 @@ bool CListeningGlobal::RegisterHotKey (HWND pHotKeyWnd)
 	if	(LOBYTE (lConfig.LoadConfig().mSrHotKey) != 0)
 	{
 		lHotKeyCode = LOBYTE (lConfig.mSrHotKey);
+		if	(IsWindows7_AtLeast ())
+		{
+			lHotKeyMod |= MOD_NOREPEAT;
+		}
 		if	(HIBYTE (lConfig.mSrHotKey) & HOTKEYF_ALT)
 		{
 			lHotKeyMod |= MOD_ALT;
@@ -1672,7 +1676,7 @@ bool CListeningGlobal::RegisterHotKey (HWND pHotKeyWnd)
 		{
 			lHotKeyMod |= MOD_SHIFT;
 		}
-		if	(::RegisterHotKey (pHotKeyWnd, mHotKeyRegisterId, lHotKeyMod|MOD_NOREPEAT, lHotKeyCode))
+		if	(::RegisterHotKey (pHotKeyWnd, mHotKeyRegisterId, lHotKeyMod, lHotKeyCode))
 		{
 			lRet = true;
 		}

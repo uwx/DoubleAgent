@@ -252,13 +252,13 @@ bool CAnimationTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 			{
 				CAgentPreviewWnd *	lPreview;
 				CRect				lClientRect;
-				CRect				lWindowRect;
 
 				SafeFreeSafePtr (mAgentPreviewWnd);
+				mPreviewWnd.GetClientRect (&lClientRect);
 
 				if	(
 						(mAgentPreviewWnd = CAgentPreviewWnd::CreateInstance())
-					&&	(mAgentPreviewWnd->Create (mPreviewWnd.m_hWnd))
+					&&	(mAgentPreviewWnd->Create (mPreviewWnd.m_hWnd, &lClientRect))
 					&&	(mAgentPreviewWnd->IsWindow ())
 					)
 				{
@@ -274,12 +274,6 @@ bool CAnimationTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 						{
 							lPreview->SetBkColor (GetSysColor (COLOR_WINDOW));
 						}
-
-						mPreviewWnd.GetClientRect (&lClientRect);
-						mAgentPreviewWnd->GetWindowRect (&lWindowRect);
-						mPreviewWnd.ScreenToClient (&lWindowRect);
-						lWindowRect.OffsetRect (lClientRect.CenterPoint().x - lWindowRect.CenterPoint().x, lClientRect.CenterPoint().y - lWindowRect.CenterPoint().y);
-						mAgentPreviewWnd->MoveWindow (&lWindowRect);
 						mAgentPreviewWnd->ShowWindow (SW_SHOWNA);
 						lRet = true;
 					}

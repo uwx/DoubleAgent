@@ -199,15 +199,15 @@ bool CStressTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 		{
 			CAgentPreviewWnd *	lPreview;
 			CRect				lClientRect;
-			CRect				lWindowRect;
 
 			SafeFreeSafePtr (mAgentWnd);
+			mPreviewWnd.GetClientRect (&lClientRect);
 
 			if	(mStressPreview.GetCheck())
 			{
 				if	(
 						(mAgentWnd = CAgentPreviewWnd::CreateInstance())
-					&&	(mAgentWnd->Create (mPreviewWnd.m_hWnd))
+					&&	(mAgentWnd->Create (mPreviewWnd.m_hWnd, &lClientRect))
 					&&	(mAgentWnd->IsWindow ())
 					)
 				{
@@ -219,12 +219,6 @@ bool CStressTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 						{
 							lPreview->SetBkColor (GetSysColor (COLOR_WINDOW));
 						}
-
-						mPreviewWnd.GetClientRect (&lClientRect);
-						mAgentWnd->GetWindowRect (&lWindowRect);
-						mPreviewWnd.ScreenToClient (&lWindowRect);
-						lWindowRect.OffsetRect (lClientRect.CenterPoint().x - lWindowRect.CenterPoint().x, lClientRect.CenterPoint().y - lWindowRect.CenterPoint().y);
-						mAgentWnd->MoveWindow (&lWindowRect);
 						mAgentWnd->ShowWindow (SW_SHOWNA);
 						lRet = true;
 					}

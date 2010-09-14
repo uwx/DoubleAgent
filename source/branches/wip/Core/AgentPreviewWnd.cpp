@@ -120,6 +120,10 @@ bool CAgentPreviewWnd::Create (HWND pParentWnd, CRect * pInitialRect)
 		lInitialRect.CopyRect (pInitialRect);
 		mAutoSize = false;
 	}
+	else
+	{
+		mAutoSize = true;
+	}
 
 	if	(
 			(::IsWindow (pParentWnd))
@@ -143,6 +147,37 @@ DWORD CAgentPreviewWnd::GetAlphaSmoothing () const
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+void CAgentPreviewWnd::Opened ()
+{
+	CAgentFile *	lAgentFile;
+	
+	CAgentWnd::Opened ();
+
+	if	(
+			(!mAutoSize)	
+		&&	(lAgentFile = GetAgentFile ())
+		)
+	{
+		CSize	lImageSize = lAgentFile->GetImageSize();
+		CRect	lClientRect;
+
+		GetClientRect (&lClientRect);
+	
+		if	(
+				(lImageSize.cx > lClientRect.Width())
+			||	(lImageSize.cy > lClientRect.Height())
+			)
+		{
+			AutoSizeVideo (true);
+		}
+		else
+		{
+			SetVideoRect (CRect (CPoint (0,0), lImageSize));
+		}
+		CenterVideo ();
+	}
+}
 
 bool CAgentPreviewWnd::DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime)
 {
@@ -842,6 +877,8 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::OpenFile (BSTR pCharacterPath, HWND 
 #endif
 	HRESULT				lResult = S_OK;
 	tPtr <CAgentFile>	lAgentFile;
+	CRect				lParentRect;
+	CRect *				lInitialRect = NULL;
 
 	if	(lAgentFile = CAgentFile::CreateInstance())
 	{
@@ -853,7 +890,14 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::OpenFile (BSTR pCharacterPath, HWND 
 				DestroyWindow ();
 			}
 			if	(
-					(Create (pParentWnd))
+					(::IsWindow (pParentWnd))
+				&&	(::GetClientRect (pParentWnd, &lParentRect))
+				)
+			{
+				lInitialRect = &lParentRect;
+			}
+			if	(
+					(Create (pParentWnd, lInitialRect))
 				&&	(Open (lAgentFile))
 				)
 			{

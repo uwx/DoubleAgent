@@ -300,24 +300,20 @@ void CPropPageCharacter::ShowCharacter ()
 
 void CPropPageCharacter::ShowPreview ()
 {
-	CRect	lClientRect;
 	CRect	lPreviewRect;
+
+	mCharPreview.ModifyStyleEx (WS_EX_STATICEDGE|WS_EX_CLIENTEDGE, 0, SWP_FRAMECHANGED);
+	mCharPreview.ModifyStyle (0, WS_BORDER, SWP_FRAMECHANGED);
+	mCharPreview.GetClientRect (&lPreviewRect);
 
 	if	(
 			(mPreviewWnd = CAgentPreviewWnd::CreateInstance())
-		&&	(mPreviewWnd->Create (mCharPreview.m_hWnd))
+		&&	(mPreviewWnd->Create (mCharPreview.m_hWnd, &lPreviewRect))
 		&&	(mPreviewWnd->Open (CAtlString ((BSTR)mAgentFile->GetPath())))
 		)
 	{
-		mCharPreview.ModifyStyleEx (WS_EX_STATICEDGE|WS_EX_CLIENTEDGE, 0, SWP_FRAMECHANGED);
-		mCharPreview.ModifyStyle (0, WS_BORDER, SWP_FRAMECHANGED);
 		mCharPreview.ShowWindow (SW_SHOWNA);
 
-		mPreviewWnd->GetWindowRect (&lPreviewRect);
-		mCharPreview.GetClientRect (&lClientRect);
-		mCharPreview.ScreenToClient (&lPreviewRect);
-		lPreviewRect.OffsetRect (lClientRect.CenterPoint() - lPreviewRect.CenterPoint());
-		mPreviewWnd->MoveWindow (&lPreviewRect);
 		mPreviewWnd->SetBkColor (GetSysColor (COLOR_WINDOW));
 		mPreviewWnd->EnableSound (true);
 		mPreviewWnd->EnableIdle (true);

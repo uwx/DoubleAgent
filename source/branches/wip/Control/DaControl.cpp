@@ -3976,6 +3976,8 @@ STDMETHODIMP DaControl::put_ControlCharacter (IDaCtlCharacter2 *ControlCharacter
 
 		if	(mControlCharacter)
 		{
+			OnAutoSizeChanged ();
+			CenterVideo ();
 			ShowWindow (SW_SHOWNA);
 			RedrawWindow ();
 		}

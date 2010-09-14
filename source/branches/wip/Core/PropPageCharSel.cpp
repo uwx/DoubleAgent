@@ -120,7 +120,6 @@ void CPropPageCharSel::ShowCharacter ()
 {
 	CAgentFile *		lFile;
 	CAgentFileName *	lFileName;
-	CRect				lClientRect;
 	CRect				lPreviewRect;
 
 	if	(
@@ -138,23 +137,19 @@ void CPropPageCharSel::ShowCharacter ()
 	}
 
 	SafeFreeSafePtr (mPreviewWnd);
+	mCharPreview.ModifyStyleEx (WS_EX_STATICEDGE|WS_EX_CLIENTEDGE, 0, SWP_FRAMECHANGED);
+	mCharPreview.ModifyStyle (0, WS_BORDER, SWP_FRAMECHANGED);
+	mCharPreview.GetClientRect (&lPreviewRect);
 
 	if	(
 			(lFile)
 		&&	(mPreviewWnd = CAgentPreviewWnd::CreateInstance())
-		&&	(mPreviewWnd->Create (mCharPreview.m_hWnd))
+		&&	(mPreviewWnd->Create (mCharPreview.m_hWnd, &lPreviewRect))
 		&&	(mPreviewWnd->Open (CAtlString ((BSTR)lFile->GetPath())))
 		)
 	{
-		mCharPreview.ModifyStyleEx (WS_EX_STATICEDGE|WS_EX_CLIENTEDGE, 0, SWP_FRAMECHANGED);
-		mCharPreview.ModifyStyle (0, WS_BORDER, SWP_FRAMECHANGED);
 		mCharPreview.ShowWindow (SW_SHOWNA);
 
-		mPreviewWnd->GetWindowRect (&lPreviewRect);
-		mCharPreview.GetClientRect (&lClientRect);
-		mCharPreview.ScreenToClient (&lPreviewRect);
-		lPreviewRect.OffsetRect (lClientRect.CenterPoint() - lPreviewRect.CenterPoint());
-		mPreviewWnd->MoveWindow (&lPreviewRect);
 		mPreviewWnd->SetBkColor (GetSysColor (COLOR_WINDOW));
 		mPreviewWnd->EnableSound (true);
 		mPreviewWnd->EnableIdle (true);

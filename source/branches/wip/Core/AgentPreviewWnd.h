@@ -59,6 +59,7 @@ public:
 public:
 	virtual DWORD GetAlphaSmoothing () const;
 protected:
+	virtual void Opened ();
 	virtual bool DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime);
 	virtual bool DoIdle ();
 
