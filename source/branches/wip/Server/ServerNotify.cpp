@@ -298,13 +298,14 @@ bool CServerNotify::PostFireEvent (LPCTSTR pEventName)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+extern int LogCrashCode (unsigned int pCode, LPCSTR pFile = NULL, UINT pLine = 0, int pAction = EXCEPTION_CONTINUE_EXECUTION);
 
 #define	FIRE_EVENT(n,e,c)\
 HRESULT CServerNotify::Fire##n e \
 { \
 	if	(PreFireEvent (_T(#n))) \
 	{ \
-		try \
+		__try \
 		{ \
 			int lNdx; \
 			IDaSvrNotifySink2 * lDaSink2; \
@@ -312,11 +313,12 @@ HRESULT CServerNotify::Fire##n e \
 			{ \
 				if	(lDaSink2 = (IDaSvrNotifySink2 *) tDaSvrNotifySink2::m_vec.GetAt (lNdx)) \
 				{ \
-					try \
+					__try \
 					{ \
 						lDaSink2->n c; \
 					} \
-					catch AnyExceptionDebug \
+					__except (EXCEPTION_CONTINUE_SEARCH) \
+					{} \
 				} \
 			} \
 			IDaSvrNotifySink * lDaSink; \
@@ -324,11 +326,12 @@ HRESULT CServerNotify::Fire##n e \
 			{ \
 				if	(lDaSink = (IDaSvrNotifySink *) tDaSvrNotifySink::m_vec.GetAt (lNdx)) \
 				{ \
-					try \
+					__try \
 					{ \
 						lDaSink->n c; \
 					} \
-					catch AnyExceptionDebug \
+					__except (EXCEPTION_CONTINUE_SEARCH) \
+					{} \
 				} \
 			} \
 			IAgentNotifySink * lMsSink; \
@@ -336,11 +339,12 @@ HRESULT CServerNotify::Fire##n e \
 			{ \
 				if	(lMsSink = (IAgentNotifySink *) tAgentNotifySink::m_vec.GetAt (lNdx)) \
 				{ \
-					try \
+					__try \
 					{ \
 						lMsSink->n c; \
 					} \
-					catch AnyExceptionDebug \
+					__except (EXCEPTION_CONTINUE_SEARCH) \
+					{} \
 				} \
 			} \
 			IAgentNotifySinkEx * lMsSinkEx; \
@@ -348,16 +352,18 @@ HRESULT CServerNotify::Fire##n e \
 			{ \
 				if	(lMsSinkEx = (IAgentNotifySinkEx *) tAgentNotifySinkEx::m_vec.GetAt (lNdx)) \
 				{ \
-					try \
+					__try \
 					{ \
 						lMsSinkEx->n c; \
 					} \
-					catch AnyExceptionDebug \
+					__except (EXCEPTION_CONTINUE_SEARCH) \
+					{} \
 				} \
 			} \
 			mEventDispatch.Fire##n c; \
 		} \
-		catch AnyExceptionDebug \
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__)) \
+		{} \
 		PostFireEvent (_T(#n)); \
 	} \
 	return S_OK; \
@@ -368,7 +374,7 @@ HRESULT CServerNotify::Fire##n e \
 { \
 	if	(PreFireEvent (_T(#n))) \
 	{ \
-		try \
+		__try \
 		{ \
 			int lNdx; \
 			IDaSvrNotifySink2 * lDaSink2; \
@@ -376,11 +382,12 @@ HRESULT CServerNotify::Fire##n e \
 			{ \
 				if	(lDaSink2 = (IDaSvrNotifySink2 *) tDaSvrNotifySink2::m_vec.GetAt (lNdx)) \
 				{ \
-					try \
+					__try \
 					{ \
 						lDaSink2->n c; \
 					} \
-					catch AnyExceptionDebug \
+					__except (EXCEPTION_CONTINUE_SEARCH) \
+					{} \
 				} \
 			} \
 			IDaSvrNotifySink * lDaSink; \
@@ -388,11 +395,12 @@ HRESULT CServerNotify::Fire##n e \
 			{ \
 				if	(lDaSink = (IDaSvrNotifySink *) tDaSvrNotifySink::m_vec.GetAt (lNdx)) \
 				{ \
-					try \
+					__try \
 					{ \
 						lDaSink->n c; \
 					} \
-					catch AnyExceptionDebug \
+					__except (EXCEPTION_CONTINUE_SEARCH) \
+					{} \
 				} \
 			} \
 			IAgentNotifySinkEx * lMsSinkEx; \
@@ -400,16 +408,18 @@ HRESULT CServerNotify::Fire##n e \
 			{ \
 				if	(lMsSinkEx = (IAgentNotifySinkEx *) tAgentNotifySinkEx::m_vec.GetAt (lNdx)) \
 				{ \
-					try \
+					__try \
 					{ \
 						lMsSinkEx->n c; \
 					} \
-					catch AnyExceptionDebug \
+					__except (EXCEPTION_CONTINUE_SEARCH) \
+					{} \
 				} \
 			} \
 			mEventDispatch.Fire##n c; \
 		} \
-		catch AnyExceptionDebug \
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__)) \
+		{} \
 		PostFireEvent (_T(#n)); \
 	} \
 	return S_OK; \
@@ -420,7 +430,7 @@ HRESULT CServerNotify::Fire##n e \
 { \
 	if	(PreFireEvent (_T(#n))) \
 	{ \
-		try \
+		__try \
 		{ \
 			int lNdx; \
 			IDaSvrNotifySink2 * lDaSink2; \
@@ -428,16 +438,18 @@ HRESULT CServerNotify::Fire##n e \
 			{ \
 				if	(lDaSink2 = (IDaSvrNotifySink2 *) tDaSvrNotifySink2::m_vec.GetAt (lNdx)) \
 				{ \
-					try \
+					__try \
 					{ \
 						lDaSink2->n c; \
 					} \
-					catch AnyExceptionDebug \
+					__except (EXCEPTION_CONTINUE_SEARCH) \
+					{} \
 				} \
 			} \
 			mEventDispatch.Fire##n c; \
 		} \
-		catch AnyExceptionDebug \
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__)) \
+		{} \
 		PostFireEvent (_T(#n)); \
 	} \
 	return S_OK; \

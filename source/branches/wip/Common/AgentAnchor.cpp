@@ -183,6 +183,7 @@ CDaCmnCharacter * CGlobalAnchor::_GetCharacter (long pCharID, CAgentFileCache & 
 				{
 					if	(
 							(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+						&&	(lCharacter->IsValid (lFile))
 						&&	(
 								(pCharID < 0)
 							||	(lCharacter->GetCharID() == pCharID)
@@ -257,13 +258,16 @@ long CGlobalAnchor::_GetListenCharacter (CAgentFileCache & pFileCache)
 		{
 			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 			INT_PTR								lClientNdx;
-			CDaCmnCharacter *						lCharacter;
+			CDaCmnCharacter *					lCharacter;
 
 			if	(pFileCache.GetFileClients (lFile, lFileClients))
 			{
 				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
-					if	(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+					if	(
+							(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+						&&	(lCharacter->IsValid (lFile))
+						)
 					{
 						if	(lCharacter->IsInputActive ())
 						{
@@ -346,6 +350,7 @@ CDaCmnCharacter * CInstanceAnchor::GetDefaultCharacter ()
 				{
 					if	(
 							(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+						&&	(lCharacter->IsValid (lFile))
 						&&	(lCharacter->IsDefault ())
 						)
 					{
@@ -391,6 +396,7 @@ long CInstanceAnchor::GetActiveClient (long pCharID)
 				{
 					if	(
 							(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+						&&	(lCharacter->IsValid (lFile))
 						&&	(lCharacter->GetCharID() == pCharID)
 						)
 					{
@@ -434,6 +440,7 @@ long CInstanceAnchor::GetNotifyClient (long pCharID)
 				{
 					if	(
 							(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+						&&	(lCharacter->IsValid (lFile))
 						&&	(lCharacter->GetCharID() == pCharID)
 						)
 					{
@@ -450,7 +457,10 @@ long CInstanceAnchor::GetNotifyClient (long pCharID)
 					{
 						for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 						{
-							if	(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+							if	(
+									(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+								&&	(lCharacter->IsValid (lFile))
+								)
 							{
 								lRet = lCharacter->GetCharID ();
 								break;

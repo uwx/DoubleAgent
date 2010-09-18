@@ -1134,6 +1134,7 @@ void CListeningState::SetSapiInputClients (long pCharID)
 					{
 						if	(
 								(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+							&&	(lCharacter->IsValid (lFile))
 							&&	(
 									(pCharID <= 0)
 								||	(lCharacter->GetCharID() == pCharID)
@@ -1171,8 +1172,8 @@ void CListeningState::SetSapiInputNames (long pCharID)
 			{
 				CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 				INT_PTR								lClientNdx;
-				CDaCmnCharacter *						lCharacter;
-				CDaCmnCommands *						lCommands;
+				CDaCmnCharacter *					lCharacter;
+				CDaCmnCommands *					lCommands;
 				BSTR								lName;
 
 				if	(mCharacter.mNotify->mAnchor->mAnchor.GetFileClients (lFile, lFileClients))
@@ -1181,6 +1182,7 @@ void CListeningState::SetSapiInputNames (long pCharID)
 					{
 						if	(
 								(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+							&&	(lCharacter->IsValid (lFile))
 							&&	(
 									(pCharID <= 0)
 								||	(lCharacter->GetCharID() == pCharID)
@@ -1538,6 +1540,7 @@ void CListeningGlobal::SetVoiceCommandClients (long pCharID)
 					{
 						if	(
 								(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+							&&	(lCharacter->IsValid (lFile))
 							&&	(
 									(pCharID <= 0)
 								||	(lCharacter->GetCharID() == pCharID)
@@ -1587,6 +1590,7 @@ void CListeningGlobal::SetVoiceCommandNames (long pCharID)
 					{
 						if	(
 								(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+							&&	(lCharacter->IsValid (lFile))
 							&&	(
 									(pCharID <= 0)
 								||	(lCharacter->GetCharID() == pCharID)

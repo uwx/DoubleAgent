@@ -110,21 +110,21 @@ void CDaCmnCharacter::Initialize (long pCharID, CEventNotify * pNotify, _IListen
 #endif
 }
 
-void CDaCmnCharacter::Terminate (bool pFinal)
+void CDaCmnCharacter::Terminate (bool pFinal, bool pAbandonned)
 {
 	if	(this)
 	{
-		try
+		if	(!pAbandonned)
 		{
-			if	(IsClientActive ())
+			try
 			{
-				SetActiveClient (false, false);
+				if	(IsClientActive ())
+				{
+					SetActiveClient (false, false);
+				}
 			}
+			catch AnyExceptionDebug
 		}
-		catch AnyExceptionDebug
-
-		ReleaseSapiVoice ();
-		ReleaseSapiInput ();
 
 		if	(!mPrepares.IsEmpty ())
 		{
@@ -168,7 +168,10 @@ void CDaCmnCharacter::Terminate (bool pFinal)
 			}
 		}
 
-		Unrealize (pFinal);
+		Unrealize (pFinal || pAbandonned);
+
+		ReleaseSapiVoice (pAbandonned);
+		ReleaseSapiInput (pAbandonned);
 
 		if	(
 				(pFinal)
@@ -184,7 +187,10 @@ void CDaCmnCharacter::Unrealize (bool pForce)
 {
 	if	(mWnd)
 	{
-		Hide (true, true);
+		if	(GetActiveClient () == mCharID)
+		{
+			Hide (true, true);
+		}
 
 		if	(
 				(mFile)
@@ -236,6 +242,15 @@ void CDaCmnCharacter::Unrealize (bool pForce)
 			SafeFreeSafePtr (mWndRefHolder);
 		}
 	}
+}
+
+bool CDaCmnCharacter::IsValid (const CAgentFile * pFile) const
+{
+	if	(pFile)
+	{
+		return mFile == pFile;
+	}
+	return false;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -837,6 +852,7 @@ bool CDaCmnCharacter::SetActiveClient (bool pActive, bool pInputActive)
 				{
 					if	(
 							(lNextCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+						&&	(lNextCharacter->IsValid (mFile))
 						&&	(lNextCharacter->GetCharID() != mCharID)
 						)
 					{
@@ -965,6 +981,7 @@ INT_PTR CDaCmnCharacter::GetClientCount (int pSkipCharID) const
 			{
 				if	(
 						(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+					&&	(lCharacter->IsValid (mFile))
 					&&	(
 							(pSkipCharID <= 0)
 						||	(lCharacter->GetCharID() != pSkipCharID)
@@ -1456,22 +1473,23 @@ CSapiVoice * CDaCmnCharacter::GetSapiVoice (bool pCreateObject, LPCTSTR pVoiceNa
 	return mSapiVoice;
 }
 
-void CDaCmnCharacter::ReleaseSapiVoice ()
+void CDaCmnCharacter::ReleaseSapiVoice (bool pAbandonned)
 {
-	try
+	if	(mSapiVoice)
 	{
-		CSapiVoiceCache *	lVoiceCache;
-
-		if	(
-				(mSapiVoice)
-			&&	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
-			)
+		try
 		{
-			lVoiceCache->RemoveVoiceClient (mSapiVoice, this);
-		}
-	}
-	catch AnyExceptionDebug
+			CSapiVoiceCache *	lVoiceCache;
 
+			mSapiVoice->Stop ();
+
+			if	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
+			{
+				lVoiceCache->RemoveVoiceClient (mSapiVoice, this, !pAbandonned);
+			}
+		}
+		catch AnyExceptionDebug
+	}
 	mSapiVoice = NULL;
 }
 
@@ -1772,24 +1790,23 @@ CSapi5Input * CDaCmnCharacter::GetSapiInput (bool pCreateObject, LPCTSTR pEngine
 	return mSapiInput;
 }
 
-void CDaCmnCharacter::ReleaseSapiInput ()
+void CDaCmnCharacter::ReleaseSapiInput (bool pAbandonned)
 {
 	SafeFreeSafePtr (mListeningState);
 
-	try
+	if	(mSapiInput)
 	{
-		CSapiInputCache *	lInputCache;
-
-		if	(
-				(mSapiInput)
-			&&	(lInputCache = CSapiInputCache::GetStaticInstance ())
-			)
+		try
 		{
-			lInputCache->RemoveInputClient (mSapiInput, this);
-		}
-	}
-	catch AnyExceptionDebug
+			CSapiInputCache *	lInputCache;
 
+			if	(lInputCache = CSapiInputCache::GetStaticInstance ())
+			{
+				lInputCache->RemoveInputClient (mSapiInput, this, !pAbandonned);
+			}
+		}
+		catch AnyExceptionDebug
+	}
 	mSapiInput = NULL;
 }
 
@@ -2619,6 +2636,7 @@ LPVOID CDaCmnCharacter::FindOtherRequest (long pReqID, CDaCmnCharacter *& pOther
 			{
 				if	(
 						(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+					&&	(lCharacter->IsValid (lFile))
 					&&	(lCharacterWnd = lCharacter->GetCharacterWnd ())
 					&&	(lRet = lCharacterWnd->FindQueuedAction (pReqID))
 					)
@@ -4080,7 +4098,6 @@ HRESULT CDaCmnCharacter::put_TTSModeID (BSTR TTSModeID)
 			CAgentCharacterWnd *	lCharacterWnd;
 			CSapiVoice *			lPrevVoice = mSapiVoice;
 
-#ifdef	_STRICT_COMPATIBILITY
 			try
 			{
 				if	(
@@ -4097,7 +4114,7 @@ HRESULT CDaCmnCharacter::put_TTSModeID (BSTR TTSModeID)
 				}
 			}
 			catch AnyExceptionDebug
-#endif
+
 			mSapiVoice = NULL;
 
 			if	(GetSapiVoice (true, CAtlString (TTSModeID)))

@@ -173,6 +173,7 @@ long CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition, CVoic
 						{
 							if	(
 									(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+								&&	(lCharacter->IsValid (lFile))
 								&&	(lCharacter->GetCharID() == mCharID)
 								)
 							{
@@ -187,6 +188,7 @@ long CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition, CVoic
 								{
 									if	(
 											(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+										&&	(lCharacter->IsValid (lFile))
 										&&	(lCharacter->GetCharID() != mCharID)
 										)
 									{

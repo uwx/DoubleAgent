@@ -46,7 +46,7 @@ CSvrObjLifetime::~CSvrObjLifetime ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CSvrObjLifetime::VerifyClientLifetime ()
+bool CSvrObjLifetime::VerifyClientLifetime () const
 {
 	bool	lRet = true;
 

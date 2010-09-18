@@ -34,7 +34,7 @@ public:
 
 // Operations
 public:
-	virtual bool VerifyClientLifetime ();
+	virtual bool VerifyClientLifetime () const;
 	virtual void OnClientEnded ();
 
 // Implementation
@@ -43,9 +43,9 @@ protected:
 	void UnmanageObjectLifetime (CComObjectRootBase * pObject);
 
 protected:
-	CAtlString			mClientMutexName;
+	CAtlString					mClientMutexName;
 private:
-	tPtr <CAutoMutex>	mClientMutex;
+	mutable tPtr <CAutoMutex>	mClientMutex;
 };
 
 /////////////////////////////////////////////////////////////////////////////

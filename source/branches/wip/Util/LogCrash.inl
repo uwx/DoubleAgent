@@ -341,7 +341,7 @@ static void _LogCrash_MiniDump (HMODULE pDbgHelp, struct _EXCEPTION_POINTERS * p
 ////////////////////////////////////////////////////////////////////////
 #pragma page()
 ////////////////////////////////////////////////////////////////////////
-static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException, LPCSTR pFile = NULL, UINT pLine = 0, int pAction = EXCEPTION_CONTINUE_SEARCH)
+int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException, LPCSTR pFile = NULL, UINT pLine = 0, int pAction = EXCEPTION_CONTINUE_SEARCH)
 {
 	__try
 	{
@@ -433,6 +433,31 @@ static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException
 			}
 			LogWriteCache ();
 		}
+	}
+	__except (EXCEPTION_CONTINUE_EXECUTION)
+	{;}
+
+	return pAction;
+}
+////////////////////////////////////////////////////////////////////////
+int LogCrashCode (unsigned int pCode, LPCSTR pFile = NULL, UINT pLine = 0, int pAction = EXCEPTION_CONTINUE_EXECUTION)
+{
+	__try
+	{
+		bool	lLogIsActive = LogIsActive ();
+
+		LogWriteCache ();
+
+		if	(lLogIsActive)
+		{
+#ifdef	_LOG_CRASH_NODESCRIPTION
+			LogMessage (LogAlways, _T("*** Exception [%8.8X] ***"), pCode);
+#else
+			_LogCrash_LogDescription (pCode, pFile, pLine);
+#endif
+		}
+
+		LogWriteCache ();
 	}
 	__except (EXCEPTION_CONTINUE_EXECUTION)
 	{;}

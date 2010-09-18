@@ -148,6 +148,7 @@ void DaSvrPropertySheet::OnClientEnded()
 		LogMessage (_LOG_ABANDONED, _T("[%p(%d)] DaSvrPropertySheet::OnClientEnded [%p]"), this, max(m_dwRef,-1), m_hWnd);
 	}
 #endif
+	Terminate (false, true);
 	Terminate (true, true);
 	try
 	{

@@ -683,13 +683,12 @@ bool CSapiVoiceCache::RemoveVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient *
 #endif
 						mCachedVoices.DeleteAt (lVoiceNdx);
 					}
+#ifdef	_DEBUG_CACHE
 					else
 					{
-#ifdef	_DEBUG_CACHE
 						LogMessage (_DEBUG_CACHE, _T("Unused cached Voice [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId());
-#endif
-						mCachedVoices.RemoveAt (lVoiceNdx);
 					}
+#endif
 				}
 			}
 #ifdef	_DEBUG_CACHE

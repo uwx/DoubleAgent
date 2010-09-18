@@ -122,6 +122,7 @@ void DaSvrAudioOutput::OnClientEnded()
 		LogMessage (_LOG_ABANDONED, _T("[%p(%d)] DaSvrAudioOutput::OnClientEnded"), this, max(m_dwRef,-1));
 	}
 #endif
+	Terminate (false, true);
 	Terminate (true, true);
 	try
 	{

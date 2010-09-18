@@ -980,7 +980,7 @@ IDaCtlRequest * DaControl::PutRequest (DaRequestCategory pCategory, long pReqID,
 				lRequest->mCategory = pCategory;
 			}
 #ifdef	_DEBUG_REQUEST
-			LogMessage (_DEBUG_REQUEST, _T("  Reuse Request   [%p(%d)(%d)] Status [%s] Category [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr(), lRequest->CategoryStr());
+			LogMessage (_DEBUG_REQUEST, _T("  Reuse Request   [%p(%d)(%d)] Status [%s] Category [%s] (@%d)"), lRequest, lRequest->mReqID, max(lRequest->m_dwRef,-1), lRequest->StatusStr(), lRequest->CategoryStr(), __LINE__);
 #endif
 		}
 
@@ -1005,7 +1005,7 @@ IDaCtlRequest * DaControl::PutRequest (DaRequestCategory pCategory, long pReqID,
 			{
 				lRequest->mStatus = IS_INTERRUPT_ERROR (lRequest->mResult) ? RequestStatus_Interrupted : RequestStatus_Failed;
 #ifdef	_DEBUG_REQUEST
-				LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)(%d)] Status [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr());
+				LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)(%d)] Status [%s] (@%d)"), lRequest, lRequest->mReqID, max(lRequest->m_dwRef,-1), lRequest->StatusStr(), __LINE__);
 #endif
 			}
 			else
@@ -1013,7 +1013,7 @@ IDaCtlRequest * DaControl::PutRequest (DaRequestCategory pCategory, long pReqID,
 			{
 				lRequest->mStatus = RequestStatus_Success;
 #ifdef	_DEBUG_REQUEST
-				LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)(%d)] Status [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr());
+				LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)(%d)] Status [%s] (@%d)"), lRequest, lRequest->mReqID, max(lRequest->m_dwRef,-1), lRequest->StatusStr(), __LINE__);
 #endif
 			}
 			else
@@ -1021,7 +1021,7 @@ IDaCtlRequest * DaControl::PutRequest (DaRequestCategory pCategory, long pReqID,
 			{
 				lRequest->mStatus = RequestStatus_InProgress;
 #ifdef	_DEBUG_REQUEST
-				LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)(%d)] Status [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr());
+				LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)(%d)] Status [%s] (@%d)"), lRequest, lRequest->mReqID, max(lRequest->m_dwRef,-1), lRequest->StatusStr(), __LINE__);
 #endif
 			}
 		}
@@ -1045,7 +1045,7 @@ IDaCtlRequest * DaControl::PutRequest (DaRequestCategory pCategory, long pReqID,
 		else
 		if	(lRequest)
 		{
-			LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)(%d)] Status [%s] Category [%s] Deferred [%p]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr(), lRequest->CategoryStr(), m_hWnd);
+			LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)(%d)] Status [%s] Category [%s] Deferred [%p] (@%d)"), lRequest, lRequest->mReqID, max(lRequest->m_dwRef,-1), lRequest->StatusStr(), lRequest->CategoryStr(), m_hWnd, __LINE__);
 		}
 #endif
 
@@ -1095,7 +1095,7 @@ void DaControl::CompleteRequests (bool pIdleTime)
 			CAtlPtrTypeArray <DaCtlRequest>	lActiveRequests;
 
 #ifdef	_DEBUG_REQUEST
-			LogMessage (_DEBUG_REQUEST, _T("[%p(%d)] Complete Requests [%d] Idle [%u]"), this, max(m_dwRef,-1), mActiveRequests.GetCount(), pIdleTime);
+			LogMessage (_DEBUG_REQUEST, _T("[%p(%d)] Complete Requests [%d %d] Idle [%u]"), this, max(m_dwRef,-1), mActiveRequests.GetCount(), mCompletedRequests.GetCount(), pIdleTime);
 #endif
 			for	(lPos = mActiveRequests.GetStartPosition(); lPos;)
 			{
@@ -1121,7 +1121,7 @@ void DaControl::CompleteRequests (bool pIdleTime)
 					//	is complete, but the application did not use the returned request object.
 					//
 #ifdef	_DEBUG_REQUEST
-					LogMessage (_DEBUG_REQUEST, _T("  Release Request [%p(%d)(%d)] Status [%s] Category [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr(), lRequest->CategoryStr());
+					LogMessage (_DEBUG_REQUEST, _T("  Release Request [%p(%d)(%d)] Status [%s] Category [%s] (@%d)"), lRequest, lRequest->mReqID, max(lRequest->m_dwRef,-1), lRequest->StatusStr(), lRequest->CategoryStr(), __LINE__);
 #endif
 					mActiveRequests.RemoveKey (lRequest->mReqID);
 					mCompletedRequests.Add (lRequest);
@@ -1129,99 +1129,110 @@ void DaControl::CompleteRequests (bool pIdleTime)
 				}
 				else
 				{
-					if	((lRequest->mCategory & DaRequestNotifyEnabled) == 0)
+					IDaCtlRequestPtr	lInterface ((LPDISPATCH) lRequest);
+					
+					try
 					{
-#ifdef	_DEBUG_REQUEST
-						if	(lRequest->mCategory & (DaRequestNotifyStart|DaRequestNotifyComplete))
+						if	((lRequest->mCategory & DaRequestNotifyEnabled) == 0)
 						{
-							LogMessage (_DEBUG_REQUEST, _T("  Deferred Request [%p(%d)(%d)] Status [%s] Category [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr(), lRequest->CategoryStr());
-						}
+#ifdef	_DEBUG_REQUEST
+							if	(lRequest->mCategory & (DaRequestNotifyStart|DaRequestNotifyComplete))
+							{
+								LogMessage (_DEBUG_REQUEST, _T("  Deferred Request [%p(%d)(%d)] Status [%s] Category [%s] (@%d)"), lRequest, lRequest->mReqID, max(lRequest->m_dwRef,-1), lRequest->StatusStr(), lRequest->CategoryStr(), __LINE__);
+							}
 #endif
-						lRequest->mCategory = (DaRequestCategory)(lRequest->mCategory & ~(DaRequestNotifyStart|DaRequestNotifyComplete));
-					}
-					lRequest->mCategory = (DaRequestCategory)(lRequest->mCategory | DaRequestNotifyEnabled);
+							lRequest->mCategory = (DaRequestCategory)(lRequest->mCategory & ~(DaRequestNotifyStart|DaRequestNotifyComplete));
+						}
+						lRequest->mCategory = (DaRequestCategory)(lRequest->mCategory | DaRequestNotifyEnabled);
 
-					if	(
-							(lRequest->mStatus == RequestStatus_InProgress)
-						||	(lRequest->mStatus == RequestStatus_Success)
-						||	(lRequest->mStatus == RequestStatus_Failed)
-						||	(lRequest->mStatus == RequestStatus_Interrupted)
-						)
-					{
-						//
-						//	This means that the function that initiated the request did so after the RequestStart
-						//	notification was received.
-						//
-						if	((lRequest->mCategory & DaRequestNotifyStart) == 0)
+						if	(
+								(lRequest->mStatus == RequestStatus_InProgress)
+							||	(lRequest->mStatus == RequestStatus_Success)
+							||	(lRequest->mStatus == RequestStatus_Failed)
+							||	(lRequest->mStatus == RequestStatus_Interrupted)
+							)
 						{
-							lRequest->mCategory = (DaRequestCategory)(lRequest->mCategory | DaRequestNotifyStart);
+							//
+							//	This means that the function that initiated the request did so after the RequestStart
+							//	notification was received.
+							//
+							if	((lRequest->mCategory & DaRequestNotifyStart) == 0)
+							{
+								lRequest->mCategory = (DaRequestCategory)(lRequest->mCategory | DaRequestNotifyStart);
 
 #ifdef	_DEBUG_REQUEST
-							LogMessage (_DEBUG_REQUEST, _T("  Queued Request [%p(%d)(%d)] Status [%s] Category [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr(), lRequest->CategoryStr());
+								LogMessage (_DEBUG_REQUEST, _T("  Queued Request [%p(%d)(%d)] Status [%s] Category [%s] (@%d)"), lRequest, lRequest->mReqID, max(lRequest->m_dwRef,-1), lRequest->StatusStr(), lRequest->CategoryStr(), __LINE__);
 #endif
 #ifdef	_DEBUG_NOTIFY
-							LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CompleteRequests::RequestStart [%d]"), this, max(m_dwRef,-1), lRequest->mReqID);
+								LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CompleteRequests::RequestStart [%d]"), this, max(m_dwRef,-1), lRequest->mReqID);
 #endif
-							if	(_AtlModule.PreNotify ())
-							{
-								IDaCtlRequestPtr	lInterface ((LPDISPATCH) lRequest);
-								try
+								if	(_AtlModule.PreNotify ())
 								{
-									FireRequestStart (lInterface);
+									try
+									{
+										FireRequestStart (lInterface);
+									}
+									catch AnyExceptionDebug
+									_AtlModule.PostNotify ();
 								}
-								catch AnyExceptionDebug
-								_AtlModule.PostNotify ();
 							}
 						}
-					}
 
-					if	(
-							(lRequest->mStatus == RequestStatus_Success)
-						||	(lRequest->mStatus == RequestStatus_Failed)
-						||	(lRequest->mStatus == RequestStatus_Interrupted)
-						)
-					{
-						//
-						//	This means that the function that initiated the request did so after the RequestComplete
-						//	notification was received.
-						//
-						if	((lRequest->mCategory & DaRequestNotifyComplete) == 0)
+						if	(
+								(lRequest->mStatus == RequestStatus_Success)
+							||	(lRequest->mStatus == RequestStatus_Failed)
+							||	(lRequest->mStatus == RequestStatus_Interrupted)
+							)
 						{
-							lRequest->mCategory = (DaRequestCategory)(lRequest->mCategory | DaRequestNotifyComplete);
+							//
+							//	This means that the function that initiated the request did so after the RequestComplete
+							//	notification was received.
+							//
+							mActiveRequests.RemoveKey (lRequest->mReqID);
+							mCompletedRequests.Add (lRequest);
+
+							if	((lRequest->mCategory & DaRequestNotifyComplete) == 0)
+							{
+								lRequest->mCategory = (DaRequestCategory)(lRequest->mCategory | DaRequestNotifyComplete);
 
 #ifdef	_DEBUG_REQUEST
-							LogMessage (_DEBUG_REQUEST, _T("  Queued Request [%p(%d)(%d)] Status [%s] Category [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr(), lRequest->CategoryStr());
+								LogMessage (_DEBUG_REQUEST, _T("  Queued Request [%p(%d)(%d)] Status [%s] Category [%s] (@%d)"), lRequest, lRequest->mReqID, max(lRequest->m_dwRef,-1), lRequest->StatusStr(), lRequest->CategoryStr(), __LINE__);
 #endif
 #ifdef	_DEBUG_NOTIFY
-							LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CompleteRequests::RequestComplete [%d]"), this, max(m_dwRef,-1), lRequest->mReqID);
+								LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CompleteRequests::RequestComplete [%d]"), this, max(m_dwRef,-1), lRequest->mReqID);
 #endif
-							if	(_AtlModule.PreNotify ())
-							{
-								IDaCtlRequestPtr	lInterface ((LPDISPATCH) lRequest);
-								try
+								if	(_AtlModule.PreNotify ())
 								{
-									FireRequestComplete (lInterface);
+									try
+									{
+										FireRequestComplete (lInterface);
+									}
+									catch AnyExceptionDebug
+									_AtlModule.PostNotify ();
 								}
-								catch AnyExceptionDebug
-								_AtlModule.PostNotify ();
 							}
+
+#ifdef	_DEBUG_REQUEST
+							LogMessage (_DEBUG_REQUEST, _T("  Release Request [%p(%d)(%d)] Status [%s] Category [%s] (@%d)"), lRequest, lRequest->mReqID, max(lRequest->m_dwRef,-1), lRequest->StatusStr(), lRequest->CategoryStr(), __LINE__);
+#endif
+							lRequest->Release ();
 						}
 #ifdef	_DEBUG_REQUEST
-						LogMessage (_DEBUG_REQUEST, _T("  Release Request [%p(%d)(%d)] Status [%s] Category [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr(), lRequest->CategoryStr());
+						else
+						if	(lRequest->mStatus == RequestStatus_Pending)
+						{
+							LogMessage (_DEBUG_REQUEST, _T("  Pending Request [%p(%d)(%d)] Status [%s] Category [%s] (@%d)"), lRequest, lRequest->mReqID, max(lRequest->m_dwRef,-1), lRequest->StatusStr(), lRequest->CategoryStr(), __LINE__);
+						}
 #endif
-						mActiveRequests.RemoveKey (lRequest->mReqID);
-						mCompletedRequests.Add (lRequest);
-						lRequest->Release ();
 					}
-#ifdef	_DEBUG_REQUEST
-					else
-					if	(lRequest->mStatus == RequestStatus_Pending)
-					{
-						LogMessage (_DEBUG_REQUEST, _T("  Pending Request [%p(%d)(%d)] Status [%s] Category [%s]"), lRequest, lRequest->mReqID, lRequest->m_dwRef, lRequest->StatusStr(), lRequest->CategoryStr());
-					}
-#endif
+					catch AnyExceptionDebug
+					
+					SafeFreeSafePtr (lInterface);
 				}
 			}
+#ifdef	_DEBUG_REQUEST
+			LogMessage (_DEBUG_REQUEST, _T("[%p(%d)] Complete Requests [%d %d] Idle [%u] Done"), this, max(m_dwRef,-1), mActiveRequests.GetCount(), mCompletedRequests.GetCount(), pIdleTime);
+#endif
 		}
 		catch AnyExceptionDebug
 	}
@@ -1282,7 +1293,7 @@ void DaControl::RequestCreated (DaCtlRequest * pRequest)
 		pRequest->AddRef ();
 		mActiveRequests.SetAt (pRequest->mReqID, pRequest);
 #ifdef	_DEBUG_REQUEST
-		LogMessage (_DEBUG_REQUEST, _T("  New Request     [%p(%d)(%d)] Status [%s] Category [%s] Count [%d]"), pRequest, pRequest->mReqID, pRequest->m_dwRef, pRequest->StatusStr(), pRequest->CategoryStr(), mActiveRequests.GetCount());
+		LogMessage (_DEBUG_REQUEST, _T("  New Request     [%p(%d)(%d)] Status [%s] Category [%s] Count [%d]"), pRequest, pRequest->mReqID, max(pRequest->m_dwRef,-1), pRequest->StatusStr(), pRequest->CategoryStr(), mActiveRequests.GetCount());
 #endif
 	}
 }
@@ -1297,7 +1308,7 @@ void DaControl::RequestDeleted (DaCtlRequest * pRequest)
 		mActiveRequests.RemoveKey (pRequest->mReqID);
 		mCompletedRequests.Remove (pRequest);
 #ifdef	_DEBUG_REQUEST
-		LogMessage (_DEBUG_REQUEST, _T("  Deleted Request [%p(%d)(%d)] Status [%s] Category [%s] Count [%d]"), pRequest, pRequest->mReqID, pRequest->m_dwRef, pRequest->StatusStr(), pRequest->CategoryStr(), mActiveRequests.GetCount());
+		LogMessage (_DEBUG_REQUEST, _T("  Deleted Request [%p(%d)(%d)] Status [%s] Category [%s] Count [%d]"), pRequest, pRequest->mReqID, max(pRequest->m_dwRef,-1), pRequest->StatusStr(), pRequest->CategoryStr(), mActiveRequests.GetCount());
 #endif
 	}
 }

@@ -50,6 +50,7 @@ public:
 // Overrides
 public:
 	virtual void OnClientEnded ();
+	virtual bool IsValid (const CAgentFile * pFile) const;
 	virtual class CDaCmnCommands * GetCommands (bool pCreateObject);
 	virtual class CDaCmnBalloon * GetBalloon (bool pCreateObject);
 	virtual bool NotifyVoiceCommand (USHORT pCommandId, interface ISpRecoResult * pRecoResult, bool pGlobalCommand);

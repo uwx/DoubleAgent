@@ -58,7 +58,7 @@ public:
 	bool CacheInput (CSapi5Input * pInput, CSapiInputClient * pClient);
 	bool UncacheInput (CSapi5Input * pInput);
 	bool AddInputClient (CSapi5Input * pInput, CSapiInputClient * pClient);
-	bool RemoveInputClient (CSapi5Input * pInput, CSapiInputClient * pClient, bool pDeleteUnusedInput = true);
+	bool RemoveInputClient (CSapi5Input * pInput, CSapiInputClient * pClient, bool pDeleteUnusedInput = false);
 
 	CSapi5Input * GetCachedInput (INT_PTR pInputNdx);
 	CSapi5Input * FindCachedInput (LPCTSTR pEngineId);

@@ -143,15 +143,17 @@ void DaSvrCharacter::Terminate (bool pFinal, bool pAbandonned)
 			m_dwRef = 0;
 		}
 
-		if	(mSvrCommands != NULL)
+		if	(
+				(pFinal)
+			&&	(mSvrCommands != NULL)
+			)
 		{
 			try
 			{
 				DaSvrCommands *	lCommands;
 
 				if	(
-						(pFinal)
-					&&	(pAbandonned)
+						(pAbandonned)
 					&&	(lCommands = dynamic_cast <DaSvrCommands *> (mSvrCommands))
 					)
 				{
@@ -163,28 +165,26 @@ void DaSvrCharacter::Terminate (bool pFinal, bool pAbandonned)
 					catch AnyExceptionSilent
 				}
 				else
-				if	(pFinal)
 				{
 					mSvrCommands->Release();
 				}
 			}
 			catch AnyExceptionSilent
 
-			if	(pFinal)
-			{
-				mSvrCommands = NULL;
-			}
+			mSvrCommands = NULL;
 		}
 
-		if	(mSvrBalloon != NULL)
+		if	(
+				(pFinal)
+			&&	(mSvrBalloon != NULL)
+			)
 		{
 			try
 			{
 				DaSvrBalloon *	lBalloon;
 
 				if	(
-						(pFinal)
-					&&	(pAbandonned)
+						(pAbandonned)
 					&&	(lBalloon = dynamic_cast <DaSvrBalloon *> (mSvrBalloon))
 					)
 				{
@@ -196,17 +196,13 @@ void DaSvrCharacter::Terminate (bool pFinal, bool pAbandonned)
 					catch AnyExceptionSilent
 				}
 				else
-				if	(pFinal)
 				{
 					mSvrBalloon->Release ();
 				}
 			}
 			catch AnyExceptionSilent
 
-			if	(pFinal)
-			{
-				mSvrBalloon = NULL;
-			}
+			mSvrBalloon = NULL;
 		}
 
 		if	(
@@ -214,7 +210,7 @@ void DaSvrCharacter::Terminate (bool pFinal, bool pAbandonned)
 			||	(pAbandonned)
 			)
 		{
-			CDaCmnCharacter::Terminate (pFinal);
+			CDaCmnCharacter::Terminate (pFinal, pAbandonned);
 		}
 
 #ifdef	_LOG_INSTANCE
@@ -252,12 +248,22 @@ void DaSvrCharacter::OnClientEnded()
 		LogMessage (_LOG_ABANDONED, _T("[%p(%d)(%d)] DaSvrCharacter::OnClientEnded [%u]"), this, mCharID, max(m_dwRef,-1), IsInNotify());
 	}
 #endif
+	Terminate (false, true);
 	Terminate (true, true);
 	try
 	{
 		delete this;
 	}
 	catch AnyExceptionDebug
+}
+
+bool DaSvrCharacter::IsValid (const CAgentFile * pFile) const
+{
+	if	(VerifyClientLifetime ())
+	{
+		return CDaCmnCharacter::IsValid (pFile);
+	}
+	return false;
 }
 
 /////////////////////////////////////////////////////////////////////////////

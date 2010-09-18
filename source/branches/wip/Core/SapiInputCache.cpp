@@ -389,13 +389,12 @@ bool CSapiInputCache::RemoveInputClient (CSapi5Input * pInput, CSapiInputClient 
 #endif
 						mCachedInputs.DeleteAt (lInputNdx);
 					}
+#ifdef	_DEBUG_CACHE
 					else
 					{
-#ifdef	_DEBUG_CACHE
 						LogMessage (_DEBUG_CACHE, _T("Unused cached Input [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId());
-#endif
-						mCachedInputs.RemoveAt (lInputNdx);
 					}
+#endif
 				}
 			}
 #ifdef	_DEBUG_CACHE

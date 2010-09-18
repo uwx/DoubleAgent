@@ -59,7 +59,10 @@ AudioStatusType CDaCmnSettings::GetAudioStatus ()
 				{
 					for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 					{
-						if	(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+						if	(
+								(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+							&&	(lCharacter->IsValid (lFile))
+							)
 						{
 							if	(lCharacter->IsSpeaking ())
 							{

@@ -297,7 +297,7 @@ template <typename aType> static inline void MemAlign (aType & pAlign, UINT pAli
 	UINT	lOffset = ((ULONG_PTR) pAlign) % pAlignVal;
 	if	(lOffset)
 	{
-		(ULONG_PTR &) pAlign = ((ULONG_PTR) pAlign) + (8 - lOffset);
+		pAlign = (aType) (((ULONG_PTR) pAlign) + (8 - lOffset));
 	}
 }
 

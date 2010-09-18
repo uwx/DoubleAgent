@@ -527,12 +527,28 @@ void DaServer::UnloadAllCharacters (bool pAbandonned)
 									LogMessage (_LOG_ABANDONED, _T("[%p(%d)] AbandonCharacter [%p(%d)(%d)]"), this, max(m_dwRef,-1), lCharacter, lCharacter->GetCharID(), max(lCharacter->m_dwRef,-1));
 								}
 #endif
-								lCharacter->Terminate (true, pAbandonned);
+								try
+								{
+									lCharacter->Terminate (false, pAbandonned);
+								}
+								catch AnyExceptionDebug
+								try
+								{
+									lCharacter->Terminate (true, pAbandonned);
+								}
+								catch AnyExceptionDebug
 								try
 								{
 									delete lCharacter;
 								}
 								catch AnyExceptionSilent
+
+#ifdef	_LOG_ABANDONED
+								if	(LogIsActive (_LOG_ABANDONED))
+								{
+									LogMessage (_LOG_ABANDONED, _T("[%p(%d)] AbandonCharacter [%p] Done"), this, max(m_dwRef,-1), lCharacter);
+								}
+#endif
 							}
 							else
 							{

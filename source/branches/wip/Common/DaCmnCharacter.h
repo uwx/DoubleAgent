@@ -65,11 +65,12 @@ public:
 	virtual DWORD GetStyle () const;
 	long GetActiveClient () const;
 	virtual short GetActiveState () const;
+	virtual bool IsValid (const CAgentFile * pFile) const;
 
 // Operations
 public:
 	void Initialize (long pCharID, CEventNotify * pNotify, _IListeningAnchor * pListeningAnchor);
-	void Terminate (bool pFinal);
+	void Terminate (bool pFinal, bool pAbandonned = false);
 	void Unrealize (bool pForce);
 
 	long Show (bool pFast, bool pImmediate = false);
@@ -191,9 +192,9 @@ public:
 	HRESULT StopAll (long pStopTypes, HRESULT pReqStatus);
 
 	class CSapiVoice * GetSapiVoice (bool pCreateObject, LPCTSTR pVoiceName = NULL);
-	void ReleaseSapiVoice ();
+	void ReleaseSapiVoice (bool pAbandonned = false);
 	class CSapi5Input * GetSapiInput (bool pCreateObject, LPCTSTR pEngineName = NULL);
-	void ReleaseSapiInput ();
+	void ReleaseSapiInput (bool pAbandonned = false);
 
 	bool ShowListeningState (bool pShow);
 	bool ShowHearingState (bool pShow);

@@ -45,7 +45,7 @@
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_SHELLIDLIST	LogNormal
+//#define	_DEBUG_SHELLIDLIST	LogNormal
 #endif
 
 #ifdef _DEBUG
