@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+	<title>Input Services</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css" />
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Input Services</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>A client application provides the primary user interface for interaction with a character. You can program
+					a character to respond to any form of input, from button-clicks to typed-in text. In addition, Double
+					Agent provides events so you can program what happens when the user clicks, double-clicks, or drags
+					the character. Double Agent passes the coordinates of the pointer and any modifier key state for these
+					events.</p>
+				<h4><a name="Active"></a>Input-Active Client</h4>
+				<div class="indent">
+					<p>Because multiple client applications can share the same character and because multiple clients can use
+						different characters at the same time, the server designates one client as the <em class="self">input-active</em>
+						client and sends mouse and voice input only to that client application. This maintains the orderly management
+						of user input, so that an appropriate client responds to the input.</p>
+					<p>Typically, user interaction determines which client application becomes <em class="self">input-active</em>.
+						For example, if the user clicks a character, that character's client application becomes <em class="self">
+							input-active</em>. Similarly, if a user speaks the name of a character, it becomes <em class="self">input-active</em>.
+						Also, when the server processes a character's <em class="keyword">Show</em> method, the client of that
+						character becomes <em class="self">input-active</em>.</p>
+					<p>When a character is hidden, the client of that character will no longer be <em class="self">input-active</em>
+						for that character. The server automatically makes the <em class="self">active</em> client of any remaining
+						character(s) <em class="self">input-active</em>. When all characters are hidden, no client is <em class="self">
+							input-active</em>. However, in this situation, if the user presses the <em class="glossary">Listening key</em>,
+						Double Agent will continue to listen for its commands (using the speech recognition engine matching
+						the topmost character of the last <em class="self">input-active</em> client).</p>
+					<p>If multiple clients are sharing the same character, the server will designate its <em class="self">active</em>
+						client as <em class="self">input-active</em> client. The <em class="self">active</em> character is the
+						topmost in the client order. You can set your client to be the <em class="self">active</em> or <em class="self">
+							not-active</em> client using the <em class="keyword">Activate</em> method. You can also use the
+						<em class="keyword">Activate</em> method to explicitly make your client <em class="self">input-active</em>;
+						but to avoid disrupting other clients of the character, you should do so only when your client application
+						is <em class="self">active</em>. For example, if the user clicks your application's window, activating
+						your application, you can call the <em class="keyword">Activate</em> method to receive and process mouse
+						and speech input from the character.</p>
+				</div>
+				<h4><a name="Menu"></a>Pop-up Menu Support</h4>
+				<div class="indent">
+					<p>Double Agent includes a <em class="self">pop-up menu</em> (also known as a context menu) for each character.
+						Double Agent displays this <em class="self">pop-up menu</em> automatically when a user right-clicks
+						the character. You can add commands for your client application to the menu by defining a <em class="keyword">
+							Commands</em> collection. For each command in the collection that you define, you can specify <em class="keyword">
+								Caption</em> and <em class="keyword">Visible</em> properties. The <em class="keyword">Caption</em>
+						is the text that appears in the menu when the <em class="keyword">Visible</em> property is set to <em
+							class="keyword">True</em>. You can also use the <em class="keyword">Enabled</em> property to display
+						the command in the menu as disabled. Define the access key for the menu text by including an ampersand
+						(&amp;) before the text character of the <em class="keyword">Caption</em> text setting.</p>
+					<p>Double Agent automatically adds to the menu commands for opening the <a href="Gen_VoiceCommands.htm">
+					Voice Commands</a> window and hiding the character as well as the <em class="keyword">Commands</em> captions
+						of other clients of the character to enable users to switch between clients. Double Agent automatically
+						adds a separator to the menu between its menu entries and those defined by the client. Separators appear
+						only when there are items in the menu to separate. </p>
+					<p>To remove commands from a menu, use the <em class="keyword">Remove</em> method. Note that menu entries
+						do not change while the menu displays. If you add or remove commands or change their properties, the
+						menu displays the changes when the user redisplays the menu.</p>
+					<p>If you prefer to provide your own <em class="self">pop-up menu</em> services for a character, you can
+						use the <em class="keyword">AutoPopupMenu</em> property to turn off automatic handling of the right-click
+						action. You can then use the <em class="keyword">Click</em> event notification to author your own menu
+						handling behaviour.</p>
+					<p>When the user selects a command from a character's <em class="self">pop-up menu</em> or the <a href="Gen_VoiceCommands.htm">
+					Voice Commands</a> window, Double Agent triggers the <em class="keyword">Command</em> event of the associated
+						client and passes back the parameters of the input using the <em class="keyword">UserInput</em> object.</p>
+					<p>Double Agent also provides a <em class="self">pop-up menu</em> for the character's notification icon.
+						When the character is visible, right-clicking this menu displays the same commands as those displayed
+						by right-clicking the character. However, when the character is hidden, only the pre-defined commands
+						are included.</p>
+				</div>
+				<h4 class="seealso">See Also</h4>
+				<a href="Gen_InputSpeech.htm">Speech Input Support</a><br>
+				<a href="Gen_VoiceCommands.htm">The Voice Commands Window</a><br>
+				<a href="Gen_ListeningTip.htm">The Listening Tip</a></td>
+		</tr>
+	</table>
+</body>
+</html>

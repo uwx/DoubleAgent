@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Using the Server in Applications</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Using the Server in Applications</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>You can access the Double Agent server from any programming interface that supports the <em class="glossary">
+					COM</em> standard or the <em class="glossary">.NET</em> standard.</p>
+				<p>For programming languages that support <em class="glossary">COM</em> interfaces, use the Double Agent
+					server directly.</p>
+				<ul>
+					<li>Create an instance of the server and request a pointer to a specific interface using the standard <em
+						class="glossary">COM</em> convention. In particular, the <em class="glossary">COM</em> library provides
+						an API function, <em class="keyword">CoCreateInstance</em>, that creates an instance of an object and
+						returns a pointer to the requested interface.</li>
+					<li>Request a pointer to the <em class="keyword">IDaServer2</em> interface in your <em class="keyword">CoCreateInstance</em>
+						call or in a subsequent call to <em class="keyword">QueryInterface</em>. The following code illustrates
+						this in C/C++:
+						<pre class="example"><em class="token">Result</em> = <em class="keyword">CoCreateInstance</em> (<em class="keyword">CLSID_DaServer</em>, NULL, <em
+							class="keyword">CLSCTX_SERVER</em>, <em class="keyword">IID_IDaServer2</em>, (<em class="keyword">void</em>**)&amp;<em
+								class="token">interface_pointer</em>);</pre>
+					</li>
+					<li>If the Double Agent server is running, this call connects to the server; otherwise, it starts the server.</li>
+					<li>Note that as Double Agent evolves, new interfaces are defined with numeric suffixes. Each new interface
+						is derived from, and therefore includes all the functionality of, the interface it supersedes. For example,
+						the <em class="keyword">IDaServer2</em> interface supersedes the <em class="keyword">IDaServer</em>
+						interface. If you want to use the latest features, always use the interface with the highest suffix.</li>
+					<li>Note also that functions that take pointers to a <em class="keyword">BSTR</em> allocate memory using
+						<em class="keyword">SysAllocString</em>. It is the caller's responsibility to free this memory using
+						<em class="keyword">SysFreeString</em>.</li>
+				</ul>
+				<p>For programming languages that use a different mechanism to instantiate <em class="glossary">COM</em>
+					classes (such as the <em class="keyword">New</em> operator), use the &quot;DoubleAgent.Server&quot;
+					or &quot;DoubleAgent.Server.1.1&quot; <em class="keyword">ProgID</em>, or the &quot;{1147E500-A208-11DE-ABF2-002421116FB2}&quot;
+					<em class="keyword">ClassID</em>.</p>
+				<p>For programming languages that support the <em class="glossary">.NET</em> <em class="glossary">Common
+					Language Runtime (CLR)</em>, use the Double Agent Server <em class="glossary">Primary Interop Assembly</em>
+					(DoubleAgent.Server.dll).</p>
+				<ul>
+					<li>Use the <em class="keyword">New</em> operator to create an instance of the <em class="keyword">DoubleAgent.Server.Server</em>
+						class.</li>
+					<li>The <em class="glossary">Interop Assembly</em> takes care of all translations between <em class="glossary">
+						.NET</em> and <em class="glossary">COM</em>, so all of the server's functionality is available as <em
+							class="glossary">.NET</em> classes, delegates, and enumerations.</li></ul>
+				<h4 class="seealso">See Also</h4>
+				<a href="Svr_Programming_Load.htm">Loading Character and Animation Data</a><br />
+				<a href="Svr_Programming_Sink.htm">Creating a Notification Sink</a><br />
+				<a href="Svr_Programming_Overview.htm">Server Programming Overview</a> </td>
+		</tr>
+	</table>
+</body>
+</html>

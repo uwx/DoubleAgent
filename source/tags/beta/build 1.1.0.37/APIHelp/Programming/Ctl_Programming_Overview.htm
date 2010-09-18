@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Control Programming Overview</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Control Programming Overview</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>To access the control, Double Agent must already be installed on the target system. If you want to install
+					Double Agent as part of your application, you can download Double Agent's installation (<em class="filename">.MSI</em>)
+					package from the Web site. You can include this file in your installation setup program (with the required
+					acknowledgement). Whenever it is executed, it will install Double Agent on the target system.</p>
+				<p>To program the control, you will also need to install Double Agent's <em class="glossary">Application
+					Interfaces</em> components. This is an optional part of the Double Agent installation. To install it,
+					you must download its <em class="filename">.CAB</em> file to the same location as the <em class="filename">
+						.MSI</em> file.</p>
+				<hr />
+				<p>Once Double Agent and its <em class="glossary">Application Interfaces</em> components are installed,
+					the following development files will be available in the installation folder:</p>
+				<table>
+					<tr>
+						<th>File</th>
+						<th>Description</th>
+					</tr>
+					<tr>
+						<td>Dev\DaControlOdl.h</td>
+						<td>The generated C/C++ header file for the Double Agent Control type library</td>
+					</tr>
+					<tr>
+						<td>Dev\DaControlInterface.h</td>
+						<td>C++ <em class="glossary">Smart pointer</em> definitions for the Double Agent Control type library (includes
+							DaControlOdl.h)</td>
+					</tr>
+					<tr>
+						<td>DoubleAgent.AxControl.dll</td>
+						<td>The Double Agent ActiveX<sup>®</sup> Control <em class="glossary">Primary Interop Assembly</em></td>
+					</tr>
+					<tr>
+						<td>DoubleAgent.AxControl.xml</td>
+						<td><em class="glossary">Intellisense</em> data for DoubleAgent.AxControl.dll</td>
+					</tr>
+					<tr>
+						<td>DoubleAgent.Control.dll</td>
+						<td>The Double Agent Control <em class="glossary">Primary Interop Assembly</em></td>
+					</tr>
+					<tr>
+						<td>DoubleAgent.Control.xml</td>
+						<td><em class="glossary">Intellisense</em> data for DoubleAgent.Control.dll</td>
+					</tr>
+				</table>
+				<h4 class="seealso">See Also</h4>
+				<a href="Ctl_Objects.htm">The Double Agent Control Object Model</a><br />
+				<a href="Ctl_Programming_Apps.htm">Using the Control in Applications</a><br />
+				<a href="Ctl_Programming_Web.htm">Using the Control in Web Pages</a><br />
+				<a href="Ctl_Programming_Speech.htm">Using Speech Services</a><br />
+				<a href="Ctl_Programming_Modes.htm">Connected, Stand-Alone, and Contained</a><br />
+				<a href="Ctl_Programming_Upgrade.htm">Updating from Previous Versions</a> </td>
+		</tr>
+	</table>
+</body>
+</html>

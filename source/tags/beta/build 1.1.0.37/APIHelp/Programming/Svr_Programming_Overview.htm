@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Server Programming Overview</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Server Programming Overview</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>To use the server interfaces, Double Agent must already be installed on the target system. If you want
+					to install Double Agent as part of your application, you can download Double Agent's installation (<em
+						class="filename">.MSI</em>) package from the Web site. You can include this file in your installation
+					setup program (with the required acknowledgement). Whenever it is executed, it will install Double Agent
+					on the target system.</p>
+				<p>The Microsoft<sup>®</sup> Agent language components can be installed the same way. Similarly, you can
+					use this technique to install the <em class="filename">.ACS</em> format of the Microsoft<sup>®</sup>
+					characters, or your own characters.</p>
+				<p>To program the server, you will also need to install Double Agent's <em class="glossary">Application
+					Interfaces</em> components. This is an optional part of the Double Agent installation. To install it,
+					you must download its <em class="filename">.CAB</em> file to the same location as the <em class="filename">
+						.MSI</em> file.</p>
+				<hr />
+				<p>Once Double Agent and its <em class="glossary">Application Interfaces</em> components are installed,
+					the following development files will be available in the installation folder:</p>
+				<table>
+					<tr>
+						<th>File</th>
+						<th>Description</th>
+					</tr>
+					<tr>
+						<td>Dev\DaServer.tlb</td>
+						<td>The registered Double Agent Server type library</td>
+					</tr>
+					<tr>
+						<td>Dev\DaServerOdl.h</td>
+						<td>The generated C/C++ header file for the Double Agent Server type library</td>
+					</tr>
+					<tr>
+						<td>Dev\DaServerInterface.h</td>
+						<td>C++ <em class="glossary">Smart pointer</em> definitions for the Double Agent Server type library (includes
+							DaServerOdl.h)</td>
+					</tr>
+					<tr>
+						<td>DoubleAgent.Server.dll</td>
+						<td>The Double Agent Server <em class="glossary">Primary Interop Assembly</em></td>
+					</tr>
+					<tr>
+						<td>DoubleAgent.Server.xml</td>
+						<td><em class="glossary">Intellisense</em> data for DoubleAgent.Server.dll</td>
+					</tr>
+				</table>
+				<h4 class="seealso">See Also</h4>
+				<a href="Svr_Objects.htm">The Double Agent Server Object Model</a><br />
+				<a href="Svr_Programming_Apps.htm">Using the Server in Applications</a><br />
+				<a href="Svr_Programming_Speech.htm">Using Speech Services</a><br />
+				<a href="Svr_Programming_Upgrade.htm">Updating from Previous Versions</a> </td>
+		</tr>
+	</table>
+</body>
+</html>
