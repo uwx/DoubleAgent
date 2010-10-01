@@ -1,0 +1,189 @@
+import "oaidl.idl";
+import "wtypes.idl";
+
+cpp_quote("#ifndef _DA_COMMON_TYPES_")
+cpp_quote("#define _DA_COMMON_TYPES_")
+
+	[
+		uuid(1147E56A-A208-11DE-ABF2-002421116FB2),
+		helpstring("Style settings for a character's word balloon")
+		//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.BalloonStyleFlags")
+	]
+	typedef enum BalloonStyleFlags
+	{
+		[helpstring("The word balloon is enabled")]
+			BalloonStyle_Enabled = 0x00000001,
+		[helpstring("The word balloon is automatically resized to fit the speech or thought text")]
+			BalloonStyle_SizeToText = 0x00000002,
+		[helpstring("The word balloon is hidden automatically after a short delay")]
+			BalloonStyle_AutoHide = 0x00000004,
+		[helpstring("The text in the word balloon is shown one word at a time")]
+			BalloonStyle_AutoPace = 0x00000008,
+		[helpstring("Partial lines are shown when the balloon text scrolls (for a word balloon that isn't SizeToText)")]
+			BalloonStyle_ShowPartialLines = 0x00000010
+	}	BalloonStyleFlags;
+
+	[
+		uuid(1147E56C-A208-11DE-ABF2-002421116FB2),
+		helpstring("The scope of a StopAll action")
+		//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.StopAllFlags")
+	]
+	typedef enum StopAllFlags
+	{
+		[helpstring("Stop any pending or running animations")]
+			StopAll_Play = 0x00000001,
+		[helpstring("Stop any pending or running move requests")]
+			StopAll_Move = 0x00000002,
+		[helpstring("Stop any pending or running speech requests")]
+			StopAll_Speak = 0x00000004,
+		[helpstring("Stop any queued animation or file downloads")]
+			StopAll_QueuedPrepare = 0x00000008,
+		[helpstring("Stop any non-queued animation or file downloads")]
+			StopAll_ImmediatePrepare = 0x00000010,
+		[helpstring("Stop any pending show or hide requests")]
+			StopAll_Visibility = 0x00000020,
+		[helpstring("Stop all pending actions")]
+			StopAll_Everything = 0xFFFFFFFF
+	}	StopAllFlags;
+
+	[
+		uuid(1147E56D-A208-11DE-ABF2-002421116FB2),
+		helpstring("The type of download requested")
+		//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.PrepareResourceType")
+	]
+	typedef enum PrepareResourceType
+	{
+		[helpstring("Download an animation")]
+			PrepareResource_Animation = 0,
+		[helpstring("Download all animations for a state")]
+			PrepareResource_State = 1,
+		[helpstring("Download a sound file")]
+			PrepareResource_Wave = 2
+	}	PrepareResourceType;
+
+	[
+		uuid(1147E56E-A208-11DE-ABF2-002421116FB2),
+		helpstring("The reason a character moved")
+		//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.MoveCauseType")
+	]
+	typedef enum MoveCauseType
+	{
+		[helpstring("The character hasn't moved")]
+			MoveCause_NeverMoved = 0,
+		[helpstring("The user dragged the character")]
+			MoveCause_UserMoved = 1,
+		[helpstring("This program moved the character")]
+			MoveCause_ProgramMoved = 2,
+		[helpstring("Another program moved the character")]
+			MoveCause_OtherProgramMoved = 3,
+	}	MoveCauseType;
+
+	[
+		uuid(1147E56F-A208-11DE-ABF2-002421116FB2),
+		helpstring("The reason a character was shown or hidden")
+		//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.VisibilityCauseType")
+	]
+	typedef enum VisibilityCauseType
+	{
+		[helpstring("The character hasn't been shown")]
+			VisibilityCause_NeverShown = 0,
+		[helpstring("The user hid the character from the popup-menu or the voice commands window")]
+			VisibilityCause_UserHid = 1,
+		[helpstring("The user showed the character from the popup-menu or the voice commands window")]
+			VisibilityCause_UserShowed = 2,
+		[helpstring("This program hid the character")]
+			VisibilityCause_ProgramHid = 3,
+		[helpstring("This program showed the character")]
+			VisibilityCause_ProgramShowed = 4,
+		[helpstring("Another program hid the character")]
+			VisibilityCause_OtherProgramHid = 5,
+		[helpstring("Another program showed the character")]
+			VisibilityCause_OtherProgramShowed = 6
+	}	VisibilityCauseType;
+
+	[
+		uuid(1147E590-A208-11DE-ABF2-002421116FB2),
+		helpstring("The global text-to-speech and speech recognition status")
+		//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.AudioStatusType")
+	]
+	typedef enum AudioStatusType
+	{
+		[helpstring("Text-to-speech is available")]
+			AudioStatus_Available = 0,
+		[helpstring("Text-to-speech is disabled in the Double Agent control panel")]
+			AudioStatus_Disabled = 1,
+		[helpstring("Speech recognition is hearing something")]
+			AudioStatus_UserSpeaking = 3,
+		[helpstring("A character is currently speaking")]
+			AudioStatus_CharacterSpeaking = 4,
+		[helpstring("Speech recognition is listening but not hearing anything")]
+			AudioStatus_CharacterListening = 5,
+		[helpstring("The audio status could not be determined")]
+			AudioStatus_Error = 6
+	}	AudioStatusType;
+
+	[
+		uuid(1147E591-A208-11DE-ABF2-002421116FB2),
+		helpstring("A character's speech recognition status")
+		//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.ListeningStatusType")
+	]
+	typedef enum ListeningStatusType
+	{
+		[helpstring("Speech recognition is available")]
+			ListeningStatus_Available = 0,
+		[helpstring("Speech recognition is unavailable because the character is inactive")]
+			ListeningStatus_CharacterInactive = 2,
+		[helpstring("Speech recognition is unavailable because it could not be initialized")]
+			ListeningStatus_InitializeFailed = 4,
+		[helpstring("Speech recognition is disabled in the Double Agent control panel")]
+			ListeningStatus_InputDisabled = 5,
+		[helpstring("The speech recognition status could not be determined")]
+			ListeningStatus_Error = 6
+	}	ListeningStatusType;
+
+	[
+		uuid(1147E592-A208-11DE-ABF2-002421116FB2),
+		helpstring("The reason a character stopped listening")
+		//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.ListenCompleteType")
+	]
+	typedef enum ListenCompleteType
+	{
+		[helpstring("This program turned off the listening state")]
+			ListenComplete_ProgramDisabled = 1,
+		[helpstring("The listening state was started by this program, and it timed out")]
+			ListenComplete_ProgramTimedOut = 2,
+		[helpstring("The listening state was started with the hot key, and it timed out")]
+			ListenComplete_UserTimedOut = 3,
+		[helpstring("The listening state was started with the hot key, and the key was released")]
+			ListenComplete_UserReleasedKey = 4,
+		[helpstring("Speech recognition has produced a result")]
+			ListenComplete_UserSpeechEnded = 5,
+		[helpstring("The character is no longer active or it's active client has changed")]
+			ListenComplete_CharacterClientDeactivated = 6,
+		[helpstring("The default character was changed in the Double Agent control panel")]
+			ListenComplete_DefaultCharacterChanged = 7,
+		[helpstring("Speech recognition was disabled in the Double Agent control panel")]
+			ListenComplete_UserDisabled = 8
+	}	ListenCompleteType;
+
+	[
+		uuid(1147E593-A208-11DE-ABF2-002421116FB2),
+		helpstring("A text-to-speech voice's gender")
+		//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.SpeechGenderType")
+	]
+	typedef enum SpeechGenderType
+	{
+		[helpstring("Gender-neutral voice")]
+			SpeechGender_Neutral = 0,
+		[helpstring("Female voice")]
+			SpeechGender_Female = 1,
+		[helpstring("Male voice")]
+			SpeechGender_Male = 2
+	}	SpeechGenderType;
+
+	const LPSTR	PropertySheet_PageName_Character	= "Character";
+	const LPSTR	PropertySheet_PageName_Output		= "Output";
+	const LPSTR	PropertySheet_PageName_Speech		= "Speech";
+	const LPSTR	PropertySheet_PageName_Copyright	= "Copyright";
+
+cpp_quote("#endif // _DA_COMMON_TYPES_")

@@ -1,0 +1,10 @@
+HKCR
+{
+	NoRemove 'Component Categories'
+	{
+		NoRemove {1147E500-A208-11DE-ABF2-002421116FB2}
+		{
+			val 409 = s 'Double Agent'
+		}
+	}
+}

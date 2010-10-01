@@ -1,0 +1,121 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "SpeechTestRes.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (Canada) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENC)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_CAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE
+BEGIN
+    "SpeechTestRes.h\0"
+END
+
+2 TEXTINCLUDE
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE
+BEGIN
+    "#include ""SpeechTest.rc2""\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_SPEECHTEST_DIALOG DIALOGEX 0, 0, 534, 231
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "Test Speech"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_CHARACTER_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_SORTASCENDING | LVS_NOCOLUMNHEADER | WS_BORDER | WS_TABSTOP,4,4,208,220
+    CHECKBOX        "Show character",IDC_SHOW_CHAR,216,4,48,44,BS_PUSHLIKE | BS_MULTILINE
+    CHECKBOX        "Show character 2",IDC_SHOW_CHAR2,216,56,48,44,BS_PUSHLIKE | BS_MULTILINE
+    CHECKBOX        "Properties...",IDC_AGENT_PROPS,216,188,48,16,BS_PUSHLIKE | BS_MULTILINE
+    CHECKBOX        "Character...",IDC_CHAR_PROPS,216,208,48,16,BS_PUSHLIKE | BS_MULTILINE
+    EDITTEXT        IDC_BALLOON_TEXT1,272,4,208,32,ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | WS_DISABLED
+    EDITTEXT        IDC_BALLOON_TEXT2,272,40,208,32,ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | WS_DISABLED
+    COMBOBOX        IDC_SPEECH_WAVE,272,76,208,148,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Balloon",IDC_STATIC,272,92,208,36
+    CHECKBOX        "Auto Pace",IDC_BALLOON_AUTOPACE,280,104,47,10
+    CHECKBOX        "Auto Hide",IDC_BALLOON_AUTOHIDE,336,104,46,10
+    CHECKBOX        "Auto Size",IDC_BALLOON_AUTOSIZE,280,116,47,10
+    CHECKBOX        "Partial Lines",IDC_BALLOON_PARTIAL,336,116,55,10
+    CHECKBOX        "Visible",IDC_BALLOON_VISIBLE,408,104,37,10
+    CONTROL         "Test Formatted",IDC_TEST_FORMATTED,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,408,116,66,10
+    GROUPBOX        "Text-to-Speech",IDC_STATIC,272,132,208,44
+    COMBOBOX        IDC_TTS_MODE,280,144,192,80,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",IDC_TTS_STATUS,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | SS_SUNKEN | WS_GROUP,280,160,192,12
+    GROUPBOX        "Speech Recognition",IDC_STATIC,272,180,208,44
+    COMBOBOX        IDC_SR_MODE,280,192,192,80,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",IDC_SR_STATUS,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | SS_SUNKEN | WS_GROUP,280,208,192,12
+    PUSHBUTTON      "Think",IDC_THINK,484,4,48,28
+    PUSHBUTTON      "Speak",IDC_SPEAK,484,40,48,28
+    PUSHBUTTON      "Stop",IDCANCEL,484,92,48,28
+    CONTROL         "Listen",IDC_LISTEN,"Button",BS_AUTOCHECKBOX | BS_PUSHLIKE | BS_MULTILINE | WS_TABSTOP,484,144,48,28
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_SPEECHTEST_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 527
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 224
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (Canada) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#include "SpeechTest.rc2"
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
