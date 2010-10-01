@@ -22,36 +22,15 @@
 #include "AgentFile.h"
 #include "AgentFileCache.h"
 #include "AgentText.h"
+#include "AgentBalloonOptions.h"
 #include "AgentBalloonShape.h"
 #include "SapiVoiceEventSink.h"
 #include "EventNotify.h"
 #include "ImageBuffer.h"
-#include "DaServerOdl.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma warning (push)
 #pragma warning (disable: 4251 4275 4150)
-/////////////////////////////////////////////////////////////////////////////
-
-struct _DACORE_IMPEXP CAgentBalloonOptions
-{
-	DECLARE_DLL_OBJECT(CAgentBalloonOptions)
-
-	DWORD		mStyle;
-	USHORT		mLines;
-	USHORT		mPerLine;
-	COLORREF	mBkColor;
-	COLORREF	mFgColor;
-	COLORREF	mBrColor;
-	LOGFONT		mFont;
-
-	CAgentBalloonOptions ();
-	CAgentBalloonOptions (const CAgentBalloonOptions & pSource);
-	CAgentBalloonOptions & operator= (const CAgentBalloonOptions & pSource);
-	bool operator== (const CAgentBalloonOptions & pSource) const;
-	bool operator!= (const CAgentBalloonOptions & pSource) const;
-};
-
 /////////////////////////////////////////////////////////////////////////////
 
 class ATL_NO_VTABLE CAgentBalloonWndObj :
@@ -92,7 +71,6 @@ public:
 // Attributes
 public:
 	long GetCharID () const;
-	LANGID GetLangID () const;
 
 	bool IsSpeechShape () const;
 	bool IsThoughtShape () const;
@@ -105,19 +83,11 @@ public:
 	bool IsAutoHide () const;
 	bool ClipPartialLines () const;
 
-	static const USHORT	mMinLines;
-	static const USHORT	mMaxLines;
-	static const USHORT	mDefLines;
-	static const USHORT	mMinPerLine;
-	static const USHORT	mMaxPerLine;
-	static const USHORT	mDefPerLine;
-	const DWORD			mAutoPaceTime;
-	DWORD				mAutoHideTime;
+	const DWORD	mAutoPaceTime;
+	DWORD		mAutoHideTime;
 
 // Operations
 public:
-	bool SetOptions (DWORD pStyle, const CAgentFileBalloon & pFileBalloon, LANGID pLangID = 0);
-	CAgentBalloonOptions * GetNextOptions () const;
 	bool ApplyOptions (CAgentBalloonOptions * pOptions = NULL);
 
 	bool Create (CWindow * pOwnerWnd, DWORD pExStyle = 0);
@@ -138,13 +108,6 @@ public:
 	CAtlString GetSpeechText ();
 	bool AbortSpeechText ();
 	bool Pause (bool pPause);
-
-	static bool CopyBalloonFont (const CAgentFileBalloon & pFileBalloon, LOGFONT & pFont);
-	static bool CopyBalloonFont (const LOGFONT & pFont, CAgentFileBalloon & pFileBalloon);
-	static bool SetFontLangID (LOGFONT & pFont, LANGID pLangID);
-	static bool GetActualFont (const LOGFONT & pFont, LOGFONT & pActualFont, bool pUpdateSize = true, bool pUpdateStyle = true);
-	static bool FontEqual (HFONT pFont1, HFONT pFont2);
-	static bool FontEqual (const LOGFONT & pFont1, const LOGFONT & pFont2);
 
 // Overrides
 protected:
@@ -245,7 +208,6 @@ protected:
 	CImageBuffer						mShapeBuffer;
 	CImageBuffer						mDrawBuffer;
 	long								mCharID;
-	LANGID								mLangID;
 	static const UINT					mVoiceStartMsg;
 	static const UINT					mVoiceEndMsg;
 	static const UINT					mVoiceWordMsg;

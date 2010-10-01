@@ -10789,7 +10789,9 @@ Command1.<keyword>Enabled</keyword> = True</code>
 						<td width="12%">True</td>
 						<td width="18%">No</td>
 						<td width="20%">
-							No<sup>*</sup>
+							No<sup>
+								<b>*</b>
+							</sup>
 						</td>
 					</tr>
 					<tr valign="top">
@@ -10809,7 +10811,9 @@ Command1.<keyword>Enabled</keyword> = True</code>
 						<td width="12%">True</td>
 						<td width="18%">No</td>
 						<td width="20%">
-							No<sup>*</sup>
+							No<sup>
+								<b>*</b>
+							</sup>
 						</td>
 					</tr>
 					<tr valign="top">
@@ -10859,8 +10863,9 @@ Command1.<keyword>Enabled</keyword> = True</code>
 					</tr>
 					<tr valign="top">
 						<td colspan="7" width="100%">
-							<sup>*</sup>
-							The command is still voice-accessible.
+							<sup>
+								<b>* </b>
+							</sup>The command is still voice-accessible.
 						</td>
 					</tr>
 				</table>
@@ -11821,8 +11826,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 				<para>
 					A character's initial <a class="see" href="&dawbref;">&dawbname;</a> defaults are defined and compiled in
 					the Microsoft<sup>®</sup> Agent Character Editor. Once running, the <self>Balloon Object's</self> <keyword>Enabled</keyword>
-					and <keyword>Font</keyword> properties may be overridden by the user. If a user changes the <a class="see" href="&dawbref;">&dawbname;'s</a>
-					properties, they affect all characters. Both the <see cref="M:&dans;.Character.Speak" /> and <see cref="M:&dans;.Character.Think" /> <a class="see" href="&dawbref;">&dawbname;s</a>
+					and <keyword>Font</keyword> properties may be overridden by the user. If a user changes the balloon's
+					properties, they affect all characters. Both the <see cref="M:&dans;.Character.Speak" /> and <see cref="M:&dans;.Character.Think" /> balloons
 					use the same property settings for size. You can access the properties for a character's <a class="see" href="&dawbref;">&dawbname;</a>
 					through the <self>Balloon Object</self>, which is a child of the <see cref="T:&dans;.Character" suffix="Object" />.
 				</para>
@@ -11923,6 +11928,19 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="Status">
 				The current status of the request:<include path="/doc/members/member[@name='T:&dans;.RequestStatus']/syntax/list" />
+			</value>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:&dans;.Request.ID">
+			<summary>
+				<para>
+					Returns the server's unique identifier for the request.
+				</para>
+			</summary>
+			<value name="ID">
+				A <typename>numeric</typename> value used by the server to uniquely identify the request.
 			</value>
 		</member>
 

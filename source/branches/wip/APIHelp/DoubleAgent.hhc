@@ -14,6 +14,22 @@
 		</OBJECT>
 	<UL>
 		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Licensing and Distribution">
+			<param name="Local" value="Reference/Licensing.htm">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="The GNU General Public License">
+				<param name="Local" value="Reference/License.htm">
+				<param name="ImageNumber" value="11">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="The GNU Lesser General Public License">
+				<param name="Local" value="Reference/License.lesser.htm">
+				<param name="ImageNumber" value="11">
+				</OBJECT>
+		</UL>
+		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="The Double Agent User Interface">
 			<param name="Local" value="Reference/UI_Intro.htm">
 			</OBJECT>
@@ -74,22 +90,6 @@
 			<param name="Local" value="Programming/Gen_Intro.htm">
 			</OBJECT>
 		<UL>
-			<LI> <OBJECT type="text/sitemap">
-				<param name="Name" value="Licensing and Distribution">
-				<param name="Local" value="Reference/Licensing.htm">
-				</OBJECT>
-			<UL>
-				<LI> <OBJECT type="text/sitemap">
-					<param name="Name" value="The GNU General Public License">
-					<param name="Local" value="Reference/License.htm">
-					<param name="ImageNumber" value="11">
-					</OBJECT>
-				<LI> <OBJECT type="text/sitemap">
-					<param name="Name" value="The GNU Lesser General Public License">
-					<param name="Local" value="Reference/License.lesser.htm">
-					<param name="ImageNumber" value="11">
-					</OBJECT>
-			</UL>
 			<LI> <OBJECT type="text/sitemap">
 				<param name="Name" value="Double Agent API Overview">
 				<param name="Local" value="Programming/Gen_Overview.htm">
@@ -3109,6 +3109,41 @@
 			</UL>
 		</UL>
 		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Notes">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Notable differences between Double Agent and Microsoft Agent">
+				<param name="Local" value="Reference/MsAgentVsDoubleAgent.htm">
+				<param name="ImageNumber" value="11">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Moving from Microsoft Agent to Double Agent">
+				<param name="Local" value="Reference/MsAgentToDoubleAgent.htm">
+				<param name="ImageNumber" value="11">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Targeting 64-bit Windows">
+				<param name="Local" value="Reference/Windows64.htm">
+				<param name="ImageNumber" value="11">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Deploying Double Agent">
+				<param name="Local" value="Reference/Deployment.htm">
+				<param name="ImageNumber" value="11">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Microsoft Agent Tools">
+				<param name="Local" value="Reference/MsAgentTools.htm">
+				<param name="ImageNumber" value="11">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Microsoft Agent on Windows 7">
+				<param name="Local" value="Reference/MsAgentWin7.htm">
+				<param name="ImageNumber" value="11">
+				</OBJECT>
+		</UL>
+		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="What's New for Version 1.1">
 			<param name="Local" value="Reference/Version_1_1_New.htm">
 			</OBJECT>
@@ -3116,18 +3151,22 @@
 			<LI> <OBJECT type="text/sitemap">
 				<param name="Name" value="The User Interface">
 				<param name="Local" value="Reference/Version_1_1_New.htm#UI">
+				<param name="ImageNumber" value="11">
 				</OBJECT>
 			<LI> <OBJECT type="text/sitemap">
 				<param name="Name" value="The Programming Interfaces">
 				<param name="Local" value="Reference/Version_1_1_New.htm#API">
+				<param name="ImageNumber" value="11">
 				</OBJECT>
 			<LI> <OBJECT type="text/sitemap">
 				<param name="Name" value="Refactoring">
 				<param name="Local" value="Reference/Version_1_1_New.htm#Refactoring">
+				<param name="ImageNumber" value="11">
 				</OBJECT>
 			<LI> <OBJECT type="text/sitemap">
 				<param name="Name" value="Speech Text">
 				<param name="Local" value="Reference/Version_1_1_New.htm#SpeechText">
+				<param name="ImageNumber" value="11">
 				</OBJECT>
 		</UL>
 	</UL>

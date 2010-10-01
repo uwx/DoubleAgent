@@ -199,10 +199,10 @@ void CPropSheetOptions::OnApplied ()
 	{
 		try
 		{
-			DWORD	lTargets = BSM_APPLICATIONS;
+			DWORD	lTargets = BSM_ALLCOMPONENTS;
 			long	lResult;
 
-			lResult = BroadcastSystemMessage (BSF_FORCEIFHUNG|/*BSF_POSTMESSAGE*/BSF_SENDNOTIFYMESSAGE, &lTargets, DA_BROADCAST_OPTIONS_CHANGED, 0, 0);
+			lResult = BroadcastSystemMessage (BSF_FORCEIFHUNG|BSF_POSTMESSAGE, &lTargets, DA_BROADCAST_OPTIONS_CHANGED, 0, 0);
 #ifdef	_DEBUG
 			LogMessage (LogNormal, _T("DA_BROADCAST_OPTIONS_CHANGED [%d]"), lResult);
 #endif

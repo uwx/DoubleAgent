@@ -37,7 +37,7 @@ public:
 public:
 	void Initialize (long pCharID, CInstanceAnchor * pAnchor, CAgentFile * pFile, class CAgentCharacterWnd * pOwnerWnd);
 	bool SetLangID (LANGID pLangID);
-	bool SetBalloonWndOptions (LANGID pLangID = 0);
+	class CAgentBalloonOptions * GetBalloonOptions (LANGID pLangID = 0, bool pIgnoreDisabled = false);
 
 // Interfaces
 public:

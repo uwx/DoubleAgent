@@ -181,7 +181,7 @@ public:
 class CQueuedThink : public CQueuedAction
 {
 public:
-	CQueuedThink (long pCharID, long pReqID = -1);
+	CQueuedThink (class CAgentBalloonOptions * pBalloonOptions, long pCharID, long pReqID = -1);
 	virtual ~CQueuedThink ();
 
 // Attributes
@@ -189,7 +189,7 @@ public:
 	tPtr <class CAgentText>				mText;
 	class CAgentTextObject *			mTextObject;
 	IUnknownPtr							mTextObjectRef;
-	tPtr <struct CAgentBalloonOptions>	mBalloonOptions;
+	tPtr <class CAgentBalloonOptions>	mBalloonOptions;
 
 // Operations
 	void Initialize (class CAgentText & pText);
@@ -208,7 +208,7 @@ public:
 class CQueuedSpeak : public CQueuedAction, public CSapiVoiceClient
 {
 public:
-	CQueuedSpeak (bool pShowBalloon, long pCharID, long pReqID = -1);
+	CQueuedSpeak (class CAgentBalloonOptions * pBalloonOptions, long pCharID, long pReqID = -1);
 	virtual ~CQueuedSpeak ();
 
 // Attributes
@@ -218,10 +218,11 @@ public:
 	class CAgentTextObject *			mTextObject;
 	IUnknownPtr							mTextObjectRef;
 	CAtlString							mSoundUrl;
-	bool								mShowBalloon;
-	tPtr <struct CAgentBalloonOptions>	mBalloonOptions;
+	tPtr <class CAgentBalloonOptions>	mBalloonOptions;
 	bool								mAnimated;
 	IUnknownPtr							mSoundFilter;
+
+	bool ShowBalloon () const {return !!mBalloonOptions;}
 
 // Operations
 	void Initialize (class CAgentText & pText, class CSapiVoice * pVoice);

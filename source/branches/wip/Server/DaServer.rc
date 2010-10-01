@@ -91,7 +91,7 @@ IDR_FIXED_DASERVER      ICON                    "..\\Resources\\DoubleAgent.ico"
 
 STRINGTABLE
 BEGIN
-    IDS_CPL_ELEVATED_DESC   "Double Agent Emulation Management"
+    IDR_FIXED_CPL_ELEVATED_DESC   "Double Agent Emulation Management"
 END
 
 #endif    // English (Canada) resources

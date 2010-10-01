@@ -4,10 +4,10 @@
 	Version="8.00"
 	Name="Managed Tool"
 	IntermediateDirectory="$(LibDir)$(ConfigDir)$(PlatformDir)\Tools\$(ProjectName)\"
+	InheritedPropertySheets=".\Tool.vsprops"
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories="..\..\Manaaged;..\..\Include;..\..\Util;..\..\Util\Atl;$(NOINHERIT)"
 		MinimalRebuild="false"
 		BasicRuntimeChecks="0"
 		TreatWChar_tAsBuiltInType="true"
@@ -17,10 +17,7 @@
 		LinkIncremental="1"
 		GenerateManifest="true"
 		AssemblyDebug="1"
-		ProgramDatabaseFile="$(TargetDir)$(TargetName).pdb"
 		StripPrivateSymbols=""
-		GenerateMapFile="false"
-		MapExports="false"
 		EntryPointSymbol="main"
 	/>
 	<Tool

@@ -161,15 +161,15 @@ bool CDaCmnBalloon::SetLangID (LANGID pLangID)
 			)
 		{
 			if	(
-					(CAgentBalloonWnd::CopyBalloonFont (*lCustomConfig, lOldFont))
-				&&	(CAgentBalloonWnd::SetFontLangID (lOldFont, mLangID))
-				&&	(CAgentBalloonWnd::CopyBalloonFont (*lCustomConfig, lNewFont))
-				&&	(CAgentBalloonWnd::SetFontLangID (lNewFont, pLangID))
+					(CAgentBalloonOptions::CopyBalloonFont (*lCustomConfig, lOldFont))
+				&&	(CAgentBalloonOptions::SetFontLangID (lOldFont, mLangID))
+				&&	(CAgentBalloonOptions::CopyBalloonFont (*lCustomConfig, lNewFont))
+				&&	(CAgentBalloonOptions::SetFontLangID (lNewFont, pLangID))
 				&&	(lNewFont.lfCharSet == lOldFont.lfCharSet)
-				&&	(CAgentBalloonWnd::GetActualFont (lNewFont, lNewFont, false))
+				&&	(CAgentBalloonOptions::GetActualFont (lNewFont, lNewFont, false))
 				)
 			{
-				CAgentBalloonWnd::CopyBalloonFont (lNewFont, *lCustomConfig);
+				CAgentBalloonOptions::CopyBalloonFont (lNewFont, *lCustomConfig);
 			}
 			else
 			{
@@ -177,12 +177,12 @@ bool CDaCmnBalloon::SetLangID (LANGID pLangID)
 				lNewFont.Clear ();
 
 				if	(
-						(CAgentBalloonWnd::CopyBalloonFont (mFile->GetBalloon(), lOldFont))
-					&&	(CAgentBalloonWnd::SetFontLangID (lOldFont, pLangID))
-					&&	(CAgentBalloonWnd::GetActualFont (lOldFont, lNewFont, false))
+						(CAgentBalloonOptions::CopyBalloonFont (mFile->GetBalloon(), lOldFont))
+					&&	(CAgentBalloonOptions::SetFontLangID (lOldFont, pLangID))
+					&&	(CAgentBalloonOptions::GetActualFont (lOldFont, lNewFont, false))
 					)
 				{
-					CAgentBalloonWnd::CopyBalloonFont (lNewFont, *lCustomConfig);
+					CAgentBalloonOptions::CopyBalloonFont (lNewFont, *lCustomConfig);
 				}
 			}
 		}
@@ -193,29 +193,35 @@ bool CDaCmnBalloon::SetLangID (LANGID pLangID)
 	return false;
 }
 
-bool CDaCmnBalloon::SetBalloonWndOptions (LANGID pLangID)
+CAgentBalloonOptions * CDaCmnBalloon::GetBalloonOptions (LANGID pLangID, bool pIgnoreDisabled)
 {
-	bool				lRet = false;
-	CAgentBalloonWnd *	lBalloonWnd = NULL;
-	long				lBalloonStyle;
+	CAgentBalloonOptions *	lBalloonOptions = NULL;
+	VARIANT_BOOL			lBalloonEnabled;
+	long					lBalloonStyle;
 
-	if	(lBalloonWnd = GetBalloonWnd (mCharID))
+	get_Enabled (&lBalloonEnabled);
+	
+	if	(
+			(lBalloonEnabled)
+		||	(pIgnoreDisabled)
+		)
 	{
 		get_Style (&lBalloonStyle);
 		if	(!pLangID)
 		{
 			pLangID = mLangID;
 		}
+
 		if	(mCustomConfig)
 		{
-			lRet = lBalloonWnd->SetOptions ((DWORD)lBalloonStyle, *mCustomConfig, pLangID);
+			lBalloonOptions = new CAgentBalloonOptions ((DWORD)lBalloonStyle, *mCustomConfig, pLangID);
 		}
 		else
 		{
-			lRet = lBalloonWnd->SetOptions ((DWORD)lBalloonStyle, mFile->GetBalloon(), pLangID);
+			lBalloonOptions = new CAgentBalloonOptions ((DWORD)lBalloonStyle, mFile->GetBalloon(), pLangID);
 		}
 	}
-	return lRet;
+	return lBalloonOptions;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -358,11 +364,6 @@ HRESULT CDaCmnBalloon::put_Style (long Style)
 		mCustomStyle->LowPart = Style;
 		mCustomStyle->HighPart = lCharStyle;
 	}
-
-	if	(SUCCEEDED (lResult))
-	{
-		SetBalloonWndOptions ();
-	}
 	return lResult;
 }
 
@@ -470,8 +471,8 @@ HRESULT CDaCmnBalloon::put_NumberOfLines (long NumberOfLines)
 	else
 	{
 		if	(
-				(NumberOfLines < (long)CAgentBalloonWnd::mMinLines)
-			||	(NumberOfLines > (long)CAgentBalloonWnd::mMaxLines)
+				(NumberOfLines < (long)CAgentBalloonOptions::mMinLines)
+			||	(NumberOfLines > (long)CAgentBalloonOptions::mMaxLines)
 			)
 		{
 			lResult = E_INVALIDARG;
@@ -481,10 +482,6 @@ HRESULT CDaCmnBalloon::put_NumberOfLines (long NumberOfLines)
 		{
 			mCustomConfig->mLines = LOBYTE(NumberOfLines);
 		}
-	}
-	if	(SUCCEEDED (lResult))
-	{
-		SetBalloonWndOptions ();
 	}
 	return lResult;
 }
@@ -530,8 +527,8 @@ HRESULT CDaCmnBalloon::put_CharsPerLine (long CharsPerLine)
 	else
 	{
 		if	(
-				(CharsPerLine < (long)CAgentBalloonWnd::mMinPerLine)
-			||	(CharsPerLine > (long)CAgentBalloonWnd::mMaxPerLine)
+				(CharsPerLine < (long)CAgentBalloonOptions::mMinPerLine)
+			||	(CharsPerLine > (long)CAgentBalloonOptions::mMaxPerLine)
 			)
 		{
 			lResult = E_INVALIDARG;
@@ -541,10 +538,6 @@ HRESULT CDaCmnBalloon::put_CharsPerLine (long CharsPerLine)
 		{
 			mCustomConfig->mPerLine = LOBYTE(CharsPerLine);
 		}
-	}
-	if	(SUCCEEDED (lResult))
-	{
-		SetBalloonWndOptions ();
 	}
 	return lResult;
 }
@@ -591,10 +584,6 @@ HRESULT CDaCmnBalloon::put_TextColor (OLE_COLOR TextColor)
 			mCustomConfig->mFgColor = GetOleColor (TextColor);
 		}
 	}
-	if	(SUCCEEDED (lResult))
-	{
-		SetBalloonWndOptions ();
-	}
 	return lResult;
 }
 
@@ -640,10 +629,6 @@ HRESULT CDaCmnBalloon::put_BackColor (OLE_COLOR BackColor)
 			mCustomConfig->mBkColor = GetOleColor (BackColor);
 		}
 	}
-	if	(SUCCEEDED (lResult))
-	{
-		SetBalloonWndOptions ();
-	}
 	return lResult;
 }
 
@@ -688,10 +673,6 @@ HRESULT CDaCmnBalloon::put_BorderColor (OLE_COLOR BorderColor)
 		{
 			mCustomConfig->mBrColor = GetOleColor (BorderColor);
 		}
-	}
-	if	(SUCCEEDED (lResult))
-	{
-		SetBalloonWndOptions ();
 	}
 	return lResult;
 }
@@ -746,10 +727,6 @@ HRESULT CDaCmnBalloon::put_FontName (BSTR FontName)
 			_tcsncpy (mCustomConfig->mFont.lfFaceName, CAtlString(FontName), (sizeof(mCustomConfig->mFont.lfFaceName)/sizeof(WCHAR))-1);
 		}
 	}
-	if	(SUCCEEDED (lResult))
-	{
-		SetBalloonWndOptions ();
-	}
 	return lResult;
 }
 
@@ -800,10 +777,6 @@ HRESULT CDaCmnBalloon::put_FontSize (long FontSize)
 			mCustomConfig->mFont.lfHeight = FontSize;
 		}
 	}
-	if	(SUCCEEDED (lResult))
-	{
-		SetBalloonWndOptions ();
-	}
 	return lResult;
 }
 
@@ -848,10 +821,6 @@ HRESULT CDaCmnBalloon::put_FontBold (VARIANT_BOOL FontBold)
 		{
 			mCustomConfig->mFont.lfWeight = FontBold ? FW_BOLD : FW_NORMAL;
 		}
-	}
-	if	(SUCCEEDED (lResult))
-	{
-		SetBalloonWndOptions ();
 	}
 	return lResult;
 }
@@ -898,10 +867,6 @@ HRESULT CDaCmnBalloon::put_FontItalic (VARIANT_BOOL FontItalic)
 			mCustomConfig->mFont.lfItalic = FontItalic ? TRUE : FALSE;
 		}
 	}
-	if	(SUCCEEDED (lResult))
-	{
-		SetBalloonWndOptions ();
-	}
 	return lResult;
 }
 
@@ -947,10 +912,6 @@ HRESULT CDaCmnBalloon::put_FontStrikethru (VARIANT_BOOL FontStrikethru)
 			mCustomConfig->mFont.lfStrikeOut = FontStrikethru ? TRUE : FALSE;
 		}
 	}
-	if	(SUCCEEDED (lResult))
-	{
-		SetBalloonWndOptions ();
-	}
 	return lResult;
 }
 
@@ -995,10 +956,6 @@ HRESULT CDaCmnBalloon::put_FontUnderline (VARIANT_BOOL FontUnderline)
 		{
 			mCustomConfig->mFont.lfUnderline = FontUnderline ? TRUE : FALSE;
 		}
-	}
-	if	(SUCCEEDED (lResult))
-	{
-		SetBalloonWndOptions ();
 	}
 	return lResult;
 }
@@ -1052,10 +1009,6 @@ HRESULT CDaCmnBalloon::put_FontCharSet (short FontCharSet)
 		{
 			mCustomConfig->mFont.lfCharSet = LOBYTE(FontCharSet);
 		}
-	}
-	if	(SUCCEEDED (lResult))
-	{
-		SetBalloonWndOptions ();
 	}
 	return lResult;
 }

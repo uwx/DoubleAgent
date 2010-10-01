@@ -317,7 +317,7 @@ CString LclFormatTime (const SYSTEMTIME & pTime, DWORD pFlags, WORD pLangId)
 {
 	CString	lRet;
 
-	if	(pFlags & (TIME_FORCESECONDS | TIME_FORCETIMEMARKER))
+	if	(pFlags & (TIME_FORCE24HOURFORMAT | TIME_FORCESECONDS | TIME_FORCETIMEMARKER))
 	{
 		GetTimeFormat (__Locale(pLangId), 0, &pTime, LclTimeFormatString (pFlags, pLangId), lRet.GetBuffer (100), 100);
 	}

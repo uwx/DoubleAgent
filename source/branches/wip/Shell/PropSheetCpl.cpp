@@ -256,7 +256,7 @@ void CPropSheetCpl::OnApplied ()
 	{
 		try
 		{
-			DWORD	lTargets = BSM_APPLICATIONS;
+			DWORD	lTargets = BSM_ALLCOMPONENTS;
 			long	lResult;
 
 			lResult = BroadcastSystemMessage (BSF_FORCEIFHUNG|BSF_POSTMESSAGE, &lTargets, DA_BROADCAST_OPTIONS_CHANGED, 0, 0);

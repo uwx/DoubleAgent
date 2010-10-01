@@ -89,17 +89,6 @@ ul p, ol p, dl p
 	margin-left: 0em;
 }
 
-p.note
-{
-	font-size: 90%;
-}
-
-span.note
-{
-	font-style: italic;
-	color: #2050A0;
-}
-
 /**********************************************************************/
 
 div.summary
@@ -218,6 +207,7 @@ div.#syntax a.keyword
 s
 {
 	text-decoration: none;
+	text-indent: 0;
 	font-style: normal;
 	font-weight: bolder;
 }
@@ -225,6 +215,7 @@ s
 em
 {
 	text-decoration: none;
+	text-indent: 0;
 	font-style: italic;
 }
 
@@ -277,9 +268,10 @@ em.typename
 
 em.filename
 {
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Lucida Console', Helvetica, sans-serif;
 	font-style: normal;
-	text-transform: uppercase;
+	font-variant: small-caps;
+	font-weight: bolder;
 	display: inline-block;
 }
 
@@ -497,13 +489,15 @@ table.pagetable td.page
 
 /**********************************************************************/
 
-.version
+.note
 {
-	text-align: left;
-	color: #000000;
-	margin-top: 3em;
-	font-size: smaller;
+	font-size: 90%;
+}
+
+span.note
+{
 	font-style: italic;
+	color: #2050A0;
 }
 
 .mini
@@ -520,6 +514,15 @@ table.pagetable td.page
 .indent
 {
 	padding-left: 4ex;
+}
+
+.version
+{
+	text-align: left;
+	color: #000000;
+	margin-top: 3em;
+	font-size: smaller;
+	font-style: italic;
 }
 
 /**********************************************************************/

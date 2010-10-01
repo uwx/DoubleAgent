@@ -165,6 +165,7 @@ namespace CtlAndSvr
 		private void ConnectedCheck_CheckedChanged (object sender, EventArgs e)
 		{
 			bool lVisible = IsCharacterVisible;
+			TestDaControl.AutoConnect = 0;
 			TestDaControl.Connected = ConnectedCheck.Checked;
 			SelectCharacter (lVisible);
 			ShowCharacterState ();

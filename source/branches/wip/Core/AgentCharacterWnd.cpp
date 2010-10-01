@@ -57,7 +57,9 @@
 //#define	_DEBUG_MOUSE		LogNormal
 #define	_DEBUG_ACTIVE			(GetProfileDebugInt(_T("DebugActive"),LogDetails,true)&0xFFFF)
 #define	_DEBUG_SPEECH			(GetProfileDebugInt(_T("DebugSpeech"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
+#define	_DEBUG_SPEECH_MOUTH		(GetProfileDebugInt(_T("DebugSpeechMouth"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_DEBUG_SPEECH_EVENTS	(GetProfileDebugInt(_T("DebugSpeechEvents"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
+#define	_DEBUG_BALLOON_OPTIONS	(GetProfileDebugInt(_T("DebugBalloonOptions"),LogVerbose,true)&0xFFFF)
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Popup"),LogDetails,true)&0xFFFF)
 #define	_LOG_QUEUE_OPS			(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_LOG_POPUP_OPS			MinLogLevel(GetProfileDebugInt(_T("LogPopupOps"),LogVerbose,true)&0xFFFF|LogTimeMs,_LOG_QUEUE_OPS)
@@ -613,14 +615,14 @@ bool CAgentCharacterWnd::NotifyHidden (long pForCharID, VisibilityCauseType pVis
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-long CAgentCharacterWnd::QueueThink (long pCharID, LPCTSTR pText, class CAgentTextObject * pTextObject, UINT pSapiVersion)
+long CAgentCharacterWnd::QueueThink (long pCharID, LPCTSTR pText, class CAgentTextObject * pTextObject, CAgentBalloonOptions * pBalloonOptions, UINT pSapiVersion)
 {
 	long			lReqID = 0;
 	CQueuedThink *	lQueuedThink = NULL;
 
 	if	(
 			(IsWindow ())
-		&&	(lQueuedThink = new CQueuedThink (pCharID, lReqID=NextReqID()))
+		&&	(lQueuedThink = new CQueuedThink (pBalloonOptions, pCharID, lReqID=NextReqID()))
 		)
 	{
 		if	(pTextObject)
@@ -658,10 +660,17 @@ long CAgentCharacterWnd::QueueThink (long pCharID, LPCTSTR pText, class CAgentTe
 			}
 		}
 
-		if	(GetBalloonWnd (true))
+#ifdef	_DEBUG_BALLOON_OPTIONS
+		if	(
+				(lQueuedThink->mBalloonOptions)
+			&&	(LogIsActive (_DEBUG_BALLOON_OPTIONS))
+			)
 		{
-			lQueuedThink->mBalloonOptions = mBalloonWnd->GetNextOptions ();
+			CAtlString	lPrefix;
+			lPrefix.Format (_T("[%p(%d)]"), this, mCharID);
+			lQueuedThink->mBalloonOptions->LogOptions (_DEBUG_BALLOON_OPTIONS, _T("QueueThink"), lPrefix);
 		}
+#endif
 		mQueue.AddTail (lQueuedThink);
 	}
 	else
@@ -681,7 +690,7 @@ long CAgentCharacterWnd::QueueThink (long pCharID, LPCTSTR pText, class CAgentTe
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-long CAgentCharacterWnd::QueueSpeak (long pCharID, LPCTSTR pText, CAgentTextObject * pTextObject, LPCTSTR pSoundUrl, CSapiVoice * pVoice, bool pShowBalloon)
+long CAgentCharacterWnd::QueueSpeak (long pCharID, LPCTSTR pText, CAgentTextObject * pTextObject, LPCTSTR pSoundUrl, CSapiVoice * pVoice, CAgentBalloonOptions * pBalloonOptions)
 {
 	long			lReqID = 0;
 	CQueuedSpeak *	lQueuedSpeak = NULL;
@@ -691,7 +700,7 @@ long CAgentCharacterWnd::QueueSpeak (long pCharID, LPCTSTR pText, CAgentTextObje
 
 	if	(
 			(IsWindow ())
-		&&	(lQueuedSpeak = new CQueuedSpeak (pShowBalloon, pCharID, lReqID=NextReqID()))
+		&&	(lQueuedSpeak = new CQueuedSpeak (pBalloonOptions, pCharID, lReqID=NextReqID()))
 		)
 	{
 		lQueuedSpeak->mSoundUrl = pSoundUrl;
@@ -734,25 +743,28 @@ long CAgentCharacterWnd::QueueSpeak (long pCharID, LPCTSTR pText, CAgentTextObje
 			}
 		}
 
-		if	(
-				(lQueuedSpeak->mShowBalloon)
-			&&	(GetBalloonWnd (true))
-			)
-		{
-			lQueuedSpeak->mBalloonOptions = mBalloonWnd->GetNextOptions ();
-		}
-
 #ifdef	_DEBUG_SPEECH
 		if	(
 				(lQueuedSpeak->mSoundUrl.IsEmpty ())
 			&&	(LogIsActive (_DEBUG_SPEECH))
 			)
 		{
-			LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] CAgentCharacterWnd Queue   [%s] [%p]"), this, mCharID, DebugStr(pText), pTextObject);
-			LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]                    Speech  [%s]"), this, mCharID, DebugStr(lQueuedSpeak->GetSpeechText()));
-			LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]                    Text    [%s]"), this, mCharID, DebugStr(lQueuedSpeak->GetFullText()));
-			LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]                    Voice   [%u] Busy [%u] Balloon [%u] Busy [%u]"), this, mCharID, lQueuedSpeak->mVoice->SafeIsValid(), lQueuedSpeak->mVoice->SafeIsSpeaking (), (mBalloonWnd!=NULL), ((mBalloonWnd!= NULL) && mBalloonWnd->IsBusy (false)));
-			LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]                    Queue   [%u] Busy [%u %u]"), this, mCharID, mQueue.GetCount(), IsQueueBusy(), !IsAnimationComplete());
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] CAgentCharacterWnd Queue   [%s] [%p]"), this, mCharID, DebugStr(pText), pTextObject);
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)]                    Speech  [%s]"), this, mCharID, DebugStr(lQueuedSpeak->GetSpeechText()));
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)]                    Text    [%s]"), this, mCharID, DebugStr(lQueuedSpeak->GetFullText()));
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)]                    Voice   [%u] Busy [%u] Balloon [%u] Busy [%u]"), this, mCharID, lQueuedSpeak->mVoice->SafeIsValid(), lQueuedSpeak->mVoice->SafeIsSpeaking (), (mBalloonWnd!=NULL), ((mBalloonWnd!= NULL) && mBalloonWnd->IsBusy (false)));
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)]                    Queue   [%u] Busy [%u %u]"), this, mCharID, mQueue.GetCount(), IsQueueBusy(), !IsAnimationComplete());
+		}
+#endif
+#ifdef	_DEBUG_BALLOON_OPTIONS
+		if	(
+				(lQueuedSpeak->mBalloonOptions)
+			&&	(LogIsActive (_DEBUG_BALLOON_OPTIONS))
+			)
+		{
+			CAtlString	lPrefix;
+			lPrefix.Format (_T("[%p(%d)]"), this, mCharID);
+			lQueuedSpeak->mBalloonOptions->LogOptions (_DEBUG_BALLOON_OPTIONS, _T("QueueSpeak"), lPrefix);
 		}
 #endif
 		mQueue.AddTail (lQueuedSpeak);
@@ -835,14 +847,14 @@ bool CAgentCharacterWnd::StartMouthAnimation (long pSpeakingDuration)
 		&&	(lStreamInfo = GetAgentStreamInfo())
 		)
 	{
-#ifdef	_DEBUG_SPEECH
+#ifdef	_DEBUG_SPEECH_MOUTH
 		if	(
-				(LogIsActive (_DEBUG_SPEECH))
+				(LogIsActive (_DEBUG_SPEECH_MOUTH))
 			&&	(lStreamInfo->GetAnimationIndex (&lAnimationNdx) == S_OK)
 			&&	(lAnimationNdx >= 0)
 			)
 		{
-			LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]   Last Animation [%d] [%ls]"), this, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName));
+			LogMessage (_DEBUG_SPEECH_MOUTH, _T("[%p(%d)]   Last Animation [%d] [%ls]"), this, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName));
 		}
 #endif
 		if	(
@@ -861,10 +873,10 @@ bool CAgentCharacterWnd::StartMouthAnimation (long pSpeakingDuration)
 			{
 				lStreamInfo->SetSpeakingDuration (pSpeakingDuration);
 				AnimationSequenceChanged ();
-#ifdef	_DEBUG_SPEECH
-				if	(LogIsActive (_DEBUG_SPEECH))
+#ifdef	_DEBUG_SPEECH_MOUTH
+				if	(LogIsActive (_DEBUG_SPEECH_MOUTH))
 				{
-					LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]   Speech MouthAnimation [%d] [%ls] Frame [%d] started [%d]"), this, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName), lSpeakingFrameNdx, pSpeakingDuration);
+					LogMessage (_DEBUG_SPEECH_MOUTH, _T("[%p(%d)]   Speech MouthAnimation [%d] [%ls] Frame [%d] started [%d]"), this, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName), lSpeakingFrameNdx, pSpeakingDuration);
 				}
 #endif
 				PlayMouthAnimation (-1, true);
@@ -889,10 +901,10 @@ bool CAgentCharacterWnd::StopMouthAnimation ()
 	{
 		lStreamInfo->ResetMouthOverlays ();
 		AnimationSequenceChanged ();
-#ifdef	_DEBUG_SPEECH
-		if	(LogIsActive (_DEBUG_SPEECH))
+#ifdef	_DEBUG_SPEECH_MOUTH
+		if	(LogIsActive (_DEBUG_SPEECH_MOUTH))
 		{
-			LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]   Speech MouthAnimation stopped"), this, mCharID);
+			LogMessage (_DEBUG_SPEECH_MOUTH, _T("[%p(%d)]   Speech MouthAnimation stopped"), this, mCharID);
 		}
 #endif
 		lRet = true;
@@ -928,10 +940,10 @@ bool CAgentCharacterWnd::PlayMouthAnimation (short pMouthOverlayNdx, bool pPlayA
 			long	lStopPosition = GetDurationMs();
 			long	lStartPosition = max (lStopPosition - 100000, 0);
 
-#ifdef	_DEBUG_SPEECH
-			if	(LogIsActive (_DEBUG_SPEECH))
+#ifdef	_DEBUG_SPEECH_MOUTH
+			if	(LogIsActive (_DEBUG_SPEECH_MOUTH))
 			{
-				LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]   Speech MouthAnimation [%d] from [%d] to [%d]"), this, mCharID, pMouthOverlayNdx, lStartPosition, lStopPosition);
+				LogMessage (_DEBUG_SPEECH_MOUTH, _T("[%p(%d)]   Speech MouthAnimation [%d] from [%d] to [%d]"), this, mCharID, pMouthOverlayNdx, lStartPosition, lStopPosition);
 			}
 #endif
 			if	(SUCCEEDED (PlayFromTo (lStartPosition, lStopPosition, (pMouthOverlayNdx < 0))))
@@ -987,7 +999,7 @@ bool CAgentCharacterWnd::KeepBalloonVisible (CAgentBalloonWnd * pBalloon)
 		if	(
 				(lQueuedAction->mAction == QueueActionSpeak)
 			&&	(lQueuedSpeak = (CQueuedSpeak *) lQueuedAction)
-			&&	(lQueuedSpeak->mShowBalloon)
+			&&	(lQueuedSpeak->ShowBalloon())
 			&&	(
 					(!lQueuedSpeak->mStarted)
 				||	(
@@ -996,7 +1008,7 @@ bool CAgentCharacterWnd::KeepBalloonVisible (CAgentBalloonWnd * pBalloon)
 					&&	(lQueuedAction = mQueue.GetNext (lPos))
 					&&	(lQueuedAction->mAction == QueueActionSpeak)
 					&&	(lQueuedSpeak = (CQueuedSpeak *) lQueuedAction)
-					&&	(lQueuedSpeak->mShowBalloon)
+					&&	(lQueuedSpeak->ShowBalloon())
 					&&	(!lQueuedSpeak->mStarted)
 					)
 				)
@@ -1017,7 +1029,7 @@ void CAgentCharacterWnd::OnVoiceStart (long pCharID)
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p] [%d] CAgentCharacterWnd   OnVoiceStart"), this, mCharID);
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%d)] CAgentCharacterWnd   OnVoiceStart"), this, mCharID);
 	}
 #endif
 	PostMessage (mVoiceStartMsg, pCharID);
@@ -1028,7 +1040,7 @@ void CAgentCharacterWnd::OnVoiceEnd (long pCharID)
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p] [%d] CAgentCharacterWnd   OnVoiceEnd"), this, mCharID);
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%d)] CAgentCharacterWnd   OnVoiceEnd"), this, mCharID);
 	}
 #endif
 	PostMessage (mVoiceEndMsg, pCharID);
@@ -1039,7 +1051,7 @@ void CAgentCharacterWnd::OnVoiceBookMark (long pCharID, long pBookMarkId)
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p] [%d] CAgentCharacterWnd   OnVoiceBookMark [%d] [%d]"), this, mCharID, pCharID, pBookMarkId);
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%d)] CAgentCharacterWnd   OnVoiceBookMark [%d] [%d]"), this, mCharID, pCharID, pBookMarkId);
 	}
 #endif
 	PostMessage (mVoiceBookMarkMsg, pCharID, pBookMarkId);
@@ -1050,7 +1062,7 @@ void CAgentCharacterWnd::OnVoiceVisual (long pCharID, int pMouthOverlay)
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p] [%d] CAgentCharacterWnd     OnVoiceVisual [%s]"), this, mCharID, MouthOverlayStr(pMouthOverlay));
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%d)] CAgentCharacterWnd     OnVoiceVisual [%s]"), this, mCharID, MouthOverlayStr(pMouthOverlay));
 	}
 #endif
 	PostMessage (mVoiceVisualMsg, pCharID, pMouthOverlay);
@@ -1063,7 +1075,7 @@ LRESULT CAgentCharacterWnd::OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lP
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p] [%d] CAgentCharacterWnd   OnVoiceStartMsg"), this, mCharID);
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%d)] CAgentCharacterWnd   OnVoiceStartMsg"), this, mCharID);
 	}
 #endif
 	StartMouthAnimation ();
@@ -1075,7 +1087,7 @@ LRESULT CAgentCharacterWnd::OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lPar
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p] [%d] CAgentCharacterWnd   OnVoiceEndMsg"), this, mCharID);
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%d)] CAgentCharacterWnd   OnVoiceEndMsg"), this, mCharID);
 	}
 #endif
 	StopMouthAnimation ();
@@ -1089,7 +1101,7 @@ LRESULT CAgentCharacterWnd::OnVoiceBookMarkMsg (UINT uMsg, WPARAM wParam, LPARAM
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p] [%d] CAgentCharacterWnd   OnVoiceBookMarkMsg [%d] [%d]"), this, mCharID, lCharID, lBookMarkId);
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%d)] CAgentCharacterWnd   OnVoiceBookMarkMsg [%d] [%d]"), this, mCharID, lCharID, lBookMarkId);
 	}
 #endif
 	if	(PreNotify ())
@@ -1115,7 +1127,7 @@ LRESULT CAgentCharacterWnd::OnVoiceVisualMsg (UINT uMsg, WPARAM wParam, LPARAM l
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p] [%d] CAgentCharacterWnd     OnVoiceVisualMsg [%s]"), this, mCharID, MouthOverlayStr(lMouthOverlay));
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%d)] CAgentCharacterWnd     OnVoiceVisualMsg [%s]"), this, mCharID, MouthOverlayStr(lMouthOverlay));
 	}
 #endif
 	PlayMouthAnimation (lMouthOverlay, true);

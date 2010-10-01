@@ -99,7 +99,7 @@ LRESULT CPropPageCharSel::OnApply(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 		SetModified (FALSE);
 		try
 		{
-			DWORD	lTargets = BSM_APPLICATIONS;
+			DWORD	lTargets = BSM_ALLCOMPONENTS;
 			long	lResult;
 
 			lResult = BroadcastSystemMessage (BSF_FORCEIFHUNG|BSF_POSTMESSAGE, &lTargets, DA_BROADCAST_DEFCHAR_CHANGED, 0, 0);

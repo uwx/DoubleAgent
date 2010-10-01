@@ -821,12 +821,9 @@ bool CDaCmnCharacter::SetActiveClient (bool pActive, bool pInputActive)
 			&&	(lCharacterWnd->Attach (mCharID, mNotify, &mIconData, true))
 			)
 		{
-			if	(
-					(GetBalloonWnd (false))
-				&&	(lBalloon = GetBalloon (true))
-				)
+			if	(lBalloon = GetBalloon (true))
 			{
-				lBalloon->SetBalloonWndOptions (mLangID);
+				lBalloon->SetLangID (mLangID);
 			}
 			lNextCharacter = this;
 			lRet = true;
@@ -869,12 +866,9 @@ bool CDaCmnCharacter::SetActiveClient (bool pActive, bool pInputActive)
 				&&	(lCharacterWnd->Attach (lNextCharacter->mCharID, lNextCharacter->mNotify, &lNextCharacter->mIconData, true))
 				)
 			{
-				if	(
-						(lNextCharacter->GetBalloonWnd (false))
-					&&	(lBalloon = lNextCharacter->GetBalloon (true))
-					)
+				if	(lBalloon = lNextCharacter->GetBalloon (true))
 				{
-					lBalloon->SetBalloonWndOptions (lNextCharacter->mLangID);
+					lBalloon->SetLangID (lNextCharacter->mLangID);
 				}
 				lRet = true;
 			}
@@ -1258,7 +1252,6 @@ void CDaCmnCharacter::PropagateLangID ()
 		{
 			CDaCmnBalloon *			lBalloon = NULL;
 			CDaCmnCommands *		lCommands = NULL;
-			CAgentBalloonWnd *		lBalloonWnd;
 			CVoiceCommandsWnd *		lVoiceCommandsWnd;
 			CAgentListeningWnd *	lListeningWnd;
 			CAgentPopupWnd *		lPopupWnd;
@@ -1309,16 +1302,6 @@ void CDaCmnCharacter::PropagateLangID ()
 			if	(lBalloon = GetBalloon (false))
 			{
 				lBalloon->SetLangID (mLangID);
-			}
-
-			if	(
-					(lBalloonWnd = GetBalloonWnd (false))
-				&&	(lBalloonWnd->GetCharID() == mCharID)
-				&&	(lBalloonWnd->GetLangID() != mLangID)
-				&&	(lBalloon = GetBalloon (true))
-				)
-			{
-				lBalloon->SetBalloonWndOptions (mLangID);
 			}
 		}
 		catch AnyExceptionDebug
@@ -2556,16 +2539,10 @@ CAgentBalloonWnd * CDaCmnCharacter::GetBalloonWnd (bool pCreateObject)
 				)
 			&&	(pCreateObject)
 			&&	(lBalloon = GetBalloon (true))
+			&&	(lBalloon->get_Enabled (NULL) == S_OK)
 			)
 		{
-			if	(
-					(lBalloon->get_Enabled (NULL) == S_OK)
-				&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (true))
-				&&	(lBalloonWnd->IsWindow ())
-				)
-			{
-				lBalloon->SetBalloonWndOptions (mLangID);
-			}
+			lBalloonWnd = lCharacterWnd->GetBalloonWnd (true);
 		}
 
 		if	(
@@ -2691,20 +2668,25 @@ void CDaCmnCharacter::_OnOptionsChanged ()
 
 	if	(
 			(mFile)
-		&&	(lBalloonWnd = GetBalloonWnd (false))
-		&&	(lBalloonWnd->GetCharID() == GetCharID())
 		&&	(lBalloon = GetBalloon (true))
 		)
 	{
+		lBalloon->SetLangID (mLangID);
+
 		if	(lBalloon->get_Enabled (NULL) == S_FALSE)
 		{
-			lBalloonWnd->HideBalloon (true);
+			if	(
+					(lBalloonWnd = GetBalloonWnd (false))
+				&&	(lBalloonWnd->GetCharID() == GetCharID())
+				)
+			{
+				lBalloonWnd->HideBalloon (true);
+			}
 			if	(lCharacterWnd = GetCharacterWnd ())
 			{
 				lCharacterWnd->RemoveQueuedActions (QueueActionThink, mCharID, AGENTREQERR_INTERRUPTEDCODE, _T("OptionsChanged"));
 			}
 		}
-		lBalloon->SetBalloonWndOptions (mLangID);
 	}
 }
 
@@ -3332,12 +3314,14 @@ HRESULT CDaCmnCharacter::Think (BSTR Text, class CAgentTextObject * pTextObject,
 
 	if	(lCharacterWnd = GetCharacterWnd ())
 	{
-		CDaCmnBalloon *	lBalloon = GetBalloon (true);
+		CDaCmnBalloon *				lBalloon = GetBalloon (true);
+		tPtr <CAgentBalloonOptions>	lBalloonOptions;
 
 		if	(lBalloon->get_Enabled (NULL) == S_OK)
 		{
 			GetBalloonWnd (true);
-			lReqID = lCharacterWnd->QueueThink (mCharID, CAtlString (Text), pTextObject, GetSapiVoice(true)->SafeIsValid());
+			lBalloonOptions = lBalloon->GetBalloonOptions ();
+			lReqID = lCharacterWnd->QueueThink (mCharID, CAtlString (Text), pTextObject, lBalloonOptions, GetSapiVoice(true)->SafeIsValid());
 			lCharacterWnd->ActivateQueue (true);
 		}
 		else
@@ -3579,11 +3563,11 @@ HRESULT CDaCmnCharacter::Speak (BSTR Text, class CAgentTextObject * pTextObject,
 #endif
 	if	(lCharacterWnd = GetCharacterWnd ())
 	{
-		CDaCmnBalloon *		lBalloon = GetBalloon (true);
-		bool				lShowBalloon = (lBalloon->get_Enabled (NULL) == S_OK);
-		CAtlString			lText (Text);
-		CAtlString			lSoundUrl (Url);
-		CSapiVoice *		lVoice = NULL;
+		CDaCmnBalloon *				lBalloon = GetBalloon (true);
+		tPtr <CAgentBalloonOptions>	lBalloonOptions;
+		CAtlString					lText (Text);
+		CAtlString					lSoundUrl (Url);
+		CSapiVoice *				lVoice = NULL;
 //
 //	MS Agent shows the speech balloon silently when the character is listening.
 //	For now, we'll just stop listening.
@@ -3593,7 +3577,11 @@ HRESULT CDaCmnCharacter::Speak (BSTR Text, class CAgentTextObject * pTextObject,
 		if	(lSoundUrl.IsEmpty ())
 		{
 			lVoice = GetSapiVoice (true);
-			if	(!lVoice)
+			if	(lVoice)
+			{
+				lBalloonOptions = lBalloon->GetBalloonOptions ();
+			}
+			else
 			{
 				lResult = AGENTERR_TTSLANGUAGENOTFOUND;
 			}
@@ -3601,9 +3589,9 @@ HRESULT CDaCmnCharacter::Speak (BSTR Text, class CAgentTextObject * pTextObject,
 		else
 		{
 			lVoice = GetSapiVoice (false);
-			if	(lText.IsEmpty ())
+			if	(!lText.IsEmpty ())
 			{
-				lShowBalloon = false;
+				lBalloonOptions = lBalloon->GetBalloonOptions ();
 			}
 
 			if	(mFile->IsRelativeFilePath (lSoundUrl))
@@ -3632,11 +3620,11 @@ HRESULT CDaCmnCharacter::Speak (BSTR Text, class CAgentTextObject * pTextObject,
 
 		if	(SUCCEEDED (lResult))
 		{
-			if	(lShowBalloon)
+			if	(lBalloonOptions)
 			{
 				GetBalloonWnd (true);
 			}
-			lReqID = lCharacterWnd->QueueSpeak (mCharID, lText, pTextObject, lSoundUrl, lVoice, lShowBalloon);
+			lReqID = lCharacterWnd->QueueSpeak (mCharID, lText, pTextObject, lSoundUrl, lVoice, lBalloonOptions);
 			lCharacterWnd->ActivateQueue (true);
 		}
 	}

@@ -89,7 +89,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Server /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentSvr.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Server.dll&quot;&#x0D;&#x0A;"
+				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Server /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentSvr.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Server.dll&quot;&#x0D;&#x0A;&#x0D;&#x0A;"
 				Outputs="$(TargetDir)\Interop\DoubleAgentSvr.dll;$(TargetDir)\Interop\DoubleAgent.Server.dll"
 				ExecutionBucket="15"
 			/>
@@ -167,7 +167,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Server /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentSvr.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Server.dll&quot;&#x0D;&#x0A;"
+				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Server /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentSvr.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Server.dll&quot;&#x0D;&#x0A;&#x0D;&#x0A;"
 				Outputs="$(TargetDir)\Interop\DoubleAgentSvr.dll;$(TargetDir)\Interop\DoubleAgent.Server.dll"
 				ExecutionBucket="15"
 			/>

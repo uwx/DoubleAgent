@@ -57,8 +57,8 @@ public:
 
 	long QueueShow (long pCharID, bool pFast = false, int pVisibilityCause = -1);
 	long QueueHide (long pCharID, bool pFast = false, int pVisibilityCause = -1);
-	long QueueThink (long pCharID, LPCTSTR pText, class CAgentTextObject * pTextObject, UINT pSapiVersion = 5);
-	long QueueSpeak (long pCharID, LPCTSTR pText, class CAgentTextObject * pTextObject, LPCTSTR pSoundUrl, class CSapiVoice * pVoice, bool pShowBalloon);
+	long QueueThink (long pCharID, LPCTSTR pText, class CAgentTextObject * pTextObject, class CAgentBalloonOptions * pBalloonOptions, UINT pSapiVersion = 5);
+	long QueueSpeak (long pCharID, LPCTSTR pText, class CAgentTextObject * pTextObject, LPCTSTR pSoundUrl, class CSapiVoice * pVoice, class CAgentBalloonOptions * pBalloonOptions);
 	long QueueWait (long pCharID, long pOtherCharID, long pOtherReqID);
 	long QueueInterrupt (long pCharID, long pOtherCharID, long pOtherReqID);
 

@@ -1433,9 +1433,9 @@ String^ XmlToHtml::PutTypeMember (String^ pMemberName, XmlNode^ pMemberNode, Typ
 
 String^ XmlToHtml::PutMethodMember (String^ pMemberName, XmlNode^ pMemberNode, MethodInfo^ pAssemblyMethod)
 {
-	String^						lRet;
+	String^			lRet;
 	XmlDocument^	lTemplate;
-	XmlElement^					lTargetRoot;
+	XmlElement^		lTargetRoot;
 
 	if	(
 			(lTemplate = LoadMethodTemplate())
@@ -3334,6 +3334,19 @@ void XmlToHtml::AdjustXmlFormat (System::Xml::XmlDocument^ pXmlDocument)
 									}
 								}
 							}
+							else
+							if	(mOutputSandcastle)
+							{
+								if	(
+										(lNodes = NodeList (lSummaryNode->SelectNodes ("para")))
+									&&	(lNode = lNodes [0])
+									&&	(lNode->FirstChild != nullptr)
+									)
+								{
+									lSummaryNode->ReplaceChild (CopyNodeInnerXml (lNode, lNode->OwnerDocument), lNode);
+								}
+							}
+							
 							if	(lNodes = NodeList (lSummaryNode->SelectNodes (".//c")))
 							{
 								for each (lNode in lNodes)
@@ -3407,6 +3420,10 @@ void XmlToHtml::AdjustXmlFormat (System::Xml::XmlDocument^ pXmlDocument)
 										lSeeNode->Attributes->Remove (lAttribute);
 									}
 								}
+								if	(lAttribute = lSeeNode->Attributes["class"])
+								{
+									lSeeNode->Attributes->Remove (lAttribute);
+								}
 							}
 						}
 
@@ -3429,6 +3446,25 @@ void XmlToHtml::AdjustXmlFormat (System::Xml::XmlDocument^ pXmlDocument)
 							}
 						}
 					}
+				}
+			}
+
+			if	(lNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes ("//a")))
+			{
+				for each (lNode in lNodes)
+				{
+					if	(lAttribute = lNode->Attributes["class"])
+					{
+						lNode->Attributes->Remove (lAttribute);
+					}
+				}
+			}
+
+			if	(lNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes ("//keyword | //token | //typename | //filename | //self | //literal | //glossary")))
+			{
+				for each (lNode in lNodes)
+				{
+					lNode->ParentNode->ReplaceChild (CopyNodeInnerXml (lNode, lNode->OwnerDocument), lNode);
 				}
 			}
 		}

@@ -9,7 +9,7 @@ Default topic=Reference\Intro.htm
 Display compile progress=Yes
 Index file=DoubleAgent.hhk
 Language=0x1009 English (Canada)
-Title=Double Agent API Help
+Title=Double Agent SDK
 
 [WINDOWS]
 MainWin=,"DoubleAgent.hhc",,"Reference\Intro.htm","Reference\Intro.htm",,,,,0x41020,,0x284e,[20,20,820,620],0x160f0000,,,,,,0

@@ -291,6 +291,10 @@
 			UniqueIdentifier="{83635B21-86E8-4016-BDB3-510BAF426414}"
 			>
 			<File
+				RelativePath=".\Core\AgentBalloonOptions.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\AgentBalloonShape.cpp"
 				>
 			</File>
@@ -628,6 +632,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{8FC5BA0E-E801-46e4-966B-D26DD9A75327}"
 			>
+			<File
+				RelativePath=".\Core\AgentBalloonOptions.h"
+				>
+			</File>
 			<File
 				RelativePath=".\Core\AgentBalloonShape.h"
 				>
