@@ -20,8 +20,9 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaCoreExp.h"
+#include "SapiLanguageMatch.h"
 
-//////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 #ifndef	GENDER_NEUTRAL
 #define	GENDER_NEUTRAL		0
@@ -38,7 +39,7 @@
 #define	TTSAGE_ELDERLY		70
 #endif
 
-//////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 #pragma warning (push)
 #pragma warning (disable: 4251 4275)
 /////////////////////////////////////////////////////////////////////////////
@@ -61,9 +62,40 @@ public:
 	tBstrPtr	mManufacturer;
 };
 
-//////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CSapi5Voices : public CAtlOwnPtrArray <CSapi5VoiceInfo>
+class CSapi5VoiceIndexArray : public CAtlTypeArray <INT_PTR>  
+{
+	DECLARE_DLL_OBJECT(CSapi5VoiceIndexArray)
+public:
+	CSapi5VoiceIndexArray() {}
+	virtual ~CSapi5VoiceIndexArray() {}
+};
+
+class CSapi5VoiceInfoArray : public CAtlPtrTypeArray <CSapi5VoiceInfo>
+{
+	DECLARE_DLL_OBJECT(CSapi5VoiceInfoArray)
+public:
+	CSapi5VoiceInfoArray() {}
+	virtual ~CSapi5VoiceInfoArray() {}
+};
+
+class CSapi5VoiceMatchRanks : public CAtlTypeArray <int>
+{
+	DECLARE_DLL_OBJECT(CSapi5VoiceMatchRanks)
+public:
+	CSapi5VoiceMatchRanks() {}
+	virtual ~CSapi5VoiceMatchRanks() {}
+
+	static int __cdecl SortDescending (const void * pElem1, const void * pElem2)
+	{
+		return -ATL::CElementTraits<int>::CompareElementsOrdered (*(int *)pElem1, *(int*)pElem2);
+	}
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
+class _DACORE_IMPEXP CSapi5Voices : public CAtlOwnPtrArray <CSapi5VoiceInfo>, protected CSapiLanguageMatch
 {
 	DECLARE_DLL_OBJECT(CSapi5Voices)
 protected:
@@ -85,8 +117,11 @@ public:
 	INT_PTR FindVoiceName (LPCTSTR pVoiceName);
 	CSapi5VoiceInfo * GetVoiceName (LPCTSTR pVoiceName);
 
-	INT_PTR FindVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, INT_PTR pStartAfter = -1);
-	CSapi5VoiceInfo * GetVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, INT_PTR pStartAfter = -1);
+	INT_PTR FindVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, int * pMatchRank = NULL);
+	CSapi5VoiceInfo * GetVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, int * pMatchRank = NULL);
+
+	CSapi5VoiceIndexArray const * FindVoices (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, CSapi5VoiceMatchRanks const ** pMatchRanks = NULL);
+	CSapi5VoiceInfoArray const * GetVoices (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, CSapi5VoiceMatchRanks const ** pMatchRanks = NULL);
 
 	bool RemoveVoice (INT_PTR pVoiceNdx);
 	bool RemoveVoice (const CSapi5VoiceInfo * pVoiceInfo);
@@ -99,9 +134,8 @@ public:
 
 // Implementation
 protected:
-	void MakeLanguageMatchList (LANGID pLanguageId, CAtlTypeArray <LANGID> & pLanguageIds, bool pUseDefaults);
 	static void LogVoiceToken (UINT pLogLevel, void * pVoiceToken, LPCTSTR pTitle = NULL);
 };
 
 #pragma warning (pop)
-//////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////

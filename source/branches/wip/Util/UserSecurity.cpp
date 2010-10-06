@@ -597,13 +597,13 @@ bool CUserSecurity::IsSidAllUsers (PSID pSid)
 		{
 			try
 			{
-				CString					lComputerName;
-				DWORD					lComputerNameSize;
-				CByteArray				lComputerSid;
-				PSID					lRootSid;
-				BYTE					lSubCount;
-				CTypeArray <DWORD>		lSubIds;
-				tSidPtr					lSid;
+				CString				lComputerName;
+				DWORD				lComputerNameSize;
+				CByteArray			lComputerSid;
+				PSID				lRootSid;
+				BYTE				lSubCount;
+				CTypeArray <DWORD>	lSubIds;
+				tSidPtr				lSid;
 
 				if	(::GetComputerName (lComputerName.GetBuffer (MAX_COMPUTERNAME_LENGTH), &(lComputerNameSize=MAX_COMPUTERNAME_LENGTH+1)))
 				{

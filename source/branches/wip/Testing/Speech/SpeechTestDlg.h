@@ -28,12 +28,17 @@ public:
 	CComboBox mSpeechWave;
 	CButton	mThinkButton;
 	CButton	mSpeakButton;
+	CButton	mThinkNameButton;
+	CButton	mSpeakNameButton;
+	CButton	mThinkDescButton;
+	CButton	mSpeakDescButton;
 	CButton	mListenButton;
 	CListCtrl	mCharacterList;
 	CButton	mShowCharButton;
 	CButton	mShowChar2Button;
 	CButton	mCancelButton;
 	CButton	mFormattedButton;
+	CComboBox mTTSLanguages;
 	CComboBox mTTSModes;
 	CComboBox mSRModes;
 	CStatic mTTSStatus;
@@ -58,6 +63,10 @@ protected:
 	afx_msg void OnShowChar2();
 	afx_msg void OnThink();
 	afx_msg void OnSpeak();
+	afx_msg void OnThinkName();
+	afx_msg void OnSpeakName();
+	afx_msg void OnThinkDesc();
+	afx_msg void OnSpeakDesc();
 	afx_msg void OnListen();
 	afx_msg void OnItemChangedCharacterList(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnItemActivateCharacterList(NMHDR* pNMHDR, LRESULT* pResult);
@@ -70,6 +79,7 @@ protected:
 	afx_msg void OnBalloonAutoSize();
 	afx_msg void OnBalloonPartialLines();
 	afx_msg void OnSelEndOkSpeechWave();
+	afx_msg void OnSelEndOkTTSLanguages();
 	afx_msg void OnSelEndOkTTSModes();
 	afx_msg void OnSelEndOkSRModes();
 	//}}AFX_MSG
@@ -123,15 +133,20 @@ protected:
 	void CharacterIsVisible (INT_PTR pCharNdx, bool pVisible);
 	void ShowCharacterState (INT_PTR pCharNdx = -1);
 
+	void ShowTTSLanguages ();
+
+	int FindTTSLangID (LANGID pLangID);
 	void ShowTTSModes ();
 	void ShowTTSStatus ();
 	int FindTTSModeID (LPCTSTR pTTSModeID);
 	CString GetTTSModeID (INT_PTR pTTSModeNdx);
+	void LogTTSModes (INT_PTR pCharNdx);
 
 	void ShowSRModes ();
 	void ShowSRStatus ();
 	int FindSRModeID (LPCTSTR pSRModeID);
 	CString GetSRModeID (INT_PTR pSRModeNdx);
+	void LogSRModes (INT_PTR pCharNdx);
 
 	void LoadConfig ();
 	void SaveConfig ();
@@ -149,6 +164,7 @@ protected:
 	tPtr <CPoint>				mCharacterPos[2];
 	long						mLoadReqID;
 	long						mActiveChar;
+	CTypeArray <LANGID>			mLangIDs;
 	IDaSvrTTSEnginesPtr			mTTSEngines;
 	IDaSvrSREnginesPtr			mSREngines;
 	int							mTTSModeAdded;

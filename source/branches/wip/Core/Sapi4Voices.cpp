@@ -40,6 +40,9 @@ _COM_SMARTPTR_TYPEDEF (ITTSEnum, IID_ITTSEnum);
 
 //////////////////////////////////////////////////////////////////////
 
+IMPLEMENT_DLL_OBJECT(CSapi4VoiceIndexArray)
+IMPLEMENT_DLL_OBJECT(CSapi4VoiceInfoArray)
+IMPLEMENT_DLL_OBJECT(CSapi4VoiceMatchRanks)
 IMPLEMENT_DLL_OBJECT(CSapi4VoiceInfo)
 
 CSapi4VoiceInfo::CSapi4VoiceInfo ()
@@ -222,143 +225,187 @@ CSapi4VoiceInfo * CSapi4Voices::GetVoiceName (LPCTSTR pVoiceName)
 }
 
 //////////////////////////////////////////////////////////////////////
+
+INT_PTR CSapi4Voices::FindVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, int * pMatchRank)
+{
+	tPtr <CSapi4VoiceIndexArray const>	lIndexArray;
+	tPtr <CSapi4VoiceMatchRanks const>	lMatchRanks;
+
+	if	(lIndexArray = FindVoices (pAgentFileTts, pUseDefaults, lMatchRanks.Free()))
+	{
+#ifdef	_DEBUG_TTS_MATCH
+		LogMessage (_DEBUG_TTS_MATCH, _T("FindSapi4Voice [%u] %4.4d [%ls] [%ls] [%s] [%s]"), pUseDefaults, (*lMatchRanks) [0], (BSTR)GetAt((*lIndexArray) [0])->mVoiceName, (BSTR)GetAt((*lIndexArray) [0])->mProduct, (CString)CGuidStr(GetAt((*lIndexArray) [0])->mModeId), (CString)CGuidStr(GetAt((*lIndexArray) [0])->mEngineId));
+		LogMessage (_DEBUG_TTS_MATCH, _T(""));
+#endif
+		if	(pMatchRank)
+		{
+			(*pMatchRank) = (*lMatchRanks) [0];
+		}
+		return (*lIndexArray) [0];
+	}
+	else
+	if	(pMatchRank)
+	{
+		(*pMatchRank) = 0;
+	}	
+	return -1;
+}
+
+CSapi4VoiceInfo * CSapi4Voices::GetVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, int * pMatchRank)
+{
+	return operator () (FindVoice (pAgentFileTts, pUseDefaults, pMatchRank));
+}
+
+//////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-INT_PTR CSapi4Voices::FindVoice (const CAgentFileTts & pAgentFileTts, bool pUseDefaults, INT_PTR pStartAfter)
+CSapi4VoiceIndexArray const * CSapi4Voices::FindVoices (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, CSapi4VoiceMatchRanks const ** pMatchRanks)
 {
-	INT_PTR	lRet = -1;
+	tPtr <CSapi4VoiceIndexArray>	lIndexArray = new CSapi4VoiceIndexArray;
+	tPtr <CSapi4VoiceMatchRanks>	lMatchRanks = new CSapi4VoiceMatchRanks;
 
 	try
 	{
 		CAtlTypeArray <LANGID>		lLanguageIds;
 		INT_PTR						lLanguageNdx;
-		CSapi4VoiceInfo *			lVoiceInfo;
 		INT_PTR						lVoiceNdx;
-		INT_PTR						lBestNdx = -1;
-		int							lPartMatch = 0;
-		int							lCurrMatch;
-		int							lBestMatch = -1;
 		static const int			lLanguageWeight = 1000;
-		static const int			lGenderWeight = 200;
-		static const int			lAgeWeight = 2;
+		static const int			lGenderWeight = 10000;
+		static const int			lGuidWeight = 200;
+		static const int			lAgeWeight = 100;
+		static const int			lOrderWeight = 1;
 
-		if	(!IsEqualGUID (pAgentFileTts.mMode, GUID_NULL))
-		{
 #ifdef	_DEBUG_TTS_MATCH
-			LogMessage (_DEBUG_TTS_MATCH, _T("FindSapi4Voice [%s] From [%d]"), (CString)CGuidStr(pAgentFileTts.mMode), pStartAfter+1);
-#endif
-			for	(lVoiceNdx = max(pStartAfter+1,0); lVoiceNdx < (INT_PTR)GetCount(); lVoiceNdx++)
-			{
-				lVoiceInfo = GetAt (lVoiceNdx);
-				if	(IsEqualGUID (pAgentFileTts.mMode, lVoiceInfo->mModeId))
-				{
-					lBestNdx = lVoiceNdx;
-					break;
-				}
-			}
+		if	(IsEqualGUID (pAgentFileTts.mMode, GUID_NULL))
+		{
+			LogMessage (_DEBUG_TTS_MATCH, _T("FindSapi4Voices [%u] Language [%4.4X] Gender [%u] Age [%u]"), pUseDefaults, pAgentFileTts.mLanguage, pAgentFileTts.mGender, pAgentFileTts.mAge);
 		}
-
-		if	(lBestNdx < 0)
+		else
 		{
-#ifdef	_DEBUG_TTS_MATCH
-			LogMessage (_DEBUG_TTS_MATCH, _T("FindSapi4Voice Language [%4.4X] Gender [%u] Age [%u] Defaults [%u] From [%d]"), pAgentFileTts.mLanguage, pAgentFileTts.mGender, pAgentFileTts.mAge, pUseDefaults, pStartAfter+1);
+			LogMessage (_DEBUG_TTS_MATCH, _T("FindSapi4Voices [%u] GUID [%s] Language [%4.4X] Gender [%u] Age [%u]"), pUseDefaults, (CString)CGuidStr(pAgentFileTts.mMode), pAgentFileTts.mLanguage, pAgentFileTts.mGender, pAgentFileTts.mAge);
+		}
+		LogLanguageMatchList (_DEBUG_TTS_MATCH, pAgentFileTts.mLanguage, pUseDefaults, NULL, _T("  "));
 #endif
-			MakeLanguageMatchList (pAgentFileTts.mLanguage, lLanguageIds, pUseDefaults);
+		MakeLanguageMatchList (pAgentFileTts.mLanguage, lLanguageIds, pUseDefaults);
 
-			for	(lVoiceNdx = max(pStartAfter+1,0); lVoiceNdx < (INT_PTR)GetCount(); lVoiceNdx++)
+		for	(lVoiceNdx = 0; lVoiceNdx < (INT_PTR)GetCount(); lVoiceNdx++)
+		{
+			CSapi4VoiceInfo *	lVoiceInfo = GetAt (lVoiceNdx);
+			int					lPartMatch = 0;
+			int					lCurrMatch = 0;
+
+#ifdef	_DEBUG_TTS_MATCH
+			CAtlString	lMatchLog;
+			lMatchLog.Format (_T("%-20.20ls"), (BSTR)lVoiceInfo->mProduct);
+#endif
+			
+			lLanguageNdx = FindLanguageMatch (lVoiceInfo->mLangId, lLanguageIds);
+			if	(lLanguageNdx >= 0)
 			{
-				lVoiceInfo = GetAt (lVoiceNdx);
-				lCurrMatch = 0;
-
+				lCurrMatch += lPartMatch = (int)(lLanguageIds.GetCount()-lLanguageNdx) * lLanguageWeight;
 #ifdef	_DEBUG_TTS_MATCH
-				CAtlString	lMatchLog;
-				lMatchLog.Format (_T("%-20.20ls"), (BSTR)lVoiceInfo->mProduct);
+				lMatchLog.Format (_T("%s Language [%4.4X (%d)]"), CAtlString((LPCTSTR)lMatchLog), lLanguageIds [lLanguageNdx], lPartMatch);
 #endif
+			}
 
-				lLanguageNdx = lLanguageIds.Find (lVoiceInfo->mLangId);
-				if	(lLanguageNdx >= 0)
+			if	(
+					(lLanguageNdx >= 0)
+				&&	(!IsEqualGUID (pAgentFileTts.mMode, GUID_NULL))
+				&&	(IsEqualGUID (pAgentFileTts.mMode, lVoiceInfo->mModeId))
+				)
+			{
+				lCurrMatch += lPartMatch = lGenderWeight + lGuidWeight;
+#ifdef	_DEBUG_TTS_MATCH
+				lMatchLog.Format (_T("%s GUID [%s (%d)]"), CAtlString((LPCTSTR)lMatchLog), (CString)CGuidStr(lVoiceInfo->mModeId), lPartMatch);
+#endif
+			}
+			else
+			if	(
+					(lCurrMatch > 0)
+				&&	(pAgentFileTts.mGender != GENDER_NEUTRAL)
+				)
+			{
+				if	(lVoiceInfo->mSpeakerGender == pAgentFileTts.mGender)
 				{
-					lCurrMatch += lPartMatch = (int)(lLanguageIds.GetCount()-lLanguageNdx) * lLanguageWeight;
-#ifdef	_DEBUG_TTS_MATCH
-					lMatchLog.Format (_T("%s Language [%4.4X (%d)]"), CAtlString((LPCTSTR)lMatchLog), lVoiceInfo->mLangId, lPartMatch);
-#endif
+					lCurrMatch += lPartMatch = lGenderWeight;
 				}
 				else
-				if	(SUBLANGID (lVoiceInfo->mLangId) != SUBLANG_NEUTRAL)
+				if	(lVoiceInfo->mSpeakerGender == GENDER_NEUTRAL)
 				{
-					lLanguageNdx = lLanguageIds.Find (PRIMARYLANGID (lVoiceInfo->mLangId));
-					if	(lLanguageNdx >= 0)
-					{
-						lCurrMatch += lPartMatch = (int)(lLanguageIds.GetCount()-lLanguageNdx) * lLanguageWeight;
-#ifdef	_DEBUG_TTS_MATCH
-						lMatchLog.Format (_T("%s Language [%4.4X (%d)]"), CAtlString((LPCTSTR)lMatchLog), lVoiceInfo->mLangId, lPartMatch);
-#endif
-					}
+					lCurrMatch += lPartMatch = lGenderWeight/2;
 				}
+#ifdef	_DEBUG_TTS_MATCH
+				else
+				{
+					lPartMatch = 0;
+				}
+				if	(lPartMatch)
+				{
+					lMatchLog.Format (_T("%s Gender [%u (%d)]"), CAtlString((LPCTSTR)lMatchLog), lVoiceInfo->mSpeakerGender, lPartMatch);
+				}
+#endif
+			}
 
-				if	(pAgentFileTts.mGender != GENDER_NEUTRAL)
-				{
-					if	(lVoiceInfo->mSpeakerGender == pAgentFileTts.mGender)
-					{
-						lCurrMatch += lPartMatch = lGenderWeight;
-					}
-					else
-					if	(lVoiceInfo->mSpeakerGender == GENDER_NEUTRAL)
-					{
-						lCurrMatch += lPartMatch = lGenderWeight/2;
-					}
+			if	(
+					(lCurrMatch > 0)
+				&&	(pAgentFileTts.mAge != 0)
+				&&	(lVoiceInfo->mSpeakerAge != 0)
+				)
+			{
+				lCurrMatch += lPartMatch = -abs((int)pAgentFileTts.mAge-(int)lVoiceInfo->mSpeakerAge) * lAgeWeight;
 #ifdef	_DEBUG_TTS_MATCH
-					else
-					{
-						lPartMatch = 0;
-					}
-					if	(lPartMatch)
-					{
-						lMatchLog.Format (_T("%s Gender [%u (%d)]"), CAtlString((LPCTSTR)lMatchLog), lVoiceInfo->mSpeakerGender, lPartMatch);
-					}
+				lMatchLog.Format (_T("%s Age [%u (%d)]"), CAtlString((LPCTSTR)lMatchLog), lVoiceInfo->mSpeakerAge, lPartMatch);
 #endif
-				}
-
-				if	(
-						(pAgentFileTts.mAge != 0)
-					&&	(lVoiceInfo->mSpeakerAge != 0)
-					)
-				{
-					lCurrMatch += lPartMatch = -abs((int)pAgentFileTts.mAge-(int)lVoiceInfo->mSpeakerAge) * lAgeWeight;
-#ifdef	_DEBUG_TTS_MATCH
-					lMatchLog.Format (_T("%s Age [%u (%d)]"), CAtlString((LPCTSTR)lMatchLog), lVoiceInfo->mSpeakerAge, lPartMatch);
-#endif
-				}
+			}
 
 #ifdef	_DEBUG_TTS_MATCH
-				LogMessage (_DEBUG_TTS_MATCH|LogHighVolume, _T("  %4.4d %s"), lCurrMatch, lMatchLog);
+			LogMessage (_DEBUG_TTS_MATCH|LogHighVolume, _T("  %3d [%6.6d] %s Name [%ls]"), lVoiceNdx, lCurrMatch, lMatchLog, (BSTR)GetAt(lVoiceNdx)->mVoiceName);
 #endif
-				if	(lCurrMatch > lBestMatch)
-				{
-					lBestMatch = lCurrMatch;
-					lBestNdx = lVoiceNdx;
-				}
+			if	(lCurrMatch > 0)
+			{
+				lIndexArray->InsertAt (lMatchRanks->AddSortedQS (lCurrMatch + (((int)GetCount()-lVoiceNdx)*lOrderWeight), CSapi4VoiceMatchRanks::SortDescending, false), lVoiceNdx);
 			}
 		}
 
-		if	(lBestNdx >= 0)
-		{
 #ifdef	_DEBUG_TTS_MATCH
-			LogMessage (_DEBUG_TTS_MATCH, _T("FindSapi4Voice [%ls] [%ls] [%s] [%s]"), (BSTR)GetAt(lBestNdx)->mVoiceName, (BSTR)GetAt(lBestNdx)->mProduct, (CString)CGuidStr(GetAt(lBestNdx)->mModeId), (CString)CGuidStr(GetAt(lBestNdx)->mEngineId));
-			LogMessage (_DEBUG_TTS_MATCH, _T(""));
+		LogMessage (_DEBUG_TTS_MATCH, _T("  Voices [%u] [%s]"), pUseDefaults, FormatArray (*lIndexArray, _T("%6d")));
+		LogMessage (_DEBUG_TTS_MATCH, _T("  Ranks  [%u] [%s]"), pUseDefaults, FormatArray (*lMatchRanks, _T("%6.6d")));
 #endif
-			lRet = lBestNdx;
-		}
 	}
 	catch AnyExceptionDebug
 
-	return lRet;
+	if	(lIndexArray->GetCount () <= 0)
+	{
+		lIndexArray = NULL;
+		lMatchRanks = NULL;
+	}
+	if	(pMatchRanks)
+	{
+		(*pMatchRanks) = lMatchRanks.Detach ();
+	}
+	return lIndexArray.Detach ();
 }
 
-CSapi4VoiceInfo * CSapi4Voices::GetVoice (const CAgentFileTts & pAgentFileTts, bool pUseDefaults, INT_PTR pStartAfter)
+//////////////////////////////////////////////////////////////////////
+
+CSapi4VoiceInfoArray const * CSapi4Voices::GetVoices (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, CSapi4VoiceMatchRanks const ** pMatchRanks)
 {
-	return operator () (FindVoice (pAgentFileTts, pUseDefaults, pStartAfter));
+	tPtr <CSapi4VoiceInfoArray>			lInfoArray;
+	tPtr <CSapi4VoiceIndexArray const>	lIndexArray;
+	INT_PTR								lNdx;
+	
+	if	(
+			(lIndexArray = FindVoices (pAgentFileTts, pUseDefaults, pMatchRanks))
+		&&	(lInfoArray = new CSapi4VoiceInfoArray)
+		)
+	{
+		for	(lNdx = 0; lNdx < (INT_PTR)lIndexArray->GetCount(); lNdx++)
+		{
+			lInfoArray->Add (operator () ((*lIndexArray) [lNdx]));
+		}
+	}
+	return lInfoArray.Detach();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -402,54 +449,12 @@ bool CSapi4Voices::VoiceSupportsLanguage (CSapi4VoiceInfo * pVoiceInfo, LANGID p
 	{
 		MakeLanguageMatchList (pLangId, lLanguageIds, pUseDefaults);
 
-		if	(lLanguageIds.Find (pVoiceInfo->mLangId) >= 0)
+		if	(FindLanguageMatch (pVoiceInfo->mLangId, lLanguageIds) >= 0)
 		{
 			lRet = true;
 		}
 	}
 	return lRet;
-}
-
-void CSapi4Voices::MakeLanguageMatchList (LANGID pLanguageId, CAtlTypeArray <LANGID> & pLanguageIds, bool pUseDefaults)
-{
-	pLanguageIds.RemoveAll ();
-
-	if	(pLanguageId)
-	{
-		if	(IsValidLocale (MAKELCID (pLanguageId, SORT_DEFAULT), LCID_SUPPORTED))
-		{
-			pLanguageIds.AddUnique (pLanguageId);
-		}
-
-		if	(
-				(SUBLANGID (pLanguageId) != SUBLANG_DEFAULT)
-			&&	(IsValidLocale (MAKELCID (MAKELANGID (PRIMARYLANGID (pLanguageId), SUBLANG_DEFAULT), SORT_DEFAULT), LCID_SUPPORTED))
-			)
-		{
-			pLanguageIds.AddUnique (MAKELANGID (PRIMARYLANGID (pLanguageId), SUBLANG_DEFAULT));
-		}
-
-		if	(
-				(SUBLANGID (pLanguageId) != SUBLANG_DEFAULT)
-			&&	(IsValidLocale (MAKELCID (MAKELANGID (PRIMARYLANGID (pLanguageId), SUBLANG_SYS_DEFAULT), SORT_DEFAULT), LCID_SUPPORTED))
-			)
-		{
-			pLanguageIds.AddUnique (MAKELANGID (PRIMARYLANGID (pLanguageId), SUBLANG_SYS_DEFAULT));
-		}
-	}
-
-	if	(pUseDefaults)
-	{
-		pLanguageIds.AddUnique (GetUserDefaultUILanguage ());
-		pLanguageIds.AddUnique (GetSystemDefaultUILanguage ());
-		pLanguageIds.AddUnique (GetUserDefaultLangID ());
-		pLanguageIds.AddUnique (GetSystemDefaultLangID ());
-		pLanguageIds.AddUnique (MAKELANGID (LANG_ENGLISH, SUBLANG_ENGLISH_US));
-		pLanguageIds.AddUnique (MAKELANGID (LANG_ENGLISH, SUBLANG_NEUTRAL));
-	}
-#ifdef	_DEBUG_TTS_MATCH
-	LogMessage (_DEBUG_TTS_MATCH, _T("  LanguageMatches for [%4.4X] are [%s] defaults [%4.4X] [%4.4X] [%4.4X] [%4.4X]"), pLanguageId, FormatArray (pLanguageIds, _T("%4.4X")), GetUserDefaultUILanguage (), GetSystemDefaultUILanguage (), GetUserDefaultLangID (), GetSystemDefaultLangID ());
-#endif
 }
 
 //////////////////////////////////////////////////////////////////////

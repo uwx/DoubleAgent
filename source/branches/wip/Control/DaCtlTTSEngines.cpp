@@ -181,35 +181,47 @@ void DaCtlTTSEngines::InitializeObjects ()
 			INT_PTR								lNdx;
 			tPtr <CComObject <DaCtlTTSEngine> >	lItemObject;
 			IDaCtlTTSEnginePtr					lItemInterface;
-
-			for	(lNdx = 0; lNdx < (INT_PTR)mLocalObject->mSapi5Voices.GetCount(); lNdx++)
-			{
-				if	(
-						(SUCCEEDED (CComObject <DaCtlTTSEngine>::CreateInstance (lItemObject.Free())))
-					&&	(lItemObject->mLocalObject = new CDaCmnTTSEngine)
-					&&	(SUCCEEDED (lItemObject->SetOwner (mOwner)))
-					)
-				{
-					lItemObject->mLocalObject->Initialize (mLocalObject->mSapi5Voices [lNdx]);
-					lItemInterface = (LPDISPATCH)lItemObject.Detach();
-					mTTSEngines.Add (lItemInterface);
-				}
-			}
+			CSapi5VoiceInfo *					lSapi5VoiceInfo;
 #ifndef	_WIN64
-			for	(lNdx = 0; lNdx < (INT_PTR)mLocalObject->mSapi4Voices.GetCount(); lNdx++)
+			CSapi4VoiceInfo *					lSapi4VoiceInfo;
+#endif			
+
+			for	(lNdx = 0; true; lNdx++)
 			{
-				if	(
-						(SUCCEEDED (CComObject <DaCtlTTSEngine>::CreateInstance (lItemObject.Free())))
-					&&	(lItemObject->mLocalObject = new CDaCmnTTSEngine)
-					&&	(SUCCEEDED (lItemObject->SetOwner (mOwner)))
-					)
+				if	(lSapi5VoiceInfo = mLocalObject->GetSapi5VoiceAt (lNdx))
 				{
-					lItemObject->mLocalObject->Initialize (mLocalObject->mSapi4Voices [lNdx]);
-					lItemInterface = (LPDISPATCH)lItemObject.Detach();
-					mTTSEngines.Add (lItemInterface);
+					if	(
+							(SUCCEEDED (CComObject <DaCtlTTSEngine>::CreateInstance (lItemObject.Free())))
+						&&	(lItemObject->mLocalObject = new CDaCmnTTSEngine)
+						&&	(SUCCEEDED (lItemObject->SetOwner (mOwner)))
+						)
+					{
+						lItemObject->mLocalObject->Initialize (lSapi5VoiceInfo);
+						lItemInterface = (LPDISPATCH)lItemObject.Detach();
+						mTTSEngines.Add (lItemInterface);
+					}
+				}
+#ifndef	_WIN64
+				else
+				if	(lSapi4VoiceInfo = mLocalObject->GetSapi4VoiceAt (lNdx))
+				{
+					if	(
+							(SUCCEEDED (CComObject <DaCtlTTSEngine>::CreateInstance (lItemObject.Free())))
+						&&	(lItemObject->mLocalObject = new CDaCmnTTSEngine)
+						&&	(SUCCEEDED (lItemObject->SetOwner (mOwner)))
+						)
+					{
+						lItemObject->mLocalObject->Initialize (lSapi4VoiceInfo);
+						lItemInterface = (LPDISPATCH)lItemObject.Detach();
+						mTTSEngines.Add (lItemInterface);
+					}
+				}
+#endif
+				else
+				{
+					break;
 				}
 			}
-#endif
 		}
 		else
 		if	(mServerObject)

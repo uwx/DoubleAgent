@@ -4365,6 +4365,10 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::FindTTSEngines (VARIANT LanguageID, ID
 			{
 				try
 				{
+					if	(lLanguageID == 0)
+					{
+						mLocalObject->get_LanguageID (&lLanguageID);
+					}
 					if	(
 							(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (lObject.Free())))
 						&&	(SUCCEEDED (lResult = lObject->SetOwner (mOwner)))
@@ -4536,6 +4540,10 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::FindSREngines (VARIANT LanguageID, IDa
 			{
 				try
 				{
+					if	(lLanguageID == 0)
+					{
+						mLocalObject->get_LanguageID (&lLanguageID);
+					}
 					if	(
 							(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (lObject.Free())))
 						&&	(SUCCEEDED (lResult = lObject->SetOwner (mOwner)))

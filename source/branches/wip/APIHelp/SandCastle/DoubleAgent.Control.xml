@@ -2679,7 +2679,7 @@ End Sub</code></example></remarks>
 <summary> Specifies the text-to-speech engine used for the character.</summary>
 <value name="TTSModeID">A string value that uniquely identifies a text-to-speech engine and synthesis mode.</value>
 <remarks>
-<para>This property determines the TTS (text-to-speech) engine for a character's spoken output. TheTTSModeID for a TTS engine is a formatted string defined by the vendor that uniquely identifies the engine and it's synthesis mode.
+<para>This property determines the TTS (text-to-speech) engine for a character's spoken output. The TTSModeID for a TTS engine is a formatted string defined by the vendor that uniquely identifies the engine and it's synthesis mode.
 </para>
 </remarks>
 <seealso cref="P:DoubleAgent.Control.Character.LanguageID" />

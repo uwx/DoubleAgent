@@ -148,17 +148,20 @@ void CTextSize::GetTextMetrics (TEXTMETRIC & pMetrics)
 
 CSize CTextSize::MeasureText (LPCTSTR pText, INT_PTR pTextLen, HDC pDC, HFONT pFont, bool pMultiline, long pWidth)
 {
-	CSize	lRet (0, 0);
-	CSize	lVptExt;
-	CSize	lWinExt;
-	HGDIOBJ	lOldFont;
+	CSize		lRet (0, 0);
+	CSize		lVptExt;
+	CSize		lWinExt;
+	tPtr <CDC>	lDC;
+	HGDIOBJ		lOldFont;
 
-#ifdef	_DEBUG
-	if	(!pDC)
+	if	(
+			(!pDC)
+		&&	(lDC = new CDC)
+		&&	(lDC->CreateCompatibleDC (NULL))
+		)
 	{
-		LogMessage (LogIfActive, _T("CTextSize::MeasureText with NULL DC"));
+		pDC = lDC->GetSafeHdc ();
 	}
-#endif
 
 	if	(::GetMapMode (pDC) != MM_TWIPS)
 	{

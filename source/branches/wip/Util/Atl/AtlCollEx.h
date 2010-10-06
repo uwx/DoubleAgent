@@ -197,9 +197,9 @@ public:
 	{
 		INT_PTR	lRet = 0;
 		INT_PTR	lNdx;
-		for	(lNdx = 0; lNdx < pSource.GetCount(); lNdx++)
+		for	(lNdx = 0; lNdx < (INT_PTR)pSource.GetCount(); lNdx++)
 		{
-			if	(AddUnique (pSource [lNdx]) >= 0)
+			if	(AddUnique ((INARGTYPE)(pSource [lNdx])) >= 0)
 			{
 				lRet++;
 			}
@@ -221,7 +221,7 @@ public:
 	{
 		if	(
 				(pNdx >= 0)
-			&&	(pNdx < GetCount())
+			&&	(pNdx < (INT_PTR)GetCount())
 			)
 		{
 			RemoveAt (pNdx);
@@ -325,7 +325,7 @@ public:
 	{
 		TYPE	lElement = (TYPE) pElement;
 		TYPE *	lArray = (TYPE *) GetData();
-		TYPE *	lFound = (TYPE *) bsearch (pElement, lArray, GetCount(), sizeof (TYPE), (pCompare) ? pCompare : DefaultCompare);
+		TYPE *	lFound = (TYPE *) bsearch (&lElement, lArray, GetCount(), sizeof (TYPE), (pCompare) ? pCompare : DefaultCompare);
 
 		if	(lFound)
 		{
@@ -336,7 +336,7 @@ public:
 
 	void SortQS (int (__cdecl * pCompare) (const void *, const void *) = NULL)
 	{
-		qsort (GetData(), GetSize (), sizeof (TYPE), (pCompare) ? pCompare : DefaultCompare);
+		qsort (GetData(), GetCount(), sizeof (TYPE), (pCompare) ? pCompare : DefaultCompare);
 	}
 };
 

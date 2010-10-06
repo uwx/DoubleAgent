@@ -4086,6 +4086,12 @@ HRESULT CDaCmnCharacter::put_TTSModeID (BSTR TTSModeID)
 			CAgentCharacterWnd *	lCharacterWnd;
 			CSapiVoice *			lPrevVoice = mSapiVoice;
 
+#ifdef	_DEBUG_LANGUAGE
+			if	(LogIsActive (_DEBUG_LANGUAGE))
+			{
+				LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] CDaCmnCharacter put_TTSModeID [%ls]"), this, mCharID, TTSModeID);
+			}
+#endif
 			try
 			{
 				if	(
@@ -4174,6 +4180,12 @@ HRESULT CDaCmnCharacter::put_SRModeID (BSTR SRModeID)
 		{
 			CSapi5Input *	lPrevInput = mSapiInput;
 
+#ifdef	_DEBUG_LANGUAGE
+			if	(LogIsActive (_DEBUG_LANGUAGE))
+			{
+				LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] CDaCmnCharacter put_SRModeID [%ls]"), this, mCharID, SRModeID);
+			}
+#endif
 			mSapiInput = NULL;
 
 			if	(GetSapiInput (true, CAtlString (SRModeID)))

@@ -19,6 +19,7 @@
 				<siteMapNode title="The Gallery Page" url="Reference/UI_PropSheet.htm" href="#Gallery" />
 				<siteMapNode title="The Copyright Page" url="Reference/UI_PropSheet.htm" href="#Copyright" />
 			</siteMapNode>
+			<siteMapNode title="The Double Agent Control Panel" url="Reference/UI_ControlPanel.htm" />
 		</siteMapNode>
 		<siteMapNode title="Programming Double Agent" url="Programming/Gen_Intro.htm">
 			<siteMapNode title="Double Agent API Overview" url="Programming/Gen_Overview.htm">

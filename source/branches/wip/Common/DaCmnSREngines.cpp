@@ -57,10 +57,10 @@ HRESULT CDaCmnSREngines::UseAllInputs ()
 
 HRESULT CDaCmnSREngines::UseTheseInputs (CAgentFile * pFile, LANGID pLangId)
 {
-	HRESULT				lResult = S_FALSE;
-	CSapiInputCache *	lInputCache;
-	CSapi5Inputs *		lSapi5Inputs;
-	INT_PTR				lSapi5InputNdx = -1;
+	HRESULT								lResult = S_FALSE;
+	CSapiInputCache *					lInputCache;
+	CSapi5Inputs *						lSapi5Inputs;
+	tPtr <CSapi5InputInfoArray const>	lInputArray;
 
 	if	(
 			(pFile)
@@ -75,12 +75,10 @@ HRESULT CDaCmnSREngines::UseTheseInputs (CAgentFile * pFile, LANGID pLangId)
 	if	(
 			(lInputCache = CSapiInputCache::GetStaticInstance ())
 		&&	(lSapi5Inputs = lInputCache->GetSapi5Inputs())
+		&&	(lInputArray = lSapi5Inputs->GetInputs (pLangId, true))
 		)
 	{
-		while ((lSapi5InputNdx = lSapi5Inputs->FindInput (pLangId, (pLangId==0), lSapi5InputNdx)) >= 0)
-		{
-			mSapi5Inputs.Add (lSapi5Inputs->GetAt (lSapi5InputNdx));
-		}
+		mSapi5Inputs.Copy (*lInputArray);
 		lResult = S_OK;
 	}
 	return lResult;

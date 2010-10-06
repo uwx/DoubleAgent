@@ -84,6 +84,10 @@
 					<param name="Local" value="Reference/UI_PropSheet.htm#Copyright">
 					</OBJECT>
 			</UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="The Double Agent Control Panel">
+				<param name="Local" value="Reference/UI_ControlPanel.htm">
+				</OBJECT>
 		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="Programming Double Agent">

@@ -206,20 +206,42 @@ CSapiVoice * CSapiVoiceCache::GetAgentVoice (const struct CAgentFileTts & pAgent
 	else
 	if	(mSapiVersionRestriction == 4)
 	{
-		lRet = GetAgentSapi4Voice (pAgentFileTts, pCached);
+		lRet = GetAgentSapi4Voice (pAgentFileTts, pUseDefaults, pCached);
 	}
 	else
 	if	(mSapiVersionPreference == 5)
 	{
-		lRet = GetAgentSapi5Voice (pAgentFileTts, pUseDefaults, pCached);
+		if	(pUseDefaults)
+		{
+			lRet = GetAgentSapi5Voice (pAgentFileTts, false, pCached);
+			if	(!lRet)
+			{
+				lRet = GetAgentSapi4Voice (pAgentFileTts, false, pCached);
+			}
+		}
 		if	(!lRet)
 		{
-			lRet = GetAgentSapi4Voice (pAgentFileTts, pCached);
+			lRet = GetAgentSapi5Voice (pAgentFileTts, pUseDefaults, pCached);
+		}
+		if	(!lRet)
+		{
+			lRet = GetAgentSapi4Voice (pAgentFileTts, pUseDefaults, pCached);
 		}
 	}
 	else
 	{
-		lRet = GetAgentSapi4Voice (pAgentFileTts, pCached);
+		if	(pUseDefaults)
+		{
+			lRet = GetAgentSapi4Voice (pAgentFileTts, false, pCached);
+			if	(!lRet)
+			{
+				lRet = GetAgentSapi5Voice (pAgentFileTts, false, pCached);
+			}
+		}
+		if	(!lRet)
+		{
+			lRet = GetAgentSapi4Voice (pAgentFileTts, pUseDefaults, pCached);
+		}
 		if	(!lRet)
 		{
 			lRet = GetAgentSapi5Voice (pAgentFileTts, pUseDefaults, pCached);
@@ -250,7 +272,7 @@ CSapiVoice * CSapiVoiceCache::GetAgentVoice (LPCTSTR pVoiceName, LANGID pLangID,
 	else
 	if	(mSapiVersionRestriction == 4)
 	{
-		lRet = GetAgentSapi4Voice (pVoiceName, pLangID, pCached);
+		lRet = GetAgentSapi4Voice (pVoiceName, pLangID, pUseDefaults, pCached);
 	}
 	else
 	if	(mSapiVersionPreference == 5)
@@ -258,12 +280,12 @@ CSapiVoice * CSapiVoiceCache::GetAgentVoice (LPCTSTR pVoiceName, LANGID pLangID,
 		lRet = GetAgentSapi5Voice (pVoiceName, pLangID, pUseDefaults, pCached);
 		if	(!lRet)
 		{
-			lRet = GetAgentSapi4Voice (pVoiceName, pLangID, pCached);
+			lRet = GetAgentSapi4Voice (pVoiceName, pLangID, pUseDefaults, pCached);
 		}
 	}
 	else
 	{
-		lRet = GetAgentSapi4Voice (pVoiceName, pLangID, pCached);
+		lRet = GetAgentSapi4Voice (pVoiceName, pLangID, pUseDefaults, pCached);
 		if	(!lRet)
 		{
 			lRet = GetAgentSapi5Voice (pVoiceName, pLangID, pUseDefaults, pCached);
@@ -277,37 +299,48 @@ CSapiVoice * CSapiVoiceCache::GetAgentVoice (LPCTSTR pVoiceName, LANGID pLangID,
 
 CSapi5Voice * CSapiVoiceCache::GetAgentSapi5Voice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, bool pCached)
 {
-	CSapi5Voice *		lRet = NULL;
-	CSapi5VoiceInfo *	lSapi5VoiceInfo;
-	tPtr <CSapi5Voice>	lSapi5Voice;
+	CSapi5Voice *	lRet = NULL;
 
 	if	(GetSapi5Voices())
 	{
-		while	(lSapi5VoiceInfo = mSapi5Voices->GetVoice (pAgentFileTts, pUseDefaults))
+		tPtr <CSapi5VoiceInfoArray const>	lInfoArray;
+		INT_PTR								lInfoNdx;
+		
+		if	(lInfoArray = mSapi5Voices->GetVoices (pAgentFileTts, pUseDefaults))
 		{
-			if	(pCached)
+			for	(lInfoNdx = 0; lInfoNdx < (INT_PTR)lInfoArray->GetCount(); lInfoNdx++)
 			{
-				lRet = dynamic_cast <CSapi5Voice *> (FindCachedVoice (lSapi5VoiceInfo->mVoiceIdShort));
-			}
-			if	(
-					(!lRet)
-				&&	(lSapi5Voice = CSapi5Voice::CreateInstance())
-				)
-			{
-				lSapi5Voice->SetVoiceId (lSapi5VoiceInfo->mVoiceIdLong);
-				if	(lSapi5Voice->SafeIsValid())
+				CSapi5VoiceInfo *	lSapi5VoiceInfo = (*lInfoArray) [lInfoNdx];
+				tPtr <CSapi5Voice>	lSapi5Voice;
+
+				if	(pCached)
 				{
-					if	(
-							(FAILED (LogSapi5ErrAnon (LogNormal, lSapi5Voice->Speak (_T("")), _T("Test [%ls]"), (BSTR)lSapi5VoiceInfo->mVoiceIdShort)))
-						&&	(mSapi5Voices->RemoveVoice (lSapi5VoiceInfo))
-						)
+					lRet = dynamic_cast <CSapi5Voice *> (FindCachedVoice (lSapi5VoiceInfo->mVoiceIdShort));
+				}
+				if	(
+						(!lRet)
+					&&	(lSapi5Voice = CSapi5Voice::CreateInstance())
+					)
+				{
+					lSapi5Voice->SetVoiceId (lSapi5VoiceInfo->mVoiceIdLong);
+					if	(lSapi5Voice->SafeIsValid())
 					{
-						continue;
+						if	(
+								(FAILED (LogSapi5ErrAnon (LogNormal, lSapi5Voice->Speak (_T("")), _T("Test [%ls]"), (BSTR)lSapi5VoiceInfo->mVoiceIdShort)))
+							&&	(mSapi5Voices->RemoveVoice (lSapi5VoiceInfo))
+							)
+						{
+							lRet = NULL;
+							continue;
+						}
+						lRet = lSapi5Voice.Detach();
 					}
-					lRet = lSapi5Voice.Detach();
+				}
+				if	(lRet)
+				{
+					break;
 				}
 			}
-			break;
 		}
 #ifndef	_STRICT_COMPATIBILITY
 		if	(
@@ -376,47 +409,59 @@ CSapi5Voice * CSapiVoiceCache::GetAgentSapi5Voice (LPCTSTR pVoiceName, LANGID pL
 #ifndef	_WIN64
 //////////////////////////////////////////////////////////////////////
 
-CSapi4Voice * CSapiVoiceCache::GetAgentSapi4Voice (const struct CAgentFileTts & pAgentFileTts, bool pCached)
+CSapi4Voice * CSapiVoiceCache::GetAgentSapi4Voice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, bool pCached)
 {
-	CSapi4Voice *		lRet = NULL;
-	CSapi4VoiceInfo *	lSapi4VoiceInfo;
-	tPtr <CSapi4Voice>	lSapi4Voice;
+	CSapi4Voice *	lRet = NULL;
 
 	if	(GetSapi4Voices())
 	{
-		while	(lSapi4VoiceInfo = mSapi4Voices->GetVoice (pAgentFileTts, true))
+		tPtr <CSapi4VoiceInfoArray const>	lInfoArray;
+		INT_PTR								lInfoNdx;
+
+		if	(lInfoArray = mSapi4Voices->GetVoices (pAgentFileTts, pUseDefaults))
 		{
-			if	(pCached)
+			for	(lInfoNdx = 0; lInfoNdx < (INT_PTR)lInfoArray->GetCount(); lInfoNdx++)
 			{
-				lRet = dynamic_cast <CSapi4Voice *> (FindCachedVoice ((CString)CGuidStr(lSapi4VoiceInfo->mModeId)));
-			}
-			if	(
-					(!lRet)
-				&&	(lSapi4Voice = CSapi4Voice::CreateInstance())
-				)
-			{
+				CSapi4VoiceInfo *	lSapi4VoiceInfo = (*lInfoArray) [lInfoNdx];
+				tPtr <CSapi4Voice>	lSapi4Voice;
+
+				if	(pCached)
+				{
+					lRet = dynamic_cast <CSapi4Voice *> (FindCachedVoice ((CString)CGuidStr(lSapi4VoiceInfo->mModeId)));
+				}
 				if	(
-						(SUCCEEDED (lSapi4Voice->SetModeId (lSapi4VoiceInfo->mModeId)))
-					&&	(lSapi4Voice->SafeIsValid())
+						(!lRet)
+					&&	(lSapi4Voice = CSapi4Voice::CreateInstance())
 					)
 				{
-//					if	(
-//							(FAILED (LogSapi4ErrAnon (LogNormal, lSapi4Voice->Speak (_T("")), _T("Test [%ls]"), (BSTR)lSapi4VoiceInfo->mVoiceName)))
-//						&&	(mSapi4Voices->RemoveVoice (lSapi4VoiceInfo))
-//						)
-//					{
-//						continue;
-//					}
-					lRet = lSapi4Voice.Detach();
+					if	(
+							(SUCCEEDED (lSapi4Voice->SetModeId (lSapi4VoiceInfo->mModeId)))
+						&&	(lSapi4Voice->SafeIsValid())
+						)
+					{
+#if	FALSE					
+						if	(
+								(FAILED (LogSapi4ErrAnon (LogNormal, lSapi4Voice->Speak (_T("")), _T("Test [%ls]"), (BSTR)lSapi4VoiceInfo->mVoiceName)))
+							&&	(mSapi4Voices->RemoveVoice (lSapi4VoiceInfo))
+							)
+						{
+							continue;
+						}
+#endif						
+						lRet = lSapi4Voice.Detach();
+					}
+				}
+				if	(lRet)
+				{
+					break;
 				}
 			}
-			break;
 		}
 	}
 	return lRet;
 }
 
-CSapi4Voice * CSapiVoiceCache::GetAgentSapi4Voice (LPCTSTR pVoiceName, LANGID pLangID, bool pCached)
+CSapi4Voice * CSapiVoiceCache::GetAgentSapi4Voice (LPCTSTR pVoiceName, LANGID pLangID, bool pUseDefaults, bool pCached)
 {
 	CSapi4Voice *		lRet = NULL;
 	CSapi4VoiceInfo *	lSapi4VoiceInfo;
@@ -431,7 +476,7 @@ CSapi4Voice * CSapiVoiceCache::GetAgentSapi4Voice (LPCTSTR pVoiceName, LANGID pL
 				?	(lSapi4VoiceInfo = mSapi4Voices->GetVoiceName (pVoiceName))
 				:	(lSapi4VoiceInfo = mSapi4Voices->GetModeId (lModeId))
 				)
-			&&	(mSapi4Voices->VoiceSupportsLanguage (lSapi4VoiceInfo, pLangID, true))
+			&&	(mSapi4Voices->VoiceSupportsLanguage (lSapi4VoiceInfo, pLangID, pUseDefaults))
 			)
 		{
 			if	(pCached)

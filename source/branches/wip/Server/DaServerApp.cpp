@@ -383,19 +383,23 @@ void CDaServerModule::RunMessageLoop ()
 
 HRESULT CDaServerModule::RegisterServer(BOOL bRegTypeLib, const CLSID* pCLSID)
 {
+#if	FALSE
 	if	(bRegTypeLib)
 	{
 		_AtlComModule.RegisterTypeLib (_T("\\3"));
 	}
+#endif	
 	return CAtlExeModuleT<CDaServerModule>::RegisterServer (bRegTypeLib, pCLSID);
 }
 
 HRESULT CDaServerModule::UnregisterServer(BOOL bUnRegTypeLib, const CLSID* pCLSID)
 {
+#if	FALSE
 	if	(bUnRegTypeLib)
 	{
 		_AtlComModule.UnRegisterTypeLib (_T("\\3"));
 	}
+#endif
 	return CAtlExeModuleT<CDaServerModule>::UnregisterServer (bUnRegTypeLib, pCLSID);
 }
 

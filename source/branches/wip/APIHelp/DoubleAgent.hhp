@@ -23,10 +23,16 @@ Reference\License.lesser.htm
 Reference\Licensing.htm
 Reference\UI_Intro.htm
 Reference\UI_PropSheet.htm
+Reference\UI_ControlPanel.htm
 Reference\UI_Rendering.htm
 Reference\Ref_Errors.htm
 Reference\Ref_SAPI5Contexts.htm
 Reference\Ref_SpeechTags.htm
+Reference\MsAgentRef.htm
+Reference\MsAgentToDoubleAgent.htm
+Reference\MsAgentTools.htm
+Reference\MsAgentVsDoubleAgent.htm
+Reference\MsAgentWin7.htm
 Programming\Ctl_Control_Name.htm
 Programming\Ctl_DocumentationConventions.htm
 Programming\Ctl_Objects.htm

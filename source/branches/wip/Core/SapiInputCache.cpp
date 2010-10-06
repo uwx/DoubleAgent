@@ -82,24 +82,35 @@ CSapi5Inputs * CSapiInputCache::GetSapi5Inputs ()
 CSapi5Input * CSapiInputCache::GetAgentInput (LANGID pLangID, bool pUseDefaults, bool pCached)
 {
 	CSapi5Input *		lRet = NULL;
-	CSapi5InputInfo *	lInputInfo;
-	tPtr <CSapi5Input>	lInput;
 
 	if	(GetSapi5Inputs())
 	{
-		if	(lInputInfo = mSapi5Inputs->GetInput (pLangID, pUseDefaults))
+		tPtr <CSapi5InputInfoArray const>	lInfoArray;
+		INT_PTR								lInfoNdx;
+
+		if	(lInfoArray = mSapi5Inputs->GetInputs (pLangID, pUseDefaults))
 		{
-			if	(pCached)
+			for	(lInfoNdx = 0; lInfoNdx < (INT_PTR)lInfoArray->GetCount(); lInfoNdx++)
 			{
-				lRet = FindCachedInput (lInputInfo->mEngineIdLong);
-			}
-			if	(
-					(!lRet)
-				&&	(lInput = CSapi5Input::CreateInstance())
-				&&	(SUCCEEDED (lInput->SetEngineId (lInputInfo->mEngineIdShort)))
-				)
-			{
-				lRet = lInput.Detach();
+				CSapi5InputInfo *	lInputInfo = (*lInfoArray) [lInfoNdx];
+				tPtr <CSapi5Input>	lInput;
+
+				if	(pCached)
+				{
+					lRet = FindCachedInput (lInputInfo->mEngineIdLong);
+				}
+				if	(
+						(!lRet)
+					&&	(lInput = CSapi5Input::CreateInstance())
+					&&	(SUCCEEDED (lInput->SetEngineId (lInputInfo->mEngineIdShort)))
+					)
+				{
+					lRet = lInput.Detach();
+				}
+				if	(lRet)
+				{
+					break;
+				}
 			}
 		}
 #ifndef	_STRICT_COMPATIBILITY

@@ -20,8 +20,9 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaCoreExp.h"
+#include "SapiLanguageMatch.h"
 
-//////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 #pragma warning (push)
 #pragma warning (disable: 4251 4275)
 
@@ -44,9 +45,40 @@ public:
 	tBstrPtr			mManufacturer;
 };
 
-//////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CSapi5Inputs : public CAtlOwnPtrArray <CSapi5InputInfo>
+class CSapi5InputIndexArray : public CAtlTypeArray <INT_PTR>  
+{
+	DECLARE_DLL_OBJECT(CSapi5InputIndexArray)
+public:
+	CSapi5InputIndexArray() {}
+	virtual ~CSapi5InputIndexArray() {}
+};
+
+class CSapi5InputInfoArray : public CAtlPtrTypeArray <CSapi5InputInfo>
+{
+	DECLARE_DLL_OBJECT(CSapi5InputInfoArray)
+public:
+	CSapi5InputInfoArray() {}
+	virtual ~CSapi5InputInfoArray() {}
+};
+
+class CSapi5InputMatchRanks : public CAtlTypeArray <int>
+{
+	DECLARE_DLL_OBJECT(CSapi5InputMatchRanks)
+public:
+	CSapi5InputMatchRanks() {}
+	virtual ~CSapi5InputMatchRanks() {}
+
+	static int __cdecl SortDescending (const void * pElem1, const void * pElem2)
+	{
+		return -ATL::CElementTraits<int>::CompareElementsOrdered (*(int *)pElem1, *(int*)pElem2);
+	}
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
+class _DACORE_IMPEXP CSapi5Inputs : public CAtlOwnPtrArray <CSapi5InputInfo>, protected CSapiLanguageMatch
 {
 	DECLARE_DLL_OBJECT(CSapi5Inputs)
 protected:
@@ -67,8 +99,11 @@ public:
 	INT_PTR FindEngineName (LPCTSTR pEngineName);
 	CSapi5InputInfo * GetEngineName (LPCTSTR pEngineName);
 
-	INT_PTR FindInput (LANGID pLangId, bool pUseDefaults, INT_PTR pStartAfter = -1);
-	CSapi5InputInfo * GetInput (LANGID pLangId, bool pUseDefaults, INT_PTR pStartAfter = -1);
+	INT_PTR FindInput (LANGID pLangId, bool pUseDefaults, int * pMatchRank = NULL);
+	CSapi5InputInfo * GetInput (LANGID pLangId, bool pUseDefaults, int * pMatchRank = NULL);
+
+	CSapi5InputIndexArray const * FindInputs (LANGID pLangId, bool pUseDefaults, CSapi5InputMatchRanks const ** pMatchRanks = NULL);
+	CSapi5InputInfoArray const * GetInputs (LANGID pLangId, bool pUseDefaults, CSapi5InputMatchRanks const ** pMatchRanks = NULL);
 
 	bool RemoveInput (INT_PTR pInputNdx);
 	bool RemoveInput (const CSapi5InputInfo * pInputInfo);
@@ -81,9 +116,8 @@ public:
 
 // Implementation
 protected:
-	void MakeLanguageMatchList (LANGID pLanguageId, CAtlTypeArray <LANGID> & pLanguageIds, bool pUseDefaults);
 	static void LogInputToken (UINT pLogLevel, void * pInputToken, LPCTSTR pTitle = NULL);
 };
 
 #pragma warning (pop)
-//////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////

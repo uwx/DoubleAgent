@@ -7788,7 +7788,7 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 			</value>
 			<remarks>
 				<para>
-					This property determines the TTS (text-to-speech) engine for a character's spoken output. The<self>TTSModeID</self>
+					This property determines the TTS (text-to-speech) engine for a character's spoken output. The <self>TTSModeID</self>
 					for a TTS engine is a formatted string defined by the vendor that uniquely identifies the engine and
 					it's synthesis mode.
 				</para>

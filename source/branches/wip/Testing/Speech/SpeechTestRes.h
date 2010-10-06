@@ -24,9 +24,14 @@
 #define IDD_SPEECHTEST_DIALOG           1019
 #define IDC_TEST_FORMATTED              1019
 #define IDC_BALLOON_PARTIAL             1020
+#define IDC_TTS_LANGUAGE                1021
+#define IDC_THINK_NAME                  1022
+#define IDC_THINK_DESC                  1023
+#define IDC_SPEAK_NAME                  1024
+#define IDC_SPEAK_DESC                  1025
 
 // Next default values for new objects
-//
+// 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        129

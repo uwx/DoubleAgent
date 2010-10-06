@@ -37,6 +37,17 @@ public:
 public:
 	HRESULT UseAllVoices ();
 	HRESULT UseTheseVoices (class CAgentFile * pFile, LANGID pLangId, short pGender);
+	
+	class CSapi5VoiceInfo * GetSapi5VoiceAt (INT_PTR pIndex) const;
+#ifndef	_WIN64
+	class CSapi4VoiceInfo * GetSapi4VoiceAt (INT_PTR pIndex) const;
+#endif
+
+// Implementation
+protected:
+#ifndef	_WIN64
+	CAtlTypeArray <INT_PTR>						mVoiceNdxMap;
+#endif	
 };
 
 /////////////////////////////////////////////////////////////////////////////

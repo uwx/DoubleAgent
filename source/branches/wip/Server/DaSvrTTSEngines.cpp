@@ -193,37 +193,49 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngines::get_Item (long Index, IDaSvrTTSEngine
 			lResult = E_INVALIDARG;
 		}
 		else
-		if	(Index < (long)mSapi5Voices.GetCount())
 		{
-			if	(lTTSEngine = DaSvrTTSEngine::CreateInstance (mSapi5Voices [Index], mClientMutexName))
+			CSapi5VoiceInfo *	lSapi5VoiceInfo;
+			
+			if	(lSapi5VoiceInfo = GetSapi5VoiceAt (Index))
 			{
-				lInterface = lTTSEngine->GetControllingUnknown();
-				(*TTSEngine) = lInterface.Detach();
+				if	(lTTSEngine = DaSvrTTSEngine::CreateInstance (lSapi5VoiceInfo, mClientMutexName))
+				{
+					lInterface = lTTSEngine->GetControllingUnknown();
+					(*TTSEngine) = lInterface.Detach();
+				}
+				else
+				{
+					lResult = E_OUTOFMEMORY;
+				}
 			}
-			else
-			{
-				lResult = E_OUTOFMEMORY;
-			}
-		}
 #ifndef	_WIN64
-		else
-		if	(Index - (long)mSapi5Voices.GetCount() < (long)mSapi4Voices.GetCount())
-		{
-			Index -= mSapi5Voices.GetCount();
-			if	(lTTSEngine = DaSvrTTSEngine::CreateInstance (mSapi4Voices [Index], mClientMutexName))
-			{
-				lInterface = lTTSEngine->GetControllingUnknown();
-				(*TTSEngine) = lInterface.Detach();
-			}
 			else
 			{
-				lResult = E_OUTOFMEMORY;
+				CSapi4VoiceInfo *	lSapi4VoiceInfo;
+			
+				if	(lSapi4VoiceInfo = GetSapi4VoiceAt (Index))
+				{
+					if	(lTTSEngine = DaSvrTTSEngine::CreateInstance (lSapi4VoiceInfo, mClientMutexName))
+					{
+						lInterface = lTTSEngine->GetControllingUnknown();
+						(*TTSEngine) = lInterface.Detach();
+					}
+					else
+					{
+						lResult = E_OUTOFMEMORY;
+					}
+				}
+				else
+				{
+					lResult = E_INVALIDARG;
+				}
 			}
-		}
+#else
+			else
+			{
+				lResult = E_INVALIDARG;
+			}
 #endif
-		else
-		{
-			lResult = E_INVALIDARG;
 		}
 	}
 

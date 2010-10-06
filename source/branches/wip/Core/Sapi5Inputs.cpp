@@ -44,6 +44,9 @@ _COM_SMARTPTR_TYPEDEF (ISpDataKey, __uuidof(ISpDataKey));
 
 //////////////////////////////////////////////////////////////////////
 
+IMPLEMENT_DLL_OBJECT(CSapi5InputIndexArray)
+IMPLEMENT_DLL_OBJECT(CSapi5InputInfoArray)
+IMPLEMENT_DLL_OBJECT(CSapi5InputMatchRanks)
 IMPLEMENT_DLL_OBJECT(CSapi5InputInfo)
 
 CSapi5InputInfo::CSapi5InputInfo ()
@@ -270,54 +273,78 @@ CSapi5InputInfo * CSapi5Inputs::GetEngineName (LPCTSTR pEngineName)
 }
 
 //////////////////////////////////////////////////////////////////////
+
+INT_PTR CSapi5Inputs::FindInput (LANGID pLangId, bool pUseDefaults, int * pMatchRank)
+{
+	tPtr <CSapi5InputIndexArray const>	lIndexArray;
+	tPtr <CSapi5InputMatchRanks const>	lMatchRanks;
+
+	if	(lIndexArray = FindInputs (pLangId, pUseDefaults, lMatchRanks.Free()))
+	{
+#ifdef	_DEBUG_INPUT_MATCH
+		LogMessage (_DEBUG_INPUT_MATCH, _T("FindInput [%u] %4.4d [%ls] [%ls] [%ls] [%ls]"), pUseDefaults, (*lMatchRanks) [0], (BSTR)GetAt((*lIndexArray) [0])->mEngineName, (BSTR)GetAt((*lIndexArray) [0])->mClassId, (BSTR)GetAt((*lIndexArray) [0])->mEngineIdShort, (BSTR)GetAt((*lIndexArray) [0])->mEngineIdLong);
+		LogMessage (_DEBUG_INPUT_MATCH, _T(""));
+#endif
+		if	(pMatchRank)
+		{
+			(*pMatchRank) = (*lMatchRanks) [0];
+		}
+		return (*lIndexArray) [0];
+	}
+	else
+	if	(pMatchRank)
+	{
+		(*pMatchRank) = 0;
+	}	
+	return -1;
+}
+
+CSapi5InputInfo * CSapi5Inputs::GetInput (LANGID pLangId, bool pUseDefaults, int * pMatchRank)
+{
+	return operator () (FindInput (pLangId, pUseDefaults, pMatchRank));
+}
+
+//////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-INT_PTR CSapi5Inputs::FindInput (LANGID pLangId, bool pUseDefaults, INT_PTR pStartAfter)
+CSapi5InputIndexArray const * CSapi5Inputs::FindInputs (LANGID pLangId, bool pUseDefaults, CSapi5InputMatchRanks const ** pMatchRanks)
 {
-	INT_PTR	lRet = -1;
+	tPtr <CSapi5InputIndexArray>	lIndexArray = new CSapi5InputIndexArray;
+	tPtr <CSapi5InputMatchRanks>	lMatchRanks = new CSapi5InputMatchRanks;
 
 	try
 	{
 		CAtlTypeArray <LANGID>		lLanguageIds;
 		INT_PTR						lLanguageNdx;
 		INT_PTR						lLocaleNdx;
-		CSapi5InputInfo *			lInputInfo;
 		INT_PTR						lInputNdx;
-		INT_PTR						lBestLanguage = INT_MAX;
-		INT_PTR						lBestNdx = -1;
+		static const int			lOrderWeight = 1;
 
 #ifdef	_DEBUG_INPUT_MATCH
-		LogMessage (_DEBUG_INPUT_MATCH, _T("FindInput Language [%4.4X] Defaults [%u] From [%d]"), pLangId, pUseDefaults, pStartAfter);
+		LogMessage (_DEBUG_INPUT_MATCH, _T("FindInputs [%u] Language [%4.4X]"), pUseDefaults, pLangId);
+		LogLanguageMatchList (_DEBUG_INPUT_MATCH, pLangId, pUseDefaults, NULL, _T("  "));
 #endif
 		MakeLanguageMatchList (pLangId, lLanguageIds, pUseDefaults);
 
-		for	(lInputNdx = max(pStartAfter+1,0); lInputNdx < (INT_PTR)GetCount(); lInputNdx++)
+		for	(lInputNdx = 0; lInputNdx < (INT_PTR)GetCount(); lInputNdx++)
 		{
-			lInputInfo = GetAt (lInputNdx);
+			CSapi5InputInfo *	lInputInfo = GetAt (lInputNdx);
 
 #ifdef	_DEBUG_INPUT_MATCH
 			CAtlString	lMatchLog;
 			lMatchLog.Format (_T("%-60.60ls"), (BSTR)lInputInfo->mEngineName);
 #endif
 
-			lLanguageNdx = lLanguageIds.Find (lInputInfo->mLangId);
+			lLanguageNdx = FindLanguageMatch (lInputInfo->mLangId, lLanguageIds);
 			if	(lLanguageNdx >= 0)
 			{
 #ifdef	_DEBUG_INPUT_MATCH
-				lMatchLog.Format (_T("%s Language [%4.4X] [%d]"), CAtlString((LPCTSTR)lMatchLog), lInputInfo->mLangId, lLanguageNdx);
+				lMatchLog.Format (_T("%s Language [%4.4X] [%d]"), CAtlString((LPCTSTR)lMatchLog), lLanguageIds [lLanguageNdx], lLanguageNdx);
 #endif
-				if	(lLanguageNdx < lBestLanguage)
-				{
-					lBestLanguage = lLanguageNdx;
-					lBestNdx = lInputNdx;
-				}
 			}
-
-			if	(
-					(lLanguageNdx < 0)
-				&&	(lInputInfo->mLangIdCount > 0)
-				)
+			else
+			if	(lInputInfo->mLangIdCount > 0)
 			{
 				for	(lLocaleNdx = 0; lLocaleNdx < (INT_PTR)lInputInfo->mLangIdCount; lLocaleNdx++)
 				{
@@ -327,61 +354,58 @@ INT_PTR CSapi5Inputs::FindInput (LANGID pLangId, bool pUseDefaults, INT_PTR pSta
 #ifdef	_DEBUG_INPUT_MATCH
 						lMatchLog.Format (_T("%s Language [%4.4X] [%d]"), CAtlString((LPCTSTR)lMatchLog), lInputInfo->mLangIdSupported [lLocaleNdx], lLanguageNdx);
 #endif
-						if	(lLanguageNdx < lBestLanguage)
-						{
-							lBestLanguage = lLanguageNdx;
-							lBestNdx = lInputNdx;
-						}
 						break;
 					}
 				}
 			}
 
-			if	(
-					(lLanguageNdx < 0)
-				&&	(SUBLANGID (lInputInfo->mLangId) != SUBLANG_NEUTRAL)
-				)
-			{
-				lLanguageNdx = lLanguageIds.Find (PRIMARYLANGID (lInputInfo->mLangId));
-				if	(lLanguageNdx >= 0)
-				{
 #ifdef	_DEBUG_INPUT_MATCH
-					lMatchLog.Format (_T("%s Language [%4.4X] [%d]"), CAtlString((LPCTSTR)lMatchLog), PRIMARYLANGID (lInputInfo->mLangId), lLanguageNdx);
+			LogMessage (_DEBUG_INPUT_MATCH|LogHighVolume, _T("  %3d [%3.3d] %s Name [%ls]"), lInputNdx, lLanguageNdx, lMatchLog, (BSTR)GetAt(lInputNdx)->mEngineName);
 #endif
-					if	(lLanguageNdx < lBestLanguage)
-					{
-						lBestLanguage = lLanguageNdx;
-						lBestNdx = lInputNdx;
-					}
-				}
-			}
-
-#ifdef	_DEBUG_INPUT_MATCH
-			LogMessage (_DEBUG_INPUT_MATCH|LogHighVolume, _T("  %4.4d %s"), lBestNdx, lMatchLog);
-#endif
-			if	(lBestLanguage == 0)
+			if	(lLanguageNdx >= 0)
 			{
-				break;
+				lIndexArray->InsertAt (lMatchRanks->AddSortedQS (((int)lLanguageIds.GetCount()-(int)lLanguageNdx) + (((int)GetCount()-(int)lInputNdx)*lOrderWeight), CSapi5InputMatchRanks::SortDescending, false), lInputNdx);
 			}
 		}
 
-		if	(lBestNdx >= 0)
-		{
 #ifdef	_DEBUG_INPUT_MATCH
-			LogMessage (_DEBUG_INPUT_MATCH, _T("FindInput [%ls] [%ls] [%ls] [%ls]"), (BSTR)GetAt(lBestNdx)->mEngineName, (BSTR)GetAt(lBestNdx)->mClassId, (BSTR)GetAt(lBestNdx)->mEngineIdShort, (BSTR)GetAt(lBestNdx)->mEngineIdLong);
-			LogMessage (_DEBUG_INPUT_MATCH, _T(""));
+		LogMessage (_DEBUG_INPUT_MATCH, _T("  Inputs [%u] [%s]"), pUseDefaults, FormatArray (*lIndexArray, _T("%3d")));
+		LogMessage (_DEBUG_INPUT_MATCH, _T("  Ranks  [%u] [%s]"), pUseDefaults, FormatArray (*lMatchRanks, _T("%3.3d")));
 #endif
-			lRet = lBestNdx;
-		}
 	}
 	catch AnyExceptionDebug
 
-	return lRet;
+	if	(lIndexArray->GetCount () <= 0)
+	{
+		lIndexArray = NULL;
+		lMatchRanks = NULL;
+	}
+	if	(pMatchRanks)
+	{
+		(*pMatchRanks) = lMatchRanks.Detach ();
+	}
+	return lIndexArray.Detach ();
 }
 
-CSapi5InputInfo * CSapi5Inputs::GetInput (LANGID pLangId, bool pUseDefaults, INT_PTR pStartAfter)
+//////////////////////////////////////////////////////////////////////
+
+CSapi5InputInfoArray const * CSapi5Inputs::GetInputs (LANGID pLangId, bool pUseDefaults, CSapi5InputMatchRanks const ** pMatchRanks)
 {
-	return operator () (FindInput (pLangId, pUseDefaults, pStartAfter));
+	tPtr <CSapi5InputInfoArray>			lInfoArray;
+	tPtr <CSapi5InputIndexArray const>	lIndexArray;
+	INT_PTR								lNdx;
+	
+	if	(
+			(lIndexArray = FindInputs (pLangId, pUseDefaults, pMatchRanks))
+		&&	(lInfoArray = new CSapi5InputInfoArray)
+		)
+	{
+		for	(lNdx = 0; lNdx < (INT_PTR)lIndexArray->GetCount(); lNdx++)
+		{
+			lInfoArray->Add (operator () ((*lIndexArray) [lNdx]));
+		}
+	}
+	return lInfoArray.Detach();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -442,7 +466,7 @@ bool CSapi5Inputs::InputSupportsLanguage (CSapi5InputInfo * pInputInfo, LANGID p
 	{
 		MakeLanguageMatchList (pLangId, lLanguageIds, pUseDefaults);
 
-		if	(lLanguageIds.Find (pInputInfo->mLangId) >= 0)
+		if	(FindLanguageMatch (pInputInfo->mLangId, lLanguageIds) >= 0)
 		{
 			lRet = true;
 		}
@@ -460,48 +484,6 @@ bool CSapi5Inputs::InputSupportsLanguage (CSapi5InputInfo * pInputInfo, LANGID p
 		}
 	}
 	return lRet;
-}
-
-void CSapi5Inputs::MakeLanguageMatchList (LANGID pLanguageId, CAtlTypeArray <LANGID> & pLanguageIds, bool pUseDefaults)
-{
-	pLanguageIds.RemoveAll ();
-
-	if	(pLanguageId)
-	{
-		if	(IsValidLocale (MAKELCID (pLanguageId, SORT_DEFAULT), LCID_SUPPORTED))
-		{
-			pLanguageIds.AddUnique (pLanguageId);
-		}
-
-		if	(
-				(SUBLANGID (pLanguageId) != SUBLANG_DEFAULT)
-			&&	(IsValidLocale (MAKELCID (MAKELANGID (PRIMARYLANGID (pLanguageId), SUBLANG_DEFAULT), SORT_DEFAULT), LCID_SUPPORTED))
-			)
-		{
-			pLanguageIds.AddUnique (MAKELANGID (PRIMARYLANGID (pLanguageId), SUBLANG_DEFAULT));
-		}
-
-		if	(
-				(SUBLANGID (pLanguageId) != SUBLANG_DEFAULT)
-			&&	(IsValidLocale (MAKELCID (MAKELANGID (PRIMARYLANGID (pLanguageId), SUBLANG_SYS_DEFAULT), SORT_DEFAULT), LCID_SUPPORTED))
-			)
-		{
-			pLanguageIds.AddUnique (MAKELANGID (PRIMARYLANGID (pLanguageId), SUBLANG_SYS_DEFAULT));
-		}
-	}
-
-	if	(pUseDefaults)
-	{
-		pLanguageIds.AddUnique (GetUserDefaultUILanguage ());
-		pLanguageIds.AddUnique (GetSystemDefaultUILanguage ());
-		pLanguageIds.AddUnique (GetUserDefaultLangID ());
-		pLanguageIds.AddUnique (GetSystemDefaultLangID ());
-		pLanguageIds.AddUnique (MAKELANGID (LANG_ENGLISH, SUBLANG_ENGLISH_US));
-		pLanguageIds.AddUnique (MAKELANGID (LANG_ENGLISH, SUBLANG_NEUTRAL));
-	}
-#ifdef	_DEBUG_INPUT_MATCH
-	LogMessage (_DEBUG_INPUT_MATCH, _T("  LanguageMatches for [%4.4X] are [%s] defaults [%4.4X] [%4.4X] [%4.4X] [%4.4X]"), pLanguageId, FormatArray (pLanguageIds, _T("%4.4X")), GetUserDefaultUILanguage (), GetSystemDefaultUILanguage (), GetUserDefaultLangID (), GetSystemDefaultLangID ());
-#endif
 }
 
 //////////////////////////////////////////////////////////////////////

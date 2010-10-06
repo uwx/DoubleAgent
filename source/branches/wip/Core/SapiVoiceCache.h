@@ -85,8 +85,8 @@ protected:
 	CSapi5Voice * GetAgentSapi5Voice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, bool pCached = true);
 	CSapi5Voice * GetAgentSapi5Voice (LPCTSTR pVoiceName, LANGID pLangID, bool pUseDefaults, bool pCached = true);
 #ifndef	_WIN64
-	CSapi4Voice * GetAgentSapi4Voice (const struct CAgentFileTts & pAgentFileTts, bool pCached = true);
-	CSapi4Voice * GetAgentSapi4Voice (LPCTSTR pVoiceName, LANGID pLangID, bool pCached = true);
+	CSapi4Voice * GetAgentSapi4Voice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, bool pCached = true);
+	CSapi4Voice * GetAgentSapi4Voice (LPCTSTR pVoiceName, LANGID pLangID, bool pUseDefaults, bool pCached = true);
 #endif
 
 protected:

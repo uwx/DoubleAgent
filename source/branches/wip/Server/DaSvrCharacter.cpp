@@ -2836,6 +2836,10 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::FindTTSEngines (long LanguageID, IDaSv
 
 		if	(lTTSEngines = DaSvrTTSEngines::CreateInstance (mClientMutexName))
 		{
+			if	(LanguageID == 0)
+			{
+				CDaCmnCharacter::get_LanguageID (&LanguageID);
+			}
 			if	(SUCCEEDED (lResult = lTTSEngines->UseTheseVoices (mFile, (LANGID)LanguageID, SpeechGender_Neutral)))
 			{
 				lInterface = lTTSEngines.Detach()->GetControllingUnknown();
@@ -2935,6 +2939,10 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::FindSREngines (long LanguageID, IDaSvr
 
 		if	(lSREngines = DaSvrSREngines::CreateInstance (mClientMutexName))
 		{
+			if	(LanguageID == 0)
+			{
+				CDaCmnCharacter::get_LanguageID (&LanguageID);
+			}
 			if	(SUCCEEDED (lResult = lSREngines->UseTheseInputs (mFile, (LANGID)LanguageID)))
 			{
 				lInterface = lSREngines.Detach()->GetControllingUnknown();
