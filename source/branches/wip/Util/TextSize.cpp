@@ -151,8 +151,9 @@ CSize CTextSize::MeasureText (LPCTSTR pText, INT_PTR pTextLen, HDC pDC, HFONT pF
 	CSize		lRet (0, 0);
 	CSize		lVptExt;
 	CSize		lWinExt;
-	tPtr <CDC>	lDC;
 	HGDIOBJ		lOldFont;
+#ifdef	__AFXWIN_H__
+	tPtr <CDC>	lDC;
 
 	if	(
 			(!pDC)
@@ -162,6 +163,14 @@ CSize CTextSize::MeasureText (LPCTSTR pText, INT_PTR pTextLen, HDC pDC, HFONT pF
 	{
 		pDC = lDC->GetSafeHdc ();
 	}
+#else
+#ifdef	_DEBUG
+	if	(!pDC)
+	{
+		LogMessage (LogIfActive, _T("CTextSize::MeasureText with NULL HDC"));
+	}
+#endif	
+#endif	
 
 	if	(::GetMapMode (pDC) != MM_TWIPS)
 	{

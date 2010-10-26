@@ -87,8 +87,8 @@ public:
 	HRESULT StartListening (bool pManual);
 	HRESULT StopListening (bool pManual, long pCause);
 
-	static HRESULT GetLoadPath (VARIANT pProvider, CAtlString & pFilePath, bool * pIsDefault = NULL);
-	static HRESULT GetAgentFile (VARIANT pProvider, tPtr <CAgentFile> & pAgentFile);
+	static HRESULT GetLoadPath (VARIANT pProvider, CAtlString & pFilePath, LPCTSTR pSearchPath = NULL, bool * pIsDefault = NULL);
+	static HRESULT GetAgentFile (VARIANT pProvider, tPtr <CAgentFile> & pAgentFile, LPCTSTR pSearchPath = NULL);
 	static HRESULT GetAgentFile (LPCTSTR pFilePath, tPtr <CAgentFile> & pAgentFile);
 
 // Overrides

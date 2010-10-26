@@ -44,6 +44,7 @@
 #endif
 #include "Registry.h"
 #include "Localize.h"
+#include "StringArrayEx.h"
 #include "GuidStr.h"
 #include "MallocPtr.h"
 #include "DebugStr.h"
@@ -442,11 +443,22 @@ BSTR CDaCmnCharacter::GetName () const
 	return NULL;
 }
 
-HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pProvider, CAtlString & pFilePath, bool * pIsDefault)
+HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pProvider, CAtlString & pFilePath, LPCTSTR pSearchPath, bool * pIsDefault)
 {
-	HRESULT	lResult = S_OK;
+	HRESULT			lResult = S_OK;
+	CAtlStringArray	lSearchPath;
 
 	pFilePath.Empty ();
+	if	(pSearchPath)
+	{
+		MakeStringArray (pSearchPath, lSearchPath, _T(";"));
+#ifdef	_LOG_FILE_LOAD
+		if	(LogIsActive (_LOG_FILE_LOAD))
+		{
+			LogMessage (_LOG_FILE_LOAD, _T("Load search Path [%s]"), JoinStringArray (lSearchPath, _T("] [")));
+		}
+#endif
+	}
 	if	(pIsDefault)
 	{
 		*pIsDefault = false;
@@ -457,7 +469,7 @@ HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pProvider, CAtlString & pFilePath,
 		try
 		{
 			pFilePath = (BSTR)(_bstr_t)_variant_t(pProvider);
-	}
+		}
 		catch AnyExceptionSilent
 	}
 
@@ -470,7 +482,7 @@ HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pProvider, CAtlString & pFilePath,
 
 	if	(pFilePath.IsEmpty ())
 	{
-		pFilePath = CAgentFiles::GetDefCharPath ();
+		pFilePath = CAgentFiles::GetDefCharPath (&lSearchPath);
 		if	(pIsDefault)
 		{
 			*pIsDefault = true;
@@ -485,7 +497,6 @@ HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pProvider, CAtlString & pFilePath,
 	else
 	if	(CAgentFile::IsRelativeFilePath (pFilePath))
 	{
-		UINT		lPathNum;
 		CAtlString	lFilePath;
 
 		lFilePath = CAgentFile::ParseFilePath (pFilePath);
@@ -503,7 +514,31 @@ HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pProvider, CAtlString & pFilePath,
 				pFilePath = lFilePath;
 			}
 			else
+			if	(lSearchPath.GetCount() > 0)
 			{
+				INT_PTR	lPathNdx;
+				
+				for	(lPathNdx = 0; lPathNdx < (INT_PTR)lSearchPath.GetCount(); lPathNdx++)
+				{
+					PathCombine (lFilePath.GetBuffer (MAX_PATH), lSearchPath [lPathNdx], pFilePath);
+					lFilePath.ReleaseBuffer ();
+#ifdef	_LOG_FILE_LOAD
+					if	(LogIsActive (_LOG_FILE_LOAD))
+					{
+						LogMessage (_LOG_FILE_LOAD, _T("File [%s] try Path [%s]"), pFilePath, lFilePath);
+					}
+#endif
+					if	(PathFileExists (lFilePath))
+					{
+						pFilePath = lFilePath;
+						break;
+					}
+				}
+			}
+			else
+			{
+				UINT	lPathNum;
+
 				for	(lPathNum = 0; true; lPathNum++)
 				{
 					lFilePath = CAgentFiles::GetSystemCharsPath (lPathNum);
@@ -521,12 +556,9 @@ HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pProvider, CAtlString & pFilePath,
 #endif
 					if	(PathFileExists (lFilePath))
 					{
+						pFilePath = lFilePath;
 						break;
 					}
-				}
-				if	(!lFilePath.IsEmpty ())
-				{
-					pFilePath = lFilePath;
 				}
 			}
 		}
@@ -550,14 +582,14 @@ HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pProvider, CAtlString & pFilePath,
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaCmnCharacter::GetAgentFile (VARIANT pProvider, tPtr <CAgentFile> & pAgentFile)
+HRESULT CDaCmnCharacter::GetAgentFile (VARIANT pProvider, tPtr <CAgentFile> & pAgentFile, LPCTSTR pSearchPath)
 {
 	HRESULT		lResult;
 	CAtlString	lFilePath;
 
-	if	(SUCCEEDED (lResult = GetLoadPath (pProvider, lFilePath)))
+	if	(SUCCEEDED (lResult = GetLoadPath (pProvider, lFilePath, pSearchPath)))
 	{
-		lResult =  GetAgentFile (lFilePath, pAgentFile);
+		lResult = GetAgentFile (lFilePath, pAgentFile);
 	}
 	return lResult;
 }

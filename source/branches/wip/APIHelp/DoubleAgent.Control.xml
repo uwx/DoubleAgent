@@ -4498,6 +4498,7 @@
 					This method does <strong>not</strong> return a <see cref="T:&dans;.Request" suffix="Object" />.
 				</para>
 			</remarks>
+			<seealso cref="M:&dans;.Characters.Load" suffix="Method" prefix="The" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -4556,7 +4557,7 @@
 			<remarks>
 				<para>
 					You can load characters from the default location(s) by specifying only a file name. For example, specifying
-					the following would search for Genie.acs using the default search path.
+					the following would search for Genie.acs using the <see class="see" cref="P:&dans;.CharacterFiles.SearchPath" text="search path" />.
 				</para>
 				<example>
 					<code xml:space="preserve">&darootref;.<keyword>Characters</keyword>.<keyword>Load</keyword> "Genie", "Genie.acs"</code>
@@ -4658,6 +4659,10 @@
 					using the <glossary>UNC</glossary> protocol because the <self>Load</self> method is processed synchronously.
 				</para>
 			</details>
+			<seealso cref="M:&dans;.Characters.Unload" suffix="Method" prefix="The" />
+			<seealso cref="P:&dans;.Characters.Item" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.CharacterFiles.SearchPath" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.CharacterFiles.DefaultFilePath" suffix="Property" prefix="The" />
 		</member>
 
 		<!--=============================================================================================-->

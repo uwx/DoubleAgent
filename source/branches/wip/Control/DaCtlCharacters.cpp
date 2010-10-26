@@ -527,7 +527,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 			CAgentFile *		lAgentFile = NULL;
 
 			if	(
-					(SUCCEEDED (lResult = CDaCmnCharacter::GetLoadPath (Provider, lFilePath, &lFilePathIsDefault)))
+					(SUCCEEDED (lResult = CDaCmnCharacter::GetLoadPath (Provider, lFilePath, mOwner->GetSearchPath(), &lFilePathIsDefault)))
 				&&	(
 						(mOwner->GetDefaultCharacter ())
 					||	(

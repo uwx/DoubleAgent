@@ -702,7 +702,7 @@
 			<remarks>
 				<para>
 					You can load characters from the default location(s) by specifying only a file name. For example, specifying
-					the following would search for Genie.acs using the default search path.
+					the following would search for Genie.acs using the <see class="see" cref="P:&dans;.CharacterFiles.SearchPath" text="search path"/>.
 				</para>
 				<example>
 					<code xml:space="preserve">&darootref;-&gt;<keyword>Load</keyword> ("Genie.acs", &amp;<token>CharacterID</token>, &amp;<token>RequestID</token>)</code>
@@ -741,6 +741,8 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Characters.Load']/details[@name='Providers']" />
 			<seealso cref="M:&darootobj;.Unload" suffix="Method" prefix="The" />
 			<seealso cref="P:&darootobj;.Character" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.CharacterFiles.SearchPath" suffix="Property" prefix="The" />
+			<seealso cref="P:&dans;.CharacterFiles.DefaultFilePath" suffix="Property" prefix="The" />
 		</member>
 
 		<!--=============================================================================================-->

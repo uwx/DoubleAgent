@@ -576,7 +576,7 @@
 <param name="CharacterID">A <numeric>value</numeric> that the server uses to uniquely identify the loaded <see cref="T:DoubleAgent.Server.Character" /> Object.</param>
 <param name="RequestID">An optional unique numeric value your application can use to track the method's status.</param>
 <remarks>
-<para>You can load characters from the default location(s) by specifying only a file name. For example, specifying the following would search for Genie.acs using the default search path.
+<para>You can load characters from the default location(s) by specifying only a file name. For example, specifying the following would search for Genie.acs using the <see cref="P:DoubleAgent.Server.CharacterFiles.SearchPath" />.
 </para>
 <example><code xml:space="preserve">server-&gt;Load ("Genie.acs", &amp;CharacterID, &amp;RequestID)</code>
 <para>You can also specify an absolute location,
@@ -597,6 +597,8 @@ server-&gt;Load (EmptyProvider, &amp;CharacterID, &amp;RequestID)</code></exampl
 </remarks>
 <seealso cref="M:DoubleAgent.Server.Server.Unload(System.Int32)" />
 <seealso cref="P:DoubleAgent.Server.Server.Character(System.Int32)" />
+<seealso cref="P:DoubleAgent.Server.CharacterFiles.SearchPath" />
+<seealso cref="P:DoubleAgent.Server.CharacterFiles.DefaultFilePath" />
 </member>
 
 <member name="M:DoubleAgent.Server.Server.Register(System.Object,System.Int32@)">

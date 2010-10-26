@@ -340,6 +340,7 @@ public:
 
 // Implementation
 public:
+	CAtlString GetSearchPath ();
 	CAtlString GetControlCharacterID (long pServerCharID);
 	CAtlString GetActiveCharacterID ();
 	class DaCtlCharacter * GetActiveCharacter ();

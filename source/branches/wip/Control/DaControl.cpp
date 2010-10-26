@@ -842,6 +842,22 @@ void DaControl::ConnectObjects ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+CAtlString DaControl::GetSearchPath ()
+{
+	CAtlString				lSearchPath;
+	IDaCtlCharacterFilesPtr	lCharacterFiles;
+	tBstrPtr				lCharacterSearchPath;
+
+	if	(
+			(lCharacterFiles = mCharacterFiles)
+		&&	(SUCCEEDED (lCharacterFiles->get_SearchPath (lCharacterSearchPath.Free())))
+		)
+	{
+		lSearchPath = lCharacterSearchPath;
+	}
+	return lSearchPath;
+}
+
 CAtlString DaControl::GetControlCharacterID (long pServerCharID)
 {
 	DaCtlCharacters *	lCharacters;
@@ -3329,7 +3345,7 @@ STDMETHODIMP DaControl::GetCharacterTTSEngine (VARIANT Provider, IDaCtlTTSEngine
 				tPtr <CAgentFile>	lAgentFile;
 
 				if	(
-						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile)))
+						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile, GetSearchPath())))
 					&&	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngine>::CreateInstance (lObject.Free())))
 					)
 				{
@@ -3436,7 +3452,7 @@ STDMETHODIMP DaControl::FindCharacterTTSEngines (VARIANT Provider, VARIANT Langu
 				tPtr <CAgentFile>	lAgentFile;
 
 				if	(
-						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile)))
+						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile, GetSearchPath())))
 					&&	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (lObject.Free())))
 					)
 				{
@@ -3738,7 +3754,7 @@ STDMETHODIMP DaControl::GetCharacterSREngine (VARIANT Provider, IDaCtlSREngine *
 				tPtr <CAgentFile>	lAgentFile;
 
 				if	(
-						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile)))
+						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile, GetSearchPath())))
 					&&	(SUCCEEDED (lResult = CComObject <DaCtlSREngine>::CreateInstance (lObject.Free())))
 					)
 				{
@@ -3845,7 +3861,7 @@ STDMETHODIMP DaControl::FindCharacterSREngines (VARIANT Provider, VARIANT Langua
 				tPtr <CAgentFile>	lAgentFile;
 
 				if	(
-						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile)))
+						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile, GetSearchPath())))
 					&&	(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (lObject.Free())))
 					)
 				{

@@ -580,6 +580,22 @@ void DaServer::UnloadAllCharacters (bool pAbandonned)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+CAtlString DaServer::GetSearchPath ()
+{
+	CAtlString				lSearchPath;
+	DaSvrCharacterFiles *	lCharacterFiles;
+	tBstrPtr				lCharacterSearchPath;
+
+	if	(
+			(lCharacterFiles = _AtlModule.GetSvrCharacterFiles (false, mClientMutexName))
+		&&	(SUCCEEDED (lCharacterFiles->get_SearchPath (lCharacterSearchPath.Free())))
+		)
+	{
+		lSearchPath = lCharacterSearchPath;
+	}
+	return lSearchPath;
+}
+
 HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, bool pIsDefault, long & pCharID, long & pReqID)
 {
 	HRESULT		lResult = S_OK;
@@ -992,7 +1008,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Load (VARIANT Provider, long * pdwCharID, lo
 		lResult = E_POINTER;
 	}
 	else
-	if	(SUCCEEDED (lResult = CDaCmnCharacter::GetLoadPath (Provider, lFilePath, &lFilePathIsDefault)))
+	if	(SUCCEEDED (lResult = CDaCmnCharacter::GetLoadPath (Provider, lFilePath, GetSearchPath(), &lFilePathIsDefault)))
 	{
 		if	(RequestID)
 		{
@@ -1637,7 +1653,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterTTSEngine (VARIANT Provider, IDa
 	{
 		(*TTSEngine) = NULL;
 
-		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile)))
+		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile, GetSearchPath())))
 		{
 			if	(lTTSEngine = DaSvrTTSEngine::CreateInstance ((CSapi5VoiceInfo*)NULL, mClientMutexName))
 			{
@@ -1683,7 +1699,7 @@ HRESULT STDMETHODCALLTYPE DaServer::FindCharacterTTSEngines (VARIANT Provider, l
 	{
 		(*TTSEngines) = NULL;
 
-		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile)))
+		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile, GetSearchPath())))
 		{
 			if	(lTTSEngines = DaSvrTTSEngines::CreateInstance (mClientMutexName))
 			{
@@ -1812,7 +1828,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterSREngine (VARIANT Provider, IDaS
 	{
 		(*SREngine) = NULL;
 
-		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile)))
+		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile, GetSearchPath())))
 		{
 			if	(lSREngine = DaSvrSREngine::CreateInstance (NULL, mClientMutexName))
 			{
@@ -1858,7 +1874,7 @@ HRESULT STDMETHODCALLTYPE DaServer::FindCharacterSREngines (VARIANT Provider, lo
 	{
 		(*SREngines) = NULL;
 
-		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile)))
+		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile, GetSearchPath())))
 		{
 			if	(lSREngines = DaSvrSREngines::CreateInstance (mClientMutexName))
 			{

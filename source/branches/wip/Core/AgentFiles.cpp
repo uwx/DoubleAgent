@@ -214,7 +214,7 @@ tBstrPtr CAgentFiles::GetSystemCharsPath (UINT pPathNum, UINT * pPathNumFound)
 		else
 		if	(lPathNum == 1)
 		{
-			GetModuleFileName (NULL, lPath.GetBuffer(MAX_PATH), MAX_PATH);
+			GetModuleFileName (_AtlBaseModule.GetModuleInstance(), lPath.GetBuffer(MAX_PATH), MAX_PATH);
 			PathRemoveFileSpec (lPath.GetBuffer (MAX_PATH));
 		}
 		else
@@ -330,11 +330,13 @@ tBstrPtr CAgentFiles::GetOfficeCharsPath ()
 tBstrPtr CAgentFiles::GetDefCharPath (const CAtlStringArray * pSearchPath)
 {
 	CAtlString	lFileName = CRegString (CRegKeyEx (HKEY_CURRENT_USER, _T("Software\\Microsoft\\Microsoft Agent"), true), _T("SystemCharacter")).Value ();
-	CAtlString	lPathName;
-	INT_PTR		lNdx;
 
 	if	(PathIsFileSpec (lFileName))
 	{
+		CAtlString	lPathName;
+		INT_PTR		lNdx;
+		UINT		lPathNum;
+
 		if	(pSearchPath)
 		{
 			for	(lNdx = 0; lNdx < (INT_PTR)pSearchPath->GetCount(); lNdx++)
@@ -348,11 +350,19 @@ tBstrPtr CAgentFiles::GetDefCharPath (const CAtlStringArray * pSearchPath)
 			}
 		}
 
-		PathCombine (lPathName.GetBuffer (MAX_PATH), GetSystemCharsPath (), lFileName);
-		lPathName.ReleaseBuffer ();
-		if	(PathFileExists (lPathName))
+		for	(lPathNum = 0; true; lPathNum++)
 		{
-			return lPathName.AllocSysString();
+			lPathName = CAgentFiles::GetSystemCharsPath (lPathNum);
+			if	(lPathName.IsEmpty ())
+			{
+				break;
+			}
+			PathAppend (lPathName.GetBuffer (MAX_PATH), lFileName);
+			lPathName.ReleaseBuffer ();
+			if	(PathFileExists (lPathName))
+			{
+				return lPathName.AllocSysString();
+			}
 		}
 	}
 	return lFileName.AllocSysString();

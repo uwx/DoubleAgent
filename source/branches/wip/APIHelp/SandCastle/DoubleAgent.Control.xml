@@ -1530,6 +1530,7 @@ End Sub</code></example></remarks>
 <para>This method does <strong>not</strong> return a <see cref="T:DoubleAgent.Control.Request" /> Object.
 </para>
 </remarks>
+<seealso cref="M:DoubleAgent.Control.Characters.Load(System.String,System.Object)" />
 </member>
 
 <member name="M:DoubleAgent.Control.Characters.Load(System.String,System.Object)">
@@ -1549,7 +1550,7 @@ End Sub</code></example></remarks>
 </param>
 <returns name="Request">A <see cref="T:DoubleAgent.Control.Request" /> Object your application can use to track the status of the Load request. The Load method is asynchronous only when loading a character using the HTTP protocol.</returns>
 <remarks>
-<para>You can load characters from the default location(s) by specifying only a file name. For example, specifying the following would search for Genie.acs using the default search path.
+<para>You can load characters from the default location(s) by specifying only a file name. For example, specifying the following would search for Genie.acs using the <see cref="P:DoubleAgent.Control.CharacterFiles.SearchPath" />.
 </para>
 <example><code xml:space="preserve">control.Characters.Load "Genie", "Genie.acs"</code>
 <para>You can also specify an absolute location,
@@ -1566,6 +1567,10 @@ End Sub</code></example></remarks>
 <para>Loading a character does not automatically display the character. Use the <see cref="M:DoubleAgent.Control.Character.Show(System.Object)" /> method first to make the character visible.
 </para>
 </remarks>
+<seealso cref="M:DoubleAgent.Control.Characters.Unload(System.String)" />
+<seealso cref="P:DoubleAgent.Control.Characters.Item(System.String)" />
+<seealso cref="P:DoubleAgent.Control.CharacterFiles.SearchPath" />
+<seealso cref="P:DoubleAgent.Control.CharacterFiles.DefaultFilePath" />
 </member>
 
 <member name="M:DoubleAgent.Control.Characters.Character(System.String)">
