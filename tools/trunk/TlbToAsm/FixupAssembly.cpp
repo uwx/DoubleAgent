@@ -315,6 +315,11 @@ void FixupAssembly::FixupCustomAttributes (Object^ pSource, Object^ pTarget, Lis
 		HideInternalClass (pSource, pTarget, pCustomAttributes);
 	}
 
+	if	(TypeBuilder::typeid->IsInstanceOfType (pTarget))
+	{
+		SetActiveXControlAttributes (pSource, pTarget, pCustomAttributes);
+	}
+
 	if	(MethodBuilder::typeid->IsInstanceOfType (pTarget))
 	{
 		SetActiveXMethodVisibility (pSource, pTarget, pCustomAttributes);

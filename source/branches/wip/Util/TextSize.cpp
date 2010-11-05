@@ -169,8 +169,8 @@ CSize CTextSize::MeasureText (LPCTSTR pText, INT_PTR pTextLen, HDC pDC, HFONT pF
 	{
 		LogMessage (LogIfActive, _T("CTextSize::MeasureText with NULL HDC"));
 	}
-#endif	
-#endif	
+#endif
+#endif
 
 	if	(::GetMapMode (pDC) != MM_TWIPS)
 	{

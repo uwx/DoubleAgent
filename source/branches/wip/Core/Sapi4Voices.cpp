@@ -142,6 +142,8 @@ void CSapi4Voices::Enumerate ()
 		&&	(lEnum != NULL)
 		)
 	{
+		GUID	lKnownEngine1 = CGuidStr::Parse (_T("{E0725551-286F-11D0-8E73-00A0C9083363}"));
+
 		while (lEnum->Next (1, &lModeInfo, NULL) == S_OK)
 		{
 			if	(LogIsActive (mLogLevelDebug))
@@ -154,11 +156,18 @@ void CSapi4Voices::Enumerate ()
 				lVoiceInfo->mEngineId = lModeInfo.gEngineID;
 				lVoiceInfo->mModeId = lModeInfo.gModeID;
 				lVoiceInfo->mLangId = lModeInfo.language.LanguageID;
-				lVoiceInfo->mVoiceName = CAtlString (lModeInfo.szSpeaker).AllocSysString ();
 				lVoiceInfo->mSpeakerGender = lModeInfo.wGender;
 				lVoiceInfo->mSpeakerAge = lModeInfo.wAge;
 				lVoiceInfo->mManufacturer = CAtlString (lModeInfo.szMfgName).AllocSysString ();
 				lVoiceInfo->mProduct = CAtlString (lModeInfo.szProductName).AllocSysString ();
+				if	(IsEqualGUID (lModeInfo.gEngineID, lKnownEngine1))
+				{
+					lVoiceInfo->mVoiceName = CAtlString (lModeInfo.szModeName).AllocSysString ();
+				}
+				else
+				{
+					lVoiceInfo->mVoiceName = CAtlString (lModeInfo.szSpeaker).AllocSysString ();
+				}
 
 				Add (lVoiceInfo);
 			}

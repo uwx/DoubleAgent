@@ -104,9 +104,11 @@ public:
 	friend CString LclFormatNumber (ULONGLONG pNumber, bool pZeroNull = false, bool pNoThousands = false, int pMaxDecimals = -1, int pMinDecimals = 0, WORD pLangId = LANG_USER_DEFAULT);
 
 	friend double LclParseNumber (LPCTSTR pNumber, CString * pRemainder = NULL);
-	friend bool LclParseNumber (LPCTSTR pNumber, double & pValue);
-	friend bool LclParseNumber (LPCTSTR pNumber, long & pValue, int pBase=10);
-	friend bool LclParseNumber (LPCTSTR pNumber, ULONG & pValue, int pBase=10);
+	friend bool LclParseNumber (LPCTSTR pNumber, double & pValue, CString * pRemainder = NULL);
+	friend bool LclParseNumber (LPCTSTR pNumber, long & pValue, int pBase=10, CString * pRemainder = NULL);
+	friend bool LclParseNumber (LPCTSTR pNumber, ULONG & pValue, int pBase=10, CString * pRemainder = NULL);
+	friend bool LclParseNumber (LPCTSTR pNumber, LONGLONG & pValue, int pBase=10, CString * pRemainder = NULL);
+	friend bool LclParseNumber (LPCTSTR pNumber, ULONGLONG & pValue, int pBase=10, CString * pRemainder = NULL);
 
 	friend CString LclFormatPercent (double pNumber, int pRoundDigits = 0, WORD pLangId = LANG_USER_DEFAULT);
 	friend CString LclFormatPercent (const CString & pNumber, WORD pLangId = LANG_USER_DEFAULT);

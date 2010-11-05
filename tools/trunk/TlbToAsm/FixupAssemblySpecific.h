@@ -35,6 +35,7 @@ protected:
 	virtual void FixEventName (EventInfo^ pSourceEvent, String^& pEventName) override;
 	virtual void FixEventFieldName (FieldInfo^ pSourceField, String^& pFieldName) override;
 
+	virtual void SetActiveXControlAttributes (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) override;
 	virtual void SetActiveXMethodVisibility (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) override;
 	virtual void SetActiveXPropertyVisibility (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) override;
 	virtual void SetActiveXPropertyCategory (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) override;

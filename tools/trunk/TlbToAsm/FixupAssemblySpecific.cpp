@@ -666,6 +666,44 @@ void FixupAssemblySpecific::FixEventFieldName (FieldInfo^ pSourceField, String^&
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+void FixupAssemblySpecific::SetActiveXControlAttributes (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes)
+{
+	Type^			lSourceType = nullptr;
+	TypeBuilder^	lTargetType = nullptr;
+
+	try
+	{
+		lSourceType = safe_cast <Type^> (pSource);
+		lTargetType = safe_cast <TypeBuilder^> (pTarget);
+	}
+	catch AnyExceptionSilent
+
+	if	(
+			(lSourceType)
+		&&	(lTargetType)
+		&&	(lSourceType->IsClass)
+		&&	(lSourceType->IsSubclassOf (System::Windows::Forms::AxHost::typeid))
+		)
+	{
+		try
+		{
+			array <Type^>^		lAttrArgTypes = gcnew array <Type^> (1);
+			array <Object^>^	lAttrArgValues = gcnew array <Object^> (1);
+
+#ifdef	_LOG_FIXES
+			LogMessage (_LOG_FIXES, _T("---> ToolBox    [%s]"), _BT(lSourceType));
+#endif
+			lAttrArgTypes [0] = System::Boolean::typeid;
+			lAttrArgValues [0] = true;
+			pCustomAttributes->Add (gcnew CustomAttributeBuilder (ToolboxItemAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
+		}
+		catch AnyExceptionSilent
+		{}
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 void FixupAssemblySpecific::SetActiveXMethodVisibility (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes)
 {
 	MethodInfo^			lSourceMethod = nullptr;

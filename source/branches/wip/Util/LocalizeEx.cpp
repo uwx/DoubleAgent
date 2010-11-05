@@ -1053,8 +1053,10 @@ CString LclFormatNumber (double pNumber, bool pZeroNull, bool pNoThousands, int 
 }
 
 //////////////////////////////////////////////////////////////////////
+#pragma page()
+//////////////////////////////////////////////////////////////////////
 
-inline int PrepNumber (LPCTSTR pNumber, CString & pNumberStr)
+inline int PrepNumberParse (LPCTSTR pNumber, CString & pNumberStr)
 {
 	int		lRet = 0;
 	TCHAR	lDecSep [3];
@@ -1100,6 +1102,8 @@ inline int PrepNumber (LPCTSTR pNumber, CString & pNumberStr)
 	return lRet;
 }
 
+//////////////////////////////////////////////////////////////////////
+
 double LclParseNumber (LPCTSTR pNumber, CString * pRemainder)
 {
 	CString	lNumber;
@@ -1107,7 +1111,7 @@ double LclParseNumber (LPCTSTR pNumber, CString * pRemainder)
 	INT_PTR	lRemoved;
 	double	lValue;
 
-	lRemoved = PrepNumber (pNumber, lNumber);
+	lRemoved = PrepNumberParse (pNumber, lNumber);
 	lValue = _tcstod (lNumber, &lEndPtr);
 
 	if	(pRemainder)
@@ -1129,64 +1133,161 @@ double LclParseNumber (LPCTSTR pNumber, CString * pRemainder)
 	return lValue;
 }
 
-bool LclParseNumber (LPCTSTR pNumber, double & pValue)
+bool LclParseNumber (LPCTSTR pNumber, double & pValue, CString * pRemainder)
 {
 	CString	lNumber;
 	LPTSTR	lEndPtr = NULL;
 	double	lValue;
 
-	PrepNumber (pNumber, lNumber);
+	if	(pRemainder)
+	{
+		pRemainder->Empty();
+	}
+	PrepNumberParse (pNumber, lNumber);
 
 	lValue = _tcstod (lNumber, &lEndPtr);
 
 	if	(
 			(lEndPtr)
-		&&	(*lEndPtr == 0)
+		&&	(
+				(*lEndPtr == 0)
+			||	(pRemainder)
+			)
 		)
 	{
 		pValue = lValue;
+		if	(pRemainder)
+		{
+			(*pRemainder) = lEndPtr;
+		}
 		return true;
 	}
 	return false;
 }
 
-bool LclParseNumber (LPCTSTR pNumber, long & pValue, int pBase)
+bool LclParseNumber (LPCTSTR pNumber, long & pValue, int pBase, CString * pRemainder)
 {
 	CString	lNumber;
 	LPTSTR	lEndPtr = NULL;
 	long	lValue;
 
-	PrepNumber (pNumber, lNumber);
+	if	(pRemainder)
+	{
+		pRemainder->Empty();
+	}
+	PrepNumberParse (pNumber, lNumber);
 
 	lValue = _tcstol (lNumber, &lEndPtr, pBase);
 
 	if	(
 			(lEndPtr)
-		&&	(*lEndPtr == 0)
+		&&	(
+				(*lEndPtr == 0)
+			||	(pRemainder)
+			)
 		)
 	{
 		pValue = lValue;
+		if	(pRemainder)
+		{
+			(*pRemainder) = lEndPtr;
+		}
 		return true;
 	}
 	return false;
 }
 
-bool LclParseNumber (LPCTSTR pNumber, ULONG & pValue, int pBase)
+bool LclParseNumber (LPCTSTR pNumber, ULONG & pValue, int pBase, CString * pRemainder)
 {
 	CString	lNumber;
 	LPTSTR	lEndPtr = NULL;
 	ULONG	lValue;
 
-	PrepNumber (pNumber, lNumber);
+	if	(pRemainder)
+	{
+		pRemainder->Empty();
+	}
+	PrepNumberParse (pNumber, lNumber);
 
 	lValue = _tcstoul (lNumber, &lEndPtr, pBase);
 
 	if	(
 			(lEndPtr)
-		&&	(*lEndPtr == 0)
+		&&	(
+				(*lEndPtr == 0)
+			||	(pRemainder)
+			)
 		)
 	{
 		pValue = lValue;
+		if	(pRemainder)
+		{
+			(*pRemainder) = lEndPtr;
+		}
+		return true;
+	}
+	return false;
+}
+
+bool LclParseNumber (LPCTSTR pNumber, LONGLONG & pValue, int pBase, CString * pRemainder)
+{
+	CString		lNumber;
+	LPTSTR		lEndPtr = NULL;
+	LONGLONG	lValue;
+
+	if	(pRemainder)
+	{
+		pRemainder->Empty();
+	}
+	PrepNumberParse (pNumber, lNumber);
+
+	lValue = _tcstoi64 (lNumber, &lEndPtr, pBase);
+
+	if	(
+			(lEndPtr)
+		&&	(
+				(*lEndPtr == 0)
+			||	(pRemainder)
+			)
+		)
+	{
+		pValue = lValue;
+		if	(pRemainder)
+		{
+			(*pRemainder) = lEndPtr;
+		}
+		return true;
+	}
+	return false;
+}
+
+bool LclParseNumber (LPCTSTR pNumber, ULONGLONG & pValue, int pBase, CString * pRemainder)
+{
+	CString		lNumber;
+	LPTSTR		lEndPtr = NULL;
+	ULONGLONG	lValue;
+
+	if	(pRemainder)
+	{
+		pRemainder->Empty();
+	}
+	PrepNumberParse (pNumber, lNumber);
+
+	lValue = _tcstoui64 (lNumber, &lEndPtr, pBase);
+
+	if	(
+			(lEndPtr)
+		&&	(
+				(*lEndPtr == 0)
+			||	(pRemainder)
+			)
+		)
+	{
+		pValue = lValue;
+		if	(pRemainder)
+		{
+			(*pRemainder) = lEndPtr;
+		}
 		return true;
 	}
 	return false;
