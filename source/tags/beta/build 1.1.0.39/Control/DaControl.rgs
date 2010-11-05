@@ -1,0 +1,35 @@
+HKCR
+{
+	ForceRemove DoubleAgent.Control.1.1 = s 'Double Agent ActiveX Control'
+	{
+		CLSID = s '{1147E530-A208-11DE-ABF2-002421116FB2}'
+		'Insertable'
+	}
+	ForceRemove DoubleAgent.Control = s 'Double Agent ActiveX Control'
+	{
+		CLSID = s '{1147E530-A208-11DE-ABF2-002421116FB2}'
+		CurVer = s 'DoubleAgent.Control.1.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {1147E530-A208-11DE-ABF2-002421116FB2} = s 'Double Agent ActiveX Control'
+		{
+			ProgID = s 'DoubleAgent.Control.1.1'
+			VersionIndependentProgID = s 'DoubleAgent.Control'
+			Programmable
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			Control
+			Insertable
+			ToolboxBitmap32 = s '%MODULE%, 101'
+			MiscStatus = s '0'
+			{
+			    ForceRemove 1 = s '%OLEMISC%'
+			}
+			TypeLib = s '{1147E550-A208-11DE-ABF2-002421116FB2}'
+			Version = s '1.1'
+		}
+	}
+}
