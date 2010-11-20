@@ -470,6 +470,7 @@ __if_not_exists(IDaSvrCharacter2Ptr)
 		__declspec(property(get=_get_Balloon))									IDaSvrBalloon2Ptr		Balloon;
 		__declspec(property(get=_get_Commands))									IDaSvrCommands2Ptr		Commands;
 		__declspec(property(get=_get_Style, put=_put_Style))					long					Style;
+		__declspec(property(get=_get_HasIcon))									bool					HasIcon;
 		__declspec(property(get=_get_IconVisible))								bool					IconVisible;
 		__declspec(property(get=_get_IconIdentity, put=_put_IconIdentity))		_bstr_t					IconIdentity;
 		__declspec(property(get=_get_IconTip, put=_put_IconTip))				_bstr_t					IconTip;
@@ -505,6 +506,7 @@ __if_not_exists(IDaSvrCharacter2Ptr)
 		IDaSvrCommands2Ptr _get_Commands () {IDaSvrCommands2Ptr lCommands; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Commands(&lCommands); return lCommands;}
 		long _get_Style () {long lStyle=0; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Style(&lStyle); return lStyle;}
 		HRESULT _put_Style (long Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_Style(Value); else return E_POINTER;}
+		bool _get_HasIcon () {VARIANT_BOOL lHasIcon=VARIANT_FALSE; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_HasIcon(&lHasIcon); return lHasIcon?true:false;}
 		bool _get_IconVisible () {VARIANT_BOOL lIconVisible=VARIANT_FALSE; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_IconVisible(&lIconVisible); return lIconVisible?true:false;}
 		_bstr_t _get_IconIdentity () {BSTR lIconIdentity=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_IconIdentity(&lIconIdentity); return _bstr_t(lIconIdentity, false);}
 		HRESULT _put_IconIdentity (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_IconIdentity(Value); else return E_POINTER;}

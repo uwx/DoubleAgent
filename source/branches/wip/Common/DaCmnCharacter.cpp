@@ -1233,15 +1233,17 @@ HRESULT CDaCmnCharacter::SetLangID (LANGID pLangID)
 			LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] CDaCmnCharacter LangID [%4.4hX] not supported"), this, mCharID, pLangID);
 		}
 #endif
-		lResult = E_INVALIDARG;
+		lResult = AGENTERR_LANGUAGENOTFOUND;
 	}
 	else
+#if	FALSE
 	if	(
 			(PRIMARYLANGID (lLangID) == LANG_ENGLISH)
 		||	(CLocalize::GetMuiModule (lLangID))
 		||	(CLocalize::GetMuiModule (lLangID = MAKELANGID (PRIMARYLANGID (lLangID), SUBLANG_DEFAULT)))
 		||	(CLocalize::GetMuiModule (lLangID = MAKELANGID (PRIMARYLANGID (lLangID), SUBLANG_NEUTRAL)))
 		)
+#endif		
 	{
 #ifdef	_DEBUG_LANGUAGE
 		if	(LogIsActive (_DEBUG_LANGUAGE))
@@ -1263,6 +1265,7 @@ HRESULT CDaCmnCharacter::SetLangID (LANGID pLangID)
 		mLangID = lLangID;
 		PropagateLangID ();
 	}
+#if	FALSE
 	else
 	{
 #ifdef	_DEBUG_LANGUAGE
@@ -1273,6 +1276,7 @@ HRESULT CDaCmnCharacter::SetLangID (LANGID pLangID)
 #endif
 		lResult = AGENTERR_LANGUAGENOTFOUND;
 	}
+#endif	
 	return lResult;
 }
 

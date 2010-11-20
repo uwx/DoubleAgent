@@ -325,14 +325,13 @@ CSapi5Voice * CSapiVoiceCache::GetAgentSapi5Voice (const struct CAgentFileTts & 
 					lSapi5Voice->SetVoiceId (lSapi5VoiceInfo->mVoiceIdLong);
 					if	(lSapi5Voice->SafeIsValid())
 					{
-						if	(
-								(FAILED (LogSapi5ErrAnon (LogNormal, lSapi5Voice->Speak (_T("")), _T("Test [%ls]"), (BSTR)lSapi5VoiceInfo->mVoiceIdShort)))
-							&&	(mSapi5Voices->RemoveVoice (lSapi5VoiceInfo))
-							)
+#if	TRUE
+						if	(FAILED (LogSapi5ErrAnon (LogNormal, lSapi5Voice->Speak (_T("")), _T("Test [%ls]"), (BSTR)lSapi5VoiceInfo->mVoiceIdShort)))
 						{
 							lRet = NULL;
 							continue;
 						}
+#endif						
 						lRet = lSapi5Voice.Detach();
 					}
 				}
@@ -440,11 +439,9 @@ CSapi4Voice * CSapiVoiceCache::GetAgentSapi4Voice (const struct CAgentFileTts & 
 						)
 					{
 #if	FALSE					
-						if	(
-								(FAILED (LogSapi4ErrAnon (LogNormal, lSapi4Voice->Speak (_T("")), _T("Test [%ls]"), (BSTR)lSapi4VoiceInfo->mVoiceName)))
-							&&	(mSapi4Voices->RemoveVoice (lSapi4VoiceInfo))
-							)
+						if	(FAILED (LogSapi4ErrAnon (LogNormal, lSapi4Voice->Speak (_T("")), _T("Test [%ls]"), (BSTR)lSapi4VoiceInfo->mVoiceName)))
 						{
+							lRet = NULL;
 							continue;
 						}
 #endif						

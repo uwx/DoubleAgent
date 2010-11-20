@@ -49,14 +49,16 @@ bool CDaCmnSREngine::Initialize (CSapi5Input * pInput)
 	bool				lRet = false;
 	CSapiInputCache *	lInputCache;
 	CSapi5Inputs *		lSapi5Inputs;
+	CSapi5InputInfo *	lSapi5Input;
 
 	if	(
 			(pInput)
 		&&	(lInputCache = CSapiInputCache::GetStaticInstance ())
 		&&	(lSapi5Inputs = lInputCache->GetSapi5Inputs ())
-		&&	(mSapi5Input = lSapi5Inputs->GetEngineId (CAtlString (pInput->GetEngineId ())))
+		&&	(lSapi5Input = lSapi5Inputs->GetEngineId (CAtlString (pInput->GetEngineId ())))
 		)
 	{
+		Initialize (lSapi5Input);
 		lRet = true;
 	}
 	return lRet;
@@ -67,6 +69,7 @@ bool CDaCmnSREngine::Initialize (CAgentFile * pFile)
 	bool				lRet = false;
 	CSapiInputCache *	lInputCache;
 	CSapi5Inputs *		lSapi5Inputs;
+	CSapi5InputInfo *	lSapi5Input;
 
 	if	(
 			(pFile)
@@ -78,9 +81,10 @@ bool CDaCmnSREngine::Initialize (CAgentFile * pFile)
 		if	(
 				(lSapiInput = lInputCache->GetAgentInput (pFile->GetTts().mLanguage, true, false))
 			&&	(lSapi5Inputs = lInputCache->GetSapi5Inputs ())
-			&&	(mSapi5Input = lSapi5Inputs->GetEngineId (CAtlString (lSapiInput->GetEngineId ())))
+			&&	(lSapi5Input = lSapi5Inputs->GetEngineId (CAtlString (lSapiInput->GetEngineId ())))
 			)
 		{
+			Initialize (lSapi5Input);
 			lRet = true;
 		}
 	}

@@ -7003,22 +7003,25 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 			</value>
 			<remarks>
 				<para>
-					If you do not set the character's <self>LanguageID</self>, its language will be the current system language,
-					if the corresponding Agent language DLL is installed. Otherwise, the character's language will
-					be English (US).
+					If you do not set the character's <self>LanguageID</self>, it defaults to the current system language.
 				</para>
 				<para>
-					This property also determines the language for <a class="see" href="&dawbref;">&dawbname;</a> text, the
-					commands in the character's <a class="see" href="&dacmref;">&dacmname;</a>, and the speech recognition engine.
-					It also determines the default language for text-to-speech output.
+					This property also determines the language for <a class="see" href="&dawbref;">&dawbname;</a> text,
+					the commands in the character's <a class="see" href="&dacmref;">&dacmname;</a>,
+					the default language for text-to-speech output,
+					and the default speech recognition language.
+				</para>
+				<para>
+					If an appropriate Agent language DLL for the specified <self>LanguageID</self> is <em>not</em> installed, the
+					commands in the character's <a class="see" href="&dacmref;">&dacmname;</a> and <a class="see" href="&davcref;">&davcname;</a> window
+					will be in English.
 				</para>
 			</remarks>
 			<details>
 				<h4 class="details">Details</h4>
 				<para>
-					If you try to set a character's <self>LanguageID</self> and the Agent language DLL for that language is
-					not installed or a display font for the language is not available, Agent raises an error and <self>LanguageID</self>
-					remains at its last setting.
+					If you try to set a character's <self>LanguageID</self> to a value not supported by Windows,
+					Agent raises an error and <self>LanguageID</self> remains at its last setting.
 				</para>
 				<para>
 					Setting this property does not raise an error if there are no matching speech engines for the language. To
@@ -7026,13 +7029,18 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 					or <see cref="P:&dans;.Character.TTSModeID" />. If you do not set <self>LanguageID</self>, it will be set
 					to the user default language.
 				</para>
+				<note>
+					Microsoft<sup>®</sup> Agent will not accept a <self>LanguageID</self> unless the corresponding the Agent language DLL is
+					installed. As of Version 1.1, Double Agent will accept any <self>LanguageID</self> that represents a valid Windows <glossary>locale</glossary>.
+				</note>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
 				<note>
 					If you set <self>LanguageID</self> to a language that supports bidirectional text (such as Arabic
 					or Hebrew), but the system running your application does not have bidirectional support installed,
 					text in the <a class="see" href="&dawbref;">&dawbname;</a> may appear in logical rather than display order.
 				</note>
-			</details>
+			
+		</details>
 			<seealso cref="P:&dans;.Character.TTSModeID" prefix="The" suffix="Property" />
 			<seealso cref="P:&dans;.Character.SRModeID" prefix="The" suffix="Property" />
 		</member>

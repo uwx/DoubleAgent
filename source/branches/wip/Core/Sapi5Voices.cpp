@@ -430,7 +430,7 @@ CSapi5VoiceIndexArray const * CSapi5Voices::FindVoices (const struct CAgentFileT
 		INT_PTR						lLanguageNdx;
 		INT_PTR						lVoiceNdx;
 		static const int			lLanguageWeight = 1000;
-		static const int			lGenderWeight = 10000;
+		static const int			lGenderWeight = 1000;
 		static const int			lAgeWeight = 100;
 		static const int			lOrderWeight = 1;
 
@@ -454,9 +454,9 @@ CSapi5VoiceIndexArray const * CSapi5Voices::FindVoices (const struct CAgentFileT
 			lLanguageNdx = FindLanguageMatch (lVoiceInfo->mLangId, lLanguageIds);
 			if	(lLanguageNdx >= 0)
 			{
-				lCurrMatch += lPartMatch = (int)(lLanguageIds.GetCount()-lLanguageNdx) * lLanguageWeight;
+				lCurrMatch += lPartMatch = ((int)(lLanguageIds.GetCount()-lLanguageNdx) * lLanguageWeight) + ((lLanguageIds [lLanguageNdx] == lVoiceInfo->mLangId) ? lLanguageWeight : 0);
 #ifdef	_DEBUG_TTS_MATCH
-				lMatchLog.Format (_T("%s Language [%4.4X (%d)]"), CAtlString((LPCTSTR)lMatchLog), lLanguageIds [lLanguageNdx], lPartMatch);
+				lMatchLog.Format (_T("%s Language [%4.4X %4.4X (%d %d)]"), CAtlString((LPCTSTR)lMatchLog), lVoiceInfo->mLangId, lLanguageIds [lLanguageNdx], lLanguageNdx, lPartMatch);
 #endif
 			}
 

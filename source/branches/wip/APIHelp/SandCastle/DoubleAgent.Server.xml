@@ -2584,9 +2584,11 @@ server-&gt;Load (EmptyProvider, &amp;CharacterID, &amp;RequestID)</code></exampl
 <summary> Specifies the character's language identifier.</summary>
 <value name="LanguageID">A numeric value specifying the character's language ID. A character's language ID (LANGID) is a 16-bit value defined by Windows, consisting of a primary language ID and a secondary language ID.</value>
 <remarks>
-<para>If you do not set the character's LanguageID, its language will be the current system language, if the corresponding Agent language DLL is installed. Otherwise, the character's language will be English (US).
+<para>If you do not set the character's LanguageID, it defaults to the current system language.
 </para>
-<para>This property also determines the language for <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> text, the commands in the character's <a href="../Reference/UI_Intro.htm#Menu">pop-up menu</a>, and the speech recognition engine. It also determines the default language for text-to-speech output.
+<para>This property also determines the language for <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> text, the commands in the character's <a href="../Reference/UI_Intro.htm#Menu">pop-up menu</a>, the default language for text-to-speech output, and the default speech recognition language.
+</para>
+<para>If an appropriate Agent language DLL for the specified LanguageID is <em>not</em> installed, the commands in the character's <a href="../Reference/UI_Intro.htm#Menu">pop-up menu</a> and <a href="../Reference/UI_Intro.htm#VoiceCommands">Voice Commands</a> window will be in English.
 </para>
 </remarks>
 <seealso cref="P:DoubleAgent.Server.Character.TTSModeID" />

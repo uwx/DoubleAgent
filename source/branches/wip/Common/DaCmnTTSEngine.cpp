@@ -63,14 +63,16 @@ bool CDaCmnTTSEngine::Initialize (CSapi5Voice * pVoice)
 	bool				lRet = false;
 	CSapiVoiceCache *	lVoiceCache;
 	CSapi5Voices *		lSapi5Voices;
+	CSapi5VoiceInfo *	lSapi5Voice;
 
 	if	(
 			(pVoice)
 		&&	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
 		&&	(lSapi5Voices = lVoiceCache->GetSapi5Voices ())
-		&&	(mSapi5Voice = lSapi5Voices->GetVoiceId (CAtlString (pVoice->GetUniqueId ())))
+		&&	(lSapi5Voice = lSapi5Voices->GetVoiceId (CAtlString (pVoice->GetUniqueId ())))
 		)
 	{
+		Initialize (lSapi5Voice);
 		lRet = true;
 	}
 	return lRet;
@@ -82,14 +84,16 @@ bool CDaCmnTTSEngine::Initialize (CSapi4Voice * pVoice)
 	bool				lRet = false;
 	CSapiVoiceCache *	lVoiceCache;
 	CSapi4Voices *		lSapi4Voices;
+	CSapi4VoiceInfo *	lSapi4Voice;
 
 	if	(
 			(pVoice)
 		&&	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
 		&&	(lSapi4Voices = lVoiceCache->GetSapi4Voices ())
-		&&	(mSapi4Voice = lSapi4Voices->GetModeId (CGuidStr::Parse (pVoice->GetUniqueId ())))
+		&&	(lSapi4Voice = lSapi4Voices->GetModeId (CGuidStr::Parse (pVoice->GetUniqueId ())))
 		)
 	{
+		Initialize (lSapi4Voice);
 		lRet = true;
 	}
 	return lRet;
@@ -101,28 +105,36 @@ bool CDaCmnTTSEngine::Initialize (CSapiVoice * pVoice)
 	bool				lRet = false;
 	CSapiVoiceCache *	lVoiceCache;
 	CSapi5Voices *		lSapi5Voices;
+	CSapi5VoiceInfo *	lSapi5Voice;
 #ifndef	_WIN64
 	CSapi4Voices *		lSapi4Voices;
+	CSapi4VoiceInfo *	lSapi4Voice;
 #endif
 
 	if	(
 			(pVoice)
 		&&	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
-		&&	(
-				(
-					(lSapi5Voices = lVoiceCache->GetSapi5Voices ())
-				&&	(mSapi5Voice = lSapi5Voices->GetVoiceId (CAtlString (pVoice->GetUniqueId ())))
-				)
-#ifndef	_WIN64
-			||	(
-					(lSapi4Voices = lVoiceCache->GetSapi4Voices ())
-				&&	(mSapi4Voice = lSapi4Voices->GetModeId (CGuidStr::Parse (pVoice->GetUniqueId ())))
-				)
-#endif
-			)
 		)
 	{
-		lRet = true;
+		if	(
+				(lSapi5Voices = lVoiceCache->GetSapi5Voices ())
+			&&	(lSapi5Voice = lSapi5Voices->GetVoiceId (CAtlString (pVoice->GetUniqueId ())))
+			)
+		{
+			Initialize (lSapi5Voice);
+			lRet = true;
+		}
+#ifndef	_WIN64
+		else
+		if	(
+				(lSapi4Voices = lVoiceCache->GetSapi4Voices ())
+			&&	(lSapi4Voice = lSapi4Voices->GetModeId (CGuidStr::Parse (pVoice->GetUniqueId ())))
+			)
+		{
+			Initialize (lSapi4Voice);
+			lRet = true;
+		}
+#endif
 	}
 	return lRet;
 }

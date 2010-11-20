@@ -340,7 +340,7 @@ CSapi5InputIndexArray const * CSapi5Inputs::FindInputs (LANGID pLangId, bool pUs
 			if	(lLanguageNdx >= 0)
 			{
 #ifdef	_DEBUG_INPUT_MATCH
-				lMatchLog.Format (_T("%s Language [%4.4X] [%d]"), CAtlString((LPCTSTR)lMatchLog), lLanguageIds [lLanguageNdx], lLanguageNdx);
+				lMatchLog.Format (_T("%s Language [%4.4X] [%4.4X] [%d]"), CAtlString((LPCTSTR)lMatchLog), lInputInfo->mLangId, lLanguageIds [lLanguageNdx], lLanguageNdx);
 #endif
 			}
 			else
