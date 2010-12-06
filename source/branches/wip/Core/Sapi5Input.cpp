@@ -60,7 +60,7 @@ IMPLEMENT_DLL_OBJECT(CSapi5Input)
 
 CSapi5Input::CSapi5Input ()
 {
-	if	(SUCCEEDED (LogComErr (LogIfActive, CoCreateInstance (CLSID_SpInprocRecognizer, NULL, CLSCTX_SERVER, __uuidof (ISpRecognizer), (void **) &mRecognizer))))
+	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CoCreateInstance (CLSID_SpInprocRecognizer, NULL, CLSCTX_SERVER, __uuidof (ISpRecognizer), (void **) &mRecognizer))))
 	{
 		mRecognizer->SetRecoState (SPRST_INACTIVE);
 	}
@@ -121,9 +121,9 @@ HRESULT CSapi5Input::PrepareToListen (bool pAllowAudioFormatChange)
 	{
 		ISpObjectTokenPtr	lToken;
 
-		if	(SUCCEEDED (lResult = LogSapi5Err (LogNormal, SpGetDefaultTokenFromCategoryId (SPCAT_AUDIOIN, &lToken))))
+		if	(SUCCEEDED (lResult = LogSapi5Err (LogNormal|LogTime, SpGetDefaultTokenFromCategoryId (SPCAT_AUDIOIN, &lToken))))
 		{
-			lResult = LogSapi5Err (LogNormal, mRecognizer->SetInput (lToken, (pAllowAudioFormatChange!=false)));
+			lResult = LogSapi5Err (LogNormal|LogTime, mRecognizer->SetInput (lToken, (pAllowAudioFormatChange!=false)));
 		}
 	}
 	return lResult;
@@ -478,7 +478,7 @@ HRESULT CSapi5InputContext::Initialize (CSapi5Input * pInput, LANGID pLangID)
 
 		if	(lRecognizer != NULL)
 		{
-			lResult = LogSapi5Err (LogNormal, lRecognizer->CreateRecoContext (&mRecoContext));
+			lResult = LogSapi5Err (LogNormal|LogTime, lRecognizer->CreateRecoContext (&mRecoContext));
 		}
 	}
 	return lResult;
@@ -539,7 +539,7 @@ HRESULT CSapi5InputContext::SetTheseCommands (long pCharID, LPCTSTR pCaption, co
 		else
 		if	(pIds.GetCount() > 0)
 		{
-			lResult = LogSapi5Err (LogNormal, mRecoContext->CreateGrammar (mGrammarIdCommands, &mRecoGrammarCommands));
+			lResult = LogSapi5Err (LogNormal|LogTime, mRecoContext->CreateGrammar (mGrammarIdCommands, &mRecoGrammarCommands));
 
 			if	(mRecoGrammarCommands != NULL)
 			{
@@ -548,13 +548,13 @@ HRESULT CSapi5InputContext::SetTheseCommands (long pCharID, LPCTSTR pCaption, co
 #endif
 				mRecoGrammarCommands->SetDictationState (SPRS_INACTIVE);
 				mRecoGrammarCommands->SetGrammarState (SPGS_DISABLED);
-				LogSapi5Err (LogNormal, mRecoGrammarCommands->ResetGrammar (GetLangID()));
+				LogSapi5Err (LogNormal|LogTime, mRecoGrammarCommands->ResetGrammar (GetLangID()));
 
 				for	(lNdx = 0; lNdx < (INT_PTR)pIds.GetCount(); lNdx++)
 				{
 					MakeSpeechRule (mRecoGrammarCommands, pIds [lNdx], pNames [lNdx], pCommands [lNdx]);
 				}
-				lResult = LogSapi5Err (LogNormal, mRecoGrammarCommands->Commit (0));
+				lResult = LogSapi5Err (LogNormal|LogTime, mRecoGrammarCommands->Commit (0));
 
 #ifdef	_DEBUG_GRAMMAR
 				LogMessage (_DEBUG_GRAMMAR, _T("Made commands grammar"));
@@ -579,7 +579,7 @@ HRESULT CSapi5InputContext::SetGlobalCommands (USHORT pShowWndCmdId, USHORT pHid
 	}
 	else
 	{
-		lResult = LogSapi5Err (LogNormal, mRecoContext->CreateGrammar (mGrammarIdGlobal, &mRecoGrammarGlobal));
+		lResult = LogSapi5Err (LogNormal|LogTime, mRecoContext->CreateGrammar (mGrammarIdGlobal, &mRecoGrammarGlobal));
 
 		if	(mRecoGrammarGlobal != NULL)
 		{
@@ -588,7 +588,7 @@ HRESULT CSapi5InputContext::SetGlobalCommands (USHORT pShowWndCmdId, USHORT pHid
 #endif
 			mRecoGrammarGlobal->SetDictationState (SPRS_INACTIVE);
 			mRecoGrammarGlobal->SetGrammarState (SPGS_DISABLED);
-			LogSapi5Err (LogNormal, mRecoGrammarGlobal->ResetGrammar (GetLangID()));
+			LogSapi5Err (LogNormal|LogTime, mRecoGrammarGlobal->ResetGrammar (GetLangID()));
 
 			if	(pShowWndCmdId)
 			{
@@ -604,7 +604,7 @@ HRESULT CSapi5InputContext::SetGlobalCommands (USHORT pShowWndCmdId, USHORT pHid
 			}
 			MakeCharacterCommands ();
 
-			lResult = LogSapi5Err (LogNormal, mRecoGrammarGlobal->Commit (0));
+			lResult = LogSapi5Err (LogNormal|LogTime, mRecoGrammarGlobal->Commit (0));
 
 #ifdef	_DEBUG_GRAMMAR_NOT
 			try
@@ -826,7 +826,7 @@ HRESULT CSapi5InputContext::StartListening (ULONG pMaxCommandAlternates)
 			&&	(LogIsActive ())
 			)
 		{
-			LogSapi5Err (LogNormal, lTempResult);
+			LogSapi5Err (LogNormal|LogTime, lTempResult);
 		}
 
 		if	(
@@ -838,7 +838,7 @@ HRESULT CSapi5InputContext::StartListening (ULONG pMaxCommandAlternates)
 			&&	(LogIsActive ())
 			)
 		{
-			LogSapi5Err (LogNormal, lTempResult, _T("Enable commands grammar"));
+			LogSapi5Err (LogNormal|LogTime, lTempResult, _T("Enable commands grammar"));
 		}
 
 		if	(
@@ -850,7 +850,7 @@ HRESULT CSapi5InputContext::StartListening (ULONG pMaxCommandAlternates)
 			&&	(LogIsActive ())
 			)
 		{
-			LogSapi5Err (LogNormal, lTempResult, _T("Enable global grammar"));
+			LogSapi5Err (LogNormal|LogTime, lTempResult, _T("Enable global grammar"));
 		}
 
 		if	(
@@ -862,7 +862,7 @@ HRESULT CSapi5InputContext::StartListening (ULONG pMaxCommandAlternates)
 			&&	(LogIsActive ())
 			)
 		{
-			LogSapi5Err (LogNormal, lTempResult, _T("SetMaxAlternates"));
+			LogSapi5Err (LogNormal|LogTime, lTempResult, _T("SetMaxAlternates"));
 		}
 
 		if	(
@@ -870,7 +870,7 @@ HRESULT CSapi5InputContext::StartListening (ULONG pMaxCommandAlternates)
 			&&	(LogIsActive ())
 			)
 		{
-			LogSapi5Err (LogNormal, lResult, _T("Enable context"));
+			LogSapi5Err (LogNormal|LogTime, lResult, _T("Enable context"));
 		}
 
 #ifdef	_DEBUG_EVENTS
@@ -882,7 +882,7 @@ HRESULT CSapi5InputContext::StartListening (ULONG pMaxCommandAlternates)
 			&&	(LogIsActive ())
 			)
 		{
-			LogSapi5Err (LogNormal, lResult, _T("StartListening"));
+			LogSapi5Err (LogNormal|LogTime, lResult, _T("StartListening"));
 		}
 #ifdef	_DEBUG_STATUS
 		LogStatus (_DEBUG_STATUS, _T("StartListening"));
@@ -909,7 +909,7 @@ HRESULT CSapi5InputContext::StopListening ()
 			&&	(LogIsActive ())
 			)
 		{
-			LogSapi5Err (LogNormal, lResult, _T("StopListening"));
+			LogSapi5Err (LogNormal|LogTime, lResult, _T("StopListening"));
 		}
 
 		if	(
@@ -918,7 +918,7 @@ HRESULT CSapi5InputContext::StopListening ()
 			&&	(LogIsActive ())
 			)
 		{
-			LogSapi5Err (LogNormal, lResult, _T("Disable context"));
+			LogSapi5Err (LogNormal|LogTime, lResult, _T("Disable context"));
 		}
 
 		if	(
@@ -927,7 +927,7 @@ HRESULT CSapi5InputContext::StopListening ()
 			&&	(LogIsActive ())
 			)
 		{
-			LogSapi5Err (LogNormal, lTempResult, _T("Disable commands grammar"));
+			LogSapi5Err (LogNormal|LogTime, lTempResult, _T("Disable commands grammar"));
 		}
 
 		if	(
@@ -936,7 +936,7 @@ HRESULT CSapi5InputContext::StopListening ()
 			&&	(LogIsActive ())
 			)
 		{
-			LogSapi5Err (LogNormal, lTempResult, _T("Disable global grammar"));
+			LogSapi5Err (LogNormal|LogTime, lTempResult, _T("Disable global grammar"));
 		}
 
 		if	(
@@ -945,7 +945,7 @@ HRESULT CSapi5InputContext::StopListening ()
 			&&	(LogIsActive ())
 			)
 		{
-			LogSapi5Err (LogNormal, lTempResult);
+			LogSapi5Err (LogNormal|LogTime, lTempResult);
 		}
 
 		mEventSoundStarted = false;
@@ -979,7 +979,7 @@ HRESULT CSapi5InputContext::PauseListening (bool pPause)
 		else
 		if	(LogIsActive ())
 		{
-			LogSapi5Err (LogNormal, lResult, _T("PauseListening [%u]"), pPause);
+			LogSapi5Err (LogNormal|LogTime, lResult, _T("PauseListening [%u]"), pPause);
 		}
 #ifdef	_DEBUG_STATUS
 		LogStatus (_DEBUG_STATUS, _T("PauseListening [%u]"), pPause);
@@ -1482,7 +1482,7 @@ void __stdcall CSapi5InputContext::InputNotifyCallback(WPARAM wParam, LPARAM lPa
 	try
 	{
 		CSapi5InputContext *	lThis = (CSapi5InputContext *) lParam;
-		CSpEvent			lEvent;
+		CSpEvent				lEvent;
 
 #ifdef	_DEBUG_EVENTS_EX
 		tS <SPEVENTSOURCEINFO>	lEventInfo;

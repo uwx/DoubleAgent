@@ -25,10 +25,10 @@
 #include "GuidStr.h"
 
 #ifdef	_DEBUG
-#define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Balloon"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Balloon"),LogVerbose,true)&0xFFFF)
-#define	_LOG_ABANDONED			MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF,_LOG_INSTANCE)
-#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Balloon"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Balloon"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_ABANDONED			MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF|LogTime,_LOG_INSTANCE)
+#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,7 @@ DaSvrBalloon * DaSvrBalloon::CreateInstance (long pCharID, CInstanceAnchor * pAn
 {
 	CComObject<DaSvrBalloon> *	lInstance = NULL;
 
-	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrBalloon>::CreateInstance (&lInstance))))
+	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CComObject<DaSvrBalloon>::CreateInstance (&lInstance))))
 	{
 		lInstance->CDaCmnBalloon::Initialize (pCharID, pAnchor, pFile, pOwner);
 		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
@@ -73,6 +73,12 @@ void DaSvrBalloon::Terminate (bool pFinal, bool pAbandonned)
 {
 	if	(this)
 	{
+#ifdef	_LOG_INSTANCE
+		if	(LogIsActive())
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrBalloon::Terminate [%u %u]"), this, max(m_dwRef,-1), pFinal, pAbandonned);
+		}
+#endif
 		if	(pFinal)
 		{
 			UnmanageObjectLifetime (this);

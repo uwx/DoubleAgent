@@ -27,8 +27,8 @@
 #include "Registry.h"
 
 #ifdef	_DEBUG
-#define	_DEBUG_NOTIFY_PATH		(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF)
-#define	_DEBUG_DEFAULT_CHAR		(GetProfileDebugInt(_T("DebugDefaultChar"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_NOTIFY_PATH		(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_DEBUG_DEFAULT_CHAR		(GetProfileDebugInt(_T("DebugDefaultChar"),LogVerbose,true)&0xFFFF|LogTime)
 //#define	_DEBUG_INTERNAL		LogDebug
 //#define	_DEBUG_ACTIVATE		LogNormal
 #endif
@@ -115,7 +115,7 @@ bool CEventNotify::PreFireEvent (LPCTSTR pEventName)
 	return true;
 }
 
-bool CEventNotify::PostFireEvent (LPCTSTR pEventName)
+bool CEventNotify::PostFireEvent (LPCTSTR pEventName, UINT pEventSinkCount)
 {
 	if	(mEventLock.GetCount() > 0)
 	{
@@ -331,10 +331,13 @@ void CEventNotify::_CharacterLoaded (long pCharID)
 #endif
 	try
 	{
-		INT_PTR				lReflectNdx;
-		_IEventReflect *	lReflect;
+		CAtlPtrTypeArray <_IEventReflect>	lReflectArray;
+		INT_PTR								lReflectNdx;
+		_IEventReflect *					lReflect;
 
-		for	(lReflectNdx = 0; lReflect = mEventReflect (lReflectNdx); lReflectNdx++)
+		lReflectArray.Copy (mEventReflect);
+
+		for	(lReflectNdx = 0; lReflect = lReflectArray (lReflectNdx); lReflectNdx++)
 		{
 			try
 			{
@@ -356,10 +359,13 @@ void CEventNotify::_CharacterUnloaded (long pCharID)
 #endif
 	try
 	{
-		INT_PTR				lReflectNdx;
-		_IEventReflect *	lReflect;
+		CAtlPtrTypeArray <_IEventReflect>	lReflectArray;
+		INT_PTR								lReflectNdx;
+		_IEventReflect *					lReflect;
 
-		for	(lReflectNdx = 0; lReflect = mEventReflect (lReflectNdx); lReflectNdx++)
+		lReflectArray.Copy (mEventReflect);
+
+		for	(lReflectNdx = 0; lReflect = lReflectArray (lReflectNdx); lReflectNdx++)
 		{
 			try
 			{
@@ -406,10 +412,13 @@ void CEventNotify::_CharacterActivated (long pActiveCharID, long pInputActiveCha
 #endif
 	try
 	{
-		INT_PTR				lReflectNdx;
-		_IEventReflect *	lReflect;
+		CAtlPtrTypeArray <_IEventReflect>	lReflectArray;
+		INT_PTR								lReflectNdx;
+		_IEventReflect *					lReflect;
 
-		for	(lReflectNdx = 0; lReflect = mEventReflect (lReflectNdx); lReflectNdx++)
+		lReflectArray.Copy (mEventReflect);
+
+		for	(lReflectNdx = 0; lReflect = lReflectArray (lReflectNdx); lReflectNdx++)
 		{
 			try
 			{
@@ -500,10 +509,13 @@ bool CEventNotify::_ContextMenu (long pCharID, HWND pOwner, const CPoint & pPosi
 
 	try
 	{
-		INT_PTR				lReflectNdx;
-		_IEventReflect *	lReflect;
+		CAtlPtrTypeArray <_IEventReflect>	lReflectArray;
+		INT_PTR								lReflectNdx;
+		_IEventReflect *					lReflect;
 
-		for	(lReflectNdx = 0; lReflect = mEventReflect (lReflectNdx); lReflectNdx++)
+		lReflectArray.Copy (mEventReflect);
+
+		for	(lReflectNdx = 0; lReflect = lReflectArray (lReflectNdx); lReflectNdx++)
 		{
 			try
 			{
@@ -526,10 +538,13 @@ bool CEventNotify::_DefaultCommand (long pCharID, HWND pOwner, const CPoint & pP
 
 	try
 	{
-		INT_PTR				lReflectNdx;
-		_IEventReflect *	lReflect;
+		CAtlPtrTypeArray <_IEventReflect>	lReflectArray;
+		INT_PTR								lReflectNdx;
+		_IEventReflect *					lReflect;
 
-		for	(lReflectNdx = 0; lReflect = mEventReflect (lReflectNdx); lReflectNdx++)
+		lReflectArray.Copy (mEventReflect);
+
+		for	(lReflectNdx = 0; lReflect = lReflectArray (lReflectNdx); lReflectNdx++)
 		{
 			try
 			{

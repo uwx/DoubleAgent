@@ -40,13 +40,19 @@
 #include "DebugStr.h"
 
 #ifdef	_DEBUG
-#define	_DEBUG_REQUESTS	(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF|LogTimeMs)
-#define	_DEBUG_SPEECH	(GetProfileDebugInt(_T("DebugSpeech"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
-#define	_LOG_QUEUE_OPS	(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs)
+#define	_DEBUG_REQUESTS		(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF|LogTimeMs)
+#define	_DEBUG_SPEECH		(GetProfileDebugInt(_T("DebugSpeech"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
+#define	_LOG_QUEUE_OPS		(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs)
+//#define	_TRACE_BUSY_TIME	LogIfActive|LogTimeMs|LogHighVolume
 #endif
 
 #ifndef	_LOG_QUEUE_OPS
 #define	_LOG_QUEUE_OPS	LogVerbose
+#endif
+
+#ifdef	_TRACE_BUSY_TIME
+#include "Elapsed.h"
+CAtlMap <const CQueuedSpeak*, DWORD>	sBusyStart;
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -66,6 +72,9 @@ CQueuedSpeak::~CQueuedSpeak ()
 {
 	CDirectSoundLipSync *	lLipSync;
 
+#ifdef	_TRACE_BUSY_TIME
+	sBusyStart.RemoveKey (this);
+#endif
 	SetVoice (NULL);
 
 	if	(lLipSync = static_cast <CDirectSoundLipSync *> (mSoundFilter.GetInterfacePtr()))
@@ -100,7 +109,7 @@ void CQueuedSpeak::Initialize (CAgentText & pText, CSapiVoice * pVoice)
 	}
 	mTextObject = NULL;
 	mTextObjectRef = mTextObject;
-	
+
 	if	(GetFullText ().IsEmpty ())
 	{
 		mBalloonOptions = NULL;
@@ -140,7 +149,7 @@ bool CQueuedSpeak::SetVoice (CSapiVoice * pVoice)
 		{
 			if	(mVoice)
 			{
-//TEST - Does this cause residual events from previous speech to get lost?			
+//TEST - Does this cause residual events from previous speech to get lost?
 				mVoice->ClearEventSinks ();
 				lVoiceCache->RemoveVoiceClient (mVoice, this);
 			}
@@ -230,6 +239,11 @@ bool CQueuedSpeak::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 			{
 				lRet = true;
 			}
+			else
+			if	(pQueue.GetNextAction (QueueActionSpeak) != this)
+			{
+				lRet = true; // Already deleted during recursion
+			}
 		}
 
 		if	(
@@ -248,6 +262,11 @@ bool CQueuedSpeak::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 #endif
 				lRet = true;
 			}
+			else
+			if	(pQueue.GetNextAction (QueueActionSpeak) != this)
+			{
+				lRet = true; // Already deleted during recursion
+			}
 		}
 		else
 		if	(
@@ -265,6 +284,11 @@ bool CQueuedSpeak::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 				}
 #endif
 				lRet = true;
+			}
+			else
+			if	(pQueue.GetNextAction (QueueActionSpeak) != this)
+			{
+				lRet = true; // Already deleted during recursion
 			}
 			else
 			if	(
@@ -292,6 +316,11 @@ bool CQueuedSpeak::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueuedSpeak [%p(%d)] failed"), pAgentWnd, mCharID, this, mReqID);
 				}
 #endif
+			}
+			else
+			if	(pQueue.GetNextAction (QueueActionSpeak) != this)
+			{
+				lRet = true; // Already deleted during recursion
 			}
 			else
 			{
@@ -329,6 +358,11 @@ bool CQueuedSpeak::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 						if	(SUCCEEDED (lResult = StartSpeech (pQueue, pAgentWnd)))
 						{
 							lRet = true;
+						}
+						else
+						if	(pQueue.GetNextAction (QueueActionSpeak) != this)
+						{
+							lRet = true; // Already deleted during recursion
 						}
 					}
 				}
@@ -398,7 +432,7 @@ bool CQueuedSpeak::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 
 #ifdef	DebugTimeStart
 		DebugTimeStop
-		LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f CQueuedSpeak::Advance"), DebugTimeElapsed);
+		LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f CQueuedSpeak::Advance"), DebugTimeElapsed);
 #endif
 	}
 	return lRet;
@@ -436,7 +470,7 @@ bool CQueuedSpeak::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool p
 			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
 			)
 		{
-			lBalloonWnd->Pause (true);			
+			lBalloonWnd->Pause (true);
 		}
 	}
 	else
@@ -452,7 +486,7 @@ bool CQueuedSpeak::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool p
 			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
 			)
 		{
-			lBalloonWnd->Pause (false);			
+			lBalloonWnd->Pause (false);
 		}
 		if	(
 				(mStarted)
@@ -463,7 +497,7 @@ bool CQueuedSpeak::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool p
 		}
 	}
 	mPaused = pPause;
-	
+
 	return lRet;
 }
 
@@ -521,7 +555,6 @@ bool CQueuedSpeak::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESUL
 			mTextObject->Detach (true);
 		}
 	}
-	else
 	if	(mAnimated)
 	{
 		if	(!pAgentWnd->ShowGesture (NULL))
@@ -592,12 +625,49 @@ bool CQueuedSpeak::SpeechIsBusy (CAgentWnd * pAgentWnd)
 			)
 		{
 			lRet = true;
+
+#ifdef	_TRACE_BUSY_TIME
+			try
+			{
+				DWORD	lStartTime;
+
+				if	(sBusyStart.Lookup (this, lStartTime))
+				{
+					if	(ElapsedTicks (lStartTime) > 1000)
+					{
+						LogMessage (_TRACE_BUSY_TIME, _T("[%p] Waiting [%d] for voice [%p] [%u] [%ls]"), this, ElapsedTicks (lStartTime), mVoice, mVoice->SafeIsSpeaking (), (BSTR)mVoice->GetDisplayName());
+						sBusyStart [this] = GetTickCount();
+					}
+				}
+				else
+				{
+					sBusyStart [this] = GetTickCount();
+				}
+			}
+			catch AnyExceptionSilent
+#endif
 		}
 	}
 
+#ifdef	_TRACE_BUSY_TIME
+	if	(!lRet)
+	{
+		DWORD	lStartTime;
+
+		if	(
+				(mVoice->SafeIsValid ())
+			&&	(sBusyStart.Lookup (this, lStartTime))
+			)
+		{
+			LogMessage (_TRACE_BUSY_TIME, _T("[%p] Got [%d] voice [%p] [%u] [%ls]"), this, ElapsedTicks (lStartTime), mVoice, mVoice->SafeIsSpeaking (), (BSTR)mVoice->GetDisplayName());
+		}
+		sBusyStart.RemoveKey (this);
+	}
+#endif
+
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f   CAgentCharacterWnd::SpeechIsBusy [%u]"), DebugTimeElapsed, lRet);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CAgentCharacterWnd::SpeechIsBusy [%u]"), DebugTimeElapsed, lRet);
 #endif
 	return lRet;
 }
@@ -673,7 +743,7 @@ HRESULT CQueuedSpeak::SpeechIsReady (CAgentWnd * pAgentWnd)
 
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f   CAgentCharacterWnd::SpeechIsReady [%8.8X]"), DebugTimeElapsed, lResult);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CAgentCharacterWnd::SpeechIsReady [%8.8X]"), DebugTimeElapsed, lResult);
 #endif
 	return lResult;
 }
@@ -722,31 +792,31 @@ HRESULT CQueuedSpeak::PrepareSpeech (CAgentWnd * pAgentWnd)
 				&&	(lAgentFile->GetTts().mPitch > 0)
 				)
 			{
-				LogSapi4Err (LogNormal, lSapi4Voice->SetPitch (lAgentFile->GetTts().mPitch));
+				LogSapi4Err (LogNormal|LogTime, lSapi4Voice->SetPitch (lAgentFile->GetTts().mPitch));
 			}
 			if	(
 					(lAgentFile)
 				&&	(lAgentFile->GetTts().mSpeed > 0)
 				)
 			{
-				LogSapi4Err (LogNormal, lSapi4Voice->SetRate (CDaSettingsConfig().ApplyVoiceRate (lAgentFile->GetTts().mSpeed, 4)));
+				LogSapi4Err (LogNormal|LogTime, lSapi4Voice->SetRate (CDaSettingsConfig().ApplyVoiceRate (lAgentFile->GetTts().mSpeed, 4)));
 			}
 			else
 			{
-				LogSapi4Err (LogNormal, lSapi4Voice->SetRate (CDaSettingsConfig().ApplyVoiceRate (lSapi4Voice->GetDefaultRate(), 4)));
+				LogSapi4Err (LogNormal|LogTime, lSapi4Voice->SetRate (CDaSettingsConfig().ApplyVoiceRate (lSapi4Voice->GetDefaultRate(), 4)));
 			}
 		}
 		else
 #endif
 		{
-			LogSapi5Err (LogNormal, mVoice->SetRate (CDaSettingsConfig().CalcVoiceRate()));
+			LogSapi5Err (LogNormal|LogTime, mVoice->SetRate (CDaSettingsConfig().CalcVoiceRate()));
 		}
 		lResult = S_OK;
 	}
 
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f   CAgentCharacterWnd::PrepareSpeech"), DebugTimeElapsed);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CAgentCharacterWnd::PrepareSpeech"), DebugTimeElapsed);
 #endif
 	return lResult;
 }
@@ -814,7 +884,7 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWn
 			mVoice->AddEventSink (lCharacterWnd);
 			mVoice->SetEventCharID (mCharID);
 		}
-		
+
 		if	(mTextObject)
 		{
 			mTextObject->Attach (mCharID, pAgentWnd->GetNotifyClientNotify (mCharID), mVoice);
@@ -861,7 +931,7 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWn
 				}
 			}
 #endif
-			lResult = LogComErr (LogNormal, mVoice->Speak (GetSpeechText()));
+			lResult = mVoice->Speak (GetSpeechText());
 		}
 	}
 	else
@@ -892,7 +962,7 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWn
 
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f   CAgentCharacterWnd::StartSpeech"), DebugTimeElapsed);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CAgentCharacterWnd::StartSpeech"), DebugTimeElapsed);
 #endif
 	return lResult;
 }
@@ -970,7 +1040,7 @@ bool CQueuedSpeak::ShowSpeechAnimation (CQueuedActions & pQueue, CAgentWnd * pAg
 
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f   CAgentCharacterWnd::ShowSpeechAnimation"), DebugTimeElapsed);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CAgentCharacterWnd::ShowSpeechAnimation"), DebugTimeElapsed);
 #endif
 	return lRet;
 }
@@ -1139,8 +1209,6 @@ bool CQueuedThink::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 			else
 			if	(pQueue.GetNextAction (QueueActionThink) == this)
 			{
-				pQueue.RemoveHead ();
-
 				if	(
 						(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
 					&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
@@ -1155,6 +1223,7 @@ bool CQueuedThink::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 					LogMessage (_LOG_QUEUE_OPS, _T("[%p] [%d] Done QueuedThink [%p] [%d]"), pAgentWnd, mCharID, this, mReqID);
 				}
 #endif
+				pQueue.RemoveHead ();
 				NotifyComplete (pAgentWnd->mNotify);
 			}
 			else
@@ -1190,7 +1259,7 @@ bool CQueuedThink::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool p
 			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
 			)
 		{
-			lBalloonWnd->Pause (true);			
+			lBalloonWnd->Pause (true);
 		}
 	}
 	else
@@ -1205,11 +1274,11 @@ bool CQueuedThink::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool p
 			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
 			)
 		{
-			lBalloonWnd->Pause (false);			
+			lBalloonWnd->Pause (false);
 		}
 	}
 	mPaused = pPause;
-	
+
 	return lRet;
 }
 
@@ -1234,4 +1303,52 @@ bool CQueuedThink::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESUL
 		lRet = true;
 	}
 	return lRet;
+}
+
+//////////////////////////////////////////////////////////////////////
+#pragma page()
+//////////////////////////////////////////////////////////////////////
+
+void CQueuedSpeak::LogAction (UINT pLogLevel, LPCTSTR pFormat, ...) const
+{
+#if defined(_DEBUG) || defined (_TRACE_ACTION_INSTANCE)
+	if	(LogIsActive (pLogLevel))
+	{
+		try
+		{
+			CAtlString	lTitle;
+			if	(pFormat)
+			{
+				va_list lArgPtr;
+				va_start (lArgPtr, pFormat);
+				_vsntprintf (lTitle.GetBuffer(2048), 2048, pFormat, lArgPtr);
+				lTitle.ReleaseBuffer ();
+			}
+			_LogAction (pLogLevel, lTitle, _T("Speech"), _T("Balloon [%u] Animated [%u] Speaking [%u] Voice [%ls] Text [%s]"), ShowBalloon(), mAnimated, mVoice->SafeIsSpeaking(), mVoice->SafeIsValid()?(BSTR)mVoice->GetDisplayName():NULL, mText?(LPCTSTR)DebugStr(mText->GetFullText()):NULL);
+		}
+		catch AnyExceptionSilent
+	}
+#endif
+}
+
+void CQueuedThink::LogAction (UINT pLogLevel, LPCTSTR pFormat, ...) const
+{
+#if defined(_DEBUG) || defined (_TRACE_ACTION_INSTANCE)
+	if	(LogIsActive (pLogLevel))
+	{
+		try
+		{
+			CAtlString	lTitle;
+			if	(pFormat)
+			{
+				va_list lArgPtr;
+				va_start (lArgPtr, pFormat);
+				_vsntprintf (lTitle.GetBuffer(2048), 2048, pFormat, lArgPtr);
+				lTitle.ReleaseBuffer ();
+			}
+			_LogAction (pLogLevel, lTitle, _T("Think"), _T("Text [%s]"), mText?(LPCTSTR)DebugStr(mText->GetFullText()):NULL);
+		}
+		catch AnyExceptionSilent
+	}
+#endif
 }

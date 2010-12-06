@@ -88,14 +88,14 @@ HRESULT CLocalCharacter::SetStyle (DWORD pRemoveStyle, DWORD pAddStyle)
 		}
 	}
 	else
-	if	(pRemoveStyle & (CharacterStyle_SuspendPause|CharacterStyle_SuspendStop)) 
+	if	(pRemoveStyle & (CharacterStyle_SuspendPause|CharacterStyle_SuspendStop))
 	{
 		if	(_AtlModule.IsAppActive ())
 		{
 			mOwner.SetSuspended (false);
 		}
 	}
-	
+
 	return CDaCmnCharacter::SetStyle (pRemoveStyle, pAddStyle);
 }
 
@@ -134,7 +134,7 @@ HRESULT CLocalCharacter::SetActiveState (short pActiveState)
 	if	(pActiveState & ActiveState_Suspended)
 	{
 		pActiveState &= ~ActiveState_Suspended;
-		
+
 		if	(
 				(pActiveState == ActiveState_Inactive)
 			||	(pActiveState == ActiveState_Active)
@@ -154,7 +154,7 @@ HRESULT CLocalCharacter::SetActiveState (short pActiveState)
 				StopListening (true, ListenComplete_CharacterClientDeactivated);
 				StopListening (false, ListenComplete_CharacterClientDeactivated);
 			}
-			else 
+			else
 			if	(
 					(mLocalStyle & CharacterStyle_SuspendPause)
 				&&	(mListeningState)
@@ -164,7 +164,7 @@ HRESULT CLocalCharacter::SetActiveState (short pActiveState)
 			{
 				mListeningState->SuspendListening (true);
 			}
-				
+
 			if	(mLocalStyle & CharacterStyle_SuspendStop)
 			{
 				StopAll (StopAll_Play|StopAll_Move|StopAll_Speak|StopAll_Visibility, AGENTERR_CHARACTERNOTACTIVE);
@@ -189,7 +189,7 @@ HRESULT CLocalCharacter::SetActiveState (short pActiveState)
 				mActiveState |= ActiveStateEx_CommandsVisible;
 				lCommandsWnd->Hide ();
 			}
-			
+
 			if	(
 					(mLocalStyle & CharacterStyle_SuspendHide)
 				&&	(lCharacterWnd = GetCharacterWnd (false))
@@ -209,7 +209,7 @@ HRESULT CLocalCharacter::SetActiveState (short pActiveState)
 				)
 			{
 				mActiveState |= ActiveStateEx_Visible;
-				
+
 				if	(lPopupWnd = GetPopupWnd (false))
 				{
 					lPopupWnd->ShowWindow (SW_HIDE);
@@ -232,7 +232,7 @@ HRESULT CLocalCharacter::SetActiveState (short pActiveState)
 			{
 				lPopupWnd->ShowWindow (SW_SHOW);
 			}
-			
+
 			if	(
 					(mActiveState & ActiveStateEx_BalloonVisible)
 				&&	(lCharacterWnd = GetCharacterWnd (false))
@@ -242,7 +242,7 @@ HRESULT CLocalCharacter::SetActiveState (short pActiveState)
 			{
 				lBalloonWnd->ShowBalloonNow ();
 			}
-			
+
 			if	(
 					(mActiveState & ActiveStateEx_CommandsVisible)
 				&&	(mListeningAnchor)
@@ -252,7 +252,7 @@ HRESULT CLocalCharacter::SetActiveState (short pActiveState)
 			{
 				lCommandsWnd->Show (false);
 			}
-			
+
 			if	(lCharacterWnd = GetCharacterWnd (false))
 			{
 				lCharacterWnd->PauseQueue (false);

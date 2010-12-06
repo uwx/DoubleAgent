@@ -461,13 +461,13 @@ bool CDaCmnCommands::SetupVoiceContext (class CSapi5InputContext * pInputContext
 
 		if	(mGlobalVoiceCommandsEnabled)
 		{
-			LogComErr (LogNormal, pInputContext->SetGlobalCommands (mShowCommandsCmdId, mHideCommandsCmdId, mHideCharacterCmdId));
+			LogComErr (LogNormal|LogTime, pInputContext->SetGlobalCommands (mShowCommandsCmdId, mHideCommandsCmdId, mHideCharacterCmdId));
 		}
 		else
 		{
 			pInputContext->RemoveGlobalCommands ();
 		}
-		if	(SUCCEEDED (LogComErr (LogNormal, pInputContext->SetTheseCommands (mCharID, GetVoiceCommandsCaption (), lCmdId, lCmdName, lCmdVoice))))
+		if	(SUCCEEDED (LogComErr (LogNormal|LogTime, pInputContext->SetTheseCommands (mCharID, GetVoiceCommandsCaption (), lCmdId, lCmdName, lCmdVoice))))
 		{
 			lRet = true;
 		}

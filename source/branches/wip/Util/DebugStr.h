@@ -24,6 +24,14 @@
 #define _DEBUGSTR_H_
 //////////////////////////////////////////////////////////////////////
 
+#ifndef	_DEBUG_T
+#ifdef	_DEBUG
+#define	_DEBUG_T(x)	_T(x)
+#else
+#define	_DEBUG_T(x)	_T("")
+#endif
+#endif
+
 static inline CString DebugStr (LPCTSTR pString)
 {
 	CString	lString (pString);

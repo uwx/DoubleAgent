@@ -376,7 +376,7 @@ HRESULT CAgentFiles::SetDefCharPath (LPCTSTR pCharPath)
 
 	if	(LogIsActive ())
 	{
-		LogMessage (LogNormal, _T("SetDefCharPath [%s]"), pCharPath);
+		LogMessage (LogNormal|LogTime, _T("SetDefCharPath [%s]"), pCharPath);
 	}
 
 	if	(PathCanonicalize (lPath.GetBuffer (MAX_PATH), pCharPath))
@@ -410,7 +410,7 @@ HRESULT CAgentFiles::SetDefCharPath (LPCTSTR pCharPath)
 
 				if	(LogIsActive ())
 				{
-					LogMessage (LogNormal, _T("[%s\\%s] = [%s]"), lRegKey.Name (), lRegString.Name (), lRegString.Value ());
+					LogMessage (LogNormal|LogTime, _T("[%s\\%s] = [%s]"), lRegKey.Name (), lRegString.Name (), lRegString.Value ());
 				}
 			}
 		}
@@ -426,7 +426,7 @@ HRESULT CAgentFiles::SetDefCharPath (LPCTSTR pCharPath)
 
 	if	(LogIsActive ())
 	{
-		LogComErr (LogNormal, lResult, _T("SetDefCharPath [%s]"), pCharPath);
+		LogComErr (LogNormal|LogTime, lResult, _T("SetDefCharPath [%s]"), pCharPath);
 	}
 	return lResult;
 }

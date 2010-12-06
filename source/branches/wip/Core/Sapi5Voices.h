@@ -64,7 +64,7 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CSapi5VoiceIndexArray : public CAtlTypeArray <INT_PTR>  
+class CSapi5VoiceIndexArray : public CAtlTypeArray <INT_PTR>
 {
 	DECLARE_DLL_OBJECT(CSapi5VoiceIndexArray)
 public:

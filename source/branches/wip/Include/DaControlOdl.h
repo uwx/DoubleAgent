@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Thu Nov 11 14:15:51 2010
+/* at Thu Nov 25 04:05:54 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
-    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -1442,12 +1442,12 @@ EXTERN_C const IID IID_IDaCtlCharacter;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GestureAt( 
             /* [in] */ short X,
-            /* [in] */ short y,
+            /* [in] */ short Y,
             /* [retval][out] */ IDaCtlRequest **Request) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE MoveTo( 
             /* [in] */ short X,
-            /* [in] */ short y,
+            /* [in] */ short Y,
             /* [optional][in] */ VARIANT Speed,
             /* [retval][out] */ IDaCtlRequest **Request) = 0;
         
@@ -1488,7 +1488,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE ShowPopupMenu( 
             /* [in] */ short X,
-            /* [in] */ short y,
+            /* [in] */ short Y,
             /* [retval][out] */ VARIANT_BOOL *Showed) = 0;
         
         virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_AutoPopupMenu( 
@@ -1719,13 +1719,13 @@ EXTERN_C const IID IID_IDaCtlCharacter;
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
             IDaCtlCharacter * This,
             /* [in] */ short X,
-            /* [in] */ short y,
+            /* [in] */ short Y,
             /* [retval][out] */ IDaCtlRequest **Request);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
             IDaCtlCharacter * This,
             /* [in] */ short X,
-            /* [in] */ short y,
+            /* [in] */ short Y,
             /* [optional][in] */ VARIANT Speed,
             /* [retval][out] */ IDaCtlRequest **Request);
         
@@ -1778,7 +1778,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
             IDaCtlCharacter * This,
             /* [in] */ short X,
-            /* [in] */ short y,
+            /* [in] */ short Y,
             /* [retval][out] */ VARIANT_BOOL *Showed);
         
         /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_AutoPopupMenu )( 
@@ -1983,11 +1983,11 @@ EXTERN_C const IID IID_IDaCtlCharacter;
 #define IDaCtlCharacter_Speak(This,Text,Url,Request)	\
     ( (This)->lpVtbl -> Speak(This,Text,Url,Request) ) 
 
-#define IDaCtlCharacter_GestureAt(This,X,y,Request)	\
-    ( (This)->lpVtbl -> GestureAt(This,X,y,Request) ) 
+#define IDaCtlCharacter_GestureAt(This,X,Y,Request)	\
+    ( (This)->lpVtbl -> GestureAt(This,X,Y,Request) ) 
 
-#define IDaCtlCharacter_MoveTo(This,X,y,Speed,Request)	\
-    ( (This)->lpVtbl -> MoveTo(This,X,y,Speed,Request) ) 
+#define IDaCtlCharacter_MoveTo(This,X,Y,Speed,Request)	\
+    ( (This)->lpVtbl -> MoveTo(This,X,Y,Speed,Request) ) 
 
 #define IDaCtlCharacter_Hide(This,Fast,Request)	\
     ( (This)->lpVtbl -> Hide(This,Fast,Request) ) 
@@ -2022,8 +2022,8 @@ EXTERN_C const IID IID_IDaCtlCharacter;
 #define IDaCtlCharacter_get_ExtraData(This,ExtraData)	\
     ( (This)->lpVtbl -> get_ExtraData(This,ExtraData) ) 
 
-#define IDaCtlCharacter_ShowPopupMenu(This,X,y,Showed)	\
-    ( (This)->lpVtbl -> ShowPopupMenu(This,X,y,Showed) ) 
+#define IDaCtlCharacter_ShowPopupMenu(This,X,Y,Showed)	\
+    ( (This)->lpVtbl -> ShowPopupMenu(This,X,Y,Showed) ) 
 
 #define IDaCtlCharacter_put_AutoPopupMenu(This,Enabled)	\
     ( (This)->lpVtbl -> put_AutoPopupMenu(This,Enabled) ) 
@@ -6641,13 +6641,13 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
             IDaCtlCharacter2 * This,
             /* [in] */ short X,
-            /* [in] */ short y,
+            /* [in] */ short Y,
             /* [retval][out] */ IDaCtlRequest **Request);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
             IDaCtlCharacter2 * This,
             /* [in] */ short X,
-            /* [in] */ short y,
+            /* [in] */ short Y,
             /* [optional][in] */ VARIANT Speed,
             /* [retval][out] */ IDaCtlRequest **Request);
         
@@ -6700,7 +6700,7 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
             IDaCtlCharacter2 * This,
             /* [in] */ short X,
-            /* [in] */ short y,
+            /* [in] */ short Y,
             /* [retval][out] */ VARIANT_BOOL *Showed);
         
         /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_AutoPopupMenu )( 
@@ -7085,11 +7085,11 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
 #define IDaCtlCharacter2_Speak(This,Text,Url,Request)	\
     ( (This)->lpVtbl -> Speak(This,Text,Url,Request) ) 
 
-#define IDaCtlCharacter2_GestureAt(This,X,y,Request)	\
-    ( (This)->lpVtbl -> GestureAt(This,X,y,Request) ) 
+#define IDaCtlCharacter2_GestureAt(This,X,Y,Request)	\
+    ( (This)->lpVtbl -> GestureAt(This,X,Y,Request) ) 
 
-#define IDaCtlCharacter2_MoveTo(This,X,y,Speed,Request)	\
-    ( (This)->lpVtbl -> MoveTo(This,X,y,Speed,Request) ) 
+#define IDaCtlCharacter2_MoveTo(This,X,Y,Speed,Request)	\
+    ( (This)->lpVtbl -> MoveTo(This,X,Y,Speed,Request) ) 
 
 #define IDaCtlCharacter2_Hide(This,Fast,Request)	\
     ( (This)->lpVtbl -> Hide(This,Fast,Request) ) 
@@ -7124,8 +7124,8 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
 #define IDaCtlCharacter2_get_ExtraData(This,ExtraData)	\
     ( (This)->lpVtbl -> get_ExtraData(This,ExtraData) ) 
 
-#define IDaCtlCharacter2_ShowPopupMenu(This,X,y,Showed)	\
-    ( (This)->lpVtbl -> ShowPopupMenu(This,X,y,Showed) ) 
+#define IDaCtlCharacter2_ShowPopupMenu(This,X,Y,Showed)	\
+    ( (This)->lpVtbl -> ShowPopupMenu(This,X,Y,Showed) ) 
 
 #define IDaCtlCharacter2_put_AutoPopupMenu(This,Enabled)	\
     ( (This)->lpVtbl -> put_AutoPopupMenu(This,Enabled) ) 

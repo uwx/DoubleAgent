@@ -25,9 +25,9 @@
 #include "Registry.h"
 
 #ifdef	_DEBUG
-#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Balloon"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Balloon"),LogDetails,true)&0xFFFF)
-#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Balloon"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Balloon"),LogDetails,true)&0xFFFF|LogTime)
+#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -62,7 +62,7 @@ DaCtlBalloon::~DaCtlBalloon ()
 			&&	(mOwner->mBalloon != NULL)
 			)
 		{
-			LogMessage (LogNormal, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon Attached [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), mOwner->mBalloon.GetInterfacePtr());
+			LogMessage (LogNormal|LogTime, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon Attached [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), mOwner->mBalloon.GetInterfacePtr());
 		}
 	}
 	catch AnyExceptionSilent

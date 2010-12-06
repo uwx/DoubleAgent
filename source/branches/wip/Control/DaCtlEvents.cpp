@@ -25,10 +25,12 @@
 #include "DaCtlFormattedText.h"
 #include "DaCtlCommands.h"
 #include "Registry.h"
+#include "DebugStr.h"
 
 #ifdef	_DEBUG
-#define	_DEBUG_NOTIFY	(GetProfileDebugInt(_T("DebugNotify"),LogVerbose,true)&0xFFFF)
-#define	_DEBUG_REQUEST	(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_NOTIFY			(GetProfileDebugInt(_T("DebugNotify"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_DEBUG_NOTIFY_DISPATCH	(GetProfileDebugInt(_T("DebugNotifyDispatch"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_DEBUG_REQUEST			(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF|LogTime)
 #endif
 
 #ifdef	_DEBUG_REQUEST
@@ -64,16 +66,17 @@ static INT_PTR CountUnk (CComDynamicUnkArray & pUnkArray)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaCtlEventDispatch::FireActivateInput(LPCTSTR CharacterID)
+int CDaCtlEventDispatch::FireActivateInput(LPCTSTR CharacterID)
 {
+	int						lCount = 0;
 	_variant_t				lCharacterId (CharacterID);
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireActivateInput [%s]"), CountUnk(mUnkArray), CharacterID);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireActivateInput [%s]"), CountUnk(mUnkArray), CharacterID);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -81,21 +84,24 @@ void CDaCtlEventDispatch::FireActivateInput(LPCTSTR CharacterID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_ActivateInput, &lCharacterId));
+			LogComErr (LogNormal|LogTime, lEventSink.Invoke1 (DISPID_AgentEvents_ActivateInput, &lCharacterId));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireDeactivateInput(LPCTSTR CharacterID)
+int CDaCtlEventDispatch::FireDeactivateInput(LPCTSTR CharacterID)
 {
+	int						lCount = 0;
 	_variant_t				lCharacterId (CharacterID);
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireDeactivateInput [%s]"), CountUnk(mUnkArray), CharacterID);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireDeactivateInput [%s]"), CountUnk(mUnkArray), CharacterID);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -103,21 +109,24 @@ void CDaCtlEventDispatch::FireDeactivateInput(LPCTSTR CharacterID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_DeactivateInput, &lCharacterId));
+			LogComErr (LogNormal|LogTime, lEventSink.Invoke1 (DISPID_AgentEvents_DeactivateInput, &lCharacterId));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
+int CDaCtlEventDispatch::FireClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
+	int						lCount = 0;
 	_variant_t				lParams [5] = {Y, X, Shift, Button, CharacterID};
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireClick [%s]"), CountUnk(mUnkArray), CharacterID);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireClick [%s]"), CountUnk(mUnkArray), CharacterID);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -125,21 +134,24 @@ void CDaCtlEventDispatch::FireClick(LPCTSTR CharacterID, short Button, short Shi
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_AgentEvents_Click, lParams, 5));
+			LogComErr (LogNormal|LogTime, lEventSink.InvokeN (DISPID_AgentEvents_Click, lParams, 5));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
+int CDaCtlEventDispatch::FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
+	int						lCount = 0;
 	_variant_t				lParams [5] = {Y, X, Shift, Button, CharacterID};
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireDblClick [%s]"), CountUnk(mUnkArray), CharacterID);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireDblClick [%s]"), CountUnk(mUnkArray), CharacterID);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -147,21 +159,24 @@ void CDaCtlEventDispatch::FireDblClick(LPCTSTR CharacterID, short Button, short 
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_AgentEvents_DblClick, lParams, 5));
+			LogComErr (LogNormal|LogTime, lEventSink.InvokeN (DISPID_AgentEvents_DblClick, lParams, 5));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
+int CDaCtlEventDispatch::FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
+	int						lCount = 0;
 	_variant_t				lParams [5] = {Y, X, Shift, Button, CharacterID};
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireDragStart [%s]"), CountUnk(mUnkArray), CharacterID);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireDragStart [%s]"), CountUnk(mUnkArray), CharacterID);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -169,21 +184,24 @@ void CDaCtlEventDispatch::FireDragStart(LPCTSTR CharacterID, short Button, short
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_AgentEvents_DragStart, lParams, 5));
+			LogComErr (LogNormal|LogTime, lEventSink.InvokeN (DISPID_AgentEvents_DragStart, lParams, 5));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
+int CDaCtlEventDispatch::FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
+	int						lCount = 0;
 	_variant_t				lParams [5] = {Y, X, Shift, Button, CharacterID};
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireDragComplete [%s]"), CountUnk(mUnkArray), CharacterID);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireDragComplete [%s]"), CountUnk(mUnkArray), CharacterID);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -191,45 +209,25 @@ void CDaCtlEventDispatch::FireDragComplete(LPCTSTR CharacterID, short Button, sh
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_AgentEvents_DragComplete, lParams, 5));
+			LogComErr (LogNormal|LogTime, lEventSink.InvokeN (DISPID_AgentEvents_DragComplete, lParams, 5));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireShow(LPCTSTR CharacterID, VisibilityCauseType Cause)
+int CDaCtlEventDispatch::FireShow(LPCTSTR CharacterID, VisibilityCauseType Cause)
 {
-	_variant_t				lCharacterId (CharacterID);
-	_variant_t				lCause (Cause);
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
-
-#ifdef	_DEBUG_NOTIFY
-	if	(CountUnk(mUnkArray) > 0)
-	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireShow [%s]"), CountUnk(mUnkArray), CharacterID);
-	}
-#endif
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
-	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
-		{
-			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_AgentEvents_Show, &lCharacterId, &lCause));
-		}
-	}
-}
-
-void CDaCtlEventDispatch::FireHide(LPCTSTR CharacterID, VisibilityCauseType Cause)
-{
+	int						lCount = 0;
 	_variant_t				lCharacterId (CharacterID);
 	_variant_t				lCause (Cause);
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireHide [%s]"), CountUnk(mUnkArray), CharacterID);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireShow [%s]"), CountUnk(mUnkArray), CharacterID);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -237,21 +235,50 @@ void CDaCtlEventDispatch::FireHide(LPCTSTR CharacterID, VisibilityCauseType Caus
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_AgentEvents_Hide, &lCharacterId, &lCause));
+			LogComErr (LogNormal|LogTime, lEventSink.Invoke2 (DISPID_AgentEvents_Show, &lCharacterId, &lCause));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireRequestStart(LPDISPATCH Request)
+int CDaCtlEventDispatch::FireHide(LPCTSTR CharacterID, VisibilityCauseType Cause)
 {
+	int						lCount = 0;
+	_variant_t				lCharacterId (CharacterID);
+	_variant_t				lCause (Cause);
+	int 					lNdx;
+	CComQIPtr <IDispatch>	lEventSink;
+
+#ifdef	_DEBUG_NOTIFY_DISPATCH
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireHide [%s]"), CountUnk(mUnkArray), CharacterID);
+	}
+#endif
+	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	{
+		lEventSink = mUnkArray.GetAt (lNdx);
+		if	(lEventSink != NULL)
+		{
+			LogComErr (LogNormal|LogTime, lEventSink.Invoke2 (DISPID_AgentEvents_Hide, &lCharacterId, &lCause));
+			lCount++;
+		}
+	}
+	return lCount;
+}
+
+int CDaCtlEventDispatch::FireRequestStart(LPDISPATCH Request)
+{
+	int						lCount = 0;
 	_variant_t				lRequest (Request);
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireRequestStart [%p]"), CountUnk(mUnkArray), Request);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireRequestStart [%p]"), CountUnk(mUnkArray), Request);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -259,21 +286,24 @@ void CDaCtlEventDispatch::FireRequestStart(LPDISPATCH Request)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_RequestStart, &lRequest));
+			LogComErr (LogNormal|LogTime, lEventSink.Invoke1 (DISPID_AgentEvents_RequestStart, &lRequest));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireRequestComplete(LPDISPATCH Request)
+int CDaCtlEventDispatch::FireRequestComplete(LPDISPATCH Request)
 {
+	int						lCount = 0;
 	_variant_t				lRequest (Request);
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireRequestComplete [%p]"), CountUnk(mUnkArray), Request);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireRequestComplete [%p]"), CountUnk(mUnkArray), Request);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -281,21 +311,24 @@ void CDaCtlEventDispatch::FireRequestComplete(LPDISPATCH Request)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_RequestComplete, &lRequest));
+			LogComErr (LogNormal|LogTime, lEventSink.Invoke1 (DISPID_AgentEvents_RequestComplete, &lRequest));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireBookmark(long BookmarkID)
+int CDaCtlEventDispatch::FireBookmark(long BookmarkID)
 {
+	int						lCount = 0;
 	_variant_t				lBookmarkID (BookmarkID);
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireBookmark [%d]"), CountUnk(mUnkArray), BookmarkID);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireBookmark [%d]"), CountUnk(mUnkArray), BookmarkID);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -303,21 +336,24 @@ void CDaCtlEventDispatch::FireBookmark(long BookmarkID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_Bookmark, &lBookmarkID));
+			LogComErr (LogNormal|LogTime, lEventSink.Invoke1 (DISPID_AgentEvents_Bookmark, &lBookmarkID));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireCommand(LPDISPATCH UserInput)
+int CDaCtlEventDispatch::FireCommand(LPDISPATCH UserInput)
 {
+	int						lCount = 0;
 	_variant_t				lUserInput (UserInput);
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireCommand [%p]"), CountUnk(mUnkArray), UserInput);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireCommand [%p]"), CountUnk(mUnkArray), UserInput);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -325,21 +361,24 @@ void CDaCtlEventDispatch::FireCommand(LPDISPATCH UserInput)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_Command, &lUserInput));
+			LogComErr (LogNormal|LogTime, lEventSink.Invoke1 (DISPID_AgentEvents_Command, &lUserInput));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireIdleStart(LPCTSTR CharacterID)
+int CDaCtlEventDispatch::FireIdleStart(LPCTSTR CharacterID)
 {
+	int						lCount = 0;
 	_variant_t				lCharacterID (CharacterID);
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireIdleStart [%s]"), CountUnk(mUnkArray), CharacterID);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireIdleStart [%s]"), CountUnk(mUnkArray), CharacterID);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -347,21 +386,24 @@ void CDaCtlEventDispatch::FireIdleStart(LPCTSTR CharacterID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_IdleStart, &lCharacterID));
+			LogComErr (LogNormal|LogTime, lEventSink.Invoke1 (DISPID_AgentEvents_IdleStart, &lCharacterID));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireIdleComplete(LPCTSTR CharacterID)
+int CDaCtlEventDispatch::FireIdleComplete(LPCTSTR CharacterID)
 {
+	int						lCount = 0;
 	_variant_t				lCharacterID (CharacterID);
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireIdleComplete [%s]"), CountUnk(mUnkArray), CharacterID);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireIdleComplete [%s]"), CountUnk(mUnkArray), CharacterID);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -369,21 +411,24 @@ void CDaCtlEventDispatch::FireIdleComplete(LPCTSTR CharacterID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_IdleComplete, &lCharacterID));
+			LogComErr (LogNormal|LogTime, lEventSink.Invoke1 (DISPID_AgentEvents_IdleComplete, &lCharacterID));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireMove(LPCTSTR CharacterID, short X, short Y, MoveCauseType Cause)
+int CDaCtlEventDispatch::FireMove(LPCTSTR CharacterID, short X, short Y, MoveCauseType Cause)
 {
+	int						lCount = 0;
 	_variant_t				lParams [4] = {Cause, Y, X, CharacterID};
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireMove [%s]"), CountUnk(mUnkArray), CharacterID);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireMove [%s]"), CountUnk(mUnkArray), CharacterID);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -391,21 +436,24 @@ void CDaCtlEventDispatch::FireMove(LPCTSTR CharacterID, short X, short Y, MoveCa
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_AgentEvents_Move, lParams, 4));
+			LogComErr (LogNormal|LogTime, lEventSink.InvokeN (DISPID_AgentEvents_Move, lParams, 4));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireSize(LPCTSTR CharacterID, short Width, short Height)
+int CDaCtlEventDispatch::FireSize(LPCTSTR CharacterID, short Width, short Height)
 {
+	int						lCount = 0;
 	_variant_t				lParams [3] = {Height, Width, CharacterID};
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireSize [%s]"), CountUnk(mUnkArray), CharacterID);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireSize [%s]"), CountUnk(mUnkArray), CharacterID);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -413,21 +461,24 @@ void CDaCtlEventDispatch::FireSize(LPCTSTR CharacterID, short Width, short Heigh
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_AgentEvents_Size, lParams, 3));
+			LogComErr (LogNormal|LogTime, lEventSink.InvokeN (DISPID_AgentEvents_Size, lParams, 3));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireBalloonShow(LPCTSTR CharacterID)
+int CDaCtlEventDispatch::FireBalloonShow(LPCTSTR CharacterID)
 {
+	int						lCount = 0;
 	_variant_t				lCharacterID (CharacterID);
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireBalloonShow [%s]"), CountUnk(mUnkArray), CharacterID);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireBalloonShow [%s]"), CountUnk(mUnkArray), CharacterID);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -435,21 +486,24 @@ void CDaCtlEventDispatch::FireBalloonShow(LPCTSTR CharacterID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_BalloonShow, &lCharacterID));
+			LogComErr (LogNormal|LogTime, lEventSink.Invoke1 (DISPID_AgentEvents_BalloonShow, &lCharacterID));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireBalloonHide(LPCTSTR CharacterID)
+int CDaCtlEventDispatch::FireBalloonHide(LPCTSTR CharacterID)
 {
+	int						lCount = 0;
 	_variant_t				lCharacterID (CharacterID);
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireBalloonHide [%s]"), CountUnk(mUnkArray), CharacterID);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireBalloonHide [%s]"), CountUnk(mUnkArray), CharacterID);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -457,21 +511,24 @@ void CDaCtlEventDispatch::FireBalloonHide(LPCTSTR CharacterID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_BalloonHide, &lCharacterID));
+			LogComErr (LogNormal|LogTime, lEventSink.Invoke1 (DISPID_AgentEvents_BalloonHide, &lCharacterID));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireListenStart(LPCTSTR CharacterID)
+int CDaCtlEventDispatch::FireListenStart(LPCTSTR CharacterID)
 {
+	int						lCount = 0;
 	_variant_t				lCharacterID (CharacterID);
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireListenStart [%s]"), CountUnk(mUnkArray), CharacterID);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireListenStart [%s]"), CountUnk(mUnkArray), CharacterID);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -479,22 +536,25 @@ void CDaCtlEventDispatch::FireListenStart(LPCTSTR CharacterID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_ListenStart, &lCharacterID));
+			LogComErr (LogNormal|LogTime, lEventSink.Invoke1 (DISPID_AgentEvents_ListenStart, &lCharacterID));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause)
+int CDaCtlEventDispatch::FireListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause)
 {
+	int						lCount = 0;
 	_variant_t				lCharacterID (CharacterID);
 	_variant_t				lCause (Cause);
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireListenComplete [%s]"), CountUnk(mUnkArray), CharacterID);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireListenComplete [%s]"), CountUnk(mUnkArray), CharacterID);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -502,21 +562,24 @@ void CDaCtlEventDispatch::FireListenComplete(LPCTSTR CharacterID, ListenComplete
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_AgentEvents_ListenComplete, &lCharacterID, &lCause));
+			LogComErr (LogNormal|LogTime, lEventSink.Invoke2 (DISPID_AgentEvents_ListenComplete, &lCharacterID, &lCause));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireDefaultCharacterChange(LPCTSTR CharGUID)
+int CDaCtlEventDispatch::FireDefaultCharacterChange(LPCTSTR CharGUID)
 {
+	int						lCount = 0;
 	_variant_t				lGUID (CharGUID);
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireDefaultCharacterChange [%s]"), CountUnk(mUnkArray), CharGUID);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireDefaultCharacterChange [%s]"), CountUnk(mUnkArray), CharGUID);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -524,20 +587,23 @@ void CDaCtlEventDispatch::FireDefaultCharacterChange(LPCTSTR CharGUID)
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_AgentEvents_DefaultCharacterChange, &lGUID));
+			LogComErr (LogNormal|LogTime, lEventSink.Invoke1 (DISPID_AgentEvents_DefaultCharacterChange, &lGUID));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireAgentPropertyChange()
+int CDaCtlEventDispatch::FireAgentPropertyChange()
 {
+	int						lCount = 0;
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireAgentPropertyChange"), CountUnk(mUnkArray));
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireAgentPropertyChange"), CountUnk(mUnkArray));
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -545,22 +611,25 @@ void CDaCtlEventDispatch::FireAgentPropertyChange()
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke0 (DISPID_AgentEvents_AgentPropertyChange));
+			LogComErr (LogNormal|LogTime, lEventSink.Invoke0 (DISPID_AgentEvents_AgentPropertyChange));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireActiveClientChange(LPCTSTR CharacterID, BOOL Active)
+int CDaCtlEventDispatch::FireActiveClientChange(LPCTSTR CharacterID, BOOL Active)
 {
+	int						lCount = 0;
 	_variant_t				lCharacterID (CharacterID);
 	_variant_t				lActive (Active);
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireActiveClientChange [%s]"), CountUnk(mUnkArray), CharacterID);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireActiveClientChange [%s]"), CountUnk(mUnkArray), CharacterID);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -568,24 +637,27 @@ void CDaCtlEventDispatch::FireActiveClientChange(LPCTSTR CharacterID, BOOL Activ
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_AgentEvents_ActiveClientChange, &lCharacterID, &lActive));
+			LogComErr (LogNormal|LogTime, lEventSink.Invoke2 (DISPID_AgentEvents_ActiveClientChange, &lCharacterID, &lActive));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaCtlEventDispatch::FireSpeechStart(LPCTSTR CharacterID, LPDISPATCH FormattedText)
+int CDaCtlEventDispatch::FireSpeechStart(LPCTSTR CharacterID, LPDISPATCH FormattedText)
 {
+	int						lCount = 0;
 	_variant_t				lCharacterID (CharacterID);
 	_variant_t				lFormattedText (FormattedText);
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireSpeechStart [%s] [%p]"), CountUnk(mUnkArray), CharacterID, FormattedText);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireSpeechStart [%s] [%p]"), CountUnk(mUnkArray), CharacterID, FormattedText);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -593,22 +665,25 @@ void CDaCtlEventDispatch::FireSpeechStart(LPCTSTR CharacterID, LPDISPATCH Format
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_DaCtlEvents2_SpeechStart, &lCharacterID, &lFormattedText));
+			LogComErr (LogNormal|LogTime, lEventSink.Invoke2 (DISPID_DaCtlEvents2_SpeechStart, &lCharacterID, &lFormattedText));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireSpeechEnd(LPCTSTR CharacterID, LPDISPATCH FormattedText, VARIANT_BOOL Stopped)
+int CDaCtlEventDispatch::FireSpeechEnd(LPCTSTR CharacterID, LPDISPATCH FormattedText, VARIANT_BOOL Stopped)
 {
+	int						lCount = 0;
 	_variant_t				lParams [3] = {Stopped, FormattedText, CharacterID};
 	_variant_t				lStopped (Stopped);
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireSpeechEnd [%s] [%p] [%d]"), CountUnk(mUnkArray), CharacterID, FormattedText, Stopped);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireSpeechEnd [%s] [%p] [%d]"), CountUnk(mUnkArray), CharacterID, FormattedText, Stopped);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -616,21 +691,24 @@ void CDaCtlEventDispatch::FireSpeechEnd(LPCTSTR CharacterID, LPDISPATCH Formatte
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_DaCtlEvents2_SpeechEnd, lParams, 3));
+			LogComErr (LogNormal|LogTime, lEventSink.InvokeN (DISPID_DaCtlEvents2_SpeechEnd, lParams, 3));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
-void CDaCtlEventDispatch::FireSpeechWord(LPCTSTR CharacterID, LPDISPATCH FormattedText, long WordIndex)
+int CDaCtlEventDispatch::FireSpeechWord(LPCTSTR CharacterID, LPDISPATCH FormattedText, long WordIndex)
 {
+	int						lCount = 0;
 	_variant_t				lParams [3] = {WordIndex, FormattedText, CharacterID};
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
-#ifdef	_DEBUG_NOTIFY
+#ifdef	_DEBUG_NOTIFY_DISPATCH
 	if	(CountUnk(mUnkArray) > 0)
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireSpeechWord [%s] [%p] {%d]"), CountUnk(mUnkArray), CharacterID, FormattedText, WordIndex);
+		LogMessage (_DEBUG_NOTIFY_DISPATCH, _T("[%d] CDaCtlEventDispatch::FireSpeechWord [%s] [%p] {%d]"), CountUnk(mUnkArray), CharacterID, FormattedText, WordIndex);
 	}
 #endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -638,191 +716,479 @@ void CDaCtlEventDispatch::FireSpeechWord(LPCTSTR CharacterID, LPDISPATCH Formatt
 		lEventSink = mUnkArray.GetAt (lNdx);
 		if	(lEventSink != NULL)
 		{
-			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_DaCtlEvents2_SpeechWord, lParams, 3));
+			LogComErr (LogNormal|LogTime, lEventSink.InvokeN (DISPID_DaCtlEvents2_SpeechWord, lParams, 3));
+			lCount++;
 		}
 	}
+	return lCount;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void DaControl::FireActivateInput(LPCTSTR CharacterID)
+int DaControl::FireActivateInput(LPCTSTR CharacterID)
 {
-	CProxy_DaCtlEvents<DaControl>::FireActivateInput (CharacterID);
-	CProxy_DaCtlEvents2<DaControl>::FireActivateInput (CharacterID);
-	CProxy_AgentEvents<DaControl>::FireActivateInput (CharacterID);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("ActivateInput")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireActivateInput (CharacterID)
+							+ CProxy_DaCtlEvents2<DaControl>::FireActivateInput (CharacterID)
+							+ CProxy_AgentEvents<DaControl>::FireActivateInput (CharacterID);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("ActivateInput"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireDeactivateInput(LPCTSTR CharacterID)
+int DaControl::FireDeactivateInput(LPCTSTR CharacterID)
 {
-	CProxy_DaCtlEvents<DaControl>::FireDeactivateInput (CharacterID);
-	CProxy_DaCtlEvents2<DaControl>::FireDeactivateInput (CharacterID);
-	CProxy_AgentEvents<DaControl>::FireDeactivateInput (CharacterID);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("DeactivateInput")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireDeactivateInput (CharacterID)
+							+ CProxy_DaCtlEvents2<DaControl>::FireDeactivateInput (CharacterID)
+							+ CProxy_AgentEvents<DaControl>::FireDeactivateInput (CharacterID);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("DeactivateInput"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
+int DaControl::FireClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
-	CProxy_DaCtlEvents<DaControl>::FireClick (CharacterID, Button, Shift, X, Y);
-	CProxy_DaCtlEvents2<DaControl>::FireClick (CharacterID, Button, Shift, X, Y);
-	CProxy_AgentEvents<DaControl>::FireClick (CharacterID, Button, Shift, X, Y);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("Click")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireClick (CharacterID, Button, Shift, X, Y)
+							+ CProxy_DaCtlEvents2<DaControl>::FireClick (CharacterID, Button, Shift, X, Y)
+							+ CProxy_AgentEvents<DaControl>::FireClick (CharacterID, Button, Shift, X, Y);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("Click"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
+int DaControl::FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
-	CProxy_DaCtlEvents<DaControl>::FireDblClick (CharacterID, Button, Shift, X, Y);
-	CProxy_DaCtlEvents2<DaControl>::FireDblClick (CharacterID, Button, Shift, X, Y);
-	CProxy_AgentEvents<DaControl>::FireDblClick (CharacterID, Button, Shift, X, Y);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("DblClick")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireDblClick (CharacterID, Button, Shift, X, Y)
+							+ CProxy_DaCtlEvents2<DaControl>::FireDblClick (CharacterID, Button, Shift, X, Y)
+							+ CProxy_AgentEvents<DaControl>::FireDblClick (CharacterID, Button, Shift, X, Y);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("DblClick"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
+int DaControl::FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
-	CProxy_DaCtlEvents<DaControl>::FireDragStart (CharacterID, Button, Shift, X, Y);
-	CProxy_DaCtlEvents2<DaControl>::FireDragStart (CharacterID, Button, Shift, X, Y);
-	CProxy_AgentEvents<DaControl>::FireDragStart (CharacterID, Button, Shift, X, Y);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("DragStart")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireDragStart (CharacterID, Button, Shift, X, Y)
+							+ CProxy_DaCtlEvents2<DaControl>::FireDragStart (CharacterID, Button, Shift, X, Y)
+							+ CProxy_AgentEvents<DaControl>::FireDragStart (CharacterID, Button, Shift, X, Y);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("DragStart"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
+int DaControl::FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
-	CProxy_DaCtlEvents<DaControl>::FireDragComplete (CharacterID, Button, Shift, X, Y);
-	CProxy_DaCtlEvents2<DaControl>::FireDragComplete (CharacterID, Button, Shift, X, Y);
-	CProxy_AgentEvents<DaControl>::FireDragComplete (CharacterID, Button, Shift, X, Y);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("DragComplete")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireDragComplete (CharacterID, Button, Shift, X, Y)
+							+ CProxy_DaCtlEvents2<DaControl>::FireDragComplete (CharacterID, Button, Shift, X, Y)
+							+ CProxy_AgentEvents<DaControl>::FireDragComplete (CharacterID, Button, Shift, X, Y);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("DragComplete"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireShow(LPCTSTR CharacterID, VisibilityCauseType Cause)
+int DaControl::FireShow(LPCTSTR CharacterID, VisibilityCauseType Cause)
 {
-	CProxy_DaCtlEvents<DaControl>::FireShow (CharacterID, Cause);
-	CProxy_DaCtlEvents2<DaControl>::FireShow (CharacterID, Cause);
-	CProxy_AgentEvents<DaControl>::FireShow (CharacterID, Cause);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("Show")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireShow (CharacterID, Cause)
+							+ CProxy_DaCtlEvents2<DaControl>::FireShow (CharacterID, Cause)
+							+ CProxy_AgentEvents<DaControl>::FireShow (CharacterID, Cause);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("Show"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireHide(LPCTSTR CharacterID, VisibilityCauseType Cause)
+int DaControl::FireHide(LPCTSTR CharacterID, VisibilityCauseType Cause)
 {
-	CProxy_DaCtlEvents<DaControl>::FireHide (CharacterID, Cause);
-	CProxy_DaCtlEvents2<DaControl>::FireHide (CharacterID, Cause);
-	CProxy_AgentEvents<DaControl>::FireHide (CharacterID, Cause);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("Hide")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireHide (CharacterID, Cause)
+							+ CProxy_DaCtlEvents2<DaControl>::FireHide (CharacterID, Cause)
+							+ CProxy_AgentEvents<DaControl>::FireHide (CharacterID, Cause);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("Hide"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireRequestStart(LPDISPATCH Request)
+int DaControl::FireRequestStart(LPDISPATCH Request)
 {
-	CProxy_DaCtlEvents<DaControl>::FireRequestStart (Request);
-	CProxy_DaCtlEvents2<DaControl>::FireRequestStart (Request);
-	CProxy_AgentEvents<DaControl>::FireRequestStart (Request);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("RequestStart")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireRequestStart (Request)
+							+ CProxy_DaCtlEvents2<DaControl>::FireRequestStart (Request)
+							+ CProxy_AgentEvents<DaControl>::FireRequestStart (Request);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("RequestStart"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireRequestComplete(LPDISPATCH Request)
+int DaControl::FireRequestComplete(LPDISPATCH Request)
 {
-	CProxy_DaCtlEvents<DaControl>::FireRequestComplete (Request);
-	CProxy_DaCtlEvents2<DaControl>::FireRequestComplete (Request);
-	CProxy_AgentEvents<DaControl>::FireRequestComplete (Request);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("RequestComplete")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireRequestComplete (Request)
+							+ CProxy_DaCtlEvents2<DaControl>::FireRequestComplete (Request)
+							+ CProxy_AgentEvents<DaControl>::FireRequestComplete (Request);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("RequestComplete"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireBookmark(long BookmarkID)
+int DaControl::FireBookmark(long BookmarkID)
 {
-	CProxy_DaCtlEvents<DaControl>::FireBookmark (BookmarkID);
-	CProxy_DaCtlEvents2<DaControl>::FireBookmark (BookmarkID);
-	CProxy_AgentEvents<DaControl>::FireBookmark (BookmarkID);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("Bookmark")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireBookmark (BookmarkID)
+							+ CProxy_DaCtlEvents2<DaControl>::FireBookmark (BookmarkID)
+							+ CProxy_AgentEvents<DaControl>::FireBookmark (BookmarkID);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("Bookmark"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireCommand(LPDISPATCH UserInput)
+int DaControl::FireCommand(LPDISPATCH UserInput)
 {
-	CProxy_DaCtlEvents<DaControl>::FireCommand (UserInput);
-	CProxy_DaCtlEvents2<DaControl>::FireCommand (UserInput);
-	CProxy_AgentEvents<DaControl>::FireCommand (UserInput);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("Command")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireCommand (UserInput)
+							+ CProxy_DaCtlEvents2<DaControl>::FireCommand (UserInput)
+							+ CProxy_AgentEvents<DaControl>::FireCommand (UserInput);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("Command"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireIdleStart(LPCTSTR CharacterID)
+int DaControl::FireIdleStart(LPCTSTR CharacterID)
 {
-	CProxy_DaCtlEvents<DaControl>::FireIdleStart (CharacterID);
-	CProxy_DaCtlEvents2<DaControl>::FireIdleStart (CharacterID);
-	CProxy_AgentEvents<DaControl>::FireIdleStart (CharacterID);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("IdleStart")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireIdleStart (CharacterID)
+							+ CProxy_DaCtlEvents2<DaControl>::FireIdleStart (CharacterID)
+							+ CProxy_AgentEvents<DaControl>::FireIdleStart (CharacterID);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("IdleStart"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireIdleComplete(LPCTSTR CharacterID)
+int DaControl::FireIdleComplete(LPCTSTR CharacterID)
 {
-	CProxy_DaCtlEvents<DaControl>::FireIdleComplete (CharacterID);
-	CProxy_DaCtlEvents2<DaControl>::FireIdleComplete (CharacterID);
-	CProxy_AgentEvents<DaControl>::FireIdleComplete (CharacterID);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("IdleComplete")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireIdleComplete (CharacterID)
+							+ CProxy_DaCtlEvents2<DaControl>::FireIdleComplete (CharacterID)
+							+ CProxy_AgentEvents<DaControl>::FireIdleComplete (CharacterID);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("IdleComplete"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireMove(LPCTSTR CharacterID, short X, short Y, MoveCauseType Cause)
+int DaControl::FireMove(LPCTSTR CharacterID, short X, short Y, MoveCauseType Cause)
 {
-	CProxy_DaCtlEvents<DaControl>::FireMove (CharacterID, X, Y, Cause);
-	CProxy_DaCtlEvents2<DaControl>::FireMove (CharacterID, X, Y, Cause);
-	CProxy_AgentEvents<DaControl>::FireMove (CharacterID, X, Y, Cause);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("Move")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireMove (CharacterID, X, Y, Cause)
+							+ CProxy_DaCtlEvents2<DaControl>::FireMove (CharacterID, X, Y, Cause)
+							+ CProxy_AgentEvents<DaControl>::FireMove (CharacterID, X, Y, Cause);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("Move"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireSize(LPCTSTR CharacterID, short Width, short Height)
+int DaControl::FireSize(LPCTSTR CharacterID, short Width, short Height)
 {
-	CProxy_DaCtlEvents<DaControl>::FireSize (CharacterID, Width, Height);
-	CProxy_DaCtlEvents2<DaControl>::FireSize (CharacterID, Width, Height);
-	CProxy_AgentEvents<DaControl>::FireSize (CharacterID, Width, Height);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("Size")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireSize (CharacterID, Width, Height)
+							+ CProxy_DaCtlEvents2<DaControl>::FireSize (CharacterID, Width, Height)
+							+ CProxy_AgentEvents<DaControl>::FireSize (CharacterID, Width, Height);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("Size"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireBalloonShow(LPCTSTR CharacterID)
+int DaControl::FireBalloonShow(LPCTSTR CharacterID)
 {
-	CProxy_DaCtlEvents<DaControl>::FireBalloonShow (CharacterID);
-	CProxy_DaCtlEvents2<DaControl>::FireBalloonShow (CharacterID);
-	CProxy_AgentEvents<DaControl>::FireBalloonShow (CharacterID);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("BalloonShow")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireBalloonShow (CharacterID)
+							+ CProxy_DaCtlEvents2<DaControl>::FireBalloonShow (CharacterID)
+							+ CProxy_AgentEvents<DaControl>::FireBalloonShow (CharacterID);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("BalloonShow"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireBalloonHide(LPCTSTR CharacterID)
+int DaControl::FireBalloonHide(LPCTSTR CharacterID)
 {
-	CProxy_DaCtlEvents<DaControl>::FireBalloonHide (CharacterID);
-	CProxy_DaCtlEvents2<DaControl>::FireBalloonHide (CharacterID);
-	CProxy_AgentEvents<DaControl>::FireBalloonHide (CharacterID);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("BalloonHide")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireBalloonHide (CharacterID)
+							+ CProxy_DaCtlEvents2<DaControl>::FireBalloonHide (CharacterID)
+							+ CProxy_AgentEvents<DaControl>::FireBalloonHide (CharacterID);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("BalloonHide"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireListenStart(LPCTSTR CharacterID)
+int DaControl::FireListenStart(LPCTSTR CharacterID)
 {
-	CProxy_DaCtlEvents<DaControl>::FireListenStart (CharacterID);
-	CProxy_DaCtlEvents2<DaControl>::FireListenStart (CharacterID);
-	CProxy_AgentEvents<DaControl>::FireListenStart (CharacterID);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("ListenStart")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireListenStart (CharacterID)
+							+ CProxy_DaCtlEvents2<DaControl>::FireListenStart (CharacterID)
+							+ CProxy_AgentEvents<DaControl>::FireListenStart (CharacterID);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("ListenStart"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause)
+int DaControl::FireListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause)
 {
-	CProxy_DaCtlEvents<DaControl>::FireListenComplete (CharacterID, Cause);
-	CProxy_DaCtlEvents2<DaControl>::FireListenComplete (CharacterID, Cause);
-	CProxy_AgentEvents<DaControl>::FireListenComplete (CharacterID, Cause);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("ListenComplete")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireListenComplete (CharacterID, Cause)
+							+ CProxy_DaCtlEvents2<DaControl>::FireListenComplete (CharacterID, Cause)
+							+ CProxy_AgentEvents<DaControl>::FireListenComplete (CharacterID, Cause);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("ListenComplete"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireDefaultCharacterChange(LPCTSTR CharGUID)
+int DaControl::FireDefaultCharacterChange(LPCTSTR CharGUID)
 {
-	CProxy_DaCtlEvents<DaControl>::FireDefaultCharacterChange (CharGUID);
-	CProxy_DaCtlEvents2<DaControl>::FireDefaultCharacterChange (CharGUID);
-	CProxy_AgentEvents<DaControl>::FireDefaultCharacterChange (CharGUID);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("DefaultCharacterChange")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireDefaultCharacterChange (CharGUID)
+							+ CProxy_DaCtlEvents2<DaControl>::FireDefaultCharacterChange (CharGUID)
+							+ CProxy_AgentEvents<DaControl>::FireDefaultCharacterChange (CharGUID);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("DefaultCharacterChange"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireAgentPropertyChange()
+int DaControl::FireAgentPropertyChange()
 {
-	CProxy_DaCtlEvents<DaControl>::FireAgentPropertyChange ();
-	CProxy_DaCtlEvents2<DaControl>::FireAgentPropertyChange ();
-	CProxy_AgentEvents<DaControl>::FireAgentPropertyChange ();
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("AgentPropertyChange")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireAgentPropertyChange ()
+							+ CProxy_DaCtlEvents2<DaControl>::FireAgentPropertyChange ()
+							+ CProxy_AgentEvents<DaControl>::FireAgentPropertyChange ();
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("AgentPropertyChange"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireActiveClientChange(LPCTSTR CharacterID, BOOL Active)
+int DaControl::FireActiveClientChange(LPCTSTR CharacterID, BOOL Active)
 {
-	CProxy_DaCtlEvents<DaControl>::FireActiveClientChange (CharacterID, Active);
-	CProxy_DaCtlEvents2<DaControl>::FireActiveClientChange (CharacterID, Active);
-	CProxy_AgentEvents<DaControl>::FireActiveClientChange (CharacterID, Active);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("ActiveClientChange")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents<DaControl>::FireActiveClientChange (CharacterID, Active)
+							+ CProxy_DaCtlEvents2<DaControl>::FireActiveClientChange (CharacterID, Active)
+							+ CProxy_AgentEvents<DaControl>::FireActiveClientChange (CharacterID, Active);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("ActiveClientChange"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaControl::FireSpeechStart(LPCTSTR CharacterID, IDaCtlFormattedText* FormattedText)
+int DaControl::FireSpeechStart(LPCTSTR CharacterID, IDaCtlFormattedText* FormattedText)
 {
-	CProxy_DaCtlEvents2<DaControl>::FireSpeechStart (CharacterID, FormattedText);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("SpeechStart")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents2<DaControl>::FireSpeechStart (CharacterID, FormattedText);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("SpeechStart"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireSpeechEnd(LPCTSTR CharacterID, IDaCtlFormattedText* FormattedText, VARIANT_BOOL Stopped)
+int DaControl::FireSpeechEnd(LPCTSTR CharacterID, IDaCtlFormattedText* FormattedText, VARIANT_BOOL Stopped)
 {
-	CProxy_DaCtlEvents2<DaControl>::FireSpeechEnd (CharacterID, FormattedText, Stopped);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("SpeechEnd")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents2<DaControl>::FireSpeechEnd (CharacterID, FormattedText, Stopped);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("SpeechEnd"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
-void DaControl::FireSpeechWord(LPCTSTR CharacterID, IDaCtlFormattedText* FormattedText, long WordIndex)
+int DaControl::FireSpeechWord(LPCTSTR CharacterID, IDaCtlFormattedText* FormattedText, long WordIndex)
 {
-	CProxy_DaCtlEvents2<DaControl>::FireSpeechWord (CharacterID, FormattedText, WordIndex);
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("SpeechWord")))
+	{
+		try
+		{
+			lEventSinkCount = CProxy_DaCtlEvents2<DaControl>::FireSpeechWord (CharacterID, FormattedText, WordIndex);
+		}
+		catch AnyExceptionDebug
+		PostFireEvent (_DEBUG_T("SpeechWord"), lEventSinkCount);
+	}
+	return lEventSinkCount;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -884,7 +1250,7 @@ HRESULT CServerNotifySink::Initialize (DaControl * pOwner)
 			try
 			{
 				if	(
-						(SUCCEEDED (LogComErr (LogNormal, lResult = mOwner->mServer->Register (this, &mServerNotifyId), _T("Register Server [%p]"), mOwner->mServer.GetInterfacePtr())))
+						(SUCCEEDED (LogComErr (LogNormal|LogTime, lResult = mOwner->mServer->Register (this, &mServerNotifyId), _T("Register Server [%p]"), mOwner->mServer.GetInterfacePtr())))
 					&&	(mServerNotifyId)
 					)
 				{
@@ -923,7 +1289,7 @@ HRESULT CServerNotifySink::Terminate ()
 				try
 				{
 					m_dwRef++;
-					LogComErr (LogNormal, lResult = lOwner->mServer->Unregister (lServerNotifyId), _T("Unregister Server [%p] [%u]"), lOwner->mServer.GetInterfacePtr(), lServerNotifyId);
+					LogComErr (LogNormal|LogTime, lResult = lOwner->mServer->Unregister (lServerNotifyId), _T("Unregister Server [%p] [%u]"), lOwner->mServer.GetInterfacePtr(), lServerNotifyId);
 					m_dwRef--;
 				}
 				catch AnyExceptionSilent
@@ -939,19 +1305,6 @@ HRESULT CServerNotifySink::Terminate ()
 		}
 	}
 	return lResult;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-bool CServerNotifySink::PreFireEvent (LPCTSTR pEventName)
-{
-	return _AtlModule.PreNotify ();
-}
-
-bool CServerNotifySink::PostFireEvent (LPCTSTR pEventName)
-{
-	_AtlModule.PostNotify ();
-	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -991,15 +1344,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Command (long CommandID, IDaSvrUser
 		lInterface = (LPDISPATCH) lUserInput;
 	}
 
-	if	(PreFireEvent ())
-	{
-		try
-		{
-			mOwner->FireCommand (lInterface);
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
-	}
+	mOwner->FireCommand (lInterface);
 	return S_OK;
 }
 
@@ -1010,28 +1355,12 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::ActivateInputState (long CharacterI
 #endif
 	if	(Activated == ActiveState_InputActive)
 	{
-		if	(PreFireEvent ())
-		{
-			try
-			{
-				mOwner->FireActivateInput (mOwner->GetControlCharacterID (CharacterID));
-			}
-			catch AnyExceptionDebug
-			PostFireEvent ();
-		}
+		mOwner->FireActivateInput (mOwner->GetControlCharacterID (CharacterID));
 	}
 	else
 	if	(Activated == ActiveState_Inactive)
 	{
-		if	(PreFireEvent ())
-		{
-			try
-			{
-				mOwner->FireDeactivateInput (mOwner->GetControlCharacterID (CharacterID));
-			}
-			catch AnyExceptionDebug
-			PostFireEvent ();
-		}
+		mOwner->FireDeactivateInput (mOwner->GetControlCharacterID (CharacterID));
 	}
 	return S_OK;
 }
@@ -1053,21 +1382,13 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::VisibleState (long CharacterID, lon
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::VisibleState [%d] [%d] cause [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Visible, Cause);
 #endif
-	if	(PreFireEvent ())
+	if	(Visible)
 	{
-		try
-		{
-			if	(Visible)
-			{
-				mOwner->FireShow (mOwner->GetControlCharacterID (CharacterID), (VisibilityCauseType)Cause);
-			}
-			else
-			{
-				mOwner->FireHide (mOwner->GetControlCharacterID (CharacterID), (VisibilityCauseType)Cause);
-			}
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
+		mOwner->FireShow (mOwner->GetControlCharacterID (CharacterID), (VisibilityCauseType)Cause);
+	}
+	else
+	{
+		mOwner->FireHide (mOwner->GetControlCharacterID (CharacterID), (VisibilityCauseType)Cause);
 	}
 	return S_OK;
 }
@@ -1077,15 +1398,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Click (long CharacterID, short Keys
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Click [%d] [%4.4X] [%d %d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Keys, X, Y);
 #endif
-	if	(PreFireEvent ())
-	{
-		try
-		{
-			mOwner->FireClick (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)X, (short)Y);
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
-	}
+	mOwner->FireClick (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)X, (short)Y);
 	return S_OK;
 }
 
@@ -1094,15 +1407,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::DblClick (long CharacterID, short K
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DblClick [%d] [%4.4X] [%d %d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Keys, X, Y);
 #endif
-	if	(PreFireEvent ())
-	{
-		try
-		{
-			mOwner->FireDblClick (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)X, (short)Y);
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
-	}
+	mOwner->FireDblClick (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)X, (short)Y);
 	return S_OK;
 }
 
@@ -1111,15 +1416,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::DragStart (long CharacterID, short 
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DragStart [%d] [%4.4X] [%d %d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Keys, X, Y);
 #endif
-	if	(PreFireEvent ())
-	{
-		try
-		{
-			mOwner->FireDragStart (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)X, (short)Y);
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
-	}
+	mOwner->FireDragStart (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)X, (short)Y);
 	return S_OK;
 }
 
@@ -1128,15 +1425,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::DragComplete (long CharacterID, sho
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Keys, X, Y);
 #endif
-	if	(PreFireEvent ())
-	{
-		try
-		{
-			mOwner->FireDragComplete (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)X, (short)Y);
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
-	}
+	mOwner->FireDragComplete (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)X, (short)Y);
 	return S_OK;
 }
 
@@ -1151,17 +1440,9 @@ STDMETHODIMP CServerNotifySink::RequestStart (long RequestID)
 
 	lInterface.Attach (mOwner->PutRequest (DaRequestNotifyStart, RequestID, S_OK));
 
-	if	(
-			(lInterface != NULL)
-		&&	(PreFireEvent ())
-		)
+	if	(lInterface != NULL)
 	{
-		try
-		{
-			mOwner->FireRequestStart (lInterface);
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
+		mOwner->FireRequestStart (lInterface);
 	}
 #ifdef	_DEBUG_REQUEST_NOTIFY
 	else
@@ -1181,17 +1462,9 @@ STDMETHODIMP CServerNotifySink::RequestComplete (long RequestID, long Result)
 
 	lInterface.Attach (mOwner->PutRequest (DaRequestNotifyComplete, RequestID, (HRESULT)Result));
 
-	if	(
-			(lInterface != NULL)
-		&&	(PreFireEvent ())
-		)
+	if	(lInterface != NULL)
 	{
-		try
-		{
-			mOwner->FireRequestComplete (lInterface);
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
+		mOwner->FireRequestComplete (lInterface);
 	}
 #ifdef	_DEBUG_REQUEST_NOTIFY
 	else
@@ -1209,15 +1482,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::BookMark (long BookMarkID)
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::BookMark [%d]"), mOwner, max(mOwner->m_dwRef,-1), BookMarkID);
 #endif
-	if	(PreFireEvent ())
-	{
-		try
-		{
-			mOwner->FireBookmark (BookMarkID);
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
-	}
+	mOwner->FireBookmark (BookMarkID);
 	return S_OK;
 }
 
@@ -1226,21 +1491,13 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Idle (long CharacterID, long Start)
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Idle [%d] [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Start);
 #endif
-	if	(PreFireEvent ())
+	if	(Start)
 	{
-		try
-		{
-			if	(Start)
-			{
-				mOwner->FireIdleStart (mOwner->GetControlCharacterID (CharacterID));
-			}
-			else
-			{
-				mOwner->FireIdleComplete (mOwner->GetControlCharacterID (CharacterID));
-			}
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
+		mOwner->FireIdleStart (mOwner->GetControlCharacterID (CharacterID));
+	}
+	else
+	{
+		mOwner->FireIdleComplete (mOwner->GetControlCharacterID (CharacterID));
 	}
 	return S_OK;
 }
@@ -1250,15 +1507,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Move (long CharacterID, long X, lon
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Move [%d] [%d %d] cause [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, X, Y, Cause);
 #endif
-	if	(PreFireEvent ())
-	{
-		try
-		{
-			mOwner->FireMove (mOwner->GetControlCharacterID (CharacterID), (short)X, (short)Y, (MoveCauseType)Cause);
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
-	}
+	mOwner->FireMove (mOwner->GetControlCharacterID (CharacterID), (short)X, (short)Y, (MoveCauseType)Cause);
 	return S_OK;
 }
 
@@ -1267,15 +1516,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Size (long CharacterID, long Width,
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Size [%d] [%d %d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Width, Height);
 #endif
-	if	(PreFireEvent ())
-	{
-		try
-		{
-			mOwner->FireSize (mOwner->GetControlCharacterID (CharacterID), (short)Width, (short)Height);
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
-	}
+	mOwner->FireSize (mOwner->GetControlCharacterID (CharacterID), (short)Width, (short)Height);
 	return S_OK;
 }
 
@@ -1284,21 +1525,13 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::BalloonVisibleState (long Character
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::BalloonVisibleState [%d] [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Visible);
 #endif
-	if	(PreFireEvent ())
+	if	(Visible)
 	{
-		try
-		{
-			if	(Visible)
-			{
-				mOwner->FireBalloonShow (mOwner->GetControlCharacterID (CharacterID));
-			}
-			else
-			{
-				mOwner->FireBalloonHide (mOwner->GetControlCharacterID (CharacterID));
-			}
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
+		mOwner->FireBalloonShow (mOwner->GetControlCharacterID (CharacterID));
+	}
+	else
+	{
+		mOwner->FireBalloonHide (mOwner->GetControlCharacterID (CharacterID));
 	}
 	return S_OK;
 }
@@ -1316,21 +1549,13 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::ListeningState (long CharacterID, l
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::ListeningState"), mOwner, max(mOwner->m_dwRef,-1));
 #endif
-	if	(PreFireEvent ())
+	if	(Listening)
 	{
-		try
-		{
-			if	(Listening)
-			{
-				mOwner->FireListenStart (mOwner->GetControlCharacterID (CharacterID));
-			}
-			else
-			{
-				mOwner->FireListenComplete (mOwner->GetControlCharacterID (CharacterID), (ListenCompleteType)Cause);
-			}
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
+		mOwner->FireListenStart (mOwner->GetControlCharacterID (CharacterID));
+	}
+	else
+	{
+		mOwner->FireListenComplete (mOwner->GetControlCharacterID (CharacterID), (ListenCompleteType)Cause);
 	}
 	return S_OK;
 }
@@ -1342,15 +1567,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::DefaultCharacterChange (BSTR CharGU
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DefaultCharacterChange [%ls]"), mOwner, max(mOwner->m_dwRef,-1), CharGUID);
 #endif
-	if	(PreFireEvent ())
-	{
-		try
-		{
-			mOwner->FireDefaultCharacterChange (CAtlString (CharGUID));
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
-	}
+	mOwner->FireDefaultCharacterChange (CAtlString (CharGUID));
 	return S_OK;
 }
 
@@ -1359,15 +1576,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::AgentPropertyChange(void)
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::AgentPropertyChange"), mOwner, max(mOwner->m_dwRef,-1));
 #endif
-	if	(PreFireEvent ())
-	{
-		try
-		{
-			mOwner->FireAgentPropertyChange ();
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
-	}
+	mOwner->FireAgentPropertyChange ();
 	return S_OK;
 }
 
@@ -1378,28 +1587,12 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::ActiveClientChange (long CharacterI
 #endif
 	if	(Status == ActiveState_InputActive)
 	{
-		if	(PreFireEvent ())
-		{
-			try
-			{
-				mOwner->FireActiveClientChange (mOwner->GetControlCharacterID (CharacterID), VARIANT_TRUE);
-			}
-			catch AnyExceptionDebug
-			PostFireEvent ();
-		}
+		mOwner->FireActiveClientChange (mOwner->GetControlCharacterID (CharacterID), VARIANT_TRUE);
 	}
 	else
 	if	(Status == ActiveState_Inactive)
 	{
-		if	(PreFireEvent ())
-		{
-			try
-			{
-				mOwner->FireActiveClientChange (mOwner->GetControlCharacterID (CharacterID), VARIANT_FALSE);
-			}
-			catch AnyExceptionDebug
-			PostFireEvent ();
-		}
+		mOwner->FireActiveClientChange (mOwner->GetControlCharacterID (CharacterID), VARIANT_FALSE);
 	}
 	return S_OK;
 }
@@ -1416,7 +1609,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::SpeechStart (long CharacterID, IDaS
 	IDaCtlFormattedTextPtr					lFormattedText;
 
 	if	(FormattedText)
-	{	
+	{
 		try
 		{
 			if	(SUCCEEDED (lResult = CComObject <DaCtlFormattedText>::CreateInstance (lObject.Free())))
@@ -1431,17 +1624,9 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::SpeechStart (long CharacterID, IDaS
 		catch AnyExceptionSilent
 	}
 
-	if	(
-			(SUCCEEDED (lResult))	
-		&&	(PreFireEvent ())
-		)
+	if	(SUCCEEDED (lResult))
 	{
-		try
-		{
-			mOwner->FireSpeechStart (mOwner->GetControlCharacterID (CharacterID), lFormattedText);
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
+		mOwner->FireSpeechStart (mOwner->GetControlCharacterID (CharacterID), lFormattedText);
 	}
 #ifdef	_DEBUG_NOTIFY_NOT
 	if	(LogIsActive (_DEBUG_NOTIFY))
@@ -1462,7 +1647,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::SpeechEnd (long CharacterID, IDaSvr
 	IDaCtlFormattedTextPtr					lFormattedText;
 
 	if	(FormattedText)
-	{	
+	{
 		try
 		{
 			if	(SUCCEEDED (lResult = CComObject <DaCtlFormattedText>::CreateInstance (lObject.Free())))
@@ -1477,17 +1662,9 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::SpeechEnd (long CharacterID, IDaSvr
 		catch AnyExceptionSilent
 	}
 
-	if	(
-			(SUCCEEDED (lResult))	
-		&&	(PreFireEvent ())
-		)
+	if	(SUCCEEDED (lResult))
 	{
-		try
-		{
-			mOwner->FireSpeechEnd (mOwner->GetControlCharacterID (CharacterID), lFormattedText, Stopped);
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
+		mOwner->FireSpeechEnd (mOwner->GetControlCharacterID (CharacterID), lFormattedText, Stopped);
 	}
 #ifdef	_DEBUG_NOTIFY_NOT
 	if	(LogIsActive (_DEBUG_NOTIFY))
@@ -1508,7 +1685,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::SpeechWord (long CharacterID, IDaSv
 	IDaCtlFormattedTextPtr					lFormattedText;
 
 	if	(FormattedText)
-	{	
+	{
 		try
 		{
 			if	(SUCCEEDED (lResult = CComObject <DaCtlFormattedText>::CreateInstance (lObject.Free())))
@@ -1523,17 +1700,9 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::SpeechWord (long CharacterID, IDaSv
 		catch AnyExceptionSilent
 	}
 
-	if	(
-			(SUCCEEDED (lResult))	
-		&&	(PreFireEvent ())
-		)
+	if	(SUCCEEDED (lResult))
 	{
-		try
-		{
-			mOwner->FireSpeechWord (mOwner->GetControlCharacterID (CharacterID), lFormattedText, WordIndex);
-		}
-		catch AnyExceptionDebug
-		PostFireEvent ();
+		mOwner->FireSpeechWord (mOwner->GetControlCharacterID (CharacterID), lFormattedText, WordIndex);
 	}
 #ifdef	_DEBUG_NOTIFY_NOT
 	if	(LogIsActive (_DEBUG_NOTIFY))
@@ -1562,39 +1731,23 @@ CEventNotifyReflect::~CEventNotifyReflect ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CEventNotifyReflect::PreFireEvent (LPCTSTR pEventName)
-{
-	if	(CServerNotifySink::PreFireEvent (pEventName))
-	{
-		return CEventNotify::PreFireEvent (pEventName);
-	}
-	return false;
-}
-
-bool CEventNotifyReflect::PostFireEvent (LPCTSTR pEventName)
-{
-	CEventNotify::PostFireEvent (pEventName);
-	return CServerNotifySink::PostFireEvent (pEventName);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
 HRESULT CEventNotifyReflect::OnSpeechStart (long CharacterID, LPUNKNOWN FormattedText)
 {
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CEventNotifyReflect::OnSpeechStart [%d] [%p]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, FormattedText);
 #endif
 	HRESULT	lResult = S_OK;
+	int		lEventSinkCount = 0;
 
-	if	(PreFireEvent (_T("SpeechStart")))
+	if	(PreFireEvent (_DEBUG_T("SpeechStart")))
 	{
 		try
 		{
 			IDaCtlFormattedTextPtr	lFormattedText (FormattedText);
-			mOwner->FireSpeechStart (mOwner->GetControlCharacterID (CharacterID), lFormattedText);
+			lEventSinkCount = mOwner->FireSpeechStart (mOwner->GetControlCharacterID (CharacterID), lFormattedText);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_T("SpeechStart"));
+		PostFireEvent (_DEBUG_T("SpeechStart"), lEventSinkCount);
 	}
 	return lResult;
 }
@@ -1605,16 +1758,17 @@ HRESULT CEventNotifyReflect::OnSpeechEnd (long CharacterID, LPUNKNOWN FormattedT
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CEventNotifyReflect::OnSpeechEnd [%d] [%p] [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, FormattedText, Stopped);
 #endif
 	HRESULT	lResult = S_OK;
+	int		lEventSinkCount = 0;
 
-	if	(PreFireEvent (_T("SpeechEnd")))
+	if	(PreFireEvent (_DEBUG_T("SpeechEnd")))
 	{
 		try
 		{
 			IDaCtlFormattedTextPtr	lFormattedText (FormattedText);
-			mOwner->FireSpeechEnd (mOwner->GetControlCharacterID (CharacterID), lFormattedText, Stopped);
+			lEventSinkCount = mOwner->FireSpeechEnd (mOwner->GetControlCharacterID (CharacterID), lFormattedText, Stopped);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_T("SpeechEnd"));
+		PostFireEvent (_DEBUG_T("SpeechEnd"), lEventSinkCount);
 	}
 	return lResult;
 }
@@ -1625,16 +1779,17 @@ HRESULT CEventNotifyReflect::OnSpeechWord (long CharacterID, LPUNKNOWN Formatted
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CEventNotifyReflect::OnSpeechWord [%d] [%p] [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, FormattedText, WordIndex);
 #endif
 	HRESULT	lResult = S_OK;
+	int		lEventSinkCount = 0;
 
-	if	(PreFireEvent (_T("SpeechWord")))
+	if	(PreFireEvent (_DEBUG_T("SpeechWord")))
 	{
 		try
 		{
 			IDaCtlFormattedTextPtr	lFormattedText (FormattedText);
-			mOwner->FireSpeechWord (mOwner->GetControlCharacterID (CharacterID), lFormattedText, WordIndex);
+			lEventSinkCount = mOwner->FireSpeechWord (mOwner->GetControlCharacterID (CharacterID), lFormattedText, WordIndex);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_T("SpeechWord"));
+		PostFireEvent (_DEBUG_T("SpeechWord"), lEventSinkCount);
 	}
 	return lResult;
 }

@@ -45,8 +45,8 @@ public:
 	CTraceSamples & ConnectAfter (IFilterGraph * pFilterGraph, IBaseFilter * pUpstreamFilter, IPin * pUpstreamPin = NULL, AM_MEDIA_TYPE * pMediaType = NULL);
 	CTraceSamples & Disconnect ();
 
-	CTraceSamples & LogSamples (UINT pLogLevel = LogIfActive|LogHighVolume|LogTimeMs, bool pOneShot = false);
-	CTraceSamples & DumpSamples (UINT pByteCount = 64, UINT pLogLevel = LogIfActive|LogHighVolume|LogTimeMs, bool pOneShot = false);
+	CTraceSamples & LogSamples (UINT pLogLevel = LogIfActive|LogTimeMs|LogHighVolume, bool pOneShot = false);
+	CTraceSamples & DumpSamples (UINT pByteCount = 64, UINT pLogLevel = LogIfActive|LogTimeMs|LogHighVolume, bool pOneShot = false);
 
 // Overrides
 
@@ -105,7 +105,7 @@ public:
 
 // Operations
 public:
-	CTraceFilter & Initialize (LPUNKNOWN pUnknown, LPCTSTR pFilterName = NULL, UINT pLogLevelPins = LogVerbose);
+	CTraceFilter & Initialize (LPUNKNOWN pUnknown, LPCTSTR pFilterName = NULL, UINT pLogLevelPins = LogVerbose|LogTime);
 	void FinalRelease ();
 	void Aggregate (LPUNKNOWN pUnknown);
 
@@ -208,7 +208,7 @@ public:
 
 // Operations
 public:
-	CTracePins & Initialize (LPUNKNOWN pUnknown, IBaseFilter * pFilter, UINT pLogLevelPins = LogVerbose);
+	CTracePins & Initialize (LPUNKNOWN pUnknown, IBaseFilter * pFilter, UINT pLogLevelPins = LogVerbose|LogTime);
 	void FinalRelease ();
 
 // Overrides

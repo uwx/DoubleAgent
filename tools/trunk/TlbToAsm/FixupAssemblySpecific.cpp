@@ -204,7 +204,7 @@ String^ FixupAssemblySpecific::RenameControlInterface (Type^ pSourceType, String
 	else
 	if	(
 			(!pSourceType->IsImport)
-		&&	(	
+		&&	(
 				(pTypeName->StartsWith ("_DaCtlEvents_"))
 			||	(pTypeName->StartsWith ("_DaCtlEvents2_"))
 			)

@@ -34,17 +34,17 @@
 #pragma warning (disable: 4355)
 
 #ifdef	_DEBUG
-//#define	_DEBUG_COM				LogNormal|LogHighVolume
-//#define	_DEBUG_INTERFACE		LogNormal
-//#define	_DEBUG_INTERFACE_EX		LogNormal|LogHighVolume
-//#define	_DEBUG_SAMPLES			LogNormal|LogHighVolume|LogTimeMs
-//#define	_DEBUG_AUDIO			LogNormal|LogHighVolume
-//#define	_DEBUG_AUDIO_FILTERS	LogNormal
-#define	_LOG_FILE_LOAD				(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF)
-#define	_LOG_INSTANCE				(GetProfileDebugInt(_T("LogInstance_DirectShowFilter"),LogVerbose,true)&0xFFFF)
-#define	_LOG_RESULTS				(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
-//#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
-//#define	_TRACE_RESOURCES_EX		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+//#define	_DEBUG_COM				LogNormal|LogTime|LogHighVolume
+//#define	_DEBUG_INTERFACE		LogNormal|LogTime
+//#define	_DEBUG_INTERFACE_EX		LogNormal|LogTime|LogHighVolume
+//#define	_DEBUG_SAMPLES			LogNormal|LogTimeMs|LogHighVolume
+//#define	_DEBUG_AUDIO			LogNormal|LogTime|LogHighVolume
+//#define	_DEBUG_AUDIO_FILTERS	LogNormal|LogTime
+#define	_LOG_FILE_LOAD				(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_INSTANCE				(GetProfileDebugInt(_T("LogInstance_DirectShowFilter"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_RESULTS				(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
+//#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+//#define	_TRACE_RESOURCES_EX		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 #endif
 
 #ifndef	_LOG_INSTANCE
@@ -764,11 +764,11 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 				(lAgentFile = CAgentStreamUtils::GetAgentFile())
 			&&	(mVideoOutPin)
 			&&	(SUCCEEDED (lResult = mVideoOutPin->GetOutputSample (&lSample, &lStartTime, &lEndTime/*, 0*/)))
-			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, lSample->GetPointer (&lSampleBuffer))))
+			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, lSample->GetPointer (&lSampleBuffer))))
 			)
 		{
-			LogVfwErr (LogNormal, lSample->SetTime (&lStartTime, &lEndTime), _T("SetTime [%f (%I64d)] [%f (%I64d)]"), RefTimeSec(lStartTime), lStartTime, RefTimeSec(lEndTime), lEndTime);
-			LogVfwErr (LogNormal, lSample->SetMediaTime (&lMediaStartTime, &lMediaEndTime), _T("SetMediaTime [%I64d] [%I64d]"), lMediaStartTime, lMediaEndTime);
+			LogVfwErr (LogNormal|LogTime, lSample->SetTime (&lStartTime, &lEndTime), _T("SetTime [%f (%I64d)] [%f (%I64d)]"), RefTimeSec(lStartTime), lStartTime, RefTimeSec(lEndTime), lEndTime);
+			LogVfwErr (LogNormal|LogTime, lSample->SetMediaTime (&lMediaStartTime, &lMediaEndTime), _T("SetMediaTime [%I64d] [%I64d]"), lMediaStartTime, lMediaEndTime);
 
 			if	(mDataLock.Lock (100))
 			{
@@ -1062,11 +1062,6 @@ LONGLONG CDirectShowSource::GetDuration ()
 		{
 			lDuration = lSequenceDuration;
 		}
-		else
-		if	(lStreamInfo->GetMaxSequenceDuration (&lSequenceDuration) == S_OK)
-		{
-			lDuration = lSequenceDuration;
-		}
 	}
 	else
 	{
@@ -1235,11 +1230,11 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::SetBkColor (const COLORREF *pBkColo
 						if	(
 								(lInputPin != NULL)
 							&&	(mState == State_Stopped)
-							&&	(SUCCEEDED (LogVfwErr (LogNormal, lInputPin->Disconnect ())))
+							&&	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lInputPin->Disconnect ())))
 							)
 						{
-							LogVfwErr (LogNormal, mVideoOutPin->Disconnect ());
-							LogVfwErr (LogNormal, mVideoOutPin->Connect (lInputPin, lMediaType));
+							LogVfwErr (LogNormal|LogTime, mVideoOutPin->Disconnect ());
+							LogVfwErr (LogNormal|LogTime, mVideoOutPin->Connect (lInputPin, lMediaType));
 							lResult = S_OK;
 						}
 					}

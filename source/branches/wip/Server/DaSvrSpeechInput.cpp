@@ -27,10 +27,10 @@
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Settings"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Settings"),LogDetails,true)&0xFFFF)
-#define	_LOG_ABANDONED		MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF,_LOG_INSTANCE)
-#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Settings"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Settings"),LogDetails,true)&0xFFFF|LogTime)
+#define	_LOG_ABANDONED		MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF|LogTime,_LOG_INSTANCE)
+#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -68,7 +68,7 @@ DaSvrSpeechInput * DaSvrSpeechInput::CreateInstance (LPCTSTR pClientMutexName)
 {
 	CComObject<DaSvrSpeechInput> *	lInstance = NULL;
 
-	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrSpeechInput>::CreateInstance (&lInstance))))
+	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CComObject<DaSvrSpeechInput>::CreateInstance (&lInstance))))
 	{
 		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
 	}

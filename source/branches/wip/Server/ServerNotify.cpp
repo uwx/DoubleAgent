@@ -23,17 +23,19 @@
 #include "DaServerApp.h"
 #include "DaServer.h"
 #include "ServerNotify.h"
+#include "ComMessageFilter.h"
 #include "GuidStr.h"
-#ifdef	_DEBUG
 #include "Registry.h"
-#endif
+#include "DebugStr.h"
 
 #pragma comment(lib, "psapi.lib")
 
+extern int LogCrashCode (unsigned int pCode, LPCSTR pFile = NULL, UINT pLine = 0, int pAction = EXCEPTION_CONTINUE_EXECUTION);
+
 #ifdef	_DEBUG
-//#define	_DEBUG_CONNECTIONS	LogNormal
-#define	_DEBUG_NOTIFY			(GetProfileDebugInt(_T("DebugNotify"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_NOTIFY		(GetProfileDebugInt(_T("DebugNotify"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_DEBUG_CONNECTIONS	(GetProfileDebugInt(_T("DebugNotifyConnections"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF|LogTime)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -45,7 +47,11 @@ _COM_SMARTPTR_TYPEDEF(IAgentNotifySinkEx, __uuidof(IAgentNotifySinkEx));
 
 CServerNotify::CServerNotify ()
 :	mOwner (NULL),
-	mEventDispatch (tDaSvrEvents::m_vec)
+	CProxyIDaSvrNotifySink<CServerNotify> (mUnregisterDelayed),
+	CProxyIDaSvrNotifySink2<CServerNotify> (mUnregisterDelayed),
+	CProxyIAgentNotifySink<CServerNotify> (mUnregisterDelayed),
+	CProxyIAgentNotifySinkEx<CServerNotify> (mUnregisterDelayed),
+	CProxy_DaSvrEvents2<CServerNotify> (mUnregisterDelayed)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -96,7 +102,7 @@ HRESULT CServerNotify::Register (IUnknown * punkNotifySink, long * pdwSinkID)
 
 	if	(lDaSink2 != NULL)
 	{
-		lResult = tDaSvrNotifySink2::Advise (punkNotifySink, (DWORD*)pdwSinkID);
+		lResult = CProxyIDaSvrNotifySink2<CServerNotify>::Advise (punkNotifySink, (DWORD*)pdwSinkID);
 #ifdef	_DEBUG_CONNECTIONS
 		if	(SUCCEEDED (lResult))
 		{
@@ -107,7 +113,7 @@ HRESULT CServerNotify::Register (IUnknown * punkNotifySink, long * pdwSinkID)
 	else
 	if	(lDaSink != NULL)
 	{
-		lResult = tDaSvrNotifySink::Advise (punkNotifySink, (DWORD*)pdwSinkID);
+		lResult = CProxyIDaSvrNotifySink<CServerNotify>::Advise (punkNotifySink, (DWORD*)pdwSinkID);
 #ifdef	_DEBUG_CONNECTIONS
 		if	(SUCCEEDED (lResult))
 		{
@@ -118,7 +124,7 @@ HRESULT CServerNotify::Register (IUnknown * punkNotifySink, long * pdwSinkID)
 	else
 	if	(lMsSinkEx != NULL)
 	{
-		lResult = tAgentNotifySinkEx::Advise (punkNotifySink, (DWORD*)pdwSinkID);
+		lResult = CProxyIAgentNotifySinkEx<CServerNotify>::Advise (punkNotifySink, (DWORD*)pdwSinkID);
 #ifdef	_DEBUG_CONNECTIONS
 		if	(SUCCEEDED (lResult))
 		{
@@ -129,7 +135,7 @@ HRESULT CServerNotify::Register (IUnknown * punkNotifySink, long * pdwSinkID)
 	else
 	if	(lMsSink != NULL)
 	{
-		lResult = tAgentNotifySink::Advise (punkNotifySink, (DWORD*)pdwSinkID);
+		lResult = CProxyIAgentNotifySink<CServerNotify>::Advise (punkNotifySink, (DWORD*)pdwSinkID);
 #ifdef	_DEBUG_CONNECTIONS
 		if	(SUCCEEDED (lResult))
 		{
@@ -144,20 +150,35 @@ HRESULT CServerNotify::Register (IUnknown * punkNotifySink, long * pdwSinkID)
 	return lResult;
 }
 
-HRESULT CServerNotify::Unregister (long dwSinkID)
+HRESULT CServerNotify::Unregister (long dwSinkID, bool pDelay)
 {
 	HRESULT	lResult = S_FALSE;
 
-	lResult = tDaSvrNotifySink2::Unadvise ((DWORD)dwSinkID);
+	if	(pDelay)
+	{
+		lResult = (CProxyIDaSvrNotifySink2<CServerNotify>::m_vec.GetUnknown ((DWORD)dwSinkID)) ? S_OK : CONNECT_E_NOCONNECTION;
+	}
+	else
+	{
+		lResult = CProxyIDaSvrNotifySink2<CServerNotify>::Unadvise ((DWORD)dwSinkID);
+	}
 #ifdef	_DEBUG_CONNECTIONS
 	if	(SUCCEEDED (lResult))
 	{
 		LogMessage (_DEBUG_CONNECTIONS, _T("[%p] Unregister2 (DA) [%u]"), this, dwSinkID);
 	}
 #endif
+
 	if	(lResult == CONNECT_E_NOCONNECTION)
 	{
-		lResult = tDaSvrNotifySink::Unadvise ((DWORD)dwSinkID);
+		if	(pDelay)
+		{
+			lResult = (CProxyIDaSvrNotifySink<CServerNotify>::m_vec.GetUnknown ((DWORD)dwSinkID)) ? S_OK : CONNECT_E_NOCONNECTION;
+		}
+		else
+		{
+			lResult = CProxyIDaSvrNotifySink<CServerNotify>::Unadvise ((DWORD)dwSinkID);
+		}
 #ifdef	_DEBUG_CONNECTIONS
 		if	(SUCCEEDED (lResult))
 		{
@@ -165,9 +186,17 @@ HRESULT CServerNotify::Unregister (long dwSinkID)
 		}
 #endif
 	}
+
 	if	(lResult == CONNECT_E_NOCONNECTION)
 	{
-		lResult = tAgentNotifySinkEx::Unadvise ((DWORD)dwSinkID);
+		if	(pDelay)
+		{
+			lResult = (CProxyIAgentNotifySinkEx<CServerNotify>::m_vec.GetUnknown ((DWORD)dwSinkID)) ? S_OK : CONNECT_E_NOCONNECTION;
+		}
+		else
+		{
+			lResult = CProxyIAgentNotifySinkEx<CServerNotify>::Unadvise ((DWORD)dwSinkID);
+		}
 #ifdef	_DEBUG_CONNECTIONS
 		if	(SUCCEEDED (lResult))
 		{
@@ -175,9 +204,17 @@ HRESULT CServerNotify::Unregister (long dwSinkID)
 		}
 #endif
 	}
+
 	if	(lResult == CONNECT_E_NOCONNECTION)
 	{
-		lResult = tAgentNotifySink::Unadvise ((DWORD)dwSinkID);
+		if	(pDelay)
+		{
+			lResult = (CProxyIAgentNotifySink<CServerNotify>::m_vec.GetUnknown ((DWORD)dwSinkID)) ? S_OK : CONNECT_E_NOCONNECTION;
+		}
+		else
+		{
+			lResult = CProxyIAgentNotifySink<CServerNotify>::Unadvise ((DWORD)dwSinkID);
+		}
 #ifdef	_DEBUG_CONNECTIONS
 		if	(SUCCEEDED (lResult))
 		{
@@ -185,23 +222,55 @@ HRESULT CServerNotify::Unregister (long dwSinkID)
 		}
 #endif
 	}
+
+	if	(
+			(pDelay)
+		&&	(SUCCEEDED (lResult))
+		)
+	{
+#ifdef	_DEBUG_CONNECTIONS
+		if	(SUCCEEDED (lResult))
+		{
+			LogMessage (_DEBUG_CONNECTIONS, _T("[%p] UnregisterDelay [%u]"), this, dwSinkID);
+		}
+#endif
+		mUnregisterDelayed.AddUnique (dwSinkID);
+	}
 	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CServerNotify::UnregisterDelayed ()
+{
+	int	lNdx;
+
+	for	(lNdx = (int)mUnregisterDelayed.GetCount()-1; lNdx >= 0; lNdx--)
+	{
+#ifdef	_DEBUG_CONNECTIONS
+		LogMessage (_DEBUG_CONNECTIONS, _T("[%p] UnregisterDelayed [%d]"), this, mUnregisterDelayed [lNdx]);
+#endif
+		Unregister (mUnregisterDelayed [lNdx], false);
+	}
+	mUnregisterDelayed.RemoveAll ();
 }
 
 void CServerNotify::UnregisterAll ()
 {
 #ifdef	_DEBUG_CONNECTIONS
-	LogMessage (_DEBUG_CONNECTIONS, _T("[%p] UnregisterAll [%d] [%d] [%d] [%d]"), this, CountUnk(tDaSvrNotifySink2::m_vec), CountUnk(tDaSvrNotifySink::m_vec), CountUnk(tAgentNotifySinkEx::m_vec), CountUnk(tAgentNotifySink::m_vec));
+	LogMessage (_DEBUG_CONNECTIONS, _T("[%p] UnregisterAll [%d] [%d] [%d] [%d] [%d]"), this, CountUnk(CProxyIDaSvrNotifySink2<CServerNotify>::m_vec), CountUnk(CProxyIDaSvrNotifySink<CServerNotify>::m_vec), CountUnk(CProxyIAgentNotifySinkEx<CServerNotify>::m_vec), CountUnk(CProxyIAgentNotifySink<CServerNotify>::m_vec), CountUnk(CProxy_DaSvrEvents2<CServerNotify>::m_vec));
 #endif
 	int	lNdx;
 
-	for	(lNdx = tDaSvrNotifySink2::m_vec.GetSize()-1; lNdx >= 0; lNdx--)
+	UnregisterDelayed ();
+
+	for	(lNdx = CProxyIDaSvrNotifySink2<CServerNotify>::m_vec.GetSize()-1; lNdx >= 0; lNdx--)
 	{
 		try
 		{
-			if	(tDaSvrNotifySink2::m_vec.GetAt (lNdx))
+			if	(CProxyIDaSvrNotifySink2<CServerNotify>::m_vec.GetAt (lNdx))
 			{
-				tDaSvrNotifySink2::Unadvise ((DWORD)lNdx);
+				CProxyIDaSvrNotifySink2<CServerNotify>::Unadvise ((DWORD)lNdx);
 #ifdef	_DEBUG_CONNECTIONS
 				LogMessage (_DEBUG_CONNECTIONS, _T("[%p] Unregister2 (DA) [%u] (All)"), this, lNdx);
 #endif
@@ -210,13 +279,13 @@ void CServerNotify::UnregisterAll ()
 		catch AnyExceptionSilent
 	}
 
-	for	(lNdx = tDaSvrNotifySink::m_vec.GetSize()-1; lNdx >= 0; lNdx--)
+	for	(lNdx = CProxyIDaSvrNotifySink<CServerNotify>::m_vec.GetSize()-1; lNdx >= 0; lNdx--)
 	{
 		try
 		{
-			if	(tDaSvrNotifySink::m_vec.GetAt (lNdx))
+			if	(CProxyIDaSvrNotifySink<CServerNotify>::m_vec.GetAt (lNdx))
 			{
-				tDaSvrNotifySink::Unadvise ((DWORD)lNdx);
+				CProxyIDaSvrNotifySink<CServerNotify>::Unadvise ((DWORD)lNdx);
 #ifdef	_DEBUG_CONNECTIONS
 				LogMessage (_DEBUG_CONNECTIONS, _T("[%p] Unregister (DA) [%u] (All)"), this, lNdx);
 #endif
@@ -225,13 +294,13 @@ void CServerNotify::UnregisterAll ()
 		catch AnyExceptionSilent
 	}
 
-	for	(lNdx = tAgentNotifySinkEx::m_vec.GetSize()-1; lNdx >= 0; lNdx--)
+	for	(lNdx = CProxyIAgentNotifySinkEx<CServerNotify>::m_vec.GetSize()-1; lNdx >= 0; lNdx--)
 	{
 		try
 		{
-			if	(tAgentNotifySinkEx::m_vec.GetAt (lNdx))
+			if	(CProxyIAgentNotifySinkEx<CServerNotify>::m_vec.GetAt (lNdx))
 			{
-				tAgentNotifySinkEx::Unadvise ((DWORD)lNdx);
+				CProxyIAgentNotifySinkEx<CServerNotify>::Unadvise ((DWORD)lNdx);
 #ifdef	_DEBUG_CONNECTIONS
 				LogMessage (_DEBUG_CONNECTIONS, _T("[%p] UnregisterEx (MS) [%u] (All)"), this, lNdx);
 #endif
@@ -240,15 +309,30 @@ void CServerNotify::UnregisterAll ()
 		catch AnyExceptionSilent
 	}
 
-	for	(lNdx = tAgentNotifySink::m_vec.GetSize()-1; lNdx >= 0; lNdx--)
+	for	(lNdx = CProxyIAgentNotifySink<CServerNotify>::m_vec.GetSize()-1; lNdx >= 0; lNdx--)
 	{
 		try
 		{
-			if	(tAgentNotifySink::m_vec.GetAt (lNdx))
+			if	(CProxyIAgentNotifySink<CServerNotify>::m_vec.GetAt (lNdx))
 			{
-				tAgentNotifySink::Unadvise ((DWORD)lNdx);
+				CProxyIAgentNotifySink<CServerNotify>::Unadvise ((DWORD)lNdx);
 #ifdef	_DEBUG_CONNECTIONS
 				LogMessage (_DEBUG_CONNECTIONS, _T("[%p] Unregister (MS)   [%u] (All)"), this, lNdx);
+#endif
+			}
+		}
+		catch AnyExceptionSilent
+	}
+
+	for	(lNdx = CProxy_DaSvrEvents2<CServerNotify>::m_vec.GetSize()-1; lNdx >= 0; lNdx--)
+	{
+		try
+		{
+			if	(CProxy_DaSvrEvents2<CServerNotify>::m_vec.GetAt (lNdx))
+			{
+				CProxy_DaSvrEvents2<CServerNotify>::Unadvise ((DWORD)lNdx);
+#ifdef	_DEBUG_CONNECTIONS
+				LogMessage (_DEBUG_CONNECTIONS, _T("[%p] Unregister (Dispatch) [%u] (All)"), this, lNdx);
 #endif
 			}
 		}
@@ -261,12 +345,13 @@ void CServerNotify::UnregisterAll ()
 void CServerNotify::AbandonAll ()
 {
 #ifdef	_DEBUG_CONNECTIONS
-	LogMessage (_DEBUG_CONNECTIONS, _T("[%p] AbandonAll [%d] [%d] {%d] [%d]"), this, CountUnk(tDaSvrNotifySink2::m_vec), CountUnk(tDaSvrNotifySink::m_vec), CountUnk(tAgentNotifySinkEx::m_vec), CountUnk(tAgentNotifySink::m_vec));
+	LogMessage (_DEBUG_CONNECTIONS, _T("[%p] AbandonAll [%d] [%d] {%d] [%d] [%d]"), this, CountUnk(CProxyIDaSvrNotifySink2<CServerNotify>::m_vec), CountUnk(CProxyIDaSvrNotifySink<CServerNotify>::m_vec), CountUnk(CProxyIAgentNotifySinkEx<CServerNotify>::m_vec), CountUnk(CProxyIAgentNotifySink<CServerNotify>::m_vec), CountUnk(CProxy_DaSvrEvents2<CServerNotify>::m_vec));
 #endif
-	tDaSvrNotifySink2::m_vec.clear ();
-	tDaSvrNotifySink::m_vec.clear ();
-	tAgentNotifySinkEx::m_vec.clear ();
-	tAgentNotifySink::m_vec.clear ();
+	CProxyIDaSvrNotifySink2<CServerNotify>::m_vec.clear ();
+	CProxyIDaSvrNotifySink<CServerNotify>::m_vec.clear ();
+	CProxyIAgentNotifySinkEx<CServerNotify>::m_vec.clear ();
+	CProxyIAgentNotifySink<CServerNotify>::m_vec.clear ();
+	CProxy_DaSvrEvents2<CServerNotify>::m_vec.clear ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -278,208 +363,482 @@ bool CServerNotify::PreFireEvent (LPCTSTR pEventName)
 #ifdef	_DEBUG_NOTIFY
 	if	(LogIsActive ())
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s (%d %d)"), mOwner, max(mOwner->m_dwRef,-1), pEventName, _AtlModule.GetLockCount(), (_AtlModule.GetLockCount()==0));
+		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s (LockCount %d)"), mOwner, max(mOwner->m_dwRef,-1), pEventName, _AtlModule.GetLockCount());
 	}
 #endif
-	CEventNotify::PreFireEvent (pEventName);
-	return mOwner->PreNotify ();
+	if	(mOwner->PreNotify ())
+	{
+		CEventNotify::PreFireEvent (pEventName);
+#if	FALSE // We're allowing incoming calls during outgoing events.  Clients expect this.
+		CComMessageFilter *	lMessageFilter;
+		if	(lMessageFilter = _AtlModule.GetMessageFilter())
+		{
+			try
+			{
+				lMessageFilter->DoNotDisturb (true);
+			}
+			catch AnyExceptionSilent
+		}
+#endif
+		return true;
+	}
+	return false;
 }
 
-bool CServerNotify::PostFireEvent (LPCTSTR pEventName)
+bool CServerNotify::PostFireEvent (LPCTSTR pEventName, UINT pEventSinkCount)
 {
 #ifdef	_DEBUG_NOTIFY
 	if	(LogIsActive ())
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s done (%d %d)"), mOwner, max(mOwner->m_dwRef,-1), pEventName, _AtlModule.GetLockCount(), (_AtlModule.GetLockCount()==0));
+		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s done [%u] (LockCount %d)"), mOwner, max(mOwner->m_dwRef,-1), pEventName, pEventSinkCount, _AtlModule.GetLockCount());
 	}
 #endif
-	CEventNotify::PostFireEvent (pEventName);
+#if	FALSE // See above
+	CComMessageFilter *	lMessageFilter;
+	if	(lMessageFilter = _AtlModule.GetMessageFilter())
+	{
+		try
+		{
+			lMessageFilter->DoNotDisturb (false);
+		}
+		catch AnyExceptionSilent
+	}
+#endif
+	CEventNotify::PostFireEvent (pEventName, pEventSinkCount);
 	return mOwner->PostNotify ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
-extern int LogCrashCode (unsigned int pCode, LPCSTR pFile = NULL, UINT pLine = 0, int pAction = EXCEPTION_CONTINUE_EXECUTION);
-
-#define	FIRE_EVENT(n,e,c)\
-HRESULT CServerNotify::Fire##n e \
-{ \
-	if	(PreFireEvent (_T(#n))) \
-	{ \
-		__try \
-		{ \
-			int lNdx; \
-			IDaSvrNotifySink2 * lDaSink2; \
-			for	(lNdx = 0; lNdx < tDaSvrNotifySink2::m_vec.GetSize(); lNdx++) \
-			{ \
-				if	(lDaSink2 = (IDaSvrNotifySink2 *) tDaSvrNotifySink2::m_vec.GetAt (lNdx)) \
-				{ \
-					__try \
-					{ \
-						lDaSink2->n c; \
-					} \
-					__except (EXCEPTION_CONTINUE_SEARCH) \
-					{} \
-				} \
-			} \
-			IDaSvrNotifySink * lDaSink; \
-			for	(lNdx = 0; lNdx < tDaSvrNotifySink::m_vec.GetSize(); lNdx++) \
-			{ \
-				if	(lDaSink = (IDaSvrNotifySink *) tDaSvrNotifySink::m_vec.GetAt (lNdx)) \
-				{ \
-					__try \
-					{ \
-						lDaSink->n c; \
-					} \
-					__except (EXCEPTION_CONTINUE_SEARCH) \
-					{} \
-				} \
-			} \
-			IAgentNotifySink * lMsSink; \
-			for	(lNdx = 0; lNdx < tAgentNotifySink::m_vec.GetSize(); lNdx++) \
-			{ \
-				if	(lMsSink = (IAgentNotifySink *) tAgentNotifySink::m_vec.GetAt (lNdx)) \
-				{ \
-					__try \
-					{ \
-						lMsSink->n c; \
-					} \
-					__except (EXCEPTION_CONTINUE_SEARCH) \
-					{} \
-				} \
-			} \
-			IAgentNotifySinkEx * lMsSinkEx; \
-			for	(lNdx = 0; lNdx < tAgentNotifySinkEx::m_vec.GetSize(); lNdx++) \
-			{ \
-				if	(lMsSinkEx = (IAgentNotifySinkEx *) tAgentNotifySinkEx::m_vec.GetAt (lNdx)) \
-				{ \
-					__try \
-					{ \
-						lMsSinkEx->n c; \
-					} \
-					__except (EXCEPTION_CONTINUE_SEARCH) \
-					{} \
-				} \
-			} \
-			mEventDispatch.Fire##n c; \
-		} \
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__)) \
-		{} \
-		PostFireEvent (_T(#n)); \
-	} \
-	return S_OK; \
-}
-
-#define	FIRE_EVENT_EX(n,e,c)\
-HRESULT CServerNotify::Fire##n e \
-{ \
-	if	(PreFireEvent (_T(#n))) \
-	{ \
-		__try \
-		{ \
-			int lNdx; \
-			IDaSvrNotifySink2 * lDaSink2; \
-			for	(lNdx = 0; lNdx < tDaSvrNotifySink2::m_vec.GetSize(); lNdx++) \
-			{ \
-				if	(lDaSink2 = (IDaSvrNotifySink2 *) tDaSvrNotifySink2::m_vec.GetAt (lNdx)) \
-				{ \
-					__try \
-					{ \
-						lDaSink2->n c; \
-					} \
-					__except (EXCEPTION_CONTINUE_SEARCH) \
-					{} \
-				} \
-			} \
-			IDaSvrNotifySink * lDaSink; \
-			for	(lNdx = 0; lNdx < tDaSvrNotifySink::m_vec.GetSize(); lNdx++) \
-			{ \
-				if	(lDaSink = (IDaSvrNotifySink *) tDaSvrNotifySink::m_vec.GetAt (lNdx)) \
-				{ \
-					__try \
-					{ \
-						lDaSink->n c; \
-					} \
-					__except (EXCEPTION_CONTINUE_SEARCH) \
-					{} \
-				} \
-			} \
-			IAgentNotifySinkEx * lMsSinkEx; \
-			for	(lNdx = 0; lNdx < tAgentNotifySinkEx::m_vec.GetSize(); lNdx++) \
-			{ \
-				if	(lMsSinkEx = (IAgentNotifySinkEx *) tAgentNotifySinkEx::m_vec.GetAt (lNdx)) \
-				{ \
-					__try \
-					{ \
-						lMsSinkEx->n c; \
-					} \
-					__except (EXCEPTION_CONTINUE_SEARCH) \
-					{} \
-				} \
-			} \
-			mEventDispatch.Fire##n c; \
-		} \
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__)) \
-		{} \
-		PostFireEvent (_T(#n)); \
-	} \
-	return S_OK; \
-}
-
-#define	FIRE_EVENT_2(n,e,c)\
-HRESULT CServerNotify::Fire##n e \
-{ \
-	if	(PreFireEvent (_T(#n))) \
-	{ \
-		__try \
-		{ \
-			int lNdx; \
-			IDaSvrNotifySink2 * lDaSink2; \
-			for	(lNdx = 0; lNdx < tDaSvrNotifySink2::m_vec.GetSize(); lNdx++) \
-			{ \
-				if	(lDaSink2 = (IDaSvrNotifySink2 *) tDaSvrNotifySink2::m_vec.GetAt (lNdx)) \
-				{ \
-					__try \
-					{ \
-						lDaSink2->n c; \
-					} \
-					__except (EXCEPTION_CONTINUE_SEARCH) \
-					{} \
-				} \
-			} \
-			mEventDispatch.Fire##n c; \
-		} \
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__)) \
-		{} \
-		PostFireEvent (_T(#n)); \
-	} \
-	return S_OK; \
-}
-
+#pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-FIRE_EVENT(Command, (long CommandID, IDaSvrUserInput2* UserInput), (CommandID, UserInput))
-FIRE_EVENT(ActivateInputState, (long CharacterID, long Activated), (CharacterID, Activated))
-FIRE_EVENT(VisibleState, (long CharacterID, long Visible, long Cause), (CharacterID, Visible, Cause))
-FIRE_EVENT(Click, (long CharacterID, short Keys, long X, long Y), (CharacterID, Keys, X, Y))
-FIRE_EVENT(DblClick, (long CharacterID, short Keys, long X, long Y), (CharacterID, Keys, X, Y))
-FIRE_EVENT(DragStart, (long CharacterID, short Keys, long X, long Y), (CharacterID, Keys, X, Y))
-FIRE_EVENT(DragComplete, (long CharacterID, short Keys, long X, long Y), (CharacterID, Keys, X, Y))
-FIRE_EVENT(RequestStart, (long RequestID), (RequestID))
-FIRE_EVENT(RequestComplete, (long RequestID, long Status), (RequestID, Status))
-FIRE_EVENT(BookMark, (long BookMarkID), (BookMarkID))
-FIRE_EVENT(Idle, (long CharacterID, long Start), (CharacterID, Start))
-FIRE_EVENT(Move, (long CharacterID, long X, long Y, long Cause), (CharacterID, X, Y, Cause))
-FIRE_EVENT(Size, (long CharacterID, long Width, long Height), (CharacterID, Width, Height))
-FIRE_EVENT(BalloonVisibleState, (long CharacterID, long Visible), (CharacterID, Visible))
+HRESULT CServerNotify::FireCommand(long CommandID, IDaSvrUserInput2* UserInput)
+{
+	int	lEventSinkCount = 0;
 
-FIRE_EVENT_EX(ListeningState, (long CharacterID, long Listening, long Cause), (CharacterID, Listening, Cause))
-FIRE_EVENT_EX(DefaultCharacterChange, (BSTR CharGUID), (CharGUID))
-FIRE_EVENT_EX(AgentPropertyChange, (), ())
-FIRE_EVENT_EX(ActiveClientChange, (long CharacterID, long Status), (CharacterID, Status))
+	if	(PreFireEvent (_DEBUG_T("Command")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink<CServerNotify>::FireCommand (CommandID, UserInput)
+							+ CProxyIDaSvrNotifySink2<CServerNotify>::FireCommand (CommandID, UserInput)
+							+ CProxyIAgentNotifySink<CServerNotify>::FireCommand (CommandID, UserInput)
+							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireCommand (CommandID, UserInput)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireCommand (CommandID, UserInput);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("Command"), lEventSinkCount);
+	}
+	return S_OK;
+}
 
-FIRE_EVENT_2(SpeechStart, (long CharacterID, IDaSvrFormattedText* FormattedText), (CharacterID, FormattedText))
-FIRE_EVENT_2(SpeechEnd, (long CharacterID, IDaSvrFormattedText* FormattedText, VARIANT_BOOL Stopped), (CharacterID, FormattedText, Stopped))
-FIRE_EVENT_2(SpeechWord, (long CharacterID, IDaSvrFormattedText* FormattedText, long WordIndex), (CharacterID, FormattedText, WordIndex))
+HRESULT CServerNotify::FireActivateInputState(long CharacterID, long Activated)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("ActivateInputState")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink<CServerNotify>::FireActivateInputState (CharacterID, Activated)
+							+ CProxyIDaSvrNotifySink2<CServerNotify>::FireActivateInputState (CharacterID, Activated)
+							+ CProxyIAgentNotifySink<CServerNotify>::FireActivateInputState (CharacterID, Activated)
+							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireActivateInputState (CharacterID, Activated)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireActivateInputState (CharacterID, Activated);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("ActivateInputState"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireVisibleState(long CharacterID, long Visible, long Cause)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("VisibleState")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink<CServerNotify>::FireVisibleState (CharacterID, Visible, Cause)
+							+ CProxyIDaSvrNotifySink2<CServerNotify>::FireVisibleState (CharacterID, Visible, Cause)
+							+ CProxyIAgentNotifySink<CServerNotify>::FireVisibleState (CharacterID, Visible, Cause)
+							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireVisibleState (CharacterID, Visible, Cause)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireVisibleState (CharacterID, Visible, Cause);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("VisibleState"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireClick(long CharacterID, short Keys, long X, long Y)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("Click")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink<CServerNotify>::FireClick (CharacterID, Keys, X, Y)
+							+ CProxyIDaSvrNotifySink2<CServerNotify>::FireClick (CharacterID, Keys, X, Y)
+							+ CProxyIAgentNotifySink<CServerNotify>::FireClick (CharacterID, Keys, X, Y)
+							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireClick (CharacterID, Keys, X, Y)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireClick (CharacterID, Keys, X, Y);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("Click"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireDblClick(long CharacterID, short Keys, long X, long Y)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("DblClick")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink<CServerNotify>::FireDblClick (CharacterID, Keys, X, Y)
+							+ CProxyIDaSvrNotifySink2<CServerNotify>::FireDblClick (CharacterID, Keys, X, Y)
+							+ CProxyIAgentNotifySink<CServerNotify>::FireDblClick (CharacterID, Keys, X, Y)
+							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireDblClick (CharacterID, Keys, X, Y)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireDblClick (CharacterID, Keys, X, Y);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("DblClick"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireDragStart(long CharacterID, short Keys, long X, long Y)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("DragStart")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink<CServerNotify>::FireDragStart (CharacterID, Keys, X, Y)
+							+ CProxyIDaSvrNotifySink2<CServerNotify>::FireDragStart (CharacterID, Keys, X, Y)
+							+ CProxyIAgentNotifySink<CServerNotify>::FireDragStart (CharacterID, Keys, X, Y)
+							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireDragStart (CharacterID, Keys, X, Y)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireDragStart (CharacterID, Keys, X, Y);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("DragStart"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireDragComplete(long CharacterID, short Keys, long X, long Y)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("DragComplete")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink<CServerNotify>::FireDragComplete (CharacterID, Keys, X, Y)
+							+ CProxyIDaSvrNotifySink2<CServerNotify>::FireDragComplete (CharacterID, Keys, X, Y)
+							+ CProxyIAgentNotifySink<CServerNotify>::FireDragComplete (CharacterID, Keys, X, Y)
+							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireDragComplete (CharacterID, Keys, X, Y)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireDragComplete (CharacterID, Keys, X, Y);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("DragComplete"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireRequestStart(long RequestID)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("RequestStart")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink<CServerNotify>::FireRequestStart (RequestID)
+							+ CProxyIDaSvrNotifySink2<CServerNotify>::FireRequestStart (RequestID)
+							+ CProxyIAgentNotifySink<CServerNotify>::FireRequestStart (RequestID)
+							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireRequestStart (RequestID)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireRequestStart (RequestID);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("RequestStart"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireRequestComplete(long RequestID, long Result)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("RequestComplete")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink<CServerNotify>::FireRequestComplete (RequestID, Result)
+							+ CProxyIDaSvrNotifySink2<CServerNotify>::FireRequestComplete (RequestID, Result)
+							+ CProxyIAgentNotifySink<CServerNotify>::FireRequestComplete (RequestID, Result)
+							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireRequestComplete (RequestID, Result)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireRequestComplete (RequestID, Result);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("RequestComplete"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireBookMark(long BookMarkID)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("BookMark")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink<CServerNotify>::FireBookMark (BookMarkID)
+							+ CProxyIDaSvrNotifySink2<CServerNotify>::FireBookMark (BookMarkID)
+							+ CProxyIAgentNotifySink<CServerNotify>::FireBookMark (BookMarkID)
+							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireBookMark (BookMarkID)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireBookMark (BookMarkID);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("BookMark"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireIdle(long CharacterID, long Start)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("Idle")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink<CServerNotify>::FireIdle (CharacterID, Start)
+							+ CProxyIDaSvrNotifySink2<CServerNotify>::FireIdle (CharacterID, Start)
+							+ CProxyIAgentNotifySink<CServerNotify>::FireIdle (CharacterID, Start)
+							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireIdle (CharacterID, Start)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireIdle (CharacterID, Start);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("Idle"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireMove(long CharacterID, long X, long Y, long Cause)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("Move")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink<CServerNotify>::FireMove (CharacterID, X, Y, Cause)
+							+ CProxyIDaSvrNotifySink2<CServerNotify>::FireMove (CharacterID, X, Y, Cause)
+							+ CProxyIAgentNotifySink<CServerNotify>::FireMove (CharacterID, X, Y, Cause)
+							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireMove (CharacterID, X, Y, Cause)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireMove (CharacterID, X, Y, Cause);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("Move"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireSize(long CharacterID, long Width, long Height)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("Size")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink<CServerNotify>::FireSize (CharacterID, Width, Height)
+							+ CProxyIDaSvrNotifySink2<CServerNotify>::FireSize (CharacterID, Width, Height)
+							+ CProxyIAgentNotifySink<CServerNotify>::FireSize (CharacterID, Width, Height)
+							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireSize (CharacterID, Width, Height)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireSize (CharacterID, Width, Height);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("Size"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireBalloonVisibleState(long CharacterID, long Visible)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("BalloonVisibleState")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink<CServerNotify>::FireBalloonVisibleState (CharacterID, Visible)
+							+ CProxyIDaSvrNotifySink2<CServerNotify>::FireBalloonVisibleState (CharacterID, Visible)
+							+ CProxyIAgentNotifySink<CServerNotify>::FireBalloonVisibleState (CharacterID, Visible)
+							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireBalloonVisibleState (CharacterID, Visible)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireBalloonVisibleState (CharacterID, Visible);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("BalloonVisibleState"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireListeningState(long CharacterID, long Listening, long Cause)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("ListeningState")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink<CServerNotify>::FireListeningState (CharacterID, Listening, Cause)
+							+ CProxyIDaSvrNotifySink2<CServerNotify>::FireListeningState (CharacterID, Listening, Cause)
+							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireListeningState (CharacterID, Listening, Cause)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireListeningState (CharacterID, Listening, Cause);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("ListeningState"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireDefaultCharacterChange(BSTR CharGUID)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("DefaultCharacterChange")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink<CServerNotify>::FireDefaultCharacterChange (CharGUID)
+							+ CProxyIDaSvrNotifySink2<CServerNotify>::FireDefaultCharacterChange (CharGUID)
+							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireDefaultCharacterChange (CharGUID)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireDefaultCharacterChange (CharGUID);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("DefaultCharacterChange"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireAgentPropertyChange()
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("AgentPropertyChange")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink<CServerNotify>::FireAgentPropertyChange ()
+							+ CProxyIDaSvrNotifySink2<CServerNotify>::FireAgentPropertyChange ()
+							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireAgentPropertyChange ()
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireAgentPropertyChange ();
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("AgentPropertyChange"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireActiveClientChange(long CharacterID, long Status)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("ActiveClientChange")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink<CServerNotify>::FireActiveClientChange (CharacterID, Status)
+							+ CProxyIDaSvrNotifySink2<CServerNotify>::FireActiveClientChange (CharacterID, Status)
+							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireActiveClientChange (CharacterID, Status)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireActiveClientChange (CharacterID, Status);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("ActiveClientChange"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireSpeechStart(long CharacterID, IDaSvrFormattedText* FormattedText)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("SpeechStart")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink2<CServerNotify>::FireSpeechStart (CharacterID, FormattedText)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireSpeechStart (CharacterID, FormattedText);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("SpeechStart"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireSpeechEnd(long CharacterID, IDaSvrFormattedText* FormattedText, VARIANT_BOOL Stopped)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("SpeechEnd")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink2<CServerNotify>::FireSpeechEnd (CharacterID, FormattedText, Stopped)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireSpeechEnd (CharacterID, FormattedText, Stopped);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("SpeechEnd"), lEventSinkCount);
+	}
+	return S_OK;
+}
+
+HRESULT CServerNotify::FireSpeechWord(long CharacterID, IDaSvrFormattedText* FormattedText, long WordNdx)
+{
+	int	lEventSinkCount = 0;
+
+	if	(PreFireEvent (_DEBUG_T("SpeechWord")))
+	{
+		__try
+		{
+			lEventSinkCount = CProxyIDaSvrNotifySink2<CServerNotify>::FireSpeechWord (CharacterID, FormattedText, WordNdx)
+							+ CProxy_DaSvrEvents2<CServerNotify>::FireSpeechWord (CharacterID, FormattedText, WordNdx);
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		{}
+		PostFireEvent (_DEBUG_T("SpeechWord"), lEventSinkCount);
+	}
+	return S_OK;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()

@@ -51,15 +51,16 @@
 #pragma warning (disable: 4355)
 
 #ifdef	_DEBUG
-#define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Server"),LogVerbose,true)&0xFFFF|LogHighVolume)
+#define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Server"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 #define	_DEBUG_REQUESTS			(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF|LogTimeMs)
+#define	_DEBUG_NOTIFY_LEVEL		(GetProfileDebugInt(_T("DebugNotifyLevel"),LogVerbose,true)&0xFFFF|LogTime)
 #define	_DEBUG_STYLE			(GetProfileDebugInt(_T("DebugStyle"),LogVerbose,true)&0xFFFF|LogTimeMs)
-#define	_DEBUG_HANDLER			(GetProfileDebugInt(_T("DebugInterface_Handler"),LogVerbose,true)&0xFFFF)
-#define	_LOG_CHARACTER			(GetProfileDebugInt(_T("LogInstance_Character"),LogDetails,true)&0xFFFF)
-#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Server"),LogNormal,true)&0xFFFF)
-#define	_LOG_ABANDONED			MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF,_LOG_INSTANCE)
-#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
-//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+#define	_DEBUG_HANDLER			(GetProfileDebugInt(_T("DebugInterface_Handler"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_CHARACTER			(GetProfileDebugInt(_T("LogInstance_Character"),LogDetails,true)&0xFFFF|LogTime)
+#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Server"),LogNormal,true)&0xFFFF|LogTime)
+#define	_LOG_ABANDONED			MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF|LogTime,_LOG_INSTANCE)
+#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
+//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 #endif
 
 //#define	__RUNNING_STRESS_TEST__	1
@@ -188,6 +189,30 @@ void DaServer::Terminate (bool pFinal, bool pAbandonned)
 	}
 }
 
+void DaServer::Abandon ()
+{
+	if	(this)
+	{
+#ifdef	_LOG_INSTANCE
+		if	(LogIsActive (_LOG_INSTANCE))
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::Abandon"), this, max(m_dwRef,-1));
+		}
+#endif
+		if	(m_dwRef > 0)
+		{
+			try
+			{
+				CoDisconnectObject (GetUnknown(), 0);
+			}
+			catch AnyExceptionDebug
+			m_dwRef = 0;
+		}
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 void DaServer::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
@@ -199,9 +224,42 @@ void DaServer::FinalRelease()
 	Terminate (false);
 }
 
-bool DaServer::CanFinalRelease ()
+bool DaServer::VerifyClientLifetime ()
 {
-	return (IsInNotify() == 0);
+	if	(HasFinalReleased())
+	{
+#ifdef	_LOG_ABANDONED
+		if	(LogIsActive (_LOG_ABANDONED))
+		{
+			LogMessage (_LOG_ABANDONED, _T("[%p(%d)] DaServer::VerifyClientLifetime [%u] HasFinalReleased"), this, max(m_dwRef,-1), IsInNotify());
+		}
+#endif
+		try
+		{
+			if	(CanFinalRelease())
+			{
+#ifdef	_LOG_INSTANCE
+				if	(LogIsActive (_LOG_INSTANCE))
+				{
+					LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer release abandoned"), this, max(m_dwRef,-1));
+				}
+#ifdef	_LOG_ABANDONED
+				else
+				if	(LogIsActive (_LOG_ABANDONED))
+				{
+					LogMessage (_LOG_ABANDONED, _T("[%p(%d)] DaServer release abandoned"), this, max(m_dwRef,-1));
+				}
+#endif
+#endif
+				m_dwRef = 1;
+				Release ();
+			}
+		}
+		catch AnyExceptionDebug
+
+		return true;
+	}
+	return CSvrObjLifetime::VerifyClientLifetime ();
 }
 
 void DaServer::OnClientEnded ()
@@ -218,6 +276,98 @@ void DaServer::OnClientEnded ()
 		delete this;
 	}
 	catch AnyExceptionDebug
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool DaServer::CanFinalRelease ()
+{
+	if	(IsInNotify() > 0)
+	{
+		return false;
+	}
+	else
+	{
+		INT_PTR			lFileNdx;
+		CAgentFile *	lFile;
+
+		for	(lFileNdx = CachedFileCount()-1; lFile = GetCachedFile (lFileNdx); lFileNdx--)
+		{
+			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
+			INT_PTR								lClientNdx;
+
+			if	(GetFileClients (lFile, lFileClients))
+			{
+				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
+				{
+					try
+					{
+						DaSvrCharacter *	lCharacter = NULL;
+
+						if	(
+								(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
+							&&	(!lCharacter->CanFinalRelease ())
+							)
+						{
+							return false;
+						}
+					}
+					catch AnyExceptionSilent
+				}
+			}
+		}
+	}
+	return true;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool DaServer::_PreNotify ()
+{
+#ifdef	_DEBUG_NOTIFY_LEVEL
+	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] DaServer::_PreNotify [%u]"), this, max(m_dwRef,-1), IsInNotify());
+#endif
+	if	(m_dwRef > 0)
+	{
+		return CEventNotifyHolder<DaServer>::_PreNotify ();
+	}
+	return false;
+}
+
+bool DaServer::_PostNotify ()
+{
+	CEventNotifyHolder<DaServer>::_PostNotify ();
+#ifdef	_DEBUG_NOTIFY_LEVEL
+	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] DaServer::_PostNotify [%u] HasFinalRelased [%u] CanFinalRelease [%u]"), this, max(m_dwRef,-1), IsInNotify(), HasFinalReleased(), CanFinalRelease());
+#endif
+
+	if	(IsInNotify() == 0)
+	{
+		mNotify.UnregisterDelayed ();
+	}
+
+	if	(HasFinalReleased ())
+	{
+#ifdef	_LOG_INSTANCE
+		if	(LogIsActive (_LOG_INSTANCE))
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer PostNotify -> HasFinalReleased"), this, max(m_dwRef,-1));
+		}
+#endif
+#if	FALSE // For safety, just let it be abandoned
+		if	(CanFinalRelease ())
+		{
+			m_dwRef = 1;
+			Release ();
+		}
+		else
+#endif
+		{
+			Abandon ();
+		}
+		return false;
+	}
+	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -432,56 +582,6 @@ HRESULT WINAPI DaServer::DelegateIDaSvrCharacterFiles (void* pv, REFIID iid, LPV
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool DaServer::_PreNotify ()
-{
-	if	(m_dwRef > 0)
-	{
-		return CEventNotifyHolder<DaServer>::_PreNotify ();
-	}
-	return false;
-}
-
-bool DaServer::_PostNotify ()
-{
-	CEventNotifyHolder<DaServer>::_PostNotify ();
-
-	if	(
-			(CanFinalRelease ())
-		&&	(mInNotifyUnregister.GetCount() > 0)
-		)
-	{
-		while (mInNotifyUnregister.GetCount() > 0)
-		{
-			long	lSinkId = mInNotifyUnregister [0];
-
-			mInNotifyUnregister.RemoveAt (0);
-			try
-			{
-				mNotify.Unregister (lSinkId);
-			}
-			catch AnyExceptionSilent
-		}
-	}
-	if	(
-			(CanFinalRelease ())
-		&&	(HasFinalReleased ())
-		)
-	{
-#ifdef	_LOG_INSTANCE
-		if	(LogIsActive (_LOG_INSTANCE))
-		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer PostNotify -> Release"), this, max(m_dwRef,-1));
-		}
-#endif
-		m_dwRef = 1;
-		Release ();
-		return false;
-	}
-	return true;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
 void DaServer::UnloadAllCharacters (bool pAbandonned)
 {
 	INT_PTR			lFileNdx;
@@ -489,14 +589,14 @@ void DaServer::UnloadAllCharacters (bool pAbandonned)
 
 #ifdef	_LOG_INSTANCE
 	if	(
-			(GetCachedFile (0))
+			(CachedFileCount() > 0)
 		&&	(LogIsActive (_LOG_INSTANCE))
 		)
 	{
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::UnloadAllCharacters [%d] Abandonned [%u]"), this, max(m_dwRef,-1), CachedFileCount(), pAbandonned);
 	}
 #endif
-	for	(lFileNdx = 0; lFile = GetCachedFile (lFileNdx); lFileNdx++)
+	for	(lFileNdx = CachedFileCount()-1; lFile = GetCachedFile (lFileNdx); lFileNdx--)
 	{
 		CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 		INT_PTR								lClientNdx;
@@ -508,13 +608,13 @@ void DaServer::UnloadAllCharacters (bool pAbandonned)
 				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
 					DaSvrCharacter *	lCharacter = NULL;
-					
+
 					try
 					{
 						lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]);
 					}
 					catch AnyExceptionDebug
-					
+
 					if	(lCharacter)
 					{
 						try
@@ -524,7 +624,7 @@ void DaServer::UnloadAllCharacters (bool pAbandonned)
 #ifdef	_LOG_ABANDONED
 								if	(LogIsActive (_LOG_ABANDONED))
 								{
-									LogMessage (_LOG_ABANDONED, _T("[%p(%d)] AbandonCharacter [%p(%d)(%d)]"), this, max(m_dwRef,-1), lCharacter, lCharacter->GetCharID(), max(lCharacter->m_dwRef,-1));
+									LogMessage (_LOG_ABANDONED, _T("[%p(%d)] TerminateCharacter [%p(%d)(%d)]"), this, max(m_dwRef,-1), lCharacter, lCharacter->GetCharID(), max(lCharacter->m_dwRef,-1));
 								}
 #endif
 								try
@@ -546,11 +646,12 @@ void DaServer::UnloadAllCharacters (bool pAbandonned)
 #ifdef	_LOG_ABANDONED
 								if	(LogIsActive (_LOG_ABANDONED))
 								{
-									LogMessage (_LOG_ABANDONED, _T("[%p(%d)] AbandonCharacter [%p] Done"), this, max(m_dwRef,-1), lCharacter);
+									LogMessage (_LOG_ABANDONED, _T("[%p(%d)] TerminateCharacter [%p] Done"), this, max(m_dwRef,-1), lCharacter);
 								}
 #endif
 							}
 							else
+							if	(lCharacter->CanFinalRelease ())
 							{
 								lCharacter->Terminate (false);
 #ifdef	_STRICT_COMPATIBILITY
@@ -563,6 +664,10 @@ void DaServer::UnloadAllCharacters (bool pAbandonned)
 #else
 								lCharacter->Release ();
 #endif
+							}
+							else
+							{
+								lCharacter->Abandon ();
 							}
 						}
 						catch AnyExceptionDebug
@@ -906,8 +1011,24 @@ HRESULT DaServer::UnloadCharacter (long pCharID)
 #ifdef	_TRACE_CHARACTER_ACTIONS
 				_AtlModule.TraceCharacterAction (lCharacter->GetCharID(), _T("Unload"));
 #endif
-				lCharacter->Terminate (false);
-				lCharacter->Release ();
+				if	(lCharacter->CanFinalRelease())
+				{
+					lCharacter->Terminate (false);
+#ifdef	_STRICT_COMPATIBILITY
+					lCharacter->Terminate (true);
+					try
+					{
+						delete lCharacter;
+					}
+					catch AnyExceptionSilent
+#else
+					lCharacter->Release ();
+#endif
+				}
+				else
+				{
+					lCharacter->Abandon ();
+				}
 			}
 			catch AnyExceptionDebug
 
@@ -980,7 +1101,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetClassForHandler (DWORD dwDestContext, voi
 		try
 		{
 			GUID lThreadId = GUID_NULL;
-			LogComErr (LogNormal, CoGetCurrentLogicalThreadId (&lThreadId));
+			LogComErr (LogNormal|LogTime, CoGetCurrentLogicalThreadId (&lThreadId));
 			LogMessage (_DEBUG_HANDLER, _T("[%p(%d)] DaServer::GetClassForHandler [%8.8X] [%p] [%s] Thread [%s]"), this, max(m_dwRef,-1), dwDestContext, pvDestContext, CGuidStr::GuidName(*pClsid), (CString)CGuidStr(lThreadId));
 		}
 		catch AnyExceptionSilent
@@ -1026,7 +1147,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Load (VARIANT Provider, long * pdwCharID, lo
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] DaServer::Load [%d] [%s] Default [%u]"), this, max(m_dwRef,-1), (pdwCharID?*pdwCharID:-1), lFilePath, lFilePathIsDefault);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::Load [%d] [%s] Default [%u]"), this, max(m_dwRef,-1), (pdwCharID?*pdwCharID:-1), lFilePath, lFilePathIsDefault);
 	}
 #endif
 	return lResult;
@@ -1043,7 +1164,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Unload (long CharacterID)
 	CDebugProcess().LogWorkingSetInline (LogIfActive|LogHighVolume);
 	CDebugProcess().LogAddressSpaceInline (LogIfActive|LogHighVolume);
 	CDebugProcess().LogGuiResourcesInline (LogIfActive|LogHighVolume);
-	LogMessage (LogIfActive, _T(""));
+	LogMessage (LogIfActive|LogTime, _T(""));
 #endif
 #if	__EMPTY_WORKING_SET__
 	if	(SUCCEEDED (lResult))
@@ -1060,7 +1181,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Unload (long CharacterID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] DaServer::Unload [%d]"), this, max(m_dwRef,-1), CharacterID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::Unload [%d]"), this, max(m_dwRef,-1), CharacterID);
 	}
 #endif
 	return lResult;
@@ -1092,15 +1213,8 @@ HRESULT STDMETHODCALLTYPE DaServer::Unregister (long dwSinkID)
 #endif
 	HRESULT	lResult;
 
-	if	(IsInNotify ())
-	{
-		mInNotifyUnregister.Add (dwSinkID);
-		lResult = S_FALSE;
-	}
-	else
-	{
-		lResult = mNotify.Unregister (dwSinkID);
-	}
+	lResult = mNotify.Unregister (dwSinkID, (IsInNotify()>0));
+
 	PutServerError (lResult, __uuidof(IDaServer));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))

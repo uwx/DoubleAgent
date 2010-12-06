@@ -59,10 +59,10 @@ bool CThemedModule::InitModuleTheme ()
 	{
 		if	(GetCurrentActCtx (&mActCtxHandle))
 		{
-#ifdef	_DEBUG_CONTEXT		
+#ifdef	_DEBUG_CONTEXT
 			LogMessage (_DEBUG_CONTEXT, _T("Initial    ActCtx [%p]"), mActCtxHandle);
 #endif
-			lRet = true;			
+			lRet = true;
 		}
 	}
 	catch AnyExceptionSilent
@@ -77,9 +77,9 @@ void CThemedModule::EndModuleTheme ()
 	{
 		if	(mActCtxHandle)
 		{
-#ifdef	_DEBUG_CONTEXT		
+#ifdef	_DEBUG_CONTEXT
 			LogMessage (_DEBUG_CONTEXT, _T("Release    ActCtx [%p]"), mActCtxHandle);
-#endif			
+#endif
 			ReleaseActCtx (mActCtxHandle);
 			mActCtxHandle = NULL;
 		}
@@ -112,18 +112,18 @@ ULONG_PTR CThemedModule::ActivateModuleTheme ()
 	}
 	else
 	{
-		LogWinErr (LogNormal, GetLastError (), _T("GetCurrentActCtx"));
+		LogWinErr (LogNormal|LogTime, GetLastError (), _T("GetCurrentActCtx"));
 	}
 
 	if	(ActivateActCtx (mActCtxHandle, &lCookie))
 	{
-#ifdef	_DEBUG_CONTEXT		
+#ifdef	_DEBUG_CONTEXT
 		LogMessage (_DEBUG_CONTEXT, _T("Activate   ActCtx [%p] [%u]"), mActCtxHandle, lCookie);
-#endif			
+#endif
 	}
 	else
 	{
-		LogWinErr (LogNormal, GetLastError (), _T("ActivateActCtx [%p]"), mActCtxHandle);
+		LogWinErr (LogNormal|LogTime, GetLastError (), _T("ActivateActCtx [%p]"), mActCtxHandle);
 	}
 #endif
 	return lCookie;
@@ -136,13 +136,13 @@ void CThemedModule::DeactivateModuleTheme (ULONG_PTR pCookie)
 	{
 		if	(DeactivateActCtx (0, pCookie))
 		{
-#ifdef	_DEBUG_CONTEXT		
+#ifdef	_DEBUG_CONTEXT
 			LogMessage (_DEBUG_CONTEXT, _T("Deactivate ActCtx [%p] [%u]"), mActCtxHandle, pCookie);
-#endif			
+#endif
 		}
 		else
 		{
-			LogWinErr (LogNormal, GetLastError (), _T("DeactivateActCtx [%p] [%u]"), mActCtxHandle, pCookie);
+			LogWinErr (LogNormal|LogTime, GetLastError (), _T("DeactivateActCtx [%p] [%u]"), mActCtxHandle, pCookie);
 		}
 	}
 #endif
@@ -190,7 +190,7 @@ void CThemedModule::LogModuleTheme (UINT pLogLevel, LPCTSTR pFormat, ...)
 				GetModuleFileName (lComCtlModule, lComCtlDll.GetBuffer (MAX_PATH), MAX_PATH);
 				lComCtlDll.ReleaseBuffer ();
 
-				LogMessage (LogNormal, _T("%s  Themed [%8.8X] ComCtlVersion [%u.%u.%u] ComCtlModule [%s]"), lTitle, GetThemeAppProperties(), lComCtlVersion.dwMajorVersion, lComCtlVersion.dwMinorVersion, lComCtlVersion.dwBuildNumber, lComCtlDll);
+				LogMessage (LogNormal|LogTime, _T("%s  Themed [%8.8X] ComCtlVersion [%u.%u.%u] ComCtlModule [%s]"), lTitle, GetThemeAppProperties(), lComCtlVersion.dwMajorVersion, lComCtlVersion.dwMinorVersion, lComCtlVersion.dwBuildNumber, lComCtlDll);
 			}
 		}
 		catch AnyExceptionDebug

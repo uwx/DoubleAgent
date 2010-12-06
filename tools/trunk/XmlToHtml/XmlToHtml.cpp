@@ -783,7 +783,7 @@ bool XmlToHtml::ConvertXmlToHtml (XmlDocument^ pXmlDocument, System::Reflection:
 #endif
 #if	FALSE
 				Console::WriteLine ("Wrote {0}", lMemberFileName);
-#endif				
+#endif
 			}
 		}
 		lRet = true;
@@ -2883,7 +2883,7 @@ bool XmlToHtml::IsInheritDoc (XmlNode^ pXmlNode)
 		)
 	{
 		lRet = true;
-		
+
 		for each (lChildNode in pXmlNode->ChildNodes)
 		{
 			if	(
@@ -3022,7 +3022,7 @@ void XmlToHtml::FixMethodSignatures (XmlDocument^ pXmlDocument)
 					{
 						Generic::KeyValuePair<String^, MethodInfo^>^	lMethod;
 						int												lStringStart;
-						
+
 						for each (lMethod in mSourceMethods)
 						{
 							if	(
@@ -3346,7 +3346,7 @@ void XmlToHtml::AdjustXmlFormat (System::Xml::XmlDocument^ pXmlDocument)
 									lSummaryNode->ReplaceChild (CopyNodeInnerXml (lNode, lNode->OwnerDocument), lNode);
 								}
 							}
-							
+
 							if	(lNodes = NodeList (lSummaryNode->SelectNodes (".//c")))
 							{
 								for each (lNode in lNodes)

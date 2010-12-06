@@ -32,8 +32,8 @@
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_VOICES		(GetProfileDebugInt(_T("LogVoices"),LogVerbose,true)&0xFFFF)
-#define	_DEBUG_TTS_MATCH	(GetProfileDebugInt(_T("LogVoiceMatch"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_VOICES		(GetProfileDebugInt(_T("LogVoices"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_DEBUG_TTS_MATCH	(GetProfileDebugInt(_T("LogVoiceMatch"),LogVerbose,true)&0xFFFF|LogTime)
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -68,7 +68,7 @@ CSapi5VoiceInfo::~CSapi5VoiceInfo ()
 IMPLEMENT_DLL_OBJECT(CSapi5Voices)
 
 CSapi5Voices::CSapi5Voices ()
-:	mLogLevelDebug (LogVerbose)
+:	mLogLevelDebug (LogVerbose|LogTime)
 {
 #ifdef	_DEBUG_VOICES
 	const_cast <UINT&> (mLogLevelDebug) = _DEBUG_VOICES;
@@ -158,7 +158,7 @@ void CSapi5Voices::Enumerate ()
 
 			if	(lVoiceInfo = new CSapi5VoiceInfo)
 			{
-				if	(SUCCEEDED (LogSapi5Err (LogNormal, SpGetDescription (lToken, lSapiStr.Free (), NULL))))
+				if	(SUCCEEDED (LogSapi5Err (LogNormal|LogTime, SpGetDescription (lToken, lSapiStr.Free (), NULL))))
 				{
 					lVoiceInfo->mVoiceName = _bstr_t (lSapiStr).Detach();
 					lVoiceInfo->mProduct = tBstrPtr (lVoiceInfo->mVoiceName).Detach();
@@ -406,7 +406,7 @@ INT_PTR CSapi5Voices::FindVoice (const struct CAgentFileTts & pAgentFileTts, boo
 	if	(pMatchRank)
 	{
 		(*pMatchRank) = 0;
-	}	
+	}
 	return -1;
 }
 
@@ -506,7 +506,7 @@ CSapi5VoiceIndexArray const * CSapi5Voices::FindVoices (const struct CAgentFileT
 				lIndexArray->InsertAt (lMatchRanks->AddSortedQS (lCurrMatch + (((int)GetCount()-(int)lVoiceNdx)*lOrderWeight), CSapi5VoiceMatchRanks::SortDescending, false), lVoiceNdx);
 			}
 		}
-	
+
 #ifdef	_DEBUG_TTS_MATCH
 		LogMessage (_DEBUG_TTS_MATCH, _T("  Voices [%u] [%s]"), pUseDefaults, FormatArray (*lIndexArray, _T("%6d")));
 		LogMessage (_DEBUG_TTS_MATCH, _T("  Ranks  [%u] [%s]"), pUseDefaults, FormatArray (*lMatchRanks, _T("%6.6d")));
@@ -533,7 +533,7 @@ CSapi5VoiceInfoArray const * CSapi5Voices::GetVoices (const struct CAgentFileTts
 	tPtr <CSapi5VoiceInfoArray>			lInfoArray;
 	tPtr <CSapi5VoiceIndexArray const>	lIndexArray;
 	INT_PTR								lNdx;
-	
+
 	if	(
 			(lIndexArray = FindVoices (pAgentFileTts, pUseDefaults, pMatchRanks))
 		&&	(lInfoArray = new CSapi5VoiceInfoArray)
@@ -701,11 +701,11 @@ void CSapi5Voices::LogVoiceToken (UINT pLogLevel, void * pVoiceToken, LPCTSTR pT
 			{
 				try
 				{
-					if	(SUCCEEDED (LogSapi5Err (LogNormal, SpGetDescription (lToken, lVoiceName.Free (), NULL))))
+					if	(SUCCEEDED (LogSapi5Err (LogNormal|LogTime, SpGetDescription (lToken, lVoiceName.Free (), NULL))))
 					{
 						LogMessage (pLogLevel, _T("  Name     [%ls]"), (LPWSTR)lVoiceName);
 					}
-					if	(SUCCEEDED (LogSapi5Err (LogNormal, lToken->GetId (lVoiceId.Free ()))))
+					if	(SUCCEEDED (LogSapi5Err (LogNormal|LogTime, lToken->GetId (lVoiceId.Free ()))))
 					{
 						LogMessage (pLogLevel, _T("  Id       [%ls]"), (LPWSTR)lVoiceId);
 					}

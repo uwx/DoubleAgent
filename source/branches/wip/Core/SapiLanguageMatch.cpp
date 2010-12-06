@@ -104,7 +104,7 @@ void CSapiLanguageMatch::LogLanguageMatchList (UINT pLogLevel, LANGID pLanguageI
 			CAtlString				lTitle (pTitle);
 			CAtlString				lIndent (pIndent);
 			CAtlTypeArray <LANGID>	lLanguageIds;
-		
+
 			if	(lTitle.IsEmpty ())
 			{
 				lTitle = _T("LanguageMatching");

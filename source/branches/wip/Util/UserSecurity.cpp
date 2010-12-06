@@ -81,7 +81,7 @@ CString CUserSecurity::GetUserId ()
 	}
 	else
 	{
-		LogWinErr (LogDetails, GetLastError (), _T("GetUserNameEx"));
+		LogWinErr (LogDetails|LogTime, GetLastError (), _T("GetUserNameEx"));
 	}
 #else
 	::GetUserName (lUserName.GetBuffer (UNLEN), &(lUserNameSize=UNLEN+1));
@@ -113,7 +113,7 @@ CString CUserSecurity::GetComputerName ()
 
 	if	(!::GetComputerName (lComputerName.GetBuffer (MAX_COMPUTERNAME_LENGTH), &(lComputerNameSize=MAX_COMPUTERNAME_LENGTH+1)))
 	{
-		LogWinErr (LogIfActive, GetLastError (), _T("GetComputerName"));
+		LogWinErr (LogIfActive|LogTime, GetLastError (), _T("GetComputerName"));
 	}
 	lComputerName.ReleaseBuffer ();
 
@@ -154,21 +154,21 @@ bool CUserSecurity::GetTokenUser (HANDLE pUserToken, CString & pUserName, CStrin
 				}
 				else
 				{
-					LogWinErr (LogDetails, GetLastError (), _T("LookupAccountSid"));
+					LogWinErr (LogDetails|LogTime, GetLastError (), _T("LookupAccountSid"));
 				}
 				pUserName.ReleaseBuffer ();
 				pDomainName.ReleaseBuffer ();
 			}
 			else
 			{
-				LogWinErr (LogDetails, GetLastError (), _T("GetTokenInformation"));
+				LogWinErr (LogDetails|LogTime, GetLastError (), _T("GetTokenInformation"));
 			}
 
 			lTokenUser = NULL;
 		}
 		else
 		{
-			LogWinErr (LogDetails, ERROR_INVALID_HANDLE);
+			LogWinErr (LogDetails|LogTime, ERROR_INVALID_HANDLE);
 		}
 	}
 	catch AnyExceptionSilent
@@ -994,7 +994,7 @@ bool CUserSecurity::CanUserRegisterClass ()
 			lDescriptor = new BYTE [lDescriptorSize];
 		}
 
-		if	(LogWinErr (LogNormal, RegGetKeySecurity (HKEY_CLASSES_ROOT, DACL_SECURITY_INFORMATION, (PISECURITY_DESCRIPTOR) lDescriptor.Ptr (), &lDescriptorSize)) == ERROR_SUCCESS)
+		if	(LogWinErr (LogNormal|LogTime, RegGetKeySecurity (HKEY_CLASSES_ROOT, DACL_SECURITY_INFORMATION, (PISECURITY_DESCRIPTOR) lDescriptor.Ptr (), &lDescriptorSize)) == ERROR_SUCCESS)
 		{
 			BOOL	lDAclPresent = FALSE;
 			BOOL	lDAclDefaulted = FALSE;

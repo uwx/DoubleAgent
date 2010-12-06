@@ -87,9 +87,9 @@
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_NOTIFY_PATH			(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF)
-#define	_DEBUG_MODELESS_PROPSHEET	(GetProfileDebugInt(_T("LogInstance_Settings"),LogDetails,true)&0xFFFF)
-//#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+#define	_DEBUG_NOTIFY_PATH			(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_DEBUG_MODELESS_PROPSHEET	(GetProfileDebugInt(_T("LogInstance_Settings"),LogDetails,true)&0xFFFF|LogTime)
+//#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -193,7 +193,7 @@ bool CDaServerModule::ParseCommandLine (LPCTSTR lpCmdLine, HRESULT* pnRetCode)
 	LPCTSTR		lPageName = NULL;
 
 #ifdef	_DEBUG
-	LogMessage (LogNormal, _T("Command line [%s]"), lpCmdLine);
+	LogMessage (LogNormal|LogTime, _T("Command line [%s]"), lpCmdLine);
 #endif
 	lRet = CAtlExeModuleT<CDaServerModule>::ParseCommandLine (lpCmdLine, pnRetCode);
 
@@ -277,7 +277,10 @@ void CDaServerModule::_PreMessageLoop (bool pForModal)
 
 		if	(mMessageFilter = new CComObjectNoLock <CComMessageFilter>)
 		{
-			LogComErr (LogNormal, mMessageFilter->Register ());
+#if	TRUE // Disable the "Client busy" dialog
+			mMessageFilter->SetRetryTimeout ((DWORD)-1);
+#endif
+			LogComErr (LogNormal|LogTime, mMessageFilter->Register ());
 		}
 	}
 }
@@ -377,6 +380,11 @@ void CDaServerModule::RunMessageLoop ()
 	{}
 }
 
+CComMessageFilter * CDaServerModule::GetMessageFilter ()
+{
+	return mMessageFilter;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -388,7 +396,7 @@ HRESULT CDaServerModule::RegisterServer(BOOL bRegTypeLib, const CLSID* pCLSID)
 	{
 		_AtlComModule.RegisterTypeLib (_T("\\3"));
 	}
-#endif	
+#endif
 	return CAtlExeModuleT<CDaServerModule>::RegisterServer (bRegTypeLib, pCLSID);
 }
 
@@ -435,12 +443,12 @@ HRESULT CDaServerModule::RegisterAppId ()
 
 			if	(LogIsActive (LogDetails))
 			{
-				lLaunchDescriptor.DumpAccess (LogDetails, true, _T("  Set LaunchPermission [%s]"), (CString)lLaunchDescriptor);
+				lLaunchDescriptor.DumpAccess (LogDetails|LogTime, true, _T("  Set LaunchPermission [%s]"), (CString)lLaunchDescriptor);
 			}
 			else
 			if	(LogIsActive ())
 			{
-				LogMessage (LogIfActive, _T("  Set LaunchPermission [%s]"), (CString)lLaunchDescriptor);
+				LogMessage (LogIfActive|LogTime, _T("  Set LaunchPermission [%s]"), (CString)lLaunchDescriptor);
 			}
 #ifdef	_DEBUG
 			if	(LogIsActive (LogNormal))
@@ -454,7 +462,7 @@ HRESULT CDaServerModule::RegisterAppId ()
 					lByteStr.Format (_T("%2.2X"), lLaunchPermission.Value().GetAt(lNdx));
 					lAccessStr += lByteStr;
 				}
-				LogMessage (LogNormal, _T("  LaunchPermission [%s]"), lAccessStr);
+				LogMessage (LogNormal|LogTime, _T("  LaunchPermission [%s]"), lAccessStr);
 			}
 #endif
 		}
@@ -473,12 +481,12 @@ HRESULT CDaServerModule::RegisterAppId ()
 
 			if	(LogIsActive (LogDetails))
 			{
-				lAccessDescriptor.DumpAccess (LogDetails, true, _T("  Set AccessPermission [%s]"), (CString)lAccessDescriptor);
+				lAccessDescriptor.DumpAccess (LogDetails|LogTime, true, _T("  Set AccessPermission [%s]"), (CString)lAccessDescriptor);
 			}
 			else
 			if	(LogIsActive ())
 			{
-				LogMessage (LogIfActive, _T("  Set AccessPermission [%s]"), (CString)lAccessDescriptor);
+				LogMessage (LogIfActive|LogTime, _T("  Set AccessPermission [%s]"), (CString)lAccessDescriptor);
 			}
 #ifdef	_DEBUG
 			if	(LogIsActive (LogNormal))
@@ -492,7 +500,7 @@ HRESULT CDaServerModule::RegisterAppId ()
 					lByteStr.Format (_T("%2.2X"), lAccessPermission.Value().GetAt(lNdx));
 					lAccessStr += lByteStr;
 				}
-				LogMessage (LogNormal, _T("  AccessPermission [%s]"), lAccessStr);
+				LogMessage (LogNormal|LogTime, _T("  AccessPermission [%s]"), lAccessStr);
 			}
 #endif
 		}
@@ -684,6 +692,7 @@ void CDaServerModule::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 //TODO Move to monitor thread?
 	if	(pTimerId == mClientLifetimeTimer)
 	{
+		CSapiVoiceCache::CleanupStaticInstance ();
 		VerifyObjectLifetimes ();
 	}
 }
@@ -815,7 +824,7 @@ bool CDaServerModule::ShowSettings (LPCTSTR pStartPage)
 		}
 		else
 		{
-			LogWinErr (LogNormal, GetLastError (), _T("Load ") _T(_SHELL_FILENAME));
+			LogWinErr (LogNormal|LogTime, GetLastError (), _T("Load ") _T(_SHELL_FILENAME));
 		}
 	}
 	catch AnyExceptionSilent

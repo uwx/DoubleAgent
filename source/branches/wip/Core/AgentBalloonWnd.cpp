@@ -38,8 +38,8 @@
 #endif
 
 #ifdef	_DEBUG
-//#define	_DEBUG_LAYOUT		LogNormal|LogHighVolume|LogTimeMs
-//#define	_DEBUG_RTL			LogNormal|LogHighVolume|LogTimeMs
+//#define	_DEBUG_LAYOUT		LogNormal|LogTimeMs|LogHighVolume
+//#define	_DEBUG_RTL			LogNormal|LogTimeMs|LogHighVolume
 //#define	_DEBUG_DRAW			LogNormal|LogTimeMs
 #define	_DEBUG_SHOW_HIDE		(GetProfileDebugInt(_T("DebugBalloonShow"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_AUTO_HIDE		(GetProfileDebugInt(_T("DebugBalloonHide"),LogVerbose,true)&0xFFFF|LogTimeMs)
@@ -47,11 +47,12 @@
 #define	_DEBUG_AUTO_PACE		(GetProfileDebugInt(_T("DebugBalloonPace"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_DEBUG_AUTO_SCROLL		(GetProfileDebugInt(_T("DebugBalloonScroll"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_DEBUG_SPEECH			(GetProfileDebugInt(_T("DebugBalloonSpeech"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
-#define	_DEBUG_OPTIONS			(GetProfileDebugInt(_T("DebugBalloonOptions"),LogVerbose,true)&0xFFFF)
-#define	_DEBUG_FONT				(GetProfileDebugInt(_T("DebugBalloonFont"),LogVerbose,true)&0xFFFF)
-#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Balloon"),LogDetails,true)&0xFFFF)
-//#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
-//#define	_TRACE_RESOURCES_EX		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+#define	_DEBUG_OPTIONS			(GetProfileDebugInt(_T("DebugBalloonOptions"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_DEBUG_FONT				(GetProfileDebugInt(_T("DebugBalloonFont"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_DEBUG_NOTIFY_LEVEL		(GetProfileDebugInt(_T("DebugNotifyLevel"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Balloon"),LogDetails,true)&0xFFFF|LogTime)
+//#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+//#define	_TRACE_RESOURCES_EX		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 #endif
 
 #define	_DRAW_LAYERED	IsWindowsVista_AtLeast()
@@ -113,7 +114,7 @@ CAgentBalloonWnd * CAgentBalloonWnd::CreateInstance (long pCharID, CAtlPtrTypeAr
 	CComObject<CAgentBalloonWnd> *	lInstance = NULL;
 	INT_PTR							lNdx;
 
-	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<CAgentBalloonWnd>::CreateInstance (&lInstance))))
+	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CComObject<CAgentBalloonWnd>::CreateInstance (&lInstance))))
 	{
 		lInstance->mCharID = pCharID;
 		lInstance->mNotify.Copy (pNotify);
@@ -141,20 +142,6 @@ void CAgentBalloonWnd::FinalRelease ()
 #endif
 }
 
-bool CAgentBalloonWnd::CanFinalRelease ()
-{
-	if	(IsInNotify() == 0)
-	{
-		return true;
-	}
-	else
-	if	(IsWindow ())
-	{
-		PostMessage (NULL, 0, 0); // To ensure OnFinalMessage gets called
-	}
-	return false;
-}
-
 void CAgentBalloonWnd::OnFinalMessage (HWND)
 {
 	if	(
@@ -171,6 +158,61 @@ void CAgentBalloonWnd::OnFinalMessage (HWND)
 		m_dwRef = 1;
 		Release ();
 	}
+}
+
+bool CAgentBalloonWnd::CanFinalRelease ()
+{
+	if	(IsInNotify() == 0)
+	{
+		return true;
+	}
+	else
+	if	(IsWindow ())
+	{
+		PostMessage (NULL, 0, 0); // To ensure OnFinalMessage gets called
+	}
+	return false;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool CAgentBalloonWnd::_PreNotify ()
+{
+#ifdef	_DEBUG_NOTIFY_LEVEL
+	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] CAgentBalloonWnd::_PreNotify [%u]"), this, max(m_dwRef,-1), IsInNotify());
+#endif
+	if	(m_dwRef > 0)
+	{
+		return CEventNotifiesClient<CAgentBalloonWnd>::_PreNotify ();
+	}
+	return false;
+}
+
+bool CAgentBalloonWnd::_PostNotify ()
+{
+	CEventNotifiesClient<CAgentBalloonWnd>::_PostNotify ();
+#ifdef	_DEBUG_NOTIFY_LEVEL
+	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] CAgentBalloonWnd::_PostNotify [%u] HasFinalRelased [%u] CanFinalRelease [%u]"), this, max(m_dwRef,-1), IsInNotify(), HasFinalReleased(), CanFinalRelease());
+#endif
+
+	if	(
+			(HasFinalReleased ())
+		&&	(CanFinalRelease ())
+		)
+	{
+#ifdef	_LOG_INSTANCE
+		if	(LogIsActive (_LOG_INSTANCE))
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p] CAgentBalloonWnd PostNotify -> DestroyWindow"), this);
+		}
+#endif
+		if	(IsWindow ())
+		{
+			DestroyWindow ();
+		}
+		return false;
+	}
+	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -222,11 +264,11 @@ bool CAgentBalloonWnd::ApplyOptions (CAgentBalloonOptions * pOptions)
 				&&	(memcmp (&mOptions.mFont, &lActualFont, sizeof(LOGFONT)) == 0)
 				)
 			{
-				mOptions.LogFont (_DEBUG_FONT, mOptions.mFont, _T("CAgentBalloonWnd SameFont"), lPrefix); 
+				mOptions.LogFont (_DEBUG_FONT, mOptions.mFont, _T("CAgentBalloonWnd SameFont"), lPrefix);
 			}
 			else
 			{
-				mOptions.LogFont (_DEBUG_FONT, mOptions.mFont, _T("CAgentBalloonWnd NewFont "), lPrefix); 
+				mOptions.LogFont (_DEBUG_FONT, mOptions.mFont, _T("CAgentBalloonWnd NewFont "), lPrefix);
 			}
 		}
 #endif
@@ -238,7 +280,7 @@ bool CAgentBalloonWnd::ApplyOptions (CAgentBalloonOptions * pOptions)
 			mOptions.LogOptions (_DEBUG_OPTIONS, _T("ApplyOptions"), lPrefix);
 		}
 #endif
-		
+
 		if	(
 				((COLORREF) SendMessage (TTM_GETTIPBKCOLOR) != mOptions.mBkColor)
 			||	((COLORREF) SendMessage (TTM_GETTIPTEXTCOLOR) != mOptions.mFgColor)
@@ -381,41 +423,6 @@ bool CAgentBalloonWnd::Detach (long pCharID, CEventNotify * pNotify)
 		mNotify.RemoveAll ();
 	}
 	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-bool CAgentBalloonWnd::_PreNotify ()
-{
-	if	(m_dwRef > 0)
-	{
-		return CEventNotifiesClient<CAgentBalloonWnd>::_PreNotify ();
-	}
-	return false;
-}
-
-bool CAgentBalloonWnd::_PostNotify ()
-{
-	CEventNotifiesClient<CAgentBalloonWnd>::_PostNotify ();
-
-	if	(
-			(HasFinalReleased ())
-		&&	(CanFinalRelease ())
-		)
-	{
-#ifdef	_LOG_INSTANCE
-		if	(LogIsActive (_LOG_INSTANCE))
-		{
-			LogMessage (_LOG_INSTANCE, _T("[%p] CAgentBalloonWnd PostNotify -> DestroyWindow"), this);
-		}
-#endif
-		if	(IsWindow ())
-		{
-			DestroyWindow ();
-		}
-		return false;
-	}
-	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -772,7 +779,7 @@ bool CAgentBalloonWnd::ShowBalloon (bool pForSpeech, bool pTextChanged)
 		LogMessage (_DEBUG_LAYOUT, _T("%sBalloon ShowBalloon [%u]"), RecursionIndent(), IsWindowVisible());
 #endif
 		EnterRecursion ();
-		
+
 		try
 		{
 			if	(
@@ -805,7 +812,10 @@ bool CAgentBalloonWnd::ShowBalloon (bool pForSpeech, bool pTextChanged)
 				LogMessage (_DEBUG_LAYOUT, _T("%sBalloon HWND_TOP"), RecursionIndent());
 #endif
 				EnterRecursion ();
-				SetWindowPos ((GetExStyle() & WS_EX_TOPMOST) ? HWND_TOPMOST : HWND_TOP, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE);
+				if	(GetExStyle() & WS_EX_TOPMOST)
+				{
+					SetWindowPos (HWND_TOPMOST, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE|SWP_NOOWNERZORDER);
+				}
 				ExitRecursion ();
 				lRet = true;
 			}
@@ -866,6 +876,7 @@ bool CAgentBalloonWnd::HideBalloon (bool pFast)
 		{
 			lWasVisible = true;
 		}
+
 		if	(pFast)
 		{
 			ShowWindow (SW_HIDE);
@@ -1173,7 +1184,7 @@ bool CAgentBalloonWnd::ApplyRegion (bool pRedraw)
 				else
 				{
 					ExitRecursion ();
-					LogWinErr (LogNormal, GetLastError(), _T("SetWindowRgn"));
+					LogWinErr (LogNormal|LogTime, GetLastError(), _T("SetWindowRgn"));
 #ifdef	_DEBUG_LAYOUT
 					LogMessage (_DEBUG_LAYOUT, _T("%sBalloon SetWindowRgn failed"), RecursionIndent());
 #endif
@@ -1542,7 +1553,7 @@ LRESULT CAgentBalloonWnd::OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lPar
 	{
 		mPacingSpeech = true;
 		StopAutoPace ();
-	
+
 		if	(
 				(IsAutoPace ())
 			||	(!IsAutoSize ())
@@ -2146,7 +2157,7 @@ void CAgentBalloonWnd::DrawBalloon (HDC pDC, const CRect & pDrawRect)
 
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f   CAgentBalloonWnd::DrawBalloon"), DebugTimeElapsed);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CAgentBalloonWnd::DrawBalloon"), DebugTimeElapsed);
 #endif
 }
 
@@ -2282,7 +2293,7 @@ void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect & pDrawRect)
 	}
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f   CAgentBalloonWnd::DrawBalloonText"), DebugTimeElapsed);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CAgentBalloonWnd::DrawBalloonText"), DebugTimeElapsed);
 #endif
 }
 
@@ -2411,7 +2422,7 @@ LRESULT CAgentBalloonWnd::OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM 
 		LogMessage (_DEBUG_DRAW, _T("%sBalloon OnWindowPosChanging [%s] Visible [%u %u]"), RecursionIndent(),  WindowPosStr(*lWindowPos), IsWindowVisible(), mRedrawDisabled);
 	}
 #endif
-	
+
 	if	(mRedrawDisabled)
 	{
 		lWindowPos->flags &= ~SWP_SHOWWINDOW;

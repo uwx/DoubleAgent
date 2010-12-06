@@ -30,9 +30,9 @@
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Other"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Other"),LogDetails,true)&0xFFFF)
-#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Other"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Other"),LogDetails,true)&0xFFFF|LogTime)
+#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -184,7 +184,7 @@ void DaCtlTTSEngines::InitializeObjects ()
 			CSapi5VoiceInfo *					lSapi5VoiceInfo;
 #ifndef	_WIN64
 			CSapi4VoiceInfo *					lSapi4VoiceInfo;
-#endif			
+#endif
 
 			for	(lNdx = 0; true; lNdx++)
 			{

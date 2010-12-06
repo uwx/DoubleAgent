@@ -27,7 +27,7 @@
 #include "DebugStr.h"
 
 #ifdef	_DEBUG
-#define	_DEBUG_CACHE	(GetProfileDebugInt(_T("LogInputCache"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_CACHE	(GetProfileDebugInt(_T("LogInputCache"),LogVerbose,true)&0xFFFF|LogTime)
 #endif
 
 //////////////////////////////////////////////////////////////////////

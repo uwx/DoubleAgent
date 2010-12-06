@@ -25,8 +25,8 @@
 #endif
 
 #ifdef	_DEBUG
-#define	_LOG_INSTANCE	(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF)
-#define	_LOG_ABANDONED	MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF,_LOG_INSTANCE)
+#define	_LOG_INSTANCE	(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_ABANDONED	MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF|LogTime,_LOG_INSTANCE)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -58,9 +58,9 @@ DaSvrAnimationNames * DaSvrAnimationNames::CreateInstance (CAgentFile & pAgentFi
 {
 	CComObject<DaSvrAnimationNames> *	lInstance = NULL;
 
-	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrAnimationNames>::CreateInstance (&lInstance))))
+	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CComObject<DaSvrAnimationNames>::CreateInstance (&lInstance))))
 	{
-		LogComErr (LogIfActive, lInstance->CDaCmnAnimationNames::Initialize (pAgentFile));
+		LogComErr (LogIfActive|LogTime, lInstance->CDaCmnAnimationNames::Initialize (pAgentFile));
 		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
 	}
 	return lInstance;
@@ -146,8 +146,8 @@ HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::Clone(IEnumVARIANT** ppEnum)
 	CComObject<DaSvrAnimationNames> *	lClone = NULL;
 
 	if	(
-			(SUCCEEDED (LogComErr (LogIfActive, lResult = CComObject<DaSvrAnimationNames>::CreateInstance (&lClone))))
-		&&	(SUCCEEDED (LogComErr (LogIfActive, lResult = lClone->CDaCmnAnimationNames::Initialize (*this, GetUnknown()))))
+			(SUCCEEDED (LogComErr (LogIfActive|LogTime, lResult = CComObject<DaSvrAnimationNames>::CreateInstance (&lClone))))
+		&&	(SUCCEEDED (LogComErr (LogIfActive|LogTime, lResult = lClone->CDaCmnAnimationNames::Initialize (*this, GetUnknown()))))
 		)
 	{
 		lResult = lClone->_InternalQueryInterface (__uuidof(IEnumVARIANT), (void**)ppEnum);

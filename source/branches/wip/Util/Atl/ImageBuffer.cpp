@@ -380,7 +380,7 @@ bool CImageBufferScaled::CreateBuffer (const CSize & pBufferSize, bool pForBlend
 			)
 		{
 #ifdef	_DEBUG_SCALING
-			LogMessage (LogNormal, _T("StartScaled [%d %d] [%p] [%p] Unscaled [%d %d] [%p] [%p]"), lScaledSize.cx, lScaledSize.cy, (HBITMAP)(*lScaledImage), GetImageBits(*lScaledImage), lBufferSize.cx, lBufferSize.cy, (HBITMAP)(*lUnscaledImage), GetImageBits(*lUnscaledImage));
+			LogMessage (LogNormal|LogTime, _T("StartScaled [%d %d] [%p] [%p] Unscaled [%d %d] [%p] [%p]"), lScaledSize.cx, lScaledSize.cy, (HBITMAP)(*lScaledImage), GetImageBits(*lScaledImage), lBufferSize.cx, lBufferSize.cy, (HBITMAP)(*lUnscaledImage), GetImageBits(*lUnscaledImage));
 #endif
 			EndBuffer ();
 			mImage = lUnscaledImage;

@@ -60,7 +60,7 @@
 //#define	_DUMP_ICON			LogDebugFast
 //#define	_DUMP_IMAGE			LogDebugFast
 //#define	_SHOW_IMAGE			LogDebugFast
-//#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+//#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 #endif
 
 #ifndef	_LOG_LOAD_ERRS
@@ -500,7 +500,7 @@ HRESULT CAgentFile::LoadFile (LPCTSTR pPath, UINT pLogLevel)
 	}
 	if	(LogIsActive())
 	{
-		LogComErr ((lResult==AGENTPROVERROR_MAGIC)?LogDetails:LogNormal, lResult, _T("Load [%s]"), pPath);
+		LogComErr (((lResult==AGENTPROVERROR_MAGIC)?LogDetails:LogNormal)|LogTime, lResult, _T("Load [%s]"), pPath);
 	}
 	return lResult;
 }
@@ -2785,7 +2785,7 @@ HRESULT CAgentFile::ReadAcaFile (CAgentFileAnimation * pAnimation, LPCTSTR pPath
 			}
 			if	(LogIsActive ())
 			{
-				LogWinErr (LogNormal, GetLastError(), _T("Open [%s]"), pPath);
+				LogWinErr (LogNormal|LogTime, GetLastError(), _T("Open [%s]"), pPath);
 			}
 		}
 
@@ -3386,7 +3386,7 @@ CAgentFileImage * CAgentFile::ReadAcsImage (DWORD pOffset, DWORD pSize, UINT pIm
 					{
 						if	(!DecodeImage (lByte, lByteCount, lRet->mBits, lRet->mBitsSize, lImageSize))
 						{
-							LogMessage (LogNormal, _T("*** [%s] Decode image [%u] failed ***"), mPath, pImageNum);
+							LogMessage (LogNormal|LogTime, _T("*** [%s] Decode image [%u] failed ***"), mPath, pImageNum);
 							//lRet = NULL;
 						}
 					}

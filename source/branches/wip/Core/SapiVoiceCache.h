@@ -78,8 +78,12 @@ public:
 	CSapiVoice * FindCachedVoice (LPCTSTR pVoiceId);
 	bool GetVoiceClients (CSapiVoice * pVoice, CAtlPtrTypeArray <CSapiVoiceClient> & pClients);
 
-	void Terminate ();
-	static void TerminateStaticInstance ();
+	void Terminate (DWORD pWaitForCompletion = 0);
+	bool DeleteUnusedVoices ();
+	void DeleteAllVoices ();
+	static void TerminateStaticInstance (DWORD pWaitForCompletion = 5000);
+	static void CleanupStaticInstance ();
+
 // Implementation
 protected:
 	CSapi5Voice * GetAgentSapi5Voice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, bool pCached = true);
@@ -99,6 +103,7 @@ protected:
 	tPtr <CSapi5Voices>													mSapi5Voices;
 	CAtlOwnPtrArray <CSapiVoice>										mCachedVoices;
 	CAtlOwnPtrMap <CSapiVoice *, CAtlPtrTypeArray <CSapiVoiceClient> >	mVoiceClients;
+	bool																mVoiceDeletePending;
 };
 
 #pragma warning (pop)

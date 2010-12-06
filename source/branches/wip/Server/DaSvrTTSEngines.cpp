@@ -32,10 +32,10 @@
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Other"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF)
-#define	_LOG_ABANDONED			MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF,_LOG_INSTANCE)
-#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Other"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_ABANDONED			MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF|LogTime,_LOG_INSTANCE)
+#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -67,7 +67,7 @@ DaSvrTTSEngines * DaSvrTTSEngines::CreateInstance (LPCTSTR pClientMutexName)
 {
 	CComObject<DaSvrTTSEngines> *	lInstance = NULL;
 
-	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrTTSEngines>::CreateInstance (&lInstance))))
+	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CComObject<DaSvrTTSEngines>::CreateInstance (&lInstance))))
 	{
 		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
 	}
@@ -195,7 +195,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngines::get_Item (long Index, IDaSvrTTSEngine
 		else
 		{
 			CSapi5VoiceInfo *	lSapi5VoiceInfo;
-			
+
 			if	(lSapi5VoiceInfo = GetSapi5VoiceAt (Index))
 			{
 				if	(lTTSEngine = DaSvrTTSEngine::CreateInstance (lSapi5VoiceInfo, mClientMutexName))
@@ -212,7 +212,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngines::get_Item (long Index, IDaSvrTTSEngine
 			else
 			{
 				CSapi4VoiceInfo *	lSapi4VoiceInfo;
-			
+
 				if	(lSapi4VoiceInfo = GetSapi4VoiceAt (Index))
 				{
 					if	(lTTSEngine = DaSvrTTSEngine::CreateInstance (lSapi4VoiceInfo, mClientMutexName))

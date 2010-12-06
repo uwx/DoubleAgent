@@ -93,7 +93,7 @@ LRESULT CPropPageCharSel::OnApply(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 	if	(
 			(lFile = mFiles.Files() (mFileNdx))
 		&&	(CAtlString ((BSTR)mFiles.GetDefCharPath ()).CompareNoCase (CAtlString ((BSTR)lFile->GetPath())) != 0)
-		&&	(SUCCEEDED (LogComErr (LogIfActive, mFiles.SetDefCharPath (CAtlString ((BSTR)lFile->GetPath())))))
+		&&	(SUCCEEDED (LogComErr (LogIfActive|LogTime, mFiles.SetDefCharPath (CAtlString ((BSTR)lFile->GetPath())))))
 		)
 	{
 		SetModified (FALSE);
@@ -104,7 +104,7 @@ LRESULT CPropPageCharSel::OnApply(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 
 			lResult = BroadcastSystemMessage (BSF_FORCEIFHUNG|BSF_POSTMESSAGE, &lTargets, DA_BROADCAST_DEFCHAR_CHANGED, 0, 0);
 #ifdef	_DEBUG
-			LogMessage (LogNormal, _T("DA_BROADCAST_DEFCHAR_CHANGED [%d]"), lResult);
+			LogMessage (LogNormal|LogTime, _T("DA_BROADCAST_DEFCHAR_CHANGED [%d]"), lResult);
 #endif
 		}
 		catch AnyExceptionSilent

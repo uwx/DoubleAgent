@@ -29,11 +29,11 @@ class CServerNotify :
 	public CEventNotify,
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public IConnectionPointContainerImpl<CServerNotify>,
-	public IConnectionPointImpl<CServerNotify, &__uuidof(IDaSvrNotifySink), CComDynamicUnkArray>,
-	public IConnectionPointImpl<CServerNotify, &__uuidof(IDaSvrNotifySink2), CComDynamicUnkArray>,
-	public IConnectionPointImpl<CServerNotify, &__uuidof(IAgentNotifySink), CComDynamicUnkArray>,
-	public IConnectionPointImpl<CServerNotify, &__uuidof(IAgentNotifySinkEx), CComDynamicUnkArray>,
-	public IConnectionPointImpl<CServerNotify, &__uuidof(_DaSvrEvents2), CComDynamicUnkArray>
+	public CProxyIDaSvrNotifySink<CServerNotify>,
+	public CProxyIDaSvrNotifySink2<CServerNotify>,
+	public CProxyIAgentNotifySink<CServerNotify>,
+	public CProxyIAgentNotifySinkEx<CServerNotify>,
+	public CProxy_DaSvrEvents2<CServerNotify>
 {
 public:
 	CServerNotify ();
@@ -46,14 +46,15 @@ public:
 // Operations
 public:
 	HRESULT Register (IUnknown * punkNotifySink, long * pdwSinkID);
-	HRESULT Unregister (long dwSinkID);
+	HRESULT Unregister (long dwSinkID, bool pDelay);
+	void UnregisterDelayed ();
 	void UnregisterAll ();
 	void AbandonAll ();
 
 // Overrides
 public:
-	virtual bool PreFireEvent (LPCTSTR pEventName);
-	virtual bool PostFireEvent (LPCTSTR pEventName);
+	virtual bool PreFireEvent (LPCTSTR pEventName = NULL);
+	virtual bool PostFireEvent (LPCTSTR pEventName = NULL, UINT pEventSinkCount = 0);
 
 	HRESULT OnSpeechStart (long CharacterID, LPUNKNOWN FormattedText);
 	HRESULT OnSpeechEnd (long CharacterID, LPUNKNOWN FormattedText, VARIANT_BOOL Stopped);
@@ -134,14 +135,7 @@ protected:
 	HRESULT FireSpeechWord(long CharacterID, IDaSvrFormattedText* FormattedText, long WordNdx);
 
 protected:
-	typedef IConnectionPointImpl<CServerNotify, &__uuidof(IDaSvrNotifySink), CComDynamicUnkArray> tDaSvrNotifySink;
-	typedef IConnectionPointImpl<CServerNotify, &__uuidof(IDaSvrNotifySink2), CComDynamicUnkArray> tDaSvrNotifySink2;
-	typedef IConnectionPointImpl<CServerNotify, &__uuidof(IAgentNotifySink), CComDynamicUnkArray> tAgentNotifySink;
-	typedef IConnectionPointImpl<CServerNotify, &__uuidof(IAgentNotifySinkEx), CComDynamicUnkArray> tAgentNotifySinkEx;
-	typedef IConnectionPointImpl<CServerNotify, &__uuidof(_DaSvrEvents2), CComDynamicUnkArray> tDaSvrEvents;
-
-protected:
-	CDaSvrEventDispatch	mEventDispatch;
+	CAtlTypeArray <long>	mUnregisterDelayed;
 };
 
 /////////////////////////////////////////////////////////////////////////////

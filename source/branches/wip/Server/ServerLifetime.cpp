@@ -46,7 +46,7 @@ CSvrObjLifetime::~CSvrObjLifetime ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CSvrObjLifetime::VerifyClientLifetime () const
+bool CSvrObjLifetime::VerifyClientLifetime ()
 {
 	bool	lRet = true;
 
@@ -71,7 +71,7 @@ bool CSvrObjLifetime::VerifyClientLifetime () const
 void CSvrObjLifetime::OnClientEnded ()
 {
 #ifdef	_DEBUG
-	LogMessage (LogIfActive, _T("[%p] CSvrObjLifetime::OnClientEnded"), this);
+	LogMessage (LogIfActive|LogTime, _T("[%p] CSvrObjLifetime::OnClientEnded"), this);
 #endif
 }
 
@@ -91,7 +91,7 @@ bool CSvrObjLifetime::ManageObjectLifetime (CComObjectRootBase * pObject, LPCTST
 			{
 				GUID	lThreadId;
 
-				if	(SUCCEEDED (LogComErr (LogNormal, CoGetCurrentLogicalThreadId (&lThreadId))))
+				if	(SUCCEEDED (LogComErr (LogNormal|LogTime, CoGetCurrentLogicalThreadId (&lThreadId))))
 				{
 					mClientMutexName.Format (_T("Local\\%s"), (CString)CGuidStr (lThreadId));
 				}
@@ -242,7 +242,7 @@ void CServerLifetime::VerifyObjectLifetimes ()
 		{
 			INT_PTR				lNdx;
 			CSvrObjLifetime *	lObject;
-			
+
 			for	(lNdx = 0; lNdx < (INT_PTR)mObjectLifetimes.GetCount(); lNdx++)
 			{
 				lObject = mObjectLifetimes [lNdx];

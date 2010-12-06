@@ -118,8 +118,8 @@ public:
 
 // Implementation
 protected:
-	virtual bool PreFireEvent (LPCTSTR pEventName);
-	virtual bool PostFireEvent (LPCTSTR pEventName);
+	virtual bool PreFireEvent (LPCTSTR pEventName = NULL);
+	virtual bool PostFireEvent (LPCTSTR pEventName = NULL, UINT pEventSinkCount = 0);
 
 protected:
 	CAtlPtrTypeArray <_IEventReflect>	mEventReflect;
@@ -206,7 +206,7 @@ public:
 // Operations
 public:
 	bool PreNotify ();
-	
+
 	CEventNotify * GetActiveClientNotify (long pCharID, bool pUseDefault = true);
 	CEventNotify * GetNotifyClientNotify (long pCharID, bool pUseDefault = true);
 };

@@ -16,20 +16,20 @@ class CHxRegHelper
 public:
 	CHxRegHelper ();
 	virtual ~CHxRegHelper ();
-	
+
 public:
 	HRESULT GetLastResult () const;
 	LPCTSTR GetSessionToken () const;
-	
+
 public:
 	HRESULT SetSessionToken (LPCTSTR pSessionToken);
-	
+
 	HRESULT CreateTransaction (LPCTSTR pSessionToken);
-	HRESULT CommitTransaction ();		
-	HRESULT RevertTransaction ();		
+	HRESULT CommitTransaction ();
+	HRESULT RevertTransaction ();
 	HRESULT PostponeTransaction ();
 	HRESULT ContinueTransaction ();
-	
+
 	HRESULT RegisterNamespace (LPCTSTR pNamespace, LPCTSTR pDescription, LPCTSTR pCollection, LPCTSTR pFileName, LANGID pLangID = 1033);
 	HRESULT UnregisterNamespace (LPCTSTR pNamespace);
 
@@ -44,7 +44,7 @@ public:
 protected:
 	IHxRegNamespacePtr GetRegNamespace (LPCTSTR pNamespace);
 	bool GetNamespaceCollection (LPCTSTR pNamespace, CAtlString & pCollectionPath, bool pStripPath = false);
-	
+
 protected:
 	HRESULT					mLastResult;
 	CString					mSessionToken;

@@ -42,14 +42,14 @@
 	i##Ptr (i##* p) : _com_ptr_t<ThisIIID> (p) {} \
 	i##Ptr (const _variant_t& varSrc) : _com_ptr_t<ThisIIID> (varSrc) {} \
 	template<typename _OtherIID> i##Ptr (const _com_ptr_t<_OtherIID>& p) : _com_ptr_t<ThisIIID> (p) {} \
-	template<typename _InterfaceType> i##Ptr (_InterfaceType* p) : _com_ptr_t<ThisIIID> (p) {} 
+	template<typename _InterfaceType> i##Ptr (_InterfaceType* p) : _com_ptr_t<ThisIIID> (p) {}
 
 #define	_DASVRPTR_ASSIGN(i) \
 	i##Ptr& operator= (const i##Ptr& p) {_com_ptr_t<ThisIIID>::operator= (p); return *this;} \
 	i##Ptr& operator= (i##* p) {_com_ptr_t<ThisIIID>::operator= (p); return *this;} \
 	i##Ptr& operator= (const _variant_t& varSrc) {_com_ptr_t<ThisIIID>::operator= (varSrc); return *this;} \
 	template<typename _OtherIID> i##Ptr& operator= (const _com_ptr_t<_OtherIID>& p) {_com_ptr_t<ThisIIID>::operator= (p); return *this;} \
-	template<typename _InterfaceType> i##Ptr& operator= (_InterfaceType* p) {_com_ptr_t<ThisIIID>::operator= (p); return *this;} 
+	template<typename _InterfaceType> i##Ptr& operator= (_InterfaceType* p) {_com_ptr_t<ThisIIID>::operator= (p); return *this;}
 
 __if_exists(IFontDisp)
 {
@@ -306,7 +306,7 @@ __if_not_exists(IDaSvrSettingsPtr)
 		{
 			__declspec(property(get=_get_BalloonFont))							IFontDispPtr			BalloonFont;
 			IFontDispPtr _get_BalloonFont () {IFontDispPtr lBalloonFont; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_BalloonFont(&lBalloonFont); return lBalloonFont;}
-		}		
+		}
 	};
 }
 

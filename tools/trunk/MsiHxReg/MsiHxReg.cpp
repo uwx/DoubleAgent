@@ -70,7 +70,7 @@ extern "C" __declspec(dllexport) int __stdcall StartTransaction (MSIHANDLE pInst
 		{
 			CHxRegHelper		lRegHelper;
 			tArrayPtr <TCHAR>	lSessionToken;
-			
+
 			if	(
 					(SUCCEEDED (lRegHelper.GetLastResult ()))
 				&&	(SUCCEEDED (lRegHelper.CreateTransaction (lSessionToken = lCustomAction.GetActionDataPart (lCustomData, 0))))
@@ -124,7 +124,7 @@ extern "C" __declspec(dllexport) int __stdcall CommitTransaction (MSIHANDLE pIns
 		{
 			CHxRegHelper		lRegHelper;
 			tArrayPtr <TCHAR>	lSessionToken;
-			
+
 			if	(
 					(SUCCEEDED (lRegHelper.GetLastResult ()))
 				&&	(SUCCEEDED (lRegHelper.SetSessionToken (lSessionToken = lCustomAction.GetActionDataPart (lCustomData, 0))))
@@ -175,7 +175,7 @@ extern "C" __declspec(dllexport) int __stdcall RollbackTransaction (MSIHANDLE pI
 		{
 			CHxRegHelper		lRegHelper;
 			tArrayPtr <TCHAR>	lSessionToken;
-			
+
 			if	(
 					(SUCCEEDED (lRegHelper.GetLastResult ()))
 				&&	(SUCCEEDED (lRegHelper.SetSessionToken (lSessionToken = lCustomAction.GetActionDataPart (lCustomData, 0))))
@@ -384,7 +384,7 @@ extern "C" __declspec(dllexport) int __stdcall RegisterFilter (MSIHANDLE pInstal
 						int					lDataPart = 2;
 						tArrayPtr <TCHAR>	lFilterName;
 						tArrayPtr <TCHAR>	lFilterQuery;
-						
+
 						while	(
 									(lFilterName = lCustomAction.GetActionDataPart (lCustomData, lDataPart++))
 								&&	(lFilterQuery = lCustomAction.GetActionDataPart (lCustomData, lDataPart++))

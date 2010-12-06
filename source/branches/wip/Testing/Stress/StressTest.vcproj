@@ -350,11 +350,19 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath="..\..\..\Users\Don\AppData\LocalLow\Control.log"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\ProgramData\Double Agent\Debug.ini"
 			>
 		</File>
 		<File
 			RelativePath="..\..\..\Users\Don\Desktop\Double Agent.log"
+			>
+		</File>
+		<File
+			RelativePath="..\..\Stress.cmd"
 			>
 		</File>
 		<File

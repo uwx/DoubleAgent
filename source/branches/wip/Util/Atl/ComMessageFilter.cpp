@@ -33,8 +33,8 @@
 
 #ifdef	_DEBUG
 #define	_DEBUG_INCOMING		((GetProfileDebugInt(_T("DebugCom_Incoming"),LogVerbose,true)&0xFFFF)|LogTimeMs)
-#define	_DEBUG_MESSAGE		((GetProfileDebugInt(_T("DebugCom_Message"),LogVerbose,true)&0xFFFF)|LogTimeMs)
-#define	_DEBUG_BUSY_DLG		((GetProfileDebugInt(_T("DebugCom_Busy"),LogNormal,true)&0xFFFF)|LogTimeMs|LogHighVolume)
+#define	_DEBUG_MESSAGE		((GetProfileDebugInt(_T("DebugCom_Message"),LogVerbose,true)&0xFFFF)|LogTimeMs|LogHighVolume)
+#define	_DEBUG_BUSY_DLG		((GetProfileDebugInt(_T("DebugCom_Busy"),LogNormal,true)&0xFFFF)|LogTimeMs)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -42,13 +42,17 @@
 CComMessageFilter::CComMessageFilter ()
 :	mDndLevel (0),
 	mCheckedOut (false),
-	mRetryTimeout (10000),
+	mRetryTimeout (0),
+	mRetryLater (0),
 	mRetryImmediate (0),
-	mRetryLater (10000),
-	mMessageTimeout (8000),
+	mRetrySoon (200),
+	mMessageTimeout (0),
 	mRegistered (false),
 	mInMessagePending (false)
 {
+	SetRetryTimeout (0);
+	SetRetryLater (0);
+	SetMessageTimeout (0);
 }
 
 CComMessageFilter::~CComMessageFilter ()
@@ -97,7 +101,7 @@ UINT CComMessageFilter::DoNotDisturb (bool pDoNotDisturb)
 #ifdef	_DEBUG
 	if	(mCheckedOut)
 	{
-		LogMessage (LogIfActive, _T("CComMessageFilter setting DoNotDisturb after CheckOut"));
+		LogMessage (LogIfActive|LogTime, _T("CComMessageFilter setting DoNotDisturb after CheckOut"));
 	}
 #endif
 	if	(pDoNotDisturb)
@@ -112,7 +116,7 @@ UINT CComMessageFilter::DoNotDisturb (bool pDoNotDisturb)
 #ifdef	DEBUG
 	else
 	{
-		LogMessage (LogIfActive, _T("CComMessageFilter mismatched DoNotDisturb"));
+		LogMessage (LogIfActive|LogTime, _T("CComMessageFilter mismatched DoNotDisturb"));
 	}
 #endif
 	return mDndLevel;
@@ -121,6 +125,73 @@ UINT CComMessageFilter::DoNotDisturb (bool pDoNotDisturb)
 void CComMessageFilter::CheckOut ()
 {
 	mCheckedOut = true;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+DWORD CComMessageFilter::GetRetryTimeout () const
+{
+	return mRetryTimeout;
+}
+
+DWORD CComMessageFilter::GetRetryLater () const
+{
+	return mRetryLater;
+}
+
+DWORD CComMessageFilter::GetMessageTimeout () const
+{
+	return mMessageTimeout;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool CComMessageFilter::SetRetryTimeout (DWORD pRetryTimeout)
+{
+	DWORD	lRetryTimeout = mRetryTimeout;
+
+	if	(pRetryTimeout == 0)
+	{
+		pRetryTimeout = 10000;
+	}
+	if	((long) pRetryTimeout > 0)
+	{
+		mRetryTimeout = min (max (pRetryTimeout, 5000), 60000);
+	}
+	else
+	{
+		mRetryTimeout = (DWORD)-1;
+	}
+
+	return (mRetryTimeout != lRetryTimeout);
+}
+
+bool CComMessageFilter::SetRetryLater (DWORD pRetryLater)
+{
+	DWORD	lRetryLater = mRetryLater;
+
+	if	(pRetryLater == 0)
+	{
+		pRetryLater = 10000;
+	}
+	mRetryLater = min (max (pRetryLater, 5000), 60000);
+
+	return (mRetryLater != lRetryLater);
+}
+
+bool CComMessageFilter::SetMessageTimeout (DWORD pMessageTimeout)
+{
+	DWORD	lMessageTimeout = mMessageTimeout;
+
+	if	(pMessageTimeout == 0)
+	{
+		pMessageTimeout = 8000;
+	}
+	mMessageTimeout = min (max (pMessageTimeout, 5000), 60000);
+
+	return (mMessageTimeout != lMessageTimeout);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -260,7 +331,14 @@ UINT CComMessageFilter::ShowBusyDlg (HTASK pBlockedTask, bool pNotResponding)
 #ifdef	_DEBUG_BUSY_DLG
 	if	(LogIsActive (_DEBUG_BUSY_DLG))
 	{
-		LogMessage (_DEBUG_BUSY_DLG, _T("CComMessageFilter show %s dialog"), (pNotResponding?_T("NotResponding"):_T("Busy")));
+		if	(pNotResponding)
+		{
+			LogMessage (_DEBUG_BUSY_DLG, _T("CComMessageFilter show NotResponding dialog (Timeout %u)"), mMessageTimeout);
+		}
+		else
+		{
+			LogMessage (_DEBUG_BUSY_DLG, _T("CComMessageFilter show Busy dialog (Timeout %d %d %d)"), mRetryTimeout, mRetrySoon, mRetryLater);
+		}
 		LogWindow (_DEBUG_BUSY_DLG, lUiBusy.hWndOwner, _T("  Owner"));
 	}
 #endif
@@ -315,12 +393,12 @@ DWORD STDMETHODCALLTYPE CComMessageFilter::HandleInComingCall (DWORD dwCallType,
 
 DWORD STDMETHODCALLTYPE CComMessageFilter::RetryRejectedCall (HTASK htaskCallee, DWORD dwTickCount, DWORD dwRejectType)
 {
-	DWORD	lRetryTime = mRetryImmediate;
+	DWORD	lRetryTime = mRetrySoon;
 
 #ifdef	_DEBUG_INCOMING
 	if	(LogIsActive (_DEBUG_INCOMING))
 	{
-		LogMessage (_DEBUG_INCOMING, _T("CComMessageFilter RetryRejected [%s] Ticks [%u] DoNotDisturb [%u] CheckedOut [%u]"), CallTypeStr(dwRejectType), dwTickCount, mDndLevel, mCheckedOut);
+		LogMessage (_DEBUG_INCOMING, _T("CComMessageFilter RetryRejected [%s] Ticks [%u] Timeout [%d %d %d] DoNotDisturb [%u] CheckedOut [%u]"), ServerCallStr(dwRejectType), dwTickCount, mRetryTimeout, mRetrySoon, mRetryLater, mDndLevel, mCheckedOut);
 	}
 #endif
 
@@ -329,21 +407,31 @@ DWORD STDMETHODCALLTYPE CComMessageFilter::RetryRejectedCall (HTASK htaskCallee,
 		lRetryTime = (DWORD)-1;
 	}
 	else
-	if	(dwTickCount > mRetryTimeout)
+	if	(
+			((long) mRetryTimeout > 0)
+		&&	(dwTickCount > mRetryTimeout)
+		)
 	{
-		switch (ShowBusyDlg (htaskCallee, false))
+		if	(mDndLevel > 0)
 		{
-			case OLEUI_CANCEL:				lRetryTime = (DWORD)-1; break;
-			case OLEUI_BZ_RETRYSELECTED:	lRetryTime = mRetryImmediate; break;
-			case OLEUI_BZ_CALLUNBLOCKED:	lRetryTime = mRetryImmediate; break;
-			default:						lRetryTime = mRetryLater;
+			lRetryTime = (DWORD)-1;
+		}
+		else
+		{
+			switch (ShowBusyDlg (htaskCallee, false))
+			{
+				case OLEUI_CANCEL:				lRetryTime = (DWORD)-1; break;
+				case OLEUI_BZ_RETRYSELECTED:	lRetryTime = mRetryImmediate; break;
+				case OLEUI_BZ_CALLUNBLOCKED:	lRetryTime = mRetryImmediate; break;
+				default:						lRetryTime = mRetryLater;
+			}
 		}
 	}
 
 #ifdef	_DEBUG_INCOMING
 	if	(LogIsActive (_DEBUG_INCOMING))
 	{
-		LogMessage (_DEBUG_INCOMING, _T("CComMessageFilter RetryRejected [%s] Ticks [%u] DoNotDisturb [%u] CheckedOut [%u] Retry [%d]"), CallTypeStr(dwRejectType), dwTickCount, mDndLevel, mCheckedOut, lRetryTime);
+		LogMessage (_DEBUG_INCOMING, _T("CComMessageFilter RetryRejected [%s] Ticks [%u] Timeout [%d %d %d] DoNotDisturb [%u] CheckedOut [%u] Retry [%d]"), ServerCallStr(dwRejectType), dwTickCount, mRetryTimeout, mRetrySoon, mRetryLater, mDndLevel, mCheckedOut, lRetryTime);
 	}
 #endif
 	return lRetryTime;
@@ -358,7 +446,7 @@ DWORD STDMETHODCALLTYPE CComMessageFilter::MessagePending (HTASK htaskCallee, DW
 #ifdef	_DEBUG_MESSAGE_NOT
 	if	(LogIsActive (_DEBUG_MESSAGE))
 	{
-		LogMessage (_DEBUG_MESSAGE, _T("CComMessageFilter MessagePending [%s] Ticks [%u] DoNotDisturb [%u] CheckedOut [%u] Reentrant [%u]"), PendingTypeStr(dwPendingType), dwTickCount, mDndLevel, mCheckedOut, mInMessagePending);
+		LogMessage (_DEBUG_MESSAGE, _T("CComMessageFilter MessagePending [%s] Ticks [%u] Timeout [%u] DoNotDisturb [%u] CheckedOut [%u] Reentrant [%u]"), PendingTypeStr(dwPendingType), dwTickCount, mMessageTimeout, mDndLevel, mCheckedOut, mInMessagePending);
 	}
 #endif
 
@@ -387,7 +475,7 @@ DWORD STDMETHODCALLTYPE CComMessageFilter::MessagePending (HTASK htaskCallee, DW
 #ifdef	_DEBUG_MESSAGE
 			if	(LogIsActive (_DEBUG_MESSAGE))
 			{
-				LogMessage (_DEBUG_MESSAGE, _T("CComMessageFilter MessagePending [%s] Ticks [%u] DoNotDisturb [%u] CheckedOut [%u]"), PendingTypeStr(dwPendingType), dwTickCount, mDndLevel, mCheckedOut);
+				LogMessage (_DEBUG_MESSAGE, _T("CComMessageFilter MessagePending [%s] Ticks [%u] Timeout [%u] DoNotDisturb [%u] CheckedOut [%u]"), PendingTypeStr(dwPendingType), dwTickCount, mMessageTimeout, mDndLevel, mCheckedOut);
 			}
 #endif
 			while (PeekMessage (&lMsg, NULL, WM_MOUSEFIRST, WM_MOUSELAST, PM_REMOVE|PM_NOYIELD))
@@ -405,7 +493,7 @@ DWORD STDMETHODCALLTYPE CComMessageFilter::MessagePending (HTASK htaskCallee, DW
 #ifdef	_DEBUG_MESSAGE
 	if	(LogIsActive (_DEBUG_MESSAGE))
 	{
-		LogMessage (_DEBUG_MESSAGE, _T("CComMessageFilter MessagePending [%s] Ticks [%u] DoNotDisturb [%u] CheckedOut [%u] Result [%s]"), PendingTypeStr(dwPendingType), dwTickCount, mDndLevel, mCheckedOut, PendingMsgStr (lRet));
+		LogMessage (_DEBUG_MESSAGE, _T("CComMessageFilter MessagePending [%s] Ticks [%u] Timeout [%u] DoNotDisturb [%u] CheckedOut [%u] Result [%s]"), PendingTypeStr(dwPendingType), dwTickCount, mMessageTimeout, mDndLevel, mCheckedOut, PendingMsgStr (lRet));
 	}
 #endif
 	return lRet;

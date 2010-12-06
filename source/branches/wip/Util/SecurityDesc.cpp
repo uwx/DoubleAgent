@@ -197,7 +197,7 @@ bool CSecurityDesc::MakeAbsolute ()
 			}
 			else
 			{
-				LogWinErr (LogIfActive, GetLastError ());
+				LogWinErr (LogIfActive|LogTime, GetLastError ());
 
 				if	(lDescriptor)
 				{
@@ -269,7 +269,7 @@ DWORD CSecurityDesc::MakeSelfRelative ()
 			}
 			else
 			{
-				LogWinErr (LogIfActive, GetLastError ());
+				LogWinErr (LogIfActive|LogTime, GetLastError ());
 
 				if	(lDescriptor)
 				{
@@ -414,7 +414,7 @@ CSecurityDesc & CSecurityDesc::operator= (LPCTSTR pDescriptorString)
 		}
 		else
 		{
-			LogWinErr (LogDetails, GetLastError ());
+			LogWinErr (LogDetails|LogTime, GetLastError ());
 		}
 	}
 #endif
@@ -523,7 +523,7 @@ CSecurityDesc & CSecurityDesc::operator= (HANDLE pToken)
 			else
 			if	(mDescriptor)
 			{
-				LogWinErr (LogDetails, GetLastError ());
+				LogWinErr (LogDetails|LogTime, GetLastError ());
 				LocalFree (mDescriptor);
 				mDescriptor = NULL;
 			}
@@ -562,7 +562,7 @@ DWORD CSecurityDesc::GetEffectiveAccessGranted (LPCTSTR pUser, ACCESS_MASK & pAc
 			else
 			if	(LogIsActive ())
 			{
-				LogWinErr (LogDetails, lError);
+				LogWinErr (LogDetails|LogTime, lError);
 			}
 		}
 	}
@@ -596,7 +596,7 @@ DWORD CSecurityDesc::GetEffectiveAccessDenied (LPCTSTR pUser, ACCESS_MASK & pAcc
 			else
 			if	(LogIsActive ())
 			{
-				LogWinErr (LogDetails, lError);
+				LogWinErr (LogDetails|LogTime, lError);
 			}
 		}
 	}
@@ -664,7 +664,7 @@ DWORD CSecurityDesc::GetExplicitAccessGranted (LPCTSTR pUser, ACCESS_MASK & pAcc
 			else
 			if	(LogIsActive ())
 			{
-				LogWinErr (LogDetails, lError);
+				LogWinErr (LogDetails|LogTime, lError);
 			}
 
 			if	(lEntries)
@@ -737,7 +737,7 @@ DWORD CSecurityDesc::GetExplicitAccessDenied (LPCTSTR pUser, ACCESS_MASK & pAcce
 			else
 			if	(LogIsActive ())
 			{
-				LogWinErr (LogDetails, lError);
+				LogWinErr (LogDetails|LogTime, lError);
 			}
 
 			if	(lEntries)
@@ -803,7 +803,7 @@ DWORD CSecurityDesc::GrantExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAccess, DW
 					&&	(LogIsActive ())
 					)
 				{
-					LogWinErr (LogDetails, lError);
+					LogWinErr (LogDetails|LogTime, lError);
 				}
 			}
 		}
@@ -884,7 +884,7 @@ DWORD CSecurityDesc::GrantExplicitAccess (PSID pUserSid, ACCESS_MASK pAccess, SI
 					&&	(LogIsActive ())
 					)
 				{
-					LogWinErr (LogDetails, lError);
+					LogWinErr (LogDetails|LogTime, lError);
 				}
 			}
 		}
@@ -929,7 +929,7 @@ DWORD CSecurityDesc::UngrantExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAccess)
 
 				if	(LogIsActive (LogVerbose))
 				{
-					LogMessage (LogVerbose, _T("  User [%s] Domain [%s] Sid [%d] [%s]"), lUser, lDomain, lSidSize, CUserSecurity::GetSidStr (lSid));
+					LogMessage (LogVerbose|LogTime, _T("  User [%s] Domain [%s] Sid [%d] [%s]"), lUser, lDomain, lSidSize, CUserSecurity::GetSidStr (lSid));
 				}
 			}
 			else
@@ -941,9 +941,9 @@ DWORD CSecurityDesc::UngrantExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAccess)
 				}
 				else
 				{
-					LogWinErr (LogNormal, lError);
+					LogWinErr (LogNormal|LogTime, lError);
 				}
-				LogMessage (LogNormal, _T("Cannot find account [%s]"), lUser);
+				LogMessage (LogNormal|LogTime, _T("Cannot find account [%s]"), lUser);
 				lSid = NULL;
 			}
 
@@ -994,7 +994,7 @@ DWORD CSecurityDesc::UngrantExplicitAccess (PSID pUserSid, ACCESS_MASK pAccess)
 							{
 								if	(LogIsActive (LogVerbose))
 								{
-									LogMessage (LogVerbose|LogHighVolume, _T("  Ace [%8.8X] Account [%s] [%s]"), lAce->Mask, CUserSecurity::GetSidName (lAceSid), CUserSecurity::GetSidStr (lAceSid));
+									LogMessage (LogVerbose|LogTime|LogHighVolume, _T("  Ace [%8.8X] Account [%s] [%s]"), lAce->Mask, CUserSecurity::GetSidName (lAceSid), CUserSecurity::GetSidStr (lAceSid));
 								}
 
 								if	(
@@ -1025,7 +1025,7 @@ DWORD CSecurityDesc::UngrantExplicitAccess (PSID pUserSid, ACCESS_MASK pAccess)
 			else
 			{
 				lError = GetLastError ();
-				LogWinErr (LogDetails, lError);
+				LogWinErr (LogDetails|LogTime, lError);
 			}
 		}
 	}
@@ -1084,7 +1084,7 @@ DWORD CSecurityDesc::DenyExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAccess, DWO
 					&&	(LogIsActive ())
 					)
 				{
-					LogWinErr (LogDetails, lError);
+					LogWinErr (LogDetails|LogTime, lError);
 				}
 			}
 		}
@@ -1165,7 +1165,7 @@ DWORD CSecurityDesc::DenyExplicitAccess (PSID pUserSid, ACCESS_MASK pAccess, SID
 					&&	(LogIsActive ())
 					)
 				{
-					LogWinErr (LogDetails, lError);
+					LogWinErr (LogDetails|LogTime, lError);
 				}
 			}
 		}
@@ -1210,7 +1210,7 @@ DWORD CSecurityDesc::UndenyExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAccess)
 
 				if	(LogIsActive (LogVerbose))
 				{
-					LogMessage (LogVerbose, _T("  User [%s] Domain [%s] Sid [%d] [%s]"), lUser, lDomain, lSidSize, CUserSecurity::GetSidStr (lSid));
+					LogMessage (LogVerbose|LogTime, _T("  User [%s] Domain [%s] Sid [%d] [%s]"), lUser, lDomain, lSidSize, CUserSecurity::GetSidStr (lSid));
 				}
 			}
 			else
@@ -1222,9 +1222,9 @@ DWORD CSecurityDesc::UndenyExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAccess)
 				}
 				else
 				{
-					LogWinErr (LogNormal, lError);
+					LogWinErr (LogNormal|LogTime, lError);
 				}
-				LogMessage (LogNormal, _T("Cannot find account [%s]"), lUser);
+				LogMessage (LogNormal|LogTime, _T("Cannot find account [%s]"), lUser);
 				lSid = NULL;
 			}
 
@@ -1274,7 +1274,7 @@ DWORD CSecurityDesc::UndenyExplicitAccess (PSID pUserSid, ACCESS_MASK pAccess)
 							{
 								if	(LogIsActive (LogVerbose))
 								{
-									LogMessage (LogVerbose|LogHighVolume, _T("  Ace [%8.8X] Account [%s] [%s]"), lAce->Mask, CUserSecurity::GetSidName (lAceSid), CUserSecurity::GetSidStr (lAceSid));
+									LogMessage (LogVerbose|LogTime|LogHighVolume, _T("  Ace [%8.8X] Account [%s] [%s]"), lAce->Mask, CUserSecurity::GetSidName (lAceSid), CUserSecurity::GetSidStr (lAceSid));
 								}
 
 								if	(
@@ -1305,7 +1305,7 @@ DWORD CSecurityDesc::UndenyExplicitAccess (PSID pUserSid, ACCESS_MASK pAccess)
 			else
 			{
 				lError = GetLastError ();
-				LogWinErr (LogDetails, lError);
+				LogWinErr (LogDetails|LogTime, lError);
 			}
 		}
 	}
@@ -1437,9 +1437,9 @@ DWORD CSecurityDesc::SetOwner (LPCTSTR pOwner)
 				}
 				else
 				{
-					LogWinErr (LogNormal, lError);
+					LogWinErr (LogNormal|LogTime, lError);
 				}
-				LogMessage (LogNormal, _T("Cannot find account [%s]"), lUser);
+				LogMessage (LogNormal|LogTime, _T("Cannot find account [%s]"), lUser);
 			}
 		}
 	}
@@ -1505,7 +1505,7 @@ DWORD CSecurityDesc::SetOwner (PSID pOwnerSid)
 					}
 					else
 					{
-						LogWinErr (LogNormal, lError);
+						LogWinErr (LogNormal|LogTime, lError);
 					}
 					LocalFree (lOwner);
 				}
@@ -1566,9 +1566,9 @@ DWORD CSecurityDesc::SetGroup (LPCTSTR pGroup)
 				}
 				else
 				{
-					LogWinErr (LogNormal, lError);
+					LogWinErr (LogNormal|LogTime, lError);
 				}
-				LogMessage (LogNormal, _T("Cannot find account [%s]"), lUser);
+				LogMessage (LogNormal|LogTime, _T("Cannot find account [%s]"), lUser);
 			}
 		}
 	}
@@ -1634,7 +1634,7 @@ DWORD CSecurityDesc::SetGroup (PSID pGroupSid)
 					}
 					else
 					{
-						LogWinErr (LogNormal, lError);
+						LogWinErr (LogNormal|LogTime, lError);
 					}
 					LocalFree (lGroup);
 				}

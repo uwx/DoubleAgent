@@ -24,346 +24,640 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaSvrEventDispatch::FireCommand(long CommandID, IDaSvrUserInput2* UserInput)
+int CDaSvrEventDispatch::FireCommand(long CommandID, IDaSvrUserInput2* UserInput)
 {
-	_variant_t				lCommandID (CommandID);
-	_variant_t				lUserInput ((LPDISPATCH)UserInput);
-	int						lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lCommandID (CommandID);
+		_variant_t				lUserInput ((LPDISPATCH)UserInput);
+		int						lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_IAgentNotifySink_Command, &lCommandID, &lUserInput));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.Invoke2 (DISPID_IAgentNotifySink_Command, &lCommandID, &lUserInput));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireActivateInputState(long CharacterID, long Activated)
+int CDaSvrEventDispatch::FireActivateInputState(long CharacterID, long Activated)
 {
-	_variant_t				lCharacterId (CharacterID);
-	_variant_t				lActivated (Activated);
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lCharacterId (CharacterID);
+		_variant_t				lActivated (Activated);
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_IAgentNotifySink_ActivateInputState, &lCharacterId, &lActivated));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.Invoke2 (DISPID_IAgentNotifySink_ActivateInputState, &lCharacterId, &lActivated));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireVisibleState(long CharacterID, long Visible, long Cause)
+int CDaSvrEventDispatch::FireVisibleState(long CharacterID, long Visible, long Cause)
 {
-	_variant_t				lParams [3] = {CharacterID, Visible, Cause};
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lParams [3] = {CharacterID, Visible, Cause};
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IAgentNotifySink_VisibleState, lParams, 3));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.InvokeN (DISPID_IAgentNotifySink_VisibleState, lParams, 3));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireClick(long CharacterID, short Keys, long X, long Y)
+int CDaSvrEventDispatch::FireClick(long CharacterID, short Keys, long X, long Y)
 {
-	_variant_t				lParams [4] = {CharacterID, Keys, X, Y};
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lParams [4] = {CharacterID, Keys, X, Y};
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IAgentNotifySink_Click, lParams, 4));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.InvokeN (DISPID_IAgentNotifySink_Click, lParams, 4));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireDblClick(long CharacterID, short Keys, long X, long Y)
+int CDaSvrEventDispatch::FireDblClick(long CharacterID, short Keys, long X, long Y)
 {
-	_variant_t				lParams [4] = {CharacterID, Keys, X, Y};
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lParams [4] = {CharacterID, Keys, X, Y};
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IAgentNotifySink_DblClick, lParams, 4));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.InvokeN (DISPID_IAgentNotifySink_DblClick, lParams, 4));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireDragStart(long CharacterID, short Keys, long X, long Y)
+int CDaSvrEventDispatch::FireDragStart(long CharacterID, short Keys, long X, long Y)
 {
-	_variant_t				lParams [4] = {CharacterID, Keys, X, Y};
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lParams [4] = {CharacterID, Keys, X, Y};
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IAgentNotifySink_DragStart, lParams, 4));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.InvokeN (DISPID_IAgentNotifySink_DragStart, lParams, 4));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireDragComplete(long CharacterID, short Keys, long X, long Y)
+int CDaSvrEventDispatch::FireDragComplete(long CharacterID, short Keys, long X, long Y)
 {
-	_variant_t				lParams [4] = {CharacterID, Keys, X, Y};
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lParams [4] = {CharacterID, Keys, X, Y};
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IAgentNotifySink_DragComplete, lParams, 4));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.InvokeN (DISPID_IAgentNotifySink_DragComplete, lParams, 4));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireRequestStart(long RequestID)
+int CDaSvrEventDispatch::FireRequestStart(long RequestID)
 {
-	_variant_t				lRequest (RequestID);
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lRequest (RequestID);
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_IAgentNotifySink_RequestStart, &lRequest));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.Invoke1 (DISPID_IAgentNotifySink_RequestStart, &lRequest));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireRequestComplete(long RequestID, long Result)
+int CDaSvrEventDispatch::FireRequestComplete(long RequestID, long Result)
 {
-	_variant_t				lRequest (RequestID);
-	_variant_t				lResult (Result);
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lRequest (RequestID);
+		_variant_t				lResult (Result);
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_IAgentNotifySink_RequestComplete, &lRequest, &lResult));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.Invoke2 (DISPID_IAgentNotifySink_RequestComplete, &lRequest, &lResult));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireBookMark(long BookMarkID)
+int CDaSvrEventDispatch::FireBookMark(long BookMarkID)
 {
-	_variant_t				lBookMarkID (BookMarkID);
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lBookMarkID (BookMarkID);
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_IAgentNotifySink_BookMark, &lBookMarkID));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.Invoke1 (DISPID_IAgentNotifySink_BookMark, &lBookMarkID));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireIdle(long CharacterID, long Start)
+int CDaSvrEventDispatch::FireIdle(long CharacterID, long Start)
 {
-	_variant_t				lCharacterID (CharacterID);
-	_variant_t				lStart (Start);
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lCharacterID (CharacterID);
+		_variant_t				lStart (Start);
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_IAgentNotifySink_Idle, &lCharacterID, &lStart));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.Invoke2 (DISPID_IAgentNotifySink_Idle, &lCharacterID, &lStart));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireMove(long CharacterID, long X, long Y, long Cause)
+int CDaSvrEventDispatch::FireMove(long CharacterID, long X, long Y, long Cause)
 {
-	_variant_t				lParams [4] = {CharacterID, X, Y, Cause};
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lParams [4] = {CharacterID, X, Y, Cause};
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IAgentNotifySink_Move, lParams, 4));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.InvokeN (DISPID_IAgentNotifySink_Move, lParams, 4));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireSize(long CharacterID, long Width, long Height)
+int CDaSvrEventDispatch::FireSize(long CharacterID, long Width, long Height)
 {
-	_variant_t				lParams [3] = {CharacterID, Width, Height};
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lParams [3] = {CharacterID, Width, Height};
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IAgentNotifySink_Size, lParams, 3));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.InvokeN (DISPID_IAgentNotifySink_Size, lParams, 3));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireBalloonVisibleState(long CharacterID, long Visible)
+int CDaSvrEventDispatch::FireBalloonVisibleState(long CharacterID, long Visible)
 {
-	_variant_t				lCharacterID (CharacterID);
-	_variant_t				lVisible (Visible);
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lCharacterID (CharacterID);
+		_variant_t				lVisible (Visible);
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_IAgentNotifySink_BalloonVisibleState, &lCharacterID, &lVisible));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.Invoke2 (DISPID_IAgentNotifySink_BalloonVisibleState, &lCharacterID, &lVisible));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireListeningState(long CharacterID, long Listening, long Cause)
+int CDaSvrEventDispatch::FireListeningState(long CharacterID, long Listening, long Cause)
 {
-	_variant_t				lParams [3] = {CharacterID, Listening, Cause};
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lParams [3] = {CharacterID, Listening, Cause};
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IAgentNotifySinkEx_ListeningState, lParams, 3));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.InvokeN (DISPID_IAgentNotifySinkEx_ListeningState, lParams, 3));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireDefaultCharacterChange(LPCTSTR CharGUID)
+int CDaSvrEventDispatch::FireDefaultCharacterChange(BSTR CharGUID)
 {
-	_variant_t				lGUID (CharGUID);
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lGUID (_bstr_t (CharGUID, true));
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke1 (DISPID_IAgentNotifySinkEx_DefaultCharacterChange, &lGUID));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.Invoke1 (DISPID_IAgentNotifySinkEx_DefaultCharacterChange, &lGUID));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireAgentPropertyChange()
+int CDaSvrEventDispatch::FireAgentPropertyChange()
 {
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke0 (DISPID_IAgentNotifySinkEx_AgentPropertyChange));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.Invoke0 (DISPID_IAgentNotifySinkEx_AgentPropertyChange));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireActiveClientChange(long CharacterID, long Status)
+int CDaSvrEventDispatch::FireActiveClientChange(long CharacterID, long Status)
 {
-	_variant_t				lCharacterID (CharacterID);
-	_variant_t				lStatus (Status);
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lCharacterID (CharacterID);
+		_variant_t				lStatus (Status);
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_IAgentNotifySinkEx_ActiveClientChange, &lCharacterID, &lStatus));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.Invoke2 (DISPID_IAgentNotifySinkEx_ActiveClientChange, &lCharacterID, &lStatus));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaSvrEventDispatch::FireSpeechStart(long CharacterID, IDaSvrFormattedText* FormattedText)
+int CDaSvrEventDispatch::FireSpeechStart(long CharacterID, IDaSvrFormattedText* FormattedText)
 {
-	_variant_t				lCharacterID (CharacterID);
-	_variant_t				lFormattedText ((LPDISPATCH)FormattedText);
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lCharacterID (CharacterID);
+		_variant_t				lFormattedText ((LPDISPATCH)FormattedText);
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.Invoke2 (DISPID_IDaSvrNotifySink2_SpeechStart, &lCharacterID, &lFormattedText));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.Invoke2 (DISPID_IDaSvrNotifySink2_SpeechStart, &lCharacterID, &lFormattedText));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireSpeechEnd(long CharacterID, IDaSvrFormattedText* FormattedText, VARIANT_BOOL Stopped)
+int CDaSvrEventDispatch::FireSpeechEnd(long CharacterID, IDaSvrFormattedText* FormattedText, VARIANT_BOOL Stopped)
 {
-	_variant_t				lParams [3] = {CharacterID, (LPDISPATCH)FormattedText, Stopped};
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lParams [3] = {CharacterID, (LPDISPATCH)FormattedText, Stopped};
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IDaSvrNotifySink2_SpeechEnd, lParams, 3));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.InvokeN (DISPID_IDaSvrNotifySink2_SpeechEnd, lParams, 3));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }
 
-void CDaSvrEventDispatch::FireSpeechWord(long CharacterID, IDaSvrFormattedText* FormattedText, long WordIndex)
+int CDaSvrEventDispatch::FireSpeechWord(long CharacterID, IDaSvrFormattedText* FormattedText, long WordIndex)
 {
-	_variant_t				lParams [3] = {CharacterID, (LPDISPATCH)FormattedText, WordIndex};
-	int 					lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
+	int	lCount = 0;
 
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
+	if	(mUnkArray.GetSize() > 0)
 	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
+		_variant_t				lParams [3] = {CharacterID, (LPDISPATCH)FormattedText, WordIndex};
+		int 					lNdx;
+		IUnknown *				lUnknown;
+		CComQIPtr <IDispatch>	lEventSink;
+
+		for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 		{
-			LogComErr (LogNormal, lEventSink.InvokeN (DISPID_IDaSvrNotifySink2_SpeechWord, lParams, 3));
+			if	(
+					(lUnknown = mUnkArray.GetAt (lNdx))
+				&&	(
+						(mUnregisterDelayed.GetCount() <= 0)
+					||	(mUnregisterDelayed.Find (mUnkArray.GetCookie (&lUnknown)) < 0)
+					)
+				&&	(lEventSink = lUnknown)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lEventSink.InvokeN (DISPID_IDaSvrNotifySink2_SpeechWord, lParams, 3));
+				lCount++;
+			}
 		}
 	}
+	return lCount;
 }

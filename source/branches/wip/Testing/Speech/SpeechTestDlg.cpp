@@ -830,15 +830,15 @@ void CSpeechTestDlg::ShowTTSLanguages ()
 		INT_PTR		lLangNdx;
 		CString		lLangName;
 
-		LogMessage (LogNormal, _T("Languages [%d]"), mLangIDs.GetCount());		
+		LogMessage (LogNormal, _T("Languages [%d]"), mLangIDs.GetCount());
 		mTTSLanguages.ResetContent ();
-		
+
 		for	(lLangNdx = 0; lLangNdx < mLangIDs.GetCount(); lLangNdx++)
 		{
 			GetLocaleInfo (MAKELCID (mLangIDs [lLangNdx], SORT_DEFAULT), LOCALE_SLANGUAGE, lLangName.GetBuffer (MAX_PATH), MAX_PATH);
 			lLangName.ReleaseBuffer ();
 			mTTSLanguages.AddString (lLangName);
-			LogMessage (LogNormal, _T("  [%4.4u] [%4.4X] [%s]"), mLangIDs [lLangNdx], mLangIDs [lLangNdx], lLangName);		
+			LogMessage (LogNormal, _T("  [%4.4u] [%4.4X] [%s]"), mLangIDs [lLangNdx], mLangIDs [lLangNdx], lLangName);
 		}
 
 		mTTSLanguages.SetCurSel (-1);
@@ -848,7 +848,7 @@ void CSpeechTestDlg::ShowTTSLanguages ()
 int CSpeechTestDlg::FindTTSLangID (LANGID pLangID)
 {
 	INT_PTR	lLangNdx = mLangIDs.Find (pLangID);
-	
+
 	if	(lLangNdx < 0)
 	{
 		for	(lLangNdx = mLangIDs.GetUpperBound(); lLangNdx >= 0; lLangNdx--)
@@ -1667,7 +1667,7 @@ void CSpeechTestDlg::OnThink()
 					lResult = mCharacter[lCharNdx]->ThinkFormatted (lFormattedText, &lReqID);
 					LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] ThinkFormatted [%d] [%s]"), mCharacterId[lCharNdx], lReqID, DebugStr(lText));
 					if	(LogIsActive (_LOG_CHAR_CALLS))
-					{ 
+					{
 						LogMessage (_LOG_CHAR_CALLS, _T("   Count     [%d] Index [%d] Word [%ls]"), lFormattedText.WordCount, lFormattedText.WordIndex, (BSTR)lFormattedText.DisplayWord[lFormattedText.WordIndex]);
 						LogMessage (_LOG_CHAR_CALLS, _T("   Display   [%ls]"), DebugStr((BSTR)lFormattedText.DisplayText));
 						LogMessage (_LOG_CHAR_CALLS, _T("   Raw       [%ls]"), DebugStr((BSTR)lFormattedText.RawText));
@@ -1697,7 +1697,7 @@ void CSpeechTestDlg::OnThink()
 					lResult = mCharacter[lCharNdx]->ThinkFormatted (lFormattedText, &lReqID);
 					LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] ThinkFormatted [%d] [%s]"), mCharacterId[lCharNdx], lReqID, DebugStr(lText));
 					if	(LogIsActive (_LOG_CHAR_CALLS))
-					{ 
+					{
 						LogMessage (_LOG_CHAR_CALLS, _T("   Count [%d] Index [%d] Word [%ls]"), lFormattedText.WordCount, lFormattedText.WordIndex, (BSTR)lFormattedText.DisplayWord[lFormattedText.WordIndex]);
 						LogMessage (_LOG_CHAR_CALLS, _T("   Display   [%ls]"), DebugStr((BSTR)lFormattedText.DisplayText));
 						LogMessage (_LOG_CHAR_CALLS, _T("   Text      [%ls]"), DebugStr((BSTR)lFormattedText.Text));
@@ -1764,7 +1764,7 @@ void CSpeechTestDlg::OnSpeak()
 					lResult = mCharacter[lCharNdx]->SpeakFormatted (lFormattedText, &lReqID);
 					LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] SpeakFormatted [%d] [%s]"), mCharacterId[lCharNdx], lReqID, DebugStr(lText));
 					if	(LogIsActive (_LOG_CHAR_CALLS))
-					{ 
+					{
 						LogMessage (_LOG_CHAR_CALLS, _T("   Count     [%d] Index [%d] Word [%ls]"), lFormattedText.WordCount, lFormattedText.WordIndex, (BSTR)lFormattedText.DisplayWord[lFormattedText.WordIndex]);
 						LogMessage (_LOG_CHAR_CALLS, _T("   Display   [%ls]"), DebugStr((BSTR)lFormattedText.DisplayText));
 						LogMessage (_LOG_CHAR_CALLS, _T("   Raw       [%ls]"), DebugStr((BSTR)lFormattedText.RawText));
@@ -1794,7 +1794,7 @@ void CSpeechTestDlg::OnSpeak()
 					lResult = mCharacter[lCharNdx]->SpeakFormatted (lFormattedText, &lReqID);
 					LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] SpeakFormatted [%d] [%s]"), mCharacterId[lCharNdx], lReqID, DebugStr(lText));
 					if	(LogIsActive (_LOG_CHAR_CALLS))
-					{ 
+					{
 						LogMessage (_LOG_CHAR_CALLS, _T("   Count [%d] Index [%d] Word [%ls]"), lFormattedText.WordCount, lFormattedText.WordIndex, (BSTR)lFormattedText.DisplayWord[lFormattedText.WordIndex]);
 						LogMessage (_LOG_CHAR_CALLS, _T("   Display   [%ls]"), DebugStr((BSTR)lFormattedText.DisplayText));
 						LogMessage (_LOG_CHAR_CALLS, _T("   Text      [%ls]"), DebugStr((BSTR)lFormattedText.Text));
@@ -2009,7 +2009,7 @@ void CSpeechTestDlg::OnSelEndOkTTSLanguages()
 	INT_PTR		lCharNdx = (mActiveChar == mCharacterId[0] ? 0 : mActiveChar == mCharacterId[1] ? 1 : -1);
 	int			lLangNdx = mTTSLanguages.GetCurSel ();
 	LANGID		lPrevLangID;
-	
+
 	if	(
 			(lLangNdx >= 0)
 		&&	(lLangNdx <= mLangIDs.GetUpperBound ())
@@ -2019,13 +2019,13 @@ void CSpeechTestDlg::OnSelEndOkTTSLanguages()
 		lPrevLangID = (LANGID) mCharacter [lCharNdx].LanguageID;
 
 		LogComErr (LogAlways, mCharacter [lCharNdx]->put_LanguageID (mLangIDs [lLangNdx]), _T("put_LanguageID [%u] [%4.4X]"), mLangIDs [lLangNdx], mLangIDs [lLangNdx]);
-		
+
 		if	((LANGID) mCharacter [lCharNdx].LanguageID != lPrevLangID)
 		{
-#if	TRUE		
+#if	TRUE
 			LogTTSModes (lCharNdx);
 			LogSRModes (lCharNdx);
-#endif			
+#endif
 		}
 
 		ShowCharacterState (lCharNdx);

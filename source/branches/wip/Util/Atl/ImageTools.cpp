@@ -168,7 +168,7 @@ bool CImageTools::ShrinkImage (ATL::CImage & pImage, UINT pFactor, UINT pBlend)
 		lFactorDiv *= (lFactorDiv - 1L);
 	}
 
-	//LogMessage (LogNormal, _T("Shrink Factor [%u] Blend [%u] MulDiv [%u + %u / %u] [%f]"), pFactor, pBlend, lFactorCenterMul, lFactorMul, lFactorDiv, (float) lFactorCenterMul / (float) lFactorDiv * 100.0f);
+	//LogMessage (LogNormal|LogTime, _T("Shrink Factor [%u] Blend [%u] MulDiv [%u + %u / %u] [%f]"), pFactor, pBlend, lFactorCenterMul, lFactorMul, lFactorDiv, (float) lFactorCenterMul / (float) lFactorDiv * 100.0f);
 
 	if	(
 			((HBITMAP)pImage)

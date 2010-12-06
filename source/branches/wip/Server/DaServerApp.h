@@ -39,6 +39,7 @@
 #endif
 /////////////////////////////////////////////////////////////////////////////
 
+class DaServer;
 class DaSvrPropertySheet;
 class DaSvrSettings;
 class DaSvrAudioOutput;
@@ -71,6 +72,8 @@ public:
 // Attributes
 	static const UINT	mOptionsChangedMsgId;
 	static const UINT	mDefaultCharacterChangedMsgId;
+
+	class CComMessageFilter * GetMessageFilter ();
 
 // Operations
 	bool ShowSettings (LPCTSTR pStartPage = NULL);

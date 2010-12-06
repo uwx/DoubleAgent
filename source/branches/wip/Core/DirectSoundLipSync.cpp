@@ -109,11 +109,11 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 				)
 			{
 				lFilterName.Format (_T("%s Lip Sync"), mFilterName);
-				lResult = LogComErr (LogNormal, CoCreateInstance (__uuidof(SampleGrabber), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mGrabberFilter));
+				lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(SampleGrabber), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mGrabberFilter));
 
 				if	(
 						(SUCCEEDED (lResult))
-					&&	(FAILED (lResult = LogVfwErr (LogNormal, pGraphBuilder->AddFilter (mGrabberFilter, lFilterName))))
+					&&	(FAILED (lResult = LogVfwErr (LogNormal|LogTime, pGraphBuilder->AddFilter (mGrabberFilter, lFilterName))))
 					)
 				{
 					SafeFreeSafePtr (mGrabberFilter);
@@ -126,11 +126,11 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 				)
 			{
 				lFilterName.Format (_T("%s Wave Parser"), mFilterName);
-				lResult = LogComErr (LogNormal, CoCreateInstance (__uuidof(WaveParser), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mWaveParser));
+				lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(WaveParser), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mWaveParser));
 
 				if	(
 						(SUCCEEDED (lResult))
-					&&	(FAILED (lResult = LogVfwErr (LogNormal, pGraphBuilder->AddFilter (mWaveParser, lFilterName))))
+					&&	(FAILED (lResult = LogVfwErr (LogNormal|LogTime, pGraphBuilder->AddFilter (mWaveParser, lFilterName))))
 					)
 				{
 					SafeFreeSafePtr (mWaveParser);
@@ -143,11 +143,11 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 				)
 			{
 				lFilterName.Format (_T("%s Audio Render"), mFilterName);
-				lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_DSoundRender, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mAudioRender));
+				lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_DSoundRender, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mAudioRender));
 
 				if	(
 						(SUCCEEDED (lResult))
-					&&	(FAILED (lResult = LogVfwErr (LogNormal, pGraphBuilder->AddFilter (mAudioRender, lFilterName))))
+					&&	(FAILED (lResult = LogVfwErr (LogNormal|LogTime, pGraphBuilder->AddFilter (mAudioRender, lFilterName))))
 					)
 				{
 					SafeFreeSafePtr (mAudioRender);
@@ -158,11 +158,11 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 			{
 				if	(PathIsURL (pWaveFileName))
 				{
-					lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_URLReader, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mFileSource));
+					lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_URLReader, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mFileSource));
 				}
 				else
 				{
-					lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_AsyncReader, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mFileSource));
+					lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_AsyncReader, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mFileSource));
 				}
 
 				if	(SUCCEEDED (lResult))
@@ -177,7 +177,7 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 					else
 					if	(lFileName = AtlAllocTaskOleString (pWaveFileName))
 					{
-						lResult = LogVfwErr (LogNormal, lFileSource->Load (lFileName, NULL));
+						lResult = LogVfwErr (LogNormal|LogTime, lFileSource->Load (lFileName, NULL));
 					}
 					else
 					{
@@ -187,7 +187,7 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 
 				if	(
 						(SUCCEEDED (lResult))
-					&&	(FAILED (lResult = LogVfwErr (LogNormal, pGraphBuilder->AddFilter (mFileSource, pWaveFileName))))
+					&&	(FAILED (lResult = LogVfwErr (LogNormal|LogTime, pGraphBuilder->AddFilter (mFileSource, pWaveFileName))))
 					)
 				{
 					SafeFreeSafePtr (mFileSource);
@@ -220,28 +220,28 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 				try
 				{
 					if	(
-							(SUCCEEDED (lResult = LogVfwErr (LogNormal, GetFilterPin (mFileSource, PINDIR_OUTPUT, MEDIATYPE_Stream, &lFileOutPin, lFileMediaType.Free()))))
-						&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, GetFilterPins (mWaveParser, &lWaveInPin, NULL))))
+							(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, GetFilterPin (mFileSource, PINDIR_OUTPUT, MEDIATYPE_Stream, &lFileOutPin, lFileMediaType.Free()))))
+						&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, GetFilterPins (mWaveParser, &lWaveInPin, NULL))))
 						)
 					{
-						lResult = LogVfwErr (LogNormal, pGraphBuilder->ConnectDirect (lFileOutPin, lWaveInPin, lFileMediaType));
+						lResult = LogVfwErr (LogNormal|LogTime, pGraphBuilder->ConnectDirect (lFileOutPin, lWaveInPin, lFileMediaType));
 					}
 					if	(
 							(SUCCEEDED (lResult))
-						&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, GetFilterPins (mWaveParser, NULL, &lWaveOutPin))))
-						&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, GetFilterPins (mGrabberFilter, &lGrabberInPin, NULL))))
+						&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, GetFilterPins (mWaveParser, NULL, &lWaveOutPin))))
+						&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, GetFilterPins (mGrabberFilter, &lGrabberInPin, NULL))))
 						)
 					{
-						lResult = LogVfwErr (LogNormal, pGraphBuilder->ConnectDirect (lWaveOutPin, lGrabberInPin, NULL));
+						lResult = LogVfwErr (LogNormal|LogTime, pGraphBuilder->ConnectDirect (lWaveOutPin, lGrabberInPin, NULL));
 					}
 					if	(SUCCEEDED (lResult))
 					{
-						lResult = LogVfwErr (LogNormal, ConnectFilters (pGraphBuilder, mAudioRender, mGrabberFilter, false));
+						lResult = LogVfwErr (LogNormal|LogTime, ConnectFilters (pGraphBuilder, mAudioRender, mGrabberFilter, false));
 
 						if	(
 								(SUCCEEDED (lResult))
-							&&	(SUCCEEDED (LogVfwErr (LogNormal, GetFilterPins (mGrabberFilter, &lGrabberInPin, NULL))))
-							&&	(SUCCEEDED (LogVfwErr (LogNormal, lGrabberInPin->ConnectionMediaType (&lGrabberMediaType))))
+							&&	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, GetFilterPins (mGrabberFilter, &lGrabberInPin, NULL))))
+							&&	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lGrabberInPin->ConnectionMediaType (&lGrabberMediaType))))
 							)
 						{
 							IMediaSeekingPtr	lMediaSeeking (mAudioRender);
@@ -249,7 +249,7 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 							MoDuplicateMediaType ((DMO_MEDIA_TYPE **)mMediaType.Free(), lGrabberMediaType);
 							if	(lMediaSeeking != NULL)
 							{
-								LogVfwErr (LogNormal, lMediaSeeking->GetDuration (&mDuration));
+								LogVfwErr (LogNormal|LogTime, lMediaSeeking->GetDuration (&mDuration));
 							}
 #ifdef	_DEBUG_FORMAT
 							LogMediaType (_DEBUG_FORMAT, lGrabberMediaType, _T("CDirectSoundLipSync [%s]"), pWaveFileName);
@@ -263,8 +263,8 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 
 			if	(SUCCEEDED (lResult))
 			{
-				LogVfwErr (LogNormal, mGrabber->SetCallback (this, 1));
-				LogVfwErr (LogNormal, mGrabber->SetOneShot (FALSE));
+				LogVfwErr (LogNormal|LogTime, mGrabber->SetCallback (this, 1));
+				LogVfwErr (LogNormal|LogTime, mGrabber->SetOneShot (FALSE));
 			}
 
 #ifdef	_DEBUG_CONNECT
@@ -324,8 +324,8 @@ HRESULT CDirectSoundLipSync::Disconnect (IGraphBuilder * pGraphBuilder)
 		{
 			try
 			{
-				LogVfwErr (LogVerbose, mFilterChain->StopChain (mFileSource, mAudioRender));
-				LogVfwErr (LogVerbose, mFilterChain->RemoveChain (mFileSource, mAudioRender));
+				LogVfwErr (LogVerbose|LogTime, mFilterChain->StopChain (mFileSource, mAudioRender));
+				LogVfwErr (LogVerbose|LogTime, mFilterChain->RemoveChain (mFileSource, mAudioRender));
 			}
 			catch AnyExceptionDebug
 		}
@@ -334,19 +334,19 @@ HRESULT CDirectSoundLipSync::Disconnect (IGraphBuilder * pGraphBuilder)
 		{
 			if	(mFileSource != NULL)
 			{
-				LogVfwErr (LogDetails, lGraphBuilder->RemoveFilter (mFileSource));
+				LogVfwErr (LogDetails|LogTime, lGraphBuilder->RemoveFilter (mFileSource));
 			}
 			if	(mWaveParser != NULL)
 			{
-				LogVfwErr (LogDetails, lGraphBuilder->RemoveFilter (mWaveParser));
+				LogVfwErr (LogDetails|LogTime, lGraphBuilder->RemoveFilter (mWaveParser));
 			}
 			if	(mAudioRender != NULL)
 			{
-				LogVfwErr (LogDetails, lGraphBuilder->RemoveFilter (mAudioRender));
+				LogVfwErr (LogDetails|LogTime, lGraphBuilder->RemoveFilter (mAudioRender));
 			}
 			if	(mGrabberFilter != NULL)
 			{
-				lResult = LogVfwErr (LogDetails, lGraphBuilder->RemoveFilter (mGrabberFilter));
+				lResult = LogVfwErr (LogDetails|LogTime, lGraphBuilder->RemoveFilter (mGrabberFilter));
 			}
 		}
 		else
@@ -384,7 +384,7 @@ HRESULT CDirectSoundLipSync::Start ()
 			&&	(mFilterChain != NULL)
 			)
 		{
-			lResult = LogVfwErr (LogNormal, mFilterChain->StartChain (mFileSource, mAudioRender));
+			lResult = LogVfwErr (LogNormal|LogTime, mFilterChain->StartChain (mFileSource, mAudioRender));
 		}
 	}
 	catch AnyExceptionDebug
@@ -405,7 +405,7 @@ HRESULT CDirectSoundLipSync::Stop ()
 			&&	(mFilterChain != NULL)
 			)
 		{
-			lResult = LogVfwErr (LogNormal, mFilterChain->StopChain (mFileSource, mAudioRender));
+			lResult = LogVfwErr (LogNormal|LogTime, mFilterChain->StopChain (mFileSource, mAudioRender));
 		}
 	}
 	catch AnyExceptionDebug

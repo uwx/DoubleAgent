@@ -110,7 +110,7 @@ LONG APIENTRY CPlApplet (HWND hwndCPl, UINT uMsg, LPARAM lParam1, LPARAM lParam2
 		case CPL_INIT:
 		{
 			ULONG_PTR	lCookie = _AtlModule.ActivateModuleTheme ();
-			
+
 			try
 			{
 				if	(!_AtlModule.mCplPropSheet)
@@ -119,16 +119,16 @@ LONG APIENTRY CPlApplet (HWND hwndCPl, UINT uMsg, LPARAM lParam1, LPARAM lParam2
 				}
 			}
 			catch AnyExceptionDebug
-			
+
 			_AtlModule.DeactivateModuleTheme (lCookie);
 			lRet = TRUE;
 		}	break;
 		case CPL_EXIT:
 		{
 			ULONG_PTR	lCookie = _AtlModule.ActivateModuleTheme ();
-			
+
 			SafeFreeSafePtr (_AtlModule.mCplPropSheet);
-			
+
 			_AtlModule.DeactivateModuleTheme (lCookie);
 		}	break;
 		case CPL_GETCOUNT:
@@ -159,7 +159,7 @@ LONG APIENTRY CPlApplet (HWND hwndCPl, UINT uMsg, LPARAM lParam1, LPARAM lParam2
 			UINT		lAppNum = (UINT)lParam1;
 			bool		lElevatedPages = (_AtlModule.mCplStartPage.CompareNoCase (CPropSheetCpl::mPageNameRegistry) == 0);
 			ULONG_PTR	lCookie = _AtlModule.ActivateModuleTheme ();
-			
+
 			try
 			{
 				if	(_AtlModule.mCplPropSheet)
@@ -173,7 +173,7 @@ LONG APIENTRY CPlApplet (HWND hwndCPl, UINT uMsg, LPARAM lParam1, LPARAM lParam2
 				}
 			}
 			catch AnyExceptionDebug
-			
+
 			_AtlModule.DeactivateModuleTheme (lCookie);
 		}	break;
 		case CPL_STOP:
@@ -201,7 +201,7 @@ void CDaShellModule::RegisterCpl ()
 
 	if	(LogIsActive ())
 	{
-		LogMessage (LogIfActive, _T("==> RegisterCpl [%s]"), lModuleName);
+		LogMessage (LogIfActive|LogTime, _T("==> RegisterCpl [%s]"), lModuleName);
 	}
 
 	if	(IsWindowsVista_AtLeast())
@@ -280,7 +280,7 @@ void CDaShellModule::RegisterCpl ()
 			{
 				if	(LogIsActive ())
 				{
-					LogMessage (LogIfActive, _T("Environment [%s]"), lPath.Value());
+					LogMessage (LogIfActive|LogTime, _T("Environment [%s]"), lPath.Value());
 				}
 
 				lPath.Value().TrimRight ();
@@ -292,8 +292,8 @@ void CDaShellModule::RegisterCpl ()
 				if	(LogIsActive ())
 				{
 					CRegString	lPathVerify (lEnvironment, _T("Path"));
-					LogMessage (LogIfActive, _T("  Updated   [%s]"), lPath.Value());
-					LogMessage (LogIfActive, _T("  Verify    [%s]"), lPathVerify.Value());
+					LogMessage (LogIfActive|LogTime, _T("  Updated   [%s]"), lPath.Value());
+					LogMessage (LogIfActive|LogTime, _T("  Verify    [%s]"), lPathVerify.Value());
 				}
 
 				try
@@ -301,7 +301,7 @@ void CDaShellModule::RegisterCpl ()
 					DWORD	lRecipients = BSM_ALLCOMPONENTS;
 					if	(BroadcastSystemMessage (BSF_FORCEIFHUNG, &lRecipients, WM_SETTINGCHANGE, 0, (LPARAM)_T("Environment")) < 0)
 					{
-						LogWinErr (LogIfActive, GetLastError());
+						LogWinErr (LogIfActive|LogTime, GetLastError());
 					}
 				}
 				catch AnyExceptionSilent
@@ -319,7 +319,7 @@ void CDaShellModule::UnregisterCpl ()
 
 	if	(LogIsActive ())
 	{
-		LogMessage (LogIfActive, _T("==> UnregisterCpl [%s]"), lModuleName);
+		LogMessage (LogIfActive|LogTime, _T("==> UnregisterCpl [%s]"), lModuleName);
 	}
 
 	if	(IsWindowsVista_AtLeast())
@@ -368,7 +368,7 @@ void CDaShellModule::UnregisterCpl ()
 			{
 				if	(LogIsActive())
 				{
-					LogMessage (LogIfActive, _T("Environment [%s]"), lPath.Value());
+					LogMessage (LogIfActive|LogTime, _T("Environment [%s]"), lPath.Value());
 				}
 
 				lModulePos = (int)(lModuleFound - (LPCTSTR)lPathLower);
@@ -388,8 +388,8 @@ void CDaShellModule::UnregisterCpl ()
 				if	(LogIsActive())
 				{
 					CRegString	lPathVerify (lEnvironment, _T("Path"));
-					LogMessage (LogIfActive, _T("  Updated   [%s]"), lPath.Value());
-					LogMessage (LogIfActive, _T("  Verify    [%s]"), lPathVerify.Value());
+					LogMessage (LogIfActive|LogTime, _T("  Updated   [%s]"), lPath.Value());
+					LogMessage (LogIfActive|LogTime, _T("  Verify    [%s]"), lPathVerify.Value());
 				}
 
 				try
@@ -397,7 +397,7 @@ void CDaShellModule::UnregisterCpl ()
 					DWORD	lRecipients = BSM_ALLCOMPONENTS;
 					if	(BroadcastSystemMessage (BSF_FORCEIFHUNG, &lRecipients, WM_SETTINGCHANGE, 0, (LPARAM)_T("Environment")) < 0)
 					{
-						LogWinErr (LogIfActive, GetLastError());
+						LogWinErr (LogIfActive|LogTime, GetLastError());
 					}
 				}
 				catch AnyExceptionSilent

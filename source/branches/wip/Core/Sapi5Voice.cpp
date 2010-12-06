@@ -30,7 +30,7 @@
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_EVENTS	(GetProfileDebugInt(_T("DebugSapiEvents"),LogVerbose,true)&0xFFFF|LogHighVolume|LogTimeMs)
+#define	_DEBUG_EVENTS	(GetProfileDebugInt(_T("DebugSapiEvents"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -50,7 +50,7 @@ CSapi5Voice::CSapi5Voice ()
 	mPaused (false),
 	mLastVoiceEvent (SPEI_UNDEFINED)
 {
-	LogComErr (LogIfActive, CoCreateInstance (CLSID_SpVoice, NULL, CLSCTX_SERVER, __uuidof (ISpVoice), (void **) &mVoice));
+	LogComErr (LogIfActive|LogTime, CoCreateInstance (CLSID_SpVoice, NULL, CLSCTX_SERVER, __uuidof (ISpVoice), (void **) &mVoice));
 }
 
 CSapi5Voice::~CSapi5Voice ()
@@ -230,11 +230,11 @@ HRESULT CSapi5Voice::PrepareToSpeak (bool pHighPriority)
 
 	if	(
 			(_IsValid ())
-		&&	(SUCCEEDED (LogSapi5Err (LogNormal, lResult = mVoice->SetPriority (pHighPriority?SPVPRI_ALERT:SPVPRI_NORMAL))))
+		&&	(SUCCEEDED (LogSapi5Err (LogNormal|LogTime, lResult = mVoice->SetPriority (pHighPriority?SPVPRI_ALERT:SPVPRI_NORMAL))))
 		)
 	{
-		LogSapi5Err (LogNormal, mVoice->SetInterest (SPFEI_ALL_TTS_EVENTS, SPFEI_ALL_TTS_EVENTS));
-		LogSapi5Err (LogNormal, mVoice->SetNotifyCallbackFunction (&VoiceNotifyCallback, 0, (LPARAM)this));
+		LogSapi5Err (LogNormal|LogTime, mVoice->SetInterest (SPFEI_ALL_TTS_EVENTS, SPFEI_ALL_TTS_EVENTS));
+		LogSapi5Err (LogNormal|LogTime, mVoice->SetNotifyCallbackFunction (&VoiceNotifyCallback, 0, (LPARAM)this));
 		mPrepared = true;
 	}
 	return lResult;
@@ -267,7 +267,7 @@ HRESULT CSapi5Voice::Speak (LPCTSTR pMessage, bool pAsync)
 	}
 	if	(LogIsActive ())
 	{
-		LogSapi5Err (LogNormal, lResult);
+		LogSapi5Err (LogNormal|LogTime, lResult);
 	}
 	return lResult;
 }
@@ -291,11 +291,11 @@ HRESULT CSapi5Voice::Stop ()
 		}
 		lResult = MAKE_HRESULT (SEVERITY_SUCCESS, FACILITY_WIN32, lTotalSkipped);
 
-		LogSapi5Err (LogNormal, mVoice->Resume ());
+		LogSapi5Err (LogNormal|LogTime, mVoice->Resume ());
 	}
 	if	(LogIsActive ())
 	{
-		LogSapi5Err (LogNormal, lResult);
+		LogSapi5Err (LogNormal|LogTime, lResult);
 	}
 	return lResult;
 }
@@ -311,7 +311,7 @@ HRESULT CSapi5Voice::Pause ()
 	}
 	if	(LogIsActive ())
 	{
-		LogSapi5Err (LogNormal, lResult);
+		LogSapi5Err (LogNormal|LogTime, lResult);
 	}
 	return lResult;
 }
@@ -327,7 +327,7 @@ HRESULT CSapi5Voice::Resume ()
 	}
 	if	(LogIsActive ())
 	{
-		LogSapi5Err (LogNormal, lResult);
+		LogSapi5Err (LogNormal|LogTime, lResult);
 	}
 	return lResult;
 }

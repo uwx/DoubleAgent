@@ -588,11 +588,17 @@ bool CAnimationTestDlg::ShowSelGesture (bool pStopFirst)
 			{
 				lRet = true;
 #if	TRUE
+				if	(lSelGesture.CompareNoCase (_T("DoMagic1")) == 0)
+				{
+					mCharacter->Play (_bstr_t("DoMagic2"), &mLastAnimationReqID);
+					mCharacter->Play (_bstr_t("RestPose"), &mLastAnimationReqID);
+				}
+				else
 				if	(lSelGesture.CompareNoCase (_T("DoMagic2")) == 0)
 				{
 					mCharacter->Play (_bstr_t("RestPose"), &mLastAnimationReqID);
 				}
-#endif				
+#endif
 			}
 		}
 

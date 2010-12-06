@@ -25,7 +25,7 @@
 #include "DebugStr.h"
 
 #ifdef	_DEBUG
-#define	_DEBUG_FONT	(GetProfileDebugInt(_T("DebugBalloonFont"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_FONT	(GetProfileDebugInt(_T("DebugBalloonFont"),LogVerbose,true)&0xFFFF|LogTime)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -251,7 +251,7 @@ bool CAgentBalloonOptions::GetActualFont (const LOGFONT & pFont, LOGFONT & pActu
 			LogFont	(_DEBUG_FONT, lFontSpec, _T("  Font  "));
 			LogFont	(_DEBUG_FONT, pActualFont, _T("  Actual"));
 		}
-#endif		
+#endif
 		return true;
 	}
 	return false;
@@ -263,7 +263,7 @@ bool CAgentBalloonOptions::FontEqual (HFONT pFont1, HFONT pFont2)
 {
 	tS <LOGFONT>	lFont1;
 	tS <LOGFONT>	lFont2;
-	
+
 	if	(
 			(pFont1)
 		&&	(GetObject (pFont1, sizeof(LOGFONT), &lFont1))
@@ -306,7 +306,7 @@ void CAgentBalloonOptions::LogOptions (UINT pLogLevel, LPCTSTR pTitle, LPCTSTR p
 		{
 			CAtlString	lTitle (pTitle);
 			CAtlString	lPrefix (pPrefix);
-			
+
 			if	(lTitle.IsEmpty ())
 			{
 				lTitle = _T("Balloon Options");
@@ -330,7 +330,7 @@ void CAgentBalloonOptions::LogFont (UINT pLogLevel, const LOGFONT & pFont, LPCTS
 		{
 			CAtlString	lTitle (pTitle);
 			CAtlString	lPrefix (pPrefix);
-			
+
 			if	(lTitle.IsEmpty ())
 			{
 				lTitle = _T("Balloon Font");

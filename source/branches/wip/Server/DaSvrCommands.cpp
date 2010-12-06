@@ -30,10 +30,10 @@
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Other"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF)
-#define	_LOG_ABANDONED		MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF,_LOG_INSTANCE)
-#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Other"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_ABANDONED		MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF|LogTime,_LOG_INSTANCE)
+#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -65,7 +65,7 @@ DaSvrCommands * DaSvrCommands::CreateInstance (long pCharID, CEventNotify * pNot
 {
 	CComObject<DaSvrCommands> *	lInstance = NULL;
 
-	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrCommands>::CreateInstance (&lInstance))))
+	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CComObject<DaSvrCommands>::CreateInstance (&lInstance))))
 	{
 		lInstance->Initialize (pCharID, pNotify);
 		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
@@ -80,6 +80,12 @@ void DaSvrCommands::Terminate (bool pFinal, bool pAbandonned)
 		DaSvrCommand *	lCommand;
 		INT_PTR			lNdx;
 
+#ifdef	_LOG_INSTANCE
+		if	(LogIsActive())
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)(%d)] DaSvrCommands::Terminate [%u %u]"), this, mCharID, max(m_dwRef,-1), pFinal, pAbandonned);
+		}
+#endif
 		SafeFreeSafePtr (mCachedEnum);
 
 		if	(pFinal)

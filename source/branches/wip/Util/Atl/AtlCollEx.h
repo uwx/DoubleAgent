@@ -1033,5 +1033,10 @@ template <class TYPE, class TRAITS> inline CAtlString FormatArray (const CAtlArr
 	return FormatArray (pArray.GetData(), pArray.GetCount(), pFormat);
 }
 
+template <class TYPE> inline CAtlString FormatArray (const CAtlPtrTypeArray <TYPE> & pArray, LPCTSTR pFormat = _T("%p"), LPCTSTR pDelim = _T(" "))
+{
+	return FormatArray (pArray.GetData(), pArray.GetCount(), pFormat);
+}
+
 ////////////////////////////////////////////////////////////////////////
 #endif	// _ATLCOLLEX_H_INCLUDED_

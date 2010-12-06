@@ -75,7 +75,7 @@ void CPropPageCharacter::FinalRelease ()
 CPropPageCharacter * CPropPageCharacter::CreateInstance ()
 {
 	CComObject<CPropPageCharacter> *	lInstance = NULL;
-	LogComErr (LogIfActive, CComObject<CPropPageCharacter>::CreateInstance (&lInstance));
+	LogComErr (LogIfActive|LogTime, CComObject<CPropPageCharacter>::CreateInstance (&lInstance));
 	return lInstance;
 }
 

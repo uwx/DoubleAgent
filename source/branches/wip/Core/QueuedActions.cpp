@@ -204,3 +204,57 @@ void CQueuedActions::PopQueue (CAtlOwnPtrList <CQueuedAction> & pQueue)
 		AddTail (lAction);
 	}
 }
+
+//////////////////////////////////////////////////////////////////////
+#pragma page()
+//////////////////////////////////////////////////////////////////////
+
+void CQueuedActions::LogActions (UINT pLogLevel, LPCTSTR pFormat, ...) const
+{
+#if defined(_DEBUG) || defined (_TRACE_ACTION_INSTANCE)
+	if	(LogIsActive (pLogLevel))
+	{
+		try
+		{
+			CAtlString				lTitle;
+			CAtlString				lIndent;
+			POSITION				lPosition;
+			const CQueuedAction *	lAction;
+
+			if	(pFormat)
+			{
+				va_list lArgPtr;
+				va_start (lArgPtr, pFormat);
+				_vsntprintf (lTitle.GetBuffer(2048), 2048, pFormat, lArgPtr);
+				lTitle.ReleaseBuffer ();
+
+				lIndent = lTitle;
+				lTitle.TrimLeft ();
+				if	(lIndent.GetLength() > lTitle.GetLength())
+				{
+					lIndent = CAtlString (_T(' '), lIndent.GetLength() - lTitle.GetLength ());
+				}
+				else
+				{
+					lIndent.Empty ();
+				}
+			}
+			if	(lTitle.IsEmpty())
+			{
+				lTitle = _T("Actions");
+			}
+
+			LogMessage (pLogLevel, _T("%s%s [%d]"), lIndent, lTitle, GetCount());
+			lIndent += _T("  ");
+			for	(lPosition = GetHeadPosition(); lPosition;)
+			{
+				if	(lAction = GetNext (lPosition))
+				{
+					lAction->LogAction (pLogLevel, lIndent);
+				}
+			}
+		}
+		catch AnyExceptionSilent
+	}
+#endif
+}

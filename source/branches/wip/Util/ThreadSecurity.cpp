@@ -132,7 +132,7 @@ bool CThreadSecurity::GetPrivileges (bool pAllThreads, LPCTSTR pSecurityName, ..
 					}
 					else
 					{
-						LogWinErr (LogDetails, GetLastError (), _T("LookupPrivilegeValue [%s]"), lSecurityName);
+						LogWinErr (LogDetails|LogTime, GetLastError (), _T("LookupPrivilegeValue [%s]"), lSecurityName);
 					}
 				}
 				va_end (lArgPtr);
@@ -196,7 +196,7 @@ bool CThreadSecurity::GetPrivileges (bool pAllThreads, LPCTSTR pSecurityName, ..
 			{
 				if	(LogIsActive ())
 				{
-					LogWinErr (LogDetails, GetLastError (), _T("AdjustTokenPrivileges"));
+					LogWinErr (LogDetails|LogTime, GetLastError (), _T("AdjustTokenPrivileges"));
 				}
 
 				RestorePrivileges ();
@@ -228,12 +228,12 @@ void CThreadSecurity::RestorePrivileges ()
 			&&	(LogIsActive ())
 			)
 		{
-			//LogMessage (LogDetails, _T("  Privileges restored"));
+			//LogMessage (LogDetails|LogTime, _T("  Privileges restored"));
 		}
 
 		if	(LogIsActive ())
 		{
-			LogWinErr (LogDetails, GetLastError (), _T("AdjustTokenPrivileges"));
+			LogWinErr (LogDetails|LogTime, GetLastError (), _T("AdjustTokenPrivileges"));
 		}
 	}
 

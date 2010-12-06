@@ -61,7 +61,7 @@ DaCtlSpeechInput::~DaCtlSpeechInput ()
 			&&	(mOwner->mSpeechInput != NULL)
 			)
 		{
-			LogMessage (LogNormal, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput Attached [%p]]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), mOwner->mSpeechInput.GetInterfacePtr());
+			LogMessage (LogNormal|LogTime, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput Attached [%p]]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), mOwner->mSpeechInput.GetInterfacePtr());
 		}
 	}
 	catch AnyExceptionSilent

@@ -1605,7 +1605,7 @@ bool CClipboard::PutStream (IStream * pStream, COleDataSource & pDataSource, boo
 				&&	(SUCCEEDED (lStgMedium.pstm->Seek (lStart, STREAM_SEEK_SET, NULL)))
 				)
 			{
-				LogMessage (LogVerbose, _T("PutClipboardStream [Size %I64d]"), lStat.cbSize.QuadPart);
+				LogMessage (LogVerbose|LogTime, _T("PutClipboardStream [Size %I64d]"), lStat.cbSize.QuadPart);
 
 				pDataSource.CacheData (lFormatEtc.cfFormat, &lStgMedium, &lFormatEtc);
 				lRet = true;
@@ -1711,7 +1711,7 @@ bool CClipboard::GetStream (IStream ** pStream, COleDataObject & pDataObject, UI
 					&&	(SUCCEEDED ((*pStream)->Seek (lStart, STREAM_SEEK_SET, NULL)))
 					)
 				{
-					//LogMessage (LogDetails, _T("GetClipboardStream [Size %I64d]"), lStat.cbSize.QuadPart);
+					//LogMessage (LogDetails|LogTime, _T("GetClipboardStream [Size %I64d]"), lStat.cbSize.QuadPart);
 					lRet = true;
 				}
 			}
@@ -1803,8 +1803,8 @@ bool CClipboard::PeekStream (GUID & pStreamClassId, UINT pFormatId, int pNdx)
 		if	(lStgMedium = PeekStream (pFormatId, pNdx))
 		{
 			if	(
-					(SUCCEEDED (LogComErr (LogVerbose, lStgMedium->pstm->Seek (lStreamStart, STREAM_SEEK_SET, NULL))))
-				&&	(SUCCEEDED (LogComErr (LogVerbose, ReadClassStm (lStgMedium->pstm, &pStreamClassId))))
+					(SUCCEEDED (LogComErr (LogVerbose|LogTime, lStgMedium->pstm->Seek (lStreamStart, STREAM_SEEK_SET, NULL))))
+				&&	(SUCCEEDED (LogComErr (LogVerbose|LogTime, ReadClassStm (lStgMedium->pstm, &pStreamClassId))))
 				)
 			{
 				lRet = true;
@@ -2057,7 +2057,7 @@ bool CClipboard::PeekStorage (GUID & pStorageClassId, UINT pFormatId, int pNdx)
 
 		if	(lStgMedium = PeekStorage (pFormatId, pNdx))
 		{
-			if	(SUCCEEDED (LogComErr (LogVerbose, ReadClassStg (lStgMedium->pstg, &pStorageClassId))))
+			if	(SUCCEEDED (LogComErr (LogVerbose|LogTime, ReadClassStg (lStgMedium->pstg, &pStorageClassId))))
 			{
 				lRet = true;
 			}

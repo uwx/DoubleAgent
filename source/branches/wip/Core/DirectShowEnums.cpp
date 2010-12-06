@@ -25,8 +25,8 @@
 #include "VfwErr.h"
 
 #ifdef	_DEBUG
-#define	_LOG_INSTANCE	(GetProfileDebugInt(_T("LogInstance_DirectShowEnum"),LogVerbose,true)&0xFFFF)
-#define	_LOG_RESULTS	(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#define	_LOG_INSTANCE	(GetProfileDebugInt(_T("LogInstance_DirectShowEnum"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_RESULTS	(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
 #ifndef	_LOG_INSTANCE

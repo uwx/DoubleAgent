@@ -38,6 +38,7 @@ public:
 	const DWORD	mTimeDefault;
 
 	UINT HasActions (long pCharID = -1) const;
+	void LogActions (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 
 // Operations
 public:

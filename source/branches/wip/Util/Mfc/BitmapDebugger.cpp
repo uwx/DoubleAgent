@@ -61,7 +61,7 @@ CBitmapDebugger::CBitmapDebugger (CWnd * pParentWin)
 		}
 		else
 		{
-			LogWinErr (LogNormal, GetLastError (), _T("Load MSIMG32"));
+			LogWinErr (LogNormal|LogTime, GetLastError (), _T("Load MSIMG32"));
 		}
 	}
 	catch AnyExceptionSilent
@@ -410,7 +410,7 @@ void CBitmapDebugger::ShowIcon
 		}
 		else
 		{
-			LogWinErr (LogIfActive, GetLastError (), _T("GetIconInfo"));
+			LogWinErr (LogIfActive|LogTime, GetLastError (), _T("GetIconInfo"));
 		}
 	}
 }
@@ -598,7 +598,7 @@ bool CBitmapDebugger::AlphaBlend (CDC & pDst, const CRect & pDstRect, CDC & pSrc
 			}
 			else
 			{
-				LogWinErr (LogNormal, GetLastError (), _T("AlphaBlend"));
+				LogWinErr (LogNormal|LogTime, GetLastError (), _T("AlphaBlend"));
 			}
 		}
 		catch AnyExceptionSilent
@@ -1396,7 +1396,7 @@ bool CBitmapDebugger::SaveBitmap (HBITMAP pBitmap, LPCTSTR pFileName, LPCTSTR pP
 
 							if	(!lFile.SafeIsValid ())
 							{
-								LogWinErr (LogNormal, GetLastError (), _T("CreateFile"));
+								LogWinErr (LogNormal|LogTime, GetLastError (), _T("CreateFile"));
 							}
 							else
 							{
@@ -1422,7 +1422,7 @@ bool CBitmapDebugger::SaveBitmap (HBITMAP pBitmap, LPCTSTR pFileName, LPCTSTR pP
 									}
 									else
 									{
-										LogWinErr (LogNormal, GetLastError (), _T("WriteFile"));
+										LogWinErr (LogNormal|LogTime, GetLastError (), _T("WriteFile"));
 									}
 								}
 								catch AnyExceptionSilent
@@ -1433,7 +1433,7 @@ bool CBitmapDebugger::SaveBitmap (HBITMAP pBitmap, LPCTSTR pFileName, LPCTSTR pP
 					}
 					else
 					{
-						LogWinErr (LogNormal, GetLastError (), _T("GetDIBits"));
+						LogWinErr (LogNormal|LogTime, GetLastError (), _T("GetDIBits"));
 					}
 				}
 				catch AnyExceptionSilent
@@ -1638,7 +1638,7 @@ bool CBitmapDebugger::SaveIcon (HICON pIcon, LPCTSTR pFileName, LPCTSTR pPath, b
 
 							if	(!lFile.SafeIsValid ())
 							{
-								LogWinErr (LogNormal, GetLastError (), _T("CreateFile"));
+								LogWinErr (LogNormal|LogTime, GetLastError (), _T("CreateFile"));
 							}
 							else
 							{
@@ -1678,7 +1678,7 @@ bool CBitmapDebugger::SaveIcon (HICON pIcon, LPCTSTR pFileName, LPCTSTR pPath, b
 									}
 									else
 									{
-										LogWinErr (LogNormal, GetLastError (), _T("WriteFile"));
+										LogWinErr (LogNormal|LogTime, GetLastError (), _T("WriteFile"));
 									}
 								}
 								catch AnyExceptionSilent
@@ -1689,7 +1689,7 @@ bool CBitmapDebugger::SaveIcon (HICON pIcon, LPCTSTR pFileName, LPCTSTR pPath, b
 					}
 					else
 					{
-						LogWinErr (LogNormal, GetLastError (), _T("GetDIBits"));
+						LogWinErr (LogNormal|LogTime, GetLastError (), _T("GetDIBits"));
 					}
 				}
 				catch AnyExceptionSilent
@@ -2101,7 +2101,7 @@ bool CBitmapDebugger::MakePathExist (LPCTSTR pPath)
 		}
 	}
 
-	LogWinErr (LogNormal, GetLastError (), _T("CreateDirectory"));
+	LogWinErr (LogNormal|LogTime, GetLastError (), _T("CreateDirectory"));
 	return false;
 }
 

@@ -31,7 +31,7 @@
 
 #ifdef	_DEBUG
 #include <typeinfo.h>
-//#define	_TRACE_GATED_INSTANCE	LogNormal|LogHighVolume|LogTimeMs
+//#define	_TRACE_GATED_INSTANCE	LogNormal|LogTimeMs|LogHighVolume
 #endif
 
 //////////////////////////////////////////////////////////////////////

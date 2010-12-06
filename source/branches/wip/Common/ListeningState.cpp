@@ -39,7 +39,7 @@
 
 #ifdef	_DEBUG
 #define	_DEBUG_LISTEN			(GetProfileDebugInt(_T("DebugListen"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
-#define	_DEBUG_NOTIFY_PATH		(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_NOTIFY_PATH		(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF|LogTime)
 //#define	_DEBUG_START_STOP	LogNormal
 //#define	_DEBUG_HOT_KEY		LogNormal
 #endif
@@ -871,7 +871,7 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 	{
 #ifdef	_DEBUG_LISTEN
 		LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] OnSapi5InputEvent - Suspended"), this, GetCharID());
-#endif	
+#endif
 	}
 	else
 	if	(pEvent.eEventId == SPEI_RECOGNITION)
@@ -1772,7 +1772,7 @@ bool CListeningGlobal::OnHotKey (WPARAM wParam, LPARAM lParam)
 
 			if	(lCharacter)
 			{
-				LogComErr (LogDetails, lCharacter->StartListening (false));
+				LogComErr (LogDetails|LogTime, lCharacter->StartListening (false));
 			}
 		}
 		catch AnyExceptionDebug

@@ -26,33 +26,33 @@
 class CDaCtlEventDispatch
 {
 public:
-	void FireActivateInput(LPCTSTR CharacterID);
-	void FireDeactivateInput(LPCTSTR CharacterID);
-	void FireClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
-	void FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
-	void FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
-	void FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
-	void FireShow(LPCTSTR CharacterID, VisibilityCauseType Cause);
-	void FireHide(LPCTSTR CharacterID, VisibilityCauseType Cause);
-	void FireRequestStart(LPDISPATCH Request);
-	void FireRequestComplete(LPDISPATCH Request);
-	void FireBookmark(long BookmarkID);
-	void FireCommand(LPDISPATCH UserInput);
-	void FireIdleStart(LPCTSTR CharacterID);
-	void FireIdleComplete(LPCTSTR CharacterID);
-	void FireMove(LPCTSTR CharacterID, short X, short Y, MoveCauseType Cause);
-	void FireSize(LPCTSTR CharacterID, short Width, short Height);
-	void FireBalloonShow(LPCTSTR CharacterID);
-	void FireBalloonHide(LPCTSTR CharacterID);
-	void FireListenStart(LPCTSTR CharacterID);
-	void FireListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause);
-	void FireDefaultCharacterChange(LPCTSTR CharGUID);
-	void FireAgentPropertyChange();
-	void FireActiveClientChange(LPCTSTR CharacterID, BOOL Active);
+	int FireActivateInput(LPCTSTR CharacterID);
+	int FireDeactivateInput(LPCTSTR CharacterID);
+	int FireClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	int FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	int FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	int FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	int FireShow(LPCTSTR CharacterID, VisibilityCauseType Cause);
+	int FireHide(LPCTSTR CharacterID, VisibilityCauseType Cause);
+	int FireRequestStart(LPDISPATCH Request);
+	int FireRequestComplete(LPDISPATCH Request);
+	int FireBookmark(long BookmarkID);
+	int FireCommand(LPDISPATCH UserInput);
+	int FireIdleStart(LPCTSTR CharacterID);
+	int FireIdleComplete(LPCTSTR CharacterID);
+	int FireMove(LPCTSTR CharacterID, short X, short Y, MoveCauseType Cause);
+	int FireSize(LPCTSTR CharacterID, short Width, short Height);
+	int FireBalloonShow(LPCTSTR CharacterID);
+	int FireBalloonHide(LPCTSTR CharacterID);
+	int FireListenStart(LPCTSTR CharacterID);
+	int FireListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause);
+	int FireDefaultCharacterChange(LPCTSTR CharGUID);
+	int FireAgentPropertyChange();
+	int FireActiveClientChange(LPCTSTR CharacterID, BOOL Active);
 
-	void FireSpeechStart(LPCTSTR CharacterID, LPDISPATCH FormattedText);
-	void FireSpeechEnd(LPCTSTR CharacterID, LPDISPATCH FormattedText, VARIANT_BOOL Stopped);
-	void FireSpeechWord(LPCTSTR CharacterID, LPDISPATCH FormattedText, long WordIndex);
+	int FireSpeechStart(LPCTSTR CharacterID, LPDISPATCH FormattedText);
+	int FireSpeechEnd(LPCTSTR CharacterID, LPDISPATCH FormattedText, VARIANT_BOOL Stopped);
+	int FireSpeechWord(LPCTSTR CharacterID, LPDISPATCH FormattedText, long WordIndex);
 
 protected:
 	CDaCtlEventDispatch (CComDynamicUnkArray & pUnkArray) : mUnkArray (pUnkArray) {}
@@ -133,10 +133,6 @@ public:
 	HRESULT STDMETHODCALLTYPE SpeechWord (long CharacterID, IDaSvrFormattedText* FormattedText, long WordIndex);
 
 // Implementation
-protected:
-	virtual bool PreFireEvent (LPCTSTR pEventName = NULL);
-	virtual bool PostFireEvent (LPCTSTR pEventName = NULL);
-
 public:
 	DaControl *	mOwner;
 	long		mServerNotifyId;
@@ -193,11 +189,6 @@ public:
 	HRESULT STDMETHODCALLTYPE SpeechStart (long CharacterID, IDaSvrFormattedText* FormattedText) {return E_NOTIMPL;}
 	HRESULT STDMETHODCALLTYPE SpeechEnd (long CharacterID, IDaSvrFormattedText* FormattedText, VARIANT_BOOL Stopped) {return  E_NOTIMPL;}
 	HRESULT STDMETHODCALLTYPE SpeechWord (long CharacterID, IDaSvrFormattedText* FormattedText, long WordIndex) {return E_NOTIMPL;}
-
-// Implementation
-protected:
-	virtual bool PreFireEvent (LPCTSTR pEventName);
-	virtual bool PostFireEvent (LPCTSTR pEventName);
 };
 
 /////////////////////////////////////////////////////////////////////////////

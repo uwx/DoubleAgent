@@ -55,12 +55,12 @@
 
 #ifdef	_DEBUG
 //#define	_DEBUG_MOUSE		LogNormal
-#define	_DEBUG_ACTIVE			(GetProfileDebugInt(_T("DebugActive"),LogDetails,true)&0xFFFF)
+#define	_DEBUG_ACTIVE			(GetProfileDebugInt(_T("DebugActive"),LogDetails,true)&0xFFFF|LogTime)
 #define	_DEBUG_SPEECH			(GetProfileDebugInt(_T("DebugSpeech"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_DEBUG_SPEECH_MOUTH		(GetProfileDebugInt(_T("DebugSpeechMouth"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_DEBUG_SPEECH_EVENTS	(GetProfileDebugInt(_T("DebugSpeechEvents"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
-#define	_DEBUG_BALLOON_OPTIONS	(GetProfileDebugInt(_T("DebugBalloonOptions"),LogVerbose,true)&0xFFFF)
-#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Popup"),LogDetails,true)&0xFFFF)
+#define	_DEBUG_BALLOON_OPTIONS	(GetProfileDebugInt(_T("DebugBalloonOptions"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Popup"),LogDetails,true)&0xFFFF|LogTime)
 #define	_LOG_QUEUE_OPS			(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_LOG_POPUP_OPS			MinLogLevel(GetProfileDebugInt(_T("LogPopupOps"),LogVerbose,true)&0xFFFF|LogTimeMs,_LOG_QUEUE_OPS)
 #endif
@@ -782,7 +782,7 @@ long CAgentCharacterWnd::QueueSpeak (long pCharID, LPCTSTR pText, CAgentTextObje
 
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f CAgentCharacterWnd::QueueSpeak"), DebugTimeElapsed);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f CAgentCharacterWnd::QueueSpeak"), DebugTimeElapsed);
 #endif
 	return lReqID;
 }
@@ -882,6 +882,10 @@ bool CAgentCharacterWnd::StartMouthAnimation (long pSpeakingDuration)
 				PlayMouthAnimation (-1, true);
 				lRet = true;
 			}
+			else
+			{
+				AnimationSequenceChanged ();
+			}
 		}
 	}
 	return lRet;
@@ -954,7 +958,7 @@ bool CAgentCharacterWnd::PlayMouthAnimation (short pMouthOverlayNdx, bool pPlayA
 	}
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f   CAgentCharacterWnd::PlayMouthAnimation"), DebugTimeElapsed);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CAgentCharacterWnd::PlayMouthAnimation"), DebugTimeElapsed);
 #endif
 	return lRet;
 }

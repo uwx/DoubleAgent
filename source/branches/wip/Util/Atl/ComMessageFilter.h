@@ -45,6 +45,15 @@ public:
 		COM_INTERFACE_ENTRY(IMessageFilter)
 	END_COM_MAP()
 
+// Attributes
+	DWORD GetRetryTimeout () const;
+	DWORD GetRetryLater () const;
+	DWORD GetMessageTimeout () const;
+
+	bool SetRetryTimeout (DWORD pRetryTimeout);
+	bool SetRetryLater (DWORD pRetryLater);
+	bool SetMessageTimeout (DWORD pMessageTimeout);
+
 // Interfaces
 public:
 	// IMessageFilter
@@ -75,6 +84,7 @@ protected:
 	bool						mCheckedOut;
 	DWORD						mRetryTimeout;
 	DWORD						mRetryImmediate;
+	DWORD						mRetrySoon;
 	DWORD						mRetryLater;
 	DWORD						mMessageTimeout;
 private:

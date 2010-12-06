@@ -64,16 +64,16 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_DEBUG
-//#define	_DEBUG_CONNECTION	LogNormal
-//#define	_DEBUG_ALLOCATOR	LogNormal
-//#define	_DEBUG_STREAM		LogNormal|LogHighVolume|LogTimeMs
-//#define	_DEBUG_STREAM_EX	LogNormal|LogHighVolume|LogTimeMs
-//#define	_DEBUG_SAMPLES		LogNormal|LogHighVolume|LogTimeMs
-#define	_LOG_MISSED_SAMPLES		LogNormal|LogHighVolume
-#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_DirectShowFilter"),LogVerbose,true)&0xFFFF)
-#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
-//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
-//#define	_TRACE_RESOURCES_EX	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+//#define	_DEBUG_CONNECTION	LogNormal|LogTime
+//#define	_DEBUG_ALLOCATOR	LogNormal|LogTime
+//#define	_DEBUG_STREAM		LogNormal|LogTimeMs|LogHighVolume
+//#define	_DEBUG_STREAM_EX	LogNormal|LogTimeMs|LogHighVolume
+//#define	_DEBUG_SAMPLES		LogNormal|LogTimeMs|LogHighVolume
+#define	_LOG_MISSED_SAMPLES		LogNormal|LogTime|LogHighVolume
+#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_DirectShowFilter"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
+//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+//#define	_TRACE_RESOURCES_EX	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 #endif
 
 #ifndef	_LOG_INSTANCE
@@ -246,7 +246,7 @@ void CDirectShowRender::OnLeftFilterGraph ()
 			&&	(lEventSink != NULL)
 			)
 		{
-			LogVfwErr (LogNormal, lEventSink->Notify (EC_WINDOW_DESTROYED, (LONG_PTR)(IBaseFilter*)this, 0));
+			LogVfwErr (LogNormal|LogTime, lEventSink->Notify (EC_WINDOW_DESTROYED, (LONG_PTR)(IBaseFilter*)this, 0));
 		}
 	}
 	catch AnyExceptionSilent
@@ -317,7 +317,7 @@ void CDirectShowRender::OnPinConnected (CDirectShowPin * pPin)
 
 		if	(lEventSink != NULL)
 		{
-			LogVfwErr (LogNormal, lEventSink->Notify (EC_NOTIFY_WINDOW, (LONG_PTR)mRenderWnd, 0));
+			LogVfwErr (LogNormal|LogTime, lEventSink->Notify (EC_NOTIFY_WINDOW, (LONG_PTR)mRenderWnd, 0));
 		}
 	}
 }
@@ -371,7 +371,7 @@ void CDirectShowRender::OnEndInputStream (INT_PTR pPendingSamples)
 
 			if	(lEventSink != NULL)
 			{
-				LogVfwErr (LogNormal, lEventSink->Notify (EC_COMPLETE, S_OK, 0));
+				LogVfwErr (LogNormal|LogTime, lEventSink->Notify (EC_COMPLETE, S_OK, 0));
 			}
 		}
 		catch AnyExceptionSilent
@@ -497,7 +497,7 @@ HRESULT CDirectShowRender::GetNextSampleTime (REFERENCE_TIME pStreamTime, REFERE
 
 		if	(
 				(mInputPin)
-			&&	(SUCCEEDED (LogVfwErr (LogNormal, lResult = mInputPin->PeekInputSample (&lSample))))
+			&&	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lResult = mInputPin->PeekInputSample (&lSample))))
 			&&	(lSample != NULL)
 			&&	(SUCCEEDED (lSample->GetTime (&lSampleStartTime, &lSampleEndTime)))
 			)
@@ -536,7 +536,7 @@ HRESULT CDirectShowRender::GetInputSample (REFERENCE_TIME pStreamTime, IMediaSam
 		if	(mInputPin)
 		{
 			while	(
-						(SUCCEEDED (LogVfwErr (LogDetails, lResult = mInputPin->PeekInputSample (&pSample))))
+						(SUCCEEDED (LogVfwErr (LogDetails|LogTime, lResult = mInputPin->PeekInputSample (&pSample))))
 					&&	(pSample != NULL)
 					&&	(SUCCEEDED (pSample->GetTime (&lSampleStartTime, &lSampleEndTime)))
 					)
@@ -548,13 +548,13 @@ HRESULT CDirectShowRender::GetInputSample (REFERENCE_TIME pStreamTime, IMediaSam
 						(lSampleEndTime < lStreamEndTime)
 					&&	(lSampleStartTime > 0)						// Always allow the first sample, even if it's late
 					&&	(lSampleEndTime < mStopTime)	// Always allow the last sample, even if it's late
-					&&	(SUCCEEDED (LogVfwErr (LogNormal, lResult = mInputPin->GetInputSample (&pSample))))
+					&&	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lResult = mInputPin->GetInputSample (&pSample))))
 					)
 				{
 #ifdef	_LOG_MISSED_SAMPLES
 					if	(LogIsActive())
 					{
-						LogMessage (_LOG_MISSED_SAMPLES|LogHighVolume|LogTimeMs, _T("[%s] [%p] [%f] Discard late sample [%f - %f] Cache [%d] Priority [%d]"), AtlTypeName(this), this, RefTimeSec(pStreamTime), RefTimeSec(lSampleStartTime), RefTimeSec(lSampleEndTime), mInputPin->GetCachedSampleCount(), GetThreadPriority(GetCurrentThread()));
+						LogMessage (_LOG_MISSED_SAMPLES|LogTimeMs|LogHighVolume, _T("[%s] [%p] [%f] Discard late sample [%f - %f] Cache [%d] Priority [%d]"), AtlTypeName(this), this, RefTimeSec(pStreamTime), RefTimeSec(lSampleStartTime), RefTimeSec(lSampleEndTime), mInputPin->GetCachedSampleCount(), GetThreadPriority(GetCurrentThread()));
 					}
 #endif
 					SafeFreeSafePtr (pSample);
@@ -594,7 +594,7 @@ HRESULT CDirectShowRender::GetInputSample (REFERENCE_TIME pStreamTime, IMediaSam
 					else
 					if	(
 							(lSampleEndTime >= lStreamEndTime)
-						&&	(SUCCEEDED (LogVfwErr (LogNormal, lResult = mInputPin->GetInputSample (&pSample))))
+						&&	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lResult = mInputPin->GetInputSample (&pSample))))
 						&&	(pSample != NULL)
 						)
 					{

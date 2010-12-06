@@ -23,7 +23,7 @@
 #ifdef	_DEBUG
 #include "DebugStr.h"
 #include "Registry.h"
-#define	_DEBUG_ENUMVARIANT	(GetProfileDebugInt(_T("DebugEnumVariant"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_ENUMVARIANT	(GetProfileDebugInt(_T("DebugEnumVariant"),LogVerbose,true)&0xFFFF|LogTime)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

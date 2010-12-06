@@ -39,26 +39,29 @@
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_FILTER_PREPARE	(GetProfileDebugInt(_T("DebugFilterPrepare"),LogDetails,true)&0xFFFF)
+#define	_DEBUG_FILTER_PREPARE	(GetProfileDebugInt(_T("DebugFilterPrepare"),LogDetails,true)&0xFFFF|LogTime)
 #define	_DEBUG_FILTER_SEGMENTS	(GetProfileDebugInt(_T("DebugFilterSegments"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_DEBUG_IDLE				(GetProfileDebugInt(_T("DebugIdle"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_SPEECH			(GetProfileDebugInt(_T("DebugSpeech"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_DEBUG_ANIMATE_OPS		(GetProfileDebugInt(_T("DebugAnimateOps"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_DEBUG_QUEUE_CYCLES		(GetProfileDebugInt(_T("DebugQueueCycles"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_LOG_FILE_NAMES			(GetProfileDebugInt(_T("LogFileNames"),LogDetails,true)&0xFFFF|LogTimeMs)
-#define	_LOG_FILE_LOAD			(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF)
+#define	_LOG_FILE_LOAD			(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF|LogTime)
 #define	_LOG_QUEUE_OPS			(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
-//#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
-//#define	_TRACE_RESOURCES_EX		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+//#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+//#define	_TRACE_RESOURCES_EX		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+#define	_TRACE_BUSY_TIME		LogIfActive|LogTimeMs|LogHighVolume
 #endif
-
-//#define	_TRACE_BUSY_TIME	60000
 
 #ifndef	_LOG_FILE_LOAD
 #define	_LOG_FILE_LOAD	LogVerbose+1
 #endif
 #ifndef	_LOG_QUEUE_OPS
 #define	_LOG_QUEUE_OPS	LogDetails
+#endif
+
+#ifdef	_TRACE_BUSY_TIME
+CAtlMap <const CAgentWnd*, DWORD>	sBusyStartTime;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -86,6 +89,10 @@ CAgentWnd::CAgentWnd ()
 
 CAgentWnd::~CAgentWnd ()
 {
+#ifdef	_TRACE_BUSY_TIME
+	sBusyStartTime.RemoveKey (this);
+#endif
+
 	if	(IsWindow ())
 	{
 		try
@@ -375,7 +382,10 @@ HRESULT CAgentWnd::Stop (DWORD pWaitForCompletion)
 {
 	HRESULT	lResult = CDirectShowWnd::Stop (pWaitForCompletion);
 
-	ClearAnimations ();
+	if	(ClearAnimations ())
+	{
+		AnimationSequenceChanged ();
+	}
 	return lResult;
 }
 
@@ -452,8 +462,8 @@ HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 
 			if	(
 					(lMediaFilter != NULL)
-				&&	(SUCCEEDED (LogComErr (LogNormal, CoCreateInstance (CLSID_SystemClock, NULL, CLSCTX_SERVER, __uuidof (IReferenceClock), (void **) &lSystemClock))))
-				&&	(SUCCEEDED (LogVfwErr (LogNormal, lMediaFilter->SetSyncSource (lSystemClock))))
+				&&	(SUCCEEDED (LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_SystemClock, NULL, CLSCTX_SERVER, __uuidof (IReferenceClock), (void **) &lSystemClock))))
+				&&	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lMediaFilter->SetSyncSource (lSystemClock))))
 				)
 			{
 #ifdef	_DEBUG_NOT
@@ -465,7 +475,7 @@ HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 					&&	(SUCCEEDED (lClockControl->GetDefaultTimerResolution (&lTimerResolution)))
 					)
 				{
-					LogMessage (LogNormal, _T("Timer resolution [%f (%I64d)]"), RefTimeSec(lTimerResolution), lTimerResolution);
+					LogMessage (LogNormal|LogTime, _T("Timer resolution [%f (%I64d)]"), RefTimeSec(lTimerResolution), lTimerResolution);
 				}
 #endif
 				mSystemClock = lSystemClock;
@@ -474,8 +484,8 @@ HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 
 		if	(
 				(SUCCEEDED (lResult))
-			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mGraphBuilder->AddFilter (lAgentFilter, lFileName))))
-			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mGraphBuilder->AddFilter (lRenderFilter, L"Animation Render"))))
+			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mGraphBuilder->AddFilter (lAgentFilter, lFileName))))
+			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mGraphBuilder->AddFilter (lRenderFilter, L"Animation Render"))))
 			)
 		{
 			lResult = ConnectFilters (mGraphBuilder, lRenderFilter, lAgentFilter, true, NULL, NULL, &lRenderPin);
@@ -490,8 +500,8 @@ HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 				IBaseFilterPtr	lColorFilter;
 
 				if	(
-						(SUCCEEDED (lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_Colour, NULL, CLSCTX_SERVER, __uuidof (IBaseFilter), (void **) &lColorFilter))))
-					&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mGraphBuilder->AddFilter (lColorFilter, L"Color Space Converter"))))
+						(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_Colour, NULL, CLSCTX_SERVER, __uuidof (IBaseFilter), (void **) &lColorFilter))))
+					&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mGraphBuilder->AddFilter (lColorFilter, L"Color Space Converter"))))
 					)
 				{
 					lResult = ConnectFilters (mGraphBuilder, lColorFilter, lAgentFilter, true);
@@ -900,7 +910,7 @@ bool CAgentWnd::ShowGesture (LPCTSTR pGestureName, LPCTSTR pForState, bool pStop
 #ifdef	_DEBUG_ANIMATE_OPS
 	if	(LogIsActive (_DEBUG_ANIMATE_OPS))
 	{
-		LogMessage (_DEBUG_ANIMATE_OPS, _T("ShowGesture [%s] StopIdle [%u] ClearQueue [%u]"), pGestureName, pStopIdle, pClearQueue);
+		LogMessage (_DEBUG_ANIMATE_OPS, _T("ShowGesture [%s] For [%s] StopIdle [%u] ClearQueue [%u]"), pGestureName, pForState, pStopIdle, pClearQueue);
 	}
 #endif
 	lGestureName.TrimLeft ();
@@ -1094,6 +1104,22 @@ bool CAgentWnd::ShowGesture (LPCTSTR pGestureName, LPCTSTR pForState, bool pStop
 					lRet = true;
 				}
 			}
+			else
+			if	(
+					(FAILED (lStreamInfo->GetAnimationIndex (&(lPrevAnimationNdx=-1))))
+				||	(lPrevAnimationNdx < 0)
+				)
+			{
+#ifdef	_DEBUG
+				LogMessage (LogDebug, _T("!!! Gesture [%s] not sequenced [%d]"), lGestureName, lAnimationNdx);
+#endif
+				lStreamInfo->ClearAnimationSequences();
+				AnimationSequenceChanged ();
+			}
+		}
+		else
+		{
+			AnimationSequenceChanged ();
 		}
 	}
 
@@ -1234,6 +1260,10 @@ bool CAgentWnd::ShowAnimation (LPCTSTR pAnimationName, bool pStopIdle, bool pCle
 				AnimationSequenceChanged ();
 			}
 		}
+		else
+		{
+			AnimationSequenceChanged ();
+		}
 	}
 
 	if	(lRet)
@@ -1278,13 +1308,6 @@ bool CAgentWnd::IsAnimationComplete (bool pPauseAtEndOfStream)
 {
 	bool	lRet = false;
 
-#ifdef	_TRACE_BUSY_TIME
-	if	(mStateTraceData.HighPart <= 0)
-	{
-		mStateTraceData.LowPart = GetTickCount();
-	}
-#endif
-
 	if	(IsStopped ())
 	{
 		lRet = true;
@@ -1306,25 +1329,6 @@ bool CAgentWnd::IsAnimationComplete (bool pPauseAtEndOfStream)
 	{
 		Resume ();
 	}
-
-#ifdef	_TRACE_BUSY_TIME
-	if	(lRet)
-	{
-		mStateTraceData.HighPart = 0;
-	}
-	else
-	if	(
-			(++mStateTraceData.HighPart >= 100)
-		&&	(ElapsedTicks (mStateTraceData.LowPart) >= _TRACE_BUSY_TIME)
-		)
-	{
-		if	(LogIsActive ())
-		{
-			LogState (LogIfActive|LogHighVolume, _T("BusyTime [%u] Cycles [%d] Queue [%u] Timer [%u]"), ElapsedTicks (mStateTraceData.LowPart), mStateTraceData.HighPart, mQueue.GetSize(), IsQueueActive());
-		}
-		mStateTraceData.HighPart = 0;
-	}
-#endif
 	return lRet;
 }
 
@@ -1472,9 +1476,9 @@ HRESULT CAgentWnd::PlayFromTo (long pStartPosMs, long pStopPosMs, bool pRestart,
 				(pRestart)
 			?	(
 					(SUCCEEDED (lResult))
-				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mMediaSeeking->SetPositions (&lCurrPosition, AM_SEEKING_AbsolutePositioning, &lStopPosition, AM_SEEKING_AbsolutePositioning))))
+				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mMediaSeeking->SetPositions (&lCurrPosition, AM_SEEKING_AbsolutePositioning, &lStopPosition, AM_SEEKING_AbsolutePositioning))))
 				)
-			:	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mMediaSeeking->SetPositions (&lCurrPosition, AM_SEEKING_AbsolutePositioning|AM_SEEKING_Segment|AM_SEEKING_NoFlush, &lStopPosition, AM_SEEKING_AbsolutePositioning|AM_SEEKING_Segment|AM_SEEKING_NoFlush))))
+			:	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mMediaSeeking->SetPositions (&lCurrPosition, AM_SEEKING_AbsolutePositioning|AM_SEEKING_Segment|AM_SEEKING_NoFlush, &lStopPosition, AM_SEEKING_AbsolutePositioning|AM_SEEKING_Segment|AM_SEEKING_NoFlush))))
 			)
 		{
 #ifdef	_DEBUG_FILTER_SEGMENTS
@@ -1488,7 +1492,7 @@ HRESULT CAgentWnd::PlayFromTo (long pStartPosMs, long pStopPosMs, bool pRestart,
 				lResult = S_OK;
 			}
 			else
-			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal, Resume (pWaitForCompletion), _T("PlayFromTo [%d - %d] Restart [%u] Wait [%u]"), pStartPosMs, pStopPosMs, pRestart, pWaitForCompletion)))
+			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, Resume (pWaitForCompletion), _T("PlayFromTo [%d - %d] Restart [%u] Wait [%u]"), pStartPosMs, pStopPosMs, pRestart, pWaitForCompletion)))
 			{
 #ifdef	_DEBUG_NOT
 //TODO - use preroll for complex animations (excess sound preparation time)???
@@ -1506,7 +1510,7 @@ HRESULT CAgentWnd::PlayFromTo (long pStartPosMs, long pStopPosMs, bool pRestart,
 		if	(FAILED (lResult))
 		{
 #ifdef	_DEBUG
-			LogMessage (LogNormal, _T("[%p] [%s] Resume failed"), this, AtlTypeName(this));
+			LogMessage (LogNormal|LogTime, _T("[%p] [%s] Resume failed"), this, AtlTypeName(this));
 #endif
 			CDirectShowWnd::Stop (0);
 		}
@@ -1613,6 +1617,7 @@ long CAgentWnd::QueueState (long pCharID, LPCTSTR pStateName)
 	{
 		lQueuedState->mGestures.Copy (*lGestures);
 		mQueue.AddTail (lQueuedState);
+
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
@@ -2272,7 +2277,7 @@ int CAgentWnd::_PreDoQueue ()
 		_InterlockedExchange ((long*)&mQueueBusy, lQueueBusy);
 #endif
 #ifdef	_DEBUG
-		LogMessage (LogIfActive, _T("PreDoQueue error [%d]"), lQueueBusy);
+		LogMessage (LogIfActive|LogTime, _T("PreDoQueue error [%d]"), lQueueBusy);
 #endif
 		lQueueBusy = 1;
 	}
@@ -2296,7 +2301,7 @@ int CAgentWnd::_PostDoQueue ()
 		_InterlockedExchange ((long*)&mQueueBusy, lQueueBusy);
 #endif
 #ifdef	_DEBUG
-		LogMessage (LogIfActive, _T("PostDoQueue [%d] without PreDoQueue!"), lQueueBusy);
+		LogMessage (LogIfActive|LogTime, _T("PostDoQueue [%d] without PreDoQueue!"), lQueueBusy);
 #endif
 		lQueueBusy = 0;
 	}
@@ -2463,6 +2468,7 @@ UINT_PTR CAgentWnd::SuspendQueue ()
 #endif
 	}
 	mQueue.mTimer = 0;
+
 	return lRet;
 }
 
@@ -2494,7 +2500,7 @@ bool CAgentWnd::PauseQueue (bool pPause)
 		SuspendQueue ();
 	}
 	if	(!mQueue.IsEmpty ())
-	{	
+	{
 		for (lPos = mQueue.GetHeadPosition (); lPos;)
 		{
 			if	(lQueuedAction = mQueue.GetNext (lPos))
@@ -2521,8 +2527,50 @@ bool CAgentWnd::CanDoAnimationQueue ()
 		&&	(IsAnimationComplete (true))
 		)
 	{
+#ifdef	_TRACE_BUSY_TIME
+		sBusyStartTime.RemoveKey (this);
+#endif
 		return true;
 	}
+
+#ifdef	_TRACE_BUSY_TIME
+	if	(
+			(!mIdleStarted)
+		||	(!mQueue.IsEmpty())
+		)
+	{
+		DWORD	lBusyStartTime;
+
+		if	(sBusyStartTime.Lookup (this, lBusyStartTime))
+		{
+			if	(ElapsedTicks (lBusyStartTime) > 30000)
+			{
+				CAgentStreamInfo *		lStreamInfo;
+				long					lAnimationNdx = -1;
+				tBstrPtr				lAnimationName;
+				tBstrPtr				lAnimationSource;
+				CAnimationSequence *	lAnimationSequence = NULL;
+
+				if	(lStreamInfo = GetAgentStreamInfo())
+				{
+					lAnimationSequence = lStreamInfo->GetAnimationSequence();
+					lStreamInfo->GetAnimationIndex (&lAnimationNdx);
+					lStreamInfo->GetAnimationName (lAnimationName.Free());
+					lStreamInfo->GetAnimationSource (lAnimationSource.Free());
+				}
+
+				LogState (_TRACE_BUSY_TIME, _T("Busy [%d] [%p] [%ls] [%ls]"), lAnimationNdx, lAnimationSequence, (BSTR)lAnimationName, (BSTR)lAnimationSource);
+				mQueue.LogActions (_TRACE_BUSY_TIME, _T("Busy [%u] (Idle [%d %u %d])"), IsQueueBusy(), mIdleLevel, mIdleStarted, mIdleQueue.GetCount());
+
+				sBusyStartTime [this] = GetTickCount();
+			}
+		}
+		else
+		{
+			sBusyStartTime [this] = GetTickCount();
+		}
+	}
+#endif
 	return false;
 }
 
@@ -2554,14 +2602,50 @@ bool CAgentWnd::DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQu
 
 		if	(lQueuedAction = mQueue.GetNextAction ())
 		{
+#ifdef	_TRACE_ACTION_INSTANCE
+			if	(LogIsActive (_TRACE_ACTION_INSTANCE))
+			{
+				LogEmptyCache ();
+				lQueuedAction->LogAction (_TRACE_ACTION_INSTANCE|LogToCache, _T("Advance"));
+			}
+#endif
+
 			if	(lQueuedAction->Advance (mQueue, this))
 			{
 				pNextActivateImmediate = (mQueue.GetNextAction () != lQueuedAction);
-				lQueuedAction.Detach ();
+
+#ifdef	_TRACE_ACTION_INSTANCE
+				if	(
+						(LogIsActive (_TRACE_ACTION_INSTANCE))
+					&&	(!mQueue.Find (lQueuedAction))
+					&&	(CQueuedAction::mInstances.FindSorted (lQueuedAction) >= 0)
+					)
+				{
+					LogWriteCache ();
+					LogMessage (_TRACE_ACTION_INSTANCE, _T("QueuedAction [%p] continued but not in queue"), lQueuedAction);
+				}
+#endif
+				lQueuedAction.Detach();				
 			}
 			else
 			{
 				pNextActivateImmediate = true;
+
+#ifdef	_TRACE_ACTION_INSTANCE
+				if	(LogIsActive (_TRACE_ACTION_INSTANCE))
+				{
+					if	(mQueue.Find (lQueuedAction))
+					{
+						LogWriteCache ();
+						LogMessage (_TRACE_ACTION_INSTANCE, _T("QueuedAction [%p] completed but still in queue"), lQueuedAction);
+					}
+					if	(CQueuedAction::mInstances.FindSorted (lQueuedAction) < 0)
+					{
+						LogWriteCache ();
+						LogMessage (_TRACE_ACTION_INSTANCE, _T("QueuedAction [%p] already destructed"), lQueuedAction);
+					}
+				}
+#endif
 			}
 			pNextQueueTime = mQueue.mTime;
 			lRet = true;

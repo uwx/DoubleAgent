@@ -54,10 +54,11 @@
 
 #ifdef	_DEBUG
 //#define	_DEBUG_MOUSE		LogNormal
-#define	_DEBUG_ACTIVE			(GetProfileDebugInt(_T("DebugActive"),LogDetails,true)&0xFFFF)
+#define	_DEBUG_NOTIFY_LEVEL		(GetProfileDebugInt(_T("DebugNotifyLevel"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_DEBUG_ACTIVE			(GetProfileDebugInt(_T("DebugActive"),LogDetails,true)&0xFFFF|LogTime)
 #define	_DEBUG_SPEECH			(GetProfileDebugInt(_T("DebugSpeech"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_DEBUG_SPEECH_EVENTS	(GetProfileDebugInt(_T("DebugSpeechEvents"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
-#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Popup"),LogDetails,true)&0xFFFF)
+#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Popup"),LogDetails,true)&0xFFFF|LogTime)
 #define	_LOG_QUEUE_OPS			(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_LOG_POPUP_OPS			MinLogLevel(GetProfileDebugInt(_T("LogPopupOps"),LogVerbose,true)&0xFFFF|LogTimeMs,_LOG_QUEUE_OPS)
 //#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
@@ -113,7 +114,7 @@ CAgentPopupWnd::~CAgentPopupWnd ()
 CAgentPopupWnd * CAgentPopupWnd::CreateInstance ()
 {
 	CComObject<CAgentPopupWnd> *	lInstance = NULL;
-	LogComErr (LogIfActive, CComObject<CAgentPopupWnd>::CreateInstance (&lInstance));
+	LogComErr (LogIfActive|LogTime, CComObject<CAgentPopupWnd>::CreateInstance (&lInstance));
 	return lInstance;
 }
 
@@ -128,6 +129,24 @@ void CAgentPopupWnd::FinalRelease ()
 	}
 #endif
 	Close ();
+}
+
+void CAgentPopupWnd::OnFinalMessage (HWND)
+{
+	if	(
+			(HasFinalReleased ())
+		&&	(CanFinalRelease ())
+		)
+	{
+#ifdef	_LOG_INSTANCE
+		if	(LogIsActive (_LOG_INSTANCE))
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::OnFinalMessage [%u] [%u]"), this, max(m_dwRef,-1), IsInNotify(), IsQueueBusy());
+		}
+#endif
+		m_dwRef = 1;
+		Release ();
+	}
 }
 
 bool CAgentPopupWnd::CanFinalRelease ()
@@ -147,8 +166,27 @@ bool CAgentPopupWnd::CanFinalRelease ()
 	return false;
 }
 
-void CAgentPopupWnd::OnFinalMessage (HWND)
+/////////////////////////////////////////////////////////////////////////////
+
+bool CAgentPopupWnd::_PreNotify ()
 {
+#ifdef	_DEBUG_NOTIFY_LEVEL
+	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] CAgentPopupWnd::_PreNotify [%u]"), this, max(m_dwRef,-1), IsInNotify());
+#endif
+	if	(m_dwRef > 0)
+	{
+		return CAgentCharacterWnd::_PreNotify ();
+	}
+	return false;
+}
+
+bool CAgentPopupWnd::_PostNotify ()
+{
+	CAgentCharacterWnd::_PostNotify ();
+#ifdef	_DEBUG_NOTIFY_LEVEL
+	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] CAgentPopupWnd::_PostNotify [%u] HasFinalRelased [%u] CanFinalRelease [%u]"), this, max(m_dwRef,-1), IsInNotify(), HasFinalReleased(), CanFinalRelease());
+#endif
+
 	if	(
 			(HasFinalReleased ())
 		&&	(CanFinalRelease ())
@@ -157,12 +195,47 @@ void CAgentPopupWnd::OnFinalMessage (HWND)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::OnFinalMessage [%u] [%u]"), this, max(m_dwRef,-1), IsInNotify(), IsQueueBusy());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd PostNotify -> DestroyWindow"), this, max(m_dwRef,-1));
 		}
 #endif
-		m_dwRef = 1;
-		Release ();
+		if	(IsWindow ())
+		{
+			DestroyWindow ();
+		}
+		return false;
 	}
+	return true;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+int CAgentPopupWnd::_PreDoQueue ()
+{
+	return CAgentCharacterWnd::_PreDoQueue ();
+}
+
+int CAgentPopupWnd::_PostDoQueue ()
+{
+	int	lRet = CAgentCharacterWnd::_PostDoQueue ();
+
+	if	(
+			(HasFinalReleased ())
+		&&	(CanFinalRelease ())
+		)
+	{
+#ifdef	_LOG_INSTANCE
+		if	(LogIsActive (_LOG_INSTANCE))
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd PostDoQueue -> DestroyWindow"), this, max(m_dwRef,-1));
+		}
+#endif
+		if	(IsWindow ())
+		{
+			DestroyWindow ();
+		}
+		lRet = -1;
+	}
+	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -473,73 +546,6 @@ void CAgentPopupWnd::IsLastActive (bool pLastActive)
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
-bool CAgentPopupWnd::_PreNotify ()
-{
-	if	(m_dwRef > 0)
-	{
-		return CAgentCharacterWnd::_PreNotify ();
-	}
-	return false;
-}
-
-bool CAgentPopupWnd::_PostNotify ()
-{
-	CAgentCharacterWnd::_PostNotify ();
-	if	(
-			(HasFinalReleased ())
-		&&	(CanFinalRelease ())
-		)
-	{
-#ifdef	_LOG_INSTANCE
-		if	(LogIsActive (_LOG_INSTANCE))
-		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd PostNotify -> DestroyWindow"), this, max(m_dwRef,-1));
-		}
-#endif
-		if	(IsWindow ())
-		{
-			DestroyWindow ();
-		}
-		return false;
-	}
-	return true;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-int CAgentPopupWnd::_PreDoQueue ()
-{
-	return CAgentCharacterWnd::_PreDoQueue ();
-}
-
-int CAgentPopupWnd::_PostDoQueue ()
-{
-	int	lRet = CAgentCharacterWnd::_PostDoQueue ();
-
-	if	(
-			(HasFinalReleased ())
-		&&	(CanFinalRelease ())
-		)
-	{
-#ifdef	_LOG_INSTANCE
-		if	(LogIsActive (_LOG_INSTANCE))
-		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd PostDoQueue -> DestroyWindow"), this, max(m_dwRef,-1));
-		}
-#endif
-		if	(IsWindow ())
-		{
-			DestroyWindow ();
-		}
-		lRet = -1;
-	}
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
 bool CAgentPopupWnd::IsDragging () const
 {
 	if	(
@@ -653,7 +659,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, VisibilityCauseType pVisiblityC
 						:	(!::UpdateLayeredWindow (m_hWnd, NULL, &lWindowRect.TopLeft(), &lWindowRect.Size(), lDC, &CPoint(0,0), *mBkColor, NULL, ULW_COLORKEY))
 						)
 					{
-						LogWinErr (LogVerbose, GetLastError(), _T("UpdateLayeredWindow"));
+						LogWinErr (LogVerbose|LogTime, GetLastError(), _T("UpdateLayeredWindow"));
 					}
 					::SelectObject (lDC, lOldBitmap);
 
@@ -670,17 +676,17 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, VisibilityCauseType pVisiblityC
 	{
 		if	(IsWindowVisible())
 		{
-			::SetWindowPos (m_hWnd, HWND_TOP, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE);
+			::SetWindowPos (m_hWnd, HWND_TOP, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE|SWP_NOOWNERZORDER);
 		}
 		else
 		{
-			::SetWindowPos (m_hWnd, HWND_TOP, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE|SWP_SHOWWINDOW);
+			::SetWindowPos (m_hWnd, HWND_TOP, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE|SWP_SHOWWINDOW|SWP_NOOWNERZORDER);
 		}
 
 		SetLastError(0);
 		if	(
 				(GetExStyle () & WS_EX_TOPMOST)
-			&&	(!::SetWindowPos (m_hWnd, HWND_TOPMOST, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE))
+			&&	(!::SetWindowPos (m_hWnd, HWND_TOPMOST, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE|SWP_NOOWNERZORDER))
 			)
 		{
 			LogWinErr (LogDebug, GetLastError());
@@ -693,7 +699,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, VisibilityCauseType pVisiblityC
 		{
 			CAtlString	lTitle;
 			lTitle.Format (_T("[%p(%d)(%d)] CAgentPopupWnd::ShowPopup"), this, mCharID, max(m_dwRef,-1));
-			LogWindow (LogIfActive, m_hWnd, lTitle); 
+			LogWindow (LogIfActive|LogTime, m_hWnd, lTitle);
 		}
 	}
 

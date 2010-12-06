@@ -31,9 +31,9 @@
 #pragma comment(lib, "msacm32.lib")
 
 #ifdef	_DEBUG
-//#define	_DEBUG_CONVERT		LogNormal|LogHighVolume
-//#define	_DEBUG_FORMATS		LogNormal|LogHighVolume
-//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+//#define	_DEBUG_CONVERT		LogNormal|LogTime|LogHighVolume
+//#define	_DEBUG_FORMATS		LogNormal|LogTime|LogHighVolume
+//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -190,7 +190,7 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 			LogWaveFormat (_DEBUG_CONVERT, *mInputFormat, _T("Convert From"));
 			LogWaveFormat (_DEBUG_CONVERT, *mOutputFormat, _T("Convert To  "));
 #endif
-			if	(LogMmSysErr (LogNormal, lMmResult = acmStreamOpen (&lAcmStream, NULL, mInputFormat, mOutputFormat, NULL, NULL, NULL, ACM_STREAMOPENF_NONREALTIME)) == MMSYSERR_NOERROR)
+			if	(LogMmSysErr (LogNormal|LogTime, lMmResult = acmStreamOpen (&lAcmStream, NULL, mInputFormat, mOutputFormat, NULL, NULL, NULL, ACM_STREAMOPENF_NONREALTIME)) == MMSYSERR_NOERROR)
 			{
 				try
 				{
@@ -211,12 +211,12 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 
 					if	(
 							(lSrcIo = mmioOpen (NULL, &lSrcInfo, MMIO_READ))
-						&&	(LogMmSysErr (LogDetails, mmioDescend (lSrcIo, &lRiffChunk, NULL, MMIO_FINDRIFF)) == MMSYSERR_NOERROR)
-						&&	(LogMmSysErr (LogDetails, mmioDescend (lSrcIo, &lWavChunk, &lRiffChunk, MMIO_FINDCHUNK)) == MMSYSERR_NOERROR)
+						&&	(LogMmSysErr (LogDetails|LogTime, mmioDescend (lSrcIo, &lRiffChunk, NULL, MMIO_FINDRIFF)) == MMSYSERR_NOERROR)
+						&&	(LogMmSysErr (LogDetails|LogTime, mmioDescend (lSrcIo, &lWavChunk, &lRiffChunk, MMIO_FINDCHUNK)) == MMSYSERR_NOERROR)
 						)
 					{
 						mmioAscend (lSrcIo, &lWavChunk, 0);
-						if	(LogMmSysErr (LogDetails, mmioDescend (lSrcIo, &lDataChunk, &lRiffChunk, MMIO_FINDCHUNK)) == MMSYSERR_NOERROR)
+						if	(LogMmSysErr (LogDetails|LogTime, mmioDescend (lSrcIo, &lDataChunk, &lRiffChunk, MMIO_FINDCHUNK)) == MMSYSERR_NOERROR)
 						{
 							mmioAscend (lSrcIo, &lDataChunk, 0);
 						}
@@ -228,13 +228,13 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 					}
 					else
 					{
-						LogMmSysErr (LogNormal, lMmResult = lSrcInfo.wErrorRet);
+						LogMmSysErr (LogNormal|LogTime, lMmResult = lSrcInfo.wErrorRet);
 					}
 
 					if	(
 							(lStreamHeader.cbSrcLength = lDataChunk.cksize)
 						&&	(lStreamHeader.pbSrc = (LPBYTE)(lSrcInfo.pchBuffer + lDataChunk.dwDataOffset))
-						&&	(LogMmSysErr (LogDetails, lMmResult = acmStreamSize (lAcmStream, lSrcInfo.cchBuffer, &lStreamHeader.cbDstLength, ACM_STREAMSIZEF_SOURCE)) == MMSYSERR_NOERROR)
+						&&	(LogMmSysErr (LogDetails|LogTime, lMmResult = acmStreamSize (lAcmStream, lSrcInfo.cchBuffer, &lStreamHeader.cbDstLength, ACM_STREAMSIZEF_SOURCE)) == MMSYSERR_NOERROR)
 						&&	((mOutputBuffer = GlobalAlloc (GPTR, lStreamHeader.cbDstLength)).SafeIsValid())
 						&&	(lStreamHeader.pbDst = (LPBYTE) GlobalLock (mOutputBuffer))
 						)
@@ -254,8 +254,8 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 
 						if	(
 								(lTrgIo = mmioOpen (NULL, &lTrgInfo, MMIO_CREATE|MMIO_READWRITE))
-							&&	(LogMmSysErr (LogDetails, mmioCreateChunk (lTrgIo, &lRiffChunk, MMIO_CREATERIFF)) == MMSYSERR_NOERROR)
-							&&	(LogMmSysErr (LogDetails, mmioCreateChunk (lTrgIo, &lWavChunk, 0)) == MMSYSERR_NOERROR)
+							&&	(LogMmSysErr (LogDetails|LogTime, mmioCreateChunk (lTrgIo, &lRiffChunk, MMIO_CREATERIFF)) == MMSYSERR_NOERROR)
+							&&	(LogMmSysErr (LogDetails|LogTime, mmioCreateChunk (lTrgIo, &lWavChunk, 0)) == MMSYSERR_NOERROR)
 							)
 						{
 							mmioWrite (lTrgIo, (HPSTR)mOutputFormat.Ptr(), sizeof(WAVEFORMATEX) + mOutputFormat->cbSize);
@@ -277,9 +277,9 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 								memset (lStreamHeader.pbDst, 0x00, lStreamHeader.cbDstLength);
 							}
 
-							if	(LogMmSysErr (LogNormal, lMmResult = acmStreamPrepareHeader (lAcmStream, &lStreamHeader, 0)) == MMSYSERR_NOERROR)
+							if	(LogMmSysErr (LogNormal|LogTime, lMmResult = acmStreamPrepareHeader (lAcmStream, &lStreamHeader, 0)) == MMSYSERR_NOERROR)
 							{
-								if	(LogMmSysErr (LogNormal, lMmResult = acmStreamConvert (lAcmStream, &lStreamHeader, 0)) == MMSYSERR_NOERROR)
+								if	(LogMmSysErr (LogNormal|LogTime, lMmResult = acmStreamConvert (lAcmStream, &lStreamHeader, 0)) == MMSYSERR_NOERROR)
 								{
 									((LPDWORD)lTrgInfo.pchBuffer)[1] += lStreamHeader.cbDstLengthUsed;
 									((LPDWORD)lTrgInfo.pchNext)[1] = lStreamHeader.cbDstLengthUsed;
@@ -292,7 +292,7 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 								{
 									((LPDWORD)lTrgInfo.pchNext)[1] = 0;
 								}
-								LogMmSysErr (LogNormal, acmStreamUnprepareHeader (lAcmStream, &lStreamHeader, 0));
+								LogMmSysErr (LogNormal|LogTime, acmStreamUnprepareHeader (lAcmStream, &lStreamHeader, 0));
 							}
 						}
 						if	(lTrgIo)
@@ -301,7 +301,7 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 						}
 						else
 						{
-							LogMmSysErr (LogNormal, lMmResult = lTrgInfo.wErrorRet);
+							LogMmSysErr (LogNormal|LogTime, lMmResult = lTrgInfo.wErrorRet);
 						}
 					}
 				}
@@ -462,7 +462,7 @@ HRESULT CDirectSoundConvert::DeriveOutputFormat ()
 
 				if	(
 						(!lOutputFormat)
-					&&	(SUCCEEDED (LogMmSysErr (LogNormal, acmMetrics (NULL, ACM_METRIC_MAX_SIZE_FORMAT, &lFormatSize))))
+					&&	(SUCCEEDED (LogMmSysErr (LogNormal|LogTime, acmMetrics (NULL, ACM_METRIC_MAX_SIZE_FORMAT, &lFormatSize))))
 					)
 				{
 					for	(lFormatNdx = 0; lFormatNdx < (INT_PTR)lRankedFormats.GetCount(); lFormatNdx++)
@@ -561,7 +561,7 @@ HRESULT CDirectSoundConvert::EnumAcmFormats (const LPWAVEFORMATEX pInputFormat, 
 	INT_PTR				lRankNdx;
 
 	if	(
-			(SUCCEEDED (lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_ACMWrapper, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &lACMFilter))))
+			(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_ACMWrapper, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &lACMFilter))))
 		&&	(SUCCEEDED (lResult = lACMFilter->EnumPins (&lEnumPins)))
 		)
 	{

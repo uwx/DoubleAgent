@@ -30,8 +30,8 @@
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_VOICES		(GetProfileDebugInt(_T("LogVoices"),LogVerbose,true)&0xFFFF)
-#define	_DEBUG_TTS_MATCH	(GetProfileDebugInt(_T("LogVoiceMatch"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_VOICES		(GetProfileDebugInt(_T("LogVoices"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_DEBUG_TTS_MATCH	(GetProfileDebugInt(_T("LogVoiceMatch"),LogVerbose,true)&0xFFFF|LogTime)
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -138,7 +138,7 @@ void CSapi4Voices::Enumerate ()
 	DeleteAll ();
 
 	if	(
-			(SUCCEEDED (LogComErr (LogVerbose, CoCreateInstance (CLSID_TTSEnumerator, NULL, CLSCTX_INPROC_SERVER, IID_ITTSEnum, (void **) &lEnum))))
+			(SUCCEEDED (LogComErr (LogVerbose|LogTime, CoCreateInstance (CLSID_TTSEnumerator, NULL, CLSCTX_INPROC_SERVER, IID_ITTSEnum, (void **) &lEnum))))
 		&&	(lEnum != NULL)
 		)
 	{
@@ -256,7 +256,7 @@ INT_PTR CSapi4Voices::FindVoice (const struct CAgentFileTts & pAgentFileTts, boo
 	if	(pMatchRank)
 	{
 		(*pMatchRank) = 0;
-	}	
+	}
 	return -1;
 }
 
@@ -308,7 +308,7 @@ CSapi4VoiceIndexArray const * CSapi4Voices::FindVoices (const struct CAgentFileT
 			CAtlString	lMatchLog;
 			lMatchLog.Format (_T("%-40.40ls"), (CString)CGuidStr(lVoiceInfo->mModeId));
 #endif
-			
+
 			lLanguageNdx = FindLanguageMatch (lVoiceInfo->mLangId, lLanguageIds);
 			if	(lLanguageNdx >= 0)
 			{
@@ -403,7 +403,7 @@ CSapi4VoiceInfoArray const * CSapi4Voices::GetVoices (const struct CAgentFileTts
 	tPtr <CSapi4VoiceInfoArray>			lInfoArray;
 	tPtr <CSapi4VoiceIndexArray const>	lIndexArray;
 	INT_PTR								lNdx;
-	
+
 	if	(
 			(lIndexArray = FindVoices (pAgentFileTts, pUseDefaults, pMatchRanks))
 		&&	(lInfoArray = new CSapi4VoiceInfoArray)

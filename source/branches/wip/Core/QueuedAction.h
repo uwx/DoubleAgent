@@ -43,6 +43,9 @@ enum QueueAction
 class CQueuedAction
 {
 public:
+#ifdef	_TRACE_ACTION_INSTANCE
+	static CAtlPtrTypeArray<CQueuedAction>	mInstances;
+#endif
 	CQueuedAction (QueueAction pAction, long pCharID, long pReqID = -1);
 	virtual ~CQueuedAction ();
 
@@ -65,8 +68,9 @@ public:
 	void NotifyComplete (class CEventNotify * pNotify, HRESULT pReqStatus = S_OK);
 	void NotifyComplete (CAtlPtrTypeArray <class CEventNotify> & pNotify, HRESULT pReqStatus = S_OK);
 
-// Implementation
+	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 protected:
+	void _LogAction (UINT pLogLevel, LPCTSTR pTitle, LPCTSTR pActionType, LPCTSTR pFormat = NULL, ...) const;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -86,6 +90,8 @@ public:
 	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
 	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
 	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+
+	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -105,6 +111,8 @@ public:
 	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
 	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
 	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+
+	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -125,6 +133,8 @@ public:
 	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
 	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
 	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+
+	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -145,6 +155,8 @@ public:
 	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
 	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
 	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+
+	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -174,6 +186,8 @@ public:
 	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
 	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
 	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+
+	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -201,6 +215,8 @@ public:
 	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
 	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
 	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+
+	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -244,6 +260,8 @@ protected:
 	HRESULT PrepareSpeech (class CAgentWnd * pAgentWnd);
 	HRESULT StartSpeech (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
 	bool ShowSpeechAnimation (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
+
+	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -263,6 +281,8 @@ public:
 	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
 	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
 	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+
+	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -282,6 +302,8 @@ public:
 	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
 	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
 	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+
+	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 };
 
 /////////////////////////////////////////////////////////////////////////////

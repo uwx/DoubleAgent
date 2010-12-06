@@ -81,7 +81,7 @@ bool CBitmapAlpha::AlphaBlend (HDC pDst, int pDstX, int pDstY, int pDstCx, int p
 				}
 				else
 				{
-					LogWinErr (LogVerbose, GetLastError (), _T("AlphaBlend [%d %d %d %d] [%d] [%d %d %d %d] [%d] [%2.2X]"), pDstX, pDstY, pDstCx, pDstCy, GetDeviceCaps (pDst,BITSPIXEL), pSrcX, pSrcY, pSrcCx, pSrcCy, GetDeviceCaps (pSrc,BITSPIXEL), pAlpha);
+					LogWinErr (LogVerbose|LogTime, GetLastError (), _T("AlphaBlend [%d %d %d %d] [%d] [%d %d %d %d] [%d] [%2.2X]"), pDstX, pDstY, pDstCx, pDstCy, GetDeviceCaps (pDst,BITSPIXEL), pSrcX, pSrcY, pSrcCx, pSrcCy, GetDeviceCaps (pSrc,BITSPIXEL), pAlpha);
 				}
 			}
 
@@ -135,7 +135,7 @@ bool CBitmapAlpha::AlphaBlend (HDC pDst, int pDstX, int pDstY, int pDstCx, int p
 						{
 							lSrcRect = CRect (CPoint (pDstX, pDstY), CSize (pSrcCx, pSrcCy));
 							lAlphaBuffer.mDC.LPtoDP (&lSrcRect);
-							LogMessage (LogNormal, _T("InternalAlpha failed [%u] [%u] WinOrg [%d %d] VptOrg [%d %d] WinExt [%d %d] VptExt [%d %d] Src [%d,%d %d,%d] Dst [%d,%d %d,%d]"), lLogSizeMismatch, lDevSizeMismatch, lWinOrg.x, lWinOrg.y, lVptOrg.x, lVptOrg.y, lWinExt.cx, lWinExt.cy, lVptExt.cx, lVptExt.cy, lSrcRect.left, lSrcRect.top, lSrcRect.Width (), lSrcRect.Height (), lDstRect.left, lDstRect.top, lDstRect.Width (), lDstRect.Height ());
+							LogMessage (LogNormal|LogTime, _T("InternalAlpha failed [%u] [%u] WinOrg [%d %d] VptOrg [%d %d] WinExt [%d %d] VptExt [%d %d] Src [%d,%d %d,%d] Dst [%d,%d %d,%d]"), lLogSizeMismatch, lDevSizeMismatch, lWinOrg.x, lWinOrg.y, lVptOrg.x, lVptOrg.y, lWinExt.cx, lWinExt.cy, lVptExt.cx, lVptExt.cy, lSrcRect.left, lSrcRect.top, lSrcRect.Width (), lSrcRect.Height (), lDstRect.left, lDstRect.top, lDstRect.Width (), lDstRect.Height ());
 						}
 #endif
 						if	(InternalAlphaBlend (pDst, pDstX, pDstY, pDstCx, pDstCy, lAlphaBuffer.mDC, pDstX, pDstY, pDstCx, pDstCy, pAlpha, lLogSizeMismatch, lDevSizeMismatch))
@@ -166,7 +166,7 @@ bool CBitmapAlpha::AlphaBlend (HDC pDst, int pDstX, int pDstY, int pDstCx, int p
 #endif
 							if	(LogIsActive ())
 							{
-								LogWinErr (LogVerbose, GetLastError (), _T("AlphaBlend"));
+								LogWinErr (LogVerbose|LogTime, GetLastError (), _T("AlphaBlend"));
 							}
 						}
 						lAlphaBuffer.EndBuffer ();
@@ -259,7 +259,7 @@ bool CBitmapAlpha::InternalAlphaBlend (HDC pDst, int pDstX, int pDstY, int pDstC
 			else
 			if	(LogIsActive ())
 			{
-				LogMessage (LogVerbose, _T("InternalAlphaBlend - Can't do"));
+				LogMessage (LogVerbose|LogTime, _T("InternalAlphaBlend - Can't do"));
 			}
 		}
 	}
@@ -279,14 +279,14 @@ bool CBitmapAlpha::InternalAlphaBlend (HDC pDst, int pDstX, int pDstY, int pDstC
 		try
 		{
 #ifdef	_DEBUG_NOT
-			LogMessage (LogNormal, _T("Alpha [%u] [%d,%d %d,%d] [%d,%d] in [%d,%d %d,%d] [%d,%d] to [%d,%d %d,%d] [%d,%d] in [%d,%d %d,%d] [%d,%d]"), pAlpha, lSrcRect.left, lSrcRect.top, lSrcRect.right, lSrcRect.bottom, lSrcRect.Width (), lSrcRect.Height (), lSrcClipBox.left, lSrcClipBox.top, lSrcClipBox.right, lSrcClipBox.bottom, lSrcClipBox.Width (), lSrcClipBox.Height (), lDstRect.left, lDstRect.top, lDstRect.right, lDstRect.bottom, lDstRect.Width (), lDstRect.Height (), lDstClipBox.left, lDstClipBox.top, lDstClipBox.right, lDstClipBox.bottom, lDstClipBox.Width (), lDstClipBox.Height ());
+			LogMessage (LogNormal|LogTime, _T("Alpha [%u] [%d,%d %d,%d] [%d,%d] in [%d,%d %d,%d] [%d,%d] to [%d,%d %d,%d] [%d,%d] in [%d,%d %d,%d] [%d,%d]"), pAlpha, lSrcRect.left, lSrcRect.top, lSrcRect.right, lSrcRect.bottom, lSrcRect.Width (), lSrcRect.Height (), lSrcClipBox.left, lSrcClipBox.top, lSrcClipBox.right, lSrcClipBox.bottom, lSrcClipBox.Width (), lSrcClipBox.Height (), lDstRect.left, lDstRect.top, lDstRect.right, lDstRect.bottom, lDstRect.Width (), lDstRect.Height (), lDstClipBox.left, lDstClipBox.top, lDstClipBox.right, lDstClipBox.bottom, lDstClipBox.Width (), lDstClipBox.Height ());
 			if	(!lDstRect.EqualRect (&CRect (CPoint (pDstX, pDstY), CSize (pDstCx, pDstCy))))
 			{
-				LogMessage (LogNormal, _T("  LogDst [%d,%d %d,%d] DevDst [%d,%d %d,%d]"), pDstX, pDstY, pDstX+pDstCx, pDstY+pDstCy, lDstRect.left, lDstRect.top, lDstRect.right, lDstRect.bottom);
+				LogMessage (LogNormal|LogTime, _T("  LogDst [%d,%d %d,%d] DevDst [%d,%d %d,%d]"), pDstX, pDstY, pDstX+pDstCx, pDstY+pDstCy, lDstRect.left, lDstRect.top, lDstRect.right, lDstRect.bottom);
 			}
 			if	(!lSrcRect.EqualRect (&CRect (CPoint (pSrcX, pSrcY), CSize (pSrcCx, pSrcCy))))
 			{
-				LogMessage (LogNormal, _T("  LogSrc [%d,%d %d,%d] DevSrc [%d,%d %d,%d]"), pSrcX, pSrcY, pSrcX+pSrcCx, pSrcY+pSrcCy, lSrcRect.left, lSrcRect.top, lSrcRect.right, lSrcRect.bottom);
+				LogMessage (LogNormal|LogTime, _T("  LogSrc [%d,%d %d,%d] DevSrc [%d,%d %d,%d]"), pSrcX, pSrcY, pSrcX+pSrcCx, pSrcY+pSrcCy, lSrcRect.left, lSrcRect.top, lSrcRect.right, lSrcRect.bottom);
 			}
 #endif
 
@@ -398,7 +398,7 @@ CBrush * CBitmapAlpha::GetAlphaBrush (HDC pDC, COLORREF pColor, BYTE pAlpha, boo
 		}
 
 #ifdef	_DEBUG_NOT
-		CBitmapDebugger::DumpBitmap (LogNormal, lBmpInfo, lBrushBits, _T("Brush Bits"));
+		CBitmapDebugger::DumpBitmap (LogNormal|LogTime, lBmpInfo, lBrushBits, _T("Brush Bits"));
 #endif
 
 		if	(lBrushDibHandle = GlobalAlloc (GHND, sizeof (lBmpInfo) + lBmpInfo.bmiHeader.biSizeImage))
@@ -413,7 +413,7 @@ CBrush * CBitmapAlpha::GetAlphaBrush (HDC pDC, COLORREF pColor, BYTE pAlpha, boo
 			lBrushInfo.lbHatch = (ULONG) lBrushDib;
 			if	(!lBrush->CreateBrushIndirect (&lBrushInfo))
 			{
-				LogWinErr (LogNormal, GetLastError ());
+				LogWinErr (LogNormal|LogTime, GetLastError ());
 				lBrush = NULL;
 			}
 
@@ -421,13 +421,13 @@ CBrush * CBitmapAlpha::GetAlphaBrush (HDC pDC, COLORREF pColor, BYTE pAlpha, boo
 		}
 		else
 		{
-			LogWinErr (LogNormal, GetLastError ());
+			LogWinErr (LogNormal|LogTime, GetLastError ());
 			lBrush = NULL;
 		}
 	}
 	else
 	{
-		LogWinErr (LogNormal, GetLastError ());
+		LogWinErr (LogNormal|LogTime, GetLastError ());
 		lBrush = NULL;
 	}
 

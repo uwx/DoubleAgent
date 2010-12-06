@@ -42,14 +42,14 @@
 	i##Ptr (i##* p) : _com_ptr_t<ThisIIID> (p) {} \
 	i##Ptr (const _variant_t& varSrc) : _com_ptr_t<ThisIIID> (varSrc) {} \
 	template<typename _OtherIID> i##Ptr (const _com_ptr_t<_OtherIID>& p) : _com_ptr_t<ThisIIID> (p) {} \
-	template<typename _InterfaceType> i##Ptr (_InterfaceType* p) : _com_ptr_t<ThisIIID> (p) {} 
+	template<typename _InterfaceType> i##Ptr (_InterfaceType* p) : _com_ptr_t<ThisIIID> (p) {}
 
 #define	_DACTLPTR_ASSIGN(i) \
 	i##Ptr& operator= (const i##Ptr& p) {_com_ptr_t<ThisIIID>::operator= (p); return *this;} \
 	i##Ptr& operator= (i##* p) {_com_ptr_t<ThisIIID>::operator= (p); return *this;} \
 	i##Ptr& operator= (const _variant_t& varSrc) {_com_ptr_t<ThisIIID>::operator= (varSrc); return *this;} \
 	template<typename _OtherIID> i##Ptr& operator= (const _com_ptr_t<_OtherIID>& p) {_com_ptr_t<ThisIIID>::operator= (p); return *this;} \
-	template<typename _InterfaceType> i##Ptr& operator= (_InterfaceType* p) {_com_ptr_t<ThisIIID>::operator= (p); return *this;} 
+	template<typename _InterfaceType> i##Ptr& operator= (_InterfaceType* p) {_com_ptr_t<ThisIIID>::operator= (p); return *this;}
 
 __if_exists(IFontDisp)
 {
@@ -332,7 +332,7 @@ __if_not_exists(IDaCtlSettingsPtr)
 		{
 			__declspec(property(get=_get_BalloonFont))							IFontDispPtr			BalloonFont;
 			IFontDispPtr _get_BalloonFont () {IFontDispPtr lBalloonFont; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_BalloonFont(&lBalloonFont); return lBalloonFont;}
-		}		
+		}
 	};
 }
 
@@ -643,6 +643,28 @@ __if_not_exists(IDaCtlCharacters2Ptr)
 
 /////////////////////////////////////////////////////////////////////////////
 
+__if_not_exists(IDaCtlRequestPtr)
+{
+	_DACTLPTR_DECLARE(IDaCtlRequest)
+	{
+	public:
+		_DACTLPTR_CONSTRUCT(IDaCtlRequest)
+		_DACTLPTR_ASSIGN(IDaCtlRequest)
+
+		__declspec(property(get=_get_ID))										long					ID;
+		__declspec(property(get=_get_Status))									long					Status;
+		__declspec(property(get=_get_Description))								_bstr_t					Description;
+		__declspec(property(get=_get_Number))									long					Number;
+
+		long _get_ID () {long lID=0; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_ID(&lID); return lID;}
+		long _get_Status () {long lStatus=0; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_Status(&lStatus); return lStatus;}
+		_bstr_t _get_Description () {BSTR lDescription=NULL; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_Description(&lDescription); return _bstr_t(lDescription, false);}
+		long _get_Number () {long lNumber=0; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_Number(&lNumber); return lNumber;}
+	};
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 __if_not_exists(IDaControl2Ptr)
 {
 	_DACTLPTR_DECLARE(IDaControl2)
@@ -671,6 +693,8 @@ __if_not_exists(IDaControl2Ptr)
 		HRESULT _put_Connected (bool Value) {if (_DACTLPTR_CHKNULL) return GetInterfacePtr()->put_Connected(Value?VARIANT_TRUE:VARIANT_FALSE); else return E_POINTER;}
 		unsigned short _get_AutoConnect () {short lAutoConnect=0; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_AutoConnect(&lAutoConnect); return (unsigned short)lAutoConnect;}
 		HRESULT _put_AutoConnect (unsigned short Value) {if (_DACTLPTR_CHKNULL) return GetInterfacePtr()->put_AutoConnect((short)Value); else return E_POINTER;}
+		long _get_CharacterStyle () {long lCharacterStyle=0; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_CharacterStyle(&lCharacterStyle); return lCharacterStyle;}
+		HRESULT _put_CharacterStyle (long Value) {if (_DACTLPTR_CHKNULL) return GetInterfacePtr()->put_CharacterStyle(Value); else return E_POINTER;}
 		IDaCtlCharacter2Ptr _get_ControlCharacter () {IDaCtlCharacter2Ptr lCharacter; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_ControlCharacter(&lCharacter); return lCharacter;}
 		HRESULT _put_ControlCharacter (IDaCtlCharacter2 * Value) {if (_DACTLPTR_CHKNULL) return GetInterfacePtr()->put_ControlCharacter(Value); else return E_POINTER;}
 		IDaCtlCharacters2Ptr _get_Characters () {IDaCtlCharacters2Ptr lCharacters; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_Characters(&lCharacters); return lCharacters;}
@@ -682,6 +706,7 @@ __if_not_exists(IDaControl2Ptr)
 		IDaCtlSettingsPtr _get_Settings () {IDaCtlSettingsPtr lSettings; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_Settings(&lSettings); return lSettings;}
 	};
 }
+
 /////////////////////////////////////////////////////////////////////////////
 
 #undef	_DACTLPTR_DECLARE

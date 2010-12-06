@@ -25,19 +25,19 @@
 #include "GuidStr.h"
 
 //#define	_DEBUG_INSTANCE		LogNormal
-//#define	_DEBUG_QUERIES		LogNormal|LogHighVolume|LogTimeMs
-#define	_DEBUG_BASEFILTER		LogNormal|LogHighVolume|LogTimeMs
-#define	_DEBUG_MEDIASEEKING		LogNormal|LogHighVolume|LogTimeMs
-#define	_DEBUG_PIN				LogNormal|LogHighVolume|LogTimeMs
-#define	_DEBUG_MEMINPUTPIN		LogNormal|LogHighVolume|LogTimeMs
-#define	_DEBUG_ASYNCREADER		LogNormal|LogHighVolume|LogTimeMs
-#define	_DEBUG_PINCONNECTION	LogNormal|LogHighVolume|LogTimeMs
-#define	_DEBUG_PINFLOWCONTROL	LogNormal|LogHighVolume|LogTimeMs
-#define	_LOG_RESULTS			LogNormal|LogHighVolume|LogTimeMs
+//#define	_DEBUG_QUERIES		LogNormal|LogTimeMs|LogHighVolume
+#define	_DEBUG_BASEFILTER		LogNormal|LogTimeMs|LogHighVolume
+#define	_DEBUG_MEDIASEEKING		LogNormal|LogTimeMs|LogHighVolume
+#define	_DEBUG_PIN				LogNormal|LogTimeMs|LogHighVolume
+#define	_DEBUG_MEMINPUTPIN		LogNormal|LogTimeMs|LogHighVolume
+#define	_DEBUG_ASYNCREADER		LogNormal|LogTimeMs|LogHighVolume
+#define	_DEBUG_PINCONNECTION	LogNormal|LogTimeMs|LogHighVolume
+#define	_DEBUG_PINFLOWCONTROL	LogNormal|LogTimeMs|LogHighVolume
+#define	_LOG_RESULTS			LogNormal|LogTimeMs|LogHighVolume
 
-//#define	_LOG_ALLOCATOR		LogNormal|LogHighVolume|LogTimeMs
-#define	_LOG_SAMPLES			LogNormal|LogHighVolume|LogTimeMs
-#define	_LOG_SEEKING			LogNormal|LogHighVolume|LogTimeMs
+//#define	_LOG_ALLOCATOR		LogNormal|LogTimeMs|LogHighVolume
+#define	_LOG_SAMPLES			LogNormal|LogTimeMs|LogHighVolume
+#define	_LOG_SEEKING			LogNormal|LogTimeMs|LogHighVolume
 //#define	_TRACE_SAMPLE_TRACER	LogIfActive
 
 /////////////////////////////////////////////////////////////////////////////
@@ -49,7 +49,7 @@ CTraceSamples::CTraceSamples ()
 #endif
 #ifdef	_TRACE_SAMPLE_TRACER
 	// Does not work yet
-	if	(SUCCEEDED (LogComErr (LogNormal, CoCreateInstance (__uuidof(SampleGrabber), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mGrabberFilter))))
+	if	(SUCCEEDED (LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(SampleGrabber), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mGrabberFilter))))
 	{
 		mGrabberFilter = (new CTraceFilter(mGrabberFilter, _T("Grabber"), _TRACE_SAMPLE_TRACER))->GetControllingUnknown();
 	}
@@ -122,16 +122,16 @@ CTraceSamples & CTraceSamples::ConnectBefore (IFilterGraph * pFilterGraph, IBase
 		if	(
 				(lDownstreamPin != NULL)
 			&&	(pMediaType != NULL)
-			&&	(SUCCEEDED (lResult = LogComErr (LogNormal, lDownstreamPin->ConnectedTo (&lUpstreamPin))))
+			&&	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, lDownstreamPin->ConnectedTo (&lUpstreamPin))))
 			&&	(lUpstreamPin != NULL)
 			)
 		{
 			if	(
 					(
 						(mGrabberFilter != NULL)
-					||	(SUCCEEDED (lResult = LogComErr (LogNormal, CoCreateInstance (__uuidof(SampleGrabber), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mGrabberFilter))))
+					||	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(SampleGrabber), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mGrabberFilter))))
 					)
-				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, pFilterGraph->AddFilter (mGrabberFilter, mFilterName))))
+				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, pFilterGraph->AddFilter (mGrabberFilter, mFilterName))))
 				)
 			{
 				mGrabber = mGrabberFilter;
@@ -139,14 +139,14 @@ CTraceSamples & CTraceSamples::ConnectBefore (IFilterGraph * pFilterGraph, IBase
 
 			if	(
 					(SUCCEEDED (lResult))
-				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mGrabber->SetMediaType (pMediaType))))
+				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mGrabber->SetMediaType (pMediaType))))
 				&&	(SUCCEEDED (lResult = GetFilterPins (mGrabberFilter, &lInputPin, &lOutputPin)))
 				&&	(lInputPin != NULL)
 				&&	(lOutputPin != NULL)
-				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, lDownstreamPin->Disconnect ())))
-				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, lUpstreamPin->Disconnect ())))
-				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, pFilterGraph->ConnectDirect (lUpstreamPin, lInputPin, pMediaType))))
-				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, pFilterGraph->ConnectDirect (lOutputPin, lDownstreamPin, pMediaType))))
+				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, lDownstreamPin->Disconnect ())))
+				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, lUpstreamPin->Disconnect ())))
+				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, pFilterGraph->ConnectDirect (lUpstreamPin, lInputPin, pMediaType))))
+				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, pFilterGraph->ConnectDirect (lOutputPin, lDownstreamPin, pMediaType))))
 				)
 			{
 			}
@@ -214,7 +214,7 @@ CTraceSamples & CTraceSamples::Disconnect ()
 			&&	(lFilterInfo.pGraph != NULL)
 			)
 		{
-			lResult = LogVfwErr (LogNormal, lFilterInfo.pGraph->RemoveFilter (lFilter));
+			lResult = LogVfwErr (LogNormal|LogTime, lFilterInfo.pGraph->RemoveFilter (lFilter));
 		}
 		else
 		if	(SUCCEEDED (lResult))
@@ -240,10 +240,10 @@ CTraceSamples & CTraceSamples::LogSamples (UINT pLogLevel, bool pOneShot)
 		mLogLevelSample = pLogLevel;
 		if	(
 				(mGrabber != NULL)
-			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mGrabber->SetCallback (this, 0))))
+			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mGrabber->SetCallback (this, 0))))
 			)
 		{
-			LogVfwErr (LogNormal, mGrabber->SetOneShot (pOneShot!=false));
+			LogVfwErr (LogNormal|LogTime, mGrabber->SetOneShot (pOneShot!=false));
 		}
 	}
 	catch AnyExceptionDebug
@@ -262,10 +262,10 @@ CTraceSamples & CTraceSamples::DumpSamples (UINT pByteCount, UINT pLogLevel, boo
 
 		if	(
 				(mGrabber != NULL)
-			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mGrabber->SetCallback (this, 1))))
+			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mGrabber->SetCallback (this, 1))))
 			)
 		{
-			LogVfwErr (LogNormal, mGrabber->SetOneShot (pOneShot!=false));
+			LogVfwErr (LogNormal|LogTime, mGrabber->SetOneShot (pOneShot!=false));
 		}
 	}
 	catch AnyExceptionDebug
@@ -303,7 +303,7 @@ HRESULT STDMETHODCALLTYPE CTraceSamples::BufferCB (double SampleTime, BYTE *pBuf
 /////////////////////////////////////////////////////////////////////////////
 
 CTraceFilter::CTraceFilter ()
-:	mLogLevelPins (LogVerbose)
+:	mLogLevelPins (LogVerbose|LogTime)
 {
 #ifdef	_DEBUG_INSTANCE
 	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::CTraceFilter (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
@@ -942,7 +942,7 @@ ULONG STDMETHODCALLTYPE CTraceFilter::GetMiscFlags ()
 
 CTracePins::CTracePins ()
 :	mFilter (NULL),
-	mLogLevelPins (LogVerbose),
+	mLogLevelPins (LogVerbose|LogTime),
 	mUnknown (NULL)
 {
 #ifdef	_DEBUG_INSTANCE
@@ -1034,7 +1034,7 @@ HRESULT STDMETHODCALLTYPE CTracePins::Clone (IEnumPins **ppEnum)
 
 CTracePin::CTracePin ()
 :	mFilter (NULL),
-	mLogLevel (LogVerbose),
+	mLogLevel (LogVerbose|LogTime),
 	mUnknown (NULL)
 {
 #ifdef	_DEBUG_INSTANCE
@@ -1140,7 +1140,7 @@ HRESULT STDMETHODCALLTYPE CTracePin::Connect (IPin *pReceivePin, const AM_MEDIA_
 
 	if	(lTracePin == NULL)
 	{
-		lLogLevel = ((mLogLevel & 0xFF) <= LogIfActive) ? mLogLevel : LogVerbose;
+		lLogLevel = ((mLogLevel & 0xFF) <= LogIfActive) ? mLogLevel : LogVerbose|LogTime;
 		lReceivePin = (new CComObject<CTracePin>)->Initialize (pReceivePin, NULL, lLogLevel).GetControllingUnknown();
 		pReceivePin = lReceivePin.Detach ();
 	}
@@ -1165,7 +1165,7 @@ HRESULT STDMETHODCALLTYPE CTracePin::ReceiveConnection (IPin *pConnector, const 
 
 	if	(lTracePin == NULL)
 	{
-		lLogLevel = ((mLogLevel & 0xFF) <= LogIfActive) ? mLogLevel : LogVerbose;
+		lLogLevel = ((mLogLevel & 0xFF) <= LogIfActive) ? mLogLevel : LogVerbose|LogTime;
 		lConnector = (new CComObject<CTracePin>)->Initialize (pConnector, NULL, lLogLevel).GetControllingUnknown();
 		pConnector = lConnector.Detach ();
 	}
@@ -1213,7 +1213,7 @@ HRESULT STDMETHODCALLTYPE CTracePin::ConnectedTo (IPin **pPin)
 		lTracePin = *pPin;
 		if	(lTracePin == NULL)
 		{
-			lLogLevel = ((mLogLevel & 0xFF) <= LogIfActive) ? mLogLevel : LogVerbose;
+			lLogLevel = ((mLogLevel & 0xFF) <= LogIfActive) ? mLogLevel : LogVerbose|LogTime;
 			lPin = (new CComObject<CTracePin>)->Initialize (*pPin, NULL, lLogLevel).GetControllingUnknown();
 			*pPin = lPin.Detach ();
 		}

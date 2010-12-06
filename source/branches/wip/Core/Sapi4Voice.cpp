@@ -37,8 +37,8 @@
 
 #ifdef	_DEBUG
 //#define	_DEBUG_NOTIFY	LogNormal|LogTimeMs
-//#define	_DEBUG_MOUTH	LogNormal|LogHighVolume|LogTimeMs
-#define	_DEBUG_EVENTS		(GetProfileDebugInt(_T("DebugSapiEvents"),LogVerbose,true)&0xFFFF/*|LogHighVolume*/|LogTimeMs)
+//#define	_DEBUG_MOUTH	LogNormal|LogTimeMs|LogHighVolume
+#define	_DEBUG_EVENTS		(GetProfileDebugInt(_T("DebugSapiEvents"),LogVerbose,true)&0xFFFF|LogTimeMs/*|LogHighVolume*/)
 #define	_TRACE_STATE		(GetProfileDebugInt(_T("TraceSapi4State"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_TRACE_STOP			(GetProfileDebugInt(_T("TraceSapi4Stop"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #endif
@@ -72,7 +72,7 @@ CSapi4Voice::~CSapi4Voice ()
 #ifdef	_TRACE_STOP
 	if	(LogIsActive (_TRACE_STOP))
 	{
-		LogMessage (_TRACE_STOP, _T("[%p] Destructor IsResetting [%u] Queuing [%u] Speaking [%u]"), this, CheckIsResetting(), CheckIsQueueing(), CheckIsSpeaking());
+		LogMessage (_TRACE_STOP, _T("[%p] Destructor [%ls] IsResetting [%u] Queuing [%u] Speaking [%u]"), this, (BSTR)GetDisplayName(), CheckIsResetting(), CheckIsQueueing(), CheckIsSpeaking());
 	}
 #endif
 
@@ -82,9 +82,9 @@ CSapi4Voice::~CSapi4Voice ()
 	}
 	catch AnyExceptionDebug
 
-	SafeFreeSafePtr (mBufNotifySink);
-	SafeFreeSafePtr (mNotifySink);
 	SafeFreeSafePtr (mEngine);
+	SafeFreeSafePtr (mNotifySink);
+	SafeFreeSafePtr (mBufNotifySink);
 }
 
 CSapi4Voice * CSapi4Voice::CreateInstance ()
@@ -338,7 +338,7 @@ HRESULT CSapi4Voice::PrepareToSpeak (bool pHighPriority)
 	}
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f     CSapi4Voice::PrepareToSpeak [%8.8X]"), DebugTimeElapsed, lResult);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f     CSapi4Voice::PrepareToSpeak [%8.8X]"), DebugTimeElapsed, lResult);
 #endif
 	return lResult;
 }
@@ -375,16 +375,16 @@ HRESULT CSapi4Voice::Speak (LPCTSTR pMessage, bool pAsync)
 				}
 #endif
 				SetIsQueueing (true);
-				LogSapi4Err (LogNormal, mEngine->AudioPause());
+				LogSapi4Err (LogDetails|LogTime, mEngine->AudioPause());
 				SetIsQueueing (true);
 
 				mLastText = AtlAllocTaskWideString (lMessage);
 				lSpeechData.pData = (PVOID)mLastText.Ptr ();
 				lSpeechData.dwSize = (lMessage.GetLength() + 1) * sizeof(WCHAR);
-				lResult = LogSapi4Err (LogNormal, mEngine->TextData (CHARSET_TEXT, TTSDATAFLAG_TAGGED, lSpeechData, mBufNotifySink, IID_ITTSBufNotifySink));
+				lResult = LogSapi4Err (LogNormal|LogTime, mEngine->TextData (CHARSET_TEXT, TTSDATAFLAG_TAGGED, lSpeechData, mBufNotifySink, IID_ITTSBufNotifySink));
 				if	(SUCCEEDED (lResult))
 				{
-					lResult = LogSapi4Err (LogNormal, mEngine->AudioResume());
+					lResult = LogSapi4Err (LogNormal|LogTime, mEngine->AudioResume());
 				}
 			}
 			catch AnyExceptionDebug
@@ -397,7 +397,7 @@ HRESULT CSapi4Voice::Speak (LPCTSTR pMessage, bool pAsync)
 	}
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f     CSapi4Voice::Speak [%8.8X] [%s]"), DebugTimeElapsed, lResult, DebugStr(pMessage));
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f     CSapi4Voice::Speak [%8.8X] [%s]"), DebugTimeElapsed, lResult, DebugStr(pMessage));
 #endif
 	return lResult;
 }
@@ -425,7 +425,7 @@ HRESULT CSapi4Voice::Stop ()
 			}
 			else
 			{
-#ifdef	_TRACE_STOP
+#ifdef	_TRACE_STOP_NOT
 				if	(LogIsActive (_TRACE_STOP))
 				{
 					LogMessage (_TRACE_STOP, _T("[%p] AudioReset Queuing [%u] Speaking [%u]"), this, CheckIsQueueing(), CheckIsSpeaking());
@@ -446,11 +446,11 @@ HRESULT CSapi4Voice::Stop ()
 	}
 	if	(LogIsActive ())
 	{
-		LogSapi4Err (LogNormal, lResult);
+		LogSapi4Err (LogNormal|LogTime, lResult);
 	}
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f     CSapi4Voice::Stop [%8.8X]"), DebugTimeElapsed, lResult);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f     CSapi4Voice::Stop [%8.8X]"), DebugTimeElapsed, lResult);
 #endif
 	return lResult;
 }
@@ -463,7 +463,7 @@ HRESULT CSapi4Voice::Pause ()
 	{
 		try
 		{
-			LogSapi4Err (LogNormal, lResult = mEngine->AudioPause());
+			LogSapi4Err (LogNormal|LogTime, lResult = mEngine->AudioPause());
 		}
 		catch AnyExceptionDebug
 
@@ -480,7 +480,7 @@ HRESULT CSapi4Voice::Resume ()
 	{
 		try
 		{
-			LogSapi4Err (LogNormal, lResult = mEngine->AudioResume());
+			LogSapi4Err (LogNormal|LogTime, lResult = mEngine->AudioResume());
 		}
 		catch AnyExceptionDebug
 
@@ -531,11 +531,11 @@ HRESULT CSapi4Voice::SetModeId (const GUID & pModeId)
 
 	if	(
 			(mEngine == NULL)
-		&&	(SUCCEEDED (lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_TTSEnumerator, NULL, CLSCTX_SERVER, IID_ITTSEnum, (void **) &lEnum))))
-		&&	(SUCCEEDED (lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_MMAudioDest, NULL, CLSCTX_SERVER, __uuidof(IUnknown), (void **) &lAudioDest))))
+		&&	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_TTSEnumerator, NULL, CLSCTX_SERVER, IID_ITTSEnum, (void **) &lEnum))))
+		&&	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_MMAudioDest, NULL, CLSCTX_SERVER, __uuidof(IUnknown), (void **) &lAudioDest))))
 		)
 	{
-		lResult = LogSapi4Err (LogNormal, lEnum->Select (pModeId, &mEngine, lAudioDest));
+		lResult = LogSapi4Err (LogNormal|LogTime, lEnum->Select (pModeId, &mEngine, lAudioDest));
 		if	(SUCCEEDED (lResult))
 		{
 			mDefaultRate = GetRate ();
@@ -864,7 +864,7 @@ HRESULT CSapi4Voice::CTTSNotifySink::Connect ()
 	else
 	if	(mRegisteredKey == 0)
 	{
-		lResult = LogSapi4Err (LogNormal, mOwner.mEngine->Register (this, IID_ITTSNotifySink, &mRegisteredKey));
+		lResult = LogSapi4Err (LogNormal|LogTime, mOwner.mEngine->Register (this, IID_ITTSNotifySink, &mRegisteredKey));
 #ifdef	_DEBUG_NOTIFY
 		if	(LogIsActive (_DEBUG_NOTIFY))
 		{
@@ -884,7 +884,7 @@ HRESULT CSapi4Voice::CTTSNotifySink::Disconnect ()
 		&&	(mRegisteredKey != 0)
 		)
 	{
-		lResult = LogSapi4Err (LogNormal, mOwner.mEngine->UnRegister (mRegisteredKey));
+		lResult = LogSapi4Err (LogNormal|LogTime, mOwner.mEngine->UnRegister (mRegisteredKey));
 #ifdef	_DEBUG_NOTIFY
 		if	(LogIsActive (_DEBUG_NOTIFY))
 		{

@@ -478,9 +478,9 @@ cpp_quote("#endif")
 		[helpstring("Speak a phrase or play a speech sound file"), helpcontext(APIHELP_Ctl_Character_Speak),
 			id(DISPID_IAgentCtlCharacter_Speak)] HRESULT Speak ([in, optional] VARIANT Text, [in, optional] VARIANT Url, [out, retval] IDaCtlRequest** Request);
 		[helpstring("Play a gesturing animation"), helpcontext(APIHELP_Ctl_Character_GestureAt),
-			id(DISPID_IAgentCtlCharacter_GestureAt)] HRESULT GestureAt ([in] short X, [in] short y, [out, retval] IDaCtlRequest** Request);
+			id(DISPID_IAgentCtlCharacter_GestureAt)] HRESULT GestureAt ([in] short X, [in] short Y, [out, retval] IDaCtlRequest** Request);
 		[helpstring("Move the character"), helpcontext(APIHELP_Ctl_Character_MoveTo),
-			id(DISPID_IAgentCtlCharacter_MoveTo)] HRESULT MoveTo ([in] short X, [in] short y, [in, optional] VARIANT Speed, [out, retval] IDaCtlRequest** Request);
+			id(DISPID_IAgentCtlCharacter_MoveTo)] HRESULT MoveTo ([in] short X, [in] short Y, [in, optional] VARIANT Speed, [out, retval] IDaCtlRequest** Request);
 		[helpstring("Hide the character"), helpcontext(APIHELP_Ctl_Character_Hide),
 			id(DISPID_IAgentCtlCharacter_Hide)] HRESULT Hide ([in, optional] VARIANT Fast, [out, retval] IDaCtlRequest** Request);
 		[helpstring("Show the character"), helpcontext(APIHELP_Ctl_Character_Show),
@@ -502,7 +502,7 @@ cpp_quote("#endif")
 			id(DISPID_IAgentCtlCharacter_ExtraData), propget, readonly, bindable] HRESULT ExtraData ([out, retval] BSTR* ExtraData);
 
 		[helpstring("Show the character's pop-up menu"), helpcontext(APIHELP_Ctl_Character_ShowPopupMenu),
-			id(DISPID_IAgentCtlCharacterEx_ShowPopupMenu)] HRESULT ShowPopupMenu ([in] short X, [in] short y, [out, retval] VARIANT_BOOL* Showed);
+			id(DISPID_IAgentCtlCharacterEx_ShowPopupMenu)] HRESULT ShowPopupMenu ([in] short X, [in] short Y, [out, retval] VARIANT_BOOL* Showed);
 		[helpstring("Is the character's pop-up menu shown when the user right-clicks on the character or it's notification icon? (see also: Style)"), helpcontext(APIHELP_Ctl_Character_AutoPopupMenu),
 			id(DISPID_IAgentCtlCharacterEx_AutoPopupMenu), propput, bindable, displaybind] HRESULT AutoPopupMenu ([in] VARIANT_BOOL Enabled);
 			[id(DISPID_IAgentCtlCharacterEx_AutoPopupMenu), propget, bindable, displaybind] HRESULT AutoPopupMenu ([out, retval] VARIANT_BOOL* Enabled);

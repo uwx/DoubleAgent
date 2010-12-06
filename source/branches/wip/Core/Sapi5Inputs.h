@@ -47,7 +47,7 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CSapi5InputIndexArray : public CAtlTypeArray <INT_PTR>  
+class CSapi5InputIndexArray : public CAtlTypeArray <INT_PTR>
 {
 	DECLARE_DLL_OBJECT(CSapi5InputIndexArray)
 public:

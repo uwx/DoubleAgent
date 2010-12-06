@@ -31,8 +31,8 @@
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_TEXT		(GetProfileDebugInt(_T("DebugSpeechText"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#define	_DEBUG_TAGS		(GetProfileDebugInt(_T("DebugSpeechTags"),LogVerbose,true)&0xFFFF|LogHighVolume)
+#define	_DEBUG_TEXT		(GetProfileDebugInt(_T("DebugSpeechText"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+#define	_DEBUG_TAGS		(GetProfileDebugInt(_T("DebugSpeechTags"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 //#define	_DEBUG_SPLIT	LogDebugFast
 //#define	_DEBUG_SAX		LogDebugFast
 //#define	_DEBUG_CACHE	LogDebugFast
@@ -256,7 +256,7 @@ CAgentTextParse & CAgentTextParse::operator+= (LPCTSTR pText)
 
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f     CAgentText::operator+="), DebugTimeElapsed);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f     CAgentText::operator+="), DebugTimeElapsed);
 #endif
 	return *this;
 }
@@ -292,14 +292,26 @@ CAgentTextParse & CAgentTextParse::operator+= (const CAgentText & pText)
 /////////////////////////////////////////////////////////////////////////////
 
 static LPCTSTR	sTagChr = _T("\\chr=");
+static LPCTSTR	sTagCom = _T("\\com=");
 static LPCTSTR	sTagCtx = _T("\\ctx=");
+static LPCTSTR	sTagDem = _T("\\dem\\");
 static LPCTSTR	sTagEmp = _T("\\emp\\");
+static LPCTSTR	sTagEng = _T("\\eng;");
 static LPCTSTR	sTagLst = _T("\\lst\\");
 static LPCTSTR	sTagMap = _T("\\map=");
 static LPCTSTR	sTagMrk = _T("\\mrk=");
 static LPCTSTR	sTagPau = _T("\\pau=");
 static LPCTSTR	sTagPit = _T("\\pit=");
+static LPCTSTR	sTagPra = _T("\\pra=");
+static LPCTSTR	sTagPrn = _T("\\prn=");
+static LPCTSTR	sTagPro = _T("\\pro=");
+static LPCTSTR	sTagPrt = _T("\\prt=");
 static LPCTSTR	sTagRst = _T("\\rst\\");
+static LPCTSTR	sTagRmS = _T("\\rms=");
+static LPCTSTR	sTagRmW = _T("\\rmw=");
+static LPCTSTR	sTagRPit = _T("\\rpit=");
+static LPCTSTR	sTagRPrn = _T("\\rprn=");
+static LPCTSTR	sTagRSpd = _T("\\rspd=");
 static LPCTSTR	sTagSpd = _T("\\spd=");
 static LPCTSTR	sTagVol = _T("\\vol=");
 
@@ -313,13 +325,25 @@ static LPCTSTR MatchTag (LPCTSTR pText)
 	if	(lTags.GetCount() <= 0)
 	{
 		lTags.Add (sTagChr);
+		lTags.Add (sTagCom);
 		lTags.Add (sTagCtx);
+		lTags.Add (sTagDem);
 		lTags.Add (sTagEmp);
+		lTags.Add (sTagEng);
 		lTags.Add (sTagLst);
 		lTags.Add (sTagMap);
 		lTags.Add (sTagMrk);
 		lTags.Add (sTagPau);
 		lTags.Add (sTagPit);
+		lTags.Add (sTagPra);
+		lTags.Add (sTagPrn);
+		lTags.Add (sTagPro);
+		lTags.Add (sTagPrt);
+		lTags.Add (sTagRmS);
+		lTags.Add (sTagRmW);
+		lTags.Add (sTagRPit);
+		lTags.Add (sTagRPrn);
+		lTags.Add (sTagRSpd);
 		lTags.Add (sTagRst);
 		lTags.Add (sTagSpd);
 		lTags.Add (sTagVol);
@@ -700,6 +724,26 @@ void CAgentTextParse::PutTag (LPCTSTR pTag, LPCTSTR pText, CAtlStringArray & pTe
 			}
 		}
 	}
+	else
+	{
+#ifdef	_DEBUG_NOT
+		LogMessage (LogDebugFast, _T("Other tag [%s] [%s]"), pTag, pText);
+#endif
+		SpeechFromText (pTextWords, pSpeechWords);
+		if	(mSapiVersion < 5)
+		{
+			if	(pText [0] != 0)
+			{
+				lTagString.Format (_T("%s%s\\"), pTag, pText);
+				pSpeechWords.Add (lTagString);
+			}
+			else
+			{
+				pSpeechWords.Add (pTag);
+			}
+		}
+		pTextWords.SetCount (max (pTextWords.GetCount(), pSpeechWords.GetCount()));
+	}
 
 #ifdef	_DEBUG_TAGS
 	LogMessage (_DEBUG_TAGS, _T("%s  PutTag [%s] [%s] Text [%s] Speech [%s] (Outer %u)"), (pOuterParse?_T(""):_T("  ")), pTag, DebugStr(pText), DebugStr(JoinStringArray(pTextWords, _T("]["))), DebugStr(JoinStringArray(pSpeechWords, _T("]["))), pOuterParse);
@@ -1070,13 +1114,13 @@ void CAgentTextParse::ParseText (LPCTSTR pText, CAtlStringArray & pTextWords, CA
 				&&	(LogIsActive ())
 				)
 			{
-				LogComErr (LogIfActive, lResult, _T("[%s]"),  DebugStr(CAtlString (V_BSTR(&lXmlText))));
+				LogComErr (LogIfActive|LogTime, lResult, _T("[%s]"),  DebugStr(CAtlString (V_BSTR(&lXmlText))));
 			}
 		}
 		else
 		if	(LogIsActive ())
 		{
-			LogComErr (LogNormal, lResult);
+			LogComErr (LogNormal|LogTime, lResult);
 		}
 
 		// Use local copy to allow recursion

@@ -26,6 +26,7 @@
 #include "AgentBalloonWnd.h"
 #include "EventNotify.h"
 #include "Elapsed.h"
+#include "StringArrayEx.h"
 #include "DebugStr.h"
 #ifdef	_DEBUG
 #include "Registry.h"
@@ -40,15 +41,25 @@
 #define	_LOG_QUEUE_OPS	LogVerbose
 #endif
 
+#ifdef	_TRACE_ACTION_INSTANCE
+CAtlPtrTypeArray<CQueuedAction>	CQueuedAction::mInstances;
+#endif
+
 //////////////////////////////////////////////////////////////////////
 
 CQueuedAction::CQueuedAction (QueueAction pAction, long pCharID, long pReqID)
 :	mAction (pAction), mCharID (pCharID), mReqID (pReqID), mStarted (false), mPaused (false)
 {
+#ifdef	_TRACE_ACTION_INSTANCE
+	mInstances.AddSorted (this);
+#endif	
 }
 
 CQueuedAction::~CQueuedAction ()
 {
+#ifdef	_TRACE_ACTION_INSTANCE
+	mInstances.RemoveSorted (this);
+#endif	
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -170,16 +181,16 @@ bool CQueuedState::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 
 			if	(pQueue.GetNextAction (QueueActionState) == this)
 			{
-				pQueue.RemoveHead ();
-
 				if	((pAgentWnd->GetStyle () & WS_VISIBLE) == 0)
 				{
+					pQueue.RemoveHead ();
 					NotifyComplete (pAgentWnd->mNotify, AGENTERR_CHARACTERNOTVISIBLE);
 				}
 				else
 				{
 					CAtlOwnPtrList <CQueuedAction>	lQueue;
 
+					pQueue.RemoveHead ();
 					pQueue.PushQueue (lQueue);
 					if	(pAgentWnd->ShowStateGestures (mCharID, mStateName, true))
 					{
@@ -278,23 +289,22 @@ bool CQueuedGesture::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 
 			if	(pQueue.GetNextAction (QueueActionGesture) == this)
 			{
-				pQueue.RemoveHead ();
-
 				if	((pAgentWnd->GetStyle () & WS_VISIBLE) == 0)
 				{
+					pQueue.RemoveHead ();
 					if	(mReqID > 0)
 					{
 						NotifyComplete (pAgentWnd->mNotify, AGENTERR_CHARACTERNOTVISIBLE);
 					}
 				}
 				else
+				if	(pAgentWnd->ShowGesture (mGestureName, mStateName))
 				{
-					if	(pAgentWnd->ShowGesture (mGestureName, mStateName))
-					{
-						pQueue.AddHead (this);
-						lRet = true;
-					}
-					else
+					lRet = true;
+				}
+				else
+				{
+					pQueue.RemoveHead ();
 					if	(mReqID > 0)
 					{
 						NotifyComplete (pAgentWnd->mNotify, AGENTERR_ANIMATIONNOTFOUND);
@@ -419,8 +429,6 @@ bool CQueuedShow::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 
 			if	(pQueue.GetNextAction (QueueActionShow) == this)
 			{
-				pQueue.RemoveHead (); // Wait until window visible so (IsWindowVisible || IsShowingQueued) works
-
 				if	(
 						(!mFast)
 					&&	(!mAnimationShown)
@@ -441,13 +449,14 @@ bool CQueuedShow::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 					pQueue.PushQueue (lQueue);
 					if	(pAgentWnd->ShowState (_T("SHOWING")))
 					{
+						lQueue.RemoveHead ();
+						pQueue.AddTail (this);
 #ifdef	_LOG_QUEUE_OPS
 						if	(LogIsActive (_LOG_QUEUE_OPS))
 						{
-							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] Requeue [%p(%d)] Show to end of queue"), pAgentWnd, mCharID, this, mReqID);
+							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] Requeue [%p(%d)] Show after Showing state"), pAgentWnd, mCharID, this, mReqID);
 						}
 #endif
-						pQueue.AddTail (this);
 						lRet = true;
 					}
 					pQueue.PopQueue (lQueue);
@@ -459,6 +468,7 @@ bool CQueuedShow::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 
 				if	(!lRet)
 				{
+					pQueue.RemoveHead ();
 					NotifyComplete (pAgentWnd->mNotify);
 				}
 			}
@@ -513,7 +523,7 @@ bool CQueuedShow::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pP
 		}
 	}
 	mPaused = pPause;
-	
+
 	return lRet;
 }
 
@@ -616,7 +626,7 @@ bool CQueuedHide::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 #ifdef	_LOG_QUEUE_OPS
 						if	(LogIsActive (_LOG_QUEUE_OPS))
 						{
-							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] Requeue [%p(%d)] Hide to end of queue"), pAgentWnd, mCharID, this, mReqID);
+							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] Requeue [%p(%d)] Hide after Hiding state"), pAgentWnd, mCharID, this, mReqID);
 						}
 #endif
 					}
@@ -700,7 +710,7 @@ bool CQueuedHide::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pP
 		}
 	}
 	mPaused = pPause;
-	
+
 	return lRet;
 }
 
@@ -902,8 +912,6 @@ bool CQueuedMove::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 				&&	(pQueue.GetNextAction (QueueActionMove) == this)
 				)
 			{
-				pQueue.RemoveHead ();
-
 				if	(!mMoveStarted)
 				{
 					mMoveStarted = new CPoint (lWinRect.TopLeft());
@@ -921,7 +929,6 @@ bool CQueuedMove::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 						&&	(Cycle (pQueue, pAgentWnd))
 						)
 					{
-						pQueue.AddHead (this);
 						lRet = true;
 					}
 
@@ -941,11 +948,11 @@ bool CQueuedMove::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 							)
 						{
 							mEndAnimationShown = true;
-							pQueue.AddHead (this);
 							lRet = true;
 						}
 						if	(!lRet)
 						{
+							pQueue.RemoveHead ();
 #ifdef	_STRICT_COMPATIBILITY
 							if	(
 									(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
@@ -1025,7 +1032,7 @@ bool CQueuedMove::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pP
 		}
 	}
 	mPaused = pPause;
-	
+
 	return lRet;
 }
 
@@ -1104,8 +1111,6 @@ bool CQueuedWait::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 		}
 		if	(pQueue.GetNextAction (QueueActionWait) == this)
 		{
-			pQueue.RemoveHead ();
-
 			if	(
 					(lRequestOwner = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
 				&&	(lOtherRequest = lRequestOwner->FindOtherRequest (mOtherReqID, lRequestOwner))
@@ -1119,7 +1124,6 @@ bool CQueuedWait::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 					}
 #endif
 				mStarted = true;
-				pQueue.AddHead (this);
 				lRet = true;
 			}
 			else
@@ -1131,6 +1135,7 @@ bool CQueuedWait::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)]   Wait done for [%p(%d)(%d)]"), pAgentWnd, mCharID, lOtherRequest, mOtherCharID, mOtherReqID);
 				}
 #endif
+				pQueue.RemoveHead ();
 				if	(pAgentWnd->mNotify.GetCount() > 0)
 				{
 					NotifyComplete (pAgentWnd->mNotify);
@@ -1138,6 +1143,7 @@ bool CQueuedWait::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 			}
 			else
 			{
+				pQueue.RemoveHead ();
 				if	(pAgentWnd->mNotify.GetCount() > 0)
 				{
 					NotifyComplete (pAgentWnd->mNotify, AGENTREQERR_REMOVED);
@@ -1211,8 +1217,6 @@ bool CQueuedInterrupt::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 		}
 		if	(pQueue.GetNextAction (QueueActionInterrupt) == this)
 		{
-			pQueue.RemoveHead ();
-
 			if	(
 					(lRequestOwner = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
 				&&	(lOtherRequest = lRequestOwner->FindOtherRequest (mOtherReqID, lRequestOwner))
@@ -1233,6 +1237,7 @@ bool CQueuedInterrupt::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 				lStatus = AGENTREQERR_REMOVED;
 			}
 
+			pQueue.RemoveHead ();
 			if	(pAgentWnd->mNotify.GetCount() > 0)
 			{
 				NotifyComplete (pAgentWnd->mNotify, lStatus);
@@ -1261,4 +1266,240 @@ bool CQueuedInterrupt::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bo
 bool CQueuedInterrupt::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
 {
 	return false;
+}
+
+//////////////////////////////////////////////////////////////////////
+#pragma page()
+//////////////////////////////////////////////////////////////////////
+
+void CQueuedAction::LogAction (UINT pLogLevel, LPCTSTR pFormat, ...) const
+{
+#if defined(_DEBUG) || defined (_TRACE_ACTION_INSTANCE)
+	if	(LogIsActive (pLogLevel))
+	{
+		try
+		{
+			CAtlString	lTitle;
+			if	(pFormat)
+			{
+				va_list lArgPtr;
+				va_start (lArgPtr, pFormat);
+				_vsntprintf (lTitle.GetBuffer(2048), 2048, pFormat, lArgPtr);
+				lTitle.ReleaseBuffer ();
+			}
+			_LogAction (pLogLevel, lTitle, _T("Action"));
+		}
+		catch AnyExceptionSilent
+	}
+#endif
+}
+
+void CQueuedAction::_LogAction (UINT pLogLevel, LPCTSTR pTitle, LPCTSTR pActionType, LPCTSTR pFormat, ...) const
+{
+#if defined(_DEBUG) || defined (_TRACE_ACTION_INSTANCE)
+	if	(LogIsActive (pLogLevel))
+	{
+		try
+		{
+			CAtlString	lTitle (pTitle);
+			CAtlString	lIndent;
+			CAtlString	lDetails;
+
+			if	(pFormat)
+			{
+				va_list lArgPtr;
+				va_start (lArgPtr, pFormat);
+				_vsntprintf (lDetails.GetBuffer(2048), 2048, pFormat, lArgPtr);
+				lDetails.ReleaseBuffer ();
+				if	(!lDetails.IsEmpty ())
+				{
+					lDetails.Insert (0, _T(' '));
+				}
+			}
+			if	(!lTitle.IsEmpty())
+			{
+				lIndent = lTitle;
+				lTitle.TrimLeft ();
+				if	(lIndent.GetLength() > lTitle.GetLength())
+				{
+					lIndent = CAtlString (_T(' '), lIndent.GetLength() - lTitle.GetLength ());
+				}
+				else
+				{
+					lIndent.Empty ();
+				}
+			}
+			if	(lTitle.IsEmpty())
+			{
+				lTitle.Format (_T("%-10s"), pActionType);
+			}
+			else
+			{
+				lTitle.Format (_T("%s %-10s"), CAtlString((LPCTSTR)lTitle), pActionType);
+			}
+			LogMessage (pLogLevel, _T("%s%s [%d %d] Started [%u (%u)]%s"), lIndent, lTitle, mCharID, mReqID, mStarted, mPaused, lDetails);
+		}
+		catch AnyExceptionSilent
+	}
+#endif
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void CQueuedState::LogAction (UINT pLogLevel, LPCTSTR pFormat, ...) const
+{
+#if defined(_DEBUG) || defined (_TRACE_ACTION_INSTANCE)
+	if	(LogIsActive (pLogLevel))
+	{
+		try
+		{
+			CAtlString	lTitle;
+			if	(pFormat)
+			{
+				va_list lArgPtr;
+				va_start (lArgPtr, pFormat);
+				_vsntprintf (lTitle.GetBuffer(2048), 2048, pFormat, lArgPtr);
+				lTitle.ReleaseBuffer ();
+			}
+			_LogAction (pLogLevel, lTitle, _T("State"), _T("Name [%s] Gestures [%s]"), mStateName, JoinStringArray(mGestures, _T(" ")));
+		}
+		catch AnyExceptionSilent
+	}
+#endif
+}
+
+void CQueuedGesture::LogAction (UINT pLogLevel, LPCTSTR pFormat, ...) const
+{
+#ifdef	_DEBUG
+	if	(LogIsActive (pLogLevel))
+	{
+		try
+		{
+			CAtlString	lTitle;
+			if	(pFormat)
+			{
+				va_list lArgPtr;
+				va_start (lArgPtr, pFormat);
+				_vsntprintf (lTitle.GetBuffer(2048), 2048, pFormat, lArgPtr);
+				lTitle.ReleaseBuffer ();
+			}
+			_LogAction (pLogLevel, lTitle, _T("Gesture"), _T("Name [%s] State [%s]"), mGestureName, mStateName);
+		}
+		catch AnyExceptionSilent
+	}
+#endif
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void CQueuedShow::LogAction (UINT pLogLevel, LPCTSTR pFormat, ...) const
+{
+#if defined(_DEBUG) || defined (_TRACE_ACTION_INSTANCE)
+	if	(LogIsActive (pLogLevel))
+	{
+		try
+		{
+			CAtlString	lTitle;
+			if	(pFormat)
+			{
+				va_list lArgPtr;
+				va_start (lArgPtr, pFormat);
+				_vsntprintf (lTitle.GetBuffer(2048), 2048, pFormat, lArgPtr);
+				lTitle.ReleaseBuffer ();
+			}
+			_LogAction (pLogLevel, lTitle, _T("Show"), _T("Fast [%u] Animated [%u] Cause [%d]"), mFast, mAnimationShown, mVisibilityCause);
+		}
+		catch AnyExceptionSilent
+	}
+#endif
+}
+
+void CQueuedHide::LogAction (UINT pLogLevel, LPCTSTR pFormat, ...) const
+{
+#if defined(_DEBUG) || defined (_TRACE_ACTION_INSTANCE)
+	if	(LogIsActive (pLogLevel))
+	{
+		try
+		{
+			CAtlString	lTitle;
+			if	(pFormat)
+			{
+				va_list lArgPtr;
+				va_start (lArgPtr, pFormat);
+				_vsntprintf (lTitle.GetBuffer(2048), 2048, pFormat, lArgPtr);
+				lTitle.ReleaseBuffer ();
+			}
+			_LogAction (pLogLevel, lTitle, _T("Hide"), _T("Fast [%u] Animated [%u] Cause [%d]"), mFast, mAnimationShown, mVisibilityCause);
+		}
+		catch AnyExceptionSilent
+	}
+#endif
+}
+
+void CQueuedMove::LogAction (UINT pLogLevel, LPCTSTR pFormat, ...) const
+{
+#if defined(_DEBUG) || defined (_TRACE_ACTION_INSTANCE)
+	if	(LogIsActive (pLogLevel))
+	{
+		try
+		{
+			CAtlString	lTitle;
+			if	(pFormat)
+			{
+				va_list lArgPtr;
+				va_start (lArgPtr, pFormat);
+				_vsntprintf (lTitle.GetBuffer(2048), 2048, pFormat, lArgPtr);
+				lTitle.ReleaseBuffer ();
+			}
+			_LogAction (pLogLevel, lTitle, _T("Move"), _T("To [%d %d] Started [%d %d] Animation [%s] Shown [%u %u]"), mPosition.x, mPosition.y, mMoveStarted?mMoveStarted->x:-1, mMoveStarted?mMoveStarted->y:-1, mAnimationState, mAnimationShown, mEndAnimationShown);
+		}
+		catch AnyExceptionSilent
+	}
+#endif
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void CQueuedWait::LogAction (UINT pLogLevel, LPCTSTR pFormat, ...) const
+{
+#if defined(_DEBUG) || defined (_TRACE_ACTION_INSTANCE)
+	if	(LogIsActive (pLogLevel))
+	{
+		try
+		{
+			CAtlString	lTitle;
+			if	(pFormat)
+			{
+				va_list lArgPtr;
+				va_start (lArgPtr, pFormat);
+				_vsntprintf (lTitle.GetBuffer(2048), 2048, pFormat, lArgPtr);
+				lTitle.ReleaseBuffer ();
+			}
+			_LogAction (pLogLevel, lTitle, _T("Wait"), _T("OtherChar [%d %d]"), mOtherCharID, mOtherReqID);
+		}
+		catch AnyExceptionSilent
+	}
+#endif
+}
+
+void CQueuedInterrupt::LogAction (UINT pLogLevel, LPCTSTR pFormat, ...) const
+{
+#if defined(_DEBUG) || defined (_TRACE_ACTION_INSTANCE)
+	if	(LogIsActive (pLogLevel))
+	{
+		try
+		{
+			CAtlString	lTitle;
+			if	(pFormat)
+			{
+				va_list lArgPtr;
+				va_start (lArgPtr, pFormat);
+				_vsntprintf (lTitle.GetBuffer(2048), 2048, pFormat, lArgPtr);
+				lTitle.ReleaseBuffer ();
+			}
+			_LogAction (pLogLevel, lTitle, _T("Interrupt"), _T("OtherChar [%d %d]"), mOtherCharID, mOtherReqID);
+		}
+		catch AnyExceptionSilent
+	}
+#endif
 }

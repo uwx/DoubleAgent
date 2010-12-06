@@ -33,10 +33,10 @@
 //#define	_DEBUG_FILTER_EX	LogNormal|LogHighVolume
 //#define	_DEBUG_SEEKING		LogNormal|LogTimeMs
 //#define	_DEBUG_SEEKING_EX	LogNormal|LogTimeMs
-//#define	_DEBUG_STATE		LogNormal|LogHighVolume|LogTimeMs
-//#define	_DEBUG_STREAM_EX	LogNormal|LogHighVolume|LogTimeMs
-#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_DirectShowFilter"),LogVerbose,true)&0xFFFF)
-#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+//#define	_DEBUG_STATE		LogNormal|LogTimeMs|LogHighVolume
+//#define	_DEBUG_STREAM_EX	LogNormal|LogTimeMs|LogHighVolume
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_DirectShowFilter"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
 #ifndef	_LOG_INSTANCE
@@ -983,7 +983,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::JoinFilterGraph (IFilterGraph *pGra
 			&&	(pName)
 			)
 		{
-			if	(SUCCEEDED (LogVfwErr (LogNormal, lResult = SetFilterName (pName))))
+			if	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lResult = SetFilterName (pName))))
 			{
 				mFilterGraph = pGraph;
 				OnJoinedFilterGraph ();

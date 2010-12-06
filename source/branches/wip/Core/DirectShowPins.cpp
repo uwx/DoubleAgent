@@ -35,16 +35,16 @@
 //#define	_DEBUG_DYNCONNECTION	LogNormal|LogHighVolume
 //#define	_DEBUG_ALLOCATOR		LogNormal
 //#define	_DEBUG_QUERIES			LogNormal|LogHighVolume
-//#define	_DEBUG_STREAM			LogNormal|LogHighVolume|LogTimeMs
-//#define	_DEBUG_STREAM_EX		LogNormal|LogHighVolume|LogTimeMs
-//#define	_DEBUG_STREAM_DATA		LogNormal|LogHighVolume|LogTimeMs
-//#define	_DEBUG_STATE			LogNormal|LogHighVolume|LogTimeMs
+//#define	_DEBUG_STREAM			LogNormal|LogTimeMs|LogHighVolume
+//#define	_DEBUG_STREAM_EX		LogNormal|LogTimeMs|LogHighVolume
+//#define	_DEBUG_STREAM_DATA		LogNormal|LogTimeMs|LogHighVolume
+//#define	_DEBUG_STATE			LogNormal|LogTimeMs|LogHighVolume
 //#define	_DEBUG_PULL				LogNormal|LogTimeMs
-//#define	_TRACE_PULL_DATA		LogNormal|LogHighVolume|LogTimeMs
-//#define	_TRACE_PULL_STATE		LogNormal|LogHighVolume|LogTimeMs |LogToCache
-//#define	_TRACE_PULL_BLOCK		LogNormal|LogHighVolume|LogTimeMs
-#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_DirectShowPin"),LogVerbose,true)&0xFFFF)
-#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+//#define	_TRACE_PULL_DATA		LogNormal|LogTimeMs|LogHighVolume
+//#define	_TRACE_PULL_STATE		LogNormal|LogTimeMs|LogHighVolume |LogToCache
+//#define	_TRACE_PULL_BLOCK		LogNormal|LogTimeMs|LogHighVolume
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_DirectShowPin"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
 #ifndef	_LOG_INSTANCE
@@ -96,7 +96,7 @@ CDirectShowPin & CDirectShowPin::Initialize (CDirectShowFilter & pFilter, PIN_DI
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
-	LogVfwErr (LogIfActive, MoDuplicateMediaType (mMediaType.Free(), &AM_MEDIA_TYPE_Safe()));
+	LogVfwErr (LogIfActive|LogTime, MoDuplicateMediaType (mMediaType.Free(), &AM_MEDIA_TYPE_Safe()));
 
 	return *this;
 }
@@ -116,7 +116,7 @@ void CDirectShowPin::FinalRelease ()
 					)
 				)
 			{
-				LogMessage (LogIfActive, _T("[%p(%d)] CDirectShowPin::FinalRelease [%s] !!!"), this, max(m_dwRef,-1), mName);
+				LogMessage (LogIfActive|LogTime, _T("[%p(%d)] CDirectShowPin::FinalRelease [%s] !!!"), this, max(m_dwRef,-1), mName);
 			}
 		}
 		catch AnyExceptionSilent
@@ -947,7 +947,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::EndOfStream (void)
 			{
 				try
 				{
-					LogVfwErr (LogVerbose, lConnection->EndOfStream ());
+					LogVfwErr (LogVerbose|LogTime, lConnection->EndOfStream ());
 				}
 				catch AnyExceptionDebug
 			}
@@ -1098,9 +1098,9 @@ HRESULT CDirectShowPinIn::ProvideAllocator ()
 #ifdef	_DEBUG_ALLOCATOR
 				LogAllocatorProps (_DEBUG_ALLOCATOR, lRequiredMem, _T("[%s] [%p]   Request "), mName, this);
 #endif
-				if	(SUCCEEDED (lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_MemoryAllocator, NULL, CLSCTX_SERVER, __uuidof(IMemAllocator), (void**)&mAllocator))))
+				if	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_MemoryAllocator, NULL, CLSCTX_SERVER, __uuidof(IMemAllocator), (void**)&mAllocator))))
 				{
-					lResult = LogVfwErr (LogNormal, mAllocator->SetProperties (&lRequiredMem, lActualMem.Clear()));
+					lResult = LogVfwErr (LogNormal|LogTime, mAllocator->SetProperties (&lRequiredMem, lActualMem.Clear()));
 				}
 			}
 #ifdef	_DEBUG_ALLOCATOR
@@ -1141,8 +1141,8 @@ HRESULT CDirectShowPinIn::ReceiveAllocator (IMemAllocator * pAllocator, bool pRe
 			lRequiredMem.cBuffers = mDesiredSampleCount;
 
 			if	(
-					(SUCCEEDED (LogComErr (LogNormal, CoCreateInstance (CLSID_MemoryAllocator, NULL, CLSCTX_SERVER, __uuidof(IMemAllocator), (void**)&mCacheAllocator))))
-				&&	(SUCCEEDED (LogVfwErr (LogNormal, mCacheAllocator->SetProperties (&lRequiredMem, lActualMem.Clear()))))
+					(SUCCEEDED (LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_MemoryAllocator, NULL, CLSCTX_SERVER, __uuidof(IMemAllocator), (void**)&mCacheAllocator))))
+				&&	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, mCacheAllocator->SetProperties (&lRequiredMem, lActualMem.Clear()))))
 				)
 			{
 #ifdef	_DEBUG_ALLOCATOR
@@ -1382,7 +1382,7 @@ HRESULT CDirectShowPinIn::BeginInput ()
 		EmptyCache ();
 		if	(mCacheAllocator != NULL)
 		{
-			LogVfwErr (LogNormal, mCacheAllocator->Commit ());
+			LogVfwErr (LogNormal|LogTime, mCacheAllocator->Commit ());
 		}
 		mIsEndOfStream = false;
 		mIsFlushing = false;
@@ -1404,7 +1404,7 @@ HRESULT CDirectShowPinIn::EndInput ()
 		EmptyCache ();
 		if	(mCacheAllocator != NULL)
 		{
-			LogVfwErr (LogNormal, mCacheAllocator->Decommit ());
+			LogVfwErr (LogNormal|LogTime, mCacheAllocator->Decommit ());
 		}
 	}
 	catch AnyExceptionDebug
@@ -1493,7 +1493,7 @@ HRESULT CDirectShowPinIn::BeginInputFlush ()
 		EmptyCache ();
 		if	(lAllocator != NULL)
 		{
-			LogVfwErr (LogNormal, lAllocator->Decommit ());
+			LogVfwErr (LogNormal|LogTime, lAllocator->Decommit ());
 		}
 	}
 	catch AnyExceptionDebug
@@ -1515,7 +1515,7 @@ HRESULT CDirectShowPinIn::EndInputFlush ()
 		mIsEndOfStream = false;
 		if	(lAllocator != NULL)
 		{
-			LogVfwErr (LogNormal, lAllocator->Commit ());
+			LogVfwErr (LogNormal|LogTime, lAllocator->Commit ());
 		}
 		mFilter->EndFlush ();
 		mIsFlushing = false;
@@ -1875,7 +1875,7 @@ HRESULT CDirectShowPinOut::CanConnect (IPin *pReceivePin)
 #ifdef	_DEBUG_ALLOCATOR_NOT
 			if	(FAILED (lResult))
 			{
-				LogVfwErrAnon (LogNormal, lResult, PinIdStr (pReceivePin));
+				LogVfwErrAnon (LogNormal|LogTime, lResult, PinIdStr (pReceivePin));
 			}
 #endif
 		}
@@ -1914,7 +1914,7 @@ HRESULT CDirectShowPinOut::InternalDisconnect ()
 	{
 		if	(mAllocator != NULL)
 		{
-			LogVfwErr (LogVerbose, mAllocator->Decommit ());
+			LogVfwErr (LogVerbose|LogTime, mAllocator->Decommit ());
 		}
 	}
 	catch AnyExceptionDebug
@@ -2012,27 +2012,27 @@ HRESULT CDirectShowPinOut::NegotiateAllocator (const AM_MEDIA_TYPE * pMediaType)
 			if	(
 					(
 						(lAllocator != NULL)
-					||	(SUCCEEDED (LogVfwErr (LogNormal, lResult = lTransport->GetAllocator (&lAllocator))))
+					||	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lResult = lTransport->GetAllocator (&lAllocator))))
 					)
-				&&	(SUCCEEDED (LogVfwErr (LogNormal, lResult = lAllocator->GetProperties (lActualMem.Clear()))))
+				&&	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lResult = lAllocator->GetProperties (lActualMem.Clear()))))
 				&&	(
 						(
 							(lActualMem.cBuffers >= lRequiredMem.cBuffers)
 						&&	(lActualMem.cbBuffer >= lRequiredMem.cbBuffer)
 						)
 					||	(
-							(SUCCEEDED (LogVfwErr (LogNormal, lResult = lAllocator->SetProperties (&lRequiredMem, lActualMem.Clear()))))
+							(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lResult = lAllocator->SetProperties (&lRequiredMem, lActualMem.Clear()))))
 						&&	(lActualMem.cBuffers >= lRequiredMem.cBuffers)
 						&&	(lActualMem.cbBuffer >= lRequiredMem.cbBuffer)
 						)
 					||	(
-							(SUCCEEDED (lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_MemoryAllocator, NULL, CLSCTX_SERVER, __uuidof(IMemAllocator), (void**)&lAllocator))))
-						&&	(SUCCEEDED (LogVfwErr (LogNormal, lResult = lAllocator->SetProperties (&lRequiredMem, lActualMem.Clear()))))
+							(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_MemoryAllocator, NULL, CLSCTX_SERVER, __uuidof(IMemAllocator), (void**)&lAllocator))))
+						&&	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lResult = lAllocator->SetProperties (&lRequiredMem, lActualMem.Clear()))))
 						&&	(lActualMem.cBuffers >= lRequiredMem.cBuffers)
 						&&	(lActualMem.cbBuffer >= lRequiredMem.cbBuffer)
 						)
 					)
-				&&	(SUCCEEDED (LogVfwErr (LogNormal, lResult = lTransport->NotifyAllocator (lAllocator, (mReadOnlySamples!=false)))))
+				&&	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lResult = lTransport->NotifyAllocator (lAllocator, (mReadOnlySamples!=false)))))
 				)
 			{
 				mAllocator = lAllocator;
@@ -2067,7 +2067,7 @@ HRESULT CDirectShowPinOut::BeginOutput ()
 #endif
 		if	(mAllocator != NULL)
 		{
-			lResult = LogVfwErr (LogNormal, mAllocator->Commit ());
+			lResult = LogVfwErr (LogNormal|LogTime, mAllocator->Commit ());
 		}
 	}
 	catch AnyExceptionDebug
@@ -2087,7 +2087,7 @@ HRESULT CDirectShowPinOut::EndOutput ()
 #endif
 		if	(mAllocator != NULL)
 		{
-			LogVfwErr (LogNormal, lResult = mAllocator->Decommit ());
+			LogVfwErr (LogNormal|LogTime, lResult = mAllocator->Decommit ());
 		}
 	}
 	catch AnyExceptionDebug
@@ -2107,7 +2107,7 @@ HRESULT CDirectShowPinOut::GetOutputSample (IMediaSample ** pSample, const REFER
 		pFlags &= AM_GBF_NOWAIT;
 		if	(lAllocator != NULL)
 		{
-			LogVfwErr (LogVerbose, lResult = lAllocator->GetBuffer (pSample, const_cast <REFERENCE_TIME *> (pStartTime), const_cast <REFERENCE_TIME *> (pEndTime), pFlags));
+			LogVfwErr (LogVerbose|LogTime, lResult = lAllocator->GetBuffer (pSample, const_cast <REFERENCE_TIME *> (pStartTime), const_cast <REFERENCE_TIME *> (pEndTime), pFlags));
 		}
 	}
 	catch AnyExceptionDebug
@@ -2137,12 +2137,12 @@ HRESULT CDirectShowPinOut::PutOutputSample (IMediaSample * pSample, ULONG pSampl
 			}
 			if	(lSampleSize != 0)
 			{
-				LogVfwErr (LogNormal, pSample->SetActualDataLength (pSampleSize), _T("SetActualDataLength [%u]"), pSampleSize);
+				LogVfwErr (LogNormal|LogTime, pSample->SetActualDataLength (pSampleSize), _T("SetActualDataLength [%u]"), pSampleSize);
 			}
 #ifdef	_DEBUG_STREAM_DATA
 			LogMediaSampleId (_DEBUG_STREAM_DATA, pSample, _T("[%s] [%u] Sample"), mName, m_dwRef);
 #endif
-			LogVfwErr (LogVerbose, lResult = lTransport->Receive (pSample));
+			LogVfwErr (LogVerbose|LogTime, lResult = lTransport->Receive (pSample));
 		}
 	}
 	catch AnyExceptionDebug
@@ -2162,7 +2162,7 @@ HRESULT CDirectShowPinOut::BeginOutputStream (REFERENCE_TIME pStartTime, REFEREN
 #ifdef	_DEBUG_STATE
 		LogMessage (_DEBUG_STATE, _T("[%s] [%u] NewSegment [%f - %f] from [%s] to [%s]"), mName, m_dwRef, RefTimeSec(pStartTime), RefTimeSec(pEndTime), PinIdStr(this), PinIdStr(lConnection));
 #endif
-		if	(SUCCEEDED (LogVfwErr (LogNormal, lConnection->NewSegment (pStartTime, pEndTime, pRate))))
+		if	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lConnection->NewSegment (pStartTime, pEndTime, pRate))))
 		{
 			lResult = S_OK;
 		}
@@ -2180,7 +2180,7 @@ HRESULT CDirectShowPinOut::EndOutputStream ()
 #ifdef	_DEBUG_STATE
 		LogMessage (_DEBUG_STATE, _T("[%s] [%u] EndOfStream from [%s] to [%s]"), mName, m_dwRef, PinIdStr(this), PinIdStr(lConnection));
 #endif
-		if	(SUCCEEDED (LogVfwErr (LogVerbose, lConnection->EndOfStream ())))
+		if	(SUCCEEDED (LogVfwErr (LogVerbose|LogTime, lConnection->EndOfStream ())))
 		{
 			lResult = S_OK;
 		}
@@ -2200,7 +2200,7 @@ HRESULT CDirectShowPinOut::BeginOutputFlush ()
 #ifdef	_DEBUG_STATE
 		LogMessage (_DEBUG_STATE, _T("[%s] [%u] BeginFlush from [%s] to [%s]"), mName, m_dwRef, PinIdStr(this), PinIdStr(lConnection));
 #endif
-		lResult = LogVfwErr (LogVerbose, lConnection->BeginFlush ());
+		lResult = LogVfwErr (LogVerbose|LogTime, lConnection->BeginFlush ());
 	}
 	return lResult;
 }
@@ -2215,7 +2215,7 @@ HRESULT CDirectShowPinOut::EndOutputFlush ()
 #ifdef	_DEBUG_STATE
 		LogMessage (_DEBUG_STATE, _T("[%s] [%u] EndFlush from [%s] to [%s]"), mName, m_dwRef, PinIdStr(this), PinIdStr(lConnection));
 #endif
-		lResult = LogVfwErr (LogVerbose, lConnection->EndFlush ());
+		lResult = LogVfwErr (LogVerbose|LogTime, lConnection->EndFlush ());
 	}
 	return lResult;
 }
@@ -2343,7 +2343,7 @@ HRESULT CDirectShowPinPull::UseAllocator (IMemAllocator * pAllocator)
 				lRequiredMem.cbBuffer = max (lRequiredMem.cbBuffer, mMediaType->lSampleSize);
 			}
 
-			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal, pAllocator->SetProperties (&lRequiredMem, lActualMem.Clear()))))
+			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, pAllocator->SetProperties (&lRequiredMem, lActualMem.Clear()))))
 			{
 				mAllocator = pAllocator;
 #ifdef	_DEBUG_ALLOCATOR
@@ -2365,7 +2365,7 @@ HRESULT CDirectShowPinPull::GetAllocator (const ALLOCATOR_PROPERTIES * pRequest)
 
 	try
 	{
-		if	(SUCCEEDED (lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_MemoryAllocator, NULL, CLSCTX_SERVER, __uuidof(IMemAllocator), (void**)&mAllocator))))
+		if	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_MemoryAllocator, NULL, CLSCTX_SERVER, __uuidof(IMemAllocator), (void**)&mAllocator))))
 		{
 			tS <ALLOCATOR_PROPERTIES>	lRequiredMem;
 			tS <ALLOCATOR_PROPERTIES>	lActualMem;
@@ -2384,7 +2384,7 @@ HRESULT CDirectShowPinPull::GetAllocator (const ALLOCATOR_PROPERTIES * pRequest)
 			{
 				lRequiredMem.cbBuffer = max (lRequiredMem.cbBuffer, mMediaType->lSampleSize);
 			}
-			lResult = LogVfwErr (LogNormal, mAllocator->SetProperties (&lRequiredMem, lActualMem.Clear()));
+			lResult = LogVfwErr (LogNormal|LogTime, mAllocator->SetProperties (&lRequiredMem, lActualMem.Clear()));
 
 #ifdef	_DEBUG_ALLOCATOR
 			LogAllocatorProps (_DEBUG_ALLOCATOR, lRequiredMem, _T("[%s] [%p]   Request "), mName, this);
@@ -2459,13 +2459,13 @@ HRESULT CDirectShowPinPull::FillSample (IMediaSample * pSample)
 
 		if	(SUCCEEDED (lResult = FillBuffer (lBuffer, lStartTime, lLength)))
 		{
-			LogVfwErr (LogNormal, pSample->SetActualDataLength (lLength));
+			LogVfwErr (LogNormal|LogTime, pSample->SetActualDataLength (lLength));
 
 			if	(lResult == S_FALSE)
 			{
 				lStartTime *= sPullTimeScale;
 				lEndTime = lStartTime + ((REFERENCE_TIME)lLength * sPullTimeScale);
-				LogVfwErr (LogNormal, pSample->SetTime (&lStartTime, &lEndTime));
+				LogVfwErr (LogNormal|LogTime, pSample->SetTime (&lStartTime, &lEndTime));
 				mIsEndOfStream = true;
 			}
 #ifdef	_TRACE_PULL_DATA
@@ -2689,7 +2689,7 @@ HRESULT CDirectShowPinPull::EndOutputStream ()
 #ifdef	_DEBUG_STATE
 		LogMessage (_DEBUG_STATE, _T("[%s] [%u] EndOfStream from [%s] to [%s]"), mName, m_dwRef, PinIdStr(this), PinIdStr(lConnection));
 #endif
-		if	(SUCCEEDED (LogVfwErr (LogVerbose, lConnection->EndOfStream ())))
+		if	(SUCCEEDED (LogVfwErr (LogVerbose|LogTime, lConnection->EndOfStream ())))
 		{
 			lResult = S_OK;
 		}
@@ -2707,7 +2707,7 @@ HRESULT CDirectShowPinPull::BeginOutputFlush ()
 #ifdef	_TRACE_PULL_STATE
 		LogMessage (_TRACE_PULL_STATE, _T("[%s] [%u] BeginFlush from [%s] to [%s]"), mName, m_dwRef, PinIdStr(this), PinIdStr(lConnection));
 #endif
-		lResult = LogVfwErr (LogVerbose, lConnection->BeginFlush ());
+		lResult = LogVfwErr (LogVerbose|LogTime, lConnection->BeginFlush ());
 	}
 
 	return lResult;
@@ -2723,7 +2723,7 @@ HRESULT CDirectShowPinPull::EndOutputFlush ()
 #ifdef	_TRACE_PULL_STATE
 		LogMessage (_TRACE_PULL_STATE, _T("[%s] [%u] EndFlush from [%s] to [%s]"), mName, m_dwRef, PinIdStr(this), PinIdStr(lConnection));
 #endif
-		lResult = LogVfwErr (LogVerbose, lConnection->EndFlush ());
+		lResult = LogVfwErr (LogVerbose|LogTime, lConnection->EndFlush ());
 	}
 	return lResult;
 }

@@ -16,8 +16,8 @@ static char THIS_FILE[] = __FILE__;
 
 #ifdef	_DEBUG
 //#define	_DEBUG_COM			LogNormal|LogHighVolume
-//#define	_LOG_AGENT_CALLS	LogAlways|LogTimeMs|LogHighVolume
-//#define	_LOG_CHAR_CALLS		LogAlways|LogTimeMs|LogHighVolume
+#define	_LOG_AGENT_CALLS	LogAlways|LogTimeMs|LogHighVolume
+#define	_LOG_CHAR_CALLS		LogAlways|LogTimeMs|LogHighVolume
 //#define	_LOG_CHAR_CALLS_EX	LogAlways|LogTimeMs|LogHighVolume
 #define	_LOG_NOTIFY				LogNormal|LogTimeMs
 #endif
@@ -34,8 +34,6 @@ static char THIS_FILE[] = __FILE__;
 #ifndef	_LOG_NOTIFY
 #define	_LOG_NOTIFY				LogDetails|LogTimeMs
 #endif
-
-#define	_ALWAYS_RELOAD
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -58,16 +56,27 @@ static const int	sSabotageIdleStartEvent = 16;
 static const int	sSabotageIdleEndEvent = 17;
 static const int	sSabotageBalloonShowEvent = 18;
 static const int	sSabotageBalloonHideEvent = 19;
+static const int	sSabotageListenStartEvent = 20;
+static const int	sSabotageListenEndEvent = 21;
+
+static const int	sSabotageMinEvent = sSabotageShowEvent;
+static const int	sSabotageMaxEvent = sSabotageListenEndEvent;
 
 static LPCTSTR	sProfileKey = _T("Settings");
 static LPCTSTR	sProfilePosX = _T("Left");
 static LPCTSTR	sProfilePosY = _T("Top");
-static LPCTSTR	sProfileCharPosX = _T("CharLeft");
-static LPCTSTR	sProfileCharPosY = _T("CharTop");
 static LPCTSTR	sProfileCharacter = _T("Character");
+static LPCTSTR	sProfileUseControl = _T("UseControl");
+static LPCTSTR	sProfileControlContained = _T("ControlContained");
+static LPCTSTR	sProfileControlStandalone = _T("ControlStandalone");
+static LPCTSTR	sProfileUseServer = _T("UseServer");
+static LPCTSTR	sProfileSoundOn = _T("Sound");
+static LPCTSTR	sProfileIdleOn = _T("Idle");
 static LPCTSTR	sProfileGesture = _T("Gesture");
-static LPCTSTR	sProfileState = _T("State");
 static LPCTSTR	sProfileSabotage = _T("Sabotage");
+
+static LPCTSTR	sControlCharacterIdPopup = _T("Popup");
+static LPCTSTR	sControlCharacterIdContained = _T("Contained");
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -76,15 +85,16 @@ BEGIN_MESSAGE_MAP(CSabotageTestDlg, CDialog)
 	ON_WM_DESTROY()
 	ON_WM_CLOSE()
 	ON_WM_ACTIVATEAPP()
-	ON_BN_CLICKED(IDC_POPUP, OnPopup)
+	ON_BN_CLICKED(IDC_SHOW, OnShowCharacter)
+	ON_BN_CLICKED(IDC_USE_CONTROL, OnControlMode)
+	ON_BN_CLICKED(IDC_CONTROL_CONTAINED, OnControlMode)
+	ON_BN_CLICKED(IDC_CONTROL_STANDALONE, OnControlMode)
 	ON_BN_CLICKED(IDC_SOUND_ON, OnSoundOn)
 	ON_BN_CLICKED(IDC_IDLE_ON, OnIdleOn)
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_CHARACTER_LIST, OnItemChangedCharacterList)
 	ON_NOTIFY(LVN_ITEMACTIVATE, IDC_CHARACTER_LIST, OnItemActivateCharacterList)
 	ON_LBN_SELCHANGE(IDC_GESTURES, OnSelChangeGestures)
 	ON_LBN_DBLCLK(IDC_GESTURES, OnDblClkGestures)
-	ON_LBN_SELCHANGE(IDC_STATES, OnSelChangeStates)
-	ON_LBN_DBLCLK(IDC_STATES, OnDblClkStates)
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_MOVE, OnMoveButton)
 	ON_BN_CLICKED(IDC_SPEAK, OnSpeakButton)
@@ -110,8 +120,36 @@ BEGIN_MESSAGE_MAP(CSabotageTestDlg, CDialog)
 	ON_BN_CLICKED(IDC_SABOTAGE17, OnSabotageNum)
 	ON_BN_CLICKED(IDC_SABOTAGE18, OnSabotageNum)
 	ON_BN_CLICKED(IDC_SABOTAGE19, OnSabotageNum)
+	ON_BN_CLICKED(IDC_SABOTAGE20, OnSabotageNum)
+	ON_BN_CLICKED(IDC_SABOTAGE21, OnSabotageNum)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
+
+BEGIN_EVENTSINK_MAP(CSabotageTestDlg, CDialog)
+    //{{AFX_EVENTSINK_MAP(CSabotageTestDlg)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_ActivateInput, CSabotageTestDlg::OnCtlActivateInput, VTS_BSTR)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_DeactivateInput, CSabotageTestDlg::OnCtlDeactivateInput, VTS_BSTR)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_Click, CSabotageTestDlg::OnCtlClick, VTS_BSTR VTS_I2 VTS_I2 VTS_I2 VTS_I2)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_DblClick, CSabotageTestDlg::OnCtlDblClick, VTS_BSTR VTS_I2 VTS_I2 VTS_I2 VTS_I2)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_DragStart, CSabotageTestDlg::OnCtlDragStart, VTS_BSTR VTS_I2 VTS_I2 VTS_I2 VTS_I2)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_DragComplete, CSabotageTestDlg::OnCtlDragComplete, VTS_BSTR VTS_I2 VTS_I2 VTS_I2 VTS_I2)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_Show, CSabotageTestDlg::OnCtlShow, VTS_BSTR VTS_I2)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_Hide, CSabotageTestDlg::OnCtlHide, VTS_BSTR VTS_I2)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_RequestStart, CSabotageTestDlg::OnCtlRequestStart, VTS_DISPATCH)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_RequestComplete, CSabotageTestDlg::OnCtlRequestComplete, VTS_DISPATCH)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_Command, CSabotageTestDlg::OnCtlCommand, VTS_DISPATCH)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_IdleStart, CSabotageTestDlg::OnCtlIdleStart, VTS_BSTR)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_IdleComplete, CSabotageTestDlg::OnCtlIdleComplete, VTS_BSTR)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_IdleStart, CSabotageTestDlg::OnCtlIdleStart, VTS_BSTR)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_Move, CSabotageTestDlg::OnCtlMove, VTS_BSTR VTS_I2 VTS_I2 VTS_I2)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_Size, CSabotageTestDlg::OnCtlSize, VTS_BSTR VTS_I2 VTS_I2)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_BalloonShow, CSabotageTestDlg::OnCtlBalloonShow, VTS_BSTR)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_BalloonHide, CSabotageTestDlg::OnCtlBalloonHide, VTS_BSTR)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_ListenStart, CSabotageTestDlg::OnCtlListenStart, VTS_BSTR)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_ListenComplete, CSabotageTestDlg::OnCtlListenComplete, VTS_BSTR VTS_I2)
+	ON_EVENT(CSabotageTestDlg, IDC_CONTROL, DISPID_AgentEvents_ActiveClientChange, CSabotageTestDlg::OnCtlActiveClientChange, VTS_BSTR VTS_BOOL)
+	//}}AFX_EVENTSINK_MAP
+END_EVENTSINK_MAP()
 
 #include "InterfaceMap.inl"
 
@@ -119,20 +157,21 @@ BEGIN_INTERFACE_MAP(CSabotageTestDlg, CDialog)
 	INTERFACE_PART(CSabotageTestDlg, __uuidof(IDaSvrNotifySink), DaSvrNotifySink)
 END_INTERFACE_MAP()
 
-IMPLEMENT_IUNKNOWN(CSabotageTestDlg, DaSvrNotifySink)
+IMPLEMENT_IDISPATCH(CSabotageTestDlg, DaSvrNotifySink)
 
 /////////////////////////////////////////////////////////////////////////////
 
 CSabotageTestDlg::CSabotageTestDlg(CWnd* pParent)
 :	CDialog(CSabotageTestDlg::IDD, pParent),
+	mCharacterNdx (-1),
 	mNotifySinkId (0),
-	mCharacterId (0),
+	mServerCharacterId (0),
 	mExitCommandId (0),
 	mRepeatTimer (0),
-	mTimerCount (0),
+	mCycleTimer (0),
 	mLoadReqID (0),
-	mLastAnimationReqID (0),
-	mHidingStateReqID (0),
+	mShowReqID (0),
+	mPlayReqID (0),
 	mMoveReqID (),
 	mSpeakReqID (0),
 	mThinkReqID (0)
@@ -145,8 +184,10 @@ CSabotageTestDlg::CSabotageTestDlg(CWnd* pParent)
 
 CSabotageTestDlg::~CSabotageTestDlg()
 {
-	FreeAgentCharacter ();
+	FreeServerCharacter ();
 	FreeAgentServer ();
+	FreeControlCharacter ();
+	FreeAgentControl ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -155,12 +196,15 @@ void CSabotageTestDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CSabotageTestDlg)
-	DDX_Control(pDX, IDC_IDLE_ON, mIdleEnabled);
+	DDX_Control(pDX, IDC_IDLE_ON, mIdleOn);
 	DDX_Control(pDX, IDC_SOUND_ON, mSoundOn);
 	DDX_Control(pDX, IDC_CHARACTER_LIST, mCharacterList);
-	DDX_Control(pDX, IDC_POPUP, mPopupButton);
+	DDX_Control(pDX, IDC_USE_CONTROL, mUseControl);
+	DDX_Control(pDX, IDC_CONTROL_CONTAINED, mControlContained);
+	DDX_Control(pDX, IDC_CONTROL_STANDALONE, mControlStandalone);
+	DDX_Control(pDX, IDC_USE_SERVER, mUseServer);
+	DDX_Control(pDX, IDC_SHOW, mShowButton);
 	DDX_Control(pDX, IDCANCEL, mCancelButton);
-	DDX_Control(pDX, IDC_STATES, mStates);
 	DDX_Control(pDX, IDC_GESTURES, mGestures);
 	DDX_Control(pDX, IDC_MOVE, mMoveButton);
 	DDX_Control(pDX, IDC_SPEAK, mSpeakButton);
@@ -177,21 +221,123 @@ void CSabotageTestDlg::DoDataExchange(CDataExchange* pDX)
 
 BOOL CSabotageTestDlg::OnInitDialog()
 {
+	bool	lAutoStart;
+
 	mSabotageNum = AfxGetApp()->GetProfileInt (sProfileKey, sProfileSabotage, mSabotageNum);
 
 	CDialog::OnInitDialog();
 
-	GetWindowText (mWinTitle);
 	GetAgentServer ();
 	ShowCharacters ();
+	FreeAgentServer ();
+
 	LoadConfig ();
+	lAutoStart = CommandLineConfig ();
+	ShowControlMode ();
 	ShowCharacterState ();
 
+	if	(lAutoStart)
+	{
+		mCycleTimer = SetTimer ((UINT_PTR)&mCycleTimer, 500, NULL);
+	}
+	else
+	{
+		ShowConfigCharacter ();
+	}
 	return TRUE;
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+void CSabotageTestDlg::SabotageEvent ()
+{
+	ShowCharacterState ();
+
+	if	(mServerCharacter)
+	{
+		LogMessage (LogNormal, _T("FreeServerCharacter"));
+		FreeServerCharacter ();
+		LogMessage (LogNormal, _T("FreeServerCharacter Done"));
+
+		ShowCharacterState ();
+	}
+
+	if	(mServer)
+	{
+		LogMessage (LogNormal, _T("FreeAgentServer"));
+		FreeAgentServer ();
+		LogMessage (LogNormal, _T("FreeAgentServer Done"));
+
+		ShowCharacterState ();
+	}
+
+	if	(mControlCharacter)
+	{
+		LogMessage (LogNormal, _T("FreeControlCharacter"));
+		FreeControlCharacter ();
+		LogMessage (LogNormal, _T("FreeControlCharacter Done"));
+
+		ShowCharacterState ();
+	}
+
+	//if	(mControl)
+	//{
+	//	LogMessage (LogNormal, _T("FreeAgentControl"));
+	//	FreeAgentControl ();
+	//	LogMessage (LogNormal, _T("FreeAgentControl Done"));
+
+	//	ShowCharacterState ();
+	//}
+}
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+void CSabotageTestDlg::ShowModeSelection ()
+{
+	if	(
+			(mServerCharacter)
+		||	(mControlCharacter)
+		)
+	{
+		mUseServer.EnableWindow (FALSE);
+		mUseControl.EnableWindow (FALSE);
+		mControlContained.EnableWindow (FALSE);
+		mControlStandalone.EnableWindow (FALSE);
+	}
+	else
+	{
+		mUseServer.EnableWindow (TRUE);
+		mUseControl.EnableWindow (TRUE);
+		ShowControlMode ();
+	}
+}
+
+void CSabotageTestDlg::ShowControlMode ()
+{
+	if	(mUseControl.GetCheck())
+	{
+		mControlContained.EnableWindow (mUseControl.IsWindowEnabled());
+		if	(mControlContained.GetCheck())
+		{
+			mControlStandalone.SetCheck (TRUE);
+			mControlStandalone.EnableWindow (FALSE);
+		}
+		else
+		{
+			mControlStandalone.EnableWindow (mUseControl.IsWindowEnabled());
+		}
+	}
+	else
+	{
+		mControlContained.SetCheck (FALSE);
+		mControlStandalone.SetCheck (FALSE);
+		mControlContained.EnableWindow (FALSE);
+		mControlStandalone.EnableWindow (FALSE);
+	}
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 void CSabotageTestDlg::ShowCharacters ()
@@ -235,30 +381,72 @@ void CSabotageTestDlg::ShowCharacters ()
 	mCharacterList.SetColumnWidth (0, lClientRect.Width());
 }
 
+/////////////////////////////////////////////////////////////////////////////
+
+bool CSabotageTestDlg::SelectCharacter (int pCharacterNdx, bool pShow)
+{
+	bool	lRet = false;
+
+	if	(
+			(pCharacterNdx >= 0)
+		&&	(pCharacterNdx < mCharacterList.GetItemCount ())
+		)
+	{
+		mCharacterNdx = pCharacterNdx;
+		{
+			CNotifyLock	lLock (m_hWnd);
+			mCharacterList.SetItemState (mCharacterNdx, LVIS_SELECTED|LVIS_FOCUSED, LVIS_SELECTED|LVIS_FOCUSED);
+		}
+		mCharacterList.EnsureVisible (mCharacterNdx, FALSE);
+		mCharacterList.RedrawWindow ();
+
+		if	(pShow)
+		{
+			lRet = ShowCharacter (mCharacterList.GetItemText (mCharacterNdx, 0));
+		}
+		else
+		{
+			lRet = true;
+		}
+	}
+	return lRet;
+}
+
 bool CSabotageTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 {
 	bool	lRet = false;
 
-#ifndef	_ALWAYS_RELOAD
 	if	(mCharacterPath.CompareNoCase (CString (pCharacterPath)) != 0)
-#endif
 	{
-		FreeAgentCharacter ();
-/**/	FreeAgentServer ();
+		FreeServerCharacter ();
+//		FreeAgentServer ();
+		FreeControlCharacter ();
 		CharacterIsVisible (false);
 	}
+
+	ShowControlMode ();
 
 	if	(
 			(pCharacterPath)
 		&&	(pCharacterPath[0])
 		)
 	{
-		lRet = true;
-	}
-
-	if	(lRet)
-	{
 		mCharacterPath = pCharacterPath;
+
+		if	(
+				(mUseServer.GetCheck())
+			&&	(LoadServerCharacter ())
+			)
+		{
+			lRet = true;
+		}
+		if	(
+				(mUseControl.GetCheck())
+			&&	(LoadControlCharacter ())
+			)
+		{
+			lRet = true;
+		}
 	}
 	else
 	{
@@ -266,17 +454,7 @@ bool CSabotageTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 	}
 
 	ShowGestures ();
-	ShowStates ();
-
-	if	(
-			(lRet)
-		&&	(mPopupButton.GetCheck())
-		)
-	{
-		ShowAgentCharacter ();
-	}
 	ShowCharacterState ();
-
 	return lRet;
 }
 
@@ -284,66 +462,52 @@ bool CSabotageTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 
 void CSabotageTestDlg::ShowGestures ()
 {
-	CString	lSelGesture = GetSelGesture ();
+	CString	lSelGesture;
+
+	if	(mGestures.GetCount() > 0)
+	{
+		lSelGesture = GetSelectedGesture ();
+	}
+	else
+	{
+		lSelGesture = AfxGetApp()->GetProfileString (sProfileKey, sProfileGesture);
+	}
 
 	mGestures.SetRedraw (FALSE);
 	mGestures.ResetContent ();
 
 	try
 	{
-		tPtr <CAgentFile>	lAgentFile;
+		tSafeArrayPtr	lAnimations;
+		VARTYPE			lAnimationType;
+		long			lLowerBound, lUpperBound, lNdx;
+		CRect			lClientRect;
+
+		mGestures.AddString (_T(""));
 
 		if	(
-				(!mCharacterPath.IsEmpty ())
-			&&	(
-					(mCharacter != NULL)
-				||	(!PathIsURL (mCharacterPath))
+				(
+					(
+						(mServerCharacter != NULL)
+					&&	(SUCCEEDED (LogComErr (LogNormal, mServerCharacter->get_Animations (lAnimations.Free()))))
+					)
+				||	(
+						(mControlCharacter != NULL)
+					&&	(SUCCEEDED (LogComErr (LogNormal, mControlCharacter->get_Animations (lAnimations.Free()))))
+					)
 				)
-			&&	(lAgentFile = CAgentFile::CreateInstance())
-			&&	(SUCCEEDED (lAgentFile->Open (mCharacterPath)))
+			&&	(SUCCEEDED (LogComErr (LogDetails, SafeArrayGetVartype (lAnimations, &lAnimationType))))
+			&&	(SUCCEEDED (LogComErr (LogDetails, SafeArrayGetLBound (lAnimations, 1, &lLowerBound))))
+			&&	(SUCCEEDED (LogComErr (LogDetails, SafeArrayGetUBound (lAnimations, 1, &lUpperBound))))
 			)
 		{
-			INT_PTR	lNdx;
-
-			mGestures.AddString (_T(""));
-			lAgentFile->ReadGestures();
-
-			for	(lNdx = 0; lNdx < (INT_PTR)lAgentFile->GetGestures().mNames.GetCount(); lNdx++)
+			for	(lNdx = lLowerBound; lNdx < lUpperBound; lNdx++)
 			{
-				mGestures.AddString (lAgentFile->GetGestures().mNames.GetAt (lNdx));
-			}
+				_variant_t	lAnimation;
 
-			if	(
-					(mCharacter != NULL)
-				&&	(PathIsURL (mCharacterPath))
-				)
-			{
-#if	FALSE
-				CString			lGestureName;
-				CStringArray	lGestureNames;
-				BOOL			lQueuePrepare = FALSE;
-				long			lReqID;
-
-				for	(lNdx = 1; lNdx < mGestures.GetCount(); lNdx++)
-				{
-					mGestures.GetText (lNdx, lGestureName);
-					lGestureNames.Add (lGestureName);
-					if	(lNdx % 10 == 1)
-					{
-						lGestureName = JoinStringArray (lGestureNames, _T(","));
-						lGestureNames.RemoveAll ();
-						mCharacter->Prepare (PREPARE_Sabotage, _bstr_t(lGestureName), lQueuePrepare, &lReqID);
-					}
-					if	(lNdx >= 20)
-					{
-						lQueuePrepare = TRUE;
-					}
-					if	(lNdx >= 40)
-					{
-						break;
-					}
-				}
-#endif
+				lAnimation.vt = lAnimationType;
+				SafeArrayGetElement (lAnimations, &lNdx, &V_BYREF(&lAnimation));
+				mGestures.AddString (CString ((BSTR)(_bstr_t)lAnimation));
 			}
 		}
 	}
@@ -353,328 +517,108 @@ void CSabotageTestDlg::ShowGestures ()
 	mGestures.SetRedraw (TRUE);
 }
 
-void CSabotageTestDlg::ShowStates ()
+/////////////////////////////////////////////////////////////////////////////
+
+bool CSabotageTestDlg::ShowSelectedGesture (bool pStopFirst)
 {
-	CString	lSelState = GetSelState ();
+	bool	lRet = false;
+	CString	lSelGesture = GetSelectedGesture ();
+	HRESULT	lResult;
 
-	mStates.SetRedraw (FALSE);
-	mStates.ResetContent ();
-
-	try
+	if	(lSelGesture.IsEmpty())
 	{
-		tPtr <CAgentFile>	lAgentFile;
-
-		if	(
-				(!mCharacterPath.IsEmpty ())
-			&&	(
-					(mCharacter != NULL)
-				||	(!PathIsURL (mCharacterPath))
-				)
-			&&	(lAgentFile = CAgentFile::CreateInstance())
-			&&	(SUCCEEDED (lAgentFile->Open (mCharacterPath)))
-			)
+		Stop ();
+	}
+	else
+	if	(IsCharacterVisible ())
+	{
+		if	(pStopFirst)
 		{
-			INT_PTR	lNdx;
-
-			mStates.AddString (_T(""));
-			lAgentFile->ReadStates();
-
-			for	(lNdx = 0; lNdx < (INT_PTR)lAgentFile->GetStates().mNames.GetCount(); lNdx++)
+			Stop ();
+		}
+		else
+		{
+			if	(mServerCharacter)
 			{
-				mStates.AddString (lAgentFile->GetStates().mNames.GetAt (lNdx));
-			}
-
-			if	(
-					(mCharacter != NULL)
-				&&	(PathIsURL (mCharacterPath))
-				)
-			{
-#if	FALSE
-				CString			lStateName;
-				CStringArray	lStateNames;
-				BOOL			lQueuePrepare = FALSE;
-				long			lReqID;
-
-				for	(lNdx = 1; lNdx < mStates.GetCount(); lNdx++)
+				if	(mPlayReqID > 0)
 				{
-					mStates.GetText (lNdx, lStateName);
-					lStateNames.Add (lStateName);
-					if	(lNdx % 10 == 1)
-					{
-						lStateName = JoinStringArray (lStateNames, _T(","));
-						lStateNames.RemoveAll ();
-						mCharacter->Prepare (PrepareResource_State, _bstr_t(lStateName), lQueuePrepare, &lReqID);
-					}
-					if	(lNdx >= 20)
-					{
-						lQueuePrepare = TRUE;
-					}
-					if	(lNdx >= 40)
-					{
-						break;
-					}
+					LogComErr (_LOG_CHAR_CALLS, mServerCharacter->Stop (mPlayReqID));
+					mPlayReqID = 0;
 				}
-#endif
+				if	(mMoveReqID > 0)
+				{
+					LogComErr (_LOG_CHAR_CALLS, mServerCharacter->Stop (mMoveReqID));
+					mMoveReqID = 0;
+				}
+				if	(mSpeakReqID > 0)
+				{
+					LogComErr (_LOG_CHAR_CALLS, mServerCharacter->Stop (mSpeakReqID));
+					mSpeakReqID = 0;
+				}
+				if	(mThinkReqID > 0)
+				{
+					LogComErr (_LOG_CHAR_CALLS, mServerCharacter->Stop (mThinkReqID));
+					mThinkReqID = 0;
+				}
+			}
+			if	(mControlCharacter)
+			{
+				if	(mPlayRequest)
+				{
+					LogComErr (_LOG_CHAR_CALLS, mControlCharacter->Stop (_variant_t((LPDISPATCH)mPlayRequest.GetInterfacePtr())));
+					mPlayRequest = NULL;
+				}
+				if	(mMoveRequest)
+				{
+					LogComErr (_LOG_CHAR_CALLS, mControlCharacter->Stop (_variant_t((LPDISPATCH)mMoveRequest.GetInterfacePtr())));
+					mMoveRequest = NULL;
+				}
+				if	(mSpeakRequest)
+				{
+					LogComErr (_LOG_CHAR_CALLS, mControlCharacter->Stop (_variant_t((LPDISPATCH)mSpeakRequest.GetInterfacePtr())));
+					mSpeakRequest = NULL;
+				}
+				if	(mThinkRequest)
+				{
+					LogComErr (_LOG_CHAR_CALLS, mControlCharacter->Stop (_variant_t((LPDISPATCH)mThinkRequest.GetInterfacePtr())));
+					mThinkRequest = NULL;
+				}
+			}
+		}
+
+		if	(mServerCharacter)
+		{
+			lResult = mServerCharacter->Play (_bstr_t(lSelGesture), &mPlayReqID);
+			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Play [%s] [%d]"), mServerCharacterId, lSelGesture, mPlayReqID)))
+			{
+				lRet = true;
+			}
+		}
+
+		if	(mControlCharacter)
+		{
+			lResult = mControlCharacter->Play (_bstr_t(lSelGesture), &mPlayRequest);
+			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%s] Play [%s] [%d]"), mControlCharacterId, lSelGesture, mPlayRequest.ID)))
+			{
+				lRet = true;
 			}
 		}
 	}
-	catch AnyExceptionDebug
 
-	mStates.SetCurSel (max (mStates.FindStringExact (1, lSelState), 0));
-	mStates.SetRedraw (TRUE);
+	ShowCharacterState ();
+	return lRet;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
-CString CSabotageTestDlg::GetSelGesture ()
+CString CSabotageTestDlg::GetSelectedGesture ()
 {
-	CString	lSelGesture;
+	CString	lGestureName;
 	int		lCurSel = mGestures.GetCurSel ();
 
 	if	(lCurSel > 0)
 	{
-		mGestures.GetText (lCurSel, lSelGesture);
+		mGestures.GetText (lCurSel, lGestureName);
 	}
-	return lSelGesture;
-}
-
-CString CSabotageTestDlg::GetSelState ()
-{
-	CString	lSelState;
-	int		lCurSel = mStates.GetCurSel ();
-
-	if	(lCurSel > 0)
-	{
-		mStates.GetText (lCurSel, lSelState);
-	}
-	return lSelState;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-void CSabotageTestDlg::ShowSelectedAnimation ()
-{
-	if	(
-			(mGestures.GetCurSel () > 0)
-		&&	(ShowSelGesture (false))
-		)
-	{
-		mStates.SetCurSel (0);
-	}
-	else
-	{
-		mGestures.SetCurSel (0);
-	}
-
-	if	(
-			(mStates.GetCurSel () > 0)
-		&&	(ShowSelState (false))
-		)
-	{
-		mGestures.SetCurSel (0);
-	}
-	else
-	{
-		mStates.SetCurSel (0);
-	}
-
-	if	(
-			(mGestures.GetCurSel () <= 0)
-		&&	(mStates.GetCurSel () <= 0)
-		)
-	{
-		Stop ();
-		ShowDefaultAnimation ();
-	}
-}
-
-void CSabotageTestDlg::ShowDefaultAnimation ()
-{
-	ShowCharacterState ();
-}
-
-bool CSabotageTestDlg::ShowSelGesture (bool pStopFirst)
-{
-	bool	lRet = false;
-	CString	lSelGesture = GetSelGesture ();
-	HRESULT	lResult;
-
-	if	(!lSelGesture.IsEmpty())
-	{
-		if	(IsCharacterVisible ())
-		{
-			if	(pStopFirst)
-			{
-				Stop ();
-			}
-			else
-			{
-				if	(
-						(mLastAnimationReqID > 0)
-					&&	(mCharacter)
-					)
-				{
-					LogComErr (_LOG_CHAR_CALLS, mCharacter->Stop (mLastAnimationReqID));
-					mLastAnimationReqID = 0;
-				}
-				if	(
-						(mMoveReqID > 0)
-					&&	(mCharacter)
-					)
-				{
-					LogComErr (_LOG_CHAR_CALLS, mCharacter->Stop (mMoveReqID));
-					mMoveReqID = 0;
-				}
-				if	(
-						(mHidingStateReqID > 0)
-					&&	(mCharacter)
-					)
-				{
-					LogComErr (_LOG_CHAR_CALLS, mCharacter->Stop (mHidingStateReqID));
-					mHidingStateReqID = 0;
-				}
-			}
-
-			if	(mCharacter)
-			{
-				lResult = mCharacter->Play (_bstr_t(lSelGesture), &mLastAnimationReqID);
-				if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Play [%s] [%d]"), mCharacterId, lSelGesture, mLastAnimationReqID)))
-				{
-					lRet = true;
-				}
-			}
-		}
-	}
-	ShowCharacterState ();
-	return lRet;
-}
-
-bool CSabotageTestDlg::ShowSelState (bool pStopFirst)
-{
-	bool	lRet = false;
-	CString	lSelState = GetSelState ();
-	bool	lCharacterVisible = IsCharacterVisible ();
-
-	if	(!lSelState.IsEmpty())
-	{
-		if	(lCharacterVisible)
-		{
-			HRESULT	lResult = S_FALSE;
-			CRect	lCharRect;
-
-			if	(pStopFirst)
-			{
-				Stop ();
-			}
-			else
-			{
-				if	(mLastAnimationReqID > 0)
-				{
-					LogComErr (_LOG_CHAR_CALLS, mCharacter->Stop (mLastAnimationReqID));
-					mLastAnimationReqID = 0;
-				}
-				if	(mMoveReqID > 0)
-				{
-					LogComErr (_LOG_CHAR_CALLS, mCharacter->Stop (mMoveReqID));
-					mMoveReqID = 0;
-				}
-				if	(mHidingStateReqID > 0)
-				{
-					LogComErr (_LOG_CHAR_CALLS, mCharacter->Stop (mHidingStateReqID));
-					mHidingStateReqID = 0;
-				}
-			}
-
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetSize (&lCharRect.right, &lCharRect.bottom), _T("[%d] GetSize"), mCharacterId);
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetPosition (&lCharRect.left, &lCharRect.top), _T("[%d] GetPosition"), mCharacterId);
-			lCharRect.right += lCharRect.left;
-			lCharRect.bottom += lCharRect.top;
-
-			if	(lSelState.CompareNoCase (_T("GESTURINGDOWN")) == 0)
-			{
-				lResult = mCharacter->GestureAt ((short)lCharRect.CenterPoint().x, (short)lCharRect.bottom, &mLastAnimationReqID);
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] GestureDown [%d]"), mCharacterId, mLastAnimationReqID);
-			}
-			else
-			if	(lSelState.CompareNoCase (_T("GESTURINGUP")) == 0)
-			{
-				lResult = mCharacter->GestureAt ((short)lCharRect.CenterPoint().x, (short)lCharRect.top, &mLastAnimationReqID);
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] GestureUp [%d]"), mCharacterId, mLastAnimationReqID);
-			}
-			else
-			if	(lSelState.CompareNoCase (_T("GESTURINGRIGHT")) == 0)
-			{
-				lResult = mCharacter->GestureAt ((short)lCharRect.left, (short)lCharRect.CenterPoint().y, &mLastAnimationReqID);
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] GestureRight [%d]"), mCharacterId, mLastAnimationReqID);
-			}
-			else
-			if	(lSelState.CompareNoCase (_T("GESTURINGLEFT")) == 0)
-			{
-				lResult = mCharacter->GestureAt ((short)lCharRect.right, (short)lCharRect.CenterPoint().y, &mLastAnimationReqID);
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] GestureLeft [%d]"), mCharacterId, mLastAnimationReqID);
-			}
-			else
-			if	(lSelState.CompareNoCase (_T("MOVINGDOWN")) == 0)
-			{
-				lResult = mCharacter->MoveTo ((short)lCharRect.left, (short)lCharRect.top+lCharRect.Height()*2, 1000, &mMoveReqID);
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] MoveDown [%d]"), mCharacterId, mMoveReqID);
-			}
-			else
-			if	(lSelState.CompareNoCase (_T("MOVINGUP")) == 0)
-			{
-				lResult = mCharacter->MoveTo ((short)lCharRect.left, (short)lCharRect.top-lCharRect.Height()*2, 1000, &mMoveReqID);
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] MoveUp [%d]"), mCharacterId, mMoveReqID);
-			}
-			else
-			if	(lSelState.CompareNoCase (_T("MOVINGRIGHT")) == 0)
-			{
-				lResult = mCharacter->MoveTo ((short)lCharRect.left-lCharRect.Width()*2, (short)lCharRect.top, 1000, &mMoveReqID);
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] MoveRight [%d]"), mCharacterId, mMoveReqID);
-			}
-			else
-			if	(lSelState.CompareNoCase (_T("MOVINGLEFT")) == 0)
-			{
-				lResult = mCharacter->MoveTo ((short)lCharRect.left+lCharRect.Width()*2, (short)lCharRect.top, 1000, &mMoveReqID);
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] MoveLeft [%d]"), mCharacterId, mMoveReqID);
-			}
-			else
-			if	(lSelState.CompareNoCase (_T("HIDING")) == 0)
-			{
-				lResult = mCharacter->Hide (FALSE, &mHidingStateReqID);
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Hide [%d]"), mCharacterId, mHidingStateReqID);
-			}
-			else
-			if	(lSelState.CompareNoCase (_T("SHOWING")) == 0)
-			{
-				lResult = mCharacter->Hide (TRUE, &mLastAnimationReqID);
-				lResult = mCharacter->Show (FALSE, &mLastAnimationReqID);
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Show [%d]"), mCharacterId, mLastAnimationReqID);
-			}
-
-			if	(lResult == S_OK)
-			{
-				lRet = true;
-			}
-
-			if	(
-					(lSelState.CompareNoCase (_T("IDLINGLEVEL1")) == 0)
-				||	(lSelState.CompareNoCase (_T("IDLINGLEVEL2")) == 0)
-				||	(lSelState.CompareNoCase (_T("IDLINGLEVEL3")) == 0)
-				)
-			{
-				if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, mCharacter->SetIdleOn (TRUE), _T("[%d] SetIdleOn"), mCharacterId)))
-				{
-					lRet = true;
-				}
-			}
-			else
-			{
-				LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetIdleOn (FALSE), _T("[%d] SetIdleOff"), mCharacterId);
-			}
-		}
-	}
-	ShowCharacterState ();
-	return lRet;
+	return lGestureName;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -684,17 +628,69 @@ bool CSabotageTestDlg::ShowSelState (bool pStopFirst)
 bool CSabotageTestDlg::IsAnimating ()
 {
 	if	(
-			(mCharacter != NULL)
+			(mServerCharacter != NULL)
 		&&	(
-				(mLastAnimationReqID > 0)
-			||	(mHidingStateReqID > 0)
+				(mLoadReqID > 0)
+			||	(mShowReqID > 0)
+			||	(mPlayReqID > 0)
 			||	(mMoveReqID > 0)
 			||	(mSpeakReqID > 0)
 			||	(mThinkReqID > 0)
 			)
 		)
 	{
-		return true;;
+		return true;
+	}
+
+	if	(
+			(mControlCharacter != NULL)
+		&&	(
+				(
+					(mLoadRequest != NULL)
+				&&	(
+						(mLoadRequest.Status == RequestStatus_Pending)
+					||	(mLoadRequest.Status == RequestStatus_InProgress)
+					)
+				)
+			||	(
+					(mShowRequest != NULL)
+				&&	(
+						(mShowRequest.Status == RequestStatus_Pending)
+					||	(mShowRequest.Status == RequestStatus_InProgress)
+					)
+				)
+			||	(
+					(mPlayRequest != NULL)
+				&&	(
+						(mPlayRequest.Status == RequestStatus_Pending)
+					||	(mPlayRequest.Status == RequestStatus_InProgress)
+					)
+				)
+			||	(
+					(mMoveRequest != NULL)
+				&&	(
+						(mMoveRequest.Status == RequestStatus_Pending)
+					||	(mMoveRequest.Status == RequestStatus_InProgress)
+					)
+				)
+			||	(
+					(mSpeakRequest != NULL)
+				&&	(
+						(mSpeakRequest.Status == RequestStatus_Pending)
+					||	(mSpeakRequest.Status == RequestStatus_InProgress)
+					)
+				)
+			||	(
+					(mThinkRequest != NULL)
+				&&	(
+						(mThinkRequest.Status == RequestStatus_Pending)
+					||	(mThinkRequest.Status == RequestStatus_InProgress)
+					)
+				)
+			)
+		)
+	{
+		return true;
 	}
 	return false;
 }
@@ -702,7 +698,6 @@ bool CSabotageTestDlg::IsAnimating ()
 bool CSabotageTestDlg::Stop ()
 {
 	bool	lRet = false;
-	long	lReqID = 0;
 
 	if	(mRepeatTimer)
 	{
@@ -711,16 +706,86 @@ bool CSabotageTestDlg::Stop ()
 		lRet = true;
 	}
 
-	if	(mCharacter != NULL)
+	if	(
+			(mServerCharacter != NULL)
+		&&	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, mServerCharacter->StopAll (StopAll_Play|StopAll_Speak|StopAll_Move|StopAll_Visibility), _T("[%d] StopAll"), mServerCharacterId)))
+		)
 	{
-		LogComErr (_LOG_CHAR_CALLS, mCharacter->StopAll (StopAll_Play|StopAll_Speak|StopAll_Move|StopAll_Visibility), _T("[%d] StopAll"), mCharacterId);
+		lRet = true;
 	}
-
-	mTimerCount = 0;
-	mLastAnimationReqID = 0;
+	mShowReqID = 0;
+	mPlayReqID = 0;
+	mMoveReqID = 0;
 	mSpeakReqID = 0;
 	mThinkReqID = 0;
+
+	if	(
+			(mControlCharacter != NULL)
+		&&	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, mControlCharacter->StopAll (_variant_t((long)(StopAll_Play|StopAll_Speak|StopAll_Move|StopAll_Visibility),VT_I4)), _T("[%s] StopAll"), mControlCharacterId)))
+		)
+	{
+		lRet = true;
+	}
+	mShowRequest = NULL;
+	mPlayRequest = NULL;
+	mMoveRequest = NULL;
+	mSpeakRequest = NULL;
+	mThinkRequest = NULL;
+
 	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+static BOOL CALLBACK GetUsedRects (HWND pWindow, LPARAM pLparam)
+{
+	CAtlTypeArray<CRect> *	lUsedRects = (CAtlTypeArray<CRect> *) pLparam;
+	CRect					lUsedRect;
+
+	if	(
+			(pWindow != GetShellWindow ())
+		&&	(pWindow != GetDesktopWindow ())
+		&&	(IsWindowVisible (pWindow))
+		&&	(!IsZoomed (pWindow))
+		&&	(GetWindowRect (pWindow, &lUsedRect))
+		&&	(!lUsedRect.IsRectEmpty ())
+		)
+	{
+		lUsedRects->Add (lUsedRect);
+	}
+	return TRUE;
+}
+
+CPoint CSabotageTestDlg::GetInitialPos (const CSize & pInitialSize)
+{
+	CPoint					lInitialPos;
+	CRect					lBounds (pInitialSize.cx, pInitialSize.cy, GetSystemMetrics(SM_CXSCREEN)-pInitialSize.cx, GetSystemMetrics(SM_CYSCREEN)-pInitialSize.cy);
+	CAtlTypeArray<CRect>	lUsedRects;
+
+	EnumWindows (GetUsedRects, (LPARAM)&lUsedRects);
+
+	for	(lInitialPos.y = lBounds.top; lInitialPos.y <= lBounds.bottom; lInitialPos.y += pInitialSize.cy)
+	{
+		for	(lInitialPos.x = lBounds.right; lInitialPos.x >= lBounds.left; lInitialPos.x -= pInitialSize.cy)
+		{
+			CRect	lRect (lInitialPos, pInitialSize);
+			CRect	lIntersect;
+			int		lNdx;
+
+			for	(lNdx = (int)lUsedRects.GetCount()-1; lNdx >= 0; lNdx--)
+			{
+				if	(lIntersect.IntersectRect (lRect, lUsedRects [lNdx]))
+				{
+					break;
+				}
+			}
+			if	(lNdx < 0)
+			{
+				return lInitialPos;
+			}
+		}
+	}
+	return CPoint (0,0);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -738,6 +803,9 @@ void CSabotageTestDlg::GetAgentServer ()
 
 		if	(mServer != NULL)
 		{
+			mServer.CharacterStyle |= CharacterStyle_Smoothed;
+			mServer.CharacterStyle &= ~CharacterStyle_IconShown;
+
 			LogComErr (_LOG_AGENT_CALLS, mServer->Register (&m_xDaSvrNotifySink, &mNotifySinkId), _T("Register"));
 		}
 	}
@@ -763,7 +831,7 @@ void CSabotageTestDlg::FreeAgentServer ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CSabotageTestDlg::ShowAgentCharacter ()
+bool CSabotageTestDlg::LoadServerCharacter ()
 {
 	bool	lRet = false;
 	HRESULT	lResult;
@@ -773,60 +841,103 @@ bool CSabotageTestDlg::ShowAgentCharacter ()
 
 	if	(
 			(mServer != NULL)
-		&&	(mCharacterId == 0)
+		&&	(mServerCharacterId == 0)
 		&&	(!mCharacterPath.IsEmpty ())
 		)
 	{
 		mExitCommandId = 0;
-		lResult = mServer->Load (_variant_t(mCharacterPath), &mCharacterId, &mLoadReqID);
-		LogComErr (_LOG_AGENT_CALLS, lResult, _T("Load [%d] [%s] as [%d]"), mLoadReqID, mCharacterPath, mCharacterId);
+		lResult = mServer->Load (_variant_t(mCharacterPath), &mServerCharacterId, &mLoadReqID);
+		LogComErr (_LOG_AGENT_CALLS, lResult, _T("Load [%d] [%s] as [%d]"), mLoadReqID, mCharacterPath, mServerCharacterId);
 	}
 
-	if	(lRet = LoadedAgentCharacter ())
+	if	(
+			(lRet = LoadedServerCharacter ())
+		&&	(
+				(mCycleTimer)
+			||	(mShowButton.GetCheck())
+			)
+		)
 	{
-		mLoadReqID = 0;
+		lRet = ShowServerCharacter ();
 	}
 	return lRet;
 }
 
-bool CSabotageTestDlg::LoadedAgentCharacter ()
+bool CSabotageTestDlg::LoadedServerCharacter ()
 {
 	bool	lRet = false;
-	HRESULT	lResult;
 	long	lReqID = 0;
-	CString	lWinTitle;
 	CPoint	lCharPos;
 
 	if	(
 			(mServer != NULL)
-		&&	(mCharacterId != 0)
-		&&	(mCharacter == NULL)
-		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->get_Character (mCharacterId, &mCharacter), _T("GetCharacterEx"))))
+		&&	(mServerCharacterId != 0)
+		&&	(mServerCharacter == NULL)
+		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->get_Character (mServerCharacterId, &mServerCharacter), _T("GetCharacterEx"))))
 		)
 	{
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetIdleOn (FALSE), _T("[%d] SetIdleOff"), mCharacterId);
-	}
-
-	if	(
-			(mCharacter != NULL)
-		&&	(mSabotageNum != sSabotageMoveEvent)
-		)
-	{
-		if	(SUCCEEDED (mCharacter->GetPosition (&lCharPos.x, &lCharPos.y)))
+		if	(mIdleOn.GetCheck())
 		{
-			lCharPos.x = AfxGetApp()->GetProfileInt (sProfileKey, sProfileCharPosX, lCharPos.x);
-			lCharPos.y = AfxGetApp()->GetProfileInt (sProfileKey, sProfileCharPosY, lCharPos.y);
-			mCharacter->MoveTo ((short)lCharPos.x, (short)lCharPos.y, 0, &lReqID);
+			mServerCharacter.Style |= CharacterStyle_IdleEnabled;
+		}
+		else
+		{
+			mServerCharacter.Style &= ~CharacterStyle_IdleEnabled;
+		}
+		if	(mSoundOn.GetCheck())
+		{
+			mServerCharacter.Style |= CharacterStyle_SoundEffects;
+		}
+		else
+		{
+			mServerCharacter.Style &= ~CharacterStyle_SoundEffects;
 		}
 	}
 
-	if	(mCharacter != NULL)
-	{
-		IDaSvrCommands2Ptr	lCommands (mCharacter);
+	ShowGestures ();
 
-		lCommands->SetCaption (_bstr_t("Sabotage"));
-		lCommands->SetVoice (_bstr_t("sabotage"));
-		lCommands->SetGlobalVoiceCommandsEnabled (TRUE);
+	if	(mServerCharacter != NULL)
+	{
+		CPoint	lCharPos;
+		CSize	lCharSize;
+
+		if	(
+				(SUCCEEDED (mServerCharacter->GetSize (&lCharSize.cx, &lCharSize.cy)))
+			&&	(
+					(lCharSize.cx > 200)
+				||	(lCharSize.cy > 200)
+				)
+			)
+		{
+			while	(
+						(lCharSize.cx > 200)
+					||	(lCharSize.cy > 200)
+					)
+			{
+				lCharSize.cx = MulDiv (lCharSize.cx, 3, 4);
+				lCharSize.cy = MulDiv (lCharSize.cy, 3, 4);
+			}
+			mServerCharacter->SetSize (lCharSize.cx, lCharSize.cy);
+		}
+
+		if	(!mServerCharacter.Visible)
+		{
+			int	lSabotageNum = mSabotageNum;
+
+			mSabotageNum = -1;
+			lCharPos = GetInitialPos (lCharSize);
+			mServerCharacter->MoveTo ((short)lCharPos.x, (short)lCharPos.y, 0, &lReqID);
+			mSabotageNum = lSabotageNum;
+		}
+	}
+
+	if	(mServerCharacter != NULL)
+	{
+		IDaSvrCommands2Ptr	lCommands (mServerCharacter);
+
+		lCommands.Caption = _bstr_t("Sabotage");
+		lCommands.VoiceGrammar = _bstr_t("sabotage");
+		lCommands.GlobalVoiceCommandsEnabled = true;
 
 		if	(mExitCommandId == 0)
 		{
@@ -834,88 +945,355 @@ bool CSabotageTestDlg::LoadedAgentCharacter ()
 		}
 	}
 
-	if	(mCharacter != NULL)
+	if	(mServerCharacter != NULL)
 	{
-		lResult = mCharacter->Show (FALSE, &lReqID);
-		if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Show [%d]"), mCharacterId, lReqID)))
-		{
-			lRet = true;
-		}
+		lRet = true;
 	}
+	mLoadReqID = 0;
 
-	if	(mCharacter != NULL)
-	{
-		lWinTitle.Format (_T("%s [%d]"), mWinTitle, mCharacterId);
-		SetWindowText (lWinTitle);
-	}
 	return lRet;
 }
 
-bool CSabotageTestDlg::HideAgentCharacter ()
-{
-	bool	lRet = false;
-	long	lReqID = 0;
-	CPoint	lCharPos;
-	HRESULT	lResult;
-
-	if	(
-			(mCharacter != NULL)
-		&&	(IsCharacterVisible ())
-		)
-	{
-		if	(SUCCEEDED (mCharacter->GetPosition (&lCharPos.x, &lCharPos.y)))
-		{
-			AfxGetApp()->WriteProfileInt (sProfileKey, sProfileCharPosX, lCharPos.x);
-			AfxGetApp()->WriteProfileInt (sProfileKey, sProfileCharPosY, lCharPos.y);
-		}
-		lResult = mCharacter->Hide (FALSE, &lReqID);
-		if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Hide [%d]"), mCharacterId, lReqID)))
-		{
-			lRet = true;
-		}
-	}
-	return lRet;
-}
-
-bool CSabotageTestDlg::FreeAgentCharacter ()
+bool CSabotageTestDlg::FreeServerCharacter ()
 {
 	bool	lRet = false;
 	CPoint	lCharPos;
 
-	if	(mCharacter != NULL)
+	if	(mServerCharacter != NULL)
 	{
-		if	(SUCCEEDED (mCharacter->GetPosition (&lCharPos.x, &lCharPos.y)))
-		{
-			AfxGetApp()->WriteProfileInt (sProfileKey, sProfileCharPosX, lCharPos.x);
-			AfxGetApp()->WriteProfileInt (sProfileKey, sProfileCharPosY, lCharPos.y);
-		}
-		mCharacter = NULL;
+		mServerCharacter = NULL;
 
 		if	(
 				(mServer != NULL)
-			&&	(mCharacterId != 0)
+			&&	(mServerCharacterId != 0)
 			)
 		{
-			LogComErr (_LOG_AGENT_CALLS, mServer->Unload (mCharacterId), _T("Unload [%d]"), mCharacterId);
+			LogComErr (_LOG_AGENT_CALLS, mServer->Unload (mServerCharacterId), _T("Unload [%d]"), mServerCharacterId);
 		}
 
-		mCharacterId = 0;
-		SetWindowText (mWinTitle);
+		mServerCharacterId = 0;
 		lRet = true;
 	}
+
+	mLoadReqID = 0;
+	mShowReqID = 0;
+	mPlayReqID = 0;
+	mMoveReqID = 0;
+	mSpeakReqID = 0;
+	mThinkReqID = 0;
 	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CSabotageTestDlg::IsCharacterVisible ()
+bool CSabotageTestDlg::ShowServerCharacter ()
 {
-	VARIANT_BOOL	lVisible = VARIANT_FALSE;
+	bool	lRet = false;
+	HRESULT	lResult;
+
+	if	(mServerCharacter != NULL)
+	{
+		mShowReqID = 0;
+		lResult = mServerCharacter->Show (FALSE, &mShowReqID);
+		if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Show [%d]"), mServerCharacterId, mShowReqID)))
+		{
+			lRet = true;
+		}
+	}
+	return lRet;
+}
+
+bool CSabotageTestDlg::HideServerCharacter ()
+{
+	bool	lRet = false;
+	HRESULT	lResult;
+
+	if	(mServerCharacter != NULL)
+	{
+		mShowReqID = 0;
+		lResult = mServerCharacter->Hide (FALSE, &mShowReqID);
+		if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Hide [%d]"), mServerCharacterId, mShowReqID)))
+		{
+			lRet = true;
+		}
+	}
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+void CSabotageTestDlg::GetAgentControl ()
+{
+	CWnd *	lPlacer;
+	if	(
+			(lPlacer = GetDlgItem (IDC_CONTROL))
+		&&	(lPlacer->GetSafeHwnd() != mControlWnd.m_hWnd)
+		)
+	{
+		lPlacer->GetWindowRect (mControlRect);
+		lPlacer->DestroyWindow();
+		ScreenToClient (mControlRect);
+	}
 
 	if	(
-			(mCharacter != NULL)
-		&&	(SUCCEEDED (mCharacter->get_Visible (&lVisible)))
-		&&	(lVisible)
+			(mControlWnd.m_hWnd == NULL)
+		&&	(mControlWnd.CreateControl (__uuidof(DaControl), _T(""), WS_CHILD|WS_CLIPSIBLINGS, mControlRect, this, IDC_CONTROL))
+		)
+	{
+		mControl = mControlWnd.GetControlSite()->m_pObject;
+	}
+	if	(mControl)
+	{
+		mControl.CharacterStyle |= CharacterStyle_Smoothed;
+		mControl.CharacterStyle &= ~CharacterStyle_IconShown;
+
+		if	(
+				(mControlContained.GetCheck ())
+			||	(mControlStandalone.GetCheck ())
+			)
+		{
+			mControl.AutoConnect = false;
+			mControl.Connected = false;
+		}
+		else
+		{
+			mControl.AutoConnect = true;
+		}
+	}
+}
+
+void CSabotageTestDlg::FreeAgentControl ()
+{
+	SafeFreeSafePtr (mControl);
+	if	(mControlWnd.m_hWnd)
+	{
+		mControlWnd.DestroyWindow ();
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool CSabotageTestDlg::LoadControlCharacter ()
+{
+	bool					lRet = false;
+	HRESULT					lResult;
+	IDaCtlCharacters2Ptr	lCharacters;
+
+	GetAgentControl ();
+	mLoadRequest = NULL;
+
+	if	(
+			(mControl != NULL)
+		&&	(mControlCharacterId.IsEmpty())
+		&&	(!mCharacterPath.IsEmpty ())
+		&&	(lCharacters = mControl.Characters)
+		)
+	{
+		if	(mControlContained.GetCheck())
+		{
+			mControlCharacterId = sControlCharacterIdContained;
+		}
+		else
+		{
+			mControlCharacterId = sControlCharacterIdPopup;
+		}
+
+		mExitCommandName.Empty();
+		lResult = lCharacters->Load (_bstr_t(mControlCharacterId), _variant_t(mCharacterPath), &mLoadRequest);
+		LogComErr (_LOG_AGENT_CALLS, lResult, _T("Load [%d] [%s] as [%s]"), mLoadRequest.ID, mCharacterPath, mControlCharacterId);
+	}
+
+	if	(lRet = LoadedControlCharacter ())
+	{
+		if	(
+				(mCycleTimer)
+			||	(mShowButton.GetCheck())
+			)
+		{
+			lRet = ShowControlCharacter ();
+		}
+	}
+	else
+	{
+		SafeFreeSafePtr (mControlCharacter);
+		mControlCharacterId.Empty ();
+	}
+
+	return lRet;
+}
+
+bool CSabotageTestDlg::LoadedControlCharacter ()
+{
+	bool					lRet = false;
+	IDaCtlCharacters2Ptr	lCharacters;
+
+	if	(
+			(mControl != NULL)
+		&&	(!mControlCharacterId.IsEmpty())
+		&&	(mControlCharacter == NULL)
+		&&	(lCharacters = mControl.Characters)
+		&&	(mControlCharacter = lCharacters.Item [_bstr_t(mControlCharacterId)])
+		)
+	{
+		mControlCharacter.IdleEnabled = mIdleOn.GetCheck() ? true : false;
+		mControlCharacter.SoundEffectsEnabled = mSoundOn.GetCheck() ? true : false;
+	}
+
+	ShowGestures ();
+
+	if	(mControlCharacter != NULL)
+	{
+		CSize	lCharSize (mControlCharacter.Width, mControlCharacter.Height);
+		CPoint	lCharPos;
+
+		if	(
+				(lCharSize.cx > 200)
+			||	(lCharSize.cy > 200)
+			)
+		{
+			while	(
+						(lCharSize.cx > 200)
+					||	(lCharSize.cy > 200)
+					)
+			{
+				lCharSize.cx = MulDiv (lCharSize.cx, 3, 4);
+				lCharSize.cy = MulDiv (lCharSize.cy, 3, 4);
+			}
+			mControlCharacter.Width = (short)lCharSize.cx;
+			mControlCharacter.Height = (short)lCharSize.cy;
+		}
+
+		if	(
+				(mControlCharacterId.CompareNoCase (sControlCharacterIdPopup) == 0)
+			&&	(!mControlCharacter.Visible)
+			)
+		{
+			int	lSabotageNum = mSabotageNum;
+
+			mSabotageNum = -1;
+			lCharPos = GetInitialPos (lCharSize);
+			mControlCharacter.Left = (short)lCharPos.x;
+			mControlCharacter.Top = (short)lCharPos.y;
+			mSabotageNum = lSabotageNum;
+		}
+
+		if	(mControlContained.GetCheck())
+		{
+			mControl.ControlCharacter = mControlCharacter;
+			mControlWnd.ShowWindow (SW_SHOWNA);
+		}
+		else
+		{
+			mControlWnd.ShowWindow (SW_HIDE);
+		}
+	}
+
+	if	(mControlCharacter != NULL)
+	{
+		IDaCtlCommands2Ptr	lCommands (mControlCharacter.Commands);
+		IDaCtlCommand2Ptr	lCommand;
+
+		lCommands.Caption = _bstr_t("Sabotage");
+		lCommands.VoiceCaption = _bstr_t("Sabotage");
+		lCommands.VoiceGrammar = _bstr_t("sabotage");
+		lCommands.GlobalVoiceCommandsEnabled = true;
+
+		if	(mExitCommandName.IsEmpty())
+		{
+			mExitCommandName = _T("exit");
+			lCommands->Add (_bstr_t(mExitCommandName), _variant_t(_bstr_t("Exit")), _variant_t(_bstr_t("exit")), _variant_t(VARIANT_TRUE,VT_BOOL), _variant_t(VARIANT_TRUE,VT_BOOL), &lCommand);
+		}
+	}
+
+	if	(mControlCharacter != NULL)
+	{
+		lRet = true;
+	}
+	return lRet;
+}
+
+bool CSabotageTestDlg::FreeControlCharacter ()
+{
+	bool					lRet = false;
+	IDaCtlCharacters2Ptr	lCharacters;
+
+	if	(mControlCharacter != NULL)
+	{
+		lRet = true;
+	}
+	mControlCharacter = NULL;
+
+	if	(
+			(!mControlCharacterId.IsEmpty())
+		&&	(mControl != NULL)
+		&&	(lCharacters = mControl.Characters)
+		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, lCharacters->Unload (_bstr_t(mControlCharacterId)))))
+		)
+	{
+		lRet = true;
+	}
+	mControlCharacterId.Empty ();
+
+	mLoadRequest = NULL;
+	mShowRequest = NULL;
+	mPlayRequest = NULL;
+	mMoveRequest = NULL;
+	mSpeakRequest = NULL;
+	mThinkRequest = NULL;
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool CSabotageTestDlg::ShowControlCharacter ()
+{
+	bool	lRet = false;
+	HRESULT	lResult;
+
+	if	(mControlCharacter)
+	{
+		lResult = mControlCharacter->Show (_variant_t (VARIANT_FALSE,VT_BOOL), &mShowRequest);
+		if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%s] Show [%d]"), mControlCharacterId, mShowRequest.ID)))
+		{
+			lRet = true;
+		}
+	}
+	return lRet;
+}
+
+bool CSabotageTestDlg::HideControlCharacter ()
+{
+	bool	lRet = false;
+	HRESULT	lResult;
+
+	if	(mControlCharacter)
+	{
+		lResult = mControlCharacter->Hide (_variant_t (VARIANT_FALSE,VT_BOOL), &mShowRequest);
+		if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%s] Hide [%d]"), mControlCharacterId, mShowRequest.ID)))
+		{
+			lRet = true;
+		}
+	}
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+bool CSabotageTestDlg::IsCharacterVisible ()
+{
+	if	(
+			(
+				(mServerCharacter != NULL)
+			&&	(mServerCharacter.Visible)
+			)
+		||	(
+				(mControlCharacter != NULL)
+			&&	(mControlCharacter.Visible)
+			)
 		)
 	{
 		return true;
@@ -930,72 +1308,75 @@ void CSabotageTestDlg::CharacterIsVisible (bool pVisible)
 
 	if	(pVisible)
 	{
-		mPopupButton.SetCheck (TRUE);
+		mShowButton.SetCheck (TRUE);
 		mSpeakButton.EnableWindow (TRUE);
 		mThinkButton.EnableWindow (TRUE);
 		mListenButton.EnableWindow (TRUE);
 	}
 	else
 	{
-		mPopupButton.SetCheck (FALSE);
+		mShowButton.SetCheck (FALSE);
 		mSpeakButton.EnableWindow (FALSE);
 		mThinkButton.EnableWindow (FALSE);
 		mListenButton.EnableWindow (FALSE);
 	}
 
-	if	(mCharacter != NULL)
+	if	(mServerCharacter != NULL)
 	{
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetSoundEffectsOn (&lSoundOn), _T("[%d] GetSoundEffectsOn"), mCharacterId);
-		mSoundOn.SetCheck (lSoundOn ? TRUE : FALSE);
+		mSoundOn.SetCheck ((mServerCharacter.Style & CharacterStyle_SoundEffects) ? TRUE : FALSE);
+		mSoundOn.EnableWindow (TRUE);
+	}
+	else
+	if	(mControlCharacter != NULL)
+	{
+		mSoundOn.SetCheck (mControlCharacter.SoundEffectsEnabled ? TRUE : FALSE);
 		mSoundOn.EnableWindow (TRUE);
 	}
 	else
 	{
 		mSoundOn.EnableWindow (FALSE);
-		mSoundOn.SetCheck (FALSE);
 	}
 
-	if	(mCharacter != NULL)
+	if	(mServerCharacter != NULL)
 	{
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetIdleOn (&lIdleOn), _T("[%d] GetIdleOn"), mCharacterId);
-		mIdleEnabled.SetCheck (lIdleOn ? TRUE : FALSE);
-		mIdleEnabled.EnableWindow (TRUE);
+		mIdleOn.SetCheck ((mServerCharacter.Style & CharacterStyle_IdleEnabled) ? TRUE : FALSE);
+		mIdleOn.EnableWindow (TRUE);
+	}
+	else
+	if	(mControlCharacter != NULL)
+	{
+		mIdleOn.SetCheck (mControlCharacter.IdleEnabled ? TRUE : FALSE);
+		mIdleOn.EnableWindow (TRUE);
 	}
 	else
 	{
-		mIdleEnabled.EnableWindow (FALSE);
-		mIdleEnabled.SetCheck (FALSE);
+		mIdleOn.EnableWindow (FALSE);
 	}
 }
 
 void CSabotageTestDlg::ShowCharacterState ()
 {
-	if	(mCharacter != NULL)
+	if	(mServerCharacter != NULL)
 	{
-//		mPopupButton.EnableWindow (TRUE);
 		mMoveButton.EnableWindow (TRUE);
 		mCancelButton.EnableWindow (TRUE);
 	}
 	else
+	if	(mControlCharacter != NULL)
 	{
-//		mPopupButton.EnableWindow (FALSE);
+		mMoveButton.EnableWindow (mControlCharacterId.CompareNoCase(sControlCharacterIdPopup)==0);
+		mCancelButton.EnableWindow (TRUE);
+	}
+	else
+	{
 		mMoveButton.EnableWindow (FALSE);
 		mCancelButton.EnableWindow (FALSE);
 	}
 
+	ShowModeSelection ();
 	CharacterIsVisible (IsCharacterVisible ());
 }
 
-void CSabotageTestDlg::SabotageEvent ()
-{
-	ShowCharacterState ();
-
-	LogMessage (LogNormal, _T("FreeAgentCharacter"));
-	FreeAgentCharacter ();
-	LogMessage (LogNormal, _T("FreeAgentCharacter Done"));
-
-	ShowCharacterState ();
-}
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -1006,24 +1387,15 @@ void CSabotageTestDlg::LoadConfig ()
 	CWinApp *	lApp = AfxGetApp ();
 	CRect		lWinRect;
 
-	if	(ShowCharacter (lApp->GetProfileString (sProfileKey, sProfileCharacter, mCharacterPath)))
-	{
-		tS <LVFINDINFO>	lFindInfo;
-		int				lFoundNdx;
+	mUseControl.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileUseControl, mUseControl.GetCheck()) ? TRUE : FALSE);
+	mControlContained.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileControlContained, mControlContained.GetCheck()) ? TRUE : FALSE);
+	mControlStandalone.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileControlStandalone, mControlStandalone.GetCheck()) ? TRUE : FALSE);
+	mUseServer.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileUseServer, mUseServer.GetCheck()) ? TRUE : FALSE);
+	mSoundOn.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileSoundOn, mSoundOn.GetCheck()) ? TRUE : FALSE);
+	mIdleOn.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIdleOn, mIdleOn.GetCheck()) ? TRUE : FALSE);
 
-		lFindInfo.flags = LVFI_STRING;
-		lFindInfo.psz = mCharacterPath;
-		lFindInfo.vkDirection = VK_NEXT;
-		lFoundNdx = ListView_FindItem (mCharacterList.m_hWnd, -1, &lFindInfo);
-		if	(lFoundNdx >= 0)
-		{
-			mCharacterList.SetItemState (lFoundNdx, LVIS_SELECTED|LVIS_FOCUSED, LVIS_SELECTED|LVIS_FOCUSED);
-		}
-	}
-
-	mGestures.SetCurSel (max (mGestures.FindStringExact (1, lApp->GetProfileString (sProfileKey, sProfileGesture, GetSelGesture())), 0));
-	mStates.SetCurSel (max (mStates.FindStringExact (1, lApp->GetProfileString (sProfileKey, sProfileState, GetSelState())), 0));
-	ShowSelectedAnimation ();
+	mCharacterNdx = -1;
+	mCharacterPath = lApp->GetProfileString (sProfileKey, sProfileCharacter);
 
 	GetWindowRect (&lWinRect);
 	lWinRect.OffsetRect (lApp->GetProfileInt (sProfileKey, sProfilePosX, lWinRect.left) - lWinRect.left, lApp->GetProfileInt (sProfileKey, sProfilePosY, lWinRect.top) - lWinRect.top);
@@ -1035,9 +1407,14 @@ void CSabotageTestDlg::SaveConfig ()
 	CWinApp *	lApp = AfxGetApp ();
 	CRect		lWinRect;
 
+	lApp->WriteProfileInt (sProfileKey, sProfileUseControl, mUseControl.GetCheck());
+	lApp->WriteProfileInt (sProfileKey, sProfileControlContained, mControlContained.GetCheck());
+	lApp->WriteProfileInt (sProfileKey, sProfileControlStandalone, mControlStandalone.GetCheck());
+	lApp->WriteProfileInt (sProfileKey, sProfileUseServer, mUseServer.GetCheck());
+	lApp->WriteProfileInt (sProfileKey, sProfileSoundOn, mSoundOn.GetCheck());
+	lApp->WriteProfileInt (sProfileKey, sProfileIdleOn, mIdleOn.GetCheck());
 	lApp->WriteProfileString (sProfileKey, sProfileCharacter, mCharacterPath);
-	lApp->WriteProfileString (sProfileKey, sProfileGesture, GetSelGesture());
-	lApp->WriteProfileString (sProfileKey, sProfileState, GetSelState());
+	lApp->WriteProfileString (sProfileKey, sProfileGesture, GetSelectedGesture());
 
 	if	(!IsIconic ())
 	{
@@ -1047,12 +1424,170 @@ void CSabotageTestDlg::SaveConfig ()
 	}
 }
 
+bool CSabotageTestDlg::CommandLineConfig ()
+{
+	bool	lRet = false;
+	int		lArgNdx;
+
+	for (lArgNdx = 1; lArgNdx < __argc; lArgNdx++)
+	{
+		CString	lArg (__targv [lArgNdx]);
+
+		if	(
+				(lArg [0] == _T('-'))
+			||	(lArg [0] == _T('/'))
+			)
+		{
+			lArg.Delete (0);
+
+			if	(
+					(lArg.CompareNoCase (_T("Server")) == 0)
+				||	(lArg.CompareNoCase (_T("Server+")) == 0)
+				)
+			{
+				mUseServer.SetCheck (TRUE);
+			}
+			else
+			if	(lArg.CompareNoCase (_T("Server-")) == 0)
+			{
+				mUseServer.SetCheck (FALSE);
+			}
+			else
+			if	(
+					(lArg.CompareNoCase (_T("Control")) == 0)
+				||	(lArg.CompareNoCase (_T("Control+")) == 0)
+				)
+			{
+				mUseControl.SetCheck (TRUE);
+			}
+			else
+			if	(lArg.CompareNoCase (_T("Control-")) == 0)
+			{
+				mUseControl.SetCheck (FALSE);
+			}
+			else
+			if	(
+					(lArg.CompareNoCase (_T("Contained")) == 0)
+				||	(lArg.CompareNoCase (_T("Contained+")) == 0)
+				)
+			{
+				mControlContained.SetCheck (TRUE);
+			}
+			else
+			if	(lArg.CompareNoCase (_T("Contained-")) == 0)
+			{
+				mControlContained.SetCheck (FALSE);
+			}
+			else
+			if	(
+					(lArg.CompareNoCase (_T("Standalone")) == 0)
+				||	(lArg.CompareNoCase (_T("Standalone+")) == 0)
+				)
+			{
+				mControlStandalone.SetCheck (TRUE);
+			}
+			else
+			if	(lArg.CompareNoCase (_T("Standalone-")) == 0)
+			{
+				mControlStandalone.SetCheck (FALSE);
+			}
+			else
+			if	(
+					(lArg.CompareNoCase (_T("Sound")) == 0)
+				||	(lArg.CompareNoCase (_T("Sound+")) == 0)
+				)
+			{
+				mSoundOn.SetCheck (TRUE);
+			}
+			else
+			if	(lArg.CompareNoCase (_T("Sound-")) == 0)
+			{
+				mSoundOn.SetCheck (FALSE);
+			}
+			else
+			if	(
+					(lArg.CompareNoCase (_T("Start")) == 0)
+				||	(lArg.CompareNoCase (_T("Go")) == 0)
+				)
+			{
+				lRet = true;
+			}
+		}
+	}
+
+	if	(lRet)
+	{
+		CString	lTitle (_T("Sabotage"));
+
+		mUseServer.EnableWindow (FALSE);
+		mUseControl.EnableWindow (FALSE);
+		mControlContained.EnableWindow (FALSE);
+		mControlStandalone.EnableWindow (FALSE);
+
+		if	(mUseServer.GetCheck())
+		{
+			lTitle += _T(" Server");
+		}
+		if	(mUseControl.GetCheck())
+		{
+			lTitle += _T(" Control");
+			if	(mControlContained.GetCheck())
+			{
+				lTitle += _T(" (Contained)");
+			}
+			else
+			if	(mControlStandalone.GetCheck())
+			{
+				lTitle += _T(" (Standalone)");
+			}
+		}
+#ifdef	_WIN64
+		lTitle += _T(" x64");
+#else
+		lTitle += _T(" x86");
+#endif
+		SetWindowText (lTitle);
+
+		LogStop ();
+		LogStart (false, lTitle+_T(".log"));
+		LogMessage (LogNormal|LogTime, _T("Start %s"), lTitle);
+	}
+	return lRet;
+}
+
+bool CSabotageTestDlg::ShowConfigCharacter ()
+{
+	CWinApp *	lApp = AfxGetApp ();
+	CString		lCharacterPath;
+
+	lCharacterPath = lApp->GetProfileString (sProfileKey, sProfileCharacter);
+	if	(!lCharacterPath.IsEmpty ())
+	{
+		tS <LVFINDINFO>	lFindInfo;
+
+		lFindInfo.flags = LVFI_STRING;
+		lFindInfo.psz = lCharacterPath;
+		lFindInfo.vkDirection = VK_NEXT;
+		if	(SelectCharacter (ListView_FindItem (mCharacterList.m_hWnd, -1, &lFindInfo), false))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
 void CSabotageTestDlg::OnCancel()
 {
+	if	(mCycleTimer)
+	{
+		KillTimer (mCycleTimer);
+	}
+	mCycleTimer = 0;
+
 	if	(!Stop ())
 	{
 		MessageBeep (MB_OK);
@@ -1065,15 +1600,19 @@ void CSabotageTestDlg::OnOK()
 
 void CSabotageTestDlg::OnClose()
 {
+	Stop ();
 	UpdateData (TRUE);
 	CDialog::EndDialog (IDOK);
 }
 
 void CSabotageTestDlg::OnDestroy()
 {
+	Stop ();
 	SaveConfig ();
-	FreeAgentCharacter ();
+	FreeServerCharacter ();
 	FreeAgentServer ();
+	FreeControlCharacter ();
+	FreeAgentControl ();
 
 	CDialog::OnDestroy();
 }
@@ -1085,7 +1624,6 @@ void CSabotageTestDlg::OnDestroy()
 void CSabotageTestDlg::OnItemChangedCharacterList(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	LPNMLISTVIEW	lNotify = (LPNMLISTVIEW)pNMHDR;
-	CString			lCharacterPath;
 
 	if	(
 			(lNotify->uChanged & LVIF_STATE)
@@ -1093,16 +1631,9 @@ void CSabotageTestDlg::OnItemChangedCharacterList(NMHDR* pNMHDR, LRESULT* pResul
 		&&	(lNotify->uNewState & LVIS_SELECTED)
 		)
 	{
-		lCharacterPath = mCharacterList.GetItemText (lNotify->iItem, 0);
-		if	(
-				(
-					(mCharacter == NULL)
-				||	(lCharacterPath.CompareNoCase (mCharacterPath) != 0)
-				)
-			&&	(ShowCharacter (lCharacterPath))
-			)
+		if	(SelectCharacter (lNotify->iItem, true))
 		{
-			ShowSelectedAnimation ();
+			ShowSelectedGesture ();
 		}
 	}
 }
@@ -1111,9 +1642,9 @@ void CSabotageTestDlg::OnItemActivateCharacterList(NMHDR* pNMHDR, LRESULT* pResu
 {
 	NMITEMACTIVATE*	lNotify = (NMITEMACTIVATE*)pNMHDR;
 
-	if	(ShowCharacter (mCharacterList.GetItemText (lNotify->iItem, 0)))
+	if	(SelectCharacter (lNotify->iItem, true))
 	{
-		ShowSelectedAnimation ();
+		ShowSelectedGesture ();
 	}
 }
 
@@ -1121,51 +1652,33 @@ void CSabotageTestDlg::OnItemActivateCharacterList(NMHDR* pNMHDR, LRESULT* pResu
 
 void CSabotageTestDlg::OnSelChangeGestures()
 {
-	if	(mGestures.GetCurSel () > 0)
-	{
-		mStates.SetCurSel (0);
-	}
-	ShowSelectedAnimation ();
+	ShowSelectedGesture ();
 }
 
 void CSabotageTestDlg::OnDblClkGestures()
 {
 	if	(mGestures.GetCurSel () > 0)
 	{
-		mStates.SetCurSel (0);
-		ShowSelectedAnimation ();
+		ShowSelectedGesture (true);
 		mRepeatTimer = SetTimer ((UINT_PTR)&mRepeatTimer, 100, NULL);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CSabotageTestDlg::OnSelChangeStates()
-{
-	if	(mStates.GetCurSel () > 0)
-	{
-		mGestures.SetCurSel (0);
-	}
-	ShowSelectedAnimation ();
-}
-
-void CSabotageTestDlg::OnDblClkStates()
-{
-	if	(mStates.GetCurSel () > 0)
-	{
-		mGestures.SetCurSel (0);
-		ShowSelectedAnimation ();
-		mRepeatTimer = SetTimer ((UINT_PTR)&mRepeatTimer, 100, NULL);
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-void CSabotageTestDlg::OnPopup()
+void CSabotageTestDlg::OnShowCharacter()
 {
 	if	(IsCharacterVisible ())
 	{
-		if	(HideAgentCharacter ())
+		mShowButton.SetCheck (FALSE);
+
+		if	(HideServerCharacter ())
+		{
+#ifdef	_DEBUG_NOT
+			CharacterIsVisible (false);
+#endif
+		}
+		if	(HideControlCharacter ())
 		{
 #ifdef	_DEBUG_NOT
 			CharacterIsVisible (false);
@@ -1174,10 +1687,9 @@ void CSabotageTestDlg::OnPopup()
 	}
 	else
 	{
-#ifdef	_ALWAYS_RELOAD
-		ShowCharacter (CString((LPCTSTR)mCharacterPath));
-#endif
-		if	(ShowAgentCharacter ())
+		mShowButton.SetCheck (TRUE);
+
+		if	(SelectCharacter (mCharacterNdx, true))
 		{
 #ifdef	_DEBUG_NOT
 			CharacterIsVisible (true);
@@ -1195,31 +1707,72 @@ void CSabotageTestDlg::OnMoveButton()
 	if	(IsCharacterVisible ())
 	{
 		HRESULT	lResult;
+		CPoint	lCharPos;
+		CSize	lCharSize;
 		CRect	lCharRect;
 
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetSize (&lCharRect.right, &lCharRect.bottom), _T("[%d] GetSize"), mCharacterId);
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetPosition (&lCharRect.left, &lCharRect.top), _T("[%d] GetPosition"), mCharacterId);
-		lCharRect.right += lCharRect.left;
-		lCharRect.bottom += lCharRect.top;
+		if	(mServerCharacter)
+		{
+			lCharPos.x = mServerCharacter.Left;
+			lCharPos.y = mServerCharacter.Top;
+			lCharSize.cx = mServerCharacter.Width;
+			lCharSize.cy = mServerCharacter.Height;
+			lCharRect = CRect (lCharPos, lCharSize);
+
+			if	(
+					(lCharRect.left <= 0)
+				||	(lCharRect.right >= GetSystemMetrics(SM_CXSCREEN)-1)
+				)
+			{
+				OffsetRect (lCharRect, (GetSystemMetrics(SM_CXSCREEN)/2)-lCharRect.CenterPoint().x, 0);
+			}
+			else
+			if	(lCharRect.CenterPoint().x > GetSystemMetrics(SM_CXSCREEN)/2)
+			{
+				OffsetRect (lCharRect, GetSystemMetrics(SM_CXSCREEN)-lCharRect.right, 0);
+			}
+			else
+			{
+				OffsetRect (lCharRect, -lCharRect.left, 0);
+			}
+
+			mMoveReqID = 0;
+			lResult = mServerCharacter->MoveTo ((short)lCharRect.left, (short)lCharRect.top, 1000, &mMoveReqID);
+			LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] MoveTo [%d %d] [%d]"), mServerCharacterId, lCharRect.left, lCharRect.top, mMoveReqID);
+		}
 
 		if	(
-				(lCharRect.left <= 0)
-			||	(lCharRect.right >= GetSystemMetrics(SM_CXSCREEN)-1)
+				(mControlCharacter)
+			&&	(mControlCharacterId.CompareNoCase(sControlCharacterIdPopup)==0)
 			)
 		{
-			OffsetRect (lCharRect, (GetSystemMetrics(SM_CXSCREEN)/2)-lCharRect.CenterPoint().x, 0);
+			lCharPos.x = mControlCharacter.Left;
+			lCharPos.y = mControlCharacter.Top;
+			lCharSize.cx = mControlCharacter.Width;
+			lCharSize.cy = mControlCharacter.Height;
+			lCharRect = CRect (lCharPos, lCharSize);
+
+			if	(
+					(lCharRect.left <= 0)
+				||	(lCharRect.right >= GetSystemMetrics(SM_CXSCREEN)-1)
+				)
+			{
+				OffsetRect (lCharRect, (GetSystemMetrics(SM_CXSCREEN)/2)-lCharRect.CenterPoint().x, 0);
+			}
+			else
+			if	(lCharRect.CenterPoint().x > GetSystemMetrics(SM_CXSCREEN)/2)
+			{
+				OffsetRect (lCharRect, GetSystemMetrics(SM_CXSCREEN)-lCharRect.right, 0);
+			}
+			else
+			{
+				OffsetRect (lCharRect, -lCharRect.left, 0);
+			}
+
+			lResult = mControlCharacter->MoveTo ((short)lCharRect.left, (short)lCharRect.top, _variant_t(), &mMoveRequest);
+			LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%s] MoveTo [%d %d] [%d]"), mControlCharacterId, lCharRect.left, lCharRect.top, mMoveRequest.ID);
 		}
-		else
-		if	(lCharRect.CenterPoint().x > GetSystemMetrics(SM_CXSCREEN)/2)
-		{
-			OffsetRect (lCharRect, GetSystemMetrics(SM_CXSCREEN)-lCharRect.right, 0);
-		}
-		else
-		{
-			OffsetRect (lCharRect, -lCharRect.left, 0);
-		}
-		lResult = mCharacter->MoveTo ((short)lCharRect.left, (short)lCharRect.top, 1000, &mMoveReqID);
-		LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] MoveTo [%d %d] [%d]"), mCharacterId, lCharRect.left, lCharRect.top, mMoveReqID);
+
 		ShowCharacterState ();
 	}
 	else
@@ -1235,8 +1788,19 @@ void CSabotageTestDlg::OnSpeakButton()
 	{
 		HRESULT	lResult;
 
-		lResult = mCharacter->Speak (_bstr_t("Now is the winter of our discontent."), NULL, &mSpeakReqID);
-		LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Speak [%d]"), mCharacterId, mSpeakReqID);
+		if	(mServerCharacter)
+		{
+			mSpeakReqID = 0;
+			lResult = mServerCharacter->Speak (_bstr_t("Now is the winter of our discontent."), NULL, &mSpeakReqID);
+			LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Speak [%d]"), mServerCharacterId, mSpeakReqID);
+		}
+
+		if	(mControlCharacter)
+		{
+			lResult = mControlCharacter->Speak (_variant_t(_bstr_t("Now is the winter of our discontent.")), _variant_t(), &mSpeakRequest);
+			LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%s] Speak [%d]"), mControlCharacterId, mSpeakRequest.ID);
+		}
+
 		ShowCharacterState ();
 	}
 	else
@@ -1252,8 +1816,19 @@ void CSabotageTestDlg::OnThinkButton()
 	{
 		HRESULT	lResult;
 
-		lResult = mCharacter->Think (_bstr_t("Now is the winter of our discontent."), &mThinkReqID);
-		LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Think [%d]"), mCharacterId, mThinkReqID);
+		if	(mServerCharacter)
+		{
+			mThinkReqID = 0;
+			lResult = mServerCharacter->Think (_bstr_t("Now is the winter of our discontent."), &mThinkReqID);
+			LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Think [%d]"), mServerCharacterId, mThinkReqID);
+		}
+
+		if	(mControlCharacter)
+		{
+			lResult = mControlCharacter->Think (_bstr_t("Now is the winter of our discontent."), &mThinkRequest);
+			LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%s] Think [%d]"), mControlCharacterId, mThinkRequest.ID);
+		}
+
 		ShowCharacterState ();
 	}
 	else
@@ -1267,13 +1842,27 @@ void CSabotageTestDlg::OnListenButton()
 	Stop ();
 	if	(IsCharacterVisible ())
 	{
-		HRESULT					lResult;
-		IDaSvrAudioOutputPtr	lOutputProperties (mServer);
-		long					lTTSStatus;
+		HRESULT	lResult;
 
-		LogComErr (_LOG_CHAR_CALLS, lOutputProperties->GetStatus (&lTTSStatus));
-		lResult = mCharacter->Listen (lTTSStatus != AudioStatus_CharacterListening);
-		LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Listen [%d]"), mCharacterId, (lTTSStatus != AudioStatus_CharacterListening));
+		if	(mServerCharacter)
+		{
+			IDaSvrSettingsPtr	lSettings (mServer.Settings);
+			long				lListen = (lSettings.AudioStatus != AudioStatus_CharacterListening);
+
+			lResult = mServerCharacter->Listen (lListen);
+			LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Listen [%d]"), mServerCharacterId, lListen);
+		}
+
+		if	(mControlCharacter)
+		{
+			IDaCtlSettingsPtr	lSettings (mControl.Settings);
+			VARIANT_BOOL		lListen = (lSettings.AudioStatus != AudioStatus_CharacterListening) ? VARIANT_TRUE : VARIANT_FALSE;
+			VARIANT_BOOL		lListening = VARIANT_FALSE;
+
+			lResult = mControlCharacter->Listen (lListen, &lListening);
+			LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%s] Listen [%d] [%d]"), mControlCharacterId, lListen, lListening);
+		}
+
 		ShowCharacterState ();
 	}
 	else
@@ -1291,28 +1880,35 @@ void CSabotageTestDlg::OnSabotageNum()
 
 /////////////////////////////////////////////////////////////////////////////
 
+void CSabotageTestDlg::OnControlMode()
+{
+	ShowControlMode ();
+}
+
 void CSabotageTestDlg::OnSoundOn()
 {
-	if	(mCharacter)
+	if	(mServerCharacter)
 	{
-		long	lSoundOn = 0;
-
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetSoundEffectsOn (&lSoundOn), _T("[%d] GetSoundEffectsOn"), mCharacterId);
-		LogComErr (_LOG_CHAR_CALLS, mCharacter->SetSoundEffectsOn (lSoundOn ? FALSE : TRUE), _T("[%d] SetSoundEffectsOn"), mCharacterId);
-		ShowCharacterState ();
+		mServerCharacter.Style ^= CharacterStyle_SoundEffects;
 	}
+	if	(mControlCharacter)
+	{
+		mControlCharacter.SoundEffectsEnabled = !mControlCharacter.SoundEffectsEnabled;
+	}
+	ShowCharacterState ();
 }
 
 void CSabotageTestDlg::OnIdleOn()
 {
-	if	(mCharacter)
+	if	(mServerCharacter)
 	{
-		long	lIdleOn = 0;
-
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetIdleOn (&lIdleOn), _T("[%d] GetIdleOn"), mCharacterId);
-		LogComErr (_LOG_CHAR_CALLS, mCharacter->SetIdleOn (lIdleOn ? FALSE : TRUE), _T("[%d] SetIdleOn"), mCharacterId);
-		ShowCharacterState ();
+		mServerCharacter.Style ^= CharacterStyle_IdleEnabled;
 	}
+	if	(mControlCharacter)
+	{
+		mControlCharacter.IdleEnabled = !mControlCharacter.IdleEnabled;
+	}
+	ShowCharacterState ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1326,10 +1922,66 @@ void CSabotageTestDlg::OnTimer(UINT_PTR nIDEvent)
 		&&	(nIDEvent == mRepeatTimer)
 		)
 	{
-		if	(!IsAnimating())
+		if	(
+				(IsCharacterVisible())
+			&&	(!IsAnimating())
+			)
 		{
-			ShowSelGesture (false);
-			ShowSelState (false);
+			ShowSelectedGesture (false);
+		}
+	}
+
+	if	(
+			(mCycleTimer)
+		&&	(nIDEvent == mCycleTimer)
+		)
+	{
+		if	(
+				(!GetQueueStatus (QS_INPUT))
+			&&	(!IsAnimating ())
+			&&	(mCharacterList.GetItemCount() > 0)
+			)
+		{
+			do
+			{
+				while	(++mCharacterNdx < mCharacterList.GetItemCount ())
+				{
+					PrimeMessagePump ();
+					if	(SelectCharacter (mCharacterNdx, true))
+					{
+						break;
+					}
+					if	(!mCycleTimer)
+					{
+						break;
+					}
+				}
+				if	(!mCycleTimer)
+				{
+					break;
+				}
+			}
+			while	(mCharacterNdx < mCharacterList.GetItemCount());
+		}
+
+		if	(
+				(mCycleTimer)
+			&&	(mCharacterList.GetItemCount() <= 0)
+			)
+		{
+			KillTimer (mCycleTimer);
+			mCycleTimer = 0;
+			Stop ();
+		}
+
+		if	(
+				(mCycleTimer)
+			&&	(mCharacterList.GetItemCount() > 0)
+			&&	(mCharacterNdx >= mCharacterList.GetItemCount()-1)
+			)
+		{
+			PrimeMessagePump ();
+			mCharacterNdx = -1;
 		}
 	}
 
@@ -1342,62 +1994,29 @@ void CSabotageTestDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwThr
 {
 	CDialog::OnActivateApp(bActive, dwThreadID);
 
-	if	(mCharacter != NULL)
+	if	(bActive)
 	{
-		ActiveStateType	lActive = (ActiveStateType)-1;
-		long			lOtherClients = -1;
-
-		if	(bActive)
+		if	(
+				(mServerCharacter != NULL)
+			&&	(mServerCharacter.Visible)
+			)
 		{
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_ActiveState (&lActive), _T("[%d] get_ActiveState"), mCharacterId);
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_OtherClientCount (&lOtherClients), _T("[%d] get_OtherClientCount"), mCharacterId);
-			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd] OtherClients [%d]"), mCharacterId, bActive, lActive, lOtherClients);
+			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd] OtherClients [%d]"), mServerCharacterId, bActive, mServerCharacter.ActiveState, mServerCharacter.OtherClientCount);
+			LogComErr (_LOG_CHAR_CALLS, mServerCharacter->put_ActiveState (ActiveState_Active), _T("[%d] put_ActiveState ActiveState_Active"), mServerCharacterId);
+			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd]"), mServerCharacterId, bActive, mServerCharacter.ActiveState);
+		}
 
-			LogComErr (_LOG_CHAR_CALLS, mCharacter->put_ActiveState (ActiveState_Active), _T("[%d] put_ActiveState ActiveState_Active"), mCharacterId);
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_ActiveState (&lActive), _T("[%d] get_ActiveState"), mCharacterId);
-			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd]"), mCharacterId, bActive, lActive);
+		if	(
+				(mControlCharacter)
+			&&	(mControlCharacter.Visible)
+			&&	(mControlCharacterId.CompareNoCase(sControlCharacterIdPopup)==0)
+			)
+		{
+			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%s] ActivateApp [%u] Active [%hd] OtherClients [%d]"), mControlCharacterId, bActive, mControlCharacter.ActiveState, mControlCharacter.HasOtherClients);
+			LogComErr (_LOG_CHAR_CALLS, mControlCharacter->Activate (_variant_t((short)ActiveState_Active,VT_I2), NULL), _T("[%s] put_ActiveState ActiveState_Active"), mControlCharacterId);
+			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%s] ActivateApp [%u] Active [%hd]"), mControlCharacterId, bActive, mControlCharacter.ActiveState);
 		}
 	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::GetTypeInfoCount(UINT *pctinfo)
-{
-	METHOD_PROLOGUE_EX_(CSabotageTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%d)] CSabotageTestDlg::XDaSvrNotifySink::GetTypeInfoCount"), pThis, pThis->m_dwRef);
-#endif
-	return pThis->GetIDispatch(FALSE)->GetTypeInfoCount (pctinfo);
-}
-
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::GetTypeInfo(UINT iTInfo, LCID lcid, ITypeInfo **ppTInfo)
-{
-	METHOD_PROLOGUE_EX_(CSabotageTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%d)] CSabotageTestDlg::XDaSvrNotifySink::GetTypeInfo"), pThis, pThis->m_dwRef);
-#endif
-	return pThis->GetIDispatch(FALSE)->GetTypeInfo (iTInfo, lcid, ppTInfo);
-}
-
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::GetIDsOfNames(REFIID riid, LPOLESTR *rgszNames, UINT cNames, LCID lcid, DISPID *rgDispId)
-{
-	METHOD_PROLOGUE_EX_(CSabotageTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%d)] CSabotageTestDlg::XDaSvrNotifySink::GetIDsOfNames"), pThis, pThis->m_dwRef);
-#endif
-	return pThis->GetIDispatch(FALSE)->GetIDsOfNames (riid, rgszNames, cNames, lcid, rgDispId);
-}
-
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT *puArgErr)
-{
-	METHOD_PROLOGUE_EX(CSabotageTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%d)] CSabotageTestDlg::XDaSvrNotifySink::Invoke [%8.8X (%u)]"), pThis, pThis->m_dwRef, dispIdMember, dispIdMember);
-#endif
-	return pThis->GetIDispatch(FALSE)->Invoke (dispIdMember, riid, lcid, wFlags, pDispParams, pVarResult, pExcepInfo, puArgErr);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1408,7 +2027,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Command (long Comm
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Command"), pThis->mCharacterId, pThis->m_dwRef);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Command"), pThis->mServerCharacterId, pThis->m_dwRef);
 #endif
 	if	(pThis->mSabotageNum == sSabotageCommandEvent)
 	{
@@ -1426,7 +2045,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::ActivateInputState
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::ActivateInputState [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Activated);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::ActivateInputState [%d] [%d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Activated);
 #endif
 	if	(
 			(
@@ -1445,7 +2064,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Restart (void)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Restart"), pThis->mCharacterId, pThis->m_dwRef);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Restart"), pThis->mServerCharacterId, pThis->m_dwRef);
 #endif
 	return S_OK;
 }
@@ -1454,7 +2073,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Shutdown (void)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Shutdown"), pThis->mCharacterId, pThis->m_dwRef);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Shutdown"), pThis->mServerCharacterId, pThis->m_dwRef);
 #endif
 	return S_OK;
 }
@@ -1464,11 +2083,11 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::VisibleState (long
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
 	VisibilityCauseType lCause = (VisibilityCauseType)-1;
-	if	(pThis->mCharacter != NULL)
+	if	(pThis->mServerCharacter != NULL)
 	{
-		pThis->mCharacter->get_VisibilityCause (&lCause);
+		pThis->mServerCharacter->get_VisibilityCause (&lCause);
 	}
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::VisibleState [%d] [%d] cause [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Visible, Cause, lCause);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::VisibleState [%d] [%d] cause [%d] [%d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Visible, Cause, lCause);
 #endif
 	if	(
 			(Visible)
@@ -1496,7 +2115,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Click (long Charac
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Click [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Click [%d] [%4.4X] [%d %d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	if	(pThis->mSabotageNum == sSabotageClickEvent)
 	{
@@ -1509,7 +2128,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::DblClick (long Cha
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::DblClick [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::DblClick [%d] [%4.4X] [%d %d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	if	(pThis->mSabotageNum == sSabotageDblClickEvent)
 	{
@@ -1522,7 +2141,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::DragStart (long Ch
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::DragStart [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::DragStart [%d] [%4.4X] [%d %d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	if	(pThis->mSabotageNum == sSabotageDragStartEvent)
 	{
@@ -1535,7 +2154,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::DragComplete (long
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	if	(pThis->mSabotageNum == sSabotageDragEndEvent)
 	{
@@ -1548,13 +2167,10 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::RequestStart (long
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::RequestStart [%d]"), pThis->mCharacterId, pThis->m_dwRef, RequestID);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::RequestStart [%d]"), pThis->mServerCharacterId, pThis->m_dwRef, RequestID);
 #endif
 	if	(
-			(
-				(RequestID == pThis->mLastAnimationReqID)
-			||	(RequestID == pThis->mHidingStateReqID)
-			)
+			(RequestID == pThis->mPlayReqID)
 		&&	(pThis->mSabotageNum == sSabotageAnimateStartEvent)
 		)
 	{
@@ -1583,13 +2199,10 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::RequestComplete (l
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::RequestComplete [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, RequestID, Result);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::RequestComplete [%d] [%8.8X]"), pThis->mServerCharacterId, pThis->m_dwRef, RequestID, Result);
 #endif
 	if	(
-			(
-				(RequestID == pThis->mLastAnimationReqID)
-			||	(RequestID == pThis->mHidingStateReqID)
-			)
+			(RequestID == pThis->mPlayReqID)
 		&&	(pThis->mSabotageNum == sSabotageAnimateEndEvent)
 		)
 	{
@@ -1612,9 +2225,13 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::RequestComplete (l
 		pThis->SabotageEvent ();
 	}
 
-	if	(RequestID == pThis->mLastAnimationReqID)
+	if	(RequestID == pThis->mShowReqID)
 	{
-		pThis->mLastAnimationReqID = 0;
+		pThis->mShowReqID = 0;
+	}
+	if	(RequestID == pThis->mPlayReqID)
+	{
+		pThis->mPlayReqID = 0;
 	}
 	if	(RequestID == pThis->mMoveReqID)
 	{
@@ -1628,22 +2245,16 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::RequestComplete (l
 	{
 		pThis->mThinkReqID = 0;
 	}
-	if	(RequestID == pThis->mHidingStateReqID)
+	if	(
+			(RequestID == pThis->mLoadReqID)
+		&&	(pThis->LoadedServerCharacter ())
+		&&	(
+				(pThis->mCycleTimer)
+			||	(pThis->mShowButton.GetCheck())
+			)
+		)
 	{
-		pThis->mHidingStateReqID = 0;
-		LogComErr (_LOG_CHAR_CALLS, pThis->mCharacter->Show (TRUE, &RequestID), _T("[%d] Show"), pThis->mCharacterId);
-	}
-	if	(RequestID == pThis->mLoadReqID)
-	{
-		pThis->mLoadReqID = 0;
-		pThis->LoadedAgentCharacter ();
-
-		if	(PathIsURL (pThis->mCharacterPath))
-		{
-			pThis->ShowGestures ();
-			pThis->ShowStates ();
-			pThis->ShowCharacterState ();
-		}
+		pThis->ShowControlCharacter ();
 	}
 	return S_OK;
 }
@@ -1652,7 +2263,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::BookMark (long Boo
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::BookMark [%d]"), pThis->mCharacterId, pThis->m_dwRef, BookMarkID);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::BookMark [%d]"), pThis->mServerCharacterId, pThis->m_dwRef, BookMarkID);
 #endif
 	return S_OK;
 }
@@ -1661,7 +2272,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Idle (long Charact
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Idle [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Start);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Idle [%d] [%d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Start);
 #endif
 	if	(
 			(Start)
@@ -1690,13 +2301,16 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Move (long Charact
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
 	MoveCauseType lCause = (MoveCauseType)-1;
-	if	(pThis->mCharacter != NULL)
+	if	(pThis->mServerCharacter != NULL)
 	{
-		pThis->mCharacter->get_MoveCause (&lCause);
+		pThis->mServerCharacter->get_MoveCause (&lCause);
 	}
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Move [%d] [%d %d] cause [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, x, y, Cause, lCause);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Move [%d] [%d %d] cause [%d] [%d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, x, y, Cause, lCause);
 #endif
-	if	(pThis->mSabotageNum == sSabotageMoveEvent)
+	if	(
+			(pThis->mMoveReqID > 0)
+		&&	(pThis->mSabotageNum == sSabotageMoveEvent)
+		)
 	{
 		pThis->SabotageEvent ();
 	}
@@ -1707,7 +2321,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Size (long Charact
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Size [%d] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Width, Height);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Size [%d] [%d %d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Width, Height);
 #endif
 	return S_OK;
 }
@@ -1716,7 +2330,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::BalloonVisibleStat
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::BalloonVisibleState [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Visible);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::BalloonVisibleState [%d] [%d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Visible);
 #endif
 	if	(
 			(Visible)
@@ -1744,7 +2358,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::HelpComplete (long
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::HelpComplete"), pThis->mCharacterId, pThis->m_dwRef);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::HelpComplete"), pThis->mServerCharacterId, pThis->m_dwRef);
 #endif
 	return S_OK;
 }
@@ -1753,9 +2367,27 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::ListeningState (lo
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::ListeningState"), pThis->mCharacterId, pThis->m_dwRef);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::ListeningState [%d] [%d] [%d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Listening, Cause);
 #endif
-	pThis->ShowCharacterState ();
+	if	(
+			(Listening)
+		&&	(pThis->mSabotageNum == sSabotageListenStartEvent)
+		)
+	{
+		pThis->SabotageEvent ();
+	}
+	else
+	if	(
+			(!Listening)
+		&&	(pThis->mSabotageNum == sSabotageListenEndEvent)
+		)
+	{
+		pThis->SabotageEvent ();
+	}
+	else
+	{
+		pThis->ShowCharacterState ();
+	}
 	return S_OK;
 }
 
@@ -1763,7 +2395,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::DefaultCharacterCh
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::DefaultCharacterChange [%ls]"), pThis->mCharacterId, pThis->m_dwRef, CharGUID);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::DefaultCharacterChange [%ls]"), pThis->mServerCharacterId, pThis->m_dwRef, CharGUID);
 #endif
 	return S_OK;
 }
@@ -1772,7 +2404,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::AgentPropertyChang
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::AgentPropertyChange"), pThis->mCharacterId, pThis->m_dwRef);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::AgentPropertyChange"), pThis->mServerCharacterId, pThis->m_dwRef);
 #endif
 	return S_OK;
 }
@@ -1781,7 +2413,337 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::ActiveClientChange
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::ActiveClientChange [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Status);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::ActiveClientChange [%d] [%8.8X]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Status);
 #endif
 	return S_OK;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+void CSabotageTestDlg::OnCtlActivateInput(LPCTSTR CharacterID)
+{
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlActivateInput [%s]"), mControlCharacterId, CharacterID);
+#endif
+	if	(mSabotageNum == sSabotageActivateEvent)
+	{
+		SabotageEvent ();
+	}
+}
+
+void CSabotageTestDlg::OnCtlDeactivateInput(LPCTSTR CharacterID)
+{
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlDeactivateInput [%s]"), mControlCharacterId, CharacterID);
+#endif
+}
+
+void CSabotageTestDlg::OnCtlClick (LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
+{
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlClick [%s] [%d] [%d] [%d %d]"), mControlCharacterId, CharacterID, Button, Shift, X, Y);
+#endif
+	if	(mSabotageNum == sSabotageClickEvent)
+	{
+		SabotageEvent ();
+	}
+}
+
+void CSabotageTestDlg::OnCtlDblClick (LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
+{
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlDblClick [%s] [%d] [%d] [%d %d]"), mControlCharacterId, CharacterID, Button, Shift, X, Y);
+#endif
+	if	(mSabotageNum == sSabotageDblClickEvent)
+	{
+		SabotageEvent ();
+	}
+}
+
+void CSabotageTestDlg::OnCtlDragStart (LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
+{
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlDragStart [%s] [%d] [%d] [%d %d]"), mControlCharacterId, CharacterID, Button, Shift, X, Y);
+#endif
+	if	(mSabotageNum == sSabotageDragStartEvent)
+	{
+		SabotageEvent ();
+	}
+}
+
+void CSabotageTestDlg::OnCtlDragComplete (LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
+{
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlDragComplete [%s] [%d] [%d] [%d %d]"), mControlCharacterId, CharacterID, Button, Shift, X, Y);
+#endif
+	if	(mSabotageNum == sSabotageDragEndEvent)
+	{
+		SabotageEvent ();
+	}
+}
+
+void CSabotageTestDlg::OnCtlShow (LPCTSTR CharacterID, VisibilityCauseType Cause)
+{
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlShow [%s] [%d]"), mControlCharacterId, CharacterID, Cause);
+#endif
+	if	(mSabotageNum == sSabotageShowEvent)
+	{
+		SabotageEvent ();
+	}
+	else
+	{
+		ShowCharacterState ();
+	}
+}
+
+void CSabotageTestDlg::OnCtlHide (LPCTSTR CharacterID, VisibilityCauseType Cause)
+{
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlHide [%s] [%d]"), mControlCharacterId, CharacterID, Cause);
+#endif
+	if	(mSabotageNum == sSabotageHideEvent)
+	{
+		SabotageEvent ();
+	}
+	else
+	{
+		ShowCharacterState ();
+	}
+}
+
+void CSabotageTestDlg::OnCtlRequestStart (IDaCtlRequest* Request)
+{
+	IDaCtlRequestPtr lRequest (Request);
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlRequestStart [%d] [%d] [%8.8X] [%ls]"), mControlCharacterId, lRequest.ID, lRequest.Status, lRequest.Number, (BSTR)lRequest.Description);
+#endif
+	if	(
+			(mPlayRequest)
+		&&	(mPlayRequest.ID == lRequest.ID)
+		&&	(mSabotageNum == sSabotageAnimateStartEvent)
+		)
+	{
+		SabotageEvent ();
+	}
+	if	(
+			(mSpeakRequest)
+		&&	(mSpeakRequest.ID == lRequest.ID)
+		&&	(mSabotageNum == sSabotageSpeakStartEvent)
+		)
+	{
+		SabotageEvent ();
+	}
+	if	(
+			(mThinkRequest)
+		&&	(mThinkRequest.ID == lRequest.ID)
+		&&	(mSabotageNum == sSabotageThinkStartEvent)
+		)
+	{
+		SabotageEvent ();
+	}
+}
+
+void CSabotageTestDlg::OnCtlRequestComplete (IDaCtlRequest* Request)
+{
+	IDaCtlRequestPtr lRequest (Request);
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlRequestComplete [%d] [%d] [%8.8X] [%ls]"), mControlCharacterId, lRequest.ID, lRequest.Status, lRequest.Number, (BSTR)lRequest.Description);
+#endif
+	if	(
+			(mPlayRequest)
+		&&	(mPlayRequest.ID == lRequest.ID)
+		&&	(mSabotageNum == sSabotageAnimateEndEvent)
+		)
+	{
+		SabotageEvent ();
+	}
+	if	(
+			(mSpeakRequest)
+		&&	(mSpeakRequest.ID == lRequest.ID)
+		&&	(mSabotageNum == sSabotageSpeakEndEvent)
+		)
+	{
+		SabotageEvent ();
+	}
+	if	(
+			(mThinkRequest)
+		&&	(mThinkRequest.ID == lRequest.ID)
+		&&	(mSabotageNum == sSabotageThinkEndEvent)
+		)
+	{
+		SabotageEvent ();
+	}
+
+	if	(
+			(mLoadRequest)
+		&&	(mLoadRequest.ID == lRequest.ID)
+		)
+	{
+		mLoadRequest = NULL;
+	}
+	if	(
+			(mShowRequest)
+		&&	(mShowRequest.ID == lRequest.ID)
+		)
+	{
+		mShowRequest = NULL;
+	}
+	if	(
+			(mPlayRequest)
+		&&	(mPlayRequest.ID == lRequest.ID)
+		)
+	{
+		mPlayRequest = NULL;
+	}
+	if	(
+			(mMoveRequest)
+		&&	(mMoveRequest.ID == lRequest.ID)
+		)
+	{
+		mMoveRequest = NULL;
+	}
+	if	(
+			(mSpeakRequest)
+		&&	(mSpeakRequest.ID == lRequest.ID)
+		)
+	{
+		mSpeakRequest = NULL;
+	}
+	if	(
+			(mThinkRequest)
+		&&	(mThinkRequest.ID == lRequest.ID)
+		)
+	{
+		mThinkRequest = NULL;
+	}
+}
+
+void CSabotageTestDlg::OnCtlCommand (IDaCtlUserInput* UserInput)
+{
+	IDaCtlUserInputPtr lUserInput (UserInput);
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlCommand [%ls] [%ls]"), mControlCharacterId, (BSTR)lUserInput.CharacterID, (BSTR)lUserInput.Name);
+#endif
+	if	(mSabotageNum == sSabotageCommandEvent)
+	{
+		SabotageEvent ();
+	}
+	else
+	if	(CString ((BSTR)lUserInput.Name).CollateNoCase (mExitCommandName) == 0)
+	{
+		PostQuitMessage (0);
+	}
+}
+
+void CSabotageTestDlg::OnCtlIdleStart (LPCTSTR CharacterID)
+{
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlIdleStart [%s]"), mControlCharacterId, CharacterID);
+#endif
+	if	(mSabotageNum == sSabotageIdleStartEvent)
+	{
+		SabotageEvent ();
+	}
+}
+
+void CSabotageTestDlg::OnCtlIdleComplete (LPCTSTR CharacterID)
+{
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlIdleComplete [%s]"), mControlCharacterId, CharacterID);
+#endif
+	if	(mSabotageNum == sSabotageIdleEndEvent)
+	{
+		SabotageEvent ();
+	}
+}
+
+void CSabotageTestDlg::OnCtlMove (LPCTSTR CharacterID, short X, short Y, MoveCauseType Cause)
+{
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlMove [%s] [%d %d] [%d]"), mControlCharacterId, CharacterID, X, Y, Cause);
+#endif
+	if	(
+			(mMoveRequest)
+		&&	(mSabotageNum == sSabotageMoveEvent)
+		)
+	{
+		SabotageEvent ();
+	}
+}
+
+void CSabotageTestDlg::OnCtlSize (LPCTSTR CharacterID, short Width, short Height)
+{
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlSize [%s] [%d %d]"), mControlCharacterId, CharacterID, Width, Height);
+#endif
+}
+
+void CSabotageTestDlg::OnCtlBalloonShow(LPCTSTR CharacterID)
+{
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlBalloonShow [%s]"), mControlCharacterId, CharacterID);
+#endif
+	if	(mSabotageNum == sSabotageBalloonShowEvent)
+	{
+		SabotageEvent ();
+	}
+	else
+	{
+		ShowCharacterState ();
+	}
+}
+
+void CSabotageTestDlg::OnCtlBalloonHide(LPCTSTR CharacterID)
+{
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlBalloonHide [%s]"), mControlCharacterId, CharacterID);
+#endif
+	if	(mSabotageNum == sSabotageBalloonHideEvent)
+	{
+		SabotageEvent ();
+	}
+	else
+	{
+		ShowCharacterState ();
+	}
+}
+
+void CSabotageTestDlg::OnCtlListenStart(LPCTSTR CharacterID)
+{
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlListenStart [%s]"), mControlCharacterId, CharacterID);
+#endif
+	if	(mSabotageNum == sSabotageListenStartEvent)
+	{
+		SabotageEvent ();
+	}
+	else
+	{
+		ShowCharacterState ();
+	}
+}
+
+void CSabotageTestDlg::OnCtlListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause)
+{
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlListenComplete [%s] [%d]"), mControlCharacterId, CharacterID, Cause);
+#endif
+	if	(mSabotageNum == sSabotageListenEndEvent)
+	{
+		SabotageEvent ();
+	}
+	else
+	{
+		ShowCharacterState ();
+	}
+}
+
+void CSabotageTestDlg::OnCtlActiveClientChange (LPCTSTR CharacterID, BOOL Active)
+{
+#ifdef	_LOG_NOTIFY
+	LogMessage (_LOG_NOTIFY, _T("[%s] CSabotageTestDlg::OnCtlActiveClientChange [%s] [%d]"), mControlCharacterId, CharacterID, Active);
+#endif
 }

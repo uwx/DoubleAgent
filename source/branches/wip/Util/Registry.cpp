@@ -270,7 +270,7 @@ long CRegKeyEx::Delete ()
 			else
 			{
 				lRet = (lError1 == ERROR_SUCCESS) ? lError2 : lError1;
-				LogWinErr (LogNormal, lRet, _T("DeleteKey"));
+				LogWinErr (LogNormal|LogTime, lRet, _T("DeleteKey"));
 			}
 		}
 	}
@@ -295,7 +295,7 @@ long CRegKeyEx::Empty ()
 		{
 			if	((lRet = SHDeleteKey (mKey, NULL)) != ERROR_SUCCESS)
 			{
-				LogWinErr (LogNormal, lRet, _T("SHDeleteKey"));
+				LogWinErr (LogNormal|LogTime, lRet, _T("SHDeleteKey"));
 			}
 		}
 	}
@@ -476,7 +476,7 @@ void CRegKeyEx::SaveStrings (const CStringArray & pStrings)
 
 		while	(RegEnumValue (mKey, 0, lValueName, &(lValueNameSize = sizeof (lValueName) / sizeof (TCHAR)), 0, &lValueType, NULL, &(lValueSize = 0)) == ERROR_SUCCESS)
 		{
-			if	(LogWinErr (LogNormal, RegDeleteValue (mKey, lValueName)) != ERROR_SUCCESS)
+			if	(LogWinErr (LogNormal|LogTime, RegDeleteValue (mKey, lValueName)) != ERROR_SUCCESS)
 			{
 				break;
 			}

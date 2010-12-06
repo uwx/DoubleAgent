@@ -211,6 +211,7 @@ public:
 		MESSAGE_HANDLER(WM_TIMER, OnTimer)
 		MESSAGE_HANDLER(WM_HOTKEY, OnHotKey)
 		MESSAGE_HANDLER(WM_ACTIVATEAPP, OnActivateApp)
+		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
 		MESSAGE_HANDLER(mCompleteRequestsMsg, OnCompleteRequests)
 		MESSAGE_HANDLER(mOptionsChangedMsgId, OnBroadcastOptionsChanged)
 		MESSAGE_HANDLER(mDefaultCharacterChangedMsgId, OnBroadcastDefaultCharacterChanged)
@@ -232,6 +233,7 @@ public:
 	LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnHotKey(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnActivateApp(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 	LRESULT OnCompleteRequests(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnBroadcastOptionsChanged(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnBroadcastDefaultCharacterChanged(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
@@ -310,33 +312,33 @@ public:
 
 // Events
 public:
-	void FireActivateInput(LPCTSTR CharacterID);
-	void FireDeactivateInput(LPCTSTR CharacterID);
-	void FireClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
-	void FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
-	void FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
-	void FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
-	void FireShow(LPCTSTR CharacterID, VisibilityCauseType Cause);
-	void FireHide(LPCTSTR CharacterID, VisibilityCauseType Cause);
-	void FireRequestStart(LPDISPATCH Request);
-	void FireRequestComplete(LPDISPATCH Request);
-	void FireBookmark(long BookmarkID);
-	void FireCommand(LPDISPATCH UserInput);
-	void FireIdleStart(LPCTSTR CharacterID);
-	void FireIdleComplete(LPCTSTR CharacterID);
-	void FireMove(LPCTSTR CharacterID, short X, short Y, MoveCauseType Cause);
-	void FireSize(LPCTSTR CharacterID, short Width, short Height);
-	void FireBalloonShow(LPCTSTR CharacterID);
-	void FireBalloonHide(LPCTSTR CharacterID);
-	void FireListenStart(LPCTSTR CharacterID);
-	void FireListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause);
-	void FireDefaultCharacterChange(LPCTSTR CharGUID);
-	void FireAgentPropertyChange();
-	void FireActiveClientChange(LPCTSTR CharacterID, BOOL Active);
+	int FireActivateInput(LPCTSTR CharacterID);
+	int FireDeactivateInput(LPCTSTR CharacterID);
+	int FireClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	int FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	int FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	int FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	int FireShow(LPCTSTR CharacterID, VisibilityCauseType Cause);
+	int FireHide(LPCTSTR CharacterID, VisibilityCauseType Cause);
+	int FireRequestStart(LPDISPATCH Request);
+	int FireRequestComplete(LPDISPATCH Request);
+	int FireBookmark(long BookmarkID);
+	int FireCommand(LPDISPATCH UserInput);
+	int FireIdleStart(LPCTSTR CharacterID);
+	int FireIdleComplete(LPCTSTR CharacterID);
+	int FireMove(LPCTSTR CharacterID, short X, short Y, MoveCauseType Cause);
+	int FireSize(LPCTSTR CharacterID, short Width, short Height);
+	int FireBalloonShow(LPCTSTR CharacterID);
+	int FireBalloonHide(LPCTSTR CharacterID);
+	int FireListenStart(LPCTSTR CharacterID);
+	int FireListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause);
+	int FireDefaultCharacterChange(LPCTSTR CharGUID);
+	int FireAgentPropertyChange();
+	int FireActiveClientChange(LPCTSTR CharacterID, BOOL Active);
 
-	void FireSpeechStart(LPCTSTR CharacterID, IDaCtlFormattedText* FormattedText);
-	void FireSpeechEnd(LPCTSTR CharacterID, IDaCtlFormattedText* FormattedText, VARIANT_BOOL Stopped);
-	void FireSpeechWord(LPCTSTR CharacterID, IDaCtlFormattedText* FormattedText, long WordIndex);
+	int FireSpeechStart(LPCTSTR CharacterID, IDaCtlFormattedText* FormattedText);
+	int FireSpeechEnd(LPCTSTR CharacterID, IDaCtlFormattedText* FormattedText, VARIANT_BOOL Stopped);
+	int FireSpeechWord(LPCTSTR CharacterID, IDaCtlFormattedText* FormattedText, long WordIndex);
 
 // Implementation
 public:
@@ -355,6 +357,9 @@ protected:
 	void DisconnectObjects (bool pTerminate, bool pFinal);
 	void ConnectObjects ();
 
+	bool PreFireEvent (LPCTSTR pEventName = NULL);
+	bool PostFireEvent (LPCTSTR pEventName = NULL, UINT pEventSinkCount = 0);
+
 	bool IsDesigning ();
 	HWND GetMsgPostingWnd ();
 	void UpdateWindowStyles ();
@@ -370,10 +375,10 @@ protected:
 	CAtlPtrTypeArray <DaCtlRequest>			mCompletedRequests;
 	tPtr <CMsgPostingWnd <DaControl> >		mMsgPostingWnd;
 private:
+	bool									mFinalReleased;
 	WORD									mPropDataVer;
 	CIconHandle								mIcon;
 	CCursorHandle							mCursor;
-	bool									mFinalReleased;
 	static const UINT						mCompleteRequestsMsg;
 	static const UINT						mOptionsChangedMsgId;
 	static const UINT						mDefaultCharacterChangedMsgId;

@@ -36,7 +36,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_FOREGROUND	(GetProfileDebugInt(_T("LogForeground"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_FOREGROUND	(GetProfileDebugInt(_T("LogForeground"),LogVerbose,true)&0xFFFF|LogTime)
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -237,7 +237,7 @@ HRESULT RunOleObject (LPUNKNOWN pUnknown)
 #endif
 		if	(LogIsActive())
 		{
-			LogComErr (LogIfActive, lResult, _T("RunOleObject"));
+			LogComErr (LogIfActive|LogTime, lResult, _T("RunOleObject"));
 		}
 	}
 	else
@@ -275,7 +275,7 @@ HRESULT RunOleWindow (LPUNKNOWN pUnknown)
 			}
 			if	(LogIsActive())
 			{
-				LogComErr (LogIfActive, lResult, _T("RunOleWindow"));
+				LogComErr (LogIfActive|LogTime, lResult, _T("RunOleWindow"));
 			}
 		}
 		catch AnyExceptionSilent
@@ -351,7 +351,7 @@ HRESULT ActivateOleWindow (LPUNKNOWN pUnknown)
 				}
 				if	(LogIsActive())
 				{
-					LogComErr (LogIfActive, lResult, _T("ActivateOleWindow"));
+					LogComErr (LogIfActive|LogTime, lResult, _T("ActivateOleWindow"));
 				}
 			}
 		}
@@ -509,7 +509,7 @@ HRESULT CoCreateInstanceElevated (REFCLSID pClassId, LPUNKNOWN* pUnknown, HWND p
 			lBindOpts.hwnd = pParentWnd;
 			lBindOpts.dwClassContext = (pClsCtx) ? pClsCtx : CLSCTX_LOCAL_SERVER;
 
-			lResult = LogComErr (LogNormal, CoGetObject (lMonikerName, &lBindOpts, __uuidof(IUnknown), (void**)&lUnknown), _T("CoGetObject [%s] [%s] [%p] [%s] [%8.8X]"), (LPCTSTR) lMonikerName, CGuidStr::GuidName(pInterfaceId), lBindOpts.hwnd, WndClassName(lBindOpts.hwnd), lBindOpts.dwClassContext);
+			lResult = LogComErr (LogNormal|LogTime, CoGetObject (lMonikerName, &lBindOpts, __uuidof(IUnknown), (void**)&lUnknown), _T("CoGetObject [%s] [%s] [%p] [%s] [%8.8X]"), (LPCTSTR) lMonikerName, CGuidStr::GuidName(pInterfaceId), lBindOpts.hwnd, WndClassName(lBindOpts.hwnd), lBindOpts.dwClassContext);
 
 			if	(
 					(SUCCEEDED (lResult))

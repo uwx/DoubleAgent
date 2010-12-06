@@ -1,17 +1,11 @@
 #pragma once
-#include "DaServerOdl.h"
-#include "AgentPreviewWnd.h"
+#include "DaServerInterface.h"
+#include "DaControlInterface.h"
+#include "FormLayout.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-_COM_SMARTPTR_TYPEDEF (IDaServer, __uuidof(IDaServer));
-_COM_SMARTPTR_TYPEDEF (IDaServer2, __uuidof(IDaServer2));
-_COM_SMARTPTR_TYPEDEF (IDaSvrCharacter, __uuidof(IDaSvrCharacter));
-_COM_SMARTPTR_TYPEDEF (IDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles));
-
-/////////////////////////////////////////////////////////////////////////////
-
-class CStressTestDlg : public CDialog
+class CStressTestDlg : public CDialog, public CFormLayout
 {
 public:
 	CStressTestDlg(CWnd* pParent = NULL);
@@ -25,18 +19,25 @@ public:
 	CButton	mRandomStop2;
 	CButton	mRandomStop3;
 	CButton	mStressRepeat;
-	CButton	mStressPreview;
-	CButton	mStressCharacter;
+	CButton	mStressControl;
+	CButton	mControlContained;
+	CButton	mControlStandalone;
+	CButton	mStressServer;
 	CButton	mStressSound;
 	CButton	mStressSpeak;
-	CStatic	mPreviewWnd;
+	CStatic	mControlPlacer;
 	CListCtrl	mCharacterList;
-	CEdit	mCharacterNameEdit;
 	CButton	mOkButton;
 	CButton	mCancelButton;
 	CListBox	mGestures;
 	//}}AFX_DATA
 
+// Operations
+	void LoadConfig ();
+	void SaveConfig ();
+	bool CommandLineConfig ();
+
+// Overrides
 	//{{AFX_VIRTUAL(CStressTestDlg)
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
@@ -52,13 +53,32 @@ protected:
 	afx_msg void OnDestroy();
 	afx_msg void OnClose();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
-	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnSelChangeGestures();
 	afx_msg void OnItemChangedCharacterList(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnControlMode();
 	afx_msg void OnRandomStop();
+	afx_msg void OnCtlActivateInput(LPCTSTR CharacterID);
+	afx_msg void OnCtlDeactivateInput(LPCTSTR CharacterID);
+	afx_msg void OnCtlClick (LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	afx_msg void OnCtlDblClick (LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	afx_msg void OnCtlDragStart (LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	afx_msg void OnCtlDragComplete (LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	afx_msg void OnCtlShow (LPCTSTR CharacterID, VisibilityCauseType Cause);
+	afx_msg void OnCtlHide (LPCTSTR CharacterID, VisibilityCauseType Cause);
+	afx_msg void OnCtlRequestStart (IDaCtlRequest* Request);
+	afx_msg void OnCtlRequestComplete (IDaCtlRequest* Request);
+	afx_msg void OnCtlCommand (IDaCtlUserInput* UserInput);
+	afx_msg void OnCtlIdleStart (LPCTSTR CharacterID);
+	afx_msg void OnCtlIdleComplete (LPCTSTR CharacterID);
+	afx_msg void OnCtlMove (LPCTSTR CharacterID, short X, short Y, MoveCauseType Cause);
+	afx_msg void OnCtlSize (LPCTSTR CharacterID, short Width, short Height);
+	afx_msg void OnCtlBalloonShow(LPCTSTR CharacterID);
+	afx_msg void OnCtlBalloonHide(LPCTSTR CharacterID);
+	afx_msg void OnCtlActiveClientChange (LPCTSTR CharacterID, BOOL Active);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+	DECLARE_EVENTSINK_MAP()
 
 	BEGIN_INTERFACE_PART(DaSvrNotifySink, IDaSvrNotifySink)
 		HRESULT STDMETHODCALLTYPE GetTypeInfoCount (unsigned int*);
@@ -88,12 +108,12 @@ protected:
 		HRESULT STDMETHODCALLTYPE AgentPropertyChange(void);
 		HRESULT STDMETHODCALLTYPE ActiveClientChange (long CharacterID, long Status);
 	END_INTERFACE_PART(DaSvrNotifySink)
-
 	DECLARE_INTERFACE_MAP()
 
 protected:
+	void ShowModeSelection ();
+	void ShowControlMode ();
 	void ShowCharacters ();
-	void ShowCharacterDetails ();
 	void ShowGestures ();
 
 	bool ShowCharacter (int pCharacterNdx);
@@ -103,33 +123,45 @@ protected:
 
 	bool IsAnimating ();
 	bool Stop ();
+	CPoint GetInitialPos (const CSize & pInitialSize);
 
 	void GetAgentServer ();
 	void FreeAgentServer ();
-	bool ShowAgentCharacter ();
-	bool HideAgentCharacter ();
-	bool FreeAgentCharacter ();
 
-	void LoadConfig ();
-	void SaveConfig ();
+	void GetAgentControl ();
+	void FreeAgentControl ();
+
+	bool ShowServerCharacter ();
+	bool HideServerCharacter ();
+	bool FreeServerCharacter ();
+
+	bool ShowControlCharacter ();
+	bool HideControlCharacter ();
+	bool FreeControlCharacter ();
 
 protected:
-	tPtr <CAgentPreviewWnd>	mAgentWnd;
-	CString					mCharacterPath;
-	CPoint					mCharacterPos;
-	int						mCharacterAutoPos;
-	IDaServer2Ptr			mServer;
-	long					mNotifySinkId;
-	IDaSvrCharacterPtr		mCharacter;
-	long					mCharacterId;
-	int						mCycleNum;
-	UINT_PTR				mTimer;
-	UINT_PTR				mRandomStopTimer;
 	int						mCharacterNdx;
+	CString					mCharacterPath;
+	IDaServer2Ptr			mServer;
+	long					mServerSinkId;
+	IDaSvrCharacter2Ptr		mServerCharacter;
+	long					mServerCharacterId;
+	IDaControl2Ptr			mControl;
+	CWnd					mControlWnd;
+	CRect					mControlRect;
+	IDaCtlCharacter2Ptr		mControlCharacter;
+	CString					mControlCharacterId;
 	int						mGestureNdx;
 	DWORD					mGestureStartTime;
+	long					mShowReqId;
 	long					mGestureReqId;
 	long					mSpeechReqId;
+	IDaCtlRequestPtr		mShowRequest;
+	IDaCtlRequestPtr		mGestureRequest;
+	IDaCtlRequestPtr		mSpeechRequest;
+	int						mCycleNum;
+	UINT_PTR				mCycleTimer;
+	UINT_PTR				mRandomStopTimer;
 };
 
 /////////////////////////////////////////////////////////////////////////////

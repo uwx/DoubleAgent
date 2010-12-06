@@ -32,7 +32,7 @@
 
 #ifdef	_DEBUG
 #define	_DEBUG_ACTIVE			(GetProfileDebugInt(_T("DebugActive"),LogVerbose,true)&0xFFFF|LogTimeMs)
-#define	_DEBUG_NOTIFY_PATH		(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_NOTIFY_PATH		(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF|LogTime)
 #define	_DEBUG_SERVER_LEVEL		LogNormal
 #define	_DEBUG_DLL_UNLOAD		LogNormal
 #endif
@@ -49,6 +49,7 @@ static tPtr <CComAutoCriticalSection>	sLogCriticalSection = new CComAutoCritical
 #define	_LOG_CRITICAL_SECTION			(!sLogCriticalSection?NULL:&sLogCriticalSection->m_sec)
 #include "LogAccess.inl"
 #include "Log.inl"
+#include "LogCrash.inl"
 /////////////////////////////////////////////////////////////////////////////
 
 CDaControlModule				_AtlModule;
@@ -77,7 +78,7 @@ CDaControlModule::CDaControlModule ()
 	LogProcessIntegrity (GetCurrentProcess(), LogIfActive);
 
 #ifdef	_ATL_DEBUG_INTERFACES
-	LogMessage (LogIfActive, _T("_ATL_DEBUG_INTERFACES %d"), _ATL_DEBUG_INTERFACES);
+	LogMessage (LogIfActive|LogTime, _T("_ATL_DEBUG_INTERFACES %d"), _ATL_DEBUG_INTERFACES);
 	atlTraceCOM.SetLevel (_ATL_DEBUG_INTERFACES);
 	atlTraceCOM.SetStatus (ATLTRACESTATUS_ENABLED);
 #endif
@@ -90,7 +91,7 @@ CDaControlModule::CDaControlModule ()
 	atlTraceException.SetStatus (ATLTRACESTATUS_ENABLED);
 #endif
 #ifdef	_ATL_DEBUG_QI
-	LogMessage (LogIfActive, _T("_ATL_DEBUG_QI %d"), _ATL_DEBUG_QI);
+	LogMessage (LogIfActive|LogTime, _T("_ATL_DEBUG_QI %d"), _ATL_DEBUG_QI);
 	atlTraceQI.SetLevel (_ATL_DEBUG_QI);
 	atlTraceQI.SetStatus (ATLTRACESTATUS_ENABLED);
 #endif
@@ -103,6 +104,24 @@ CDaControlModule::CDaControlModule ()
 }
 
 CDaControlModule::~CDaControlModule ()
+{
+	Terminate ();
+	LogStop (LogIfActive);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CDaControlModule::Terminate ()
+{
+	__try
+	{
+		_Terminate ();
+	}
+	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__))
+	{}
+}
+
+void CDaControlModule::_Terminate ()
 {
 #ifdef	_DEBUG_DLL_UNLOAD
 	try
@@ -133,10 +152,10 @@ CDaControlModule::~CDaControlModule ()
 
 	CListeningGlobal::Shutdown ();
 	CLocalize::FreeMuiModules ();
+
 #if	ISOLATION_AWARE_ENABLED
 	IsolationAwareCleanup ();
 #endif
-	LogStop (LogIfActive);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -251,9 +270,7 @@ HRESULT CDaControlModule::PreServerCall (LPUNKNOWN pServerInterface)
 #endif
 		return AGENTCTLERROR_SERVERINIT;
 	}
-
 	mServerCallLevel++;
-	PendingMessageFilter ();
 	return S_OK;
 }
 
@@ -269,13 +286,6 @@ HRESULT CDaControlModule::PostServerCall (LPUNKNOWN pServerInterface)
 		LogMessage (_DEBUG_SERVER_LEVEL, _T("Imbalanced Pre/Post ServerCall"));
 	}
 #endif
-	if	(
-			(mServerCallLevel <= 0)
-		&&	(mNotifyLevel <= 0)
-		)
-	{
-		EndMessageFilter (false);
-	}
 	return S_OK;
 }
 
@@ -284,7 +294,7 @@ HRESULT CDaControlModule::PostServerCall (LPUNKNOWN pServerInterface)
 bool CDaControlModule::PreNotify ()
 {
 	mNotifyLevel++;
-	PendingMessageFilter ();
+	NotifyMessageFilter ();
 	return true;
 }
 
@@ -294,10 +304,7 @@ void CDaControlModule::PostNotify ()
 	{
 		mNotifyLevel--;
 	}
-	if	(
-			(mServerCallLevel <= 0)
-		&&	(mNotifyLevel <= 0)
-		)
+	if	(mNotifyLevel <= 0)
 	{
 		EndMessageFilter (false);
 	}
@@ -305,7 +312,7 @@ void CDaControlModule::PostNotify ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaControlModule::PendingMessageFilter ()
+bool CDaControlModule::NotifyMessageFilter ()
 {
 	if	(
 			(!mMessageFilter)
@@ -317,7 +324,7 @@ void CDaControlModule::PendingMessageFilter ()
 	if	(
 			(mMessageFilter)
 		&&	(!mMessageFilter->IsRegistered ())
-		&&	(LogComErr (LogNormal, mMessageFilter->Register ()) != S_OK)
+		&&	(LogComErr (LogNormal|LogTime, mMessageFilter->Register ()) != S_OK)
 		)
 	{
 		mMessageFilter = NULL;
@@ -325,10 +332,12 @@ void CDaControlModule::PendingMessageFilter ()
 	if	(mMessageFilter)
 	{
 		mMessageFilter->DoNotDisturb (true);
+		return true;
 	}
+	return false;
 }
 
-void CDaControlModule::FinalMessageFilter ()
+bool CDaControlModule::FinalMessageFilter ()
 {
 	if	(
 			(!mMessageFilter)
@@ -340,7 +349,7 @@ void CDaControlModule::FinalMessageFilter ()
 	if	(
 			(mMessageFilter)
 		&&	(!mMessageFilter->IsRegistered ())
-		&&	(LogComErr (LogNormal, mMessageFilter->Register ()) != S_OK)
+		&&	(LogComErr (LogNormal|LogTime, mMessageFilter->Register ()) != S_OK)
 		)
 	{
 		mMessageFilter = NULL;
@@ -348,8 +357,10 @@ void CDaControlModule::FinalMessageFilter ()
 	if	(mMessageFilter)
 	{
 		mMessageFilter->CheckOut ();
-		mServerCallLevel = SHRT_MAX;
+		mNotifyLevel = SHRT_MAX;
+		return true;
 	}
+	return false;
 }
 
 void CDaControlModule::EndMessageFilter (bool pFinal)
@@ -368,7 +379,7 @@ void CDaControlModule::EndMessageFilter (bool pFinal)
 	if	(pFinal)
 	{
 		SafeFreeSafePtr (mMessageFilter);
-		mServerCallLevel = 0;
+		mNotifyLevel = 0;
 	}
 }
 
@@ -435,7 +446,7 @@ bool CDaControlModule::IsAppActive () const
 bool CDaControlModule::VerifyAppActive () const
 {
 	bool	lRet = false;
-	
+
 #ifdef	_DEBUG_ACTIVE_NOT
 	if	(LogIsActive (_DEBUG_ACTIVE))
 	{
@@ -459,8 +470,8 @@ bool CDaControlModule::VerifyAppActive () const
 				{
 					GetWindowThreadProcessId (lForegroundInfo.hwndActive, &lForegroundProcess);
 				}
-				LogMessage (_DEBUG_ACTIVE, _T("  Foreground Active [%u] [%p]"), lForegroundProcess, lForegroundInfo.hwndActive);  
-			}		
+				LogMessage (_DEBUG_ACTIVE, _T("  Foreground Active [%u] [%p]"), lForegroundProcess, lForegroundInfo.hwndActive);
+			}
 			if	(
 					(lIsGUIThread)
 				&&	(GetGUIThreadInfo (GetCurrentThreadId(), &lThreadInfo))
@@ -471,7 +482,7 @@ bool CDaControlModule::VerifyAppActive () const
 				{
 					GetWindowThreadProcessId (lThreadInfo.hwndActive, &lForegroundProcess);
 				}
-				LogMessage (_DEBUG_ACTIVE, _T("  Thread Active [%u] [%p]"), lForegroundProcess, lThreadInfo.hwndActive);  
+				LogMessage (_DEBUG_ACTIVE, _T("  Thread Active [%u] [%p]"), lForegroundProcess, lThreadInfo.hwndActive);
 			}
 		}
 		catch AnyExceptionSilent
@@ -505,7 +516,7 @@ bool CDaControlModule::VerifyAppActive () const
 		}
 	}
 	catch AnyExceptionSilent
-	
+
 	return lRet;
 }
 
@@ -530,6 +541,10 @@ STDAPI DllCanUnloadNow(void)
 		LogComErrAnon (MinLogLevel(_DEBUG_DLL_UNLOAD,LogAlways), lResult, _T("DllCanUnloadNow"));
 	}
 #endif
+	if	(lResult == S_OK)
+	{
+		CSapiVoiceCache::TerminateStaticInstance ();
+	}
 	return lResult;
 }
 

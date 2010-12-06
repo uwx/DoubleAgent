@@ -28,10 +28,10 @@
 
 #ifdef	_DEBUG
 //#define	_DEBUG_INSTANCE		LogNormal
-#define	_DEBUG_SEQUENCE			(GetProfileDebugInt(_T("DebugSequence"),LogVerbose,true)&0xFFFF)
-#define	_DEBUG_SEQUENCE_FRAMES	(GetProfileDebugInt(_T("DebugSequenceFrames"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#define	_DEBUG_SEQUENCE_AUDIO	(GetProfileDebugInt(_T("DebugSequenceAudio"),LogVerbose,true)&0xFFFF|LogHighVolume)
-//#define	_DEBUG_MOUTH_OVERLAYS	LogNormal|LogHighVolume|LogTimeMs
+#define	_DEBUG_SEQUENCE			(GetProfileDebugInt(_T("DebugSequence"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_DEBUG_SEQUENCE_FRAMES	(GetProfileDebugInt(_T("DebugSequenceFrames"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+#define	_DEBUG_SEQUENCE_AUDIO	(GetProfileDebugInt(_T("DebugSequenceAudio"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+//#define	_DEBUG_MOUTH_OVERLAYS	LogNormal|LogTimeMs|LogHighVolume
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

@@ -1079,14 +1079,14 @@ bool CPropPageRegistry::PrepareElevated (HWND pOwnerWnd)
 				&&	(!CUserSecurity::IsUserAdministrator())
 				)
 			{
-				if	(SUCCEEDED (LogComErr (LogNormal, CoCreateInstanceElevated (__uuidof(CDaElevatedSettings), &lUnknown, pOwnerWnd))))
+				if	(SUCCEEDED (LogComErr (LogNormal|LogTime, CoCreateInstanceElevated (__uuidof(CDaElevatedSettings), &lUnknown, pOwnerWnd))))
 				{
 					mElevatedSettings = lUnknown;
 				}
 			}
 			else
 			{
-				if	(SUCCEEDED (LogComErr (LogNormal, CoCreateInstance (__uuidof(CDaElevatedSettings), NULL, CLSCTX_SERVER, __uuidof(IUnknown), (void**)&lUnknown))))
+				if	(SUCCEEDED (LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(CDaElevatedSettings), NULL, CLSCTX_SERVER, __uuidof(IUnknown), (void**)&lUnknown))))
 				{
 					mElevatedSettings = lUnknown;
 				}
@@ -1209,7 +1209,7 @@ bool CPropPageRegistry::UpdateTreatAs (REFGUID pClsId, REFGUID pTreatAsClsId)
 		lRet = UpdateTreatAs ((CString)CGuidStr(pClsId), (CString)CGuidStr(pTreatAsClsId));
 	}
 	else
-	if	(SUCCEEDED (LogComErr (LogNormal, CoTreatAsClass (pClsId, pTreatAsClsId))))
+	if	(SUCCEEDED (LogComErr (LogNormal|LogTime, CoTreatAsClass (pClsId, pTreatAsClsId))))
 	{
 		lRet = true;
 	}
@@ -1234,7 +1234,7 @@ bool CPropPageRegistry::UpdateTreatAs (LPCTSTR pClsId, LPCTSTR pTreatAsClsId)
 
 		try
 		{
-			lResult = LogComErr (LogNormal, mElevatedSettings->Exec (NULL, OLECMDID_OPEN, OLECMDEXECOPT_DODEFAULT, &lParm, NULL));
+			lResult = LogComErr (LogNormal|LogTime, mElevatedSettings->Exec (NULL, OLECMDID_OPEN, OLECMDEXECOPT_DODEFAULT, &lParm, NULL));
 			if	(lResult == S_OK)
 			{
 				lRet = true;

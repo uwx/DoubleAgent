@@ -68,7 +68,7 @@ DaSvrCharacterFiles * DaSvrCharacterFiles::CreateInstance (LPCTSTR pClientMutexN
 {
 	CComObject<DaSvrCharacterFiles> *	lInstance = NULL;
 
-	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrCharacterFiles>::CreateInstance (&lInstance))))
+	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CComObject<DaSvrCharacterFiles>::CreateInstance (&lInstance))))
 	{
 		lInstance->Initialize ();
 		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);

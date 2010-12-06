@@ -4,7 +4,7 @@
 #pragma comment(lib, "msi.lib")
 
 #ifdef	_DEBUG
-//#define	_DEBUG_PROGRESS	LogNormal|LogHighVolume|LogTimeMs
+//#define	_DEBUG_PROGRESS	LogNormal|LogTimeMs|LogHighVolume
 #endif
 
 //////////////////////////////////////////////////////////////////////

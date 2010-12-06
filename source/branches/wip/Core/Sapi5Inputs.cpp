@@ -31,8 +31,8 @@
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_INPUTS		(GetProfileDebugInt(_T("LogInputs"),LogVerbose,true)&0xFFFF)
-#define	_DEBUG_INPUT_MATCH	(GetProfileDebugInt(_T("LogInputMatch"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_INPUTS		(GetProfileDebugInt(_T("LogInputs"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_DEBUG_INPUT_MATCH	(GetProfileDebugInt(_T("LogInputMatch"),LogVerbose,true)&0xFFFF|LogTime)
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -66,7 +66,7 @@ CSapi5InputInfo::~CSapi5InputInfo ()
 IMPLEMENT_DLL_OBJECT(CSapi5Inputs)
 
 CSapi5Inputs::CSapi5Inputs ()
-:	mLogLevelDebug (LogVerbose)
+:	mLogLevelDebug (LogVerbose|LogTime)
 {
 #ifdef	_DEBUG_INPUTS
 	const_cast <UINT&> (mLogLevelDebug) = _DEBUG_INPUTS;
@@ -121,7 +121,7 @@ void CSapi5Inputs::Enumerate ()
 
 			if	(lInputInfo = new CSapi5InputInfo)
 			{
-				if	(SUCCEEDED (LogSapi5Err (LogNormal, SpGetDescription (lToken, lSapiStr.Free (), NULL))))
+				if	(SUCCEEDED (LogSapi5Err (LogNormal|LogTime, SpGetDescription (lToken, lSapiStr.Free (), NULL))))
 				{
 					lInputInfo->mEngineName = _bstr_t (lSapiStr).Detach();
 				}
@@ -295,7 +295,7 @@ INT_PTR CSapi5Inputs::FindInput (LANGID pLangId, bool pUseDefaults, int * pMatch
 	if	(pMatchRank)
 	{
 		(*pMatchRank) = 0;
-	}	
+	}
 	return -1;
 }
 
@@ -394,7 +394,7 @@ CSapi5InputInfoArray const * CSapi5Inputs::GetInputs (LANGID pLangId, bool pUseD
 	tPtr <CSapi5InputInfoArray>			lInfoArray;
 	tPtr <CSapi5InputIndexArray const>	lIndexArray;
 	INT_PTR								lNdx;
-	
+
 	if	(
 			(lIndexArray = FindInputs (pLangId, pUseDefaults, pMatchRanks))
 		&&	(lInfoArray = new CSapi5InputInfoArray)
@@ -581,11 +581,11 @@ void CSapi5Inputs::LogInputToken (UINT pLogLevel, void * pInputToken, LPCTSTR pT
 			{
 				try
 				{
-					if	(SUCCEEDED (LogSapi5Err (LogNormal, SpGetDescription (lToken, lInputName.Free (), NULL))))
+					if	(SUCCEEDED (LogSapi5Err (LogNormal|LogTime, SpGetDescription (lToken, lInputName.Free (), NULL))))
 					{
 						LogMessage (pLogLevel, _T("  Name     [%ls]"), (LPWSTR)lInputName);
 					}
-					if	(SUCCEEDED (LogSapi5Err (LogNormal, lToken->GetId (lInputId.Free ()))))
+					if	(SUCCEEDED (LogSapi5Err (LogNormal|LogTime, lToken->GetId (lInputId.Free ()))))
 					{
 						LogMessage (pLogLevel, _T("  Id       [%ls]"), (LPWSTR)lInputId);
 					}

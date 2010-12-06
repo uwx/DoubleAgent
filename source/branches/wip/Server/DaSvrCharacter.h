@@ -45,10 +45,12 @@ public:
 public:
 	static DaSvrCharacter * CreateInstance (long pCharID, CEventNotify * pNotify, _IListeningAnchor * pListeningAnchor, LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
+	void Abandon();
 	void FinalRelease();
 
 // Overrides
 public:
+	virtual bool VerifyClientLifetime ();
 	virtual void OnClientEnded ();
 	virtual bool IsValid (const CAgentFile * pFile) const;
 	virtual class CDaCmnCommands * GetCommands (bool pCreateObject);

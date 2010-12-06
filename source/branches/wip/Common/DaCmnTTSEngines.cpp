@@ -35,7 +35,7 @@ static int __cdecl SortRankDescending (const void * pElem1, const void * pElem2)
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_LANGUAGE			(GetProfileDebugInt(_T("DebugLanguage"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_LANGUAGE			(GetProfileDebugInt(_T("DebugLanguage"),LogVerbose,true)&0xFFFF|LogTime)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -135,7 +135,7 @@ HRESULT CDaCmnTTSEngines::UseTheseVoices (CAgentFile * pFile, LANGID pLangId, sh
 				&&	(lSapi5InfoArray = lSapi5Voices->GetVoices (lFileTts, true))
 #else
 				&&	(lSapi5InfoArray = lSapi5Voices->GetVoices (lFileTts, true, lSapi5Ranks.Free()))
-#endif				
+#endif
 				)
 			{
 				mSapi5Voices.Copy (*lSapi5InfoArray);
@@ -154,7 +154,7 @@ HRESULT CDaCmnTTSEngines::UseTheseVoices (CAgentFile * pFile, LANGID pLangId, sh
 				lResult = S_OK;
 			}
 		}
-		
+
 		if	(lSapi5Ranks)
 		{
 			for	(lRankNdx = 0; lRankNdx < (INT_PTR)lSapi5Ranks->GetCount(); lRankNdx++)
@@ -191,7 +191,7 @@ HRESULT CDaCmnTTSEngines::UseTheseVoices (CAgentFile * pFile, LANGID pLangId, sh
 				mVoiceNdxMap.InsertAt (lRankMap.AddSortedQS ((*lSapi4Ranks) [lRankNdx] + lRankOffset, SortRankDescending, false), lRankNdx + (INT_PTR)mSapi5Voices.GetCount());
 			}
 		}
-		
+
 #ifdef	_DEBUG_LANGUAGE
 		if	(LogIsActive (_DEBUG_LANGUAGE))
 		{
@@ -230,7 +230,7 @@ CSapi5VoiceInfo * CDaCmnTTSEngines::GetSapi5VoiceAt (INT_PTR pIndex) const
 	CSapi5VoiceInfo *	lRet = NULL;
 
 	if	(mVoiceNdxMap.GetCount() > 0)
-	{	
+	{
 		if	(
 				(pIndex >= 0)
 			&&	(pIndex < (INT_PTR)mVoiceNdxMap.GetCount ())
@@ -251,7 +251,7 @@ CSapi4VoiceInfo * CDaCmnTTSEngines::GetSapi4VoiceAt (INT_PTR pIndex) const
 	CSapi4VoiceInfo *	lRet = NULL;
 
 	if	(mVoiceNdxMap.GetCount() > 0)
-	{	
+	{
 		if	(
 				(pIndex >= 0)
 			&&	(pIndex < (INT_PTR)mVoiceNdxMap.GetCount ())

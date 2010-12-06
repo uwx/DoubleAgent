@@ -40,7 +40,7 @@ static char THIS_FILE[] = __FILE__;
 IMPLEMENT_DYNAMIC (CCmdLineInfoEx, CObject)
 
 CCmdLineInfoEx::CCmdLineInfoEx ()
-:	mLogLevelDebug (LogVerbose)
+:	mLogLevelDebug (LogVerbose|LogTime)
 {
 }
 

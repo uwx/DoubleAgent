@@ -31,7 +31,8 @@
 //#define	_DEBUG_BINDING	LogNormal
 //#define	_DEBUG_PROGRESS	LogNormal
 //#define	_DEBUG_ASYNC	LogNormal
-#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Download"),LogVerbose,true)&0xFFFF)
+//#define	_TRACE_THREADS	(GetProfileDebugInt(_T("TraceThreads"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Download"),LogVerbose,true)&0xFFFF|LogTime)
 //#define	_LOG_STATUS		LogNormal
 #endif
 
@@ -302,9 +303,9 @@ HRESULT CFileDownload::Download (LPUNKNOWN pActiveXContext, CEventNotify * pNoti
 			{
 				if	(pActiveXContext)
 				{
-					LogComErr (LogNormal, CoMarshalInterThreadInterfaceInStream (__uuidof(IUnknown), pActiveXContext, &mContextMarshall));
+					LogComErr (LogNormal|LogTime, CoMarshalInterThreadInterfaceInStream (__uuidof(IUnknown), pActiveXContext, &mContextMarshall));
 				}
-				lResult = LogComErr (LogNormal, CoMarshalInterThreadInterfaceInStream (__uuidof(IBindStatusCallback), (IBindStatusCallback*)this, &mBindStatusMarshall));
+				lResult = LogComErr (LogNormal|LogTime, CoMarshalInterThreadInterfaceInStream (__uuidof(IBindStatusCallback), (IBindStatusCallback*)this, &mBindStatusMarshall));
 			}
 			catch AnyExceptionSilent
 		}
@@ -327,7 +328,7 @@ HRESULT CFileDownload::Download (LPUNKNOWN pActiveXContext, CEventNotify * pNoti
 	}
 	else
 	{
-		lResult = LogComErr (LogNormal, URLDownloadToCacheFile (pActiveXContext, mURL, lCacheName.GetBuffer(MAX_PATH), MAX_PATH, 0, this));
+		lResult = LogComErr (LogNormal|LogTime, URLDownloadToCacheFile (pActiveXContext, mURL, lCacheName.GetBuffer(MAX_PATH), MAX_PATH, 0, this));
 		lCacheName.ReleaseBuffer ();
 
 		{
@@ -414,6 +415,10 @@ DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 	CAtlString		lCacheName;
 
 	CoInitialize (NULL);
+
+#ifdef	_TRACE_THREADS
+	LogMessage (_TRACE_THREADS, _T("CFileDownload::AsyncThreadProc"));
+#endif
 #ifdef	_DEBUG_ASYNC
 	LogMessage (_DEBUG_ASYNC, _T("[%p] AsyncThreadProc"), lpParameter);
 #endif
@@ -427,12 +432,12 @@ DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 			{
 				if	(lThis->mContextMarshall != NULL)
 				{
-					if	(SUCCEEDED (LogComErr (LogNormal, CoGetInterfaceAndReleaseStream (lThis->mContextMarshall, __uuidof(IUnknown), (void**) &lActiveXContext))))
+					if	(SUCCEEDED (LogComErr (LogNormal|LogTime, CoGetInterfaceAndReleaseStream (lThis->mContextMarshall, __uuidof(IUnknown), (void**) &lActiveXContext))))
 					{
 						lThis->mContextMarshall.Detach ();
 					}
 				}
-				if	(SUCCEEDED (LogComErr (LogNormal, CoGetInterfaceAndReleaseStream (lThis->mBindStatusMarshall, __uuidof(IBindStatusCallback), (void**) &lThis->mBindStatusCallback))))
+				if	(SUCCEEDED (LogComErr (LogNormal|LogTime, CoGetInterfaceAndReleaseStream (lThis->mBindStatusMarshall, __uuidof(IBindStatusCallback), (void**) &lThis->mBindStatusCallback))))
 				{
 					lThis->mBindStatusMarshall.Detach ();
 					lURL = lThis->mURL;
@@ -458,7 +463,7 @@ DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 		{
 			try
 			{
-				lResult = LogComErr (LogNormal, URLDownloadToCacheFile (lActiveXContext, lURL, lCacheName.GetBuffer(MAX_PATH), MAX_PATH, 0, lThis));
+				lResult = LogComErr (LogNormal|LogTime, URLDownloadToCacheFile (lActiveXContext, lURL, lCacheName.GetBuffer(MAX_PATH), MAX_PATH, 0, lThis));
 				lCacheName.ReleaseBuffer ();
 			}
 			catch AnyExceptionDebug
@@ -510,6 +515,10 @@ DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 #ifdef	_DEBUG_ASYNC
 	LogMessage (_DEBUG_ASYNC, _T("[%p] AsyncThreadProc Done [%s]"), lpParameter, lURL);
 #endif
+#ifdef	_TRACE_THREADS
+	LogMessage (_TRACE_THREADS, _T("CFileDownload::AsyncThreadProc End"));
+#endif
+
 	CoUninitialize ();
 	return ERROR_SUCCESS;
 }
@@ -890,7 +899,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::OnObjectAvailable (REFIID riid, IUnknow
 #ifdef	_LOG_STATUS
 	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnObjectAvailable"), this, max(m_dwRef,-1));
 #endif
-	return LogComErr (LogNormal, E_NOTIMPL);
+	return LogComErr (LogNormal|LogTime, E_NOTIMPL);
 }
 
 HRESULT STDMETHODCALLTYPE CFileDownload::OnLowResource (DWORD reserved)

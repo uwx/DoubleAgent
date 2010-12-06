@@ -162,7 +162,10 @@ bool CAgentListeningWnd::ShowTipWnd ()
 	{
 		SendMessage (TTM_ACTIVATE, TRUE);
 		PositionTipWnd ();
-		SetWindowPos ((GetExStyle() & WS_EX_TOPMOST) ? HWND_TOPMOST : HWND_TOP, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE);
+		if	(GetExStyle() & WS_EX_TOPMOST)
+		{
+			SetWindowPos (HWND_TOPMOST, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE|SWP_NOOWNERZORDER);
+		}
 		lRet = true;
 	}
 	return lRet;

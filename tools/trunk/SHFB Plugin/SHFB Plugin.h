@@ -23,7 +23,7 @@ public ref class TocNamespaceGrouping : public SandcastleBuilder::Utils::PlugIn:
 public:
 	TocNamespaceGrouping ();
 	virtual ~TocNamespaceGrouping ();
-	
+
 #pragma region IPlugIn Implementation
 public:
 	property String^ Name
@@ -83,7 +83,7 @@ public:
 
 	virtual void Initialize (BuildProcess^ pBuildProcess, XPathNavigator^ pConfiguration);
 	virtual void Execute (ExecutionContext^ pContext);
-#pragma endregion	
+#pragma endregion
 
 #pragma region Private Methods
 private:
@@ -106,13 +106,13 @@ private:
 	static void LogTocEntries (TocEntryCollection^ pEntries, String^ pIndent);
 	static void LogTocEntry (TocEntry^ pEntry);
 	static void LogTocEntry (TocEntry^ pEntry, String^ pIndent);
-#pragma endregion	
+#pragma endregion
 
 #pragma region Private Fields
 private:
 	ExecutionPointCollection^	mExecutionPoints;
 	BuildProcess^				mBuildProcess;
-#pragma endregion	
+#pragma endregion
 };
 
 /////////////////////////////////////////////////////////////////////////////

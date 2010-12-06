@@ -19,6 +19,8 @@ public:
 	//{{AFX_MSG(CSabotageTestApp)
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+	INT_PTR RunDlg (class CSabotageTestDlg & pDlg);
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -26,9 +26,9 @@
 #include "GuidStr.h"
 
 #ifdef	_DEBUG
-#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Settings"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Settings"),LogDetails,true)&0xFFFF)
-#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogDetails,true)&0xFFFF)
+#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Settings"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Settings"),LogDetails,true)&0xFFFF|LogTime)
+#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogDetails,true)&0xFFFF|LogTime)
 #endif
 
 #ifndef	_LOG_CHANGES
@@ -106,12 +106,12 @@ HRESULT WINAPI CDaElevatedSettings::UpdateRegistryOverride (BOOL bRegister)
 
 			if	(LogIsActive (LogDetails))
 			{
-				lLaunchDescriptor.DumpAccess (LogDetails, true, _T("  Set LaunchPermission [%s]"), (CString)lLaunchDescriptor);
+				lLaunchDescriptor.DumpAccess (LogDetails|LogTime, true, _T("  Set LaunchPermission [%s]"), (CString)lLaunchDescriptor);
 			}
 			else
 			if	(LogIsActive ())
 			{
-				LogMessage (LogIfActive, _T("  Set LaunchPermission [%s]"), (CString)lLaunchDescriptor);
+				LogMessage (LogIfActive|LogTime, _T("  Set LaunchPermission [%s]"), (CString)lLaunchDescriptor);
 			}
 #ifdef	_DEBUG
 			if	(LogIsActive (LogNormal))
@@ -125,7 +125,7 @@ HRESULT WINAPI CDaElevatedSettings::UpdateRegistryOverride (BOOL bRegister)
 					lByteStr.Format (_T("%2.2X"), lLaunchPermission.Value().GetAt(lNdx));
 					lAccessStr += lByteStr;
 				}
-				LogMessage (LogNormal, _T("  LaunchPermission [%s]"), lAccessStr);
+				LogMessage (LogNormal|LogTime, _T("  LaunchPermission [%s]"), lAccessStr);
 			}
 #endif
 		}
@@ -144,12 +144,12 @@ HRESULT WINAPI CDaElevatedSettings::UpdateRegistryOverride (BOOL bRegister)
 
 			if	(LogIsActive (LogDetails))
 			{
-				lAccessDescriptor.DumpAccess (LogDetails, true, _T("  Set AccessPermission [%s]"), (CString)lAccessDescriptor);
+				lAccessDescriptor.DumpAccess (LogDetails|LogTime, true, _T("  Set AccessPermission [%s]"), (CString)lAccessDescriptor);
 			}
 			else
 			if	(LogIsActive ())
 			{
-				LogMessage (LogIfActive, _T("  Set AccessPermission [%s]"), (CString)lAccessDescriptor);
+				LogMessage (LogIfActive|LogTime, _T("  Set AccessPermission [%s]"), (CString)lAccessDescriptor);
 			}
 #ifdef	_DEBUG
 			if	(LogIsActive (LogNormal))
@@ -163,7 +163,7 @@ HRESULT WINAPI CDaElevatedSettings::UpdateRegistryOverride (BOOL bRegister)
 					lByteStr.Format (_T("%2.2X"), lAccessPermission.Value().GetAt(lNdx));
 					lAccessStr += lByteStr;
 				}
-				LogMessage (LogNormal, _T("  AccessPermission [%s]"), lAccessStr);
+				LogMessage (LogNormal|LogTime, _T("  AccessPermission [%s]"), lAccessStr);
 			}
 #endif
 		}

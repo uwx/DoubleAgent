@@ -204,7 +204,7 @@ void CPropSheetOptions::OnApplied ()
 
 			lResult = BroadcastSystemMessage (BSF_FORCEIFHUNG|BSF_POSTMESSAGE, &lTargets, DA_BROADCAST_OPTIONS_CHANGED, 0, 0);
 #ifdef	_DEBUG
-			LogMessage (LogNormal, _T("DA_BROADCAST_OPTIONS_CHANGED [%d]"), lResult);
+			LogMessage (LogNormal|LogTime, _T("DA_BROADCAST_OPTIONS_CHANGED [%d]"), lResult);
 #endif
 		}
 		catch AnyExceptionDebug

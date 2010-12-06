@@ -53,15 +53,15 @@
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_LANGUAGE			(GetProfileDebugInt(_T("DebugLanguage"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_LANGUAGE			(GetProfileDebugInt(_T("DebugLanguage"),LogVerbose,true)&0xFFFF|LogTime)
 #define	_DEBUG_ACTIVE			(GetProfileDebugInt(_T("DebugActive"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_PREPARE			(GetProfileDebugInt(_T("DebugPrepare"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_LISTEN			(GetProfileDebugInt(_T("DebugListen"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_REQUESTS			(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_STYLE			(GetProfileDebugInt(_T("DebugStyle"),LogVerbose,true)&0xFFFF|LogTimeMs)
-#define	_DEBUG_NOTIFY_PATH		(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF)
-#define	_DEBUG_DEFAULT_CHAR		(GetProfileDebugInt(_T("DebugDefaultChar"),LogVerbose,true)&0xFFFF)
-#define	_LOG_FILE_LOAD			(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_NOTIFY_PATH		(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_DEBUG_DEFAULT_CHAR		(GetProfileDebugInt(_T("DebugDefaultChar"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_FILE_LOAD			(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF|LogTime)
 #endif
 
 #ifndef	_LOG_FILE_LOAD
@@ -199,7 +199,7 @@ void CDaCmnCharacter::Unrealize (bool pForce)
 			)
 		{
 			INT_PTR	lClientCount = GetClientCount (mCharID);
-			
+
 			try
 			{
 				mNotify->mAnchor->RemoveFileClient (mFile, mWnd, false);
@@ -517,7 +517,7 @@ HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pProvider, CAtlString & pFilePath,
 			if	(lSearchPath.GetCount() > 0)
 			{
 				INT_PTR	lPathNdx;
-				
+
 				for	(lPathNdx = 0; lPathNdx < (INT_PTR)lSearchPath.GetCount(); lPathNdx++)
 				{
 					PathCombine (lFilePath.GetBuffer (MAX_PATH), lSearchPath [lPathNdx], pFilePath);
@@ -806,7 +806,7 @@ short CDaCmnCharacter::GetActiveState () const
 	if	(IsClientActive ())
 	{
 		CAgentCharacterWnd *	lCharacterWnd;
-	
+
 		if	(
 				(lCharacterWnd = GetCharacterWnd ())
 			&&	(lCharacterWnd->m_hWnd == CAgentCharacterWnd::GetLastActive())
@@ -1243,7 +1243,7 @@ HRESULT CDaCmnCharacter::SetLangID (LANGID pLangID)
 		||	(CLocalize::GetMuiModule (lLangID = MAKELANGID (PRIMARYLANGID (lLangID), SUBLANG_DEFAULT)))
 		||	(CLocalize::GetMuiModule (lLangID = MAKELANGID (PRIMARYLANGID (lLangID), SUBLANG_NEUTRAL)))
 		)
-#endif		
+#endif
 	{
 #ifdef	_DEBUG_LANGUAGE
 		if	(LogIsActive (_DEBUG_LANGUAGE))
@@ -1276,7 +1276,7 @@ HRESULT CDaCmnCharacter::SetLangID (LANGID pLangID)
 #endif
 		lResult = AGENTERR_LANGUAGENOTFOUND;
 	}
-#endif	
+#endif
 	return lResult;
 }
 
@@ -1939,13 +1939,15 @@ HRESULT CDaCmnCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 						LogMessage (_DEBUG_REQUESTS, _T("[%d] RequestStart    [%d]"), mCharID, lReqID);
 					}
 #endif
-					PreNotify ();
-					try
+					if	(PreNotify ())
 					{
-						mNotify->RequestComplete (lReqID, pReqStatus);
+						try
+						{
+							mNotify->RequestComplete (lReqID, pReqStatus);
+						}
+						catch AnyExceptionSilent
+						PostNotify ();
 					}
-					catch AnyExceptionSilent
-					PostNotify ();
 				}
 			}
 		}
@@ -2006,13 +2008,15 @@ HRESULT CDaCmnCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, long
 					LogMessage (_DEBUG_REQUESTS, _T("[%d] RequestStart    [%d]"), mCharID, pReqID);
 				}
 #endif
-				PreNotify ();
-				try
+				if	(PreNotify ())
 				{
-					mNotify->RequestStart (pReqID);
+					try
+					{
+						mNotify->RequestStart (pReqID);
+					}
+					catch AnyExceptionSilent
+					PostNotify ();
 				}
-				catch AnyExceptionSilent
-				PostNotify ();
 			}
 
 			if	(lPrepare = CQueuedPrepare::CreateInstance (mCharID, pReqID))
@@ -2075,13 +2079,15 @@ HRESULT CDaCmnCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, long
 					LogMessage (_DEBUG_REQUESTS, _T("[%d] RequestComplete [%d] [%8.8X]"), mCharID, pReqID, lResult);
 				}
 #endif
-				PreNotify ();
-				try
+				if	(PreNotify ())
 				{
-					mNotify->RequestComplete (pReqID, lResult);
+					try
+					{
+						mNotify->RequestComplete (pReqID, lResult);
+					}
+					catch AnyExceptionSilent
+					PostNotify ();
 				}
-				catch AnyExceptionSilent
-				PostNotify ();
 			}
 		}
 	}
@@ -2153,13 +2159,15 @@ bool CDaCmnCharacter::_OnDownloadComplete (CFileDownload * pDownload)
 						LogMessage (_DEBUG_REQUESTS, _T("[%d] RequestComplete [%d] [%8.8X]"), mCharID, lPrepare->mReqID, lResult);
 					}
 #endif
-					PreNotify ();
-					try
+					if	(PreNotify ())
 					{
-						mNotify->RequestComplete (lPrepare->mReqID, lResult);
+						try
+						{
+							mNotify->RequestComplete (lPrepare->mReqID, lResult);
+						}
+						catch AnyExceptionSilent
+						PostNotify ();
 					}
-					catch AnyExceptionSilent
-					PostNotify ();
 				}
 			}
 		}
@@ -2326,9 +2334,17 @@ bool CDaCmnCharacter::_OnContextMenu (long pCharID, HWND pOwner, const CPoint & 
 {
 	if	(pCharID == mCharID)
 	{
-		if	(mAutoPopupMenu)
+		if	(
+				(mAutoPopupMenu)
+			&&	(PreNotify ())
+			)
 		{
-			DoContextMenu (pOwner, pPosition);
+			try
+			{
+				DoContextMenu (pOwner, pPosition);
+			}
+			catch AnyExceptionDebug
+			PostNotify ();
 		}
 		return true;
 	}
@@ -2339,9 +2355,17 @@ bool CDaCmnCharacter::_OnDefaultCommand (long pCharID, HWND pOwner, const CPoint
 {
 	if	(pCharID == mCharID)
 	{
-		if	(mAutoPopupMenu)
+		if	(
+				(mAutoPopupMenu)
+			&&	(PreNotify ())
+			)
 		{
-			DoDefaultCommand (pOwner, pPosition);
+			try
+			{
+				DoDefaultCommand (pOwner, pPosition);
+			}
+			catch AnyExceptionDebug
+			PostNotify ();
 		}
 		return true;
 	}
@@ -2385,9 +2409,9 @@ bool CDaCmnCharacter::DoContextMenu (HWND pOwner, const CPoint & pPosition)
 					(!DoMenuCommand (LOWORD (lCommandId)))
 				&&	(lCommand = lCommands->GetCommand (LOWORD (lCommandId)))
 				&&	(lCommand->mEnabled)
+				&&	(PreNotify ())
 				)
 			{
-				PreNotify ();
 				try
 				{
 					mNotify->Command (lCommandId, NULL);
@@ -2417,13 +2441,15 @@ bool CDaCmnCharacter::DoDefaultCommand (HWND pOwner, const CPoint & pPosition)
 		&&	(lCommand = lCommands->mDefaultId)
 		)
 	{
-		PreNotify ();
-		try
+		if	(PreNotify ())
 		{
-			mNotify->Command ((long)lCommand, NULL);
+			try
+			{
+				mNotify->Command ((long)lCommand, NULL);
+			}
+			catch AnyExceptionDebug
+			PostNotify ();
 		}
-		catch AnyExceptionDebug
-		PostNotify ();
 		return true;
 	}
 #endif
@@ -2760,7 +2786,7 @@ void CDaCmnCharacter::_OnDefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFi
 						(lNewFile = mNotify->mAnchor->mAnchor.FindCachedFile (pCharGuid))
 					||	(
 							(lLoadFile = CAgentFile::CreateInstance())
-						&&	(SUCCEEDED (LogComErr (LogNormal, lLoadFile->Open (pFilePath))))
+						&&	(SUCCEEDED (LogComErr (LogNormal|LogTime, lLoadFile->Open (pFilePath))))
 						&&	(lNewFile = lLoadFile)
 						)
 					)
@@ -2789,7 +2815,7 @@ void CDaCmnCharacter::_OnDefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFi
 #endif
 					Terminate (false);
 
-					if	(SUCCEEDED (lResult = LogComErr (LogNormal, OpenFile (lNewFile, true))))
+					if	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, OpenFile (lNewFile, true))))
 					{
 						Initialize (mCharID, mNotify, mListeningAnchor);
 						lLoadFile.Detach ();
@@ -2798,8 +2824,8 @@ void CDaCmnCharacter::_OnDefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFi
 							(SUCCEEDED (lResult))
 						&&	(
 								(lPopupWnd)
-							?	(SUCCEEDED (lResult = LogComErr (LogNormal, RealizePopup (mNotify->mAnchor->mOwnerWnd, lStyle))))
-							:	(SUCCEEDED (lResult = LogComErr (LogNormal, Realize (lCharacterWnd, lStyle))))
+							?	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, RealizePopup (mNotify->mAnchor->mOwnerWnd, lStyle))))
+							:	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, Realize (lCharacterWnd, lStyle))))
 							)
 						)
 					{
@@ -3490,9 +3516,17 @@ HRESULT CDaCmnCharacter::ShowPopupMenu (short X, short Y)
 	else
 	if	(lCharacterWnd = GetCharacterWnd ())
 	{
-		if	(!DoContextMenu (lCharacterWnd->m_hWnd, CPoint (X, Y)))
+		if	(PreNotify ())
 		{
-			lResult = S_FALSE;
+			try
+			{
+				if	(!DoContextMenu (lCharacterWnd->m_hWnd, CPoint (X, Y)))
+				{
+					lResult = S_FALSE;
+				}
+			}
+			catch AnyExceptionDebug
+			PostNotify ();
 		}
 	}
 	else

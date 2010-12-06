@@ -42,7 +42,7 @@ CDaCmnBalloon::~CDaCmnBalloon ()
 			(mAnchor)
 		&&	(mFile)
 		)
-	{	
+	{
 		try
 		{
 			mAnchor->RemoveFileClient (mFile, this, false);
@@ -67,7 +67,7 @@ void CDaCmnBalloon::Initialize (long pCharID, CInstanceAnchor * pAnchor, CAgentF
 			(mAnchor)
 		&&	(mFile)
 		)
-	{	
+	{
 		mAnchor->AddFileClient (mFile, this);
 		mAnchor->mAnchor.AddFileClient (mFile, this);
 	}
@@ -200,7 +200,7 @@ CAgentBalloonOptions * CDaCmnBalloon::GetBalloonOptions (LANGID pLangID, bool pI
 	long					lBalloonStyle;
 
 	get_Enabled (&lBalloonEnabled);
-	
+
 	if	(
 			(lBalloonEnabled)
 		||	(pIgnoreDisabled)

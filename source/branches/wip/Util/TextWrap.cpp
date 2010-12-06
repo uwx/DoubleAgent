@@ -297,7 +297,7 @@ CSize CTextWrap::MeasureText (LPCTSTR pText, HDC pDC, HFONT pFont, bool * pWordB
 			}
 			else
 			{
-				LogWinErr (LogIfActive, GetLastError (), _T("GetTextExtentExPoint"));
+				LogWinErr (LogIfActive|LogTime, GetLastError (), _T("GetTextExtentExPoint"));
 				mTextLines.DeleteAll ();
 				break;
 			}

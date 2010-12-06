@@ -69,7 +69,7 @@ public:
 	static bool GetActualFont (const LOGFONT & pFont, LOGFONT & pActualFont, bool pUpdateSize = true, bool pUpdateStyle = true);
 	static bool FontEqual (HFONT pFont1, HFONT pFont2);
 	static bool FontEqual (const LOGFONT & pFont1, const LOGFONT & pFont2);
-	
+
 	void LogOptions (UINT pLogLevel, LPCTSTR pTitle = NULL, LPCTSTR pPrefix = NULL);
 	static void LogFont (UINT pLogLevel, const LOGFONT & pFont, LPCTSTR pTitle = NULL, LPCTSTR pPrefix = NULL);
 };

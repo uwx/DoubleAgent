@@ -49,7 +49,7 @@ CAgentTextObject::CAgentTextObject ()
 CAgentTextObject::~CAgentTextObject ()
 {
 	SafeFreeSafePtr (mMsgPostingWnd);
-	
+
 	if	(mVoice)
 	{
 		try
@@ -87,7 +87,7 @@ void CAgentTextObject::Attach (long pCharID, CEventNotify * pNotify, CSapiVoice 
 			mVoice->AddEventSink (this);
 		}
 	}
-	
+
 	if	(!mMsgPostingWnd)
 	{
 		mMsgPostingWnd = new CMsgPostingWnd <CAgentTextObject> (*this);
@@ -113,7 +113,7 @@ void CAgentTextObject::Detach (bool pStopped)
 		mMsgPostingWnd->SendMessage (mVoiceEndMsg, mCharID, (LPARAM)pStopped);
 	}
 	SafeFreeSafePtr (mMsgPostingWnd);
-	
+
 	if	(mVoice)
 	{
 		try
@@ -144,7 +144,7 @@ void CAgentTextObject::OnVoiceStart (long pCharID)
 #endif
 	mVoiceStartNotified = true;
 	mVoiceEndNotified = false;
-	
+
 	if	(
 			(mNotify)
 		&&	(mMsgPostingWnd)
@@ -164,7 +164,7 @@ void CAgentTextObject::OnVoiceEnd (long pCharID)
 	}
 #endif
 	mVoiceEndNotified = true;
-	
+
 	if	(
 			(mNotify)
 		&&	(mMsgPostingWnd)

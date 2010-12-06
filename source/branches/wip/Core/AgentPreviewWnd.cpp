@@ -31,8 +31,8 @@
 
 #ifdef	_DEBUG
 //#define	_DEBUG_INTERFACE	LogNormal
-#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Preview"),LogVerbose,true)&0xFFFF)
-#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Preview"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
 #ifndef	_LOG_INSTANCE
@@ -81,7 +81,7 @@ void CAgentPreviewWnd::FinalRelease ()
 CAgentPreviewWnd * CAgentPreviewWnd::CreateInstance ()
 {
 	CComObject<CAgentPreviewWnd> *	lInstance = NULL;
-	LogComErr (LogIfActive, CComObject<CAgentPreviewWnd>::CreateInstance (&lInstance));
+	LogComErr (LogIfActive|LogTime, CComObject<CAgentPreviewWnd>::CreateInstance (&lInstance));
 	return lInstance;
 }
 
@@ -151,11 +151,11 @@ DWORD CAgentPreviewWnd::GetAlphaSmoothing () const
 void CAgentPreviewWnd::Opened ()
 {
 	CAgentFile *	lAgentFile;
-	
+
 	CAgentWnd::Opened ();
 
 	if	(
-			(!mAutoSize)	
+			(!mAutoSize)
 		&&	(lAgentFile = GetAgentFile ())
 		)
 	{
@@ -163,7 +163,7 @@ void CAgentPreviewWnd::Opened ()
 		CRect	lClientRect;
 
 		GetClientRect (&lClientRect);
-	
+
 		if	(
 				(lImageSize.cx > lClientRect.Width())
 			||	(lImageSize.cy > lClientRect.Height())

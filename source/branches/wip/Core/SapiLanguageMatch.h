@@ -30,7 +30,7 @@ protected:
 protected:
 	void MakeLanguageMatchList (LANGID pLanguageId, CAtlTypeArray <LANGID> & pLanguageIds, bool pUseDefaults) const;
 	INT_PTR FindLanguageMatch (LANGID pLanguageId, const CAtlTypeArray <LANGID> & pLanguageIds) const;
-	
+
 	void LogLanguageMatchList (UINT pLogLevel, LANGID pLanguageId, bool pUseDefaults, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL) const;
 };
 //////////////////////////////////////////////////////////////////////

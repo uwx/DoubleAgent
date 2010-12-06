@@ -38,7 +38,7 @@ LPCTSTR CHxRegHelper::GetSessionToken () const
 HRESULT CHxRegHelper::SetSessionToken (LPCTSTR pSessionToken)
 {
 	mSessionToken = pSessionToken;
-	return ContinueTransaction ();	
+	return ContinueTransaction ();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -46,13 +46,13 @@ HRESULT CHxRegHelper::SetSessionToken (LPCTSTR pSessionToken)
 HRESULT CHxRegHelper::CreateTransaction (LPCTSTR pSessionToken)
 {
 	HRESULT	lResult = E_FAIL;
-	
+
 	try
 	{
 		if	(mRegisterSession)
 		{
 			mSessionToken = pSessionToken;
-			
+
 			if	(mSessionToken.IsEmpty ())
 			{
 				lResult = E_INVALIDARG;
@@ -61,13 +61,13 @@ HRESULT CHxRegHelper::CreateTransaction (LPCTSTR pSessionToken)
 			{
 #ifdef	_DEBUG_TRANSACTION
 				LogMessage (_DEBUG_TRANSACTION, _T("  Create transaction    [%s]"), mSessionToken);
-#endif		
+#endif
 
 				mSessionToken = (BSTR) mRegisterSession->CreateTransaction (_bstr_t (mSessionToken));
 
 #ifdef	_DEBUG_TRANSACTION
 				LogMessage (_DEBUG_TRANSACTION, _T("  Created transaction   [%s]"), mSessionToken);
-#endif		
+#endif
 				if	(!mSessionToken.IsEmpty ())
 				{
 					lResult = S_OK;
@@ -76,14 +76,14 @@ HRESULT CHxRegHelper::CreateTransaction (LPCTSTR pSessionToken)
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return (mLastResult = lResult);
 }
 
 HRESULT CHxRegHelper::CommitTransaction ()
 {
 	HRESULT	lResult = E_FAIL;
-	
+
 	try
 	{
 		if	(
@@ -93,25 +93,25 @@ HRESULT CHxRegHelper::CommitTransaction ()
 		{
 #ifdef	_DEBUG_TRANSACTION
 			LogMessage (_DEBUG_TRANSACTION, _T("  Commit transaction    [%s]"), mSessionToken);
-#endif		
+#endif
 
-			LogComErr (LogNormal, lResult = mRegisterSession->CommitTransaction ()); 
+			LogComErr (LogNormal, lResult = mRegisterSession->CommitTransaction ());
 
 #ifdef	_DEBUG_TRANSACTION
 			LogComErrAnon (MinLogLevel(_DEBUG_TRANSACTION,LogAlways), lResult, _T("  Committed transaction [%s]"), mSessionToken);
-#endif		
+#endif
 			mSessionToken.Empty ();
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return (mLastResult = lResult);
 }
 
-HRESULT CHxRegHelper::RevertTransaction ()		
+HRESULT CHxRegHelper::RevertTransaction ()
 {
 	HRESULT	lResult = E_FAIL;
-	
+
 	try
 	{
 		if	(
@@ -121,18 +121,18 @@ HRESULT CHxRegHelper::RevertTransaction ()
 		{
 #ifdef	_DEBUG_TRANSACTION
 			LogMessage (_DEBUG_TRANSACTION, _T("  Revert transaction    [%s]"), mSessionToken);
-#endif		
+#endif
 
-			LogComErr (LogNormal, lResult = mRegisterSession->RevertTransaction ()); 
+			LogComErr (LogNormal, lResult = mRegisterSession->RevertTransaction ());
 
 #ifdef	_DEBUG_TRANSACTION
 			LogComErrAnon (MinLogLevel(_DEBUG_TRANSACTION,LogAlways), lResult, _T("  Reverted transaction [%s]"), mSessionToken);
-#endif		
+#endif
 			mSessionToken.Empty ();
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return (mLastResult = lResult);
 }
 
@@ -141,7 +141,7 @@ HRESULT CHxRegHelper::RevertTransaction ()
 HRESULT CHxRegHelper::PostponeTransaction ()
 {
 	HRESULT	lResult = E_FAIL;
-	
+
 	try
 	{
 		if	(
@@ -151,13 +151,13 @@ HRESULT CHxRegHelper::PostponeTransaction ()
 		{
 #ifdef	_DEBUG_TRANSACTION
 			LogMessage (_DEBUG_TRANSACTION, _T("  Postpone transaction  [%s]"), mSessionToken);
-#endif		
+#endif
 
 			mSessionToken = (BSTR) mRegisterSession->PostponeTransaction ();
 
 #ifdef	_DEBUG_TRANSACTION
 			LogMessage (_DEBUG_TRANSACTION, _T("  Postponed transaction [%s]"), mSessionToken);
-#endif		
+#endif
 			if	(!mSessionToken.IsEmpty ())
 			{
 				lResult = S_OK;
@@ -165,14 +165,14 @@ HRESULT CHxRegHelper::PostponeTransaction ()
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return (mLastResult = lResult);
 }
 
 HRESULT CHxRegHelper::ContinueTransaction ()
 {
 	HRESULT	lResult = E_FAIL;
-	
+
 	try
 	{
 		if	(
@@ -182,17 +182,17 @@ HRESULT CHxRegHelper::ContinueTransaction ()
 		{
 #ifdef	_DEBUG_TRANSACTION
 			LogMessage (_DEBUG_TRANSACTION, _T("  Continue transaction  [%s]"), mSessionToken);
-#endif		
+#endif
 
-			LogComErr (LogNormal, lResult = mRegisterSession->ContinueTransaction (_bstr_t(mSessionToken))); 
+			LogComErr (LogNormal, lResult = mRegisterSession->ContinueTransaction (_bstr_t(mSessionToken)));
 
 #ifdef	_DEBUG_TRANSACTION
 			LogComErrAnon (MinLogLevel(_DEBUG_TRANSACTION,LogAlways), lResult, _T("  Continued transaction [%s]"), mSessionToken);
-#endif		
+#endif
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return (mLastResult = lResult);
 }
 
@@ -203,7 +203,7 @@ HRESULT CHxRegHelper::ContinueTransaction ()
 HRESULT CHxRegHelper::RegisterNamespace (LPCTSTR pNamespace, LPCTSTR pDescription, LPCTSTR pCollection, LPCTSTR pFileName, LANGID pLangID)
 {
 	HRESULT	lResult = E_FAIL;
-	
+
 	try
 	{
 		if	(mRegisterSession)
@@ -214,7 +214,7 @@ HRESULT CHxRegHelper::RegisterNamespace (LPCTSTR pNamespace, LPCTSTR pDescriptio
 			CAtlString		lNamespaceCollection (pCollection);
 			CAtlString		lNamespaceFileName (PathFindFileName (pFileName));
 			CAtlString		lNamespaceFileID (pNamespace);
-	
+
 			while (*PathFindExtension (lNamespaceFileID))
 			{
 				PathRemoveExtension (lNamespaceFileID.GetBuffer (lNamespaceFileID.GetLength ()));
@@ -225,15 +225,15 @@ HRESULT CHxRegHelper::RegisterNamespace (LPCTSTR pNamespace, LPCTSTR pDescriptio
 			{
 				CAtlString	lCurrPath;
 				CAtlString	lFilePath (pFileName);
-				
+
 				GetCurrentDirectory (MAX_PATH, lCurrPath.GetBuffer (MAX_PATH));
 				lCurrPath.ReleaseBuffer ();
 				PathRemoveFileSpec (lFilePath.GetBuffer (lFilePath.GetLength ()));
 				lFilePath.ReleaseBuffer ();
 				SetCurrentDirectory (lFilePath);
-				
+
 				try
-				{				
+				{
 #ifdef	_DEBUG_REGISTER
 					LogMessage (_DEBUG_REGISTER, _T("  RegisterNamespace [%s] Collection [%s] File [%s] [%s] LangID [%u %4.4X] Description [%s]"), lNamespaceName, lNamespaceCollection, lNamespaceFileID, lNamespaceFileName, pLangID, pLangID, lNamespaceDescription);
 #endif
@@ -244,19 +244,19 @@ HRESULT CHxRegHelper::RegisterNamespace (LPCTSTR pNamespace, LPCTSTR pDescriptio
 				}
 				catch AnyExceptionDebug
 
-				SetCurrentDirectory (lCurrPath);				
+				SetCurrentDirectory (lCurrPath);
 #if	FALSE
 				if	(SUCCEEDED (lResult))
 				{
 					LogComErr (LogNormal, mRegisterSession->CommitTransaction ());
 					mSessionToken = (BSTR) mRegisterSession->CreateTransaction (_bstr_t(mSessionToken));
 				}
-#endif				
+#endif
 			}
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return (mLastResult = lResult);
 }
 
@@ -265,7 +265,7 @@ HRESULT CHxRegHelper::RegisterNamespace (LPCTSTR pNamespace, LPCTSTR pDescriptio
 HRESULT CHxRegHelper::UnregisterNamespace (LPCTSTR pNamespace)
 {
 	HRESULT	lResult = E_FAIL;
-	
+
 	try
 	{
 		if	(mRegisterSession)
@@ -273,7 +273,7 @@ HRESULT CHxRegHelper::UnregisterNamespace (LPCTSTR pNamespace)
 			IHxRegisterPtr	lRegister = mRegisterSession->GetRegistrationObject (HxRegisterSession_IHxRegister);
 			CAtlString		lNamespaceName (pNamespace);
 			CAtlString		lNamespaceFileID (pNamespace);
-	
+
 			while (*PathFindExtension (lNamespaceFileID))
 			{
 				PathRemoveExtension (lNamespaceFileID.GetBuffer (lNamespaceFileID.GetLength ()));
@@ -302,12 +302,12 @@ HRESULT CHxRegHelper::UnregisterNamespace (LPCTSTR pNamespace)
 					LogComErr (LogNormal, mRegisterSession->CommitTransaction ());
 					mSessionToken = (BSTR) mRegisterSession->CreateTransaction (_bstr_t(mSessionToken));
 				}
-#endif				
+#endif
 			}
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return (mLastResult = lResult);
 }
 
@@ -318,13 +318,13 @@ HRESULT CHxRegHelper::UnregisterNamespace (LPCTSTR pNamespace)
 HRESULT CHxRegHelper::RegisterFilter (LPCTSTR pNamespace, LPCTSTR pFilterName, LPCTSTR pFilterQuery)
 {
 	HRESULT	lResult = E_FAIL;
-	
+
 	try
 	{
 		if	(mRegisterSession)
 		{
 			IHxFiltersPtr	lFilters = mRegisterSession->GetRegistrationObject (HxRegisterSession_IHxFilters);
-			
+
 			if	(
 					(lFilters)
 				&&	(SUCCEEDED (LogComErr (LogNormal, lResult = lFilters->SetNamespace (_bstr_t (pNamespace)))))
@@ -342,20 +342,20 @@ HRESULT CHxRegHelper::RegisterFilter (LPCTSTR pNamespace, LPCTSTR pFilterName, L
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return (mLastResult = lResult);
 }
 
 HRESULT CHxRegHelper::UnregisterFilter (LPCTSTR pNamespace, LPCTSTR pFilterName)
 {
 	HRESULT	lResult = E_FAIL;
-	
+
 	try
 	{
 		if	(mRegisterSession)
 		{
 			IHxFiltersPtr	lFilters = mRegisterSession->GetRegistrationObject (HxRegisterSession_IHxFilters);
-			
+
 			if	(
 					(lFilters)
 				&&	(SUCCEEDED (LogComErr (LogNormal, lResult = lFilters->SetNamespace (_bstr_t (pNamespace)))))
@@ -373,7 +373,7 @@ HRESULT CHxRegHelper::UnregisterFilter (LPCTSTR pNamespace, LPCTSTR pFilterName)
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return (mLastResult = lResult);
 }
 
@@ -382,7 +382,7 @@ HRESULT CHxRegHelper::UnregisterFilter (LPCTSTR pNamespace, LPCTSTR pFilterName)
 HRESULT CHxRegHelper::UnregisterNamespaceFilters (LPCTSTR pNamespace)
 {
 	HRESULT	lResult = E_FAIL;
-	
+
 	try
 	{
 		if	(mRegisterSession)
@@ -394,7 +394,7 @@ HRESULT CHxRegHelper::UnregisterNamespaceFilters (LPCTSTR pNamespace)
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return lResult;
 }
 
@@ -405,7 +405,7 @@ HRESULT CHxRegHelper::UnregisterNamespaceFilters (LPCTSTR pNamespace)
 HRESULT CHxRegHelper::RegisterPlugin (LPCTSTR pParentNamespace, LPCTSTR pParentFile, LPCTSTR pChildNamespace, LPCTSTR pChildFile)
 {
 	HRESULT	lResult = E_FAIL;
-	
+
 	try
 	{
 		if	(mRegisterSession)
@@ -454,7 +454,7 @@ HRESULT CHxRegHelper::RegisterPlugin (LPCTSTR pParentNamespace, LPCTSTR pParentF
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return lResult;
 }
 //////////////////////////////////////////////////////////////////////
@@ -462,7 +462,7 @@ HRESULT CHxRegHelper::RegisterPlugin (LPCTSTR pParentNamespace, LPCTSTR pParentF
 HRESULT CHxRegHelper::UnregisterPlugin (LPCTSTR pParentNamespace, LPCTSTR pChildNamespace)
 {
 	HRESULT	lResult = E_FAIL;
-	
+
 	try
 	{
 		if	(mRegisterSession)
@@ -490,7 +490,7 @@ HRESULT CHxRegHelper::UnregisterPlugin (LPCTSTR pParentNamespace, LPCTSTR pChild
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return lResult;
 }
 
@@ -501,7 +501,7 @@ HRESULT CHxRegHelper::UnregisterPlugin (LPCTSTR pParentNamespace, LPCTSTR pChild
 IHxRegNamespacePtr CHxRegHelper::GetRegNamespace (LPCTSTR pNamespace)
 {
 	IHxRegNamespacePtr	lRet;
-	
+
 	try
 	{
 		IHxRegNamespaceListPtr	lRegNamespaceList;
@@ -533,22 +533,22 @@ IHxRegNamespacePtr CHxRegHelper::GetRegNamespace (LPCTSTR pNamespace)
 			}
 		}
 	}
-	catch AnyExceptionDebug	
-	
+	catch AnyExceptionDebug
+
 	return lRet;
 }
 
 bool CHxRegHelper::GetNamespaceCollection (LPCTSTR pNamespace, CAtlString & pCollectionPath, bool pStripPath)
 {
 	bool	lRet = false;
-	
+
 	pCollectionPath.Empty ();
 
 	try
 	{
 		IHxRegNamespacePtr	lRegNamespace;
 		_variant_t			lProperty;
-		
+
 		if	(lRegNamespace = GetRegNamespace (pNamespace))
 		{
 			lProperty = lRegNamespace->GetProperty (HxRegNamespaceCollection);
@@ -565,6 +565,6 @@ bool CHxRegHelper::GetNamespaceCollection (LPCTSTR pNamespace, CAtlString & pCol
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return lRet;
 }

@@ -433,7 +433,7 @@ HRESULT CDirectShowUtils::EmptyFilterCache (IGraphConfig * pGraphConfig)
 			{
 				lFilter = NULL;
 				lFilter.Attach (lFilters [lFilterNdx].Detach ());
-				if	(SUCCEEDED (LogVfwErr (LogNormal, pGraphConfig->RemoveFilterFromCache (lFilter))))
+				if	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, pGraphConfig->RemoveFilterFromCache (lFilter))))
 				{
 					lResult = S_OK;
 				}
@@ -714,11 +714,11 @@ HRESULT CDirectShowUtils::ConnectNullRenderer (IGraphBuilder * pGraphBuilder, IB
 
 		if	(
 				(lUpstreamPin != NULL)
-			&&	(SUCCEEDED (lResult = LogComErr (LogNormal, CoCreateInstance (__uuidof(NullRenderer), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &lNullRenderer))))
-			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, pGraphBuilder->AddFilter (lNullRenderer, L"Null Render"))))
+			&&	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(NullRenderer), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &lNullRenderer))))
+			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, pGraphBuilder->AddFilter (lNullRenderer, L"Null Render"))))
 			)
 		{
-			lResult = LogComErr (LogNormal, ConnectFilters (pGraphBuilder, lNullRenderer, pUpstreamFilter, true, pMediaType));
+			lResult = LogComErr (LogNormal|LogTime, ConnectFilters (pGraphBuilder, lNullRenderer, pUpstreamFilter, true, pMediaType));
 		}
 	}
 	catch AnyExceptionDebug
@@ -822,7 +822,7 @@ HRESULT CDirectShowUtils::CopySample (IMediaSample * pSource, IMediaSample * pTa
 					lTargetProps.tStart = lSourceProps.tStart;
 					lTargetProps.tStop = lSourceProps.tStop;
 					lTargetProps.dwStreamId = lSourceProps.dwStreamId;
-					lResult = LogVfwErr (LogNormal, lTargetSample2->SetProperties (sizeof(lTargetProps), (LPBYTE)&lTargetProps));
+					lResult = LogVfwErr (LogNormal|LogTime, lTargetSample2->SetProperties (sizeof(lTargetProps), (LPBYTE)&lTargetProps));
 				}
 			}
 			else
@@ -1004,7 +1004,7 @@ LPWAVEFORMATEX CDirectShowUtils::GetSoundFormat (HMMIO pSound, long * pFormatSiz
 			{
 				mmioAscend (pSound, &lFmtChunk, 0);
 				mmioAscend (pSound, &lRiffChunk, 0);
-				mmioSeek (pSound,	lFmtChunk.dwDataOffset, SEEK_SET);
+				mmioSeek (pSound, lFmtChunk.dwDataOffset, SEEK_SET);
 
 				if	(lSoundFormat = (LPWAVEFORMATEX) new BYTE [max (lFmtChunk.cksize, sizeof(WAVEFORMATEX))])
 				{
@@ -1013,7 +1013,7 @@ LPWAVEFORMATEX CDirectShowUtils::GetSoundFormat (HMMIO pSound, long * pFormatSiz
 #ifdef	_DEBUG
 					if	((int)lSoundFormat->cbSize != max((int)lFmtChunk.cksize - (int)sizeof(WAVEFORMATEX), 0))
 					{
-						LogMessage (LogIfActive, _T("--- SoundFormat [%d]->[%d]!=[%d] ---"), (int)lSoundFormat->cbSize, (int)lSoundFormat->cbSize+(int)sizeof(WAVEFORMATEX), lFmtChunk.cksize);
+						LogMessage (LogNormal|LogTime, _T("--- SoundFormat [%d]->[%d]!=[%d] ---"), (int)lSoundFormat->cbSize, (int)lSoundFormat->cbSize+(int)sizeof(WAVEFORMATEX), lFmtChunk.cksize);
 					}
 #endif
 					lSoundFormat->cbSize = (WORD) max (min ((int)lSoundFormat->cbSize, (int)lFmtChunk.cksize - (int)sizeof(WAVEFORMATEX)), 0);

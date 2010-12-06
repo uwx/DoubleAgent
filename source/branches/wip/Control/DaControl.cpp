@@ -46,15 +46,15 @@
 #include "DebugWin.h"
 
 #ifdef	_DEBUG
-#define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Control"),LogVerbose,true)&0xFFFF)
-#define	_DEBUG_NOTIFY			(GetProfileDebugInt(_T("DebugNotify"),LogVerbose,true)&0xFFFF)
-#define	_DEBUG_REQUEST			(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF)
-#define	_DEBUG_ATTRIBUTES		(GetProfileDebugInt(_T("DebugAttributes"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Control"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_DEBUG_NOTIFY			(GetProfileDebugInt(_T("DebugNotify"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_DEBUG_REQUEST			(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_DEBUG_ATTRIBUTES		(GetProfileDebugInt(_T("DebugAttributes"),LogVerbose,true)&0xFFFF|LogTime)
 #define	_DEBUG_ACTIVE			(GetProfileDebugInt(_T("DebugActive"),LogVerbose,true)&0xFFFF|LogTimeMs)
 //#define	_DEBUG_PERSIST		LogNormal
 //#define	_TRACE_PERSIST		LogNormal
-#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Control"),LogNormal,true)&0xFFFF)
-#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Control"),LogNormal,true)&0xFFFF|LogTime)
+#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
 #define	_PROP_DATA_VER			0x0101
@@ -406,32 +406,73 @@ HRESULT DaControl::ConnectServer ()
 #ifdef	_WIN64
 		if	(
 				(mAutoConnect != 32)
-			||	(LogComErr (LogNormal, lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server (32)")) == REGDB_E_CLASSNOTREG)
+			||	(FAILED (lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer)))
 			)
 		{
 			if	(
-					(LogComErr (LogNormal, lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server (64)")) == REGDB_E_CLASSNOTREG)
+					(FAILED (lResult))
+				&&	(lResult != REGDB_E_CLASSNOTREG)
+				)
+			{
+				LogComErr (LogNormal|LogTime, lResult, _T("Create Server (32)"));
+			}
+			else
+			if	(
+					(FAILED (lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer)))
 				&&	(mAutoConnect != 32)
 				)
 			{
-				LogComErr (LogNormal, lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server (32)"));
+				if	(
+						(FAILED (lResult))
+					&&	(lResult != REGDB_E_CLASSNOTREG)
+					)
+				{
+					LogComErr (LogNormal|LogTime, lResult, _T("Create Server (64)"));
+				}
+				else
+				{
+					LogComErr (LogNormal|LogTime, lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server (default)"));
+				}
 			}
 		}
 #else
 		if	(
 				(mAutoConnect != 64)
-			||	(LogComErr (LogNormal, lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server (64)")) == REGDB_E_CLASSNOTREG)
+			||	(FAILED (lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer)))
 			)
 		{
 			if	(
-					(LogComErr (LogNormal, lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server (32)")) == REGDB_E_CLASSNOTREG)
-				&&	(mAutoConnect != 64)
+					(FAILED (lResult))
+				&&	(lResult != REGDB_E_CLASSNOTREG)
+				&&	(lResult != E_INVALIDARG)
 				)
 			{
-				LogComErr (LogNormal, lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server (64)"));
+				LogComErr (LogNormal|LogTime, lResult, _T("Create Server (64)"));
+			}
+			else
+			if	(
+					(FAILED (lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer)))
+				&&	(
+						(mAutoConnect != 64)
+					||	(lResult == E_INVALIDARG)
+					)
+				)
+			{
+				if	(
+						(FAILED (lResult))
+					&&	(lResult != REGDB_E_CLASSNOTREG)
+					&&	(lResult != E_INVALIDARG)
+					)
+				{
+					LogComErr (LogNormal|LogTime, lResult, _T("Create Server (32)"));
+				}
+				else
+				{
+					LogComErr (LogNormal|LogTime, lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server (default)"));
+				}
 			}
 		}
-#endif		
+#endif
 
 		if	(
 				(SUCCEEDED (lResult))
@@ -524,15 +565,23 @@ void DaControl::DisconnectNotify (bool pForce)
 
 			try
 			{
+				int	lCount = 0;
 				if	(CProxy_DaCtlEvents<DaControl>::m_vec.GetSize() > 0)
 				{
-					LogMessage (_LOG_INSTANCE, _T("--- _DaCtlEvents Connections [%d] ---"), CProxy_DaCtlEvents<DaControl>::m_vec.GetSize());
-				}
-				for	(lNdx = 0; lNdx < CProxy_DaCtlEvents<DaControl>::m_vec.GetSize(); lNdx++)
-				{
-					if	(lConnection = CProxy_DaCtlEvents<DaControl>::m_vec.GetAt (lNdx))
+					for	(lNdx = 0; lNdx < CProxy_DaCtlEvents<DaControl>::m_vec.GetSize(); lNdx++)
 					{
-						LogMessage (_LOG_INSTANCE, _T("--- _DaCtlEvents Connection [%d] [%p] ---"), lNdx, lConnection);
+						if	(CProxy_DaCtlEvents<DaControl>::m_vec.GetAt (lNdx))
+						{
+							lCount++;
+						}
+					}
+					LogMessage (_LOG_INSTANCE, _T("--- _DaCtlEvents Connections [%d] Size [%d] ---"), lCount, CProxy_DaCtlEvents<DaControl>::m_vec.GetSize());
+					for	(lNdx = 0; lNdx < CProxy_DaCtlEvents<DaControl>::m_vec.GetSize(); lNdx++)
+					{
+						if	(lConnection = CProxy_DaCtlEvents<DaControl>::m_vec.GetAt (lNdx))
+						{
+							LogMessage (_LOG_INSTANCE, _T("--- _DaCtlEvents Connection [%d] [%p] ---"), lNdx, lConnection);
+						}
 					}
 				}
 			}
@@ -540,15 +589,23 @@ void DaControl::DisconnectNotify (bool pForce)
 
 			try
 			{
+				int	lCount = 0;
 				if	(CProxy_DaCtlEvents2<DaControl>::m_vec.GetSize() > 0)
 				{
-					LogMessage (_LOG_INSTANCE, _T("--- _DaCtlEvents2 Connections [%d] ---"), CProxy_DaCtlEvents2<DaControl>::m_vec.GetSize());
-				}
-				for	(lNdx = 0; lNdx < CProxy_DaCtlEvents2<DaControl>::m_vec.GetSize(); lNdx++)
-				{
-					if	(lConnection = CProxy_DaCtlEvents2<DaControl>::m_vec.GetAt (lNdx))
+					for	(lNdx = 0; lNdx < CProxy_DaCtlEvents2<DaControl>::m_vec.GetSize(); lNdx++)
 					{
-						LogMessage (_LOG_INSTANCE, _T("--- _DaCtlEvents2 Connection [%d] [%p] ---"), lNdx, lConnection);
+						if	(CProxy_DaCtlEvents2<DaControl>::m_vec.GetAt (lNdx))
+						{
+							lCount++;
+						}
+					}
+					LogMessage (_LOG_INSTANCE, _T("--- _DaCtlEvents2 Connections [%d] Size [%d] ---"), lCount, CProxy_DaCtlEvents2<DaControl>::m_vec.GetSize());
+					for	(lNdx = 0; lNdx < CProxy_DaCtlEvents2<DaControl>::m_vec.GetSize(); lNdx++)
+					{
+						if	(lConnection = CProxy_DaCtlEvents2<DaControl>::m_vec.GetAt (lNdx))
+						{
+							LogMessage (_LOG_INSTANCE, _T("--- _DaCtlEvents2 Connection [%d] [%p] ---"), lNdx, lConnection);
+						}
 					}
 				}
 			}
@@ -556,30 +613,46 @@ void DaControl::DisconnectNotify (bool pForce)
 
 			try
 			{
+				int	lCount = 0;
 				if	(CProxy_AgentEvents<DaControl>::m_vec.GetSize() > 0)
 				{
-					LogMessage (_LOG_INSTANCE, _T("--- _AgentEvents Connections [%d] ---"), CProxy_AgentEvents<DaControl>::m_vec.GetSize());
-				}
-				for	(lNdx = 0; lNdx < CProxy_AgentEvents<DaControl>::m_vec.GetSize(); lNdx++)
-				{
-					if	(lConnection = CProxy_AgentEvents<DaControl>::m_vec.GetAt (lNdx))
+					for	(lNdx = 0; lNdx < CProxy_AgentEvents<DaControl>::m_vec.GetSize(); lNdx++)
 					{
-						LogMessage (_LOG_INSTANCE, _T("--- _AgentEvents Connection [%d] [%p] ---"), lNdx, lConnection);
+						if	(CProxy_AgentEvents<DaControl>::m_vec.GetAt (lNdx))
+						{
+							lCount++;
+						}
+					}
+					LogMessage (_LOG_INSTANCE, _T("--- _AgentEvents Connections [%d] Size [%d] ---"), lCount, CProxy_AgentEvents<DaControl>::m_vec.GetSize());
+					for	(lNdx = 0; lNdx < CProxy_AgentEvents<DaControl>::m_vec.GetSize(); lNdx++)
+					{
+						if	(lConnection = CProxy_AgentEvents<DaControl>::m_vec.GetAt (lNdx))
+						{
+							LogMessage (_LOG_INSTANCE, _T("--- _AgentEvents Connection [%d] [%p] ---"), lNdx, lConnection);
+						}
 					}
 				}
 			}
 			catch AnyExceptionDebug
 			try
 			{
+				int	lCount = 0;
 				if	(IPropertyNotifySinkCP<DaControl>::m_vec.GetSize() > 0)
 				{
-					LogMessage (_LOG_INSTANCE, _T("--- IPropertyNotifySink Connections [%d] ---"), IPropertyNotifySinkCP<DaControl>::m_vec.GetSize());
-				}
-				for	(lNdx = 0; lNdx < IPropertyNotifySinkCP<DaControl>::m_vec.GetSize(); lNdx++)
-				{
-					if	(lConnection = IPropertyNotifySinkCP<DaControl>::m_vec.GetAt (lNdx))
+					for	(lNdx = 0; lNdx < IPropertyNotifySinkCP<DaControl>::m_vec.GetSize(); lNdx++)
 					{
-						LogMessage (_LOG_INSTANCE, _T("--- IPropertyNotifySink Connection [%d] [%p] ---"), lNdx, lConnection);
+						if	(IPropertyNotifySinkCP<DaControl>::m_vec.GetAt (lNdx))
+						{
+							lCount++;
+						}
+					}
+					LogMessage (_LOG_INSTANCE, _T("--- IPropertyNotifySink Connections [%d] Size [%d] ---"), lCount, IPropertyNotifySinkCP<DaControl>::m_vec.GetSize());
+					for	(lNdx = 0; lNdx < IPropertyNotifySinkCP<DaControl>::m_vec.GetSize(); lNdx++)
+					{
+						if	(lConnection = IPropertyNotifySinkCP<DaControl>::m_vec.GetAt (lNdx))
+						{
+							LogMessage (_LOG_INSTANCE, _T("--- IPropertyNotifySink Connection [%d] [%p] ---"), lNdx, lConnection);
+						}
 					}
 				}
 			}
@@ -839,6 +912,25 @@ void DaControl::ConnectObjects ()
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+bool DaControl::PreFireEvent (LPCTSTR pEventName)
+{
+#ifdef	_DEBUG_NOTIFY
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s (LockCount %d)"), this, max(m_dwRef,-1), pEventName, _AtlModule.GetLockCount());
+#endif
+	return _AtlModule.PreNotify ();
+}
+
+bool DaControl::PostFireEvent (LPCTSTR pEventName, UINT pEventSinkCount)
+{
+#ifdef	_DEBUG_NOTIFY
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s done [%u] (LockCount %d)"), this, max(m_dwRef,-1), pEventName, pEventSinkCount, _AtlModule.GetLockCount());
+#endif
+	_AtlModule.PostNotify ();
+	return true;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
@@ -905,9 +997,14 @@ CAtlString DaControl::GetActiveCharacterID ()
 		{
 			if	(
 					(lCharacter = dynamic_cast <DaCtlCharacter *> (lCharacters->mCharacters.GetValueAt (lPos).GetInterfacePtr()))
-				&&	(lCharacter->mServerObject != NULL)
-				&&	(SUCCEEDED (lCharacter->mServerObject->get_ActiveState (&(lCharacterState=(ActiveStateType)-1))))
-				&&	(lCharacterState >= ActiveState_Active)
+				&&	(
+						(lCharacter == mControlCharacter)
+					||	(
+							(!mControlCharacter)
+						&&	(SUCCEEDED (lCharacter->get_ActiveState (&(lCharacterState=(ActiveStateType)-1))))
+						&&	(lCharacterState >= ActiveState_Active)
+						)
+					)
 				)
 			{
 				lCharacterID = lCharacters->mCharacters.GetKeyAt (lPos);
@@ -935,9 +1032,14 @@ DaCtlCharacter * DaControl::GetActiveCharacter ()
 		{
 			if	(
 					(lCharacter = dynamic_cast <DaCtlCharacter *> (lCharacters->mCharacters.GetValueAt (lPos).GetInterfacePtr()))
-				&&	(lCharacter->mServerObject != NULL)
-				&&	(SUCCEEDED (lCharacter->mServerObject->get_ActiveState (&(lCharacterState=(ActiveStateType)-1))))
-				&&	(lCharacterState >= ActiveState_Active)
+				&&	(
+						(lCharacter == mControlCharacter)
+					||	(
+							(!mControlCharacter)
+						&&	(SUCCEEDED (lCharacter->get_ActiveState (&(lCharacterState=(ActiveStateType)-1))))
+						&&	(lCharacterState >= ActiveState_Active)
+						)
+					)
 				)
 			{
 				return lCharacter;
@@ -1002,7 +1104,7 @@ IDaCtlRequest * DaControl::PutRequest (DaRequestCategory pCategory, long pReqID,
 
 		if	(
 				(!lRequest)
-			&&	(SUCCEEDED (LogComErr (LogNormal, CComObject <DaCtlRequest>::CreateInstance (&lNewRequest))))
+			&&	(SUCCEEDED (LogComErr (LogNormal|LogTime, CComObject <DaCtlRequest>::CreateInstance (&lNewRequest))))
 			)
 		{
 			lNewRequest->SetOwner (this, pCategory, pReqID, pResult);
@@ -1081,6 +1183,7 @@ IDaCtlRequest * DaControl::PutRequest (DaRequestCategory pCategory, long pReqID,
 LRESULT DaControl::OnCompleteRequests (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	CompleteRequests (true);
+	CSapiVoiceCache::CleanupStaticInstance ();
 	bHandled = TRUE;
 	return 0;
 }
@@ -1146,7 +1249,7 @@ void DaControl::CompleteRequests (bool pIdleTime)
 				else
 				{
 					IDaCtlRequestPtr	lInterface ((LPDISPATCH) lRequest);
-					
+
 					try
 					{
 						if	((lRequest->mCategory & DaRequestNotifyEnabled) == 0)
@@ -1182,15 +1285,11 @@ void DaControl::CompleteRequests (bool pIdleTime)
 #ifdef	_DEBUG_NOTIFY
 								LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CompleteRequests::RequestStart [%d]"), this, max(m_dwRef,-1), lRequest->mReqID);
 #endif
-								if	(_AtlModule.PreNotify ())
+								try
 								{
-									try
-									{
-										FireRequestStart (lInterface);
-									}
-									catch AnyExceptionDebug
-									_AtlModule.PostNotify ();
+									FireRequestStart (lInterface);
 								}
+								catch AnyExceptionDebug
 							}
 						}
 
@@ -1217,15 +1316,11 @@ void DaControl::CompleteRequests (bool pIdleTime)
 #ifdef	_DEBUG_NOTIFY
 								LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CompleteRequests::RequestComplete [%d]"), this, max(m_dwRef,-1), lRequest->mReqID);
 #endif
-								if	(_AtlModule.PreNotify ())
+								try
 								{
-									try
-									{
-										FireRequestComplete (lInterface);
-									}
-									catch AnyExceptionDebug
-									_AtlModule.PostNotify ();
+									FireRequestComplete (lInterface);
 								}
+								catch AnyExceptionDebug
 							}
 
 #ifdef	_DEBUG_REQUEST
@@ -1242,7 +1337,7 @@ void DaControl::CompleteRequests (bool pIdleTime)
 #endif
 					}
 					catch AnyExceptionDebug
-					
+
 					SafeFreeSafePtr (lInterface);
 				}
 			}
@@ -1384,6 +1479,13 @@ LRESULT DaControl::OnActivateApp(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 	LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)] DaControl::OnActivateApp [%u %u]"), this, max(m_dwRef,-1), wParam, _AtlModule.VerifyAppActive());
 #endif
 	_AtlModule._AppActivated (wParam?true:false);
+	bHandled = FALSE;
+	return 0;
+}
+
+LRESULT DaControl::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+{
+	CSapiVoiceCache::CleanupStaticInstance ();
 	bHandled = FALSE;
 	return 0;
 }
@@ -1748,7 +1850,7 @@ bool DaControl::IsDesigning ()
 	{
 		BOOL	lUserMode = FALSE;
 		if	(
-				(SUCCEEDED (LogComErr (LogVerbose, GetAmbientUserMode (lUserMode))))
+				(SUCCEEDED (LogComErr (LogVerbose|LogTime, GetAmbientUserMode (lUserMode))))
 			&&	(!lUserMode)
 			)
 		{
@@ -2064,10 +2166,10 @@ HRESULT DaControl::IPersistStreamInit_Load(LPSTREAM pStm, const ATL_PROPMAP_ENTR
 					(lBufferSize.LowPart > 0)
 				&&	(lStreamBuffer = GlobalAlloc (GMEM_FIXED, lBufferSize.LowPart))
 				&&	(lBufferWords = (LPWORD) GlobalLock (lStreamBuffer))
-				&&	(SUCCEEDED (LogComErr (LogNormal, CreateStreamOnHGlobal (lStreamBuffer, FALSE, &lStreamCopy))))
+				&&	(SUCCEEDED (LogComErr (LogNormal|LogTime, CreateStreamOnHGlobal (lStreamBuffer, FALSE, &lStreamCopy))))
 				)
 			{
-				lResult = LogComErr (LogNormal, pStm->CopyTo (lStreamCopy, lBufferSize, NULL, NULL));
+				lResult = LogComErr (LogNormal|LogTime, pStm->CopyTo (lStreamCopy, lBufferSize, NULL, NULL));
 				lSeekTo.QuadPart = (LONGLONG)lSeekPos.QuadPart;
 				pStm->Seek (lSeekTo, STREAM_SEEK_SET, NULL);
 
@@ -2239,9 +2341,9 @@ STDMETHODIMP DaControl::get_AutoConnect (short *AutoConnect)
 	{
 #ifdef	_WIN64
 		(*AutoConnect) = (mAutoConnect==32) ? 32 : (mAutoConnect) ? 64 : 0;
-#else	
+#else
 		(*AutoConnect) = (mAutoConnect==64) ? 64 : (mAutoConnect) ? 32 : 0;
-#endif		
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl));

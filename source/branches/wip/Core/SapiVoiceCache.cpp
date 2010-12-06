@@ -30,11 +30,13 @@
 #include "Sapi5Voice.h"
 #include "Sapi5Voices.h"
 #include "Sapi5Err.h"
+#include "Elapsed.h"
 #include "Registry.h"
 #include "DebugStr.h"
 
 #ifdef	_DEBUG
-#define	_DEBUG_CACHE	(GetProfileDebugInt(_T("LogVoiceCache"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_CACHE	(GetProfileDebugInt(_T("LogVoiceCache"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_TERMINATE	_DEBUG_CACHE
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -42,6 +44,7 @@
 IMPLEMENT_DLL_OBJECT(CSapiVoiceCache)
 
 CSapiVoiceCache::CSapiVoiceCache ()
+:	mVoiceDeletePending (false)
 {
 #ifndef	_WIN64
 	mSapiVersionRestriction = 0;
@@ -51,10 +54,10 @@ CSapiVoiceCache::CSapiVoiceCache ()
 
 CSapiVoiceCache::~CSapiVoiceCache ()
 {
-#ifdef	_DEBUG_CACHE
+#ifdef	_LOG_TERMINATE
 	try
 	{
-		LogMessage (_DEBUG_CACHE, _T("CSapiVoiceCache::~CSapiVoiceCache Voices [%d] Clients [%d]"), mCachedVoices.GetCount(), mVoiceClients.GetCount());
+		LogMessage (_LOG_TERMINATE, _T("CSapiVoiceCache::~CSapiVoiceCache Voices [%d] Clients [%d]"), mCachedVoices.GetCount(), mVoiceClients.GetCount());
 	}
 	catch AnyExceptionSilent
 #endif
@@ -70,18 +73,29 @@ CSapiVoiceCache * CSapiVoiceCache::GetStaticInstance ()
 	return &_AtlModule;
 }
 
-void CSapiVoiceCache::TerminateStaticInstance ()
+void CSapiVoiceCache::TerminateStaticInstance (DWORD pWaitForCompletion)
 {
 	try
 	{
-		_AtlModule.CSapiVoiceCache::Terminate ();
+		_AtlModule.CSapiVoiceCache::Terminate (pWaitForCompletion);
 	}
 	catch AnyExceptionSilent
 }
 
-void CSapiVoiceCache::Terminate ()
+void CSapiVoiceCache::CleanupStaticInstance ()
 {
-#ifdef	_DEBUG_CACHE
+	try
+	{
+		_AtlModule.CSapiVoiceCache::DeleteUnusedVoices ();
+	}
+	catch AnyExceptionSilent
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void CSapiVoiceCache::Terminate (DWORD pWaitForCompletion)
+{
+#ifdef	_LOG_TERMINATE
 	try
 	{
 		if	(
@@ -89,11 +103,131 @@ void CSapiVoiceCache::Terminate ()
 			||	(mVoiceClients.GetCount() > 0)
 			)
 		{
-			LogMessage (_DEBUG_CACHE, _T("CSapiVoiceCache::Terminate Voices [%d] Clients [%d]"), mCachedVoices.GetCount(), mVoiceClients.GetCount());
+			LogMessage (_LOG_TERMINATE, _T("CSapiVoiceCache::Terminate Voices [%d] Clients [%d]"), mCachedVoices.GetCount(), mVoiceClients.GetCount());
+			if	(mCachedVoices.GetCount() > 0)
+			{
+				LogMessage (_LOG_TERMINATE, _T("  Voices [%s]"), FormatArray(mCachedVoices));
+			}
+			if	(mVoiceClients.GetCount() > 0)
+			{
+				POSITION	lPosition;
+
+				for	(lPosition = mVoiceClients.GetStartPosition(); lPosition;)
+				{
+					const CAtlOwnPtrMap <CSapiVoice *, CAtlPtrTypeArray <CSapiVoiceClient> >::CPair *	lPair = mVoiceClients.GetNext (lPosition);
+					if	(lPair->m_value)
+					{
+						LogMessage (_LOG_TERMINATE, _T("  Voice {%p] Clients [%s]"), lPair->m_key, FormatArray(*lPair->m_value));
+					}
+				}
+			}
 		}
 	}
 	catch AnyExceptionSilent
 #endif
+
+	if	(
+			(pWaitForCompletion)
+		&&	(mCachedVoices.GetCount() > 0)
+		)
+	{
+		DWORD	lStartTime = GetTickCount();
+#ifdef	_LOG_TERMINATE
+		UINT	lCycleCount = 0;
+#endif
+
+		do
+		{
+#ifdef	_LOG_TERMINATE
+			lCycleCount++;
+#endif
+			if	(DeleteUnusedVoices ())
+			{
+				break;
+			}
+			Sleep (200);
+		}
+		while (ElapsedTicks (lStartTime) < (long)pWaitForCompletion);
+
+#ifdef	_LOG_TERMINATE
+		if	(LogIsActive (_LOG_TERMINATE))
+		{
+			LogMessage (_LOG_TERMINATE, _T("CSapiVoiceCache::Terminate Cycles [%u] Time [%d] of [%u]"), lCycleCount, ElapsedTicks(lStartTime), pWaitForCompletion);
+		}
+#endif
+	}
+
+	DeleteAllVoices ();
+}
+
+//////////////////////////////////////////////////////////////////////
+
+bool CSapiVoiceCache::DeleteUnusedVoices ()
+{
+	if	(
+			(mVoiceDeletePending)
+		&&	(mCachedVoices.GetCount() > 0)
+		)
+	{
+		try
+		{
+			INT_PTR			lVoiceNdx;
+			CSapiVoice *	lVoice;
+			
+			mVoiceDeletePending = false;
+
+			for	(lVoiceNdx = mCachedVoices.GetCount()-1; lVoiceNdx >= 0; lVoiceNdx--)
+			{
+				if	(lVoice = mCachedVoices [lVoiceNdx])
+				{
+					tPtr <CAtlPtrTypeArray <CSapiVoiceClient> > &	lClients = mVoiceClients [lVoice];
+
+					if	(
+							(!lClients)
+						||	(lClients->GetCount() <= 0)
+						)
+					{
+						mVoiceClients.RemoveKey (lVoice);
+
+						if	(lVoice->SafeIsSpeaking ())
+						{
+							lVoice->Stop ();
+						}
+						if	(lVoice->SafeIsSpeaking ())
+						{
+							mVoiceDeletePending = true;
+#ifdef	_LOG_TERMINATE
+							if	(LogIsActive (_LOG_TERMINATE))
+							{
+								LogMessage (_LOG_TERMINATE, _T("  Speaking cached Voice [%p] [%s] (DeleteUnusedVoices)"), lVoice, (BSTR)lVoice->GetUniqueId());
+							}
+#endif
+						}
+						else
+						{
+#ifdef	_LOG_TERMINATE
+							if	(LogIsActive (_LOG_TERMINATE))
+							{
+								LogMessage (_LOG_TERMINATE, _T("  Delete cached Voice [%p] [%s] (DeleteUnusedVoices)"), lVoice, (BSTR)lVoice->GetUniqueId());
+							}
+#endif
+							mCachedVoices.DeleteAt (lVoiceNdx);
+						}
+					}
+				}
+				else
+				{
+					mCachedVoices.RemoveAt (lVoiceNdx);
+				}
+			}
+		}
+		catch AnyExceptionSilent
+	}
+	return (!mVoiceDeletePending);
+}
+
+void CSapiVoiceCache::DeleteAllVoices ()
+{
 	try
 	{
 		mVoiceClients.RemoveAll ();
@@ -104,8 +238,15 @@ void CSapiVoiceCache::Terminate ()
 		mCachedVoices.DeleteAll ();
 	}
 	catch AnyExceptionSilent
+	try
+	{
+		mCachedVoices.RemoveAll ();
+	}
+	catch AnyExceptionSilent
 }
 
+//////////////////////////////////////////////////////////////////////
+#pragma page()
 //////////////////////////////////////////////////////////////////////
 
 CSapi5Voices * CSapiVoiceCache::GetSapi5Voices ()
@@ -305,7 +446,7 @@ CSapi5Voice * CSapiVoiceCache::GetAgentSapi5Voice (const struct CAgentFileTts & 
 	{
 		tPtr <CSapi5VoiceInfoArray const>	lInfoArray;
 		INT_PTR								lInfoNdx;
-		
+
 		if	(lInfoArray = mSapi5Voices->GetVoices (pAgentFileTts, pUseDefaults))
 		{
 			for	(lInfoNdx = 0; lInfoNdx < (INT_PTR)lInfoArray->GetCount(); lInfoNdx++)
@@ -326,12 +467,12 @@ CSapi5Voice * CSapiVoiceCache::GetAgentSapi5Voice (const struct CAgentFileTts & 
 					if	(lSapi5Voice->SafeIsValid())
 					{
 #if	TRUE
-						if	(FAILED (LogSapi5ErrAnon (LogNormal, lSapi5Voice->Speak (_T("")), _T("Test [%ls]"), (BSTR)lSapi5VoiceInfo->mVoiceIdShort)))
+						if	(FAILED (LogSapi5ErrAnon (LogNormal|LogTime, lSapi5Voice->Speak (_T("")), _T("Test [%ls]"), (BSTR)lSapi5VoiceInfo->mVoiceIdShort)))
 						{
 							lRet = NULL;
 							continue;
 						}
-#endif						
+#endif
 						lRet = lSapi5Voice.Detach();
 					}
 				}
@@ -438,13 +579,13 @@ CSapi4Voice * CSapiVoiceCache::GetAgentSapi4Voice (const struct CAgentFileTts & 
 						&&	(lSapi4Voice->SafeIsValid())
 						)
 					{
-#if	FALSE					
-						if	(FAILED (LogSapi4ErrAnon (LogNormal, lSapi4Voice->Speak (_T("")), _T("Test [%ls]"), (BSTR)lSapi4VoiceInfo->mVoiceName)))
+#if	FALSE
+						if	(FAILED (LogSapi4ErrAnon (LogNormal|LogTime, lSapi4Voice->Speak (_T("")), _T("Test [%ls]"), (BSTR)lSapi4VoiceInfo->mVoiceName)))
 						{
 							lRet = NULL;
 							continue;
 						}
-#endif						
+#endif
 						lRet = lSapi4Voice.Detach();
 					}
 				}
@@ -516,7 +657,7 @@ bool CSapiVoiceCache::CacheVoice (CSapiVoice * pVoice, CSapiVoiceClient * pClien
 			&&	(pClient)
 			)
 		{
-			INT_PTR										lVoiceNdx;
+			INT_PTR											lVoiceNdx;
 			tPtr <CAtlPtrTypeArray <CSapiVoiceClient> > &	lClients = mVoiceClients [pVoice];
 
 			lVoiceNdx = mCachedVoices.Find (pVoice);
@@ -657,6 +798,10 @@ bool CSapiVoiceCache::AddVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient * pC
 		{
 			tPtr <CAtlPtrTypeArray <CSapiVoiceClient> > &	lClients = mVoiceClients [pVoice];
 
+			if	(!lClients)
+			{
+				lClients = new CAtlPtrTypeArray <CSapiVoiceClient>;
+			}
 			if	(
 					(lClients)
 				&&	(lClients->Find (pClient) < 0)
@@ -718,27 +863,49 @@ bool CSapiVoiceCache::RemoveVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient *
 				if	(lClients->GetCount() <= 0)
 				{
 					mVoiceClients.RemoveKey (pVoice);
+
 					if	(pDeleteUnusedVoice)
 					{
-#ifdef	_DEBUG_CACHE
-						LogMessage (_DEBUG_CACHE, _T("Delete cached Voice [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId());
+						if	(pVoice->SafeIsSpeaking ())
+						{
+							pVoice->Stop ();
+						}
+						if	(pVoice->SafeIsSpeaking ())
+						{
+							mVoiceDeletePending = true;
+#ifdef	_LOG_TERMINATE
+							if	(LogIsActive (_LOG_TERMINATE))
+							{
+								LogMessage (_LOG_TERMINATE, _T("  Don't delete SPEAKING cached Voice [%p] [%s] (RemoveVoiceClient)"), pVoice, (BSTR)pVoice->GetUniqueId());
+							}
 #endif
-						mCachedVoices.DeleteAt (lVoiceNdx);
+						}
+						else
+						{
+#ifdef	_DEBUG_CACHE
+							LogMessage (_DEBUG_CACHE, _T("Delete cached Voice [%p] [%s] (RemoveVoiceClient)"), pVoice, (BSTR)pVoice->GetUniqueId());
+#endif
+							mCachedVoices.DeleteAt (lVoiceNdx);
+						}
 					}
 #ifdef	_DEBUG_CACHE
 					else
 					{
-						LogMessage (_DEBUG_CACHE, _T("Unused cached Voice [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId());
+						LogMessage (_DEBUG_CACHE, _T("Unused cached Voice [%p] [%s] (RemoveVoiceClient)"), pVoice, (BSTR)pVoice->GetUniqueId());
 					}
 #endif
 				}
 			}
-#ifdef	_DEBUG_CACHE
 			else
 			{
+				if	(!lClients)
+				{
+					mVoiceClients.RemoveKey (pVoice);
+				}
+#ifdef	_DEBUG_CACHE
 				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] No Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, AtlTypeName(pClient));
-			}
 #endif
+			}
 		}
 #ifdef	_DEBUG_CACHE
 		else

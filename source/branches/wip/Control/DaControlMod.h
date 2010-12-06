@@ -78,9 +78,11 @@ public:
 
 // Implementation
 protected:
+	void Terminate ();
+	void _Terminate ();
 	void DeleteAllControls ();
-	void PendingMessageFilter ();
-	void FinalMessageFilter ();
+	bool NotifyMessageFilter ();
+	bool FinalMessageFilter ();
 	void EndMessageFilter (bool pFinal);
 
 private:

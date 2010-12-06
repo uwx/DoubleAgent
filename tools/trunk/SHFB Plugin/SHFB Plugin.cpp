@@ -24,14 +24,14 @@ TocNamespaceGrouping::TocNamespaceGrouping ()
 	LogStart (true);
 #ifdef	_DEBUG
 	LogMessage (LogIfActive, _T("TocNamespaceGrouping::TocNamespaceGrouping"));
-#endif	
+#endif
 }
 
 TocNamespaceGrouping::~TocNamespaceGrouping ()
 {
 #ifdef	_DEBUG
 	LogMessage (LogIfActive, _T("TocNamespaceGrouping::~TocNamespaceGrouping"));
-#endif	
+#endif
 	LogStop (LogIfActive);
 }
 
@@ -46,7 +46,7 @@ void TocNamespaceGrouping::Initialize (BuildProcess^ pBuildProcess, XPathNavigat
 	LogMessage (LogIfActive, _T("RootContentContainerId [%s]"), _B(mBuildProcess->RootContentContainerId));
 	LogMessage (LogIfActive, _T("ApiTocParentId         [%s]"), _B(mBuildProcess->ApiTocParentId));
 	LogMessage (LogIfActive, _T("TocParentId            [%s]"), _B(mBuildProcess->CurrentProject->TocParentId));
-#endif	
+#endif
 }
 
 void TocNamespaceGrouping::Execute (ExecutionContext^ pContext)
@@ -55,7 +55,7 @@ void TocNamespaceGrouping::Execute (ExecutionContext^ pContext)
 	LogMessage (LogIfActive, _T(""));
 	LogMessage (LogIfActive, _T("%s %s"), _B(pContext->Behavior.ToString()), _B(pContext->BuildStep.ToString()));
 	LogMessage (LogIfActive, _T(""));
-#endif	
+#endif
 
 	if	(
 			(pContext->BuildStep == BuildStep::GenerateIntermediateTableOfContents)
@@ -88,7 +88,7 @@ void TocNamespaceGrouping::Execute (ExecutionContext^ pContext)
 	{
 #ifdef	_DEBUG
 		LogXmlFile (System::IO::Path::Combine (mBuildProcess->WorkingFolder, "toc.xml"));
-#endif	
+#endif
 		ReparentApiTopics ();
 	}
 
@@ -101,7 +101,7 @@ void TocNamespaceGrouping::Execute (ExecutionContext^ pContext)
 		LogXmlFile (System::IO::Path::Combine (mBuildProcess->WorkingFolder, "_ConceptualTOC_.xml"));
 		LogXmlFile (System::IO::Path::Combine (mBuildProcess->WorkingFolder, "toc.xml"));
 	}
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -118,10 +118,10 @@ void TocNamespaceGrouping::UpdateGenerateIntermediateProject ()
 		XmlNode^		lNode;
 		XmlAttribute^	lAttribute;
 		String^			lTransform = gcnew String("C:\\ProgramData\\EWSoftware\\Sandcastle Help File Builder\\Components and Plug-Ins\\CreateVSToc_Override.xsl");
-	
+
 #ifdef	_DEBUG
 		LogMessage (LogIfActive, _T("  Load      '%s'"), _B(lProjectPath));
-#endif		
+#endif
 		lDocument->Load (lProjectPath);
 		if (lNodes = lDocument->DocumentElement->SelectNodes ("//*[@Transformations!='']"))
 		{
@@ -136,7 +136,7 @@ void TocNamespaceGrouping::UpdateGenerateIntermediateProject ()
 					LogMessage (LogIfActive, _T("  Update    '%s'"), _B(lProjectPath));
 					LogMessage (LogIfActive, _T("    replace '%s'"), _B(lAttribute->Value));
 					LogMessage (LogIfActive, _T("    with    '%s'"), _B(lTransform));
-#endif	
+#endif
 					mBuildProcess->ReportProgress ("{0}: Update    '{1}'", this->Name, lProjectPath);
 					mBuildProcess->ReportProgress ("{0}:   replace '{1}'", this->Name, lAttribute->Value);
 					mBuildProcess->ReportProgress ("{0}:   with    '{1}", this->Name, lTransform);
@@ -163,10 +163,10 @@ void TocNamespaceGrouping::UpdateGenerateHelpFormatProject ()
 		XmlNode^		lNode;
 		XmlAttribute^	lAttribute;
 		String^			lTransform = gcnew String("C:\\ProgramData\\EWSoftware\\Sandcastle Help File Builder\\Components and Plug-Ins\\TocToHxsContents_Override.xsl");
-	
+
 #ifdef	_DEBUG
 		LogMessage (LogIfActive, _T("  Load      '%s'"), _B(lProjectPath));
-#endif		
+#endif
 		lDocument->Load (lProjectPath);
 		if (lNodes = lDocument->DocumentElement->SelectNodes ("//*[@Transformations!='']"))
 		{
@@ -182,14 +182,14 @@ void TocNamespaceGrouping::UpdateGenerateHelpFormatProject ()
 					LogMessage (LogIfActive, _T("    replace '%s'"), _B(lAttribute->Value));
 					LogMessage (LogIfActive, _T("    with    '%s'"), _B(lTransform));
 					LogMessage (LogIfActive, _T("    SiteMap '%s'"), _B(SiteMapPath));
-#endif	
+#endif
 					mBuildProcess->ReportProgress ("{0}: Update    '{1}'", this->Name, lProjectPath);
 					mBuildProcess->ReportProgress ("{0}:   replace '{1}'", this->Name, lAttribute->Value);
 					mBuildProcess->ReportProgress ("{0}:   with    '{1}", this->Name, lTransform);
 					mBuildProcess->ReportProgress ("{0}:   SiteMap '{1}", this->Name, SiteMapPath);
 
 					lAttribute->Value = lTransform;
-					
+
 					lAttribute = lDocument->CreateAttribute ("Arguments");
 					lAttribute->Value = "SiteMap=file://" + SiteMapPath;
 					lNode->Attributes->Append (lAttribute);
@@ -216,15 +216,15 @@ void TocNamespaceGrouping::RetargetSiteMapToc ()
 
         if	(lSiteMapFile = this->SiteMapFile)
         {
-#ifdef	_DEBUG            
+#ifdef	_DEBUG
 			LogMessage (LogNormal, _T("Load [%s]"), _B(lSiteMapFile->FullPath));
-#endif				
+#endif
 			mBuildProcess->ReportProgress ("{0}: RetargetSiteMapToc '{1}'", this->Name, lSiteMapFile->FullPath);
             lSiteMapToc = gcnew TocEntryCollection(lSiteMapFile);
             lSiteMapToc->Load();
 
 			TargetTocEntries (lSiteMapToc);
-#ifdef	_DEBUG_NOT            
+#ifdef	_DEBUG_NOT
 			LogTocEntries (lSiteMapToc);
 #endif
 #ifdef	_DEBUG_NOT
@@ -233,16 +233,16 @@ void TocNamespaceGrouping::RetargetSiteMapToc ()
 			LogMessage (LogNormal, _T(""));
 #endif
 			//
-			//	Replacement of TocEntryCollection::SaveToIntermediateTocFile which only works for MAML 
+			//	Replacement of TocEntryCollection::SaveToIntermediateTocFile which only works for MAML
 			//
 			try
 			{
 				String^						lTocFilePath = System::IO::Path::Combine (mBuildProcess->WorkingFolder, "_ConceptualTOC_.xml");
 				System::IO::StreamWriter^	lWriter = gcnew System::IO::StreamWriter (lTocFilePath);
 
-#ifdef	_DEBUG            
+#ifdef	_DEBUG
 				LogMessage (LogNormal, _T("Save [%s]"), _B(lTocFilePath));
-#endif				
+#endif
                 lWriter->WriteLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
                 lWriter->WriteLine("<topics>");
 
@@ -269,7 +269,7 @@ void TocNamespaceGrouping::WriteTocEntries (TocEntryCollection^ pEntries, System
 void TocNamespaceGrouping::WriteTocEntry (TocEntry^ pEntry, System::IO::StreamWriter^ pWriter)
 {
     pWriter->Write("<topic");
-    
+
 	if	(!String::IsNullOrEmpty (pEntry->Title))
 	{
 		pWriter->Write(" id=\"");
@@ -322,10 +322,10 @@ void TocNamespaceGrouping::ReparentApiTopics ()
 
 #ifdef	_DEBUG
 		LogMessage (LogNormal, _T("ReparentApiTopics %s"), _B(lTocFilePath));
-#endif	
+#endif
 		mBuildProcess->ReportProgress ("{0}: ReparentApiTopics '{1}'", this->Name, lTocFilePath);
 		lDocument->Load (lTocFilePath);
-		
+
 		lNavigator = lDocument->CreateNavigator ();
 		if	(
 				(lNavigator != nullptr)
@@ -371,7 +371,7 @@ void TocNamespaceGrouping::ReparentApiTopics ()
 					catch AnyExceptionDebug
 				}
 			}
-			
+
 			if	(lChanged)
 			{
 				lDocument->Save (lTocFilePath);
@@ -469,7 +469,7 @@ void TocNamespaceGrouping::LogXmlFile (String^ pFilePath)
 		lReaderSettings->CloseInput = true;
 
 		lReader = XmlReader::Create (pFilePath, lReaderSettings);
-		
+
 		try
 		{
 			LogMessage (LogNormal, _T("%s"), _B(pFilePath));
@@ -477,7 +477,7 @@ void TocNamespaceGrouping::LogXmlFile (String^ pFilePath)
 			LogMessage (LogNormal, _T("%s"), _B(lDocument->DocumentElement->OuterXml));
 		}
 		catch AnyExceptionDebug
-		
+
 		lReader->Close ();
 	}
 	catch AnyExceptionDebug
@@ -507,7 +507,7 @@ void TocNamespaceGrouping::LogTocEntries (TocEntryCollection^ pEntries, String^ 
 		LogTocEntry (lEntry, pIndent);
 	}
 }
- 
+
 void TocNamespaceGrouping::LogTocEntries (TocEntryCollection^ pEntries)
 {
 	LogTocEntries (pEntries, "  ");

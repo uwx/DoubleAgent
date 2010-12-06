@@ -46,14 +46,14 @@ COleMessageFilterEx::COleMessageFilterEx (DWORD pNotRespondingTimeout, DWORD pBu
 }
 
 COleMessageFilterEx::COleMessageFilterEx (const COleMessageFilter & pSource)
-:	mLogLevelDlg (LogVerbose),
+:	mLogLevelDlg (LogVerbose|LogTime),
 	mLogLevelMsg (LogVerbose+1)
 {
 	operator= (pSource);
 }
 
 COleMessageFilterEx::COleMessageFilterEx (const CWinThread * pThread)
-:	mLogLevelDlg (LogVerbose),
+:	mLogLevelDlg (LogVerbose|LogTime),
 	mLogLevelMsg (LogVerbose+1)
 {
 	if	(

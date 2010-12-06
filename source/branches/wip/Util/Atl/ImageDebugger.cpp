@@ -362,7 +362,7 @@ void CImageDebugger::ShowIcon
 		}
 		else
 		{
-			LogWinErr (LogIfActive, GetLastError (), _T("GetIconInfo"));
+			LogWinErr (LogIfActive|LogTime, GetLastError (), _T("GetIconInfo"));
 		}
 	}
 }
@@ -1363,7 +1363,7 @@ bool CImageDebugger::SaveBitmap (HBITMAP pBitmap, LPCTSTR pFileName, LPCTSTR pPa
 
 							if	(!lFile.SafeIsValid ())
 							{
-								LogWinErr (LogNormal, GetLastError (), _T("CreateFile"));
+								LogWinErr (LogNormal|LogTime, GetLastError (), _T("CreateFile"));
 							}
 							else
 							{
@@ -1389,7 +1389,7 @@ bool CImageDebugger::SaveBitmap (HBITMAP pBitmap, LPCTSTR pFileName, LPCTSTR pPa
 									}
 									else
 									{
-										LogWinErr (LogNormal, GetLastError (), _T("WriteFile"));
+										LogWinErr (LogNormal|LogTime, GetLastError (), _T("WriteFile"));
 									}
 								}
 								catch AnyExceptionSilent
@@ -1400,7 +1400,7 @@ bool CImageDebugger::SaveBitmap (HBITMAP pBitmap, LPCTSTR pFileName, LPCTSTR pPa
 					}
 					else
 					{
-						LogWinErr (LogNormal, GetLastError (), _T("GetDIBits"));
+						LogWinErr (LogNormal|LogTime, GetLastError (), _T("GetDIBits"));
 					}
 				}
 				catch AnyExceptionSilent
@@ -1603,7 +1603,7 @@ bool CImageDebugger::SaveIcon (HICON pIcon, LPCTSTR pFileName, LPCTSTR pPath, bo
 
 							if	(!lFile.SafeIsValid ())
 							{
-								LogWinErr (LogNormal, GetLastError (), _T("CreateFile"));
+								LogWinErr (LogNormal|LogTime, GetLastError (), _T("CreateFile"));
 							}
 							else
 							{
@@ -1643,7 +1643,7 @@ bool CImageDebugger::SaveIcon (HICON pIcon, LPCTSTR pFileName, LPCTSTR pPath, bo
 									}
 									else
 									{
-										LogWinErr (LogNormal, GetLastError (), _T("WriteFile"));
+										LogWinErr (LogNormal|LogTime, GetLastError (), _T("WriteFile"));
 									}
 								}
 								catch AnyExceptionSilent
@@ -1654,7 +1654,7 @@ bool CImageDebugger::SaveIcon (HICON pIcon, LPCTSTR pFileName, LPCTSTR pPath, bo
 					}
 					else
 					{
-						LogWinErr (LogNormal, GetLastError (), _T("GetDIBits"));
+						LogWinErr (LogNormal|LogTime, GetLastError (), _T("GetDIBits"));
 					}
 				}
 				catch AnyExceptionSilent
@@ -2059,7 +2059,7 @@ bool CImageDebugger::MakePathExist (LPCTSTR pPath)
 		}
 	}
 
-	LogWinErr (LogNormal, GetLastError (), _T("CreateDirectory"));
+	LogWinErr (LogNormal|LogTime, GetLastError (), _T("CreateDirectory"));
 	return false;
 }
 

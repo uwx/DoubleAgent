@@ -1,15 +1,6 @@
 #pragma once
-#include "DaServerOdl.h"
-#include "AgentPreviewWnd.h"
-
-_COM_SMARTPTR_TYPEDEF (IDaServer, __uuidof(IDaServer));
-_COM_SMARTPTR_TYPEDEF (IDaServer2, __uuidof(IDaServer2));
-_COM_SMARTPTR_TYPEDEF (IDaSvrCharacter, __uuidof(IDaSvrCharacter));
-_COM_SMARTPTR_TYPEDEF (IDaSvrCharacter2, __uuidof(IDaSvrCharacter2));
-_COM_SMARTPTR_TYPEDEF (IDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles));
-_COM_SMARTPTR_TYPEDEF (IDaSvrAudioOutput, __uuidof(IDaSvrAudioOutput));
-_COM_SMARTPTR_TYPEDEF (IDaSvrCommands2, __uuidof(IDaSvrCommands2));
-_COM_SMARTPTR_TYPEDEF (IDaSvrCommand2, __uuidof(IDaSvrCommand2));
+#include "DaServerInterface.h"
+#include "DaControlInterface.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -22,13 +13,16 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CSabotageTestDlg)
 	enum { IDD = IDD_SABOTAGETEST_DIALOG };
-	CButton	mIdleEnabled;
+	CButton	mIdleOn;
 	CButton	mSoundOn;
 	CListCtrl	mCharacterList;
-	CButton	mPopupButton;
+	CButton	mShowButton;
 	CButton	mCancelButton;
-	CListBox	mStates;
 	CListBox	mGestures;
+	CButton	mUseControl;
+	CButton	mControlContained;
+	CButton	mControlStandalone;
+	CButton	mUseServer;
 	CButton	mMoveButton;
 	CButton	mSpeakButton;
 	CButton	mThinkButton;
@@ -41,6 +35,12 @@ public:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 	//}}AFX_VIRTUAL
 
+// Operations
+	void LoadConfig ();
+	void SaveConfig ();
+	bool CommandLineConfig ();
+		bool ShowConfigCharacter ();
+
 // Implementation
 protected:
 	//{{AFX_MSG(CSabotageTestDlg)
@@ -50,23 +50,43 @@ protected:
 	afx_msg void OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwThreadID);
 	afx_msg void OnDestroy();
 	afx_msg void OnClose();
-	afx_msg void OnPopup();
+	afx_msg void OnShowCharacter();
+	afx_msg void OnControlMode();
 	afx_msg void OnSoundOn();
 	afx_msg void OnIdleOn();
 	afx_msg void OnItemChangedCharacterList(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnItemActivateCharacterList(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnSelChangeGestures();
 	afx_msg void OnDblClkGestures();
-	afx_msg void OnSelChangeStates();
-	afx_msg void OnDblClkStates();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnMoveButton();
 	afx_msg void OnSpeakButton();
 	afx_msg void OnThinkButton();
 	afx_msg void OnListenButton();
 	afx_msg void OnSabotageNum();
+	afx_msg void OnCtlActivateInput(LPCTSTR CharacterID);
+	afx_msg void OnCtlDeactivateInput(LPCTSTR CharacterID);
+	afx_msg void OnCtlClick (LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	afx_msg void OnCtlDblClick (LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	afx_msg void OnCtlDragStart (LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	afx_msg void OnCtlDragComplete (LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	afx_msg void OnCtlShow (LPCTSTR CharacterID, VisibilityCauseType Cause);
+	afx_msg void OnCtlHide (LPCTSTR CharacterID, VisibilityCauseType Cause);
+	afx_msg void OnCtlRequestStart (IDaCtlRequest* Request);
+	afx_msg void OnCtlRequestComplete (IDaCtlRequest* Request);
+	afx_msg void OnCtlCommand (IDaCtlUserInput* UserInput);
+	afx_msg void OnCtlIdleStart (LPCTSTR CharacterID);
+	afx_msg void OnCtlIdleComplete (LPCTSTR CharacterID);
+	afx_msg void OnCtlMove (LPCTSTR CharacterID, short X, short Y, MoveCauseType Cause);
+	afx_msg void OnCtlSize (LPCTSTR CharacterID, short Width, short Height);
+	afx_msg void OnCtlBalloonShow(LPCTSTR CharacterID);
+	afx_msg void OnCtlBalloonHide(LPCTSTR CharacterID);
+	afx_msg void OnCtlListenStart(LPCTSTR CharacterID);
+	afx_msg void OnCtlListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause);
+	afx_msg void OnCtlActiveClientChange (LPCTSTR CharacterID, BOOL Active);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+	DECLARE_EVENTSINK_MAP()
 
 	BEGIN_INTERFACE_PART(DaSvrNotifySink, IDaSvrNotifySink)
 		HRESULT STDMETHODCALLTYPE GetTypeInfoCount (unsigned int*);
@@ -100,50 +120,68 @@ protected:
 	DECLARE_INTERFACE_MAP()
 
 protected:
+	void ShowModeSelection ();
+	void ShowControlMode ();
 	void ShowCharacters ();
+	bool SelectCharacter (int pCharacterNdx, bool pShow);
 	bool ShowCharacter (LPCTSTR pCharacterPath);
 	void ShowGestures ();
-	void ShowStates ();
-	CString GetSelGesture ();
-	CString GetSelState ();
-	void ShowSelectedAnimation ();
-	void ShowDefaultAnimation ();
-	bool ShowSelGesture (bool pStopFirst = true);
-	bool ShowSelState (bool pStopFirst = true);
+	bool ShowSelectedGesture (bool pStopFirst = true);
+	CString GetSelectedGesture ();
 
 	bool IsAnimating ();
 	bool Stop ();
+	CPoint GetInitialPos (const CSize & pInitialSize);
 	void SabotageEvent ();
 
 	void GetAgentServer ();
 	void FreeAgentServer ();
-	bool ShowAgentCharacter ();
-	bool HideAgentCharacter ();
-	bool FreeAgentCharacter ();
-	bool LoadedAgentCharacter ();
+	bool LoadServerCharacter ();
+	bool LoadedServerCharacter ();
+	bool FreeServerCharacter ();
+	bool ShowServerCharacter ();
+	bool HideServerCharacter ();
+
+	void GetAgentControl ();
+	void FreeAgentControl ();
+	bool LoadControlCharacter ();
+	bool FreeControlCharacter ();
+	bool LoadedControlCharacter ();
+	bool ShowControlCharacter ();
+	bool HideControlCharacter ();
+
 	bool IsCharacterVisible ();
 	void CharacterIsVisible (bool pVisible);
 	void ShowCharacterState ();
 
-	void LoadConfig ();
-	void SaveConfig ();
-
 protected:
-	CString					mWinTitle;
+	int						mCharacterNdx;
 	CString					mCharacterPath;
 	IDaServer2Ptr			mServer;
 	long					mNotifySinkId;
-	IDaSvrCharacter2Ptr		mCharacter;
-	long					mCharacterId;
-	long					mExitCommandId;
-	UINT_PTR				mRepeatTimer;
-	UINT					mTimerCount;
+	IDaSvrCharacter2Ptr		mServerCharacter;
+	long					mServerCharacterId;
+	IDaControl2Ptr			mControl;
+	CWnd					mControlWnd;
+	CRect					mControlRect;
+	IDaCtlCharacter2Ptr		mControlCharacter;
+	CString					mControlCharacterId;
 	long					mLoadReqID;
-	long					mLastAnimationReqID;
-	long					mHidingStateReqID;
+	long					mShowReqID;
+	long					mPlayReqID;
 	long					mMoveReqID;
 	long					mSpeakReqID;
 	long					mThinkReqID;
+	long					mExitCommandId;
+	IDaCtlRequestPtr		mLoadRequest;
+	IDaCtlRequestPtr		mShowRequest;
+	IDaCtlRequestPtr		mPlayRequest;
+	IDaCtlRequestPtr		mMoveRequest;
+	IDaCtlRequestPtr		mSpeakRequest;
+	IDaCtlRequestPtr		mThinkRequest;
+	CString					mExitCommandName;
+	UINT_PTR				mRepeatTimer;
+	UINT_PTR				mCycleTimer;
 };
 
 /////////////////////////////////////////////////////////////////////////////

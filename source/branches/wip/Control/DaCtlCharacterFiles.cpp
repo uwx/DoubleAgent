@@ -25,9 +25,9 @@
 #include "Registry.h"
 
 #ifdef	_DEBUG
-#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Other"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Other"),LogDetails,true)&0xFFFF)
-#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Other"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Other"),LogDetails,true)&0xFFFF|LogTime)
+#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 /////////////////////////////////////////////////////////////////////////////
 
@@ -121,7 +121,7 @@ HRESULT DaCtlCharacterFiles::SetOwner (DaControl * pOwner)
 	mOwner = pOwner;
 	if	(mOwner->mServer != NULL)
 	{
-		LogComErr (LogNormal, lResult = pOwner->mServer->get_CharacterFiles (&mServerObject));
+		LogComErr (LogNormal|LogTime, lResult = pOwner->mServer->get_CharacterFiles (&mServerObject));
 	}
 	else
 	if	(mLocalObject = new CDaCmnCharacterFiles)

@@ -34,7 +34,7 @@ public:
 
 // Operations
 public:
-	virtual bool VerifyClientLifetime () const;
+	virtual bool VerifyClientLifetime ();
 	virtual void OnClientEnded ();
 
 // Implementation

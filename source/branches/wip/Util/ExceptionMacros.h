@@ -104,16 +104,16 @@ catch
 #endif	// __cplusplus_cli
 
 #define AnyException \
-__CatchAfxExceptionR (LogNormal) \
-__CatchAtlException (LogNormal) \
-__CatchCliException (LogNormal) \
-(...) {__LogAnyException (LogIfActive)}
+__CatchAfxExceptionR (LogNormal|LogTime) \
+__CatchAtlException (LogNormal|LogTime) \
+__CatchCliException (LogNormal|LogTime) \
+(...) {__LogAnyException (LogIfActive|LogTime)}
 
 #ifdef	_DEBUG
 #define AnyExceptionSilent \
-__CatchAfxExceptionL (LogDetails) \
-__CatchAtlException (LogDetails) \
-__CatchCliException (LogDetails) \
+__CatchAfxExceptionL (LogDetails|LogTime) \
+__CatchAtlException (LogDetails|LogTime) \
+__CatchCliException (LogDetails|LogTime) \
 (...) {}
 #else
 #define AnyExceptionSilent \

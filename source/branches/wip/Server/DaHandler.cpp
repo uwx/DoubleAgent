@@ -27,7 +27,7 @@
 #include "SecurityDesc.h"
 
 #ifdef	_DEBUG
-#define	_LOG_INSTANCE	(GetProfileDebugInt(_T("LogInstance_Handler"),LogVerbose,true)&0xFFFF)
+#define	_LOG_INSTANCE	(GetProfileDebugInt(_T("LogInstance_Handler"),LogVerbose,true)&0xFFFF|LogTime)
 #endif
 
 #ifndef	_LOG_INSTANCE
@@ -179,7 +179,7 @@ STDAPI DllRegisterServer(void)
 	{
 		lResult = HRESULT_FROM_WIN32 (ERROR_ELEVATION_REQUIRED);
 	}
-	LogComErrAnon (LogNormal, lResult, _T("DllRegisterServer"));
+	LogComErrAnon (LogNormal|LogTime, lResult, _T("DllRegisterServer"));
 	return lResult;
 }
 
@@ -199,6 +199,6 @@ STDAPI DllUnregisterServer(void)
 	{
 		lResult = HRESULT_FROM_WIN32 (ERROR_ELEVATION_REQUIRED);
 	}
-	LogComErrAnon (LogNormal, lResult, _T("DllUnregisterServer"));
+	LogComErrAnon (LogNormal|LogTime, lResult, _T("DllUnregisterServer"));
 	return lResult;
 }

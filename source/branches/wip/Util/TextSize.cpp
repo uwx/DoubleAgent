@@ -167,7 +167,7 @@ CSize CTextSize::MeasureText (LPCTSTR pText, INT_PTR pTextLen, HDC pDC, HFONT pF
 #ifdef	_DEBUG
 	if	(!pDC)
 	{
-		LogMessage (LogIfActive, _T("CTextSize::MeasureText with NULL HDC"));
+		LogMessage (LogIfActive|LogTime, _T("CTextSize::MeasureText with NULL HDC"));
 	}
 #endif
 #endif

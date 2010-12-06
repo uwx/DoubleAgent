@@ -34,8 +34,9 @@
 #ifdef	_DEBUG
 //#define	_DEBUG_CUES				LogNormal
 //#define	_LOG_FAILED_FORMATS		LogNormal
-//#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#define	_LOG_INSTANCE				(GetProfileDebugInt(_T("LogInstance_DirectShowPin"),LogVerbose,true)&0xFFFF)
+//#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+//#define	_TRACE_THREADS			(GetProfileDebugInt(_T("TraceThreads"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+#define	_LOG_INSTANCE				(GetProfileDebugInt(_T("LogInstance_DirectShowPin"),LogVerbose,true)&0xFFFF|LogTime)
 #endif
 
 #define	_NO_FILTER_CACHE
@@ -154,10 +155,10 @@ HRESULT CDirectSoundPinPush::ConvertSound (LPCVOID pSound, long pSoundSize)
 
 				if	(
 						(
-							(SUCCEEDED (lResult = LogComErr (LogNormal, lConvert->DeriveOutputFormat (), _T("%s format"), mName)))
-						&&	(SUCCEEDED (lResult = LogComErr (LogNormal, lConvert->ConvertSound (), _T("%s convert"), mName)))
+							(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, lConvert->DeriveOutputFormat (), _T("%s format"), mName)))
+						&&	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, lConvert->ConvertSound (), _T("%s convert"), mName)))
 						)
-					||	(SUCCEEDED (lResult = LogComErr (LogNormal, lConvert->StashSound (), _T("%s stash"), mName)))
+					||	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, lConvert->StashSound (), _T("%s stash"), mName)))
 					)
 				{
 					lConvert->GetOutputBuffer (lBuffer, lBufferSize, lDataLength);
@@ -233,19 +234,19 @@ HRESULT CDirectSoundPinPush::ConnectFilters ()
 			lFilterName.Format (_T("Audio Render (%d)"), mSoundNdx);
 
 #ifdef	_NO_FILTER_CACHE
-			if	(SUCCEEDED (lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_DSoundRender, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mAudioRender))))
+			if	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_DSoundRender, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mAudioRender))))
 #else
-			LogComErr (LogNormal, GetFilterFromCache (CLSID_DSoundRender, lGraphBuilder, &mAudioRender));
+			LogComErr (LogNormal|LogTime, GetFilterFromCache (CLSID_DSoundRender, lGraphBuilder, &mAudioRender));
 			if	(
 					(mAudioRender != NULL)
-				||	(SUCCEEDED (lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_DSoundRender, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mAudioRender))))
+				||	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_DSoundRender, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mAudioRender))))
 				)
 #endif
 			{
 #ifdef	_DEBUG_NOT
 				mAudioRender = (new CTraceFilter(mAudioRender, _T("AudioRender"), LogIfActive))->GetControllingUnknown();
 #endif
-				if	(FAILED (lResult = LogVfwErr (LogNormal, lGraphBuilder->AddFilter (mAudioRender, lFilterName))))
+				if	(FAILED (lResult = LogVfwErr (LogNormal|LogTime, lGraphBuilder->AddFilter (mAudioRender, lFilterName))))
 				{
 					SafeFreeSafePtr (mAudioRender);
 				}
@@ -262,7 +263,7 @@ HRESULT CDirectSoundPinPush::ConnectFilters ()
 				&&	(lRenderInPin != NULL)
 				)
 			{
-				if	(FAILED (lResult = LogVfwErr (LogNormal, lGraphBuilder->Connect (this, lRenderInPin))))
+				if	(FAILED (lResult = LogVfwErr (LogNormal|LogTime, lGraphBuilder->Connect (this, lRenderInPin))))
 				{
 #ifdef	_LOG_FAILED_FORMATS
 					LogFilterPin (_LOG_FAILED_FORMATS, this, true, _T("AudioOut -> RenderIn"));
@@ -319,17 +320,17 @@ HRESULT CDirectSoundPinPush::DisconnectFilters (bool pCacheUnusedFilter)
 				IFilterGraphPtr	lFilterGraph (mFilter->GetFilterGraph ());
 				IPinPtr			lRenderInPin;
 
-				LogVfwErr (LogNormal, mAudioRender->Stop ());
+				LogVfwErr (LogNormal|LogTime, mAudioRender->Stop ());
 #ifdef	_NO_FILTER_CACHE
-				LogVfwErr (LogNormal, lResult = lFilterGraph->RemoveFilter (mAudioRender));
+				LogVfwErr (LogNormal|LogTime, lResult = lFilterGraph->RemoveFilter (mAudioRender));
 #else
 				if	(pCacheUnusedFilter)
 				{
-					LogVfwErr (LogNormal, lResult = MoveFilterToCache (mAudioRender, lFilterGraph));
+					LogVfwErr (LogNormal|LogTime, lResult = MoveFilterToCache (mAudioRender, lFilterGraph));
 				}
 				else
 				{
-					LogVfwErr (LogNormal, lResult = lFilterGraph->RemoveFilter (mAudioRender));
+					LogVfwErr (LogNormal|LogTime, lResult = lFilterGraph->RemoveFilter (mAudioRender));
 				}
 #endif
 			}
@@ -340,8 +341,8 @@ HRESULT CDirectSoundPinPush::DisconnectFilters (bool pCacheUnusedFilter)
 		{
 			if	(mConnection != NULL)
 			{
-				LogVfwErr (LogNormal, mConnection->Disconnect ());
-				LogVfwErr (LogNormal, Disconnect ());
+				LogVfwErr (LogNormal|LogTime, mConnection->Disconnect ());
+				LogVfwErr (LogNormal|LogTime, Disconnect ());
 			}
 		}
 		catch AnyExceptionSilent
@@ -518,6 +519,9 @@ HRESULT CDirectSoundPinPush::BeginOutputStream (REFERENCE_TIME pStartTime, REFER
 
 		if	((INT_PTR)mCueTimes.GetCount() > mCueAsyncStart)
 		{
+#ifdef	_TRACE_THREADS
+			LogMessage (_TRACE_THREADS, _T("CDirectSoundPinPush::QueueUserWorkItem"));
+#endif
 			QueueUserWorkItem (StreamProc, PutGatedInstance<CDirectSoundPinPush> (this), WT_EXECUTELONGFUNCTION);
 		}
 	}
@@ -535,6 +539,10 @@ DWORD WINAPI CDirectSoundPinPush::StreamProc (LPVOID pThreadParameter)
 	CDirectSoundPinPush *	lThis = NULL;
 	HRESULT					lResult = S_FALSE;
 	INT_PTR					lCueNdx = 1;
+
+#ifdef	_TRACE_THREADS
+	LogMessage (_TRACE_THREADS, _T("CDirectSoundPinPush::StreamProc"));
+#endif
 
 	if	(LockGatedInstance<CDirectSoundPinPush> (pThreadParameter, lThis))
 	{
@@ -566,6 +574,10 @@ DWORD WINAPI CDirectSoundPinPush::StreamProc (LPVOID pThreadParameter)
 			break;
 		}
 	}
+
+#ifdef	_TRACE_THREADS
+	LogMessage (_TRACE_THREADS, _T("CDirectSoundPinPush::StreamProc End"));
+#endif
 	return 0;
 }
 

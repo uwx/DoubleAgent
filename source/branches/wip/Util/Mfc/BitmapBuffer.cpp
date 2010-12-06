@@ -574,7 +574,7 @@ bool CBitmapBufferScaled::CreateBuffer (const CSize & pBufferSize, bool pForBlen
 			}
 #endif
 #ifdef	_DEBUG_SCALING
-			LogMessage (LogNormal, _T("StartScaled [%d %d] [%p] [%p] Unscaled [%d %d] [%p] [%p]"), lScaledSize.cx, lScaledSize.cy, lScaledBuffer.GetSafeHandle (), lScaledBits, lBufferSize.cx, lBufferSize.cy, lUnscaledBuffer.GetSafeHandle (), lUnscaledBits);
+			LogMessage (LogNormal|LogTime, _T("StartScaled [%d %d] [%p] [%p] Unscaled [%d %d] [%p] [%p]"), lScaledSize.cx, lScaledSize.cy, lScaledBuffer.GetSafeHandle (), lScaledBits, lBufferSize.cx, lBufferSize.cy, lUnscaledBuffer.GetSafeHandle (), lUnscaledBits);
 #endif
 
 			if	(mDC.GetSafeHdc ())
@@ -785,7 +785,7 @@ bool CBitmapBufferScaled::UnscaleBuffer ()
 		mBitmapBits = mScaledBits;
 		mScaledBits = lBits;
 
-//		LogMessage (LogNormal, _T("EndScaled [%p] [%p] Unscaled [%p] [%p]"), mScaledBitmap.GetSafeHandle (), mScaledBits, mBitmap.GetSafeHandle (), mBitmapBits);
+//		LogMessage (LogNormal|LogTime, _T("EndScaled [%p] [%p] Unscaled [%p] [%p]"), mScaledBitmap.GetSafeHandle (), mScaledBits, mBitmap.GetSafeHandle (), mBitmapBits);
 
 		if	(
 				(mBitmap.GetBitmap (&lBitmapDef))
@@ -906,7 +906,7 @@ bool CBitmapBuffer::SaveBitmap (HBITMAP pBitmap, LPCTSTR pFileName)
 
 						if	(!lFile.SafeIsValid ())
 						{
-							LogWinErr (LogNormal, GetLastError (), _T("CreateFile"));
+							LogWinErr (LogNormal|LogTime, GetLastError (), _T("CreateFile"));
 						}
 						else
 						{
@@ -932,7 +932,7 @@ bool CBitmapBuffer::SaveBitmap (HBITMAP pBitmap, LPCTSTR pFileName)
 								}
 								else
 								{
-									LogWinErr (LogNormal, GetLastError (), _T("WriteFile"));
+									LogWinErr (LogNormal|LogTime, GetLastError (), _T("WriteFile"));
 								}
 							}
 							catch AnyExceptionSilent
@@ -942,7 +942,7 @@ bool CBitmapBuffer::SaveBitmap (HBITMAP pBitmap, LPCTSTR pFileName)
 					}
 					else
 					{
-						LogWinErr (LogNormal, GetLastError (), _T("GetDIBits"));
+						LogWinErr (LogNormal|LogTime, GetLastError (), _T("GetDIBits"));
 					}
 				}
 				catch AnyExceptionSilent

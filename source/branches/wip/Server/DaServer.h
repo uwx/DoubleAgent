@@ -49,10 +49,12 @@ public:
 public:
 	static HRESULT WINAPI UpdateRegistryOverride (BOOL bRegister);
 	void Terminate (bool pFinal, bool pAbandonned = false);
+	void Abandon();
 	void FinalRelease();
 
 // Overrides
 public:
+	virtual bool VerifyClientLifetime ();
 	virtual void OnClientEnded ();
 	virtual bool _OnDownloadComplete (CFileDownload * pDownload);
 	virtual bool _PreNotify ();
@@ -165,7 +167,6 @@ private:
 	DWORD								mCharacterStyle;
 	UINT								mUsingHandler;
 	LPUNKNOWN							mNotifyPtr;
-	CAtlTypeArray <long>				mInNotifyUnregister;
 };
 
 /////////////////////////////////////////////////////////////////////////////

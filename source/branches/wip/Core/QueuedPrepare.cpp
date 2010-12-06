@@ -107,10 +107,8 @@ bool CQueuedPrepare::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 				LogMessage (_DEBUG_PREPARE, _T("[%p] Complete [%ls]"), this, (BSTR)GetAnimationNames());
 			}
 #endif
-			if	(pQueue.GetNextAction (QueueActionPrepare) == this)
-			{
-				pQueue.RemoveHead ();
-			}
+			pQueue.RemoveHead ();
+
 			if	(pAgentWnd->mNotify.GetCount() > 0)
 			{
 				HRESULT			lPrepareResult = S_OK;
