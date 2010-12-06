@@ -1,0 +1,134 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "SabotageTestRes.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (Canada) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENC)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_CAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE
+BEGIN
+    "SabotageTestRes.h\0"
+END
+
+2 TEXTINCLUDE
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE
+BEGIN
+    "#include ""SabotageTest.rc2""\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_SABOTAGETEST_DIALOG DIALOGEX 0, 0, 487, 277
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "Sabotage Test"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_CHARACTER_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_SORTASCENDING | LVS_NOCOLUMNHEADER | WS_BORDER | WS_TABSTOP,4,4,208,164
+    LISTBOX         IDC_GESTURES,4,172,208,100,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",IDC_CONTROL,"Static",SS_GRAYFRAME | NOT WS_VISIBLE | WS_BORDER,216,4,156,128
+    CHECKBOX        "Show\ncharacter",IDC_SHOW,224,140,60,44,BS_PUSHLIKE | BS_MULTILINE
+    PUSHBUTTON      "Stop",IDCANCEL,224,188,60,44
+    CHECKBOX        "Sound on",IDC_SOUND_ON,228,244,45,10
+    CHECKBOX        "Idle on",IDC_IDLE_ON,228,256,36,10
+    PUSHBUTTON      "Move",IDC_MOVE,292,140,72,16
+    PUSHBUTTON      "Speak",IDC_SPEAK,292,160,72,16
+    PUSHBUTTON      "Think",IDC_THINK,292,180,72,16
+    PUSHBUTTON      "Listen",IDC_LISTEN,292,200,72,16
+    CONTROL         "Server",IDC_USE_SERVER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,296,220,49,10
+    CONTROL         "Control",IDC_USE_CONTROL,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,296,232,44,10
+    CONTROL         "Contained",IDC_CONTROL_CONTAINED,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,308,244,52,10
+    CONTROL         "Standalone",IDC_CONTROL_STANDALONE,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,308,256,56,10
+    CONTROL         "Sabotage disabled",IDC_SABOTAGE00,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,380,4,104,10
+    CONTROL         "Sabotage Show",IDC_SABOTAGE01,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,20,104,10
+    CONTROL         "Sabotage Hide",IDC_SABOTAGE02,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,32,104,10
+    CONTROL         "Sabotage Activate",IDC_SABOTAGE03,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,44,104,10
+    CONTROL         "Sabotage Click",IDC_SABOTAGE04,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,56,104,10
+    CONTROL         "Sabotage Double-click",IDC_SABOTAGE05,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,68,104,10
+    CONTROL         "Sabotage Command",IDC_SABOTAGE06,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,80,104,10
+    CONTROL         "Sabotage Move",IDC_SABOTAGE07,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,92,104,10
+    CONTROL         "Sabotage Drag start",IDC_SABOTAGE08,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,104,104,10
+    CONTROL         "Sabotage Drag end",IDC_SABOTAGE09,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,116,104,10
+    CONTROL         "Sabotage Animate start",IDC_SABOTAGE10,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,128,104,10
+    CONTROL         "Sabotage Animate end",IDC_SABOTAGE11,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,140,104,10
+    CONTROL         "Sabotage Speak start",IDC_SABOTAGE12,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,152,104,10
+    CONTROL         "Sabotage Speak end",IDC_SABOTAGE13,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,164,104,10
+    CONTROL         "Sabotage Think start",IDC_SABOTAGE14,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,176,104,10
+    CONTROL         "Sabotage Think end",IDC_SABOTAGE15,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,188,104,10
+    CONTROL         "Sabotage Idle start",IDC_SABOTAGE16,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,200,104,10
+    CONTROL         "Sabotage Idle end",IDC_SABOTAGE17,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,212,104,10
+    CONTROL         "Sabotage Balloon show",IDC_SABOTAGE18,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,224,104,10
+    CONTROL         "Sabotage Balloon hide",IDC_SABOTAGE19,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,236,104,10
+    CONTROL         "Sabotage Listen start",IDC_SABOTAGE20,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,248,104,10
+    CONTROL         "Sabotage Listen end",IDC_SABOTAGE21,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,260,104,10
+    GROUPBOX        "",IDC_STATIC,216,132,156,140,WS_GROUP
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_SABOTAGETEST_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 480
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 270
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (Canada) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#include "SabotageTest.rc2"
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

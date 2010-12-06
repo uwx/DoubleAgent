@@ -1,0 +1,16 @@
+HKCR
+{
+	NoRemove CLSID
+	{
+		ForceRemove {1147E521-A208-11DE-ABF2-002421116FB2} = s 'Double Agent Server - Recognition Engine'
+		{
+			Programmable
+			LocalServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			InprocHandler32 = s 'ole32.dll'
+			TypeLib = s '{1147E501-A208-11DE-ABF2-002421116FB2}'
+		}
+	}
+}

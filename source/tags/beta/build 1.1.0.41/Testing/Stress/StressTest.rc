@@ -1,0 +1,115 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "StressTestRes.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (Canada) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENC)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_CAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE
+BEGIN
+    "StressTestRes.h\0"
+END
+
+2 TEXTINCLUDE
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE
+BEGIN
+    "#include ""StressTest.rc2""\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_STRESSTEST_DIALOG DIALOGEX 0, 0, 446, 246
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "Stress Test"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Go",IDOK,352,4,88,36,WS_GROUP
+    PUSHBUTTON      "Stop",IDCANCEL,352,44,88,36
+    CONTROL         "",IDC_CHARACTER_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_SORTASCENDING | LVS_NOCOLUMNHEADER | WS_BORDER | WS_TABSTOP,4,4,212,236
+    CONTROL         "",IDC_CONTROL_PLACER,"Static",SS_GRAYRECT | NOT WS_VISIBLE | WS_BORDER,224,4,108,108
+    LTEXT           "Gestures",IDC_STATIC,224,120,40,8
+    LISTBOX         IDC_GESTURES,224,132,108,108,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Server",IDC_STRESS_SERVER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,352,92,49,10
+    CONTROL         "Control",IDC_STRESS_CONTROL,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,352,104,44,10
+    CONTROL         "Contained",IDC_STRESS_CONTAINED,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,364,116,52,10
+    CONTROL         "Standalone",IDC_STRESS_STANDALONE,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,364,128,56,10
+    CONTROL         "Sound effects",IDC_STRESS_SOUND,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,352,148,57,10
+    CONTROL         "Speak",IDC_STRESS_SPEAK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,352,160,40,10
+    CONTROL         "Repeat",IDC_STRESS_REPEAT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,352,172,43,10
+    CONTROL         "No random stop",IDC_RANDOM_STOP0,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,352,192,64,10
+    CONTROL         "Slow random stop",IDC_RANDOM_STOP1,"Button",BS_AUTORADIOBUTTON,352,204,70,10
+    CONTROL         "Fast random stop",IDC_RANDOM_STOP2,"Button",BS_AUTORADIOBUTTON,352,216,68,10
+    CONTROL         "Constant random stop",IDC_RANDOM_STOP3,"Button",BS_AUTORADIOBUTTON,352,228,88,10
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_STRESSTEST_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 440
+        VERTGUIDE, 224
+        VERTGUIDE, 352
+        TOPMARGIN, 4
+        BOTTOMMARGIN, 240
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (Canada) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#include "StressTest.rc2"
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

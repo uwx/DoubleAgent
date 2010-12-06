@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+	<title>Moving from Microsoft Agent to Double Agent</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css" />
+	<xml>
+		<MSHelp:TOCTitle Title="Moving from Microsoft Agent to Double Agent" />
+		<MSHelp:Keyword Index="K" Term="Moving from Microsoft Agent to Double Agent" />
+		<MSHelp:Attr Name="TopicType" Value="kbOrient" />
+		<MSHelp:Attr Name="TopicType" Value="apiref" />
+		<MSHelp:Attr Name="DocSet" Value="DoubleAgent" />
+		<MSHelp:Attr Name="DocSet" Value="NETFramework" />
+		<MSHelp:Attr Name="DocSet" Value="WindowsForms" />
+		<MSHelp:Attr Name="DocSet" Value="C#" />
+		<MSHelp:Attr Name="DocSet" Value="Visual Basic" />
+		<MSHelp:Attr Name="DocSet" Value="ExpressLibVS" />
+		<MSHelp:Attr Name="Technology" Value="Agent" />
+		<MSHelp:Attr Name="Technology" Value="ManagedCode" />
+		<MSHelp:Attr Name="Technology" Value="ActiveX" />
+		<MSHelp:Attr Name="Technology" Value="WindowsForms" />
+		<MSHelp:Attr Name="Technology" Value="kb3Ptech" />
+		<MSHelp:Attr Name="ProgModel" Value="managed" />
+		<MSHelp:Attr Name="TargetOS" Value="Windows" />
+	</xml>
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;SDK</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Moving from Microsoft<sup>®</sup> Agent to Double Agent</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>Applications developed for Microsoft<sup>®</sup> Agent will continue to work with Double Agent. However, if you want to develop your application for Double Agent instead of Microsoft<sup>®</sup> Agent, make
+					these simple changes:</p>
+				<ul>
+					<li>If you're using the native Agent Control:
+						<ul>
+							<li>Replace the Microsoft<sup>®</sup> Agent Control <em class="glossary">ProgId</em> <em class="keyword">
+								Agent.Control</em> or <em class="keyword">Agent.Control.2</em> with the Double Agent Control <em class="glossary">
+									ProgId</em> <em class="keyword">DoubleAgent.Control</em></li>
+							<li>Replace the Microsoft<sup>®</sup> Agent Control <em class="glossary">ClassId</em> <em class="keyword">
+								{D45FD31B-5C6E-11D1-9EC1-00C04FD7081F}</em> with the Double Agent Control <em class="glossary">ClassId</em>
+								<em class="keyword">{1147E530-A208-11DE-ABF2-002421116FB2}</em></li>
+							<li>Replace the Microsoft<sup>®</sup> Agent Control <em class="glossary">TypeLib</em> <em class="keyword">
+								AgentObjects</em> {F5BE8BC2-7DE6-11D0-91FE-00C04FD701A5} with the Double Agent Control <em class="glossary">
+									TypeLib</em> <em class="keyword">DoubleAgentCtl</em> {1147E550-A208-11DE-ABF2-002421116FB2}</li>
+						</ul>
+					</li>
+					<li>If you're using the native Agent Server:
+						<ul>
+							<li>Replace the Microsoft<sup>®</sup> Agent Server <em class="glossary">ProgId</em> <em class="keyword">
+								Agent.Server</em> or <em class="keyword">Agent.Server.2</em> with the Double Agent Server <em class="glossary">
+									ProgId</em> <em class="keyword">DoubleAgent.Agent</em></li>
+							<li>Replace the Microsoft<sup>®</sup> Agent Server <em class="glossary">ClassId</em> <em class="keyword">
+								{D45FD2FC-5C6E-11D1-9EC1-00C04FD7081F}</em> with the Double Agent Server <em class="glossary">ClassId</em>
+								<em class="keyword">{1147E500-A208-11DE-ABF2-002421116FB2}</em></li>
+							<li>Replace the Microsoft<sup>®</sup> Agent Server <em class="glossary">TypeLib</em> <em class="keyword">
+								AgentServerObjects</em> {A7B93C73-7B81-11D0-AC5F-00C04FD97575} with the Double Agent Server <em class="glossary">
+									TypeLib</em> <em class="keyword">DoubleAgentSvr</em> {1147E501-A208-11DE-ABF2-002421116FB2}</li>
+						</ul>
+					</li>
+					<li>For C and C++ development, replace the the Microsoft<sup>®</sup> Agent interfaces in <em class="filename">
+						AgtSvr.h</em> and <em class="filename">AgtCtl.h</em> with the coresponding Double Agent interfaces in
+						<em class="filename">DaServerOdl.h</em> and <em class="filename">DaControlOdl.h</em>.<br />
+						Optionally, you can also use the interface smart pointers in <em class="filename">DaControlInterface.h</em>
+						and <em class="filename">DaServerInterface.h</em>.</li>
+					<li>
+						<p>For Visual Basic 6 development, replace <em class="filename">AgentCtl.dll</em> references with <em
+							class="filename">DaControl.dll</em>.<br />
+							You can easily change these references in your project (<em class="filename">.vbp</em>) and form (<em
+								class="filename">.frm</em>) files with a text editor, as follows:</p>
+						<table class="invisible" style="margin-bottom: 0.5em">
+							<tr valign="bottom">
+								<td>change:</td>
+								<td><code>Object = &quot;{F5BE8BC2-7DE6-11D0-91FE-00C04FD701A5}#2.0#0&quot;; &quot;AgentCtl.dll&quot;</code>
+								</td>
+							</tr>
+							<tr valign="bottom">
+								<td>to:</td>
+								<td><code>Object = &quot;{1147E550-A208-11DE-ABF2-002421116FB2}#1.0#0&quot;; &quot;DaControl.dll&quot;</code>
+								</td>
+							</tr>
+						</table>
+					</li>
+					<li>
+						<p>For <em class="glossary">.NET</em> languages, change the <em class="glossary">COM Interop Assembly</em> references as follows:</p>
+						<table class="invisible" style="margin-bottom: 0.5em">
+							<tr valign="bottom">
+								<td>change:</td>
+								<td><code>AgentObjects</code></td>
+								<td>to:</td>
+								<td><code>DoubleAgent.Control</code></td>
+							</tr>
+							<tr valign="bottom">
+								<td>change:</td>
+								<td><code>AxAgentObjects</code></td>
+								<td>to:</td>
+								<td><code>DoubleAgent.AxControl</code></td>
+							</tr>
+							<tr valign="bottom">
+								<td>change:</td>
+								<td><code>AgentServerObjects</code></td>
+								<td>to:</td>
+								<td><code>DoubleAgent.Server</code></td>
+							</tr>
+						</table>
+					</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>
