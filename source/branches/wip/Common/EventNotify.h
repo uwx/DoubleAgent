@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -20,6 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaServerOdl.h"
+#include "NotifyObjects.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -68,7 +69,7 @@ interface _IEventLock
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-class CEventNotify : public IDaSvrNotifySink2, public _IEventNotify
+class CEventNotify : public IDaSvrNotifySink2, public _IEventNotify, public CNotifySinksOwner <_IEventReflect>, public CNotifySinksOwner <_IEventLock>
 {
 public:
 	CEventNotify ();
@@ -78,11 +79,11 @@ public:
 	class CInstanceAnchor *	mAnchor;
 	_IEventNotify *			mGlobal;
 
+	typedef CNotifySinksOwner <_IEventReflect> ReflectSinks;
+	typedef CNotifySinksOwner <_IEventLock> LockSinks;
+
 // Operations
 public:
-	virtual void RegisterEventReflect (_IEventReflect * pEventReflect, bool pRegister);
-	virtual void RegisterEventLock (_IEventLock * pEventLock, bool pRegister);
-
 	virtual long NextReqID ();
 	virtual class CAgentWnd * GetRequestOwner (long pReqID);
 	virtual class CAgentWnd * GetAgentWnd (HWND pWindow);
@@ -122,8 +123,8 @@ protected:
 	virtual bool PostFireEvent (LPCTSTR pEventName = NULL, UINT pEventSinkCount = 0);
 
 protected:
-	CAtlPtrTypeArray <_IEventReflect>	mEventReflect;
-	CAtlPtrTypeArray <_IEventLock>		mEventLock;
+//	CAtlPtrTypeArray <_IEventReflect>	mEventReflect;
+//	CAtlPtrTypeArray <_IEventLock>		mEventLock;
 	CAtlMap <long, CZeroInit<long> >	mVisibilityCause;
 	CAtlMap <long, CZeroInit<long> >	mMoveCause;
 };

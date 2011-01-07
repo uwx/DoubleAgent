@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -189,7 +189,14 @@ bool CComMessageFilter::SetMessageTimeout (DWORD pMessageTimeout)
 	{
 		pMessageTimeout = 8000;
 	}
-	mMessageTimeout = min (max (pMessageTimeout, 5000), 60000);
+	if	((long) pMessageTimeout > 0)
+	{
+		mMessageTimeout = min (max (pMessageTimeout, 5000), 60000);
+	}
+	else
+	{
+		mMessageTimeout = (DWORD)-1;
+	}
 
 	return (mMessageTimeout != lMessageTimeout);
 }
@@ -333,7 +340,7 @@ UINT CComMessageFilter::ShowBusyDlg (HTASK pBlockedTask, bool pNotResponding)
 	{
 		if	(pNotResponding)
 		{
-			LogMessage (_DEBUG_BUSY_DLG, _T("CComMessageFilter show NotResponding dialog (Timeout %u)"), mMessageTimeout);
+			LogMessage (_DEBUG_BUSY_DLG, _T("CComMessageFilter show NotResponding dialog (Timeout %d)"), mMessageTimeout);
 		}
 		else
 		{
@@ -446,7 +453,7 @@ DWORD STDMETHODCALLTYPE CComMessageFilter::MessagePending (HTASK htaskCallee, DW
 #ifdef	_DEBUG_MESSAGE_NOT
 	if	(LogIsActive (_DEBUG_MESSAGE))
 	{
-		LogMessage (_DEBUG_MESSAGE, _T("CComMessageFilter MessagePending [%s] Ticks [%u] Timeout [%u] DoNotDisturb [%u] CheckedOut [%u] Reentrant [%u]"), PendingTypeStr(dwPendingType), dwTickCount, mMessageTimeout, mDndLevel, mCheckedOut, mInMessagePending);
+		LogMessage (_DEBUG_MESSAGE, _T("CComMessageFilter MessagePending [%s] Ticks [%u] Timeout [%d] DoNotDisturb [%u] CheckedOut [%u] Reentrant [%u]"), PendingTypeStr(dwPendingType), dwTickCount, mMessageTimeout, mDndLevel, mCheckedOut, mInMessagePending);
 	}
 #endif
 
@@ -461,7 +468,8 @@ DWORD STDMETHODCALLTYPE CComMessageFilter::MessagePending (HTASK htaskCallee, DW
 	}
 	else
 	if	(
-			(dwTickCount > mMessageTimeout)
+			((long) mMessageTimeout > 0)
+		&&	(dwTickCount > mMessageTimeout)
 		&&	(mDndLevel == 0)
 		&&	(GetQueueStatus (QS_INPUT|QS_TIMER|QS_INPUT) != 0)
 		)
@@ -475,7 +483,7 @@ DWORD STDMETHODCALLTYPE CComMessageFilter::MessagePending (HTASK htaskCallee, DW
 #ifdef	_DEBUG_MESSAGE
 			if	(LogIsActive (_DEBUG_MESSAGE))
 			{
-				LogMessage (_DEBUG_MESSAGE, _T("CComMessageFilter MessagePending [%s] Ticks [%u] Timeout [%u] DoNotDisturb [%u] CheckedOut [%u]"), PendingTypeStr(dwPendingType), dwTickCount, mMessageTimeout, mDndLevel, mCheckedOut);
+				LogMessage (_DEBUG_MESSAGE, _T("CComMessageFilter MessagePending [%s] Ticks [%u] Timeout [%d] DoNotDisturb [%u] CheckedOut [%u]"), PendingTypeStr(dwPendingType), dwTickCount, mMessageTimeout, mDndLevel, mCheckedOut);
 			}
 #endif
 			while (PeekMessage (&lMsg, NULL, WM_MOUSEFIRST, WM_MOUSELAST, PM_REMOVE|PM_NOYIELD))
@@ -493,7 +501,7 @@ DWORD STDMETHODCALLTYPE CComMessageFilter::MessagePending (HTASK htaskCallee, DW
 #ifdef	_DEBUG_MESSAGE
 	if	(LogIsActive (_DEBUG_MESSAGE))
 	{
-		LogMessage (_DEBUG_MESSAGE, _T("CComMessageFilter MessagePending [%s] Ticks [%u] Timeout [%u] DoNotDisturb [%u] CheckedOut [%u] Result [%s]"), PendingTypeStr(dwPendingType), dwTickCount, mMessageTimeout, mDndLevel, mCheckedOut, PendingMsgStr (lRet));
+		LogMessage (_DEBUG_MESSAGE, _T("CComMessageFilter MessagePending [%s] Ticks [%u] Timeout [%d] DoNotDisturb [%u] CheckedOut [%u] Result [%s]"), PendingTypeStr(dwPendingType), dwTickCount, mMessageTimeout, mDndLevel, mCheckedOut, PendingMsgStr (lRet));
 	}
 #endif
 	return lRet;

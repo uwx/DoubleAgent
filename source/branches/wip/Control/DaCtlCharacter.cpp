@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -127,7 +127,7 @@ HRESULT DaCtlCharacter::Terminate (bool pFinal)
 				&&	(lCommands = dynamic_cast <DaCtlCommands *> (mCommands.GetInterfacePtr()))
 				)
 			{
-				lCommands->Terminate (false);
+				lCommands->Terminate (pFinal);
 			}
 			if	(pFinal)
 			{

@@ -455,6 +455,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Core\NotifyObjects.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\PropPageCharacter.cpp"
 				>
 			</File>
@@ -789,6 +793,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Core\NotifyObjects.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\PropPageCharacter.h"
 				>
 			</File>
@@ -889,10 +897,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core\Sapi5InputEventSink.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Core\Sapi5Inputs.h"
 				>
 			</File>
@@ -913,11 +917,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core\SapiVoiceCache.h"
+				RelativePath=".\Core\SapiVoice.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Core\SapiVoiceEventSink.h"
+				RelativePath=".\Core\SapiVoiceCache.h"
 				>
 			</File>
 			<File

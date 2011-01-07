@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -212,6 +212,7 @@ void DaControl::Terminate (bool pFinal)
 #endif
 		try
 		{
+			ClearNotifySources ();
 			mServerNotifySink->Terminate ();
 			SafeFreeSafePtr (mServerNotifySink);
 

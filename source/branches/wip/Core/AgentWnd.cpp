@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -2625,7 +2625,7 @@ bool CAgentWnd::DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQu
 					LogMessage (_TRACE_ACTION_INSTANCE, _T("QueuedAction [%p] continued but not in queue"), lQueuedAction);
 				}
 #endif
-				lQueuedAction.Detach();				
+				lQueuedAction.Detach();
 			}
 			else
 			{

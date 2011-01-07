@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -27,9 +27,6 @@
 #include "AgentPreviewWnd.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning (push)
-#pragma warning (disable: 4251 4275)
-/////////////////////////////////////////////////////////////////////////////
 
 class ATL_NO_VTABLE CPropPageCharacterObj :
 	public CComObjectRootEx<CComMultiThreadModel>,
@@ -46,17 +43,17 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP ATL_NO_VTABLE CPropPageCharacter :
+class ATL_NO_VTABLE CPropPageCharacter :
 	public CPropPageCharacterObj,
 	public CAtlPropertyPage,
 	protected CLayoutTools
 {
-	DECLARE_DLL_OBJECT(CPropPageCharacter)
+	DECLARE_DLL_OBJECT_EX(CPropPageCharacter, _DACORE_IMPEXP)
 protected:
 	CPropPageCharacter();
 public:
-	virtual ~CPropPageCharacter();
-	static CPropPageCharacter * CreateInstance ();
+	_DACORE_IMPEXP virtual ~CPropPageCharacter();
+	_DACORE_IMPEXP static CPropPageCharacter * CreateInstance ();
 
 // Dialog Data
 	enum { IDD = IDD_PROPPAGE_CHARACTER };
@@ -73,12 +70,12 @@ public:
 	tPtr <CAgentFile>	mAgentFile;
 
 // Operations
-	void FinalRelease();
-	HRESULT AddSheetPage (LPFNSVADDPROPSHEETPAGE pAddPageFunc, LPARAM pLparam);
+	_DACORE_IMPEXP void FinalRelease();
+	_DACORE_IMPEXP HRESULT AddSheetPage (LPFNSVADDPROPSHEETPAGE pAddPageFunc, LPARAM pLparam);
 
 // Overrides
 protected:
-	virtual BOOL OnInitDialog();
+	_DACORE_IMPEXP virtual BOOL OnInitDialog();
 
 // Implementation
 protected:
@@ -108,5 +105,4 @@ protected:
 	tPtr <CAgentPreviewWnd>	mPreviewWnd;
 };
 
-#pragma warning (pop)
 /////////////////////////////////////////////////////////////////////////////

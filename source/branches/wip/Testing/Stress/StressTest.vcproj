@@ -337,6 +337,10 @@
 			UniqueIdentifier="{0FFC8FA2-61B0-4218-918F-4D6E1CD543B9}"
 			>
 			<File
+				RelativePath="..\..\Resources\DoubleAgent.ico"
+				>
+			</File>
+			<File
 				RelativePath=".\StressTest.rc"
 				>
 			</File>

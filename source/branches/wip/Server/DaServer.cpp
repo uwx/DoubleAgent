@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -92,8 +92,8 @@ DaServer::DaServer()
 		mNotify.mOwner = this;
 		mNotify.mAnchor = this;
 		mNotify.mGlobal = (CEventGlobal*)&_AtlModule;
-		mNotify.RegisterEventReflect (this, true);
-		mNotify.RegisterEventLock (this, true);
+		mNotify.ReflectSinks::AddNotifySink (this);
+		mNotify.LockSinks::AddNotifySink (this);
 	}
 	catch AnyExceptionDebug
 	try
@@ -170,13 +170,13 @@ void DaServer::Terminate (bool pFinal, bool pAbandonned)
 			{
 				mNotify.UnregisterAll ();
 			}
-			mNotify.RegisterEventReflect (this, false);
+			mNotify.ReflectSinks::RemoveNotifySink (this);
 
 			UnloadAllCharacters (pAbandonned);
 
 			if	(pFinal)
 			{
-				mNotify.RegisterEventLock (this, false);
+				mNotify.LockSinks::RemoveNotifySink (this);
 			}
 		}
 		catch AnyExceptionDebug
@@ -327,10 +327,16 @@ bool DaServer::_PreNotify ()
 #ifdef	_DEBUG_NOTIFY_LEVEL
 	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] DaServer::_PreNotify [%u]"), this, max(m_dwRef,-1), IsInNotify());
 #endif
-	if	(m_dwRef > 0)
+	if	(
+			(m_dwRef > 0)
+		&&	(CSvrObjLifetime::VerifyClientLifetime ())
+		)
 	{
 		return CEventNotifyHolder<DaServer>::_PreNotify ();
 	}
+#ifdef	_DEBUG_NOTIFY_LEVEL
+	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] DaServer::_PreNotify failed"), this, max(m_dwRef,-1));
+#endif
 	return false;
 }
 
@@ -365,6 +371,21 @@ bool DaServer::_PostNotify ()
 		{
 			Abandon ();
 		}
+		return false;
+	}
+	else
+	if	(
+			(!IsInNotify ())
+		&&	(!CSvrObjLifetime::VerifyClientLifetime ())
+		)
+	{
+#ifdef	_LOG_INSTANCE
+		if	(LogIsActive (_LOG_INSTANCE))
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer PostNotify -> !VerifyClientLifetime"), this, max(m_dwRef,-1));
+		}
+#endif
+		Abandon ();
 		return false;
 	}
 	return true;
@@ -1299,7 +1320,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterEx (long CharacterID, IDaSvrChar
 		}
 		else
 		{
-#ifdef	_STRICT_COMPATIBILITY
+#ifdef	_STRICT_COMPATIBILITY_NOT
 			lResult = E_OUTOFMEMORY;
 #else
 			lResult = AGENTERR_CHARACTERINVALID;

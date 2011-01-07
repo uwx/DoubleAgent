@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -21,7 +21,7 @@
 #pragma once
 #include "EventNotify.h"
 #include "SapiInputCache.h"
-#include "Sapi5InputEventSink.h"
+#include "Sapi5Input.h"
 #include "TimerNotify.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -30,8 +30,6 @@ class CDaCmnCharacter;
 class CAgentWnd;
 class CAgentListeningWnd;
 class CVoiceCommandsWnd;
-class CSapi5Input;
-class CSapi5InputContext;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -50,9 +48,9 @@ interface _IListeningAnchor
 
 class CListeningState :
 	public CSapiInputClient,
-	protected ISapi5InputEventSink,
 	protected _ITimerNotifySink,
-	protected _IEventReflect
+	protected _IEventReflect,
+	public CNotifySourceSink <CSapi5InputContext, _ISapi5InputEventSink>
 {
 public:
 	CListeningState (CDaCmnCharacter & pCharacter);

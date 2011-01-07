@@ -6,8 +6,11 @@
 #include "Elapsed.h"
 #include "UiState.h"
 #include "GuidStr.h"
+#include "StringArrayEx.h"
+#include "LocalizeEx.h"
 #include "DebugProcess.h"
 #include "DebugWin.h"
+#include "DebugStr.h"
 
 #pragma comment(lib, "shlwapi.lib")
 #pragma comment(lib, "psapi.lib")
@@ -19,7 +22,25 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 #ifdef	_DEBUG
-//#define	_DEBUG_NOTIFY	LogNormal|LogTimeMs|LogHighVolume
+//#define	_LOG_AGENT_CALLS		LogNormal|LogTimeMs|LogHighVolume
+//#define	_LOG_CHAR_CALLS			LogNormal|LogTimeMs|LogHighVolume
+//#define	_LOG_NOTIFY				LogNormal|LogTimeMs|LogHighVolume
+#endif
+
+#ifndef	_LOG_AGENT_CALLS
+#define	_LOG_AGENT_CALLS		LogNormal|LogTimeMs
+#endif
+#ifndef	_LOG_CHAR_CALLS
+#define	_LOG_CHAR_CALLS			LogNormal|LogTimeMs
+#endif
+#ifndef	_LOG_NOTIFY
+#define	_LOG_NOTIFY				LogDetails|LogTimeMs
+#endif
+#ifndef	_LOG_PROGRESS
+#define	_LOG_PROGRESS			LogNormal|LogTime
+#endif
+#ifndef	_LOG_PROGRESS_MORE
+#define	_LOG_PROGRESS_MORE		LogDetails|LogTime
 #endif
 
 static LPCTSTR	sControlCharacterIdPopup = _T("Popup");
@@ -39,6 +60,10 @@ BEGIN_MESSAGE_MAP(CStressTestDlg, CDialog)
 	ON_BN_CLICKED(IDC_STRESS_CONTROL, OnControlMode)
 	ON_BN_CLICKED(IDC_STRESS_CONTAINED, OnControlMode)
 	ON_BN_CLICKED(IDC_STRESS_STANDALONE, OnControlMode)
+	ON_BN_CLICKED(IDC_CHARACTERS_01, OnCharacterCount)
+	ON_BN_CLICKED(IDC_CHARACTERS_02, OnCharacterCount)
+	ON_BN_CLICKED(IDC_CHARACTERS_05, OnCharacterCount)
+	ON_BN_CLICKED(IDC_CHARACTERS_10, OnCharacterCount)
 	ON_BN_CLICKED(IDC_RANDOM_STOP0, OnRandomStop)
 	ON_BN_CLICKED(IDC_RANDOM_STOP1, OnRandomStop)
 	ON_BN_CLICKED(IDC_RANDOM_STOP2, OnRandomStop)
@@ -84,8 +109,8 @@ CStressTestDlg::CStressTestDlg(CWnd* pParent)
 :	CDialog(CStressTestDlg::IDD, pParent),
 	mServerSinkId (0),
 	mServerCharacterId (0),
-	mCharacterNdx (-1),
-	mGestureNdx (-1),
+	mCharacterSelNdx (-1),
+	mGestureSelNdx (-1),
 	mShowReqId (0),
 	mGestureReqId (0),
 	mSpeechReqId (0),
@@ -100,10 +125,10 @@ CStressTestDlg::CStressTestDlg(CWnd* pParent)
 
 CStressTestDlg::~CStressTestDlg()
 {
-	FreeServerCharacter ();
-	FreeAgentServer ();
-	FreeControlCharacter ();
-	FreeAgentControl ();
+	FreeServerCharacters ();
+	FreeAgentServers ();
+	FreeControlCharacters ();
+	FreeAgentControls ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -121,13 +146,19 @@ void CStressTestDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RANDOM_STOP1, mRandomStop1);
 	DDX_Control(pDX, IDC_RANDOM_STOP2, mRandomStop2);
 	DDX_Control(pDX, IDC_RANDOM_STOP3, mRandomStop3);
+	DDX_Control(pDX, IDC_RANDOM_STOP_ALL, mRandomStopAll);
 	DDX_Control(pDX, IDC_STRESS_SOUND, mStressSound);
 	DDX_Control(pDX, IDC_STRESS_SPEAK, mStressSpeak);
 	DDX_Control(pDX, IDC_CONTROL_PLACER, mControlPlacer);
 	DDX_Control(pDX, IDC_CHARACTER_LIST, mCharacterList);
+	DDX_Control(pDX, IDC_CHARACTERS_01, mCharacterCount1);
+	DDX_Control(pDX, IDC_CHARACTERS_02, mCharacterCount2);
+	DDX_Control(pDX, IDC_CHARACTERS_05, mCharacterCount5);
+	DDX_Control(pDX, IDC_CHARACTERS_10, mCharacterCount10);
 	DDX_Control(pDX, IDOK, mOkButton);
 	DDX_Control(pDX, IDCANCEL, mCancelButton);
 	DDX_Control(pDX, IDC_GESTURES, mGestures);
+	DDX_Control(pDX, IDC_CYCLE_INDICATOR, mCycleIndicator);
 	//}}AFX_DATA_MAP
 }
 
@@ -139,9 +170,9 @@ BOOL CStressTestDlg::OnInitDialog()
 
 	ModifyStyleEx (0, WS_EX_APPWINDOW);
 
-	GetAgentServer ();
+	GetAgentServers ();
 	ShowCharacters ();
-	FreeAgentServer ();
+	FreeAgentServers ();
 
 	LoadConfig ();
 	lAutoStart = CommandLineConfig ();
@@ -161,8 +192,8 @@ BOOL CStressTestDlg::OnInitDialog()
 void CStressTestDlg::ShowModeSelection ()
 {
 	if	(
-			(mServerCharacter)
-		||	(mControlCharacter)
+			(mServerCharacter.GetCount() > 0)
+		||	(mControlCharacter.GetCount() > 0)
 		)
 	{
 		mStressServer.EnableWindow (FALSE);
@@ -217,18 +248,19 @@ void CStressTestDlg::ShowCharacters ()
 	lClientRect.right -= GetSystemMetrics (SM_CXVSCROLL);
 
 	if	(
-			(mServer != NULL)
-		&&	(SUCCEEDED (LogComErr (LogDetails, mServer->get_CharacterFiles (&lCharacterFiles))))
+			(mServer.GetCount() > 0)
+		&&	(mServer[0])
+		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer[0]->get_CharacterFiles (&lCharacterFiles))))
 		)
 	{
 #if	TRUE
 		lCharacterFiles->put_Filter (FilesFilter_PathMask);
 #endif
 		if	(
-				(SUCCEEDED (LogComErr (LogDetails, lCharacterFiles->get_FilePaths (lFilePaths.Free()))))
-			&&	(SUCCEEDED (LogComErr (LogDetails, SafeArrayGetVartype (lFilePaths, &lFilePathType))))
-			&&	(SUCCEEDED (LogComErr (LogDetails, SafeArrayGetLBound (lFilePaths, 1, &lLowerBound))))
-			&&	(SUCCEEDED (LogComErr (LogDetails, SafeArrayGetUBound (lFilePaths, 1, &lUpperBound))))
+				(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, lCharacterFiles->get_FilePaths (lFilePaths.Free()))))
+			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, SafeArrayGetVartype (lFilePaths, &lFilePathType))))
+			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, SafeArrayGetLBound (lFilePaths, 1, &lLowerBound))))
+			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, SafeArrayGetUBound (lFilePaths, 1, &lUpperBound))))
 			)
 		{
 			for	(lNdx = lLowerBound; lNdx < lUpperBound; lNdx++)
@@ -245,8 +277,8 @@ void CStressTestDlg::ShowCharacters ()
 	mCharacterList.SetColumnWidth (0, lClientRect.Width());
 
 	mCharacterPath.Empty ();
-	mCharacterNdx = -1;
-	mGestureNdx = -1;
+	mCharacterSelNdx = -1;
+	mGestureSelNdx = -1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -260,12 +292,12 @@ bool CStressTestDlg::ShowCharacter (int pCharacterNdx)
 		&&	(pCharacterNdx < mCharacterList.GetItemCount ())
 		)
 	{
-		mCharacterNdx = pCharacterNdx;
-		mCharacterList.SetItemState (mCharacterNdx, LVIS_SELECTED|LVIS_FOCUSED, LVIS_SELECTED|LVIS_FOCUSED);
-		mCharacterList.EnsureVisible (mCharacterNdx, FALSE);
+		mCharacterSelNdx = pCharacterNdx;
+		mCharacterList.SetItemState (mCharacterSelNdx, LVIS_SELECTED|LVIS_FOCUSED, LVIS_SELECTED|LVIS_FOCUSED);
+		mCharacterList.EnsureVisible (mCharacterSelNdx, FALSE);
 		mCharacterList.RedrawWindow ();
 
-		lRet = ShowCharacter (mCharacterList.GetItemText (mCharacterNdx, 0));
+		lRet = ShowCharacter (mCharacterList.GetItemText (mCharacterSelNdx, 0));
 	}
 	return lRet;
 }
@@ -279,13 +311,13 @@ bool CStressTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 	CDebugProcess().LogAddressSpaceInline (LogNormal|LogTime|LogHighVolume);
 	CDebugProcess().LogGuiResourcesInline (LogNormal|LogTime|LogHighVolume);
 #endif
-	LogMessage (LogNormal|LogTime, _T("Show Character [%d %d] %s"), mCycleNum, mCharacterNdx, pCharacterPath);
+	LogMessage (_LOG_PROGRESS, _T("Show Character [%d %d] %s"), mCycleNum, mCharacterSelNdx, pCharacterPath);
 
 	if	(mCharacterPath.CompareNoCase (CString (pCharacterPath)) != 0)
 	{
-		FreeServerCharacter ();
-		FreeAgentServer ();
-		FreeControlCharacter ();
+		FreeServerCharacters ();
+		FreeAgentServers ();
+		FreeControlCharacters ();
 	}
 
 	ShowControlMode ();
@@ -299,7 +331,7 @@ bool CStressTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 
 		if	(
 				(mStressServer.GetCheck ())
-			&&	(ShowServerCharacter ())
+			&&	(ShowServerCharacters (-1))
 			)
 		{
 			lRet = true;
@@ -307,7 +339,7 @@ bool CStressTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 
 		if	(
 				(mStressControl.GetCheck ())
-			&&	(ShowControlCharacter ())
+			&&	(ShowControlCharacters (-1))
 			)
 		{
 			lRet = true;
@@ -342,12 +374,14 @@ void CStressTestDlg::ShowGestures ()
 		if	(
 				(
 					(
-						(mServerCharacter != NULL)
-					&&	(SUCCEEDED (LogComErr (LogNormal, mServerCharacter->get_Animations (lAnimations.Free()))))
+						(mServerCharacter.GetCount() > 0)
+					&&	(mServerCharacter[0])
+					&&	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, mServerCharacter[0]->get_Animations (lAnimations.Free()))))
 					)
 				||	(
-						(mControlCharacter != NULL)
-					&&	(SUCCEEDED (LogComErr (LogNormal, mControlCharacter->get_Animations (lAnimations.Free()))))
+						(mControlCharacter.GetCount() > 0)
+					&&	(mControlCharacter[0])
+					&&	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, mControlCharacter[0]->get_Animations (lAnimations.Free()))))
 					)
 				)
 			&&	(SUCCEEDED (LogComErr (LogDetails, SafeArrayGetVartype (lAnimations, &lAnimationType))))
@@ -369,7 +403,7 @@ void CStressTestDlg::ShowGestures ()
 
 	mGestures.SetCurSel (-1);
 	mGestures.SetRedraw (TRUE);
-	mGestureNdx = -1;
+	mGestureSelNdx = -1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -384,10 +418,10 @@ bool CStressTestDlg::ShowGesture (int pGestureNdx)
 		&&	(pGestureNdx < mGestures.GetCount())
 		)
 	{
-		mGestureNdx = pGestureNdx;
-		mGestures.SetCurSel (mGestureNdx);
+		mGestureSelNdx = pGestureNdx;
+		mGestures.SetCurSel (mGestureSelNdx);
 		mGestures.RedrawWindow ();
-		mGestures.GetText (mGestureNdx, lGestureName);
+		mGestures.GetText (mGestureSelNdx, lGestureName);
 		lRet = ShowGesture (lGestureName);
 	}
 	return lRet;
@@ -431,70 +465,89 @@ static CString GestureNameSpeech (LPCTSTR pGestureName)
 bool CStressTestDlg::ShowGesture (LPCTSTR pGestureName)
 {
 	bool	lRet = false;
+	int		lNdx;
 
-	mGestureReqId = 0;
-	mSpeechReqId = 0;
-	mGestureRequest = NULL;
-	mSpeechRequest = NULL;
+	mGestureReqId.RemoveAll();
+	mSpeechReqId.RemoveAll();
+	mGestureRequest.RemoveAll();
+	mSpeechRequest.RemoveAll();
 
 	if	(
 			(pGestureName)
 		&&	(pGestureName[0])
 		)
 	{
-		LogMessage (LogDetails|LogTime, _T("  Show %s Gesture %s"), PathFindFileName(mCharacterPath), pGestureName);
+		LogMessage (_LOG_PROGRESS_MORE, _T("  Show %s Gesture %s"), PathFindFileName(mCharacterPath), pGestureName);
 
 		if	(
 				(mStressServer.GetCheck())
-			&&	(mServerCharacter != NULL)
+			&&	(mServerCharacter.GetCount() > 0)
 			)
 		{
-			if	(mStressSound.GetCheck ())
+			mGestureReqId.SetCount (mServerCharacter.GetCount());
+			mSpeechReqId.SetCount (mServerCharacter.GetCount());
+
+			for	(lNdx = 0; lNdx < (int)mServerCharacter.GetCount(); lNdx++)
 			{
-				mServerCharacter.Style |= CharacterStyle_SoundEffects;
-			}
-			else
-			{
-				mServerCharacter.Style &= ~CharacterStyle_SoundEffects;
-			}
-			if	(
-					(
-						(mStressSpeak.GetCheck())
-					?	(SUCCEEDED (LogComErr (LogNormal|LogTime, mServerCharacter->Speak (_bstr_t(GestureNameSpeech(pGestureName)), NULL, &mSpeechReqId))))
-					:	(SUCCEEDED (LogComErr (LogNormal|LogTime, mServerCharacter->Think (_bstr_t(GestureNameSpeech(pGestureName)), &mSpeechReqId))))
-					)
-				&&	(SUCCEEDED (LogComErr (LogNormal|LogTime, mServerCharacter->Play (_bstr_t(pGestureName), &mGestureReqId))))
-				)
-			{
-				//LogMessage (LogNormal, _T("[%s] Gesture [%s] SpeechReqId [%d] GestureReqId [%d]"), mCharacterPath, pGestureName, mSpeechReqId, mGestureReqId);
-				lRet = true;
+				if	(mServerCharacter[lNdx])
+				{
+					if	(mStressSound.GetCheck ())
+					{
+						mServerCharacter[lNdx].Style |= CharacterStyle_SoundEffects;
+					}
+					else
+					{
+						mServerCharacter[lNdx].Style &= ~CharacterStyle_SoundEffects;
+					}
+					if	(
+							(
+								(mStressSpeak.GetCheck())
+							?	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, mServerCharacter[lNdx]->Speak (_bstr_t(GestureNameSpeech(pGestureName)), NULL, &mSpeechReqId[lNdx]))))
+							:	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, mServerCharacter[lNdx]->Think (_bstr_t(GestureNameSpeech(pGestureName)), &mSpeechReqId[lNdx]))))
+							)
+						&&	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, mServerCharacter[lNdx]->Play (_bstr_t(pGestureName), &mGestureReqId[lNdx]))))
+						)
+					{
+						//LogMessage (LogNormal, _T("[%s] Gesture [%s] SpeechReqId [%d] GestureReqId [%d]"), mCharacterPath, pGestureName, mSpeechReqId[lNdx], mGestureReqId[lNdx]);
+						lRet = true;
+					}
+				}
 			}
 		}
 
 		if	(
 				(mStressControl.GetCheck())
-			&&	(mControlCharacter != NULL)
+			&&	(mControlCharacter.GetCount() > 0)
 			)
 		{
-			if	(mStressSound.GetCheck ())
+			mGestureRequest.SetCount (mControlCharacter.GetCount());
+			mSpeechRequest.SetCount (mControlCharacter.GetCount());
+
+			for	(lNdx = 0; lNdx < (int)mControlCharacter.GetCount(); lNdx++)
 			{
-				mControlCharacter.SoundEffectsEnabled = true;
-			}
-			else
-			{
-				mControlCharacter.SoundEffectsEnabled = false;
-			}
-			if	(
-					(
-						(mStressSpeak.GetCheck())
-					?	(SUCCEEDED (LogComErr (LogNormal|LogTime, mControlCharacter->Speak (_variant_t(GestureNameSpeech(pGestureName)), _variant_t(), &mSpeechRequest))))
-					:	(SUCCEEDED (LogComErr (LogNormal|LogTime, mControlCharacter->Think (_bstr_t(GestureNameSpeech(pGestureName)), &mSpeechRequest))))
-					)
-				&&	(SUCCEEDED (LogComErr (LogNormal|LogTime, mControlCharacter->Play (_bstr_t(pGestureName), &mGestureRequest))))
-				)
-			{
-				//LogMessage (LogNormal, _T("[%s] Gesture [%s] SpeechReqId [%d] GestureReqId [%d]"), mCharacterPath, pGestureName, mSpeechRequest.ID, mGestureRequest.ID);
-				lRet = true;
+				if	(mControlCharacter[lNdx])
+				{
+					if	(mStressSound.GetCheck ())
+					{
+						mControlCharacter[lNdx].SoundEffectsEnabled = true;
+					}
+					else
+					{
+						mControlCharacter[lNdx].SoundEffectsEnabled = false;
+					}
+					if	(
+							(
+								(mStressSpeak.GetCheck())
+							?	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, mControlCharacter[lNdx]->Speak (_variant_t(GestureNameSpeech(pGestureName)), _variant_t(), &mSpeechRequest[lNdx]))))
+							:	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, mControlCharacter[lNdx]->Think (_bstr_t(GestureNameSpeech(pGestureName)), &mSpeechRequest[lNdx]))))
+							)
+						&&	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, mControlCharacter[lNdx]->Play (_bstr_t(pGestureName), &mGestureRequest[lNdx]))))
+						)
+					{
+						//LogMessage (LogNormal, _T("[%s] Gesture [%s] SpeechReqId [%d] GestureReqId [%d]"), mCharacterPath, pGestureName, mSpeechRequest[lNdx].ID, mGestureRequest[lNdx].ID);
+						lRet = true;
+					}
+				}
 			}
 		}
 
@@ -512,78 +565,136 @@ bool CStressTestDlg::ShowGesture (LPCTSTR pGestureName)
 
 bool CStressTestDlg::IsAnimating ()
 {
-	if	(
-			(mServerCharacter != NULL)
-		&&	(
-				(!mServerCharacter.Visible)
-			||	(mShowReqId > 0)
-			||	(mGestureReqId > 0)
-			||	(mSpeechReqId > 0)
-			)
-		)
+	int	lNdx;
+
+	for	(lNdx = 0; lNdx < (int)mServerCharacter.GetCount(); lNdx++)
 	{
-		return true;
+		if	(
+				(mServerCharacter[lNdx])
+			&&	(
+					(!mServerCharacter[lNdx].Visible)
+				||	(
+						(lNdx < (int)mShowReqId.GetCount())
+					&&	(mShowReqId[lNdx] > 0)
+					)
+				||	(
+						(lNdx < (int)mGestureReqId.GetCount())
+					&&	(mGestureReqId[lNdx] > 0)
+					)
+				||	(
+						(lNdx < (int)mSpeechReqId.GetCount())
+					&&	(mSpeechReqId[lNdx] > 0)
+					)
+				)
+			)
+		{
+			return true;
+		}
 	}
 
-	if	(
-			(mControlCharacter != NULL)
-		&&	(
-				(!mControlCharacter.Visible)
-			||	(
-					(mShowRequest != NULL)
-				&&	(
-						(mShowRequest.Status == RequestStatus_Pending)
-					||	(mShowRequest.Status == RequestStatus_InProgress)
+	for	(lNdx = 0; lNdx < (int)mControlCharacter.GetCount(); lNdx++)
+	{
+		if	(
+				(mControlCharacter[lNdx])
+			&&	(
+					(!mControlCharacter[lNdx].Visible)
+				||	(
+						(lNdx < (int)mShowRequest.GetCount())
+					&&	(mShowRequest[lNdx])
+					&&	(
+							(mShowRequest[lNdx].Status == RequestStatus_Pending)
+						||	(mShowRequest[lNdx].Status == RequestStatus_InProgress)
+						)
 					)
-				)
-			||	(
-					(mGestureRequest != NULL)
-				&&	(
-						(mGestureRequest.Status == RequestStatus_Pending)
-					||	(mGestureRequest.Status == RequestStatus_InProgress)
+				||	(
+						(lNdx < (int)mGestureRequest.GetCount())
+					&&	(mGestureRequest[lNdx])
+					&&	(
+							(mGestureRequest[lNdx].Status == RequestStatus_Pending)
+						||	(mGestureRequest[lNdx].Status == RequestStatus_InProgress)
+						)
 					)
-				)
-			||	(
-					(mSpeechRequest != NULL)
-				&&	(
-						(mSpeechRequest.Status == RequestStatus_Pending)
-					||	(mSpeechRequest.Status == RequestStatus_InProgress)
+				||	(
+						(lNdx < (int)mSpeechRequest.GetCount())
+					&&	(mSpeechRequest[lNdx])
+					&&	(
+							(mSpeechRequest[lNdx].Status == RequestStatus_Pending)
+						||	(mSpeechRequest[lNdx].Status == RequestStatus_InProgress)
+						)
 					)
 				)
 			)
-		)
-	{
-		return true;
+		{
+			return true;
+		}
 	}
 	return false;
 }
 
-bool CStressTestDlg::Stop ()
+bool CStressTestDlg::Stop (bool pRandom)
 {
 	bool	lRet = false;
+	bool	lDone = false;
+	HRESULT	lResult;
+	int		lNdx;
 
-	if	(
-			(mServerCharacter != NULL)
-		&&	(SUCCEEDED (LogComErr (LogNormal|LogTime, mServerCharacter->StopAll (StopAll_Everything), _T("[%d] StopAll"), mServerCharacterId)))
-		)
+	mShowReqId.SetCount (mServerCharacter.GetCount());
+	mGestureReqId.SetCount (mServerCharacter.GetCount());
+	mSpeechReqId.SetCount (mServerCharacter.GetCount());
+
+	for	(lNdx = 0; (lNdx < (int)mServerCharacter.GetCount()) && (!lDone); lNdx++)
 	{
-		lRet = true;
-	}
-	mShowReqId = 0;
-	mGestureReqId = 0;
-	mSpeechReqId = 0;
+		mShowReqId[lNdx] = 0;
+		mGestureReqId[lNdx] = 0;
+		mSpeechReqId[lNdx] = 0;
 
-	if	(
-			(mControlCharacter != NULL)
-		&&	(SUCCEEDED (LogComErr (LogNormal|LogTime, mControlCharacter->StopAll (_variant_t((long)(StopAll_Everything),VT_I4)), _T("[%s] StopAll"), mControlCharacterId)))
-		)
+		if	(
+				(mServerCharacter[lNdx])
+			&&	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult = mServerCharacter[lNdx]->StopAll (StopAll_Everything), _T("[%d] [%d] StopAll"), lNdx, mServerCharacterId[lNdx])))
+			)
+		{
+			lRet = true;
+			
+			if	(
+					(pRandom)
+				&&	(lResult == S_OK)
+				&&	(!mRandomStopAll.GetCheck())
+				)
+			{
+				lDone = true;
+			}
+		}
+	}
+
+	mShowRequest.SetCount (mControlCharacter.GetCount());
+	mGestureRequest.SetCount (mControlCharacter.GetCount());
+	mSpeechRequest.SetCount (mControlCharacter.GetCount());
+
+	for	(lNdx = 0; (lNdx < (int)mControlCharacter.GetCount()) && (!lDone); lNdx++)
 	{
-		lRet = true;
-	}
-	mShowRequest = NULL;
-	mGestureRequest = NULL;
-	mSpeechRequest = NULL;
+		mShowRequest[lNdx] = NULL;
+		mGestureRequest[lNdx] = NULL;
+		mSpeechRequest[lNdx] = NULL;
 
+		if	(
+				(mControlCharacter[lNdx])
+			&&	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult = mControlCharacter[lNdx]->StopAll (_variant_t((long)(StopAll_Everything),VT_I4)), _T("[%d] [%s] StopAll"), lNdx, mControlCharacterId[lNdx])))
+			)
+		{
+			lRet = true;
+			
+			if	(
+					(pRandom)
+				&&	(lResult == S_OK)
+				&&	(!mRandomStopAll.GetCheck())
+				)
+			{
+				lDone = true;
+			}
+		}
+	}
+
+	mCycleIndicator.ShowWindow (IsAnimating()?TRUE:FALSE);
 	return lRet;
 }
 
@@ -591,362 +702,614 @@ bool CStressTestDlg::Stop ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CStressTestDlg::GetAgentServer ()
+void CStressTestDlg::GetAgentServers (int pServerCount)
 {
-	if	(mServer == NULL)
+	int	lNdx;
+	
+	if	(pServerCount <= 0)
 	{
-		IUnknownPtr	lUnknown;
-
-		LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_SERVER, __uuidof(IUnknown), (void**)&lUnknown), _T("CoCreateInstance"));
-		mServer = lUnknown;
-
-		if	(mServer != NULL)
+		pServerCount = 1;
+	}
+	if	((int)mServer.GetCount() < pServerCount)
+	{
+		mServer.SetCount (pServerCount);
+	}
+	mServerSinkId.SetCount (mServer.GetCount());
+	
+	for	(lNdx = 0; lNdx < (int)mServer.GetCount(); lNdx++)
+	{
+		if	(!mServer[lNdx])
 		{
-			LogComErr (LogNormal|LogTime, mServer->Register (&m_xDaSvrNotifySink, &mServerSinkId), _T("Register"));
-			mServer.CharacterStyle = CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_Smoothed;
+			IUnknownPtr	lUnknown;
+
+			LogComErr (_LOG_AGENT_CALLS, CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_SERVER, __uuidof(IUnknown), (void**)&lUnknown), _T("[%d] CoCreateInstance"), lNdx);
+			mServer[lNdx] = lUnknown;
+
+			if	(mServer[lNdx] != NULL)
+			{
+				LogComErr (_LOG_AGENT_CALLS, mServer[lNdx]->Register (&m_xDaSvrNotifySink, &mServerSinkId[lNdx]), _T("[%d] Register"), lNdx);
+				mServer[lNdx].CharacterStyle = CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_Smoothed;
+			}
 		}
 	}
 }
 
-void CStressTestDlg::FreeAgentServer ()
+void CStressTestDlg::FreeAgentServers (int pServerCount)
 {
-	if	(
-			(mServerSinkId)
-		&&	(mServer != NULL)
-		)
+	int	lNdx;
+	
+	if	(pServerCount <= 0)
 	{
-		try
+		pServerCount = 0;
+	}
+	pServerCount = min (pServerCount, (int)mServer.GetCount());
+	
+	for	(lNdx = pServerCount; lNdx < (int)mServer.GetCount(); lNdx++)
+	{
+		if	(
+				(mServer[lNdx])
+			&&	(lNdx < (int)mServerSinkId.GetCount())
+			&&	(mServerSinkId[lNdx])
+			)
 		{
-			LogComErr (LogNormal|LogTime, mServer->Unregister (mServerSinkId), _T("Unregister"));
+			try
+			{
+				LogComErr (_LOG_AGENT_CALLS, mServer[lNdx]->Unregister (mServerSinkId[lNdx]), _T("[%d] Unregister"), lNdx);
+			}
+			catch AnyExceptionSilent
 		}
-		catch AnyExceptionSilent
 	}
 
-	mServerSinkId = 0;
-	SafeFreeSafePtr (mServer);
+	mServer.SetCount (pServerCount);
+	mServerSinkId.SetCount (mServer.GetCount());
+}
+
+int CStressTestDlg::GetServerMultiple () const
+{
+	if	(mCharacterCount1.m_hWnd)
+	{
+		return mCharacterCount10.GetCheck()?10:mCharacterCount5.GetCheck()?5:mCharacterCount2.GetCheck()?2:1;
+	}
+	return 1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CStressTestDlg::GetAgentControl ()
+void CStressTestDlg::GetAgentControls (int pControlCount)
 {
+	int	lNdx;
+
 	if	(mControlPlacer.m_hWnd)
 	{
 		mControlRect = ChildWndRect (mControlPlacer);
 		mControlPlacer.DestroyWindow();
 	}
-	if	(
-			(mControlWnd.m_hWnd == NULL)
-		&&	(mControlWnd.CreateControl (__uuidof(DaControl), _T(""), WS_CHILD|WS_CLIPSIBLINGS, mControlRect, this, IDC_CONTROL_PLACER))
-		)
-	{
-		mControl = mControlWnd.GetControlSite()->m_pObject;
-	}
-	if	(mControl)
-	{
-		mControl.CharacterStyle = CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_Smoothed;
 
+	if	(pControlCount <= 0)
+	{
+		pControlCount = 1;
+	}
+	if	(mControlContained.GetCheck())
+	{
+		pControlCount = max (pControlCount, 1);
+	}
+	if	((int)mControl.GetCount() < pControlCount)
+	{
+		mControl.SetCount (pControlCount);
+	}
+	mControlWnd.SetCount (max (mControlWnd.GetCount(), mControl.GetCount()));
+
+	for	(lNdx = 0; lNdx < (int)mControl.GetCount(); lNdx++)
+	{
 		if	(
-				(mControlContained.GetCheck ())
-			||	(mControlStandalone.GetCheck ())
+				(!mControlWnd[lNdx]->GetSafeHwnd())
+			&&	(mControlWnd[lNdx] = new CWnd)
+			&&	(mControlWnd[lNdx]->CreateControl (__uuidof(DaControl), _T(""), WS_CHILD|WS_CLIPSIBLINGS, mControlRect, this, IDC_CONTROL_PLACER+(UINT)lNdx))
 			)
 		{
-			mControl.AutoConnect = false;
-			mControl.Connected = false;
+			mControl[lNdx] = mControlWnd[lNdx]->GetControlSite()->m_pObject;
 		}
-		else
+		if	(mControl[lNdx])
 		{
-			mControl.AutoConnect = true;
+			mControl[lNdx].CharacterStyle = CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_Smoothed;
+
+			if	(
+					(mControlContained.GetCheck ())
+				||	(mControlStandalone.GetCheck ())
+				)
+			{
+				mControl[lNdx].AutoConnect = false;
+				mControl[lNdx].Connected = false;
+			}
+			else
+			{
+				mControl[lNdx].AutoConnect = true;
+			}
 		}
 	}
 }
 
-void CStressTestDlg::FreeAgentControl ()
+void CStressTestDlg::FreeAgentControls (int pControlCount)
 {
-	SafeFreeSafePtr (mControl);
-	if	(mControlWnd.m_hWnd)
+	int	lNdx;
+
+	if	(pControlCount <= 0)
 	{
-		mControlWnd.DestroyWindow ();
+		pControlCount = 0;
 	}
+	pControlCount = min (pControlCount, (int)mControl.GetCount());
+	mControl.SetCount (pControlCount);
+	
+	for	(lNdx = pControlCount; lNdx < (int)mControlWnd.GetCount(); lNdx++)
+	{
+		if	(mControlWnd[lNdx]->GetSafeHwnd())
+		{
+			mControlWnd[lNdx]->DestroyWindow ();
+		}
+	}
+	mControlWnd.SetCount (pControlCount);
+}
+
+int CStressTestDlg::GetControlMultiple () const
+{
+	if	(
+			(mCharacterCount1.m_hWnd)
+		&&	(!mControlContained.GetCheck())
+		)
+	{
+		return mCharacterCount10.GetCheck()?10:mCharacterCount5.GetCheck()?5:mCharacterCount2.GetCheck()?2:1;
+	}
+	return 1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CStressTestDlg::ShowServerCharacter ()
+bool CStressTestDlg::ShowServerCharacters (int pCharacterCount)
 {
 	bool	lRet = false;
 	long	lReqID = 0;
 	HRESULT	lResult;
 	CString	lWinTitle;
+	int		lNdx;
+	int		lServerNdx;
 
-	GetAgentServer ();
+	if	(pCharacterCount == 0)
+	{
+		pCharacterCount = 1;
+	}
+	else
+	if	(pCharacterCount < 0)
+	{
+		pCharacterCount = GetServerMultiple ();
+	}
+
+	GetAgentServers (pCharacterCount);
 
 	if	(
-			(mServer != NULL)
-		&&	(mServerCharacterId == 0)
+			(mServer.GetCount() > 0)
+		&&	(mServer[0])
 		&&	(!mCharacterPath.IsEmpty ())
 		)
 	{
-		lResult = mServer->Load (_variant_t(mCharacterPath), &mServerCharacterId, &lReqID);
-		LogComErr (LogNormal|LogTime, lResult, _T("Load [%d] [%s] as [%d]"), lReqID, mCharacterPath, mServerCharacterId);
+		if	((int)mServerCharacter.GetCount() < pCharacterCount)
+		{
+			mServerCharacter.SetCount (pCharacterCount);
+		}
+		mServerCharacterId.SetCount (mServerCharacter.GetCount());
+		mCharacterServer.SetCount (mServerCharacter.GetCount());
+		mShowReqId.SetCount (mServerCharacter.GetCount());
+
+		for	(lNdx = 0; lNdx < (int)mServerCharacter.GetCount(); lNdx++)
+		{
+			if	(
+					(lNdx < (int)mServer.GetCount())
+				&&	(mServer[lNdx])
+				)
+			{
+				lServerNdx = lNdx;
+			}
+			else
+			{
+				lServerNdx = 0;
+			}
+		
+			if	(
+					(!mServerCharacter[lNdx])
+				&&	(mServer[lServerNdx])
+				)
+			{
+				mServerCharacterId[lNdx] = 0;
+				mCharacterServer[lNdx] = mServer[lServerNdx];
+
+				lResult = mCharacterServer[lNdx]->Load (_variant_t(mCharacterPath), &mServerCharacterId[lNdx], &lReqID);
+				LogComErr (_LOG_AGENT_CALLS, lResult, _T("[%d] Load [%d] [%s] as [%d]"), lNdx, lReqID, mCharacterPath, mServerCharacterId[lNdx]);
+				
+				if	(FAILED (lResult))
+				{
+					mServerCharacterId[lNdx] = 0;
+					mCharacterServer[lNdx] = NULL;
+				}
+			}
+
+			if	(
+					(mServerCharacterId[lNdx] != 0)
+				&&	(!mServerCharacter[lNdx])
+				&&	(mCharacterServer[lNdx])
+				&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mCharacterServer[lNdx]->get_Character (mServerCharacterId[lNdx], &mServerCharacter[lNdx]), _T("[%d] GetCharacter [%d]"), lNdx, mServerCharacterId[lNdx])))
+				)
+			{
+				mServerCharacter[lNdx].Style &= ~CharacterStyle_IdleEnabled;
+				if	(mStressSound.GetCheck ())
+				{
+					mServerCharacter[lNdx].Style |= CharacterStyle_SoundEffects;
+				}
+				else
+				{
+					mServerCharacter[lNdx].Style &= ~CharacterStyle_SoundEffects;
+				}
+			}
+
+			if	(mServerCharacter[lNdx])
+			{
+				CPoint	lCharPos;
+				CSize	lCharSize;
+
+				if	(
+						(SUCCEEDED (mServerCharacter[lNdx]->GetSize (&lCharSize.cx, &lCharSize.cy)))
+					&&	(
+							(lCharSize.cx > 200)
+						||	(lCharSize.cy > 200)
+						)
+					)
+				{
+					while	(
+								(lCharSize.cx > 200)
+							||	(lCharSize.cy > 200)
+							)
+					{
+						lCharSize.cx = MulDiv (lCharSize.cx, 3, 4);
+						lCharSize.cy = MulDiv (lCharSize.cy, 3, 4);
+					}
+					mServerCharacter[lNdx]->SetSize (lCharSize.cx, lCharSize.cy);
+				}
+
+				if	(!mServerCharacter[lNdx].Visible)
+				{
+					lCharPos = GetInitialPos (lCharSize);
+					mServerCharacter[lNdx]->MoveTo ((short)lCharPos.x, (short)lCharPos.y, 0, &lReqID);
+				}
+
+				mShowReqId[lNdx] = 0;
+				lResult = mServerCharacter[lNdx]->Show (FALSE, &mShowReqId[lNdx]);
+				if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] [%d] Show [%d]"), lNdx, mServerCharacterId[lNdx], mShowReqId[lNdx])))
+				{
+					lRet = true;
+				}
+			}
+		}
 	}
 
 	if	(
-			(mServer != NULL)
-		&&	(mServerCharacterId != 0)
-		&&	(mServerCharacter == NULL)
-		&&	(SUCCEEDED (LogComErr (LogNormal|LogTime, mServer->get_Character (mServerCharacterId, &mServerCharacter), _T("GetCharacter"))))
+			(mServerCharacter.GetCount() > 0)	
+		&&	(!mServerCharacter[mServerCharacter.GetCount()-1])
 		)
 	{
-		mServerCharacter.Style &= ~CharacterStyle_IdleEnabled;
-		if	(mStressSound.GetCheck ())
-		{
-			mServerCharacter.Style |= CharacterStyle_SoundEffects;
-		}
-		else
-		{
-			mServerCharacter.Style &= ~CharacterStyle_SoundEffects;
-		}
-	}
-
-	if	(mServerCharacter != NULL)
-	{
-		CPoint	lCharPos;
-		CSize	lCharSize;
-
-		if	(
-				(SUCCEEDED (mServerCharacter->GetSize (&lCharSize.cx, &lCharSize.cy)))
-			&&	(
-					(lCharSize.cx > 200)
-				||	(lCharSize.cy > 200)
-				)
-			)
-		{
-			while	(
-						(lCharSize.cx > 200)
-					||	(lCharSize.cy > 200)
-					)
-			{
-				lCharSize.cx = MulDiv (lCharSize.cx, 3, 4);
-				lCharSize.cy = MulDiv (lCharSize.cy, 3, 4);
-			}
-			mServerCharacter->SetSize (lCharSize.cx, lCharSize.cy);
-		}
-
-		if	(!mServerCharacter.Visible)
-		{
-			lCharPos = GetInitialPos (lCharSize);
-			mServerCharacter->MoveTo ((short)lCharPos.x, (short)lCharPos.y, 0, &lReqID);
-		}
-
-		mShowReqId = 0;
-		lResult = mServerCharacter->Show (FALSE, &mShowReqId);
-		if	(SUCCEEDED (LogComErr (LogNormal|LogTime, lResult, _T("[%d] Show [%d]"), mServerCharacterId, mShowReqId)))
-		{
-			lRet = true;
-		}
-	}
-	if	(!lRet)
-	{
-		FreeServerCharacter ();
-		FreeAgentServer ();
+		FreeServerCharacters ();
+		FreeAgentServers ();
 		OnCancel ();
 	}
 	return lRet;
 }
 
-bool CStressTestDlg::HideServerCharacter ()
+bool CStressTestDlg::HideServerCharacters ()
 {
 	bool	lRet = false;
 	long	lReqID = 0;
 	HRESULT	lResult;
+	int		lNdx;
 
-	if	(mServerCharacter != NULL)
+	for	(lNdx = 0; lNdx < (int)mServerCharacter.GetCount(); lNdx++)
 	{
-		lResult = mServerCharacter->Hide (FALSE, &lReqID);
-		if	(SUCCEEDED (LogComErr (LogNormal|LogTime, lResult, _T("[%d] Hide [%d]"), mServerCharacterId, lReqID)))
+		if	(mServerCharacter[lNdx])
 		{
-			lRet = true;
+			lResult = mServerCharacter[lNdx]->Hide (FALSE, &lReqID);
+			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] [%d] Hide [%d]"), lNdx, mServerCharacterId[lNdx], lReqID)))
+			{
+				lRet = true;
+			}
 		}
 	}
 	return lRet;
 }
 
-bool CStressTestDlg::FreeServerCharacter ()
+bool CStressTestDlg::FreeServerCharacters (int pCharacterCount)
 {
 	bool	lRet = false;
+	int		lNdx;
 
-	mShowReqId = 0;
-	mGestureReqId = 0;
-	mSpeechReqId = 0;
-
-	if	(mServerCharacter != NULL)
+	if	(pCharacterCount < 0)
 	{
-		LogMessage (LogNormal|LogTime, _T("Free Character %s"), (BSTR)mServerCharacter.FilePath);
-		lRet = true;
+		pCharacterCount = GetServerMultiple ();
 	}
-	mServerCharacter = NULL;
+	pCharacterCount = min (pCharacterCount, (int)mServerCharacter.GetCount());
 
+	for	(lNdx = pCharacterCount; lNdx < (int)mServerCharacter.GetCount(); lNdx++)
+	{
+		if	(mServerCharacter[lNdx] != NULL)
+		{
+			LogMessage (_LOG_PROGRESS, _T("[%d] Free Character [%d] %s"), lNdx, mServerCharacterId[lNdx], (BSTR)mServerCharacter[lNdx].FilePath);
+			lRet = true;
+		}
+		mServerCharacter[lNdx] = NULL;
+
+		if	(
+				(mServerCharacterId[lNdx] != 0)
+			&&	(mCharacterServer[lNdx])
+			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mCharacterServer[lNdx]->Unload (mServerCharacterId[lNdx]), _T("[%d] Unload [%d]"), lNdx, mServerCharacterId[lNdx])))
+			)
+		{
+			lRet = true;
+		}
+		mServerCharacterId[lNdx] = 0;
+		mCharacterServer[lNdx] = 0;
+	}
+
+	mServerCharacter.SetCount (pCharacterCount);
+	mServerCharacterId.SetCount (mServerCharacter.GetCount());
+	mCharacterServer.SetCount (mServerCharacter.GetCount());
+	
+	mShowReqId.SetCount (mServerCharacter.GetCount());
+	mGestureReqId.SetCount (mServerCharacter.GetCount());
+	mSpeechReqId.SetCount (mServerCharacter.GetCount());
+
+	FreeAgentServers (max (pCharacterCount,1));
+	return lRet;
+}
+
+long CStressTestDlg::GetServerCharacterId (int pNdx) const
+{
 	if	(
-			(mServerCharacterId != 0)
-		&&	(mServer != NULL)
-		&&	(SUCCEEDED (LogComErr (LogNormal|LogTime, mServer->Unload (mServerCharacterId), _T("Unload [%d]"), mServerCharacterId)))
+			(pNdx >= 0)
+		&&	(pNdx < (INT_PTR)mServerCharacterId.GetCount())
 		)
 	{
-		lRet = true;
+		return mServerCharacterId[pNdx];
 	}
-	mServerCharacterId = 0;
-
-	return lRet;
+	return -1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CStressTestDlg::ShowControlCharacter ()
+bool CStressTestDlg::ShowControlCharacters (int pCharacterCount)
 {
 	bool					lRet = false;
 	HRESULT					lResult;
 	IDaCtlCharacters2Ptr	lCharacters;
+	int						lNdx;
+	int						lControlNdx;
 
-	GetAgentControl ();
+	if	(pCharacterCount == 0)
+	{
+		pCharacterCount = 1;
+	}
+	else
+	if	(pCharacterCount < 0)
+	{
+		pCharacterCount = GetControlMultiple ();
+	}
+
+	GetAgentControls (pCharacterCount);
 
 	if	(
-			(mControl != NULL)
-		&&	(mControlCharacterId.IsEmpty())
+			(mControl.GetCount() > 0)
+		&&	(mControl[0])
 		&&	(!mCharacterPath.IsEmpty ())
-		&&	(lCharacters = mControl.Characters)
 		)
 	{
-		if	(mControlContained.GetCheck())
+		if	((int)mControlCharacter.GetCount() < pCharacterCount)
 		{
-			mControlCharacterId = sControlCharacterIdContained;
+			mControlCharacter.SetCount (pCharacterCount);
 		}
-		else
+		mControlCharacterId.SetSize (mControlCharacter.GetCount());
+		mCharacterControl.SetCount (mControlCharacter.GetCount());
+		mShowRequest.SetCount (mControlCharacter.GetCount());
+
+		for	(lNdx = 0; lNdx < (int)mControlCharacter.GetCount(); lNdx++)
 		{
-			mControlCharacterId = sControlCharacterIdPopup;
-		}
-		lResult = lCharacters->Load (_bstr_t(mControlCharacterId), _variant_t(mCharacterPath), NULL);
-		LogComErr (LogNormal|LogTime, lResult, _T("Load [%s] as [%s]"), mCharacterPath, mControlCharacterId);
-	}
+			if	(
+					(lNdx < (int)mControl.GetCount())
+				&&	(mControl[lNdx])
+				)
+			{
+				lControlNdx = lNdx;
+			}
+			else
+			{
+				lControlNdx = 0;
+			}
 
-	if	(
-			(mControl != NULL)
-		&&	(!mControlCharacterId.IsEmpty())
-		&&	(mControlCharacter == NULL)
-		&&	(lCharacters = mControl.Characters)
-		&&	(mControlCharacter = lCharacters.Item [_bstr_t(mControlCharacterId)])
-		)
-	{
-		mControlCharacter.IdleEnabled = false;
-		mControlCharacter.SoundEffectsEnabled = mStressSound.GetCheck() ? true : false;
-	}
+			if	(
+					(!mControlCharacter [lNdx])
+				&&	(mControl[lControlNdx])
+				&&	(lCharacters = mControl[lControlNdx].Characters)
+				)
+			{
+				if	(mControlContained.GetCheck())
+				{
+					mControlCharacterId[lNdx] = sControlCharacterIdContained;
+				}
+				else
+				{
+					mControlCharacterId[lNdx] = sControlCharacterIdPopup;
+				}
+				mCharacterControl[lNdx] = mControl[lControlNdx];
 
-	if	(mControlCharacter != NULL)
-	{
-		CSize	lCharSize (mControlCharacter.Width, mControlCharacter.Height);
-		CPoint	lCharPos;
+				lResult = lCharacters->Load (_bstr_t(mControlCharacterId[lNdx]), _variant_t(mCharacterPath), NULL);
+				LogComErr (_LOG_AGENT_CALLS, lResult, _T("[%d] Load [%s] as [%s]"), lNdx, mCharacterPath, mControlCharacterId[lNdx]);
+				
+				if	(FAILED (lResult))
+				{
+					mControlCharacterId[lNdx].Empty();
+					mCharacterControl[lNdx] = NULL;
+				}
+			}
 
-		if	(
-				(lCharSize.cx > 200)
-			||	(lCharSize.cy > 200)
-			)
-		{
-			while	(
+			if	(
+					(!mControlCharacterId[lNdx].IsEmpty())
+				&&	(!mControlCharacter[lNdx])
+				&&	(mCharacterControl[lNdx])
+				&&	(lCharacters = mCharacterControl[lNdx].Characters)
+				&&	(mControlCharacter[lNdx] = lCharacters.Item [_bstr_t(mControlCharacterId[lNdx])])
+				)
+			{
+				mControlCharacter[lNdx].IdleEnabled = false;
+				mControlCharacter[lNdx].SoundEffectsEnabled = mStressSound.GetCheck() ? true : false;
+			}
+
+			if	(mControlCharacter[lNdx])
+			{
+				CSize	lCharSize (mControlCharacter[lNdx].Width, mControlCharacter[lNdx].Height);
+				CPoint	lCharPos;
+
+				if	(
 						(lCharSize.cx > 200)
 					||	(lCharSize.cy > 200)
 					)
-			{
-				lCharSize.cx = MulDiv (lCharSize.cx, 3, 4);
-				lCharSize.cy = MulDiv (lCharSize.cy, 3, 4);
+				{
+					while	(
+								(lCharSize.cx > 200)
+							||	(lCharSize.cy > 200)
+							)
+					{
+						lCharSize.cx = MulDiv (lCharSize.cx, 3, 4);
+						lCharSize.cy = MulDiv (lCharSize.cy, 3, 4);
+					}
+					mControlCharacter[lNdx].Width = (short)lCharSize.cx;
+					mControlCharacter[lNdx].Height = (short)lCharSize.cy;
+				}
+
+				if	(
+						(mControlCharacterId[lNdx].CompareNoCase (sControlCharacterIdPopup) == 0)
+					&&	(!mControlCharacter[lNdx].Visible)
+					)
+				{
+					lCharPos = GetInitialPos (lCharSize);
+					mControlCharacter[lNdx].Left = (short)lCharPos.x;
+					mControlCharacter[lNdx].Top = (short)lCharPos.y;
+				}
+
+				if	(mControlContained.GetCheck())
+				{
+					mCharacterControl[lNdx].ControlCharacter = mControlCharacter[lNdx];
+					mControlWnd[lNdx]->ShowWindow (SW_SHOWNA);
+				}
+				else
+				{
+					mCharacterControl[lNdx].ControlCharacter = NULL;
+					mControlWnd[lNdx]->ShowWindow (SW_HIDE);
+				}
+
+				mShowRequest[lNdx] = NULL;
+				lResult = mControlCharacter[lNdx]->Show (_variant_t (VARIANT_FALSE,VT_BOOL), &mShowRequest[lNdx]);
+				if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] [%s] Show [%d]"), lNdx, mControlCharacterId[lNdx], mShowRequest[lNdx].ID)))
+				{
+					lRet = true;
+				}
 			}
-			mControlCharacter.Width = (short)lCharSize.cx;
-			mControlCharacter.Height = (short)lCharSize.cy;
-		}
-
-		if	(
-				(mControlCharacterId.CompareNoCase (sControlCharacterIdPopup) == 0)
-			&&	(!mControlCharacter.Visible)
-			)
-		{
-			lCharPos = GetInitialPos (lCharSize);
-			mControlCharacter.Left = (short)lCharPos.x;
-			mControlCharacter.Top = (short)lCharPos.y;
-		}
-
-		if	(mControlContained.GetCheck())
-		{
-			mControl.ControlCharacter = mControlCharacter;
-			mControlWnd.ShowWindow (SW_SHOWNA);
-		}
-		else
-		{
-			mControlWnd.ShowWindow (SW_HIDE);
-		}
-
-		mShowRequest = NULL;
-		lResult = mControlCharacter->Show (_variant_t (VARIANT_FALSE,VT_BOOL), &mShowRequest);
-		if	(SUCCEEDED (LogComErr (LogNormal|LogTime, lResult, _T("[%s] Show [%d]"), mControlCharacterId, mShowRequest.ID)))
-		{
-			lRet = true;
 		}
 	}
-	if	(!lRet)
+
+	if	(
+			(mControlCharacter.GetCount() > 0)
+		&&	(!mControlCharacter [mControlCharacter.GetCount()-1])
+		)
 	{
-		SafeFreeSafePtr (mControlCharacter);
+		FreeControlCharacters ();
 		OnCancel ();
 	}
-
 	return lRet;
 }
 
-bool CStressTestDlg::HideControlCharacter ()
+bool CStressTestDlg::HideControlCharacters ()
 {
 	bool	lRet = false;
 	HRESULT	lResult;
+	int		lNdx;
 
-	if	(mControlCharacter)
+	for	(lNdx = 0; lNdx < (int)mControlCharacter.GetCount(); lNdx++)
 	{
-		lResult = mControlCharacter->Hide (_variant_t (VARIANT_FALSE,VT_BOOL), NULL);
-		if	(SUCCEEDED (LogComErr (LogNormal|LogTime, lResult, _T("[%s] Hide [%d]"), mControlCharacterId)))
+		if	(mControlCharacter[lNdx])
 		{
-			lRet = true;
+			lResult = mControlCharacter[lNdx]->Hide (_variant_t (VARIANT_FALSE,VT_BOOL), NULL);
+			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] [%s] Hide"), lNdx, mControlCharacterId[lNdx])))
+			{
+				lRet = true;
+			}
 		}
 	}
 	return lRet;
 }
 
-bool CStressTestDlg::FreeControlCharacter ()
+bool CStressTestDlg::FreeControlCharacters (int pCharacterCount)
 {
 	bool					lRet = false;
 	IDaCtlCharacters2Ptr	lCharacters;
+	int						lNdx;
 
-	mShowRequest = NULL;
-	mGestureRequest = NULL;
-	mSpeechRequest = NULL;
-
-	if	(mControlCharacter != NULL)
+	if	(pCharacterCount < 0)
 	{
-		LogMessage (LogNormal|LogTime, _T("Free Character %s"), (BSTR)mControlCharacter.FilePath);
-		lRet = true;
+		pCharacterCount = GetControlMultiple ();
 	}
-	mControlCharacter = NULL;
+	pCharacterCount = min (pCharacterCount, (INT_PTR)mControlCharacter.GetCount());
 
+	mShowRequest.RemoveAll();
+	mGestureRequest.RemoveAll();
+	mSpeechRequest.RemoveAll();
+
+	for	(lNdx = pCharacterCount; lNdx < (INT_PTR)mControlCharacter.GetCount(); lNdx++)
+	{
+		if	(mControlCharacter[lNdx])
+		{
+			LogMessage (_LOG_PROGRESS, _T("[%d] Free Character %s"), lNdx, (BSTR)mControlCharacter[lNdx].FilePath);
+			lRet = true;
+		}
+		mControlCharacter[lNdx] = NULL;
+
+		if	(
+				(!mControlCharacterId[lNdx].IsEmpty())
+			&&	(mCharacterControl[lNdx])
+			&&	(lCharacters = mCharacterControl[lNdx].Characters)
+			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, lCharacters->Unload (_bstr_t(mControlCharacterId[lNdx])), _T("[%d] Unload [%s]"), lNdx, mControlCharacterId[lNdx])))
+			)
+		{
+			lRet = true;
+		}
+		mControlCharacterId[lNdx].Empty ();
+		mCharacterControl[lNdx] = NULL;
+	}
+	
+	mControlCharacter.SetCount (pCharacterCount);
+	mControlCharacterId.SetSize (mControlCharacter.GetCount());
+	mCharacterControl.SetCount (mControlCharacter.GetCount());
+
+	FreeAgentControls (max (pCharacterCount,1));
+	return lRet;
+}
+
+CString CStressTestDlg::GetControlCharacterId (int pNdx) const
+{
 	if	(
-			(!mControlCharacterId.IsEmpty())
-		&&	(mControl != NULL)
-		&&	(lCharacters = mControl.Characters)
-		&&	(SUCCEEDED (LogComErr (LogNormal|LogTime, lCharacters->Unload (_bstr_t(mControlCharacterId)), _T("Unload [%s]"), mControlCharacterId)))
+			(pNdx >= 0)
+		&&	(pNdx < (INT_PTR)mControlCharacterId.GetCount())
 		)
 	{
-		lRet = true;
+		return mControlCharacterId[pNdx];
 	}
-	mControlCharacterId.Empty ();
-
-	return lRet;
+	return CString();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -964,6 +1327,8 @@ static LPCTSTR	sProfileStressRepeat = _T("StressRepeat");
 static LPCTSTR	sProfileStressSpeak = _T("StressSpeak");
 static LPCTSTR	sProfileStressSound = _T("StressSound");
 static LPCTSTR	sProfileRandomStop = _T("RandomStop");
+static LPCTSTR	sProfileStopAll = _T("RandomStopAll");
+static LPCTSTR	sProfileCharacterCount = _T("CharacterCount");
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -979,10 +1344,15 @@ void CStressTestDlg::LoadConfig ()
 	mStressRepeat.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileStressRepeat, mStressRepeat.GetCheck()) ? TRUE : FALSE);
 	mStressSpeak.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileStressSpeak, mStressSpeak.GetCheck()) ? TRUE : FALSE);
 	mStressSound.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileStressSound, mStressSound.GetCheck()) ? TRUE : FALSE);
+	mCharacterCount10.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileCharacterCount, 0) == 10);
+	mCharacterCount5.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileCharacterCount, 0) == 5);
+	mCharacterCount2.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileCharacterCount, 0) == 2);
+	mCharacterCount1.SetCheck (!mCharacterCount10.GetCheck() && !mCharacterCount5.GetCheck() && !mCharacterCount2.GetCheck());
 	mRandomStop0.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileRandomStop, !mRandomStop0.GetCheck()) ? FALSE : TRUE);
 	mRandomStop1.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileRandomStop, mRandomStop1.GetCheck() ? 1 : 0) == 1);
 	mRandomStop2.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileRandomStop, mRandomStop2.GetCheck() ? 2 : 0) == 2);
 	mRandomStop3.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileRandomStop, mRandomStop3.GetCheck() ? 3 : 0) == 3);
+	mRandomStopAll.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileStopAll, mRandomStopAll.GetCheck()) ? TRUE : FALSE);
 
 	GetWindowRect (&lWinRect);
 	lWinRect.OffsetRect (lApp->GetProfileInt (sProfileKey, sProfilePosX, lWinRect.left) - lWinRect.left, lApp->GetProfileInt (sProfileKey, sProfilePosY, lWinRect.top) - lWinRect.top);
@@ -1003,7 +1373,9 @@ void CStressTestDlg::SaveConfig ()
 	lApp->WriteProfileInt (sProfileKey, sProfileStressRepeat, mStressRepeat.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileStressSpeak, mStressSpeak.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileStressSound, mStressSound.GetCheck());
+	lApp->WriteProfileInt (sProfileKey, sProfileCharacterCount, GetServerMultiple());
 	lApp->WriteProfileInt (sProfileKey, sProfileRandomStop, mRandomStop1.GetCheck() ? 1 : mRandomStop2.GetCheck() ? 2 : mRandomStop3.GetCheck() ? 3 : 0);
+	lApp->WriteProfileInt (sProfileKey, sProfileStopAll, mRandomStopAll.GetCheck());
 
 	if	(!IsIconic ())
 	{
@@ -1121,16 +1493,65 @@ bool CStressTestDlg::CommandLineConfig ()
 			}
 			else
 			if	(
+					(lArg.CompareNoCase (_T("Count")) == 0)
+				&&	(lArgNdx < __argc-1)
+				)
+			{
+				long	lCount;
+				
+				if	(LclParseNumber (__targv [lArgNdx+1], lCount))
+				{
+					lArgNdx++;
+					if	(lCount >= 10)
+					{
+						CheckRadioButton (IDC_CHARACTERS_01, IDC_CHARACTERS_10, IDC_CHARACTERS_10);
+					}
+					else
+					if	(lCount >= 5)
+					{
+						CheckRadioButton (IDC_CHARACTERS_01, IDC_CHARACTERS_10, IDC_CHARACTERS_05);
+					}
+					else
+					if	(lCount >= 2)
+					{
+						CheckRadioButton (IDC_CHARACTERS_01, IDC_CHARACTERS_10, IDC_CHARACTERS_02);
+					}
+					else
+					if	(lCount >= 1)
+					{
+						CheckRadioButton (IDC_CHARACTERS_01, IDC_CHARACTERS_10, IDC_CHARACTERS_01);
+					}
+				}
+			}
+			else
+			if	(
 					(lArg.CompareNoCase (_T("Random")) == 0)
 				&&	(lArgNdx < __argc-1)
 				)
 			{
-				int lRandomStop = _ttoi(__targv [++lArgNdx]);
+				long lRandomStop;
 
-				mRandomStop0.SetCheck (lRandomStop == 0);
-				mRandomStop1.SetCheck (lRandomStop == 1);
-				mRandomStop2.SetCheck (lRandomStop == 2);
-				mRandomStop3.SetCheck (lRandomStop == 3);
+				if	(LclParseNumber (__targv [lArgNdx+1], lRandomStop))
+				{
+					lArgNdx++;
+					mRandomStop0.SetCheck (lRandomStop == 0);
+					mRandomStop1.SetCheck (lRandomStop == 1);
+					mRandomStop2.SetCheck (lRandomStop == 2);
+					mRandomStop3.SetCheck (lRandomStop == 3);
+				}
+			}
+			else
+			if	(
+					(lArg.CompareNoCase (_T("RandomAll")) == 0)
+				||	(lArg.CompareNoCase (_T("RandomAll+")) == 0)
+				)
+			{
+				mRandomStopAll.SetCheck (TRUE);
+			}
+			else
+			if	(lArg.CompareNoCase (_T("RandomAll-")) == 0)
+			{
+				mRandomStopAll.SetCheck (FALSE);
 			}
 			else
 			if	(
@@ -1178,8 +1599,8 @@ bool CStressTestDlg::CommandLineConfig ()
 #if	FALSE
 		LogStop ();
 		LogStart (false, lTitle+_T(".log"));
-#endif		
-		LogMessage (LogNormal|LogTime, _T("Start %s"), lTitle);
+#endif
+		LogMessage (_LOG_PROGRESS, _T("Start %s"), lTitle);
 	}
 	return lRet;
 }
@@ -1295,10 +1716,10 @@ void CStressTestDlg::OnTimer(UINT_PTR nIDEvent)
 			{
 				bool	lGestureShown = false;
 
-				while	(++mGestureNdx < mGestures.GetCount())
+				while	(++mGestureSelNdx < mGestures.GetCount())
 				{
 					PrimeMessagePump ();
-					if	(lGestureShown = ShowGesture (mGestureNdx))
+					if	(lGestureShown = ShowGesture (mGestureSelNdx))
 					{
 						break;
 					}
@@ -1311,10 +1732,10 @@ void CStressTestDlg::OnTimer(UINT_PTR nIDEvent)
 				{
 					break;
 				}
-				while	(++mCharacterNdx < mCharacterList.GetItemCount ())
+				while	(++mCharacterSelNdx < mCharacterList.GetItemCount ())
 				{
 					PrimeMessagePump ();
-					if	(ShowCharacter (mCharacterNdx))
+					if	(ShowCharacter (mCharacterSelNdx))
 					{
 						break;
 					}
@@ -1328,7 +1749,7 @@ void CStressTestDlg::OnTimer(UINT_PTR nIDEvent)
 					break;
 				}
 			}
-			while	(mCharacterNdx < mCharacterList.GetItemCount());
+			while	(mCharacterSelNdx < mCharacterList.GetItemCount());
 		}
 
 		if	(
@@ -1344,14 +1765,14 @@ void CStressTestDlg::OnTimer(UINT_PTR nIDEvent)
 		if	(
 				(mCycleTimer)
 			&&	(mCharacterList.GetItemCount() > 0)
-			&&	(mCharacterNdx >= mCharacterList.GetItemCount()-1)
-			&&	(mGestureNdx >= mGestures.GetCount())
+			&&	(mCharacterSelNdx >= mCharacterList.GetItemCount()-1)
+			&&	(mGestureSelNdx >= mGestures.GetCount())
 			)
 		{
 			PrimeMessagePump ();
 			mCycleNum++;
-			mCharacterNdx = -1;
-			mGestureNdx = -1;
+			mCharacterSelNdx = -1;
+			mGestureSelNdx = -1;
 
 			if	(!mStressRepeat.GetCheck ())
 			{
@@ -1360,6 +1781,8 @@ void CStressTestDlg::OnTimer(UINT_PTR nIDEvent)
 				OnRandomStop ();
 			}
 		}
+		
+		mCycleIndicator.ShowWindow (IsAnimating()?TRUE:FALSE);
 	}
 	else
 	if	(
@@ -1382,15 +1805,15 @@ void CStressTestDlg::OnTimer(UINT_PTR nIDEvent)
 			)
 #endif
 		{
-			if	(mServerCharacter)
+			if	(mServerCharacter.GetCount() > 0)
 			{
-				LogMessage (LogDetails|LogTime, _T("  Random stop [%d %d %d]"), mShowReqId, mGestureReqId, mSpeechReqId);
+				LogMessage (_LOG_PROGRESS_MORE, _T("  Random stop [%d %d %d]"), (mShowReqId.GetCount()>0)?mShowReqId[0]:-1, (mGestureReqId.GetCount()>0)?mGestureReqId[0]:-1, (mSpeechReqId.GetCount()>0)?mSpeechReqId[0]:-1);
 			}
-			if	(mControlCharacter)
+			if	(mControlCharacter.GetCount() > 0)
 			{
-				LogMessage (LogDetails|LogTime, _T("  Random stop [%d %d] [%d %d] [%d %d]"), mShowRequest.ID, mShowRequest.Status, mGestureRequest.ID, mGestureRequest.Status, mSpeechRequest.ID, mSpeechRequest.Status);
+				LogMessage (_LOG_PROGRESS_MORE, _T("  Random stop [%d %d] [%d %d] [%d %d]"), (mShowRequest.GetCount()>0)?mShowRequest[0].ID:-1, (mShowRequest.GetCount()>0)?mShowRequest[0].Status:-1, (mGestureRequest.GetCount()>0)?mGestureRequest[0].ID:-1, (mGestureRequest.GetCount()>0)?mGestureRequest[0].Status:-1, (mSpeechRequest.GetCount()>0)?mSpeechRequest[0].ID:-1, (mSpeechRequest.GetCount()>0)?mSpeechRequest[0].Status:-1);
 			}
-			Stop ();
+			Stop (true);
 			OnRandomStop ();
 			OnTimer (mCycleTimer);
 		}
@@ -1410,7 +1833,7 @@ void CStressTestDlg::OnItemChangedCharacterList(NMHDR* pNMHDR, LRESULT* pResult)
 		&&	(lNotify->uNewState & LVIS_SELECTED)
 		)
 	{
-		if	(mCharacterNdx != lNotify->iItem)
+		if	(mCharacterSelNdx != lNotify->iItem)
 		{
 			ShowCharacter (lNotify->iItem);
 		}
@@ -1419,7 +1842,7 @@ void CStressTestDlg::OnItemChangedCharacterList(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CStressTestDlg::OnSelChangeGestures()
 {
-	if	(mGestureNdx != mGestures.GetCurSel ())
+	if	(mGestureSelNdx != mGestures.GetCurSel ())
 	{
 		ShowGesture (mGestures.GetCurSel ());
 	}
@@ -1428,6 +1851,26 @@ void CStressTestDlg::OnSelChangeGestures()
 void CStressTestDlg::OnControlMode()
 {
 	ShowControlMode ();
+}
+
+void CStressTestDlg::OnCharacterCount()
+{
+	if	(mStressServer.GetCheck())
+	{
+		FreeServerCharacters (-1);
+		if	(mCycleTimer)
+		{
+			ShowServerCharacters (-1);
+		}
+	}
+	if	(mStressControl.GetCheck())
+	{
+		FreeControlCharacters (-1);
+		if	(mCycleTimer)
+		{
+			ShowControlCharacters (-1);
+		}
+	}
 }
 
 void CStressTestDlg::OnRandomStop()
@@ -1457,7 +1900,7 @@ void CStressTestDlg::OnRandomStop()
 			lRandomTime = ((DWORD)rand() % 50000) + 500;
 		}
 
-		//LogMessage (LogNormal|LogTime, _T("Starting Random stop [%u]"), lRandomTime);
+		//LogMessage (_LOG_PROGRESS_MORE, _T("Starting Random stop [%u]"), lRandomTime);
 		mRandomStopTimer = SetTimer ((UINT_PTR)&mRandomStopTimer, lRandomTime, NULL);
 	}
 	else
@@ -1490,10 +1933,10 @@ void CStressTestDlg::OnClose()
 void CStressTestDlg::OnDestroy()
 {
 	SaveConfig ();
-	FreeServerCharacter ();
-	FreeAgentServer ();
-	FreeControlCharacter ();
-	FreeAgentControl ();
+	FreeServerCharacters ();
+	FreeAgentServers ();
+	FreeControlCharacters ();
+	FreeAgentControls ();
 
 	CDialog::OnDestroy();
 }
@@ -1507,7 +1950,7 @@ void CStressTestDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwThrea
 		&&	(mServerCharacter != NULL)
 		)
 	{
-		LogComErr (LogNormal|LogTime, mServerCharacter->Activate (ActiveState_InputActive), _T("[%d] Activate ActiveState_Active"), mServerCharacterId);
+		LogComErr (_LOG_PROGRESS, mServerCharacter->Activate (ActiveState_InputActive), _T("[%d] Activate ActiveState_Active"), mServerCharacterId);
 	}
 #endif
 #if	FALSE
@@ -1516,7 +1959,7 @@ void CStressTestDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwThrea
 		&&	(mControlCharacter != NULL)
 		)
 	{
-		LogComErr (LogNormal|LogTime, mControlCharacter->Activate (_variant_t((short)ActiveState_InputActive,VT_I4), NULL), _T("[%s] Activate ActiveState_Active"), mControlCharacterId);
+		LogComErr (_LOG_PROGRESS, mControlCharacter->Activate (_variant_t((short)ActiveState_InputActive,VT_I4), NULL), _T("[%s] Activate ActiveState_Active"), mControlCharacterId);
 	}
 #endif
 }
@@ -1528,8 +1971,11 @@ void CStressTestDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwThrea
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Command (long CommandID, IDaSvrUserInput2 *UserInput)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Command"), pThis->mServerCharacterId, pThis->m_dwRef);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Command"), pThis->GetServerCharacterId(0), pThis->m_dwRef);
+	}
 #endif
 	return S_OK;
 }
@@ -1537,8 +1983,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Command (long Comman
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::ActivateInputState (long CharacterID, long Activated)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::ActivateInputState [%d] [%d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Activated);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::ActivateInputState [%d] [%d]"), pThis->GetServerCharacterId((int)pThis->mServerCharacterId.Find(CharacterID)), pThis->m_dwRef, CharacterID, Activated);
+	}
 #endif
 	return S_OK;
 }
@@ -1546,8 +1995,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::ActivateInputState (
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Restart (void)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Restart"), pThis->mServerCharacterId, pThis->m_dwRef);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Restart"), pThis->GetServerCharacterId(0), pThis->m_dwRef);
+	}
 #endif
 	return S_OK;
 }
@@ -1555,8 +2007,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Restart (void)
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Shutdown (void)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Shutdown"), pThis->mServerCharacterId, pThis->m_dwRef);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Shutdown"), pThis->GetServerCharacterId(0), pThis->m_dwRef);
+	}
 #endif
 	return S_OK;
 }
@@ -1564,13 +2019,20 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Shutdown (void)
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::VisibleState (long CharacterID, long Visible, long Cause)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	long lCause = -1;
-	if	(pThis->mServerCharacter != NULL)
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
 	{
-		pThis->mServerCharacter->GetVisibilityCause (&lCause);
+		long	lCause = -1;
+		int		lNdx = (int)pThis->mServerCharacterId.Find (CharacterID);
+		if	(
+				(lNdx < (int)pThis->mServerCharacter.GetCount())
+			&&	(pThis->mServerCharacter[lNdx])
+			)
+		{
+			pThis->mServerCharacter[lNdx]->GetVisibilityCause (&lCause);
+		}
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::VisibleState [%d] [%d] cause [%d] [%d]"), pThis->GetServerCharacterId(lNdx), pThis->m_dwRef, CharacterID, Visible, Cause, lCause);
 	}
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::VisibleState [%d] [%d] cause [%d] [%d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Visible, Cause, lCause);
 #endif
 	return S_OK;
 }
@@ -1578,10 +2040,13 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::VisibleState (long C
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Click (long CharacterID, short Keys, long x, long y)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Click [%d] [%4.4X] [%d %d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Click [%d] [%4.4X] [%d %d]"), pThis->GetServerCharacterId((int)pThis->mServerCharacterId.Find(CharacterID)), pThis->m_dwRef, CharacterID, Keys, x, y);
+	}
 #else
-	LogMessage (LogNormal|LogTime, _T("Click [%d]"), CharacterID);
+	LogMessage (_LOG_PROGRESS, _T("Click [%d]"), CharacterID);
 #endif
 	return S_OK;
 }
@@ -1589,8 +2054,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Click (long Characte
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::DblClick (long CharacterID, short Keys, long x, long y)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::DblClick [%d] [%4.4X] [%d %d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::DblClick [%d] [%4.4X] [%d %d]"), pThis->GetServerCharacterId((int)pThis->mServerCharacterId.Find(CharacterID)), pThis->m_dwRef, CharacterID, Keys, x, y);
+	}
 #endif
 	pThis->BringWindowToTop ();
 	return S_OK;
@@ -1599,8 +2067,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::DblClick (long Chara
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::DragStart (long CharacterID, short Keys, long x, long y)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::DragStart [%d] [%4.4X] [%d %d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::DragStart [%d] [%4.4X] [%d %d]"), pThis->GetServerCharacterId((int)pThis->mServerCharacterId.Find(CharacterID)), pThis->m_dwRef, CharacterID, Keys, x, y);
+	}
 #endif
 	return S_OK;
 }
@@ -1608,8 +2079,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::DragStart (long Char
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::DragComplete (long CharacterID, short Keys, long x, long y)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), pThis->GetServerCharacterId((int)pThis->mServerCharacterId.Find(CharacterID)), pThis->m_dwRef, CharacterID, Keys, x, y);
+	}
 #endif
 	return S_OK;
 }
@@ -1617,8 +2091,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::DragComplete (long C
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::RequestStart (long RequestID)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::RequestStart [%d]"), pThis->mServerCharacterId, pThis->m_dwRef, RequestID);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::RequestStart [%d]"), pThis->GetServerCharacterId(0), pThis->m_dwRef, RequestID);
+	}
 #endif
 	return S_OK;
 }
@@ -1626,20 +2103,34 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::RequestStart (long R
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::RequestComplete (long RequestID, long Result)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::RequestComplete [%d] [%8.8X]"), pThis->mServerCharacterId, pThis->m_dwRef, RequestID, Result);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::RequestComplete [%d] [%8.8X]"), pThis->GetServerCharacterId(0), pThis->m_dwRef, RequestID, Result);
+	}
 #endif
-	if	(RequestID == pThis->mShowReqId)
+	int	lNdx;
+	
+	for	(lNdx = 0; lNdx < (int)pThis->mShowReqId.GetCount(); lNdx++)
 	{
-		pThis->mShowReqId = 0;
+		if	(RequestID == pThis->mShowReqId[lNdx])
+		{
+			pThis->mShowReqId[lNdx] = 0;
+		}
 	}
-	if	(RequestID == pThis->mGestureReqId)
+	for	(lNdx = 0; lNdx < (int)pThis->mGestureReqId.GetCount(); lNdx++)
 	{
-		pThis->mGestureReqId = 0;
+		if	(RequestID == pThis->mGestureReqId[lNdx])
+		{
+			pThis->mGestureReqId[lNdx] = 0;
+		}
 	}
-	if	(RequestID == pThis->mSpeechReqId)
+	for	(lNdx = 0; lNdx < (int)pThis->mSpeechReqId.GetCount(); lNdx++)
 	{
-		pThis->mSpeechReqId = 0;
+		if	(RequestID == pThis->mSpeechReqId[lNdx])
+		{
+			pThis->mSpeechReqId[lNdx] = 0;
+		}
 	}
 	return S_OK;
 }
@@ -1647,8 +2138,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::RequestComplete (lon
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::BookMark (long BookMarkID)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::BookMark"), pThis->mServerCharacterId, pThis->m_dwRef);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::BookMark"), pThis->GetServerCharacterId(0), pThis->m_dwRef);
+	}
 #endif
 	return S_OK;
 }
@@ -1656,8 +2150,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::BookMark (long BookM
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Idle (long CharacterID, long Start)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Idle [%d] [%d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Start);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Idle [%d] [%d]"), pThis->GetServerCharacterId((int)pThis->mServerCharacterId.Find(CharacterID)), pThis->m_dwRef, CharacterID, Start);
+	}
 #endif
 	return S_OK;
 }
@@ -1665,13 +2162,20 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Idle (long Character
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Move (long CharacterID, long x, long y, long Cause)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	long lCause = -1;
-	if	(pThis->mServerCharacter != NULL)
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
 	{
-		pThis->mServerCharacter->GetMoveCause (&lCause);
+		long	lCause = -1;
+		int		lNdx = (int)pThis->mServerCharacterId.Find (CharacterID);
+		if	(
+				(lNdx < (int)pThis->mServerCharacter.GetCount())
+			&&	(pThis->mServerCharacter[lNdx])
+			)
+		{
+			pThis->mServerCharacter[lNdx]->GetMoveCause (&lCause);
+		}
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Move [%d] [%d %d] cause [%d] [%d]"), pThis->GetServerCharacterId(lNdx), pThis->m_dwRef, CharacterID, x, y, Cause, lCause);
 	}
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Move [%d] [%d %d] cause [%d] [%d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, x, y, Cause, lCause);
 #endif
 	return S_OK;
 }
@@ -1679,8 +2183,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Move (long Character
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Size (long CharacterID, long Width, long Height)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Size [%d] [%d %d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Width, Height);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Size [%d] [%d %d]"), pThis->GetServerCharacterId((int)pThis->mServerCharacterId.Find(CharacterID)), pThis->m_dwRef, CharacterID, Width, Height);
+	}
 #endif
 	return S_OK;
 }
@@ -1688,8 +2195,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Size (long Character
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::BalloonVisibleState (long CharacterID, long Visible)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::BalloonVisibleState [%d] [%d]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Visible);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::BalloonVisibleState [%d] [%d]"), pThis->GetServerCharacterId((int)pThis->mServerCharacterId.Find(CharacterID)), pThis->m_dwRef, CharacterID, Visible);
+	}
 #endif
 	return S_OK;
 }
@@ -1697,8 +2207,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::BalloonVisibleState 
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::HelpComplete (long CharacterID, long CommandID, long Cause)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::HelpComplete"), pThis->mServerCharacterId, pThis->m_dwRef);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::HelpComplete"), pThis->GetServerCharacterId((int)pThis->mServerCharacterId.Find(CharacterID)), pThis->m_dwRef);
+	}
 #endif
 	return S_OK;
 }
@@ -1706,8 +2219,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::HelpComplete (long C
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::ListeningState (long CharacterID, long Listening, long Cause)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::ListeningState"), pThis->mServerCharacterId, pThis->m_dwRef);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::ListeningState"), pThis->GetServerCharacterId((int)pThis->mServerCharacterId.Find(CharacterID)), pThis->m_dwRef);
+	}
 #endif
 	return S_OK;
 }
@@ -1715,8 +2231,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::ListeningState (long
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::DefaultCharacterChange (BSTR GUID)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::DefaultCharacterChange [%ls]"), pThis->mServerCharacterId, pThis->m_dwRef, GUID);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::DefaultCharacterChange [%ls]"), pThis->GetServerCharacterId(0), pThis->m_dwRef, GUID);
+	}
 #endif
 	return S_OK;
 }
@@ -1724,8 +2243,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::DefaultCharacterChan
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::AgentPropertyChange(void)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::AgentPropertyChange"), pThis->mServerCharacterId, pThis->m_dwRef);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::AgentPropertyChange"), pThis->GetServerCharacterId(0), pThis->m_dwRef);
+	}
 #endif
 	return S_OK;
 }
@@ -1733,8 +2255,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::AgentPropertyChange(
 HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::ActiveClientChange (long CharacterID, long Status)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::ActiveClientChange [%d] [%8.8X]"), pThis->mServerCharacterId, pThis->m_dwRef, CharacterID, Status);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::ActiveClientChange [%d] [%8.8X]"), pThis->GetServerCharacterId((int)pThis->mServerCharacterId.Find(CharacterID)), pThis->m_dwRef, CharacterID, Status);
+	}
 #endif
 	return S_OK;
 }
@@ -1745,153 +2270,217 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::ActiveClientChange (
 
 void CStressTestDlg::OnCtlActivateInput(LPCTSTR CharacterID)
 {
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlActivateInput [%s]"), mControlCharacterId, CharacterID);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlActivateInput [%s]"), GetControlCharacterId((int)FindString(mControlCharacterId,CharacterID)), CharacterID);
+	}
 #endif
 }
 
 void CStressTestDlg::OnCtlDeactivateInput(LPCTSTR CharacterID)
 {
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlDeactivateInput [%s]"), mControlCharacterId, CharacterID);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlDeactivateInput [%s]"), GetControlCharacterId((int)FindString(mControlCharacterId,CharacterID)), CharacterID);
+	}
 #endif
 }
 
 void CStressTestDlg::OnCtlClick (LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlClick [%s] [%d] [%d] [%d %d]"), mControlCharacterId, CharacterID, Button, Shift, X, Y);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlClick [%s] [%d] [%d] [%d %d]"), GetControlCharacterId((int)FindString(mControlCharacterId,CharacterID)), CharacterID, Button, Shift, X, Y);
+	}
 #else
-	LogMessage (LogNormal|LogTime, _T("Click [%s]"), CharacterID);
+	LogMessage (_LOG_PROGRESS, _T("Click [%s]"), CharacterID);
 #endif
 }
 
 void CStressTestDlg::OnCtlDblClick (LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlDblClick [%s] [%d] [%d] [%d %d]"), mControlCharacterId, CharacterID, Button, Shift, X, Y);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlDblClick [%s] [%d] [%d] [%d %d]"), GetControlCharacterId((int)FindString(mControlCharacterId,CharacterID)), CharacterID, Button, Shift, X, Y);
+	}
 #endif
 	BringWindowToTop ();
 }
 
 void CStressTestDlg::OnCtlDragStart (LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlDragStart [%s] [%d] [%d] [%d %d]"), mControlCharacterId, CharacterID, Button, Shift, X, Y);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlDragStart [%s] [%d] [%d] [%d %d]"), GetControlCharacterId((int)FindString(mControlCharacterId,CharacterID)), CharacterID, Button, Shift, X, Y);
+	}
 #endif
 }
 
 void CStressTestDlg::OnCtlDragComplete (LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlDragComplete [%s] [%d] [%d] [%d %d]"), mControlCharacterId, CharacterID, Button, Shift, X, Y);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlDragComplete [%s] [%d] [%d] [%d %d]"), GetControlCharacterId((int)FindString(mControlCharacterId,CharacterID)), CharacterID, Button, Shift, X, Y);
+	}
 #endif
 }
 
 void CStressTestDlg::OnCtlShow (LPCTSTR CharacterID, VisibilityCauseType Cause)
 {
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlShow [%s] [%d]"), mControlCharacterId, CharacterID, Cause);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlShow [%s] [%d]"), GetControlCharacterId((int)FindString(mControlCharacterId,CharacterID)), CharacterID, Cause);
+	}
 #endif
 }
 
 void CStressTestDlg::OnCtlHide (LPCTSTR CharacterID, VisibilityCauseType Cause)
 {
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlHide [%s] [%d]"), mControlCharacterId, CharacterID, Cause);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlHide [%s] [%d]"), GetControlCharacterId((int)FindString(mControlCharacterId,CharacterID)), CharacterID, Cause);
+	}
 #endif
 }
 
 void CStressTestDlg::OnCtlRequestStart (IDaCtlRequest* Request)
 {
 	IDaCtlRequestPtr lRequest (Request);
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlRequestStart [%d] [%d] [%8.8X] [%ls]"), mControlCharacterId, lRequest.ID, lRequest.Status, lRequest.Number, (BSTR)lRequest.Description);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlRequestStart [%d] [%d] [%8.8X] [%ls]"), GetControlCharacterId(0), lRequest.ID, lRequest.Status, lRequest.Number, (BSTR)lRequest.Description);
+	}
 #endif
 }
 
 void CStressTestDlg::OnCtlRequestComplete (IDaCtlRequest* Request)
 {
-	IDaCtlRequestPtr lRequest (Request);
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlRequestComplete [%d] [%d] [%8.8X] [%ls]"), mControlCharacterId, lRequest.ID, lRequest.Status, lRequest.Number, (BSTR)lRequest.Description);
+	IDaCtlRequestPtr	lRequest (Request);
+	int					lNdx;
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlRequestComplete [%d] [%d] [%8.8X] [%ls]"), GetControlCharacterId(0), lRequest.ID, lRequest.Status, lRequest.Number, (BSTR)lRequest.Description);
+	}
 #endif
-	if	(
-			(mShowRequest)
-		&&	(mShowRequest.ID == lRequest.ID)
-		)
+	for	(lNdx = 0; lNdx < (int)mShowRequest.GetCount(); lNdx++)
 	{
-		mShowRequest = NULL;
+		if	(
+				(mShowRequest[lNdx])
+			&&	(mShowRequest[lNdx].ID == lRequest.ID)
+			)
+		{
+			mShowRequest[lNdx] = NULL;
+		}
 	}
-	if	(
-			(mGestureRequest)
-		&&	(mGestureRequest.ID == lRequest.ID)
-		)
+	for	(lNdx = 0; lNdx < (int)mGestureRequest.GetCount(); lNdx++)
 	{
-		mGestureRequest = NULL;
+		if	(
+				(mGestureRequest[lNdx])
+			&&	(mGestureRequest[lNdx].ID == lRequest.ID)
+			)
+		{
+			mGestureRequest[lNdx] = NULL;
+		}
 	}
-	if	(
-			(mSpeechRequest)
-		&&	(mSpeechRequest.ID == lRequest.ID)
-		)
+	for	(lNdx = 0; lNdx < (int)mSpeechRequest.GetCount(); lNdx++)
 	{
-		mSpeechRequest = NULL;
+		if	(
+				(mSpeechRequest[lNdx])
+			&&	(mSpeechRequest[lNdx].ID == lRequest.ID)
+			)
+		{
+			mSpeechRequest[lNdx] = NULL;
+		}
 	}
 }
 
 void CStressTestDlg::OnCtlCommand (IDaCtlUserInput* UserInput)
 {
 	IDaCtlUserInputPtr lUserInput (UserInput);
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlCommand [%ls] [%ls]"), mControlCharacterId, (BSTR)lUserInput.CharacterID, (BSTR)lUserInput.Name);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlCommand [%ls] [%ls]"), GetControlCharacterId(0), (BSTR)lUserInput.CharacterID, (BSTR)lUserInput.Name);
+	}
 #endif
 }
 
 void CStressTestDlg::OnCtlIdleStart (LPCTSTR CharacterID)
 {
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlIdleStart [%s]"), mControlCharacterId, CharacterID);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlIdleStart [%s]"), GetControlCharacterId((int)FindString(mControlCharacterId,CharacterID)), CharacterID);
+	}
 #endif
 }
 
 void CStressTestDlg::OnCtlIdleComplete (LPCTSTR CharacterID)
 {
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlIdleComplete [%s]"), mControlCharacterId, CharacterID);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlIdleComplete [%s]"), GetControlCharacterId((int)FindString(mControlCharacterId,CharacterID)), CharacterID);
+	}
 #endif
 }
 
 void CStressTestDlg::OnCtlMove (LPCTSTR CharacterID, short X, short Y, MoveCauseType Cause)
 {
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlMove [%s] [%d %d] [%d]"), mControlCharacterId, CharacterID, X, Y, Cause);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlMove [%s] [%d %d] [%d]"), GetControlCharacterId((int)FindString(mControlCharacterId,CharacterID)), CharacterID, X, Y, Cause);
+	}
 #endif
 }
 
 void CStressTestDlg::OnCtlSize (LPCTSTR CharacterID, short Width, short Height)
 {
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlSize [%s] [%d %d]"), mControlCharacterId, CharacterID, Width, Height);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlSize [%s] [%d %d]"), GetControlCharacterId((int)FindString(mControlCharacterId,CharacterID)), CharacterID, Width, Height);
+	}
 #endif
 }
 
 void CStressTestDlg::OnCtlBalloonShow(LPCTSTR CharacterID)
 {
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlBalloonShow [%s]"), mControlCharacterId, CharacterID);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlBalloonShow [%s]"), GetControlCharacterId((int)FindString(mControlCharacterId,CharacterID)), CharacterID);
+	}
 #endif
 }
 
 void CStressTestDlg::OnCtlBalloonHide(LPCTSTR CharacterID)
 {
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlBalloonHide [%s]"), mControlCharacterId, CharacterID);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlBalloonHide [%s]"), GetControlCharacterId((int)FindString(mControlCharacterId,CharacterID)), CharacterID);
+	}
 #endif
 }
 
 void CStressTestDlg::OnCtlActiveClientChange (LPCTSTR CharacterID, BOOL Active)
 {
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlActiveClientChange [%s] [%d]"), mControlCharacterId, CharacterID, Active);
+#ifdef	_LOG_NOTIFY
+	if	(LogIsActive (_LOG_NOTIFY))
+	{
+		LogMessage (_LOG_NOTIFY, _T("[%s] CStressTestDlg::OnCtlActiveClientChange [%s] [%d]"), GetControlCharacterId((int)FindString(mControlCharacterId,CharacterID)), CharacterID, Active);
+	}
 #endif
 }

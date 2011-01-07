@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -1541,15 +1541,15 @@ void __stdcall CSapi5InputContext::InputNotifyCallback(WPARAM wParam, LPARAM lPa
 
 			if	(
 					(lEvent.ulStreamNum >= lThis->mEventLastStream)
-				&&	(lThis->mEventSinks.GetCount() > 0)
+				&&	(lThis->GetNotifySinkCount() > 0)
 				)
 			{
 				INT_PTR					lNdx;
-				ISapi5InputEventSink *	lEventSink;
+				_ISapi5InputEventSink *	lEventSink;
 
-				for	(lNdx = 0; lNdx < (INT_PTR)lThis->mEventSinks.GetCount(); lNdx++)
+				for	(lNdx = 0; lNdx < lThis->GetNotifySinkCount(); lNdx++)
 				{
-					if	(lEventSink = lThis->mEventSinks [lNdx])
+					if	(lEventSink = lThis->GetNotifySink (lNdx))
 					{
 						try
 						{
@@ -1566,53 +1566,12 @@ void __stdcall CSapi5InputContext::InputNotifyCallback(WPARAM wParam, LPARAM lPa
 
 //////////////////////////////////////////////////////////////////////
 
-bool CSapi5InputContext::AddEventSink (ISapi5InputEventSink * pEventSink, CSapi5InputContext * pPrevSourceContext)
+void CSapi5InputContext::FromPrevInputContext (CSapi5InputContext * pPrevInputContext)
 {
-	bool	lRet = false;
-
-	if	(pEventSink)
+	if	(pPrevInputContext)
 	{
-		if	(mEventSinks.AddUnique (pEventSink) >= 0)
-		{
-			if	(pPrevSourceContext)
-			{
-				mEventLastStream = max (mEventLastStream, pPrevSourceContext->mEventLastStream);
-			}
-			lRet = true;
-		}
+		mEventLastStream = max (mEventLastStream, pPrevInputContext->mEventLastStream);
 	}
-	return lRet;
-}
-
-bool CSapi5InputContext::RemoveEventSink (ISapi5InputEventSink * pEventSink)
-{
-	bool	lRet = false;
-
-	if	(pEventSink)
-	{
-		if	(mEventSinks.Remove (pEventSink) >= 0)
-		{
-			lRet = true;
-		}
-	}
-	return lRet;
-}
-
-bool CSapi5InputContext::FindEventSink (ISapi5InputEventSink * pEventSink) const
-{
-	if	(
-			(pEventSink)
-		&&	(mEventSinks.Find (pEventSink) >= 0)
-		)
-	{
-		return true;
-	}
-	return false;
-}
-
-void CSapi5InputContext::ClearEventSinks ()
-{
-	mEventSinks.RemoveAll ();
 }
 
 //////////////////////////////////////////////////////////////////////

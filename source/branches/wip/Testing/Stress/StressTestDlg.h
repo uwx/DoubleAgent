@@ -18,6 +18,7 @@ public:
 	CButton	mRandomStop1;
 	CButton	mRandomStop2;
 	CButton	mRandomStop3;
+	CButton	mRandomStopAll;
 	CButton	mStressRepeat;
 	CButton	mStressControl;
 	CButton	mControlContained;
@@ -27,9 +28,14 @@ public:
 	CButton	mStressSpeak;
 	CStatic	mControlPlacer;
 	CListCtrl	mCharacterList;
+	CButton	mCharacterCount1;
+	CButton	mCharacterCount2;
+	CButton	mCharacterCount5;
+	CButton	mCharacterCount10;
 	CButton	mOkButton;
 	CButton	mCancelButton;
 	CListBox	mGestures;
+	CStatic mCycleIndicator;
 	//}}AFX_DATA
 
 // Operations
@@ -57,6 +63,7 @@ protected:
 	afx_msg void OnSelChangeGestures();
 	afx_msg void OnItemChangedCharacterList(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnControlMode();
+	afx_msg void OnCharacterCount();
 	afx_msg void OnRandomStop();
 	afx_msg void OnCtlActivateInput(LPCTSTR CharacterID);
 	afx_msg void OnCtlDeactivateInput(LPCTSTR CharacterID);
@@ -122,46 +129,52 @@ protected:
 	bool ShowGesture (LPCTSTR pGestureName);
 
 	bool IsAnimating ();
-	bool Stop ();
+	bool Stop (bool pRandom = false);
 	CPoint GetInitialPos (const CSize & pInitialSize);
 
-	void GetAgentServer ();
-	void FreeAgentServer ();
+	void GetAgentServers (int pServerCount = 0);
+	void FreeAgentServers (int pServerCount = 0);
+	int GetServerMultiple () const;
 
-	void GetAgentControl ();
-	void FreeAgentControl ();
+	void GetAgentControls (int pControlCount = 0);
+	void FreeAgentControls (int pControlCount = 0);
+	int GetControlMultiple () const;
 
-	bool ShowServerCharacter ();
-	bool HideServerCharacter ();
-	bool FreeServerCharacter ();
+	bool ShowServerCharacters (int pCharacterCount = 0);
+	bool HideServerCharacters ();
+	bool FreeServerCharacters (int pCharacterCount = 0);
+	long GetServerCharacterId (int pNdx) const;
 
-	bool ShowControlCharacter ();
-	bool HideControlCharacter ();
-	bool FreeControlCharacter ();
+	bool ShowControlCharacters (int pCharacterCount = 0);
+	bool HideControlCharacters ();
+	bool FreeControlCharacters (int pCharacterCount = 0);
+	CString GetControlCharacterId (int pNdx) const;
 
 protected:
-	int						mCharacterNdx;
-	CString					mCharacterPath;
-	IDaServer2Ptr			mServer;
-	long					mServerSinkId;
-	IDaSvrCharacter2Ptr		mServerCharacter;
-	long					mServerCharacterId;
-	IDaControl2Ptr			mControl;
-	CWnd					mControlWnd;
-	CRect					mControlRect;
-	IDaCtlCharacter2Ptr		mControlCharacter;
-	CString					mControlCharacterId;
-	int						mGestureNdx;
-	DWORD					mGestureStartTime;
-	long					mShowReqId;
-	long					mGestureReqId;
-	long					mSpeechReqId;
-	IDaCtlRequestPtr		mShowRequest;
-	IDaCtlRequestPtr		mGestureRequest;
-	IDaCtlRequestPtr		mSpeechRequest;
-	int						mCycleNum;
-	UINT_PTR				mCycleTimer;
-	UINT_PTR				mRandomStopTimer;
+	int																									mCharacterSelNdx;
+	CString																								mCharacterPath;
+	int																									mGestureSelNdx;
+	DWORD																								mGestureStartTime;
+	CAtlArrayEx <IDaServer2Ptr, CComPtrElementTraits <IDaServer2Ptr, IDaServer2> >						mServer;
+	CAtlTypeArray <long>																				mServerSinkId;
+	CAtlArrayEx <IDaSvrCharacter2Ptr, CComPtrElementTraits <IDaSvrCharacter2Ptr, IDaSvrCharacter2> >	mServerCharacter;
+	CAtlTypeArray <long>																				mServerCharacterId;
+	CAtlArrayEx <IDaServer2Ptr, CComPtrElementTraits <IDaServer2Ptr, IDaServer2> >						mCharacterServer;
+	CAtlArrayEx <IDaControl2Ptr, CComPtrElementTraits <IDaControl2Ptr, IDaControl2> >					mControl;
+	CAtlArrayEx <IDaCtlCharacter2Ptr, CComPtrElementTraits <IDaCtlCharacter2Ptr, IDaCtlCharacter2> >	mControlCharacter;
+	CStringArray																						mControlCharacterId;
+	CAtlOwnPtrArray <CWnd>																				mControlWnd;
+	CAtlArrayEx <IDaControl2Ptr, CComPtrElementTraits <IDaControl2Ptr, IDaControl2> >					mCharacterControl;
+	CRect																								mControlRect;
+	CAtlTypeArray <long>																				mShowReqId;
+	CAtlTypeArray <long>																				mGestureReqId;
+	CAtlTypeArray <long>																				mSpeechReqId;
+	CAtlArrayEx <IDaCtlRequestPtr, CComPtrElementTraits <IDaCtlRequestPtr, IDaCtlRequest> >				mShowRequest;
+	CAtlArrayEx <IDaCtlRequestPtr, CComPtrElementTraits <IDaCtlRequestPtr, IDaCtlRequest> >				mGestureRequest;
+	CAtlArrayEx <IDaCtlRequestPtr, CComPtrElementTraits <IDaCtlRequestPtr, IDaCtlRequest> >				mSpeechRequest;
+	int																									mCycleNum;
+	UINT_PTR																							mCycleTimer;
+	UINT_PTR																							mRandomStopTimer;
 };
 
 /////////////////////////////////////////////////////////////////////////////

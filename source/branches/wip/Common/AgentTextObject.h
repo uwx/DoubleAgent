@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -22,7 +22,7 @@
 #include "AgentText.h"
 #include "EventNotify.h"
 #include "SapiVoiceCache.h"
-#include "SapiVoiceEventSink.h"
+#include "SapiVoice.h"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -36,7 +36,7 @@ class ATL_NO_VTABLE CAgentTextObject :
 	public IUnknown,
 	public CEventNotifyClient<CAgentTextObject>,
 	public CSapiVoiceClient,
-	public _ISapiVoiceEventSink
+	public CNotifySourceSink <CSapiVoice, _ISapiVoiceEventSink>
 {
 public:
 	CAgentTextObject ();

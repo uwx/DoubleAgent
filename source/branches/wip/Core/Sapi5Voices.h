@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -41,7 +41,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma warning (push)
-#pragma warning (disable: 4251 4275)
+#pragma warning (disable: 4251)
 /////////////////////////////////////////////////////////////////////////////
 
 class _DACORE_IMPEXP CSapi5VoiceInfo
@@ -95,42 +95,42 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CSapi5Voices : public CAtlOwnPtrArray <CSapi5VoiceInfo>, protected CSapiLanguageMatch
+class CSapi5Voices : public CAtlOwnPtrArray <CSapi5VoiceInfo>, protected CSapiLanguageMatch
 {
-	DECLARE_DLL_OBJECT(CSapi5Voices)
+	DECLARE_DLL_OBJECT_EX(CSapi5Voices, _DACORE_IMPEXP)
 protected:
 	CSapi5Voices();
 public:
-	virtual ~CSapi5Voices();
-	static CSapi5Voices * CreateInstance ();
+	_DACORE_IMPEXP virtual ~CSapi5Voices();
+	_DACORE_IMPEXP static CSapi5Voices * CreateInstance ();
 
 // Attributes
 	const UINT	mLogLevelDebug;
 
 // Operations
-	static bool IsSapi5Installed ();
-	void Enumerate ();
+	_DACORE_IMPEXP static bool IsSapi5Installed ();
+	_DACORE_IMPEXP void Enumerate ();
 
-	INT_PTR FindVoiceId (LPCTSTR pVoiceId);
-	CSapi5VoiceInfo * GetVoiceId (LPCTSTR pVoiceId);
+	_DACORE_IMPEXP INT_PTR FindVoiceId (LPCTSTR pVoiceId);
+	_DACORE_IMPEXP CSapi5VoiceInfo * GetVoiceId (LPCTSTR pVoiceId);
 
-	INT_PTR FindVoiceName (LPCTSTR pVoiceName);
-	CSapi5VoiceInfo * GetVoiceName (LPCTSTR pVoiceName);
+	_DACORE_IMPEXP INT_PTR FindVoiceName (LPCTSTR pVoiceName);
+	_DACORE_IMPEXP CSapi5VoiceInfo * GetVoiceName (LPCTSTR pVoiceName);
 
-	INT_PTR FindVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, int * pMatchRank = NULL);
-	CSapi5VoiceInfo * GetVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, int * pMatchRank = NULL);
+	_DACORE_IMPEXP INT_PTR FindVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, int * pMatchRank = NULL);
+	_DACORE_IMPEXP CSapi5VoiceInfo * GetVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, int * pMatchRank = NULL);
 
-	CSapi5VoiceIndexArray const * FindVoices (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, CSapi5VoiceMatchRanks const ** pMatchRanks = NULL);
-	CSapi5VoiceInfoArray const * GetVoices (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, CSapi5VoiceMatchRanks const ** pMatchRanks = NULL);
+	_DACORE_IMPEXP CSapi5VoiceIndexArray const * FindVoices (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, CSapi5VoiceMatchRanks const ** pMatchRanks = NULL);
+	_DACORE_IMPEXP CSapi5VoiceInfoArray const * GetVoices (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, CSapi5VoiceMatchRanks const ** pMatchRanks = NULL);
 
-	bool RemoveVoice (INT_PTR pVoiceNdx);
-	bool RemoveVoice (const CSapi5VoiceInfo * pVoiceInfo);
+	_DACORE_IMPEXP bool RemoveVoice (INT_PTR pVoiceNdx);
+	_DACORE_IMPEXP bool RemoveVoice (const CSapi5VoiceInfo * pVoiceInfo);
 
-	INT_PTR DefaultVoiceNdx ();
-	bool VoiceSupportsLanguage (CSapi5VoiceInfo * pVoiceInfo, LANGID pLangId, bool pUseDefaults);
+	_DACORE_IMPEXP INT_PTR DefaultVoiceNdx ();
+	_DACORE_IMPEXP bool VoiceSupportsLanguage (CSapi5VoiceInfo * pVoiceInfo, LANGID pLangId, bool pUseDefaults);
 
-	void Log (UINT pLogLevel, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
-	static void LogVoiceInfo (UINT pLogLevel, CSapi5VoiceInfo & pVoiceInfo, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
+	_DACORE_IMPEXP void Log (UINT pLogLevel, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
+	_DACORE_IMPEXP static void LogVoiceInfo (UINT pLogLevel, CSapi5VoiceInfo & pVoiceInfo, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
 
 // Implementation
 protected:

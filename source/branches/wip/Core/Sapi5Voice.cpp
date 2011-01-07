@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -170,15 +170,15 @@ void __stdcall CSapi5Voice::VoiceNotifyCallback(WPARAM wParam, LPARAM lParam)
 					||	(lEvent.eEventId == SPEI_WORD_BOUNDARY)
 					||	(lEvent.eEventId == SPEI_VISEME)
 					)
-				&&	(lThis->mEventSinks.GetCount() > 0)
+				&&	(lThis->GetNotifySinkCount() > 0)
 				)
 			{
 				INT_PTR					lNdx;
 				_ISapiVoiceEventSink *	lEventSink;
 
-				for	(lNdx = 0; lNdx < (INT_PTR)lThis->mEventSinks.GetCount(); lNdx++)
+				for	(lNdx = 0; lNdx < lThis->GetNotifySinkCount(); lNdx++)
 				{
-					if	(lEventSink = lThis->mEventSinks [lNdx])
+					if	(lEventSink = lThis->GetNotifySink (lNdx))
 					{
 						try
 						{

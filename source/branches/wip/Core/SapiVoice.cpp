@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -181,32 +181,6 @@ HRESULT CSapiVoice::SetPitch (USHORT pPitch)
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-void CSapiVoice::AddEventSink (_ISapiVoiceEventSink * pEventSink)
-{
-	if	(pEventSink)
-	{
-		mEventSinks.AddUnique (pEventSink);
-	}
-}
-
-void CSapiVoice::RemoveEventSink (_ISapiVoiceEventSink * pEventSink)
-{
-	if	(pEventSink)
-	{
-		mEventSinks.Remove (pEventSink);
-	}
-}
-
-void CSapiVoice::ClearEventSinks ()
-{
-	if	(this)
-	{
-		mEventSinks.RemoveAll ();
-	}
-}
-
 /////////////////////////////////////////////////////////////////////////////
 
 long CSapiVoice::GetEventCharID () const

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -106,6 +106,7 @@ CAgentBalloonWnd::~CAgentBalloonWnd ()
 	{
 		DestroyWindow ();
 	}
+	ClearNotifySources ();
 	Detach (-1, NULL);
 }
 
@@ -123,7 +124,7 @@ CAgentBalloonWnd * CAgentBalloonWnd::CreateInstance (long pCharID, CAtlPtrTypeAr
 		{
 			if	(lInstance->mNotify [lNdx])
 			{
-				lInstance->mNotify [lNdx]->RegisterEventLock (lInstance, true);
+				lInstance->mNotify [lNdx]->LockSinks::AddNotifySink (lInstance);
 			}
 		}
 	}
@@ -380,7 +381,7 @@ bool CAgentBalloonWnd::Attach (long pCharID, CEventNotify * pNotify, bool pSetAc
 		&&	(mNotify.AddUnique (pNotify) >= 0)
 		)
 	{
-		pNotify->RegisterEventLock (this, true);
+		pNotify->LockSinks::AddNotifySink (this);
 		lRet = true;
 	}
 	if	(
@@ -404,7 +405,7 @@ bool CAgentBalloonWnd::Detach (long pCharID, CEventNotify * pNotify)
 		&&	(mNotify.Remove (pNotify) >= 0)
 		)
 	{
-		pNotify->RegisterEventLock (this, false);
+		pNotify->LockSinks::RemoveNotifySink (this);
 		lRet = true;
 	}
 

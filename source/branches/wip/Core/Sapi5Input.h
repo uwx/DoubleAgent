@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -20,7 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaCoreExp.h"
-#include "Sapi5InputEventSink.h"
+#include "NotifyObjects.h"
 #include <sapi.h>
 
 //////////////////////////////////////////////////////////////////////
@@ -33,43 +33,53 @@ _COM_SMARTPTR_TYPEDEF (ISpPhrase, __uuidof(ISpPhrase));
 _COM_SMARTPTR_TYPEDEF (ISpPhraseAlt, __uuidof(ISpPhraseAlt));
 
 //////////////////////////////////////////////////////////////////////
+
+interface _ISapi5InputEventSink
+{
+public:
+	virtual void OnSapi5InputEvent (const class CSpEvent & pEvent) = 0;
+
+	virtual CNotifySourcesOwner <class CSapi5InputContext> * _GetNotifySources () {return NULL;}
+};
+
+//////////////////////////////////////////////////////////////////////
 #pragma warning (push)
-#pragma warning (disable: 4251 4275)
+#pragma warning (disable: 4251)
 /////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CSapi5Input
+class CSapi5Input
 {
-	DECLARE_DLL_OBJECT(CSapi5Input)
+	DECLARE_DLL_OBJECT_EX(CSapi5Input, _DACORE_IMPEXP)
 protected:
 	CSapi5Input ();
 public:
-	virtual ~CSapi5Input ();
-	static CSapi5Input * CreateInstance ();
+	_DACORE_IMPEXP virtual ~CSapi5Input ();
+	_DACORE_IMPEXP static CSapi5Input * CreateInstance ();
 
 // Attributes
-	ISpRecognizer * SafeGetRecognizer () const;
-	bool SafeIsPrepared () const;
+	_DACORE_IMPEXP ISpRecognizer * SafeGetRecognizer () const;
+	_DACORE_IMPEXP bool SafeIsPrepared () const;
 
-	static tBstrPtr ShortEngineId (LPCTSTR pLongEngineId);
-	static tBstrPtr LongEngineId (LPCTSTR pShortEngineId);
+	_DACORE_IMPEXP static tBstrPtr ShortEngineId (LPCTSTR pLongEngineId);
+	_DACORE_IMPEXP static tBstrPtr LongEngineId (LPCTSTR pShortEngineId);
 
 // Operations
-	HRESULT PrepareToListen (bool pAllowAudioFormatChange = true);
+	_DACORE_IMPEXP HRESULT PrepareToListen (bool pAllowAudioFormatChange = true);
 
-	tBstrPtr GetEngineId ();
-	HRESULT GetEngineId (CAtlString & pEngineId);
-	HRESULT SetEngineId (LPCTSTR pEngineId);
+	_DACORE_IMPEXP tBstrPtr GetEngineId ();
+	_DACORE_IMPEXP HRESULT GetEngineId (CAtlString & pEngineId);
+	_DACORE_IMPEXP HRESULT SetEngineId (LPCTSTR pEngineId);
 
-	tBstrPtr GetEngineName ();
-	HRESULT GetEngineName (CAtlString & pEngineName);
-	HRESULT GetEngineLanguages (CAtlTypeArray <LANGID> & pLanguages);
+	_DACORE_IMPEXP tBstrPtr GetEngineName ();
+	_DACORE_IMPEXP HRESULT GetEngineName (CAtlString & pEngineName);
+	_DACORE_IMPEXP HRESULT GetEngineLanguages (CAtlTypeArray <LANGID> & pLanguages);
 
-	tBstrPtr GetInputId ();
-	HRESULT GetInputId (CAtlString & pInputId);
-	tBstrPtr GetInputName ();
-	HRESULT GetInputName (CAtlString & pInputName);
+	_DACORE_IMPEXP tBstrPtr GetInputId ();
+	_DACORE_IMPEXP HRESULT GetInputId (CAtlString & pInputId);
+	_DACORE_IMPEXP tBstrPtr GetInputName ();
+	_DACORE_IMPEXP HRESULT GetInputName (CAtlString & pInputName);
 
-	void LogStatus (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
+	_DACORE_IMPEXP void LogStatus (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 
 // Implementation
 protected:
@@ -78,56 +88,53 @@ protected:
 
 //////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CSapi5InputContext
+class CSapi5InputContext : public CNotifySinksOwner2 <_ISapi5InputEventSink, CSapi5InputContext>
 {
-	DECLARE_DLL_OBJECT(CSapi5InputContext)
+	DECLARE_DLL_OBJECT_EX(CSapi5InputContext, _DACORE_IMPEXP)
 protected:
 	CSapi5InputContext ();
 public:
-	virtual ~CSapi5InputContext ();
-	static CSapi5InputContext * CreateInstance ();
+	_DACORE_IMPEXP virtual ~CSapi5InputContext ();
+	_DACORE_IMPEXP static CSapi5InputContext * CreateInstance ();
 
 // Attributes
-	bool SafeIsValid () const;
-	bool IsInitialized () const;
-	bool IsListening () const;
-	bool IsHearing () const;
-	bool IsPaused () const;
+	_DACORE_IMPEXP bool SafeIsValid () const;
+	_DACORE_IMPEXP bool IsInitialized () const;
+	_DACORE_IMPEXP bool IsListening () const;
+	_DACORE_IMPEXP bool IsHearing () const;
+	_DACORE_IMPEXP bool IsPaused () const;
 
 	const ULONGLONG	mGrammarIdCommands;
 	const ULONGLONG	mGrammarIdGlobal;
 
 // Operations
-	HRESULT Initialize (CSapi5Input * pInput, LANGID pLangID);
-	LANGID GetLangID ();
+	_DACORE_IMPEXP HRESULT Initialize (CSapi5Input * pInput, LANGID pLangID);
+	_DACORE_IMPEXP LANGID GetLangID ();
 
-	HRESULT SetTheseCommands (long pCharID, LPCTSTR pCaption, const CAtlTypeArray <long> & pIds, const CAtlStringArray & pNames, const CAtlStringArray & pCommands);
-	HRESULT SetGlobalCommands (USHORT pShowWndCmdId = 0, USHORT pHideWndCmdId = 0, USHORT pHideCharCmdId = 0);
-	bool RemoveGlobalCommands ();
+	_DACORE_IMPEXP HRESULT SetTheseCommands (long pCharID, LPCTSTR pCaption, const CAtlTypeArray <long> & pIds, const CAtlStringArray & pNames, const CAtlStringArray & pCommands);
+	_DACORE_IMPEXP HRESULT SetGlobalCommands (USHORT pShowWndCmdId = 0, USHORT pHideWndCmdId = 0, USHORT pHideCharCmdId = 0);
+	_DACORE_IMPEXP bool RemoveGlobalCommands ();
 
-	bool SetCharacterClient (long pCharID, long pActiveCharID);
-	bool SetCharacterName (long pCharID, LPCTSTR pCharName, LPCTSTR pCommandsCaption = NULL);
-	bool RemoveCharacter (long pCharID);
+	_DACORE_IMPEXP bool SetCharacterClient (long pCharID, long pActiveCharID);
+	_DACORE_IMPEXP bool SetCharacterName (long pCharID, LPCTSTR pCharName, LPCTSTR pCommandsCaption = NULL);
+	_DACORE_IMPEXP bool RemoveCharacter (long pCharID);
 
-	HRESULT StartListening (ULONG pMaxCommandAlternates = 2);
-	HRESULT StopListening ();
-	HRESULT PauseListening (bool pPause);
+	_DACORE_IMPEXP HRESULT StartListening (ULONG pMaxCommandAlternates = 2);
+	_DACORE_IMPEXP HRESULT StopListening ();
+	_DACORE_IMPEXP HRESULT PauseListening (bool pPause);
 
-	bool AddEventSink (ISapi5InputEventSink * pEventSink, CSapi5InputContext * pPrevSourceContext = NULL);
-	bool RemoveEventSink (ISapi5InputEventSink * pEventSink);
-	bool FindEventSink (ISapi5InputEventSink * pEventSink) const;
-	void ClearEventSinks ();
+	_DACORE_IMPEXP void FromPrevInputContext (CSapi5InputContext * pPrevInputContext);
 
-	void LogStatus (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
-	friend void _DACORE_IMPEXP LogRecoResult (UINT pLogLevel, ISpRecoResult * pResult, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogRecoPhrase (UINT pLogLevel, ISpPhrase * pPhrase, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogRecoPhraseAlt (UINT pLogLevel, ISpPhraseAlt * pPhrase, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP void LogStatus (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
+	_DACORE_IMPEXP friend void LogRecoResult (UINT pLogLevel, ISpRecoResult * pResult, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogRecoPhrase (UINT pLogLevel, ISpPhrase * pPhrase, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogRecoPhraseAlt (UINT pLogLevel, ISpPhraseAlt * pPhrase, LPCTSTR pFormat = NULL, ...);
 
-	friend tBstrPtr _DACORE_IMPEXP AudioStateStr (SPAUDIOSTATE pAudioState);
-	friend tBstrPtr _DACORE_IMPEXP RecoStateStr (SPRECOSTATE pRecoState);
-	friend tBstrPtr _DACORE_IMPEXP GrammarStateStr (SPGRAMMARSTATE pGrammarState);
-	friend tBstrPtr _DACORE_IMPEXP ConfidenceStr (signed char pConfidence);
-	friend tBstrPtr _DACORE_IMPEXP InterferenceStr (SPINTERFERENCE pInterference);
+	_DACORE_IMPEXP friend tBstrPtr AudioStateStr (SPAUDIOSTATE pAudioState);
+	_DACORE_IMPEXP friend tBstrPtr RecoStateStr (SPRECOSTATE pRecoState);
+	_DACORE_IMPEXP friend tBstrPtr GrammarStateStr (SPGRAMMARSTATE pGrammarState);
+	_DACORE_IMPEXP friend tBstrPtr ConfidenceStr (signed char pConfidence);
+	_DACORE_IMPEXP friend tBstrPtr InterferenceStr (SPINTERFERENCE pInterference);
 
 // Implementation
 protected:
@@ -147,7 +154,6 @@ protected:
 	CAtlMap <long, CZeroInit<long> >													mCharClients;
 	CAtlMap <long, CAtlString, CElementTraits<long>, CStringElementTraits<CAtlString> >	mCharNames;
 	CAtlMap <long, CAtlString, CElementTraits<long>, CStringElementTraits<CAtlString> >	mCharCommands;
-	CAtlPtrTypeArray <ISapi5InputEventSink>												mEventSinks;
 	ULONG																				mEventLastStream;
 	bool																				mEventSoundStarted;
 	bool																				mPaused;

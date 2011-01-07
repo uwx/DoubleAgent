@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -24,7 +24,8 @@
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma warning (push)
-#pragma warning (disable: 4251 4275)
+#pragma warning (disable: 4251)
+/////////////////////////////////////////////////////////////////////////////
 
 class _DACORE_IMPEXP CSapi5InputInfo
 {
@@ -78,45 +79,45 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CSapi5Inputs : public CAtlOwnPtrArray <CSapi5InputInfo>, protected CSapiLanguageMatch
+class CSapi5Inputs : public CAtlOwnPtrArray <CSapi5InputInfo>, protected CSapiLanguageMatch
 {
-	DECLARE_DLL_OBJECT(CSapi5Inputs)
+	DECLARE_DLL_OBJECT_EX(CSapi5Inputs, _DACORE_IMPEXP)
 protected:
 	CSapi5Inputs();
 public:
-	virtual ~CSapi5Inputs();
-	static CSapi5Inputs * CreateInstance ();
+	_DACORE_IMPEXP virtual ~CSapi5Inputs();
+	_DACORE_IMPEXP static CSapi5Inputs * CreateInstance ();
 
 // Attributes
 	const UINT	mLogLevelDebug;
 
 // Operations
-	void Enumerate ();
+	_DACORE_IMPEXP void Enumerate ();
 
-	INT_PTR FindEngineId (LPCTSTR pEngineId);
-	CSapi5InputInfo * GetEngineId (LPCTSTR pEngineId);
+	_DACORE_IMPEXP INT_PTR FindEngineId (LPCTSTR pEngineId);
+	_DACORE_IMPEXP CSapi5InputInfo * GetEngineId (LPCTSTR pEngineId);
 
-	INT_PTR FindEngineName (LPCTSTR pEngineName);
-	CSapi5InputInfo * GetEngineName (LPCTSTR pEngineName);
+	_DACORE_IMPEXP INT_PTR FindEngineName (LPCTSTR pEngineName);
+	_DACORE_IMPEXP CSapi5InputInfo * GetEngineName (LPCTSTR pEngineName);
 
-	INT_PTR FindInput (LANGID pLangId, bool pUseDefaults, int * pMatchRank = NULL);
-	CSapi5InputInfo * GetInput (LANGID pLangId, bool pUseDefaults, int * pMatchRank = NULL);
+	_DACORE_IMPEXP INT_PTR FindInput (LANGID pLangId, bool pUseDefaults, int * pMatchRank = NULL);
+	_DACORE_IMPEXP CSapi5InputInfo * GetInput (LANGID pLangId, bool pUseDefaults, int * pMatchRank = NULL);
 
-	CSapi5InputIndexArray const * FindInputs (LANGID pLangId, bool pUseDefaults, CSapi5InputMatchRanks const ** pMatchRanks = NULL);
-	CSapi5InputInfoArray const * GetInputs (LANGID pLangId, bool pUseDefaults, CSapi5InputMatchRanks const ** pMatchRanks = NULL);
+	_DACORE_IMPEXP CSapi5InputIndexArray const * FindInputs (LANGID pLangId, bool pUseDefaults, CSapi5InputMatchRanks const ** pMatchRanks = NULL);
+	_DACORE_IMPEXP CSapi5InputInfoArray const * GetInputs (LANGID pLangId, bool pUseDefaults, CSapi5InputMatchRanks const ** pMatchRanks = NULL);
 
-	bool RemoveInput (INT_PTR pInputNdx);
-	bool RemoveInput (const CSapi5InputInfo * pInputInfo);
+	_DACORE_IMPEXP bool RemoveInput (INT_PTR pInputNdx);
+	_DACORE_IMPEXP bool RemoveInput (const CSapi5InputInfo * pInputInfo);
 
-	INT_PTR DefaultInputNdx ();
-	bool InputSupportsLanguage (CSapi5InputInfo * pInputInfo, LANGID pLangId, bool pUseDefaults);
+	_DACORE_IMPEXP INT_PTR DefaultInputNdx ();
+	_DACORE_IMPEXP bool InputSupportsLanguage (CSapi5InputInfo * pInputInfo, LANGID pLangId, bool pUseDefaults);
 
-	void Log (UINT pLogLevel, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
-	static void LogInputInfo (UINT pLogLevel, CSapi5InputInfo & pInputInfo, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
+	_DACORE_IMPEXP void Log (UINT pLogLevel, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
+	_DACORE_IMPEXP static void LogInputInfo (UINT pLogLevel, CSapi5InputInfo & pInputInfo, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
 
 // Implementation
 protected:
-	static void LogInputToken (UINT pLogLevel, void * pInputToken, LPCTSTR pTitle = NULL);
+	_DACORE_IMPEXP static void LogInputToken (UINT pLogLevel, void * pInputToken, LPCTSTR pTitle = NULL);
 };
 
 #pragma warning (pop)

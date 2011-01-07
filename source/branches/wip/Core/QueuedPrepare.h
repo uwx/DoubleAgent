@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -22,48 +22,45 @@
 #include "QueuedAction.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning (push)
-#pragma warning (disable:4251 4275)
-/////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CQueuedPrepare : public CQueuedAction
+class CQueuedPrepare : public CQueuedAction
 {
-	DECLARE_DLL_OBJECT(CQueuedPrepare)
+	DECLARE_DLL_OBJECT_EX(CQueuedPrepare, _DACORE_IMPEXP)
 protected:
 	CQueuedPrepare (long pCharID = 0, long pReqID = -1);
 public:
-	virtual ~CQueuedPrepare ();
+	_DACORE_IMPEXP virtual ~CQueuedPrepare ();
 
 // Attributes
 public:
 	const UINT	mMaxConcurrentDownloads;
 
-	bool IsStarted () const;
-	bool IsComplete () const;
-	bool IsSoundDownload () const;
+	_DACORE_IMPEXP bool IsStarted () const;
+	_DACORE_IMPEXP bool IsComplete () const;
+	_DACORE_IMPEXP bool IsSoundDownload () const;
 
 // Operations
 public:
-	static CQueuedPrepare * CreateInstance (long pCharID, long pReqID = -1);
+	_DACORE_IMPEXP static CQueuedPrepare * CreateInstance (long pCharID, long pReqID = -1);
 
-	HRESULT PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAnimationNames, class CEventNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
-	HRESULT PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNames, class CEventNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
-	HRESULT PutSoundUrl (CAgentFile * pAgentFile, LPCTSTR pSoundUrl, class CEventNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
+	_DACORE_IMPEXP HRESULT PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAnimationNames, class CEventNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
+	_DACORE_IMPEXP HRESULT PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNames, class CEventNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
+	_DACORE_IMPEXP HRESULT PutSoundUrl (CAgentFile * pAgentFile, LPCTSTR pSoundUrl, class CEventNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
 
-	HRESULT StartDownloads ();
-	HRESULT FinishDownloads ();
-	HRESULT CancelDownloads ();
-	bool FindDownload (CFileDownload * pDownload);
-	CFileDownload * GetDownload ();
+	_DACORE_IMPEXP HRESULT StartDownloads ();
+	_DACORE_IMPEXP HRESULT FinishDownloads ();
+	_DACORE_IMPEXP HRESULT CancelDownloads ();
+	_DACORE_IMPEXP bool FindDownload (CFileDownload * pDownload);
+	_DACORE_IMPEXP CFileDownload * GetDownload ();
 
-	bool PutAnimations (CAgentFile * pAgentFile);
-	HRESULT PutAnimation (CAgentFile * pAgentFile, CFileDownload * pDownload);
-	tBstrPtr GetAnimationNames (LPCTSTR pDelimiter = _T(","));
+	_DACORE_IMPEXP bool PutAnimations (CAgentFile * pAgentFile);
+	_DACORE_IMPEXP HRESULT PutAnimation (CAgentFile * pAgentFile, CFileDownload * pDownload);
+	_DACORE_IMPEXP tBstrPtr GetAnimationNames (LPCTSTR pDelimiter = _T(","));
 
 // Overrides
-	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
-	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
-	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+	_DACORE_IMPEXP virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
+	_DACORE_IMPEXP virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
+	_DACORE_IMPEXP virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 
 // Implementation
 protected:
@@ -75,5 +72,4 @@ protected:
 	LPUNKNOWN																		mDownloadActiveXContext;
 };
 
-#pragma warning (pop)
 /////////////////////////////////////////////////////////////////////////////

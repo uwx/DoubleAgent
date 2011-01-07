@@ -42,7 +42,6 @@ CStressTestApp::CStressTestApp()
 CStressTestApp::~CStressTestApp()
 {
 	LogStop (LogIfActive);
-	ExitProcess (0);
 }
 
 /////////////////////////////////////////////////////////////////////////////

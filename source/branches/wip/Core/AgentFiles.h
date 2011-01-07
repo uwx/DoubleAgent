@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -23,36 +23,32 @@
 #include "AgentFile.h"
 
 //////////////////////////////////////////////////////////////////////
-#pragma warning (push)
-#pragma warning (disable:4251 4275)
-//////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CAgentFiles
+class CAgentFiles
 {
 public:
-	CAgentFiles();
-	virtual ~CAgentFiles();
+	_DACORE_IMPEXP CAgentFiles();
+	_DACORE_IMPEXP virtual ~CAgentFiles();
 
 // Attributes
-	const CAtlPtrTypeArray <CAgentFile> & Files () const;
+	_DACORE_IMPEXP const CAtlPtrTypeArray <CAgentFile> & Files () const;
 
 // Operations
-	HRESULT Load (LPCTSTR pPath = NULL, UINT pLogLevel = 15);
+	_DACORE_IMPEXP HRESULT Load (LPCTSTR pPath = NULL, UINT pLogLevel = 15);
 
-	INT_PTR FindDefChar ();
-	CAgentFile * GetDefChar ();
+	_DACORE_IMPEXP INT_PTR FindDefChar ();
+	_DACORE_IMPEXP CAgentFile * GetDefChar ();
 
-	static tBstrPtr GetDefCharPath (const CAtlStringArray * pSearchPath = NULL);
-	static HRESULT SetDefCharPath (LPCTSTR pCharPath);
+	_DACORE_IMPEXP static tBstrPtr GetDefCharPath (const CAtlStringArray * pSearchPath = NULL);
+	_DACORE_IMPEXP static HRESULT SetDefCharPath (LPCTSTR pCharPath);
 
-	static tBstrPtr GetAgentPath (bool pAlternatePlatform = false);
-	static tBstrPtr GetSystemCharsPath (UINT pPathNum = 0, UINT * pPathNumFound = NULL);
-	static tBstrPtr GetOfficeCharsPath ();
+	_DACORE_IMPEXP static tBstrPtr GetAgentPath (bool pAlternatePlatform = false);
+	_DACORE_IMPEXP static tBstrPtr GetSystemCharsPath (UINT pPathNum = 0, UINT * pPathNumFound = NULL);
+	_DACORE_IMPEXP static tBstrPtr GetOfficeCharsPath ();
 
 // Implementation
 protected:
 	CAtlOwnPtrArray <CAgentFile>	mFiles;
 };
 
-#pragma warning (pop)
 //////////////////////////////////////////////////////////////////////

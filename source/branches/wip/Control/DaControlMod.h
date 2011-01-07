@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -157,5 +157,19 @@ _COM_SMARTPTR_TYPEDEF (IDaSvrTTSEngine, __uuidof(IDaSvrTTSEngine));
 _COM_SMARTPTR_TYPEDEF (IDaSvrTTSEngines, __uuidof(IDaSvrTTSEngines));
 _COM_SMARTPTR_TYPEDEF (IDaSvrSREngine, __uuidof(IDaSvrSREngine));
 _COM_SMARTPTR_TYPEDEF (IDaSvrSREngines, __uuidof(IDaSvrSREngines));
+
+/////////////////////////////////////////////////////////////////////////////
+
+#ifndef	_DEBUG
+#ifndef	_LOG_INSTANCE
+#define	_LOG_INSTANCE	LogVerbose
+#endif
+#ifndef	_LOG_ABANDONED
+#define	_LOG_ABANDONED	LogDetails
+#endif
+#ifndef	_LOG_RESULTS
+#define	_LOG_RESULTS	LogNormal
+#endif
+#endif
 
 /////////////////////////////////////////////////////////////////////////////

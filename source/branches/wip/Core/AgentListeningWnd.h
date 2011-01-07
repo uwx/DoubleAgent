@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -22,9 +22,6 @@
 #include "DaCoreExp.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning (push)
-#pragma warning (disable: 4251 4275)
-/////////////////////////////////////////////////////////////////////////////
 
 class CAgentListeningWndBase :
 	public CWindowImpl<CAgentListeningWndBase, CWindow, CWinTraits<WS_POPUP|TTS_ALWAYSTIP|TTS_NOPREFIX|TTS_NOANIMATE|TTS_NOFADE> >
@@ -34,44 +31,44 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CAgentListeningWnd :
+class CAgentListeningWnd :
 	public CAgentListeningWndBase
 {
-	DECLARE_DLL_OBJECT(CAgentListeningWnd)
+	DECLARE_DLL_OBJECT_EX(CAgentListeningWnd, _DACORE_IMPEXP)
 protected:
 	CAgentListeningWnd ();
 public:
-	virtual ~CAgentListeningWnd ();
-	static CAgentListeningWnd * CreateInstance ();
+	_DACORE_IMPEXP virtual ~CAgentListeningWnd ();
+	_DACORE_IMPEXP static CAgentListeningWnd * CreateInstance ();
 
 // Attributes
 public:
-	long GetCharID () const {return mCharID;}
-	long GetLangID () const {return mLangID;}
+	_DACORE_IMPEXP long GetCharID () const {return mCharID;}
+	_DACORE_IMPEXP long GetLangID () const {return mLangID;}
 
 // Operations
 public:
-	bool Create (CWindow * pOwnerWnd, DWORD pExStyle = 0);
-	bool Attach (long pCharID, LPCTSTR pCharacterName);
-	bool Detach (long pCharID);
-	bool SetLangID (LANGID pLangID);
+	_DACORE_IMPEXP bool Create (CWindow * pOwnerWnd, DWORD pExStyle = 0);
+	_DACORE_IMPEXP bool Attach (long pCharID, LPCTSTR pCharacterName);
+	_DACORE_IMPEXP bool Detach (long pCharID);
+	_DACORE_IMPEXP bool SetLangID (LANGID pLangID);
 
-	bool ShowTipWnd ();
-	bool HideTipWnd ();
-	void PositionTipWnd ();
-	void RefreshTipWnd ();
+	_DACORE_IMPEXP bool ShowTipWnd ();
+	_DACORE_IMPEXP bool HideTipWnd ();
+	_DACORE_IMPEXP void PositionTipWnd ();
+	_DACORE_IMPEXP void RefreshTipWnd ();
 
-	void ShowCharacterListening (LPCTSTR pCommandsCaption);
-	void ShowCharacterNotListening (LPCTSTR pCommandsCaption, LPCTSTR pReason = NULL);
-	void ShowCharacterHeard (LPCTSTR pCommand);
+	_DACORE_IMPEXP void ShowCharacterListening (LPCTSTR pCommandsCaption);
+	_DACORE_IMPEXP void ShowCharacterNotListening (LPCTSTR pCommandsCaption, LPCTSTR pReason = NULL);
+	_DACORE_IMPEXP void ShowCharacterHeard (LPCTSTR pCommand);
 
 // Overrides
 
 // Implementation
 protected:
-	LRESULT OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 
 	BEGIN_MSG_MAP(CAgentListeningWnd)
 		MESSAGE_HANDLER(WM_WINDOWPOSCHANGING, OnWindowPosChanging)
@@ -100,5 +97,4 @@ protected:
 	CFontHandle				mFont;
 };
 
-#pragma warning (pop)
 /////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -48,16 +48,8 @@ CAgentTextObject::CAgentTextObject ()
 
 CAgentTextObject::~CAgentTextObject ()
 {
+	ClearNotifySources ();
 	SafeFreeSafePtr (mMsgPostingWnd);
-
-	if	(mVoice)
-	{
-		try
-		{
-			mVoice->RemoveEventSink (this);
-		}
-		catch AnyExceptionSilent
-	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -80,11 +72,11 @@ void CAgentTextObject::Attach (long pCharID, CEventNotify * pNotify, CSapiVoice 
 	{
 		if	(mVoice)
 		{
-			mVoice->RemoveEventSink (this);
+			mVoice->RemoveNotifySink (this);
 		}
 		if	(mVoice = pVoice)
 		{
-			mVoice->AddEventSink (this);
+			mVoice->AddNotifySink (this);
 		}
 	}
 
@@ -118,7 +110,7 @@ void CAgentTextObject::Detach (bool pStopped)
 	{
 		try
 		{
-			mVoice->RemoveEventSink (this);
+			mVoice->RemoveNotifySink (this);
 		}
 		catch AnyExceptionSilent
 	}

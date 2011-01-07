@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -42,8 +42,13 @@
 #ifdef	_DEBUG
 #define	_DEBUG_REQUESTS		(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_SPEECH		(GetProfileDebugInt(_T("DebugSpeech"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
+#define	_LOG_SPEECH			_DEBUG_SPEECH
 #define	_LOG_QUEUE_OPS		(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs)
 //#define	_TRACE_BUSY_TIME	LogIfActive|LogTimeMs|LogHighVolume
+#endif
+
+#ifndef	_LOG_SPEECH
+#define	_LOG_SPEECH		LogDetails
 #endif
 
 #ifndef	_LOG_QUEUE_OPS
@@ -62,6 +67,8 @@ CQueuedSpeak::CQueuedSpeak (CAgentBalloonOptions * pBalloonOptions, long pCharID
 	mVoice (NULL),
 	mAnimated (false)
 {
+	mVoiceNotifyId[0] = 0;
+	mVoiceNotifyId[1] = 0;
 	if	(pBalloonOptions)
 	{
 		mBalloonOptions = new CAgentBalloonOptions (*pBalloonOptions);
@@ -147,10 +154,35 @@ bool CQueuedSpeak::SetVoice (CSapiVoice * pVoice)
 			&&	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
 			)
 		{
+			_ISapiVoiceEventSink *	lVoiceNotifySink [2] = {NULL, NULL};
+
 			if	(mVoice)
 			{
-//TEST - Does this cause residual events from previous speech to get lost?
-				mVoice->ClearEventSinks ();
+				if	(mVoiceNotifyId[0])
+				{
+					lVoiceNotifySink[0] = mVoice->FindNotifySink (mVoiceNotifyId[0]);
+					mVoiceNotifyId[0] = 0;
+				}
+				if	(mVoiceNotifyId[1])
+				{
+					lVoiceNotifySink[1] = mVoice->FindNotifySink (mVoiceNotifyId[1]);
+					mVoiceNotifyId[1] = 0;
+				}
+				if	(
+						(lVoiceNotifySink[0])
+					||	(lVoiceNotifySink[1])
+					)
+				{
+					mVoice->Stop ();
+				}
+				if	(lVoiceNotifySink[0])
+				{
+					mVoice->RemoveNotifySink (lVoiceNotifySink[0]);
+				}
+				if	(lVoiceNotifySink[1])
+				{
+					mVoice->RemoveNotifySink (lVoiceNotifySink[1]);
+				}
 				lVoiceCache->RemoveVoiceClient (mVoice, this);
 			}
 			if	(mVoice = pVoice)
@@ -158,6 +190,14 @@ bool CQueuedSpeak::SetVoice (CSapiVoice * pVoice)
 				if	(!lVoiceCache->CacheVoice (mVoice, this))
 				{
 					lVoiceCache->AddVoiceClient (mVoice, this);
+				}
+				if	(lVoiceNotifySink[0])
+				{
+					mVoiceNotifyId[0] = pVoice->AddNotifySink (lVoiceNotifySink[0]);
+				}
+				if	(lVoiceNotifySink[1])
+				{
+					mVoiceNotifyId[1] = pVoice->AddNotifySink (lVoiceNotifySink[1]);
 				}
 			}
 			if	(mText)
@@ -393,12 +433,10 @@ bool CQueuedSpeak::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 			{
 				mTextObject->Detach ();
 			}
-			if	(
-					(mVoice)
-				&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
-				)
+			if	(mVoice)
 			{
-				mVoice->RemoveEventSink (lCharacterWnd);
+				mVoice->RemoveNotifySink (mVoice->FindNotifySink (mVoiceNotifyId[0]));
+				mVoice->RemoveNotifySink (mVoice->FindNotifySink (mVoiceNotifyId[1]));
 			}
 			if	(
 					(!mSoundUrl.IsEmpty ())
@@ -519,8 +557,9 @@ bool CQueuedSpeak::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESUL
 
 		if	(mVoice->SafeIsValid())
 		{
+			mVoice->RemoveNotifySink (mVoice->FindNotifySink (mVoiceNotifyId[0]));
+			mVoice->RemoveNotifySink (mVoice->FindNotifySink (mVoiceNotifyId[1]));
 			mVoice->Stop ();
-			mVoice->ClearEventSinks ();
 		}
 		if	(
 				(!mSoundUrl.IsEmpty ())
@@ -877,11 +916,11 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWn
 	else
 	if	(mVoice->SafeIsValid())
 	{
-		mVoice->ClearEventSinks ();
+		mVoice->ClearNotifySinks ();
 
 		if	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
 		{
-			mVoice->AddEventSink (lCharacterWnd);
+			mVoiceNotifyId[0] = mVoice->AddNotifySink (lCharacterWnd);
 			mVoice->SetEventCharID (mCharID);
 		}
 
@@ -898,7 +937,7 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWn
 			&&	(lBalloonWnd->IsWindow ())
 			)
 		{
-			mVoice->AddEventSink (lBalloonWnd);
+			mVoiceNotifyId[1] = mVoice->AddNotifySink (lBalloonWnd);
 			lBalloonWnd->ApplyOptions (mBalloonOptions);
 			if	(mText)
 			{
@@ -913,12 +952,12 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWn
 
 		if	(pQueue.GetNextAction (QueueActionSpeak) == this)
 		{
-#ifdef	_DEBUG_SPEECH
-			if	(LogIsActive (_DEBUG_SPEECH))
+#ifdef	_LOG_SPEECH
+			if	(LogIsActive (_LOG_SPEECH))
 			{
-				LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] CAgentCharacterWnd Speak   [%s]"), pAgentWnd, mCharID, DebugStr(GetSpeechText()));
-				LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]                    Text    [%s]"), pAgentWnd, mCharID, DebugStr(GetFullText()));
-				LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]                    Voice   [%u] Rate [%u]"), pAgentWnd, mCharID, mVoice->SafeIsValid (), mVoice->GetRate());
+				LogMessage (_LOG_SPEECH, _T("[%p] [%d] CAgentCharacterWnd Speak   [%s]"), pAgentWnd, mCharID, DebugStr(GetSpeechText()));
+				LogMessage (_LOG_SPEECH, _T("[%p] [%d]                    Text    [%s]"), pAgentWnd, mCharID, DebugStr(GetFullText()));
+				LogMessage (_LOG_SPEECH, _T("[%p] [%d]                    Voice   [%u] Rate [%u] Volume [%u]"), pAgentWnd, mCharID, mVoice->SafeIsValid (), mVoice->GetRate(), mVoice->GetVolume());
 
 				if	(
 						(ShowBalloon())
@@ -927,7 +966,7 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWn
 					&&	(lBalloonWnd->IsWindow ())
 					)
 				{
-					LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]                    Balloon [%u] AutoSize [%u] AutoPace [%u] AutoHide [%u]"), pAgentWnd, mCharID, lBalloonWnd->IsWindowVisible(), lBalloonWnd->IsAutoSize(), lBalloonWnd->IsAutoPace(), lBalloonWnd->IsAutoHide());
+					LogMessage (_LOG_SPEECH, _T("[%p] [%d]                    Balloon [%u] AutoSize [%u] AutoPace [%u] AutoHide [%u]"), pAgentWnd, mCharID, lBalloonWnd->IsWindowVisible(), lBalloonWnd->IsAutoSize(), lBalloonWnd->IsAutoPace(), lBalloonWnd->IsAutoHide());
 				}
 			}
 #endif

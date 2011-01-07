@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -26,18 +26,15 @@
 #include "AgentPreviewWnd.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning (push)
-#pragma warning (disable: 4251 4275)
-/////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CPropPageCharSel : public CAtlPropertyPage
+class CPropPageCharSel : public CAtlPropertyPage
 {
-	DECLARE_DLL_OBJECT(CPropPageCharSel)
+	DECLARE_DLL_OBJECT_EX(CPropPageCharSel, _DACORE_IMPEXP)
 protected:
 	CPropPageCharSel();
 public:
-	virtual ~CPropPageCharSel();
-	static CPropPageCharSel * CreateInstance ();
+	_DACORE_IMPEXP virtual ~CPropPageCharSel();
+	_DACORE_IMPEXP static CPropPageCharSel * CreateInstance ();
 
 // Dialog Data
 	enum { IDD = IDD_PROPPAGE_CHARSEL };
@@ -51,7 +48,7 @@ public:
 
 // Overrides
 protected:
-	virtual BOOL OnInitDialog ();
+	_DACORE_IMPEXP virtual BOOL OnInitDialog ();
 
 // Implementation
 protected:
@@ -85,5 +82,4 @@ protected:
 	tPtr <CAgentPreviewWnd>	mPreviewWnd;
 };
 
-#pragma warning (pop)
 /////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -41,7 +41,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma warning (push)
-#pragma warning (disable: 4251 4275)
+#pragma warning (disable: 4251)
 /////////////////////////////////////////////////////////////////////////////
 
 class _DACORE_IMPEXP CSapi4VoiceInfo
@@ -95,45 +95,45 @@ public:
 
 //////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CSapi4Voices : public CAtlOwnPtrArray <CSapi4VoiceInfo>, protected CSapiLanguageMatch
+class CSapi4Voices : public CAtlOwnPtrArray <CSapi4VoiceInfo>, protected CSapiLanguageMatch
 {
-	DECLARE_DLL_OBJECT(CSapi4Voices)
+	DECLARE_DLL_OBJECT_EX(CSapi4Voices, _DACORE_IMPEXP)
 protected:
 	CSapi4Voices();
 public:
-	virtual ~CSapi4Voices();
-	static CSapi4Voices * CreateInstance ();
+	_DACORE_IMPEXP virtual ~CSapi4Voices();
+	_DACORE_IMPEXP static CSapi4Voices * CreateInstance ();
 
 // Attributes
 	const UINT	mLogLevelDebug;
 
 // Operations
-	static bool IsSapi4Installed ();
-	void Enumerate ();
+	_DACORE_IMPEXP static bool IsSapi4Installed ();
+	_DACORE_IMPEXP void Enumerate ();
 
-	INT_PTR FindModeId (const GUID & pModeId);
-	CSapi4VoiceInfo * GetModeId (const GUID & pModeId);
+	_DACORE_IMPEXP INT_PTR FindModeId (const GUID & pModeId);
+	_DACORE_IMPEXP CSapi4VoiceInfo * GetModeId (const GUID & pModeId);
 
-	INT_PTR FindVoiceName (LPCTSTR pVoiceName);
-	CSapi4VoiceInfo * GetVoiceName (LPCTSTR pVoiceName);
+	_DACORE_IMPEXP INT_PTR FindVoiceName (LPCTSTR pVoiceName);
+	_DACORE_IMPEXP CSapi4VoiceInfo * GetVoiceName (LPCTSTR pVoiceName);
 
-	INT_PTR FindVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, int * pMatchRank = NULL);
-	CSapi4VoiceInfo * GetVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, int * pMatchRank = NULL);
+	_DACORE_IMPEXP INT_PTR FindVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, int * pMatchRank = NULL);
+	_DACORE_IMPEXP CSapi4VoiceInfo * GetVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, int * pMatchRank = NULL);
 
-	CSapi4VoiceIndexArray const * FindVoices (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, CSapi4VoiceMatchRanks const ** pMatchRanks = NULL);
-	CSapi4VoiceInfoArray const * GetVoices (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, CSapi4VoiceMatchRanks const ** pMatchRanks = NULL);
+	_DACORE_IMPEXP CSapi4VoiceIndexArray const * FindVoices (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, CSapi4VoiceMatchRanks const ** pMatchRanks = NULL);
+	_DACORE_IMPEXP CSapi4VoiceInfoArray const * GetVoices (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, CSapi4VoiceMatchRanks const ** pMatchRanks = NULL);
 
-	bool RemoveVoice (INT_PTR pVoiceNdx);
-	bool RemoveVoice (const CSapi4VoiceInfo * pVoiceInfo);
+	_DACORE_IMPEXP bool RemoveVoice (INT_PTR pVoiceNdx);
+	_DACORE_IMPEXP bool RemoveVoice (const CSapi4VoiceInfo * pVoiceInfo);
 
-	bool VoiceSupportsLanguage (CSapi4VoiceInfo * pVoiceInfo, LANGID pLangId, bool pUseDefaults);
+	_DACORE_IMPEXP bool VoiceSupportsLanguage (CSapi4VoiceInfo * pVoiceInfo, LANGID pLangId, bool pUseDefaults);
 
-	void Log (UINT pLogLevel, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
-	static void LogVoiceInfo (UINT pLogLevel, CSapi4VoiceInfo & pVoiceInfo, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
+	_DACORE_IMPEXP void Log (UINT pLogLevel, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
+	_DACORE_IMPEXP static void LogVoiceInfo (UINT pLogLevel, CSapi4VoiceInfo & pVoiceInfo, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
 
 // Implementation
 protected:
-	static void LogModeInfo (UINT pLogLevel, LPVOID pModeInfo, LPCTSTR pTitle = NULL);
+	_DACORE_IMPEXP static void LogModeInfo (UINT pLogLevel, LPVOID pModeInfo, LPCTSTR pTitle = NULL);
 };
 
 #pragma warning (pop)

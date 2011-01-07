@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -95,8 +95,8 @@ void CDaCmnCharacter::Initialize (long pCharID, CEventNotify * pNotify, _IListen
 {
 	mCharID = pCharID;
 	mNotify = pNotify;
-	mNotify->RegisterEventReflect (this, true);
-	mNotify->RegisterEventLock (this, true);
+	mNotify->ReflectSinks::AddNotifySink (this);
+	mNotify->LockSinks::AddNotifySink (this);
 	mListeningAnchor = pListeningAnchor;
 
 	if	(FAILED (SetLangID (GetUserDefaultUILanguage ())))
@@ -145,9 +145,9 @@ void CDaCmnCharacter::Terminate (bool pFinal, bool pAbandonned)
 					||	(!IsInNotify ())
 					)
 				{
-					mNotify->RegisterEventLock (this, false);
+					mNotify->LockSinks::RemoveNotifySink (this);
 				}
-				mNotify->RegisterEventReflect (this, false);
+				mNotify->ReflectSinks::RemoveNotifySink (this);
 			}
 			catch AnyExceptionDebug
 

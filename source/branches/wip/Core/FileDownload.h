@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -23,9 +23,6 @@
 #include "InstanceGate.h"
 
 //////////////////////////////////////////////////////////////////////
-#pragma warning (push)
-#pragma warning (disable:4251 4275)
-//////////////////////////////////////////////////////////////////////
 
 class ATL_NO_VTABLE CFileDownloadObj :
 	public CComObjectRootEx<CComMultiThreadModel>,
@@ -43,43 +40,43 @@ public:
 
 //////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP ATL_NO_VTABLE CFileDownload :
+class ATL_NO_VTABLE CFileDownload :
 	public CFileDownloadObj,
 	private CInstanceGate
 
 {
-	DECLARE_DLL_OBJECT(CFileDownload)
+	DECLARE_DLL_OBJECT_EX(CFileDownload, _DACORE_IMPEXP)
 protected:
 	CFileDownload ();
 public:
-	virtual ~CFileDownload ();
-	static CFileDownload * CreateInstance (LPCTSTR pURL);
+	_DACORE_IMPEXP virtual ~CFileDownload ();
+	_DACORE_IMPEXP static CFileDownload * CreateInstance (LPCTSTR pURL);
 
 // Attributes
 public:
 	ULONG_PTR	mUserData;
 
-	tBstrPtr GetURL () const;
-	tBstrPtr GetCacheName () const;
+	_DACORE_IMPEXP tBstrPtr GetURL () const;
+	_DACORE_IMPEXP tBstrPtr GetCacheName () const;
 
-	DWORD GetBindFlags () const;
-	ULONG GetDownloadSize () const;
-	ULONG GetDownloadProgress () const;
+	_DACORE_IMPEXP DWORD GetBindFlags () const;
+	_DACORE_IMPEXP ULONG GetDownloadSize () const;
+	_DACORE_IMPEXP ULONG GetDownloadProgress () const;
 
-	bool IsDownloadStarting () const;
-	bool IsDownloadStarted () const;
-	bool IsDownloadCancelling () const;
-	HRESULT IsDownloadComplete () const;
+	_DACORE_IMPEXP bool IsDownloadStarting () const;
+	_DACORE_IMPEXP bool IsDownloadStarted () const;
+	_DACORE_IMPEXP bool IsDownloadCancelling () const;
+	_DACORE_IMPEXP HRESULT IsDownloadComplete () const;
 
 // Operations
 public:
-	DWORD SetBindFlags (DWORD pBindFlags);
-	DWORD SetReloadMode (bool pReload);
-	DWORD SetResynchronizeMode (bool pResynchronize);
-	DWORD SetSecurityMode (bool pEnforeSecurity);
+	_DACORE_IMPEXP DWORD SetBindFlags (DWORD pBindFlags);
+	_DACORE_IMPEXP DWORD SetReloadMode (bool pReload);
+	_DACORE_IMPEXP DWORD SetResynchronizeMode (bool pResynchronize);
+	_DACORE_IMPEXP DWORD SetSecurityMode (bool pEnforeSecurity);
 
-	HRESULT Download (LPUNKNOWN pActiveXContext = NULL, class CEventNotify * pNotify = NULL);
-	bool CancelDownload ();
+	_DACORE_IMPEXP HRESULT Download (LPUNKNOWN pActiveXContext = NULL, class CEventNotify * pNotify = NULL);
+	_DACORE_IMPEXP bool CancelDownload ();
 
 // Overrides
 
@@ -116,5 +113,4 @@ protected:
 	IStreamPtr						mContextMarshall;
 };
 
-#pragma warning (pop)
 //////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -25,18 +25,15 @@
 #include "PropertyPage.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning (push)
-#pragma warning (disable: 4251 4275)
-/////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CPropPageSpeech : public CAtlPropertyPage
+class CPropPageSpeech : public CAtlPropertyPage
 {
-	DECLARE_DLL_OBJECT(CPropPageSpeech)
+	DECLARE_DLL_OBJECT_EX(CPropPageSpeech, _DACORE_IMPEXP)
 protected:
 	CPropPageSpeech();
 public:
-	virtual ~CPropPageSpeech();
-	static CPropPageSpeech * CreateInstance ();
+	_DACORE_IMPEXP virtual ~CPropPageSpeech();
+	_DACORE_IMPEXP static CPropPageSpeech * CreateInstance ();
 
 // Dialog Data
 	enum { IDD = IDD_PROPPAGE_SPEECH };
@@ -53,7 +50,7 @@ public:
 
 // Overrides
 protected:
-	virtual BOOL OnInitDialog ();
+	_DACORE_IMPEXP virtual BOOL OnInitDialog ();
 
 // Implementation
 protected:
@@ -85,5 +82,4 @@ protected:
 	CDaSettingsConfig	mSettingsConfig;
 };
 
-#pragma warning (pop)
 /////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -920,14 +920,14 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::AudioStart (QWORD qTimeSt
 	}
 	catch AnyExceptionSilent
 
-	if	(mOwner.mEventSinks.GetCount() > 0)
+	if	(mOwner.GetNotifySinkCount() > 0)
 	{
 		INT_PTR					lNdx;
 		_ISapiVoiceEventSink *	lEventSink;
 
-		for	(lNdx = 0; lNdx < (INT_PTR)mOwner.mEventSinks.GetCount(); lNdx++)
+		for	(lNdx = 0; lNdx < mOwner.GetNotifySinkCount(); lNdx++)
 		{
-			if	(lEventSink = mOwner.mEventSinks [lNdx])
+			if	(lEventSink = mOwner.GetNotifySink (lNdx))
 			{
 				try
 				{
@@ -952,14 +952,14 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::AudioStop (QWORD qTimeSta
 	}
 	catch AnyExceptionSilent
 
-	if	(mOwner.mEventSinks.GetCount() > 0)
+	if	(mOwner.GetNotifySinkCount() > 0)
 	{
 		INT_PTR					lNdx;
 		_ISapiVoiceEventSink *	lEventSink;
 
-		for	(lNdx = 0; lNdx < (INT_PTR)mOwner.mEventSinks.GetCount(); lNdx++)
+		for	(lNdx = 0; lNdx < mOwner.GetNotifySinkCount(); lNdx++)
 		{
-			if	(lEventSink = mOwner.mEventSinks [lNdx])
+			if	(lEventSink = mOwner.GetNotifySink (lNdx))
 			{
 				try
 				{
@@ -978,7 +978,7 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::Visual (QWORD qTimeStamp,
 	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::Visual [%I64u] [%s %s] [%s]"), this, max(m_dwRef,-1), &mOwner, qTimeStamp, DebugStr(CAtlString(cIPAPhoneme,1)), DebugStr(CAtlString(cEnginePhoneme,1)), VoiceMouthStr(pTTSMouth));
 #endif
 
-	if	(mOwner.mEventSinks.GetCount() > 0)
+	if	(mOwner.GetNotifySinkCount() > 0)
 	{
 		INT_PTR					lNdx;
 		_ISapiVoiceEventSink *	lEventSink;
@@ -987,9 +987,9 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::Visual (QWORD qTimeStamp,
 #ifdef	_DEBUG_MOUTH
 		LogMessage (_DEBUG_MOUTH, _T("[%p] Visual [%s %s] [%s] [%s]"), &mOwner, DebugStr(CAtlString(cIPAPhoneme,1)), DebugStr(CAtlString(cEnginePhoneme,1)), VoiceMouthStr(pTTSMouth), MouthOverlayStr(lMouthOverlay));
 #endif
-		for	(lNdx = 0; lNdx < (INT_PTR)mOwner.mEventSinks.GetCount(); lNdx++)
+		for	(lNdx = 0; lNdx < mOwner.GetNotifySinkCount(); lNdx++)
 		{
-			if	(lEventSink = mOwner.mEventSinks [lNdx])
+			if	(lEventSink = mOwner.GetNotifySink (lNdx))
 			{
 				try
 				{
@@ -1106,14 +1106,14 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSBufNotifySink::BookMark (QWORD qTimeS
 	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::BookMark [%I64u] [%u]"), this, max(m_dwRef,-1), &mOwner, qTimeStamp, dwMarkNum);
 #endif
 
-	if	(mOwner.mEventSinks.GetCount() > 0)
+	if	(mOwner.GetNotifySinkCount() > 0)
 	{
 		INT_PTR					lNdx;
 		_ISapiVoiceEventSink *	lEventSink;
 
-		for	(lNdx = 0; lNdx < (INT_PTR)mOwner.mEventSinks.GetCount(); lNdx++)
+		for	(lNdx = 0; lNdx < mOwner.GetNotifySinkCount(); lNdx++)
 		{
-			if	(lEventSink = mOwner.mEventSinks [lNdx])
+			if	(lEventSink = mOwner.GetNotifySink (lNdx))
 			{
 				try
 				{
@@ -1132,14 +1132,14 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSBufNotifySink::WordPosition (QWORD qT
 	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::WordPosition [%I64u] [%u]"), this, max(m_dwRef,-1), &mOwner, qTimeStamp, dwByteOffset);
 #endif
 
-	if	(mOwner.mEventSinks.GetCount() > 0)
+	if	(mOwner.GetNotifySinkCount() > 0)
 	{
 		INT_PTR					lNdx;
 		_ISapiVoiceEventSink *	lEventSink;
 
-		for	(lNdx = 0; lNdx < (INT_PTR)mOwner.mEventSinks.GetCount(); lNdx++)
+		for	(lNdx = 0; lNdx < mOwner.GetNotifySinkCount(); lNdx++)
 		{
-			if	(lEventSink = mOwner.mEventSinks [lNdx])
+			if	(lEventSink = mOwner.GetNotifySink (lNdx))
 			{
 				try
 				{

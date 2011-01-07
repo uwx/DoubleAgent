@@ -45,7 +45,7 @@ BOOL CReplayActionsDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	LogComErr (LogNormal, CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_SERVER, __uuidof(IDaServer), (void**)&mServer), _T("CoCreateInstance"));
+	LogComErr (LogNormal, CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("CoCreateInstance"));
 
 	LoadConfig ();
 	RecalcLayout ();
@@ -191,7 +191,7 @@ HRESULT CReplayActionsDlg::LoadCharacter (LPCTSTR pCharacterName)
 	if	(
 			(mServer != NULL)
 		&&	(SUCCEEDED (lResult = LogComErr (LogNormal, mServer->Load (_variant_t(lCharacterName), &mCharacterId, &lReqID), _T("Load [%s]"), lCharacterName)))
-		&&	(SUCCEEDED (lResult = LogComErr (LogNormal, mServer->get_Character (mCharacterId, &mCharacter), _T("GetCharacterEx"))))
+		&&	(SUCCEEDED (lResult = LogComErr (LogNormal, mServer->get_Character (mCharacterId, &mCharacter), _T("get_Character"))))
 		)
 	{
 		LogComErr (LogNormal, mCharacter->SetIdleOn (FALSE));

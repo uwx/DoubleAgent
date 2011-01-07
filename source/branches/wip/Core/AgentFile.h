@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -25,7 +25,7 @@
 
 //////////////////////////////////////////////////////////////////////
 #pragma warning (push)
-#pragma warning (disable:4251 4275)
+#pragma warning (disable:4251)
 //////////////////////////////////////////////////////////////////////
 
 struct _DACORE_IMPEXP CAgentFileName
@@ -189,103 +189,103 @@ enum AgentMouthOverlay
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CAgentFile
+class CAgentFile
 {
-	DECLARE_DLL_OBJECT(CAgentFile)
+	DECLARE_DLL_OBJECT_EX(CAgentFile, _DACORE_IMPEXP)
 protected:
 	CAgentFile ();
 public:
-	virtual ~CAgentFile ();
-	static CAgentFile * CreateInstance ();
+	_DACORE_IMPEXP virtual ~CAgentFile ();
+	_DACORE_IMPEXP static CAgentFile * CreateInstance ();
 
 // Attributes
 public:
-	tBstrPtr GetPath () const;
-	tBstrPtr GetFileName () const;
+	_DACORE_IMPEXP tBstrPtr GetPath () const;
+	_DACORE_IMPEXP tBstrPtr GetFileName () const;
 
-	bool IsAcsFile () const;
-	bool IsAcfFile () const;
+	_DACORE_IMPEXP bool IsAcsFile () const;
+	_DACORE_IMPEXP bool IsAcfFile () const;
 
-	const GUID & GetGuid () const;
-	DWORD GetVersion () const;
-	DWORD GetStyle () const;
-	HICON GetIcon () const;
-	const CAgentFileBalloon & GetBalloon () const;
-	const CAgentFileTts & GetTts () const;
+	_DACORE_IMPEXP const GUID & GetGuid () const;
+	_DACORE_IMPEXP DWORD GetVersion () const;
+	_DACORE_IMPEXP DWORD GetStyle () const;
+	_DACORE_IMPEXP HICON GetIcon () const;
+	_DACORE_IMPEXP const CAgentFileBalloon & GetBalloon () const;
+	_DACORE_IMPEXP const CAgentFileTts & GetTts () const;
 
-	const CAtlPtrTypeArray <CAgentFileName> & GetNames () const;
-	const CAgentFileStates & GetStates () const;
-	const CAgentFileGestures & GetGestures () const;
+	_DACORE_IMPEXP const CAtlPtrTypeArray <CAgentFileName> & GetNames () const;
+	_DACORE_IMPEXP const CAgentFileStates & GetStates () const;
+	_DACORE_IMPEXP const CAgentFileGestures & GetGestures () const;
 
-	SAFEARRAY * GetStateNames ();
-	SAFEARRAY * GetGestureNames ();
-	SAFEARRAY * GetAnimationNames ();
+	_DACORE_IMPEXP SAFEARRAY * GetStateNames ();
+	_DACORE_IMPEXP SAFEARRAY * GetGestureNames ();
+	_DACORE_IMPEXP SAFEARRAY * GetAnimationNames ();
 
-	CSize GetImageSize () const;
-	SHORT GetPaletteSize () const;
-	LPCOLORREF GetPalette () const;
-	BYTE GetTransparency () const;
+	_DACORE_IMPEXP CSize GetImageSize () const;
+	_DACORE_IMPEXP SHORT GetPaletteSize () const;
+	_DACORE_IMPEXP LPCOLORREF GetPalette () const;
+	_DACORE_IMPEXP BYTE GetTransparency () const;
 
 // Operations
 public:
-	static bool IsProperFilePath (LPCTSTR pPath);
-	static bool IsRelativeFilePath (LPCTSTR pPath);
-	static tBstrPtr ParseFilePath (LPCTSTR pPath);
-	tBstrPtr ParseRelativePath (LPCTSTR pRelativePath);
+	_DACORE_IMPEXP static bool IsProperFilePath (LPCTSTR pPath);
+	_DACORE_IMPEXP static bool IsRelativeFilePath (LPCTSTR pPath);
+	_DACORE_IMPEXP static tBstrPtr ParseFilePath (LPCTSTR pPath);
+	_DACORE_IMPEXP tBstrPtr ParseRelativePath (LPCTSTR pRelativePath);
 
-	HRESULT Open (LPCTSTR pPath, UINT pLogLevel = 15);
-	void Close ();
+	_DACORE_IMPEXP HRESULT Open (LPCTSTR pPath, UINT pLogLevel = 15);
+	_DACORE_IMPEXP void Close ();
 
-	void SetDownloadMode (bool pRefresh = true, bool pReload = false, bool pSecure = true);
-	HRESULT LoadAcf (CFileDownload * pDownload, UINT pLogLevel = 15);
+	_DACORE_IMPEXP void SetDownloadMode (bool pRefresh = true, bool pReload = false, bool pSecure = true);
+	_DACORE_IMPEXP HRESULT LoadAcf (CFileDownload * pDownload, UINT pLogLevel = 15);
 
-	bool ReadNames (bool pFirstLetterCaps = true, UINT pLogLevel = 15);
-	bool ReadStates (UINT pLogLevel = 15);
-	bool ReadGestures (UINT pLogLevel = 15);
-	bool ReadImageIndex (UINT pLogLevel = 15);
-	bool ReadSoundIndex (UINT pLogLevel = 15);
+	_DACORE_IMPEXP bool ReadNames (bool pFirstLetterCaps = true, UINT pLogLevel = 15);
+	_DACORE_IMPEXP bool ReadStates (UINT pLogLevel = 15);
+	_DACORE_IMPEXP bool ReadGestures (UINT pLogLevel = 15);
+	_DACORE_IMPEXP bool ReadImageIndex (UINT pLogLevel = 15);
+	_DACORE_IMPEXP bool ReadSoundIndex (UINT pLogLevel = 15);
 
-	void FreeNames ();
-	void FreeStates ();
-	void FreeGestures ();
-	void FreeImageIndex ();
-	void FreeSoundIndex ();
+	_DACORE_IMPEXP void FreeNames ();
+	_DACORE_IMPEXP void FreeStates ();
+	_DACORE_IMPEXP void FreeGestures ();
+	_DACORE_IMPEXP void FreeImageIndex ();
+	_DACORE_IMPEXP void FreeSoundIndex ();
 
-	CAgentFileName * FindName (WORD pLangID = LANG_USER_DEFAULT);
-	INT_PTR FindState (LPCTSTR pStateName);
-	INT_PTR FindGesture (LPCTSTR pGestureName);
-	INT_PTR FindAnimation (LPCTSTR pAnimationName);
+	_DACORE_IMPEXP CAgentFileName * FindName (WORD pLangID = LANG_USER_DEFAULT);
+	_DACORE_IMPEXP INT_PTR FindState (LPCTSTR pStateName);
+	_DACORE_IMPEXP INT_PTR FindGesture (LPCTSTR pGestureName);
+	_DACORE_IMPEXP INT_PTR FindAnimation (LPCTSTR pAnimationName);
 
-	const CAgentFileAnimation * GetGesture (INT_PTR pGestureNdx);
-	const CAgentFileAnimation * GetAnimation (INT_PTR pAnimationNdx);
-	const CAgentFileAnimation * GetGesture (LPCTSTR pGestureName);
-	const CAgentFileAnimation * GetAnimation (LPCTSTR pAnimationName);
+	_DACORE_IMPEXP const CAgentFileAnimation * GetGesture (INT_PTR pGestureNdx);
+	_DACORE_IMPEXP const CAgentFileAnimation * GetAnimation (INT_PTR pAnimationNdx);
+	_DACORE_IMPEXP const CAgentFileAnimation * GetGesture (LPCTSTR pGestureName);
+	_DACORE_IMPEXP const CAgentFileAnimation * GetAnimation (LPCTSTR pAnimationName);
 
-	bool IsAnimationLoaded (INT_PTR pAnimationNdx);
-	bool IsAnimationLoaded (LPCTSTR pAnimationName);
-	HRESULT LoadAnimationAca (INT_PTR pAnimationNdx, CFileDownload * pDownload);
-	HRESULT LoadAnimationAca (LPCTSTR pAnimationName, CFileDownload * pDownload);
-	tBstrPtr GetAnimationAcaPath (INT_PTR pAnimationNdx);
-	tBstrPtr GetAnimationAcaPath (LPCTSTR pAnimationName);
+	_DACORE_IMPEXP bool IsAnimationLoaded (INT_PTR pAnimationNdx);
+	_DACORE_IMPEXP bool IsAnimationLoaded (LPCTSTR pAnimationName);
+	_DACORE_IMPEXP HRESULT LoadAnimationAca (INT_PTR pAnimationNdx, CFileDownload * pDownload);
+	_DACORE_IMPEXP HRESULT LoadAnimationAca (LPCTSTR pAnimationName, CFileDownload * pDownload);
+	_DACORE_IMPEXP tBstrPtr GetAnimationAcaPath (INT_PTR pAnimationNdx);
+	_DACORE_IMPEXP tBstrPtr GetAnimationAcaPath (LPCTSTR pAnimationName);
 
-	INT_PTR GetImageCount () const;
-	CAgentFileImage * GetImage (INT_PTR pImageNdx, bool p32Bit = false, UINT pLogLevel = 15);
-	UINT GetImageFormat (LPBITMAPINFO pImageInfo, const CAgentFileImage * pImage = NULL, bool p32Bit = false) const;
-	UINT GetImageBits (LPBYTE pImageBits, const CAgentFileImage * pImage, bool p32Bit = false) const;
-	UINT GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame & pFrame, bool p32Bit = false, const COLORREF * pBkColor = NULL, SHORT pOverlayNdx = -1);
+	_DACORE_IMPEXP INT_PTR GetImageCount () const;
+	_DACORE_IMPEXP CAgentFileImage * GetImage (INT_PTR pImageNdx, bool p32Bit = false, UINT pLogLevel = 15);
+	_DACORE_IMPEXP UINT GetImageFormat (LPBITMAPINFO pImageInfo, const CAgentFileImage * pImage = NULL, bool p32Bit = false) const;
+	_DACORE_IMPEXP UINT GetImageBits (LPBYTE pImageBits, const CAgentFileImage * pImage, bool p32Bit = false) const;
+	_DACORE_IMPEXP UINT GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame & pFrame, bool p32Bit = false, const COLORREF * pBkColor = NULL, SHORT pOverlayNdx = -1);
 
-	INT_PTR GetSoundCount () const;
-	long GetSoundSize (INT_PTR pSoundNdx);
-	LPCVOID GetSound (INT_PTR pSoundNdx);
+	_DACORE_IMPEXP INT_PTR GetSoundCount () const;
+	_DACORE_IMPEXP long GetSoundSize (INT_PTR pSoundNdx);
+	_DACORE_IMPEXP LPCVOID GetSound (INT_PTR pSoundNdx);
 
 // Implementation
 public:
-	void Log (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
-	void LogNames (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
-	void LogStates (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
-	void LogGestures (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
-	static void LogTts (const CAgentFileTts & pTts, UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
-	static void LogBalloon (const CAgentFileBalloon & pBalloon, UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP void Log (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
+	_DACORE_IMPEXP void LogNames (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
+	_DACORE_IMPEXP void LogStates (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
+	_DACORE_IMPEXP void LogGestures (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
+	_DACORE_IMPEXP static void LogTts (const CAgentFileTts & pTts, UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP static void LogBalloon (const CAgentFileBalloon & pBalloon, UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
 
 protected:
 	HRESULT LoadFile (LPCTSTR pPath, UINT pLogLevel = 15);

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -27,41 +27,38 @@
 _COM_SMARTPTR_TYPEDEF (IDaPreview, __uuidof(IDaPreview));
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning (push)
-#pragma warning (disable: 4251 4275)
-/////////////////////////////////////////////////////////////////////////////
 
 class ATL_NO_VTABLE CAgentPreviewObjectRoot : public CComObjectRootEx<CComMultiThreadModel> {};
 
-class _DACORE_IMPEXP ATL_NO_VTABLE __declspec(uuid("{1147E561-A208-11DE-ABF2-002421116FB2}")) CAgentPreviewWnd :
+class ATL_NO_VTABLE __declspec(uuid("{1147E561-A208-11DE-ABF2-002421116FB2}")) CAgentPreviewWnd :
 	public CAgentPreviewObjectRoot,
 	public CAgentWnd,
 	public IDaPreview,
 	public IOleWindow,
 	public CComCoClass<CAgentPreviewWnd, &__uuidof(CAgentPreviewWnd)>
 {
-	DECLARE_DLL_OBJECT(CAgentPreviewWnd)
+	DECLARE_DLL_OBJECT_EX(CAgentPreviewWnd, _DACORE_IMPEXP)
 protected:
-	CAgentPreviewWnd ();
+	_DACORE_IMPEXP CAgentPreviewWnd ();
 public:
-	virtual ~CAgentPreviewWnd ();
-	static CAgentPreviewWnd * CreateInstance ();
+	_DACORE_IMPEXP virtual ~CAgentPreviewWnd ();
+	_DACORE_IMPEXP static CAgentPreviewWnd * CreateInstance ();
 
 // Attributes
 public:
 
 // Operations
 public:
-	bool Create (HWND pParentWnd, CRect * pInitialRect = NULL);
-	void FinalRelease();
+	_DACORE_IMPEXP bool Create (HWND pParentWnd, CRect * pInitialRect = NULL);
+	_DACORE_IMPEXP void FinalRelease();
 
 // Overrides
 public:
-	virtual DWORD GetAlphaSmoothing () const;
+	_DACORE_IMPEXP virtual DWORD GetAlphaSmoothing () const;
 protected:
-	virtual void Opened ();
-	virtual bool DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime);
-	virtual bool DoIdle ();
+	_DACORE_IMPEXP virtual void Opened ();
+	_DACORE_IMPEXP virtual bool DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime);
+	_DACORE_IMPEXP virtual bool DoIdle ();
 
 // Declarations
 public:
@@ -82,37 +79,37 @@ public:
 // Interfaces
 public:
 	// IOleWindow
-    HRESULT STDMETHODCALLTYPE GetWindow (HWND *phwnd);
-    HRESULT STDMETHODCALLTYPE ContextSensitiveHelp (BOOL fEnterMode);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetWindow (HWND *phwnd);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE ContextSensitiveHelp (BOOL fEnterMode);
 
 	// IDaPreview
-    HRESULT STDMETHODCALLTYPE PlayAnimation (BSTR pAnimationName);
-    HRESULT STDMETHODCALLTYPE PlayState (BSTR pStateName);
-    HRESULT STDMETHODCALLTYPE GetIsPlaying (boolean *pIsPlaying);
-    HRESULT STDMETHODCALLTYPE StopPlaying ();
-    HRESULT STDMETHODCALLTYPE GetSoundsEnabled (boolean *pEnabled);
-    HRESULT STDMETHODCALLTYPE EnableSounds (boolean pEnabled);
-    HRESULT STDMETHODCALLTYPE GetIdleEnabled (boolean *pEnabled);
-    HRESULT STDMETHODCALLTYPE EnableIdle (boolean pEnabled);
-	HRESULT STDMETHODCALLTYPE SetBkColor (COLORREF pBkColor);
-	HRESULT STDMETHODCALLTYPE GetFrameSize (SIZE * pFrameSize);
-	HRESULT STDMETHODCALLTYPE GetCharacterFrameSize (BSTR pCharacterPath, SIZE * pFrameSize);
-    HRESULT STDMETHODCALLTYPE GetFrameFormat (BYTE **pFrameFormat);
-    HRESULT STDMETHODCALLTYPE GetCharacterFrameFormat (BSTR pCharacterPath, BYTE **pFrameFormat);
-	HRESULT STDMETHODCALLTYPE OnAppActive (boolean pActive);
-	HRESULT STDMETHODCALLTYPE RenderFrame (HDC pDC, POINT *pPosition);
-	HRESULT STDMETHODCALLTYPE RenderAnimationFrame (BSTR pAnimationName, USHORT pFrameNum, HDC pDC, POINT *pPosition);
-    HRESULT STDMETHODCALLTYPE RenderCharacterFrame (BSTR pCharacterPath, BSTR pAnimationName, USHORT pFrameNum, HDC pDC, POINT *pPosition);
-    HRESULT STDMETHODCALLTYPE OpenFile (BSTR pCharacterPath, HWND pParentWnd);
-    HRESULT STDMETHODCALLTYPE GetCharacterPath (BSTR *pCharacterPath);
-    HRESULT STDMETHODCALLTYPE GetCharacterName (BSTR *pCharacterName, USHORT pLangID = 0);
-    HRESULT STDMETHODCALLTYPE GetCharacterDescription (BSTR *pCharacterDescription, USHORT pLangID = 0);
-    HRESULT STDMETHODCALLTYPE GetCharacterGuid (GUID *pGuid);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE PlayAnimation (BSTR pAnimationName);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE PlayState (BSTR pStateName);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetIsPlaying (boolean *pIsPlaying);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE StopPlaying ();
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetSoundsEnabled (boolean *pEnabled);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE EnableSounds (boolean pEnabled);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetIdleEnabled (boolean *pEnabled);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE EnableIdle (boolean pEnabled);
+	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE SetBkColor (COLORREF pBkColor);
+	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetFrameSize (SIZE * pFrameSize);
+	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetCharacterFrameSize (BSTR pCharacterPath, SIZE * pFrameSize);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetFrameFormat (BYTE **pFrameFormat);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetCharacterFrameFormat (BSTR pCharacterPath, BYTE **pFrameFormat);
+	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE OnAppActive (boolean pActive);
+	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE RenderFrame (HDC pDC, POINT *pPosition);
+	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE RenderAnimationFrame (BSTR pAnimationName, USHORT pFrameNum, HDC pDC, POINT *pPosition);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE RenderCharacterFrame (BSTR pCharacterPath, BSTR pAnimationName, USHORT pFrameNum, HDC pDC, POINT *pPosition);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE OpenFile (BSTR pCharacterPath, HWND pParentWnd);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetCharacterPath (BSTR *pCharacterPath);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetCharacterName (BSTR *pCharacterName, USHORT pLangID = 0);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetCharacterDescription (BSTR *pCharacterDescription, USHORT pLangID = 0);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetCharacterGuid (GUID *pGuid);
 
 // Implementation
 protected:
-	LRESULT OnMouseActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnMouseActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 
 	BEGIN_MSG_MAP(CAgentPreviewWnd)
 		MESSAGE_HANDLER(WM_MOUSEACTIVATE, OnMouseActivate)
@@ -125,7 +122,6 @@ protected:
 	HRESULT InternalRenderAnimationFrame (CAgentFile * pAgentFile, LPCTSTR pAnimationName, long pFrameNum, HDC pDC, const POINT * pPosition);
 };
 
-#pragma warning (pop)
 /////////////////////////////////////////////////////////////////////////////
 
 OBJECT_ENTRY_AUTO(__uuidof(CAgentPreviewWnd), CAgentPreviewWnd)

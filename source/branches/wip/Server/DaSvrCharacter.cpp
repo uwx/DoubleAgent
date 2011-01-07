@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -345,10 +345,16 @@ bool DaSvrCharacter::_PreNotify ()
 #ifdef	_DEBUG_NOTIFY_LEVEL
 	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] DaSvrCharacter::_PreNotify [%u]"), this, max(m_dwRef,-1), IsInNotify());
 #endif
-	if	(m_dwRef > 0)
+	if	(
+			(m_dwRef > 0)
+		&&	(CSvrObjLifetime::VerifyClientLifetime ())
+		)
 	{
 		return CDaCmnCharacter::_PreNotify ();
 	}
+#ifdef	_DEBUG_NOTIFY_LEVEL
+	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] DaSvrCharacter::_PreNotify failed"), this, max(m_dwRef,-1));
+#endif
 	return false;
 }
 
@@ -378,6 +384,21 @@ bool DaSvrCharacter::_PostNotify ()
 		{
 			Abandon ();
 		}
+		return false;
+	}
+	else
+	if	(
+			(!IsInNotify ())
+		&&	(!CSvrObjLifetime::VerifyClientLifetime ())
+		)
+	{
+#ifdef	_LOG_INSTANCE
+		if	(LogIsActive (_LOG_INSTANCE))
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)(%d)] DaSvrCharacter PostNotify -> !VerifyClientLifetime"), this, mCharID, max(m_dwRef,-1));
+		}
+#endif
+		Abandon ();
 		return false;
 	}
 	return true;

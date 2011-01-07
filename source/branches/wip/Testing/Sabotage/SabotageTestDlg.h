@@ -27,6 +27,10 @@ public:
 	CButton	mSpeakButton;
 	CButton	mThinkButton;
 	CButton	mListenButton;
+	CButton	mCharacterCount1;
+	CButton	mCharacterCount2;
+	CButton	mCharacterCount5;
+	CButton	mCharacterCount10;
 	int mSabotageNum;
 	//}}AFX_DATA
 
@@ -39,7 +43,7 @@ public:
 	void LoadConfig ();
 	void SaveConfig ();
 	bool CommandLineConfig ();
-		bool ShowConfigCharacter ();
+	bool ShowConfigCharacter ();
 
 // Implementation
 protected:
@@ -52,6 +56,7 @@ protected:
 	afx_msg void OnClose();
 	afx_msg void OnShowCharacter();
 	afx_msg void OnControlMode();
+	afx_msg void OnCharacterCount();
 	afx_msg void OnSoundOn();
 	afx_msg void OnIdleOn();
 	afx_msg void OnItemChangedCharacterList(NMHDR* pNMHDR, LRESULT* pResult);
@@ -134,54 +139,60 @@ protected:
 	CPoint GetInitialPos (const CSize & pInitialSize);
 	void SabotageEvent ();
 
-	void GetAgentServer ();
-	void FreeAgentServer ();
-	bool LoadServerCharacter ();
-	bool LoadedServerCharacter ();
-	bool FreeServerCharacter ();
-	bool ShowServerCharacter ();
-	bool HideServerCharacter ();
+	void GetAgentServers (INT_PTR pServerCount = 0);
+	void FreeAgentServers (INT_PTR pServerCount = 0);
+	bool LoadServerCharacters (INT_PTR pCharacterCount = 0);
+	bool LoadedServerCharacter (INT_PTR pNdx);
+	bool FreeServerCharacters (INT_PTR pCharacterCount = 0);
+	bool ShowServerCharacters ();
+	bool HideServerCharacters ();
+	long GetServerCharacterId (INT_PTR pNdx) const;
+	INT_PTR GetServerCharacterCount () const;
 
-	void GetAgentControl ();
-	void FreeAgentControl ();
-	bool LoadControlCharacter ();
-	bool FreeControlCharacter ();
-	bool LoadedControlCharacter ();
-	bool ShowControlCharacter ();
-	bool HideControlCharacter ();
+	void GetAgentControls (INT_PTR pControlCount = 0);
+	void FreeAgentControls (INT_PTR pControlCount = 0);
+	bool LoadControlCharacters (INT_PTR pCharacterCount = 0);
+	bool LoadedControlCharacter (INT_PTR pNdx);
+	bool FreeControlCharacters (INT_PTR pCharacterCount = 0);
+	bool ShowControlCharacters ();
+	bool HideControlCharacters ();
+	CString GetControlCharacterId (INT_PTR pNdx) const;
+	INT_PTR GetControlCharacterCount () const;
 
 	bool IsCharacterVisible ();
 	void CharacterIsVisible (bool pVisible);
 	void ShowCharacterState ();
 
 protected:
-	int						mCharacterNdx;
-	CString					mCharacterPath;
-	IDaServer2Ptr			mServer;
-	long					mNotifySinkId;
-	IDaSvrCharacter2Ptr		mServerCharacter;
-	long					mServerCharacterId;
-	IDaControl2Ptr			mControl;
-	CWnd					mControlWnd;
-	CRect					mControlRect;
-	IDaCtlCharacter2Ptr		mControlCharacter;
-	CString					mControlCharacterId;
-	long					mLoadReqID;
-	long					mShowReqID;
-	long					mPlayReqID;
-	long					mMoveReqID;
-	long					mSpeakReqID;
-	long					mThinkReqID;
-	long					mExitCommandId;
-	IDaCtlRequestPtr		mLoadRequest;
-	IDaCtlRequestPtr		mShowRequest;
-	IDaCtlRequestPtr		mPlayRequest;
-	IDaCtlRequestPtr		mMoveRequest;
-	IDaCtlRequestPtr		mSpeakRequest;
-	IDaCtlRequestPtr		mThinkRequest;
-	CString					mExitCommandName;
-	UINT_PTR				mRepeatTimer;
-	UINT_PTR				mCycleTimer;
+	int																									mSelCharacterNdx;
+	CString																								mSelCharacterPath;
+	CAtlArrayEx <IDaServer2Ptr, CComPtrElementTraits <IDaServer2Ptr, IDaServer2> >						mServer;
+	CAtlTypeArray <long>																				mNotifySinkId;
+	CAtlArrayEx <IDaSvrCharacter2Ptr, CComPtrElementTraits <IDaSvrCharacter2Ptr, IDaSvrCharacter2> >	mServerCharacter;
+	CAtlTypeArray <long>																				mServerCharacterId;
+	CAtlArrayEx <IDaServer2Ptr, CComPtrElementTraits <IDaServer2Ptr, IDaServer2> >						mCharacterServer;
+	CAtlArrayEx <IDaControl2Ptr, CComPtrElementTraits <IDaControl2Ptr, IDaControl2> >					mControl;
+	CAtlArrayEx <IDaCtlCharacter2Ptr, CComPtrElementTraits <IDaCtlCharacter2Ptr, IDaCtlCharacter2> >	mControlCharacter;
+	CStringArray																						mControlCharacterId;
+	CAtlOwnPtrArray <CWnd>																				mControlWnd;
+	CRect																								mControlRect;
+	CAtlArrayEx <IDaControl2Ptr, CComPtrElementTraits <IDaControl2Ptr, IDaControl2> >					mCharacterControl;
+	CAtlTypeArray <long>																				mLoadReqID;
+	CAtlTypeArray <long>																				mShowReqID;
+	CAtlTypeArray <long>																				mPlayReqID;
+	CAtlTypeArray <long>																				mMoveReqID;
+	CAtlTypeArray <long>																				mSpeakReqID;
+	CAtlTypeArray <long>																				mThinkReqID;
+	CAtlTypeArray <long>																				mExitCommandId;
+	CAtlArrayEx <IDaCtlRequestPtr, CComPtrElementTraits <IDaCtlRequestPtr, IDaCtlRequest> >				mLoadRequest;
+	CAtlArrayEx <IDaCtlRequestPtr, CComPtrElementTraits <IDaCtlRequestPtr, IDaCtlRequest> >				mShowRequest;
+	CAtlArrayEx <IDaCtlRequestPtr, CComPtrElementTraits <IDaCtlRequestPtr, IDaCtlRequest> >				mPlayRequest;
+	CAtlArrayEx <IDaCtlRequestPtr, CComPtrElementTraits <IDaCtlRequestPtr, IDaCtlRequest> >				mMoveRequest;
+	CAtlArrayEx <IDaCtlRequestPtr, CComPtrElementTraits <IDaCtlRequestPtr, IDaCtlRequest> >				mSpeakRequest;
+	CAtlArrayEx <IDaCtlRequestPtr, CComPtrElementTraits <IDaCtlRequestPtr, IDaCtlRequest> >				mThinkRequest;
+	CStringArray																						mExitCommandName;
+	UINT_PTR																							mRepeatTimer;
+	UINT_PTR																							mCycleTimer;
 };
 
 /////////////////////////////////////////////////////////////////////////////

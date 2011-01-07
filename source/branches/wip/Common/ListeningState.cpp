@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -38,10 +38,18 @@
 #pragma comment(lib, "winmm.lib")
 
 #ifdef	_DEBUG
-#define	_DEBUG_LISTEN			(GetProfileDebugInt(_T("DebugListen"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
-#define	_DEBUG_NOTIFY_PATH		(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF|LogTime)
-//#define	_DEBUG_START_STOP	LogNormal
-//#define	_DEBUG_HOT_KEY		LogNormal
+#define	_DEBUG_LISTEN		(GetProfileDebugInt(_T("DebugListen"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
+#define	_DEBUG_NOTIFY_PATH	(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF|LogTime)
+//#define	_LOG_START_STOP	LogNormal
+//#define	_LOG_HOT_KEY	LogNormal
+#endif
+
+#ifndef	_LOG_START_STOP
+#define	_LOG_START_STOP	LogVerbose
+#endif
+
+#ifndef	_LOG_HOT_KEY
+#define	_LOG_HOT_KEY	LogVerbose
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -65,21 +73,22 @@ CListeningState::CListeningState (CDaCmnCharacter & pCharacter)
 	mListenTimerHotkey (0),
 	mListenTimerHeard (0)
 {
-	mCharacter.mNotify->RegisterEventReflect (this, true);
+	mCharacter.mNotify->ReflectSinks::AddNotifySink (this);
 }
 
 CListeningState::~CListeningState()
 {
-	mCharacter.mNotify->RegisterEventReflect (this, false);
+	mCharacter.mNotify->ReflectSinks::RemoveNotifySink (this);
 
 	StopListenTimers ();
 	ShowListeningTip (false, false);
+	ClearNotifySources ();
 
 	if	(mSapi5InputContext)
 	{
 		try
 		{
-			mSapi5InputContext->ClearEventSinks ();
+			mSapi5InputContext->RemoveNotifySink (this);
 			mSapi5InputContext->StopListening ();
 		}
 		catch AnyExceptionDebug
@@ -180,7 +189,7 @@ HRESULT CListeningState::StartListening (bool pManual)
 	CDaSettingsConfig	lSettingsConfig;
 
 #ifdef	_DEBUG_LISTEN
-	LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] StartListening Manual [%u] Enabled [%u] IsAuto [%u] Active [%u %u] Listening [%u %u] CharActive [%u]"), this, GetCharID(), pManual, CDaSettingsConfig().LoadConfig().mSrEnabled, IsAutomatic(), IsActive(), IsSuspended(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->mAnchor->mAnchor.GetActiveCharacter()==GetCharID()));
+	LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] StartListening Manual [%u] Enabled [%u] IsAuto [%u] Active [%u %u] Listening [%u %u] CharActive [%u]"), this, GetCharID(), pManual, CDaSettingsConfig().LoadConfig().mSrEnabled, IsAutomatic(), IsActive(), IsSuspended(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindNotifySink(this):false), (mCharacter.mNotify->mAnchor->mAnchor.GetActiveCharacter()==GetCharID()));
 #endif
 
 	lSettingsConfig.LoadConfig ();
@@ -288,7 +297,7 @@ HRESULT CListeningState::StopListening (bool pManual, long pCause)
 			case ListenComplete_UserDisabled:				lCauseStr = _T("UserDisabled"); break;
 			default:										lCauseStr.Format (_T("%d"), pCause); break;
 		}
-		LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] StopListening Manual [%u] IsAuto [%u] Active [%u %u] Listening [%u %u] CharActive [%u] Cause[%s]"), this, GetCharID(), pManual, IsAutomatic(), IsActive(), IsSuspended(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->mAnchor->mAnchor.GetActiveCharacter()==GetCharID()), lCauseStr);
+		LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] StopListening Manual [%u] IsAuto [%u] Active [%u %u] Listening [%u %u] CharActive [%u] Cause[%s]"), this, GetCharID(), pManual, IsAutomatic(), IsActive(), IsSuspended(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindNotifySink(this):false), (mCharacter.mNotify->mAnchor->mAnchor.GetActiveCharacter()==GetCharID()), lCauseStr);
 #endif
 
 		if	(
@@ -306,8 +315,8 @@ HRESULT CListeningState::StopListening (bool pManual, long pCause)
 			{
 				lResult = mSapi5InputContext->StopListening ();
 
-				lWasListening = mSapi5InputContext->FindEventSink (this);
-				mSapi5InputContext->RemoveEventSink (this);
+				lWasListening = (mSapi5InputContext->FindNotifySink (this) != 0);
+				mSapi5InputContext->RemoveNotifySink (this);
 			}
 			if	(
 					(lWasListening)
@@ -351,7 +360,7 @@ HRESULT CListeningState::KeepListening (bool pManual)
 	HRESULT	lResult = S_FALSE;
 
 #ifdef	_DEBUG_LISTEN
-	LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] KeepListening Manual [%u] Enabled [%u] IsAuto [%u] Active [%u %u] Listening [%u %u] CharActive [%u]"), this, GetCharID(), pManual, CDaSettingsConfig().LoadConfig().mSrEnabled, IsAutomatic(), IsActive(), IsSuspended(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->mAnchor->mAnchor.GetActiveCharacter()==GetCharID()));
+	LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] KeepListening Manual [%u] Enabled [%u] IsAuto [%u] Active [%u %u] Listening [%u %u] CharActive [%u]"), this, GetCharID(), pManual, CDaSettingsConfig().LoadConfig().mSrEnabled, IsAutomatic(), IsActive(), IsSuspended(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindNotifySink(this):false), (mCharacter.mNotify->mAnchor->mAnchor.GetActiveCharacter()==GetCharID()));
 #endif
 	if	(
 			(!pManual)
@@ -379,7 +388,7 @@ HRESULT CListeningState::SuspendListening (bool pSuspend)
 {
 	HRESULT	lResult = S_FALSE;
 #ifdef	_DEBUG_LISTEN
-	LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] SuspendListening [%u] Enabled [%u] IsAuto [%u] Active [%u %u] Listening [%u %u] CharActive [%u]"), this, GetCharID(), pSuspend, CDaSettingsConfig().LoadConfig().mSrEnabled, IsAutomatic(), IsActive(), IsSuspended(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->mAnchor->mAnchor.GetActiveCharacter()==GetCharID()));
+	LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] SuspendListening [%u] Enabled [%u] IsAuto [%u] Active [%u %u] Listening [%u %u] CharActive [%u]"), this, GetCharID(), pSuspend, CDaSettingsConfig().LoadConfig().mSrEnabled, IsAutomatic(), IsActive(), IsSuspended(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindNotifySink(this):false), (mCharacter.mNotify->mAnchor->mAnchor.GetActiveCharacter()==GetCharID()));
 #endif
 
 	if	(pSuspend)
@@ -438,7 +447,7 @@ HRESULT CListeningState::TransferState (CListeningState * pToState)
 		{
 			if	(SUCCEEDED (lResult = pToState->GetInputContext ()))
 			{
-				mSapi5InputContext->RemoveEventSink (this);
+				mSapi5InputContext->RemoveNotifySink (this);
 				mSapi5InputContext->StopListening ();
 			}
 			if	(
@@ -470,7 +479,7 @@ HRESULT CListeningState::TransferState (CListeningState * pToState)
 			}
 			else
 			{
-				mSapi5InputContext->AddEventSink (this);
+				mSapi5InputContext->AddNotifySink (this);
 				ShowListeningTip (true, false);
 			}
 		}
@@ -547,7 +556,7 @@ HRESULT CListeningState::StartInputContext (CSapi5InputContext * pPrevInputConte
 		&&	(!mSapi5InputContext->IsListening ())
 		)
 	{
-		mSapi5InputContext->RemoveEventSink (this);
+		mSapi5InputContext->RemoveNotifySink (this);
 
 		if	(
 				(lCommands = mCharacter.GetCommands (true))
@@ -558,7 +567,10 @@ HRESULT CListeningState::StartInputContext (CSapi5InputContext * pPrevInputConte
 
 			if	(SUCCEEDED (lResult))
 			{
-				mSapi5InputContext->AddEventSink (this, pPrevInputContext);
+				if	(mSapi5InputContext->AddNotifySink (this))
+				{
+					mSapi5InputContext->FromPrevInputContext (pPrevInputContext);
+				}
 				lResult = S_OK;
 			}
 		}
@@ -1283,8 +1295,11 @@ CListeningAnchor::~CListeningAnchor ()
 
 void CListeningAnchor::Startup (HWND pHotKeyWnd)
 {
-#ifdef	_DEBUG_START_STOP
-	LogMessage (_DEBUG_START_STOP, _T("CListeningAnchor::Startup [%p]"), pHotKeyWnd);
+#ifdef	_LOG_START_STOP
+	if	(LogIsActive (_LOG_START_STOP))
+	{
+		LogMessage (_LOG_START_STOP, _T("CListeningAnchor::Startup [%p]"), pHotKeyWnd);
+	}
 #endif
 	if	(mStarted)
 	{
@@ -1297,8 +1312,11 @@ void CListeningAnchor::Startup (HWND pHotKeyWnd)
 
 void CListeningAnchor::Shutdown ()
 {
-#ifdef	_DEBUG_START_STOP
-	LogMessage (_DEBUG_START_STOP, _T("CListeningAnchor::Shutdown [%p] [%d]"), mHotKeyWnd, mTimerNotifies.GetCount());
+#ifdef	_LOG_START_STOP
+	if	(LogIsActive (_LOG_START_STOP))
+	{
+		LogMessage (_LOG_START_STOP, _T("CListeningAnchor::Shutdown [%p] [%d]"), mHotKeyWnd, mTimerNotifies.GetCount());
+	}
 #endif
 	try
 	{
@@ -1418,8 +1436,11 @@ CListeningGlobal::~CListeningGlobal ()
 
 void CListeningGlobal::Startup ()
 {
-#ifdef	_DEBUG_START_STOP
-	LogMessage (_DEBUG_START_STOP, _T("CListeningGlobal::Startup"));
+#ifdef	_LOG_START_STOP
+	if	(LogIsActive (_LOG_START_STOP))
+	{
+		LogMessage (_LOG_START_STOP, _T("CListeningGlobal::Startup"));
+	}
 #endif
 	if	(mStarted)
 	{
@@ -1431,8 +1452,11 @@ void CListeningGlobal::Startup ()
 
 void CListeningGlobal::Shutdown ()
 {
-#ifdef	_DEBUG_START_STOP
-	LogMessage (_DEBUG_START_STOP, _T("CListeningGlobal::Shutdown [%p]"), mVoiceCommandsWnd.Ptr());
+#ifdef	_LOG_START_STOP
+	if	(LogIsActive (_LOG_START_STOP))
+	{
+		LogMessage (_LOG_START_STOP, _T("CListeningGlobal::Shutdown [%p]"), mVoiceCommandsWnd.Ptr());
+	}
 #endif
 	UnregisterHotKeys ();
 	mHotKeyWnds.RemoveAll ();
@@ -1442,8 +1466,11 @@ void CListeningGlobal::Shutdown ()
 
 void CListeningGlobal::Suspend ()
 {
-#ifdef	_DEBUG_START_STOP
-	LogMessage (_DEBUG_START_STOP, _T("CListeningGlobal::Suspend"));
+#ifdef	_LOG_START_STOP
+	if	(LogIsActive (_LOG_START_STOP))
+	{
+		LogMessage (_LOG_START_STOP, _T("CListeningGlobal::Suspend"));
+	}
 #endif
 	if	(mStarted)
 	{
@@ -1454,8 +1481,11 @@ void CListeningGlobal::Suspend ()
 
 void CListeningGlobal::Resume ()
 {
-#ifdef	_DEBUG_START_STOP
-	LogMessage (_DEBUG_START_STOP, _T("CListeningGlobal::Resume"));
+#ifdef	_LOG_START_STOP
+	if	(LogIsActive (_LOG_START_STOP))
+	{
+		LogMessage (_LOG_START_STOP, _T("CListeningGlobal::Resume"));
+	}
 #endif
 	if	(
 			(mStarted)
@@ -1656,8 +1686,11 @@ bool CListeningGlobal::RegisterHotKey (HWND pHotKeyWnd)
 	UINT				lHotKeyCode;
 	UINT				lHotKeyMod = 0;
 
-#ifdef	_DEBUG_HOT_KEY
-	LogMessage (_DEBUG_HOT_KEY, _T("CListeningGlobal::RegisterHotKey [%p] [%d]"), pHotKeyWnd, mHotKeyRegisterId);
+#ifdef	_LOG_HOT_KEY
+	if	(LogIsActive (_LOG_HOT_KEY))
+	{
+		LogMessage (_LOG_HOT_KEY, _T("CListeningGlobal::RegisterHotKey [%p] [%d]"), pHotKeyWnd, mHotKeyRegisterId);
+	}
 #endif
 	::UnregisterHotKey (pHotKeyWnd, mHotKeyRegisterId);
 
@@ -1692,8 +1725,11 @@ bool CListeningGlobal::UnregisterHotKey (HWND pHotKeyWnd)
 {
 	bool	lRet = false;
 
-#ifdef	_DEBUG_HOT_KEY
-	LogMessage (_DEBUG_HOT_KEY, _T("CListeningGlobal::UnregisterHotKey [%p] [%d]"), pHotKeyWnd, mHotKeyRegisterId);
+#ifdef	_LOG_HOT_KEY
+	if	(LogIsActive (_LOG_HOT_KEY))
+	{
+		LogMessage (_LOG_HOT_KEY, _T("CListeningGlobal::UnregisterHotKey [%p] [%d]"), pHotKeyWnd, mHotKeyRegisterId);
+	}
 #endif
 	if	(::UnregisterHotKey (pHotKeyWnd, mHotKeyRegisterId))
 	{
@@ -1763,8 +1799,11 @@ bool CListeningGlobal::OnHotKey (WPARAM wParam, LPARAM lParam)
 			mLastHotKey |= VK_SHIFT << 24;
 		}
 
-#ifdef	_DEBUG_HOT_KEY
-		LogMessage (_DEBUG_HOT_KEY, _T("CListeningGlobal::OnHotKey [%8.8X]"), mLastHotKey);
+#ifdef	_LOG_HOT_KEY
+		if	(LogIsActive (_LOG_HOT_KEY))
+		{
+			LogMessage (_LOG_HOT_KEY, _T("CListeningGlobal::OnHotKey [%8.8X]"), mLastHotKey);
+		}
 #endif
 		try
 		{

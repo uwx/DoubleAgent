@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -1151,7 +1151,10 @@ bool LclParseNumber (LPCTSTR pNumber, double & pValue, CString * pRemainder)
 			(lEndPtr)
 		&&	(
 				(*lEndPtr == 0)
-			||	(pRemainder)
+			||	(
+					(pRemainder)
+				&&	(lEndPtr != (LPCTSTR)lNumber)
+				)
 			)
 		)
 	{
@@ -1183,7 +1186,10 @@ bool LclParseNumber (LPCTSTR pNumber, long & pValue, int pBase, CString * pRemai
 			(lEndPtr)
 		&&	(
 				(*lEndPtr == 0)
-			||	(pRemainder)
+			||	(
+					(pRemainder)
+				&&	(lEndPtr != (LPCTSTR)lNumber)
+				)
 			)
 		)
 	{
@@ -1215,7 +1221,10 @@ bool LclParseNumber (LPCTSTR pNumber, ULONG & pValue, int pBase, CString * pRema
 			(lEndPtr)
 		&&	(
 				(*lEndPtr == 0)
-			||	(pRemainder)
+			||	(
+					(pRemainder)
+				&&	(lEndPtr != (LPCTSTR)lNumber)
+				)
 			)
 		)
 	{
@@ -1247,7 +1256,10 @@ bool LclParseNumber (LPCTSTR pNumber, LONGLONG & pValue, int pBase, CString * pR
 			(lEndPtr)
 		&&	(
 				(*lEndPtr == 0)
-			||	(pRemainder)
+			||	(
+					(pRemainder)
+				&&	(lEndPtr != (LPCTSTR)lNumber)
+				)
 			)
 		)
 	{
@@ -1279,7 +1291,10 @@ bool LclParseNumber (LPCTSTR pNumber, ULONGLONG & pValue, int pBase, CString * p
 			(lEndPtr)
 		&&	(
 				(*lEndPtr == 0)
-			||	(pRemainder)
+			||	(
+					(pRemainder)
+				&&	(lEndPtr != (LPCTSTR)lNumber)
+				)
 			)
 		)
 	{

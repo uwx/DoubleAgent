@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -43,66 +43,22 @@ CEventNotify::CEventNotify ()
 
 CEventNotify::~CEventNotify ()
 {
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-void CEventNotify::RegisterEventReflect (_IEventReflect * pEventReflect, bool pRegister)
-{
-	try
-	{
-		if	(pEventReflect)
-		{
-#ifdef	_DEBUG_INTERNAL
-			LogMessage (_DEBUG_INTERNAL, _T("[%p] RegisterEventReflect [%u]"), pEventReflect, pRegister);
-#endif
-			if	(pRegister)
-			{
-				mEventReflect.AddUnique (pEventReflect);
-			}
-			else
-			{
-				mEventReflect.Remove (pEventReflect);
-			}
-		}
-	}
-	catch AnyExceptionDebug
-}
-
-void CEventNotify::RegisterEventLock (_IEventLock * pEventLock, bool pRegister)
-{
-	try
-	{
-		if	(pEventLock)
-		{
-#ifdef	_DEBUG_INTERNAL
-			LogMessage (_DEBUG_INTERNAL, _T("[%p] RegisterEventLock [%u]"), pEventLock, pRegister);
-#endif
-			if	(pRegister)
-			{
-				mEventLock.AddUnique (pEventLock);
-			}
-			else
-			{
-				mEventLock.Remove (pEventLock);
-			}
-		}
-	}
-	catch AnyExceptionDebug
+	LockSinks::ClearNotifySinks ();
+	ReflectSinks::ClearNotifySinks ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
 bool CEventNotify::PreFireEvent (LPCTSTR pEventName)
 {
-	if	(mEventLock.GetCount() > 0)
+	if	(LockSinks::GetNotifySinkCount() > 0)
 	{
 		INT_PTR			lNdx;
 		_IEventLock *	lEventLock;
 
-		for	(lNdx = (INT_PTR)mEventLock.GetCount()-1; lNdx >= 0; lNdx--)
+		for	(lNdx = LockSinks::GetNotifySinkCount()-1; lNdx >= 0; lNdx--)
 		{
-			if	(lEventLock = mEventLock [lNdx])
+			if	(lEventLock = LockSinks::GetNotifySink (lNdx))
 			{
 				try
 				{
@@ -117,14 +73,14 @@ bool CEventNotify::PreFireEvent (LPCTSTR pEventName)
 
 bool CEventNotify::PostFireEvent (LPCTSTR pEventName, UINT pEventSinkCount)
 {
-	if	(mEventLock.GetCount() > 0)
+	if	(LockSinks::GetNotifySinkCount() > 0)
 	{
 		INT_PTR			lNdx;
 		_IEventLock *	lEventLock;
 
-		for	(lNdx = (INT_PTR)mEventLock.GetCount()-1; lNdx >= 0; lNdx--)
+		for	(lNdx = LockSinks::GetNotifySinkCount()-1; lNdx >= 0; lNdx--)
 		{
-			if	(lEventLock = mEventLock [lNdx])
+			if	(lEventLock = LockSinks::GetNotifySink (lNdx))
 			{
 				try
 				{
@@ -297,15 +253,16 @@ VisibilityCauseType CEventNotify::_GetVisibilityCause (long pCharID)
 void CEventNotify::_PutVisibilityCause (long pCharID, VisibilityCauseType pVisibilityCause)
 {
 	mVisibilityCause [pCharID] = (long)pVisibilityCause;
-
-	//if	(pVisibilityCause == VisibilityCause_ProgramHid)
-	//{
-	//	try
-	//	{
-	//		EmptyWorkingSet (GetCurrentProcess ());
-	//	}
-	//	catch AnyExceptionSilent
-	//}
+#if	FALSE
+	if	(pVisibilityCause == VisibilityCause_ProgramHid)
+	{
+		try
+		{
+			EmptyWorkingSet (GetCurrentProcess ());
+		}
+		catch AnyExceptionSilent
+	}
+#endif
 }
 
 MoveCauseType CEventNotify::_GetMoveCause (long pCharID)
@@ -335,8 +292,10 @@ void CEventNotify::_CharacterLoaded (long pCharID)
 		INT_PTR								lReflectNdx;
 		_IEventReflect *					lReflect;
 
-		lReflectArray.Copy (mEventReflect);
-
+		for	(lReflectNdx = 0; lReflect = ReflectSinks::GetNotifySink (lReflectNdx); lReflectNdx++)
+		{
+			lReflectArray.Add (lReflect);
+		}
 		for	(lReflectNdx = 0; lReflect = lReflectArray (lReflectNdx); lReflectNdx++)
 		{
 			try
@@ -363,8 +322,10 @@ void CEventNotify::_CharacterUnloaded (long pCharID)
 		INT_PTR								lReflectNdx;
 		_IEventReflect *					lReflect;
 
-		lReflectArray.Copy (mEventReflect);
-
+		for	(lReflectNdx = 0; lReflect = ReflectSinks::GetNotifySink (lReflectNdx); lReflectNdx++)
+		{
+			lReflectArray.Add (lReflect);
+		}
 		for	(lReflectNdx = 0; lReflect = lReflectArray (lReflectNdx); lReflectNdx++)
 		{
 			try
@@ -390,7 +351,7 @@ void CEventNotify::_CharacterNameChanged (long pCharID)
 		INT_PTR				lReflectNdx;
 		_IEventReflect *	lReflect;
 
-		for	(lReflectNdx = 0; lReflect = mEventReflect (lReflectNdx); lReflectNdx++)
+		for	(lReflectNdx = 0; lReflect = ReflectSinks::GetNotifySink (lReflectNdx); lReflectNdx++)
 		{
 			try
 			{
@@ -416,8 +377,10 @@ void CEventNotify::_CharacterActivated (long pActiveCharID, long pInputActiveCha
 		INT_PTR								lReflectNdx;
 		_IEventReflect *					lReflect;
 
-		lReflectArray.Copy (mEventReflect);
-
+		for	(lReflectNdx = 0; lReflect = ReflectSinks::GetNotifySink (lReflectNdx); lReflectNdx++)
+		{
+			lReflectArray.Add (lReflect);
+		}
 		for	(lReflectNdx = 0; lReflect = lReflectArray (lReflectNdx); lReflectNdx++)
 		{
 			try
@@ -454,7 +417,7 @@ bool CEventNotify::_DownloadComplete (class CFileDownload * pDownload)
 		INT_PTR				lReflectNdx;
 		_IEventReflect *	lReflect;
 
-		for	(lReflectNdx = 0; lReflect = mEventReflect (lReflectNdx); lReflectNdx++)
+		for	(lReflectNdx = 0; lReflect = ReflectSinks::GetNotifySink (lReflectNdx); lReflectNdx++)
 		{
 			try
 			{
@@ -484,7 +447,7 @@ class CFileDownload * CEventNotify::_FindSoundDownload (LPCTSTR pSoundUrl)
 		INT_PTR				lReflectNdx;
 		_IEventReflect *	lReflect;
 
-		for	(lReflectNdx = 0; lReflect = mEventReflect (lReflectNdx); lReflectNdx++)
+		for	(lReflectNdx = 0; lReflect = ReflectSinks::GetNotifySink (lReflectNdx); lReflectNdx++)
 		{
 			try
 			{
@@ -513,8 +476,10 @@ bool CEventNotify::_ContextMenu (long pCharID, HWND pOwner, const CPoint & pPosi
 		INT_PTR								lReflectNdx;
 		_IEventReflect *					lReflect;
 
-		lReflectArray.Copy (mEventReflect);
-
+		for	(lReflectNdx = 0; lReflect = ReflectSinks::GetNotifySink (lReflectNdx); lReflectNdx++)
+		{
+			lReflectArray.Add (lReflect);
+		}
 		for	(lReflectNdx = 0; lReflect = lReflectArray (lReflectNdx); lReflectNdx++)
 		{
 			try
@@ -542,8 +507,10 @@ bool CEventNotify::_DefaultCommand (long pCharID, HWND pOwner, const CPoint & pP
 		INT_PTR								lReflectNdx;
 		_IEventReflect *					lReflect;
 
-		lReflectArray.Copy (mEventReflect);
-
+		for	(lReflectNdx = 0; lReflect = ReflectSinks::GetNotifySink (lReflectNdx); lReflectNdx++)
+		{
+			lReflectArray.Add (lReflect);
+		}
 		for	(lReflectNdx = 0; lReflect = lReflectArray (lReflectNdx); lReflectNdx++)
 		{
 			try
@@ -570,7 +537,7 @@ void CEventNotify::_AppActivated (bool pActive)
 		INT_PTR				lReflectNdx;
 		_IEventReflect *	lReflect;
 
-		for	(lReflectNdx = 0; lReflect = mEventReflect (lReflectNdx); lReflectNdx++)
+		for	(lReflectNdx = 0; lReflect = ReflectSinks::GetNotifySink (lReflectNdx); lReflectNdx++)
 		{
 			try
 			{
@@ -592,7 +559,7 @@ void CEventNotify::_OptionsChanged ()
 		INT_PTR				lReflectNdx;
 		_IEventReflect *	lReflect;
 
-		for	(lReflectNdx = 0; lReflect = mEventReflect (lReflectNdx); lReflectNdx++)
+		for	(lReflectNdx = 0; lReflect = ReflectSinks::GetNotifySink (lReflectNdx); lReflectNdx++)
 		{
 			try
 			{
@@ -620,7 +587,7 @@ void CEventNotify::_DefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFilePat
 		INT_PTR				lReflectNdx;
 		_IEventReflect *	lReflect;
 
-		for	(lReflectNdx = 0; lReflect = mEventReflect (lReflectNdx); lReflectNdx++)
+		for	(lReflectNdx = 0; lReflect = ReflectSinks::GetNotifySink (lReflectNdx); lReflectNdx++)
 		{
 			try
 			{

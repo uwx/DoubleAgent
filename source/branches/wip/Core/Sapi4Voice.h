@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -32,57 +32,57 @@ _COM_SMARTPTR_TYPEDEF (ITTSCentral, IID_ITTSCentral);
 
 //////////////////////////////////////////////////////////////////////
 #pragma warning (push)
-#pragma warning (disable: 4251 4275)
+#pragma warning (disable: 4251)
 /////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CSapi4Voice : public CSapiVoice
+class CSapi4Voice : public CSapiVoice
 {
-	DECLARE_DLL_OBJECT(CSapi4Voice)
+	DECLARE_DLL_OBJECT_EX(CSapi4Voice, _DACORE_IMPEXP )
 protected:
 	CSapi4Voice ();
 public:
-	virtual ~CSapi4Voice ();
-	static CSapi4Voice * CreateInstance ();
+	_DACORE_IMPEXP virtual ~CSapi4Voice ();
+	_DACORE_IMPEXP static CSapi4Voice * CreateInstance ();
 
 // Attributes
-	ULONG GetDefaultRate () const;
-	USHORT GetDefaultVolume () const;
-	USHORT GetDefaultPitch () const;
+	_DACORE_IMPEXP ULONG GetDefaultRate () const;
+	_DACORE_IMPEXP USHORT GetDefaultVolume () const;
+	_DACORE_IMPEXP USHORT GetDefaultPitch () const;
 
 // Operations
-	HRESULT PrepareToSpeak (bool pHighPriority = false);
-	HRESULT Speak (LPCTSTR pMessage, bool pAsync = true);
-	HRESULT Stop ();
-	HRESULT Pause ();
-	HRESULT Resume ();
+	_DACORE_IMPEXP HRESULT PrepareToSpeak (bool pHighPriority = false);
+	_DACORE_IMPEXP HRESULT Speak (LPCTSTR pMessage, bool pAsync = true);
+	_DACORE_IMPEXP HRESULT Stop ();
+	_DACORE_IMPEXP HRESULT Pause ();
+	_DACORE_IMPEXP HRESULT Resume ();
 
-	HRESULT GetEngineId (GUID & pEngineId);
-	HRESULT GetModeId (GUID & pModeId);
-	HRESULT SetModeId (const GUID & pModeId);
+	_DACORE_IMPEXP HRESULT GetEngineId (GUID & pEngineId);
+	_DACORE_IMPEXP HRESULT GetModeId (GUID & pModeId);
+	_DACORE_IMPEXP HRESULT SetModeId (const GUID & pModeId);
 
-	friend int VoiceMouthOverlay (LPVOID pMouth);
-	friend CAtlString VoiceMouthStr (LPVOID pMouth);
+	_DACORE_IMPEXP friend int VoiceMouthOverlay (LPVOID pMouth);
+	_DACORE_IMPEXP friend CAtlString VoiceMouthStr (LPVOID pMouth);
 
 // Overrides
 protected:
-	virtual UINT _IsValid () const;
-	virtual bool _IsPrepared () const;
-	virtual bool _IsSpeaking () const;
-	virtual bool _IsPaused () const;
+	_DACORE_IMPEXP virtual UINT _IsValid () const;
+	_DACORE_IMPEXP virtual bool _IsPrepared () const;
+	_DACORE_IMPEXP virtual bool _IsSpeaking () const;
+	_DACORE_IMPEXP virtual bool _IsPaused () const;
 public:
-	virtual tBstrPtr GetUniqueId ();
-	virtual HRESULT GetUniqueId (tBstrPtr & pUniqueId);
-	virtual tBstrPtr GetDisplayName ();
-	virtual HRESULT GetDisplayName (tBstrPtr & pDisplayName);
-	virtual ULONG GetRate ();
-	virtual HRESULT GetRate (ULONG & pRate);
-	virtual HRESULT SetRate (ULONG pRate);
-	virtual USHORT GetVolume ();
-	virtual HRESULT GetVolume (USHORT & pVolume);
-	virtual HRESULT SetVolume (USHORT pVolume);
-	virtual USHORT GetPitch ();
-	virtual HRESULT GetPitch (USHORT & pPitch);
-	virtual HRESULT SetPitch (USHORT pPitch);
+	_DACORE_IMPEXP virtual tBstrPtr GetUniqueId ();
+	_DACORE_IMPEXP virtual HRESULT GetUniqueId (tBstrPtr & pUniqueId);
+	_DACORE_IMPEXP virtual tBstrPtr GetDisplayName ();
+	_DACORE_IMPEXP virtual HRESULT GetDisplayName (tBstrPtr & pDisplayName);
+	_DACORE_IMPEXP virtual ULONG GetRate ();
+	_DACORE_IMPEXP virtual HRESULT GetRate (ULONG & pRate);
+	_DACORE_IMPEXP virtual HRESULT SetRate (ULONG pRate);
+	_DACORE_IMPEXP virtual USHORT GetVolume ();
+	_DACORE_IMPEXP virtual HRESULT GetVolume (USHORT & pVolume);
+	_DACORE_IMPEXP virtual HRESULT SetVolume (USHORT pVolume);
+	_DACORE_IMPEXP virtual USHORT GetPitch ();
+	_DACORE_IMPEXP virtual HRESULT GetPitch (USHORT & pPitch);
+	_DACORE_IMPEXP virtual HRESULT SetPitch (USHORT pPitch);
 
 // Implementation
 private:

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -28,11 +28,15 @@
 
 CServerError::CServerError (HRESULT pResult, const GUID & pGuid)
 {
-	mSource  = _T(_SERVER_PROGID_NAME);
 	mGuid = pGuid;
 	mDescription = DaErrorDescription (pResult);
-
-#ifndef	_STRICT_COMPATIBILITY
+#ifdef	_STRICT_COMPATIBILITY
+	if	(!mDescription.IsEmpty ())
+	{
+		mSource = _T(_SERVER_PROGID_NAME);
+	}
+#else		
+	mSource = _T(_SERVER_PROGID_NAME);
 	if	(mDescription.IsEmpty ())
 	{
 		mDescription = GetSysDescription (pResult);
@@ -44,7 +48,7 @@ CServerError::CServerError (HRESULT pResult, const GUID & pGuid)
 
 CControlError::CControlError (HRESULT pResult, const GUID & pGuid)
 {
-	mSource  = _T(_CONTROL_PROGID_NAME);
+	mSource = _T(_CONTROL_PROGID_NAME);
 	mGuid = pGuid;
 	mDescription = DaErrorDescription (pResult);
 	if	(mDescription.IsEmpty ())

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -52,14 +52,14 @@ CQueuedAction::CQueuedAction (QueueAction pAction, long pCharID, long pReqID)
 {
 #ifdef	_TRACE_ACTION_INSTANCE
 	mInstances.AddSorted (this);
-#endif	
+#endif
 }
 
 CQueuedAction::~CQueuedAction ()
 {
 #ifdef	_TRACE_ACTION_INSTANCE
 	mInstances.RemoveSorted (this);
-#endif	
+#endif
 }
 
 //////////////////////////////////////////////////////////////////////

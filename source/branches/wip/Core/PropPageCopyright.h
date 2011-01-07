@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -24,18 +24,15 @@
 #include "LayoutTools.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning (push)
-#pragma warning (disable: 4251 4275)
-/////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CPropPageCopyright : public CAtlPropertyPage, protected CLayoutTools
+class CPropPageCopyright : public CAtlPropertyPage, protected CLayoutTools
 {
-	DECLARE_DLL_OBJECT(CPropPageCopyright)
+	DECLARE_DLL_OBJECT_EX(CPropPageCopyright, _DACORE_IMPEXP)
 protected:
 	CPropPageCopyright();
 public:
-	virtual ~CPropPageCopyright();
-	static CPropPageCopyright * CreateInstance ();
+	_DACORE_IMPEXP virtual ~CPropPageCopyright();
+	_DACORE_IMPEXP static CPropPageCopyright * CreateInstance ();
 
 // Dialog Data
 	enum { IDD = IDD_PROPPAGE_COPYRIGHT };
@@ -52,7 +49,7 @@ public:
 
 // Overrides
 protected:
-	virtual BOOL OnInitDialog ();
+	_DACORE_IMPEXP virtual BOOL OnInitDialog ();
 
 // Implementation
 protected:
@@ -96,5 +93,4 @@ protected:
 	};
 };
 
-#pragma warning (pop)
 /////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -110,6 +110,7 @@ CAgentCharacterWnd::~CAgentCharacterWnd ()
 		LogMessage (_LOG_INSTANCE, _T("[%p] CAgentCharacterWnd::~CAgentCharacterWnd [%p] [%d]"), this, m_hWnd, ::IsWindow(m_hWnd));
 	}
 #endif
+	ClearNotifySources ();
 	Detach (-1, NULL);
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
@@ -166,7 +167,7 @@ bool CAgentCharacterWnd::Attach (long pCharID, CEventNotify * pNotify, const CAg
 		&&	(mNotify.AddUnique (pNotify) >= 0)
 		)
 	{
-		pNotify->RegisterEventLock (this, true);
+		pNotify->LockSinks::AddNotifySink (this);
 		lRet = true;
 	}
 	if	(
@@ -234,7 +235,7 @@ bool CAgentCharacterWnd::Detach (long pCharID, CEventNotify * pNotify)
 			&&	(mNotify.Remove (pNotify) >= 0)
 			)
 		{
-			pNotify->RegisterEventLock (this, false);
+			pNotify->LockSinks::RemoveNotifySink (this);
 			lRet = true;
 		}
 

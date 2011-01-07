@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -173,7 +173,7 @@ bool CSapiVoiceCache::DeleteUnusedVoices ()
 		{
 			INT_PTR			lVoiceNdx;
 			CSapiVoice *	lVoice;
-			
+
 			mVoiceDeletePending = false;
 
 			for	(lVoiceNdx = mCachedVoices.GetCount()-1; lVoiceNdx >= 0; lVoiceNdx--)

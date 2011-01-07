@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -23,9 +23,6 @@
 #include "DaCoreRes.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning (push)
-#pragma warning (disable:4251 4275)
-/////////////////////////////////////////////////////////////////////////////
 
 class CVoiceCommandsWndBase :
 	public CWindowImpl<CVoiceCommandsWndBase>
@@ -35,46 +32,46 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CVoiceCommandsWnd :
+class CVoiceCommandsWnd :
 	public CVoiceCommandsWndBase
 {
-	DECLARE_DLL_OBJECT(CVoiceCommandsWnd)
+	DECLARE_DLL_OBJECT_EX(CVoiceCommandsWnd, _DACORE_IMPEXP)
 protected:
 	CVoiceCommandsWnd ();
 public:
-	virtual ~CVoiceCommandsWnd ();
-	static CVoiceCommandsWnd * CreateInstance ();
+	_DACORE_IMPEXP virtual ~CVoiceCommandsWnd ();
+	_DACORE_IMPEXP static CVoiceCommandsWnd * CreateInstance ();
 
 // Attributes
 public:
-	long GetCharID () const {return mCharID;}
-	LANGID GetLangID () const {return mLangID;}
+	_DACORE_IMPEXP long GetCharID () const {return mCharID;}
+	_DACORE_IMPEXP LANGID GetLangID () const {return mLangID;}
 
 // Operations
 public:
-	bool Create (CWindow * pOwnerWnd);
-	bool Show (bool pActivate);
-	bool Hide ();
+	_DACORE_IMPEXP bool Create (CWindow * pOwnerWnd);
+	_DACORE_IMPEXP bool Show (bool pActivate);
+	_DACORE_IMPEXP bool Hide ();
 
-	bool ShowTheseCommands (long pCharID, LPCTSTR pCaption, const CAtlTypeArray <long> & pIds, const CAtlStringArray & pCaptions);
-	void ShowOtherClients (long pCharID);
-	bool ShowGlobalCommands (USHORT pHideWndCmdId = ID_COMMANDS_WINDOW_OPEN, USHORT pHideCharCmdId = ID_COMMANDS_WINDOW_CLOSE);
-	bool HideGlobalCommands ();
+	_DACORE_IMPEXP bool ShowTheseCommands (long pCharID, LPCTSTR pCaption, const CAtlTypeArray <long> & pIds, const CAtlStringArray & pCaptions);
+	_DACORE_IMPEXP void ShowOtherClients (long pCharID);
+	_DACORE_IMPEXP bool ShowGlobalCommands (USHORT pHideWndCmdId = ID_COMMANDS_WINDOW_OPEN, USHORT pHideCharCmdId = ID_COMMANDS_WINDOW_CLOSE);
+	_DACORE_IMPEXP bool HideGlobalCommands ();
 
-	bool SetCharacter (long pCharID, LPCTSTR pCharName = NULL, LPCTSTR pCommandsCaption = NULL);
-	bool SetCharacterClient (long pCharID, long pActiveCharID);
-	bool SetCharacterName (long pCharID, LPCTSTR pCharName, LPCTSTR pCommandsCaption = NULL);
-	bool RemoveCharacter (long pCharID);
-	bool SetLangID (LANGID pLangID);
+	_DACORE_IMPEXP bool SetCharacter (long pCharID, LPCTSTR pCharName = NULL, LPCTSTR pCommandsCaption = NULL);
+	_DACORE_IMPEXP bool SetCharacterClient (long pCharID, long pActiveCharID);
+	_DACORE_IMPEXP bool SetCharacterName (long pCharID, LPCTSTR pCharName, LPCTSTR pCommandsCaption = NULL);
+	_DACORE_IMPEXP bool RemoveCharacter (long pCharID);
+	_DACORE_IMPEXP bool SetLangID (LANGID pLangID);
 
 // Overrides
 
 // Implementation
 protected:
-	LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnItemExpanding(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnItemExpanding(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
 
 	BEGIN_MSG_MAP(CVoiceCommandsWnd)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
@@ -108,5 +105,4 @@ protected:
 	HTREEITEM																			mGlobalItems [2];
 };
 
-#pragma warning (pop)
 /////////////////////////////////////////////////////////////////////////////

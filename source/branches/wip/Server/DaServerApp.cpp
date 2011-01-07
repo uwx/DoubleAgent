@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -273,12 +273,16 @@ void CDaServerModule::_PreMessageLoop (bool pForModal)
 	{
 		CListeningGlobal::Startup ();
 		CListeningAnchor::Startup (NULL);
+		CListeningGlobal::Resume ();
 		AddListeningTimer (mClientLifetimeTimer=(UINT)&mClientLifetimeTimer, 5000, this); // Move to monitor thread?
 
 		if	(mMessageFilter = new CComObjectNoLock <CComMessageFilter>)
 		{
 #if	TRUE // Disable the "Client busy" dialog
 			mMessageFilter->SetRetryTimeout ((DWORD)-1);
+#endif
+#if	TRUE // Disable the "Not Responding" dialog
+			mMessageFilter->SetMessageTimeout ((DWORD)-1);
 #endif
 			LogComErr (LogNormal|LogTime, mMessageFilter->Register ());
 		}
@@ -287,6 +291,8 @@ void CDaServerModule::_PreMessageLoop (bool pForModal)
 
 void CDaServerModule::_PostMessageLoop (bool pForModal)
 {
+	CoSuspendClassObjects ();
+
 	CListeningAnchor::Shutdown ();
 	CListeningGlobal::Shutdown ();
 	SafeFreeSafePtr (mSvrPropertySheet);
@@ -297,6 +303,8 @@ void CDaServerModule::_PostMessageLoop (bool pForModal)
 	SafeFreeSafePtr (mSvrCharacterFiles);
 	SafeFreeSafePtr (mMessageFilter);
 	CSapiVoiceCache::TerminateStaticInstance ();
+
+	CoResumeClassObjects ();
 }
 
 ////////////////////////////////////////////////////////////////////////////

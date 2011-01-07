@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -23,20 +23,17 @@
 #include "DaServerOdl.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning (push)
-#pragma warning (disable: 4251 4275 4150)
-/////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CAgentBalloonOptions
+class CAgentBalloonOptions
 {
-	DECLARE_DLL_OBJECT(CAgentBalloonOptions)
+	DECLARE_DLL_OBJECT_EX(CAgentBalloonOptions, _DACORE_IMPEXP)
 public:
-	CAgentBalloonOptions ();
-	CAgentBalloonOptions (DWORD pStyle, const CAgentFileBalloon & pFileBalloon, LANGID pLangID = 0);
-	CAgentBalloonOptions (const CAgentBalloonOptions & pSource);
-	CAgentBalloonOptions & operator= (const CAgentBalloonOptions & pSource);
-	bool operator== (const CAgentBalloonOptions & pSource) const;
-	bool operator!= (const CAgentBalloonOptions & pSource) const;
+	_DACORE_IMPEXP CAgentBalloonOptions ();
+	_DACORE_IMPEXP CAgentBalloonOptions (DWORD pStyle, const CAgentFileBalloon & pFileBalloon, LANGID pLangID = 0);
+	_DACORE_IMPEXP CAgentBalloonOptions (const CAgentBalloonOptions & pSource);
+	_DACORE_IMPEXP CAgentBalloonOptions & operator= (const CAgentBalloonOptions & pSource);
+	_DACORE_IMPEXP bool operator== (const CAgentBalloonOptions & pSource) const;
+	_DACORE_IMPEXP bool operator!= (const CAgentBalloonOptions & pSource) const;
 
 // Attributes
 public:
@@ -48,33 +45,30 @@ public:
 	COLORREF			mBrColor;
 	LOGFONT				mFont;
 
-	static const USHORT	mMinLines;
-	static const USHORT	mMaxLines;
-	static const USHORT	mDefLines;
-	static const USHORT	mMinPerLine;
-	static const USHORT	mMaxPerLine;
-	static const USHORT	mDefPerLine;
+	_DACORE_IMPEXP static const USHORT	mMinLines;
+	_DACORE_IMPEXP static const USHORT	mMaxLines;
+	_DACORE_IMPEXP static const USHORT	mDefLines;
+	_DACORE_IMPEXP static const USHORT	mMinPerLine;
+	_DACORE_IMPEXP static const USHORT	mMaxPerLine;
+	_DACORE_IMPEXP static const USHORT	mDefPerLine;
 
-	bool IsEnabled () const;
-	bool IsAutoSize () const;
-	bool IsAutoPace () const;
-	bool IsAutoHide () const;
-	bool ClipPartialLines () const;
+	_DACORE_IMPEXP bool IsEnabled () const;
+	_DACORE_IMPEXP bool IsAutoSize () const;
+	_DACORE_IMPEXP bool IsAutoPace () const;
+	_DACORE_IMPEXP bool IsAutoHide () const;
+	_DACORE_IMPEXP bool ClipPartialLines () const;
 
 // Operations
 public:
-	static bool CopyBalloonFont (const CAgentFileBalloon & pFileBalloon, LOGFONT & pFont);
-	static bool CopyBalloonFont (const LOGFONT & pFont, CAgentFileBalloon & pFileBalloon);
-	static bool SetFontLangID (LOGFONT & pFont, LANGID pLangID);
-	static bool GetActualFont (const LOGFONT & pFont, LOGFONT & pActualFont, bool pUpdateSize = true, bool pUpdateStyle = true);
-	static bool FontEqual (HFONT pFont1, HFONT pFont2);
-	static bool FontEqual (const LOGFONT & pFont1, const LOGFONT & pFont2);
+	_DACORE_IMPEXP static bool CopyBalloonFont (const CAgentFileBalloon & pFileBalloon, LOGFONT & pFont);
+	_DACORE_IMPEXP static bool CopyBalloonFont (const LOGFONT & pFont, CAgentFileBalloon & pFileBalloon);
+	_DACORE_IMPEXP static bool SetFontLangID (LOGFONT & pFont, LANGID pLangID);
+	_DACORE_IMPEXP static bool GetActualFont (const LOGFONT & pFont, LOGFONT & pActualFont, bool pUpdateSize = true, bool pUpdateStyle = true);
+	_DACORE_IMPEXP static bool FontEqual (HFONT pFont1, HFONT pFont2);
+	_DACORE_IMPEXP static bool FontEqual (const LOGFONT & pFont1, const LOGFONT & pFont2);
 
-	void LogOptions (UINT pLogLevel, LPCTSTR pTitle = NULL, LPCTSTR pPrefix = NULL);
-	static void LogFont (UINT pLogLevel, const LOGFONT & pFont, LPCTSTR pTitle = NULL, LPCTSTR pPrefix = NULL);
+	_DACORE_IMPEXP void LogOptions (UINT pLogLevel, LPCTSTR pTitle = NULL, LPCTSTR pPrefix = NULL);
+	_DACORE_IMPEXP static void LogFont (UINT pLogLevel, const LOGFONT & pFont, LPCTSTR pTitle = NULL, LPCTSTR pPrefix = NULL);
 };
 
-/////////////////////////////////////////////////////////////////////////////
-
-#pragma warning (pop)
 /////////////////////////////////////////////////////////////////////////////

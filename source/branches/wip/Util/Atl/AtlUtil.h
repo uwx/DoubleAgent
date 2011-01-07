@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -44,6 +44,11 @@ extern LPCTSTR _AtlProfilePath;
 public: \
 static void* __stdcall operator new(size_t nSize); \
 static void __stdcall operator delete(void* p); \
+
+#define	DECLARE_DLL_OBJECT_EX(theClass, exDecl) \
+public: \
+exDecl static void* __stdcall operator new(size_t nSize); \
+exDecl static void __stdcall operator delete(void* p); \
 
 #define	IMPLEMENT_DLL_OBJECT(theClass) \
 void* __stdcall theClass::operator new(size_t nSize) {return ::operator new(nSize);} \

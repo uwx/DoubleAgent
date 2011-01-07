@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -22,9 +22,6 @@
 #include "DaCoreExp.h"
 #include "AtlCollEx.h"
 
-//////////////////////////////////////////////////////////////////////
-#pragma warning (push)
-#pragma warning (disable: 4251 4275)
 /////////////////////////////////////////////////////////////////////////////
 
 class CSapi5Input;
@@ -39,32 +36,32 @@ public:
 
 //////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CSapiInputCache
+class CSapiInputCache
 {
-	DECLARE_DLL_OBJECT(CSapiInputCache)
+	DECLARE_DLL_OBJECT_EX(CSapiInputCache, _DACORE_IMPEXP)
 public:
-	CSapiInputCache ();
-	virtual ~CSapiInputCache ();
+	_DACORE_IMPEXP CSapiInputCache ();
+	_DACORE_IMPEXP virtual ~CSapiInputCache ();
 
 // Attributes
 public:
-	static CSapiInputCache * GetStaticInstance ();
+	_DACORE_IMPEXP static CSapiInputCache * GetStaticInstance ();
 
 // Operations
 public:
-	CSapi5Input * GetAgentInput (LANGID pLangID, bool pUseDefaults, bool pCached = true);
-	CSapi5Input * GetAgentInput (LPCTSTR pEngineName, LANGID pLangID, bool pUseDefaults, bool pCached = true);
+	_DACORE_IMPEXP CSapi5Input * GetAgentInput (LANGID pLangID, bool pUseDefaults, bool pCached = true);
+	_DACORE_IMPEXP CSapi5Input * GetAgentInput (LPCTSTR pEngineName, LANGID pLangID, bool pUseDefaults, bool pCached = true);
 
-	bool CacheInput (CSapi5Input * pInput, CSapiInputClient * pClient);
-	bool UncacheInput (CSapi5Input * pInput);
-	bool AddInputClient (CSapi5Input * pInput, CSapiInputClient * pClient);
-	bool RemoveInputClient (CSapi5Input * pInput, CSapiInputClient * pClient, bool pDeleteUnusedInput = false);
+	_DACORE_IMPEXP bool CacheInput (CSapi5Input * pInput, CSapiInputClient * pClient);
+	_DACORE_IMPEXP bool UncacheInput (CSapi5Input * pInput);
+	_DACORE_IMPEXP bool AddInputClient (CSapi5Input * pInput, CSapiInputClient * pClient);
+	_DACORE_IMPEXP bool RemoveInputClient (CSapi5Input * pInput, CSapiInputClient * pClient, bool pDeleteUnusedInput = false);
 
-	CSapi5Input * GetCachedInput (INT_PTR pInputNdx);
-	CSapi5Input * FindCachedInput (LPCTSTR pEngineId);
-	bool GetInputClients (CSapi5Input * pInput, CAtlPtrTypeArray <CSapiInputClient> & pClients);
+	_DACORE_IMPEXP CSapi5Input * GetCachedInput (INT_PTR pInputNdx);
+	_DACORE_IMPEXP CSapi5Input * FindCachedInput (LPCTSTR pEngineId);
+	_DACORE_IMPEXP bool GetInputClients (CSapi5Input * pInput, CAtlPtrTypeArray <CSapiInputClient> & pClients);
 
-	CSapi5Inputs * GetSapi5Inputs ();
+	_DACORE_IMPEXP CSapi5Inputs * GetSapi5Inputs ();
 
 // Implementation
 protected:
@@ -74,5 +71,4 @@ protected:
 	CAtlOwnPtrMap <CSapi5Input *, CAtlPtrTypeArray <CSapiInputClient> >	mInputClients;
 };
 
-#pragma warning (pop)
 //////////////////////////////////////////////////////////////////////
