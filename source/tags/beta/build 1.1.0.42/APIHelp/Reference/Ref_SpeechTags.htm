@@ -1,0 +1,639 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+	<title>Speech Output Tags</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css" />
+	<xml>
+		<MSHelp:TOCTitle Title="Speech Output Tags" />
+		<MSHelp:Keyword Index="K" Term="Speech Output Tags" />
+		<MSHelp:Attr Name="TopicType" Value="kbOrient" />
+		<MSHelp:Attr Name="TopicType" Value="apiref" />
+		<MSHelp:Attr Name="DocSet" Value="DoubleAgent" />
+		<MSHelp:Attr Name="DocSet" Value="NETFramework" />
+		<MSHelp:Attr Name="DocSet" Value="WindowsForms" />
+		<MSHelp:Attr Name="DocSet" Value="C#" />
+		<MSHelp:Attr Name="DocSet" Value="Visual Basic" />
+		<MSHelp:Attr Name="DocSet" Value="ExpressLibVS" />
+		<MSHelp:Attr Name="Technology" Value="Agent" />
+		<MSHelp:Attr Name="Technology" Value="ManagedCode" />
+		<MSHelp:Attr Name="Technology" Value="ActiveX" />
+		<MSHelp:Attr Name="Technology" Value="WindowsForms" />
+		<MSHelp:Attr Name="Technology" Value="kb3Ptech" />
+		<MSHelp:Attr Name="ProgModel" Value="managed" />
+		<MSHelp:Attr Name="TargetOS" Value="Windows" />
+	</xml>
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h1>Speech Output Tags</h1>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>Double Agent allows client applications to modify speech output through special tags inserted in the
+					speech text string. These tags help you change the character's spoken output characteristics.</p>
+				<h4><a name="SAPI5"></a>Microsoft<sup>®</sup> Speech Version 5 (<em class="glossary">SAPI5</em>)</h4>
+				<div class="indent">
+					<p><em class="glossary keyword">SAPI5</em> synthesis markup is an application of <em class="glossary">XML</em>.</p>
+					<ul>
+						<li>Every <em class="glossary">XML</em> element consists of a start tag <em class="literal">&lt;Some_tag&gt;</em>
+							and an end tag <em class="literal">&lt;/Some_tag&gt;</em> with a case-insensitive tag name and contents
+							between these tags. If the element is empty <em class="literal">&lt;Some_tag&gt;&lt;/Some_tag&gt;</em>,
+							it has no contents and the start tag and the end tag might be the same <em class="literal">&lt;Some_tag/&gt;</em>.</li>
+						<li>Attributes of an <em class="glossary">XML</em> element appear inside the start tag. Each attribute is
+							in the form of a name, followed by an equal character, followed by a quoted <em class="glossary">literal</em>
+							string value. An attribute of a given name may only appear once in a start tag.</li>
+						<li>The <em class="glossary">literal</em> string cannot contain a less than character (&lt). If the string
+							is surrounded by single quotation marks, it cannot contain a single quotation mark. If the string is
+							surrounded by double quotation marks it cannot contain a double quotation mark. Furthermore, an ampersand
+							(&amp;) can be used only in an entity reference such as <em class="keyword">&amp;amp;</em> and <em class="keyword">
+								&amp;gt;</em>. When a <em class="glossary">literal</em> string is parsed, an entity reference such
+							as <em class="keyword">&amp;gt;</em> is resolved to its corresponding text, such as &quot;&gt;&quot;.</li></ul>
+					<p>The following <em class="glossary keyword">SAPI5</em> tags are supported:</p>
+				</div>
+				<div class="syntax">
+					<table class="syntax">
+						<tr>
+							<th width="90ex">Tag</th>
+							<th width="255ex">Description</th>
+							<th>Syntax</th>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Bookmark"></a><b>Bookmark</b></p>
+							</td>
+							<td>
+								<p>Defines a bookmark in the spoken text.</p>
+							</td>
+							<td>
+								<p>&lt;<b>Bookmark</b> <b>MARK</b>="<i>number</i>" /&gt;</p>
+								<table>
+									<tr class="mini">
+										<th width="100ex">Part</th>
+										<th width="400ex">Description</th>
+									</tr>
+									<tr>
+										<td width="100ex"><i>number</i></td>
+										<td width="400ex">A numeric value that identifies the bookmark (from 1 to 2147483645).</td>
+									</tr>
+								</table>
+								<p>When the speech engine processes a bookmark, Double Agent generates a <em class="keyword">Bookmark</em>
+									event.</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Context"></a><b>Context</b></p>
+							</td>
+							<td>
+								<p>The context can specify the type of normalization rules which should be applied to the contained text.</p>
+							</td>
+							<td>
+								<p>&lt;<b>Context</b> <b>ID</b>="<i><a href="Ref_SAPI5Contexts.htm">string</a></i>"&gt;<i>content</i>&lt;/<b>Context</b>&gt;</p>
+								<table>
+									<tr class="mini">
+										<th width="100ex">Part</th>
+										<th width="400ex">Description</th>
+									</tr>
+									<tr>
+										<td width="100ex"><i>string</i></td>
+										<td width="400ex">The <a href="Ref_SAPI5Contexts.htm">normalization context</a> name. </td>
+									</tr>
+									<tr>
+										<td width="100ex"><i>content</i></td>
+										<td width="400ex">The speech to be normalized according to the specified context.</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Emph"></a><b>Emph</b></p>
+							</td>
+							<td>
+								<p>Places emphasis on the words contained by this element.</p>
+							</td>
+							<td>
+								<p>&lt;<b>Emph</b>&gt;<i>content</i>&lt;/<b>Emph</b>&gt;</p>
+								<table>
+									<tr class="mini">
+										<th width="100ex">Part</th>
+										<th width="400ex">Description</th>
+									</tr>
+									<tr>
+										<td width="100ex"><i>content</i></td>
+										<td width="400ex">The speech text to emphasize.</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Pitch"></a><b>Pitch</b></p>
+							</td>
+							<td>
+								<p>Modifies the pitch of the text contained by this element.</p>
+							</td>
+							<td>
+								<p>&lt;<b>Pitch</b> <b>MIDDLE</b>|<b>ABSMIDDLE</b>="<i>number</i>"&gt;<i>content</i>&lt;/<b>Pitch</b>&gt;</p>
+								<table>
+									<tr class="mini">
+										<th width="100ex">Part</th>
+										<th width="400ex">Description</th>
+									</tr>
+									<tr>
+										<td width="100ex"><i>number</i><br />
+											(<b>MIDDLE</b>)</td>
+										<td width="400ex">
+											<table class="invisible">
+												<tr>
+													<td>-24</td>
+													<td>One octave lower than the current pitch</td>
+												</tr>
+												<tr>
+													<td>-10</td>
+													<td>3/4 the current pitch</td>
+												</tr>
+												<tr>
+													<td>[+]10</td>
+													<td>4/3 the current pitch</td>
+												</tr>
+												<tr>
+													<td>[+]24</td>
+													<td>One octave higher than the current pitch</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td width="100ex"><i>number</i><br />
+											(<b>ABSMIDDLE</b>)</td>
+										<td width="400ex">
+											<table class="invisible">
+												<tr>
+													<td>-24</td>
+													<td>One octave lower than the default pitch</td>
+												</tr>
+												<tr>
+													<td>-10</td>
+													<td>3/4 the default pitch</td>
+												</tr>
+												<tr>
+													<td>0</td>
+													<td>The default pitch</td>
+												</tr>
+												<tr>
+													<td>[+]10</td>
+													<td>4/3 the default pitch</td>
+												</tr>
+												<tr>
+													<td>[+]24</td>
+													<td>One octave higher than the default pitch</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td width="100ex"><i>content</i></td>
+										<td width="400ex">The affected speech text.</td>
+									</tr>
+								</table>
+								<p>The speech engine may clip the pitch to the maximum or minimum pitch it supports.</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Rate"></a><b>Rate</b></p>
+							</td>
+							<td>
+								<p>Modifies the speaking rate of the text contained by this element.</p>
+							</td>
+							<td>
+								<p>&lt;<b>Rate</b> <b>SPEED</b>|<b>ABSSPEED</b>="<i>number</i>"&gt;<i>content</i>&lt;/<b>Rate</b>&gt;</p>
+								<table>
+									<tr class="mini">
+										<th width="100ex">Part</th>
+										<th width="400ex">Description</th>
+									</tr>
+									<tr>
+										<td width="100ex"><i>number</i><br />
+											(<b>SPEED</b>)</td>
+										<td width="400ex">
+											<table class="invisible">
+												<tr>
+													<td>-10</td>
+													<td>1/3 the current rate</td>
+												</tr>
+												<tr>
+													<td>[+]10</td>
+													<td>3 times the current rate</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td width="100ex"><i>number</i><br />
+											(<b>ABSSPEED</b>)</td>
+										<td width="400ex">
+											<table class="invisible">
+												<tr>
+													<td>-10</td>
+													<td>1/3 the default rate</td>
+												</tr>
+												<tr>
+													<td>0</td>
+													<td>The default rate</td>
+												</tr>
+												<tr>
+													<td>[+]10</td>
+													<td>3 times the default rate</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td width="100ex"><i>content</i></td>
+										<td width="400ex">The affected speech text.</td>
+									</tr>
+								</table>
+								<p>The speech engine may clip the rate to the maximum or minimum rate it supports.</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Silence"></a><b>Silence</b></p>
+							</td>
+							<td>
+								<p>Produces silence for a specified number of milliseconds.</p>
+							</td>
+							<td>
+								<p>&lt;<b>Silence</b> <b>MSEC</b>="<i>number</i>" /&gt;</p>
+								<table>
+									<tr class="mini">
+										<th width="100ex">Part</th>
+										<th width="400ex">Description</th>
+									</tr>
+									<tr>
+										<td width="100ex"><i>number</i></td>
+										<td width="400ex">The number of milliseconds to pause.</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Spell"></a><b>Spell</b></p>
+							</td>
+							<td>
+								<p>Spells out the words contained by this element, letter by letter.</p>
+							</td>
+							<td>
+								<p>&lt;<b>Spell</b>&gt;<i>content</i>&lt;/<b>Spell</b>&gt;</p>
+								<table>
+									<tr class="mini">
+										<th width="100ex">Part</th>
+										<th width="400ex">Description</th>
+									</tr>
+									<tr>
+										<td width="100ex"><i>content</i></td>
+										<td width="400ex">Words and numbers are spelled. For words that contain punctuation, such as &quot;U.S.A.&quot;,
+											both the punctuation and the letters are spelled.</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Volume"></a><b>Volume</b></p>
+							</td>
+							<td>
+								<p>Modifies the volume of the text contained by this element.</p>
+							</td>
+							<td>
+								<p>&lt;<b>Volume</b> <b>LEVEL</b>="<i>number</i>"&gt;<i>content</i>&lt;/<b>Volume</b>&gt;</p>
+								<table>
+									<tr class="mini">
+										<th width="100ex">Part</th>
+										<th width="400ex">Description</th>
+									</tr>
+									<tr>
+										<td width="100ex"><i>number</i></td>
+										<td width="400ex">A value from 0 to 100:<br />
+											<table class="invisible">
+												<tr>
+													<td>0</td>
+													<td>Silent</td>
+												</tr>
+												<tr>
+													<td>100</td>
+													<td>Full volume</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td width="100ex"><i>content</i></td>
+										<td width="400ex">The affected speech text.</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<br />
+				<h4><a name="SAPI4"></a>Microsoft<sup>®</sup> Speech Version 4 (<em class="glossary">SAPI4</em>)</h4>
+				<div class="indent">
+					<p><em class="glossary keyword">SAPI4</em> speech output tags use the following syntax rules:</p>
+					<ul>
+						<li>All tags begin and end with a backslash character (\).</li>
+						<li>The single backslash character is not allowed within a tag. To include a backslash character in a text
+							parameter of a tag, use a double backslash (\\).</li>
+						<li>Tags are <em>case-insensitive</em>. For example, \pit\ is the same as \PIT\.</li>
+						<li>Tags are <em>whitespace-dependent</em>. For example, \Rst\ is <em>not</em> the same as \&nbsp;Rst&nbsp;\.</li>
+						<li>Unless otherwise specified or modified by another tag, the speech output retains the characteristic
+							set by the tag for the text specified in a single <em class="keyword">Speak</em> method. Speech output
+							is automatically reset after a <em class="keyword">Speak</em> method is completed.</li>
+					</ul>
+					<p>Some tags include quoted strings:</p>
+					<ul>
+						<li>
+							<p>For Visual Basic® and Visual Basic® Scripting Edition (VBScript), you may have to use two quote marks
+								to designate the tag's parameter, or concatenate a double-quote character as part of the string. The
+								latter is shown in this Visual Basic example:</p>
+							<pre class="example"><em class="token">control</em>.<em class="keyword">Characters</em>("Genie").<em
+								class="keyword">Speak</em> "This is \map=" + chr(34) + "Spoken text" + chr(34) _
++ "=" + chr(34) + "Balloon text" + chr(34) + "\."
+</pre>
+						</li>
+						<li>
+							<p>For C, C++, and Java™ programming, precede backslashes and double quotes with a backslash. For example:</p>
+							<pre class="example"><em class="keyword">BSTR</em> <em class="token">SpeechText</em> = <em class="keyword">SysAllocString</em> (L"This is \\map=\"Spoken text\"=\"Balloon text\"\\");
+<em class="token">character</em>-><em class="keyword">Speak</em> (<em class="token">SpeechText</em>, …);
+</pre>
+						</li>
+					</ul>
+					<p>The following <em class="glossary keyword">SAPI4</em> tags are supported:</p>
+				</div>
+				<div class="syntax">
+					<table class="syntax">
+						<tr>
+							<th width="45ex">Tag</th>
+							<th width="300ex">Description</th>
+							<th>Syntax</th>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Chr"></a><b>Chr</b></p>
+							</td>
+							<td>
+								<p>Sets the voice's character.</p>
+							</td>
+							<td>
+								<p>\<b>Chr</b>=<i>string</i>\</p>
+								<table>
+									<tr class="mini">
+										<th width="100ex">Part</th>
+										<th width="400ex">Description</th>
+									</tr>
+									<tr>
+										<td width="100ex"><i>string</i></td>
+										<td width="400ex">A string specifying the character of the voice:<br />
+											<table class="invisible">
+												<tr>
+													<td>"Normal"</td>
+													<td>A normal tone of voice (default)</td>
+												</tr>
+												<tr>
+													<td>"Monotone"</td>
+													<td>A monotone voice</td>
+												</tr>
+												<tr>
+													<td>"Whisper"</td>
+													<td>A whispered voice</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Ctx"></a><b>Ctx</b></p>
+							</td>
+							<td>
+								<p>Sets the context of the output text.</p>
+							</td>
+							<td>
+								<p>\<b>Ctx</b>=<i>string</i>\</p>
+								<table>
+									<tr class="mini">
+										<th width="100ex">Part</th>
+										<th width="400ex">Description</th>
+									</tr>
+									<tr>
+										<td width="100ex"><i>string</i></td>
+										<td width="400ex">A string specifying the context of the text that follows, which determines how symbols
+											or abbreviations are spoken:<br />
+											<table class="invisible">
+												<tr>
+													<td>"Address"</td>
+													<td>Addresses and/or phone numbers</td>
+												</tr>
+												<tr>
+													<td>"E-mail"</td>
+													<td>Electronic mail</td>
+												</tr>
+												<tr>
+													<td>"Unknown"</td>
+													<td>The context is unknown (default)</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Emp"></a><b>Emp</b></p>
+							</td>
+							<td>
+								<p>Emphasizes the next word spoken. This tag must immediately precede the word.</p>
+							</td>
+							<td>
+								<p>\<b>Emp</b>\</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Lst"></a><b>Lst</b></p>
+							</td>
+							<td>
+								<p>Repeats the character's last spoken statement.</p>
+							</td>
+							<td>
+								<p>\<b>Lst</b>\</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Map"></a><b>Map</b></p>
+							</td>
+							<td>
+								<p>Maps spoken text to text displayed in the word balloon.</p>
+							</td>
+							<td>
+								<p>\<b>Map</b>="<i>spokentext</i>"="<i>balloontext</i>"\</p>
+								<table>
+									<tr class="mini">
+										<th width="100ex">Part</th>
+										<th width="400ex">Description</th>
+									</tr>
+									<tr>
+										<td width="100ex"><i>spokentext</i></td>
+										<td width="400ex">A string specifying the text for spoken output.</td>
+									</tr>
+									<tr>
+										<td width="100ex"><i>balloontext</i></td>
+										<td width="400ex">A string specifying the text for word balloon output.</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Mrk"></a><b>Mrk</b></p>
+							</td>
+							<td>
+								<p>Defines a bookmark in the spoken text.</p>
+							</td>
+							<td>
+								<p>\<b>Mrk</b>=<i>number</i>\</p>
+								<table>
+									<tr class="mini">
+										<th width="100ex">Part</th>
+										<th width="400ex">Description</th>
+									</tr>
+									<tr>
+										<td width="100ex"><i>number</i></td>
+										<td width="400ex">A numeric value that identifies the bookmark (from 1 to 2147483645).</td>
+									</tr>
+								</table>
+								<p>When the speech engine processes a bookmark, Double Agent generates a <em class="keyword">Bookmark</em>
+									event.</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Pau"></a><b>Pau</b></p>
+							</td>
+							<td>
+								<p>Pauses speech for the specified number of milliseconds.</p>
+							</td>
+							<td>
+								<p>\<b>Pau</b>=<i>number</i>\</p>
+								<table>
+									<tr class="mini">
+										<th width="100ex">Part</th>
+										<th width="400ex">Description</th>
+									</tr>
+									<tr>
+										<td width="100ex"><i>number</i></td>
+										<td width="400ex">The number of milliseconds to pause.</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Pit"></a><b>Pit</b></p>
+							</td>
+							<td>
+								<p>Sets the baseline pitch of the output to the specified value in hertz.</p>
+							</td>
+							<td>
+								<p>\<b>Pit</b>=<i>number</i>\</p>
+								<table>
+									<tr class="mini">
+										<th width="100ex">Part</th>
+										<th width="400ex">Description</th>
+									</tr>
+									<tr>
+										<td width="100ex"><i>number</i></td>
+										<td width="400ex">The pitch in hertz.</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Rst"></a><b>Rst</b></p>
+							</td>
+							<td>
+								<p>Resets all tags to the default settings.</p>
+							</td>
+							<td>
+								<p>\<b>Rst</b>\</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Spd"></a><b>Spd</b></p>
+							</td>
+							<td>
+								<p>Sets the baseline average speed of the speech output.</p>
+							</td>
+							<td>
+								<p>\<b>Spd</b>=<i>number</i>\</p>
+								<table>
+									<tr class="mini">
+										<th width="100ex">Part</th>
+										<th width="400ex">Description</th>
+									</tr>
+									<tr>
+										<td width="100ex"><i>number</i></td>
+										<td width="400ex">The baseline average speed, in words per minute.</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p><a name="Vol"></a><b>Vol</b></p>
+							</td>
+							<td>
+								<p>Sets the baseline volume of the speech output.</p>
+							</td>
+							<td>
+								<p>\<b>Vol</b>=<i>number</i>\</p>
+								<table>
+									<tr class="mini">
+										<th width="100ex">Part</th>
+										<th width="400ex">Description</th>
+									</tr>
+									<tr>
+										<td width="100ex"><i>number</i></td>
+										<td width="400ex">The baseline volume: 0 is silence and 65535 is maximum volume.</td>
+									</tr>
+								</table>
+								<p>The volume setting affects both left and right channels. You cannot set the volume of each channel separately.</p>
+							</td>
+						</tr>
+					</table>
+					<p class="note"><span class="note">Note:</span> Double Agent does not support all of the tags documented
+						in the Microsoft<sup>®</sup> Speech SDK. Parameters may also vary depending on the TTS engine selected.
+						You can set a specific TTS engine using the character's <em class="keyword">TTSModeID</em> property.</p>
+				</div>
+				<h4 class="seealso">See Also</h4>
+				<a href="Ref_SAPI5Contexts.htm">SAPI5 English Normalization Contexts</a> </td>
+		</tr>
+	</table>
+</body>
+</html>

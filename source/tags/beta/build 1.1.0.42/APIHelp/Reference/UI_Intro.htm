@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>The Double Agent User Interface</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+	<xml>
+		<MSHelp:TOCTitle Title="The Double Agent User Interface" />
+		<MSHelp:Keyword Index="K" Term="The Double Agent User Interface" />
+		<MSHelp:Attr Name="TopicType" Value="kbOrient" />
+		<MSHelp:Attr Name="TopicType" Value="apiref" />
+		<MSHelp:Attr Name="DocSet" Value="DoubleAgent" />
+		<MSHelp:Attr Name="DocSet" Value="NETFramework" />
+		<MSHelp:Attr Name="DocSet" Value="WindowsForms" />
+		<MSHelp:Attr Name="DocSet" Value="C#" />
+		<MSHelp:Attr Name="DocSet" Value="Visual Basic" />
+		<MSHelp:Attr Name="DocSet" Value="ExpressLibVS" />
+		<MSHelp:Attr Name="Technology" Value="Agent" />
+		<MSHelp:Attr Name="Technology" Value="ManagedCode" />
+		<MSHelp:Attr Name="Technology" Value="ActiveX" />
+		<MSHelp:Attr Name="Technology" Value="WindowsForms" />
+		<MSHelp:Attr Name="Technology" Value="kb3Ptech" />
+		<MSHelp:Attr Name="ProgModel" Value="managed" />
+		<MSHelp:Attr Name="TargetOS" Value="Windows" />
+	</xml>
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;SDK</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h1>The Double Agent User Interface</h1>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>The Double Agent user interface generally reproduces the Microsoft<sup>®</sup> Agent user interface.
+					Double Agent version 1.0 reproduces the Microsoft<sup>®</sup> Agent 2.0 user interface quite faithfully,
+					except that a few components (such as the <a class="see" href="#ListeningTip">Listening tip</a>) have
+					been brought up-to-date.</p>
+				<p>The Double Agent version 1.1 user interface has evolved a bit, but is still similar to Microsoft<sup>®</sup>
+					Agent. Because Double Agent supports the Microsoft<sup>®</sup> Agent international language components,
+					the evolution of its user interface is limited.</p>
+				<h4><a name="Character"></a>The Character Window</h4>
+				<div class="indent">
+					<p>Normally, Double Agent displays animated characters in their own windows that float over other application
+						windows. A user can move a character's window by dragging the character with the left mouse button.
+						The character image moves with the pointer. An application can also move a character using the <em class="keyword">
+							MoveTo</em> method.</p>
+					<p>The Double Agent Control can also be used in <em class="glossary">contained</em> mode. It appears as
+						a child window within an application and it's character is limited to its window. In this case, the
+						user cannot move the character and the <em class="keyword">MoveTo</em> method is disabled.</p>
+				</div>
+				<h4><a name="Menu"></a>The Pop-up Menu</h4>
+				<div class="indent">
+					<p>When the user right-clicks a character, a pop-up menu appears:</p>
+					<p>
+						<img alt="Pop-up Menu" border="0" src="../images/MultiMenu.png" /></p>
+					<p class="mini"><sup><b>*</b></sup> Commands listed are based on the input-active client. For more information
+						on defining commands that appear in the pop-up menu, see the <a href="../Programming/Gen_Overview.htm">
+						Double Agent API Overview</a>.</p>
+					<p class="mini"><sup><b>**</b></sup> Entries listed are all other applications currently hosting the character.
+						For more information on defining this entry, see the <a href="../Programming/Gen_Overview.htm">Double
+						Agent API Overview</a>.</p>
+					<p>The <em class="literal">Open/Close Voice Commands Window</em> command controls the display of the <a
+					class="see" href="#VoiceCommands">Voice Commands</a> window for the current active character. If speech
+						recognition services are disabled, this command is disabled. If speech recognition services are not
+						installed, this command does not appear. </p>
+					<p>The <em class="literal">Hide</em> command plays the animation assigned to the character's <em class="glossary">
+						Hiding</em> state and then hides the character. If the character is already hidden, there will be a
+						<em class="literal">Show</em> command instead.</p>
+					<p>The commands for the character's active client application follow the <em class="literal">Hide</em> command,
+						preceded by a separator. Then the names of other applications using the character appear, also preceded
+						by a separator.</p>
+				</div>
+				<h4><a name="Icon"></a>The Notification Icon</h4>
+				<div class="indent">
+					<p>If a character has been authored to include an icon, or an icon is generated for the character, the icon
+						appears in the notification area of the Windows<sup>®</sup> taskbar when the character is loaded. This
+						icon provides access to the character's <a class="see" href="#Menu">pop-up menu</a>, which provides
+						access to Double Agent's pre-defined commands such as those that hide and show the character.</p>
+					<p>
+						<img alt="Notification area with clock and icon" border="0" src="../images/TaskBarGen.png" /></p>
+					<p>Moving the pointer over the <em class="self">notification icon</em> displays a tip window that reflects
+						the name of the character (in the character's current language), or the tip text specified by the character's
+						active client application. Single-clicking the character's <em class="self">notification icon</em> displays
+						the character. The action associated with double-clicking the <em class="self">notification icon</em>
+						depends on the application currently controlling that character.</p>
+					<p>Right-clicking the <em class="self">notification icon</em> displays the <a class="see" href="#Menu">
+					pop-up menu</a>. When the character is visible, the pop-up menu displays the same commands as those displayed
+						when right-clicking the character. If the character is hidden, only the <em class="literal">Open Voice Commands
+							Window</em> or <em class="literal">Close Voice Commands Window</em> and <em class="literal">Show</em>
+						commands appear.</p>
+				</div>
+				<h4><a name="Balloon"></a>The Word Balloon</h4>
+				<div class="indent">
+					<p>In addition to spoken audio output, the Double Agent interface supports textual captioning in the form
+						of text output in cartoon-style <em class="self">word balloons</em>. Words appear in the <em class="self">
+							word balloon</em> as they are spoken. The <em class="self">word balloon</em> hides when spoken output
+						is completed. The <a href="../Reference/UI_PropSheet.htm#Output">Advanced Character Options</a> window
+						provides options to disable the <em class="self">word balloon's</em> display as well as control attributes
+						related to its appearance.</p>
+					<p>
+						<img title="Yes master word balloon" border="0" src="../images/WordBalloon.png" /></p>
+				</div>
+				<h4><a name="ListeningTip"></a>The Listening Tip</h4>
+				<div class="indent">
+					<p>If speech input is enabled, a special tooltip window appears when the user presses the <em class="glossary">
+						Listening key</em> to begin voice input. The <em class="self">Listening tip</em> displays contextual
+						information related to the current input state of Double Agent. If compatible speech recognition has
+						not been installed or has been disabled, the <em class="self">Listening tip</em> does not appear.</p>
+					<p>
+						<img title="Genie listening tip" border="0" src="../images/ListeningTip.png" /></p>
+				</div>
+				<h4><a name="VoiceCommands"></a>The Voice Commands Window</h4>
+				<div class="indent">
+					<p>If a compatible speech engine is installed, Double Agent supplies a special window called the <em
+						class="self">Voice Commands Window</em> that displays the commands that have been voice-enabled for
+						speech recognition. The <em class="self">Voice Commands Window</em> serves as a visual prompt for what
+						can be spoken as input (commands cannot be selected with the mouse).</p>
+					<p>
+						<img alt="Voice Commands Window" border="0" src="../images/VoiceCommands.png" /></p>
+					<p class="mini"><sup><b>*</b></sup> Commands listed are based on the input-active client. For more information
+						on defining commands that appear in the pop-up menu, see the <a href="../Programming/Gen_Overview.htm">
+						Double Agent API Overview</a>.</p>
+					<p class="mini"><sup><b>**</b></sup> Entries listed are all other applications currently hosting the character.
+						For more information on defining this entry, see the <a href="../Programming/Gen_Overview.htm">Double
+						Agent API Overview</a>.</p>
+					<p>The window appears when a user selects the <em class="literal">Open Voice Commands Window</em> command,
+						either by speaking the command or right-clicking the character and choosing the command from the character's
+						<a class="see" href="#Menu">pop-up menu</a>. However, if the user disables speech input, the <em class="self">
+							Voice Commands Window</em> is not available.</p>
+					<p>The <em class="self">Voice Commands Window</em> displays voice-enabled commands as an indented list.
+						If the current hosting application supplies voice commands, they appear expanded and at the top of the
+						window. Entries also appear for other applications using the character. The window also includes the
+						<em class="glossary">Global Voice Commands</em> predefined by Double Agent. If the current hosting application
+						has no voice commands, the <em class="glossary">Global Voice Commands</em> appear expanded and at the
+						top of the window.</p>
+					<p>The user can size and move the <em class="self">Voice Commands Window</em>. Double Agent remembers the
+						last location of the window and redisplays it at that location if the user closes and re-opens the window.
+						If the entries in the window exceed the current display size of the window, scroll bars appear.</p>
+				</div>
+				<h4 class="seealso">See Also</h4>
+				<a href="UI_Rendering.htm">Image Rendering</a> </td>
+		</tr>
+	</table>
+</body>
+</html>

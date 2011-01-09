@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Using the Control in Web Pages</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+	<xml>
+		<MSHelp:TOCTitle Title="Using the Control in Web Pages" />
+		<MSHelp:Keyword Index="K" Term="Using the Control in Web Pages" />
+		<MSHelp:Attr Name="TopicType" Value="kbOrient" />
+		<MSHelp:Attr Name="TopicType" Value="apiref" />
+		<MSHelp:Attr Name="DocSet" Value="DoubleAgent" />
+		<MSHelp:Attr Name="DocSet" Value="NETFramework" />
+		<MSHelp:Attr Name="DocSet" Value="WindowsForms" />
+		<MSHelp:Attr Name="DocSet" Value="ExpressLibVS" />
+		<MSHelp:Attr Name="Technology" Value="Agent" />
+		<MSHelp:Attr Name="Technology" Value="ManagedCode" />
+		<MSHelp:Attr Name="Technology" Value="ActiveX" />
+		<MSHelp:Attr Name="Technology" Value="WindowsForms" />
+		<MSHelp:Attr Name="Technology" Value="kb3Ptech" />
+		<MSHelp:Attr Name="ProgModel" Value="managed" />
+		<MSHelp:Attr Name="TargetOS" Value="Windows" />
+	</xml>
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Using the Control in Web Pages</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>To access the Double Agent control from a Web page, use the HTML &lt;OBJECT&gt; tag within the &lt;HEAD&gt;
+					or &lt;BODY&gt; element of the page, specifying the <em class="keyword">CLSID</em> (class identifier)
+					for the control.</p>
+				<p><span class="note">Note:</span> At this time, the Double Agent control has not yet been packaged for
+					automatic installation, so it will have to be installed on the target machine before your web page can
+					use it.</p>
+				<h4>The &lt;OBJECT&gt; Tag</h4>
+				<div class="indent">
+					<p>The following example illustrates how to use the &lt;OBJECT&gt; tag to include the control in a Web page.</p>
+					<div class="example">
+						<pre class="example">&lt;OBJECT
+CLASSID=&quot;CLSID: 1147E530-A208-11DE-ABF2-002421116FB2&quot;
+id=AgentControl&gt;
+&lt;/OBJECT&gt;</pre>
+					</div>
+					<p>To begin using a character, you must load the character using the <a class="see" href="../html/M_DoubleAgent_Control_Characters_Load.htm">
+					Load</a> method. A character can be loaded from the user's local storage or an <em class="glossary">HTTP</em>
+						server. For more information about the syntax for loading a character, see the <a class="see" href="../html/M_DoubleAgent_Control_Characters_Load.htm">
+						Load</a> method.</p>
+					<p>Once the character has been successful loaded, you can use the methods, properties, and events exposed
+						by the Double Agent control to program the character. You can also use the methods, properties, and
+						events exposed by your programming language and the browser to program the character; for example, to
+						program its reaction to a button click. Consult the documentation for your browser to determine what
+						features it exposes in its scripting model.</p>
+					<p>The Double Agent server remains loaded only when there is at least one client application with a connection.
+						This means that when a user moves between Agent-enabled Web pages, the Double Agent server will shut
+						down and any characters you loaded will disappear. To keep the server running between pages (and thereby
+						keep a character visible), create another client that remains loaded between page changes. For example,
+						you can create an HTML frameset and declare an &lt;OBJECT&gt; tag for Double Agent in the parent frame.
+						You can then script the pages you load into the child frame(s), to call into the parent's script. Alternatively,
+						you can also include an &lt;OBJECT&gt; tag on each page you load into the child frame. In this case,
+						remember that each page will be its own client. You may need to use the <a class="see" href="../html/M_DoubleAgent_Control_Character_Activate.htm">
+						Activate</a> method to set which client has control when the user interacts with the parent or child
+						page.</p>
+				</div>
+				<h4>Language Components</h4>
+				<div class="indent">
+					<p>To support automatic download of a Microsoft<sup>®</sup> Agent language component in a Web page, include
+						the language component's Object tag on the page before the Double Agent control &lt;OBJECT&gt; tag:</p>
+					<div class="example">
+						<pre class="example">&lt;OBJECT width=0 height=0
+CLASSID=&quot;CLSID: C348<b><em class="token">XXXX</em></b>-A7F8-11D1-AA75-00C04FA34D72&quot;
+CODEBASE = &quot;http://your server/agt<b><em class="token">XXXX</em></b>.dll&quot;&gt;
+&lt;/OBJECT&gt;</pre>
+					</div>
+					<p>where <em class="token">XXXX</em> is replaced with a Language ID. The Microsoft<sup>®</sup> Agent language
+						components are no longer available on the Microsoft Web site, so you must download them from your own
+						site.</p>
+					<ul class="close">
+						<li><b>Note</b> that the &lt;OBJECT&gt; tag for a language component must precede the &lt;OBJECT&gt; tag
+							for the Double Agent control.</li>
+						<li>Multiple languages can be installed on the same client.</li>
+						<li>Before setting the <a class="see" href="../html/P_DoubleAgent_Control_Character_LanguageID.htm">LanguageID</a>
+							of a character, we recommend that your script verify that the locale of the browser, available in the
+							<em>navigator.userLanguage</em> property, matches the language being set.</li>
+					</ul>
+					<p>To support other language versions of Agent, you use another &lt;OBJECT&gt; tag specifying the language
+						component. However, be aware that attempting to install multiple languages at the same time may require
+						the user to reboot.</p>
+				</div>
+				<h4 class="seealso">See Also</h4>
+				<a href="Ctl_Programming_VBScript.htm">Using VBScript</a><br />
+				<a href="Ctl_Programming_JScript.htm">Using JavaScript and JScript</a><br />
+				<a href="Ctl_Programming_Overview.htm">Control Programming Overview</a> </td>
+		</tr>
+	</table>
+</body>
+</html>
