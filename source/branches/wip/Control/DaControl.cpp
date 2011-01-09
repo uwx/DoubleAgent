@@ -53,7 +53,7 @@
 #define	_DEBUG_ACTIVE			(GetProfileDebugInt(_T("DebugActive"),LogVerbose,true)&0xFFFF|LogTimeMs)
 //#define	_DEBUG_PERSIST		LogNormal
 //#define	_TRACE_PERSIST		LogNormal
-#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Control"),LogNormal,true)&0xFFFF|LogTime)
+#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Control"),LogDetails,true)&0xFFFF|LogTime)
 #define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 

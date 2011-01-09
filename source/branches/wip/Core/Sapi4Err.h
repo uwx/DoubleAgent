@@ -27,13 +27,13 @@
 #include <speech.h>
 #pragma warning (pop)
 ////////////////////////////////////////////////////////////////////////
-#ifdef	_DEBUG
+EXTERN_C LPCTSTR _GetSapi4Err (HRESULT pError);
+#if		defined(_DEBUG) || defined(_SAPI4_LOGGING)
 #ifdef	_LOG_DISABLED
 static inline LPCTSTR _GetSapi4Err (HRESULT pError) {return _T("");}
 static inline HRESULT LogSapi4Err (unsigned int pLogLevel, HRESULT pError, LPCTSTR pFormat = NULL, ...) {return pError;}
 #define LogSapi4ErrAnon LogSapi4Err
 #else
-extern LPCTSTR _GetSapi4Err (HRESULT pError);
 #ifdef	_LOG_NOFILELINE
 extern HRESULT LogSapi4Err (unsigned int pLogLevel, HRESULT pError, LPCTSTR pFormat = NULL, ...);
 #define LogSapi4ErrAnon LogSapi4Err

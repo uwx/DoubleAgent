@@ -29,6 +29,8 @@
 //////////////////////////////////////////////////////////////////////
 
 _COM_SMARTPTR_TYPEDEF (ITTSCentral, IID_ITTSCentral);
+_COM_SMARTPTR_TYPEDEF (IAudio, IID_IAudio);
+_COM_SMARTPTR_TYPEDEF (IAudioDest, IID_IAudioDest);
 
 //////////////////////////////////////////////////////////////////////
 #pragma warning (push)
@@ -162,8 +164,12 @@ protected:
 	void SetIsSpeaking (bool pIsSpeaking);
 	void SetIsResetting (bool pIsResetting);
 
+	void LogTtsEngine (UINT pLogLevel, ITTSCentral * pTtsEngine, LPCTSTR pFormat = NULL, ...);
+	void LogTtsAudio (UINT pLogLevel, IAudioDest * pTtsAudio, LPCTSTR pFormat = NULL, ...);
+
 protected:
 	ITTSCentralPtr				mEngine;
+	IAudioDestPtr				mAudioDest;
 	ULONG						mDefaultRate;
 	USHORT						mDefaultVolume;
 	USHORT						mDefaultPitch;

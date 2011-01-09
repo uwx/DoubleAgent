@@ -57,7 +57,7 @@
 #define	_DEBUG_STYLE			(GetProfileDebugInt(_T("DebugStyle"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_HANDLER			(GetProfileDebugInt(_T("DebugInterface_Handler"),LogVerbose,true)&0xFFFF|LogTime)
 #define	_LOG_CHARACTER			(GetProfileDebugInt(_T("LogInstance_Character"),LogDetails,true)&0xFFFF|LogTime)
-#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Server"),LogNormal,true)&0xFFFF|LogTime)
+#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Server"),LogDetails,true)&0xFFFF|LogTime)
 #define	_LOG_ABANDONED			MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF|LogTime,_LOG_INSTANCE)
 #define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 //#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)

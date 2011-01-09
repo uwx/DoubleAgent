@@ -41,8 +41,8 @@ CPropPageLogging::CPropPageLogging()
 	mKeyNdxServer (0),
 	mKeyNdxControl (1),
 	mKeyNdxCore (2),
-	mKeyNdx (-1),
-	mDefLogFile (_T(_DOUBLEAGENT_NAME) _T(".log"))
+	mKeyNdxSapi4 (3),
+	mKeyNdx (-1)
 {
 #ifdef	_DEBUG_INSTANCE
 	LogMessage (_DEBUG_INSTANCE, _T("[%p] CPropPageLogging::CPropPageLogging"), this);
@@ -54,6 +54,12 @@ CPropPageLogging::CPropPageLogging()
 	mLogComponent.SetAtGrow (mKeyNdxServer, _T(_SERVER_REGNAME));
 	mLogComponent.SetAtGrow (mKeyNdxControl, _T(_CONTROL_REGNAME));
 	mLogComponent.SetAtGrow (mKeyNdxCore, _T(_CORE_REGNAME));
+	mLogComponent.SetAtGrow (mKeyNdxSapi4, _T("Sapi4"));
+
+	mDefLogFile.SetAtGrow (mKeyNdxServer, _T(_DOUBLEAGENT_NAME) _T(".log"));
+	mDefLogFile.SetAtGrow (mKeyNdxControl, _T(_DOUBLEAGENT_NAME) _T(".log"));
+	mDefLogFile.SetAtGrow (mKeyNdxCore, _T(_DOUBLEAGENT_NAME) _T(".log"));
+	mDefLogFile.SetAtGrow (mKeyNdxSapi4, _T("Sapi4.log"));
 }
 
 CPropPageLogging::~CPropPageLogging()
@@ -70,6 +76,7 @@ BOOL CPropPageLogging::OnInitDialog ()
 	mLogServer.Attach			(GetDlgItem (IDC_LOG_SERVER));
 	mLogControl.Attach			(GetDlgItem (IDC_LOG_CONTROL));
 	mLogCore.Attach				(GetDlgItem (IDC_LOG_CORE));
+	mLogSapi4.Attach			(GetDlgItem (IDC_LOG_SAPI4));
 	mLogLevelNone.Attach		(GetDlgItem (IDC_LOG_LEVEL_NONE));
 	mLogLevelIfActive.Attach	(GetDlgItem (IDC_LOG_LEVEL_IFACTIVE));
 	mLogLevelNormal.Attach		(GetDlgItem (IDC_LOG_LEVEL_NORMAL));
@@ -84,6 +91,13 @@ BOOL CPropPageLogging::OnInitDialog ()
 	mLogPathBrowse.Attach		(GetDlgItem (IDC_LOG_PATH_BROWSE));
 	mLogPathReset.Attach		(GetDlgItem (IDC_LOG_PATH_RESET));
 	mLogRegistry.Attach			(GetDlgItem (IDC_LOG_REGISTRY));
+
+#ifdef	_WIN64
+	CAtlString	lButtonTitle;
+	mLogSapi4.GetWindowText (lButtonTitle);
+	lButtonTitle += _T("\n(32-bit)");
+	mLogSapi4.SetWindowText (lButtonTitle);
+#endif
 
 	ShowLogging ();
 	return TRUE;
@@ -105,6 +119,7 @@ void CPropPageLogging::ShowLogging ()
 			(!Button_GetCheck (mLogServer))
 		&&	(!Button_GetCheck (mLogControl))
 		&&	(!Button_GetCheck (mLogCore))
+		&&	(!Button_GetCheck (mLogSapi4))
 		)
 	{
 		Button_SetCheck (mLogServer, TRUE);
@@ -123,6 +138,11 @@ void CPropPageLogging::ShowLogging ()
 	if	(Button_GetCheck (mLogCore))
 	{
 		ShowLogging (mKeyNdx = mKeyNdxCore);
+	}
+	else
+	if	(Button_GetCheck (mLogSapi4))
+	{
+		ShowLogging (mKeyNdx = mKeyNdxSapi4);
 	}
 
 	if	(!mLogCrashValue)
@@ -151,17 +171,17 @@ void CPropPageLogging::ShowLogging (INT_PTR pKeyNdx)
 	{
 		lLogLevel = &lItemLogLevel;
 	}
-	ShowLogLevel (*lLogLevel);
+	ShowLogLevel (*lLogLevel, pKeyNdx);
 
 	lLogPath = mLogPath (pKeyNdx);
 	if	(!lLogPath)
 	{
 		lLogPath = &lItemLogPath;
 	}
-	ShowLogPath (*lLogPath);
+	ShowLogPath (*lLogPath, pKeyNdx);
 }
 
-void CPropPageLogging::ShowLogLevel (const CRegDWord & pLogLevel)
+void CPropPageLogging::ShowLogLevel (const CRegDWord & pLogLevel, INT_PTR pKeyNdx)
 {
 	DWORD	lLogLevel = pLogLevel.Value() & LogLevelMask;
 
@@ -172,16 +192,17 @@ void CPropPageLogging::ShowLogLevel (const CRegDWord & pLogLevel)
 	Button_SetCheck (mLogLevelVerbose, lLogLevel == LogVerbose);
 }
 
-void CPropPageLogging::ShowLogPath (const CRegString & pLogPath)
+void CPropPageLogging::ShowLogPath (const CRegString & pLogPath, INT_PTR pKeyNdx)
 {
 	CAtlString	lFilePath;
 	CAtlString	lFileName;
+	CAtlString	lDefLogFile = mDefLogFile [pKeyNdx];
 
 	SplitLogPath (CRegString (pLogPath).Expand().Value(), lFilePath, lFileName);
 
 	mLogFileEdit.SetWindowText (lFileName);
 	mLogPathEdit.SetWindowText (lFilePath);
-	mLogFileReset.EnableWindow (lFileName.CompareNoCase (mDefLogFile) != 0);
+	mLogFileReset.EnableWindow (lFileName.CompareNoCase (lDefLogFile) != 0);
 	mLogPathReset.EnableWindow (lFilePath.CompareNoCase (mDefLogPath) != 0);
 }
 
@@ -313,9 +334,13 @@ void CPropPageLogging::SplitLogPath (LPCTSTR pLogPath, CAtlString & pFilePath, C
 
 	PathRemoveBackslash (pFilePath.GetBuffer (MAX_PATH));
 	pFilePath.ReleaseBuffer ();
-	if	(pFileName.IsEmpty ())
+	if	(
+			(pFileName.IsEmpty ())
+		&&	(mKeyNdx >= 0)
+		&&	(mKeyNdx < (INT_PTR)mDefLogFile.GetCount())
+		)
 	{
-		pFileName = mDefLogFile;
+		pFileName = mDefLogFile [mKeyNdx];
 	}
 }
 
@@ -323,7 +348,7 @@ CAtlString CPropPageLogging::MakeLogPath (LPCTSTR pFilePath, LPCTSTR pFileName, 
 {
 	CAtlString	lFilePath (pFilePath);
 	CAtlString	lFileName (pFileName);
-
+	
 	lFilePath.TrimLeft ();
 	lFilePath.TrimRight ();
 	PathUnquoteSpaces (lFilePath.GetBuffer (MAX_PATH));
@@ -342,9 +367,13 @@ CAtlString CPropPageLogging::MakeLogPath (LPCTSTR pFilePath, LPCTSTR pFileName, 
 	{
 		lFilePath = mDefLogPath;
 	}
-	if	(lFileName.IsEmpty ())
+	if	(
+			(lFileName.IsEmpty ())
+		&&	(mKeyNdx >= 0)
+		&&	(mKeyNdx < (INT_PTR)mDefLogFile.GetCount())
+		)
 	{
-		lFileName = mDefLogFile;
+		lFileName = mDefLogFile [mKeyNdx];
 	}
 	PathAppend (lFilePath.GetBuffer (MAX_PATH), lFileName);
 	lFilePath.ReleaseBuffer ();
@@ -356,7 +385,11 @@ CAtlString CPropPageLogging::MakeLogPath (LPCTSTR pFilePath, LPCTSTR pFileName, 
 		&&	(lFilePath.CompareNoCase (mDefLogPath) == 0)
 		)
 	{
-		if	(lFileName.CompareNoCase (mDefLogFile) == 0)
+		if	(
+				(mKeyNdx >= 0)
+			&&	(mKeyNdx < (INT_PTR)mDefLogFile.GetCount())
+			&&	(lFileName.CompareNoCase (mDefLogFile [mKeyNdx]) == 0)
+			)
 		{
 			lFilePath.Empty ();
 		}
@@ -422,7 +455,7 @@ LRESULT CPropPageLogging::OnLogLevel(WORD wNotifyCode, WORD wID, HWND hWndCtl, B
 			mLogLevel (mKeyNdx)->SetValue (lLogLevel);
 			SetModified (TRUE);
 		}
-		ShowLogLevel (*mLogLevel (mKeyNdx));
+		ShowLogLevel (*mLogLevel (mKeyNdx), mKeyNdx);
 	}
 	return 0;
 }

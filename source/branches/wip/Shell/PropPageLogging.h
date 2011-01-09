@@ -36,6 +36,7 @@ public:
 	CContainedWindow mLogServer;
 	CContainedWindow mLogControl;
 	CContainedWindow mLogCore;
+	CContainedWindow mLogSapi4;
 	CContainedWindow mLogLevelNone;
 	CContainedWindow mLogLevelIfActive;
 	CContainedWindow mLogLevelNormal;
@@ -79,6 +80,7 @@ protected:
 		COMMAND_HANDLER(IDC_LOG_SERVER, BN_CLICKED, OnLogComponent)
 		COMMAND_HANDLER(IDC_LOG_CONTROL, BN_CLICKED, OnLogComponent)
 		COMMAND_HANDLER(IDC_LOG_CORE, BN_CLICKED, OnLogComponent)
+		COMMAND_HANDLER(IDC_LOG_SAPI4, BN_CLICKED, OnLogComponent)
 		COMMAND_HANDLER(IDC_LOG_LEVEL_NONE, BN_CLICKED, OnLogLevel)
 		COMMAND_HANDLER(IDC_LOG_LEVEL_IFACTIVE, BN_CLICKED, OnLogLevel)
 		COMMAND_HANDLER(IDC_LOG_LEVEL_NORMAL, BN_CLICKED, OnLogLevel)
@@ -99,8 +101,8 @@ protected:
 protected:
 	void ShowLogging ();
 	void ShowLogging (INT_PTR pKeyNdx);
-	void ShowLogLevel (const CRegDWord & pLogLevel);
-	void ShowLogPath (const CRegString & pLogPath);
+	void ShowLogLevel (const CRegDWord & pLogLevel, INT_PTR pKeyNdx);
+	void ShowLogPath (const CRegString & pLogPath, INT_PTR pKeyNdx);
 
 	CRegKeyEx * PrepUpdate (INT_PTR pKeyNdx);
 	void UpdateLogPath (INT_PTR pKeyNdx);
@@ -134,6 +136,7 @@ protected:
 	const INT_PTR					mKeyNdxServer;
 	const INT_PTR					mKeyNdxControl;
 	const INT_PTR					mKeyNdxCore;
+	const INT_PTR					mKeyNdxSapi4;
 	INT_PTR							mKeyNdx;
 	CAtlStringArray					mLogComponent;
 	CAtlOwnPtrArray <CRegKeyEx>		mLogKey;
@@ -142,7 +145,7 @@ protected:
 	tPtr <CRegKeyEx>				mLogSettingsKey;
 	tPtr <CRegDWord>				mLogCrashValue;
 	tPtr <CRegDWord>				mLogTraceValue;
-	CAtlString						mDefLogFile;
+	CAtlStringArray					mDefLogFile;
 	CAtlString						mDefLogPath;
 	CAtlString						mBrowseInitPath;
 };

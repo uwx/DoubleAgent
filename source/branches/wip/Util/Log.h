@@ -60,8 +60,9 @@ typedef	enum
 #endif
 #else	// _M_CEE_XXXX
 #ifdef	__cplusplus
-extern "C"
-{
+#ifndef	_LOG_NO_EXTERN_C
+EXTERN_C {
+#endif
 #else
 #include <tchar.h>
 #endif
@@ -79,7 +80,9 @@ extern bool				gLogAllWinErr;
 #endif
 
 #ifdef	__cplusplus
+#ifndef	_LOG_NO_EXTERN_C
 }
+#endif
 #endif
 #endif	// _M_CEE_XXXX
 
@@ -107,8 +110,10 @@ static inline int LogDebugMemory (int pDbgFlag = 0) {return 0;}
 #else	// _LOG_DISABLED
 
 #ifdef	__cplusplus
-extern "C"
-{
+#ifndef	_LOG_NO_EXTERN_C
+EXTERN_C {
+#endif
+
 DWORD LogStart (bool pNewLogFile = false, LPCTSTR pLogFileName = NULL, UINT pLogLevel = 0);
 void LogStop (unsigned int pPutLogEnd = 15);
 void LogControl (LPTSTR pLogFileName, UINT & pLogLevel);
@@ -129,11 +134,10 @@ int LogDebugMemory (int pDbgFlag = _CRTDBG_ALLOC_MEM_DF|_CRTDBG_DELAY_FREE_MEM_D
 static inline void LogDebugRuntime (bool pDebugRuntime = true, bool pAsserts = true, bool pErrors = true, bool pWarnings = false) {}
 static inline int LogDebugMemory (int pDbgFlag = 0) {return 0;}
 #endif
-}
 
 #ifdef	_LOG_NOFILELINE
-extern "C" DWORD LogWinErr (UINT pLogLevel, DWORD pError, LPCTSTR pFormat = NULL, ...);
-extern "C" HRESULT LogComErr (UINT pLogLevel, HRESULT pError, LPCTSTR pFormat = NULL, ...);
+extern DWORD LogWinErr (UINT pLogLevel, DWORD pError, LPCTSTR pFormat = NULL, ...);
+extern HRESULT LogComErr (UINT pLogLevel, HRESULT pError, LPCTSTR pFormat = NULL, ...);
 #define	LogWinErrAnon LogWinErr
 #define	LogComErrAnon LogComErr
 #else
@@ -145,6 +149,9 @@ DEFINE_LogErrFL(Com,HRESULT)
 #define	LogComErrAnon _LogComErrFL(NULL,0).LogErr
 #endif
 
+#ifndef	_LOG_NO_EXTERN_C
+}
+#endif
 #else	// __cplusplus
 
 extern DWORD LogStart (int pNewLogFile = false, LPCTSTR pLogFileName = NULL, UINT pLogLevel = 0);

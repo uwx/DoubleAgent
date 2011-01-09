@@ -99,7 +99,7 @@
 #define	_LOG_ROOT_PATH					_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
 #define	_LOG_SECTION_NAME				_T(_SERVER_REGNAME)
 #define _LOG_DEF_LOGNAME				_T(_DOUBLEAGENT_NAME) _T(".log")
-#define	_LOG_PREFIX						_T("Srvr ")
+#define	_LOG_PREFIX						_T("Server  ")
 static tPtr <CComAutoCriticalSection>	sLogCriticalSection = new CComAutoCriticalSection;
 #define	_LOG_CRITICAL_SECTION			(!sLogCriticalSection?NULL:&sLogCriticalSection->m_sec)
 #include "LogAccess.inl"

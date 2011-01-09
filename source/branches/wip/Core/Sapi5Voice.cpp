@@ -30,7 +30,7 @@
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_EVENTS	(GetProfileDebugInt(_T("DebugSapiEvents"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
+#define	_TRACE_EVENTS	(GetProfileDebugInt(_T("TraceSapi5Events"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -124,17 +124,17 @@ void __stdcall CSapi5Voice::VoiceNotifyCallback(WPARAM wParam, LPARAM lParam)
 		CSapi5Voice *	lThis = (CSapi5Voice *) lParam;
 		CSpEvent		lEvent;
 
-#ifdef	_DEBUG_EVENTS
+#ifdef	_TRACE_EVENTS
 		tS <SPEVENTSOURCEINFO>	lEventInfo;
 		lEventInfo.ullEventInterest = SPFEI_ALL_TTS_EVENTS;
 		lEventInfo.ullQueuedInterest = SPFEI_ALL_TTS_EVENTS;
 		LogSapi5Err (LogIfActive|LogHighVolume, lThis->mVoice->GetInfo (&lEventInfo));
-		LogMessage (_DEBUG_EVENTS, _T("[%p] EventCount [%u]"), lThis, lEventInfo.ulCount);
+		LogMessage (_TRACE_EVENTS, _T("[%p] EventCount [%u]"), lThis, lEventInfo.ulCount);
 #endif
 
 		while (lEvent.GetFrom (lThis->mVoice) == S_OK)
 		{
-#ifdef	_DEBUG_EVENTS
+#ifdef	_TRACE_EVENTS
 			CAtlString	lEventStr;
 
 			switch (lEvent.eEventId)
@@ -152,7 +152,7 @@ void __stdcall CSapi5Voice::VoiceNotifyCallback(WPARAM wParam, LPARAM lParam)
 				case SPEI_UNDEFINED:			lEventStr = _T("UNDEFINED"); break;
 				default:						lEventStr.Format (_T("%u"), lEvent.eEventId);
 			}
-			LogMessage (_DEBUG_EVENTS, _T("  Stream [%u] Event [%u] [%s]"), lEvent.ulStreamNum, lEvent.eEventId, lEventStr);
+			LogMessage (_TRACE_EVENTS, _T("  Stream [%u] Event [%u] [%s]"), lEvent.ulStreamNum, lEvent.eEventId, lEventStr);
 #endif
 			if	(
 					(lEvent.eEventId == SPEI_START_INPUT_STREAM)
