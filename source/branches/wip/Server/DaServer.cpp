@@ -63,6 +63,10 @@
 //#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 #endif
 
+#ifndef	_LOG_CHARACTER
+#define	_LOG_CHARACTER	LogNormal
+#endif
+
 //#define	__RUNNING_STRESS_TEST__	1
 //#define	__EMPTY_WORKING_SET__	1
 
@@ -221,7 +225,7 @@ void DaServer::FinalRelease()
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::FinalRelease [%u]"), this, max(m_dwRef,-1), IsInNotify());
 	}
 #endif
-	Terminate (false);
+	Terminate (false, !CSvrObjLifetime::VerifyClientLifetime());
 }
 
 bool DaServer::VerifyClientLifetime ()

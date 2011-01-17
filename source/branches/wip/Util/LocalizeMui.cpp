@@ -106,7 +106,7 @@ HINSTANCE CLocalize::GetMuiModule (LANGID pLangId)
 		return NULL;
 	}
 
-#ifdef	_VISTA
+#if	(WINVER >= 0x0600)
 	TCHAR	lParentPath [85];
 
 	GetLocaleInfo (MAKELCID (pLangId, SORT_DEFAULT), LOCALE_SNAME, lMuiPath, sizeof(lMuiPath)/sizeof(TCHAR));

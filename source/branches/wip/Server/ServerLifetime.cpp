@@ -157,7 +157,7 @@ void CSvrObjLifetime::UnmanageObjectLifetime (CComObjectRootBase * pObject)
 #ifdef	_LOG_LIFETIME
 			if	(LogIsActive (_LOG_LIFETIME))
 			{
-				LogMessage (_LOG_LIFETIME, _T("[%p(%d)] Unmanage %s"), this, pObject->m_dwRef, AtlTypeName(this));
+				LogMessage (_LOG_LIFETIME, _T("[%p(%d)] Unmanage %s"), this, max(pObject->m_dwRef,0), AtlTypeName(this));
 			}
 #endif
 			_AtlModule.UnmanageObjectLifetime (this);

@@ -31,6 +31,8 @@ public:
 	CButton	mCharacterCount2;
 	CButton	mCharacterCount5;
 	CButton	mCharacterCount10;
+	CButton	mSuperSabotage;
+	CButton	mRestartSabotage;
 	int mSabotageNum;
 	//}}AFX_DATA
 
@@ -56,6 +58,7 @@ protected:
 	afx_msg void OnClose();
 	afx_msg void OnShowCharacter();
 	afx_msg void OnControlMode();
+	afx_msg void OnSabotageMode();
 	afx_msg void OnCharacterCount();
 	afx_msg void OnSoundOn();
 	afx_msg void OnIdleOn();
@@ -127,6 +130,7 @@ protected:
 protected:
 	void ShowModeSelection ();
 	void ShowControlMode ();
+	void ShowSabotageMode ();
 	void ShowCharacters ();
 	bool SelectCharacter (int pCharacterNdx, bool pShow);
 	bool ShowCharacter (LPCTSTR pCharacterPath);

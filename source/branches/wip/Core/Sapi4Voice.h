@@ -158,9 +158,11 @@ private:
 
 protected:
 	bool CheckIsQueueing () const;
+	bool CheckIsParsing () const;
 	bool CheckIsSpeaking () const;
 	bool CheckIsResetting () const;
 	void SetIsQueueing (bool pIsQueueing);
+	void SetIsParsing (bool pIsParsing);
 	void SetIsSpeaking (bool pIsSpeaking);
 	void SetIsResetting (bool pIsResetting);
 
@@ -175,6 +177,7 @@ protected:
 	USHORT						mDefaultPitch;
 	bool						mPaused;
 	tPtr <DWORD>				mIsQueueing;
+	tPtr <DWORD>				mIsParsing;
 	tPtr <DWORD>				mIsSpeaking;
 	tPtr <DWORD>				mResetPending;
 	tMallocPtr <WCHAR>			mLastText;

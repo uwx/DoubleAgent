@@ -133,6 +133,7 @@ CDaServerModule::CDaServerModule ()
 	CListeningAnchor (*(CListeningGlobal*)this),
 	mClientLifetimeTimer (0)
 {
+	LogCrash_Initialize ();
 #ifdef	_DEBUG_LANGUAGE
 	SetThreadLocale (MAKELCID (_DEBUG_LANGUAGE, SORT_DEFAULT));
 #endif
@@ -173,7 +174,6 @@ CDaServerModule::CDaServerModule ()
 	atlTraceWindowing.SetLevel (2);
 	atlTraceWindowing.SetStatus (ATLTRACESTATUS_ENABLED);
 #endif
-
 	WerOptOut (false);
 }
 
@@ -181,6 +181,7 @@ CDaServerModule::~CDaServerModule ()
 {
 	CLocalize::FreeMuiModules ();
 	LogStop (LogIfActive);
+	LogCrash_Terminate ();
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -303,6 +304,7 @@ void CDaServerModule::_PostMessageLoop (bool pForModal)
 	SafeFreeSafePtr (mSvrCharacterFiles);
 	SafeFreeSafePtr (mMessageFilter);
 	CSapiVoiceCache::TerminateStaticInstance ();
+	CSapiInputCache::TerminateStaticInstance ();
 
 	CoResumeClassObjects ();
 }
@@ -378,8 +380,23 @@ void CDaServerModule::RunMessageLoop ()
 				}
 			}
 
-			TranslateMessage (&lMsg);
-			DispatchMessage (&lMsg);
+			if	(lMsg.message == WM_USER)
+			{
+				_try
+				{
+					TranslateMessage (&lMsg);
+					DispatchMessage (&lMsg);
+				}
+				__except (LogCrashStack (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__))
+				{
+					LogMessage (LogIfActive, _T("  Message [%p] [%8.8X] [(%I64d) (%I64u) (%p)] [(%I64d) (%I64u) (%p)]"), lMsg.hwnd, lMsg.message, lMsg.wParam, lMsg.wParam, lMsg.wParam, lMsg.lParam, lMsg.lParam, lMsg.lParam);
+				}
+			}
+			else
+			{
+				TranslateMessage (&lMsg);
+				DispatchMessage (&lMsg);
+			}
 		}
 
 		_PostMessageLoop (false); // Cleanup before delayed shutdown

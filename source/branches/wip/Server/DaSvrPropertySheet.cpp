@@ -111,7 +111,7 @@ void DaSvrPropertySheet::FinalRelease ()
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrPropertySheet::FinalRelease [%p]"), this, max(m_dwRef,-1), m_hWnd);
 	}
 #endif
-	Terminate (false);
+	Terminate (false, !CSvrObjLifetime::VerifyClientLifetime());
 }
 
 /////////////////////////////////////////////////////////////////////////////

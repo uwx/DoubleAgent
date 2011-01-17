@@ -126,7 +126,7 @@ void DaSvrCommand::FinalRelease()
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCommand::FinalRelease"), this, max(m_dwRef,-1));
 	}
 #endif
-	Terminate (false);
+	Terminate (false, !CSvrObjLifetime::VerifyClientLifetime());
 }
 
 void DaSvrCommand::OnClientEnded()

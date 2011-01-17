@@ -86,7 +86,7 @@ public:
 	friend UINT RunMessagePump (CFrameWnd * pFrameWnd, UINT pCycles = 0);
 	friend UINT RunMessagePump (UINT pCycles = 0);
 
-#ifdef	_VISTA
+#if	(WINVER >= 0x0600)
 	friend bool MonitorMessagePumpNotResponding (HWND pWindow);
 	friend bool UnmonitorMessagePumpNotResponding (HWND pWindow);
 	friend bool CheckMessagePumpNotResponding (HWND pWindow, bool pReset = true);

@@ -2195,7 +2195,7 @@ DWORD LogStart (bool pNewLogFile, LPCTSTR pLogFileName, UINT pLogLevel)
 				{
 					HMODULE		lModule = 0;
 					TCHAR		lProgramName [MAX_PATH];
-#ifdef	_VISTA
+#if	(WINVER >= 0x0600)
 #ifdef	_WIN64
 					LPCTSTR		lVersionSuffix = _T(" Vx64");
 #else

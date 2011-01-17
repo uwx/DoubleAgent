@@ -255,7 +255,7 @@ void DaSvrCharacter::FinalRelease()
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)(%d)] DaSvrCharacter::FinalRelease [%u]"), this, mCharID, max(m_dwRef,-1), IsInNotify());
 	}
 #endif
-	Terminate (false);
+	Terminate (false, !CSvrObjLifetime::VerifyClientLifetime());
 }
 
 bool DaSvrCharacter::VerifyClientLifetime ()

@@ -2646,6 +2646,7 @@ bool CAgentWnd::DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQu
 					}
 				}
 #endif
+				lQueuedAction = NULL;
 			}
 			pNextQueueTime = mQueue.mTime;
 			lRet = true;

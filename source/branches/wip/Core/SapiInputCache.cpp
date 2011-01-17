@@ -40,10 +40,15 @@ CSapiInputCache::CSapiInputCache ()
 
 CSapiInputCache::~CSapiInputCache ()
 {
+	Terminate ();
+}
+
+void CSapiInputCache::Terminate ()
+{
 #ifdef	_DEBUG_CACHE
 	try
 	{
-		LogMessage (_DEBUG_CACHE, _T("CSapiInputCache::~CSapiInputCache Inputs [%d] Clients [%d]"), mCachedInputs.GetCount(), mInputClients.GetCount());
+		LogMessage (_DEBUG_CACHE, _T("CSapiInputCache::Terminate Inputs [%d] Clients [%d]"), mCachedInputs.GetCount(), mInputClients.GetCount());
 	}
 	catch AnyExceptionSilent
 #endif
@@ -64,6 +69,11 @@ CSapiInputCache::~CSapiInputCache ()
 CSapiInputCache * CSapiInputCache::GetStaticInstance ()
 {
 	return &_AtlModule;
+}
+
+void CSapiInputCache::TerminateStaticInstance ()
+{
+	return _AtlModule.CSapiInputCache::Terminate ();
 }
 
 CSapi5Inputs * CSapiInputCache::GetSapi5Inputs ()

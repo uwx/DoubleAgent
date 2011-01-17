@@ -35,6 +35,7 @@ CStressTestApp gApp;
 CStressTestApp::CStressTestApp()
 :	CWinApp (_LOG_SECTION_NAME)
 {
+	LogCrash_Initialize ();
 	SetRegistryKeyEx (_T("Double Agent"), _LOG_SECTION_NAME);
 	LogStart (true);
 }
@@ -42,6 +43,7 @@ CStressTestApp::CStressTestApp()
 CStressTestApp::~CStressTestApp()
 {
 	LogStop (LogIfActive);
+	LogCrash_Terminate ();
 }
 
 /////////////////////////////////////////////////////////////////////////////

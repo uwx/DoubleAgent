@@ -110,7 +110,7 @@ void DaSvrSpeechInput::FinalRelease()
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechInput::FinalRelease"), this, max(m_dwRef,-1));
 	}
 #endif
-	Terminate (false);
+	Terminate (false, !CSvrObjLifetime::VerifyClientLifetime());
 }
 
 void DaSvrSpeechInput::OnClientEnded()

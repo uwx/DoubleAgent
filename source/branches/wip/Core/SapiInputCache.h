@@ -46,6 +46,7 @@ public:
 // Attributes
 public:
 	_DACORE_IMPEXP static CSapiInputCache * GetStaticInstance ();
+	_DACORE_IMPEXP CSapi5Inputs * GetSapi5Inputs ();
 
 // Operations
 public:
@@ -61,7 +62,8 @@ public:
 	_DACORE_IMPEXP CSapi5Input * FindCachedInput (LPCTSTR pEngineId);
 	_DACORE_IMPEXP bool GetInputClients (CSapi5Input * pInput, CAtlPtrTypeArray <CSapiInputClient> & pClients);
 
-	_DACORE_IMPEXP CSapi5Inputs * GetSapi5Inputs ();
+	_DACORE_IMPEXP void Terminate ();
+	_DACORE_IMPEXP static void TerminateStaticInstance ();
 
 // Implementation
 protected:

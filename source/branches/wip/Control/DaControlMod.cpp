@@ -63,6 +63,7 @@ CDaControlModule::CDaControlModule ()
 	mAppActive (false)
 {
 	mNextCharID = SHRT_MAX+1;
+	LogCrash_Initialize ();
 	CListeningGlobal::Startup ();
 
 #if	ISOLATION_AWARE_ENABLED
@@ -107,6 +108,7 @@ CDaControlModule::~CDaControlModule ()
 {
 	Terminate ();
 	LogStop (LogIfActive);
+	LogCrash_Terminate ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -544,6 +546,7 @@ STDAPI DllCanUnloadNow(void)
 	if	(lResult == S_OK)
 	{
 		CSapiVoiceCache::TerminateStaticInstance ();
+		CSapiInputCache::TerminateStaticInstance ();
 	}
 	return lResult;
 }

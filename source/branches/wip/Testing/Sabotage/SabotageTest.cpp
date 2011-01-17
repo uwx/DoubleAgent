@@ -32,13 +32,15 @@ CSabotageTestApp gApp;
 CSabotageTestApp::CSabotageTestApp()
 :	CWinApp (_LOG_SECTION_NAME)
 {
+	LogCrash_Initialize ();
 	SetRegistryKeyEx (_T("Double Agent"), _LOG_SECTION_NAME);
-	LogStart (true);
+	LogStart (false);
 }
 
 CSabotageTestApp::~CSabotageTestApp()
 {
 	LogStop (LogIfActive);
+	LogCrash_Terminate ();
 }
 
 /////////////////////////////////////////////////////////////////////////////

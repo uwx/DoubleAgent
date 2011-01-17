@@ -306,6 +306,9 @@ HRESULT CListeningState::StopListening (bool pManual, long pCause)
 			)
 		{
 			lResult = S_FALSE;
+#ifdef	_DEBUG_LISTEN
+			LogComErr (_DEBUG_LISTEN, lResult, _T("[%p(%d)] StopListening"), this, GetCharID());
+#endif
 		}
 		else
 		{
@@ -334,6 +337,9 @@ HRESULT CListeningState::StopListening (bool pManual, long pCause)
 				StopListenTimers ();
 				ShowListeningTip (false, false);
 			}
+#ifdef	_DEBUG_LISTEN
+			LogComErr (_DEBUG_LISTEN, lResult, _T("[%p(%d)] StopListening"), this, GetCharID());
+#endif
 			if	(lWasListening)
 			{
 				mCharacter.ShowListeningState (false);
@@ -346,9 +352,6 @@ HRESULT CListeningState::StopListening (bool pManual, long pCause)
 				catch AnyExceptionSilent
 			}
 		}
-#ifdef	_DEBUG_LISTEN
-		LogComErr (_DEBUG_LISTEN, lResult, _T("[%p(%d)] StopListening"), this, GetCharID());
-#endif
 	}
 	return lResult;
 }

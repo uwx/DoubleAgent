@@ -48,11 +48,11 @@
 #endif
 
 #ifndef	_LOG_SPEECH
-#define	_LOG_SPEECH		LogDetails
+#define	_LOG_SPEECH		LogNormal
 #endif
 
 #ifndef	_LOG_QUEUE_OPS
-#define	_LOG_QUEUE_OPS	LogVerbose
+#define	_LOG_QUEUE_OPS	LogDetails
 #endif
 
 #ifdef	_TRACE_BUSY_TIME

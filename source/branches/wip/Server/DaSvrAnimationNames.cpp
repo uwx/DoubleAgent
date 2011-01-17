@@ -101,7 +101,7 @@ void DaSvrAnimationNames::FinalRelease()
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAnimationNames::FinalRelease"), this, max(m_dwRef,-1));
 	}
 #endif
-	Terminate (false);
+	Terminate (false, !CSvrObjLifetime::VerifyClientLifetime());
 }
 
 void DaSvrAnimationNames::OnClientEnded()

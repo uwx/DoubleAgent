@@ -71,7 +71,7 @@
 #define	_LOG_QUEUE_OPS		LogDetails
 #endif
 #ifndef	_LOG_POPUP_OPS
-#define	_LOG_POPUP_OPS		LogDetails
+#define	_LOG_POPUP_OPS		LogNormal
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

@@ -38,7 +38,7 @@
 #endif
 
 #ifndef	_LOG_QUEUE_OPS
-#define	_LOG_QUEUE_OPS	LogVerbose
+#define	_LOG_QUEUE_OPS	LogDetails
 #endif
 
 #ifdef	_TRACE_ACTION_INSTANCE
@@ -941,19 +941,29 @@ bool CQueuedMove::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 						{
 							lPopupWnd->MovePopup (mPosition, mCharID, MoveCause_ProgramMoved, true);
 						}
-						if	(
-								(mTimeAllowed > 0)
-							&&	(!mEndAnimationShown)
-							&&	(pAgentWnd->ShowGesture (NULL))
-							)
+						if	(pQueue.GetNextAction (QueueActionMove) == this)
 						{
-							mEndAnimationShown = true;
-							lRet = true;
+							if	(
+									(mTimeAllowed > 0)
+								&&	(!mEndAnimationShown)
+								&&	(pAgentWnd->ShowGesture (NULL))
+								)
+							{
+								mEndAnimationShown = true;
+								lRet = true;
+							}
 						}
-						if	(!lRet)
+						else
+						{
+							lRet = true; // Deleted during MovePopup
+						}
+					}
+					if	(!lRet)
+					{
+						if	(pQueue.GetNextAction (QueueActionMove) == this)
 						{
 							pQueue.RemoveHead ();
-#ifdef	_STRICT_COMPATIBILITY
+	#ifdef	_STRICT_COMPATIBILITY
 							if	(
 									(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
 								&&	(!lCharacterWnd->IsCharShown ())
@@ -962,11 +972,12 @@ bool CQueuedMove::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 								NotifyComplete (pAgentWnd->mNotify, AGENTERR_CHARACTERNOTVISIBLE);
 							}
 							else
-#endif
+	#endif
 							{
 								NotifyComplete (pAgentWnd->mNotify);
 							}
 						}
+						lRet = true;
 					}
 				}
 			}

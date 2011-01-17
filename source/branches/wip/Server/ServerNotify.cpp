@@ -30,7 +30,7 @@
 
 #pragma comment(lib, "psapi.lib")
 
-extern int LogCrashCode (unsigned int pCode, LPCSTR pFile = NULL, UINT pLine = 0, int pAction = EXCEPTION_CONTINUE_EXECUTION);
+extern int LogCrashCode (unsigned int pCode, LPCSTR pFile = NULL, UINT pLine = 0, int pAction = EXCEPTION_EXECUTE_HANDLER);
 
 #ifdef	_DEBUG
 #define	_DEBUG_NOTIFY		(GetProfileDebugInt(_T("DebugNotify"),LogVerbose,true)&0xFFFF|LogTime)

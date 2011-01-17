@@ -23,11 +23,11 @@
 #include "StdAfx.h"
 #include <oledlg.h>
 #include "ComMessageFilter.h"
-#ifdef	_DEBUG
+//#ifdef	_DEBUG
 #include "Registry.h"
 #include "GuidStr.h"
 #include "DebugWin.h"
-#endif
+//#endif
 
 #pragma comment(lib, "oledlg.lib")
 
@@ -204,9 +204,8 @@ bool CComMessageFilter::SetMessageTimeout (DWORD pMessageTimeout)
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_DEBUG
-/////////////////////////////////////////////////////////////////////////////
 
+#ifdef	_DEBUG_INCOMING
 static CAtlString CallTypeStr (DWORD pCallType)
 {
 	CAtlString	lCallTypeStr;
@@ -237,6 +236,23 @@ static CAtlString ServerCallStr (DWORD pServerCall)
 	return lServerCallStr;
 }
 
+static CAtlString InterfaceInfoStr (const INTERFACEINFO * pInterfaceInfo)
+{
+	CAtlString	lInterfaceInfoStr;
+
+	if	(pInterfaceInfo)
+	{
+		lInterfaceInfoStr.Format (_T("%s (%hu)"), CGuidStr::GuidName (pInterfaceInfo->iid), pInterfaceInfo->wMethod);
+	}
+	else
+	{
+		lInterfaceInfoStr = _T("<null>");
+	}
+	return lInterfaceInfoStr;
+}
+#endif	// _DEBUG_INCOMING
+
+#ifdef	_DEBUG_MESSAGE
 static CAtlString PendingTypeStr (DWORD pPendingType)
 {
 	CAtlString	lPendingTypeStr;
@@ -263,22 +279,9 @@ static CAtlString PendingMsgStr (DWORD pPendingMsg)
 	}
 	return lPendingMsgStr;
 }
+#endif	// _DEBUG_MESSAGE
 
-static CAtlString InterfaceInfoStr (const INTERFACEINFO * pInterfaceInfo)
-{
-	CAtlString	lInterfaceInfoStr;
-
-	if	(pInterfaceInfo)
-	{
-		lInterfaceInfoStr.Format (_T("%s (%hu)"), CGuidStr::GuidName (pInterfaceInfo->iid), pInterfaceInfo->wMethod);
-	}
-	else
-	{
-		lInterfaceInfoStr = _T("<null>");
-	}
-	return lInterfaceInfoStr;
-}
-
+#ifdef	_DEBUG_BUSY_DLG
 static CAtlString OleUiResultStr (UINT pResult)
 {
 	CAtlString	lOleUiResultStr;
@@ -300,9 +303,10 @@ static CAtlString OleUiResultStr (UINT pResult)
 	}
 	return lOleUiResultStr;
 }
+#endif	// _DEBUG_BUSY_DLG
 
 /////////////////////////////////////////////////////////////////////////////
-#endif	// _DEBUG
+#pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
 UINT CComMessageFilter::ShowBusyDlg (HTASK pBlockedTask, bool pNotResponding)

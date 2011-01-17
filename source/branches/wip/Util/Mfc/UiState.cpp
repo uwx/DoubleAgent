@@ -584,7 +584,7 @@ UINT RunMessagePump (UINT pCycles)
 //////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
-#ifdef	_VISTA
+#if	(WINVER >= 0x0600)
 //////////////////////////////////////////////////////////////////////
 
 struct sMessagePumpMonitorWnd
@@ -744,7 +744,7 @@ bool StopMessagePumpMonitor ()
 }
 
 //////////////////////////////////////////////////////////////////////
-#endif	// _VISTA
+#endif	// WINVER
 //////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
@@ -755,7 +755,7 @@ bool StopMessagePumpMonitor ()
 bool IsDwmCompositionEnabled ()
 {
 	bool	lRet = false;
-#ifdef	_VISTA
+#if	(WINVER >= 0x0600)
 	try
 	{
 		BOOL	lCompositionEnabled = FALSE;
@@ -773,7 +773,7 @@ bool IsDwmCompositionEnabled ()
 bool IsDwmRenderingEnabled (HWND pWindow)
 {
 	bool	lRet = false;
-#ifdef	_VISTA
+#if	(WINVER >= 0x0600)
 	try
 	{
 		BOOL	lCompositionEnabled = FALSE;
@@ -800,7 +800,7 @@ bool IsDwmRenderingEnabled (HWND pWindow)
 COLORREF GetDwmFrameColor ()
 {
 	COLORREF	lRet = GetSysColor (COLOR_ACTIVECAPTION)|0xFF000000;
-#ifdef	_VISTA
+#if	(WINVER >= 0x0600)
 	try
 	{
 		COLORREF	lColorization = lRet;
@@ -827,7 +827,7 @@ COLORREF GetDwmFrameColor ()
 BYTE GetDwmFrameAlpha ()
 {
 	BYTE	lRet = 255;
-#ifdef	_VISTA
+#if	(WINVER >= 0x0600)
 	try
 	{
 		COLORREF	lColorization = GetSysColor (COLOR_ACTIVECAPTION) | 0xFF000000;
@@ -854,7 +854,7 @@ BYTE GetDwmFrameAlpha ()
 
 void LogDwmState (UINT pLogLevel, HWND pWindow, LPCTSTR pTitle)
 {
-#ifdef	_VISTA
+#if	(WINVER >= 0x0600)
 	if	(LogIsActive (pLogLevel))
 	{
 		try
