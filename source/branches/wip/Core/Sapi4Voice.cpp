@@ -95,9 +95,6 @@ namespace _SAPI4_LOG
 #ifndef	_TRACE_STOP
 #define	_TRACE_STOP			LogVerbose|LogTimeMs|LogHighVolume
 #endif
-//#ifndef	_TRACE_AUDIO
-//#define	_TRACE_AUDIO		LogDetails|LogTimeMs|LogHighVolume
-//#endif
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -422,7 +419,7 @@ HRESULT CSapi4Voice::PrepareToSpeak (bool pHighPriority)
 	if	(_IsValid ())
 	{
 		lResult = S_OK;
-
+		
 		if	(
 				(!mNotifySink->SafeIsConnected ())
 			&&	(mNotifySink = new CTTSNotifySink (*this))
@@ -491,43 +488,28 @@ HRESULT CSapi4Voice::Speak (LPCTSTR pMessage, bool pAsync)
 					_SAPI4_LOG::LogMessage (_TRACE_STOP, _T("[%p] ResetPending at Speak"), this);
 				}
 #endif
-#ifdef	_TRACE_AUDIO
-				if	(_SAPI4_LOG::LogIsActive ())
-				{
-					IAudioPtr	lAudio (mAudioDest);
-					HRESULT		lResult;
-					
-					if	(lAudio)
-					{
-						lResult = lAudio->UnClaim ();
-						if	(
-								(FAILED (lResult))
-							||	(_SAPI4_LOG::LogIsActive (_TRACE_AUDIO))
-							)
-						{
-							_SAPI4_LOG::LogSapi4ErrAnon (MinLogLevel(_TRACE_AUDIO,LogAlways), lResult, _T("[%p] AudioUnClaim before TextData"), this);
-						}
-					}
-				}
-#endif
 #ifdef	_LOG_SPEECH
 				if	(_SAPI4_LOG::LogIsActive (_LOG_SPEECH))
 				{
 					_SAPI4_LOG::LogMessage (_LOG_SPEECH, _T("[%p] TextData [%s]"), this, DebugStr(lMessage));
 				}
 #endif
-
 				SetIsQueueing (true);
-				_SAPI4_LOG::LogSapi4Err (LogDetails|LogTime, mEngine->AudioPause());
-				SetIsQueueing (true);
+				SetIsParsing (false);
 
 				mLastText = AtlAllocTaskWideString (lMessage);
 				lSpeechData.pData = (PVOID)mLastText.Ptr ();
 				lSpeechData.dwSize = (lMessage.GetLength() + 1) * sizeof(WCHAR);
-				lResult = _SAPI4_LOG::LogSapi4Err (LogNormal|LogTime, mEngine->TextData (CHARSET_TEXT, TTSDATAFLAG_TAGGED, lSpeechData, mBufNotifySink, IID_ITTSBufNotifySink));
-				if	(SUCCEEDED (lResult))
+				lResult = mEngine->TextData (CHARSET_TEXT, TTSDATAFLAG_TAGGED, lSpeechData, mBufNotifySink, IID_ITTSBufNotifySink);
+#ifdef	_TRACE_STOP
+				if	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
 				{
-					lResult = _SAPI4_LOG::LogSapi4Err (LogNormal|LogTime, mEngine->AudioResume());
+					_SAPI4_LOG::LogSapi4ErrAnon (MinLogLevel(_TRACE_STOP,LogAlways), lResult, _T("[%p] TextData"), this);
+				}
+				else
+#endif
+				{
+					_SAPI4_LOG::LogSapi4Err (LogNormal|LogTime, lResult);
 				}
 			}
 			catch AnyExceptionDebug
@@ -555,67 +537,6 @@ HRESULT CSapi4Voice::Stop ()
 	{
 		try
 		{
-#ifdef	_TRACE_STOP
-			if	(CheckIsResetting ())
-			{
-				if	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
-				{
-					_SAPI4_LOG::LogMessage (_TRACE_STOP, _T("[%p] AudioReset already resetting"), this);
-				}
-			}
-			else
-			{
-				if	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
-				{
-					_SAPI4_LOG::LogMessage (_TRACE_STOP, _T("[%p] AudioReset IsQueuing [%u] IsParsing [%u] IsSpeaking [%u]"), this, CheckIsQueueing(), CheckIsParsing(), CheckIsSpeaking());
-				}
-			}
-#endif
-#ifdef	_TRACE_AUDIO
-			if	(
-					(CheckIsQueueing ())
-				||	(CheckIsParsing ())
-				||	(CheckIsSpeaking ())
-				)
-			{
-				LogTtsAudio (_TRACE_AUDIO, mAudioDest, _T("[%p] Before AudioReset"), this);
-			}
-#endif
-#ifdef	_TRACE_AUDIO
-			if	(_SAPI4_LOG::LogIsActive ())
-			{
-				IAudioPtr	lAudio (mAudioDest);
-				HRESULT		lResult;
-				
-				if	(lAudio)
-				{
-					lResult = lAudio->Stop ();
-					if	(
-							(FAILED (lResult))
-						||	(_SAPI4_LOG::LogIsActive (_TRACE_AUDIO))
-						)
-					{
-						_SAPI4_LOG::LogSapi4ErrAnon (MinLogLevel(_TRACE_AUDIO,LogAlways), lResult, _T("[%p] AudioStop before AudioReset"), this);
-					}
-					lResult = lAudio->Flush ();
-					if	(
-							(FAILED (lResult))
-						||	(_SAPI4_LOG::LogIsActive (_TRACE_AUDIO))
-						)
-					{
-						_SAPI4_LOG::LogSapi4ErrAnon (MinLogLevel(_TRACE_AUDIO,LogAlways), lResult, _T("[%p] AudioFlush before AudioReset"), this);
-					}
-					lResult = lAudio->UnClaim ();
-					if	(
-							(FAILED (lResult))
-						||	(_SAPI4_LOG::LogIsActive (_TRACE_AUDIO))
-						)
-					{
-						_SAPI4_LOG::LogSapi4ErrAnon (MinLogLevel(_TRACE_AUDIO,LogAlways), lResult, _T("[%p] AudioUnClaim before AudioReset"), this);
-					}
-				}
-			}
-#endif
 			if	(
 					(
 						(CheckIsQueueing())
@@ -624,11 +545,30 @@ HRESULT CSapi4Voice::Stop ()
 				&&	(!CheckIsResetting())
 				)
 			{
-				SetIsResetting (CheckIsQueueing() || CheckIsParsing());
+#ifdef	_TRACE_STOP
+				if	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
+				{
+					_SAPI4_LOG::LogMessage (_TRACE_STOP, _T("[%p] AudioReset IsQueuing [%u] IsParsing [%u] IsSpeaking [%u]"), this, CheckIsQueueing(), CheckIsParsing(), CheckIsSpeaking());
+				}
+#endif
+				SetIsResetting (CheckIsParsing());
 				lResult = mEngine->AudioReset ();
 			}
 			else
 			{
+#ifdef	_TRACE_STOP
+				if	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
+				{
+					if	(CheckIsResetting ())
+					{
+						_SAPI4_LOG::LogMessage (_TRACE_STOP, _T("[%p] AudioReset already resetting"), this);
+					}
+					else
+					{
+						_SAPI4_LOG::LogMessage (_TRACE_STOP, _T("[%p] NOT AudioReset IsQueuing [%u] IsParsing [%u] IsSpeaking [%u]"), this, CheckIsQueueing(), CheckIsParsing(), CheckIsSpeaking());
+					}
+				}
+#endif
 				lResult = S_FALSE;
 			}
 		}
@@ -683,6 +623,7 @@ HRESULT CSapi4Voice::Resume ()
 		try
 		{
 			_SAPI4_LOG::LogSapi4Err (LogNormal|LogTime, lResult = mEngine->AudioResume());
+			_SAPI4_LOG::LogSapi4Err (LogNormal|LogTime, lResult = mEngine->AudioResume()); // SAPI4 seems to sometime lose a call?
 		}
 		catch AnyExceptionDebug
 
@@ -1409,7 +1350,7 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::AudioStart (QWORD qTimeSt
 #ifdef	_TRACE_EVENTS
 	if	(_SAPI4_LOG::LogIsActive (_TRACE_EVENTS))
 	{
-		_SAPI4_LOG::LogMessage (_TRACE_EVENTS, _T("[%p] [%p(%d)] CSapi4Voice::AudioStart [%I64u]"), &mOwner, this, max(m_dwRef,-1), qTimeStamp);
+		_SAPI4_LOG::LogMessage (_TRACE_EVENTS, _T("[%p] [%p(%d)] CSapi4Voice::AudioStart [%I64u] IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), &mOwner, this, max(m_dwRef,-1), qTimeStamp, mOwner.CheckIsQueueing(), mOwner.CheckIsParsing(), mOwner.CheckIsSpeaking(), mOwner.CheckIsResetting());
 	}
 #endif
 	try
@@ -1444,7 +1385,7 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::AudioStop (QWORD qTimeSta
 #ifdef	_TRACE_EVENTS
 	if	(_SAPI4_LOG::LogIsActive (_TRACE_EVENTS))
 	{
-		_SAPI4_LOG::LogMessage (_TRACE_EVENTS, _T("[%p] [%p(%d)] CSapi4Voice::AudioStop [%I64u]"), &mOwner, this, max(m_dwRef,-1), qTimeStamp);
+		_SAPI4_LOG::LogMessage (_TRACE_EVENTS, _T("[%p] [%p(%d)] CSapi4Voice::AudioStop [%I64u] IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), &mOwner, this, max(m_dwRef,-1), qTimeStamp, mOwner.CheckIsQueueing(), mOwner.CheckIsParsing(), mOwner.CheckIsSpeaking(), mOwner.CheckIsResetting());
 	}
 #endif
 	try
@@ -1583,15 +1524,12 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSBufNotifySink::TextDataStarted (QWORD
 #ifdef	_TRACE_EVENTS
 	if	(_SAPI4_LOG::LogIsActive (_TRACE_EVENTS))
 	{
-		_SAPI4_LOG::LogMessage (_TRACE_EVENTS, _T("[%p] [%p(%d)] CSapi4Voice::TextDataStarted [%I64u]"), &mOwner, this, max(m_dwRef,-1), qTimeStamp);
+		_SAPI4_LOG::LogMessage (_TRACE_EVENTS, _T("[%p] [%p(%d)] CSapi4Voice::TextDataStarted [%I64u] IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), &mOwner, this, max(m_dwRef,-1), qTimeStamp, mOwner.CheckIsQueueing(), mOwner.CheckIsParsing(), mOwner.CheckIsSpeaking(), mOwner.CheckIsResetting());
 	}
 #endif
 	try
 	{
-		if	(!mOwner.CheckIsResetting())
-		{
-			mOwner.SetIsParsing (true);
-		}
+		mOwner.SetIsParsing (!mOwner.CheckIsResetting());
 	}
 	catch AnyExceptionSilent
 	return S_OK;
@@ -1602,7 +1540,7 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSBufNotifySink::TextDataDone (QWORD qT
 #ifdef	_TRACE_EVENTS
 	if	(_SAPI4_LOG::LogIsActive (_TRACE_EVENTS))
 	{
-		_SAPI4_LOG::LogMessage (_TRACE_EVENTS, _T("[%p] [%p(%d)] CSapi4Voice::TextDataDone [%I64u] [%8.8X]"), &mOwner, this, max(m_dwRef,-1), qTimeStamp, dwFlags);
+		_SAPI4_LOG::LogMessage (_TRACE_EVENTS, _T("[%p] [%p(%d)] CSapi4Voice::TextDataDone [%I64u] [%8.8X] IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), &mOwner, this, max(m_dwRef,-1), qTimeStamp, dwFlags, mOwner.CheckIsQueueing(), mOwner.CheckIsParsing(), mOwner.CheckIsSpeaking(), mOwner.CheckIsResetting());
 	}
 #ifdef	_TRACE_STOP
 	else
