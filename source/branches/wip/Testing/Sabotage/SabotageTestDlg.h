@@ -33,6 +33,7 @@ public:
 	CButton	mCharacterCount10;
 	CButton	mSuperSabotage;
 	CButton	mRestartSabotage;
+	CButton	mSuperSabotageNow;
 	int mSabotageNum;
 	//}}AFX_DATA
 
@@ -59,6 +60,7 @@ protected:
 	afx_msg void OnShowCharacter();
 	afx_msg void OnControlMode();
 	afx_msg void OnSabotageMode();
+	afx_msg void OnSabotageNow();
 	afx_msg void OnCharacterCount();
 	afx_msg void OnSoundOn();
 	afx_msg void OnIdleOn();

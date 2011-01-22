@@ -2,6 +2,8 @@
 // Microsoft Visual C++ generated include file.
 // Used by SabotageTest.rc
 //
+#define IDCANCEL2                       3
+#define IDOK2                           3
 #define IDC_CHARACTER_LIST              1000
 #define IDC_CHARACTERS_01               1001
 #define IDC_CHARACTERS_02               1002
@@ -45,10 +47,10 @@
 #define IDD_SABOTAGETEST_DIALOG         1040
 #define IDC_SUPER_SABOTAGE              1041
 #define IDC_RESTART_SABOTAGE            1042
-#define IDC_SUPER_SABOTAGE2             1042
+#define IDC_SUPER_SABOTAGE_NOW          1043
 
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        129

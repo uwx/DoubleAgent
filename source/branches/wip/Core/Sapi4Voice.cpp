@@ -42,7 +42,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	_SAPI4_LOGGING
 /////////////////////////////////////////////////////////////////////////////
-#define	_SAPI4_LOG	Sapi4Log	
+#define	_SAPI4_LOG	Sapi4Log
 namespace _SAPI4_LOG
 {
 #define	_LOG_ROOT_PATH		_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
@@ -89,9 +89,6 @@ namespace _SAPI4_LOG
 #ifndef	_TRACE_EVENTS_EX
 #define	_TRACE_EVENTS_EX	LogVerbose|LogTimeMs|LogHighVolume
 #endif
-#ifndef	_TRACE_STATE
-#define	_TRACE_STATE		LogVerbose|LogTimeMs|LogToCache
-#endif
 #ifndef	_TRACE_STOP
 #define	_TRACE_STOP			LogVerbose|LogTimeMs|LogHighVolume
 #endif
@@ -118,9 +115,9 @@ CSapi4Voice::CSapi4Voice ()
 #ifdef	_LOG_INSTANCE
 	if	(_SAPI4_LOG::LogIsActive (_LOG_INSTANCE))
 	{
-		_SAPI4_LOG::LogMessage (_LOG_INSTANCE, _T("[%p] CSapi4Voice"), this); 
+		_SAPI4_LOG::LogMessage (_LOG_INSTANCE, _T("[%p] CSapi4Voice"), this);
 	}
-#endif	
+#endif
 }
 
 CSapi4Voice::~CSapi4Voice ()
@@ -132,12 +129,7 @@ CSapi4Voice::~CSapi4Voice ()
 	}
 #endif
 
-	try
-	{
-		Stop ();
-	}
-	catch AnyExceptionDebug
-
+	Stop ();
 	SafeFreeSafePtr (mAudioDest);
 	SafeFreeSafePtr (mEngine);
 	SafeFreeSafePtr (mNotifySink);
@@ -146,9 +138,9 @@ CSapi4Voice::~CSapi4Voice ()
 #ifdef	_LOG_INSTANCE
 	if	(_SAPI4_LOG::LogIsActive (_LOG_INSTANCE))
 	{
-		_SAPI4_LOG::LogMessage (_LOG_INSTANCE, _T("[%p] ~CSapi4Voice"), this); 
+		_SAPI4_LOG::LogMessage (_LOG_INSTANCE, _T("[%p] ~CSapi4Voice"), this);
 	}
-#endif	
+#endif
 }
 
 CSapi4Voice * CSapi4Voice::CreateInstance ()
@@ -419,7 +411,7 @@ HRESULT CSapi4Voice::PrepareToSpeak (bool pHighPriority)
 	if	(_IsValid ())
 	{
 		lResult = S_OK;
-		
+
 		if	(
 				(!mNotifySink->SafeIsConnected ())
 			&&	(mNotifySink = new CTTSNotifySink (*this))
@@ -465,6 +457,34 @@ HRESULT CSapi4Voice::Speak (LPCTSTR pMessage, bool pAsync)
 #ifdef	DebugTimeStart
 	DebugTimeStart
 #endif
+
+#if	TRUE
+	if	(
+			(_SAPI4_LOG::LogIsActive ())
+		&&	(_IsValid ())
+		&&	(!_IsPaused ())
+		&&	(CheckIsParsing())
+		&&	(!CheckIsSpeaking())
+		&&	(!CheckIsResetting())
+		)
+	{
+#ifdef	_TRACE_STOP
+		if	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
+		{
+			_SAPI4_LOG::LogMessage (_TRACE_STOP, _T("[%p] FullReset IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), this, CheckIsQueueing(), CheckIsParsing(), CheckIsSpeaking(), CheckIsResetting());
+		}
+#endif
+		lResult = FullReset ();
+
+#ifdef	_TRACE_STOP
+		if	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
+		{
+			_SAPI4_LOG::LogSapi4ErrAnon (MinLogLevel(_TRACE_STOP,LogAlways), lResult, _T("[%p] FullReset IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), this, CheckIsQueueing(), CheckIsParsing(), CheckIsSpeaking(), CheckIsResetting());
+		}
+#endif
+	}
+#endif	
+
 	if	(_IsValid ())
 	{
 		if	(_IsPaused ())
@@ -533,6 +553,7 @@ HRESULT CSapi4Voice::Stop ()
 #ifdef	DebugTimeStart
 	DebugTimeStart
 #endif
+
 	if	(_IsValid ())
 	{
 		try
@@ -541,18 +562,26 @@ HRESULT CSapi4Voice::Stop ()
 					(
 						(CheckIsQueueing())
 					||	(CheckIsSpeaking())
+					||	(CheckIsParsing())
 					)
 				&&	(!CheckIsResetting())
 				)
 			{
+				SetIsResetting (CheckIsParsing());
 #ifdef	_TRACE_STOP
 				if	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
 				{
-					_SAPI4_LOG::LogMessage (_TRACE_STOP, _T("[%p] AudioReset IsQueuing [%u] IsParsing [%u] IsSpeaking [%u]"), this, CheckIsQueueing(), CheckIsParsing(), CheckIsSpeaking());
+					_SAPI4_LOG::LogMessage (_TRACE_STOP, _T("[%p] AudioReset IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), this, CheckIsQueueing(), CheckIsParsing(), CheckIsSpeaking(), CheckIsResetting());
 				}
 #endif
-				SetIsResetting (CheckIsParsing());
 				lResult = mEngine->AudioReset ();
+
+#ifdef	_TRACE_STOP
+				if	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
+				{
+					_SAPI4_LOG::LogSapi4ErrAnon (MinLogLevel(_TRACE_STOP,LogAlways), lResult, _T("[%p] AudioReset IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), this, CheckIsQueueing(), CheckIsParsing(), CheckIsSpeaking(), CheckIsResetting());
+				}
+#endif
 			}
 			else
 			{
@@ -573,22 +602,22 @@ HRESULT CSapi4Voice::Stop ()
 			}
 		}
 		catch AnyExceptionDebug
-
-		if	(FAILED (lResult))
-		{
-			SetIsQueueing (false);
-			SetIsParsing (false);
-			SetIsSpeaking (false);
-		}
 	}
 	else
 	{
 		lResult = E_UNEXPECTED;
 	}
-	
+
 	if	(_SAPI4_LOG::LogIsActive ())
 	{
 		_SAPI4_LOG::LogSapi4Err (LogNormal|LogTime, lResult);
+	}
+
+	if	(FAILED (lResult))
+	{
+		SetIsQueueing (false);
+		SetIsParsing (false);
+		SetIsSpeaking (false);
 	}
 #ifdef	DebugTimeStart
 	DebugTimeStop
@@ -847,6 +876,83 @@ HRESULT CSapi4Voice::SetPitch (USHORT pPitch)
 	{
 		lResult = lAttributes->PitchSet (pPitch);
 	}
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+//
+//	Occasionally, the SAPI4 engine gets seized up.  When this happens, we
+//	get a speech cycle with an AudioStop event but no TextDataDone event.
+//	From that point on, the TextData method stops working.
+//
+//	This method copes by starting a new instance of the SAPI4 engine.
+//
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT CSapi4Voice::FullReset ()
+{
+	HRESULT						lResult;
+	IAudioDestPtr				lOldAudioDest;
+	ITTSCentralPtr				lOldEngine;
+	IAudioDestPtr				lNewAudioDest;
+	ITTSCentralPtr				lNewEngine;
+	USHORT						lDefaultPitch = mDefaultPitch;
+	ULONG						lDefaultRate = mDefaultRate;
+	USHORT						lDefaultVolume = mDefaultVolume;
+	GUID						lModeId;
+	USHORT						lPitch = GetPitch();
+	ULONG						lRate = GetRate();
+	USHORT						lVolume = GetVolume();
+
+	mIsQueueing = NULL;
+	mIsParsing = NULL;
+	mIsSpeaking = NULL;
+	mResetPending = NULL;
+
+	GetModeId (lModeId);
+	lOldAudioDest.Attach (mAudioDest.Detach());
+	lOldEngine.Attach (mEngine.Detach());
+
+	try
+	{
+		lResult = SetModeId (lModeId);
+
+		if	(SUCCEEDED (lResult))
+		{
+			SetPitch (lPitch);
+			SetRate (lRate);
+			SetVolume (lVolume);
+		}
+	}
+	catch AnyExceptionDebug
+
+	if	(SUCCEEDED (lResult))
+	{
+		lNewAudioDest.Attach (mAudioDest.Detach());
+		lNewEngine.Attach (mEngine.Detach());
+		mAudioDest.Attach (lOldAudioDest.Detach());
+		mEngine.Attach (lOldEngine.Detach());
+
+		mNotifySink->Disconnect ();
+ 		SafeFreeSafePtr (mAudioDest);
+		SafeFreeSafePtr (mEngine);
+		mAudioDest.Attach (lNewAudioDest.Detach());
+		mEngine.Attach (lNewEngine.Detach());
+		mNotifySink->Connect ();
+	}
+	else
+	{
+ 		SafeFreeSafePtr (mAudioDest);
+		SafeFreeSafePtr (mEngine);
+		mAudioDest.Attach (lOldAudioDest.Detach());
+		mEngine.Attach (lOldEngine.Detach());
+	}
+
+	mDefaultPitch = lDefaultPitch;
+	mDefaultRate = lDefaultRate; 
+	mDefaultVolume = lDefaultVolume;
 	return lResult;
 }
 
@@ -1317,13 +1423,17 @@ HRESULT CSapi4Voice::CTTSNotifySink::Disconnect ()
 		&&	(mRegisteredKey != 0)
 		)
 	{
-		lResult = _SAPI4_LOG::LogSapi4Err (LogNormal|LogTime, mOwner.mEngine->UnRegister (mRegisteredKey));
+		lResult = mOwner.mEngine->UnRegister (mRegisteredKey);
 #ifdef	_LOG_NOTIFY
 		if	(_SAPI4_LOG::LogIsActive (_LOG_NOTIFY))
 		{
-			_SAPI4_LOG::LogComErrAnon (MinLogLevel(_LOG_NOTIFY,LogAlways), lResult, _T("[%p] [%p(%d)] Disconnect [%u]"), &mOwner, this, max(m_dwRef,-1), mRegisteredKey);
+			_SAPI4_LOG::LogSapi4ErrAnon (MinLogLevel(_LOG_NOTIFY,LogAlways), lResult, _T("[%p] [%p(%d)] Disconnect [%u]"), &mOwner, this, max(m_dwRef,-1), mRegisteredKey);
 		}
+		else
 #endif
+		{
+			_SAPI4_LOG::LogSapi4Err (LogNormal|LogTime, lResult);
+		}
 	}
 	mRegisteredKey = 0;
 

@@ -27,18 +27,18 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_CAN
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
     "DaShellRes.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
     "#include ""afxres.h""\r\n"
     "#include ""..\\Include\\DaVersion.h""\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
     "#include ""DaShell.rc2""\r\n"
     "\0"
@@ -130,7 +130,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_REGISTRY, DIALOG
     BEGIN
@@ -169,7 +169,7 @@ EMULATIONDETAILS.HTM    HTML                    "..\\Resources\\EmulationDetails
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_CPL_NAME            "Double Agent"
     IDS_CPL_DESC            "Double Agent settings"

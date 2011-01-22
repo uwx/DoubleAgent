@@ -348,7 +348,7 @@ CAtlString CPropPageLogging::MakeLogPath (LPCTSTR pFilePath, LPCTSTR pFileName, 
 {
 	CAtlString	lFilePath (pFilePath);
 	CAtlString	lFileName (pFileName);
-	
+
 	lFilePath.TrimLeft ();
 	lFilePath.TrimRight ();
 	PathUnquoteSpaces (lFilePath.GetBuffer (MAX_PATH));

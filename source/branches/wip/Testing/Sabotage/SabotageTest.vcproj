@@ -162,6 +162,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				Optimization="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -223,6 +224,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				Optimization="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

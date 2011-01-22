@@ -25,10 +25,11 @@
 #include "GuidStr.h"
 
 #ifdef	_DEBUG
-#define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Balloon"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
-#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Balloon"),LogVerbose,true)&0xFFFF|LogTime)
-#define	_LOG_ABANDONED			MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF|LogTime,_LOG_INSTANCE)
-#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
+#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Balloon"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Balloon"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_ABANDONED		MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF|LogTime,_LOG_INSTANCE)
+#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
+#define	_DEBUG_ABANDONED	_LOG_ABANDONED
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -89,7 +90,16 @@ void DaSvrBalloon::Terminate (bool pFinal, bool pAbandonned)
 			&&	(m_dwRef > 0)
 			)
 		{
-			if	(!pAbandonned)
+			if	(pAbandonned)
+			{
+#ifdef	_DEBUG_ABANDONED
+				if	(LogIsActive (_DEBUG_ABANDONED))
+				{
+					LogMessage (_DEBUG_ABANDONED, _T("[%p(%d)] DaSvrBalloon SKIP CoDisconnectObject"), this, max(m_dwRef,-1));
+				}
+#endif
+			}
+			else
 			{
 				try
 				{
@@ -110,7 +120,7 @@ void DaSvrBalloon::FinalRelease ()
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrBalloon::FinalRelease"), this, max(m_dwRef,-1));
 	}
 #endif
-	Terminate (false, !CSvrObjLifetime::VerifyClientLifetime());
+	Terminate (false, !_VerifyClientLifetime());
 }
 
 void DaSvrBalloon::OnClientEnded()

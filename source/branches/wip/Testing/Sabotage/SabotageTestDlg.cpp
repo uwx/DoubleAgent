@@ -20,7 +20,7 @@ static char THIS_FILE[] = __FILE__;
 #define	_LOG_AGENT_CALLS		LogNormal|LogTimeMs|LogHighVolume
 #define	_LOG_CHAR_CALLS			LogAlways|LogTimeMs|LogHighVolume
 //#define	_LOG_CHAR_CALLS_EX	LogAlways|LogTimeMs|LogHighVolume
-#define	_LOG_NOTIFY				LogNormal|LogTimeMs
+//#define	_LOG_NOTIFY			LogNormal|LogTimeMs
 #endif
 
 #ifndef	_LOG_AGENT_CALLS
@@ -97,6 +97,7 @@ BEGIN_MESSAGE_MAP(CSabotageTestDlg, CDialog)
 	ON_BN_CLICKED(IDC_CONTROL_STANDALONE, OnControlMode)
 	ON_BN_CLICKED(IDC_SUPER_SABOTAGE, OnSabotageMode)
 	ON_BN_CLICKED(IDC_RESTART_SABOTAGE, OnSabotageMode)
+	ON_BN_CLICKED(IDC_SUPER_SABOTAGE_NOW, OnSabotageNow)
 	ON_BN_CLICKED(IDC_CHARACTERS_01, OnCharacterCount)
 	ON_BN_CLICKED(IDC_CHARACTERS_02, OnCharacterCount)
 	ON_BN_CLICKED(IDC_CHARACTERS_05, OnCharacterCount)
@@ -221,6 +222,7 @@ void CSabotageTestDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_USE_SERVER, mUseServer);
 	DDX_Control(pDX, IDC_SUPER_SABOTAGE, mSuperSabotage);
 	DDX_Control(pDX, IDC_RESTART_SABOTAGE, mRestartSabotage);
+	DDX_Control(pDX, IDC_SUPER_SABOTAGE_NOW, mSuperSabotageNow);
 	DDX_Control(pDX, IDC_SHOW, mShowButton);
 	DDX_Control(pDX, IDCANCEL, mCancelButton);
 	DDX_Control(pDX, IDC_GESTURES, mGestures);
@@ -247,9 +249,9 @@ BOOL CSabotageTestDlg::OnInitDialog()
 
 	GetAgentServers ();
 	ShowCharacters ();
-#if	!_KEEP_INITIAL_SERVER	
+#if	!_KEEP_INITIAL_SERVER
 	FreeAgentServers ();
-#endif	
+#endif
 
 	LoadConfig ();
 	lAutoStart = CommandLineConfig ();
@@ -259,7 +261,7 @@ BOOL CSabotageTestDlg::OnInitDialog()
 
 	if	(lAutoStart)
 	{
-		mCycleTimer = SetTimer ((UINT_PTR)&mCycleTimer, 500, NULL);
+		OnOK ();
 	}
 	else
 	{
@@ -273,7 +275,7 @@ BOOL CSabotageTestDlg::OnInitDialog()
 void CSabotageTestDlg::SabotageEvent ()
 {
 	LogMessage (LogIfActive, _T("*** SabotageEvent ***"));
-	
+
 	if	(mSuperSabotage.GetCheck())
 	{
 		SaveConfig ();
@@ -282,7 +284,7 @@ void CSabotageTestDlg::SabotageEvent ()
 			tSS <STARTUPINFO, DWORD>	lStartupInfo;
 			tS <PROCESS_INFORMATION>	lProcessInfo;
 
-			CreateProcess (NULL, GetCommandLine(), NULL, NULL, FALSE, DETACHED_PROCESS|CREATE_NEW_PROCESS_GROUP|CREATE_DEFAULT_ERROR_MODE|NORMAL_PRIORITY_CLASS, NULL, NULL, &lStartupInfo, &lProcessInfo); 
+			CreateProcess (NULL, GetCommandLine(), NULL, NULL, FALSE, DETACHED_PROCESS|CREATE_NEW_PROCESS_GROUP|CREATE_DEFAULT_ERROR_MODE|NORMAL_PRIORITY_CLASS, NULL, NULL, &lStartupInfo, &lProcessInfo);
 			if	(lProcessInfo.hThread)
 			{
 				CloseHandle (lProcessInfo.hThread);
@@ -337,7 +339,7 @@ void CSabotageTestDlg::SabotageEvent ()
 
 			ShowCharacterState ();
 		}
-#endif		
+#endif
 	}
 }
 
@@ -394,10 +396,12 @@ void CSabotageTestDlg::ShowSabotageMode ()
 	if	(mSuperSabotage.GetCheck())
 	{
 		mRestartSabotage.EnableWindow (TRUE);
+		mSuperSabotageNow.EnableWindow (TRUE);
 	}
 	else
 	{
 		mRestartSabotage.EnableWindow (FALSE);
+		mSuperSabotageNow.EnableWindow (FALSE);
 	}
 }
 
@@ -738,7 +742,7 @@ CString CSabotageTestDlg::GetSelectedGesture ()
 bool CSabotageTestDlg::IsAnimating ()
 {
 	INT_PTR	lNdx;
-	
+
 	for	(lNdx = 0; lNdx < (INT_PTR)mServerCharacter.GetCount(); lNdx++)
 	{
 		if	(
@@ -945,7 +949,7 @@ void CSabotageTestDlg::GetAgentServers (INT_PTR pServerCount)
 {
 	HRESULT	lResult;
 	INT_PTR	lNdx;
-	
+
 	if	(pServerCount <= 0)
 	{
 		pServerCount = 1;
@@ -955,13 +959,17 @@ void CSabotageTestDlg::GetAgentServers (INT_PTR pServerCount)
 		mServer.SetCount (pServerCount);
 	}
 	mNotifySinkId.SetCount (mServer.GetCount());
-	
+
 	for	(lNdx = 0; lNdx < (INT_PTR)mServer.GetCount(); lNdx++)
 	{
 		if	(!mServer[lNdx])
 		{
 			IUnknownPtr	lUnknown;
 
+			if	(LogIsActive (_LOG_AGENT_CALLS))
+			{
+				LogMessage (_LOG_AGENT_CALLS, _T("[%d] CoCreateInstance"), lNdx);
+			}
 			lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_SERVER, __uuidof(IUnknown), (void**)&lUnknown);
 			if	(LogIsActive (_LOG_AGENT_CALLS))
 			{
@@ -971,13 +979,17 @@ void CSabotageTestDlg::GetAgentServers (INT_PTR pServerCount)
 
 			if	(mServer[lNdx])
 			{
-				mServer[lNdx].CharacterStyle |= CharacterStyle_Smoothed;
-				mServer[lNdx].CharacterStyle &= ~CharacterStyle_IconShown;
+				if	(LogIsActive (_LOG_AGENT_CALLS))
+				{
+					LogMessage (_LOG_AGENT_CALLS, _T("[%d] Register"), lNdx);
+				}
 				lResult = mServer[lNdx]->Register (&m_xDaSvrNotifySink, &mNotifySinkId[lNdx]);
 				if	(LogIsActive (_LOG_AGENT_CALLS))
 				{
 					LogComErrAnon (MinLogLevel(_LOG_AGENT_CALLS,LogAlways), lResult, _T("[%d] Register [%d]"), lNdx, mNotifySinkId[lNdx]);
 				}
+				mServer[lNdx].CharacterStyle |= CharacterStyle_Smoothed;
+				mServer[lNdx].CharacterStyle &= ~CharacterStyle_IconShown;
 			}
 		}
 	}
@@ -987,13 +999,13 @@ void CSabotageTestDlg::FreeAgentServers (INT_PTR pServerCount)
 {
 	HRESULT	lResult;
 	INT_PTR	lNdx;
-	
+
 	if	(pServerCount <= 0)
 	{
 		pServerCount = 0;
 	}
 	pServerCount = min (pServerCount, (INT_PTR)mServer.GetCount());
-	
+
 	for	(lNdx = pServerCount; lNdx < (INT_PTR)mServer.GetCount(); lNdx++)
 	{
 		if	(
@@ -1004,6 +1016,10 @@ void CSabotageTestDlg::FreeAgentServers (INT_PTR pServerCount)
 		{
 			try
 			{
+				if	(LogIsActive (_LOG_AGENT_CALLS))
+				{
+					LogMessage (_LOG_AGENT_CALLS, _T("[%d] Unregister"), lNdx);
+				}
 				lResult = mServer[lNdx]->Unregister (mNotifySinkId[lNdx]);
 				if	(LogIsActive (_LOG_AGENT_CALLS))
 				{
@@ -1038,7 +1054,7 @@ bool CSabotageTestDlg::LoadServerCharacters (INT_PTR pCharacterCount)
 	}
 
 	GetAgentServers (pCharacterCount);
-	
+
 	if	(
 			(mServer.GetCount() > 0)
 		&&	(mServer[0])
@@ -1067,7 +1083,7 @@ bool CSabotageTestDlg::LoadServerCharacters (INT_PTR pCharacterCount)
 			{
 				lServerNdx = 0;
 			}
-		
+
 			if	(
 					(!mServerCharacter[lNdx])
 				&&	(mServer[lServerNdx])
@@ -1077,6 +1093,11 @@ bool CSabotageTestDlg::LoadServerCharacters (INT_PTR pCharacterCount)
 				mExitCommandId[lNdx] = 0;
 				mServerCharacterId[lNdx] = 0;
 				mCharacterServer[lNdx] = mServer[lServerNdx];
+
+				if	(LogIsActive (_LOG_AGENT_CALLS))
+				{
+					LogMessage (_LOG_AGENT_CALLS, _T("[%d] Load [%s]"), lNdx, mSelCharacterPath);
+				}
 
 				lResult = mCharacterServer[lNdx]->Load (_variant_t(mSelCharacterPath), &mServerCharacterId[lNdx], &mLoadReqID[lNdx]);
 
@@ -1099,7 +1120,7 @@ bool CSabotageTestDlg::LoadServerCharacters (INT_PTR pCharacterCount)
 				}
 			}
 		}
-		
+
 		if	(
 				(lRet)
 			&&	(
@@ -1242,6 +1263,10 @@ bool CSabotageTestDlg::FreeServerCharacters (INT_PTR pCharacterCount)
 			&&	(mServerCharacterId[lNdx])
 			)
 		{
+			if	(LogIsActive (_LOG_AGENT_CALLS))
+			{
+				LogMessage (_LOG_AGENT_CALLS, _T("[%d] Unload [%d]"), lNdx, mServerCharacterId[lNdx]);
+			}
 			lResult = mCharacterServer[lNdx]->Unload (mServerCharacterId[lNdx]);
 			if	(LogIsActive (_LOG_AGENT_CALLS))
 			{
@@ -1261,7 +1286,7 @@ bool CSabotageTestDlg::FreeServerCharacters (INT_PTR pCharacterCount)
 	mMoveReqID.SetCount (mServerCharacter.GetCount());
 	mSpeakReqID.SetCount (mServerCharacter.GetCount());
 	mThinkReqID.SetCount (mServerCharacter.GetCount());
-	
+
 	FreeAgentServers (max (pCharacterCount,1));
 	return lRet;
 }
@@ -1276,7 +1301,7 @@ bool CSabotageTestDlg::ShowServerCharacters ()
 
 	mShowReqID.RemoveAll ();
 	mShowReqID.SetCount (mServerCharacter.GetCount());
-		
+
 	for	(lNdx = 0; lNdx < (INT_PTR)mServerCharacter.GetCount(); lNdx++)
 	{
 		if	(mServerCharacter[lNdx])
@@ -1345,7 +1370,7 @@ void CSabotageTestDlg::GetAgentControls (INT_PTR pControlCount)
 {
 	CWnd *	lPlacer;
 	INT_PTR	lNdx;
-	
+
 	if	(
 			(lPlacer = GetDlgItem (IDC_CONTROL))
 		&&	(
@@ -1372,7 +1397,7 @@ void CSabotageTestDlg::GetAgentControls (INT_PTR pControlCount)
 		mControl.SetCount (pControlCount);
 	}
 	mControlWnd.SetCount (max (mControlWnd.GetCount(), mControl.GetCount()));
-	
+
 	for	(lNdx = 0; lNdx < (INT_PTR)mControl.GetCount(); lNdx++)
 	{
 		if	(
@@ -1414,7 +1439,7 @@ void CSabotageTestDlg::FreeAgentControls (INT_PTR pControlCount)
 	}
 	pControlCount = min (pControlCount, (INT_PTR)mControl.GetCount());
 	mControl.SetCount (pControlCount);
-	
+
 	for	(lNdx = pControlCount; lNdx < (INT_PTR)mControlWnd.GetCount(); lNdx++)
 	{
 		if	(mControlWnd[lNdx]->GetSafeHwnd())
@@ -1518,7 +1543,7 @@ bool CSabotageTestDlg::LoadControlCharacters (INT_PTR pCharacterCount)
 		}
 
 		if	(
-				(lRet)				
+				(lRet)
 			&&	(
 					(mCycleTimer)
 				||	(mShowButton.GetCheck())
@@ -1650,7 +1675,7 @@ bool CSabotageTestDlg::FreeControlCharacters (INT_PTR pCharacterCount)
 		pCharacterCount = GetControlCharacterCount ();
 	}
 	pCharacterCount = min (pCharacterCount, (INT_PTR)mControlCharacter.GetCount());
-	
+
 	for	(lNdx = pCharacterCount; lNdx < (INT_PTR)mControlCharacter.GetCount(); lNdx++)
 	{
 		if	(mControlCharacter[lNdx] != NULL)
@@ -1677,7 +1702,7 @@ bool CSabotageTestDlg::FreeControlCharacters (INT_PTR pCharacterCount)
 		}
 		mControlCharacterId[lNdx].Empty ();
 	}
-	
+
 	mControlCharacter.SetCount (pCharacterCount);
 	mControlCharacterId.SetSize (mControlCharacter.GetCount());
 	mCharacterControl.SetCount (mControlCharacter.GetCount());
@@ -2063,7 +2088,7 @@ bool CSabotageTestDlg::CommandLineConfig ()
 			if	(lArg.CompareNoCase (_T("Count")) == 0)
 			{
 				long	lCount;
-				
+
 				if	(
 						(lArgNdx < __argc-1)
 					&&	(LclParseNumber (__targv [lArgNdx+1], lCount))
@@ -2142,10 +2167,11 @@ bool CSabotageTestDlg::CommandLineConfig ()
 		lTitle += _T(" x86");
 #endif
 		SetWindowText (lTitle);
-
+#if	FALSE
 		LogStop ();
 		LogStart (false, lTitle+_T(".log"));
-		LogMessage (LogNormal|LogTime, _T("Start %s"), lTitle);
+#endif
+		LogMessage (LogNormal|LogTime, _T("Start (%s)"), lTitle);
 	}
 
 	if	(
@@ -2199,6 +2225,11 @@ void CSabotageTestDlg::OnCancel()
 
 void CSabotageTestDlg::OnOK()
 {
+	if	(!mCycleTimer)
+	{
+		mCycleTimer = SetTimer ((UINT_PTR)&mCycleTimer, 500, NULL);
+		GetDlgItem (IDOK)->EnableWindow (FALSE);
+	}
 }
 
 void CSabotageTestDlg::OnClose()
@@ -2536,6 +2567,14 @@ void CSabotageTestDlg::OnSabotageMode()
 	ShowSabotageMode ();
 }
 
+void CSabotageTestDlg::OnSabotageNow()
+{
+	if	(mSuperSabotage.GetCheck())
+	{
+		SabotageEvent ();
+	}
+}
+
 void CSabotageTestDlg::OnCharacterCount()
 {
 	if	(mUseServer.GetCheck())
@@ -2623,36 +2662,36 @@ void CSabotageTestDlg::OnTimer(UINT_PTR nIDEvent)
 			&&	(!IsAnimating ())
 			)
 		{
-			if	(mSabotageNum == sSabotageMoveEvent)	
+			if	(mSabotageNum == sSabotageMoveEvent)
 			{
 				OnMoveButton ();
 			}
 			else
 			if	(
-					(mSabotageNum == sSabotageSpeakStartEvent)	
-				||	(mSabotageNum == sSabotageSpeakEndEvent)	
+					(mSabotageNum == sSabotageSpeakStartEvent)
+				||	(mSabotageNum == sSabotageSpeakEndEvent)
 				)
 			{
 				OnSpeakButton ();
 			}
 			else
 			if	(
-					(mSabotageNum == sSabotageThinkStartEvent)	
-				||	(mSabotageNum == sSabotageThinkEndEvent)	
+					(mSabotageNum == sSabotageThinkStartEvent)
+				||	(mSabotageNum == sSabotageThinkEndEvent)
 				)
 			{
 				OnThinkButton ();
 			}
 			else
 			if	(
-					(mSabotageNum == sSabotageListenStartEvent)	
-				||	(mSabotageNum == sSabotageListenEndEvent)	
+					(mSabotageNum == sSabotageListenStartEvent)
+				||	(mSabotageNum == sSabotageListenEndEvent)
 				)
 			{
 				OnListenButton ();
 			}
 		}
-#if	FALSE	
+#if	FALSE
 		if	(
 				(!GetQueueStatus (QS_INPUT))
 			&&	(!IsAnimating ())
@@ -2700,7 +2739,7 @@ void CSabotageTestDlg::OnTimer(UINT_PTR nIDEvent)
 			PrimeMessagePump ();
 			mSelCharacterNdx = -1;
 		}
-#endif		
+#endif
 	}
 
 	CDialog::OnTimer(nIDEvent);
@@ -2956,7 +2995,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::RequestComplete (l
 	{
 		pThis->SabotageEvent ();
 	}
-	
+
 	INT_PTR	lReqNdx;
 
 	if	((lReqNdx = pThis->mShowReqID.Find (RequestID)) >= 0)
@@ -3308,7 +3347,7 @@ void CSabotageTestDlg::OnCtlRequestStart (IDaCtlRequest* Request)
 			}
 		}
 	}
-	if	(lRequestFound)		
+	if	(lRequestFound)
 	{
 		SabotageEvent ();
 	}
@@ -3481,7 +3520,7 @@ void CSabotageTestDlg::OnCtlMove (LPCTSTR CharacterID, short X, short Y, MoveCau
 	if	(mSabotageNum == sSabotageMoveEvent)
 	{
 		INT_PTR	lNdx;
-		
+
 		for	(lNdx = 0; lNdx < (INT_PTR)mMoveRequest.GetCount(); lNdx++)
 		{
 			if	(mMoveRequest[lNdx])

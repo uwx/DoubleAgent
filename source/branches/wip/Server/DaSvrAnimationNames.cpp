@@ -25,8 +25,9 @@
 #endif
 
 #ifdef	_DEBUG
-#define	_LOG_INSTANCE	(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF|LogTime)
-#define	_LOG_ABANDONED	MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF|LogTime,_LOG_INSTANCE)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_ABANDONED		MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF|LogTime,_LOG_INSTANCE)
+#define	_DEBUG_ABANDONED	_LOG_ABANDONED
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -80,7 +81,16 @@ void DaSvrAnimationNames::Terminate (bool pFinal, bool pAbandonned)
 			&&	(m_dwRef > 0)
 			)
 		{
-			if	(!pAbandonned)
+			if	(pAbandonned)
+			{
+#ifdef	_DEBUG_ABANDONED
+				if	(LogIsActive (_DEBUG_ABANDONED))
+				{
+					LogMessage (_DEBUG_ABANDONED, _T("[%p(%d)] DaSvrAnimationNames SKIP CoDisconnectObject"), this, max(m_dwRef,-1));
+				}
+#endif
+			}
+			else
 			{
 				try
 				{
@@ -101,7 +111,7 @@ void DaSvrAnimationNames::FinalRelease()
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAnimationNames::FinalRelease"), this, max(m_dwRef,-1));
 	}
 #endif
-	Terminate (false, !CSvrObjLifetime::VerifyClientLifetime());
+	Terminate (false, !_VerifyClientLifetime());
 }
 
 void DaSvrAnimationNames::OnClientEnded()

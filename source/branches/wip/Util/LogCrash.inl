@@ -426,7 +426,7 @@ int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException, LPCST
 			{
 				lStack.mFrameCount = (*sRtlCaptureStackBackTrace) (0, 64, lStack.mStackFrame, NULL);
 			}
-#endif			
+#endif
 #endif
 		}
 #endif
@@ -457,7 +457,7 @@ int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException, LPCST
 					(lLogIsActive)
 #ifndef	_LOG_CRASH_NOMINIDUMP
 				||	(_LogCrash_MiniDumpLevel () != _LOG_CRASH_DUMPNONE)
-#endif				
+#endif
 				)
 			)
 		{

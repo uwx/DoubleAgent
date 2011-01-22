@@ -843,29 +843,34 @@ bool CDaCmnCharacter::SetActiveClient (bool pActive, bool pInputActive)
 		lPrevCharId = lCharacterWnd->GetCharID ();
 	}
 
-	if	(
-			(pActive)
-		&&	(lPrevCharId != mCharID)
-		)
+	if	(pActive)
 	{
+		if	(lPrevCharId != mCharID)
+		{
+			if	(
+					(lCharacterWnd = GetCharacterWnd ())
+				&&	(lCharacterWnd->Attach (mCharID, mNotify, &mIconData, true))
+				)
+			{
+				if	(lBalloon = GetBalloon (true))
+				{
+					lBalloon->SetLangID (mLangID);
+				}
+				lRet = true;
+			}
+		}
+
 		if	(
-				(lCharacterWnd = GetCharacterWnd ())
-			&&	(lCharacterWnd->Attach (mCharID, mNotify, &mIconData, true))
+				(pInputActive)
+			&&	(lCharacterWnd = GetCharacterWnd ())
+			&&	(lCharacterWnd->IsCharShown ())
 			)
 		{
-			if	(lBalloon = GetBalloon (true))
-			{
-				lBalloon->SetLangID (mLangID);
-			}
-			lNextCharacter = this;
-			lRet = true;
+			lCharacterWnd->SetLastActive ();
 		}
 	}
 	else
-	if	(
-			(!pActive)
-		&&	(lPrevCharId == mCharID)
-		)
+	if	(lPrevCharId == mCharID)
 	{
 		try
 		{
@@ -892,30 +897,26 @@ bool CDaCmnCharacter::SetActiveClient (bool pActive, bool pInputActive)
 			}
 
 			if	(
-					(lCharacterWnd = GetCharacterWnd ())
-				&&	(lNextCharacter)
-				&&	(lNextCharacter->GetCharacterWnd () == lCharacterWnd)
-				&&	(lCharacterWnd->Attach (lNextCharacter->mCharID, lNextCharacter->mNotify, &lNextCharacter->mIconData, true))
+					(lNextCharacter)
+				&&	(lNextCharacter->PreNotify ())
 				)
 			{
-				if	(lBalloon = lNextCharacter->GetBalloon (true))
+				if	(
+						(lCharacterWnd = GetCharacterWnd ())
+					&&	(lNextCharacter->GetCharacterWnd () == lCharacterWnd)
+					&&	(lCharacterWnd->Attach (lNextCharacter->mCharID, lNextCharacter->mNotify, &lNextCharacter->mIconData, true))
+					)
 				{
-					lBalloon->SetLangID (lNextCharacter->mLangID);
+					if	(lBalloon = lNextCharacter->GetBalloon (true))
+					{
+						lBalloon->SetLangID (lNextCharacter->mLangID);
+					}
+					lRet = true;
 				}
-				lRet = true;
+				lNextCharacter->PostNotify ();
 			}
 		}
 		catch AnyExceptionDebug
-	}
-
-	if	(
-			(pActive)
-		&&	(pInputActive)
-		&&	(lCharacterWnd = GetCharacterWnd ())
-		&&	(lCharacterWnd->IsCharShown ())
-		)
-	{
-		lCharacterWnd->SetLastActive ();
 	}
 #ifdef	_DEBUG_ACTIVE
 	if	(LogIsActive (_DEBUG_ACTIVE))
@@ -1500,8 +1501,10 @@ void CDaCmnCharacter::ReleaseSapiVoice (bool pAbandonned)
 		{
 			CSapiVoiceCache *	lVoiceCache;
 
-			mSapiVoice->Stop ();
-
+			if	(pAbandonned)
+			{
+				mSapiVoice->Stop ();
+			}
 			if	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
 			{
 				lVoiceCache->RemoveVoiceClient (mSapiVoice, this, !pAbandonned);
@@ -4171,10 +4174,6 @@ HRESULT CDaCmnCharacter::put_TTSModeID (BSTR TTSModeID)
 					)
 				{
 					lCharacterWnd->RemoveQueuedAction (lCharacterWnd->NextQueuedAction (mCharID), AGENTREQERR_INTERRUPTEDCODE, _T("put_TTSModeID"));
-				}
-				if	(mSapiVoice)
-				{
-					mSapiVoice->Stop ();
 				}
 			}
 			catch AnyExceptionDebug

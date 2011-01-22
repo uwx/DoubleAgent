@@ -41,6 +41,7 @@ public:
 protected:
 	bool ManageObjectLifetime (CComObjectRootBase * pObject, LPCTSTR pClientMutexName = NULL);
 	void UnmanageObjectLifetime (CComObjectRootBase * pObject);
+	bool _VerifyClientLifetime ();
 
 protected:
 	CAtlString					mClientMutexName;
@@ -58,16 +59,15 @@ public:
 
 // Attributes
 public:
+	bool	mObjectWasAbandoned;
 
 // Operations
 public:
 	void ManageObjectLifetime (CSvrObjLifetime * pObject);
 	void UnmanageObjectLifetime (CSvrObjLifetime * pObject);
+	void VerifyObjectLifetimes (bool pImmediate = false);
 
 // Implementation
-protected:
-	void VerifyObjectLifetimes ();
-
 private:
 	CComAutoCriticalSection				mCriticalSection;
 	CAtlPtrTypeArray <CSvrObjLifetime>	mObjectLifetimes;

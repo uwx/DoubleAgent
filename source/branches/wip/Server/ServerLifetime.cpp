@@ -27,7 +27,7 @@
 #include "DebugStr.h"
 
 #ifdef	_DEBUG
-#define	_LOG_LIFETIME	(GetProfileDebugInt(_T("LogInstance_Handler"),LogDetails,true)&0xFFFF)
+#define	_LOG_LIFETIME	(GetProfileDebugInt(_T("LogInstance_Handler"),LogDetails,true)&0xFFFF|LogTime)
 #endif
 
 #ifndef	_LOG_LIFETIME
@@ -48,24 +48,34 @@ CSvrObjLifetime::~CSvrObjLifetime ()
 
 bool CSvrObjLifetime::VerifyClientLifetime ()
 {
-	bool	lRet = true;
+	if	(_VerifyClientLifetime())
+	{
+		return true;
+	}
+#ifdef	_LOG_LIFETIME
+	if	(
+			(mClientMutex)
+		&&	(LogIsActive (_LOG_LIFETIME))
+		)
+	{
+		LogMessage (_LOG_LIFETIME, _T("[%p] Verify %s ClientMutex [%p] [%s] ABANDONED"), this, AtlTypeName(this), mClientMutex->m_h, mClientMutexName);
+	}
+#endif
+	return false;
+}
 
+bool CSvrObjLifetime::_VerifyClientLifetime ()
+{
 	if	(
 			(mClientMutex)
 		&&	(mClientMutex->m_h)
 		&&	(mClientMutex->Lock (0))
 		)
 	{
-#ifdef	_LOG_LIFETIME
-		if	(LogIsActive (_LOG_LIFETIME))
-		{
-			LogMessage (_LOG_LIFETIME, _T("[%p] Verify %s ClientMutex [%p] [%s] ABANDONED"), this, AtlTypeName(this), mClientMutex->m_h, mClientMutexName);
-		}
-#endif
 		mClientMutex->Unlock ();
-		lRet = false;
+		return false;
 	}
-	return lRet;
+	return true;
 }
 
 void CSvrObjLifetime::OnClientEnded ()
@@ -157,7 +167,7 @@ void CSvrObjLifetime::UnmanageObjectLifetime (CComObjectRootBase * pObject)
 #ifdef	_LOG_LIFETIME
 			if	(LogIsActive (_LOG_LIFETIME))
 			{
-				LogMessage (_LOG_LIFETIME, _T("[%p(%d)] Unmanage %s"), this, max(pObject->m_dwRef,0), AtlTypeName(this));
+				LogMessage (_LOG_LIFETIME, _T("[%p(%d)] Unmanage %s ClientMutex [%p] [%s]"), this, max(pObject->m_dwRef,0), AtlTypeName(this), mClientMutex->m_h, mClientMutexName);
 			}
 #endif
 			_AtlModule.UnmanageObjectLifetime (this);
@@ -174,7 +184,8 @@ void CSvrObjLifetime::UnmanageObjectLifetime (CComObjectRootBase * pObject)
 /////////////////////////////////////////////////////////////////////////////
 
 CServerLifetime::CServerLifetime ()
-:	mLastVerifyTime (GetTickCount ()),
+:	mObjectWasAbandoned (false),
+	mLastVerifyTime (GetTickCount ()),
 #ifdef	_DEBUG
 	mVerifyInterval (3000)
 #else
@@ -208,7 +219,7 @@ void CServerLifetime::ManageObjectLifetime (CSvrObjLifetime * pObject)
 #ifdef	_LOG_LIFETIME_NOT
 		if	(LogIsActive (_LOG_LIFETIME))
 		{
-			LogMessage (_LOG_LIFETIME, _T("ManagedLifetimes [%d] Objects [%d]"), mObjectLifetimes.GetCount(), _AtlModule.GetLockCount());
+			LogMessage (_LOG_LIFETIME, _T("ManagedLifetimes [%d] Locks [%d]"), mObjectLifetimes.GetCount(), _AtlModule.GetLockCount());
 		}
 #endif
 	}
@@ -232,9 +243,14 @@ void CServerLifetime::UnmanageObjectLifetime (CSvrObjLifetime * pObject)
 	catch AnyExceptionSilent
 }
 
-void CServerLifetime::VerifyObjectLifetimes ()
+/////////////////////////////////////////////////////////////////////////////
+
+void CServerLifetime::VerifyObjectLifetimes (bool pImmediate)
 {
-	if	(TicksElapsed (mLastVerifyTime, mVerifyInterval))
+	if	(
+			(TicksElapsed (mLastVerifyTime, mVerifyInterval))
+		||	(pImmediate)
+		)
 	{
 		CLockCS	lLock (mCriticalSection);
 
@@ -242,6 +258,22 @@ void CServerLifetime::VerifyObjectLifetimes ()
 		{
 			INT_PTR				lNdx;
 			CSvrObjLifetime *	lObject;
+			bool				lCoCreateSuspended = false;
+
+#ifdef	_LOG_LIFETIME
+			if	(
+					(pImmediate)
+				&&	(LogIsActive (_LOG_LIFETIME))
+				)
+			{
+				LogMessage (_LOG_LIFETIME, _T("VerifyObjectLifetimes [%d] Locks [%d] (start)"), mObjectLifetimes.GetCount(), _AtlModule.GetLockCount());
+			}
+#endif
+			if	(pImmediate)
+			{
+				CoSuspendClassObjects ();
+				lCoCreateSuspended = true;
+			}
 
 			for	(lNdx = 0; lNdx < (INT_PTR)mObjectLifetimes.GetCount(); lNdx++)
 			{
@@ -251,11 +283,43 @@ void CServerLifetime::VerifyObjectLifetimes ()
 				{
 					if	(!lObject->VerifyClientLifetime ())
 					{
-						mObjectLifetimes.RemoveAt (lNdx--);
+						if	(!lCoCreateSuspended)
+						{
+#ifdef	_LOG_LIFETIME
+							if	(
+									(!pImmediate)
+								&&	(LogIsActive (_LOG_LIFETIME))
+								)
+							{
+								LogMessage (_LOG_LIFETIME, _T("VerifyObjectLifetimes [%d] Locks [%d] (start)"), mObjectLifetimes.GetCount(), _AtlModule.GetLockCount());
+							}
+#endif
+							CoSuspendClassObjects ();
+							lCoCreateSuspended = true;
+						}
+						mObjectLifetimes.RemoveAt (lNdx);
+						lNdx = -1;
 						lObject->OnClientEnded ();
 					}
 				}
 				catch AnyExceptionDebug
+			}
+
+#ifdef	_LOG_LIFETIME
+			if	(
+					(
+						(lCoCreateSuspended)
+					||	(pImmediate)
+					)
+				&&	(LogIsActive (_LOG_LIFETIME))
+				)
+			{
+				LogMessage (_LOG_LIFETIME, _T("VerifyObjectLifetimes [%d] Locks [%d] (end)"), mObjectLifetimes.GetCount(), _AtlModule.GetLockCount());
+			}
+#endif
+			if	(lCoCreateSuspended)
+			{
+				CoResumeClassObjects ();
 			}
 		}
 		catch AnyExceptionDebug

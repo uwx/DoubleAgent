@@ -164,9 +164,6 @@ _COM_SMARTPTR_TYPEDEF (IDaSvrSREngines, __uuidof(IDaSvrSREngines));
 #ifndef	_LOG_INSTANCE
 #define	_LOG_INSTANCE	LogVerbose
 #endif
-#ifndef	_LOG_ABANDONED
-#define	_LOG_ABANDONED	LogDetails
-#endif
 #ifndef	_LOG_RESULTS
 #define	_LOG_RESULTS	LogNormal
 #endif

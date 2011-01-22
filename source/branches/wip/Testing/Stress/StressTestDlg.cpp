@@ -654,7 +654,7 @@ bool CStressTestDlg::Stop (bool pRandom)
 			)
 		{
 			lRet = true;
-			
+
 			if	(
 					(pRandom)
 				&&	(lResult == S_OK)
@@ -682,7 +682,7 @@ bool CStressTestDlg::Stop (bool pRandom)
 			)
 		{
 			lRet = true;
-			
+
 			if	(
 					(pRandom)
 				&&	(lResult == S_OK)
@@ -705,7 +705,7 @@ bool CStressTestDlg::Stop (bool pRandom)
 void CStressTestDlg::GetAgentServers (int pServerCount)
 {
 	int	lNdx;
-	
+
 	if	(pServerCount <= 0)
 	{
 		pServerCount = 1;
@@ -715,7 +715,7 @@ void CStressTestDlg::GetAgentServers (int pServerCount)
 		mServer.SetCount (pServerCount);
 	}
 	mServerSinkId.SetCount (mServer.GetCount());
-	
+
 	for	(lNdx = 0; lNdx < (int)mServer.GetCount(); lNdx++)
 	{
 		if	(!mServer[lNdx])
@@ -737,13 +737,13 @@ void CStressTestDlg::GetAgentServers (int pServerCount)
 void CStressTestDlg::FreeAgentServers (int pServerCount)
 {
 	int	lNdx;
-	
+
 	if	(pServerCount <= 0)
 	{
 		pServerCount = 0;
 	}
 	pServerCount = min (pServerCount, (int)mServer.GetCount());
-	
+
 	for	(lNdx = pServerCount; lNdx < (int)mServer.GetCount(); lNdx++)
 	{
 		if	(
@@ -839,7 +839,7 @@ void CStressTestDlg::FreeAgentControls (int pControlCount)
 	}
 	pControlCount = min (pControlCount, (int)mControl.GetCount());
 	mControl.SetCount (pControlCount);
-	
+
 	for	(lNdx = pControlCount; lNdx < (int)mControlWnd.GetCount(); lNdx++)
 	{
 		if	(mControlWnd[lNdx]->GetSafeHwnd())
@@ -914,7 +914,7 @@ bool CStressTestDlg::ShowServerCharacters (int pCharacterCount)
 			{
 				lServerNdx = 0;
 			}
-		
+
 			if	(
 					(!mServerCharacter[lNdx])
 				&&	(mServer[lServerNdx])
@@ -925,7 +925,7 @@ bool CStressTestDlg::ShowServerCharacters (int pCharacterCount)
 
 				lResult = mCharacterServer[lNdx]->Load (_variant_t(mCharacterPath), &mServerCharacterId[lNdx], &lReqID);
 				LogComErr (_LOG_AGENT_CALLS, lResult, _T("[%d] Load [%d] [%s] as [%d]"), lNdx, lReqID, mCharacterPath, mServerCharacterId[lNdx]);
-				
+
 				if	(FAILED (lResult))
 				{
 					mServerCharacterId[lNdx] = 0;
@@ -992,7 +992,7 @@ bool CStressTestDlg::ShowServerCharacters (int pCharacterCount)
 	}
 
 	if	(
-			(mServerCharacter.GetCount() > 0)	
+			(mServerCharacter.GetCount() > 0)
 		&&	(!mServerCharacter[mServerCharacter.GetCount()-1])
 		)
 	{
@@ -1059,7 +1059,7 @@ bool CStressTestDlg::FreeServerCharacters (int pCharacterCount)
 	mServerCharacter.SetCount (pCharacterCount);
 	mServerCharacterId.SetCount (mServerCharacter.GetCount());
 	mCharacterServer.SetCount (mServerCharacter.GetCount());
-	
+
 	mShowReqId.SetCount (mServerCharacter.GetCount());
 	mGestureReqId.SetCount (mServerCharacter.GetCount());
 	mSpeechReqId.SetCount (mServerCharacter.GetCount());
@@ -1150,7 +1150,7 @@ bool CStressTestDlg::ShowControlCharacters (int pCharacterCount)
 
 				lResult = lCharacters->Load (_bstr_t(mControlCharacterId[lNdx]), _variant_t(mCharacterPath), NULL);
 				LogComErr (_LOG_AGENT_CALLS, lResult, _T("[%d] Load [%s] as [%s]"), lNdx, mCharacterPath, mControlCharacterId[lNdx]);
-				
+
 				if	(FAILED (lResult))
 				{
 					mControlCharacterId[lNdx].Empty();
@@ -1291,7 +1291,7 @@ bool CStressTestDlg::FreeControlCharacters (int pCharacterCount)
 		mControlCharacterId[lNdx].Empty ();
 		mCharacterControl[lNdx] = NULL;
 	}
-	
+
 	mControlCharacter.SetCount (pCharacterCount);
 	mControlCharacterId.SetSize (mControlCharacter.GetCount());
 	mCharacterControl.SetCount (mControlCharacter.GetCount());
@@ -1498,7 +1498,7 @@ bool CStressTestDlg::CommandLineConfig ()
 				)
 			{
 				long	lCount;
-				
+
 				if	(LclParseNumber (__targv [lArgNdx+1], lCount))
 				{
 					lArgNdx++;
@@ -1781,7 +1781,7 @@ void CStressTestDlg::OnTimer(UINT_PTR nIDEvent)
 				OnRandomStop ();
 			}
 		}
-		
+
 		mCycleIndicator.ShowWindow (IsAnimating()?TRUE:FALSE);
 	}
 	else
@@ -2110,7 +2110,7 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::RequestComplete (lon
 	}
 #endif
 	int	lNdx;
-	
+
 	for	(lNdx = 0; lNdx < (int)pThis->mShowReqId.GetCount(); lNdx++)
 	{
 		if	(RequestID == pThis->mShowReqId[lNdx])

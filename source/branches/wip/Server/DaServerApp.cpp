@@ -152,8 +152,12 @@ CDaServerModule::CDaServerModule ()
 	LogProcessIntegrity (GetCurrentProcess(), LogIfActive);
 #endif
 #ifdef	_DEBUG
-	m_dwTimeOut /= 10;
-	m_dwPause /= 10;
+	if	(GetProfileDebugInt(_T("LogRestart"))!=0)
+	{
+		m_dwTimeOut /= 10;
+		m_dwPause /= 10;
+		LogMessage (LogIfActive, _T("Shutdown Timeout [%u] Pause [%u]"), m_dwTimeOut, m_dwPause);
+	}
 #endif
 
 #ifdef	_ATL_DEBUG_INTERFACES
@@ -305,8 +309,6 @@ void CDaServerModule::_PostMessageLoop (bool pForModal)
 	SafeFreeSafePtr (mMessageFilter);
 	CSapiVoiceCache::TerminateStaticInstance ();
 	CSapiInputCache::TerminateStaticInstance ();
-
-	CoResumeClassObjects ();
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -396,6 +398,12 @@ void CDaServerModule::RunMessageLoop ()
 			{
 				TranslateMessage (&lMsg);
 				DispatchMessage (&lMsg);
+			}
+			
+			if	(mObjectWasAbandoned)
+			{
+				mObjectWasAbandoned = false;
+				VerifyObjectLifetimes (true);
 			}
 		}
 
@@ -714,7 +722,6 @@ void CDaServerModule::OnDeleteSvrCharacterFiles (DaSvrCharacterFiles * pSvrChara
 
 void CDaServerModule::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTimerId)
 {
-//TODO Move to monitor thread?
 	if	(pTimerId == mClientLifetimeTimer)
 	{
 		CSapiVoiceCache::CleanupStaticInstance ();

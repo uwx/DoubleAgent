@@ -60,6 +60,7 @@
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Server"),LogDetails,true)&0xFFFF|LogTime)
 #define	_LOG_ABANDONED			MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF|LogTime,_LOG_INSTANCE)
 #define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
+#define	_DEBUG_ABANDONED		_LOG_ABANDONED
 //#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 #endif
 
@@ -91,20 +92,13 @@ DaServer::DaServer()
 	}
 #endif
 
-	try
-	{
-		mNotify.mOwner = this;
-		mNotify.mAnchor = this;
-		mNotify.mGlobal = (CEventGlobal*)&_AtlModule;
-		mNotify.ReflectSinks::AddNotifySink (this);
-		mNotify.LockSinks::AddNotifySink (this);
-	}
-	catch AnyExceptionDebug
-	try
-	{
-		_AtlModule.mInstanceNotify.Add (&mNotify);
-	}
-	catch AnyExceptionSilent
+	mNotify.mOwner = this;
+	mNotify.mAnchor = this;
+	mNotify.mGlobal = (CEventGlobal*)&_AtlModule;
+	mNotify.ReflectSinks::AddNotifySink (this);
+	mNotify.LockSinks::AddNotifySink (this);
+
+	_AtlModule.mInstanceNotify.Add (&mNotify);
 
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -144,28 +138,13 @@ void DaServer::Terminate (bool pFinal, bool pAbandonned)
 {
 	if	(this)
 	{
-		if	(
-				(pFinal)
-			&&	(m_dwRef > 0)
-			)
+		if	(pFinal)
 		{
-			if	(!pAbandonned)
-			{
-				try
-				{
-					CoDisconnectObject (GetUnknown(), 0);
-				}
-				catch AnyExceptionDebug
-			}
-			m_dwRef = 0;
+			UnmanageObjectLifetime (this);
 		}
 
 		try
 		{
-			if	(pFinal)
-			{
-				UnmanageObjectLifetime (this);
-			}
 			if	(pAbandonned)
 			{
 				mNotify.AbandonAll ();
@@ -190,6 +169,31 @@ void DaServer::Terminate (bool pFinal, bool pAbandonned)
 			_AtlModule.mInstanceNotify.Remove (&mNotify);
 		}
 		catch AnyExceptionSilent
+
+		if	(
+				(pFinal)
+			&&	(m_dwRef > 0)
+			)
+		{
+			if	(pAbandonned)
+			{
+#ifdef	_DEBUG_ABANDONED
+				if	(LogIsActive (_DEBUG_ABANDONED))
+				{
+					LogMessage (_DEBUG_ABANDONED, _T("[%p(%d)] DaServer SKIP CoDisconnectObject"), this, max(m_dwRef,-1));
+				}
+#endif
+			}
+			else
+			{
+				try
+				{
+					CoDisconnectObject (GetUnknown(), 0);
+				}
+				catch AnyExceptionDebug
+			}
+			m_dwRef = 0;
+		}
 	}
 }
 
@@ -205,12 +209,21 @@ void DaServer::Abandon ()
 #endif
 		if	(m_dwRef > 0)
 		{
+#ifdef	_DEBUG_ABANDONED
+			if	(LogIsActive (_DEBUG_ABANDONED))
+			{
+				LogMessage (_DEBUG_ABANDONED, _T("[%p(%d)] DaServer CoDisconnectObject"), this, max(m_dwRef,-1));
+			}
+#endif
+			CEventNotifyHolder<DaServer>::_PreNotify ();
 			try
 			{
 				CoDisconnectObject (GetUnknown(), 0);
 			}
 			catch AnyExceptionDebug
+			CEventNotifyHolder<DaServer>::_PostNotify ();
 			m_dwRef = 0;
+			_AtlModule.mObjectWasAbandoned = true;
 		}
 	}
 }
@@ -222,10 +235,10 @@ void DaServer::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::FinalRelease [%u]"), this, max(m_dwRef,-1), IsInNotify());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::FinalRelease [%u] UsingHandler [%u]"), this, max(m_dwRef,-1), IsInNotify(), mUsingHandler);
 	}
 #endif
-	Terminate (false, !CSvrObjLifetime::VerifyClientLifetime());
+	Terminate (false, !_VerifyClientLifetime());
 }
 
 bool DaServer::VerifyClientLifetime ()
@@ -247,14 +260,15 @@ bool DaServer::VerifyClientLifetime ()
 				{
 					LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer release abandoned"), this, max(m_dwRef,-1));
 				}
-#ifdef	_LOG_ABANDONED
+#ifdef	_DEBUG_ABANDONED
 				else
-				if	(LogIsActive (_LOG_ABANDONED))
+				if	(LogIsActive (_DEBUG_ABANDONED))
 				{
-					LogMessage (_LOG_ABANDONED, _T("[%p(%d)] DaServer release abandoned"), this, max(m_dwRef,-1));
+					LogMessage (_DEBUG_ABANDONED, _T("[%p(%d)] DaServer release abandoned"), this, max(m_dwRef,-1));
 				}
 #endif
 #endif
+
 				m_dwRef = 1;
 				Release ();
 			}
@@ -333,7 +347,7 @@ bool DaServer::_PreNotify ()
 #endif
 	if	(
 			(m_dwRef > 0)
-		&&	(CSvrObjLifetime::VerifyClientLifetime ())
+		&&	(_VerifyClientLifetime ())
 		)
 	{
 		return CEventNotifyHolder<DaServer>::_PreNotify ();
@@ -356,37 +370,27 @@ bool DaServer::_PostNotify ()
 		mNotify.UnregisterDelayed ();
 	}
 
-	if	(HasFinalReleased ())
-	{
-#ifdef	_LOG_INSTANCE
-		if	(LogIsActive (_LOG_INSTANCE))
-		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer PostNotify -> HasFinalReleased"), this, max(m_dwRef,-1));
-		}
-#endif
-#if	FALSE // For safety, just let it be abandoned
-		if	(CanFinalRelease ())
-		{
-			m_dwRef = 1;
-			Release ();
-		}
-		else
-#endif
-		{
-			Abandon ();
-		}
-		return false;
-	}
-	else
 	if	(
 			(!IsInNotify ())
-		&&	(!CSvrObjLifetime::VerifyClientLifetime ())
+		&&	(!_VerifyClientLifetime ())
 		)
 	{
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
 			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer PostNotify -> !VerifyClientLifetime"), this, max(m_dwRef,-1));
+		}
+#endif
+		Abandon ();
+		return false;
+	}
+	else
+	if	(HasFinalReleased ())
+	{
+#ifdef	_LOG_INSTANCE
+		if	(LogIsActive (_LOG_INSTANCE))
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer PostNotify -> HasFinalReleased"), this, max(m_dwRef,-1));
 		}
 #endif
 		Abandon ();

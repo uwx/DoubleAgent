@@ -34,6 +34,7 @@
 #define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF|LogTime)
 #define	_LOG_ABANDONED		MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF|LogTime,_LOG_INSTANCE)
 #define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
+#define	_DEBUG_ABANDONED	_LOG_ABANDONED
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -93,22 +94,6 @@ void DaSvrCommands::Terminate (bool pFinal, bool pAbandonned)
 			UnmanageObjectLifetime (this);
 		}
 
-		if	(
-				(pFinal)
-			&&	(m_dwRef > 0)
-			)
-		{
-			if	(!pAbandonned)
-			{
-				try
-				{
-					CoDisconnectObject (GetUnknown(), 0);
-				}
-				catch AnyExceptionDebug
-			}
-			m_dwRef = 0;
-		}
-
 		try
 		{
 			for	(lNdx = mCommands.GetCount()-1; lNdx >= 0; lNdx--)
@@ -152,6 +137,31 @@ void DaSvrCommands::Terminate (bool pFinal, bool pAbandonned)
 			}
 		}
 		catch AnyExceptionSilent
+
+		if	(
+				(pFinal)
+			&&	(m_dwRef > 0)
+			)
+		{
+			if	(pAbandonned)
+			{
+#ifdef	_DEBUG_ABANDONED
+				if	(LogIsActive (_DEBUG_ABANDONED))
+				{
+					LogMessage (_DEBUG_ABANDONED, _T("[%p(%d)] DaSvrCommands SKIP CoDisconnectObject"), this, max(m_dwRef,-1));
+				}
+#endif
+			}
+			else
+			{
+				try
+				{
+					CoDisconnectObject (GetUnknown(), 0);
+				}
+				catch AnyExceptionDebug
+			}
+			m_dwRef = 0;
+		}
 	}
 }
 
@@ -163,7 +173,7 @@ void DaSvrCommands::FinalRelease()
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)(%d)] DaSvrCommands::FinalRelease"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
-	Terminate (false, !CSvrObjLifetime::VerifyClientLifetime());
+	Terminate (false, !_VerifyClientLifetime());
 }
 
 void DaSvrCommands::OnClientEnded()

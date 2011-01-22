@@ -166,6 +166,8 @@ protected:
 	void SetIsSpeaking (bool pIsSpeaking);
 	void SetIsResetting (bool pIsResetting);
 
+	HRESULT FullReset ();
+
 	void LogTtsEngine (UINT pLogLevel, ITTSCentral * pTtsEngine, LPCTSTR pFormat = NULL, ...);
 	void LogTtsAudio (UINT pLogLevel, IAudioDest * pTtsAudio, LPCTSTR pFormat = NULL, ...);
 
