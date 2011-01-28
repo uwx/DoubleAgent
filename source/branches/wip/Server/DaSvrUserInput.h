@@ -87,6 +87,10 @@ public:
 	HRESULT STDMETHODCALLTYPE get_ItemCommandID (long ItemIndex, long *ItemCommandID);
 	HRESULT STDMETHODCALLTYPE get_ItemConfidence (long ItemIndex, long *ItemConfidence);
 	HRESULT STDMETHODCALLTYPE get_ItemText (long ItemIndex, BSTR *ItemText);
+
+// Implementation
+protected:
+	void Disconnect (bool pAbandonned);
 };
 
 /////////////////////////////////////////////////////////////////////////////

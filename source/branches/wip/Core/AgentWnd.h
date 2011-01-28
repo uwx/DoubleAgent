@@ -32,7 +32,7 @@ class CQueuedAction;
 
 /////////////////////////////////////////////////////////////////////////////
 
-class ATL_NO_VTABLE CAgentWnd :
+class CAgentWnd :
 	public CDirectShowWnd,
 	public CAgentFileClient,
 	public CEventNotifiesClient<CAgentWnd>,

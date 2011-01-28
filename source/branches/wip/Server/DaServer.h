@@ -156,6 +156,7 @@ public:
 
 // Implementation
 protected:
+	void Disconnect (bool pAbandonned);
 	void UnloadAllCharacters (bool pAbandonned = false);
 	CAtlString GetSearchPath ();
 	HRESULT LoadCharacter (LPCTSTR pFilePath, bool pIsDefault, long & pCharID, long & pReqID);

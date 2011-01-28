@@ -59,6 +59,11 @@
 #define	_LOG_ABANDONED		MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF|LogTime,_LOG_INSTANCE)
 #define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #define	_DEBUG_ABANDONED	_LOG_ABANDONED
+#else
+#ifdef	_LOG_INSTANCE
+#undef	_LOG_INSTANCE
+#endif
+#define	_LOG_INSTANCE	LogDetails
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -118,6 +123,7 @@ void DaSvrCharacter::Terminate (bool pFinal, bool pAbandonned)
 			CAgentPopupWnd *	lPopupWnd;
 
 			LogMessage (_LOG_INSTANCE, _T("[%p(%d)(%d)] DaSvrCharacter::Terminate [%u %u] [%ls] IsInNotify [%u]"), this, mCharID, max(m_dwRef,-1), pFinal, pAbandonned, (mFile ? (BSTR)mFile->GetPath() : NULL), IsInNotify());
+			// If this crashes it generally means that the destructor is being called recursively.
 			if	(lPopupWnd = GetPopupWnd ())
 			{
 				LogMessage (_LOG_INSTANCE, _T("[%p(%d)(%d)]   PopupWnd [%p(%d)(%d)] IsInNotify [%u] IsQueueBusy [%u]"), this, mCharID, max(m_dwRef,-1), lPopupWnd, lPopupWnd->GetCharID(), max(lPopupWnd->m_dwRef,-1), lPopupWnd->IsInNotify(), lPopupWnd->IsQueueBusy());
@@ -127,6 +133,10 @@ void DaSvrCharacter::Terminate (bool pFinal, bool pAbandonned)
 		if	(pFinal)
 		{
 			UnmanageObjectLifetime (this);
+		}
+		if	(pAbandonned)
+		{
+			Disconnect (pAbandonned);
 		}
 
 		if	(
@@ -199,29 +209,9 @@ void DaSvrCharacter::Terminate (bool pFinal, bool pAbandonned)
 			CDaCmnCharacter::Terminate (pFinal, pAbandonned);
 		}
 
-		if	(
-				(pFinal)
-			&&	(m_dwRef > 0)
-			)
+		if	(pFinal)
 		{
-			if	(pAbandonned)
-			{
-#ifdef	_DEBUG_ABANDONED
-				if	(LogIsActive (_DEBUG_ABANDONED))
-				{
-					LogMessage (_DEBUG_ABANDONED, _T("[%p(%d)(%d)] DaSvrCharacter SKIP CoDisconnectObject"), this, mCharID, max(m_dwRef,-1));
-				}
-#endif
-			}
-			else
-			{
-				try
-				{
-					CoDisconnectObject (GetUnknown(), 0);
-				}
-				catch AnyExceptionDebug
-			}
-			m_dwRef = 0;
+			Disconnect (pAbandonned);
 		}
 
 #ifdef	_LOG_INSTANCE
@@ -233,34 +223,55 @@ void DaSvrCharacter::Terminate (bool pFinal, bool pAbandonned)
 	}
 }
 
-void DaSvrCharacter::Abandon()
+void DaSvrCharacter::Abandon ()
 {
-	if	(this)
+	if	(
+			(this)
+		&&	(m_dwRef > 0)
+		)
 	{
-#ifdef	_LOG_INSTANCE
-		if	(LogIsActive (_LOG_INSTANCE))
+#ifdef	_LOG_ABANDONED
+		if	(LogIsActive (_LOG_ABANDONED))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)(%d)] DaSvrCharacter::Abandon"), this, mCharID, max(m_dwRef,-1));
+			LogMessage (_LOG_ABANDONED, _T("[%p(%d)(%d)] DaSvrCharacter::Abandon"), this, mCharID, max(m_dwRef,-1));
 		}
 #endif
-		if	(m_dwRef > 0)
+		__super::_PreNotify ();
+		Disconnect (true);
+		__super::_PostNotify ();
+		_AtlModule.mObjectWasAbandoned = true;
+
+#ifdef	_LOG_ABANDONED_NOT
+		if	(LogIsActive (_LOG_ABANDONED))
 		{
-#ifdef	_DEBUG_ABANDONED
-			if	(LogIsActive (_DEBUG_ABANDONED))
-			{
-				LogMessage (_DEBUG_ABANDONED, _T("[%p(%d)(%d)] DaSvrCharacter CoDisconnectObject"), this, mCharID, max(m_dwRef,-1));
-			}
-#endif
-			CDaCmnCharacter::_PreNotify ();
-			try
-			{
-				CoDisconnectObject (GetUnknown(), 0);
-			}
-			catch AnyExceptionDebug
-			CDaCmnCharacter::_PostNotify ();
-			m_dwRef = 0;
-			_AtlModule.mObjectWasAbandoned = true;
+			LogMessage (_LOG_ABANDONED, _T("[%p(%d)(%d)] DaSvrCharacter::Abandoned"), this, mCharID, max(m_dwRef,-1));
 		}
+#endif
+	}
+}
+
+void DaSvrCharacter::Disconnect (bool pAbandonned)
+{
+	if	(m_dwRef > 1) // Allow for loaded but unreferenced objects
+	{
+		if	(pAbandonned)
+		{
+			m_dwRef = SHRT_MIN;
+		}
+		__try
+		{
+			LogComErr (LogIfActive, CoDisconnectObject (GetUnknown(), 0));
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
+		{}
+	}
+	if	(pAbandonned)
+	{
+		m_dwRef = min (m_dwRef, SHRT_MIN);
+	}
+	else
+	{
+		m_dwRef = min (m_dwRef, 1);
 	}
 }
 
@@ -279,6 +290,14 @@ void DaSvrCharacter::FinalRelease()
 
 bool DaSvrCharacter::VerifyClientLifetime ()
 {
+	if	(IsInNotify())
+	{
+#ifdef	_DEBUG_NOTIFY_LEVEL
+		LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)(%d)] DaSvrCharacter::VerifyClientLifetime IsInNotify [%u]"), this, mCharID, max(m_dwRef,-1), IsInNotify());
+#endif
+		return true;
+	}
+	else
 	if	(HasFinalReleased())
 	{
 #ifdef	_LOG_ABANDONED
@@ -294,13 +313,13 @@ bool DaSvrCharacter::VerifyClientLifetime ()
 #ifdef	_LOG_INSTANCE
 				if	(LogIsActive (_LOG_INSTANCE))
 				{
-					LogMessage (_LOG_INSTANCE, _T("[%p(%d)(%d)] DaSvrCharacter release abandoned"), this, mCharID, max(m_dwRef,-1));
+					LogMessage (_LOG_INSTANCE, _T("[%p(%d)(%d)] DaSvrCharacter Release (HasFinalReleased)"), this, mCharID, max(m_dwRef,-1));
 				}
 #ifdef	_DEBUG_ABANDONED
 				else
 				if	(LogIsActive (_DEBUG_ABANDONED))
 				{
-					LogMessage (_DEBUG_ABANDONED, _T("[%p(%d)(%d)] DaSvrCharacter release abandoned"), this, mCharID, max(m_dwRef,-1));
+					LogMessage (_DEBUG_ABANDONED, _T("[%p(%d)(%d)] DaSvrCharacter Release (HasFinalReleased)"), this, mCharID, max(m_dwRef,-1));
 				}
 #endif
 #endif
@@ -342,8 +361,8 @@ bool DaSvrCharacter::CanFinalRelease ()
 bool DaSvrCharacter::IsValid (const CAgentFile * pFile) const
 {
 	if	(
-			(!const_cast <DaSvrCharacter *> (this)->HasFinalReleased ())
-		&&	(const_cast <DaSvrCharacter *> (this)->_VerifyClientLifetime ())
+			(!HasFinalReleased ())
+		&&	(_VerifyClientLifetime ())
 		)
 	{
 		return CDaCmnCharacter::IsValid (pFile);
@@ -362,26 +381,30 @@ bool DaSvrCharacter::IsValid (const CAgentFile * pFile) const
 bool DaSvrCharacter::_PreNotify ()
 {
 #ifdef	_DEBUG_NOTIFY_LEVEL
-	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] DaSvrCharacter::_PreNotify [%u]"), this, max(m_dwRef,-1), IsInNotify());
+	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)(%d)] DaSvrCharacter::_PreNotify [%u]"), this, mCharID, max(m_dwRef,-1), IsInNotify());
 #endif
 	if	(
 			(m_dwRef > 0)
 		&&	(_VerifyClientLifetime ())
 		)
 	{
-		return CDaCmnCharacter::_PreNotify ();
+		return __super::_PreNotify ();
 	}
+	else
+	{
+		__super::_PreNotify ();
 #ifdef	_DEBUG_NOTIFY_LEVEL
-	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] DaSvrCharacter::_PreNotify failed"), this, max(m_dwRef,-1));
+		LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)(%d)] DaSvrCharacter::_PreNotify [%u] failed"), this, mCharID, max(m_dwRef,-1), IsInNotify());
 #endif
-	return false;
+		return false;
+	}
 }
 
 bool DaSvrCharacter::_PostNotify ()
 {
-	CDaCmnCharacter::_PostNotify ();
+	__super::_PostNotify ();
 #ifdef	_DEBUG_NOTIFY_LEVEL
-	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] DaSvrCharacter::_PostNotify [%u] HasFinalRelased [%u] CanFinalRelease [%u]"), this, max(m_dwRef,-1), IsInNotify(), HasFinalReleased(), CanFinalRelease());
+	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)(%d)] DaSvrCharacter::_PostNotify [%u] HasFinalRelased [%u] CanFinalRelease [%u]"), this, mCharID, max(m_dwRef,-1), IsInNotify(), HasFinalReleased(), CanFinalRelease());
 #endif
 
 	if	(
@@ -404,7 +427,7 @@ bool DaSvrCharacter::_PostNotify ()
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)(%d)] DaSvrCharacter PostNotify -> HasFinalReleased"), this, mCharID, max(m_dwRef,-1));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)(%d)] DaSvrCharacter PostNotify -> HasFinalReleased [%u]"), this, mCharID, max(m_dwRef,-1), IsInNotify());
 		}
 #endif
 		Abandon ();

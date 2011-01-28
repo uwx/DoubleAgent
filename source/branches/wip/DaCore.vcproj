@@ -176,9 +176,6 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="4"
-				InlineFunctionExpansion="2"
-				FavorSizeOrSpeed="2"
 				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="_DACORE_EXPORT"
 			/>
@@ -245,10 +242,6 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/homeparams"
-				Optimization="4"
-				InlineFunctionExpansion="2"
-				FavorSizeOrSpeed="2"
 				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="_DACORE_EXPORT"
 			/>

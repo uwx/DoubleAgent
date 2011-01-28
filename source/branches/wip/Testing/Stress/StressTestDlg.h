@@ -131,9 +131,10 @@ protected:
 	bool IsAnimating ();
 	bool Stop (bool pRandom = false);
 	CPoint GetInitialPos (const CSize & pInitialSize);
+	bool CheckServerOk (HRESULT pResult);
 
-	void GetAgentServers (int pServerCount = 0);
-	void FreeAgentServers (int pServerCount = 0);
+	HRESULT GetAgentServers (int pServerCount = 0);
+	HRESULT FreeAgentServers (int pServerCount = 0);
 	int GetServerMultiple () const;
 
 	void GetAgentControls (int pControlCount = 0);

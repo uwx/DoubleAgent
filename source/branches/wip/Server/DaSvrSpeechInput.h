@@ -82,6 +82,10 @@ public:
 	HRESULT STDMETHODCALLTYPE GetEngine (BSTR *Engine);
 	HRESULT STDMETHODCALLTYPE SetEngine (BSTR Engine);
 	HRESULT STDMETHODCALLTYPE GetListeningTip (long *ListeningTip);
+
+// Implementation
+protected:
+	void Disconnect (bool pAbandonned);
 };
 
 /////////////////////////////////////////////////////////////////////////////

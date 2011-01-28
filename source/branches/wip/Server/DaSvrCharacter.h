@@ -45,8 +45,8 @@ public:
 public:
 	static DaSvrCharacter * CreateInstance (long pCharID, CEventNotify * pNotify, _IListeningAnchor * pListeningAnchor, LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
-	void Abandon();
-	void FinalRelease();
+	void Abandon ();
+	void FinalRelease ();
 
 // Overrides
 public:
@@ -220,6 +220,8 @@ public:
     HRESULT STDMETHODCALLTYPE GetClassForHandler (DWORD dwDestContext, void *pvDestContext, CLSID *pClsid);
 
 // Implementation
+protected:
+	void Disconnect (bool pAbandonned);
 protected:
 	LPUNKNOWN	mSvrBalloon;
 	LPUNKNOWN	mSvrCommands;

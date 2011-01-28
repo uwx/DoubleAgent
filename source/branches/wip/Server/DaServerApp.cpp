@@ -184,6 +184,13 @@ CDaServerModule::CDaServerModule ()
 CDaServerModule::~CDaServerModule ()
 {
 	CLocalize::FreeMuiModules ();
+#if	TRUE // Do it now rather than in superclass destructor so we can log any crashes
+	if	(m_bComInitialized)
+	{
+		UninitializeCom ();
+	}
+	m_bComInitialized = FALSE;
+#endif	
 	LogStop (LogIfActive);
 	LogCrash_Terminate ();
 }
@@ -200,7 +207,7 @@ bool CDaServerModule::ParseCommandLine (LPCTSTR lpCmdLine, HRESULT* pnRetCode)
 #ifdef	_DEBUG
 	LogMessage (LogNormal|LogTime, _T("Command line [%s]"), lpCmdLine);
 #endif
-	lRet = CAtlExeModuleT<CDaServerModule>::ParseCommandLine (lpCmdLine, pnRetCode);
+	lRet = __super::ParseCommandLine (lpCmdLine, pnRetCode);
 
 	if	(lRet)
 	{
@@ -241,7 +248,7 @@ HRESULT CDaServerModule::PreMessageLoop (int nShowCmd)
 	__try
 	{
 		_PreMessageLoop (false);
-		lResult = CAtlExeModuleT<CDaServerModule>::PreMessageLoop (nShowCmd);
+		lResult = __super::PreMessageLoop (nShowCmd);
 	}
 	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__))
 	{}
@@ -254,7 +261,7 @@ HRESULT CDaServerModule::PostMessageLoop ()
 	__try
 	{
 		_PostMessageLoop (false);
-		lResult = CAtlExeModuleT<CDaServerModule>::PostMessageLoop ();
+		lResult = __super::PostMessageLoop ();
 	}
 	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__))
 	{}
@@ -413,6 +420,22 @@ void CDaServerModule::RunMessageLoop ()
 	{}
 }
 
+void CDaServerModule::UninitializeCom ()
+{
+	__try
+	{
+		CoFreeAllLibraries ();
+	}
+	__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+	{}
+	__try
+	{
+		CoUninitialize ();
+	}
+	__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+	{}
+}
+
 CComMessageFilter * CDaServerModule::GetMessageFilter ()
 {
 	return mMessageFilter;
@@ -430,7 +453,7 @@ HRESULT CDaServerModule::RegisterServer(BOOL bRegTypeLib, const CLSID* pCLSID)
 		_AtlComModule.RegisterTypeLib (_T("\\3"));
 	}
 #endif
-	return CAtlExeModuleT<CDaServerModule>::RegisterServer (bRegTypeLib, pCLSID);
+	return __super::RegisterServer (bRegTypeLib, pCLSID);
 }
 
 HRESULT CDaServerModule::UnregisterServer(BOOL bUnRegTypeLib, const CLSID* pCLSID)
@@ -441,12 +464,12 @@ HRESULT CDaServerModule::UnregisterServer(BOOL bUnRegTypeLib, const CLSID* pCLSI
 		_AtlComModule.UnRegisterTypeLib (_T("\\3"));
 	}
 #endif
-	return CAtlExeModuleT<CDaServerModule>::UnregisterServer (bUnRegTypeLib, pCLSID);
+	return __super::UnregisterServer (bUnRegTypeLib, pCLSID);
 }
 
 HRESULT CDaServerModule::RegisterAppId ()
 {
-	HRESULT	lResult = CAtlExeModuleT<CDaServerModule>::RegisterAppId ();
+	HRESULT	lResult = __super::RegisterAppId ();
 
 //
 //	Set the launch permissions for the server object allow a low-integrity process to access the server at medium integrity.
@@ -578,7 +601,7 @@ HRESULT CDaServerModule::UnregisterAppId ()
 		lAppKey.Delete ();
 	}
 
-	return CAtlExeModuleT<CDaServerModule>::UnregisterAppId ();
+	return __super::UnregisterAppId ();
 }
 
 /////////////////////////////////////////////////////////////////////////////

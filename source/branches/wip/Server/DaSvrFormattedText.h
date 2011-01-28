@@ -84,6 +84,10 @@ public:
 	HRESULT STDMETHODCALLTYPE get_DisplayText (BSTR *DisplayText);
 	HRESULT STDMETHODCALLTYPE Parse (BSTR RawText);
 	HRESULT STDMETHODCALLTYPE Append (IDaSvrFormattedText *FormattedText);
+
+// Implementation
+protected:
+	void Disconnect (bool pAbandonned);
 };
 
 /////////////////////////////////////////////////////////////////////////////

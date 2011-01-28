@@ -257,15 +257,11 @@ BOOL CSabotageTestDlg::OnInitDialog()
 	lAutoStart = CommandLineConfig ();
 	ShowControlMode ();
 	ShowSabotageMode ();
-	ShowCharacterState ();
+	ShowConfigCharacter ();
 
 	if	(lAutoStart)
 	{
-		OnOK ();
-	}
-	else
-	{
-		ShowConfigCharacter ();
+		PostMessage (WM_COMMAND, IDOK);
 	}
 	return TRUE;
 }
@@ -1122,8 +1118,8 @@ bool CSabotageTestDlg::LoadServerCharacters (INT_PTR pCharacterCount)
 		}
 
 		if	(
-				(lRet)
-			&&	(
+				/*(lRet)
+			&&	*/(
 					(mCycleTimer)
 				||	(mShowButton.GetCheck())
 				)
@@ -1543,8 +1539,8 @@ bool CSabotageTestDlg::LoadControlCharacters (INT_PTR pCharacterCount)
 		}
 
 		if	(
-				(lRet)
-			&&	(
+				/*(lRet)
+			&&	*/(
 					(mCycleTimer)
 				||	(mShowButton.GetCheck())
 				)
@@ -2174,18 +2170,12 @@ bool CSabotageTestDlg::CommandLineConfig ()
 		LogMessage (LogNormal|LogTime, _T("Start (%s)"), lTitle);
 	}
 
-	if	(
-			(!mSelCharacterPath.IsEmpty())
-		&&	(mShowButton.GetCheck ())
-		)
-	{
-		ShowCharacter (mSelCharacterPath);
-	}
 	return lRet;
 }
 
 bool CSabotageTestDlg::ShowConfigCharacter ()
 {
+	bool		lRet = false;
 	CWinApp *	lApp = AfxGetApp ();
 	CString		lCharacterPath;
 
@@ -2199,8 +2189,17 @@ bool CSabotageTestDlg::ShowConfigCharacter ()
 		lFindInfo.vkDirection = VK_NEXT;
 		if	(SelectCharacter (ListView_FindItem (mCharacterList.m_hWnd, -1, &lFindInfo), false))
 		{
-			return true;
+			lRet = true;
 		}
+	}
+
+	if	(
+			(!mSelCharacterPath.IsEmpty())
+		&&	(mShowButton.GetCheck ())
+		&&	(ShowCharacter (mSelCharacterPath))
+		)
+	{
+		lRet = true;
 	}
 	return false;
 }

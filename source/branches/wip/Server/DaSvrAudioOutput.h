@@ -81,6 +81,10 @@ public:
 	HRESULT STDMETHODCALLTYPE GetEnabled (long *Enabled);
 	HRESULT STDMETHODCALLTYPE GetUsingSoundEffects (long *UsingSoundEffects);
 	HRESULT STDMETHODCALLTYPE GetStatus (long *Status);
+
+// Implementation
+protected:
+	void Disconnect (bool pAbandonned);
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -85,6 +85,10 @@ public:
 	HRESULT STDMETHODCALLTYPE get_Gender (SpeechGenderType *Gender);
 	HRESULT STDMETHODCALLTYPE get_LanguageID (long *LanguageID);
 	HRESULT STDMETHODCALLTYPE get_LanguageName (VARIANT_BOOL EnglishName, BSTR *LanguageName);
+
+// Implementation
+protected:
+	void Disconnect (bool pAbandonned);
 };
 
 /////////////////////////////////////////////////////////////////////////////

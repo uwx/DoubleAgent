@@ -35,8 +35,6 @@ public:
 	virtual void OnVoiceBookMark (long pCharID, long pBookMarkId) {}
 	virtual void OnVoiceWord (long pCharID, UINT pWordPos, int pWordLength) {}
 	virtual void OnVoiceVisual (long pCharID, int pMouthOverlay) {}
-
-	virtual CNotifySourcesOwner <class CSapiVoice> * _GetNotifySources () {return NULL;}
 };
 
 //////////////////////////////////////////////////////////////////////

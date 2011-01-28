@@ -76,7 +76,7 @@ void CAgentTextObject::Attach (long pCharID, CEventNotify * pNotify, CSapiVoice 
 		}
 		if	(mVoice = pVoice)
 		{
-			mVoice->AddNotifySink (this);
+			mVoice->AddNotifySink (this, this);
 		}
 	}
 
@@ -200,14 +200,16 @@ LRESULT CAgentTextObject::OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lPar
 	if	(
 			(m_pOuterUnknown)
 		&&	(mNotify)
-		&&	(PreNotify ())
 		)
 	{
-		try
+		if	(PreNotify ())
 		{
-			mNotify->OnSpeechStart (mCharID, m_pOuterUnknown);
+			try
+			{
+				mNotify->OnSpeechStart (mCharID, m_pOuterUnknown);
+			}
+			catch AnyExceptionSilent
 		}
-		catch AnyExceptionSilent
 		PostNotify ();
 	}
 	return 0;
@@ -224,14 +226,16 @@ LRESULT CAgentTextObject::OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam
 	if	(
 			(m_pOuterUnknown)
 		&&	(mNotify)
-		&&	(PreNotify ())
 		)
 	{
-		try
+		if	(PreNotify ())
 		{
-			mNotify->OnSpeechEnd (mCharID, m_pOuterUnknown, (lParam)?VARIANT_TRUE:VARIANT_FALSE);
+			try
+			{
+				mNotify->OnSpeechEnd (mCharID, m_pOuterUnknown, (lParam)?VARIANT_TRUE:VARIANT_FALSE);
+			}
+			catch AnyExceptionSilent
 		}
-		catch AnyExceptionSilent
 		PostNotify ();
 	}
 	return 0;
@@ -248,14 +252,16 @@ LRESULT CAgentTextObject::OnVoiceWordMsg (UINT uMsg, WPARAM wParam, LPARAM lPara
 	if	(
 			(m_pOuterUnknown)
 		&&	(mNotify)
-		&&	(PreNotify ())
 		)
 	{
-		try
+		if	(PreNotify ())
 		{
-			mNotify->OnSpeechWord (mCharID, m_pOuterUnknown, (long)lParam);
+			try
+			{
+				mNotify->OnSpeechWord (mCharID, m_pOuterUnknown, (long)lParam);
+			}
+			catch AnyExceptionSilent
 		}
-		catch AnyExceptionSilent
 		PostNotify ();
 	}
 	return 0;

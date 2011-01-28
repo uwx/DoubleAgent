@@ -115,26 +115,6 @@ void CDaCmnCharacter::Terminate (bool pFinal, bool pAbandonned)
 {
 	if	(this)
 	{
-		if	(!pAbandonned)
-		{
-			try
-			{
-				if	(IsClientActive ())
-				{
-					SetActiveClient (false, false);
-				}
-			}
-			catch AnyExceptionDebug
-		}
-
-		if	(!mPrepares.IsEmpty ())
-		{
-			try
-			{
-				mPrepares.RemoveAll ();
-			}
-			catch AnyExceptionDebug
-		}
 
 		if	(mNotify)
 		{
@@ -150,23 +130,48 @@ void CDaCmnCharacter::Terminate (bool pFinal, bool pAbandonned)
 				mNotify->ReflectSinks::RemoveNotifySink (this);
 			}
 			catch AnyExceptionDebug
+		}
 
-			if	(
-					(pFinal)
-				&&	(mFile)
-				)
+		if	(!mPrepares.IsEmpty ())
+		{
+			try
 			{
-				try
-				{
-					mNotify->mAnchor->RemoveFileClient (mFile, this, false);
-				}
-				catch AnyExceptionDebug
-				try
-				{
-					mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, this);
-				}
-				catch AnyExceptionDebug
+				mPrepares.RemoveAll ();
 			}
+			catch AnyExceptionDebug
+		}
+
+		if	(!pAbandonned)
+		{
+			try
+			{
+				if	(IsClientActive ())
+				{
+					// Protect this object from possible deletion by incrementing its notification level
+					__super::_PreNotify ();
+					SetActiveClient (false, false);
+					__super::_PostNotify ();
+				}
+			}
+			catch AnyExceptionDebug
+		}
+
+		if	(
+				(pFinal)
+			&&	(mNotify)
+			&&	(mFile)
+			)
+		{
+			try
+			{
+				mNotify->mAnchor->RemoveFileClient (mFile, this, false);
+			}
+			catch AnyExceptionDebug
+			try
+			{
+				mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, this);
+			}
+			catch AnyExceptionDebug
 		}
 
 		Unrealize (pFinal || pAbandonned);
@@ -455,7 +460,7 @@ HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pProvider, CAtlString & pFilePath,
 #ifdef	_LOG_FILE_LOAD
 		if	(LogIsActive (_LOG_FILE_LOAD))
 		{
-			LogMessage (_LOG_FILE_LOAD, _T("Load search Path [%s]"), JoinStringArray (lSearchPath, _T("] [")));
+			LogMessage (_LOG_FILE_LOAD, _T("Load search Path [%s] [%s]"), pSearchPath, JoinStringArray (lSearchPath, _T("] [")));
 		}
 #endif
 	}
@@ -898,20 +903,26 @@ bool CDaCmnCharacter::SetActiveClient (bool pActive, bool pInputActive)
 
 			if	(
 					(lNextCharacter)
-				&&	(lNextCharacter->PreNotify ())
+				&&	(lCharacterWnd = GetCharacterWnd ())
+				&&	(lNextCharacter->GetCharacterWnd () == lCharacterWnd)
 				)
 			{
-				if	(
-						(lCharacterWnd = GetCharacterWnd ())
-					&&	(lNextCharacter->GetCharacterWnd () == lCharacterWnd)
-					&&	(lCharacterWnd->Attach (lNextCharacter->mCharID, lNextCharacter->mNotify, &lNextCharacter->mIconData, true))
-					)
+#ifdef	_DEBUG_ACTIVE
+				if	(LogIsActive (_DEBUG_ACTIVE))
 				{
-					if	(lBalloon = lNextCharacter->GetBalloon (true))
+					LogMessage (_DEBUG_ACTIVE, _T("[%d]    NextActive [%p(%d)(%u)]"), mCharID, lNextCharacter, lNextCharacter->GetCharID(), lNextCharacter->IsInNotify());
+				}
+#endif
+				if	(lNextCharacter->PreNotify ())
+				{
+					if	(lCharacterWnd->Attach (lNextCharacter->mCharID, lNextCharacter->mNotify, &lNextCharacter->mIconData, true))
 					{
-						lBalloon->SetLangID (lNextCharacter->mLangID);
+						if	(lBalloon = lNextCharacter->GetBalloon (true))
+						{
+							lBalloon->SetLangID (lNextCharacter->mLangID);
+						}
+						lRet = true;
 					}
-					lRet = true;
 				}
 				lNextCharacter->PostNotify ();
 			}
@@ -1949,8 +1960,8 @@ HRESULT CDaCmnCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 							mNotify->RequestComplete (lReqID, pReqStatus);
 						}
 						catch AnyExceptionSilent
-						PostNotify ();
 					}
+					PostNotify ();
 				}
 			}
 		}
@@ -2018,8 +2029,8 @@ HRESULT CDaCmnCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, long
 						mNotify->RequestStart (pReqID);
 					}
 					catch AnyExceptionSilent
-					PostNotify ();
 				}
+				PostNotify ();
 			}
 
 			if	(lPrepare = CQueuedPrepare::CreateInstance (mCharID, pReqID))
@@ -2089,8 +2100,8 @@ HRESULT CDaCmnCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, long
 						mNotify->RequestComplete (pReqID, lResult);
 					}
 					catch AnyExceptionSilent
-					PostNotify ();
 				}
+				PostNotify ();
 			}
 		}
 	}
@@ -2169,8 +2180,8 @@ bool CDaCmnCharacter::_OnDownloadComplete (CFileDownload * pDownload)
 							mNotify->RequestComplete (lPrepare->mReqID, lResult);
 						}
 						catch AnyExceptionSilent
-						PostNotify ();
 					}
+					PostNotify ();
 				}
 			}
 		}
@@ -2337,16 +2348,16 @@ bool CDaCmnCharacter::_OnContextMenu (long pCharID, HWND pOwner, const CPoint & 
 {
 	if	(pCharID == mCharID)
 	{
-		if	(
-				(mAutoPopupMenu)
-			&&	(PreNotify ())
-			)
+		if	(mAutoPopupMenu)
 		{
-			try
+			if	(PreNotify ())
 			{
-				DoContextMenu (pOwner, pPosition);
+				try
+				{
+					DoContextMenu (pOwner, pPosition);
+				}
+				catch AnyExceptionDebug
 			}
-			catch AnyExceptionDebug
 			PostNotify ();
 		}
 		return true;
@@ -2358,16 +2369,16 @@ bool CDaCmnCharacter::_OnDefaultCommand (long pCharID, HWND pOwner, const CPoint
 {
 	if	(pCharID == mCharID)
 	{
-		if	(
-				(mAutoPopupMenu)
-			&&	(PreNotify ())
-			)
+		if	(mAutoPopupMenu)
 		{
-			try
+			if	(PreNotify ())
 			{
-				DoDefaultCommand (pOwner, pPosition);
+				try
+				{
+					DoDefaultCommand (pOwner, pPosition);
+				}
+				catch AnyExceptionDebug
 			}
-			catch AnyExceptionDebug
 			PostNotify ();
 		}
 		return true;
@@ -2412,14 +2423,16 @@ bool CDaCmnCharacter::DoContextMenu (HWND pOwner, const CPoint & pPosition)
 					(!DoMenuCommand (LOWORD (lCommandId)))
 				&&	(lCommand = lCommands->GetCommand (LOWORD (lCommandId)))
 				&&	(lCommand->mEnabled)
-				&&	(PreNotify ())
 				)
 			{
-				try
+				if	(PreNotify ())
 				{
-					mNotify->Command (lCommandId, NULL);
+					try
+					{
+						mNotify->Command (lCommandId, NULL);
+					}
+					catch AnyExceptionDebug
 				}
-				catch AnyExceptionDebug
 				PostNotify ();
 			}
 		}
@@ -2451,8 +2464,8 @@ bool CDaCmnCharacter::DoDefaultCommand (HWND pOwner, const CPoint & pPosition)
 				mNotify->Command ((long)lCommand, NULL);
 			}
 			catch AnyExceptionDebug
-			PostNotify ();
 		}
+		PostNotify ();
 		return true;
 	}
 #endif
@@ -3529,8 +3542,8 @@ HRESULT CDaCmnCharacter::ShowPopupMenu (short X, short Y)
 				}
 			}
 			catch AnyExceptionDebug
-			PostNotify ();
 		}
+		PostNotify ();
 	}
 	else
 	{

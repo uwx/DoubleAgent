@@ -30,8 +30,6 @@
 
 #pragma comment(lib, "psapi.lib")
 
-extern int LogCrashCode (unsigned int pCode, LPCSTR pFile = NULL, UINT pLine = 0, int pAction = EXCEPTION_EXECUTE_HANDLER);
-
 #ifdef	_DEBUG
 #define	_DEBUG_NOTIFY		(GetProfileDebugInt(_T("DebugNotify"),LogVerbose,true)&0xFFFF|LogTime)
 #define	_DEBUG_CONNECTIONS	(GetProfileDebugInt(_T("DebugNotifyConnections"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
@@ -360,29 +358,15 @@ void CServerNotify::AbandonAll ()
 
 bool CServerNotify::PreFireEvent (LPCTSTR pEventName)
 {
+	bool	lRet = mOwner->PreNotify ();
 #ifdef	_DEBUG_NOTIFY
 	if	(LogIsActive ())
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s (LockCount %d)"), mOwner, max(mOwner->m_dwRef,-1), pEventName, _AtlModule.GetLockCount());
+		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s [%u] (LockCount %d)"), mOwner, max(mOwner->m_dwRef,-1), pEventName, lRet, _AtlModule.GetLockCount());
 	}
 #endif
-	if	(mOwner->PreNotify ())
-	{
-		CEventNotify::PreFireEvent (pEventName);
-#if	FALSE // We're allowing incoming calls during outgoing events.  Clients expect this.
-		CComMessageFilter *	lMessageFilter;
-		if	(lMessageFilter = _AtlModule.GetMessageFilter())
-		{
-			try
-			{
-				lMessageFilter->DoNotDisturb (true);
-			}
-			catch AnyExceptionSilent
-		}
-#endif
-		return true;
-	}
-	return false;
+	CEventNotify::PreFireEvent (pEventName);
+	return lRet;
 }
 
 bool CServerNotify::PostFireEvent (LPCTSTR pEventName, UINT pEventSinkCount)
@@ -391,17 +375,6 @@ bool CServerNotify::PostFireEvent (LPCTSTR pEventName, UINT pEventSinkCount)
 	if	(LogIsActive ())
 	{
 		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s done [%u] (LockCount %d)"), mOwner, max(mOwner->m_dwRef,-1), pEventName, pEventSinkCount, _AtlModule.GetLockCount());
-	}
-#endif
-#if	FALSE // See above
-	CComMessageFilter *	lMessageFilter;
-	if	(lMessageFilter = _AtlModule.GetMessageFilter())
-	{
-		try
-		{
-			lMessageFilter->DoNotDisturb (false);
-		}
-		catch AnyExceptionSilent
 	}
 #endif
 	CEventNotify::PostFireEvent (pEventName, pEventSinkCount);
@@ -426,10 +399,10 @@ HRESULT CServerNotify::FireCommand(long CommandID, IDaSvrUserInput2* UserInput)
 							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireCommand (CommandID, UserInput)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireCommand (CommandID, UserInput);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("Command"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("Command"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -447,10 +420,10 @@ HRESULT CServerNotify::FireActivateInputState(long CharacterID, long Activated)
 							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireActivateInputState (CharacterID, Activated)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireActivateInputState (CharacterID, Activated);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("ActivateInputState"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("ActivateInputState"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -468,10 +441,10 @@ HRESULT CServerNotify::FireVisibleState(long CharacterID, long Visible, long Cau
 							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireVisibleState (CharacterID, Visible, Cause)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireVisibleState (CharacterID, Visible, Cause);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("VisibleState"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("VisibleState"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -489,10 +462,10 @@ HRESULT CServerNotify::FireClick(long CharacterID, short Keys, long X, long Y)
 							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireClick (CharacterID, Keys, X, Y)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireClick (CharacterID, Keys, X, Y);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("Click"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("Click"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -510,10 +483,10 @@ HRESULT CServerNotify::FireDblClick(long CharacterID, short Keys, long X, long Y
 							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireDblClick (CharacterID, Keys, X, Y)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireDblClick (CharacterID, Keys, X, Y);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("DblClick"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("DblClick"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -531,10 +504,10 @@ HRESULT CServerNotify::FireDragStart(long CharacterID, short Keys, long X, long 
 							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireDragStart (CharacterID, Keys, X, Y)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireDragStart (CharacterID, Keys, X, Y);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("DragStart"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("DragStart"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -552,10 +525,10 @@ HRESULT CServerNotify::FireDragComplete(long CharacterID, short Keys, long X, lo
 							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireDragComplete (CharacterID, Keys, X, Y)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireDragComplete (CharacterID, Keys, X, Y);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("DragComplete"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("DragComplete"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -573,10 +546,10 @@ HRESULT CServerNotify::FireRequestStart(long RequestID)
 							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireRequestStart (RequestID)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireRequestStart (RequestID);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("RequestStart"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("RequestStart"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -594,10 +567,10 @@ HRESULT CServerNotify::FireRequestComplete(long RequestID, long Result)
 							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireRequestComplete (RequestID, Result)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireRequestComplete (RequestID, Result);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("RequestComplete"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("RequestComplete"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -615,10 +588,10 @@ HRESULT CServerNotify::FireBookMark(long BookMarkID)
 							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireBookMark (BookMarkID)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireBookMark (BookMarkID);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("BookMark"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("BookMark"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -636,10 +609,10 @@ HRESULT CServerNotify::FireIdle(long CharacterID, long Start)
 							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireIdle (CharacterID, Start)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireIdle (CharacterID, Start);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("Idle"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("Idle"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -657,10 +630,10 @@ HRESULT CServerNotify::FireMove(long CharacterID, long X, long Y, long Cause)
 							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireMove (CharacterID, X, Y, Cause)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireMove (CharacterID, X, Y, Cause);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("Move"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("Move"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -678,10 +651,10 @@ HRESULT CServerNotify::FireSize(long CharacterID, long Width, long Height)
 							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireSize (CharacterID, Width, Height)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireSize (CharacterID, Width, Height);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("Size"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("Size"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -699,10 +672,10 @@ HRESULT CServerNotify::FireBalloonVisibleState(long CharacterID, long Visible)
 							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireBalloonVisibleState (CharacterID, Visible)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireBalloonVisibleState (CharacterID, Visible);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("BalloonVisibleState"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("BalloonVisibleState"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -719,10 +692,10 @@ HRESULT CServerNotify::FireListeningState(long CharacterID, long Listening, long
 							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireListeningState (CharacterID, Listening, Cause)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireListeningState (CharacterID, Listening, Cause);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("ListeningState"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("ListeningState"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -739,10 +712,10 @@ HRESULT CServerNotify::FireDefaultCharacterChange(BSTR CharGUID)
 							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireDefaultCharacterChange (CharGUID)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireDefaultCharacterChange (CharGUID);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("DefaultCharacterChange"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("DefaultCharacterChange"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -759,10 +732,10 @@ HRESULT CServerNotify::FireAgentPropertyChange()
 							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireAgentPropertyChange ()
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireAgentPropertyChange ();
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("AgentPropertyChange"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("AgentPropertyChange"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -779,10 +752,10 @@ HRESULT CServerNotify::FireActiveClientChange(long CharacterID, long Status)
 							+ CProxyIAgentNotifySinkEx<CServerNotify>::FireActiveClientChange (CharacterID, Status)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireActiveClientChange (CharacterID, Status);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("ActiveClientChange"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("ActiveClientChange"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -797,10 +770,10 @@ HRESULT CServerNotify::FireSpeechStart(long CharacterID, IDaSvrFormattedText* Fo
 			lEventSinkCount = CProxyIDaSvrNotifySink2<CServerNotify>::FireSpeechStart (CharacterID, FormattedText)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireSpeechStart (CharacterID, FormattedText);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("SpeechStart"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("SpeechStart"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -815,10 +788,10 @@ HRESULT CServerNotify::FireSpeechEnd(long CharacterID, IDaSvrFormattedText* Form
 			lEventSinkCount = CProxyIDaSvrNotifySink2<CServerNotify>::FireSpeechEnd (CharacterID, FormattedText, Stopped)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireSpeechEnd (CharacterID, FormattedText, Stopped);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("SpeechEnd"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("SpeechEnd"), lEventSinkCount);
 	return S_OK;
 }
 
@@ -833,10 +806,10 @@ HRESULT CServerNotify::FireSpeechWord(long CharacterID, IDaSvrFormattedText* For
 			lEventSinkCount = CProxyIDaSvrNotifySink2<CServerNotify>::FireSpeechWord (CharacterID, FormattedText, WordNdx)
 							+ CProxy_DaSvrEvents2<CServerNotify>::FireSpeechWord (CharacterID, FormattedText, WordNdx);
 		}
-		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__))
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
 		{}
-		PostFireEvent (_DEBUG_T("SpeechWord"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("SpeechWord"), lEventSinkCount);
 	return S_OK;
 }
 

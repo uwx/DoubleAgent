@@ -740,8 +740,8 @@ int DaControl::FireActivateInput(LPCTSTR CharacterID)
 							+ CProxy_AgentEvents<DaControl>::FireActivateInput (CharacterID);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("ActivateInput"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("ActivateInput"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -758,8 +758,8 @@ int DaControl::FireDeactivateInput(LPCTSTR CharacterID)
 							+ CProxy_AgentEvents<DaControl>::FireDeactivateInput (CharacterID);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("DeactivateInput"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("DeactivateInput"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -776,8 +776,8 @@ int DaControl::FireClick(LPCTSTR CharacterID, short Button, short Shift, short X
 							+ CProxy_AgentEvents<DaControl>::FireClick (CharacterID, Button, Shift, X, Y);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("Click"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("Click"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -794,8 +794,8 @@ int DaControl::FireDblClick(LPCTSTR CharacterID, short Button, short Shift, shor
 							+ CProxy_AgentEvents<DaControl>::FireDblClick (CharacterID, Button, Shift, X, Y);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("DblClick"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("DblClick"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -812,8 +812,8 @@ int DaControl::FireDragStart(LPCTSTR CharacterID, short Button, short Shift, sho
 							+ CProxy_AgentEvents<DaControl>::FireDragStart (CharacterID, Button, Shift, X, Y);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("DragStart"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("DragStart"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -830,8 +830,8 @@ int DaControl::FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, 
 							+ CProxy_AgentEvents<DaControl>::FireDragComplete (CharacterID, Button, Shift, X, Y);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("DragComplete"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("DragComplete"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -848,8 +848,8 @@ int DaControl::FireShow(LPCTSTR CharacterID, VisibilityCauseType Cause)
 							+ CProxy_AgentEvents<DaControl>::FireShow (CharacterID, Cause);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("Show"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("Show"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -866,8 +866,8 @@ int DaControl::FireHide(LPCTSTR CharacterID, VisibilityCauseType Cause)
 							+ CProxy_AgentEvents<DaControl>::FireHide (CharacterID, Cause);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("Hide"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("Hide"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -884,8 +884,8 @@ int DaControl::FireRequestStart(LPDISPATCH Request)
 							+ CProxy_AgentEvents<DaControl>::FireRequestStart (Request);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("RequestStart"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("RequestStart"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -902,8 +902,8 @@ int DaControl::FireRequestComplete(LPDISPATCH Request)
 							+ CProxy_AgentEvents<DaControl>::FireRequestComplete (Request);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("RequestComplete"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("RequestComplete"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -920,8 +920,8 @@ int DaControl::FireBookmark(long BookmarkID)
 							+ CProxy_AgentEvents<DaControl>::FireBookmark (BookmarkID);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("Bookmark"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("Bookmark"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -938,8 +938,8 @@ int DaControl::FireCommand(LPDISPATCH UserInput)
 							+ CProxy_AgentEvents<DaControl>::FireCommand (UserInput);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("Command"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("Command"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -956,8 +956,8 @@ int DaControl::FireIdleStart(LPCTSTR CharacterID)
 							+ CProxy_AgentEvents<DaControl>::FireIdleStart (CharacterID);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("IdleStart"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("IdleStart"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -974,8 +974,8 @@ int DaControl::FireIdleComplete(LPCTSTR CharacterID)
 							+ CProxy_AgentEvents<DaControl>::FireIdleComplete (CharacterID);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("IdleComplete"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("IdleComplete"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -992,8 +992,8 @@ int DaControl::FireMove(LPCTSTR CharacterID, short X, short Y, MoveCauseType Cau
 							+ CProxy_AgentEvents<DaControl>::FireMove (CharacterID, X, Y, Cause);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("Move"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("Move"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -1010,8 +1010,8 @@ int DaControl::FireSize(LPCTSTR CharacterID, short Width, short Height)
 							+ CProxy_AgentEvents<DaControl>::FireSize (CharacterID, Width, Height);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("Size"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("Size"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -1028,8 +1028,8 @@ int DaControl::FireBalloonShow(LPCTSTR CharacterID)
 							+ CProxy_AgentEvents<DaControl>::FireBalloonShow (CharacterID);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("BalloonShow"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("BalloonShow"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -1046,8 +1046,8 @@ int DaControl::FireBalloonHide(LPCTSTR CharacterID)
 							+ CProxy_AgentEvents<DaControl>::FireBalloonHide (CharacterID);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("BalloonHide"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("BalloonHide"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -1064,8 +1064,8 @@ int DaControl::FireListenStart(LPCTSTR CharacterID)
 							+ CProxy_AgentEvents<DaControl>::FireListenStart (CharacterID);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("ListenStart"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("ListenStart"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -1082,8 +1082,8 @@ int DaControl::FireListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause)
 							+ CProxy_AgentEvents<DaControl>::FireListenComplete (CharacterID, Cause);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("ListenComplete"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("ListenComplete"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -1100,8 +1100,8 @@ int DaControl::FireDefaultCharacterChange(LPCTSTR CharGUID)
 							+ CProxy_AgentEvents<DaControl>::FireDefaultCharacterChange (CharGUID);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("DefaultCharacterChange"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("DefaultCharacterChange"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -1118,8 +1118,8 @@ int DaControl::FireAgentPropertyChange()
 							+ CProxy_AgentEvents<DaControl>::FireAgentPropertyChange ();
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("AgentPropertyChange"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("AgentPropertyChange"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -1136,8 +1136,8 @@ int DaControl::FireActiveClientChange(LPCTSTR CharacterID, BOOL Active)
 							+ CProxy_AgentEvents<DaControl>::FireActiveClientChange (CharacterID, Active);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("ActiveClientChange"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("ActiveClientChange"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -1154,8 +1154,8 @@ int DaControl::FireSpeechStart(LPCTSTR CharacterID, IDaCtlFormattedText* Formatt
 			lEventSinkCount = CProxy_DaCtlEvents2<DaControl>::FireSpeechStart (CharacterID, FormattedText);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("SpeechStart"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("SpeechStart"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -1170,8 +1170,8 @@ int DaControl::FireSpeechEnd(LPCTSTR CharacterID, IDaCtlFormattedText* Formatted
 			lEventSinkCount = CProxy_DaCtlEvents2<DaControl>::FireSpeechEnd (CharacterID, FormattedText, Stopped);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("SpeechEnd"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("SpeechEnd"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -1186,8 +1186,8 @@ int DaControl::FireSpeechWord(LPCTSTR CharacterID, IDaCtlFormattedText* Formatte
 			lEventSinkCount = CProxy_DaCtlEvents2<DaControl>::FireSpeechWord (CharacterID, FormattedText, WordIndex);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("SpeechWord"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("SpeechWord"), lEventSinkCount);
 	return lEventSinkCount;
 }
 
@@ -1747,8 +1747,8 @@ HRESULT CEventNotifyReflect::OnSpeechStart (long CharacterID, LPUNKNOWN Formatte
 			lEventSinkCount = mOwner->FireSpeechStart (mOwner->GetControlCharacterID (CharacterID), lFormattedText);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("SpeechStart"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("SpeechStart"), lEventSinkCount);
 	return lResult;
 }
 
@@ -1768,8 +1768,8 @@ HRESULT CEventNotifyReflect::OnSpeechEnd (long CharacterID, LPUNKNOWN FormattedT
 			lEventSinkCount = mOwner->FireSpeechEnd (mOwner->GetControlCharacterID (CharacterID), lFormattedText, Stopped);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("SpeechEnd"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("SpeechEnd"), lEventSinkCount);
 	return lResult;
 }
 
@@ -1789,8 +1789,8 @@ HRESULT CEventNotifyReflect::OnSpeechWord (long CharacterID, LPUNKNOWN Formatted
 			lEventSinkCount = mOwner->FireSpeechWord (mOwner->GetControlCharacterID (CharacterID), lFormattedText, WordIndex);
 		}
 		catch AnyExceptionDebug
-		PostFireEvent (_DEBUG_T("SpeechWord"), lEventSinkCount);
 	}
+	PostFireEvent (_DEBUG_T("SpeechWord"), lEventSinkCount);
 	return lResult;
 }
 

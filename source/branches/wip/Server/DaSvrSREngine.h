@@ -83,6 +83,10 @@ public:
 	HRESULT STDMETHODCALLTYPE get_LanguageName (VARIANT_BOOL EnglishName, BSTR *LanguageName);
 	HRESULT STDMETHODCALLTYPE get_LanguageIDs (SAFEARRAY **LanguageIds);
 	HRESULT STDMETHODCALLTYPE get_LanguageNames (VARIANT_BOOL EnglishNames, SAFEARRAY **LanguageNames);
+
+// Implementation
+protected:
+	void Disconnect (bool pAbandonned);
 };
 
 /////////////////////////////////////////////////////////////////////////////

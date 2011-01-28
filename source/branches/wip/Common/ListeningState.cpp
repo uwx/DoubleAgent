@@ -482,7 +482,7 @@ HRESULT CListeningState::TransferState (CListeningState * pToState)
 			}
 			else
 			{
-				mSapi5InputContext->AddNotifySink (this);
+				mSapi5InputContext->AddNotifySink (this, this);
 				ShowListeningTip (true, false);
 			}
 		}
@@ -570,7 +570,7 @@ HRESULT CListeningState::StartInputContext (CSapi5InputContext * pPrevInputConte
 
 			if	(SUCCEEDED (lResult))
 			{
-				if	(mSapi5InputContext->AddNotifySink (this))
+				if	(mSapi5InputContext->AddNotifySink (this, this))
 				{
 					mSapi5InputContext->FromPrevInputContext (pPrevInputContext);
 				}
@@ -967,11 +967,10 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 						lCharacter->NotifyVoiceCommand (LOWORD(lPhrase->Rule.ulId), lRecoResult, true);
 					}
 					catch AnyExceptionSilent
-
-					if	(!lCharacter->PostNotify ())
-					{
-						lCharacter = NULL; // My character has been unloaded
-					}
+				}
+				if	(!lCharacter->PostNotify ())
+				{
+					lCharacter = NULL; // My character has been unloaded
 				}
 
 				if	(
@@ -1026,11 +1025,10 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 						lCharacter->NotifyVoiceCommand (LOWORD(lPhrase->Rule.ulId), lRecoResult, false);
 					}
 					catch AnyExceptionSilent
-
-					if	(!lCharacter->PostNotify ())
-					{
-						lCharacter = NULL; // My character has been unloaded
-					}
+				}
+				if	(!lCharacter->PostNotify ())
+				{
+					lCharacter = NULL; // My character has been unloaded
 				}
 			}
 		}

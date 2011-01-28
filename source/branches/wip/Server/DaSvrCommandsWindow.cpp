@@ -85,31 +85,39 @@ void DaSvrCommandsWindow::Terminate (bool pFinal, bool pAbandonned)
 		{
 			UnmanageObjectLifetime (this);
 		}
-
-		if	(
-				(pFinal)
-			&&	(m_dwRef > 0)
-			)
+		if	(pAbandonned)
 		{
-			if	(pAbandonned)
-			{
-#ifdef	_DEBUG_ABANDONED
-				if	(LogIsActive (_DEBUG_ABANDONED))
-				{
-					LogMessage (_DEBUG_ABANDONED, _T("[%p(%d)] DaSvrCommandsWindow SKIP CoDisconnectObject"), this, max(m_dwRef,-1));
-				}
-#endif
-			}
-			else
-			{
-				try
-				{
-					CoDisconnectObject (GetUnknown(), 0);
-				}
-				catch AnyExceptionDebug
-			}
-			m_dwRef = 0;
+			Disconnect (pAbandonned);
 		}
+		if	(pFinal)
+		{
+			Disconnect (pAbandonned);
+		}
+	}
+}
+
+void DaSvrCommandsWindow::Disconnect (bool pAbandonned)
+{
+	if	(m_dwRef > 0)
+	{
+		if	(pAbandonned)
+		{
+			m_dwRef = SHRT_MIN;
+		}
+		__try
+		{
+			LogComErr (LogIfActive, CoDisconnectObject (GetUnknown(), 0));
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
+		{}
+	}
+	if	(pAbandonned)
+	{
+		m_dwRef = min (m_dwRef, SHRT_MIN);
+	}
+	else
+	{
+		m_dwRef = min (m_dwRef, 0);
 	}
 }
 

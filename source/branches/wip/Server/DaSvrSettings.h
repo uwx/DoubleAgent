@@ -87,6 +87,10 @@ public:
 	HRESULT STDMETHODCALLTYPE get_SRListeningTip (VARIANT_BOOL *SRListeningTip);
 	HRESULT STDMETHODCALLTYPE get_SRListeningPrompt (VARIANT_BOOL *SRListeningPrompt);
 	HRESULT STDMETHODCALLTYPE get_AudioStatus (AudioStatusType *AudioStatus);
+
+// Implementation
+protected:
+	void Disconnect (bool pAbandonned);
 };
 
 /////////////////////////////////////////////////////////////////////////////

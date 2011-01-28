@@ -104,7 +104,7 @@ CAgentBalloonWnd::~CAgentBalloonWnd ()
 #endif
 	if	(IsWindow ())
 	{
-		DestroyWindow ();
+		::DestroyWindow (UnsubclassWindow());
 	}
 	ClearNotifySources ();
 	Detach (-1, NULL);
@@ -184,14 +184,18 @@ bool CAgentBalloonWnd::_PreNotify ()
 #endif
 	if	(m_dwRef > 0)
 	{
-		return CEventNotifiesClient<CAgentBalloonWnd>::_PreNotify ();
+		return __super::_PreNotify ();
 	}
-	return false;
+	else
+	{
+		__super::_PreNotify ();
+		return false;
+	}
 }
 
 bool CAgentBalloonWnd::_PostNotify ()
 {
-	CEventNotifiesClient<CAgentBalloonWnd>::_PostNotify ();
+	__super::_PostNotify ();
 #ifdef	_DEBUG_NOTIFY_LEVEL
 	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] CAgentBalloonWnd::_PostNotify [%u] HasFinalRelased [%u] CanFinalRelease [%u]"), this, max(m_dwRef,-1), IsInNotify(), HasFinalReleased(), CanFinalRelease());
 #endif
@@ -837,20 +841,22 @@ void CAgentBalloonWnd::ShowedBalloon (bool pWasVisible)
 			(!pWasVisible)
 		&&	(IsWindow ())
 		&&	(!IsPaused ())
-		&&	(PreNotify ())
 		)
 	{
-		try
+		if	(PreNotify ())
 		{
-			INT_PTR			lNotifyNdx;
-			CEventNotify *	lNotify;
-
-			for	(lNotifyNdx = (INT_PTR)mNotify.GetCount()-1; lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
+			try
 			{
-				lNotify->BalloonVisibleState (lNotify->GetNotifyClient (mCharID), TRUE);
+				INT_PTR			lNotifyNdx;
+				CEventNotify *	lNotify;
+
+				for	(lNotifyNdx = (INT_PTR)mNotify.GetCount()-1; lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
+				{
+					lNotify->BalloonVisibleState (lNotify->GetNotifyClient (mCharID), TRUE);
+				}
 			}
+			catch AnyExceptionDebug
 		}
-		catch AnyExceptionDebug
 		PostNotify ();
 	}
 }
@@ -900,20 +906,22 @@ bool CAgentBalloonWnd::HideBalloon (bool pFast)
 			(lRet)
 		&&	(lWasVisible)
 		&&	(!IsPaused ())
-		&&	(PreNotify ())
 		)
 	{
-		try
+		if	(PreNotify ())
 		{
-			INT_PTR			lNotifyNdx;
-			CEventNotify *	lNotify;
-
-			for	(lNotifyNdx = (INT_PTR)mNotify.GetCount()-1; lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
+			try
 			{
-				lNotify->BalloonVisibleState (lNotify->GetNotifyClient (mCharID), FALSE);
+				INT_PTR			lNotifyNdx;
+				CEventNotify *	lNotify;
+
+				for	(lNotifyNdx = (INT_PTR)mNotify.GetCount()-1; lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
+				{
+					lNotify->BalloonVisibleState (lNotify->GetNotifyClient (mCharID), FALSE);
+				}
 			}
+			catch AnyExceptionDebug
 		}
-		catch AnyExceptionDebug
 		PostNotify ();
 	}
 	return lRet;

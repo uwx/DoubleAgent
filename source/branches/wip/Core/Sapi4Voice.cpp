@@ -169,7 +169,10 @@ bool CSapi4Voice::_IsSpeaking () const
 		&&	(
 				(mIsQueueing.Ptr())
 			||	(mIsSpeaking.Ptr())
-			||	(mResetPending.Ptr())
+			||	(
+					(mResetPending.Ptr())
+				&&	(!mIsParsing.Ptr())
+				)
 			)
 		)
 	{
@@ -465,23 +468,9 @@ HRESULT CSapi4Voice::Speak (LPCTSTR pMessage, bool pAsync)
 		&&	(!_IsPaused ())
 		&&	(CheckIsParsing())
 		&&	(!CheckIsSpeaking())
-		&&	(!CheckIsResetting())
 		)
 	{
-#ifdef	_TRACE_STOP
-		if	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
-		{
-			_SAPI4_LOG::LogMessage (_TRACE_STOP, _T("[%p] FullReset IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), this, CheckIsQueueing(), CheckIsParsing(), CheckIsSpeaking(), CheckIsResetting());
-		}
-#endif
 		lResult = FullReset ();
-
-#ifdef	_TRACE_STOP
-		if	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
-		{
-			_SAPI4_LOG::LogSapi4ErrAnon (MinLogLevel(_TRACE_STOP,LogAlways), lResult, _T("[%p] FullReset IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), this, CheckIsQueueing(), CheckIsParsing(), CheckIsSpeaking(), CheckIsResetting());
-		}
-#endif
 	}
 #endif	
 
@@ -529,7 +518,7 @@ HRESULT CSapi4Voice::Speak (LPCTSTR pMessage, bool pAsync)
 				else
 #endif
 				{
-					_SAPI4_LOG::LogSapi4Err (LogNormal|LogTime, lResult);
+					_SAPI4_LOG::LogSapi4Err (LogIfActive|LogTime, lResult, _T("[%p] TextData [%s]"), this, DebugStr(lMessage));
 				}
 			}
 			catch AnyExceptionDebug
@@ -906,6 +895,13 @@ HRESULT CSapi4Voice::FullReset ()
 	ULONG						lRate = GetRate();
 	USHORT						lVolume = GetVolume();
 
+#ifdef	_TRACE_STOP
+	if	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
+	{
+		_SAPI4_LOG::LogMessage (_TRACE_STOP, _T("[%p] FullReset IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), this, CheckIsQueueing(), CheckIsParsing(), CheckIsSpeaking(), CheckIsResetting());
+	}
+#endif
+
 	mIsQueueing = NULL;
 	mIsParsing = NULL;
 	mIsSpeaking = NULL;
@@ -953,6 +949,13 @@ HRESULT CSapi4Voice::FullReset ()
 	mDefaultPitch = lDefaultPitch;
 	mDefaultRate = lDefaultRate; 
 	mDefaultVolume = lDefaultVolume;
+
+#ifdef	_TRACE_STOP
+	if	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
+	{
+		_SAPI4_LOG::LogSapi4ErrAnon (MinLogLevel(_TRACE_STOP,LogAlways), lResult, _T("[%p] FullReset IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), this, CheckIsQueueing(), CheckIsParsing(), CheckIsSpeaking(), CheckIsResetting());
+	}
+#endif
 	return lResult;
 }
 
@@ -1188,6 +1191,7 @@ void CSapi4Voice::LogTtsAudio (UINT pLogLevel, IAudioDest * pTtsAudio, LPCTSTR p
 
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	_SAPI4_LOGGING
+extern "C" void _LogPrepFileLine (LPTSTR pString, LPCSTR pFile, UINT pLine);
 namespace _SAPI4_LOG
 {
 /////////////////////////////////////////////////////////////////////////////
@@ -1221,16 +1225,14 @@ HRESULT _LogSapi4ErrFL::LogErr (unsigned int pLogLevel, HRESULT pError, LPCTSTR 
 			_vsntprintf (lFormat.GetBuffer(lFormat.GetLength()+4096)+lFormat.GetLength(), 4096, pFormat, lArgPtr);
 			lFormat.ReleaseBuffer ();
 		}
-		if	(
-				(SUCCEEDED (pError))
-			||	(mFile)
-			||	(mLine)
-			)
+		if	(SUCCEEDED (pError))
 		{
 			_LogComErrFL(mFile,mLine).LogErr (MinLogLevel(pLogLevel,LogAlways), pError, lFormat);
 		}
 		else
 		{
+			_LogPrepFileLine (lFormat.GetBuffer (lFormat.GetLength()+(MAX_PATH*2)), mFile, mLine);
+			lFormat.ReleaseBuffer ();
 			LogMessage (MinLogLevel(pLogLevel,LogAlways), lFormat);
 		}
 	}

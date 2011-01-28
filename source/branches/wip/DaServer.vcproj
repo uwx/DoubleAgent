@@ -201,9 +201,6 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				ExecutionBucket="4"
-				Optimization="4"
-				InlineFunctionExpansion="2"
-				FavorSizeOrSpeed="2"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -283,10 +280,6 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				ExecutionBucket="4"
-				AdditionalOptions="/homeparams"
-				Optimization="4"
-				InlineFunctionExpansion="2"
-				FavorSizeOrSpeed="2"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

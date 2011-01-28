@@ -96,7 +96,8 @@ public:
 	bool ParseCommandLine (LPCTSTR lpCmdLine, HRESULT* pnRetCode);
 	HRESULT PreMessageLoop (int nShowCmd);
 	HRESULT PostMessageLoop ();
-	void RunMessageLoop();
+	void RunMessageLoop ();
+	static void UninitializeCom ();
 public:
 	virtual void _CharacterLoaded (long pCharID);
 	virtual void _CharacterUnloaded (long pCharID);
@@ -151,6 +152,7 @@ protected:
 };
 
 extern CDaServerModule _AtlModule;
+extern int LogCrashCode (unsigned int pCode, LPCSTR pFile, UINT pLine, int pAction);
 
 #import "mscorlib.tlb" rename("ReportEvent","CorReportEvent") no_smart_pointers raw_interfaces_only raw_method_prefix("cor_") raw_property_prefixes("corget_","corput_","corputref_")
 

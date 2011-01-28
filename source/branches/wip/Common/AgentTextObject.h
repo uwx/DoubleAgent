@@ -31,12 +31,13 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
-class ATL_NO_VTABLE CAgentTextObject :
+class CAgentTextObject :
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public IUnknown,
 	public CEventNotifyClient<CAgentTextObject>,
 	public CSapiVoiceClient,
-	public CNotifySourceSink <CSapiVoice, _ISapiVoiceEventSink>
+	public CNotifySourcesOwner2 <CSapiVoice, _ISapiVoiceEventSink, CAgentTextObject>,
+	public _ISapiVoiceEventSink
 {
 public:
 	CAgentTextObject ();

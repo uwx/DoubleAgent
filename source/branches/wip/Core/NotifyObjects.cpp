@@ -46,7 +46,7 @@ ULONG CNotifyObjects::AddNotifyObject (void * pNotifyObject, void * pSourceObjec
 		&&	(!FindNotifyObject (pNotifyObject))
 		)
 	{
-		mNotifyObjects.Add (tNotifyObject (pNotifyObject, lObjectId = mNextObjectId++));
+		mNotifyObjects.Add (tNotifyObject (pNotifyObject, lObjectId = mNextObjectId++, pTargetObjects));
 #ifdef	_TRACE_NOTIFY_OBJECTS
 		LogMessage (_TRACE_NOTIFY_OBJECTS, _T("[%p] %hs::AddNotifyObject [%u] [%p] [%p]"), pSourceObject, typeid(*this).name(), lObjectId, pNotifyObject, pTargetObjects);
 #endif
@@ -180,4 +180,35 @@ void * CNotifyObjects::FindNotifyObject (ULONG pNotifyObjectId) const
 		}
 	}
 	return 0;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+CNotifyObjects * CNotifyObjects::GetTargetObjects (INT_PTR pNdx) const
+{
+	if	(
+			(pNdx >= 0)
+		&&	(pNdx < (INT_PTR)mNotifyObjects.GetCount())
+		)
+	{
+		return mNotifyObjects [pNdx].mTargetObjects;
+	}
+	return NULL;
+}
+
+CNotifyObjects * CNotifyObjects::GetTargetObjects (const void * pNotifyObject) const
+{
+	INT_PTR	lNdx;
+
+	if	(pNotifyObject)
+	{
+		for	(lNdx = 0; lNdx < (INT_PTR)mNotifyObjects.GetCount(); lNdx++)
+		{
+			if	(mNotifyObjects [lNdx].mObject == pNotifyObject)
+			{
+				return mNotifyObjects [lNdx].mTargetObjects;
+			}
+		}
+	}
+	return NULL;
 }

@@ -68,6 +68,7 @@ void CStressTestApp::_ExitInstance()
 {
 	CWinApp::ExitInstance();
 	CoFreeUnusedLibraries ();
+	OleUninitialize ();
 	LogStop (LogIfActive);
 }
 
@@ -92,7 +93,6 @@ BOOL CStressTestApp::InitInstance()
 	RunDlg (lDlg);
 	m_pMainWnd = NULL;
 
-	OleUninitialize ();
 	return FALSE;
 }
 

@@ -64,7 +64,7 @@ bool CSvrObjLifetime::VerifyClientLifetime ()
 	return false;
 }
 
-bool CSvrObjLifetime::_VerifyClientLifetime ()
+bool CSvrObjLifetime::_VerifyClientLifetime () const
 {
 	if	(
 			(mClientMutex)
@@ -252,11 +252,10 @@ void CServerLifetime::VerifyObjectLifetimes (bool pImmediate)
 		||	(pImmediate)
 		)
 	{
-		CLockCS	lLock (mCriticalSection);
 
 		try
 		{
-			INT_PTR				lNdx;
+			INT_PTR				lObjectNdx;
 			CSvrObjLifetime *	lObject;
 			bool				lCoCreateSuspended = false;
 
@@ -274,10 +273,21 @@ void CServerLifetime::VerifyObjectLifetimes (bool pImmediate)
 				CoSuspendClassObjects ();
 				lCoCreateSuspended = true;
 			}
-
-			for	(lNdx = 0; lNdx < (INT_PTR)mObjectLifetimes.GetCount(); lNdx++)
+			
+			for (lObjectNdx = 0; true; lObjectNdx++)
 			{
-				lObject = mObjectLifetimes [lNdx];
+				{
+					CLockCS	lLock (mCriticalSection);
+					try
+					{
+						lObject = mObjectLifetimes (lObjectNdx);
+					}
+					catch AnyExceptionSilent
+				}
+				if	(!lObject)
+				{
+					break;
+				}				
 
 				try
 				{
@@ -297,9 +307,39 @@ void CServerLifetime::VerifyObjectLifetimes (bool pImmediate)
 							CoSuspendClassObjects ();
 							lCoCreateSuspended = true;
 						}
-						mObjectLifetimes.RemoveAt (lNdx);
-						lNdx = -1;
+						{
+							CLockCS	lLock (mCriticalSection);
+							try
+							{
+								mObjectLifetimes.Remove (lObject);
+							}
+							catch AnyExceptionSilent
+						}
 						lObject->OnClientEnded ();
+
+#ifdef	_LOG_LIFETIME_NOT
+						if	(
+								(
+									(lCoCreateSuspended)
+								||	(pImmediate)
+								)
+							&&	(LogIsActive (_LOG_LIFETIME))
+							)
+						{
+							LogMessage (_LOG_LIFETIME, _T("VerifyObjectLifetimes [%d] Locks [%d] (cycle)"), mObjectLifetimes.GetCount(), _AtlModule.GetLockCount());
+						}
+#endif
+					}
+					{
+						CLockCS	lLock (mCriticalSection);
+						try
+						{
+							if	(mObjectLifetimes (lObjectNdx) != lObject)
+							{
+								lObjectNdx = -1;
+							}
+						}
+						catch AnyExceptionSilent
 					}
 				}
 				catch AnyExceptionDebug

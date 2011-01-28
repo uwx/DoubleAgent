@@ -72,6 +72,10 @@ public:
 	HRESULT STDMETHODCALLTYPE Skip (ULONG celt);
 	HRESULT STDMETHODCALLTYPE Reset (void);
 	HRESULT STDMETHODCALLTYPE Clone (IEnumVARIANT** ppEnum);
+
+// Implementation
+protected:
+	void Disconnect (bool pAbandonned);
 };
 
 /////////////////////////////////////////////////////////////////////////////

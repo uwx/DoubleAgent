@@ -30,7 +30,7 @@
 
 #ifdef	_DEBUG
 #include <typeinfo.h>
-//#define	_TRACE_NOTIFY_OBJECTS	LogNormal|LogTimeMs|LogHighVolume
+//#define	_TRACE_NOTIFY_OBJECTS	LogIfActive|LogTimeMs
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -52,12 +52,16 @@ protected:
 	_DACORE_IMPEXP virtual ULONG FindNotifyObject (const void * pNotifyObject) const;
 	_DACORE_IMPEXP virtual void * FindNotifyObject (ULONG pNotifyObjectId) const;
 
+	_DACORE_IMPEXP virtual CNotifyObjects * GetTargetObjects (INT_PTR pNdx) const;
+	_DACORE_IMPEXP virtual CNotifyObjects * GetTargetObjects (const void * pNotifyObject) const;
+
 private:
 	struct tNotifyObject
 	{
-		void *	mObject;
-		ULONG	mObjectId;
-		tNotifyObject (void * pObject = NULL, ULONG pObjectId = 0) : mObject (pObject), mObjectId (pObjectId) {}
+		void *				mObject;
+		ULONG				mObjectId;
+		CNotifyObjects *	mTargetObjects;
+		tNotifyObject (void * pObject = NULL, ULONG pObjectId = 0, CNotifyObjects * pTargetObjects = NULL) : mObject (pObject), mObjectId (pObjectId), mTargetObjects (pTargetObjects) {}
 	};
 	CAtlStructArray <tNotifyObject>	mNotifyObjects;
 	ULONG							mNextObjectId;
@@ -69,12 +73,12 @@ template <class aSink> class CNotifySinksOwner : public CNotifyObjects
 {
 public:
 	CNotifySinksOwner () {}
-	~CNotifySinksOwner () {ClearNotifySinks ();}
+	virtual ~CNotifySinksOwner () {ClearNotifySinks ();}
 
 public:
 	ULONG AddNotifySink (aSink * pNotifySink);
-	bool RemoveNotifySink (aSink * pNotifySink);
-	bool ClearNotifySinks ();
+	virtual bool RemoveNotifySink (aSink * pNotifySink);
+	virtual bool ClearNotifySinks ();
 
 	INT_PTR GetNotifySinkCount () const {return GetNotifyObjectCount();}
 	aSink * GetNotifySink (INT_PTR pNdx) const {return (aSink *) GetNotifyObject (pNdx);}
@@ -88,12 +92,12 @@ template <class aSource> class CNotifySourcesOwner : public CNotifyObjects
 {
 public:
 	CNotifySourcesOwner () {}
-	~CNotifySourcesOwner () {ClearNotifySources ();}
+	virtual ~CNotifySourcesOwner () {ClearNotifySources ();}
 
 public:
 	ULONG AddNotifySource (aSource * pNotifySource);
-	bool RemoveNotifySource (aSource * pNotifySource);
-	bool ClearNotifySources ();
+	virtual bool RemoveNotifySource (aSource * pNotifySource);
+	virtual bool ClearNotifySources ();
 
 	INT_PTR GetNotifySourceCount () const {return GetNotifyObjectCount();}
 	aSource * GetNotifySource (INT_PTR pNdx) const {return (aSource *) GetNotifyObject (pNdx);}
@@ -103,64 +107,42 @@ public:
 
 //////////////////////////////////////////////////////////////////////
 
-template <class aSink, class aSource> class CNotifySinksOwner2 : public CNotifySinksOwner <aSink>
+template <class aSink, class aSource, class aBase=aSource> class CNotifySinksOwner2 : public CNotifySinksOwner <aSink>
 {
 public:
 	CNotifySinksOwner2 () {}
-	~CNotifySinksOwner2 () {ClearNotifySinks ();}
+	virtual ~CNotifySinksOwner2 () {ClearNotifySinks ();}
 
 public:
-	ULONG AddNotifySink (aSink * pNotifySink);
-	bool RemoveNotifySink (aSink * pNotifySink);
-	bool ClearNotifySinks ();
+	ULONG AddNotifySink (aSink * pNotifySink, CNotifySourcesOwner <aSource> * pNotifySources = NULL);
+	virtual bool RemoveNotifySink (aSink * pNotifySink);
+	virtual bool ClearNotifySinks ();
+
+	CNotifySourcesOwner <aSource> * GetNotifySources (INT_PTR pNdx) const {return (CNotifySourcesOwner <aSource> *) GetTargetObjects (pNdx);}
+	CNotifySourcesOwner <aSource> * GetNotifySources (const void * pNotifyObject) const {return (CNotifySourcesOwner <aSource> *) GetTargetObjects (pNotifyObject);}
 
 public:
-	virtual __forceinline aSource * _GetNotifySource () {return dynamic_cast <aSource *> (this);}
-	virtual __forceinline CNotifySinksOwner <aSink> * _GetNotifySinks () {return this;}
+	inline aSource * _GetNotifySource () {return static_cast <aSource *> (static_cast <aBase *> (this));}
 };
 
 //////////////////////////////////////////////////////////////////////
 
-template <class aSource, class aSink> class CNotifySourcesOwner2 : public CNotifySourcesOwner <aSource>
+template <class aSource, class aSink, class aBase=aSink> class CNotifySourcesOwner2 : public CNotifySourcesOwner <aSource>
 {
 public:
 	CNotifySourcesOwner2 () {}
-	~CNotifySourcesOwner2 () {ClearNotifySources ();}
+	virtual ~CNotifySourcesOwner2 () {ClearNotifySources ();}
 
 public:
-	ULONG AddNotifySource (aSource * pNotifySource);
-	bool RemoveNotifySource (aSource * pNotifySource);
-	bool ClearNotifySources ();
+	ULONG AddNotifySource (aSource * pNotifySource, CNotifySinksOwner <aSink> * pNotifySinks = NULL);
+	virtual bool RemoveNotifySource (aSource * pNotifySource);
+	virtual bool ClearNotifySources ();
+
+	CNotifySinksOwner <aSource> * GetNotifySinks (INT_PTR pNdx) const {return (CNotifySinksOwner <aSource> *) GetTargetObjects (pNdx);}
+	CNotifySinksOwner <aSource> * GetNotifySinks (const void * pNotifyObject) const {return (CNotifySinksOwner <aSource> *) GetTargetObjects (pNotifyObject);}
 
 public:
-	virtual __forceinline aSink * _GetNotifySink () {return dynamic_cast <aSink *> (this);}
-	virtual __forceinline CNotifySourcesOwner <aSource> * _GetNotifySources () {return this;}
-};
-
-//////////////////////////////////////////////////////////////////////
-
-template <class aSink, class aSource> class CNotifySinkSource : public CNotifySinksOwner2 <aSink, aSource>, public aSource
-{
-public:
-	CNotifySinkSource () {}
-	~CNotifySinkSource () {ClearNotifySinks ();}
-
-public:
-	virtual __forceinline aSource * _GetNotifySource () {return this;}
-	virtual __forceinline CNotifySinksOwner <aSink> * _GetNotifySinks () {return this;}
-};
-
-//////////////////////////////////////////////////////////////////////
-
-template <class aSource, class aSink> class CNotifySourceSink : public CNotifySourcesOwner2 <aSource, aSink>, public aSink
-{
-public:
-	CNotifySourceSink () {}
-	~CNotifySourceSink () {ClearNotifySources ();}
-
-public:
-	virtual __forceinline aSink * _GetNotifySink () {return this;}
-	virtual __forceinline CNotifySourcesOwner <aSource> * _GetNotifySources () {return this;}
+	inline aSink * _GetNotifySink () {return static_cast <aSink *> (static_cast <aBase *> (this));}
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -251,40 +233,38 @@ bool CNotifySourcesOwner<aSource>::ClearNotifySources ()
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-template <class aSink, class aSource>
-ULONG CNotifySinksOwner2<aSink,aSource>::AddNotifySink (aSink * pNotifySink)
+template <class aSink, class aSource, class aBase>
+ULONG CNotifySinksOwner2<aSink,aSource,aBase>::AddNotifySink (aSink * pNotifySink, CNotifySourcesOwner <aSource> * pNotifySources)
 {
-	ULONG						lNotifySinkId;
-	aSource *					lNotifySource;
-	CNotifySourcesOwner <aSource> *	lNotifySources;
+	ULONG		lNotifySinkId;
+	aSource *	lNotifySource;
 
 	try
 	{
 		lNotifySource = _GetNotifySource();
-		lNotifySources = pNotifySink ? pNotifySink->_GetNotifySources() : NULL;
 	}
 	catch AnyExceptionSilent
 
-	lNotifySinkId = AddNotifyObject (pNotifySink, lNotifySource, lNotifySources);
+	lNotifySinkId = AddNotifyObject (pNotifySink, lNotifySource, pNotifySources);
 #ifdef	_TRACE_NOTIFY_OBJECTS
 	if	(lNotifySinkId)
 	{
-		LogMessage (_TRACE_NOTIFY_OBJECTS, _T("[%p] %hs::AddNotifySink [%u] [%p] (%hs)"), lNotifySource, typeid(*lNotifySource).name(), lNotifySinkId, pNotifySink, typeid(*pNotifySink).name());
+		LogMessage (_TRACE_NOTIFY_OBJECTS, _T("[%p] %hs::AddNotifySink [%u] [%p] (%hs)"), lNotifySource, typeid(aBase).name(), lNotifySinkId, pNotifySink, typeid(*pNotifySink).name());
 	}
 #endif
 	return lNotifySinkId;
 }
 
-template <class aSink, class aSource>
-bool CNotifySinksOwner2<aSink,aSource>::RemoveNotifySink (aSink * pNotifySink)
+template <class aSink, class aSource, class aBase>
+bool CNotifySinksOwner2<aSink,aSource,aBase>::RemoveNotifySink (aSink * pNotifySink)
 {
-	aSource *					lNotifySource;
-	CNotifySourcesOwner <aSource> *	lNotifySources;
+	aSource *			lNotifySource;
+	CNotifyObjects *	lNotifySources;
 
 	try
 	{
 		lNotifySource = _GetNotifySource();
-		lNotifySources = pNotifySink ? pNotifySink->_GetNotifySources() : NULL;
+		lNotifySources = GetTargetObjects (pNotifySink);
 	}
 	catch AnyExceptionSilent
 
@@ -292,19 +272,19 @@ bool CNotifySinksOwner2<aSink,aSource>::RemoveNotifySink (aSink * pNotifySink)
 	ULONG	lNotifySinkId = FindNotifySink (pNotifySink);
 	if	(lNotifySinkId)
 	{
-		LogMessage (_TRACE_NOTIFY_OBJECTS, _T("[%p] %hs::RemoveNotifySink [%u] [%p] (%hs)"), lNotifySource, typeid(*lNotifySource).name(), lNotifySinkId, pNotifySink, typeid(*pNotifySink).name());
+		LogMessage (_TRACE_NOTIFY_OBJECTS, _T("[%p] %hs::RemoveNotifySink [%u] [%p] (%hs)"), lNotifySource, typeid(aBase).name(), lNotifySinkId, pNotifySink, typeid(*pNotifySink).name());
 	}
 #endif
 	return RemoveNotifyObject (pNotifySink, lNotifySource, lNotifySources);
 }
 
-template <class aSink, class aSource>
-bool CNotifySinksOwner2<aSink,aSource>::ClearNotifySinks ()
+template <class aSink, class aSource, class aBase>
+bool CNotifySinksOwner2<aSink,aSource,aBase>::ClearNotifySinks ()
 {
-	bool						lRet = false;
-	aSink *						lNotifySink;
-	aSource *					lNotifySource;
-	CNotifySourcesOwner <aSource> *	lNotifySources;
+	bool				lRet = false;
+	aSink *				lNotifySink;
+	aSource *			lNotifySource;
+	CNotifyObjects *	lNotifySources;
 
 	try
 	{
@@ -315,17 +295,17 @@ bool CNotifySinksOwner2<aSink,aSource>::ClearNotifySinks ()
 #ifdef	_TRACE_NOTIFY_OBJECTS
 	if	(GetNotifyObjectCount() > 0)
 	{
-		LogMessage (_TRACE_NOTIFY_OBJECTS, _T("[%p] %hs::ClearNotifySinks [%u] (%hs)"), lNotifySource, typeid(aSource).name(), GetNotifyObjectCount(), typeid(aSink).name());
+		LogMessage (_TRACE_NOTIFY_OBJECTS, _T("[%p] %hs::ClearNotifySinks [%u] (%hs)"), lNotifySource, typeid(aBase).name(), GetNotifyObjectCount(), typeid(aSink).name());
 	}
 #endif
 	while	(
 				(GetNotifyObjectCount() > 0)
-			&&	(lNotifySink = GetNotifySink (0))
+			&&	(lNotifySink = GetNotifySink ((INT_PTR)0))
 			)
 	{
 		try
 		{
-			lNotifySources = lNotifySink->_GetNotifySources();
+			lNotifySources = GetTargetObjects ((INT_PTR)0);
 		}
 		catch AnyExceptionSilent
 
@@ -336,7 +316,7 @@ bool CNotifySinksOwner2<aSink,aSource>::ClearNotifySinks ()
 		else
 		{
 #ifdef	_TRACE_NOTIFY_OBJECTS
-			LogMessage (_TRACE_NOTIFY_OBJECTS, _T("[%p] %hs::ClearNotifySinks [%u] (%hs) failed!"), lNotifySource, typeid(aSource).name(), GetNotifyObjectCount(), typeid(aSink).name());
+			LogMessage (_TRACE_NOTIFY_OBJECTS, _T("[%p] %hs::ClearNotifySinks [%u] (%hs) failed!"), lNotifySource, typeid(aBase).name(), GetNotifyObjectCount(), typeid(aSink).name());
 #endif
 			break;
 		}
@@ -348,40 +328,38 @@ bool CNotifySinksOwner2<aSink,aSource>::ClearNotifySinks ()
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-template <class aSource, class aSink>
-ULONG CNotifySourcesOwner2<aSource,aSink>::AddNotifySource (aSource * pNotifySource)
+template <class aSource, class aSink, class aBase>
+ULONG CNotifySourcesOwner2<aSource,aSink,aBase>::AddNotifySource (aSource * pNotifySource, CNotifySinksOwner <aSink> * pNotifySinks)
 {
-	ULONG					lNotifySourceId;
-	aSink *					lNotifySink;
-	CNotifySinksOwner <aSink> *	lNotifySinks;
+	ULONG	lNotifySourceId;
+	aSink *	lNotifySink;
 
 	try
 	{
 		lNotifySink = _GetNotifySink();
-		lNotifySinks = pNotifySource ? pNotifySource->_GetNotifySinks() : NULL;
 	}
 	catch AnyExceptionSilent
 
-	lNotifySourceId = AddNotifyObject (pNotifySource, lNotifySink, lNotifySinks);
+	lNotifySourceId = AddNotifyObject (pNotifySource, lNotifySink, pNotifySinks);
 #ifdef	_TRACE_NOTIFY_OBJECTS
 	if	(lNotifySourceId)
 	{
-		LogMessage (_TRACE_NOTIFY_OBJECTS, _T("[%p] %hs::AddNotifySource [%u] [%p] (%hs)"), lNotifySink, typeid(*lNotifySink).name(), lNotifySourceId, pNotifySource, typeid(*pNotifySource).name());
+		LogMessage (_TRACE_NOTIFY_OBJECTS, _T("[%p] %hs::AddNotifySource [%u] [%p] (%hs)"), lNotifySink, typeid(aBase).name(), lNotifySourceId, pNotifySource, typeid(*pNotifySource).name());
 	}
 #endif
 	return lNotifySourceId;
 }
 
-template <class aSource, class aSink>
-bool CNotifySourcesOwner2<aSource,aSink>::RemoveNotifySource (aSource * pNotifySource)
+template <class aSource, class aSink, class aBase>
+bool CNotifySourcesOwner2<aSource,aSink,aBase>::RemoveNotifySource (aSource * pNotifySource)
 {
-	aSink *					lNotifySink;
-	CNotifySinksOwner <aSink> *	lNotifySinks;
+	aSink *				lNotifySink;
+	CNotifyObjects *	lNotifySinks;
 
 	try
 	{
 		lNotifySink = _GetNotifySink();
-		lNotifySinks = pNotifySource ? pNotifySource->_GetNotifySinks() : NULL;
+		lNotifySinks = GetTargetObjects (pNotifySource);
 	}
 	catch AnyExceptionSilent
 
@@ -389,19 +367,19 @@ bool CNotifySourcesOwner2<aSource,aSink>::RemoveNotifySource (aSource * pNotifyS
 	ULONG	lNotifySourceId = FindNotifySource (pNotifySource);
 	if	(lNotifySourceId)
 	{
-		LogMessage (_TRACE_NOTIFY_OBJECTS, _T("[%p] %hs::RemoveNotifySource [%u] [%p] (%hs)"), lNotifySink, typeid(*lNotifySink).name(), lNotifySourceId, pNotifySource, typeid(*pNotifySource).name());
+		LogMessage (_TRACE_NOTIFY_OBJECTS, _T("[%p] %hs::RemoveNotifySource [%u] [%p] (%hs)"), lNotifySink, typeid(aBase).name(), lNotifySourceId, pNotifySource, typeid(*pNotifySource).name());
 	}
 #endif
 	return RemoveNotifyObject (pNotifySource, lNotifySink, lNotifySinks);
 }
 
-template <class aSource, class aSink>
-bool CNotifySourcesOwner2<aSource,aSink>::ClearNotifySources ()
+template <class aSource, class aSink, class aBase>
+bool CNotifySourcesOwner2<aSource,aSink,aBase>::ClearNotifySources ()
 {
-	bool					lRet = false;
-	aSource *				lNotifySource;
-	aSink *					lNotifySink;
-	CNotifySinksOwner <aSink> *	lNotifySinks;
+	bool				lRet = false;
+	aSource *			lNotifySource;
+	aSink *				lNotifySink;
+	CNotifyObjects *	lNotifySinks;
 
 	try
 	{
@@ -412,17 +390,17 @@ bool CNotifySourcesOwner2<aSource,aSink>::ClearNotifySources ()
 #ifdef	_TRACE_NOTIFY_OBJECTS
 	if	(GetNotifyObjectCount() > 0)
 	{
-		LogMessage (_TRACE_NOTIFY_OBJECTS, _T("[%p] %hs::ClearNotifySources [%u] (%hs)"), lNotifySink, typeid(aSink).name(), GetNotifyObjectCount(), typeid(aSource).name());
+		LogMessage (_TRACE_NOTIFY_OBJECTS, _T("[%p] %hs::ClearNotifySources [%u] (%hs)"), lNotifySink, typeid(aBase).name(), GetNotifyObjectCount(), typeid(aSource).name());
 	}
 #endif
 	while	(
 				(GetNotifyObjectCount() > 0)
-			&&	(lNotifySource = GetNotifySource (0))
+			&&	(lNotifySource = GetNotifySource ((INT_PTR)0))
 			)
 	{
 		try
 		{
-			lNotifySinks = lNotifySource->_GetNotifySinks();
+			lNotifySinks = GetTargetObjects ((INT_PTR)0);
 		}
 		catch AnyExceptionSilent
 
@@ -433,7 +411,7 @@ bool CNotifySourcesOwner2<aSource,aSink>::ClearNotifySources ()
 		else
 		{
 #ifdef	_TRACE_NOTIFY_OBJECTS
-			LogMessage (_TRACE_NOTIFY_OBJECTS, _T("[%p] %hs::ClearNotifySources [%u] (%hs) failed!"), lNotifySink, typeid(aSink).name(), GetNotifyObjectCount(), typeid(aSource).name());
+			LogMessage (_TRACE_NOTIFY_OBJECTS, _T("[%p] %hs::ClearNotifySources [%u] (%hs) failed!"), lNotifySink, typeid(aBase).name(), GetNotifyObjectCount(), typeid(aSource).name());
 #endif
 			break;
 		}

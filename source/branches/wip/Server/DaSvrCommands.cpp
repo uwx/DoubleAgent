@@ -87,12 +87,16 @@ void DaSvrCommands::Terminate (bool pFinal, bool pAbandonned)
 			LogMessage (_LOG_INSTANCE, _T("[%p(%d)(%d)] DaSvrCommands::Terminate [%u %u]"), this, mCharID, max(m_dwRef,-1), pFinal, pAbandonned);
 		}
 #endif
-		SafeFreeSafePtr (mCachedEnum);
-
 		if	(pFinal)
 		{
 			UnmanageObjectLifetime (this);
 		}
+		if	(pAbandonned)
+		{
+			Disconnect (pAbandonned);
+		}
+
+		SafeFreeSafePtr (mCachedEnum);
 
 		try
 		{
@@ -138,30 +142,35 @@ void DaSvrCommands::Terminate (bool pFinal, bool pAbandonned)
 		}
 		catch AnyExceptionSilent
 
-		if	(
-				(pFinal)
-			&&	(m_dwRef > 0)
-			)
+		if	(pFinal)
 		{
-			if	(pAbandonned)
-			{
-#ifdef	_DEBUG_ABANDONED
-				if	(LogIsActive (_DEBUG_ABANDONED))
-				{
-					LogMessage (_DEBUG_ABANDONED, _T("[%p(%d)] DaSvrCommands SKIP CoDisconnectObject"), this, max(m_dwRef,-1));
-				}
-#endif
-			}
-			else
-			{
-				try
-				{
-					CoDisconnectObject (GetUnknown(), 0);
-				}
-				catch AnyExceptionDebug
-			}
-			m_dwRef = 0;
+			Disconnect (pAbandonned);
 		}
+	}
+}
+
+void DaSvrCommands::Disconnect (bool pAbandonned)
+{
+	if	(m_dwRef > 0)
+	{
+		if	(pAbandonned)
+		{
+			m_dwRef = SHRT_MIN;
+		}
+		__try
+		{
+			LogComErr (LogIfActive, CoDisconnectObject (GetUnknown(), 0));
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
+		{}
+	}
+	if	(pAbandonned)
+	{
+		m_dwRef = min (m_dwRef, SHRT_MIN);
+	}
+	else
+	{
+		m_dwRef = min (m_dwRef, 0);
 	}
 }
 

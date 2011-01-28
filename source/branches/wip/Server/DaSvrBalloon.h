@@ -137,6 +137,8 @@ public:
 
 // Implementation
 protected:
+	void Disconnect (bool pAbandonned);
+protected:
 	CDaBalloonConfig			mGlobalConfig;
 	tPtr <CAgentFileBalloon>	mCustomConfig;
 	tPtr <ULARGE_INTEGER>		mCustomStyle;

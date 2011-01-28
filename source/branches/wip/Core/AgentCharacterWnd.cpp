@@ -306,25 +306,25 @@ bool CAgentCharacterWnd::SetLastActive ()
 		}
 		IsLastActive (true);
 
-		if	(
-				(lLastActive)
-			&&	(lLastActive->PreNotify ())
-			)
+		if	(lLastActive)
 		{
-			try
+			if	(lLastActive->PreNotify ())
 			{
+				try
+				{
 #ifdef	_DEBUG_ACTIVE
-				if	(LogIsActive (_DEBUG_ACTIVE))
-				{
-					LogMessage (_DEBUG_ACTIVE, _T("[%p] SetNotInputActive [%d] (Activate)"), this, lLastActiveCharID);
-				}
+					if	(LogIsActive (_DEBUG_ACTIVE))
+					{
+						LogMessage (_DEBUG_ACTIVE, _T("[%p] SetNotInputActive [%d] (Activate)"), this, lLastActiveCharID);
+					}
 #endif
-				for	(lNotifyNdx = 0; lNotify = lLastActive->mNotify (lNotifyNdx); lNotifyNdx++)
-				{
-					lNotify->ActiveCharacterNotify (-1, -1, lLastActiveCharID, lLastActiveCharID);
+					for	(lNotifyNdx = 0; lNotify = lLastActive->mNotify (lNotifyNdx); lNotifyNdx++)
+					{
+						lNotify->ActiveCharacterNotify (-1, -1, lLastActiveCharID, lLastActiveCharID);
+					}
 				}
+				catch AnyExceptionDebug
 			}
-			catch AnyExceptionDebug
 			lLastActive->PostNotify ();
 		}
 
@@ -351,8 +351,9 @@ bool CAgentCharacterWnd::SetLastActive ()
 				}
 			}
 			catch AnyExceptionDebug
-			PostNotify ();
 		}
+		PostNotify ();
+
 		return true;
 	}
 	return false;
@@ -481,28 +482,28 @@ bool CAgentCharacterWnd::ShowQueued (CQueuedShow * pQueuedShow)
 
 bool CAgentCharacterWnd::NotifyShown (long pForCharID, VisibilityCauseType pVisiblityCause)
 {
-	if	(
-			(pVisiblityCause != VisibilityCause_NeverShown)
-		&&	(PreNotify ())
-		)
+	if	(pVisiblityCause != VisibilityCause_NeverShown)
 	{
-		try
+		if	(PreNotify ())
 		{
-			INT_PTR				lNotifyNdx;
-			CEventNotify *		lNotify;
-			long				lNotifyCharID;
-			VisibilityCauseType	lVisibilityCause;
-
-			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+			try
 			{
-				lNotifyCharID = lNotify->GetNotifyClient (mCharID);
-				lVisibilityCause = ((pVisiblityCause==VisibilityCause_ProgramShowed) && (lNotifyCharID!=pForCharID)) ? VisibilityCause_OtherProgramShowed : pVisiblityCause;
+				INT_PTR				lNotifyNdx;
+				CEventNotify *		lNotify;
+				long				lNotifyCharID;
+				VisibilityCauseType	lVisibilityCause;
 
-				lNotify->_PutVisibilityCause (lNotifyCharID, lVisibilityCause);
-				lNotify->VisibleState (lNotifyCharID, TRUE, lVisibilityCause);
+				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+				{
+					lNotifyCharID = lNotify->GetNotifyClient (mCharID);
+					lVisibilityCause = ((pVisiblityCause==VisibilityCause_ProgramShowed) && (lNotifyCharID!=pForCharID)) ? VisibilityCause_OtherProgramShowed : pVisiblityCause;
+
+					lNotify->_PutVisibilityCause (lNotifyCharID, lVisibilityCause);
+					lNotify->VisibleState (lNotifyCharID, TRUE, lVisibilityCause);
+				}
 			}
+			catch AnyExceptionDebug
 		}
-		catch AnyExceptionDebug
 		PostNotify ();
 		return true;
 	}
@@ -569,43 +570,43 @@ bool CAgentCharacterWnd::HideQueued (CQueuedHide * pQueuedHide)
 
 bool CAgentCharacterWnd::NotifyHidden (long pForCharID, VisibilityCauseType pVisiblityCause)
 {
-	if	(
-			(pVisiblityCause != VisibilityCause_NeverShown)
-		&&	(PreNotify ())
-		)
+	if	(pVisiblityCause != VisibilityCause_NeverShown)
 	{
-		try
+		if	(PreNotify ())
 		{
-			INT_PTR				lNotifyNdx;
-			CEventNotify *		lNotify;
-			long				lNotifyCharID;
-			VisibilityCauseType	lVisibilityCause;
-
-			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+			try
 			{
-				lNotifyCharID = lNotify->GetNotifyClient (mCharID);
-				lVisibilityCause = ((pVisiblityCause==VisibilityCause_ProgramHid) && (lNotifyCharID!=pForCharID)) ? VisibilityCause_OtherProgramHid : pVisiblityCause;
+				INT_PTR				lNotifyNdx;
+				CEventNotify *		lNotify;
+				long				lNotifyCharID;
+				VisibilityCauseType	lVisibilityCause;
 
-				lNotify->_PutVisibilityCause (lNotifyCharID, lVisibilityCause);
-				lNotify->VisibleState (lNotifyCharID, FALSE, lVisibilityCause);
-			}
-
-			if	(GetLastActive() == m_hWnd)
-			{
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
-					lNotify->ActiveCharacterNotify (-1, -1, mCharID, mCharID);
+					lNotifyCharID = lNotify->GetNotifyClient (mCharID);
+					lVisibilityCause = ((pVisiblityCause==VisibilityCause_ProgramHid) && (lNotifyCharID!=pForCharID)) ? VisibilityCause_OtherProgramHid : pVisiblityCause;
+
+					lNotify->_PutVisibilityCause (lNotifyCharID, lVisibilityCause);
+					lNotify->VisibleState (lNotifyCharID, FALSE, lVisibilityCause);
 				}
-				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+
+				if	(GetLastActive() == m_hWnd)
 				{
-					if	(lNotify->ActiveCharacterChanged (-1, -1, mCharID, mCharID))
+					for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 					{
-						break;
+						lNotify->ActiveCharacterNotify (-1, -1, mCharID, mCharID);
+					}
+					for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+					{
+						if	(lNotify->ActiveCharacterChanged (-1, -1, mCharID, mCharID))
+						{
+							break;
+						}
 					}
 				}
 			}
+			catch AnyExceptionDebug
 		}
-		catch AnyExceptionDebug
 		PostNotify ();
 		return true;
 	}
@@ -1121,8 +1122,9 @@ LRESULT CAgentCharacterWnd::OnVoiceBookMarkMsg (UINT uMsg, WPARAM wParam, LPARAM
 			}
 		}
 		catch AnyExceptionDebug
-		PostNotify ();
 	}
+	PostNotify ();
+
 	return 0;
 }
 
@@ -1255,20 +1257,22 @@ bool CAgentCharacterWnd::StopIdle (LPCTSTR pReason)
 	if	(
 			(lRet)
 		&&	(lIdleStarted)
-		&&	(PreNotify ())
 		)
 	{
-		try
+		if	(PreNotify ())
 		{
-			INT_PTR			lNotifyNdx;
-			CEventNotify *	lNotify;
-
-			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+			try
 			{
-				lNotify->Idle (lNotify->GetNotifyClient (mCharID), FALSE);
+				INT_PTR			lNotifyNdx;
+				CEventNotify *	lNotify;
+
+				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+				{
+					lNotify->Idle (lNotify->GetNotifyClient (mCharID), FALSE);
+				}
 			}
+			catch AnyExceptionDebug
 		}
-		catch AnyExceptionDebug
 		PostNotify ();
 	}
 	return lRet;
@@ -1285,20 +1289,22 @@ bool CAgentCharacterWnd::DoIdle ()
 			(lRet)
 		&&	(!lIdleStarted)
 		&&	(mIdleStarted)
-		&&	(PreNotify ())
 		)
 	{
-		try
+		if	(PreNotify ())
 		{
-			INT_PTR			lNotifyNdx;
-			CEventNotify *	lNotify;
-
-			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+			try
 			{
-				lNotify->Idle (lNotify->GetNotifyClient (mCharID), TRUE);
+				INT_PTR			lNotifyNdx;
+				CEventNotify *	lNotify;
+
+				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+				{
+					lNotify->Idle (lNotify->GetNotifyClient (mCharID), TRUE);
+				}
 			}
+			catch AnyExceptionDebug
 		}
-		catch AnyExceptionDebug
 		PostNotify ();
 	}
 	return lRet;
@@ -1352,8 +1358,8 @@ void CAgentCharacterWnd::NotifyClick (short pButton, const CPoint & pPoint)
 			}
 		}
 		catch AnyExceptionDebug
-		PostNotify ();
 	}
+	PostNotify ();
 }
 
 void CAgentCharacterWnd::NotifyDblClick (short pButton, const CPoint & pPoint)
@@ -1370,8 +1376,8 @@ void CAgentCharacterWnd::NotifyDblClick (short pButton, const CPoint & pPoint)
 			}
 		}
 		catch AnyExceptionDebug
-		PostNotify ();
 	}
+	PostNotify ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1467,8 +1473,9 @@ LRESULT CAgentCharacterWnd::OnRButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam
 			mLastButtonMsg = WM_RBUTTONUP;
 		}
 		catch AnyExceptionDebug
-		PostNotify ();
 	}
+	PostNotify ();
+
 	return lResult;
 }
 
@@ -1550,21 +1557,21 @@ LRESULT CAgentCharacterWnd::OnContextMenu (UINT uMsg, WPARAM wParam, LPARAM lPar
 #ifdef	_DEBUG_MOUSE
 	LogMessage (_DEBUG_MOUSE, _T("OnContextMenu [%d %d]"), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 #endif
-	if	(
-			((HWND)wParam == m_hWnd)
-		&&	(PreNotify ())
-		)
+	if	((HWND)wParam == m_hWnd)
 	{
-		try
+		if	(PreNotify ())
 		{
-			CEventNotify *	lNotify;
-
-			if	(lNotify = GetNotifyClientNotify (mCharID))
+			try
 			{
-				lNotify->_ContextMenu (mCharID, m_hWnd, CPoint (GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
+				CEventNotify *	lNotify;
+
+				if	(lNotify = GetNotifyClientNotify (mCharID))
+				{
+					lNotify->_ContextMenu (mCharID, m_hWnd, CPoint (GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
+				}
 			}
+			catch AnyExceptionDebug
 		}
-		catch AnyExceptionDebug
 		PostNotify ();
 	}
 	return 0;

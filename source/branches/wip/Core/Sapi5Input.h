@@ -38,8 +38,6 @@ interface _ISapi5InputEventSink
 {
 public:
 	virtual void OnSapi5InputEvent (const class CSpEvent & pEvent) = 0;
-
-	virtual CNotifySourcesOwner <class CSapi5InputContext> * _GetNotifySources () {return NULL;}
 };
 
 //////////////////////////////////////////////////////////////////////

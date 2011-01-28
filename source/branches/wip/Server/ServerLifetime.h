@@ -41,7 +41,7 @@ public:
 protected:
 	bool ManageObjectLifetime (CComObjectRootBase * pObject, LPCTSTR pClientMutexName = NULL);
 	void UnmanageObjectLifetime (CComObjectRootBase * pObject);
-	bool _VerifyClientLifetime ();
+	bool _VerifyClientLifetime () const;
 
 protected:
 	CAtlString					mClientMutexName;

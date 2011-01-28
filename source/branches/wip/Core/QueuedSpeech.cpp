@@ -154,18 +154,25 @@ bool CQueuedSpeak::SetVoice (CSapiVoice * pVoice)
 			&&	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
 			)
 		{
-			_ISapiVoiceEventSink *	lVoiceNotifySink [2] = {NULL, NULL};
+			_ISapiVoiceEventSink *				lVoiceNotifySink [2] = {NULL, NULL};
+			CNotifySourcesOwner <CSapiVoice> *	lVoiceNotifySources [2] = {NULL, NULL};
 
 			if	(mVoice)
 			{
 				if	(mVoiceNotifyId[0])
 				{
-					lVoiceNotifySink[0] = mVoice->FindNotifySink (mVoiceNotifyId[0]);
+					if	(lVoiceNotifySink[0] = mVoice->FindNotifySink (mVoiceNotifyId[0]))
+					{
+						lVoiceNotifySources[0] = mVoice->GetNotifySources (lVoiceNotifySink[0]);
+					}
 					mVoiceNotifyId[0] = 0;
 				}
 				if	(mVoiceNotifyId[1])
 				{
-					lVoiceNotifySink[1] = mVoice->FindNotifySink (mVoiceNotifyId[1]);
+					if	(lVoiceNotifySink[1] = mVoice->FindNotifySink (mVoiceNotifyId[1]))
+					{
+						lVoiceNotifySources[1] = mVoice->GetNotifySources (lVoiceNotifySink[1]);
+					}
 					mVoiceNotifyId[1] = 0;
 				}
 				if	(
@@ -193,11 +200,11 @@ bool CQueuedSpeak::SetVoice (CSapiVoice * pVoice)
 				}
 				if	(lVoiceNotifySink[0])
 				{
-					mVoiceNotifyId[0] = pVoice->AddNotifySink (lVoiceNotifySink[0]);
+					mVoiceNotifyId[0] = pVoice->AddNotifySink (lVoiceNotifySink[0], lVoiceNotifySources[0]);
 				}
 				if	(lVoiceNotifySink[1])
 				{
-					mVoiceNotifyId[1] = pVoice->AddNotifySink (lVoiceNotifySink[1]);
+					mVoiceNotifyId[1] = pVoice->AddNotifySink (lVoiceNotifySink[1], lVoiceNotifySources[1]);
 				}
 			}
 			if	(mText)
@@ -920,7 +927,7 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWn
 
 		if	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
 		{
-			mVoiceNotifyId[0] = mVoice->AddNotifySink (lCharacterWnd);
+			mVoiceNotifyId[0] = mVoice->AddNotifySink (lCharacterWnd, lCharacterWnd);
 			mVoice->SetEventCharID (mCharID);
 		}
 
@@ -937,7 +944,7 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWn
 			&&	(lBalloonWnd->IsWindow ())
 			)
 		{
-			mVoiceNotifyId[1] = mVoice->AddNotifySink (lBalloonWnd);
+			mVoiceNotifyId[1] = mVoice->AddNotifySink (lBalloonWnd, lBalloonWnd);
 			lBalloonWnd->ApplyOptions (mBalloonOptions);
 			if	(mText)
 			{

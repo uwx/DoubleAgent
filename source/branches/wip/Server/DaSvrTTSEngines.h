@@ -89,6 +89,8 @@ public:
 // Implementation
 public:
 	HRESULT InitEnumVariant (CEnumVARIANTImpl * pEnum);
+protected:
+	void Disconnect (bool pAbandonned);
 
 private:
 	IUnknownPtr	mCachedEnum;

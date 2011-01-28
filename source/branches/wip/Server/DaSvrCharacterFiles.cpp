@@ -81,6 +81,10 @@ void DaSvrCharacterFiles::Terminate (bool pFinal, bool pAbandonned)
 {
 	if	(this)
 	{
+		if	(pAbandonned)
+		{
+			m_dwRef = min (m_dwRef, SHRT_MIN);
+		}
 		if	(pFinal)
 		{
 			UnmanageObjectLifetime (this);
@@ -91,23 +95,11 @@ void DaSvrCharacterFiles::Terminate (bool pFinal, bool pAbandonned)
 			&&	(m_dwRef > 0)
 			)
 		{
-			if	(pAbandonned)
+			try
 			{
-#ifdef	_DEBUG_ABANDONED
-				if	(LogIsActive (_DEBUG_ABANDONED))
-				{
-					LogMessage (_DEBUG_ABANDONED, _T("[%p(%d)] DaSvrCharacterFiles SKIP CoDisconnectObject"), this, max(m_dwRef,-1));
-				}
-#endif
+				LogComErr (LogIfActive, CoDisconnectObject (GetUnknown(), 0));
 			}
-			else
-			{
-				try
-				{
-					CoDisconnectObject (GetUnknown(), 0);
-				}
-				catch AnyExceptionDebug
-			}
+			catch AnyExceptionDebug
 			m_dwRef = 0;
 		}
 	}

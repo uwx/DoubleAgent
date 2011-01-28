@@ -50,7 +50,8 @@ class CListeningState :
 	public CSapiInputClient,
 	protected _ITimerNotifySink,
 	protected _IEventReflect,
-	public CNotifySourceSink <CSapi5InputContext, _ISapi5InputEventSink>
+	public CNotifySourcesOwner2 <CSapi5InputContext, _ISapi5InputEventSink, CListeningState>,
+	public _ISapi5InputEventSink
 {
 public:
 	CListeningState (CDaCmnCharacter & pCharacter);

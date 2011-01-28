@@ -52,7 +52,8 @@ class ATL_NO_VTABLE CAgentBalloonWnd :
 	public CAgentBalloonWndObj,
 	public CAgentFileClient,
 	public CEventNotifiesClient<CAgentBalloonWnd>,
-	public CNotifySourceSink <CSapiVoice, _ISapiVoiceEventSink>
+	public CNotifySourcesOwner2 <CSapiVoice, _ISapiVoiceEventSink, CAgentBalloonWnd>,
+	public _ISapiVoiceEventSink
 {
 	DECLARE_DLL_OBJECT_EX(CAgentBalloonWnd, _DACORE_IMPEXP)
 protected:

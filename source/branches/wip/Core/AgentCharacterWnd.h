@@ -29,7 +29,8 @@
 
 class CAgentCharacterWnd :
 	public CAgentWnd,
-	public CNotifySourceSink <CSapiVoice, _ISapiVoiceEventSink>
+	public CNotifySourcesOwner2 <CSapiVoice, _ISapiVoiceEventSink, CAgentCharacterWnd>,
+	public _ISapiVoiceEventSink
 {
 	DECLARE_DLL_OBJECT_EX(CAgentCharacterWnd, _DACORE_IMPEXP)
 public:

@@ -175,14 +175,18 @@ bool CAgentPopupWnd::_PreNotify ()
 #endif
 	if	(m_dwRef > 0)
 	{
-		return CAgentCharacterWnd::_PreNotify ();
+		return __super::_PreNotify ();
 	}
-	return false;
+	else
+	{
+		__super::_PreNotify ();
+		return false;
+	}
 }
 
 bool CAgentPopupWnd::_PostNotify ()
 {
-	CAgentCharacterWnd::_PostNotify ();
+	__super::_PostNotify ();
 #ifdef	_DEBUG_NOTIFY_LEVEL
 	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] CAgentPopupWnd::_PostNotify [%u] HasFinalRelased [%u] CanFinalRelease [%u]"), this, max(m_dwRef,-1), IsInNotify(), HasFinalReleased(), CanFinalRelease());
 #endif
@@ -211,12 +215,12 @@ bool CAgentPopupWnd::_PostNotify ()
 
 int CAgentPopupWnd::_PreDoQueue ()
 {
-	return CAgentCharacterWnd::_PreDoQueue ();
+	return __super::_PreDoQueue ();
 }
 
 int CAgentPopupWnd::_PostDoQueue ()
 {
-	int	lRet = CAgentCharacterWnd::_PostDoQueue ();
+	int	lRet = __super::_PostDoQueue ();
 
 	if	(
 			(HasFinalReleased ())
@@ -355,7 +359,7 @@ void CAgentPopupWnd::Closing ()
 
 DWORD CAgentPopupWnd::GetAlphaSmoothing () const
 {
-	DWORD	lRet = CAgentCharacterWnd::GetAlphaSmoothing ();
+	DWORD	lRet = __super::GetAlphaSmoothing ();
 
 	if	(!IsEqualGUID (mVideoRenderType, MEDIASUBTYPE_RGB8))
 	{
@@ -398,61 +402,69 @@ bool CAgentPopupWnd::Attach (long pCharID, CEventNotify * pNotify, const CAgentI
 
 		if	(mNotify.GetCount() > 0)
 		{
+			if	(PreNotify ())
+			{
+				try
+				{
 //
 //	Do the activation notifications twice - first for inactive, then for active.  It's important that the
 //	inactive notifications are sent first so an application that is going inactive has a chance to clean
 //	up before the next application becomes active.
 //
-			INT_PTR			lNotifyNdx;
-			CEventNotify *	lNotify;
-			long			lInputInactiveCharID = 0;
-			long			lInputActiveCharID = 0;
+					INT_PTR			lNotifyNdx;
+					CEventNotify *	lNotify;
+					long			lInputInactiveCharID = 0;
+					long			lInputActiveCharID = 0;
 
-			if	(lPrevCharID > 0)
-			{
-				if	(
-						(GetLastActive() == m_hWnd)
-					&&	(IsCharShown ())
-					)
-				{
-					lInputInactiveCharID = lPrevCharID;
-				}
+					if	(lPrevCharID > 0)
+					{
+						if	(
+								(GetLastActive() == m_hWnd)
+							&&	(IsCharShown ())
+							)
+						{
+							lInputInactiveCharID = lPrevCharID;
+						}
 #ifdef	_DEBUG_ACTIVE
-				if	(LogIsActive (_DEBUG_ACTIVE))
-				{
-					LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)(%d)] SetInactive [%d] InputActive [%d] (Attach)"), this, mCharID, max(m_dwRef,-1), lPrevCharID, lInputInactiveCharID);
-				}
+						if	(LogIsActive (_DEBUG_ACTIVE))
+						{
+							LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)(%d)] SetInactive [%d] InputActive [%d] (Attach)"), this, mCharID, max(m_dwRef,-1), lPrevCharID, lInputInactiveCharID);
+						}
 #endif
-				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
-				{
-					lNotify->ActiveCharacterNotify (0, 0, lPrevCharID, lInputInactiveCharID);
-				}
-			}
+						for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+						{
+							lNotify->ActiveCharacterNotify (0, 0, lPrevCharID, lInputInactiveCharID);
+						}
+					}
 
-			if	(
-					(GetLastActive() == m_hWnd)
-				&&	(IsCharShown ())
-				)
-			{
-				lInputActiveCharID = mCharID;
-			}
+					if	(
+							(GetLastActive() == m_hWnd)
+						&&	(IsCharShown ())
+						)
+					{
+						lInputActiveCharID = mCharID;
+					}
 #ifdef	_DEBUG_ACTIVE
-			if	(LogIsActive (_DEBUG_ACTIVE))
-			{
-				LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)(%d)] SetActive [%d] InputActive [%d] (Attach)"), this, mCharID, max(m_dwRef,-1), pCharID, lInputActiveCharID);
-			}
+					if	(LogIsActive (_DEBUG_ACTIVE))
+					{
+						LogMessage (_DEBUG_ACTIVE, _T("[%p(%d)(%d)] SetActive [%d] InputActive [%d] (Attach)"), this, mCharID, max(m_dwRef,-1), pCharID, lInputActiveCharID);
+					}
 #endif
-			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
-			{
-				lNotify->ActiveCharacterNotify (mCharID, lInputActiveCharID, 0, 0);
-			}
-			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
-			{
-				if	(lNotify->ActiveCharacterChanged (mCharID, lInputActiveCharID, lPrevCharID, lInputInactiveCharID))
-				{
-					break;
+					for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+					{
+						lNotify->ActiveCharacterNotify (mCharID, lInputActiveCharID, 0, 0);
+					}
+					for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+					{
+						if	(lNotify->ActiveCharacterChanged (mCharID, lInputActiveCharID, lPrevCharID, lInputInactiveCharID))
+						{
+							break;
+						}
+					}
 				}
+				catch AnyExceptionDebug
 			}
+			PostNotify ();
 		}
 	}
 
@@ -891,26 +903,28 @@ bool CAgentPopupWnd::MovePopup (const CPoint & pPosition, long pForCharID, MoveC
 				||	(pAlwaysNotify)
 				)
 			&&	(pMoveCause != MoveCause_NeverMoved)
-			&&	(PreNotify ())
 			)
 		{
-			try
+			if	(PreNotify ())
 			{
-				INT_PTR				lNotifyNdx;
-				CEventNotify *		lNotify;
-				long				lNotifyCharID;
-				MoveCauseType		lMoveCause;
-
-				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+				try
 				{
-					lNotifyCharID = lNotify->GetNotifyClient (mCharID);
-					lMoveCause = ((pMoveCause==MoveCause_ProgramMoved) && (lNotifyCharID!=pForCharID)) ? MoveCause_OtherProgramMoved : pMoveCause;
+					INT_PTR				lNotifyNdx;
+					CEventNotify *		lNotify;
+					long				lNotifyCharID;
+					MoveCauseType		lMoveCause;
 
-					lNotify->_PutMoveCause (lNotifyCharID, lMoveCause);
-					lNotify->Move (lNotifyCharID, pPosition.x, pPosition.y, lMoveCause);
+					for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+					{
+						lNotifyCharID = lNotify->GetNotifyClient (mCharID);
+						lMoveCause = ((pMoveCause==MoveCause_ProgramMoved) && (lNotifyCharID!=pForCharID)) ? MoveCause_OtherProgramMoved : pMoveCause;
+
+						lNotify->_PutMoveCause (lNotifyCharID, lMoveCause);
+						lNotify->Move (lNotifyCharID, pPosition.x, pPosition.y, lMoveCause);
+					}
 				}
+				catch AnyExceptionDebug
 			}
-			catch AnyExceptionDebug
 			PostNotify ();
 		}
 	}
@@ -952,24 +966,24 @@ bool CAgentPopupWnd::SizePopup (const CSize & pSize, long pForCharID, bool pAlwa
 		}
 
 		if	(
-				(
-					(lRet)
-				||	(pAlwaysNotify)
-				)
-			&&	(PreNotify ())
+				(lRet)
+			||	(pAlwaysNotify)
 			)
 		{
-			try
+			if	(PreNotify ())
 			{
-				INT_PTR			lNotifyNdx;
-				CEventNotify *	lNotify;
-
-				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+				try
 				{
-					lNotify->Size (lNotify->GetNotifyClient (mCharID), pSize.cx, pSize.cy);
+					INT_PTR			lNotifyNdx;
+					CEventNotify *	lNotify;
+
+					for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+					{
+						lNotify->Size (lNotify->GetNotifyClient (mCharID), pSize.cx, pSize.cy);
+					}
 				}
+				catch AnyExceptionDebug
 			}
-			catch AnyExceptionDebug
 			PostNotify ();
 		}
 	}
@@ -1328,8 +1342,9 @@ LRESULT CAgentPopupWnd::OnExitSizeMove (UINT uMsg, WPARAM wParam, LPARAM lParam,
 			}
 		}
 		catch AnyExceptionDebug
-		PostNotify ();
 	}
+	PostNotify ();
+
 	mSizeMoveStart = NULL;
 	mWasDragged = mIsDragging;
 	mIsDragging = false;
@@ -1371,8 +1386,8 @@ LRESULT CAgentPopupWnd::OnMoving (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL 
 				}
 			}
 			catch AnyExceptionDebug
-			PostNotify ();
 		}
+		PostNotify ();
 	}
 
 	bHandled = CAgentCharacterWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult);
@@ -1514,8 +1529,8 @@ void CAgentPopupWnd::OnIconDblClick (const CPoint & pPoint)
 			}
 		}
 		catch AnyExceptionDebug
-		PostNotify ();
 	}
+	PostNotify ();
 #endif
 }
 

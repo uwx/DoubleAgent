@@ -113,6 +113,10 @@ public:
 	HRESULT STDMETHODCALLTYPE put_ConfidenceThreshold (long ConfidenceThreshold);
 	HRESULT STDMETHODCALLTYPE get_ConfidenceText (BSTR *ConfidenceText);
 	HRESULT STDMETHODCALLTYPE put_ConfidenceText (BSTR ConfidenceText);
+
+// Implementation
+protected:
+	void Disconnect (bool pAbandonned);
 };
 
 /////////////////////////////////////////////////////////////////////////////

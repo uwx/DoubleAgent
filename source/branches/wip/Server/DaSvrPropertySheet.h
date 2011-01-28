@@ -104,6 +104,10 @@ public:
 	// IOleWindow
     HRESULT STDMETHODCALLTYPE GetWindow (HWND *phwnd);
     HRESULT STDMETHODCALLTYPE ContextSensitiveHelp (BOOL fEnterMode);
+
+// Implementation
+protected:
+	void Disconnect (bool pAbandonned);
 };
 
 /////////////////////////////////////////////////////////////////////////////
