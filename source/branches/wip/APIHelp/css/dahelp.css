@@ -154,6 +154,16 @@ code.example
 	padding-right: 4ex;
 }
 
+code.inline
+{
+	margin-top: 0;
+	margin-bottom: 0;
+	color: #004000;
+	font-size: 100%;
+	font-family: Segoe UI, Verdana, Arial, Helvetica, sans-serif;
+	display: inline-block;
+}
+
 /**********************************************************************/
 
 a
@@ -287,8 +297,9 @@ blockquote
 
 sup
 {
+	font-size: 75%;
+	vertical-align:top;
 	text-decoration: none;
-	font-size: smaller;
 }
 
 hr

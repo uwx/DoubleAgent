@@ -191,48 +191,52 @@ void CDaCmnCharacter::Terminate (bool pFinal, bool pAbandonned)
 
 void CDaCmnCharacter::Unrealize (bool pForce)
 {
-	if	(mWnd)
+	if	(	
+			(mWnd)
+		&&	(GetActiveClient () == mCharID)
+		)
 	{
-		if	(GetActiveClient () == mCharID)
+		Hide (true, true);
+	}
+
+	if	(
+			(mWnd)
+		&&	(mFile)
+		&&	(mNotify)
+		)
+	{
+		INT_PTR	lClientCount = GetClientCount (mCharID);
+
+		try
 		{
-			Hide (true, true);
+			mNotify->mAnchor->RemoveFileClient (mFile, mWnd, false);
+			if	(mWnd->GetBalloonWnd())
+			{
+				mNotify->mAnchor->RemoveFileClient (mFile, mWnd->GetBalloonWnd(), false);
+			}
 		}
+		catch AnyExceptionDebug
 
-		if	(
-				(mFile)
-			&&	(mNotify)
-			)
+		if	(lClientCount <= 0)
 		{
-			INT_PTR	lClientCount = GetClientCount (mCharID);
-
 			try
 			{
-				mNotify->mAnchor->RemoveFileClient (mFile, mWnd, false);
+				mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, mWnd);
 				if	(mWnd->GetBalloonWnd())
 				{
-					mNotify->mAnchor->RemoveFileClient (mFile, mWnd->GetBalloonWnd(), false);
+					mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, mWnd->GetBalloonWnd());
 				}
 			}
 			catch AnyExceptionDebug
-
-			if	(lClientCount <= 0)
-			{
-				try
-				{
-					mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, mWnd);
-					if	(mWnd->GetBalloonWnd())
-					{
-						mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, mWnd->GetBalloonWnd());
-					}
-				}
-				catch AnyExceptionDebug
-			}
 		}
+	}
 
-		if	(
-				(pForce)
-			||	(!IsInNotify ())
-			)
+	if	(
+			(pForce)
+		||	(!IsInNotify ())
+		)
+	{
+		if	(mWnd)
 		{
 			try
 			{
@@ -245,8 +249,8 @@ void CDaCmnCharacter::Unrealize (bool pForce)
 			catch AnyExceptionDebug
 
 			mWnd = NULL;
-			SafeFreeSafePtr (mWndRefHolder);
 		}
+		SafeFreeSafePtr (mWndRefHolder);
 	}
 }
 

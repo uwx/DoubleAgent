@@ -36,7 +36,29 @@
 		</tr>
 		<tr>
 			<td class="page">
-				<p><img src="../images/construction.gif" alt="Under construction" /></p>
+					<p>The Double Agent installation files are Microsoft Installer (MSI) packages. They can be installed
+					using the <span style="font-variant: small-caps; font-weight: bold">msiexec</span> program that&#39;s
+					part of Windows.&nbsp; Here are some sample command-lines (refer to Microsoft&#39;s MSI documentation
+					for more details):</p>
+					<ul>
+						<li>
+							<p>Install on a 64-bit system with the full user interface:</p>
+							<code>msiexec /i DoubleAgent_x64x86.msi</code></li>
+						<li>
+							<p>Install on a 32-bit system with only a progress indicator and no user interaction:</p>
+							<code>msiexec /i DoubleAgent_x86.msi /qb-!</code></li>
+						<li>
+							<p>Install with a progress indicator and cancel button, and a confirmation dialog at the end:</p>
+							<code>msiexec /i DoubleAgent_x86.msi /qb+</code></li>
+						<li>
+							<p>Install with emulation enabled and only a confirmation dialog at the end:</p>
+							<code>msiexec /i DoubleAgent_x86.msi /qn+ AUTO_EMULATE=1</code></li>
+					</ul>
+					<p>If you configure your installation to automatically install Double Agent, you must include the appropriate
+						Open Source acknowledgement (see <a href="Licensing.htm">Licensing and Distribution</a>).</p>
+					<p>If you choose to deploy Double Agent with less than the full user interface, you should include some
+						kind reference to the GNU license agreement in your installation. The GNU licenses in HTML format
+						are included in the Double agent installation.</p>
 			</td>
 		</tr>
 	</table>

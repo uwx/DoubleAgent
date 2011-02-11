@@ -1257,7 +1257,7 @@ HRESULT CServerNotifySink::Initialize (DaControl * pOwner)
 					mOwner->mServer->AddRef ();
 				}
 			}
-			catch AnyExceptionSilent
+			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mOwner->mServer);
 		}
 	}
@@ -1284,7 +1284,6 @@ HRESULT CServerNotifySink::Terminate ()
 		{
 			try
 			{
-
 				_AtlModule.PreServerCall (lOwner->mServer);
 				try
 				{
@@ -1292,7 +1291,7 @@ HRESULT CServerNotifySink::Terminate ()
 					LogComErr (LogNormal|LogTime, lResult = lOwner->mServer->Unregister (lServerNotifyId), _T("Unregister Server [%p] [%u]"), lOwner->mServer.GetInterfacePtr(), lServerNotifyId);
 					m_dwRef--;
 				}
-				catch AnyExceptionSilent
+				catch AnyExceptionDebug
 				_AtlModule.PostServerCall (lOwner->mServer);
 			}
 			catch AnyExceptionSilent

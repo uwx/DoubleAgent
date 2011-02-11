@@ -150,6 +150,11 @@ HRESULT DaCtlCharacter::Terminate (bool pFinal)
 					try
 					{
 						lResult = mOwner->mServer->Unload (mServerCharID);
+
+						if	(HRESULT_CODE (lResult) == RPC_S_SERVER_UNAVAILABLE)
+						{
+							lResult = S_FALSE;
+						}
 					}
 					catch AnyExceptionDebug
 					_AtlModule.PostServerCall (mOwner->mServer);

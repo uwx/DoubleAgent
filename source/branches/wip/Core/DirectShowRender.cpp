@@ -425,7 +425,7 @@ void CDirectShowRender::OnClockPulse ()
 			if	(GetSampleImage (lSample))
 			{
 #ifdef	_DEBUG_SAMPLES
-				LogMediaSampleId (_DEBUG_SAMPLES, lSample, _T("[%s] [%p] [%f] GotSampleImage [%s] for [%p]"), AtlTypeName(this), this, RefTimeSec(lStreamTime), FormatSize(mImageBuffer.GetBitmapSize()), mRenderWnd);
+				LogMediaSampleId (_DEBUG_SAMPLES, lSample, _T("[%s] [%p] [%f] GotSampleImage [%s] for [%p]"), AtlTypeName(this), this, RefTimeSec(lStreamTime), FormatSize(mImageBuffer.GetImageSize()), mRenderWnd);
 #endif
 				DrawSampleImage ();
 			}

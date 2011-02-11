@@ -318,7 +318,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::get_Item (BSTR CharacterID, IDaCtlCha
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::get_Item"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::get_Item [%s]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), CAtlString(CharacterID));
 	}
 #endif
 	return lResult;
@@ -384,7 +384,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Character (BSTR CharacterID, IDaCtlCh
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::Character"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::Character [%s]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), CAtlString(CharacterID));
 #endif
 
 	HRESULT	lResult = get_Item (CharacterID, Character);
@@ -393,7 +393,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Character (BSTR CharacterID, IDaCtlCh
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::Character"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::Character [%s]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), CAtlString(CharacterID));
 	}
 #endif
 	return lResult;

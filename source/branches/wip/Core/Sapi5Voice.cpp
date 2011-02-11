@@ -278,19 +278,8 @@ HRESULT CSapi5Voice::Stop ()
 
 	if	(_IsValid ())
 	{
-		LPWSTR	lSkipType = _T("SENTENCE");
-		ULONG	lSkipped = 0;
-		ULONG	lTotalSkipped = 0;
-
-		while	(
-					((lResult = mVoice->Skip (lSkipType, 1, &(lSkipped=0))) == S_OK)
-				&&	(lSkipped > 0)
-				)
-		{
-			lTotalSkipped += lSkipped;
-		}
-		lResult = MAKE_HRESULT (SEVERITY_SUCCESS, FACILITY_WIN32, lTotalSkipped);
-
+		mLastVoiceEvent = SPEI_UNDEFINED;
+		lResult = mVoice->Speak (NULL, SPF_PURGEBEFORESPEAK, &mVoiceStreamNum);
 		LogSapi5Err (LogNormal|LogTime, mVoice->Resume ());
 	}
 	if	(LogIsActive ())

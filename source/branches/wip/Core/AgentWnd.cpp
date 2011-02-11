@@ -1111,7 +1111,7 @@ bool CAgentWnd::ShowGesture (LPCTSTR pGestureName, LPCTSTR pForState, bool pStop
 				)
 			{
 #ifdef	_DEBUG
-				LogMessage (LogDebug, _T("!!! Gesture [%s] not sequenced [%d]"), lGestureName, lAnimationNdx);
+				LogMessage (LogDebug, _T("!!! Gesture [%s] not sequenced [%d] [%d]"), lGestureName, lAnimationNdx, lPrevAnimationNdx);
 #endif
 				lStreamInfo->ClearAnimationSequences();
 				AnimationSequenceChanged ();

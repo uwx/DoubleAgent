@@ -38,6 +38,9 @@
 #endif
 #include "Registry.h"
 #include "DebugStr.h"
+#ifdef	_DEBUG_NOT
+#include "DebugTime.h"
+#endif
 
 #ifdef	_DEBUG
 #define	_DEBUG_REQUESTS		(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF|LogTimeMs)
@@ -713,7 +716,7 @@ bool CQueuedSpeak::SpeechIsBusy (CAgentWnd * pAgentWnd)
 
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CAgentCharacterWnd::SpeechIsBusy [%u]"), DebugTimeElapsed, lRet);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CQueuedSpeak::SpeechIsBusy [%u]"), DebugTimeElapsed, lRet);
 #endif
 	return lRet;
 }
@@ -789,7 +792,7 @@ HRESULT CQueuedSpeak::SpeechIsReady (CAgentWnd * pAgentWnd)
 
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CAgentCharacterWnd::SpeechIsReady [%8.8X]"), DebugTimeElapsed, lResult);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CQueuedSpeak::SpeechIsReady [%8.8X]"), DebugTimeElapsed, lResult);
 #endif
 	return lResult;
 }
@@ -862,7 +865,7 @@ HRESULT CQueuedSpeak::PrepareSpeech (CAgentWnd * pAgentWnd)
 
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CAgentCharacterWnd::PrepareSpeech"), DebugTimeElapsed);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CQueuedSpeak::PrepareSpeech"), DebugTimeElapsed);
 #endif
 	return lResult;
 }
@@ -917,7 +920,14 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWn
 				LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] CAgentCharacterWnd Speak [%s] [%s]"), pAgentWnd, mCharID, DebugStr(GetFullText()), DebugStr(mSoundUrl));
 			}
 #endif
-			lResult = pAgentWnd->PlayFromTo (0, pAgentWnd->GetDurationMs(), true);
+#ifdef	DebugTimeStart
+			DebugTimeStart
+#endif
+			lResult = pAgentWnd->PlayFromTo (0, pAgentWnd->GetDurationMs(), false);
+#ifdef	DebugTimeStart
+			DebugTimeStop
+			LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CQueuedSpeak::PlayFromTo"), DebugTimeElapsed);
+#endif
 		}
 	}
 	else
@@ -1008,7 +1018,7 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWn
 
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CAgentCharacterWnd::StartSpeech"), DebugTimeElapsed);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CQueuedSpeak::StartSpeech"), DebugTimeElapsed);
 #endif
 	return lResult;
 }
@@ -1086,7 +1096,7 @@ bool CQueuedSpeak::ShowSpeechAnimation (CQueuedActions & pQueue, CAgentWnd * pAg
 
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CAgentCharacterWnd::ShowSpeechAnimation"), DebugTimeElapsed);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CQueuedSpeak::ShowSpeechAnimation"), DebugTimeElapsed);
 #endif
 	return lRet;
 }

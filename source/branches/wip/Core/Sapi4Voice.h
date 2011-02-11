@@ -121,8 +121,10 @@ private:
 		HRESULT STDMETHODCALLTYPE Warning (LPUNKNOWN pWarning);
 		HRESULT STDMETHODCALLTYPE VisualFuture (DWORD dwMilliseconds, QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth);
 
+	public:
+		CSapi4Voice *	mOwner;
 	protected:
-		CSapi4Voice &	mOwner;
+		ITTSCentralPtr	mEngine;
 		DWORD			mRegisteredKey;
 	};
 	friend class CTTSNotifySink;
@@ -151,10 +153,20 @@ private:
 		HRESULT STDMETHODCALLTYPE BookMark (QWORD qTimeStamp, DWORD dwMarkNum);
 		HRESULT STDMETHODCALLTYPE WordPosition (QWORD qTimeStamp, DWORD dwByteOffset);
 
-	protected:
-		CSapi4Voice &	mOwner;
+	public:
+		CSapi4Voice *	mOwner;
 	};
 	friend class CTTSBufNotifySink;
+
+	struct AbandonedData
+	{
+		DWORD						mAbandonTime;
+		ITTSCentralPtr				mEngine;
+		IAudioDestPtr				mAudioDest;
+		tMallocPtr <WCHAR>			mLastText;
+		tPtr <CTTSNotifySink>		mNotifySink;
+		tPtr <CTTSBufNotifySink>	mBufNotifySink;
+	};
 
 protected:
 	bool CheckIsQueueing () const;
@@ -172,19 +184,20 @@ protected:
 	void LogTtsAudio (UINT pLogLevel, IAudioDest * pTtsAudio, LPCTSTR pFormat = NULL, ...);
 
 protected:
-	ITTSCentralPtr				mEngine;
-	IAudioDestPtr				mAudioDest;
-	ULONG						mDefaultRate;
-	USHORT						mDefaultVolume;
-	USHORT						mDefaultPitch;
-	bool						mPaused;
-	tPtr <DWORD>				mIsQueueing;
-	tPtr <DWORD>				mIsParsing;
-	tPtr <DWORD>				mIsSpeaking;
-	tPtr <DWORD>				mResetPending;
-	tMallocPtr <WCHAR>			mLastText;
-	tPtr <CTTSNotifySink>		mNotifySink;
-	tPtr <CTTSBufNotifySink>	mBufNotifySink;
+	ITTSCentralPtr					mEngine;
+	IAudioDestPtr					mAudioDest;
+	ULONG							mDefaultRate;
+	USHORT							mDefaultVolume;
+	USHORT							mDefaultPitch;
+	bool							mPaused;
+	tPtr <DWORD>					mIsQueueing;
+	tPtr <DWORD>					mIsParsing;
+	tPtr <DWORD>					mIsSpeaking;
+	tPtr <DWORD>					mResetPending;
+	tMallocPtr <WCHAR>				mLastText;
+	tPtr <CTTSNotifySink>			mNotifySink;
+	tPtr <CTTSBufNotifySink>		mBufNotifySink;
+	COwnPtrArray <AbandonedData>	mAbandoned;
 };
 
 #pragma warning (pop)

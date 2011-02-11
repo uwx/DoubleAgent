@@ -843,6 +843,9 @@ bool CAgentCharacterWnd::StartMouthAnimation (long pSpeakingDuration)
 	CAgentStreamInfo *	lStreamInfo;
 	long				lAnimationNdx = -1;
 	long				lSpeakingFrameNdx = -1;
+#ifdef	DebugTimeStart
+	DebugTimeStart
+#endif
 
 	if	(
 			(lAgentFile = GetAgentFile())
@@ -878,10 +881,9 @@ bool CAgentCharacterWnd::StartMouthAnimation (long pSpeakingDuration)
 #ifdef	_DEBUG_SPEECH_MOUTH
 				if	(LogIsActive (_DEBUG_SPEECH_MOUTH))
 				{
-					LogMessage (_DEBUG_SPEECH_MOUTH, _T("[%p(%d)]   Speech MouthAnimation [%d] [%ls] Frame [%d] started [%d]"), this, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName), lSpeakingFrameNdx, pSpeakingDuration);
+					LogMessage (_DEBUG_SPEECH_MOUTH, _T("[%p(%d)]   Speech MouthAnimation [%d] [%ls] Frame [%d] Duration [%d]"), this, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName), lSpeakingFrameNdx, pSpeakingDuration);
 				}
 #endif
-				PlayMouthAnimation (-1, true);
 				lRet = true;
 			}
 			else
@@ -890,6 +892,10 @@ bool CAgentCharacterWnd::StartMouthAnimation (long pSpeakingDuration)
 			}
 		}
 	}
+#ifdef	DebugTimeStart
+	DebugTimeStop
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f   CAgentCharacterWnd::StartMouthAnimation"), DebugTimeElapsed);
+#endif
 	return lRet;
 }
 
@@ -952,7 +958,7 @@ bool CAgentCharacterWnd::PlayMouthAnimation (short pMouthOverlayNdx, bool pPlayA
 				LogMessage (_DEBUG_SPEECH_MOUTH, _T("[%p(%d)]   Speech MouthAnimation [%d] from [%d] to [%d]"), this, mCharID, pMouthOverlayNdx, lStartPosition, lStopPosition);
 			}
 #endif
-			if	(SUCCEEDED (PlayFromTo (lStartPosition, lStopPosition, (pMouthOverlayNdx < 0))))
+			if	(SUCCEEDED (PlayFromTo (lStartPosition, lStopPosition, (pMouthOverlayNdx < 0), 0)))
 			{
 				lRet = true;
 			}
@@ -1084,7 +1090,10 @@ LRESULT CAgentCharacterWnd::OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lP
 		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%d)] CAgentCharacterWnd   OnVoiceStartMsg"), this, mCharID);
 	}
 #endif
-	StartMouthAnimation ();
+	if	(StartMouthAnimation ())
+	{
+		PlayMouthAnimation (-1, true);
+	}
 	return 0;
 }
 

@@ -36,7 +36,28 @@
 		</tr>
 		<tr>
 			<td class="page">
-				<p><img src="../images/construction.gif" alt="Under construction" /></p>
+				<p>If you install Microsoft<sup>®</sup> Agent on Windows 7 using the <a target="_blank" href="http://support.microsoft.com/Default.aspx?kbid=969168">
+				KB969168</a> hotfix, it&#39;s installed using Windows Resource Protection. This means that it&#39;s treated
+					as part of Windows, and no aspect of its installation can be changed (except by Microsoft). Therefore,
+					if you install both the Microsoft<sup>®</sup> Agent hotfix and Double Agent:</p>
+				<ul>
+					<li>The Microsoft<sup>®</sup> Agent hotfix <b>must</b> be installed <b>before</b> Double Agent. If you&#39;ve
+						already installed Double Agent, you must remove it <b>before</b> installing the Microsoft<sup>®</sup>
+						Agent hotfix. You can reinstall Double Agent after the hotfix is installed.</li>
+					<li>If you install the Microsoft<sup>®</sup> Agent hotfix while Double Agent is installed, you must remove
+						the hotfix <b>first</b>, then remove Double Agent, then reinstall them in the correct order.</li>
+					<li>
+						<p>There will be limitations in Double Agent&#39;s ability to emulate Microsoft<sup>®</sup> Agent. This
+							is because emulation is achieved by redirecting Microsoft<sup>®</sup> Agent COM classes to Double Agent
+							COM classes using the <b>TreatAs</b> registry entry. However, the Microsoft<sup>®</sup> Agent registration
+							in the <code class="inline">HKEY_LOCAL_MACHINE</code> registry hive cannot be changed, so the <b>TreatAs</b>
+							redirection can only be set in the <code class="inline">HKEY_CURRENT_USER</code> registry hive.</p>
+						<p>When you use the Double Agent control panel to enable Microsoft<sup>®</sup> Agent emulation, it can only
+							apply to the <b>current</b> user. In addition, any application that runs with elevated permissions (i.e.
+							&quot;as administrator&quot;) will <b>not</b> recognize the emulation (because elevated processes ignore
+							per-user COM configuration).</p>
+					</li>
+				</ul>
 			</td>
 		</tr>
 	</table>

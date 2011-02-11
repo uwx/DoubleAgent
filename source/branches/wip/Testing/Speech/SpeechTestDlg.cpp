@@ -454,6 +454,8 @@ bool CSpeechTestDlg::LoadedAgentCharacter (INT_PTR pCharNdx)
 		if	(mCharacter[pCharNdx] != NULL)
 		{
 			mCharacter[pCharNdx].Style |= CharacterStyle_IdleEnabled;
+//			mCharacter[pCharNdx].Style &= ~CharacterStyle_IdleEnabled;
+
 			lResult = mCharacter[pCharNdx]->Show (FALSE, &lReqID);
 			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Show [%d]"), mCharacterId[pCharNdx], lReqID)))
 			{

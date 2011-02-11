@@ -401,26 +401,19 @@ HRESULT DaControl::ConnectServer ()
 			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::ConnectServer"), this, max(m_dwRef,-1));
 		}
 #endif
-		mServerNotifySink->Terminate ();
+		try
+		{
+			mServerNotifySink->Terminate ();
+		}
+		catch AnyExceptionDebug
 		SafeFreeSafePtr (mServerNotifySink);
 
-#ifdef	_WIN64
-		if	(
-				(mAutoConnect != 32)
-			||	(FAILED (lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer)))
-			)
+		try
 		{
+#ifdef	_WIN64
 			if	(
-					(FAILED (lResult))
-				&&	(lResult != REGDB_E_CLASSNOTREG)
-				)
-			{
-				LogComErr (LogNormal|LogTime, lResult, _T("Create Server (32)"));
-			}
-			else
-			if	(
-					(FAILED (lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer)))
-				&&	(mAutoConnect != 32)
+					(mAutoConnect != 32)
+				||	(FAILED (lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer)))
 				)
 			{
 				if	(
@@ -428,35 +421,31 @@ HRESULT DaControl::ConnectServer ()
 					&&	(lResult != REGDB_E_CLASSNOTREG)
 					)
 				{
-					LogComErr (LogNormal|LogTime, lResult, _T("Create Server (64)"));
+					LogComErr (LogNormal|LogTime, lResult, _T("Create Server (32)"));
 				}
 				else
+				if	(
+						(FAILED (lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer)))
+					&&	(mAutoConnect != 32)
+					)
 				{
-					LogComErr (LogNormal|LogTime, lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server (default)"));
+					if	(
+							(FAILED (lResult))
+						&&	(lResult != REGDB_E_CLASSNOTREG)
+						)
+					{
+						LogComErr (LogNormal|LogTime, lResult, _T("Create Server (64)"));
+					}
+					else
+					{
+						LogComErr (LogNormal|LogTime, lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server (default)"));
+					}
 				}
 			}
-		}
 #else
-		if	(
-				(mAutoConnect != 64)
-			||	(FAILED (lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer)))
-			)
-		{
 			if	(
-					(FAILED (lResult))
-				&&	(lResult != REGDB_E_CLASSNOTREG)
-				&&	(lResult != E_INVALIDARG)
-				)
-			{
-				LogComErr (LogNormal|LogTime, lResult, _T("Create Server (64)"));
-			}
-			else
-			if	(
-					(FAILED (lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer)))
-				&&	(
-						(mAutoConnect != 64)
-					||	(lResult == E_INVALIDARG)
-					)
+					(mAutoConnect != 64)
+				||	(FAILED (lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer)))
 				)
 			{
 				if	(
@@ -465,27 +454,57 @@ HRESULT DaControl::ConnectServer ()
 					&&	(lResult != E_INVALIDARG)
 					)
 				{
-					LogComErr (LogNormal|LogTime, lResult, _T("Create Server (32)"));
+					LogComErr (LogNormal|LogTime, lResult, _T("Create Server (64)"));
 				}
 				else
+				if	(
+						(FAILED (lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER, __uuidof(IDaServer2), (void**)&mServer)))
+					&&	(
+							(mAutoConnect != 64)
+						||	(lResult == E_INVALIDARG)
+						)
+					)
 				{
-					LogComErr (LogNormal|LogTime, lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server (default)"));
+					if	(
+							(FAILED (lResult))
+						&&	(lResult != REGDB_E_CLASSNOTREG)
+						&&	(lResult != E_INVALIDARG)
+						)
+					{
+						LogComErr (LogNormal|LogTime, lResult, _T("Create Server (32)"));
+					}
+					else
+					{
+						LogComErr (LogNormal|LogTime, lResult = CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_LOCAL_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server (default)"));
+					}
 				}
 			}
+#endif
+		}
+		catch AnyExceptionDebug
+
+#ifdef	_LOG_INSTANCE
+		if	(LogIsActive())
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::ConnectServer [%p]"), this, max(m_dwRef,-1), mServer.GetInterfacePtr());
 		}
 #endif
 
-		if	(
-				(SUCCEEDED (lResult))
-			&&	(SUCCEEDED (lResult = CComObject <CServerNotifySink>::CreateInstance (mServerNotifySink.Free())))
-			)
+		try
 		{
-			lResult = mServerNotifySink->Initialize (this);
+			if	(
+					(SUCCEEDED (lResult))
+				&&	(SUCCEEDED (lResult = CComObject <CServerNotifySink>::CreateInstance (mServerNotifySink.Free())))
+				)
+			{
+				lResult = mServerNotifySink->Initialize (this);
+			}
+			if	(mServer)
+			{
+				mServer->put_CharacterStyle (mLocalCharacterStyle &~LocalCharacterStyle);
+			}
 		}
-		if	(mServer)
-		{
-			mServer->put_CharacterStyle (mLocalCharacterStyle &~LocalCharacterStyle);
-		}
+		catch AnyExceptionDebug
 
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
