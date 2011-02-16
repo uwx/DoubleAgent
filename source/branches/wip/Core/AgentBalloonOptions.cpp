@@ -131,6 +131,11 @@ bool CAgentBalloonOptions::IsAutoHide () const
 	return ((mStyle & BalloonStyle_AutoHide) != 0);
 }
 
+bool CAgentBalloonOptions::AppendText () const
+{
+	return (((mStyle & BalloonStyle_SizeToText) == 0) && ((mStyle & BalloonStyle_NoAppend) == 0));
+}
+
 bool CAgentBalloonOptions::ClipPartialLines () const
 {
 	return (((mStyle & BalloonStyle_SizeToText) == 0) && ((mStyle & BalloonStyle_ShowPartialLines) == 0));
@@ -315,7 +320,7 @@ void CAgentBalloonOptions::LogOptions (UINT pLogLevel, LPCTSTR pTitle, LPCTSTR p
 			{
 				lPrefix += _T(' ');
 			}
-			LogMessage (pLogLevel, _T("%s%s [%8.8X] AutoSize [%u] AutoPace [%u] AutoHide [%u] PartialLines [%u]"), lPrefix, lTitle, mStyle, IsAutoSize(), IsAutoPace(), IsAutoHide(), !ClipPartialLines());
+			LogMessage (pLogLevel, _T("%s%s [%8.8X] AutoSize [%u] AutoPace [%u] AutoHide [%u] Append [%u] PartialLines [%u]"), lPrefix, lTitle, mStyle, IsAutoSize(), IsAutoPace(), IsAutoHide(), AppendText(), !ClipPartialLines());
 			LogMessage (pLogLevel, _T("%s%*c Lines [%hu] PerLine [%hu] BkColor [%8.8X] FgColor [%8.8X] BrColor [%8.8X]"), lPrefix, lTitle.GetLength(), _T(' '), mLines, mPerLine, mBkColor, mFgColor, mBrColor);
 		}
 		catch AnyExceptionSilent

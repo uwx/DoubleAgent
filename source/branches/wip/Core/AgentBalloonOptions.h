@@ -56,6 +56,7 @@ public:
 	_DACORE_IMPEXP bool IsAutoSize () const;
 	_DACORE_IMPEXP bool IsAutoPace () const;
 	_DACORE_IMPEXP bool IsAutoHide () const;
+	_DACORE_IMPEXP bool AppendText () const;
 	_DACORE_IMPEXP bool ClipPartialLines () const;
 
 // Operations

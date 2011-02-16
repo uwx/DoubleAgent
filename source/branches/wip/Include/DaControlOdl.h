@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Thu Feb 03 12:27:58 2011
+/* at Wed Feb 16 01:22:34 2011
  */
 /* Compiler settings for .\Control\DaControl.odl:
-    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -509,7 +509,8 @@ enum BalloonStyleFlags
 	BalloonStyle_SizeToText	= 0x2,
 	BalloonStyle_AutoHide	= 0x4,
 	BalloonStyle_AutoPace	= 0x8,
-	BalloonStyle_ShowPartialLines	= 0x10
+	BalloonStyle_NoAppend	= 0x10,
+	BalloonStyle_ShowPartialLines	= 0x20
     } 	BalloonStyleFlags;
 
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56C-A208-11DE-ABF2-002421116FB2") 
@@ -956,7 +957,9 @@ enum RequestStatus
 
 #define	DISPID_IDaCtlBalloon2_AutoPace	( 19 )
 
-#define	DISPID_IDaCtlBalloon2_ShowPartialLines	( 20 )
+#define	DISPID_IDaCtlBalloon2_NoAppend	( 20 )
+
+#define	DISPID_IDaCtlBalloon2_ShowPartialLines	( 21 )
 
 #define	DISPID_IAgentCtlCommands_Count	( 2 )
 
@@ -7594,6 +7597,12 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_AutoPace( 
             /* [in] */ VARIANT_BOOL AutoPace) = 0;
         
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_NoAppend( 
+            /* [retval][out] */ VARIANT_BOOL *NoAppend) = 0;
+        
+        virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_NoAppend( 
+            /* [in] */ VARIANT_BOOL NoAppend) = 0;
+        
         virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ShowPartialLines( 
             /* [retval][out] */ VARIANT_BOOL *ShowPartialLines) = 0;
         
@@ -7825,6 +7834,14 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             IDaCtlBalloon2 * This,
             /* [in] */ VARIANT_BOOL AutoPace);
         
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_NoAppend )( 
+            IDaCtlBalloon2 * This,
+            /* [retval][out] */ VARIANT_BOOL *NoAppend);
+        
+        /* [displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_NoAppend )( 
+            IDaCtlBalloon2 * This,
+            /* [in] */ VARIANT_BOOL NoAppend);
+        
         /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ShowPartialLines )( 
             IDaCtlBalloon2 * This,
             /* [retval][out] */ VARIANT_BOOL *ShowPartialLines);
@@ -8001,6 +8018,12 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
 
 #define IDaCtlBalloon2_put_AutoPace(This,AutoPace)	\
     ( (This)->lpVtbl -> put_AutoPace(This,AutoPace) ) 
+
+#define IDaCtlBalloon2_get_NoAppend(This,NoAppend)	\
+    ( (This)->lpVtbl -> get_NoAppend(This,NoAppend) ) 
+
+#define IDaCtlBalloon2_put_NoAppend(This,NoAppend)	\
+    ( (This)->lpVtbl -> put_NoAppend(This,NoAppend) ) 
 
 #define IDaCtlBalloon2_get_ShowPartialLines(This,ShowPartialLines)	\
     ( (This)->lpVtbl -> get_ShowPartialLines(This,ShowPartialLines) ) 

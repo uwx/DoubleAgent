@@ -275,6 +275,12 @@
 			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.Enabled']/remarks" />
 		</member>
 
+		<member name="F:&dans;.BalloonStyleFlags.NoAppend">
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.NoAppend']/summary" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.NoAppend']/value" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.NoAppend']/remarks" />
+		</member>
+
 		<member name="F:&dans;.BalloonStyleFlags.ShowPartialLines">
 			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.ShowPartialLines']/summary" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='F:&dactlns;.BalloonStyleFlags.ShowPartialLines']/value" />

@@ -163,6 +163,7 @@ cpp_quote("#endif")
 	const long	BALLOON_STYLE_SIZETOTEXT				= BalloonStyle_SizeToText;
 	const long	BALLOON_STYLE_AUTOHIDE					= BalloonStyle_AutoHide;
 	const long	BALLOON_STYLE_AUTOPACE					= BalloonStyle_AutoPace;
+	const long	BALLOON_STYLE_NO_APPEND					= BalloonStyle_NoAppend;
 	const long	BALLOON_STYLE_PARTIAL_LINES				= BalloonStyle_ShowPartialLines;
 
 	const long	AUDIO_STATUS_AVAILABLE					= AudioStatus_Available;

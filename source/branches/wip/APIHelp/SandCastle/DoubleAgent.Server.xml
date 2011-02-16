@@ -146,9 +146,18 @@
 </remarks>
 </member>
 
+<member name="F:DoubleAgent.Server.BalloonStyleFlags.NoAppend">
+<summary>Prevents the <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> from appending text when it's already visible (for a <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> that's <em>not</em> SizeToText).</summary>
+<value>0x00000010</value>
+<remarks>
+<para>When the <see cref="F:DoubleAgent.Server.BalloonStyleFlags.NoAppend" /> style is set, the <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> will not append new text to existing text. When it's not set, new text is appended if the <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> is visible. This style only applies when the <see cref="F:DoubleAgent.Server.BalloonStyleFlags.SizeToText" /> style is <em>not</em> set.
+</para>
+</remarks>
+</member>
+
 <member name="F:DoubleAgent.Server.BalloonStyleFlags.ShowPartialLines">
 <summary>Partial lines are shown when the <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> text scrolls (for a <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> that's <em>not</em> SizeToText).</summary>
-<value>0x00000010</value>
+<value>0x00000020</value>
 <remarks>
 <para>When the <see cref="F:DoubleAgent.Server.BalloonStyleFlags.ShowPartialLines" /> style is set, the <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> will show partial lines at the bottom as it scrolls its text. When it's not set, only full lines are shown. This style only applies when the <see cref="F:DoubleAgent.Server.BalloonStyleFlags.SizeToText" /> style is <em>not</em> set.
 </para>
@@ -1658,7 +1667,12 @@ server-&gt;Load (EmptyProvider, &amp;CharacterID, &amp;RequestID)</code></exampl
 <description>The text in the <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> is shown one word at a time.</description>
 </item>
 <item><term xml:space="preserve">
-0x00000010 = ShowPartialLines
+0x00000010 = NoAppend
+</term>
+<description>Prevents the <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> from appending text when it's already visible (for a <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> that's <em>not</em> SizeToText).</description>
+</item>
+<item><term xml:space="preserve">
+0x00000020 = ShowPartialLines
 </term>
 <description>Partial lines are shown when the <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> text scrolls (for a <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> that's <em>not</em> SizeToText).</description>
 </item>

@@ -548,7 +548,8 @@
 #define	APIHELP_Ctl_Balloon_SizeToText						0x01060011
 #define	APIHELP_Ctl_Balloon_AutoHide						0x01060012
 #define	APIHELP_Ctl_Balloon_AutoPace						0x01060013
-#define	APIHELP_Ctl_Balloon_ShowPartialLines				0x01060014
+#define	APIHELP_Ctl_Balloon_NoAppend						0x01060014
+#define	APIHELP_Ctl_Balloon_ShowPartialLines				0x01060015
 
 #define	APIHELP_Ctl_Commands								0x01070000
 #define	APIHELP_Ctl_Commands_Item							0x01070001

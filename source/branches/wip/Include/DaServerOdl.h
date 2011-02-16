@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Thu Feb 03 12:22:35 2011
+/* at Wed Feb 16 01:17:57 2011
  */
 /* Compiler settings for .\Server\DaServer.odl:
-    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -485,7 +485,8 @@ enum BalloonStyleFlags
 	BalloonStyle_SizeToText	= 0x2,
 	BalloonStyle_AutoHide	= 0x4,
 	BalloonStyle_AutoPace	= 0x8,
-	BalloonStyle_ShowPartialLines	= 0x10
+	BalloonStyle_NoAppend	= 0x10,
+	BalloonStyle_ShowPartialLines	= 0x20
     } 	BalloonStyleFlags;
 
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56C-A208-11DE-ABF2-002421116FB2") 
@@ -690,6 +691,8 @@ enum FilesFilterFlags
 #define	BALLOON_STYLE_AUTOHIDE	( BalloonStyle_AutoHide )
 
 #define	BALLOON_STYLE_AUTOPACE	( BalloonStyle_AutoPace )
+
+#define	BALLOON_STYLE_NO_APPEND	( BalloonStyle_NoAppend )
 
 #define	BALLOON_STYLE_PARTIAL_LINES	( BalloonStyle_ShowPartialLines )
 

@@ -310,12 +310,29 @@
 			<seealso cref="P:&dans;.Balloon.Enabled" suffix="Property" prefix="The" />
 		</member>
 
+		<member name="F:&dans;.BalloonStyleFlags.NoAppend">
+			<summary>
+				Prevents the <a class="see" href="&dawbref;">&dawbname;</a> from appending text when it's
+				already visible (for a <a class="see" href="&dawbref;">&dawbname;</a> that's <em>not</em> <keyword>SizeToText</keyword>).
+			</summary>
+			<value>&hexprefix;00000010</value>
+			<remarks>
+				<para>
+					When the <see cref="F:&dans;.BalloonStyleFlags.NoAppend" /> style is set, the <a class="see" href="&dawbref;">&dawbname;</a>
+					will not append new text to existing text. When it's not set, new text is appended if the <a class="see" href="&dawbref;">&dawbname;</a>
+					is visible. This style only applies when the <see cref="F:&dans;.BalloonStyleFlags.SizeToText" /> style is
+					<em>not</em> set.
+				</para>
+			</remarks>
+			<seealso cref="P:&dans;.Balloon.NoAppend" suffix="Property" prefix="The" />
+		</member>
+
 		<member name="F:&dans;.BalloonStyleFlags.ShowPartialLines">
 			<summary>
 				Partial lines are shown when the <a class="see" href="&dawbref;">&dawbname;</a> text scrolls (for
 				a <a class="see" href="&dawbref;">&dawbname;</a> that's <em>not</em> <keyword>SizeToText</keyword>).
 			</summary>
-			<value>&hexprefix;00000010</value>
+			<value>&hexprefix;00000020</value>
 			<remarks>
 				<para>
 					When the <see cref="F:&dans;.BalloonStyleFlags.ShowPartialLines" /> style is set, the <a class="see" href="&dawbref;">&dawbname;</a>
@@ -387,6 +404,14 @@
 </term>
 						<description>
 							<copy path="/doc/members/member[@name='F:&dans;.BalloonStyleFlags.AutoPace']/summary" />
+						</description>
+					</item>
+					<item>
+						<term xml:space="preserve">
+<copy path="/doc/members/member[@name='F:&dans;.BalloonStyleFlags.NoAppend']/value" /> = <keyword>NoAppend</keyword>
+</term>
+						<description>
+							<copy path="/doc/members/member[@name='F:&dans;.BalloonStyleFlags.NoAppend']/summary" />
 						</description>
 					</item>
 					<item>
@@ -7039,8 +7064,8 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 					or Hebrew), but the system running your application does not have bidirectional support installed,
 					text in the <a class="see" href="&dawbref;">&dawbname;</a> may appear in logical rather than display order.
 				</note>
-			
-		</details>
+
+			</details>
 			<seealso cref="P:&dans;.Character.TTSModeID" prefix="The" suffix="Property" />
 			<seealso cref="P:&dans;.Character.SRModeID" prefix="The" suffix="Property" />
 		</member>
@@ -11402,6 +11427,12 @@ Command1.<keyword>Enabled</keyword> = True</code>
 					<item>
 						<term>bit 4 (&hexprefix;00000010)</term>
 						<description>
+							<see cref="P:&dans;.Balloon.NoAppend" />
+						</description>
+					</item>
+					<item>
+						<term>bit 5 (&hexprefix;00000020)</term>
+						<description>
 							<see cref="P:&dans;.Balloon.ShowPartialLines" />
 						</description>
 					</item>
@@ -11444,6 +11475,9 @@ Command1.<keyword>Enabled</keyword> = True</code>
 						<include path="/doc/members/member[@name='F:&dans;.BalloonStyleFlags.AutoPace']/remarks/para" />
 					</item>
 					<item>
+						<include path="/doc/members/member[@name='F:&dans;.BalloonStyleFlags.NoAppend']/remarks/para" />
+					</item>
+					<item>
 						<include path="/doc/members/member[@name='F:&dans;.BalloonStyleFlags.ShowPartialLines']/remarks/para" />
 					</item>
 					<item>
@@ -11462,13 +11496,14 @@ Command1.<keyword>Enabled</keyword> = True</code>
 				</note>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
 			</details>
-			<seealso cref="P:&dans;.Balloon.AutoHide" prefix="The" suffix="Property" />
-			<seealso cref="P:&dans;.Balloon.AutoPace" prefix="The" suffix="Property" />
-			<seealso cref="P:&dans;.Balloon.CharsPerLine" prefix="The" suffix="Property" />
-			<seealso cref="P:&dans;.Balloon.NumberOfLines" prefix="The" suffix="Property" />
 			<seealso cref="P:&dans;.Balloon.Enabled" prefix="The" suffix="Property" />
 			<seealso cref="P:&dans;.Balloon.SizeToText" prefix="The" suffix="Property" />
+			<seealso cref="P:&dans;.Balloon.AutoHide" prefix="The" suffix="Property" />
+			<seealso cref="P:&dans;.Balloon.AutoPace" prefix="The" suffix="Property" />
+			<seealso cref="P:&dans;.Balloon.NoAppend" prefix="The" suffix="Property" />
 			<seealso cref="P:&dans;.Balloon.ShowPartialLines" prefix="The" suffix="Property" />
+			<seealso cref="P:&dans;.Balloon.CharsPerLine" prefix="The" suffix="Property" />
+			<seealso cref="P:&dans;.Balloon.NumberOfLines" prefix="The" suffix="Property" />
 			<seealso cref="T:&dans;.BalloonStyleFlags" suffix="Enumeration" prefix="The" />
 		</member>
 
@@ -11585,6 +11620,38 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</value>
 			<remarks>
 				<include path="/doc/members/member[@name='F:&dans;.BalloonStyleFlags.AutoPace']/remarks/para" />
+			</remarks>
+			<seealso cref="P:&dans;.Balloon.Style" prefix="The" suffix="Property" />
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:&dans;.Balloon.NoAppend">
+			<summary>
+				<para>
+					Indicates if the <a class="see" href="&dawbref;">&dawbname;</a> appends text when it's visible.
+				</para>
+			</summary>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>balloon</token>-&gt;<keyword>get_NoAppend</keyword> (<token>&amp;NoAppend</token>)</para>
+<para><token>balloon</token>-&gt;<keyword>put_NoAppend</keyword> (<token>NoAppend</token>)</para>
+</cpp>
+<csharp>
+<para>[<token>NoAppend</token> = ]&dacharref_csharp;.<keyword>Balloon</keyword>.<keyword>NoAppend</keyword></para>
+<para>&dacharref_csharp;.<keyword>Balloon</keyword>.<keyword>NoAppend</keyword> = <token>NoAppend</token></para>
+</csharp>
+<vb>
+<para>[<token>NoAppend</token> = ]&dacharref_vb;.<keyword>Balloon</keyword>.<keyword>NoAppend</keyword></para>
+<para>&dacharref_vb;.<keyword>Balloon</keyword>.<keyword>NoAppend</keyword> = <token>NoAppend</token></para>
+</vb>
+</syntax>
+			<value name="NoAppend">
+				A <typename>boolean</typename> value that indicates if the <see cref="F:&dans;.BalloonStyleFlags.NoAppend" />
+				style is enabled.
+			</value>
+			<remarks>
+				<include path="/doc/members/member[@name='F:&dans;.BalloonStyleFlags.NoAppend']/remarks/para" />
 			</remarks>
 			<seealso cref="P:&dans;.Balloon.Style" prefix="The" suffix="Property" />
 		</member>
@@ -11788,6 +11855,14 @@ Command1.<keyword>Enabled</keyword> = True</code>
 									</term>
 									<description>
 										<copy path="/doc/members/member[@name='P:&dans;.Balloon.NumberOfLines']/summary/para[1]" />
+									</description>
+								</item>
+								<item>
+									<term>
+										<see cref="P:&dans;.Balloon.NoAppend" />
+									</term>
+									<description>
+										<copy path="/doc/members/member[@name='P:&dans;.Balloon.NoAppend']/summary/para[1]" />
 									</description>
 								</item>
 								<item>

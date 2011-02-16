@@ -19,8 +19,10 @@ cpp_quote("#define _DA_COMMON_TYPES_")
 			BalloonStyle_AutoHide = 0x00000004,
 		[helpstring("The text in the word balloon is shown one word at a time")]
 			BalloonStyle_AutoPace = 0x00000008,
+		[helpstring("Text is not appended to the existing text in the balloon (for a word balloon that isn't SizeToText)")]
+			BalloonStyle_NoAppend = 0x00000010,
 		[helpstring("Partial lines are shown when the balloon text scrolls (for a word balloon that isn't SizeToText)")]
-			BalloonStyle_ShowPartialLines = 0x00000010
+			BalloonStyle_ShowPartialLines = 0x00000020
 	}	BalloonStyleFlags;
 
 	[

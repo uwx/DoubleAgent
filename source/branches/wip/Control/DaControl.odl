@@ -765,7 +765,8 @@ cpp_quote("#endif")
 	const DISPID DISPID_IDaCtlBalloon2_SizeToText = 17;
 	const DISPID DISPID_IDaCtlBalloon2_AutoHide = 18;
 	const DISPID DISPID_IDaCtlBalloon2_AutoPace = 19;
-	const DISPID DISPID_IDaCtlBalloon2_ShowPartialLines = 20;
+	const DISPID DISPID_IDaCtlBalloon2_NoAppend = 20;
+	const DISPID DISPID_IDaCtlBalloon2_ShowPartialLines = 21;
 
 	[
 		odl,
@@ -814,6 +815,9 @@ cpp_quote("#endif")
 		[helpstring("Is the text in the word balloon shown one word at a time? (see also: Style)"), helpcontext(APIHELP_Ctl_Balloon_AutoPace),
 			id(DISPID_IDaCtlBalloon2_AutoPace), propget, bindable, displaybind] HRESULT AutoPace ([out, retval] VARIANT_BOOL* AutoPace);
 			[id(DISPID_IDaCtlBalloon2_AutoPace), propput, bindable, displaybind] HRESULT AutoPace ([in] VARIANT_BOOL AutoPace);
+		[helpstring("Is text appended to the existing text in the balloon (for a word balloon that isn't SizeToText)? (see also: Style)"), helpcontext(APIHELP_Ctl_Balloon_NoAppend),
+			id(DISPID_IDaCtlBalloon2_NoAppend), propget, bindable, displaybind] HRESULT NoAppend ([out, retval] VARIANT_BOOL* NoAppend);
+			[id(DISPID_IDaCtlBalloon2_NoAppend), propput, bindable, displaybind] HRESULT NoAppend ([in] VARIANT_BOOL NoAppend);
 		[helpstring("Are partial lines shown when the balloon text scrolls (for a word balloon that isn't SizeToText)? (see also: Style)"), helpcontext(APIHELP_Ctl_Balloon_ShowPartialLines),
 			id(DISPID_IDaCtlBalloon2_ShowPartialLines), propget, bindable, displaybind] HRESULT ShowPartialLines ([out, retval] VARIANT_BOOL* ShowPartialLines);
 			[id(DISPID_IDaCtlBalloon2_ShowPartialLines), propput, bindable, displaybind] HRESULT ShowPartialLines ([in] VARIANT_BOOL ShowPartialLines);

@@ -84,6 +84,7 @@ __if_not_exists(IDaCtlBalloon2Ptr)
 		__declspec(property(get=_get_SizeToText, put=_put_SizeToText))									bool					SizeToText;
 		__declspec(property(get=_get_AutoHide, put=_put_AutoHide))										bool					AutoHide;
 		__declspec(property(get=_get_AutoPace, put=_put_AutoPace))										bool					AutoPace;
+		__declspec(property(get=_get_NoAppend, put=_put_NoAppend))										bool					NoAppend;
 		__declspec(property(get=_get_ShowPartialLines, put=_put_ShowPartialLines))						bool					ShowPartialLines;
 
 		bool _get_Enabled () {VARIANT_BOOL lEnabled=VARIANT_FALSE; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_Enabled(&lEnabled); return lEnabled?true:false;}
@@ -121,6 +122,8 @@ __if_not_exists(IDaCtlBalloon2Ptr)
 		HRESULT _put_AutoHide (bool Value) {if (_DACTLPTR_CHKNULL) return GetInterfacePtr()->put_AutoHide(Value?VARIANT_TRUE:VARIANT_FALSE); else return E_POINTER;}
 		bool _get_AutoPace () {VARIANT_BOOL lAutoPace=VARIANT_FALSE; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_AutoPace(&lAutoPace); return lAutoPace?true:false;}
 		HRESULT _put_AutoPace (bool Value) {if (_DACTLPTR_CHKNULL) return GetInterfacePtr()->put_AutoPace(Value?VARIANT_TRUE:VARIANT_FALSE); else return E_POINTER;}
+		bool _get_NoAppend () {VARIANT_BOOL lNoAppend=VARIANT_FALSE; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_NoAppend(&lNoAppend); return lNoAppend?true:false;}
+		HRESULT _put_NoAppend (bool Value) {if (_DACTLPTR_CHKNULL) return GetInterfacePtr()->put_NoAppend(Value?VARIANT_TRUE:VARIANT_FALSE); else return E_POINTER;}
 		bool _get_ShowPartialLines () {VARIANT_BOOL lShowPartialLines=VARIANT_FALSE; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_ShowPartialLines(&lShowPartialLines); return lShowPartialLines?true:false;}
 		HRESULT _put_ShowPartialLines (bool Value) {if (_DACTLPTR_CHKNULL) return GetInterfacePtr()->put_ShowPartialLines(Value?VARIANT_TRUE:VARIANT_FALSE); else return E_POINTER;}
 	};

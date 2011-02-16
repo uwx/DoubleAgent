@@ -114,9 +114,19 @@
 <seealso cref="P:DoubleAgent.Control.Balloon.Enabled" />
 </member>
 
+<member name="F:DoubleAgent.Control.BalloonStyleFlags.NoAppend">
+<summary>Prevents the <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> from appending text when it's already visible (for a <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> that's <em>not</em> SizeToText).</summary>
+<value>&amp;H00000010</value>
+<remarks>
+<para>When the <see cref="F:DoubleAgent.Control.BalloonStyleFlags.NoAppend" /> style is set, the <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> will not append new text to existing text. When it's not set, new text is appended if the <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> is visible. This style only applies when the <see cref="F:DoubleAgent.Control.BalloonStyleFlags.SizeToText" /> style is <em>not</em> set.
+</para>
+</remarks>
+<seealso cref="P:DoubleAgent.Control.Balloon.NoAppend" />
+</member>
+
 <member name="F:DoubleAgent.Control.BalloonStyleFlags.ShowPartialLines">
 <summary>Partial lines are shown when the <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> text scrolls (for a <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> that's <em>not</em> SizeToText).</summary>
-<value>&amp;H00000010</value>
+<value>&amp;H00000020</value>
 <remarks>
 <para>When the <see cref="F:DoubleAgent.Control.BalloonStyleFlags.ShowPartialLines" /> style is set, the <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> will show partial lines at the bottom as it scrolls its text. When it's not set, only full lines are shown. This style only applies when the <see cref="F:DoubleAgent.Control.BalloonStyleFlags.SizeToText" /> style is <em>not</em> set.
 </para>
@@ -3446,6 +3456,10 @@ Command2.VoiceCaption = "this is a test"</code></example></remarks>
 </item>
 <item>
 <term>bit 4 (&amp;H00000010)</term>
+<description> <see cref="P:DoubleAgent.Control.Balloon.NoAppend" /></description>
+</item>
+<item>
+<term>bit 5 (&amp;H00000020)</term>
 <description> <see cref="P:DoubleAgent.Control.Balloon.ShowPartialLines" /></description>
 </item>
 <item>
@@ -3464,13 +3478,14 @@ Command2.VoiceCaption = "this is a test"</code></example></remarks>
 <para>The defaults for the Style property are set when the character is compiled with the Microsoft<sup>®</sup> Agent Character Editor.
 </para>
 </remarks>
-<seealso cref="P:DoubleAgent.Control.Balloon.AutoHide" />
-<seealso cref="P:DoubleAgent.Control.Balloon.AutoPace" />
-<seealso cref="P:DoubleAgent.Control.Balloon.CharsPerLine" />
-<seealso cref="P:DoubleAgent.Control.Balloon.NumberOfLines" />
 <seealso cref="P:DoubleAgent.Control.Balloon.Enabled" />
 <seealso cref="P:DoubleAgent.Control.Balloon.SizeToText" />
+<seealso cref="P:DoubleAgent.Control.Balloon.AutoHide" />
+<seealso cref="P:DoubleAgent.Control.Balloon.AutoPace" />
+<seealso cref="P:DoubleAgent.Control.Balloon.NoAppend" />
 <seealso cref="P:DoubleAgent.Control.Balloon.ShowPartialLines" />
+<seealso cref="P:DoubleAgent.Control.Balloon.CharsPerLine" />
+<seealso cref="P:DoubleAgent.Control.Balloon.NumberOfLines" />
 <seealso cref="T:DoubleAgent.Control.BalloonStyleFlags" />
 </member>
 
@@ -3504,6 +3519,16 @@ Command2.VoiceCaption = "this is a test"</code></example></remarks>
 <value name="AutoPace">A boolean value that indicates if the <see cref="F:DoubleAgent.Control.BalloonStyleFlags.AutoPace" /> style is enabled.</value>
 <remarks>
 <para>When the <see cref="F:DoubleAgent.Control.BalloonStyleFlags.AutoPace" /> style is set, the <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> paces its text output based on the current output rate, for example one word at a time. When output exceeds the size of the <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a>, the text is automatically scrolled. When it's not set, all text included in a <see cref="M:DoubleAgent.Control.Character.Speak(System.Object,System.Object)" /> or <see cref="M:DoubleAgent.Control.Character.Think(System.String)" /> request is displayed at once.
+</para>
+</remarks>
+<seealso cref="P:DoubleAgent.Control.Balloon.Style" />
+</member>
+
+<member name="P:DoubleAgent.Control.Balloon.NoAppend">
+<summary> Indicates if the <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> appends text when it's visible.</summary>
+<value name="NoAppend">A boolean value that indicates if the <see cref="F:DoubleAgent.Control.BalloonStyleFlags.NoAppend" /> style is enabled.</value>
+<remarks>
+<para>When the <see cref="F:DoubleAgent.Control.BalloonStyleFlags.NoAppend" /> style is set, the <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> will not append new text to existing text. When it's not set, new text is appended if the <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> is visible. This style only applies when the <see cref="F:DoubleAgent.Control.BalloonStyleFlags.SizeToText" /> style is <em>not</em> set.
 </para>
 </remarks>
 <seealso cref="P:DoubleAgent.Control.Balloon.Style" />

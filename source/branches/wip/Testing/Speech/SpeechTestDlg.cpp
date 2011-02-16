@@ -75,6 +75,7 @@ BEGIN_MESSAGE_MAP(CSpeechTestDlg, CDialog)
 	ON_BN_CLICKED(IDC_BALLOON_AUTOPACE, OnBalloonAutoPace)
 	ON_BN_CLICKED(IDC_BALLOON_AUTOHIDE, OnBalloonAutoHide)
 	ON_BN_CLICKED(IDC_BALLOON_AUTOSIZE, OnBalloonAutoSize)
+	ON_BN_CLICKED(IDC_BALLOON_APPEND, OnBalloonAppend)
 	ON_BN_CLICKED(IDC_BALLOON_PARTIAL, OnBalloonPartialLines)
 	ON_CBN_SELENDOK(IDC_SPEECH_WAVE, OnSelEndOkSpeechWave)
 	ON_CBN_SELENDOK(IDC_TTS_LANGUAGE, OnSelEndOkTTSLanguages)
@@ -121,6 +122,7 @@ void CSpeechTestDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BALLOON_AUTOSIZE, mBalloonAutoSize);
 	DDX_Control(pDX, IDC_BALLOON_AUTOPACE, mBalloonAutoPace);
 	DDX_Control(pDX, IDC_BALLOON_AUTOHIDE, mBalloonAutoHide);
+	DDX_Control(pDX, IDC_BALLOON_APPEND, mBalloonAppend);
 	DDX_Control(pDX, IDC_BALLOON_PARTIAL, mBalloonPartialLines);
 	DDX_Control(pDX, IDC_BALLOON_VISIBLE, mBalloonVisible);
 	DDX_Control(pDX, IDC_AGENT_PROPS, mAgentPropsButton);
@@ -627,8 +629,10 @@ void CSpeechTestDlg::CharacterIsVisible (INT_PTR pCharNdx, bool pVisible)
 			mBalloonAutoHide.SetCheck ((lBalloon.Style & BalloonStyle_AutoHide) != 0);
 			mBalloonAutoPace.SetCheck ((lBalloon.Style & BalloonStyle_AutoPace) != 0);
 			mBalloonAutoSize.SetCheck ((lBalloon.Style & BalloonStyle_SizeToText) != 0);
+			mBalloonAppend.SetCheck ((lBalloon.Style & BalloonStyle_NoAppend) == 0);
 			mBalloonPartialLines.SetCheck ((lBalloon.Style & BalloonStyle_ShowPartialLines) != 0);
 			mBalloonVisible.SetCheck (lBalloon.Visible ? TRUE : FALSE);
+			mBalloonAppend.EnableWindow ((lBalloon.Style & BalloonStyle_SizeToText) == 0);
 			mBalloonPartialLines.EnableWindow ((lBalloon.Style & BalloonStyle_SizeToText) == 0);
 		}
 		else
@@ -636,8 +640,10 @@ void CSpeechTestDlg::CharacterIsVisible (INT_PTR pCharNdx, bool pVisible)
 			mBalloonAutoHide.SetCheck (FALSE);
 			mBalloonAutoPace.SetCheck (FALSE);
 			mBalloonAutoSize.SetCheck (FALSE);
+			mBalloonAppend.SetCheck (FALSE);
 			mBalloonPartialLines.SetCheck (FALSE);
 			mBalloonVisible.SetCheck (FALSE);
+			mBalloonAppend.EnableWindow (TRUE);
 			mBalloonPartialLines.EnableWindow (TRUE);
 		}
 
@@ -762,6 +768,8 @@ void CSpeechTestDlg::CharacterIsVisible (INT_PTR pCharNdx, bool pVisible)
 		mBalloonAutoPace.SetCheck (FALSE);
 		mBalloonAutoSize.EnableWindow (FALSE);
 		mBalloonAutoSize.SetCheck (FALSE);
+		mBalloonAppend.EnableWindow (FALSE);
+		mBalloonAppend.SetCheck (FALSE);
 		mBalloonPartialLines.EnableWindow (FALSE);
 		mBalloonPartialLines.SetCheck (FALSE);
 		mBalloonVisible.EnableWindow (FALSE);
@@ -1957,6 +1965,17 @@ void CSpeechTestDlg::OnBalloonPartialLines()
 	if	(lCharNdx >= 0)
 	{
 		mCharacter[lCharNdx].Balloon.Style ^= BalloonStyle_ShowPartialLines;
+		ShowCharacterState ();
+	}
+}
+
+void CSpeechTestDlg::OnBalloonAppend()
+{
+	INT_PTR	lCharNdx = (mActiveChar == mCharacterId[0] ? 0 : mActiveChar == mCharacterId[1] ? 1 : -1);
+
+	if	(lCharNdx >= 0)
+	{
+		mCharacter[lCharNdx].Balloon.Style ^= BalloonStyle_NoAppend;
 		ShowCharacterState ();
 	}
 }

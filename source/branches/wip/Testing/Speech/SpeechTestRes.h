@@ -29,9 +29,11 @@
 #define IDC_THINK_DESC                  1023
 #define IDC_SPEAK_NAME                  1024
 #define IDC_SPEAK_DESC                  1025
+#define IDC_BALLOON_PARTIAL2            1026
+#define IDC_BALLOON_APPEND              1026
 
 // Next default values for new objects
-//
+// 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        129

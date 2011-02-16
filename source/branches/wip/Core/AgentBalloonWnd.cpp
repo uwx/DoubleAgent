@@ -516,6 +516,11 @@ bool CAgentBalloonWnd::IsAutoHide () const
 	return mOptions.IsAutoHide ();
 }
 
+bool CAgentBalloonWnd::AppendText () const
+{
+	return mOptions.AppendText ();
+}
+
 bool CAgentBalloonWnd::ClipPartialLines () const
 {
 	return mOptions.ClipPartialLines ();
@@ -664,7 +669,7 @@ bool CAgentBalloonWnd::ShowBalloonText (const CAgentText & pText, UINT pForSpeec
 		}
 
 		if	(
-				(IsAutoSize ())
+				(!AppendText ())
 			||	(!IsWindowVisible())
 			)
 		{

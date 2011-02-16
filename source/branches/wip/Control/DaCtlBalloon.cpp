@@ -1628,7 +1628,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_SizeToText (VARIANT_BOOL SizeToText)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_SizeToText"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::put_SizeToText"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1673,7 +1673,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_AutoHide (VARIANT_BOOL *AutoHide)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_SizeToText"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_AutoHide"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1729,7 +1729,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_AutoHide (VARIANT_BOOL AutoHide)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_SizeToText"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::put_AutoHide"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1774,7 +1774,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_AutoPace (VARIANT_BOOL *AutoPace)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_SizeToText"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_AutoPace"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1830,7 +1830,108 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_AutoPace (VARIANT_BOOL AutoPace)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_SizeToText"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::put_AutoPace"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_NoAppend (VARIANT_BOOL *NoAppend)
+{
+	HRESULT	lResult = S_OK;
+	long	lStyle = 0;
+
+	if	(!NoAppend)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+
+		(*NoAppend) = (lStyle & BalloonStyle_NoAppend) ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlBalloon));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_NoAppend"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_NoAppend (VARIANT_BOOL NoAppend)
+{
+	HRESULT	lResult = S_OK;
+	long	lStyle;
+
+	if	(mLocalObject)
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mLocalObject->get_Style (&lStyle)))
+			{
+				if	(NoAppend)
+				{
+					lStyle |= BalloonStyle_NoAppend;
+				}
+				else
+				{
+					lStyle &= ~BalloonStyle_NoAppend;
+				}
+				lResult = mLocalObject->put_Style (lStyle);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
+	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mServerObject->get_Style (&lStyle)))
+			{
+				if	(NoAppend)
+				{
+					lStyle |= BalloonStyle_NoAppend;
+				}
+				else
+				{
+					lStyle &= ~BalloonStyle_NoAppend;
+				}
+				lResult = mServerObject->put_Style (lStyle);
+			}
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServerObject);
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlBalloon));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::put_NoAppend"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1875,7 +1976,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_ShowPartialLines (VARIANT_BOOL *Show
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_SizeToText"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_ShowPartialLines"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1931,7 +2032,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_ShowPartialLines (VARIANT_BOOL ShowP
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_SizeToText"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::put_ShowPartialLines"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

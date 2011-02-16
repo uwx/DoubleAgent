@@ -2310,6 +2310,11 @@
 								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_FontUnderline.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The NoAppend Property">
+								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_NoAppend.htm">
+								<param name="New" value="1">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The NumberOfLines Property">
 								<param name="Local" value="html/P_DoubleAgent_Control_Balloon_NumberOfLines.htm">
 								</OBJECT>
