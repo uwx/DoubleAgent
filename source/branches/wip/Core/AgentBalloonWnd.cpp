@@ -692,7 +692,15 @@ bool CAgentBalloonWnd::ShowBalloonText (const CAgentText & pText, UINT pForSpeec
 			}
 #endif
 			mText = pText;
-			mText.DisplayFirstWord (pForSpeech ? true : false);
+			if	(mText.DisplayFirstWord (pForSpeech ? true : false))
+			{
+#ifdef	_DEBUG_AUTO_PACE
+				if	(LogIsActive (_DEBUG_AUTO_PACE))
+				{
+					LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s] (start)"), this, mCharID, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+				}
+#endif
+			}
 		}
 		else
 		{
@@ -1581,7 +1589,7 @@ LRESULT CAgentBalloonWnd::OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lPar
 #ifdef	_DEBUG_AUTO_PACE
 				if	(LogIsActive (_DEBUG_AUTO_PACE))
 				{
-					LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceResume word [%d] of [%d] [%s]"), this, mCharID, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+					LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s] (resume)"), this, mCharID, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
 				}
 #endif
 				ShowedVoiceWord (false);
@@ -1592,7 +1600,7 @@ LRESULT CAgentBalloonWnd::OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lPar
 #ifdef	_DEBUG_AUTO_PACE
 				if	(LogIsActive (_DEBUG_AUTO_PACE))
 				{
-					LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s]"), this, mCharID, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+					LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s] (first)"), this, mCharID, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
 				}
 #endif
 				ShowedVoiceWord (false);
@@ -1631,7 +1639,7 @@ LRESULT CAgentBalloonWnd::OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam
 #ifdef	_DEBUG_AUTO_PACE
 					if	(LogIsActive (_DEBUG_AUTO_PACE))
 					{
-						LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s]"), this, mCharID, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+						LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s] (all)"), this, mCharID, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
 					}
 #endif
 					ShowedVoiceWord (false);
@@ -1645,7 +1653,7 @@ LRESULT CAgentBalloonWnd::OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam
 #ifdef	_DEBUG_AUTO_PACE
 					if	(LogIsActive (_DEBUG_AUTO_PACE))
 					{
-						LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s]"), this, mCharID, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+						LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s] (next)"), this, mCharID, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
 					}
 #endif
 					ShowedVoiceWord (false);
@@ -1687,7 +1695,7 @@ LRESULT CAgentBalloonWnd::OnVoiceWordMsg (UINT uMsg, WPARAM wParam, LPARAM lPara
 #ifdef	_DEBUG_AUTO_PACE
 		if	(LogIsActive (_DEBUG_AUTO_PACE))
 		{
-			LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s]"), this, mCharID, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+			LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s] (this)"), this, mCharID, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
 		}
 #endif
 		if	(IsPaused ())

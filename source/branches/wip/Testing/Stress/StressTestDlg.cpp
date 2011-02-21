@@ -662,6 +662,7 @@ bool CStressTestDlg::Stop (bool pRandom)
 
 		if	(
 				(mServerCharacter[lNdx])
+			&&	(CheckServerOk (lResult))
 			&&	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult = mServerCharacter[lNdx]->StopAll (StopAll_Everything), _T("[%d] [%d] StopAll"), lNdx, mServerCharacterId[lNdx])))
 			)
 		{
@@ -692,6 +693,7 @@ bool CStressTestDlg::Stop (bool pRandom)
 
 		if	(
 				(mControlCharacter[lNdx])
+			&&	(CheckServerOk (lResult))
 			&&	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult = mControlCharacter[lNdx]->StopAll (_variant_t((long)(StopAll_Everything),VT_I4)), _T("[%d] [%s] StopAll"), lNdx, mControlCharacterId[lNdx])))
 			)
 		{
@@ -897,7 +899,7 @@ bool CStressTestDlg::ShowServerCharacters (int pCharacterCount)
 {
 	bool	lRet = false;
 	long	lReqID = 0;
-	HRESULT	lResult;
+	HRESULT	lResult = S_FALSE;
 	CString	lWinTitle;
 	int		lNdx;
 	int		lServerNdx;

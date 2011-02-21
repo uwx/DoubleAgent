@@ -88,7 +88,7 @@ public:
 
 // Implementation
 private:
-	class ATL_NO_VTABLE CTTSNotifyBase : public  CComObjectRoot, public ITTSNotifySink2
+	class ATL_NO_VTABLE CTTSNotifyBase : public  CComObjectRoot, public ITTSNotifySink2, public ITTSBufNotifySink
 	{
 	public:
 		CTTSNotifyBase () {}
@@ -97,6 +97,7 @@ private:
 		BEGIN_COM_MAP(CTTSNotifyBase)
 			COM_INTERFACE_ENTRY_IID(IID_ITTSNotifySink, ITTSNotifySink2)
 			COM_INTERFACE_ENTRY_IID(IID_ITTSNotifySink2, ITTSNotifySink2)
+			COM_INTERFACE_ENTRY_IID(IID_ITTSBufNotifySink, ITTSBufNotifySink)
 		END_COM_MAP()
 	};
 
@@ -120,33 +121,6 @@ private:
 		HRESULT STDMETHODCALLTYPE Error (LPUNKNOWN pError);
 		HRESULT STDMETHODCALLTYPE Warning (LPUNKNOWN pWarning);
 		HRESULT STDMETHODCALLTYPE VisualFuture (DWORD dwMilliseconds, QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth);
-
-	public:
-		CSapi4Voice *	mOwner;
-	protected:
-		ITTSCentralPtr	mEngine;
-		DWORD			mRegisteredKey;
-	};
-	friend class CTTSNotifySink;
-
-	class ATL_NO_VTABLE CTTSBufNotifyBase : public  CComObjectRoot, public ITTSBufNotifySink
-	{
-	public:
-		CTTSBufNotifyBase () {}
-		~CTTSBufNotifyBase () {}
-
-		BEGIN_COM_MAP(CTTSBufNotifyBase)
-			COM_INTERFACE_ENTRY_IID(IID_ITTSBufNotifySink, ITTSBufNotifySink)
-		END_COM_MAP()
-	};
-
-	class CTTSBufNotifySink : public CComObjectNoLock<CTTSBufNotifyBase>
-	{
-	public:
-		CTTSBufNotifySink (CSapi4Voice & pOwner);
-		~CTTSBufNotifySink ();
-
-	public:
 		// ITTSBufNotifySink
 		HRESULT STDMETHODCALLTYPE TextDataDone (QWORD qTimeStamp, DWORD dwFlags);
 		HRESULT STDMETHODCALLTYPE TextDataStarted (QWORD qTimeStamp);
@@ -154,19 +128,11 @@ private:
 		HRESULT STDMETHODCALLTYPE WordPosition (QWORD qTimeStamp, DWORD dwByteOffset);
 
 	public:
-		CSapi4Voice *	mOwner;
+		CSapi4Voice &	mOwner;
+	protected:
+		DWORD			mRegisteredKey;
 	};
-	friend class CTTSBufNotifySink;
-
-	struct AbandonedData
-	{
-		DWORD						mAbandonTime;
-		ITTSCentralPtr				mEngine;
-		IAudioDestPtr				mAudioDest;
-		tMallocPtr <WCHAR>			mLastText;
-		tPtr <CTTSNotifySink>		mNotifySink;
-		tPtr <CTTSBufNotifySink>	mBufNotifySink;
-	};
+	friend class CTTSNotifySink;
 
 protected:
 	bool CheckIsQueueing () const;
@@ -178,26 +144,22 @@ protected:
 	void SetIsSpeaking (bool pIsSpeaking);
 	void SetIsResetting (bool pIsResetting);
 
-	HRESULT FullReset ();
-
 	void LogTtsEngine (UINT pLogLevel, ITTSCentral * pTtsEngine, LPCTSTR pFormat = NULL, ...);
 	void LogTtsAudio (UINT pLogLevel, IAudioDest * pTtsAudio, LPCTSTR pFormat = NULL, ...);
 
 protected:
-	ITTSCentralPtr					mEngine;
-	IAudioDestPtr					mAudioDest;
-	ULONG							mDefaultRate;
-	USHORT							mDefaultVolume;
-	USHORT							mDefaultPitch;
-	bool							mPaused;
-	tPtr <DWORD>					mIsQueueing;
-	tPtr <DWORD>					mIsParsing;
-	tPtr <DWORD>					mIsSpeaking;
-	tPtr <DWORD>					mResetPending;
-	tMallocPtr <WCHAR>				mLastText;
-	tPtr <CTTSNotifySink>			mNotifySink;
-	tPtr <CTTSBufNotifySink>		mBufNotifySink;
-	COwnPtrArray <AbandonedData>	mAbandoned;
+	ITTSCentralPtr			mEngine;
+	IAudioDestPtr			mAudioDest;
+	ULONG					mDefaultRate;
+	USHORT					mDefaultVolume;
+	USHORT					mDefaultPitch;
+	bool					mPaused;
+	tPtr <DWORD>			mIsQueueing;
+	tPtr <DWORD>			mIsParsing;
+	tPtr <DWORD>			mIsSpeaking;
+	tPtr <DWORD>			mResetPending;
+	tMallocPtr <WCHAR>		mLastText;
+	tPtr <CTTSNotifySink>	mNotifySink;
 };
 
 #pragma warning (pop)
