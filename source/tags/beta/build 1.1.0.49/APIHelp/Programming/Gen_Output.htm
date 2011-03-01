@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+	<title>Output Services</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css" />
+	<xml>
+		<MSHelp:TOCTitle Title="Output Services" />
+		<MSHelp:Keyword Index="K" Term="Output Services" />
+		<MSHelp:Attr Name="TopicType" Value="kbOrient" />
+		<MSHelp:Attr Name="TopicType" Value="apiref" />
+		<MSHelp:Attr Name="DocSet" Value="DoubleAgent" />
+		<MSHelp:Attr Name="DocSet" Value="NETFramework" />
+		<MSHelp:Attr Name="DocSet" Value="WindowsForms" />
+		<MSHelp:Attr Name="DocSet" Value="C#" />
+		<MSHelp:Attr Name="DocSet" Value="Visual Basic" />
+		<MSHelp:Attr Name="DocSet" Value="ExpressLibVS" />
+		<MSHelp:Attr Name="Technology" Value="Agent" />
+		<MSHelp:Attr Name="Technology" Value="ManagedCode" />
+		<MSHelp:Attr Name="Technology" Value="ActiveX" />
+		<MSHelp:Attr Name="Technology" Value="WindowsForms" />
+		<MSHelp:Attr Name="Technology" Value="kb3Ptech" />
+		<MSHelp:Attr Name="ProgModel" Value="managed" />
+		<MSHelp:Attr Name="TargetOS" Value="Windows" />
+	</xml>
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Output Services</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>In addition to animation sequences, a Double Agent character supports other types of output.</p>
+				<p>Some animation sequences are accompanied by sound effects, which are included in the character's definition.
+					They can be enabled or disabled by the user using the <a href="../Reference/UI_PropSheet.htm#Output">Advanced
+					Character Options</a> window.</p>
+				<p>A character can also produce speech output, either using a text-to-speech engine or by playing a sound
+					file (.WAV). The speech output can be accompanied by it's text equivalent in a <a class="see" href="#Balloon">
+					word balloon</a>. It can also show silent text in a <em class="glossary">thought</em> <a class="see"
+					href="#Balloon">word balloon</a>.</p>
+				<h4><a name="Effects"></a>Animation Sound Effects</h4>
+				<div class="indent">
+					<p>Double Agent also allows you to include sound effects as a part of a character's animation. Using the
+						Microsoft<sup>®</sup> Agent Character Editor, you can specify the filename of standard Windows sound
+						(.WAV) files to trigger on a given frame. Note that Double Agent does not synchronize sound effects
+						and spoken output, so sound effects can interfere with spoken output. Therefore, avoid any long or looping
+						sound effect as a part of a character's animation.</p>
+				</div>
+				<h4><a name="Speech"></a>Synthesized Speech Support</h4>
+				<div class="indent">
+					<p>If you use synthesized speech, your character has the ability to say almost anything, which provides
+						the greatest flexibility. With recorded audio, you can give the character a specific or unique voice.
+						To specify output, provide the spoken text as a parameter of the <em class="keyword">Speak</em> method.</p>
+					<p>A character's <em class="keyword">LanguageID</em> setting determines its TTS output. If a client does
+						not specify a <em class="keyword">LanguageID</em> for the character, the character's <em class="keyword">
+							LanguageID</em> is set to the user default language. If the character's definition includes a specific
+						engine and that engine can be loaded and it matches the character's language setting, that engine will
+						be used. Otherwise, Double Agent enumerates the other available engines and chooses best match based
+						on language and gender (in that order). If there is no matching engine available, there is no TTS output
+						for that client's use of the character. Agent attempts to load the TTS engine on the first <em class="keyword">
+							Speak</em> call or when you query or successfully set its <em class="keyword">TTSModeID</em>.</p>
+					<p>A client application can also specify a TTS engine for its character (using the <em class="keyword">TTSModeID</em>
+						property). This overrides the server's attempt to automatically find a matching engine based on the
+						character's preferred <em class="keyword">TTSModeID</em> or the character's current <em class="keyword">
+							LanguageID</em> setting. However, if that engine is not installed (or cannot otherwise be loaded),
+						the call will fail (and raise an error in the control). The server then attempts to load another engine
+						based on the <em class="keyword">LanguageID</em>, compiled character TTS setting, and available TTS
+						engines. If there is still no match, TTS is not available for that client, but the character can still
+						speak into its <a class="see" href="#Balloon">word balloon</a>.</p>
+					<p>Only the TTS engines in use by any client remain loaded. For example, if a character has a defined preference
+						for a specific engine and that engine is available, but your client application has specified a different
+						engine (by setting a character's <em class="keyword">LanguageID</em> differently from the engine or
+						specifying a different mode ID), only the engine specified by your application remains loaded. The engine
+						matching the character's defined preference for a TTS setting is unloaded (unless another client is
+						using the character's compiled engine setting).</p>
+				</div>
+				<h4><a name="Audio"></a>Audio Output Support</h4>
+				<div class="indent">
+					<p>Double Agent allows you to use audio files for a character's spoken output. You can record audio files
+						and use the <em class="keyword">Speak</em> method to play that data. Double Agent's animation stream
+						automatically supports lip-syncing the character's mouth by using the audio characteristics of the audio
+						file.</p>
+				</div>
+				<h4><a name="Balloon"></a>Word Balloon Support</h4>
+				<div class="indent">
+					<p>Spoken output can also appear as textual output in the form of a cartoon <em class="self">word balloon</em>.
+						This can be used to supplement the spoken output of a character or as an alternative to audio output
+						when you use the <em class="keyword">Speak</em> method.</p>
+					<p>
+						<img src="../images/WordBalloon.png" alt="Yes master word balloon" border="0"></p>
+					<p>You can also use a <em class="self">word balloon</em> to communicate what a character is &quot;thinking&quot;
+						using the <em class="keyword">Think</em> method. This displays the text you supply in a <em class="glossary">
+							thought</em> <em class="self">word balloon</em>. The <em class="keyword">Think</em> method differs
+						from the <em class="keyword">Speak</em> method in that it produces no audio output.</p>
+					<p>
+						<img src="../images/ThoughtBalloon.png" alt="Yes master thought balloon" border="0"></p>
+					<p><em class="self">Word balloons</em> support only captioned communication from the character, <em>not</em>
+						user input. Therefore, the <em class="self">word balloon</em> does not support input controls. However,
+						you can easily provide user input for a character, using interfaces from your programming language or
+						the other input services provided by Double Agent, such as the <a href="Gen_Input.htm#Menu">pop-up menu</a>.</p>
+					<p>When you define a character, you can specify whether to include <em class="self">word balloon</em> support.
+						However, if you use a character that includes <em class="self">word balloon</em> support, you cannot
+						disable the support. The user can disable <em class="self">word balloons</em> for <em>all</em> characters
+						in the <a href="../Reference/UI_PropSheet.htm#Output">Advanced Character Options</a> window</p>
+				</div>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

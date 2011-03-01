@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+	<title>Licensing and Distribution</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css" />
+	<xml>
+		<MSHelp:TOCTitle Title="Licensing and Distribution" />
+		<MSHelp:Keyword Index="K" Term="Licensing and Distribution" />
+		<MSHelp:Attr Name="TopicType" Value="kbOrient" />
+		<MSHelp:Attr Name="TopicType" Value="apiref" />
+		<MSHelp:Attr Name="DocSet" Value="DoubleAgent" />
+		<MSHelp:Attr Name="DocSet" Value="NETFramework" />
+		<MSHelp:Attr Name="DocSet" Value="WindowsForms" />
+		<MSHelp:Attr Name="DocSet" Value="C#" />
+		<MSHelp:Attr Name="DocSet" Value="Visual Basic" />
+		<MSHelp:Attr Name="DocSet" Value="ExpressLibVS" />
+		<MSHelp:Attr Name="Technology" Value="Agent" />
+		<MSHelp:Attr Name="Technology" Value="ManagedCode" />
+		<MSHelp:Attr Name="Technology" Value="ActiveX" />
+		<MSHelp:Attr Name="Technology" Value="WindowsForms" />
+		<MSHelp:Attr Name="Technology" Value="kb3Ptech" />
+		<MSHelp:Attr Name="ProgModel" Value="managed" />
+		<MSHelp:Attr Name="TargetOS" Value="Windows" />
+	</xml>
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;SDK</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h1>Licensing and Distribution</h1>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>Double Agent is open-source software, distributed in the hope that it will be useful, but with ABSOLUTELY
+					NO WARRANTY.</p>
+				<p>You can redistribute it and/or modify it under the terms of the <a href="License.htm">GNU General
+				Public License</a> and the <a href="License.lesser.htm">GNU Lesser General Public License</a> published
+					by the <a href="http://www.fsf.org/" target="_blank">Free Software Foundation</a>.</p>
+				<ul>
+					<li>The published <em class="glossary">COM</em> interfaces (and associated <em class="glossary">Primary
+						Interop Assemblies</em>) are covered by the <a href="http://www.gnu.org/licenses/lgpl.html" target="_blank">
+						GNU Lesser General Public License version 3.0</a>.
+						<ul>
+							<li>This is the license that covers the use of libraries within an application. Using a <em class="glossary">
+								COM</em> interface or <em class="glossary">Primary Interop Assembly</em> is functionally equivalent
+								to dynamically binding to a runtime library.</li>
+							<li>The <em class="glossary">COM</em> interfaces and <em class="glossary">Primary Interop Assemblies</em>
+								covered by this licence include all interfaces for the Agent Control and Agent Server.</li>
+							<li>The intention is to allow any application that uses Microsoft<sup>®</sup> Agent's published <em class="glossary">
+								COM</em> interfaces to use Double Agent in the same way.</li>
+							<li>The GNU <em>Lesser</em> General Public License licence allows any application, including <em>proprietary</em>
+								applications, to use open source libraries, with the proper <s>prominent</s> acknowledgement and references
+								to the open source.</li>
+							<li>The easiest way provide acknowledgement is to provide access to the Double Agent copyright page. The
+								sample source code in the Double Agent project includes examples of application <em>About</em> boxes
+								that do this.</li>
+						</ul>
+					</li>
+					<li>The rest of Double Agent (i.e. the internals) is covered by the <a href="http://www.gnu.org/licenses/gpl.html"
+					target="_blank">GNU General Public License version 3.0</a>.
+						<ul>
+							<li>This license restricts usage to <em>non-proprietary</em> applications. A <em>proprietary</em> application
+								<s>may not</s> bind to these libraries either statically (at build time) or dynamically (at run time).
+								A <em>proprietary</em> application <s>must not</s> make use of any Double Agent source code or <em>any derivation
+									of it</em>.</li>
+							<li>The intention is to restrict usage of any portion Double Agent that is not available through the published
+								<em class="glossary">COM</em> interfaces and <em class="glossary">Primary Interop Assemblies</em> interfaces.</li>
+							<li>A <em>non-proprietary</em> application that binds to any portion of Double Agent other than the published
+								<em class="glossary">COM</em> interfaces and <em class="glossary">Primary Interop Assemblies</em> interfaces
+								must include the appropriate acknowledgements and references, and <s>must</s> itself conform to the GNU General
+									Public License or an acceptable alternative.</li>
+						</ul>
+					</li>
+					<li>For Double Agent version 1.1 this specifically means:
+						<ul>
+							<li>The basic Double Agent installation available on the <a href="http://sourceforge.net/projects/doubleagent/files/"
+							target="_blank">SourceForge</a> website is sufficient for any application.&nbsp; The development and debugging
+								components are not required at runtime.</li>
+							<li>Any application may use the <em class="glossary">COM</em> interfaces defined in <em class="filename">
+								DaControl.tlb</em> and <em class="filename">DaControlOdl.h</em> and implemented by <em class="filename">
+									DaControl.dll</em>. </li>
+							<li>Any application may use the <em class="glossary">COM</em> interfaces defined in <em class="filename">
+								DaServer.tlb</em> and <em class="filename">DaServerOdl.h</em> and implemented by <em class="filename">DaServer.exe</em>.
+							</li>
+							<li>Any application may use the <em class="glossary">Primary Interop Assemblies</em> implemented by <em
+								class="filename">DoubleAgent.Control.dll</em>, <em class="filename">DoubleAgent.AxControl.dll</em>,
+								and <em class="filename">DoubleAgent.Server.dll</em>. </li>
+							<li>Everything else is restricted to <em>non-proprietary</em> applications. </li>
+						</ul>
+					</li>
+				</ul>
+				<hr />
+				<p>The Double Agent home page is at <a href="http://doubleagent.sourceforge.net/" target="_blank">http://doubleagent.sourceforge.net</a></p>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

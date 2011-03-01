@@ -1,0 +1,1918 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+<assembly> <name>Double Agent AxControl</name></assembly>
+<members>
+
+<member name="M:DoubleAgent.AxControl.AxControl.FindCharacterSREngines(System.Object,System.Object)">
+<summary> Retrieves a collection of <see cref="T:DoubleAgent.Control.SREngine" /> Objects that meet a specific character's requirements.</summary>
+<param name="Provider">A string value that specifies the character file, or an empty string for the default character.</param>
+<param name="LanguageID">An optional numeric value that specifies the language to match, or zero to match any language.</param>
+<returns name="SREngines">A <see cref="T:DoubleAgent.Control.SREngines" /> Collection that matches the character's text-to-speech requirements and the specified <paramref name="LanguageID" /> (if any).</returns>
+<remarks>
+<para>This method allows you to choose a speech recognition engine without loading the character.
+</para>
+<para name="Provider">For more information on specifying character file names, see the <see cref="M:DoubleAgent.Control.Characters.Load(System.String,System.Object)" /> method.
+</para>
+<note name="Provider">This method does not support the HTTP protocol for character files.</note>
+</remarks>
+<seealso cref="T:DoubleAgent.Control.SREngines" />
+<seealso cref="T:DoubleAgent.Control.SREngine" />
+<seealso cref="M:DoubleAgent.Control.Characters.Load(System.String,System.Object)" />
+</member>
+
+<member name="M:DoubleAgent.AxControl.AxControl.FindCharacterTTSEngines(System.Object,System.Object)">
+<summary> Retrieves a collection of <see cref="T:DoubleAgent.Control.TTSEngine" /> Objects that meet a specific character's requirements.</summary>
+<param name="Provider">A string value that specifies the character file, or an empty string for the default character.</param>
+<param name="LanguageID">An optional numeric value that specifies the language to match, or zero to match any language.</param>
+<returns name="TTSEngines">A <see cref="T:DoubleAgent.Control.TTSEngines" /> Collection that matches the character's text-to-speech requirements and the specified <paramref name="LanguageID" /> (if any).</returns>
+<remarks>
+<para>This method allows you to choose a text-to-speech engine without loading the character.
+</para>
+<para name="Provider">For more information on specifying character file names, see the <see cref="M:DoubleAgent.Control.Characters.Load(System.String,System.Object)" /> method.
+</para>
+<note name="Provider">This method does not support the HTTP protocol for character files.</note>
+</remarks>
+<seealso cref="T:DoubleAgent.Control.TTSEngines" />
+<seealso cref="T:DoubleAgent.Control.TTSEngine" />
+<seealso cref="M:DoubleAgent.Control.Characters.Load(System.String,System.Object)" />
+</member>
+
+<member name="M:DoubleAgent.AxControl.AxControl.FindSREngines(System.Object)">
+<summary> Retrieves a collection of <see cref="T:DoubleAgent.Control.SREngine" /> Objects for a specific language.</summary>
+<param name="LanguageID">A numeric value that specifies the language to match, or zero for any language.</param>
+<returns name="SREngines">A <see cref="T:DoubleAgent.Control.SREngines" /> Collection that matches the the specified <paramref name="LanguageID" />.</returns>
+<remarks>
+<para>This method allows you to query available speech recognition engines without loading a character.
+</para>
+<note>Using this method with zero for the <paramref name="LanguageID" /> is equivalent to using the <see cref="P:DoubleAgent.AxControl.AxControl.SREngines" /> property.</note>
+</remarks>
+<seealso cref="T:DoubleAgent.Control.SREngines" />
+<seealso cref="T:DoubleAgent.Control.SREngine" />
+</member>
+
+<member name="M:DoubleAgent.AxControl.AxControl.FindTTSEngines(System.Object,System.Object)">
+<summary> Retrieves a collection of <see cref="T:DoubleAgent.Control.TTSEngine" /> Objects for a specific language and gender.</summary>
+<param name="LanguageID">A numeric value that specifies the language to match, or zero for any language.</param>
+<param name="Gender">A numeric value, or a member of the <see cref="T:DoubleAgent.Control.SpeechGenderType" /> Enumeration, that specifies the gender to match:
+<list type="table">
+<item name="Female"><term xml:space="preserve">
+1 = Female
+</term>
+<description>A female voice.</description>
+</item>
+<item name="Male"><term xml:space="preserve">
+2 = Male
+</term>
+<description>A male voice.</description>
+</item>
+<item name="Neutral"><term xml:space="preserve">
+0 = Neutral
+</term>
+<description>Either a female or male voice.</description>
+</item>
+</list>
+</param>
+<returns name="TTSEngines">A <see cref="T:DoubleAgent.Control.TTSEngines" /> Collection that matches the the specified <paramref name="LanguageID" /> and <paramref name="Gender" />.</returns>
+<remarks>
+<para>This method allows you to query available text-to-speech engines without loading a character.
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.Control.SpeechGenderType" />
+<seealso cref="T:DoubleAgent.Control.TTSEngines" />
+<seealso cref="T:DoubleAgent.Control.TTSEngine" />
+</member>
+
+<member name="M:DoubleAgent.AxControl.AxControl.GetCharacterSREngine(System.Object)">
+<summary> Retrieves a <see cref="T:DoubleAgent.Control.SREngine" /> Object that meets a specific character's requirements.</summary>
+<param name="Provider">A string value that specifies the character file, or an empty string for the default character.</param>
+<returns name="SREngine">The <see cref="T:DoubleAgent.Control.SREngine" /> Object that matches the character's speech recognition requirements (if any).</returns>
+<remarks>
+<para>This method allows you to query a character's <em>default</em> speech recognition engine without loading the character.
+</para>
+<para name="Provider">For more information on specifying character file names, see the <see cref="M:DoubleAgent.Control.Characters.Load(System.String,System.Object)" /> method.
+</para>
+<note name="Provider">This method does not support the HTTP protocol for character files.</note>
+</remarks>
+<seealso cref="T:DoubleAgent.Control.SREngine" />
+<seealso cref="M:DoubleAgent.Control.Characters.Load(System.String,System.Object)" />
+</member>
+
+<member name="M:DoubleAgent.AxControl.AxControl.GetCharacterTTSEngine(System.Object)">
+<summary> Retrieves a <see cref="T:DoubleAgent.Control.TTSEngine" /> Object that meets a specific character's requirements.</summary>
+<param name="Provider">A string value that specifies the character file, or an empty string for the default character.</param>
+<returns name="TTSEngine">The <see cref="T:DoubleAgent.Control.TTSEngine" /> Object that matches the character's text-to-speech requirements (if any).</returns>
+<remarks>
+<para>This method allows you to query a character's <em>default</em> text-to-speech engine without loading the character.
+</para>
+<para name="Provider">For more information on specifying character file names, see the <see cref="M:DoubleAgent.Control.Characters.Load(System.String,System.Object)" /> method.
+</para>
+<note name="Provider">This method does not support the HTTP protocol for character files.</note>
+</remarks>
+<seealso cref="T:DoubleAgent.Control.TTSEngine" />
+<seealso cref="M:DoubleAgent.Control.Characters.Load(System.String,System.Object)" />
+</member>
+
+<member name="M:DoubleAgent.AxControl.AxControl.ShowDefaultCharacterProperties(System.Object,System.Object)">
+<summary> Shows the <a href="../Reference/UI_PropSheet.htm#Gallery">Gallery</a> page of the <a href="../Reference/UI_PropSheet.htm">Advanced Character Options</a> window.</summary>
+<param name="X">The horizontal position, in pixels, of the <see cref="P:DoubleAgent.Control.PropertySheet.Left" /> window. This parameter is optional. For programming languages that don't support optional parameters, a negative value will be ignored.</param>
+<param name="Y">The vertical position, in pixels, of the <see cref="P:DoubleAgent.Control.PropertySheet.Top" /> window. This parameter is optional. For programming languages that don't support optional parameters, a negative value will be ignored.</param>
+<remarks>
+<para>This method is obsolete, but is still supported for backward compatibility. Calling it shows the <a href="../Reference/UI_PropSheet.htm">Advanced Character Options</a> window. New applications should use the <see cref="T:DoubleAgent.Control.PropertySheet" /> Object instead.
+</para>
+<para>If you don't specify the <paramref name="X" /> and <paramref name="Y" /> coordinates (or use a negative value for programming languages that don't support optional parameters), the window appears at the last location it was displayed.
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.Control.PropertySheet" />
+<seealso cref="P:DoubleAgent.Control.PropertySheet.Page" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDefaultCharacterChange" />
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.AudioOutput">
+<summary> deprecated</summary>
+<remarks>
+<para>This property has been replaced by the <see cref="P:DoubleAgent.AxControl.AxControl.Settings" /> property, but is still supported for backward compatibility.
+</para>
+</remarks>
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.AutoConnect">
+<summary> Specifies if the Double Agent control will automatically connect to the Double Agent server.</summary>
+<value name="AutoConnect">A numeric value specifying whether automatic connection is enabled.
+<para>On a 32-bit system:
+</para>
+<list type="table">
+<item>
+<term width="150ex">0</term>
+<description>The control will <em>not</em> automatically connect to the server.</description>
+</item>
+<item>
+<term width="150ex">Any non-zero value</term>
+<description>The control will automatically connect to the server.</description>
+</item>
+</list>
+<para>On a 64-bit system:
+</para>
+<list type="table">
+<item>
+<term width="150ex">0</term>
+<description>The control will <em>not</em> automatically connect to the server.</description>
+</item>
+<item>
+<term width="150ex">32</term>
+<description>The control will automatically connect to the 32-bit server. If the 32-bit server is not installed, the 64-bit server will be used.</description>
+</item>
+<item>
+<term width="150ex">64</term>
+<description>The control will automatically connect to the 64-bit server. If the 64-bit server is not installed, the 32-bit server will be used.</description>
+</item>
+<item>
+<term width="150ex">Any other non-zero value</term>
+<description>The control will automatically connect to server with the same architecture as the calling process. If the matching server is not installed, then the other server will be used.</description>
+</item>
+</list>
+</value>
+<remarks>
+<para>If this property is non-zero, then the control will automatically establish a connection with the server the first time it's required. To use the control in <a href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a> mode, you must set this property to zero.
+</para>
+<para>For compatibility with Microsoft<sup>®</sup> Agent, the default value for this property is True.
+</para>
+</remarks>
+<seealso cref="P:DoubleAgent.AxControl.AxControl.Connected" />
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.CtlAutoSize">
+<summary> Specifies if the ActiveX<sup>®</sup> control is automatically sized to fit the <see cref="P:DoubleAgent.AxControl.AxControl.ControlCharacter" />.</summary>
+<value name="CtlAutoSize">A boolean value that specifies if the control's size is automatically adjusted to exactly fit the <see cref="P:DoubleAgent.AxControl.AxControl.ControlCharacter" />.</value>
+<remarks>
+<note name="ContainedOnly">This property is relevant only when the control is visible (i.e. when it's used in <a href="..\Programming\Ctl_Programming_Modes.htm">contained</a> mode).</note>
+</remarks>
+<seealso cref="P:DoubleAgent.AxControl.AxControl.ControlCharacter" />
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.CtlBackColor">
+<summary> Specifies the ActiveX<sup>®</sup> control's background color.</summary>
+<value name="CtlBackColor">An System.Drawing.Color value for the control's background color.</value>
+<remarks>
+<note name="ContainedOnly">This property is relevant only when the control is visible (i.e. when it's used in <a href="..\Programming\Ctl_Programming_Modes.htm">contained</a> mode).</note>
+</remarks>
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.CtlBorderColor">
+<summary> Specifies the ActiveX<sup>®</sup> control's border color.</summary>
+<value name="CtlBorderColor">An System.Drawing.Color value for the control's border color.</value>
+<remarks>
+<note name="ContainedOnly">This property is relevant only when the control is visible (i.e. when it's used in <a href="..\Programming\Ctl_Programming_Modes.htm">contained</a> mode).</note>
+</remarks>
+<seealso cref="P:DoubleAgent.AxControl.AxControl.CtlBorderStyle" />
+<seealso cref="P:DoubleAgent.AxControl.AxControl.CtlBorderVisible" />
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.CtlBorderStyle">
+<summary> Specifies the style of the ActiveX<sup>®</sup> control's border.</summary>
+<value name="CtlBorderStyle">A numeric value that specifies the border style as follows:
+<list type="table">
+<item><term xml:space="preserve">0 = Default</term>
+<description>The default border style (default for the target environment)</description>
+</item>
+<item><term xml:space="preserve">1 = FixedSingle</term>
+<description>A fixed-width single line of width <see cref="P:DoubleAgent.AxControl.AxControl.CtlBorderWidth" /> and color <see cref="P:DoubleAgent.AxControl.AxControl.CtlBorderColor" /></description>
+</item>
+</list>
+</value>
+<remarks>
+<note name="ContainedOnly">This property is relevant only when the control is visible (i.e. when it's used in <a href="..\Programming\Ctl_Programming_Modes.htm">contained</a> mode).</note>
+</remarks>
+<seealso cref="P:DoubleAgent.AxControl.AxControl.CtlBorderVisible" />
+<seealso cref="P:DoubleAgent.AxControl.AxControl.CtlBorderColor" />
+<seealso cref="P:DoubleAgent.AxControl.AxControl.CtlBorderWidth" />
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.CtlBorderVisible">
+<summary> Specifies if the ActiveX<sup>®</sup> control's has a visible border.</summary>
+<value name="CtlBorderVisible">An boolean value that indicates if the border is visible.</value>
+<remarks>
+<note name="ContainedOnly">This property is relevant only when the control is visible (i.e. when it's used in <a href="..\Programming\Ctl_Programming_Modes.htm">contained</a> mode).</note>
+</remarks>
+<seealso cref="P:DoubleAgent.AxControl.AxControl.CtlBorderColor" />
+<seealso cref="P:DoubleAgent.AxControl.AxControl.CtlBorderStyle" />
+<seealso cref="P:DoubleAgent.AxControl.AxControl.CtlBorderWidth" />
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.CtlBorderWidth">
+<summary> Specifies the width of the ActiveX<sup>®</sup> control's border.</summary>
+<value name="CtlBorderWidth">An numeric value that specifies the border width, in pixels.</value>
+<remarks>
+<note name="ContainedOnly">This property is relevant only when the control is visible (i.e. when it's used in <a href="..\Programming\Ctl_Programming_Modes.htm">contained</a> mode).</note>
+</remarks>
+<seealso cref="P:DoubleAgent.AxControl.AxControl.CtlBorderVisible" />
+<seealso cref="P:DoubleAgent.AxControl.AxControl.CtlBorderColor" />
+<seealso cref="P:DoubleAgent.AxControl.AxControl.CtlBorderStyle" />
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.CtlMousePointer">
+<summary> Specifies the pointer to show when the mouse moves over the ActiveX<sup>®</sup> control.</summary>
+<value name="CtlMousePointer">A numeric value that specifies the pointer style as follows:
+<list type="table">
+<item><term xml:space="preserve">0 = Default</term>
+<description>The default pointer style (default for the target environment)</description>
+</item>
+<item><term xml:space="preserve">1 = Arrow</term>
+<description>The arrow-shaped pointer</description>
+</item>
+<item><term xml:space="preserve">2 = Cross</term>
+<description>The cross-shaped pointer</description>
+</item>
+<item><term xml:space="preserve">11 = Hourglass</term>
+<description>The "wait" pointer</description>
+</item>
+<item><term xml:space="preserve">12 = No Drop</term>
+<description>The pointer that indicates that drag-and-drop is not possible here</description>
+</item>
+<item><term xml:space="preserve">13 = Arrow and Hourglass</term>
+<description>The pointer that indicates that an application is starting</description>
+</item>
+<item><term xml:space="preserve">14 = Arrow and Question</term>
+<description>The pointer used for "What's this?" help</description>
+</item>
+<item><term xml:space="preserve">16 = Hand</term>
+<description>The hand-shaped pointer</description>
+</item>
+</list>
+</value>
+<remarks>
+<note name="ContainedOnly">This property is relevant only when the control is visible (i.e. when it's used in <a href="..\Programming\Ctl_Programming_Modes.htm">contained</a> mode).</note>
+</remarks>
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.CharacterFiles">
+<summary> Returns the control's <see cref="T:DoubleAgent.Control.CharacterFiles" /> Object.</summary>
+<value name="CharacterFiles">The control's <see cref="T:DoubleAgent.Control.CharacterFiles" /> Object.</value>
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.Characters">
+<summary> Returns the control's <see cref="T:DoubleAgent.Control.Characters" /> Collection.</summary>
+<value name="Characters">The control's <see cref="T:DoubleAgent.Control.Characters" /> Collection.</value>
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.CharacterStyle">
+<summary> Specifies the initial style to use when a <see cref="T:DoubleAgent.Control.Character" /> is loaded.</summary>
+<value name="CharacterStyle">A numeric bit-field value that specifies the <see cref="P:DoubleAgent.Control.Character.Style" /> to apply when a <see cref="T:DoubleAgent.Control.Character" /> is loaded:
+<list type="table">
+<item name="SoundEffects"><term xml:space="preserve">
+&amp;H00000001 = SoundEffects
+</term>
+<description>The animation sound effects are played.</description>
+</item>
+<item name="IdleEnabled"><term xml:space="preserve">
+&amp;H00000002 = IdleEnabled
+</term>
+<description>The character enters idle mode and shows it's idling animations when it's not doing anything else.</description>
+</item>
+<item name="AutoPopupMenu"><term xml:space="preserve">
+&amp;H00000004 = AutoPopupMenu
+</term>
+<description>A right-click on the character or it's <a href="../Reference/UI_Intro.htm#Icon">notification icon</a> automatically shows a <a href="../Reference/UI_Intro.htm#Menu">pop-up menu</a>.</description>
+</item>
+<item name="IconShown"><term xml:space="preserve">
+&amp;H00000008 = IconShown
+</term>
+<description>The character has a <a href="../Reference/UI_Intro.htm#Icon">notification icon</a> in the taskbar notification area.</description>
+</item>
+<item name="SmoothEdges"><term xml:space="preserve">
+&amp;H00000020 = SmoothEdges
+</term>
+<description>Image smoothing (antialiasing) is applied to the edges of the character's animations.</description>
+</item>
+<item name="Smoothed"><term xml:space="preserve">
+&amp;H00000030 = Smoothed
+</term>
+<description>Image smoothing (antialiasing) is applied to the character's animations.</description>
+</item>
+<item name="SuspendPause"><term xml:space="preserve">
+&amp;H00000100 = SuspendPause
+</term>
+<description>All requests are paused when the client is not in the foreground.</description>
+</item>
+<item name="SuspendStop"><term xml:space="preserve">
+&amp;H00000200 = SuspendStop
+</term>
+<description>All requests are stopped when the client is not in the foreground.</description>
+</item>
+<item name="SuspendHide"><term xml:space="preserve">
+&amp;H00000400 = SuspendHide
+</term>
+<description>All floating windows are hidden when the client is not in the foreground.</description>
+</item>
+</list>
+</value>
+<remarks>
+<para>Setting this property allows you to establish a default <see cref="T:DoubleAgent.Control.Character" />.<see cref="P:DoubleAgent.Control.Character.Style" /> for you application. It's initial value is <see cref="F:DoubleAgent.Control.CharacterStyleFlags.AutoPopupMenu" />, <see cref="F:DoubleAgent.Control.CharacterStyleFlags.IdleEnabled" />, <see cref="F:DoubleAgent.Control.CharacterStyleFlags.IconShown" />, <see cref="F:DoubleAgent.Control.CharacterStyleFlags.SoundEffects" />.
+</para>
+<para>The <see cref="F:DoubleAgent.Control.CharacterStyleFlags.Smoothed" /> and <see cref="F:DoubleAgent.Control.CharacterStyleFlags.SmoothEdges" /> flags can only be changed here. Once a <see cref="T:DoubleAgent.Control.Character" /> is loaded, these bits <strong>cannot</strong> be changed in it's <see cref="P:DoubleAgent.Control.Character.Style" /> property. Also, these two settings are only used the first time the character is loaded. If another client has already loaded the character, it's smoothing settings will not change. If your client application is the first client to load the character, then your smoothing settings will apply to all clients.
+</para>
+<note>For compatibility with Microsoft<sup>®</sup> Agent, the <see cref="F:DoubleAgent.Control.CharacterStyleFlags.IconShown" /> flag is set by default. To load a <see cref="T:DoubleAgent.Control.Character" /> without showing it's <a href="../Reference/UI_Intro.htm#Icon">notification icon</a>, set the <see cref="F:DoubleAgent.Control.CharacterStyleFlags.IconShown" /> flag off.</note>
+</remarks>
+<seealso cref="P:DoubleAgent.Control.Character.Style" />
+<seealso cref="T:DoubleAgent.Control.CharacterStyleFlags" />
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.CommandsWindow">
+<summary> Returns the control's <see cref="T:DoubleAgent.Control.CommandsWindow" /> Object.</summary>
+<value name="CommandsWindow">The control's <see cref="T:DoubleAgent.Control.CommandsWindow" /> Object.</value>
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.Connected">
+<summary> Specifies if the control is currently connected to the Double Agent server. The Double Agent control will work whether or not it's connected to the server, but there are are special considerations in each case. See <a href="..\Programming\Ctl_Programming_Modes.htm">Connected, Stand-Alone, and Contained</a> for more information.</summary>
+<value name="Connected">A boolean value specifying whether the control is connected.</value>
+<remarks>
+<para>You can manually open or close the connection to the server by changing the Connected property. When the connection state changes, any characters you've loaded are automatically unloaded. If you still have references to any objects except the control itself, any attempt to access the objects' properties or methods will fail.
+</para>
+</remarks>
+<seealso cref="P:DoubleAgent.AxControl.AxControl.AutoConnect" />
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.ControlCharacter">
+<summary> Specifies the control's <a href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a> character.</summary>
+<value name="ControlCharacter">The <see cref="T:DoubleAgent.Control.Character" /> Object object that's contained within the visible area of the control, or an empty reference (Nothing).</value>
+<remarks>
+<para>Setting the ControlCharacter property to a <see cref="T:DoubleAgent.Control.Character" /> Object changes the control from <a href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a> mode to <a href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a> mode. Setting ControlCharacter to an empty reference changes the control from <a href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a> mode back to <a href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a> mode.
+</para>
+<para>Normally, the control isn't visible at runtime, but when it has a ControlCharacter it will become visible as a child window of its containing form. This is the only time the ActiveX<sup>®</sup> appearance properties, such as <see cref="P:DoubleAgent.AxControl.AxControl.CtlBackColor" /> and <see cref="P:DoubleAgent.AxControl.AxControl.CtlBorderColor" />, are used.
+</para>
+<note>You cannot set the ControlCharacter property if the control is <see cref="P:DoubleAgent.AxControl.AxControl.Connected" /> to the server.</note>
+</remarks>
+<seealso cref="P:DoubleAgent.AxControl.AxControl.Connected" />
+<seealso cref="P:DoubleAgent.AxControl.AxControl.CtlAutoSize" />
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.PropertySheet">
+<summary> Returns the control's <see cref="T:DoubleAgent.Control.PropertySheet" /> Object.</summary>
+<value name="PropertySheet">The control's <see cref="T:DoubleAgent.Control.PropertySheet" /> Object.</value>
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.RaiseRequestErrors">
+<summary> Specifies if an error condition is raised (an exception thrown) for failed requests.</summary>
+<value name="RaiseRequestErrors">A boolean value that determines whether errors are raised for failed requests. The default value is True.</value>
+<remarks>
+<para>When a method that returns a <see cref="T:DoubleAgent.Control.Request" /> Object fails, there are two ways to detect the error. If RaiseRequestErrors is set, the Double Agent control will raise an error condition. If it's not set, you can check the <see cref="T:DoubleAgent.Control.Request" /> Object's <see cref="P:DoubleAgent.Control.Request.Status" /> property. An example of a request error is when you specify an animation name that doesn't exist for the <see cref="M:DoubleAgent.Control.Character.Play(System.String)" /> method.
+</para>
+</remarks>
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.Settings">
+<summary> Returns the control's <see cref="T:DoubleAgent.Control.Settings" /> Object.</summary>
+<value name="Settings">The control's <see cref="T:DoubleAgent.Control.Settings" /> Object.</value>
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.SpeechInput">
+<summary> deprecated</summary>
+<remarks>
+<para>This property has been replaced by the <see cref="P:DoubleAgent.AxControl.AxControl.Settings" /> property, but is still supported for backward compatibility.
+</para>
+</remarks>
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.SREngines">
+<summary> Returns a collection of <see cref="T:DoubleAgent.Control.SREngine" /> Objects for all available speech recognition engines.</summary>
+<value name="SREngines">A <see cref="T:DoubleAgent.Control.SREngines" /> Collection that includes all available speech recognition engines.</value>
+<remarks>
+<para>This property allows you to query available speech recognition engines without loading a character.
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.Control.SREngines" />
+<seealso cref="T:DoubleAgent.Control.SREngine" />
+</member>
+
+<member name="P:DoubleAgent.AxControl.AxControl.TTSEngines">
+<summary> Returns a collection of <see cref="T:DoubleAgent.Control.TTSEngine" /> Objects for all available text-to-speech engines.</summary>
+<value name="TTSEngines">A <see cref="T:DoubleAgent.Control.TTSEngines" /> Collection that includes all available text-to-speech engines.</value>
+<remarks>
+<para>This property allows you to query available text-to-speech engines without loading a character.
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.Control.TTSEngines" />
+<seealso cref="T:DoubleAgent.Control.TTSEngine" />
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlActivateInput">
+<summary> Signalled when a client becomes input-active.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlActivateInputEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlActivateInputEvent.CharacterID" /></term>
+<description>The unique identifier of the character that has become input-active.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>The input-active client receives mouse and speech input events for the character. Double Agent sends this event only to the client that becomes input-active.
+</para>
+<para>This event can occur when the user uses your <see cref="T:DoubleAgent.Control.Commands" /> Collection, for example, by choosing a <see cref="T:DoubleAgent.Control.Commands" /> Collection entry in the <a href="../Reference/UI_Intro.htm#VoiceCommands">Voice Commands</a> window or in the <a href="../Reference/UI_Intro.htm#Menu">pop-up menu</a> window for a character. It can also occur when the user selects a character (by clicking or speaking its name), when a character becomes visible, or when the character of another client application becomes hidden.
+</para>
+<para>You can also call the <see cref="M:DoubleAgent.Control.Character.Activate(System.Object)" /> method with <paramref name="State" /> set to 2 (<see cref="F:DoubleAgent.Control.ActiveStateType.InputActive" />) to explicitly make the character topmost, which results in your client application becoming input-active and triggers this event. However, this event does not occur if you use the <see cref="M:DoubleAgent.Control.Character.Activate(System.Object)" /> method only to specify whether or not your client is the active client of the character.
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlActivateInputEvent" />
+<seealso cref="M:DoubleAgent.Control.Character.Activate(System.Object)" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDeactivateInput" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlActiveClientChange" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlActivateInputEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlActiveClientChange">
+<summary> Signalled when the active client of the character changes.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlActiveClientChangeEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlActiveClientChangeEvent.CharacterID" /></term>
+<description>The unique identifier of the character that has become active or inactive.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlActiveClientChangeEvent.Active" /></term>
+<description> True if the character has become the active client or False if it's no longer the active client.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>When multiple clients (<see cref="T:DoubleAgent.AxControl.AxControl" /> instances) share the same character, the active client of the character receives mouse input (for example, click or drag events). Similarly, when multiple characters are displayed, the active client of the topmost character (also known as the input-active client) receives <see cref="E:DoubleAgent.AxControl.AxControl.CtlCommand" /> events.
+</para>
+<para>A client application may receive this event when the user selects one of the client's entries in the character's <a href="../Reference/UI_Intro.htm#Menu">pop-up menu</a> or by voice command, when the client application changes its active status, or when another client terminates.
+</para>
+<para>Double Agent sends this event only to the clients that are directly affected; that either become the active client or stop being the active client.
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlActiveClientChangeEvent" />
+<seealso cref="M:DoubleAgent.Control.Character.Activate(System.Object)" />
+<seealso cref="P:DoubleAgent.Control.Character.ActiveState" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDeactivateInput" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlActiveClientChangeEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlActiveClientChange" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlAgentPropertyChange">
+<summary> Signalled when the user changes a property in the <a href="../Reference/UI_PropSheet.htm">Advanced Character Options</a> window.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">An EventArgs object that contains no event data.</param>
+<remarks>
+<para>This event indicates that the user has changed and applied any property in the <a href="../Reference/UI_PropSheet.htm">Advanced Character Options</a> window. You can use the <see cref="T:DoubleAgent.Control.Settings" /> Object to query the specific property settings.
+</para>
+</remarks>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDefaultCharacterChange" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlAgentPropertyChangeEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlAgentPropertyChange" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlBalloonHide">
+<summary> Signalled when a character's <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> is hidden.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlBalloonHideEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlBalloonHideEvent.CharacterID" /></term>
+<description>The unique identifier of the character who's <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> was hidden.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>Double Agent sends this event only to all clients of the character (applications that have loaded the character).
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlBalloonHideEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlBalloonShow" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlBalloonHideEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlBalloonHide" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlBalloonShow">
+<summary> Signalled when a character's <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> is shown.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlBalloonShowEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlBalloonShowEvent.CharacterID" /></term>
+<description>The unique identifier of the character who's <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> was shown.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>Double Agent sends this event only to all clients of the character (applications that have loaded the character).
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlBalloonShowEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlBalloonHide" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlBalloonShowEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlBalloonShow" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlBookmark">
+<summary> Signalled when a bookmark defined by your application in a speech text string is reached.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlBookmarkEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlBookmarkEvent.BookmarkID" /></term>
+<description>The bookmark's unique identifier.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>To specify a bookmark event, use the <see cref="M:DoubleAgent.Control.Character.Speak(System.Object,System.Object)" /> or <see cref="M:DoubleAgent.Control.Character.SpeakFormatted(DoubleAgent.Control.FormattedText)" /> method with a Mrk tag in your supplied text. For more information about tags, see <a href="../Reference/Ref_SpeechTags.htm">Speech Output Tags</a>.
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlBookmarkEvent" />
+<seealso cref="M:DoubleAgent.Control.Character.Speak(System.Object,System.Object)" />
+<seealso cref="M:DoubleAgent.Control.Character.SpeakFormatted(DoubleAgent.Control.FormattedText)" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlBookmarkEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlBookmark" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlClick">
+<summary> Signalled when the user clicks a character, or the character's <a href="../Reference/UI_Intro.htm#Icon">notification icon</a>.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlClickEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlClickEvent.CharacterID" /></term>
+<description>The unique identifier of the character that was clicked.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlClickEvent.Button" /></term>
+<description>A numeric value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the left button (bit 0) (&amp;H0001), right button (bit 1) (&amp;H0002), and middle button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a href="../Reference/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a href="../Reference/UI_Intro.htm#Icon">notification icon</a>.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlClickEvent.Shift" /></term>
+<description>A numeric value that corresponds to the state of the Shift, Ctrl, and Alt keys when the mouse button was pressed or released. The <paramref name="Shift" /> parameter is a bit field with bits corresponding to the Shift key (bit 0) (&amp;H0001), the Ctrl key (bit 1) (&amp;H0002), and the Alt key (bit 2) (&amp;H0004). A bit is set if the key is down. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are down. For example, if both Ctrl and Alt were down, the  value of <paramref name="Shift" /> would be 6.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlClickEvent.X" /></term>
+<description>The current horizontal location of the mouse pointer, in pixels, relative to the left side of the screen.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlClickEvent.Y" /></term>
+<description>The current vertical location of the mouse pointer, in pixels, relative to the top of the screen.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>This event is sent only to the input-active client of a character. When the user clicks a character or its <a href="../Reference/UI_Intro.htm#Icon">notification icon</a> with no input-active client, Double Agent sends the event to its active client. If the character is visible (<see cref="P:DoubleAgent.Control.Character.Visible" /> is True), the user's action also sets the character's current input-active client as the last input-active client, sending the <see cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" /> event to that client, and then sending the CtlClick event. If the character is hidden (<see cref="P:DoubleAgent.Control.Character.Visible" /> is False), and the user clicks the character's <a href="../Reference/UI_Intro.htm#Icon">notification icon</a> using button 1, the character is also automatically shown.
+</para>
+<note>Clicking a character does not disable all other character output. However, pressing the Listening key <em>does</em> flush the input-active character's output and triggers the <see cref="E:DoubleAgent.AxControl.AxControl.CtlRequestComplete" /> event, passing a <see cref="P:DoubleAgent.Control.Request.Status" /> that indicates that the client's queue was interrupted.</note>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlClickEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDblClick" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlClickEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlClick" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlCommand">
+<summary> Signalled when the user chooses a (client's) command.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlCommandEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlCommandEvent.UserInput" /></term>
+<description>A <see cref="T:DoubleAgent.Control.UserInput" /> Object that identifies the chosen command.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>Double Agent sends this event when your application is input-active and the user chooses a command from the character's <a href="../Reference/UI_Intro.htm#Menu">pop-up menu</a>, or by spoken input.
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlCommandEvent" />
+<seealso cref="T:DoubleAgent.Control.UserInput" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlCommandEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlCommand" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlDblClick">
+<summary> Signalled when the user double-clicks a character.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlDblClickEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlDblClickEvent.CharacterID" /></term>
+<description>The unique identifier of the character that was double-clicked.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlDblClickEvent.Button" /></term>
+<description>A numeric value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the left button (bit 0) (&amp;H0001), right button (bit 1) (&amp;H0002), and middle button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a href="../Reference/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a href="../Reference/UI_Intro.htm#Icon">notification icon</a>.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlDblClickEvent.Shift" /></term>
+<description>A numeric value that corresponds to the state of the Shift, Ctrl, and Alt keys when the mouse button was pressed or released. The <paramref name="Shift" /> parameter is a bit field with bits corresponding to the Shift key (bit 0) (&amp;H0001), the Ctrl key (bit 1) (&amp;H0002), and the Alt key (bit 2) (&amp;H0004). A bit is set if the key is down. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are down. For example, if both Ctrl and Alt were down, the  value of <paramref name="Shift" /> would be 6.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlDblClickEvent.X" /></term>
+<description>The current horizontal location of the mouse pointer, in pixels, relative to the left side of the screen.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlDblClickEvent.Y" /></term>
+<description>The current vertical location of the mouse pointer, in pixels, relative to the top of the screen.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>This event is sent only to the input-active client of a character. When the user double-clicks a character or its <a href="../Reference/UI_Intro.htm#Icon">notification icon</a> with no input-active client, Double Agent sends the event to its active client. If the character is visible (<see cref="P:DoubleAgent.Control.Character.Visible" /> is True), the user's action also sets the character's current input-active client as the last input-active client, sending the <see cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" /> event to that client, and then sending the CtlDblClick event. If the character is hidden (<see cref="P:DoubleAgent.Control.Character.Visible" /> is False), and the user double-clicks the character's <a href="../Reference/UI_Intro.htm#Icon">notification icon</a> using button 1, the character is also automatically shown.
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlDblClickEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlClick" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlDblClickEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlDblClick" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlDeactivateInput">
+<summary> Signalled when a client becomes non-input-active.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlDeactivateInputEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlDeactivateInputEvent.CharacterID" /></term>
+<description>The unique identifier of the character that has become non-input-active.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>A non-input-active client no longer receives mouse or speech events from Double Agent (unless it becomes input-active again). Double Agent sends this event only to the client that becomes non-input-active.
+</para>
+<para>This event is signalled when your client application is input-active and the user chooses a another client's <see cref="T:DoubleAgent.Control.Command" /> in a character's <a href="../Reference/UI_Intro.htm#Menu">pop-up menu</a> or the <a href="../Reference/UI_Intro.htm#VoiceCommands">Voice Commands</a> window, or you call the <see cref="M:DoubleAgent.Control.Character.Activate(System.Object)" /> method and set the <paramref name="State" /> parameter to 0 (<see cref="F:DoubleAgent.Control.ActiveStateType.Inactive" />). It may also occur when the user selects the name of another character by clicking or speaking. You also get this event when your character is hidden or another character becomes visible.
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlDeactivateInputEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlActiveClientChange" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlDeactivateInputEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlDeactivateInput" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlDefaultCharacterChange">
+<summary> Signalled when the user changes the default character.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent.CharGUID" /></term>
+<description>The unique identifier of the new default character.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>This event indicates that the user has changed the character assigned as the user's default character. Double Agent sends this only to clients that have loaded the default character.
+</para>
+<para>When the new character appears, it assumes the same size as any already loaded instance of the character, or the size of the previous default character (in that order).
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent" />
+<seealso cref="M:DoubleAgent.AxControl.AxControl.ShowDefaultCharacterProperties(System.Object,System.Object)" />
+<seealso cref="M:DoubleAgent.Control.Characters.Load(System.String,System.Object)" />
+<seealso cref="P:DoubleAgent.Control.CharacterFiles.DefaultFilePath" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlDefaultCharacterChangeEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlDefaultCharacterChange" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlDragComplete">
+<summary> Signalled when the user stops dragging a character.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlDragCompleteEvent.CharacterID" /></term>
+<description>The unique identifier of the character that was dragged.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Button" /></term>
+<description>A numeric value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the left button (bit 0) (&amp;H0001), right button (bit 1) (&amp;H0002), and middle button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a href="../Reference/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a href="../Reference/UI_Intro.htm#Icon">notification icon</a>.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Shift" /></term>
+<description>A numeric value that corresponds to the state of the Shift, Ctrl, and Alt keys when the mouse button was pressed or released. The <paramref name="Shift" /> parameter is a bit field with bits corresponding to the Shift key (bit 0) (&amp;H0001), the Ctrl key (bit 1) (&amp;H0002), and the Alt key (bit 2) (&amp;H0004). A bit is set if the key is down. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are down. For example, if both Ctrl and Alt were down, the  value of <paramref name="Shift" /> would be 6.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlDragCompleteEvent.X" /></term>
+<description>The current horizontal location of the mouse pointer, in pixels, relative to the left side of the screen.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Y" /></term>
+<description>The current vertical location of the mouse pointer, in pixels, relative to the top of the screen.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>This event is sent only to the input-active client of a character. When the user drags a character with no input-active client, Double Agent sets its current input-active client as the last input-active client, sending the <see cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" /> event to that client, and then sending the <see cref="E:DoubleAgent.AxControl.AxControl.CtlDragStart" /> and CtlDragComplete events.
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragStart" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlDragCompleteEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlDragComplete" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlDragStart">
+<summary> Signalled when the user starts dragging a character.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlDragStartEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlDragStartEvent.CharacterID" /></term>
+<description>The unique identifier of the character that's being dragged.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlDragStartEvent.Button" /></term>
+<description>A numeric value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the left button (bit 0) (&amp;H0001), right button (bit 1) (&amp;H0002), and middle button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a href="../Reference/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a href="../Reference/UI_Intro.htm#Icon">notification icon</a>.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlDragStartEvent.Shift" /></term>
+<description>A numeric value that corresponds to the state of the Shift, Ctrl, and Alt keys when the mouse button was pressed or released. The <paramref name="Shift" /> parameter is a bit field with bits corresponding to the Shift key (bit 0) (&amp;H0001), the Ctrl key (bit 1) (&amp;H0002), and the Alt key (bit 2) (&amp;H0004). A bit is set if the key is down. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are down. For example, if both Ctrl and Alt were down, the  value of <paramref name="Shift" /> would be 6.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlDragStartEvent.X" /></term>
+<description>The current horizontal location of the mouse pointer, in pixels, relative to the left side of the screen.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlDragStartEvent.Y" /></term>
+<description>The current vertical location of the mouse pointer, in pixels, relative to the top of the screen.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>This event is sent only to the input-active client of a character. When the user drags a character with no input-active client, Double Agent sets its current input-active client as the last input-active client, sending the <see cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" /> event to that client, and then sending the CtlDragStart event.
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlDragStartEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragComplete" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlDragStartEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlDragStart" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlHide">
+<summary> Signalled when a character is hidden.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlHideEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlHideEvent.CharacterID" /></term>
+<description>The unique identifier of the character that was hidden.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlHideEvent.Cause" /></term>
+<description>A <see cref="T:DoubleAgent.Control.VisibilityCauseType" /> value that indicates what caused the character to be hidden: 
+<list type="table">
+<item name="UserHid"><term xml:space="preserve">
+1 = UserHid
+</term>
+<description>The user hid the character using the command on the character's <a href="../Reference/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
+</item>
+<item name="ProgramHid"><term xml:space="preserve">
+3 = ProgramHid
+</term>
+<description>Your application hid the character.</description>
+</item>
+<item name="OtherProgramHid"><term xml:space="preserve">
+5 = OtherProgramHid
+</term>
+<description>Another client application hid the character.</description>
+</item>
+</list>
+</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>Double Agent sends this event to all clients of the character. To query the current state of the character, use the <see cref="P:DoubleAgent.Control.Character.Visible" /> property.
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlHideEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlShow" />
+<seealso cref="M:DoubleAgent.Control.Character.Hide(System.Object)" />
+<seealso cref="P:DoubleAgent.Control.Character.Visible" />
+<seealso cref="P:DoubleAgent.Control.Character.VisibilityCause" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlHideEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlHide" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlIdleComplete">
+<summary> Signalled when Double Agent ends the Idling state of a character.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlIdleCompleteEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlIdleCompleteEvent.CharacterID" /></term>
+<description>The unique identifier of the Idling character.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>Double Agent sends this event to all clients of the character.
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlIdleCompleteEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlIdleStart" />
+<seealso cref="P:DoubleAgent.Control.Character.IdleEnabled" />
+<seealso cref="P:DoubleAgent.Control.Character.IdleState" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlIdleCompleteEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlIdleComplete" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlIdleStart">
+<summary> Signalled when Double Agent sets a character to the Idling state.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlIdleStartEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlIdleStartEvent.CharacterID" /></term>
+<description>The unique identifier of the Idling character.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>Double Agent sends this event to all clients of the character.
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlIdleStartEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlIdleComplete" />
+<seealso cref="P:DoubleAgent.Control.Character.IdleEnabled" />
+<seealso cref="P:DoubleAgent.Control.Character.IdleState" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlIdleStartEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlIdleStart" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlListenComplete">
+<summary> Signalled when Listening mode (speech recognition) has ended.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlListenCompleteEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlListenCompleteEvent.CharacterID" /></term>
+<description>The unique identifier of the listening character.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlListenCompleteEvent.Cause" /></term>
+<description>The cause of the ListenComplete event.
+<list type="table">
+<item><term xml:space="preserve">
+1 = ProgramDisabled
+</term>
+<description>This program turned off the Listening mode with the <see cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" /> method.</description>
+</item>
+<item><term xml:space="preserve">
+2 = ProgramTimedOut
+</term>
+<description>The Listening mode was started by this program with the <see cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" /> method, and it timed out.</description>
+</item>
+<item><term xml:space="preserve">
+3 = UserTimedOut
+</term>
+<description>The Listening mode was started with the Listening key, and it timed out.</description>
+</item>
+<item><term xml:space="preserve">
+4 = UserReleasedKey
+</term>
+<description>The Listening mode was started with the Listening key, and the key was released.</description>
+</item>
+<item><term xml:space="preserve">
+5 = UserSpeechEnded
+</term>
+<description>Speech recognition has produced a result.</description>
+</item>
+<item><term xml:space="preserve">
+6 = CharacterClientDeactivated
+</term>
+<description>The character is no longer active or it's active client has changed.</description>
+</item>
+<item><term xml:space="preserve">
+7 = DefaultCharacterChanged
+</term>
+<description>The default character was changed in the <a href="../Reference/UI_PropSheet.htm#Gallery">Advanced Character Options</a> window.</description>
+</item>
+<item><term xml:space="preserve">
+8 = UserDisabled
+</term>
+<description>Speech recognition was disabled in the <a href="../Reference/UI_PropSheet.htm#SpeechInput">Advanced Character Options</a> window.</description>
+</item>
+</list>
+</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>This event is sent to all clients when the Listening mode time-out ends, after the user releases the Listening key, when the input-active client calls the <see cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" /> method with False, or when the user has finished speaking. You can use this event to determine when to resume spoken output.
+</para>
+<para>If you turn on Listening mode using the <see cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" /> method and then the user presses the Listening key, the Listening mode resets and continues until the Listening key time-out completes, the Listening key is released, or the user finishes speaking, whichever is later. In this situation, you will <em>not</em> receive a ListenComplete event until the Listening key's mode completes.
+</para>
+<para>The event returns the <paramref name="CharacterID" /> to the clients that currently have this character loaded. All other clients receive a null <paramref name="CharacterID" /> (empty string).
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlListenCompleteEvent" />
+<seealso cref="T:DoubleAgent.Control.ListenCompleteType" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlListenStart" />
+<seealso cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" />
+<seealso cref="P:DoubleAgent.Control.Settings.SRHotKeyTime" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlListenCompleteEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlListenComplete" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlListenStart">
+<summary> Signalled when Listening mode (speech recognition) begins.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlListenStartEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlListenStartEvent.CharacterID" /></term>
+<description>The unique identifier of the listening character.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>This event is sent to all clients when Listening mode begins because the user pressed the Listening key or the input-active client called the <see cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" /> method with True. You can use this event to avoid having your character speak while Listening mode is active.
+</para>
+<para>If you turn on Listening mode with the <see cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" /> method and then the user presses the Listening key, the Listening mode resets and continues until the Listening key time-out completes, the Listening key is released, or the user finishes speaking, whichever is later. In this situation, when Listening mode is already on, you will <em>not</em> get an additional ListenStart event when the user presses the Listening key.
+</para>
+<para>The event returns the <paramref name="CharacterID" /> to the clients that currently have this character loaded. All other clients receive a null <paramref name="CharacterID" /> (empty string).
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlListenStartEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlListenComplete" />
+<seealso cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" />
+<seealso cref="P:DoubleAgent.Control.Settings.SRHotKey" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlListenStartEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlListenStart" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlMove">
+<summary> Signalled when a character has moved.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlMoveEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlMoveEvent.CharacterID" /></term>
+<description>The unique identifier of the character that was moved.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlMoveEvent.X" /></term>
+<description>The character's new horizontal location, in pixels, relative to the left side of the screen.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlMoveEvent.Y" /></term>
+<description>The character's new vertical location, in pixels, relative to the top of the screen.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlMoveEvent.Cause" /></term>
+<description>The reason the character moved:
+<list type="table">
+<item name="UserMoved"><term xml:space="preserve">
+1 = UserMoved
+</term>
+<description>The user dragged the character.</description>
+</item>
+<item name="ProgramMoved"><term xml:space="preserve">
+2 = ProgramMoved
+</term>
+<description>Your client application moved the character.</description>
+</item>
+<item name="OtherProgramMoved"><term xml:space="preserve">
+3 = OtherProgramMoved
+</term>
+<description>Another client application moved the character.</description>
+</item>
+</list>
+</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>This event is signalled when the user or an application changes the character's position. Coordinates are relevant to the upper left corner of the screen. This event is sent only to the clients of the character (applications that have loaded the character).
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlMoveEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSize" />
+<seealso cref="M:DoubleAgent.Control.Character.MoveTo(System.Int16,System.Int16,System.Object)" />
+<seealso cref="P:DoubleAgent.Control.Character.MoveCause" />
+<seealso cref="T:DoubleAgent.Control.MoveCauseType" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlMoveEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlMove" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlRequestComplete">
+<summary> Signalled when Double Agent completes a queued request.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlRequestCompleteEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlRequestCompleteEvent.Request" /></term>
+<description>The <see cref="T:DoubleAgent.Control.Request" /> Object that identifies the completed request.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>This event provides a <see cref="T:DoubleAgent.Control.Request" /> Object. Because requests are processed asynchronously, you can use this event to determine when Double Agent finishes processing a request (such as a <see cref="M:DoubleAgent.Control.Character.Prepare(DoubleAgent.Control.PrepareResourceType,System.String,System.Object)" />, <see cref="M:DoubleAgent.Control.Character.Play(System.String)" />, or <see cref="M:DoubleAgent.Control.Character.Speak(System.Object,System.Object)" /> method) to synchronize this event with other requests generated by your application. Double Agent sends the event only to the client that created the reference to the <see cref="T:DoubleAgent.Control.Request" /> Object, and only if you defined a global variable for the request reference.
+</para>
+<example><code xml:space="preserve">Dim MyRequest 
+Dim Genie
+
+Sub window_Onload
+    control.Characters.Load "Genie","Genie.acs"
+
+    Set Genie = control.Characters("Genie")
+
+    ' This syntax will generate CtlRequestStart and CtlRequestComplete events.
+    Set MyRequest = Genie.Show(False)
+    ' This syntax will not generate CtlRequestStart and CtlRequestComplete events.
+    Genie.Hide False
+End Sub
+
+Sub control_CtlRequestComplete(ByVal Request)
+    If Request Is MyRequest Then
+        status = "Genie was shown"
+End Sub</code></example>
+<para>Because animation <see cref="T:DoubleAgent.Control.Request" /> Objects don't get assigned until Double Agent has queued the request, make sure that the <see cref="T:DoubleAgent.Control.Request" /> Object exists before you attempt to evaluate it. For example, in Visual Basic, if you use a conditional to test whether a specific request was completed, you can use the Nothing keyword.
+</para>
+<example><code xml:space="preserve">Sub control_CtlRequestComplete (ByVal Request)
+    If Not (MyRequest Is Nothing) Then
+        If Request Is MyRequest Then
+            '-- Do whatever
+        End If
+    End If
+End Sub</code></example></remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlRequestCompleteEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlRequestStart" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlRequestCompleteEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlRequestComplete" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlRequestStart">
+<summary> Signalled when Double Agent begins a queued request.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlRequestStartEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlRequestStartEvent.Request" /></term>
+<description>The <see cref="T:DoubleAgent.Control.Request" /> Object that identifies the queued request.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>The event provides a <see cref="T:DoubleAgent.Control.Request" /> Object. Because requests are processed asynchronously, you can use this event to determine when Double Agent begins processing a request (such as a <see cref="M:DoubleAgent.Control.Character.Prepare(DoubleAgent.Control.PrepareResourceType,System.String,System.Object)" />, <see cref="M:DoubleAgent.Control.Character.Play(System.String)" />, or <see cref="M:DoubleAgent.Control.Character.Speak(System.Object,System.Object)" /> method) and thereby synchronize this with other requests generated by your application. The event is sent only to the client that created the reference to the <see cref="T:DoubleAgent.Control.Request" /> Object, and only if you defined a global variable for the request reference.
+</para>
+<example><code xml:space="preserve">Dim MyRequest 
+Dim Genie 
+
+Sub window_Onload
+    control.Characters.Load "Genie", "Genie.acs"
+
+    Set Genie = control.Characters("Genie")
+
+    ' This syntax will generate CtlRequestStart and CtlRequestComplete events.
+    Set MyRequest = Genie.Show(False)
+
+    ' This syntax will not generate CtlRequestStart and CtlRequestComplete events.
+    Genie.Hide False
+End Sub
+
+Sub control_CtlRequestStart(ByVal Request)
+    If Request Is MyRequest Then
+        status = "Genie is showing"
+End Sub</code></example>
+<para>The <see cref="P:DoubleAgent.Control.Request.Status" /> property is 4 (InProgress) for the <see cref="T:DoubleAgent.Control.Request" /> Object.
+</para>
+<para>Because animation <see cref="T:DoubleAgent.Control.Request" /> Objects don't get assigned until Double Agent has queued the request, make sure that the <see cref="T:DoubleAgent.Control.Request" /> Object exists before you attempt to evaluate it. For example, in Visual Basic, if you use a conditional to test whether a specific request was completed, you can use the Nothing keyword.
+</para>
+<example><code xml:space="preserve">Sub control_CtlRequestStart (ByVal Request)
+    If Not (MyRequest Is Nothing) Then
+        If Request Is MyRequest Then
+            '-- Do whatever
+        End If
+    End If
+End Sub</code></example></remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlRequestStartEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlRequestComplete" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlRequestStartEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlRequestStart" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlShow">
+<summary> Signalled when a character is displayed.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlShowEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlShowEvent.CharacterID" /></term>
+<description>The unique identifier of the character that was shown.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlShowEvent.Cause" /></term>
+<description>A <see cref="T:DoubleAgent.Control.VisibilityCauseType" /> value that indicates what caused the character to be shown. 
+<list type="table">
+<item name="UserShowed"><term xml:space="preserve">
+2 = UserShowed
+</term>
+<description>The user showed the character using the command on the character's <a href="../Reference/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
+</item>
+<item name="ProgramShowed"><term xml:space="preserve">
+4 = ProgramShowed
+</term>
+<description>Your application showed the character.</description>
+</item>
+<item name="OtherProgramShowed"><term xml:space="preserve">
+6 = OtherProgramShowed
+</term>
+<description>Another client application showed the character.</description>
+</item>
+</list>
+</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>Double Agent sends this event to all clients of the character. To query the current state of the character, use the <see cref="P:DoubleAgent.Control.Character.Visible" /> property.
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlShowEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlHide" />
+<seealso cref="M:DoubleAgent.Control.Character.Show(System.Object)" />
+<seealso cref="P:DoubleAgent.Control.Character.Visible" />
+<seealso cref="P:DoubleAgent.Control.Character.VisibilityCause" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlShowEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlShow" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlSize">
+<summary> Signalled when a character's size changes.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlSizeEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlSizeEvent.CharacterID" /></term>
+<description>The unique identifier of the character that was resized.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlSizeEvent.Width" /></term>
+<description>The character's new width, in pixels.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlSizeEvent.Height" /></term>
+<description>The character's new height, in pixels.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>This event is signalled when an application changes the size of a character. This event is sent only to the clients of the character (applications that have loaded the character).
+</para>
+</remarks>
+<seealso cref="T:DoubleAgent.AxControl.CtlSizeEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlMove" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlSizeEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlSize" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlSpeechStart">
+<summary> Signalled when the character starts speaking for the <see cref="M:DoubleAgent.Control.Character.SpeakFormatted(DoubleAgent.Control.FormattedText)" /> method.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlSpeechStartEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlSpeechStartEvent.CharacterID" /></term>
+<description>The unique identifier of the speaking character.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlSpeechStartEvent.FormattedText" /></term>
+<description>The <see cref="T:DoubleAgent.Control.FormattedText" /> that's being spoken.</description>
+</item>
+</list>
+</param>
+<remarks>
+<note name="FormattedText">The <paramref name="FormattedText" /> parameter may not contain the same reference pointer as the <paramref name="FormattedText" /> parameter passed to the <see cref="M:DoubleAgent.Control.Character.SpeakFormatted(DoubleAgent.Control.FormattedText)" /> method, but the underlying data is the same.</note>
+</remarks>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechEnd" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechWord" />
+<seealso cref="T:DoubleAgent.Control.FormattedText" />
+<seealso cref="M:DoubleAgent.Control.Character.SpeakFormatted(DoubleAgent.Control.FormattedText)" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlSpeechStartEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechStart" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlSpeechEnd">
+<summary> Signalled when the character stops speaking for the <see cref="M:DoubleAgent.Control.Character.SpeakFormatted(DoubleAgent.Control.FormattedText)" /> method.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlSpeechEndEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlSpeechEndEvent.CharacterID" /></term>
+<description>The unique identifier of the speaking character.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlSpeechEndEvent.FormattedText" /></term>
+<description>The <see cref="T:DoubleAgent.Control.FormattedText" /> that's being spoken.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlSpeechEndEvent.Stopped" /></term>
+<description>A boolean value that indicates if the speech was stopped before completion.</description>
+</item>
+</list>
+</param>
+<remarks>
+<note name="FormattedText">The <paramref name="FormattedText" /> parameter may not contain the same reference pointer as the <paramref name="FormattedText" /> parameter passed to the <see cref="M:DoubleAgent.Control.Character.SpeakFormatted(DoubleAgent.Control.FormattedText)" /> method, but the underlying data is the same.</note>
+</remarks>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechStart" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechWord" />
+<seealso cref="T:DoubleAgent.Control.FormattedText" />
+<seealso cref="M:DoubleAgent.Control.Character.SpeakFormatted(DoubleAgent.Control.FormattedText)" />
+<seealso cref="M:DoubleAgent.Control.Character.Stop(System.Object)" />
+<seealso cref="M:DoubleAgent.Control.Character.StopAll(System.Object)" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlSpeechEndEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechEnd" /> event.</summary>
+</member>
+
+<member name="E:DoubleAgent.AxControl.AxControl.CtlSpeechWord">
+<summary> Signalled when the character reaches a new word for the <see cref="M:DoubleAgent.Control.Character.SpeakFormatted(DoubleAgent.Control.FormattedText)" /> method.</summary>
+<param name="Sender">The source of the event.</param>
+<param name="E">A <see cref="T:DoubleAgent.AxControl.CtlSpeechWordEvent" /> Object that contains the event data: 
+<list>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlSpeechWordEvent.CharacterID" /></term>
+<description>The unique identifier of the speaking character.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlSpeechWordEvent.FormattedText" /></term>
+<description>The <see cref="T:DoubleAgent.Control.FormattedText" /> that's being spoken.</description>
+</item>
+<item>
+<term> <see cref="F:DoubleAgent.AxControl.CtlSpeechWordEvent.WordIndex" /></term>
+<description>A numeric value that identifies the word that is currently being spoken.</description>
+</item>
+</list>
+</param>
+<remarks>
+<para>Because events are signalled asynchronously, the synchronization between the speech output and the receipt of this event cannot be exact. However, <paramref name="WordIndex" /> will generally identify the <em>next</em> word to be spoken.
+</para>
+<note name="FormattedText">The <paramref name="FormattedText" /> parameter may not contain the same reference pointer as the <paramref name="FormattedText" /> parameter passed to the <see cref="M:DoubleAgent.Control.Character.SpeakFormatted(DoubleAgent.Control.FormattedText)" /> method, but the underlying data is the same.</note>
+</remarks>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechStart" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechEnd" />
+<seealso cref="T:DoubleAgent.Control.FormattedText" />
+<seealso cref="P:DoubleAgent.Control.FormattedText.WordIndex" />
+<seealso cref="M:DoubleAgent.Control.Character.SpeakFormatted(DoubleAgent.Control.FormattedText)" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlSpeechWordEventHandler">
+<summary> See the <see cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechWord" /> event.</summary>
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlActivateInputEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlActivateInputEvent.CharacterID">
+<summary> The unique identifier of the character that has become input-active.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlActivateInputEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlActivateInput" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlActiveClientChangeEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlActiveClientChange" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlActiveClientChange" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlActiveClientChangeEvent.Active">
+<summary> True if the character has become the active client or False if it's no longer the active client.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlActiveClientChangeEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlActiveClientChange" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlActiveClientChangeEvent.CharacterID">
+<summary> The unique identifier of the character that has become active or inactive.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlActiveClientChangeEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlActiveClientChange" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlBalloonHideEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlBalloonHide" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlBalloonHide" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlBalloonHideEvent.CharacterID">
+<summary> The unique identifier of the character who's <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> was hidden.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlBalloonHideEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlBalloonHide" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlBalloonShowEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlBalloonShow" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlBalloonShow" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlBalloonShowEvent.CharacterID">
+<summary> The unique identifier of the character who's <a href="../Reference/UI_Intro.htm#Balloon">word balloon</a> was shown.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlBalloonShowEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlBalloonShow" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlBookmarkEvent.BookmarkID">
+<summary> The bookmark's unique identifier.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlBookmarkEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlBookmark" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlBookmarkEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlBookmark" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlBookmark" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlClickEvent.Button">
+<summary> A numeric value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the left button (bit 0) (&amp;H0001), right button (bit 1) (&amp;H0002), and middle button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a href="../Reference/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a href="../Reference/UI_Intro.htm#Icon">notification icon</a>.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlClickEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlClick" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlClickEvent.CharacterID">
+<summary> The unique identifier of the character that was clicked.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlClickEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlClick" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlClickEvent.Shift">
+<summary> A numeric value that corresponds to the state of the Shift, Ctrl, and Alt keys when the mouse button was pressed or released. The <paramref name="Shift" /> parameter is a bit field with bits corresponding to the Shift key (bit 0) (&amp;H0001), the Ctrl key (bit 1) (&amp;H0002), and the Alt key (bit 2) (&amp;H0004). A bit is set if the key is down. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are down. For example, if both Ctrl and Alt were down, the  value of <paramref name="Shift" /> would be 6.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlClickEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlClick" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlClickEvent.X">
+<summary> The current horizontal location of the mouse pointer, in pixels, relative to the left side of the screen.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlClickEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlClick" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlClickEvent.Y">
+<summary> The current vertical location of the mouse pointer, in pixels, relative to the top of the screen.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlClickEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlClick" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlClickEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlClick" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlClick" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlCommandEvent.UserInput">
+<summary> A <see cref="T:DoubleAgent.Control.UserInput" /> Object that identifies the chosen command.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlCommandEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlCommand" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlCommandEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlCommand" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlCommand" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlDblClickEvent.Button">
+<summary> A numeric value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the left button (bit 0) (&amp;H0001), right button (bit 1) (&amp;H0002), and middle button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a href="../Reference/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a href="../Reference/UI_Intro.htm#Icon">notification icon</a>.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlDblClickEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDblClick" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlDblClickEvent.CharacterID">
+<summary> The unique identifier of the character that was double-clicked.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlDblClickEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDblClick" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlDblClickEvent.Shift">
+<summary> A numeric value that corresponds to the state of the Shift, Ctrl, and Alt keys when the mouse button was pressed or released. The <paramref name="Shift" /> parameter is a bit field with bits corresponding to the Shift key (bit 0) (&amp;H0001), the Ctrl key (bit 1) (&amp;H0002), and the Alt key (bit 2) (&amp;H0004). A bit is set if the key is down. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are down. For example, if both Ctrl and Alt were down, the  value of <paramref name="Shift" /> would be 6.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlDblClickEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDblClick" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlDblClickEvent.X">
+<summary> The current horizontal location of the mouse pointer, in pixels, relative to the left side of the screen.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlDblClickEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDblClick" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlDblClickEvent.Y">
+<summary> The current vertical location of the mouse pointer, in pixels, relative to the top of the screen.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlDblClickEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDblClick" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlDblClickEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlDblClick" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDblClick" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlDeactivateInputEvent.CharacterID">
+<summary> The unique identifier of the character that has become non-input-active.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlDeactivateInputEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDeactivateInput" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlDeactivateInputEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlDeactivateInput" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDeactivateInput" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent.CharGUID">
+<summary> The unique identifier of the new default character.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDefaultCharacterChange" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlDefaultCharacterChange" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDefaultCharacterChange" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Button">
+<summary> A numeric value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the left button (bit 0) (&amp;H0001), right button (bit 1) (&amp;H0002), and middle button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a href="../Reference/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a href="../Reference/UI_Intro.htm#Icon">notification icon</a>.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragComplete" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlDragCompleteEvent.CharacterID">
+<summary> The unique identifier of the character that was dragged.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragComplete" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Shift">
+<summary> A numeric value that corresponds to the state of the Shift, Ctrl, and Alt keys when the mouse button was pressed or released. The <paramref name="Shift" /> parameter is a bit field with bits corresponding to the Shift key (bit 0) (&amp;H0001), the Ctrl key (bit 1) (&amp;H0002), and the Alt key (bit 2) (&amp;H0004). A bit is set if the key is down. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are down. For example, if both Ctrl and Alt were down, the  value of <paramref name="Shift" /> would be 6.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragComplete" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlDragCompleteEvent.X">
+<summary> The current horizontal location of the mouse pointer, in pixels, relative to the left side of the screen.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragComplete" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlDragCompleteEvent.Y">
+<summary> The current vertical location of the mouse pointer, in pixels, relative to the top of the screen.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlDragCompleteEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragComplete" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlDragCompleteEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlDragComplete" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragComplete" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlDragStartEvent.Button">
+<summary> A numeric value that identifies which mouse button was pressed and released to cause the event. The <paramref name="Button" /> parameter is a bit field with bits corresponding to the left button (bit 0) (&amp;H0001), right button (bit 1) (&amp;H0002), and middle button (bit 2) (&amp;H0004). Only one of the bits is set, indicating the mouse button that caused the event. If the character has a <a href="../Reference/UI_Intro.htm#Icon">notification icon</a>, and bit 13 (&amp;H1000) is also set, the click occurred on the <a href="../Reference/UI_Intro.htm#Icon">notification icon</a>.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlDragStartEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragStart" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlDragStartEvent.CharacterID">
+<summary> The unique identifier of the character that's being dragged.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlDragStartEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragStart" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlDragStartEvent.Shift">
+<summary> A numeric value that corresponds to the state of the Shift, Ctrl, and Alt keys when the mouse button was pressed or released. The <paramref name="Shift" /> parameter is a bit field with bits corresponding to the Shift key (bit 0) (&amp;H0001), the Ctrl key (bit 1) (&amp;H0002), and the Alt key (bit 2) (&amp;H0004). A bit is set if the key is down. Some, all, or none of the bits can be set, indicating that some, all, or none of the keys are down. For example, if both Ctrl and Alt were down, the  value of <paramref name="Shift" /> would be 6.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlDragStartEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragStart" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlDragStartEvent.X">
+<summary> The current horizontal location of the mouse pointer, in pixels, relative to the left side of the screen.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlDragStartEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragStart" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlDragStartEvent.Y">
+<summary> The current vertical location of the mouse pointer, in pixels, relative to the top of the screen.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlDragStartEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragStart" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlDragStartEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlDragStart" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlDragStart" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlHideEvent.Cause">
+<summary> A <see cref="T:DoubleAgent.Control.VisibilityCauseType" /> value that indicates what caused the character to be hidden: 
+<list type="table">
+<item name="UserHid"><term xml:space="preserve">
+1 = UserHid
+</term>
+<description>The user hid the character using the command on the character's <a href="../Reference/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
+</item>
+<item name="ProgramHid"><term xml:space="preserve">
+3 = ProgramHid
+</term>
+<description>Your application hid the character.</description>
+</item>
+<item name="OtherProgramHid"><term xml:space="preserve">
+5 = OtherProgramHid
+</term>
+<description>Another client application hid the character.</description>
+</item>
+</list>
+</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlHideEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlHide" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlHideEvent.CharacterID">
+<summary> The unique identifier of the character that was hidden.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlHideEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlHide" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlHideEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlHide" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlHide" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlIdleCompleteEvent.CharacterID">
+<summary> The unique identifier of the Idling character.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlIdleCompleteEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlIdleComplete" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlIdleCompleteEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlIdleComplete" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlIdleComplete" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlIdleStartEvent.CharacterID">
+<summary> The unique identifier of the Idling character.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlIdleStartEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlIdleStart" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlIdleStartEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlIdleStart" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlIdleStart" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlListenCompleteEvent.Cause">
+<summary> The cause of the ListenComplete event.
+<list type="table">
+<item><term xml:space="preserve">
+1 = ProgramDisabled
+</term>
+<description>This program turned off the Listening mode with the <see cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" /> method.</description>
+</item>
+<item><term xml:space="preserve">
+2 = ProgramTimedOut
+</term>
+<description>The Listening mode was started by this program with the <see cref="M:DoubleAgent.Control.Character.Listen(System.Boolean)" /> method, and it timed out.</description>
+</item>
+<item><term xml:space="preserve">
+3 = UserTimedOut
+</term>
+<description>The Listening mode was started with the Listening key, and it timed out.</description>
+</item>
+<item><term xml:space="preserve">
+4 = UserReleasedKey
+</term>
+<description>The Listening mode was started with the Listening key, and the key was released.</description>
+</item>
+<item><term xml:space="preserve">
+5 = UserSpeechEnded
+</term>
+<description>Speech recognition has produced a result.</description>
+</item>
+<item><term xml:space="preserve">
+6 = CharacterClientDeactivated
+</term>
+<description>The character is no longer active or it's active client has changed.</description>
+</item>
+<item><term xml:space="preserve">
+7 = DefaultCharacterChanged
+</term>
+<description>The default character was changed in the <a href="../Reference/UI_PropSheet.htm#Gallery">Advanced Character Options</a> window.</description>
+</item>
+<item><term xml:space="preserve">
+8 = UserDisabled
+</term>
+<description>Speech recognition was disabled in the <a href="../Reference/UI_PropSheet.htm#SpeechInput">Advanced Character Options</a> window.</description>
+</item>
+</list>
+</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlListenCompleteEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlListenComplete" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlListenCompleteEvent.CharacterID">
+<summary> The unique identifier of the listening character.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlListenCompleteEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlListenComplete" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlListenCompleteEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlListenComplete" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlListenComplete" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlListenStartEvent.CharacterID">
+<summary> The unique identifier of the listening character.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlListenStartEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlListenStart" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlListenStartEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlListenStart" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlListenStart" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlMoveEvent.Cause">
+<summary> The reason the character moved:
+<list type="table">
+<item name="UserMoved"><term xml:space="preserve">
+1 = UserMoved
+</term>
+<description>The user dragged the character.</description>
+</item>
+<item name="ProgramMoved"><term xml:space="preserve">
+2 = ProgramMoved
+</term>
+<description>Your client application moved the character.</description>
+</item>
+<item name="OtherProgramMoved"><term xml:space="preserve">
+3 = OtherProgramMoved
+</term>
+<description>Another client application moved the character.</description>
+</item>
+</list>
+</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlMoveEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlMove" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlMoveEvent.CharacterID">
+<summary> The unique identifier of the character that was moved.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlMoveEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlMove" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlMoveEvent.X">
+<summary> The character's new horizontal location, in pixels, relative to the left side of the screen.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlMoveEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlMove" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlMoveEvent.Y">
+<summary> The character's new vertical location, in pixels, relative to the top of the screen.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlMoveEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlMove" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlMoveEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlMove" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlMove" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlRequestCompleteEvent.Request">
+<summary> The <see cref="T:DoubleAgent.Control.Request" /> Object that identifies the completed request.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlRequestCompleteEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlRequestComplete" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlRequestCompleteEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlRequestComplete" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlRequestComplete" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlRequestStartEvent.Request">
+<summary> The <see cref="T:DoubleAgent.Control.Request" /> Object that identifies the queued request.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlRequestStartEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlRequestStart" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlRequestStartEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlRequestStart" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlRequestStart" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlShowEvent.Cause">
+<summary> A <see cref="T:DoubleAgent.Control.VisibilityCauseType" /> value that indicates what caused the character to be shown. 
+<list type="table">
+<item name="UserShowed"><term xml:space="preserve">
+2 = UserShowed
+</term>
+<description>The user showed the character using the command on the character's <a href="../Reference/UI_Intro.htm#Icon">notification icon</a> or using speech input.</description>
+</item>
+<item name="ProgramShowed"><term xml:space="preserve">
+4 = ProgramShowed
+</term>
+<description>Your application showed the character.</description>
+</item>
+<item name="OtherProgramShowed"><term xml:space="preserve">
+6 = OtherProgramShowed
+</term>
+<description>Another client application showed the character.</description>
+</item>
+</list>
+</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlShowEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlShow" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlShowEvent.CharacterID">
+<summary> The unique identifier of the character that was shown.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlShowEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlShow" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlShowEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlShow" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlShow" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlSizeEvent.CharacterID">
+<summary> The unique identifier of the character that was resized.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlSizeEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSize" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlSizeEvent.Height">
+<summary> The character's new height, in pixels.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlSizeEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSize" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlSizeEvent.Width">
+<summary> The character's new width, in pixels.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlSizeEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSize" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlSizeEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlSize" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSize" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlSpeechStartEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechStart" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechStart" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlSpeechStartEvent.CharacterID">
+<summary> The unique identifier of the speaking character.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlSpeechStartEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechStart" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlSpeechStartEvent.FormattedText">
+<summary> The <see cref="T:DoubleAgent.Control.FormattedText" /> that's being spoken.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlSpeechStartEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechStart" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlSpeechEndEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechEnd" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechEnd" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlSpeechEndEvent.CharacterID">
+<summary> The unique identifier of the speaking character.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlSpeechEndEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechEnd" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlSpeechEndEvent.FormattedText">
+<summary> The <see cref="T:DoubleAgent.Control.FormattedText" /> that's being spoken.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlSpeechEndEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechEnd" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlSpeechEndEvent.Stopped">
+<summary> A boolean value that indicates if the speech was stopped before completion.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlSpeechEndEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechEnd" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.CtlSpeechWordEvent">
+<summary> Event arguments for the <see cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechWord" /> Event.</summary>
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechWord" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlSpeechWordEvent.CharacterID">
+<summary> The unique identifier of the speaking character.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlSpeechWordEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechWord" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlSpeechWordEvent.FormattedText">
+<summary> The <see cref="T:DoubleAgent.Control.FormattedText" /> that's being spoken.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlSpeechWordEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechWord" />
+</member>
+
+<member name="F:DoubleAgent.AxControl.CtlSpeechWordEvent.WordIndex">
+<summary> A numeric value that identifies the word that is currently being spoken.</summary>
+<seealso cref="T:DoubleAgent.AxControl.CtlSpeechWordEvent" />
+<seealso cref="E:DoubleAgent.AxControl.AxControl.CtlSpeechWord" />
+</member>
+
+<member name="T:DoubleAgent.AxControl.AxControl">
+<summary> The AxControl Object is a managed class that makes the Double Agent control available as a Windows Forms control. It derives from System.Windows.Forms.Control.</summary>
+<remarks>
+<para>The AxControl Object implements the same methods, properties, and events as the <see cref="T:DoubleAgent.Control.Control" /> Object.
+</para>
+<para>The ActiveX<sup>®</sup> appearance property names and the event names are prefixed with "Ctl", to avoid name collisions and to make them stand out. Also, the events receive their event data according to the pattern for Windows Forms controls.
+</para>
+</remarks>
+</member>
+
+</members>
+</doc>
