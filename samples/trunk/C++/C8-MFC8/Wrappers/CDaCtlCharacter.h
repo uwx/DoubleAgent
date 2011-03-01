@@ -16,7 +16,7 @@ public:
 public:
 
 
-	// IDaCtlCharacter methods
+	// IDaCtlCharacter2 methods
 public:
 	LPDISPATCH get_Balloon()
 	{
@@ -139,7 +139,7 @@ public:
 	void Stop(VARIANT& Request)
 	{
 		static BYTE parms[] = VTS_VARIANT ;
-		InvokeHelper(0xf, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Request);
+		InvokeHelper(0xe, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Request);
 	}
 	LPDISPATCH Wait(LPDISPATCH WaitForRequest)
 	{
@@ -159,7 +159,7 @@ public:
 	{
 		LPDISPATCH result;
 		static BYTE parms[] = VTS_VARIANT VTS_VARIANT ;
-		InvokeHelper(0x0f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Text, &Url);
+		InvokeHelper(0xf, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Text, &Url);
 		return result;
 	}
 	LPDISPATCH GestureAt(short x, short y)
@@ -195,16 +195,16 @@ public:
 		static BYTE parms[] = VTS_VARIANT ;
 		InvokeHelper(0x1f, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Types);
 	}
-	short get_MoveCause()
+	long get_MoveCause()
 	{
-		short result;
-		InvokeHelper(0x20, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+		long result;
+		InvokeHelper(0x20, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 		return result;
 	}
-	short get_VisibilityCause()
+	long get_VisibilityCause()
 	{
-		short result;
-		InvokeHelper(0x21, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+		long result;
+		InvokeHelper(0x21, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 		return result;
 	}
 	BOOL get_HasOtherClients()
@@ -380,8 +380,185 @@ public:
 		InvokeHelper(0x37, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 		return result;
 	}
+	long get_Style()
+	{
+		long result;
+		InvokeHelper(0x3c, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+		return result;
+	}
+	void put_Style(long newValue)
+	{
+		static BYTE parms[] = VTS_I4 ;
+		InvokeHelper(0x3c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	BOOL get_HasIcon()
+	{
+		BOOL result;
+		InvokeHelper(0x3d, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		return result;
+	}
+	void GenerateIcon(long ClipLeft, long ClipTop, long ClipWidth, long ClipHeight)
+	{
+		static BYTE parms[] = VTS_I4 VTS_I4 VTS_I4 VTS_I4 ;
+		InvokeHelper(0x3e, DISPATCH_METHOD, VT_EMPTY, NULL, parms, ClipLeft, ClipTop, ClipWidth, ClipHeight);
+	}
+	BOOL get_IconShown()
+	{
+		BOOL result;
+		InvokeHelper(0x3f, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		return result;
+	}
+	void put_IconShown(BOOL newValue)
+	{
+		static BYTE parms[] = VTS_BOOL ;
+		InvokeHelper(0x3f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	BOOL get_IconVisible()
+	{
+		BOOL result;
+		InvokeHelper(0x40, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		return result;
+	}
+	CString get_IconIdentity()
+	{
+		CString result;
+		InvokeHelper(0x41, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+		return result;
+	}
+	void put_IconIdentity(LPCTSTR newValue)
+	{
+		static BYTE parms[] = VTS_BSTR ;
+		InvokeHelper(0x41, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	CString get_IconTip()
+	{
+		CString result;
+		InvokeHelper(0x42, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+		return result;
+	}
+	void put_IconTip(LPCTSTR newValue)
+	{
+		static BYTE parms[] = VTS_BSTR ;
+		InvokeHelper(0x42, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	LPDISPATCH get_TTSEngine(VARIANT& GetDefault)
+	{
+		LPDISPATCH result;
+		static BYTE parms[] = VTS_VARIANT ;
+		InvokeHelper(0x43, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, parms, &GetDefault);
+		return result;
+	}
+	LPDISPATCH FindTTSEngines(VARIANT& LanguageID)
+	{
+		LPDISPATCH result;
+		static BYTE parms[] = VTS_VARIANT ;
+		InvokeHelper(0x44, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &LanguageID);
+		return result;
+	}
+	LPDISPATCH get_SREngine(VARIANT& GetDefault)
+	{
+		LPDISPATCH result;
+		static BYTE parms[] = VTS_VARIANT ;
+		InvokeHelper(0x45, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, parms, &GetDefault);
+		return result;
+	}
+	LPDISPATCH FindSREngines(VARIANT& LanguageID)
+	{
+		LPDISPATCH result;
+		static BYTE parms[] = VTS_VARIANT ;
+		InvokeHelper(0x46, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &LanguageID);
+		return result;
+	}
+	CString get_UniqueID()
+	{
+		CString result;
+		InvokeHelper(0x47, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+		return result;
+	}
+	CString get_CharacterID()
+	{
+		CString result;
+		InvokeHelper(0x48, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+		return result;
+	}
+	CString get_FileName()
+	{
+		CString result;
+		InvokeHelper(0x49, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+		return result;
+	}
+	CString get_FilePath()
+	{
+		CString result;
+		InvokeHelper(0x4a, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+		return result;
+	}
+	void put_ActiveState(long newValue)
+	{
+		static BYTE parms[] = VTS_I4 ;
+		InvokeHelper(0x4b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	long get_ActiveState()
+	{
+		long result;
+		InvokeHelper(0x4b, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+		return result;
+	}
+	BOOL get_IdleState()
+	{
+		BOOL result;
+		InvokeHelper(0x4c, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		return result;
+	}
+	void put_IdleEnabled(BOOL newValue)
+	{
+		static BYTE parms[] = VTS_BOOL ;
+		InvokeHelper(0x4d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	BOOL get_IdleEnabled()
+	{
+		BOOL result;
+		InvokeHelper(0x4d, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		return result;
+	}
+	void put_SoundEffectsEnabled(BOOL newValue)
+	{
+		static BYTE parms[] = VTS_BOOL ;
+		InvokeHelper(0x4e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	BOOL get_SoundEffectsEnabled()
+	{
+		BOOL result;
+		InvokeHelper(0x4e, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		return result;
+	}
+	LPDISPATCH Prepare(long ResourceType, LPCTSTR Name, VARIANT& Queue)
+	{
+		LPDISPATCH result;
+		static BYTE parms[] = VTS_I4 VTS_BSTR VTS_VARIANT ;
+		InvokeHelper(0x4f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, ResourceType, Name, &Queue);
+		return result;
+	}
+	long get_ListeningStatus()
+	{
+		long result;
+		InvokeHelper(0x50, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+		return result;
+	}
+	BOOL get_Smoothed()
+	{
+		BOOL result;
+		InvokeHelper(0x51, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		return result;
+	}
+	BOOL get_SmoothEdges()
+	{
+		BOOL result;
+		InvokeHelper(0x52, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		return result;
+	}
 
-	// IDaCtlCharacter properties
+	// IDaCtlCharacter2 properties
 public:
 
 };

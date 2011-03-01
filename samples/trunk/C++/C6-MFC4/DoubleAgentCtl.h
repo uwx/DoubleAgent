@@ -1,33 +1,13 @@
 // Machine generated IDispatch wrapper class(es) created with ClassWizard
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlCharacters wrapper class
+// IDaCtlCharacter2 wrapper class
 
-class IDaCtlCharacters : public COleDispatchDriver
+class IDaCtlCharacter2 : public COleDispatchDriver
 {
 public:
-	IDaCtlCharacters() {}		// Calls COleDispatchDriver default constructor
-	IDaCtlCharacters(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaCtlCharacters(const IDaCtlCharacters& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
-
-// Attributes
-public:
-
-// Operations
-public:
-	LPDISPATCH GetItem(LPCTSTR CharacterID);
-	LPDISPATCH Character(LPCTSTR CharacterID);
-	void Unload(LPCTSTR CharacterID);
-	LPDISPATCH Load(LPCTSTR CharacterID, const VARIANT& LoadKey);
-};
-/////////////////////////////////////////////////////////////////////////////
-// IDaCtlCharacter wrapper class
-
-class IDaCtlCharacter : public COleDispatchDriver
-{
-public:
-	IDaCtlCharacter() {}		// Calls COleDispatchDriver default constructor
-	IDaCtlCharacter(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaCtlCharacter(const IDaCtlCharacter& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaCtlCharacter2() {}		// Calls COleDispatchDriver default constructor
+	IDaCtlCharacter2(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaCtlCharacter2(const IDaCtlCharacter2& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
@@ -47,10 +27,6 @@ public:
 	short GetHeight();
 	void SetWidth(short nNewValue);
 	short GetWidth();
-	long GetSpeed();
-	long GetPitch();
-	void SetIdleOn(BOOL bNewValue);
-	BOOL GetIdleOn();
 	BOOL Activate(const VARIANT& State);
 	LPDISPATCH Play(LPCTSTR Animation);
 	LPDISPATCH Get(LPCTSTR Type, LPCTSTR Name, const VARIANT& Queue);
@@ -58,23 +34,20 @@ public:
 	LPDISPATCH Wait(LPDISPATCH WaitForRequest);
 	LPDISPATCH Interrupt(LPDISPATCH InterruptRequest);
 	LPDISPATCH Speak(const VARIANT& Text, const VARIANT& Url);
-	LPDISPATCH GestureAt(short x, short y);
-	LPDISPATCH MoveTo(short x, short y, const VARIANT& Speed);
+	LPDISPATCH GestureAt(short X, short y);
+	LPDISPATCH MoveTo(short X, short y, const VARIANT& Speed);
 	LPDISPATCH Hide(const VARIANT& Fast);
 	LPDISPATCH Show(const VARIANT& Fast);
 	void StopAll(const VARIANT& Types);
-	short GetMoveCause();
-	short GetVisibilityCause();
+	long GetMoveCause();
+	long GetVisibilityCause();
 	BOOL GetHasOtherClients();
-	void SetSoundEffectsOn(BOOL bNewValue);
-	BOOL GetSoundEffectsOn();
 	void SetName(LPCTSTR lpszNewValue);
 	void SetDescription(LPCTSTR lpszNewValue);
 	CString GetExtraData();
-	BOOL ShowPopupMenu(short x, short y);
+	BOOL ShowPopupMenu(short X, short y);
 	void SetAutoPopupMenu(BOOL bNewValue);
 	BOOL GetAutoPopupMenu();
-	short GetActive();
 	BOOL Listen(BOOL Listen);
 	void SetLanguageID(long nNewValue);
 	long GetLanguageID();
@@ -82,23 +55,53 @@ public:
 	void SetSRModeID(LPCTSTR lpszNewValue);
 	CString GetTTSModeID();
 	void SetTTSModeID(LPCTSTR lpszNewValue);
-	CString GetGuid();
 	short GetOriginalHeight();
 	short GetOriginalWidth();
 	LPDISPATCH Think(LPCTSTR Text);
 	CString GetVersion();
-	LPDISPATCH GetAnimationNames();
-	long GetSRStatus();
+	long GetStyle();
+	void SetStyle(long nNewValue);
+	BOOL GetHasIcon();
+	void GenerateIcon(long ClipLeft, long ClipTop, long ClipWidth, long ClipHeight);
+	BOOL GetIconShown();
+	void SetIconShown(BOOL bNewValue);
+	BOOL GetIconVisible();
+	CString GetIconIdentity();
+	void SetIconIdentity(LPCTSTR lpszNewValue);
+	CString GetIconTip();
+	void SetIconTip(LPCTSTR lpszNewValue);
+	LPDISPATCH GetTTSEngine(const VARIANT& GetDefault);
+	LPDISPATCH FindTTSEngines(const VARIANT& LanguageID);
+	LPDISPATCH GetSREngine(const VARIANT& GetDefault);
+	LPDISPATCH FindSREngines(const VARIANT& LanguageID);
+	CString GetUniqueID();
+	CString GetCharacterID();
+	BOOL GetConnected();
+	CString GetFileName();
+	CString GetFilePath();
+	void SetActiveState(long nNewValue);
+	long GetActiveState();
+	BOOL GetIdleState();
+	void SetIdleEnabled(BOOL bNewValue);
+	BOOL GetIdleEnabled();
+	void SetSoundEffectsEnabled(BOOL bNewValue);
+	BOOL GetSoundEffectsEnabled();
+	LPDISPATCH Prepare(long ResourceType, LPCTSTR Name, const VARIANT& Queue);
+	long GetListeningStatus();
+	BOOL GetSmoothed();
+	BOOL GetSmoothEdges();
+	// method 'GetAnimations' not emitted because of invalid return type or parameter type
+	// method 'GetStates' not emitted because of invalid return type or parameter type
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlBalloon wrapper class
+// IDaCtlBalloon2 wrapper class
 
-class IDaCtlBalloon : public COleDispatchDriver
+class IDaCtlBalloon2 : public COleDispatchDriver
 {
 public:
-	IDaCtlBalloon() {}		// Calls COleDispatchDriver default constructor
-	IDaCtlBalloon(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaCtlBalloon(const IDaCtlBalloon& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaCtlBalloon2() {}		// Calls COleDispatchDriver default constructor
+	IDaCtlBalloon2(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaCtlBalloon2(const IDaCtlBalloon2& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
@@ -106,17 +109,8 @@ public:
 // Operations
 public:
 	BOOL GetEnabled();
-	long GetNumberOfLines();
-	long GetCharsPerLine();
 	CString GetFontName();
 	long GetFontSize();
-	BOOL GetFontBold();
-	BOOL GetFontItalic();
-	BOOL GetFontStrikethru();
-	BOOL GetFontUnderline();
-	long GetForeColor();
-	long GetBackColor();
-	long GetBorderColor();
 	void SetVisible(BOOL bNewValue);
 	BOOL GetVisible();
 	void SetFontName(LPCTSTR lpszNewValue);
@@ -125,16 +119,42 @@ public:
 	short GetFontCharSet();
 	void SetStyle(long nNewValue);
 	long GetStyle();
+	long GetNumberOfLines();
+	void SetNumberOfLines(long nNewValue);
+	long GetCharsPerLine();
+	void SetCharsPerLine(long nNewValue);
+	unsigned long GetTextColor();
+	void SetTextColor(unsigned long newValue);
+	unsigned long GetBackColor();
+	void SetBackColor(unsigned long newValue);
+	unsigned long GetBorderColor();
+	void SetBorderColor(unsigned long newValue);
+	BOOL GetFontBold();
+	void SetFontBold(BOOL bNewValue);
+	BOOL GetFontItalic();
+	void SetFontItalic(BOOL bNewValue);
+	BOOL GetFontStrikethru();
+	void SetFontStrikethru(BOOL bNewValue);
+	BOOL GetFontUnderline();
+	void SetFontUnderline(BOOL bNewValue);
+	BOOL GetSizeToText();
+	void SetSizeToText(BOOL bNewValue);
+	BOOL GetAutoHide();
+	void SetAutoHide(BOOL bNewValue);
+	BOOL GetAutoPace();
+	void SetAutoPace(BOOL bNewValue);
+	BOOL GetShowPartialLines();
+	void SetShowPartialLines(BOOL bNewValue);
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlCommands wrapper class
+// IDaCtlCommands2 wrapper class
 
-class IDaCtlCommands : public COleDispatchDriver
+class IDaCtlCommands2 : public COleDispatchDriver
 {
 public:
-	IDaCtlCommands() {}		// Calls COleDispatchDriver default constructor
-	IDaCtlCommands(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaCtlCommands(const IDaCtlCommands& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaCtlCommands2() {}		// Calls COleDispatchDriver default constructor
+	IDaCtlCommands2(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaCtlCommands2(const IDaCtlCommands2& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
@@ -142,16 +162,13 @@ public:
 // Operations
 public:
 	LPDISPATCH GetItem(LPCTSTR Name);
-	LPDISPATCH Command(LPCTSTR Name);
 	long GetCount();
 	CString GetCaption();
 	void SetCaption(LPCTSTR lpszNewValue);
-	CString GetVoice();
-	void SetVoice(LPCTSTR lpszNewValue);
 	BOOL GetVisible();
 	void SetVisible(BOOL bNewValue);
-	LPDISPATCH Add(LPCTSTR Name, const VARIANT& Caption, const VARIANT& Voice, const VARIANT& Enabled, const VARIANT& Visible);
-	LPDISPATCH Insert(LPCTSTR Name, LPCTSTR RefName, const VARIANT& Before, const VARIANT& Caption, const VARIANT& Voice, const VARIANT& Enabled, const VARIANT& Visible);
+	LPDISPATCH Add(LPCTSTR Name, const VARIANT& Caption, const VARIANT& VoiceGrammar, const VARIANT& Enabled, const VARIANT& Visible);
+	LPDISPATCH Insert(LPCTSTR Name, LPCTSTR RefName, const VARIANT& Before, const VARIANT& Caption, const VARIANT& VoiceGrammar, const VARIANT& Enabled, const VARIANT& Visible);
 	void Remove(LPCTSTR Name);
 	void RemoveAll();
 	CString GetDefaultCommand();
@@ -164,36 +181,40 @@ public:
 	void SetVoiceCaption(LPCTSTR lpszNewValue);
 	BOOL GetGlobalVoiceCommandsEnabled();
 	void SetGlobalVoiceCommandsEnabled(BOOL bNewValue);
+	CString GetVoiceGrammar();
+	void SetVoiceGrammar(LPCTSTR lpszNewValue);
+	LPDISPATCH GetIndex(long Index);
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlCommand wrapper class
+// IDaCtlCommand2 wrapper class
 
-class IDaCtlCommand : public COleDispatchDriver
+class IDaCtlCommand2 : public COleDispatchDriver
 {
 public:
-	IDaCtlCommand() {}		// Calls COleDispatchDriver default constructor
-	IDaCtlCommand(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaCtlCommand(const IDaCtlCommand& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaCtlCommand2() {}		// Calls COleDispatchDriver default constructor
+	IDaCtlCommand2(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaCtlCommand2(const IDaCtlCommand2& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
 
 // Operations
 public:
-	CString GetVoice();
-	void SetVoice(LPCTSTR lpszNewValue);
 	CString GetCaption();
 	void SetCaption(LPCTSTR lpszNewValue);
 	BOOL GetEnabled();
 	void SetEnabled(BOOL bNewValue);
 	BOOL GetVisible();
 	void SetVisible(BOOL bNewValue);
-	long GetConfidence();
-	void SetConfidence(long nNewValue);
 	CString GetConfidenceText();
 	void SetConfidenceText(LPCTSTR lpszNewValue);
 	CString GetVoiceCaption();
 	void SetVoiceCaption(LPCTSTR lpszNewValue);
+	CString GetVoiceGrammar();
+	void SetVoiceGrammar(LPCTSTR lpszNewValue);
+	long GetConfidenceThreshold();
+	void SetConfidenceThreshold(long nNewValue);
+	CString GetName();
 };
 /////////////////////////////////////////////////////////////////////////////
 // IDaCtlRequest wrapper class
@@ -215,81 +236,87 @@ public:
 	long GetNumber();
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlAnimationNames wrapper class
+// IDaCtlTTSEngine wrapper class
 
-class IDaCtlAnimationNames : public COleDispatchDriver
+class IDaCtlTTSEngine : public COleDispatchDriver
 {
 public:
-	IDaCtlAnimationNames() {}		// Calls COleDispatchDriver default constructor
-	IDaCtlAnimationNames(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaCtlAnimationNames(const IDaCtlAnimationNames& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaCtlTTSEngine() {}		// Calls COleDispatchDriver default constructor
+	IDaCtlTTSEngine(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaCtlTTSEngine(const IDaCtlTTSEngine& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
 
 // Operations
 public:
+	CString GetTTSModeID();
+	CString GetDisplayName();
+	CString GetManufacturer();
+	void GetVersion(short* MajorVersion, short* MinorVersion);
+	long GetGender();
+	long GetLanguageID();
+	CString GetLanguageName(BOOL EnglishName);
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlAudioObject wrapper class
+// IDaCtlTTSEngines wrapper class
 
-class IDaCtlAudioObject : public COleDispatchDriver
+class IDaCtlTTSEngines : public COleDispatchDriver
 {
 public:
-	IDaCtlAudioObject() {}		// Calls COleDispatchDriver default constructor
-	IDaCtlAudioObject(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaCtlAudioObject(const IDaCtlAudioObject& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaCtlTTSEngines() {}		// Calls COleDispatchDriver default constructor
+	IDaCtlTTSEngines(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaCtlTTSEngines(const IDaCtlTTSEngines& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
 
 // Operations
 public:
-	BOOL GetEnabled();
-	BOOL GetSoundEffects();
+	LPDISPATCH GetItem(const VARIANT& Index);
+	long GetCount();
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlSpeechInput wrapper class
+// IDaCtlSREngine wrapper class
 
-class IDaCtlSpeechInput : public COleDispatchDriver
+class IDaCtlSREngine : public COleDispatchDriver
 {
 public:
-	IDaCtlSpeechInput() {}		// Calls COleDispatchDriver default constructor
-	IDaCtlSpeechInput(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaCtlSpeechInput(const IDaCtlSpeechInput& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaCtlSREngine() {}		// Calls COleDispatchDriver default constructor
+	IDaCtlSREngine(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaCtlSREngine(const IDaCtlSREngine& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
 
 // Operations
 public:
-	BOOL GetEnabled();
-	CString GetHotKey();
-	BOOL GetListeningTip();
+	CString GetSRModeID();
+	CString GetDisplayName();
+	CString GetManufacturer();
+	void GetVersion(short* MajorVersion, short* MinorVersion);
+	long GetLanguageID();
+	CString GetLanguageName(BOOL EnglishName);
+	// method 'GetLanguageIDs' not emitted because of invalid return type or parameter type
+	// method 'GetLanguageNames' not emitted because of invalid return type or parameter type
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlPropertySheet wrapper class
+// IDaCtlSREngines wrapper class
 
-class IDaCtlPropertySheet : public COleDispatchDriver
+class IDaCtlSREngines : public COleDispatchDriver
 {
 public:
-	IDaCtlPropertySheet() {}		// Calls COleDispatchDriver default constructor
-	IDaCtlPropertySheet(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaCtlPropertySheet(const IDaCtlPropertySheet& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaCtlSREngines() {}		// Calls COleDispatchDriver default constructor
+	IDaCtlSREngines(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaCtlSREngines(const IDaCtlSREngines& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
 
 // Operations
 public:
-	short GetLeft();
-	short GetTop();
-	short GetHeight();
-	short GetWidth();
-	void SetVisible(BOOL bNewValue);
-	BOOL GetVisible();
-	void SetPage(LPCTSTR lpszNewValue);
-	CString GetPage();
+	LPDISPATCH GetItem(const VARIANT& Index);
+	long GetCount();
 };
 /////////////////////////////////////////////////////////////////////////////
 // IDaCtlUserInput wrapper class
@@ -341,12 +368,93 @@ public:
 	short GetWidth();
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaControl wrapper class
+// IDaCtlCharacters2 wrapper class
 
-class IDaControl : public CWnd
+class IDaCtlCharacters2 : public COleDispatchDriver
+{
+public:
+	IDaCtlCharacters2() {}		// Calls COleDispatchDriver default constructor
+	IDaCtlCharacters2(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaCtlCharacters2(const IDaCtlCharacters2& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+
+// Attributes
+public:
+
+// Operations
+public:
+	LPDISPATCH GetItem(LPCTSTR CharacterID);
+	void Unload(LPCTSTR CharacterID);
+	LPDISPATCH Load(LPCTSTR CharacterID, const VARIANT& Provider);
+	long GetCount();
+	LPDISPATCH GetIndex(long Index);
+};
+/////////////////////////////////////////////////////////////////////////////
+// IDaCtlPropertySheet2 wrapper class
+
+class IDaCtlPropertySheet2 : public COleDispatchDriver
+{
+public:
+	IDaCtlPropertySheet2() {}		// Calls COleDispatchDriver default constructor
+	IDaCtlPropertySheet2(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaCtlPropertySheet2(const IDaCtlPropertySheet2& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+
+// Attributes
+public:
+
+// Operations
+public:
+	short GetHeight();
+	short GetWidth();
+	void SetVisible(BOOL bNewValue);
+	BOOL GetVisible();
+	void SetPage(LPCTSTR lpszNewValue);
+	CString GetPage();
+	void SetLeft(short nNewValue);
+	short GetLeft();
+	void SetTop(short nNewValue);
+	short GetTop();
+};
+/////////////////////////////////////////////////////////////////////////////
+// IDaCtlCharacterFiles wrapper class
+
+class IDaCtlCharacterFiles : public COleDispatchDriver
+{
+public:
+	IDaCtlCharacterFiles() {}		// Calls COleDispatchDriver default constructor
+	IDaCtlCharacterFiles(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaCtlCharacterFiles(const IDaCtlCharacterFiles& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+
+// Attributes
+public:
+
+// Operations
+public:
+	// method 'GetFilePaths' not emitted because of invalid return type or parameter type
+	CString GetSearchPath();
+	void SetSearchPath(LPCTSTR lpszNewValue);
+	CString GetDefaultSearchPath();
+	BOOL GetDoubleAgentFiles();
+	void SetDoubleAgentFiles(BOOL bNewValue);
+	BOOL GetMsAgentFiles();
+	void SetMsAgentFiles(BOOL bNewValue);
+	BOOL GetMsOfficeFiles();
+	void SetMsOfficeFiles(BOOL bNewValue);
+	BOOL GetSpeakingCharacters();
+	void SetSpeakingCharacters(BOOL bNewValue);
+	BOOL GetNonSpeakingCharacters();
+	void SetNonSpeakingCharacters(BOOL bNewValue);
+	BOOL GetVerifyVersion();
+	void SetVerifyVersion(BOOL bNewValue);
+	CString GetDefaultFilePath();
+	CString GetDefaultFileName();
+};
+/////////////////////////////////////////////////////////////////////////////
+// IDaControl2 wrapper class
+
+class IDaControl2 : public CWnd
 {
 protected:
-	DECLARE_DYNCREATE(IDaControl)
+	DECLARE_DYNCREATE(IDaControl2)
 public:
 	CLSID const& GetClsid()
 	{
@@ -374,52 +482,67 @@ public:
 // Operations
 public:
 	LPDISPATCH GetCharacters();
-	LPDISPATCH GetAudioOutput();
-	LPDISPATCH GetSpeechInput();
 	LPDISPATCH GetPropertySheet();
 	LPDISPATCH GetCommandsWindow();
 	BOOL GetConnected();
 	void SetConnected(BOOL bNewValue);
-	void ShowDefaultCharacterProperties(const VARIANT& x, const VARIANT& y);
 	BOOL GetRaiseRequestErrors();
 	void SetRaiseRequestErrors(BOOL bNewValue);
+	void SetAutoSize(BOOL bNewValue);
+	BOOL GetAutoSize();
+	void SetBackColor(unsigned long newValue);
+	unsigned long GetBackColor();
+	void SetBorderColor(unsigned long newValue);
+	unsigned long GetBorderColor();
+	void SetBorderStyle(long nNewValue);
+	long GetBorderStyle();
+	void SetBorderWidth(long nNewValue);
+	long GetBorderWidth();
+	void SetBorderVisible(BOOL bNewValue);
+	BOOL GetBorderVisible();
+	void SetMousePointer(long nNewValue);
+	long GetMousePointer();
+	long GetCharacterStyle();
+	void SetCharacterStyle(long nNewValue);
+	LPDISPATCH GetCharacterFiles();
+	LPDISPATCH GetTTSEngines();
+	LPDISPATCH FindTTSEngines(const VARIANT& LanguageID, const VARIANT& Gender);
+	LPDISPATCH GetCharacterTTSEngine(const VARIANT& Provider);
+	LPDISPATCH FindCharacterTTSEngines(const VARIANT& Provider, const VARIANT& LanguageID);
+	LPDISPATCH GetSREngines();
+	LPDISPATCH FindSREngines(const VARIANT& LanguageID);
+	LPDISPATCH GetCharacterSREngine(const VARIANT& Provider);
+	LPDISPATCH FindCharacterSREngines(const VARIANT& Provider, const VARIANT& LanguageID);
+	LPDISPATCH GetSettings();
+	short GetAutoConnect();
+	void SetAutoConnect(short nNewValue);
+	LPDISPATCH GetControlCharacter();
+	void SetControlCharacter(LPDISPATCH newValue);
 };
 /////////////////////////////////////////////////////////////////////////////
-// _DaCtlEvents wrapper class
+// IDaCtlSettings wrapper class
 
-class _DaCtlEvents : public COleDispatchDriver
+class IDaCtlSettings : public COleDispatchDriver
 {
 public:
-	_DaCtlEvents() {}		// Calls COleDispatchDriver default constructor
-	_DaCtlEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_DaCtlEvents(const _DaCtlEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaCtlSettings() {}		// Calls COleDispatchDriver default constructor
+	IDaCtlSettings(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaCtlSettings(const IDaCtlSettings& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
 
 // Operations
 public:
-	void ActivateInput(LPCTSTR CharacterID);
-	void DeactivateInput(LPCTSTR CharacterID);
-	void Click(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
-	void DblClick(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
-	void DragStart(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
-	void DragComplete(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
-	void Show(LPCTSTR CharacterID, short Cause);
-	void Hide(LPCTSTR CharacterID, short Cause);
-	void RequestStart(LPDISPATCH Request);
-	void RequestComplete(LPDISPATCH Request);
-	void Bookmark(long BookmarkID);
-	void Command(LPDISPATCH UserInput);
-	void IdleStart(LPCTSTR CharacterID);
-	void IdleComplete(LPCTSTR CharacterID);
-	void Move(LPCTSTR CharacterID, short x, short y, short Cause);
-	void Size(LPCTSTR CharacterID, short Width, short Height);
-	void BalloonShow(LPCTSTR CharacterID);
-	void BalloonHide(LPCTSTR CharacterID);
-	void ListenStart(LPCTSTR CharacterID);
-	void ListenComplete(LPCTSTR CharacterID, short Cause);
-	void DefaultCharacterChange(LPCTSTR GUID);
-	void AgentPropertyChange();
-	void ActiveClientChange(LPCTSTR CharacterID, BOOL Active);
+	BOOL GetSoundEffectsEnabled();
+	BOOL GetBalloonEnabled();
+	LPDISPATCH GetBalloonFont();
+	BOOL GetTTSEnabled();
+	short GetTTSSpeed();
+	BOOL GetSREnabled();
+	CString GetSRHotKey();
+	short GetSRHotKeyTime();
+	BOOL GetSRListeningTip();
+	BOOL GetSRListeningPrompt();
+	long GetAudioStatus();
 };

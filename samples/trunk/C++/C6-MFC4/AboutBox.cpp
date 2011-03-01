@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "Sample1_C6_MFC4.h"
+#include "MsaWithDa_C6_MFC4.h"
 #include "DoubleAgentCtl.h"
 #include "AboutBox.h"
 
@@ -16,7 +16,7 @@ static char THIS_FILE[] = __FILE__;
 // CAboutBox dialog
 
 
-CAboutBox::CAboutBox(IDaControl & pDaControl, CWnd* pParent /*=NULL*/)
+CAboutBox::CAboutBox(IDaControl2 & pDaControl, CWnd* pParent /*=NULL*/)
 	: CDialog(CAboutBox::IDD, pParent),
 	mDaControl (pDaControl)
 {
@@ -46,7 +46,7 @@ END_MESSAGE_MAP()
 
 void CAboutBox::OnDaMore() 
 {
-	IDaCtlPropertySheet lPropSheet;
+	IDaCtlPropertySheet2 lPropSheet;
 
 	lPropSheet.AttachDispatch (mDaControl.GetPropertySheet());
 	lPropSheet.SetVisible (TRUE);	

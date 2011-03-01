@@ -1,7 +1,7 @@
 // Machine generated IDispatch wrapper class(es) created with ClassWizard
 
 #include "stdafx.h"
-#include "doubleagentsvr.h"
+#include "DoubleAgentSvr.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -12,1438 +12,1786 @@ static char THIS_FILE[] = __FILE__;
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaServer properties
+// IDaSvrCommandsWindow properties
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaServer operations
+// IDaSvrCommandsWindow operations
 
-void IDaServer::Load(const VARIANT& vLoadKey, long* pdwCharID, long* pdwReqID)
-{
-	static BYTE parms[] =
-		VTS_VARIANT VTS_PI4 VTS_PI4;
-	InvokeHelper(0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &vLoadKey, pdwCharID, pdwReqID);
-}
-
-void IDaServer::Unload(long dwCharID)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID);
-}
-
-void IDaServer::Register(LPUNKNOWN punkNotifySink, long* pdwSinkID)
-{
-	static BYTE parms[] =
-		VTS_UNKNOWN VTS_PI4;
-	InvokeHelper(0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 punkNotifySink, pdwSinkID);
-}
-
-void IDaServer::Unregister(long dwSinkID)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x60020003, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwSinkID);
-}
-
-void IDaServer::GetCharacter(long dwCharID, LPDISPATCH* ppunkCharacter)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_PDISPATCH;
-	InvokeHelper(0x60020004, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, ppunkCharacter);
-}
-
-void IDaServer::GetCharacterEx(long dwCharID, LPDISPATCH* ppCharacterEx)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_PDISPATCH;
-	InvokeHelper(0x60030000, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, ppCharacterEx);
-}
-
-void IDaServer::GetVersion(short* psMajor, short* psMinor)
-{
-	static BYTE parms[] =
-		VTS_PI2 VTS_PI2;
-	InvokeHelper(0x60030001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 psMajor, psMinor);
-}
-
-void IDaServer::ShowDefaultCharacterProperties(short x, short y, long bUseDefaultPosition)
-{
-	static BYTE parms[] =
-		VTS_I2 VTS_I2 VTS_I4;
-	InvokeHelper(0x60030002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 x, y, bUseDefaultPosition);
-}
-
-
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrCharacter properties
-
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrCharacter operations
-
-void IDaSvrCharacter::GetVisible(long* pbVisible)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbVisible);
-}
-
-void IDaSvrCharacter::SetPosition(long lLeft, long lTop)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_I4;
-	InvokeHelper(0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 lLeft, lTop);
-}
-
-void IDaSvrCharacter::GetPosition(long* plLeft, long* plTop)
+void IDaSvrCommandsWindow::GetPosition(long* Left, long* Top)
 {
 	static BYTE parms[] =
 		VTS_PI4 VTS_PI4;
 	InvokeHelper(0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 plLeft, plTop);
+		 Left, Top);
 }
 
-void IDaSvrCharacter::SetSize(long lWidth, long lHeight)
+void IDaSvrCommandsWindow::GetSize(long* Width, long* Height)
 {
 	static BYTE parms[] =
-		VTS_I4 VTS_I4;
+		VTS_PI4 VTS_PI4;
 	InvokeHelper(0x60020003, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 lWidth, lHeight);
-}
-
-void IDaSvrCharacter::GetSize(long* plWidth, long* plHeight)
-{
-	static BYTE parms[] =
-		VTS_PI4 VTS_PI4;
-	InvokeHelper(0x60020004, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 plWidth, plHeight);
-}
-
-void IDaSvrCharacter::GetName(BSTR* pbszName)
-{
-	static BYTE parms[] =
-		VTS_PBSTR;
-	InvokeHelper(0x60020005, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbszName);
-}
-
-void IDaSvrCharacter::GetDescription(BSTR* pbszDescription)
-{
-	static BYTE parms[] =
-		VTS_PBSTR;
-	InvokeHelper(0x60020006, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbszDescription);
-}
-
-void IDaSvrCharacter::GetTTSSpeed(long* pdwSpeed)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pdwSpeed);
-}
-
-void IDaSvrCharacter::GetTTSPitch(short* pwPitch)
-{
-	static BYTE parms[] =
-		VTS_PI2;
-	InvokeHelper(0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pwPitch);
-}
-
-void IDaSvrCharacter::Activate(short sState)
-{
-	static BYTE parms[] =
-		VTS_I2;
-	InvokeHelper(0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 sState);
-}
-
-void IDaSvrCharacter::SetIdleOn(long bOn)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bOn);
-}
-
-void IDaSvrCharacter::GetIdleOn(long* pbOn)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x6002000b, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbOn);
-}
-
-void IDaSvrCharacter::Prepare(long dwType, LPCTSTR bszName, long bQueue, long* pdwReqID)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_BSTR VTS_I4 VTS_PI4;
-	InvokeHelper(0x6002000c, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwType, bszName, bQueue, pdwReqID);
-}
-
-void IDaSvrCharacter::Play(LPCTSTR bszAnimation, long* pdwReqID)
-{
-	static BYTE parms[] =
-		VTS_BSTR VTS_PI4;
-	InvokeHelper(0x6002000d, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszAnimation, pdwReqID);
-}
-
-void IDaSvrCharacter::Stop(long dwReqID)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x6002000e, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwReqID);
-}
-
-void IDaSvrCharacter::StopAll(long lTypes)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x6002000f, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 lTypes);
-}
-
-void IDaSvrCharacter::Wait(long dwReqID, long* pdwReqID)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_PI4;
-	InvokeHelper(0x60020010, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwReqID, pdwReqID);
-}
-
-void IDaSvrCharacter::Interrupt(long dwReqID, long* pdwReqID)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_PI4;
-	InvokeHelper(0x60020011, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwReqID, pdwReqID);
-}
-
-void IDaSvrCharacter::Show(long bFast, long* pdwReqID)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_PI4;
-	InvokeHelper(0x60020012, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bFast, pdwReqID);
-}
-
-void IDaSvrCharacter::Hide(long bFast, long* pdwReqID)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_PI4;
-	InvokeHelper(0x60020013, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bFast, pdwReqID);
-}
-
-void IDaSvrCharacter::Speak(LPCTSTR bszText, LPCTSTR bszUrl, long* pdwReqID)
-{
-	static BYTE parms[] =
-		VTS_BSTR VTS_BSTR VTS_PI4;
-	InvokeHelper(0x60020014, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszText, bszUrl, pdwReqID);
-}
-
-void IDaSvrCharacter::MoveTo(short x, short y, long lSpeed, long* pdwReqID)
-{
-	static BYTE parms[] =
-		VTS_I2 VTS_I2 VTS_I4 VTS_PI4;
-	InvokeHelper(0x60020015, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 x, y, lSpeed, pdwReqID);
-}
-
-void IDaSvrCharacter::GestureAt(short x, short y, long* pdwReqID)
-{
-	static BYTE parms[] =
-		VTS_I2 VTS_I2 VTS_PI4;
-	InvokeHelper(0x60020016, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 x, y, pdwReqID);
-}
-
-void IDaSvrCharacter::GetMoveCause(long* pdwCause)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020017, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pdwCause);
-}
-
-void IDaSvrCharacter::GetVisibilityCause(long* pdwCause)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020018, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pdwCause);
-}
-
-void IDaSvrCharacter::HasOtherClients(long* plNumOtherClients)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020019, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 plNumOtherClients);
-}
-
-void IDaSvrCharacter::SetSoundEffectsOn(long bOn)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x6002001a, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bOn);
-}
-
-void IDaSvrCharacter::GetSoundEffectsOn(long* pbOn)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x6002001b, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbOn);
-}
-
-void IDaSvrCharacter::SetName(LPCTSTR bszName)
-{
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x6002001c, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszName);
-}
-
-void IDaSvrCharacter::SetDescription(LPCTSTR bszDescription)
-{
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x6002001d, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszDescription);
-}
-
-void IDaSvrCharacter::GetExtraData(BSTR* pbszExtraData)
-{
-	static BYTE parms[] =
-		VTS_PBSTR;
-	InvokeHelper(0x6002001e, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbszExtraData);
-}
-
-void IDaSvrCharacter::ShowPopupMenu(short x, short y)
-{
-	static BYTE parms[] =
-		VTS_I2 VTS_I2;
-	InvokeHelper(0x60030000, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 x, y);
-}
-
-void IDaSvrCharacter::SetAutoPopupMenu(long bAutoPopupMenu)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x60030001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bAutoPopupMenu);
-}
-
-void IDaSvrCharacter::GetAutoPopupMenu(long* pbAutoPopupMenu)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60030002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbAutoPopupMenu);
-}
-
-void IDaSvrCharacter::GetActive(short* psState)
-{
-	static BYTE parms[] =
-		VTS_PI2;
-	InvokeHelper(0x60030009, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 psState);
-}
-
-void IDaSvrCharacter::Listen(long bListen)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x6003000a, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bListen);
-}
-
-void IDaSvrCharacter::SetLanguageID(long langid)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x6003000b, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 langid);
-}
-
-void IDaSvrCharacter::GetLanguageID(long* plangid)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x6003000c, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 plangid);
-}
-
-void IDaSvrCharacter::GetTTSModeID(BSTR* pbszModeID)
-{
-	static BYTE parms[] =
-		VTS_PBSTR;
-	InvokeHelper(0x6003000d, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbszModeID);
-}
-
-void IDaSvrCharacter::SetTTSModeID(LPCTSTR bszModeID)
-{
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x6003000e, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszModeID);
-}
-
-void IDaSvrCharacter::GetSRModeID(BSTR* pbszModeID)
-{
-	static BYTE parms[] =
-		VTS_PBSTR;
-	InvokeHelper(0x6003000f, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbszModeID);
-}
-
-void IDaSvrCharacter::SetSRModeID(LPCTSTR bszModeID)
-{
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x60030010, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszModeID);
-}
-
-void IDaSvrCharacter::GetGUID(BSTR* pbszID)
-{
-	static BYTE parms[] =
-		VTS_PBSTR;
-	InvokeHelper(0x60030011, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbszID);
-}
-
-void IDaSvrCharacter::GetOriginalSize(long* plWidth, long* plHeight)
-{
-	static BYTE parms[] =
-		VTS_PI4 VTS_PI4;
-	InvokeHelper(0x60030012, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 plWidth, plHeight);
-}
-
-void IDaSvrCharacter::Think(LPCTSTR bszText, long* pdwReqID)
-{
-	static BYTE parms[] =
-		VTS_BSTR VTS_PI4;
-	InvokeHelper(0x60030013, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszText, pdwReqID);
-}
-
-void IDaSvrCharacter::GetVersion(short* psMajor, short* psMinor)
-{
-	static BYTE parms[] =
-		VTS_PI2 VTS_PI2;
-	InvokeHelper(0x60030014, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 psMajor, psMinor);
-}
-
-void IDaSvrCharacter::GetAnimationNames(LPUNKNOWN* punkEnum)
-{
-	static BYTE parms[] =
-		VTS_PUNKNOWN;
-	InvokeHelper(0x60030015, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 punkEnum);
-}
-
-void IDaSvrCharacter::GetSRStatus(long* plStatus)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60030016, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 plStatus);
+		 Width, Height);
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaSvrUserInput properties
+// IDaSvrUserInput2 properties
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaSvrUserInput operations
+// IDaSvrUserInput2 operations
 
-void IDaSvrUserInput::GetCount(long* pdwCount)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pdwCount);
-}
-
-void IDaSvrUserInput::GetItemID(long dwItemIndex, long* pdwCommandID)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_PI4;
-	InvokeHelper(0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwItemIndex, pdwCommandID);
-}
-
-void IDaSvrUserInput::GetItemConfidence(long dwItemIndex, long* plConfidence)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_PI4;
-	InvokeHelper(0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwItemIndex, plConfidence);
-}
-
-void IDaSvrUserInput::GetItemText(long dwItemIndex, BSTR* pbszText)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_PBSTR;
-	InvokeHelper(0x60020003, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwItemIndex, pbszText);
-}
-
-void IDaSvrUserInput::GetAllItemData(VARIANT* pdwItemIndices, VARIANT* plConfidences, VARIANT* pbszText)
+void IDaSvrUserInput2::GetAllItemData(VARIANT* ItemIndices, VARIANT* ItemConfidences, VARIANT* ItemText)
 {
 	static BYTE parms[] =
 		VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT;
 	InvokeHelper(0x60020004, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pdwItemIndices, plConfidences, pbszText);
+		 ItemIndices, ItemConfidences, ItemText);
+}
+
+long IDaSvrUserInput2::GetCount()
+{
+	long result;
+	InvokeHelper(0x60030000, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+long IDaSvrUserInput2::GetItemCommandID(long ItemIndex)
+{
+	long result;
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x60030001, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, parms,
+		ItemIndex);
+	return result;
+}
+
+long IDaSvrUserInput2::GetItemConfidence(long ItemIndex)
+{
+	long result;
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x60030002, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, parms,
+		ItemIndex);
+	return result;
+}
+
+CString IDaSvrUserInput2::GetItemText(long ItemIndex)
+{
+	CString result;
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x60030003, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, parms,
+		ItemIndex);
+	return result;
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaSvrCommand properties
+// IDaSvrCharacterFiles properties
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaSvrCommand operations
+// IDaSvrCharacterFiles operations
 
-void IDaSvrCommand::SetCaption(LPCTSTR bszCaption)
+CString IDaSvrCharacterFiles::GetSearchPath()
+{
+	CString result;
+	InvokeHelper(0x60020001, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCharacterFiles::SetSearchPath(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
-	InvokeHelper(0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszCaption);
+	InvokeHelper(0x60020001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 lpszNewValue);
 }
 
-void IDaSvrCommand::GetCaption(BSTR* pbszCaption)
+CString IDaSvrCharacterFiles::GetDefaultSearchPath()
 {
-	static BYTE parms[] =
-		VTS_PBSTR;
-	InvokeHelper(0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbszCaption);
+	CString result;
+	InvokeHelper(0x60020002, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
 }
 
-void IDaSvrCommand::SetVoice(LPCTSTR bszVoice)
+long IDaSvrCharacterFiles::GetFilter()
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszVoice);
+	long result;
+	InvokeHelper(0x60020003, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
 }
 
-void IDaSvrCommand::GetVoice(BSTR* pbszVoice)
+void IDaSvrCharacterFiles::SetFilter(long nNewValue)
 {
 	static BYTE parms[] =
-		VTS_PBSTR;
+		VTS_I4;
+	InvokeHelper(0x60020003, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
+}
+
+CString IDaSvrCharacterFiles::GetDefaultFilePath()
+{
+	CString result;
+	InvokeHelper(0x60020004, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+CString IDaSvrCharacterFiles::GetDefaultFileName()
+{
+	CString result;
+	InvokeHelper(0x60020005, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrTTSEngine properties
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrTTSEngine operations
+
+CString IDaSvrTTSEngine::GetTTSModeID()
+{
+	CString result;
+	InvokeHelper(0x0, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+CString IDaSvrTTSEngine::GetDisplayName()
+{
+	CString result;
+	InvokeHelper(0x60020001, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+CString IDaSvrTTSEngine::GetManufacturer()
+{
+	CString result;
+	InvokeHelper(0x60020002, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrTTSEngine::GetVersion(short* MajorVersion, short* MinorVersion)
+{
+	static BYTE parms[] =
+		VTS_PI2 VTS_PI2;
 	InvokeHelper(0x60020003, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbszVoice);
+		 MajorVersion, MinorVersion);
 }
 
-void IDaSvrCommand::SetEnabled(long bEnabled)
+long IDaSvrTTSEngine::GetGender()
+{
+	long result;
+	InvokeHelper(0x60020004, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+long IDaSvrTTSEngine::GetLanguageID()
+{
+	long result;
+	InvokeHelper(0x60020005, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+CString IDaSvrTTSEngine::GetLanguageName(BOOL EnglishName)
+{
+	CString result;
+	static BYTE parms[] =
+		VTS_BOOL;
+	InvokeHelper(0x60020006, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, parms,
+		EnglishName);
+	return result;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrTTSEngines properties
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrTTSEngines operations
+
+LPDISPATCH IDaSvrTTSEngines::GetItem(long Index)
+{
+	LPDISPATCH result;
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x0, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, parms,
+		Index);
+	return result;
+}
+
+long IDaSvrTTSEngines::GetCount()
+{
+	long result;
+	InvokeHelper(0xfffffff8, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrSREngine properties
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrSREngine operations
+
+CString IDaSvrSREngine::GetSRModeID()
+{
+	CString result;
+	InvokeHelper(0x0, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+CString IDaSvrSREngine::GetDisplayName()
+{
+	CString result;
+	InvokeHelper(0x60020001, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+CString IDaSvrSREngine::GetManufacturer()
+{
+	CString result;
+	InvokeHelper(0x60020002, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrSREngine::GetVersion(short* MajorVersion, short* MinorVersion)
+{
+	static BYTE parms[] =
+		VTS_PI2 VTS_PI2;
+	InvokeHelper(0x60020003, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 MajorVersion, MinorVersion);
+}
+
+long IDaSvrSREngine::GetLanguageID()
+{
+	long result;
+	InvokeHelper(0x60020004, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+CString IDaSvrSREngine::GetLanguageName(BOOL EnglishName)
+{
+	CString result;
+	static BYTE parms[] =
+		VTS_BOOL;
+	InvokeHelper(0x60020005, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, parms,
+		EnglishName);
+	return result;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrSREngines properties
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrSREngines operations
+
+LPDISPATCH IDaSvrSREngines::GetItem(long Index)
+{
+	LPDISPATCH result;
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x0, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, parms,
+		Index);
+	return result;
+}
+
+long IDaSvrSREngines::GetCount()
+{
+	long result;
+	InvokeHelper(0xfffffff8, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaServer2 properties
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaServer2 operations
+
+void IDaServer2::Load(const VARIANT& Provider, long* CharacterID, long* RequestID)
+{
+	static BYTE parms[] =
+		VTS_VARIANT VTS_PI4 VTS_PI4;
+	InvokeHelper(0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 &Provider, CharacterID, RequestID);
+}
+
+void IDaServer2::Unload(long CharacterID)
 {
 	static BYTE parms[] =
 		VTS_I4;
+	InvokeHelper(0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 CharacterID);
+}
+
+void IDaServer2::GetVersion(short* MajorVersion, short* MinorVersion)
+{
+	static BYTE parms[] =
+		VTS_PI2 VTS_PI2;
+	InvokeHelper(0x60030001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 MajorVersion, MinorVersion);
+}
+
+LPDISPATCH IDaServer2::GetCharacter(long CharacterID)
+{
+	LPDISPATCH result;
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x60040000, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, parms,
+		CharacterID);
+	return result;
+}
+
+LPDISPATCH IDaServer2::GetCharacterFiles()
+{
+	LPDISPATCH result;
+	InvokeHelper(0x60040001, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
+	return result;
+}
+
+long IDaServer2::GetCharacterStyle()
+{
+	long result;
+	InvokeHelper(0x60040002, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+void IDaServer2::SetCharacterStyle(long nNewValue)
+{
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x60040002, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
+}
+
+LPDISPATCH IDaServer2::GetTTSEngines()
+{
+	LPDISPATCH result;
+	InvokeHelper(0x60040003, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
+	return result;
+}
+
+LPDISPATCH IDaServer2::FindTTSEngines(long LanguageID, short Gender)
+{
+	LPDISPATCH result;
+	static BYTE parms[] =
+		VTS_I4 VTS_I2;
+	InvokeHelper(0x60040004, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
+		LanguageID, Gender);
+	return result;
+}
+
+LPDISPATCH IDaServer2::GetCharacterTTSEngine(const VARIANT& Provider)
+{
+	LPDISPATCH result;
+	static BYTE parms[] =
+		VTS_VARIANT;
+	InvokeHelper(0x60040005, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
+		&Provider);
+	return result;
+}
+
+LPDISPATCH IDaServer2::FindCharacterTTSEngines(const VARIANT& Provider, long LanguageID)
+{
+	LPDISPATCH result;
+	static BYTE parms[] =
+		VTS_VARIANT VTS_I4;
+	InvokeHelper(0x60040006, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
+		&Provider, LanguageID);
+	return result;
+}
+
+LPDISPATCH IDaServer2::GetSREngines()
+{
+	LPDISPATCH result;
+	InvokeHelper(0x60040007, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
+	return result;
+}
+
+LPDISPATCH IDaServer2::FindSREngines(long LanguageID)
+{
+	LPDISPATCH result;
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x60040008, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
+		LanguageID);
+	return result;
+}
+
+LPDISPATCH IDaServer2::GetCharacterSREngine(const VARIANT& Provider)
+{
+	LPDISPATCH result;
+	static BYTE parms[] =
+		VTS_VARIANT;
+	InvokeHelper(0x60040009, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
+		&Provider);
+	return result;
+}
+
+LPDISPATCH IDaServer2::FindCharacterSREngines(const VARIANT& Provider, long LanguageID)
+{
+	LPDISPATCH result;
+	static BYTE parms[] =
+		VTS_VARIANT VTS_I4;
+	InvokeHelper(0x6004000a, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
+		&Provider, LanguageID);
+	return result;
+}
+
+LPDISPATCH IDaServer2::GetPropertySheet()
+{
+	LPDISPATCH result;
+	InvokeHelper(0x6004000b, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
+	return result;
+}
+
+LPDISPATCH IDaServer2::GetCommandsWindow()
+{
+	LPDISPATCH result;
+	InvokeHelper(0x6004000c, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
+	return result;
+}
+
+LPDISPATCH IDaServer2::GetSettings()
+{
+	LPDISPATCH result;
+	InvokeHelper(0x6004000d, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
+	return result;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrCharacter2 properties
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrCharacter2 operations
+
+void IDaSvrCharacter2::SetPosition(long Left, long Top)
+{
+	static BYTE parms[] =
+		VTS_I4 VTS_I4;
+	InvokeHelper(0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 Left, Top);
+}
+
+void IDaSvrCharacter2::GetPosition(long* Left, long* Top)
+{
+	static BYTE parms[] =
+		VTS_PI4 VTS_PI4;
+	InvokeHelper(0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 Left, Top);
+}
+
+void IDaSvrCharacter2::SetSize(long Width, long Height)
+{
+	static BYTE parms[] =
+		VTS_I4 VTS_I4;
+	InvokeHelper(0x60020003, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 Width, Height);
+}
+
+void IDaSvrCharacter2::GetSize(long* Width, long* Height)
+{
+	static BYTE parms[] =
+		VTS_PI4 VTS_PI4;
 	InvokeHelper(0x60020004, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bEnabled);
+		 Width, Height);
 }
 
-void IDaSvrCommand::GetEnabled(long* pbEnabled)
+void IDaSvrCharacter2::Activate(short State)
 {
 	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020005, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbEnabled);
-}
-
-void IDaSvrCommand::SetVisible(long bVisible)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x60020006, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bVisible);
-}
-
-void IDaSvrCommand::GetVisible(long* pbVisible)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbVisible);
-}
-
-void IDaSvrCommand::SetConfidenceThreshold(long lThreshold)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 lThreshold);
-}
-
-void IDaSvrCommand::GetConfidenceThreshold(long* plThreshold)
-{
-	static BYTE parms[] =
-		VTS_PI4;
+		VTS_I2;
 	InvokeHelper(0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 plThreshold);
+		 State);
 }
 
-void IDaSvrCommand::SetConfidenceText(LPCTSTR bszTipText)
+void IDaSvrCharacter2::Prepare(long Type, LPCTSTR Name, long Queue, long* RequestID)
 {
 	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszTipText);
-}
-
-void IDaSvrCommand::GetConfidenceText(BSTR* pbszTipText)
-{
-	static BYTE parms[] =
-		VTS_PBSTR;
-	InvokeHelper(0x6002000b, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbszTipText);
-}
-
-void IDaSvrCommand::GetID(long* pdwID)
-{
-	static BYTE parms[] =
-		VTS_PI4;
+		VTS_I4 VTS_BSTR VTS_I4 VTS_PI4;
 	InvokeHelper(0x6002000c, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pdwID);
+		 Type, Name, Queue, RequestID);
 }
 
-void IDaSvrCommand::SetVoiceCaption(LPCTSTR bszVoiceCaption)
+void IDaSvrCharacter2::Play(LPCTSTR Animation, long* RequestID)
 {
 	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x60030002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszVoiceCaption);
+		VTS_BSTR VTS_PI4;
+	InvokeHelper(0x6002000d, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 Animation, RequestID);
 }
 
-void IDaSvrCommand::GetVoiceCaption(BSTR* pbszVoiceCaption)
-{
-	static BYTE parms[] =
-		VTS_PBSTR;
-	InvokeHelper(0x60030003, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbszVoiceCaption);
-}
-
-
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrCommands properties
-
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrCommands operations
-
-void IDaSvrCommands::GetCommand(long dwCommandID, LPUNKNOWN* ppunkCommand)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_PUNKNOWN;
-	InvokeHelper(0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCommandID, ppunkCommand);
-}
-
-void IDaSvrCommands::GetCount(long* pdwCount)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pdwCount);
-}
-
-void IDaSvrCommands::SetCaption(LPCTSTR bszCaption)
-{
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszCaption);
-}
-
-void IDaSvrCommands::GetCaption(BSTR* pbszCaption)
-{
-	static BYTE parms[] =
-		VTS_PBSTR;
-	InvokeHelper(0x60020003, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbszCaption);
-}
-
-void IDaSvrCommands::SetVoice(LPCTSTR bszVoice)
-{
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x60020004, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszVoice);
-}
-
-void IDaSvrCommands::GetVoice(BSTR* pbszVoice)
-{
-	static BYTE parms[] =
-		VTS_PBSTR;
-	InvokeHelper(0x60020005, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbszVoice);
-}
-
-void IDaSvrCommands::SetVisible(long bVisible)
+void IDaSvrCharacter2::Stop(long RequestID)
 {
 	static BYTE parms[] =
 		VTS_I4;
-	InvokeHelper(0x60020006, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bVisible);
+	InvokeHelper(0x6002000e, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 RequestID);
 }
 
-void IDaSvrCommands::GetVisible(long* pbVisible)
+void IDaSvrCharacter2::StopAll(long Types)
 {
 	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbVisible);
+		VTS_I4;
+	InvokeHelper(0x6002000f, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 Types);
 }
 
-void IDaSvrCommands::Add(LPCTSTR bszCaption, LPCTSTR bszVoice, long bEnabled, long bVisible, long* pdwID)
+void IDaSvrCharacter2::Wait(long WaitForRequestID, long* RequestID)
+{
+	static BYTE parms[] =
+		VTS_I4 VTS_PI4;
+	InvokeHelper(0x60020010, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 WaitForRequestID, RequestID);
+}
+
+void IDaSvrCharacter2::Interrupt(long InterruptRequestID, long* RequestID)
+{
+	static BYTE parms[] =
+		VTS_I4 VTS_PI4;
+	InvokeHelper(0x60020011, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 InterruptRequestID, RequestID);
+}
+
+void IDaSvrCharacter2::Show(long Fast, long* RequestID)
+{
+	static BYTE parms[] =
+		VTS_I4 VTS_PI4;
+	InvokeHelper(0x60020012, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 Fast, RequestID);
+}
+
+void IDaSvrCharacter2::Hide(long Fast, long* RequestID)
+{
+	static BYTE parms[] =
+		VTS_I4 VTS_PI4;
+	InvokeHelper(0x60020013, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 Fast, RequestID);
+}
+
+void IDaSvrCharacter2::Speak(LPCTSTR Text, LPCTSTR Url, long* RequestID)
+{
+	static BYTE parms[] =
+		VTS_BSTR VTS_BSTR VTS_PI4;
+	InvokeHelper(0x60020014, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 Text, Url, RequestID);
+}
+
+void IDaSvrCharacter2::MoveTo(short X, short Y, long Speed, long* RequestID)
+{
+	static BYTE parms[] =
+		VTS_I2 VTS_I2 VTS_I4 VTS_PI4;
+	InvokeHelper(0x60020015, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 X, Y, Speed, RequestID);
+}
+
+void IDaSvrCharacter2::GestureAt(short X, short Y, long* RequestID)
+{
+	static BYTE parms[] =
+		VTS_I2 VTS_I2 VTS_PI4;
+	InvokeHelper(0x60020016, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 X, Y, RequestID);
+}
+
+void IDaSvrCharacter2::ShowPopupMenu(short X, short Y)
+{
+	static BYTE parms[] =
+		VTS_I2 VTS_I2;
+	InvokeHelper(0x60030000, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 X, Y);
+}
+
+void IDaSvrCharacter2::Listen(long Listen)
+{
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x6003000a, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 Listen);
+}
+
+void IDaSvrCharacter2::GetOriginalSize(long* Width, long* Height)
+{
+	static BYTE parms[] =
+		VTS_PI4 VTS_PI4;
+	InvokeHelper(0x60030012, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 Width, Height);
+}
+
+void IDaSvrCharacter2::Think(LPCTSTR Text, long* RequestID)
+{
+	static BYTE parms[] =
+		VTS_BSTR VTS_PI4;
+	InvokeHelper(0x60030013, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 Text, RequestID);
+}
+
+void IDaSvrCharacter2::GetVersion(short* MajorVersion, short* MinorVersion)
+{
+	static BYTE parms[] =
+		VTS_PI2 VTS_PI2;
+	InvokeHelper(0x60030014, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 MajorVersion, MinorVersion);
+}
+
+LPDISPATCH IDaSvrCharacter2::GetBalloon()
+{
+	LPDISPATCH result;
+	InvokeHelper(0x60040000, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
+	return result;
+}
+
+LPDISPATCH IDaSvrCharacter2::GetCommands()
+{
+	LPDISPATCH result;
+	InvokeHelper(0x60040001, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
+	return result;
+}
+
+long IDaSvrCharacter2::GetStyle()
+{
+	long result;
+	InvokeHelper(0x60040002, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCharacter2::SetStyle(long nNewValue)
+{
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x60040002, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
+}
+
+BOOL IDaSvrCharacter2::GetHasIcon()
+{
+	BOOL result;
+	InvokeHelper(0x60040003, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCharacter2::GenerateIcon(long ClipLeft, long ClipTop, long ClipWidth, long ClipHeight)
+{
+	static BYTE parms[] =
+		VTS_I4 VTS_I4 VTS_I4 VTS_I4;
+	InvokeHelper(0x60040004, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 ClipLeft, ClipTop, ClipWidth, ClipHeight);
+}
+
+BOOL IDaSvrCharacter2::GetIconVisible()
+{
+	BOOL result;
+	InvokeHelper(0x60040005, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
+}
+
+CString IDaSvrCharacter2::GetIconIdentity()
+{
+	CString result;
+	InvokeHelper(0x60040008, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCharacter2::SetIconIdentity(LPCTSTR lpszNewValue)
+{
+	static BYTE parms[] =
+		VTS_BSTR;
+	InvokeHelper(0x60040008, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 lpszNewValue);
+}
+
+CString IDaSvrCharacter2::GetIconTip()
+{
+	CString result;
+	InvokeHelper(0x60040009, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCharacter2::SetIconTip(LPCTSTR lpszNewValue)
+{
+	static BYTE parms[] =
+		VTS_BSTR;
+	InvokeHelper(0x60040009, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 lpszNewValue);
+}
+
+LPDISPATCH IDaSvrCharacter2::GetTTSEngine(BOOL GetDefault)
+{
+	LPDISPATCH result;
+	static BYTE parms[] =
+		VTS_BOOL;
+	InvokeHelper(0x6004000a, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, parms,
+		GetDefault);
+	return result;
+}
+
+LPDISPATCH IDaSvrCharacter2::FindTTSEngines(long LanguageID)
+{
+	LPDISPATCH result;
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x6004000b, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
+		LanguageID);
+	return result;
+}
+
+LPDISPATCH IDaSvrCharacter2::GetSREngine(BOOL GetDefault)
+{
+	LPDISPATCH result;
+	static BYTE parms[] =
+		VTS_BOOL;
+	InvokeHelper(0x6004000c, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, parms,
+		GetDefault);
+	return result;
+}
+
+LPDISPATCH IDaSvrCharacter2::FindSREngines(long LanguageID)
+{
+	LPDISPATCH result;
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x6004000d, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
+		LanguageID);
+	return result;
+}
+
+long IDaSvrCharacter2::GetCharacterID()
+{
+	long result;
+	InvokeHelper(0x60040010, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+CString IDaSvrCharacter2::GetUniqueID()
+{
+	CString result;
+	InvokeHelper(0x60040011, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+CString IDaSvrCharacter2::GetName()
+{
+	CString result;
+	InvokeHelper(0x60040012, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCharacter2::SetName(LPCTSTR lpszNewValue)
+{
+	static BYTE parms[] =
+		VTS_BSTR;
+	InvokeHelper(0x60040012, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 lpszNewValue);
+}
+
+CString IDaSvrCharacter2::GetDescription()
+{
+	CString result;
+	InvokeHelper(0x60040013, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCharacter2::SetDescription(LPCTSTR lpszNewValue)
+{
+	static BYTE parms[] =
+		VTS_BSTR;
+	InvokeHelper(0x60040013, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 lpszNewValue);
+}
+
+CString IDaSvrCharacter2::GetExtraData()
+{
+	CString result;
+	InvokeHelper(0x60040014, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+CString IDaSvrCharacter2::GetFileName()
+{
+	CString result;
+	InvokeHelper(0x60040015, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+CString IDaSvrCharacter2::GetFilePath()
+{
+	CString result;
+	InvokeHelper(0x60040016, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+long IDaSvrCharacter2::GetLanguageID()
+{
+	long result;
+	InvokeHelper(0x60040017, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCharacter2::SetLanguageID(long nNewValue)
+{
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x60040017, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
+}
+
+CString IDaSvrCharacter2::GetTTSModeID()
+{
+	CString result;
+	InvokeHelper(0x60040018, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCharacter2::SetTTSModeID(LPCTSTR lpszNewValue)
+{
+	static BYTE parms[] =
+		VTS_BSTR;
+	InvokeHelper(0x60040018, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 lpszNewValue);
+}
+
+CString IDaSvrCharacter2::GetSRModeID()
+{
+	CString result;
+	InvokeHelper(0x60040019, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCharacter2::SetSRModeID(LPCTSTR lpszNewValue)
+{
+	static BYTE parms[] =
+		VTS_BSTR;
+	InvokeHelper(0x60040019, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 lpszNewValue);
+}
+
+short IDaSvrCharacter2::GetLeft()
+{
+	short result;
+	InvokeHelper(0x6004001a, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCharacter2::SetLeft(short nNewValue)
+{
+	static BYTE parms[] =
+		VTS_I2;
+	InvokeHelper(0x6004001a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
+}
+
+short IDaSvrCharacter2::GetTop()
+{
+	short result;
+	InvokeHelper(0x6004001b, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCharacter2::SetTop(short nNewValue)
+{
+	static BYTE parms[] =
+		VTS_I2;
+	InvokeHelper(0x6004001b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
+}
+
+short IDaSvrCharacter2::GetWidth()
+{
+	short result;
+	InvokeHelper(0x6004001c, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCharacter2::SetWidth(short nNewValue)
+{
+	static BYTE parms[] =
+		VTS_I2;
+	InvokeHelper(0x6004001c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
+}
+
+short IDaSvrCharacter2::GetHeight()
+{
+	short result;
+	InvokeHelper(0x6004001d, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCharacter2::SetHeight(short nNewValue)
+{
+	static BYTE parms[] =
+		VTS_I2;
+	InvokeHelper(0x6004001d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
+}
+
+short IDaSvrCharacter2::GetOriginalWidth()
+{
+	short result;
+	InvokeHelper(0x6004001e, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+	return result;
+}
+
+short IDaSvrCharacter2::GetOriginalHeight()
+{
+	short result;
+	InvokeHelper(0x6004001f, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+	return result;
+}
+
+BOOL IDaSvrCharacter2::GetVisible()
+{
+	BOOL result;
+	InvokeHelper(0x60040020, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
+}
+
+long IDaSvrCharacter2::GetActiveState()
+{
+	long result;
+	InvokeHelper(0x60040021, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCharacter2::SetActiveState(long nNewValue)
+{
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x60040021, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
+}
+
+BOOL IDaSvrCharacter2::GetIdleState()
+{
+	BOOL result;
+	InvokeHelper(0x60040022, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
+}
+
+long IDaSvrCharacter2::GetOtherClientCount()
+{
+	long result;
+	InvokeHelper(0x60040023, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+long IDaSvrCharacter2::GetMoveCause()
+{
+	long result;
+	InvokeHelper(0x60040024, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+long IDaSvrCharacter2::GetVisibilityCause()
+{
+	long result;
+	InvokeHelper(0x60040025, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+long IDaSvrCharacter2::GetListeningStatus()
+{
+	long result;
+	InvokeHelper(0x60040026, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrBalloon2 properties
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrBalloon2 operations
+
+BOOL IDaSvrBalloon2::GetEnabled()
+{
+	BOOL result;
+	InvokeHelper(0x1, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
+}
+
+long IDaSvrBalloon2::GetStyle()
+{
+	long result;
+	InvokeHelper(0x2, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrBalloon2::SetStyle(long nNewValue)
+{
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
+}
+
+BOOL IDaSvrBalloon2::GetVisible()
+{
+	BOOL result;
+	InvokeHelper(0x3, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrBalloon2::SetVisible(BOOL bNewValue)
+{
+	static BYTE parms[] =
+		VTS_BOOL;
+	InvokeHelper(0x3, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 bNewValue);
+}
+
+long IDaSvrBalloon2::GetNumberOfLines()
+{
+	long result;
+	InvokeHelper(0x4, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrBalloon2::SetNumberOfLines(long nNewValue)
+{
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x4, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
+}
+
+long IDaSvrBalloon2::GetCharsPerLine()
+{
+	long result;
+	InvokeHelper(0x5, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrBalloon2::SetCharsPerLine(long nNewValue)
+{
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x5, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
+}
+
+unsigned long IDaSvrBalloon2::GetTextColor()
+{
+	unsigned long result;
+	InvokeHelper(0x6, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrBalloon2::SetTextColor(unsigned long newValue)
+{
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 newValue);
+}
+
+unsigned long IDaSvrBalloon2::GetBackColor()
+{
+	unsigned long result;
+	InvokeHelper(0x7, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrBalloon2::SetBackColor(unsigned long newValue)
+{
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 newValue);
+}
+
+unsigned long IDaSvrBalloon2::GetBorderColor()
+{
+	unsigned long result;
+	InvokeHelper(0x8, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrBalloon2::SetBorderColor(unsigned long newValue)
+{
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 newValue);
+}
+
+CString IDaSvrBalloon2::GetFontName()
+{
+	CString result;
+	InvokeHelper(0x9, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrBalloon2::SetFontName(LPCTSTR lpszNewValue)
+{
+	static BYTE parms[] =
+		VTS_BSTR;
+	InvokeHelper(0x9, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 lpszNewValue);
+}
+
+long IDaSvrBalloon2::GetFontSize()
+{
+	long result;
+	InvokeHelper(0xa, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrBalloon2::SetFontSize(long nNewValue)
+{
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0xa, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
+}
+
+BOOL IDaSvrBalloon2::GetFontBold()
+{
+	BOOL result;
+	InvokeHelper(0xb, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrBalloon2::SetFontBold(BOOL bNewValue)
+{
+	static BYTE parms[] =
+		VTS_BOOL;
+	InvokeHelper(0xb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 bNewValue);
+}
+
+BOOL IDaSvrBalloon2::GetFontItalic()
+{
+	BOOL result;
+	InvokeHelper(0xc, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrBalloon2::SetFontItalic(BOOL bNewValue)
+{
+	static BYTE parms[] =
+		VTS_BOOL;
+	InvokeHelper(0xc, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 bNewValue);
+}
+
+BOOL IDaSvrBalloon2::GetFontStrikethru()
+{
+	BOOL result;
+	InvokeHelper(0xd, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrBalloon2::SetFontStrikethru(BOOL bNewValue)
+{
+	static BYTE parms[] =
+		VTS_BOOL;
+	InvokeHelper(0xd, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 bNewValue);
+}
+
+BOOL IDaSvrBalloon2::GetFontUnderline()
+{
+	BOOL result;
+	InvokeHelper(0xe, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrBalloon2::SetFontUnderline(BOOL bNewValue)
+{
+	static BYTE parms[] =
+		VTS_BOOL;
+	InvokeHelper(0xe, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 bNewValue);
+}
+
+short IDaSvrBalloon2::GetFontCharSet()
+{
+	short result;
+	InvokeHelper(0xf, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrBalloon2::SetFontCharSet(short nNewValue)
+{
+	static BYTE parms[] =
+		VTS_I2;
+	InvokeHelper(0xf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrCommands2 properties
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrCommands2 operations
+
+void IDaSvrCommands2::Add(LPCTSTR Caption, LPCTSTR VoiceGrammar, long Enabled, long Visible, long* CommandID)
 {
 	static BYTE parms[] =
 		VTS_BSTR VTS_BSTR VTS_I4 VTS_I4 VTS_PI4;
 	InvokeHelper(0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszCaption, bszVoice, bEnabled, bVisible, pdwID);
+		 Caption, VoiceGrammar, Enabled, Visible, CommandID);
 }
 
-void IDaSvrCommands::Insert(LPCTSTR bszCaption, LPCTSTR bszVoice, long bEnabled, long bVisible, long dwRefID, long bBefore, long* pdwID)
+void IDaSvrCommands2::Insert(LPCTSTR Caption, LPCTSTR VoiceGrammar, long Enabled, long Visible, long RefCommandID, long Before, long* CommandID)
 {
 	static BYTE parms[] =
 		VTS_BSTR VTS_BSTR VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_PI4;
 	InvokeHelper(0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszCaption, bszVoice, bEnabled, bVisible, dwRefID, bBefore, pdwID);
+		 Caption, VoiceGrammar, Enabled, Visible, RefCommandID, Before, CommandID);
 }
 
-void IDaSvrCommands::Remove(long dwID)
+void IDaSvrCommands2::Remove(long CommandID)
 {
 	static BYTE parms[] =
 		VTS_I4;
 	InvokeHelper(0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwID);
+		 CommandID);
 }
 
-void IDaSvrCommands::RemoveAll()
+void IDaSvrCommands2::RemoveAll()
 {
 	InvokeHelper(0x6002000b, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
 }
 
-void IDaSvrCommands::GetCommandEx(long dwCommandID, LPDISPATCH* ppCommandEx)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_PDISPATCH;
-	InvokeHelper(0x60030000, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCommandID, ppCommandEx);
-}
-
-void IDaSvrCommands::SetDefaultID(long dwID)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x60030001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwID);
-}
-
-void IDaSvrCommands::GetDefaultID(long* pdwID)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60030002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pdwID);
-}
-
-void IDaSvrCommands::SetFontName(LPCTSTR bszFontName)
-{
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x60030005, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszFontName);
-}
-
-void IDaSvrCommands::GetFontName(BSTR* pbszFontName)
-{
-	static BYTE parms[] =
-		VTS_PBSTR;
-	InvokeHelper(0x60030006, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbszFontName);
-}
-
-void IDaSvrCommands::SetFontSize(long lFontSize)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x60030007, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 lFontSize);
-}
-
-void IDaSvrCommands::GetFontSize(long* lFontSize)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60030008, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 lFontSize);
-}
-
-void IDaSvrCommands::SetVoiceCaption(LPCTSTR bszVoiceCaption)
-{
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x60030009, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszVoiceCaption);
-}
-
-void IDaSvrCommands::GetVoiceCaption(BSTR* bszVoiceCaption)
-{
-	static BYTE parms[] =
-		VTS_PBSTR;
-	InvokeHelper(0x6003000a, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszVoiceCaption);
-}
-
-void IDaSvrCommands::AddEx(LPCTSTR bszCaption, LPCTSTR bszVoice, LPCTSTR bszVoiceCaption, long bEnabled, long bVisible, long ulHelpID, long* pdwID)
+void IDaSvrCommands2::AddEx(LPCTSTR Caption, LPCTSTR VoiceGrammar, LPCTSTR VoiceCaption, long Enabled, long Visible, long HelpContextID, long* CommandID)
 {
 	static BYTE parms[] =
 		VTS_BSTR VTS_BSTR VTS_BSTR VTS_I4 VTS_I4 VTS_I4 VTS_PI4;
 	InvokeHelper(0x6003000b, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszCaption, bszVoice, bszVoiceCaption, bEnabled, bVisible, ulHelpID, pdwID);
+		 Caption, VoiceGrammar, VoiceCaption, Enabled, Visible, HelpContextID, CommandID);
 }
 
-void IDaSvrCommands::InsertEx(LPCTSTR bszCaption, LPCTSTR bszVoice, LPCTSTR bszVoiceCaption, long bEnabled, long bVisible, long ulHelpID, long dwRefID, long bBefore, long* pdwID)
+void IDaSvrCommands2::InsertEx(LPCTSTR Caption, LPCTSTR VoiceGrammar, LPCTSTR VoiceCaption, long Enabled, long Visible, long HelpContextID, long RefCommandID, long Before, long* CommandID)
 {
 	static BYTE parms[] =
 		VTS_BSTR VTS_BSTR VTS_BSTR VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_PI4;
 	InvokeHelper(0x6003000c, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszCaption, bszVoice, bszVoiceCaption, bEnabled, bVisible, ulHelpID, dwRefID, bBefore, pdwID);
+		 Caption, VoiceGrammar, VoiceCaption, Enabled, Visible, HelpContextID, RefCommandID, Before, CommandID);
 }
 
-void IDaSvrCommands::SetGlobalVoiceCommandsEnabled(long bEnable)
+LPDISPATCH IDaSvrCommands2::GetItem(long Index)
+{
+	LPDISPATCH result;
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x0, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, parms,
+		Index);
+	return result;
+}
+
+long IDaSvrCommands2::GetCount()
+{
+	long result;
+	InvokeHelper(0xfffffff8, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+LPDISPATCH IDaSvrCommands2::GetCommand(long CommandID)
+{
+	LPDISPATCH result;
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x60040000, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, parms,
+		CommandID);
+	return result;
+}
+
+CString IDaSvrCommands2::GetCaption()
+{
+	CString result;
+	InvokeHelper(0x60040001, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCommands2::SetCaption(LPCTSTR lpszNewValue)
+{
+	static BYTE parms[] =
+		VTS_BSTR;
+	InvokeHelper(0x60040001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 lpszNewValue);
+}
+
+CString IDaSvrCommands2::GetVoiceGrammar()
+{
+	CString result;
+	InvokeHelper(0x60040002, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCommands2::SetVoiceGrammar(LPCTSTR lpszNewValue)
+{
+	static BYTE parms[] =
+		VTS_BSTR;
+	InvokeHelper(0x60040002, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 lpszNewValue);
+}
+
+BOOL IDaSvrCommands2::GetVisible()
+{
+	BOOL result;
+	InvokeHelper(0x60040003, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCommands2::SetVisible(BOOL bNewValue)
+{
+	static BYTE parms[] =
+		VTS_BOOL;
+	InvokeHelper(0x60040003, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 bNewValue);
+}
+
+long IDaSvrCommands2::GetDefaultCommand()
+{
+	long result;
+	InvokeHelper(0x60040004, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCommands2::SetDefaultCommand(long nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
-	InvokeHelper(0x6003000d, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bEnable);
+	InvokeHelper(0x60040004, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
 }
 
-void IDaSvrCommands::GetGlobalVoiceCommandsEnabled(long* pbEnabled)
+CString IDaSvrCommands2::GetFontName()
+{
+	CString result;
+	InvokeHelper(0x60040005, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCommands2::SetFontName(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x6003000e, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbEnabled);
+		VTS_BSTR;
+	InvokeHelper(0x60040005, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 lpszNewValue);
 }
 
-
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrSpeechInputProperties properties
-
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrSpeechInputProperties operations
-
-void IDaSvrSpeechInputProperties::GetEnabled(long* pbEnabled)
+long IDaSvrCommands2::GetFontSize()
 {
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbEnabled);
+	long result;
+	InvokeHelper(0x60040006, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
 }
 
-void IDaSvrSpeechInputProperties::GetHotKey(BSTR* pbszHotCharKey)
-{
-	static BYTE parms[] =
-		VTS_PBSTR;
-	InvokeHelper(0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbszHotCharKey);
-}
-
-void IDaSvrSpeechInputProperties::GetListeningTip(long* pbListeningTip)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020006, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbListeningTip);
-}
-
-
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrAudioOutputProperties properties
-
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrAudioOutputProperties operations
-
-void IDaSvrAudioOutputProperties::GetEnabled(long* pbEnabled)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbEnabled);
-}
-
-void IDaSvrAudioOutputProperties::GetUsingSoundEffects(long* pbUsingSoundEffects)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbUsingSoundEffects);
-}
-
-
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrPropertySheet properties
-
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrPropertySheet operations
-
-void IDaSvrPropertySheet::GetVisible(long* pbVisible)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbVisible);
-}
-
-void IDaSvrPropertySheet::SetVisible(long bVisible)
+void IDaSvrCommands2::SetFontSize(long nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
-	InvokeHelper(0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bVisible);
+	InvokeHelper(0x60040006, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
 }
 
-void IDaSvrPropertySheet::GetPosition(long* plLeft, long* plTop)
+CString IDaSvrCommands2::GetVoiceCaption()
+{
+	CString result;
+	InvokeHelper(0x60040007, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCommands2::SetVoiceCaption(LPCTSTR lpszNewValue)
+{
+	static BYTE parms[] =
+		VTS_BSTR;
+	InvokeHelper(0x60040007, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 lpszNewValue);
+}
+
+BOOL IDaSvrCommands2::GetGlobalVoiceCommandsEnabled()
+{
+	BOOL result;
+	InvokeHelper(0x60040008, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCommands2::SetGlobalVoiceCommandsEnabled(BOOL bNewValue)
+{
+	static BYTE parms[] =
+		VTS_BOOL;
+	InvokeHelper(0x60040008, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 bNewValue);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrCommand2 properties
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrCommand2 operations
+
+CString IDaSvrCommand2::GetCaption()
+{
+	CString result;
+	InvokeHelper(0x60030004, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCommand2::SetCaption(LPCTSTR lpszNewValue)
+{
+	static BYTE parms[] =
+		VTS_BSTR;
+	InvokeHelper(0x60030004, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 lpszNewValue);
+}
+
+BOOL IDaSvrCommand2::GetEnabled()
+{
+	BOOL result;
+	InvokeHelper(0x60030005, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCommand2::SetEnabled(BOOL bNewValue)
+{
+	static BYTE parms[] =
+		VTS_BOOL;
+	InvokeHelper(0x60030005, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 bNewValue);
+}
+
+BOOL IDaSvrCommand2::GetVisible()
+{
+	BOOL result;
+	InvokeHelper(0x60030006, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCommand2::SetVisible(BOOL bNewValue)
+{
+	static BYTE parms[] =
+		VTS_BOOL;
+	InvokeHelper(0x60030006, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 bNewValue);
+}
+
+long IDaSvrCommand2::GetCommandID()
+{
+	long result;
+	InvokeHelper(0x60030007, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+CString IDaSvrCommand2::GetVoiceCaption()
+{
+	CString result;
+	InvokeHelper(0x60030008, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCommand2::SetVoiceCaption(LPCTSTR lpszNewValue)
+{
+	static BYTE parms[] =
+		VTS_BSTR;
+	InvokeHelper(0x60030008, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 lpszNewValue);
+}
+
+CString IDaSvrCommand2::GetVoiceGrammar()
+{
+	CString result;
+	InvokeHelper(0x60030009, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCommand2::SetVoiceGrammar(LPCTSTR lpszNewValue)
+{
+	static BYTE parms[] =
+		VTS_BSTR;
+	InvokeHelper(0x60030009, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 lpszNewValue);
+}
+
+long IDaSvrCommand2::GetConfidenceThreshold()
+{
+	long result;
+	InvokeHelper(0x6003000a, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCommand2::SetConfidenceThreshold(long nNewValue)
+{
+	static BYTE parms[] =
+		VTS_I4;
+	InvokeHelper(0x6003000a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
+}
+
+CString IDaSvrCommand2::GetConfidenceText()
+{
+	CString result;
+	InvokeHelper(0x6003000b, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCommand2::SetConfidenceText(LPCTSTR lpszNewValue)
+{
+	static BYTE parms[] =
+		VTS_BSTR;
+	InvokeHelper(0x6003000b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 lpszNewValue);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrPropertySheet2 properties
+
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrPropertySheet2 operations
+
+void IDaSvrPropertySheet2::GetPosition(long* Left, long* Top)
 {
 	static BYTE parms[] =
 		VTS_PI4 VTS_PI4;
 	InvokeHelper(0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 plLeft, plTop);
+		 Left, Top);
 }
 
-void IDaSvrPropertySheet::GetSize(long* plWidth, long* plHeight)
+void IDaSvrPropertySheet2::GetSize(long* Width, long* Height)
 {
 	static BYTE parms[] =
 		VTS_PI4 VTS_PI4;
 	InvokeHelper(0x60020003, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 plWidth, plHeight);
+		 Width, Height);
 }
 
-void IDaSvrPropertySheet::GetPage(BSTR* pbszPage)
-{
-	static BYTE parms[] =
-		VTS_PBSTR;
-	InvokeHelper(0x60020004, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbszPage);
-}
-
-void IDaSvrPropertySheet::SetPage(LPCTSTR bszPage)
-{
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x60020005, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszPage);
-}
-
-
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrBalloon properties
-
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrBalloon operations
-
-void IDaSvrBalloon::GetEnabled(long* pbEnabled)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbEnabled);
-}
-
-void IDaSvrBalloon::GetNumLines(long* plLines)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 plLines);
-}
-
-void IDaSvrBalloon::GetNumCharsPerLine(long* plCharsPerLine)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 plCharsPerLine);
-}
-
-void IDaSvrBalloon::GetFontName(BSTR* pbszFontName)
-{
-	static BYTE parms[] =
-		VTS_PBSTR;
-	InvokeHelper(0x60020003, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbszFontName);
-}
-
-void IDaSvrBalloon::GetFontSize(long* plFontSize)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020004, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 plFontSize);
-}
-
-void IDaSvrBalloon::GetFontBold(long* pbFontBold)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020005, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbFontBold);
-}
-
-void IDaSvrBalloon::GetFontItalic(long* pbFontItalic)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020006, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbFontItalic);
-}
-
-void IDaSvrBalloon::GetFontStrikethru(long* pbFontStrikethru)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbFontStrikethru);
-}
-
-void IDaSvrBalloon::GetFontUnderline(long* pbFontUnderline)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbFontUnderline);
-}
-
-void IDaSvrBalloon::GetForeColor(long* plFGColor)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 plFGColor);
-}
-
-void IDaSvrBalloon::GetBackColor(long* plBGColor)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 plBGColor);
-}
-
-void IDaSvrBalloon::GetBorderColor(long* plBorderColor)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x6002000b, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 plBorderColor);
-}
-
-void IDaSvrBalloon::SetVisible(long bVisible)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x6002000c, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bVisible);
-}
-
-void IDaSvrBalloon::GetVisible(long* pbVisible)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x6002000d, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbVisible);
-}
-
-void IDaSvrBalloon::SetFontName(LPCTSTR bszFontName)
-{
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x6002000e, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszFontName);
-}
-
-void IDaSvrBalloon::SetFontSize(long lFontSize)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x6002000f, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 lFontSize);
-}
-
-void IDaSvrBalloon::SetFontCharSet(short sFontCharSet)
+void IDaSvrPropertySheet2::SetLeft(short nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I2;
-	InvokeHelper(0x60020010, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 sFontCharSet);
+	InvokeHelper(0x1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
 }
 
-void IDaSvrBalloon::GetFontCharSet(short* psFontCharSet)
+short IDaSvrPropertySheet2::GetLeft()
 {
-	static BYTE parms[] =
-		VTS_PI2;
-	InvokeHelper(0x60020011, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 psFontCharSet);
+	short result;
+	InvokeHelper(0x1, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+	return result;
 }
 
-void IDaSvrBalloon::SetStyle(long lStyle)
+void IDaSvrPropertySheet2::SetTop(short nNewValue)
 {
 	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x60030000, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 lStyle);
+		VTS_I2;
+	InvokeHelper(0x2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 nNewValue);
 }
 
-void IDaSvrBalloon::GetStyle(long* plStyle)
+short IDaSvrPropertySheet2::GetTop()
 {
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60030001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 plStyle);
+	short result;
+	InvokeHelper(0x2, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+	return result;
 }
 
-void IDaSvrBalloon::SetNumLines(long lLines)
+short IDaSvrPropertySheet2::GetHeight()
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x60030002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 lLines);
+	short result;
+	InvokeHelper(0x3, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+	return result;
 }
 
-void IDaSvrBalloon::SetNumCharsPerLine(long lCharsPerLine)
+short IDaSvrPropertySheet2::GetWidth()
+{
+	short result;
+	InvokeHelper(0x4, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrPropertySheet2::SetVisible(BOOL bNewValue)
 {
 	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x60030003, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 lCharsPerLine);
+		VTS_BOOL;
+	InvokeHelper(0x6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 bNewValue);
+}
+
+BOOL IDaSvrPropertySheet2::GetVisible()
+{
+	BOOL result;
+	InvokeHelper(0x6, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrPropertySheet2::SetPage(LPCTSTR lpszNewValue)
+{
+	static BYTE parms[] =
+		VTS_BSTR;
+	InvokeHelper(0x5, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 lpszNewValue);
+}
+
+CString IDaSvrPropertySheet2::GetPage()
+{
+	CString result;
+	InvokeHelper(0x5, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrPropertySheet2::SetPosition(long Left, long Top)
+{
+	static BYTE parms[] =
+		VTS_I4 VTS_I4;
+	InvokeHelper(0x8, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 Left, Top);
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaSvrCommandWindow properties
+// IDaSvrCommandsWindow2 properties
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaSvrCommandWindow operations
+// IDaSvrCommandsWindow2 operations
 
-void IDaSvrCommandWindow::SetVisible(long bVisible)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bVisible);
-}
-
-void IDaSvrCommandWindow::GetVisible(long* pbVisible)
-{
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pbVisible);
-}
-
-void IDaSvrCommandWindow::GetPosition(long* plLeft, long* plTop)
+void IDaSvrCommandsWindow2::GetPosition(long* Left, long* Top)
 {
 	static BYTE parms[] =
 		VTS_PI4 VTS_PI4;
 	InvokeHelper(0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 plLeft, plTop);
+		 Left, Top);
 }
 
-void IDaSvrCommandWindow::GetSize(long* plWidth, long* plHeight)
+void IDaSvrCommandsWindow2::GetSize(long* Width, long* Height)
 {
 	static BYTE parms[] =
 		VTS_PI4 VTS_PI4;
 	InvokeHelper(0x60020003, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 plWidth, plHeight);
+		 Width, Height);
+}
+
+BOOL IDaSvrCommandsWindow2::GetVisible()
+{
+	BOOL result;
+	InvokeHelper(0x60030001, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
+}
+
+void IDaSvrCommandsWindow2::SetVisible(BOOL bNewValue)
+{
+	static BYTE parms[] =
+		VTS_BOOL;
+	InvokeHelper(0x60030001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 bNewValue);
+}
+
+short IDaSvrCommandsWindow2::GetLeft()
+{
+	short result;
+	InvokeHelper(0x60030002, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+	return result;
+}
+
+short IDaSvrCommandsWindow2::GetTop()
+{
+	short result;
+	InvokeHelper(0x60030003, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+	return result;
+}
+
+short IDaSvrCommandsWindow2::GetHeight()
+{
+	short result;
+	InvokeHelper(0x60030004, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+	return result;
+}
+
+short IDaSvrCommandsWindow2::GetWidth()
+{
+	short result;
+	InvokeHelper(0x60030005, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+	return result;
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaAgentNotifySink15 properties
+// IDaSvrSettings properties
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaAgentNotifySink15 operations
+// IDaSvrSettings operations
 
-void IDaAgentNotifySink15::Command(long dwCommandID, LPUNKNOWN punkUserInput)
+BOOL IDaSvrSettings::GetSoundEffectsEnabled()
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_UNKNOWN;
-	InvokeHelper(0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCommandID, punkUserInput);
+	BOOL result;
+	InvokeHelper(0x1, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
 }
 
-void IDaAgentNotifySink15::ActivateInputState(long dwCharID, long bActivated)
+BOOL IDaSvrSettings::GetBalloonEnabled()
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4;
-	InvokeHelper(0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, bActivated);
+	BOOL result;
+	InvokeHelper(0x2, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
 }
 
-void IDaAgentNotifySink15::VisibleState(long dwCharID, long bVisible, long dwCause)
+LPDISPATCH IDaSvrSettings::GetBalloonFont()
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_I4;
-	InvokeHelper(0x60020004, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, bVisible, dwCause);
+	LPDISPATCH result;
+	InvokeHelper(0x3, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
+	return result;
 }
 
-void IDaAgentNotifySink15::Click(long dwCharID, short fwKeys, long x, long y)
+BOOL IDaSvrSettings::GetTTSEnabled()
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I2 VTS_I4 VTS_I4;
-	InvokeHelper(0x60020005, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, fwKeys, x, y);
+	BOOL result;
+	InvokeHelper(0x4, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
 }
 
-void IDaAgentNotifySink15::DblClick(long dwCharID, short fwKeys, long x, long y)
+short IDaSvrSettings::GetTTSSpeed()
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I2 VTS_I4 VTS_I4;
-	InvokeHelper(0x60020006, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, fwKeys, x, y);
+	short result;
+	InvokeHelper(0x5, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+	return result;
 }
 
-void IDaAgentNotifySink15::DragStart(long dwCharID, short fwKeys, long x, long y)
+BOOL IDaSvrSettings::GetSREnabled()
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I2 VTS_I4 VTS_I4;
-	InvokeHelper(0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, fwKeys, x, y);
+	BOOL result;
+	InvokeHelper(0x6, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
 }
 
-void IDaAgentNotifySink15::DragComplete(long dwCharID, short fwKeys, long x, long y)
+CString IDaSvrSettings::GetSRHotKey()
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I2 VTS_I4 VTS_I4;
-	InvokeHelper(0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, fwKeys, x, y);
+	CString result;
+	InvokeHelper(0x7, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
 }
 
-void IDaAgentNotifySink15::RequestStart(long dwRequestID)
+short IDaSvrSettings::GetSRHotKeyTime()
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwRequestID);
+	short result;
+	InvokeHelper(0x8, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+	return result;
 }
 
-void IDaAgentNotifySink15::RequestComplete(long dwRequestID, long hrStatus)
+BOOL IDaSvrSettings::GetSRListeningTip()
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4;
-	InvokeHelper(0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwRequestID, hrStatus);
+	BOOL result;
+	InvokeHelper(0x9, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
 }
 
-void IDaAgentNotifySink15::BookMark(long dwBookMarkID)
+BOOL IDaSvrSettings::GetSRListeningPrompt()
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x6002000b, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwBookMarkID);
+	BOOL result;
+	InvokeHelper(0xa, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
 }
 
-void IDaAgentNotifySink15::Idle(long dwCharID, long bStart)
+long IDaSvrSettings::GetAudioStatus()
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4;
-	InvokeHelper(0x6002000c, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, bStart);
-}
-
-void IDaAgentNotifySink15::Move(long dwCharID, long x, long y, long dwCause)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_I4 VTS_I4;
-	InvokeHelper(0x6002000d, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, x, y, dwCause);
-}
-
-void IDaAgentNotifySink15::Size(long dwCharID, long lWidth, long lHeight)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_I4;
-	InvokeHelper(0x6002000e, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, lWidth, lHeight);
-}
-
-void IDaAgentNotifySink15::BalloonVisibleState(long dwCharID, long bVisible)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_I4;
-	InvokeHelper(0x6002000f, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, bVisible);
-}
-
-
-/////////////////////////////////////////////////////////////////////////////
-// IDaNotifySink properties
-
-/////////////////////////////////////////////////////////////////////////////
-// IDaNotifySink operations
-
-void IDaNotifySink::Command(long dwCommandID, LPUNKNOWN punkUserInput)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_UNKNOWN;
-	InvokeHelper(0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCommandID, punkUserInput);
-}
-
-void IDaNotifySink::ActivateInputState(long dwCharID, long bActivated)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_I4;
-	InvokeHelper(0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, bActivated);
-}
-
-void IDaNotifySink::VisibleState(long dwCharID, long bVisible, long dwCause)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_I4;
-	InvokeHelper(0x60020004, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, bVisible, dwCause);
-}
-
-void IDaNotifySink::Click(long dwCharID, short fwKeys, long x, long y)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_I2 VTS_I4 VTS_I4;
-	InvokeHelper(0x60020005, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, fwKeys, x, y);
-}
-
-void IDaNotifySink::DblClick(long dwCharID, short fwKeys, long x, long y)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_I2 VTS_I4 VTS_I4;
-	InvokeHelper(0x60020006, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, fwKeys, x, y);
-}
-
-void IDaNotifySink::DragStart(long dwCharID, short fwKeys, long x, long y)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_I2 VTS_I4 VTS_I4;
-	InvokeHelper(0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, fwKeys, x, y);
-}
-
-void IDaNotifySink::DragComplete(long dwCharID, short fwKeys, long x, long y)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_I2 VTS_I4 VTS_I4;
-	InvokeHelper(0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, fwKeys, x, y);
-}
-
-void IDaNotifySink::RequestStart(long dwRequestID)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwRequestID);
-}
-
-void IDaNotifySink::RequestComplete(long dwRequestID, long hrStatus)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_I4;
-	InvokeHelper(0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwRequestID, hrStatus);
-}
-
-void IDaNotifySink::BookMark(long dwBookMarkID)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x6002000b, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwBookMarkID);
-}
-
-void IDaNotifySink::Idle(long dwCharID, long bStart)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_I4;
-	InvokeHelper(0x6002000c, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, bStart);
-}
-
-void IDaNotifySink::Move(long dwCharID, long x, long y, long dwCause)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_I4 VTS_I4;
-	InvokeHelper(0x6002000d, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, x, y, dwCause);
-}
-
-void IDaNotifySink::Size(long dwCharID, long lWidth, long lHeight)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_I4;
-	InvokeHelper(0x6002000e, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, lWidth, lHeight);
-}
-
-void IDaNotifySink::BalloonVisibleState(long dwCharID, long bVisible)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_I4;
-	InvokeHelper(0x6002000f, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, bVisible);
-}
-
-void IDaNotifySink::ListeningState(long dwCharID, long bListening, long dwCause)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_I4;
-	InvokeHelper(0x60030001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, bListening, dwCause);
-}
-
-void IDaNotifySink::DefaultCharacterChange(LPCTSTR bszGUID)
-{
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x60030002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 bszGUID);
-}
-
-void IDaNotifySink::AgentPropertyChange()
-{
-	InvokeHelper(0x60030003, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
-}
-
-void IDaNotifySink::ActiveClientChange(long dwCharID, long lStatus)
-{
-	static BYTE parms[] =
-		VTS_I4 VTS_I4;
-	InvokeHelper(0x60030004, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 dwCharID, lStatus);
+	long result;
+	InvokeHelper(0xb, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	return result;
 }

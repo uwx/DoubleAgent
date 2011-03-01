@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "Sample1_C8_MFC8.h"
+#include "MsaWithDa_C8_MFC8.h"
 #include "AboutBox.h"
 #include "CDaCtlPropertySheet.h"
 
