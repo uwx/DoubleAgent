@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,103 +18,117 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSHOWWND_H_INCLUDED_
-#define DIRECTSHOWWND_H_INCLUDED_
 #pragma once
-
 #include "DirectShowUtils.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
 
-class _DACORE_IMPEXP CDirectShowWnd : public CWnd, protected CDirectShowUtils
+class CDirectShowWndBase :
+	public CWindowImpl<CDirectShowWndBase, CWindow, CNullTraits>
 {
+public:
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
+class CDirectShowWnd :
+	public CDirectShowWndBase,
+	protected CDirectShowUtils
+{
+	DECLARE_DLL_OBJECT_EX(CDirectShowWnd, _DACORE_IMPEXP)
 protected:
 	CDirectShowWnd();
 public:
-	virtual ~CDirectShowWnd();
-	DECLARE_DYNCREATE(CDirectShowWnd)
+	_DACORE_IMPEXP virtual ~CDirectShowWnd();
+	_DACORE_IMPEXP static CDirectShowWnd * CreateInstance ();
 
 // Attributes
 public:
-	bool				mAutoSize;
-	bool				mAutoRewind;
-	bool				mAlphaBlended;
-	static const UINT	mEventMsg;
+	bool								mAutoSize;
+	bool								mAutoRewind;
+	_DACORE_IMPEXP static const UINT	mEventMsg;
+
+	_DACORE_IMPEXP virtual DWORD SetAlphaSmoothing (DWORD pAlphaSmoothing);
+	_DACORE_IMPEXP virtual DWORD GetAlphaSmoothing () const;
 
 // Operations
 public:
-	virtual bool Open (LPCTSTR pFileName);
-	virtual void Close ();
+	_DACORE_IMPEXP virtual bool Open (LPCTSTR pFileName);
+	_DACORE_IMPEXP virtual void Close ();
 
-	virtual HRESULT Start (DWORD pWaitForCompletion = 100);
-	virtual HRESULT Stop (DWORD pWaitForCompletion = 100);
-	virtual HRESULT Pause (DWORD pWaitForCompletion = 100);
-	virtual HRESULT Resume (DWORD pWaitForCompletion = 100);
-	virtual bool Rewind ();
+	_DACORE_IMPEXP virtual HRESULT Start (DWORD pWaitForCompletion = 100);
+	_DACORE_IMPEXP virtual HRESULT Stop (DWORD pWaitForCompletion = 100);
+	_DACORE_IMPEXP virtual HRESULT Pause (DWORD pWaitForCompletion = 100);
+	_DACORE_IMPEXP virtual HRESULT Resume (DWORD pWaitForCompletion = 100);
+	_DACORE_IMPEXP virtual bool Rewind ();
 
-	bool IsPlaying (bool pIncludePause = true, bool pQuickCheck = false) const;
-	bool IsPaused (bool pQuickCheck = false) const;
-	bool IsStopped (bool pQuickCheck = false) const;
-	bool IsEndOfStream ();
-	bool IsVideoVisible ();
-	bool SetVideoVisible (bool pVisible);
+	_DACORE_IMPEXP bool IsPlaying (bool pIncludePause = true) const;
+	_DACORE_IMPEXP bool IsPaused () const;
+	_DACORE_IMPEXP bool IsStopped () const;
+	_DACORE_IMPEXP bool IsEndOfStream ();
+	_DACORE_IMPEXP bool IsVideoVisible ();
+	_DACORE_IMPEXP bool SetVideoVisible (bool pVisible);
 
-	LONGLONG GetDuration ();
-	LONGLONG GetPosition ();
-	LONGLONG GetStop ();
+	_DACORE_IMPEXP LONGLONG GetDuration ();
+	_DACORE_IMPEXP LONGLONG GetPosition ();
+	_DACORE_IMPEXP LONGLONG GetStop ();
+
+	_DACORE_IMPEXP CSize GetVideoSize ();
+	_DACORE_IMPEXP CRect GetVideoRect ();
+	_DACORE_IMPEXP HRESULT SetVideoRect (const CRect & pVideoRect);
+	_DACORE_IMPEXP HRESULT CenterVideo (const CSize * pVideoSize = NULL);
+	_DACORE_IMPEXP HRESULT AutoSizeWindow ();
+	_DACORE_IMPEXP HRESULT AutoSizeVideo (bool pKeepAspectRatio = false);
 
 // Overrides
-	//{{AFX_VIRTUAL(CDirectShowWnd)
-	protected:
-	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
-	//{{AFX_MSG(CDirectShowWnd)
-	afx_msg void OnDestroy();
-	afx_msg void OnMeasureItem(int nIDCtl, LPMEASUREITEMSTRUCT lpMeasureItemStruct);
-	afx_msg LRESULT OnDisplayChange(WPARAM wParam, LPARAM lParam);
-	afx_msg void OnPaint();
-	afx_msg BOOL OnEraseBkgnd(CDC *pDC);
-	afx_msg LRESULT OnPrintClient(WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnMediaEvent(WPARAM wParam, LPARAM lParam);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+	_DACORE_IMPEXP LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnDisplayChange (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnEraseBkgnd (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnPrintClient (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnMediaEvent (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+
+	BEGIN_MSG_MAP(CDirectShowWnd)
+		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
+		MESSAGE_HANDLER(WM_DISPLAYCHANGE, OnDisplayChange)
+		MESSAGE_HANDLER(WM_PAINT, OnPaint)
+		MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
+		MESSAGE_HANDLER(WM_PRINTCLIENT, OnPrintClient)
+		MESSAGE_HANDLER(mEventMsg, OnMediaEvent)
+	END_MSG_MAP()
 
 protected:
 	HRESULT _Open (LPCTSTR pFileName);
 	void _Close ();
-	virtual void Opening (LPCTSTR pFileName);
-	virtual void Opened ();
-	virtual void Closing ();
-	virtual void Closed ();
+	_DACORE_IMPEXP virtual void Opening (LPCTSTR pFileName);
+	_DACORE_IMPEXP virtual void Opened ();
+	_DACORE_IMPEXP virtual void Closing ();
+	_DACORE_IMPEXP virtual void Closed ();
 
 protected:
-	virtual HRESULT Initialize (LPCTSTR pFileName);
-	virtual HRESULT PrepareGraph (LPCTSTR pFileName);
-	virtual HRESULT GraphPrepared (LPCTSTR pFileName);
+	_DACORE_IMPEXP virtual HRESULT Initialize (LPCTSTR pFileName);
+	_DACORE_IMPEXP virtual HRESULT PrepareGraph (LPCTSTR pFileName);
+	_DACORE_IMPEXP virtual HRESULT GraphPrepared (LPCTSTR pFileName);
 
-	HRESULT PrepareGraphWindowed (IBaseFilter ** pFilter);
-	HRESULT PrepareGraphWindowless (IBaseFilter ** pFilter);
-	virtual HRESULT InitVideoWindow ();
+	_DACORE_IMPEXP HRESULT PrepareGraphWindowed (IBaseFilter ** pFilter);
+	_DACORE_IMPEXP HRESULT PrepareGraphWindowless (IBaseFilter ** pFilter);
+	_DACORE_IMPEXP virtual HRESULT InitVideoWindow ();
 
-	HRESULT AutoSizeWindow ();
-	HRESULT AutoSizeVideo (bool pKeepAspectRatio = false);
-	CSize GetVideoSize ();
-	CRect GetVideoRect ();
-
-	virtual COLORREF GetEraseColor ();
-	virtual bool EraseWindow (CDC * pDC, COLORREF pBkColor);
-	virtual bool PaintWindow (CDC * pDC);
+	_DACORE_IMPEXP virtual COLORREF GetEraseColor ();
+	_DACORE_IMPEXP virtual bool EraseWindow (HDC pDC, COLORREF pBkColor);
+	_DACORE_IMPEXP virtual bool PaintWindow (HDC pDC);
 
 public:
-	FILTER_STATE GetState (CString * pStateStr);
-	void LogState (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
-	void LogStatus (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
-	void LogFilters (UINT pLogLevel, bool pEnumPinTypes = false, LPCTSTR pFormat = NULL, ...);
-	void LogFilterStates (UINT pLogLevel, bool pEnumPins = false, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP IGraphBuilder * GetGraphBuilder () const {return mGraphBuilder;}
+	_DACORE_IMPEXP FILTER_STATE GetState (CAtlString * pStateStr);
+
+	_DACORE_IMPEXP void LogState (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP void LogStatus (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP void LogFilters (UINT pLogLevel, bool pEnumPinTypes = false, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP void LogFilterStates (UINT pLogLevel, bool pEnumPins = false, LPCTSTR pFormat = NULL, ...);
 
 protected:
 	IGraphBuilderPtr			mGraphBuilder;
@@ -128,13 +142,8 @@ protected:
 	IVMRWindowlessControlPtr	mVMRWindowlessControl7;
 	IVMRFilterConfig9Ptr		mVMRFilterConfig9;
 	IVMRWindowlessControl9Ptr	mVMRWindowlessControl9;
+	DWORD						mAlphaSmoothing;
 	CFileHandle					mLogFile;
 };
 
-#pragma warning(pop)
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSHOWWND_H_INCLUDED_

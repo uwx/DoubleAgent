@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,46 +18,46 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSHOWENUMS_H_INCLUDED_
-#define DIRECTSHOWENUMS_H_INCLUDED_
 #pragma once
-
 #include "DirectShowPins.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CEnumPins : public CCmdTarget
+class ATL_NO_VTABLE CEnumPins :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public IEnumPins
 {
-protected:
-	CEnumPins (const CEnumPins & pSource);
 public:
-	CEnumPins (CDirectShowPins & pInputPins, CDirectShowPins & pOutputPins, LPUNKNOWN pOwnerRef = NULL);
-	virtual ~CEnumPins ();
-	DECLARE_DYNAMIC(CEnumPins)
+	CEnumPins ();
+	~CEnumPins ();
+
+// Declarations
+public:
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
+
+	BEGIN_COM_MAP(CEnumPins)
+		COM_INTERFACE_ENTRY(IEnumPins)
+	END_COM_MAP()
 
 // Attributes
 public:
-	CDirectShowPins &	mInputPins;
-	CDirectShowPins &	mOutputPins;
+	CDirectShowPins *	mInputPins;
+	CDirectShowPins *	mOutputPins;
 
 // Operations
 public:
+	void Initialize (CDirectShowPins & pInputPins, CDirectShowPins & pOutputPins, LPUNKNOWN pOwnerRef = NULL);
+	CEnumPins & operator= (const CEnumPins & pSource);
 
-// Overrides
-	//{{AFX_VIRTUAL(CEnumPins)
-	//}}AFX_VIRTUAL
+// Interfaces
+public:
+	// IEnumPins
+    HRESULT STDMETHODCALLTYPE Next (ULONG cPins, IPin **ppPins, ULONG *pcFetched);
+    HRESULT STDMETHODCALLTYPE Skip (ULONG cPins);
+    HRESULT STDMETHODCALLTYPE Reset ();
+    HRESULT STDMETHODCALLTYPE Clone (IEnumPins **ppEnum);
 
 // Implementation
-protected:
-	BEGIN_INTERFACE_PART(Enum, IEnumPins)
-        HRESULT STDMETHODCALLTYPE Next (ULONG cPins, IPin **ppPins, ULONG *pcFetched);
-        HRESULT STDMETHODCALLTYPE Skip (ULONG cPins);
-        HRESULT STDMETHODCALLTYPE Reset ();
-        HRESULT STDMETHODCALLTYPE Clone (IEnumPins **ppEnum);
-	END_INTERFACE_PART(Enum)
-
-	DECLARE_INTERFACE_MAP()
-
 protected:
 	INT_PTR		mCurrNdx;
 	IUnknownPtr	mOwnerRef;
@@ -67,45 +67,43 @@ protected:
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-class CEnumMediaTypes : public CCmdTarget
+class ATL_NO_VTABLE CEnumMediaTypes :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public IEnumMediaTypes
 {
-protected:
-	CEnumMediaTypes (const CEnumMediaTypes & pSource);
 public:
-	CEnumMediaTypes (CMediaTypes & pMediaTypes, LPUNKNOWN pOwnerRef = NULL);
-	virtual ~CEnumMediaTypes ();
-	DECLARE_DYNAMIC(CEnumMediaTypes)
+	CEnumMediaTypes ();
+	~CEnumMediaTypes ();
+	void Initialize (CMediaTypes & pMediaTypes, LPUNKNOWN pOwnerRef = NULL);
+
+// Declarations
+public:
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
+
+	BEGIN_COM_MAP(CEnumMediaTypes)
+		COM_INTERFACE_ENTRY(IEnumMediaTypes)
+	END_COM_MAP()
 
 // Attributes
 public:
-	CMediaTypes &	mMediaTypes;
+	CMediaTypes *	mMediaTypes;
 
 // Operations
 public:
+	CEnumMediaTypes & operator= (const CEnumMediaTypes & pSource);
 
-// Overrides
-	//{{AFX_VIRTUAL(CEnumMediaTypes)
-	//}}AFX_VIRTUAL
+// Interfaces
+public:
+	// IEnumMediaTypes
+    HRESULT STDMETHODCALLTYPE Next (ULONG cMediaTypes, AM_MEDIA_TYPE **ppMediaTypes, ULONG *pcFetched);
+    HRESULT STDMETHODCALLTYPE Skip (ULONG cMediaTypes);
+    HRESULT STDMETHODCALLTYPE Reset ();
+    HRESULT STDMETHODCALLTYPE Clone (IEnumMediaTypes **ppEnum);
 
 // Implementation
-protected:
-	BEGIN_INTERFACE_PART(Enum, IEnumMediaTypes)
-        HRESULT STDMETHODCALLTYPE Next (ULONG cMediaTypes, AM_MEDIA_TYPE **ppMediaTypes, ULONG *pcFetched);
-        HRESULT STDMETHODCALLTYPE Skip (ULONG cMediaTypes);
-        HRESULT STDMETHODCALLTYPE Reset ();
-        HRESULT STDMETHODCALLTYPE Clone (IEnumMediaTypes **ppEnum);
-	END_INTERFACE_PART(Enum)
-
-	DECLARE_INTERFACE_MAP()
-
 protected:
 	INT_PTR		mCurrNdx;
 	IUnknownPtr	mOwnerRef;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSHOWENUMS_H_INCLUDED_

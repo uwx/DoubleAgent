@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -24,6 +24,7 @@
 #define AFX_LOCALIZEEX_H__10AD0B9D_CA8C_4FFB_9471_F05F73598B6F__INCLUDED_
 #pragma once
 
+#include <atlcomtime.h>
 #include "Localize.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -92,7 +93,9 @@ public:
 #endif
 
 	friend CString LclFormatCurrency (VARIANT & pCurrency, bool pZeroNull = false, bool pNoDecimals = false, WORD pLangId = LANG_USER_DEFAULT);
+#ifdef	__AFX_H__
 	friend CString LclFormatCurrency (COleCurrency & pCurrency, bool pZeroNull = false, bool pNoDecimals = false, WORD pLangId = LANG_USER_DEFAULT);
+#endif
 
 	friend CString LclFormatNumber (long pNumber, bool pZeroNull = false, bool pNoThousands = false, WORD pLangId = LANG_USER_DEFAULT);
 	friend CString LclFormatNumber (unsigned long pNumber, bool pZeroNull = false, bool pNoThousands = false, WORD pLangId = LANG_USER_DEFAULT);
@@ -101,9 +104,11 @@ public:
 	friend CString LclFormatNumber (ULONGLONG pNumber, bool pZeroNull = false, bool pNoThousands = false, int pMaxDecimals = -1, int pMinDecimals = 0, WORD pLangId = LANG_USER_DEFAULT);
 
 	friend double LclParseNumber (LPCTSTR pNumber, CString * pRemainder = NULL);
-	friend bool LclParseNumber (LPCTSTR pNumber, double & pValue);
-	friend bool LclParseNumber (LPCTSTR pNumber, long & pValue, int pBase=10);
-	friend bool LclParseNumber (LPCTSTR pNumber, ULONG & pValue, int pBase=10);
+	friend bool LclParseNumber (LPCTSTR pNumber, double & pValue, CString * pRemainder = NULL);
+	friend bool LclParseNumber (LPCTSTR pNumber, long & pValue, int pBase=10, CString * pRemainder = NULL);
+	friend bool LclParseNumber (LPCTSTR pNumber, ULONG & pValue, int pBase=10, CString * pRemainder = NULL);
+	friend bool LclParseNumber (LPCTSTR pNumber, LONGLONG & pValue, int pBase=10, CString * pRemainder = NULL);
+	friend bool LclParseNumber (LPCTSTR pNumber, ULONGLONG & pValue, int pBase=10, CString * pRemainder = NULL);
 
 	friend CString LclFormatPercent (double pNumber, int pRoundDigits = 0, WORD pLangId = LANG_USER_DEFAULT);
 	friend CString LclFormatPercent (const CString & pNumber, WORD pLangId = LANG_USER_DEFAULT);

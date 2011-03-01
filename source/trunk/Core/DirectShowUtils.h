@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,10 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSHOWUTILS_H_INCLUDED_
-#define DIRECTSHOWUTILS_H_INCLUDED_
 #pragma once
-
 #include <dshow.h>
 #include <dsound.h>
 #include <amaudio.h>
@@ -37,6 +34,7 @@
 #include <uuids.h>
 #include "VfwErr.h"
 #include "DaCoreExp.h"
+#include "AtlCollEx.h"
 
 //////////////////////////////////////////////////////////////////////
 
@@ -91,7 +89,7 @@ static inline double RefTimeSec (REFERENCE_TIME pRefTime) {return (double)pRefTi
 
 class tMediaTypePtrFree {protected: static inline void _Init (AM_MEDIA_TYPE *& pPtr) {}; static inline void _Free (AM_MEDIA_TYPE * pPtr) {if (pPtr) MoDeleteMediaType ((DMO_MEDIA_TYPE*)pPtr);}};
 typedef tPtr <AM_MEDIA_TYPE, tMediaTypePtrFree> tMediaTypePtr;
-typedef CArrayEx <tMediaTypePtr, AM_MEDIA_TYPE*> CMediaTypes;
+typedef CAtlArrayEx <tMediaTypePtr> CMediaTypes;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -132,8 +130,8 @@ struct __declspec(novtable) FILTER_INFO_Safe : public FILTER_INFO
 class CDirectShowUtils
 {
 public:
-	static HRESULT GetMonikerFilter (LPCTSTR pMonikerName, IBaseFilter ** pFilter, CString & pFilterName);
-	static HRESULT GetDefaultFilter (const GUID & pCategory, IBaseFilter ** pFilter, CString & pFilterName);
+	static HRESULT GetMonikerFilter (LPCTSTR pMonikerName, IBaseFilter ** pFilter, CAtlString & pFilterName);
+	static HRESULT GetDefaultFilter (const GUID & pCategory, IBaseFilter ** pFilter, CAtlString & pFilterName);
 
 	static HRESULT ConnectFilters (IGraphBuilder * pGraphBuilder, IBaseFilter * pDownstreamFilter, IBaseFilter * pUpstreamFilter, bool pDirect = false, const AM_MEDIA_TYPE * pDirectMediaType = NULL, IPin ** pDownstreamPin = NULL, IPin ** pUpstreamPin = NULL);
 	static HRESULT GetFilterPins (IBaseFilter * pFilter, IPin ** pInputPin, IPin ** pOutputPin);
@@ -166,47 +164,47 @@ public:
 	static AM_MEDIA_TYPE * GetSoundMediaType (LPCTSTR pSoundFileName, UINT pLogLevel = 15);
 
 public:
-	friend CString _DACORE_IMPEXP MediaTypeStr (const AM_MEDIA_TYPE & pMediaType);
-	friend CString _DACORE_IMPEXP WaveFormatStr (WORD pFormatTag);
-	friend CString _DACORE_IMPEXP FilterStateStr (OAFilterState pFilterState, bool pStatePending = false);
-	friend CString _DACORE_IMPEXP SeekingFlagsStr (DWORD pSeekingFlags);
-	friend CString _DACORE_IMPEXP SeekingCapsStr (DWORD pSeekingCaps);
-	friend CString _DACORE_IMPEXP SampleIdStr (DWORD pSampleId);
-	friend CString _DACORE_IMPEXP SampleFlagsStr (DWORD pSampleFlags);
-	friend CString _DACORE_IMPEXP PinIdStr (IPin * pPin, bool pIncludeFilter = true);
+	_DACORE_IMPEXP friend CAtlString MediaTypeStr (const AM_MEDIA_TYPE & pMediaType);
+	_DACORE_IMPEXP friend CAtlString WaveFormatStr (WORD pFormatTag);
+	_DACORE_IMPEXP friend CAtlString FilterStateStr (OAFilterState pFilterState, bool pStatePending = false);
+	_DACORE_IMPEXP friend CAtlString SeekingFlagsStr (DWORD pSeekingFlags);
+	_DACORE_IMPEXP friend CAtlString SeekingCapsStr (DWORD pSeekingCaps);
+	_DACORE_IMPEXP friend CAtlString SampleIdStr (DWORD pSampleId);
+	_DACORE_IMPEXP friend CAtlString SampleFlagsStr (DWORD pSampleFlags);
+	_DACORE_IMPEXP friend CAtlString PinIdStr (IPin * pPin, bool pIncludeFilter = true);
 
 public:
-	friend void _DACORE_IMPEXP LogFilters (UINT pLogLevel, IFilterGraph * pFilterGraph, bool pEnumPinTypes = false, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogFilter (UINT pLogLevel, IBaseFilter * pFilter, bool pEnumPinTypes = false, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogFilterPins (UINT pLogLevel, IBaseFilter * pFilter, bool pEnumTypes = false, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogFilterPin (UINT pLogLevel, IPin * pPin, bool pEnumTypes = false, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogFilters (UINT pLogLevel, IFilterGraph * pFilterGraph, bool pEnumPinTypes = false, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogFilter (UINT pLogLevel, IBaseFilter * pFilter, bool pEnumPinTypes = false, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogFilterPins (UINT pLogLevel, IBaseFilter * pFilter, bool pEnumTypes = false, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogFilterPin (UINT pLogLevel, IPin * pPin, bool pEnumTypes = false, LPCTSTR pFormat = NULL, ...);
 
-	friend void _DACORE_IMPEXP LogFilterStates (UINT pLogLevel, IFilterGraph * pFilterGraph, bool pEnumPins = false, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogFilterState (UINT pLogLevel, IBaseFilter * pFilter, bool pEnumPins = false, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogFilterPinState (UINT pLogLevel, IPin * pPin, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogFilterCache (UINT pLogLevel, IFilterGraph * pFilterGraph, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogFilterStates (UINT pLogLevel, IFilterGraph * pFilterGraph, bool pEnumPins = false, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogFilterState (UINT pLogLevel, IBaseFilter * pFilter, bool pEnumPins = false, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogFilterPinState (UINT pLogLevel, IPin * pPin, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogFilterCache (UINT pLogLevel, IFilterGraph * pFilterGraph, LPCTSTR pFormat = NULL, ...);
 
-	friend void _DACORE_IMPEXP LogPinAllocator (UINT pLogLevel, IPin * pPin, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogMemAllocator (UINT pLogLevel, IMemInputPin * pInputPin, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogMemAllocator (UINT pLogLevel, IMemAllocator * pAllocator, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogAllocatorProps (UINT pLogLevel, const ALLOCATOR_PROPERTIES & pProperties, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogPinAllocator (UINT pLogLevel, IPin * pPin, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogMemAllocator (UINT pLogLevel, IMemInputPin * pInputPin, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogMemAllocator (UINT pLogLevel, IMemAllocator * pAllocator, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogAllocatorProps (UINT pLogLevel, const ALLOCATOR_PROPERTIES & pProperties, LPCTSTR pFormat = NULL, ...);
 
-	friend void _DACORE_IMPEXP LogMediaSeeking (UINT pLogLevel, IMediaSeeking * pMediaSeeking, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogMediaSeekingPos (UINT pLogLevel, IMediaSeeking * pMediaSeeking, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogMediaSample (UINT pLogLevel, IMediaSample * pMediaSample, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogMediaSampleId (UINT pLogLevel, IMediaSample * pMediaSample, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogMediaSeeking (UINT pLogLevel, IMediaSeeking * pMediaSeeking, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogMediaSeekingPos (UINT pLogLevel, IMediaSeeking * pMediaSeeking, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogMediaSample (UINT pLogLevel, IMediaSample * pMediaSample, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogMediaSampleId (UINT pLogLevel, IMediaSample * pMediaSample, LPCTSTR pFormat = NULL, ...);
 
-	friend void _DACORE_IMPEXP LogMediaType (UINT pLogLevel, const AM_MEDIA_TYPE & pMediaType, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogWaveFormat (UINT pLogLevel, const WAVEFORMAT & pWaveFormat, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogWaveFormat (UINT pLogLevel, const WAVEFORMATEX & pWaveFormat, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogVideoFormat (UINT pLogLevel, const VIDEOINFOHEADER & pVideoFormat, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogMediaType (UINT pLogLevel, const AM_MEDIA_TYPE & pMediaType, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogWaveFormat (UINT pLogLevel, const WAVEFORMAT & pWaveFormat, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogWaveFormat (UINT pLogLevel, const WAVEFORMATEX & pWaveFormat, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogVideoFormat (UINT pLogLevel, const VIDEOINFOHEADER & pVideoFormat, LPCTSTR pFormat = NULL, ...);
 
-	friend void _DACORE_IMPEXP LogWaveSound (UINT pLogLevel, LPCVOID pSoundData, long pSoundSize, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogWaveSound (UINT pLogLevel, LPCTSTR pSoundFileName, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogWaveSound (UINT pLogLevel, HMMIO pSound, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogWaveSound (UINT pLogLevel, LPCVOID pSoundData, long pSoundSize, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogWaveSound (UINT pLogLevel, LPCTSTR pSoundFileName, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogWaveSound (UINT pLogLevel, HMMIO pSound, LPCTSTR pFormat = NULL, ...);
 
-	friend void _DACORE_IMPEXP LogMediaEvent (UINT pLogLevel, IMediaEvent * pMediaEvent, LPCTSTR pFormat = NULL, ...);
-	friend void _DACORE_IMPEXP LogMediaEvent (UINT pLogLevel, long pEventCode, LONG_PTR pEventParam1, LONG_PTR pEventParam2, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogMediaEvent (UINT pLogLevel, IMediaEvent * pMediaEvent, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogMediaEvent (UINT pLogLevel, long pEventCode, LONG_PTR pEventParam1, LONG_PTR pEventParam2, LPCTSTR pFormat = NULL, ...);
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -243,12 +241,7 @@ _COM_SMARTPTR_TYPEDEF (ISampleGrabber, __uuidof(ISampleGrabber));
 #ifdef	_DEBUG
 
 #include "Registry.h"
-#define	_LOG_DIRECT_SHOW	(GetProfileDebugInt(_T("LogDirectShow"),LogVerbose,true)&0xFFFF|LogHighVolume|LogTimeMs)
+#define	_DEBUG_DIRECT_SHOW	(GetProfileDebugInt(_T("DebugDirectShow"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 
 #endif
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSHOWUTILS_H_INCLUDED_

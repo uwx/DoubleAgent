@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -26,8 +26,10 @@
 #include "GuidStr.h"
 #include "StringArrayEx.h"
 #include "AgentFile.h"
-#include "UiState.h"
 #include "Elapsed.h"
+#include "DebugStr.h"
+#include "LocalizeEx.h"
+#include "DaVersion.h"
 #ifdef	_DEBUG
 #include "Registry.h"
 #endif
@@ -35,25 +37,61 @@
 #include "DebugTime.h"
 #endif
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
+#define	_SAPI4_LOGGING
+
+/////////////////////////////////////////////////////////////////////////////
+#ifdef	_SAPI4_LOGGING
+/////////////////////////////////////////////////////////////////////////////
+#define	_SAPI4_LOG	Sapi4Log
+namespace _SAPI4_LOG
+{
+#define	_LOG_ROOT_PATH		_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
+#define	_LOG_SECTION_NAME	_T("Sapi4")
+#define _LOG_DEF_LOGNAME	_LOG_SECTION_NAME _T(".log")
+#define	_LOG_PREFIX			_T("Sapi4   ")
+
+#define	_LOG_NO_EXTERN_C
+#undef	_LOG_H
+#include "Log.h"
+#include "Log.inl"
+#undef	_SAPI4ERR_H
+#include "Sapi4Err.h"
+#undef	_LOG_NO_EXTERN_C
+}
+#else
+#define	_SAPI4_LOG
+/////////////////////////////////////////////////////////////////////////////
+#endif	// _SAPI4_LOGGING
+/////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_DEBUG
-#define	_DEBUG_NOTIFY		LogNormal
-//#define	_DEBUG_MOUTH	LogNormal|LogHighVolume|LogTimeMs
-#define	_DEBUG_EVENTS	(GetProfileDebugInt(_T("DebugSapiEvents"),LogVerbose,true)&0xFFFF|LogHighVolume|LogTimeMs)
-//#define	_TRACE_STATE	LogNormal|LogTimeMs
-//#define	_TRACE_STOP		LogNormal|LogTimeMs
+//#define	_DEBUG_MOUTH	LogNormal|LogTimeMs|LogHighVolume
+//#define	_LOG_NOTIFY		LogNormal|LogTimeMs
+#define	_TRACE_EVENTS		(GetProfileDebugInt(_T("TraceSapi4Events"),LogDetails,true)&0xFFFF|LogTimeMs|LogHighVolume)
+#define	_TRACE_EVENTS_EX	(GetProfileDebugInt(_T("TraceSapi4Events"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
+#define	_TRACE_STATE		(GetProfileDebugInt(_T("TraceSapi4State"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
+#define	_TRACE_STOP			(GetProfileDebugInt(_T("TraceSapi4Stop"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #endif
 
-#ifndef	_TRACE_STATE
-#define	_TRACE_STATE		LogIfActive|LogTimeMs|LogToCache
+#ifdef	_SAPI4_LOGGING
+#ifndef	_LOG_INSTANCE
+#define	_LOG_INSTANCE		LogIfActive|LogTimeMs
+#endif
+#ifndef	_LOG_NOTIFY
+#define	_LOG_NOTIFY			LogVerbose|LogTimeMs
+#endif
+#ifndef	_LOG_SPEECH
+#define	_LOG_SPEECH			LogNormal|LogTimeMs|LogHighVolume
+#endif
+#ifndef	_TRACE_EVENTS
+#define	_TRACE_EVENTS		LogDetails|LogTimeMs|LogHighVolume
+#endif
+#ifndef	_TRACE_EVENTS_EX
+#define	_TRACE_EVENTS_EX	LogVerbose|LogTimeMs|LogHighVolume
 #endif
 #ifndef	_TRACE_STOP
-#define	_TRACE_STOP			LogIfActive|LogTimeMs|LogToCache
+#define	_TRACE_STOP			LogVerbose|LogTimeMs|LogHighVolume
+#endif
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -63,34 +101,50 @@ _COM_SMARTPTR_TYPEDEF (ITTSAttributes, IID_ITTSAttributes);
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNCREATE (CSapi4Voice, CSapiVoice)
+IMPLEMENT_DLL_OBJECT(CSapi4Voice)
 
 CSapi4Voice::CSapi4Voice ()
 :	mDefaultRate (0),
 	mDefaultVolume (0),
-	mDefaultPitch (0)
+	mDefaultPitch (0),
+	mPaused (false)
 {
+#ifdef	_SAPI4_LOGGING
+	_SAPI4_LOG::LogStart ();
+#endif
+#ifdef	_LOG_INSTANCE
+	if	(_SAPI4_LOG::LogIsActive (_LOG_INSTANCE))
+	{
+		_SAPI4_LOG::LogMessage (_LOG_INSTANCE, _T("[%p] CSapi4Voice"), this);
+	}
+#endif
 }
 
 CSapi4Voice::~CSapi4Voice ()
 {
-	try
-	{
-		Stop ();
-	}
-	catch AnyExceptionDebug
-
 #ifdef	_TRACE_STOP
-	if	(
-			(LogIsActive (_TRACE_STOP))
-		&&	(CheckIsResetting ())
-		)
+	if	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
 	{
-		LogMessage (_TRACE_STOP, _T("[%p] Destructor ResetPending"), this);
+		_SAPI4_LOG::LogMessage (_TRACE_STOP, _T("[%p] Destructor [%ls] IsResetting [%u] IsQueuing [%u] IsSpeaking [%u]"), this, (BSTR)GetDisplayName(), CheckIsResetting(), CheckIsQueueing(), CheckIsSpeaking());
 	}
 #endif
-	SafeFreeSafePtr (mNotifySink);
+
+	Stop ();
+	SafeFreeSafePtr (mAudioDest);
 	SafeFreeSafePtr (mEngine);
+	SafeFreeSafePtr (mNotifySink);
+
+#ifdef	_LOG_INSTANCE
+	if	(_SAPI4_LOG::LogIsActive (_LOG_INSTANCE))
+	{
+		_SAPI4_LOG::LogMessage (_LOG_INSTANCE, _T("[%p] ~CSapi4Voice"), this);
+	}
+#endif
+}
+
+CSapi4Voice * CSapi4Voice::CreateInstance ()
+{
+	return new CSapi4Voice;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -114,14 +168,18 @@ bool CSapi4Voice::_IsSpeaking () const
 		&&	(
 				(mIsQueueing.Ptr())
 			||	(mIsSpeaking.Ptr())
-			||	(mResetPending.Ptr())
+			||	(
+					(mResetPending.Ptr())
+				&&	(!mIsParsing.Ptr())
+				)
 			)
 		)
 	{
 #ifdef	_TRACE_STATE
-		if	(LogIsActive (_TRACE_STATE))
+		if	(_SAPI4_LOG::LogIsActive (_TRACE_STATE))
 		{
 			long	lQueueingElapsed = 0;
+			long	lParsingElapsed = 0;
 			long	lSpeakingElapsed = 0;
 			long	lResettingElapsed = 0;
 			long	lElapsed = 0;
@@ -130,6 +188,11 @@ bool CSapi4Voice::_IsSpeaking () const
 			{
 				lQueueingElapsed = ElapsedTicks (*mIsQueueing);
 				lElapsed = max (lElapsed, lQueueingElapsed);
+			}
+			if	(mIsParsing)
+			{
+				lParsingElapsed = ElapsedTicks (*mIsParsing);
+				lElapsed = max (lElapsed, lParsingElapsed);
 			}
 			if	(mIsSpeaking)
 			{
@@ -143,9 +206,10 @@ bool CSapi4Voice::_IsSpeaking () const
 			}
 			if	(lElapsed >= 300000)
 			{
-				LogMessage (_TRACE_STATE, _T("[%p] *** BusyTime %f [Queueing %f Speaking %f Resetting %f] ***"), this, ((double)lElapsed)/1000.0, ((double)lQueueingElapsed)/1000.0, ((double)lSpeakingElapsed)/1000.0, ((double)lResettingElapsed)/1000.0);
-				LogWriteCache ();
+				_SAPI4_LOG::LogMessage (_TRACE_STATE, _T("[%p] *** BusyTime %f [Queueing %f Parsing %f Speaking %f Resetting %f] ***"), this, ((double)lElapsed)/1000.0, ((double)lQueueingElapsed)/1000.0, ((double)lParsingElapsed)/1000.0, ((double)lSpeakingElapsed)/1000.0, ((double)lResettingElapsed)/1000.0);
+				_SAPI4_LOG::LogWriteCache ();
 				const_cast <CSapi4Voice *> (this)->mIsQueueing = NULL;
+				const_cast <CSapi4Voice *> (this)->mIsParsing = NULL;
 				const_cast <CSapi4Voice *> (this)->mIsSpeaking = NULL;
 				const_cast <CSapi4Voice *> (this)->mResetPending = NULL;
 			}
@@ -156,6 +220,11 @@ bool CSapi4Voice::_IsSpeaking () const
 	return false;
 }
 
+bool CSapi4Voice::_IsPaused () const
+{
+	return ((mEngine != NULL) && mPaused);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 bool CSapi4Voice::CheckIsQueueing () const
@@ -163,6 +232,15 @@ bool CSapi4Voice::CheckIsQueueing () const
 	if	(this)
 	{
 		return (mIsQueueing.Ptr() != NULL);
+	}
+	return false;
+}
+
+bool CSapi4Voice::CheckIsParsing () const
+{
+	if	(this)
+	{
+		return (mIsParsing.Ptr() != NULL);
 	}
 	return false;
 }
@@ -194,10 +272,10 @@ void CSapi4Voice::SetIsQueueing (bool pIsQueueing)
 #ifdef	_TRACE_STATE
 			if	(
 					(!mIsQueueing)
-				&&	(LogIsActive (_TRACE_STATE))
+				&&	(_SAPI4_LOG::LogIsActive (_TRACE_STATE))
 				)
 			{
-				LogMessage (_TRACE_STATE, _T("[%p] Start Queueing"), this);
+				_SAPI4_LOG::LogMessage (_TRACE_STATE, _T("[%p] Start Queueing"), this);
 			}
 #endif
 			mIsQueueing = new DWORD;
@@ -208,13 +286,47 @@ void CSapi4Voice::SetIsQueueing (bool pIsQueueing)
 #ifdef	_TRACE_STATE
 			if	(
 					(mIsQueueing)
-				&&	(LogIsActive (_TRACE_STATE))
+				&&	(_SAPI4_LOG::LogIsActive (_TRACE_STATE))
 				)
 			{
-				LogMessage (_TRACE_STATE, _T("[%p] Stop  Queueing"), this);
+				_SAPI4_LOG::LogMessage (_TRACE_STATE, _T("[%p] Stop  Queueing"), this);
 			}
 #endif
 			mIsQueueing = NULL;
+		}
+	}
+}
+
+void CSapi4Voice::SetIsParsing (bool pIsParsing)
+{
+	if	(this)
+	{
+		if	(pIsParsing)
+		{
+#ifdef	_TRACE_STATE
+			if	(
+					(!mIsParsing)
+				&&	(_SAPI4_LOG::LogIsActive (_TRACE_STATE))
+				)
+			{
+				_SAPI4_LOG::LogMessage (_TRACE_STATE, _T("[%p] Start Parsing"), this);
+			}
+#endif
+			mIsParsing = new DWORD;
+			(*mIsParsing) = GetTickCount ();
+		}
+		else
+		{
+#ifdef	_TRACE_STATE
+			if	(
+					(mIsParsing)
+				&&	(_SAPI4_LOG::LogIsActive (_TRACE_STATE))
+				)
+			{
+				_SAPI4_LOG::LogMessage (_TRACE_STATE, _T("[%p] Stop  Parsing"), this);
+			}
+#endif
+			mIsParsing = NULL;
 		}
 	}
 }
@@ -228,10 +340,10 @@ void CSapi4Voice::SetIsSpeaking (bool pIsSpeaking)
 #ifdef	_TRACE_STATE
 			if	(
 					(!mIsSpeaking)
-				&&	(LogIsActive (_TRACE_STATE))
+				&&	(_SAPI4_LOG::LogIsActive (_TRACE_STATE))
 				)
 			{
-				LogMessage (_TRACE_STATE, _T("[%p] Start Speaking"), this);
+				_SAPI4_LOG::LogMessage (_TRACE_STATE, _T("[%p] Start Speaking"), this);
 			}
 #endif
 			mIsSpeaking = new DWORD;
@@ -242,10 +354,10 @@ void CSapi4Voice::SetIsSpeaking (bool pIsSpeaking)
 #ifdef	_TRACE_STATE
 			if	(
 					(mIsSpeaking)
-				&&	(LogIsActive (_TRACE_STATE))
+				&&	(_SAPI4_LOG::LogIsActive (_TRACE_STATE))
 				)
 			{
-				LogMessage (_TRACE_STATE, _T("[%p] Stop  Speaking"), this);
+				_SAPI4_LOG::LogMessage (_TRACE_STATE, _T("[%p] Stop  Speaking"), this);
 			}
 #endif
 			mIsSpeaking = NULL;
@@ -262,10 +374,10 @@ void CSapi4Voice::SetIsResetting (bool pIsResetting)
 #ifdef	_TRACE_STATE
 			if	(
 					(!mResetPending)
-				&&	(LogIsActive (_TRACE_STATE))
+				&&	(_SAPI4_LOG::LogIsActive (_TRACE_STATE))
 				)
 			{
-				LogMessage (_TRACE_STATE, _T("[%p] Start Resetting"), this);
+				_SAPI4_LOG::LogMessage (_TRACE_STATE, _T("[%p] Start Resetting"), this);
 			}
 #endif
 			mResetPending = new DWORD;
@@ -276,10 +388,10 @@ void CSapi4Voice::SetIsResetting (bool pIsResetting)
 #ifdef	_TRACE_STATE
 			if	(
 					(mResetPending)
-				&&	(LogIsActive (_TRACE_STATE))
+				&&	(_SAPI4_LOG::LogIsActive (_TRACE_STATE))
 				)
 			{
-				LogMessage (_TRACE_STATE, _T("[%p] Stop  Resetting"), this);
+				_SAPI4_LOG::LogMessage (_TRACE_STATE, _T("[%p] Stop  Resetting"), this);
 			}
 #endif
 			mResetPending = NULL;
@@ -327,7 +439,7 @@ HRESULT CSapi4Voice::PrepareToSpeak (bool pHighPriority)
 	}
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f     CSapi4Voice::PrepareToSpeak [%8.8X]"), DebugTimeElapsed, lResult);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f     CSapi4Voice::PrepareToSpeak [%8.8X]"), DebugTimeElapsed, lResult);
 #endif
 	return lResult;
 }
@@ -340,100 +452,179 @@ HRESULT CSapi4Voice::Speak (LPCTSTR pMessage, bool pAsync)
 #ifdef	DebugTimeStart
 	DebugTimeStart
 #endif
-
 	if	(_IsValid ())
 	{
-		try
+		if	(_IsPaused ())
 		{
-			tS <SDATA>	lSpeechData;
-			CString		lMessage (pMessage);
+			lResult = TTSERR_ALREADYPAUSED;
+		}
+		else
+		{
+			try
+			{
+				tS <SDATA>	lSpeechData;
+				CAtlString	lMessage (pMessage);
 
 #ifdef	_TRACE_STOP
-			if	(
-					(LogIsActive (_TRACE_STOP))
-				&&	(CheckIsQueueing ())
-				&&	(CheckIsResetting ())
-				)
-			{
-				LogMessage (_TRACE_STOP, _T("[%p] ResetPending at Speak"), this);
-			}
+				if	(
+						(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
+					&&	(CheckIsQueueing ())
+					&&	(CheckIsResetting ())
+					)
+				{
+					_SAPI4_LOG::LogMessage (_TRACE_STOP, _T("[%p] ResetPending at Speak"), this);
+				}
 #endif
-			SetIsQueueing (true);
-			LogSapi4Err (LogNormal, mEngine->AudioPause());
-			SetIsQueueing (true);
+#ifdef	_LOG_SPEECH
+				if	(_SAPI4_LOG::LogIsActive (_LOG_SPEECH))
+				{
+					_SAPI4_LOG::LogMessage (_LOG_SPEECH, _T("[%p] TextData [%s]"), this, DebugStr(lMessage));
+				}
+#endif
+				SetIsQueueing (true);
+				SetIsParsing (false);
 
-			mLastText = AfxAllocTaskWideString (lMessage);
-			lSpeechData.pData = (PVOID)mLastText.Ptr ();
-			lSpeechData.dwSize = (lMessage.GetLength() + 1) * sizeof(WCHAR);
-			lResult = LogSapi4Err (LogNormal, mEngine->TextData (CHARSET_TEXT, TTSDATAFLAG_TAGGED, lSpeechData, &mNotifySink->m_xBufNotifySink, IID_ITTSBufNotifySink));
-			if	(SUCCEEDED (lResult))
-			{
-				lResult = LogSapi4Err (LogNormal, mEngine->AudioResume());
+				mLastText = AtlAllocTaskWideString (lMessage);
+				lSpeechData.pData = (PVOID)mLastText.Ptr();
+				lSpeechData.dwSize = (lMessage.GetLength() + 1) * sizeof(WCHAR);
+				lResult = mEngine->TextData (CHARSET_TEXT, TTSDATAFLAG_TAGGED, lSpeechData, (ITTSBufNotifySink *)mNotifySink.Ptr(), IID_ITTSBufNotifySink);
+#ifdef	_TRACE_STOP
+				if	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
+				{
+					_SAPI4_LOG::LogSapi4ErrAnon (MinLogLevel(_TRACE_STOP,LogAlways), lResult, _T("[%p] TextData"), this);
+				}
+				else
+#endif
+				{
+					_SAPI4_LOG::LogSapi4Err (LogIfActive|LogTime, lResult, _T("[%p] TextData [%s]"), this, DebugStr(lMessage));
+				}
 			}
-		}
-		catch AnyExceptionDebug
+			catch AnyExceptionDebug
 
-		if	(FAILED (lResult))
-		{
-			SetIsQueueing (false);
+			if	(FAILED (lResult))
+			{
+				SetIsQueueing (false);
+			}
 		}
 	}
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f     CSapi4Voice::Speak [%8.8X] [%s]"), DebugTimeElapsed, lResult, DebugStr(pMessage));
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f     CSapi4Voice::Speak [%8.8X] [%s]"), DebugTimeElapsed, lResult, DebugStr(pMessage));
 #endif
 	return lResult;
 }
 
 HRESULT CSapi4Voice::Stop ()
 {
-	HRESULT	lResult = E_UNEXPECTED;
+	HRESULT	lResult = E_FAIL;
 #ifdef	DebugTimeStart
 	DebugTimeStart
 #endif
 
 	if	(_IsValid ())
 	{
-		lResult = E_FAIL;
-
 		try
 		{
-			if	(CheckIsResetting ())
+			if	(
+					(
+						(CheckIsQueueing())
+					||	(CheckIsSpeaking())
+					||	(CheckIsParsing())
+					)
+				&&	(!CheckIsResetting())
+				)
 			{
+				SetIsResetting (CheckIsParsing());
 #ifdef	_TRACE_STOP
-				if	(LogIsActive (_TRACE_STOP))
+				if	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
 				{
-					LogMessage (_TRACE_STOP, _T("[%p] AudioReset already resetting"), this);
+					_SAPI4_LOG::LogMessage (_TRACE_STOP, _T("[%p] AudioReset IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), this, CheckIsQueueing(), CheckIsParsing(), CheckIsSpeaking(), CheckIsResetting());
+				}
+#endif
+				lResult = mEngine->AudioReset ();
+
+#ifdef	_TRACE_STOP
+				if	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
+				{
+					_SAPI4_LOG::LogSapi4ErrAnon (MinLogLevel(_TRACE_STOP,LogAlways), lResult, _T("[%p] AudioReset IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), this, CheckIsQueueing(), CheckIsParsing(), CheckIsSpeaking(), CheckIsResetting());
 				}
 #endif
 			}
 			else
 			{
 #ifdef	_TRACE_STOP
-				if	(LogIsActive (_TRACE_STOP))
+				if	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
 				{
-					LogMessage (_TRACE_STOP, _T("[%p] AudioReset [%u [%u]"), this, CheckIsQueueing(), CheckIsSpeaking());
+					if	(CheckIsResetting ())
+					{
+						_SAPI4_LOG::LogMessage (_TRACE_STOP, _T("[%p] AudioReset already resetting"), this);
+					}
+					else
+					{
+						_SAPI4_LOG::LogMessage (_TRACE_STOP, _T("[%p] NOT AudioReset IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), this, CheckIsQueueing(), CheckIsParsing(), CheckIsSpeaking(), CheckIsResetting());
+					}
 				}
 #endif
-				SetIsResetting (CheckIsQueueing ());
-				SetIsQueueing (false);
-				SetIsSpeaking (false);
+				lResult = S_FALSE;
 			}
-			lResult = mEngine->AudioReset ();
 		}
 		catch AnyExceptionDebug
-
-		SetIsQueueing (false);
-		SetIsSpeaking (false);
 	}
-	if	(LogIsActive ())
+	else
 	{
-		LogSapi4Err (LogNormal, lResult);
+		lResult = E_UNEXPECTED;
+	}
+
+	if	(_SAPI4_LOG::LogIsActive ())
+	{
+		_SAPI4_LOG::LogSapi4Err (LogNormal|LogTime, lResult);
+	}
+
+	if	(FAILED (lResult))
+	{
+		SetIsQueueing (false);
+		SetIsParsing (false);
+		SetIsSpeaking (false);
 	}
 #ifdef	DebugTimeStart
 	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f     CSapi4Voice::Stop [%8.8X]"), DebugTimeElapsed, lResult);
+	LogMessage (LogIfActive|LogTimeMs|LogHighVolume, _T("%f     CSapi4Voice::Stop [%8.8X]"), DebugTimeElapsed, lResult);
 #endif
+	return lResult;
+}
+
+HRESULT CSapi4Voice::Pause ()
+{
+	HRESULT	lResult = E_UNEXPECTED;
+
+	if	(_IsValid ())
+	{
+		try
+		{
+			_SAPI4_LOG::LogSapi4Err (LogNormal|LogTime, lResult = mEngine->AudioPause());
+		}
+		catch AnyExceptionDebug
+
+		mPaused = true;
+	}
+	return lResult;
+}
+
+HRESULT CSapi4Voice::Resume ()
+{
+	HRESULT	lResult = E_UNEXPECTED;
+
+	if	(_IsValid ())
+	{
+		try
+		{
+			_SAPI4_LOG::LogSapi4Err (LogNormal|LogTime, lResult = mEngine->AudioResume());
+			_SAPI4_LOG::LogSapi4Err (LogNormal|LogTime, lResult = mEngine->AudioResume()); // SAPI4 seems to sometime lose a call?
+		}
+		catch AnyExceptionDebug
+
+		mPaused = false;
+	}
 	return lResult;
 }
 
@@ -479,16 +670,22 @@ HRESULT CSapi4Voice::SetModeId (const GUID & pModeId)
 
 	if	(
 			(mEngine == NULL)
-		&&	(SUCCEEDED (lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_TTSEnumerator, NULL, CLSCTX_SERVER, IID_ITTSEnum, (void **) &lEnum))))
-		&&	(SUCCEEDED (lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_MMAudioDest, NULL, CLSCTX_SERVER, __uuidof(IUnknown), (void **) &lAudioDest))))
+		&&	(SUCCEEDED (lResult = _SAPI4_LOG::LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_TTSEnumerator, NULL, CLSCTX_SERVER, IID_ITTSEnum, (void **) &lEnum))))
+		&&	(SUCCEEDED (lResult = _SAPI4_LOG::LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_MMAudioDest, NULL, CLSCTX_SERVER, __uuidof(IUnknown), (void **) &lAudioDest))))
 		)
 	{
-		lResult = LogSapi4Err (LogNormal, lEnum->Select (pModeId, &mEngine, lAudioDest));
+		mAudioDest = NULL;
+		lResult = _SAPI4_LOG::LogSapi4Err (LogNormal|LogTime, lEnum->Select (pModeId, &mEngine, lAudioDest));
 		if	(SUCCEEDED (lResult))
 		{
+			mAudioDest = lAudioDest;
 			mDefaultRate = GetRate ();
 			mDefaultVolume = GetVolume ();
 			mDefaultPitch = GetPitch ();
+#ifdef	_LOG_INSTANCE
+			LogTtsEngine (_LOG_INSTANCE, mEngine);
+			LogTtsAudio (_LOG_INSTANCE, mAudioDest);
+#endif
 		}
 	}
 	return lResult;
@@ -513,7 +710,7 @@ HRESULT CSapi4Voice::GetDisplayName (tBstrPtr & pDisplayName)
 		&&	(SUCCEEDED (lResult = mEngine->ModeGet (&lModeInfo)))
 		)
 	{
-		pDisplayName = CString (lModeInfo.szSpeaker).AllocSysString ();
+		pDisplayName = CAtlString (lModeInfo.szSpeaker).AllocSysString ();
 	}
 	return lResult;
 }
@@ -527,9 +724,9 @@ tBstrPtr CSapi4Voice::GetUniqueId ()
 
 HRESULT CSapi4Voice::GetUniqueId (tBstrPtr & pUniqueId)
 {
-	HRESULT	lResult;
-	GUID	lModeId;
-	CString	lTTSModeStr;
+	HRESULT		lResult;
+	GUID		lModeId;
+	CAtlString	lTTSModeStr;
 
 	if	(SUCCEEDED (lResult = GetModeId (lModeId)))
 	{
@@ -653,6 +850,289 @@ HRESULT CSapi4Voice::SetPitch (USHORT pPitch)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+static CAtlString FeatureFlagsString (DWORD pFlags)
+{
+	CAtlString	lFeatures;
+
+	lFeatures.Format (_T("%8.8X"), pFlags);
+
+	if	(pFlags & TTSFEATURE_ANYWORD)
+	{
+		lFeatures += _T(" ANYWORD");
+	}
+	if	(pFlags & TTSFEATURE_VOLUME)
+	{
+		lFeatures += _T(" VOLUME");
+	}
+	if	(pFlags & TTSFEATURE_SPEED)
+	{
+		lFeatures += _T(" SPEED");
+	}
+	if	(pFlags & TTSFEATURE_PITCH)
+	{
+		lFeatures += _T(" PITCH");
+	}
+	if	(pFlags & TTSFEATURE_VISUAL)
+	{
+		lFeatures += _T(" VISUAL");
+	}
+	if	(pFlags & TTSFEATURE_WORDPOSITION)
+	{
+		lFeatures += _T(" WORDPOSITION");
+	}
+	if	(pFlags & TTSFEATURE_FIXEDAUDIO)
+	{
+		lFeatures += _T(" FIXEDAUDIO");
+	}
+	if	(pFlags & TTSFEATURE_PCOPTIMIZED)
+	{
+		lFeatures += _T(" PCOPTIMIZED");
+	}
+	if	(pFlags & TTSFEATURE_PHONEOPTIMIZED)
+	{
+		lFeatures += _T(" PHONEOPTIMIZED");
+	}
+	if	(pFlags & TTSFEATURE_IPATEXTDATA)
+	{
+		lFeatures += _T(" IPATEXTDATA");
+	}
+	if	(pFlags & TTSFEATURE_IPAUNICODE)
+	{
+		lFeatures += _T(" IPAUNICODE");
+	}
+	if	(pFlags & TTSFEATURE_PREFERRED)
+	{
+		lFeatures += _T(" PREFERRED");
+	}
+	if	(pFlags & TTSFEATURE_TRANSPLANTED)
+	{
+		lFeatures += _T(" TRANSPLANTED");
+	}
+	if	(pFlags & TTSFEATURE_SINGLEINSTANCE)
+	{
+		lFeatures += _T(" SINGLEINSTANCE");
+	}
+	if	(pFlags & TTSFEATURE_THREADSAFE)
+	{
+		lFeatures += _T(" THREADSAFE");
+	}
+	if	(pFlags & TTSFEATURE_SAPI4)
+	{
+		lFeatures += _T(" SAPI4");
+	}
+	return lFeatures;
+}
+
+static CAtlString InterfaceFlagsString (DWORD pFlags)
+{
+	CAtlString	lInterfaces;
+
+	lInterfaces.Format (_T("%8.8X"), pFlags);
+
+	if	(pFlags & TTSI_ITTSCENTRAL)
+	{
+		lInterfaces += _T(" TTSI_ITTSCENTRAL");
+	}
+	if	(pFlags & TTSI_ITTSATTRIBUTES)
+	{
+		lInterfaces += _T(" TTSI_ITTSATTRIBUTES");
+	}
+	if	(pFlags & TTSI_ITTSDIALOGS)
+	{
+		lInterfaces += _T(" TTSI_ITTSDIALOGS");
+	}
+	if	(pFlags & TTSI_ILEXPRONOUNCE)
+	{
+		lInterfaces += _T(" TTSI_ILEXPRONOUNCE");
+	}
+	if	(pFlags & TTSI_ILEXPRONOUNCE2)
+	{
+		lInterfaces += _T(" TTSI_ILEXPRONOUNCE2");
+	}
+	return lInterfaces;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+static void SubtractCurrentTime (FILETIME & pFileTime)
+{
+	FILETIME		lCurrFileTime;
+	ULARGE_INTEGER	lLargeFileTime [2];
+
+	GetSystemTimeAsFileTime (&lCurrFileTime);
+	lLargeFileTime[0].HighPart = pFileTime.dwHighDateTime;
+	lLargeFileTime[0].LowPart = pFileTime.dwLowDateTime;
+	lLargeFileTime[1].HighPart = lCurrFileTime.dwHighDateTime;
+	lLargeFileTime[1].LowPart = lCurrFileTime.dwLowDateTime;
+	//lLargeFileTime[1].QuadPart = min (lLargeFileTime[1].QuadPart, lLargeFileTime[0].QuadPart);
+	lLargeFileTime[0].QuadPart -= lLargeFileTime[1].QuadPart;
+	pFileTime.dwHighDateTime = lLargeFileTime[0].HighPart;
+	pFileTime.dwLowDateTime = lLargeFileTime[0].LowPart;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CSapi4Voice::LogTtsEngine (UINT pLogLevel, ITTSCentral * pTtsEngine, LPCTSTR pFormat, ...)
+{
+	if	(_SAPI4_LOG::LogIsActive (pLogLevel))
+	{
+		try
+		{
+			CAtlString			lTitle;
+			CAtlString			lIndent;
+			tS <TTSMODEINFO>	lModeInfo;
+			QWORD				lTimeStamp = 0;
+			FILETIME			lFileTime;
+
+			if	(pFormat)
+			{
+				va_list lArgPtr;
+				va_start (lArgPtr, pFormat);
+				_vsntprintf (lTitle.GetBuffer(2048), 2048, pFormat, lArgPtr);
+				lTitle.ReleaseBuffer ();
+				lIndent = lTitle;
+				lTitle.TrimLeft ();
+				lIndent = CAtlString (_T(' '), lIndent.GetLength()-lTitle.GetLength());
+			}
+			if	(lTitle.IsEmpty())
+			{
+				lTitle = _T("Sapi4Engine");
+			}
+
+			_SAPI4_LOG::LogMessage (pLogLevel, _T("%s%s [%p]"), lIndent, lTitle, pTtsEngine);
+			if	(pTtsEngine)
+			{
+				if	(SUCCEEDED (_SAPI4_LOG::LogSapi4Err (pLogLevel, pTtsEngine->ModeGet (&lModeInfo))))
+				{
+					_SAPI4_LOG::LogMessage (pLogLevel|LogHighVolume, _T("  Engine     [%s] [%s] [%s]"), (CAtlString)CGuidStr(lModeInfo.gEngineID), lModeInfo.szProductName, lModeInfo.szMfgName);
+					_SAPI4_LOG::LogMessage (pLogLevel|LogHighVolume, _T("  Mode       [%s] [%s]"), (CAtlString)CGuidStr(lModeInfo.gModeID), lModeInfo.szModeName);
+					_SAPI4_LOG::LogMessage (pLogLevel|LogHighVolume, _T("  Speaker    [%s] Gender [%hu] Age [%hu] Style [%s]"), lModeInfo.szSpeaker, lModeInfo.wGender, lModeInfo.wAge, lModeInfo.szStyle);
+					_SAPI4_LOG::LogMessage (pLogLevel|LogHighVolume, _T("  Features   [%s]"), FeatureFlagsString(lModeInfo.dwFeatures));
+					_SAPI4_LOG::LogMessage (pLogLevel|LogHighVolume, _T("  Interfaces [%s]"), InterfaceFlagsString(lModeInfo.dwInterfaces));
+				}
+				if	(SUCCEEDED (_SAPI4_LOG::LogSapi4Err (pLogLevel, pTtsEngine->PosnGet (&lTimeStamp))))
+				{
+					_SAPI4_LOG::LogSapi4Err (pLogLevel, pTtsEngine->ToFileTime (&lTimeStamp, &lFileTime));
+					SubtractCurrentTime (lFileTime);
+					_SAPI4_LOG::LogMessage (pLogLevel|LogHighVolume, _T("  Position   [%I64u] [%s]"), lTimeStamp, LclFormatDuration (lFileTime));
+				}
+			}
+		}
+		catch AnyExceptionSilent
+	}
+}
+
+void CSapi4Voice::LogTtsAudio (UINT pLogLevel, IAudioDest * pTtsAudio, LPCTSTR pFormat, ...)
+{
+	if	(_SAPI4_LOG::LogIsActive (pLogLevel))
+	{
+		try
+		{
+			IAudioPtr	lTtsAudio (pTtsAudio);
+			CAtlString	lTitle;
+			CAtlString	lIndent;
+			DWORD		lLevel = 0;
+			QWORD		lTimeStamp = 0;
+			FILETIME	lFileTime;
+
+			if	(pFormat)
+			{
+				va_list lArgPtr;
+				va_start (lArgPtr, pFormat);
+				_vsntprintf (lTitle.GetBuffer(2048), 2048, pFormat, lArgPtr);
+				lTitle.ReleaseBuffer ();
+				lIndent = lTitle;
+				lTitle.TrimLeft ();
+				lIndent = CAtlString (_T(' '), lIndent.GetLength()-lTitle.GetLength());
+			}
+			if	(lTitle.IsEmpty())
+			{
+				lTitle = _T("Sapi4Audio");
+			}
+
+			_SAPI4_LOG::LogMessage (pLogLevel, _T("%s%s [%p]"), lIndent, lTitle, pTtsAudio);
+
+			if	(lTtsAudio)
+			{
+				if	(SUCCEEDED (_SAPI4_LOG::LogSapi4Err (pLogLevel, lTtsAudio->LevelGet (&lLevel))))
+				{
+					_SAPI4_LOG::LogMessage (pLogLevel|LogHighVolume, _T("  Level      [%d]"), lLevel);
+				}
+				if	(SUCCEEDED (_SAPI4_LOG::LogSapi4Err (pLogLevel, lTtsAudio->PosnGet (&lTimeStamp))))
+				{
+					_SAPI4_LOG::LogSapi4Err (pLogLevel, lTtsAudio->ToFileTime (&lTimeStamp, &lFileTime));
+					SubtractCurrentTime (lFileTime);
+					_SAPI4_LOG::LogMessage (pLogLevel|LogHighVolume, _T("  Position   [%I64u] [%s]"), lTimeStamp, LclFormatDuration (lFileTime));
+				}
+				if	(SUCCEEDED (_SAPI4_LOG::LogSapi4Err (pLogLevel, lTtsAudio->TotalGet (&lTimeStamp))))
+				{
+					_SAPI4_LOG::LogSapi4Err (pLogLevel, lTtsAudio->ToFileTime (&lTimeStamp, &lFileTime));
+					SubtractCurrentTime (lFileTime);
+					_SAPI4_LOG::LogMessage (pLogLevel|LogHighVolume, _T("  Total      [%I64u] [%s]"), lTimeStamp, LclFormatDuration (lFileTime));
+				}
+			}
+		}
+		catch AnyExceptionSilent
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#ifdef	_SAPI4_LOGGING
+extern "C" void _LogPrepFileLine (LPTSTR pString, LPCSTR pFile, UINT pLine);
+namespace _SAPI4_LOG
+{
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT _LogSapi4ErrFL::LogErr (unsigned int pLogLevel, HRESULT pError, LPCTSTR pFormat, ...)
+{
+	if	(
+			(
+				(FAILED (pError))
+			||	((pLogLevel & 0x000000FF) == LogAlways)
+			)
+		&&	(LogIsActive (pLogLevel))
+		)
+	{
+		CAtlString	lFormat;
+		LPCTSTR		lError;
+
+		if	(lError = ::_GetSapi4Err (pError))
+		{
+			lFormat.Format (_T("Sapi4Error [%8.8X] [%s]"), pError, lError);
+		}
+		if  (pFormat)
+		{
+			va_list lArgPtr;
+
+			if	(!lFormat.IsEmpty ())
+			{
+				lFormat += _T(" => ");
+			}
+			va_start (lArgPtr, pFormat);
+			_vsntprintf (lFormat.GetBuffer(lFormat.GetLength()+4096)+lFormat.GetLength(), 4096, pFormat, lArgPtr);
+			lFormat.ReleaseBuffer ();
+		}
+		if	(SUCCEEDED (pError))
+		{
+			_LogComErrFL(mFile,mLine).LogErr (MinLogLevel(pLogLevel,LogAlways), pError, lFormat);
+		}
+		else
+		{
+			_LogPrepFileLine (lFormat.GetBuffer (lFormat.GetLength()+(MAX_PATH*2)), mFile, mLine);
+			lFormat.ReleaseBuffer ();
+			LogMessage (MinLogLevel(pLogLevel,LogAlways), lFormat);
+		}
+	}
+	return pError;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+}
+#endif	// _SAPI4_LOGGING
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
 int VoiceMouthOverlay (LPVOID pMouth)
 {
 	int			lMouthOverlayNdx = -1;
@@ -706,9 +1186,9 @@ int VoiceMouthOverlay (LPVOID pMouth)
 	return lMouthOverlayNdx;
 }
 
-CString VoiceMouthStr (LPVOID pMouth)
+CAtlString VoiceMouthStr (LPVOID pMouth)
 {
-	CString		lMouthStr;
+	CAtlString	lMouthStr;
 	PTTSMOUTH	lMouth;
 
 	if	(lMouth = (PTTSMOUTH)pMouth)
@@ -723,9 +1203,9 @@ CString VoiceMouthStr (LPVOID pMouth)
 	return lMouthStr;
 }
 
-static CString MouthOverlayStr (short pMouthOverlayNdx)
+static CAtlString MouthOverlayStr (short pMouthOverlayNdx)
 {
-	CString	lOverlayStr;
+	CAtlString	lOverlayStr;
 
 	lOverlayStr.Format (_T("%u "), pMouthOverlayNdx);
 
@@ -748,29 +1228,27 @@ static CString MouthOverlayStr (short pMouthOverlayNdx)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-#include "InterfaceMap.inl"
-
-BEGIN_INTERFACE_MAP(CSapi4Voice::CTTSNotifySink, CCmdTarget)
-	INTERFACE_PART(CSapi4Voice::CTTSNotifySink, __uuidof(IUnknown), InnerUnknown)
-	INTERFACE_PART(CSapi4Voice::CTTSNotifySink, IID_ITTSNotifySink, NotifySink)
-	INTERFACE_PART(CSapi4Voice::CTTSNotifySink, IID_ITTSNotifySink2, NotifySink)
-	INTERFACE_PART(CSapi4Voice::CTTSNotifySink, IID_ITTSBufNotifySink, BufNotifySink)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IUNKNOWN(CSapi4Voice::CTTSNotifySink, NotifySink)
-IMPLEMENT_IUNKNOWN(CSapi4Voice::CTTSNotifySink, BufNotifySink)
-
-/////////////////////////////////////////////////////////////////////////////
-
 CSapi4Voice::CTTSNotifySink::CTTSNotifySink (CSapi4Voice & pOwner)
 :	mOwner (pOwner),
 	mRegisteredKey (0)
 {
-	EnableAggregation ();
+	m_dwRef = 1;
+#ifdef	_LOG_NOTIFY
+	if	(_SAPI4_LOG::LogIsActive (_LOG_NOTIFY))
+	{
+		_SAPI4_LOG::LogMessage (_LOG_NOTIFY, _T("[%p] [%p(%d)] CTTSNotifySink"), &mOwner, this, max(m_dwRef,-1));
+	}
+#endif
 }
 
 CSapi4Voice::CTTSNotifySink::~CTTSNotifySink ()
 {
+#ifdef	_LOG_NOTIFY
+	if	(_SAPI4_LOG::LogIsActive (_LOG_NOTIFY))
+	{
+		_SAPI4_LOG::LogMessage (_LOG_NOTIFY, _T("[%p] [%p(%d)] ~CTTSNotifySink"), &mOwner, this, max(m_dwRef,-1));
+	}
+#endif
 	try
 	{
 		Disconnect ();
@@ -780,10 +1258,10 @@ CSapi4Voice::CTTSNotifySink::~CTTSNotifySink ()
 #ifdef	_TRACE_STOP
 	if	(
 			(m_dwRef > 1)
-		&&	(LogIsActive (_TRACE_STOP))
+		&&	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
 		)
 	{
-		LogMessage (_TRACE_STOP, _T("[%p] CTTSNotifySink Destructor [%u]"), this, m_dwRef);
+		_SAPI4_LOG::LogMessage (_TRACE_STOP&~LogHighVolume, _T("[%p(%d)] CTTSNotifySink Destructor"), this, max(m_dwRef,-1));
 	}
 #endif
 	m_dwRef = 0;
@@ -814,11 +1292,11 @@ HRESULT CSapi4Voice::CTTSNotifySink::Connect ()
 	else
 	if	(mRegisteredKey == 0)
 	{
-		lResult = LogSapi4Err (LogNormal, mOwner.mEngine->Register (&m_xNotifySink, IID_ITTSNotifySink, &mRegisteredKey));
-#ifdef	_DEBUG_NOTIFY
-		if	(LogIsActive (_DEBUG_NOTIFY))
+		lResult = _SAPI4_LOG::LogSapi4Err (LogNormal|LogTime, mOwner.mEngine->Register ((ITTSNotifySink2 *)this, IID_ITTSNotifySink, &mRegisteredKey));
+#ifdef	_LOG_NOTIFY
+		if	(_SAPI4_LOG::LogIsActive (_LOG_NOTIFY))
 		{
-			LogComErrAnon (MinLogLevel(_DEBUG_NOTIFY,LogAlways), lResult, _T("[%p(%u)] [%p] Connected  [%u]"), this, m_dwRef, &mOwner, mRegisteredKey);
+			_SAPI4_LOG::LogComErrAnon (MinLogLevel(_LOG_NOTIFY,LogAlways), lResult, _T("[%p] [%p(%d)] Connected  [%u]"), &mOwner, this, max(m_dwRef,-1), mRegisteredKey);
 		}
 #endif
 	}
@@ -834,13 +1312,17 @@ HRESULT CSapi4Voice::CTTSNotifySink::Disconnect ()
 		&&	(mRegisteredKey != 0)
 		)
 	{
-		lResult = LogSapi4Err (LogNormal, mOwner.mEngine->UnRegister (mRegisteredKey));
-#ifdef	_DEBUG_NOTIFY
-		if	(LogIsActive (_DEBUG_NOTIFY))
+		lResult = mOwner.mEngine->UnRegister (mRegisteredKey);
+#ifdef	_LOG_NOTIFY
+		if	(_SAPI4_LOG::LogIsActive (_LOG_NOTIFY))
 		{
-			LogComErrAnon (MinLogLevel(_DEBUG_NOTIFY,LogAlways), lResult, _T("[%p(%u)] [%p] Disconnect [%u]"), this, m_dwRef, &mOwner, mRegisteredKey);
+			_SAPI4_LOG::LogSapi4ErrAnon (MinLogLevel(_LOG_NOTIFY,LogAlways), lResult, _T("[%p] [%p(%d)] Disconnect [%u]"), &mOwner, this, max(m_dwRef,-1), mRegisteredKey);
 		}
+		else
 #endif
+		{
+			_SAPI4_LOG::LogSapi4Err (LogNormal|LogTime, lResult);
+		}
 	}
 	mRegisteredKey = 0;
 
@@ -851,39 +1333,44 @@ HRESULT CSapi4Voice::CTTSNotifySink::Disconnect ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::AttribChanged (DWORD dwAttribute)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::AttribChanged (DWORD dwAttribute)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, NotifySink)
-#ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XNotifySink::AttribChanged [%u]"), &pThis->mOwner, dwAttribute);
+#ifdef	_TRACE_EVENTS_EX_NOT
+	if	(_SAPI4_LOG::LogIsActive (_TRACE_EVENTS_EX))
+	{
+		_SAPI4_LOG::LogMessage (_TRACE_EVENTS_EX, _T("[%p] [%p(%d)] CSapi4Voice::AttribChanged [%u]"), &mOwner, this, max(m_dwRef,-1), dwAttribute);
+	}
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::AudioStart (QWORD qTimeStamp)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::AudioStart (QWORD qTimeStamp)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, NotifySink)
-#ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XNotifySink::AudioStart [%I64u]"), &pThis->mOwner, qTimeStamp);
+#ifdef	_TRACE_EVENTS
+	if	(_SAPI4_LOG::LogIsActive (_TRACE_EVENTS))
+	{
+		_SAPI4_LOG::LogMessage (_TRACE_EVENTS, _T("[%p] [%p(%d)] CSapi4Voice::AudioStart [%I64u] IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), &mOwner, this, max(m_dwRef,-1), qTimeStamp, mOwner.CheckIsQueueing(), mOwner.CheckIsParsing(), mOwner.CheckIsSpeaking(), mOwner.CheckIsResetting());
+	}
 #endif
 	try
 	{
-		pThis->mOwner.SetIsSpeaking (true);
+		mOwner.SetIsSpeaking (true);
+		mOwner.SetIsQueueing (false);
 	}
 	catch AnyExceptionSilent
 
-	if	(pThis->mOwner.mEventSinks.GetSize() > 0)
+	if	(mOwner.GetNotifySinkCount() > 0)
 	{
-		int						lNdx;
-		ISapiVoiceEventSink *	lEventSink;
+		INT_PTR					lNdx;
+		_ISapiVoiceEventSink *	lEventSink;
 
-		for	(lNdx = 0; lNdx <= pThis->mOwner.mEventSinks.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx < mOwner.GetNotifySinkCount(); lNdx++)
 		{
-			if	(lEventSink = pThis->mOwner.mEventSinks [lNdx])
+			if	(lEventSink = mOwner.GetNotifySink (lNdx))
 			{
 				try
 				{
-					lEventSink->OnVoiceStart (pThis->mOwner.mEventCharID);
+					lEventSink->OnVoiceStart (mOwner.mEventCharID);
 				}
 				catch AnyExceptionSilent
 			}
@@ -892,31 +1379,33 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::AudioStart (
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::AudioStop (QWORD qTimeStamp)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::AudioStop (QWORD qTimeStamp)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, NotifySink)
-#ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XNotifySink::AudioStop [%I64u]"), &pThis->mOwner, qTimeStamp);
+#ifdef	_TRACE_EVENTS
+	if	(_SAPI4_LOG::LogIsActive (_TRACE_EVENTS))
+	{
+		_SAPI4_LOG::LogMessage (_TRACE_EVENTS, _T("[%p] [%p(%d)] CSapi4Voice::AudioStop [%I64u] IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), &mOwner, this, max(m_dwRef,-1), qTimeStamp, mOwner.CheckIsQueueing(), mOwner.CheckIsParsing(), mOwner.CheckIsSpeaking(), mOwner.CheckIsResetting());
+	}
 #endif
 	try
 	{
-		pThis->mOwner.SetIsSpeaking (false);
-		pThis->mOwner.SetIsQueueing (false);
+		mOwner.SetIsSpeaking (false);
+		mOwner.SetIsQueueing (false);
 	}
 	catch AnyExceptionSilent
 
-	if	(pThis->mOwner.mEventSinks.GetSize() > 0)
+	if	(mOwner.GetNotifySinkCount() > 0)
 	{
-		int						lNdx;
-		ISapiVoiceEventSink *	lEventSink;
+		INT_PTR					lNdx;
+		_ISapiVoiceEventSink *	lEventSink;
 
-		for	(lNdx = 0; lNdx <= pThis->mOwner.mEventSinks.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx < mOwner.GetNotifySinkCount(); lNdx++)
 		{
-			if	(lEventSink = pThis->mOwner.mEventSinks [lNdx])
+			if	(lEventSink = mOwner.GetNotifySink (lNdx))
 			{
 				try
 				{
-					lEventSink->OnVoiceEnd (pThis->mOwner.mEventCharID);
+					lEventSink->OnVoiceEnd (mOwner.mEventCharID);
 				}
 				catch AnyExceptionSilent
 			}
@@ -925,29 +1414,30 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::AudioStop (Q
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::Visual (QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::Visual (QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, NotifySink)
-#ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XNotifySink::Visual [%I64u] [%s %s] [%s]"), &pThis->mOwner, qTimeStamp, DebugStr(CString(cIPAPhoneme,1)), DebugStr(CString(cEnginePhoneme,1)), VoiceMouthStr(pTTSMouth));
-#endif
-
-	if	(pThis->mOwner.mEventSinks.GetSize() > 0)
+#ifdef	_TRACE_EVENTS_EX
+	if	(_SAPI4_LOG::LogIsActive (_TRACE_EVENTS_EX))
 	{
-		int						lNdx;
-		ISapiVoiceEventSink *	lEventSink;
+		_SAPI4_LOG::LogMessage (_TRACE_EVENTS_EX, _T("[%p] [%p(%d)] CSapi4Voice::Visual [%I64u] [%s %s] [%s]"), &mOwner, this, max(m_dwRef,-1), qTimeStamp, DebugStr(CAtlString(cIPAPhoneme,1)), DebugStr(CAtlString(cEnginePhoneme,1)), VoiceMouthStr(pTTSMouth));
+	}
+#endif
+	if	(mOwner.GetNotifySinkCount() > 0)
+	{
+		INT_PTR					lNdx;
+		_ISapiVoiceEventSink *	lEventSink;
 		int						lMouthOverlay = VoiceMouthOverlay (pTTSMouth);
 
 #ifdef	_DEBUG_MOUTH
-		LogMessage (_DEBUG_MOUTH, _T("[%p] Visual [%s %s] [%s] [%s]"), &pThis->mOwner, DebugStr(CString(cIPAPhoneme,1)), DebugStr(CString(cEnginePhoneme,1)), VoiceMouthStr(pTTSMouth), MouthOverlayStr(lMouthOverlay));
+		LogMessage (_DEBUG_MOUTH, _T("[%p] Visual [%s %s] [%s] [%s]"), mOwner, DebugStr(CAtlString(cIPAPhoneme,1)), DebugStr(CAtlString(cEnginePhoneme,1)), VoiceMouthStr(pTTSMouth), MouthOverlayStr(lMouthOverlay));
 #endif
-		for	(lNdx = 0; lNdx <= pThis->mOwner.mEventSinks.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx < mOwner.GetNotifySinkCount(); lNdx++)
 		{
-			if	(lEventSink = pThis->mOwner.mEventSinks [lNdx])
+			if	(lEventSink = mOwner.GetNotifySink (lNdx))
 			{
 				try
 				{
-					lEventSink->OnVoiceVisual (pThis->mOwner.mEventCharID, lMouthOverlay);
+					lEventSink->OnVoiceVisual (mOwner.mEventCharID, lMouthOverlay);
 				}
 				catch AnyExceptionSilent
 			}
@@ -956,92 +1446,108 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::Visual (QWOR
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::Error (LPUNKNOWN pError)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::Error (LPUNKNOWN pError)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, NotifySink)
-#ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XNotifySink::Error [%p]"), &pThis->mOwner, pError);
+#ifdef	_TRACE_EVENTS
+	if	(_SAPI4_LOG::LogIsActive (_TRACE_EVENTS))
+	{
+		_SAPI4_LOG::LogMessage (_TRACE_EVENTS, _T("[%p] [%p(%d)] CSapi4Voice::Error [%p]"), &mOwner, this, max(m_dwRef,-1), pError);
+	}
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::Warning (LPUNKNOWN pWarning)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::Warning (LPUNKNOWN pWarning)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, NotifySink)
-#ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XNotifySink::Warning [%p]"), &pThis->mOwner, pWarning);
+#ifdef	_TRACE_EVENTS
+	if	(_SAPI4_LOG::LogIsActive (_TRACE_EVENTS))
+	{
+		_SAPI4_LOG::LogMessage (_TRACE_EVENTS, _T("[%p] [%p(%d)] CSapi4Voice::Warning [%p]"), &mOwner, this, max(m_dwRef,-1), pWarning);
+	}
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::VisualFuture (DWORD dwMilliseconds, QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::VisualFuture (DWORD dwMilliseconds, QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, NotifySink)
-#ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XNotifySink::VisualFuture [%u] [%I64u]"), &pThis->mOwner, dwMilliseconds, qTimeStamp);
+#ifdef	_TRACE_EVENTS
+	if	(_SAPI4_LOG::LogIsActive (_TRACE_EVENTS))
+	{
+		_SAPI4_LOG::LogMessage (_TRACE_EVENTS, _T("[%p] [%p(%d)] CSapi4Voice::VisualFuture [%u] [%I64u]"), &mOwner, this, max(m_dwRef,-1), dwMilliseconds, qTimeStamp);
+	}
 #endif
 	return S_OK;
 }
 
 /////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XBufNotifySink::TextDataDone (QWORD qTimeStamp, DWORD dwFlags)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::TextDataStarted (QWORD qTimeStamp)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, BufNotifySink)
-#ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XBufNotifySink::TextDataDone [%I64u] [%8.8X]"), &pThis->mOwner, qTimeStamp, dwFlags);
+#ifdef	_TRACE_EVENTS
+	if	(_SAPI4_LOG::LogIsActive (_TRACE_EVENTS))
+	{
+		_SAPI4_LOG::LogMessage (_TRACE_EVENTS, _T("[%p] [%p(%d)] CSapi4Voice::TextDataStarted [%I64u] IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), &mOwner, this, max(m_dwRef,-1), qTimeStamp, mOwner.CheckIsQueueing(), mOwner.CheckIsParsing(), mOwner.CheckIsSpeaking(), mOwner.CheckIsResetting());
+	}
+#endif
+	try
+	{
+		mOwner.SetIsParsing (!mOwner.CheckIsResetting());
+	}
+	catch AnyExceptionSilent
+	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::TextDataDone (QWORD qTimeStamp, DWORD dwFlags)
+{
+#ifdef	_TRACE_EVENTS
+	if	(_SAPI4_LOG::LogIsActive (_TRACE_EVENTS))
+	{
+		_SAPI4_LOG::LogMessage (_TRACE_EVENTS, _T("[%p] [%p(%d)] CSapi4Voice::TextDataDone [%I64u] [%8.8X] IsQueuing [%u] IsParsing [%u] IsSpeaking [%u] IsResetting [%u]"), &mOwner, this, max(m_dwRef,-1), qTimeStamp, dwFlags, mOwner.CheckIsQueueing(), mOwner.CheckIsParsing(), mOwner.CheckIsSpeaking(), mOwner.CheckIsResetting());
+	}
+#ifdef	_TRACE_STOP
+	else
+#endif
 #endif
 #ifdef	_TRACE_STOP
 	if	(
 			(dwFlags & TTSBNS_ABORTED)
-		&&	(LogIsActive (_TRACE_STOP))
+		&&	(_SAPI4_LOG::LogIsActive (_TRACE_STOP))
 		)
 	{
-		LogMessage (_TRACE_STOP|LogHighVolume, _T("[%p] TextDataDone [%I64u] [%8.8X]"), &pThis->mOwner, qTimeStamp, dwFlags);
+		_SAPI4_LOG::LogMessage (_TRACE_STOP, _T("[%p] [%p(%d)] TextDataDone [%I64u] [%8.8X]"), &mOwner, this, max(m_dwRef,-1), qTimeStamp, dwFlags);
 	}
 #endif
 	try
 	{
-		pThis->mOwner.SetIsQueueing (false);
-		pThis->mOwner.SetIsResetting (false);
+		mOwner.SetIsParsing (false);
+		mOwner.SetIsResetting (false);
 	}
 	catch AnyExceptionSilent
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XBufNotifySink::TextDataStarted (QWORD qTimeStamp)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::BookMark (QWORD qTimeStamp, DWORD dwMarkNum)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, BufNotifySink)
-#ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XBufNotifySink::TextDataStarted [%I64u]"), &pThis->mOwner, qTimeStamp);
-#endif
-	try
+#ifdef	_TRACE_EVENTS_EX
+	if	(_SAPI4_LOG::LogIsActive (_TRACE_EVENTS_EX))
 	{
-		pThis->mOwner.SetIsQueueing (true);
+		_SAPI4_LOG::LogMessage (_TRACE_EVENTS_EX, _T("[%p] [%p(%d)] CSapi4Voice::BookMark [%I64u] [%u]"), &mOwner, this, max(m_dwRef,-1), qTimeStamp, dwMarkNum);
 	}
-	catch AnyExceptionSilent
-	return S_OK;
-}
-
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XBufNotifySink::BookMark (QWORD qTimeStamp, DWORD dwMarkNum)
-{
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, BufNotifySink)
-#ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XBufNotifySink::BookMark [%I64u] [%u]"), &pThis->mOwner, qTimeStamp, dwMarkNum);
 #endif
-
-	if	(pThis->mOwner.mEventSinks.GetSize() > 0)
+	if	(mOwner.GetNotifySinkCount() > 0)
 	{
-		int						lNdx;
-		ISapiVoiceEventSink *	lEventSink;
+		INT_PTR					lNdx;
+		_ISapiVoiceEventSink *	lEventSink;
 
-		for	(lNdx = 0; lNdx <= pThis->mOwner.mEventSinks.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx < mOwner.GetNotifySinkCount(); lNdx++)
 		{
-			if	(lEventSink = pThis->mOwner.mEventSinks [lNdx])
+			if	(lEventSink = mOwner.GetNotifySink (lNdx))
 			{
 				try
 				{
-					lEventSink->OnVoiceBookMark (pThis->mOwner.mEventCharID, (long)dwMarkNum);
+					lEventSink->OnVoiceBookMark (mOwner.mEventCharID, (long)dwMarkNum);
 				}
 				catch AnyExceptionSilent
 			}
@@ -1050,25 +1556,26 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XBufNotifySink::BookMark 
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XBufNotifySink::WordPosition (QWORD qTimeStamp, DWORD dwByteOffset)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::WordPosition (QWORD qTimeStamp, DWORD dwByteOffset)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, BufNotifySink)
-#ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XBufNotifySink::WordPosition [%I64u] [%u]"), &pThis->mOwner, qTimeStamp, dwByteOffset);
-#endif
-
-	if	(pThis->mOwner.mEventSinks.GetSize() > 0)
+#ifdef	_TRACE_EVENTS_EX
+	if	(_SAPI4_LOG::LogIsActive (_TRACE_EVENTS_EX))
 	{
-		int						lNdx;
-		ISapiVoiceEventSink *	lEventSink;
+		_SAPI4_LOG::LogMessage (_TRACE_EVENTS_EX, _T("[%p] [%p(%d)] CSapi4Voice::WordPosition [%I64u] [%u]"), &mOwner, this, max(m_dwRef,-1), qTimeStamp, dwByteOffset);
+	}
+#endif
+	if	(mOwner.GetNotifySinkCount() > 0)
+	{
+		INT_PTR					lNdx;
+		_ISapiVoiceEventSink *	lEventSink;
 
-		for	(lNdx = 0; lNdx <= pThis->mOwner.mEventSinks.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx < mOwner.GetNotifySinkCount(); lNdx++)
 		{
-			if	(lEventSink = pThis->mOwner.mEventSinks [lNdx])
+			if	(lEventSink = mOwner.GetNotifySink (lNdx))
 			{
 				try
 				{
-					lEventSink->OnVoiceWord (pThis->mOwner.mEventCharID, dwByteOffset/sizeof(TCHAR), 1);
+					lEventSink->OnVoiceWord (mOwner.mEventCharID, dwByteOffset/sizeof(TCHAR), 1);
 				}
 				catch AnyExceptionSilent
 			}

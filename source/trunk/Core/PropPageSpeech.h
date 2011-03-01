@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,71 +18,68 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef PROPPAGESPEECH_H_INCLUDED_
-#define PROPPAGESPEECH_H_INCLUDED_
 #pragma once
-
 #include "DaCoreExp.h"
-#include "PropPageFix.h"
+#include "DaCoreRes.h"
 #include "DaGlobalConfig.h"
+#include "PropertyPage.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
 
-class _DACORE_IMPEXP CPropPageSpeech : public CPropertyPage
+class CPropPageSpeech : public CAtlPropertyPage
 {
+	DECLARE_DLL_OBJECT_EX(CPropPageSpeech, _DACORE_IMPEXP)
 protected:
 	CPropPageSpeech();
 public:
-	virtual ~CPropPageSpeech();
-	DECLARE_DYNCREATE(CPropPageSpeech)
+	_DACORE_IMPEXP virtual ~CPropPageSpeech();
+	_DACORE_IMPEXP static CPropPageSpeech * CreateInstance ();
 
 // Dialog Data
-	//{{AFX_DATA(CPropPageSpeech)
 	enum { IDD = IDD_PROPPAGE_SPEECH };
-	CButton	mSpeechTipsEnabled;
-	CButton	mSpeechPromptEnabled;
-	CStatic	mHotKeyTitle4;
-	CStatic	mHotKeyTitle3;
-	CStatic	mHotKeyTitle2;
-	CStatic	mHotKeyTitle1;
-	CEdit	mHotKeyDelay;
-	CSpinButtonCtrl	mHotKeySpin;
-	CHotKeyCtrl	mHotKey;
-	CButton	mSpeechEnabled;
-	//}}AFX_DATA
+	CContainedWindow	mSrTipsEnabled;
+	CContainedWindow	mSrPromptEnabled;
+	CContainedWindow	mSrHotKeyTitle4;
+	CContainedWindow	mSrHotKeyTitle3;
+	CContainedWindow	mSrHotKeyTitle2;
+	CContainedWindow	mSrHotKeyTitle1;
+	CContainedWindow	mSrHotKeyDelay;
+	CContainedWindow	mSrHotKeyDelaySpin;
+	CContainedWindow	mSrHotKey;
+	CContainedWindow	mSrEnabled;
 
 // Overrides
-	//{{AFX_VIRTUAL(CPropPageSpeech)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+protected:
+	_DACORE_IMPEXP virtual BOOL OnInitDialog ();
 
 // Implementation
 protected:
-	//{{AFX_MSG(CPropPageSpeech)
-	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-	afx_msg void OnSpeechEnabled();
-	afx_msg void OnSpeechPrompt();
-	afx_msg void OnSpeechTips();
-	afx_msg void OnHotKeyChange();
-	afx_msg void OnHotKeyDelayChange();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+	LRESULT OnApply(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
+	LRESULT OnSrEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnSrPrompt(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnSrTips(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnSrHotKeyChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnSrHotKeyDelayChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnCtlColor (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+
+	BEGIN_MSG_MAP(CPropPageSpeech)
+		NOTIFY_CODE_HANDLER(PSN_APPLY, OnApply)
+		COMMAND_HANDLER(IDC_PROPPAGE_SR_ENABLED, BN_CLICKED, OnSrEnabled)
+		COMMAND_HANDLER(IDC_PROPPAGE_SR_PROMPT, BN_CLICKED, OnSrPrompt)
+		COMMAND_HANDLER(IDC_PROPPAGE_SR_TIPS, BN_CLICKED, OnSrTips)
+		COMMAND_HANDLER(IDC_PROPPAGE_SR_HOTKEY, EN_CHANGE, OnSrHotKeyChange)
+		COMMAND_HANDLER(IDC_PROPPAGE_SR_HOTKEY_DELAY, EN_CHANGE, OnSrHotKeyDelayChange)
+		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColor)
+		MESSAGE_HANDLER(WM_CTLCOLORSTATIC, OnCtlColor)
+		CHAIN_MSG_MAP(CAtlPropertyPage)
+	END_MSG_MAP()
 
 protected:
 	void EnableControls ();
 
 protected:
-	CPropPageFix			mPropPageFix;
-	CDaSpeechInputConfig	mSpeechConfig;
+	CGlobalHandle		mTemplate;
+	CDaSettingsConfig	mSettingsConfig;
 };
 
-#pragma warning(pop)
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // PROPPAGESPEECH_H_INCLUDED_

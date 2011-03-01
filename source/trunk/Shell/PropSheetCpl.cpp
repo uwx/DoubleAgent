@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -20,6 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "DaShell.h"
+#include "DaGlobalConfig.h"
 #include "PropSheetCpl.h"
 #include "PropPageCharSel.h"
 #include "PropPageOutput.h"
@@ -28,12 +29,6 @@
 #include "PropPageRegistry.h"
 #include "PropPageLogging.h"
 #include "Registry.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 
 #ifdef	_DEBUG
 #define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance"),LogDetails,true)&0xFFFF)
@@ -45,18 +40,10 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC(CPropSheetCpl, CPropSheetBase)
-
-BEGIN_MESSAGE_MAP(CPropSheetCpl, CPropSheetBase)
-	//{{AFX_MSG_MAP(CPropSheetCpl)
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
-
 LPCTSTR	CPropSheetCpl::mPageNameCharSel		= _T("pageCharacter");
 LPCTSTR	CPropSheetCpl::mPageNameOutput		= _T("pageOutput");
 LPCTSTR	CPropSheetCpl::mPageNameSpeech		= _T("pageSpeech");
+LPCTSTR	CPropSheetCpl::mPageNameCopyright	= _T("pageCopyright");
 LPCTSTR	CPropSheetCpl::mPageNameRegistry	= _T("pageRegistry");
 
 static LPCTSTR	sProfilePropertyPage		= _T("ControlPanelPage");
@@ -66,13 +53,13 @@ static LPCTSTR	sProfileLogControl			= _T("LogControl");
 
 /////////////////////////////////////////////////////////////////////////////
 
-CPropSheetCpl::CPropSheetCpl(CWnd* pParentWnd)
-:	CPropSheetBase(IDS_CPL_NAME, pParentWnd)
+CPropSheetCpl::CPropSheetCpl (HWND pParentWnd)
 {
+	Construct (IDS_CPL_NAME, pParentWnd);
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CPropSheetCpl::CPropSheetCpl"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p] CPropSheetCpl::CPropSheetCpl"), this);
 	}
 #endif
 }
@@ -82,42 +69,39 @@ CPropSheetCpl::~CPropSheetCpl()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CPropSheetCpl::~CPropSheetCpl"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p] CPropSheetCpl::~CPropSheetCpl"), this);
 	}
 #endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropSheetCpl::SetModalParent (CWnd * pParentWnd)
-{
-	m_pParentWnd = pParentWnd;
-}
-
 bool CPropSheetCpl::InitPages (bool pElevatedOnly)
 {
 	bool						lRet = false;
-	CPropertyPage *				lPage;
+	CAtlPropertyPage *			lPage;
 	tPtr <CPropPageRegistry>	lRegistryPage;
+
+	mPages.DeleteAll ();
 
 	if	(!pElevatedOnly)
 	{
-		if	(lPage = (CPropPageCharSel *)CPropPageCharSel::CreateObject())
+		if	(lPage = CPropPageOutput::CreateInstance())
 		{
 			mPages.Add (lPage);
 			lRet = true;
 		}
-		if	(lPage = (CPropPageOutput *)CPropPageOutput::CreateObject())
+		if	(lPage = CPropPageSpeech::CreateInstance())
 		{
 			mPages.Add (lPage);
 			lRet = true;
 		}
-		if	(lPage = (CPropPageSpeech *)CPropPageSpeech::CreateObject())
+		if	(lPage = CPropPageCharSel::CreateInstance())
 		{
 			mPages.Add (lPage);
 			lRet = true;
 		}
-		if	(lPage = (CPropPageCopyright *)CPropPageCopyright::CreateObject())
+		if	(lPage = CPropPageCopyright::CreateInstance())
 		{
 			mPages.Add (lPage);
 			lRet = true;
@@ -128,7 +112,7 @@ bool CPropSheetCpl::InitPages (bool pElevatedOnly)
 			(lRegistryPage = new CPropPageRegistry)
 		&&	(
 				(!pElevatedOnly)
-			||	(lRegistryPage->PrepareElevated (m_pParentWnd->GetSafeHwnd()))
+			||	(lRegistryPage->PrepareElevated (mPsh.hwndParent))
 			)
 		)
 	{
@@ -139,7 +123,7 @@ bool CPropSheetCpl::InitPages (bool pElevatedOnly)
 	if	(
 			(!pElevatedOnly)
 #ifndef	_DEBUG
-		&&	(CRegDWord (CRegKey (HKEY_LOCAL_MACHINE, gProfileKeyDa, true), sProfileLogControl).Value() != 0)
+		&&	(CRegDWord (CRegKeyEx (HKEY_LOCAL_MACHINE, gProfileKeyDa, true), sProfileLogControl).Value() != 0)
 #endif
 		&&	(lPage = new CPropPageLogging)
 		)
@@ -148,9 +132,9 @@ bool CPropSheetCpl::InitPages (bool pElevatedOnly)
 		lRet = true;
 	}
 
-	if	(mPages.GetSize () > 1)
+	if	(mPages.GetCount() > 1)
 	{
-		CRegKey	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
+		CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
 
 		mPsh.nStartPage = max ((long)CRegDWord (lRegKey, sProfilePropertyPage, false, mPsh.nStartPage).Value(), 0);
 #ifdef	_DEBUG_NOT
@@ -162,47 +146,56 @@ bool CPropSheetCpl::InitPages (bool pElevatedOnly)
 
 void CPropSheetCpl::SetStartPage (LPCTSTR pPageName)
 {
-	CString			lPageName (pPageName);
-	CPropertyPage *	lPage;
-	int				lNdx;
+	CAtlString			lPageName (pPageName);
+	CAtlPropertyPage *	lPage;
+	INT_PTR				lNdx;
 
 	if	(!lPageName.IsEmpty ())
 	{
 		for	(lNdx = 0; lPage = mPages (lNdx); lNdx++)
 		{
 			if	(
-					(lPageName.CompareNoCase (mPageNameCharSel) == 0)
-				&&	(lPage->IsKindOf (RUNTIME_CLASS (CPropPageCharSel)))
-				)
-			{
-				mPsh.nStartPage = lNdx;
-				break;
-			}
-			else
-			if	(
 					(lPageName.CompareNoCase (mPageNameOutput) == 0)
-				&&	(lPage->IsKindOf (RUNTIME_CLASS (CPropPageOutput)))
+				&&	(dynamic_cast <CPropPageOutput *> (lPage))
 				)
 			{
-				mPsh.nStartPage = lNdx;
+				mPsh.nStartPage = (UINT)lNdx;
 				break;
 			}
 			else
 			if	(
 					(lPageName.CompareNoCase (mPageNameSpeech) == 0)
-				&&	(lPage->IsKindOf (RUNTIME_CLASS (CPropPageSpeech)))
+				&&	(dynamic_cast <CPropPageSpeech *> (lPage))
 				)
 			{
-				mPsh.nStartPage = lNdx;
+				mPsh.nStartPage = (UINT)lNdx;
+				break;
+			}
+			else
+			if	(
+					(lPageName.CompareNoCase (mPageNameCharSel) == 0)
+				&&	(dynamic_cast <CPropPageCharSel *> (lPage))
+				)
+			{
+				mPsh.nStartPage = (UINT)lNdx;
+				break;
+			}
+			else
+			if	(
+					(lPageName.CompareNoCase (mPageNameCopyright) == 0)
+				&&	(dynamic_cast <CPropPageCopyright *> (lPage))
+				)
+			{
+				mPsh.nStartPage = (UINT)lNdx;
 				break;
 			}
 			else
 			if	(
 					(lPageName.CompareNoCase (mPageNameRegistry) == 0)
-				&&	(lPage->IsKindOf (RUNTIME_CLASS (CPropPageRegistry)))
+				&&	(dynamic_cast <CPropPageRegistry *> (lPage))
 				)
 			{
-				mPsh.nStartPage = lNdx;
+				mPsh.nStartPage = (UINT)lNdx;
 				break;
 			}
 		}
@@ -218,9 +211,9 @@ void CPropSheetCpl::SetStartPage (LPCTSTR pPageName)
 
 void CPropSheetCpl::LoadConfig ()
 {
-	CRegKey	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
-	CRect	lWinRect;
-	CPoint	lWinPos;
+	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
+	CRect		lWinRect;
+	CPoint		lWinPos;
 
 	GetWindowRect (&lWinRect);
 	lWinPos.x = (long)CRegDWord (lRegKey, sProfilePropertySheetX, true, lWinRect.left).Value ();
@@ -231,20 +224,20 @@ void CPropSheetCpl::LoadConfig ()
 		lWinRect.OffsetRect (lWinPos - lWinRect.TopLeft());
 		MoveWindow (lWinRect);
 	}
-	CPropSheetBase::LoadConfig ();
+	CAtlPropertySheet::LoadConfig ();
 }
 
 void CPropSheetCpl::SaveConfig (int pSheetResult)
 {
 	if	(pSheetResult > 0)
 	{
-		CRegKey	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
-		CRect	lWinRect;
+		CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
+		CRect		lWinRect;
 
 		GetWindowRect (&lWinRect);
 		CRegDWord (lRegKey, sProfilePropertySheetX, true).SetValue (lWinRect.left).Update ();
 		CRegDWord (lRegKey, sProfilePropertySheetY, true).SetValue (lWinRect.top).Update ();
-		if	(mPages.GetSize() > 1)
+		if	(mPages.GetCount() > 1)
 		{
 			CRegDWord (lRegKey, sProfilePropertyPage, true).SetValue (mPsh.nStartPage=max(PropSheet_HwndToIndex(m_hWnd,PropSheet_GetCurrentPageHwnd(m_hWnd)),0)).Update ();
 #ifdef	_DEBUG_NOT
@@ -252,7 +245,7 @@ void CPropSheetCpl::SaveConfig (int pSheetResult)
 #endif
 		}
 	}
-	CPropSheetBase::SaveConfig (pSheetResult);
+	CAtlPropertySheet::SaveConfig (pSheetResult);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -263,10 +256,15 @@ void CPropSheetCpl::OnApplied ()
 	{
 		try
 		{
-			DWORD	lTargets = BSM_APPLICATIONS;
-			BroadcastSystemMessage (BSF_FORCEIFHUNG|BSF_POSTMESSAGE, &lTargets, DA_BROADCAST_OPTIONS_CHANGED, 0, 0);
+			DWORD	lTargets = BSM_ALLCOMPONENTS;
+			long	lResult;
+
+			lResult = BroadcastSystemMessage (BSF_FORCEIFHUNG|BSF_POSTMESSAGE, &lTargets, DA_BROADCAST_OPTIONS_CHANGED, 0, 0);
+#ifdef	_DEBUG
+			LogMessage (LogNormal|LogTime, _T("DA_BROADCAST_OPTIONS_CHANGED [%d]"), lResult);
+#endif
 		}
 		catch AnyExceptionDebug
 	}
-	CPropSheetBase::OnApplied ();
+	CAtlPropertySheet::OnApplied ();
 }

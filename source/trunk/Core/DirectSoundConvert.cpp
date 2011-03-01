@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -27,19 +27,13 @@
 #include "DebugProcess.h"
 #endif
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "msacm32.lib")
 
 #ifdef	_DEBUG
-//#define	_DEBUG_CONVERT		LogNormal|LogHighVolume
-//#define	_DEBUG_FORMATS		LogNormal|LogHighVolume
-//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+//#define	_DEBUG_CONVERT		LogNormal|LogTime|LogHighVolume
+//#define	_DEBUG_FORMATS		LogNormal|LogTime|LogHighVolume
+//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -69,7 +63,7 @@ CDirectSoundConvert::~CDirectSoundConvert ()
 
 void CDirectSoundConvert::SetInputFormat (const LPWAVEFORMATEX pFormat)
 {
-	CSingleLock	lLock (&mLock, TRUE);
+	CLockCS	lLock (mLock);
 	try
 	{
 		mInputFormat = DuplicateFormat (pFormat);
@@ -79,8 +73,8 @@ void CDirectSoundConvert::SetInputFormat (const LPWAVEFORMATEX pFormat)
 
 bool CDirectSoundConvert::GetInputFormat (LPWAVEFORMATEX & pFormat)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mLock, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mLock);
 	try
 	{
 		pFormat = mInputFormat;
@@ -95,8 +89,8 @@ bool CDirectSoundConvert::GetInputFormat (LPWAVEFORMATEX & pFormat)
 
 bool CDirectSoundConvert::GetOutputFormat (LPWAVEFORMATEX & pFormat)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mLock, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mLock);
 	try
 	{
 		pFormat = mOutputFormat;
@@ -113,7 +107,7 @@ bool CDirectSoundConvert::GetOutputFormat (LPWAVEFORMATEX & pFormat)
 
 void CDirectSoundConvert::SetInputBuffer (LPCVOID pBuffer, ULONG pBufferSize)
 {
-	CSingleLock	lLock (&mLock, TRUE);
+	CLockCS	lLock (mLock);
 	try
 	{
 		mInputBuffer = pBuffer;
@@ -124,8 +118,8 @@ void CDirectSoundConvert::SetInputBuffer (LPCVOID pBuffer, ULONG pBufferSize)
 
 bool CDirectSoundConvert::GetInputBuffer (LPCVOID & pBuffer, ULONG & pBufferSize)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mLock, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mLock);
 	try
 	{
 		pBuffer = mInputBuffer;
@@ -144,8 +138,8 @@ bool CDirectSoundConvert::GetInputBuffer (LPCVOID & pBuffer, ULONG & pBufferSize
 
 bool CDirectSoundConvert::GetOutputBuffer (LPVOID & pBuffer, ULONG & pBufferSize, ULONG & pDataLength)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mLock, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mLock);
 	try
 	{
 		pBuffer = GlobalLock (mOutputBuffer);
@@ -170,13 +164,16 @@ bool CDirectSoundConvert::GetOutputBuffer (LPVOID & pBuffer, ULONG & pBufferSize
 
 HRESULT CDirectSoundConvert::ConvertSound ()
 {
-	HRESULT		lResult = E_UNEXPECTED;
-	CSingleLock	lLock (&mLock, TRUE);
+	HRESULT	lResult = E_UNEXPECTED;
+	CLockCS	lLock (mLock);
 
 	try
 	{
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::ConvertSound"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::ConvertSound"), this);
+		}
 #endif
 		if	(
 				(mInputBuffer)
@@ -193,7 +190,7 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 			LogWaveFormat (_DEBUG_CONVERT, *mInputFormat, _T("Convert From"));
 			LogWaveFormat (_DEBUG_CONVERT, *mOutputFormat, _T("Convert To  "));
 #endif
-			if	(LogMmSysErr (LogNormal, lMmResult = acmStreamOpen (&lAcmStream, NULL, mInputFormat, mOutputFormat, NULL, NULL, NULL, ACM_STREAMOPENF_NONREALTIME)) == MMSYSERR_NOERROR)
+			if	(LogMmSysErr (LogNormal|LogTime, lMmResult = acmStreamOpen (&lAcmStream, NULL, mInputFormat, mOutputFormat, NULL, NULL, NULL, ACM_STREAMOPENF_NONREALTIME)) == MMSYSERR_NOERROR)
 			{
 				try
 				{
@@ -214,12 +211,12 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 
 					if	(
 							(lSrcIo = mmioOpen (NULL, &lSrcInfo, MMIO_READ))
-						&&	(LogMmSysErr (LogDetails, mmioDescend (lSrcIo, &lRiffChunk, NULL, MMIO_FINDRIFF)) == MMSYSERR_NOERROR)
-						&&	(LogMmSysErr (LogDetails, mmioDescend (lSrcIo, &lWavChunk, &lRiffChunk, MMIO_FINDCHUNK)) == MMSYSERR_NOERROR)
+						&&	(LogMmSysErr (LogDetails|LogTime, mmioDescend (lSrcIo, &lRiffChunk, NULL, MMIO_FINDRIFF)) == MMSYSERR_NOERROR)
+						&&	(LogMmSysErr (LogDetails|LogTime, mmioDescend (lSrcIo, &lWavChunk, &lRiffChunk, MMIO_FINDCHUNK)) == MMSYSERR_NOERROR)
 						)
 					{
 						mmioAscend (lSrcIo, &lWavChunk, 0);
-						if	(LogMmSysErr (LogDetails, mmioDescend (lSrcIo, &lDataChunk, &lRiffChunk, MMIO_FINDCHUNK)) == MMSYSERR_NOERROR)
+						if	(LogMmSysErr (LogDetails|LogTime, mmioDescend (lSrcIo, &lDataChunk, &lRiffChunk, MMIO_FINDCHUNK)) == MMSYSERR_NOERROR)
 						{
 							mmioAscend (lSrcIo, &lDataChunk, 0);
 						}
@@ -231,13 +228,13 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 					}
 					else
 					{
-						LogMmSysErr (LogNormal, lMmResult = lSrcInfo.wErrorRet);
+						LogMmSysErr (LogNormal|LogTime, lMmResult = lSrcInfo.wErrorRet);
 					}
 
 					if	(
 							(lStreamHeader.cbSrcLength = lDataChunk.cksize)
 						&&	(lStreamHeader.pbSrc = (LPBYTE)(lSrcInfo.pchBuffer + lDataChunk.dwDataOffset))
-						&&	(LogMmSysErr (LogDetails, lMmResult = acmStreamSize (lAcmStream, lSrcInfo.cchBuffer, &lStreamHeader.cbDstLength, ACM_STREAMSIZEF_SOURCE)) == MMSYSERR_NOERROR)
+						&&	(LogMmSysErr (LogDetails|LogTime, lMmResult = acmStreamSize (lAcmStream, lSrcInfo.cchBuffer, &lStreamHeader.cbDstLength, ACM_STREAMSIZEF_SOURCE)) == MMSYSERR_NOERROR)
 						&&	((mOutputBuffer = GlobalAlloc (GPTR, lStreamHeader.cbDstLength)).SafeIsValid())
 						&&	(lStreamHeader.pbDst = (LPBYTE) GlobalLock (mOutputBuffer))
 						)
@@ -257,8 +254,8 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 
 						if	(
 								(lTrgIo = mmioOpen (NULL, &lTrgInfo, MMIO_CREATE|MMIO_READWRITE))
-							&&	(LogMmSysErr (LogDetails, mmioCreateChunk (lTrgIo, &lRiffChunk, MMIO_CREATERIFF)) == MMSYSERR_NOERROR)
-							&&	(LogMmSysErr (LogDetails, mmioCreateChunk (lTrgIo, &lWavChunk, 0)) == MMSYSERR_NOERROR)
+							&&	(LogMmSysErr (LogDetails|LogTime, mmioCreateChunk (lTrgIo, &lRiffChunk, MMIO_CREATERIFF)) == MMSYSERR_NOERROR)
+							&&	(LogMmSysErr (LogDetails|LogTime, mmioCreateChunk (lTrgIo, &lWavChunk, 0)) == MMSYSERR_NOERROR)
 							)
 						{
 							mmioWrite (lTrgIo, (HPSTR)mOutputFormat.Ptr(), sizeof(WAVEFORMATEX) + mOutputFormat->cbSize);
@@ -280,9 +277,9 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 								memset (lStreamHeader.pbDst, 0x00, lStreamHeader.cbDstLength);
 							}
 
-							if	(LogMmSysErr (LogNormal, lMmResult = acmStreamPrepareHeader (lAcmStream, &lStreamHeader, 0)) == MMSYSERR_NOERROR)
+							if	(LogMmSysErr (LogNormal|LogTime, lMmResult = acmStreamPrepareHeader (lAcmStream, &lStreamHeader, 0)) == MMSYSERR_NOERROR)
 							{
-								if	(LogMmSysErr (LogNormal, lMmResult = acmStreamConvert (lAcmStream, &lStreamHeader, 0)) == MMSYSERR_NOERROR)
+								if	(LogMmSysErr (LogNormal|LogTime, lMmResult = acmStreamConvert (lAcmStream, &lStreamHeader, 0)) == MMSYSERR_NOERROR)
 								{
 									((LPDWORD)lTrgInfo.pchBuffer)[1] += lStreamHeader.cbDstLengthUsed;
 									((LPDWORD)lTrgInfo.pchNext)[1] = lStreamHeader.cbDstLengthUsed;
@@ -295,7 +292,7 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 								{
 									((LPDWORD)lTrgInfo.pchNext)[1] = 0;
 								}
-								LogMmSysErr (LogNormal, acmStreamUnprepareHeader (lAcmStream, &lStreamHeader, 0));
+								LogMmSysErr (LogNormal|LogTime, acmStreamUnprepareHeader (lAcmStream, &lStreamHeader, 0));
 							}
 						}
 						if	(lTrgIo)
@@ -304,7 +301,7 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 						}
 						else
 						{
-							LogMmSysErr (LogNormal, lMmResult = lTrgInfo.wErrorRet);
+							LogMmSysErr (LogNormal|LogTime, lMmResult = lTrgInfo.wErrorRet);
 						}
 					}
 				}
@@ -337,7 +334,10 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 		}
 #endif
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::ConvertSound Done"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::ConvertSound Done"), this);
+		}
 #endif
 	}
 	catch AnyExceptionDebug
@@ -349,13 +349,16 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 
 HRESULT CDirectSoundConvert::StashSound ()
 {
-	HRESULT		lResult = E_FAIL;
-	CSingleLock	lLock (&mLock, TRUE);
+	HRESULT	lResult = E_FAIL;
+	CLockCS	lLock (mLock);
 
 	try
 	{
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::StashSound"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::StashSound"), this);
+		}
 #endif
 		if	(
 				(mInputBuffer)
@@ -413,7 +416,10 @@ HRESULT CDirectSoundConvert::StashSound ()
 			}
 		}
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::StashSound Done"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::StashSound Done"), this);
+		}
 #endif
 	}
 	catch AnyExceptionDebug
@@ -427,15 +433,15 @@ HRESULT CDirectSoundConvert::StashSound ()
 
 HRESULT CDirectSoundConvert::DeriveOutputFormat ()
 {
-	HRESULT		lResult = E_UNEXPECTED;
-	CSingleLock	lLock (&mLock, TRUE);
+	HRESULT	lResult = E_UNEXPECTED;
+	CLockCS	lLock (mLock);
 
 	try
 	{
-		tPtr <WAVEFORMATEX>			lOutputFormat;
-		COwnPtrArray <WAVEFORMATEX>	lRankedFormats;
-		INT_PTR						lFormatNdx;
-		DWORD						lFormatSize = 0;
+		tPtr <WAVEFORMATEX>				lOutputFormat;
+		CAtlOwnPtrArray <WAVEFORMATEX>	lRankedFormats;
+		INT_PTR							lFormatNdx;
+		DWORD							lFormatSize = 0;
 
 		if	(mInputFormat)
 		{
@@ -444,7 +450,7 @@ HRESULT CDirectSoundConvert::DeriveOutputFormat ()
 #endif
 			if	(SUCCEEDED (lResult = EnumAcmFormats (mInputFormat, lRankedFormats)))
 			{
-				for	(lFormatNdx = 0; lFormatNdx <= lRankedFormats.GetUpperBound(); lFormatNdx++)
+				for	(lFormatNdx = 0; lFormatNdx < (INT_PTR)lRankedFormats.GetCount(); lFormatNdx++)
 				{
 					if	(IsValidOutputFormat (mInputFormat, lRankedFormats[lFormatNdx]))
 					{
@@ -456,10 +462,10 @@ HRESULT CDirectSoundConvert::DeriveOutputFormat ()
 
 				if	(
 						(!lOutputFormat)
-					&&	(SUCCEEDED (LogMmSysErr (LogNormal, acmMetrics (NULL, ACM_METRIC_MAX_SIZE_FORMAT, &lFormatSize))))
+					&&	(SUCCEEDED (LogMmSysErr (LogNormal|LogTime, acmMetrics (NULL, ACM_METRIC_MAX_SIZE_FORMAT, &lFormatSize))))
 					)
 				{
-					for	(lFormatNdx = 0; lFormatNdx <= lRankedFormats.GetUpperBound(); lFormatNdx++)
+					for	(lFormatNdx = 0; lFormatNdx < (INT_PTR)lRankedFormats.GetCount(); lFormatNdx++)
 					{
 						if	(SuggestOutputFormat (mInputFormat, lRankedFormats[lFormatNdx], lOutputFormat.Free(), lFormatSize))
 						{
@@ -541,7 +547,7 @@ bool CDirectSoundConvert::SuggestOutputFormat (const LPWAVEFORMATEX pInputFormat
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectSoundConvert::EnumAcmFormats (const LPWAVEFORMATEX pInputFormat, COwnPtrArray <WAVEFORMATEX> & pRankedFormats)
+HRESULT CDirectSoundConvert::EnumAcmFormats (const LPWAVEFORMATEX pInputFormat, CAtlOwnPtrArray <WAVEFORMATEX> & pRankedFormats)
 {
 	HRESULT				lResult;
 	IBaseFilterPtr		lACMFilter;
@@ -551,11 +557,11 @@ HRESULT CDirectSoundConvert::EnumAcmFormats (const LPWAVEFORMATEX pInputFormat, 
 	IEnumMediaTypesPtr	lEnumMediaTypes;
 	tMediaTypePtr		lMediaType;
 	LPWAVEFORMATEX		lMediaFormat;
-	CArrayEx <int>		lRanks;
+	CAtlTypeArray <int>	lRanks;
 	INT_PTR				lRankNdx;
 
 	if	(
-			(SUCCEEDED (lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_ACMWrapper, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &lACMFilter))))
+			(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_ACMWrapper, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &lACMFilter))))
 		&&	(SUCCEEDED (lResult = lACMFilter->EnumPins (&lEnumPins)))
 		)
 	{
@@ -639,9 +645,9 @@ CDirectSoundConvertCache::~CDirectSoundConvertCache ()
 {
 }
 
-INT_PTR CDirectSoundConvertCache::GetSize () const
+INT_PTR CDirectSoundConvertCache::GetCount() const
 {
-	CSingleLock	lLock (&mLock, TRUE);
+	CLockCS	lLock (mLock);
 	return mCache.GetCount();
 }
 
@@ -650,7 +656,7 @@ INT_PTR CDirectSoundConvertCache::GetSize () const
 CDirectSoundConvert * CDirectSoundConvertCache::GetCachedConvert (UINT pSoundNdx)
 {
 	CDirectSoundConvert *	lRet = NULL;
-	CSingleLock				lLock (&mLock, TRUE);
+	CLockCS					lLock (mLock);
 
 	try
 	{
@@ -663,8 +669,8 @@ CDirectSoundConvert * CDirectSoundConvertCache::GetCachedConvert (UINT pSoundNdx
 
 bool CDirectSoundConvertCache::CacheSoundConvert (CDirectSoundConvert * pConvert, UINT pSoundNdx)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mLock, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mLock);
 
 	try
 	{
@@ -689,8 +695,8 @@ bool CDirectSoundConvertCache::CacheSoundConvert (CDirectSoundConvert * pConvert
 
 bool CDirectSoundConvertCache::RemovedCachedConvert (UINT pSoundNdx)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mLock, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mLock);
 
 	try
 	{

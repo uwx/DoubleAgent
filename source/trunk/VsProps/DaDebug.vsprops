@@ -21,6 +21,9 @@
 		Name="VCLinkerTool"
 		LinkIncremental="2"
 		GenerateDebugInformation="true"
+		GenerateMapFile="true"
+		MapFileName="$(IntDir)$(TargetName).Map"
+		MapExports="true"
 	/>
 	<UserMacro
 		Name="ConfigDir"

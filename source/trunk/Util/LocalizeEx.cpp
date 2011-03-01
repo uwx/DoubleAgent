@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -25,10 +25,12 @@
 #include "LocalizeEx.h"
 #include "Log.h"
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -190,7 +192,7 @@ CString LclFormatDate (const VARIANT & pDate, DWORD pFlags, WORD pLangId)
 	}
 	else
 	{
-		COleVariant lDateVal (pDate);
+		_variant_t lDateVal (pDate);
 		VariantChangeType (&lDateVal, &lDateVal, 0, VT_BSTR);
 		return CString (V_BSTR (&lDateVal));
 	}
@@ -315,7 +317,7 @@ CString LclFormatTime (const SYSTEMTIME & pTime, DWORD pFlags, WORD pLangId)
 {
 	CString	lRet;
 
-	if	(pFlags & (TIME_FORCESECONDS | TIME_FORCETIMEMARKER))
+	if	(pFlags & (TIME_FORCE24HOURFORMAT | TIME_FORCESECONDS | TIME_FORCETIMEMARKER))
 	{
 		GetTimeFormat (__Locale(pLangId), 0, &pTime, LclTimeFormatString (pFlags, pLangId), lRet.GetBuffer (100), 100);
 	}
@@ -360,7 +362,7 @@ CString LclFormatTime (const VARIANT & pTime, DWORD pFlags, WORD pLangId)
 	}
 	else
 	{
-		COleVariant lTimeVal (pTime);
+		_variant_t lTimeVal (pTime);
 		VariantChangeType (&lTimeVal, &lTimeVal, 0, VT_BSTR);
 		return CString (V_BSTR (&lTimeVal));
 	}
@@ -760,7 +762,7 @@ CString LclFormatCurrency (VARIANT & pCurrency, bool pZeroNull, bool pNoDecimals
 			)
 		)
 	{
-		COleVariant	lCurrencyVal (pCurrency);
+		_variant_t	lCurrencyVal (pCurrency);
 		CString		lFormatted;
 		int			lFormattedSize;
 
@@ -791,6 +793,7 @@ CString LclFormatCurrency (VARIANT & pCurrency, bool pZeroNull, bool pNoDecimals
 	return CString (lRet);
 }
 
+#ifdef	__AFX_H__
 CString LclFormatCurrency (COleCurrency & pCurrency, bool pZeroNull, bool pNoDecimals, WORD pLangId)
 {
 	CString	lRet;
@@ -831,6 +834,7 @@ CString LclFormatCurrency (COleCurrency & pCurrency, bool pZeroNull, bool pNoDec
 
 	return CString (lRet);
 }
+#endif
 
 //////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -1049,8 +1053,10 @@ CString LclFormatNumber (double pNumber, bool pZeroNull, bool pNoThousands, int 
 }
 
 //////////////////////////////////////////////////////////////////////
+#pragma page()
+//////////////////////////////////////////////////////////////////////
 
-inline int PrepNumber (LPCTSTR pNumber, CString & pNumberStr)
+inline int PrepNumberParse (LPCTSTR pNumber, CString & pNumberStr)
 {
 	int		lRet = 0;
 	TCHAR	lDecSep [3];
@@ -1096,6 +1102,8 @@ inline int PrepNumber (LPCTSTR pNumber, CString & pNumberStr)
 	return lRet;
 }
 
+//////////////////////////////////////////////////////////////////////
+
 double LclParseNumber (LPCTSTR pNumber, CString * pRemainder)
 {
 	CString	lNumber;
@@ -1103,7 +1111,7 @@ double LclParseNumber (LPCTSTR pNumber, CString * pRemainder)
 	INT_PTR	lRemoved;
 	double	lValue;
 
-	lRemoved = PrepNumber (pNumber, lNumber);
+	lRemoved = PrepNumberParse (pNumber, lNumber);
 	lValue = _tcstod (lNumber, &lEndPtr);
 
 	if	(pRemainder)
@@ -1125,64 +1133,176 @@ double LclParseNumber (LPCTSTR pNumber, CString * pRemainder)
 	return lValue;
 }
 
-bool LclParseNumber (LPCTSTR pNumber, double & pValue)
+bool LclParseNumber (LPCTSTR pNumber, double & pValue, CString * pRemainder)
 {
 	CString	lNumber;
 	LPTSTR	lEndPtr = NULL;
 	double	lValue;
 
-	PrepNumber (pNumber, lNumber);
+	if	(pRemainder)
+	{
+		pRemainder->Empty();
+	}
+	PrepNumberParse (pNumber, lNumber);
 
 	lValue = _tcstod (lNumber, &lEndPtr);
 
 	if	(
 			(lEndPtr)
-		&&	(*lEndPtr == 0)
+		&&	(
+				(*lEndPtr == 0)
+			||	(
+					(pRemainder)
+				&&	(lEndPtr != (LPCTSTR)lNumber)
+				)
+			)
 		)
 	{
 		pValue = lValue;
+		if	(pRemainder)
+		{
+			(*pRemainder) = lEndPtr;
+		}
 		return true;
 	}
 	return false;
 }
 
-bool LclParseNumber (LPCTSTR pNumber, long & pValue, int pBase)
+bool LclParseNumber (LPCTSTR pNumber, long & pValue, int pBase, CString * pRemainder)
 {
 	CString	lNumber;
 	LPTSTR	lEndPtr = NULL;
 	long	lValue;
 
-	PrepNumber (pNumber, lNumber);
+	if	(pRemainder)
+	{
+		pRemainder->Empty();
+	}
+	PrepNumberParse (pNumber, lNumber);
 
 	lValue = _tcstol (lNumber, &lEndPtr, pBase);
 
 	if	(
 			(lEndPtr)
-		&&	(*lEndPtr == 0)
+		&&	(
+				(*lEndPtr == 0)
+			||	(
+					(pRemainder)
+				&&	(lEndPtr != (LPCTSTR)lNumber)
+				)
+			)
 		)
 	{
 		pValue = lValue;
+		if	(pRemainder)
+		{
+			(*pRemainder) = lEndPtr;
+		}
 		return true;
 	}
 	return false;
 }
 
-bool LclParseNumber (LPCTSTR pNumber, ULONG & pValue, int pBase)
+bool LclParseNumber (LPCTSTR pNumber, ULONG & pValue, int pBase, CString * pRemainder)
 {
 	CString	lNumber;
 	LPTSTR	lEndPtr = NULL;
 	ULONG	lValue;
 
-	PrepNumber (pNumber, lNumber);
+	if	(pRemainder)
+	{
+		pRemainder->Empty();
+	}
+	PrepNumberParse (pNumber, lNumber);
 
 	lValue = _tcstoul (lNumber, &lEndPtr, pBase);
 
 	if	(
 			(lEndPtr)
-		&&	(*lEndPtr == 0)
+		&&	(
+				(*lEndPtr == 0)
+			||	(
+					(pRemainder)
+				&&	(lEndPtr != (LPCTSTR)lNumber)
+				)
+			)
 		)
 	{
 		pValue = lValue;
+		if	(pRemainder)
+		{
+			(*pRemainder) = lEndPtr;
+		}
+		return true;
+	}
+	return false;
+}
+
+bool LclParseNumber (LPCTSTR pNumber, LONGLONG & pValue, int pBase, CString * pRemainder)
+{
+	CString		lNumber;
+	LPTSTR		lEndPtr = NULL;
+	LONGLONG	lValue;
+
+	if	(pRemainder)
+	{
+		pRemainder->Empty();
+	}
+	PrepNumberParse (pNumber, lNumber);
+
+	lValue = _tcstoi64 (lNumber, &lEndPtr, pBase);
+
+	if	(
+			(lEndPtr)
+		&&	(
+				(*lEndPtr == 0)
+			||	(
+					(pRemainder)
+				&&	(lEndPtr != (LPCTSTR)lNumber)
+				)
+			)
+		)
+	{
+		pValue = lValue;
+		if	(pRemainder)
+		{
+			(*pRemainder) = lEndPtr;
+		}
+		return true;
+	}
+	return false;
+}
+
+bool LclParseNumber (LPCTSTR pNumber, ULONGLONG & pValue, int pBase, CString * pRemainder)
+{
+	CString		lNumber;
+	LPTSTR		lEndPtr = NULL;
+	ULONGLONG	lValue;
+
+	if	(pRemainder)
+	{
+		pRemainder->Empty();
+	}
+	PrepNumberParse (pNumber, lNumber);
+
+	lValue = _tcstoui64 (lNumber, &lEndPtr, pBase);
+
+	if	(
+			(lEndPtr)
+		&&	(
+				(*lEndPtr == 0)
+			||	(
+					(pRemainder)
+				&&	(lEndPtr != (LPCTSTR)lNumber)
+				)
+			)
+		)
+	{
+		pValue = lValue;
+		if	(pRemainder)
+		{
+			(*pRemainder) = lEndPtr;
+		}
 		return true;
 	}
 	return false;

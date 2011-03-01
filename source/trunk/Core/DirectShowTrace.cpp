@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -19,127 +19,69 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#include "DaCore.h"
 #include "DirectShowTrace.h"
 #include "DirectShowEnums.h"
 #include "GuidStr.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 //#define	_DEBUG_INSTANCE		LogNormal
-//#define	_DEBUG_COM			LogNormal
-//#define	_DEBUG_COM_QI		LogNormal
-//#define	_DEBUG_QUERIES		LogNormal|LogHighVolume|LogTimeMs
-#define	_DEBUG_BASEFILTER		LogNormal|LogHighVolume|LogTimeMs
-#define	_DEBUG_MEDIASEEKING		LogNormal|LogHighVolume|LogTimeMs
-#define	_DEBUG_PIN				LogNormal|LogHighVolume|LogTimeMs
-#define	_DEBUG_MEMINPUTPIN		LogNormal|LogHighVolume|LogTimeMs
-#define	_DEBUG_ASYNCREADER		LogNormal|LogHighVolume|LogTimeMs
-#define	_DEBUG_PINCONNECTION	LogNormal|LogHighVolume|LogTimeMs
-#define	_DEBUG_PINFLOWCONTROL	LogNormal|LogHighVolume|LogTimeMs
-#define	_LOG_RESULTS			LogNormal|LogHighVolume|LogTimeMs
+//#define	_DEBUG_QUERIES		LogNormal|LogTimeMs|LogHighVolume
+#define	_DEBUG_BASEFILTER		LogNormal|LogTimeMs|LogHighVolume
+#define	_DEBUG_MEDIASEEKING		LogNormal|LogTimeMs|LogHighVolume
+#define	_DEBUG_PIN				LogNormal|LogTimeMs|LogHighVolume
+#define	_DEBUG_MEMINPUTPIN		LogNormal|LogTimeMs|LogHighVolume
+#define	_DEBUG_ASYNCREADER		LogNormal|LogTimeMs|LogHighVolume
+#define	_DEBUG_PINCONNECTION	LogNormal|LogTimeMs|LogHighVolume
+#define	_DEBUG_PINFLOWCONTROL	LogNormal|LogTimeMs|LogHighVolume
+#define	_LOG_RESULTS			LogNormal|LogTimeMs|LogHighVolume
 
-//#define	_LOG_ALLOCATOR		LogNormal|LogHighVolume|LogTimeMs
-#define	_LOG_SAMPLES			LogNormal|LogHighVolume|LogTimeMs
-#define	_LOG_SEEKING			LogNormal|LogHighVolume|LogTimeMs
+//#define	_LOG_ALLOCATOR		LogNormal|LogTimeMs|LogHighVolume
+#define	_LOG_SAMPLES			LogNormal|LogTimeMs|LogHighVolume
+#define	_LOG_SEEKING			LogNormal|LogTimeMs|LogHighVolume
 //#define	_TRACE_SAMPLE_TRACER	LogIfActive
 
 /////////////////////////////////////////////////////////////////////////////
 
-#include "InterfaceMap.inl"
-
-BEGIN_INTERFACE_MAP(CTraceSamples, CCmdTarget)
-	INTERFACE_PART(CTraceSamples, __uuidof(IUnknown), InnerUnknown)
-	INTERFACE_PART(CTraceSamples, __uuidof(ISampleGrabberCB), Trace)
-END_INTERFACE_MAP()
-
-BEGIN_INTERFACE_MAP(CTraceFilter, CCmdTarget)
-	INTERFACE_PART(CTraceFilter, __uuidof(IUnknown), InnerUnknown)
-	INTERFACE_PART(CTraceFilter, __uuidof(_ITraceFilter), _TraceFilter)
-	INTERFACE_PART(CTraceFilter, __uuidof(IPersist), BaseFilter)
-	INTERFACE_PART(CTraceFilter, __uuidof(IBaseFilter), BaseFilter)
-	INTERFACE_PART(CTraceFilter, __uuidof(IMediaFilter), BaseFilter)
-	INTERFACE_AGGREGATE (CTraceFilter, mUnknown)
-END_INTERFACE_MAP()
-
-BEGIN_INTERFACE_MAP(CTracePins, CCmdTarget)
-	INTERFACE_PART(CTracePins, __uuidof(IUnknown), InnerUnknown)
-	INTERFACE_PART(CTracePins, __uuidof(_ITracePins), _TracePins)
-	INTERFACE_PART(CTracePins, __uuidof(IEnumPins), Enum)
-	INTERFACE_AGGREGATE (CTracePins, mUnknown)
-END_INTERFACE_MAP()
-
-BEGIN_INTERFACE_MAP(CTracePin, CCmdTarget)
-	INTERFACE_PART(CTracePin, __uuidof(IUnknown), InnerUnknown)
-	INTERFACE_PART(CTracePin, __uuidof(_ITracePin), _TracePin)
-	INTERFACE_PART(CTracePin, __uuidof(IPin), Pin)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IUNKNOWN(CTraceSamples, Trace)
-IMPLEMENT_IUNKNOWN(CTraceFilter, _TraceFilter)
-IMPLEMENT_IUNKNOWN(CTraceFilter, BaseFilter)
-IMPLEMENT_IUNKNOWN(CTraceFilter, MediaSeeking)
-IMPLEMENT_IUNKNOWN(CTraceFilter, SampleGrabber)
-IMPLEMENT_IUNKNOWN(CTraceFilter, FileSourceFilter)
-IMPLEMENT_IUNKNOWN(CTraceFilter, AMFilterMiscFlags)
-IMPLEMENT_IUNKNOWN(CTracePins, Enum)
-IMPLEMENT_IUNKNOWN(CTracePins, _TracePins)
-IMPLEMENT_IUNKNOWN(CTracePin, Pin)
-IMPLEMENT_IUNKNOWN(CTracePin, _TracePin)
-IMPLEMENT_IUNKNOWN(CTracePin, MemInputPin)
-IMPLEMENT_IUNKNOWN(CTracePin, AsyncReader)
-IMPLEMENT_IUNKNOWN(CTracePin, MediaSeeking)
-IMPLEMENT_IUNKNOWN(CTracePin, PinConnection)
-IMPLEMENT_IUNKNOWN(CTracePin, PinFlowControl)
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-IMPLEMENT_DYNAMIC(CTraceSamples, CCmdTarget)
-
-CTraceSamples::CTraceSamples (LPCTSTR pFilterName)
-:	mFilterName (pFilterName)
+CTraceSamples::CTraceSamples ()
 {
-	if	(mFilterName.IsEmpty())
-	{
-		mFilterName = _T("TraceSamples");
-	}
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::CTraceSamples (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::CTraceSamples (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
-	AfxOleLockApp ();
-
-	EnableAggregation ();
-	m_dwRef = 0;
-
 #ifdef	_TRACE_SAMPLE_TRACER
 	// Does not work yet
-	if	(SUCCEEDED (LogComErr (LogNormal, CoCreateInstance (__uuidof(SampleGrabber), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mGrabberFilter))))
+	if	(SUCCEEDED (LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(SampleGrabber), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mGrabberFilter))))
 	{
 		mGrabberFilter = (new CTraceFilter(mGrabberFilter, _T("Grabber"), _TRACE_SAMPLE_TRACER))->GetControllingUnknown();
 	}
 #endif
 }
 
-CTraceSamples::~CTraceSamples( )
+CTraceSamples::~CTraceSamples ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::~CTraceSamples (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::~CTraceSamples (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 	Disconnect ();
-	AfxOleUnlockApp ();
 }
 
-void CTraceSamples::OnFinalRelease ()
+CTraceSamples & CTraceSamples::Initialize (LPCTSTR pFilterName)
+{
+	mFilterName = pFilterName;
+	if	(mFilterName.IsEmpty())
+	{
+		mFilterName = _T("TraceSamples");
+	}
+#ifdef	_DEBUG_INSTANCE
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::Initialize (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+#endif
+	return *this;
+}
+
+void CTraceSamples::FinalRelease ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::OnFinalRelease"), this);
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::FinalRelease"), this);
 #endif
-	CCmdTarget::OnFinalRelease ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -180,16 +122,16 @@ CTraceSamples & CTraceSamples::ConnectBefore (IFilterGraph * pFilterGraph, IBase
 		if	(
 				(lDownstreamPin != NULL)
 			&&	(pMediaType != NULL)
-			&&	(SUCCEEDED (lResult = LogComErr (LogNormal, lDownstreamPin->ConnectedTo (&lUpstreamPin))))
+			&&	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, lDownstreamPin->ConnectedTo (&lUpstreamPin))))
 			&&	(lUpstreamPin != NULL)
 			)
 		{
 			if	(
 					(
 						(mGrabberFilter != NULL)
-					||	(SUCCEEDED (lResult = LogComErr (LogNormal, CoCreateInstance (__uuidof(SampleGrabber), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mGrabberFilter))))
+					||	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(SampleGrabber), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mGrabberFilter))))
 					)
-				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, pFilterGraph->AddFilter (mGrabberFilter, mFilterName))))
+				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, pFilterGraph->AddFilter (mGrabberFilter, mFilterName))))
 				)
 			{
 				mGrabber = mGrabberFilter;
@@ -197,14 +139,14 @@ CTraceSamples & CTraceSamples::ConnectBefore (IFilterGraph * pFilterGraph, IBase
 
 			if	(
 					(SUCCEEDED (lResult))
-				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mGrabber->SetMediaType (pMediaType))))
+				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mGrabber->SetMediaType (pMediaType))))
 				&&	(SUCCEEDED (lResult = GetFilterPins (mGrabberFilter, &lInputPin, &lOutputPin)))
 				&&	(lInputPin != NULL)
 				&&	(lOutputPin != NULL)
-				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, lDownstreamPin->Disconnect ())))
-				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, lUpstreamPin->Disconnect ())))
-				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, pFilterGraph->ConnectDirect (lUpstreamPin, lInputPin, pMediaType))))
-				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, pFilterGraph->ConnectDirect (lOutputPin, lDownstreamPin, pMediaType))))
+				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, lDownstreamPin->Disconnect ())))
+				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, lUpstreamPin->Disconnect ())))
+				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, pFilterGraph->ConnectDirect (lUpstreamPin, lInputPin, pMediaType))))
+				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, pFilterGraph->ConnectDirect (lOutputPin, lDownstreamPin, pMediaType))))
 				)
 			{
 			}
@@ -272,7 +214,7 @@ CTraceSamples & CTraceSamples::Disconnect ()
 			&&	(lFilterInfo.pGraph != NULL)
 			)
 		{
-			lResult = LogVfwErr (LogNormal, lFilterInfo.pGraph->RemoveFilter (lFilter));
+			lResult = LogVfwErr (LogNormal|LogTime, lFilterInfo.pGraph->RemoveFilter (lFilter));
 		}
 		else
 		if	(SUCCEEDED (lResult))
@@ -298,10 +240,10 @@ CTraceSamples & CTraceSamples::LogSamples (UINT pLogLevel, bool pOneShot)
 		mLogLevelSample = pLogLevel;
 		if	(
 				(mGrabber != NULL)
-			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mGrabber->SetCallback (&m_xTrace, 0))))
+			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mGrabber->SetCallback (this, 0))))
 			)
 		{
-			LogVfwErr (LogNormal, mGrabber->SetOneShot (pOneShot!=false));
+			LogVfwErr (LogNormal|LogTime, mGrabber->SetOneShot (pOneShot!=false));
 		}
 	}
 	catch AnyExceptionDebug
@@ -320,10 +262,10 @@ CTraceSamples & CTraceSamples::DumpSamples (UINT pByteCount, UINT pLogLevel, boo
 
 		if	(
 				(mGrabber != NULL)
-			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mGrabber->SetCallback (&m_xTrace, 1))))
+			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mGrabber->SetCallback (this, 1))))
 			)
 		{
-			LogVfwErr (LogNormal, mGrabber->SetOneShot (pOneShot!=false));
+			LogVfwErr (LogNormal|LogTime, mGrabber->SetOneShot (pOneShot!=false));
 		}
 	}
 	catch AnyExceptionDebug
@@ -335,24 +277,22 @@ CTraceSamples & CTraceSamples::DumpSamples (UINT pByteCount, UINT pLogLevel, boo
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTraceSamples::XTrace::SampleCB (double SampleTime, IMediaSample *pSample)
+HRESULT STDMETHODCALLTYPE CTraceSamples::SampleCB (double SampleTime, IMediaSample *pSample)
 {
-	METHOD_PROLOGUE(CTraceSamples, Trace)
 	try
 	{
-		LogMediaSample (pThis->mLogLevelSample, pSample, _T("[%s] At [%f]"), pThis->mFilterName, SampleTime);
+		LogMediaSample (mLogLevelSample, pSample, _T("[%s] At [%f]"), mFilterName, SampleTime);
 	}
 	catch AnyExceptionSilent
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceSamples::XTrace::BufferCB (double SampleTime, BYTE *pBuffer, long BufferLen)
+HRESULT STDMETHODCALLTYPE CTraceSamples::BufferCB (double SampleTime, BYTE *pBuffer, long BufferLen)
 {
-	METHOD_PROLOGUE(CTraceSamples, Trace)
 	try
 	{
-		LogMessage (pThis->mLogLevelDump, _T("[%s] At [%f] of [%d]"), pThis->mFilterName, SampleTime, BufferLen);
-		LogDump (pThis->mLogLevelDump, pBuffer, min (BufferLen, pThis->mDumpSize), _T("  "));
+		LogMessage (mLogLevelDump, _T("[%s] At [%f] of [%d]"), mFilterName, SampleTime, BufferLen);
+		LogDump (mLogLevelDump, pBuffer, min (BufferLen, mDumpSize), _T("  "));
 	}
 	catch AnyExceptionSilent
 	return S_OK;
@@ -362,80 +302,83 @@ HRESULT STDMETHODCALLTYPE CTraceSamples::XTrace::BufferCB (double SampleTime, BY
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC (CTraceFilter, CCmdTarget)
-
-CTraceFilter::CTraceFilter (LPUNKNOWN pUnknown, LPCTSTR pFilterName, UINT pLogLevelPins)
-:	mFilterName (pFilterName),
-	mLogLevelPins (pLogLevelPins)
+CTraceFilter::CTraceFilter ()
+:	mLogLevelPins (LogVerbose|LogTime)
 {
-	Aggregate (pUnknown);
-	if	(mFilterName.IsEmpty())
-	{
-		mFilterName = _T("TraceFilter");
-	}
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::CTraceFilter (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::CTraceFilter (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
-	AfxOleLockApp ();
-
-	EnableAggregation ();
-	EnableAutomation ();
-	//m_dwRef = 0;
 }
 
 CTraceFilter::~CTraceFilter ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::~CTraceFilter (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::~CTraceFilter (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
-	AfxOleUnlockApp ();
 }
 
-void CTraceFilter::OnFinalRelease ()
+CTraceFilter & CTraceFilter::Initialize (LPUNKNOWN pUnknown, LPCTSTR pFilterName, UINT pLogLevelPins)
+{
+	mFilterName = pFilterName;
+	if	(mFilterName.IsEmpty())
+	{
+		mFilterName = _T("TraceFilter");
+	}
+	mLogLevelPins = pLogLevelPins;
+	Aggregate (pUnknown);
+
+#ifdef	_DEBUG_INSTANCE
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::Initialize (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+#endif
+	return *this;
+}
+
+void CTraceFilter::FinalRelease ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::OnFinalRelease"), this);
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::FinalRelease"), this);
 #endif
-	CCmdTarget::OnFinalRelease ();
 }
 
-LPUNKNOWN CTraceFilter::GetInterfaceHook(const void* iid)
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT WINAPI CTraceFilter::CheckInternalInterfaces (void* pv, REFIID riid, LPVOID* ppv, DWORD_PTR dw)
 {
-#ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%u)] %s::QueryInterface [%s]"), this, m_dwRef, mFilterName, CGuidStr::GuidName(*(GUID*)iid));
-#endif
+	HRESULT			lResult = S_FALSE;
+	CTraceFilter *	lThis = (CTraceFilter *) pv;
+
 	if	(
-			(IsEqualGUID (*(GUID*)iid, __uuidof(IMediaSeeking)))
-		&&	(mInnerMediaSeeking != NULL)
+			(IsEqualGUID (riid, __uuidof(IMediaSeeking)))
+		&&	(lThis->mInnerMediaSeeking == NULL)
 		)
 	{
-		return &m_xMediaSeeking;
+		lResult = E_NOINTERFACE;
 	}
 	else
 	if	(
-			(IsEqualGUID (*(GUID*)iid, __uuidof(ISampleGrabber)))
-		&&	(mInnerSampleGrabber != NULL)
+			(IsEqualGUID (riid, __uuidof(ISampleGrabber)))
+		&&	(lThis->mInnerSampleGrabber == NULL)
 		)
 	{
-		return &m_xSampleGrabber;
+		lResult = E_NOINTERFACE;
 	}
 	else
 	if	(
-			(IsEqualGUID (*(GUID*)iid, __uuidof(IFileSourceFilter)))
-		&&	(mInnerFileSourceFilter != NULL)
+			(IsEqualGUID (riid, __uuidof(IFileSourceFilter)))
+		&&	(lThis->mInnerFileSourceFilter == NULL)
 		)
 	{
-		return &m_xFileSourceFilter;
+		lResult = E_NOINTERFACE;
 	}
 	else
 	if	(
-			(IsEqualGUID (*(GUID*)iid, __uuidof(IAMFilterMiscFlags)))
-		&&	(mInnerAMFilterMiscFlags != NULL)
+			(IsEqualGUID (riid, __uuidof(IAMFilterMiscFlags)))
+		&&	(lThis->mInnerAMFilterMiscFlags == NULL)
 		)
 	{
-		return &m_xAMFilterMiscFlags;
+		lResult = E_NOINTERFACE;
 	}
-	return NULL;
+	return lResult;
 }
 
 void CTraceFilter::Aggregate (LPUNKNOWN pUnknown)
@@ -452,189 +395,177 @@ void CTraceFilter::Aggregate (LPUNKNOWN pUnknown)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XBaseFilter::GetClassID (CLSID *pClassID)
+HRESULT STDMETHODCALLTYPE CTraceFilter::GetClassID (CLSID *pClassID)
 {
-	METHOD_PROLOGUE(CTraceFilter, BaseFilter)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%u)] %s::XBaseFilter::GetClassID"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::GetClassID"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT lResult = pThis->mInnerBaseFilter->GetClassID (pClassID);
+	HRESULT lResult = mInnerBaseFilter->GetClassID (pClassID);
 
 #ifdef	_LOG_RESULTS
-	LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XBaseFilter::GetClassID"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetClassID"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XBaseFilter::Stop (void)
+HRESULT STDMETHODCALLTYPE CTraceFilter::Stop (void)
 {
-	METHOD_PROLOGUE(CTraceFilter, BaseFilter)
 #ifdef	_DEBUG_BASEFILTER
-	LogMessage (_DEBUG_BASEFILTER, _T("[%p(%u)] %s::XBaseFilter::Stop"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_BASEFILTER, _T("[%p(%d)] %s::Stop"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerBaseFilter->Stop ();
+	HRESULT	lResult = mInnerBaseFilter->Stop ();
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XBaseFilter::Stop"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Stop"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XBaseFilter::Pause (void)
+HRESULT STDMETHODCALLTYPE CTraceFilter::Pause (void)
 {
-	METHOD_PROLOGUE(CTraceFilter, BaseFilter)
 #ifdef	_DEBUG_BASEFILTER
-	LogMessage (_DEBUG_BASEFILTER, _T("[%p(%u)] %s::XBaseFilter::Pause"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_BASEFILTER, _T("[%p(%d)] %s::Pause"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerBaseFilter->Pause ();
+	HRESULT	lResult = mInnerBaseFilter->Pause ();
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XBaseFilter::Pause"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Pause"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XBaseFilter::Run (REFERENCE_TIME tStart)
+HRESULT STDMETHODCALLTYPE CTraceFilter::Run (REFERENCE_TIME tStart)
 {
-	METHOD_PROLOGUE(CTraceFilter, BaseFilter)
 #ifdef	_DEBUG_BASEFILTER
-	LogMessage (_DEBUG_BASEFILTER, _T("[%p(%u)] %s::XBaseFilter::Run [%f]"), pThis, pThis->m_dwRef, pThis->mFilterName, RefTimeSec(tStart));
+	LogMessage (_DEBUG_BASEFILTER, _T("[%p(%d)] %s::Run [%f]"), this, max(m_dwRef,-1), mFilterName, RefTimeSec(tStart));
 #endif
 
-	HRESULT	lResult = pThis->mInnerBaseFilter->Run (tStart);
+	HRESULT	lResult = mInnerBaseFilter->Run (tStart);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XBaseFilter::Run"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Run"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XBaseFilter::GetState (DWORD dwMilliSecsTimeout, FILTER_STATE *State)
+HRESULT STDMETHODCALLTYPE CTraceFilter::GetState (DWORD dwMilliSecsTimeout, FILTER_STATE *State)
 {
-	METHOD_PROLOGUE(CTraceFilter, BaseFilter)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%u)] %s::XBaseFilter::GetState"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::GetState"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerBaseFilter->GetState (dwMilliSecsTimeout, State);
+	HRESULT	lResult = mInnerBaseFilter->GetState (dwMilliSecsTimeout, State);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XBaseFilter::GetState"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetState"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XBaseFilter::SetSyncSource (IReferenceClock *pClock)
+HRESULT STDMETHODCALLTYPE CTraceFilter::SetSyncSource (IReferenceClock *pClock)
 {
-	METHOD_PROLOGUE(CTraceFilter, BaseFilter)
 #ifdef	_DEBUG_BASEFILTER
-	LogMessage (_DEBUG_BASEFILTER, _T("[%p(%u)] %s::XBaseFilter::SetSyncSource [%p]"), pThis, pThis->m_dwRef, pThis->mFilterName, pClock);
+	LogMessage (_DEBUG_BASEFILTER, _T("[%p(%d)] %s::SetSyncSource [%p]"), this, max(m_dwRef,-1), mFilterName, pClock);
 #endif
 
-	HRESULT	lResult = pThis->mInnerBaseFilter->SetSyncSource (pClock);
+	HRESULT	lResult = mInnerBaseFilter->SetSyncSource (pClock);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XBaseFilter::SetSyncSource"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::SetSyncSource"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XBaseFilter::GetSyncSource (IReferenceClock **pClock)
+HRESULT STDMETHODCALLTYPE CTraceFilter::GetSyncSource (IReferenceClock **pClock)
 {
-	METHOD_PROLOGUE(CTraceFilter, BaseFilter)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%u)] %s::XBaseFilter::GetSyncSource"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::GetSyncSource"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerBaseFilter->GetSyncSource (pClock);
+	HRESULT	lResult = mInnerBaseFilter->GetSyncSource (pClock);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XBaseFilter::GetSyncSource"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetSyncSource"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XBaseFilter::EnumPins (IEnumPins **ppEnum)
+HRESULT STDMETHODCALLTYPE CTraceFilter::EnumPins (IEnumPins **ppEnum)
 {
-	METHOD_PROLOGUE(CTraceFilter, BaseFilter)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%u)] %s::XBaseFilter::EnumPins"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::EnumPins"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
 	HRESULT			lResult;
 	IEnumPinsPtr	lEnum;
 
-	lResult = pThis->mInnerBaseFilter->EnumPins (&lEnum);
-	lEnum = (new CTracePins (lEnum, this, pThis->mLogLevelPins))->GetControllingUnknown ();
+	lResult = mInnerBaseFilter->EnumPins (&lEnum);
+	lEnum = (new CComObject<CTracePins>)->Initialize (lEnum, this, mLogLevelPins).GetControllingUnknown ();
 	*ppEnum = lEnum.Detach();
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XBaseFilter::EnumPins"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::EnumPins"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XBaseFilter::FindPin (LPCWSTR Id, IPin **ppPin)
+HRESULT STDMETHODCALLTYPE CTraceFilter::FindPin (LPCWSTR Id, IPin **ppPin)
 {
-	METHOD_PROLOGUE(CTraceFilter, BaseFilter)
 #ifdef	_DEBUG_BASEFILTER
-	LogMessage (_DEBUG_BASEFILTER, _T("[%p(%u)] %s::XBaseFilter::FindPin"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_BASEFILTER, _T("[%p(%d)] %s::FindPin"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerBaseFilter->FindPin (Id, ppPin);
+	HRESULT	lResult = mInnerBaseFilter->FindPin (Id, ppPin);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XBaseFilter::FindPin"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::FindPin"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XBaseFilter::QueryFilterInfo (FILTER_INFO *pInfo)
+HRESULT STDMETHODCALLTYPE CTraceFilter::QueryFilterInfo (FILTER_INFO *pInfo)
 {
-	METHOD_PROLOGUE(CTraceFilter, BaseFilter)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%u)] %s::XBaseFilter::QueryFilterInfo"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::QueryFilterInfo"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerBaseFilter->QueryFilterInfo (pInfo);
+	HRESULT	lResult = mInnerBaseFilter->QueryFilterInfo (pInfo);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XBaseFilter::QueryFilterInfo"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::QueryFilterInfo"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XBaseFilter::JoinFilterGraph (IFilterGraph *pGraph, LPCWSTR pName)
+HRESULT STDMETHODCALLTYPE CTraceFilter::JoinFilterGraph (IFilterGraph *pGraph, LPCWSTR pName)
 {
-	METHOD_PROLOGUE(CTraceFilter, BaseFilter)
 #ifdef	_DEBUG_BASEFILTER
-	LogMessage (_DEBUG_BASEFILTER, _T("[%p(%u)] %s::XBaseFilter::JoinFilterGraph [%p] [%ls]"), pThis, pThis->m_dwRef, pThis->mFilterName, pGraph, pName);
+	LogMessage (_DEBUG_BASEFILTER, _T("[%p(%d)] %s::JoinFilterGraph [%p] [%ls]"), this, max(m_dwRef,-1), mFilterName, pGraph, pName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerBaseFilter->JoinFilterGraph (pGraph, pName);
+	HRESULT	lResult = mInnerBaseFilter->JoinFilterGraph (pGraph, pName);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XBaseFilter::JoinFilterGraph"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::JoinFilterGraph"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XBaseFilter::QueryVendorInfo (LPWSTR *pVendorInfo)
+HRESULT STDMETHODCALLTYPE CTraceFilter::QueryVendorInfo (LPWSTR *pVendorInfo)
 {
-	METHOD_PROLOGUE(CTraceFilter, BaseFilter)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%u)] %s::XBaseFilter::QueryVendorInfo"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::QueryVendorInfo"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerBaseFilter->QueryVendorInfo (pVendorInfo);
+	HRESULT	lResult = mInnerBaseFilter->QueryVendorInfo (pVendorInfo);
 
 #ifdef	_DEBUG_QUERIES
-	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%u)] %s::XBaseFilter::QueryVendorInfo"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::QueryVendorInfo"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
@@ -643,208 +574,196 @@ HRESULT STDMETHODCALLTYPE CTraceFilter::XBaseFilter::QueryVendorInfo (LPWSTR *pV
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::GetCapabilities (DWORD *pCapabilities)
+HRESULT STDMETHODCALLTYPE CTraceFilter::GetCapabilities (DWORD *pCapabilities)
 {
-	METHOD_PROLOGUE(CTraceFilter, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%u)] %s::MediaSeeking::GetCapabilities"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::MediaSeeking::GetCapabilities"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->GetCapabilities (pCapabilities);
+	HRESULT	lResult = mInnerMediaSeeking->GetCapabilities (pCapabilities);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XMediaSeeking::GetCapabilities"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetCapabilities"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::CheckCapabilities (DWORD *pCapabilities)
+HRESULT STDMETHODCALLTYPE CTraceFilter::CheckCapabilities (DWORD *pCapabilities)
 {
-	METHOD_PROLOGUE(CTraceFilter, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%u)] %s::XMediaSeeking::CheckCapabilities"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::CheckCapabilities"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->CheckCapabilities (pCapabilities);
+	HRESULT	lResult = mInnerMediaSeeking->CheckCapabilities (pCapabilities);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XMediaSeeking::CheckCapabilities"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::CheckCapabilities"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::IsFormatSupported (const GUID *pFormat)
+HRESULT STDMETHODCALLTYPE CTraceFilter::IsFormatSupported (const GUID *pFormat)
 {
-	METHOD_PROLOGUE(CTraceFilter, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%u)] %s::XMediaSeeking::IsFormatSupported"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::IsFormatSupported"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->IsFormatSupported (pFormat);
+	HRESULT	lResult = mInnerMediaSeeking->IsFormatSupported (pFormat);
 
 #ifdef	_DEBUG_QUERIES
-	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%u)] %s::XMediaSeeking::IsFormatSupported"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::IsFormatSupported"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::QueryPreferredFormat (GUID *pFormat)
+HRESULT STDMETHODCALLTYPE CTraceFilter::QueryPreferredFormat (GUID *pFormat)
 {
-	METHOD_PROLOGUE(CTraceFilter, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%u)] %s::XMediaSeeking::QueryPreferredFormat"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::QueryPreferredFormat"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->QueryPreferredFormat (pFormat);
+	HRESULT	lResult = mInnerMediaSeeking->QueryPreferredFormat (pFormat);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XMediaSeeking::QueryPreferredFormat"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::QueryPreferredFormat"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::GetTimeFormat (GUID *pFormat)
+HRESULT STDMETHODCALLTYPE CTraceFilter::GetTimeFormat (GUID *pFormat)
 {
-	METHOD_PROLOGUE(CTraceFilter, MediaSeeking)
 #ifdef	_DEBUG_SEEKING_EX
-	LogMessage (_DEBUG_SEEKING_EX, _T("[%p(%u)] %s::XMediaSeeking::GetTimeFormat"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_SEEKING_EX, _T("[%p(%d)] %s::GetTimeFormat"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->GetTimeFormat (pFormat);
+	HRESULT	lResult = mInnerMediaSeeking->GetTimeFormat (pFormat);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XMediaSeeking::GetTimeFormat"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetTimeFormat"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::IsUsingTimeFormat (const GUID *pFormat)
+HRESULT STDMETHODCALLTYPE CTraceFilter::IsUsingTimeFormat (const GUID *pFormat)
 {
-	METHOD_PROLOGUE(CTraceFilter, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%u)] %s::XMediaSeeking::IsUsingTimeFormat"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::IsUsingTimeFormat"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->IsUsingTimeFormat (pFormat);
+	HRESULT	lResult = mInnerMediaSeeking->IsUsingTimeFormat (pFormat);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XMediaSeeking::IsUsingTimeFormat"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::IsUsingTimeFormat"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::SetTimeFormat (const GUID *pFormat)
+HRESULT STDMETHODCALLTYPE CTraceFilter::SetTimeFormat (const GUID *pFormat)
 {
-	METHOD_PROLOGUE(CTraceFilter, MediaSeeking)
 #ifdef	_DEBUG_MEDIASEEKING
-	LogMessage (_DEBUG_MEDIASEEKING, _T("[%p(%u)] %s::XMediaSeeking::SetTimeFormat"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_MEDIASEEKING, _T("[%p(%d)] %s::SetTimeFormat"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->SetTimeFormat (pFormat);
+	HRESULT	lResult = mInnerMediaSeeking->SetTimeFormat (pFormat);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XMediaSeeking::SetTimeFormat"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::SetTimeFormat"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::ConvertTimeFormat (LONGLONG *pTarget, const GUID *pTargetFormat, LONGLONG Source, const GUID *pSourceFormat)
+HRESULT STDMETHODCALLTYPE CTraceFilter::ConvertTimeFormat (LONGLONG *pTarget, const GUID *pTargetFormat, LONGLONG Source, const GUID *pSourceFormat)
 {
-	METHOD_PROLOGUE(CTraceFilter, MediaSeeking)
 #ifdef	_DEBUG_MEDIASEEKING
-	LogMessage (_DEBUG_MEDIASEEKING, _T("[%p(%u)] %s::XMediaSeeking::ConvertTimeFormat"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_MEDIASEEKING, _T("[%p(%d)] %s::ConvertTimeFormat"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->ConvertTimeFormat (pTarget, pTargetFormat, Source, pSourceFormat);
+	HRESULT	lResult = mInnerMediaSeeking->ConvertTimeFormat (pTarget, pTargetFormat, Source, pSourceFormat);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XMediaSeeking::ConvertTimeFormat"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::ConvertTimeFormat"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::GetDuration (LONGLONG *pDuration)
+HRESULT STDMETHODCALLTYPE CTraceFilter::GetDuration (LONGLONG *pDuration)
 {
-	METHOD_PROLOGUE(CTraceFilter, MediaSeeking)
 #ifdef	_DEBUG_MEDIASEEKING
-	LogMessage (_DEBUG_MEDIASEEKING, _T("[%p(%u)] %s::XMediaSeeking::GetDuration"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_MEDIASEEKING, _T("[%p(%d)] %s::GetDuration"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->GetDuration (pDuration);
+	HRESULT	lResult = mInnerMediaSeeking->GetDuration (pDuration);
 #ifdef	_LOG_SEEKING
 	if	(pDuration)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] Duration [%f]"), pThis, pThis->mFilterName, RefTimeSec (*pDuration));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] Duration [%f]"), this, mFilterName, RefTimeSec (*pDuration));
 	}
 #endif
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XMediaSeeking::GetDuration"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetDuration"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::GetStopPosition (LONGLONG *pStop)
+HRESULT STDMETHODCALLTYPE CTraceFilter::GetStopPosition (LONGLONG *pStop)
 {
-	METHOD_PROLOGUE(CTraceFilter, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%u)] %s::XMediaSeeking::GetStopPosition"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::GetStopPosition"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->GetStopPosition (pStop);
+	HRESULT	lResult = mInnerMediaSeeking->GetStopPosition (pStop);
 #ifdef	_LOG_SEEKING
 	if	(pStop)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] StopPosition [%f]"), pThis, pThis->mFilterName, RefTimeSec (*pStop));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] StopPosition [%f]"), this, mFilterName, RefTimeSec (*pStop));
 	}
 #endif
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XMediaSeeking::GetStopPosition"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetStopPosition"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::GetCurrentPosition (LONGLONG *pCurrent)
+HRESULT STDMETHODCALLTYPE CTraceFilter::GetCurrentPosition (LONGLONG *pCurrent)
 {
-	METHOD_PROLOGUE(CTraceFilter, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%u)] %s::XMediaSeeking::GetCurrentPosition"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::GetCurrentPosition"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->GetCurrentPosition (pCurrent);
+	HRESULT	lResult = mInnerMediaSeeking->GetCurrentPosition (pCurrent);
 #ifdef	_LOG_SEEKING
 	if	(pCurrent)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] CurrPosition [%f]"), pThis, pThis->mFilterName, RefTimeSec (*pCurrent));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] CurrPosition [%f]"), this, mFilterName, RefTimeSec (*pCurrent));
 	}
 #endif
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XMediaSeeking::GetCurrentPosition"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetCurrentPosition"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::SetPositions (LONGLONG *pCurrent, DWORD dwCurrentFlags, LONGLONG *pStop, DWORD dwStopFlags)
+HRESULT STDMETHODCALLTYPE CTraceFilter::SetPositions (LONGLONG *pCurrent, DWORD dwCurrentFlags, LONGLONG *pStop, DWORD dwStopFlags)
 {
-	METHOD_PROLOGUE(CTraceFilter, MediaSeeking)
 #ifdef	_DEBUG_MEDIASEEKING
-	LogMessage (_DEBUG_MEDIASEEKING, _T("[%p(%u)] %s::XMediaSeeking::SetPositions"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_MEDIASEEKING, _T("[%p(%d)] %s::SetPositions"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
 #ifdef	_LOG_SEEKING
 	if	(pCurrent)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] CurrPosition [%f] [%s]"), pThis, pThis->mFilterName, RefTimeSec (*pCurrent), SeekingFlagsStr(dwCurrentFlags));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] CurrPosition [%f] [%s]"), this, mFilterName, RefTimeSec (*pCurrent), SeekingFlagsStr(dwCurrentFlags));
 	}
 	if	(pStop)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] StopPosition [%f] [%s]"), pThis, pThis->mFilterName, RefTimeSec (*pStop), SeekingFlagsStr(dwStopFlags));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] StopPosition [%f] [%s]"), this, mFilterName, RefTimeSec (*pStop), SeekingFlagsStr(dwStopFlags));
 	}
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->SetPositions (pCurrent, dwCurrentFlags, pStop, dwStopFlags);
+	HRESULT	lResult = mInnerMediaSeeking->SetPositions (pCurrent, dwCurrentFlags, pStop, dwStopFlags);
 
 #ifdef	_LOG_SEEKING
 	if	(
@@ -852,114 +771,109 @@ HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::SetPositions (LONGLONG *p
 		&&	(dwCurrentFlags & AM_SEEKING_ReturnTime)
 		)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] CurrPosition [%f]"), pThis, pThis->mFilterName, RefTimeSec (*pCurrent));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] CurrPosition [%f]"), this, mFilterName, RefTimeSec (*pCurrent));
 	}
 	if	(
 			(pStop)
 		&&	(dwStopFlags & AM_SEEKING_ReturnTime)
 		)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] StopPosition [%f]"), pThis, pThis->mFilterName, RefTimeSec (*pStop));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] StopPosition [%f]"), this, mFilterName, RefTimeSec (*pStop));
 	}
 #endif
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XMediaSeeking::SetPositions"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::SetPositions"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::GetPositions (LONGLONG *pCurrent, LONGLONG *pStop)
+HRESULT STDMETHODCALLTYPE CTraceFilter::GetPositions (LONGLONG *pCurrent, LONGLONG *pStop)
 {
-	METHOD_PROLOGUE(CTraceFilter, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%u)] %s::XMediaSeeking::GetPositions"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::GetPositions"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->GetPositions (pCurrent, pStop);
+	HRESULT	lResult = mInnerMediaSeeking->GetPositions (pCurrent, pStop);
 #ifdef	_LOG_SEEKING
 	if	(pCurrent)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] CurrPosition [%f]"), pThis, pThis->mFilterName, RefTimeSec (*pCurrent));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] CurrPosition [%f]"), this, mFilterName, RefTimeSec (*pCurrent));
 	}
 	if	(pStop)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] StopPosition [%f]"), pThis, pThis->mFilterName, RefTimeSec (*pStop));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] StopPosition [%f]"), this, mFilterName, RefTimeSec (*pStop));
 	}
 #endif
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XMediaSeeking::GetPositions"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetPositions"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::GetAvailable (LONGLONG *pEarliest, LONGLONG *pLatest)
+HRESULT STDMETHODCALLTYPE CTraceFilter::GetAvailable (LONGLONG *pEarliest, LONGLONG *pLatest)
 {
-	METHOD_PROLOGUE(CTraceFilter, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%u)] %s::XMediaSeeking::GetAvailable"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::GetAvailable"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->GetAvailable (pEarliest, pLatest);
+	HRESULT	lResult = mInnerMediaSeeking->GetAvailable (pEarliest, pLatest);
 #ifdef	_LOG_SEEKING
 	if	(pEarliest)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] Earliest [%f]"), pThis, pThis->mFilterName, RefTimeSec (*pEarliest));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] Earliest [%f]"), this, mFilterName, RefTimeSec (*pEarliest));
 	}
 	if	(pLatest)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] Latest   [%f]"), pThis, pThis->mFilterName, RefTimeSec (*pLatest));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] Latest   [%f]"), this, mFilterName, RefTimeSec (*pLatest));
 	}
 #endif
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XMediaSeeking::GetAvailable"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetAvailable"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::SetRate (double dRate)
+HRESULT STDMETHODCALLTYPE CTraceFilter::SetRate (double dRate)
 {
-	METHOD_PROLOGUE(CTraceFilter, MediaSeeking)
 #ifdef	_DEBUG_MEDIASEEKING
-	LogMessage (_DEBUG_MEDIASEEKING, _T("[%p(%u)] %s::XMediaSeeking::SetRate"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_MEDIASEEKING, _T("[%p(%d)] %s::SetRate"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->SetRate (dRate);
+	HRESULT	lResult = mInnerMediaSeeking->SetRate (dRate);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XMediaSeeking::SetRate"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::SetRate"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::GetRate (double *pdRate)
+HRESULT STDMETHODCALLTYPE CTraceFilter::GetRate (double *pdRate)
 {
-	METHOD_PROLOGUE(CTraceFilter, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%u)] %s::XMediaSeeking::GetRate"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::GetRate"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->GetRate (pdRate);
+	HRESULT	lResult = mInnerMediaSeeking->GetRate (pdRate);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XMediaSeeking::GetRate"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetRate"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::GetPreroll (LONGLONG *pllPreroll)
+HRESULT STDMETHODCALLTYPE CTraceFilter::GetPreroll (LONGLONG *pllPreroll)
 {
-	METHOD_PROLOGUE(CTraceFilter, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%u)] %s::XMediaSeeking::GetPreroll"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::GetPreroll"), this, max(m_dwRef,-1), mFilterName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->GetPreroll (pllPreroll);
+	HRESULT	lResult = mInnerMediaSeeking->GetPreroll (pllPreroll);
 
 #ifdef	_DEBUG_QUERIES
-	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%u)] %s::XMediaSeeking::GetPreroll"), pThis, pThis->m_dwRef, pThis->mFilterName);
+	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::GetPreroll"), this, max(m_dwRef,-1), mFilterName);
 #endif
 	return lResult;
 }
@@ -968,128 +882,112 @@ HRESULT STDMETHODCALLTYPE CTraceFilter::XMediaSeeking::GetPreroll (LONGLONG *pll
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XSampleGrabber::SetOneShot (BOOL OneShot)
+HRESULT STDMETHODCALLTYPE CTraceFilter::SetOneShot (BOOL OneShot)
 {
-	METHOD_PROLOGUE(CTraceFilter, SampleGrabber)
-	return pThis->mInnerSampleGrabber->SetOneShot (OneShot);
+	return mInnerSampleGrabber->SetOneShot (OneShot);
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XSampleGrabber::SetMediaType (const AM_MEDIA_TYPE *pType)
+HRESULT STDMETHODCALLTYPE CTraceFilter::SetMediaType (const AM_MEDIA_TYPE *pType)
 {
-	METHOD_PROLOGUE(CTraceFilter, SampleGrabber)
-	return pThis->mInnerSampleGrabber->SetMediaType (pType);
+	return mInnerSampleGrabber->SetMediaType (pType);
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XSampleGrabber::GetConnectedMediaType ( AM_MEDIA_TYPE *pType)
+HRESULT STDMETHODCALLTYPE CTraceFilter::GetConnectedMediaType ( AM_MEDIA_TYPE *pType)
 {
-	METHOD_PROLOGUE(CTraceFilter, SampleGrabber)
-	return pThis->mInnerSampleGrabber->GetConnectedMediaType (pType);
+	return mInnerSampleGrabber->GetConnectedMediaType (pType);
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XSampleGrabber::SetBufferSamples (BOOL BufferThem)
+HRESULT STDMETHODCALLTYPE CTraceFilter::SetBufferSamples (BOOL BufferThem)
 {
-	METHOD_PROLOGUE(CTraceFilter, SampleGrabber)
-	return pThis->mInnerSampleGrabber->SetBufferSamples (BufferThem);
+	return mInnerSampleGrabber->SetBufferSamples (BufferThem);
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XSampleGrabber::GetCurrentBuffer (long *pBufferSize, long *pBuffer)
+HRESULT STDMETHODCALLTYPE CTraceFilter::GetCurrentBuffer (long *pBufferSize, long *pBuffer)
 {
-	METHOD_PROLOGUE(CTraceFilter, SampleGrabber)
-	return pThis->mInnerSampleGrabber->GetCurrentBuffer (pBufferSize, pBuffer);
+	return mInnerSampleGrabber->GetCurrentBuffer (pBufferSize, pBuffer);
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XSampleGrabber::GetCurrentSample (IMediaSample **ppSample)
+HRESULT STDMETHODCALLTYPE CTraceFilter::GetCurrentSample (IMediaSample **ppSample)
 {
-	METHOD_PROLOGUE(CTraceFilter, SampleGrabber)
-	return pThis->mInnerSampleGrabber->GetCurrentSample (ppSample);
+	return mInnerSampleGrabber->GetCurrentSample (ppSample);
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XSampleGrabber::SetCallback (ISampleGrabberCB *pCallback, long WhichMethodToCallback)
+HRESULT STDMETHODCALLTYPE CTraceFilter::SetCallback (ISampleGrabberCB *pCallback, long WhichMethodToCallback)
 {
-	METHOD_PROLOGUE(CTraceFilter, SampleGrabber)
-	return pThis->mInnerSampleGrabber->SetCallback (pCallback, WhichMethodToCallback);
+	return mInnerSampleGrabber->SetCallback (pCallback, WhichMethodToCallback);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XFileSourceFilter::Load (LPCOLESTR pszFileName, const AM_MEDIA_TYPE *pmt)
+HRESULT STDMETHODCALLTYPE CTraceFilter::Load (LPCOLESTR pszFileName, const AM_MEDIA_TYPE *pmt)
 {
-	METHOD_PROLOGUE(CTraceFilter, FileSourceFilter)
-	return pThis->mInnerFileSourceFilter->Load (pszFileName, pmt);
+	return mInnerFileSourceFilter->Load (pszFileName, pmt);
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::XFileSourceFilter::GetCurFile (LPOLESTR *ppszFileName, AM_MEDIA_TYPE *pmt)
+HRESULT STDMETHODCALLTYPE CTraceFilter::GetCurFile (LPOLESTR *ppszFileName, AM_MEDIA_TYPE *pmt)
 {
-	METHOD_PROLOGUE(CTraceFilter, FileSourceFilter)
-	return pThis->mInnerFileSourceFilter->GetCurFile (ppszFileName, pmt);
+	return mInnerFileSourceFilter->GetCurFile (ppszFileName, pmt);
 }
 
-ULONG STDMETHODCALLTYPE CTraceFilter::XAMFilterMiscFlags::GetMiscFlags ()
+ULONG STDMETHODCALLTYPE CTraceFilter::GetMiscFlags ()
 {
-	METHOD_PROLOGUE(CTraceFilter, AMFilterMiscFlags)
-	return pThis->mInnerAMFilterMiscFlags->GetMiscFlags ();
+	return mInnerAMFilterMiscFlags->GetMiscFlags ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC(CTracePins, CCmdTarget)
-
-CTracePins::CTracePins (LPUNKNOWN pUnknown, IBaseFilter * pFilter, UINT pLogLevelPins)
-:	mFilter (pFilter),
-	mLogLevelPins (pLogLevelPins),
-	mUnknown (pUnknown),
-	mInnerEnum (pUnknown)
+CTracePins::CTracePins ()
+:	mFilter (NULL),
+	mLogLevelPins (LogVerbose|LogTime),
+	mUnknown (NULL)
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::CTracePins (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::CTracePins (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
-	AfxOleLockApp ();
-
-	EnableAggregation();
-	//m_dwRef = 0;
 }
 
 CTracePins::~CTracePins ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::~CTracePins (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::~CTracePins (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
-	AfxOleUnlockApp ();
 }
 
-void CTracePins::OnFinalRelease ()
+CTracePins & CTracePins::Initialize (LPUNKNOWN pUnknown, IBaseFilter * pFilter, UINT pLogLevelPins)
+{
+	mFilter = pFilter;
+	mLogLevelPins = pLogLevelPins;
+	mUnknown = pUnknown;
+	mInnerEnum = pUnknown;
+
+#ifdef	_DEBUG_INSTANCE
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::Initialize (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+#endif
+	return *this;
+}
+
+void CTracePins::FinalRelease ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::OnFinalRelease"), this);
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::FinalRelease"), this);
 #endif
-	CCmdTarget::OnFinalRelease ();
-}
-
-LPUNKNOWN CTracePins::GetInterfaceHook(const void* iid)
-{
-#ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%u)] CTracePins::QueryInterface [%s]"), this, m_dwRef, CGuidStr::GuidName(*(GUID*)iid));
-#endif
-	return NULL;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTracePins::XEnum::Next (ULONG cPins, IPin **ppPins, ULONG *pcFetched)
+HRESULT STDMETHODCALLTYPE CTracePins::Next (ULONG cPins, IPin **ppPins, ULONG *pcFetched)
 {
-	METHOD_PROLOGUE(CTracePins, Enum)
-
 	HRESULT	lResult;
 	ULONG	lFetched = 0;
 	ULONG	lNdx;
 
-	lResult = pThis->mInnerEnum->Next (cPins, ppPins, &lFetched);
+	lResult = mInnerEnum->Next (cPins, ppPins, &lFetched);
 	if	(pcFetched)
 	{
 		*pcFetched = lFetched;
@@ -1101,35 +999,31 @@ HRESULT STDMETHODCALLTYPE CTracePins::XEnum::Next (ULONG cPins, IPin **ppPins, U
 
 		if	(lTracePin == NULL)
 		{
-			lPin = (new CTracePin (ppPins [lNdx], pThis->mFilter, pThis->mLogLevelPins))->GetControllingUnknown ();
+			lPin = (new CComObject<CTracePin>)->Initialize (ppPins [lNdx], mFilter, mLogLevelPins).GetControllingUnknown ();
 			ppPins [lNdx] = lPin.Detach();
 		}
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePins::XEnum::Skip (ULONG cPins)
+HRESULT STDMETHODCALLTYPE CTracePins::Skip (ULONG cPins)
 {
-	METHOD_PROLOGUE(CTracePins, Enum)
-	return pThis->mInnerEnum->Skip (cPins);
+	return mInnerEnum->Skip (cPins);
 }
 
-HRESULT STDMETHODCALLTYPE CTracePins::XEnum::Reset ()
+HRESULT STDMETHODCALLTYPE CTracePins::Reset ()
 {
-	METHOD_PROLOGUE(CTracePins, Enum)
-	return pThis->mInnerEnum->Reset ();
+	return mInnerEnum->Reset ();
 }
 
-HRESULT STDMETHODCALLTYPE CTracePins::XEnum::Clone (IEnumPins **ppEnum)
+HRESULT STDMETHODCALLTYPE CTracePins::Clone (IEnumPins **ppEnum)
 {
-	METHOD_PROLOGUE(CTracePins, Enum)
-
 	HRESULT			lResult;
 	IEnumPinsPtr	lClone;
 
-	if	(SUCCEEDED (lResult = pThis->mInnerEnum->Clone (&lClone)))
+	if	(SUCCEEDED (lResult = mInnerEnum->Clone (&lClone)))
 	{
-		(*ppEnum) = lClone = (new CTracePins (lClone, pThis->mFilter))->GetControllingUnknown();
+		(*ppEnum) = lClone = (new CComObject<CTracePins>)->Initialize (lClone, mFilter).GetControllingUnknown();
 	}
 	return lResult;
 }
@@ -1138,102 +1032,105 @@ HRESULT STDMETHODCALLTYPE CTracePins::XEnum::Clone (IEnumPins **ppEnum)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC(CTracePin, CCmdTarget)
-
-CTracePin::CTracePin (LPUNKNOWN pUnknown, IBaseFilter * pFilter, UINT pLogLevel)
-:	mFilter (pFilter),
-	mLogLevel (pLogLevel),
-	mUnknown (pUnknown),
-	mInnerPin (pUnknown),
-	mInnerMemInputPin (pUnknown),
-	mInnerAsyncReader (pUnknown),
-	mInnerMediaSeeking (pUnknown),
-	mInnerPinConnection (pUnknown),
-	mInnerPinFlowControl (pUnknown)
+CTracePin::CTracePin ()
+:	mFilter (NULL),
+	mLogLevel (LogVerbose|LogTime),
+	mUnknown (NULL)
 {
-	ASSERT(mInnerPin != NULL);
-	mName = PinIdStr (mInnerPin);
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::CTracePin (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::CTracePin (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
-	AfxOleLockApp ();
-
-	EnableAggregation();
-	//m_dwRef = 0;
 }
 
 CTracePin::~CTracePin ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::~CTracePin (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::~CTracePin (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
-	AfxOleUnlockApp ();
 }
 
-void CTracePin::OnFinalRelease ()
+CTracePin & CTracePin::Initialize (LPUNKNOWN pUnknown, IBaseFilter * pFilter, UINT pLogLevel)
+{
+	mFilter = pFilter;
+	mLogLevel = pLogLevel;
+	mUnknown = pUnknown;
+	mInnerPin = pUnknown;
+	mInnerMemInputPin = pUnknown;
+	mInnerAsyncReader = pUnknown;
+	mInnerMediaSeeking = pUnknown;
+	mInnerPinConnection = pUnknown;
+	mInnerPinFlowControl = pUnknown;
+
+	ATLASSERT(mInnerPin != NULL);
+	mName = PinIdStr (mInnerPin);
+#ifdef	_DEBUG_INSTANCE
+	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::Initialize (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+#endif
+	return *this;
+}
+
+void CTracePin::FinalRelease ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::OnFinalRelease"), this);
+	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::FinalRelease"), this);
 #endif
-	CCmdTarget::OnFinalRelease ();
 }
 
-LPUNKNOWN CTracePin::GetInterfaceHook(const void* iid)
+HRESULT WINAPI CTracePin::CheckInternalInterfaces (void* pv, REFIID riid, LPVOID* ppv, DWORD_PTR dw)
 {
-#ifdef	_DEBUG_COM
-	LogMessage (MaxLogLevel (_DEBUG_COM,mLogLevel), _T("[%p(%u)] CTracePin::QueryInterface [%s]"), this, m_dwRef, CGuidStr::GuidName(*(GUID*)iid));
-#endif
+	HRESULT		lResult = S_FALSE;
+	CTracePin *	lThis = (CTracePin *) pv;
+
 	if	(
-			(IsEqualGUID (*(GUID*)iid, __uuidof(IMemInputPin)))
-		&&	(mInnerMemInputPin != NULL)
+			(IsEqualGUID (riid, __uuidof(IMemInputPin)))
+		&&	(lThis->mInnerMemInputPin == NULL)
 		)
 	{
-		return &m_xMemInputPin;
+		lResult = E_NOINTERFACE;
 	}
 	else
 	if	(
-			(IsEqualGUID (*(GUID*)iid, __uuidof(IAsyncReader)))
-		&&	(mInnerAsyncReader != NULL)
+			(IsEqualGUID (riid, __uuidof(IAsyncReader)))
+		&&	(lThis->mInnerAsyncReader == NULL)
 		)
 	{
-		return &m_xAsyncReader;
+		lResult = E_NOINTERFACE;
 	}
 	else
 	if	(
-			(IsEqualGUID (*(GUID*)iid, __uuidof(IMediaSeeking)))
-		&&	(mInnerMediaSeeking != NULL)
+			(IsEqualGUID (riid, __uuidof(IMediaSeeking)))
+		&&	(lThis->mInnerMediaSeeking == NULL)
 		)
 	{
-		return &m_xMediaSeeking;
+		lResult = E_NOINTERFACE;
 	}
 	else
 	if	(
-			(IsEqualGUID (*(GUID*)iid, __uuidof(IPinConnection)))
-		&&	(mInnerPinConnection != NULL)
+			(IsEqualGUID (riid, __uuidof(IPinConnection)))
+		&&	(lThis->mInnerPinConnection == NULL)
 		)
 	{
-		return &m_xPinConnection;
+		lResult = E_NOINTERFACE;
 	}
 	else
 	if	(
-			(IsEqualGUID (*(GUID*)iid, __uuidof(IPinFlowControl)))
-		&&	(mInnerPinFlowControl != NULL)
+			(IsEqualGUID (riid, __uuidof(IPinFlowControl)))
+		&&	(lThis->mInnerPinFlowControl == NULL)
 		)
 	{
-		return &m_xPinFlowControl;
+		lResult = E_NOINTERFACE;
 	}
-	return NULL;
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPin::Connect (IPin *pReceivePin, const AM_MEDIA_TYPE *pmt)
+HRESULT STDMETHODCALLTYPE CTracePin::Connect (IPin *pReceivePin, const AM_MEDIA_TYPE *pmt)
 {
-	METHOD_PROLOGUE(CTracePin, Pin)
 #ifdef	_DEBUG_PIN
-	LogMessage (MaxLogLevel (_DEBUG_PIN,pThis->mLogLevel), _T("[%p(%u)] %s::XPin::Connect [%p] [%p]"), pThis, pThis->m_dwRef, pThis->mName, pReceivePin, pmt);
+	LogMessage (MaxLogLevel (_DEBUG_PIN,mLogLevel), _T("[%p(%d)] %s::Connect [%p] [%p]"), this, max(m_dwRef,-1), mName, pReceivePin, pmt);
 #endif
 
 	HRESULT			lResult;
@@ -1243,23 +1140,22 @@ HRESULT STDMETHODCALLTYPE CTracePin::XPin::Connect (IPin *pReceivePin, const AM_
 
 	if	(lTracePin == NULL)
 	{
-		lLogLevel = ((pThis->mLogLevel & 0xFF) <= LogIfActive) ? pThis->mLogLevel : LogVerbose;
-		lReceivePin = (new CTracePin (pReceivePin, NULL, lLogLevel))->GetControllingUnknown();
+		lLogLevel = ((mLogLevel & 0xFF) <= LogIfActive) ? mLogLevel : LogVerbose|LogTime;
+		lReceivePin = (new CComObject<CTracePin>)->Initialize (pReceivePin, NULL, lLogLevel).GetControllingUnknown();
 		pReceivePin = lReceivePin.Detach ();
 	}
-	lResult = pThis->mInnerPin->Connect (pReceivePin, pmt);
+	lResult = mInnerPin->Connect (pReceivePin, pmt);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPin::Connect"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::Connect"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPin::ReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE *pmt)
+HRESULT STDMETHODCALLTYPE CTracePin::ReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE *pmt)
 {
-	METHOD_PROLOGUE(CTracePin, Pin)
 #ifdef	_DEBUG_PIN
-	LogMessage (MaxLogLevel (_DEBUG_PIN,pThis->mLogLevel), _T("[%p(%u)] %s::XPin::ReceiveConnection"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_PIN,mLogLevel), _T("[%p(%d)] %s::ReceiveConnection"), this, max(m_dwRef,-1), mName);
 #endif
 
 	HRESULT			lResult;
@@ -1269,40 +1165,38 @@ HRESULT STDMETHODCALLTYPE CTracePin::XPin::ReceiveConnection (IPin *pConnector, 
 
 	if	(lTracePin == NULL)
 	{
-		lLogLevel = ((pThis->mLogLevel & 0xFF) <= LogIfActive) ? pThis->mLogLevel : LogVerbose;
-		lConnector = (new CTracePin (pConnector, NULL, lLogLevel))->GetControllingUnknown();
+		lLogLevel = ((mLogLevel & 0xFF) <= LogIfActive) ? mLogLevel : LogVerbose|LogTime;
+		lConnector = (new CComObject<CTracePin>)->Initialize (pConnector, NULL, lLogLevel).GetControllingUnknown();
 		pConnector = lConnector.Detach ();
 	}
-	lResult = pThis->mInnerPin->ReceiveConnection (pConnector, pmt);
+	lResult = mInnerPin->ReceiveConnection (pConnector, pmt);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPin::ReceiveConnection"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::ReceiveConnection"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPin::Disconnect (void)
+HRESULT STDMETHODCALLTYPE CTracePin::Disconnect (void)
 {
-	METHOD_PROLOGUE(CTracePin, Pin)
 #ifdef	_DEBUG_PIN
-	LogMessage (MaxLogLevel (_DEBUG_PIN,pThis->mLogLevel), _T("[%p(%u)] %s::XPin::Disconnect"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_PIN,mLogLevel), _T("[%p(%d)] %s::Disconnect"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerPin->Disconnect ();
+	HRESULT	lResult = mInnerPin->Disconnect ();
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPin::Disconnect"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::Disconnect"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPin::ConnectedTo (IPin **pPin)
+HRESULT STDMETHODCALLTYPE CTracePin::ConnectedTo (IPin **pPin)
 {
-	METHOD_PROLOGUE(CTracePin, Pin)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (MaxLogLevel (_DEBUG_QUERIES,pThis->mLogLevel), _T("[%p(%u)] %s::XPin::ConnectedTo"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), _T("[%p(%d)] %s::ConnectedTo"), this, max(m_dwRef,-1), mName);
 #endif
 
 	HRESULT			lResult;
@@ -1310,7 +1204,7 @@ HRESULT STDMETHODCALLTYPE CTracePin::XPin::ConnectedTo (IPin **pPin)
 	IPinPtr			lPin;
 	UINT			lLogLevel;
 
-	lResult = pThis->mInnerPin->ConnectedTo (pPin);
+	lResult = mInnerPin->ConnectedTo (pPin);
 	if	(
 			(pPin)
 		&&	(*pPin)
@@ -1319,8 +1213,8 @@ HRESULT STDMETHODCALLTYPE CTracePin::XPin::ConnectedTo (IPin **pPin)
 		lTracePin = *pPin;
 		if	(lTracePin == NULL)
 		{
-			lLogLevel = ((pThis->mLogLevel & 0xFF) <= LogIfActive) ? pThis->mLogLevel : LogVerbose;
-			lPin = (new CTracePin (*pPin, NULL, lLogLevel))->GetControllingUnknown();
+			lLogLevel = ((mLogLevel & 0xFF) <= LogIfActive) ? mLogLevel : LogVerbose|LogTime;
+			lPin = (new CComObject<CTracePin>)->Initialize (*pPin, NULL, lLogLevel).GetControllingUnknown();
 			*pPin = lPin.Detach ();
 		}
 	}
@@ -1328,194 +1222,183 @@ HRESULT STDMETHODCALLTYPE CTracePin::XPin::ConnectedTo (IPin **pPin)
 #ifdef	_LOG_RESULTS
 	if	(lResult != VFW_E_NOT_CONNECTED)
 	{
-		LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPin::ConnectedTo"), pThis, pThis->m_dwRef, pThis->mName);
+		LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::ConnectedTo"), this, max(m_dwRef,-1), mName);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPin::ConnectionMediaType (AM_MEDIA_TYPE *pmt)
+HRESULT STDMETHODCALLTYPE CTracePin::ConnectionMediaType (AM_MEDIA_TYPE *pmt)
 {
-	METHOD_PROLOGUE(CTracePin, Pin)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (MaxLogLevel (_DEBUG_QUERIES,pThis->mLogLevel), _T("[%p(%u)] %s::XPin::ConnectionMediaType"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), _T("[%p(%d)] %s::ConnectionMediaType"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerPin->ConnectionMediaType (pmt);
+	HRESULT	lResult = mInnerPin->ConnectionMediaType (pmt);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPin::ConnectionMediaType"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::ConnectionMediaType"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPin::QueryPinInfo (PIN_INFO *pInfo)
+HRESULT STDMETHODCALLTYPE CTracePin::QueryPinInfo (PIN_INFO *pInfo)
 {
-	METHOD_PROLOGUE(CTracePin, Pin)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (MaxLogLevel (_DEBUG_QUERIES,pThis->mLogLevel), _T("[%p(%u)] %s::XPin::QueryPinInfo"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), _T("[%p(%d)] %s::QueryPinInfo"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerPin->QueryPinInfo (pInfo);
+	HRESULT	lResult = mInnerPin->QueryPinInfo (pInfo);
 
 	if	(
 			(pInfo)
-		&&	(pThis->mFilter)
+		&&	(mFilter)
 		)
 	{
 		if	(pInfo->pFilter)
 		{
 			pInfo->pFilter->Release();
 		}
-		pInfo->pFilter = pThis->mFilter;
+		pInfo->pFilter = mFilter;
 		pInfo->pFilter->AddRef ();
 	}
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPin::QueryPinInfo"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::QueryPinInfo"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPin::QueryDirection (PIN_DIRECTION *pPinDir)
+HRESULT STDMETHODCALLTYPE CTracePin::QueryDirection (PIN_DIRECTION *pPinDir)
 {
-	METHOD_PROLOGUE(CTracePin, Pin)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (MaxLogLevel (_DEBUG_QUERIES,pThis->mLogLevel), _T("[%p(%u)] %s::XPin::QueryDirection"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), _T("[%p(%d)] %s::QueryDirection"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerPin->QueryDirection (pPinDir);
+	HRESULT	lResult = mInnerPin->QueryDirection (pPinDir);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPin::QueryDirection"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::QueryDirection"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPin::QueryId (LPWSTR *Id)
+HRESULT STDMETHODCALLTYPE CTracePin::QueryId (LPWSTR *Id)
 {
-	METHOD_PROLOGUE(CTracePin, Pin)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (MaxLogLevel (_DEBUG_QUERIES,pThis->mLogLevel), _T("[%p(%u)] %s::XPin::QueryId"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), _T("[%p(%d)] %s::QueryId"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerPin->QueryId (Id);
+	HRESULT	lResult = mInnerPin->QueryId (Id);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPin::QueryId"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::QueryId"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPin::QueryAccept (const AM_MEDIA_TYPE *pmt)
+HRESULT STDMETHODCALLTYPE CTracePin::QueryAccept (const AM_MEDIA_TYPE *pmt)
 {
-	METHOD_PROLOGUE(CTracePin, Pin)
 #ifdef	_DEBUG_PIN
-	LogMessage (MaxLogLevel (_DEBUG_PIN,pThis->mLogLevel), _T("[%p(%u)] %s::XPin::QueryAccept"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_PIN,mLogLevel), _T("[%p(%d)] %s::QueryAccept"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerPin->QueryAccept (pmt);
+	HRESULT	lResult = mInnerPin->QueryAccept (pmt);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPin::QueryAccept"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::QueryAccept"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPin::EnumMediaTypes (IEnumMediaTypes **ppEnum)
+HRESULT STDMETHODCALLTYPE CTracePin::EnumMediaTypes (IEnumMediaTypes **ppEnum)
 {
-	METHOD_PROLOGUE(CTracePin, Pin)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (MaxLogLevel (_DEBUG_QUERIES,pThis->mLogLevel), _T("[%p(%u)] %s::XPin::EnumMediaTypes"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), _T("[%p(%d)] %s::EnumMediaTypes"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerPin->EnumMediaTypes (ppEnum);
+	HRESULT	lResult = mInnerPin->EnumMediaTypes (ppEnum);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPin::EnumMediaTypes"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::EnumMediaTypes"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPin::QueryInternalConnections (IPin **apPin, ULONG *nPin)
+HRESULT STDMETHODCALLTYPE CTracePin::QueryInternalConnections (IPin **apPin, ULONG *nPin)
 {
-	METHOD_PROLOGUE(CTracePin, Pin)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (MaxLogLevel (_DEBUG_QUERIES,pThis->mLogLevel), _T("[%p(%u)] %s::XPin::QueryInternalConnections"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), _T("[%p(%d)] %s::QueryInternalConnections"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerPin->QueryInternalConnections (apPin, nPin);
+	HRESULT	lResult = mInnerPin->QueryInternalConnections (apPin, nPin);
 
 #ifdef	_DEBUG_QUERIES
-	LogVfwErrAnon (MaxLogLevel (_DEBUG_QUERIES,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPin::QueryInternalConnections"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), lResult, _T("[%p(%d)] %s::QueryInternalConnections"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPin::NewSegment (REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate)
+HRESULT STDMETHODCALLTYPE CTracePin::NewSegment (REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate)
 {
-	METHOD_PROLOGUE(CTracePin, Pin)
 #ifdef	_DEBUG_PIN
-	LogMessage (MaxLogLevel (_DEBUG_PIN,pThis->mLogLevel), _T("[%p(%u)] %s::XPin::NewSegment [%f - %f] [%f]"), pThis, pThis->m_dwRef, pThis->mName, RefTimeSec(tStart), RefTimeSec(tStop), dRate);
+	LogMessage (MaxLogLevel (_DEBUG_PIN,mLogLevel), _T("[%p(%d)] %s::NewSegment [%f - %f] [%f]"), this, max(m_dwRef,-1), mName, RefTimeSec(tStart), RefTimeSec(tStop), dRate);
 #endif
 
-	HRESULT	lResult = pThis->mInnerPin->NewSegment (tStart, tStop, dRate);
+	HRESULT	lResult = mInnerPin->NewSegment (tStart, tStop, dRate);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPin::NewSegment"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::NewSegment"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPin::EndOfStream (void)
+HRESULT STDMETHODCALLTYPE CTracePin::EndOfStream (void)
 {
-	METHOD_PROLOGUE(CTracePin, Pin)
 #ifdef	_DEBUG_PIN
-	LogMessage (MaxLogLevel (_DEBUG_PIN,pThis->mLogLevel), _T("[%p(%u)] %s::XPin::EndOfStream"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_PIN,mLogLevel), _T("[%p(%d)] %s::EndOfStream"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerPin->EndOfStream ();
+	HRESULT	lResult = mInnerPin->EndOfStream ();
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPin::EndOfStream"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::EndOfStream"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPin::BeginFlush (void)
+HRESULT STDMETHODCALLTYPE CTracePin::BeginFlush (void)
 {
-	METHOD_PROLOGUE(CTracePin, Pin)
 #ifdef	_DEBUG_PIN
-	LogMessage (MaxLogLevel (_DEBUG_PIN,pThis->mLogLevel), _T("[%p(%u)] %s::XPin::BeginFlush"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_PIN,mLogLevel), _T("[%p(%d)] %s::BeginFlush"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerPin->BeginFlush ();
+	HRESULT	lResult = mInnerPin->BeginFlush ();
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPin::BeginFlush"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::BeginFlush"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPin::EndFlush (void)
+HRESULT STDMETHODCALLTYPE CTracePin::EndFlush (void)
 {
-	METHOD_PROLOGUE(CTracePin, Pin)
 #ifdef	_DEBUG_PIN
-	LogMessage (MaxLogLevel (_DEBUG_PIN,pThis->mLogLevel), _T("[%p(%u)] %s::XPin::EndFlush"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_PIN,mLogLevel), _T("[%p(%d)] %s::EndFlush"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerPin->EndFlush ();
+	HRESULT	lResult = mInnerPin->EndFlush ();
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPin::EndFlush"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::EndFlush"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -1524,14 +1407,13 @@ HRESULT STDMETHODCALLTYPE CTracePin::XPin::EndFlush (void)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMemInputPin::GetAllocator (IMemAllocator **ppAllocator)
+HRESULT STDMETHODCALLTYPE CTracePin::GetAllocator (IMemAllocator **ppAllocator)
 {
-	METHOD_PROLOGUE(CTracePin, MemInputPin)
 #ifdef	_DEBUG_MEMINPUTPIN
-	LogMessage (MaxLogLevel (_DEBUG_MEMINPUTPIN,pThis->mLogLevel), _T("[%p(%u)] %s::XMemInputPin::GetAllocator"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_MEMINPUTPIN,mLogLevel), _T("[%p(%d)] %s::GetAllocator"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMemInputPin->GetAllocator (ppAllocator);
+	HRESULT	lResult = mInnerMemInputPin->GetAllocator (ppAllocator);
 #ifdef	_LOG_ALLOCATOR
 	if	(*ppAllocator)
 	{
@@ -1540,16 +1422,15 @@ HRESULT STDMETHODCALLTYPE CTracePin::XMemInputPin::GetAllocator (IMemAllocator *
 #endif
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMemInputPin::GetAllocator"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::GetAllocator"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMemInputPin::NotifyAllocator (IMemAllocator *pAllocator, BOOL bReadOnly)
+HRESULT STDMETHODCALLTYPE CTracePin::NotifyAllocator (IMemAllocator *pAllocator, BOOL bReadOnly)
 {
-	METHOD_PROLOGUE(CTracePin, MemInputPin)
 #ifdef	_DEBUG_MEMINPUTPIN
-	LogMessage (MaxLogLevel (_DEBUG_MEMINPUTPIN,pThis->mLogLevel), _T("[%p(%u)] %s::XMemInputPin::NotifyAllocator [%p] ReadOnly [%d]"), pThis, pThis->m_dwRef, pThis->mName, pAllocator, bReadOnly);
+	LogMessage (MaxLogLevel (_DEBUG_MEMINPUTPIN,mLogLevel), _T("[%p(%d)] %s::NotifyAllocator [%p] ReadOnly [%d]"), this, max(m_dwRef,-1), mName, pAllocator, bReadOnly);
 #endif
 
 #ifdef	_LOG_ALLOCATOR
@@ -1558,22 +1439,21 @@ HRESULT STDMETHODCALLTYPE CTracePin::XMemInputPin::NotifyAllocator (IMemAllocato
 		LogMemAllocator (_LOG_ALLOCATOR, pAllocator);
 	}
 #endif
-	HRESULT	lResult = pThis->mInnerMemInputPin->NotifyAllocator (pAllocator, bReadOnly);
+	HRESULT	lResult = mInnerMemInputPin->NotifyAllocator (pAllocator, bReadOnly);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMemInputPin::NotifyAllocator"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::NotifyAllocator"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMemInputPin::GetAllocatorRequirements (ALLOCATOR_PROPERTIES *pProps)
+HRESULT STDMETHODCALLTYPE CTracePin::GetAllocatorRequirements (ALLOCATOR_PROPERTIES *pProps)
 {
-	METHOD_PROLOGUE(CTracePin, MemInputPin)
 #ifdef	_DEBUG_MEMINPUTPIN
-	LogMessage (MaxLogLevel (_DEBUG_MEMINPUTPIN,pThis->mLogLevel), _T("[%p(%u)] %s::XMemInputPin::GetAllocatorRequirements"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_MEMINPUTPIN,mLogLevel), _T("[%p(%d)] %s::GetAllocatorRequirements"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMemInputPin->GetAllocatorRequirements (pProps);
+	HRESULT	lResult = mInnerMemInputPin->GetAllocatorRequirements (pProps);
 #ifdef	_LOG_ALLOCATOR
 	if	(
 			(SUCCEEDED (lResult))
@@ -1585,53 +1465,50 @@ HRESULT STDMETHODCALLTYPE CTracePin::XMemInputPin::GetAllocatorRequirements (ALL
 #endif
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMemInputPin::GetAllocatorRequirements"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::GetAllocatorRequirements"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMemInputPin::Receive (IMediaSample *pSample)
+HRESULT STDMETHODCALLTYPE CTracePin::Receive (IMediaSample *pSample)
 {
-	METHOD_PROLOGUE(CTracePin, MemInputPin)
 #ifdef	_DEBUG_MEMINPUTPIN
-	LogMessage (MaxLogLevel (_DEBUG_MEMINPUTPIN,pThis->mLogLevel), _T("[%p(%u)] %s::XMemInputPin::Receive"), pThis, pThis->m_dwRef, pThis->mName);
-	//LogMediaSampleId (MaxLogLevel (_DEBUG_MEMINPUTPIN,pThis->mLogLevel), pSample, _T("[%p(%u)] %s"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_MEMINPUTPIN,mLogLevel), _T("[%p(%d)] %s::Receive"), this, max(m_dwRef,-1), mName);
+	//LogMediaSampleId (MaxLogLevel (_DEBUG_MEMINPUTPIN,mLogLevel), pSample, _T("[%p(%d)] %s"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMemInputPin->Receive (pSample);
+	HRESULT	lResult = mInnerMemInputPin->Receive (pSample);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMemInputPin::Receive"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::Receive"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMemInputPin::ReceiveMultiple (IMediaSample **pSamples, long nSamples, long *nSamplesProcessed)
+HRESULT STDMETHODCALLTYPE CTracePin::ReceiveMultiple (IMediaSample **pSamples, long nSamples, long *nSamplesProcessed)
 {
-	METHOD_PROLOGUE(CTracePin, MemInputPin)
 #ifdef	_DEBUG_MEMINPUTPIN
-	LogMessage (MaxLogLevel (_DEBUG_MEMINPUTPIN,pThis->mLogLevel), _T("[%p(%u)] %s::XMemInputPin::ReceiveMultiple"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_MEMINPUTPIN,mLogLevel), _T("[%p(%d)] %s::ReceiveMultiple"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMemInputPin->ReceiveMultiple (pSamples, nSamples, nSamplesProcessed);
+	HRESULT	lResult = mInnerMemInputPin->ReceiveMultiple (pSamples, nSamples, nSamplesProcessed);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMemInputPin::ReceiveMultiple"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::ReceiveMultiple"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMemInputPin::ReceiveCanBlock (void)
+HRESULT STDMETHODCALLTYPE CTracePin::ReceiveCanBlock (void)
 {
-	METHOD_PROLOGUE(CTracePin, MemInputPin)
 #ifdef	_DEBUG_MEMINPUTPIN
-	LogMessage (MaxLogLevel (_DEBUG_MEMINPUTPIN,pThis->mLogLevel), _T("[%p(%u)] %s::XMemInputPin::ReceiveCanBlock"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_MEMINPUTPIN,mLogLevel), _T("[%p(%d)] %s::ReceiveCanBlock"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMemInputPin->ReceiveCanBlock ();
+	HRESULT	lResult = mInnerMemInputPin->ReceiveCanBlock ();
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMemInputPin::ReceiveCanBlock"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::ReceiveCanBlock"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -1640,14 +1517,13 @@ HRESULT STDMETHODCALLTYPE CTracePin::XMemInputPin::ReceiveCanBlock (void)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTracePin::XAsyncReader::RequestAllocator (IMemAllocator *pPreferred, ALLOCATOR_PROPERTIES *pProps, IMemAllocator **ppActual)
+HRESULT STDMETHODCALLTYPE CTracePin::RequestAllocator (IMemAllocator *pPreferred, ALLOCATOR_PROPERTIES *pProps, IMemAllocator **ppActual)
 {
-	METHOD_PROLOGUE(CTracePin, AsyncReader)
 #ifdef	_DEBUG_ASYNCREADER
-	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,pThis->mLogLevel), _T("[%p(%u)] %s::XAsyncReader::RequestAllocator"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,mLogLevel), _T("[%p(%d)] %s::RequestAllocator"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerAsyncReader->RequestAllocator (pPreferred, pProps, ppActual);
+	HRESULT	lResult = mInnerAsyncReader->RequestAllocator (pPreferred, pProps, ppActual);
 #ifdef	_LOG_ALLOCATOR
 	if	(pPreferred)
 	{
@@ -1667,112 +1543,77 @@ HRESULT STDMETHODCALLTYPE CTracePin::XAsyncReader::RequestAllocator (IMemAllocat
 #endif
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XAsyncReader::RequestAllocator"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::RequestAllocator"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XAsyncReader::Request (IMediaSample *pSample, DWORD_PTR dwUser)
+HRESULT STDMETHODCALLTYPE CTracePin::Request (IMediaSample *pSample, DWORD_PTR dwUser)
 {
-	METHOD_PROLOGUE(CTracePin, AsyncReader)
 #ifdef	_DEBUG_ASYNCREADER
-	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,pThis->mLogLevel), _T("[%p(%u)] %s::XAsyncReader::Request"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,mLogLevel), _T("[%p(%d)] %s::Request"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerAsyncReader->Request (pSample, dwUser);
+	HRESULT	lResult = mInnerAsyncReader->Request (pSample, dwUser);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XAsyncReader::Request"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::Request"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XAsyncReader::WaitForNext (DWORD dwTimeout, IMediaSample **ppSample, DWORD_PTR *pdwUser)
+HRESULT STDMETHODCALLTYPE CTracePin::WaitForNext (DWORD dwTimeout, IMediaSample **ppSample, DWORD_PTR *pdwUser)
 {
-	METHOD_PROLOGUE(CTracePin, AsyncReader)
 #ifdef	_DEBUG_ASYNCREADER
-	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,pThis->mLogLevel), _T("[%p(%u)] %s::XAsyncReader::WaitForNext"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,mLogLevel), _T("[%p(%d)] %s::WaitForNext"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerAsyncReader->WaitForNext (dwTimeout, ppSample, pdwUser);
+	HRESULT	lResult = mInnerAsyncReader->WaitForNext (dwTimeout, ppSample, pdwUser);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XAsyncReader::WaitForNext"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::WaitForNext"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XAsyncReader::SyncReadAligned (IMediaSample *pSample)
+HRESULT STDMETHODCALLTYPE CTracePin::SyncReadAligned (IMediaSample *pSample)
 {
-	METHOD_PROLOGUE(CTracePin, AsyncReader)
 #ifdef	_DEBUG_ASYNCREADER
-	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,pThis->mLogLevel), _T("[%p(%u)] %s::XAsyncReader::SyncReadAligned"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,mLogLevel), _T("[%p(%d)] %s::SyncReadAligned"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerAsyncReader->SyncReadAligned (pSample);
+	HRESULT	lResult = mInnerAsyncReader->SyncReadAligned (pSample);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XAsyncReader::SyncReadAligned"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::SyncReadAligned"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XAsyncReader::SyncRead (LONGLONG llPosition, LONG lLength, BYTE *pBuffer)
+HRESULT STDMETHODCALLTYPE CTracePin::SyncRead (LONGLONG llPosition, LONG lLength, BYTE *pBuffer)
 {
-	METHOD_PROLOGUE(CTracePin, AsyncReader)
 #ifdef	_DEBUG_ASYNCREADER
-	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,pThis->mLogLevel), _T("[%p(%u)] %s::XAsyncReader::SyncRead"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,mLogLevel), _T("[%p(%d)] %s::SyncRead"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerAsyncReader->SyncRead (llPosition, lLength, pBuffer);
+	HRESULT	lResult = mInnerAsyncReader->SyncRead (llPosition, lLength, pBuffer);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XAsyncReader::SyncRead"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::SyncRead"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XAsyncReader::Length (LONGLONG *pTotal, LONGLONG *pAvailable)
+HRESULT STDMETHODCALLTYPE CTracePin::Length (LONGLONG *pTotal, LONGLONG *pAvailable)
 {
-	METHOD_PROLOGUE(CTracePin, AsyncReader)
 #ifdef	_DEBUG_ASYNCREADER
-	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,pThis->mLogLevel), _T("[%p(%u)] %s::XAsyncReader::Length"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,mLogLevel), _T("[%p(%d)] %s::Length"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerAsyncReader->Length (pTotal, pAvailable);
+	HRESULT	lResult = mInnerAsyncReader->Length (pTotal, pAvailable);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XAsyncReader::Length"), pThis, pThis->m_dwRef, pThis->mName);
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE CTracePin::XAsyncReader::BeginFlush (void)
-{
-	METHOD_PROLOGUE(CTracePin, AsyncReader)
-#ifdef	_DEBUG_ASYNCREADER
-	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,pThis->mLogLevel), _T("[%p(%u)] %s::XAsyncReader::BeginFlush"), pThis, pThis->m_dwRef, pThis->mName);
-#endif
-
-	HRESULT	lResult = pThis->mInnerAsyncReader->BeginFlush ();
-
-#ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XAsyncReader::BeginFlush"), pThis, pThis->m_dwRef, pThis->mName);
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE CTracePin::XAsyncReader::EndFlush (void)
-{
-	METHOD_PROLOGUE(CTracePin, AsyncReader)
-#ifdef	_DEBUG_ASYNCREADER
-	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,pThis->mLogLevel), _T("[%p(%u)] %s::XAsyncReader::EndFlush"), pThis, pThis->m_dwRef, pThis->mName);
-#endif
-
-	HRESULT	lResult = pThis->mInnerAsyncReader->EndFlush ();
-
-#ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XAsyncReader::EndFlush"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::Length"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -1781,208 +1622,196 @@ HRESULT STDMETHODCALLTYPE CTracePin::XAsyncReader::EndFlush (void)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::GetCapabilities (DWORD *pCapabilities)
+HRESULT STDMETHODCALLTYPE CTracePin::GetCapabilities (DWORD *pCapabilities)
 {
-	METHOD_PROLOGUE(CTracePin, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (MaxLogLevel (_DEBUG_QUERIES,pThis->mLogLevel), _T("[%p(%u)] %s::XMediaSeeking::GetCapabilities"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), _T("[%p(%d)] %s::GetCapabilities"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->GetCapabilities (pCapabilities);
+	HRESULT	lResult = mInnerMediaSeeking->GetCapabilities (pCapabilities);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMediaSeeking::GetCapabilities"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::GetCapabilities"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::CheckCapabilities (DWORD *pCapabilities)
+HRESULT STDMETHODCALLTYPE CTracePin::CheckCapabilities (DWORD *pCapabilities)
 {
-	METHOD_PROLOGUE(CTracePin, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (MaxLogLevel (_DEBUG_QUERIES,pThis->mLogLevel), _T("[%p(%u)] %s::XMediaSeeking::CheckCapabilities"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), _T("[%p(%d)] %s::CheckCapabilities"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->CheckCapabilities (pCapabilities);
+	HRESULT	lResult = mInnerMediaSeeking->CheckCapabilities (pCapabilities);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMediaSeeking::CheckCapabilities"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::CheckCapabilities"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::IsFormatSupported (const GUID *pFormat)
+HRESULT STDMETHODCALLTYPE CTracePin::IsFormatSupported (const GUID *pFormat)
 {
-	METHOD_PROLOGUE(CTracePin, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (MaxLogLevel (_DEBUG_QUERIES,pThis->mLogLevel), _T("[%p(%u)] %s::XMediaSeeking::IsFormatSupported"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), _T("[%p(%d)] %s::IsFormatSupported"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->IsFormatSupported (pFormat);
+	HRESULT	lResult = mInnerMediaSeeking->IsFormatSupported (pFormat);
 
 #ifdef	_DEBUG_QUERIES
-	LogVfwErrAnon (MaxLogLevel (_DEBUG_QUERIES,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMediaSeeking::IsFormatSupported"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), lResult, _T("[%p(%d)] %s::IsFormatSupported"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::QueryPreferredFormat (GUID *pFormat)
+HRESULT STDMETHODCALLTYPE CTracePin::QueryPreferredFormat (GUID *pFormat)
 {
-	METHOD_PROLOGUE(CTracePin, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (MaxLogLevel (_DEBUG_QUERIES,pThis->mLogLevel), _T("[%p(%u)] %s::XMediaSeeking::QueryPreferredFormat"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), _T("[%p(%d)] %s::QueryPreferredFormat"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->QueryPreferredFormat (pFormat);
+	HRESULT	lResult = mInnerMediaSeeking->QueryPreferredFormat (pFormat);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMediaSeeking::QueryPreferredFormat"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::QueryPreferredFormat"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::GetTimeFormat (GUID *pFormat)
+HRESULT STDMETHODCALLTYPE CTracePin::GetTimeFormat (GUID *pFormat)
 {
-	METHOD_PROLOGUE(CTracePin, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (MaxLogLevel (_DEBUG_QUERIES,pThis->mLogLevel), _T("[%p(%u)] %s::XMediaSeeking::GetTimeFormat"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), _T("[%p(%d)] %s::GetTimeFormat"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->GetTimeFormat   (pFormat);
+	HRESULT	lResult = mInnerMediaSeeking->GetTimeFormat   (pFormat);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMediaSeeking::GetTimeFormat"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::GetTimeFormat"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::IsUsingTimeFormat (const GUID *pFormat)
+HRESULT STDMETHODCALLTYPE CTracePin::IsUsingTimeFormat (const GUID *pFormat)
 {
-	METHOD_PROLOGUE(CTracePin, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (MaxLogLevel (_DEBUG_QUERIES,pThis->mLogLevel), _T("[%p(%u)] %s::XMediaSeeking::IsUsingTimeFormat"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), _T("[%p(%d)] %s::IsUsingTimeFormat"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->IsUsingTimeFormat (pFormat);
+	HRESULT	lResult = mInnerMediaSeeking->IsUsingTimeFormat (pFormat);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMediaSeeking::IsUsingTimeFormat"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::IsUsingTimeFormat"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::SetTimeFormat (const GUID *pFormat)
+HRESULT STDMETHODCALLTYPE CTracePin::SetTimeFormat (const GUID *pFormat)
 {
-	METHOD_PROLOGUE(CTracePin, MediaSeeking)
 #ifdef	_DEBUG_MEDIASEEKING
-	LogMessage (MaxLogLevel (_DEBUG_MEDIASEEKING,pThis->mLogLevel), _T("[%p(%u)] %s::XMediaSeeking::SetTimeFormat"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_MEDIASEEKING,mLogLevel), _T("[%p(%d)] %s::SetTimeFormat"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->SetTimeFormat (pFormat);
+	HRESULT	lResult = mInnerMediaSeeking->SetTimeFormat (pFormat);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMediaSeeking::SetTimeFormat"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::SetTimeFormat"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::GetDuration (LONGLONG *pDuration)
+HRESULT STDMETHODCALLTYPE CTracePin::GetDuration (LONGLONG *pDuration)
 {
-	METHOD_PROLOGUE(CTracePin, MediaSeeking)
 #ifdef	_DEBUG_MEDIASEEKING
-	LogMessage (MaxLogLevel (_DEBUG_MEDIASEEKING,pThis->mLogLevel), _T("[%p(%u)] %s::XMediaSeeking::GetDuration"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_MEDIASEEKING,mLogLevel), _T("[%p(%d)] %s::GetDuration"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->GetDuration (pDuration);
+	HRESULT	lResult = mInnerMediaSeeking->GetDuration (pDuration);
 #ifdef	_LOG_SEEKING
 	if	(pDuration)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] Duration [%f]"), pThis, pThis->mName, RefTimeSec (*pDuration));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] Duration [%f]"), this, mName, RefTimeSec (*pDuration));
 	}
 #endif
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMediaSeeking::GetDuration"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::GetDuration"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::GetStopPosition (LONGLONG *pStop)
+HRESULT STDMETHODCALLTYPE CTracePin::GetStopPosition (LONGLONG *pStop)
 {
-	METHOD_PROLOGUE(CTracePin, MediaSeeking)
 #ifdef	_DEBUG_MEDIASEEKING
-	LogMessage (MaxLogLevel (_DEBUG_MEDIASEEKING,pThis->mLogLevel), _T("[%p(%u)] %s::XMediaSeeking::GetStopPosition"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_MEDIASEEKING,mLogLevel), _T("[%p(%d)] %s::GetStopPosition"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->GetStopPosition (pStop);
+	HRESULT	lResult = mInnerMediaSeeking->GetStopPosition (pStop);
 #ifdef	_LOG_SEEKING
 	if	(pStop)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] StopPosition [%f]"), pThis, pThis->mName, RefTimeSec (*pStop));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] StopPosition [%f]"), this, mName, RefTimeSec (*pStop));
 	}
 #endif
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMediaSeeking::GetStopPosition"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::GetStopPosition"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::GetCurrentPosition (LONGLONG *pCurrent)
+HRESULT STDMETHODCALLTYPE CTracePin::GetCurrentPosition (LONGLONG *pCurrent)
 {
-	METHOD_PROLOGUE(CTracePin, MediaSeeking)
 #ifdef	_DEBUG_MEDIASEEKING
-	LogMessage (MaxLogLevel (_DEBUG_MEDIASEEKING,pThis->mLogLevel), _T("[%p(%u)] %s::XMediaSeeking::GetCurrentPosition"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_MEDIASEEKING,mLogLevel), _T("[%p(%d)] %s::GetCurrentPosition"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->GetCurrentPosition (pCurrent);
+	HRESULT	lResult = mInnerMediaSeeking->GetCurrentPosition (pCurrent);
 #ifdef	_LOG_SEEKING
 	if	(pCurrent)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] CurrPosition [%f]"), pThis, pThis->mName, RefTimeSec (*pCurrent));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] CurrPosition [%f]"), this, mName, RefTimeSec (*pCurrent));
 	}
 #endif
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMediaSeeking::GetCurrentPosition"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::GetCurrentPosition"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::ConvertTimeFormat (LONGLONG *pTarget, const GUID *pTargetFormat, LONGLONG Source, const GUID *pSourceFormat)
+HRESULT STDMETHODCALLTYPE CTracePin::ConvertTimeFormat (LONGLONG *pTarget, const GUID *pTargetFormat, LONGLONG Source, const GUID *pSourceFormat)
 {
-	METHOD_PROLOGUE(CTracePin, MediaSeeking)
 #ifdef	_DEBUG_MEDIASEEKING
-	LogMessage (MaxLogLevel (_DEBUG_MEDIASEEKING,pThis->mLogLevel), _T("[%p(%u)] %s::XMediaSeeking::ConvertTimeFormat"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_MEDIASEEKING,mLogLevel), _T("[%p(%d)] %s::ConvertTimeFormat"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->ConvertTimeFormat (pTarget, pTargetFormat, Source, pSourceFormat);
+	HRESULT	lResult = mInnerMediaSeeking->ConvertTimeFormat (pTarget, pTargetFormat, Source, pSourceFormat);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMediaSeeking::ConvertTimeFormat"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::ConvertTimeFormat"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::SetPositions (LONGLONG *pCurrent, DWORD dwCurrentFlags, LONGLONG *pStop, DWORD dwStopFlags)
+HRESULT STDMETHODCALLTYPE CTracePin::SetPositions (LONGLONG *pCurrent, DWORD dwCurrentFlags, LONGLONG *pStop, DWORD dwStopFlags)
 {
-	METHOD_PROLOGUE(CTracePin, MediaSeeking)
 #ifdef	_DEBUG_MEDIASEEKING
-	LogMessage (MaxLogLevel (_DEBUG_MEDIASEEKING,pThis->mLogLevel), _T("[%p(%u)] %s::XMediaSeeking::SetPositions"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_MEDIASEEKING,mLogLevel), _T("[%p(%d)] %s::SetPositions"), this, max(m_dwRef,-1), mName);
 #endif
 
 #ifdef	_LOG_SEEKING
 	if	(pCurrent)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] CurrPosition [%f] [%s]"), pThis, pThis->mName, RefTimeSec (*pCurrent), SeekingFlagsStr(dwCurrentFlags));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] CurrPosition [%f] [%s]"), this, mName, RefTimeSec (*pCurrent), SeekingFlagsStr(dwCurrentFlags));
 	}
 	if	(pStop)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] StopPosition [%f] [%s]"), pThis, pThis->mName, RefTimeSec (*pStop), SeekingFlagsStr(dwStopFlags));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] StopPosition [%f] [%s]"), this, mName, RefTimeSec (*pStop), SeekingFlagsStr(dwStopFlags));
 	}
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->SetPositions (pCurrent, dwCurrentFlags, pStop, dwStopFlags);
+	HRESULT	lResult = mInnerMediaSeeking->SetPositions (pCurrent, dwCurrentFlags, pStop, dwStopFlags);
 
 #ifdef	_LOG_SEEKING
 	if	(
@@ -1990,114 +1819,109 @@ HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::SetPositions (LONGLONG *pCur
 		&&	(dwCurrentFlags & AM_SEEKING_ReturnTime)
 		)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] CurrPosition [%f]"), pThis, pThis->mName, RefTimeSec (*pCurrent));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] CurrPosition [%f]"), this, mName, RefTimeSec (*pCurrent));
 	}
 	if	(
 			(pStop)
 		&&	(dwStopFlags & AM_SEEKING_ReturnTime)
 		)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] StopPosition [%f]"), pThis, pThis->mName, RefTimeSec (*pStop));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] StopPosition [%f]"), this, mName, RefTimeSec (*pStop));
 	}
 #endif
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMediaSeeking::SetPositions"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::SetPositions"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::GetPositions (LONGLONG *pCurrent, LONGLONG *pStop)
+HRESULT STDMETHODCALLTYPE CTracePin::GetPositions (LONGLONG *pCurrent, LONGLONG *pStop)
 {
-	METHOD_PROLOGUE(CTracePin, MediaSeeking)
 #ifdef	_DEBUG_MEDIASEEKING
-	LogMessage (MaxLogLevel (_DEBUG_MEDIASEEKING,pThis->mLogLevel), _T("[%p(%u)] %s::XMediaSeeking::GetPositions"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_MEDIASEEKING,mLogLevel), _T("[%p(%d)] %s::GetPositions"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->GetPositions (pCurrent, pStop);
+	HRESULT	lResult = mInnerMediaSeeking->GetPositions (pCurrent, pStop);
 #ifdef	_LOG_SEEKING
 	if	(pCurrent)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] CurrPosition [%f]"), pThis, pThis->mName, RefTimeSec (*pCurrent));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] CurrPosition [%f]"), this, mName, RefTimeSec (*pCurrent));
 	}
 	if	(pStop)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] StopPosition [%f]"), pThis, pThis->mName, RefTimeSec (*pStop));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] StopPosition [%f]"), this, mName, RefTimeSec (*pStop));
 	}
 #endif
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMediaSeeking::GetPositions"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::GetPositions"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::GetAvailable (LONGLONG *pEarliest, LONGLONG *pLatest)
+HRESULT STDMETHODCALLTYPE CTracePin::GetAvailable (LONGLONG *pEarliest, LONGLONG *pLatest)
 {
-	METHOD_PROLOGUE(CTracePin, MediaSeeking)
 #ifdef	_DEBUG_MEDIASEEKING
-	LogMessage (MaxLogLevel (_DEBUG_MEDIASEEKING,pThis->mLogLevel), _T("[%p(%u)] %s::XMediaSeeking::GetAvailable"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_MEDIASEEKING,mLogLevel), _T("[%p(%d)] %s::GetAvailable"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->GetAvailable (pEarliest, pLatest);
+	HRESULT	lResult = mInnerMediaSeeking->GetAvailable (pEarliest, pLatest);
 #ifdef	_LOG_SEEKING
 	if	(pEarliest)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%s] [%p] Earliest [%f]"), pThis, pThis->mName, RefTimeSec (*pEarliest));
+		LogMessage (_LOG_SEEKING, _T("[%s] [%p] Earliest [%f]"), this, mName, RefTimeSec (*pEarliest));
 	}
 	if	(pLatest)
 	{
-		LogMessage (_LOG_SEEKING, _T("[%p] [%s] Latest   [%f]"), pThis, pThis->mName, RefTimeSec (*pLatest));
+		LogMessage (_LOG_SEEKING, _T("[%p] [%s] Latest   [%f]"), this, mName, RefTimeSec (*pLatest));
 	}
 #endif
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMediaSeeking::GetAvailable"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::GetAvailable"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::SetRate (double dRate)
+HRESULT STDMETHODCALLTYPE CTracePin::SetRate (double dRate)
 {
-	METHOD_PROLOGUE(CTracePin, MediaSeeking)
 #ifdef	_DEBUG_MEDIASEEKING
-	LogMessage (MaxLogLevel (_DEBUG_MEDIASEEKING,pThis->mLogLevel), _T("[%p(%u)] %s::XMediaSeeking::SetRate"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_MEDIASEEKING,mLogLevel), _T("[%p(%d)] %s::SetRate"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->SetRate (dRate);
+	HRESULT	lResult = mInnerMediaSeeking->SetRate (dRate);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMediaSeeking::SetRate"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::SetRate"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::GetRate (double *pdRate)
+HRESULT STDMETHODCALLTYPE CTracePin::GetRate (double *pdRate)
 {
-	METHOD_PROLOGUE(CTracePin, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (MaxLogLevel (_DEBUG_QUERIES,pThis->mLogLevel), _T("[%p(%u)] %s::XMediaSeeking::GetRate"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), _T("[%p(%d)] %s::GetRate"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->GetRate (pdRate);
+	HRESULT	lResult = mInnerMediaSeeking->GetRate (pdRate);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMediaSeeking::GetRate"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::GetRate"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::GetPreroll (LONGLONG *pllPreroll)
+HRESULT STDMETHODCALLTYPE CTracePin::GetPreroll (LONGLONG *pllPreroll)
 {
-	METHOD_PROLOGUE(CTracePin, MediaSeeking)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (MaxLogLevel (_DEBUG_QUERIES,pThis->mLogLevel), _T("[%p(%u)] %s::XMediaSeeking::GetPreroll"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), _T("[%p(%d)] %s::GetPreroll"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerMediaSeeking->GetPreroll (pllPreroll);
+	HRESULT	lResult = mInnerMediaSeeking->GetPreroll (pllPreroll);
 
 #ifdef	_DEBUG_QUERIES
-	LogVfwErrAnon (MaxLogLevel (_DEBUG_QUERIES,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XMediaSeeking::GetPreroll"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), lResult, _T("[%p(%d)] %s::GetPreroll"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -2106,77 +1930,72 @@ HRESULT STDMETHODCALLTYPE CTracePin::XMediaSeeking::GetPreroll (LONGLONG *pllPre
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPinConnection::DynamicQueryAccept (const AM_MEDIA_TYPE *pmt)
+HRESULT STDMETHODCALLTYPE CTracePin::DynamicQueryAccept (const AM_MEDIA_TYPE *pmt)
 {
-	METHOD_PROLOGUE(CTracePin, PinConnection)
 #ifdef	_DEBUG_PINCONNECTION
-	LogMessage (MaxLogLevel (_DEBUG_PINCONNECTION,pThis->mLogLevel), _T("[%p(%u)] %s::XPinConnection::DynamicQueryAccept"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_PINCONNECTION,mLogLevel), _T("[%p(%d)] %s::DynamicQueryAccept"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerPinConnection->DynamicQueryAccept (pmt);
+	HRESULT	lResult = mInnerPinConnection->DynamicQueryAccept (pmt);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPinConnection::DynamicQueryAccept"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::DynamicQueryAccept"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPinConnection::NotifyEndOfStream (HANDLE hNotifyEvent)
+HRESULT STDMETHODCALLTYPE CTracePin::NotifyEndOfStream (HANDLE hNotifyEvent)
 {
-	METHOD_PROLOGUE(CTracePin, PinConnection)
 #ifdef	_DEBUG_PINCONNECTION
-	LogMessage (MaxLogLevel (_DEBUG_PINCONNECTION,pThis->mLogLevel), _T("[%p(%u)] %s::XPinConnection::NotifyEndOfStream"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_PINCONNECTION,mLogLevel), _T("[%p(%d)] %s::NotifyEndOfStream"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerPinConnection->NotifyEndOfStream (hNotifyEvent);
+	HRESULT	lResult = mInnerPinConnection->NotifyEndOfStream (hNotifyEvent);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPinConnection::NotifyEndOfStream"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::NotifyEndOfStream"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPinConnection::IsEndPin (void)
+HRESULT STDMETHODCALLTYPE CTracePin::IsEndPin (void)
 {
-	METHOD_PROLOGUE(CTracePin, PinConnection)
 #ifdef	_DEBUG_PINCONNECTION
-	LogMessage (MaxLogLevel (_DEBUG_PINCONNECTION,pThis->mLogLevel), _T("[%p(%u)] %s::XPinConnection::IsEndPin"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_PINCONNECTION,mLogLevel), _T("[%p(%d)] %s::IsEndPin"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerPinConnection->IsEndPin ();
+	HRESULT	lResult = mInnerPinConnection->IsEndPin ();
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPinConnection::IsEndPin"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::IsEndPin"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPinConnection::DynamicDisconnect (void)
+HRESULT STDMETHODCALLTYPE CTracePin::DynamicDisconnect (void)
 {
-	METHOD_PROLOGUE(CTracePin, PinConnection)
 #ifdef	_DEBUG_PINCONNECTION
-	LogMessage (MaxLogLevel (_DEBUG_PINCONNECTION,pThis->mLogLevel), _T("[%p(%u)] %s::XPinConnection::DynamicDisconnect"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_PINCONNECTION,mLogLevel), _T("[%p(%d)] %s::DynamicDisconnect"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerPinConnection->DynamicDisconnect ();
+	HRESULT	lResult = mInnerPinConnection->DynamicDisconnect ();
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPinConnection::DynamicDisconnect"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::DynamicDisconnect"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::XPinFlowControl::Block (DWORD dwBlockFlags, HANDLE hEvent)
+HRESULT STDMETHODCALLTYPE CTracePin::Block (DWORD dwBlockFlags, HANDLE hEvent)
 {
-	METHOD_PROLOGUE(CTracePin, PinFlowControl)
 #ifdef	_DEBUG_PINFLOWCONTROL
-	LogMessage (MaxLogLevel (_DEBUG_PINFLOWCONTROL,pThis->mLogLevel), _T("[%p(%u)] %s::XPinFlowControl::Block"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (MaxLogLevel (_DEBUG_PINFLOWCONTROL,mLogLevel), _T("[%p(%d)] %s::Block"), this, max(m_dwRef,-1), mName);
 #endif
 
-	HRESULT	lResult = pThis->mInnerPinFlowControl->Block (dwBlockFlags, hEvent);
+	HRESULT	lResult = mInnerPinFlowControl->Block (dwBlockFlags, hEvent);
 
 #ifdef	_LOG_RESULTS
-	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,pThis->mLogLevel), lResult, _T("[%p(%u)] %s::XPinFlowControl::Block"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (MaxLogLevel (_LOG_RESULTS,mLogLevel), lResult, _T("[%p(%d)] %s::Block"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }

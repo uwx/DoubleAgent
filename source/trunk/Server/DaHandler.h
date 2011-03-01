@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -18,18 +18,17 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DAHANDLER_H_INCLUDED_
-#define DAHANDLER_H_INCLUDED_
 #pragma once
+#include "DaGuid.h"
+#include "DaVersion.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CDaHandlerApp : public CWinApp
+class CDaHandlerModule : public CAtlDllModuleT <CDaHandlerModule>
 {
 public:
-	CDaHandlerApp();
-	~CDaHandlerApp();
-	DECLARE_DYNAMIC(CDaHandlerApp)
+	CDaHandlerModule();
+	~CDaHandlerModule();
 
 // Attributes
 public:
@@ -38,24 +37,10 @@ public:
 	void StartThreadLifetime ();
 	void EndAllLifetimes ();
 
-// Overrides
-	//{{AFX_VIRTUAL(CDaHandlerApp)
-	public:
-	virtual BOOL InitInstance();
-	virtual int ExitInstance();
-	//}}AFX_VIRTUAL
-
-	//{{AFX_MSG(CDaHandlerApp)
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-
 protected:
-	COwnPtrMap <CString, CMutex, LPCTSTR>	mLifetimeMutex;
+	CAtlOwnPtrMap <CString, CAutoMutex, CStringElementTraitsI<CString> >	mLifetimeMutex;
 };
 
+extern CDaHandlerModule _AtlModule;
+
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DAHANDLER_H_INCLUDED_

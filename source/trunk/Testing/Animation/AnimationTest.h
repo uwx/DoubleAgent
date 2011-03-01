@@ -1,7 +1,4 @@
-#ifndef ANIMATIONTEST_H_INCLUDED_
-#define ANIMATIONTEST_H_INCLUDED_
 #pragma once
-
 #include "AnimationTestRes.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -25,8 +22,3 @@ public:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // ANIMATIONTEST_H_INCLUDED_

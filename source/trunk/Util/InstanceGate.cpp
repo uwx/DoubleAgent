@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -31,8 +31,8 @@ static char THIS_FILE[]=__FILE__;
 
 //////////////////////////////////////////////////////////////////////
 
-CCriticalSection		CInstanceGate::mThreadLock;
-COwnPtrArray <CObject>	CInstanceGate::mInstances;
+ATL::CComAutoCriticalSection					CInstanceGate::mThreadLock;
+CAtlOwnPtrArray <CInstanceGate::CGenericLock>	CInstanceGate::mInstances;
 
 //////////////////////////////////////////////////////////////////////
 

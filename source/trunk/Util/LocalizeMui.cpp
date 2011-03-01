@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -24,13 +24,22 @@
 #include <shlwapi.h>
 #include "Localize.h"
 #include "ResName.h"
-#include "StringMap.h"
 #include "Log.h"
 
+#ifdef	__AFX_H__
+#include "StringMap.h"
+#define	_GetResourceHandle AfxGetResourceHandle
+#else
+#include <AtlColl.h>
+#define	_GetResourceHandle _AtlBaseModule.GetResourceInstance
+#endif
+
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
+#endif
 #endif
 
 #ifdef	_DEBUG
@@ -64,7 +73,11 @@ static CString _MakeMuiPath (LPCTSTR pResModulePath, LPCTSTR pMuiPath, LANGID pL
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__AFX_H__
 static CStringMap <CModuleHandle, HINSTANCE>	sMuiResources;
+#else
+static CAtlMap <CAtlString, CModuleHandle, CStringElementTraitsI<CAtlString>, CPrimitiveElementTraits<HINSTANCE> >	sMuiResources;
+#endif
 
 void CLocalize::FreeMuiModules ()
 {
@@ -93,7 +106,7 @@ HINSTANCE CLocalize::GetMuiModule (LANGID pLangId)
 		return NULL;
 	}
 
-#ifdef	_VISTA
+#if	(WINVER >= 0x0600)
 	TCHAR	lParentPath [85];
 
 	GetLocaleInfo (MAKELCID (pLangId, SORT_DEFAULT), LOCALE_SNAME, lMuiPath, sizeof(lMuiPath)/sizeof(TCHAR));
@@ -109,9 +122,13 @@ HINSTANCE CLocalize::GetMuiModule (LANGID pLangId)
 	_stprintf (lMuiPath, _T("MUI\\%4.4X"), pLangId);
 #endif
 
+#ifdef	__AFX_H__
 	if	(sMuiResources.FindKey (lMuiPath) < 0)
+#else
+	if	(sMuiResources.Lookup (lMuiPath) == NULL)
+#endif
 	{
-		::GetModuleFileName (AfxGetResourceHandle(), lResourcePath.GetBuffer(MAX_PATH), MAX_PATH);
+		::GetModuleFileName (_GetResourceHandle(), lResourcePath.GetBuffer(MAX_PATH), MAX_PATH);
 		lResourcePath.ReleaseBuffer ();
 
 		for	(lPathNum = 0; !(lModulePath = MakeMuiPath (lResourcePath, lMuiPath, pLangId, lPathNum)).IsEmpty(); lPathNum++)
@@ -175,7 +192,7 @@ HINSTANCE CLocalize::GetMuiModule (LANGID pLangId, ULONG & pModuleNum)
 		)
 	{
 		pModuleNum++;
-		lModule = AfxGetResourceHandle ();
+		lModule = _GetResourceHandle ();
 	}
 	return lModule;
 }
@@ -188,7 +205,7 @@ HINSTANCE CLocalize::FindResource (const CResName & pResName, WORD pLangId, HINS
 
 	try
 	{
-		HINSTANCE	lAfxModule = AfxGetResourceHandle();
+		HINSTANCE	lAfxModule = _GetResourceHandle();
 		LPCTSTR		lResName = pResName.Name();
 		HRSRC		lResource;
 
@@ -274,7 +291,7 @@ LPCVOID CLocalize::LoadResource (const CResName & pResName, ULONG & pResSize, WO
 
 	try
 	{
-		HINSTANCE	lAfxModule = AfxGetResourceHandle();
+		HINSTANCE	lAfxModule = _GetResourceHandle();
 		HGLOBAL		lResHandle;
 		HRSRC		lResource;
 
@@ -424,7 +441,7 @@ bool CLocalize::LoadMuiString (UINT pId, WORD pLangId, LPCWSTR & pString, ULONG 
 #ifdef	_UNICODE
 	try
 	{
-		HINSTANCE	lAfxModule = AfxGetResourceHandle();
+		HINSTANCE	lAfxModule = _GetResourceHandle();
 		LANGID		lLangId = pLangId;
 		ULONG		lModuleNum = 0;
 		HINSTANCE	lResModule;

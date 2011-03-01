@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -18,52 +18,52 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DASERVERHANDLER_H_INCLUDED_
-#define DASERVERHANDLER_H_INCLUDED_
 #pragma once
 
-#include "DaGuid.h"
-#include "OleObjectFactoryExEx.h"
-
-/////////////////////////////////////////////////////////////////////////////
-
-class __declspec(uuid("{1147E518-A208-11DE-ABF2-002421116FB2}")) CDaServerHandler : public CCmdTarget
+class ATL_NO_VTABLE __declspec(uuid("{1147E518-A208-11DE-ABF2-002421116FB2}")) CDaServerHandler :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public CComCoClass<CDaServerHandler, &__uuidof(DaServerHandler)>,
+	public IMultiQI
 {
-	DECLARE_DYNCREATE (CDaServerHandler)
-	DECLARE_OLECREATE_EX(CDaServerHandler)
-protected:
-	CDaServerHandler ();
 public:
-	virtual ~CDaServerHandler ();
+	CDaServerHandler ();
+	~CDaServerHandler ();
 
 // Attributes
 public:
 
 // Operations
 public:
+	HRESULT FinalConstruct ();
+	void FinalRelease ();
 
-// Overrides
-	//{{AFX_VIRTUAL(CDaServerHandler)
-	public:
-	virtual void OnFinalRelease();
-	virtual BOOL OnCreateAggregates();
-	protected:
-	virtual LPUNKNOWN GetInterfaceHook(const void* iid);
-	//}}AFX_VIRTUAL
+// Declarations
+public:
+	DECLARE_REGISTRY_RESOURCEID(101)
+	DECLARE_POLY_AGGREGATABLE(CDaServerHandler)
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
+
+	BEGIN_COM_MAP(CDaServerHandler)
+		COM_INTERFACE_ENTRY(IMultiQI)
+		COM_INTERFACE_ENTRY_FUNC_BLIND(0, &DelegateInterface)
+	END_COM_MAP()
+
+	BEGIN_CATEGORY_MAP(CDaServerHandler)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
+	END_CATEGORY_MAP()
+
+	static HRESULT WINAPI DelegateInterface (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw);
+
+// Interfaces
+	HRESULT STDMETHODCALLTYPE QueryMultipleInterfaces (ULONG cMQIs, MULTI_QI *pMQIs);
 
 // Implementation
-protected:
-	//BEGIN_INTERFACE_PART(Balloon, IDaSvrBalloon)
-	//END_INTERFACE_PART(Balloon)
-	DECLARE_INTERFACE_MAP()
-
 protected:
 	IUnknownPtr	mProxyManager;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+OBJECT_ENTRY_AUTO(__uuidof(DaServerHandler), CDaServerHandler)
 
-#endif // DASERVERHANDLER_H_INCLUDED_
+/////////////////////////////////////////////////////////////////////////////

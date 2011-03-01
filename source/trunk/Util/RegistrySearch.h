@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -32,10 +32,10 @@ class CRegistrySearch
 {
 // Operations
 public:
-	static bool GetGlobalClassesKey (CRegKey & pGlobalClasses, bool pAltPlatform = false);
-	static bool GetUserClassesKey (CRegKey & pUserClasses, bool pAltPlatform = false);
-	static bool GetClassesRootKey (CRegKey & pClassesRoot, bool pAltPlatform = false);
-	static void GetRootKeys (CRegKey & pGlobalClasses, CRegKey & pUserClasses, CRegKey & pClassesRoot, bool pAltPlatform = false);
+	static bool GetGlobalClassesKey (CRegKeyEx & pGlobalClasses, bool pAltPlatform = false);
+	static bool GetUserClassesKey (CRegKeyEx & pUserClasses, bool pAltPlatform = false);
+	static bool GetClassesRootKey (CRegKeyEx & pClassesRoot, bool pAltPlatform = false);
+	static void GetRootKeys (CRegKeyEx & pGlobalClasses, CRegKeyEx & pUserClasses, CRegKeyEx & pClassesRoot, bool pAltPlatform = false);
 
 	static CString GetClassProgId (REFGUID pClassId, HKEY pRootKey);
 	static CString GetClassViProgId (REFGUID pClassId, HKEY pRootKey);

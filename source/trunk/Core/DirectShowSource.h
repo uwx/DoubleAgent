@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,48 +18,38 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSHOWSOURCE_H_INCLUDED_
-#define DIRECTSHOWSOURCE_H_INCLUDED_
 #pragma once
-
 #include "DirectShowFilter.h"
 #include "DirectShowSeeking.h"
 #include "DirectSoundPinPush.h"
 #include "DirectSoundConvert.h"
 #include "AgentStreamUtils.h"
-#include "OleObjectFactoryExEx.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class __declspec(uuid("{1147E563-A208-11DE-ABF2-002421116FB2}")) CDirectShowSource : public CDirectShowFilter, public CDirectShowSeeking, public CAgentStreamUtils, public CDirectShowUtils, protected CDirectSoundConvertCache
+class __declspec(uuid("{1147E563-A208-11DE-ABF2-002421116FB2}")) CDirectShowSource : public CDirectShowFilter, public _IAgentStreamSource, public IFileSourceFilter, public IAMFilterMiscFlags, public IGraphConfigCallback, public CDirectShowSeeking<CDirectShowFilter>, public CAgentFileClient, public CAgentStreamUtils, public CDirectShowUtils, protected CDirectSoundConvertCache
 {
-	DECLARE_DYNCREATE(CDirectShowSource)
-//	DECLARE_OLECREATE_EX(CDirectShowSource) // Not registered for now
 public:
 	CDirectShowSource();
 	virtual ~CDirectShowSource();
-	void Terminate ();
 
 // Attributes
 public:
-	bool SetBkColor (const COLORREF * pBkColor);
-	const COLORREF * GetBkColor () const;
 
 // Operations
 public:
-	HRESULT SetAgentFile (CAgentFile * pAgentFile);
-	HRESULT	SegmentDurationChanged ();
-	HRESULT PutVideoSample (REFERENCE_TIME & pSampleTime, REFERENCE_TIME pStopTime);
+	HRESULT FinalConstruct ();
+	void Terminate ();
+	void FinalRelease ();
 
 // Overrides
-	//{{AFX_VIRTUAL(CDirectShowSource)
-	public:
+public:
 	virtual LONGLONG GetDuration ();
 	virtual LONGLONG GetPreroll ();
-	protected:
+protected:
 	virtual const GUID & GetClassID ();
 	virtual HRESULT SetFilterName (LPCWSTR pFilterName);
-	virtual CString GetFilterName ();
+	virtual CAtlString GetFilterName ();
 	virtual void GetSeekingTimes (REFERENCE_TIME & pCurrTime, REFERENCE_TIME & pStopTime);
 	virtual void InitializePins ();
 	virtual void OnJoinedFilterGraph ();
@@ -68,32 +58,48 @@ public:
 	virtual void OnTimesChanged (REFERENCE_TIME pCurrTime, DWORD pCurrentFlags, REFERENCE_TIME pStopTime, DWORD pStopFlags);
 	virtual HRESULT StartOutputStreams ();
 	virtual void OnClockPulse ();
-	//}}AFX_VIRTUAL
+
+// Interfaces
+public:
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
+
+	BEGIN_COM_MAP(CDirectShowSource)
+		COM_INTERFACE_ENTRY(_IAgentStreamSource)
+		COM_INTERFACE_ENTRY(IMediaSeeking)
+		COM_INTERFACE_ENTRY(IFileSourceFilter)
+		COM_INTERFACE_ENTRY(IAMFilterMiscFlags)
+		COM_INTERFACE_ENTRY(IGraphConfigCallback)
+		COM_INTERFACE_ENTRY_CHAIN(CDirectShowFilter)
+	END_COM_MAP()
+
+public:
+	// _IAgentStreamSource
+	HRESULT STDMETHODCALLTYPE GetAgentFile (ULONG_PTR *pAgentFile);
+	HRESULT STDMETHODCALLTYPE SetAgentFile (ULONG_PTR pAgentFile);
+	HRESULT STDMETHODCALLTYPE GetAgentStreamInfo (ULONG_PTR *pAgentStreamInfo);
+	HRESULT STDMETHODCALLTYPE SetAgentStreamInfo (ULONG_PTR pAgentStreamInfo);
+	HRESULT STDMETHODCALLTYPE GetBkColor (COLORREF *pBkColor);
+	HRESULT STDMETHODCALLTYPE SetBkColor (const COLORREF *pBkColor);
+	HRESULT STDMETHODCALLTYPE SegmentDurationChanged (void);
+
+	// IFileSourceFilter
+	HRESULT STDMETHODCALLTYPE Load (LPCOLESTR pszFileName, const AM_MEDIA_TYPE *pmt);
+	HRESULT STDMETHODCALLTYPE GetCurFile (LPOLESTR *ppszFileName, AM_MEDIA_TYPE *pmt);
+
+	// IAMFilterMiscFlags
+    ULONG STDMETHODCALLTYPE GetMiscFlags (void);
+
+	// IGraphConfigCallback
+	HRESULT STDMETHODCALLTYPE Reconfigure (PVOID pvContext, DWORD dwFlags);
+
+	// IAMOpenProgress //
 
 // Implementation
-protected:
-	BEGIN_INTERFACE_PART(FileSource, IFileSourceFilter)
-		HRESULT STDMETHODCALLTYPE Load (LPCOLESTR pszFileName, const AM_MEDIA_TYPE *pmt);
-		HRESULT STDMETHODCALLTYPE GetCurFile (LPOLESTR *ppszFileName, AM_MEDIA_TYPE *pmt);
-	END_INTERFACE_PART(FileSource)
-
-	BEGIN_INTERFACE_PART(FilterMiscFlags, IAMFilterMiscFlags)
-        ULONG STDMETHODCALLTYPE GetMiscFlags (void);
-	END_INTERFACE_PART(FilterMiscFlags)
-
-	BEGIN_INTERFACE_PART(ConfigCallback, IGraphConfigCallback)
-		HRESULT STDMETHODCALLTYPE Reconfigure (PVOID pvContext, DWORD dwFlags);
-	END_INTERFACE_PART(ConfigCallback)
-
-	//BEGIN_INTERFACE_PART(OpenProgress, IAMOpenProgress)
-	//END_INTERFACE_PART(OpenProgress)
-
-	DECLARE_INTERFACE_MAP()
-
 protected:
 	HRESULT OpenFile (LPCTSTR pFileName);
 	void ReadFile ();
 
+	HRESULT PutVideoSample (REFERENCE_TIME & pSampleTime, REFERENCE_TIME pStopTime);
 	bool PutVideoFrame ();
 	bool CueAudioSegments ();
 	bool CueAudioSegments (CAnimationSequence * pAnimationSequence);
@@ -102,14 +108,9 @@ protected:
 	CDirectSoundPinPush * ConnectSequenceSound (long pSoundNdx);
 
 protected:
-	tPtr <COLORREF>							mBkColor;
-	tPtr <CDirectShowPinOut>				mVideoOutPin;
-	COwnPtrMap <long, CDirectSoundPinPush>	mAudioOutPins;
+	tPtr <COLORREF>								mBkColor;
+	tPtr <CDirectShowPinOut>					mVideoOutPin;
+	CAtlOwnPtrMap <long, CDirectSoundPinPush>	mAudioOutPins;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSHOWSOURCE_H_INCLUDED_

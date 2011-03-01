@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -23,7 +23,9 @@
 /////////////////////////////////////////////////////////////////////////////
 #ifndef	_LOG_DISABLED
 #ifdef __cplusplus
-extern "C" {
+#ifndef	_LOG_NO_EXTERN_C
+EXTERN_C {
+#endif
 #endif
 /////////////////////////////////////////////////////////////////////////////
 
@@ -2193,7 +2195,7 @@ DWORD LogStart (bool pNewLogFile, LPCTSTR pLogFileName, UINT pLogLevel)
 				{
 					HMODULE		lModule = 0;
 					TCHAR		lProgramName [MAX_PATH];
-#ifdef	_VISTA
+#if	(WINVER >= 0x0600)
 #ifdef	_WIN64
 					LPCTSTR		lVersionSuffix = _T(" Vx64");
 #else
@@ -2327,10 +2329,10 @@ DWORD LogStart (bool pNewLogFile, LPCTSTR pLogFileName, UINT pLogLevel)
 								&&	(lValueType == REG_DWORD)
 								)
 							{
-								TCHAR	lSpeed [20];
-								_stprintf (lSpeed, _T("%uMHz"), * (DWORD *) lValue);
+								TCHAR	Speed [20];
+								_stprintf (Speed, _T("%uMHz"), * (DWORD *) lValue);
 								_tcscat (lProcessorStr, _T(" "));
-								_tcscat (lProcessorStr, lSpeed);
+								_tcscat (lProcessorStr, Speed);
 							}
 						}
 
@@ -2824,7 +2826,9 @@ bool LogUnlock ()
 
 /////////////////////////////////////////////////////////////////////////////
 #ifdef __cplusplus
+#ifndef	_LOG_NO_EXTERN_C
 }
+#endif
 #endif
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()

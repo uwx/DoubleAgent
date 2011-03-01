@@ -2,6 +2,7 @@
 #include "ReplayActions.h"
 #include "ActionList.h"
 #include "LocalizeEx.h"
+#include "DebugStr.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

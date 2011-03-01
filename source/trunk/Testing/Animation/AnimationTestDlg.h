@@ -1,13 +1,14 @@
-#ifndef ANIMATIONTESTDLG_H_INCLUDED_
-#define ANIMATIONTESTDLG_H_INCLUDED_
 #pragma once
-
 #include "DaServerOdl.h"
 #include "AgentPreviewWnd.h"
 
 _COM_SMARTPTR_TYPEDEF (IDaServer, __uuidof(IDaServer));
+_COM_SMARTPTR_TYPEDEF (IDaServer2, __uuidof(IDaServer2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCharacter, __uuidof(IDaSvrCharacter));
+_COM_SMARTPTR_TYPEDEF (IDaSvrCharacter2, __uuidof(IDaSvrCharacter2));
+_COM_SMARTPTR_TYPEDEF (IDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles));
 _COM_SMARTPTR_TYPEDEF (IDaSvrPropertySheet, __uuidof(IDaSvrPropertySheet));
+_COM_SMARTPTR_TYPEDEF (IDaSvrPropertySheet2, __uuidof(IDaSvrPropertySheet2));
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -22,7 +23,7 @@ public:
 	enum { IDD = IDD_ANIMATIONTEST_DIALOG };
 	CButton	mAutoPopup;
 	CButton	mFastShowHide;
-	CButton	mIdleOn;
+	CButton	mIdleEnabled;
 	CButton	mAnimateBoth;
 	CButton	mAgentPropsButton;
 	CButton	mCharPropsButton;
@@ -40,6 +41,14 @@ public:
 	CButton	mSizeNormal;
 	CButton	mSizeLarge;
 	CButton	mSizeSmall;
+	CButton	mSmoothNone;
+	CButton	mSmoothEdges;
+	CButton	mSmoothFull;
+	CButton	mIconShown;
+	CButton	mIconOnLoad;
+	CButton	mIconGenerated;
+	CButton	mIconClipped;
+	CButton	mIconIdentified;
 	//}}AFX_DATA
 
 	//{{AFX_VIRTUAL(CAnimationTestDlg)
@@ -75,6 +84,11 @@ protected:
 	afx_msg void OnSizeNormal();
 	afx_msg void OnSizeLarge();
 	afx_msg void OnSizeSmall();
+	afx_msg void OnSmooth();
+	afx_msg void OnIconOnLoad();
+	afx_msg void OnIconShown();
+	afx_msg void OnIconGenerated();
+	afx_msg void OnIconIdentified();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -84,27 +98,27 @@ protected:
 		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*);
 		HRESULT STDMETHODCALLTYPE Invoke (DISPID, REFIID, LCID, unsigned short, DISPPARAMS*, VARIANT*, EXCEPINFO*, unsigned int*);
 
-		HRESULT STDMETHODCALLTYPE Command (long dwCommandID, IUnknown *punkUserInput);
-		HRESULT STDMETHODCALLTYPE ActivateInputState (long dwCharID, long bActivated);
+		HRESULT STDMETHODCALLTYPE Command (long CommandID, IDaSvrUserInput2 *UserInput);
+		HRESULT STDMETHODCALLTYPE ActivateInputState (long CharacterID, long Activated);
 		HRESULT STDMETHODCALLTYPE Restart (void);
 		HRESULT STDMETHODCALLTYPE Shutdown (void);
-		HRESULT STDMETHODCALLTYPE VisibleState (long dwCharID, long bVisible, long dwCause);
-		HRESULT STDMETHODCALLTYPE Click (long dwCharID, short fwKeys, long x, long y);
-		HRESULT STDMETHODCALLTYPE DblClick (long dwCharID, short fwKeys, long x, long y);
-		HRESULT STDMETHODCALLTYPE DragStart (long dwCharID, short fwKeys, long x, long y);
-		HRESULT STDMETHODCALLTYPE DragComplete (long dwCharID, short fwKeys, long x, long y);
-		HRESULT STDMETHODCALLTYPE RequestStart (long dwRequestID);
-		HRESULT STDMETHODCALLTYPE RequestComplete (long dwRequestID, long hrStatus);
-		HRESULT STDMETHODCALLTYPE BookMark (long dwBookMarkID);
-		HRESULT STDMETHODCALLTYPE Idle (long dwCharID, long bStart);
-		HRESULT STDMETHODCALLTYPE Move (long dwCharID, long x, long y, long dwCause);
-		HRESULT STDMETHODCALLTYPE Size (long dwCharID, long lWidth, long lHeight);
-		HRESULT STDMETHODCALLTYPE BalloonVisibleState (long dwCharID, long bVisible);
-		HRESULT STDMETHODCALLTYPE HelpComplete (long dwCharID, long dwCommandID, long dwCause);
-		HRESULT STDMETHODCALLTYPE ListeningState (long dwCharID, long bListening, long dwCause);
-		HRESULT STDMETHODCALLTYPE DefaultCharacterChange (BSTR bszGUID);
+		HRESULT STDMETHODCALLTYPE VisibleState (long CharacterID, long Visible, long Cause);
+		HRESULT STDMETHODCALLTYPE Click (long CharacterID, short Keys, long x, long y);
+		HRESULT STDMETHODCALLTYPE DblClick (long CharacterID, short Keys, long x, long y);
+		HRESULT STDMETHODCALLTYPE DragStart (long CharacterID, short Keys, long x, long y);
+		HRESULT STDMETHODCALLTYPE DragComplete (long CharacterID, short Keys, long x, long y);
+		HRESULT STDMETHODCALLTYPE RequestStart (long RequestID);
+		HRESULT STDMETHODCALLTYPE RequestComplete (long RequestID, long Result);
+		HRESULT STDMETHODCALLTYPE BookMark (long BookMarkID);
+		HRESULT STDMETHODCALLTYPE Idle (long CharacterID, long Start);
+		HRESULT STDMETHODCALLTYPE Move (long CharacterID, long x, long y, long Cause);
+		HRESULT STDMETHODCALLTYPE Size (long CharacterID, long Width, long Height);
+		HRESULT STDMETHODCALLTYPE BalloonVisibleState (long CharacterID, long Visible);
+		HRESULT STDMETHODCALLTYPE HelpComplete (long CharacterID, long CommandID, long Cause);
+		HRESULT STDMETHODCALLTYPE ListeningState (long CharacterID, long Listening, long Cause);
+		HRESULT STDMETHODCALLTYPE DefaultCharacterChange (BSTR CharGUID);
 		HRESULT STDMETHODCALLTYPE AgentPropertyChange(void);
-		HRESULT STDMETHODCALLTYPE ActiveClientChange (long dwCharID, long lStatus);
+		HRESULT STDMETHODCALLTYPE ActiveClientChange (long CharacterID, long Status);
 	END_INTERFACE_PART(DaSvrNotifySink)
 
 	DECLARE_INTERFACE_MAP()
@@ -136,17 +150,18 @@ protected:
 	void CharacterIsVisible (bool pVisible);
 	void ShowCharacterState ();
 	void SetCharacterSize();
+	void SetCharacterIcon();
 
 	void LoadConfig ();
 	void SaveConfig ();
 
 protected:
-	tPtr <CAgentPreviewWnd>	mAgentWnd;
+	tPtr <CAgentPreviewWnd>	mAgentPreviewWnd;
 	CString					mWinTitle;
 	CString					mCharacterPath;
-	IDaServerPtr			mServer;
+	IDaServer2Ptr			mServer;
 	long					mNotifySinkId;
-	IDaSvrCharacterPtr		mCharacter;
+	IDaSvrCharacter2Ptr		mCharacter;
 	long					mCharacterId;
 	UINT_PTR				mRepeatTimer;
 	UINT_PTR				mAllGesturesTimer;
@@ -158,8 +173,3 @@ protected:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // ANIMATIONTESTDLG_H_INCLUDED_

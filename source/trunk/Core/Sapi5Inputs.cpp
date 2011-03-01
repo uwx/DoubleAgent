@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -26,20 +26,13 @@
 #include "Sapi5Err.h"
 #include "MallocPtr.h"
 #include "StringArrayEx.h"
-#include "UiState.h"
 #ifdef	_DEBUG
 #include "Registry.h"
 #endif
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
 #ifdef	_DEBUG
-#define	_DEBUG_INPUTS		(GetProfileDebugInt(_T("LogInputs"),LogVerbose,true)&0xFFFF)
-#define	_DEBUG_INPUT_MATCH	(GetProfileDebugInt(_T("LogInputMatch"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_INPUTS		(GetProfileDebugInt(_T("LogInputs"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_DEBUG_INPUT_MATCH	(GetProfileDebugInt(_T("LogInputMatch"),LogVerbose,true)&0xFFFF|LogTime)
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -50,6 +43,11 @@ _COM_SMARTPTR_TYPEDEF (ISpObjectTokenCategory, __uuidof(ISpObjectTokenCategory))
 _COM_SMARTPTR_TYPEDEF (ISpDataKey, __uuidof(ISpDataKey));
 
 //////////////////////////////////////////////////////////////////////
+
+IMPLEMENT_DLL_OBJECT(CSapi5InputIndexArray)
+IMPLEMENT_DLL_OBJECT(CSapi5InputInfoArray)
+IMPLEMENT_DLL_OBJECT(CSapi5InputMatchRanks)
+IMPLEMENT_DLL_OBJECT(CSapi5InputInfo)
 
 CSapi5InputInfo::CSapi5InputInfo ()
 :	mLangId (MAKELANGID (LANG_NEUTRAL, SUBLANG_NEUTRAL)),
@@ -65,10 +63,10 @@ CSapi5InputInfo::~CSapi5InputInfo ()
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNCREATE (CSapi5Inputs, CPtrArray)
+IMPLEMENT_DLL_OBJECT(CSapi5Inputs)
 
 CSapi5Inputs::CSapi5Inputs ()
-:	mLogLevelDebug (LogVerbose)
+:	mLogLevelDebug (LogVerbose|LogTime)
 {
 #ifdef	_DEBUG_INPUTS
 	const_cast <UINT&> (mLogLevelDebug) = _DEBUG_INPUTS;
@@ -88,6 +86,11 @@ CSapi5Inputs::~CSapi5Inputs ()
 		RemoveAll ();
 	}
 	catch AnyExceptionSilent
+}
+
+CSapi5Inputs * CSapi5Inputs::CreateInstance ()
+{
+	return new CSapi5Inputs;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -118,7 +121,7 @@ void CSapi5Inputs::Enumerate ()
 
 			if	(lInputInfo = new CSapi5InputInfo)
 			{
-				if	(SUCCEEDED (LogSapi5Err (LogNormal, SpGetDescription (lToken, lSapiStr.Free (), NULL))))
+				if	(SUCCEEDED (LogSapi5Err (LogNormal|LogTime, SpGetDescription (lToken, lSapiStr.Free (), NULL))))
 				{
 					lInputInfo->mEngineName = _bstr_t (lSapiStr).Detach();
 				}
@@ -140,10 +143,10 @@ void CSapi5Inputs::Enumerate ()
 
 				if	(SUCCEEDED (lToken->OpenKey (SPTOKENKEY_ATTRIBUTES, &lAttributes)))
 				{
-					CStringArray		lLangIdStrs;
-					LPTSTR				lLangIdStrEnd;
-					CArrayEx <LANGID>	lLocales;
-					INT_PTR				lLocaleNdx;
+					CAtlStringArray			lLangIdStrs;
+					LPTSTR					lLangIdStrEnd;
+					CAtlTypeArray <LANGID>	lLocales;
+					INT_PTR					lLocaleNdx;
 
 					if	(SUCCEEDED (lAttributes->GetDWORD (L"Language", &lSapiValue)))
 					{
@@ -156,7 +159,7 @@ void CSapi5Inputs::Enumerate ()
 					else
 					if	(
 							(SUCCEEDED (lAttributes->GetStringValue (L"Language", lSapiStr.Free ())))
-						&&	(MakeStringArray (CString (lSapiStr), lLangIdStrs, _T(" ,;")) > 0)
+						&&	(MakeStringArray (CAtlString (lSapiStr), lLangIdStrs, _T(" ,;")) > 0)
 						&&	(lSapiValue = _tcstoul (lLangIdStrs [0], &lLangIdStrEnd, 16))
 						&&	(*lLangIdStrEnd == 0)
 						&&	(IsValidLocale (MAKELCID ((LANGID)lSapiValue, SORT_DEFAULT), LCID_SUPPORTED))
@@ -168,10 +171,10 @@ void CSapi5Inputs::Enumerate ()
 
 					if	(
 							(SUCCEEDED (lAttributes->GetStringValue (L"SupportedLocales", lSapiStr.Free ())))
-						&&	(MakeStringArray (CString (lSapiStr), lLangIdStrs, _T(" ,;")) > 0)
+						&&	(MakeStringArray (CAtlString (lSapiStr), lLangIdStrs, _T(" ,;")) > 0)
 						)
 					{
-						for	(lLocaleNdx = 0; lLocaleNdx <= lLangIdStrs.GetUpperBound(); lLocaleNdx++)
+						for	(lLocaleNdx = 0; lLocaleNdx < (INT_PTR)lLangIdStrs.GetCount(); lLocaleNdx++)
 						{
 							if	(
 									(lSapiValue = _tcstoul (lLangIdStrs [lLocaleNdx], &lLangIdStrEnd, 16))
@@ -184,17 +187,17 @@ void CSapi5Inputs::Enumerate ()
 					}
 					if	(
 							(
-								(lLocales.GetSize() > 1)
+								(lLocales.GetCount() > 1)
 							||	(
-									(lLocales.GetSize() > 0)
+									(lLocales.GetCount() > 0)
 								&&	(lLocales [0] != lInputInfo->mLangId)
 								)
 							)
-						&&	(lInputInfo->mLangIdSupported = new LANGID [lLocales.GetSize()])
+						&&	(lInputInfo->mLangIdSupported = new LANGID [lLocales.GetCount()])
 						)
 					{
-						lInputInfo->mLangIdCount = (UINT)lLocales.GetSize();
-						for	(lLocaleNdx = 0; lLocaleNdx <= lLocales.GetUpperBound(); lLocaleNdx++)
+						lInputInfo->mLangIdCount = (UINT)lLocales.GetCount();
+						for	(lLocaleNdx = 0; lLocaleNdx < (INT_PTR)lLocales.GetCount(); lLocaleNdx++)
 						{
 							lInputInfo->mLangIdSupported [lLocaleNdx] = lLocales [lLocaleNdx];
 						}
@@ -221,13 +224,13 @@ INT_PTR CSapi5Inputs::FindEngineId (LPCTSTR pEngineId)
 	INT_PTR				lNdx;
 	CSapi5InputInfo *	lInputInfo;
 
-	for	(lNdx = 0; lNdx <= GetUpperBound (); lNdx++)
+	for	(lNdx = 0; lNdx < (INT_PTR)GetCount(); lNdx++)
 	{
 		if	(
 				(lInputInfo = (operator [] (lNdx)))
 			&&	(
-					(CString (lInputInfo->mEngineIdLong).CompareNoCase (pEngineId) == 0)
-				||	(CString (lInputInfo->mEngineIdShort).CompareNoCase (pEngineId) == 0)
+					(CAtlString (lInputInfo->mEngineIdLong).CompareNoCase (pEngineId) == 0)
+				||	(CAtlString (lInputInfo->mEngineIdShort).CompareNoCase (pEngineId) == 0)
 				)
 			)
 		{
@@ -250,11 +253,11 @@ INT_PTR CSapi5Inputs::FindEngineName (LPCTSTR pEngineName)
 	INT_PTR				lNdx;
 	CSapi5InputInfo *	lInputInfo;
 
-	for	(lNdx = 0; lNdx <= GetUpperBound (); lNdx++)
+	for	(lNdx = 0; lNdx < (INT_PTR)GetCount(); lNdx++)
 	{
 		if	(
 				(lInputInfo = (operator [] (lNdx)))
-			&&	(CString (lInputInfo->mEngineName).CompareNoCase (pEngineName) == 0)
+			&&	(CAtlString (lInputInfo->mEngineName).CompareNoCase (pEngineName) == 0)
 			)
 		{
 			return lNdx;
@@ -270,54 +273,78 @@ CSapi5InputInfo * CSapi5Inputs::GetEngineName (LPCTSTR pEngineName)
 }
 
 //////////////////////////////////////////////////////////////////////
+
+INT_PTR CSapi5Inputs::FindInput (LANGID pLangId, bool pUseDefaults, int * pMatchRank)
+{
+	tPtr <CSapi5InputIndexArray const>	lIndexArray;
+	tPtr <CSapi5InputMatchRanks const>	lMatchRanks;
+
+	if	(lIndexArray = FindInputs (pLangId, pUseDefaults, lMatchRanks.Free()))
+	{
+#ifdef	_DEBUG_INPUT_MATCH
+		LogMessage (_DEBUG_INPUT_MATCH, _T("FindInput [%u] %4.4d [%ls] [%ls] [%ls] [%ls]"), pUseDefaults, (*lMatchRanks) [0], (BSTR)GetAt((*lIndexArray) [0])->mEngineName, (BSTR)GetAt((*lIndexArray) [0])->mClassId, (BSTR)GetAt((*lIndexArray) [0])->mEngineIdShort, (BSTR)GetAt((*lIndexArray) [0])->mEngineIdLong);
+		LogMessage (_DEBUG_INPUT_MATCH, _T(""));
+#endif
+		if	(pMatchRank)
+		{
+			(*pMatchRank) = (*lMatchRanks) [0];
+		}
+		return (*lIndexArray) [0];
+	}
+	else
+	if	(pMatchRank)
+	{
+		(*pMatchRank) = 0;
+	}
+	return -1;
+}
+
+CSapi5InputInfo * CSapi5Inputs::GetInput (LANGID pLangId, bool pUseDefaults, int * pMatchRank)
+{
+	return operator () (FindInput (pLangId, pUseDefaults, pMatchRank));
+}
+
+//////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-INT_PTR CSapi5Inputs::FindInput (LANGID pLangId, bool pUseDefaults)
+CSapi5InputIndexArray const * CSapi5Inputs::FindInputs (LANGID pLangId, bool pUseDefaults, CSapi5InputMatchRanks const ** pMatchRanks)
 {
-	INT_PTR	lRet = -1;
+	tPtr <CSapi5InputIndexArray>	lIndexArray = new CSapi5InputIndexArray;
+	tPtr <CSapi5InputMatchRanks>	lMatchRanks = new CSapi5InputMatchRanks;
 
 	try
 	{
-		CArrayEx <LANGID, LANGID>	lLanguageIds;
+		CAtlTypeArray <LANGID>		lLanguageIds;
 		INT_PTR						lLanguageNdx;
 		INT_PTR						lLocaleNdx;
-		CSapi5InputInfo *			lInputInfo;
 		INT_PTR						lInputNdx;
-		INT_PTR						lBestLanguage = INT_MAX;
-		INT_PTR						lBestNdx = -1;
+		static const int			lOrderWeight = 1;
 
 #ifdef	_DEBUG_INPUT_MATCH
-		LogMessage (_DEBUG_INPUT_MATCH, _T("FindInput Language [%4.4X]"), pLangId);
+		LogMessage (_DEBUG_INPUT_MATCH, _T("FindInputs [%u] Language [%4.4X]"), pUseDefaults, pLangId);
+		LogLanguageMatchList (_DEBUG_INPUT_MATCH, pLangId, pUseDefaults, NULL, _T("  "));
 #endif
 		MakeLanguageMatchList (pLangId, lLanguageIds, pUseDefaults);
 
-		for	(lInputNdx = 0; lInputNdx <= GetUpperBound (); lInputNdx++)
+		for	(lInputNdx = 0; lInputNdx < (INT_PTR)GetCount(); lInputNdx++)
 		{
-			lInputInfo = GetAt (lInputNdx);
+			CSapi5InputInfo *	lInputInfo = GetAt (lInputNdx);
 
 #ifdef	_DEBUG_INPUT_MATCH
-			CString	lMatchLog;
+			CAtlString	lMatchLog;
 			lMatchLog.Format (_T("%-60.60ls"), (BSTR)lInputInfo->mEngineName);
 #endif
 
-			lLanguageNdx = lLanguageIds.Find (lInputInfo->mLangId);
+			lLanguageNdx = FindLanguageMatch (lInputInfo->mLangId, lLanguageIds);
 			if	(lLanguageNdx >= 0)
 			{
 #ifdef	_DEBUG_INPUT_MATCH
-				lMatchLog.Format (_T("%s Language [%4.4X] [%d]"), CString((LPCTSTR)lMatchLog), lInputInfo->mLangId, lLanguageNdx);
+				lMatchLog.Format (_T("%s Language [%4.4X] [%4.4X] [%d]"), CAtlString((LPCTSTR)lMatchLog), lInputInfo->mLangId, lLanguageIds [lLanguageNdx], lLanguageNdx);
 #endif
-				if	(lLanguageNdx < lBestLanguage)
-				{
-					lBestLanguage = lLanguageNdx;
-					lBestNdx = lInputNdx;
-				}
 			}
-
-			if	(
-					(lLanguageNdx < 0)
-				&&	(lInputInfo->mLangIdCount > 0)
-				)
+			else
+			if	(lInputInfo->mLangIdCount > 0)
 			{
 				for	(lLocaleNdx = 0; lLocaleNdx < (INT_PTR)lInputInfo->mLangIdCount; lLocaleNdx++)
 				{
@@ -325,63 +352,60 @@ INT_PTR CSapi5Inputs::FindInput (LANGID pLangId, bool pUseDefaults)
 					if	(lLanguageNdx >= 0)
 					{
 #ifdef	_DEBUG_INPUT_MATCH
-						lMatchLog.Format (_T("%s Language [%4.4X] [%d]"), CString((LPCTSTR)lMatchLog), lInputInfo->mLangIdSupported [lLocaleNdx], lLanguageNdx);
+						lMatchLog.Format (_T("%s Language [%4.4X] [%d]"), CAtlString((LPCTSTR)lMatchLog), lInputInfo->mLangIdSupported [lLocaleNdx], lLanguageNdx);
 #endif
-						if	(lLanguageNdx < lBestLanguage)
-						{
-							lBestLanguage = lLanguageNdx;
-							lBestNdx = lInputNdx;
-						}
 						break;
 					}
 				}
 			}
 
-			if	(
-					(lLanguageNdx < 0)
-				&&	(SUBLANGID (lInputInfo->mLangId) != SUBLANG_NEUTRAL)
-				)
-			{
-				lLanguageNdx = lLanguageIds.Find (PRIMARYLANGID (lInputInfo->mLangId));
-				if	(lLanguageNdx >= 0)
-				{
 #ifdef	_DEBUG_INPUT_MATCH
-					lMatchLog.Format (_T("%s Language [%4.4X] [%d]"), CString((LPCTSTR)lMatchLog), PRIMARYLANGID (lInputInfo->mLangId), lLanguageNdx);
+			LogMessage (_DEBUG_INPUT_MATCH|LogHighVolume, _T("  %3d [%3.3d] %s Name [%ls]"), lInputNdx, lLanguageNdx, lMatchLog, (BSTR)GetAt(lInputNdx)->mEngineName);
 #endif
-					if	(lLanguageNdx < lBestLanguage)
-					{
-						lBestLanguage = lLanguageNdx;
-						lBestNdx = lInputNdx;
-					}
-				}
-			}
-
-#ifdef	_DEBUG_INPUT_MATCH
-			LogMessage (_DEBUG_INPUT_MATCH|LogHighVolume, _T("  %4.4d %s"), lBestNdx, lMatchLog);
-#endif
-			if	(lBestLanguage == 0)
+			if	(lLanguageNdx >= 0)
 			{
-				break;
+				lIndexArray->InsertAt (lMatchRanks->AddSortedQS (((int)lLanguageIds.GetCount()-(int)lLanguageNdx) + (((int)GetCount()-(int)lInputNdx)*lOrderWeight), CSapi5InputMatchRanks::SortDescending, false), lInputNdx);
 			}
 		}
 
-		if	(lBestNdx >= 0)
-		{
 #ifdef	_DEBUG_INPUT_MATCH
-			LogMessage (_DEBUG_INPUT_MATCH, _T("FindInput [%ls] [%ls] [%ls] [%ls]"), (BSTR)GetAt(lBestNdx)->mEngineName, (BSTR)GetAt(lBestNdx)->mClassId, (BSTR)GetAt(lBestNdx)->mEngineIdShort, (BSTR)GetAt(lBestNdx)->mEngineIdLong);
-			LogMessage (_DEBUG_INPUT_MATCH, _T(""));
+		LogMessage (_DEBUG_INPUT_MATCH, _T("  Inputs [%u] [%s]"), pUseDefaults, FormatArray (*lIndexArray, _T("%3d")));
+		LogMessage (_DEBUG_INPUT_MATCH, _T("  Ranks  [%u] [%s]"), pUseDefaults, FormatArray (*lMatchRanks, _T("%3.3d")));
 #endif
-			lRet = lBestNdx;
-		}
 	}
 	catch AnyExceptionDebug
 
-	return lRet;
+	if	(lIndexArray->GetCount () <= 0)
+	{
+		lIndexArray = NULL;
+		lMatchRanks = NULL;
+	}
+	if	(pMatchRanks)
+	{
+		(*pMatchRanks) = lMatchRanks.Detach ();
+	}
+	return lIndexArray.Detach ();
 }
 
-CSapi5InputInfo * CSapi5Inputs::GetInput (LANGID pLangId, bool pUseDefaults)
+//////////////////////////////////////////////////////////////////////
+
+CSapi5InputInfoArray const * CSapi5Inputs::GetInputs (LANGID pLangId, bool pUseDefaults, CSapi5InputMatchRanks const ** pMatchRanks)
 {
-	return operator () (FindInput (pLangId, pUseDefaults));
+	tPtr <CSapi5InputInfoArray>			lInfoArray;
+	tPtr <CSapi5InputIndexArray const>	lIndexArray;
+	INT_PTR								lNdx;
+
+	if	(
+			(lIndexArray = FindInputs (pLangId, pUseDefaults, pMatchRanks))
+		&&	(lInfoArray = new CSapi5InputInfoArray)
+		)
+	{
+		for	(lNdx = 0; lNdx < (INT_PTR)lIndexArray->GetCount(); lNdx++)
+		{
+			lInfoArray->Add (operator () ((*lIndexArray) [lNdx]));
+		}
+	}
+	return lInfoArray.Detach();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -390,7 +414,7 @@ bool CSapi5Inputs::RemoveInput (INT_PTR pInputNdx)
 {
 	if	(
 			(pInputNdx >= 0)
-		&&	(pInputNdx <= GetUpperBound ())
+		&&	(pInputNdx < (INT_PTR)GetCount())
 		)
 	{
 		if	(LogIsActive (mLogLevelDebug))
@@ -425,7 +449,7 @@ INT_PTR CSapi5Inputs::DefaultInputNdx ()
 		&&	(SUCCEEDED (lToken->GetId (lSapiStr.Free ())))
 		)
 	{
-		lRet = FindEngineId (CString (lSapiStr));
+		lRet = FindEngineId (CAtlString (lSapiStr));
 	}
 	return lRet;
 }
@@ -434,15 +458,15 @@ INT_PTR CSapi5Inputs::DefaultInputNdx ()
 
 bool CSapi5Inputs::InputSupportsLanguage (CSapi5InputInfo * pInputInfo, LANGID pLangId, bool pUseDefaults)
 {
-	bool						lRet = false;
-	CArrayEx <LANGID, LANGID>	lLanguageIds;
-	INT_PTR						lLocaleNdx;
+	bool					lRet = false;
+	CAtlTypeArray <LANGID>	lLanguageIds;
+	INT_PTR					lLocaleNdx;
 
 	if	(pInputInfo)
 	{
 		MakeLanguageMatchList (pLangId, lLanguageIds, pUseDefaults);
 
-		if	(lLanguageIds.Find (pInputInfo->mLangId) >= 0)
+		if	(FindLanguageMatch (pInputInfo->mLangId, lLanguageIds) >= 0)
 		{
 			lRet = true;
 		}
@@ -462,48 +486,6 @@ bool CSapi5Inputs::InputSupportsLanguage (CSapi5InputInfo * pInputInfo, LANGID p
 	return lRet;
 }
 
-void CSapi5Inputs::MakeLanguageMatchList (LANGID pLanguageId, CArrayEx <LANGID, LANGID> & pLanguageIds, bool pUseDefaults)
-{
-	pLanguageIds.RemoveAll ();
-
-	if	(pLanguageId)
-	{
-		if	(IsValidLocale (MAKELCID (pLanguageId, SORT_DEFAULT), LCID_SUPPORTED))
-		{
-			pLanguageIds.AddUnique (pLanguageId);
-		}
-
-		if	(
-				(SUBLANGID (pLanguageId) != SUBLANG_DEFAULT)
-			&&	(IsValidLocale (MAKELCID (MAKELANGID (PRIMARYLANGID (pLanguageId), SUBLANG_DEFAULT), SORT_DEFAULT), LCID_SUPPORTED))
-			)
-		{
-			pLanguageIds.AddUnique (MAKELANGID (PRIMARYLANGID (pLanguageId), SUBLANG_DEFAULT));
-		}
-
-		if	(
-				(SUBLANGID (pLanguageId) != SUBLANG_DEFAULT)
-			&&	(IsValidLocale (MAKELCID (MAKELANGID (PRIMARYLANGID (pLanguageId), SUBLANG_SYS_DEFAULT), SORT_DEFAULT), LCID_SUPPORTED))
-			)
-		{
-			pLanguageIds.AddUnique (MAKELANGID (PRIMARYLANGID (pLanguageId), SUBLANG_SYS_DEFAULT));
-		}
-	}
-
-	if	(pUseDefaults)
-	{
-		pLanguageIds.AddUnique (GetUserDefaultUILanguage ());
-		pLanguageIds.AddUnique (GetSystemDefaultUILanguage ());
-		pLanguageIds.AddUnique (GetUserDefaultLangID ());
-		pLanguageIds.AddUnique (GetSystemDefaultLangID ());
-		pLanguageIds.AddUnique (MAKELANGID (LANG_ENGLISH, SUBLANG_ENGLISH_US));
-		pLanguageIds.AddUnique (MAKELANGID (LANG_ENGLISH, SUBLANG_NEUTRAL));
-	}
-#ifdef	_DEBUG_INPUT_MATCH
-	LogMessage (_DEBUG_INPUT_MATCH, _T("  LanguageMatches for [%4.4X] are [%s] defaults [%4.4X] [%4.4X] [%4.4X] [%4.4X]"), pLanguageId, FormatArray (pLanguageIds, _T("%4.4X")), GetUserDefaultUILanguage (), GetSystemDefaultUILanguage (), GetUserDefaultLangID (), GetSystemDefaultLangID ());
-#endif
-}
-
 //////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
@@ -514,18 +496,18 @@ void CSapi5Inputs::Log (UINT pLogLevel, LPCTSTR pTitle, LPCTSTR pIndent)
 	{
 		try
 		{
-			CString	lTitle (pTitle);
-			CString	lIndent (pIndent);
-			int		lNdx;
+			CAtlString	lTitle (pTitle);
+			CAtlString	lIndent (pIndent);
+			INT_PTR		lNdx;
 
 			if	(lTitle.IsEmpty ())
 			{
 				lTitle = _T("SAPI5 Inputs");
 			}
-			LogMessage (pLogLevel, _T("%s%s [%d]"), lIndent, lTitle, GetSize ());
+			LogMessage (pLogLevel, _T("%s%s [%d]"), lIndent, lTitle, GetCount());
 
 			lIndent += _T("  ");
-			for	(lNdx = 0; lNdx <= GetUpperBound (); lNdx++)
+			for	(lNdx = 0; lNdx < (INT_PTR)GetCount(); lNdx++)
 			{
 				lTitle.Format (_T("Input %d"), lNdx);
 				LogInputInfo (pLogLevel|LogHighVolume, *operator[](lNdx), lTitle, lIndent);
@@ -541,8 +523,8 @@ void CSapi5Inputs::LogInputInfo (UINT pLogLevel, CSapi5InputInfo & pInputInfo, L
 	{
 		try
 		{
-			CString	lTitle (pTitle);
-			CString	lIndent (pIndent);
+			CAtlString	lTitle (pTitle);
+			CAtlString	lIndent (pIndent);
 
 			if	(lTitle.IsEmpty ())
 			{
@@ -581,7 +563,7 @@ void CSapi5Inputs::LogInputToken (UINT pLogLevel, void * pInputToken, LPCTSTR pT
 		try
 		{
 			ISpObjectToken *	lToken = (ISpObjectToken *) pInputToken;
-			CString				lTitle (pTitle);
+			CAtlString			lTitle (pTitle);
 			tMallocPtr <WCHAR>	lInputName;
 			tMallocPtr <WCHAR>	lInputId;
 			tMallocPtr <WCHAR>	lClassId;
@@ -599,11 +581,11 @@ void CSapi5Inputs::LogInputToken (UINT pLogLevel, void * pInputToken, LPCTSTR pT
 			{
 				try
 				{
-					if	(SUCCEEDED (LogSapi5Err (LogNormal, SpGetDescription (lToken, lInputName.Free (), NULL))))
+					if	(SUCCEEDED (LogSapi5Err (LogNormal|LogTime, SpGetDescription (lToken, lInputName.Free (), NULL))))
 					{
 						LogMessage (pLogLevel, _T("  Name     [%ls]"), (LPWSTR)lInputName);
 					}
-					if	(SUCCEEDED (LogSapi5Err (LogNormal, lToken->GetId (lInputId.Free ()))))
+					if	(SUCCEEDED (LogSapi5Err (LogNormal|LogTime, lToken->GetId (lInputId.Free ()))))
 					{
 						LogMessage (pLogLevel, _T("  Id       [%ls]"), (LPWSTR)lInputId);
 					}

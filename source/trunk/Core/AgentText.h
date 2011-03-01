@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,10 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef AGENTTEXT_H_INCLUDED_
-#define AGENTTEXT_H_INCLUDED_
 #pragma once
-
 #include <msxml6.h>
 #include "TextWrap.h"
 
@@ -36,7 +33,7 @@ class CAgentText
 {
 public:
 	CAgentText (UINT pSapiVersion = 5);
-	CAgentText (const CStringArray & pWords, UINT pSapiVersion = 5);
+	CAgentText (const CAtlStringArray & pWords, UINT pSapiVersion = 5);
 	CAgentText (const CAgentText & pText, UINT pSapiVersion = 5);
 	virtual ~CAgentText ();
 
@@ -45,37 +42,49 @@ public:
 	UINT GetSapiVersion () const;
 	bool SetSapiVersion (UINT pSapiVersion);
 
-	const CString & GetFullText () const {return mText;}
-	CString GetSpeechText () const;
+	const CAtlString & GetFullText () const {return mText;}
+	CAtlString GetSpeechText () const;
 
 // Operations
 public:
-	CAgentText & operator= (const CStringArray & pWords);
-	CAgentText & operator+= (const CStringArray & pWords);
+	CAgentText & operator= (const CAtlStringArray & pWords);
+	CAgentText & operator+= (const CAtlStringArray & pWords);
 	CAgentText & operator= (const CAgentText & pText);
 	CAgentText & operator+= (const CAgentText & pText);
 
 // Implementation
 public:
-	void Append (const CStringArray & pTextWords, const CStringArray & pSpeechWords);
+	void Append (const CAgentText & pText, bool pAppendSpeech = false);
+	void Append (const CAtlStringArray & pTextWords, const CAtlStringArray & pSpeechWords, bool pAppendSpeech = false);
 
 protected:
 	UINT			mSapiVersion;
-	CString			mText;
-	CStringArray	mTextWords;
-	CStringArray	mSpeechWords;
+	CAtlString		mText;
+	CAtlStringArray	mTextWords;
+	CAtlStringArray	mSpeechWords;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CAgentTextParse : public CCmdTarget, public CAgentText
+class ATL_NO_VTABLE CAgentSaxParse : public  CComObjectRoot, public ISAXContentHandler, public ISAXErrorHandler
+{
+public:
+	CAgentSaxParse () {}
+	~CAgentSaxParse () {}
+
+	BEGIN_COM_MAP(CAgentSaxParse)
+		COM_INTERFACE_ENTRY(ISAXContentHandler)
+		COM_INTERFACE_ENTRY(ISAXErrorHandler)
+	END_COM_MAP()
+};
+
+class CAgentTextParse : public CComObjectNoLock<CAgentSaxParse>, public CAgentText
 {
 public:
 	CAgentTextParse (LPCTSTR pText = NULL, UINT pSapiVersion = 5);
-	CAgentTextParse (const CStringArray & pWords, UINT pSapiVersion = 5);
+	CAgentTextParse (const CAtlStringArray & pWords, UINT pSapiVersion = 5);
 	CAgentTextParse (const CAgentText & pText, UINT pSapiVersion = 5);
 	virtual ~CAgentTextParse ();
-	DECLARE_DYNAMIC (CAgentTextParse)
 
 // Attributes
 public:
@@ -84,60 +93,54 @@ public:
 public:
 	CAgentTextParse & operator= (LPCTSTR pText);
 	CAgentTextParse & operator+= (LPCTSTR pText);
-	CAgentTextParse & operator= (const CStringArray & pWords);
-	CAgentTextParse & operator+= (const CStringArray & pWords);
+	CAgentTextParse & operator= (const CAtlStringArray & pWords);
+	CAgentTextParse & operator+= (const CAtlStringArray & pWords);
 	CAgentTextParse & operator= (const CAgentText & pText);
 	CAgentTextParse & operator+= (const CAgentText & pText);
 
 // Overrides
-	//{{AFX_VIRTUAL(CAgentTextParse)
-	//}}AFX_VIRTUAL
 
 // Implementation
 public:
-	static int SplitText (LPCTSTR pText, CStringArray & pTextWords);
+	static int SplitText (LPCTSTR pText, CAtlStringArray & pTextWords);
 protected:
-	int SplitMap (LPCTSTR pText, CString * pSpeechWords, CString * pTextWords);
+	int SplitMap (LPCTSTR pText, CAtlString * pSpeechWords, CAtlString * pTextWords);
 
-	void ParseText (LPCTSTR pText, CStringArray & pTextWords, CStringArray & pSpeechWords);
-	void ParseTags (LPCTSTR pText, CStringArray & pTextWords, CStringArray & pSpeechWords, bool pOuterParse);
-	void PutTag (LPCTSTR pTag, LPCTSTR pText, CStringArray & pTextWords, CStringArray & pSpeechWords, bool pOuterParse);
+	void ParseText (LPCTSTR pText, CAtlStringArray & pTextWords, CAtlStringArray & pSpeechWords);
+	void ParseTags (LPCTSTR pText, CAtlStringArray & pTextWords, CAtlStringArray & pSpeechWords, bool pOuterParse);
+	void PutTag (LPCTSTR pTag, LPCTSTR pText, CAtlStringArray & pTextWords, CAtlStringArray & pSpeechWords, bool pOuterParse);
 
-	void UnquoteMappedText (CString & pText);
-	void AppendWords (const CStringArray & pAppend, CStringArray & pWords, UINT pSapiVersion = 0);
-	void PadWords (CStringArray & pWords, UINT pSapiVersion = 0);
-	void FinishWords (CStringArray & pWords, UINT pSapiVersion = 0);
-	void SpeechFromText (const CStringArray & pTextWords, CStringArray & pSpeechWords);
-	void FinishSpeech (CStringArray & pSpeechWords);
+	void UnquoteMappedText (CAtlString & pText);
+	void AppendWords (const CAtlStringArray & pAppend, CAtlStringArray & pWords, UINT pSapiVersion = 0);
+	void PadWords (CAtlStringArray & pWords, UINT pSapiVersion = 0);
+	void FinishWords (CAtlStringArray & pWords, UINT pSapiVersion = 0);
+	void SpeechFromText (const CAtlStringArray & pTextWords, CAtlStringArray & pSpeechWords);
+	void FinishSpeech (CAtlStringArray & pSpeechWords);
 
-	BEGIN_INTERFACE_PART(SaxContentHandler, ISAXContentHandler)
-		HRESULT STDMETHODCALLTYPE putDocumentLocator (ISAXLocator *pLocator);
-		HRESULT STDMETHODCALLTYPE startDocument (void);
-		HRESULT STDMETHODCALLTYPE endDocument (void);
-		HRESULT STDMETHODCALLTYPE startPrefixMapping (const wchar_t *pwchPrefix, int cchPrefix, const wchar_t *pwchUri, int cchUri);
-		HRESULT STDMETHODCALLTYPE endPrefixMapping (const wchar_t *pwchPrefix, int cchPrefix);
-		HRESULT STDMETHODCALLTYPE startElement (const wchar_t *pwchNamespaceUri, int cchNamespaceUri, const wchar_t *pwchLocalName, int cchLocalName, const wchar_t *pwchQName, int cchQName, ISAXAttributes *pAttributes);
-		HRESULT STDMETHODCALLTYPE endElement (const wchar_t *pwchNamespaceUri, int cchNamespaceUri, const wchar_t *pwchLocalName, int cchLocalName, const wchar_t *pwchQName, int cchQName);
-		HRESULT STDMETHODCALLTYPE characters (const wchar_t *pwchChars, int cchChars);
-		HRESULT STDMETHODCALLTYPE ignorableWhitespace (const wchar_t *pwchChars, int cchChars);
-		HRESULT STDMETHODCALLTYPE processingInstruction (const wchar_t *pwchTarget, int cchTarget, const wchar_t *pwchData, int cchData);
-		HRESULT STDMETHODCALLTYPE skippedEntity (const wchar_t *pwchName, int cchName);
-	END_INTERFACE_PART(SaxContentHandler)
+// ISAXContentHandler
+	HRESULT STDMETHODCALLTYPE putDocumentLocator (ISAXLocator *pLocator);
+	HRESULT STDMETHODCALLTYPE startDocument (void);
+	HRESULT STDMETHODCALLTYPE endDocument (void);
+	HRESULT STDMETHODCALLTYPE startPrefixMapping (const wchar_t *pwchPrefix, int cchPrefix, const wchar_t *pwchUri, int cchUri);
+	HRESULT STDMETHODCALLTYPE endPrefixMapping (const wchar_t *pwchPrefix, int cchPrefix);
+	HRESULT STDMETHODCALLTYPE startElement (const wchar_t *pwchNamespaceUri, int cchNamespaceUri, const wchar_t *pwchLocalName, int cchLocalName, const wchar_t *pwchQName, int cchQName, ISAXAttributes *pAttributes);
+	HRESULT STDMETHODCALLTYPE endElement (const wchar_t *pwchNamespaceUri, int cchNamespaceUri, const wchar_t *pwchLocalName, int cchLocalName, const wchar_t *pwchQName, int cchQName);
+	HRESULT STDMETHODCALLTYPE characters (const wchar_t *pwchChars, int cchChars);
+	HRESULT STDMETHODCALLTYPE ignorableWhitespace (const wchar_t *pwchChars, int cchChars);
+	HRESULT STDMETHODCALLTYPE processingInstruction (const wchar_t *pwchTarget, int cchTarget, const wchar_t *pwchData, int cchData);
+	HRESULT STDMETHODCALLTYPE skippedEntity (const wchar_t *pwchName, int cchName);
 
-	BEGIN_INTERFACE_PART(SaxErrorHandler, ISAXErrorHandler)
-		HRESULT STDMETHODCALLTYPE error (ISAXLocator *pLocator, const wchar_t *pwchErrorMessage, HRESULT hrErrorCode);
-		HRESULT STDMETHODCALLTYPE fatalError (ISAXLocator *pLocator, const wchar_t *pwchErrorMessage, HRESULT hrErrorCode);
-		HRESULT STDMETHODCALLTYPE ignorableWarning (ISAXLocator *pLocator, const wchar_t *pwchErrorMessage, HRESULT hrErrorCode);
-	END_INTERFACE_PART(SaxErrorHandler)
-
-	DECLARE_INTERFACE_MAP()
+// ISAXErrorHandler
+	HRESULT STDMETHODCALLTYPE error (ISAXLocator *pLocator, const wchar_t *pwchErrorMessage, HRESULT hrErrorCode);
+	HRESULT STDMETHODCALLTYPE fatalError (ISAXLocator *pLocator, const wchar_t *pwchErrorMessage, HRESULT hrErrorCode);
+	HRESULT STDMETHODCALLTYPE ignorableWarning (ISAXLocator *pLocator, const wchar_t *pwchErrorMessage, HRESULT hrErrorCode);
 
 private:
 	ISAXXMLReaderPtr	mSaxReader;
 	ISAXLocatorPtr		mSaxLocator;
-	CStringArray		mSaxElements;
-	CStringArray		mSaxTextWords;
-	CStringArray		mSaxSpeechWords;
+	CAtlStringArray		mSaxElements;
+	CAtlStringArray		mSaxTextWords;
+	CAtlStringArray		mSaxSpeechWords;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -152,10 +155,10 @@ public:
 
 // Attributes
 public:
-	CString GetDisplayText (INT_PTR pLookAhead = 0) const;
-	CString GetDisplayWord (INT_PTR pWordNdx) const;
+	CAtlString GetDisplayText (INT_PTR pLookAhead = 0) const;
+	CAtlString GetDisplayWord (INT_PTR pWordNdx) const;
 
-	INT_PTR GetWordCount () const {return mTextWords.GetSize();}
+	INT_PTR GetWordCount () const {return mTextWords.GetCount();}
 	INT_PTR GetWordDisplayed () const {return mWordDisplayed;}
 
 	bool CanScroll (const CRect & pTextBounds) const;
@@ -174,10 +177,11 @@ public:
 	bool DisplayFirstWord (bool pForSpeech = false);
 	bool DisplayNextWord (bool pForSpeech = false);
 	bool DisplayThisWord (long pWordPos, long pWordLength, bool pForSpeech = true);
+	bool DisplayThisWord (INT_PTR pWordNdx, bool pForSpeech = true);
 	bool DisplayAllWords (bool pForSpeech = false);
 
-	CSize CalcTextSize (CFont * pFont, USHORT pPerLine, USHORT pLines);
-	CSize CalcTextSize (CFont * pFont, USHORT pPerLine);
+	CSize CalcTextSize (HFONT pFont, USHORT pPerLine, USHORT pLines);
+	CSize CalcTextSize (HFONT pFont, USHORT pPerLine);
 
 	DWORD CalcScroll (const CRect & pTextBounds, long & pScrollInc, long & pScrollMin, long & pScrollMax, bool pClipLines = false, DWORD pMaxLineTime = 0) const;
 	DWORD InitScroll (const CRect & pTextBounds, bool pForceReinit = false, bool pClipLines = false, DWORD pMaxLineTime = 0);
@@ -185,8 +189,6 @@ public:
 	bool Scroll ();
 
 // Overrides
-	//{{AFX_VIRTUAL(CAgentTextDraw)
-	//}}AFX_VIRTUAL
 
 // Implementation
 public:
@@ -195,20 +197,15 @@ protected:
 	virtual bool IsBreakChar (LPCTSTR pText, int pNdx, UINT pPriority, bool & pBreakAfter);
 
 protected:
-	INT_PTR							mWordDisplayed;
-	long							mScrollPos;
-	long							mScrollInc;
-	long							mScrollMin;
-	long							mScrollMax;
-private:	
-	mutable INT_PTR					mTextCacheLimit;
-	mutable INT_PTR					mTextCacheStart;
-	mutable COwnPtrArray <CString>	mTextCache;
+	INT_PTR									mWordDisplayed;
+	long									mScrollPos;
+	long									mScrollInc;
+	long									mScrollMin;
+	long									mScrollMax;
+private:
+	mutable INT_PTR							mTextCacheLimit;
+	mutable INT_PTR							mTextCacheStart;
+	mutable CAtlOwnPtrArray <CAtlString>	mTextCache;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // AGENTTEXT_H_INCLUDED_

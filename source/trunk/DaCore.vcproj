@@ -22,8 +22,9 @@
 		<Configuration
 			Name="Debug|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops"
-			UseOfMFC="1"
+			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfMFC="0"
+			UseOfATL="1"
 			CharacterSet="1"
 			>
 			<Tool
@@ -86,8 +87,9 @@
 		<Configuration
 			Name="Debug|x64"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops"
-			UseOfMFC="1"
+			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfMFC="0"
+			UseOfATL="1"
 			CharacterSet="1"
 			>
 			<Tool
@@ -150,8 +152,9 @@
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops"
-			UseOfMFC="1"
+			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfMFC="0"
+			UseOfATL="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -215,8 +218,9 @@
 		<Configuration
 			Name="Release|x64"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops"
-			UseOfMFC="1"
+			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfMFC="0"
+			UseOfATL="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -287,6 +291,10 @@
 			UniqueIdentifier="{83635B21-86E8-4016-BDB3-510BAF426414}"
 			>
 			<File
+				RelativePath=".\Core\AgentBalloonOptions.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\AgentBalloonShape.cpp"
 				>
 			</File>
@@ -295,11 +303,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Core\AgentCharacterWnd.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\AgentFile.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Core\AgentFileCache.cpp"
+				RelativePath=".\Common\AgentFileCache.cpp"
 				>
 			</File>
 			<File
@@ -307,7 +319,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Core\AgentIconMaker.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\AgentListeningWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Core\AgentNotifyIcon.cpp"
 				>
 			</File>
 			<File
@@ -331,6 +351,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Common\AgentTextObject.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\AgentWnd.cpp"
 				>
 			</File>
@@ -345,42 +369,6 @@
 			<File
 				RelativePath=".\Core\DaCore.odl"
 				>
-			</File>
-			<File
-				RelativePath=".\Include\DaCore_i.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Core\DaGlobalConfig.cpp"
@@ -467,6 +455,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Core\NotifyObjects.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\PropPageCharacter.cpp"
 				>
 			</File>
@@ -496,6 +488,10 @@
 			</File>
 			<File
 				RelativePath=".\Core\QueuedPrepare.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Core\QueuedSpeech.cpp"
 				>
 			</File>
 			<File
@@ -583,6 +579,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Core\SapiLanguageMatch.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\SapiVoice.cpp"
 				>
 			</File>
@@ -591,7 +591,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core\StdAfx.cpp"
+				RelativePath=".\Util\Atl\StdAfx.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -641,6 +641,10 @@
 			UniqueIdentifier="{8FC5BA0E-E801-46e4-966B-D26DD9A75327}"
 			>
 			<File
+				RelativePath=".\Core\AgentBalloonOptions.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\AgentBalloonShape.h"
 				>
 			</File>
@@ -649,11 +653,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Core\AgentCharacterWnd.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\AgentFile.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Core\AgentFileCache.h"
+				RelativePath=".\Common\AgentFileCache.h"
 				>
 			</File>
 			<File
@@ -661,7 +669,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Core\AgentIconMaker.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\AgentListeningWnd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Core\AgentNotifyIcon.h"
 				>
 			</File>
 			<File
@@ -685,6 +701,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Common\AgentTextObject.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\AgentWnd.h"
 				>
 			</File>
@@ -694,10 +714,6 @@
 			</File>
 			<File
 				RelativePath=".\Core\DaCoreExp.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Include\DaCoreOdl.h"
 				>
 			</File>
 			<File
@@ -713,7 +729,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core\DaInternalNotify.h"
+				RelativePath=".\Include\DaVersion.h"
 				>
 			</File>
 			<File
@@ -774,6 +790,10 @@
 			</File>
 			<File
 				RelativePath=".\Core\MmSysError.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Core\NotifyObjects.h"
 				>
 			</File>
 			<File
@@ -877,10 +897,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core\Sapi5InputEventSink.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Core\Sapi5Inputs.h"
 				>
 			</File>
@@ -897,15 +913,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Core\SapiLanguageMatch.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Core\SapiVoice.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\SapiVoiceCache.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Core\SapiVoiceEventSink.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Core\StdAfx.h"
+				RelativePath=".\Util\Atl\StdAfx.h"
 				>
 			</File>
 			<File
@@ -922,6 +942,10 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{F089859E-20D6-4a7d-9624-EF07CFA35FF1}"
 			>
+			<File
+				RelativePath=".\Core\AgentPreviewWnd.rgs"
+				>
+			</File>
 			<File
 				RelativePath=".\Core\DaCore.rc"
 				>
@@ -940,6 +964,68 @@
 			</File>
 			<File
 				RelativePath=".\Core\DaErrorRes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\DoubleAgent.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Empty.wav"
+				>
+			</File>
+			<File
+				RelativePath=".\License\License.htm"
+				DeploymentContent="true"
+				>
+			</File>
+			<File
+				RelativePath=".\License\License.lesser.htm"
+				DeploymentContent="true"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Generated Files"
+			>
+			<File
+				RelativePath=".\Include\DaCore_i.c"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Include\DaCoreOdl.h"
 				>
 			</File>
 		</Filter>

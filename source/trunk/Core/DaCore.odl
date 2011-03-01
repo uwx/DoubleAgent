@@ -46,6 +46,9 @@ coclass DaPreview
 [uuid(1147E562-A208-11DE-ABF2-002421116FB2), object, hidden]
 interface _IAgentStreamInfo : IUnknown
 {
+	[] HRESULT GetMaxSequenceDuration ([out] long * pMaxSequenceDuration) const;
+	[] HRESULT GetMaxSequenceFrames ([out] long * pMaxSequenceFrames) const;
+
 	[] HRESULT GetAnimationIndex ([out] long * pAnimationNdx) const;
 	[] HRESULT SetAnimationIndex ([in] long pAnimationNdx);
 	[] HRESULT GetAnimationName ([out] BSTR * pAnimationName) const;
@@ -76,6 +79,40 @@ interface _IAgentStreamInfo : IUnknown
 	[] HRESULT CueSequenceAudio ([in,defaultvalue(0)] long pStartFrameNum);
 	[] HRESULT ClearSequenceAudio ();
 };
+
+/////////////////////////////////////////////////////////////////////////////
+
+[uuid(1147E567-A208-11DE-ABF2-002421116FB2), object, hidden]
+interface _IAgentStreamSource : IUnknown
+{
+	[] HRESULT GetAgentFile ([out] ULONG_PTR * pAgentFile);
+	[] HRESULT SetAgentFile ([in] ULONG_PTR pAgentFile);
+	[] HRESULT GetAgentStreamInfo ([out] ULONG_PTR * pAgentStreamInfo);
+	[] HRESULT SetAgentStreamInfo ([in] ULONG_PTR pAgentStreamInfo);
+	[] HRESULT GetBkColor ([out] COLORREF * pBkColor);
+	[] HRESULT SetBkColor ([in] const COLORREF * pBkColor);
+	[] HRESULT SegmentDurationChanged ();
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
+const DWORD	RenderSmoothEdges = 0x00000001;
+const DWORD	RenderSmoothAll = 0x00000002;
+
+[uuid(1147E568-A208-11DE-ABF2-002421116FB2), object, hidden]
+interface _IAgentStreamRender : IUnknown
+{
+	[] HRESULT GetRenderWnd ([out] HWND * pRenderWnd);
+	[] HRESULT SetRenderWnd ([in] HWND pRenderWnd);
+	[] HRESULT GetBkColor ([out] COLORREF * pBkColor);
+	[] HRESULT SetBkColor ([in] const COLORREF * pBkColor);
+	[] HRESULT GetSmoothing ([out] DWORD * pSmoothing);
+	[] HRESULT SetSmoothing ([in] DWORD pSmoothing);
+	[] HRESULT GetImageSize ([out] long * pImageWidth, [out] long * pImageHeight);
+	[] HRESULT DrawSampleImage ([in, defaultvalue(0)] HDC pDC, [in, defaultvalue(0)] const RECT * pTargetRect);
+};
+
+/////////////////////////////////////////////////////////////////////////////
 
 //{{AFX_APPEND_ODL}}
 //}}AFX_APPEND_ODL}}

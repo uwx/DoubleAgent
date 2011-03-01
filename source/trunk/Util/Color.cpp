@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -25,10 +25,12 @@
 #include <float.h>
 #include "Color.h"
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -91,6 +93,7 @@ CColor & CColor::operator&= (COLORREF pColor)
 
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 void CColor::Dump (CDumpContext& dc) const
 {
@@ -108,6 +111,7 @@ void CColor::Dump (CDumpContext& dc) const
 
 	dc << lDump;
 }
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////

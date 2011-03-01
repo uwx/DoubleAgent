@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -19,17 +19,14 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include <AfxHtml.h>
+#include <shellapi.h>
 #include "DaCore.h"
 #include "PropPageCopyright.h"
 #include "Localize.h"
 #include "FileVersionEx.h"
+#include "ImageBuffer.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
+#pragma comment (lib,"comctl32.lib")
 
 #ifdef	_DEBUG
 //#define	_DEBUG_INSTANCE		LogDebug
@@ -37,41 +34,17 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNCREATE(CPropPageCopyright, CPropertyPage)
-
-BEGIN_MESSAGE_MAP(CPropPageCopyright, CPropertyPage)
-	//{{AFX_MSG_MAP(CPropPageCopyright)
-	ON_NOTIFY(NM_CLICK,IDC_PROPPAGE_CPR_LICENSELINK,OnLinkClick)
-	ON_NOTIFY(NM_CLICK,IDC_PROPPAGE_CPR_REFLINK,OnLinkClick)
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
+IMPLEMENT_DLL_OBJECT(CPropPageCopyright)
 
 CPropPageCopyright::CPropPageCopyright()
-:	CPropertyPage(IDD)
+:	CAtlPropertyPage(IDD)
 {
 #ifdef	_DEBUG_INSTANCE
 	LogMessage (_DEBUG_INSTANCE, _T("[%p] CPropPageCopyright::CPropPageCopyright"), this);
 #endif
-	//{{AFX_DATA_INIT(CPropPageCopyright)
-	//}}AFX_DATA_INIT
-
-	if	(m_psp.pResource = mPropPageFix.GetWritableTemplate (IDD))
-	{
-		m_psp.pszTitle = (LPCTSTR) (m_strCaption = mPropPageFix.GetTemplateCaption (m_psp.pResource));
-	}
-	if	(m_psp.pResource = mPropPageFix.GetWritableTemplate (IDD, MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_CAN)))
-	{
-		m_psp.dwFlags |= PSP_DLGINDIRECT;
-//
-//	Doesn't work for Arabic and Hebrew, and the page content is in English anyway
-//
-//		if	(m_psp.pszTitle)
-//		{
-//			m_psp.pResource = mPropPageFix.SetTemplateCaption (m_psp.pResource, m_psp.pszTitle);
-//		}
-	}
+	tSS <INITCOMMONCONTROLSEX, DWORD> lInitControls;
+	lInitControls.dwICC = ICC_WIN95_CLASSES|ICC_LINK_CLASS|ICC_INTERNET_CLASSES;
+	InitCommonControlsEx (&lInitControls);
 }
 
 CPropPageCopyright::~CPropPageCopyright()
@@ -81,30 +54,31 @@ CPropPageCopyright::~CPropPageCopyright()
 #endif
 }
 
+CPropPageCopyright * CPropPageCopyright::CreateInstance ()
+{
+	return new CPropPageCopyright;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageCopyright::DoDataExchange(CDataExchange* pDX)
+BOOL CPropPageCopyright::OnInitDialog ()
 {
-	CPropertyPage::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CPropPageCopyright)
-	DDX_Control(pDX, IDC_PROPPAGE_CPR_VERSION_TITLE, mVersionTitle);
-	DDX_Control(pDX, IDC_PROPPAGE_CPR_VERSION, mProductVersion);
-	DDX_Control(pDX, IDC_PROPPAGE_CPR_NAME, mProductName);
-	DDX_Control(pDX, IDC_PROPPAGE_CPR_ICON, mIcon);
-	DDX_Control(pDX, IDC_PROPPAGE_CPR_COPYRIGHT, mCopyright);
-	DDX_Control(pDX, IDC_PROPPAGE_CPR_VERSION_TITLE_MA, mMaVersionTitle);
-	DDX_Control(pDX, IDC_PROPPAGE_CPR_VERSION_MA, mMaProductVersion);
-	DDX_Control(pDX, IDC_PROPPAGE_CPR_NAME_MA, mMaProductName);
-	DDX_Control(pDX, IDC_PROPPAGE_CPR_ICON_MA, mMaIcon);
-	DDX_Control(pDX, IDC_PROPPAGE_CPR_COPYRIGHT_MA, mMaCopyright);
-	//}}AFX_DATA_MAP
+	mVersionTitle.Attach		(GetDlgItem (IDC_PROPPAGE_CPR_VERSION_TITLE));
+	mProductVersion.Attach		(GetDlgItem (IDC_PROPPAGE_CPR_VERSION));
+	mProductName.Attach			(GetDlgItem (IDC_PROPPAGE_CPR_NAME));
+	mIconControl.Attach			(GetDlgItem (IDC_PROPPAGE_CPR_ICON));
+	mCopyright.Attach			(GetDlgItem (IDC_PROPPAGE_CPR_COPYRIGHT));
+	mMaVersionTitle.Attach		(GetDlgItem (IDC_PROPPAGE_CPR_VERSION_TITLE_MA));
+	mMaProductVersion.Attach	(GetDlgItem (IDC_PROPPAGE_CPR_VERSION_MA));
+	mMaProductName.Attach		(GetDlgItem (IDC_PROPPAGE_CPR_NAME_MA));
+	mMaIcon.Attach				(GetDlgItem (IDC_PROPPAGE_CPR_ICON_MA));
+	mMaCopyright.Attach			(GetDlgItem (IDC_PROPPAGE_CPR_COPYRIGHT_MA));
 
-	if	(!pDX->m_bSaveAndValidate)
-	{
-		InitFonts ();
-		ShowDaVersion ();
-		ShowMaVersion ();
-	}
+	InitFonts ();
+	ShowDaVersion ();
+	ShowMaVersion ();
+
+	return TRUE;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -113,48 +87,47 @@ void CPropPageCopyright::DoDataExchange(CDataExchange* pDX)
 
 void CPropPageCopyright::InitFonts ()
 {
-	CFont *			lFont;
+	HFONT			lFont;
 	tS <LOGFONT>	lLogFont;
 
 	if	(
 			(!mLargeFont.GetSafeHandle ())
 		&&	(lFont = GetFont())
-		&&	(lFont->GetLogFont (&lLogFont))
+		&&	(::GetObject (lFont, sizeof(lLogFont), &lLogFont))
 		)
 	{
 		lLogFont.lfWidth = 0;
 		lLogFont.lfHeight = MulDiv (lLogFont.lfHeight, 3, 2);
-		mLargeFont.CreateFontIndirect (&lLogFont);
+		mLargeFont = CreateFontIndirect (&lLogFont);
 	}
 	if	(mLargeFont.GetSafeHandle ())
 	{
-		mProductName.SetFont (&mLargeFont);
-		mMaProductName.SetFont (&mLargeFont);
+		mProductName.SetFont (mLargeFont);
+		mMaProductName.SetFont (mLargeFont);
 	}
 }
 
 void CPropPageCopyright::ShowDaVersion ()
 {
-	CSize	lIconSize;
-	HICON	lIcon;
+	CSize		lIconSize;
+	CAtlString	lVersionStr (_DOUBLEAGENT_VERSION_STR);
 
-	AlignTop (&mIcon, &mProductName);
+	AlignTop (mIconControl, mProductName);
 	lIconSize.cy = ChildWndRect (mProductVersion).bottom - ChildWndRect (mProductName).top;
 	lIconSize.cx = lIconSize.cy;
-	if	(lIcon = (HICON)LoadImage (AfxGetResourceHandle(), MAKEINTRESOURCE(IDD_PROPPAGE_COPYRIGHT), IMAGE_ICON, lIconSize.cx, lIconSize.cy, LR_DEFAULTCOLOR))
+	if	(mIcon = (HICON)LoadImage (_AtlBaseModule.GetResourceInstance(), MAKEINTRESOURCE(IDD_PROPPAGE_COPYRIGHT), IMAGE_ICON, lIconSize.cx, lIconSize.cy, LR_DEFAULTCOLOR))
 	{
-		mIcon.SetIcon (lIcon);
+		mIconControl.ModifyStyle (SS_TYPEMASK, SS_OWNERDRAW);
+		UpdateSize (mIconControl, lIconSize);
 	}
-	mIcon.ModifyStyle (0, SS_REALSIZECONTROL);
-	UpdateSize (&mIcon, lIconSize);
 
-	mProductVersion.SetWindowText (CString(_DOUBLEAGENT_VERSION_STR));
+	mProductVersion.SetWindowText (lVersionStr);
 	mCopyright.SetWindowText (_T(_DOUBLEAGENT_COPYRIGHT));
 }
 
 void CPropPageCopyright::ShowMaVersion ()
 {
-	CString			lMaServerPath;
+	CAtlString		lMaServerPath;
 	CModuleHandle	lMaServerModule;
 	UINT			lErrMode;
 
@@ -200,18 +173,45 @@ void CPropPageCopyright::ShowMaVersion ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageCopyright::OnLinkClick(NMHDR* pNMHDR, LRESULT* pResult)
+LRESULT CPropPageCopyright::OnDrawIcon (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	PNMLINK	lNotify = (PNMLINK)pNMHDR;
+	LPDRAWITEMSTRUCT	lDIS = (LPDRAWITEMSTRUCT) lParam;
+
+	if	(
+			(lDIS->hwndItem == mIconControl.m_hWnd)
+		&&	(mIcon.GetSafeHandle ())
+		)
+	{
+		CRect			lDrawRect (lDIS->rcItem);
+		CImageBuffer	lImageBuffer;
+
+		if	(lImageBuffer.CreateBuffer (lDrawRect.Size ()))
+		{
+			FillSolidRect (lImageBuffer.GetDC (), lDrawRect, GetSysColor(COLOR_WINDOW));
+			DrawIconEx (lImageBuffer.GetDC (), 0, 0, mIcon, lDrawRect.Width(), lDrawRect.Height(), 0, NULL, DI_NORMAL);
+			BitBlt (lDIS->hDC, lDrawRect.left, lDrawRect.top, lDrawRect.Width(), lDrawRect.Height(), lImageBuffer.GetDC(), 0, 0, SRCCOPY);
+			lImageBuffer.EndBuffer ();
+		}
+		else
+		{
+			DrawIconEx (lDIS->hDC, lDrawRect.left, lDrawRect.top, mIcon, lDrawRect.Width(), lDrawRect.Height(), 0, GetStockBrush(COLOR_WINDOW), DI_NORMAL);
+		}
+		return TRUE;
+	}
+	return 0;
+}
+
+LRESULT CPropPageCopyright::OnLinkClick(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
+{
+	PNMLINK	lNotify = (PNMLINK)pnmh;
 
 	if	(lNotify->item.szID[0])
 	{
 		try
 		{
-			CLicenseDlg	lLicenseDlg (this);
-
+			CLicenseDlg	lLicenseDlg;
 			lLicenseDlg.mLicenseURL = lNotify->item.szID;
-			lLicenseDlg.DoModal ();
+			lLicenseDlg.DoModal (m_hWnd);
 		}
 		catch AnyExceptionSilent
 	}
@@ -227,68 +227,44 @@ void CPropPageCopyright::OnLinkClick(NMHDR* pNMHDR, LRESULT* pResult)
 		}
 		catch AnyExceptionSilent
 	}
+	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CPropPageCopyright::CLicenseDlg::CLicenseDlg (CWnd * pParentWnd)
-:	CDialog (IDD_LICENSE, pParentWnd)
+LRESULT CPropPageCopyright::CLicenseDlg::OnInitDialog (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-}
-
-BOOL CPropPageCopyright::CLicenseDlg::OnInitDialog ()
-{
-	BOOL						lRet;
-	CWnd *						lTextWnd;
-	CRect						lTextRect;
-	CRect						lWinRect;
-	HMONITOR					lMonitor;
-	tSS <MONITORINFO, DWORD>	lMonitorInfo;
-
-	lRet = CDialog::OnInitDialog ();
+	HWND		lTextWnd;
+	CRect		lTextRect;
+	CAtlString	lLicenseURL;
 
 	CenterWindow ();
-	GetWindowRect (&lWinRect);
-	if	(
-			(
-				(lMonitor = MonitorFromPoint (lWinRect.TopLeft(), MONITOR_DEFAULTTONEAREST))
-			||	(lMonitor = MonitorFromPoint (lWinRect.TopLeft(), MONITOR_DEFAULTTOPRIMARY))
-			)
-		&&	(GetMonitorInfo (lMonitor, &lMonitorInfo))
-		)
-	{
-		if	(lWinRect.right > lMonitorInfo.rcWork.right)
-		{
-			lWinRect.OffsetRect (lMonitorInfo.rcWork.right - lWinRect.right, 0);
-		}
-		if	(lWinRect.left < lMonitorInfo.rcWork.left)
-		{
-			lWinRect.OffsetRect (lMonitorInfo.rcWork.left - lWinRect.left, 0);
-		}
-		if	(lWinRect.bottom > lMonitorInfo.rcWork.bottom)
-		{
-			lWinRect.OffsetRect (0, lMonitorInfo.rcWork.bottom - lWinRect.bottom);
-		}
-		if	(lWinRect.top < lMonitorInfo.rcWork.top)
-		{
-			lWinRect.OffsetRect (0, lMonitorInfo.rcWork.top - lWinRect.top);
-		}
-	}
-	MoveWindow (&lWinRect);
 
 	lTextWnd = GetDlgItem (IDC_LICENSE_TEXT);
-	lTextWnd->GetWindowRect (&lTextRect);
+	::GetWindowRect (lTextWnd, &lTextRect);
 	ScreenToClient (&lTextRect);
-	lTextWnd->DestroyWindow ();
+	::DestroyWindow (lTextWnd);
 
-	mLicenseText = (CHtmlView *) CHtmlView::CreateObject ();
-	if	(mLicenseText->Create (NULL, NULL, WS_CHILD|WS_CLIPSIBLINGS|WS_VISIBLE|WS_TABSTOP, lTextRect, this, IDC_LICENSE_TEXT))
+	if	(mLicenseText.Create (m_hWnd, lTextRect, NULL, WS_CHILD|WS_CLIPSIBLINGS|WS_VISIBLE|WS_TABSTOP|WS_VSCROLL, WS_EX_STATICEDGE, IDC_LICENSE_TEXT))
 	{
-		mLicenseText->ModifyStyleEx (0, WS_EX_STATICEDGE, SWP_FRAMECHANGED);
-		mLicenseText->LoadFromResource (mLicenseURL);
+		GetModuleFileName (_AtlBaseModule.GetModuleInstance(), lLicenseURL.GetBuffer(MAX_PATH), MAX_PATH);
+		lLicenseURL.ReleaseBuffer ();
+		lLicenseURL.Format (_T("res://%s/%s"), CAtlString((LPCTSTR)lLicenseURL), mLicenseURL);
+		mLicenseText.CreateControl (lLicenseURL);
 	}
+	return TRUE;
+}
 
-	return lRet;
+LRESULT CPropPageCopyright::CLicenseDlg::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+{
+	EndDialog (IDCANCEL);
+	return 0;
+}
+
+LRESULT CPropPageCopyright::CLicenseDlg::OnOk (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+{
+	EndDialog (IDOK);
+	return 0;
 }

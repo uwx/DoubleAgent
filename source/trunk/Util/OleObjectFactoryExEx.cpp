@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -29,7 +29,7 @@
 
 #ifdef	_UNICODE
 #undef	HKEY_CLASSES_ROOT
-#define	HKEY_CLASSES_ROOT CRegKey(HKEY_LOCAL_MACHINE,_T("SOFTWARE\\Classes"))
+#define	HKEY_CLASSES_ROOT CRegKeyEx(HKEY_LOCAL_MACHINE,_T("SOFTWARE\\Classes"))
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -81,7 +81,7 @@ BOOL COleObjectFactoryExEx::DoUpdateRegistry (BOOL pRegister, LPCTSTR pClassName
 		lProgId.TrimRight ();
 		if	(lProgId.IsEmpty())
 		{
-			CRegKey	lClassKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid), false, true);
+			CRegKeyEx	lClassKey (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid), false, true);
 
 			if	(
 					(pClassName)
@@ -110,8 +110,8 @@ BOOL COleObjectFactoryExEx::DoUpdateRegistry (BOOL pRegister, LPCTSTR pClassName
 			&&	(pShellExt)
 			)
 		{
-			CRegString (CRegKey (HKEY_LOCAL_MACHINE, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved"), false, false), CGuidStr (m_clsid), true).Update (pClassName);
-			CRegString (CRegKey (HKEY_LOCAL_MACHINE, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Blocked"), false, false), CGuidStr (m_clsid)).Delete ();
+			CRegString (CRegKeyEx (HKEY_LOCAL_MACHINE, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved"), false, false), CGuidStr (m_clsid), true).Update (pClassName);
+			CRegString (CRegKeyEx (HKEY_LOCAL_MACHINE, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Blocked"), false, false), CGuidStr (m_clsid)).Delete ();
 		}
 	}
 	else
@@ -125,11 +125,11 @@ BOOL COleObjectFactoryExEx::DoUpdateRegistry (BOOL pRegister, LPCTSTR pClassName
 
 		if	(lRet)
 		{
-			CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)).Delete ();
-			CRegKey (HKEY_CLASSES_ROOT, m_lpszProgID).Delete ();
+			CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)).Delete ();
+			CRegKeyEx (HKEY_CLASSES_ROOT, m_lpszProgID).Delete ();
 			if	(pShellExt)
 			{
-				CRegString (CRegKey (HKEY_LOCAL_MACHINE, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved")), CGuidStr (m_clsid)).Delete ();
+				CRegString (CRegKeyEx (HKEY_LOCAL_MACHINE, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved")), CGuidStr (m_clsid)).Delete ();
 			}
 		}
 	}
@@ -188,7 +188,7 @@ void COleObjectFactoryExEx::RegisterCategory (const GUID & pClsid, const GUID & 
 	{
 		if	(IsEqualGUID (pCatId, CATID_Programmable))
 		{
-			CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (pClsid)), _T("Programmable"), false, true);
+			CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (pClsid)), _T("Programmable"), false, true);
 		}
 	}
 }
@@ -202,12 +202,12 @@ void COleObjectFactoryExEx::UnregisterCategory (const GUID & pClsid, const GUID 
 		&&	(SUCCEEDED (LogComErr (LogIfActive, lCatRegister->UnRegisterClassImplCategories (pClsid, 1, const_cast <GUID *> (&pCatId)))))
 		)
 	{
-		CRegKey lClassKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (pClsid));
-		CRegKey	lCategoriesKey (lClassKey, _T("Implemented Categories"), false);
+		CRegKeyEx	lClassKey (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (pClsid));
+		CRegKeyEx	lCategoriesKey (lClassKey, _T("Implemented Categories"), false);
 
 		if	(IsEqualGUID (pCatId, CATID_Programmable))
 		{
-			CRegKey (lClassKey, _T("Programmable"), false).Delete ();
+			CRegKeyEx (lClassKey, _T("Programmable"), false).Delete ();
 		}
 		if	(
 				(lCategoriesKey.IsValid ())
@@ -224,7 +224,7 @@ void COleObjectFactoryExEx::UnregisterCategory (const GUID & pClsid, const GUID 
 bool COleObjectFactoryExEx::RegisterProgIdVer (LPCTSTR pProgId, int pProgIdVerMajor, int pProgIdVerMinor, LPCTSTR pProgIdName)
 {
 	CString	lProgIdVersionned;
-	
+
 	if	(pProgIdVerMinor >= 0)
 	{
 		lProgIdVersionned.Format (_T("%s.%d.%d"), pProgId, pProgIdVerMajor, pProgIdVerMinor);
@@ -247,8 +247,8 @@ bool COleObjectFactoryExEx::RegisterProgIdVer (LPCTSTR pProgId, LPCTSTR pProgIdV
 
 bool COleObjectFactoryExEx:: RegisterProgIdVer (const GUID & pClsid, LPCTSTR pProgId, LPCTSTR pProgIdVersionned, LPCTSTR pProgIdName)
 {
-	CRegKey lClassIdKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (pClsid), false);
-	CString	lProgIdName (pProgIdName);
+	CRegKeyEx	lClassIdKey (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (pClsid), false);
+	CString		lProgIdName (pProgIdName);
 
 	if	(
 			(pProgId)
@@ -257,35 +257,35 @@ bool COleObjectFactoryExEx:: RegisterProgIdVer (const GUID & pClsid, LPCTSTR pPr
 	{
 		if	(pProgIdVersionned)
 		{
-			CRegString (CRegKey (lClassIdKey, _T("ProgID"), false, true), (LPCTSTR)NULL, true).Update (pProgIdVersionned);
-			CRegString (CRegKey (lClassIdKey, _T("VersionIndependentProgID"), false, true), (LPCTSTR)NULL, true).Update (pProgId);
+			CRegString (CRegKeyEx (lClassIdKey, _T("ProgID"), false, true), (LPCTSTR)NULL, true).Update (pProgIdVersionned);
+			CRegString (CRegKeyEx (lClassIdKey, _T("VersionIndependentProgID"), false, true), (LPCTSTR)NULL, true).Update (pProgId);
 		}
 		else
 		{
-			CRegString (CRegKey (lClassIdKey, _T("ProgID"), false, true), (LPCTSTR)NULL, true).Update (pProgId);
-			CRegKey (lClassIdKey, _T("VersionIndependentProgID"), false).Delete ();
+			CRegString (CRegKeyEx (lClassIdKey, _T("ProgID"), false, true), (LPCTSTR)NULL, true).Update (pProgId);
+			CRegKeyEx (lClassIdKey, _T("VersionIndependentProgID"), false).Delete ();
 		}
 
 		if	(pProgIdVersionned)
 		{
-			CRegKey	lProgIdKey (HKEY_CLASSES_ROOT, pProgId, false, true);
-			CRegKey	lProgIdKeyVer (HKEY_CLASSES_ROOT, pProgIdVersionned, false, true);
-			
+			CRegKeyEx	lProgIdKey (HKEY_CLASSES_ROOT, pProgId, false, true);
+			CRegKeyEx	lProgIdKeyVer (HKEY_CLASSES_ROOT, pProgIdVersionned, false, true);
+
 			CRegString (lProgIdKey, (LPCTSTR)NULL, true).Update (pProgIdName);
 			CRegString (lProgIdKeyVer, (LPCTSTR)NULL, true).Update (pProgIdName);
-			CRegString (CRegKey (lProgIdKey, _T("CLSID"),  false, true), (LPCTSTR)NULL, true).Update (CGuidStr (pClsid));
-			CRegString (CRegKey (lProgIdKeyVer, _T("CLSID"),  false, true), (LPCTSTR)NULL, true).Update (CGuidStr (pClsid));
-			CRegString (CRegKey (lProgIdKey, _T("CurVer"), false, true), (LPCTSTR)NULL, true).Update (pProgIdVersionned);
+			CRegString (CRegKeyEx (lProgIdKey, _T("CLSID"),  false, true), (LPCTSTR)NULL, true).Update (CGuidStr (pClsid));
+			CRegString (CRegKeyEx (lProgIdKeyVer, _T("CLSID"),  false, true), (LPCTSTR)NULL, true).Update (CGuidStr (pClsid));
+			CRegString (CRegKeyEx (lProgIdKey, _T("CurVer"), false, true), (LPCTSTR)NULL, true).Update (pProgIdVersionned);
 		}
 		else
 		{
-			CRegKey	lProgIdKey (HKEY_CLASSES_ROOT, pProgId, false, true);
-			
+			CRegKeyEx	lProgIdKey (HKEY_CLASSES_ROOT, pProgId, false, true);
+
 			CRegString (lProgIdKey, (LPCTSTR)NULL, true).Update (pProgIdName);
-			CRegString (CRegKey (lProgIdKey, _T("CLSID"),  false, true), (LPCTSTR)NULL, true).Update (CGuidStr (pClsid));
-			CRegKey (lProgIdKey, _T("CurVer"), false).Delete ();
+			CRegString (CRegKeyEx (lProgIdKey, _T("CLSID"),  false, true), (LPCTSTR)NULL, true).Update (CGuidStr (pClsid));
+			CRegKeyEx (lProgIdKey, _T("CurVer"), false).Delete ();
 		}
-	}	
+	}
 	return false;
 }
 
@@ -294,7 +294,7 @@ bool COleObjectFactoryExEx:: RegisterProgIdVer (const GUID & pClsid, LPCTSTR pPr
 void COleObjectFactoryExEx::UnregisterProgIdVer (LPCTSTR pProgId, int pProgIdVerMajor, int pProgIdVerMinor)
 {
 	CString	lProgIdVersionned;
-	
+
 	if	(pProgIdVerMinor >= 0)
 	{
 		lProgIdVersionned.Format (_T("%s.%d.%d"), pProgId, pProgIdVerMajor, pProgIdVerMinor);
@@ -310,11 +310,11 @@ void COleObjectFactoryExEx::UnregisterProgIdVer (LPCTSTR pProgId, LPCTSTR pProgI
 {
 	if	(pProgId)
 	{
-		CRegKey	(HKEY_CLASSES_ROOT, pProgId, false).Delete();
+		CRegKeyEx(HKEY_CLASSES_ROOT, pProgId, false).Delete();
 	}
 	if	(pProgIdVersionned)
 	{
-		CRegKey	(HKEY_CLASSES_ROOT, pProgIdVersionned, false).Delete();
+		CRegKeyEx(HKEY_CLASSES_ROOT, pProgIdVersionned, false).Delete();
 	}
 }
 
@@ -329,24 +329,24 @@ void COleObjectFactoryExEx::RegisterAppId (const GUID & pAppId, UINT pAppNameId,
 
 void COleObjectFactoryExEx::RegisterAppId (const GUID & pAppId, LPCTSTR pAppName, LPCTSTR pRunAs, LPCTSTR pLocalService)
 {
-	CRegString (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), _T("AppID"), true).Update (CGuidStr (pAppId));
+	CRegString (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), _T("AppID"), true).Update (CGuidStr (pAppId));
 	if	(pAppName)
 	{
-		CRegString (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("AppID")), CGuidStr (pAppId), false, true), (LPCTSTR)NULL, true).Update (pAppName);
+		CRegString (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("AppID")), CGuidStr (pAppId), false, true), (LPCTSTR)NULL, true).Update (pAppName);
 	}
 	if	(pRunAs)
 	{
-		CRegString (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("AppID")), CGuidStr (pAppId), false, true), _T("RunAs"), true).Update (pRunAs);
+		CRegString (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("AppID")), CGuidStr (pAppId), false, true), _T("RunAs"), true).Update (pRunAs);
 	}
 	if	(pLocalService)
 	{
-		CRegString (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("AppID")), CGuidStr (pAppId), false, true), _T("LocalService"), true).Update (pLocalService);
+		CRegString (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("AppID")), CGuidStr (pAppId), false, true), _T("LocalService"), true).Update (pLocalService);
 	}
 }
 
 void COleObjectFactoryExEx::UnregisterAppId (const GUID & pAppId)
 {
-	CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("AppID")), CGuidStr (pAppId), false).Delete ();
+	CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("AppID")), CGuidStr (pAppId), false).Delete ();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -372,7 +372,7 @@ void COleObjectFactoryExEx::RegisterExeAppId (const GUID & pAppId, LPCTSTR pAppN
 	}
 	if	(!lExeName.IsEmpty ())
 	{
-		CRegKey	lExeKey (CRegKey (HKEY_CLASSES_ROOT, _T("AppID")), lExeName, false, true);
+		CRegKeyEx	lExeKey (CRegKeyEx (HKEY_CLASSES_ROOT, _T("AppID")), lExeName, false, true);
 
 		CRegString (lExeKey, _T("AppID"), true).Update (CGuidStr (pAppId));
 		if	(pAppName)
@@ -396,7 +396,7 @@ void COleObjectFactoryExEx::UnregisterExeAppId (LPCTSTR pExeName)
 	}
 	if	(!lExeName.IsEmpty ())
 	{
-		CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("AppID")), lExeName, false).Delete ();
+		CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("AppID")), lExeName, false).Delete ();
 	}
 }
 
@@ -404,7 +404,7 @@ void COleObjectFactoryExEx::UnregisterExeAppId (LPCTSTR pExeName)
 
 void COleObjectFactoryExEx::RegisterDllSurrogate (const GUID & pAppId, LPCTSTR pSurrogatePath)
 {
-	CRegKey		lRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("AppID")), CGuidStr (pAppId), false);
+	CRegKeyEx	lRegKey (CRegKeyEx (HKEY_CLASSES_ROOT, _T("AppID")), CGuidStr (pAppId), false);
 	CRegString	lSurrogate (lRegKey, _T("DllSurrogate"), true);
 
 	if	(lSurrogate.IsValid ())
@@ -415,7 +415,7 @@ void COleObjectFactoryExEx::RegisterDllSurrogate (const GUID & pAppId, LPCTSTR p
 
 void COleObjectFactoryExEx::UnegisterDllSurrogate (const GUID & pAppId)
 {
-	CRegKey		lRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("AppID")), CGuidStr (pAppId), false);
+	CRegKeyEx	lRegKey (CRegKeyEx (HKEY_CLASSES_ROOT, _T("AppID")), CGuidStr (pAppId), false);
 	CRegString	lSurrogate (lRegKey, _T("DllSurrogate"));
 
 	lSurrogate.Delete ();
@@ -429,9 +429,9 @@ void COleObjectFactoryExEx::RegisterElevated (UINT pClassNameId, LPCTSTR pClassN
 
 void COleObjectFactoryExEx::RegisterElevated (LPCTSTR pClassNamePath)
 {
-	CRegKey		lRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), false);
+	CRegKeyEx	lRegKey (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), false);
 
-	CRegDWord (CRegKey (lRegKey, _T("Elevation"), false, true), _T("Enabled"), true, 1).Update ();
+	CRegDWord (CRegKeyEx (lRegKey, _T("Elevation"), false, true), _T("Enabled"), true, 1).Update ();
 	if	(pClassNamePath)
 	{
 		RegisterLocalizedString (pClassNamePath);
@@ -440,7 +440,7 @@ void COleObjectFactoryExEx::RegisterElevated (LPCTSTR pClassNamePath)
 
 void COleObjectFactoryExEx::RegisterTypeLib (const GUID & pTypeLib)
 {
-	CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), _T("TypeLib"), false, true), NULL, true).Update (CGuidStr (pTypeLib));
+	CRegString (CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), _T("TypeLib"), false, true), NULL, true).Update (CGuidStr (pTypeLib));
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -478,8 +478,8 @@ void COleObjectFactoryExEx::RegisterServer (LPCTSTR pServerPath, bool pInproc, L
 		lServerKeyName = _T("LocalServer32");
 	}
 
-	CRegKey	lClassKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid), false, true);
-	CRegKey	lServerKey (lClassKey, lServerKeyName, false, true);
+	CRegKeyEx	lClassKey (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid), false, true);
+	CRegKeyEx	lServerKey (lClassKey, lServerKeyName, false, true);
 
 	PathQuoteSpaces (lServerPath.GetBuffer (MAX_PATH));
 	lServerPath.ReleaseBuffer ();
@@ -494,7 +494,7 @@ void COleObjectFactoryExEx::RegisterServer (LPCTSTR pServerPath, bool pInproc, L
 		{
 			pInprocHandler = _T("ole32.dll");
 		}
-		CRegString (CRegKey (lClassKey, _T("InprocHandler32"), false, true), NULL, true).Update (pInprocHandler);
+		CRegString (CRegKeyEx (lClassKey, _T("InprocHandler32"), false, true), NULL, true).Update (pInprocHandler);
 	}
 }
 
@@ -511,8 +511,8 @@ void COleObjectFactoryExEx::UnregisterServer (bool pInproc)
 		lServerKeyName = _T("LocalServer32");
 	}
 
-	CRegKey	(CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), lServerKeyName, false).Delete ();
-	CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), _T("InprocHandler32"), false).Delete ();
+	CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), lServerKeyName, false).Delete ();
+	CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), _T("InprocHandler32"), false).Delete ();
 }
 
 void COleObjectFactoryExEx::RegisterThreadingModel (LPCTSTR pThreadingModel, bool pInproc, LPCTSTR pInprocHandler)
@@ -528,9 +528,9 @@ void COleObjectFactoryExEx::RegisterThreadingModel (LPCTSTR pThreadingModel, boo
 		lServerKeyName = _T("LocalServer32");
 	}
 
-	CRegKey	lServerKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), lServerKeyName, false, true);
-	CString	lFileName;
-	CString	lLongName;
+	CRegKeyEx	lServerKey (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), lServerKeyName, false, true);
+	CString		lFileName;
+	CString		lLongName;
 
 	GetModuleFileName (AfxGetInstanceHandle (), lFileName.GetBuffer (MAX_PATH), MAX_PATH);
 	lFileName.ReleaseBuffer ();
@@ -557,7 +557,7 @@ void COleObjectFactoryExEx::RegisterThreadingModel (LPCTSTR pThreadingModel, boo
 		{
 			pInprocHandler = _T("ole32.dll");
 		}
-		CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), _T("InprocHandler32"), false, true), NULL, true).Update (pInprocHandler);
+		CRegString (CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), _T("InprocHandler32"), false, true), NULL, true).Update (pInprocHandler);
 	}
 }
 
@@ -589,7 +589,7 @@ void COleObjectFactoryExEx::RegisterLocalizedString (LPCTSTR pClassNamePath)
 {
 	if	(pClassNamePath)
 	{
-		CRegKey	lRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), false);
+		CRegKeyEx	lRegKey (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), false);
 		CRegString (lRegKey, _T("LocalizedString"), true).Update (pClassNamePath);
 	}
 }
@@ -634,10 +634,10 @@ void COleObjectFactoryExEx::RegisterDefaultIcon (LPCTSTR pIconFile, int pIconId,
 		&&	(pProgId [0])
 		)
 	{
-		CRegString (CRegKey (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("DefaultIcon"), false, true), NULL, true).Update (lIconLocation);
+		CRegString (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, pProgId), _T("DefaultIcon"), false, true), NULL, true).Update (lIconLocation);
 		if	(pOpenIconId)
 		{
-			CRegString (CRegKey (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("DefaultIcon"), false, true), _T("OpenIcon"), true).Update (lIconLocationOpen);
+			CRegString (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, pProgId), _T("DefaultIcon"), false, true), _T("OpenIcon"), true).Update (lIconLocationOpen);
 		}
 	}
 	if	(
@@ -648,17 +648,17 @@ void COleObjectFactoryExEx::RegisterDefaultIcon (LPCTSTR pIconFile, int pIconId,
 		&&	(!IsEqualGUID (*pClassId, GUID_NULL))
 		)
 	{
-		CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (*pClassId)), _T("DefaultIcon"), false, true), NULL, true).Update (lIconLocation);
+		CRegString (CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (*pClassId)), _T("DefaultIcon"), false, true), NULL, true).Update (lIconLocation);
 		if	(pOpenIconId)
 		{
-			CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (*pClassId)), _T("DefaultIcon"), false, true), _T("OpenIcon"), true).Update (lIconLocationOpen);
+			CRegString (CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (*pClassId)), _T("DefaultIcon"), false, true), _T("OpenIcon"), true).Update (lIconLocationOpen);
 		}
 	}
 }
 
 void COleObjectFactoryExEx::RegisterInfoTip (LPCTSTR pInfoTip)
 {
-	CRegString (CRegKey (HKEY_CLASSES_ROOT, m_lpszProgID), _T("InfoTip"), true).Update (pInfoTip);
+	CRegString (CRegKeyEx (HKEY_CLASSES_ROOT, m_lpszProgID), _T("InfoTip"), true).Update (pInfoTip);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -669,20 +669,20 @@ void COleObjectFactoryExEx::RegisterPropSheetHandler (const GUID & pHandlerClsid
 	{
 		pHandlerName = _T("Default");
 	}
-	CRegString (CRegKey (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, m_lpszProgID), _T("shellex"), false, true), _T("PropertySheetHandlers"), false, true), pHandlerName, false, true), NULL, true).Update ((LPCTSTR) CGuidStr (pHandlerClsid));
+	CRegString (CRegKeyEx (CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, m_lpszProgID), _T("shellex"), false, true), _T("PropertySheetHandlers"), false, true), pHandlerName, false, true), NULL, true).Update ((LPCTSTR) CGuidStr (pHandlerClsid));
 }
 
 void COleObjectFactoryExEx::RegisterPropSheetHandler (LPCTSTR pProgId, LPCTSTR pHandlerName)
 {
-	CRegString (CRegKey (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false, true), _T("PropertySheetHandlers"), false, true), pHandlerName, false, true), NULL, true).Update ((LPCTSTR) CGuidStr (m_clsid));
+	CRegString (CRegKeyEx (CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false, true), _T("PropertySheetHandlers"), false, true), pHandlerName, false, true), NULL, true).Update ((LPCTSTR) CGuidStr (m_clsid));
 }
 
 void COleObjectFactoryExEx::UnregisterPropSheetHandler (LPCTSTR pProgId, LPCTSTR pHandlerName)
 {
-	CRegKey	lKey1 (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false);
-	CRegKey	lKey2 (lKey1, _T("PropertySheetHandlers"));
+	CRegKeyEx	lKey1 (CRegKeyEx (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false);
+	CRegKeyEx	lKey2 (lKey1, _T("PropertySheetHandlers"));
 
-	CRegKey (lKey2, pHandlerName, false).Delete ();
+	CRegKeyEx (lKey2, pHandlerName, false).Delete ();
 	if	(lKey2.IsEmpty ())
 	{
 		lKey2.Delete ();
@@ -731,7 +731,7 @@ void COleObjectFactoryExEx::RegisterContextMenuHandler (LPCTSTR pProgId, const G
 		}
 	}
 
-	CRegString (CRegKey (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false, true), _T("ContextMenuHandlers"), false, true), lHandlerName, false, true), NULL, true).Update ((LPCTSTR) CGuidStr (pHandlerClsid));
+	CRegString (CRegKeyEx (CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false, true), _T("ContextMenuHandlers"), false, true), lHandlerName, false, true), NULL, true).Update ((LPCTSTR) CGuidStr (pHandlerClsid));
 }
 
 void COleObjectFactoryExEx::UnregisterContextMenuHandler (LPCTSTR pProgId, const GUID & pHandlerClsid, LPCTSTR pHandlerName)
@@ -750,10 +750,10 @@ void COleObjectFactoryExEx::UnregisterContextMenuHandler (LPCTSTR pProgId, const
 		}
 	}
 
-	CRegKey	lKey1 (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false);
-	CRegKey	lKey2 (lKey1, _T("ContextMenuHandlers"), false);
+	CRegKeyEx	lKey1 (CRegKeyEx (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false);
+	CRegKeyEx	lKey2 (lKey1, _T("ContextMenuHandlers"), false);
 
-	CRegKey (lKey2, lHandlerName, false).Delete ();
+	CRegKeyEx (lKey2, lHandlerName, false).Delete ();
 
 	if	(lKey2.IsEmpty ())
 	{
@@ -773,20 +773,20 @@ void COleObjectFactoryExEx::RegisterDragDropHandler (const GUID & pHandlerClsid,
 	{
 		pHandlerName = _T("Default");
 	}
-	CRegString (CRegKey (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, m_lpszProgID), _T("shellex"), false, true), _T("DragDropHandlers"), false, true), pHandlerName, false, true), NULL, true).Update ((LPCTSTR) CGuidStr (pHandlerClsid));
+	CRegString (CRegKeyEx (CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, m_lpszProgID), _T("shellex"), false, true), _T("DragDropHandlers"), false, true), pHandlerName, false, true), NULL, true).Update ((LPCTSTR) CGuidStr (pHandlerClsid));
 }
 
 void COleObjectFactoryExEx::RegisterDragDropHandler (LPCTSTR pProgId, LPCTSTR pHandlerName)
 {
-	CRegString (CRegKey (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false, true), _T("DragDropHandlers"), false, true), pHandlerName, false, true), NULL, true).Update ((LPCTSTR) CGuidStr (m_clsid));
+	CRegString (CRegKeyEx (CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false, true), _T("DragDropHandlers"), false, true), pHandlerName, false, true), NULL, true).Update ((LPCTSTR) CGuidStr (m_clsid));
 }
 
 void COleObjectFactoryExEx::UnregisterDragDropHandler (LPCTSTR pProgId, LPCTSTR pHandlerName)
 {
-	CRegKey	lKey1 (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false);
-	CRegKey	lKey2 (lKey1, _T("DragDropHandlers"));
+	CRegKeyEx lKey1 (CRegKeyEx (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false);
+	CRegKeyEx lKey2 (lKey1, _T("DragDropHandlers"));
 
-	CRegKey (lKey2, pHandlerName, false).Delete ();
+	CRegKeyEx (lKey2, pHandlerName, false).Delete ();
 	if	(lKey2.IsEmpty ())
 	{
 		lKey2.Delete ();
@@ -840,7 +840,7 @@ void COleObjectFactoryExEx::RegisterGenericHandler (LPCTSTR pProgId, const GUID 
 	{
 		lHandlerTypeName = (CString) CGuidStr (pHandlerId);
 	}
-	CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false, true), lHandlerTypeName, false, true), NULL, true).Update ((LPCTSTR) CGuidStr (pHandlerClsid));
+	CRegString (CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false, true), lHandlerTypeName, false, true), NULL, true).Update ((LPCTSTR) CGuidStr (pHandlerClsid));
 }
 
 void COleObjectFactoryExEx::UnregisterGenericHandler (LPCTSTR pProgId, const GUID & pHandlerId, LPCTSTR pHandlerTypeName)
@@ -850,8 +850,8 @@ void COleObjectFactoryExEx::UnregisterGenericHandler (LPCTSTR pProgId, const GUI
 	{
 		lHandlerTypeName = (CString) CGuidStr (pHandlerId);
 	}
-	CRegKey	lKey1 (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false);
-	CRegKey	lKey2 (lKey1, lHandlerTypeName);
+	CRegKeyEx lKey1 (CRegKeyEx (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false);
+	CRegKeyEx lKey2 (lKey1, lHandlerTypeName);
 
 	lKey2.Delete ();
 	if	(lKey1.IsEmpty ())
@@ -880,18 +880,18 @@ void COleObjectFactoryExEx::RegisterNamespace (LPCTSTR pNamespace, const GUID & 
 			)
 		)
 	{
-		CRegString (CRegKey (CRegKey (CRegKey (CRegKey (pRootKey, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer"), false, false), pNamespace, false, true), _T("NameSpace"), false, true), CGuidStr (pHandlerClsid), false, true), (LPCTSTR)NULL, true).Update (pHandlerName);
+		CRegString (CRegKeyEx (CRegKeyEx (CRegKeyEx (CRegKeyEx (pRootKey, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer"), false, false), pNamespace, false, true), _T("NameSpace"), false, true), CGuidStr (pHandlerClsid), false, true), (LPCTSTR)NULL, true).Update (pHandlerName);
 	}
 }
 
 void COleObjectFactoryExEx::RegisterNamespaceOption (const GUID & pHandlerClsid, LPCTSTR pOption, HKEY pRootKey)
 {
-	CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (pHandlerClsid)), CString (_T("ShellFolder")), false, true), pOption, true).Update (_T(""));
+	CRegString (CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (pHandlerClsid)), CString (_T("ShellFolder")), false, true), pOption, true).Update (_T(""));
 }
 
 void COleObjectFactoryExEx::RegisterNamespaceAttrs (const GUID & pHandlerClsid, DWORD pShellAttrs, HKEY pRootKey)
 {
-	CRegDWord (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (pHandlerClsid)), CString (_T("ShellFolder")), false, true), _T("Attributes"), true).SetValue (pShellAttrs).Update ();
+	CRegDWord (CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (pHandlerClsid)), CString (_T("ShellFolder")), false, true), _T("Attributes"), true).SetValue (pShellAttrs).Update ();
 }
 
 void COleObjectFactoryExEx::UnregisterNamespace (LPCTSTR pNamespace, const GUID & pHandlerClsid, HKEY pRootKey)
@@ -904,7 +904,7 @@ void COleObjectFactoryExEx::UnregisterNamespace (LPCTSTR pNamespace, const GUID 
 			)
 		)
 	{
-		CRegKey (CRegKey (CRegKey (CRegKey (pRootKey, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer")), pNamespace), _T("NameSpace"), false), CGuidStr (pHandlerClsid), false).Delete ();
+		CRegKeyEx (CRegKeyEx (CRegKeyEx (CRegKeyEx (pRootKey, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer")), pNamespace), _T("NameSpace"), false), CGuidStr (pHandlerClsid), false).Delete ();
 	}
 }
 
@@ -912,8 +912,8 @@ void COleObjectFactoryExEx::UnregisterNamespace (LPCTSTR pNamespace, const GUID 
 
 void COleObjectFactoryExEx::RegisterBrowserHelperObject (const GUID & pClassId, LPCTSTR pClassName)
 {
-	CRegKey	lRegKey (HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Browser Helper Objects"), false);
-	CRegKey	lHelperObject (lRegKey, (LPCTSTR) CGuidStr (pClassId), false, true);
+	CRegKeyEx	lRegKey (HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Browser Helper Objects"), false);
+	CRegKeyEx	lHelperObject (lRegKey, (LPCTSTR) CGuidStr (pClassId), false, true);
 
 	if	(pClassName)
 	{
@@ -923,8 +923,8 @@ void COleObjectFactoryExEx::RegisterBrowserHelperObject (const GUID & pClassId, 
 
 void COleObjectFactoryExEx::UnegisterBrowserHelperObject (const GUID & pClassId)
 {
-	CRegKey	lRegKey (HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Browser Helper Objects"), false);
-	CRegKey	lHelperObject (lRegKey, (LPCTSTR) CGuidStr (pClassId), false, false);
+	CRegKeyEx	lRegKey (HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Browser Helper Objects"), false);
+	CRegKeyEx	lHelperObject (lRegKey, (LPCTSTR) CGuidStr (pClassId), false, false);
 
 	if	(lHelperObject.IsValid ())
 	{
@@ -936,8 +936,8 @@ void COleObjectFactoryExEx::UnegisterBrowserHelperObject (const GUID & pClassId)
 
 bool COleObjectFactoryExEx::FindExtProgId (LPCTSTR pExt, CString & pProgId, CString * pProgIdName)
 {
-	bool	lRet = false;
-	CRegKey	lExtKey (HKEY_CLASSES_ROOT, pExt, true);
+	bool		lRet = false;
+	CRegKeyEx	lExtKey (HKEY_CLASSES_ROOT, pExt, true);
 
 	if	(lExtKey.IsValid ())
 	{
@@ -951,7 +951,7 @@ bool COleObjectFactoryExEx::FindExtProgId (LPCTSTR pExt, CString & pProgId, CStr
 
 			if	(pProgIdName)
 			{
-				(*pProgIdName) = CRegKey (HKEY_CLASSES_ROOT, pProgId, true).Value ().Value ();
+				(*pProgIdName) = CRegKeyEx (HKEY_CLASSES_ROOT, pProgId, true).Value ().Value ();
 				pProgIdName->TrimLeft ();
 				pProgIdName->TrimRight ();
 			}

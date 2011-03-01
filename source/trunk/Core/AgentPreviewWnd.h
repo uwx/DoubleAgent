@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,92 +18,112 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef AGENTPREVIEWWND_H_INCLUDED_
-#define AGENTPREVIEWWND_H_INCLUDED_
 #pragma once
-
 #include "AgentWnd.h"
+#include "DaGuid.h"
+#include "DaCoreRes.h"
 #include "DaCoreOdl.h"
-#include "OleObjectFactoryExEx.h"
+
+_COM_SMARTPTR_TYPEDEF (IDaPreview, __uuidof(IDaPreview));
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
 
-class _DACORE_IMPEXP __declspec(uuid("{1147E561-A208-11DE-ABF2-002421116FB2}")) CAgentPreviewWnd : public CAgentWnd
+class ATL_NO_VTABLE CAgentPreviewObjectRoot : public CComObjectRootEx<CComMultiThreadModel> {};
+
+class ATL_NO_VTABLE __declspec(uuid("{1147E561-A208-11DE-ABF2-002421116FB2}")) CAgentPreviewWnd :
+	public CAgentPreviewObjectRoot,
+	public CAgentWnd,
+	public IDaPreview,
+	public IOleWindow,
+	public CComCoClass<CAgentPreviewWnd, &__uuidof(CAgentPreviewWnd)>
 {
-	DECLARE_DYNCREATE(CAgentPreviewWnd)
-	DECLARE_OLECREATE_EX(CAgentPreviewWnd)
+	DECLARE_DLL_OBJECT_EX(CAgentPreviewWnd, _DACORE_IMPEXP)
 protected:
-	CAgentPreviewWnd ();
+	_DACORE_IMPEXP CAgentPreviewWnd ();
 public:
-	virtual ~CAgentPreviewWnd ();
+	_DACORE_IMPEXP virtual ~CAgentPreviewWnd ();
+	_DACORE_IMPEXP static CAgentPreviewWnd * CreateInstance ();
 
 // Attributes
 public:
 
 // Operations
 public:
-	bool Create (HWND pParentWnd, CRect * pInitialRect = NULL);
+	_DACORE_IMPEXP bool Create (HWND pParentWnd, CRect * pInitialRect = NULL);
+	_DACORE_IMPEXP void FinalRelease();
 
 // Overrides
-	//{{AFX_VIRTUAL(CAgentPreviewWnd)
-	public:
-	virtual void OnFinalRelease();
-	protected:
-	virtual bool DoAnimationQueue ();
-	virtual bool DoIdle ();
-	//}}AFX_VIRTUAL
+public:
+	_DACORE_IMPEXP virtual DWORD GetAlphaSmoothing () const;
+protected:
+	_DACORE_IMPEXP virtual void Opened ();
+	_DACORE_IMPEXP virtual bool DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime);
+	_DACORE_IMPEXP virtual bool DoIdle ();
+
+// Declarations
+public:
+	DECLARE_REGISTRY_RESOURCEID(IDR_AGENTPREVIEWWND)
+	DECLARE_NOT_AGGREGATABLE(CAgentPreviewWnd)
+	DECLARE_GET_CONTROLLING_UNKNOWN()
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
+
+	BEGIN_COM_MAP(CAgentPreviewWnd)
+		COM_INTERFACE_ENTRY(IDaPreview)
+		COM_INTERFACE_ENTRY(IOleWindow)
+	END_COM_MAP()
+
+	BEGIN_CATEGORY_MAP(CAgentPreviewWnd)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
+	END_CATEGORY_MAP()
+
+// Interfaces
+public:
+	// IOleWindow
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetWindow (HWND *phwnd);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE ContextSensitiveHelp (BOOL fEnterMode);
+
+	// IDaPreview
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE PlayAnimation (BSTR pAnimationName);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE PlayState (BSTR pStateName);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetIsPlaying (boolean *pIsPlaying);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE StopPlaying ();
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetSoundsEnabled (boolean *pEnabled);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE EnableSounds (boolean pEnabled);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetIdleEnabled (boolean *pEnabled);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE EnableIdle (boolean pEnabled);
+	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE SetBkColor (COLORREF pBkColor);
+	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetFrameSize (SIZE * pFrameSize);
+	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetCharacterFrameSize (BSTR pCharacterPath, SIZE * pFrameSize);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetFrameFormat (BYTE **pFrameFormat);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetCharacterFrameFormat (BSTR pCharacterPath, BYTE **pFrameFormat);
+	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE OnAppActive (boolean pActive);
+	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE RenderFrame (HDC pDC, POINT *pPosition);
+	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE RenderAnimationFrame (BSTR pAnimationName, USHORT pFrameNum, HDC pDC, POINT *pPosition);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE RenderCharacterFrame (BSTR pCharacterPath, BSTR pAnimationName, USHORT pFrameNum, HDC pDC, POINT *pPosition);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE OpenFile (BSTR pCharacterPath, HWND pParentWnd);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetCharacterPath (BSTR *pCharacterPath);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetCharacterName (BSTR *pCharacterName, USHORT pLangID = 0);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetCharacterDescription (BSTR *pCharacterDescription, USHORT pLangID = 0);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetCharacterGuid (GUID *pGuid);
 
 // Implementation
 protected:
-	//{{AFX_MSG(CAgentPreviewWnd)
-	afx_msg int OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message);
-	afx_msg _MFC_NCHITTEST_RESULT OnNcHitTest(CPoint point);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+	_DACORE_IMPEXP LRESULT OnMouseActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 
-	BEGIN_INTERFACE_PART(OleWindow, IOleWindow)
-        HRESULT STDMETHODCALLTYPE GetWindow (HWND *phwnd);
-        HRESULT STDMETHODCALLTYPE ContextSensitiveHelp (BOOL fEnterMode);
-	END_INTERFACE_PART(OleWindow)
-
-	BEGIN_INTERFACE_PART(DaPreview, IDaPreview)
-        HRESULT STDMETHODCALLTYPE PlayAnimation (BSTR pAnimationName);
-        HRESULT STDMETHODCALLTYPE PlayState (BSTR pStateName);
-        HRESULT STDMETHODCALLTYPE GetIsPlaying (boolean *pIsPlaying);
-        HRESULT STDMETHODCALLTYPE StopPlaying ();
-        HRESULT STDMETHODCALLTYPE GetSoundsEnabled (boolean *pEnabled);
-        HRESULT STDMETHODCALLTYPE EnableSounds (boolean pEnabled);
-        HRESULT STDMETHODCALLTYPE GetIdleEnabled (boolean *pEnabled);
-        HRESULT STDMETHODCALLTYPE EnableIdle (boolean pEnabled);
-		HRESULT STDMETHODCALLTYPE SetBkColor (COLORREF pBkColor);
-		HRESULT STDMETHODCALLTYPE GetFrameSize (SIZE * pFrameSize);
-		HRESULT STDMETHODCALLTYPE GetCharacterFrameSize (BSTR pCharacterPath, SIZE * pFrameSize);
-        HRESULT STDMETHODCALLTYPE GetFrameFormat (BYTE **pFrameFormat);
-        HRESULT STDMETHODCALLTYPE GetCharacterFrameFormat (BSTR pCharacterPath, BYTE **pFrameFormat);
-		HRESULT STDMETHODCALLTYPE OnAppActive (boolean pActive);
-		HRESULT STDMETHODCALLTYPE RenderFrame (HDC pDC, POINT *pPosition);
-		HRESULT STDMETHODCALLTYPE RenderAnimationFrame (BSTR pAnimationName, USHORT pFrameNum, HDC pDC, POINT *pPosition);
-        HRESULT STDMETHODCALLTYPE RenderCharacterFrame (BSTR pCharacterPath, BSTR pAnimationName, USHORT pFrameNum, HDC pDC, POINT *pPosition);
-        HRESULT STDMETHODCALLTYPE OpenFile (BSTR pCharacterPath, HWND pParentWnd);
-        HRESULT STDMETHODCALLTYPE GetCharacterPath (BSTR *pCharacterPath);
-        HRESULT STDMETHODCALLTYPE GetCharacterName (BSTR *pCharacterName, USHORT pLangID = 0);
-        HRESULT STDMETHODCALLTYPE GetCharacterDescription (BSTR *pCharacterDescription, USHORT pLangID = 0);
-        HRESULT STDMETHODCALLTYPE GetCharacterGuid (GUID *pGuid);
-	END_INTERFACE_PART(DaPreview)
-
-	DECLARE_INTERFACE_MAP()
+	BEGIN_MSG_MAP(CAgentPreviewWnd)
+		MESSAGE_HANDLER(WM_MOUSEACTIVATE, OnMouseActivate)
+		MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest)
+		CHAIN_MSG_MAP(CAgentWnd)
+	END_MSG_MAP()
 
 protected:
-	HRESULT RenderFrame (HDC pDC, const POINT * pPosition);
-	HRESULT RenderAnimationFrame (CAgentFile * pAgentFile, LPCTSTR pAnimationName, long pFrameNum, HDC pDC, const POINT * pPosition);
+	HRESULT InternalRenderFrame (HDC pDC, const POINT * pPosition);
+	HRESULT InternalRenderAnimationFrame (CAgentFile * pAgentFile, LPCTSTR pAnimationName, long pFrameNum, HDC pDC, const POINT * pPosition);
 };
 
-#pragma warning(pop)
 /////////////////////////////////////////////////////////////////////////////
 
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+OBJECT_ENTRY_AUTO(__uuidof(CAgentPreviewWnd), CAgentPreviewWnd)
 
-#endif // AGENTPREVIEWWND_H_INCLUDED_
+/////////////////////////////////////////////////////////////////////////////

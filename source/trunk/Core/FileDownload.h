@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,93 +18,99 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef FILEDOWNLOAD_H_INCLUDED_
-#define FILEDOWNLOAD_H_INCLUDED_
 #pragma once
-
 #include "DaCoreExp.h"
-#include "DainternalNotify.h"
 #include "InstanceGate.h"
 
 //////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable:4251 4275)
 
-class _DACORE_IMPEXP CFileDownload : public CCmdTarget, private CInstanceGate
+class ATL_NO_VTABLE CFileDownloadObj :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public IBindStatusCallback
 {
+// Declarations
 public:
-	CFileDownload (LPCTSTR pURL);
-	virtual ~CFileDownload ();
-	DECLARE_DYNAMIC (CFileDownload)
+	DECLARE_NOT_AGGREGATABLE(CFileDownloadObj)
+
+	BEGIN_COM_MAP(CFileDownloadObj)
+		COM_INTERFACE_ENTRY(IBindStatusCallback)
+	END_COM_MAP()
+
+};
+
+//////////////////////////////////////////////////////////////////////
+
+class ATL_NO_VTABLE CFileDownload :
+	public CFileDownloadObj,
+	private CInstanceGate
+
+{
+	DECLARE_DLL_OBJECT_EX(CFileDownload, _DACORE_IMPEXP)
+protected:
+	CFileDownload ();
+public:
+	_DACORE_IMPEXP virtual ~CFileDownload ();
+	_DACORE_IMPEXP static CFileDownload * CreateInstance (LPCTSTR pURL);
 
 // Attributes
 public:
 	ULONG_PTR	mUserData;
 
-	tBstrPtr GetURL () const;
-	tBstrPtr GetCacheName () const;
+	_DACORE_IMPEXP tBstrPtr GetURL () const;
+	_DACORE_IMPEXP tBstrPtr GetCacheName () const;
 
-	DWORD GetBindFlags () const;
-	ULONG GetDownloadSize () const;
-	ULONG GetDownloadProgress () const;
+	_DACORE_IMPEXP DWORD GetBindFlags () const;
+	_DACORE_IMPEXP ULONG GetDownloadSize () const;
+	_DACORE_IMPEXP ULONG GetDownloadProgress () const;
 
-	bool IsDownloadStarting () const;
-	bool IsDownloadStarted () const;
-	bool IsDownloadCancelling () const;
-	HRESULT IsDownloadComplete () const;
+	_DACORE_IMPEXP bool IsDownloadStarting () const;
+	_DACORE_IMPEXP bool IsDownloadStarted () const;
+	_DACORE_IMPEXP bool IsDownloadCancelling () const;
+	_DACORE_IMPEXP HRESULT IsDownloadComplete () const;
 
 // Operations
 public:
-	DWORD SetBindFlags (DWORD pBindFlags);
-	DWORD SetReloadMode (bool pReload);
-	DWORD SetResynchronizeMode (bool pResynchronize);
-	DWORD SetSecurityMode (bool pEnforeSecurity);
+	_DACORE_IMPEXP DWORD SetBindFlags (DWORD pBindFlags);
+	_DACORE_IMPEXP DWORD SetReloadMode (bool pReload);
+	_DACORE_IMPEXP DWORD SetResynchronizeMode (bool pResynchronize);
+	_DACORE_IMPEXP DWORD SetSecurityMode (bool pEnforeSecurity);
 
-	HRESULT Download (LPUNKNOWN pActiveXContext = NULL, IDaNotify * pNotify = NULL);
-	bool CancelDownload ();
+	_DACORE_IMPEXP HRESULT Download (LPUNKNOWN pActiveXContext = NULL, class CEventNotify * pNotify = NULL);
+	_DACORE_IMPEXP bool CancelDownload ();
 
 // Overrides
-	//{{AFX_VIRTUAL(CFileDownload)
-	protected:
-	virtual void OnFinalRelease();
-	//}}AFX_VIRTUAL
+
+// Interfaces
+public:
+	// IBindStatusCallback
+	HRESULT STDMETHODCALLTYPE OnStartBinding (DWORD dwReserved, IBinding *pib);
+	HRESULT STDMETHODCALLTYPE GetPriority (LONG *pnPriority);
+	HRESULT STDMETHODCALLTYPE OnLowResource (DWORD reserved);
+	HRESULT STDMETHODCALLTYPE OnProgress (ULONG ulProgress, ULONG ulProgressMax, ULONG ulStatusCode, LPCWSTR szStatusText);
+	HRESULT STDMETHODCALLTYPE OnStopBinding (HRESULT hresult, LPCWSTR szError);
+	HRESULT STDMETHODCALLTYPE GetBindInfo (DWORD *grfBINDF, BINDINFO *pbindinfo);
+	HRESULT STDMETHODCALLTYPE OnDataAvailable (DWORD grfBSCF, DWORD dwSize, FORMATETC *pformatetc, STGMEDIUM *pstgmed);
+	HRESULT STDMETHODCALLTYPE OnObjectAvailable (REFIID riid, IUnknown *punk);
 
 // Implementation
-protected:
-	BEGIN_INTERFACE_PART(BindStatusCallback, IBindStatusCallback)
-		HRESULT STDMETHODCALLTYPE OnStartBinding (DWORD dwReserved, IBinding *pib);
-		HRESULT STDMETHODCALLTYPE GetPriority (LONG *pnPriority);
-		HRESULT STDMETHODCALLTYPE OnLowResource (DWORD reserved);
-		HRESULT STDMETHODCALLTYPE OnProgress (ULONG ulProgress, ULONG ulProgressMax, ULONG ulStatusCode, LPCWSTR szStatusText);
-		HRESULT STDMETHODCALLTYPE OnStopBinding (HRESULT hresult, LPCWSTR szError);
-		HRESULT STDMETHODCALLTYPE GetBindInfo (DWORD *grfBINDF, BINDINFO *pbindinfo);
-		HRESULT STDMETHODCALLTYPE OnDataAvailable (DWORD grfBSCF, DWORD dwSize, FORMATETC *pformatetc, STGMEDIUM *pstgmed);
-		HRESULT STDMETHODCALLTYPE OnObjectAvailable (REFIID riid, IUnknown *punk);
-	END_INTERFACE_PART(BindStatusCallback)
-
-	DECLARE_INTERFACE_MAP()
-
 protected:
 	static DWORD WINAPI AsyncThreadProc (LPVOID lpParameter);
 
 protected:
-	mutable CCriticalSection	mLock;
-	CString						mURL;
-	CString						mCacheName;
-	DWORD						mBindFlags;
-	ULONG						mDownloadSize;
-	ULONG						mDownloadProgress;
-	bool						mDownloadStarted;
-	bool						mDownloadCancelling;
-	HRESULT						mDownloadComplete;
-	IDaNotify *					mNotify;
-	DWORD						mNotifyThreadId;
-	IBindStatusCallbackPtr		mBindStatusCallback;
-	IStreamPtr					mBindStatusMarshall;
-	IStreamPtr					mContextMarshall;
+	mutable CComAutoCriticalSection	mLock;
+	CAtlString						mURL;
+	CAtlString						mCacheName;
+	DWORD							mBindFlags;
+	ULONG							mDownloadSize;
+	ULONG							mDownloadProgress;
+	bool							mDownloadStarted;
+	bool							mDownloadCancelling;
+	HRESULT							mDownloadComplete;
+	class CEventNotify *			mNotify;
+	DWORD							mNotifyThreadId;
+	IBindStatusCallbackPtr			mBindStatusCallback;
+	IStreamPtr						mBindStatusMarshall;
+	IStreamPtr						mContextMarshall;
 };
 
-#pragma warning(pop)
 //////////////////////////////////////////////////////////////////////
-
-#endif // AGENTFILE_H_INCLUDED_

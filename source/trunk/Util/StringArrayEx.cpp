@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -24,15 +24,19 @@
 #include <search.h>
 #include "StringArrayEx.h"
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
+#endif
 
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__AFX_H__
 IMPLEMENT_DYNAMIC (CStringArrayEx, CStringArray)
+#endif
 
 //////////////////////////////////////////////////////////////////////
 
@@ -85,8 +89,8 @@ INT_PTR AddUniqueString (CStringArray & pStrings, const CString & pString, bool 
 
 INT_PTR FindString (const CStringArray & pStrings, const CString & pFind, bool pIgnoreCase)
 {
-	const CString *	lBase = pStrings.GetData ();
-	UINT			lCount = (UINT)pStrings.GetSize ();
+	const CString *	lBase = pStrings.GetData();
+	UINT			lCount = (UINT)pStrings.GetCount();
 	const CString *	lFound = (const CString *) _lfind (&pFind, lBase, &lCount, sizeof (const CString *), pIgnoreCase ? CompareStringNoCase : CompareStringCase);
 	return (lFound) ? (lFound - lBase) : -1;
 }
@@ -116,13 +120,13 @@ INT_PTR RemoveString (CStringArray & pStrings, const CString & pFind, bool pAll,
 
 void SortStrings (CStringArray & pStrings, bool pIgnoreCase)
 {
-	qsort (pStrings.GetData (), pStrings.GetSize (), sizeof (const CString *), pIgnoreCase ? CollateStringNoCase : CollateStringCase);
+	qsort (pStrings.GetData(), pStrings.GetCount(), sizeof (const CString *), pIgnoreCase ? CollateStringNoCase : CollateStringCase);
 }
 
 INT_PTR AddSortedString (CStringArray & pStrings, const CString & pString, bool pAllowDuplicates, bool pIgnoreCase)
 {
-	CString *	lArray = pStrings.GetData ();
-	INT_PTR		lCount = pStrings.GetSize ();
+	CString *	lArray = pStrings.GetData();
+	INT_PTR		lCount = pStrings.GetCount();
 
 	if	(
 			(lArray)
@@ -205,8 +209,8 @@ INT_PTR AddSortedStringReverse (CStringArray & pStrings, const CString & pString
 
 INT_PTR FindSortedString (const CStringArray & pStrings, const CString & pFind, bool pIgnoreCase)
 {
-	const CString *	lBase = pStrings.GetData ();
-	const CString *	lFound = (const CString *) bsearch (&pFind, lBase, pStrings.GetSize (), sizeof (const CString *), pIgnoreCase ? CollateStringNoCase : CollateStringCase);
+	const CString *	lBase = pStrings.GetData();
+	const CString *	lFound = (const CString *) bsearch (&pFind, lBase, pStrings.GetCount(), sizeof (const CString *), pIgnoreCase ? CollateStringNoCase : CollateStringCase);
 	return (lFound) ? (lFound - lBase) : -1;
 }
 
@@ -214,11 +218,11 @@ INT_PTR FindNextSortedString (const CStringArray & pStrings, const CString & pFi
 {
 	INT_PTR	lRet = -1;
 
-	if	(pStartAfter < pStrings.GetUpperBound ())
+	if	(pStartAfter < (INT_PTR)pStrings.GetCount()-1)
 	{
 		INT_PTR			lStartAt = max (pStartAfter+1, 0);
-		INT_PTR			lSize = pStrings.GetSize () - lStartAt;
-		const CString *	lBase = pStrings.GetData () + lStartAt;
+		INT_PTR			lSize = pStrings.GetCount() - lStartAt;
+		const CString *	lBase = pStrings.GetData() + lStartAt;
 		const CString *	lFound;
 
 		if	(
@@ -364,11 +368,11 @@ CString JoinStringArray (const CStringArray & pStrings, LPCTSTR pDelimiter, bool
 	bool	lFirst = true;
 
 	pFirstNdx = max (pFirstNdx, 0);
-	pLastNdx = min (pLastNdx, pStrings.GetUpperBound ());
+	pLastNdx = min (pLastNdx, pStrings.GetCount()-1);
 
 	for	(lNdx = pFirstNdx; lNdx <= pLastNdx; lNdx++)
 	{
-		const CString &	lString = const_cast <CStringArray &> (pStrings).ElementAt (lNdx);
+		const CString &	lString = const_cast <CStringArray &> (pStrings).operator[] (lNdx);
 
 		if	(
 				(pIncludeEmpty)
@@ -429,7 +433,7 @@ INT_PTR ReplaceAll (CStringArray & pStrings, TCHAR pReplace, TCHAR pReplaceWith)
 	INT_PTR	lRet = 0;
 	INT_PTR	lNdx = 0;
 
-	for	(lNdx = 0; lNdx <= pStrings.GetUpperBound (); lNdx++)
+	for	(lNdx = 0; lNdx < (INT_PTR)pStrings.GetCount(); lNdx++)
 	{
 		lRet += pStrings [lNdx].Replace (pReplace, pReplaceWith);
 	}
@@ -441,7 +445,7 @@ INT_PTR ReplaceAll (CStringArray & pStrings, LPCTSTR pReplace, LPCTSTR pReplaceW
 	INT_PTR	lRet = 0;
 	INT_PTR	lNdx = 0;
 
-	for	(lNdx = 0; lNdx <= pStrings.GetUpperBound (); lNdx++)
+	for	(lNdx = 0; lNdx < (INT_PTR)pStrings.GetCount(); lNdx++)
 	{
 		lRet += pStrings [lNdx].Replace (pReplace, pReplaceWith);
 	}
@@ -452,12 +456,12 @@ INT_PTR ReplaceAll (CStringArray & pStrings, LPCTSTR pReplace, LPCTSTR pReplaceW
 
 bool CompareStringArrays (const CStringArray & pStrings1, const CStringArray & pStrings2, bool pIgnoreCase)
 {
-	if	(pStrings1.GetSize () != pStrings2.GetSize ())
+	if	(pStrings1.GetCount() != pStrings2.GetCount())
 	{
 		return false;
 	}
 
-	for	(INT_PTR lNdx = 0; lNdx <= pStrings1.GetUpperBound (); lNdx++)
+	for	(INT_PTR lNdx = 0; lNdx < (INT_PTR)pStrings1.GetCount(); lNdx++)
 	{
 		if	(
 				(pIgnoreCase)

@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+	<title>SAPI5 English Normalization Contexts</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css" />
+	<xml>
+		<MSHelp:TOCTitle Title="SAPI5 English Normalization Contexts" />
+		<MSHelp:Keyword Index="K" Term="SAPI5 English Normalization Contexts" />
+		<MSHelp:Attr Name="TopicType" Value="kbOrient" />
+		<MSHelp:Attr Name="TopicType" Value="apiref" />
+		<MSHelp:Attr Name="DocSet" Value="DoubleAgent" />
+		<MSHelp:Attr Name="DocSet" Value="NETFramework" />
+		<MSHelp:Attr Name="DocSet" Value="WindowsForms" />
+		<MSHelp:Attr Name="DocSet" Value="C#" />
+		<MSHelp:Attr Name="DocSet" Value="Visual Basic" />
+		<MSHelp:Attr Name="DocSet" Value="ExpressLibVS" />
+		<MSHelp:Attr Name="Technology" Value="Agent" />
+		<MSHelp:Attr Name="Technology" Value="ManagedCode" />
+		<MSHelp:Attr Name="Technology" Value="ActiveX" />
+		<MSHelp:Attr Name="Technology" Value="WindowsForms" />
+		<MSHelp:Attr Name="Technology" Value="kb3Ptech" />
+		<MSHelp:Attr Name="ProgModel" Value="managed" />
+		<MSHelp:Attr Name="TargetOS" Value="Windows" />
+	</xml>
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>SAPI5 English Normalization Contexts</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p><a name="SAPI5Contexts"></a>The following <a href="Ref_SpeechTags.htm#Context">normalization contexts</a>
+					are defined by <em class="glossary keyword">SAPI5</em>, but not guaranteed to be implemented, for English
+					speech engines.</p>
+				<div class="syntax">
+					<table class="syntax">
+						<tr>
+							<th width="150ex">Context</th>
+							<th width="300ex">Description</th>
+							<th>Details</th>
+						</tr>
+						<tr>
+							<td><b>date</b></td>
+							<td>The text is normalized as a date</td>
+							<td>
+								<p>Dates will generally have the format of number [delimiter] number [delimiter] number or number [delimiter]
+									number where the delimiter can be a '.', '/' or '-', and numbers are typically between 01 and 12 for
+									months, 01 and 31 for days. A year is generally a two or four-digit number.</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>date_mdy</b></td>
+							<td>A date in m/d/y format</td>
+							<td>
+								<p><code>&lt;CONTEXT&nbsp;ID="date_mdy"&gt;12/21/99&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;December twenty first ninety nine&quot; or &quot;December twenty first nineteen
+									ninety nine&quot;</p>
+								<p><code>&lt;CONTEXT&nbsp;ID="date_mdy"&gt;12/21/1999&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;December twenty first nineteen ninety nine&quot;</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>date_dmy</b></td>
+							<td>A date in d/m/y format</td>
+							<td>
+								<p><code>&lt;CONTEXT&nbsp;ID="date_dmy"&gt;21.12.99&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;December twenty first ninety nine&quot; or &quot;December twenty first nineteen
+									ninety nine&quot;</p>
+								<p><code>&lt;CONTEXT&nbsp;ID="date_ dmy">21-12-1999&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;December twenty first nineteen ninety nine&quot;</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>date_ymd</b></td>
+							<td>A date in y/m/d format</td>
+							<td>
+								<p><code>&lt;CONTEXT&nbsp;ID="date_ymd"&gt;99-12-21&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;December twenty first ninety nine&quot; or &quot;December twenty first nineteen
+									ninety nine&quot;</p>
+								<p><code>&lt;CONTEXT&nbsp;ID="date_ ymd"&gt;1999.12.21&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;December twenty first nineteen ninety nine&quot;</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>date_ym</b></td>
+							<td>A date in y/m format</td>
+							<td>
+								<p><code>&lt;CONTEXT&nbsp;ID="date_ym"&gt;99-12&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;December ninety nine&quot; or &quot;December nineteen ninety nine&quot;</p>
+								<p><code>&lt;CONTEXT&nbsp;ID="date_ ym"&gt;1999.12&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;December nineteen ninety nine&quot;</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>date_my</b></td>
+							<td>A date in m/y format</td>
+							<td>
+								<p><code>&lt;CONTEXT&nbsp;ID="date_my"&gt;12/99&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;December ninety nine&quot; or &quot;December nineteen ninety nine&quot;</p>
+								<p><code>&lt;CONTEXT&nbsp;ID="date_my"&gt;12/1999&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;December nineteen ninety nine&quot;</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>date_dm</b></td>
+							<td>A date in d/m format</td>
+							<td>
+								<p><code>&lt;CONTEXT&nbsp;ID="date_dm"&gt;21.12&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;December twenty first"&quot;</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>date_md</b></td>
+							<td>A date in m/d format</td>
+							<td>
+								<p><code>&lt;CONTEXT&nbsp;ID="date_md"&gt;12/21&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;December twenty first&quot;</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>date_year</b></td>
+							<td>A numeric year</td>
+							<td>
+								<p><code>&lt;CONTEXT&nbsp;ID="date_year"&gt;1999&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;nineteen ninety nine&quot;</p>
+								<p><code>&lt;CONTEXT&nbsp;ID="date_year"&gt;2001&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;two thousand one&quot;</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>time</b></td>
+							<td>The text is normalized as a time</td>
+							<td>
+								<p>Times will generally have the format of number [delimiter] number [delimiter] number or number [delimiter]
+									number where the delimiter is ':' or ' ' ' or ' " ' and numbers are typically between 01 and 24 for
+									hours, 01 and 59 for minutes and seconds.</p>
+								<p><code>&lt;CONTEXT&nbsp;ID="time"&gt;12:30&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;twelve thirty&quot;</p>
+								<p><code>&lt;CONTEXT&nbsp;ID="time"&gt;01:21&lt;/CONTEXT&gt;</code><br />
+									is normalized as &quot;one twenty one&quot;</p>
+								<p><code>&lt;CONTEXT&nbsp;ID="time"&gt;1'21"&lt;/CONTEXT&gt;</code><br />
+									is normalized as &quot;one minute twenty one seconds&quot; or &quot;one minute and twenty one seconds&quot;</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>number_cardinal</b></td>
+							<td>The text is normalized as a number using the regular format of ones, tens, etc.</td>
+							<td>
+								<p><code>&lt;CONTEXT&nbsp;ID="number_cardinal"&gt;3432&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;three thousand four hundred thirty two&quot; or &quot;three thousand four hundred
+									and thirty two&quot;</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>number_digit</b></td>
+							<td>The text is normalized digit by digit.</td>
+							<td>
+								<p><code>&lt;CONTEXT&nbsp;ID="number_digit"&gt;3432&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;three four three two&quot;</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>number_fraction</b></td>
+							<td>The text is normalized as a fraction.</td>
+							<td>
+								<p><code>&lt;CONTEXT&nbsp;ID="number_fraction"&gt;3/15&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;three fifteenths&quot; or &quot;three over fifteen&quot;</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>number_decimal</b></td>
+							<td>The text is normalized as a decimal value.</td>
+							<td>
+								<p><code>&lt;CONTEXT&nbsp;ID="number_decimal"&gt;423.1243&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;four hundred and twenty three point one two four three&quot;</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>phone_Number</b></td>
+							<td>The text is normalized as a phone number.</td>
+							<td>
+								<p>The exact implementation is left to the engine developer and may be defined in a future release of <em
+									class="glossary">SAPI</em>.</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>currency</b></td>
+							<td>The text is normalized as a currency.</td>
+							<td>
+								<p><code>&lt;CONTEXT&nbsp;ID="currency"&gt;$34.90&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;thirty four dollars and ninety cents&quot;</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>web_url</b></td>
+							<td>The text is normalized as a URL.</td>
+							<td>
+								<p><code>&lt;CONTEXT&nbsp;ID="web_url"&gt;www.microsoft.com&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;w w w dot microsoft dot com&quot;</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>e-mail</b></td>
+							<td>The text is normalized as e-mail.</td>
+							<td>
+								<p>The exact implementation is left to the engine developer and may be defined in a future release of <em
+									class="glossary">SAPI</em>.</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>e-mail_address</b></td>
+							<td>The text is normalized as an e-mail address.</td>
+							<td>
+								<p><code>&lt;CONTEXT&nbsp;ID="e-mail_address"&gt;someone@microsoft.com&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;someone at microsoft dot com&quot;</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>address</b></td>
+							<td>The text is normalized as an address.</td>
+							<td>
+								<p><code>&lt;CONTEXT&nbsp;ID="address"&gt;One Microsoft Way, Redmond, WA, 98052&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;One Microsoft Way Redmond Washington nine eight zero five two&quot;</p>
+							</td>
+						</tr>
+						<tr>
+							<td><b>address_postal</b></td>
+							<td>The text is normalized as a postal address.</td>
+							<td>
+								<p><code>&lt;CONTEXT&nbsp;ID="address_postal"&gt;A2C 4X5&lt;/CONTEXT&gt;</code><br />
+									is normalized to &quot;A 2 C 4 X 5&quot;</p>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<h4 class="seealso">See Also</h4>
+				<a href="Ref_SpeechTags.htm">Speech Output Tags</a> </td>
+		</tr>
+	</table>
+</body>
+</html>

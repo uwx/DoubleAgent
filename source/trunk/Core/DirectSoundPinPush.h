@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,10 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSOUNDPINPUSH_H_INCLUDED_
-#define DIRECTSOUNDPINPUSH_H_INCLUDED_
 #pragma once
-
 #include "DirectShowPins.h"
 #include "DirectShowSeeking.h"
 #include "DirectSoundConvert.h"
@@ -29,12 +26,11 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CDirectSoundPinPush : public CDirectShowPinOut, public CDirectShowSeeking, public CDirectShowUtils, private CInstanceGate
+class ATL_NO_VTABLE CDirectSoundPinPush : public CDirectShowPinOut, public CDirectShowSeeking<CDirectSoundPinPush>, public CDirectShowUtils, private CInstanceGate
 {
 public:
-	CDirectSoundPinPush (class CDirectShowFilter & pFilter, CDirectSoundConvertCache & pConvertCache, long pSoundNdx);
+	CDirectSoundPinPush ();
 	virtual ~CDirectSoundPinPush ();
-	DECLARE_DYNAMIC(CDirectSoundPinPush)
 
 // Attributes
 public:
@@ -42,39 +38,38 @@ public:
 
 // Operations
 public:
+	CDirectSoundPinPush & Initialize (class CDirectShowFilter & pFilter, CDirectSoundConvertCache & pConvertCache, long pSoundNdx);
+
 	HRESULT ConvertSound (LPCVOID pSound, long pSoundSize);
 	HRESULT ConnectFilters ();
 	HRESULT DisconnectFilters (bool pCacheUnusedFilters = true);
 	HRESULT CueSound (REFERENCE_TIME pStartTime);
 
 // Overrides
-	//{{AFX_VIRTUAL(CDirectSoundPinPush)
-	public:
+public:
 	virtual LONGLONG GetDuration ();
 	virtual HRESULT BeginOutputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate = 1.0);
-	protected:
-	virtual LPUNKNOWN GetInterfaceHook(const void* iid);
-	//}}AFX_VIRTUAL
+
+// Interfaces
+public:
+	BEGIN_COM_MAP(CDirectSoundPinPush)
+		COM_INTERFACE_ENTRY(IMediaSeeking)
+		COM_INTERFACE_ENTRY_CHAIN(CDirectShowPinOut)
+	END_COM_MAP()
 
 // Implementation
 protected:
-	DECLARE_INTERFACE_MAP()
-
 	HRESULT StreamCuedSound (INT_PTR pCueNdx, bool pSynchronous);
 	static DWORD WINAPI StreamProc (LPVOID pThreadParameter);
 
 // Implementation
 protected:
-	IBaseFilterPtr				mAudioRender;
-	CDirectShowPins &			mFilterPins;
-	CDirectSoundConvertCache &	mConvertCache;
-	CArrayEx <REFERENCE_TIME>	mCueTimes;
+	IBaseFilterPtr					mAudioRender;
+	CDirectShowPins *				mFilterPins;
+	CDirectSoundConvertCache *		mConvertCache;
+	CAtlTypeArray <REFERENCE_TIME>	mCueTimes;
+	INT_PTR							mCueAsyncStart;
 	int							mCueAsyncStart;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSOUNDPINPUSH_H_INCLUDED_

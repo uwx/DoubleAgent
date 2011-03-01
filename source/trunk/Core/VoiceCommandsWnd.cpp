@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -19,21 +19,14 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include <AfxPriv.h>
 #include "DaCore.h"
 #include "DaGlobalConfig.h"
 #include "VoiceCommandsWnd.h"
 #include "Localize.h"
 #include "Registry.h"
-#include "StringMap.h"
 #ifdef	_DEBUG
 #include "DebugStr.h"
-#endif
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
+#include "DebugWin.h"
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -54,7 +47,7 @@ static const int	sGlobalItemHideChar = 1;
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNCREATE (CVoiceCommandsWnd, CWnd)
+IMPLEMENT_DLL_OBJECT(CVoiceCommandsWnd)
 
 CVoiceCommandsWnd::CVoiceCommandsWnd ()
 :	mCharID (0),
@@ -67,47 +60,47 @@ CVoiceCommandsWnd::CVoiceCommandsWnd ()
 
 CVoiceCommandsWnd::~CVoiceCommandsWnd ()
 {
-	if	(m_hWnd)
+	if	(IsWindow ())
 	{
 		DestroyWindow ();
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
-BEGIN_MESSAGE_MAP(CVoiceCommandsWnd, CWnd)
-	//{{AFX_MSG_MAP(CVoiceCommandsWnd)
-	ON_WM_DESTROY()
-	ON_WM_SIZE()
-	ON_WM_CLOSE()
-	ON_NOTIFY(TVN_ITEMEXPANDING, AFX_IDC_LISTBOX, OnItemExpanding)
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
+CVoiceCommandsWnd * CVoiceCommandsWnd::CreateInstance ()
+{
+	return new CVoiceCommandsWnd;
+}
 
 /////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
 
-bool CVoiceCommandsWnd::Create ()
+bool CVoiceCommandsWnd::Create (CWindow * pOwnerWnd)
 {
 	bool			lRet = false;
+	HWND			lOwnerWnd = (pOwnerWnd) ? pOwnerWnd->m_hWnd : NULL;
+	DWORD			lStyle = WS_POPUP|WS_CAPTION|WS_THICKFRAME|WS_SYSMENU;
+	DWORD			lExStyle = WS_EX_TOOLWINDOW | ((pOwnerWnd) ? 0 : WS_EX_TOPMOST);
 	CRect			lInitialRect (0,0,200,200);
 	tS <LOGFONT>	lLogFont;
 
 	if	(
-			(!m_hWnd)
-		&&	(CreateEx (WS_EX_TOOLWINDOW|WS_EX_TOPMOST, AfxRegisterWndClass(0), CLocalize::LoadString (IDS_COMMANDS_VOICE_TITLE, mLangID), WS_POPUP|WS_CAPTION|WS_THICKFRAME|WS_SYSMENU, lInitialRect, NULL, NULL))
+			(!IsWindow ())
+		&&	(CVoiceCommandsWndBase::Create (lOwnerWnd, lInitialRect, CLocalize::LoadString (IDS_COMMANDS_VOICE_TITLE, mLangID), lStyle, lExStyle))
 		)
 	{
-		mCommandTree.Create (WS_CHILD|WS_VISIBLE|WS_TABSTOP|TVS_HASLINES|TVS_DISABLEDRAGDROP|TVS_SHOWSELALWAYS, lInitialRect, this, AFX_IDC_LISTBOX);
+		mCommandTree.Attach (::CreateWindowEx (0, WC_TREEVIEW, NULL, WS_CHILD|WS_VISIBLE|WS_TABSTOP|TVS_HASLINES|TVS_DISABLEDRAGDROP|TVS_SHOWSELALWAYS, lInitialRect.left, lInitialRect.top, lInitialRect.Width(), lInitialRect.Height(), m_hWnd, (HMENU)IDS_FOR_COMMANDS, _AtlBaseModule.GetModuleInstance(), NULL));
+
 		if	(IsWindowsVista_AtLeast())
 		{
 			TreeView_SetExtendedStyle (mCommandTree.m_hWnd, TVS_EX_DOUBLEBUFFER, TVS_EX_DOUBLEBUFFER);
 		}
 		if	(
 				(GetObject (GetStockObject (DEFAULT_GUI_FONT), sizeof(lLogFont), &lLogFont) > 0)
-			&&	(mFont.CreateFontIndirect (&lLogFont))
+			&&	(mFont = CreateFontIndirect (&lLogFont))
 			)
 		{
-			mCommandTree.SetFont (&mFont);
+			mCommandTree.SetFont (mFont);
 		}
 		LoadConfig ();
 		RecalcLayout ();
@@ -116,16 +109,16 @@ bool CVoiceCommandsWnd::Create ()
 	return lRet;
 }
 
-bool CVoiceCommandsWnd::Show ()
+bool CVoiceCommandsWnd::Show (bool pActivate)
 {
 	bool	lRet = false;
 
 	if	(
-			(m_hWnd)
+			(IsWindow ())
 		&&	(!IsWindowVisible ())
 		)
 	{
-		ShowWindow (SW_SHOW);
+		ShowWindow (pActivate ? SW_SHOW : SW_SHOWNA);
 		lRet = true;
 	}
 	return lRet;
@@ -150,7 +143,7 @@ bool CVoiceCommandsWnd::Hide ()
 
 void CVoiceCommandsWnd::LoadConfig ()
 {
-	CRegKey						lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
+	CRegKeyEx					lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
 	CRect						lWinRect;
 	CPoint						lWinPos;
 	CSize						lWinSize;
@@ -207,8 +200,8 @@ void CVoiceCommandsWnd::LoadConfig ()
 
 void CVoiceCommandsWnd::SaveConfig ()
 {
-	CRegKey	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
-	CRect	lWinRect;
+	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
+	CRect		lWinRect;
 
 	GetWindowRect (&lWinRect);
 	if	(!lWinRect.EqualRect (&mInitialRect))
@@ -225,7 +218,7 @@ void CVoiceCommandsWnd::SaveConfig ()
 		&&	(mGlobalRoot)
 		)
 	{
-		if	(mCommandTree.GetItemState (mGlobalRoot, TVIS_EXPANDED) & TVIS_EXPANDED)
+		if	(TreeView_GetItemState (mCommandTree, mGlobalRoot, TVIS_EXPANDED) & TVIS_EXPANDED)
 		{
 			CRegDWord (lRegKey, sProfileGlobalExpanded, true).SetValue (TRUE).Update ();
 		}
@@ -251,11 +244,61 @@ void CVoiceCommandsWnd::RecalcLayout ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CVoiceCommandsWnd::ShowTheseCommands (long pCharID, LPCTSTR pCaption, const CArrayEx <long> & pIds, const CStringArray & pCaptions)
+HTREEITEM CVoiceCommandsWnd::InsertTreeItem (HWND pTree, LPCTSTR pItemText, HTREEITEM pParentItem, HTREEITEM pPrevItem)
+{
+	tS <TVINSERTSTRUCT>	lTreeInsert;
+
+	lTreeInsert.hParent = pParentItem;
+	lTreeInsert.hInsertAfter = pPrevItem;
+	lTreeInsert.item.mask = TVIF_TEXT;
+	lTreeInsert.item.pszText = (LPTSTR)pItemText;
+	return TreeView_InsertItem (pTree, &lTreeInsert);
+}
+
+CAtlString CVoiceCommandsWnd::GetTreeItemText (HWND pTree, HTREEITEM pTreeItem)
+{
+	CAtlString	lText;
+	tS <TVITEM>	lTreeItem;
+
+	lTreeItem.hItem = pTreeItem;
+	lTreeItem.mask = TVIF_TEXT;
+	lTreeItem.cchTextMax = 2048;
+	lTreeItem.pszText = lText.GetBuffer (lTreeItem.cchTextMax);
+	TreeView_GetItem (pTree, &lTreeItem);
+
+	lText.ReleaseBuffer ();
+	return lText;
+}
+
+void CVoiceCommandsWnd::SetTreeItemText (HWND pTree, HTREEITEM pTreeItem, LPCTSTR pItemText)
+{
+	tS <TVITEM>	lTreeItem;
+
+	lTreeItem.hItem = pTreeItem;
+	lTreeItem.mask = TVIF_TEXT;
+	lTreeItem.pszText = (LPTSTR)pItemText;
+	TreeView_SetItem (pTree, &lTreeItem);
+}
+
+void CVoiceCommandsWnd::SetTreeItemData (HWND pTree, HTREEITEM pTreeItem, LPARAM pItemData)
+{
+	tS <TVITEM>	lTreeItem;
+
+	lTreeItem.hItem = pTreeItem;
+	lTreeItem.mask = TVIF_PARAM;
+	lTreeItem.lParam = pItemData;
+	TreeView_SetItem (pTree, &lTreeItem);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+bool CVoiceCommandsWnd::ShowTheseCommands (long pCharID, LPCTSTR pCaption, const CAtlTypeArray <long> & pIds, const CAtlStringArray & pCaptions)
 {
 	bool		lRet = false;
-	bool		lSpeechEnabled = CDaSpeechInputConfig().LoadConfig().mEnabled;
-	CString		lCaption (pCaption);
+	bool		lSpeechEnabled = CDaSettingsConfig().LoadConfig().mSrEnabled;
+	CAtlString	lCaption (pCaption);
 	HTREEITEM	lCmdItem;
 	HTREEITEM	lPrevItem = TVI_FIRST;
 	INT_PTR		lNdx;
@@ -264,11 +307,11 @@ bool CVoiceCommandsWnd::ShowTheseCommands (long pCharID, LPCTSTR pCaption, const
 
 	if	(mCommandTree.m_hWnd)
 	{
-		HTREEITEM &	lCharRoot = mCharRoots[pCharID];
+		HTREEITEM &	lCharRoot = mCharRoots [pCharID];
 
 		if	(
-				(pIds.GetSize() > 0)
-			&&	(pCaptions.GetSize() == pIds.GetSize())
+				(pIds.GetCount() > 0)
+			&&	(pCaptions.GetCount() == pIds.GetCount())
 			&&	(lSpeechEnabled)
 			)
 		{
@@ -277,65 +320,72 @@ bool CVoiceCommandsWnd::ShowTheseCommands (long pCharID, LPCTSTR pCaption, const
 				lCaption = CLocalize::LoadString (IDS_COMMAND_UNDEFINED, mLangID);
 			}
 #ifdef	_DEBUG_NOT
-			lCaption.Format (_T("%s [%d]"), CString((LPCTSTR)lCaption), mCharID);
+			lCaption.Format (_T("%s [%d]"), CAtlString((LPCTSTR)lCaption), mCharID);
 #endif
 
 			if	(lCharRoot)
 			{
-				if	(mCommandTree.GetItemText (lCharRoot) != lCaption)
+				if	(GetTreeItemText (mCommandTree, lCharRoot) != lCaption)
 				{
-					mCommandTree.SetItemText (lCharRoot, lCaption);
+					SetTreeItemText (mCommandTree, lCharRoot, lCaption);
 				}
 			}
 			else
-			if	(lCharRoot = mCommandTree.InsertItem (lCaption, TVI_ROOT, TVI_FIRST))
+			if	(lCharRoot = InsertTreeItem (mCommandTree, lCaption, TVI_ROOT, TVI_FIRST))
 			{
-				mCommandTree.SetItemState (lCharRoot, TVIS_EXPANDED, TVIS_EXPANDED);
+				TreeView_SetItemState (mCommandTree, lCharRoot, TVIS_EXPANDED, TVIS_EXPANDED);
 			}
 
-			for	(lNdx = 0, lCmdItem = mCommandTree.GetChildItem (lCharRoot); (lNdx <= pIds.GetUpperBound()) || (lCmdItem != NULL); lNdx++, lCmdItem = lCmdItem ? mCommandTree.GetNextSiblingItem (lCmdItem) : NULL)
+			for	(lNdx = 0, lCmdItem = TreeView_GetChild (mCommandTree, lCharRoot); (lNdx < (INT_PTR)pIds.GetCount()) || (lCmdItem != NULL); lNdx++, lCmdItem = lCmdItem ? TreeView_GetNextSibling (mCommandTree, lCmdItem) : NULL)
 			{
-				if	(lNdx <= pIds.GetUpperBound ())
+				if	(lNdx < (INT_PTR)pIds.GetCount())
 				{
 #ifdef	_DEBUG_NOT
-					const_cast <CStringArray &> (pCaptions) [lNdx].Format (_T("%s [%d] [%d]"), CString((LPCTSTR)pCaptions [lNdx]), pIds[lNdx], mCharID);
+					const_cast <CAtlStringArray &> (pCaptions) [lNdx].Format (_T("%s [%d] [%d]"), CAtlString((LPCTSTR)pCaptions [lNdx]), pIds[lNdx], mCharID);
 #endif
 					if	(lCmdItem)
 					{
-						if	(mCommandTree.GetItemText (lCmdItem) != pCaptions [lNdx])
+						if	(pCaptions [lNdx].IsEmpty ())
 						{
-							mCommandTree.SetItemText (lCmdItem, pCaptions [lNdx]);
+							lCmdItem = (lPrevItem == TVI_FIRST) ? TreeView_GetChild (mCommandTree, lCharRoot) : (lPrevItem == TVI_LAST) ? NULL : lPrevItem;
+							continue;
+						}
+						else
+						if	(GetTreeItemText (mCommandTree, lCmdItem) != pCaptions [lNdx])
+						{
+							SetTreeItemText (mCommandTree, lCmdItem, pCaptions [lNdx]);
 						}
 					}
 					else
+					if	(!pCaptions [lNdx].IsEmpty ())
 					{
-						lCmdItem = mCommandTree.InsertItem (pCaptions [lNdx], lCharRoot, lPrevItem);
+						lCmdItem = InsertTreeItem (mCommandTree, pCaptions [lNdx], lCharRoot, lPrevItem);
 					}
 					if	(lCmdItem)
 					{
-						mCommandTree.SetItemData (lCmdItem, pIds [lNdx]);
+						SetTreeItemData (mCommandTree, lCmdItem, pIds [lNdx]);
 					}
 				}
 				else
 				if	(
-						(lNdx > pIds.GetSize ())
+						(lNdx > (INT_PTR)pIds.GetCount())
 					&&	(lPrevItem != TVI_FIRST)
 					&&	(lPrevItem != TVI_LAST)
 					)
 				{
-					mCommandTree.DeleteItem (lPrevItem);
+					TreeView_DeleteItem (mCommandTree, lPrevItem);
 				}
 
 				lPrevItem = lCmdItem ? lCmdItem : TVI_LAST;
 			}
 
 			if	(
-					(lNdx > pIds.GetSize ())
+					(lNdx > (INT_PTR)pIds.GetCount())
 				&&	(lPrevItem != TVI_FIRST)
 				&&	(lPrevItem != TVI_LAST)
 				)
 			{
-				mCommandTree.DeleteItem (lPrevItem);
+				TreeView_DeleteItem (mCommandTree, lPrevItem);
 			}
 			lRet = true;
 		}
@@ -356,26 +406,26 @@ bool CVoiceCommandsWnd::ShowTheseCommands (long pCharID, LPCTSTR pCaption, const
 
 			if	(lCharRoot)
 			{
-				if	(mCommandTree.GetItemText (lCharRoot) != lCaption)
+				if	(GetTreeItemText (mCommandTree, lCharRoot) != lCaption)
 				{
-					mCommandTree.SetItemText (lCharRoot, lCaption);
+					SetTreeItemText (mCommandTree, lCharRoot, lCaption);
 				}
-				while	(lCmdItem = mCommandTree.GetChildItem (lCharRoot))
+				while	(lCmdItem = TreeView_GetChild (mCommandTree, lCharRoot))
 				{
-					mCommandTree.DeleteItem (lCmdItem);
+					TreeView_DeleteItem (mCommandTree, lCmdItem);
 				}
 			}
 			else
-			if	(lCharRoot = mCommandTree.InsertItem (lCaption, TVI_ROOT, TVI_FIRST))
+			if	(lCharRoot = InsertTreeItem (mCommandTree, lCaption, TVI_ROOT, TVI_FIRST))
 			{
-				mCommandTree.SetItemState (lCharRoot, TVIS_EXPANDED, TVIS_EXPANDED);
+				TreeView_SetItemState (mCommandTree, lCharRoot, TVIS_EXPANDED, TVIS_EXPANDED);
 			}
 		}
 		else
 		{
 			if	(lCharRoot)
 			{
-				mCommandTree.DeleteItem (lCharRoot);
+				TreeView_DeleteItem (mCommandTree, lCharRoot);
 			}
 			lCharRoot = NULL;
 		}
@@ -391,7 +441,7 @@ void CVoiceCommandsWnd::ShowOtherClients (long pCharID)
 		)
 	{
 		POSITION	lPos;
-		CString		lCaption;
+		CAtlString	lCaption;
 		long		lCharID;
 		HTREEITEM	lCharRoot;
 		HTREEITEM	lCmdItem;
@@ -409,14 +459,14 @@ void CVoiceCommandsWnd::ShowOtherClients (long pCharID)
 			{
 				if	(mCharClients [lCharID] == pCharID)
 				{
-					while (lCmdItem = mCommandTree.GetChildItem (lCharRoot))
+					while (lCmdItem = TreeView_GetChild (mCommandTree, lCharRoot))
 					{
-						mCommandTree.DeleteItem (lCmdItem);
+						TreeView_DeleteItem (mCommandTree, lCmdItem);
 					}
 				}
 				else
 				{
-					mCommandTree.DeleteItem (lCharRoot);
+					TreeView_DeleteItem (mCommandTree, lCharRoot);
 					mCharRoots [lCharID] = NULL;
 				}
 			}
@@ -430,9 +480,9 @@ void CVoiceCommandsWnd::ShowOtherClients (long pCharID)
 
 			if	(lCharID == pCharID)
 			{
-				if	(mCharRoots[pCharID])
+				if	(mCharRoots [pCharID])
 				{
-					lPrevItem = mCharRoots[pCharID];
+					lPrevItem = mCharRoots [pCharID];
 				}
 			}
 			else
@@ -444,14 +494,14 @@ void CVoiceCommandsWnd::ShowOtherClients (long pCharID)
 			{
 				if	(lCharRoot = mCharRoots [lCharID])
 				{
-					if	(mCommandTree.GetItemText (lCharRoot) != lCaption)
+					if	(GetTreeItemText (mCommandTree, lCharRoot) != lCaption)
 					{
-						mCommandTree.SetItemText (lCharRoot, lCaption);
+						SetTreeItemText (mCommandTree, lCharRoot, lCaption);
 					}
 					lPrevItem = lCharRoot;
 				}
 				else
-				if	(lCharRoot = mCommandTree.InsertItem (lCaption, TVI_ROOT, lPrevItem))
+				if	(lCharRoot = InsertTreeItem (mCommandTree, lCaption, TVI_ROOT, lPrevItem))
 				{
 					mCharRoots [lCharID] = lCharRoot;
 					lPrevItem = lCharRoot;
@@ -465,15 +515,14 @@ void CVoiceCommandsWnd::ShowOtherClients (long pCharID)
 
 bool CVoiceCommandsWnd::ShowGlobalCommands (USHORT pHideWndCmdId, USHORT pHideCharCmdId)
 {
-	bool				lRet = false;
-	HTREEITEM			lPrevItem = TVI_FIRST;
-	POSITION			lPos;
-	long				lCharID;
-	CString				lCharName;
-	CStringMap <long>	lCharNames;
-	INT_PTR				lCharNdx;
+	bool																		lRet = false;
+	HTREEITEM																	lPrevItem = TVI_FIRST;
+	POSITION																	lPos;
+	long																		lCharID;
+	CAtlString																	lCharName;
+	CAtlMap <CAtlString, CZeroInit<long>, CStringElementTraits<CAtlString> >	lCharNames;
 
-	if	(!CDaSpeechInputConfig().LoadConfig().mEnabled)
+	if	(!CDaSettingsConfig().LoadConfig().mSrEnabled)
 	{
 		HideGlobalCommands ();
 	}
@@ -482,13 +531,13 @@ bool CVoiceCommandsWnd::ShowGlobalCommands (USHORT pHideWndCmdId, USHORT pHideCh
 	{
 		if	(!mGlobalRoot)
 		{
-			CRegKey	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
+			CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
 
-			mGlobalRoot = mCommandTree.InsertItem (CLocalize::LoadString (IDS_COMMANDS_GLOBAL_TITLE, mLangID), TVI_ROOT, TVI_LAST);
+			mGlobalRoot = InsertTreeItem (mCommandTree, CLocalize::LoadString (IDS_COMMANDS_GLOBAL_TITLE, mLangID), TVI_ROOT, TVI_LAST);
 
 			if	(CRegDWord (lRegKey, sProfileGlobalExpanded, true).Value ())
 			{
-				mCommandTree.SetItemState (mGlobalRoot, TVIS_EXPANDED, TVIS_EXPANDED);
+				TreeView_SetItemState (mCommandTree, mGlobalRoot, TVIS_EXPANDED, TVIS_EXPANDED);
 			}
 		}
 
@@ -496,10 +545,10 @@ bool CVoiceCommandsWnd::ShowGlobalCommands (USHORT pHideWndCmdId, USHORT pHideCh
 		{
 			if	(
 					(mGlobalItems[sGlobalItemHideWnd])
-				||	(mGlobalItems[sGlobalItemHideWnd] = mCommandTree.InsertItem (CLocalize::LoadString (IDS_COMMANDS_WINDOW_CLOSE_PROMPT, mLangID), mGlobalRoot, lPrevItem))
+				||	(mGlobalItems[sGlobalItemHideWnd] = InsertTreeItem (mCommandTree, CLocalize::LoadString (IDS_COMMANDS_WINDOW_CLOSE_PROMPT, mLangID), mGlobalRoot, lPrevItem))
 				)
 			{
-				mCommandTree.SetItemData (mGlobalItems[sGlobalItemHideWnd], pHideWndCmdId);
+				SetTreeItemData (mCommandTree, mGlobalItems[sGlobalItemHideWnd], pHideWndCmdId);
 				lPrevItem = mGlobalItems[sGlobalItemHideWnd];
 			}
 		}
@@ -507,7 +556,7 @@ bool CVoiceCommandsWnd::ShowGlobalCommands (USHORT pHideWndCmdId, USHORT pHideCh
 		{
 			if	(mGlobalItems[sGlobalItemHideWnd])
 			{
-				mCommandTree.DeleteItem (mGlobalItems[sGlobalItemHideWnd]);
+				TreeView_DeleteItem (mCommandTree, mGlobalItems[sGlobalItemHideWnd]);
 				mGlobalItems[sGlobalItemHideWnd] = NULL;
 			}
 		}
@@ -519,10 +568,9 @@ bool CVoiceCommandsWnd::ShowGlobalCommands (USHORT pHideWndCmdId, USHORT pHideCh
 			lCharNames.SetAt (lCharName, lCharID);
 		}
 
-		for	(lCharNdx = 0; lCharNdx <= lCharNames.GetUpperBound(); lCharNdx++)
+		for	(lPos = lCharNames.GetStartPosition(); lPos;)
 		{
-			lCharID = lCharNames [lCharNdx];
-			lCharName = lCharNames.KeyAt (lCharNdx);
+			lCharNames.GetNextAssoc (lPos, lCharName, lCharID);
 
 			if	(
 					(!lCharName.IsEmpty ())
@@ -531,15 +579,15 @@ bool CVoiceCommandsWnd::ShowGlobalCommands (USHORT pHideWndCmdId, USHORT pHideCh
 			{
 				if	(
 						(mCharItems[lCharID])
-					&&	(mCommandTree.GetPrevSiblingItem (mCharItems[lCharID]) != lPrevItem)
+					&&	(TreeView_GetPrevSibling (mCommandTree, mCharItems[lCharID]) != lPrevItem)
 					)
 				{
-					mCommandTree.DeleteItem (mCharItems[lCharID]);
+					TreeView_DeleteItem (mCommandTree, mCharItems[lCharID]);
 					mCharItems[lCharID] = NULL;
 				}
 				if	(
 						(mCharItems[lCharID])
-					||	(mCharItems[lCharID] = mCommandTree.InsertItem (lCharName, mGlobalRoot, lPrevItem))
+					||	(mCharItems[lCharID] = InsertTreeItem (mCommandTree, lCharName, mGlobalRoot, lPrevItem))
 					)
 				{
 					lPrevItem = mCharItems[lCharID];
@@ -549,7 +597,7 @@ bool CVoiceCommandsWnd::ShowGlobalCommands (USHORT pHideWndCmdId, USHORT pHideCh
 			{
 				if	(mCharItems[lCharID])
 				{
-					mCommandTree.DeleteItem (mCharItems[lCharID]);
+					TreeView_DeleteItem (mCommandTree, mCharItems[lCharID]);
 					mCharItems[lCharID] = NULL;
 				}
 			}
@@ -559,10 +607,10 @@ bool CVoiceCommandsWnd::ShowGlobalCommands (USHORT pHideWndCmdId, USHORT pHideCh
 		{
 			if	(
 					(mGlobalItems[sGlobalItemHideChar])
-				||	(mGlobalItems[sGlobalItemHideChar] = mCommandTree.InsertItem (CLocalize::LoadString (IDS_COMMANDS_HIDE_PROMPT, mLangID), mGlobalRoot, lPrevItem))
+				||	(mGlobalItems[sGlobalItemHideChar] = InsertTreeItem (mCommandTree, CLocalize::LoadString (IDS_COMMANDS_HIDE_PROMPT, mLangID), mGlobalRoot, lPrevItem))
 				)
 			{
-				mCommandTree.SetItemData (mGlobalItems[sGlobalItemHideChar], pHideCharCmdId);
+				SetTreeItemData (mCommandTree, mGlobalItems[sGlobalItemHideChar], pHideCharCmdId);
 				lPrevItem = mGlobalItems[sGlobalItemHideChar];
 			}
 		}
@@ -570,7 +618,7 @@ bool CVoiceCommandsWnd::ShowGlobalCommands (USHORT pHideWndCmdId, USHORT pHideCh
 		{
 			if	(mGlobalItems[sGlobalItemHideChar])
 			{
-				mCommandTree.DeleteItem (mGlobalItems[sGlobalItemHideChar]);
+				TreeView_DeleteItem (mCommandTree, mGlobalItems[sGlobalItemHideChar]);
 				mGlobalItems[sGlobalItemHideChar] = NULL;
 			}
 		}
@@ -586,7 +634,7 @@ bool CVoiceCommandsWnd::HideGlobalCommands ()
 	if	(mGlobalRoot)
 	{
 		SaveConfig ();
-		mCommandTree.DeleteItem (mGlobalRoot);
+		TreeView_DeleteItem (mCommandTree, mGlobalRoot);
 		mGlobalRoot = NULL;
 		memset (mGlobalItems, 0, sizeof (mGlobalItems));
 		mCharItems.RemoveAll ();
@@ -606,8 +654,8 @@ bool CVoiceCommandsWnd::SetCharacter (long pCharID, LPCTSTR pCharName, LPCTSTR p
 
 	if	(m_hWnd)
 	{
-		CString	lCaption;
-		CString	lCharName;
+		CAtlString	lCaption;
+		CAtlString	lCharName;
 
 		if	(pCharID != mCharID)
 		{
@@ -636,10 +684,10 @@ bool CVoiceCommandsWnd::SetCharacter (long pCharID, LPCTSTR pCharName, LPCTSTR p
 		{
 			lCaption = CLocalize::LoadString (IDS_COMMANDS_VOICE_TITLE, mLangID);
 #ifdef	_DEBUG_NOT
-			lCaption.Format (_T("%s [%d]"), CString((LPCTSTR)lCaption), mCharID);
+			lCaption.Format (_T("%s [%d]"), CAtlString((LPCTSTR)lCaption), mCharID);
 #endif
 		}
-		AfxSetWindowText (m_hWnd, lCaption);
+		SetWindowText (lCaption);
 
 		if	(
 				(pCharID)
@@ -677,7 +725,7 @@ bool CVoiceCommandsWnd::SetCharacterClient (long pCharID, long pActiveCharID)
 				&&	(mCharNames [pActiveCharID] != mCharNames [pCharID])
 				)
 			{
-				mCommandTree.SetItemText (mCharItems [pActiveCharID], mCharNames [pActiveCharID]);
+				SetTreeItemText (mCommandTree, mCharItems [pActiveCharID], mCharNames [pActiveCharID]);
 			}
 		}
 
@@ -689,14 +737,14 @@ bool CVoiceCommandsWnd::SetCharacterClient (long pCharID, long pActiveCharID)
 
 bool CVoiceCommandsWnd::SetCharacterName (long pCharID, LPCTSTR pCharName, LPCTSTR pCommandsCaption)
 {
-	bool	lRet = false;
-	CString	lCharName (pCharName);
-	CString	lCommandsCaption (pCommandsCaption);
+	bool		lRet = false;
+	CAtlString	lCharName (pCharName);
+	CAtlString	lCommandsCaption (pCommandsCaption);
 
 #ifdef	_DEBUG_NOT
 	if	(!lCharName.IsEmpty ())
 	{
-		lCharName.Format (_T("%s [%d]"), CString((LPCTSTR)lCharName), pCharID);
+		lCharName.Format (_T("%s [%d]"), CAtlString((LPCTSTR)lCharName), pCharID);
 	}
 #endif
 	if	(pCharID)
@@ -720,7 +768,7 @@ bool CVoiceCommandsWnd::SetCharacterName (long pCharID, LPCTSTR pCharName, LPCTS
 				&&	(mCharItems [pCharID])
 				)
 			{
-				mCommandTree.SetItemText (mCharItems [pCharID], mCharNames [pCharID]);
+				SetTreeItemText (mCommandTree, mCharItems [pCharID], mCharNames [pCharID]);
 			}
 			lRet = true;
 		}
@@ -751,7 +799,7 @@ bool CVoiceCommandsWnd::RemoveCharacter (long pCharID)
 		&&	(mCharRoots [pCharID])
 		)
 	{
-		mCommandTree.DeleteItem (mCharRoots [pCharID]);
+		TreeView_DeleteItem (mCommandTree, mCharRoots [pCharID]);
 	}
 	mCharRoots.RemoveKey (pCharID);
 	if	(
@@ -759,7 +807,7 @@ bool CVoiceCommandsWnd::RemoveCharacter (long pCharID)
 		&&	(mCharItems [pCharID])
 		)
 	{
-		mCommandTree.DeleteItem (mCharItems [pCharID]);
+		TreeView_DeleteItem (mCommandTree, mCharItems [pCharID]);
 	}
 	mCharItems.RemoveKey (pCharID);
 
@@ -789,28 +837,32 @@ bool CVoiceCommandsWnd::SetLangID (LANGID pLangID)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CVoiceCommandsWnd::OnDestroy()
+LRESULT CVoiceCommandsWnd::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 	SaveConfig ();
-	CWnd::OnDestroy ();
+	bHandled = FALSE;
+	return 0;
 }
 
-void CVoiceCommandsWnd::OnSize(UINT nType, int cx, int cy)
+LRESULT CVoiceCommandsWnd::OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	CWnd::OnSize (nType, cx, cy);
+	LRESULT	lResult = DefWindowProc ();
 	RecalcLayout ();
+	return lResult;
 }
 
-void CVoiceCommandsWnd::OnClose()
+LRESULT CVoiceCommandsWnd::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 	Hide ();
+	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CVoiceCommandsWnd::OnItemExpanding(NMHDR* pNMHDR, LRESULT* pResult)
+LRESULT CVoiceCommandsWnd::OnItemExpanding(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 {
-	LPNMTREEVIEW	lNotify = (LPNMTREEVIEW) pNMHDR;
+	LRESULT			lResult = FALSE;
+	LPNMTREEVIEW	lNotify = (LPNMTREEVIEW) pnmh;
 
 	if	(
 			(lNotify->hdr.hwndFrom == mCommandTree.m_hWnd)
@@ -821,6 +873,7 @@ void CVoiceCommandsWnd::OnItemExpanding(NMHDR* pNMHDR, LRESULT* pResult)
 			)
 		)
 	{
-		*pResult = TRUE;
+		lResult = TRUE;
 	}
+	return lResult;
 }

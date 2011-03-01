@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,59 +18,37 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef AGENTFILES_H_INCLUDED_
-#define AGENTFILES_H_INCLUDED_
 #pragma once
-
 #include "DaCoreExp.h"
 #include "AgentFile.h"
 
 //////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable:4251 4275)
 
-class _DACORE_IMPEXP CAgentFiles : public CObject
+class CAgentFiles
 {
 public:
-	CAgentFiles();
-	virtual ~CAgentFiles();
-	DECLARE_DYNAMIC(CAgentFiles)
+	_DACORE_IMPEXP CAgentFiles();
+	_DACORE_IMPEXP virtual ~CAgentFiles();
 
 // Attributes
-	const CPtrTypeArray <CAgentFile> & Files () const;
+	_DACORE_IMPEXP const CAtlPtrTypeArray <CAgentFile> & Files () const;
 
 // Operations
-	HRESULT Load (LPCTSTR pPath = NULL, UINT pLogLevel = 15);
+	_DACORE_IMPEXP HRESULT Load (LPCTSTR pPath = NULL, UINT pLogLevel = 15);
 
-	int FindDefChar ();
-	CAgentFile * GetDefChar ();
+	_DACORE_IMPEXP INT_PTR FindDefChar ();
+	_DACORE_IMPEXP CAgentFile * GetDefChar ();
 
-	static tBstrPtr GetDefCharPath (const CStringArray * pSearchPath = NULL);
-	static HRESULT SetDefCharPath (LPCTSTR pCharPath);
+	_DACORE_IMPEXP static tBstrPtr GetDefCharPath (const CAtlStringArray * pSearchPath = NULL);
+	_DACORE_IMPEXP static HRESULT SetDefCharPath (LPCTSTR pCharPath);
 
-	static tBstrPtr GetAgentPath (bool pAlternatePlatform = false);
-	static tBstrPtr GetSystemCharsPath (UINT pPathNum = 0);
-	static tBstrPtr GetOfficeCharsPath ();
+	_DACORE_IMPEXP static tBstrPtr GetAgentPath (bool pAlternatePlatform = false);
+	_DACORE_IMPEXP static tBstrPtr GetSystemCharsPath (UINT pPathNum = 0, UINT * pPathNumFound = NULL);
+	_DACORE_IMPEXP static tBstrPtr GetOfficeCharsPath ();
 
 // Implementation
 protected:
-	COwnPtrArray <CAgentFile>	mFiles;
-
-// new and delete for DLL object
-public:
-#pragma auto_inline (off)
-	void PASCAL operator delete (void* p) {CObject::operator delete (p);}
-#ifdef	_DEBUG
-	void PASCAL operator delete (void *p, LPCSTR lpszFileName, int nLine) {CObject::operator delete (p, lpszFileName, nLine);}
-#endif
-	void* PASCAL operator new(size_t nSize) {return CObject::operator new (nSize);}
-#ifdef	_DEBUG
-	void* PASCAL operator new(size_t nSize, LPCSTR lpszFileName, int nLine) {return CObject::operator new (nSize, lpszFileName, nLine);}
-#endif
-#pragma auto_inline ()
+	CAtlOwnPtrArray <CAgentFile>	mFiles;
 };
 
-#pragma warning(pop)
 //////////////////////////////////////////////////////////////////////
-
-#endif // AGENTFILES_H_INCLUDED_

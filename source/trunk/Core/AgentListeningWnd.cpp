@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -22,16 +22,12 @@
 #include <sphelper.h>
 #include "DaCore.h"
 #include "AgentListeningWnd.h"
+#include "AgentCharacterWnd.h"
 #include "Localize.h"
 #include "TextSize.h"
 #ifdef	_DEBUG
 #include "DebugStr.h"
-#endif
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
+#include "DebugWin.h"
 #endif
 
 #ifdef	_DEBUG
@@ -40,62 +36,60 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNCREATE (CAgentListeningWnd, CToolTipCtrl)
+IMPLEMENT_DLL_OBJECT(CAgentListeningWnd)
 
 CAgentListeningWnd::CAgentListeningWnd ()
 :	mCharID (0),
-	mLangID (LANG_USER_DEFAULT)
+	mLangID (LANG_USER_DEFAULT),
+	mOwnerWnd (NULL)
 {
 }
 
 CAgentListeningWnd::~CAgentListeningWnd ()
 {
-	if	(m_hWnd)
+	if	(IsWindow ())
 	{
 		DestroyWindow ();
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
-BEGIN_MESSAGE_MAP(CAgentListeningWnd, CToolTipCtrl)
-	//{{AFX_MSG_MAP(CAgentListeningWnd)
-	ON_WM_WINDOWPOSCHANGING()
-	ON_WM_WINDOWPOSCHANGED()
-	ON_WM_NCHITTEST()
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
+CAgentListeningWnd * CAgentListeningWnd::CreateInstance ()
+{
+	return new CAgentListeningWnd;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentListeningWnd::Create (CWnd * pParentWnd)
+bool CAgentListeningWnd::Create (CWindow * pOwnerWnd, DWORD pExStyle)
 {
 	bool			lRet = false;
 	tS <LOGFONT>	lLogFont;
 
 	if	(
-			(IsWindow (pParentWnd->GetSafeHwnd ()))
-		&&	(CToolTipCtrl::Create (pParentWnd, TTS_ALWAYSTIP|TTS_NOPREFIX|TTS_NOANIMATE|TTS_NOFADE))
+			(pOwnerWnd)
+		&&	(pOwnerWnd->IsWindow())
+		&&	(SubclassWindow (::CreateWindowEx (pExStyle, TOOLTIPS_CLASS, _T(""), WS_POPUP|TTS_ALWAYSTIP|TTS_NOPREFIX, 0,0,0,0, pOwnerWnd->m_hWnd, 0, _AtlBaseModule.GetModuleInstance(), NULL)))
 		)
 	{
+		mOwnerWnd = pOwnerWnd;
+
 		if	(
 				(GetObject (GetStockObject (DEFAULT_GUI_FONT), sizeof(lLogFont), &lLogFont) > 0)
-			&&	(mFont.CreateFontIndirect (&lLogFont))
+			&&	(mFont = CreateFontIndirect (&lLogFont))
 			)
 		{
-			SetFont (&mFont);
+			SetFont (mFont);
 		}
 
 		mToolInfo.uFlags = TTF_CENTERTIP|TTF_TRACK|TTF_ABSOLUTE|TTF_TRANSPARENT;
-		mToolInfo.hwnd = m_hWnd;
+		mToolInfo.hwnd = pOwnerWnd->m_hWnd;
 		mToolInfo.uId = 0;
 		mToolInfo.lpszText = _T("");
 		SendMessage (TTM_ADDTOOL, 0, (LPARAM)&mToolInfo);
 
-		SetOwner (pParentWnd);
-		ModifyStyleEx (0, WS_EX_TOPMOST);
+		ModifyStyleEx (WS_EX_TOPMOST, pExStyle);
 		lRet = true;
 	}
 	return lRet;
@@ -135,7 +129,7 @@ bool CAgentListeningWnd::Detach (long pCharID)
 		mCharID = 0;
 
 		if	(
-				(IsWindow (m_hWnd))
+				(IsWindow ())
 			&&	(IsWindowVisible ())
 			)
 		{
@@ -164,11 +158,14 @@ bool CAgentListeningWnd::ShowTipWnd ()
 {
 	bool	lRet = false;
 
-	if	(IsWindow (m_hWnd))
+	if	(IsWindow ())
 	{
-		Activate (TRUE);
+		SendMessage (TTM_ACTIVATE, TRUE);
 		PositionTipWnd ();
-		SetWindowPos (&wndTopMost, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE);
+		if	(GetExStyle() & WS_EX_TOPMOST)
+		{
+			SetWindowPos (HWND_TOPMOST, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE|SWP_NOOWNERZORDER);
+		}
 		lRet = true;
 	}
 	return lRet;
@@ -178,13 +175,13 @@ bool CAgentListeningWnd::HideTipWnd ()
 {
 	bool	lRet = false;
 
-	if	(IsWindow (m_hWnd))
+	if	(IsWindow ())
 	{
 		if	(IsWindowVisible ())
 		{
 			lRet = true;
 		}
-		Activate (FALSE);
+		SendMessage (TTM_ACTIVATE, FALSE);
 		mCaption.Empty ();
 		mDetail.Empty ();
 	}
@@ -206,9 +203,9 @@ void CAgentListeningWnd::PositionTipWnd ()
 
 void CAgentListeningWnd::RefreshTipWnd ()
 {
-	if	(IsWindow (m_hWnd))
+	if	(IsWindow ())
 	{
-		if	(GetOwner()->IsWindowVisible ())
+		if	(::IsWindowVisible (GetWindow (GW_OWNER)))
 		{
 			ShowToolText (mCaption, mDetail);
 		}
@@ -223,6 +220,7 @@ void CAgentListeningWnd::RefreshTipWnd ()
 bool CAgentListeningWnd::CalcWinRect (CRect & pWinRect)
 {
 	CRect						lOldRect (pWinRect);
+	CAgentCharacterWnd *		lOwner;
 	CRect						lOwnerRect;
 	CRect						lBoundsRect (0,0,0,0);
 	tSS <MONITORINFO, DWORD>	lMonitorInfo;
@@ -240,10 +238,21 @@ bool CAgentListeningWnd::CalcWinRect (CRect & pWinRect)
 	LogMessage (_DEBUG_POSITION, _T("Position [%s]"), FormatRect(pWinRect));
 #endif
 
-	if	(GetOwner()->IsWindowVisible ())
+	if	(::IsWindowVisible (GetWindow (GW_OWNER)))
 	{
-		GetOwner()->GetWindowRect (&mToolInfo.rect);
-		lOwnerRect.CopyRect (&mToolInfo.rect);
+		mOwnerWnd->GetWindowRect (&lOwnerRect);
+		if	(
+				(mOwnerWnd->GetStyle () & WS_CHILD)
+			&&	(lOwner = dynamic_cast <CAgentCharacterWnd *> ((CAgentWnd*)mOwnerWnd))
+			)
+		{
+			CRect	lVideoRect = lOwner->GetVideoRect ();
+
+			lVideoRect.OffsetRect (lOwnerRect.left, lOwnerRect.top);
+			lOwnerRect = lVideoRect;
+		}
+		::CopyRect (&mToolInfo.rect, &lOwnerRect);
+
 #ifdef	_DEBUG_POSITION
 		LogMessage (_DEBUG_POSITION, _T("  Below  [%s]"), FormatRect(lOwnerRect));
 		LogMessage (_DEBUG_POSITION, _T("  Within [%s]"), FormatRect(lBoundsRect));
@@ -258,6 +267,18 @@ bool CAgentListeningWnd::CalcWinRect (CRect & pWinRect)
 			else
 			{
 				pWinRect.OffsetRect (lOwnerRect.right - pWinRect.left, lOwnerRect.CenterPoint().y - pWinRect.CenterPoint().y);
+			}
+		}
+		else
+		{
+			if	(pWinRect.left < lBoundsRect.left)
+			{
+				pWinRect.OffsetRect (lBoundsRect.left - pWinRect.left, 0);
+			}
+			else
+			if	(pWinRect.right > lBoundsRect.right)
+			{
+				pWinRect.OffsetRect (lBoundsRect.right - pWinRect.right, 0);
 			}
 		}
 	}
@@ -286,11 +307,11 @@ void CAgentListeningWnd::ShowCharacterListening (LPCTSTR pCommandsCaption)
 		mCommandsCaption = pCommandsCaption;
 	}
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mCharID > 0)
 		)
 	{
-		if	(GetOwner()->IsWindowVisible ())
+		if	(::IsWindowVisible (GetWindow (GW_OWNER)))
 		{
 			ShowToolText (GetCharacterCaption (IDS_COMMANDS_LISTENING_PROMPT), GetCommandsCaption ());
 		}
@@ -309,7 +330,7 @@ void CAgentListeningWnd::ShowCharacterNotListening (LPCTSTR pCommandsCaption, LP
 		mCommandsCaption = pCommandsCaption;
 	}
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mCharID > 0)
 		)
 	{
@@ -328,7 +349,7 @@ void CAgentListeningWnd::ShowCharacterNotListening (LPCTSTR pCommandsCaption, LP
 void CAgentListeningWnd::ShowCharacterHeard (LPCTSTR pCommand)
 {
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mCharID > 0)
 		)
 	{
@@ -348,9 +369,9 @@ void CAgentListeningWnd::ShowCharacterHeard (LPCTSTR pCommand)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CString CAgentListeningWnd::GetCharacterCaption (UINT pCaptionStrId) const
+CAtlString CAgentListeningWnd::GetCharacterCaption (UINT pCaptionStrId) const
 {
-	CString	lCaption;
+	CAtlString	lCaption;
 
 	lCaption = CLocalize::LoadString (pCaptionStrId, mLangID);
 	lCaption.Replace (_T("%1s"), _T("%1"));
@@ -358,9 +379,9 @@ CString CAgentListeningWnd::GetCharacterCaption (UINT pCaptionStrId) const
 	return lCaption;
 }
 
-CString CAgentListeningWnd::GetCommandsCaption () const
+CAtlString CAgentListeningWnd::GetCommandsCaption () const
 {
-	CString	lCaption;
+	CAtlString	lCaption;
 
 	if	(mCommandsCaption.IsEmpty ())
 	{
@@ -375,9 +396,9 @@ CString CAgentListeningWnd::GetCommandsCaption () const
 	return lCaption;
 }
 
-CString CAgentListeningWnd::GetCommandCaption (LPCTSTR pCommand) const
+CAtlString CAgentListeningWnd::GetCommandCaption (LPCTSTR pCommand) const
 {
-	CString	lCaption;
+	CAtlString	lCaption;
 
 	lCaption = CLocalize::LoadString (IDS_COMMANDS_VOICE_HEARD, mLangID);
 	lCaption.Replace (_T("%1s"), _T("%1"));
@@ -389,15 +410,15 @@ CString CAgentListeningWnd::GetCommandCaption (LPCTSTR pCommand) const
 
 void CAgentListeningWnd::ShowToolText (LPCTSTR pCaption, LPCTSTR pDetail)
 {
-	CString	lCaption (pCaption);
-	CString	lDetail (pDetail);
-	CRect	lMargin;
+	CAtlString	lCaption (pCaption);
+	CAtlString	lDetail (pDetail);
+	CRect		lMargin;
 
 	if	(mCaption != lCaption)
 	{
 		mCaption = lCaption;
-		GetMargin (&lMargin);
-		SetMaxTipWidth (CTextSize (GetFont(), false).MeasureText (mCaption).cx + lMargin.left + lMargin.right);
+		SendMessage (TTM_GETMARGIN, 0, (LPARAM)&lMargin);
+		SendMessage (TTM_SETMAXTIPWIDTH, 0, CTextSize (GetFont(), false).MeasureText (mCaption).cx + lMargin.left + lMargin.right);
 #ifdef	_DEBUG_POSITION
 		LogMessage (_DEBUG_POSITION, _T("Listening TTM_SETTITLE"));
 #endif
@@ -422,41 +443,45 @@ void CAgentListeningWnd::ShowToolText (LPCTSTR pCaption, LPCTSTR pDetail)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentListeningWnd::OnWindowPosChanging (WINDOWPOS *lpwndpos)
+LRESULT CAgentListeningWnd::OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	CToolTipCtrl::OnWindowPosChanging (lpwndpos);
+	LRESULT		lResult = DefWindowProc ();
+	LPWINDOWPOS	lWindowPos = (LPWINDOWPOS) lParam;
 
 #ifdef	_DEBUG_POSITION
-	LogMessage (_DEBUG_POSITION, _T("Listening OnWindowPosChanging [%s]"), WindowPosStr(*lpwndpos));
+	LogMessage (_DEBUG_POSITION, _T("Listening OnWindowPosChanging [%s]"), WindowPosStr(*lWindowPos));
 #endif
-	if	((lpwndpos->flags & (SWP_NOMOVE|SWP_NOSIZE)) == 0)
+	if	((lWindowPos->flags & (SWP_NOMOVE|SWP_NOSIZE)) == 0)
 	{
-		CRect	lWinRect (lpwndpos->x, lpwndpos->y, lpwndpos->x+lpwndpos->cx, lpwndpos->y+lpwndpos->cy);
+		CRect	lWinRect (lWindowPos->x, lWindowPos->y, lWindowPos->x+lWindowPos->cx, lWindowPos->y+lWindowPos->cy);
 
 		if	(CalcWinRect (lWinRect))
 		{
-			lpwndpos->x = lWinRect.left;
-			lpwndpos->y = lWinRect.top;
-			lpwndpos->cx = lWinRect.Width();
-			lpwndpos->cy = lWinRect.Height();
+			lWindowPos->x = lWinRect.left;
+			lWindowPos->y = lWinRect.top;
+			lWindowPos->cx = lWinRect.Width();
+			lWindowPos->cy = lWinRect.Height();
 #ifdef	_DEBUG_POSITION
-			LogMessage (_DEBUG_POSITION, _T("          OnWindowPosChanging [%s]"), WindowPosStr(*lpwndpos));
+			LogMessage (_DEBUG_POSITION, _T("          OnWindowPosChanging [%s]"), WindowPosStr(*lWindowPos));
 #endif
 		}
 	}
+	return lResult;
 }
 
-void CAgentListeningWnd::OnWindowPosChanged (WINDOWPOS *lpwndpos)
+LRESULT CAgentListeningWnd::OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	CToolTipCtrl::OnWindowPosChanged (lpwndpos);
+	LRESULT		lResult = DefWindowProc ();
+	LPWINDOWPOS	lWindowPos = (LPWINDOWPOS) lParam;
 #ifdef	_DEBUG_POSITION
-	LogMessage (_DEBUG_POSITION, _T("Listening OnWindowPosChanged  [%s]"), WindowPosStr(*lpwndpos));
+	LogMessage (_DEBUG_POSITION, _T("Listening OnWindowPosChanged  [%s]"), WindowPosStr(*lWindowPos));
 #endif
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-_MFC_NCHITTEST_RESULT CAgentListeningWnd::OnNcHitTest (CPoint point)
+LRESULT CAgentListeningWnd::OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 	return HTTRANSPARENT;
 }

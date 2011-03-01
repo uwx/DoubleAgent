@@ -1,7 +1,4 @@
-#ifndef REPLAYACTIONS_H_INCLUDED_
-#define REPLAYACTIONS_H_INCLUDED_
 #pragma once
-
 #include "ReplayActionsRes.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -26,8 +23,3 @@ public:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // REPLAYACTIONS_H_INCLUDED_

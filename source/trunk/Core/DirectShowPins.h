@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,31 +18,28 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSHOWPINS_H_INCLUDED_
-#define DIRECTSHOWPINS_H_INCLUDED_
 #pragma once
-
-#include "AfxTemplEx.h"
+#include "AtlCollEx.h"
 #include "DirectShowUtils.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CDirectShowPin : public CCmdTarget
+class ATL_NO_VTABLE CDirectShowPin :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public IPin
 {
 public:
-	CDirectShowPin (class CDirectShowFilter & pFilter, PIN_DIRECTION pDirection, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL);
+	CDirectShowPin (PIN_DIRECTION pDirection = (PIN_DIRECTION)-1);
 	virtual ~CDirectShowPin ();
-	DECLARE_DYNAMIC(CDirectShowPin)
 
 // Attributes
 public:
-	CString				mUniqueId;
-	CString				mName;
+	CAtlString			mUniqueId;
+	CAtlString			mName;
 	const PIN_DIRECTION	mDirection;
 	tMediaTypePtr		mMediaType;
 	CMediaTypes			mMediaTypes;
 
-	IPin * GetInterface () {return &m_xPin;}
 	IPin * SafeGetConnection () const;
 	IMemAllocator * SafeGetAllocator () const;
 	bool SafeIsFlushing () const;
@@ -50,6 +47,9 @@ public:
 
 // Operations
 public:
+	CDirectShowPin & Initialize (class CDirectShowFilter & pFilter, PIN_DIRECTION pDirection, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL);
+	void FinalRelease ();
+
 	virtual HRESULT BeginOutput ();
 	virtual HRESULT EndOutput ();
 	virtual HRESULT GetOutputSample (IMediaSample ** pSample, const REFERENCE_TIME * pStartTime = NULL, const REFERENCE_TIME * pEndTime = NULL, DWORD pFlags = AM_GBF_NOWAIT);
@@ -69,45 +69,45 @@ public:
 	virtual HRESULT EndInputFlush ();
 
 // Overrides
-	//{{AFX_VIRTUAL(CDirectShowPin)
-	public:
-	virtual void OnFinalRelease ();
-	protected:
-	virtual LPUNKNOWN GetInterfaceHook(const void* iid);
-	//}}AFX_VIRTUAL
+
+// Interfaces
+public:
+	BEGIN_COM_MAP(CDirectShowPin)
+		COM_INTERFACE_ENTRY(IPin)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IMediaSeeking), 0, &DelegateIMediaSeeking)
+	END_COM_MAP()
+
+public:
+	// IPin
+	HRESULT STDMETHODCALLTYPE Connect (IPin *pReceivePin, const AM_MEDIA_TYPE *pmt);
+	HRESULT STDMETHODCALLTYPE ReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE *pmt);
+	HRESULT STDMETHODCALLTYPE Disconnect (void);
+	HRESULT STDMETHODCALLTYPE ConnectedTo (IPin **pPin);
+	HRESULT STDMETHODCALLTYPE ConnectionMediaType (AM_MEDIA_TYPE *pmt);
+	HRESULT STDMETHODCALLTYPE QueryPinInfo (PIN_INFO *pInfo);
+	HRESULT STDMETHODCALLTYPE QueryDirection (PIN_DIRECTION *pPinDir);
+	HRESULT STDMETHODCALLTYPE QueryId (LPWSTR *Id);
+	HRESULT STDMETHODCALLTYPE QueryAccept (const AM_MEDIA_TYPE *pmt);
+	HRESULT STDMETHODCALLTYPE EnumMediaTypes (IEnumMediaTypes **ppEnum);
+	HRESULT STDMETHODCALLTYPE QueryInternalConnections (IPin **apPin, ULONG *nPin);
+	HRESULT STDMETHODCALLTYPE EndOfStream (void);
+	HRESULT STDMETHODCALLTYPE BeginFlush (void);
+	HRESULT STDMETHODCALLTYPE EndFlush (void);
+	HRESULT STDMETHODCALLTYPE NewSegment (REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate);
 
 // Implementation
 protected:
-	BEGIN_INTERFACE_PART(Pin, IPin)
-		HRESULT STDMETHODCALLTYPE Connect (IPin *pReceivePin, const AM_MEDIA_TYPE *pmt);
-		HRESULT STDMETHODCALLTYPE ReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE *pmt);
-		HRESULT STDMETHODCALLTYPE Disconnect (void);
-		HRESULT STDMETHODCALLTYPE ConnectedTo (IPin **pPin);
-		HRESULT STDMETHODCALLTYPE ConnectionMediaType (AM_MEDIA_TYPE *pmt);
-		HRESULT STDMETHODCALLTYPE QueryPinInfo (PIN_INFO *pInfo);
-		HRESULT STDMETHODCALLTYPE QueryDirection (PIN_DIRECTION *pPinDir);
-		HRESULT STDMETHODCALLTYPE QueryId (LPWSTR *Id);
-		HRESULT STDMETHODCALLTYPE QueryAccept (const AM_MEDIA_TYPE *pmt);
-		HRESULT STDMETHODCALLTYPE EnumMediaTypes (IEnumMediaTypes **ppEnum);
-		HRESULT STDMETHODCALLTYPE QueryInternalConnections (IPin **apPin, ULONG *nPin);
-		HRESULT STDMETHODCALLTYPE EndOfStream (void);
-		HRESULT STDMETHODCALLTYPE BeginFlush (void);
-		HRESULT STDMETHODCALLTYPE EndFlush (void);
-		HRESULT STDMETHODCALLTYPE NewSegment (REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate);
-	END_INTERFACE_PART(Pin)
+	static HRESULT WINAPI DelegateIMediaSeeking (void* pv, REFIID riid, LPVOID* ppv, DWORD_PTR dw);
 
-	DECLARE_INTERFACE_MAP()
-
-protected:
 	virtual HRESULT CanConnect (IPin *pReceivePin);
-	virtual HRESULT Connect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType);
-	virtual HRESULT ReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE * pMediaType);
-	virtual HRESULT Disconnect ();
+	virtual HRESULT InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType);
+	virtual HRESULT InternalReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE * pMediaType);
+	virtual HRESULT InternalDisconnect ();
 
 protected:
-	class CDirectShowFilter &	mFilter;
-	mutable CMutex				mStateLock;
-	mutable CMutex				mDataLock;
+	class CDirectShowFilter *	mFilter;
+	mutable CAutoMutex			mStateLock;
+	mutable CAutoMutex			mDataLock;
 	IPinPtr						mConnection;
 	IMemAllocatorPtr			mAllocator;
 	bool						mIsFlushing;
@@ -116,18 +116,17 @@ protected:
 
 /////////////////////////////////////////////////////////////////////////////
 
-typedef CPtrTypeArray <CDirectShowPin> CDirectShowPins;
+typedef CAtlPtrTypeArray <CDirectShowPin> CDirectShowPins;
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-class CDirectShowPinIn : public CDirectShowPin
+class ATL_NO_VTABLE CDirectShowPinIn : public CDirectShowPin, public IMemInputPin, public	IPinConnection
 {
 public:
-	CDirectShowPinIn (class CDirectShowFilter & pFilter, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL, UINT pDesiredSampleCount = 0, UINT pMaxSampleCount = 0);
+	CDirectShowPinIn ();
 	virtual ~CDirectShowPinIn ();
-	DECLARE_DYNAMIC(CDirectShowPinIn)
 
 // Attributes
 public:
@@ -139,10 +138,10 @@ public:
 
 // Operations
 public:
+	CDirectShowPinIn & Initialize (class CDirectShowFilter & pFilter, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL, UINT pDesiredSampleCount = 0, UINT pMaxSampleCount = 0);
 
 // Overrides
-	//{{AFX_VIRTUAL(CDirectShowPinIn)
-	public:
+public:
 	virtual HRESULT BeginInput ();
 	virtual HRESULT EndInput ();
 	virtual HRESULT PeekInputSample (IMediaSample ** pSample, DWORD pLockTime = 100);
@@ -151,31 +150,34 @@ public:
 	virtual HRESULT EndInputStream ();
 	virtual HRESULT BeginInputFlush ();
 	virtual HRESULT EndInputFlush ();
-	protected:
-	virtual HRESULT ReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE * pMediaType);
-	virtual HRESULT Disconnect ();
-	//}}AFX_VIRTUAL
+protected:
+	virtual HRESULT InternalReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE * pMediaType);
+	virtual HRESULT InternalDisconnect ();
+
+// Interfaces
+public:
+	BEGIN_COM_MAP(CDirectShowPinIn)
+		COM_INTERFACE_ENTRY(IMemInputPin)
+		COM_INTERFACE_ENTRY(IPinConnection)
+		COM_INTERFACE_ENTRY_CHAIN(CDirectShowPin)
+	END_COM_MAP()
+
+public:
+	// IMemInputPin
+	HRESULT STDMETHODCALLTYPE GetAllocator (IMemAllocator **ppAllocator);
+	HRESULT STDMETHODCALLTYPE NotifyAllocator (IMemAllocator *pAllocator, BOOL bReadOnly);
+	HRESULT STDMETHODCALLTYPE GetAllocatorRequirements (ALLOCATOR_PROPERTIES *pProps);
+	HRESULT STDMETHODCALLTYPE Receive (IMediaSample *pSample);
+	HRESULT STDMETHODCALLTYPE ReceiveMultiple (IMediaSample **pSamples, long nSamples, long *nSamplesProcessed);
+	HRESULT STDMETHODCALLTYPE ReceiveCanBlock (void);
+
+	// IPinConnection
+	HRESULT STDMETHODCALLTYPE DynamicQueryAccept (const AM_MEDIA_TYPE *pmt);
+	HRESULT STDMETHODCALLTYPE NotifyEndOfStream (HANDLE hNotifyEvent);
+	HRESULT STDMETHODCALLTYPE IsEndPin (void);
+	HRESULT STDMETHODCALLTYPE DynamicDisconnect (void);
 
 // Implementation
-protected:
-	BEGIN_INTERFACE_PART(MemInput, IMemInputPin)
-		HRESULT STDMETHODCALLTYPE GetAllocator (IMemAllocator **ppAllocator);
-		HRESULT STDMETHODCALLTYPE NotifyAllocator (IMemAllocator *pAllocator, BOOL bReadOnly);
-		HRESULT STDMETHODCALLTYPE GetAllocatorRequirements (ALLOCATOR_PROPERTIES *pProps);
-		HRESULT STDMETHODCALLTYPE Receive (IMediaSample *pSample);
-		HRESULT STDMETHODCALLTYPE ReceiveMultiple (IMediaSample **pSamples, long nSamples, long *nSamplesProcessed);
-		HRESULT STDMETHODCALLTYPE ReceiveCanBlock (void);
-	END_INTERFACE_PART(MemInput)
-
-	BEGIN_INTERFACE_PART(PinConnection, IPinConnection)
-		HRESULT STDMETHODCALLTYPE DynamicQueryAccept (const AM_MEDIA_TYPE *pmt);
-		HRESULT STDMETHODCALLTYPE NotifyEndOfStream (HANDLE hNotifyEvent);
-		HRESULT STDMETHODCALLTYPE IsEndPin (void);
-		HRESULT STDMETHODCALLTYPE DynamicDisconnect (void);
-	END_INTERFACE_PART(PinConnection)
-
-	DECLARE_INTERFACE_MAP()
-
 protected:
 	HRESULT ProvideAllocator ();
 	HRESULT ReceiveAllocator (IMemAllocator * pAllocator, bool pReadOnly);
@@ -184,23 +186,22 @@ protected:
 	void EmptyCache ();
 
 protected:
-	bool										mReadOnlySamples;
-	CArrayEx <IMediaSamplePtr, IMediaSample *>	mSamples;
-	IMemAllocatorPtr							mCacheAllocator;
-	tPtr <CSemaphore>							mMaxSampleSemaphore;
-	HANDLE										mEosNotifyEvent;
+	bool							mReadOnlySamples;
+	CInterfaceArray <IMediaSample>	mSamples;
+	IMemAllocatorPtr				mCacheAllocator;
+	tPtr <CAutoSemaphore>			mMaxSampleSemaphore;
+	HANDLE							mEosNotifyEvent;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-class CDirectShowPinOut : public CDirectShowPin
+class ATL_NO_VTABLE CDirectShowPinOut : public CDirectShowPin
 {
 public:
-	CDirectShowPinOut (class CDirectShowFilter & pFilter, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL, UINT pDesiredSampleCount = 0);
+	CDirectShowPinOut ();
 	virtual ~CDirectShowPinOut ();
-	DECLARE_DYNAMIC(CDirectShowPinOut)
 
 // Attributes
 public:
@@ -210,10 +211,10 @@ public:
 
 // Operations
 public:
+	CDirectShowPinOut & Initialize (class CDirectShowFilter & pFilter, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL, UINT pDesiredSampleCount = 0);
 
 // Overrides
-	//{{AFX_VIRTUAL(CDirectShowPinOut)
-	public:
+public:
 	virtual HRESULT BeginOutput ();
 	virtual HRESULT EndOutput ();
 	virtual HRESULT GetOutputSample (IMediaSample ** pSample, const REFERENCE_TIME * pStartTime = NULL, const REFERENCE_TIME * pEndTime = NULL, DWORD pFlags = AM_GBF_NOWAIT);
@@ -222,11 +223,10 @@ public:
 	virtual HRESULT EndOutputStream ();
 	virtual HRESULT BeginOutputFlush ();
 	virtual HRESULT EndOutputFlush ();
-	protected:
+protected:
 	virtual HRESULT CanConnect (IPin *pReceivePin);
-	virtual HRESULT Connect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType);
-	virtual HRESULT Disconnect ();
-	//}}AFX_VIRTUAL
+	virtual HRESULT InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType);
+	virtual HRESULT InternalDisconnect ();
 
 // Implementation
 protected:
@@ -237,51 +237,53 @@ protected:
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-class CDirectShowPinPull : public CDirectShowPin
+class ATL_NO_VTABLE CDirectShowPinPull : public CDirectShowPin, public IAsyncReader, public IPinFlowControl
 {
 public:
-	CDirectShowPinPull (class CDirectShowFilter & pFilter, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL);
+	CDirectShowPinPull ();
 	virtual ~CDirectShowPinPull ();
-	DECLARE_DYNAMIC(CDirectShowPinPull)
 
 // Attributes
 public:
 
 // Operations
 public:
+	CDirectShowPinPull & Initialize (class CDirectShowFilter & pFilter, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL);
 	HRESULT SetInputBuffer (LPCVOID pBuffer, ULONG pBufferSize, bool pCopyBuffer = false);
 
 // Overrides
-	//{{AFX_VIRTUAL(CDirectShowPinPull)
-	public:
+public:
 	virtual HRESULT EndOutputStream ();
 	virtual HRESULT BeginOutputFlush ();
 	virtual HRESULT EndOutputFlush ();
-	protected:
+protected:
 	virtual HRESULT CanConnect (IPin *pReceivePin);
-	virtual HRESULT Connect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType);
-	virtual HRESULT Disconnect ();
-	//}}AFX_VIRTUAL
+	virtual HRESULT InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType);
+	virtual HRESULT InternalDisconnect ();
+
+// Interfaces
+public:
+	BEGIN_COM_MAP(CDirectShowPinPull)
+		COM_INTERFACE_ENTRY(IAsyncReader)
+		COM_INTERFACE_ENTRY(IPinFlowControl)
+		COM_INTERFACE_ENTRY_CHAIN(CDirectShowPin)
+	END_COM_MAP()
+
+public:
+	// IAsyncReader
+	HRESULT STDMETHODCALLTYPE RequestAllocator (IMemAllocator *pPreferred, ALLOCATOR_PROPERTIES *pProps, IMemAllocator **ppActual);
+	HRESULT STDMETHODCALLTYPE Request (IMediaSample *pSample, DWORD_PTR dwUser);
+	HRESULT STDMETHODCALLTYPE WaitForNext (DWORD dwTimeout, IMediaSample **ppSample,DWORD_PTR *pdwUser);
+	HRESULT STDMETHODCALLTYPE SyncReadAligned (IMediaSample *pSample);
+	HRESULT STDMETHODCALLTYPE SyncRead (LONGLONG llPosition, LONG lLength, BYTE *pBuffer);
+	HRESULT STDMETHODCALLTYPE Length (LONGLONG *pTotal, LONGLONG *pAvailable);
+	HRESULT STDMETHODCALLTYPE BeginFlush (void);
+	HRESULT STDMETHODCALLTYPE EndFlush (void);
+
+	// IPinFlowControl
+	HRESULT STDMETHODCALLTYPE Block (DWORD dwBlockFlags, HANDLE hEvent);
 
 // Implementation
-protected:
-	BEGIN_INTERFACE_PART(AsyncReader, IAsyncReader)
-		HRESULT STDMETHODCALLTYPE RequestAllocator (IMemAllocator *pPreferred, ALLOCATOR_PROPERTIES *pProps, IMemAllocator **ppActual);
-		HRESULT STDMETHODCALLTYPE Request (IMediaSample *pSample, DWORD_PTR dwUser);
-		HRESULT STDMETHODCALLTYPE WaitForNext (DWORD dwTimeout, IMediaSample **ppSample,DWORD_PTR *pdwUser);
-		HRESULT STDMETHODCALLTYPE SyncReadAligned (IMediaSample *pSample);
-		HRESULT STDMETHODCALLTYPE SyncRead (LONGLONG llPosition, LONG lLength, BYTE *pBuffer);
-		HRESULT STDMETHODCALLTYPE Length (LONGLONG *pTotal, LONGLONG *pAvailable);
-		HRESULT STDMETHODCALLTYPE BeginFlush (void);
-		HRESULT STDMETHODCALLTYPE EndFlush (void);
-	END_INTERFACE_PART(AsyncReader)
-
-	BEGIN_INTERFACE_PART(FlowControl, IPinFlowControl)
-		HRESULT STDMETHODCALLTYPE Block (DWORD dwBlockFlags, HANDLE hEvent);
-	END_INTERFACE_PART(FlowControl)
-
-	DECLARE_INTERFACE_MAP()
-
 protected:
 	HRESULT UseAllocator (IMemAllocator * pAllocator);
 	HRESULT GetAllocator (const ALLOCATOR_PROPERTIES * pRequest = NULL);
@@ -306,19 +308,14 @@ protected:
 	};
 
 protected:
-	CArrayEx <PullRequest, PullRequest &>	mRequests;
-	CEvent									mRequestEvent;
-	LPCVOID									mInputBuffer;
-	ULONG									mInputBufferSize;
-	tArrayPtr <BYTE>						mInputBufferCopy;
-	CCriticalSection						mBlockingLock;
-	CMutex									mBlockingMutex;
-	HANDLE									mBlockingEvent;
+	CAtlStructArray <PullRequest>	mRequests;
+	CAutoEvent						mRequestEvent;
+	LPCVOID							mInputBuffer;
+	ULONG							mInputBufferSize;
+	tArrayPtr <BYTE>				mInputBufferCopy;
+	CComAutoCriticalSection			mBlockingLock;
+	CAutoMutex						mBlockingMutex;
+	HANDLE							mBlockingEvent;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSHOWPINS_H_INCLUDED_

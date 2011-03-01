@@ -100,7 +100,7 @@
 #define IDC_PROPPAGE_TTS_SPEED_TITLE    11028
 #define IDD_LICENSE                     5100
 #define IDC_LICENSE_TEXT                5101
-
+#define IDR_AGENTPREVIEWWND 5102
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED

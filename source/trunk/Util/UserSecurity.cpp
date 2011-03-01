@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -22,6 +22,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include <shlwapi.h>
+#include <shlobj.h>
 #include <lmcons.h>
 #include <aclapi.h>
 #include <sddl.h>
@@ -36,10 +37,12 @@
 #pragma comment(lib, "shlwapi.lib")
 #pragma comment(lib, "secur32.lib")
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -78,7 +81,7 @@ CString CUserSecurity::GetUserId ()
 	}
 	else
 	{
-		LogWinErr (LogDetails, GetLastError (), _T("GetUserNameEx"));
+		LogWinErr (LogDetails|LogTime, GetLastError (), _T("GetUserNameEx"));
 	}
 #else
 	::GetUserName (lUserName.GetBuffer (UNLEN), &(lUserNameSize=UNLEN+1));
@@ -110,7 +113,7 @@ CString CUserSecurity::GetComputerName ()
 
 	if	(!::GetComputerName (lComputerName.GetBuffer (MAX_COMPUTERNAME_LENGTH), &(lComputerNameSize=MAX_COMPUTERNAME_LENGTH+1)))
 	{
-		LogWinErr (LogIfActive, GetLastError (), _T("GetComputerName"));
+		LogWinErr (LogIfActive|LogTime, GetLastError (), _T("GetComputerName"));
 	}
 	lComputerName.ReleaseBuffer ();
 
@@ -151,21 +154,21 @@ bool CUserSecurity::GetTokenUser (HANDLE pUserToken, CString & pUserName, CStrin
 				}
 				else
 				{
-					LogWinErr (LogDetails, GetLastError (), _T("LookupAccountSid"));
+					LogWinErr (LogDetails|LogTime, GetLastError (), _T("LookupAccountSid"));
 				}
 				pUserName.ReleaseBuffer ();
 				pDomainName.ReleaseBuffer ();
 			}
 			else
 			{
-				LogWinErr (LogDetails, GetLastError (), _T("GetTokenInformation"));
+				LogWinErr (LogDetails|LogTime, GetLastError (), _T("GetTokenInformation"));
 			}
 
 			lTokenUser = NULL;
 		}
 		else
 		{
-			LogWinErr (LogDetails, ERROR_INVALID_HANDLE);
+			LogWinErr (LogDetails|LogTime, ERROR_INVALID_HANDLE);
 		}
 	}
 	catch AnyExceptionSilent
@@ -374,9 +377,13 @@ bool CUserSecurity::GetNameSid (LPCTSTR pAccountName, CByteArray & pAccountSid, 
 
 		if	(lSidSize)
 		{
+#ifdef	__AFXCOLL_H__
 			pAccountSid.SetSize (lSidSize);
+#else
+			pAccountSid.SetCount (lSidSize);
+#endif
 
-			if	(LookupAccountName (NULL, pAccountName, (PSID) pAccountSid.GetData (), &lSidSize, lDomain.GetBuffer (lDomainSize), &lDomainSize, &lSidUse))
+			if	(LookupAccountName (NULL, pAccountName, (PSID) pAccountSid.GetData(), &lSidSize, lDomain.GetBuffer (lDomainSize), &lDomainSize, &lSidUse))
 			{
 				lDomain.ReleaseBuffer ();
 
@@ -586,17 +593,17 @@ bool CUserSecurity::IsSidAllUsers (PSID pSid)
 	{
 		static CByteArray	lAllUsersSid;
 
-		if	(lAllUsersSid.GetSize () <= 0)
+		if	(lAllUsersSid.GetCount() <= 0)
 		{
 			try
 			{
-				CString					lComputerName;
-				DWORD					lComputerNameSize;
-				CByteArray				lComputerSid;
-				PSID					lRootSid;
-				BYTE					lSubCount;
-				CArray <DWORD, DWORD>	lSubIds;
-				tSidPtr					lSid;
+				CString				lComputerName;
+				DWORD				lComputerNameSize;
+				CByteArray			lComputerSid;
+				PSID				lRootSid;
+				BYTE				lSubCount;
+				CTypeArray <DWORD>	lSubIds;
+				tSidPtr				lSid;
 
 				if	(::GetComputerName (lComputerName.GetBuffer (MAX_COMPUTERNAME_LENGTH), &(lComputerNameSize=MAX_COMPUTERNAME_LENGTH+1)))
 				{
@@ -604,11 +611,15 @@ bool CUserSecurity::IsSidAllUsers (PSID pSid)
 
 					if	(
 							(GetNameSid (lComputerName, lComputerSid))
-						&&	(IsValidSid (lRootSid = (PSID) lComputerSid.GetData ()))
+						&&	(IsValidSid (lRootSid = (PSID) lComputerSid.GetData()))
 						&&	(lSubCount = *GetSidSubAuthorityCount (lRootSid))
 						)
 					{
+#ifdef	__AFXCOLL_H__
 						lSubIds.SetSize (8);
+#else
+						lSubIds.SetCount (8);
+#endif
 						for	(BYTE lNdx = 0; lNdx < lSubCount; lNdx++)
 						{
 							lSubIds [lNdx] = *GetSidSubAuthority (lRootSid, (DWORD) lNdx);
@@ -617,23 +628,31 @@ bool CUserSecurity::IsSidAllUsers (PSID pSid)
 
 						if	(AllocateAndInitializeSid (GetSidIdentifierAuthority (lRootSid), lSubCount+1, lSubIds [0], lSubIds [1], lSubIds [2], lSubIds [3], lSubIds [4], lSubIds [5], lSubIds [6], lSubIds [7], (void **) lSid.Free ()))
 						{
+#ifdef	__AFXCOLL_H__
 							lAllUsersSid.SetSize (GetLengthSid (lSid));
-							CopySid ((DWORD)lAllUsersSid.GetSize (), (PSID) lAllUsersSid.GetData (), lSid);
+#else
+							lAllUsersSid.SetCount (GetLengthSid (lSid));
+#endif
+							CopySid ((DWORD)lAllUsersSid.GetCount(), (PSID) lAllUsersSid.GetData(), lSid);
 						}
 					}
 				}
 			}
 			catch AnyExceptionDebug
 
-			if	(lAllUsersSid.GetSize () <= 0)
+			if	(lAllUsersSid.GetCount() <= 0)
 			{
+#ifdef	__AFXCOLL_H__
 				lAllUsersSid.SetSize (1);
+#else
+				lAllUsersSid.SetCount (1);
+#endif
 			}
 		}
 
 		if	(
 				(IsValidSid (pSid))
-			&&	(EqualSid (pSid, (PSID) lAllUsersSid.GetData ()))
+			&&	(EqualSid (pSid, (PSID) lAllUsersSid.GetData()))
 			)
 		{
 			lRet = true;
@@ -975,7 +994,7 @@ bool CUserSecurity::CanUserRegisterClass ()
 			lDescriptor = new BYTE [lDescriptorSize];
 		}
 
-		if	(LogWinErr (LogNormal, RegGetKeySecurity (HKEY_CLASSES_ROOT, DACL_SECURITY_INFORMATION, (PISECURITY_DESCRIPTOR) lDescriptor.Ptr (), &lDescriptorSize)) == ERROR_SUCCESS)
+		if	(LogWinErr (LogNormal|LogTime, RegGetKeySecurity (HKEY_CLASSES_ROOT, DACL_SECURITY_INFORMATION, (PISECURITY_DESCRIPTOR) lDescriptor.Ptr (), &lDescriptorSize)) == ERROR_SUCCESS)
 		{
 			BOOL	lDAclPresent = FALSE;
 			BOOL	lDAclDefaulted = FALSE;

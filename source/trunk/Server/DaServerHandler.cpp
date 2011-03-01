@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -21,97 +21,39 @@
 #include "StdAfx.h"
 #include "DaHandler.h"
 #include "DaServerHandler.h"
+#include "Registry.h"
 #include "GuidStr.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #ifdef	_DEBUG
-//#define	_DEBUG_COM		LogNormal
-#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Handler"),LogVerbose,true)&0xFFFF)
-#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Handler"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Handler"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Handler"),LogVerbose,true)&0xFFFF|LogTime)
 #endif
-#include "InterfaceMap.inl"
 
-/////////////////////////////////////////////////////////////////////////////
-
-BEGIN_INTERFACE_MAP(CDaServerHandler, CCmdTarget)
-	INTERFACE_PART(CDaServerHandler, __uuidof(IUnknown), InnerUnknown)
-END_INTERFACE_MAP()
-
-IMPLEMENT_DYNCREATE(CDaServerHandler, CCmdTarget)
-IMPLEMENT_OLECREATE_EX(CDaServerHandler, "", 0x1147E518, 0xA208, 0x11DE, 0xAB, 0xF2, 0x00, 0x24, 0x21, 0x11, 0x6F, 0xB2)
-
-BOOL CDaServerHandler::CDaServerHandlerFactory::UpdateRegistry (BOOL bRegister)
-{
-	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, _T(_SERVER_HANDLER_NAME)))
-	{
-		if	(bRegister)
-		{
-			CString	lModuleName;
-
-			GetModuleFileName (AfxGetInstanceHandle (), lModuleName.GetBuffer (MAX_PATH), MAX_PATH);
-			lModuleName.ReleaseBuffer ();
-			RegisterServer (true, lModuleName);
-			RegisterBothThreaded (true, lModuleName);
-			RegisterDefCategory ();
-		}
-		return TRUE;
-	}
-	return FALSE;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
 CDaServerHandler::CDaServerHandler ()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaServerHandler::CDaServerHandler (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaServerHandler::CDaServerHandler (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
-	AfxOleLockApp();
-	EnableAggregation();
 }
 
 CDaServerHandler::~CDaServerHandler ()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaServerHandler::~CDaServerHandler (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
-	}
-#endif
-	AfxOleUnlockApp();
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
-	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaServerHandler::~CDaServerHandler (%d) Done"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaServerHandler::~CDaServerHandler (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaServerHandler::OnFinalRelease ()
-{
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
-	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaServerHandler::OnFinalRelease [%p] [%p]"), this, m_dwRef, m_pOuterUnknown, mProxyManager.GetInterfacePtr());
-	}
-#endif
-	SafeFreeSafePtr (mProxyManager);
-	CCmdTarget::OnFinalRelease();
-}
-
-BOOL CDaServerHandler::OnCreateAggregates ()
+HRESULT CDaServerHandler::FinalConstruct ()
 {
 	HRESULT	lResult;
 
@@ -119,31 +61,101 @@ BOOL CDaServerHandler::OnCreateAggregates ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%u)] CoGetStdMarshalEx Identity [%p] Manager [%p]"), this, m_dwRef, m_pOuterUnknown, mProxyManager.GetInterfacePtr());
+		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] CDaServerHandler::FinalConstruct Identity [%p] Manager [%p]"), this, max(m_dwRef,-1), m_pOuterUnknown, mProxyManager.GetInterfacePtr());
 	}
 #endif
-	return (SUCCEEDED (lResult));
+	return lResult;
+}
+
+void CDaServerHandler::FinalRelease ()
+{
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive (_LOG_INSTANCE))
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaServerHandler::FinalRelease [%p] [%p]"), this, max(m_dwRef,-1), m_pOuterUnknown, mProxyManager.GetInterfacePtr());
+	}
+#endif
+	SafeFreeSafePtr (mProxyManager);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-LPUNKNOWN CDaServerHandler::GetInterfaceHook(const void* iid)
+HRESULT WINAPI CDaServerHandler::DelegateInterface (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw)
 {
-	LPUNKNOWN	lUnknown = NULL;
-	HRESULT		lResult = S_FALSE;
+	CDaServerHandler *	lHandler = (CDaServerHandler *)pv;
+	HRESULT				lResult = E_NOINTERFACE;
 
-	if	(mProxyManager != NULL)
-	{
-		if	(SUCCEEDED (lResult = mProxyManager->QueryInterface (*(const IID *)iid, (void**)&lUnknown)))
-		{
-			ExternalRelease ();
-		}
-	}
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogComErrAnon (MinLogLevel(_DEBUG_INTERFACE,LogAlways), lResult, _T("[%p(%u)] CDaServerHandler::QueryInterface [%p] [%s]]"), this, m_dwRef, lUnknown, CGuidStr::GuidName(*(GUID*)iid));
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaServerHandler::QueryInterface [%s]"), lHandler, lHandler->m_dwRef, CGuidStr::GuidName(iid));
 	}
 #endif
-	return lUnknown;
+
+	if	(lHandler->mProxyManager != NULL)
+	{
+		lResult = lHandler->mProxyManager->QueryInterface (iid, ppvObject);
+	}
+
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogComErrAnon (MinLogLevel(_DEBUG_INTERFACE,LogAlways), lResult, _T("[%p(%d)] CDaServerHandler::QueryInterface [%p] [%s]"), lHandler, lHandler->m_dwRef, *ppvObject, CGuidStr::GuidName(iid));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaServerHandler::QueryMultipleInterfaces (ULONG cMQIs, MULTI_QI *pMQIs)
+{
+	HRESULT	lResult = E_NOINTERFACE;
+	ULONG	lNdx;
+
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaServerHandler::QueryMultipleInterfaces [%u]"), this, max(m_dwRef,-1), cMQIs);
+	}
+#endif
+
+	if	(!pMQIs)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		for	(lNdx = 0; lNdx < cMQIs; lNdx++)
+		{
+			if	(pMQIs[lNdx].pIID)
+			{
+				pMQIs[lNdx].hr = DelegateInterface (this, *(pMQIs[lNdx].pIID), (LPVOID*)&pMQIs[lNdx].pItf, 0);
+			}
+			else
+			{
+				lResult = E_INVALIDARG;
+			}
+			if	(SUCCEEDED (pMQIs[lNdx].hr))
+			{
+				if	(lResult == E_POINTER)
+				{
+					lResult = S_OK;
+				}
+			}
+			else
+			{
+				if	(lResult == S_OK)
+				{
+					lResult = S_FALSE;
+				}
+			}
+		}
+	}
+
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogComErrAnon (MinLogLevel(_DEBUG_INTERFACE,LogAlways), lResult, _T("[%p(%d)] CDaServerHandler::QueryMultipleInterfaces [%u]"), this, max(m_dwRef,-1), cMQIs);
+	}
+#endif
+	return lResult;
 }

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -31,7 +31,7 @@ static char THIS_FILE[]=__FILE__;
 
 //////////////////////////////////////////////////////////////////////
 
-CTimerNotify::CTimerNotify (UINT_PTR pTimerId, ITimerNotifySink * pNotifySink)
+CTimerNotify::CTimerNotify (UINT_PTR pTimerId, _ITimerNotifySink * pNotifySink)
 :	mNotifySink (pNotifySink),
 	mTimerId (pTimerId),
 	mTimerIdSet (0),
@@ -84,7 +84,7 @@ bool CTimerNotify::OnTimer (UINT_PTR pTimerId)
 {
 	if	(pTimerId == mTimerIdSet)
 	{
-		ITimerNotifySink *	lNotifySink;
+		_ITimerNotifySink *	lNotifySink;
 
 		if	(lNotifySink = mNotifySink)
 		{
@@ -101,7 +101,7 @@ bool CTimerNotify::OnTimer (UINT_PTR pTimerId)
 
 //////////////////////////////////////////////////////////////////////
 
-bool CTimerNotify::SetNotifySink (ITimerNotifySink * pNotifySink)
+bool CTimerNotify::SetNotifySink (_ITimerNotifySink * pNotifySink)
 {
 	if	(
 			(pNotifySink)
@@ -133,7 +133,7 @@ INT_PTR CTimerNotifies::FindTimer (UINT_PTR pTimerId) const
 	INT_PTR					lNdx;
 	const CTimerNotify *	lTimer;
 
-	for	(lNdx = 0; lNdx <= GetUpperBound(); lNdx++)
+	for	(lNdx = 0; lNdx < (INT_PTR)GetCount(); lNdx++)
 	{
 		if	(
 				(lTimer = GetAt (lNdx))
@@ -152,7 +152,7 @@ CTimerNotify * CTimerNotifies::GetTimer (UINT_PTR pTimerId)
 
 	if	(lNdx >= 0)
 	{
-		return ElementAt (lNdx);
+		return GetAt (lNdx);
 	}
 	return NULL;
 }
@@ -176,7 +176,7 @@ bool CTimerNotifies::OnTimer (UINT_PTR pTimerId)
 	INT_PTR			lNdx;
 	CTimerNotify *	lTimer;
 
-	for	(lNdx = 0; lNdx <= GetUpperBound(); lNdx++)
+	for	(lNdx = 0; lNdx < (INT_PTR)GetCount(); lNdx++)
 	{
 		if	(
 				(lTimer = GetAt (lNdx))

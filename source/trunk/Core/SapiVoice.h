@@ -23,67 +23,74 @@
 #pragma once
 
 #include "DaCoreExp.h"
-#include "SapiVoiceEventSink.h"
+#include "NotifyObjects.h"
 
 //////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
 
-class _DACORE_IMPEXP CSapiVoice : public CObject
+interface _ISapiVoiceEventSink
+{
+public:
+	virtual void OnVoiceStart (long pCharID) {}
+	virtual void OnVoiceEnd (long pCharID) {}
+	virtual void OnVoiceBookMark (long pCharID, long pBookMarkId) {}
+	virtual void OnVoiceWord (long pCharID, UINT pWordPos, int pWordLength) {}
+	virtual void OnVoiceVisual (long pCharID, int pMouthOverlay) {}
+};
+
+//////////////////////////////////////////////////////////////////////
+
+class CSapiVoice : public CNotifySinksOwner2 <_ISapiVoiceEventSink, CSapiVoice>
 {
 protected:
 	CSapiVoice ();
 public:
-	virtual ~CSapiVoice ();
-	DECLARE_DYNAMIC (CSapiVoice)
+	_DACORE_IMPEXP virtual ~CSapiVoice ();
 
 // Attributes
-	UINT SafeIsValid () const;
-	bool SafeIsPrepared () const;
-	bool SafeIsSpeaking () const;
+	_DACORE_IMPEXP UINT SafeIsValid () const;
+	_DACORE_IMPEXP bool SafeIsPrepared () const;
+	_DACORE_IMPEXP bool SafeIsSpeaking () const;
+	_DACORE_IMPEXP bool SafeIsPaused () const;
 
-	virtual tBstrPtr GetUniqueId ();
-	virtual tBstrPtr GetDisplayName ();
-	virtual ULONG GetRate ();
-	virtual USHORT GetVolume ();
-	virtual USHORT GetPitch ();
+	_DACORE_IMPEXP virtual tBstrPtr GetUniqueId ();
+	_DACORE_IMPEXP virtual tBstrPtr GetDisplayName ();
+	_DACORE_IMPEXP virtual ULONG GetRate ();
+	_DACORE_IMPEXP virtual USHORT GetVolume ();
+	_DACORE_IMPEXP virtual USHORT GetPitch ();
 
 // Operations
-	virtual HRESULT PrepareToSpeak (bool pHighPriority = false) = 0;
-	virtual HRESULT Speak (LPCTSTR pMessage, bool pAsync = true) = 0;
-	virtual HRESULT Stop () = 0;
+	_DACORE_IMPEXP virtual HRESULT PrepareToSpeak (bool pHighPriority = false) = 0;
+	_DACORE_IMPEXP virtual HRESULT Speak (LPCTSTR pMessage, bool pAsync = true) = 0;
+	_DACORE_IMPEXP virtual HRESULT Stop () = 0;
+	_DACORE_IMPEXP virtual HRESULT Pause () = 0;
+	_DACORE_IMPEXP virtual HRESULT Resume () = 0;
 
-	virtual HRESULT GetUniqueId (tBstrPtr & pUniqueId);
-	virtual HRESULT GetDisplayName (tBstrPtr & pDisplayName);
+	_DACORE_IMPEXP virtual HRESULT GetUniqueId (tBstrPtr & pUniqueId);
+	_DACORE_IMPEXP virtual HRESULT GetDisplayName (tBstrPtr & pDisplayName);
 
-	virtual HRESULT GetRate (ULONG & pRate);
-	virtual HRESULT SetRate (ULONG pRate);
+	_DACORE_IMPEXP virtual HRESULT GetRate (ULONG & pRate);
+	_DACORE_IMPEXP virtual HRESULT SetRate (ULONG pRate);
 
-	virtual HRESULT GetVolume (USHORT & pVolume);
-	virtual HRESULT SetVolume (USHORT pVolume);
+	_DACORE_IMPEXP virtual HRESULT GetVolume (USHORT & pVolume);
+	_DACORE_IMPEXP virtual HRESULT SetVolume (USHORT pVolume);
 
-	virtual HRESULT GetPitch (USHORT & pPitch);
-	virtual HRESULT SetPitch (USHORT pPitch);
+	_DACORE_IMPEXP virtual HRESULT GetPitch (USHORT & pPitch);
+	_DACORE_IMPEXP virtual HRESULT SetPitch (USHORT pPitch);
 
-	void AddEventSink (ISapiVoiceEventSink * pEventSink);
-	void RemoveEventSink (ISapiVoiceEventSink * pEventSink);
-	void ClearEventSinks ();
-
-	long GetEventCharID () const;
-	bool SetEventCharID (long pEventCharID);
+	_DACORE_IMPEXP long GetEventCharID () const;
+	_DACORE_IMPEXP bool SetEventCharID (long pEventCharID);
 
 // Implementation
 protected:
 	virtual UINT _IsValid () const = 0;
 	virtual bool _IsPrepared () const = 0;
 	virtual bool _IsSpeaking () const = 0;
+	virtual bool _IsPaused () const = 0;
 
 protected:
-	long								mEventCharID;
-	CPtrTypeArray <ISapiVoiceEventSink>	mEventSinks;
+	long	mEventCharID;
 };
 
-#pragma warning(pop)
 //////////////////////////////////////////////////////////////////////
 
 #endif // _SAPIVOICE_H_INCLUDED

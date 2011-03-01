@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -21,15 +21,7 @@
 #include "StdAfx.h"
 #include "SapiVoice.h"
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
 //////////////////////////////////////////////////////////////////////
-
-IMPLEMENT_DYNAMIC (CSapiVoice, CObject)
 
 CSapiVoice::CSapiVoice ()
 :	mEventCharID (0)
@@ -81,6 +73,21 @@ bool CSapiVoice::SafeIsSpeaking () const
 		try
 		{
 			lRet = _IsSpeaking ();
+		}
+		catch AnyExceptionSilent
+	}
+	return lRet;
+}
+
+bool CSapiVoice::SafeIsPaused () const
+{
+	bool	lRet = false;
+
+	if	(this)
+	{
+		try
+		{
+			lRet = _IsPaused ();
 		}
 		catch AnyExceptionSilent
 	}
@@ -174,32 +181,6 @@ HRESULT CSapiVoice::SetPitch (USHORT pPitch)
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-void CSapiVoice::AddEventSink (ISapiVoiceEventSink * pEventSink)
-{
-	if	(pEventSink)
-	{
-		mEventSinks.AddUnique (pEventSink);
-	}
-}
-
-void CSapiVoice::RemoveEventSink (ISapiVoiceEventSink * pEventSink)
-{
-	if	(pEventSink)
-	{
-		mEventSinks.Remove (pEventSink);
-	}
-}
-
-void CSapiVoice::ClearEventSinks ()
-{
-	if	(this)
-	{
-		mEventSinks.RemoveAll ();
-	}
-}
-
 /////////////////////////////////////////////////////////////////////////////
 
 long CSapiVoice::GetEventCharID () const

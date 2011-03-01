@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -25,7 +25,6 @@
 #include "GuidStr.h"
 #include "MallocPtr.h"
 #include "Elapsed.h"
-#include "UiState.h"
 #ifdef	_DEBUG
 #include "DebugStr.h"
 #include "DebugWin.h"
@@ -46,21 +45,21 @@
 #pragma comment(lib, "strmiids.lib")
 #pragma comment(lib, "dmoguids.lib")
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #ifdef	_DEBUG
 //#define	_DEBUG_FILTERS		LogNormal|LogHighVolume
-//#define	_DEBUG_EVENTS		LogNormal|LogHighVolume|LogTimeMs
+//#define	_DEBUG_EVENTS		LogNormal|LogTimeMs|LogHighVolume
 //#define	_LOG_GRAPH_BUILDER	LogNormal
-#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+//#define	_TRACE_STREAM_HANG		LogIfActive|LogTimeMs|LogHighVolume
 #endif
 
 #ifndef	_LOG_GRAPH_BUILDER
 #define	_LOG_GRAPH_BUILDER	LogVerbose
+#endif
+
+#ifdef	_TRACE_STREAM_HANG
+CAtlMap <const CDirectShowWnd*, DWORD>	sLastEosTime;
+CAtlMap <const CDirectShowWnd*, DWORD>	sLastEosTrace;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -78,37 +77,27 @@ _COM_SMARTPTR_TYPEDEF (IPin, __uuidof(IPin));
 
 const UINT	CDirectShowWnd::mEventMsg = RegisterWindowMessage (_T("1147E563-A208-11DE-ABF2-002421116FB2"));
 
-IMPLEMENT_DYNCREATE(CDirectShowWnd, CWnd)
-
-BEGIN_MESSAGE_MAP(CDirectShowWnd, CWnd)
-	//{{AFX_MSG_MAP(CDirectShowWnd)
-	ON_WM_DESTROY()
-	ON_WM_MEASUREITEM()
-	ON_WM_PAINT()
-	ON_WM_ERASEBKGND()
-	ON_MESSAGE(WM_PRINTCLIENT, OnPrintClient)
-	ON_MESSAGE(WM_DISPLAYCHANGE, OnDisplayChange)
-	ON_REGISTERED_MESSAGE(mEventMsg, OnMediaEvent)
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
 /////////////////////////////////////////////////////////////////////////////
+
+IMPLEMENT_DLL_OBJECT(CDirectShowWnd)
 
 CDirectShowWnd::CDirectShowWnd()
 :	mAutoSize (true),
 	mAutoRewind (false),
-	mAlphaBlended (false)
+	mAlphaSmoothing (0)
 {
-#ifdef	_DEBUG
-	EnableAggregation ();
-#endif
 }
 
 CDirectShowWnd::~CDirectShowWnd()
 {
+#ifdef	_TRACE_STREAM_HANG
+	sLastEosTime.RemoveKey (this);
+	sLastEosTrace.RemoveKey (this);
+#endif
+
 	Close ();
 
-	if	(IsWindow (m_hWnd))
+	if	(IsWindow ())
 	{
 		try
 		{
@@ -116,6 +105,16 @@ CDirectShowWnd::~CDirectShowWnd()
 		}
 		catch AnyExceptionSilent
 	}
+	else
+	if	(m_hWnd)
+	{
+		Detach ();
+	}
+}
+
+CDirectShowWnd * CDirectShowWnd::CreateInstance ()
+{
+	return new CDirectShowWnd;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -305,7 +304,7 @@ HRESULT CDirectShowWnd::Start (DWORD pWaitForCompletion)
 	HRESULT	lResult = E_UNEXPECTED;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mMediaControl != NULL)
 		)
 	{
@@ -317,7 +316,7 @@ HRESULT CDirectShowWnd::Start (DWORD pWaitForCompletion)
 			DWORD			lStartTime = GetTickCount ();
 			OAFilterState	lState;
 
-			if	(SUCCEEDED (LogVfwErr (LogNormal, lResult = mMediaControl->Run ())))
+			if	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lResult = mMediaControl->Run ())))
 			{
 				if	(pWaitForCompletion)
 				{
@@ -363,7 +362,7 @@ HRESULT CDirectShowWnd::Stop (DWORD pWaitForCompletion)
 	HRESULT	lResult = E_UNEXPECTED;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mMediaControl != NULL)
 		)
 	{
@@ -375,7 +374,7 @@ HRESULT CDirectShowWnd::Stop (DWORD pWaitForCompletion)
 			DWORD			lStartTime = GetTickCount ();
 			OAFilterState	lState;
 
-			if	(SUCCEEDED (LogVfwErr (LogNormal, lResult = mMediaControl->Stop ())))
+			if	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lResult = mMediaControl->Stop ())))
 			{
 				if	(pWaitForCompletion)
 				{
@@ -427,7 +426,7 @@ HRESULT CDirectShowWnd::Pause (DWORD pWaitForCompletion)
 	HRESULT	lResult = E_UNEXPECTED;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mMediaControl != NULL)
 		)
 	{
@@ -439,7 +438,7 @@ HRESULT CDirectShowWnd::Pause (DWORD pWaitForCompletion)
 			DWORD			lStartTime = GetTickCount ();
 			OAFilterState	lState;
 
-			if	(SUCCEEDED (LogVfwErr (LogNormal, lResult = mMediaControl->Pause ())))
+			if	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lResult = mMediaControl->Pause ())))
 			{
 				if	(pWaitForCompletion)
 				{
@@ -485,7 +484,7 @@ HRESULT CDirectShowWnd::Resume (DWORD pWaitForCompletion)
 	HRESULT	lResult = E_UNEXPECTED;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mMediaControl != NULL)
 		)
 	{
@@ -497,7 +496,7 @@ HRESULT CDirectShowWnd::Resume (DWORD pWaitForCompletion)
 			DWORD			lStartTime = GetTickCount ();
 			OAFilterState	lState;
 
-			if	(SUCCEEDED (LogVfwErr (LogNormal, lResult = mMediaControl->Run ())))
+			if	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lResult = mMediaControl->Run ())))
 			{
 				if	(pWaitForCompletion)
 				{
@@ -545,7 +544,7 @@ bool CDirectShowWnd::Rewind ()
 	bool	lRet = false;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mMediaSeeking != NULL)
 		)
 	{
@@ -557,7 +556,7 @@ bool CDirectShowWnd::Rewind ()
 			LONGLONG	lCurrPosition = 0;
 			LONGLONG	lStopPosition = 0;
 
-			if	(SUCCEEDED (LogVfwErr (LogNormal, mMediaSeeking->SetPositions (&lCurrPosition, AM_SEEKING_AbsolutePositioning, &lStopPosition, AM_SEEKING_AbsolutePositioning))))
+			if	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, mMediaSeeking->SetPositions (&lCurrPosition, AM_SEEKING_AbsolutePositioning, &lStopPosition, AM_SEEKING_AbsolutePositioning))))
 			{
 #ifdef	_DEBUG_NOT
 				LogMediaSeeking (LogDebug, mMediaSeeking, _T("[%p] Rewind"), this);
@@ -582,7 +581,7 @@ bool CDirectShowWnd::IsPlaying (bool pIncludePause, bool pQuickCheck) const
 	bool	lRet = false;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mMediaControl != NULL)
 		)
 	{
@@ -617,6 +616,14 @@ bool CDirectShowWnd::IsPlaying (bool pIncludePause, bool pQuickCheck) const
 		}
 		catch AnyExceptionDebug
 	}
+
+#ifdef	_TRACE_STREAM_HANG
+	if	(!lRet)
+	{
+		sLastEosTime.RemoveKey (this);
+		sLastEosTrace.RemoveKey (this);
+	}
+#endif
 	return lRet;
 }
 
@@ -625,7 +632,7 @@ bool CDirectShowWnd::IsPaused (bool pQuickCheck) const
 	bool	lRet = false;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mMediaControl != NULL)
 		)
 	{
@@ -654,6 +661,14 @@ bool CDirectShowWnd::IsPaused (bool pQuickCheck) const
 		}
 		catch AnyExceptionDebug
 	}
+
+#ifdef	_TRACE_STREAM_HANG
+	if	(lRet)
+	{
+		sLastEosTime.RemoveKey (this);
+		sLastEosTrace.RemoveKey (this);
+	}
+#endif
 	return lRet;
 }
 
@@ -662,7 +677,7 @@ bool CDirectShowWnd::IsStopped (bool pQuickCheck) const
 	bool	lRet = false;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mMediaControl != NULL)
 		)
 	{
@@ -691,6 +706,14 @@ bool CDirectShowWnd::IsStopped (bool pQuickCheck) const
 		}
 		catch AnyExceptionDebug
 	}
+
+#ifdef	_TRACE_STREAM_HANG
+	if	(lRet)
+	{
+		sLastEosTime.RemoveKey (this);
+		sLastEosTrace.RemoveKey (this);
+	}
+#endif
 	return lRet;
 }
 
@@ -701,7 +724,7 @@ bool CDirectShowWnd::IsEndOfStream ()
 	bool	lRet = false;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mMediaSeeking != NULL)
 		)
 	{
@@ -723,8 +746,32 @@ bool CDirectShowWnd::IsEndOfStream ()
 #ifdef	_DEBUG_EVENTS_NOT
 				LogMessage (_DEBUG_EVENTS, _T("[%p] IsEndOfStream [%f - %f] of [%f]"), this, RefTimeSec(lCurrPos), RefTimeSec(lStopPos), RefTimeSec(lDuration));
 #endif
+#ifdef	_TRACE_STREAM_HANG
+				sLastEosTime [this] = GetTickCount();
+				sLastEosTrace.RemoveKey (this);
+#endif
 				lRet = true;
 			}
+#ifdef	_TRACE_STREAM_HANG
+			else
+			{
+				DWORD	lLastEosTime;
+				DWORD	lLastEosTrace;
+
+				if	(
+						(sLastEosTime.Lookup (this, lLastEosTime))
+					&&	(ElapsedTicks (lLastEosTime) > 30000)
+					&&	(
+							(!sLastEosTrace.Lookup (this, lLastEosTrace))
+						||	(ElapsedTicks (lLastEosTrace) > 1000)
+						)
+					)
+				{
+					LogMessage (_TRACE_STREAM_HANG, _T("[%p] [%d] NotEndOfStream [%f - %f] of [%f]"), this, ElapsedTicks (lLastEosTime), RefTimeSec(lCurrPos), RefTimeSec(lStopPos), RefTimeSec(lDuration));
+					sLastEosTrace [this] = GetTickCount();
+				}
+			}
+#endif
 		}
 		catch AnyExceptionDebug
 	}
@@ -739,7 +786,7 @@ bool CDirectShowWnd::IsVideoVisible ()
 	long	lVisible = 0;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mVideoWindow != NULL)
 		&&	(SUCCEEDED (mVideoWindow->get_Visible (&lVisible)))
 		&&	(lVisible)
@@ -755,9 +802,9 @@ bool CDirectShowWnd::SetVideoVisible (bool pVisible)
 	bool	lRet = false;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mVideoWindow != NULL)
-		&&	(SUCCEEDED (LogVfwErr (LogNormal, mVideoWindow->put_Visible (pVisible?OATRUE:OAFALSE))))
+		&&	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, mVideoWindow->put_Visible (pVisible?OATRUE:OAFALSE))))
 		)
 	{
 		lRet = true;
@@ -808,12 +855,12 @@ LONGLONG CDirectShowWnd::GetStop ()
 
 HRESULT CDirectShowWnd::Initialize (LPCTSTR pFileName)
 {
-	HRESULT	lResult = E_FAIL;
-	CString	lFileName (pFileName);
+	HRESULT		lResult = E_FAIL;
+	CAtlString	lFileName (pFileName);
 
 	try
 	{
-		lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_FilterGraphNoThread, NULL, CLSCTX_INPROC_SERVER, __uuidof (IGraphBuilder), (void **) &mGraphBuilder));
+		lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_FilterGraphNoThread, NULL, CLSCTX_INPROC_SERVER, __uuidof (IGraphBuilder), (void **) &mGraphBuilder));
 
 		if	(SUCCEEDED (lResult))
 		{
@@ -826,15 +873,15 @@ HRESULT CDirectShowWnd::Initialize (LPCTSTR pFileName)
 
 					if	(LogIsActive (_LOG_GRAPH_BUILDER))
 					{
-						CString	lLogFilePath (gLogFileName);
-						CString	lLogFileName (pFileName);
+						CAtlString	lLogFilePath (gLogFileName);
+						CAtlString	lLogFileName (pFileName);
 
 						if	(PathIsURL (pFileName))
 						{
 							DWORD lParsedSize;
 							CoInternetParseUrl (pFileName, PARSE_SCHEMA, 0, lLogFileName.GetBuffer(MAX_PATH), MAX_PATH, &lParsedSize, 0);
 							lLogFileName.ReleaseBuffer ();
-							lLogFileName = CString(pFileName).Mid (lLogFileName.GetLength()+1);
+							lLogFileName = CAtlString(pFileName).Mid (lLogFileName.GetLength()+1);
 							lLogFileName.TrimLeft (_T('/'));
 							lLogFileName = PathFindFileName (lLogFileName);
 						}
@@ -863,7 +910,7 @@ HRESULT CDirectShowWnd::Initialize (LPCTSTR pFileName)
 			mMediaEvent = mGraphBuilder;
 			if	(mMediaEvent != NULL)
 			{
-				LogVfwErr (LogNormal, mMediaEvent->SetNotifyWindow ((OAHWND) m_hWnd, mEventMsg, 0));
+				LogVfwErr (LogNormal|LogTime, mMediaEvent->SetNotifyWindow ((OAHWND) m_hWnd, mEventMsg, 0));
 			}
 		}
 	}
@@ -892,13 +939,13 @@ HRESULT CDirectShowWnd::PrepareGraphWindowed (IBaseFilter ** pFilter)
 	SafeFreeSafePtr (mVMRFilterConfig9);
 	SafeFreeSafePtr (mVMRWindowlessControl9);
 
-	lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_VideoRendererDefault, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &lVideoRenderFilter));
+	lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_VideoRendererDefault, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &lVideoRenderFilter));
 	if	(
 			(SUCCEEDED (lResult))
 		&&	(lVideoRenderFilter != NULL)
 		)
 	{
-		lResult = LogVfwErr (LogNormal, mGraphBuilder->AddFilter (lVideoRenderFilter, L"Video Renderer (Windowed)"));
+		lResult = LogVfwErr (LogNormal|LogTime, mGraphBuilder->AddFilter (lVideoRenderFilter, L"Video Renderer (Windowed)"));
 		if	(SUCCEEDED (lResult))
 		{
 			(*pFilter) = lVideoRenderFilter.Detach ();
@@ -919,7 +966,7 @@ HRESULT CDirectShowWnd::PrepareGraphWindowless (IBaseFilter ** pFilter)
 	SafeFreeSafePtr (mVMRWindowlessControl9);
 
 #if	FALSE
-	lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_VideoMixingRenderer9, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &lVideoRenderFilter));
+	lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_VideoMixingRenderer9, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &lVideoRenderFilter));
 	if	(
 			(SUCCEEDED (lResult))
 		&&	(lVideoRenderFilter != NULL)
@@ -932,8 +979,8 @@ HRESULT CDirectShowWnd::PrepareGraphWindowless (IBaseFilter ** pFilter)
 			lResult = E_NOINTERFACE;
 		}
 		if	(
-				(SUCCEEDED (lResult = LogVfwErr (LogNormal, mGraphBuilder->AddFilter (lVideoRenderFilter, L"Video Renderer (Windowless-9)"))))
-			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mVMRFilterConfig9->SetRenderingMode (VMRMode_Windowless))))
+				(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mGraphBuilder->AddFilter (lVideoRenderFilter, L"Video Renderer (Windowless-9)"))))
+			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mVMRFilterConfig9->SetRenderingMode (VMRMode_Windowless))))
 			)
 		{
 			mVMRWindowlessControl9 = mVMRFilterConfig9;
@@ -949,7 +996,7 @@ HRESULT CDirectShowWnd::PrepareGraphWindowless (IBaseFilter ** pFilter)
 #endif
 	{
 		lVideoRenderFilter = NULL;
-		lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_VideoMixingRenderer, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &lVideoRenderFilter));
+		lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_VideoMixingRenderer, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &lVideoRenderFilter));
 		if	(
 				(SUCCEEDED (lResult))
 			&&	(lVideoRenderFilter != NULL)
@@ -963,8 +1010,8 @@ HRESULT CDirectShowWnd::PrepareGraphWindowless (IBaseFilter ** pFilter)
 			}
 
 			if	(
-					(SUCCEEDED (lResult = LogVfwErr (LogNormal, mGraphBuilder->AddFilter (lVideoRenderFilter, L"Video Renderer (Windowless-7)"))))
-				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mVMRFilterConfig7->SetRenderingMode (VMRMode_Windowless))))
+					(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mGraphBuilder->AddFilter (lVideoRenderFilter, L"Video Renderer (Windowless-7)"))))
+				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mVMRFilterConfig7->SetRenderingMode (VMRMode_Windowless))))
 				)
 			{
 				mVMRWindowlessControl7 = mVMRFilterConfig7;
@@ -987,8 +1034,8 @@ HRESULT CDirectShowWnd::PrepareGraphWindowless (IBaseFilter ** pFilter)
 
 HRESULT CDirectShowWnd::GraphPrepared (LPCTSTR pFileName)
 {
-	HRESULT	lResult = E_FAIL;
-	CString	lFileName (pFileName);
+	HRESULT		lResult = E_FAIL;
+	CAtlString	lFileName (pFileName);
 
 	try
 	{
@@ -1002,7 +1049,7 @@ HRESULT CDirectShowWnd::GraphPrepared (LPCTSTR pFileName)
 
 		if	(mMediaSeeking != NULL)
 		{
-			LogVfwErr (LogNormal, mMediaSeeking->SetTimeFormat (&TIME_FORMAT_MEDIA_TIME));
+			LogVfwErr (LogNormal|LogTime, mMediaSeeking->SetTimeFormat (&TIME_FORMAT_MEDIA_TIME));
 		}
 
 		if	(mBasicVideo != NULL)
@@ -1050,7 +1097,7 @@ HRESULT CDirectShowWnd::InitVideoWindow ()
 		{
 			if	(mVMRWindowlessControl9 != NULL)
 			{
-				lResult = LogVfwErr (LogNormal, mVMRWindowlessControl9->GetNativeVideoSize (&lVideoSize.cx, &lVideoSize.cy, &lAspectRatio.cx, &lAspectRatio.cy));
+				lResult = LogVfwErr (LogNormal|LogTime, mVMRWindowlessControl9->GetNativeVideoSize (&lVideoSize.cx, &lVideoSize.cy, &lAspectRatio.cx, &lAspectRatio.cy));
 
 				if	(
 						(SUCCEEDED (lResult))
@@ -1064,9 +1111,9 @@ HRESULT CDirectShowWnd::InitVideoWindow ()
 				}
 				if	(SUCCEEDED (lResult))
 				{
-					LogVfwErr (LogNormal, mVMRWindowlessControl9->SetVideoClippingWindow (m_hWnd));
-					LogVfwErr (LogNormal, mVMRWindowlessControl9->SetBorderColor (lBorderColor));
-					LogVfwErr (LogNormal, mVMRWindowlessControl9->SetAspectRatioMode (lAspectRatioMode));
+					LogVfwErr (LogNormal|LogTime, mVMRWindowlessControl9->SetVideoClippingWindow (m_hWnd));
+					LogVfwErr (LogNormal|LogTime, mVMRWindowlessControl9->SetBorderColor (lBorderColor));
+					LogVfwErr (LogNormal|LogTime, mVMRWindowlessControl9->SetAspectRatioMode (lAspectRatioMode));
 				}
 				else
 				{
@@ -1077,7 +1124,7 @@ HRESULT CDirectShowWnd::InitVideoWindow ()
 			else
 			if	(mVMRWindowlessControl7 != NULL)
 			{
-				lResult = LogVfwErr (LogNormal, mVMRWindowlessControl7->GetNativeVideoSize (&lVideoSize.cx, &lVideoSize.cy, &lAspectRatio.cx, &lAspectRatio.cy));
+				lResult = LogVfwErr (LogNormal|LogTime, mVMRWindowlessControl7->GetNativeVideoSize (&lVideoSize.cx, &lVideoSize.cy, &lAspectRatio.cx, &lAspectRatio.cy));
 
 				if	(
 						(SUCCEEDED (lResult))
@@ -1091,9 +1138,9 @@ HRESULT CDirectShowWnd::InitVideoWindow ()
 				}
 				if	(SUCCEEDED (lResult))
 				{
-					LogVfwErr (LogNormal, mVMRWindowlessControl7->SetVideoClippingWindow (m_hWnd));
-					LogVfwErr (LogNormal, mVMRWindowlessControl7->SetBorderColor (lBorderColor));
-					LogVfwErr (LogNormal, mVMRWindowlessControl7->SetAspectRatioMode (lAspectRatioMode));
+					LogVfwErr (LogNormal|LogTime, mVMRWindowlessControl7->SetVideoClippingWindow (m_hWnd));
+					LogVfwErr (LogNormal|LogTime, mVMRWindowlessControl7->SetBorderColor (lBorderColor));
+					LogVfwErr (LogNormal|LogTime, mVMRWindowlessControl7->SetAspectRatioMode (lAspectRatioMode));
 				}
 				else
 				{
@@ -1109,9 +1156,9 @@ HRESULT CDirectShowWnd::InitVideoWindow ()
 					&&	(SUCCEEDED (mVideoWindow->get_Visible (&lVisible)))
 					)
 				{
-					LogVfwErr (LogNormal, mVideoWindow->put_Owner ((OAHWND) m_hWnd));
-					LogVfwErr (LogNormal, mVideoWindow->put_WindowStyle (WS_CHILD|WS_CLIPSIBLINGS));
-					LogVfwErr (LogNormal, mVideoWindow->put_AutoShow (OATRUE));
+					LogVfwErr (LogNormal|LogTime, mVideoWindow->put_Owner ((OAHWND) m_hWnd));
+					LogVfwErr (LogNormal|LogTime, mVideoWindow->put_WindowStyle (WS_CHILD|WS_CLIPSIBLINGS));
+					LogVfwErr (LogNormal|LogTime, mVideoWindow->put_AutoShow (OATRUE));
 				}
 				else
 				{
@@ -1137,113 +1184,6 @@ HRESULT CDirectShowWnd::InitVideoWindow ()
 	return lResult;
 }
 
-HRESULT CDirectShowWnd::AutoSizeWindow ()
-{
-	HRESULT	lResult = E_UNEXPECTED;
-
-	if	(IsWindow (m_hWnd))
-	{
-		CSize	lVideoSize;
-		CRect	lVideoRect;
-		CRect	lClientRect;
-		CRect	lWinRect;
-
-		GetClientRect (&lClientRect);
-		GetWindowRect (&lWinRect);
-		lVideoSize = GetVideoSize ();
-		lVideoRect.SetRect (0, 0, lVideoSize.cx, lVideoSize.cy);
-#ifdef	_DEBUG_NOT
-		LogMessage (LogDebug, _T("[%p] AutoSizeWindow Window [%s] Client [%s] Video [%s]"), this, FormatRect(lWinRect), FormatRect(lClientRect), FormatRect(lVideoRect));
-#endif
-		if	(
-				(lClientRect.Width() != lVideoSize.cx)
-			||	(lClientRect.Height() != lVideoSize.cy)
-			)
-		{
-			lWinRect.right = lWinRect.left + lVideoSize.cx + lWinRect.Width() - lClientRect.Width();
-			lWinRect.bottom = lWinRect.top + lVideoSize.cy + lWinRect.Height() - lClientRect.Height();
-
-			if	(GetStyle () & WS_CHILD)
-			{
-				GetParent()->ScreenToClient (&lWinRect);
-			}
-			MoveWindow (lWinRect);
-			GetClientRect (&lClientRect);
-		}
-
-		if	(mVMRWindowlessControl9 != NULL)
-		{
-			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mVMRWindowlessControl9->SetVideoPosition (&lVideoRect, &lClientRect))))
-			{
-				Invalidate ();
-			}
-		}
-		else
-		if	(mVMRWindowlessControl7 != NULL)
-		{
-			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mVMRWindowlessControl7->SetVideoPosition (&lVideoRect, &lClientRect))))
-			{
-				Invalidate ();
-			}
-		}
-		else
-		if	(mVideoWindow != NULL)
-		{
-			LogVfwErr (LogNormal, lResult = mVideoWindow->SetWindowPosition (lVideoRect.left, lVideoRect.top, lVideoRect.Width (), lVideoRect.Height ()));
-		}
-		else
-		if	(mBasicVideo != NULL)
-		{
-			LogVfwErr (LogNormal, lResult = mBasicVideo->SetDestinationPosition (lVideoRect.left, lVideoRect.top, lVideoRect.Width (), lVideoRect.Height ()));
-		}
-	}
-	return lResult;
-}
-
-HRESULT CDirectShowWnd::AutoSizeVideo (bool pKeepAspectRatio)
-{
-	HRESULT	lResult = E_UNEXPECTED;
-
-	if	(IsWindow (m_hWnd))
-	{
-		CRect	lClientRect;
-		CSize	lVideoSize (0, 0);
-		CRect	lVideoRect;
-		CSize	lAspectRatio;
-
-		GetClientRect (&lClientRect);
-		lVideoSize = GetVideoSize ();
-		lVideoRect.SetRect (0, 0, lVideoSize.cx, lVideoSize.cy);
-
-		if	(mVMRWindowlessControl9 != NULL)
-		{
-			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mVMRWindowlessControl9->SetVideoPosition (&lVideoRect, &lClientRect))))
-			{
-				Invalidate ();
-			}
-		}
-		else
-		if	(mVMRWindowlessControl7 != NULL)
-		{
-			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mVMRWindowlessControl7->SetVideoPosition (&lVideoRect, &lClientRect))))
-			{
-				Invalidate ();
-			}
-		}
-		else
-		if	(mVideoWindow != NULL)
-		{
-			LogVfwErr (LogNormal, lResult = mVideoWindow->SetWindowPosition (lClientRect.left, lClientRect.top, lClientRect.Width (), lClientRect.Height ()));
-		}
-		else
-		if	(mBasicVideo != NULL)
-		{
-			LogVfwErr (LogNormal, lResult = mBasicVideo->SetDestinationPosition (lClientRect.left, lClientRect.top, lClientRect.Width (), lClientRect.Height ()));
-		}
-	}
-	return lResult;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 
 CSize CDirectShowWnd::GetVideoSize ()
@@ -1253,22 +1193,22 @@ CSize CDirectShowWnd::GetVideoSize ()
 
 	if	(mVMRWindowlessControl9 != NULL)
 	{
-		LogVfwErr (LogNormal, mVMRWindowlessControl9->GetNativeVideoSize (&lVideoSize.cx, &lVideoSize.cy, &lAspectRatio.cx, &lAspectRatio.cy));
+		LogVfwErr (LogNormal|LogTime, mVMRWindowlessControl9->GetNativeVideoSize (&lVideoSize.cx, &lVideoSize.cy, &lAspectRatio.cx, &lAspectRatio.cy));
 	}
 	else
 	if	(mVMRWindowlessControl7 != NULL)
 	{
-		LogVfwErr (LogNormal, mVMRWindowlessControl7->GetNativeVideoSize (&lVideoSize.cx, &lVideoSize.cy, &lAspectRatio.cx, &lAspectRatio.cy));
+		LogVfwErr (LogNormal|LogTime, mVMRWindowlessControl7->GetNativeVideoSize (&lVideoSize.cx, &lVideoSize.cy, &lAspectRatio.cx, &lAspectRatio.cy));
 	}
 	else
 	if	(mVideoWindow != NULL)
 	{
-		LogVfwErr (LogNormal, mBasicVideo->GetVideoSize (&lVideoSize.cx, &lVideoSize.cy));
+		LogVfwErr (LogNormal|LogTime, mBasicVideo->GetVideoSize (&lVideoSize.cx, &lVideoSize.cy));
 	}
 	else
 	if	(mBasicVideo != NULL)
 	{
-		LogVfwErr (LogNormal, mBasicVideo->GetVideoSize (&lVideoSize.cx, &lVideoSize.cy));
+		LogVfwErr (LogNormal|LogTime, mBasicVideo->GetVideoSize (&lVideoSize.cx, &lVideoSize.cy));
 	}
 	return lVideoSize;
 }
@@ -1296,70 +1236,254 @@ CRect CDirectShowWnd::GetVideoRect ()
 		)
 	{
 		mVideoWindow->GetWindowPosition (&lVideoRect.left, &lVideoRect.top, &lVideoRect.right, &lVideoRect.bottom);
+		lVideoRect.right += lVideoRect.left;
+		lVideoRect.bottom += lVideoRect.top;
 	}
 	else
 	if	(mBasicVideo != NULL)
 	{
 		mBasicVideo->GetDestinationPosition (&lVideoRect.left, &lVideoRect.top, &lVideoRect.right, &lVideoRect.bottom);
+		lVideoRect.right += lVideoRect.left;
+		lVideoRect.bottom += lVideoRect.top;
 	}
 	return lVideoRect;
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+HRESULT CDirectShowWnd::SetVideoRect (const CRect & pVideoRect)
+{
+	HRESULT	lResult = E_UNEXPECTED;
+
+	if	(IsWindow ())
+	{
+		CRect	lVideoRect (pVideoRect);
+
+#ifdef	_DEBUG_NOT
+		GetClientRect (&lClientRect);
+		GetWindowRect (&lWinRect);
+		LogMessage (LogDebug, _T("[%p] SetVideoRect Window [%s] Client [%s] Video [%s]"), this, FormatRect(lWinRect), FormatRect(lClientRect), FormatRect(lVideoRect));
+#endif
+		if	(mVMRWindowlessControl9 != NULL)
+		{
+			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mVMRWindowlessControl9->SetVideoPosition (&CRect (CPoint (0, 0), GetVideoSize()), &lVideoRect))))
+			{
+				Invalidate ();
+			}
+		}
+		else
+		if	(mVMRWindowlessControl7 != NULL)
+		{
+			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mVMRWindowlessControl7->SetVideoPosition (&CRect (CPoint (0, 0), GetVideoSize()), &lVideoRect))))
+			{
+				Invalidate ();
+			}
+		}
+		else
+		if	(mVideoWindow != NULL)
+		{
+			LogVfwErr (LogNormal|LogTime, lResult = mVideoWindow->SetWindowPosition (lVideoRect.left, lVideoRect.top, lVideoRect.Width (), lVideoRect.Height ()));
+		}
+		else
+		if	(mBasicVideo != NULL)
+		{
+			if	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lResult = mBasicVideo->SetDestinationPosition (lVideoRect.left, lVideoRect.top, lVideoRect.Width (), lVideoRect.Height ()))))
+			{
+				Invalidate ();
+			}
+		}
+	}
+	return lResult;
+}
+
+HRESULT CDirectShowWnd::CenterVideo (const CSize * pVideoSize)
+{
+	HRESULT	lResult = S_FALSE;
+
+	if	(IsWindow ())
+	{
+		CRect	lVideoRect;
+		CRect	lClientRect;
+
+		if	(pVideoSize)
+		{
+			if	(
+					(pVideoSize->cx > 0)
+				&&	(pVideoSize->cy > 0)
+				)
+			{
+				lVideoRect.SetRect (0, 0, pVideoSize->cx, pVideoSize->cy);
+			}
+			else
+			{
+				lResult = E_INVALIDARG;
+			}
+		}
+		else
+		{
+			lVideoRect = GetVideoRect();
+			if	(lVideoRect.IsRectEmpty ())
+			{
+				lVideoRect = CRect (CPoint (0, 0), GetVideoSize());
+			}
+		}
+
+		GetClientRect (&lClientRect);
+		lVideoRect.OffsetRect (lClientRect.CenterPoint().x - lVideoRect.CenterPoint().x, lClientRect.CenterPoint().y - lVideoRect.CenterPoint().y);
+		lResult = SetVideoRect (lVideoRect);
+	}
+	else
+	{
+		lResult = E_UNEXPECTED;
+	}
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT CDirectShowWnd::AutoSizeWindow ()
+{
+	HRESULT	lResult = E_UNEXPECTED;
+
+	if	(IsWindow ())
+	{
+		CSize	lVideoSize;
+		CRect	lVideoRect;
+		CRect	lClientRect;
+		CRect	lWinRect;
+
+		GetClientRect (&lClientRect);
+		GetWindowRect (&lWinRect);
+		lVideoSize = GetVideoSize ();
+		lVideoRect.SetRect (0, 0, lVideoSize.cx, lVideoSize.cy);
+#ifdef	_DEBUG_NOT
+		LogMessage (LogDebug, _T("[%p] AutoSizeWindow Window [%s] Client [%s] Video [%s]"), this, FormatRect(lWinRect), FormatRect(lClientRect), FormatRect(lVideoRect));
+#endif
+		if	(
+				(lClientRect.Width() != lVideoSize.cx)
+			||	(lClientRect.Height() != lVideoSize.cy)
+			)
+		{
+			lWinRect.right = lWinRect.left + lVideoSize.cx + lWinRect.Width() - lClientRect.Width();
+			lWinRect.bottom = lWinRect.top + lVideoSize.cy + lWinRect.Height() - lClientRect.Height();
+
+			if	(GetStyle () & WS_CHILD)
+			{
+				GetParent().ScreenToClient (&lWinRect);
+			}
+			MoveWindow (lWinRect);
+		}
+		lResult = SetVideoRect (lVideoRect);
+	}
+	return lResult;
+}
+
+HRESULT CDirectShowWnd::AutoSizeVideo (bool pKeepAspectRatio)
+{
+	HRESULT	lResult = E_UNEXPECTED;
+
+	if	(IsWindow ())
+	{
+		CRect	lTargetRect;
+
+		GetClientRect (&lTargetRect);
+
+		if	(pKeepAspectRatio)
+		{
+			CSize	lSourceSize = GetVideoSize ();
+			CSize	lTargetSize = lTargetRect.Size ();
+
+			if	(MulDiv (lSourceSize.cx, 100, lTargetSize.cx) > MulDiv (lSourceSize.cy, 100, lTargetSize.cy))
+			{
+				lTargetSize.cy = MulDiv (lTargetSize.cx, lSourceSize.cy, lSourceSize.cx);
+			}
+			else
+			{
+				lTargetSize.cx = MulDiv (lTargetSize.cy, lSourceSize.cx, lSourceSize.cy);
+			}
+			lTargetRect.OffsetRect ((lTargetRect.Width()-lTargetSize.cx)/2, (lTargetRect.Height()-lTargetSize.cy)/2);
+			lTargetRect = CRect (lTargetRect.TopLeft(), lTargetSize);
+		}
+		lResult = SetVideoRect (lTargetRect);
+	}
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+DWORD CDirectShowWnd::SetAlphaSmoothing (DWORD pAlphaSmoothing)
+{
+	DWORD	lRet = mAlphaSmoothing;
+
+	if	(!m_hWnd)
+	{
+		mAlphaSmoothing = pAlphaSmoothing;
+	}
+	return lRet;
+}
+
+DWORD CDirectShowWnd::GetAlphaSmoothing () const
+{
+	return mAlphaSmoothing;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CDirectShowWnd::OnDestroy()
+LRESULT CDirectShowWnd::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 	Close ();
-	CWnd::OnDestroy ();
+	return DefWindowProc ();
 }
 
-void CDirectShowWnd::OnMeasureItem(int nIDCtl, LPMEASUREITEMSTRUCT lpMeasureItemStruct)
-{
-	Default ();
-	// Skip CWnd response - avoids MFC assertions for custom menus
-}
-
-LRESULT CDirectShowWnd::OnDisplayChange(WPARAM wParam, LPARAM lParam)
+LRESULT CDirectShowWnd::OnDisplayChange (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 	if	(mVMRWindowlessControl9 != NULL)
 	{
-		LogVfwErr (LogNormal, mVMRWindowlessControl9->DisplayModeChanged ());
+		LogVfwErr (LogNormal|LogTime, mVMRWindowlessControl9->DisplayModeChanged ());
 	}
 	else
 	if	(mVMRWindowlessControl7 != NULL)
 	{
-		LogVfwErr (LogNormal, mVMRWindowlessControl7->DisplayModeChanged ());
+		LogVfwErr (LogNormal|LogTime, mVMRWindowlessControl7->DisplayModeChanged ());
 	}
-	return CWnd::OnDisplayChange (wParam, lParam);
+	return DefWindowProc ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CDirectShowWnd::OnPaint()
+LRESULT CDirectShowWnd::OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	CPaintDC lPaintDC (this);
-	PrintClient (&lPaintDC, PRF_CLIENT);
+	tS <PAINTSTRUCT>	lPaintStruct;
+	CMemDCHandle		lPaintDC;
+
+	if	(lPaintDC = BeginPaint (&lPaintStruct))
+	{
+		PrintClient (lPaintDC, PRF_CLIENT);
+		EndPaint (&lPaintStruct);
+	}
+	lPaintDC.Detach ();
+	return 0;
 }
 
-BOOL CDirectShowWnd::OnEraseBkgnd(CDC *pDC)
+LRESULT CDirectShowWnd::OnEraseBkgnd (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	if	(EraseWindow (pDC, GetEraseColor()))
+	if	(EraseWindow ((HDC)wParam, GetEraseColor()))
 	{
 		return TRUE;
 	}
 	else
 	{
-		return CWnd::OnEraseBkgnd (pDC);
+		return DefWindowProc ();
 	}
 }
 
-LRESULT CDirectShowWnd::OnPrintClient(WPARAM wParam, LPARAM lParam)
+LRESULT CDirectShowWnd::OnPrintClient (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	CDC *	lDC = CDC::FromHandle ((HDC)wParam);
+	HDC	lDC = (HDC)wParam;
 
 	if	(lParam & PRF_ERASEBKGND)
 	{
@@ -1372,8 +1496,7 @@ LRESULT CDirectShowWnd::OnPrintClient(WPARAM wParam, LPARAM lParam)
 	{
 		return 0;
 	}
-
-	return Default();
+	return DefWindowProc();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1383,46 +1506,46 @@ COLORREF CDirectShowWnd::GetEraseColor ()
 	return GetSysColor (COLOR_WINDOW);
 }
 
-bool CDirectShowWnd::EraseWindow (CDC * pDC, COLORREF pBkColor)
+bool CDirectShowWnd::EraseWindow (HDC pDC, COLORREF pBkColor)
 {
 	CRect	lVideoRect;
 	CRect	lClientRect;
 
 	GetClientRect (&lClientRect);
 
-	if	(!mAlphaBlended)
+	if	(!GetAlphaSmoothing())
 	{
 		lVideoRect = GetVideoRect ();
 	}
 	if	(
-			(mAlphaBlended)
+			(GetAlphaSmoothing())
 		||	(lVideoRect.IsRectEmpty ())
 		)
 	{
-		pDC->FillSolidRect (&lClientRect, pBkColor);
+		FillSolidRect (pDC, &lClientRect, pBkColor);
 	}
 	else
 	if	(!lVideoRect.EqualRect (&lClientRect))
 	{
-		pDC->SaveDC ();
-		pDC->ExcludeClipRect (&lVideoRect);
-		pDC->FillSolidRect (&lClientRect, pBkColor);
-		pDC->RestoreDC (-1);
+		SaveDC (pDC);
+		ExcludeClipRect (pDC, lVideoRect.left, lVideoRect.top, lVideoRect.right, lVideoRect.bottom);
+		FillSolidRect (pDC, &lClientRect, pBkColor);
+		RestoreDC (pDC, -1);
 	}
 	return true;
 }
 
-bool CDirectShowWnd::PaintWindow (CDC * pDC)
+bool CDirectShowWnd::PaintWindow (HDC pDC)
 {
 	if	(mVMRWindowlessControl9 != NULL)
 	{
-		LogVfwErr (LogNormal, mVMRWindowlessControl9->RepaintVideo (m_hWnd, *pDC));
+		LogVfwErr (LogNormal|LogTime, mVMRWindowlessControl9->RepaintVideo (m_hWnd, pDC));
 		return true;
 	}
 	else
 	if	(mVMRWindowlessControl7 != NULL)
 	{
-		LogVfwErr (LogNormal, mVMRWindowlessControl7->RepaintVideo (m_hWnd, *pDC));
+		LogVfwErr (LogNormal|LogTime, mVMRWindowlessControl7->RepaintVideo (m_hWnd, pDC));
 		return true;
 	}
 	return false;
@@ -1430,7 +1553,7 @@ bool CDirectShowWnd::PaintWindow (CDC * pDC)
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CDirectShowWnd::OnMediaEvent (WPARAM wParam, LPARAM lParam)
+LRESULT CDirectShowWnd::OnMediaEvent (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 #ifdef	_DEBUG_EVENTS
 	if	(mMediaEvent != NULL)
@@ -1445,7 +1568,7 @@ LRESULT CDirectShowWnd::OnMediaEvent (WPARAM wParam, LPARAM lParam)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-FILTER_STATE CDirectShowWnd::GetState (CString * pStateStr)
+FILTER_STATE CDirectShowWnd::GetState (CAtlString * pStateStr)
 {
 	OAFilterState	lState = -1;
 	HRESULT			lResult;
@@ -1470,11 +1593,11 @@ void CDirectShowWnd::LogState (UINT pLogLevel, LPCTSTR pFormat, ...)
 {
 	if	(LogIsActive (pLogLevel))
 	{
-		CString			lPrefix;
-		CString			lTitle;
+		CAtlString		lPrefix;
+		CAtlString		lTitle;
 		HRESULT			lResult;
 		OAFilterState	lState;
-		CString			lStateStr;
+		CAtlString		lStateStr;
 		LONGLONG		lDuration = -1;
 		LONGLONG		lCurrPos = -1;
 		LONGLONG		lStopPos = -1;
@@ -1520,8 +1643,8 @@ void CDirectShowWnd::LogStatus (UINT pLogLevel, LPCTSTR pFormat, ...)
 {
 	if	(LogIsActive (pLogLevel))
 	{
-		CString	lPrefix;
-		CString	lTitle;
+		CAtlString	lPrefix;
+		CAtlString	lTitle;
 
 		if	(pFormat)
 		{
@@ -1620,11 +1743,11 @@ void CDirectShowWnd::LogStatus (UINT pLogLevel, LPCTSTR pFormat, ...)
 				}
 				if	(SUCCEEDED (mVideoWindow->get_Visible (&lVisible)))
 				{
-					LogMessage (pLogLevel, _T("%s     Visible       [%d] WndVisible [%d]"), lPrefix, lVisible, (IsWindow (m_hWnd) ? ((GetStyle () & WS_VISIBLE) != 0) : -1));
+					LogMessage (pLogLevel, _T("%s     Visible       [%d] WndVisible [%d]"), lPrefix, lVisible, (IsWindow () ? ((GetStyle () & WS_VISIBLE) != 0) : -1));
 				}
 				if	(SUCCEEDED (mVideoWindow->GetWindowPosition (&lPos.x, &lPos.y, &lSize.cx, &lSize.cy)))
 				{
-					if	(IsWindow (m_hWnd))
+					if	(IsWindow ())
 					{
 						ScreenToClient (&lPos);
 					}

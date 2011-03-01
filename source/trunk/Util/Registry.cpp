@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -28,52 +28,54 @@
 
 #pragma comment(lib, "shlwapi.lib")
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
+#endif
 
 //////////////////////////////////////////////////////////////////////
 
-CRegKey::CRegKey ()
+CRegKeyEx::CRegKeyEx ()
 :	mKey (NULL),
 	mReadOnly (false)
 {
 }
 
-CRegKey::CRegKey (const CRegKey & pKey)
+CRegKeyEx::CRegKeyEx (const CRegKeyEx & pKey)
 :	mKey (NULL),
 	mReadOnly (pKey.mReadOnly)
 {
 	Reopen (pKey, mReadOnly);
 }
 
-CRegKey::CRegKey (const CRegKey & pParent, LPCTSTR pName)
+CRegKeyEx::CRegKeyEx (const CRegKeyEx & pParent, LPCTSTR pName)
 :	mKey (NULL),
 	mReadOnly (pParent.mReadOnly)
 {
 	Open (pParent, pName, mReadOnly);
 }
 
-CRegKey::CRegKey (HKEY pParent, LPCTSTR pName, bool pReadOnly, bool pCreate, bool pAuthorize)
+CRegKeyEx::CRegKeyEx (HKEY pParent, LPCTSTR pName, bool pReadOnly, bool pCreate, bool pAuthorize)
 :	mKey (NULL),
 	mReadOnly (pReadOnly)
 {
 	Open (pParent, pName, mReadOnly, pCreate, pAuthorize);
 }
 
-CRegKey::~CRegKey ()
+CRegKeyEx::~CRegKeyEx ()
 {
 	Close ();
 }
 
 //////////////////////////////////////////////////////////////////////
 
-long CRegKey::Open (HKEY pParent, LPCTSTR pName, bool pReadOnly, bool pCreate, bool pAuthorize)
+long CRegKeyEx::Open (HKEY pParent, LPCTSTR pName, bool pReadOnly, bool pCreate, bool pAuthorize)
 {
-	long	lRet = ERROR_INVALID_PARAMETER;
-	CRegKey	lOldKey;
+	long		lRet = ERROR_INVALID_PARAMETER;
+	CRegKeyEx	lOldKey;
 
 	lOldKey.mKey = mKey;
 	lOldKey.mName = mName;
@@ -139,11 +141,11 @@ long CRegKey::Open (HKEY pParent, LPCTSTR pName, bool pReadOnly, bool pCreate, b
 	return lRet;
 }
 
-long CRegKey::Reopen (const CRegKey & pKey, bool pReadOnly, bool pDeleteOnly)
+long CRegKeyEx::Reopen (const CRegKeyEx & pKey, bool pReadOnly, bool pDeleteOnly)
 {
-	long	lRet = ERROR_INVALID_PARAMETER;
-	HKEY	lKey = pKey;
-	CRegKey	lOldKey;
+	long		lRet = ERROR_INVALID_PARAMETER;
+	HKEY		lKey = pKey;
+	CRegKeyEx	lOldKey;
 
 	lOldKey.mKey = mKey;
 	lOldKey.mName = mName;
@@ -204,7 +206,7 @@ long CRegKey::Reopen (const CRegKey & pKey, bool pReadOnly, bool pDeleteOnly)
 	return lRet;
 }
 
-long CRegKey::Close ()
+long CRegKeyEx::Close ()
 {
 	if	(mKey)
 	{
@@ -220,7 +222,7 @@ long CRegKey::Close ()
 
 //////////////////////////////////////////////////////////////////////
 
-bool CRegKey::IsEmpty () const
+bool CRegKeyEx::IsEmpty () const
 {
 	DWORD	lKeyCount = 0;
 	DWORD	lValueCount = 0;
@@ -239,7 +241,7 @@ bool CRegKey::IsEmpty () const
 	return false;
 }
 
-long CRegKey::Delete ()
+long CRegKeyEx::Delete ()
 {
 	long	lRet = ERROR_INVALID_HANDLE;
 
@@ -268,7 +270,7 @@ long CRegKey::Delete ()
 			else
 			{
 				lRet = (lError1 == ERROR_SUCCESS) ? lError2 : lError1;
-				LogWinErr (LogNormal, lRet, _T("DeleteKey"));
+				LogWinErr (LogNormal|LogTime, lRet, _T("DeleteKey"));
 			}
 		}
 	}
@@ -276,7 +278,7 @@ long CRegKey::Delete ()
 	return	lRet;
 }
 
-long CRegKey::Empty ()
+long CRegKeyEx::Empty ()
 {
 	long	lRet = ERROR_INVALID_HANDLE;
 
@@ -293,7 +295,7 @@ long CRegKey::Empty ()
 		{
 			if	((lRet = SHDeleteKey (mKey, NULL)) != ERROR_SUCCESS)
 			{
-				LogWinErr (LogNormal, lRet, _T("SHDeleteKey"));
+				LogWinErr (LogNormal|LogTime, lRet, _T("SHDeleteKey"));
 			}
 		}
 	}
@@ -303,7 +305,7 @@ long CRegKey::Empty ()
 
 //////////////////////////////////////////////////////////////////////
 
-HKEY CRegKey::Attach (HKEY pKey)
+HKEY CRegKeyEx::Attach (HKEY pKey)
 {
 	Close ();
 	mKey = pKey;
@@ -311,7 +313,7 @@ HKEY CRegKey::Attach (HKEY pKey)
 	return mKey;
 }
 
-HKEY CRegKey::Detach ()
+HKEY CRegKeyEx::Detach ()
 {
 	HKEY lRet = mKey;
 	mKey = NULL;
@@ -321,7 +323,7 @@ HKEY CRegKey::Detach ()
 
 //////////////////////////////////////////////////////////////////////
 
-long CRegKey::KeyCount () const
+long CRegKeyEx::KeyCount () const
 {
 	DWORD	lKeyCount = 0;
 
@@ -335,16 +337,16 @@ long CRegKey::KeyCount () const
 	return 0;
 }
 
-CRegKey * CRegKey::operator [] (long pNdx)
+CRegKeyEx * CRegKeyEx::operator [] (long pNdx)
 {
-	tPtr <CRegKey>	lRet;
-	TCHAR			lSubKey [MAX_PATH+1];
-	DWORD			lSubKeySize;
+	tPtr <CRegKeyEx>	lRet;
+	TCHAR				lSubKey [MAX_PATH+1];
+	DWORD				lSubKeySize;
 
 	if	(
 			(mKey)
 		&&	(RegEnumKeyEx (mKey, pNdx, lSubKey, &(lSubKeySize = sizeof (lSubKey) / sizeof (TCHAR)), 0, NULL, NULL, NULL) == ERROR_SUCCESS)
-		&&	(lRet = new CRegKey ())
+		&&	(lRet = new CRegKeyEx ())
 		&&	(lRet->Open (mKey, lSubKey, mReadOnly) == ERROR_SUCCESS)
 		)
 	{
@@ -353,7 +355,7 @@ CRegKey * CRegKey::operator [] (long pNdx)
 	return NULL;
 }
 
-long CRegKey::ValueCount () const
+long CRegKeyEx::ValueCount () const
 {
 	DWORD	lValueCount = 0;
 
@@ -367,7 +369,7 @@ long CRegKey::ValueCount () const
 	return 0;
 }
 
-CRegValue * CRegKey::operator () (long pNdx)
+CRegValue * CRegKeyEx::operator () (long pNdx)
 {
 	TCHAR	lValueName [MAX_PATH+1];
 	DWORD	lValueNameSize;
@@ -418,7 +420,7 @@ CRegValue * CRegKey::operator () (long pNdx)
 	return NULL;
 }
 
-CRegString CRegKey::Value (bool pExpanded) const
+CRegString CRegKeyEx::Value (bool pExpanded) const
 {
 	if	(pExpanded)
 	{
@@ -432,7 +434,7 @@ CRegString CRegKey::Value (bool pExpanded) const
 
 //////////////////////////////////////////////////////////////////////
 
-void CRegKey::LoadStrings (CStringArray & pStrings)
+void CRegKeyEx::LoadStrings (CStringArray & pStrings)
 {
 	if	(IsValid ())
 	{
@@ -445,7 +447,11 @@ void CRegKey::LoadStrings (CStringArray & pStrings)
 		{
 			if	(
 					(lValue = operator () (lValueNdx))
+#ifdef	__AFX_H__
 				&&	(lString = DYNAMIC_DOWNCAST (CRegString, lValue.Ptr ()))
+#else
+				&&	(lString = dynamic_cast <CRegString *> (lValue.Ptr ()))
+#endif
 				&&	(!lString->Value ().IsEmpty ())
 				)
 			{
@@ -455,7 +461,7 @@ void CRegKey::LoadStrings (CStringArray & pStrings)
 	}
 }
 
-void CRegKey::SaveStrings (const CStringArray & pStrings)
+void CRegKeyEx::SaveStrings (const CStringArray & pStrings)
 {
 	if	(
 			(!mReadOnly)
@@ -470,13 +476,13 @@ void CRegKey::SaveStrings (const CStringArray & pStrings)
 
 		while	(RegEnumValue (mKey, 0, lValueName, &(lValueNameSize = sizeof (lValueName) / sizeof (TCHAR)), 0, &lValueType, NULL, &(lValueSize = 0)) == ERROR_SUCCESS)
 		{
-			if	(LogWinErr (LogNormal, RegDeleteValue (mKey, lValueName)) != ERROR_SUCCESS)
+			if	(LogWinErr (LogNormal|LogTime, RegDeleteValue (mKey, lValueName)) != ERROR_SUCCESS)
 			{
 				break;
 			}
 		}
 
-		for	(lNdx = 0; lNdx <= pStrings.GetUpperBound (); lNdx++)
+		for	(lNdx = 0; lNdx < (int)pStrings.GetCount(); lNdx++)
 		{
 			_stprintf (lValueName, _T("%d"), lNdx);
 			CRegString (mKey, lValueName, true, pStrings [lNdx]).Update ();
@@ -486,13 +492,13 @@ void CRegKey::SaveStrings (const CStringArray & pStrings)
 
 //////////////////////////////////////////////////////////////////////
 
-void CRegKey::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
+void CRegKeyEx::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 {
 	if	(LogIsActive (pLogLevel))
 	{
 		CString				lIndent (_T(' '), pIndent);
 		int					lNdx;
-		tPtr <CRegKey>		lSubKey;
+		tPtr <CRegKeyEx>	lSubKey;
 		tPtr <CRegValue>	lValue;
 
 		if	(!pTitle)
@@ -516,7 +522,9 @@ void CRegKey::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__AFX_H__
 IMPLEMENT_DYNAMIC (CRegValue, CObject)
+#endif
 
 CRegValue::CRegValue (HKEY pKey, LPCTSTR pName, DWORD pValueType)
 :	mKey (NULL),
@@ -600,7 +608,9 @@ void CRegValue::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__AFX_H__
 IMPLEMENT_DYNAMIC (CRegString, CRegValue)
+#endif
 
 CRegString::CRegString (HKEY pKey, LPCTSTR pName, bool pForCreate, LPCTSTR pValue)
 :	CRegValue (NULL, pName),
@@ -746,7 +756,9 @@ void CRegString::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__AFX_H__
 IMPLEMENT_DYNAMIC (CRegStrings, CRegValue)
+#endif
 
 CRegStrings::CRegStrings (HKEY pKey, LPCTSTR pName, bool pForCreate, const CStringArray * pValue)
 :	CRegValue (NULL, pName)
@@ -827,7 +839,7 @@ long CRegStrings::Update (const CStringArray * pValue)
 			mValue.Copy (*pValue);
 		}
 
-		if	(mValue.GetSize () > 0)
+		if	(mValue.GetCount() > 0)
 		{
 			lValue = JoinStringArray (mValue, NULL, false);
 		}
@@ -864,7 +876,9 @@ void CRegStrings::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__AFX_H__
 IMPLEMENT_DYNAMIC (CRegDWord, CRegValue)
+#endif
 
 CRegDWord::CRegDWord (HKEY pKey, LPCTSTR pName, bool pForCreate, DWORD pValue)
 :	CRegValue (NULL, pName),
@@ -987,7 +1001,9 @@ void CRegDWord::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__AFX_H__
 IMPLEMENT_DYNAMIC (CRegQWord, CRegValue)
+#endif
 
 CRegQWord::CRegQWord (HKEY pKey, LPCTSTR pName, bool pForCreate, ULONGLONG pValue)
 :	CRegValue (NULL, pName),
@@ -1110,7 +1126,9 @@ void CRegQWord::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__AFX_H__
 IMPLEMENT_DYNAMIC (CRegBinary, CRegValue)
+#endif
 
 CRegBinary::CRegBinary (HKEY pKey, LPCTSTR pName, bool pForCreate, const CByteArray * pValue)
 :	CRegValue (NULL, pName)
@@ -1127,8 +1145,12 @@ CRegBinary::CRegBinary (HKEY pKey, LPCTSTR pName, bool pForCreate, const CByteAr
 
 		if	(lValueSize > 0)
 		{
+#ifdef	__AFXCOLL_H__
 			mValue.SetSize (lValueSize);
-			if	(RegQueryValueEx (pKey, pName, NULL, &mValueType, mValue.GetData (), &lValueSize) != ERROR_SUCCESS)
+#else
+			mValue.SetCount (lValueSize);
+#endif
+			if	(RegQueryValueEx (pKey, pName, NULL, &mValueType, mValue.GetData(), &lValueSize) != ERROR_SUCCESS)
 			{
 				mKey = NULL;
 				mValue.RemoveAll ();
@@ -1167,8 +1189,12 @@ CRegBinary::CRegBinary (HKEY pKey, long pIndex)
 
 		if	(lValueSize > 0)
 		{
+#ifdef	__AFXCOLL_H__
 			mValue.SetSize (lValueSize);
-			if	(RegQueryValueEx (pKey, (LPCTSTR) mName, NULL, &mValueType, mValue.GetData (), &lValueSize) != ERROR_SUCCESS)
+#else
+			mValue.SetCount (lValueSize);
+#endif
+			if	(RegQueryValueEx (pKey, (LPCTSTR) mName, NULL, &mValueType, mValue.GetData(), &lValueSize) != ERROR_SUCCESS)
 			{
 				mKey = NULL;
 				mValue.RemoveAll ();
@@ -1203,7 +1229,7 @@ long CRegBinary::Update (const CByteArray * pValue)
 			mValue.Copy (*pValue);
 		}
 
-		return RegSetValueEx (mKey, mName.IsEmpty() ? NULL : (LPCTSTR) mName, 0, mValueType, (DWORD)mValue.GetSize() ? mValue.GetData () : NULL, (DWORD)mValue.GetSize ());
+		return RegSetValueEx (mKey, mName.IsEmpty() ? NULL : (LPCTSTR) mName, 0, mValueType, (DWORD)mValue.GetCount() ? mValue.GetData() : NULL, (DWORD)mValue.GetCount());
 	}
 	else
 	{
@@ -1224,8 +1250,8 @@ void CRegBinary::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 			pTitle = _T("REG_BINARY");
 		}
 		LogMessage (pLogLevel, _T("%s%s \"%s\""), lIndent, pTitle, mName);
-		LogDump (pLogLevel, mValue.GetData (), min (mValue.GetSize (), 1024), lIndent+_T("  "), true);
-		if	(mValue.GetSize () > 1024)
+		LogDump (pLogLevel, mValue.GetData(), min (mValue.GetCount(), 1024), lIndent+_T("  "), true);
+		if	(mValue.GetCount() > 1024)
 		{
 			LogMessage (pLogLevel, _T("%s..."), lIndent);
 		}
@@ -1234,6 +1260,8 @@ void CRegBinary::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 
 //////////////////////////////////////////////////////////////////////
 #pragma page()
+//////////////////////////////////////////////////////////////////////
+#ifdef	__AFX_H__
 //////////////////////////////////////////////////////////////////////
 
 void SetAppProfileName (LPCTSTR pSubKeyName, bool pDeleteSubKey)
@@ -1268,7 +1296,7 @@ void SetAppProfileName (LPCTSTR pSubKeyName, bool pDeleteSubKey)
 				&&	(pDeleteSubKey)
 				)
 			{
-				CRegKey	lKey;
+				CRegKeyEx	lKey;
 
 				if	(
 						(lKey.Attach (lApp->GetAppRegistryKey ()))
@@ -1282,3 +1310,7 @@ void SetAppProfileName (LPCTSTR pSubKeyName, bool pDeleteSubKey)
 	}
 	catch AnyExceptionSilent
 }
+
+//////////////////////////////////////////////////////////////////////
+#endif	// __AFX_H__
+//////////////////////////////////////////////////////////////////////

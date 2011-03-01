@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -141,7 +141,7 @@ CSize CTextWrap::MeasureText (LPCTSTR pText, HDC pDC, HFONT pFont, bool * pWordB
 				)
 		{
 			lTextLine->lpstr = lText;
-			lTextLine->x = GetLineIndent (lText, lTextLen, pDC, (int)mTextLines.GetSize ());
+			lTextLine->x = GetLineIndent (lText, lTextLen, pDC, (int)mTextLines.GetCount ());
 			lBounds.left = mBounds.left + lTextLine->x;
 
 			if	(::GetTextExtentExPoint (pDC, lText, lTextLen, lBounds.Width (), &(lFitCount = 0), NULL, &lFitSize))
@@ -280,7 +280,7 @@ CSize CTextWrap::MeasureText (LPCTSTR pText, HDC pDC, HFONT pFont, bool * pWordB
 				mSize.cy += lFitSize.cy;
 
 				if	(
-						(mTextLines.GetSize () > 0)
+						(mTextLines.GetCount () > 0)
 					&&	(mUseExternalLeading)
 					)
 				{
@@ -297,14 +297,14 @@ CSize CTextWrap::MeasureText (LPCTSTR pText, HDC pDC, HFONT pFont, bool * pWordB
 			}
 			else
 			{
-				LogWinErr (LogIfActive, GetLastError (), _T("GetTextExtentExPoint"));
+				LogWinErr (LogIfActive|LogTime, GetLastError (), _T("GetTextExtentExPoint"));
 				mTextLines.DeleteAll ();
 				break;
 			}
 		}
 
 		if	(
-				(mTextLines.GetSize () > 1)
+				(mTextLines.GetCount () > 1)
 			&&	(!mUseInternalLeading)
 			)
 		{

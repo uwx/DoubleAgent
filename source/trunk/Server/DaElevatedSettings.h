@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -18,22 +18,20 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DAELEVATEDSETTINGS_H_INCLUDED_
-#define DAELEVATEDSETTINGS_H_INCLUDED_
 #pragma once
-
+#include "DaServerApp.h"
 #include "RegistrySearch.h"
-#include "OleObjectFactoryExEx.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class __declspec(uuid("{1147E566-A208-11DE-ABF2-002421116FB2}")) CDaElevatedSettings : public CCmdTarget, protected CRegistrySearch
+class ATL_NO_VTABLE __declspec(uuid("{1147E566-A208-11DE-ABF2-002421116FB2}")) CDaElevatedSettings :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public CComCoClass<DaServer, &__uuidof(CDaElevatedSettings)>,
+	public IOleCommandTarget,
+	protected CRegistrySearch
 {
-	DECLARE_DYNCREATE(CDaElevatedSettings)
-	DECLARE_OLECREATE_EX(CDaElevatedSettings)
-protected:
-	CDaElevatedSettings ();
 public:
+	CDaElevatedSettings ();
 	virtual ~CDaElevatedSettings ();
 
 // Attributes
@@ -41,35 +39,39 @@ public:
 
 // Operations
 public:
+	static HRESULT WINAPI UpdateRegistryOverride (BOOL bRegister);
+
 	HRESULT SetTreatAs (REFGUID pClassId, REFGUID pTreatAs);
 	HRESULT SetTreatAs (HKEY pClassesRoot, REFGUID pClassId, REFGUID pTreatAs);
 
 // Overrides
-	//{{AFX_VIRTUAL(CDaElevatedSettings)
-	public:
-	virtual void OnFinalRelease();
-	//}}AFX_VIRTUAL
 
-// Implementation
+// Declarations
 protected:
-	//{{AFX_MSG(CDaElevatedSettings)
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+	DECLARE_REGISTRY_RESOURCEID(IDR_DAEMULATION)
+	DECLARE_NOT_AGGREGATABLE(CDaElevatedSettings)
+	DECLARE_GET_CONTROLLING_UNKNOWN()
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_INTERFACE_PART(OleCommandTarget, IOleCommandTarget)
-        HRESULT STDMETHODCALLTYPE QueryStatus (const GUID *pguidCmdGroup, ULONG cCmds, OLECMD prgCmds[], OLECMDTEXT *pCmdText);
-        HRESULT STDMETHODCALLTYPE Exec (const GUID *pguidCmdGroup, DWORD nCmdID, DWORD nCmdexecopt, VARIANT *pvaIn, VARIANT *pvaOut);
-	END_INTERFACE_PART(OleCommandTarget)
+	BEGIN_COM_MAP(CDaElevatedSettings)
+		COM_INTERFACE_ENTRY(IOleCommandTarget)
+	END_COM_MAP()
 
-	DECLARE_INTERFACE_MAP()
+	BEGIN_CATEGORY_MAP(CDaElevatedSettings)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
+	END_CATEGORY_MAP()
 
+// Interfaces
 public:
-	static COleObjectFactoryEx & GetClassFactory() {return factory;}
+	// IOleCommandTarget
+    HRESULT STDMETHODCALLTYPE QueryStatus (const GUID *pguidCmdGroup, ULONG cCmds, OLECMD prgCmds[], OLECMDTEXT *pCmdText);
+    HRESULT STDMETHODCALLTYPE Exec (const GUID *pguidCmdGroup, DWORD nCmdID, DWORD nCmdexecopt, VARIANT *pvaIn, VARIANT *pvaOut);
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+#define	UpdateRegistry	UpdateRegistryOverride
+OBJECT_ENTRY_AUTO(__uuidof(CDaElevatedSettings), CDaElevatedSettings)
+#undef	UpdateRegistry
 
-#endif // DAELEVATEDSETTINGS_H_INCLUDED_
+/////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,10 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DAERROR_H_INCLUDED_
-#define DAERROR_H_INCLUDED_
 #pragma once
-
 #include <AgtErr.h>
 #include "ErrorInfo.h"
 
@@ -32,7 +29,7 @@ class CServerError : public CErrorInfo
 public:
 	CServerError (HRESULT pResult, const GUID & pGuid = GUID_NULL);
 
-	friend CString DaErrorDescription (HRESULT pResult);
+	friend CAtlString DaErrorDescription (HRESULT pResult);
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -59,7 +56,7 @@ class CControlError : public CErrorInfo
 public:
 	CControlError (HRESULT pResult, const GUID & pGuid = GUID_NULL);
 
-	friend CString DaErrorDescription (HRESULT pResult);
+	friend CAtlString DaErrorDescription (HRESULT pResult);
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -79,23 +76,3 @@ inline HRESULT PutControlError (HRESULT pResult, const GUID & pGuid = GUID_NULL)
 }
 
 //////////////////////////////////////////////////////////////////////
-#pragma page()
-//////////////////////////////////////////////////////////////////////
-
-inline COleDispatchException * DaDispatchException (HRESULT pResult)
-{
-	COleDispatchException * lException;
-	CString					lDescription = DaErrorDescription (pResult);
-
-	if	(lDescription.IsEmpty ())
-	{
-		lDescription = CErrorInfo::GetSysDescription (pResult);
-	}
-	lException = new COleDispatchException (DaErrorDescription (pResult), 0, 0);
-	lException->m_scError = (SCODE)pResult;
-	return lException;
-}
-
-//////////////////////////////////////////////////////////////////////
-
-#endif // DAERROR_H_INCLUDED_

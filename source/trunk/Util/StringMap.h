@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -40,7 +40,7 @@ public:
 
 // Attributes
 	INT_PTR GetSize () const;
-	INT_PTR GetUpperBound () const;
+	INT_PTR GetUpperBound() const;
 	bool IsEmpty () const;
 	CStringArray const & OrderArray () const;
 
@@ -127,7 +127,7 @@ AFX_INLINE INT_PTR CStringMap <VALUE, ARG_VALUE>::GetSize () const
 }
 
 template <typename VALUE, typename ARG_VALUE>
-AFX_INLINE INT_PTR CStringMap <VALUE, ARG_VALUE>::GetUpperBound () const
+AFX_INLINE INT_PTR CStringMap <VALUE, ARG_VALUE>::GetUpperBound() const
 {
 	return m_nSize-1;
 }
@@ -249,7 +249,7 @@ AFX_INLINE INT_PTR CStringMap <VALUE, ARG_VALUE>::RemoveValue (ARG_VALUE pValue)
 	ASSERT_VALID (this);
 	INT_PTR	lRet = 0;
 	INT_PTR	lNdx;
-	for	(lNdx = CArray <VALUE, ARG_VALUE>::GetUpperBound (); lNdx >= 0; lNdx--)
+	for	(lNdx = CArray <VALUE, ARG_VALUE>::GetUpperBound(); lNdx >= 0; lNdx--)
 	{
 		if	(CArray <VALUE, ARG_VALUE>::ElementAt (lNdx) == pValue)
 		{
@@ -273,7 +273,7 @@ INT_PTR CStringMap <VALUE, ARG_VALUE>::FindValue (ARG_VALUE pValue) const
 {
 	ASSERT_VALID (this);
 	INT_PTR	lNdx;
-	for	(lNdx = CArray <VALUE, ARG_VALUE>::GetUpperBound (); lNdx >= 0; lNdx--)
+	for	(lNdx = CArray <VALUE, ARG_VALUE>::GetUpperBound(); lNdx >= 0; lNdx--)
 	{
 		if	(const_cast <CStringMap <VALUE, ARG_VALUE> *> (this)->CArray <VALUE, ARG_VALUE>::ElementAt (lNdx) == pValue)
 		{
@@ -350,7 +350,7 @@ const VALUE * CStringMap <VALUE, ARG_VALUE>::operator () (LPCTSTR pKey) const
 	INT_PTR	lNdx = SearchKey (pKey);
 	if	(lNdx >= 0)
 	{
-		return GetData () + lNdx;
+		return GetData() + lNdx;
 	}
 	return NULL;
 }
@@ -362,7 +362,7 @@ VALUE * CStringMap <VALUE, ARG_VALUE>::operator () (LPCTSTR pKey)
 	INT_PTR	lNdx = SearchKey (pKey);
 	if	(lNdx >= 0)
 	{
-		return GetData () + lNdx;
+		return GetData() + lNdx;
 	}
 	return NULL;
 }
@@ -376,7 +376,7 @@ const VALUE * CStringMap <VALUE, ARG_VALUE>::operator () (INT_PTR pIndex) const
 		&&	(pIndex < m_nSize)
 		)
 	{
-		return GetData () + pIndex;
+		return GetData() + pIndex;
 	}
 	return NULL;
 }
@@ -389,7 +389,7 @@ VALUE * CStringMap <VALUE, ARG_VALUE>::operator () (INT_PTR pIndex)
 		&&	(pIndex < m_nSize)
 		)
 	{
-		return GetData () + pIndex;
+		return GetData() + pIndex;
 	}
 	return NULL;
 }
@@ -404,11 +404,11 @@ INT_PTR CStringMap <VALUE, ARG_VALUE>::SearchKey (LPCTSTR pKey) const
 
 	if	(
 			(mOrder.GetSize () > 0)
-		&&	(std::binary_search (mOrder.GetData (), mOrder.GetData ()+mOrder.GetSize (), pKey, _CSortPredicate (&lFound, mCaseInsensitive)))
+		&&	(std::binary_search (mOrder.GetData(), mOrder.GetData()+mOrder.GetSize (), pKey, _CSortPredicate (&lFound, mCaseInsensitive)))
 		&&	(lFound)
 		)
 	{
-		lRet = lFound - mOrder.GetData ();
+		lRet = lFound - mOrder.GetData();
 	}
 	return lRet;
 }
@@ -419,8 +419,8 @@ INT_PTR CStringMap <VALUE, ARG_VALUE>::AddKey (LPCTSTR pKey)
 	if	(mOrder.GetSize () > 0)
 	{
 		CString		lKey (pKey);
-		CString *	lInsert = std::upper_bound (mOrder.GetData (), mOrder.GetData ()+mOrder.GetSize (), lKey, _CSortPredicate (NULL, mCaseInsensitive));
-		INT_PTR		lRet = lInsert - mOrder.GetData ();
+		CString *	lInsert = std::upper_bound (mOrder.GetData(), mOrder.GetData()+mOrder.GetSize (), lKey, _CSortPredicate (NULL, mCaseInsensitive));
+		INT_PTR		lRet = lInsert - mOrder.GetData();
 		mOrder.InsertAt (lRet, lKey);
 		return lRet;
 	}

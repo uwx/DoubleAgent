@@ -1,7 +1,4 @@
-#ifndef SABOTAGETEST_H_INCLUDED_
-#define SABOTAGETEST_H_INCLUDED_
 #pragma once
-
 #include "SabotageTestRes.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -22,11 +19,8 @@ public:
 	//{{AFX_MSG(CSabotageTestApp)
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+	INT_PTR RunDlg (class CSabotageTestDlg & pDlg);
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // SABOTAGETEST_H_INCLUDED_

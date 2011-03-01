@@ -7,10 +7,14 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories="..\..\Include;..\..\Util;..\..\Core;..\..\Server;..\..\Resources;$(NOINHERIT)"
+		AdditionalIncludeDirectories="&quot;$(SolutionDir)\Include&quot;;&quot;$(SolutionDir)\Util&quot;;&quot;$(SolutionDir)\Util\Atl&quot;;&quot;$(SolutionDir)\Util\Mfc&quot;;&quot;$(SolutionDir)\Core&quot;;&quot;$(SolutionDir)\Server&quot;;&quot;$(SolutionDir)\Resources&quot;;$(NOINHERIT)"
 	/>
 	<Tool
 		Name="VCLinkerTool"
 		DelayLoadDLLs="$(StopEvaluating)"
+		ProgramDatabaseFile="$(TargetDir)$(TargetName).pdb"
+		StripPrivateSymbols=""
+		GenerateMapFile="false"
+		MapExports="false"
 	/>
 </VisualStudioPropertySheet>

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -163,8 +163,8 @@ public:
 
 inline void COleObjectFactoryExEx::CreateDefCategory (GUID & pCatId)
 {
-	::CRegKey	lRootKey (HKEY_CLASSES_ROOT, _T("Component Categories"));
-	::CRegKey	lCatKey;
+	::CRegKeyEx	lRootKey (HKEY_CLASSES_ROOT, _T("Component Categories"));
+	::CRegKeyEx	lCatKey;
 	LPCTSTR		lCatGuid = _T(_DEF_CATEGORY_GUID);
 
 	pCatId = CGuidStr::Parse (lCatGuid);
@@ -183,7 +183,7 @@ inline void COleObjectFactoryExEx::CreateDefCategory (GUID & pCatId)
 #define	DECLARE_ISALLUSERS(c) \
 	static bool IsInstalledAllUsers () \
 	{ \
-		return CRegKey (HKEY_LOCAL_MACHINE, CString (_T("Software\\Classes\\CLSID\\")) + (CString) CGuidStr (__uuidof (c)), true).IsValid (); \
+		return CRegKeyEx (HKEY_LOCAL_MACHINE, CString (_T("Software\\Classes\\CLSID\\")) + (CString) CGuidStr (__uuidof (c)), true).IsValid (); \
 	}
 #endif
 

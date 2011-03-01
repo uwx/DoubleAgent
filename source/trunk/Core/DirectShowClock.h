@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,10 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSHOWCLOCK_H_INCLUDED_
-#define DIRECTSHOWCLOCK_H_INCLUDED_
 #pragma once
-
 #include <strmif.h>
 #include "InstanceGate.h"
 
@@ -70,21 +67,16 @@ private:
 	static void CALLBACK ClockCallback (PVOID lpParameter, BOOLEAN TimerOrWaitFired);
 
 protected:
-	IReferenceClockPtr			mClock;
-	REFERENCE_TIME				mTimeOffset;
+	IReferenceClockPtr				mClock;
+	REFERENCE_TIME					mTimeOffset;
 private:
-	mutable CCriticalSection	mClockCS;
-	CSemaphore					mClockAdviseSemaphore;
-	CEvent						mClockAdviseEvent;
-	DWORD_PTR					mClockSemaphoreCookie;
-	DWORD_PTR					mClockEventCookie;
-	CRegisteredWaitHandle		mClockSemaphoreWaitHandle;
-	CRegisteredWaitHandle		mClockEventWaitHandle;
+	mutable CComAutoCriticalSection	mClockCS;
+	CAutoSemaphore					mClockAdviseSemaphore;
+	CAutoEvent						mClockAdviseEvent;
+	DWORD_PTR						mClockSemaphoreCookie;
+	DWORD_PTR						mClockEventCookie;
+	CRegisteredWaitHandle			mClockSemaphoreWaitHandle;
+	CRegisteredWaitHandle			mClockEventWaitHandle;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSHOWCLOCK_H_INCLUDED_

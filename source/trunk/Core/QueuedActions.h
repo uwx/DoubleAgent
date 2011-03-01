@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,15 +18,12 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef QUEUEDACTIONS_H_INCLUDED_
-#define QUEUEDACTIONS_H_INCLUDED_
 #pragma once
-
 #include "QueuedAction.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CQueuedActions : public COwnPtrList <CQueuedAction>
+class CQueuedActions : public CAtlOwnPtrList <CQueuedAction>
 {
 public:
 	CQueuedActions ();
@@ -34,7 +31,14 @@ public:
 
 // Attributes
 public:
+	UINT_PTR	mTimer;
+	DWORD		mTime;
+	const DWORD	mTimeMin;
+	const DWORD	mTimeMax;
+	const DWORD	mTimeDefault;
+
 	UINT HasActions (long pCharID = -1) const;
+	void LogActions (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 
 // Operations
 public:
@@ -43,15 +47,8 @@ public:
 	CQueuedAction * GetNextAction (QueueAction pAction) const;
 	CQueuedAction * FindNextAction (long pCharID = -1) const;
 
-	void PushQueue (COwnPtrList <CQueuedAction> & pQueue);
-	void PopQueue (COwnPtrList <CQueuedAction> & pQueue);
-
-// Overrides
-	//{{AFX_VIRTUAL(CQueuedActions)
-	//}}AFX_VIRTUAL
-
+	void PushQueue (CAtlOwnPtrList <CQueuedAction> & pQueue);
+	void PopQueue (CAtlOwnPtrList <CQueuedAction> & pQueue);
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-#endif // QUEUEDACTIONS_H_INCLUDED_

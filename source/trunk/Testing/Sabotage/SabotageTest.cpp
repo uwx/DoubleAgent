@@ -1,7 +1,8 @@
 #include "StdAfx.h"
+#include "DaGuid.h"
+#include "DaVersion.h"
 #include "SabotageTest.h"
 #include "SabotageTestDlg.h"
-#include "DaCore.h"
 #include "WerOpt.h"
 
 #ifdef _DEBUG
@@ -15,7 +16,10 @@ static char THIS_FILE[] = __FILE__;
 #define	_LOG_ROOT_PATH			_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
 #define	_LOG_SECTION_NAME		_T("SabotageTest")
 #define _LOG_DEF_LOGNAME		_T("SabotageTest.log")
+#define	_LOG_PREFIX				_T("Sabot   ")
+#include "LogAccess.inl"
 #include "Log.inl"
+#include "LogCrash.inl"
 /////////////////////////////////////////////////////////////////////////////
 
 BEGIN_MESSAGE_MAP(CSabotageTestApp, CWinApp)
@@ -30,19 +34,34 @@ CSabotageTestApp gApp;
 CSabotageTestApp::CSabotageTestApp()
 :	CWinApp (_LOG_SECTION_NAME)
 {
+	LogCrash_Initialize ();
 	SetRegistryKeyEx (_T("Double Agent"), _LOG_SECTION_NAME);
-	LogStart (true);
-	CDaCoreApp::InitLogging (gLogFileName, gLogLevel);
+	LogStart (false);
 }
 
 CSabotageTestApp::~CSabotageTestApp()
 {
 	LogStop (LogIfActive);
+	LogCrash_Terminate ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
+
+INT_PTR CSabotageTestApp::RunDlg (CSabotageTestDlg & pDlg)
+{
+	INT_PTR	lResult = IDCANCEL;
+
+	__try
+	{
+		lResult = pDlg.DoModal();
+	}
+	__except (LogCrash (GetExceptionCode(), GetExceptionInformation()))
+	{}
+
+	return lResult;
+}
 
 BOOL CSabotageTestApp::InitInstance()
 {
@@ -50,11 +69,9 @@ BOOL CSabotageTestApp::InitInstance()
 	OleInitialize (NULL);
 	WerOptOut (false);
 
-	CSabotageTestDlg	lDlg;
-	INT_PTR				lResult;
-
+	CSabotageTestDlg lDlg;
 	m_pMainWnd = &lDlg;
-	lResult = lDlg.DoModal();
+	RunDlg (lDlg);
 	m_pMainWnd = NULL;
 
 	OleUninitialize ();

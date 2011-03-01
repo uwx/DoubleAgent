@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -18,55 +18,62 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DACHARACTERPROPS_H_INCLUDED_
-#define DACHARACTERPROPS_H_INCLUDED_
 #pragma once
-
-#include "OleObjectFactoryExEx.h"
+#include "DaGuid.h"
+#include "DaShellRes.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class __declspec(uuid("{1147E565-A208-11DE-ABF2-002421116FB2}")) CDaCharacterProps : public CCmdTarget
+class ATL_NO_VTABLE __declspec(uuid("{1147E565-A208-11DE-ABF2-002421116FB2}")) CDaCharacterProps :
+	public CComObjectRootEx<CComSingleThreadModel>,
+	public IObjectWithSiteImpl<CDaCharacterProps>,
+	public IShellExtInit,
+	public IShellPropSheetExt,
+	public CComCoClass<CDaCharacterProps, &__uuidof(CDaCharacterProps)>
 {
-	DECLARE_DYNCREATE(CDaCharacterProps)
-	DECLARE_OLECREATE_EX(CDaCharacterProps)
 protected:
 	CDaCharacterProps ();
 public:
 	virtual ~CDaCharacterProps ();
+	static CDaCharacterProps * CreateInstance ();
 
 // Attributes
 public:
 
 // Operations
 public:
+	static HRESULT WINAPI UpdateRegistryOverride (BOOL bRegister);
+	void FinalRelease();
 
-// Overrides
-	//{{AFX_VIRTUAL(CDaCharacterProps)
-	public:
-	virtual void OnFinalRelease();
-	protected:
-	virtual LPUNKNOWN GetInterfaceHook(const void* iid);
-	//}}AFX_VIRTUAL
+// Declarations
+public:
+	DECLARE_REGISTRY_RESOURCEID(IDR_DACHARACTERPROPS)
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
+
+	BEGIN_COM_MAP(CDaCharacterProps)
+		COM_INTERFACE_ENTRY(IShellExtInit)
+		COM_INTERFACE_ENTRY(IShellPropSheetExt)
+		COM_INTERFACE_ENTRY(IObjectWithSite)
+	END_COM_MAP()
+
+	BEGIN_CATEGORY_MAP(CDaCharacterProps)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
+	END_CATEGORY_MAP()
+
+// Interfaces
+public:
+	// IObjectWithSite
+    STDMETHOD (SetSite) (IUnknown *pUnkSite);
+    STDMETHOD (GetSite) (REFIID riid, void **ppvSite);
+
+	// IShellExtInit
+    STDMETHOD (Initialize) (LPCITEMIDLIST pFolderId, IDataObject * pDataObject, HKEY pProgIdKey);
+
+	// IShellPropSheetExt
+    STDMETHOD (AddPages) (LPFNSVADDPROPSHEETPAGE pAddPageFunc, LPARAM pLparam);
+    STDMETHOD (ReplacePage) (EXPPS pPageID, LPFNSVADDPROPSHEETPAGE pReplaceProc, LPARAM pLparam);
 
 // Implementation
-protected:
-	BEGIN_INTERFACE_PART (ObjectWithSite, IObjectWithSite)
-        STDMETHOD (SetSite) (IUnknown *pUnkSite);
-        STDMETHOD (GetSite) (REFIID riid, void **ppvSite);
-	END_INTERFACE_PART (ObjectWithSite)
-
-	BEGIN_INTERFACE_PART (ShellExtInit, IShellExtInit)
-        STDMETHOD (Initialize) (LPCITEMIDLIST pFolderId, IDataObject * pDataObject, HKEY pProgIdKey);
-	END_INTERFACE_PART (ShellExtInit)
-
-	BEGIN_INTERFACE_PART (ShellPropSheetExt, IShellPropSheetExt)
-        STDMETHOD (AddPages) (LPFNSVADDPROPSHEETPAGE pAddPageFunc, LPARAM pLparam);
-        STDMETHOD (ReplacePage) (EXPPS pPageID, LPFNSVADDPROPSHEETPAGE pReplaceProc, LPARAM pLparam);
-	END_INTERFACE_PART (ShellPropSheetExt)
-
-	DECLARE_INTERFACE_MAP()
-
 protected:
 	IUnknownPtr				mExplorerInstance;
 	IUnknownPtr				mSite;
@@ -75,7 +82,8 @@ protected:
 
 /////////////////////////////////////////////////////////////////////////////
 
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+#define	UpdateRegistry	UpdateRegistryOverride
+OBJECT_ENTRY_AUTO(__uuidof(CDaCharacterProps), CDaCharacterProps)
+#undef	UpdateRegistry
 
-#endif // DACHARACTERPROPS_H_INCLUDED_
+/////////////////////////////////////////////////////////////////////////////

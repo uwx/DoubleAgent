@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Wed Apr 07 15:08:31 2010
+/* at Wed Jan 26 02:39:11 2011
  */
 /* Compiler settings for .\Core\DaCore.odl:
-    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -67,6 +67,18 @@ typedef struct DaPreview DaPreview;
 #define ___IAgentStreamInfo_FWD_DEFINED__
 typedef interface _IAgentStreamInfo _IAgentStreamInfo;
 #endif 	/* ___IAgentStreamInfo_FWD_DEFINED__ */
+
+
+#ifndef ___IAgentStreamSource_FWD_DEFINED__
+#define ___IAgentStreamSource_FWD_DEFINED__
+typedef interface _IAgentStreamSource _IAgentStreamSource;
+#endif 	/* ___IAgentStreamSource_FWD_DEFINED__ */
+
+
+#ifndef ___IAgentStreamRender_FWD_DEFINED__
+#define ___IAgentStreamRender_FWD_DEFINED__
+typedef interface _IAgentStreamRender _IAgentStreamRender;
+#endif 	/* ___IAgentStreamRender_FWD_DEFINED__ */
 
 
 /* header files for imported files */
@@ -406,6 +418,12 @@ EXTERN_C const IID IID__IAgentStreamInfo;
     _IAgentStreamInfo : public IUnknown
     {
     public:
+        virtual HRESULT STDMETHODCALLTYPE GetMaxSequenceDuration( 
+            /* [out] */ long *pMaxSequenceDuration) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetMaxSequenceFrames( 
+            /* [out] */ long *pMaxSequenceFrames) = 0;
+        
         virtual HRESULT STDMETHODCALLTYPE GetAnimationIndex( 
             /* [out] */ long *pAnimationNdx) = 0;
         
@@ -506,6 +524,14 @@ EXTERN_C const IID IID__IAgentStreamInfo;
         
         ULONG ( STDMETHODCALLTYPE *Release )( 
             _IAgentStreamInfo * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetMaxSequenceDuration )( 
+            _IAgentStreamInfo * This,
+            /* [out] */ long *pMaxSequenceDuration);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetMaxSequenceFrames )( 
+            _IAgentStreamInfo * This,
+            /* [out] */ long *pMaxSequenceFrames);
         
         HRESULT ( STDMETHODCALLTYPE *GetAnimationIndex )( 
             _IAgentStreamInfo * This,
@@ -635,6 +661,12 @@ EXTERN_C const IID IID__IAgentStreamInfo;
     ( (This)->lpVtbl -> Release(This) ) 
 
 
+#define _IAgentStreamInfo_GetMaxSequenceDuration(This,pMaxSequenceDuration)	\
+    ( (This)->lpVtbl -> GetMaxSequenceDuration(This,pMaxSequenceDuration) ) 
+
+#define _IAgentStreamInfo_GetMaxSequenceFrames(This,pMaxSequenceFrames)	\
+    ( (This)->lpVtbl -> GetMaxSequenceFrames(This,pMaxSequenceFrames) ) 
+
 #define _IAgentStreamInfo_GetAnimationIndex(This,pAnimationNdx)	\
     ( (This)->lpVtbl -> GetAnimationIndex(This,pAnimationNdx) ) 
 
@@ -716,6 +748,308 @@ EXTERN_C const IID IID__IAgentStreamInfo;
 
 
 #endif 	/* ___IAgentStreamInfo_INTERFACE_DEFINED__ */
+
+
+#ifndef ___IAgentStreamSource_INTERFACE_DEFINED__
+#define ___IAgentStreamSource_INTERFACE_DEFINED__
+
+/* interface _IAgentStreamSource */
+/* [hidden][object][uuid] */ 
+
+
+EXTERN_C const IID IID__IAgentStreamSource;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E567-A208-11DE-ABF2-002421116FB2")
+    _IAgentStreamSource : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE GetAgentFile( 
+            /* [out] */ ULONG_PTR *pAgentFile) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetAgentFile( 
+            /* [in] */ ULONG_PTR pAgentFile) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetAgentStreamInfo( 
+            /* [out] */ ULONG_PTR *pAgentStreamInfo) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetAgentStreamInfo( 
+            /* [in] */ ULONG_PTR pAgentStreamInfo) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetBkColor( 
+            /* [out] */ COLORREF *pBkColor) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetBkColor( 
+            /* [in] */ const COLORREF *pBkColor) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SegmentDurationChanged( void) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct _IAgentStreamSourceVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            _IAgentStreamSource * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            _IAgentStreamSource * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            _IAgentStreamSource * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetAgentFile )( 
+            _IAgentStreamSource * This,
+            /* [out] */ ULONG_PTR *pAgentFile);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetAgentFile )( 
+            _IAgentStreamSource * This,
+            /* [in] */ ULONG_PTR pAgentFile);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetAgentStreamInfo )( 
+            _IAgentStreamSource * This,
+            /* [out] */ ULONG_PTR *pAgentStreamInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetAgentStreamInfo )( 
+            _IAgentStreamSource * This,
+            /* [in] */ ULONG_PTR pAgentStreamInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetBkColor )( 
+            _IAgentStreamSource * This,
+            /* [out] */ COLORREF *pBkColor);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetBkColor )( 
+            _IAgentStreamSource * This,
+            /* [in] */ const COLORREF *pBkColor);
+        
+        HRESULT ( STDMETHODCALLTYPE *SegmentDurationChanged )( 
+            _IAgentStreamSource * This);
+        
+        END_INTERFACE
+    } _IAgentStreamSourceVtbl;
+
+    interface _IAgentStreamSource
+    {
+        CONST_VTBL struct _IAgentStreamSourceVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define _IAgentStreamSource_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define _IAgentStreamSource_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define _IAgentStreamSource_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define _IAgentStreamSource_GetAgentFile(This,pAgentFile)	\
+    ( (This)->lpVtbl -> GetAgentFile(This,pAgentFile) ) 
+
+#define _IAgentStreamSource_SetAgentFile(This,pAgentFile)	\
+    ( (This)->lpVtbl -> SetAgentFile(This,pAgentFile) ) 
+
+#define _IAgentStreamSource_GetAgentStreamInfo(This,pAgentStreamInfo)	\
+    ( (This)->lpVtbl -> GetAgentStreamInfo(This,pAgentStreamInfo) ) 
+
+#define _IAgentStreamSource_SetAgentStreamInfo(This,pAgentStreamInfo)	\
+    ( (This)->lpVtbl -> SetAgentStreamInfo(This,pAgentStreamInfo) ) 
+
+#define _IAgentStreamSource_GetBkColor(This,pBkColor)	\
+    ( (This)->lpVtbl -> GetBkColor(This,pBkColor) ) 
+
+#define _IAgentStreamSource_SetBkColor(This,pBkColor)	\
+    ( (This)->lpVtbl -> SetBkColor(This,pBkColor) ) 
+
+#define _IAgentStreamSource_SegmentDurationChanged(This)	\
+    ( (This)->lpVtbl -> SegmentDurationChanged(This) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* ___IAgentStreamSource_INTERFACE_DEFINED__ */
+
+
+/* interface __MIDL_itf_DaCore_0000_0003 */
+/* [local] */ 
+
+#define	RenderSmoothEdges	( 0x1 )
+
+#define	RenderSmoothAll	( 0x2 )
+
+
+
+extern RPC_IF_HANDLE __MIDL_itf_DaCore_0000_0003_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_DaCore_0000_0003_v0_0_s_ifspec;
+
+#ifndef ___IAgentStreamRender_INTERFACE_DEFINED__
+#define ___IAgentStreamRender_INTERFACE_DEFINED__
+
+/* interface _IAgentStreamRender */
+/* [hidden][object][uuid] */ 
+
+
+EXTERN_C const IID IID__IAgentStreamRender;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E568-A208-11DE-ABF2-002421116FB2")
+    _IAgentStreamRender : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE GetRenderWnd( 
+            /* [out] */ HWND *pRenderWnd) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetRenderWnd( 
+            /* [in] */ HWND pRenderWnd) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetBkColor( 
+            /* [out] */ COLORREF *pBkColor) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetBkColor( 
+            /* [in] */ const COLORREF *pBkColor) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetSmoothing( 
+            /* [out] */ DWORD *pSmoothing) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetSmoothing( 
+            /* [in] */ DWORD pSmoothing) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetImageSize( 
+            /* [out] */ long *pImageWidth,
+            /* [out] */ long *pImageHeight) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE DrawSampleImage( 
+            /* [defaultvalue][in] */ HDC pDC = 0,
+            /* [defaultvalue][in] */ const RECT *pTargetRect = 0) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct _IAgentStreamRenderVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            _IAgentStreamRender * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            _IAgentStreamRender * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            _IAgentStreamRender * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetRenderWnd )( 
+            _IAgentStreamRender * This,
+            /* [out] */ HWND *pRenderWnd);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetRenderWnd )( 
+            _IAgentStreamRender * This,
+            /* [in] */ HWND pRenderWnd);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetBkColor )( 
+            _IAgentStreamRender * This,
+            /* [out] */ COLORREF *pBkColor);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetBkColor )( 
+            _IAgentStreamRender * This,
+            /* [in] */ const COLORREF *pBkColor);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetSmoothing )( 
+            _IAgentStreamRender * This,
+            /* [out] */ DWORD *pSmoothing);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetSmoothing )( 
+            _IAgentStreamRender * This,
+            /* [in] */ DWORD pSmoothing);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetImageSize )( 
+            _IAgentStreamRender * This,
+            /* [out] */ long *pImageWidth,
+            /* [out] */ long *pImageHeight);
+        
+        HRESULT ( STDMETHODCALLTYPE *DrawSampleImage )( 
+            _IAgentStreamRender * This,
+            /* [defaultvalue][in] */ HDC pDC,
+            /* [defaultvalue][in] */ const RECT *pTargetRect);
+        
+        END_INTERFACE
+    } _IAgentStreamRenderVtbl;
+
+    interface _IAgentStreamRender
+    {
+        CONST_VTBL struct _IAgentStreamRenderVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define _IAgentStreamRender_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define _IAgentStreamRender_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define _IAgentStreamRender_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define _IAgentStreamRender_GetRenderWnd(This,pRenderWnd)	\
+    ( (This)->lpVtbl -> GetRenderWnd(This,pRenderWnd) ) 
+
+#define _IAgentStreamRender_SetRenderWnd(This,pRenderWnd)	\
+    ( (This)->lpVtbl -> SetRenderWnd(This,pRenderWnd) ) 
+
+#define _IAgentStreamRender_GetBkColor(This,pBkColor)	\
+    ( (This)->lpVtbl -> GetBkColor(This,pBkColor) ) 
+
+#define _IAgentStreamRender_SetBkColor(This,pBkColor)	\
+    ( (This)->lpVtbl -> SetBkColor(This,pBkColor) ) 
+
+#define _IAgentStreamRender_GetSmoothing(This,pSmoothing)	\
+    ( (This)->lpVtbl -> GetSmoothing(This,pSmoothing) ) 
+
+#define _IAgentStreamRender_SetSmoothing(This,pSmoothing)	\
+    ( (This)->lpVtbl -> SetSmoothing(This,pSmoothing) ) 
+
+#define _IAgentStreamRender_GetImageSize(This,pImageWidth,pImageHeight)	\
+    ( (This)->lpVtbl -> GetImageSize(This,pImageWidth,pImageHeight) ) 
+
+#define _IAgentStreamRender_DrawSampleImage(This,pDC,pTargetRect)	\
+    ( (This)->lpVtbl -> DrawSampleImage(This,pDC,pTargetRect) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* ___IAgentStreamRender_INTERFACE_DEFINED__ */
 
 
 /* Additional Prototypes for ALL interfaces */

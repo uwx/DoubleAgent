@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,72 +18,90 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef _SAPI4VOICE_H_INCLUDED
-#define _SAPI4VOICE_H_INCLUDED
 #pragma once
-
 #include "SapiVoice.h"
 #include "MallocPtr.h"
+#pragma warning (push)
+#pragma warning (disable: 4005)
 #include <speech.h>
+#pragma warning (pop)
 
 //////////////////////////////////////////////////////////////////////
 
 _COM_SMARTPTR_TYPEDEF (ITTSCentral, IID_ITTSCentral);
+_COM_SMARTPTR_TYPEDEF (IAudio, IID_IAudio);
+_COM_SMARTPTR_TYPEDEF (IAudioDest, IID_IAudioDest);
 
 //////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
+#pragma warning (push)
+#pragma warning (disable: 4251)
+/////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CSapi4Voice : public CSapiVoice
+class CSapi4Voice : public CSapiVoice
 {
+	DECLARE_DLL_OBJECT_EX(CSapi4Voice, _DACORE_IMPEXP )
 protected:
 	CSapi4Voice ();
 public:
-	virtual ~CSapi4Voice ();
-	DECLARE_DYNCREATE (CSapi4Voice)
+	_DACORE_IMPEXP virtual ~CSapi4Voice ();
+	_DACORE_IMPEXP static CSapi4Voice * CreateInstance ();
 
 // Attributes
-	ULONG GetDefaultRate () const;
-	USHORT GetDefaultVolume () const;
-	USHORT GetDefaultPitch () const;
+	_DACORE_IMPEXP ULONG GetDefaultRate () const;
+	_DACORE_IMPEXP USHORT GetDefaultVolume () const;
+	_DACORE_IMPEXP USHORT GetDefaultPitch () const;
 
 // Operations
-	HRESULT PrepareToSpeak (bool pHighPriority = false);
-	HRESULT Speak (LPCTSTR pMessage, bool pAsync = true);
-	HRESULT Stop ();
+	_DACORE_IMPEXP HRESULT PrepareToSpeak (bool pHighPriority = false);
+	_DACORE_IMPEXP HRESULT Speak (LPCTSTR pMessage, bool pAsync = true);
+	_DACORE_IMPEXP HRESULT Stop ();
+	_DACORE_IMPEXP HRESULT Pause ();
+	_DACORE_IMPEXP HRESULT Resume ();
 
-	HRESULT GetEngineId (GUID & pEngineId);
-	HRESULT GetModeId (GUID & pModeId);
-	HRESULT SetModeId (const GUID & pModeId);
+	_DACORE_IMPEXP HRESULT GetEngineId (GUID & pEngineId);
+	_DACORE_IMPEXP HRESULT GetModeId (GUID & pModeId);
+	_DACORE_IMPEXP HRESULT SetModeId (const GUID & pModeId);
 
-	friend int VoiceMouthOverlay (LPVOID pMouth);
-	friend CString VoiceMouthStr (LPVOID pMouth);
+	_DACORE_IMPEXP friend int VoiceMouthOverlay (LPVOID pMouth);
+	_DACORE_IMPEXP friend CAtlString VoiceMouthStr (LPVOID pMouth);
 
 // Overrides
-	//{{AFX_VIRTUAL(CSapi4Voice)
-	protected:
-	virtual UINT _IsValid () const;
-	virtual bool _IsPrepared () const;
-	virtual bool _IsSpeaking () const;
-	public:
-	virtual tBstrPtr GetUniqueId ();
-	virtual HRESULT GetUniqueId (tBstrPtr & pUniqueId);
-	virtual tBstrPtr GetDisplayName ();
-	virtual HRESULT GetDisplayName (tBstrPtr & pDisplayName);
-	virtual ULONG GetRate ();
-	virtual HRESULT GetRate (ULONG & pRate);
-	virtual HRESULT SetRate (ULONG pRate);
-	virtual USHORT GetVolume ();
-	virtual HRESULT GetVolume (USHORT & pVolume);
-	virtual HRESULT SetVolume (USHORT pVolume);
-	virtual USHORT GetPitch ();
-	virtual HRESULT GetPitch (USHORT & pPitch);
-	virtual HRESULT SetPitch (USHORT pPitch);
-	//}}AFX_VIRTUAL
+protected:
+	_DACORE_IMPEXP virtual UINT _IsValid () const;
+	_DACORE_IMPEXP virtual bool _IsPrepared () const;
+	_DACORE_IMPEXP virtual bool _IsSpeaking () const;
+	_DACORE_IMPEXP virtual bool _IsPaused () const;
+public:
+	_DACORE_IMPEXP virtual tBstrPtr GetUniqueId ();
+	_DACORE_IMPEXP virtual HRESULT GetUniqueId (tBstrPtr & pUniqueId);
+	_DACORE_IMPEXP virtual tBstrPtr GetDisplayName ();
+	_DACORE_IMPEXP virtual HRESULT GetDisplayName (tBstrPtr & pDisplayName);
+	_DACORE_IMPEXP virtual ULONG GetRate ();
+	_DACORE_IMPEXP virtual HRESULT GetRate (ULONG & pRate);
+	_DACORE_IMPEXP virtual HRESULT SetRate (ULONG pRate);
+	_DACORE_IMPEXP virtual USHORT GetVolume ();
+	_DACORE_IMPEXP virtual HRESULT GetVolume (USHORT & pVolume);
+	_DACORE_IMPEXP virtual HRESULT SetVolume (USHORT pVolume);
+	_DACORE_IMPEXP virtual USHORT GetPitch ();
+	_DACORE_IMPEXP virtual HRESULT GetPitch (USHORT & pPitch);
+	_DACORE_IMPEXP virtual HRESULT SetPitch (USHORT pPitch);
 
 // Implementation
 private:
-	class CTTSNotifySink : public CCmdTarget
+	class ATL_NO_VTABLE CTTSNotifyBase : public  CComObjectRoot, public ITTSNotifySink2, public ITTSBufNotifySink
+	{
+	public:
+		CTTSNotifyBase () {}
+		~CTTSNotifyBase () {}
+
+		BEGIN_COM_MAP(CTTSNotifyBase)
+			COM_INTERFACE_ENTRY_IID(IID_ITTSNotifySink, ITTSNotifySink2)
+			COM_INTERFACE_ENTRY_IID(IID_ITTSNotifySink2, ITTSNotifySink2)
+			COM_INTERFACE_ENTRY_IID(IID_ITTSBufNotifySink, ITTSBufNotifySink)
+		END_COM_MAP()
+	};
+
+	class CTTSNotifySink : public CComObjectNoLock<CTTSNotifyBase>
 	{
 	public:
 		CTTSNotifySink (CSapi4Voice & pOwner);
@@ -95,52 +113,54 @@ private:
 		HRESULT Disconnect ();
 
 	public:
-		BEGIN_INTERFACE_PART(NotifySink, ITTSNotifySink2)
-			HRESULT STDMETHODCALLTYPE AttribChanged (DWORD dwAttribute);
-			HRESULT STDMETHODCALLTYPE AudioStart (QWORD qTimeStamp);
-			HRESULT STDMETHODCALLTYPE AudioStop (QWORD qTimeStamp);
-			HRESULT STDMETHODCALLTYPE Visual (QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth);
-			HRESULT STDMETHODCALLTYPE Error (LPUNKNOWN pError);
-			HRESULT STDMETHODCALLTYPE Warning (LPUNKNOWN pWarning);
-			HRESULT STDMETHODCALLTYPE VisualFuture (DWORD dwMilliseconds, QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth);
-		END_INTERFACE_PART(NotifySink)
+		// ITTSNotifySink2
+		HRESULT STDMETHODCALLTYPE AttribChanged (DWORD dwAttribute);
+		HRESULT STDMETHODCALLTYPE AudioStart (QWORD qTimeStamp);
+		HRESULT STDMETHODCALLTYPE AudioStop (QWORD qTimeStamp);
+		HRESULT STDMETHODCALLTYPE Visual (QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth);
+		HRESULT STDMETHODCALLTYPE Error (LPUNKNOWN pError);
+		HRESULT STDMETHODCALLTYPE Warning (LPUNKNOWN pWarning);
+		HRESULT STDMETHODCALLTYPE VisualFuture (DWORD dwMilliseconds, QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth);
+		// ITTSBufNotifySink
+		HRESULT STDMETHODCALLTYPE TextDataDone (QWORD qTimeStamp, DWORD dwFlags);
+		HRESULT STDMETHODCALLTYPE TextDataStarted (QWORD qTimeStamp);
+		HRESULT STDMETHODCALLTYPE BookMark (QWORD qTimeStamp, DWORD dwMarkNum);
+		HRESULT STDMETHODCALLTYPE WordPosition (QWORD qTimeStamp, DWORD dwByteOffset);
 
-		BEGIN_INTERFACE_PART(BufNotifySink, ITTSBufNotifySink)
-			HRESULT STDMETHODCALLTYPE TextDataDone (QWORD qTimeStamp, DWORD dwFlags);
-			HRESULT STDMETHODCALLTYPE TextDataStarted (QWORD qTimeStamp);
-			HRESULT STDMETHODCALLTYPE BookMark (QWORD qTimeStamp, DWORD dwMarkNum);
-			HRESULT STDMETHODCALLTYPE WordPosition (QWORD qTimeStamp, DWORD dwByteOffset);
-		END_INTERFACE_PART(BufNotifySink)
-
-		DECLARE_INTERFACE_MAP()
-
-	protected:
+	public:
 		CSapi4Voice &	mOwner;
+	protected:
 		DWORD			mRegisteredKey;
 	};
 	friend class CTTSNotifySink;
 
 protected:
 	bool CheckIsQueueing () const;
+	bool CheckIsParsing () const;
 	bool CheckIsSpeaking () const;
 	bool CheckIsResetting () const;
 	void SetIsQueueing (bool pIsQueueing);
+	void SetIsParsing (bool pIsParsing);
 	void SetIsSpeaking (bool pIsSpeaking);
 	void SetIsResetting (bool pIsResetting);
 
+	void LogTtsEngine (UINT pLogLevel, ITTSCentral * pTtsEngine, LPCTSTR pFormat = NULL, ...);
+	void LogTtsAudio (UINT pLogLevel, IAudioDest * pTtsAudio, LPCTSTR pFormat = NULL, ...);
+
 protected:
 	ITTSCentralPtr			mEngine;
+	IAudioDestPtr			mAudioDest;
 	ULONG					mDefaultRate;
 	USHORT					mDefaultVolume;
 	USHORT					mDefaultPitch;
+	bool					mPaused;
 	tPtr <DWORD>			mIsQueueing;
+	tPtr <DWORD>			mIsParsing;
 	tPtr <DWORD>			mIsSpeaking;
 	tPtr <DWORD>			mResetPending;
 	tMallocPtr <WCHAR>		mLastText;
 	tPtr <CTTSNotifySink>	mNotifySink;
 };
 
-#pragma warning(pop)
+#pragma warning (pop)
 //////////////////////////////////////////////////////////////////////
-
-#endif // _SAPI4VOICE_H_INCLUDED

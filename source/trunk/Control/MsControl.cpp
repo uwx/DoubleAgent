@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -22,14 +22,9 @@
 #include "MsControl.h"
 #include "Registry.h"
 #include "RegistrySearch.h"
-#include "GuidStr.h"
 #include "UserSecurity.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
+#include "DaGuid.h"
+#include "DaVersion.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	_DEBUG
@@ -41,51 +36,26 @@ static char THIS_FILE[] = __FILE__;
 #define	_LOG_PREFIX				_T("Stub ")
 #include "LogAccess.inl"
 #include "Log.inl"
-
-////////////////////////////////////////////////////////////////////////////
-
-CMsControlApp gApp;
-
-IMPLEMENT_DYNAMIC(CMsControlApp, CWinApp);
-
-CMsControlApp::CMsControlApp ()
-:	CWinApp (_T(_DOUBLEAGENT_NAME))
-{
-	SetRegistryKeyEx (_T(_DOUBLEAGENT_NAME), _T(_CONTROL_REGNAME));
-	LogStart (false);
-}
-
-CMsControlApp::~CMsControlApp ()
-{
-	LogStop (LogIfActive);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-static const GUID sMsTypeLibId = __uuidof(AgentControlTypeLib);
-static const WORD sMsTypeLibVerMajor = 2;
-static const WORD sMsTypeLibVerMinor = 0;
+CMsControlModule				_AtlModule;
+LPCTSTR __declspec(selectany)	_AtlProfileName = _LOG_SECTION_NAME;
+LPCTSTR __declspec(selectany)	_AtlProfilePath = _LOG_ROOT_PATH;
 
 /////////////////////////////////////////////////////////////////////////////
 
 STDAPI DllRegisterServer(void)
 {
 	HRESULT	lResult = S_FALSE;
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	LogStart (false);
 	if	(IsWindows7_AtLeast ())
 	{
 		if	(CUserSecurity::IsUserAdministrator ())
 		{
-			if	(
-					(CRegistrySearch::GetClassViProgId (__uuidof(AgentControl), HKEY_CLASSES_ROOT).IsEmpty())
-				&&	(!AfxOleRegisterTypeLib(AfxGetInstanceHandle(), sMsTypeLibId))
-				)
+			if	(CRegistrySearch::GetClassViProgId (__uuidof(AgentControl), HKEY_CLASSES_ROOT).IsEmpty())
 			{
-				lResult = SELFREG_E_TYPELIB;
+			    lResult = AtlRegisterTypeLib (_AtlBaseModule.GetModuleInstance(), NULL);
 			}
 		}
 		else
@@ -96,25 +66,18 @@ STDAPI DllRegisterServer(void)
 	return lResult;
 }
 
-
-/////////////////////////////////////////////////////////////////////////////
-
 STDAPI DllUnregisterServer(void)
 {
 	HRESULT	lResult = S_FALSE;
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	LogStart (false);
 	if	(IsWindows7_AtLeast ())
 	{
 		if	(CUserSecurity::IsUserAdministrator ())
 		{
-			if	(
-					(CRegistrySearch::GetClassViProgId (__uuidof(AgentControl), HKEY_CLASSES_ROOT).IsEmpty())
-				&&	(!AfxOleUnregisterTypeLib(sMsTypeLibId, sMsTypeLibVerMajor, sMsTypeLibVerMinor))
-				)
+			if	(CRegistrySearch::GetClassViProgId (__uuidof(AgentControl), HKEY_CLASSES_ROOT).IsEmpty())
 			{
-				lResult = SELFREG_E_TYPELIB;
+				lResult = AtlUnRegisterTypeLib (_AtlBaseModule.GetModuleInstance(), NULL);
 			}
 		}
 		else

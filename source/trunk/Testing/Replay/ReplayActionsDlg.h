@@ -1,7 +1,4 @@
-#ifndef REPLAYACTIONSDLG_H_INCLUDED_
-#define REPLAYACTIONSDLG_H_INCLUDED_
 #pragma once
-
 #include "DaServerOdl.h"
 #include "ActionList.h"
 #include "ActionFile.h"
@@ -9,9 +6,9 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-_COM_SMARTPTR_TYPEDEF (IDaServer, __uuidof(IDaServer));
-_COM_SMARTPTR_TYPEDEF (IDaSvrCharacter, __uuidof(IDaSvrCharacter));
-_COM_SMARTPTR_TYPEDEF (IDaSvrBalloon, __uuidof(IDaSvrBalloon));
+_COM_SMARTPTR_TYPEDEF (IDaServer2, __uuidof(IDaServer2));
+_COM_SMARTPTR_TYPEDEF (IDaSvrCharacter2, __uuidof(IDaSvrCharacter2));
+_COM_SMARTPTR_TYPEDEF (IDaSvrBalloon2, __uuidof(IDaSvrBalloon2));
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -69,17 +66,12 @@ protected:
 
 protected:
 	tPtr <CActionFile>				mActionFile;
-	IDaServerPtr					mServer;
-	IDaSvrCharacterPtr				mCharacter;
+	IDaServer2Ptr					mServer;
+	IDaSvrCharacter2Ptr				mCharacter;
 	long							mCharacterId;
 	UINT_PTR						mPlayTimer;
 	tPtr <CFileTimeSpan>			mStartTimeOffset;
 	CMap <long, long, long, long>	mReqIdMap;
 };
 
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
 /////////////////////////////////////////////////////////////////////////////
-
-#endif // REPLAYACTIONSDLG_H_INCLUDED_

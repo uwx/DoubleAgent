@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -20,8 +20,8 @@
     along with this file.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#if !defined(AFX_TEXTWRAP_H__73626BD3_B71D_4BFA_9B98_29853DCB6B16__INCLUDED_)
-#define AFX_TEXTWRAP_H__73626BD3_B71D_4BFA_9B98_29853DCB6B16__INCLUDED_
+#ifndef	TEXTWRAP_H_INCLUDED_
+#define TEXTWRAP_H_INCLUDED_
 #pragma once
 
 #include "TextSize.h"
@@ -43,7 +43,7 @@ public:
 	bool	mUseInternalLeading;
 
 	const CSize & GetSize () const							{return mSize;}
-	int GetLineCount () const								{return (int)mTextLines.GetSize ();}
+	int GetLineCount () const								{return (int)mTextLines.GetCount();}
 	const COwnPtrArray <POLYTEXT> & GetLines () const		{return mTextLines;}
 
 // Operations
@@ -51,9 +51,11 @@ public:
 	virtual void DrawText (HDC pDC, HFONT pFont = NULL, const CRect * pClipRect = NULL, HDC pAttribDC = NULL);
 	virtual void DrawText (HDC pDC, const CRect & pBounds, LPCTSTR pText, HFONT pFont = NULL, const CRect * pClipRect = NULL, HDC pAttribDC = NULL);
 
+#ifdef	__AFXWIN_H__
 	CSize MeasureText (LPCTSTR pText, CDC & pDC, HFONT pFont = NULL, bool * pWordBroken = NULL) {return MeasureText (pText, pDC.m_hAttribDC, pFont, pWordBroken);}
 	void DrawText (CDC & pDC, HFONT pFont = NULL, const CRect * pClipRect = NULL) {DrawText (pDC.m_hDC, pFont, pClipRect, pDC.IsPrinting() ? NULL : pDC.m_hAttribDC);}
 	void DrawText (CDC & pDC, const CRect & pBounds, LPCTSTR pText, HFONT pFont = NULL, const CRect * pClipRect = NULL) {DrawText (pDC.m_hDC, pBounds, pText, pFont, pClipRect, pDC.IsPrinting() ? NULL : pDC.m_hAttribDC);}
+#endif
 
 	void Offset (int pXOffset, int pYOffset);
 	void Offset (const CPoint & pOffset) {Offset (pOffset.x, pOffset.y);}
@@ -100,4 +102,4 @@ protected:
 
 //////////////////////////////////////////////////////////////////////
 
-#endif // !defined(AFX_TEXTWRAP_H__73626BD3_B71D_4BFA_9B98_29853DCB6B16__INCLUDED_)
+#endif // TEXTWRAP_H_INCLUDED_

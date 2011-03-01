@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -77,7 +77,9 @@ public:
 
 	aType * Alloc (UINT pCount = 1)
 	{
+#ifdef	ASSERT
 		ASSERT (mPtr == NULL);
+#endif
 		Free ();
 		if	(mMalloc)
 		{
@@ -97,7 +99,9 @@ public:
 	void * AllocBulk (UINT pSize)
 	{
 		Free ();
+#ifdef	ASSERT
 		ASSERT (mPtr == NULL);
+#endif
 		if	(mMalloc)
 		{
 			mPtr = (aType *) mMalloc->Alloc (pSize);

@@ -5,7 +5,7 @@
 	Name="Control"
 	ProjectGUID="{394447B3-9AD8-49FC-90B0-9F208F649936}"
 	RootNamespace="DoubleAgent"
-	Keyword="Win32Proj"
+	Keyword="AtlProj"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -22,8 +22,10 @@
 		<Configuration
 			Name="Debug|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops"
-			UseOfMFC="1"
+			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfMFC="0"
+			UseOfATL="1"
+			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			>
 			<Tool
@@ -59,8 +61,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				ExecutionBucket="8"
-				OutputFile="$(OutDir)\Da$(ProjectName).dll"
-				ModuleDefinitionFile="$(InputDir)$(ProjectName)\$(InputName).def"
+				OutputFile="$(OutDir)\DaControl.dll"
+				ModuleDefinitionFile=".\Control\DaControl.def"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -89,8 +91,9 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
-				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll"
+				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot; /fix /save /namespace DoubleAgent.AxControl &quot;$(TargetDir)\Interop\AxDoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;"
+				AdditionalDependencies=""
+				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll;$(TargetDir)\Interop\DoubleAgent.AxControl.dll"
 				ExecutionBucket="15"
 			/>
 			<Tool
@@ -100,8 +103,10 @@
 		<Configuration
 			Name="Debug|x64"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops"
-			UseOfMFC="1"
+			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfMFC="0"
+			UseOfATL="1"
+			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			>
 			<Tool
@@ -137,8 +142,9 @@
 			<Tool
 				Name="VCLinkerTool"
 				ExecutionBucket="8"
-				OutputFile="$(OutDir)\Da$(ProjectName).dll"
-				ModuleDefinitionFile="$(InputDir)$(ProjectName)\$(InputName).def"
+				OutputFile="$(OutDir)\DaControl.dll"
+				ModuleDefinitionFile=".\Control\DaControl.def"
+				TargetMachine="17"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -167,8 +173,9 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
-				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll"
+				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot; /fix /save /namespace DoubleAgent.AxControl &quot;$(TargetDir)\Interop\AxDoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;"
+				AdditionalDependencies=""
+				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll;$(TargetDir)\Interop\DoubleAgent.AxControl.dll"
 				ExecutionBucket="15"
 			/>
 			<Tool
@@ -178,8 +185,10 @@
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops"
-			UseOfMFC="1"
+			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfMFC="0"
+			UseOfATL="1"
+			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -216,8 +225,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				ExecutionBucket="8"
-				OutputFile="$(OutDir)\Da$(ProjectName).dll"
-				ModuleDefinitionFile="$(InputDir)$(ProjectName)\$(InputName).def"
+				OutputFile="$(OutDir)\DaControl.dll"
+				ModuleDefinitionFile=".\Control\DaControl.def"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -246,8 +255,9 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
-				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll"
+				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot; /fix /save /namespace DoubleAgent.AxControl &quot;$(TargetDir)\Interop\AxDoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;"
+				AdditionalDependencies=""
+				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll;$(TargetDir)\Interop\DoubleAgent.AxControl.dll"
 				ExecutionBucket="15"
 			/>
 			<Tool
@@ -257,8 +267,10 @@
 		<Configuration
 			Name="Release|x64"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops"
-			UseOfMFC="1"
+			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfMFC="0"
+			UseOfATL="1"
+			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -295,8 +307,9 @@
 			<Tool
 				Name="VCLinkerTool"
 				ExecutionBucket="8"
-				OutputFile="$(OutDir)\Da$(ProjectName).dll"
-				ModuleDefinitionFile="$(InputDir)$(ProjectName)\$(InputName).def"
+				OutputFile="$(OutDir)\DaControl.dll"
+				ModuleDefinitionFile=".\Control\DaControl.def"
+				TargetMachine="17"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -325,8 +338,9 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
-				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll"
+				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot; /fix /save /namespace DoubleAgent.AxControl &quot;$(TargetDir)\Interop\AxDoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;"
+				AdditionalDependencies=""
+				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll;$(TargetDir)\Interop\DoubleAgent.AxControl.dll"
 				ExecutionBucket="15"
 			/>
 			<Tool
@@ -340,51 +354,119 @@
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{0274CF75-0849-43fd-BE44-1628E98D4A51}"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\Control\DaAgentCtl.cpp"
+				RelativePath=".\Common\AgentAnchor.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaAnimationNamesObj.cpp"
+				RelativePath=".\Common\AgentFileCache.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaAudioOutputObj.cpp"
+				RelativePath=".\Core\AgentText.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaBalloonObj.cpp"
+				RelativePath=".\Common\AgentTextObject.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCharacterObj.cpp"
+				RelativePath=".\Common\DaCmnAnimationNames.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCharactersEnum.cpp"
+				RelativePath=".\Common\DaCmnBalloon.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCharactersObj.cpp"
+				RelativePath=".\Common\DaCmnCharacter.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCommandObj.cpp"
+				RelativePath=".\Common\DaCmnCharacterFiles.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCommandsEnum.cpp"
+				RelativePath=".\Common\DaCmnCommand.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCommandsObj.cpp"
+				RelativePath=".\Common\DaCmnCommands.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCommandsWindowObj.cpp"
+				RelativePath=".\Common\DaCmnCommandsWindow.cpp"
 				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnFormattedText.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnPropertySheet.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnSettings.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnSREngine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnSREngines.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnTTSEngine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnTTSEngines.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnUserInput.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCommon.odl"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCMIDLTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCMIDLTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCMIDLTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCMIDLTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Control\DaControl.cpp"
@@ -399,67 +481,119 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Include\DaControl_i.c"
+				RelativePath=".\Control\DaControlMod.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlAnimationNames.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlAudioOutput.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlBalloon.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlCharacter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlCharacterFiles.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlCharacters.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlCommand.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlCommands.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlCommandsWindow.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlEvents.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlEvents1.odl.inl"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlEvents2.odl.inl"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlFormattedText.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlPropertySheet.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlRequest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlSettings.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlSpeechInput.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlSREngine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlSREngines.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlTTSEngine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlTTSEngines.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlUserInput.cpp"
+				>
 			</File>
 			<File
 				RelativePath=".\Core\DaError.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Core\DaLocalizeMui.cpp"
+				RelativePath=".\Common\EventNotify.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaPropertySheetObj.cpp"
+				RelativePath=".\Common\ListeningState.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaRequestObj.cpp"
+				RelativePath=".\Control\LocalCharacter.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaSpeechInputObj.cpp"
+				RelativePath=".\Common\PropSheetOptions.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaUserInputObj.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Core\StdAfx.cpp"
+				RelativePath=".\Util\Atl\StdAfx.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -498,50 +632,82 @@
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{FB626B03-C764-434c-8CC0-66CE5AFA0E21}"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Control\DaAgentCtl.h"
+				RelativePath=".\Common\AgentAnchor.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaAnimationNamesObj.h"
+				RelativePath=".\Common\AgentFileCache.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaAudioOutputObj.h"
+				RelativePath=".\Common\CorEnumVariant.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaBalloonObj.h"
+				RelativePath=".\ApiHelp\DaApiHelp.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCharacterObj.h"
+				RelativePath=".\Common\DaCmnAnimationNames.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCharactersEnum.h"
+				RelativePath=".\Common\DaCmnBalloon.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCharactersObj.h"
+				RelativePath=".\Common\DaCmnCharacter.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCommandObj.h"
+				RelativePath=".\Common\DaCmnCharacterFiles.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCommandsEnum.h"
+				RelativePath=".\Common\DaCmnCommand.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCommandsObj.h"
+				RelativePath=".\Common\DaCmnCommands.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCommandsWindowObj.h"
+				RelativePath=".\Common\DaCmnCommandsWindow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnFormattedText.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnPropertySheet.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnSettings.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnSREngine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnSREngines.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnTTSEngine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnTTSEngines.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnUserInput.h"
 				>
 			</File>
 			<File
@@ -549,7 +715,91 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Include\DaControlOdl.h"
+				RelativePath=".\Include\DaControlInterface.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaControlMod.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlAnimationNames.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlAudioOutput.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlBalloon.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlCharacter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlCharacterFiles.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlCharacters.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlCommand.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlCommands.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlCommandsWindow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlEvents.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlFormattedText.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlPropertySheet.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlRequest.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlSettings.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlSpeechInput.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlSREngine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlSREngines.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlTTSEngine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlTTSEngines.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlUserInput.h"
 				>
 			</File>
 			<File
@@ -557,31 +807,39 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaPropertySheetObj.h"
+				RelativePath=".\Include\DaVersion.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaRequestObj.h"
+				RelativePath=".\Common\EventNotify.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaSpeechInputObj.h"
+				RelativePath=".\Common\ListeningState.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaUserInputObj.h"
+				RelativePath=".\Control\LocalCharacter.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Core\StdAfx.h"
+				RelativePath=".\Util\Atl\StdAfx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\TargetVer.h"
 				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{FA5AF7E1-7C04-460e-9341-0BF0ED670A7B}"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath=".\Resources\DaAgentCtl.bmp"
+				>
+			</File>
 			<File
 				RelativePath=".\Control\DaControl.rc"
 				>
@@ -591,7 +849,87 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Control\DaControl.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaControlMod.rgs"
+				>
+			</File>
+			<File
 				RelativePath=".\Control\DaControlRes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlAnimationNames.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlAudioOutput.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlBalloon.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlCharacter.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlCharacterFiles.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlCharacters.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlCommand.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlCommands.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlCommandsWindow.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlPropertySheet.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlRequest.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlSettings.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlSpeechInput.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlSREngine.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlSREngines.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlTTSEngine.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlTTSEngines.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlUserInput.rgs"
 				>
 			</File>
 			<File
@@ -600,6 +938,55 @@
 			</File>
 			<File
 				RelativePath=".\Core\DaErrorRes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\DoubleAgent.ico"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Generated Files"
+			SourceControlFiles="false"
+			>
+			<File
+				RelativePath=".\Include\DaControl_i.c"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Include\DaControlOdl.h"
 				>
 			</File>
 		</Filter>

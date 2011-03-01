@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -19,856 +19,732 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include <Cpl.h>
+#define PSAPI_VERSION 1
+#include <shlwapi.h>
+#include <wininet.h>
+#include <psapi.h>
 #include "DaServer.h"
-#include "DaCore.h"
-#include "DaAgentNotify.h"
-#include "DaAgent.h"
-#include "DaAgentCharacter.h"
-#include "DaAgentCommands.h"
-#include "DaElevatedSettings.h"
-#include "DaGlobalConfig.h"
+#include "DaSvrCharacter.h"
+#include "DaSvrPropertySheet.h"
+#include "DaSvrSettings.h"
+#include "DaSvrAudioOutput.h"
+#include "DaSvrSpeechInput.h"
+#include "DaSvrCommandsWindow.h"
+#include "DaSvrTTSEngines.h"
+#include "DaSvrTTSEngine.h"
+#include "DaSvrSREngines.h"
+#include "DaSvrSREngine.h"
+#include "DaSvrCharacterFiles.h"
 #include "AgentFiles.h"
-#include "DaAgentPropertySheet.h"
-#include "DaAgentAudioOutputProperties.h"
-#include "DaAgentSpeechInputProperties.h"
-#include "DaAgentCommandWindow.h"
-#include "PropSheetCharSel.h"
-#include "VoiceCommandsWnd.h"
-#include "CmdLineInfoEx.h"
-#include "Localize.h"
-#include "ThreadSecurity.h"
-#include "UserSecurity.h"
-#include "OleMessageFilterEx.h"
+#include "FileDownload.h"
 #include "Registry.h"
 #include "RegistrySearch.h"
+#include "GuidStr.h"
+#include "ThreadSecurity.h"
+#include "UserSecurity.h"
 #include "MallocPtr.h"
-#include "WerOpt.h"
-#ifdef	_DEBUG
 #include "DebugProcess.h"
-#endif
+#include "DebugStr.h"
 
-#pragma warning (disable : 4722)
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
+#pragma comment(lib, "shlwapi.lib")
+#pragma comment(lib, "psapi.lib")
+#pragma warning (disable: 4355)
 
 #ifdef	_DEBUG
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_ARABIC, SUBLANG_ARABIC_SAUDI_ARABIA)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_CROATIAN, SUBLANG_DEFAULT)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_CZECH, SUBLANG_CZECH_CZECH_REPUBLIC)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_DANISH, SUBLANG_DEFAULT)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_GERMAN, SUBLANG_GERMAN)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_GREEK, SUBLANG_GREEK_GREECE)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_SPANISH, SUBLANG_SPANISH_MODERN)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_BASQUE, SUBLANG_BASQUE_BASQUE)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_FINNISH, SUBLANG_DEFAULT)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_FRENCH, SUBLANG_FRENCH)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_HEBREW, SUBLANG_HEBREW_ISRAEL)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_HUNGARIAN, SUBLANG_DEFAULT)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_ITALIAN, SUBLANG_ITALIAN)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_JAPANESE, SUBLANG_JAPANESE_JAPAN)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_KOREAN, SUBLANG_KOREAN)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_NORWEGIAN, SUBLANG_NORWEGIAN_BOKMAL)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_DUTCH, SUBLANG_DUTCH)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_POLISH, SUBLANG_DEFAULT)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_PORTUGUESE, SUBLANG_PORTUGUESE_BRAZILIAN)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_PORTUGUESE, SUBLANG_PORTUGUESE)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_ROMANIAN, SUBLANG_DEFAULT)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_RUSSIAN, SUBLANG_DEFAULT)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_SLOVAK, SUBLANG_DEFAULT)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_SLOVENIAN, SUBLANG_DEFAULT)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_SWEDISH, SUBLANG_SWEDISH)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_THAI, SUBLANG_THAI_THAILAND)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_TURKISH, SUBLANG_TURKISH_TURKEY)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED)
-//#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_CHINESE, SUBLANG_CHINESE_TRADITIONAL)
-#endif
-
-#ifdef	_DEBUG
-//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#endif
-
-/////////////////////////////////////////////////////////////////////////////
-#ifdef	_DEBUG
-#define _LOG_LEVEL_DEBUG		LogNormal
-#endif
-#define	_LOG_ROOT_PATH			_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
-#define	_LOG_SECTION_NAME		_T(_SERVER_REGNAME)
-#define _LOG_DEF_LOGNAME		_T(_DOUBLEAGENT_NAME) _T(".log")
-#define	_LOG_PREFIX				_T("Srvr ")
-static tPtr <CCriticalSection>	sLogCriticalSection = new CCriticalSection;
-#define	_LOG_CRITICAL_SECTION	(!sLogCriticalSection?NULL:(CRITICAL_SECTION*)(*sLogCriticalSection))
-#include "LogAccess.inl"
-#include "Log.inl"
-#include "LogCrash.inl"
-/////////////////////////////////////////////////////////////////////////////
-
-const GUID gDaTypeLibId = __uuidof(DaServerTypeLib);
-const WORD gDaTypeLibVerMajor = _SERVER_VER_MAJOR;
-const WORD gDaTypeLibVerMinor = _SERVER_VER_MINOR;
-
-const GUID gDaMsTypeLibId = __uuidof(AgentServerTypeLib);
-const WORD gDaMsTypeLibVerMajor = 2;
-const WORD gDaMsTypeLibVerMinor = 0;
-
-////////////////////////////////////////////////////////////////////////////
-
-class CServerCmdLine : public CCmdLineInfoEx
-{
-public:
-	virtual void ParseParam(const TCHAR* pszParam, BOOL bFlag, BOOL bLast);
-};
-
-static LPCTSTR	sCmdLineSettings = _T("Settings");
-static LPCTSTR	sCmdLinePage = _T("Page");
-
-const UINT	CDaServerApp::mOptionsChangedMsgId = DA_BROADCAST_OPTIONS_CHANGED;
-const UINT	CDaServerApp::mDefaultCharacterChangedMsgId = DA_BROADCAST_DEFCHAR_CHANGED;
-
-////////////////////////////////////////////////////////////////////////////
-
-IMPLEMENT_DYNAMIC (CDaServerApp, CWinApp)
-
-BEGIN_MESSAGE_MAP(CDaServerApp, CWinApp)
-	//{{AFX_MSG_MAP(CDaServerApp)
-	ON_THREAD_MESSAGE(WM_HOTKEY, OnThreadHotKey)
-	ON_REGISTERED_THREAD_MESSAGE(mOptionsChangedMsgId, OnBroadcastOptionsChanged)
-	ON_REGISTERED_THREAD_MESSAGE(mDefaultCharacterChangedMsgId, OnBroadcastDefaultCharacterChanged)
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-CDaServerApp gApp;
-
-////////////////////////////////////////////////////////////////////////////
-
-CDaServerApp::CDaServerApp()
-:	CWinApp (_T(_DOUBLEAGENT_NAME)),
-	mNextCharID (256),
-	mLastHotKey (0),
-	mClientLifetimeTimer (0)
-{
-	SetRegistryKeyEx (_T(_DOUBLEAGENT_NAME), _T(_SERVER_REGNAME));
-#ifdef	_DEBUG
-	LogStart (GetProfileDebugInt(_T("LogRestart"))!=0);
-	LogDebugRuntime ();
+#define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Server"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+#define	_DEBUG_REQUESTS			(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF|LogTimeMs)
+#define	_DEBUG_NOTIFY_LEVEL		(GetProfileDebugInt(_T("DebugNotifyLevel"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_DEBUG_STYLE			(GetProfileDebugInt(_T("DebugStyle"),LogVerbose,true)&0xFFFF|LogTimeMs)
+#define	_DEBUG_HANDLER			(GetProfileDebugInt(_T("DebugInterface_Handler"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_CHARACTER			(GetProfileDebugInt(_T("LogInstance_Character"),LogDetails,true)&0xFFFF|LogTime)
+#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Server"),LogDetails,true)&0xFFFF|LogTime)
+#define	_LOG_ABANDONED			MinLogLevel(GetProfileDebugInt(_T("LogAbandoned"),LogDetails,true)&0xFFFF|LogTime,_LOG_INSTANCE)
+#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
+#define	_DEBUG_ABANDONED		_LOG_ABANDONED
+//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 #else
-	LogStart (false);
+#ifdef	_LOG_INSTANCE
+#undef	_LOG_INSTANCE
 #endif
-#ifdef	_DEBUG_LANGUAGE
-	SetThreadLocale (MAKELCID (_DEBUG_LANGUAGE, SORT_DEFAULT));
+#define	_LOG_INSTANCE	LogDetails
 #endif
-#ifdef	_DEBUG
-	CDaCoreApp::InitLogging (gLogFileName, gLogLevel);
+
+#ifndef	_LOG_CHARACTER
+#define	_LOG_CHARACTER	LogNormal
 #endif
+
+//#define	__RUNNING_STRESS_TEST__	1
+//#define	__EMPTY_WORKING_SET__	1
+
+/////////////////////////////////////////////////////////////////////////////
+
+DaServer::DaServer()
+:	CInstanceAnchor (_AtlModule),
+	mUsingHandler (0),
+	mNotifyPtr ((CEventNotify*)&mNotify),
+	mCharacterStyle (CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_AutoPopupMenu|CharacterStyle_IconShown)
+{
+#ifdef	_TRACE_RESOURCES
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResources (_TRACE_RESOURCES&~LogHighVolume, _T("[%p] DaServer"), this);
+	}
+#endif
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::DaServer (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
+	}
+#endif
+
+	mNotify.mOwner = this;
+	mNotify.mAnchor = this;
+	mNotify.mGlobal = (CEventGlobal*)&_AtlModule;
+	mNotify.ReflectSinks::AddNotifySink (this);
+	mNotify.LockSinks::AddNotifySink (this);
+
+	_AtlModule.mInstanceNotify.Add (&mNotify);
 }
 
-CDaServerApp::~CDaServerApp()
+DaServer::~DaServer()
 {
-	LogStop (LogIfActive);
-#ifndef	_DEBUG
-	ExitProcess (0);
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::~DaServer (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
+	}
+#endif
+	Terminate (true);
+
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::~DaServer (%d) Done [%d]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), (_AtlModule.GetLockCount()==0));
+	}
+#endif
+#ifdef	_TRACE_RESOURCES
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResources (_TRACE_RESOURCES&~LogHighVolume, _T("[%p] ~DaServer"), this);
+	}
 #endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
 
-void CDaServerApp::_InitInstance()
+void DaServer::Terminate (bool pFinal, bool pAbandonned)
 {
-	CoInitialize (NULL);
-	AfxSetResourceHandle (GetModuleHandle (_T("DaCore")));
-	tSS <INITCOMMONCONTROLSEX, DWORD> lInitControls;
-	lInitControls.dwICC = ICC_WIN95_CLASSES;
-	InitCommonControlsEx (&lInitControls);
-	AfxEnableControlContainer ();
-
-#ifdef	_DEBUG_NOT
-	LogProcessSecurity (GetCurrentProcess(), LogIfActive);
-#else
-	LogProcessUser (GetCurrentProcess(), LogIfActive);
-	LogProcessOwner (GetCurrentProcess(), LogIfActive);
-	LogProcessIntegrity (GetCurrentProcess(), LogIfActive);
-#endif
-#ifdef	_DEBUG
-	LogMessage (LogNormal, _T("Command line [%s]"), GetCommandLine());
-#endif
-	ParseCommandLine (*(m_pCmdInfo = new CServerCmdLine));
-}
-
-BOOL CDaServerApp::InitInstance()
-{
-	BOOL	lRet = FALSE;
-
-	__try
+	if	(this)
 	{
-		_InitInstance ();
-
-		if	(m_pCmdInfo->m_nShellCommand == m_pCmdInfo->AppRegister)
+#ifdef	_LOG_INSTANCE
+		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			RegisterServer ();
-		}
-		else
-#if	(_MFC_VER >= 0x0800)
-		if	(m_pCmdInfo->m_nShellCommand == m_pCmdInfo->AppUnregister)
-#else
-		if	(
-				(m_pCmdInfo->m_nShellCommand == m_pCmdInfo->FileNothing)
-			&&	(m_pCmdInfo->m_strFileName.IsEmpty ())
-			)
-#endif
-		{
-			UnregisterServer ();
-		}
-		else
-		if	(
-				(m_pCmdInfo->m_nShellCommand == m_pCmdInfo->FileNothing)
-			&&	(m_pCmdInfo->m_strFileName.CompareNoCase (sCmdLineSettings) == 0)
-			)
-		{
-			ShowSettings (m_pCmdInfo->m_strPortName);
-		}
-		else
-		if	(
-				(m_pCmdInfo->m_bRunEmbedded)
-			||	(m_pCmdInfo->m_bRunAutomated)
-			)
-		{
-			COleMessageFilterEx *	lMessageFilter;
-
-			COleObjectFactory::RegisterAll ();
-			CThreadSecurity::AllowUiPiMessage (mOptionsChangedMsgId);
-			CThreadSecurity::AllowUiPiMessage (mDefaultCharacterChangedMsgId);
-			CDaSpeechInputConfig::RegisterHotKey (true);
-			WerOptOut (false);
-
-			if	(lMessageFilter = COleMessageFilterEx::SetAppFilter ())
-			{
-				lMessageFilter->SafeEnableNotResponding (0);
-				lMessageFilter->SafeEnableBusy (0);
-#ifdef	_DEBUG_NOT
-				lMessageFilter->mLogLevelDlg = LogNormal|LogHighVolume;
-#endif
-			}
-			lRet = TRUE;
-		}
-	}
-	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__))
-	{}
-
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-void CDaServerApp::_ExitInstance()
-{
-	try
-	{
-		mTimerNotifies.DeleteAll ();
-	}
-	catch AnyExceptionSilent
-
-	CDaSpeechInputConfig::RegisterHotKey (false);
-	SafeFreeSafePtr (mAgentPropertySheet);
-	SafeFreeSafePtr (mAgentAudioOutputProperties);
-	SafeFreeSafePtr (mAgentSpeechInputProperties);
-	SafeFreeSafePtr (mAgentCommandWindow);
-	SafeFreeSafePtr (mPropSheetCharSel);
-	SafeFreeSafePtr (mVoiceCommandsWnd);
-	CLocalize::FreeMuiModules ();
-	COleMessageFilterEx::ResetAppFilter (false);
-
-	try
-	{
-		COleObjectFactory::RevokeAll ();
-	}
-	catch AnyExceptionSilent
-	try
-	{
-		COleObjectFactory::UnregisterAll ();
-	}
-	catch AnyExceptionSilent
-}
-
-int CDaServerApp::ExitInstance()
-{
-	int	lRet = 4;
-
-	__try
-	{
-#ifdef	_DEBUG
-		if	(GetProfileDebugInt(_T("LogRestart"))==0)
-		{
-			LogMessage (LogNormal, _T("ExitInstance"));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::Terminate [%u %u] IsInNotify [%u]"), this, max(m_dwRef,-1), pFinal, pAbandonned, IsInNotify());
 		}
 #endif
-		_ExitInstance ();
-	}
-	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__, EXCEPTION_CONTINUE_EXECUTION))
-	{}
-
-	__try
-	{
-		CoUninitialize ();
-	}
-	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__, EXCEPTION_CONTINUE_EXECUTION))
-	{}
-
-	__try
-	{
-#ifdef	_DEBUG
-		if	(GetProfileDebugInt(_T("LogRestart"))==0)
+		if	(pFinal)
 		{
-			LogMessage (LogNormal, _T("ExitInstance Done"));
+			UnmanageObjectLifetime (this);
 		}
-#endif
-		LogStop (LogIfActive);
-		lRet = CWinApp::ExitInstance();
-	}
-	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__, EXCEPTION_CONTINUE_EXECUTION))
-	{}
-
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-int CDaServerApp::Run ()
-{
-	int	lRet = 4;
-
-	__try
-	{
-		AddTimerNotify (mClientLifetimeTimer=(UINT)&mClientLifetimeTimer, 5000, this);
-		lRet = CWinApp::Run();
-	}
-	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__))
-	{}
-
-	return lRet;
-}
-
-//BOOL CDaServerApp::PumpMessage()
-//{
-//	BOOL	lRet = FALSE;
-//
-//	__try
-//	{
-//		lRet = CWinApp::PumpMessage();
-//	}
-//	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__))
-//	{}
-//
-//	return lRet;
-//}
-
-/////////////////////////////////////////////////////////////////////////////
-
-BOOL CDaServerApp::PreTranslateMessage(MSG *pMsg)
-{
-	if	(
-			(pMsg->message == WM_TIMER)
-		&&	(pMsg->hwnd == NULL)
-		&&	(!mTimerNotifies.OnTimer ((UINT_PTR)pMsg->wParam))
-		)
-	{
-		return TRUE;
-	}
-
-	if	(
-			(pMsg->message == mOptionsChangedMsgId)
-		||	(pMsg->message == mDefaultCharacterChangedMsgId)
-		)
-	{
-		MSG	lMsg;
-		while (PeekMessage (&lMsg, 0, pMsg->message, pMsg->message, PM_REMOVE))
-		{}
-		return DispatchThreadMessageEx(pMsg);
-	}
-	return CWinApp::PreTranslateMessage(pMsg);
-}
-
-void CDaServerApp::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTimerId)
-{
-	if	(pTimerId == mClientLifetimeTimer)
-	{
-		VerifyObjectLifetimes ();
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-void CServerCmdLine::ParseParam(const TCHAR* pszParam, BOOL bFlag, BOOL bLast)
-{
-	if	(
-			(bFlag)
-		&&	(_tcsicmp (pszParam, sCmdLineSettings) == 0)
-		)
-	{
-		m_nShellCommand = FileNothing;
-		m_strFileName = sCmdLineSettings;
-	}
-	else
-	if	(
-			(bFlag)
-		&&	(!bLast)
-		&&	(m_nShellCommand == FileNothing)
-		&&	(m_strFileName.CompareNoCase (sCmdLineSettings) == 0)
-		&&	(_tcsicmp (pszParam, sCmdLinePage) == 0)
-		)
-	{
-		m_strDriverName = sCmdLinePage;
-	}
-	else
-	if	(
-			(!bFlag)
-		&&	(bLast)
-		&&	(m_nShellCommand == FileNothing)
-		&&	(m_strFileName.CompareNoCase (sCmdLineSettings) == 0)
-		&&	(m_strDriverName.CompareNoCase (sCmdLinePage) == 0)
-		)
-	{
-		m_strPortName = pszParam;
-	}
-	else
-	{
-		CCmdLineInfoEx::ParseParam (pszParam, bFlag, bLast);
-	}
-};
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-void CDaServerApp::RegisterServer ()
-{
-	if	(
-			(IsWindowsXp_AtMost ())
-		||	(CUserSecurity::IsUserAdministrator ())
-		)
-	{
-		//AfxOleUnregisterTypeLib (gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLibVerMinor);
-		COleObjectFactory::UpdateRegistryAll (FALSE);
-		COleObjectFactory::UpdateRegistryAll (TRUE);
-		AfxOleRegisterTypeLib (AfxGetInstanceHandle(), gDaTypeLibId);
-//
-//	If MS Agent is not installed, we have to register its type library as well.
-//
-		if	(
-				(IsWindows7_AtLeast())
-			&&	(CRegistrySearch::GetClassViProgId (__uuidof(AgentServer), HKEY_CLASSES_ROOT).IsEmpty())
-#ifdef	_WIN64
-			&&	(CRegistrySearch::GetClassViProgId (__uuidof(AgentServer64), HKEY_CLASSES_ROOT).IsEmpty())
-#endif
-			)
+ 		if	(pAbandonned)
 		{
-			AfxOleRegisterTypeLib(AfxGetInstanceHandle(), gDaMsTypeLibId, CRegistrySearch::GetAltTypeLibPath (2));
+			Disconnect (pAbandonned);
 		}
-	}
-	else
-	if	(IsWindowsVista_AtLeast ())
-	{
-		AfxMessageBox (_T("Registration requires administrative privileges"), MB_OK|MB_ICONASTERISK);
-	}
-}
 
-void CDaServerApp::UnregisterServer ()
-{
-	if	(
-			(IsWindowsXp_AtMost ())
-		||	(CUserSecurity::IsUserAdministrator ())
-		)
-	{
-//
-//	If we installed the MS Agent type library, we should uninstall it too.
-//
-		if	(
-				(IsWindows7_AtLeast())
-			&&	(CRegistrySearch::GetClassViProgId (__uuidof(AgentServer), HKEY_CLASSES_ROOT).IsEmpty())
-#ifdef	_WIN64
-			&&	(CRegistrySearch::GetClassViProgId (__uuidof(AgentServer64), HKEY_CLASSES_ROOT).IsEmpty())
-#endif
-			)
-		{
-			AfxOleUnregisterTypeLib(gDaMsTypeLibId, gDaMsTypeLibVerMajor, gDaMsTypeLibVerMinor);
-		}
-		AfxOleUnregisterTypeLib (gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLibVerMinor);
-		COleObjectFactory::UpdateRegistryAll (FALSE);
-	}
-	else
-	if	(IsWindowsVista_AtLeast ())
-	{
-		AfxMessageBox (_T("Registration requires administrative privileges"), MB_OK|MB_ICONASTERISK);
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-CDaAgentPropertySheet * CDaServerApp::GetAgentPropertySheet (bool pCreate, LPCTSTR pClientMutexName)
-{
-	if	(
-			(!mAgentPropertySheet)
-		&&	(pCreate)
-		&&	(mAgentPropertySheet = new CDaAgentPropertySheet (pClientMutexName))
-		)
-	{
-		mAgentPropertySheet->m_dwRef = 0;
-	}
-	return mAgentPropertySheet;
-}
-
-void CDaServerApp::OnDeleteAgentPropertySheet (CDaAgentPropertySheet * pAgentPropertySheet)
-{
-	if	(pAgentPropertySheet == mAgentPropertySheet)
-	{
-		mAgentPropertySheet.Detach ();
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CDaAgentAudioOutputProperties * CDaServerApp::GetAgentAudioOutputProperties (bool pCreate, LPCTSTR pClientMutexName)
-{
-	if	(
-			(!mAgentAudioOutputProperties)
-		&&	(pCreate)
-		&&	(mAgentAudioOutputProperties = new CDaAgentAudioOutputProperties (pClientMutexName))
-		)
-	{
-		mAgentAudioOutputProperties->m_dwRef = 0;
-	}
-	return mAgentAudioOutputProperties;
-}
-
-void CDaServerApp::OnDeleteAgentAudioOutputProperties (CDaAgentAudioOutputProperties * pAgentAudioOutputProperties)
-{
-	if	(pAgentAudioOutputProperties == mAgentAudioOutputProperties)
-	{
-		mAgentAudioOutputProperties.Detach ();
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CDaAgentSpeechInputProperties * CDaServerApp::GetAgentSpeechInputProperties (bool pCreate, LPCTSTR pClientMutexName)
-{
-	if	(
-			(!mAgentSpeechInputProperties)
-		&&	(pCreate)
-		&&	(mAgentSpeechInputProperties = new CDaAgentSpeechInputProperties (pClientMutexName))
-		)
-	{
-		mAgentSpeechInputProperties->m_dwRef = 0;
-	}
-	return mAgentSpeechInputProperties;
-}
-
-void CDaServerApp::OnDeleteAgentSpeechInputProperties (CDaAgentSpeechInputProperties * pAgentSpeechInputProperties)
-{
-	if	(pAgentSpeechInputProperties == mAgentSpeechInputProperties)
-	{
-		mAgentSpeechInputProperties.Detach ();
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CDaAgentCommandWindow * CDaServerApp::GetAgentCommandWindow (bool pCreate, LPCTSTR pClientMutexName)
-{
-	if	(
-			(!mAgentCommandWindow)
-		&&	(pCreate)
-		&&	(mAgentCommandWindow = new CDaAgentCommandWindow (GetVoiceCommandsWnd (true), pClientMutexName))
-		)
-	{
-		mAgentCommandWindow->m_dwRef = 0;
-	}
-	return mAgentCommandWindow;
-}
-
-void CDaServerApp::OnDeleteAgentCommandWindow (CDaAgentCommandWindow * pAgentCommandWindow)
-{
-	if	(pAgentCommandWindow == mAgentCommandWindow)
-	{
-		mAgentCommandWindow.Detach ();
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CPropSheetCharSel * CDaServerApp::GetPropSheetCharSel (bool pCreate, LPCTSTR pClientMutexName)
-{
-	if	(
-			(!mPropSheetCharSel)
-		&&	(pCreate)
-		&&	(mPropSheetCharSel = new CPropSheetCharSel (NULL, pClientMutexName))
-		)
-	{
-		mPropSheetCharSel->m_dwRef = 0;
-	}
-	return mPropSheetCharSel;
-}
-
-void CDaServerApp::OnDeletePropSheetCharSel (CPropSheetCharSel * pPropSheetCharSel)
-{
-	if	(pPropSheetCharSel == mPropSheetCharSel)
-	{
-		mPropSheetCharSel.Detach ();
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-CDaAgentCharacter * CDaServerApp::GetAppCharacter (long pCharID)
-{
-	CDaAgentCharacter *	lRet = NULL;
-
-	if	(pCharID > 0)
-	{
 		try
 		{
-			INT_PTR			lFileNdx;
-			CAgentFile *	lFile;
-
-			for	(lFileNdx = 0; lFile = GetCachedFile (lFileNdx); lFileNdx++)
+			if	(pAbandonned)
 			{
-				CObTypeArray <CObject>	lFileClients;
-				INT_PTR					lClientNdx;
-				CDaAgentCharacter *		lCharacter;
+				mNotify.AbandonAll ();
+			}
+			else
+			{
+				mNotify.UnregisterAll ();
+			}
+			if	(
+					(pFinal)
+				||	(!IsInNotify ())
+				)
+			{
+				mNotify.LockSinks::RemoveNotifySink (this);
+			}
+			mNotify.ReflectSinks::RemoveNotifySink (this);
 
-				if	(GetFileClients (lFile, lFileClients))
+			// Protect this object from possible deletion by incrementing its notification level
+			__super::_PreNotify ();
+			UnloadAllCharacters (pAbandonned);
+			__super::_PostNotify ();
+		}
+		catch AnyExceptionDebug
+
+		try
+		{
+			_AtlModule.mInstanceNotify.Remove (&mNotify);
+		}
+		catch AnyExceptionSilent
+
+		if	(pFinal)
+		{
+			Disconnect (pAbandonned);
+		}
+	}
+}
+
+void DaServer::Abandon ()
+{
+	if	(
+			(this)
+		&&	(m_dwRef > 0)
+		)
+	{
+#ifdef	_LOG_ABANDONED
+		if	(LogIsActive (_LOG_ABANDONED))
+		{
+			LogMessage (_LOG_ABANDONED, _T("[%p(%d)] DaServer::Abandon"), this, max(m_dwRef,-1));
+		}
+#endif
+		__super::_PreNotify ();
+		Disconnect (true);
+		__super::_PostNotify ();
+		_AtlModule.mObjectWasAbandoned = true;
+
+#ifdef	_LOG_ABANDONED_NOT
+		if	(LogIsActive (_LOG_ABANDONED))
+		{
+			LogMessage (_LOG_ABANDONED, _T("[%p(%d)] DaServer::Abandoned"), this, max(m_dwRef,-1));
+		}
+#endif
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void DaServer::Disconnect (bool pAbandonned)
+{
+	if	(m_dwRef > 0)
+	{
+		if	(pAbandonned)
+		{
+			m_dwRef = SHRT_MIN;
+		}
+		__try
+		{
+			LogComErr (LogIfActive, CoDisconnectObject (GetUnknown(), 0));
+		}
+		__except (LogCrashCode (GetExceptionCode(), __FILE__, __LINE__, EXCEPTION_EXECUTE_HANDLER))
+		{}
+	}
+	if	(pAbandonned)
+	{
+		m_dwRef = min (m_dwRef, SHRT_MIN);
+	}
+	else
+	{
+		m_dwRef = min (m_dwRef, 0);
+	}
+}
+
+void DaServer::FinalRelease()
+{
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::FinalRelease [%u] UsingHandler [%u]"), this, max(m_dwRef,-1), IsInNotify(), mUsingHandler);
+	}
+#endif
+	Terminate (false, !_VerifyClientLifetime());
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool DaServer::VerifyClientLifetime ()
+{
+	if	(IsInNotify())
+	{
+#ifdef	_DEBUG_NOTIFY_LEVEL
+		LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] DaServer::VerifyClientLifetime IsInNotify [%u]"), this, max(m_dwRef,-1), IsInNotify());
+#endif
+		return true;
+	}
+	else
+	if	(HasFinalReleased())
+	{
+#ifdef	_LOG_ABANDONED
+		if	(LogIsActive (_LOG_ABANDONED))
+		{
+			LogMessage (_LOG_ABANDONED, _T("[%p(%d)] DaServer::VerifyClientLifetime [%u] HasFinalReleased"), this, max(m_dwRef,-1), IsInNotify());
+		}
+#endif
+		try
+		{
+			if	(CanFinalRelease())
+			{
+#ifdef	_LOG_INSTANCE
+				if	(LogIsActive (_LOG_INSTANCE))
 				{
-					for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
-					{
-						if	(
-								(lCharacter = DYNAMIC_DOWNCAST (CDaAgentCharacter, lFileClients [lClientNdx]))
-							&&	(lCharacter->GetCharID() == pCharID)
-							)
-						{
-							lRet = lCharacter;
-						}
-					}
+					LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer Release (HasFinalReleased)"), this, max(m_dwRef,-1));
 				}
-				if	(lRet)
+#ifdef	_DEBUG_ABANDONED
+				else
+				if	(LogIsActive (_DEBUG_ABANDONED))
 				{
-					break;
+					LogMessage (_DEBUG_ABANDONED, _T("[%p(%d)] DaServer Release (HasFinalReleased)"), this, max(m_dwRef,-1));
 				}
+#endif
+#endif
+
+				m_dwRef = 1;
+				Release ();
 			}
 		}
 		catch AnyExceptionDebug
+
+		return true;
 	}
-	return lRet;
+	return CSvrObjLifetime::VerifyClientLifetime ();
 }
 
-CDaAgentCharacter * CDaServerApp::GetListenCharacter ()
+void DaServer::OnClientEnded ()
 {
-	CDaAgentCharacter *	lListenCharacter = NULL;
-
+#ifdef	_LOG_ABANDONED
+	if	(LogIsActive (_LOG_ABANDONED))
+	{
+		LogMessage (_LOG_ABANDONED, _T("[%p(%d)] DaServer::OnClientEnded [%u]"), this, max(m_dwRef,-1), IsInNotify());
+	}
+#endif
+	Terminate (true, true);
 	try
 	{
-		CDaAgentCharacter *	lActiveCharacter = NULL;
-		CDaAgentCharacter *	lClientActiveCharacter = NULL;
-		INT_PTR				lFileNdx;
-		CAgentFile *		lFile;
+		delete this;
+	}
+	catch AnyExceptionDebug
+}
 
-		for	(lFileNdx = 0; lFile = GetCachedFile (lFileNdx); lFileNdx++)
+/////////////////////////////////////////////////////////////////////////////
+
+bool DaServer::CanFinalRelease ()
+{
+	if	(IsInNotify() > 0)
+	{
+		return false;
+	}
+	else
+	{
+		INT_PTR			lFileNdx;
+		CAgentFile *	lFile;
+
+		for	(lFileNdx = CachedFileCount()-1; lFile = GetCachedFile (lFileNdx); lFileNdx--)
 		{
-			CObTypeArray <CObject>	lFileClients;
-			INT_PTR					lClientNdx;
-			CDaAgentCharacter *		lCharacter;
+			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
+			INT_PTR								lClientNdx;
 
 			if	(GetFileClients (lFile, lFileClients))
 			{
-				for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
+				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
-					if	(lCharacter = DYNAMIC_DOWNCAST (CDaAgentCharacter, lFileClients [lClientNdx]))
+					try
 					{
-						if	(lCharacter->IsInputActive ())
-						{
-							lActiveCharacter = lCharacter;
-							break;
-						}
-						else
+						DaSvrCharacter *	lCharacter = NULL;
+
 						if	(
-								(!lClientActiveCharacter)
-							&&	(lCharacter->IsClientActive ())
+								(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
+							&&	(!lCharacter->CanFinalRelease ())
 							)
 						{
-							lClientActiveCharacter = lCharacter;
+							return false;
 						}
 					}
+					catch AnyExceptionSilent
 				}
 			}
-			if	(lActiveCharacter)
-			{
-				break;
-			}
-		}
-
-		if	(lActiveCharacter)
-		{
-			lListenCharacter = lActiveCharacter;
-		}
-		else
-		{
-			lListenCharacter = lClientActiveCharacter;
 		}
 	}
-	catch AnyExceptionDebug
-
-	return lListenCharacter;
+	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CVoiceCommandsWnd * CDaServerApp::GetVoiceCommandsWnd (bool pCreate, long pCharID)
+bool DaServer::_PreNotify ()
 {
-#ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDaServerApp::GetVoiceCommandsWnd"));
+#ifdef	_DEBUG_NOTIFY_LEVEL
+	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] DaServer::_PreNotify [%u]"), this, max(m_dwRef,-1), IsInNotify());
 #endif
 	if	(
-			(!mVoiceCommandsWnd)
-		&&	(pCreate)
-		&&	(mVoiceCommandsWnd = (CVoiceCommandsWnd *) CVoiceCommandsWnd::CreateObject ())
+			(m_dwRef > 0)
+		&&	(_VerifyClientLifetime ())
 		)
 	{
-		if	(mVoiceCommandsWnd->Create ())
-		{
-			SetVoiceCommandClients (-1);
-			SetVoiceCommandNames (-1);
-		}
-		else
-		{
-			SafeFreeSafePtr (mVoiceCommandsWnd);
-		}
+		return __super::_PreNotify ();
 	}
-	if	(
-			(mVoiceCommandsWnd)
-		&&	(pCharID > 0)
-		&&	(mVoiceCommandsWnd->GetCharID() != pCharID)
-		)
+	else
 	{
-		CDaAgentCharacter *	lCharacter;
-		CDaAgentCommands *	lCommands = NULL;
-		BSTR				lName = NULL;
+		__super::_PreNotify ();
+#ifdef	_DEBUG_NOTIFY_LEVEL
+		LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] DaServer::_PreNotify [%u] failed"), this, max(m_dwRef,-1), IsInNotify());
+#endif
+		return false;
+	}
+}
 
-		if	(lCharacter = GetAppCharacter (pCharID))
-		{
-			lName = lCharacter->GetName ();
-			lCommands = lCharacter->GetCommandsObj (true);
-		}
-		mVoiceCommandsWnd->SetCharacter (pCharID, CString (lName), (lCommands ? (LPCTSTR)lCommands->GetVoiceCommandsCaption() : NULL));
-	}
-#ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDaServerApp::GetVoiceCommandsWnd Done"));
+bool DaServer::_PostNotify ()
+{
+	__super::_PostNotify ();
+#ifdef	_DEBUG_NOTIFY_LEVEL
+	LogMessage (_DEBUG_NOTIFY_LEVEL, _T("[%p(%d)] DaServer::_PostNotify [%u] HasFinalRelased [%u] CanFinalRelease [%u]"), this, max(m_dwRef,-1), IsInNotify(), HasFinalReleased(), CanFinalRelease());
 #endif
-	return mVoiceCommandsWnd;
+
+	if	(IsInNotify() == 0)
+	{
+		mNotify.UnregisterDelayed ();
+	}
+
+	if	(
+			(!IsInNotify ())
+		&&	(!_VerifyClientLifetime ())
+		)
+	{
+#ifdef	_LOG_INSTANCE
+		if	(LogIsActive (_LOG_INSTANCE))
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer PostNotify -> !VerifyClientLifetime"), this, max(m_dwRef,-1));
+		}
+#endif
+		Abandon ();
+		return false;
+	}
+	else
+	if	(HasFinalReleased ())
+	{
+#ifdef	_LOG_INSTANCE
+		if	(LogIsActive (_LOG_INSTANCE))
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer PostNotify -> HasFinalReleased [%u]"), this, max(m_dwRef,-1), IsInNotify());
+		}
+#endif
+		Abandon ();
+		return false;
+	}
+	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
 
-void CDaServerApp::SetVoiceCommandClients (long pCharID)
+HRESULT WINAPI DaServer::UpdateRegistryOverride (BOOL bRegister)
 {
-	if	(mVoiceCommandsWnd)
+	HRESULT		lResult = UpdateRegistry (bRegister);
+
+	if	(SUCCEEDED (lResult))
 	{
-		try
+		if	(bRegister)
 		{
-			INT_PTR			lFileNdx;
-			CAgentFile *	lFile;
-
-			for	(lFileNdx = 0; lFile = GetCachedFile (lFileNdx); lFileNdx++)
+			if	(
+					(IsWindows7_AtLeast())
+				&&	(CRegistrySearch::GetClassViProgId (__uuidof(AgentServer), HKEY_CLASSES_ROOT).IsEmpty())
+#ifdef	_WIN64
+				&&	(CRegistrySearch::GetClassViProgId (__uuidof(AgentServer64), HKEY_CLASSES_ROOT).IsEmpty())
+#endif
+				)
 			{
-				CObTypeArray <CObject>	lFileClients;
-				INT_PTR					lClientNdx;
-				CDaAgentCharacter *		lCharacter;
+				CRegKeyEx	lMsAgentClass (HKEY_CLASSES_ROOT, _T("CLSID\\")+(CString)CGuidStr(__uuidof(AgentServer)), false, true);
+				CRegKeyEx	lServerProgId (HKEY_CLASSES_ROOT, _T(_AGENT_SERVER_PROGID), false, true);
+				CRegKeyEx	lServerProgId2 (HKEY_CLASSES_ROOT, _T(_AGENT_SERVER_PROGID2), false, true);
 
-				if	(GetFileClients (lFile, lFileClients))
-				{
-					for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
-					{
-						if	(
-								(lCharacter = DYNAMIC_DOWNCAST (CDaAgentCharacter, lFileClients [lClientNdx]))
-							&&	(
-									(pCharID <= 0)
-								||	(lCharacter->GetCharID() == pCharID)
-								)
-							)
-						{
-							mVoiceCommandsWnd->SetCharacterClient (lCharacter->GetCharID(), lCharacter->GetActiveClient());
-							if	(pCharID > 0)
-							{
-								break;
-							}
-						}
-					}
-					if	(lClientNdx >= 0)
-					{
-						break;
-					}
-				}
+				CRegString (lMsAgentClass, (LPCTSTR)NULL, true).Update (_T("Microsoft Agent Server 2.0"));
+				CRegString (CRegKeyEx (lMsAgentClass, _T("ProgID"), false, true), (LPCTSTR)NULL, true).Update (_T(_AGENT_SERVER_PROGID2));
+				AtlRegisterClassCategoriesHelper (__uuidof(AgentServer), GetCategoryMap(), TRUE);
+
+				CRegString (lServerProgId, (LPCTSTR)NULL, true).Update (_T(_AGENT_SERVER_PROGID_NAME));
+				CRegString (CRegKeyEx (lServerProgId, _T("CurVer"), false, true), (LPCTSTR)NULL, true).Update (_T(_AGENT_SERVER_PROGID2));
+				CRegString (lServerProgId2, (LPCTSTR)NULL, true).Update (_T(_AGENT_SERVER_PROGID_NAME));
+				CRegString (CRegKeyEx (lServerProgId2, _T("CLSID"), false, true), (LPCTSTR)NULL, true).Update ((CString)CGuidStr(__uuidof(AgentServer)));
+
+				CRegString (CRegKeyEx (lMsAgentClass, _T("AutoTreatAs"), false, true), (LPCTSTR)NULL, true).Update ((CString)CGuidStr(__uuidof(DaServer)));
+				CRegString (CRegKeyEx (lMsAgentClass, _T("TreatAs"), false, true), (LPCTSTR)NULL, true).Update ((CString)CGuidStr(__uuidof(DaServer)));
 			}
 		}
-		catch AnyExceptionDebug
+		else
+		{
+			CRegKeyEx	lMsAgentClass (HKEY_CLASSES_ROOT, _T("CLSID\\")+(CString)CGuidStr(__uuidof(AgentServer)), false);
+#ifdef	_WIN64
+			CRegKeyEx	lMsAgentClass64 (HKEY_CLASSES_ROOT, _T("CLSID\\")+(CString)CGuidStr(__uuidof(AgentServer64)), false);
+#endif
+
+			if	(
+					(IsWindows7_AtLeast())
+				&&	(CRegistrySearch::GetClassViProgId (__uuidof(AgentServer), HKEY_CLASSES_ROOT).IsEmpty())
+#ifdef	_WIN64
+				&&	(CRegistrySearch::GetClassViProgId (__uuidof(AgentServer64), HKEY_CLASSES_ROOT).IsEmpty())
+#endif
+				)
+			{
+				lMsAgentClass.Delete ();
+
+				CRegKeyEx (HKEY_CLASSES_ROOT, _T(_AGENT_SERVER_PROGID), false).Delete ();
+				CRegKeyEx (HKEY_CLASSES_ROOT, _T(_AGENT_SERVER_PROGID2), false).Delete ();
+			}
+			else
+			{
+				CRegKeyEx	lAutoTreatAs (lMsAgentClass, _T("AutoTreatAs"), false);
+				CRegKeyEx	lTreatAs (lMsAgentClass, _T("TreatAs"), false);
+
+				if	(
+						(lAutoTreatAs.IsValid())
+					&&	(lAutoTreatAs.Value().Value().CompareNoCase ((CString)CGuidStr(__uuidof(DaServer))) == 0)
+					)
+				{
+					lAutoTreatAs.Delete ();
+				}
+				if	(
+						(lTreatAs.IsValid())
+					&&	(lTreatAs.Value().Value().CompareNoCase ((CString)CGuidStr(__uuidof(DaServer))) == 0)
+					)
+				{
+					lTreatAs.Delete ();
+				}
+#ifdef	_WIN64
+				if	(lMsAgentClass64.IsValid ())
+				{
+					CRegKeyEx	lAutoTreatAs64 (lMsAgentClass, _T("AutoTreatAs"), false);
+					CRegKeyEx	lTreatAs64 (lMsAgentClass, _T("TreatAs"), false);
+
+					if	(
+							(lAutoTreatAs64.IsValid())
+						&&	(lAutoTreatAs64.Value().Value().CompareNoCase ((CString)CGuidStr(__uuidof(DaServer))) == 0)
+						)
+					{
+						lAutoTreatAs64.Delete ();
+					}
+					if	(
+							(lTreatAs64.IsValid())
+						&&	(lTreatAs64.Value().Value().CompareNoCase ((CString)CGuidStr(__uuidof(DaServer))) == 0)
+						)
+					{
+						lTreatAs64.Delete ();
+					}
+				}
+#endif
+			}
+		}
 	}
+	return lResult;
 }
 
-void CDaServerApp::SetVoiceCommandNames (long pCharID)
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT WINAPI DaServer::CatchFirstQueryInterface (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw)
 {
-	if	(mVoiceCommandsWnd)
+	DaServer *	lThis = (DaServer *) pv;
+
+	if	(
+			(lThis->mUsingHandler > 0)
+		&&	(lThis->mUsingHandler < 10)
+		)
 	{
-		try
+		lThis->UnmanageObjectLifetime (lThis);
+		if	(lThis->ManageObjectLifetime (lThis))
 		{
-			INT_PTR			lFileNdx;
-			CAgentFile *	lFile;
+			lThis->mUsingHandler = 10;
+		}
+		else
+		{
+			lThis->mUsingHandler++;
+		}
+	}
+	return S_FALSE;
+}
 
-			for	(lFileNdx = 0; lFile = GetCachedFile (lFileNdx); lFileNdx++)
+HRESULT WINAPI DaServer::DelegateIDaSvrPropertySheet (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw)
+{
+	HRESULT					lResult = E_NOINTERFACE;
+	DaServer *				lThis = (DaServer *) pv;
+	DaSvrPropertySheet *	lPropSheet;
+
+	if	(lPropSheet = _AtlModule.GetSvrPropertySheet (true, lThis->mClientMutexName))
+	{
+		lResult = lPropSheet->QueryInterface (iid, ppvObject);
+	}
+	return lResult;
+}
+
+HRESULT WINAPI DaServer::DelegateIDaSvrSettings (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw)
+{
+	HRESULT			lResult = E_NOINTERFACE;
+	DaServer *		lThis = (DaServer *) pv;
+	DaSvrSettings *	lSettings;
+
+	if	(lSettings = _AtlModule.GetSvrSettings (true, lThis->mClientMutexName))
+	{
+		lResult = lSettings->QueryInterface (iid, ppvObject);
+	}
+	return lResult;
+}
+
+HRESULT WINAPI DaServer::DelegateIDaSvrAudioOutput (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw)
+{
+	HRESULT				lResult = E_NOINTERFACE;
+	DaServer *			lThis = (DaServer *) pv;
+	DaSvrAudioOutput *	lAudioOutput;
+
+	if	(lAudioOutput = _AtlModule.GetSvrAudioOutput (true, lThis->mClientMutexName))
+	{
+		lResult = lAudioOutput->QueryInterface (iid, ppvObject);
+	}
+	return lResult;
+}
+
+HRESULT WINAPI DaServer::DelegateIDaSvrSpeechInput (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw)
+{
+	HRESULT				lResult = E_NOINTERFACE;
+	DaServer *			lThis = (DaServer *) pv;
+	DaSvrSpeechInput *	lSpeechInput;
+
+	if	(lSpeechInput = _AtlModule.GetSvrSpeechInput (true, lThis->mClientMutexName))
+	{
+		lResult = lSpeechInput->QueryInterface (iid, ppvObject);
+	}
+	return lResult;
+}
+
+HRESULT WINAPI DaServer::DelegateIDaSvrCommandsWindow (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw)
+{
+	HRESULT					lResult = E_NOINTERFACE;
+	DaServer *				lThis = (DaServer *) pv;
+	DaSvrCommandsWindow *	lCommandsWindow;
+
+	if	(lCommandsWindow = _AtlModule.GetSvrCommandsWindow (true, lThis->mClientMutexName))
+	{
+		lResult = lCommandsWindow->QueryInterface (iid, ppvObject);
+	}
+	return lResult;
+}
+
+HRESULT WINAPI DaServer::DelegateIDaSvrCharacterFiles (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw)
+{
+	HRESULT					lResult = E_NOINTERFACE;
+	DaServer *				lThis = (DaServer *) pv;
+	DaSvrCharacterFiles *	lCharacterFiles;
+
+	if	(lCharacterFiles = _AtlModule.GetSvrCharacterFiles (true, lThis->mClientMutexName))
+	{
+		lResult = lCharacterFiles->QueryInterface (iid, ppvObject);
+	}
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+void DaServer::UnloadAllCharacters (bool pAbandonned)
+{
+	INT_PTR			lFileNdx;
+	CAgentFile *	lFile;
+
+#ifdef	_LOG_INSTANCE
+	if	(
+			(CachedFileCount() > 0)
+		&&	(LogIsActive (_LOG_INSTANCE))
+		)
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::UnloadAllCharacters [%d] Abandonned [%u]"), this, max(m_dwRef,-1), CachedFileCount(), pAbandonned);
+	}
+#endif
+	for	(lFileNdx = CachedFileCount()-1; lFileNdx >= 0; lFileNdx--)
+	{
+		CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
+		INT_PTR								lClientNdx;
+
+		if	(
+				(lFile = GetCachedFile (lFileNdx))
+			&&	(GetFileClients (lFile, lFileClients))
+			)
+		{
+			try
 			{
-				CObTypeArray <CObject>	lFileClients;
-				INT_PTR					lClientNdx;
-				CDaAgentCharacter *		lCharacter;
-				CDaAgentCommands *		lCommands;
-				BSTR					lName;
-
-				if	(GetFileClients (lFile, lFileClients))
+				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
-					for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
+					DaSvrCharacter *	lCharacter = NULL;
+
+					try
 					{
-						if	(
-								(lCharacter = DYNAMIC_DOWNCAST (CDaAgentCharacter, lFileClients [lClientNdx]))
-							&&	(
-									(pCharID <= 0)
-								||	(lCharacter->GetCharID() == pCharID)
-								)
-							&&	(lName = lCharacter->GetName())
-							)
+						lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]);
+					}
+					catch AnyExceptionDebug
+
+					if	(lCharacter)
+					{
+						try
 						{
-							lCommands = lCharacter->GetCommandsObj (true);
-							mVoiceCommandsWnd->SetCharacterName (lCharacter->GetCharID(), CString (lName), (lCommands ? (LPCTSTR)lCommands->GetVoiceCommandsCaption() : NULL));
-							if	(pCharID > 0)
+							if	(pAbandonned)
 							{
-								break;
+								bool	lCanFinalRelease = lCharacter->CanFinalRelease();
+#ifdef	_LOG_ABANDONED
+								if	(LogIsActive (_LOG_ABANDONED))
+								{
+									LogMessage (_LOG_ABANDONED, _T("[%p(%d)] TerminateCharacter [%p(%d)(%d)] CanFinalRelease [%u]"), this, max(m_dwRef,-1), lCharacter, lCharacter->GetCharID(), max(lCharacter->m_dwRef,-1), lCanFinalRelease);
+								}
+#endif
+								try
+								{
+									lCharacter->Terminate (false, pAbandonned);
+								}
+								catch AnyExceptionDebug
+								try
+								{
+									lCharacter->Terminate (true, pAbandonned);
+								}
+								catch AnyExceptionDebug
+								
+								if	(lCanFinalRelease)
+								{
+									try
+									{
+										delete lCharacter;
+									}
+									catch AnyExceptionSilent
+								}
+								else
+								{
+									_AtlModule.mObjectWasAbandoned = true;
+								}
+#ifdef	_LOG_ABANDONED
+								if	(LogIsActive (_LOG_ABANDONED))
+								{
+									LogMessage (_LOG_ABANDONED, _T("[%p(%d)] TerminateCharacter [%p] Done"), this, max(m_dwRef,-1), lCharacter);
+								}
+#endif
+							}
+							else
+							if	(lCharacter->CanFinalRelease ())
+							{
+								lCharacter->Terminate (false);
+#ifdef	_STRICT_COMPATIBILITY
+								lCharacter->Terminate (true);
+								
+								try
+								{
+									delete lCharacter;
+								}
+								catch AnyExceptionSilent
+#else
+								lCharacter->Release ();
+#endif
+							}
+							else
+							{
+								lCharacter->Abandon ();
 							}
 						}
-					}
-					if	(lClientNdx >= 0)
-					{
-						break;
+						catch AnyExceptionDebug
 					}
 				}
 			}
+			catch AnyExceptionDebug
 		}
-		catch AnyExceptionDebug
 	}
 }
 
@@ -876,451 +752,1344 @@ void CDaServerApp::SetVoiceCommandNames (long pCharID)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CDaServerApp::AddTimerNotify (UINT_PTR pTimerId, DWORD pInterval, ITimerNotifySink * pNotifySink)
+CAtlString DaServer::GetSearchPath ()
 {
-	bool			lRet = false;
-	CTimerNotify *	lTimer;
+	CAtlString				lSearchPath;
+	DaSvrCharacterFiles *	lCharacterFiles;
+	tBstrPtr				lCharacterSearchPath;
 
 	if	(
-			(pTimerId != 0)
-		&&	(pNotifySink != NULL)
-		&&	(pInterval >= USER_TIMER_MINIMUM)
-		&&	(mTimerNotifies.FindTimer (pTimerId) < 0)
-		&&	(lTimer = new CTimerNotify (pTimerId, pNotifySink))
+			(lCharacterFiles = _AtlModule.GetSvrCharacterFiles (false, mClientMutexName))
+		&&	(SUCCEEDED (lCharacterFiles->get_SearchPath (lCharacterSearchPath.Free())))
 		)
 	{
-		mTimerNotifies.Add (lTimer);
+		lSearchPath = lCharacterSearchPath;
+	}
+	return lSearchPath;
+}
 
-		if	(lTimer->StartTimer (NULL, pInterval))
+HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, bool pIsDefault, long & pCharID, long & pReqID)
+{
+	HRESULT		lResult = S_OK;
+	CAtlString	lFilePath (pFilePath);
+
+#ifdef	_TRACE_RESOURCES
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] DaServer::LoadCharacter [%s]"), this, pFilePath);
+	}
+#endif
+#ifdef	_LOG_CHARACTER
+	if	(LogIsActive (_LOG_CHARACTER))
+	{
+		LogMessage (_LOG_CHARACTER, _T("[%p(%d)] LoadCharacter [%s]"), this, max(m_dwRef,-1), pFilePath);
+	}
+#endif
+
+	if	(lFilePath.IsEmpty ())
+	{
+		lResult = E_INVALIDARG;
+	}
+	else
+	if	(!CAgentFile::IsProperFilePath (lFilePath))
+	{
+		lResult = AGENTPROVERROR_PROTOCOL;
+	}
+	else
+	if	(
+			(GetDefaultCharacter ())
+		||	(
+				(pIsDefault)
+			&&	(GetInstanceCharacter (-1))
+			)
+		)
+	{
+		lResult = AGENTERR_DEFAULTCHARACTER;
+	}
+	else
+	if	(
+			(PathIsURL (lFilePath))
+		&&	(pReqID)
+		)
+	{
+		tPtr <CFileDownload>	lDownload;
+
+#ifdef	_DEBUG_REQUESTS
+		LogMessage (_DEBUG_REQUESTS, _T("RequestStart    [%d]"), pReqID);
+#endif
+		mNotify.RequestStart (pReqID);
+
+		if	(lDownload = CFileDownload::CreateInstance (lFilePath))
 		{
-			lRet = true;
+			lDownload->mUserData = pCharID = _AtlModule.NextCharID();
+			mCharactersLoading.SetAt (pReqID, lDownload);
+#ifdef	_LOG_CHARACTER
+			if	(LogIsActive (_LOG_CHARACTER))
+			{
+				LogMessage (_LOG_CHARACTER, _T("[%p(%d)] Character [%d] Loading [%d]"), this, max(m_dwRef,-1), pCharID, pReqID);
+			}
+#endif
+			lResult = lDownload.Detach()->Download (GetControllingUnknown(), &mNotify);
+
+			if	(SUCCEEDED (lResult))
+			{
+				lResult = S_OK;
+			}
+			else
+			{
+				mCharactersLoading.RemoveKey (pReqID);
+			}
 		}
 		else
 		{
-			mTimerNotifies.Remove (lTimer);
+			lResult = E_OUTOFMEMORY;
+		}
+		if	(FAILED (lResult))
+		{
+#ifdef	_DEBUG_REQUESTS
+			LogMessage (_DEBUG_REQUESTS, _T("RequestComplete [%d] [%8.8X]"), pReqID, lResult);
+#endif
+			pCharID = 0;
+			mNotify.RequestComplete (pReqID, lResult);
 		}
 	}
-	return lRet;
+	else
+	{
+		tPtr <CAgentFile>	lLoadFile;
+		CAgentFile *		lAgentFile = NULL;
+		DaSvrCharacter *	lSvrCharacter = NULL;
+
+		if	(pReqID <= 0)
+		{
+			pReqID = mNotify.NextReqID ();
+		}
+#ifdef	_DEBUG_REQUESTS
+		LogMessage (_DEBUG_REQUESTS, _T("RequestStart    [%d]"), pReqID);
+#endif
+		mNotify.RequestStart (pReqID);
+
+		if	(lLoadFile = CAgentFile::CreateInstance())
+		{
+			if	(SUCCEEDED (lResult = lLoadFile->Open (lFilePath)))
+			{
+				lAgentFile = _AtlModule.FindCachedFile (lLoadFile->GetGuid());
+				if	(!lAgentFile)
+				{
+					lAgentFile = lLoadFile;
+				}
+
+				if	(FindCachedFile (lLoadFile->GetGuid()))
+				{
+					lResult = AGENTERR_CHARACTERALREADYLOADED;
+				}
+				else
+				if	(lSvrCharacter = DaSvrCharacter::CreateInstance (_AtlModule.NextCharID(), &mNotify, &_AtlModule, mClientMutexName))
+				{
+#ifdef	_STRICT_COMPATIBILITY
+					lSvrCharacter->AddRef ();
+#endif					
+					if	(
+							(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile, pIsDefault)))
+						&&	(SUCCEEDED (lResult = lSvrCharacter->RealizePopup (NULL, mCharacterStyle, WS_EX_TOPMOST)))
+						)
+					{
+						if	(lLoadFile == lAgentFile)
+						{
+							lLoadFile.Detach ();
+						}
+						pCharID = lSvrCharacter->GetCharID();
+						_AtlModule._CharacterLoaded (lSvrCharacter->GetCharID());
+#ifdef	_LOG_CHARACTER
+						if	(LogIsActive (_LOG_CHARACTER))
+						{
+							LogMessage (_LOG_CHARACTER, _T("[%p(%d)] Character [%d] Loaded [%p(%d)] (%d)"), this, max(m_dwRef,-1), pCharID, lSvrCharacter, lSvrCharacter->m_dwRef, _AtlModule.GetLockCount());
+						}
+#endif
+#ifdef	_TRACE_CHARACTER_ACTIONS
+						_AtlModule.TraceCharacterAction (lSvrCharacter->GetCharID(), _T("Load"), _T("%s\t%ls\t%d"), pFilePath, lAgentFile->GetPath(), pReqID);
+#endif
+					}
+					else
+					{
+						try
+						{
+#ifdef	_STRICT_COMPATIBILITY
+							lSvrCharacter->Release ();
+#else
+							delete lSvrCharacter;
+#endif							
+						}
+						catch AnyExceptionSilent
+					}
+				}
+				else
+				{
+					lResult = E_OUTOFMEMORY;
+				}
+			}
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+
+#ifdef	_DEBUG_REQUESTS
+		LogMessage (_DEBUG_REQUESTS, _T("RequestComplete [%d] [%8.8X]"), pReqID, lResult);
+#endif
+		mNotify.RequestComplete (pReqID, lResult);
+	}
+
+#ifdef	_TRACE_RESOURCES
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] DaServer::LoadCharacter [%s] Done"), this, pFilePath);
+	}
+#endif
+	return lResult;
 }
 
-bool CDaServerApp::DelTimerNotify (UINT_PTR pTimerId)
-{
-	bool				lRet = false;
-	tPtr <CTimerNotify>	lTimer;
+/////////////////////////////////////////////////////////////////////////////
 
-	if	(lTimer = mTimerNotifies.GetTimer (pTimerId))
+bool DaServer::_OnDownloadComplete (CFileDownload * pDownload)
+{
+	bool	lRet = false;
+	long	lReqID;
+
+	if	(
+			(pDownload)
+		&&	(mCharactersLoading.FindValue (pDownload, lReqID))
+		)
 	{
-		mTimerNotifies.Remove (lTimer);
-		lTimer->StopTimer (NULL);
+		try
+		{
+			HRESULT				lResult;
+			tPtr <CAgentFile>	lLoadFile;
+			CAgentFile *		lAgentFile = NULL;
+			DaSvrCharacter *	lSvrCharacter = NULL;
+
+			if	(lLoadFile = CAgentFile::CreateInstance())
+			{
+				if	(SUCCEEDED (lResult = lLoadFile->LoadAcf (pDownload)))
+				{
+					lAgentFile = _AtlModule.FindCachedFile (lLoadFile->GetGuid());
+					if	(!lAgentFile)
+					{
+						lAgentFile = lLoadFile;
+					}
+
+					if	(FindCachedFile (lLoadFile->GetGuid()))
+					{
+						lResult = AGENTERR_CHARACTERALREADYLOADED;
+					}
+					else
+					if	(lSvrCharacter = DaSvrCharacter::CreateInstance ((long)pDownload->mUserData, &mNotify, &_AtlModule, mClientMutexName))
+					{
+#ifdef	_STRICT_COMPATIBILITY
+						lSvrCharacter->AddRef ();
+#endif						
+						if	(
+								(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile)))
+							&&	(SUCCEEDED (lResult = lSvrCharacter->RealizePopup (NULL, mCharacterStyle, WS_EX_TOPMOST)))
+							)
+						{
+							if	(lAgentFile == lLoadFile)
+							{
+								lLoadFile.Detach ();
+							}
+							_AtlModule._CharacterLoaded (lSvrCharacter->GetCharID());
+#ifdef	_LOG_CHARACTER
+							if	(LogIsActive (_LOG_CHARACTER))
+							{
+								LogMessage (_LOG_CHARACTER, _T("[%p(%d)] Character [%d] Loaded [%p(%d)] (%d)"), this, max(m_dwRef,-1), lSvrCharacter->GetCharID(), lSvrCharacter, lSvrCharacter->m_dwRef, _AtlModule.GetLockCount());
+							}
+#endif
+#ifdef	_TRACE_CHARACTER_ACTIONS
+							_AtlModule.TraceCharacterAction (lSvrCharacter->GetCharID(), _T("Load"), _T("%ls\t%ls\t%d"), pDownload->GetURL(), lAgentFile->GetPath(), lReqID);
+#endif
+						}
+						else
+						{
+							try
+							{
+#ifdef	_STRICT_COMPATIBILITY
+								lSvrCharacter->Release ();
+#else
+								delete lSvrCharacter;
+#endif								
+							}
+							catch AnyExceptionSilent
+						}
+					}
+					else
+					{
+						lResult = E_OUTOFMEMORY;
+					}
+				}
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+
+#ifdef	_DEBUG_REQUESTS
+			LogMessage (_DEBUG_REQUESTS, _T("RequestComplete [%d] [%8.8X]"), lReqID, lResult);
+#endif
+			mNotify.RequestComplete (lReqID, lResult);
+		}
+		catch AnyExceptionSilent
+
 		lRet = true;
 	}
 	return lRet;
 }
 
-bool CDaServerApp::HasTimerNotify (UINT_PTR pTimerId)
-{
-	return (mTimerNotifies.FindTimer (pTimerId) >= 0);
-}
-
-CTimerNotify * CDaServerApp::GetTimerNotify (UINT_PTR pTimerId)
-{
-	return mTimerNotifies.GetTimer (pTimerId);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CDaServerApp::TraceCharacterAction (long pCharID, LPCTSTR pAction, LPCTSTR pFormat, ...)
+HRESULT DaServer::UnloadCharacter (long pCharID)
 {
-	bool	lRet = false;
-#ifdef	_TRACE_CHARACTER_ACTIONS
-	if	(
-			(pCharID > 0)
-		?	(mActionTraceLog.FindValue (pCharID) >= 0)
-		:	(mActionTraceLog.GetSize() > 0)
-		)
+	HRESULT	lResult = S_OK;
+
+#ifdef	_TRACE_RESOURCES
+	if	(LogIsActive (_TRACE_RESOURCES))
 	{
-		try
-		{
-			tS <SYSTEMTIME>	lTraceTime;
-			CString			lTraceDetail;
-			CString			lTraceMsg;
-
-			if	(pFormat)
-			{
-				va_list lArgPtr;
-				va_start (lArgPtr, pFormat);
-				_vsntprintf (lTraceDetail.GetBuffer(2048), 2048, pFormat, lArgPtr);
-				lTraceDetail.ReleaseBuffer ();
-			}
-			if	(!lTraceDetail.IsEmpty ())
-			{
-				lTraceDetail.Insert (0, _T('\t'));
-			}
-			GetLocalTime (&lTraceTime);
-			lTraceMsg.Format (_T("%4.4u-%2.2u-%2.2u\t%2.2u:%2.2u:%2.2u:%3.3u\t%s%s\r\n"), lTraceTime.wYear, lTraceTime.wMonth, lTraceTime.wDay, lTraceTime.wHour, lTraceTime.wMinute, lTraceTime.wSecond, lTraceTime.wMilliseconds, pAction, lTraceDetail);
-
-			if	(pCharID > 0)
-			{
-				LogWrite (lTraceMsg, mActionTraceLog.KeyAt (mActionTraceLog.FindValue (pCharID)));
-			}
-			else
-			{
-				INT_PTR	lNdx;
-
-				for	(lNdx = 0; lNdx <= mActionTraceLog.GetUpperBound(); lNdx++)
-				{
-					LogWrite (lTraceMsg, mActionTraceLog.KeyAt (lNdx));
-				}
-			}
-			lRet = true;
-		}
-		catch AnyExceptionDebug
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] DaServer::UnloadCharacter [%d]"), this, pCharID);
 	}
 #endif
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-bool CDaServerApp::StartActionTrace (long pCharID)
-{
-	bool	lRet = false;
-#ifdef	_TRACE_CHARACTER_ACTIONS
+#ifdef	_LOG_CHARACTER
+	if	(LogIsActive (_LOG_CHARACTER))
+	{
+		LogMessage (_LOG_CHARACTER, _T("[%p(%d)] UnloadCharacter [%d]"), this, max(m_dwRef,-1), pCharID);
+	}
+#endif
 	try
 	{
-		CDaAgentCharacter *	lCharacter;
+		DaSvrCharacter *	lCharacter;
 
-		if	(
-				(CRegDWord (CRegKey (CRegKey (HKEY_CURRENT_USER, gProfileKeyDa, true), _T(_SERVER_REGNAME), true), _T("ActionTrace")).Value() != 0)
-			&&	(lCharacter = GetAppCharacter (pCharID))
-			)
+		if	(lCharacter = dynamic_cast <DaSvrCharacter *> (GetInstanceCharacter (pCharID)))
 		{
-			CString			lTraceFilePath;
-			CString			lTraceFileName;
-			tS <SYSTEMTIME>	lTraceTime;
-
-			if	(gLogFileName[0] == 0)
+#ifdef	_LOG_CHARACTER
+			if	(LogIsActive (_LOG_CHARACTER))
 			{
-				UINT lLogLevel = LogIfActive;
-				LogControl (gLogFileName, lLogLevel);
+				LogMessage (_LOG_CHARACTER, _T("[%p(%d)] Character [%d] IsInNotify [%u] IsClientActive [%d] Clients [%d]"), this, max(m_dwRef,-1), pCharID, lCharacter->IsInNotify(), lCharacter->IsClientActive (), lCharacter->GetClientCount (lCharacter->GetCharID()));
 			}
-
-			GetLocalTime (&lTraceTime);
-			lTraceFilePath = lCharacter->GetFile()->GetFileName();
-			PathStripPath (lTraceFilePath.GetBuffer (lTraceFilePath.GetLength ()));
-			PathRemoveExtension (lTraceFilePath.GetBuffer (lTraceFilePath.GetLength ()));
-#ifdef	_DEBUG
-			lTraceFileName.Format (_T("%s(%d) %4.4u-%2.2u-%2.2u"), lTraceFilePath, pCharID, lTraceTime.wYear, lTraceTime.wMonth, lTraceTime.wDay);
-#else
-			lTraceFileName.Format (_T("%s(%d) %4.4u-%2.2u-%2.2u %2.2u-%2.2u-%2.2u"), lTraceFilePath, pCharID, lTraceTime.wYear, lTraceTime.wMonth, lTraceTime.wDay, lTraceTime.wHour, lTraceTime.wMinute, lTraceTime.wSecond);
 #endif
-			lTraceFilePath = gLogFileName;
-			PathRemoveFileSpec (lTraceFilePath.GetBuffer (MAX_PATH));
-			PathAppend (lTraceFilePath.GetBuffer (MAX_PATH), lTraceFileName);
-			PathAddExtension (lTraceFilePath.GetBuffer (MAX_PATH), _T(".txt"));
-			lTraceFilePath.ReleaseBuffer ();
-
-			mActionTraceLog.SetAt (lTraceFilePath, pCharID);
 			try
 			{
-				UINT lErrorMode = SetErrorMode (SEM_NOOPENFILEERRORBOX);
-				DeleteFile (lTraceFilePath);
-				SetErrorMode (lErrorMode);
+				if	(lCharacter->IsClientActive ())
+				{
+					lCharacter->CDaCmnCharacter::StopAll (StopAll_Everything, AGENTREQERR_INTERRUPTEDUSER);
+				}
+				if	(lCharacter->GetClientCount (lCharacter->GetCharID()) <= 0)
+				{
+					lCharacter->CDaCmnCharacter::Hide (true, true);
+				}
 			}
-			catch AnyExceptionSilent
-
-			lRet = true;
-		}
-	}
-	catch AnyExceptionDebug
-#endif
-	return lRet;
-}
-
-bool CDaServerApp::StopActionTrace (long pCharID)
-{
-	bool	lRet = false;
+			catch AnyExceptionDebug
+			try
+			{
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	try
-	{
-		INT_PTR	lTraceNdx;
-
-		lTraceNdx = mActionTraceLog.FindValue (pCharID);
-		if	(lTraceNdx >= 0)
-		{
-			mActionTraceLog.RemoveAt (lTraceNdx);
-			lRet = true;
-		}
-	}
-	catch AnyExceptionDebug
+				_AtlModule.TraceCharacterAction (lCharacter->GetCharID(), _T("Unload"));
 #endif
-	return lRet;
-}
+				if	(lCharacter->CanFinalRelease())
+				{
+					lCharacter->Terminate (false);
+#ifdef	_STRICT_COMPATIBILITY
+					lCharacter->Terminate (true);
+					try
+					{
+						delete lCharacter;
+					}
+					catch AnyExceptionSilent
+#else
+					lCharacter->Release ();
+#endif
+				}
+				else
+				{
+					lCharacter->Abandon ();
+				}
+			}
+			catch AnyExceptionDebug
 
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-bool CDaServerApp::ShowSettings (LPCTSTR pStartPage)
-{
-	bool			lRet = false;
-	UINT			lErrorMode = SetErrorMode (SEM_NOOPENFILEERRORBOX);
-	CModuleHandle	lSettingsModule;
-	APPLET_PROC		lCplProc = NULL;
-	CString			lStartPage (pStartPage);
-
-	try
-	{
-		SetLastError (0);
-		if	(lSettingsModule = LoadLibrary (_T(_SHELL_FILENAME)))
-		{
-			lCplProc = (APPLET_PROC) GetProcAddress (lSettingsModule, "CPlApplet");
+#ifdef	_LOG_CHARACTER
+			if	(LogIsActive (_LOG_CHARACTER))
+			{
+				LogMessage (_LOG_CHARACTER, _T("[%p(%d)] Character [%d] Unloaded [%p]"), this, max(m_dwRef,-1), pCharID, lCharacter);
+			}
+#endif
 		}
 		else
 		{
-			LogWinErr (LogNormal, GetLastError (), _T("Load ") _T(_SHELL_FILENAME));
-		}
-	}
-	catch AnyExceptionSilent
-
-	SetErrorMode (lErrorMode);
-
-	if	(lCplProc)
-	{
-		try
-		{
-			if	((*lCplProc) (NULL, CPL_INIT, 0, 0))
-			{
-				if	(!lStartPage.IsEmpty ())
-				{
-					(*lCplProc) (NULL, CPL_STARTWPARMS, 0, (LPARAM)(LPCTSTR)lStartPage);
-				}
-				(*lCplProc) (NULL, CPL_DBLCLK, 0, 0);
-				(*lCplProc) (NULL, CPL_EXIT, 0, 0);
-			}
-		}
-		catch AnyExceptionSilent
-	}
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-void CDaServerApp::OnThreadHotKey(WPARAM wParam, LPARAM lParam)
-{
-
-	if	(wParam == (WPARAM) CDaSpeechInputConfig::mHotKeyRegisterId)
-	{
-		mLastHotKey = HIWORD (lParam);
-		if	(LOWORD (lParam) & MOD_ALT)
-		{
-			mLastHotKey |= VK_MENU << 8;
-		}
-		if	(LOWORD (lParam) & MOD_CONTROL)
-		{
-			mLastHotKey |= VK_CONTROL << 16;
-		}
-		if	(LOWORD (lParam) & MOD_SHIFT)
-		{
-			mLastHotKey |= VK_SHIFT << 24;
-		}
-
-		try
-		{
-			CDaAgentCharacter *	lCharacter = GetListenCharacter ();
-
-			if	(lCharacter)
-			{
-				LogComErr (LogDetails, lCharacter->StartListening (false));
-			}
-		}
-		catch AnyExceptionDebug
-	}
-}
-
-bool CDaServerApp::IsHotKeyStillPressed () const
-{
-	if	(
-			(LOBYTE (LOWORD (mLastHotKey)))
-		&&	(GetAsyncKeyState (LOBYTE (LOWORD (mLastHotKey))) < 0)
-		&&	(
-				(!HIBYTE (LOWORD (mLastHotKey)))
-			||	(GetAsyncKeyState (HIBYTE (LOWORD (mLastHotKey))) < 0)
-			)
-		&&	(
-				(!LOBYTE (HIWORD (mLastHotKey)))
-			||	(GetAsyncKeyState (LOBYTE (HIWORD (mLastHotKey))) < 0)
-			)
-		&&	(
-				(!HIBYTE (HIWORD (mLastHotKey)))
-			||	(GetAsyncKeyState (HIBYTE (HIWORD (mLastHotKey))) < 0)
-			)
-		)
-	{
-		return true;
-	}
-	return false;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-void CDaServerApp::OnBroadcastOptionsChanged(WPARAM wParam, LPARAM lParam)
-{
-	_OnOptionsChanged ();
-}
-
-void CDaServerApp::OnBroadcastDefaultCharacterChanged(WPARAM wParam, LPARAM lParam)
-{
-	_OnDefaultCharacterChanged ();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-void CDaServerApp::_OnOptionsChanged ()
-{
-	try
-	{
-		int			lNotifyNdx;
-		IDaNotify *	lNotify;
-
-		CDaSpeechInputConfig::RegisterHotKey (true);
-
-		for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
-		{
-			lNotify->_OptionsChanged ();
+			lResult = E_INVALIDARG;
 		}
 	}
 	catch AnyExceptionDebug
-}
-
-void CDaServerApp::_OnDefaultCharacterChanged ()
-{
 	try
 	{
-		int					lNotifyNdx;
-		IDaNotify *			lNotify;
-		tPtr <CAgentFile>	lFile;
-		CString				lDefCharPath ((BSTR)CAgentFiles::GetDefCharPath());
-
-		if	(
-				(!lDefCharPath.IsEmpty ())
-			&&	(lFile = (CAgentFile *) CAgentFile::CreateObject())
-			&&	(SUCCEEDED (lFile->Open (lDefCharPath)))
-			)
-		{
-			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
-			{
-				lNotify->_DefaultCharacterChanged (lFile->GetGuid());
-			}
-		}
+		_AtlModule._CharacterUnloaded (pCharID);
 	}
-	catch AnyExceptionSilent
+	catch AnyExceptionDebug
+#ifdef	_TRACE_RESOURCES
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] DaServer::UnloadCharacter [%d] Done"), this, pCharID);
+	}
+#endif
+
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaServerApp::_OnCharacterLoaded (long pCharID)
+STDMETHODIMP DaServer::InterfaceSupportsErrorInfo(REFIID riid)
 {
-	try
+	if	(
+			(InlineIsEqualGUID (__uuidof(IDaServer2), riid))
+		||	(InlineIsEqualGUID (__uuidof(IDaServer), riid))
+		||	(InlineIsEqualGUID (__uuidof(IAgent), riid))
+		||	(InlineIsEqualGUID (__uuidof(IAgentEx), riid))
+		)
 	{
-		int			lNotifyNdx;
-		IDaNotify *	lNotify;
-
-		StartActionTrace (pCharID);
-		SetVoiceCommandClients (pCharID);
-		SetVoiceCommandNames (pCharID);
-
-		for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
-		{
-			lNotify->_CharacterLoaded (pCharID);
-		}
+		return S_OK;
 	}
-	catch AnyExceptionSilent
+	return S_FALSE;
 }
 
-void CDaServerApp::_OnCharacterUnloaded (long pCharID)
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaServer::GetClassForHandler (DWORD dwDestContext, void *pvDestContext, CLSID *pClsid)
 {
+	if	(!pClsid)
+	{
+		return E_POINTER;
+	}
+	*pClsid = __uuidof(DaServerHandler);
+
 	try
 	{
-		int			lNotifyNdx;
-		IDaNotify *	lNotify;
-
-		if	(mVoiceCommandsWnd)
-		{
-			mVoiceCommandsWnd->RemoveCharacter (pCharID);
-		}
-
-		for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
-		{
-			lNotify->_CharacterUnloaded (pCharID);
-		}
-		StopActionTrace (pCharID);
+		mUsingHandler = 1;
+		UnmanageObjectLifetime (this);
 	}
 	catch AnyExceptionSilent
+
+#ifdef	_DEBUG_HANDLER
+	if	(LogIsActive (_DEBUG_HANDLER))
+	{
+		try
+		{
+			GUID lThreadId = GUID_NULL;
+			LogComErr (LogNormal|LogTime, CoGetCurrentLogicalThreadId (&lThreadId));
+			LogMessage (_DEBUG_HANDLER, _T("[%p(%d)] DaServer::GetClassForHandler [%8.8X] [%p] [%s] Thread [%s]"), this, max(m_dwRef,-1), dwDestContext, pvDestContext, CGuidStr::GuidName(*pClsid), (CString)CGuidStr(lThreadId));
+		}
+		catch AnyExceptionSilent
+	}
+#endif
+	return S_OK;
 }
 
-void CDaServerApp::_OnCharacterNameChanged (long pCharID)
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaServer::Load (VARIANT Provider, long * pdwCharID, long * RequestID)
 {
-	try
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::Load [%s]"), this, max(m_dwRef,-1), DebugVariant(Provider));
+#endif
+	HRESULT		lResult = S_OK;
+	CAtlString	lFilePath;
+	bool		lFilePathIsDefault = false;
+	long		lReqID = 0;
+
+	if	(pdwCharID == NULL)
 	{
-		int			lNotifyNdx;
-		IDaNotify *	lNotify;
-
-		SetVoiceCommandNames (pCharID);
-
-		for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
-		{
-			lNotify->_CharacterNameChanged (pCharID);
-		}
+		lResult = E_POINTER;
 	}
-	catch AnyExceptionSilent
+	else
+	if	(SUCCEEDED (lResult = CDaCmnCharacter::GetLoadPath (Provider, lFilePath, GetSearchPath(), &lFilePathIsDefault)))
+	{
+		if	(RequestID)
+		{
+			lReqID = mNotify.NextReqID ();
+		}
+		lResult = LoadCharacter (lFilePath, lFilePathIsDefault, *pdwCharID, lReqID);
+	}
+
+	if	(RequestID)
+	{
+		(*RequestID) = lReqID;
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::Load [%d] [%s] Default [%u]"), this, max(m_dwRef,-1), (pdwCharID?*pdwCharID:-1), lFilePath, lFilePathIsDefault);
+	}
+#endif
+	return lResult;
 }
 
-void CDaServerApp::_OnCharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID)
+HRESULT STDMETHODCALLTYPE DaServer::Unload (long CharacterID)
 {
-	try
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::Unload [%d]"), this, max(m_dwRef,-1), CharacterID);
+#endif
+	HRESULT	lResult = UnloadCharacter (CharacterID);
+
+#if	__RUNNING_STRESS_TEST__
+	CDebugProcess().LogWorkingSetInline (LogIfActive|LogHighVolume);
+	CDebugProcess().LogAddressSpaceInline (LogIfActive|LogHighVolume);
+	CDebugProcess().LogGuiResourcesInline (LogIfActive|LogHighVolume);
+	LogMessage (LogIfActive|LogTime, _T(""));
+#endif
+#if	__EMPTY_WORKING_SET__
+	if	(SUCCEEDED (lResult))
 	{
-		int			lNotifyNdx;
-		IDaNotify *	lNotify;
-
-		if	(pActiveCharID > 0)
+		try
 		{
-			SetVoiceCommandClients (pActiveCharID);
+			::EmptyWorkingSet (GetCurrentProcess ());
 		}
-		if	(pInactiveCharID > 0)
-		{
-			SetVoiceCommandClients (pInactiveCharID);
-		}
-
-		for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
-		{
-			lNotify->_CharacterActivated (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
-		}
+		catch AnyExceptionSilent
 	}
-	catch AnyExceptionSilent
+#endif
+
+	PutServerError (lResult, __uuidof(IDaServer));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::Unload [%d]"), this, max(m_dwRef,-1), CharacterID);
+	}
+#endif
+	return lResult;
 }
 
-void CDaServerApp::OnCharacterListening (long pCharID, bool pListening, long pCause)
-{
-//
-//	This notification is slightly different in that it's sent to all of a character's
-//	clients rather than just the active client.
-//
-	try
-	{
-		int			lNotifyNdx;
-		IDaNotify *	lNotify;
+/////////////////////////////////////////////////////////////////////////////
 
-		for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+HRESULT STDMETHODCALLTYPE DaServer::Register (IUnknown * punkNotifySink, long * pdwSinkID)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::Register"), this, max(m_dwRef,-1));
+#endif
+	HRESULT	lResult = mNotify.Register (punkNotifySink, pdwSinkID);
+
+	PutServerError (lResult, __uuidof(IDaServer));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::Register [%d]"), this, max(m_dwRef,-1), *pdwSinkID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaServer::Unregister (long dwSinkID)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::Unregister [%d]"), this, max(m_dwRef,-1), dwSinkID);
+#endif
+	HRESULT	lResult;
+
+	lResult = mNotify.Unregister (dwSinkID, (IsInNotify()>0));
+
+	PutServerError (lResult, __uuidof(IDaServer));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::Unregister [%d]"), this, max(m_dwRef,-1), dwSinkID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaServer::GetCharacter (long CharacterID, IDispatch ** Character)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacter"), this, max(m_dwRef,-1));
+#endif
+	HRESULT	lResult;
+
+	if	(!Character)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		IDaSvrCharacterPtr	lCharacter;
+
+		lResult = GetCharacterEx (CharacterID, &lCharacter);
+		(*Character) = lCharacter.Detach();
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetCharacter"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaServer::GetCharacterEx (long CharacterID, IDaSvrCharacter **Character)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterEx"), this, max(m_dwRef,-1));
+#endif
+	HRESULT				lResult = S_OK;
+	DaSvrCharacter *	lCharacter;
+	IDaSvrCharacterPtr	lSvrCharacter;
+
+	if	(!Character)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(lCharacter = dynamic_cast <DaSvrCharacter *> (GetInstanceCharacter (CharacterID)))
+	{
+		lSvrCharacter = lCharacter->GetControllingUnknown ();
+		(*Character) = lSvrCharacter.Detach ();
+	}
+	else
+	{
+		POSITION		lPos;
+		long			lReqID;
+		CFileDownload *	lDownload = NULL;
+
+		for	(lPos = mCharactersLoading.GetStartPosition(); lPos;)
 		{
-			lNotify->_CharacterListening (pCharID, pListening, pCause);
+			lDownload = NULL;
+			mCharactersLoading.GetNextAssoc (lPos, lReqID, lDownload);
+			if	(
+					(lDownload)
+				&&	(lDownload->mUserData == CharacterID)
+				)
+			{
+				break;
+			}
+		}
+		if	(lDownload)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		{
+#ifdef	_STRICT_COMPATIBILITY_NOT
+			lResult = E_OUTOFMEMORY;
+#else
+			lResult = AGENTERR_CHARACTERINVALID;
+#endif
 		}
 	}
-	catch AnyExceptionSilent
+
+	PutServerError (lResult, __uuidof(IDaServer));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetCharacterEx"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaServer::get_Character (long CharacterID, IDaSvrCharacter2 **Character2)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_Character"), this, max(m_dwRef,-1));
+#endif
+	HRESULT	lResult;
+
+	if	(!Character2)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		IDaSvrCharacterPtr	lCharacter;
+		IDaSvrCharacter2Ptr	lCharacter2;
+
+		lResult = GetCharacterEx (CharacterID, &lCharacter);
+		lCharacter2 = lCharacter;
+		(*Character2) = lCharacter2.Detach();
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_Character"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaServer::ShowDefaultCharacterProperties (short X, short Y, long UseDefaultPosition)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::ShowDefaultCharacterProperties"), this, max(m_dwRef,-1));
+#endif
+	HRESULT					lResult = S_OK;
+	DaSvrPropertySheet *	lPropertySheet;
+
+	if	(lPropertySheet = _AtlModule.GetSvrPropertySheet (true, mClientMutexName))
+	{
+		lPropertySheet->put_Page (_bstr_t (PropertySheet_PageName_Character));
+		if	(!UseDefaultPosition)
+		{
+			if	(
+					(X >= 0)
+				&&	(Y >= 0)
+				)
+			{
+				lPropertySheet->SetPosition (X, Y);
+			}
+			else
+			{
+				if	(X >= 0)
+				{
+					lPropertySheet->put_Left (X);
+				}
+				if	(Y >= 0)
+				{
+					lPropertySheet->put_Top (Y);
+				}
+			}
+		}
+		lPropertySheet->put_Visible (VARIANT_TRUE);
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::ShowDefaultCharacterProperties"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaServer::GetVersion (short *MajorVersion, short *MinorVersion)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetVersion"), this, max(m_dwRef,-1));
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(MajorVersion)
+	{
+		(*MajorVersion) = (short)DoubleAgentSvr_MajorVer;
+	}
+	if	(MinorVersion)
+	{
+		(*MinorVersion) = (short)DoubleAgentSvr_MinorVer;
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetVersion"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaServer::GetSuspended (long * Suspended)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetSuspended"), this, max(m_dwRef,-1));
+#endif
+	if	(Suspended)
+	{
+		*Suspended = 0;
+	}
+#ifdef	_STRICT_COMPATIBILITY
+	return S_OK;
+#else
+	return S_FALSE;
+#endif
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaServer::get_CharacterFiles (IDaSvrCharacterFiles **CharacterFiles)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_CharacterFiles"), this, max(m_dwRef,-1));
+#endif
+	HRESULT					lResult = S_OK;
+	DaSvrCharacterFiles *	lCharacterFiles;
+	IDaSvrCharacterFilesPtr	lInterface;
+
+	if	(!CharacterFiles)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*CharacterFiles) = NULL;
+
+		if	(lCharacterFiles = _AtlModule.GetSvrCharacterFiles (true, mClientMutexName))
+		{
+			lInterface = lCharacterFiles->GetControllingUnknown ();
+			(*CharacterFiles) = lInterface.Detach();
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_CharacterFiles"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaServer::get_PropertySheet (IDaSvrPropertySheet2 **PropertySheet)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_PropertySheet"), this, max(m_dwRef,-1));
+#endif
+	HRESULT					lResult = S_OK;
+	DaSvrPropertySheet *	lPropertySheet;
+	IDaSvrPropertySheet2Ptr	lInterface;
+
+	if	(!PropertySheet)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*PropertySheet) = NULL;
+
+		if	(lPropertySheet = _AtlModule.GetSvrPropertySheet (true, mClientMutexName))
+		{
+			lInterface = lPropertySheet->GetControllingUnknown ();
+			(*PropertySheet) = lInterface.Detach();
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_PropertySheet"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaServer::get_CommandsWindow (IDaSvrCommandsWindow2 **CommandsWindow)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_CommandsWindow"), this, max(m_dwRef,-1));
+#endif
+	HRESULT						lResult = S_OK;
+	DaSvrCommandsWindow *		lCommandsWindow;
+	IDaSvrCommandsWindow2Ptr	lInterface;
+
+	if	(!CommandsWindow)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*CommandsWindow) = NULL;
+
+		if	(lCommandsWindow = _AtlModule.GetSvrCommandsWindow (true, mClientMutexName))
+		{
+			lInterface = lCommandsWindow->GetControllingUnknown ();
+			(*CommandsWindow) = lInterface.Detach();
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_CommandsWindow"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaServer::get_Settings (IDaSvrSettings **Settings)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_Settings"), this, max(m_dwRef,-1));
+#endif
+	HRESULT				lResult = S_OK;
+	DaSvrSettings *		lSettings;
+	IDaSvrSettingsPtr	lInterface;
+
+	if	(!Settings)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*Settings) = NULL;
+
+		if	(lSettings = _AtlModule.GetSvrSettings (true, mClientMutexName))
+		{
+			lInterface = lSettings->GetControllingUnknown ();
+			(*Settings) = lInterface.Detach();
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_Settings"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaServer::put_CharacterStyle (long CharacterStyle)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::put_CharacterStyle [%d]"), this, max(m_dwRef,-1), CharacterStyle);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+#ifdef	_TRACE_CHARACTER_ACTIONS
+	_AtlModule.TraceCharacterAction (0, _T("put_CharacterStyle"), _T("%u"), CharacterStyle);
+#endif
+#ifdef	_DEBUG_STYLE
+	if	(
+			((DWORD)CharacterStyle != mCharacterStyle)
+		&&	(LogIsActive (_DEBUG_STYLE))
+		)
+	{
+		LogMessage (_DEBUG_STYLE, _T("[%p(%d)] DaServer CharacterStyle [%8.8X]"), this, max(m_dwRef,-1), CharacterStyle);
+	}
+#endif
+
+	mCharacterStyle = (DWORD)CharacterStyle;
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::put_CharacterStyle"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaServer::get_CharacterStyle (long *CharacterStyle)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_CharacterStyle"), this, max(m_dwRef,-1));
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(CharacterStyle)
+	{
+		(*CharacterStyle) = (long)mCharacterStyle;
+	}
+	else
+	{
+		lResult = E_POINTER;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_CharacterStyle"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaServer::get_TTSEngines (IDaSvrTTSEngines **TTSEngines)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_TTSEngines"), this, max(m_dwRef,-1));
+#endif
+	HRESULT					lResult = S_OK;
+	tPtr <DaSvrTTSEngines>	lTTSEngines;
+	IDaSvrTTSEnginesPtr		lInterface;
+
+	if	(!TTSEngines)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*TTSEngines) = NULL;
+
+		if	(lTTSEngines = DaSvrTTSEngines::CreateInstance (mClientMutexName))
+		{
+			if	(SUCCEEDED (lResult = lTTSEngines->UseAllVoices ()))
+			{
+				lInterface = lTTSEngines.Detach()->GetControllingUnknown();
+				(*TTSEngines) = lInterface.Detach();
+			}
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_TTSEngines"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaServer::FindTTSEngines (long LanguageID, short Gender, IDaSvrTTSEngines **TTSEngines)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindTTSEngines"), this, max(m_dwRef,-1));
+#endif
+	HRESULT					lResult = S_FALSE;
+	tPtr <DaSvrTTSEngines>	lTTSEngines;
+	IDaSvrTTSEnginesPtr		lInterface;
+
+	if	(!TTSEngines)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*TTSEngines) = NULL;
+
+		if	(lTTSEngines = DaSvrTTSEngines::CreateInstance (mClientMutexName))
+		{
+			if	(SUCCEEDED (lResult = lTTSEngines->UseTheseVoices (NULL, (LANGID)LanguageID, Gender)))
+			{
+				lInterface = lTTSEngines.Detach()->GetControllingUnknown();
+				(*TTSEngines) = lInterface.Detach();
+			}
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindTTSEngines"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaServer::GetCharacterTTSEngine (VARIANT Provider, IDaSvrTTSEngine **TTSEngine)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterTTSEngine"), this, max(m_dwRef,-1));
+#endif
+	HRESULT					lResult = S_OK;
+	tPtr <CAgentFile>		lAgentFile;
+	tPtr <DaSvrTTSEngine>	lTTSEngine;
+	IDaSvrTTSEnginePtr		lInterface;
+
+	if	(!TTSEngine)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*TTSEngine) = NULL;
+
+		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile, GetSearchPath())))
+		{
+			if	(lTTSEngine = DaSvrTTSEngine::CreateInstance ((CSapi5VoiceInfo*)NULL, mClientMutexName))
+			{
+				if	(lTTSEngine->Initialize (lAgentFile))
+				{
+					lInterface = lTTSEngine.Detach()->GetControllingUnknown();
+					(*TTSEngine) = lInterface.Detach();
+					lResult = S_OK;
+				}
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetCharacterTTSEngine"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaServer::FindCharacterTTSEngines (VARIANT Provider, long LanguageID, IDaSvrTTSEngines **TTSEngines)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindCharacterTTSEngines"), this, max(m_dwRef,-1));
+#endif
+	HRESULT					lResult = S_FALSE;
+	tPtr <CAgentFile>		lAgentFile;
+	tPtr <DaSvrTTSEngines>	lTTSEngines;
+	IDaSvrTTSEnginesPtr		lInterface;
+
+	if	(!TTSEngines)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*TTSEngines) = NULL;
+
+		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile, GetSearchPath())))
+		{
+			if	(lTTSEngines = DaSvrTTSEngines::CreateInstance (mClientMutexName))
+			{
+				if	(SUCCEEDED (lResult = lTTSEngines->UseTheseVoices (lAgentFile, (LANGID)LanguageID, SpeechGender_Neutral)))
+				{
+					lInterface = lTTSEngines.Detach()->GetControllingUnknown();
+					(*TTSEngines) = lInterface.Detach();
+				}
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindCharacterTTSEngines"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaServer::get_SREngines (IDaSvrSREngines **SREngines)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_SREngines"), this, max(m_dwRef,-1));
+#endif
+	HRESULT					lResult = S_OK;
+	tPtr <DaSvrSREngines>	lSREngines;
+	IDaSvrSREnginesPtr		lInterface;
+
+	if	(!SREngines)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*SREngines) = NULL;
+
+		if	(lSREngines = DaSvrSREngines::CreateInstance (mClientMutexName))
+		{
+			if	(SUCCEEDED (lResult = lSREngines->UseAllInputs ()))
+			{
+				lInterface = lSREngines.Detach()->GetControllingUnknown();
+				(*SREngines) = lInterface.Detach();
+			}
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_SREngines"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaServer::FindSREngines (long LanguageID, IDaSvrSREngines **SREngines)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindSREngines"), this, max(m_dwRef,-1));
+#endif
+	HRESULT					lResult = S_FALSE;
+	tPtr <DaSvrSREngines>	lSREngines;
+	IDaSvrSREnginesPtr		lInterface;
+
+	if	(!SREngines)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*SREngines) = NULL;
+
+		if	(lSREngines = DaSvrSREngines::CreateInstance (mClientMutexName))
+		{
+			if	(SUCCEEDED (lResult = lSREngines->UseTheseInputs (NULL, (LANGID)LanguageID)))
+			{
+				lInterface = lSREngines.Detach()->GetControllingUnknown();
+				(*SREngines) = lInterface.Detach();
+			}
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindSREngines"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaServer::GetCharacterSREngine (VARIANT Provider, IDaSvrSREngine **SREngine)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterSREngine"), this, max(m_dwRef,-1));
+#endif
+	HRESULT					lResult = S_OK;
+	tPtr <CAgentFile>		lAgentFile;
+	tPtr <DaSvrSREngine>	lSREngine;
+	IDaSvrSREnginePtr		lInterface;
+
+	if	(!SREngine)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*SREngine) = NULL;
+
+		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile, GetSearchPath())))
+		{
+			if	(lSREngine = DaSvrSREngine::CreateInstance (NULL, mClientMutexName))
+			{
+				if	(lSREngine->Initialize (lAgentFile))
+				{
+					lInterface = lSREngine.Detach()->GetControllingUnknown();
+					(*SREngine) = lInterface.Detach();
+					lResult = S_OK;
+				}
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetCharacterSREngine"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaServer::FindCharacterSREngines (VARIANT Provider, long LanguageID, IDaSvrSREngines **SREngines)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindCharacterSREngines"), this, max(m_dwRef,-1));
+#endif
+	HRESULT					lResult = S_FALSE;
+	tPtr <CAgentFile>		lAgentFile;
+	tPtr <DaSvrSREngines>	lSREngines;
+	IDaSvrSREnginesPtr		lInterface;
+
+	if	(!SREngines)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*SREngines) = NULL;
+
+		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile, GetSearchPath())))
+		{
+			if	(lSREngines = DaSvrSREngines::CreateInstance (mClientMutexName))
+			{
+				if	(SUCCEEDED (lResult = lSREngines->UseTheseInputs (lAgentFile, (LANGID)LanguageID)))
+				{
+					lInterface = lSREngines.Detach()->GetControllingUnknown();
+					(*SREngines) = lInterface.Detach();
+				}
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindCharacterSREngines"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
 }

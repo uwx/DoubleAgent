@@ -22,8 +22,9 @@
 		<Configuration
 			Name="Debug|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops"
-			UseOfMFC="1"
+			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfMFC="0"
+			UseOfATL="1"
 			CharacterSet="1"
 			>
 			<Tool
@@ -83,8 +84,9 @@
 		<Configuration
 			Name="Debug|x64"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops"
-			UseOfMFC="1"
+			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfMFC="0"
+			UseOfATL="1"
 			CharacterSet="1"
 			>
 			<Tool
@@ -144,8 +146,9 @@
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops"
-			UseOfMFC="1"
+			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfMFC="0"
+			UseOfATL="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -206,8 +209,9 @@
 		<Configuration
 			Name="Release|x64"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops"
-			UseOfMFC="1"
+			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfMFC="0"
+			UseOfATL="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -281,22 +285,6 @@
 			<File
 				RelativePath=".\Core\DaLocalizeMui.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Shell\DaShell.cpp"
@@ -315,15 +303,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core\PropSheetBase.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Shell\PropSheetCpl.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Core\StdAfx.cpp"
+				RelativePath=".\Util\Atl\StdAfx.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -358,6 +342,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\Util\ThemedModule.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -377,6 +365,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Include\DaVersion.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Shell\PropPageLogging.h"
 				>
 			</File>
@@ -385,15 +377,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core\PropSheetBase.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Shell\PropSheetCpl.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Core\StdAfx.h"
+				RelativePath=".\Util\Atl\StdAfx.h"
 				>
 			</File>
 		</Filter>
@@ -407,6 +395,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Shell\DaCharacterProps.rgs"
+				>
+			</File>
+			<File
 				RelativePath=".\Shell\DaShell.rc"
 				>
 			</File>
@@ -416,6 +408,15 @@
 			</File>
 			<File
 				RelativePath=".\Shell\DaShellRes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\DoubleAgent.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\EmulationDetails.htm"
+				DeploymentContent="true"
 				>
 			</File>
 		</Filter>

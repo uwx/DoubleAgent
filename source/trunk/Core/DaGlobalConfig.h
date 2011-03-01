@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,32 +18,30 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DAGLOBALCONFIG_H_INCLUDED_
-#define DAGLOBALCONFIG_H_INCLUDED_
 #pragma once
-
 #include "DaCoreExp.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
+#pragma warning (push)
+#pragma warning (disable: 4251)
 /////////////////////////////////////////////////////////////////////////////
 
 class _DACORE_IMPEXP CDaBalloonConfig
 {
+	DECLARE_DLL_OBJECT(CDaBalloonConfig)
 public:
 	CDaBalloonConfig ();
 	virtual ~CDaBalloonConfig ();
 
 // Attributes
 public:
-	bool			mEnabled;
-	tPtr <COLORREF>	mFgColor;
-	tPtr <COLORREF>	mBkColor;
-	tPtr <COLORREF>	mBrColor;
-	tPtr <LOGFONT>	mFont;
-	tPtr <COLORREF>	mLastFgColor;
-	tPtr <LOGFONT>	mLastFont;
+	bool				mEnabled;
+	tPtr <OLE_COLOR>	mFgColor;
+	tPtr <OLE_COLOR>	mBkColor;
+	tPtr <OLE_COLOR>	mBrColor;
+	tPtr <LOGFONT>		mFont;
+	tPtr <OLE_COLOR>	mLastFgColor;
+	tPtr <LOGFONT>		mLastFont;
 
 // Operations
 public:
@@ -53,58 +51,39 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CDaAudioOutputConfig
+class _DACORE_IMPEXP CDaSettingsConfig
 {
+	DECLARE_DLL_OBJECT(CDaSettingsConfig)
 public:
-	CDaAudioOutputConfig ();
-	virtual ~CDaAudioOutputConfig ();
+	CDaSettingsConfig ();
+	virtual ~CDaSettingsConfig ();
 
 // Attributes
 public:
 	bool				mEffectsEnabled;
 	bool				mTtsEnabled;
-	USHORT				mSpeechSpeed;
-	static const USHORT	mSpeechSpeedMin;
-	static const USHORT	mSpeechSpeedMax;
+	USHORT				mTtsSpeed;
+	static const USHORT	mTtsSpeedMin;
+	static const USHORT	mTtsSpeedMax;
+	bool				mSrEnabled;
+	WORD				mSrHotKey;
+	DWORD				mSrHotKeyDelay;
+	bool				mSrListeningTip;
+	bool				mSrListeningPrompt;
+	static const DWORD	mSrHotKeyDelayMin;
+	static const DWORD	mSrHotKeyDelayMax;
 
 // Operations
 public:
-	CDaAudioOutputConfig & LoadConfig ();
-	CDaAudioOutputConfig & SaveConfig ();
+	CDaSettingsConfig & LoadConfig ();
+	CDaSettingsConfig & SaveConfig ();
 
 	long CalcVoiceRate (UINT pSapiVersion = 5);
 	long ApplyVoiceRate (long pVoiceSpeed, UINT pSapiVersion = 5);
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-class _DACORE_IMPEXP CDaSpeechInputConfig
-{
-public:
-	CDaSpeechInputConfig ();
-	virtual ~CDaSpeechInputConfig ();
-
-// Attributes
-public:
-	bool				mEnabled;
-	WORD				mHotKey;
-	DWORD				mHotKeyDelay;
-	bool				mListeningTip;
-	bool				mListeningPrompt;
-	static const DWORD	mHotKeyDelayMin;
-	static const DWORD	mHotKeyDelayMax;
-	static const int	mHotKeyRegisterId;
-
-// Operations
-public:
-	CDaSpeechInputConfig & LoadConfig ();
-	CDaSpeechInputConfig & SaveConfig ();
-
-	static bool RegisterHotKey (bool pRegister);
-};
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma warning(pop)
+#pragma warning (pop)
 /////////////////////////////////////////////////////////////////////////////
 
 extern _DACORE_IMPEXP LPCTSTR gProfileKeySettings;
@@ -116,5 +95,3 @@ extern _DACORE_IMPEXP LPCTSTR gProfileKeyMaSettings;
 #define	DA_BROADCAST_DEFCHAR_CHANGED RegisterWindowMessage (_T("1147E513-A208-11DE-ABF2-002421116FB2"))
 
 /////////////////////////////////////////////////////////////////////////////
-
-#endif // DAGLOBALCONFIG_H_INCLUDED_

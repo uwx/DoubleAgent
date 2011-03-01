@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,71 +18,70 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSHOWFILTER_H_INCLUDED_
-#define DIRECTSHOWFILTER_H_INCLUDED_
 #pragma once
-
 #include "DirectShowUtils.h"
 #include "DirectShowPins.h"
 #include "DirectShowClock.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CDirectShowFilter : public CCmdTarget, public CDirectShowClock
+class ATL_NO_VTABLE CDirectShowFilter :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public IBaseFilter,
+	public CDirectShowClock
 {
 public:
 	CDirectShowFilter();
 	virtual ~CDirectShowFilter();
-	void Terminate ();
-	DECLARE_DYNAMIC(CDirectShowFilter)
 
 // Attributes
 public:
 	FILTER_STATE GetState () const {return mState;}
-	IBaseFilter * GetFilter () const {return &const_cast <CDirectShowFilter *> (this)->m_xBaseFilter;}
 	IFilterGraph * GetFilterGraph () const {return mFilterGraph;}
 
 // Operations
 public:
-	virtual HRESULT Start (REFERENCE_TIME pStartOffset);
-	virtual HRESULT Stop ();
-	virtual HRESULT Pause ();
+	void Terminate ();
+	void FinalRelease ();
+
+	virtual HRESULT StartFilter (REFERENCE_TIME pStartOffset);
+	virtual HRESULT StopFilter ();
+	virtual HRESULT PauseFilter ();
 
 	void Flush ();
 	virtual void BeginFlush ();
 	virtual void EndFlush ();
 
 // Overrides
-	//{{AFX_VIRTUAL(CDirectShowFilter)
-	public:
-	virtual void OnFinalRelease ();
-	protected:
-	virtual LPUNKNOWN GetInterfaceHook(const void* iid);
-	//}}AFX_VIRTUAL
+
+// Interfaces
+public:
+	DECLARE_GET_CONTROLLING_UNKNOWN()
+
+	BEGIN_COM_MAP(CDirectShowFilter)
+		COM_INTERFACE_ENTRY(IBaseFilter)
+	END_COM_MAP()
+
+public:
+	// IBaseFilter
+	HRESULT STDMETHODCALLTYPE GetClassID (CLSID *pClassID);
+    HRESULT STDMETHODCALLTYPE Stop (void);
+    HRESULT STDMETHODCALLTYPE Pause (void);
+    HRESULT STDMETHODCALLTYPE Run (REFERENCE_TIME tStart);
+    HRESULT STDMETHODCALLTYPE GetState (DWORD dwMilliSecsTimeout, FILTER_STATE *State);
+    HRESULT STDMETHODCALLTYPE SetSyncSource (IReferenceClock *pClock);
+    HRESULT STDMETHODCALLTYPE GetSyncSource (IReferenceClock **pClock);
+    HRESULT STDMETHODCALLTYPE EnumPins (IEnumPins **ppEnum);
+    HRESULT STDMETHODCALLTYPE FindPin (LPCWSTR Id, IPin **ppPin);
+    HRESULT STDMETHODCALLTYPE QueryFilterInfo (FILTER_INFO *pInfo);
+    HRESULT STDMETHODCALLTYPE JoinFilterGraph (IFilterGraph *pGraph, LPCWSTR pName);
+    HRESULT STDMETHODCALLTYPE QueryVendorInfo (LPWSTR *pVendorInfo);
 
 // Implementation
 protected:
-	BEGIN_INTERFACE_PART(BaseFilter, IBaseFilter)
-		HRESULT STDMETHODCALLTYPE GetClassID (CLSID *pClassID);
-        HRESULT STDMETHODCALLTYPE Stop (void);
-        HRESULT STDMETHODCALLTYPE Pause (void);
-        HRESULT STDMETHODCALLTYPE Run (REFERENCE_TIME tStart);
-        HRESULT STDMETHODCALLTYPE GetState (DWORD dwMilliSecsTimeout, FILTER_STATE *State);
-        HRESULT STDMETHODCALLTYPE SetSyncSource (IReferenceClock *pClock);
-        HRESULT STDMETHODCALLTYPE GetSyncSource (IReferenceClock **pClock);
-        HRESULT STDMETHODCALLTYPE EnumPins (IEnumPins **ppEnum);
-        HRESULT STDMETHODCALLTYPE FindPin (LPCWSTR Id, IPin **ppPin);
-        HRESULT STDMETHODCALLTYPE QueryFilterInfo (FILTER_INFO *pInfo);
-        HRESULT STDMETHODCALLTYPE JoinFilterGraph (IFilterGraph *pGraph, LPCWSTR pName);
-        HRESULT STDMETHODCALLTYPE QueryVendorInfo (LPWSTR *pVendorInfo);
-	END_INTERFACE_PART(BaseFilter)
-
-	DECLARE_INTERFACE_MAP()
-
-protected:
 	virtual const GUID & GetClassID () = 0;
 	virtual HRESULT SetFilterName (LPCWSTR pFilterName) = 0;
-	virtual CString GetFilterName () = 0;
+	virtual CAtlString GetFilterName () = 0;
 	virtual void InitializePins () = 0;
 
 	virtual HRESULT StartPins ();
@@ -116,15 +115,10 @@ public:
 	CDirectShowPins		mInputPins;
 	CDirectShowPins		mOutputPins;
 protected:
-	mutable CMutex		mStateLock;
-	mutable CMutex		mDataLock;
+	mutable CAutoMutex	mStateLock;
+	mutable CAutoMutex	mDataLock;
 	IFilterGraph *		mFilterGraph;
 	FILTER_STATE		mState;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSHOWFILTER_H_INCLUDED_

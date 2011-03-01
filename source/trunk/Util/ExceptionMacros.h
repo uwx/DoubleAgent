@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -24,148 +24,115 @@
 #define	_EXCEPTIONMACROS_H
 ////////////////////////////////////////////////////////////////////////
 
+#if defined (_LOG_H) && !defined (_LOG_DISABLED)
+#define	__LogAnyException(lvl) try {LogMessage (lvl, _T("*** Exception *** at %hs %d"), __FILE__, __LINE__);} catch (...) {}
+#else
+#define	__LogAnyException(lvl)
+#endif
+
 #ifdef	__AFX_H__
-
 #if defined (_LOG_H) && !defined (_LOG_DISABLED)
-#define AnyException \
-(CException * pException) \
-{ \
-	try \
-	{ \
-		LogException (LogNormal, pException, __FILE__, __LINE__); \
-		pException->ReportError (); \
-		pException->Delete (); \
-	} \
-	catch (...) \
-	{} \
-} \
-catch (...) \
-{ \
-	try \
-	{ \
-		LogMessage (LogIfActive, _T("*** Exception *** at %hs %d"), __FILE__, __LINE__); \
-	} \
-	catch (...) \
-	{} \
-}
+#define	__LogAfxException(lvl) LogMfcException (lvl, pException, __FILE__, __LINE__);
 #else
-#define AnyException \
+#define	__LogAfxException(lvl)
+#endif
+
+#define	__CatchAfxExceptionL(lvl) \
 (CException * pException) \
 { \
-	try \
-	{ \
-		LogException (LogNormal, pException, __FILE__, __LINE__); \
-		pException->ReportError (); \
-	} \
-	catch (...) \
-	{} \
-	try \
-	{ \
-		pException->Delete (); \
-	} \
-	catch (...) \
-	{} \
+	__LogAfxException (lvl) \
+	try {pException->Delete ();} catch (...) {} \
 } \
-catch (...) \
-{}
+catch
+
+#define	__CatchAfxExceptionR(lvl) \
+(CException * pException) \
+{ \
+	__LogAfxException (lvl) \
+	try {pException->ReportError ();} catch (...) {} \
+	try {pException->Delete ();} catch (...) {} \
+} \
+catch
+
+#define	__CatchAfxExceptionN \
+(CException * pException) \
+{ \
+	try {pException->Delete ();} catch (...) {} \
+} \
+catch
+
+#else
+#define	__CatchAfxExceptionL(lvl)
+#define	__CatchAfxExceptionR(lvl)
+#define	__CatchAfxExceptionN
+#endif	// __AFX_H__
+
+#ifdef	__ATLEXCEPT_H__
+#if defined (_LOG_H) && !defined (_LOG_DISABLED)
+#define	__LogAtlException(lvl) LogAtlException (lvl, pException, __FILE__, __LINE__);
+#else
+#define	__LogAtlException(lvl) (pException);
 #endif
+
+#define	__CatchAtlException(lvl) \
+(CAtlException pException) \
+{ \
+	__LogAtlException (lvl) \
+} \
+catch
+
+#else
+#define	__CatchAtlException(lvl)
+#endif	// __ATLEXCEPT_H__
+
+#ifdef	__cplusplus_cli
+#if defined (_LOG_H) && !defined (_LOG_DISABLED)
+#define	__LogCliException(lvl) LogCliException (lvl, pException, __FILE__, __LINE__);
+#else
+#define	__LogCliException(lvl) pException;
+#endif
+
+#define	__CatchCliException(lvl) \
+(Exception^ pException) \
+{ \
+	__LogCliException (lvl) \
+} \
+catch
+
+#else
+#define	__CatchCliException(lvl)
+#endif	// __cplusplus_cli
+
+#define AnyException \
+__CatchAfxExceptionR (LogNormal|LogTime) \
+__CatchAtlException (LogNormal|LogTime) \
+__CatchCliException (LogNormal|LogTime) \
+(...) {__LogAnyException (LogIfActive|LogTime)}
 
 #ifdef	_DEBUG
 #define AnyExceptionSilent \
-(CException * pException) \
-{ \
-	try \
-	{ \
-		LogException (LogDetails, pException, __FILE__, __LINE__); \
-		pException->Delete (); \
-	} \
-	catch (...) \
-	{} \
-} \
-catch (...) \
-{}
+__CatchAfxExceptionL (LogDetails|LogTime) \
+__CatchAtlException (LogDetails|LogTime) \
+__CatchCliException (LogDetails|LogTime) \
+(...) {}
 #else
 #define AnyExceptionSilent \
-(CException * pException) \
-{ \
-	try \
-	{ \
-		pException->Delete (); \
-	} \
-	catch (...) \
-	{} \
-} \
-catch (...) \
-{}
+(...) {}
 #endif
 
 #ifdef	_DEBUG
 #define AnyExceptionDebug \
-(CException * pException) \
-{ \
-	try \
-	{ \
-		LogException (LogNormal, pException, __FILE__, __LINE__); \
-	} \
-	catch (...) \
-	{} \
-	try \
-	{ \
-		pException->Delete (); \
-	} \
-	catch (...) \
-	{} \
-} \
-catch (...) \
-{ \
-	try \
-	{ \
-		LogMessage (LogIfActive, _T("*** Exception *** at %hs %d"), __FILE__, __LINE__); \
-	} \
-	catch (...) \
-	{} \
-}
+__CatchAfxExceptionL (LogNormal) \
+__CatchAtlException (LogNormal) \
+__CatchCliException (LogNormal) \
+(...) {__LogAnyException (LogIfActive)}
 #else
-#if defined (_LOG_H) && !defined (_LOG_DISABLED)
 #define AnyExceptionDebug \
-(CException * pException) \
-{ \
-	try \
-	{ \
-		LogException (LogIfActive, pException, __FILE__, __LINE__); \
-	} \
-	catch (...) \
-	{} \
-	try \
-	{ \
-		pException->Delete (); \
-	} \
-	catch (...) \
-	{} \
-} \
-catch (...) \
-{ \
-	try \
-	{ \
-		LogMessage (LogIfActive, _T("*** Exception *** at %hs %d"), __FILE__, __LINE__); \
-	} \
-	catch (...) \
-	{} \
-}
-#else
-#define AnyExceptionDebug AnyExceptionSilent
+__CatchAfxExceptionL (LogIfActive) \
+__CatchAtlException (LogIfActive) \
+__CatchCliException (LogIfActive) \
+(...) {__LogAnyException (LogIfActive)}
 #endif
-#endif
-
-#else // __AFX_H__
-
-#define AnyException (...) {}
-
-#define AnyExceptionSilent (...) {}
-
-#define AnyExceptionDebug (...) {}
-
-#endif // __AFX_H__
 
 ////////////////////////////////////////////////////////////////////////
 #endif // _EXCEPTIONMACROS_H

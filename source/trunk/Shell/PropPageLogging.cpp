@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -19,23 +19,16 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include <AfxPriv.h>
-#include <AfxShellManager.h>
+#include <commdlg.h>
+#include <shlobj.h>
 #include "DaShell.h"
 #include "DaGlobalConfig.h"
 #include "PropPageLogging.h"
 #include "PropPageRegistry.h"
 #include "Registry.h"
 #include "GuidStr.h"
-#include "NotifyLock.h"
 #include "DaServerOdl.h"
 #include "DaControlOdl.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 
 #ifdef	_DEBUG
 //#define	_DEBUG_INSTANCE		LogNormal
@@ -43,46 +36,17 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC(CPropPageLogging, CPropertyPage)
-
-BEGIN_MESSAGE_MAP(CPropPageLogging, CPropertyPage)
-	//{{AFX_MSG_MAP(CPropPageLogging)
-	ON_BN_CLICKED(IDC_LOG_SERVER, OnLogComponent)
-	ON_BN_CLICKED(IDC_LOG_CONTROL, OnLogComponent)
-	ON_BN_CLICKED(IDC_LOG_CORE, OnLogComponent)
-	ON_BN_CLICKED(IDC_LOG_LEVEL_NONE, OnLogLevel)
-	ON_BN_CLICKED(IDC_LOG_LEVEL_IFACTIVE, OnLogLevel)
-	ON_BN_CLICKED(IDC_LOG_LEVEL_NORMAL, OnLogLevel)
-	ON_BN_CLICKED(IDC_LOG_LEVEL_DETAIL, OnLogLevel)
-	ON_BN_CLICKED(IDC_LOG_LEVEL_VERBOSE, OnLogLevel)
-	ON_BN_CLICKED(IDC_LOG_TRACE_ACTIONS, OnLogTraceActions)
-	ON_BN_CLICKED(IDC_LOG_CRASH_DUMP, OnLogCrashDump)
-	ON_BN_CLICKED(IDC_LOG_FILE_BROWSE, OnLogFileBrowse)
-	ON_BN_CLICKED(IDC_LOG_FILE_RESET, OnLogFileReset)
-	ON_BN_CLICKED(IDC_LOG_PATH_BROWSE, OnLogPathBrowse)
-	ON_BN_CLICKED(IDC_LOG_PATH_RESET, OnLogPathReset)
-	ON_BN_CLICKED(IDC_LOG_REGISTRY, OnLogRegistry)
-	ON_EN_CHANGE(IDC_LOG_FILE, OnLogFileChange)
-	ON_EN_CHANGE(IDC_LOG_PATH, OnLogPathChange)
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
-
 CPropPageLogging::CPropPageLogging()
-:	CPropertyPage(IDD),
+:	CAtlPropertyPage (IDD),
 	mKeyNdxServer (0),
 	mKeyNdxControl (1),
 	mKeyNdxCore (2),
-	mKeyNdx (-1),
-	mDefLogFile (_T(_DOUBLEAGENT_NAME) _T(".log"))
+	mKeyNdxSapi4 (3),
+	mKeyNdx (-1)
 {
 #ifdef	_DEBUG_INSTANCE
 	LogMessage (_DEBUG_INSTANCE, _T("[%p] CPropPageLogging::CPropPageLogging"), this);
 #endif
-	//{{AFX_DATA_INIT(CPropPageLogging)
-	//}}AFX_DATA_INIT
-
 	SHGetSpecialFolderPath (NULL, mDefLogPath.GetBuffer (MAX_PATH), CSIDL_DESKTOPDIRECTORY, FALSE);
 	PathRemoveBackslash (mDefLogPath.GetBuffer (MAX_PATH));
 	mDefLogPath.ReleaseBuffer ();
@@ -90,12 +54,12 @@ CPropPageLogging::CPropPageLogging()
 	mLogComponent.SetAtGrow (mKeyNdxServer, _T(_SERVER_REGNAME));
 	mLogComponent.SetAtGrow (mKeyNdxControl, _T(_CONTROL_REGNAME));
 	mLogComponent.SetAtGrow (mKeyNdxCore, _T(_CORE_REGNAME));
+	mLogComponent.SetAtGrow (mKeyNdxSapi4, _T("Sapi4"));
 
-	if	(m_psp.pResource = mPropPageFix.GetWritableTemplate (IDD))
-	{
-		m_psp.dwFlags |= PSP_DLGINDIRECT;
-		m_psp.pszTitle = (LPCTSTR) (m_strCaption = mPropPageFix.GetTemplateCaption (m_psp.pResource));
-	}
+	mDefLogFile.SetAtGrow (mKeyNdxServer, _T(_DOUBLEAGENT_NAME) _T(".log"));
+	mDefLogFile.SetAtGrow (mKeyNdxControl, _T(_DOUBLEAGENT_NAME) _T(".log"));
+	mDefLogFile.SetAtGrow (mKeyNdxCore, _T(_DOUBLEAGENT_NAME) _T(".log"));
+	mDefLogFile.SetAtGrow (mKeyNdxSapi4, _T("Sapi4.log"));
 }
 
 CPropPageLogging::~CPropPageLogging()
@@ -106,89 +70,97 @@ CPropPageLogging::~CPropPageLogging()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
 
-void CPropPageLogging::DoDataExchange(CDataExchange* pDX)
+BOOL CPropPageLogging::OnInitDialog ()
 {
-	CPropertyPage::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CPropPageLogging)
-	DDX_Control(pDX, IDC_LOG_SERVER, mLogServer);
-	DDX_Control(pDX, IDC_LOG_CONTROL, mLogControl);
-	DDX_Control(pDX, IDC_LOG_CORE, mLogCore);
-	DDX_Control(pDX, IDC_LOG_LEVEL_NONE, mLogLevelNone);
-	DDX_Control(pDX, IDC_LOG_LEVEL_IFACTIVE, mLogLevelIfActive);
-	DDX_Control(pDX, IDC_LOG_LEVEL_NORMAL, mLogLevelNormal);
-	DDX_Control(pDX, IDC_LOG_LEVEL_DETAIL, mLogLevelDetail);
-	DDX_Control(pDX, IDC_LOG_LEVEL_VERBOSE, mLogLevelVerbose);
-	DDX_Control(pDX, IDC_LOG_TRACE_ACTIONS, mLogTraceActions);
-	DDX_Control(pDX, IDC_LOG_CRASH_DUMP, mLogCrashDump);
-	DDX_Control(pDX, IDC_LOG_FILE, mLogFileEdit);
-	DDX_Control(pDX, IDC_LOG_FILE_BROWSE, mLogFileBrowse);
-	DDX_Control(pDX, IDC_LOG_FILE_RESET, mLogFileReset);
-	DDX_Control(pDX, IDC_LOG_PATH, mLogPathEdit);
-	DDX_Control(pDX, IDC_LOG_PATH_BROWSE, mLogPathBrowse);
-	DDX_Control(pDX, IDC_LOG_PATH_RESET, mLogPathReset);
-	DDX_Control(pDX, IDC_LOG_REGISTRY, mLogRegistry);
-	//}}AFX_DATA_MAP
+	mLogServer.Attach			(GetDlgItem (IDC_LOG_SERVER));
+	mLogControl.Attach			(GetDlgItem (IDC_LOG_CONTROL));
+	mLogCore.Attach				(GetDlgItem (IDC_LOG_CORE));
+	mLogSapi4.Attach			(GetDlgItem (IDC_LOG_SAPI4));
+	mLogLevelNone.Attach		(GetDlgItem (IDC_LOG_LEVEL_NONE));
+	mLogLevelIfActive.Attach	(GetDlgItem (IDC_LOG_LEVEL_IFACTIVE));
+	mLogLevelNormal.Attach		(GetDlgItem (IDC_LOG_LEVEL_NORMAL));
+	mLogLevelDetail.Attach		(GetDlgItem (IDC_LOG_LEVEL_DETAIL));
+	mLogLevelVerbose.Attach		(GetDlgItem (IDC_LOG_LEVEL_VERBOSE));
+	mLogTraceActions.Attach		(GetDlgItem (IDC_LOG_TRACE_ACTIONS));
+	mLogCrashDump.Attach		(GetDlgItem (IDC_LOG_CRASH_DUMP));
+	mLogFileEdit.Attach			(GetDlgItem (IDC_LOG_FILE));
+	mLogFileBrowse.Attach		(GetDlgItem (IDC_LOG_FILE_BROWSE));
+	mLogFileReset.Attach		(GetDlgItem (IDC_LOG_FILE_RESET));
+	mLogPathEdit.Attach			(GetDlgItem (IDC_LOG_PATH));
+	mLogPathBrowse.Attach		(GetDlgItem (IDC_LOG_PATH_BROWSE));
+	mLogPathReset.Attach		(GetDlgItem (IDC_LOG_PATH_RESET));
+	mLogRegistry.Attach			(GetDlgItem (IDC_LOG_REGISTRY));
 
-	if	(pDX->m_bSaveAndValidate)
-	{
-		UpdateLogging ();
-	}
-	else
-	{
-		ShowLogging ();
-	}
+#ifdef	_WIN64
+	CAtlString	lButtonTitle;
+	mLogSapi4.GetWindowText (lButtonTitle);
+	lButtonTitle += _T("\n(32-bit)");
+	mLogSapi4.SetWindowText (lButtonTitle);
+#endif
+
+	ShowLogging ();
+	return TRUE;
 }
 
+LRESULT CPropPageLogging::OnApply(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
+{
+	UpdateLogging ();
+	return PSNRET_NOERROR;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
 void CPropPageLogging::ShowLogging ()
 {
-	CNotifyLock	lLock (m_hWnd);
-
 	if	(
-			(!mLogServer.GetCheck())
-		&&	(!mLogControl.GetCheck())
-		&&	(!mLogCore.GetCheck())
+			(!Button_GetCheck (mLogServer))
+		&&	(!Button_GetCheck (mLogControl))
+		&&	(!Button_GetCheck (mLogCore))
+		&&	(!Button_GetCheck (mLogSapi4))
 		)
 	{
-		mLogServer.SetCheck (TRUE);
+		Button_SetCheck (mLogServer, TRUE);
 	}
 
-	if	(mLogServer.GetCheck())
+	if	(Button_GetCheck (mLogServer))
 	{
 		ShowLogging (mKeyNdx = mKeyNdxServer);
 	}
 	else
-	if	(mLogControl.GetCheck())
+	if	(Button_GetCheck (mLogControl))
 	{
 		ShowLogging (mKeyNdx = mKeyNdxControl);
 	}
 	else
-	if	(mLogCore.GetCheck())
+	if	(Button_GetCheck (mLogCore))
 	{
 		ShowLogging (mKeyNdx = mKeyNdxCore);
+	}
+	else
+	if	(Button_GetCheck (mLogSapi4))
+	{
+		ShowLogging (mKeyNdx = mKeyNdxSapi4);
 	}
 
 	if	(!mLogCrashValue)
 	{
-		mLogSettingsKey = new CRegKey (CRegKey (HKEY_CURRENT_USER, gProfileKeyDa, false), _T(_SERVER_REGNAME), false, true);
+		mLogSettingsKey = new CRegKeyEx (CRegKeyEx (HKEY_CURRENT_USER, gProfileKeyDa, false), _T(_SERVER_REGNAME), false, true);
 		mLogCrashValue = new CRegDWord (*mLogSettingsKey, _T("CrashDump"), true);
 		mLogTraceValue = new CRegDWord (*mLogSettingsKey, _T("ActionTrace"), true);
 	}
-	mLogCrashDump.SetCheck (mLogCrashValue->Value() != 0);
-	mLogCrashDump.ShowWindow (mLogServer.GetCheck() ? SW_SHOWNA : SW_HIDE);
-	mLogTraceActions.SetCheck (mLogTraceValue->Value() != 0);
-	mLogTraceActions.ShowWindow (mLogServer.GetCheck() ? SW_SHOWNA : SW_HIDE);
+	Button_SetCheck (mLogCrashDump, mLogCrashValue->Value() != 0);
+	mLogCrashDump.ShowWindow (Button_GetCheck (mLogServer) ? SW_SHOWNA : SW_HIDE);
+	Button_SetCheck (mLogTraceActions, mLogTraceValue->Value() != 0);
+	mLogTraceActions.ShowWindow (Button_GetCheck (mLogServer) ? SW_SHOWNA : SW_HIDE);
 }
 
 void CPropPageLogging::ShowLogging (INT_PTR pKeyNdx)
 {
-	CNotifyLock		lLock (m_hWnd);
-	CRegKey			lRootKey (HKEY_CURRENT_USER, gProfileKeyDa, true);
-	CRegKey			lItemKey (lRootKey, mLogComponent [pKeyNdx], true);
+	CRegKeyEx		lRootKey (HKEY_CURRENT_USER, gProfileKeyDa, true);
+	CRegKeyEx		lItemKey (lRootKey, mLogComponent [pKeyNdx], true);
 	CRegDWord		lItemLogLevel (lItemKey, _T("LogLevel"));
 	CRegString		lItemLogPath (lItemKey, _T("LogFile"));
 	CRegDWord *		lLogLevel;
@@ -199,37 +171,38 @@ void CPropPageLogging::ShowLogging (INT_PTR pKeyNdx)
 	{
 		lLogLevel = &lItemLogLevel;
 	}
-	ShowLogLevel (*lLogLevel);
+	ShowLogLevel (*lLogLevel, pKeyNdx);
 
 	lLogPath = mLogPath (pKeyNdx);
 	if	(!lLogPath)
 	{
 		lLogPath = &lItemLogPath;
 	}
-	ShowLogPath (*lLogPath);
+	ShowLogPath (*lLogPath, pKeyNdx);
 }
 
-void CPropPageLogging::ShowLogLevel (const CRegDWord & pLogLevel)
+void CPropPageLogging::ShowLogLevel (const CRegDWord & pLogLevel, INT_PTR pKeyNdx)
 {
 	DWORD	lLogLevel = pLogLevel.Value() & LogLevelMask;
 
-	mLogLevelNone.SetCheck (lLogLevel == 0);
-	mLogLevelIfActive.SetCheck (lLogLevel == LogIfActive);
-	mLogLevelNormal.SetCheck (lLogLevel == LogNormal);
-	mLogLevelDetail.SetCheck (lLogLevel == LogDetail);
-	mLogLevelVerbose.SetCheck (lLogLevel == LogVerbose);
+	Button_SetCheck (mLogLevelNone, lLogLevel == 0);
+	Button_SetCheck (mLogLevelIfActive, lLogLevel == LogIfActive);
+	Button_SetCheck (mLogLevelNormal, lLogLevel == LogNormal);
+	Button_SetCheck (mLogLevelDetail, lLogLevel == LogDetail);
+	Button_SetCheck (mLogLevelVerbose, lLogLevel == LogVerbose);
 }
 
-void CPropPageLogging::ShowLogPath (const CRegString & pLogPath)
+void CPropPageLogging::ShowLogPath (const CRegString & pLogPath, INT_PTR pKeyNdx)
 {
-	CString	lFilePath;
-	CString	lFileName;
+	CAtlString	lFilePath;
+	CAtlString	lFileName;
+	CAtlString	lDefLogFile = mDefLogFile [pKeyNdx];
 
 	SplitLogPath (CRegString (pLogPath).Expand().Value(), lFilePath, lFileName);
 
 	mLogFileEdit.SetWindowText (lFileName);
 	mLogPathEdit.SetWindowText (lFilePath);
-	mLogFileReset.EnableWindow (lFileName.CompareNoCase (mDefLogFile) != 0);
+	mLogFileReset.EnableWindow (lFileName.CompareNoCase (lDefLogFile) != 0);
 	mLogPathReset.EnableWindow (lFilePath.CompareNoCase (mDefLogPath) != 0);
 }
 
@@ -237,25 +210,25 @@ void CPropPageLogging::ShowLogPath (const CRegString & pLogPath)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CRegKey * CPropPageLogging::PrepUpdate (INT_PTR pKeyNdx)
+CRegKeyEx * CPropPageLogging::PrepUpdate (INT_PTR pKeyNdx)
 {
 	if	(
 			(pKeyNdx >= 0)
-		&&	(pKeyNdx <= mLogComponent.GetUpperBound ())
+		&&	(pKeyNdx < (INT_PTR)mLogComponent.GetCount())
 		&&	(!mLogKey (pKeyNdx))
 		)
 	{
-		CRegKey	lRootKey (HKEY_CURRENT_USER, gProfileKeyDa, false, true);
+		CRegKeyEx	lRootKey (HKEY_CURRENT_USER, gProfileKeyDa, false, true);
 
-		mLogKey.SetAtGrow (pKeyNdx, new CRegKey (lRootKey, mLogComponent [pKeyNdx], false, true));
+		mLogKey.SetAtGrow (pKeyNdx, new CRegKeyEx (lRootKey, mLogComponent [pKeyNdx], false, true));
 	}
 	return mLogKey (pKeyNdx);
 }
 
 void CPropPageLogging::UpdateLogPath (INT_PTR pKeyNdx)
 {
-	CString		lLogPath = MakeLogPath (true);
-	CRegKey *	lLogKey;
+	CAtlString	lLogPath = MakeLogPath (true);
+	CRegKeyEx *	lLogKey;
 
 	if	(
 			(!mLogPath (pKeyNdx))
@@ -278,14 +251,14 @@ void CPropPageLogging::UpdateLogging ()
 {
 	INT_PTR	lKeyNdx;
 
-	for	(lKeyNdx = 0; lKeyNdx <= mLogLevel.GetUpperBound(); lKeyNdx++)
+	for	(lKeyNdx = 0; lKeyNdx < (INT_PTR)mLogLevel.GetCount(); lKeyNdx++)
 	{
 		if	(mLogLevel (lKeyNdx))
 		{
 			mLogLevel (lKeyNdx)->Update ();
 		}
 	}
-	for	(lKeyNdx = 0; lKeyNdx <= mLogPath.GetUpperBound(); lKeyNdx++)
+	for	(lKeyNdx = 0; lKeyNdx < (INT_PTR)mLogPath.GetCount(); lKeyNdx++)
 	{
 		if	(mLogPath (lKeyNdx))
 		{
@@ -316,7 +289,7 @@ void CPropPageLogging::UpdateLogging ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageLogging::SplitLogPath (LPCTSTR pLogPath, CString & pFilePath, CString & pFileName)
+void CPropPageLogging::SplitLogPath (LPCTSTR pLogPath, CAtlString & pFilePath, CAtlString & pFileName)
 {
 	pFilePath = pLogPath;
 	pFilePath.TrimLeft ();
@@ -361,16 +334,20 @@ void CPropPageLogging::SplitLogPath (LPCTSTR pLogPath, CString & pFilePath, CStr
 
 	PathRemoveBackslash (pFilePath.GetBuffer (MAX_PATH));
 	pFilePath.ReleaseBuffer ();
-	if	(pFileName.IsEmpty ())
+	if	(
+			(pFileName.IsEmpty ())
+		&&	(mKeyNdx >= 0)
+		&&	(mKeyNdx < (INT_PTR)mDefLogFile.GetCount())
+		)
 	{
-		pFileName = mDefLogFile;
+		pFileName = mDefLogFile [mKeyNdx];
 	}
 }
 
-CString CPropPageLogging::MakeLogPath (LPCTSTR pFilePath, LPCTSTR pFileName, bool pDefaultBlank)
+CAtlString CPropPageLogging::MakeLogPath (LPCTSTR pFilePath, LPCTSTR pFileName, bool pDefaultBlank)
 {
-	CString	lFilePath (pFilePath);
-	CString	lFileName (pFileName);
+	CAtlString	lFilePath (pFilePath);
+	CAtlString	lFileName (pFileName);
 
 	lFilePath.TrimLeft ();
 	lFilePath.TrimRight ();
@@ -390,21 +367,29 @@ CString CPropPageLogging::MakeLogPath (LPCTSTR pFilePath, LPCTSTR pFileName, boo
 	{
 		lFilePath = mDefLogPath;
 	}
-	if	(lFileName.IsEmpty ())
+	if	(
+			(lFileName.IsEmpty ())
+		&&	(mKeyNdx >= 0)
+		&&	(mKeyNdx < (INT_PTR)mDefLogFile.GetCount())
+		)
 	{
-		lFileName = mDefLogFile;
+		lFileName = mDefLogFile [mKeyNdx];
 	}
 	PathAppend (lFilePath.GetBuffer (MAX_PATH), lFileName);
 	lFilePath.ReleaseBuffer ();
 
-	SplitLogPath (CString ((LPCTSTR)lFilePath), lFilePath, lFileName);
+	SplitLogPath (CAtlString ((LPCTSTR)lFilePath), lFilePath, lFileName);
 
 	if	(
 			(pDefaultBlank)
 		&&	(lFilePath.CompareNoCase (mDefLogPath) == 0)
 		)
 	{
-		if	(lFileName.CompareNoCase (mDefLogFile) == 0)
+		if	(
+				(mKeyNdx >= 0)
+			&&	(mKeyNdx < (INT_PTR)mDefLogFile.GetCount())
+			&&	(lFileName.CompareNoCase (mDefLogFile [mKeyNdx]) == 0)
+			)
 		{
 			lFilePath.Empty ();
 		}
@@ -421,19 +406,19 @@ CString CPropPageLogging::MakeLogPath (LPCTSTR pFilePath, LPCTSTR pFileName, boo
 	return lFilePath;
 }
 
-CString CPropPageLogging::MakeLogPath (LPCTSTR pLogPath, bool pDefaultBlank)
+CAtlString CPropPageLogging::MakeLogPath (LPCTSTR pLogPath, bool pDefaultBlank)
 {
-	CString	lFileName;
-	CString	lFilePath;
+	CAtlString	lFileName;
+	CAtlString	lFilePath;
 
 	SplitLogPath (pLogPath, lFilePath, lFileName);
 	return MakeLogPath (lFilePath, lFileName, pDefaultBlank);
 }
 
-CString CPropPageLogging::MakeLogPath (bool pDefaultBlank)
+CAtlString CPropPageLogging::MakeLogPath (bool pDefaultBlank)
 {
-	CString	lFileName;
-	CString	lFilePath;
+	CAtlString	lFileName;
+	CAtlString	lFilePath;
 
 	mLogFileEdit.GetWindowText (lFileName);
 	mLogPathEdit.GetWindowText (lFilePath);
@@ -445,15 +430,16 @@ CString CPropPageLogging::MakeLogPath (bool pDefaultBlank)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageLogging::OnLogComponent()
+LRESULT CPropPageLogging::OnLogComponent(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 	ShowLogging ();
+	return 0;
 }
 
-void CPropPageLogging::OnLogLevel()
+LRESULT CPropPageLogging::OnLogLevel(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
-	CRegKey *	lLogKey;
-	DWORD		lLogLevel = mLogLevelIfActive.GetCheck() ? LogIfActive : mLogLevelNormal.GetCheck() ? LogNormal : mLogLevelDetail.GetCheck() ? LogDetail : mLogLevelVerbose.GetCheck() ? LogVerbose : 0;
+	CRegKeyEx *	lLogKey;
+	DWORD		lLogLevel = Button_GetCheck (mLogLevelIfActive) ? LogIfActive : Button_GetCheck (mLogLevelNormal) ? LogNormal : Button_GetCheck (mLogLevelDetail) ? LogDetail : Button_GetCheck (mLogLevelVerbose) ? LogVerbose : 0;
 
 	if	(
 			(!mLogLevel (mKeyNdx))
@@ -469,97 +455,174 @@ void CPropPageLogging::OnLogLevel()
 			mLogLevel (mKeyNdx)->SetValue (lLogLevel);
 			SetModified (TRUE);
 		}
-		ShowLogLevel (*mLogLevel (mKeyNdx));
+		ShowLogLevel (*mLogLevel (mKeyNdx), mKeyNdx);
 	}
+	return 0;
 }
 
-void CPropPageLogging::OnLogTraceActions()
+LRESULT CPropPageLogging::OnLogTraceActions(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 	if	(mLogTraceValue)
 	{
-		mLogTraceValue->SetValue (mLogTraceActions.GetCheck() ? 2 : 0);
+		mLogTraceValue->SetValue (Button_GetCheck (mLogTraceActions) ? 2 : 0);
 		SetModified (TRUE);
 	}
+	return 0;
 }
 
-void CPropPageLogging::OnLogCrashDump()
+LRESULT CPropPageLogging::OnLogCrashDump(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 	if	(mLogCrashValue)
 	{
-		mLogCrashValue->SetValue (mLogCrashDump.GetCheck() ? 2 : 0);
+		mLogCrashValue->SetValue (Button_GetCheck (mLogCrashDump) ? 2 : 0);
 		SetModified (TRUE);
 	}
+	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageLogging::OnLogFileChange()
+LRESULT CPropPageLogging::OnLogFileChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 	UpdateLogPath (mKeyNdx);
+	bHandled = FALSE;
+	return 0;
 }
 
-void CPropPageLogging::OnLogFileBrowse()
+LRESULT CPropPageLogging::OnLogFileBrowse(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
-	CFileDialog	lFileDlg (FALSE, _T(".log"), MakeLogPath (false), OFN_NOCHANGEDIR|OFN_HIDEREADONLY|OFN_DONTADDTORECENT, _T("All Files|*.*|Log Files|*.log||"), this);
-	CString		lFileName;
-	CString		lFilePath;
+	CAtlString	lFilePath = MakeLogPath (false);
+	CAtlString	lFileName;
 
-	lFileDlg.GetOFN().lpstrTitle = _T("Log File");
-
-	if	(lFileDlg.DoModal () == IDOK)
+	if	(BrowseForFile (lFilePath))
 	{
-		SplitLogPath (MakeLogPath (lFileDlg.GetPathName(), false), lFilePath, lFileName);
+		SplitLogPath (MakeLogPath (lFilePath, false), lFilePath, lFileName);
 		mLogFileEdit.SetWindowText (lFileName);
 		mLogPathEdit.SetWindowText (lFilePath);
 		UpdateLogPath (mKeyNdx);
 		ShowLogging (mKeyNdx);
 	}
+	return 0;
 }
 
-void CPropPageLogging::OnLogFileReset()
+LRESULT CPropPageLogging::OnLogFileReset(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
-	CString	lFileName;
-	CString	lFilePath;
+	CAtlString	lFileName;
+	CAtlString	lFilePath;
 
 	SplitLogPath (MakeLogPath (NULL, NULL, false), lFilePath, lFileName);
 	mLogFileEdit.SetWindowText (lFileName);
 	UpdateLogPath (mKeyNdx);
 	ShowLogging (mKeyNdx);
+
+	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageLogging::OnLogPathChange()
+LRESULT CPropPageLogging::OnLogPathChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 	UpdateLogPath (mKeyNdx);
+	bHandled = FALSE;
+	return 0;
 }
 
-void CPropPageLogging::OnLogPathBrowse()
+LRESULT CPropPageLogging::OnLogPathBrowse(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
-	CShellManager	lShellManager;
-	CString			lFileName;
-	CString			lFilePath;
+	CAtlString	lFilePath;
+	CAtlString	lFileName;
 
 	SplitLogPath (MakeLogPath (NULL, NULL, false), lFilePath, lFileName);
 
-	if	(lShellManager.BrowseForFolder (lFilePath, this, lFilePath, _T("Specify the log file's location"), BIF_RETURNONLYFSDIRS|BIF_VALIDATE|BIF_USENEWUI))
+	if	(BrowseForFolder (lFilePath))
 	{
 		SplitLogPath (MakeLogPath (lFilePath, NULL, false), lFilePath, lFileName);
 		mLogPathEdit.SetWindowText (lFilePath);
 		UpdateLogPath (mKeyNdx);
 		ShowLogging (mKeyNdx);
 	}
+	return 0;
 }
 
-void CPropPageLogging::OnLogPathReset()
+LRESULT CPropPageLogging::OnLogPathReset(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
-	CString	lFileName;
-	CString	lFilePath;
+	CAtlString	lFileName;
+	CAtlString	lFilePath;
 
 	SplitLogPath (MakeLogPath (NULL, NULL, false), lFilePath, lFileName);
 	mLogPathEdit.SetWindowText (lFilePath);
 	UpdateLogPath (mKeyNdx);
 	ShowLogging (mKeyNdx);
+
+	return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+bool CPropPageLogging::BrowseForFile (CAtlString & pFileName, DWORD pFlags)
+{
+	bool						lRet = false;
+	tSS <OPENFILENAME, DWORD>	lOpenFile;
+	CAtlString					lFileName (pFileName);
+
+	lOpenFile.lpstrTitle = _T("Log File");
+	lOpenFile.lpstrFilter = _T("All Files\0*.*\0Log Files\0*.log\0");
+	lOpenFile.lpstrDefExt = _T(".log");
+	lOpenFile.Flags = OFN_EXPLORER|OFN_NOCHANGEDIR|OFN_HIDEREADONLY|OFN_DONTADDTORECENT;
+	lOpenFile.lpstrFile = lFileName.GetBuffer (MAX_PATH);
+	lOpenFile.nMaxFile = MAX_PATH;
+
+	if	(GetSaveFileName (&lOpenFile))
+	{
+		lFileName.ReleaseBuffer ();
+		pFileName = lFileName;
+		lRet = true;
+	}
+	return lRet;
+}
+
+bool CPropPageLogging::BrowseForFolder (CAtlString & pFolderPath)
+{
+	bool			lRet = false;
+	tS <BROWSEINFO>	lBrowseInfo;
+	LPITEMIDLIST	lBrowseResult;
+	CAtlString		lBrowseFolder;
+
+	lBrowseInfo.hwndOwner = m_hWnd;
+	lBrowseInfo.lpszTitle = _T("Specify the log file's location");
+	lBrowseInfo.ulFlags = BIF_RETURNONLYFSDIRS|BIF_VALIDATE|BIF_USENEWUI;
+	lBrowseInfo.lpfn = &BrowseCallbackProc;
+	lBrowseInfo.lParam = (LPARAM)this;
+
+	mBrowseInitPath = pFolderPath;
+	if	(lBrowseResult = SHBrowseForFolder (&lBrowseInfo))
+	{
+		if	(SHGetPathFromIDList (lBrowseResult, lBrowseFolder.GetBuffer(MAX_PATH)))
+		{
+			lBrowseFolder.ReleaseBuffer ();
+			pFolderPath = lBrowseFolder;
+			lRet = true;
+		}
+		ILFree (lBrowseResult);
+	}
+	return lRet;
+}
+
+int CALLBACK CPropPageLogging::BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData)
+{
+	CPropPageLogging * lThis;
+
+	if	(
+			(uMsg == BFFM_INITIALIZED)
+		&&	(lThis = (CPropPageLogging*) lpData)
+		&&	(!lThis->mBrowseInitPath.IsEmpty ())
+		)
+	{
+		SendMessage (hwnd, BFFM_SETSELECTION, (WPARAM)TRUE, (LPARAM)(LPCTSTR)lThis->mBrowseInitPath);
+	}
+	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -604,21 +667,21 @@ void CPropPageLogging::OnLogPathReset()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageLogging::OnLogRegistry()
+LRESULT CPropPageLogging::OnLogRegistry(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
-	CString		lLogPath = (mLogPath (mKeyNdxServer)) ? mLogPath (mKeyNdxServer)->Value() : CRegString (CRegKey (HKEY_CURRENT_USER, gProfileKeyDa, true), mLogComponent [mKeyNdxServer], true).Value();
-	CFileDialog	lFileDlg (FALSE, _T(".log"), MakeLogPath (lLogPath, false), OFN_NOCHANGEDIR|OFN_PATHMUSTEXIST|OFN_HIDEREADONLY|OFN_DONTADDTORECENT, _T("All Files|*.*|Log Files|*.log||"), this);
+	CAtlString	lLogPath;
 
-	lFileDlg.GetOFN().lpstrTitle = _T("Log File");
+	lLogPath = (mLogPath (mKeyNdxServer)) ? mLogPath (mKeyNdxServer)->Value() : CRegString (CRegKeyEx (HKEY_CURRENT_USER, gProfileKeyDa, true), mLogComponent [mKeyNdxServer], true).Value();
+	lLogPath = MakeLogPath (lLogPath, false);
 
-	if	(lFileDlg.DoModal () == IDOK)
+	if	(BrowseForFile (lLogPath, OFN_PATHMUSTEXIST))
 	{
-		CWaitCursor	lWait;
+		HCURSOR		lPrevCursor = SetCursor (::LoadCursor (NULL, IDC_WAIT));
 		UINT		lLogLevel = gLogLevel;
-		CString		lLogFileName = gLogFileName;
+		CAtlString	lLogFileName = gLogFileName;
 
 		LogStop ();
-		LogStart (false, lFileDlg.GetPathName(), LogIfActive);
+		LogStart (false, lLogPath, LogIfActive);
 
 		try
 		{
@@ -632,7 +695,9 @@ void CPropPageLogging::OnLogRegistry()
 
 		LogStop (LogIfActive);
 		LogStart (false, lLogFileName, lLogLevel);
+		SetCursor (lPrevCursor);
 	}
+	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -643,10 +708,10 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 	{
 		try
 		{
-			CString	lTitle (pTitle);
-			CRegKey	lGlobalClasses;
-			CRegKey	lUserClasses;
-			CRegKey	lClassesRoot;
+			CAtlString	lTitle (pTitle);
+			CRegKeyEx	lGlobalClasses;
+			CRegKeyEx	lUserClasses;
+			CRegKeyEx	lClassesRoot;
 
 			if	(lTitle.IsEmpty())
 			{
@@ -655,20 +720,20 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 
 			GetRootKeys (lGlobalClasses, lUserClasses, lClassesRoot);
 #ifdef	_WIN64
-			CRegKey	lGlobalClasses32;
-			CRegKey	lUserClasses32;
-			CRegKey	lClassesRoot32;
+			CRegKeyEx	lGlobalClasses32;
+			CRegKeyEx	lUserClasses32;
+			CRegKeyEx	lClassesRoot32;
 			GetRootKeys (lGlobalClasses32, lUserClasses32, lClassesRoot32, true);
 #endif
 			LogMessage (pLogLevel, lTitle);
 
-			_LogClassIdPlatform (pLogLevel, __uuidof(CDaAgent), _T(_SERVER_PROGID_NAME))
+			_LogClassIdPlatform (pLogLevel, __uuidof(DaServer), _T(_SERVER_PROGID_NAME))
 			_LogClassIdPlatform (pLogLevel, __uuidof(DaServerHandler), _T(_SERVER_HANDLER_NAME))
 			_LogProgIdPlatform (pLogLevel, _T(_SERVER_PROGID), _T(_SERVER_PROGID));
 			_LogProgIdPlatform (pLogLevel, _T(_SERVER_PROGID_VER), _T(_SERVER_PROGID_VER));
-			_LogAppIdPlatform (pLogLevel, __uuidof(CDaAgent), _T(_SERVER_PROGID_NAME))
+			_LogAppIdPlatform (pLogLevel, __uuidof(DaServer), _T(_SERVER_PROGID_NAME))
 
-			_LogClassIdPlatform (pLogLevel, __uuidof(CDaAgentCtl), _T(_CONTROL_PROGID_NAME))
+			_LogClassIdPlatform (pLogLevel, __uuidof(DaControl), _T(_CONTROL_PROGID_NAME))
 			_LogProgIdPlatform (pLogLevel, _T(_CONTROL_PROGID), _T(_CONTROL_PROGID));
 			_LogProgIdPlatform (pLogLevel, _T(_CONTROL_PROGID_VER), _T(_CONTROL_PROGID_VER));
 
@@ -688,37 +753,63 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 				_LogAppIdAny (pLogLevel, __uuidof(CDaElevatedSettings), _T("Double Agent Emulation Management"))
 			}
 
-			_LogTypeLibAny (pLogLevel, __uuidof(DaServerTypeLib), _T(_SERVER_PROGID_NAME));
+			_LogTypeLibAny (pLogLevel, __uuidof(DoubleAgentSvr_TypeLib), _T(_SERVER_PROGID_NAME));
 #ifdef	_DEBUG
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaServer), _T("IDaServer"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaServer2), _T("IDaServer2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCharacter), _T("IDaSvrCharacter"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCharacter2), _T("IDaSvrCharacter2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrBalloon), _T("IDaSvrBalloon"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrBalloon2), _T("IDaSvrBalloon2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCommands), _T("IDaSvrCommands"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCommands2), _T("IDaSvrCommands2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCommand), _T("IDaSvrCommand"));
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCommandWindow), _T("IDaSvrCommandWindow"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCommand2), _T("IDaSvrCommand2"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCommandsWindow), _T("IDaSvrCommandsWindow"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCommandsWindow2), _T("IDaSvrCommandsWindow2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrUserInput), _T("IDaSvrUserInput"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrUserInput2), _T("IDaSvrUserInput2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrPropertySheet), _T("IDaSvrPropertySheet"));
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSpeechInputProperties), _T("IDaSvrSpeechInputProperties"));
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrAudioOutputProperties), _T("IDaSvrAudioOutputProperties"));
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrNotifySink), _T("IDaSvrNotifySink"));
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrNotifySink15), _T("IDaSvrNotifySink15"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrPropertySheet2), _T("IDaSvrPropertySheet2"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSpeechInput), _T("IDaSvrSpeechInput"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrAudioOutput), _T("IDaSvrAudioOutput"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSettings), _T("IDaSvrSettings"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCharacterFiles), _T("IDaSvrCharacterFiles"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrTTSEngine), _T("IDaSvrTTSEngine"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrTTSEngines), _T("IDaSvrTTSEngines"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSREngine), _T("IDaSvrSREngine"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSREngines), _T("IDaSvrSREngines"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrNotifySink2), _T("IDaSvrNotifySink2"));
 #endif
-			_LogTypeLibAny (pLogLevel, __uuidof(DaControlTypeLib), _T(_CONTROL_PROGID_NAME));
+			_LogTypeLibAny (pLogLevel, __uuidof(DoubleAgentCtl_TypeLib), _T(_CONTROL_PROGID_NAME));
 #ifdef	_DEBUG
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaControl), _T("IDaControl"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaControl2), _T("IDaControl2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCharacters), _T("IDaCtlCharacters"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCharacters2), _T("IDaCtlCharacters2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCharacter), _T("IDaCtlCharacter"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCharacter2), _T("IDaCtlCharacter2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlBalloon), _T("IDaCtlBalloon"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlBalloon2), _T("IDaCtlBalloon2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCommands), _T("IDaCtlCommands"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCommands2), _T("IDaCtlCommands2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCommand), _T("IDaCtlCommand"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCommand2), _T("IDaCtlCommand2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlRequest), _T("IDaCtlRequest"));
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlAudioObject), _T("IDaCtlAudioObject"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlSettings), _T("IDaCtlSettings"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlAudioOutput), _T("IDaCtlAudioOutput"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlSpeechInput), _T("IDaCtlSpeechInput"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlPropertySheet), _T("IDaCtlPropertySheet"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlPropertySheet2), _T("IDaCtlPropertySheet2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlUserInput), _T("IDaCtlUserInput"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCommandsWindow), _T("IDaCtlCommandsWindow"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlAnimationNames), _T("IDaCtlAnimationNames"));
-			_LogInterfaceAny (pLogLevel, __uuidof(_DaCtlEvents), _T("_DaCtlEvents"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCharacterFiles), _T("IDaCtlCharacterFiles"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlTTSEngine), _T("IDaCtlTTSEngine"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlTTSEngines), _T("IDaCtlTTSEngines"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlSREngine), _T("IDaCtlSREngine"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlSREngines), _T("IDaCtlSREngines"));
+			_LogInterfaceAny (pLogLevel, __uuidof(_DaCtlEvents2), _T("_DaCtlEvents2"));
 #endif
 		}
 		catch AnyExceptionSilent
@@ -731,10 +822,10 @@ void CPropPageLogging::LogMsRegistry (UINT pLogLevel, LPCTSTR pTitle)
 	{
 		try
 		{
-			CString	lTitle (pTitle);
-			CRegKey	lGlobalClasses;
-			CRegKey	lUserClasses;
-			CRegKey	lClassesRoot;
+			CAtlString	lTitle (pTitle);
+			CRegKeyEx	lGlobalClasses;
+			CRegKeyEx	lUserClasses;
+			CRegKeyEx	lClassesRoot;
 
 			if	(lTitle.IsEmpty())
 			{
@@ -743,9 +834,9 @@ void CPropPageLogging::LogMsRegistry (UINT pLogLevel, LPCTSTR pTitle)
 
 			GetRootKeys (lGlobalClasses, lUserClasses, lClassesRoot);
 #ifdef	_WIN64
-			CRegKey	lGlobalClasses32;
-			CRegKey	lUserClasses32;
-			CRegKey	lClassesRoot32;
+			CRegKeyEx	lGlobalClasses32;
+			CRegKeyEx	lUserClasses32;
+			CRegKeyEx	lClassesRoot32;
 			GetRootKeys (lGlobalClasses32, lUserClasses32, lClassesRoot32, true);
 #endif
 			LogMessage (pLogLevel, lTitle);
@@ -947,7 +1038,7 @@ bool CPropPageLogging::LogInterface (UINT pLogLevel, REFGUID pInterfaceId, LPCTS
 
 bool CPropPageLogging::LogClassId (UINT pLogLevel, REFGUID pClassId, LPCTSTR pClassTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged)
 {
-	CRegKey	lClassIdKey (pRootKey, _T("CLSID\\")+(CString)CGuidStr(pClassId), true);
+	CRegKeyEx	lClassIdKey (pRootKey, _T("CLSID\\")+(CString)CGuidStr(pClassId), true);
 
 	if	(lClassIdKey.IsValid ())
 	{
@@ -963,7 +1054,7 @@ bool CPropPageLogging::LogClassId (UINT pLogLevel, REFGUID pClassId, LPCTSTR pCl
 				*pTitleLogged = true;
 			}
 		}
-		LogRegKey (pLogLevel, lClassIdKey, CString (pRootName) + _T("\\"), 4);
+		LogRegKey (pLogLevel, lClassIdKey, CAtlString (pRootName) + _T("\\"), 4);
 		return true;
 	}
 	return false;
@@ -971,7 +1062,7 @@ bool CPropPageLogging::LogClassId (UINT pLogLevel, REFGUID pClassId, LPCTSTR pCl
 
 bool CPropPageLogging::LogAppId (UINT pLogLevel, REFGUID pAppId, LPCTSTR pAppTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged)
 {
-	CRegKey	lAppIdKey (pRootKey, _T("APPID\\")+(CString)CGuidStr(pAppId), true);
+	CRegKeyEx	lAppIdKey (pRootKey, _T("APPID\\")+(CString)CGuidStr(pAppId), true);
 
 	if	(lAppIdKey.IsValid ())
 	{
@@ -987,7 +1078,7 @@ bool CPropPageLogging::LogAppId (UINT pLogLevel, REFGUID pAppId, LPCTSTR pAppTit
 				*pTitleLogged = true;
 			}
 		}
-		LogRegKey (pLogLevel, lAppIdKey, CString (pRootName) + _T("\\"), 4);
+		LogRegKey (pLogLevel, lAppIdKey, CAtlString (pRootName) + _T("\\"), 4);
 		return true;
 	}
 	return false;
@@ -995,7 +1086,7 @@ bool CPropPageLogging::LogAppId (UINT pLogLevel, REFGUID pAppId, LPCTSTR pAppTit
 
 bool CPropPageLogging::LogProgId (UINT pLogLevel, LPCTSTR pProgId, LPCTSTR pProgIdTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged)
 {
-	CRegKey	lProgIdKey (pRootKey, pProgId, true);
+	CRegKeyEx	lProgIdKey (pRootKey, pProgId, true);
 
 	if	(lProgIdKey.IsValid ())
 	{
@@ -1011,7 +1102,7 @@ bool CPropPageLogging::LogProgId (UINT pLogLevel, LPCTSTR pProgId, LPCTSTR pProg
 				*pTitleLogged = true;
 			}
 		}
-		LogRegKey (pLogLevel, lProgIdKey, CString (pRootName) + _T("\\"), 4);
+		LogRegKey (pLogLevel, lProgIdKey, CAtlString (pRootName) + _T("\\"), 4);
 		return true;
 	}
 	return false;
@@ -1019,7 +1110,7 @@ bool CPropPageLogging::LogProgId (UINT pLogLevel, LPCTSTR pProgId, LPCTSTR pProg
 
 bool CPropPageLogging::LogTypeLib (UINT pLogLevel, REFGUID pTypeLibId, LPCTSTR pTypeLibTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged)
 {
-	CRegKey	lTypeLibKey (pRootKey, _T("TYPELIB\\")+(CString)CGuidStr(pTypeLibId), true);
+	CRegKeyEx	lTypeLibKey (pRootKey, _T("TYPELIB\\")+(CString)CGuidStr(pTypeLibId), true);
 
 	if	(lTypeLibKey.IsValid ())
 	{
@@ -1035,7 +1126,7 @@ bool CPropPageLogging::LogTypeLib (UINT pLogLevel, REFGUID pTypeLibId, LPCTSTR p
 				*pTitleLogged = true;
 			}
 		}
-		LogRegKey (pLogLevel, lTypeLibKey, CString (pRootName) + _T("\\"), 4);
+		LogRegKey (pLogLevel, lTypeLibKey, CAtlString (pRootName) + _T("\\"), 4);
 		return true;
 	}
 	return false;
@@ -1043,7 +1134,7 @@ bool CPropPageLogging::LogTypeLib (UINT pLogLevel, REFGUID pTypeLibId, LPCTSTR p
 
 bool CPropPageLogging::LogInterface (UINT pLogLevel, REFGUID pInterfaceId, LPCTSTR pInterfaceTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged)
 {
-	CRegKey	lInterfaceKey (pRootKey, _T("INTERFACE\\")+(CString)CGuidStr(pInterfaceId), true);
+	CRegKeyEx	lInterfaceKey (pRootKey, _T("INTERFACE\\")+(CString)CGuidStr(pInterfaceId), true);
 
 	if	(lInterfaceKey.IsValid ())
 	{
@@ -1059,7 +1150,7 @@ bool CPropPageLogging::LogInterface (UINT pLogLevel, REFGUID pInterfaceId, LPCTS
 				*pTitleLogged = true;
 			}
 		}
-		LogRegKey (pLogLevel, lInterfaceKey, CString (pRootName) + _T("\\"), 6);
+		LogRegKey (pLogLevel, lInterfaceKey, CAtlString (pRootName) + _T("\\"), 6);
 		return true;
 	}
 	return false;
@@ -1069,12 +1160,12 @@ bool CPropPageLogging::LogInterface (UINT pLogLevel, REFGUID pInterfaceId, LPCTS
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageLogging::LogRegKey (UINT pLogLevel, CRegKey & pRegKey, LPCTSTR pTitle, UINT pIndent)
+void CPropPageLogging::LogRegKey (UINT pLogLevel, CRegKeyEx & pRegKey, LPCTSTR pTitle, UINT pIndent)
 {
-	CString				lTitle (pTitle);
-	CString				lIndent (_T(' '), (int)pIndent);
+	CAtlString			lTitle (pTitle);
+	CAtlString			lIndent (_T(' '), (int)pIndent);
 	long				lKeyNdx;
-	tPtr <CRegKey>		lKey;
+	tPtr <CRegKeyEx>	lKey;
 	long				lValNdx;
 	tPtr <CRegValue>	lVal;
 

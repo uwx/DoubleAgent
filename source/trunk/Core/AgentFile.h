@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,16 +18,15 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef AGENTFILE_H_INCLUDED_
-#define AGENTFILE_H_INCLUDED_
 #pragma once
-
 #include "DaCoreExp.h"
-#include "StringMap.h"
+#include "AtlCollEx.h"
+#include "FileDownload.h"
 
 //////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable:4251 4275)
+#pragma warning (push)
+#pragma warning (disable:4251)
+//////////////////////////////////////////////////////////////////////
 
 struct _DACORE_IMPEXP CAgentFileName
 {
@@ -38,6 +37,7 @@ struct _DACORE_IMPEXP CAgentFileName
 
 	CAgentFileName () {}
 	~CAgentFileName () {}
+	DECLARE_DLL_OBJECT(CAgentFileName)
 };
 
 struct _DACORE_IMPEXP CAgentFileTts
@@ -54,6 +54,7 @@ struct _DACORE_IMPEXP CAgentFileTts
 
 	CAgentFileTts () {}
 	~CAgentFileTts () {}
+	DECLARE_DLL_OBJECT(CAgentFileTts)
 };
 
 struct _DACORE_IMPEXP CAgentFileBalloon
@@ -63,16 +64,11 @@ struct _DACORE_IMPEXP CAgentFileBalloon
 	COLORREF				mFgColor;
 	COLORREF				mBkColor;
 	COLORREF				mBrColor;
-	tBstrPtr				mFontName;
-	long					mFontHeight;
-	USHORT					mFontWeight;
-	BYTE					mFontItalic;
-	BYTE					mFontUnderline;
-	BYTE					mFontStrikethru;
-	BYTE					mFontCharset;
+	tS <LOGFONT>			mFont;
 
 	CAgentFileBalloon () {}
 	~CAgentFileBalloon () {}
+	DECLARE_DLL_OBJECT(CAgentFileBalloon)
 };
 
 struct _DACORE_IMPEXP CAgentFileImage
@@ -84,6 +80,7 @@ struct _DACORE_IMPEXP CAgentFileImage
 
 	CAgentFileImage () {}
 	~CAgentFileImage () {}
+	DECLARE_DLL_OBJECT(CAgentFileImage)
 };
 
 struct _DACORE_IMPEXP CAgentFileFrameImage
@@ -93,6 +90,7 @@ struct _DACORE_IMPEXP CAgentFileFrameImage
 
 	CAgentFileFrameImage () {}
 	~CAgentFileFrameImage () {}
+	DECLARE_DLL_OBJECT(CAgentFileFrameImage)
 };
 typedef tArrayPtr <CAgentFileFrameImage> CAgentFileFrameImages;
 
@@ -106,6 +104,7 @@ struct _DACORE_IMPEXP CAgentFileFrameOverlay
 
 	CAgentFileFrameOverlay () {}
 	~CAgentFileFrameOverlay () {}
+	DECLARE_DLL_OBJECT(CAgentFileFrameOverlay)
 };
 typedef tArrayPtr <CAgentFileFrameOverlay> CAgentFileFrameOverlays;
 
@@ -122,6 +121,7 @@ struct _DACORE_IMPEXP CAgentFileFrame
 
 	CAgentFileFrame () {}
 	~CAgentFileFrame () {}
+	DECLARE_DLL_OBJECT(CAgentFileFrame)
 };
 typedef	tArrayPtr <CAgentFileFrame> CAgentFileFrames;
 
@@ -137,8 +137,30 @@ struct _DACORE_IMPEXP CAgentFileAnimation
 
 	CAgentFileAnimation () {}
 	~CAgentFileAnimation () {}
+	DECLARE_DLL_OBJECT(CAgentFileAnimation)
 };
-typedef	CStringMap <tPtr <CAgentFileAnimation>, CAgentFileAnimation *> CAgentFileGestures;
+
+//////////////////////////////////////////////////////////////////////
+
+struct _DACORE_IMPEXP CAgentFileGestures
+{
+	CAtlOwnPtrArray <CAgentFileAnimation>	mAnimations;
+	CAtlStringArray							mNames;
+
+	CAgentFileAnimation * operator() (const CAtlString & pName);
+	const CAgentFileAnimation * operator() (const CAtlString & pName) const;
+	DECLARE_DLL_OBJECT(CAgentFileGestures)
+};
+
+struct _DACORE_IMPEXP CAgentFileStates
+{
+	CAtlClassArray <CAtlStringArray>	mGestures;
+	CAtlStringArray						mNames;
+
+	CAtlStringArray * operator() (const CAtlString & pName);
+	const CAtlStringArray * operator() (const CAtlString & pName) const;
+	DECLARE_DLL_OBJECT(CAgentFileStates)
+};
 
 //////////////////////////////////////////////////////////////////////
 
@@ -163,104 +185,107 @@ enum AgentMouthOverlay
 	MouthOverlayNarrow = 6
 };
 
-class CFileDownload;
-
 //////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CAgentFile : public CObject
+class CAgentFile
 {
+	DECLARE_DLL_OBJECT_EX(CAgentFile, _DACORE_IMPEXP)
 protected:
 	CAgentFile ();
 public:
-	virtual ~CAgentFile ();
-	DECLARE_DYNCREATE (CAgentFile)
+	_DACORE_IMPEXP virtual ~CAgentFile ();
+	_DACORE_IMPEXP static CAgentFile * CreateInstance ();
 
 // Attributes
 public:
-	tBstrPtr GetPath () const;
-	tBstrPtr GetFileName () const;
+	_DACORE_IMPEXP tBstrPtr GetPath () const;
+	_DACORE_IMPEXP tBstrPtr GetFileName () const;
 
-	bool IsAcsFile () const;
-	bool IsAcfFile () const;
+	_DACORE_IMPEXP bool IsAcsFile () const;
+	_DACORE_IMPEXP bool IsAcfFile () const;
 
-	const GUID & GetGuid () const;
-	DWORD GetVersion () const;
-	DWORD GetStyle () const;
-	HICON GetIcon () const;
-	const CAgentFileBalloon & GetBalloon () const;
-	const CAgentFileTts & GetTts () const;
+	_DACORE_IMPEXP const GUID & GetGuid () const;
+	_DACORE_IMPEXP DWORD GetVersion () const;
+	_DACORE_IMPEXP DWORD GetStyle () const;
+	_DACORE_IMPEXP HICON GetIcon () const;
+	_DACORE_IMPEXP const CAgentFileBalloon & GetBalloon () const;
+	_DACORE_IMPEXP const CAgentFileTts & GetTts () const;
 
-	const CPtrTypeArray <CAgentFileName> & GetNames () const;
-	const CStringMap <CStringArray> & GetStates () const;
-	const CAgentFileGestures & GetGestures () const;
+	_DACORE_IMPEXP const CAtlPtrTypeArray <CAgentFileName> & GetNames () const;
+	_DACORE_IMPEXP const CAgentFileStates & GetStates () const;
+	_DACORE_IMPEXP const CAgentFileGestures & GetGestures () const;
 
-	CSize GetImageSize () const;
-	SHORT GetPaletteSize () const;
-	LPCOLORREF GetPalette () const;
-	BYTE GetTransparency () const;
+	_DACORE_IMPEXP SAFEARRAY * GetStateNames ();
+	_DACORE_IMPEXP SAFEARRAY * GetGestureNames ();
+	_DACORE_IMPEXP SAFEARRAY * GetAnimationNames ();
+
+	_DACORE_IMPEXP CSize GetImageSize () const;
+	_DACORE_IMPEXP SHORT GetPaletteSize () const;
+	_DACORE_IMPEXP LPCOLORREF GetPalette () const;
+	_DACORE_IMPEXP BYTE GetTransparency () const;
 
 // Operations
 public:
-	static bool IsProperFilePath (LPCTSTR pPath);
-	static bool IsRelativeFilePath (LPCTSTR pPath);
-	static CString ParseFilePath (LPCTSTR pPath);
-	CString ParseRelativePath (LPCTSTR pRelativePath);
+	_DACORE_IMPEXP static bool IsProperFilePath (LPCTSTR pPath);
+	_DACORE_IMPEXP static bool IsRelativeFilePath (LPCTSTR pPath);
+	_DACORE_IMPEXP static tBstrPtr ParseFilePath (LPCTSTR pPath);
+	_DACORE_IMPEXP tBstrPtr ParseRelativePath (LPCTSTR pRelativePath);
 
-	HRESULT Open (LPCTSTR pPath, UINT pLogLevel = 15);
-	void Close ();
+	_DACORE_IMPEXP HRESULT Open (LPCTSTR pPath, UINT pLogLevel = 15);
+	_DACORE_IMPEXP void Close ();
 
-	void SetDownloadMode (bool pRefresh = true, bool pReload = false, bool pSecure = true);
-	HRESULT LoadAcf (CFileDownload * pDownload, UINT pLogLevel = 15);
+	_DACORE_IMPEXP void SetDownloadMode (bool pRefresh = true, bool pReload = false, bool pSecure = true);
+	_DACORE_IMPEXP HRESULT LoadAcf (CFileDownload * pDownload, UINT pLogLevel = 15);
 
-	bool ReadNames (bool pFirstLetterCaps = true, UINT pLogLevel = 15);
-	bool ReadStates (UINT pLogLevel = 15);
-	bool ReadGestures (UINT pLogLevel = 15);
-	bool ReadImageIndex (UINT pLogLevel = 15);
-	bool ReadSoundIndex (UINT pLogLevel = 15);
+	_DACORE_IMPEXP bool ReadNames (bool pFirstLetterCaps = true, UINT pLogLevel = 15);
+	_DACORE_IMPEXP bool ReadStates (UINT pLogLevel = 15);
+	_DACORE_IMPEXP bool ReadGestures (UINT pLogLevel = 15);
+	_DACORE_IMPEXP bool ReadImageIndex (UINT pLogLevel = 15);
+	_DACORE_IMPEXP bool ReadSoundIndex (UINT pLogLevel = 15);
 
-	void FreeNames ();
-	void FreeStates ();
-	void FreeGestures ();
-	void FreeImageIndex ();
-	void FreeSoundIndex ();
+	_DACORE_IMPEXP void FreeNames ();
+	_DACORE_IMPEXP void FreeStates ();
+	_DACORE_IMPEXP void FreeGestures ();
+	_DACORE_IMPEXP void FreeImageIndex ();
+	_DACORE_IMPEXP void FreeSoundIndex ();
 
-	CAgentFileName * FindName (WORD pLangID = LANG_USER_DEFAULT);
-	INT_PTR FindState (LPCTSTR pStateName);
-	INT_PTR FindGesture (LPCTSTR pGestureName);
-	INT_PTR FindAnimation (LPCTSTR pAnimationName);
+	_DACORE_IMPEXP CAgentFileName * FindName (WORD pLangID = LANG_USER_DEFAULT);
+	_DACORE_IMPEXP INT_PTR FindState (LPCTSTR pStateName);
+	_DACORE_IMPEXP INT_PTR FindGesture (LPCTSTR pGestureName);
+	_DACORE_IMPEXP INT_PTR FindAnimation (LPCTSTR pAnimationName);
 
-	const CAgentFileAnimation * GetGesture (INT_PTR pGestureNdx);
-	const CAgentFileAnimation * GetAnimation (INT_PTR pAnimationNdx);
-	const CAgentFileAnimation * GetGesture (LPCTSTR pGestureName);
-	const CAgentFileAnimation * GetAnimation (LPCTSTR pAnimationName);
+	_DACORE_IMPEXP const CAgentFileAnimation * GetGesture (INT_PTR pGestureNdx);
+	_DACORE_IMPEXP const CAgentFileAnimation * GetAnimation (INT_PTR pAnimationNdx);
+	_DACORE_IMPEXP const CAgentFileAnimation * GetGesture (LPCTSTR pGestureName);
+	_DACORE_IMPEXP const CAgentFileAnimation * GetAnimation (LPCTSTR pAnimationName);
 
-	bool IsAnimationLoaded (INT_PTR pAnimationNdx);
-	bool IsAnimationLoaded (LPCTSTR pAnimationName);
-	HRESULT LoadAnimationAca (INT_PTR pAnimationNdx, CFileDownload * pDownload);
-	HRESULT LoadAnimationAca (LPCTSTR pAnimationName, CFileDownload * pDownload);
-	tBstrPtr GetAnimationAcaPath (INT_PTR pAnimationNdx);
-	tBstrPtr GetAnimationAcaPath (LPCTSTR pAnimationName);
+	_DACORE_IMPEXP bool IsAnimationLoaded (INT_PTR pAnimationNdx);
+	_DACORE_IMPEXP bool IsAnimationLoaded (LPCTSTR pAnimationName);
+	_DACORE_IMPEXP HRESULT LoadAnimationAca (INT_PTR pAnimationNdx, CFileDownload * pDownload);
+	_DACORE_IMPEXP HRESULT LoadAnimationAca (LPCTSTR pAnimationName, CFileDownload * pDownload);
+	_DACORE_IMPEXP tBstrPtr GetAnimationAcaPath (INT_PTR pAnimationNdx);
+	_DACORE_IMPEXP tBstrPtr GetAnimationAcaPath (LPCTSTR pAnimationName);
 
-	INT_PTR GetImageCount () const;
-	CAgentFileImage * GetImage (INT_PTR pImageNdx, bool p32Bit = false, UINT pLogLevel = 15);
-	UINT GetImageFormat (LPBITMAPINFO pImageInfo, const CAgentFileImage * pImage = NULL, bool p32Bit = false) const;
-	UINT GetImageBits (LPBYTE pImageBits, const CAgentFileImage * pImage, bool p32Bit = false) const;
-	UINT GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame & pFrame, bool p32Bit = false, const COLORREF * pBkColor = NULL, SHORT pOverlayNdx = -1);
+	_DACORE_IMPEXP INT_PTR GetImageCount () const;
+	_DACORE_IMPEXP CAgentFileImage * GetImage (INT_PTR pImageNdx, bool p32Bit = false, UINT pLogLevel = 15);
+	_DACORE_IMPEXP UINT GetImageFormat (LPBITMAPINFO pImageInfo, const CAgentFileImage * pImage = NULL, bool p32Bit = false) const;
+	_DACORE_IMPEXP UINT GetImageBits (LPBYTE pImageBits, const CAgentFileImage * pImage, bool p32Bit = false) const;
+	_DACORE_IMPEXP UINT GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame & pFrame, bool p32Bit = false, const COLORREF * pBkColor = NULL, SHORT pOverlayNdx = -1);
 
-	INT_PTR GetSoundCount () const;
-	long GetSoundSize (INT_PTR pSoundNdx);
-	LPCVOID GetSound (INT_PTR pSoundNdx);
+	_DACORE_IMPEXP INT_PTR GetSoundCount () const;
+	_DACORE_IMPEXP long GetSoundSize (INT_PTR pSoundNdx);
+	_DACORE_IMPEXP LPCVOID GetSound (INT_PTR pSoundNdx);
 
 // Implementation
 public:
-	void Log (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
-	void LogNames (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
-	void LogStates (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
-	void LogGestures (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
-	static void LogTts (const CAgentFileTts & pTts, UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
-	static void LogBalloon (const CAgentFileBalloon & pBalloon, UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP void Log (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
+	_DACORE_IMPEXP void LogNames (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
+	_DACORE_IMPEXP void LogStates (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
+	_DACORE_IMPEXP void LogGestures (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
+	_DACORE_IMPEXP static void LogTts (const CAgentFileTts & pTts, UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP static void LogBalloon (const CAgentFileBalloon & pBalloon, UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
 
 protected:
 	HRESULT LoadFile (LPCTSTR pPath, UINT pLogLevel = 15);
@@ -278,7 +303,7 @@ protected:
 	CAgentFileImage * ReadAcsImage (DWORD pOffset, DWORD pSize, UINT pImageNum, bool p32Bit = false, UINT pLogLevel = 15);
 	LPCVOID ReadAcsSound (DWORD pOffset, DWORD pSize, UINT pSoundNum, UINT pLogLevel = 15);
 
-	CString GetAcaPath (CAgentFileAnimation * pAnimation);
+	CAtlString GetAcaPath (CAgentFileAnimation * pAnimation);
 	HRESULT ReadAcaFile (CAgentFileAnimation * pAnimation, bool p32Bit = false, UINT pLogLevel = 15);
 	HRESULT ReadAcaFile (CAgentFileAnimation * pAnimation, LPCTSTR pPath, bool p32Bit = false, UINT pLogLevel = 15);
 	HRESULT ReadAcaFrames (CAgentFileAnimation * pAnimation, LPCVOID & pBuffer, DWORD & pBufferSize, WORD pImageStart, bool p32Bit = false, UINT pLogLevel = 15);
@@ -298,49 +323,34 @@ protected:
 	void SaveImage (CAgentFileImage * pImage);
 
 protected:
-	CFileHandle						mFileHandle;
-	CGenericHandle					mFileMapping;
-	CMappedHandle					mFileView;
-	tPtr <CFileDownload>			mFileDownload;
-	DWORD							mFileSize;
-	DWORD							mFileNamesOffset;
-	DWORD							mFileStatesOffset;
-	CString							mPath;
-	DWORD							mSignature;
-	WORD							mVersionMajor;
-	WORD							mVersionMinor;
-	GUID							mGuid;
-	CSize							mImageSize;
-	BYTE							mTransparency;
-	DWORD							mStyle;
-	tS <CAgentFileTts>				mTts;
-	tS <CAgentFileBalloon>			mBalloon;
-	HICON							mIcon;
-	tArrayPtr <COLORREF>			mPalette;
+	CFileHandle							mFileHandle;
+	CGenericHandle						mFileMapping;
+	CMappedHandle						mFileView;
+	tPtr <CFileDownload>				mFileDownload;
+	DWORD								mFileSize;
+	DWORD								mFileNamesOffset;
+	DWORD								mFileStatesOffset;
+	CAtlString							mPath;
+	DWORD								mSignature;
+	WORD								mVersionMajor;
+	WORD								mVersionMinor;
+	GUID								mGuid;
+	CSize								mImageSize;
+	BYTE								mTransparency;
+	DWORD								mStyle;
+	tS <CAgentFileTts>					mTts;
+	tS <CAgentFileBalloon>				mBalloon;
+	HICON								mIcon;
+	tArrayPtr <COLORREF>				mPalette;
 
-	COwnPtrArray <CAgentFileName>	mNames;
-	CStringMap <CStringArray>		mStates;
-	CAgentFileGestures				mGestures;
-	CArrayEx <ULARGE_INTEGER>		mImageIndex;
-	CArrayEx <ULARGE_INTEGER>		mSoundIndex;
-	COwnPtrArray <CAgentFileImage>	mAcaImages;
-	COwnPtrArray <CByteArray>		mAcaSounds;
-
-// new and delete for DLL object
-public:
-#pragma auto_inline (off)
-	void PASCAL operator delete (void* p) {CObject::operator delete (p);}
-#ifdef	_DEBUG
-	void PASCAL operator delete (void *p, LPCSTR lpszFileName, int nLine) {CObject::operator delete (p, lpszFileName, nLine);}
-#endif
-	void* PASCAL operator new(size_t nSize) {return CObject::operator new (nSize);}
-#ifdef	_DEBUG
-	void* PASCAL operator new(size_t nSize, LPCSTR lpszFileName, int nLine) {return CObject::operator new (nSize, lpszFileName, nLine);}
-#endif
-#pragma auto_inline ()
+	CAtlOwnPtrArray <CAgentFileName>	mNames;
+	CAgentFileStates					mStates;
+	CAgentFileGestures					mGestures;
+	CAtlStructArray <ULARGE_INTEGER>	mImageIndex;
+	CAtlStructArray <ULARGE_INTEGER>	mSoundIndex;
+	CAtlOwnPtrArray <CAgentFileImage>	mAcaImages;
+	CAtlOwnPtrArray <CAtlByteArray>		mAcaSounds;
 };
 
-#pragma warning(pop)
+#pragma warning (pop)
 //////////////////////////////////////////////////////////////////////
-
-#endif // AGENTFILE_H_INCLUDED_

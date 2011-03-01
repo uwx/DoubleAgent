@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -24,16 +24,44 @@
 #include "TextSize.h"
 #include "Log.h"
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
+#endif
+
+#ifdef	__AFXWIN_H__
+#define	_MY_DC_HANDLE	mDC.m_hAttribDC
+#else
+#define	_MY_DC_HANDLE	mDC
+#endif
 
 //////////////////////////////////////////////////////////////////////
 
+CTextSize::CTextSize (HFONT pFont, bool pMeasureTwips)
+:	mOleFontHandle (0),
+	mOldFont (NULL)
+{
+#ifdef	__AFXWIN_H__
+	mDC.CreateCompatibleDC (0);
+#else
+	mDC.Attach (CreateCompatibleDC (0));
+#endif
+	if	(pMeasureTwips)
+	{
+		::SetMapMode (mDC, MM_TWIPS);
+	}
+	if	(pFont)
+	{
+		mOldFont = ::SelectObject (mDC, pFont);
+	}
+}
+
+#ifdef	__AFXWIN_H__
 CTextSize::CTextSize (CFont * pFont, bool pMeasureTwips)
-:	mFontHandle (0),
+:	mOleFontHandle (0),
 	mOldFont (NULL)
 {
 	mDC.CreateCompatibleDC (0);
@@ -47,9 +75,11 @@ CTextSize::CTextSize (CFont * pFont, bool pMeasureTwips)
 		mOldFont = mDC.SelectObject (pFont->GetSafeHandle ());
 	}
 }
+#endif
 
+#ifdef	__AFXCTL_H__
 CTextSize::CTextSize (CFontHolder & pFont, bool pMeasureTwips)
-:	mFontHandle (0),
+:	mOleFontHandle (0),
 	mOldFont (NULL)
 {
 	mDC.CreateCompatibleDC (0);
@@ -60,58 +90,86 @@ CTextSize::CTextSize (CFontHolder & pFont, bool pMeasureTwips)
 
 	if	(
 			((mOleFont = pFont.m_pFont) != NULL)
-		&&	(SUCCEEDED (mOleFont->get_hFont (&mFontHandle)))
+		&&	(SUCCEEDED (mOleFont->get_hFont (&mOleFontHandle)))
 		)
 	{
-		mOleFont->AddRefHfont (mFontHandle);
-		mOldFont = mDC.SelectObject ((HGDIOBJ) mFontHandle);
+		mOleFont->AddRefHfont (mOleFontHandle);
+		mOldFont = mDC.SelectObject ((HGDIOBJ) mOleFontHandle);
 	}
 }
+#endif
 
 CTextSize::~CTextSize ()
 {
+#ifdef	__AFXWIN_H__
 	if	(mOldFont)
 	{
 		mDC.SelectObject (mOldFont);
 	}
-
 	mDC.DeleteDC ();
-
+#else
+	if	(mOldFont)
+	{
+		::SelectObject (mDC, mOldFont);
+	}
+	mDC.Close ();
+#endif
+#ifdef	__AFXCTL_H__
 	if	(
 			(mOleFont != NULL)
-		&&	(mFontHandle)
+		&&	(mOleFontHandle)
 		)
 	{
-		mOleFont->ReleaseHfont (mFontHandle);
+		mOleFont->ReleaseHfont (mOleFontHandle);
 	}
+#endif
 }
 
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__AFXWIN_H__
 CFont * CTextSize::GetFont ()
 {
 	return mDC.GetCurrentFont ();
 }
+#else
+HFONT CTextSize::GetFont () const
+{
+	return (HFONT)::GetCurrentObject(mDC, OBJ_FONT);
+}
+#endif
 
 void CTextSize::GetTextMetrics (TEXTMETRIC & pMetrics)
 {
-	mDC.GetTextMetrics (&pMetrics);
+	::GetTextMetrics (mDC, &pMetrics);
 }
 
 //////////////////////////////////////////////////////////////////////
 
 CSize CTextSize::MeasureText (LPCTSTR pText, INT_PTR pTextLen, HDC pDC, HFONT pFont, bool pMultiline, long pWidth)
 {
-	CSize	lRet (0, 0);
-	CSize	lVptExt;
-	CSize	lWinExt;
-	HGDIOBJ	lOldFont;
+	CSize		lRet (0, 0);
+	CSize		lVptExt;
+	CSize		lWinExt;
+	HGDIOBJ		lOldFont;
+#ifdef	__AFXWIN_H__
+	tPtr <CDC>	lDC;
 
+	if	(
+			(!pDC)
+		&&	(lDC = new CDC)
+		&&	(lDC->CreateCompatibleDC (NULL))
+		)
+	{
+		pDC = lDC->GetSafeHdc ();
+	}
+#else
 #ifdef	_DEBUG
 	if	(!pDC)
 	{
-		LogMessage (LogIfActive, _T("CTextSize::MeasureText with NULL DC"));
+		LogMessage (LogIfActive|LogTime, _T("CTextSize::MeasureText with NULL HDC"));
 	}
+#endif
 #endif
 
 	if	(::GetMapMode (pDC) != MM_TWIPS)
@@ -437,52 +495,52 @@ CRect CTextSize::PelsToDeciPoints (HDC pDC, const CRect & pRect, bool pLogUnits)
 
 CPoint CTextSize::TwipsToPels (const CPoint & pPoint, bool pLogUnits)
 {
-	return TwipsToPels (mDC.m_hAttribDC, pPoint, pLogUnits);
+	return TwipsToPels (_MY_DC_HANDLE, pPoint, pLogUnits);
 }
 CPoint CTextSize::PelsToTwips (const CPoint & pPoint, bool pLogUnits)
 {
-	return PelsToTwips (mDC.m_hAttribDC, pPoint, pLogUnits);
+	return PelsToTwips (_MY_DC_HANDLE, pPoint, pLogUnits);
 }
 CSize CTextSize::TwipsToPels (const CSize & pSize, bool pLogUnits)
 {
-	return TwipsToPels (mDC.m_hAttribDC, pSize, pLogUnits);
+	return TwipsToPels (_MY_DC_HANDLE, pSize, pLogUnits);
 }
 CSize CTextSize::PelsToTwips (const CSize & pSize, bool pLogUnits)
 {
-	return PelsToTwips (mDC.m_hAttribDC, pSize, pLogUnits);
+	return PelsToTwips (_MY_DC_HANDLE, pSize, pLogUnits);
 }
 CRect CTextSize::TwipsToPels (const CRect & pRect, bool pLogUnits)
 {
-	return TwipsToPels (mDC.m_hAttribDC, pRect, pLogUnits);
+	return TwipsToPels (_MY_DC_HANDLE, pRect, pLogUnits);
 }
 CRect CTextSize::PelsToTwips (const CRect & pRect, bool pLogUnits)
 {
-	return PelsToTwips (mDC.m_hAttribDC, pRect, pLogUnits);
+	return PelsToTwips (_MY_DC_HANDLE, pRect, pLogUnits);
 }
 
 //////////////////////////////////////////////////////////////////////
 
 CPoint CTextSize::DeciPointsToPels (const CPoint & pPoint, bool pLogUnits)
 {
-	return DeciPointsToPels (mDC.m_hAttribDC, pPoint, pLogUnits);
+	return DeciPointsToPels (_MY_DC_HANDLE, pPoint, pLogUnits);
 }
 CPoint CTextSize::PelsToDeciPoints (const CPoint & pPoint, bool pLogUnits)
 {
-	return PelsToDeciPoints (mDC.m_hAttribDC, pPoint, pLogUnits);
+	return PelsToDeciPoints (_MY_DC_HANDLE, pPoint, pLogUnits);
 }
 CSize CTextSize::DeciPointsToPels (const CSize & pSize, bool pLogUnits)
 {
-	return DeciPointsToPels (mDC.m_hAttribDC, pSize, pLogUnits);
+	return DeciPointsToPels (_MY_DC_HANDLE, pSize, pLogUnits);
 }
 CSize CTextSize::PelsToDeciPoints (const CSize & pSize, bool pLogUnits)
 {
-	return PelsToDeciPoints (mDC.m_hAttribDC, pSize, pLogUnits);
+	return PelsToDeciPoints (_MY_DC_HANDLE, pSize, pLogUnits);
 }
 CRect CTextSize::DeciPointsToPels (const CRect & pRect, bool pLogUnits)
 {
-	return DeciPointsToPels (mDC.m_hAttribDC, pRect, pLogUnits);
+	return DeciPointsToPels (_MY_DC_HANDLE, pRect, pLogUnits);
 }
 CRect CTextSize::PelsToDeciPoints (const CRect & pRect, bool pLogUnits)
 {
-	return PelsToDeciPoints (mDC.m_hAttribDC, pRect, pLogUnits);
+	return PelsToDeciPoints (_MY_DC_HANDLE, pRect, pLogUnits);
 }

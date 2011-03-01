@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,29 +18,52 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef AGENTSTREAMINFO_H_INCLUDED_
-#define AGENTSTREAMINFO_H_INCLUDED_
 #pragma once
-
 #include "DaCoreOdl.h"
 #include "AgentStreamUtils.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CAgentStreamInfo : public CCmdTarget, public _IAgentStreamInfo, public CAgentStreamUtils
+class ATL_NO_VTABLE CAgentStreamInfo :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public _IAgentStreamInfo,
+	public CAgentStreamUtils,
+	public CAgentFileClient
 {
 public:
-	CAgentStreamInfo (CAgentFile * pAgentFile, LPUNKNOWN pOuterUnknown);
+	CAgentStreamInfo ();
 	virtual ~CAgentStreamInfo ();
-	DECLARE_DYNAMIC (CAgentStreamInfo)
 
 // Attributes
 public:
-	long MaxSequenceDuration () const;
-	long MaxSequenceFrames () const;
 
 // Operations
 public:
+	CAgentStreamInfo & Initialize (CAgentFile * pAgentFile);
+
+	void LogAnimationSequence (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
+	void LogAnimationSequenceFrames (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
+	void LogAnimationSequenceAudio (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
+	friend void LogAnimationSequence (UINT pLogLevel, const CAnimationSequence * pSequence, LPCTSTR pFormat = NULL, ...);
+	friend void LogAnimationSequenceFrames (UINT pLogLevel, const CAnimationSequence * pSequence, LPCTSTR pFormat = NULL, ...);
+	friend void LogAnimationSequenceAudio (UINT pLogLevel, const CAnimationSequence * pSequence, LPCTSTR pFormat = NULL, ...);
+
+// Overrides
+
+// Interfaces
+public:
+	DECLARE_GET_CONTROLLING_UNKNOWN()
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
+
+	BEGIN_COM_MAP(CAgentStreamInfo)
+		COM_INTERFACE_ENTRY(_IAgentStreamInfo)
+	END_COM_MAP()
+
+public:
+	// _IAgentStreamInfo
+	virtual HRESULT STDMETHODCALLTYPE GetMaxSequenceDuration (long *pMaxSequenceDuration);
+	virtual HRESULT STDMETHODCALLTYPE GetMaxSequenceFrames (long *pMaxSequenceFrames);
+
 	virtual HRESULT STDMETHODCALLTYPE GetAnimationIndex (long *pAnimationNdx);
 	virtual HRESULT STDMETHODCALLTYPE SetAnimationIndex (long pAnimationNdx);
 	virtual HRESULT STDMETHODCALLTYPE GetAnimationName (BSTR *pAnimationName);
@@ -51,10 +74,6 @@ public:
 	virtual HRESULT STDMETHODCALLTYPE CalcAnimationFrameCount (long *pAnimationFrameCount, long pAnimationNdx);
 	virtual HRESULT STDMETHODCALLTYPE CalcAnimationDuration (long *pAnimationDuration, long pAnimationNdx);
 	virtual HRESULT STDMETHODCALLTYPE FindAnimationSpeakingFrame (long *pSpeakingFrameNdx, long pAnimationNdx, long pStartFrameNdx = 0);
-
-	HRESULT CalcAnimationFrameCount (long *pAnimationFrameCount, LPCTSTR pAnimationName) {return CalcAnimationFrameCount (pAnimationFrameCount, (long)GetAgentFile()->FindGesture (pAnimationName));}
-	HRESULT CalcAnimationDuration (long *pAnimationDuration, LPCTSTR pAnimationName) {return CalcAnimationDuration (pAnimationDuration, (long)GetAgentFile()->FindGesture (pAnimationName));}
-	HRESULT FindAnimationSpeakingFrame (long *pSpeakingFrameNdx, LPCTSTR pAnimationName, long pStartFrameNdx = 0) {return FindAnimationSpeakingFrame (pSpeakingFrameNdx, (long)GetAgentFile()->FindGesture (pAnimationName), pStartFrameNdx);}
 
 	virtual HRESULT STDMETHODCALLTYPE NewAnimationSequence ();
 	virtual HRESULT STDMETHODCALLTYPE EndAnimationSequence ();
@@ -77,26 +96,7 @@ public:
 	virtual HRESULT STDMETHODCALLTYPE CueSequenceAudio (long pStartFrameNum = 0);
 	virtual HRESULT STDMETHODCALLTYPE ClearSequenceAudio ();
 
-	void LogAnimationSequence (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
-	void LogAnimationSequenceFrames (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
-	void LogAnimationSequenceAudio (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
-	friend void LogAnimationSequence (UINT pLogLevel, const CAnimationSequence * pSequence, LPCTSTR pFormat = NULL, ...);
-	friend void LogAnimationSequenceFrames (UINT pLogLevel, const CAnimationSequence * pSequence, LPCTSTR pFormat = NULL, ...);
-	friend void LogAnimationSequenceAudio (UINT pLogLevel, const CAnimationSequence * pSequence, LPCTSTR pFormat = NULL, ...);
-
-// Overrides
-	//{{AFX_VIRTUAL(CAgentStreamInfo)
-	public:
-	virtual void OnFinalRelease ();
-	virtual STDMETHODIMP_(ULONG) AddRef ();
-	virtual STDMETHODIMP_(ULONG) Release ();
-	virtual STDMETHODIMP QueryInterface (REFIID iid, LPVOID* ppvObj);
-	//}}AFX_VIRTUAL
-
 // Implementation
-protected:
-	DECLARE_INTERFACE_MAP()
-
 public:
 	bool Lock ();	// Use carefully!
 	bool Unlock ();	// Use carefully!
@@ -113,25 +113,20 @@ public:
 	bool SetSpeakingDuration (long pSpeakingDuration);					// Duration of -1 means "infinite"
 	long GetSpeakingDuration (bool pRealiseInfinite = false) const;		// Realising an "infinite" duration turns it into an arbitrarily long positive duration
 
-	friend CString MouthOverlayStr (short pMouthOverlayNdx);
+	friend CAtlString MouthOverlayStr (short pMouthOverlayNdx);
 
 protected:
 	long SequenceAnimationFrames (CAnimationSequence * pSequence, long pAnimationNdx, long pStartFrameNdx, long pEndFrameNdx, long pLoopFrameNdx, long pMaxLoopTime, bool pExit = false);
 
 protected:
 	long								mAnimationNdx;
-	CString								mAnimationSource;
-	COwnPtrList <CAnimationSequence>	mSequences;
-	CArrayEx <LONGLONG>					mMouthOverlays;
+	CAtlString							mAnimationSource;
+	CAtlOwnPtrList <CAnimationSequence>	mSequences;
+	CAtlTypeArray <LONGLONG>			mMouthOverlays;
 	long								mSpeakingDuration;
 	const long							mMaxLoopTime;
 	const long							mMaxLoopFrames;
-	mutable CCriticalSection			mCritSec;
+	mutable CComAutoCriticalSection		mCritSec;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // AGENTSTREAMINFO_H_INCLUDED_

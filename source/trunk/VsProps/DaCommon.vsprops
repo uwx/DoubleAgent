@@ -12,7 +12,7 @@
 	/>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories=".\Include;.\Core;.\Util;.\Resources"
+		AdditionalIncludeDirectories="&quot;$(SolutionDir)\Include&quot;;&quot;$(SolutionDir)\Core&quot;;&quot;$(SolutionDir)\Util&quot;;&quot;$(SolutionDir)\Common&quot;;&quot;$(SolutionDir)\Resources&quot;"
 		PreprocessorDefinitions="_WINDOWS"
 		TreatWChar_tAsBuiltInType="false"
 		UsePrecompiledHeader="2"
@@ -30,6 +30,7 @@
 	/>
 	<Tool
 		Name="VCMIDLTool"
+		AdditionalIncludeDirectories=".\Core;.\Common"
 		TypeLibraryName="$(ProjectDir)Resources\$(InputName)$(PlatformDir).tlb"
 		HeaderFileName="$(InputDir)..\Include\$(InputName)Odl.h"
 		DLLDataFileName="$(InputDir)$(InputName)_data$(PlatformDir).c"
@@ -38,7 +39,7 @@
 	/>
 	<Tool
 		Name="VCResourceCompilerTool"
-		AdditionalIncludeDirectories=".\Resources;.\Include;.\Core"
+		AdditionalIncludeDirectories=".\Resources;.\Include;.\Core;.\Common"
 	/>
 	<Tool
 		Name="VCManifestTool"
@@ -51,5 +52,9 @@
 	<UserMacro
 		Name="BinDir"
 		Value="%DOUBLE_AGENT_BIN%Bin\"
+	/>
+	<UserMacro
+		Name="TempDir"
+		Value="%TEMP%"
 	/>
 </VisualStudioPropertySheet>

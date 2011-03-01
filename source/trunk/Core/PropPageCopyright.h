@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,53 +18,50 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef PROPPAGECOPYRIGHT_H_INCLUDED_
-#define PROPPAGECOPYRIGHT_H_INCLUDED_
 #pragma once
-
 #include "DaCoreExp.h"
-#include "PropPageFix.h"
-#include "FormLayout.h"
+#include "PropertyPage.h"
+#include "LayoutTools.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
 
-class _DACORE_IMPEXP CPropPageCopyright : public CPropertyPage, protected CFormLayout
+class CPropPageCopyright : public CAtlPropertyPage, protected CLayoutTools
 {
+	DECLARE_DLL_OBJECT_EX(CPropPageCopyright, _DACORE_IMPEXP)
 protected:
 	CPropPageCopyright();
 public:
-	virtual ~CPropPageCopyright();
-	DECLARE_DYNCREATE(CPropPageCopyright)
+	_DACORE_IMPEXP virtual ~CPropPageCopyright();
+	_DACORE_IMPEXP static CPropPageCopyright * CreateInstance ();
 
 // Dialog Data
-	//{{AFX_DATA(CPropPageCopyright)
 	enum { IDD = IDD_PROPPAGE_COPYRIGHT };
-	CStatic	mVersionTitle;
-	CStatic	mProductVersion;
-	CStatic	mProductName;
-	CStatic	mCopyright;
-	CStatic	mIcon;
-	CStatic	mMaVersionTitle;
-	CStatic	mMaProductVersion;
-	CStatic	mMaProductName;
-	CStatic	mMaIcon;
-	CStatic	mMaCopyright;
-	//}}AFX_DATA
+	CContainedWindow	mVersionTitle;
+	CContainedWindow	mProductVersion;
+	CContainedWindow	mProductName;
+	CContainedWindow	mCopyright;
+	CContainedWindow	mIconControl;
+	CContainedWindow	mMaVersionTitle;
+	CContainedWindow	mMaProductVersion;
+	CContainedWindow	mMaProductName;
+	CContainedWindow	mMaIcon;
+	CContainedWindow	mMaCopyright;
 
 // Overrides
-	//{{AFX_VIRTUAL(CPropPageCopyright)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+protected:
+	_DACORE_IMPEXP virtual BOOL OnInitDialog ();
 
 // Implementation
 protected:
-	//{{AFX_MSG(CPropPageCopyright)
-	afx_msg void OnLinkClick(NMHDR* pNMHDR, LRESULT* pResult);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+	LRESULT OnDrawIcon (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnLinkClick(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
+
+	BEGIN_MSG_MAP(CPropPageCopyright)
+		MESSAGE_HANDLER (WM_DRAWITEM, OnDrawIcon)
+		NOTIFY_HANDLER (IDC_PROPPAGE_CPR_LICENSELINK, NM_CLICK, OnLinkClick)
+		NOTIFY_HANDLER (IDC_PROPPAGE_CPR_REFLINK, NM_CLICK, OnLinkClick)
+		CHAIN_MSG_MAP(CAtlPropertyPage)
+	END_MSG_MAP()
 
 protected:
 	void InitFonts ();
@@ -72,24 +69,28 @@ protected:
 	void ShowMaVersion ();
 
 protected:
-	CPropPageFix	mPropPageFix;
-	CFont			mLargeFont;
+	CFontHandle	mLargeFont;
+	CIconHandle	mIcon;
 
 protected:
-	class CLicenseDlg : public CDialog
+	class CLicenseDlg : public CDialogImpl <CLicenseDlg>
 	{
 	public:
-		CLicenseDlg (CWnd * pParentWnd);
-		virtual BOOL OnInitDialog ();
-		class CHtmlView * mLicenseText;
-		CString mLicenseURL;
+		enum { IDD = IDD_LICENSE };
+
+		BEGIN_MSG_MAP(CLicenseDlg)
+			MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
+			MESSAGE_HANDLER(WM_CLOSE, OnClose)
+			COMMAND_HANDLER(IDOK, BN_CLICKED, OnOk)
+		END_MSG_MAP()
+
+		LRESULT OnInitDialog (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+		LRESULT OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+		LRESULT OnOk (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+
+		CAxWindow mLicenseText;
+		CAtlString mLicenseURL;
 	};
 };
 
-#pragma warning(pop)
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // PROPPAGECOPYRIGHT_H_INCLUDED_

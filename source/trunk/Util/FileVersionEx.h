@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -25,7 +25,9 @@
 #pragma once
 
 #include "FileVersion.h"
+#ifdef	__AFXCOLL_H__
 #include "AfxTemplEx.h"
+#endif
 
 //////////////////////////////////////////////////////////////////////
 
@@ -113,7 +115,7 @@ public:
 
 //----------------------------------------------------------------------
 
-	class CVersionStrings : public CArray <CVersionString, const CVersionString &>
+	class CVersionStrings : public CClassArray <CVersionString>
 	{
 	public:
 		CVersionStrings (LPCTSTR pKey);

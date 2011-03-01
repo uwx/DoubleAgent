@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -18,162 +18,162 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DASERVER_H_INCLUDED_
-#define DASERVER_H_INCLUDED_
 #pragma once
-
-#ifndef __AFXWIN_H__
-	#error include 'stdafx.h' before including this file for PCH
-#endif
-
-#include "DaCoreRes.h"
-#include "DaServerOdl.h"
-#include "DaServerLifetime.h"
-#include "DaInternalNotify.h"
-#include "DaError.h"
-#include "AgentFileCache.h"
-#include "TimerNotify.h"
-#include "InterfaceMap.h"
+#include "DaServerApp.h"
+#include "ServerNotify.h"
+#include "ServerLifetime.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#ifndef	_STRICT_COMPATIBILITY
-#define	_STRICT_COMPATIBILITY
-#endif
-#ifndef	_TRACE_CHARACTER_ACTIONS
-#define	_TRACE_CHARACTER_ACTIONS
-#endif
-/////////////////////////////////////////////////////////////////////////////
 
-class CDaAgentPropertySheet;
-class CDaAgentAudioOutputProperties;
-class CDaAgentSpeechInputProperties;
-class CDaAgentCommandWindow;
-class CPropSheetCharSel;
-class CVoiceCommandsWnd;
-class CDaAgentCharacter;
-
-class CDaServerApp : public CWinApp, public CAgentFileCache, public CDaServerLifetime, public IDaInternalNotify, protected ITimerNotifySink
+class ATL_NO_VTABLE __declspec(uuid("{1147E500-A208-11DE-ABF2-002421116FB2}")) DaServer :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public CComCoClass<DaServer, &__uuidof(DaServer)>,
+	public IDispatchImpl<IDaServer2, &__uuidof(IDaServer2), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>,
+	public IProvideClassInfo2Impl<&__uuidof(DaServer), &__uuidof(_DaSvrEvents2), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>,
+	public ISupportErrorInfo,
+	public IStdMarshalInfo,
+	public CSvrObjLifetime,
+	public CInstanceAnchor,
+	public CEventNotifyHolder<DaServer>,
+	protected _IEventReflect
 {
 public:
-	CDaServerApp ();
-	~CDaServerApp ();
-	DECLARE_DYNAMIC (CDaServerApp)
+	DaServer();
+	virtual ~DaServer();
 
 // Attributes
-	long								mNextCharID;
-	CPtrTypeArray <interface IDaNotify>	mNotify;
-	static const UINT					mOptionsChangedMsgId;
-	static const UINT					mDefaultCharacterChangedMsgId;
+public:
+	CComObjectStackEx <CServerNotify>	mNotify;
 
 // Operations
-	bool ShowSettings (LPCTSTR pStartPage = NULL);
-
-	CDaAgentPropertySheet * GetAgentPropertySheet (bool pCreate, LPCTSTR pClientMutexName = NULL);
-	CDaAgentAudioOutputProperties * GetAgentAudioOutputProperties (bool pCreate, LPCTSTR pClientMutexName = NULL);
-	CDaAgentSpeechInputProperties * GetAgentSpeechInputProperties (bool pCreate, LPCTSTR pClientMutexName = NULL);
-	CDaAgentCommandWindow * GetAgentCommandWindow (bool pCreate, LPCTSTR pClientMutexName = NULL);
-	CPropSheetCharSel * GetPropSheetCharSel (bool pCreate, LPCTSTR pClientMutexName = NULL);
-
-	CDaAgentCharacter * GetAppCharacter (long pCharID);
-	CDaAgentCharacter * GetListenCharacter ();
-	CVoiceCommandsWnd * GetVoiceCommandsWnd (bool pCreate, long pCharID = 0);
-	void OnCharacterListening (long pCharID, bool pListening, long pCause);
-	bool IsHotKeyStillPressed () const;
-
-	bool AddTimerNotify (UINT_PTR pTimerId, DWORD pInterval, ITimerNotifySink * pNotifySink);
-	bool DelTimerNotify (UINT_PTR pTimerId);
-	bool HasTimerNotify (UINT_PTR pTimerId);
-	CTimerNotify * GetTimerNotify (UINT_PTR pTimerId);
-
-	bool TraceCharacterAction (long pCharID, LPCTSTR pAction, LPCTSTR pFormat = NULL, ...);
+public:
+	static HRESULT WINAPI UpdateRegistryOverride (BOOL bRegister);
+	void Terminate (bool pFinal, bool pAbandonned = false);
+	void Abandon();
+	void FinalRelease();
 
 // Overrides
-	//{{AFX_VIRTUAL(CDaServerApp)
-	public:
-	virtual BOOL InitInstance();
-	virtual int ExitInstance();
-	virtual int Run ();
-	virtual void _OnCharacterLoaded (long pCharID);
-	virtual void _OnCharacterUnloaded (long pCharID);
-	virtual void _OnCharacterNameChanged (long pCharID);
-	virtual void _OnCharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
-	virtual void _OnOptionsChanged ();
-	virtual void _OnDefaultCharacterChanged ();
-	protected:
-//	virtual BOOL PumpMessage();
-	virtual BOOL PreTranslateMessage(MSG *pMsg);
-	virtual void OnTimerNotify (class CTimerNotify * pTimerNotify, UINT_PTR pTimerId);
-	//}}AFX_VIRTUAL
+public:
+	virtual bool VerifyClientLifetime ();
+	virtual void OnClientEnded ();
+	virtual bool _OnDownloadComplete (CFileDownload * pDownload);
+	virtual bool _PreNotify ();
+	virtual bool _PostNotify ();
+
+// Declarations
+public:
+	DECLARE_REGISTRY_RESOURCEID(IDR_DASERVER)
+	DECLARE_GET_CONTROLLING_UNKNOWN()
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
+	DECLARE_PROTECT_FINAL_RELEASE(CComObjectRootEx<CComMultiThreadModel>)
+
+	BEGIN_COM_MAP(DaServer)
+		COM_INTERFACE_ENTRY(IStdMarshalInfo)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDispatch), 0, &CatchFirstQueryInterface)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaServer2), 0, &CatchFirstQueryInterface)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaServer), 0, &CatchFirstQueryInterface)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrPropertySheet2), 0, &CatchFirstQueryInterface)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrPropertySheet), 0, &CatchFirstQueryInterface)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrSettings), 0, &CatchFirstQueryInterface)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrCommandsWindow2), 0, &CatchFirstQueryInterface)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrCommandsWindow), 0, &CatchFirstQueryInterface)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrCharacterFiles), 0, &CatchFirstQueryInterface)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IAgent), 0, &CatchFirstQueryInterface)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IAgentEx), 0, &CatchFirstQueryInterface)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IConnectionPointContainer), 0, &CatchFirstQueryInterface)
+		COM_INTERFACE_ENTRY(IDaServer2)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaServer2)
+		COM_INTERFACE_ENTRY2(IDaServer, IDaServer2)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgent), IDaServer2)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentEx), IDaServer2)
+		COM_INTERFACE_ENTRY_AGGREGATE(__uuidof(IConnectionPointContainer), mNotifyPtr)
+		COM_INTERFACE_ENTRY(ISupportErrorInfo)
+		COM_INTERFACE_ENTRY(IProvideClassInfo)
+		COM_INTERFACE_ENTRY(IProvideClassInfo2)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrPropertySheet2), 0, &DelegateIDaSvrPropertySheet)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrPropertySheet), 0, &DelegateIDaSvrPropertySheet)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IAgentPropertySheet), 0, &DelegateIDaSvrPropertySheet)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrSettings), 0, &DelegateIDaSvrSettings)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrAudioOutput), 0, &DelegateIDaSvrAudioOutput)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IAgentAudioOutputProperties), 0, &DelegateIDaSvrAudioOutput)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IAgentAudioOutputPropertiesEx), 0, &DelegateIDaSvrAudioOutput)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrSpeechInput), 0, &DelegateIDaSvrSpeechInput)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IAgentSpeechInputProperties), 0, &DelegateIDaSvrSpeechInput)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrCommandsWindow2), 0, &DelegateIDaSvrCommandsWindow)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrCommandsWindow), 0, &DelegateIDaSvrCommandsWindow)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IAgentCommandWindow), 0, &DelegateIDaSvrCommandsWindow)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrCharacterFiles), 0, &DelegateIDaSvrCharacterFiles)
+	END_COM_MAP()
+
+	BEGIN_CATEGORY_MAP(DaServer)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
+	   IMPLEMENTED_CATEGORY(CATID_Programmable)
+	END_CATEGORY_MAP()
+
+	static HRESULT WINAPI CatchFirstQueryInterface (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw);
+	static HRESULT WINAPI DelegateIDaSvrPropertySheet (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw);
+	static HRESULT WINAPI DelegateIDaSvrSettings (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw);
+	static HRESULT WINAPI DelegateIDaSvrAudioOutput (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw);
+	static HRESULT WINAPI DelegateIDaSvrSpeechInput (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw);
+	static HRESULT WINAPI DelegateIDaSvrCommandsWindow (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw);
+	static HRESULT WINAPI DelegateIDaSvrCharacterFiles (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw);
+
+// Interfaces
+public:
+	// ISupportsErrorInfo
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
+
+	// IDaServer2
+	HRESULT STDMETHODCALLTYPE Load (VARIANT Provider, long * pdwCharID, long * RequestID);
+	HRESULT STDMETHODCALLTYPE Unload (long CharacterID);
+	HRESULT STDMETHODCALLTYPE Register (IUnknown * punkNotifySink, long * pdwSinkID);
+	HRESULT STDMETHODCALLTYPE Unregister (long dwSinkID);
+	HRESULT STDMETHODCALLTYPE GetCharacter (long CharacterID, IDispatch ** Character);
+	HRESULT STDMETHODCALLTYPE GetSuspended (long * Suspended);
+
+    HRESULT STDMETHODCALLTYPE GetCharacterEx (long CharacterID, IDaSvrCharacter **Character);
+    HRESULT STDMETHODCALLTYPE GetVersion (short *MajorVersion, short *MinorVersion);
+    HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties (short X, short Y, long UseDefaultPosition);
+
+	HRESULT STDMETHODCALLTYPE get_Character (long CharacterID, IDaSvrCharacter2 **Character2);
+	HRESULT STDMETHODCALLTYPE get_CharacterFiles (IDaSvrCharacterFiles **CharacterFiles);
+	HRESULT STDMETHODCALLTYPE get_CharacterStyle (long *CharacterStyle);
+	HRESULT STDMETHODCALLTYPE put_CharacterStyle (long CharacterStyle);
+	HRESULT STDMETHODCALLTYPE get_TTSEngines (IDaSvrTTSEngines **TTSEngines);
+	HRESULT STDMETHODCALLTYPE FindTTSEngines (long LanguageID, short Gender, IDaSvrTTSEngines **TTSEngines);
+	HRESULT STDMETHODCALLTYPE GetCharacterTTSEngine (VARIANT Provider, IDaSvrTTSEngine **TTSEngine);
+	HRESULT STDMETHODCALLTYPE FindCharacterTTSEngines (VARIANT Provider, long LanguageID, IDaSvrTTSEngines **TTSEngines);
+	HRESULT STDMETHODCALLTYPE get_SREngines (IDaSvrSREngines **SREngines);
+	HRESULT STDMETHODCALLTYPE FindSREngines (long LanguageID, IDaSvrSREngines **SREngines);
+	HRESULT STDMETHODCALLTYPE GetCharacterSREngine (VARIANT Provider, IDaSvrSREngine **SREngine);
+	HRESULT STDMETHODCALLTYPE FindCharacterSREngines (VARIANT Provider, long LanguageID, IDaSvrSREngines **SREngines);
+	HRESULT STDMETHODCALLTYPE get_PropertySheet (IDaSvrPropertySheet2 **PropertySheet);
+	HRESULT STDMETHODCALLTYPE get_CommandsWindow (IDaSvrCommandsWindow2 **CommandsWindow);
+	HRESULT STDMETHODCALLTYPE get_Settings (IDaSvrSettings **Settings);
+
+	// IStdMarshalInfo
+    HRESULT STDMETHODCALLTYPE GetClassForHandler (DWORD dwDestContext, void *pvDestContext, CLSID *pClsid);
 
 // Implementation
-public:
-	//{{AFX_MSG(CDaServerApp)
-	afx_msg void OnThreadHotKey(WPARAM wParam, LPARAM lParam);
-	afx_msg void OnBroadcastOptionsChanged(WPARAM wParam, LPARAM lParam);
-	afx_msg void OnBroadcastDefaultCharacterChanged(WPARAM wParam, LPARAM lParam);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-
-public:
-	void OnDeleteAgentPropertySheet (CDaAgentPropertySheet * pAgentPropertySheet);
-	void OnDeleteAgentAudioOutputProperties (CDaAgentAudioOutputProperties * pAgentAudioOutputProperties);
-	void OnDeleteAgentSpeechInputProperties (CDaAgentSpeechInputProperties * pAgentSpeechInputProperties);
-	void OnDeleteAgentCommandWindow (CDaAgentCommandWindow * pAgentCommandWindow);
-	void OnDeletePropSheetCharSel (CPropSheetCharSel * pPropSheetCharSel);
+protected:
+	void Disconnect (bool pAbandonned);
+	void UnloadAllCharacters (bool pAbandonned = false);
+	CAtlString GetSearchPath ();
+	HRESULT LoadCharacter (LPCTSTR pFilePath, bool pIsDefault, long & pCharID, long & pReqID);
+	HRESULT UnloadCharacter (long pCharID);
 
 protected:
-	void _InitInstance ();
-	void _ExitInstance ();
-	void RegisterServer ();
-	void UnregisterServer ();
-	void SetVoiceCommandClients (long pCharID);
-	void SetVoiceCommandNames (long pCharID);
-	bool StartActionTrace (long pCharID);
-	bool StopActionTrace (long pCharID);
-
-protected:
-	tPtr <CDaAgentPropertySheet>			mAgentPropertySheet;
-	tPtr <CDaAgentAudioOutputProperties>	mAgentAudioOutputProperties;
-	tPtr <CDaAgentSpeechInputProperties>	mAgentSpeechInputProperties;
-	tPtr <CDaAgentCommandWindow>			mAgentCommandWindow;
-	tPtr <CPropSheetCharSel>				mPropSheetCharSel;
-	tPtr <CVoiceCommandsWnd>				mVoiceCommandsWnd;
-	DWORD									mLastHotKey;
-	UINT									mClientLifetimeTimer;
-	CTimerNotifies							mTimerNotifies;
-	CStringMap <long>						mActionTraceLog;
+	CAtlOwnPtrMap <long, CFileDownload>	mCharactersLoading;
+private:
+	DWORD								mCharacterStyle;
+	UINT								mUsingHandler;
+	LPUNKNOWN							mNotifyPtr;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-#define TheServerApp ((CDaServerApp *) AfxGetApp ())
-
-extern const GUID gDaTypeLibId;
-extern const WORD gDaTypeLibVerMajor;
-extern const WORD gDaTypeLibVerMinor;
-
-extern const GUID gDaMsTypeLibId;
-extern const WORD gDaMsTypeLibVerMajor;
-extern const WORD gDaMsTypeLibVerMinor;
+#define	UpdateRegistry	UpdateRegistryOverride
+OBJECT_ENTRY_AUTO(__uuidof(DaServer), DaServer)
+#undef	UpdateRegistry
 
 /////////////////////////////////////////////////////////////////////////////
-
-_COM_SMARTPTR_TYPEDEF(IDaServer, __uuidof(IDaServer));
-_COM_SMARTPTR_TYPEDEF(IDaSvrCharacter, __uuidof(IDaSvrCharacter));
-_COM_SMARTPTR_TYPEDEF(IDaSvrUserInput, __uuidof(IDaSvrUserInput));
-_COM_SMARTPTR_TYPEDEF(IDaSvrCommand, __uuidof(IDaSvrCommand));
-_COM_SMARTPTR_TYPEDEF(IDaSvrCommands, __uuidof(IDaSvrCommands));
-_COM_SMARTPTR_TYPEDEF(IDaSvrSpeechInputProperties, __uuidof(IDaSvrSpeechInputProperties));
-_COM_SMARTPTR_TYPEDEF(IDaSvrAudioOutputProperties, __uuidof(IDaSvrAudioOutputProperties));
-_COM_SMARTPTR_TYPEDEF(IDaSvrPropertySheet, __uuidof(IDaSvrPropertySheet));
-_COM_SMARTPTR_TYPEDEF(IDaSvrBalloon, __uuidof(IDaSvrBalloon));
-_COM_SMARTPTR_TYPEDEF(IDaSvrCommandWindow, __uuidof(IDaSvrCommandWindow));
-_COM_SMARTPTR_TYPEDEF(IDaSvrNotifySink15, __uuidof(IDaSvrNotifySink15));
-_COM_SMARTPTR_TYPEDEF(IDaSvrNotifySink, __uuidof(IDaSvrNotifySink));
-
-/////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DASERVER_H_INCLUDED_

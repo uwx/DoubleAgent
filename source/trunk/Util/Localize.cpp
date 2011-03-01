@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -21,14 +21,23 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include <afxpriv.h>
 #include "Localize.h"
 #include "Log.h"
 
+#ifdef	__AFX_H__
+#include <afxpriv.h>
+#define	_GetResourceHandle AfxGetResourceHandle
+#else
+#include <atlcore.h>
+#define	_GetResourceHandle _AtlBaseModule.GetResourceInstance
+#endif
+
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -54,7 +63,7 @@ CString CLocalize::LoadString (UINT pId, WORD pLangId)
 	else
 #endif
 	{
-		::LoadString (AfxGetResourceHandle (), pId, lRet.GetBuffer (2048), 2048);
+		::LoadString (_GetResourceHandle (), pId, lRet.GetBuffer (2048), 2048);
 		lRet.ReleaseBuffer ();
 		lRet.FreeExtra ();
 	}
@@ -65,7 +74,7 @@ CString CLocalize::LoadString (UINT pId, WORD pLangId)
 
 HACCEL CLocalize::LoadAccelerators (LPCTSTR pTableName, WORD pLangId)
 {
-	return ::LoadAccelerators (AfxGetResourceHandle (), pTableName);
+	return ::LoadAccelerators (_GetResourceHandle (), pTableName);
 }
 
 HACCEL CLocalize::LoadAccelerators (UINT pTableId, WORD pLangId)
@@ -77,10 +86,10 @@ HACCEL CLocalize::LoadAccelerators (UINT pTableId, WORD pLangId)
 
 HANDLE CLocalize::LoadImage (LPCTSTR pImageName, UINT pImageType, int pCX, int pCY, UINT pFlags, WORD pLangId)
 {
-	return ::LoadImage (AfxGetResourceHandle (), pImageName, pImageType, pCX, pCY, pFlags);
+	return ::LoadImage (_GetResourceHandle (), pImageName, pImageType, pCX, pCY, pFlags);
 }
 
-HANDLE CLocalize::LoadImage (LPCTSTR pImageName, UINT pImageType, const CSize & pSize, UINT pFlags, WORD pLangId)
+HANDLE CLocalize::LoadImage (LPCTSTR pImageName, UINT pImageType, const SIZE & pSize, UINT pFlags, WORD pLangId)
 {
 	return LoadImage (pImageName, pImageType, pSize.cx, pSize.cy, pFlags, pLangId);
 }
@@ -90,7 +99,7 @@ HANDLE CLocalize::LoadImage (UINT pImageId, UINT pImageType, int pCX, int pCY, U
 	return LoadImage (MAKEINTRESOURCE (pImageId), pImageType, pCX, pCY, pFlags, pLangId);
 }
 
-HANDLE CLocalize::LoadImage (UINT pImageId, UINT pImageType, const CSize & pSize, UINT pFlags, WORD pLangId)
+HANDLE CLocalize::LoadImage (UINT pImageId, UINT pImageType, const SIZE & pSize, UINT pFlags, WORD pLangId)
 {
 	return LoadImage (MAKEINTRESOURCE (pImageId), pImageType, pSize.cx, pSize.cy, pFlags, pLangId);
 }
@@ -102,7 +111,7 @@ HBITMAP CLocalize::LoadBitmap (UINT pBitmapId, int pCX, int pCY, UINT pFlags, WO
 	return (HBITMAP) LoadImage (MAKEINTRESOURCE (pBitmapId), IMAGE_BITMAP, pCX, pCY, pFlags, pLangId);
 }
 
-HBITMAP CLocalize::LoadBitmap (UINT pBitmapId, const CSize & pSize, UINT pFlags, WORD pLangId)
+HBITMAP CLocalize::LoadBitmap (UINT pBitmapId, const SIZE & pSize, UINT pFlags, WORD pLangId)
 {
 	return (HBITMAP) LoadImage (MAKEINTRESOURCE (pBitmapId), IMAGE_BITMAP, pSize.cx, pSize.cy, pFlags, pLangId);
 }
@@ -112,14 +121,14 @@ HICON CLocalize::LoadIcon (UINT pIconId, WORD pLangId)
 	return (HICON) LoadImage (MAKEINTRESOURCE (pIconId), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR|LR_DEFAULTSIZE, pLangId);
 }
 
-HICON CLocalize::LoadIcon (UINT pIconId, const CSize & pSize, UINT pFlags, WORD pLangId)
+HICON CLocalize::LoadIcon (UINT pIconId, const SIZE & pSize, UINT pFlags, WORD pLangId)
 {
 	return (HICON) LoadImage (MAKEINTRESOURCE (pIconId), IMAGE_ICON, pSize.cx, pSize.cy, pFlags, pLangId);
 }
 
 HCURSOR CLocalize::LoadCursor (UINT pCursorId, WORD pLangId)
 {
-	return ::LoadCursor (AfxGetResourceHandle (), MAKEINTRESOURCE (pCursorId));
+	return ::LoadCursor (_GetResourceHandle (), MAKEINTRESOURCE (pCursorId));
 	//return (HCURSOR) LoadImage (MAKEINTRESOURCE (pCursorId), IMAGE_CURSOR, 0, 0, LR_DEFAULTCOLOR|LR_DEFAULTSIZE, pLangId);
 }
 
@@ -145,6 +154,10 @@ HMENU CLocalize::LoadMenu (UINT pMenuId, WORD pLangId)
 #endif
 	return lMenu;
 }
+
+//////////////////////////////////////////////////////////////////////
+#ifdef	__AFX_H__
+//////////////////////////////////////////////////////////////////////
 
 bool CLocalize::LoadMenu (CMenu & pMenu, UINT pMenuId, WORD pLangId)
 {
@@ -191,6 +204,60 @@ bool CLocalize::LoadDialog (CDialogTemplate & pTemplate, UINT pDialogId, WORD pL
 }
 
 //////////////////////////////////////////////////////////////////////
+#else	// __AFX_H__
+//////////////////////////////////////////////////////////////////////
+
+bool CLocalize::LoadMenu (CMenuHandle & pMenu, UINT pMenuId, WORD pLangId)
+{
+	if	(pMenu.GetSafeHandle ())
+	{
+		pMenu.Close ();
+	}
+	if	(pMenu.Attach (LoadMenu (pMenuId, pLangId)))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool CLocalize::LoadDialog (CGlobalHandle & pTemplate, UINT pDialogId, WORD pLangId)
+{
+	bool		lRet = false;
+	CByteArray	lNlsTemplate;
+	LPCVOID		lDialogTemplate;
+	ULONG		lDialogTemplateSize;
+
+	if	(pTemplate.GetSafeHandle ())
+	{
+		pTemplate.Close ();
+	}
+
+	if	(LoadNlsDialog (pDialogId, pLangId, lNlsTemplate))
+	{
+		if	(pTemplate.Attach (GlobalAlloc (GPTR, lNlsTemplate.GetCount())))
+		{
+			memcpy (GlobalLock (pTemplate), lNlsTemplate.GetData(), lNlsTemplate.GetCount());
+			GlobalUnlock (pTemplate);
+			lRet = true;
+		}
+	}
+	else
+	if	(LoadMuiDialog (pDialogId, pLangId, lDialogTemplate, lDialogTemplateSize))
+	{
+		if	(pTemplate.Attach (GlobalAlloc (GPTR, lDialogTemplateSize)))
+		{
+			memcpy (GlobalLock (pTemplate), lDialogTemplate, lDialogTemplateSize);
+			GlobalUnlock (pTemplate);
+			lRet = true;
+		}
+	}
+
+	return lRet;
+}
+
+//////////////////////////////////////////////////////////////////////
+#endif	// __AFX_H__
+//////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 #pragma optimize("",off)
@@ -198,93 +265,50 @@ bool CLocalize::LoadDialog (CDialogTemplate & pTemplate, UINT pDialogId, WORD pL
 
 CString FormatString (UINT pId, LPCTSTR pInsert)
 {
-	CString	lRet;
-	AfxFormatStrings (lRet, CLocalize::LoadString (pId), &pInsert, 1);
-	lRet.FreeExtra ();
-	return CString (lRet);
+	return FormatString (CLocalize::LoadString (pId), pInsert);
 }
 
 CString FormatString (UINT pId, LPCTSTR pInsert1, LPCTSTR pInsert2)
 {
-	CString	lRet;
-	LPCTSTR lInserts [2];
-	lInserts [0] = pInsert1;
-	lInserts [1] = pInsert2;
-	AfxFormatStrings (lRet, CLocalize::LoadString (pId), lInserts, 2);
-	lRet.FreeExtra ();
-	return CString (lRet);
+	return FormatString (CLocalize::LoadString (pId), pInsert1, pInsert2);
 }
 
 CString FormatString (UINT pId, LPCTSTR pInsert1, LPCTSTR pInsert2, LPCTSTR pInsert3)
 {
-	CString	lRet;
-	LPCTSTR lInserts [3];
-	lInserts [0] = pInsert1;
-	lInserts [1] = pInsert2;
-	lInserts [2] = pInsert3;
-	AfxFormatStrings (lRet, CLocalize::LoadString (pId), lInserts, 3);
-	lRet.FreeExtra ();
-	return CString (lRet);
+	return FormatString (CLocalize::LoadString (pId), pInsert1, pInsert2, pInsert3);
 }
 
 CString FormatString (UINT pId, const CStringArray & pInsert)
 {
-	CString		lRet;
-	INT_PTR		lCount = pInsert.GetSize ();
-	INT_PTR		lNdx;
-	LPCTSTR *	lInsert = new LPCTSTR [lCount];
-
-	for	(lNdx = 0; lNdx < lCount; lNdx++)
-	{
-		lInsert [lNdx] = pInsert [lNdx];
-	}
-
-	AfxFormatStrings (lRet, CLocalize::LoadString (pId), lInsert, (int)lCount);
-
-#if (_MSC_VER >= 1400)
-	delete lInsert;
-#else
-	delete [] lInsert;
-#endif
-	lRet.FreeExtra ();
-	return CString (lRet);
+	return FormatString (CLocalize::LoadString (pId), pInsert);
 }
 
 CString FormatString (LPCTSTR pFormat, LPCTSTR pInsert)
 {
-	CString	lRet;
-	AfxFormatStrings (lRet, pFormat, &pInsert, 1);
-	lRet.FreeExtra ();
-	return CString (lRet);
+	return FormatString (pFormat, &pInsert, 1);
 }
 
 CString FormatString (LPCTSTR pFormat, LPCTSTR pInsert1, LPCTSTR pInsert2)
 {
-	CString	lRet;
 	LPCTSTR lInserts [2];
 	lInserts [0] = pInsert1;
 	lInserts [1] = pInsert2;
-	AfxFormatStrings (lRet, pFormat, lInserts, 2);
-	lRet.FreeExtra ();
-	return CString (lRet);
+	return FormatString (pFormat, lInserts, 2);
 }
 
 CString FormatString (LPCTSTR pFormat, LPCTSTR pInsert1, LPCTSTR pInsert2, LPCTSTR pInsert3)
 {
-	CString	lRet;
 	LPCTSTR lInserts [3];
 	lInserts [0] = pInsert1;
 	lInserts [1] = pInsert2;
 	lInserts [2] = pInsert3;
-	AfxFormatStrings (lRet, pFormat, lInserts, 3);
-	lRet.FreeExtra ();
-	return CString (lRet);
+	return FormatString (pFormat, lInserts, 3);
 }
 
 CString FormatString (LPCTSTR pFormat, const CStringArray & pInsert)
 {
 	CString		lRet;
-	INT_PTR		lCount = pInsert.GetSize ();
+	INT_PTR		lCount = pInsert.GetCount();
 	INT_PTR		lNdx;
 	LPCTSTR *	lInsert = new LPCTSTR [lCount];
 
@@ -292,17 +316,67 @@ CString FormatString (LPCTSTR pFormat, const CStringArray & pInsert)
 	{
 		lInsert [lNdx] = pInsert [lNdx];
 	}
-
-	AfxFormatStrings (lRet, pFormat, lInsert, (int)lCount);
-
+	lRet = FormatString (pFormat, lInsert, (int)lCount);
 #if (_MSC_VER >= 1400)
 	delete lInsert;
 #else
 	delete [] lInsert;
 #endif
+	return lRet;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+CString FormatString (LPCTSTR pFormat, LPCTSTR * pInsert, int pInsertCount)
+{
+	CString	lRet;
+
+#ifdef	__AFX_H__
+	AfxFormatStrings (lRet, pFormat, pInsert, pInsertCount);
 	lRet.FreeExtra ();
+#else
+	LPTSTR	lBuffer = NULL;
+	try
+	{
+		FormatMessage (FORMAT_MESSAGE_ALLOCATE_BUFFER|FORMAT_MESSAGE_FROM_STRING|FORMAT_MESSAGE_ARGUMENT_ARRAY|FORMAT_MESSAGE_MAX_WIDTH_MASK, pFormat, 0, 0, (LPTSTR)&lBuffer, 1, (va_list*)pInsert);
+		lRet = lBuffer;
+	}
+	catch AnyExceptionSilent
+	if	(lBuffer)
+	{
+		LocalFree (lBuffer);
+	}
+#endif
+
 	return CString (lRet);
 }
+
 //////////////////////////////////////////////////////////////////////
 #pragma optimize("",off)
 //////////////////////////////////////////////////////////////////////
+
+#ifdef	__AFX_H__
+CString ExtractSubString (LPCTSTR pString, int pSubString, TCHAR pSep)
+{
+	CString	lRet;
+	AfxExtractSubString (lRet, pString, pSubString, pSep);
+	lRet.ReleaseBuffer ();
+	lRet.Replace (_T('\r'), _T('\n'));
+	return lRet;
+}
+#else
+#include "StringArrayEx.h"
+CString ExtractSubString (LPCTSTR pString, int pSubString, TCHAR pSep)
+{
+	CString			lRet;
+	CStringArray	lParts;
+	TCHAR			lDelims [2] = {pSep, 0};
+
+	if	(MakeStringArray (pString, lParts, lDelims, true, false) > pSubString)
+	{
+		lRet = lParts [pSubString];
+		lRet.Replace (_T('\r'), _T('\n'));
+	}
+	return lRet;
+}
+#endif

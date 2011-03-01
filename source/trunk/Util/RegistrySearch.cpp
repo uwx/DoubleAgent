@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -25,15 +25,17 @@
 #include "RegistrySearch.h"
 #include "GuidStr.h"
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CRegistrySearch::GetGlobalClassesKey (CRegKey & pGlobalClasses, bool pAltPlatform)
+bool CRegistrySearch::GetGlobalClassesKey (CRegKeyEx & pGlobalClasses, bool pAltPlatform)
 {
 #ifdef	_WIN64
 	if	(pAltPlatform)
@@ -53,7 +55,7 @@ bool CRegistrySearch::GetGlobalClassesKey (CRegKey & pGlobalClasses, bool pAltPl
 	return pGlobalClasses.IsValid ();
 }
 
-bool CRegistrySearch::GetUserClassesKey (CRegKey & pUserClasses, bool pAltPlatform)
+bool CRegistrySearch::GetUserClassesKey (CRegKeyEx & pUserClasses, bool pAltPlatform)
 {
 #ifdef	_WIN64
 	if	(pAltPlatform)
@@ -73,7 +75,7 @@ bool CRegistrySearch::GetUserClassesKey (CRegKey & pUserClasses, bool pAltPlatfo
 	return pUserClasses.IsValid ();
 }
 
-bool CRegistrySearch::GetClassesRootKey (CRegKey & pClassesRoot, bool pAltPlatform)
+bool CRegistrySearch::GetClassesRootKey (CRegKeyEx & pClassesRoot, bool pAltPlatform)
 {
 #ifdef	_WIN64
 	if	(pAltPlatform)
@@ -95,7 +97,7 @@ bool CRegistrySearch::GetClassesRootKey (CRegKey & pClassesRoot, bool pAltPlatfo
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CRegistrySearch::GetRootKeys (CRegKey & pGlobalClasses, CRegKey & pUserClasses, CRegKey & pClassesRoot, bool pAltPlatform)
+void CRegistrySearch::GetRootKeys (CRegKeyEx & pGlobalClasses, CRegKeyEx & pUserClasses, CRegKeyEx & pClassesRoot, bool pAltPlatform)
 {
 #ifdef	_WIN64
 	if	(pAltPlatform)
@@ -130,10 +132,10 @@ void CRegistrySearch::GetRootKeys (CRegKey & pGlobalClasses, CRegKey & pUserClas
 
 CString CRegistrySearch::GetClassProgId (REFGUID pClassId, HKEY pRootKey)
 {
-	CString	lProgId;
-	CRegKey	lClsIdKey (pRootKey, _T("CLSID"), true);
-	CRegKey	lClassKey (lClsIdKey, (CString)CGuidStr(pClassId), true);
-	CRegKey	lProgIdKey (lClassKey, _T("ProgID"), true);
+	CString		lProgId;
+	CRegKeyEx	lClsIdKey (pRootKey, _T("CLSID"), true);
+	CRegKeyEx	lClassKey (lClsIdKey, (CString)CGuidStr(pClassId), true);
+	CRegKeyEx	lProgIdKey (lClassKey, _T("ProgID"), true);
 
 	if	(lProgIdKey.IsValid ())
 	{
@@ -146,10 +148,10 @@ CString CRegistrySearch::GetClassProgId (REFGUID pClassId, HKEY pRootKey)
 
 CString CRegistrySearch::GetClassViProgId (REFGUID pClassId, HKEY pRootKey)
 {
-	CString	lViProgId;
-	CRegKey	lClsIdKey (pRootKey, _T("CLSID"), true);
-	CRegKey	lClassKey (lClsIdKey, (CString)CGuidStr(pClassId), true);
-	CRegKey	lViProgIdKey (lClassKey, _T("VersionIndependentProgID"), true);
+	CString		lViProgId;
+	CRegKeyEx	lClsIdKey (pRootKey, _T("CLSID"), true);
+	CRegKeyEx	lClassKey (lClsIdKey, (CString)CGuidStr(pClassId), true);
+	CRegKeyEx	lViProgIdKey (lClassKey, _T("VersionIndependentProgID"), true);
 
 	if	(lViProgIdKey.IsValid ())
 	{
@@ -164,14 +166,14 @@ CString CRegistrySearch::GetClassViProgId (REFGUID pClassId, HKEY pRootKey)
 
 CString CRegistrySearch::GetServerPath (REFGUID pClassId, HKEY pRootKey)
 {
-	CString	lServerPath;
-	CRegKey	lClsIdKey (pRootKey, _T("CLSID"), true);
-	CRegKey	lClassKey (lClsIdKey, (CString)CGuidStr(pClassId), true);
+	CString		lServerPath;
+	CRegKeyEx	lClsIdKey (pRootKey, _T("CLSID"), true);
+	CRegKeyEx	lClassKey (lClsIdKey, (CString)CGuidStr(pClassId), true);
 
 	if	(lClassKey.IsValid ())
 	{
-		CRegKey	lLocalServer (lClassKey, _T("LocalServer32"), true);
-		CRegKey	lInprocServer (lClassKey, _T("InprocServer32"), true);
+		CRegKeyEx	lLocalServer (lClassKey, _T("LocalServer32"), true);
+		CRegKeyEx	lInprocServer (lClassKey, _T("InprocServer32"), true);
 
 #ifdef	_DEBUG_NOT
 		LogMessage (LogDebug, _T("--- Local [%s]"), lLocalServer.Value().Value());
@@ -216,9 +218,9 @@ CString CRegistrySearch::GetServerPath (REFGUID pClassId, HKEY pRootKey)
 
 CString CRegistrySearch::GetServerPath (LPCTSTR pProgId, HKEY pRootKey)
 {
-	CString	lServerPath;
-	CRegKey	lProgIdKey (pRootKey, pProgId, true);
-	CRegKey	lProgClass (lProgIdKey, _T("CLSID"), true);
+	CString		lServerPath;
+	CRegKeyEx	lProgIdKey (pRootKey, pProgId, true);
+	CRegKeyEx	lProgClass (lProgIdKey, _T("CLSID"), true);
 
 	if	(
 			(lProgIdKey.IsValid ())
@@ -240,7 +242,15 @@ CString CRegistrySearch::GetAltTypeLibPath (UINT pTypeLibNum)
 	CString	lTypeLibNum;
 
 	lTypeLibNum.Format (_T("%u"), pTypeLibNum);
+#ifdef	__AFX_H__
 	GetModuleFileName (AfxGetInstanceHandle(), lModuleName.GetBuffer (MAX_PATH), MAX_PATH);
+#else
+#ifdef	__ATLCORE_H__
+	GetModuleFileName (_AtlBaseModule.GetModuleInstance(), lModuleName.GetBuffer (MAX_PATH), MAX_PATH);
+#else
+	GetModuleFileName (NULL, lModuleName.GetBuffer (MAX_PATH), MAX_PATH);
+#endif
+#endif
 	PathStripPath (lModuleName.GetBuffer (MAX_PATH));
 	PathAppend (lModuleName.GetBuffer (MAX_PATH), lTypeLibNum);
 	lModuleName.ReleaseBuffer ();

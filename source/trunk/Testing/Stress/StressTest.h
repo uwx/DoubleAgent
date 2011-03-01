@@ -1,7 +1,4 @@
-#ifndef STRESSTEST_H_INCLUDED_
-#define STRESSTEST_H_INCLUDED_
 #pragma once
-
 #include "StressTestRes.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -16,17 +13,16 @@ public:
 	//{{AFX_VIRTUAL(CStressTestApp)
 	public:
 	virtual BOOL InitInstance();
+	virtual int ExitInstance();
 	//}}AFX_VIRTUAL
 
 // Implementation
 	//{{AFX_MSG(CStressTestApp)
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+	INT_PTR RunDlg (class CStressTestDlg & pDlg);
+	void _ExitInstance();
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // STRESSTEST_H_INCLUDED_

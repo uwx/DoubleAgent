@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -81,9 +81,11 @@ END
 #ifdef	_WIN64
 1 TYPELIB "DaServer(x64).tlb"
 2 TYPELIB "AgentSvr(x64).tlb"
+3 TYPELIB "DaServerV1_0(x64).tlb"
 #else
 1 TYPELIB "DaServer(x86).tlb"
 2 TYPELIB "AgentSvr(x86).tlb"
+3 TYPELIB "DaServerV1_0(x86).tlb"
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

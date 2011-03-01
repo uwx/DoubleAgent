@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -21,20 +21,15 @@
 #ifndef _DAGUID_H
 #define _DAGUID_H
 /////////////////////////////////////////////////////////////////////////////
-#ifndef	__midl
-/////////////////////////////////////////////////////////////////////////////
 
-class __declspec(uuid("{1147E500-A208-11DE-ABF2-002421116FB2}")) CDaAgent;
-class __declspec(uuid("{1147E530-A208-11DE-ABF2-002421116FB2}")) CDaAgentCtl;
+class __declspec(uuid("{1147E500-A208-11DE-ABF2-002421116FB2}")) DaServer;
+class __declspec(uuid("{1147E518-A208-11DE-ABF2-002421116FB2}")) DaServerHandler;
+class __declspec(uuid("{1147E530-A208-11DE-ABF2-002421116FB2}")) DaControl;
 class __declspec(uuid("{1147E563-A208-11DE-ABF2-002421116FB2}")) CDirectShowSource;
 class __declspec(uuid("{1147E561-A208-11DE-ABF2-002421116FB2}")) CAgentPreviewWnd;
 class __declspec(uuid("{1147E564-A208-11DE-ABF2-002421116FB2}")) CDaShellApp;
 class __declspec(uuid("{1147E565-A208-11DE-ABF2-002421116FB2}")) CDaCharacterProps;
 class __declspec(uuid("{1147E566-A208-11DE-ABF2-002421116FB2}")) CDaElevatedSettings;
-
-class __declspec(uuid("{1147E518-A208-11DE-ABF2-002421116FB2}")) DaServerHandler;
-class __declspec(uuid("{1147E501-A208-11DE-ABF2-002421116FB2}")) DaServerTypeLib;
-class __declspec(uuid("{1147E550-A208-11DE-ABF2-002421116FB2}")) DaControlTypeLib;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -88,148 +83,10 @@ interface __declspec(uuid("{6D0ECB27-9968-11D0-AC6E-00C04FD97575}")) IAgentCtlCo
 interface __declspec(uuid("{F5BE8BD4-7DE6-11D0-91FE-00C04FD701A5}")) _AgentEvents;
 
 /////////////////////////////////////////////////////////////////////////////
-#endif	// __midl
-/////////////////////////////////////////////////////////////////////////////
-
-#define	_DOUBLEAGENT_NAME				"Double Agent"
-#define	_DOUBLEAGENT_COMPANY			"Cinnamon Software Inc."
-#define	_DOUBLEAGENT_BUILD				32
-#define	_DOUBLEAGENT_BUILD_STR			"32"
-#define	_DOUBLEAGENT_VERSION			1,0,0,_DOUBLEAGENT_BUILD
-#define	_DOUBLEAGENT_VERSION_STR		"1.0.0." _DOUBLEAGENT_BUILD_STR
-#define	_DOUBLEAGENT_COPYRIGHT			"Copyright © Cinnamon Software Inc. 2009-2010"
-
-/////////////////////////////////////////////////////////////////////////////
-
-#define	_SERVER_REGNAME					"Server"
-#define	_SERVER_FILENAME				"DaServer"
-#define	_SERVER_PROGID					"DoubleAgent.Agent"
-#define	_SERVER_PROGID_VER				"DoubleAgent.Agent.1"
-#define	_SERVER_PROGID_NAME				"Double Agent Server"
-#define	_SERVER_HANDLER_NAME			"Double Agent Server COM Handler"
-#define	_SERVER_VER_MAJOR				1
-#define	_SERVER_VER_MINOR				0
-#define	_SERVER_VER						_SERVER_VER_MAJOR._SERVER_VER_MINOR
-
-#define	_CONTROL_REGNAME				"Control"
-#define	_CONTROL_FILENAME				"DaControl"
-#define	_CONTROL_PROGID					"DoubleAgent.Control"
-#define	_CONTROL_PROGID_VER				"DoubleAgent.Control.1"
-#define	_CONTROL_PROGID_NAME			"Double Agent ActiveX Control"
-#define	_CONTROL_VER_MAJOR				1
-#define	_CONTROL_VER_MINOR				0
-#define	_CONTROL_VER					_CONTROL_VER_MAJOR._CONTROL_VER_MINOR
-
-#define	_CORE_REGNAME					"Core"
-#define	_CORE_FILENAME					"DaCore"
-#define	_CORE_PROGID					"DoubleAgent.Core"
-#define	_CORE_PROGID_VER				"DoubleAgent.Core.1"
-#define	_CORE_PROGID_NAME				"Double Agent Core Components"
-
-#define	_SHELL_REGNAME					"Shell"
-#define	_SHELL_FILENAME					"DaShell"
-#define	_SHELL_PROGID					"DoubleAgent.Shell"
-#define	_SHELL_PROGID_VER				"DoubleAgent.Shell.1"
-#define	_SHELL_PROGID_NAME				"Double Agent Shell Extensions"
-
-#define	_PROPERTIES_PROGID				"DoubleAgent.Properties"
-#define	_PROPERTIES_PROGID_VER			"DoubleAgent.Properties.1"
-#define	_PROPERTIES_PROGID_NAME			"Agent Character Properties"
-
-#define	_PREVIEW_PROGID					"DoubleAgent.Preview"
-#define	_PREVIEW_PROGID_VER				"DoubleAgent.Preview.1"
-#define	_PREVIEW_PROGID_NAME			"Double Agent Preview Window"
-
-#define	_DSFILTER_PROGID				"DoubleAgent.DirectShowSource"
-#define	_DSFILTER_PROGID_VER			"DoubleAgent.DirectShowSource.1"
-#define	_DSFILTER_PROGID_NAME			"Double Agent Direct Show Filter"
-
-#define	_CPL_NAME						"DoubleAgent"
-#define	_CPL_CANONICAL_NAME				"DoubleAgent"
-#define	_ELEVATED_SETTINGS_PROGID		"DoubleAgent.Settings"
-#define	_ELEVATED_SETTINGS_PROGID_VER	"DoubleAgent.Settings.1"
-
-#define	_AGENT_SERVER_PROGID			"Agent.Server"
-#define	_AGENT_SERVER_PROGID2			"Agent.Server.2"
-#define	_AGENT_SERVER_PROGID_NAME		"Microsoft Agent Server 2.0"
-#define	_AGENT_CONTROL_PROGID			"Agent.Control"
-#define	_AGENT_CONTROL_PROGID2			"Agent.Control.2"
-#define	_AGENT_CONTROL_PROGID_NAME		"Microsoft Agent Control 2.0"
-#define	_AGENT_CHAR_PROGID				"Agent.Character2.2"
-#define	_AGENT_CHAR_PROGID_NAME			"Agent Character"
-#define	_AGENT_CHAR_WEB_PROGID			"Agent.Character.2"
-#define	_AGENT_CHAR_WEB_PROGID_NAME		"Agent Character (Web)"
-#define	_AGENT_CHAR_PVW_PROGID			"Agent.Preview.2"
-#define	_AGENT_CHAR_PVW_PROGID_NAME		"Agent Character Preview"
-
-
-/////////////////////////////////////////////////////////////////////////////
-
-#define	_DEF_CATEGORY_GUID	"{1147E500-A208-11DE-ABF2-002421116FB2}"
-#define	_DEF_CATEGORY_NAME	"Double Agent"
-
-/////////////////////////////////////////////////////////////////////////////
 //	Unused UUIDs
 /////////////////////////////////////////////////////////////////////////////
 
 //Server
-//1147E519-A208-11DE-ABF2-002421116FB2
-//1147E51A-A208-11DE-ABF2-002421116FB2
-//1147E51B-A208-11DE-ABF2-002421116FB2
-//1147E51C-A208-11DE-ABF2-002421116FB2
-//1147E51D-A208-11DE-ABF2-002421116FB2
-//1147E51E-A208-11DE-ABF2-002421116FB2
-//1147E51F-A208-11DE-ABF2-002421116FB2
-//1147E520-A208-11DE-ABF2-002421116FB2
-//1147E521-A208-11DE-ABF2-002421116FB2
-//1147E522-A208-11DE-ABF2-002421116FB2
-//1147E523-A208-11DE-ABF2-002421116FB2
-//1147E524-A208-11DE-ABF2-002421116FB2
-//1147E525-A208-11DE-ABF2-002421116FB2
-//1147E526-A208-11DE-ABF2-002421116FB2
-//1147E527-A208-11DE-ABF2-002421116FB2
-//1147E528-A208-11DE-ABF2-002421116FB2
-//1147E529-A208-11DE-ABF2-002421116FB2
-//1147E52A-A208-11DE-ABF2-002421116FB2
-//1147E52B-A208-11DE-ABF2-002421116FB2
-//1147E52C-A208-11DE-ABF2-002421116FB2
-//1147E52D-A208-11DE-ABF2-002421116FB2
-//1147E52E-A208-11DE-ABF2-002421116FB2
-//1147E52F-A208-11DE-ABF2-002421116FB2
-
-//Control
-//1147E54C-A208-11DE-ABF2-002421116FB2
-//1147E54D-A208-11DE-ABF2-002421116FB2
-//1147E54E-A208-11DE-ABF2-002421116FB2
-//1147E54F-A208-11DE-ABF2-002421116FB2
-//1147E551-A208-11DE-ABF2-002421116FB2
-//1147E552-A208-11DE-ABF2-002421116FB2
-//1147E553-A208-11DE-ABF2-002421116FB2
-//1147E554-A208-11DE-ABF2-002421116FB2
-//1147E555-A208-11DE-ABF2-002421116FB2
-//1147E556-A208-11DE-ABF2-002421116FB2
-//1147E557-A208-11DE-ABF2-002421116FB2
-//1147E558-A208-11DE-ABF2-002421116FB2
-//1147E559-A208-11DE-ABF2-002421116FB2
-//1147E55A-A208-11DE-ABF2-002421116FB2
-//1147E55B-A208-11DE-ABF2-002421116FB2
-//1147E55C-A208-11DE-ABF2-002421116FB2
-//1147E55D-A208-11DE-ABF2-002421116FB2
-//1147E55E-A208-11DE-ABF2-002421116FB2
-//1147E55F-A208-11DE-ABF2-002421116FB2
-
-//Core and Shell
-//1147E567-A208-11DE-ABF2-002421116FB2
-//1147E568-A208-11DE-ABF2-002421116FB2
-//1147E569-A208-11DE-ABF2-002421116FB2
-//1147E56A-A208-11DE-ABF2-002421116FB2
-//1147E56B-A208-11DE-ABF2-002421116FB2
-//1147E56C-A208-11DE-ABF2-002421116FB2
-//1147E56D-A208-11DE-ABF2-002421116FB2
-//1147E56E-A208-11DE-ABF2-002421116FB2
-//1147E56F-A208-11DE-ABF2-002421116FB2
-//1147E570-A208-11DE-ABF2-002421116FB2
-//1147E571-A208-11DE-ABF2-002421116FB2
 //1147E572-A208-11DE-ABF2-002421116FB2
 //1147E573-A208-11DE-ABF2-002421116FB2
 //1147E574-A208-11DE-ABF2-002421116FB2
@@ -244,9 +101,8 @@ interface __declspec(uuid("{F5BE8BD4-7DE6-11D0-91FE-00C04FD701A5}")) _AgentEvent
 //1147E57D-A208-11DE-ABF2-002421116FB2
 //1147E57E-A208-11DE-ABF2-002421116FB2
 //1147E57F-A208-11DE-ABF2-002421116FB2
-//1147E580-A208-11DE-ABF2-002421116FB2
-//1147E581-A208-11DE-ABF2-002421116FB2
-//1147E582-A208-11DE-ABF2-002421116FB2
+
+//Control
 //1147E583-A208-11DE-ABF2-002421116FB2
 //1147E584-A208-11DE-ABF2-002421116FB2
 //1147E585-A208-11DE-ABF2-002421116FB2
@@ -260,12 +116,8 @@ interface __declspec(uuid("{F5BE8BD4-7DE6-11D0-91FE-00C04FD701A5}")) _AgentEvent
 //1147E58D-A208-11DE-ABF2-002421116FB2
 //1147E58E-A208-11DE-ABF2-002421116FB2
 //1147E58F-A208-11DE-ABF2-002421116FB2
-//1147E590-A208-11DE-ABF2-002421116FB2
-//1147E591-A208-11DE-ABF2-002421116FB2
-//1147E592-A208-11DE-ABF2-002421116FB2
-//1147E593-A208-11DE-ABF2-002421116FB2
-//1147E594-A208-11DE-ABF2-002421116FB2
-//1147E595-A208-11DE-ABF2-002421116FB2
+
+//Core and Shell
 //1147E596-A208-11DE-ABF2-002421116FB2
 //1147E597-A208-11DE-ABF2-002421116FB2
 //1147E598-A208-11DE-ABF2-002421116FB2

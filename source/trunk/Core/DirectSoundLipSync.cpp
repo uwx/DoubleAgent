@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -19,6 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#include "DaCore.h"
 #include <shlwapi.h>
 #include "DirectSoundLipSync.h"
 #include "DirectShowFilter.h"
@@ -30,18 +31,13 @@
 #include "DirectShowTrace.h"
 #endif
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 #pragma warning (disable: 4355)
 
 #ifdef	_DEBUG
-#define	_DEBUG_CONNECT	LogNormal
-#define	_DEBUG_FORMAT	LogNormal
-#define	_DEBUG_LIP_SYNC	LogNormal|LogHighVolume
-#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_DirectShow"),LogVerbose,true)&0xFFFF)
+//#define	_DEBUG_CONNECT	LogNormal
+//#define	_DEBUG_FORMAT	LogNormal
+#define	_DEBUG_LIP_SYNC		(GetProfileDebugInt(_T("DebugSpeechEvents"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_DirectShowFilter"),LogVerbose,true)&0xFFFF)
 #endif
 
 #ifndef	_LOG_INSTANCE
@@ -50,30 +46,15 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-#include "InterfaceMap.inl"
-
-BEGIN_INTERFACE_MAP(CDirectSoundLipSync, CCmdTarget)
-	INTERFACE_PART(CDirectSoundLipSync, __uuidof(IUnknown), InnerUnknown)
-	INTERFACE_PART(CDirectSoundLipSync, __uuidof(ISampleGrabberCB), Samples)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IUNKNOWN(CDirectSoundLipSync, Samples)
-
-/////////////////////////////////////////////////////////////////////////////
-
-IMPLEMENT_DYNCREATE(CDirectSoundLipSync, CCmdTarget)
-
 CDirectSoundLipSync::CDirectSoundLipSync ()
 :	mDuration (0)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
-	AfxOleLockApp ();
-	EnableAggregation ();
 }
 
 CDirectSoundLipSync::~CDirectSoundLipSync ()
@@ -81,22 +62,21 @@ CDirectSoundLipSync::~CDirectSoundLipSync ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::~CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::~CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	Disconnect ();
-	AfxOleUnlockApp ();
 }
 
-void CDirectSoundLipSync::OnFinalRelease ()
+void CDirectSoundLipSync::FinalRelease ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::OnFinalRelease"), this);
+		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::~CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
-	CCmdTarget::OnFinalRelease ();
+	Disconnect ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -106,7 +86,7 @@ void CDirectSoundLipSync::OnFinalRelease ()
 HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWaveFileName, CAgentStreamInfo * pStreamInfo)
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -116,7 +96,7 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 			&&	(pWaveFileName[0])
 			)
 		{
-			CString	lFilterName;
+			CAtlString	lFilterName;
 
 			SetAgentStreamInfo (pStreamInfo);
 			mFilterName = PathFindFileName (pWaveFileName);
@@ -129,11 +109,11 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 				)
 			{
 				lFilterName.Format (_T("%s Lip Sync"), mFilterName);
-				lResult = LogComErr (LogNormal, CoCreateInstance (__uuidof(SampleGrabber), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mGrabberFilter));
+				lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(SampleGrabber), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mGrabberFilter));
 
 				if	(
 						(SUCCEEDED (lResult))
-					&&	(FAILED (lResult = LogVfwErr (LogNormal, pGraphBuilder->AddFilter (mGrabberFilter, lFilterName))))
+					&&	(FAILED (lResult = LogVfwErr (LogNormal|LogTime, pGraphBuilder->AddFilter (mGrabberFilter, lFilterName))))
 					)
 				{
 					SafeFreeSafePtr (mGrabberFilter);
@@ -146,11 +126,11 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 				)
 			{
 				lFilterName.Format (_T("%s Wave Parser"), mFilterName);
-				lResult = LogComErr (LogNormal, CoCreateInstance (__uuidof(WaveParser), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mWaveParser));
+				lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(WaveParser), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mWaveParser));
 
 				if	(
 						(SUCCEEDED (lResult))
-					&&	(FAILED (lResult = LogVfwErr (LogNormal, pGraphBuilder->AddFilter (mWaveParser, lFilterName))))
+					&&	(FAILED (lResult = LogVfwErr (LogNormal|LogTime, pGraphBuilder->AddFilter (mWaveParser, lFilterName))))
 					)
 				{
 					SafeFreeSafePtr (mWaveParser);
@@ -163,11 +143,11 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 				)
 			{
 				lFilterName.Format (_T("%s Audio Render"), mFilterName);
-				lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_DSoundRender, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mAudioRender));
+				lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_DSoundRender, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mAudioRender));
 
 				if	(
 						(SUCCEEDED (lResult))
-					&&	(FAILED (lResult = LogVfwErr (LogNormal, pGraphBuilder->AddFilter (mAudioRender, lFilterName))))
+					&&	(FAILED (lResult = LogVfwErr (LogNormal|LogTime, pGraphBuilder->AddFilter (mAudioRender, lFilterName))))
 					)
 				{
 					SafeFreeSafePtr (mAudioRender);
@@ -178,11 +158,11 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 			{
 				if	(PathIsURL (pWaveFileName))
 				{
-					lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_URLReader, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mFileSource));
+					lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_URLReader, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mFileSource));
 				}
 				else
 				{
-					lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_AsyncReader, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mFileSource));
+					lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_AsyncReader, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mFileSource));
 				}
 
 				if	(SUCCEEDED (lResult))
@@ -195,9 +175,9 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 						lResult = E_FAIL;
 					}
 					else
-					if	(lFileName = AfxAllocTaskOleString (pWaveFileName))
+					if	(lFileName = AtlAllocTaskOleString (pWaveFileName))
 					{
-						lResult = LogVfwErr (LogNormal, lFileSource->Load (lFileName, NULL));
+						lResult = LogVfwErr (LogNormal|LogTime, lFileSource->Load (lFileName, NULL));
 					}
 					else
 					{
@@ -207,7 +187,7 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 
 				if	(
 						(SUCCEEDED (lResult))
-					&&	(FAILED (lResult = LogVfwErr (LogNormal, pGraphBuilder->AddFilter (mFileSource, pWaveFileName))))
+					&&	(FAILED (lResult = LogVfwErr (LogNormal|LogTime, pGraphBuilder->AddFilter (mFileSource, pWaveFileName))))
 					)
 				{
 					SafeFreeSafePtr (mFileSource);
@@ -240,28 +220,28 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 				try
 				{
 					if	(
-							(SUCCEEDED (lResult = LogVfwErr (LogNormal, GetFilterPin (mFileSource, PINDIR_OUTPUT, MEDIATYPE_Stream, &lFileOutPin, lFileMediaType.Free()))))
-						&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, GetFilterPins (mWaveParser, &lWaveInPin, NULL))))
+							(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, GetFilterPin (mFileSource, PINDIR_OUTPUT, MEDIATYPE_Stream, &lFileOutPin, lFileMediaType.Free()))))
+						&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, GetFilterPins (mWaveParser, &lWaveInPin, NULL))))
 						)
 					{
-						lResult = LogVfwErr (LogNormal, pGraphBuilder->ConnectDirect (lFileOutPin, lWaveInPin, lFileMediaType));
+						lResult = LogVfwErr (LogNormal|LogTime, pGraphBuilder->ConnectDirect (lFileOutPin, lWaveInPin, lFileMediaType));
 					}
 					if	(
 							(SUCCEEDED (lResult))
-						&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, GetFilterPins (mWaveParser, NULL, &lWaveOutPin))))
-						&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, GetFilterPins (mGrabberFilter, &lGrabberInPin, NULL))))
+						&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, GetFilterPins (mWaveParser, NULL, &lWaveOutPin))))
+						&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, GetFilterPins (mGrabberFilter, &lGrabberInPin, NULL))))
 						)
 					{
-						lResult = LogVfwErr (LogNormal, pGraphBuilder->ConnectDirect (lWaveOutPin, lGrabberInPin, NULL));
+						lResult = LogVfwErr (LogNormal|LogTime, pGraphBuilder->ConnectDirect (lWaveOutPin, lGrabberInPin, NULL));
 					}
 					if	(SUCCEEDED (lResult))
 					{
-						lResult = LogVfwErr (LogNormal, ConnectFilters (pGraphBuilder, mAudioRender, mGrabberFilter, false));
+						lResult = LogVfwErr (LogNormal|LogTime, ConnectFilters (pGraphBuilder, mAudioRender, mGrabberFilter, false));
 
 						if	(
 								(SUCCEEDED (lResult))
-							&&	(SUCCEEDED (LogVfwErr (LogNormal, GetFilterPins (mGrabberFilter, &lGrabberInPin, NULL))))
-							&&	(SUCCEEDED (LogVfwErr (LogNormal, lGrabberInPin->ConnectionMediaType (&lGrabberMediaType))))
+							&&	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, GetFilterPins (mGrabberFilter, &lGrabberInPin, NULL))))
+							&&	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lGrabberInPin->ConnectionMediaType (&lGrabberMediaType))))
 							)
 						{
 							IMediaSeekingPtr	lMediaSeeking (mAudioRender);
@@ -269,7 +249,7 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 							MoDuplicateMediaType ((DMO_MEDIA_TYPE **)mMediaType.Free(), lGrabberMediaType);
 							if	(lMediaSeeking != NULL)
 							{
-								LogVfwErr (LogNormal, lMediaSeeking->GetDuration (&mDuration));
+								LogVfwErr (LogNormal|LogTime, lMediaSeeking->GetDuration (&mDuration));
 							}
 #ifdef	_DEBUG_FORMAT
 							LogMediaType (_DEBUG_FORMAT, lGrabberMediaType, _T("CDirectSoundLipSync [%s]"), pWaveFileName);
@@ -283,8 +263,8 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 
 			if	(SUCCEEDED (lResult))
 			{
-				LogVfwErr (LogNormal, mGrabber->SetCallback (&m_xSamples, 1));
-				LogVfwErr (LogNormal, mGrabber->SetOneShot (FALSE));
+				LogVfwErr (LogNormal|LogTime, mGrabber->SetCallback (this, 1));
+				LogVfwErr (LogNormal|LogTime, mGrabber->SetOneShot (FALSE));
 			}
 
 #ifdef	_DEBUG_CONNECT
@@ -315,7 +295,7 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 HRESULT CDirectSoundLipSync::Disconnect (IGraphBuilder * pGraphBuilder)
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -344,8 +324,8 @@ HRESULT CDirectSoundLipSync::Disconnect (IGraphBuilder * pGraphBuilder)
 		{
 			try
 			{
-				LogVfwErr (LogVerbose, mFilterChain->StopChain (mFileSource, mAudioRender));
-				LogVfwErr (LogVerbose, mFilterChain->RemoveChain (mFileSource, mAudioRender));
+				LogVfwErr (LogVerbose|LogTime, mFilterChain->StopChain (mFileSource, mAudioRender));
+				LogVfwErr (LogVerbose|LogTime, mFilterChain->RemoveChain (mFileSource, mAudioRender));
 			}
 			catch AnyExceptionDebug
 		}
@@ -354,19 +334,19 @@ HRESULT CDirectSoundLipSync::Disconnect (IGraphBuilder * pGraphBuilder)
 		{
 			if	(mFileSource != NULL)
 			{
-				LogVfwErr (LogDetails, lGraphBuilder->RemoveFilter (mFileSource));
+				LogVfwErr (LogDetails|LogTime, lGraphBuilder->RemoveFilter (mFileSource));
 			}
 			if	(mWaveParser != NULL)
 			{
-				LogVfwErr (LogDetails, lGraphBuilder->RemoveFilter (mWaveParser));
+				LogVfwErr (LogDetails|LogTime, lGraphBuilder->RemoveFilter (mWaveParser));
 			}
 			if	(mAudioRender != NULL)
 			{
-				LogVfwErr (LogDetails, lGraphBuilder->RemoveFilter (mAudioRender));
+				LogVfwErr (LogDetails|LogTime, lGraphBuilder->RemoveFilter (mAudioRender));
 			}
 			if	(mGrabberFilter != NULL)
 			{
-				lResult = LogVfwErr (LogDetails, lGraphBuilder->RemoveFilter (mGrabberFilter));
+				lResult = LogVfwErr (LogDetails|LogTime, lGraphBuilder->RemoveFilter (mGrabberFilter));
 			}
 		}
 		else
@@ -394,7 +374,7 @@ HRESULT CDirectSoundLipSync::Disconnect (IGraphBuilder * pGraphBuilder)
 HRESULT CDirectSoundLipSync::Start ()
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -404,7 +384,7 @@ HRESULT CDirectSoundLipSync::Start ()
 			&&	(mFilterChain != NULL)
 			)
 		{
-			lResult = LogVfwErr (LogNormal, mFilterChain->StartChain (mFileSource, mAudioRender));
+			lResult = LogVfwErr (LogNormal|LogTime, mFilterChain->StartChain (mFileSource, mAudioRender));
 		}
 	}
 	catch AnyExceptionDebug
@@ -415,7 +395,7 @@ HRESULT CDirectSoundLipSync::Start ()
 HRESULT CDirectSoundLipSync::Stop ()
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -425,7 +405,7 @@ HRESULT CDirectSoundLipSync::Stop ()
 			&&	(mFilterChain != NULL)
 			)
 		{
-			lResult = LogVfwErr (LogNormal, mFilterChain->StopChain (mFileSource, mAudioRender));
+			lResult = LogVfwErr (LogNormal|LogTime, mFilterChain->StopChain (mFileSource, mAudioRender));
 		}
 	}
 	catch AnyExceptionDebug
@@ -437,16 +417,13 @@ HRESULT CDirectSoundLipSync::Stop ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectSoundLipSync::XSamples::SampleCB (double SampleTime, IMediaSample *pSample)
+HRESULT STDMETHODCALLTYPE CDirectSoundLipSync::SampleCB (double SampleTime, IMediaSample *pSample)
 {
-	METHOD_PROLOGUE(CDirectSoundLipSync, Samples)
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectSoundLipSync::XSamples::BufferCB (double SampleTime, BYTE *pBuffer, long BufferLen)
+HRESULT STDMETHODCALLTYPE CDirectSoundLipSync::BufferCB (double SampleTime, BYTE *pBuffer, long BufferLen)
 {
-	METHOD_PROLOGUE(CDirectSoundLipSync, Samples)
-
 	if	(BufferLen >= 2)
 	{
 		try
@@ -469,11 +446,14 @@ HRESULT STDMETHODCALLTYPE CDirectSoundLipSync::XSamples::BufferCB (double Sample
 			}
 
 #ifdef	_DEBUG_LIP_SYNC
-			LogMessage (_DEBUG_LIP_SYNC, _T("Buffer [%d] [%f] [%f] Mouth [%d] [%s] at [%d]"), BufferLen, SampleTime, (float)(long)lBufferVal/(float)(long)USHRT_MAX, lNdx, MouthOverlayStr((short)lNdx), (long)(SampleTime * 100.0));
-#endif
-			if	(lStreamInfo = pThis->GetAgentStreamInfo ())
+			if	(LogIsActive (_DEBUG_LIP_SYNC))
 			{
-				lStreamInfo->SetMouthOverlay ((short)lNdx, (long)(SampleTime * 100.0));
+				LogMessage (_DEBUG_LIP_SYNC, _T("Buffer [%d] at [%f] [%4d] Value [%f] Mouth [%d] [%s]"), BufferLen, SampleTime, (long)(SampleTime*Ns100PerSec/MsPer100Ns), (float)(long)lBufferVal/(float)(long)USHRT_MAX, lNdx, MouthOverlayStr((short)lNdx));
+			}
+#endif
+			if	(lStreamInfo = GetAgentStreamInfo ())
+			{
+				lStreamInfo->SetMouthOverlay ((short)lNdx, (long)(SampleTime*Ns100PerSec/MsPer100Ns));
 			}
 		}
 		catch AnyExceptionSilent

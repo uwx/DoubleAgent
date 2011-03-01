@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -18,34 +18,12 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef MSCONTROL_H_INCLUDED_
-#define MSCONTROL_H_INCLUDED_
 #pragma once
 
-#if !defined( __AFXCTL_H__ )
-	#error include 'afxctl.h' before including this file
-#endif
-
-/////////////////////////////////////////////////////////////////////////////
-
-class CMsControlApp : public CWinApp
+class CMsControlModule : public CAtlDllModuleT< CMsControlModule >
 {
-public:
-	CMsControlApp ();
-	virtual ~CMsControlApp ();
-	DECLARE_DYNAMIC(CMsControlApp);
-
-// Operations
-public:
-
-// Overrides
-	//{{AFX_VIRTUAL(CMsControlApp)
-	//}}AFX_VIRTUAL
 };
 
+extern class CMsControlModule _AtlModule;
+
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // MSCONTROL_H_INCLUDED_

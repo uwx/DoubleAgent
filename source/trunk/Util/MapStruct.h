@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -44,7 +44,7 @@ public:
 	CMapStruct(int pBlockSize = 10);
 	~CMapStruct();
 
-	int GetCount () const;
+	int GetCount() const;
 	BOOL IsEmpty () const;
 	BOOL HasKey (aKeyParm pKey) const;
 	BOOL Lookup (aKeyParm pKey, aValType*& pValue) const;

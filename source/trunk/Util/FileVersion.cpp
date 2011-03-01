@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -24,15 +24,18 @@
 #include <shlwapi.h>
 #include "FileVersion.h"
 #include "StringArrayEx.h"
+#include "Localize.h"
 #include "Log.h"
 
 #pragma comment(lib, "shlwapi.lib")
 #pragma comment(lib, "version.lib")
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -223,12 +226,7 @@ CString CFileVersion::FormatVersion (ULONGLONG pVersion, LPCTSTR pVersionString,
 		{
 			if	(pFormatString)
 			{
-				CString	lFormatted;
-				LPCTSTR lInserts [2];
-				lInserts [0] = lRet;
-				lInserts [1] = lVersionString;
-				AfxFormatStrings (lFormatted, pFormatString, lInserts, 2);
-				lRet = lFormatted;
+				lRet = FormatString (pFormatString, lRet, lVersionString);
 			}
 			else
 			{
@@ -267,11 +265,15 @@ bool CFileVersion::ParseVersion (LPCTSTR pVersionString, ULONGLONG & pVersion)
 	lVersionString.Replace (_T(", "), _T("."));
 	lVersionString.Replace (',', '.');
 
+#ifdef	__AFXCOLL_H__
 	lParts.SetSize (4);
+#else
+	lParts.SetCount (4);
+#endif
 
 	while ((lChar = lVersionString.Find ('.')) >= 0)
 	{
-		if	(lPartNdx <= lParts.GetUpperBound ())
+		if	(lPartNdx < (int)lParts.GetCount())
 		{
 			lParts [lPartNdx] = lVersionString.Left (lChar);
 		}
@@ -279,13 +281,13 @@ bool CFileVersion::ParseVersion (LPCTSTR pVersionString, ULONGLONG & pVersion)
 		lPartNdx++;
 	}
 
-	if	(lPartNdx <= lParts.GetUpperBound ())
+	if	(lPartNdx < (int)lParts.GetCount())
 	{
 		lVersionString.FreeExtra ();
 		lParts [lPartNdx] = lVersionString;
 	}
 
-	if	(lParts.GetSize () > 0)
+	if	(lParts.GetCount() > 0)
 	{
 		if	(GetPartVal (lParts [0], lPartVal))
 		{
@@ -293,7 +295,7 @@ bool CFileVersion::ParseVersion (LPCTSTR pVersionString, ULONGLONG & pVersion)
 			lRet = true;
 		}
 
-		if	(lParts.GetSize () > 1)
+		if	(lParts.GetCount() > 1)
 		{
 			if	(GetPartVal (lParts [1], lPartVal))
 			{
@@ -305,7 +307,7 @@ bool CFileVersion::ParseVersion (LPCTSTR pVersionString, ULONGLONG & pVersion)
 			}
 		}
 
-		if	(lParts.GetSize () > 2)
+		if	(lParts.GetCount() > 2)
 		{
 			if	(GetPartVal (lParts [2], lPartVal))
 			{
@@ -317,7 +319,7 @@ bool CFileVersion::ParseVersion (LPCTSTR pVersionString, ULONGLONG & pVersion)
 			}
 		}
 
-		if	(lParts.GetSize () > 3)
+		if	(lParts.GetCount() > 3)
 		{
 			if	(GetPartVal (lParts [3], lPartVal))
 			{
@@ -365,7 +367,7 @@ bool CFileVersion::MakeValidVersion (CString & pVersion, bool pSkipTrailingZero)
 
 	lVersion.Empty ();
 
-	for	(lPartNdx = min (lParts.GetUpperBound (), 3); lPartNdx >= 0; lPartNdx--)
+	for	(lPartNdx = min (lParts.GetCount()-1, 3); lPartNdx >= 0; lPartNdx--)
 	{
 		lPart = lParts [lPartNdx];
 		if	(lPart.IsEmpty ())
@@ -412,7 +414,7 @@ bool CFileVersion::ExtractVersion (LPCTSTR pString, CString & pVersion, bool pLa
 
 	MakeStringArray (pString, lWords, _T(" "));
 
-	for	(lNdx = (pIncludeFirstWord ? 0 : 1); lNdx <= lWords.GetUpperBound (); lNdx++)
+	for	(lNdx = (pIncludeFirstWord ? 0 : 1); lNdx < (int)lWords.GetCount(); lNdx++)
 	{
 		const CString &	lWord = lWords [lNdx];
 

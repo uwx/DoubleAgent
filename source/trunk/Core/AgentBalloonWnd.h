@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,130 +18,157 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef AGENTBALLOONWND_H_INCLUDED_
-#define AGENTBALLOONWND_H_INCLUDED_
 #pragma once
-
 #include "AgentFile.h"
+#include "AgentFileCache.h"
 #include "AgentText.h"
-#include "BitmapBuffer.h"
-#include "SapiVoiceEventSink.h"
-#include "DaServerOdl.h"
+#include "AgentBalloonOptions.h"
+#include "AgentBalloonShape.h"
+#include "SapiVoice.h"
+#include "EventNotify.h"
+#include "ImageBuffer.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
 
-interface IDaNotify;
-
-struct CAgentBalloonOptions
+class ATL_NO_VTABLE CAgentBalloonWndObj :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public IUnknown,
+	public CWindowImpl<CAgentBalloonWndObj, CWindow, CWinTraits<WS_POPUP|TTS_ALWAYSTIP|TTS_NOPREFIX|TTS_NOANIMATE|TTS_NOFADE> >
 {
-	DWORD		mStyle;
-	USHORT		mLines;
-	USHORT		mPerLine;
-	COLORREF	mBkColor;
-	COLORREF	mFgColor;
-	COLORREF	mBrColor;
-	LOGFONT		mFont;
+// Declarations
+public:
+	DECLARE_WND_SUPERCLASS(NULL, TOOLTIPS_CLASS)
+	DECLARE_NOT_AGGREGATABLE(CAgentBalloonWndObj)
+	DECLARE_GET_CONTROLLING_UNKNOWN()
 
-	CAgentBalloonOptions ();
-	CAgentBalloonOptions (const CAgentBalloonOptions & pSource);
-	CAgentBalloonOptions & operator= (const CAgentBalloonOptions & pSource);
-	bool operator== (const CAgentBalloonOptions & pSource) const;
-	bool operator!= (const CAgentBalloonOptions & pSource) const;
+	BEGIN_COM_MAP(CAgentBalloonWndObj)
+		COM_INTERFACE_ENTRY(IUnknown)
+	END_COM_MAP()
 };
 
-class _DACORE_IMPEXP CAgentBalloonWnd : public CToolTipCtrl, public ISapiVoiceEventSink
+/////////////////////////////////////////////////////////////////////////////
+
+class ATL_NO_VTABLE CAgentBalloonWnd :
+	public CAgentBalloonWndObj,
+	public CAgentFileClient,
+	public CEventNotifiesClient<CAgentBalloonWnd>,
+	public CNotifySourcesOwner2 <CSapiVoice, _ISapiVoiceEventSink, CAgentBalloonWnd>,
+	public _ISapiVoiceEventSink
 {
+	DECLARE_DLL_OBJECT_EX(CAgentBalloonWnd, _DACORE_IMPEXP)
 protected:
 	CAgentBalloonWnd ();
 public:
-	virtual ~CAgentBalloonWnd ();
-	DECLARE_DYNCREATE (CAgentBalloonWnd)
+	_DACORE_IMPEXP virtual ~CAgentBalloonWnd ();
+	_DACORE_IMPEXP static CAgentBalloonWnd * CreateInstance (long pCharID, CAtlPtrTypeArray <CEventNotify> & pNotify);
+
+// Declarations
+public:
+	DECLARE_PROTECT_FINAL_RELEASE(CAgentBalloonWndObj)
 
 // Attributes
 public:
-	long GetCharID () const;
-	LANGID GetLangID () const;
+	_DACORE_IMPEXP long GetCharID () const;
 
-	bool IsSpeechShape () const;
-	bool IsThoughtShape () const;
-	bool IsBusy (bool pForIdle) const;
-	bool IsDrawingLayered () const;
+	_DACORE_IMPEXP bool IsSpeechShape () const;
+	_DACORE_IMPEXP bool IsThoughtShape () const;
+	_DACORE_IMPEXP bool IsBusy (bool pForIdle) const;
+	_DACORE_IMPEXP bool IsPaused () const;
+	_DACORE_IMPEXP bool IsDrawingLayered () const;
 
-	bool IsAutoSize () const;
-	bool IsAutoPace () const;
-	bool IsAutoHide () const;
+	_DACORE_IMPEXP bool IsAutoSize () const;
+	_DACORE_IMPEXP bool IsAutoPace () const;
+	_DACORE_IMPEXP bool IsAutoHide () const;
+	_DACORE_IMPEXP bool AppendText () const;
+	_DACORE_IMPEXP bool ClipPartialLines () const;
 
-	static const USHORT	mMinLines;
-	static const USHORT	mMaxLines;
-	static const USHORT	mDefLines;
-	static const USHORT	mMinPerLine;
-	static const USHORT	mMaxPerLine;
-	static const USHORT	mDefPerLine;
-	const DWORD			mAutoPaceTime;
-	DWORD				mAutoHideTime;
-	const bool			mClipPartialLines;
+	const DWORD	mAutoPaceTime;
+	DWORD		mAutoHideTime;
 
 // Operations
 public:
-	bool SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSvrBalloon * pCharBalloon, LANGID pLangID = 0);
-	CAgentBalloonOptions * GetNextOptions () const;
-	bool ApplyOptions (CAgentBalloonOptions * pOptions = NULL);
+	_DACORE_IMPEXP bool ApplyOptions (CAgentBalloonOptions * pOptions = NULL);
 
-	bool Create (CWnd * pParentWnd);
-	bool Attach (long pCharID, IDaNotify * pNotify, bool pSetActiveCharID);
-	bool Detach (long pCharID, IDaNotify * pNotify);
+	_DACORE_IMPEXP bool Create (CWindow * pOwnerWnd, DWORD pExStyle = 0);
+	_DACORE_IMPEXP bool Attach (long pCharID, class CEventNotify * pNotify, bool pSetActiveCharID);
+	_DACORE_IMPEXP bool Detach (long pCharID, class CEventNotify * pNotify);
+	_DACORE_IMPEXP void FinalRelease ();
 
-	bool ShowBalloonSpeech (LPCTSTR pText, UINT pSapiVersion = 5, bool pNoAutoPace = false);
-	bool ShowBalloonSpeech (const CAgentText & pText, bool pNoAutoPace = false);
-	bool ShowBalloonThought (LPCTSTR pText, UINT pSapiVersion = 5, bool pNoAutoPace = false);
-	bool ShowBalloonThought (const CAgentText & pText, bool pNoAutoPace = false);
-	bool ShowBalloonNow ();
-	bool ShowBalloonAuto ();
-	bool HideBalloon (bool pFast = false);
-	bool MoveBalloon ();
+	_DACORE_IMPEXP bool ShowBalloonSpeech (LPCTSTR pText, UINT pSapiVersion = 5, bool pNoAutoPace = false);
+	_DACORE_IMPEXP bool ShowBalloonSpeech (const CAgentText & pText, bool pNoAutoPace = false);
+	_DACORE_IMPEXP bool ShowBalloonThought (LPCTSTR pText, UINT pSapiVersion = 5, bool pNoAutoPace = false);
+	_DACORE_IMPEXP bool ShowBalloonThought (const CAgentText & pText, bool pNoAutoPace = false);
+	_DACORE_IMPEXP bool ShowBalloonNow ();
+	_DACORE_IMPEXP bool ShowBalloonAuto ();
+	_DACORE_IMPEXP bool HideBalloon (bool pFast = false);
+	_DACORE_IMPEXP bool MoveBalloon ();
 
-	CString GetDisplayText ();
-	CString GetSpeechText ();
-	bool AbortSpeechText ();
-
-	static bool CopyBalloonFont (const CAgentFileBalloon & pFileBalloon, LOGFONT & pFont);
-	static bool CopyBalloonFont (const LOGFONT & pFont, CAgentFileBalloon & pFileBalloon);
-	static bool CopyBalloonFont (IDaSvrBalloon * pCharBalloon, LOGFONT & pFont);
-	static bool SetFontLangID (LOGFONT & pFont, LANGID pLangID);
-	static bool GetActualFont (const LOGFONT & pFont, LOGFONT & pActualFont, bool pUpdateSize = true, bool pUpdateStyle = true);
+	CAtlString GetDisplayText ();
+	CAtlString GetSpeechText ();
+	_DACORE_IMPEXP bool AbortSpeechText ();
+	_DACORE_IMPEXP bool Pause (bool pPause);
 
 // Overrides
-	//{{AFX_VIRTUAL(CAgentBalloonWnd)
-	public:
-	virtual void OnFinalRelease ();
-	protected:
-	virtual void OnVoiceStart (long pCharID);
-	virtual void OnVoiceEnd (long pCharID);
-	virtual void OnVoiceWord (long pCharID, UINT pWordPos, int pWordLength);
-	//}}AFX_VIRTUAL
+protected:
+	_DACORE_IMPEXP virtual void OnVoiceStart (long pCharID);
+	_DACORE_IMPEXP virtual void OnVoiceEnd (long pCharID);
+	_DACORE_IMPEXP virtual void OnVoiceWord (long pCharID, UINT pWordPos, int pWordLength);
+	_DACORE_IMPEXP virtual void OnFinalMessage (HWND);
+	_DACORE_IMPEXP virtual bool _PreNotify ();
+	_DACORE_IMPEXP virtual bool _PostNotify ();
 
 // Implementation
 protected:
-	//{{AFX_MSG(CAgentBalloonWnd)
-	afx_msg BOOL OnShow(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnPaint();
-	afx_msg BOOL OnEraseBkgnd(CDC * pDC);
-	afx_msg LRESULT OnPrint(WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnPrintClient(WPARAM wParam, LPARAM lParam);
-	afx_msg BOOL OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnWindowPosChanging (WINDOWPOS *lpwndpos);
-	afx_msg void OnWindowPosChanged (WINDOWPOS *lpwndpos);
-	afx_msg void OnSize (UINT nType, int cx, int cy);
-	afx_msg _MFC_NCHITTEST_RESULT OnNcHitTest(CPoint point);
-	afx_msg void OnTimer(UINT_PTR nIDEvent);
-	afx_msg void OnDestroy();
-	afx_msg LRESULT OnVoiceStartMsg (WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnVoiceEndMsg (WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnVoiceWordMsg (WPARAM wParam, LPARAM lParam);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+	_DACORE_IMPEXP LRESULT OnShow(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnEraseBkgnd (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnPrint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnPrintClient (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnCustomDraw(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnSetRedraw (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnNcPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnVoiceWordMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnTtmActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnTtmTrackPosition (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnTtmTrackActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnTtmUpdateTipText (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnTtmUpdate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+
+	BEGIN_MSG_MAP(CAgentBalloonWnd)
+		REFLECTED_NOTIFY_CODE_HANDLER(TTN_SHOW, OnShow)
+		MESSAGE_HANDLER(WM_PAINT, OnPaint)
+		MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
+		MESSAGE_HANDLER(WM_PRINT, OnPrint)
+		MESSAGE_HANDLER(WM_PRINTCLIENT, OnPrintClient)
+		REFLECTED_NOTIFY_CODE_HANDLER(NM_CUSTOMDRAW, OnCustomDraw)
+		MESSAGE_HANDLER(WM_WINDOWPOSCHANGING, OnWindowPosChanging)
+		MESSAGE_HANDLER(WM_WINDOWPOSCHANGED, OnWindowPosChanged)
+		MESSAGE_HANDLER(WM_SIZE, OnSize)
+		MESSAGE_HANDLER(WM_SHOWWINDOW, OnShowWindow)
+		MESSAGE_HANDLER(WM_SETREDRAW, OnSetRedraw)
+		MESSAGE_HANDLER(WM_NCPAINT, OnNcPaint)
+		MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest)
+		MESSAGE_HANDLER(WM_TIMER, OnTimer)
+		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
+		MESSAGE_HANDLER(mVoiceStartMsg, OnVoiceStartMsg)
+		MESSAGE_HANDLER(mVoiceEndMsg, OnVoiceEndMsg)
+		MESSAGE_HANDLER(mVoiceWordMsg, OnVoiceWordMsg)
+		MESSAGE_HANDLER(TTM_ACTIVATE, OnTtmActivate)
+		MESSAGE_HANDLER(TTM_TRACKPOSITION, OnTtmTrackPosition)
+		MESSAGE_HANDLER(TTM_TRACKACTIVATE, OnTtmTrackActivate)
+		MESSAGE_HANDLER(TTM_UPDATETIPTEXT, OnTtmUpdateTipText)
+		MESSAGE_HANDLER(TTM_UPDATE, OnTtmUpdate)
+		DEFAULT_REFLECTION_HANDLER()
+	END_MSG_MAP()
 
 protected:
 	bool ShowingBalloon ();
@@ -165,43 +192,38 @@ protected:
 	DWORD ApplyFontLayout (HDC pDC);
 	void ShowedVoiceWord (bool pFastRefresh);
 
-public:
-	bool PreNotify ();
-	bool PostNotify ();
-	UINT IsInNotify () const;
-
 protected:
-	CAgentBalloonOptions			mOptions;
-	tPtr <CAgentBalloonOptions>		mPendingOptions;
-	CFont							mFont;
-	tSS <TOOLINFO, UINT>			mToolInfo;
-	CAgentTextDraw					mText;
-	bool							mAutoPaceDisabled;
-	UINT_PTR						mAutoPaceTimer;
-	UINT_PTR						mAutoHideTimer;
-	UINT_PTR						mAutoScrollTimer;
-	tPtr <class CAgentBalloonShape>	mShape;
-	tPtr <CSize>					mShapeSize;
-	CBitmapBuffer					mShapeBuffer;
-	CBitmapBuffer					mDrawBuffer;
-	long							mCharID;
-	LANGID							mLangID;
-	CPtrTypeArray <IDaNotify>		mNotify;
-	static UINT						mVoiceStartMsg;
-	static UINT						mVoiceEndMsg;
-	static UINT						mVoiceWordMsg;
+	CAgentBalloonOptions				mOptions;
+	tPtr <CAgentBalloonOptions>			mPendingOptions;
+	CFontHandle							mFont;
+	tSS <TOOLINFO, UINT>				mToolInfo;
+	CAgentTextDraw						mText;
+	bool								mAutoPaceDisabled;
+	UINT_PTR							mAutoPaceTimer;
+	UINT_PTR							mAutoHideTimer;
+	UINT_PTR							mAutoScrollTimer;
+	tPtr <class CAgentBalloonShape>		mShape;
+	tPtr <CSize>						mShapeSize;
+	CImageBuffer						mShapeBuffer;
+	CImageBuffer						mDrawBuffer;
+	long								mCharID;
+	static const UINT					mVoiceStartMsg;
+	static const UINT					mVoiceEndMsg;
+	static const UINT					mVoiceWordMsg;
 private:
-	UINT							mInNotify;
-	bool							mPacingSpeech;
-	bool							mPacingWord;
-	bool							mApplyingLayout;
-	bool							mApplyingRegion;
+	CWindow *							mOwnerWnd;
+	bool								mRedrawDisabled;
+	bool								mPacingSpeech;
+	bool								mApplyingLayout;
+	bool								mApplyingRegion;
+	bool								mPaused;
+	INT_PTR								mPausedWord;
+
+private:
+	UINT EnterRecursion () const;
+	UINT ExitRecursion () const;
+	CAtlString RecursionIndent () const;
+	mutable UINT mDebugRecursionLevel;
 };
 
-#pragma warning(pop)
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // AGENTBALLOONWND_H_INCLUDED_

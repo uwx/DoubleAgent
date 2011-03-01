@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,38 +18,35 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef AGENTBALLOONSHAPE_H_INCLUDED_
-#define AGENTBALLOONSHAPE_H_INCLUDED_
 #pragma once
+
+#include "UseGdiplus.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CAgentBalloonShape : public CObject
+class CAgentBalloonShape
 {
 protected:
 	CAgentBalloonShape ();
 public:
 	virtual ~CAgentBalloonShape ();
-	DECLARE_DYNAMIC (CAgentBalloonShape)
 
 // Attributes
 public:
-	CRect	mTextRect;
-	CRect	mBalloonRect;
-	CPoint	mCalloutBeg;
-	CPoint	mCalloutEnd;
+	CRect				mTextRect;
+	CRect				mBalloonRect;
+	CPoint				mShadowOffset;
+	tPtr <CUseGdiplus>	mUseGdiplus;
 
 // Operations
 public:
 	virtual void InitLayout ();
 	virtual CRect RecalcLayout (const CRect & pTextRect, const CRect & pRefRect, const CRect & pBounds);
 
-	virtual HRGN GetBalloonRgn (UINT pScale = 1) = 0;
-	virtual bool Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor, UINT pScale = 1) = 0;
+	virtual HRGN GetBalloonRgn () = 0;
+	virtual bool Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor) = 0;
 
 // Overrides
-	//{{AFX_VIRTUAL(CAgentBalloonShape)
-	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
@@ -57,10 +54,15 @@ protected:
 	void CalcRectIntersect (const _complex & pRefPoint, const _complex & pRectCenter, const _complex & pRectSize, _complex & pRectIntersect, double pMinAngle = 0.0);
 	bool ValidateBalloonRect (CRect & pBalloonRect, const CRect & pRefRect, const CRect & pBounds);
 	void FixupNearPoint (CPoint & pPoint, const CRect & pRefRect, long pNearness = 2);
+	void MakeRoundRect (Gdiplus::GraphicsPath & pShapePath);
+	void DrawShadow (Gdiplus::GraphicsPath & pShapePath, Gdiplus::Graphics & pGraphics);
 
 protected:
+	CRect	mBounds;
 	CSize	mRounding;
 	CSize	mCalloutSize;
+	CPoint	mCalloutBeg;
+	CPoint	mCalloutEnd;
 
 #ifdef	_DEBUG
 protected:
@@ -75,8 +77,8 @@ protected:
 	void TracePointFrame (const _complex & pPoint, COLORREF pColor, UINT pSize = 3) const;
 
 protected:
-	mutable tPtr <class CBitmapBuffer>		mTraceBuffer;
-	mutable tPtr <class CBitmapDebugger>	mTraceDebugger;
+	mutable tPtr <class CImageBuffer>	mTraceBuffer;
+	mutable tPtr <class CImageDebugger>	mTraceDebugger;
 #endif
 };
 
@@ -89,7 +91,6 @@ class CAgentBalloonSpeak : public CAgentBalloonShape
 public:
 	CAgentBalloonSpeak ();
 	virtual ~CAgentBalloonSpeak ();
-	DECLARE_DYNAMIC (CAgentBalloonSpeak)
 
 // Attributes
 public:
@@ -98,16 +99,14 @@ public:
 public:
 
 // Overrides
-	//{{AFX_VIRTUAL(CAgentBalloonSpeak)
-	public:
+public:
 	virtual void InitLayout ();
-	virtual HRGN GetBalloonRgn (UINT pScale = 1);
-	virtual bool Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor, UINT pScale = 1);
-	//}}AFX_VIRTUAL
+	virtual HRGN GetBalloonRgn ();
+	virtual bool Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor);
 
 // Implementation
 protected:
-	void GetCalloutPoints (CPoint * pPoints, UINT pScale = 1);
+	void GetCalloutPoints (Gdiplus::PointF * pPoints);
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -119,7 +118,6 @@ class CAgentBalloonThink : public CAgentBalloonShape
 public:
 	CAgentBalloonThink ();
 	virtual ~CAgentBalloonThink ();
-	DECLARE_DYNAMIC (CAgentBalloonThink)
 
 // Attributes
 public:
@@ -128,21 +126,14 @@ public:
 public:
 
 // Overrides
-	//{{AFX_VIRTUAL(CAgentBalloonThink)
-	public:
+public:
 	virtual void InitLayout ();
-	virtual HRGN GetBalloonRgn (UINT pScale = 1);
-	virtual bool Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor, UINT pScale = 1);
-	//}}AFX_VIRTUAL
+	virtual HRGN GetBalloonRgn ();
+	virtual bool Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor);
 
 // Implementation
 protected:
-	void GetCalloutEllipses (CRect * pEllipses, UINT pScale = 1);
+	void GetCalloutEllipses (Gdiplus::RectF * pEllipses);
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // AGENTBALLOONSHAPE_H_INCLUDED_

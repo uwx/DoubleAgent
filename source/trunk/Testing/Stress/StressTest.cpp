@@ -1,7 +1,9 @@
 #include "StdAfx.h"
+#include "DaGuid.h"
+#include "DaVersion.h"
 #include "StressTest.h"
 #include "StressTestDlg.h"
-#include "DaCore.h"
+#include "OleMessageFilterEx.h"
 #include "WerOpt.h"
 
 #ifdef _DEBUG
@@ -10,12 +12,15 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
+#pragma warning (disable: 4722)
+
 /////////////////////////////////////////////////////////////////////////////
 #define _LOG_LEVEL_DEBUG		LogNormal
 #define	_LOG_ROOT_PATH			_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
 #define	_LOG_SECTION_NAME		_T("StressTest")
 #define _LOG_DEF_LOGNAME		_T("StressTest.log")
 #include "Log.inl"
+#include "LogCrash.inl"
 /////////////////////////////////////////////////////////////////////////////
 
 BEGIN_MESSAGE_MAP(CStressTestApp, CWinApp)
@@ -30,18 +35,43 @@ CStressTestApp gApp;
 CStressTestApp::CStressTestApp()
 :	CWinApp (_LOG_SECTION_NAME)
 {
+	LogCrash_Initialize ();
 	SetRegistryKeyEx (_T("Double Agent"), _LOG_SECTION_NAME);
 	LogStart (true);
-	CDaCoreApp::InitLogging (gLogFileName, gLogLevel);
 }
 
 CStressTestApp::~CStressTestApp()
 {
 	LogStop (LogIfActive);
+	LogCrash_Terminate ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+INT_PTR CStressTestApp::RunDlg (CStressTestDlg & pDlg)
+{
+	INT_PTR	lResult = IDCANCEL;
+
+	__try
+	{
+		lResult = pDlg.DoModal();
+	}
+	__except (LogCrash (GetExceptionCode(), GetExceptionInformation()))
+	{}
+
+	return lResult;
+}
+
+void CStressTestApp::_ExitInstance()
+{
+	CWinApp::ExitInstance();
+	CoFreeUnusedLibraries ();
+	OleUninitialize ();
+	LogStop (LogIfActive);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 BOOL CStressTestApp::InitInstance()
@@ -50,13 +80,29 @@ BOOL CStressTestApp::InitInstance()
 	OleInitialize (NULL);
 	WerOptOut (false);
 
-	CStressTestDlg	lDlg;
-	INT_PTR			lResult;
+#if	TRUE
+	if	(m_pMessageFilter)
+	{
+		delete m_pMessageFilter;
+	}
+	m_pMessageFilter = new COleMessageFilterEx (60000);
+#endif
 
+	CStressTestDlg	lDlg;
 	m_pMainWnd = &lDlg;
-	lResult = lDlg.DoModal();
+	RunDlg (lDlg);
 	m_pMainWnd = NULL;
 
-	OleUninitialize ();
 	return FALSE;
 }
+
+int CStressTestApp::ExitInstance()
+{
+	__try
+	{
+		_ExitInstance ();
+	}
+	__except (LogCrash (GetExceptionCode(), GetExceptionInformation()))
+	{}
+	return 0;
+};

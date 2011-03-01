@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,62 +18,69 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef AGENTLISTENINGWND_H_INCLUDED_
-#define AGENTLISTENINGWND_H_INCLUDED_
 #pragma once
-
 #include "DaCoreExp.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
 
-class _DACORE_IMPEXP CAgentListeningWnd : public CToolTipCtrl
+class CAgentListeningWndBase :
+	public CWindowImpl<CAgentListeningWndBase, CWindow, CWinTraits<WS_POPUP|TTS_ALWAYSTIP|TTS_NOPREFIX|TTS_NOANIMATE|TTS_NOFADE> >
 {
+public:
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
+class CAgentListeningWnd :
+	public CAgentListeningWndBase
+{
+	DECLARE_DLL_OBJECT_EX(CAgentListeningWnd, _DACORE_IMPEXP)
 protected:
 	CAgentListeningWnd ();
 public:
-	virtual ~CAgentListeningWnd ();
-	DECLARE_DYNCREATE (CAgentListeningWnd)
+	_DACORE_IMPEXP virtual ~CAgentListeningWnd ();
+	_DACORE_IMPEXP static CAgentListeningWnd * CreateInstance ();
 
 // Attributes
 public:
-	long GetCharID () const {return mCharID;}
-	long GetLangID () const {return mLangID;}
+	_DACORE_IMPEXP long GetCharID () const {return mCharID;}
+	_DACORE_IMPEXP long GetLangID () const {return mLangID;}
 
 // Operations
 public:
-	bool Create (CWnd * pParentWnd);
-	bool Attach (long pCharID, LPCTSTR pCharacterName);
-	bool Detach (long pCharID);
-	bool SetLangID (LANGID pLangID);
+	_DACORE_IMPEXP bool Create (CWindow * pOwnerWnd, DWORD pExStyle = 0);
+	_DACORE_IMPEXP bool Attach (long pCharID, LPCTSTR pCharacterName);
+	_DACORE_IMPEXP bool Detach (long pCharID);
+	_DACORE_IMPEXP bool SetLangID (LANGID pLangID);
 
-	bool ShowTipWnd ();
-	bool HideTipWnd ();
-	void PositionTipWnd ();
-	void RefreshTipWnd ();
+	_DACORE_IMPEXP bool ShowTipWnd ();
+	_DACORE_IMPEXP bool HideTipWnd ();
+	_DACORE_IMPEXP void PositionTipWnd ();
+	_DACORE_IMPEXP void RefreshTipWnd ();
 
-	void ShowCharacterListening (LPCTSTR pCommandsCaption);
-	void ShowCharacterNotListening (LPCTSTR pCommandsCaption, LPCTSTR pReason = NULL);
-	void ShowCharacterHeard (LPCTSTR pCommand);
+	_DACORE_IMPEXP void ShowCharacterListening (LPCTSTR pCommandsCaption);
+	_DACORE_IMPEXP void ShowCharacterNotListening (LPCTSTR pCommandsCaption, LPCTSTR pReason = NULL);
+	_DACORE_IMPEXP void ShowCharacterHeard (LPCTSTR pCommand);
 
 // Overrides
-	//{{AFX_VIRTUAL(CAgentListeningWnd)
-	afx_msg void OnWindowPosChanging (WINDOWPOS *lpwndpos);
-	afx_msg void OnWindowPosChanged (WINDOWPOS *lpwndpos);
-	afx_msg _MFC_NCHITTEST_RESULT OnNcHitTest(CPoint point);
-	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
-	//{{AFX_MSG(CAgentListeningWnd)
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+	_DACORE_IMPEXP LRESULT OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+
+	BEGIN_MSG_MAP(CAgentListeningWnd)
+		MESSAGE_HANDLER(WM_WINDOWPOSCHANGING, OnWindowPosChanging)
+		MESSAGE_HANDLER(WM_WINDOWPOSCHANGED, OnWindowPosChanged)
+		MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest)
+		DEFAULT_REFLECTION_HANDLER()
+	END_MSG_MAP()
 
 protected:
-	CString GetCharacterCaption (UINT pCaptionStrId) const;
-	CString GetCommandsCaption () const;
-	CString GetCommandCaption (LPCTSTR pCommand) const;
+	CAtlString GetCharacterCaption (UINT pCaptionStrId) const;
+	CAtlString GetCommandsCaption () const;
+	CAtlString GetCommandCaption (LPCTSTR pCommand) const;
 
 	void ShowToolText (LPCTSTR pCaption, LPCTSTR pDetail);
 	bool CalcWinRect (CRect & pWinRect);
@@ -81,18 +88,13 @@ protected:
 protected:
 	long					mCharID;
 	LANGID					mLangID;
-	CString					mCharacterName;
-	CString					mCommandsCaption;
-	CString					mCaption;
-	CString					mDetail;
+	CAtlString				mCharacterName;
+	CAtlString				mCommandsCaption;
+	CAtlString				mCaption;
+	CAtlString				mDetail;
 	tSS <TOOLINFO, UINT>	mToolInfo;
-	CFont					mFont;
+	CWindow *				mOwnerWnd;
+	CFontHandle				mFont;
 };
 
-#pragma warning(pop)
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // AGENTLISTENINGWND_H_INCLUDED_

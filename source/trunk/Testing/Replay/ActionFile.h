@@ -1,7 +1,4 @@
-#ifndef ACTIONFILE_H_INCLUDED_
-#define ACTIONFILE_H_INCLUDED_
 #pragma once
-
 #include "AfxTemplEx.h"
 #include "InstanceGate.h"
 
@@ -44,14 +41,9 @@ protected:
 	void ParseLineTime (LPCTSTR pDateStr, LPCTSTR pTimeStr, CFileTime & pLineTime);
 
 protected:
-	mutable CCriticalSection	mCriticalSection;
-	CEvent						mThreadEndEvent;
+	mutable ::CCriticalSection	mCriticalSection;
+	::CEvent					mThreadEndEvent;
 	COwnPtrList <CActionLine>	mLines;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // ACTIONFILE_H_INCLUDED_

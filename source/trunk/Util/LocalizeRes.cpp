@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -25,10 +25,19 @@
 #include "ResName.h"
 #include "Log.h"
 
+#ifdef	__AFX_H__
+#define	_GetResourceHandle AfxGetResourceHandle
+#else
+#include <atlcore.h>
+#define	_GetResourceHandle _AtlBaseModule.GetResourceInstance
+#endif
+
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -44,7 +53,7 @@ HINSTANCE CLocalize::FindResource (const CResName & pResName, WORD pLangId, HINS
 
 		if	(!pResModule)
 		{
-			pResModule = AfxGetResourceHandle ();
+			pResModule = _GetResourceHandle ();
 		}
 
 #ifdef	_UNICODE
@@ -128,7 +137,7 @@ LPCVOID CLocalize::LoadResource (const CResName & pResName, ULONG & pResSize, WO
 
 		if	(!pResModule)
 		{
-			pResModule = AfxGetResourceHandle ();
+			pResModule = _GetResourceHandle ();
 		}
 
 #ifdef	_UNICODE
@@ -270,7 +279,7 @@ bool CLocalize::LoadMuiString (UINT pId, WORD pLangId, LPCWSTR & pString, ULONG 
 	try
 	{
 		LANGID		lLangId = pLangId;
-		HINSTANCE	lResModule = AfxGetResourceHandle ();
+		HINSTANCE	lResModule = _GetResourceHandle ();
 		CResName	lResName ((pId / 16) + 1, RT_STRING);
 		HGLOBAL		lResHandle;
 		HRSRC		lResource;

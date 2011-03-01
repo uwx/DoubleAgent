@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -18,10 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef _SAPI5VOICE_H_INCLUDED
-#define _SAPI5VOICE_H_INCLUDED
 #pragma once
-
 #include "SapiVoice.h"
 #include <sapi.h>
 
@@ -30,62 +27,62 @@
 _COM_SMARTPTR_TYPEDEF (ISpVoice, __uuidof(ISpVoice));
 
 //////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
 
-class _DACORE_IMPEXP CSapi5Voice : public CSapiVoice
+class CSapi5Voice : public CSapiVoice
 {
+	DECLARE_DLL_OBJECT_EX(CSapi5Voice, _DACORE_IMPEXP)
 protected:
 	CSapi5Voice ();
 public:
-	virtual ~CSapi5Voice ();
-	DECLARE_DYNCREATE (CSapi5Voice)
+	_DACORE_IMPEXP virtual ~CSapi5Voice ();
+	_DACORE_IMPEXP static CSapi5Voice * CreateInstance ();
 
 // Attributes
-	static tBstrPtr ShortVoiceId (LPCTSTR pLongVoiceId);
-	static tBstrPtr LongVoiceId (LPCTSTR pShortVoiceId);
+	_DACORE_IMPEXP static tBstrPtr ShortVoiceId (LPCTSTR pLongVoiceId);
+	_DACORE_IMPEXP static tBstrPtr LongVoiceId (LPCTSTR pShortVoiceId);
 
-	static tBstrPtr ShortOutputId (LPCTSTR pLongOutputId);
-	static tBstrPtr LongOutputId (LPCTSTR pShortOutputId);
+	_DACORE_IMPEXP static tBstrPtr ShortOutputId (LPCTSTR pLongOutputId);
+	_DACORE_IMPEXP static tBstrPtr LongOutputId (LPCTSTR pShortOutputId);
 
 // Operations
-	HRESULT PrepareToSpeak (bool pHighPriority = false);
-	HRESULT Speak (LPCTSTR pMessage, bool pAsync = true);
-	HRESULT Stop ();
+	_DACORE_IMPEXP HRESULT PrepareToSpeak (bool pHighPriority = false);
+	_DACORE_IMPEXP HRESULT Speak (LPCTSTR pMessage, bool pAsync = true);
+	_DACORE_IMPEXP HRESULT Stop ();
+	_DACORE_IMPEXP HRESULT Pause ();
+	_DACORE_IMPEXP HRESULT Resume ();
 
-	tBstrPtr GetVoiceId ();
-	HRESULT GetVoiceId (tBstrPtr & pVoiceId);
-	HRESULT SetVoiceId (LPCTSTR pVoiceId);
+	_DACORE_IMPEXP tBstrPtr GetVoiceId ();
+	_DACORE_IMPEXP HRESULT GetVoiceId (tBstrPtr & pVoiceId);
+	_DACORE_IMPEXP HRESULT SetVoiceId (LPCTSTR pVoiceId);
 
-	tBstrPtr GetOutputId ();
-	HRESULT GetOutputId (tBstrPtr & pOutputId);
-	HRESULT SetOutputId (LPCTSTR pOutputId);
+	_DACORE_IMPEXP tBstrPtr GetOutputId ();
+	_DACORE_IMPEXP HRESULT GetOutputId (tBstrPtr & pOutputId);
+	_DACORE_IMPEXP HRESULT SetOutputId (LPCTSTR pOutputId);
 
-	tBstrPtr GetVoiceName ();
-	HRESULT GetVoiceName (tBstrPtr & pVoiceName);
-	HRESULT GetVoiceLanguages (CArray <LANGID, LANGID> & pLanguages);
+	_DACORE_IMPEXP tBstrPtr GetVoiceName ();
+	_DACORE_IMPEXP HRESULT GetVoiceName (tBstrPtr & pVoiceName);
+	_DACORE_IMPEXP HRESULT GetVoiceLanguages (CAtlTypeArray <LANGID> & pLanguages);
 
-	friend int VoiceVisemeOverlay (int pViseme);
-	friend CString VoiceVisemeStr (int pViseme);
+	_DACORE_IMPEXP friend int VoiceVisemeOverlay (int pViseme);
+	_DACORE_IMPEXP friend CAtlString VoiceVisemeStr (int pViseme);
 
 // Overrides
-	//{{AFX_VIRTUAL(CSapi5Voice)
-	protected:
-	virtual UINT _IsValid () const;
-	virtual bool _IsPrepared () const;
-	virtual bool _IsSpeaking () const;
-	public:
-	virtual tBstrPtr GetUniqueId ();
-	virtual HRESULT GetUniqueId (tBstrPtr & pUniqueId);
-	virtual tBstrPtr GetDisplayName ();
-	virtual HRESULT GetDisplayName (tBstrPtr & pDisplayName);
-	virtual ULONG GetRate ();
-	virtual HRESULT GetRate (ULONG & pRate);
-	virtual HRESULT SetRate (ULONG pRate);
-	virtual USHORT GetVolume ();
-	virtual HRESULT GetVolume (USHORT & pVolume);
-	virtual HRESULT SetVolume (USHORT pVolume);
-	//}}AFX_VIRTUAL
+protected:
+	_DACORE_IMPEXP virtual UINT _IsValid () const;
+	_DACORE_IMPEXP virtual bool _IsPrepared () const;
+	_DACORE_IMPEXP virtual bool _IsSpeaking () const;
+	_DACORE_IMPEXP virtual bool _IsPaused () const;
+public:
+	_DACORE_IMPEXP virtual tBstrPtr GetUniqueId ();
+	_DACORE_IMPEXP virtual HRESULT GetUniqueId (tBstrPtr & pUniqueId);
+	_DACORE_IMPEXP virtual tBstrPtr GetDisplayName ();
+	_DACORE_IMPEXP virtual HRESULT GetDisplayName (tBstrPtr & pDisplayName);
+	_DACORE_IMPEXP virtual ULONG GetRate ();
+	_DACORE_IMPEXP virtual HRESULT GetRate (ULONG & pRate);
+	_DACORE_IMPEXP virtual HRESULT SetRate (ULONG pRate);
+	_DACORE_IMPEXP virtual USHORT GetVolume ();
+	_DACORE_IMPEXP virtual HRESULT GetVolume (USHORT & pVolume);
+	_DACORE_IMPEXP virtual HRESULT SetVolume (USHORT pVolume);
 
 // Implementation
 private:
@@ -96,9 +93,7 @@ protected:
 	ULONG		mVoiceStreamNum;
 	SPEVENTENUM	mLastVoiceEvent;
 	bool		mPrepared;
+	bool		mPaused;
 };
 
-#pragma warning(pop)
 //////////////////////////////////////////////////////////////////////
-
-#endif // _SAPI5VOICE_H_INCLUDED

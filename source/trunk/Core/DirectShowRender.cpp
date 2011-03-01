@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -20,23 +20,20 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include <uuids.h>
+#include "DaCore.h"
 #include "DirectShowRender.h"
+#include "ImageTools.h"
 #include "GuidStr.h"
 #include "MallocPtr.h"
-#define GDIPVER 0x0110
 #include "UseGdiPlus.h"
-#ifdef	_DEBUG
-#include "BitmapDebugger.h"
 #include "DebugStr.h"
+#ifdef	_DEBUG
+#include "ImageDebugger.h"
 #include "DebugWin.h"
 #include "DebugProcess.h"
+#include "LocalizeEx.h"
 #endif
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 #pragma warning (disable: 4355)
 
 /////////////////////////////////////////////////////////////////////////////
@@ -67,17 +64,16 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_DEBUG
-//#define	_DEBUG_COM			LogNormal|LogHighVolume
-//#define	_DEBUG_CONNECTION	LogNormal
-//#define	_DEBUG_ALLOCATOR	LogNormal
-//#define	_DEBUG_STREAM		LogNormal|LogHighVolume|LogTimeMs
-//#define	_DEBUG_STREAM_EX	LogNormal|LogHighVolume|LogTimeMs
-//#define	_DEBUG_SAMPLES		LogNormal|LogHighVolume|LogTimeMs
-#define	_LOG_MISSED_SAMPLES		LogNormal|LogHighVolume
-#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_DirectShow"),LogVerbose,true)&0xFFFF)
-#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
-//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
-//#define	_TRACE_RESOURCES_EX	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+//#define	_DEBUG_CONNECTION	LogNormal|LogTime
+//#define	_DEBUG_ALLOCATOR	LogNormal|LogTime
+//#define	_DEBUG_STREAM		LogNormal|LogTimeMs|LogHighVolume
+//#define	_DEBUG_STREAM_EX	LogNormal|LogTimeMs|LogHighVolume
+//#define	_DEBUG_SAMPLES		LogNormal|LogTimeMs|LogHighVolume
+#define	_LOG_MISSED_SAMPLES		LogNormal|LogTime|LogHighVolume
+#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_DirectShowFilter"),LogVerbose,true)&0xFFFF|LogTime)
+#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
+//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+//#define	_TRACE_RESOURCES_EX	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 #endif
 
 #ifndef	_LOG_INSTANCE
@@ -90,32 +86,19 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-#include "InterfaceMap.inl"
-
-BEGIN_INTERFACE_MAP(CDirectShowRender, CDirectShowFilter)
-	INTERFACE_PART(CDirectShowRender, __uuidof(IUnknown), InnerUnknown)
-	INTERFACE_PART(CDirectShowRender, __uuidof(IBasicVideo), BasicVideo)
-	INTERFACE_PART(CDirectShowRender, __uuidof(IMediaSeeking), MediaSeeking)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IDISPATCH(CDirectShowRender, BasicVideo)
-
-/////////////////////////////////////////////////////////////////////////////
-
-IMPLEMENT_DYNCREATE (CDirectShowRender, CDirectShowFilter)
-
 CDirectShowRender::CDirectShowRender()
-:	CDirectShowSeeking (*(CCmdTarget*)this, *(CDirectShowClock*)this),
+:	mRenderWnd (NULL),
+	mSmoothing (0),
 	mSourceRect (0,0,0,0),
 	mRenderRect (0,0,0,0)
 {
+	mUseGdiplus = new CUseGdiplus;
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectShowRender::CDirectShowRender (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowRender::CDirectShowRender (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
-	mSeekingCaps |= AM_SEEKING_CanGetCurrentPos | AM_SEEKING_CanGetStopPos | AM_SEEKING_CanDoSegments;
 }
 
 CDirectShowRender::~CDirectShowRender()
@@ -123,9 +106,16 @@ CDirectShowRender::~CDirectShowRender()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectShowRender::~CDirectShowRender (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowRender::~CDirectShowRender (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
+}
+
+HRESULT CDirectShowRender::FinalConstruct ()
+{
+	InitMediaSeeking (*this, *this, 0, AM_SEEKING_CanGetCurrentPos | AM_SEEKING_CanGetStopPos | AM_SEEKING_CanDoSegments);
+
+	return S_OK;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -141,7 +131,7 @@ HRESULT CDirectShowRender::SetFilterName (LPCWSTR pFilterName)
 	return S_OK;
 }
 
-CString CDirectShowRender::GetFilterName ()
+CAtlString CDirectShowRender::GetFilterName ()
 {
 	return mFilterName;
 }
@@ -163,35 +153,37 @@ bool CDirectShowRender::GetUpstreamSeeking (IMediaSeeking ** pMediaSeeking)
 void CDirectShowRender::InitializePins ()
 {
 	tMediaTypePtr		lMediaType;
+	GUID				lMediaSubtype;
+	CAtlString			lPinName;
 	VIDEOINFOHEADER *	lVideoInfo;
-	CString				lPinName;
 
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::InitializePins"), this);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::InitializePins"), this);
+	}
 #endif
 	if	(mBkColor)
 	{
 		lPinName = _T("RGB32");
+		lMediaSubtype = MEDIASUBTYPE_RGB32;
 	}
 	else
 	{
 		lPinName = _T("ARGB32");
+		lMediaSubtype = MEDIASUBTYPE_ARGB32;
 	}
 
 	if	(
-			(mInputPin = new CDirectShowPinIn (*this, _T("Animation In"), lPinName, 16))
-		&&	(SUCCEEDED (MoCreateMediaType (lMediaType.Free(), sizeof(VIDEOINFOHEADER))))
+			(SUCCEEDED (MoCreateMediaType (lMediaType.Free(), sizeof(VIDEOINFOHEADER))))
+		&&	(mInputPin = new CComObjectNoLock <CDirectShowPinIn>)
 		)
 	{
+		mInputPin->AddRef ();
+		mInputPin->Initialize (*this, _T("Animation In"), lPinName, 16);
+
 		lMediaType->majortype = MEDIATYPE_Video;
-		if	(mBkColor)
-		{
-			lMediaType->subtype = MEDIASUBTYPE_RGB32;
-		}
-		else
-		{
-			lMediaType->subtype = MEDIASUBTYPE_ARGB32;
-		}
+		lMediaType->subtype = lMediaSubtype;
 		lMediaType->formattype = FORMAT_VideoInfo;
 		lMediaType->bFixedSizeSamples = FALSE;
 		lMediaType->bTemporalCompression = FALSE;
@@ -208,7 +200,10 @@ void CDirectShowRender::InitializePins ()
 		mInputPins.Add (mInputPin);
 	}
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::InitializePins Done"), this);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::InitializePins Done"), this);
+	}
 #endif
 }
 
@@ -217,21 +212,30 @@ void CDirectShowRender::InitializePins ()
 void CDirectShowRender::OnJoinedFilterGraph ()
 {
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnJoinedFilterGraph"), this);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnJoinedFilterGraph"), this);
+	}
 #endif
 
 	CDirectShowFilter::OnJoinedFilterGraph ();
 	SetTimes (0, GetDuration());
 
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnJoinedFilterGraph Done"), this);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnJoinedFilterGraph Done"), this);
+	}
 #endif
 }
 
 void CDirectShowRender::OnLeftFilterGraph ()
 {
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnLeftFilterGraph"), this);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnLeftFilterGraph"), this);
+	}
 #endif
 	try
 	{
@@ -242,14 +246,17 @@ void CDirectShowRender::OnLeftFilterGraph ()
 			&&	(lEventSink != NULL)
 			)
 		{
-			LogVfwErr (LogNormal, lEventSink->Notify (EC_WINDOW_DESTROYED, (LONG_PTR)&m_xBaseFilter, 0));
+			LogVfwErr (LogNormal|LogTime, lEventSink->Notify (EC_WINDOW_DESTROYED, (LONG_PTR)(IBaseFilter*)this, 0));
 		}
 	}
 	catch AnyExceptionSilent
 
 	CDirectShowFilter::OnLeftFilterGraph ();
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnLeftFilterGraph Done"), this);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnLeftFilterGraph Done"), this);
+	}
 #endif
 }
 
@@ -259,32 +266,29 @@ HRESULT CDirectShowRender::OnStateChanged (FILTER_STATE pOldState, FILTER_STATE 
 {
 	HRESULT	lResult = CDirectShowFilter::OnStateChanged (pOldState, pNewState);
 
-#ifdef	_LOG_DIRECT_SHOW
-	if	(LogIsActive (_LOG_DIRECT_SHOW))
+#ifdef	_DEBUG_DIRECT_SHOW
+	if	(
+			(pNewState == State_Stopped)
+		&&	(pOldState != State_Stopped)
+		)
 	{
-		if	(
-				(pNewState == State_Stopped)
-			&&	(pOldState != State_Stopped)
-			)
-		{
-			LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Stopped> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
-		}
-		else
-		if	(
-				(pNewState == State_Paused)
-			&&	(pOldState == State_Stopped)
-			)
-		{
-			LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Started> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
-		}
-		else
-		if	(
-				(pNewState == State_Running)
-			&&	(pOldState == State_Paused)
-			)
-		{
-			LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Running> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
-		}
+		LogMessage (_DEBUG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Stopped> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+	}
+	else
+	if	(
+			(pNewState == State_Paused)
+		&&	(pOldState == State_Stopped)
+		)
+	{
+		LogMessage (_DEBUG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Started> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+	}
+	else
+	if	(
+			(pNewState == State_Running)
+		&&	(pOldState == State_Paused)
+		)
+	{
+		LogMessage (_DEBUG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Running> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 	}
 #endif
 	return lResult;
@@ -313,7 +317,7 @@ void CDirectShowRender::OnPinConnected (CDirectShowPin * pPin)
 
 		if	(lEventSink != NULL)
 		{
-			LogVfwErr (LogNormal, lEventSink->Notify (EC_NOTIFY_WINDOW, (LONG_PTR)mRenderWnd, 0));
+			LogVfwErr (LogNormal|LogTime, lEventSink->Notify (EC_NOTIFY_WINDOW, (LONG_PTR)mRenderWnd, 0));
 		}
 	}
 }
@@ -323,37 +327,43 @@ void CDirectShowRender::OnPinConnected (CDirectShowPin * pPin)
 void CDirectShowRender::OnStartInputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate)
 {
 #ifdef	_DEBUG_SAMPLES
-	LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] OnStartInputStream [%f - %f] [%s (%u %u)]"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)), RefTimeSec(pStartTime), RefTimeSec(pEndTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+	LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] OnStartInputStream [%f - %f] [%s (%u %u)]"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)), RefTimeSec(pStartTime), RefTimeSec(pEndTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 #endif
 #ifdef	_TRACE_RESOURCES_EX
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnStartInputStream"), this);
+	if	(LogIsActive (_TRACE_RESOURCES_EX))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnStartInputStream"), this);
+	}
 #endif
 
 	CDirectShowFilter::OnStartInputStream (pStartTime, pEndTime, pRate);
 
 #ifdef	_TRACE_RESOURCES_EX
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnStartInputStream Done"), this);
+	if	(LogIsActive (_TRACE_RESOURCES_EX))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnStartInputStream Done"), this);
+	}
 #endif
 }
 
 void CDirectShowRender::OnEndInputStream (INT_PTR pPendingSamples)
 {
 #ifdef	_DEBUG_SAMPLES
-	LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] OnEndInputStream [%d] [%s (%u %u)]"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)), pPendingSamples, FilterStateStr(mState), IsClockStarted(), IsClockSet());
+	LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] OnEndInputStream [%d] [%s (%u %u)]"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)), pPendingSamples, FilterStateStr(mState), IsClockStarted(), IsClockSet());
 #endif
 #ifdef	_TRACE_RESOURCES_EX
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnEndInputStream"), this);
+	if	(LogIsActive (_TRACE_RESOURCES_EX))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnEndInputStream"), this);
+	}
 #endif
 
 	CDirectShowFilter::OnEndInputStream (pPendingSamples);
 
 	if	(pPendingSamples <= 0)
 	{
-#ifdef	_LOG_DIRECT_SHOW
-		if	(LogIsActive (_LOG_DIRECT_SHOW))
-		{
-			LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <EndOfStream> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
-		}
+#ifdef	_DEBUG_DIRECT_SHOW
+		LogMessage (_DEBUG_DIRECT_SHOW, _T("  [%f] DirectShow Render <EndOfStream> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 #endif
 		try
 		{
@@ -361,13 +371,16 @@ void CDirectShowRender::OnEndInputStream (INT_PTR pPendingSamples)
 
 			if	(lEventSink != NULL)
 			{
-				LogVfwErr (LogNormal, lEventSink->Notify (EC_COMPLETE, S_OK, 0));
+				LogVfwErr (LogNormal|LogTime, lEventSink->Notify (EC_COMPLETE, S_OK, 0));
 			}
 		}
 		catch AnyExceptionSilent
 	}
 #ifdef	_TRACE_RESOURCES_EX
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnEndInputStream Done"), this);
+	if	(LogIsActive (_TRACE_RESOURCES_EX))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnEndInputStream Done"), this);
+	}
 #endif
 }
 
@@ -378,7 +391,10 @@ void CDirectShowRender::OnEndInputStream (INT_PTR pPendingSamples)
 void CDirectShowRender::OnClockPulse ()
 {
 #ifdef	_TRACE_RESOURCES_EX
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnClockPulse"), this);
+	if	(LogIsActive (_TRACE_RESOURCES_EX))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnClockPulse"), this);
+	}
 #endif
 	HANDLE	lThread = GetCurrentThread ();
 	int		lThreadPriority = GetThreadPriority (lThread);
@@ -395,7 +411,7 @@ void CDirectShowRender::OnClockPulse ()
 		IMediaSamplePtr	lSample;
 
 #ifdef	_DEBUG_STREAM_EX
-		LogMessage (_DEBUG_STREAM_EX, _T("[%s] [%p] [%f] OnClockPulse [%s]"), ObjClassName(this), this, RefTimeSec(lStreamTime), FilterStateStr(mState));
+		LogMessage (_DEBUG_STREAM_EX, _T("[%s] [%p] [%f] OnClockPulse [%s]"), AtlTypeName(this), this, RefTimeSec(lStreamTime), FilterStateStr(mState));
 #endif
 		lResult = GetInputSample (lStreamTime, lSample, lSampleTime, lNextSampleTime);
 
@@ -409,7 +425,7 @@ void CDirectShowRender::OnClockPulse ()
 			if	(GetSampleImage (lSample))
 			{
 #ifdef	_DEBUG_SAMPLES
-				LogMediaSampleId (_DEBUG_SAMPLES, lSample, _T("[%s] [%p] [%f] GotSampleImage [%s] for [%p]"), ObjClassName(this), this, RefTimeSec(lStreamTime), FormatSize(mImageBuffer.GetBitmapSize()), mRenderWnd);
+				LogMediaSampleId (_DEBUG_SAMPLES, lSample, _T("[%s] [%p] [%f] GotSampleImage [%s] for [%p]"), AtlTypeName(this), this, RefTimeSec(lStreamTime), FormatSize(mImageBuffer.GetImageSize()), mRenderWnd);
 #endif
 				DrawSampleImage ();
 			}
@@ -424,7 +440,7 @@ void CDirectShowRender::OnClockPulse ()
 			)
 		{
 #ifdef	_DEBUG_SAMPLES_NOT
-			LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] Delay [%f] until [%f]"), ObjClassName(this), this, RefTimeSec(lStreamTime), RefTimeSec(lNextSampleTime-lStreamTime), RefTimeSec(lNextSampleTime));
+			LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] Delay [%f] until [%f]"), AtlTypeName(this), this, RefTimeSec(lStreamTime), RefTimeSec(lNextSampleTime-lStreamTime), RefTimeSec(lNextSampleTime));
 #endif
 			SetClock (lReferenceTime, lNextSampleTime - GetStreamTime(mState));
 		}
@@ -435,13 +451,10 @@ void CDirectShowRender::OnClockPulse ()
 			StopClock ();
 			mInputPin->EndInputStream ();
 #ifdef	_DEBUG_STREAM
-			LogMessage (_DEBUG_STREAM, _T("[%s] [%p] [%f] EndOfStream"), ObjClassName(this), this, RefTimeSec(lStreamTime));
+			LogMessage (_DEBUG_STREAM, _T("[%s] [%p] [%f] EndOfStream"), AtlTypeName(this), this, RefTimeSec(lStreamTime));
 #endif
-#ifdef	_LOG_DIRECT_SHOW
-			if	(LogIsActive (_LOG_DIRECT_SHOW))
-			{
-				LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Complete> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
-			}
+#ifdef	_DEBUG_DIRECT_SHOW
+			LogMessage (_DEBUG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Complete> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 #endif
 		}
 		else
@@ -450,11 +463,8 @@ void CDirectShowRender::OnClockPulse ()
 			&&	(!IsClockStarted ())
 			)
 		{
-#ifdef	_LOG_DIRECT_SHOW
-			if	(LogIsActive (_LOG_DIRECT_SHOW))
-			{
-				LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Start> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
-			}
+#ifdef	_DEBUG_DIRECT_SHOW
+			LogMessage (_DEBUG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Start> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 #endif
 			StartClock (sDefaultClockInterval);
 		}
@@ -463,7 +473,10 @@ void CDirectShowRender::OnClockPulse ()
 
 	SetThreadPriority (lThread, lThreadPriority);
 #ifdef	_TRACE_RESOURCES_EX
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnClockPulse Done"), this);
+	if	(LogIsActive (_TRACE_RESOURCES_EX))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnClockPulse Done"), this);
+	}
 #endif
 }
 
@@ -472,7 +485,7 @@ void CDirectShowRender::OnClockPulse ()
 HRESULT CDirectShowRender::GetNextSampleTime (REFERENCE_TIME pStreamTime, REFERENCE_TIME & pNextSampleTime)
 {
 	HRESULT		lResult = E_UNEXPECTED;
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -484,7 +497,7 @@ HRESULT CDirectShowRender::GetNextSampleTime (REFERENCE_TIME pStreamTime, REFERE
 
 		if	(
 				(mInputPin)
-			&&	(SUCCEEDED (LogVfwErr (LogNormal, lResult = mInputPin->PeekInputSample (&lSample))))
+			&&	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lResult = mInputPin->PeekInputSample (&lSample))))
 			&&	(lSample != NULL)
 			&&	(SUCCEEDED (lSample->GetTime (&lSampleStartTime, &lSampleEndTime)))
 			)
@@ -509,7 +522,7 @@ HRESULT CDirectShowRender::GetNextSampleTime (REFERENCE_TIME pStreamTime, REFERE
 HRESULT CDirectShowRender::GetInputSample (REFERENCE_TIME pStreamTime, IMediaSamplePtr & pSample, REFERENCE_TIME & pSampleTime, REFERENCE_TIME & pNextSampleTime)
 {
 	HRESULT		lResult = E_UNEXPECTED;
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -523,25 +536,25 @@ HRESULT CDirectShowRender::GetInputSample (REFERENCE_TIME pStreamTime, IMediaSam
 		if	(mInputPin)
 		{
 			while	(
-						(SUCCEEDED (LogVfwErr (LogDetails, lResult = mInputPin->PeekInputSample (&pSample))))
+						(SUCCEEDED (LogVfwErr (LogDetails|LogTime, lResult = mInputPin->PeekInputSample (&pSample))))
 					&&	(pSample != NULL)
 					&&	(SUCCEEDED (pSample->GetTime (&lSampleStartTime, &lSampleEndTime)))
 					)
 			{
 #ifdef	_DEBUG_STREAM_EX
-				LogMessage (_DEBUG_STREAM_EX, _T("[%s] [%p] [%f] PeekSample [%f - %f]"), ObjClassName(this), this, RefTimeSec(pStreamTime), RefTimeSec(lSampleStartTime), RefTimeSec(lSampleEndTime));
+				LogMessage (_DEBUG_STREAM_EX, _T("[%s] [%p] [%f] PeekSample [%f - %f]"), AtlTypeName(this), this, RefTimeSec(pStreamTime), RefTimeSec(lSampleStartTime), RefTimeSec(lSampleEndTime));
 #endif
 				if	(
 						(lSampleEndTime < lStreamEndTime)
-					&&	(lSampleStartTime > 0)				// Always allow the first sample, even if it's late
-					&&	(lSampleEndTime < mStopTime)		// Always allow the last sample, even if it's late
-					&&	(SUCCEEDED (LogVfwErr (LogNormal, lResult = mInputPin->GetInputSample (&pSample))))
+					&&	(lSampleStartTime > 0)						// Always allow the first sample, even if it's late
+					&&	(lSampleEndTime < mStopTime)	// Always allow the last sample, even if it's late
+					&&	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lResult = mInputPin->GetInputSample (&pSample))))
 					)
 				{
 #ifdef	_LOG_MISSED_SAMPLES
 					if	(LogIsActive())
 					{
-						LogMessage (_LOG_MISSED_SAMPLES|LogHighVolume|LogTimeMs, _T("[%s] [%p] [%f] Discard late sample [%f - %f] Cache [%d] Priority [%d]"), ObjClassName(this), this, RefTimeSec(pStreamTime), RefTimeSec(lSampleStartTime), RefTimeSec(lSampleEndTime), mInputPin->GetCachedSampleCount(), GetThreadPriority(GetCurrentThread()));
+						LogMessage (_LOG_MISSED_SAMPLES|LogTimeMs|LogHighVolume, _T("[%s] [%p] [%f] Discard late sample [%f - %f] Cache [%d] Priority [%d]"), AtlTypeName(this), this, RefTimeSec(pStreamTime), RefTimeSec(lSampleStartTime), RefTimeSec(lSampleEndTime), mInputPin->GetCachedSampleCount(), GetThreadPriority(GetCurrentThread()));
 					}
 #endif
 					SafeFreeSafePtr (pSample);
@@ -573,7 +586,7 @@ HRESULT CDirectShowRender::GetInputSample (REFERENCE_TIME pStreamTime, IMediaSam
 					if	(lSampleStartTime > pStreamTime)
 					{
 #ifdef	_DEBUG_STREAM_EX
-						LogMessage (_DEBUG_STREAM_EX, _T("[%s] [%p] [%f] Delay sample [%f - %f]"), ObjClassName(this), this, RefTimeSec(pStreamTime), RefTimeSec(lSampleStartTime), RefTimeSec(lSampleEndTime));
+						LogMessage (_DEBUG_STREAM_EX, _T("[%s] [%p] [%f] Delay sample [%f - %f]"), AtlTypeName(this), this, RefTimeSec(pStreamTime), RefTimeSec(lSampleStartTime), RefTimeSec(lSampleEndTime));
 #endif
 						pNextSampleTime = lSampleStartTime;
 						lResult = S_OK;
@@ -581,7 +594,7 @@ HRESULT CDirectShowRender::GetInputSample (REFERENCE_TIME pStreamTime, IMediaSam
 					else
 					if	(
 							(lSampleEndTime >= lStreamEndTime)
-						&&	(SUCCEEDED (LogVfwErr (LogNormal, lResult = mInputPin->GetInputSample (&pSample))))
+						&&	(SUCCEEDED (LogVfwErr (LogNormal|LogTime, lResult = mInputPin->GetInputSample (&pSample))))
 						&&	(pSample != NULL)
 						)
 					{
@@ -597,7 +610,7 @@ HRESULT CDirectShowRender::GetInputSample (REFERENCE_TIME pStreamTime, IMediaSam
 #ifdef	_DEBUG_STREAM
 			if	(lResult == VFW_S_NO_MORE_ITEMS)
 			{
-				LogMessage (_DEBUG_STREAM, _T("[%s] [%p] [%f] NoMoreItems"), ObjClassName(this), this, RefTimeSec(pStreamTime));
+				LogMessage (_DEBUG_STREAM, _T("[%s] [%p] [%f] NoMoreItems"), AtlTypeName(this), this, RefTimeSec(pStreamTime));
 			}
 #endif
 		}
@@ -612,7 +625,7 @@ HRESULT CDirectShowRender::GetInputSample (REFERENCE_TIME pStreamTime, IMediaSam
 bool CDirectShowRender::GetSampleImage (IMediaSample * pSample)
 {
 	bool		lRet = false;
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -632,11 +645,12 @@ bool CDirectShowRender::GetSampleImage (IMediaSample * pSample)
 			CSize	lImageSize (lVideoInfo->bmiHeader.biWidth, lVideoInfo->bmiHeader.biHeight);
 
 			if	(
-					(mImageBuffer.GetBitmapSize () == lImageSize)
+					(mImageBuffer.GetImageSize () == lImageSize)
 				||	(mImageBuffer.CreateBuffer (lImageSize, true))
 				)
 			{
-				memcpy (mImageBuffer.mBitmapBits, lSampleBuffer, lSampleSize);
+				mImageBuffer.EndBuffer ();
+				memcpy (GetImageBits (*mImageBuffer.mImage), lSampleBuffer, lSampleSize);
 				lRet = true;
 			}
 		}
@@ -650,60 +664,26 @@ bool CDirectShowRender::GetSampleImage (IMediaSample * pSample)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CDirectShowRender::SetBkColor (const COLORREF * pBkColor)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const RECT *pTargetRect)
 {
-	CSingleLock	lLock (&mStateLock, TRUE);
+	HRESULT		lResult = S_FALSE;
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
-		if	(pBkColor)
-		{
-			mBkColor = new COLORREF;
-			*mBkColor = *pBkColor;
-			mUseGdiplus = NULL;
-		}
-		else
-		{
-			mBkColor = NULL;
-			mUseGdiplus = new CUseGdiplus;
-		}
-	}
-	catch AnyExceptionSilent
-
-	return true;
-}
-
-const COLORREF * CDirectShowRender::GetBkColor () const
-{
-	CSingleLock	lLock (&mStateLock, TRUE);
-	return mBkColor;
-}
-
-CSize CDirectShowRender::GetImageSize () const
-{
-	CSingleLock	lLock (&mDataLock, TRUE);
-	return mImageBuffer.GetBitmapSize ();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-bool CDirectShowRender::DrawSampleImage (HDC pDC, const RECT * pTargetRect)
-{
-	bool		lRet = false;
-	CSingleLock	lLock (&mDataLock, TRUE);
-
-	try
-	{
-		CSize	lImageSize = mImageBuffer.GetBitmapSize ();
 		bool	lImageHasAlpha = false;
+		CRect	lSourceRect (mSourceRect);
 		CRect	lTargetRect;
 		HDC		lRenderDC;
 
 		if	(
-				(lRenderDC = pDC)
-			||	(
-					(IsWindow (mRenderWnd))
-				&&	(lRenderDC = ::GetDC (mRenderWnd))
+				(mImageBuffer.GetImage ())
+			&&	(
+					(lRenderDC = pDC)
+				||	(
+						(IsWindow (mRenderWnd))
+					&&	(lRenderDC = ::GetDC (mRenderWnd))
+					)
 				)
 			)
 		{
@@ -722,18 +702,27 @@ bool CDirectShowRender::DrawSampleImage (HDC pDC, const RECT * pTargetRect)
 			else
 			if	(IsWindow (mRenderWnd))
 			{
-				::GetClientRect (mRenderWnd, &lTargetRect);
+				if	(mRenderRect.IsRectEmpty ())
+				{
+					::GetClientRect (mRenderWnd, &lTargetRect);
+				}
+				else
+				{
+					lTargetRect = mRenderRect;
+				}
 			}
 			else
 			{
-				lTargetRect.SetRect (0, 0, lImageSize.cx, lImageSize.cy);
+				lTargetRect = CRect (CPoint (0, 0), mImageBuffer.GetImageSize());
 			}
+
+			lSourceRect.IntersectRect (&lSourceRect, CRect (CPoint (0, 0), mImageBuffer.GetImageSize()));
 
 			if	(lImageHasAlpha)
 			{
-				bool					lUpdateLayered = false;
-				tPtr <CBitmapBuffer>	lWorkBuffer;
-				BLENDFUNCTION			lBlend = {AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
+				bool				lUpdateLayered = false;
+				tPtr <CImageBuffer>	lWorkBuffer;
+				BLENDFUNCTION		lBlend = {AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
 
 				if	(
 						(WindowFromDC (lRenderDC) == mRenderWnd)
@@ -744,17 +733,17 @@ bool CDirectShowRender::DrawSampleImage (HDC pDC, const RECT * pTargetRect)
 				}
 
 				if	(
-						(lWorkBuffer = ScaleImage (lImageSize, lTargetRect))
-					||	(lWorkBuffer = SmoothImage (lImageSize, lTargetRect))
+						(lWorkBuffer = ScaleImage (mImageBuffer.GetImageSize(), lTargetRect))
+					||	(lWorkBuffer = SmoothImage (mImageBuffer.GetImageSize(), lTargetRect))
 					)
 				{
 					if	(lUpdateLayered)
 					{
-						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lTargetRect.Size(), lWorkBuffer->mDC, &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
+						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lTargetRect.Size(), *lWorkBuffer->mDC, &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
 					}
 					else
 					{
-						::AlphaBlend (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), lWorkBuffer->mDC, 0, 0, lImageSize.cx, lImageSize.cy, lBlend);
+						::AlphaBlend (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), *lWorkBuffer->mDC, 0, 0, lTargetRect.Width(), lTargetRect.Height(), lBlend);
 					}
 				}
 				else
@@ -762,29 +751,29 @@ bool CDirectShowRender::DrawSampleImage (HDC pDC, const RECT * pTargetRect)
 				{
 					if	(
 							(lUpdateLayered)
-						&&	(lTargetRect.Size() != lImageSize)
-						&&	(lWorkBuffer = new CBitmapBuffer)
+						&&	(lTargetRect.Size() != lSourceRect.Size())
+						&&	(lWorkBuffer = new CImageBuffer)
 						&&	(lWorkBuffer->CreateBuffer (lTargetRect.Size(), true))
 						)
 					{
-						::SetStretchBltMode (lWorkBuffer->mDC, COLORONCOLOR);
-						::StretchBlt (lWorkBuffer->mDC, 0, 0, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.mDC, 0, 0, lImageSize.cx, lImageSize.cy, SRCCOPY);
-						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lTargetRect.Size(), lWorkBuffer->mDC, &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
+						::SetStretchBltMode (*lWorkBuffer->mDC, COLORONCOLOR);
+						::StretchBlt (*lWorkBuffer->mDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.GetDC(), lSourceRect.left, lSourceRect.top, lSourceRect.Width(), lSourceRect.Height(), SRCCOPY);
+						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lTargetRect.Size(), *lWorkBuffer->mDC, &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
 					}
 					else
 					if	(lUpdateLayered)
 					{
-						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lImageSize, mImageBuffer.mDC, &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
+						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lTargetRect.Size(), mImageBuffer.GetDC(), &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
 					}
 					else
 					{
-						::AlphaBlend (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.mDC, 0, 0, lImageSize.cx, lImageSize.cy, lBlend);
+						::AlphaBlend (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.GetDC(), lSourceRect.left, lSourceRect.top, lSourceRect.Width(), lSourceRect.Height(), lBlend);
 					}
 				}
 #ifdef	_DEBUG_SAMPLES
 				else
 				{
-					LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Image buffer [%d %d] failed"), ObjClassName(this), this, lImageSize.cx, lImageSize.cy);
+					LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Image buffer [%d %d] failed"), AtlTypeName(this), this, lSourceRect.Width(), lSourceRect.Height());
 				}
 #endif
 			}
@@ -792,20 +781,20 @@ bool CDirectShowRender::DrawSampleImage (HDC pDC, const RECT * pTargetRect)
 			{
 				if	(mImageBuffer.StartBuffer ())
 				{
-					if	(lTargetRect.Size() == lImageSize)
+					if	(lTargetRect.Size() == lSourceRect.Size())
 					{
-						::BitBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lImageSize.cx, lImageSize.cy, mImageBuffer.mDC, 0, 0, SRCCOPY);
+						::BitBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.GetDC(), lSourceRect.left, lSourceRect.top, SRCCOPY);
 					}
 					else
 					{
 						::SetStretchBltMode (lRenderDC, HALFTONE);
-						::StretchBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.mDC, 0, 0, lImageSize.cx, lImageSize.cy, SRCCOPY);
+						::StretchBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.GetDC(), lSourceRect.left, lSourceRect.top, lSourceRect.Width(), lSourceRect.Height(), SRCCOPY);
 					}
 				}
 #ifdef	_DEBUG_SAMPLES
 				else
 				{
-					LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Image buffer [%d %d] failed"), ObjClassName(this), this, lImageSize.cx, lImageSize.cy);
+					LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Image buffer [%d %d] failed"), AtlTypeName(this), this, lSourceRect.Width(), lSourceRect.Height());
 				}
 #endif
 			}
@@ -818,34 +807,35 @@ bool CDirectShowRender::DrawSampleImage (HDC pDC, const RECT * pTargetRect)
 			{
 				::ReleaseDC (mRenderWnd, lRenderDC);
 			}
-			lRet = true;
+			lResult = S_OK;
 		}
 #ifdef	_DEBUG_SAMPLES
 		else
 		{
-			LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Unable to get Render DC"), ObjClassName(this), this);
+			LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Unable to get Render DC"), AtlTypeName(this), this);
 		}
 #endif
 	}
 	catch AnyExceptionDebug
 
-	return lRet;
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CBitmapBuffer * CDirectShowRender::ScaleImage (const CSize & pImageSize, const CRect & pTargetRect)
+CImageBuffer * CDirectShowRender::ScaleImage (const CSize & pImageSize, const CRect & pTargetRect)
 {
-	tPtr <CBitmapBuffer>	lTargetBuffer;
+	tPtr <CImageBuffer>	lTargetBuffer;
 
 	if	(
-			(pTargetRect.Size () != pImageSize)
-		&&	(lTargetBuffer = new CBitmapBuffer)
+			(mImageBuffer.GetImage())
+		&&	(pTargetRect.Size () != pImageSize)
+		&&	(lTargetBuffer = new CImageBuffer)
 		&&	(lTargetBuffer->CreateBuffer (pTargetRect.Size(), true))
 		)
 	{
-		Gdiplus::Bitmap		lBitmap (pImageSize.cx, pImageSize.cy, pImageSize.cx*4, PixelFormat32bppPARGB, mImageBuffer.mBitmapBits);
-		Gdiplus::Graphics	lGraphics (lTargetBuffer->mDC);
+		Gdiplus::Bitmap		lBitmap (pImageSize.cx, pImageSize.cy, pImageSize.cx*4, PixelFormat32bppPARGB, GetImageBits(*mImageBuffer.mImage));
+		Gdiplus::Graphics	lGraphics (*lTargetBuffer->mDC);
 
 		lGraphics.Clear (Gdiplus::Color (0,0,0,0));
 		lGraphics.SetCompositingMode (Gdiplus::CompositingModeSourceOver);
@@ -853,40 +843,124 @@ CBitmapBuffer * CDirectShowRender::ScaleImage (const CSize & pImageSize, const C
 		lGraphics.SetInterpolationMode (Gdiplus::InterpolationModeHighQualityBilinear);
 		lGraphics.SetPixelOffsetMode (Gdiplus::PixelOffsetModeHighQuality);
 		lGraphics.DrawImage (&lBitmap, 0, pTargetRect.Height(), pTargetRect.Width(), -pTargetRect.Height());
+
 		return lTargetBuffer.Detach ();
 	}
 	return NULL;
 }
 
-CBitmapBuffer * CDirectShowRender::SmoothImage (const CSize & pImageSize, const CRect & pTargetRect)
+CImageBuffer * CDirectShowRender::SmoothImage (const CSize & pImageSize, const CRect & pTargetRect)
 {
-	tPtr <CBitmapBuffer>	lTargetBuffer;
+	tPtr <CImageBuffer>	lTargetBuffer;
 
 	if	(
-			(pTargetRect.Size () == pImageSize)
-#ifdef	_DEBUG
-		&&	(GetProfileDebugInt(_T("DebugDisableSmoothing")) <= 0)
-#endif
-		&&	(lTargetBuffer = new CBitmapBuffer)
+			(mSmoothing & (RenderSmoothEdges|RenderSmoothAll))
+		&&	(mImageBuffer.GetImage())
+		&&	(pTargetRect.Size () == pImageSize)
+		&&	(lTargetBuffer = new CImageBuffer)
 		&&	(lTargetBuffer->CreateBuffer (pTargetRect.Size(), true))
 		)
 	{
-#if	TRUE
-		Gdiplus::Bitmap		lBitmap (pImageSize.cx, pImageSize.cy, pImageSize.cx*4, PixelFormat32bppPARGB, mImageBuffer.mBitmapBits);
-		Gdiplus::Graphics	lGraphics (lTargetBuffer->mDC);
-		Gdiplus::RectF		lSrcRect (0.0f, 0.0f, (float)pImageSize.cx, (float)pImageSize.cy);
-		Gdiplus::RectF		lDstRect (0.0f, (float)pTargetRect.Height(), (float)pTargetRect.Width(), -(float)pTargetRect.Height());
+		lTargetBuffer->EndBuffer ();
 
-		lGraphics.Clear (Gdiplus::Color (0,0,0,0));
-		lGraphics.SetCompositingMode (Gdiplus::CompositingModeSourceOver);
-		lGraphics.SetCompositingQuality (Gdiplus::CompositingQualityHighQuality);
-		lGraphics.SetInterpolationMode (Gdiplus::InterpolationModeHighQualityBilinear);
-		lGraphics.SetPixelOffsetMode (Gdiplus::PixelOffsetModeHighQuality);
+		LPBYTE	lSrcBits = GetImageBits (*mImageBuffer.mImage);
+		LPBYTE	lDstBits = GetImageBits (*lTargetBuffer->mImage);
+		long	lBitmapPitch = abs(mImageBuffer.mImage->GetPitch());
+		CPoint	lSrcPixel;
+		CPoint	lDstPixel;
+		long	lDstNdx;
+		long	lSrcNdx;
+		bool	lEdgesOnly = ((mSmoothing & RenderSmoothAll) != RenderSmoothAll);
 
-		lDstRect.Offset (0.5f, 0.5f);
-		lGraphics.DrawImage (&lBitmap, lDstRect, lSrcRect, Gdiplus::UnitPixel);
+		for	(lDstPixel.y = 0; lDstPixel.y < pImageSize.cy; lDstPixel.y++)
+		{
+			lDstNdx = (pImageSize.cy-lDstPixel.y-1) * lBitmapPitch;
+
+			for	(lDstPixel.x = 0; lDstPixel.x < pImageSize.cx; lDstPixel.x++, lDstNdx += 4)
+			{
+				if	(
+						(lEdgesOnly)
+					&&	(lSrcBits [lDstNdx+3])
+					)
+				{
+					*(PDWORD)(lDstBits+lDstNdx) = *(PDWORD)(lSrcBits+lDstNdx);
+				}
+				else
+				{
+					ULONG	lCount = 0;
+					ULONG	lAlpha = 0;
+					ULONG	lRed = 0;
+					ULONG	lGreen = 0;
+					ULONG	lBlue = 0;
+
+					for	(lSrcPixel.y = max (lDstPixel.y-1, 0); lSrcPixel.y < min (lDstPixel.y+2, pImageSize.cy); lSrcPixel.y++)
+					{
+						lSrcNdx = (pImageSize.cy-lSrcPixel.y-1) * lBitmapPitch;
+
+						for	(lSrcPixel.x = max (lDstPixel.x-1, 0), lSrcNdx += lSrcPixel.x*4; lSrcPixel.x < min (lDstPixel.x+2, pImageSize.cx); lSrcPixel.x++, lSrcNdx += 4)
+						{
+							const ULONG	lNearWeight = 6;
+							const ULONG	lEdgeWeight = 3;
+							ULONG		lWeight = 1;
+
+							if	(lSrcPixel.x == lDstPixel.x)
+							{
+								lWeight *= lNearWeight;
+							}
+							else
+							if	(
+									(lSrcBits [lSrcNdx+3])
+								&&	(!lSrcBits [lDstNdx+3])
+								)
+							{
+								lWeight *= lEdgeWeight;
+							}
+
+							if	(lSrcPixel.y == lDstPixel.y)
+							{
+								lWeight *= lNearWeight;
+							}
+							else
+							if	(
+									(lSrcBits [lSrcNdx+3])
+								&&	(!lSrcBits [lDstNdx+3])
+								)
+							{
+								lWeight *= lEdgeWeight;
+							}
+
+							if	(lSrcBits [lSrcNdx+3])
+							{
+								lBlue += (ULONG)lSrcBits [lSrcNdx] * lWeight;
+								lGreen += (ULONG)lSrcBits [lSrcNdx+1] * lWeight;
+								lRed += (ULONG)lSrcBits [lSrcNdx+2] * lWeight;
+								lAlpha += (ULONG)lSrcBits [lSrcNdx+3] * lWeight;
+							}
+
+							if	(
+									(lSrcBits [lDstNdx+3])
+								?	(lSrcBits [lSrcNdx+3])
+								:	(true)
+								)
+							{
+								lCount += lWeight;
+							}
+						}
+					}
+
+					if	(lCount > 0)
+					{
+						lDstBits [lDstNdx] = (BYTE)(lBlue/lCount);
+						lDstBits [lDstNdx+1] = (BYTE)(lGreen/lCount);
+						lDstBits [lDstNdx+2] = (BYTE)(lRed/lCount);
+						lDstBits [lDstNdx+3] = (BYTE)(lAlpha/lCount);
+					}
+				}
+			}
+		}
+
+		lTargetBuffer->StartBuffer ();
 		return lTargetBuffer.Detach ();
-#endif
 	}
 	return NULL;
 }
@@ -895,10 +969,184 @@ CBitmapBuffer * CDirectShowRender::SmoothImage (const CSize & pImageSize, const 
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_AvgTimePerFrame (REFTIME *pAvgTimePerFrame)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::GetRenderWnd (HWND *pRenderWnd)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
+	HRESULT		lResult = S_FALSE;
+	CLockMutex	lLock (mStateLock);
 
+	try
+	{
+		if	(pRenderWnd)
+		{
+			(*pRenderWnd) = mRenderWnd;
+		}
+		if	(mRenderWnd)
+		{
+			lResult = S_OK;
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDirectShowRender::SetRenderWnd (HWND pRenderWnd)
+{
+	HRESULT		lResult = S_OK;
+	CLockMutex	lLock (mStateLock);
+
+	try
+	{
+		if	(mRenderWnd)
+		{
+			lResult = E_UNEXPECTED;
+		}
+		else
+		if	(!IsWindow (pRenderWnd))
+		{
+			lResult = E_INVALIDARG;
+		}
+		else
+		{
+			mRenderWnd = pRenderWnd;
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDirectShowRender::GetBkColor (COLORREF *pBkColor)
+{
+	HRESULT		lResult = S_FALSE;
+	CLockMutex	lLock (mStateLock);
+
+	try
+	{
+		if	(pBkColor)
+		{
+			if	(mBkColor)
+			{
+				(*pBkColor) = (*mBkColor);
+			}
+			else
+			{
+				(*pBkColor) = 0;
+			}
+		}
+		if	(mBkColor)
+		{
+			lResult = S_OK;
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDirectShowRender::SetBkColor (const COLORREF *pBkColor)
+{
+	HRESULT		lResult = S_OK;
+	CLockMutex	lLock (mStateLock);
+
+	try
+	{
+		if	(pBkColor)
+		{
+			mBkColor = new COLORREF;
+			*mBkColor = *pBkColor;
+		}
+		else
+		{
+			mBkColor = NULL;
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDirectShowRender::GetSmoothing (DWORD *pSmoothing)
+{
+	HRESULT		lResult = S_FALSE;
+	CLockMutex	lLock (mStateLock);
+
+	try
+	{
+		if	(!pSmoothing)
+		{
+			lResult = E_POINTER;
+		}
+		else
+		{
+			(*pSmoothing) = mSmoothing;
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDirectShowRender::SetSmoothing (DWORD pSmoothing)
+{
+	HRESULT		lResult = S_FALSE;
+	CLockMutex	lLock (mStateLock);
+
+	try
+	{
+		if	(mSmoothing != pSmoothing)
+		{
+			lResult = S_OK;
+		}
+		mSmoothing = pSmoothing;
+	}
+	catch AnyExceptionDebug
+
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDirectShowRender::GetImageSize (long *pImageWidth, long *pImageHeight)
+{
+	HRESULT		lResult = S_FALSE;
+	CLockMutex	lLock (mStateLock);
+
+	try
+	{
+		CSize	lImageSize (0,0);
+
+		if	(mImageBuffer.mImage)
+		{
+			lImageSize = mImageBuffer.GetImageSize ();
+			lResult = S_OK;
+		}
+		if	(pImageWidth)
+		{
+			(*pImageWidth) = lImageSize.cx;
+		}
+		if	(pImageHeight)
+		{
+			(*pImageHeight) = lImageSize.cy;
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDirectShowRender::get_AvgTimePerFrame (REFTIME *pAvgTimePerFrame)
+{
 	HRESULT				lResult = S_OK;
 	VIDEOINFOHEADER *	lVideoInfo;
 
@@ -908,9 +1156,9 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_AvgTimePerFrame (R
 	}
 	else
 	if	(
-			(pThis->mInputPin)
-		&&	(pThis->mInputPin->mMediaType)
-		&&	(lVideoInfo = (VIDEOINFOHEADER *)pThis->mInputPin->mMediaType->pbFormat)
+			(mInputPin)
+		&&	(mInputPin->mMediaType)
+		&&	(lVideoInfo = (VIDEOINFOHEADER *)mInputPin->mMediaType->pbFormat)
 		)
 	{
 		*pAvgTimePerFrame = RefTimeSec (lVideoInfo->AvgTimePerFrame);
@@ -922,10 +1170,8 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_AvgTimePerFrame (R
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_BitRate (long *pBitRate)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::get_BitRate (long *pBitRate)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT				lResult = S_OK;
 	VIDEOINFOHEADER *	lVideoInfo;
 
@@ -935,9 +1181,9 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_BitRate (long *pBi
 	}
 	else
 	if	(
-			(pThis->mInputPin)
-		&&	(pThis->mInputPin->mMediaType)
-		&&	(lVideoInfo = (VIDEOINFOHEADER *)pThis->mInputPin->mMediaType->pbFormat)
+			(mInputPin)
+		&&	(mInputPin->mMediaType)
+		&&	(lVideoInfo = (VIDEOINFOHEADER *)mInputPin->mMediaType->pbFormat)
 		)
 	{
 		*pBitRate = lVideoInfo->dwBitRate;
@@ -949,10 +1195,8 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_BitRate (long *pBi
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_BitErrorRate (long *pBitErrorRate)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::get_BitErrorRate (long *pBitErrorRate)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT				lResult = S_OK;
 	VIDEOINFOHEADER *	lVideoInfo;
 
@@ -962,9 +1206,9 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_BitErrorRate (long
 	}
 	else
 	if	(
-			(pThis->mInputPin)
-		&&	(pThis->mInputPin->mMediaType)
-		&&	(lVideoInfo = (VIDEOINFOHEADER *)pThis->mInputPin->mMediaType->pbFormat)
+			(mInputPin)
+		&&	(mInputPin->mMediaType)
+		&&	(lVideoInfo = (VIDEOINFOHEADER *)mInputPin->mMediaType->pbFormat)
 		)
 	{
 		*pBitErrorRate = lVideoInfo->dwBitErrorRate;
@@ -978,10 +1222,8 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_BitErrorRate (long
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_VideoWidth (long *pVideoWidth)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::get_VideoWidth (long *pVideoWidth)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT				lResult = S_OK;
 	VIDEOINFOHEADER *	lVideoInfo;
 
@@ -991,9 +1233,9 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_VideoWidth (long *
 	}
 	else
 	if	(
-			(pThis->mInputPin)
-		&&	(pThis->mInputPin->mMediaType)
-		&&	(lVideoInfo = (VIDEOINFOHEADER *)pThis->mInputPin->mMediaType->pbFormat)
+			(mInputPin)
+		&&	(mInputPin->mMediaType)
+		&&	(lVideoInfo = (VIDEOINFOHEADER *)mInputPin->mMediaType->pbFormat)
 		)
 	{
 		*pVideoWidth = lVideoInfo->bmiHeader.biWidth;
@@ -1005,10 +1247,8 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_VideoWidth (long *
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_VideoHeight (long *pVideoHeight)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::get_VideoHeight (long *pVideoHeight)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT				lResult = S_OK;
 	VIDEOINFOHEADER *	lVideoInfo;
 
@@ -1018,9 +1258,9 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_VideoHeight (long 
 	}
 	else
 	if	(
-			(pThis->mInputPin)
-		&&	(pThis->mInputPin->mMediaType)
-		&&	(lVideoInfo = (VIDEOINFOHEADER *)pThis->mInputPin->mMediaType->pbFormat)
+			(mInputPin)
+		&&	(mInputPin->mMediaType)
+		&&	(lVideoInfo = (VIDEOINFOHEADER *)mInputPin->mMediaType->pbFormat)
 		)
 	{
 		*pVideoHeight = lVideoInfo->bmiHeader.biHeight;
@@ -1034,20 +1274,16 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_VideoHeight (long 
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::put_SourceLeft (long SourceLeft)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::put_SourceLeft (long SourceLeft)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 
-	pThis->mSourceRect.OffsetRect (SourceLeft - pThis->mSourceRect.left, 0);
+	mSourceRect.OffsetRect (SourceLeft - mSourceRect.left, 0);
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_SourceLeft (long *pSourceLeft)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::get_SourceLeft (long *pSourceLeft)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 
 	if	(!pSourceLeft)
@@ -1056,15 +1292,13 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_SourceLeft (long *
 	}
 	else
 	{
-		*pSourceLeft = pThis->mSourceRect.left;
+		*pSourceLeft = mSourceRect.left;
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::put_SourceWidth (long SourceWidth)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::put_SourceWidth (long SourceWidth)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 
 	if	(SourceWidth < 0)
@@ -1073,15 +1307,13 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::put_SourceWidth (long 
 	}
 	else
 	{
-		pThis->mSourceRect.right = pThis->mSourceRect.left + SourceWidth;
+		mSourceRect.right = mSourceRect.left + SourceWidth;
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_SourceWidth (long *pSourceWidth)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::get_SourceWidth (long *pSourceWidth)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 
 	if	(!pSourceWidth)
@@ -1090,25 +1322,21 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_SourceWidth (long 
 	}
 	else
 	{
-		*pSourceWidth = pThis->mSourceRect.Width();
+		*pSourceWidth = mSourceRect.Width();
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::put_SourceTop (long SourceTop)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::put_SourceTop (long SourceTop)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 
-	pThis->mSourceRect.OffsetRect (0, SourceTop - pThis->mSourceRect.top);
+	mSourceRect.OffsetRect (0, SourceTop - mSourceRect.top);
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_SourceTop (long *pSourceTop)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::get_SourceTop (long *pSourceTop)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 
 	if	(!pSourceTop)
@@ -1117,15 +1345,13 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_SourceTop (long *p
 	}
 	else
 	{
-		*pSourceTop = pThis->mSourceRect.top;
+		*pSourceTop = mSourceRect.top;
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::put_SourceHeight (long SourceHeight)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::put_SourceHeight (long SourceHeight)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 
 	if	(SourceHeight < 0)
@@ -1134,15 +1360,13 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::put_SourceHeight (long
 	}
 	else
 	{
-		pThis->mSourceRect.bottom = pThis->mSourceRect.top + SourceHeight;
+		mSourceRect.bottom = mSourceRect.top + SourceHeight;
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_SourceHeight (long *pSourceHeight)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::get_SourceHeight (long *pSourceHeight)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 
 	if	(!pSourceHeight)
@@ -1151,33 +1375,29 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_SourceHeight (long
 	}
 	else
 	{
-		*pSourceHeight = pThis->mSourceRect.Height ();
+		*pSourceHeight = mSourceRect.Height ();
 	}
 	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::put_DestinationLeft (long DestinationLeft)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::put_DestinationLeft (long DestinationLeft)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 	CRect	lClientRect;
 
-	pThis->mSourceRect.OffsetRect (DestinationLeft - pThis->mSourceRect.left, 0);
-	if	(IsWindow (pThis->mRenderWnd))
+	mSourceRect.OffsetRect (DestinationLeft - mSourceRect.left, 0);
+	if	(IsWindow (mRenderWnd))
 	{
-		::GetClientRect (pThis->mRenderWnd, &lClientRect);
-		::IntersectRect (&pThis->mRenderRect, &pThis->mRenderRect, &lClientRect);
+		::GetClientRect (mRenderWnd, &lClientRect);
+		::IntersectRect (&mRenderRect, &mRenderRect, &lClientRect);
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_DestinationLeft (long *pDestinationLeft)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::get_DestinationLeft (long *pDestinationLeft)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 
 	if	(!pDestinationLeft)
@@ -1186,15 +1406,13 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_DestinationLeft (l
 	}
 	else
 	{
-		*pDestinationLeft = pThis->mRenderRect.left;
+		*pDestinationLeft = mRenderRect.left;
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::put_DestinationWidth (long DestinationWidth)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::put_DestinationWidth (long DestinationWidth)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 	CRect	lClientRect;
 
@@ -1204,20 +1422,18 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::put_DestinationWidth (
 	}
 	else
 	{
-		pThis->mRenderRect.right = pThis->mRenderRect.left + DestinationWidth;
-		if	(IsWindow (pThis->mRenderWnd))
+		mRenderRect.right = mRenderRect.left + DestinationWidth;
+		if	(IsWindow (mRenderWnd))
 		{
-			::GetClientRect (pThis->mRenderWnd, &lClientRect);
-			::IntersectRect (&pThis->mRenderRect, &pThis->mRenderRect, &lClientRect);
+			::GetClientRect (mRenderWnd, &lClientRect);
+			::IntersectRect (&mRenderRect, &mRenderRect, &lClientRect);
 		}
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_DestinationWidth (long *pDestinationWidth)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::get_DestinationWidth (long *pDestinationWidth)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 
 	if	(!pDestinationWidth)
@@ -1226,31 +1442,27 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_DestinationWidth (
 	}
 	else
 	{
-		*pDestinationWidth = pThis->mRenderRect.Width();
+		*pDestinationWidth = mRenderRect.Width();
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::put_DestinationTop (long DestinationTop)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::put_DestinationTop (long DestinationTop)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 	CRect	lClientRect;
 
-	pThis->mRenderRect.OffsetRect (0, DestinationTop - pThis->mRenderRect.top);
-	if	(IsWindow (pThis->mRenderWnd))
+	mRenderRect.OffsetRect (0, DestinationTop - mRenderRect.top);
+	if	(IsWindow (mRenderWnd))
 	{
-		::GetClientRect (pThis->mRenderWnd, &lClientRect);
-		::IntersectRect (&pThis->mRenderRect, &pThis->mRenderRect, &lClientRect);
+		::GetClientRect (mRenderWnd, &lClientRect);
+		::IntersectRect (&mRenderRect, &mRenderRect, &lClientRect);
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_DestinationTop (long *pDestinationTop)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::get_DestinationTop (long *pDestinationTop)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 
 	if	(!pDestinationTop)
@@ -1259,15 +1471,13 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_DestinationTop (lo
 	}
 	else
 	{
-		*pDestinationTop = pThis->mRenderRect.top;
+		*pDestinationTop = mRenderRect.top;
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::put_DestinationHeight (long DestinationHeight)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::put_DestinationHeight (long DestinationHeight)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 	CRect	lClientRect;
 
@@ -1277,20 +1487,18 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::put_DestinationHeight 
 	}
 	else
 	{
-		pThis->mRenderRect.bottom = pThis->mRenderRect.top + DestinationHeight;
-		if	(IsWindow (pThis->mRenderWnd))
+		mRenderRect.bottom = mRenderRect.top + DestinationHeight;
+		if	(IsWindow (mRenderWnd))
 		{
-			::GetClientRect (pThis->mRenderWnd, &lClientRect);
-			::IntersectRect (&pThis->mRenderRect, &pThis->mRenderRect, &lClientRect);
+			::GetClientRect (mRenderWnd, &lClientRect);
+			::IntersectRect (&mRenderRect, &mRenderRect, &lClientRect);
 		}
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_DestinationHeight (long *pDestinationHeight)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::get_DestinationHeight (long *pDestinationHeight)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 
 	if	(!pDestinationHeight)
@@ -1299,17 +1507,15 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::get_DestinationHeight 
 	}
 	else
 	{
-		*pDestinationHeight = pThis->mRenderRect.Height();
+		*pDestinationHeight = mRenderRect.Height();
 	}
 	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::SetSourcePosition (long Left, long Top, long Width, long Height)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::SetSourcePosition (long Left, long Top, long Width, long Height)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 
 	if	(
@@ -1321,50 +1527,46 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::SetSourcePosition (lon
 	}
 	else
 	{
-		pThis->mSourceRect.SetRect (Left, Top, Left+Width, Top+Height);
+		mSourceRect.SetRect (Left, Top, Left+Width, Top+Height);
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::GetSourcePosition (long *pLeft, long *pTop, long *pWidth, long *pHeight)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::GetSourcePosition (long *pLeft, long *pTop, long *pWidth, long *pHeight)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 
 	if	(pLeft)
 	{
-		*pLeft = pThis->mSourceRect.left;
+		*pLeft = mSourceRect.left;
 	}
 	if	(pTop)
 	{
-		*pTop = pThis->mSourceRect.top;
+		*pTop = mSourceRect.top;
 	}
 	if	(pWidth)
 	{
-		*pWidth = pThis->mSourceRect.Width();
+		*pWidth = mSourceRect.Width();
 	}
 	if	(pHeight)
 	{
-		*pHeight = pThis->mSourceRect.Height();
+		*pHeight = mSourceRect.Height();
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::SetDefaultSourcePosition (void)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::SetDefaultSourcePosition (void)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT				lResult = S_OK;
 	VIDEOINFOHEADER *	lVideoInfo;
 
 	if	(
-			(pThis->mInputPin)
-		&&	(pThis->mInputPin->mMediaType)
-		&&	(lVideoInfo = (VIDEOINFOHEADER *)pThis->mInputPin->mMediaType->pbFormat)
+			(mInputPin)
+		&&	(mInputPin->mMediaType)
+		&&	(lVideoInfo = (VIDEOINFOHEADER *)mInputPin->mMediaType->pbFormat)
 		)
 	{
-		pThis->mSourceRect.SetRect (0, 0, lVideoInfo->bmiHeader.biWidth, lVideoInfo->bmiHeader.biHeight);
+		mSourceRect.SetRect (0, 0, lVideoInfo->bmiHeader.biWidth, lVideoInfo->bmiHeader.biHeight);
 	}
 	else
 	{
@@ -1373,10 +1575,8 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::SetDefaultSourcePositi
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::SetDestinationPosition (long Left, long Top, long Width, long Height)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::SetDestinationPosition (long Left, long Top, long Width, long Height)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 	CRect	lClientRect;
 
@@ -1389,50 +1589,46 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::SetDestinationPosition
 	}
 	else
 	{
-		pThis->mRenderRect.SetRect (Left, Top, Left+Width, Top+Height);
-		if	(IsWindow (pThis->mRenderWnd))
+		mRenderRect.SetRect (Left, Top, Left+Width, Top+Height);
+		if	(IsWindow (mRenderWnd))
 		{
-			::GetClientRect (pThis->mRenderWnd, &lClientRect);
-			::IntersectRect (&pThis->mRenderRect, &pThis->mRenderRect, &lClientRect);
+			::GetClientRect (mRenderWnd, &lClientRect);
+			::IntersectRect (&mRenderRect, &mRenderRect, &lClientRect);
 		}
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::GetDestinationPosition (long *pLeft, long *pTop, long *pWidth, long *pHeight)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::GetDestinationPosition (long *pLeft, long *pTop, long *pWidth, long *pHeight)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 
 	if	(pLeft)
 	{
-		*pLeft = pThis->mRenderRect.left;
+		*pLeft = mRenderRect.left;
 	}
 	if	(pTop)
 	{
-		*pTop = pThis->mRenderRect.top;
+		*pTop = mRenderRect.top;
 	}
 	if	(pWidth)
 	{
-		*pWidth = pThis->mRenderRect.Width();
+		*pWidth = mRenderRect.Width();
 	}
 	if	(pHeight)
 	{
-		*pHeight = pThis->mRenderRect.Height();
+		*pHeight = mRenderRect.Height();
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::SetDefaultDestinationPosition (void)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::SetDefaultDestinationPosition (void)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_OK;
 
-	if	(IsWindow (pThis->mRenderWnd))
+	if	(IsWindow (mRenderWnd))
 	{
-		::GetClientRect (pThis->mRenderWnd, &pThis->mRenderRect);
+		::GetClientRect (mRenderWnd, &mRenderRect);
 	}
 	else
 	{
@@ -1443,17 +1639,15 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::SetDefaultDestinationP
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::GetVideoSize (long *pWidth, long *pHeight)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::GetVideoSize (long *pWidth, long *pHeight)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT				lResult = S_OK;
 	VIDEOINFOHEADER *	lVideoInfo;
 
 	if	(
-			(pThis->mInputPin)
-		&&	(pThis->mInputPin->mMediaType)
-		&&	(lVideoInfo = (VIDEOINFOHEADER *)pThis->mInputPin->mMediaType->pbFormat)
+			(mInputPin)
+		&&	(mInputPin->mMediaType)
+		&&	(lVideoInfo = (VIDEOINFOHEADER *)mInputPin->mMediaType->pbFormat)
 		)
 	{
 		if	(pWidth)
@@ -1472,17 +1666,15 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::GetVideoSize (long *pW
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::GetVideoPaletteEntries (long StartIndex, long Entries, long *pRetrieved, long *pPalette)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::GetVideoPaletteEntries (long StartIndex, long Entries, long *pRetrieved, long *pPalette)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT				lResult = S_OK;
 	VIDEOINFOHEADER *	lVideoInfo;
 
 	if	(
-			(pThis->mInputPin)
-		&&	(pThis->mInputPin->mMediaType)
-		&&	(lVideoInfo = (VIDEOINFOHEADER *)pThis->mInputPin->mMediaType->pbFormat)
+			(mInputPin)
+		&&	(mInputPin->mMediaType)
+		&&	(lVideoInfo = (VIDEOINFOHEADER *)mInputPin->mMediaType->pbFormat)
 		)
 	{
 		lResult = E_NOTIMPL;
@@ -1494,10 +1686,8 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::GetVideoPaletteEntries
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::GetCurrentImage (long *pBufferSize,long *pDIBImage)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::GetCurrentImage (long *pBufferSize,long *pDIBImage)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = E_NOTIMPL;
 
 	return lResult;
@@ -1505,24 +1695,22 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::GetCurrentImage (long 
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::IsUsingDefaultSource (void)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::IsUsingDefaultSource (void)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT				lResult = S_FALSE;
 	VIDEOINFOHEADER *	lVideoInfo;
 
 	if	(
-			(pThis->mInputPin)
-		&&	(pThis->mInputPin->mMediaType)
-		&&	(lVideoInfo = (VIDEOINFOHEADER *)pThis->mInputPin->mMediaType->pbFormat)
+			(mInputPin)
+		&&	(mInputPin->mMediaType)
+		&&	(lVideoInfo = (VIDEOINFOHEADER *)mInputPin->mMediaType->pbFormat)
 		)
 	{
 		if	(
-				(pThis->mSourceRect.left == 0)
-			&&	(pThis->mSourceRect.top == 0)
-			&&	(pThis->mSourceRect.Width() == lVideoInfo->bmiHeader.biWidth)
-			&&	(pThis->mSourceRect.Height() == lVideoInfo->bmiHeader.biHeight)
+				(mSourceRect.left == 0)
+			&&	(mSourceRect.top == 0)
+			&&	(mSourceRect.Width() == lVideoInfo->bmiHeader.biWidth)
+			&&	(mSourceRect.Height() == lVideoInfo->bmiHeader.biHeight)
 			)
 		{
 			lResult = S_OK;
@@ -1531,17 +1719,15 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::IsUsingDefaultSource (
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::XBasicVideo::IsUsingDefaultDestination (void)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::IsUsingDefaultDestination (void)
 {
-	METHOD_PROLOGUE(CDirectShowRender, BasicVideo)
-
 	HRESULT	lResult = S_FALSE;
 	CRect	lClientRect;
 
-	if	(IsWindow (pThis->mRenderWnd))
+	if	(IsWindow (mRenderWnd))
 	{
-		::GetClientRect (pThis->mRenderWnd, &lClientRect);
-		if	(::EqualRect (&pThis->mRenderRect, &lClientRect))
+		::GetClientRect (mRenderWnd, &lClientRect);
+		if	(::EqualRect (&mRenderRect, &lClientRect))
 		{
 			lResult = S_OK;
 		}

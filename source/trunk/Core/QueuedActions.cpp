@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -22,15 +22,14 @@
 #include "DaCore.h"
 #include "QueuedActions.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 //////////////////////////////////////////////////////////////////////
 
 CQueuedActions::CQueuedActions ()
+:	mTimer (0),
+	mTime (0),
+	mTimeMin (10),
+	mTimeMax (200),
+	mTimeDefault (100)
 {
 }
 
@@ -68,7 +67,7 @@ UINT CQueuedActions::HasActions (long pCharID) const
 	}
 	else
 	{
-		return (UINT)GetCount ();
+		return (UINT)GetCount();
 	}
 }
 
@@ -180,7 +179,7 @@ CQueuedAction * CQueuedActions::FindNextAction (long pCharID) const
 
 //////////////////////////////////////////////////////////////////////
 
-void CQueuedActions::PushQueue (COwnPtrList <CQueuedAction> & pQueue)
+void CQueuedActions::PushQueue (CAtlOwnPtrList <CQueuedAction> & pQueue)
 {
 	CQueuedAction *	lAction;
 
@@ -193,7 +192,7 @@ void CQueuedActions::PushQueue (COwnPtrList <CQueuedAction> & pQueue)
 	}
 }
 
-void CQueuedActions::PopQueue (COwnPtrList <CQueuedAction> & pQueue)
+void CQueuedActions::PopQueue (CAtlOwnPtrList <CQueuedAction> & pQueue)
 {
 	CQueuedAction *	lAction;
 
@@ -204,4 +203,58 @@ void CQueuedActions::PopQueue (COwnPtrList <CQueuedAction> & pQueue)
 	{
 		AddTail (lAction);
 	}
+}
+
+//////////////////////////////////////////////////////////////////////
+#pragma page()
+//////////////////////////////////////////////////////////////////////
+
+void CQueuedActions::LogActions (UINT pLogLevel, LPCTSTR pFormat, ...) const
+{
+#if defined(_DEBUG) || defined (_TRACE_ACTION_INSTANCE)
+	if	(LogIsActive (pLogLevel))
+	{
+		try
+		{
+			CAtlString				lTitle;
+			CAtlString				lIndent;
+			POSITION				lPosition;
+			const CQueuedAction *	lAction;
+
+			if	(pFormat)
+			{
+				va_list lArgPtr;
+				va_start (lArgPtr, pFormat);
+				_vsntprintf (lTitle.GetBuffer(2048), 2048, pFormat, lArgPtr);
+				lTitle.ReleaseBuffer ();
+
+				lIndent = lTitle;
+				lTitle.TrimLeft ();
+				if	(lIndent.GetLength() > lTitle.GetLength())
+				{
+					lIndent = CAtlString (_T(' '), lIndent.GetLength() - lTitle.GetLength ());
+				}
+				else
+				{
+					lIndent.Empty ();
+				}
+			}
+			if	(lTitle.IsEmpty())
+			{
+				lTitle = _T("Actions");
+			}
+
+			LogMessage (pLogLevel, _T("%s%s [%d]"), lIndent, lTitle, GetCount());
+			lIndent += _T("  ");
+			for	(lPosition = GetHeadPosition(); lPosition;)
+			{
+				if	(lAction = GetNext (lPosition))
+				{
+					lAction->LogAction (pLogLevel, lIndent);
+				}
+			}
+		}
+		catch AnyExceptionSilent
+	}
+#endif
 }

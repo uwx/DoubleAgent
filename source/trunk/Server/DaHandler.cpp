@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -24,16 +24,10 @@
 #include "GuidStr.h"
 #include "ThreadSecurity.h"
 #include "UserSecurity.h"
-#include "SecurityDescriptor.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
+#include "SecurityDesc.h"
 
 #ifdef	_DEBUG
-#define	_LOG_INSTANCE	(GetProfileDebugInt(_T("LogInstance_Handler"),LogVerbose,true)&0xFFFF)
+#define	_LOG_INSTANCE	(GetProfileDebugInt(_T("LogInstance_Handler"),LogVerbose,true)&0xFFFF|LogTime)
 #endif
 
 #ifndef	_LOG_INSTANCE
@@ -42,42 +36,25 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	_DEBUG
-#define _LOG_LEVEL_DEBUG		LogNormal
+#define _LOG_LEVEL_DEBUG				LogNormal
 #endif
-#define	_LOG_ROOT_PATH			_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
-#define	_LOG_SECTION_NAME		_T(_SERVER_REGNAME)
-#define _LOG_DEF_LOGNAME		_T(_DOUBLEAGENT_NAME) _T(".log")
-#define	_LOG_PREFIX				_T("Hnd  ")
-static tPtr <CCriticalSection>	sLogCriticalSection = new CCriticalSection;
-#define	_LOG_CRITICAL_SECTION	(!sLogCriticalSection?NULL:(CRITICAL_SECTION*)(*sLogCriticalSection))
+#define	_LOG_ROOT_PATH					_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
+#define	_LOG_SECTION_NAME				_T(_SERVER_REGNAME)
+#define _LOG_DEF_LOGNAME				_T(_DOUBLEAGENT_NAME) _T(".log")
+#define	_LOG_PREFIX						_T("Handler ")
+static tPtr <CComAutoCriticalSection>	sLogCriticalSection = new CComAutoCriticalSection;
+#define	_LOG_CRITICAL_SECTION			(!sLogCriticalSection?NULL:&sLogCriticalSection->m_sec)
 #include "LogAccess.inl"
 #include "Log.inl"
 /////////////////////////////////////////////////////////////////////////////
 
-BEGIN_MESSAGE_MAP(CDaHandlerApp, CWinApp)
-	//{{AFX_MSG_MAP(CDaHandlerApp)
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-IMPLEMENT_DYNAMIC (CDaHandlerApp, CWinApp)
-
-CDaHandlerApp gApp;
+CDaHandlerModule				_AtlModule;
+LPCTSTR __declspec(selectany)	_AtlProfileName = _LOG_SECTION_NAME;
+LPCTSTR __declspec(selectany)	_AtlProfilePath = _LOG_ROOT_PATH;
 
 /////////////////////////////////////////////////////////////////////////////
 
-CDaHandlerApp::CDaHandlerApp()
-:	CWinApp (_T(_DOUBLEAGENT_NAME))
-{
-	SetRegistryKeyEx (_T(_DOUBLEAGENT_NAME), _T(_SERVER_REGNAME));
-}
-
-CDaHandlerApp::~CDaHandlerApp()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-BOOL CDaHandlerApp::InitInstance()
+CDaHandlerModule::CDaHandlerModule()
 {
 #if	ISOLATION_AWARE_ENABLED
 	IsolationAwareInit ();
@@ -86,16 +63,15 @@ BOOL CDaHandlerApp::InitInstance()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
+		LogMessage (_LOG_INSTANCE, _T("CDaHandlerModule::CDaHandlerModule"));
 		LogProcessUser (GetCurrentProcess(), _LOG_INSTANCE);
 		LogProcessOwner (GetCurrentProcess(), _LOG_INSTANCE);
 		LogProcessIntegrity (GetCurrentProcess(), _LOG_INSTANCE);
 	}
 #endif
-	COleObjectFactory::RegisterAll();
-	return TRUE;
 }
 
-int CDaHandlerApp::ExitInstance()
+CDaHandlerModule::~CDaHandlerModule()
 {
 #if	ISOLATION_AWARE_ENABLED
 	IsolationAwareCleanup ();
@@ -104,16 +80,15 @@ int CDaHandlerApp::ExitInstance()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("CDaHandlerApp::ExitInstance [%d]"), AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("CDaHandlerModule::~CDaHandlerModule [%d]"), GetLockCount());
 	}
 #endif
 	LogStop (LogIfActive);
-	return CWinApp::ExitInstance();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaHandlerApp::StartThreadLifetime ()
+void CDaHandlerModule::StartThreadLifetime ()
 {
 	GUID	lThreadId = GUID_NULL;
 	CString	lMutexName;
@@ -122,13 +97,13 @@ void CDaHandlerApp::StartThreadLifetime ()
 	{
 		lMutexName.Format (_T("Local\\%s"), (CString)CGuidStr (lThreadId));
 
-		if	(mLifetimeMutex [lMutexName] == NULL)
+		if	(!mLifetimeMutex [lMutexName])
 		{
 			try
 			{
-				tPtr <CMutex>						lLifetimeMutex;
+				tPtr <CAutoMutex>					lLifetimeMutex;
 				tSS <SECURITY_ATTRIBUTES, DWORD>	lMutexSecurity;
-				CSecurityDescriptor					lAccessDescriptor (_T("O:BAG:BAD:(A;;0x0001f0001;;;WD)"));
+				CSecurityDesc						lAccessDescriptor (_T("O:BAG:BAD:(A;;0x0001f0001;;;WD)"));
 
 				lMutexSecurity.bInheritHandle = FALSE;
 				lMutexSecurity.lpSecurityDescriptor = lAccessDescriptor.mDescriptor;
@@ -137,18 +112,18 @@ void CDaHandlerApp::StartThreadLifetime ()
 				{
 					if	(CUserSecurity::IsUserAdministrator())
 					{
-						lLifetimeMutex = new CMutex (TRUE, lMutexName, &lMutexSecurity);
+						lLifetimeMutex = new CAutoMutex (&lMutexSecurity, TRUE, lMutexName);
 					}
 					else
 					{
-						lLifetimeMutex = new CMutex (TRUE, lMutexName);
+						lLifetimeMutex = new CAutoMutex (NULL, TRUE, lMutexName);
 					}
 				}
 				catch AnyExceptionDebug
 
 				if	(
 						(!lLifetimeMutex)
-					||	(!lLifetimeMutex->m_hObject)
+					||	(!lLifetimeMutex->m_h)
 					)
 				{
 					LogWinErr (LogAlways, GetLastError());
@@ -157,7 +132,7 @@ void CDaHandlerApp::StartThreadLifetime ()
 #ifdef	_LOG_INSTANCE
 				if	(LogIsActive())
 				{
-					LogMessage (_LOG_INSTANCE, _T("CDaHandlerApp::StartThreadLifetime Thread [%s] Mutex [%p] [%s]"), (CString)CGuidStr(lThreadId), (lLifetimeMutex.Ptr() ? lLifetimeMutex->m_hObject : NULL), lMutexName);
+					LogMessage (_LOG_INSTANCE, _T("CDaHandlerModule::StartThreadLifetime Thread [%s] Mutex [%p] [%s]"), (CString)CGuidStr(lThreadId), (lLifetimeMutex.Ptr() ? lLifetimeMutex->m_h : NULL), lMutexName);
 				}
 #endif
 				mLifetimeMutex.SetAt (lMutexName, lLifetimeMutex.Detach());
@@ -167,7 +142,7 @@ void CDaHandlerApp::StartThreadLifetime ()
 	}
 }
 
-void CDaHandlerApp::EndAllLifetimes ()
+void CDaHandlerModule::EndAllLifetimes ()
 {
 	mLifetimeMutex.RemoveAll ();
 }
@@ -178,20 +153,19 @@ void CDaHandlerApp::EndAllLifetimes ()
 
 STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-	((CDaHandlerApp*) AfxGetApp())->StartThreadLifetime ();
-	return AfxDllGetClassObject(rclsid, riid, ppv);
+	_AtlModule.StartThreadLifetime ();
+    return _AtlModule.DllGetClassObject(rclsid, riid, ppv);
 }
 
 STDAPI DllCanUnloadNow(void)
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-	return AfxDllCanUnloadNow();
+	return (_AtlModule.GetLockCount()==0) ? S_OK : S_FALSE;
 }
 
 STDAPI DllRegisterServer(void)
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+	HRESULT	lResult = S_FALSE;
+
 	LogStart (false);
 	if	(
 			(IsWindowsXp_AtMost ())
@@ -199,36 +173,32 @@ STDAPI DllRegisterServer(void)
 		)
 	{
 		DllUnregisterServer ();
-
-		if	(!COleObjectFactory::UpdateRegistryAll(TRUE))
-		{
-			return SELFREG_E_CLASS;
-		}
+		lResult = _AtlModule.DllRegisterServer (FALSE);
 	}
 	else
 	{
-		return HRESULT_FROM_WIN32 (ERROR_ELEVATION_REQUIRED);
+		lResult = HRESULT_FROM_WIN32 (ERROR_ELEVATION_REQUIRED);
 	}
-	return S_OK;
+	LogComErrAnon (LogNormal|LogTime, lResult, _T("DllRegisterServer"));
+	return lResult;
 }
 
 STDAPI DllUnregisterServer(void)
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+	HRESULT	lResult = S_FALSE;
+
 	LogStart (false);
 	if	(
 			(IsWindowsXp_AtMost ())
 		||	(CUserSecurity::IsUserAdministrator ())
 		)
 	{
-		if	(!COleObjectFactory::UpdateRegistryAll(FALSE))
-		{
-			return SELFREG_E_CLASS;
-		}
+		lResult = _AtlModule.DllUnregisterServer (FALSE);
 	}
 	else
 	{
-		return HRESULT_FROM_WIN32 (ERROR_ELEVATION_REQUIRED);
+		lResult = HRESULT_FROM_WIN32 (ERROR_ELEVATION_REQUIRED);
 	}
-	return S_OK;
+	LogComErrAnon (LogNormal|LogTime, lResult, _T("DllUnregisterServer"));
+	return lResult;
 }

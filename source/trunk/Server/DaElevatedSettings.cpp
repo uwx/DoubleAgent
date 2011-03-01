@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -19,24 +19,16 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include "DaServer.h"
 #include "DaServerRes.h"
 #include "DaElevatedSettings.h"
 #include "ThreadSecurity.h"
-#include "SecurityDescriptor.h"
+#include "SecurityDesc.h"
 #include "GuidStr.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #ifdef	_DEBUG
-//#define	_DEBUG_COM		LogNormal
-#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Settings"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Settings"),LogDetails,true)&0xFFFF)
-#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogDetails,true)&0xFFFF)
+#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Settings"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Settings"),LogDetails,true)&0xFFFF|LogTime)
+#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogDetails,true)&0xFFFF|LogTime)
 #endif
 
 #ifndef	_LOG_CHANGES
@@ -51,162 +43,15 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-// {1147E566-A208-11DE-ABF2-002421116FB2}
-IMPLEMENT_DYNCREATE(CDaElevatedSettings, CCmdTarget)
-IMPLEMENT_OLECREATE_EX(CDaElevatedSettings, _ELEVATED_SETTINGS_PROGID_VER, 0x1147E566, 0xA208, 0x11DE, 0xAB, 0xF2, 0x00, 0x24, 0x21, 0x11, 0x6F, 0xB2)
-
-BOOL CDaElevatedSettings::CDaElevatedSettingsFactory::UpdateRegistry (BOOL bRegister)
-{
-	CString	lClassName;
-
-	::LoadString (AfxGetInstanceHandle(), IDS_CPL_ELEVATED_DESC, lClassName.GetBuffer(MAX_PATH), MAX_PATH);
-	lClassName.ReleaseBuffer ();
-
-	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, lClassName))
-	{
-		if	(bRegister)
-		{
-			RegisterProgIdVer (_T(_ELEVATED_SETTINGS_PROGID), _T(_ELEVATED_SETTINGS_PROGID_VER), lClassName);
-			RegisterServer (false);
-			RegisterAppIdSelf (lClassName);
-			RegisterApartmentThreaded (false);
-			RegisterDefCategory ();
-			if	(IsWindowsVista_AtLeast ())
-			{
-				RegisterElevated (IDS_CPL_ELEVATED_DESC);
-			}
-		}
-		else
-		{
-			UnregisterProgIdVer (_T(_ELEVATED_SETTINGS_PROGID), _T(_ELEVATED_SETTINGS_PROGID_VER));
-			UnregisterAppIdSelf ();
-		}
-//
-//	Set the launch and access permissions to allow OTS activation as per the Elevation Moniker documentation in the SDK.
-//
-		if	(
-				(bRegister)
-			&&	(IsWindowsVista_AtLeast ())
-			)
-		{
-			CRegKey				lAppIdKey (CRegKey (HKEY_CLASSES_ROOT, _T("AppID"), true), CGuidStr(m_clsid), false);
-			CRegBinary			lLaunchPermission (lAppIdKey, _T("LaunchPermission"), true);
-			CRegBinary			lAccessPermission (lAppIdKey, _T("AccessPermission"), true);
-			CSecurityDescriptor	lLaunchDescriptor (_T("O:BAG:BAD:(A;;CCDCSW;;;BA)(A;;CCDCSW;;;IU)(A;;CCDCSW;;;SY)"));
-			CSecurityDescriptor	lAccessDescriptor (_T("O:BAG:BAD:(A;;CCDC;;;IU)(A;;CCDC;;;PS)(A;;CCDC;;;SY)"));
-			DWORD				lDescriptorSize;
-
-			lLaunchDescriptor.MakeAbsolute ();
-			lDescriptorSize = lLaunchDescriptor.MakeSelfRelative ();
-			if	(lDescriptorSize > 0)
-			{
-				lLaunchPermission.Value().SetSize (lDescriptorSize);
-				memcpy (lLaunchPermission.Value().GetData(), (PSECURITY_DESCRIPTOR)lLaunchDescriptor.mDescriptor, lDescriptorSize);
-				lLaunchPermission.Update ();
-
-				if	(LogIsActive (LogDetails))
-				{
-					lLaunchDescriptor.DumpAccess (LogDetails, true, _T("  Set LaunchPermission [%s]"), (CString)lLaunchDescriptor);
-				}
-				else
-				if	(LogIsActive ())
-				{
-					LogMessage (LogIfActive, _T("  Set LaunchPermission [%s]"), (CString)lLaunchDescriptor);
-				}
-#ifdef	_DEBUG
-				if	(LogIsActive (LogNormal))
-				{
-					CString	lAccessStr;
-					CString	lByteStr;
-					INT_PTR	lNdx;
-
-					for	(lNdx = 0; lNdx <= lLaunchPermission.Value().GetUpperBound(); lNdx++)
-					{
-						lByteStr.Format (_T("%2.2X"), lLaunchPermission.Value().GetAt(lNdx));
-						lAccessStr += lByteStr;
-					}
-					LogMessage (LogNormal, _T("  LaunchPermission [%s]"), lAccessStr);
-				}
-#endif
-			}
-			else
-			{
-				lLaunchPermission.Delete ();
-			}
-
-			lAccessDescriptor.MakeAbsolute ();
-			lDescriptorSize = lAccessDescriptor.MakeSelfRelative ();
-			if	(lDescriptorSize > 0)
-			{
-				lAccessPermission.Value().SetSize (lDescriptorSize);
-				memcpy (lAccessPermission.Value().GetData(), (PSECURITY_DESCRIPTOR)lAccessDescriptor.mDescriptor, lDescriptorSize);
-				lAccessPermission.Update ();
-
-				if	(LogIsActive (LogDetails))
-				{
-					lAccessDescriptor.DumpAccess (LogDetails, true, _T("  Set AccessPermission [%s]"), (CString)lAccessDescriptor);
-				}
-				else
-				if	(LogIsActive ())
-				{
-					LogMessage (LogIfActive, _T("  Set AccessPermission [%s]"), (CString)lAccessDescriptor);
-				}
-#ifdef	_DEBUG
-				if	(LogIsActive (LogNormal))
-				{
-					CString	lAccessStr;
-					CString	lByteStr;
-					INT_PTR	lNdx;
-
-					for	(lNdx = 0; lNdx <= lAccessPermission.Value().GetUpperBound(); lNdx++)
-					{
-						lByteStr.Format (_T("%2.2X"), lAccessPermission.Value().GetAt(lNdx));
-						lAccessStr += lByteStr;
-					}
-					LogMessage (LogNormal, _T("  AccessPermission [%s]"), lAccessStr);
-				}
-#endif
-			}
-			else
-			{
-				lAccessPermission.Delete ();
-			}
-		}
-		return TRUE;
-	}
-	return FALSE;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-#include "InterfaceMap.inl"
-
-BEGIN_INTERFACE_MAP(CDaElevatedSettings, CCmdTarget)
-	INTERFACE_PART(CDaElevatedSettings, __uuidof(IUnknown), InnerUnknown)
-	INTERFACE_PART(CDaElevatedSettings, __uuidof(IOleCommandTarget), OleCommandTarget)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IUNKNOWN(CDaElevatedSettings, OleCommandTarget)
-
-BEGIN_MESSAGE_MAP(CDaElevatedSettings, CCmdTarget)
-	//{{AFX_MSG_MAP(CDaElevatedSettings)
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
-
 CDaElevatedSettings::CDaElevatedSettings ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaElevatedSettings::CDaElevatedSettings (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaElevatedSettings::CDaElevatedSettings (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 		LogProcessIntegrity (GetCurrentProcess(), _LOG_INSTANCE);
 	}
 #endif
-	AfxOleLockApp();
-
-	EnableAggregation ();
 }
 
 CDaElevatedSettings::~CDaElevatedSettings ()
@@ -214,31 +59,131 @@ CDaElevatedSettings::~CDaElevatedSettings ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaElevatedSettings::~CDaElevatedSettings (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaElevatedSettings::~CDaElevatedSettings (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
-	AfxOleUnlockApp();
 }
 
-void CDaElevatedSettings::OnFinalRelease()
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT WINAPI CDaElevatedSettings::UpdateRegistryOverride (BOOL bRegister)
 {
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	HRESULT		lResult = S_OK;
+
+	if	(
+			(!bRegister)
+		||	(IsWindowsVista_AtLeast ())
+		)
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaElevatedSettings::OnFinalRelease"), this, m_dwRef);
+		lResult = UpdateRegistry (bRegister);
 	}
+
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(bRegister)
+		&&	(IsWindowsVista_AtLeast ())
+		)
+	{
+//
+//	Set the launch and access permissions to allow OTS activation as per the Elevation Moniker documentation in the SDK.
+//
+		CRegKeyEx		lAppIdKey (CRegKeyEx (HKEY_CLASSES_ROOT, _T("AppID"), true), CGuidStr(__uuidof(CDaElevatedSettings)), false);
+		CRegBinary		lLaunchPermission (lAppIdKey, _T("LaunchPermission"), true);
+		CRegBinary		lAccessPermission (lAppIdKey, _T("AccessPermission"), true);
+		CSecurityDesc	lLaunchDescriptor (_T("O:BAG:BAD:(A;;CCDCSW;;;BA)(A;;CCDCSW;;;IU)(A;;CCDCSW;;;SY)"));
+		CSecurityDesc	lAccessDescriptor (_T("O:BAG:BAD:(A;;CCDC;;;IU)(A;;CCDC;;;PS)(A;;CCDC;;;SY)"));
+		DWORD			lDescriptorSize;
+
+		lLaunchDescriptor.MakeAbsolute ();
+		lDescriptorSize = lLaunchDescriptor.MakeSelfRelative ();
+		if	(lDescriptorSize > 0)
+		{
+			lLaunchPermission.Value().SetCount (lDescriptorSize);
+			memcpy (lLaunchPermission.Value().GetData(), (PSECURITY_DESCRIPTOR)lLaunchDescriptor.mDescriptor, lDescriptorSize);
+			lLaunchPermission.Update ();
+
+			if	(LogIsActive (LogDetails))
+			{
+				lLaunchDescriptor.DumpAccess (LogDetails|LogTime, true, _T("  Set LaunchPermission [%s]"), (CString)lLaunchDescriptor);
+			}
+			else
+			if	(LogIsActive ())
+			{
+				LogMessage (LogIfActive|LogTime, _T("  Set LaunchPermission [%s]"), (CString)lLaunchDescriptor);
+			}
+#ifdef	_DEBUG
+			if	(LogIsActive (LogNormal))
+			{
+				CAtlString	lAccessStr;
+				CAtlString	lByteStr;
+				INT_PTR		lNdx;
+
+				for	(lNdx = 0; lNdx < (INT_PTR)lLaunchPermission.Value().GetCount(); lNdx++)
+				{
+					lByteStr.Format (_T("%2.2X"), lLaunchPermission.Value().GetAt(lNdx));
+					lAccessStr += lByteStr;
+				}
+				LogMessage (LogNormal|LogTime, _T("  LaunchPermission [%s]"), lAccessStr);
+			}
 #endif
-	CCmdTarget::OnFinalRelease();
+		}
+		else
+		{
+			lLaunchPermission.Delete ();
+		}
+
+		lAccessDescriptor.MakeAbsolute ();
+		lDescriptorSize = lAccessDescriptor.MakeSelfRelative ();
+		if	(lDescriptorSize > 0)
+		{
+			lAccessPermission.Value().SetCount (lDescriptorSize);
+			memcpy (lAccessPermission.Value().GetData(), (PSECURITY_DESCRIPTOR)lAccessDescriptor.mDescriptor, lDescriptorSize);
+			lAccessPermission.Update ();
+
+			if	(LogIsActive (LogDetails))
+			{
+				lAccessDescriptor.DumpAccess (LogDetails|LogTime, true, _T("  Set AccessPermission [%s]"), (CString)lAccessDescriptor);
+			}
+			else
+			if	(LogIsActive ())
+			{
+				LogMessage (LogIfActive|LogTime, _T("  Set AccessPermission [%s]"), (CString)lAccessDescriptor);
+			}
+#ifdef	_DEBUG
+			if	(LogIsActive (LogNormal))
+			{
+				CAtlString	lAccessStr;
+				CAtlString	lByteStr;
+				INT_PTR		lNdx;
+
+				for	(lNdx = 0; lNdx < (INT_PTR)lAccessPermission.Value().GetCount(); lNdx++)
+				{
+					lByteStr.Format (_T("%2.2X"), lAccessPermission.Value().GetAt(lNdx));
+					lAccessStr += lByteStr;
+				}
+				LogMessage (LogNormal|LogTime, _T("  AccessPermission [%s]"), lAccessStr);
+			}
+#endif
+		}
+		else
+		{
+			lAccessPermission.Delete ();
+		}
+	}
+	return lResult;
 }
+
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
 HRESULT CDaElevatedSettings::SetTreatAs (REFGUID pClassId, REFGUID pTreatAs)
 {
-	HRESULT	lResult;
-	HRESULT	lSubResult;
-	CRegKey	lUserClasses;
+	HRESULT		lResult;
+	HRESULT		lSubResult;
+	CRegKeyEx	lUserClasses;
 
 	lResult = CoTreatAsClass (pClassId, pTreatAs);
 #ifdef	_LOG_CHANGES
@@ -305,7 +250,7 @@ HRESULT CDaElevatedSettings::SetTreatAs (REFGUID pClassId, REFGUID pTreatAs)
 			)
 		)
 	{
-		CRegKey	lClassesRoot;
+		CRegKeyEx	lClassesRoot;
 
 		if	(GetClassesRootKey (lClassesRoot, true))
 		{
@@ -373,22 +318,22 @@ HRESULT CDaElevatedSettings::SetTreatAs (REFGUID pClassId, REFGUID pTreatAs)
 
 HRESULT CDaElevatedSettings::SetTreatAs (HKEY pClassesRoot, REFGUID pClassId, REFGUID pTreatAs)
 {
-	HRESULT	lResult = REGDB_E_KEYMISSING;
-	CRegKey	lClassIds (pClassesRoot, _T("CLSID"), true);
+	HRESULT		lResult = REGDB_E_KEYMISSING;
+	CRegKeyEx	lClassIds (pClassesRoot, _T("CLSID"), true);
 
 	if	(
 			(pClassesRoot)
 		&&	(lClassIds.IsValid ())
 		)
 	{
-		long	lError;
-		CString	lClassIdStr = (CString)CGuidStr (pClassId);
-		CString	lTreatAsStr = (CString)CGuidStr (pTreatAs);
+		long		lError;
+		CAtlString	lClassIdStr = (CString)CGuidStr (pClassId);
+		CAtlString	lTreatAsStr = (CString)CGuidStr (pTreatAs);
 
 		if	(IsEqualGUID (pTreatAs, GUID_NULL))
 		{
-			CRegKey	lClassId (lClassIds, lClassIdStr, false);
-			CRegKey	lTreatAs (lClassId, _T("TreatAs"), false);
+			CRegKeyEx	lClassId (lClassIds, lClassIdStr, false);
+			CRegKeyEx	lTreatAs (lClassId, _T("TreatAs"), false);
 
 			if	(lTreatAs.IsValid ())
 			{
@@ -426,8 +371,8 @@ HRESULT CDaElevatedSettings::SetTreatAs (HKEY pClassesRoot, REFGUID pClassId, RE
 		}
 		else
 		{
-			CRegKey	lClassId;
-			CRegKey	lTreatAs;
+			CRegKeyEx	lClassId;
+			CRegKeyEx	lTreatAs;
 
 			lError = lClassId.Open (lClassIds, lClassIdStr, false, true);
 			if	(lClassId.IsValid ())
@@ -490,27 +435,25 @@ HRESULT CDaElevatedSettings::SetTreatAs (HKEY pClassesRoot, REFGUID pClassId, RE
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaElevatedSettings::XOleCommandTarget::QueryStatus (const GUID *pguidCmdGroup, ULONG cCmds, OLECMD prgCmds[], OLECMDTEXT *pCmdText)
+HRESULT STDMETHODCALLTYPE CDaElevatedSettings::QueryStatus (const GUID *pguidCmdGroup, ULONG cCmds, OLECMD prgCmds[], OLECMDTEXT *pCmdText)
 {
-	METHOD_PROLOGUE(CDaElevatedSettings, OleCommandTarget)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaElevatedSettings::XOleCommandTarget::QueryStatus"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaElevatedSettings::QueryStatus"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = E_NOTIMPL;
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaElevatedSettings::XOleCommandTarget::QueryStatus"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaElevatedSettings::QueryStatus"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaElevatedSettings::XOleCommandTarget::Exec (const GUID *pguidCmdGroup, DWORD nCmdID, DWORD nCmdexecopt, VARIANT *pvaIn, VARIANT *pvaOut)
+HRESULT STDMETHODCALLTYPE CDaElevatedSettings::Exec (const GUID *pguidCmdGroup, DWORD nCmdID, DWORD nCmdexecopt, VARIANT *pvaIn, VARIANT *pvaOut)
 {
-	METHOD_PROLOGUE(CDaElevatedSettings, OleCommandTarget)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaElevatedSettings::XOleCommandTarget::Exec [%u] [%u]"), pThis, pThis->m_dwRef, nCmdID, nCmdexecopt);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaElevatedSettings::Exec [%u] [%u]"), this, max(m_dwRef,-1), nCmdID, nCmdexecopt);
 #endif
 	HRESULT	lResult = S_OK;
 	VARTYPE	lParmType;
@@ -540,7 +483,7 @@ HRESULT STDMETHODCALLTYPE CDaElevatedSettings::XOleCommandTarget::Exec (const GU
 			LogMessage (_DEBUG_INTERFACE, _T("  Treat [%ls] as [%ls]"), (BSTR)lParm0, (BSTR)lParm1);
 			LogMessage (_DEBUG_INTERFACE, _T("  Treat [%s] as [%s]"), (CString)CGuidStr(lClsId), (CString)CGuidStr(lTreatAsClsId));
 #endif
-			lResult = pThis->SetTreatAs (lClsId, lTreatAsClsId);
+			lResult = SetTreatAs (lClsId, lTreatAsClsId);
 		}
 	}
 	else
@@ -551,7 +494,7 @@ HRESULT STDMETHODCALLTYPE CDaElevatedSettings::XOleCommandTarget::Exec (const GU
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaElevatedSettings::XOleCommandTarget::Exec [%u] [%u]"), pThis, pThis->m_dwRef, nCmdID, nCmdexecopt);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaElevatedSettings::Exec [%u] [%u]"), this, max(m_dwRef,-1), nCmdID, nCmdexecopt);
 	}
 #endif
 	return lResult;

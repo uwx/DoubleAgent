@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include <shlwapi.h>
+#include "DaActionTrace.h"
 #include "ReplayActions.h"
 #include "ReplayActionsDlg.h"
-#include "DaCore.h"
 #include "LocalizeEx.h"
 #include "StringArrayEx.h"
 
@@ -45,7 +45,7 @@ BOOL CReplayActionsDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	LogComErr (LogNormal, CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_SERVER, __uuidof(IDaServer), (void**)&mServer), _T("CoCreateInstance"));
+	LogComErr (LogNormal, CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("CoCreateInstance"));
 
 	LoadConfig ();
 	RecalcLayout ();
@@ -191,7 +191,7 @@ HRESULT CReplayActionsDlg::LoadCharacter (LPCTSTR pCharacterName)
 	if	(
 			(mServer != NULL)
 		&&	(SUCCEEDED (lResult = LogComErr (LogNormal, mServer->Load (_variant_t(lCharacterName), &mCharacterId, &lReqID), _T("Load [%s]"), lCharacterName)))
-		&&	(SUCCEEDED (lResult = LogComErr (LogNormal, mServer->GetCharacterEx (mCharacterId, &mCharacter), _T("GetCharacterEx"))))
+		&&	(SUCCEEDED (lResult = LogComErr (LogNormal, mServer->get_Character (mCharacterId, &mCharacter), _T("get_Character"))))
 		)
 	{
 		LogComErr (LogNormal, mCharacter->SetIdleOn (FALSE));
@@ -323,19 +323,19 @@ HRESULT CReplayActionsDlg::RunAction (CActionLine * pAction)
 			lResult = LogComErr (LogNormal, mCharacter->SetSize (_ttol(pAction->mValues[0]), _ttol(pAction->mValues[1])));
 		}
 		else
-		if	(pAction->mAction.CompareNoCase (_T("SetName")) == 0)
+		if	(pAction->mAction.CompareNoCase (_T("put_Name")) == 0)
 		{
-			lResult = LogComErr (LogNormal, mCharacter->SetName (_bstr_t(pAction->mValues[0])));
+			lResult = LogComErr (LogNormal, mCharacter->put_Name (_bstr_t(pAction->mValues[0])));
 		}
 		else
-		if	(pAction->mAction.CompareNoCase (_T("SetDescription")) == 0)
+		if	(pAction->mAction.CompareNoCase (_T("put_Description")) == 0)
 		{
-			lResult = LogComErr (LogNormal, mCharacter->SetDescription (_bstr_t(pAction->mValues[0])));
+			lResult = LogComErr (LogNormal, mCharacter->put_Description (_bstr_t(pAction->mValues[0])));
 		}
 		else
-		if	(pAction->mAction.CompareNoCase (_T("SetLanguageID")) == 0)
+		if	(pAction->mAction.CompareNoCase (_T("put_LanguageID")) == 0)
 		{
-			lResult = LogComErr (LogNormal, mCharacter->SetLanguageID (_ttol(pAction->mValues[0])));
+			lResult = LogComErr (LogNormal, mCharacter->put_LanguageID (_ttol(pAction->mValues[0])));
 		}
 		else
 		if	(pAction->mAction.CompareNoCase (_T("SetIdleOn")) == 0)
@@ -439,10 +439,10 @@ HRESULT CReplayActionsDlg::RunAction (CActionLine * pAction)
 			lResult = LogComErr (LogNormal, mCharacter->SetAutoPopupMenu (_ttol(pAction->mValues[0])));
 		}
 		else
-		if	(pAction->mAction.CompareNoCase (_T("SetTTSModeID")) == 0)
+		if	(pAction->mAction.CompareNoCase (_T("put_TTSModeID")) == 0)
 		{
 			pAction->mValues.SetSize (max (pAction->mValues.GetSize(), 1));
-			lResult = LogComErr (LogNormal, mCharacter->SetTTSModeID (_bstr_t(pAction->mValues[0])));
+			lResult = LogComErr (LogNormal, mCharacter->put_TTSModeID (_bstr_t(pAction->mValues[0])));
 		}
 		else
 		if	(pAction->mAction.CompareNoCase (_T("Speak")) == 0)
@@ -453,10 +453,10 @@ HRESULT CReplayActionsDlg::RunAction (CActionLine * pAction)
 			mReqIdMap.SetAt (_ttol(pAction->mValues[2]), lReqID);
 		}
 		else
-		if	(pAction->mAction.CompareNoCase (_T("SetSRModeID")) == 0)
+		if	(pAction->mAction.CompareNoCase (_T("put_SRModeID")) == 0)
 		{
 			pAction->mValues.SetSize (max (pAction->mValues.GetSize(), 1));
-			lResult = LogComErr (LogNormal, mCharacter->SetSRModeID (_bstr_t(pAction->mValues[0])));
+			lResult = LogComErr (LogNormal, mCharacter->put_SRModeID (_bstr_t(pAction->mValues[0])));
 		}
 		else
 		if	(pAction->mAction.CompareNoCase (_T("Listen")) == 0)
@@ -465,80 +465,80 @@ HRESULT CReplayActionsDlg::RunAction (CActionLine * pAction)
 			lResult = LogComErr (LogNormal, mCharacter->Listen (_ttol(pAction->mValues[0])));
 		}
 		else
-		if	(pAction->mAction.CompareNoCase (_T("Balloon:SetStyle")) == 0)
+		if	(pAction->mAction.CompareNoCase (_T("Balloon:put_Style")) == 0)
 		{
-			IDaSvrBalloonPtr	lBalloon (mCharacter);
+			IDaSvrBalloon2Ptr	lBalloon (mCharacter);
 
 			if	(lBalloon != NULL)
 			{
 				pAction->mValues.SetSize (max (pAction->mValues.GetSize(), 1));
-				lResult = LogComErr (LogDetails, lBalloon->SetStyle (_tcstoul(pAction->mValues[0], NULL, 16)));
+				lResult = LogComErr (LogDetails, lBalloon->put_Style (_tcstoul(pAction->mValues[0], NULL, 16)));
 			}
 		}
 		else
-		if	(pAction->mAction.CompareNoCase (_T("Balloon:SetNumLines")) == 0)
+		if	(pAction->mAction.CompareNoCase (_T("Balloon:put_NumberOfLines")) == 0)
 		{
-			IDaSvrBalloonPtr	lBalloon (mCharacter);
+			IDaSvrBalloon2Ptr	lBalloon (mCharacter);
 
 			if	(lBalloon != NULL)
 			{
 				pAction->mValues.SetSize (max (pAction->mValues.GetSize(), 1));
-				lResult = LogComErr (LogDetails, lBalloon->SetNumLines (_ttol(pAction->mValues[0])));
+				lResult = LogComErr (LogDetails, lBalloon->put_NumberOfLines (_ttol(pAction->mValues[0])));
 			}
 		}
 		else
-		if	(pAction->mAction.CompareNoCase (_T("Balloon:SetNumCharsPerLine")) == 0)
+		if	(pAction->mAction.CompareNoCase (_T("Balloon:put_CharsPerLine")) == 0)
 		{
-			IDaSvrBalloonPtr	lBalloon (mCharacter);
+			IDaSvrBalloon2Ptr	lBalloon (mCharacter);
 
 			if	(lBalloon != NULL)
 			{
 				pAction->mValues.SetSize (max (pAction->mValues.GetSize(), 1));
-				lResult = LogComErr (LogDetails, lBalloon->SetNumCharsPerLine (_ttol(pAction->mValues[0])));
+				lResult = LogComErr (LogDetails, lBalloon->put_CharsPerLine (_ttol(pAction->mValues[0])));
 			}
 		}
 		else
-		if	(pAction->mAction.CompareNoCase (_T("Balloon:SetFontName")) == 0)
+		if	(pAction->mAction.CompareNoCase (_T("Balloon:put_FontName")) == 0)
 		{
-			IDaSvrBalloonPtr	lBalloon (mCharacter);
+			IDaSvrBalloon2Ptr	lBalloon (mCharacter);
 
 			if	(lBalloon != NULL)
 			{
 				pAction->mValues.SetSize (max (pAction->mValues.GetSize(), 1));
-				lResult = LogComErr (LogDetails, lBalloon->SetFontName (_bstr_t(pAction->mValues[0])));
+				lResult = LogComErr (LogDetails, lBalloon->put_FontName (_bstr_t(pAction->mValues[0])));
 			}
 		}
 		else
-		if	(pAction->mAction.CompareNoCase (_T("Balloon:SetFontSize")) == 0)
+		if	(pAction->mAction.CompareNoCase (_T("Balloon:put_FontSize")) == 0)
 		{
-			IDaSvrBalloonPtr	lBalloon (mCharacter);
+			IDaSvrBalloon2Ptr	lBalloon (mCharacter);
 
 			if	(lBalloon != NULL)
 			{
 				pAction->mValues.SetSize (max (pAction->mValues.GetSize(), 1));
-				lResult = LogComErr (LogDetails, lBalloon->SetFontSize (_ttol(pAction->mValues[0])));
+				lResult = LogComErr (LogDetails, lBalloon->put_FontSize (_ttol(pAction->mValues[0])));
 			}
 		}
 		else
-		if	(pAction->mAction.CompareNoCase (_T("Balloon:SetFontCharSet")) == 0)
+		if	(pAction->mAction.CompareNoCase (_T("Balloon:put_FontCharSet")) == 0)
 		{
-			IDaSvrBalloonPtr	lBalloon (mCharacter);
+			IDaSvrBalloon2Ptr	lBalloon (mCharacter);
 
 			if	(lBalloon != NULL)
 			{
 				pAction->mValues.SetSize (max (pAction->mValues.GetSize(), 1));
-				lResult = LogComErr (LogDetails, lBalloon->SetFontCharSet ((short)_ttol(pAction->mValues[0])));
+				lResult = LogComErr (LogDetails, lBalloon->put_FontCharSet ((short)_ttol(pAction->mValues[0])));
 			}
 		}
 		else
 		if	(pAction->mAction.CompareNoCase (_T("Balloon:SetVisible")) == 0)
 		{
-			IDaSvrBalloonPtr	lBalloon (mCharacter);
+			IDaSvrBalloon2Ptr	lBalloon (mCharacter);
 
 			if	(lBalloon != NULL)
 			{
 				pAction->mValues.SetSize (max (pAction->mValues.GetSize(), 1));
-				lResult = LogComErr (LogDetails, lBalloon->SetVisible (_ttol(pAction->mValues[0])));
+				lResult = LogComErr (LogDetails, lBalloon->put_Visible ((VARIANT_BOOL)_ttol(pAction->mValues[0])));
 			}
 		}
 		else
@@ -636,7 +636,7 @@ void CReplayActionsDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwTh
 		&&	(mCharacter != NULL)
 		)
 	{
-		LogComErr (LogNormal, mCharacter->Activate (ACTIVATE_INPUTACTIVE), _T("[%d] Activate ACTIVATE_ACTIVE"), mCharacterId);
+		LogComErr (LogNormal, mCharacter->Activate (ActiveState_InputActive), _T("[%d] Activate ActiveState_Active"), mCharacterId);
 	}
 }
 

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2010 Cinnamon Software Inc.
+//	Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -22,7 +22,7 @@
 /////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 #ifndef	_LOG_DISABLED
-#ifndef	_VISTA
+#if	(WINVER < 0x0501)
 #ifndef	_LOG_CRASH_NOSTACK
 #define	_LOG_CRASH_NOSTACK
 #endif
@@ -51,6 +51,52 @@
 #ifndef	_IMAGEHLP64
 #define	_IMAGEHLP64
 #endif
+#endif
+////////////////////////////////////////////////////////////////////////
+#pragma page()
+////////////////////////////////////////////////////////////////////////
+#if	(WINVER < 0x0600) && !defined(_WIN64) && !defined(_LOG_CRASH_NOSTACK)
+typedef WORD (NTAPI * tRtlCaptureStackBackTrace) (DWORD, DWORD, PVOID *, PDWORD);
+static	HMODULE sKernelHandle = NULL;
+static	tRtlCaptureStackBackTrace sRtlCaptureStackBackTrace = NULL;
+////////////////////////////////////////////////////////////////////////
+static void LogCrash_Initialize ()
+{
+	UINT	lErrMode = SetErrorMode (SEM_NOOPENFILEERRORBOX|SEM_NOGPFAULTERRORBOX);
+
+	__try
+	{
+		sKernelHandle = ::LoadLibrary (_T("KERNEL32"));
+		if	(sKernelHandle)
+		{
+			sRtlCaptureStackBackTrace = (tRtlCaptureStackBackTrace) ::GetProcAddress (sKernelHandle, "RtlCaptureStackBackTrace");
+		}
+	}
+	__finally
+	{
+		SetErrorMode (lErrMode);
+	}
+}
+////////////////////////////////////////////////////////////////////////
+static void LogCrash_Terminate ()
+{
+	if	(sKernelHandle)
+	{
+		__try
+		{
+			::FreeLibrary (sKernelHandle);
+		}
+		__finally
+		{
+			sKernelHandle = NULL;
+		}
+	}
+	sRtlCaptureStackBackTrace = NULL;
+}
+#else
+static void LogCrash_Initialize () {}
+static void LogCrash_Terminate () {}
+EXTERN_C NTSYSAPI WORD NTAPI RtlCaptureStackBackTrace (DWORD FramesToSkip, DWORD FramesToCapture, PVOID *BackTrace, PDWORD BackTraceHash);
 #endif
 ////////////////////////////////////////////////////////////////////////
 #ifndef	_LOG_CRASH_NODESCRIPTION
@@ -84,13 +130,27 @@ static void _LogCrash_LogDescription (unsigned int pCode, LPCSTR pFile = NULL, U
 		case EXCEPTION_GUARD_PAGE:					lCodeName = _T("GUARD_PAGE"); break;
 		case EXCEPTION_INVALID_HANDLE:				lCodeName = _T("INVALID_HANDLE"); break;
 	}
-	if	(pFile)
+	if	(lCodeName)
 	{
-		LogMessage (LogAlways, _T("*** Exception [%8.8X] [%s] at [%u %hs] ***"), pCode, lCodeName, pLine, pFile);
+		if	(pFile)
+		{
+			LogMessage (LogAlways, _T("*** Exception [%8.8X] [%s] at [%u %hs] ***"), pCode, lCodeName, pLine, pFile);
+		}
+		else
+		{
+			LogMessage (LogAlways, _T("*** Exception [%8.8X] [%s] ***"), pCode, lCodeName);
+		}
 	}
 	else
 	{
-		LogMessage (LogAlways, _T("*** Exception [%8.8X] [%s] ***"), pCode, lCodeName);
+		if	(pFile)
+		{
+			LogMessage (LogAlways, _T("*** Exception [%8.8X] at [%u %hs] ***"), pCode, pLine, pFile);
+		}
+		else
+		{
+			LogMessage (LogAlways, _T("*** Exception [%8.8X] ***"), pCode);
+		}
 	}
 }
 ////////////////////////////////////////////////////////////////////////
@@ -341,7 +401,7 @@ static void _LogCrash_MiniDump (HMODULE pDbgHelp, struct _EXCEPTION_POINTERS * p
 ////////////////////////////////////////////////////////////////////////
 #pragma page()
 ////////////////////////////////////////////////////////////////////////
-static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException, LPCSTR pFile = NULL, UINT pLine = 0, int pAction = EXCEPTION_CONTINUE_SEARCH)
+int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException, LPCSTR pFile = NULL, UINT pLine = 0, int pAction = EXCEPTION_CONTINUE_SEARCH)
 {
 	__try
 	{
@@ -359,7 +419,14 @@ static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException
 #ifdef	_WIN64
 			lStack.mFrameCount = RtlCaptureStackBackTrace (_LOG_CRASH_STACK_SKIP_FRAMES, 64, lStack.mStackFrame, NULL);
 #else
+#if	(WINVER >= 0x0600)
 			lStack.mFrameCount = RtlCaptureStackBackTrace (0, 64, lStack.mStackFrame, NULL);
+#else
+			if	(sRtlCaptureStackBackTrace)
+			{
+				lStack.mFrameCount = (*sRtlCaptureStackBackTrace) (0, 64, lStack.mStackFrame, NULL);
+			}
+#endif
 #endif
 		}
 #endif
@@ -368,7 +435,14 @@ static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException
 		if	(lLogIsActive)
 		{
 #ifdef	_LOG_CRASH_NODESCRIPTION
-			LogMessage (LogAlways, _T("*** Exception [%8.8X] ***"), pCode);
+			if	(pFile)
+			{
+				LogMessage (LogAlways, _T("*** Exception [%8.8X] at [%u %hs] ***"), pCode, pLine, pFile);
+			}
+			else
+			{
+				LogMessage (LogAlways, _T("*** Exception [%8.8X] ***"), pCode);
+			}
 #else
 			_LogCrash_LogDescription (pCode, pFile, pLine);
 #endif
@@ -381,7 +455,9 @@ static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException
 			&&	(pCode != EXCEPTION_BREAKPOINT)
 			&&	(
 					(lLogIsActive)
+#ifndef	_LOG_CRASH_NOMINIDUMP
 				||	(_LogCrash_MiniDumpLevel () != _LOG_CRASH_DUMPNONE)
+#endif
 				)
 			)
 		{
@@ -434,9 +510,147 @@ static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException
 			LogWriteCache ();
 		}
 	}
-	__except (EXCEPTION_CONTINUE_EXECUTION)
+	__except (EXCEPTION_EXECUTE_HANDLER)
 	{;}
 
+	if	(
+			(pCode == EXCEPTION_NONCONTINUABLE_EXCEPTION)
+		&&	(pAction == EXCEPTION_CONTINUE_EXECUTION)
+		)
+	{
+		pAction = EXCEPTION_CONTINUE_SEARCH;
+	}
+	return pAction;
+}
+
+////////////////////////////////////////////////////////////////////////
+
+int LogCrashStack (unsigned int pCode, struct _EXCEPTION_POINTERS * pException, LPCSTR pFile = NULL, UINT pLine = 0, int pAction = EXCEPTION_EXECUTE_HANDLER)
+{
+	__try
+	{
+		bool	lLogIsActive = LogIsActive ();
+#ifndef	_LOG_CRASH_NOSTACK
+		_LogCrash_Stack	lStack;
+
+		if	(
+				(pCode != EXCEPTION_STACK_OVERFLOW)
+			&&	(pCode != EXCEPTION_BREAKPOINT)
+			&&	(lLogIsActive)
+			)
+		{
+			memset (&lStack, 0, sizeof(_LogCrash_Stack));
+#ifdef	_WIN64
+			lStack.mFrameCount = RtlCaptureStackBackTrace (_LOG_CRASH_STACK_SKIP_FRAMES, 64, lStack.mStackFrame, NULL);
+#else
+#if	(WINVER >= 0x0600)
+			lStack.mFrameCount = RtlCaptureStackBackTrace (0, 64, lStack.mStackFrame, NULL);
+#else
+			if	(sRtlCaptureStackBackTrace)
+			{
+				lStack.mFrameCount = (*sRtlCaptureStackBackTrace) (0, 64, lStack.mStackFrame, NULL);
+			}
+#endif
+#endif
+		}
+#endif
+		LogWriteCache ();
+
+		if	(lLogIsActive)
+		{
+#ifdef	_LOG_CRASH_NODESCRIPTION
+			if	(pFile)
+			{
+				LogMessage (LogAlways, _T("*** Exception [%8.8X] at [%u %hs] ***"), pCode, pLine, pFile);
+			}
+			else
+			{
+				LogMessage (LogAlways, _T("*** Exception [%8.8X] ***"), pCode);
+			}
+#else
+			_LogCrash_LogDescription (pCode, pFile, pLine);
+#endif
+#ifndef	_LOG_CRASH_NOEXCEPTION
+			_LogCrash_LogException (pException);
+#endif
+		}
+
+#ifndef	_LOG_CRASH_NOSTACK
+		if	(
+				(pCode != EXCEPTION_STACK_OVERFLOW)
+			&&	(pCode != EXCEPTION_BREAKPOINT)
+			&&	(lLogIsActive)
+			)
+		{
+#ifndef	_LOG_CRASH_NODBGHELP
+			HMODULE	lDbgHelp = _LogCrash_LoadDbgHelp ();
+			tEnumerateLoadedModules	lDbgEnumModules = NULL;
+			if	(lDbgHelp)
+			{
+				lDbgEnumModules = (tEnumerateLoadedModules) ::GetProcAddress (lDbgHelp, "EnumerateLoadedModules");
+			}
+			if	(lDbgEnumModules)
+			{
+				(*lDbgEnumModules) (GetCurrentProcess(), _LogCrash_GetStackModules, &lStack);
+			}
+#endif
+			_LogCrash_DumpStack (lStack);
+		}
+#endif
+
+		LogWriteCache ();
+	}
+	__except (EXCEPTION_EXECUTE_HANDLER)
+	{;}
+
+	if	(
+			(pCode == EXCEPTION_NONCONTINUABLE_EXCEPTION)
+		&&	(pAction == EXCEPTION_CONTINUE_EXECUTION)
+		)
+	{
+		pAction = EXCEPTION_EXECUTE_HANDLER;
+	}
+	return pAction;
+}
+
+////////////////////////////////////////////////////////////////////////
+
+int LogCrashCode (unsigned int pCode, LPCSTR pFile = NULL, UINT pLine = 0, int pAction = EXCEPTION_EXECUTE_HANDLER)
+{
+	__try
+	{
+		bool	lLogIsActive = LogIsActive ();
+
+		LogWriteCache ();
+
+		if	(lLogIsActive)
+		{
+#ifdef	_LOG_CRASH_NODESCRIPTION
+			if	(pFile)
+			{
+				LogMessage (LogAlways, _T("*** Exception [%8.8X] at [%u %hs] ***"), pCode, pLine, pFile);
+			}
+			else
+			{
+				LogMessage (LogAlways, _T("*** Exception [%8.8X] ***"), pCode);
+			}
+#else
+			_LogCrash_LogDescription (pCode, pFile, pLine);
+#endif
+		}
+
+		LogWriteCache ();
+	}
+	__except (EXCEPTION_EXECUTE_HANDLER)
+	{;}
+
+	if	(
+			(pCode == EXCEPTION_NONCONTINUABLE_EXCEPTION)
+		&&	(pAction == EXCEPTION_CONTINUE_EXECUTION)
+		)
+	{
+		pAction = EXCEPTION_EXECUTE_HANDLER;
+	}
 	return pAction;
 }
 ////////////////////////////////////////////////////////////////////////

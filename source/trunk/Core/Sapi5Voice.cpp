@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -29,14 +29,8 @@
 #include "Registry.h"
 #endif
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
 #ifdef	_DEBUG
-#define	_DEBUG_EVENTS	(GetProfileDebugInt(_T("DebugSapiEvents"),LogVerbose,true)&0xFFFF|LogHighVolume|LogTimeMs)
+#define	_TRACE_EVENTS	(GetProfileDebugInt(_T("TraceSapi5Events"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -48,14 +42,15 @@ _COM_SMARTPTR_TYPEDEF (ISpDataKey, __uuidof(ISpDataKey));
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNCREATE (CSapi5Voice, CSapiVoice)
+IMPLEMENT_DLL_OBJECT(CSapi5Voice)
 
 CSapi5Voice::CSapi5Voice ()
 :	mVoiceStreamNum (0),
 	mPrepared (false),
+	mPaused (false),
 	mLastVoiceEvent (SPEI_UNDEFINED)
 {
-	LogComErr (LogIfActive, CoCreateInstance (CLSID_SpVoice, NULL, CLSCTX_SERVER, __uuidof (ISpVoice), (void **) &mVoice));
+	LogComErr (LogIfActive|LogTime, CoCreateInstance (CLSID_SpVoice, NULL, CLSCTX_SERVER, __uuidof (ISpVoice), (void **) &mVoice));
 }
 
 CSapi5Voice::~CSapi5Voice ()
@@ -69,6 +64,11 @@ CSapi5Voice::~CSapi5Voice ()
 		catch AnyExceptionSilent
 	}
 	SafeFreeSafePtr (mVoice);
+}
+
+CSapi5Voice * CSapi5Voice::CreateInstance ()
+{
+	return new CSapi5Voice;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -87,17 +87,17 @@ bool CSapi5Voice::_IsPrepared () const
 
 bool CSapi5Voice::_IsSpeaking () const
 {
-	tS <SPVOICESTATUS>	lStatus;
+	tS <SPVOICESTATUS>	Status;
 
 	if	(
 			(_IsValid ())
 		&&	(
 				(mLastVoiceEvent == SPEI_START_INPUT_STREAM)
 			||	(
-					(SUCCEEDED (mVoice->GetStatus (&lStatus, NULL)))
+					(SUCCEEDED (mVoice->GetStatus (&Status, NULL)))
 				&&	(
-						(lStatus.dwRunningState == SPRS_IS_SPEAKING)
-					||	(lStatus.dwRunningState == 0)
+						(Status.dwRunningState == SPRS_IS_SPEAKING)
+					||	(Status.dwRunningState == 0)
 					)
 				)
 			)
@@ -106,6 +106,11 @@ bool CSapi5Voice::_IsSpeaking () const
 		return true;
 	}
 	return false;
+}
+
+bool CSapi5Voice::_IsPaused () const
+{
+	return ((mVoice != NULL) && mPaused);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -119,18 +124,18 @@ void __stdcall CSapi5Voice::VoiceNotifyCallback(WPARAM wParam, LPARAM lParam)
 		CSapi5Voice *	lThis = (CSapi5Voice *) lParam;
 		CSpEvent		lEvent;
 
-#ifdef	_DEBUG_EVENTS
+#ifdef	_TRACE_EVENTS
 		tS <SPEVENTSOURCEINFO>	lEventInfo;
 		lEventInfo.ullEventInterest = SPFEI_ALL_TTS_EVENTS;
 		lEventInfo.ullQueuedInterest = SPFEI_ALL_TTS_EVENTS;
 		LogSapi5Err (LogIfActive|LogHighVolume, lThis->mVoice->GetInfo (&lEventInfo));
-		LogMessage (_DEBUG_EVENTS, _T("[%p] EventCount [%u]"), lThis, lEventInfo.ulCount);
+		LogMessage (_TRACE_EVENTS, _T("[%p] EventCount [%u]"), lThis, lEventInfo.ulCount);
 #endif
 
 		while (lEvent.GetFrom (lThis->mVoice) == S_OK)
 		{
-#ifdef	_DEBUG_EVENTS
-			CString	lEventStr;
+#ifdef	_TRACE_EVENTS
+			CAtlString	lEventStr;
 
 			switch (lEvent.eEventId)
 			{
@@ -147,7 +152,7 @@ void __stdcall CSapi5Voice::VoiceNotifyCallback(WPARAM wParam, LPARAM lParam)
 				case SPEI_UNDEFINED:			lEventStr = _T("UNDEFINED"); break;
 				default:						lEventStr.Format (_T("%u"), lEvent.eEventId);
 			}
-			LogMessage (_DEBUG_EVENTS, _T("  Stream [%u] Event [%u] [%s]"), lEvent.ulStreamNum, lEvent.eEventId, lEventStr);
+			LogMessage (_TRACE_EVENTS, _T("  Stream [%u] Event [%u] [%s]"), lEvent.ulStreamNum, lEvent.eEventId, lEventStr);
 #endif
 			if	(
 					(lEvent.eEventId == SPEI_START_INPUT_STREAM)
@@ -165,15 +170,15 @@ void __stdcall CSapi5Voice::VoiceNotifyCallback(WPARAM wParam, LPARAM lParam)
 					||	(lEvent.eEventId == SPEI_WORD_BOUNDARY)
 					||	(lEvent.eEventId == SPEI_VISEME)
 					)
-				&&	(lThis->mEventSinks.GetSize() > 0)
+				&&	(lThis->GetNotifySinkCount() > 0)
 				)
 			{
-				int						lNdx;
-				ISapiVoiceEventSink *	lEventSink;
+				INT_PTR					lNdx;
+				_ISapiVoiceEventSink *	lEventSink;
 
-				for	(lNdx = 0; lNdx <= lThis->mEventSinks.GetUpperBound(); lNdx++)
+				for	(lNdx = 0; lNdx < lThis->GetNotifySinkCount(); lNdx++)
 				{
-					if	(lEventSink = lThis->mEventSinks [lNdx])
+					if	(lEventSink = lThis->GetNotifySink (lNdx))
 					{
 						try
 						{
@@ -225,11 +230,11 @@ HRESULT CSapi5Voice::PrepareToSpeak (bool pHighPriority)
 
 	if	(
 			(_IsValid ())
-		&&	(SUCCEEDED (LogSapi5Err (LogNormal, lResult = mVoice->SetPriority (pHighPriority?SPVPRI_ALERT:SPVPRI_NORMAL))))
+		&&	(SUCCEEDED (LogSapi5Err (LogNormal|LogTime, lResult = mVoice->SetPriority (pHighPriority?SPVPRI_ALERT:SPVPRI_NORMAL))))
 		)
 	{
-		LogSapi5Err (LogNormal, mVoice->SetInterest (SPFEI_ALL_TTS_EVENTS, SPFEI_ALL_TTS_EVENTS));
-		LogSapi5Err (LogNormal, mVoice->SetNotifyCallbackFunction (&VoiceNotifyCallback, 0, (LPARAM)this));
+		LogSapi5Err (LogNormal|LogTime, mVoice->SetInterest (SPFEI_ALL_TTS_EVENTS, SPFEI_ALL_TTS_EVENTS));
+		LogSapi5Err (LogNormal|LogTime, mVoice->SetNotifyCallbackFunction (&VoiceNotifyCallback, 0, (LPARAM)this));
 		mPrepared = true;
 	}
 	return lResult;
@@ -243,19 +248,26 @@ HRESULT CSapi5Voice::Speak (LPCTSTR pMessage, bool pAsync)
 
 	if	(_IsValid ())
 	{
-		DWORD				lFlags = SPF_PURGEBEFORESPEAK|SPF_IS_XML;
-		tMallocPtr <WCHAR>	lMessage = AfxAllocTaskWideString (pMessage);
-
-		if	(pAsync)
+		if	(_IsPaused ())
 		{
-			lFlags |= SPF_ASYNC;
+			lResult = SPERR_VOICE_PAUSED;
 		}
-		mLastVoiceEvent = SPEI_UNDEFINED;
-		lResult = mVoice->Speak (lMessage, lFlags, &mVoiceStreamNum);
+		else
+		{
+			DWORD				lFlags = SPF_PURGEBEFORESPEAK|SPF_IS_XML;
+			tMallocPtr <WCHAR>	lMessage = AtlAllocTaskWideString (pMessage);
+
+			if	(pAsync)
+			{
+				lFlags |= SPF_ASYNC;
+			}
+			mLastVoiceEvent = SPEI_UNDEFINED;
+			lResult = mVoice->Speak (lMessage, lFlags, &mVoiceStreamNum);
+		}
 	}
 	if	(LogIsActive ())
 	{
-		LogSapi5Err (LogNormal, lResult);
+		LogSapi5Err (LogNormal|LogTime, lResult);
 	}
 	return lResult;
 }
@@ -266,22 +278,45 @@ HRESULT CSapi5Voice::Stop ()
 
 	if	(_IsValid ())
 	{
-		LPWSTR	lSkipType = _T("SENTENCE");
-		ULONG	lSkipped = 0;
-		ULONG	lTotalSkipped = 0;
-
-		while	(
-					((lResult = mVoice->Skip (lSkipType, 1, &(lSkipped=0))) == S_OK)
-				&&	(lSkipped > 0)
-				)
-		{
-			lTotalSkipped += lSkipped;
-		}
-		lResult = MAKE_HRESULT (SEVERITY_SUCCESS, FACILITY_WIN32, lTotalSkipped);
+		mLastVoiceEvent = SPEI_UNDEFINED;
+		lResult = mVoice->Speak (NULL, SPF_PURGEBEFORESPEAK, &mVoiceStreamNum);
+		LogSapi5Err (LogNormal|LogTime, mVoice->Resume ());
 	}
 	if	(LogIsActive ())
 	{
-		LogSapi5Err (LogNormal, lResult);
+		LogSapi5Err (LogNormal|LogTime, lResult);
+	}
+	return lResult;
+}
+
+HRESULT CSapi5Voice::Pause ()
+{
+	HRESULT	lResult = E_UNEXPECTED;
+
+	if	(_IsValid ())
+	{
+		lResult = mVoice->Pause ();
+		mPaused = true;
+	}
+	if	(LogIsActive ())
+	{
+		LogSapi5Err (LogNormal|LogTime, lResult);
+	}
+	return lResult;
+}
+
+HRESULT CSapi5Voice::Resume ()
+{
+	HRESULT	lResult = E_UNEXPECTED;
+
+	if	(_IsValid ())
+	{
+		lResult = mVoice->Resume ();
+		mPaused = false;
+	}
+	if	(LogIsActive ())
+	{
+		LogSapi5Err (LogNormal|LogTime, lResult);
 	}
 	return lResult;
 }
@@ -313,7 +348,7 @@ HRESULT CSapi5Voice::GetVoiceId (tBstrPtr & pVoiceId)
 			&&	(SUCCEEDED (lResult = lToken->GetId (lTokenId.Free ())))
 			)
 		{
-			pVoiceId.Attach (CString (lTokenId).AllocSysString ());
+			pVoiceId.Attach (CAtlString (lTokenId).AllocSysString ());
 		}
 	}
 	return lResult;
@@ -325,7 +360,7 @@ HRESULT CSapi5Voice::SetVoiceId (LPCTSTR pVoiceId)
 
 	if	(SafeIsValid ())
 	{
-		CString				lNewVoiceId (pVoiceId);
+		CAtlString			lNewVoiceId (pVoiceId);
 		ISpObjectTokenPtr	lOldToken;
 		ISpObjectTokenPtr	lNewToken;
 		tMallocPtr <WCHAR>	lOldTokenId;
@@ -337,7 +372,7 @@ HRESULT CSapi5Voice::SetVoiceId (LPCTSTR pVoiceId)
 		}
 		else
 		{
-			lNewTokenId = AfxAllocTaskWideString (LongVoiceId (lNewVoiceId));
+			lNewTokenId = AtlAllocTaskWideString (LongVoiceId (lNewVoiceId));
 		}
 
 		if	(
@@ -388,7 +423,7 @@ HRESULT CSapi5Voice::GetOutputId (tBstrPtr & pOutputId)
 			&&	(SUCCEEDED (lResult = lToken->GetId (lTokenId.Free ())))
 			)
 		{
-			pOutputId.Attach (CString (lTokenId).AllocSysString ());
+			pOutputId.Attach (CAtlString (lTokenId).AllocSysString ());
 		}
 	}
 	return lResult;
@@ -400,7 +435,7 @@ HRESULT CSapi5Voice::SetOutputId (LPCTSTR pOutputId)
 
 	if	(SafeIsValid ())
 	{
-		CString				lNewOutputId (pOutputId);
+		CAtlString			lNewOutputId (pOutputId);
 		ISpObjectTokenPtr	lOldToken;
 		ISpObjectTokenPtr	lNewToken;
 		tMallocPtr <WCHAR>	lOldTokenId;
@@ -412,7 +447,7 @@ HRESULT CSapi5Voice::SetOutputId (LPCTSTR pOutputId)
 		}
 		else
 		{
-			lNewTokenId = AfxAllocTaskWideString (CSapi5Voice::LongOutputId (lNewOutputId));
+			lNewTokenId = AtlAllocTaskWideString (CSapi5Voice::LongOutputId (lNewOutputId));
 		}
 
 		if	(
@@ -465,13 +500,13 @@ HRESULT CSapi5Voice::GetVoiceName (tBstrPtr & pVoiceName)
 			&&	(SUCCEEDED (lResult = SpGetDescription (lToken, lDescription.Free (), NULL)))
 			)
 		{
-			pVoiceName.Attach (CString (lDescription).AllocSysString ());
+			pVoiceName.Attach (CAtlString (lDescription).AllocSysString ());
 		}
 	}
 	return lResult;
 }
 
-HRESULT CSapi5Voice::GetVoiceLanguages (CArray <LANGID, LANGID> & pLanguages)
+HRESULT CSapi5Voice::GetVoiceLanguages (CAtlTypeArray <LANGID> & pLanguages)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
@@ -480,7 +515,7 @@ HRESULT CSapi5Voice::GetVoiceLanguages (CArray <LANGID, LANGID> & pLanguages)
 		ISpObjectTokenPtr	lToken;
 		ISpDataKeyPtr		lAttributes;
 		tMallocPtr <WCHAR>	lLanguages;
-		CStringArray		lLanguageArray;
+		CAtlStringArray		lLanguageArray;
 
 		pLanguages.RemoveAll ();
 
@@ -490,14 +525,14 @@ HRESULT CSapi5Voice::GetVoiceLanguages (CArray <LANGID, LANGID> & pLanguages)
 			&&	(SUCCEEDED (lResult = lAttributes->GetStringValue (L"Language", lLanguages.Free ())))
 			)
 		{
-			int		lNdx;
+			INT_PTR	lNdx;
 			DWORD	lValue;
 			LPTSTR	lValueEnd;
 
 			lResult = S_FALSE;
-			MakeStringArray (CString ((BSTR)lLanguages), lLanguageArray, _T(";"));
+			MakeStringArray (CAtlString ((BSTR)lLanguages), lLanguageArray, _T(";"));
 
-			for	(lNdx = 0; lNdx <= lLanguageArray.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx < (INT_PTR)lLanguageArray.GetCount(); lNdx++)
 			{
 				if	(
 						(lValue = _tcstoul (lLanguageArray [lNdx], &lValueEnd, 16))
@@ -539,7 +574,7 @@ HRESULT CSapi5Voice::GetUniqueId (tBstrPtr & pUniqueId)
 	HRESULT	lResult = GetVoiceId (pUniqueId);
 	if	(!pUniqueId.IsEmpty())
 	{
-		pUniqueId = LongVoiceId (CString (pUniqueId));
+		pUniqueId = ShortVoiceId (CAtlString (pUniqueId));
 	}
 	return lResult;
 }
@@ -662,7 +697,7 @@ HRESULT CSapi5Voice::SetVolume (USHORT pVolume)
 
 tBstrPtr CSapi5Voice::ShortVoiceId (LPCTSTR pLongVoiceId)
 {
-	CString	lVoiceId (pLongVoiceId);
+	CAtlString	lVoiceId (pLongVoiceId);
 
 	PathStripPath (lVoiceId.GetBuffer (lVoiceId.GetLength ()));
 	lVoiceId.ReleaseBuffer ();
@@ -671,7 +706,7 @@ tBstrPtr CSapi5Voice::ShortVoiceId (LPCTSTR pLongVoiceId)
 
 tBstrPtr CSapi5Voice::LongVoiceId (LPCTSTR pShortVoiceId)
 {
-	CString	lVoiceId;
+	CAtlString	lVoiceId;
 
 	PathCombine (lVoiceId.GetBuffer (MAX_PATH), SPCAT_VOICES, _T("Tokens"));
 	PathAppend (lVoiceId.GetBuffer (MAX_PATH), PathFindFileName (pShortVoiceId));
@@ -683,7 +718,7 @@ tBstrPtr CSapi5Voice::LongVoiceId (LPCTSTR pShortVoiceId)
 
 tBstrPtr CSapi5Voice::ShortOutputId (LPCTSTR pLongOutputId)
 {
-	CString	lOutputId (pLongOutputId);
+	CAtlString	lOutputId (pLongOutputId);
 
 	PathStripPath (lOutputId.GetBuffer (lOutputId.GetLength ()));
 	lOutputId.ReleaseBuffer ();
@@ -692,7 +727,7 @@ tBstrPtr CSapi5Voice::ShortOutputId (LPCTSTR pLongOutputId)
 
 tBstrPtr CSapi5Voice::LongOutputId (LPCTSTR pShortOutputId)
 {
-	CString	lOutputId;
+	CAtlString	lOutputId;
 
 	PathCombine (lOutputId.GetBuffer (MAX_PATH), SPMMSYS_AUDIO_OUT_TOKEN_ID, PathFindFileName (pShortOutputId));
 	lOutputId.ReleaseBuffer ();
@@ -759,9 +794,9 @@ int VoiceVisemeOverlay (int pViseme)
 
 /////////////////////////////////////////////////////////////////////////////
 
-CString VoiceVisemeStr (int pViseme)
+CAtlString VoiceVisemeStr (int pViseme)
 {
-	CString	lVoiceVisemeStr;
+	CAtlString	lVoiceVisemeStr;
 
 	lVoiceVisemeStr.Format (_T("%2u"), pViseme);
 

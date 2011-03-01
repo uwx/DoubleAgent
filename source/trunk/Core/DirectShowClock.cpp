@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -26,16 +26,11 @@
 #include "DebugProcess.h"
 #endif
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #ifdef	_DEBUG
-//#define	_DEBUG_CLOCK		LogNormal|LogHighVolume|LogTimeMs
-//#define	_TRACE_CLOCK		LogNormal|LogHighVolume|LogTimeMs
-//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+//#define	_DEBUG_CLOCK		LogNormal|LogTimeMs|LogHighVolume
+//#define	_TRACE_CLOCK		LogNormal|LogTimeMs|LogHighVolume
+//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
+//#define	_TRACE_THREADS		(GetProfileDebugInt(_T("TraceThreads"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -59,7 +54,7 @@ CDirectShowClock::~CDirectShowClock()
 REFERENCE_TIME CDirectShowClock::GetStreamTime (FILTER_STATE pStreamState)
 {
 	REFERENCE_TIME	lRet = 0;
-	CSingleLock		lLock (&mClockCS, TRUE);
+	CLockCS			lLock (mClockCS);
 
 	try
 	{
@@ -82,7 +77,7 @@ REFERENCE_TIME CDirectShowClock::GetStreamTime (FILTER_STATE pStreamState)
 REFERENCE_TIME CDirectShowClock::GetReferenceTime ()
 {
 	REFERENCE_TIME	lRet = 0;
-	CSingleLock		lLock (&mClockCS, TRUE);
+	CLockCS			lLock (mClockCS);
 
 	try
 	{
@@ -105,14 +100,14 @@ REFERENCE_TIME CDirectShowClock::GetReferenceTime ()
 
 void CDirectShowClock::SetStartTime (REFERENCE_TIME pTimeOffset)
 {
-	CSingleLock	lLock (&mClockCS, TRUE);
+	CLockCS	lLock (mClockCS);
 
 	mTimeOffset = pTimeOffset;
 }
 
 REFERENCE_TIME CDirectShowClock::GetStartTime () const
 {
-	CSingleLock	lLock (&mClockCS, TRUE);
+	CLockCS	lLock (mClockCS);
 	return mTimeOffset;
 }
 
@@ -120,8 +115,8 @@ REFERENCE_TIME CDirectShowClock::GetStartTime () const
 
 bool CDirectShowClock::IsClockSet () const
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mClockCS, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mClockCS);
 
 	try
 	{
@@ -140,8 +135,8 @@ bool CDirectShowClock::IsClockSet () const
 
 bool CDirectShowClock::IsClockStarted () const
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mClockCS, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mClockCS);
 
 	try
 	{
@@ -162,31 +157,34 @@ bool CDirectShowClock::IsClockStarted () const
 
 HRESULT CDirectShowClock::SetClock (REFERENCE_TIME pReferenceTime, REFERENCE_TIME pDelay)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mClockCS, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mClockCS);
 
 	try
 	{
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::SetClock"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::SetClock"), this);
+		}
 #endif
 		if	(mClock != NULL)
 		{
 			if	(mClockSemaphoreCookie)
 			{
-				LogVfwErr (LogNormal, mClock->Unadvise (mClockSemaphoreCookie));
+				LogVfwErr (LogNormal|LogTime, mClock->Unadvise (mClockSemaphoreCookie));
 				mClockSemaphoreCookie = 0;
 			}
 
 			if	(mClockEventCookie)
 			{
-				LogVfwErr (LogNormal, mClock->Unadvise (mClockEventCookie));
+				LogVfwErr (LogNormal|LogTime, mClock->Unadvise (mClockEventCookie));
 				mClockEventCookie = 0;
 			}
 
-			mClockAdviseEvent.ResetEvent ();
+			mClockAdviseEvent.Reset ();
 
-			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mClock->AdviseTime (pReferenceTime, pDelay, (HEVENT)(HANDLE)mClockAdviseEvent, &mClockEventCookie))))
+			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mClock->AdviseTime (pReferenceTime, pDelay, (HEVENT)(HANDLE)mClockAdviseEvent, &mClockEventCookie))))
 			{
 #ifdef	_DEBUG_CLOCK
 				LogMessage (_DEBUG_CLOCK, _T("[%p] SyncAdvise [%f + %f = %f] started [%u] at [%f]"), this, RefTimeSec(pReferenceTime), RefTimeSec(pDelay), RefTimeSec(pReferenceTime+pDelay), mClockEventCookie, RefTimeSec(GetReferenceTime()));
@@ -212,7 +210,10 @@ HRESULT CDirectShowClock::SetClock (REFERENCE_TIME pReferenceTime, REFERENCE_TIM
 			}
 		}
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::SetClock Done"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::SetClock Done"), this);
+		}
 #endif
 	}
 	catch AnyExceptionSilent
@@ -222,13 +223,16 @@ HRESULT CDirectShowClock::SetClock (REFERENCE_TIME pReferenceTime, REFERENCE_TIM
 
 HRESULT CDirectShowClock::StartClock (REFERENCE_TIME pInterval)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mClockCS, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mClockCS);
 
 	try
 	{
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StartClock"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StartClock"), this);
+		}
 #endif
 		REFERENCE_TIME	lClockTime;
 
@@ -236,19 +240,19 @@ HRESULT CDirectShowClock::StartClock (REFERENCE_TIME pInterval)
 		{
 			if	(mClockSemaphoreCookie)
 			{
-				LogVfwErr (LogNormal, mClock->Unadvise (mClockSemaphoreCookie));
+				LogVfwErr (LogNormal|LogTime, mClock->Unadvise (mClockSemaphoreCookie));
 				mClockSemaphoreCookie = 0;
 			}
 
 			if	(mClockEventCookie)
 			{
-				LogVfwErr (LogNormal, mClock->Unadvise (mClockEventCookie));
+				LogVfwErr (LogNormal|LogTime, mClock->Unadvise (mClockEventCookie));
 				mClockEventCookie = 0;
 			}
 
 			if	(
-					(SUCCEEDED (lResult = LogVfwErr (LogNormal, mClock->GetTime (&lClockTime))))
-				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mClock->AdvisePeriodic (lClockTime, pInterval, (HSEMAPHORE)(HANDLE)mClockAdviseSemaphore, &mClockSemaphoreCookie))))
+					(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mClock->GetTime (&lClockTime))))
+				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mClock->AdvisePeriodic (lClockTime, pInterval, (HSEMAPHORE)(HANDLE)mClockAdviseSemaphore, &mClockSemaphoreCookie))))
 				)
 			{
 #ifdef	_DEBUG_CLOCK
@@ -262,6 +266,9 @@ HRESULT CDirectShowClock::StartClock (REFERENCE_TIME pInterval)
 			&&	(!mClockSemaphoreWaitHandle.SafeIsValid())
 			)
 		{
+#ifdef	_TRACE_THREADS
+			LogMessage (_TRACE_THREADS, _T("CDirectShowClock::RegisterWaitForSingleObject"));
+#endif
 			if	(RegisterWaitForSingleObject (&mClockSemaphoreWaitHandle, mClockAdviseSemaphore, ClockCallback, PutGatedInstance<CDirectShowClock> (this), INFINITE, WT_EXECUTELONGFUNCTION))
 			{
 #ifdef	_DEBUG_CLOCK
@@ -278,7 +285,10 @@ HRESULT CDirectShowClock::StartClock (REFERENCE_TIME pInterval)
 			}
 		}
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StartClock Done"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StartClock Done"), this);
+		}
 #endif
 	}
 	catch AnyExceptionSilent
@@ -289,13 +299,16 @@ HRESULT CDirectShowClock::StartClock (REFERENCE_TIME pInterval)
 
 HRESULT CDirectShowClock::StopClock ()
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mClockCS, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mClockCS);
 
 	try
 	{
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StopClock"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StopClock"), this);
+		}
 #endif
 		if	(mClockSemaphoreWaitHandle.SafeIsValid())
 		{
@@ -317,7 +330,7 @@ HRESULT CDirectShowClock::StopClock ()
 		{
 			if	(
 					(mClockSemaphoreCookie)
-				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mClock->Unadvise (mClockSemaphoreCookie))))
+				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mClock->Unadvise (mClockSemaphoreCookie))))
 				)
 			{
 #ifdef	_DEBUG_CLOCK
@@ -328,7 +341,7 @@ HRESULT CDirectShowClock::StopClock ()
 
 			if	(
 					(mClockEventCookie)
-				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mClock->Unadvise (mClockEventCookie))))
+				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, mClock->Unadvise (mClockEventCookie))))
 				)
 			{
 #ifdef	_DEBUG_CLOCK
@@ -338,7 +351,10 @@ HRESULT CDirectShowClock::StopClock ()
 			mClockEventCookie = 0;
 		}
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StopClock Done"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StopClock Done"), this);
+		}
 #endif
 	}
 	catch AnyExceptionSilent
@@ -357,6 +373,10 @@ void CDirectShowClock::EndClock ()
 
 void CALLBACK CDirectShowClock::ClockCallback (PVOID lpParameter, BOOLEAN TimerOrWaitFired)
 {
+#ifdef	_TRACE_THREADS
+	LogMessage (_TRACE_THREADS, _T("CDirectShowClock::ClockCallback"));
+#endif
+
 	if	(!TimerOrWaitFired)
 	{
 		CDirectShowClock *	lThis = NULL;
@@ -380,5 +400,8 @@ void CALLBACK CDirectShowClock::ClockCallback (PVOID lpParameter, BOOLEAN TimerO
 	{
 		LogMessage (_TRACE_CLOCK, _T("ClockCallback [%d] skipped"), TimerOrWaitFired);
 	}
+#endif
+#ifdef	_TRACE_THREADS
+	LogMessage (_TRACE_THREADS, _T("CDirectShowClock::ClockCallback End"));
 #endif
 }

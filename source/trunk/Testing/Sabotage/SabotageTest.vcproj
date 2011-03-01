@@ -81,7 +81,7 @@
 		<Configuration
 			Name="Debug|x64"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\..\VsProps\DaDebug.vsprops;..\..\VsProps\Dax64.vsprops;..\Testing.vsprops"
+			InheritedPropertySheets="..\..\VsProps\Dax64.vsprops;..\..\VsProps\DaDebug.vsprops;..\Testing.vsprops"
 			UseOfMFC="1"
 			CharacterSet="1"
 			>
@@ -162,6 +162,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				Optimization="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -201,7 +202,7 @@
 		<Configuration
 			Name="Release|x64"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\..\VsProps\DaRelease.vsprops;..\..\VsProps\Dax64.vsprops;..\Testing.vsprops"
+			InheritedPropertySheets="..\..\VsProps\Dax64.vsprops;..\..\VsProps\DaRelease.vsprops;..\Testing.vsprops"
 			UseOfMFC="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -223,6 +224,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				Optimization="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -277,7 +279,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Core\StdAfx.cpp"
+				RelativePath="..\..\Util\Mfc\StdAfx.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -327,7 +329,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Core\StdAfx.h"
+				RelativePath="..\..\Util\Mfc\StdAfx.h"
 				>
 			</File>
 		</Filter>
@@ -349,6 +351,22 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\..\Users\Don\AppData\LocalLow\Control.log"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\ProgramData\Double Agent\Debug.ini"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\Users\Don\Desktop\Double Agent.log"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\Users\Don\Desktop\SabotageTest.log"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
