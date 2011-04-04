@@ -28,8 +28,8 @@ public:
 
 	static bool IsInterfaceImplemented (Type^ pType, Type^ pInterface);
 	static bool IsInterfaceInherited (Type^ pType, Type^ pInterface);
-	System::Reflection::MethodInfo^ IsMethodOverride (System::Reflection::MethodBase ^ pMethod);
-	System::Reflection::MethodInfo^ IsMethodOverride (System::Reflection::MethodBase ^ pMethod, int pInheritanceLevels);
+	System::Reflection::MethodInfo^ IsMethodOverride (System::Reflection::MethodBase^ pMethod);
+	System::Reflection::MethodInfo^ IsMethodOverride (System::Reflection::MethodBase^ pMethod, int pInheritanceLevels);
 
 	static System::String^ TypeProps (System::Type^ pType);
 	static System::String^ TypeAttrsStr (System::Reflection::TypeAttributes pTypeAttrs);

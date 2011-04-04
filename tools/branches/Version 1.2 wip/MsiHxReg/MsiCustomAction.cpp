@@ -144,7 +144,7 @@ LPTSTR CMsiCustomAction::GetActionDataPart (LPCTSTR pActionData, int pPart, TCHA
 		{
 			lSize = lEnd - lStart + 1;
 			lRet = new TCHAR [lSize];
-			memset ((void *) (LPCTSTR) lRet, 0, lSize*sizeof(TCHAR));
+			memset ((void*) (LPCTSTR) lRet, 0, lSize*sizeof(TCHAR));
 			if	(lSize > 1)
 			{
 				_tcsncpy (lRet, lStart, lSize-1);

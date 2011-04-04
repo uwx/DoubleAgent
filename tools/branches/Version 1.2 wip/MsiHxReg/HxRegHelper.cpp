@@ -538,7 +538,7 @@ IHxRegNamespacePtr CHxRegHelper::GetRegNamespace (LPCTSTR pNamespace)
 	return lRet;
 }
 
-bool CHxRegHelper::GetNamespaceCollection (LPCTSTR pNamespace, CAtlString & pCollectionPath, bool pStripPath)
+bool CHxRegHelper::GetNamespaceCollection (LPCTSTR pNamespace, CAtlString& pCollectionPath, bool pStripPath)
 {
 	bool	lRet = false;
 

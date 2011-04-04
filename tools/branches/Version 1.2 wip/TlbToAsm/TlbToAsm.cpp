@@ -27,7 +27,7 @@ using namespace DoubleAgent::TlbToAsm;
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-int main(array<System::String ^> ^args)
+int main(array<System::String^>^ args)
 {
 	bool								lRestartLog = true;
 	DoubleAgent::TlbToAsm::TlbToAsm^	lTlbToAsm;

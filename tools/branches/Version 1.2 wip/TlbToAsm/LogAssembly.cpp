@@ -1043,12 +1043,12 @@ void LogAssembly::GetInterfaceMappings (Type^ pType)
 
 /////////////////////////////////////////////////////////////////////////////
 
-MethodInfo^ LogAssembly::IsMethodOverride (System::Reflection::MethodBase ^ pMethod)
+MethodInfo^ LogAssembly::IsMethodOverride (System::Reflection::MethodBase^ pMethod)
 {
 	return IsMethodOverride (pMethod, 1);
 }
 
-MethodInfo^ LogAssembly::IsMethodOverride (System::Reflection::MethodBase ^ pMethod, int pInheritanceLevels)
+MethodInfo^ LogAssembly::IsMethodOverride (System::Reflection::MethodBase^ pMethod, int pInheritanceLevels)
 {
 	MethodInfo^	lRet;
 

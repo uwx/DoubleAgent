@@ -1631,7 +1631,7 @@ Type^ CopyAssembly::CopyEnum (Type^ pSourceType, String^ pTargetName, TypeAttrib
 	try
 	{
 		EnumBuilder^		lEnumBuilder;
-		Type ^				lUnderlyingType;
+		Type^				lUnderlyingType;
 		array<FieldInfo^>^	lSourceFields;
 		FieldInfo^			lSourceField;
 		FieldBuilder^		lFieldBuilder;

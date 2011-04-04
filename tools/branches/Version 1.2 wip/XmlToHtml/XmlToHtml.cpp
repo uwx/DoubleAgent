@@ -40,7 +40,7 @@ using namespace DoubleAgent::XmlToHtml;
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-int main(array<System::String ^> ^args)
+int main(array<System::String^>^ args)
 {
 	bool								lRestartLog = true;
 	DoubleAgent::XmlToHtml::XmlToHtml^	lXmlToHtml;

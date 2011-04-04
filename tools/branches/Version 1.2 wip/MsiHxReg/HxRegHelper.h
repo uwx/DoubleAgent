@@ -43,7 +43,7 @@ public:
 
 protected:
 	IHxRegNamespacePtr GetRegNamespace (LPCTSTR pNamespace);
-	bool GetNamespaceCollection (LPCTSTR pNamespace, CAtlString & pCollectionPath, bool pStripPath = false);
+	bool GetNamespaceCollection (LPCTSTR pNamespace, CAtlString& pCollectionPath, bool pStripPath = false);
 
 protected:
 	HRESULT					mLastResult;
