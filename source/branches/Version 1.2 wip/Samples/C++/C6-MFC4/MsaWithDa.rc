@@ -1,0 +1,210 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "MsaWithDaRes.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (Canada) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENC)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_CAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "MsaWithDaRes.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""MsaWithDa.rc2""\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_MSAWITHDA_DIALOG DIALOGEX 0, 0, 370, 197
+STYLE DS_MODALFRAME | DS_NOFAILCREATE | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "MsaWithDa"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    GROUPBOX        "MS Agent Server",IDC_STATIC,4,4,172,84
+    PUSHBUTTON      "Load character",IDC_LOAD_MS_SERVER_CHAR,12,16,40,28,
+                    BS_MULTILINE
+    PUSHBUTTON      "Unload character",IDC_UNLOAD_MS_SERVER_CHAR,12,52,40,28,
+                    BS_MULTILINE
+    PUSHBUTTON      "Show character",IDC_SHOW_MS_SERVER_CHAR,68,16,40,28,
+                    BS_MULTILINE
+    PUSHBUTTON      "Hide character",IDC_HIDE_MS_SERVER_CHAR,68,52,40,28,
+                    BS_MULTILINE
+    PUSHBUTTON      "Show options",IDC_SHOW_MS_SERVER_OPTIONS,128,16,40,28,
+                    BS_MULTILINE
+    PUSHBUTTON      "Show characters",IDC_SHOW_MS_SERVER_CHARS,128,52,40,28,
+                    BS_MULTILINE
+    CONTROL         "",IDC_CONTROL_MS,"{D45FD31B-5C6E-11D1-9EC1-00C04FD7081F}",
+                    0x0,176,0,16,16
+    GROUPBOX        "MS Agent Control",IDC_STATIC,192,4,172,84
+    PUSHBUTTON      "Load character",IDC_LOAD_MS_CONTROL_CHAR,200,16,40,28,
+                    BS_MULTILINE
+    PUSHBUTTON      "Unload character",IDC_UNLOAD_MS_CONTROL_CHAR,200,52,40,
+                    28,BS_MULTILINE
+    PUSHBUTTON      "Show character",IDC_SHOW_MS_CONTROL_CHAR,256,16,40,28,
+                    BS_MULTILINE
+    PUSHBUTTON      "Hide character",IDC_HIDE_MS_CONTROL_CHAR,256,52,40,28,
+                    BS_MULTILINE
+    PUSHBUTTON      "Show options",IDC_SHOW_MS_CONTROL_OPTIONS,316,16,40,28,
+                    BS_MULTILINE
+    PUSHBUTTON      "Show characters",IDC_SHOW_MS_CONTROL_CHARS,316,52,40,28,
+                    BS_MULTILINE
+    GROUPBOX        "Double Agent Server",IDC_STATIC,4,96,172,84
+    PUSHBUTTON      "Load character",IDC_LOAD_DA_SERVER_CHAR,12,108,40,28,
+                    BS_MULTILINE
+    PUSHBUTTON      "Unload character",IDC_UNLOAD_DA_SERVER_CHAR,12,144,40,
+                    28,BS_MULTILINE
+    PUSHBUTTON      "Show character",IDC_SHOW_DA_SERVER_CHAR,68,108,40,28,
+                    BS_MULTILINE
+    PUSHBUTTON      "Hide character",IDC_HIDE_DA_SERVER_CHAR,68,144,40,28,
+                    BS_MULTILINE
+    PUSHBUTTON      "Show options",IDC_SHOW_DA_SERVER_OPTIONS,128,108,40,28,
+                    BS_MULTILINE
+    PUSHBUTTON      "Show characters",IDC_SHOW_DA_SERVER_CHARS,128,144,40,28,
+                    BS_MULTILINE
+    CONTROL         "",IDC_CONTROL_DA,"{1147E530-A208-11DE-ABF2-002421116FB2}",
+                    0x0,172,80,20,20
+    GROUPBOX        "Double Agent Control",IDC_STATIC,192,96,172,84
+    PUSHBUTTON      "Load character",IDC_LOAD_DA_CONTROL_CHAR,200,108,40,28,
+                    BS_MULTILINE
+    PUSHBUTTON      "Unload character",IDC_UNLOAD_DA_CONTROL_CHAR,200,144,40,
+                    28,BS_MULTILINE
+    PUSHBUTTON      "Show character",IDC_SHOW_DA_CONTROL_CHAR,256,108,40,28,
+                    BS_MULTILINE
+    PUSHBUTTON      "Hide character",IDC_HIDE_DA_CONTROL_CHAR,256,144,40,28,
+                    BS_MULTILINE
+    PUSHBUTTON      "Show options",IDC_SHOW_DA_CONTROL_OPTIONS,316,108,40,28,
+                    BS_MULTILINE
+    PUSHBUTTON      "Show characters",IDC_SHOW_DA_CONTROL_CHARS,316,144,40,
+                    28,BS_MULTILINE
+END
+
+IDD_ABOUTBOX_DIALOG DIALOG DISCARDABLE  0, 0, 187, 95
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION
+CAPTION "About..."
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,68,68,50,14
+    LTEXT           "Application title...",IDC_STATIC,8,8,168,20
+    LTEXT           "This program uses Double Agent under the GNU Public License.",
+                    IDC_STATIC,8,36,104,16
+    PUSHBUTTON      "More...",ID_DA_MORE,124,37,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_MSAWITHDA_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 363
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 190
+    END
+
+    IDD_ABOUTBOX_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDD_MSAWITHDA_DIALOG MENU DISCARDABLE 
+BEGIN
+    POPUP "Help"
+    BEGIN
+        MENUITEM "About...",                    ID_APP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_MSAWITHDA_DIALOG DLGINIT
+BEGIN
+    IDC_CONTROL_MS, 0x376, 76, 0
+0x0000, 0x0000, 0x0900, 0x0000, 0x0101, 0x02a5, 0x0000, 0x02a5, 0x0000, 
+0x000b, 0xffff, 0x000b, 0xffff, 0x000b, 0x0000, 0x0013, 0x0005, 0x8000, 
+0x0013, 0x0008, 0x8000, 0x0003, 0x0000, 0x0000, 0x000b, 0xffff, 0x0003, 
+0x0001, 0x0000, 0x0009, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+0x0000, 0x0000, 
+    IDC_CONTROL_DA, 0x376, 76, 0
+0x0000, 0x0000, 0x0900, 0x0000, 0x0101, 0x034f, 0x0000, 0x034f, 0x0000, 
+0x000b, 0xffff, 0x000b, 0xffff, 0x000b, 0x0000, 0x0013, 0x0005, 0x8000, 
+0x0013, 0x0008, 0x8000, 0x0003, 0x0000, 0x0000, 0x000b, 0xffff, 0x0003, 
+0x0001, 0x0000, 0x0009, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+0x0000, 0x0000, 
+    0
+END
+
+#endif    // English (Canada) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#include "MsaWithDa.rc2"
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

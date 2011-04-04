@@ -1,0 +1,10 @@
+HKCR
+{
+	NoRemove APPID
+	{
+		ForceRemove {1147E500-A208-11DE-ABF2-002421116FB2} = s 'Double Agent Server'
+		{
+			val RunAs = s 'Interactive User'
+		}
+	}
+}
