@@ -1,4 +1,24 @@
-﻿namespace AgentCharacterEditor
+﻿/////////////////////////////////////////////////////////////////////////////
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+/////////////////////////////////////////////////////////////////////////////
+/*
+	This file is part of Double Agent.
+
+    Double Agent is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Double Agent is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/////////////////////////////////////////////////////////////////////////////
+namespace AgentCharacterEditor
 {
 	partial class OverlayForm
 	{
@@ -50,13 +70,13 @@
 			this.TableLayoutSample = new System.Windows.Forms.TableLayoutPanel ();
 			this.PictureBoxImageSample = new System.Windows.Forms.PictureBox ();
 			this.ToolStripShiftUp = new DoubleAgent.ToolStripEx ();
-			this.ButtonShiftUp = new System.Windows.Forms.ToolStripButton ();
+			this.ButtonShiftUp = new DoubleAgent.ToolStripButtonEx ();
 			this.ToolStripShiftRight = new DoubleAgent.ToolStripEx ();
-			this.ButtonShiftRight = new System.Windows.Forms.ToolStripButton ();
+			this.ButtonShiftRight = new DoubleAgent.ToolStripButtonEx ();
 			this.ToolStripShiftDown = new DoubleAgent.ToolStripEx ();
-			this.ButtonShiftDown = new System.Windows.Forms.ToolStripButton ();
+			this.ButtonShiftDown = new DoubleAgent.ToolStripButtonEx ();
 			this.ToolStripShiftLeft = new DoubleAgent.ToolStripEx ();
-			this.ButtonShiftLeft = new System.Windows.Forms.ToolStripButton ();
+			this.ButtonShiftLeft = new DoubleAgent.ToolStripButtonEx ();
 			this.CheckBoxReplace = new System.Windows.Forms.CheckBox ();
 			this.PanelImagesLeft = new System.Windows.Forms.Panel ();
 			this.ListViewOverlays = new DoubleAgent.ListViewEx ();
@@ -293,7 +313,6 @@
 			this.ToolStripShiftUp.MinimumSize = new System.Drawing.Size (0, 23);
 			this.ToolStripShiftUp.Name = "ToolStripShiftUp";
 			this.ToolStripShiftUp.Padding = new System.Windows.Forms.Padding (0);
-			this.ToolStripShiftUp.RenderInline = true;
 			this.ToolStripShiftUp.Size = new System.Drawing.Size (130, 23);
 			this.ToolStripShiftUp.TabIndex = 0;
 			// 
@@ -307,6 +326,7 @@
 			this.ButtonShiftUp.Margin = new System.Windows.Forms.Padding (0);
 			this.ButtonShiftUp.Name = "ButtonShiftUp";
 			this.ButtonShiftUp.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+			this.ButtonShiftUp.RepeatEnabled = true;
 			this.ButtonShiftUp.Size = new System.Drawing.Size (128, 23);
 			this.ButtonShiftUp.Click += new System.EventHandler (this.ButtonShiftUp_Click);
 			// 
@@ -328,7 +348,6 @@
 			this.ToolStripShiftRight.MinimumSize = new System.Drawing.Size (23, 0);
 			this.ToolStripShiftRight.Name = "ToolStripShiftRight";
 			this.ToolStripShiftRight.Padding = new System.Windows.Forms.Padding (0);
-			this.ToolStripShiftRight.RenderInline = true;
 			this.ToolStripShiftRight.Size = new System.Drawing.Size (23, 130);
 			this.ToolStripShiftRight.TabIndex = 2;
 			// 
@@ -342,6 +361,7 @@
 			this.ButtonShiftRight.Margin = new System.Windows.Forms.Padding (0);
 			this.ButtonShiftRight.Name = "ButtonShiftRight";
 			this.ButtonShiftRight.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+			this.ButtonShiftRight.RepeatEnabled = true;
 			this.ButtonShiftRight.Size = new System.Drawing.Size (23, 128);
 			this.ButtonShiftRight.Click += new System.EventHandler (this.ButtonShiftRight_Click);
 			// 
@@ -363,7 +383,6 @@
 			this.ToolStripShiftDown.MinimumSize = new System.Drawing.Size (0, 23);
 			this.ToolStripShiftDown.Name = "ToolStripShiftDown";
 			this.ToolStripShiftDown.Padding = new System.Windows.Forms.Padding (0);
-			this.ToolStripShiftDown.RenderInline = true;
 			this.ToolStripShiftDown.Size = new System.Drawing.Size (130, 23);
 			this.ToolStripShiftDown.TabIndex = 3;
 			// 
@@ -377,6 +396,7 @@
 			this.ButtonShiftDown.Margin = new System.Windows.Forms.Padding (0);
 			this.ButtonShiftDown.Name = "ButtonShiftDown";
 			this.ButtonShiftDown.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+			this.ButtonShiftDown.RepeatEnabled = true;
 			this.ButtonShiftDown.Size = new System.Drawing.Size (128, 23);
 			this.ButtonShiftDown.Click += new System.EventHandler (this.ButtonShiftDown_Click);
 			// 
@@ -398,7 +418,6 @@
 			this.ToolStripShiftLeft.MinimumSize = new System.Drawing.Size (23, 0);
 			this.ToolStripShiftLeft.Name = "ToolStripShiftLeft";
 			this.ToolStripShiftLeft.Padding = new System.Windows.Forms.Padding (0);
-			this.ToolStripShiftLeft.RenderInline = true;
 			this.ToolStripShiftLeft.Size = new System.Drawing.Size (23, 130);
 			this.ToolStripShiftLeft.TabIndex = 1;
 			// 
@@ -412,6 +431,7 @@
 			this.ButtonShiftLeft.Margin = new System.Windows.Forms.Padding (0);
 			this.ButtonShiftLeft.Name = "ButtonShiftLeft";
 			this.ButtonShiftLeft.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+			this.ButtonShiftLeft.RepeatEnabled = true;
 			this.ButtonShiftLeft.Size = new System.Drawing.Size (23, 128);
 			this.ButtonShiftLeft.Click += new System.EventHandler (this.ButtonShiftLeft_Click);
 			// 
@@ -519,7 +539,6 @@
 			this.ToolStripImages.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.ToolStripImages.Location = new System.Drawing.Point (0, 0);
 			this.ToolStripImages.Name = "ToolStripImages";
-			this.ToolStripImages.RenderInline = true;
 			this.ToolStripImages.Size = new System.Drawing.Size (72, 26);
 			this.ToolStripImages.TabIndex = 0;
 			// 
@@ -604,13 +623,13 @@
 		private System.Windows.Forms.TableLayoutPanel TableLayoutSample;
 		private System.Windows.Forms.PictureBox PictureBoxImageSample;
 		private DoubleAgent.ToolStripEx ToolStripShiftUp;
-		private System.Windows.Forms.ToolStripButton ButtonShiftUp;
+		private DoubleAgent.ToolStripButtonEx ButtonShiftUp;
 		private DoubleAgent.ToolStripEx ToolStripShiftRight;
-		private System.Windows.Forms.ToolStripButton ButtonShiftRight;
+		private DoubleAgent.ToolStripButtonEx ButtonShiftRight;
 		private DoubleAgent.ToolStripEx ToolStripShiftDown;
-		private System.Windows.Forms.ToolStripButton ButtonShiftDown;
+		private DoubleAgent.ToolStripButtonEx ButtonShiftDown;
 		private DoubleAgent.ToolStripEx ToolStripShiftLeft;
-		private System.Windows.Forms.ToolStripButton ButtonShiftLeft;
+		private DoubleAgent.ToolStripButtonEx ButtonShiftLeft;
 		private System.Windows.Forms.Label LabelOffsetX;
 		private DoubleAgent.NumericUpDownEx NumericOffsetY;
 		private System.Windows.Forms.Label LabelOffsetY;

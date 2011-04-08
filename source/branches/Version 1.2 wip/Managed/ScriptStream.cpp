@@ -75,11 +75,11 @@ System::String^ ScriptReader::Keyword::get (int pKeyword)
 System::String^ ScriptReader::ReadLine ()
 {
 	String^	lLine;
-	
+
 	while	(lLine = __super::ReadLine ())
 	{
 		lLine = lLine->Trim ();
-		
+
 		if	(
 				(mSkipComments)
 			&&	(lLine->StartsWith (_T("//")))
@@ -101,7 +101,7 @@ System::String^ ScriptReader::NextToken (System::String^% pLine)
 	String^				lToken = nullptr;
 	array <wchar_t>^	lWhitespace = {' ', '\t'};
 	int					lNdx;
-	
+
 	pLine = pLine->Trim (lWhitespace);
 	lNdx = pLine->IndexOfAny (lWhitespace);
 	if	(lNdx > 0)
@@ -123,7 +123,7 @@ System::String^ ScriptReader::NextValue (System::String^ pLine)
 	String^	lToken = nullptr;
 
 	if	(
-			(lToken = NextToken (pLine))	
+			(lToken = NextToken (pLine))
 		&&	(lToken = _T("="))
 		)
 	{
@@ -152,10 +152,10 @@ int ScriptReader::GetInt (System::String^ pToken)
 
 	try
 	{
-		lValue = int::Parse (pToken, NumberStyles::Integer); 
+		lValue = int::Parse (pToken, NumberStyles::Integer);
 	}
 	catch AnyExceptionDebug
-	
+
 	return lValue;
 }
 
@@ -175,7 +175,7 @@ unsigned int ScriptReader::GetHex (System::String^ pToken)
 		lValue = (unsigned int)int::Parse (pToken, NumberStyles::HexNumber);
 	}
 	catch AnyExceptionDebug
-	
+
 	return lValue;
 }
 
@@ -187,13 +187,13 @@ COLORREF ScriptReader::GetColor (System::String^ pToken)
 System::Guid ScriptReader::GetGuid (System::String^ pToken)
 {
 	System::Guid	lGuid = Guid::Empty;
-	
+
 	try
 	{
 		lGuid = System::Guid (pToken);
 	}
 	catch AnyExceptionDebug
-	
+
 	return lGuid;
 }
 
@@ -203,7 +203,7 @@ array <System::String^>^ ScriptReader::GetStyles (System::String^ pToken)
 {
 	array <String^>^	lParts = nullptr;
 	array <wchar_t>^	lDelims = {_T('|')};
-	
+
 	try
 	{
 		lParts = pToken->Split (lDelims, System::StringSplitOptions::RemoveEmptyEntries);
@@ -213,7 +213,7 @@ array <System::String^>^ ScriptReader::GetStyles (System::String^ pToken)
 		}
 	}
 	catch AnyExceptionSilent
-	
+
 	return lParts;
 }
 
@@ -221,7 +221,7 @@ array <System::String^>^ ScriptReader::GetFontStyles (System::String^ pToken)
 {
 	array <String^>^	lParts = nullptr;
 	array <wchar_t>^	lDelims = {_T('|')};
-	
+
 	try
 	{
 		lParts = pToken->Split (lDelims, System::StringSplitOptions::RemoveEmptyEntries);
@@ -231,7 +231,7 @@ array <System::String^>^ ScriptReader::GetFontStyles (System::String^ pToken)
 		}
 	}
 	catch AnyExceptionSilent
-	
+
 	return lParts;
 }
 
@@ -390,7 +390,7 @@ System::String^ ScriptWriter::FormatColor (COLORREF pValue)
 System::String^ ScriptWriter::FormatGuid (System::Guid pValue)
 {
 	String^	lGuid;
-	
+
 	lGuid = pValue.ToString()->ToUpper();
 	return String::Concat ("{", lGuid, "}");
 }
@@ -491,7 +491,7 @@ ScriptKeywords::ScriptKeywords ()
 	FrameDuration = Add ("Duration");
 	FrameExitBranch = Add ("ExitBranch");
 	FrameSound = Add ("SoundEffect");
-	
+
 	BranchingTarget = Add ("BranchTo");
 	BranchingProbability = Add ("Probability");
 

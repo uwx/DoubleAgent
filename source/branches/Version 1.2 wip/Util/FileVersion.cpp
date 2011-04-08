@@ -89,7 +89,7 @@ void CFileVersion::GetVersionInfo (void* pVersionInfo)
 
 		if	(
 				(lVersionInfoW->Value.dwSignature == 0xFEEF04BD)
-			&&	(lVersionInfoW->szKey [sizeof (lVersionInfoW->szKey) / sizeof (WCHAR)] == 0)
+			&&	(lVersionInfoW->szKey [sizeof (lVersionInfoW->szKey) / sizeof(WCHAR)] == 0)
 			&&	(wcscmp (lVersionInfoW->szKey, L"VS_VERSION_INFO") == 0)
 			)
 		{

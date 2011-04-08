@@ -127,9 +127,13 @@ protected:
 	HICON										mIcon;
 	tArrayPtr <COLORREF>						mPalette;
 	BYTE										mTransparency;
-#endif	
+#endif
 
+#ifdef	_M_CEE
+internal:
+#else
 public:
+#endif
 	CAgentFileHeader ();
 	~CAgentFileHeader () {}
 	void Empty ();
@@ -139,12 +143,13 @@ public:
     virtual System::String^ ToString() override;
 internal:
 	CAgentFileHeader (CharacterFile^ pOwner);
-#else	
+#else
+public:
 	DECLARE_DLL_OBJECT(CAgentFileHeader)
 	friend class CAgentFileBinary;
 	friend class CAgentFileAcs;
 	friend class CAgentFileAcf;
-#endif	
+#endif
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -175,7 +180,7 @@ public:
 	void put_Name (LPCTSTR pName);
 	void put_Desc1 (LPCTSTR pDesc1);
 	void put_Desc2 (LPCTSTR pDesc2);
-#endif	
+#endif
 
 #ifdef	_M_CEE
 internal:
@@ -190,22 +195,28 @@ protected:
 	tBstrPtr		mName;
 	tBstrPtr		mDesc1;
 	tBstrPtr		mDesc2;
-#endif	
+#endif
 
+#ifdef	_M_CEE
+internal:
+#else
 public:
+#endif
 	CAgentFileName () {Empty ();}
 	~CAgentFileName () {}
 	void Empty ();
 
 #ifdef	_M_CEE
 public:
+	CAgentFileName (LANGID pLanguage, System::String^ pName);
     virtual System::String^ ToString() override;
 internal:
 	CAgentFileName (CharacterFile^ pOwner);
-#else	
+#else
+public:
 	DECLARE_DLL_OBJECT(CAgentFileName)
 	friend class CAgentFileBinary;
-#endif	
+#endif
 };
 
 #ifdef	_M_CEE
@@ -227,17 +238,17 @@ internal:
 	void Insert (Int32 pNdx, CAgentFileName^ pItem) new {__super::Insert (pNdx, pItem);}
 	void RemoveAt (Int32 pNdx) new {__super::RemoveAt (pNdx);}
 	void Clear () new {__super::Clear ();}
-	
+
 protected:
 	virtual LANGID GetKeyForItem (CAgentFileName^ pItem) override;
-	
+
 internal:
-	CharacterFile^	mOwner;	
+	CharacterFile^	mOwner;
 };
 #else
 typedef	CAtlPtrTypeArray <CAgentFileName>	CAgentFileNames;
 #endif
- 
+
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
@@ -274,11 +285,11 @@ public:
 	USHORT get_Age () const {return mAge;}
 	long get_Speed () const {return mSpeed;}
 	short get_Pitch () const {return mPitch;}
-	
+
 	void put_Mode (const GUID& pMode);
 	void put_Language (LANGID pLanguage);
 	void put_Gender (USHORT pGender);
-#endif	
+#endif
 
 #ifdef	_M_CEE
 internal:
@@ -299,9 +310,13 @@ protected:
 	USHORT				mAge;
 	long				mSpeed;
 	short				mPitch;
-#endif	
+#endif
 
+#ifdef	_M_CEE
+internal:
+#else
 public:
+#endif
 	CAgentFileTts () {Empty ();}
 	~CAgentFileTts () {}
 	void Empty ();
@@ -311,10 +326,11 @@ public:
     virtual System::String^ ToString() override;
 internal:
 	CAgentFileTts (CharacterFile^ pOwner);
-#else	
+#else
+public:
 	DECLARE_DLL_OBJECT(CAgentFileTts)
 	friend class CAgentFileBinary;
-#endif	
+#endif
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -334,7 +350,7 @@ public:
 	property System::Drawing::Color BkColor {System::Drawing::Color get(); void set (System::Drawing::Color pValue);}
 	property System::Drawing::Color BrColor {System::Drawing::Color get(); void set (System::Drawing::Color pValue);}
 	property System::Drawing::Font^ Font {System::Drawing::Font^ get(); void set (System::Drawing::Font^ pValue);}
-	
+
 	static property UInt16 MinLines {UInt16 get();}
 	static property UInt16 MaxLines {UInt16 get();}
 	static property UInt16 DefLines {UInt16 get();}
@@ -369,7 +385,7 @@ public:
 	static const USHORT	MinPerLine;
 	static const USHORT	MaxPerLine;
 	static const USHORT	DefPerLine;
-#endif	
+#endif
 
 #ifdef	_M_CEE
 internal:
@@ -390,7 +406,11 @@ protected:
 	tS <LOGFONT>			mFont;
 #endif
 
+#ifdef	_M_CEE
+internal:
+#else
 public:
+#endif
 	CAgentFileBalloon () {Empty ();}
 	~CAgentFileBalloon () {}
 	void Empty ();
@@ -400,11 +420,12 @@ public:
     virtual System::String^ ToString() override;
 internal:
 	CAgentFileBalloon (CharacterFile^ pOwner);
-#else	
+#else
+public:
 	DECLARE_DLL_OBJECT(CAgentFileBalloon)
 	friend class CAgentFileBinary;
 	friend class CDaCmnBalloon;
-#endif	
+#endif
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -440,27 +461,33 @@ internal:
 protected:
 	LONG					mImageNdx;
 	CPoint					mOffset;
-#endif	
+#endif
 
+#ifdef	_M_CEE
+internal:
+#else
 public:
+#endif
 	CAgentFileFrameImage () {Empty ();}
 	~CAgentFileFrameImage () {}
 	void Empty ();
 
 #ifdef	_M_CEE
 public:
+	Boolean CopyTo (CAgentFileFrameImage^ pTarget);
     virtual System::String^ ToString() override;
 internal:
 	CAgentFileFrameImage (CharacterFile^ pOwner);
-#else	
+#else
+public:
 	DECLARE_DLL_OBJECT(CAgentFileFrameImage)
 	friend class CAgentFileAcs;
 	friend class CAgentFileAcf;
-#endif	
+#endif
 };
 
 #ifdef	_M_CEE
-#define CAgentFileFrameImages FileFrameImages 
+#define CAgentFileFrameImages FileFrameImages
 public ref class CAgentFileFrameImages : public System::Collections::ObjectModel::Collection <CAgentFileFrameImage^>
 {
 public:
@@ -481,9 +508,9 @@ internal:
 	void Add (CAgentFileFrameImage^ pItem) new {__super::Add (pItem);}
 	void Insert (Int32 pNdx, CAgentFileFrameImage^ pItem) new {__super::Insert (pNdx, pItem);}
 	void Clear () new {__super::Clear ();}
-	
+
 internal:
-	CharacterFile^	mOwner;	
+	CharacterFile^	mOwner;
 };
 #else
 typedef tArrayPtr <CAgentFileFrameImage> CAgentFileFrameImages;
@@ -532,23 +559,29 @@ protected:
 	bool					mReplaceFlag;
 	CPoint					mOffset;
 	CPoint					mSomething;
-#endif	
+#endif
 
+#ifdef	_M_CEE
+internal:
+#else
 public:
+#endif
 	CAgentFileFrameOverlay () {Empty ();}
 	~CAgentFileFrameOverlay () {}
 	void Empty ();
 
 #ifdef	_M_CEE
 public:
+	Boolean CopyTo (CAgentFileFrameOverlay^ pTarget);
     virtual System::String^ ToString() override;
 internal:
 	CAgentFileFrameOverlay (CharacterFile^ pOwner);
-#else	
+#else
+public:
 	DECLARE_DLL_OBJECT(CAgentFileFrameOverlay)
 	friend class CAgentFileAcs;
 	friend class CAgentFileAcf;
-#endif	
+#endif
 };
 
 #ifdef	_M_CEE
@@ -570,12 +603,12 @@ internal:
 	void Insert (Int32 pNdx, CAgentFileFrameOverlay^ pItem) new {__super::Insert (pNdx, pItem);}
 	void RemoveAt (Int32 pNdx) new {__super::RemoveAt (pNdx);}
 	void Clear () new {__super::Clear ();}
-	
+
 protected:
 	virtual AgentMouthOverlay GetKeyForItem (CAgentFileFrameOverlay^ pItem) override;
-	
+
 internal:
-	CharacterFile^	mOwner;	
+	CharacterFile^	mOwner;
 };
 #else
 typedef tArrayPtr <CAgentFileFrameOverlay> CAgentFileFrameOverlays;
@@ -661,25 +694,31 @@ protected:
 	CAgentFileFrameOverlays			mOverlays;
 #endif
 
+#ifdef	_M_CEE
+internal:
+#else
 public:
+#endif
 	CAgentFileFrame () {Empty ();}
 	~CAgentFileFrame () {}
 	void Empty ();
 
 #ifdef	_M_CEE
 public:
+	Boolean CopyTo (CAgentFileFrame^ pTarget);
     virtual System::String^ ToString() override;
 internal:
 	CAgentFileFrame (CharacterFile^ pOwner);
-#else	
+#else
+public:
 	DECLARE_DLL_OBJECT(CAgentFileFrame)
 	friend class CAgentFileAcs;
 	friend class CAgentFileAcf;
-#endif	
+#endif
 };
 
 #ifdef	_M_CEE
-#define CAgentFileFrames FileFrames 
+#define CAgentFileFrames FileFrames
 public ref class CAgentFileFrames : public System::Collections::ObjectModel::Collection <CAgentFileFrame^>
 {
 public:
@@ -700,9 +739,9 @@ internal:
 	void Add (CAgentFileFrame^ pItem) new {__super::Add (pItem);}
 	void Insert (Int32 pNdx, CAgentFileFrame^ pItem) new {__super::Insert (pNdx, pItem);}
 	void Clear () new {__super::Clear ();}
-	
+
 internal:
-	CharacterFile^	mOwner;	
+	CharacterFile^	mOwner;
 };
 #else
 typedef	tArrayPtr <CAgentFileFrame> CAgentFileFrames;
@@ -736,7 +775,7 @@ public:
 	tBstrPtr get_ReturnName () const {return mReturnName;}
 	USHORT get_FrameCount () const {return mFrameCount;}
 	const CAgentFileFrame* get_Frames () const {return mFrames;}
-#endif	
+#endif
 
 #ifdef	_M_CEE
 internal:
@@ -756,24 +795,30 @@ protected:
 	CAgentFileFrames		mFrames;
 	tBstrPtr				mAcaFileName;
 	DWORD					mAcaChksum;
-#endif	
+#endif
 
+#ifdef	_M_CEE
+internal:
+#else
 public:
+#endif
 	CAgentFileAnimation () {Empty ();}
 	~CAgentFileAnimation () {}
 	void Empty ();
 
 #ifdef	_M_CEE
 public:
+	Boolean CopyTo (CAgentFileAnimation^ pTarget);
     virtual System::String^ ToString() override;
 internal:
 	CAgentFileAnimation (CharacterFile^ pOwner);
-#else	
+#else
+public:
 	DECLARE_DLL_OBJECT(CAgentFileAnimation)
 	friend class CAgentFile;
 	friend class CAgentFileAcs;
 	friend class CAgentFileAcf;
-#endif	
+#endif
 };
 
 #ifdef	_M_CEE
@@ -794,13 +839,13 @@ internal:
 	void Add (CAgentFileAnimation^ pItem) new;
 	void RemoveAt (Int32 pNdx) new {__super::RemoveAt (pNdx);}
 	void Clear () new {__super::Clear ();}
-	void ChangeItemKey (CAgentFileAnimation^ pItem);
-	
+	void ChangeItemKey (CAgentFileAnimation^ pItem, String^ pNewKey);
+
 protected:
 	virtual System::String^ GetKeyForItem (CAgentFileAnimation^ pItem) override;
-	
+
 internal:
-	CharacterFile^	mOwner;	
+	CharacterFile^	mOwner;
 };
 #else
 struct _DACORE_IMPEXP CAgentFileGestures
@@ -831,9 +876,9 @@ public:
 
 internal:
 	void Add (System::String^ pStateName, array <System::String^>^ pAnimations) new {__super::Add (pStateName, pAnimations);}
-	
+
 internal:
-	CharacterFile^	mOwner;	
+	CharacterFile^	mOwner;
 };
 #else
 struct _DACORE_IMPEXP CAgentFileStates
@@ -877,10 +922,10 @@ public:
 	bool get_Is32Bit () const {return mIs32Bit;}
 	ULONG get_BitsSize () const {return mBitsSize;}
 	const BYTE* get_Bits () const {return mBits;}
-	
+
 	void put_ImageSize (const CSize& pImageSize);
 #endif
-	
+
 #ifdef	_M_CEE
 internal:
 	UInt32					mImageNum;
@@ -896,7 +941,11 @@ protected:
 	tArrayPtr <BYTE>		mBits;
 #endif
 
+#ifdef	_M_CEE
+internal:
+#else
 public:
+#endif
 	CAgentFileImage () {Empty ();}
 	~CAgentFileImage () {}
 	void Empty ();
@@ -904,11 +953,12 @@ public:
 #ifdef	_M_CEE
 public:
     virtual System::String^ ToString() override;
-#else    
+#else
+public:
 	DECLARE_DLL_OBJECT(CAgentFileImage)
 	friend class CAgentFileAcs;
 	friend class CAgentFileAcf;
-#endif	
+#endif
 };
 
 /////////////////////////////////////////////////////////////////////////////

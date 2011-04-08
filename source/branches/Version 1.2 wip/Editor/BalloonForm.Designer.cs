@@ -1,4 +1,24 @@
-﻿namespace AgentCharacterEditor
+﻿/////////////////////////////////////////////////////////////////////////////
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+/////////////////////////////////////////////////////////////////////////////
+/*
+	This file is part of Double Agent.
+
+    Double Agent is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Double Agent is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/////////////////////////////////////////////////////////////////////////////
+namespace AgentCharacterEditor
 {
 	partial class BalloonForm
 	{
@@ -134,11 +154,13 @@
 			this.LabelBalloonFontSample.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.LabelBalloonFontSample.AutoEllipsis = true;
-			this.LabelBalloonFontSample.Location = new System.Drawing.Point (429, 22);
+			this.LabelBalloonFontSample.CausesValidation = false;
+			this.LabelBalloonFontSample.Location = new System.Drawing.Point (429, 25);
 			this.LabelBalloonFontSample.Name = "LabelBalloonFontSample";
 			this.LabelBalloonFontSample.Size = new System.Drawing.Size (144, 30);
 			this.LabelBalloonFontSample.TabIndex = 8;
 			this.LabelBalloonFontSample.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.LabelBalloonFontSample.UseMnemonic = false;
 			// 
 			// LabelBalloonForegroundSample
 			// 
@@ -202,6 +224,7 @@
 			// 
 			// NumericNumLines
 			// 
+			this.NumericNumLines.DefaultBackColor = System.Drawing.SystemColors.Window;
 			this.NumericNumLines.Location = new System.Drawing.Point (140, 58);
 			this.NumericNumLines.Maximum = new decimal (new int[] {
             128,
@@ -259,6 +282,7 @@
 			// 
 			// NumericCharsPerLine
 			// 
+			this.NumericCharsPerLine.DefaultBackColor = System.Drawing.SystemColors.Window;
 			this.NumericCharsPerLine.Location = new System.Drawing.Point (140, 26);
 			this.NumericCharsPerLine.Maximum = new decimal (new int[] {
             255,

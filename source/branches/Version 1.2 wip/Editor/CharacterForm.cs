@@ -1,9 +1,30 @@
-﻿using System;
+﻿/////////////////////////////////////////////////////////////////////////////
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+/////////////////////////////////////////////////////////////////////////////
+/*
+	This file is part of Double Agent.
+
+    Double Agent is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Double Agent is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/////////////////////////////////////////////////////////////////////////////
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using DoubleAgent;
 using DoubleAgent.Character;
 
 namespace AgentCharacterEditor
@@ -132,6 +153,9 @@ namespace AgentCharacterEditor
 				TextBoxDescription.Enabled = true;
 				TextBoxExtra.Enabled = true;
 			}
+			TextBoxName.Modified = false;
+			TextBoxDescription.Modified = false;
+			TextBoxExtra.Modified = false;
 
 			return lLangID;
 		}
@@ -251,6 +275,213 @@ namespace AgentCharacterEditor
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Update
+
+		internal class AddRemoveCharacterName : UndoableAddRemove<FileCharacterName>
+		{
+			public AddRemoveCharacterName (CharacterFile pCharacterFile, FileCharacterName pName, bool pRemove)
+				: base (pCharacterFile, pName)
+			{
+				this.IsRemove = pRemove;
+			}
+
+			public override UndoUnit Apply ()
+			{
+				AddRemoveCharacterName	lApplied = null;
+
+				if (IsRemove)
+				{
+					if (CharacterFile.Names.Remove (this.Target))
+					{
+						lApplied = new AddRemoveCharacterName (CharacterFile, this.Target, false);
+						lApplied.IsRedo = !IsRedo;
+					}
+				}
+				else
+				{
+					FileCharacterName	lName = CharacterFile.Names.Add (this.Target.Language, this.Target.Name);
+
+					if (lName != null)
+					{
+						lName.Desc1 = this.Target.Desc1;
+						lName.Desc2 = this.Target.Desc2;
+						lApplied = new AddRemoveCharacterName (CharacterFile, lName, true);
+						lApplied.IsRedo = !IsRedo;
+					}
+				}
+				if (lApplied != null)
+				{
+					return OnApplied (lApplied);
+				}
+				return null;
+			}
+
+			public override string ToString ()
+			{
+				return String.Format ("{0} {1} name \"{2}\"", this.AddRemoveTitle, new System.Globalization.CultureInfo (this.Target.Language).EnglishName, this.Target.Name);
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		internal class UpdateCharacterName : UndoableUpdate
+		{
+			public UpdateCharacterName (CharacterFile pCharacterFile, UInt16 pLanguage, String pName, String pDesc1, String pDesc2)
+				: base (pCharacterFile)
+			{
+				this.Language = pLanguage;
+				this.Name = pName;
+				this.Desc1 = pDesc1;
+				this.Desc2 = pDesc2;
+			}
+
+			public UInt16 Language
+			{
+				get;
+				private set;
+			}
+			public String Name
+			{
+				get;
+				private set;
+			}
+			public String Desc1
+			{
+				get;
+				private set;
+			}
+			public String Desc2
+			{
+				get;
+				private set;
+			}
+
+			public override UndoUnit Apply ()
+			{
+				UpdateCharacterName	lApplied = null;
+				FileCharacterName	lName;
+				String				lSwap;
+
+				if (CharacterFile.Names.Contains (this.Language))
+				{
+					lName = CharacterFile.Names[this.Language];
+#if DEBUG_NOT
+					System.Diagnostics.Debug.Print ("Applying {0}", lName.ToString ());
+#endif
+
+					if ((this.Name != null) && (!this.Name.Equals (lName.Name)))
+					{
+						lSwap = lName.Name;
+						lName.Name = this.Name;
+						this.Name = lSwap;
+						lApplied = this;
+					}
+					if ((this.Desc1 != null) && (!this.Desc1.Equals (lName.Desc1)))
+					{
+						lSwap = lName.Desc1;
+						lName.Desc1 = this.Desc1;
+						this.Desc1 = lSwap;
+						lApplied = this;
+					}
+					if ((this.Desc2 != null) && (!this.Desc2.Equals (lName.Desc2)))
+					{
+						lSwap = lName.Desc2;
+						lName.Desc2 = this.Desc2;
+						this.Desc2 = lSwap;
+						lApplied = this;
+					}
+#if DEBUG_NOT
+				if (lApplied != null)
+				{
+					System.Diagnostics.Debug.Print ("Applyed  {0}", lName.ToString ());
+				}
+#endif
+				}
+				if (lApplied != null)
+				{
+					return OnApplied (lApplied);
+				}
+				return null;
+			}
+
+			public override string ToString ()
+			{
+				return String.Format ("change {0} name", new System.Globalization.CultureInfo (this.Language).EnglishName);
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		internal class UpdateCharacterGuid : UndoableUpdate
+		{
+			public UpdateCharacterGuid (CharacterFile pCharacterFile, Guid pGuid)
+				: base (pCharacterFile)
+			{
+				this.Guid = pGuid;
+			}
+
+			public Guid Guid
+			{
+				get;
+				private set;
+			}
+
+			public override UndoUnit Apply ()
+			{
+				Guid	lSwap;
+
+				if (!CharacterFile.Header.Guid.Equals (this.Guid))
+				{
+					lSwap = CharacterFile.Header.Guid;
+					CharacterFile.Header.Guid = this.Guid;
+					this.Guid = lSwap;
+
+					return OnApplied (this);
+				}
+				return null;
+			}
+
+			public override string ToString ()
+			{
+				return "change unique identifier";
+			}
+		}
+
+		internal class UpdateCharacterIcon : UndoableUpdate
+		{
+			public UpdateCharacterIcon (CharacterFile pCharacterFile, String pIconPath)
+				: base (pCharacterFile)
+			{
+				this.IconPath = pIconPath;
+			}
+
+			public String IconPath
+			{
+				get;
+				private set;
+			}
+
+			public override UndoUnit Apply ()
+			{
+				if (!CharacterFile.IconFilePath.Equals (this.IconPath))
+				{
+					String	lSwap = CharacterFile.IconFilePath;
+					CharacterFile.IconFilePath = this.IconPath;
+					this.IconPath = lSwap;
+
+					return OnApplied (this);
+				}
+				return null;
+			}
+
+			public override string ToString ()
+			{
+				return "icon";
+			}
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
 		#region Event Handlers
 
 		private void ListViewLanguage_SelectedIndexChanged (object sender, EventArgs e)
@@ -270,12 +501,9 @@ namespace AgentCharacterEditor
 					{
 						if (String.IsNullOrEmpty (lName.Desc1) && String.IsNullOrEmpty (lName.Desc2))
 						{
-							if (mCharacterFile.Names.Remove (lName))
-							{
-								ShowNameStates ();
-								ShowCharacterName ();
-								Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
-							}
+							AddRemoveCharacterName lUpdate = new AddRemoveCharacterName (mCharacterFile, lName, true);
+							lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableNameStateUpdate_Applied);
+							AddRemoveCharacterName.PutUndo (lUpdate.Apply () as AddRemoveCharacterName);
 						}
 						else
 						{
@@ -284,34 +512,45 @@ namespace AgentCharacterEditor
 					}
 					else
 					{
-						lName.Name = TextBoxName.Text;
-						Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
+						UpdateCharacterName lUpdate = new UpdateCharacterName (mCharacterFile, lName.Language, TextBoxName.Text, null, null);
+						lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableNameTextUpdate_Applied);
+						UpdateCharacterName.PutUndo (lUpdate.Apply () as UpdateCharacterName);
 					}
 				}
 				else if ((!String.IsNullOrEmpty (TextBoxName.Text)) && ((lName == null) || (TextBoxName.Text != lName.Name)))
 				{
-					if (mCharacterFile.Names.Add (mLangCurrent, TextBoxName.Text) != null)
-					{
-						ShowNameStates ();
-						ShowCharacterName ();
-						Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
-					}
+					lName = new FileCharacterName (mLangCurrent, TextBoxName.Text);
+					AddRemoveCharacterName lUpdate = new AddRemoveCharacterName (mCharacterFile, lName, false);
+					lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableNameStateUpdate_Applied);
+					AddRemoveCharacterName.PutUndo (lUpdate.Apply () as AddRemoveCharacterName);
 				}
 			}
+			TextBoxName.Modified = false;
 		}
+
+		private void UndoableNameStateUpdate_Applied (object sender, EventArgs e)
+		{
+			ShowNameStates ();
+			ShowCharacterName ();
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
 
 		private void TextBoxDescription_Validated (object sender, EventArgs e)
 		{
 			if ((TextBoxDescription.Modified) && (!Program.MainForm.FileIsReadOnly))
 			{
 				FileCharacterName	lName = mCharacterFile.FindName (mLangCurrent);
+				UndoableUpdate		lUpdate;
 
 				if ((lName != null) && ((Byte)lName.Language == (Byte)mLangCurrent))
 				{
-					lName.Desc1 = TextBoxDescription.Text;
-					Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
+					lUpdate = new UpdateCharacterName (mCharacterFile, lName.Language, null, TextBoxDescription.Text, null);
+					lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableNameTextUpdate_Applied);
+					UndoableUpdate.PutUndo (lUpdate.Apply () as UndoableUpdate);
 				}
 			}
+			TextBoxDescription.Modified = false;
 		}
 
 		private void TextBoxExtra_Validated (object sender, EventArgs e)
@@ -319,13 +558,21 @@ namespace AgentCharacterEditor
 			if ((TextBoxExtra.Modified) && (!Program.MainForm.FileIsReadOnly))
 			{
 				FileCharacterName	lName = mCharacterFile.FindName (mLangCurrent);
+				UndoableUpdate		lUpdate;
 
 				if ((lName != null) && ((Byte)lName.Language == (Byte)mLangCurrent))
 				{
-					lName.Desc2 = TextBoxExtra.Text;
-					Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
+					lUpdate = new UpdateCharacterName (mCharacterFile, lName.Language, null, null, TextBoxExtra.Text);
+					lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableNameTextUpdate_Applied);
+					UndoableUpdate.PutUndo (lUpdate.Apply () as UndoableUpdate);
 				}
 			}
+			TextBoxExtra.Modified = false;
+		}
+
+		private void UndoableNameTextUpdate_Applied (object sender, EventArgs e)
+		{
+			ShowCharacterName ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -334,9 +581,10 @@ namespace AgentCharacterEditor
 		{
 			if ((TextBoxIconFile.Modified) && (!Program.MainForm.FileIsReadOnly))
 			{
-				mCharacterFile.IconFilePath = TextBoxIconFile.Text;
-				ShowCharacterIcon ();
-				Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
+				UndoableUpdate	lUpdate = new UpdateCharacterIcon (mCharacterFile, TextBoxIconFile.Text);
+
+				lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableIconUpdate_Applied);
+				UndoableUpdate.PutUndo (lUpdate.Apply () as UndoableUpdate);
 			}
 		}
 
@@ -344,25 +592,39 @@ namespace AgentCharacterEditor
 		{
 			if (!Program.MainForm.FileIsReadOnly)
 			{
-				String	lFilePath = mCharacterFile.IconFilePath;
+				String			lFilePath = mCharacterFile.IconFilePath;
+				UndoableUpdate	lUpdate;
 
 				if (OpenFileDialogEx.OpenIconFile (ref lFilePath))
 				{
-					mCharacterFile.IconFilePath = lFilePath;
-					ShowCharacterIcon ();
-					Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
+					lUpdate = new UpdateCharacterIcon (mCharacterFile, lFilePath);
+					lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableIconUpdate_Applied);
+					UndoableUpdate.PutUndo (lUpdate.Apply () as UndoableUpdate);
 				}
 			}
 		}
+
+		private void UndoableIconUpdate_Applied (object sender, EventArgs e)
+		{
+			ShowCharacterIcon ();
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
 
 		private void ButtonNewGUID_Click (object sender, EventArgs e)
 		{
 			if (!Program.MainForm.FileIsReadOnly)
 			{
-				mCharacterFile.Header.Guid = System.Guid.NewGuid ();
-				ShowCharacterGuid ();
-				Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
+				UndoableUpdate	lUpdate = new UpdateCharacterGuid (mCharacterFile, System.Guid.NewGuid ());
+
+				lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableGuidUpdate_Applied);
+				UndoableUpdate.PutUndo (lUpdate.Apply () as UndoableUpdate);
 			}
+		}
+
+		private void UndoableGuidUpdate_Applied (object sender, EventArgs e)
+		{
+			ShowCharacterGuid ();
 		}
 
 		#endregion

@@ -56,9 +56,7 @@ namespace Character {
 /////////////////////////////////////////////////////////////////////////////
 
 CAgentFile::CAgentFile()
-:	mSignature (0),
-	mVersionMajor (0),
-	mVersionMinor (0)
+:	mSignature (0)
 {
 	Close ();
 }
@@ -78,7 +76,7 @@ CAgentFile* CAgentFile::CreateInstance (LPCTSTR pPath)
 	if	(pPath)
 	{
 		String^	lPath = ParseFilePath (pPath);
-		
+
 		if	(String::Compare (System::IO::Path::GetExtension (lPath), ".acd", true) == 0)
 		{
 			return CAgentFileScript::CreateInstance ();
@@ -94,7 +92,7 @@ CAgentFile* CAgentFile::CreateInstance (LPCTSTR pPath)
 	}
 #else
 	return CAgentFileBinary::CreateInstance (pPath);
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -105,11 +103,11 @@ CAgentFile* CAgentFile::CreateInstance (LPCTSTR pPath)
 bool CAgentFile::IsProperFilePath (const System::String^ pPath)
 {
 	String^	lPath = ParseFilePath (pPath);
-	
+
 	if	(!lPath->IsNullOrEmpty (lPath))
 	{
 		System::Uri^	lUri = gcnew System::Uri (lPath);
-		
+
 		if	(
 				(lUri->UriSchemeFile)
 			||	(lUri->UriSchemeHttp)
@@ -157,7 +155,7 @@ bool CAgentFile::IsProperFilePath (LPCTSTR pPath)
 bool CAgentFile::IsRelativeFilePath (const System::String^ pPath)
 {
 	String^	lPath;
-	
+
 	if	(!pPath->IsNullOrEmpty (const_cast <System::String^> (pPath)))
 	{
 		lPath = lPath->Copy (const_cast <System::String^> (pPath));
@@ -208,7 +206,7 @@ bool CAgentFile::IsRelativeFilePath (LPCTSTR pPath)
 System::String^ CAgentFile::ParseFilePath (const System::String^ pPath)
 {
 	String^	lPath;
-	
+
 	if	(!pPath->IsNullOrEmpty (const_cast <String^> (pPath)))
 	{
 		lPath = lPath->Copy (const_cast <String^> (pPath));
@@ -325,7 +323,7 @@ tBstrPtr CAgentFile::ParseRelativePath (LPCTSTR pRelativePath)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-HRESULT CAgentFile::Open (const System::String^ pPath)
+bool CAgentFile::Open (const System::String^ pPath)
 {
 	return Open (pPath, LogVerbose+1);
 }
@@ -347,13 +345,42 @@ void CAgentFile::Close ()
 	mHeader.Empty ();
 	mTts.Empty ();
 	mBalloon.Empty ();
-#endif	
+#endif
+	mVersionMajor = 2;
+	mVersionMinor = 0;
 }
 
+/////////////////////////////////////////////////////////////////////////////
+
 #ifdef	_M_CEE
-HRESULT CAgentFile::Save ()
+bool CAgentFile::Save ()
 {
-	return E_NOTIMPL;
+	return Save (nullptr);
+}
+
+bool CAgentFile::Save (UINT pLogLevel)
+{
+	return Save (nullptr, pLogLevel);
+}
+
+bool CAgentFile::Save (const System::String^ pPath)
+{
+	return Save (pPath, LogVerbose+1);
+}
+
+bool CAgentFile::Save (const System::String^ pPath, UINT pLogLevel)
+{
+	return Save (pPath, this, pLogLevel);
+}
+
+bool CAgentFile::Save (const System::String^ pPath, CAgentFile^ pSource)
+{
+	return Save (pPath, pSource, LogVerbose+1);
+}
+
+bool CAgentFile::Save (const System::String^ pPath, CAgentFile^ pSource, UINT pLogLevel)
+{
+	return false;
 }
 #endif
 
@@ -362,7 +389,7 @@ HRESULT CAgentFile::Save ()
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-const System::String^ CAgentFile::Path::get ()
+System::String^ CAgentFile::Path::get ()
 {
 	return (mPath) ? mPath->Copy (mPath) : nullptr;
 }
@@ -371,10 +398,10 @@ tBstrPtr CAgentFile::get_Path () const
 {
 	return mPath.AllocSysString();
 }
-#endif	
+#endif
 
 #ifdef	_M_CEE
-const System::String^ CAgentFile::FileName::get ()
+System::String^ CAgentFile::FileName::get ()
 {
 	return (mPath) ? System::IO::Path::GetFileName (mPath) : nullptr;
 }
@@ -384,7 +411,7 @@ tBstrPtr CAgentFile::get_FileName () const
 	CAtlString	lFileName (PathFindFileName (mPath));
 	return lFileName.AllocSysString();
 }
-#endif	
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -433,7 +460,7 @@ bool CAgentFile::get_IsAcsFile () const
 {
 	return false;
 }
-#endif	
+#endif
 
 #ifdef	_M_CEE
 bool CAgentFile::IsAcfFile::get ()
@@ -445,7 +472,7 @@ bool CAgentFile::get_IsAcfFile () const
 {
 	return false;
 }
-#endif	
+#endif
 
 #ifdef	_M_CEE
 bool CAgentFile::IsAcdFile::get ()
@@ -457,7 +484,7 @@ bool CAgentFile::get_IsAcdFile () const
 {
 	return false;
 }
-#endif	
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -474,7 +501,7 @@ DWORD CAgentFile::get_Version () const
 #endif
 
 #ifdef	_M_CEE
-const CAgentFileHeader^ CAgentFile::Header::get ()
+CAgentFileHeader^ CAgentFile::Header::get ()
 {
 	return mHeader;
 }
@@ -486,7 +513,7 @@ const CAgentFileHeader& CAgentFile::get_Header () const
 #endif
 
 #ifdef	_M_CEE
-const CAgentFileBalloon^ CAgentFile::Balloon::get ()
+CAgentFileBalloon^ CAgentFile::Balloon::get ()
 {
 	return mBalloon;
 }
@@ -498,7 +525,7 @@ const CAgentFileBalloon& CAgentFile::get_Balloon () const
 #endif
 
 #ifdef	_M_CEE
-const CAgentFileTts^ CAgentFile::Tts::get ()
+CAgentFileTts^ CAgentFile::Tts::get ()
 {
 	return mTts;
 }
@@ -512,7 +539,7 @@ const CAgentFileTts& CAgentFile::get_Tts () const
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-const CAgentFileNames^ CAgentFile::Names::get ()
+CAgentFileNames^ CAgentFile::Names::get ()
 {
 	if	(
 			(
@@ -541,7 +568,7 @@ const CAgentFileNames& CAgentFile::get_Names () const
 #endif
 
 #ifdef	_M_CEE
-const CAgentFileStates^ CAgentFile::States::get ()
+CAgentFileStates^ CAgentFile::States::get ()
 {
 	if	(
 			(
@@ -570,7 +597,7 @@ const CAgentFileStates& CAgentFile::get_States () const
 #endif
 
 #ifdef	_M_CEE
-const CAgentFileGestures^ CAgentFile::Gestures::get ()
+CAgentFileGestures^ CAgentFile::Gestures::get ()
 {
 	if	(
 			(
@@ -681,7 +708,7 @@ SAFEARRAY* CAgentFile::GetStateNames ()
 array <System::String^>^ CAgentFile::GetGestureNames ()
 {
 	array <String^>^	lRet = nullptr;
-	
+
 	try
 	{
 		if	(
@@ -795,7 +822,7 @@ UInt16 CAgentFile::NewFrameDuration::get()
 void CAgentFile::NewFrameDuration::set (UInt16 pValue)
 {
 }
-#endif	
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -935,7 +962,7 @@ INT_PTR CAgentFile::GetImageCount () const
 {
 	return 0;
 }
-	
+
 CAgentFileImage* CAgentFile::GetImage (INT_PTR pImageNdx, bool p32Bit, const COLORREF* pBkColor, UINT pLogLevel)
 {
 	return NULL;
@@ -1021,15 +1048,15 @@ UINT CAgentFile::GetImageBits (LPBYTE pImageBits, const CAgentFileImage* pImage,
 		memcpy (pImageBits, (LPBYTE)lImageBits, pImage->BitsSize);
 #else
 		memcpy (pImageBits, pImage->Bits, pImage->BitsSize);
-#endif		
+#endif
 	}
 	else
 	{
 #ifdef	_M_CEE
 		System::Drawing::Size	lImageSize (mHeader->ImageSize);
-#else		
+#else
 		CSize					lImageSize (mHeader.ImageSize);
-#endif		
+#endif
 
 		if	(pImage)
 		{
@@ -1039,7 +1066,7 @@ UINT CAgentFile::GetImageBits (LPBYTE pImageBits, const CAgentFileImage* pImage,
 #else
 			lImageSize.cx = min (lImageSize.cx, pImage->ImageSize.cx);
 			lImageSize.cy = min (lImageSize.cy, pImage->ImageSize.cy);
-#endif			
+#endif
 			p32Bit = pImage->Is32Bit;
 		}
 		if	(p32Bit)
@@ -1048,7 +1075,7 @@ UINT CAgentFile::GetImageBits (LPBYTE pImageBits, const CAgentFileImage* pImage,
 			lRet = lImageSize.Width * lImageSize.Height * 4;
 #else
 			lRet = lImageSize.cx * lImageSize.cy * 4;
-#endif			
+#endif
 		}
 		else
 		{
@@ -1056,7 +1083,7 @@ UINT CAgentFile::GetImageBits (LPBYTE pImageBits, const CAgentFileImage* pImage,
 			lRet = ((lImageSize.Width + 3) / 4) * 4 * lImageSize.Height;
 #else
 			lRet = ((lImageSize.cx + 3) / 4) * 4 * lImageSize.cy;
-#endif			
+#endif
 		}
 		if	(
 				(pImage)
@@ -1100,7 +1127,7 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame,
 		lRet = GetImageBits (NULL, nullptr, p32Bit);
 #else
 		lRet = GetImageBits (NULL, NULL, p32Bit);
-#endif		
+#endif
 	}
 
 	if	(
@@ -1122,7 +1149,7 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame,
 		LPCOLORREF					lPalette = mHeader.Palette;
 		BYTE						lTransparency = mHeader.Transparency;
 		USHORT						lOverlayNdx;
-#endif		
+#endif
 		INT_PTR						lMaxNdx = (long)((short)pFrame->ImageCount)-1;
 		INT_PTR						lImageNdx = lMaxNdx + 1;
 		INT_PTR						lSrcNdx;
@@ -1147,7 +1174,7 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame,
 					break;
 				}
 			}
-#endif				
+#endif
 		}
 
 		if	(p32Bit)
@@ -1183,7 +1210,7 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame,
 #else
 				lImage = GetImage (pFrame->Images [lImageNdx].ImageNdx, false);
 				lOffset = pFrame->Images [lImageNdx].Offset;
-#endif				
+#endif
 			}
 			else
 			if	(
@@ -1232,7 +1259,7 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame,
 				&&	(lOffset.y == 0)
 				&&	(lImage->ImageSize.cx == mHeader.ImageSize.cx)
 				&&	(lImage->ImageSize.cy == mHeader.ImageSize.cy)
-#endif				
+#endif
 				&&	(!p32Bit)
 				)
 			{
@@ -1240,7 +1267,7 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame,
 				pin_ptr <BYTE>	lImageBits = &lImage->Bits[0];
 #else
 				const BYTE*	lImageBits = lImage->Bits;
-#endif				
+#endif
 
 				if	(lImageNdx == lMaxNdx)
 				{
@@ -1248,7 +1275,7 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame,
 					memcpy (pImageBits, (LPBYTE)lImageBits, lImage->BitsSize);
 #else
 					memcpy (pImageBits, lImageBits, lImage->BitsSize);
-#endif					
+#endif
 					continue;
 				}
 
@@ -1266,7 +1293,7 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame,
 				pin_ptr <BYTE>	lImageBits = &lImage->Bits[0];
 #else
 				const BYTE*	lImageBits = lImage->Bits;
-#endif				
+#endif
 
 #ifdef	_M_CEE
 				lSrcScanBytes = ((lImage->mImageSize.Width + 3) / 4) * 4;
@@ -1288,13 +1315,13 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame,
 				{
 					lTrgScanBytes = ((mHeader.ImageSize.cx + 3) / 4) * 4;
 				}
-#endif				
+#endif
 
 #ifdef	_M_CEE
 				for	(lPixel.Y = max (-lOffset.Y, 0); lPixel.Y < min (lImage->ImageSize.Height, mHeader->ImageSize.Height - lOffset.Y); lPixel.Y++)
 #else
 				for	(lPixel.y = max (-lOffset.y, 0); lPixel.y < min (lImage->ImageSize.cy, mHeader.ImageSize.cy - lOffset.y); lPixel.y++)
-#endif				
+#endif
 				{
 #ifdef	_M_CEE
 					lTrgNdx = (mHeader->ImageSize.Height - (lPixel.Y + lOffset.Y) - 1) * lTrgScanBytes;
@@ -1326,7 +1353,7 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame,
 					lSrcNdx = ((lImage->ImageSize.Height - lPixel.Y - 1) * lSrcScanBytes) + max (-lOffset.X, 0);
 #else
 					lSrcNdx = ((lImage->ImageSize.cy - lPixel.y - 1) * lSrcScanBytes) + max (-lOffset.x, 0);
-#endif					
+#endif
 
 #ifdef	_M_CEE
 					for	(lPixel.X = max (-lOffset.X, 0); lPixel.X < min (lImage->ImageSize.Width, mHeader->ImageSize.Width - lOffset.X); lPixel.X++)
@@ -1342,7 +1369,7 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame,
 								||	(lPalette->Entries [lImageBits [lSrcNdx]].Equals (lPalette->Entries [lTransparency]))
 #else
 								||	(lPalette [lImageBits [lSrcNdx]] == lPalette [lTransparency])
-#endif								
+#endif
 								)
 							{
 								if	(lImageNdx == lMaxNdx)
@@ -1360,7 +1387,7 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame,
 									{
 										*(COLORREF*)(pImageBits + lTrgNdx) = *pBkColor | 0xFF000000;
 									}
-#endif									
+#endif
 								}
 							}
 							else
@@ -1369,7 +1396,7 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame,
 								*(COLORREF*)(pImageBits + lTrgNdx) = lPalette->Entries [lImageBits [lSrcNdx]].ToArgb() | 0xFF000000;
 #else
 								*(COLORREF*)(pImageBits + lTrgNdx) = lPalette [lImageBits [lSrcNdx]] | 0xFF000000;
-#endif								
+#endif
 							}
 							lSrcNdx++;
 							lTrgNdx += 4;
@@ -1418,7 +1445,7 @@ System::Drawing::Bitmap^ CAgentFile::GetImageBitmap (CAgentFileImage^ pImage)
 {
 	System::Drawing::Bitmap^	lBitmap = nullptr;
 	pin_ptr <BYTE>				lImageBits;
-	
+
 	if	(
 			(pImage)
 		&&	(pImage->Bits)
@@ -1467,7 +1494,7 @@ System::Drawing::Bitmap^ CAgentFile::GetFrameBitmap (CAgentFileFrame^ pFrame, bo
 	array <BYTE>^				lBits;
 	UINT						lBitsSize;
 	pin_ptr <BYTE>				lImageBits;
-	
+
 	if	(
 			(pFrame)
 		&&	(lBitsSize = GetFrameBits (NULL, pFrame, p32Bit))
@@ -1512,6 +1539,11 @@ int CAgentFile::GetSoundSize (int pSoundNdx)
 	return 0;
 }
 
+array <BYTE>^ CAgentFile::GetSound (int pSoundNdx)
+{
+	return nullptr;
+}
+
 System::String^ CAgentFile::GetSoundFilePath (int pSoundNdx)
 {
 	return nullptr;
@@ -1543,7 +1575,7 @@ void CAgentFile::FreeNames ()
 	mNames = gcnew CAgentFileNames;
 #else
 	mNames.DeleteAll ();
-#endif	
+#endif
 }
 
 bool CAgentFile::ReadNames ()
@@ -1569,7 +1601,7 @@ CAgentFileName* CAgentFile::FindName (WORD pLangID)
 #else
 	CAgentFileName*	lName = NULL;
 	INT_PTR				lNdx;
-#endif	
+#endif
 
 #ifdef	_M_CEE
 	if	(
@@ -1578,7 +1610,7 @@ CAgentFileName* CAgentFile::FindName (WORD pLangID)
 		)
 #else
 	if	(mNames.GetCount() > 0)
-#endif		
+#endif
 	{
 		if	(pLangID == LANG_USER_DEFAULT)
 		{
@@ -1607,7 +1639,7 @@ CAgentFileName* CAgentFile::FindName (WORD pLangID)
 				break;
 			}
 		}
-#endif		
+#endif
 
 		if	(!lName)
 		{
@@ -1626,7 +1658,7 @@ CAgentFileName* CAgentFile::FindName (WORD pLangID)
 					break;
 				}
 			}
-#else		
+#else
 			for	(lNdx = 0; lName = mNames (lNdx); lNdx++)
 			{
 				if	(
@@ -1654,7 +1686,7 @@ CAgentFileName* CAgentFile::FindName (WORD pLangID)
 					break;
 				}
 			}
-#else			
+#else
 			for	(lNdx = 0; lName = mNames (lNdx); lNdx++)
 			{
 				if	(PRIMARYLANGID (lName->Language) == PRIMARYLANGID (pLangID))
@@ -1662,7 +1694,7 @@ CAgentFileName* CAgentFile::FindName (WORD pLangID)
 					break;
 				}
 			}
-#endif			
+#endif
 		}
 
 		if	(!lName)
@@ -1679,7 +1711,7 @@ CAgentFileName* CAgentFile::FindName (WORD pLangID)
 			}
 #else
 			lName = mNames (0);
-#endif			
+#endif
 		}
 
 #ifdef	_DEBUG_FIND_NAME
@@ -1706,7 +1738,7 @@ void CAgentFile::FreeStates ()
 #else
 	mStates.mGestures.RemoveAll ();
 	mStates.mNames.RemoveAll ();
-#endif	
+#endif
 }
 
 bool CAgentFile::ReadStates ()

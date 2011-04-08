@@ -44,20 +44,20 @@ extern LPCTSTR _AtlProfilePath;
 #define	DECLARE_DLL_OBJECT(theClass) \
 public: \
 static void* __stdcall operator new(size_t nSize); \
-static void __stdcall operator delete(void* p); 
+static void __stdcall operator delete(void* p);
 #endif
 
 #ifndef	DECLARE_DLL_OBJECT_EX
 #define	DECLARE_DLL_OBJECT_EX(theClass, exDecl) \
 public: \
 exDecl static void* __stdcall operator new(size_t nSize); \
-exDecl static void __stdcall operator delete(void* p); 
+exDecl static void __stdcall operator delete(void* p);
 #endif
 
 #ifndef	IMPLEMENT_DLL_OBJECT
 #define	IMPLEMENT_DLL_OBJECT(theClass) \
 void* __stdcall theClass::operator new(size_t nSize) {return ::operator new(nSize);} \
-void __stdcall theClass::operator delete(void* p) {::operator delete(p);} 
+void __stdcall theClass::operator delete(void* p) {::operator delete(p);}
 #endif
 
 ////////////////////////////////////////////////////////////////////////

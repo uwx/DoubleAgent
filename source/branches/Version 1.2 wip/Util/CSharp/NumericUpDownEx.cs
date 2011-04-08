@@ -1,4 +1,26 @@
-﻿using System;
+﻿/////////////////////////////////////////////////////////////////////////////
+//	Copyright 2009-2011 Cinnamon Software Inc.
+/////////////////////////////////////////////////////////////////////////////
+/*
+	This file is a utility used by Double Agent but not specific to
+	Double Agent.  However, it is included as part of the Double Agent
+	source code under the following conditions:
+
+    This is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this file.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/////////////////////////////////////////////////////////////////////////////
+using System;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.Drawing;
@@ -10,7 +32,14 @@ namespace DoubleAgent
 		private const	int WM_KEYDOWN = 0x0100;
 		private TextBox	mTextBox = null;
 		private Color	mDefaultBackColor = SystemColors.Window;
+		private Timer	mWheelTimer = null;
 
+		public NumericUpDownEx ()
+		{
+			this.MouseWheelSingle = true;
+		}
+
+		[System.ComponentModel.Browsable (false)]
 		public System.Windows.Forms.TextBox TextBox
 		{
 			get
@@ -29,6 +58,14 @@ namespace DoubleAgent
 			{
 				mDefaultBackColor = value;
 			}
+		}
+
+		[System.ComponentModel.Category ("Behavior")]
+		[System.ComponentModel.DefaultValue (true)]
+		public Boolean MouseWheelSingle
+		{
+			get;
+			set;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -76,6 +113,11 @@ namespace DoubleAgent
 
 		private bool ValidateNow ()
 		{
+			if (mWheelTimer != null)
+			{
+				mWheelTimer.Stop ();
+				mWheelTimer = null;
+			}
 			if (CausesValidation)
 			{
 				CancelEventArgs	lEventArgs = new CancelEventArgs ();
@@ -94,6 +136,11 @@ namespace DoubleAgent
 
 		protected override void OnValidated (EventArgs e)
 		{
+			if (mWheelTimer != null)
+			{
+				mWheelTimer.Stop ();
+				mWheelTimer = null;
+			}
 			if ((base.Value >= Minimum) && (base.Value <= Maximum) && (BackColor != DefaultBackColor))
 			{
 				BackColor = DefaultBackColor;
@@ -105,11 +152,11 @@ namespace DoubleAgent
 
 		protected override void OnControlAdded (ControlEventArgs e)
 		{
-			try
+			if (e.Control is TextBox)
 			{
-				mTextBox = (TextBox)e.Control;
+				mTextBox = e.Control as TextBox;
 			}
-			catch
+			else
 			{
 				try
 				{
@@ -137,7 +184,36 @@ namespace DoubleAgent
 
 		protected override void OnMouseWheel (MouseEventArgs e)
 		{
-			base.OnMouseWheel (e);
+			if (this.MouseWheelSingle)
+			{
+				this.Value += e.Delta / System.Windows.Forms.SystemInformation.MouseWheelScrollDelta;
+			}
+			else
+			{
+				base.OnMouseWheel (e);
+			}
+			//if (Math.Abs (e.Delta) > System.Windows.Forms.SystemInformation.MouseWheelScrollDelta)
+			{
+				if (mWheelTimer == null)
+				{
+					mWheelTimer = new Timer();
+					mWheelTimer.Tick += new EventHandler (WheelTimer_Tick);
+					mWheelTimer.Interval = System.Windows.Forms.SystemInformation.DoubleClickTime;
+				}
+				mWheelTimer.Stop ();
+				mWheelTimer.Start ();
+			}
+			//else
+			//{
+			//    if (mWheelTimer == null)
+			//    {
+			//        ValidateNow ();
+			//    }
+			//}
+		}
+
+		void WheelTimer_Tick (object sender, EventArgs e)
+		{
 			ValidateNow ();
 		}
 

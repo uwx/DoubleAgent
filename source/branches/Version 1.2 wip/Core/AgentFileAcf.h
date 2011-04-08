@@ -45,7 +45,7 @@ public:
 	_DACORE_IMPEXP virtual const CAgentFileAnimation* GetAnimation (INT_PTR pAnimationNdx);
 
 	_DACORE_IMPEXP virtual INT_PTR GetImageCount () const;
-	_DACORE_IMPEXP virtual CAgentFileImage* GetImage (INT_PTR pImageNdx, bool p32Bit = false, UINT pLogLevel = 15);
+	_DACORE_IMPEXP virtual CAgentFileImage* GetImage (INT_PTR pImageNdx, bool p32Bit = false, const COLORREF* pBkColor = NULL, UINT pLogLevel = 15);
 
 	_DACORE_IMPEXP virtual INT_PTR GetSoundCount () const;
 	_DACORE_IMPEXP virtual long GetSoundSize (INT_PTR pSoundNdx);

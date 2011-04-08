@@ -59,6 +59,7 @@ static LPCTSTR	sProfileIconOnLoad = _T("IconOnLoad");
 static LPCTSTR	sProfileIconGenerated = _T("IconGenerated");
 static LPCTSTR	sProfileIconClipped = _T("IconClipped");
 static LPCTSTR	sProfileIconIdentified = _T("IconIdentified");
+static LPCTSTR	sProfileUseMsAgent = _T("UseMsAgent");
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -93,6 +94,7 @@ BEGIN_MESSAGE_MAP(CAnimationTestDlg, CDialog)
 	ON_BN_CLICKED(IDC_ICON_SHOW, OnIconShown)
 	ON_BN_CLICKED(IDC_ICON_GENERATE, OnIconGenerated)
 	ON_BN_CLICKED(IDC_ICON_IDENTITY, OnIconIdentified)
+	ON_BN_CLICKED(IDC_USE_MSAGENT, OnUseMsAgent)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -100,6 +102,7 @@ END_MESSAGE_MAP()
 
 BEGIN_INTERFACE_MAP(CAnimationTestDlg, CDialog)
 	INTERFACE_PART(CAnimationTestDlg, __uuidof(IDaSvrNotifySink), DaSvrNotifySink)
+	INTERFACE_PART(CAnimationTestDlg, __uuidof(IAgentNotifySinkEx), DaSvrNotifySink)
 END_INTERFACE_MAP()
 
 IMPLEMENT_IUNKNOWN(CAnimationTestDlg, DaSvrNotifySink)
@@ -161,6 +164,7 @@ void CAnimationTestDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_ICON_GENERATE, mIconGenerated);
 	DDX_Control(pDX, IDC_ICON_GENERATE_CLIP, mIconClipped);
 	DDX_Control(pDX, IDC_ICON_IDENTITY, mIconIdentified);
+	DDX_Control(pDX, IDC_USE_MSAGENT, mUseMsAgent);
 	//}}AFX_DATA_MAP
 }
 
@@ -172,6 +176,7 @@ BOOL CAnimationTestDlg::OnInitDialog()
 	GetAgentServer ();
 	ShowCharacters ();
 	LoadConfig ();
+	GetAgentServer (mUseMsAgent.GetCheck() ? true : false);
 	ShowCharacterState ();
 
 	return TRUE;
@@ -194,8 +199,8 @@ void CAnimationTestDlg::ShowCharacters ()
 	lClientRect.right -= GetSystemMetrics (SM_CXVSCROLL);
 
 	if	(
-			(mServer != NULL)
-		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->get_CharacterFiles (&lCharacterFiles))))
+			(mDaServer)
+		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mDaServer->get_CharacterFiles (&lCharacterFiles))))
 		)
 	{
 #if	TRUE
@@ -218,7 +223,9 @@ void CAnimationTestDlg::ShowCharacters ()
 			}
 		}
 
-/**/	mCharacterList.InsertItem (0, _T("C:\\DoubleAgent\\_Test/Chars\\TestChar1.acs"));
+/**/	mCharacterList.InsertItem (0, _T("C:\\DoubleAgent\\_Test\\Chars\\TestChar1.acs"));
+/**/	mCharacterList.InsertItem (0, _T("C:\\DoubleAgent\\_Test\\Chars\\TestChar1Copy.acs"));
+/**/	mCharacterList.InsertItem (0, _T("C:\\DoubleAgent\\_Test\\Chars\\MerlinCopy.acs"));
 /**/	mCharacterList.InsertItem (0, _T("file://C:/DoubleAgent/_Test/Chars/TestChar1.acf"));
 		mCharacterList.InsertItem (0, _T("<default>"));
 	}
@@ -234,7 +241,7 @@ bool CAnimationTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 	if	(mCharacterPath.CompareNoCase (CString (pCharacterPath)) != 0)
 #endif
 	{
-		ReleaseAgentCharacter ();
+		FreeAgentCharacter ();
 		CharacterIsVisible (false);
 	}
 
@@ -244,6 +251,11 @@ bool CAnimationTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 				(pCharacterPath[0])
 			&&	(PathIsURL (pCharacterPath))
 			)
+		{
+			lRet = true;
+		}
+		else
+		if	(mMsServer)
 		{
 			lRet = true;
 		}
@@ -326,7 +338,8 @@ void CAnimationTestDlg::ShowCharacterDetails ()
 	CAgentFileName*	lFileName;
 
 	if	(
-			(mAgentPreviewWnd)
+			(!mMsServer)
+		&&	(mAgentPreviewWnd)
 		&&	(mAgentPreviewWnd->IsWindow ())
 		&&	(mAgentPreviewWnd->GetAgentFile())
 		&&	(lFileName = mAgentPreviewWnd->GetAgentFile()->FindName ())
@@ -361,7 +374,8 @@ void CAnimationTestDlg::ShowGestures ()
 		if	(
 				(!lCharacterPath.IsEmpty ())
 			&&	(
-					(mCharacter != NULL)
+					(mDaCharacter)
+				||	(mMsCharacter)
 				||	(!PathIsURL (mCharacterPath))
 				)
 			&&	(lAgentFile = CAgentFile::CreateInstance (lCharacterPath))
@@ -378,7 +392,10 @@ void CAnimationTestDlg::ShowGestures ()
 			}
 
 			if	(
-					(mCharacter != NULL)
+					(	
+						(mDaCharacter)
+					||	(mMsCharacter)
+					)
 				&&	(PathIsURL (mCharacterPath))
 				)
 			{
@@ -396,7 +413,7 @@ void CAnimationTestDlg::ShowGestures ()
 					{
 						lGestureName = JoinStringArray (lGestureNames, _T(","));
 						lGestureNames.RemoveAll ();
-						mCharacter->Prepare (PrepareResource_Animation, _bstr_t(lGestureName), lQueuePrepare, &lReqID);
+						mDaCharacter->Prepare (PrepareResource_Animation, _bstr_t(lGestureName), lQueuePrepare, &lReqID);
 					}
 					if	(lNdx >= 20)
 					{
@@ -436,7 +453,8 @@ void CAnimationTestDlg::ShowStates ()
 		if	(
 				(!lCharacterPath.IsEmpty ())
 			&&	(
-					(mCharacter != NULL)
+					(mDaCharacter)
+				||	(mMsCharacter)
 				||	(!PathIsURL (mCharacterPath))
 				)
 			&&	(lAgentFile = CAgentFile::CreateInstance (lCharacterPath))
@@ -453,7 +471,10 @@ void CAnimationTestDlg::ShowStates ()
 			}
 
 			if	(
-					(mCharacter != NULL)
+					(
+						(mDaCharacter)
+					||	(mMsCharacter)
+					)
 				&&	(PathIsURL (mCharacterPath))
 				)
 			{
@@ -471,7 +492,7 @@ void CAnimationTestDlg::ShowStates ()
 					{
 						lStateName = JoinStringArray (lStateNames, _T(","));
 						lStateNames.RemoveAll ();
-						mCharacter->Prepare (PrepareResource_State, _bstr_t(lStateName), lQueuePrepare, &lReqID);
+						mDaCharacter->Prepare (PrepareResource_State, _bstr_t(lStateName), lQueuePrepare, &lReqID);
 					}
 					if	(lNdx >= 20)
 					{
@@ -578,41 +599,82 @@ bool CAnimationTestDlg::ShowSelGesture (bool pStopFirst)
 			else
 			if	(mLastAnimationReqID > 0)
 			{
-				LogComErr (_LOG_CHAR_CALLS, mCharacter->Stop (mLastAnimationReqID));
+				if	(mDaCharacter)
+				{
+					LogComErr (_LOG_CHAR_CALLS, mDaCharacter->Stop (mLastAnimationReqID));
+				}
+				else
+				if	(mMsCharacter)
+				{
+					LogComErr (_LOG_CHAR_CALLS, mMsCharacter->Stop (mLastAnimationReqID));
+				}
 				mLastAnimationReqID = 0;
 			}
 
-			lResult = mCharacter->Play (_bstr_t(lSelGesture), &mLastAnimationReqID);
+			if	(mDaCharacter)
+			{
+				lResult = mDaCharacter->Play (_bstr_t(lSelGesture), &mLastAnimationReqID);
+			}
+			else
+			if	(mMsCharacter)
+			{
+				lResult = mMsCharacter->Play (_bstr_t(lSelGesture), &mLastAnimationReqID);
+			}
 			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Play [%s] [%d]"), mCharacterId, lSelGesture, mLastAnimationReqID)))
 			{
-#if	TRUE
+				lRet = true;
+#if	FALSE
 				if	(lSelGesture.CompareNoCase (_T("DoMagic1")) == 0)
 				{
 					LogMessage (LogDebug, _T("DoMagic1 [%d]"), mLastAnimationReqID);
-					LogComErr (_LOG_CHAR_CALLS, mCharacter->Play (_bstr_t(_T("DoMagic2")), &mLastAnimationReqID));
+					if	(mDaCharacter)
+					{
+						LogComErr (_LOG_CHAR_CALLS, mDaCharacter->Play (_bstr_t(_T("DoMagic2")), &mLastAnimationReqID));
+					}
 					LogMessage (LogDebug, _T("DoMagic2 [%d]"), mLastAnimationReqID);
-					LogComErr (_LOG_CHAR_CALLS, mCharacter->Play (_bstr_t(_T("RestPose")), &mLastAnimationReqID));
+					if	(mDaCharacter)
+					{
+						LogComErr (_LOG_CHAR_CALLS, mDaCharacter->Play (_bstr_t(_T("RestPose")), &mLastAnimationReqID));
+					}
 					LogMessage (LogDebug, _T("RestPose [%d]"), mLastAnimationReqID);
 				}
-#endif			
-				lRet = true;
+#endif
 #if	TRUE
 				if	(lSelGesture.CompareNoCase (_T("DoMagic1")) == 0)
 				{
-					mCharacter->Play (_bstr_t("DoMagic2"), &mLastAnimationReqID);
-					mCharacter->Play (_bstr_t("RestPose"), &mLastAnimationReqID);
+					if	(mDaCharacter)
+					{
+						mDaCharacter->Play (_bstr_t("DoMagic2"), &mLastAnimationReqID);
+						mDaCharacter->Play (_bstr_t("RestPose"), &mLastAnimationReqID);
+					}
+					else
+					if	(mMsCharacter)
+					{
+						mMsCharacter->Play (_bstr_t("DoMagic2"), &mLastAnimationReqID);
+						mMsCharacter->Play (_bstr_t("RestPose"), &mLastAnimationReqID);
+					}
 				}
 				else
 				if	(lSelGesture.CompareNoCase (_T("DoMagic2")) == 0)
 				{
-					mCharacter->Play (_bstr_t("RestPose"), &mLastAnimationReqID);
+					if	(mDaCharacter)
+					{
+						mDaCharacter->Play (_bstr_t("RestPose"), &mLastAnimationReqID);
+					}
+					else
+					if	(mMsCharacter)
+					{
+						mMsCharacter->Play (_bstr_t("RestPose"), &mLastAnimationReqID);
+					}
 				}
 #endif
 			}
 		}
 
 		if	(
-				(
+				(!mMsServer)
+			&&	(!mMsCharacter)
+			&&	(
 					(!IsCharacterVisible ())
 				||	(mAnimateBoth.GetCheck())
 				)
@@ -656,73 +718,171 @@ bool CAnimationTestDlg::ShowSelState (bool pStopFirst)
 			else
 			if	(mLastAnimationReqID > 0)
 			{
-				LogComErr (_LOG_CHAR_CALLS, mCharacter->Stop (mLastAnimationReqID));
+				if	(mDaCharacter)
+				{
+					LogComErr (_LOG_CHAR_CALLS, mDaCharacter->Stop (mLastAnimationReqID));
+				}
+				else
+				if	(mMsCharacter)
+				{
+					LogComErr (_LOG_CHAR_CALLS, mMsCharacter->Stop (mLastAnimationReqID));
+				}
 				mLastAnimationReqID = 0;
 			}
 
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetSize (&lCharRect.right, &lCharRect.bottom), _T("[%d] GetSize"), mCharacterId);
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetPosition (&lCharRect.left, &lCharRect.top), _T("[%d] GetPosition"), mCharacterId);
+			if	(mDaCharacter)
+			{
+				LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->GetSize (&lCharRect.right, &lCharRect.bottom), _T("[%d] GetSize"), mCharacterId);
+				LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->GetPosition (&lCharRect.left, &lCharRect.top), _T("[%d] GetPosition"), mCharacterId);
+			}
+			else
+			if	(mMsCharacter)
+			{
+				LogComErr (_LOG_CHAR_CALLS_EX, mMsCharacter->GetSize (&lCharRect.right, &lCharRect.bottom), _T("[%d] GetSize"), mCharacterId);
+				LogComErr (_LOG_CHAR_CALLS_EX, mMsCharacter->GetPosition (&lCharRect.left, &lCharRect.top), _T("[%d] GetPosition"), mCharacterId);
+			}
 			lCharRect.right += lCharRect.left;
 			lCharRect.bottom += lCharRect.top;
 
 			if	(lSelState.CompareNoCase (_T("GESTURINGDOWN")) == 0)
 			{
-				lResult = mCharacter->GestureAt ((short)lCharRect.CenterPoint().x, (short)lCharRect.bottom, &mLastAnimationReqID);
+				if	(mDaCharacter)
+				{
+					lResult = mDaCharacter->GestureAt ((short)lCharRect.CenterPoint().x, (short)lCharRect.bottom, &mLastAnimationReqID);
+				}
+				else
+				if	(mMsCharacter)
+				{
+					lResult = mMsCharacter->GestureAt ((short)lCharRect.CenterPoint().x, (short)lCharRect.bottom, &mLastAnimationReqID);
+				}
 				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] GestureDown [%d]"), mCharacterId, mLastAnimationReqID);
 			}
 			else
 			if	(lSelState.CompareNoCase (_T("GESTURINGUP")) == 0)
 			{
-				lResult = mCharacter->GestureAt ((short)lCharRect.CenterPoint().x, (short)lCharRect.top, &mLastAnimationReqID);
+				if	(mDaCharacter)
+				{
+					lResult = mDaCharacter->GestureAt ((short)lCharRect.CenterPoint().x, (short)lCharRect.top, &mLastAnimationReqID);
+				}
+				else
+				if	(mMsCharacter)
+				{
+					lResult = mMsCharacter->GestureAt ((short)lCharRect.CenterPoint().x, (short)lCharRect.top, &mLastAnimationReqID);
+				}
 				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] GestureUp [%d]"), mCharacterId, mLastAnimationReqID);
 			}
 			else
 			if	(lSelState.CompareNoCase (_T("GESTURINGRIGHT")) == 0)
 			{
-				lResult = mCharacter->GestureAt ((short)lCharRect.left, (short)lCharRect.CenterPoint().y, &mLastAnimationReqID);
+				if	(mDaCharacter)
+				{
+					lResult = mDaCharacter->GestureAt ((short)lCharRect.left, (short)lCharRect.CenterPoint().y, &mLastAnimationReqID);
+				}
+				else
+				if	(mMsCharacter)
+				{
+					lResult = mMsCharacter->GestureAt ((short)lCharRect.left, (short)lCharRect.CenterPoint().y, &mLastAnimationReqID);
+				}
 				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] GestureRight [%d]"), mCharacterId, mLastAnimationReqID);
 			}
 			else
 			if	(lSelState.CompareNoCase (_T("GESTURINGLEFT")) == 0)
 			{
-				lResult = mCharacter->GestureAt ((short)lCharRect.right, (short)lCharRect.CenterPoint().y, &mLastAnimationReqID);
+				if	(mDaCharacter)
+				{
+					lResult = mDaCharacter->GestureAt ((short)lCharRect.right, (short)lCharRect.CenterPoint().y, &mLastAnimationReqID);
+				}
+				else
+				if	(mMsCharacter)
+				{
+					lResult = mMsCharacter->GestureAt ((short)lCharRect.right, (short)lCharRect.CenterPoint().y, &mLastAnimationReqID);
+				}
 				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] GestureLeft [%d]"), mCharacterId, mLastAnimationReqID);
 			}
 			else
 			if	(lSelState.CompareNoCase (_T("MOVINGDOWN")) == 0)
 			{
-				lResult = mCharacter->MoveTo ((short)lCharRect.left, (short)lCharRect.top+lCharRect.Height()*2, 1000, &mLastAnimationReqID);
+				if	(mDaCharacter)
+				{
+					lResult = mDaCharacter->MoveTo ((short)lCharRect.left, (short)lCharRect.top+lCharRect.Height()*2, 1000, &mLastAnimationReqID);
+				}
+				else
+				if	(mMsCharacter)
+				{
+					lResult = mMsCharacter->MoveTo ((short)lCharRect.left, (short)lCharRect.top+lCharRect.Height()*2, 1000, &mLastAnimationReqID);
+				}
 				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] MoveDown [%d]"), mCharacterId, mLastAnimationReqID);
 			}
 			else
 			if	(lSelState.CompareNoCase (_T("MOVINGUP")) == 0)
 			{
-				lResult = mCharacter->MoveTo ((short)lCharRect.left, (short)lCharRect.top-lCharRect.Height()*2, 1000, &mLastAnimationReqID);
+				if	(mDaCharacter)
+				{
+					lResult = mDaCharacter->MoveTo ((short)lCharRect.left, (short)lCharRect.top-lCharRect.Height()*2, 1000, &mLastAnimationReqID);
+				}
+				else
+				if	(mMsCharacter)
+				{
+					lResult = mMsCharacter->MoveTo ((short)lCharRect.left, (short)lCharRect.top-lCharRect.Height()*2, 1000, &mLastAnimationReqID);
+				}
 				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] MoveUp [%d]"), mCharacterId, mLastAnimationReqID);
 			}
 			else
 			if	(lSelState.CompareNoCase (_T("MOVINGRIGHT")) == 0)
 			{
-				lResult = mCharacter->MoveTo ((short)lCharRect.left-lCharRect.Width()*2, (short)lCharRect.top, 1000, &mLastAnimationReqID);
+				if	(mDaCharacter)
+				{
+					lResult = mDaCharacter->MoveTo ((short)lCharRect.left-lCharRect.Width()*2, (short)lCharRect.top, 1000, &mLastAnimationReqID);
+				}
+				else
+				if	(mMsCharacter)
+				{
+					lResult = mMsCharacter->MoveTo ((short)lCharRect.left-lCharRect.Width()*2, (short)lCharRect.top, 1000, &mLastAnimationReqID);
+				}
 				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] MoveRight [%d]"), mCharacterId, mLastAnimationReqID);
 			}
 			else
 			if	(lSelState.CompareNoCase (_T("MOVINGLEFT")) == 0)
 			{
-				lResult = mCharacter->MoveTo ((short)lCharRect.left+lCharRect.Width()*2, (short)lCharRect.top, 1000, &mLastAnimationReqID);
+				if	(mDaCharacter)
+				{
+					lResult = mDaCharacter->MoveTo ((short)lCharRect.left+lCharRect.Width()*2, (short)lCharRect.top, 1000, &mLastAnimationReqID);
+				}
+				else
+				if	(mMsCharacter)
+				{
+					lResult = mMsCharacter->MoveTo ((short)lCharRect.left+lCharRect.Width()*2, (short)lCharRect.top, 1000, &mLastAnimationReqID);
+				}
 				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] MoveLeft [%d]"), mCharacterId, mLastAnimationReqID);
 			}
 			else
 			if	(lSelState.CompareNoCase (_T("HIDING")) == 0)
 			{
-				lResult = mCharacter->Hide (FALSE, &mHideReqID);
+				if	(mDaCharacter)
+				{
+					lResult = mDaCharacter->Hide (FALSE, &mHideReqID);
+				}
+				else
+				if	(mMsCharacter)
+				{
+					lResult = mMsCharacter->Hide (FALSE, &mHideReqID);
+				}
 				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Hide [%d]"), mCharacterId, mHideReqID);
 			}
 			else
 			if	(lSelState.CompareNoCase (_T("SHOWING")) == 0)
 			{
-				lResult = mCharacter->Hide (TRUE, &mLastAnimationReqID);
-				lResult = mCharacter->Show (FALSE, &mLastAnimationReqID);
+				if	(mDaCharacter)
+				{
+					lResult = mDaCharacter->Hide (TRUE, &mLastAnimationReqID);
+					lResult = mDaCharacter->Show (FALSE, &mLastAnimationReqID);
+				}
+				else
+				if	(mMsCharacter)
+				{
+					lResult = mMsCharacter->Hide (TRUE, &mLastAnimationReqID);
+					lResult = mMsCharacter->Show (FALSE, &mLastAnimationReqID);
+				}
 				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Show [%d]"), mCharacterId, mLastAnimationReqID);
 			}
 
@@ -737,19 +897,40 @@ bool CAnimationTestDlg::ShowSelState (bool pStopFirst)
 				||	(lSelState.CompareNoCase (_T("IDLINGLEVEL3")) == 0)
 				)
 			{
-				if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, mCharacter->SetIdleOn (TRUE), _T("[%d] SetIdleOn"), mCharacterId)))
+				if	(mDaCharacter)
 				{
-					lRet = true;
+					if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, mDaCharacter->SetIdleOn (TRUE), _T("[%d] SetIdleOn"), mCharacterId)))
+					{
+						lRet = true;
+					}
+				}
+				else
+				if	(mMsCharacter)
+				{
+					if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, mMsCharacter->SetIdleOn (TRUE), _T("[%d] SetIdleOn"), mCharacterId)))
+					{
+						lRet = true;
+					}
 				}
 			}
 			else
 			{
-				LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetIdleOn (FALSE), _T("[%d] SetIdleOff"), mCharacterId);
+				if	(mDaCharacter)
+				{
+					LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->SetIdleOn (FALSE), _T("[%d] SetIdleOff"), mCharacterId);
+				}
+				else
+				if	(mMsCharacter)
+				{
+					LogComErr (_LOG_CHAR_CALLS_EX, mMsCharacter->SetIdleOn (FALSE), _T("[%d] SetIdleOff"), mCharacterId);
+				}
 			}
 		}
 
 		if	(
-				(
+				(!mMsServer)
+			&&	(!mMsCharacter)
+			&&	(
 					(!lCharacterVisible)
 				||	(mAnimateBoth.GetCheck())
 				)
@@ -796,14 +977,18 @@ bool CAnimationTestDlg::ShowAllStates ()
 bool CAnimationTestDlg::IsAnimating ()
 {
 	if	(
-			(mCharacter != NULL)
+			(
+				(mDaCharacter)
+			||	(mMsCharacter != NULL)
+			)
 		&&	(mLastAnimationReqID > 0)
 		)
 	{
 		return true;;
 	}
 	if	(
-			(mAgentPreviewWnd)
+			(!mMsServer)
+		&&	(mAgentPreviewWnd)
 		&&	(mAgentPreviewWnd->IsWindow ())
 		&&	(!mAgentPreviewWnd->IsAnimationComplete ())
 		)
@@ -840,7 +1025,8 @@ bool CAnimationTestDlg::Stop ()
 	}
 
 	if	(
-			(mAgentPreviewWnd)
+			(!mMsServer)
+		&&	(mAgentPreviewWnd)
 		&&	(mAgentPreviewWnd->IsWindow ())
 		&&	(mAgentPreviewWnd->Stop () == S_OK)
 		)
@@ -848,9 +1034,14 @@ bool CAnimationTestDlg::Stop ()
 		lRet = true;
 	}
 
-	if	(mCharacter != NULL)
+	if	(mDaCharacter)
 	{
-		LogComErr (_LOG_CHAR_CALLS, mCharacter->StopAll (StopAll_Play|StopAll_Speak|StopAll_Move|StopAll_Visibility), _T("[%d] StopAll"), mCharacterId);
+		LogComErr (_LOG_CHAR_CALLS, mDaCharacter->StopAll (StopAll_Play|StopAll_Speak|StopAll_Move|StopAll_Visibility), _T("[%d] StopAll"), mCharacterId);
+	}
+	else
+	if	(mMsCharacter != NULL)
+	{
+		LogComErr (_LOG_CHAR_CALLS, mMsCharacter->StopAll (StopAll_Play|StopAll_Speak|StopAll_Move|StopAll_Visibility), _T("[%d] StopAll"), mCharacterId);
 	}
 
 	mTimerCount = 0;
@@ -862,41 +1053,95 @@ bool CAnimationTestDlg::Stop ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CAnimationTestDlg::GetAgentServer ()
+void CAnimationTestDlg::GetAgentServer (bool pMsAgent)
 {
-	if	(mServer == NULL)
+	if	(pMsAgent)
 	{
-		IUnknownPtr	lUnknown;
-
-		LogComErr (_LOG_AGENT_CALLS, CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_SERVER, __uuidof(IUnknown), (void**)&lUnknown), _T("CoCreateInstance"));
-		mServer = lUnknown;
-
-		if	(mServer != NULL)
+		if	(mMsServer == NULL)
 		{
-			LogComErr (_LOG_AGENT_CALLS, mServer->Register (&m_xDaSvrNotifySink, &mNotifySinkId), _T("Register"));
+			IUnknownPtr	lUnknown;
+
+			FreeAgentServer ();
+			LogComErr (_LOG_AGENT_CALLS, CoCreateInstance (__uuidof(AgentServer), NULL, CLSCTX_SERVER, __uuidof(IUnknown), (void**)&lUnknown), _T("CoCreateInstance"));
+			mMsServer = lUnknown;
+
+			//if	(mMsServer != NULL)
+			//{
+			//	LogComErr (_LOG_AGENT_CALLS, mMsServer->Register (&m_xDaSvrNotifySink, &mNotifySinkId), _T("Register"));
+			//}
+		}
+	}
+	else
+	{
+		if	(mDaServer == NULL)
+		{
+			IUnknownPtr	lUnknown;
+
+			FreeAgentServer ();
+			LogComErr (_LOG_AGENT_CALLS, CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_SERVER, __uuidof(IUnknown), (void**)&lUnknown), _T("CoCreateInstance"));
+			mDaServer = lUnknown;
+
+			if	(mDaServer)
+			{
+				LogComErr (_LOG_AGENT_CALLS, mDaServer->Register (&m_xDaSvrNotifySink, &mNotifySinkId), _T("Register"));
+			}
 		}
 	}
 }
+
+void CAnimationTestDlg::FreeAgentServer ()
+{
+	if	(
+			(mDaServer)
+		&&	(mNotifySinkId)
+		)
+	{
+		try
+		{
+			LogComErr (_LOG_AGENT_CALLS, mDaServer->Unregister (mNotifySinkId), _T("Unregister"));
+		}
+		catch AnyExceptionDebug
+	}
+	else
+	if	(
+			(mMsServer)
+		&&	(mNotifySinkId)
+		)
+	{
+		try
+		{
+			LogComErr (_LOG_AGENT_CALLS, mMsServer->Unregister (mNotifySinkId), _T("Unregister"));
+		}
+		catch AnyExceptionDebug
+	}
+	mNotifySinkId = 0;
+
+	SafeFreeSafePtr (mMsServer);
+	SafeFreeSafePtr (mDaServer);
+}
+
+/////////////////////////////////////////////////////////////////////////////
 
 bool CAnimationTestDlg::ShowAgentCharacter ()
 {
 	bool	lRet = false;
 	HRESULT	lResult;
 
-	GetAgentServer ();
+	GetAgentServer (mUseMsAgent.GetCheck() ? true : false);
 	mLoadReqID = 0;
 
-	if	(mServer != NULL)
+	if	(mDaServer)
 	{
-		LogComErr (_LOG_AGENT_CALLS, mServer->put_CharacterStyle	((mSoundOn.GetCheck()?CharacterStyle_SoundEffects:0)
+		LogComErr (_LOG_AGENT_CALLS, mDaServer->put_CharacterStyle	((mSoundOn.GetCheck()?CharacterStyle_SoundEffects:0)
 																	|(mIdleEnabled.GetCheck()?CharacterStyle_IdleEnabled:0)
 																	|(mAutoPopup.GetCheck()?CharacterStyle_AutoPopupMenu:0)
 																	|(mIconOnLoad.GetCheck()?CharacterStyle_IconShown:0)
 																	|(mSmoothFull.GetCheck()?CharacterStyle_Smoothed:mSmoothEdges.GetCheck()?CharacterStyle_SmoothEdges:0)
 																	));
 	}
+
 	if	(
-			(mServer != NULL)
+			(mDaServer)
 		&&	(mCharacterId == 0)
 		)
 	{
@@ -906,7 +1151,22 @@ bool CAnimationTestDlg::ShowAgentCharacter ()
 		{
 			lProvider = mCharacterPath;
 		}
-		lResult = mServer->Load (lProvider, &mCharacterId, &mLoadReqID);
+		lResult = mDaServer->Load (lProvider, &mCharacterId, &mLoadReqID);
+		LogComErr (_LOG_AGENT_CALLS, lResult, _T("Load [%d] [%s] as [%d]"), mLoadReqID, mCharacterPath, mCharacterId);
+	}
+	else
+	if	(
+			(mMsServer != NULL)
+		&&	(mCharacterId == 0)
+		)
+	{
+		_variant_t	lProvider;
+
+		if	(!mCharacterPath.IsEmpty ())
+		{
+			lProvider = mCharacterPath;
+		}
+		lResult = mMsServer->Load (lProvider, &mCharacterId, &mLoadReqID);
 		LogComErr (_LOG_AGENT_CALLS, lResult, _T("Load [%d] [%s] as [%d]"), mLoadReqID, mCharacterPath, mCharacterId);
 	}
 
@@ -925,41 +1185,73 @@ bool CAnimationTestDlg::LoadedAgentCharacter ()
 	CString	lWinTitle;
 	CPoint	lCharPos;
 
-	IDaSvrCharacterPtr	lCharacter;
+	IDaSvrCharacterPtr		lDaCharacter;
+	IAgentCharacterExPtr	lMsCharacter;
 
 	if	(
-			(mServer != NULL)
+			(mDaServer)
 		&&	(mCharacterId != 0)
-		&&	(mCharacter == NULL)
-		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->GetCharacterEx (mCharacterId, &lCharacter), _T("GetCharacterEx"))))
+		&&	(mDaCharacter == NULL)
+		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mDaServer->GetCharacterEx (mCharacterId, &lDaCharacter), _T("GetCharacterEx"))))
 		)
 	{
-		mCharacter = lCharacter;
+		mDaCharacter = lDaCharacter;
+	}
+	else
+	if	(
+			(mMsServer != NULL)
+		&&	(mCharacterId != 0)
+		&&	(mMsCharacter == NULL)
+		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mMsServer->GetCharacterEx (mCharacterId, &lMsCharacter), _T("GetCharacterEx"))))
+		)
+	{
+		mMsCharacter = lMsCharacter;
 	}
 
-	if	(mCharacter != NULL)
+	if	(mDaCharacter)
 	{
-//		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GenerateIcon ());
-//		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetIdleOn (mIdleEnabled.GetCheck()?TRUE:FALSE), _T("[%d] SetIdleOn"), mCharacterId);
-//		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetSoundEffectsOn (mSoundOn.GetCheck()?TRUE:FALSE), _T("[%d] SetSoundEffectsOn"), mCharacterId);
-//		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetAutoPopupMenu (mAutoPopup.GetCheck()?TRUE:FALSE), _T("[%d] SetSoundEffectsOn"), mCharacterId);
+//		LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->GenerateIcon ());
+//		LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->SetIdleOn (mIdleEnabled.GetCheck()?TRUE:FALSE), _T("[%d] SetIdleOn"), mCharacterId);
+//		LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->SetSoundEffectsOn (mSoundOn.GetCheck()?TRUE:FALSE), _T("[%d] SetSoundEffectsOn"), mCharacterId);
+//		LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->SetAutoPopupMenu (mAutoPopup.GetCheck()?TRUE:FALSE), _T("[%d] SetSoundEffectsOn"), mCharacterId);
 
-		if	(SUCCEEDED (mCharacter->GetPosition (&lCharPos.x, &lCharPos.y)))
+		if	(SUCCEEDED (mDaCharacter->GetPosition (&lCharPos.x, &lCharPos.y)))
 		{
 			lCharPos.x = AfxGetApp()->GetProfileInt (sProfileKey, sProfileCharPosX, lCharPos.x);
 			lCharPos.y = AfxGetApp()->GetProfileInt (sProfileKey, sProfileCharPosY, lCharPos.y);
-			mCharacter->MoveTo ((short)lCharPos.x, (short)lCharPos.y, 0, &lReqID);
+			mDaCharacter->MoveTo ((short)lCharPos.x, (short)lCharPos.y, 0, &lReqID);
 		}
 		SetCharacterSize ();
 		SetCharacterIcon ();
 
-		lResult = mCharacter->Show (mFastShowHide.GetCheck() ? TRUE : FALSE, &lReqID);
+		lResult = mDaCharacter->Show (mFastShowHide.GetCheck() ? TRUE : FALSE, &lReqID);
 		if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Show [%d]"), mCharacterId, lReqID)))
 		{
 			lRet = true;
 		}
 
 		lWinTitle.Format (_T("%s [%d]"), mWinTitle, mCharacterId);
+		SetWindowText (lWinTitle);
+		lRet = true;
+	}
+	else
+	if	(mMsCharacter != NULL)
+	{
+		if	(SUCCEEDED (mMsCharacter->GetPosition (&lCharPos.x, &lCharPos.y)))
+		{
+			lCharPos.x = AfxGetApp()->GetProfileInt (sProfileKey, sProfileCharPosX, lCharPos.x);
+			lCharPos.y = AfxGetApp()->GetProfileInt (sProfileKey, sProfileCharPosY, lCharPos.y);
+			mMsCharacter->MoveTo ((short)lCharPos.x, (short)lCharPos.y, 0, &lReqID);
+		}
+		SetCharacterSize ();
+
+		lResult = mMsCharacter->Show (mFastShowHide.GetCheck() ? TRUE : FALSE, &lReqID);
+		if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Show [%d]"), mCharacterId, lReqID)))
+		{
+			lRet = true;
+		}
+
+		lWinTitle.Format (_T("%s [%d] (Native)"), mWinTitle, mCharacterId);
 		SetWindowText (lWinTitle);
 		lRet = true;
 	}
@@ -974,16 +1266,33 @@ bool CAnimationTestDlg::HideAgentCharacter ()
 	HRESULT	lResult;
 
 	if	(
-			(mCharacter != NULL)
+			(mDaCharacter)
 		&&	(IsCharacterVisible ())
 		)
 	{
-		if	(SUCCEEDED (mCharacter->GetPosition (&lCharPos.x, &lCharPos.y)))
+		if	(SUCCEEDED (mDaCharacter->GetPosition (&lCharPos.x, &lCharPos.y)))
 		{
 			AfxGetApp()->WriteProfileInt (sProfileKey, sProfileCharPosX, lCharPos.x);
 			AfxGetApp()->WriteProfileInt (sProfileKey, sProfileCharPosY, lCharPos.y);
 		}
-		lResult = mCharacter->Hide (mFastShowHide.GetCheck() ? TRUE : FALSE, &lReqID);
+		lResult = mDaCharacter->Hide (mFastShowHide.GetCheck() ? TRUE : FALSE, &lReqID);
+		if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Hide [%d]"), mCharacterId, lReqID)))
+		{
+			lRet = true;
+		}
+	}
+	else
+	if	(
+			(mMsCharacter != NULL)
+		&&	(IsCharacterVisible ())
+		)
+	{
+		if	(SUCCEEDED (mMsCharacter->GetPosition (&lCharPos.x, &lCharPos.y)))
+		{
+			AfxGetApp()->WriteProfileInt (sProfileKey, sProfileCharPosX, lCharPos.x);
+			AfxGetApp()->WriteProfileInt (sProfileKey, sProfileCharPosY, lCharPos.y);
+		}
+		lResult = mMsCharacter->Hide (mFastShowHide.GetCheck() ? TRUE : FALSE, &lReqID);
 		if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Hide [%d]"), mCharacterId, lReqID)))
 		{
 			lRet = true;
@@ -992,32 +1301,52 @@ bool CAnimationTestDlg::HideAgentCharacter ()
 	return lRet;
 }
 
-bool CAnimationTestDlg::ReleaseAgentCharacter ()
+bool CAnimationTestDlg::FreeAgentCharacter ()
 {
 	bool	lRet = false;
 	CPoint	lCharPos;
 
-	if	(mCharacter != NULL)
+	if	(mDaCharacter)
 	{
-		if	(SUCCEEDED (mCharacter->GetPosition (&lCharPos.x, &lCharPos.y)))
+		if	(SUCCEEDED (mDaCharacter->GetPosition (&lCharPos.x, &lCharPos.y)))
 		{
 			AfxGetApp()->WriteProfileInt (sProfileKey, sProfileCharPosX, lCharPos.x);
 			AfxGetApp()->WriteProfileInt (sProfileKey, sProfileCharPosY, lCharPos.y);
 		}
-		mCharacter = NULL;
+		mDaCharacter = NULL;
 
 		if	(
-				(mServer != NULL)
+				(mDaServer)
 			&&	(mCharacterId != 0)
 			)
 		{
-			LogComErr (_LOG_AGENT_CALLS, mServer->Unload (mCharacterId), _T("Unload [%d]"), mCharacterId);
+			LogComErr (_LOG_AGENT_CALLS, mDaServer->Unload (mCharacterId), _T("Unload [%d]"), mCharacterId);
 		}
+		lRet = true;
+	}
+	if	(mMsCharacter != NULL)
+	{
+		if	(SUCCEEDED (mMsCharacter->GetPosition (&lCharPos.x, &lCharPos.y)))
+		{
+			AfxGetApp()->WriteProfileInt (sProfileKey, sProfileCharPosX, lCharPos.x);
+			AfxGetApp()->WriteProfileInt (sProfileKey, sProfileCharPosY, lCharPos.y);
+		}
+		mMsCharacter = NULL;
 
-		SetWindowText (mWinTitle);
+		if	(
+				(mMsServer != NULL)
+			&&	(mCharacterId != 0)
+			)
+		{
+			LogComErr (_LOG_AGENT_CALLS, mMsServer->Unload (mCharacterId), _T("Unload [%d]"), mCharacterId);
+		}
 		lRet = true;
 	}
 	mCharacterId = 0;
+	if	(lRet)
+	{
+		SetWindowText (mWinTitle);
+	}
 	return lRet;
 }
 
@@ -1026,22 +1355,42 @@ void CAnimationTestDlg::SetCharacterSize()
 	CSize	lCharSize;
 
 	if	(
-			(mCharacter != NULL)
-		&&	(SUCCEEDED (mCharacter->GetOriginalSize (&lCharSize.cx, &lCharSize.cy)))
+			(mDaCharacter)
+		&&	(SUCCEEDED (mDaCharacter->GetOriginalSize (&lCharSize.cx, &lCharSize.cy)))
 		)
 	{
 		if	(mSizeSmall.GetCheck ())
 		{
-			mCharacter->SetSize (MulDiv (lCharSize.cx, 2, 3), MulDiv (lCharSize.cy, 2, 3));
+			mDaCharacter->SetSize (MulDiv (lCharSize.cx, 2, 3), MulDiv (lCharSize.cy, 2, 3));
 		}
 		else
 		if	(mSizeLarge.GetCheck ())
 		{
-			mCharacter->SetSize (MulDiv (lCharSize.cx, 3, 2), MulDiv (lCharSize.cy, 3, 2));
+			mDaCharacter->SetSize (MulDiv (lCharSize.cx, 3, 2), MulDiv (lCharSize.cy, 3, 2));
 		}
 		else
 		{
-			mCharacter->SetSize (lCharSize.cx, lCharSize.cy);
+			mDaCharacter->SetSize (lCharSize.cx, lCharSize.cy);
+		}
+	}
+	else
+	if	(
+			(mMsCharacter != NULL)
+		&&	(SUCCEEDED (mMsCharacter->GetOriginalSize (&lCharSize.cx, &lCharSize.cy)))
+		)
+	{
+		if	(mSizeSmall.GetCheck ())
+		{
+			mMsCharacter->SetSize (MulDiv (lCharSize.cx, 2, 3), MulDiv (lCharSize.cy, 2, 3));
+		}
+		else
+		if	(mSizeLarge.GetCheck ())
+		{
+			mMsCharacter->SetSize (MulDiv (lCharSize.cx, 3, 2), MulDiv (lCharSize.cy, 3, 2));
+		}
+		else
+		{
+			mMsCharacter->SetSize (lCharSize.cx, lCharSize.cy);
 		}
 	}
 }
@@ -1050,17 +1399,17 @@ void CAnimationTestDlg::SetCharacterIcon()
 {
 	long	lCharacterStyle;
 
-	if	(mCharacter)
+	if	(mDaCharacter)
 	{
 		if	(mIconIdentified.GetCheck())
 		{
 			tBstrPtr	lGUID;
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_UniqueID (lGUID.Free()));
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IconIdentity (lGUID));
+			LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->get_UniqueID (lGUID.Free()));
+			LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->put_IconIdentity (lGUID));
 		}
 		else
 		{
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IconIdentity (_bstr_t("")));
+			LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->put_IconIdentity (_bstr_t("")));
 		}
 
 		if	(mIconGenerated.GetCheck())
@@ -1069,18 +1418,18 @@ void CAnimationTestDlg::SetCharacterIcon()
 
 			if	(
 					(mIconClipped.GetCheck ())
-				&&	(SUCCEEDED (mCharacter->GetOriginalSize (&lCharSize.cx, &lCharSize.cy)))
+				&&	(SUCCEEDED (mDaCharacter->GetOriginalSize (&lCharSize.cx, &lCharSize.cy)))
 				)
 			{
-				LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GenerateIcon (0, 0, lCharSize.cx, lCharSize.cy/2));
+				LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->GenerateIcon (0, 0, lCharSize.cx, lCharSize.cy/2));
 			}
 			else
 			{
-				LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GenerateIcon ());
+				LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->GenerateIcon ());
 			}
 		}
 
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_Style (&lCharacterStyle));
+		LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->get_Style (&lCharacterStyle));
 		if	(mIconShown.GetCheck ())
 		{
 			lCharacterStyle |= CharacterStyle_IconShown;
@@ -1089,13 +1438,13 @@ void CAnimationTestDlg::SetCharacterIcon()
 		{
 			lCharacterStyle &= ~CharacterStyle_IconShown;
 		}
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_Style (lCharacterStyle));
+		LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->put_Style (lCharacterStyle));
 	}
 
 #if	FALSE
 	CString		lIconTip;
 	lIconTip.Format (_T("%u Animation Test"), GetCurrentProcessId());
-	LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IconTip (_bstr_t(lIconTip)));
+	LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->put_IconTip (_bstr_t(lIconTip)));
 #endif
 }
 
@@ -1103,15 +1452,30 @@ void CAnimationTestDlg::SetCharacterIcon()
 
 bool CAnimationTestDlg::IsCharacterVisible ()
 {
-	VARIANT_BOOL	lVisible = VARIANT_FALSE;
-
-	if	(
-			(mCharacter != NULL)
-		&&	(SUCCEEDED (mCharacter->get_Visible (&lVisible)))
-		&&	(lVisible)
-		)
+	if	(mDaCharacter)
 	{
-		return true;
+		VARIANT_BOOL	lVisible = VARIANT_FALSE;
+
+		if	(
+				(SUCCEEDED (mDaCharacter->get_Visible (&lVisible)))
+			&&	(lVisible)
+			)
+		{
+			return true;
+		}
+	}
+	else
+	if	(mMsCharacter)
+	{
+		long	lVisible = FALSE;
+		
+		if	(
+				(SUCCEEDED (mMsCharacter->GetVisible (&lVisible)))
+			&&	(lVisible)
+			)
+		{
+			return true;
+		}
 	}
 	return false;
 }
@@ -1121,7 +1485,7 @@ void CAnimationTestDlg::CharacterIsVisible (bool pVisible)
 	if	(pVisible)
 	{
 		mPopupButton.SetCheck (TRUE);
-		mAnimateBoth.EnableWindow (TRUE);
+		mAnimateBoth.EnableWindow (mMsCharacter == NULL);
 	}
 	else
 	{
@@ -1129,11 +1493,11 @@ void CAnimationTestDlg::CharacterIsVisible (bool pVisible)
 		mAnimateBoth.EnableWindow (FALSE);
 	}
 
-	if	(mCharacter != NULL)
+	if	(mDaCharacter)
 	{
 		long	lCharacterStyle;
 
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_Style (&lCharacterStyle), _T("[%d] get_Style"), mCharacterId);
+		LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->get_Style (&lCharacterStyle), _T("[%d] get_Style"), mCharacterId);
 
 		mSoundOn.SetCheck ((lCharacterStyle & CharacterStyle_SoundEffects) ? TRUE : FALSE);
 		mIdleEnabled.SetCheck ((lCharacterStyle & CharacterStyle_IdleEnabled) ? TRUE : FALSE);
@@ -1152,11 +1516,38 @@ void CAnimationTestDlg::CharacterIsVisible (bool pVisible)
 		mSmoothFull.EnableWindow (FALSE);
 	}
 	else
-	if	(mServer != NULL)
+	if	(mMsCharacter != NULL)
+	{
+		long	lSoundOn = FALSE;
+		long	lIdleOn = FALSE;
+		long	lAutoPop = FALSE;
+
+		mMsCharacter->GetSoundEffectsOn (&lSoundOn);
+		mMsCharacter->GetIdleOn (&lIdleOn);
+		mMsCharacter->GetAutoPopupMenu (&lAutoPop);
+
+		mSoundOn.SetCheck (lSoundOn ? TRUE : FALSE);
+		mIdleEnabled.SetCheck (lIdleOn ? TRUE : FALSE);
+		mAutoPopup.SetCheck (lAutoPop ? TRUE : FALSE);
+		mIconShown.SetCheck (FALSE);
+		mSmoothNone.SetCheck (FALSE);
+		mSmoothEdges.SetCheck (FALSE);
+		mSmoothFull.SetCheck (FALSE);
+
+		mSoundOn.EnableWindow (TRUE);
+		mIdleEnabled.EnableWindow (TRUE);
+		mAutoPopup.EnableWindow (TRUE);
+		mIconShown.EnableWindow (FALSE);
+		mSmoothNone.EnableWindow (FALSE);
+		mSmoothEdges.EnableWindow (FALSE);
+		mSmoothFull.EnableWindow (FALSE);
+	}
+	else
+	if	(mDaServer)
 	{
 		long	lCharacterStyle;
 
-		LogComErr (_LOG_AGENT_CALLS, mServer->get_CharacterStyle (&lCharacterStyle), _T("get_CharacterStyle"));
+		LogComErr (_LOG_AGENT_CALLS, mDaServer->get_CharacterStyle (&lCharacterStyle), _T("get_CharacterStyle"));
 
 		mSoundOn.SetCheck ((lCharacterStyle & CharacterStyle_SoundEffects) ? TRUE : FALSE);
 		mIdleEnabled.SetCheck ((lCharacterStyle & CharacterStyle_IdleEnabled) ? TRUE : FALSE);
@@ -1195,11 +1586,12 @@ void CAnimationTestDlg::CharacterIsVisible (bool pVisible)
 void CAnimationTestDlg::ShowCharacterState ()
 {
 	if	(
-			(mAgentPreviewWnd)
+			(!mMsServer)
+		&&	(mAgentPreviewWnd)
 		&&	(mAgentPreviewWnd->IsWindow ())
 		)
 	{
-		mAgentPreviewWnd->EnableSound (mCharacter == NULL);
+		mAgentPreviewWnd->EnableSound (mDaCharacter == NULL);
 	}
 	CharacterIsVisible (IsCharacterVisible ());
 }
@@ -1232,10 +1624,11 @@ void CAnimationTestDlg::LoadConfig ()
 	mIconGenerated.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconGenerated, mIconGenerated.GetCheck()) ? TRUE : FALSE);
 	mIconClipped.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconClipped, mIconClipped.GetCheck()) ? TRUE : FALSE);
 	mIconIdentified.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconIdentified, mIconIdentified.GetCheck()) ? TRUE : FALSE);
+	mUseMsAgent.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileUseMsAgent, mUseMsAgent.GetCheck()) ? TRUE : FALSE);
 
-	if	(mServer != NULL)
+	if	(mDaServer)
 	{
-		LogComErr (_LOG_AGENT_CALLS, mServer->put_CharacterStyle	((mSoundOn.GetCheck()?CharacterStyle_SoundEffects:0)
+		LogComErr (_LOG_AGENT_CALLS, mDaServer->put_CharacterStyle	((mSoundOn.GetCheck()?CharacterStyle_SoundEffects:0)
 																	|(mIdleEnabled.GetCheck()?CharacterStyle_IdleEnabled:0)
 																	|(mAutoPopup.GetCheck()?CharacterStyle_AutoPopupMenu:0)
 																	|(mIconOnLoad.GetCheck()?CharacterStyle_IconShown:0)
@@ -1293,6 +1686,7 @@ void CAnimationTestDlg::SaveConfig ()
 	lApp->WriteProfileInt (sProfileKey, sProfileIconGenerated, mIconGenerated.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileIconClipped, mIconClipped.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileIconIdentified, mIconIdentified.GetCheck());
+	lApp->WriteProfileInt (sProfileKey, sProfileUseMsAgent, mUseMsAgent.GetCheck());
 
 	if	(!IsIconic ())
 	{
@@ -1333,20 +1727,8 @@ void CAnimationTestDlg::OnClose()
 void CAnimationTestDlg::OnDestroy()
 {
 	SaveConfig ();
-	ReleaseAgentCharacter ();
-	if	(
-			(mNotifySinkId)
-		&&	(mServer != NULL)
-		)
-	{
-		try
-		{
-			LogComErr (_LOG_AGENT_CALLS, mServer->Unregister (mNotifySinkId), _T("Unregister"));
-		}
-		catch AnyExceptionSilent
-	}
-	SafeFreeSafePtr (mCharacter);
-	SafeFreeSafePtr (mServer);
+	FreeAgentCharacter ();
+	FreeAgentServer ();
 
 	if	(
 			(mAgentPreviewWnd)
@@ -1511,11 +1893,11 @@ void CAnimationTestDlg::OnPopup()
 
 void CAnimationTestDlg::OnSoundOn()
 {
-	if	(mServer)
+	if	(mDaServer)
 	{
 		long	lCharacterStyle;
 
-		LogComErr (_LOG_CHAR_CALLS_EX, mServer->get_CharacterStyle (&lCharacterStyle));
+		LogComErr (_LOG_CHAR_CALLS_EX, mDaServer->get_CharacterStyle (&lCharacterStyle));
 		if	(mSoundOn.GetCheck())
 		{
 			lCharacterStyle |= CharacterStyle_SoundEffects;
@@ -1524,25 +1906,34 @@ void CAnimationTestDlg::OnSoundOn()
 		{
 			lCharacterStyle &= ~CharacterStyle_SoundEffects;
 		}
-		LogComErr (_LOG_CHAR_CALLS_EX, mServer->put_CharacterStyle (lCharacterStyle));
+		LogComErr (_LOG_CHAR_CALLS_EX, mDaServer->put_CharacterStyle (lCharacterStyle));
 	}
-	if	(mCharacter)
+
+	if	(mDaCharacter)
 	{
 		long	lSoundOn = 0;
 
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetSoundEffectsOn (&lSoundOn), _T("[%d] GetSoundEffectsOn"), mCharacterId);
-		LogComErr (_LOG_CHAR_CALLS, mCharacter->SetSoundEffectsOn (mSoundOn.GetCheck() ? TRUE : FALSE), _T("[%d] SetSoundEffectsOn"), mCharacterId);
+		LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->GetSoundEffectsOn (&lSoundOn), _T("[%d] GetSoundEffectsOn"), mCharacterId);
+		LogComErr (_LOG_CHAR_CALLS, mDaCharacter->SetSoundEffectsOn (mSoundOn.GetCheck() ? TRUE : FALSE), _T("[%d] SetSoundEffectsOn"), mCharacterId);
+	}
+	else
+	if	(mMsCharacter)
+	{
+		long	lSoundOn = 0;
+
+		LogComErr (_LOG_CHAR_CALLS_EX, mMsCharacter->GetSoundEffectsOn (&lSoundOn), _T("[%d] GetSoundEffectsOn"), mCharacterId);
+		LogComErr (_LOG_CHAR_CALLS, mMsCharacter->SetSoundEffectsOn (mSoundOn.GetCheck() ? TRUE : FALSE), _T("[%d] SetSoundEffectsOn"), mCharacterId);
 	}
 	ShowCharacterState ();
 }
 
 void CAnimationTestDlg::OnIdleOn()
 {
-	if	(mServer)
+	if	(mDaServer)
 	{
 		long	lCharacterStyle;
 
-		LogComErr (_LOG_CHAR_CALLS_EX, mServer->get_CharacterStyle (&lCharacterStyle));
+		LogComErr (_LOG_CHAR_CALLS_EX, mDaServer->get_CharacterStyle (&lCharacterStyle));
 		if	(mIdleEnabled.GetCheck())
 		{
 			lCharacterStyle |= CharacterStyle_IdleEnabled;
@@ -1551,25 +1942,34 @@ void CAnimationTestDlg::OnIdleOn()
 		{
 			lCharacterStyle &= ~CharacterStyle_IdleEnabled;
 		}
-		LogComErr (_LOG_CHAR_CALLS_EX, mServer->put_CharacterStyle (lCharacterStyle));
+		LogComErr (_LOG_CHAR_CALLS_EX, mDaServer->put_CharacterStyle (lCharacterStyle));
 	}
-	if	(mCharacter)
+
+	if	(mDaCharacter)
 	{
 		long	lIdleOn = 0;
 
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetIdleOn (&lIdleOn), _T("[%d] GetIdleOn"), mCharacterId);
-		LogComErr (_LOG_CHAR_CALLS, mCharacter->SetIdleOn (mIdleEnabled.GetCheck() ? TRUE : FALSE), _T("[%d] SetIdleOn"), mCharacterId);
+		LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->GetIdleOn (&lIdleOn), _T("[%d] GetIdleOn"), mCharacterId);
+		LogComErr (_LOG_CHAR_CALLS, mDaCharacter->SetIdleOn (mIdleEnabled.GetCheck() ? TRUE : FALSE), _T("[%d] SetIdleOn"), mCharacterId);
+	}
+	else
+	if	(mMsCharacter)
+	{
+		long	lIdleOn = 0;
+
+		LogComErr (_LOG_CHAR_CALLS_EX, mMsCharacter->GetIdleOn (&lIdleOn), _T("[%d] GetIdleOn"), mCharacterId);
+		LogComErr (_LOG_CHAR_CALLS, mMsCharacter->SetIdleOn (mIdleEnabled.GetCheck() ? TRUE : FALSE), _T("[%d] SetIdleOn"), mCharacterId);
 	}
 	ShowCharacterState ();
 }
 
 void CAnimationTestDlg::OnAutoPopup()
 {
-	if	(mServer)
+	if	(mDaServer)
 	{
 		long	lCharacterStyle;
 
-		LogComErr (_LOG_CHAR_CALLS_EX, mServer->get_CharacterStyle (&lCharacterStyle));
+		LogComErr (_LOG_CHAR_CALLS_EX, mDaServer->get_CharacterStyle (&lCharacterStyle));
 		if	(mAutoPopup.GetCheck())
 		{
 			lCharacterStyle |= CharacterStyle_AutoPopupMenu;
@@ -1578,14 +1978,23 @@ void CAnimationTestDlg::OnAutoPopup()
 		{
 			lCharacterStyle &= ~CharacterStyle_AutoPopupMenu;
 		}
-		LogComErr (_LOG_CHAR_CALLS_EX, mServer->put_CharacterStyle (lCharacterStyle));
+		LogComErr (_LOG_CHAR_CALLS_EX, mDaServer->put_CharacterStyle (lCharacterStyle));
 	}
-	if	(mCharacter)
+
+	if	(mDaCharacter)
 	{
 		long	lAutoPopup = 0;
 
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetAutoPopupMenu (&lAutoPopup), _T("[%d] GetAutoPopupMenu"), mCharacterId);
-		LogComErr (_LOG_CHAR_CALLS, mCharacter->SetAutoPopupMenu (mAutoPopup.GetCheck() ? TRUE : FALSE), _T("[%d] SetAutoPopupMenu"), mCharacterId);
+		LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->GetAutoPopupMenu (&lAutoPopup), _T("[%d] GetAutoPopupMenu"), mCharacterId);
+		LogComErr (_LOG_CHAR_CALLS, mDaCharacter->SetAutoPopupMenu (mAutoPopup.GetCheck() ? TRUE : FALSE), _T("[%d] SetAutoPopupMenu"), mCharacterId);
+	}
+	else
+	if	(mMsCharacter)
+	{
+		long	lAutoPopup = 0;
+
+		LogComErr (_LOG_CHAR_CALLS_EX, mMsCharacter->GetAutoPopupMenu (&lAutoPopup), _T("[%d] GetAutoPopupMenu"), mCharacterId);
+		LogComErr (_LOG_CHAR_CALLS, mMsCharacter->SetAutoPopupMenu (mAutoPopup.GetCheck() ? TRUE : FALSE), _T("[%d] SetAutoPopupMenu"), mCharacterId);
 	}
 	ShowCharacterState ();
 }
@@ -1611,11 +2020,11 @@ void CAnimationTestDlg::OnSizeLarge()
 
 void CAnimationTestDlg::OnSmooth()
 {
-	if	(mServer)
+	if	(mDaServer)
 	{
 		long	lCharacterStyle;
 
-		LogComErr (_LOG_CHAR_CALLS_EX, mServer->get_CharacterStyle (&lCharacterStyle));
+		LogComErr (_LOG_CHAR_CALLS_EX, mDaServer->get_CharacterStyle (&lCharacterStyle));
 		if	(mSmoothFull.GetCheck())
 		{
 			lCharacterStyle |= CharacterStyle_Smoothed;
@@ -1630,7 +2039,7 @@ void CAnimationTestDlg::OnSmooth()
 		{
 			lCharacterStyle &= ~CharacterStyle_Smoothed;
 		}
-		LogComErr (_LOG_CHAR_CALLS_EX, mServer->put_CharacterStyle (lCharacterStyle));
+		LogComErr (_LOG_CHAR_CALLS_EX, mDaServer->put_CharacterStyle (lCharacterStyle));
 	}
 }
 
@@ -1638,11 +2047,11 @@ void CAnimationTestDlg::OnSmooth()
 
 void CAnimationTestDlg::OnIconOnLoad()
 {
-	if	(mServer)
+	if	(mDaServer)
 	{
 		long	lCharacterStyle;
 
-		LogComErr (_LOG_CHAR_CALLS_EX, mServer->get_CharacterStyle (&lCharacterStyle));
+		LogComErr (_LOG_CHAR_CALLS_EX, mDaServer->get_CharacterStyle (&lCharacterStyle));
 		if	(mIconOnLoad.GetCheck())
 		{
 			lCharacterStyle |= CharacterStyle_IconShown;
@@ -1651,7 +2060,7 @@ void CAnimationTestDlg::OnIconOnLoad()
 		{
 			lCharacterStyle &= ~CharacterStyle_IconShown;
 		}
-		LogComErr (_LOG_CHAR_CALLS_EX, mServer->put_CharacterStyle (lCharacterStyle));
+		LogComErr (_LOG_CHAR_CALLS_EX, mDaServer->put_CharacterStyle (lCharacterStyle));
 	}
 	ShowCharacterState ();
 }
@@ -1673,29 +2082,64 @@ void CAnimationTestDlg::OnIconIdentified()
 
 /////////////////////////////////////////////////////////////////////////////
 
+void CAnimationTestDlg::OnUseMsAgent()
+{
+	FreeAgentCharacter ();
+	FreeAgentServer ();
+	GetAgentServer (mUseMsAgent.GetCheck() ? true : false);
+	ShowCharacterState ();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 void CAnimationTestDlg::OnAgentProps()
 {
-	IDaSvrPropertySheet2Ptr	lPropSheet (mServer);
-	VARIANT_BOOL			lVisible = VARIANT_FALSE;
-	HRESULT					lResult;
+	HRESULT		lResult;
 
-	if	(lPropSheet != NULL)
+	if	(mDaServer)
 	{
-		AllowSetForegroundWindow (ASFW_ANY);
-		LogComErr (_LOG_AGENT_CALLS, lPropSheet->get_Visible (&lVisible), _T("PropertySheet->get_Visible"));
-		lResult = lPropSheet->put_Visible (lVisible?VARIANT_FALSE:VARIANT_TRUE);
-		LogComErr (_LOG_AGENT_CALLS, lResult, _T("PropertySheet->put_Visible"));
+		IDaSvrPropertySheet2Ptr	lPropSheet (mDaServer);
+		VARIANT_BOOL			lVisible = VARIANT_FALSE;
+
+		if	(lPropSheet != NULL)
+		{
+			AllowSetForegroundWindow (ASFW_ANY);
+			LogComErr (_LOG_AGENT_CALLS, lPropSheet->get_Visible (&lVisible), _T("PropertySheet->get_Visible"));
+			lResult = lPropSheet->put_Visible (lVisible?VARIANT_FALSE:VARIANT_TRUE);
+			LogComErr (_LOG_AGENT_CALLS, lResult, _T("PropertySheet->put_Visible"));
+		}
+	}
+	else
+	if	(mMsServer)
+	{
+		IAgentPropertySheetPtr	lPropSheet (mMsServer);
+		long					lVisible = FALSE;
+
+		if	(lPropSheet != NULL)
+		{
+			AllowSetForegroundWindow (ASFW_ANY);
+			LogComErr (_LOG_AGENT_CALLS, lPropSheet->GetVisible (&lVisible), _T("PropertySheet->GetVisible"));
+			lResult = lPropSheet->SetVisible (lVisible?FALSE:TRUE);
+			LogComErr (_LOG_AGENT_CALLS, lResult, _T("PropertySheet->SetVisible"));
+		}
 	}
 }
 
 void CAnimationTestDlg::OnCharProps()
 {
-	if	(mServer != NULL)
-	{
-		HRESULT	lResult;
+	HRESULT	lResult;
 
+	if	(mDaServer)
+	{
 		AllowSetForegroundWindow (ASFW_ANY);
-		lResult = mServer->ShowDefaultCharacterProperties (0, 0, TRUE);
+		lResult = mDaServer->ShowDefaultCharacterProperties (0, 0, TRUE);
+		LogComErr (_LOG_AGENT_CALLS, lResult, _T("ShowDefaultCharacterProperties"));
+	}
+	else
+	if	(mMsServer)
+	{
+		AllowSetForegroundWindow (ASFW_ANY);
+		lResult = mMsServer->ShowDefaultCharacterProperties (0, 0, TRUE);
 		LogComErr (_LOG_AGENT_CALLS, lResult, _T("ShowDefaultCharacterProperties"));
 	}
 }
@@ -1778,21 +2222,25 @@ void CAnimationTestDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwTh
 {
 	CDialog::OnActivateApp(bActive, dwThreadID);
 
-	if	(mCharacter != NULL)
+	if	(mDaCharacter)
 	{
 		ActiveStateType	lActive = (ActiveStateType)-1;
 		long			lOtherClients = -1;
 
 		if	(bActive)
 		{
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_ActiveState (&lActive), _T("[%d] get_ActiveState"), mCharacterId);
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_OtherClientCount (&lOtherClients), _T("[%d] get_OtherClientCount"), mCharacterId);
+			LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->get_ActiveState (&lActive), _T("[%d] get_ActiveState"), mCharacterId);
+			LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->get_OtherClientCount (&lOtherClients), _T("[%d] get_OtherClientCount"), mCharacterId);
 			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd] OtherClients [%d]"), mCharacterId, bActive, lActive, lOtherClients);
 
-			LogComErr (_LOG_CHAR_CALLS, mCharacter->put_ActiveState (ActiveState_InputActive), _T("[%d] put_ActiveState ActiveState_InputActive"), mCharacterId);
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_ActiveState (&lActive), _T("[%d] get_ActiveState"), mCharacterId);
+			LogComErr (_LOG_CHAR_CALLS, mDaCharacter->put_ActiveState (ActiveState_InputActive), _T("[%d] put_ActiveState ActiveState_InputActive"), mCharacterId);
+			LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->get_ActiveState (&lActive), _T("[%d] get_ActiveState"), mCharacterId);
 			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd]"), mCharacterId, bActive, lActive);
 		}
+	}
+	else
+	if	(mMsCharacter)
+	{
 	}
 	if	(
 			(mAgentPreviewWnd)
@@ -1888,9 +2336,14 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::VisibleState (lon
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
 	VisibilityCauseType lCause = (VisibilityCauseType)-1;
-	if	(pThis->mCharacter != NULL)
+	if	(pThis->mDaCharacter)
 	{
-		pThis->mCharacter->get_VisibilityCause (&lCause);
+		pThis->mDaCharacter->get_VisibilityCause (&lCause);
+	}
+	else
+	if	(pThis->mMsCharacter != NULL)
+	{
+		pThis->mMsCharacter->GetVisibilityCause ((long*)&lCause);
 	}
 	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::VisibleState [%d] [%d] cause [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Visible, Cause, lCause);
 #endif
@@ -1941,11 +2394,11 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::RequestStart (lon
 	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::RequestStart [%d]"), pThis->mCharacterId, pThis->m_dwRef, RequestID);
 #endif
 //	if	(
-//			(pThis->mCharacter != NULL)
+//			(pThis->mDaCharacter)
 //		&&	(RequestID > 101)
 //		)
 //	{
-//		pThis->mCharacter->Stop (RequestID);
+//		pThis->mDaCharacter->Stop (RequestID);
 //	}
 	return S_OK;
 }
@@ -1976,7 +2429,15 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::RequestComplete (
 	if	(RequestID == pThis->mHideReqID)
 	{
 		pThis->mHideReqID = 0;
-		LogComErr (_LOG_CHAR_CALLS, pThis->mCharacter->Show (TRUE, &RequestID), _T("[%d] Show"), pThis->mCharacterId);
+		if	(pThis->mDaCharacter)
+		{
+			LogComErr (_LOG_CHAR_CALLS, pThis->mDaCharacter->Show (TRUE, &RequestID), _T("[%d] Show"), pThis->mCharacterId);
+		}
+		else
+		if	(pThis->mMsCharacter)
+		{
+			LogComErr (_LOG_CHAR_CALLS, pThis->mMsCharacter->Show (TRUE, &RequestID), _T("[%d] Show"), pThis->mCharacterId);
+		}
 	}
 	return S_OK;
 }
@@ -1998,7 +2459,7 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::Idle (long Charac
 #endif
 //	if	(Start)
 //	{
-//		pThis->ReleaseAgentCharacter ();
+//		pThis->FreeAgentCharacter ();
 //	}
 	return S_OK;
 }
@@ -2008,9 +2469,14 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::Move (long Charac
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
 	MoveCauseType lCause = (MoveCauseType)-1;
-	if	(pThis->mCharacter != NULL)
+	if	(pThis->mDaCharacter)
 	{
-		pThis->mCharacter->get_MoveCause (&lCause);
+		pThis->mDaCharacter->get_MoveCause (&lCause);
+	}
+	else
+	if	(pThis->mMsCharacter != NULL)
+	{
+		pThis->mMsCharacter->GetMoveCause ((long*)&lCause);
 	}
 	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::Move [%d] [%d %d] cause [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, x, y, Cause, lCause);
 #endif

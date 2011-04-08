@@ -46,7 +46,7 @@ public:
 #else
 	DECLARE_DLL_OBJECT_EX(CAgentFileBinary, _DACORE_IMPEXP)
 	_DACORE_IMPEXP static CAgentFileBinary* CreateInstance (LPCTSTR pPath);
-#endif	
+#endif
 
 // Overrides
 public:
@@ -56,7 +56,7 @@ public:
 #else
 	_DACORE_IMPEXP virtual bool get_IsOpen () const;
 	_DACORE_IMPEXP virtual bool get_IsReadOnly () const;
-#endif	
+#endif
 
 #ifdef	_M_CEE
 	virtual CAgentFileName^ FindName (WORD pLangID) override;
@@ -68,30 +68,51 @@ public:
 
 	_DACORE_IMPEXP virtual const CAgentFileAnimation* GetGesture (INT_PTR pGestureNdx);
 	_DACORE_IMPEXP virtual const CAgentFileAnimation* GetAnimation (INT_PTR pAnimationNdx);
-#endif	
+#endif
 
 #ifdef	_M_CEE
 	virtual void Close () override;
 #else
 	_DACORE_IMPEXP virtual void Close ();
-#endif	
+#endif
 
 // Implementation
 protected:
 #ifdef	_M_CEE
-	virtual HRESULT LoadFile (System::String^, UINT pLogLevel);
+	virtual void CloseFile ();
+	virtual bool LoadFile (System::String^, UINT pLogLevel);
+	bool ReadHeader ();
+	virtual bool ReadHeader (UINT pLogLevel);
 #else
+	virtual void CloseFile ();
 	virtual HRESULT LoadFile (LPCTSTR pPath, UINT pLogLevel = 15);
-#endif	
 	HRESULT ReadHeader ();
 	virtual HRESULT ReadHeader (UINT pLogLevel);
+#endif
 
-	LPCVOID ReadBufferNames (LPCVOID pBuffer, bool pNullTerminated, bool pFirstLetterCaps, UINT pLogLevel);
-	LPCVOID ReadBufferStates (LPCVOID pBuffer, bool pNullTerminated, LPCVOID pBufferEnd, UINT pLogLevel);
+	LPCVOID ReadBufferNames (LPCVOID pBuffer, DWORD pBufferSize, bool pNullTerminated, bool pFirstLetterCaps, UINT pLogLevel);
+	LPCVOID ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize, bool pNullTerminated, UINT pLogLevel);
 	LPCVOID ReadBufferTts (LPCVOID pBuffer, bool pNullTerminated, UINT pLogLevel);
 	LPCVOID ReadBufferBalloon (LPCVOID pBuffer, bool pNullTerminated, UINT pLogLevel);
 	LPCVOID ReadBufferPalette (LPCVOID pBuffer, UINT pLogLevel);
 	LPCVOID ReadBufferIcon (LPCVOID pBuffer, UINT pLogLevel);
+
+#ifdef	_M_CEE
+	LPVOID WriteBufferNames (LPVOID pBuffer, CAgentFileNames^ pNames, bool pNullTerminated, UINT pLogLevel);
+	LPVOID WriteBufferStates (LPVOID pBuffer, CAgentFileStates^ pStates, bool pNullTerminated, UINT pLogLevel);
+	LPVOID WriteBufferTts (LPVOID pBuffer, CAgentFileTts^ pTts, bool pNullTerminated, UINT pLogLevel);
+	LPVOID WriteBufferBalloon (LPVOID pBuffer, CAgentFileBalloon^ pBalloon, bool pNullTerminated, UINT pLogLevel);
+	LPVOID WriteBufferPalette (LPVOID pBuffer, CAgentFileHeader^ pHeader, UINT pLogLevel);
+	LPVOID WriteBufferIcon (LPVOID pBuffer, CAgentFileHeader^ pHeader, UINT pLogLevel);
+#endif
+
+#ifdef	_M_CEE
+	static LPCVOID ReadBufferString (LPCVOID pBuffer, bool pNullTerminated, System::String^% pString);
+	static LPVOID WriteBufferString (LPVOID pBuffer, bool pNullTerminated, System::String^ pString);
+#else
+	static LPCVOID ReadBufferString (LPCVOID pBuffer, bool pNullTerminated, CAtlString& pString);
+	static LPCVOID ReadBufferString (LPCVOID pBuffer, bool pNullTerminated, tBstrPtr& pString);
+#endif
 
 	bool DecodeImage (LPCVOID pSrcBits, ULONG pSrcCount, LPBYTE pTrgBits, ULONG pTrgCount, long pTrgWidth, long pTrgHeight);
 	ULONG DecodeData (LPCVOID pSrcData, ULONG pSrcSize, LPVOID pTrgData, ULONG pTrgSize);
@@ -101,23 +122,20 @@ protected:
 	void DumpBlocks (UINT pLogLevel, UINT pMaxBlockSize=512);
 	void DumpPalette (LPVOID pPalette);
 	void SaveImage (CAgentFileImage* pImage);
-#endif	
+#endif
 
 protected:
 #ifdef	_M_CEE
-	System::IO::FileStream^					mFileStream;
+	System::IO::FileStream^						mFileStream;
 	System::IO::BinaryReader^					mFileReader;
-	UInt64										mFileSize;
-	UInt32										mFileNamesOffset;
-	UInt32										mFileStatesOffset;
+	System::IO::BinaryWriter^					mFileWriter;
+	UInt32										mFileSize;
 #else
 	CFileHandle									mFileHandle;
 	CGenericHandle								mFileMapping;
 	CMappedHandle								mFileView;
 	DWORD										mFileSize;
-	DWORD										mFileNamesOffset;
-	DWORD										mFileStatesOffset;
-#endif	
+#endif
 };
 
 /////////////////////////////////////////////////////////////////////////////

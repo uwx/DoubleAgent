@@ -48,7 +48,7 @@ public:
 #else
 	DECLARE_DLL_OBJECT_EX(CAgentFileScript, _DACORE_IMPEXP)
 	_DACORE_IMPEXP static CAgentFileScript* CreateInstance ();
-#endif	
+#endif
 
 // Overrides
 public:
@@ -61,16 +61,16 @@ public:
 	_DACORE_IMPEXP virtual bool IsAcdFile () const;
 	_DACORE_IMPEXP virtual bool IsOpen () const;
 	_DACORE_IMPEXP virtual bool IsReadOnly () const;
-#endif	
+#endif
 
 #ifdef	_M_CEE
-	virtual HRESULT Open (const System::String^ pPath, UINT pLogLevel) override;
-	virtual HRESULT Save () override;
+	virtual bool Open (const System::String^ pPath, UINT pLogLevel) override;
+	virtual bool Save (const System::String^ pPath, UINT pLogLevel) override;
 	virtual void Close () override;
 #else
 	_DACORE_IMPEXP virtual HRESULT Open (LPCTSTR pPath, UINT pLogLevel = 15);
 	_DACORE_IMPEXP virtual void Close ();
-#endif	
+#endif
 
 #ifdef	_M_CEE
 	virtual property int ImageCount {virtual int get() override;}
@@ -81,7 +81,7 @@ public:
 	_DACORE_IMPEXP virtual INT_PTR GetImageCount () const;
 	_DACORE_IMPEXP virtual CAgentFileImage* GetImage (INT_PTR pImageNdx, bool p32Bit = false, UINT pLogLevel = 15);
 #endif
-	
+
 #ifdef	_M_CEE
 	virtual property int SoundCount {virtual int get() override;}
 	virtual int GetSoundSize (int pSoundNdx) override;
@@ -90,7 +90,7 @@ public:
 	_DACORE_IMPEXP virtual INT_PTR GetSoundCount () const;
 	_DACORE_IMPEXP virtual long GetSoundSize (INT_PTR pSoundNdx);
 	_DACORE_IMPEXP virtual LPCVOID GetSound (INT_PTR pSoundNdx);
-#endif	
+#endif
 
 #ifdef	_M_CEE
 	virtual property System::String^ IconFilePath {virtual System::String^ get() override; virtual void set (System::String^ pValue) override;}
@@ -103,43 +103,43 @@ protected:
 	virtual void FreeNames () override;
 	virtual void FreeStates () override;
 	virtual void FreeGestures () override;
-internal:	
+internal:
 	virtual bool RenameAnimation (CAgentFileAnimation^ pAnimation, System::String^ pNewName) override;
 	virtual Int32 LoadImageFile (System::String^ pImageFilePath) override;
 	virtual Int32 LoadSoundFile (System::String^ pSoundFilePath) override;
-#endif	
+#endif
 
 // Implementation
 protected:
 #ifdef	_M_CEE
-	HRESULT ParseFile (ScriptReader^ pReader);
-	HRESULT ParseHeader (ScriptReader^ pReader);
+	bool ParseFile (ScriptReader^ pReader);
+	bool ParseHeader (ScriptReader^ pReader);
 	UInt32 ParseStyle (ScriptReader^ pReader, System::String^ pStyle);
 	bool ParseTtsLine (ScriptReader^ pReader, System::String^ pToken, System::String^ pLine);
-	HRESULT ParseBalloon (ScriptReader^ pReader);
-	HRESULT ParseName (ScriptReader^ pReader, LANGID pLangID);
-	HRESULT ParseAnimation (ScriptReader^ pReader, System::String^ pAnimationName);
-	HRESULT ParseAnimationFrame (ScriptReader^ pReader, CAgentFileAnimation^ pAnimation);
-	HRESULT ParseFrameBranching (ScriptReader^ pReader, CAgentFileFrame^ pFrame);
-	HRESULT ParseFrameImage (ScriptReader^ pReader, CAgentFileFrame^ pFrame);
-	HRESULT ParseFrameOverlay (ScriptReader^ pReader, CAgentFileFrame^ pFrame);
-	HRESULT ParseState (ScriptReader^ pReader, System::String^ pStateName);
+	bool ParseBalloon (ScriptReader^ pReader);
+	bool ParseName (ScriptReader^ pReader, LANGID pLangID);
+	bool ParseAnimation (ScriptReader^ pReader, System::String^ pAnimationName);
+	bool ParseAnimationFrame (ScriptReader^ pReader, CAgentFileAnimation^ pAnimation);
+	bool ParseFrameBranching (ScriptReader^ pReader, CAgentFileFrame^ pFrame);
+	bool ParseFrameImage (ScriptReader^ pReader, CAgentFileFrame^ pFrame);
+	bool ParseFrameOverlay (ScriptReader^ pReader, CAgentFileFrame^ pFrame);
+	bool ParseState (ScriptReader^ pReader, System::String^ pStateName);
 
-	HRESULT WriteFile (ScriptWriter^ pWriter);
-	HRESULT WriteHeader (ScriptWriter^ pWriter);
-	HRESULT WriteStyle (ScriptWriter^ pWriter, UInt32 pStyle);
-	HRESULT WriteTts (ScriptWriter^ pWriter);
-	HRESULT WriteBalloon (ScriptWriter^ pWriter);
-	HRESULT WriteNames (ScriptWriter^ pWriter);
-	HRESULT WriteName (ScriptWriter^ pWriter, CAgentFileName^ pName);
-	HRESULT WriteAnimations (ScriptWriter^ pWriter);
-	HRESULT WriteAnimation (ScriptWriter^ pWriter, CAgentFileAnimation^ pAnimation);
-	HRESULT WriteAnimationFrame (ScriptWriter^ pWriter, CAgentFileFrame^ pFrame);
-	HRESULT WriteFrameBranching (ScriptWriter^ pWriter, CAgentFileFrame^ pFrame);
-	HRESULT WriteFrameImage (ScriptWriter^ pWriter, CAgentFileFrameImage^ pFrameImage);
-	HRESULT WriteFrameOverlay (ScriptWriter^ pWriter, CAgentFileFrameOverlay^ pFrameOverlay);
-	HRESULT WriteStates (ScriptWriter^ pWriter);
-#endif	
+	bool WriteFile (ScriptWriter^ pWriter);
+	bool WriteHeader (ScriptWriter^ pWriter);
+	bool WriteStyle (ScriptWriter^ pWriter, UInt32 pStyle);
+	bool WriteTts (ScriptWriter^ pWriter);
+	bool WriteBalloon (ScriptWriter^ pWriter);
+	bool WriteNames (ScriptWriter^ pWriter);
+	bool WriteName (ScriptWriter^ pWriter, CAgentFileName^ pName);
+	bool WriteAnimations (ScriptWriter^ pWriter);
+	bool WriteAnimation (ScriptWriter^ pWriter, CAgentFileAnimation^ pAnimation);
+	bool WriteAnimationFrame (ScriptWriter^ pWriter, CAgentFileFrame^ pFrame);
+	bool WriteFrameBranching (ScriptWriter^ pWriter, CAgentFileFrame^ pFrame);
+	bool WriteFrameImage (ScriptWriter^ pWriter, CAgentFileFrameImage^ pFrameImage);
+	bool WriteFrameOverlay (ScriptWriter^ pWriter, CAgentFileFrameOverlay^ pFrameOverlay);
+	bool WriteStates (ScriptWriter^ pWriter);
+#endif
 
 protected:
 #ifdef	_M_CEE
@@ -154,7 +154,7 @@ protected:
 	System::String^																			mPaletteFilePath;
 	UInt16																						mNewFrameDuration;
 #else
-#endif	
+#endif
 };
 
 /////////////////////////////////////////////////////////////////////////////

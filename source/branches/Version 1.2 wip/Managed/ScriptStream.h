@@ -116,7 +116,7 @@ private	ref class ScriptKeywords : public ArrayList
 		int OverlayTypeWide4;
 		int OverlayTypeMedium;
 		int OverlayTypeNarrow;
-	
+
 	public:
 		ScriptKeywords ();
 };
@@ -129,8 +129,8 @@ public:
 	ScriptReader (System::IO::Stream^ pFileStream);
 	virtual ~ScriptReader ();
 
-// Properties	
-public:	
+// Properties
+public:
 	property bool SkipComments {bool get(); void set (bool pValue);}
 	property const ScriptKeywords^ Keywords {const ScriptKeywords^ get ();}
 	property System::String^ Keyword [int] {System::String^ get (int pKeyword);}
@@ -147,7 +147,7 @@ public:
 	static System::Guid GetGuid (System::String^ pToken);
 	static array <System::String^>^ GetStyles (System::String^ pToken);
 	static array <System::String^>^ GetFontStyles (System::String^ pToken);
-	
+
 	bool IsKeyword (System::String^ pToken, int pKeyword);
 
 // Overrides
@@ -170,8 +170,8 @@ public:
 	ScriptWriter (System::IO::Stream^ pFileStream);
 	virtual ~ScriptWriter ();
 
-// Properties	
-public:	
+// Properties
+public:
 	property int Indent {int get(); void set (int pValue);}
 	property const ScriptKeywords^ Keywords {const ScriptKeywords^ get ();}
 	property System::String^ Keyword [int] {System::String^ get (int pKeyword);}
@@ -192,11 +192,11 @@ public:
 	static System::String^ FormatGuid (System::Guid pValue);
 	static System::String^ GetStyles (array <System::String^>^ pValue);
 	static System::String^ GetFontStyles (array <System::String^>^ pValue);
-	
+
 protected:
 	void WriteIndent ();
-	
-protected:	
+
+protected:
 	int					mIndent;
 	System::String^	mIndentString;
 	ScriptKeywords^	mKeywords;

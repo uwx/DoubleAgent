@@ -1,4 +1,24 @@
-﻿using System;
+﻿/////////////////////////////////////////////////////////////////////////////
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+/////////////////////////////////////////////////////////////////////////////
+/*
+	This file is part of Double Agent.
+
+    Double Agent is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Double Agent is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/////////////////////////////////////////////////////////////////////////////
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Drawing;
@@ -10,11 +30,11 @@ namespace AgentCharacterEditor
 	static class Program
 	{
 		[STAThread]
-		static void Main ()
+		static void Main (string[] args)
 		{
 			Application.EnableVisualStyles ();
 			Application.SetCompatibleTextRenderingDefault (false);
-			Application.Run (sMainForm = new MainForm ());
+			Application.Run (sMainForm = new MainForm (args));
 		}
 
 		static public MainForm MainForm
@@ -27,87 +47,6 @@ namespace AgentCharacterEditor
 
 		static private AgentCharacterEditor.MainForm sMainForm = null;
 
-		///////////////////////////////////////////////////////////////////////////////
-		#region Utility Functions - PictureBox
-
-		static internal void ResizeImageControl (PictureBox pImageControl)
-		{
-			ResizeImageControl (pImageControl.Image.Size, pImageControl, pImageControl);
-		}
-
-		static internal void ResizeImageControl (PictureBox pImageControl, Control pResizeControl)
-		{
-			ResizeImageControl (pImageControl.Image.Size, pImageControl, pResizeControl);
-		}
-
-		static internal void ResizeImageControl (Size pImageSize, Control pImageControl)
-		{
-			ResizeImageControl (pImageSize, pImageControl, pImageControl);
-		}
-
-		static internal void ResizeImageControl (Size pImageSize, Control pImageControl, Control pResizeControl)
-		{
-			Size	lImageSize = pImageControl.ClientSize;
-			Size	lControlSize = pResizeControl.Size;
-
-			lControlSize.Width += pImageSize.Width - lImageSize.Width;
-			lControlSize.Height += pImageSize.Height - lImageSize.Height;
-			pResizeControl.Size = lControlSize;
-
-			if ((pResizeControl != pImageControl) && (pImageControl.ClientSize != pImageSize))
-			{
-				lImageSize = pImageControl.ClientSize;
-#if DEBUG_NOT
-				System.Diagnostics.Debug.Print ("ResizeImage [{0:D}x{1:D}] with [{2:D}x{3:D}] gives [{4:D}x{5:D}]", pImageSize.Width, pImageSize.Height, lControlSize.Width, lControlSize.Height, lImageSize.Width, lImageSize.Height);
-#endif
-				lControlSize.Width += lImageSize.Width - pImageSize.Width;
-				lControlSize.Height += lImageSize.Height - pImageSize.Height;
-				pResizeControl.Size = lControlSize;
-#if DEBUG_NOT
-				lImageSize = pImageControl.ClientSize;
-				System.Diagnostics.Debug.Print ("ResizeImage [{0:D}x{1:D}] with [{2:D}x{3:D}] gives [{4:D}x{5:D}]", pImageSize.Width, pImageSize.Height, lControlSize.Width, lControlSize.Height, lImageSize.Width, lImageSize.Height);
-#endif
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		static internal double ScaleImageControl (PictureBox pImageControl)
-		{
-			return ScaleImageControl (pImageControl.Image.Size, pImageControl);
-		}
-
-		static internal double ScaleImageControl (PictureBox pImageControl, Control pScaleToControl)
-		{
-			return ScaleImageControl (pImageControl.Image.Size, pImageControl, pScaleToControl);
-		}
-
-		static internal double ScaleImageControl (Size pImageSize, PictureBox pImageControl)
-		{
-			return ScaleImageControl (pImageSize, pImageControl, pImageControl);
-		}
-
-		static internal double ScaleImageControl (Size pImageSize, PictureBox pImageControl, Control pScaleToControl)
-		{
-			double	lScale = 1.0;
-			Size	lImageSize = pScaleToControl.ClientSize;
-
-			if (lImageSize != pImageSize)
-			{
-				lScale = Math.Min ((double)lImageSize.Width / (double)pImageSize.Width, (double)lImageSize.Height / (double)pImageSize.Height);
-
-				lImageSize = Size.Round (new SizeF ((float)pImageControl.Image.Width * (float)lScale, (float)pImageControl.Image.Height * (float)lScale));
-#if DEBUG_NOT
-				System.Diagnostics.Debug.Print ("ScaleImage [{0:D}x{1:D}] from [{2:D}x{3:D}] to [{4:D}x{5:D}]", pImageSize.Width, pImageSize.Height, pImageControl.ClientSize.Width, pImageControl.ClientSize.Height, lImageSize.Width, lImageSize.Height);
-#endif
-				lImageSize.Width += pImageControl.Size.Width - pImageControl.ClientSize.Width;
-				lImageSize.Height += pImageControl.Size.Height - pImageControl.ClientSize.Height;
-				pImageControl.Size = lImageSize;
-			}
-			return lScale;
-		}
-
-		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Assembly Attribute Accessors
 

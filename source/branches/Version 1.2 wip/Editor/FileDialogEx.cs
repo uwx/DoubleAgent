@@ -1,4 +1,24 @@
-﻿using System;
+﻿/////////////////////////////////////////////////////////////////////////////
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+/////////////////////////////////////////////////////////////////////////////
+/*
+	This file is part of Double Agent.
+
+    Double Agent is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Double Agent is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/////////////////////////////////////////////////////////////////////////////
+using System;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.Text;
@@ -19,9 +39,10 @@ namespace AgentCharacterEditor
 			lFilter.Append ("|" + FileExtTypeName (".acs", "Character Files") + " (*.acs)|*.acs");
 			lFilter.Append ("|All Files (*.*)|*.*");
 			lDialog.Filter = lFilter.ToString ();
-			lDialog.DefaultExt = ".acd";
+			lDialog.CheckFileExists = true;
 
-			InitFilePath (lDialog, pFilePath);
+			InitFilePath (lDialog, pFilePath, ".acd");
+			InitFilterIndex (lDialog);
 			if (lDialog.ShowDialog () == DialogResult.OK)
 			{
 				pFilePath = lDialog.FileName;
@@ -30,11 +51,35 @@ namespace AgentCharacterEditor
 			return false;
 		}
 
+		static public bool SaveCharacterFile (ref String pFilePath)
+		{
+			SaveFileDialog	lDialog = new SaveFileDialog ();
+			StringBuilder	lFilter = new StringBuilder ();
+
+			lFilter.Append (FileExtTypeName (".acd", "Character Definition Files") + " (*.acd)|*.acd");
+			lFilter.Append ("|" + FileExtTypeName (".acs", "Character Files") + " (*.acs)|*.acs");
+			lFilter.Append ("|All Files (*.*)|*.*");
+			lDialog.Filter = lFilter.ToString ();
+			lDialog.CheckPathExists = true;
+			lDialog.OverwritePrompt = true;
+
+			InitFilePath (lDialog, pFilePath, ".acd");
+			InitFilterIndex (lDialog);
+			if (lDialog.ShowDialog () == DialogResult.OK)
+			{
+				pFilePath = lDialog.FileName;
+				return true;
+			}
+			return false;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
 		static public bool OpenImageFile (ref String pFilePath)
 		{
 			OpenFileDialog	lDialog = new OpenFileDialog ();
 			StringBuilder	lFilter = new StringBuilder ();
-			
+
 			lFilter.Append (FileExtTypeName (".bmp", "Bitmap Files") + " (*.bmp)|*.bmp");
 			lFilter.Append ("|" + FileExtTypeName (".gif", "GIF Files") + " (*.gif)|*.gif");
 			lFilter.Append ("|" + FileExtTypeName (".jpg", "Jpeg Files") + " (*.jpg,*.jpeg)|*.jpg;*.jpeg");
@@ -42,9 +87,10 @@ namespace AgentCharacterEditor
 			lFilter.Append ("|All Image Files (*.bmp,*.gif,*.jpg,*.jpeg,*.png)|*.bmp;*.gif;*.jpg;*.jpeg;*.png");
 			lFilter.Append ("|All Files (*.*)|*.*");
 			lDialog.Filter = lFilter.ToString ();
-			lDialog.DefaultExt = ".bmp";
+			lDialog.CheckFileExists = true;
 
-			InitFilePath (lDialog, pFilePath);
+			InitFilePath (lDialog, pFilePath, ".bmp");
+			InitFilterIndex (lDialog);
 			if (lDialog.ShowDialog () == DialogResult.OK)
 			{
 				pFilePath = lDialog.FileName;
@@ -60,10 +106,11 @@ namespace AgentCharacterEditor
 
 			lFilter.Append (FileExtTypeName (".ico", "Icon Files") + " (*.ico)|*.ico");
 			lFilter.Append ("|All Files (*.*)|*.*");
-			lDialog.Filter = lFilter.ToString();
-			lDialog.DefaultExt = ".ico";
+			lDialog.Filter = lFilter.ToString ();
+			lDialog.CheckFileExists = true;
 
-			InitFilePath (lDialog, pFilePath);
+			InitFilePath (lDialog, pFilePath, ".ico");
+			InitFilterIndex (lDialog);
 			if (lDialog.ShowDialog () == DialogResult.OK)
 			{
 				pFilePath = lDialog.FileName;
@@ -80,9 +127,10 @@ namespace AgentCharacterEditor
 			lFilter.Append (FileExtTypeName (".wav", "Sound Files") + " (*.wav)|*.wav");
 			lFilter.Append ("|All Files (*.*)|*.*");
 			lDialog.Filter = lFilter.ToString ();
-			lDialog.DefaultExt = ".wav";
+			lDialog.CheckFileExists = true;
 
-			InitFilePath (lDialog, pFilePath);
+			InitFilePath (lDialog, pFilePath, ".wav");
+			InitFilterIndex (lDialog);
 			if (lDialog.ShowDialog () == DialogResult.OK)
 			{
 				pFilePath = lDialog.FileName;
@@ -100,9 +148,10 @@ namespace AgentCharacterEditor
 			lFilter.Append ("|" + FileExtTypeName (".gif", "GIF Files") + " (*.gif)|*.gif");
 			lFilter.Append ("|All Files (*.*)|*.*");
 			lDialog.Filter = lFilter.ToString ();
-			lDialog.DefaultExt = ".bmp";
+			lDialog.CheckFileExists = true;
 
-			InitFilePath (lDialog, pFilePath);
+			InitFilePath (lDialog, pFilePath, ".bmp");
+			InitFilterIndex (lDialog);
 			if (lDialog.ShowDialog () == DialogResult.OK)
 			{
 				Bitmap			lBitmap = null;
@@ -137,10 +186,14 @@ namespace AgentCharacterEditor
 
 		static public void InitFilePath (FileDialog pFileDialog, String pFilePath)
 		{
-			pFileDialog.FileName = pFilePath;
+			InitFilePath (pFileDialog, pFilePath, null);
+		}
 
-			if (!String.IsNullOrEmpty (pFilePath))
+		static public void InitFilePath (FileDialog pFileDialog, String pFilePath, String pDefaultExt)
+		{
+			if (!String.IsNullOrEmpty (pFilePath) && !pFilePath.Contains ("*"))
 			{
+				pFileDialog.FileName = pFilePath;
 				try
 				{
 					pFileDialog.FileName = System.IO.Path.GetFullPath (pFilePath);
@@ -152,6 +205,44 @@ namespace AgentCharacterEditor
 				}
 				catch
 				{
+				}
+			}
+			if (!String.IsNullOrEmpty (pDefaultExt))
+			{
+				if (!String.IsNullOrEmpty (pFilePath))
+				{
+					try
+					{
+						pFileDialog.DefaultExt = System.IO.Path.GetExtension (pFilePath);
+					}
+					catch
+					{
+					}
+				}
+				if (String.IsNullOrEmpty (pFileDialog.DefaultExt))
+				{
+					pFileDialog.DefaultExt = pDefaultExt;
+				}
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		static public void InitFilterIndex (FileDialog pFileDialog)
+		{
+			if (!String.IsNullOrEmpty (pFileDialog.Filter) && !String.IsNullOrEmpty (pFileDialog.DefaultExt))
+			{
+				Char[]		lDelim = { '|' };
+				String[]	lFilters = pFileDialog.Filter.Split (lDelim);
+				int			lNdx;
+
+				for (lNdx = 0; lNdx < lFilters.Length; lNdx++)
+				{
+					if (lFilters[lNdx].Contains (pFileDialog.DefaultExt))
+					{
+						pFileDialog.FilterIndex = (lNdx / 2) + 1;
+						break;
+					}
 				}
 			}
 		}

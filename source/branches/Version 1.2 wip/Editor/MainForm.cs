@@ -1,4 +1,24 @@
-﻿using System;
+﻿/////////////////////////////////////////////////////////////////////////////
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+/////////////////////////////////////////////////////////////////////////////
+/*
+	This file is part of Double Agent.
+
+    Double Agent is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Double Agent is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/////////////////////////////////////////////////////////////////////////////
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -13,6 +33,8 @@ namespace AgentCharacterEditor
 	{
 		private CharacterFile	mCharacterFile = null;
 		private RecentFileList	mRecentFiles;
+		private UndoManager		mUndoManager;
+		private String			mInitialFile = null;
 		private const String	mNodeCharacter = "NodeCharacter";
 		private const String	mNodeWordBalloon = "NodeWordBalloon";
 		private const String	mNodeTTSMode = "NodeTTSMode";
@@ -22,12 +44,27 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
-		public MainForm ()
+		public MainForm (string[] args)
 		{
+			if ((args != null) && (args.Length > 0))
+			{
+				mInitialFile = args[0];
+			}
 			mRecentFiles = new RecentFileList ();
-			mRecentFiles.RecentItemClick += new RecentFileList.RecentItemClickEvent (RecentFiles_RecentItemClick);
+			mUndoManager = new UndoManager ();
+
 			InitializeComponent ();
+
+			this.MainMenuStrip = this.MenuStripMain;
 			Application.Idle += new EventHandler (Application_Idle);
+			mRecentFiles.RecentItemClick += new RecentFileList.RecentItemClickEvent (RecentFiles_RecentItemClick);
+			mUndoManager.Undone += new UndoManager.UndoneEvent (UndoManager_Undone);
+			mUndoManager.Redone += new UndoManager.RedoneEvent (UndoManager_Redone);
+
+			PanelAnimations.AnimationAdded += new AnimationsForm.AnimationAddedEvent (PanelState.PanelAnimations_AnimationAdded);
+			PanelAnimations.AnimationRemoved += new AnimationsForm.AnimationRemovedEvent (PanelState.PanelAnimations_AnimationRemoved);
+			PanelAnimation.AnimationNameChanged += new AnimationForm.AnimationNameChangedEvent (PanelState.PanelAnimation_AnimationNameChanged);
+			PanelAnimation.AnimationNameChanged += new AnimationForm.AnimationNameChangedEvent (PanelAnimations.PanelAnimation_AnimationNameChanged);
 		}
 
 		~MainForm ()
@@ -46,7 +83,6 @@ namespace AgentCharacterEditor
 
 			LoadRecentFiles ();
 			mRecentFiles.ShowPaths (MenuItemFile.DropDown, MenuItemFilePrintPreview);
-
 			LoadTreeExpansion ();
 			LoadWindowState ();
 		}
@@ -61,6 +97,11 @@ namespace AgentCharacterEditor
 				this.Size = (System.Drawing.Size)lSettings.MainFormSize;
 			}
 			this.WindowState = lSettings.MainFormState;
+
+			if (lSettings.MainFormSplit > 0)
+			{
+				SplitContainerMain.SplitterDistance = lSettings.MainFormSplit;
+			}
 		}
 
 		private void LoadTreeExpansion ()
@@ -155,6 +196,8 @@ namespace AgentCharacterEditor
 				lSettings.MainFormSize = (System.Drawing.Point)this.RestoreBounds.Size;
 			}
 			lSettings.MainFormState = this.WindowState;
+
+			lSettings.MainFormSplit = SplitContainerMain.SplitterDistance;
 		}
 
 		private void SaveTreeExpansion ()
@@ -190,6 +233,16 @@ namespace AgentCharacterEditor
 #if DEBUG_NOT
 				System.Diagnostics.Debug.Print ("Save Recent [{0}]", lPath);
 #endif
+			}
+		}
+
+		private void UpdateRecentFiles ()
+		{
+			if ((mCharacterFile != null) && (!String.IsNullOrEmpty (mCharacterFile.Path)))
+			{
+				mRecentFiles.MostRecent = mCharacterFile.Path;
+				mRecentFiles.ShowPaths (MenuItemFile.DropDown, MenuItemFilePrintPreview);
+				SaveRecentFiles ();
 			}
 		}
 
@@ -229,7 +282,16 @@ namespace AgentCharacterEditor
 				{
 					CharacterFile.IsDirty = value;
 					ShowFileState ();
+					ShowEditState ();
 				}
+			}
+		}
+
+		public UndoManager UndoManager
+		{
+			get
+			{
+				return mUndoManager;
 			}
 		}
 
@@ -239,6 +301,11 @@ namespace AgentCharacterEditor
 
 		private bool OpenCharacterFile (String pFilePath)
 		{
+			bool			lRet = false;
+			CursorState		lCursorState = new CursorState (this);
+			CharacterFile	lCharacterFile = null;
+			bool			lOpened = false;
+
 			try
 			{
 				if ((mCharacterFile != null) && (System.IO.Path.GetFullPath (pFilePath).Equals (System.IO.Path.GetFullPath (mCharacterFile.Path), StringComparison.InvariantCultureIgnoreCase)))
@@ -250,68 +317,75 @@ namespace AgentCharacterEditor
 			{
 			}
 
-			CharacterFile	lCharacterFile = CharacterFile.CreateInstance (pFilePath);
-
-			try
-			{
-				lCharacterFile.Open (pFilePath, 1);
-			}
-			catch (Exception e)
-			{
-				MessageBox.Show (e.Message);
-				return false;
-			}
-
+			lCursorState.ShowWait ();
 			if (mCharacterFile != null)
 			{
 				SaveConfig ();
 			}
-			if (lCharacterFile.IsOpen)
-			{
-				mCharacterFile = lCharacterFile;
 
-				ShowFileState ();
-				ShowAnimationNames ();
-				LoadTreeExpansion ();
-
-				PanelCharacter.CharacterFile = mCharacterFile;
-				PanelBalloon.CharacterFile = mCharacterFile;
-				PanelTts.CharacterFile = mCharacterFile;
-				PanelAnimations.CharacterFile = mCharacterFile;
-				PanelAnimation.CharacterFile = mCharacterFile;
-				PanelFrame.CharacterFile = mCharacterFile;
-				PanelBranching.CharacterFile = mCharacterFile;
-				PanelOverlays.CharacterFile = mCharacterFile;
-				PanelState.CharacterFile = mCharacterFile;
-
-				ShowSelectedTreeNode ();
-				mRecentFiles.MostRecent = mCharacterFile.Path;
-				mRecentFiles.ShowPaths (MenuItemFile.DropDown, MenuItemFilePrintPreview);
-				return true;
-			}
-			else
+			try
 			{
-				MessageBox.Show (String.Format (Properties.Resources.MsgInvalidFile, pFilePath), Program.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-				return false;
+				lCharacterFile = CharacterFile.CreateInstance (pFilePath);
 			}
-		}
+			catch
+			{
+			}
 
-		private void ShowFileState ()
-		{
-			if (mCharacterFile == null)
+			if (lCharacterFile != null)
 			{
-				this.Text = Program.AssemblyTitle;
-				MenuItemFileSave.Enabled = false;
-				MenuItemFileSaveAs.Enabled = false;
-				ToolButtonFileSave.Enabled = false;
+				try
+				{
+#if DEBUG
+					lOpened = lCharacterFile.Open (pFilePath, 1);
+#else
+					lOpened = lCharacterFile.Open (pFilePath);
+#endif
+				}
+				catch (Exception pException)
+				{
+					MessageBox.Show (pException.Message);
+					lCursorState.RestoreCursor ();
+					return false;
+				}
 			}
-			else
+
+			try
 			{
-				this.Text = Program.AssemblyTitle + " [" + mCharacterFile.FileName + ((mCharacterFile.IsDirty) ? " *" : "") + "]";
-				MenuItemFileSave.Enabled = mCharacterFile.IsDirty;
-				MenuItemFileSaveAs.Enabled = true;
-				ToolButtonFileSave.Enabled = mCharacterFile.IsDirty;
+				if (lOpened)
+				{
+					mUndoManager.Clear ();
+					mCharacterFile = lCharacterFile;
+
+					ShowFileState ();
+					ShowEditState ();
+					ShowAnimationNames ();
+					LoadTreeExpansion ();
+
+					PanelCharacter.CharacterFile = mCharacterFile;
+					PanelBalloon.CharacterFile = mCharacterFile;
+					PanelTts.CharacterFile = mCharacterFile;
+					PanelAnimations.CharacterFile = mCharacterFile;
+					PanelAnimation.CharacterFile = mCharacterFile;
+					PanelFrame.CharacterFile = mCharacterFile;
+					PanelBranching.CharacterFile = mCharacterFile;
+					PanelOverlays.CharacterFile = mCharacterFile;
+					PanelState.CharacterFile = mCharacterFile;
+
+					ShowSelectedTreeNode ();
+					UpdateRecentFiles ();
+					lRet = true;
+				}
+				else
+				{
+					MessageBox.Show (String.Format (Properties.Resources.MsgInvalidFile, pFilePath), Program.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				}
 			}
+			catch
+			{
+			}
+
+			lCursorState.RestoreCursor ();
+			return lRet;
 		}
 
 		private void ShowAnimationNames ()
@@ -465,8 +539,8 @@ namespace AgentCharacterEditor
 									{
 										lAnimationName = TreeViewMain.SelectedNode.Parent.Parent.Text;
 										lFrameName = TreeViewMain.SelectedNode.Parent.Text;
-										lFileFrame = (FileAnimationFrame)TreeViewMain.SelectedNode.Parent.Tag;
-										lFrameForm = (UserControl)TreeViewMain.SelectedNode.Tag;
+										lFileFrame = TreeViewMain.SelectedNode.Parent.Tag as FileAnimationFrame;
+										lFrameForm = TreeViewMain.SelectedNode.Tag as UserControl;
 									}
 									catch
 									{
@@ -479,7 +553,7 @@ namespace AgentCharacterEditor
 								{
 									lAnimationName = TreeViewMain.SelectedNode.Parent.Text;
 									lFrameName = TreeViewMain.SelectedNode.Text;
-									lFileFrame = (FileAnimationFrame)TreeViewMain.SelectedNode.Tag;
+									lFileFrame = TreeViewMain.SelectedNode.Tag as FileAnimationFrame;
 									lFrameForm = PanelFrame;
 								}
 								catch
@@ -492,7 +566,7 @@ namespace AgentCharacterEditor
 							try
 							{
 								lAnimationName = TreeViewMain.SelectedNode.Text;
-								lFileAnimation = (FileAnimation)TreeViewMain.SelectedNode.Tag;
+								lFileAnimation = TreeViewMain.SelectedNode.Tag as FileAnimation;
 							}
 							catch
 							{
@@ -583,6 +657,73 @@ namespace AgentCharacterEditor
 
 		///////////////////////////////////////////////////////////////////////////////
 
+		private void ShowFileState ()
+		{
+			if (mCharacterFile == null)
+			{
+				this.Text = Program.AssemblyTitle;
+				MenuItemFileSave.Enabled = false;
+				MenuItemFileSaveAs.Enabled = false;
+				ToolButtonFileSave.Enabled = false;
+			}
+			else
+			{
+				this.Text = Program.AssemblyTitle + " [" + mCharacterFile.FileName + ((mCharacterFile.IsDirty) ? " *" : "") + "]";
+				MenuItemFileSave.Enabled = mCharacterFile.IsDirty;
+				MenuItemFileSaveAs.Enabled = true;
+				ToolButtonFileSave.Enabled = mCharacterFile.IsDirty;
+			}
+		}
+
+		private void ShowEditState ()
+		{
+			TextBox	lTextBox = null;
+			Control	lActive = GetActiveControl (ref lTextBox);
+
+			if (lTextBox != null)
+			{
+				ToolButtonEditCopy.Enabled = (lTextBox.SelectionLength > 0);
+				ToolButtonEditCut.Enabled = !lTextBox.ReadOnly && (lTextBox.SelectionLength > 0);
+				ToolButtonEditDelete.Enabled = !lTextBox.ReadOnly && (lTextBox.SelectionLength > 0);
+				ToolButtonEditPaste.Enabled = !lTextBox.ReadOnly && (Clipboard.ContainsText (TextDataFormat.Text) || Clipboard.ContainsText (TextDataFormat.UnicodeText));
+			}
+			else
+			{
+				ToolButtonEditCopy.Enabled = false;
+				ToolButtonEditCut.Enabled = false;
+				ToolButtonEditDelete.Enabled = false;
+				ToolButtonEditPaste.Enabled = false;
+			}
+
+			if ((lTextBox != null) && lTextBox.Modified)
+			{
+				ToolButtonEditUndo.Enabled = lTextBox.CanUndo;
+				ToolButtonEditRedo.Enabled = false;
+				ToolButtonEditUndo.ToolTipText = ToolButtonEditUndo.Enabled ? "Undo typing" : "Undo";
+				ToolButtonEditRedo.ToolTipText = "Redo";
+			}
+			else
+			{
+				ToolButtonEditUndo.Enabled = UndoManager.CanUndo;
+				ToolButtonEditRedo.Enabled = UndoManager.CanRedo;
+				ToolButtonEditUndo.ToolTipText = UndoManager.UndoTip;
+				ToolButtonEditRedo.ToolTipText = UndoManager.RedoTip;
+			}
+
+			MenuItemEditUndo.Text = "&" + ToolButtonEditUndo.ToolTipText;
+			MenuItemEditRedo.Text = "&" + ToolButtonEditRedo.ToolTipText;
+			MenuItemEditUndo.Enabled = ToolButtonEditUndo.Enabled;
+			MenuItemEditRedo.Enabled = ToolButtonEditRedo.Enabled;
+			MenuItemEditCopy.Enabled = ToolButtonEditCopy.Enabled;
+			MenuItemEditCut.Enabled = ToolButtonEditCut.Enabled;
+			MenuItemEditDelete.Enabled = ToolButtonEditDelete.Enabled;
+			MenuItemEditPaste.Enabled = ToolButtonEditPaste.Enabled;
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region Internal Methods
+
 		private TreeNode FindTreeRootNode (String pNodeName)
 		{
 			foreach (TreeNode lNode in TreeViewMain.Nodes)
@@ -643,6 +784,81 @@ namespace AgentCharacterEditor
 			return null;
 		}
 
+		///////////////////////////////////////////////////////////////////////////////
+
+		internal Control GetActiveControl ()
+		{
+			try
+			{
+				Control	lActive = this.ActiveControl;
+
+				if ((lActive != null) && (lActive.Enabled))
+				{
+					while (!lActive.Focused && lActive.HasChildren && lActive.ContainsFocus)
+					{
+						ContainerControl	lContainer = null;
+						Control				lContained = null;
+
+						lContainer = lActive as ContainerControl;
+						if (lContainer != null)
+						{
+							lContained = lContainer.ActiveControl;
+						}
+						if ((lContained != null) && (lContained.Enabled))
+						{
+							lActive = lContained;
+						}
+						else
+						{
+							break;
+						}
+					}
+
+					if ((lActive != null) && lActive.Enabled && lActive.Focused)
+					{
+						return lActive;
+					}
+				}
+			}
+			catch
+			{
+			}
+
+			return null;
+		}
+
+		internal Control GetActiveControl (ref TextBox pTextBox)
+		{
+			NumericUpDownEx	lNumeric = null;
+			Control			lActive = GetActiveControl (ref pTextBox, ref lNumeric);
+
+			if (lNumeric != null)
+			{
+				pTextBox = lNumeric.TextBox;
+			}
+			return lActive;
+		}
+
+		internal Control GetActiveControl (ref TextBox pTextBox, ref NumericUpDownEx pNumeric)
+		{
+			Control	lActive = GetActiveControl ();
+
+			pTextBox = null;
+			pNumeric = null;
+
+			if (lActive != null)
+			{
+				pTextBox = lActive as TextBox;
+				pNumeric = lActive as NumericUpDownEx;
+			}
+			return lActive;
+		}
+
+		public new bool ValidateChildren ()
+		{
+			return ValidateChildren (ValidationConstraints.Visible | ValidationConstraints.Enabled | ValidationConstraints.Selectable);
+		}
+
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Form Event Handlers
@@ -673,16 +889,16 @@ namespace AgentCharacterEditor
 						break;
 				}
 			}
-#endif			
+#endif
 		}
 
 		private void MainForm_Shown (object sender, EventArgs e)
 		{
-#if	DEBUG
-			//OpenAgentFile ("C:\\Windows\\MsAgent\\Chars\\Merlin.acs");
-			//OpenAgentFile ("C:\\DoubleAgent\\_Test\\Chars\\TestChar1.acs");
-			OpenCharacterFile ("C:\\DoubleAgent\\_Test\\Chars\\TestChar1.acd");
-#endif
+			if (!String.IsNullOrEmpty (mInitialFile))
+			{
+				Update ();
+				OpenCharacterFile (mInitialFile);
+			}
 			if (TreeViewMain.SelectedNode != null)
 			{
 				TreeViewMain.SelectedNode.EnsureVisible ();
@@ -695,96 +911,11 @@ namespace AgentCharacterEditor
 		{
 			try
 			{
-				Control			lActive = GetActiveControl ();
-				TextBox			lTextBox = null;
-				NumericUpDownEx	lNumeric = null;
-
-
-				if (lActive != null)
-				{
-					try
-					{
-						lTextBox = (TextBox)lActive;
-					}
-					catch
-					{
-					}
-					try
-					{
-						lNumeric = (NumericUpDownEx)lActive;
-					}
-					catch
-					{
-					}
-				}
-
-				if (lTextBox != null)
-				{
-					ToolButtonEditCopy.Enabled = (lTextBox.SelectionLength > 0);
-					ToolButtonEditCut.Enabled = !lTextBox.ReadOnly && (lTextBox.SelectionLength > 0);
-					ToolButtonEditDelete.Enabled = !lTextBox.ReadOnly && (lTextBox.SelectionLength > 0);
-					ToolButtonEditPaste.Enabled = !lTextBox.ReadOnly && (Clipboard.ContainsText (TextDataFormat.Text) || Clipboard.ContainsText (TextDataFormat.UnicodeText));
-				}
-				else if (lNumeric != null)
-				{
-					ToolButtonEditCopy.Enabled = (lNumeric.TextBox.SelectionLength > 0);
-					ToolButtonEditCut.Enabled = !lNumeric.ReadOnly && (lNumeric.TextBox.SelectionLength > 0);
-					ToolButtonEditDelete.Enabled = !lNumeric.ReadOnly && (lNumeric.TextBox.SelectionLength > 0);
-					ToolButtonEditPaste.Enabled = !lNumeric.ReadOnly && (Clipboard.ContainsText (TextDataFormat.Text) || Clipboard.ContainsText (TextDataFormat.UnicodeText));
-				}
-				else
-				{
-					ToolButtonEditCopy.Enabled = false;
-					ToolButtonEditCut.Enabled = false;
-					ToolButtonEditDelete.Enabled = false;
-					ToolButtonEditPaste.Enabled = false;
-				}
+				ShowEditState ();
 			}
 			catch
 			{
 			}
-		}
-
-		internal Control GetActiveControl ()
-		{
-			try
-			{
-				Control	lActive = this.ActiveControl;
-
-				if ((lActive != null) && (lActive.Enabled))
-				{
-					while (!lActive.Focused && lActive.HasChildren)
-					{
-						try
-						{
-							ContainerControl	lContainer = (ContainerControl)lActive;
-							Control				lContained = lContainer.ActiveControl;
-
-							if ((lContained != null) && (lContained.Enabled))
-							{
-								lActive = lContained;
-							}
-							else
-							{
-								break;
-							}
-						}
-						catch
-						{
-						}
-					}
-
-					if ((lActive != null) && (lActive.Enabled) && (lActive.Focused))
-					{
-						return lActive;
-					}
-				}
-			}
-			catch
-			{
-			}
-
-			return null;
 		}
 
 		#endregion
@@ -850,9 +981,16 @@ namespace AgentCharacterEditor
 			Close ();
 		}
 
+		private void MenuItemHelpAbout_Click (object sender, EventArgs e)
+		{
+			(new AgentCharacterEditor.AboutBox ()).ShowDialog ();
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
 		private void MenuItemFileNew_Click (object sender, EventArgs e)
 		{
-
+			MessageBox.Show ("Not implemented", Program.AssemblyTitle, MessageBoxButtons.OK);
 		}
 
 		private void MenuItemFileOpen_Click (object sender, EventArgs e)
@@ -869,69 +1007,218 @@ namespace AgentCharacterEditor
 		{
 			if ((mCharacterFile != null) && (!mCharacterFile.IsReadOnly) && (mCharacterFile.IsDirty))
 			{
-				mCharacterFile.Save ();
-				ShowFileState ();
+				CursorState	lCursorState = new CursorState (this);
+
+				lCursorState.ShowWait ();
+
+				try
+				{
+#if DEBUG
+					mCharacterFile.Save (3);
+#else
+					mCharacterFile.Save ();
+#endif
+					ShowFileState ();
+					ShowEditState ();
+				}
+				catch
+				{
+				}
+
+				lCursorState.RestoreCursor ();
 			}
 		}
 
 		private void MenuItemFileSaveAs_Click (object sender, EventArgs e)
 		{
+			if (mCharacterFile != null)
+			{
+				String	lFilePath = String.Empty;
 
+				if (!String.IsNullOrEmpty (mCharacterFile.Path))
+				{
+					lFilePath = "*" + System.IO.Path.GetExtension (mCharacterFile.Path);
+				}
+				if (OpenFileDialogEx.SaveCharacterFile (ref lFilePath))
+				{
+					CursorState		lCursorState = new CursorState (this);
+					CharacterFile	lCharacterFile = null;
+					bool			lSaved = false;
+
+					lCursorState.ShowWait ();
+
+					try
+					{
+						lCharacterFile = CharacterFile.CreateInstance (lFilePath);
+					}
+					catch
+					{
+					}
+					if (lCharacterFile != null)
+					{
+						try
+						{
+#if DEBUG
+							lSaved = lCharacterFile.Save (lFilePath, mCharacterFile, 3);
+#else
+							lSaved = lCharacterFile.Save (lFilePath, mCharacterFile);
+#endif
+						}
+						catch (Exception pException)
+						{
+							MessageBox.Show (pException.Message);
+						}
+
+						if (lSaved)
+						{
+							lFilePath = lCharacterFile.Path;
+							lCharacterFile.Close ();
+							lCharacterFile = null;
+							OpenCharacterFile (lFilePath);
+						}
+						else
+						{
+							MessageBox.Show ("<save failed>", Program.AssemblyTitle, MessageBoxButtons.OK);
+						}
+					}
+					else
+					{
+						MessageBox.Show ("Not implemented", Program.AssemblyTitle, MessageBoxButtons.OK);
+					}
+
+					lCursorState.RestoreCursor ();
+				}
+			}
 		}
 
 		private void MenuItemFilePrint_Click (object sender, EventArgs e)
 		{
-
+			MessageBox.Show ("Not implemented", Program.AssemblyTitle, MessageBoxButtons.OK);
 		}
 
 		private void MenuItemFilePrintPreview_Click (object sender, EventArgs e)
 		{
-
+			MessageBox.Show ("Not implemented", Program.AssemblyTitle, MessageBoxButtons.OK);
 		}
+
+		///////////////////////////////////////////////////////////////////////////////
 
 		private void MenuItemEditUndo_Click (object sender, EventArgs e)
 		{
+			TextBox	lTextBox = null;
+			Control	lActive = GetActiveControl (ref lTextBox);
 
+			if ((lTextBox != null) && lTextBox.Modified)
+			{
+				if (lTextBox.CanUndo)
+				{
+					lTextBox.Undo ();
+					ValidateChildren ();
+				}
+			}
+			else if (UndoManager.Undo ())
+			{
+				ShowFileState ();
+				ShowEditState ();
+			}
 		}
 
 		private void MenuItemEditRedo_Click (object sender, EventArgs e)
 		{
-
+			if (UndoManager.Redo ())
+			{
+				ShowFileState ();
+				ShowEditState ();
+			}
 		}
+
+		///////////////////////////////////////////////////////////////////////////////
 
 		private void MenuItemEditCut_Click (object sender, EventArgs e)
 		{
+			TextBox	lTextBox = null;
+			Control	lActive = GetActiveControl (ref lTextBox);
 
+			if (lTextBox != null)
+			{
+				lTextBox.Cut ();
+				ValidateChildren ();
+			}
 		}
 
 		private void MenuItemEditCopy_Click (object sender, EventArgs e)
 		{
+			TextBox	lTextBox = null;
+			Control	lActive = GetActiveControl (ref lTextBox);
 
+			if (lTextBox != null)
+			{
+				lTextBox.Copy ();
+				ValidateChildren ();
+			}
 		}
 
 		private void MenuItemEditPaste_Click (object sender, EventArgs e)
 		{
+			TextBox	lTextBox = null;
+			Control	lActive = GetActiveControl (ref lTextBox);
 
+			if (lTextBox != null)
+			{
+				lTextBox.Paste ();
+				ValidateChildren ();
+			}
 		}
 
 		private void MenuItemEditDelete_Click (object sender, EventArgs e)
 		{
+			TextBox	lTextBox = null;
+			Control	lActive = GetActiveControl (ref lTextBox);
 
-		}
-
-		private void MenuItemHelpAbout_Click (object sender, EventArgs e)
-		{
-			(new AgentCharacterEditor.AboutBox ()).ShowDialog ();
+			if (lTextBox != null)
+			{
+				lTextBox.Paste (String.Empty);
+				ValidateChildren ();
+			}
 		}
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Internal Event Handlers
 
-		void RecentFiles_RecentItemClick (object sender, string e)
+		private void RecentFiles_RecentItemClick (object sender, string e)
 		{
-			OpenCharacterFile (e);
+			if (!OpenCharacterFile (e))
+			{
+				if (MessageBox.Show (String.Format ("Remove {0} from the recent files list?", e), Program.AssemblyTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
+				{
+					if (mRecentFiles.RemovePath (e))
+					{
+						UpdateRecentFiles ();
+					}
+				}
+			}
 		}
+
+		private void UndoManager_Undone (object sender, UndoManager.EventArgs e)
+		{
+			FileIsDirty = true;
+			ToolStripTop.TipTextChanged ();
+#if DEBUG
+			System.Diagnostics.Debug.Print ("[{0}] Undone", e.UndoUnit.ToString ());
+#endif
+		}
+
+		private void UndoManager_Redone (object sender, UndoManager.EventArgs e)
+		{
+			FileIsDirty = true;
+			ToolStripTop.TipTextChanged ();
+#if DEBUG
+			System.Diagnostics.Debug.Print ("[{0}] Redone", e.UndoUnit.ToString ());
+#endif
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
 
 		private void PanelAnimations_AnimationAdded (object sender, AnimationsForm.AnimationEventArgs e)
 		{
@@ -941,6 +1228,7 @@ namespace AgentCharacterEditor
 		private void PanelAnimations_AnimationRemoved (object sender, AnimationsForm.AnimationEventArgs e)
 		{
 			ShowAnimationNames ();
+			ShowSelectedTreeNode ();
 		}
 
 		private void PanelAnimation_AnimationNameChanged (object sender, AnimationForm.AnimationEventArgs e)
@@ -970,6 +1258,7 @@ namespace AgentCharacterEditor
 			if (lAnimationNode != null)
 			{
 				ShowAnimationFrames (e.Animation, lAnimationNode);
+				ShowSelectedTreeNode ();
 			}
 		}
 

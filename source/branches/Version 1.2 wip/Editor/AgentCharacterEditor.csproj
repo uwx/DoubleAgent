@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AgentCharacterEditor</RootNamespace>
-    <AssemblyName>AgentCharacterEditor</AssemblyName>
+    <AssemblyName>DoubleACE</AssemblyName>
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>AgentCharacterEditor.Program</StartupObject>
@@ -43,6 +43,7 @@
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>..\..\BinDa\Bin\Release%28x86%29\</OutputPath>
@@ -51,6 +52,7 @@
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DaCharFileCLR, Version=1.0.4088.6175, Culture=neutral, processorArchitecture=x86">
@@ -65,9 +67,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Util\CSharp\CursorState.cs">
+      <Link>CursorState.cs</Link>
+    </Compile>
     <Compile Include="..\Util\CSharp\ToolStripEx.cs">
       <Link>ToolStripEx.cs</Link>
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="..\Util\CSharp\UndoManager.cs">
+      <Link>UndoManager.cs</Link>
     </Compile>
     <Compile Include="FileDialogEx.cs">
     </Compile>
@@ -212,6 +220,7 @@
     <Compile Include="BalloonForm.Designer.cs">
       <DependentUpon>BalloonForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UndoableUpdate.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

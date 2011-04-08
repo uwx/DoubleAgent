@@ -95,7 +95,7 @@ void CAgentFileHeader::Empty ()
 	{
 		DestroyIcon ((HICON)(INT_PTR)mIcon->Handle);
 	}
-#else	
+#else
 	if	(mIcon)
 	{
 #ifdef	_TRACE_RESOURCES
@@ -114,7 +114,7 @@ void CAgentFileHeader::Empty ()
 		}
 #endif
 	}
-#endif	
+#endif
 
 	mTransparency = 0;
 	mStyle = 0;
@@ -129,7 +129,7 @@ void CAgentFileHeader::Empty ()
 	mIcon = NULL;
 	mGuid = GUID_NULL;
 	mPalette = NULL;
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -238,10 +238,10 @@ void CAgentFileHeader::Transparency::set (Byte pValue)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-System::String^ CAgentFileHeader::ToString () 
+System::String^ CAgentFileHeader::ToString ()
 {
 	String^	lStyle = String::Empty;
-	
+
 	if	((UInt32)Style & (UInt32)AgentCharStyle::CharStyleStandard)
 	{
 		lStyle += "Standard ";
@@ -268,13 +268,20 @@ System::String^ CAgentFileHeader::ToString ()
 	}
     return String::Format ("Style [{0}] ImageSize {1},{2} Transparency {3} GUID {4}", lStyle, ImageSize.Width, ImageSize.Height, Transparency, Guid.ToString()->ToUpper());
 }
-#endif    
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
+CAgentFileName::CAgentFileName (LANGID pLanguage, System::String^ pName)
+{
+	Empty ();
+	mLanguage = pLanguage;
+	mName = pName;
+}
+
 CAgentFileName::CAgentFileName (CharacterFile^ pOwner)
 :	mOwner (pOwner)
 {
@@ -331,7 +338,7 @@ void CAgentFileName::Name::set (System::String^ pValue)
 void CAgentFileName::put_Name (LPCTSTR pName)
 {
 	CAtlString	lName (pName);
-	
+
 	if	(!lName.IsEmpty())
 	{
 		mName = lName.AllocSysString ();
@@ -406,11 +413,11 @@ void CAgentFileName::put_Desc2 (LPCTSTR pDesc2)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-System::String^ CAgentFileName::ToString () 
+System::String^ CAgentFileName::ToString ()
 {
-    return String::Format ("Name \"{0}\" Language {1:H} {2:D} \"{3}\"", Name, Language, Language, (gcnew System::Globalization::CultureInfo (Language))->EnglishName);
+    return String::Format ("Name \"{0}\" Language {1:X} {1:D} \"{2}\" \"{3}\" \"{4}\"", Name, Language, (gcnew System::Globalization::CultureInfo (Language))->EnglishName, Desc1, Desc2);
 }
-#endif    
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -434,7 +441,7 @@ LANGID CAgentFileNames::GetKeyForItem (CAgentFileName^ pItem)
 CAgentFileName^ CAgentFileNames::Add (LANGID pLangID, System::String^ pName)
 {
 	CAgentFileName^	lFileName = nullptr;
-	
+
 	if	(
 			(mOwner)
 		&&	(!mOwner->IsReadOnly)
@@ -509,7 +516,7 @@ void CAgentFileTts::Empty ()
 	mAge = 0;
 	mSpeed = 0;
 	mPitch = 0;
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -554,7 +561,7 @@ void CAgentFileTts::Mode::set (System::Guid pValue)
 		else
 		{
 			mModeId = mMode.ToString()->ToUpper();
-		}		
+		}
 		mOwner->IsDirty = true;
 	}
 }
@@ -562,14 +569,14 @@ void CAgentFileTts::Mode::set (System::Guid pValue)
 void CAgentFileTts::put_Mode (const GUID& pMode)
 {
 	mMode = pMode;
-	
+
 	if	(IsEqualGUID (mMode, GUID_NULL))
 	{
 		mModeId = NULL;
 	}
 	else
 	{
-		mModeId = ((CAtlString)CGuidStr(mMode)).AllocSysString ();		
+		mModeId = ((CAtlString)CGuidStr(mMode)).AllocSysString ();
 	}
 }
 #endif
@@ -641,11 +648,11 @@ void CAgentFileTts::put_Gender (USHORT pGender)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-System::String^ CAgentFileTts::ToString () 
+System::String^ CAgentFileTts::ToString ()
 {
     return String::Format ("Tts {0}", (ModeId ? ModeId : "<empty>"));
 }
-#endif    
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -681,7 +688,7 @@ UInt16 CAgentFileBalloon::Lines::get ()
 void CAgentFileBalloon::Lines::set (UInt16 pValue)
 {
 	pValue = min (max (pValue, MinLines), MaxLines);
-	
+
 	if	(
 			(mOwner)
 		&&	(mLines != pValue)
@@ -707,7 +714,7 @@ UInt16 CAgentFileBalloon::PerLine::get ()
 void CAgentFileBalloon::PerLine::set (UInt16 pValue)
 {
 	pValue = min (max (pValue, MinPerLine), MaxPerLine);
-	
+
 	if	(
 			(mOwner)
 		&&	(mPerLine != pValue)
@@ -830,11 +837,11 @@ void CAgentFileBalloon::put_Font (const LOGFONT& pFont)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-System::String^ CAgentFileBalloon::ToString () 
+System::String^ CAgentFileBalloon::ToString ()
 {
     return String::Format ("Balloon {0:D} {1:D}", Lines, PerLine);
 }
-#endif    
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -910,11 +917,11 @@ void CAgentFileImage::put_ImageSize (const CSize& pImageSize)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-System::String^ CAgentFileImage::ToString () 
+System::String^ CAgentFileImage::ToString ()
 {
     return String::Format ("FileImage {0}", ImageSize.ToString());
 }
-#endif    
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -965,7 +972,7 @@ void CAgentFileFrameImage::ImageFilePath::set (System::String^ pValue)
 		)
 	{
 		Int32	lImageNdx = mOwner->LoadImageFile (pValue);
-		
+
 		if	(
 				(lImageNdx >= 0)
 			&&	(mImageNdx != lImageNdx)
@@ -973,7 +980,7 @@ void CAgentFileFrameImage::ImageFilePath::set (System::String^ pValue)
 		{
 			mImageNdx = lImageNdx;
 			mOwner->IsDirty = true;
-		}			
+		}
 	}
 }
 
@@ -999,11 +1006,25 @@ void CAgentFileFrameImage::Offset::set (System::Drawing::Point pValue)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-System::String^ CAgentFileFrameImage::ToString () 
+Boolean CAgentFileFrameImage::CopyTo (CAgentFileFrameImage^ pTarget)
+{
+	if	(
+			(pTarget)
+		&&	(pTarget->mOwner == mOwner)
+		)
+	{
+		pTarget->mImageNdx = mImageNdx;
+		pTarget->mOffset = mOffset;
+		return true;
+	}
+	return false;
+}
+
+System::String^ CAgentFileFrameImage::ToString ()
 {
     return String::Format ("FrameImage {0:D} {%1}", ImageNdx, Offset.ToString());
 }
-#endif    
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -1027,7 +1048,7 @@ CAgentFileFrameImage^ CAgentFileFrameImages::Add (System::String^ pFrameImagePat
 CAgentFileFrameImage^ CAgentFileFrameImages::Insert (Int32 pNdx, System::String^ pFrameImagePath)
 {
 	CAgentFileFrameImage^	lImage = nullptr;
-	
+
 	if	(
 			(mOwner)
 		&&	(!mOwner->IsReadOnly)
@@ -1128,7 +1149,7 @@ bool CAgentFileFrameImages::Move (CAgentFileFrameImage^ pItem, CAgentFileFrameIm
 	{
 		int	lNdx = IndexOf (pItem);
 		int	lNewNdx = (pBefore) ? IndexOf (pBefore) : Count;
-		
+
 		if	(lNewNdx > lNdx)
 		{
 			lNewNdx--;
@@ -1186,7 +1207,7 @@ void CAgentFileFrameOverlay::OverlayType::set (AgentMouthOverlay pValue)
 		mOwner->IsDirty = true;
 	}
 }
- 
+
 Int32 CAgentFileFrameOverlay::ImageNdx::get()
 {
 	return mImageNdx;
@@ -1210,7 +1231,7 @@ void CAgentFileFrameOverlay::ImageFilePath::set (System::String^ pValue)
 		)
 	{
 		Int32	lImageNdx = mOwner->LoadImageFile (pValue);
-		
+
 		if	(
 				(lImageNdx >= 0)
 			&&	(mImageNdx != lImageNdx)
@@ -1218,7 +1239,7 @@ void CAgentFileFrameOverlay::ImageFilePath::set (System::String^ pValue)
 		{
 			mImageNdx = lImageNdx;
 			mOwner->IsDirty = true;
-		}			
+		}
 	}
 }
 
@@ -1262,11 +1283,27 @@ void CAgentFileFrameOverlay::Offset::set (System::Drawing::Point pValue)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-System::String^ CAgentFileFrameOverlay::ToString () 
+Boolean CAgentFileFrameOverlay::CopyTo (CAgentFileFrameOverlay^ pTarget)
+{
+	if	(
+			(pTarget)
+		&&	(pTarget->mOwner == mOwner)
+		)
+	{
+		pTarget->mOverlayType = mOverlayType;
+		pTarget->mImageNdx = mImageNdx;
+		pTarget->mReplaceFlag = mReplaceFlag;
+		pTarget->mOffset = mOffset;
+		return true;
+	}
+	return false;
+}
+
+System::String^ CAgentFileFrameOverlay::ToString ()
 {
     return String::Format ("FrameOverlay {0:D} {%1}", OverlayType, Offset.ToString());
 }
-#endif    
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -1290,7 +1327,7 @@ AgentMouthOverlay CAgentFileFrameOverlays::GetKeyForItem (CAgentFileFrameOverlay
 CAgentFileFrameOverlay^ CAgentFileFrameOverlays::Add (AgentMouthOverlay pOverlayType, System::String^ pOverlayImagePath)
 {
 	CAgentFileFrameOverlay^	lOverlay = nullptr;
-	
+
 	if	(
 			(mOwner)
 		&&	(!mOwner->IsReadOnly)
@@ -1436,7 +1473,7 @@ void CAgentFileFrame::SoundFilePath::set (System::String^ pValue)
 		else
 		{
 			Int32	lSoundNdx = mOwner->LoadSoundFile (pValue);
-			
+
 			if	(
 					(lSoundNdx >= 0)
 				&&	(mSoundNdx != lSoundNdx)
@@ -1444,7 +1481,7 @@ void CAgentFileFrame::SoundFilePath::set (System::String^ pValue)
 			{
 				mSoundNdx = lSoundNdx;
 				mOwner->IsDirty = true;
-			}			
+			}
 		}
 	}
 }
@@ -1514,7 +1551,7 @@ USHORT CAgentFileFrame::get_Duration () const
 	{
 		return mDuration * 10;
 	}
-#endif	
+#endif
 	return mDuration;
 }
 #endif
@@ -1523,11 +1560,29 @@ USHORT CAgentFileFrame::get_Duration () const
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-System::String^ CAgentFileFrame::ToString () 
+Boolean CAgentFileFrame::CopyTo (CAgentFileFrame^ pTarget)
+{
+	if	(
+			(pTarget)
+		&&	(pTarget->mOwner == mOwner)
+		)
+	{
+		pTarget->mDuration = mDuration;
+		pTarget->mSoundNdx = mSoundNdx;
+		pTarget->mExitFrame = mExitFrame;
+		pTarget->mBranching = mBranching;
+		pTarget->mImages = mImages;
+		pTarget->mOverlays = mOverlays;
+		return true;
+	}
+	return false;
+}
+
+System::String^ CAgentFileFrame::ToString ()
 {
     return String::Format ("Frame {0:D} Images {1:D} Overlays {2:D} Sound {3:D}", Duration, ImageCount, OverlayCount, SoundNdx);
 }
-#endif    
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -1561,7 +1616,7 @@ CAgentFileFrame^ CAgentFileFrames::Insert (Int32 pNdx)
 	{
 		lFrame = gcnew CAgentFileFrame (mOwner);
 		lFrame->mDuration = mOwner->NewFrameDuration;
-		
+
 		if	(pNdx < 0)
 		{
 			pNdx = Count;
@@ -1653,7 +1708,7 @@ bool CAgentFileFrames::Move (CAgentFileFrame^ pItem, CAgentFileFrame^ pBefore)
 	{
 		int	lNdx = IndexOf (pItem);
 		int	lNewNdx = (pBefore) ? IndexOf (pBefore) : Count;
-		
+
 		if	(lNewNdx > lNdx)
 		{
 			lNewNdx--;
@@ -1681,7 +1736,7 @@ void CAgentFileAnimation::Empty ()
 	mAcaChksum = 0;
 	mReturnType = 2;
 #ifdef	_M_CEE
-	mName = nullptr;
+	mName = String::Empty;
 	mReturnName = nullptr;
 	mAcaFileName = nullptr;
 	if	(mOwner)
@@ -1798,11 +1853,29 @@ CAgentFileFrames^ CAgentFileAnimation::Frames::get()
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-System::String^ CAgentFileAnimation::ToString () 
+Boolean CAgentFileAnimation::CopyTo (CAgentFileAnimation^ pTarget)
+{
+	if	(
+			(pTarget)
+		&&	(pTarget->mOwner == mOwner)
+		)
+	{
+		pTarget->mName = mName;
+		pTarget->mReturnType = mReturnType;
+		pTarget->mReturnName = mReturnName;
+		pTarget->mFrames = mFrames;
+		pTarget->mAcaFileName = mAcaFileName;
+		pTarget->mAcaChksum = mAcaChksum;
+		return true;
+	}
+	return false;
+}
+
+System::String^ CAgentFileAnimation::ToString ()
 {
     return String::Format ("Animation \"{0}\"", Name);
 }
-#endif    
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -1830,7 +1903,7 @@ System::String^ CAgentFileGestures::GetKeyForItem (CAgentFileAnimation^ pItem)
 CAgentFileAnimation^ CAgentFileGestures::Add (System::String^ pAnimationName)
 {
 	CAgentFileAnimation^	lAnimation = nullptr;
-	
+
 	if	(
 			(mOwner)
 		&&	(!mOwner->IsReadOnly)
@@ -1880,7 +1953,7 @@ bool CAgentFileGestures::Remove (CAgentFileAnimation^ pItem)
 void CAgentFileGestures::Add (CAgentFileAnimation^ pItem)
 {
 	int	lNdx;
-	
+
 	for (lNdx = 0; lNdx < Count; lNdx++)
 	{
 		if	(String::Compare (this [lNdx]->Name, pItem->Name, true) > 0)
@@ -1891,15 +1964,15 @@ void CAgentFileGestures::Add (CAgentFileAnimation^ pItem)
 	__super::Insert (lNdx, pItem);
 }
 
-void CAgentFileGestures::ChangeItemKey (CAgentFileAnimation^ pItem)
+void CAgentFileGestures::ChangeItemKey (CAgentFileAnimation^ pItem, String^ pNewKey)
 {
-	int	lNdx = IndexOf (pItem);
-	
-	if	(lNdx >= 0)
-	{
-		RemoveItem (lNdx);
-		Add (pItem);
-	}
+//	__super::ChangeItemKey (pItem, pItem->Name);
+//
+//	Instead - Remove/Add to resort
+//	
+	__super::Remove (pItem);
+	pItem->mName = pNewKey;
+	Add (pItem);
 }
 #endif
 
@@ -1950,7 +2023,7 @@ bool CAgentFileStates::AddStateAnimation (System::String^ pStateName, System::St
 			{
 				List <String^>^	lList = gcnew List <String^> (lAnimations);
 				int				lNdx;
-				
+
 				for (lNdx = 0; lNdx < lList->Count; lNdx++)
 				{
 					if	(String::Compare (lList [lNdx], pAnimationName) > 0)

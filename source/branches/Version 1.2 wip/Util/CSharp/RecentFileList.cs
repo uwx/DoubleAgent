@@ -1,4 +1,26 @@
-﻿using System;
+﻿/////////////////////////////////////////////////////////////////////////////
+//	Copyright 2009-2011 Cinnamon Software Inc.
+/////////////////////////////////////////////////////////////////////////////
+/*
+	This file is a utility used by Double Agent but not specific to
+	Double Agent.  However, it is included as part of the Double Agent
+	source code under the following conditions:
+
+    This is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this file.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/////////////////////////////////////////////////////////////////////////////
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
@@ -125,10 +147,38 @@ namespace DoubleAgent
 			}
 			return false;
 		}
+		
+		public bool RemovePath (String pPath)
+		{
+			bool	lRet = false;
+			String	lPath = null;
+
+			try
+			{
+				lPath = Path.GetFullPath (pPath);
+			}
+			catch
+			{
+			}
+
+			if (!String.IsNullOrEmpty (lPath))
+			{
+				for (int lNdx = 0; lNdx < this.Count; lNdx++)
+				{
+					if (String.Compare (this[lNdx], lPath, true) == 0)
+					{
+						this.RemoveAt (lNdx);
+						lRet = true;
+						break;
+					}
+				}
+			}
+			return lRet;
+		}
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Helper Methods
+		#region Methods
 
 		internal String RelativeCurrent (String pPath)
 		{
@@ -177,7 +227,7 @@ namespace DoubleAgent
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Event Delegates
+		#region Events
 
 		public delegate void RecentItemClickEvent (object sender, String e);
 

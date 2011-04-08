@@ -54,8 +54,6 @@ namespace Character {
 /////////////////////////////////////////////////////////////////////////////
 
 CAgentFileBinary::CAgentFileBinary()
-:	mFileNamesOffset (0),
-	mFileStatesOffset (0)
 {
 }
 
@@ -95,7 +93,10 @@ bool CAgentFileBinary::IsOpen::get ()
 {
 	if	(
 			(mFileStream)
-		&&	(mFileReader)
+		&&	(
+				(mFileReader)
+			||	(mFileWriter)
+			)
 		)
 	{
 		return true;
@@ -107,11 +108,18 @@ bool CAgentFileBinary::get_IsOpen () const
 {
 	return mFileView.SafeIsValid ();
 }
-#endif	
+#endif
 
 #ifdef	_M_CEE
 bool CAgentFileBinary::IsReadOnly::get ()
 {
+	if	(
+			(mFileStream)
+		&&	(mFileWriter)
+		)
+	{
+		return false;
+	}
 	return true;
 }
 #else
@@ -185,25 +193,73 @@ const CAgentFileAnimation* CAgentFileBinary::GetAnimation (INT_PTR pAnimationNdx
 
 void CAgentFileBinary::Close ()
 {
+	CloseFile ();
+	__super::Close ();
+}
+
+void CAgentFileBinary::CloseFile ()
+{
 #ifdef	_M_CEE
-	mFileStream = nullptr;
-	mFileReader = nullptr;
 	mFileSize = 0;
+
+	if	(mFileReader)
+	{
+		try
+		{
+			mFileReader->Close ();
+		}
+		catch AnyExceptionDebug
+		try
+		{
+			mFileReader->~BinaryReader ();
+		}
+		catch AnyExceptionDebug
+	}
+	mFileReader = nullptr;
+
+	if	(mFileWriter)
+	{
+		try
+		{
+			mFileWriter->Close ();
+		}
+		catch AnyExceptionDebug
+		try
+		{
+			mFileWriter->~BinaryWriter ();
+		}
+		catch AnyExceptionDebug
+	}
+	mFileWriter = nullptr;
+
+	if	(mFileStream)
+	{
+		try
+		{
+			mFileStream->Close ();
+		}
+		catch AnyExceptionDebug
+		try
+		{
+			mFileStream->~FileStream ();
+		}
+		catch AnyExceptionDebug
+	}
+	mFileStream = nullptr;
 #else
+	mFileSize = 0;
 	mFileView.Close ();
 	mFileMapping.Close ();
 	mFileHandle.Close ();
-	mFileSize = 0;
-#endif	
-	__super::Close ();
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-HRESULT CAgentFileBinary::LoadFile (System::String^ pPath, UINT pLogLevel)
+bool CAgentFileBinary::LoadFile (System::String^ pPath, UINT pLogLevel)
 {
-	HRESULT	lResult = E_FAIL;
+	bool	lRet = false;
 
 #ifdef	_DEBUG_LOAD
 	pLogLevel = MinLogLevel (pLogLevel, _DEBUG_LOAD);
@@ -213,40 +269,52 @@ HRESULT CAgentFileBinary::LoadFile (System::String^ pPath, UINT pLogLevel)
 		LogMessage (pLogLevel, _T("Load [%s]"), _B(pPath));
 	}
 
-	mFileStream = nullptr;
-	mFileReader = nullptr;
-	mFileSize = 0;
-	
+	CloseFile ();
+
 	try
 	{
 		mFileStream = gcnew FileStream (pPath, FileMode::Open, FileAccess::Read);
 	}
-	catch (FileNotFoundException^)
+	catch (Exception^ pException)
 	{
-		lResult = HRESULT_FROM_WIN32 (ERROR_FILE_NOT_FOUND);
+		__LogCliException (LogIfActive);
+		throw pException;
 	}
-	catch AnyExceptionDebug
-	
+
 	if	(
 			(mFileStream)
-		&&	(mFileSize = mFileStream->Length)
+		&&	(mFileSize = (UInt32)mFileStream->Length)
 		&&	(mFileReader = gcnew BinaryReader (mFileStream))
 		)
 	{
-		lResult = S_OK;
+		lRet = true;
 	}
 
-	if	(SUCCEEDED (lResult))
+	if	(lRet)
 	{
-		lResult = ReadHeader (pLogLevel);
-
-		if	(SUCCEEDED (lResult))
+		try
 		{
-			ReadNames (true, pLogLevel);
-			ReadStates (pLogLevel);
-			ReadGestures (pLogLevel);
+			lRet = ReadHeader (pLogLevel);
+
+			if	(lRet)
+			{
+				ReadNames (true, pLogLevel);
+				ReadStates (pLogLevel);
+				ReadGestures (pLogLevel);
+			}
 		}
-		else
+		catch (Exception^ pException)
+		{
+			try
+			{
+				Close ();
+			}
+			catch AnyExceptionDebug
+
+			throw pException;
+		}
+
+		if	(!lRet)
 		{
 			Close ();
 		}
@@ -254,9 +322,9 @@ HRESULT CAgentFileBinary::LoadFile (System::String^ pPath, UINT pLogLevel)
 
 	if	(LogIsActive())
 	{
-		LogComErr (((lResult==AGENTPROVERROR_MAGIC)?LogDetails:LogNormal)|LogTime, lResult, _T("Load [%s]"), _B(pPath));
+		LogMessage (LogNormal|LogTime, _T("Load [%s] [%u]"), _B(pPath), lRet);
 	}
-	return lResult;
+	return lRet;
 }
 #else
 HRESULT CAgentFileBinary::LoadFile (LPCTSTR pPath, UINT pLogLevel)
@@ -322,12 +390,20 @@ HRESULT CAgentFileBinary::LoadFile (LPCTSTR pPath, UINT pLogLevel)
 
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef	_M_CEE
+bool CAgentFileBinary::ReadHeader ()
+#else
 HRESULT CAgentFileBinary::ReadHeader ()
+#endif
 {
 	return ReadHeader (LogVerbose+1);
 }
 
+#ifdef	_M_CEE
+bool CAgentFileBinary::ReadHeader (UINT pLogLevel)
+#else
 HRESULT CAgentFileBinary::ReadHeader (UINT pLogLevel)
+#endif
 {
 	mSignature = 0;
 
@@ -352,9 +428,10 @@ HRESULT CAgentFileBinary::ReadHeader (UINT pLogLevel)
 		}
 		else
 		{
-			return AGENTPROVERROR_MAGIC;
+			throw gcnew Exception ("The specified file is not a Microsoft Agent 2.x character file.");
 		}
 	}
+	return true;
 #else
 	LPCDWORD	lSignature;
 
@@ -413,252 +490,410 @@ HRESULT CAgentFileBinary::ReadHeader (UINT pLogLevel)
 	}
 #endif
 
-#endif
 	return S_OK;
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
 LPCVOID CAgentFileBinary::ReadBufferTts (LPCVOID pBuffer, bool pNullTerminated, UINT pLogLevel)
 {
-	LPCBYTE		lByte = (LPCBYTE)pBuffer;
-	const DWORD	lStrPad = (pNullTerminated) ? 1 : 0;
-	DWORD		lStrLen;
-	LPCWSTR		lStr;
+	LPCBYTE	lByte = (LPCBYTE)pBuffer;
 
-#ifdef	_M_CEE
-	mTts = gcnew CAgentFileTts;
-	mTts->mEngine = System::Guid (*(LPCDWORD)lByte, *(LPCWORD)(lByte+4), *(LPCWORD)(lByte+6), lByte[8], lByte[9], lByte[10], lByte[11], lByte[12], lByte[13], lByte[14], lByte[15]);
-#else
-	mTts.mEngine = *(LPCGUID)lByte;
-#endif	
-	lByte += sizeof (GUID);
-#ifdef	_M_CEE
-	mTts->mMode = System::Guid (*(LPCDWORD)lByte, *(LPCWORD)(lByte+4), *(LPCWORD)(lByte+6), lByte[8], lByte[9], lByte[10], lByte[11], lByte[12], lByte[13], lByte[14], lByte[15]);
-#else
-	mTts.mMode = *(LPCGUID)lByte;
-#endif	
-	lByte += sizeof (GUID);
-
-#ifdef	_M_CEE
-	//mTts->mSpeed = *(long*) lByte;
-#else
-	mTts.mSpeed = *(long*) lByte;
-#endif	
-	lByte += sizeof (long);
-#ifdef	_M_CEE
-	//mTts->mPitch = *(short*) lByte;
-#else
-	mTts.mPitch = *(short*) lByte;
-#endif	
-	lByte += sizeof (short);
-
-	if	(*lByte)
+	try
 	{
-		lByte += sizeof (BYTE);	// TRUE
 #ifdef	_M_CEE
-		mTts->mLanguage = *(LPCWORD)lByte;
+		String^		lUnknownStr;
 #else
-		mTts.mLanguage = *(LPCWORD)lByte;
-#endif		
-		lByte += sizeof (WORD);
+		CAtlString	lUnknownStr;
+#endif
 
-		lStrLen = *(LPCDWORD)lByte;
-		lByte += sizeof(DWORD);
-		lStr = (LPCWSTR) lByte;
+#ifdef	_M_CEE
+		mTts = gcnew CAgentFileTts;
+		mTts->mEngine = System::Guid (*(LPCDWORD)lByte, *(LPCWORD)(lByte+4), *(LPCWORD)(lByte+6), lByte[8], lByte[9], lByte[10], lByte[11], lByte[12], lByte[13], lByte[14], lByte[15]);
+#else
+		mTts.mEngine = *(LPCGUID)lByte;
+#endif
+		lByte += sizeof (GUID);
+#ifdef	_M_CEE
+		mTts->mMode = System::Guid (*(LPCDWORD)lByte, *(LPCWORD)(lByte+4), *(LPCWORD)(lByte+6), lByte[8], lByte[9], lByte[10], lByte[11], lByte[12], lByte[13], lByte[14], lByte[15]);
+#else
+		mTts.mMode = *(LPCGUID)lByte;
+#endif
+		lByte += sizeof (GUID);
 
-#ifndef	_M_CEE
-		if	(
-				(lStrLen > 2048)
-			||	(IsBadStringPtr (lStr, 2048))
-			)
+#ifdef	_M_CEE
+		//mTts->mSpeed = *(long*)lByte;
+#else
+		mTts.mSpeed = *(long*)lByte;
+#endif
+		lByte += sizeof (long);
+#ifdef	_M_CEE
+		//mTts->mPitch = *(short*)lByte;
+#else
+		mTts.mPitch = *(short*)lByte;
+#endif
+		lByte += sizeof (short);
+
+		if	(*lByte)
 		{
-			AtlThrow (HRESULT_FROM_WIN32 (ERROR_INVALID_DATA));
+			lByte += sizeof (BYTE);	// TRUE
+#ifdef	_M_CEE
+			mTts->mLanguage = *(LPCWORD)lByte;
+#else
+			mTts.mLanguage = *(LPCWORD)lByte;
+#endif
+			lByte += sizeof (WORD);
+			lByte = (LPCBYTE)ReadBufferString (lByte, pNullTerminated, lUnknownStr);
+#ifdef	_M_CEE
+			mTts->mGender = *(LPCWORD)lByte;
+#else
+			mTts.mGender = *(LPCWORD)lByte;
+#endif
+			lByte += sizeof (WORD);
+#ifdef	_M_CEE
+			//mTts->mAge = *(LPCWORD)lByte;
+#else
+			mTts.mAge = *(LPCWORD)lByte;
+#endif
+			lByte += sizeof (WORD);
+#ifdef	_M_CEE
+			lByte = (LPCBYTE)ReadBufferString (lByte, pNullTerminated, lUnknownStr); // Style
+#else
+			lByte = (LPCBYTE)ReadBufferString (lByte, pNullTerminated, mTts.mStyle);
+#endif
 		}
-#ifdef	_DEBUG_NOT
-		CAtlString	lUnknownStr (lStr, lStrLen);
-		if	(!lUnknownStr.IsEmpty ())
+		else
 		{
-			LogMessage (LogDebug, _T("Unknown TTS string [%s]"), lUnknownStr);
+			lByte += sizeof (BYTE);	// FALSE
+		}
+
+#ifdef	_M_CEE
+		if	(mTts->mMode.Equals (Guid::Empty))
+		{
+			mTts->mModeId = nullptr;
+		}
+		else
+		{
+			mTts->mModeId = mTts->mMode.ToString ();
+		}
+#else
+		if	(IsEqualGUID (mTts.mMode, GUID_NULL))
+		{
+			mTts.mModeId = NULL;
+		}
+		else
+		{
+			mTts.mModeId = ((CString)CGuidStr (mTts.mMode)).AllocSysString();
 		}
 #endif
-#endif
-		if	(lStrLen > 0)
-		{
-			lByte += (lStrLen + lStrPad) * sizeof (WCHAR);
-		}
 
-#ifdef	_M_CEE
-		mTts->mGender = *(LPCWORD)lByte;
-#else
-		mTts.mGender = *(LPCWORD)lByte;
-#endif		
-		lByte += sizeof (WORD);
-#ifdef	_M_CEE
-		//mTts->mAge = *(LPCWORD)lByte;
-#else
-		mTts.mAge = *(LPCWORD)lByte;
-#endif		
-		lByte += sizeof (WORD);
-
-		lStrLen = *(LPCDWORD)lByte;
-		lByte += sizeof(DWORD);
-		lStr = (LPCWSTR) lByte;
-#ifdef	_M_CEE
-		//mTts->mStyle = gcnew String (lStr, 0, lStrLen);
-#else
-		if	(
-				(lStrLen > MAX_PATH)
-			||	(IsBadStringPtr (lStr, MAX_PATH))
-			)
+		if	(LogIsActive(pLogLevel))
 		{
-			AtlThrow (HRESULT_FROM_WIN32 (ERROR_INVALID_DATA));
-		}
-		mTts.mStyle = CAtlString (lStr, lStrLen).AllocSysString();
-#endif		
-		if	(lStrLen > 0)
-		{
-			lByte += (lStrLen + lStrPad) * sizeof (WCHAR);
+			LogMessage (pLogLevel, _T("  [%s] Read Tts          of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, pBuffer);
 		}
 	}
-	else
-	{
-		lByte += sizeof (BYTE);	// FALSE
-	}
+	catch AnyExceptionDebug
 
-#ifdef	_M_CEE
-	if	(mTts->mMode.Equals (Guid::Empty))
-	{
-		mTts->mModeId = nullptr;
-	}
-	else
-	{
-		mTts->mModeId = mTts->mMode.ToString ();
-	}
-#else
-	if	(IsEqualGUID (mTts.mMode, GUID_NULL))
-	{
-		mTts.mModeId = NULL;
-	}
-	else
-	{
-		mTts.mModeId = ((CString)CGuidStr (mTts.mMode)).AllocSysString();
-	}
-#endif	
 	return lByte;
 }
+
+#ifdef	_M_CEE
+LPVOID CAgentFileBinary::WriteBufferTts (LPVOID pBuffer, CAgentFileTts^ pTts, bool pNullTerminated, UINT pLogLevel)
+{
+	LPBYTE	lByte = (LPBYTE)pBuffer;
+
+	try
+	{
+		const DWORD	lStrPad = (pNullTerminated) ? 1 : 0;
+
+		if	(pBuffer)
+		{
+			array <BYTE>^	lBytes = pTts->mEngine.ToByteArray ();
+			pin_ptr <BYTE>	lPinned = &lBytes [0];
+			memcpy (lByte, lPinned, sizeof(GUID));
+		}
+		lByte += sizeof (GUID);
+		if	(pBuffer)
+		{
+			array <BYTE>^	lBytes = pTts->mMode.ToByteArray ();
+			pin_ptr <BYTE>	lPinned = &lBytes [0];
+			memcpy (lByte, lPinned, sizeof(GUID));
+		}
+		lByte += sizeof (GUID);
+
+		if	(pBuffer)
+		{
+			*(long*) lByte = 0; // Speed;
+		}
+		lByte += sizeof (long);
+		if	(pBuffer)
+		{
+			*(short*) lByte = 0; // Pitch;
+		}
+		lByte += sizeof (short);
+
+		if	(pTts->mMode.Equals (Guid::Empty))
+		{
+			if	(pBuffer)
+			{
+				*lByte = FALSE;
+			}
+			lByte += sizeof (BYTE);
+		}
+		else
+		{
+			if	(pBuffer)
+			{
+				*lByte = TRUE;
+			}
+			lByte += sizeof (BYTE);
+
+			if	(pBuffer)
+			{
+				*(LPWORD)lByte = pTts->mLanguage;
+			}
+			lByte += sizeof (WORD);
+
+			if	(pBuffer)
+			{
+				*(LPDWORD)lByte = 0; // Empty unknown string
+			}
+			lByte += sizeof (DWORD);
+
+			if	(pBuffer)
+			{
+				*(LPWORD)lByte = pTts->mGender;
+			}
+			lByte += sizeof (WORD);
+
+			if	(pBuffer)
+			{
+				*(LPWORD)lByte = 0; // Age
+			}
+			lByte += sizeof (WORD);
+
+			if	(pBuffer)
+			{
+				*(LPDWORD)lByte = 0; // Empty style
+			}
+			lByte += sizeof (DWORD);
+		}
+
+		if	(LogIsActive(pLogLevel))
+		{
+			LogMessage (pLogLevel, _T("  [%s] Write Tts         of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, pBuffer);
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lByte;
+}
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
 
 LPCVOID CAgentFileBinary::ReadBufferBalloon (LPCVOID pBuffer, bool pNullTerminated, UINT pLogLevel)
 {
-	LPCBYTE		lByte = (LPCBYTE)pBuffer;
-	const DWORD	lStrPad = (pNullTerminated) ? 1 : 0;
-	DWORD		lStrLen;
-	LPCWSTR		lStr;
-#ifdef	_M_CEE
-	String^	lFontName = nullptr;
-	long		lFontHeight = 0;
-	int			lFontStyle = (int)System::Drawing::FontStyle::Regular;
-#endif	
+	LPCBYTE	lByte = (LPCBYTE)pBuffer;
 
-#ifdef	_M_CEE
-	mBalloon = gcnew CAgentFileBalloon;
-	mBalloon->mLines = *lByte;
-#else
-	mBalloon.mLines = *lByte;
-#endif	
-	lByte++;
-#ifdef	_M_CEE
-	mBalloon->mPerLine = *lByte;
-#else
-	mBalloon.mPerLine = *lByte;
-#endif
-	lByte++;
-#ifdef	_M_CEE
-//	mBalloon->mFgColor = System::Drawing::ColorTranslator::FromWin32 (*(LPCOLORREF)lByte);
-	mBalloon->mFgColor = System::Drawing::Color::FromArgb (255, (int)lByte[2], (int)lByte[1], (int)lByte[0]); // BGRA
-#else
-	mBalloon.mFgColor = *(LPCDWORD)lByte;
-#endif
-	lByte += sizeof(DWORD);
-#ifdef	_M_CEE
-//	mBalloon->mBkColor = System::Drawing::ColorTranslator::FromWin32 (*(LPCOLORREF)lByte);
-	mBalloon->mBkColor = System::Drawing::Color::FromArgb (255, (int)lByte[2], (int)lByte[1], (int)lByte[0]); // BGRA
-#else
-	mBalloon.mBkColor = *(LPCDWORD)lByte;
-#endif
-	lByte += sizeof(DWORD);
-#ifdef	_M_CEE
-//	mBalloon->mBrColor = System::Drawing::ColorTranslator::FromWin32 (*(LPCOLORREF)lByte);
-	mBalloon->mBrColor = System::Drawing::Color::FromArgb (255, (int)lByte[2], (int)lByte[1], (int)lByte[0]); // BGRA
-#else
-	mBalloon.mBrColor = *(LPCDWORD)lByte;
-#endif
-	lByte += sizeof(DWORD);
-
-	lStrLen = *(LPCDWORD)lByte;
-	lByte += sizeof(DWORD);
-	lStr = (LPCWSTR) lByte;
-#ifdef	_M_CEE
-	lFontName = gcnew String (lStr, 0, lStrLen);
-#else
-	if	(
-			(lStrLen > MAX_PATH)
-		||	(IsBadStringPtr (lStr, MAX_PATH))
-		)
-	{
-		AtlThrow (HRESULT_FROM_WIN32 (ERROR_INVALID_DATA));
-	}
-	_tcsncpy (mBalloon.mFont.lfFaceName, lStr, (sizeof(mBalloon.mFont.lfFaceName)/sizeof(WCHAR))-1);
-#endif
-	if	(lStrLen > 0)
-	{
-		lByte += (lStrLen + lStrPad) * sizeof (WCHAR);
-	}
-#ifdef	_M_CEE
-	lFontHeight = labs (*(long*) lByte);
-#else
-	mBalloon.mFont.lfHeight = *(long*) lByte;
-#endif
-	lByte += sizeof (long);
-#ifdef	_M_CEE
-	if	((*(LPCWORD)lByte) >= FW_BOLD)
-	{
-		lFontStyle |= (int)System::Drawing::FontStyle::Bold;
-	}
-#else
-	mBalloon.mFont.lfWeight = ((*(LPCWORD)lByte) >= FW_BOLD) ? FW_BOLD : FW_NORMAL;
-#endif
-	lByte += sizeof (WORD);
-#ifdef	_M_CEE
-	if	(*lByte)
-	{
-		lFontStyle |= (int)System::Drawing::FontStyle::Strikeout;
-	}
-#else
-	mBalloon.mFont.lfStrikeOut = *lByte; // Unsure, and where is underline?
-#endif
-	lByte += sizeof (WORD);
-#ifdef	_M_CEE
-	if	(*lByte)
-	{
-		lFontStyle |= (int)System::Drawing::FontStyle::Italic;
-	}
-#else
-	mBalloon.mFont.lfItalic = *lByte;
-#endif
-	lByte += sizeof (WORD);
-
-#ifdef	_M_CEE
 	try
 	{
-		mBalloon->mFont = gcnew System::Drawing::Font (lFontName, (float)lFontHeight, (FontStyle)lFontStyle, GraphicsUnit::Pixel); 
+#ifdef	_M_CEE
+		String^		lFontName = nullptr;
+		long		lFontHeight = 0;
+		int			lFontStyle = (int)System::Drawing::FontStyle::Regular;
+#else
+		CAtlString	lFontName;
+#endif
+
+#ifdef	_M_CEE
+		mBalloon = gcnew CAgentFileBalloon;
+		mBalloon->mLines = *lByte;
+#else
+		mBalloon.mLines = *lByte;
+#endif
+		lByte++;
+#ifdef	_M_CEE
+		mBalloon->mPerLine = *lByte;
+#else
+		mBalloon.mPerLine = *lByte;
+#endif
+		lByte++;
+#ifdef	_M_CEE
+//		mBalloon->mFgColor = System::Drawing::ColorTranslator::FromWin32 (*(LPCOLORREF)lByte);
+		mBalloon->mFgColor = System::Drawing::Color::FromArgb (255, (int)lByte[2], (int)lByte[1], (int)lByte[0]); // BGRA
+#else
+		mBalloon.mFgColor = *(LPCDWORD)lByte;
+#endif
+		lByte += sizeof(DWORD);
+#ifdef	_M_CEE
+//		mBalloon->mBkColor = System::Drawing::ColorTranslator::FromWin32 (*(LPCOLORREF)lByte);
+		mBalloon->mBkColor = System::Drawing::Color::FromArgb (255, (int)lByte[2], (int)lByte[1], (int)lByte[0]); // BGRA
+#else
+		mBalloon.mBkColor = *(LPCDWORD)lByte;
+#endif
+		lByte += sizeof(DWORD);
+#ifdef	_M_CEE
+//		mBalloon->mBrColor = System::Drawing::ColorTranslator::FromWin32 (*(LPCOLORREF)lByte);
+		mBalloon->mBrColor = System::Drawing::Color::FromArgb (255, (int)lByte[2], (int)lByte[1], (int)lByte[0]); // BGRA
+#else
+		mBalloon.mBrColor = *(LPCDWORD)lByte;
+#endif
+		lByte += sizeof(DWORD);
+
+		lByte = (LPCBYTE)ReadBufferString (lByte, pNullTerminated, lFontName);
+#ifndef	_M_CEE
+		_tcsncpy (mBalloon.mFont.lfFaceName, lFontName, (sizeof(mBalloon.mFont.lfFaceName)/sizeof(WCHAR))-1);
+#endif
+#ifdef	_M_CEE
+		lFontHeight = labs (*(long*) lByte);
+#else
+		mBalloon.mFont.lfHeight = *(long*) lByte;
+#endif
+		lByte += sizeof (long);
+#ifdef	_M_CEE
+		if	((*(LPCWORD)lByte) >= FW_BOLD)
+		{
+			lFontStyle |= (int)System::Drawing::FontStyle::Bold;
+		}
+#else
+		mBalloon.mFont.lfWeight = ((*(LPCWORD)lByte) >= FW_BOLD) ? FW_BOLD : FW_NORMAL;
+#endif
+		lByte += sizeof (WORD);
+#ifdef	_M_CEE
+		if	(*lByte)
+		{
+			lFontStyle |= (int)System::Drawing::FontStyle::Strikeout;
+		}
+#else
+		mBalloon.mFont.lfStrikeOut = *lByte; // Unsure, and where is underline?
+#endif
+		lByte += sizeof (WORD);
+#ifdef	_M_CEE
+		if	(*lByte)
+		{
+			lFontStyle |= (int)System::Drawing::FontStyle::Italic;
+		}
+#else
+		mBalloon.mFont.lfItalic = *lByte;
+#endif
+		lByte += sizeof (WORD);
+
+#ifdef	_M_CEE
+		try
+		{
+			mBalloon->mFont = gcnew System::Drawing::Font (lFontName, (float)lFontHeight, (FontStyle)lFontStyle, GraphicsUnit::Pixel);
+		}
+		catch AnyExceptionDebug
+#else
+		mBalloon.mFont.lfCharSet = DEFAULT_CHARSET;
+#endif
+
+		if	(LogIsActive(pLogLevel))
+		{
+			LogMessage (pLogLevel, _T("  [%s] Read Balloon      of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, pBuffer);
+		}
 	}
 	catch AnyExceptionDebug
-#else
-	mBalloon.mFont.lfCharSet = DEFAULT_CHARSET;
-#endif
+
 	return lByte;
 }
+
+#ifdef	_M_CEE
+LPVOID CAgentFileBinary::WriteBufferBalloon (LPVOID pBuffer, CAgentFileBalloon^ pBalloon, bool pNullTerminated, UINT pLogLevel)
+{
+	LPBYTE				lByte = (LPBYTE)pBuffer;
+	String^				lFontName = String::Empty;
+	long				lFontHeight = 0;
+	WORD				lFontWeight = FW_NORMAL;
+	WORD				lFontItalic = FALSE;
+
+	if	(pBuffer)
+	{
+		*lByte = (BYTE)pBalloon->mLines;
+	}
+	lByte++;
+	if	(pBuffer)
+	{
+		*lByte = (BYTE)pBalloon->mPerLine;
+	}
+	lByte++;
+	if	(pBuffer)
+	{
+		COLORREF lColor = pBalloon->mFgColor.ToArgb();
+		//*(COLORREF*)lByte = RGB (GetBValue (lColor), GetGValue(lColor), GetRValue(lColor)); // BGR;
+		*(COLORREF*)lByte = lColor & 0x00FFFFFF;
+	}
+	lByte += sizeof(DWORD);
+	if	(pBuffer)
+	{
+		COLORREF lColor = pBalloon->mBkColor.ToArgb();
+		//*(COLORREF*)lByte = RGB (GetBValue (lColor), GetGValue(lColor), GetRValue(lColor)); // BGR;
+		*(COLORREF*)lByte = lColor & 0x00FFFFFF;
+	}
+	lByte += sizeof(DWORD);
+	if	(pBuffer)
+	{
+		COLORREF lColor = pBalloon->mBrColor.ToArgb();
+		//*(COLORREF*)lByte = RGB (GetBValue (lColor), GetGValue(lColor), GetRValue(lColor)); // BGR;
+		*(COLORREF*)lByte = lColor & 0x00FFFFFF;
+	}
+	lByte += sizeof(DWORD);
+
+	if	(pBalloon->mFont)
+	{
+		lFontName = (String::IsNullOrEmpty (pBalloon->mFont->OriginalFontName)) ? pBalloon->mFont->Name : pBalloon->mFont->OriginalFontName;
+		lFontHeight = (long)(pBalloon->Font->Size + 0.49);
+		if	(pBalloon->mFont->Bold)
+		{
+			lFontWeight = FW_BOLD;
+		}
+		if	(pBalloon->mFont->Italic)
+		{
+			lFontItalic = TRUE;
+		}
+	}
+
+	if	(pBuffer)
+	{
+		lByte = (LPBYTE)WriteBufferString (lByte, pNullTerminated, lFontName);
+	}
+	else
+	{
+		lByte += (DWORD)WriteBufferString (NULL, pNullTerminated, lFontName);
+	}
+
+	if	(pBuffer)
+	{
+		*(long*)lByte = lFontHeight;
+	}
+	lByte += sizeof (long);
+	if	(pBuffer)
+	{
+		*(LPWORD)lByte = lFontWeight;
+	}
+	lByte += sizeof (WORD);
+	if	(pBuffer)
+	{
+		*(LPWORD)lByte = FALSE; // Strikeout
+	}
+	lByte += sizeof (WORD);
+	if	(pBuffer)
+	{
+		*(LPWORD)lByte = lFontItalic;
+	}
+	lByte += sizeof (WORD);
+
+	if	(LogIsActive(pLogLevel))
+	{
+		LogMessage (pLogLevel, _T("  [%s] Write Balloon     of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, pBuffer);
+	}
+	return lByte;
+}
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
 
 LPCVOID CAgentFileBinary::ReadBufferPalette (LPCVOID pBuffer, UINT pLogLevel)
 {
@@ -673,7 +908,7 @@ LPCVOID CAgentFileBinary::ReadBufferPalette (LPCVOID pBuffer, UINT pLogLevel)
 		System::Drawing::Bitmap^		lBitmap;
 		array <System::Drawing::Color>^	lColors;
 		int								lNdx;
-		
+
 		if	(
 				(lBitmap = gcnew System::Drawing::Bitmap (1,1, System::Drawing::Imaging::PixelFormat::Format8bppIndexed))
 			&&	(mHeader->mPalette = lBitmap->Palette)
@@ -686,7 +921,7 @@ LPCVOID CAgentFileBinary::ReadBufferPalette (LPCVOID pBuffer, UINT pLogLevel)
 			{
 				//lColors [lNdx] = System::Drawing::ColorTranslator::FromWin32 (*(LPCOLORREF)lByte);
 				lColors [lNdx] = System::Drawing::Color::FromArgb (255, (int)lByte[2], (int)lByte[1], (int)lByte[0]); // BGRA
-				lByte += sizeof(COLORREF); 
+				lByte += sizeof(COLORREF);
 			}
 		}
 		else
@@ -699,7 +934,7 @@ LPCVOID CAgentFileBinary::ReadBufferPalette (LPCVOID pBuffer, UINT pLogLevel)
 			memcpy ((LPCOLORREF)mHeader.mPalette, lByte, min (lPaletteSize, 256) * sizeof(COLORREF));
 		}
 		lByte += lPaletteSize * sizeof(COLORREF);
-#endif		
+#endif
 	}
 	else
 	{
@@ -710,6 +945,10 @@ LPCVOID CAgentFileBinary::ReadBufferPalette (LPCVOID pBuffer, UINT pLogLevel)
 #endif
 	}
 
+	if	(LogIsActive (pLogLevel))
+	{
+		LogMessage (pLogLevel, _T("  [%s] Read Palette      of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPCBYTE)pBuffer, pBuffer, pBuffer);
+	}
 #ifdef	_SAVE_PALETTE
 	if	(
 			(mHeader.Palette)
@@ -732,52 +971,115 @@ LPCVOID CAgentFileBinary::ReadBufferPalette (LPCVOID pBuffer, UINT pLogLevel)
 	return lByte;
 }
 
+#ifdef	_M_CEE
+LPVOID CAgentFileBinary::WriteBufferPalette (LPVOID pBuffer, CAgentFileHeader^ pHeader, UINT pLogLevel)
+{
+	LPBYTE	lByte = (LPBYTE)pBuffer;
+
+	try
+	{
+		if	(
+				(pHeader->mPalette)
+			&&	(pHeader->mPalette->Entries->Length == 256)
+			)
+		{
+			array <System::Drawing::Color>^	lColors = pHeader->mPalette->Entries;
+			int								lNdx;
+
+			if	(pBuffer)
+			{
+				*(LPDWORD)lByte = pHeader->mPalette->Entries->Length;
+			}
+			lByte += sizeof(DWORD);
+
+			if	(pBuffer)
+			{
+				for (lNdx = 0; lNdx < pHeader->mPalette->Entries->Length; lNdx++)
+				{
+					COLORREF lColor = pHeader->mPalette->Entries[lNdx].ToArgb();
+					//*(COLORREF*)lByte = RGB (GetBValue (lColor), GetGValue(lColor), GetRValue(lColor)) >> 8; // BGR;
+					*(COLORREF*)lByte = lColor & 0x00FFFFFF;
+					lByte += sizeof(DWORD);
+				}
+			}
+			else
+			{
+				lByte += sizeof(DWORD) * pHeader->mPalette->Entries->Length;
+			}
+		}
+		else
+		{
+			*(LPDWORD)lByte = 0;
+			lByte += sizeof(DWORD);
+		}
+
+		if	(LogIsActive (pLogLevel))
+		{
+			LogMessage (pLogLevel, _T("  [%s] Write Palette     of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPCBYTE)pBuffer, pBuffer, pBuffer);
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lByte;
+}
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+
 LPCVOID CAgentFileBinary::ReadBufferIcon (LPCVOID pBuffer, UINT pLogLevel)
 {
 	LPCBYTE	lByte = (LPCBYTE)pBuffer;
 
 #ifdef	_M_CEE
-		if	(mHeader->mIcon)
-		{
-			DestroyIcon ((HICON)(INT_PTR)mHeader->mIcon->Handle);
-		}
-		mHeader->mIcon = nullptr;
+	if	(mHeader->mIcon)
+	{
+		DestroyIcon ((HICON)(INT_PTR)mHeader->mIcon->Handle);
+	}
+	mHeader->mIcon = nullptr;
 #else
-		if	(mHeader.mIcon)
-		{
-			DestroyIcon (mHeader.mIcon);
-		}
-		mHeader.mIcon = NULL;
-#endif		
+	if	(mHeader.mIcon)
+	{
+		DestroyIcon (mHeader.mIcon);
+	}
+	mHeader.mIcon = NULL;
+#endif
 
 	if	(*(lByte++))
 	{
-		DWORD			lIconSize = *(LPCDWORD)lByte;
+		DWORD			lBitsSize;
 		LPBITMAPINFO	lMaskBitmapInfo;
 		LPBITMAPINFO	lColorBitmapInfo;
-		LPCBYTE			lMaskBytes;
-		LPCBYTE			lColorBytes;
+		LPCBYTE			lMaskBits;
+		LPCBYTE			lColorBits;
+		UINT			lPaletteSize = 0;
 		tS <ICONINFO>	lIconInfo;
 		CMemDCHandle	lDC;
 
+		lBitsSize = *(LPCDWORD)lByte;
 		lByte += sizeof(DWORD);
 		lMaskBitmapInfo = (LPBITMAPINFO)lByte;
-		lMaskBytes = lByte + lMaskBitmapInfo->bmiHeader.biSize;
-		lMaskBytes += 2 * sizeof(DWORD);
-		lByte += lIconSize;
+		lMaskBits = lByte + lMaskBitmapInfo->bmiHeader.biSize;
+		lPaletteSize = (lMaskBitmapInfo->bmiHeader.biClrUsed) ? lMaskBitmapInfo->bmiHeader.biClrUsed : (lMaskBitmapInfo->bmiHeader.biBitCount == 1) ? 2 : (lMaskBitmapInfo->bmiHeader.biBitCount == 4) ? 16 : (lMaskBitmapInfo->bmiHeader.biBitCount == 8) ? 256 : 0;
+		//LogMessage (LogIfActive, _T("    At [%u] Mask  [%d] Header [%d] Bits [%d]"), lByte-sizeof(DWORD)-(LPBYTE)pBuffer, lBitsSize, lMaskBitmapInfo->bmiHeader.biSize + (sizeof(DWORD) * lPaletteSize), lBitsSize - lMaskBitmapInfo->bmiHeader.biSize - (sizeof(DWORD) * lPaletteSize));
+		//LogMessage (LogIfActive, _T("      Size [%d] Width {%d] Height [%d] Bits [%d] Palette [%d (%d)]"), lMaskBitmapInfo->bmiHeader.biSizeImage, lMaskBitmapInfo->bmiHeader.biWidth, lMaskBitmapInfo->bmiHeader.biHeight, lMaskBitmapInfo->bmiHeader.biBitCount, lMaskBitmapInfo->bmiHeader.biClrUsed, lPaletteSize);
+		lMaskBits += sizeof(DWORD) * lPaletteSize;
+		lByte += lBitsSize;
 
-		lIconSize = *(LPCDWORD)lByte;
+		lBitsSize = *(LPCDWORD)lByte;
 		lByte += sizeof(DWORD);
 		lColorBitmapInfo = (LPBITMAPINFO)lByte;
-		lColorBytes = lByte + lColorBitmapInfo->bmiHeader.biSize;
-		lColorBytes += 16 * sizeof(DWORD);
-		lByte += lIconSize;
+		lColorBits = lByte + lColorBitmapInfo->bmiHeader.biSize;
+		lPaletteSize = (lColorBitmapInfo->bmiHeader.biClrUsed) ? lColorBitmapInfo->bmiHeader.biClrUsed : (lColorBitmapInfo->bmiHeader.biBitCount == 1) ? 2 : (lColorBitmapInfo->bmiHeader.biBitCount == 4) ? 16 : (lColorBitmapInfo->bmiHeader.biBitCount == 8) ? 256 : 0;
+		//LogMessage (LogIfActive, _T("    At [%u] Color [%d] Header [%d] Bits [%d]"), lByte-sizeof(DWORD)-(LPBYTE)pBuffer, lBitsSize, lColorBitmapInfo->bmiHeader.biSize + (sizeof(DWORD) * lPaletteSize), lBitsSize - lMaskBitmapInfo->bmiHeader.biSize - (sizeof(DWORD) * lPaletteSize));
+		//LogMessage (LogIfActive, _T("      Size [%d] Width {%d] Height [%d] Bits [%d] Palette [%d (%d)]"), lColorBitmapInfo->bmiHeader.biSizeImage, lColorBitmapInfo->bmiHeader.biWidth, lColorBitmapInfo->bmiHeader.biHeight, lColorBitmapInfo->bmiHeader.biBitCount, lColorBitmapInfo->bmiHeader.biClrUsed, lPaletteSize);
+		lColorBits += sizeof(DWORD) * lPaletteSize;
+		lByte += lBitsSize;
 
 #ifdef	_DUMP_ICON
 		if	(LogIsActive (MaxLogLevel (pLogLevel, _DUMP_ICON)))
 		{
-			CImageDebugger::DumpBitmap (_DUMP_ICON, *lMaskBitmapInfo, (LPBYTE)lMaskBytes, _T("Icon Mask"));
-			CImageDebugger::DumpBitmap (_DUMP_ICON, *lColorBitmapInfo, (LPBYTE)lColorBytes, _T("Icon Color"));
+			CImageDebugger::DumpBitmap (_DUMP_ICON, *lMaskBitmapInfo, (LPBYTE)lMaskBits, _T("Icon Mask"));
+			CImageDebugger::DumpBitmap (_DUMP_ICON, *lColorBitmapInfo, (LPBYTE)lColorBits, _T("Icon Color"));
 		}
 #endif
 #ifdef	_TRACE_RESOURCES
@@ -788,28 +1090,28 @@ LPCVOID CAgentFileBinary::ReadBufferIcon (LPCVOID pBuffer, UINT pLogLevel)
 #endif
 #ifdef	_M_CEE
 		HICON	lIcon = NULL;
-#endif		
+#endif
 
-		if	(lDC.Attach (CreateDC (_T("DISPLAY"), NULL, NULL, NULL)))
+		if	(lDC.Attach (::CreateDC (_T("DISPLAY"), NULL, NULL, NULL)))
 		{
-			lIconInfo.hbmMask = CreateDIBitmap (lDC, &lMaskBitmapInfo->bmiHeader, CBM_INIT, lMaskBytes, lMaskBitmapInfo, DIB_RGB_COLORS);
-			lIconInfo.hbmColor = CreateDIBitmap (lDC, &lColorBitmapInfo->bmiHeader, CBM_INIT, lColorBytes, lColorBitmapInfo, DIB_RGB_COLORS);
+			lIconInfo.hbmMask = ::CreateDIBitmap (lDC, &lMaskBitmapInfo->bmiHeader, CBM_INIT, lMaskBits, lMaskBitmapInfo, DIB_RGB_COLORS);
+			lIconInfo.hbmColor = ::CreateDIBitmap (lDC, &lColorBitmapInfo->bmiHeader, CBM_INIT, lColorBits, lColorBitmapInfo, DIB_RGB_COLORS);
 
 			lIconInfo.fIcon = TRUE;
 #ifdef	_M_CEE
-			lIcon = CreateIconIndirect (&lIconInfo);
+			lIcon = ::CreateIconIndirect (&lIconInfo);
 #else
 			mHeader.mIcon = CreateIconIndirect (&lIconInfo);
-#endif			
+#endif
 			lDC.Close ();
 		}
 		if	(lIconInfo.hbmMask)
 		{
-			DeleteObject (lIconInfo.hbmMask);
+			::DeleteObject (lIconInfo.hbmMask);
 		}
 		if	(lIconInfo.hbmColor)
 		{
-			DeleteObject (lIconInfo.hbmColor);
+			::DeleteObject (lIconInfo.hbmColor);
 		}
 
 #ifdef	_M_CEE
@@ -830,6 +1132,28 @@ LPCVOID CAgentFileBinary::ReadBufferIcon (LPCVOID pBuffer, UINT pLogLevel)
 #endif
 	}
 
+	if	(LogIsActive (pLogLevel))
+	{
+		LogMessage (pLogLevel, _T("  [%s] Read Icon         of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPCBYTE)pBuffer, pBuffer, pBuffer);
+	}
+
+#ifdef	_M_CEE_NOT
+if	(mHeader->mIcon)
+{
+	try
+	{
+		String^ lPath = "C:\\Users\\Don\\Desktop";
+		System::IO::FileStream^	lStream;
+		lPath = System::IO::Path::Combine (lPath, System::IO::Path::GetFileNameWithoutExtension (mPath));
+		lPath = lPath + " - Icon.ico";
+		lStream = gcnew FileStream (lPath, FileMode::Create, FileAccess::Write, FileShare::Read);
+		mHeader->mIcon->Save (lStream);
+		lStream->Close ();
+	}
+	catch AnyExceptionDebug
+}
+#endif
+
 #ifdef	_SAVE_ICON
 	if	(
 			(mHeader.mIcon)
@@ -847,96 +1171,216 @@ LPCVOID CAgentFileBinary::ReadBufferIcon (LPCVOID pBuffer, UINT pLogLevel)
 	return lByte;
 }
 
+#ifdef	_M_CEE
+LPVOID CAgentFileBinary::WriteBufferIcon (LPVOID pBuffer, CAgentFileHeader^ pHeader, UINT pLogLevel)
+{
+	LPBYTE	lByte = (LPBYTE)pBuffer;
+
+	try
+	{
+		if	(
+				(pHeader->mIcon)
+			&&	((INT_PTR)pHeader->mIcon->Handle != 0)
+			)
+		{
+			tS <ICONINFO>	lIconInfo;
+			tS <BITMAP>		lMaskBitmap;
+			tS <BITMAP>		lColorBitmap;
+			array <BYTE>^	lBitmapInfoBuffer;
+			pin_ptr <BYTE>	lBitmapInfoPinned;
+			LPBITMAPINFO	lBitmapInfo;
+			UINT			lPaletteSize = 0;
+			CMemDCHandle	lDC;
+
+			if	(pBuffer)
+			{
+				*lByte = TRUE;
+			}
+			lByte++;
+			::GetIconInfo ((HICON)(INT_PTR)pHeader->mIcon->Handle, &lIconInfo);
+
+			lDC.Attach (CreateDC (_T("DISPLAY"), NULL, NULL, NULL));
+
+			try
+			{
+				if	(lIconInfo.hbmMask)
+				{
+					::GetObject (lIconInfo.hbmMask, sizeof(BITMAP), &lMaskBitmap);
+
+					lPaletteSize = (lMaskBitmap.bmBitsPixel == 1) ? 2 : (lMaskBitmap.bmBitsPixel == 4) ? 16 : (lMaskBitmap.bmBitsPixel == 8) ? 256 : 0;
+					lBitmapInfoBuffer = gcnew array <BYTE> (sizeof(BITMAPINFOHEADER) + (sizeof(DWORD) * lPaletteSize));
+					lBitmapInfoPinned = &lBitmapInfoBuffer[0];
+					lBitmapInfo = (LPBITMAPINFO)(LPBYTE)lBitmapInfoPinned;
+
+					lBitmapInfo->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+					lBitmapInfo->bmiHeader.biCompression = BI_RGB;
+					lBitmapInfo->bmiHeader.biWidth = lMaskBitmap.bmWidth;
+					lBitmapInfo->bmiHeader.biHeight = lMaskBitmap.bmHeight;
+					lBitmapInfo->bmiHeader.biBitCount = lMaskBitmap.bmBitsPixel;
+					lBitmapInfo->bmiHeader.biPlanes = lMaskBitmap.bmPlanes;
+					lBitmapInfo->bmiHeader.biSizeImage = lMaskBitmap.bmHeight * lMaskBitmap.bmWidthBytes;
+					lBitmapInfo->bmiHeader.biClrUsed = lPaletteSize;
+					::GetDIBits (lDC, lIconInfo.hbmMask, 0, lBitmapInfo->bmiHeader.biHeight, NULL, lBitmapInfo, DIB_RGB_COLORS);
+					lBitmapInfo->bmiHeader.biClrUsed = max (lBitmapInfo->bmiHeader.biClrUsed, lPaletteSize);
+
+					//LogMessage (LogIfActive, _T("    At [%u] Mask  [%d] Header [%d] Bits [%d]"), lByte-(LPBYTE)pBuffer, sizeof(BITMAPINFOHEADER) + (sizeof(DWORD) * lBitmapInfo->bmiHeader.biClrUsed) + lBitmapInfo->bmiHeader.biSizeImage, sizeof(BITMAPINFOHEADER) + (sizeof(DWORD) * lBitmapInfo->bmiHeader.biClrUsed), lBitmapInfo->bmiHeader.biSizeImage);
+					//LogMessage (LogIfActive, _T("      Size [%d] Width {%d] Height [%d] Bits [%d] Palette [%d]"), lBitmapInfo->bmiHeader.biSizeImage, lBitmapInfo->bmiHeader.biWidth, lBitmapInfo->bmiHeader.biHeight, lBitmapInfo->bmiHeader.biBitCount, lBitmapInfo->bmiHeader.biClrUsed);
+					if	(pBuffer)
+					{
+						*(LPDWORD)lByte = sizeof(BITMAPINFOHEADER) + (sizeof(DWORD) * lBitmapInfo->bmiHeader.biClrUsed) + lBitmapInfo->bmiHeader.biSizeImage;
+					}
+					lByte += sizeof(DWORD);
+
+					if	(pBuffer)
+					{
+						memcpy (lByte, &lBitmapInfo->bmiHeader, sizeof(BITMAPINFOHEADER) + (sizeof(DWORD) * lBitmapInfo->bmiHeader.biClrUsed));
+					}
+					lByte += sizeof(BITMAPINFOHEADER) + (sizeof(DWORD) * lBitmapInfo->bmiHeader.biClrUsed);
+
+					if	(pBuffer)
+					{
+						array <BYTE>^	lMaskBytes = gcnew array <BYTE> (lBitmapInfo->bmiHeader.biSizeImage);
+						pin_ptr <BYTE>	lPinned = &lMaskBytes[0];
+
+						::GetDIBits (lDC, lIconInfo.hbmMask, 0, lBitmapInfo->bmiHeader.biHeight, lPinned, lBitmapInfo, DIB_RGB_COLORS);
+						memcpy (lByte, lPinned, lBitmapInfo->bmiHeader.biSizeImage);
+					}
+					lByte += lBitmapInfo->bmiHeader.biSizeImage;
+				}
+				else
+				{
+					if	(pBuffer)
+					{
+						*(LPDWORD)lByte = 0;
+					}
+					lByte += sizeof(DWORD);
+				}
+
+				if	(lIconInfo.hbmColor)
+				{
+					::GetObject (lIconInfo.hbmColor, sizeof(BITMAP), &lColorBitmap);
+
+					lPaletteSize = (lColorBitmap.bmBitsPixel == 1) ? 2 : (lColorBitmap.bmBitsPixel == 4) ? 16 : (lColorBitmap.bmBitsPixel == 8) ? 256 : 0;
+					lBitmapInfoBuffer = gcnew array <BYTE> (sizeof(BITMAPINFOHEADER) + (sizeof(DWORD) * lPaletteSize));
+					lBitmapInfoPinned = &lBitmapInfoBuffer[0];
+					lBitmapInfo = (LPBITMAPINFO)(LPBYTE)lBitmapInfoPinned;
+
+					lBitmapInfo->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+					lBitmapInfo->bmiHeader.biCompression = BI_RGB;
+					lBitmapInfo->bmiHeader.biWidth = lColorBitmap.bmWidth;
+					lBitmapInfo->bmiHeader.biHeight = lColorBitmap.bmHeight;
+					lBitmapInfo->bmiHeader.biBitCount = lColorBitmap.bmBitsPixel;
+					lBitmapInfo->bmiHeader.biPlanes = lColorBitmap.bmPlanes;
+					lBitmapInfo->bmiHeader.biSizeImage = lColorBitmap.bmHeight * lColorBitmap.bmWidthBytes;
+					lBitmapInfo->bmiHeader.biClrUsed = lBitmapInfo->bmiHeader.biClrUsed;
+					::GetDIBits (lDC, lIconInfo.hbmColor, 0, lBitmapInfo->bmiHeader.biHeight, NULL, lBitmapInfo, DIB_RGB_COLORS);
+					lBitmapInfo->bmiHeader.biClrUsed = max (lBitmapInfo->bmiHeader.biClrUsed, lPaletteSize);
+
+					//LogMessage (LogIfActive, _T("    At [%u] Color [%d] Header [%d] Bits [%d]"), lByte-(LPBYTE)pBuffer, sizeof(BITMAPINFOHEADER) + (sizeof(DWORD) * lBitmapInfo->bmiHeader.biClrUsed) + lBitmapInfo->bmiHeader.biSizeImage, sizeof(BITMAPINFOHEADER) + (sizeof(DWORD) * lBitmapInfo->bmiHeader.biClrUsed), lBitmapInfo->bmiHeader.biSizeImage);
+					//LogMessage (LogIfActive, _T("      Size [%d] Width {%d] Height [%d] Bits [%d] Palette [%d]"), lBitmapInfo->bmiHeader.biSizeImage, lBitmapInfo->bmiHeader.biWidth, lBitmapInfo->bmiHeader.biHeight, lBitmapInfo->bmiHeader.biBitCount, lBitmapInfo->bmiHeader.biClrUsed);
+					if	(pBuffer)
+					{
+						*(LPDWORD)lByte = sizeof(BITMAPINFOHEADER) + (sizeof(DWORD) * lBitmapInfo->bmiHeader.biClrUsed) + lBitmapInfo->bmiHeader.biSizeImage;
+					}
+					lByte += sizeof(DWORD);
+
+					if	(pBuffer)
+					{
+						memcpy (lByte, &lBitmapInfo->bmiHeader, sizeof(BITMAPINFOHEADER) + (sizeof(DWORD) * lBitmapInfo->bmiHeader.biClrUsed));
+					}
+					lByte += sizeof(BITMAPINFOHEADER) + (sizeof(DWORD) * lBitmapInfo->bmiHeader.biClrUsed);
+
+					if	(pBuffer)
+					{
+						array <BYTE>^	lColorBytes = gcnew array <BYTE> (lBitmapInfo->bmiHeader.biSizeImage);
+						pin_ptr <BYTE>	lPinned = &lColorBytes[0];
+
+						::GetDIBits (lDC, lIconInfo.hbmColor, 0, lBitmapInfo->bmiHeader.biHeight, lPinned, lBitmapInfo, DIB_RGB_COLORS);
+						memcpy (lByte, lPinned, lBitmapInfo->bmiHeader.biSizeImage);
+					}
+					lByte += lBitmapInfo->bmiHeader.biSizeImage;
+				}
+				else
+				{
+					if	(pBuffer)
+					{
+						*(LPDWORD)lByte = 0;
+					}
+					lByte += sizeof(DWORD);
+				}
+			}
+			catch AnyExceptionDebug
+
+			if	(lIconInfo.hbmMask)
+			{
+				::DeleteObject (lIconInfo.hbmMask);
+			}
+			if	(lIconInfo.hbmColor)
+			{
+				::DeleteObject (lIconInfo.hbmColor);
+			}
+			lDC.Close ();
+		}
+		else
+		{
+			if	(pBuffer)
+			{
+				*lByte = FALSE;
+			}
+			lByte++;
+		}
+
+		if	(LogIsActive (pLogLevel))
+		{
+			LogMessage (pLogLevel, _T("  [%s] Write Icon        of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPCBYTE)pBuffer, pBuffer, pBuffer);
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lByte;
+}
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LPCVOID CAgentFileBinary::ReadBufferNames (LPCVOID pBuffer, bool pNullTerminated, bool pFirstLetterCaps, UINT pLogLevel)
+LPCVOID CAgentFileBinary::ReadBufferNames (LPCVOID pBuffer, DWORD pBufferSize, bool pNullTerminated, bool pFirstLetterCaps, UINT pLogLevel)
 {
 	LPCBYTE	lByte = (LPCBYTE)pBuffer;
 
 	try
 	{
 		WORD					lNameCount;
-		const DWORD				lStrPad = (pNullTerminated) ? 1 : 0;
-		DWORD					lStrLen;
-		LPCWSTR					lStr;
 #ifdef	_M_CEE
-		CAgentFileName^		lName;
-#else		
+		CAgentFileName^			lName;
+#else
 		tPtr <CAgentFileName>	lName;
-#endif		
+#endif
 
 		lNameCount = *(LPCWORD)lByte;
 		lByte += sizeof (WORD);
 
-		while (lNameCount > 0)
+		while	(
+					(lNameCount > 0)
+				&&	(
+						(pBufferSize == 0)
+					||	(lByte < ((LPCBYTE)pBuffer + pBufferSize))
+					)
+				)
 		{
 #ifdef	_M_CEE
 			lName = gcnew CAgentFileName;
 #else
 			lName = new CAgentFileName;
-#endif			
+#endif
 
 			lName->mLanguage = *(LPCWORD)lByte;
 			lByte += sizeof (WORD);
 
-			lStrLen = *(LPCDWORD)lByte;
-			lByte += sizeof(DWORD);
-			if	(lStrLen > 0)
-			{
-				lStr = (LPCWSTR) lByte;
-				lByte += (lStrLen + lStrPad) * sizeof (WCHAR);
-#ifdef	_M_CEE
-				lName->mName = gcnew String (lStr, 0, lStrLen);
-#else
-				lName->mName = CAtlString (lStr, lStrLen).AllocSysString();
-#endif				
-			}
-#ifdef	_DEBUG_LOAD
-			if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_LOAD)))
-			{
-				LogMessage (_DEBUG_LOAD|LogHighVolume, _T("    StrLen [%u] Str [%ls]"), lStrLen, (lStrLen) ? CAtlString (lStr, lStrLen) : NULL);
-			}
-#endif
-
-			lStrLen = *(LPCDWORD)lByte;
-			lByte += sizeof(DWORD);
-			if	(lStrLen > 0)
-			{
-				lStr = (LPCWSTR) lByte;
-				lByte += (lStrLen + lStrPad) * sizeof (WCHAR);
-#ifdef	_M_CEE
-				lName->mDesc1 = gcnew String (lStr, 0, lStrLen);
-#else
-				lName->mDesc1 = CAtlString (lStr, lStrLen).AllocSysString();
-#endif				
-			}
-#ifdef	_DEBUG_LOAD
-			if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_LOAD)))
-			{
-				LogMessage (_DEBUG_LOAD|LogHighVolume, _T("    StrLen [%u] Str [%ls]"), lStrLen, (lStrLen) ? CAtlString (lStr, lStrLen) : NULL);
-			}
-#endif
-
-			lStrLen = *(LPCDWORD)lByte;
-			lByte += sizeof(DWORD);
-			if	(lStrLen > 0)
-			{
-				lStr = (LPCWSTR) lByte;
-				lByte += (lStrLen + lStrPad) * sizeof (WCHAR);
-#ifdef	_M_CEE
-				lName->mDesc2 = gcnew String (lStr, 0, lStrLen);
-#else
-				lName->mDesc2 = CAtlString (lStr, lStrLen).AllocSysString();
-#endif
-			}
-#ifdef	_DEBUG_LOAD
-			if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_LOAD)))
-			{
-				LogMessage (_DEBUG_LOAD|LogHighVolume, _T("    StrLen [%u] Str [%ls]"), lStrLen, (lStrLen) ? CAtlString (lStr, lStrLen) : NULL);
-			}
-#endif
+			lByte = (LPCBYTE)ReadBufferString (lByte, pNullTerminated, lName->mName);
+			lByte = (LPCBYTE)ReadBufferString (lByte, pNullTerminated, lName->mDesc1);
+			lByte = (LPCBYTE)ReadBufferString (lByte, pNullTerminated, lName->mDesc2);
 
 			if	(pFirstLetterCaps)
 			{
@@ -956,16 +1400,12 @@ LPCVOID CAgentFileBinary::ReadBufferNames (LPCVOID pBuffer, bool pNullTerminated
 					lCharName.SetAt (0, _totupper (lCharName [0]));
 					lName->mName = lCharName.AllocSysString();
 				}
-#endif				
+#endif
 			}
 
 			if	(LogIsActive(pLogLevel))
 			{
-#ifdef	_M_CEE
-				LogMessage (pLogLevel|LogHighVolume, _T("  NameCount [%hu] Language [%4.4hX] Name [%s]"), lNameCount, lName->mLanguage, _B(lName->mName));
-#else
-				LogMessage (pLogLevel|LogHighVolume, _T("  NameCount [%hu] Language [%4.4hX] Name [%ls]"), lNameCount, lName->mLanguage, (BSTR) lName->mName);
-#endif				
+				LogMessage (pLogLevel|LogHighVolume, _T("    NameCount [%hu] Language [%4.4hX] Name [%s]"), lNameCount, lName->mLanguage, _B(lName->mName));
 			}
 
 			lNameCount--;
@@ -977,13 +1417,64 @@ LPCVOID CAgentFileBinary::ReadBufferNames (LPCVOID pBuffer, bool pNullTerminated
 			mNames->Add (lName);
 #else
 			mNames.Add (lName.Detach ());
-#endif			
+#endif
+		}
+
+		if	(LogIsActive(pLogLevel))
+		{
+			LogMessage (pLogLevel, _T("  [%s] Read Names        of [%u (%u)] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBufferSize, pBuffer, pBuffer);
 		}
 	}
 	catch AnyExceptionDebug
 
 	return lByte;
 }
+
+#ifdef	_M_CEE
+LPVOID CAgentFileBinary::WriteBufferNames (LPVOID pBuffer, CAgentFileNames^ pNames, bool pNullTerminated, UINT pLogLevel)
+{
+	LPBYTE	lByte = (LPBYTE)pBuffer;
+
+	try
+	{
+		if	(pBuffer)
+		{
+			*(LPWORD)lByte = pNames->Count;
+		}
+		lByte += sizeof (WORD);
+
+		for each (CAgentFileName^ lName in pNames)
+		{
+			if	(pBuffer)
+			{
+				*(LPWORD)lByte = lName->mLanguage;
+			}
+			lByte += sizeof (WORD);
+
+			if	(pBuffer)
+			{
+				lByte = (LPBYTE)WriteBufferString (lByte, pNullTerminated, lName->mName);
+				lByte = (LPBYTE)WriteBufferString (lByte, pNullTerminated, lName->mDesc1);
+				lByte = (LPBYTE)WriteBufferString (lByte, pNullTerminated, lName->mDesc2);
+			}
+			else
+			{
+				lByte += (DWORD)WriteBufferString (NULL, pNullTerminated, lName->mName);
+				lByte += (DWORD)WriteBufferString (NULL, pNullTerminated, lName->mDesc1);
+				lByte += (DWORD)WriteBufferString (NULL, pNullTerminated, lName->mDesc2);
+			}
+		}
+
+		if	(LogIsActive(pLogLevel))
+		{
+			LogMessage (pLogLevel, _T("  [%s] Write Names       of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, pBuffer);
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lByte;
+}
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -1012,7 +1503,7 @@ CAgentFileName* CAgentFileBinary::FindName (WORD pLangID)
 	{
 		ReadNames ();
 	}
-#endif		
+#endif
 	return __super::FindName (pLangID);
 }
 
@@ -1020,16 +1511,13 @@ CAgentFileName* CAgentFileBinary::FindName (WORD pLangID)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LPCVOID CAgentFileBinary::ReadBufferStates (LPCVOID pBuffer, bool pNullTerminated, LPCVOID pBufferEnd, UINT pLogLevel)
+LPCVOID CAgentFileBinary::ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize, bool pNullTerminated, UINT pLogLevel)
 {
 	LPCBYTE	lByte = (LPCBYTE)pBuffer;
 
 	try
 	{
-		WORD		lStateCount;
-		const DWORD	lStrPad = (pNullTerminated) ? 1 : 0;
-		DWORD		lStrLen;
-		LPCWSTR		lStr;
+		WORD	lStateCount;
 
 		lStateCount = *(LPCWORD)lByte;
 		lByte += sizeof (WORD);
@@ -1037,29 +1525,32 @@ LPCVOID CAgentFileBinary::ReadBufferStates (LPCVOID pBuffer, bool pNullTerminate
 		while	(
 					(lStateCount > 0)
 				&&	(
-						(pBufferEnd == NULL)
-					||	(lByte < pBufferEnd)
+						(pBufferSize == 0)
+					||	(lByte < ((LPCBYTE)pBuffer + pBufferSize))
 					)
 				)
-		{																					 
-			lStrLen = *(LPCDWORD)lByte;
-			lByte += sizeof(DWORD);
-			lStr = (LPCWSTR) lByte;
-			lByte += (lStrLen + lStrPad) * sizeof (WCHAR);
-
+		{
 #ifdef	_M_CEE
-			String^		lState = gcnew String (lStr, 0, lStrLen);
-			List <String^>^	lGestures = gcnew List<String^>;
-			String^		lGesture;
+			String^			lState;
+			List <String^>^	lGestures;
+			String^			lGesture;
 #else
-			CAtlString		lState (lStr, lStrLen);
-			INT_PTR			lStateNdx = FindSortedString (mStates.mNames, lState);
+			CAtlString		lState;
+			INT_PTR			lStateNdx;
+			CAtlString		lGesture;
+#endif
+
+			lByte = (LPCBYTE)ReadBufferString (lByte, pNullTerminated, lState);
+#ifdef	_M_CEE
+			lGestures = gcnew List<String^>;
+#else
+			lStateNdx = FindSortedString (mStates.mNames, lState);
 
 			if	(lStateNdx < 0)
 			{
 				mStates.mGestures.InsertAt (lStateNdx = AddSortedString (mStates.mNames, lState), CAtlStringArray());
 			}
-#endif			
+#endif
 
 #ifndef	_M_CEE
 			CAtlStringArray&	lGestures  = mStates.mGestures [lStateNdx];
@@ -1071,39 +1562,26 @@ LPCVOID CAgentFileBinary::ReadBufferStates (LPCVOID pBuffer, bool pNullTerminate
 
 			if	(LogIsActive (pLogLevel))
 			{
-#ifdef	_M_CEE
-				LogMessage (pLogLevel|LogHighVolume, _T("  State [%s] Gestures [%u]"), _B(lState), lGestureCount);
-#else
-				LogMessage (pLogLevel|LogHighVolume, _T("  State [%s] Gestures [%u]"), lState, lGestureCount);
-#endif
+				LogMessage (pLogLevel|LogHighVolume, _T("    State [%s] Gestures [%u]"), _B(lState), lGestureCount);
 			}
 
 			while	(
 						(lGestureCount > 0)
 					&&	(
-							(pBufferEnd == NULL)
-						||	(lByte < pBufferEnd)
+							(pBufferSize == 0)
+						||	(lByte < ((LPCBYTE)pBuffer + pBufferSize))
 						)
 					)
 			{
-				lStrLen = *(LPCDWORD)lByte;
-				lByte += sizeof(DWORD);
-				lStr = (LPCWSTR) lByte;
-				lByte += (lStrLen + lStrPad) * sizeof (WCHAR);
+				lByte = (LPCBYTE)ReadBufferString (lByte, pNullTerminated, lGesture);
 #ifdef	_M_CEE
-				lGesture = gcnew String (lStr, 0, lStrLen);
 				lGestures->Add (lGesture);
 #else
-				CAtlString	lGesture (lStr, lStrLen);
 				lGestures.Add (lGesture);
 #endif
 				if	(LogIsActive (pLogLevel))
 				{
-#ifdef	_M_CEE
-					LogMessage (pLogLevel|LogHighVolume, _T("    Gesture [%s]"), _B(lGesture));
-#else
-					LogMessage (pLogLevel|LogHighVolume, _T("    Gesture [%s]"), lGesture);
-#endif
+					LogMessage (pLogLevel|LogHighVolume, _T("      Gesture [%s]"), _B(lGesture));
 				}
 				lGestureCount--;
 			}
@@ -1111,13 +1589,72 @@ LPCVOID CAgentFileBinary::ReadBufferStates (LPCVOID pBuffer, bool pNullTerminate
 
 #ifdef	_M_CEE
 			mStates->Add (lState, lGestures->ToArray());
-#endif			
+#endif
+		}
+
+		if	(LogIsActive(pLogLevel))
+		{
+			LogMessage (pLogLevel, _T("  [%s] Read States       of [%u (%u)] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBufferSize, pBuffer, pBuffer);
 		}
 	}
 	catch AnyExceptionDebug
 
 	return lByte;
 }
+
+#ifdef	_M_CEE
+LPVOID CAgentFileBinary::WriteBufferStates (LPVOID pBuffer, CAgentFileStates^ pStates, bool pNullTerminated, UINT pLogLevel)
+{
+	LPBYTE	lByte = (LPBYTE)pBuffer;
+
+	try
+	{
+		if	(pBuffer)
+		{
+			*(LPWORD)lByte = pStates->Count;
+		}
+		lByte += sizeof (WORD);
+
+		for each (KeyValuePair <System::String^, array <System::String^>^> lState in pStates)
+		{
+			if	(pBuffer)
+			{
+				lByte = (LPBYTE)WriteBufferString (lByte, pNullTerminated, lState.Key);
+			}
+			else
+			{
+				lByte += (DWORD)WriteBufferString (NULL, pNullTerminated, lState.Key);
+			}
+
+			if	(pBuffer)
+			{
+				*(LPWORD)lByte = lState.Value->Length;
+			}
+			lByte += sizeof (WORD);
+
+			for each (String^ lGesture in lState.Value)
+			{
+				if	(pBuffer)
+				{
+					lByte = (LPBYTE)WriteBufferString (lByte, pNullTerminated, lGesture);
+				}
+				else
+				{
+					lByte += (DWORD)WriteBufferString (NULL, pNullTerminated, lGesture);
+				}
+			}
+		}
+
+		if	(LogIsActive(pLogLevel))
+		{
+			LogMessage (pLogLevel, _T("  [%s] Write States      of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, pBuffer);
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lByte;
+}
+#endif
 
 #ifndef	_M_CEE
 INT_PTR CAgentFileBinary::FindState (LPCTSTR pStateName)
@@ -1130,6 +1667,133 @@ INT_PTR CAgentFileBinary::FindState (LPCTSTR pStateName)
 		ReadStates ();
 	}
 	return __super::FindState (pStateName);
+}
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+#ifdef	_M_CEE
+LPCVOID CAgentFileBinary::ReadBufferString (LPCVOID pBuffer, bool pNullTerminated, System::String^% pString)
+{
+	LPCBYTE	lByte = (LPCBYTE)pBuffer;
+	DWORD	lStrLen;
+
+	lStrLen = *(LPCDWORD)lByte;
+	lByte += sizeof(DWORD);
+
+	if	(lStrLen > 0)
+	{
+#ifdef	_DEBUG
+		if	(
+				(lStrLen > 2048)
+			||	(IsBadStringPtr ((LPCWSTR)lByte, 2048))
+			)
+		{
+			LogComErr (LogIfActive, HRESULT_FROM_WIN32 (ERROR_INVALID_DATA));
+		}
+#endif
+		pString = gcnew String ((LPCWSTR)lByte, 0, lStrLen);
+		lByte += lStrLen * sizeof(wchar_t);
+		if	(pNullTerminated)
+		{
+			lByte += sizeof(wchar_t);
+		}
+	}
+	else
+	{
+		pString = String::Empty;
+	}
+	return lByte;
+}
+
+LPVOID CAgentFileBinary::WriteBufferString (LPVOID pBuffer, bool pNullTerminated, System::String^ pString)
+{
+	LPBYTE				lByte = (LPBYTE)pBuffer;
+	DWORD				lStrLen = 0;
+	array<wchar_t>^		lStrChars;
+	pin_ptr<wchar_t>	lStrPinned;
+
+	if	(!String::IsNullOrEmpty (pString))
+	{
+		lStrLen = (DWORD)pString->Length;
+	}
+	if	(pBuffer)
+	{
+		*(LPDWORD)lByte = lStrLen;
+	}
+	lByte += sizeof(DWORD);
+
+	if	(lStrLen > 0)
+	{
+		if	(pBuffer)
+		{
+			lStrChars = pString->ToCharArray();
+			lStrPinned = &lStrChars[0];
+			memcpy (lByte, lStrPinned, lStrLen * sizeof(wchar_t));
+		}
+		lByte += lStrLen * sizeof(wchar_t);
+		if	(pNullTerminated)
+		{
+			if	(pBuffer)
+			{
+				*(wchar_t*)lByte = 0;
+			}
+			lByte += sizeof(wchar_t);
+		}
+	}
+	return lByte;
+}
+#else
+LPCVOID CAgentFileBinary::ReadBufferString (LPCVOID pBuffer, bool pNullTerminated, CAtlString& pString)
+{
+	LPCBYTE		lByte = (LPCBYTE)pBuffer;
+	DWORD		lStrLen;
+
+	lStrLen = *(LPCDWORD)lByte;
+	lByte += sizeof(DWORD);
+
+	if	(lStrLen > 0)
+	{
+#ifdef	_DEBUG
+		if	(
+				(lStrLen > 2048)
+			||	(IsBadStringPtr ((LPCWSTR)lByte, 2048))
+			)
+		{
+			AtlThrow (HRESULT_FROM_WIN32 (ERROR_INVALID_DATA));
+		}
+#endif
+		pString = CAtlString ((LPCWSTR)lByte, lStrLen);
+		lByte += lStrLen * sizeof(WCHAR);
+		if	(pNullTerminated)
+		{
+			lByte += sizeof(WCHAR);
+		}
+	}
+	else
+	{
+		pString.Empty ();
+	}
+	return lByte;
+}
+
+LPCVOID CAgentFileBinary::ReadBufferString (LPCVOID pBuffer, bool pNullTerminated, tBstrPtr& pString)
+{
+	LPCVOID		lRet;
+	CAtlString	lString;
+
+	lRet = ReadBufferString (pBuffer, pNullTerminated, lString);
+	if	(lString.IsEmpty())
+	{
+		pString.Free();
+	}
+	else
+	{
+		pString = lString.AllocSysString ();
+	}
+	return lRet;
 }
 #endif
 
@@ -1394,13 +2058,13 @@ void CAgentFileBinary::DumpBlocks (UINT pLogLevel, UINT pMaxBlockSize)
 						lStrLen = *(LPCDWORD)lByte;
 						if	(lStrLen > 0)
 						{
-							lByte += (lStrLen + 1) * sizeof (WCHAR);
+							lByte += (lStrLen + 1) * sizeof(WCHAR);
 						}
 						lByte += sizeof(DWORD) + sizeof (WORD) + sizeof (WORD);
 						lStrLen = *(LPCDWORD)lByte;
 						if	(lStrLen > 0)
 						{
-							lByte += (lStrLen + 1) * sizeof (WCHAR);
+							lByte += (lStrLen + 1) * sizeof(WCHAR);
 						}
 						lByte += sizeof(DWORD);
 
@@ -1415,7 +2079,7 @@ void CAgentFileBinary::DumpBlocks (UINT pLogLevel, UINT pMaxBlockSize)
 						lStrLen = *(LPCDWORD)lByte;
 						if	(lStrLen > 0)
 						{
-							lByte += (lStrLen + 1) * sizeof (WCHAR);
+							lByte += (lStrLen + 1) * sizeof(WCHAR);
 						}
 						lByte += sizeof(DWORD) + sizeof (long) + sizeof (WORD) + sizeof(DWORD);
 
@@ -1468,19 +2132,19 @@ void CAgentFileBinary::DumpBlocks (UINT pLogLevel, UINT pMaxBlockSize)
 						lByte += sizeof(DWORD);
 						if	(lStrLen > 0)
 						{
-							lByte += (lStrLen + 1) * sizeof (WCHAR);
+							lByte += (lStrLen + 1) * sizeof(WCHAR);
 						}
 						lStrLen = *(LPCDWORD)lByte;
 						lByte += sizeof(DWORD);
 						if	(lStrLen > 0)
 						{
-							lByte += (lStrLen + 1) * sizeof (WCHAR);
+							lByte += (lStrLen + 1) * sizeof(WCHAR);
 						}
 						lStrLen = *(LPCDWORD)lByte;
 						lByte += sizeof(DWORD);
 						if	(lStrLen > 0)
 						{
-							lByte += (lStrLen + 1) * sizeof (WCHAR);
+							lByte += (lStrLen + 1) * sizeof(WCHAR);
 						}
 					}
 

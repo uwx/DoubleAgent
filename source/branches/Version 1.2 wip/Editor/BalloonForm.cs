@@ -1,9 +1,30 @@
-﻿using System;
+﻿/////////////////////////////////////////////////////////////////////////////
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+/////////////////////////////////////////////////////////////////////////////
+/*
+	This file is part of Double Agent.
+
+    Double Agent is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Double Agent is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/////////////////////////////////////////////////////////////////////////////
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using DoubleAgent;
 using DoubleAgent.Character;
 
 namespace AgentCharacterEditor
@@ -22,7 +43,7 @@ namespace AgentCharacterEditor
 			mFileBalloon = null;
 
 			InitializeComponent ();
-			
+
 			NumericNumLines.Minimum = (decimal)FileBalloon.MinLines;
 			NumericNumLines.Maximum = (decimal)FileBalloon.MaxLines;
 			NumericCharsPerLine.Minimum = (decimal)FileBalloon.MinPerLine;
@@ -80,6 +101,7 @@ namespace AgentCharacterEditor
 		{
 			CheckBoxWordBalloon.Enabled = (mCharacterFile != null) && (!Program.MainForm.FileIsReadOnly);
 
+			CheckBoxWordBalloon.CheckedChanged -= new System.EventHandler (CheckBoxWordBalloon_CheckedChanged);
 			if (IsEmpty)
 			{
 				CheckBoxWordBalloon.Checked = false;
@@ -88,6 +110,8 @@ namespace AgentCharacterEditor
 			{
 				CheckBoxWordBalloon.Checked = ((mCharacterFile.Header.Style & CharacterStyle.CharStyleBalloon) != 0);
 			}
+			CheckBoxWordBalloon.CheckedChanged += new System.EventHandler (CheckBoxWordBalloon_CheckedChanged);
+
 			ShowBalloonStyle ();
 			ShowBalloonColors ();
 			ShowBalloonFont ();
@@ -95,6 +119,11 @@ namespace AgentCharacterEditor
 
 		private void ShowBalloonStyle ()
 		{
+			RadioButtonNumLines.CheckedChanged -= new System.EventHandler (RadioButtonNumLines_CheckedChanged);
+			RadioButtonSizeToText.CheckedChanged -= new System.EventHandler (RadioButtonSizeToText_CheckedChanged);
+			CheckBoxAutoHide.CheckedChanged -= new System.EventHandler (CheckBoxAutoHide_CheckedChanged);
+			CheckBoxAutoPace.CheckedChanged -= new System.EventHandler (CheckBoxAutoPace_CheckedChanged);
+
 			if (IsEmpty)
 			{
 				NumericCharsPerLine.ResetText ();
@@ -138,6 +167,11 @@ namespace AgentCharacterEditor
 				CheckBoxAutoHide.Enabled = !Program.MainForm.FileIsReadOnly;
 				CheckBoxAutoPace.Enabled = !Program.MainForm.FileIsReadOnly;
 			}
+
+			RadioButtonNumLines.CheckedChanged += new System.EventHandler (RadioButtonNumLines_CheckedChanged);
+			RadioButtonSizeToText.CheckedChanged += new System.EventHandler (RadioButtonSizeToText_CheckedChanged);
+			CheckBoxAutoHide.CheckedChanged += new System.EventHandler (CheckBoxAutoHide_CheckedChanged);
+			CheckBoxAutoPace.CheckedChanged += new System.EventHandler (CheckBoxAutoPace_CheckedChanged);
 		}
 
 		private void ShowBalloonFont ()
@@ -206,32 +240,211 @@ namespace AgentCharacterEditor
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Update
+
+		internal class UpdateBalloon : UndoableUpdate
+		{
+			public UpdateBalloon (CharacterFile pCharacterFile)
+				: base (pCharacterFile)
+			{
+				this.CharacterStyle = pCharacterFile.Header.Style & mStyleMask;
+				if (pCharacterFile.Balloon != null)
+				{
+					this.Lines = pCharacterFile.Balloon.Lines;
+					this.PerLine = pCharacterFile.Balloon.PerLine;
+					this.BkColor = pCharacterFile.Balloon.BkColor;
+					this.FgColor = pCharacterFile.Balloon.FgColor;
+					this.BrColor = pCharacterFile.Balloon.BrColor;
+					this.Font = pCharacterFile.Balloon.Font;
+				}
+			}
+
+			public CharacterStyle CharacterStyle
+			{
+				get;
+				set;
+			}
+			public UInt16 Lines
+			{
+				get;
+				set;
+			}
+			public UInt16 PerLine
+			{
+				get;
+				set;
+			}
+			public Color BkColor
+			{
+				get;
+				set;
+			}
+			public Color FgColor
+			{
+				get;
+				set;
+			}
+			public Color BrColor
+			{
+				get;
+				set;
+			}
+			public Font Font
+			{
+				get;
+				set;
+			}
+
+			public override UndoUnit Apply ()
+			{
+				UndoUnit	lApplied = null;
+
+				if (this.StyleChanged)
+				{
+					CharacterStyle	lSwap = CharacterFile.Header.Style & mStyleMask;
+					CharacterFile.Header.Style = (CharacterFile.Header.Style & ~mStyleMask) | (this.CharacterStyle & mStyleMask);
+					this.CharacterStyle = lSwap;
+					lApplied = this;
+				}
+				if (CharacterFile.Balloon != null)
+				{
+					if (this.SizeChanged)
+					{
+						UInt16	lSwap;
+
+						lSwap = CharacterFile.Balloon.Lines;
+						CharacterFile.Balloon.Lines = this.Lines;
+						this.Lines = lSwap;
+
+						lSwap = CharacterFile.Balloon.PerLine;
+						CharacterFile.Balloon.PerLine = this.PerLine;
+						this.PerLine = lSwap;
+
+						lApplied = this;
+					}
+					if (this.ColorChanged)
+					{
+						Color	lSwap;
+
+						lSwap = CharacterFile.Balloon.BkColor;
+						CharacterFile.Balloon.BkColor = this.BkColor;
+						this.BkColor = lSwap;
+
+						lSwap = CharacterFile.Balloon.FgColor;
+						CharacterFile.Balloon.FgColor = this.FgColor;
+						this.FgColor = lSwap;
+
+						lSwap = CharacterFile.Balloon.BrColor;
+						CharacterFile.Balloon.BrColor = this.BrColor;
+						this.BrColor = lSwap;
+
+						lApplied = this;
+					}
+					if (this.FontChanged)
+					{
+						Font	lSwap;
+
+						lSwap = CharacterFile.Balloon.Font;
+						CharacterFile.Balloon.Font = this.Font;
+						this.Font = lSwap;
+
+						lApplied = this;
+					}
+				}
+				if (lApplied != null)
+				{
+					return OnApplied (lApplied);
+				}
+				return null;
+			}
+
+			public override string ToString ()
+			{
+				String	lChange = StyleChanged ? "style" : SizeChanged ? "size" : ColorChanged ? "color" : FontChanged ? "font" : "";
+				return String.Format ("balloon {0}", lChange).TrimEnd ();
+			}
+
+			private const CharacterStyle	mStyleMask = (CharacterStyle.CharStyleBalloon | CharacterStyle.CharStyleSizeToText | CharacterStyle.CharStyleNoAutoHide | CharacterStyle.CharStyleNoAutoPace);
+
+			private bool StyleChanged
+			{
+				get
+				{
+					return (CharacterFile.Header.Style & mStyleMask) != (this.CharacterStyle & mStyleMask);
+				}
+			}
+
+			private bool SizeChanged
+			{
+				get
+				{
+					return (CharacterFile.Balloon != null) && ((CharacterFile.Balloon.Lines != this.Lines) || (CharacterFile.Balloon.PerLine != this.PerLine));
+				}
+			}
+
+			private bool ColorChanged
+			{
+				get
+				{
+					return (CharacterFile.Balloon != null) && ((CharacterFile.Balloon.BkColor != this.BkColor) || (CharacterFile.Balloon.FgColor != this.FgColor) || (CharacterFile.Balloon.BrColor != this.BrColor));
+				}
+			}
+
+			private bool FontChanged
+			{
+				get
+				{
+					try
+					{
+						return (CharacterFile.Balloon != null) && !CharacterFile.Balloon.Font.Equals (this.Font);
+					}
+					catch
+					{
+					}
+					return false;
+				}
+			}
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
 		#region Event Handlers
 
 		private void CheckBoxWordBalloon_CheckedChanged (object sender, EventArgs e)
 		{
 			if ((mCharacterFile != null) && !Program.MainForm.FileIsReadOnly)
 			{
+				UpdateBalloon	lUpdate = new UpdateBalloon (mCharacterFile);
+
 				if (CheckBoxWordBalloon.Checked)
 				{
-					mCharacterFile.Header.Style |= CharacterStyle.CharStyleBalloon;
+					lUpdate.CharacterStyle |= CharacterStyle.CharStyleBalloon;
 				}
 				else
 				{
-					mCharacterFile.Header.Style &= ~CharacterStyle.CharStyleBalloon;
+					lUpdate.CharacterStyle &= ~CharacterStyle.CharStyleBalloon;
 				}
-				Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
-				ShowBalloonProperties ();
+				lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableBalloonUpdate_Applied);
+				UndoableUpdate.PutUndo (lUpdate.Apply () as UpdateBalloon);
 			}
 		}
+
+		private void UndoableBalloonUpdate_Applied (object sender, EventArgs e)
+		{
+			ShowBalloonProperties ();
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
 
 		private void NumericCharsPerLine_Validated (object sender, EventArgs e)
 		{
 			if (!IsEmpty && !Program.MainForm.FileIsReadOnly)
 			{
-				mFileBalloon.PerLine = (UInt16)NumericCharsPerLine.Value;
-				ShowBalloonStyle ();
-				Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
+				UpdateBalloon	lUpdate = new UpdateBalloon (mCharacterFile);
+
+				lUpdate.PerLine = (UInt16)NumericCharsPerLine.Value;
+				lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableStyleUpdate_Applied);
+				UndoableUpdate.PutUndo (lUpdate.Apply () as UpdateBalloon);
 			}
 		}
 
@@ -239,9 +452,11 @@ namespace AgentCharacterEditor
 		{
 			if (!IsEmpty && !Program.MainForm.FileIsReadOnly)
 			{
-				mFileBalloon.Lines = (UInt16)NumericNumLines.Value;
-				ShowBalloonStyle ();
-				Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
+				UpdateBalloon	lUpdate = new UpdateBalloon (mCharacterFile);
+
+				lUpdate.Lines = (UInt16)NumericNumLines.Value;
+				lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableStyleUpdate_Applied);
+				UndoableUpdate.PutUndo (lUpdate.Apply () as UpdateBalloon);
 			}
 		}
 
@@ -251,9 +466,11 @@ namespace AgentCharacterEditor
 			{
 				if (RadioButtonNumLines.Checked)
 				{
-					mCharacterFile.Header.Style &= ~CharacterStyle.CharStyleSizeToText;
-					ShowBalloonStyle ();
-					Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
+					UpdateBalloon	lUpdate = new UpdateBalloon (mCharacterFile);
+
+					lUpdate.CharacterStyle &= ~CharacterStyle.CharStyleSizeToText;
+					lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableStyleUpdate_Applied);
+					UndoableUpdate.PutUndo (lUpdate.Apply () as UpdateBalloon);
 				}
 			}
 		}
@@ -264,9 +481,11 @@ namespace AgentCharacterEditor
 			{
 				if (RadioButtonSizeToText.Checked)
 				{
-					mCharacterFile.Header.Style |= CharacterStyle.CharStyleSizeToText;
-					ShowBalloonStyle ();
-					Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
+					UpdateBalloon	lUpdate = new UpdateBalloon (mCharacterFile);
+
+					lUpdate.CharacterStyle |= CharacterStyle.CharStyleSizeToText;
+					lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableStyleUpdate_Applied);
+					UndoableUpdate.PutUndo (lUpdate.Apply () as UpdateBalloon);
 				}
 			}
 		}
@@ -275,16 +494,18 @@ namespace AgentCharacterEditor
 		{
 			if (!IsEmpty && !Program.MainForm.FileIsReadOnly)
 			{
+				UpdateBalloon	lUpdate = new UpdateBalloon (mCharacterFile);
+
 				if (CheckBoxAutoHide.Checked)
 				{
-					mCharacterFile.Header.Style &= ~CharacterStyle.CharStyleNoAutoHide;
+					lUpdate.CharacterStyle &= ~CharacterStyle.CharStyleNoAutoHide;
 				}
 				else
 				{
-					mCharacterFile.Header.Style |= CharacterStyle.CharStyleNoAutoHide;
+					lUpdate.CharacterStyle |= CharacterStyle.CharStyleNoAutoHide;
 				}
-				ShowBalloonStyle ();
-				Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
+				lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableStyleUpdate_Applied);
+				UndoableUpdate.PutUndo (lUpdate.Apply () as UpdateBalloon);
 			}
 		}
 
@@ -292,17 +513,24 @@ namespace AgentCharacterEditor
 		{
 			if (!IsEmpty && !Program.MainForm.FileIsReadOnly)
 			{
-				if (this.CheckBoxAutoHide.Checked)
+				UpdateBalloon	lUpdate = new UpdateBalloon (mCharacterFile);
+
+				if (CheckBoxAutoPace.Checked)
 				{
-					mCharacterFile.Header.Style &= ~CharacterStyle.CharStyleNoAutoPace;
+					lUpdate.CharacterStyle &= ~CharacterStyle.CharStyleNoAutoPace;
 				}
 				else
 				{
-					mCharacterFile.Header.Style |= CharacterStyle.CharStyleNoAutoPace;
+					lUpdate.CharacterStyle |= CharacterStyle.CharStyleNoAutoPace;
 				}
-				ShowBalloonStyle ();
-				Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
+				lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableStyleUpdate_Applied);
+				UndoableUpdate.PutUndo (lUpdate.Apply () as UpdateBalloon);
 			}
+		}
+
+		private void UndoableStyleUpdate_Applied (object sender, EventArgs e)
+		{
+			ShowBalloonStyle ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -317,12 +545,21 @@ namespace AgentCharacterEditor
 				lFontDialog.Font = mFileBalloon.Font;
 				if (lFontDialog.ShowDialog () == DialogResult.OK)
 				{
-					mFileBalloon.Font = lFontDialog.Font;
-					ShowBalloonFont ();
-					Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
+					UpdateBalloon	lUpdate = new UpdateBalloon (mCharacterFile);
+
+					lUpdate.Font = lFontDialog.Font;
+					lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableFontUpdate_Applied);
+					UndoableUpdate.PutUndo (lUpdate.Apply () as UpdateBalloon);
 				}
 			}
 		}
+
+		private void UndoableFontUpdate_Applied (object sender, EventArgs e)
+		{
+			ShowBalloonFont ();
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
 
 		private void ButtonBalloonForeground_Click (object sender, EventArgs e)
 		{
@@ -334,9 +571,11 @@ namespace AgentCharacterEditor
 				lColorDialog.FullOpen = true;
 				if (lColorDialog.ShowDialog () == DialogResult.OK)
 				{
-					mFileBalloon.FgColor = lColorDialog.Color;
-					ShowBalloonColors ();
-					Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
+					UpdateBalloon	lUpdate = new UpdateBalloon (mCharacterFile);
+
+					lUpdate.FgColor = lColorDialog.Color;
+					lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableColorUpdate_Applied);
+					UndoableUpdate.PutUndo (lUpdate.Apply () as UpdateBalloon);
 				}
 			}
 		}
@@ -351,9 +590,11 @@ namespace AgentCharacterEditor
 				lColorDialog.FullOpen = true;
 				if (lColorDialog.ShowDialog () == DialogResult.OK)
 				{
-					mFileBalloon.BkColor = lColorDialog.Color;
-					ShowBalloonColors ();
-					Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
+					UpdateBalloon	lUpdate = new UpdateBalloon (mCharacterFile);
+
+					lUpdate.BkColor = lColorDialog.Color;
+					lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableColorUpdate_Applied);
+					UndoableUpdate.PutUndo (lUpdate.Apply () as UpdateBalloon);
 				}
 			}
 		}
@@ -368,14 +609,20 @@ namespace AgentCharacterEditor
 				lColorDialog.FullOpen = true;
 				if (lColorDialog.ShowDialog () == DialogResult.OK)
 				{
-					mFileBalloon.BrColor = lColorDialog.Color;
-					ShowBalloonColors ();
-					Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
+					UpdateBalloon	lUpdate = new UpdateBalloon (mCharacterFile);
+
+					lUpdate.BrColor = lColorDialog.Color;
+					lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableColorUpdate_Applied);
+					UndoableUpdate.PutUndo (lUpdate.Apply () as UpdateBalloon);
 				}
 			}
 		}
 
+		private void UndoableColorUpdate_Applied (object sender, EventArgs e)
+		{
+			ShowBalloonColors ();
+		}
+
 		#endregion
-		///////////////////////////////////////////////////////////////////////////////
 	}
 }

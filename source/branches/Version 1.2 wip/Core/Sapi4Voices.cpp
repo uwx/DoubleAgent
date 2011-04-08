@@ -71,7 +71,7 @@ CSapi4VoiceInfo::CSapi4VoiceInfo ()
 	mSpeakerAge = TTSAGE_ADULT;
 	mModeId = GUID_NULL;
 	mEngineId = GUID_NULL;
-#endif	
+#endif
 }
 
 CSapi4VoiceInfo::~CSapi4VoiceInfo ()
@@ -85,7 +85,7 @@ System::String^ CSapi4VoiceInfo::ToString()
 {
 	return String::Format ("\"{0}\" [{1}] [{2:X4} {2:D4}] [{3:D}]", VoiceName, ModeId.ToString()->ToUpper(), LangId, SpeakerGender);
 }
-#endif	
+#endif
 
 //////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -104,7 +104,7 @@ CSapi4Voices::~CSapi4Voices ()
 {
 #ifdef	_M_CEE
 	Clear ();
-#else	
+#else
 	try
 	{
 		DeleteAll ();
@@ -115,7 +115,7 @@ CSapi4Voices::~CSapi4Voices ()
 		RemoveAll ();
 	}
 	catch AnyExceptionSilent
-#endif	
+#endif
 }
 
 #ifndef	_M_CEE
@@ -123,7 +123,7 @@ CSapi4Voices * CSapi4Voices::CreateInstance ()
 {
 	return new CSapi4Voices;
 }
-#endif	
+#endif
 
 //////////////////////////////////////////////////////////////////////
 
@@ -170,13 +170,13 @@ void CSapi4Voices::Enumerate ()
 	CSapi4VoiceInfo^	lVoiceInfo;
 #else
 	CSapi4VoiceInfo*	lVoiceInfo;
-#endif	
+#endif
 
 #ifdef	_M_CEE
 	Clear ();
-#else	
+#else
 	DeleteAll ();
-#endif	
+#endif
 
 	if	(
 			(SUCCEEDED (LogComErr (LogVerbose|LogTime, CoCreateInstance (CLSID_TTSEnumerator, NULL, CLSCTX_INPROC_SERVER, IID_ITTSEnum, (void**) &lEnum))))
@@ -187,7 +187,7 @@ void CSapi4Voices::Enumerate ()
 		Guid	lKnownEngine1 ("{E0725551-286F-11D0-8E73-00A0C9083363}");
 #else
 		GUID	lKnownEngine1 = CGuidStr::Parse (_T("{E0725551-286F-11D0-8E73-00A0C9083363}"));
-#endif		
+#endif
 
 		while (lEnum->Next (1, &lModeInfo, NULL) == S_OK)
 		{
@@ -585,7 +585,7 @@ void CSapi4Voices::Log (UINT pLogLevel, LPCTSTR pTitle, LPCTSTR pIndent)
 				lTitle.Format (_T("Voice %d"), lNdx);
 				LogVoiceInfo (pLogLevel|LogHighVolume, *operator[](lNdx), lTitle, lIndent);
 			}
-#endif			
+#endif
 		}
 		catch AnyExceptionDebug
 	}
@@ -632,7 +632,7 @@ void CSapi4Voices::LogVoiceInfo (UINT pLogLevel, CSapi4VoiceInfo& pVoiceInfo, LP
 			LogMessage (pLogLevel, _T("%s  EngineId     [%s]"), lIndent, (CString)CGuidStr(pVoiceInfo.mEngineId));
 			LogMessage (pLogLevel, _T("%s  Manufacturer [%ls]"), lIndent, (BSTR)pVoiceInfo.mManufacturer);
 			LogMessage (pLogLevel, _T("%s  Product      [%ls]"), lIndent, (BSTR)pVoiceInfo.mProduct);
-#endif			
+#endif
 		}
 		catch AnyExceptionDebug
 	}
@@ -781,7 +781,7 @@ void CSapi4Voices::LogModeInfo (UINT pLogLevel, LPVOID pModeInfo, LPCTSTR pTitle
 				LogMessage (pLogLevel|LogHighVolume, _T("  Interfaces   [%8.8X] [%s]"), lModeInfo->dwInterfaces, lInterfaces);
 				LogMessage (pLogLevel, _T(""));
 			}
-#endif			
+#endif
 		}
 		catch AnyExceptionSilent
 	}

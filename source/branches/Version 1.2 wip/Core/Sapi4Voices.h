@@ -92,14 +92,14 @@ public:
 	UINT			mSpeakerAge;
 	tBstrPtr		mProduct;
 	tBstrPtr		mManufacturer;
-#endif	
-	
+#endif
+
 #ifdef	_M_CEE
 public:
     virtual System::String^ ToString() override;
 #else
 	DECLARE_DLL_OBJECT(CSapi4VoiceInfo)
-#endif	
+#endif
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -155,7 +155,7 @@ protected:
 public:
 	_DACORE_IMPEXP virtual ~CSapi4Voices();
 	_DACORE_IMPEXP static CSapi4Voices * CreateInstance ();
-#endif	
+#endif
 
 // Attributes
 	const UINT	mLogLevelDebug;
@@ -184,7 +184,7 @@ public:
 	_DACORE_IMPEXP bool RemoveVoice (const CSapi4VoiceInfo* pVoiceInfo);
 
 	_DACORE_IMPEXP bool VoiceSupportsLanguage (CSapi4VoiceInfo* pVoiceInfo, LANGID pLangId, bool pUseDefaults);
-#endif	
+#endif
 
 #ifdef	_M_CEE
 	void Log (UINT pLogLevel);
@@ -196,7 +196,7 @@ public:
 #else
 	_DACORE_IMPEXP void Log (UINT pLogLevel, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
 	_DACORE_IMPEXP static void LogVoiceInfo (UINT pLogLevel, CSapi4VoiceInfo& pVoiceInfo, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
-#endif	
+#endif
 
 // Implementation
 protected:
@@ -213,7 +213,7 @@ protected:
 	static void LogModeInfo (UINT pLogLevel, LPVOID pModeInfo, System::String^ pTitle);
 #else
 	_DACORE_IMPEXP static void LogModeInfo (UINT pLogLevel, LPVOID pModeInfo, LPCTSTR pTitle = NULL);
-#endif	
+#endif
 };
 
 /////////////////////////////////////////////////////////////////////////////

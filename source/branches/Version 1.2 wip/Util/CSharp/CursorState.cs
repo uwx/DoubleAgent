@@ -22,42 +22,73 @@
 /////////////////////////////////////////////////////////////////////////////
 using System;
 using System.Windows.Forms;
-using System.ComponentModel;
 
 namespace DoubleAgent
 {
-	public class TextBoxEx : System.Windows.Forms.TextBox
+	public class CursorState
 	{
-		private const int WM_KEYDOWN = 0x0100;
-
-		public TextBoxEx ()
+		public System.Windows.Forms.Form Form
 		{
-			AcceptsReturn = true;
+			get;
+			set;
+		}
+		public System.Windows.Forms.Cursor SavedCursor
+		{
+			get;
+			set;
 		}
 
-		protected override bool ProcessCmdKey (ref Message pMessage, Keys pKeyData)
+		public CursorState (System.Windows.Forms.Form pForm)
 		{
-			if ((pMessage.Msg == WM_KEYDOWN) && (pKeyData == Keys.Return) && (this.AcceptsReturn))
+			this.Form = pForm;
+			this.SavedCursor = pForm.Cursor;
+		}
+
+		~CursorState ()
+		{
+			RestoreCursor ();
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		public Boolean ShowCursor (System.Windows.Forms.Cursor pCursor)
+		{
+			if ((pCursor != null) && (this.SavedCursor != null) && (this.Form != null))
 			{
-				ValidateNow ();
+				try
+				{
+					this.Form.Cursor = pCursor;
+				}
+				catch
+				{
+				}
 				return true;
 			}
-			return base.ProcessCmdKey (ref pMessage, pKeyData);
+			return false;
 		}
 
-		private bool ValidateNow ()
+		public Boolean RestoreCursor ()
 		{
-			if (CausesValidation)
+			if ((this.SavedCursor != null) && (this.Form != null))
 			{
-				CancelEventArgs	lEventArgs = new CancelEventArgs ();
-				OnValidating (lEventArgs);
-				if (!lEventArgs.Cancel)
+				try
 				{
-					OnValidated (new EventArgs ());
-					return true;
+					this.Form.Cursor = this.SavedCursor;
+					this.SavedCursor = null;
 				}
+				catch
+				{
+				}
+				return true;
 			}
 			return false;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		public Boolean ShowWait ()
+		{
+			return ShowCursor (System.Windows.Forms.Cursors.WaitCursor);
 		}
 	}
 }

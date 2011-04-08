@@ -63,5 +63,7 @@ static const DWORD	sAcfFileSignature = 0xABCDABC4;
 using namespace System;
 using namespace System::IO;
 using namespace System::Globalization;
+#else
+#define _B(x) x
 #endif
 /////////////////////////////////////////////////////////////////////////////

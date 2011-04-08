@@ -1,4 +1,4 @@
-﻿/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 //	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
@@ -18,28 +18,23 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
+#pragma once
 
-namespace AgentCharacterEditor
+/////////////////////////////////////////////////////////////////////////////
+namespace DoubleAgent {
+/////////////////////////////////////////////////////////////////////////////
+
+public ref class Win32Native
 {
-	partial class AboutBox : Form
-	{
-		public AboutBox ()
-		{
-			InitializeComponent ();
+public:
+	static property Boolean IsInputPending {Boolean get();}
+	static property Boolean IsMouseInputPending {Boolean get();}
+	static property Boolean IsMouseWheelPending {Boolean get();}
+	
+	static void PopThreadToolTips ();
+	static void PopThreadToolTips (IntPtr pWindowHandle);
+};
 
-			//LogoPictureBox.Image = Properties.Resources.DoubleAgent.ToBitmap ();
-			
-			Text = String.Format ("About {0}", Program.AssemblyTitle);
-			LabelProductName.Text = Program.AssemblyTitle;
-			LabelVersion.Text = String.Format ("Version {0}", Program.AssemblyVersion);
-			LabelCopyright.Text = Program.AssemblyCopyright;
-			LabelCompanyName.Text = Program.AssemblyCompany;
-			TextBoxDescription.Text = Program.AssemblyDescription;
-		}
-	}
-}
+/////////////////////////////////////////////////////////////////////////////
+} // namespace DoubleAgent
+/////////////////////////////////////////////////////////////////////////////

@@ -190,7 +190,7 @@ HRESULT CQueuedPrepare::PutAnimationNames (CAgentFile* pAgentFile, LPCTSTR pAnim
 			if	(lAnimationNdx >= 0)
 			{
 				if	(
-						(lAgentFileAcf = dynamic_cast <CAgentFileAcf*> (pAgentFile)) 
+						(lAgentFileAcf = dynamic_cast <CAgentFileAcf*> (pAgentFile))
 					&&	(!lAgentFileAcf->IsAnimationLoaded (lAnimationNdx))
 					)
 				{
@@ -268,7 +268,7 @@ HRESULT CQueuedPrepare::PutStateNames (CAgentFile* pAgentFile, LPCTSTR pStateNam
 				for	(lAnimationNdx = 0; lAnimationNdx < (INT_PTR)lAnimations.GetCount(); lAnimationNdx++)
 				{
 					if	(
-							(lAgentFileAcf = dynamic_cast <CAgentFileAcf*> (pAgentFile)) 
+							(lAgentFileAcf = dynamic_cast <CAgentFileAcf*> (pAgentFile))
 						&&	(mDownloads.Lookup (lAnimations [lAnimationNdx]) == NULL)
 						&&	(!lAgentFileAcf->IsAnimationLoaded (lAnimations [lAnimationNdx]))
 						)

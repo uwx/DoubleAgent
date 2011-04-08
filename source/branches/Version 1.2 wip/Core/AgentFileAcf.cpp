@@ -123,6 +123,7 @@ void CAgentFileAcf::Close ()
 	mAcaImages.DeleteAll ();
 	mAcaSounds.DeleteAll ();
 	__super::Close ();
+	mSignature = sAcfFileSignature;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -297,7 +298,7 @@ INT_PTR CAgentFileAcf::GetImageCount () const
 	return mAcaImages.GetCount();
 }
 
-CAgentFileImage* CAgentFileAcf::GetImage (INT_PTR pImageNdx, bool p32Bit, UINT pLogLevel)
+CAgentFileImage* CAgentFileAcf::GetImage (INT_PTR pImageNdx, bool p32Bit, const COLORREF* pBkColor, UINT pLogLevel)
 {
 	tPtr <CAgentFileImage>	lImage;
 	const CAgentFileImage*	lAcfImage;
@@ -474,7 +475,7 @@ bool CAgentFileAcf::ReadAcfHeader (UINT pLogLevel)
 
 				mHeader.mGuid = *(LPCGUID)lByte;
 				lByte += sizeof (GUID);
-				lByte = (LPCBYTE)ReadBufferNames (lByte, false, true, pLogLevel);
+				lByte = (LPCBYTE)ReadBufferNames (lByte, 0, false, true, pLogLevel);
 
 				mHeader.mImageSize.cx = *(LPCWORD)lByte;
 				lByte += sizeof (WORD);
@@ -496,7 +497,7 @@ bool CAgentFileAcf::ReadAcfHeader (UINT pLogLevel)
 				}
 				lByte = (LPCBYTE)ReadBufferPalette (lByte, pLogLevel);
 				lByte = (LPCBYTE)ReadBufferIcon (lByte, pLogLevel);
-				lByte = (LPCBYTE)ReadBufferStates (lByte, false, lHeaderData+lUncompressedSize, pLogLevel);
+				lByte = (LPCBYTE)ReadBufferStates (lByte, lUncompressedSize-(DWORD)(lByte-lHeaderData), false, pLogLevel);
 
 				lRet = true;
 			}
@@ -943,7 +944,7 @@ HRESULT CAgentFileAcf::ReadAcaImages (CAgentFileAnimation* pAnimation, LPCVOID& 
 				memcpy (lImage->mBits, lByte, lByteCount);
 
 #ifdef	_SAVE_IMAGE
-				if	(LogIsActive (MaxLogLevel (pLogLevel, _SAVE_IMAGE)))
+				if	(LogIsActive (_SAVE_IMAGE))
 				{
 					SaveImage (lImage);
 				}
@@ -951,9 +952,13 @@ HRESULT CAgentFileAcf::ReadAcaImages (CAgentFileAnimation* pAnimation, LPCVOID& 
 				mAcaImages.Add (lImage.Detach ());
 
 #ifdef	_DUMP_IMAGE
-				if	(LogIsActive (MaxLogLevel (pLogLevel, _DUMP_IMAGE)))
+				//if	(LogIsActive (MaxLogLevel (pLogLevel, _DUMP_IMAGE)))
+				//{
+				//	DumpAcaImage ((INT_PTR)mAcaImages.GetCount()-1, MaxLogLevel (pLogLevel, _DUMP_IMAGE));
+				//}
+				if	(LogIsActive (_DUMP_IMAGE))
 				{
-					DumpAcaImage ((INT_PTR)mAcaImages.GetCount()-1, MaxLogLevel (pLogLevel, _DUMP_IMAGE));
+					DumpAcaImage ((INT_PTR)mAcaImages.GetCount()-1, _DUMP_IMAGE);
 				}
 #endif
 			}

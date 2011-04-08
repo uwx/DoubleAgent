@@ -677,7 +677,7 @@ bool CStressTestDlg::Stop (bool pRandom)
 				lDone = true;
 			}
 		}
-		
+
 		CheckServerOk (lResult);
 	}
 

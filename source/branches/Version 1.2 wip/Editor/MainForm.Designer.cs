@@ -1,4 +1,24 @@
-﻿namespace AgentCharacterEditor
+﻿/////////////////////////////////////////////////////////////////////////////
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+/////////////////////////////////////////////////////////////////////////////
+/*
+	This file is part of Double Agent.
+
+    Double Agent is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Double Agent is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/////////////////////////////////////////////////////////////////////////////
+namespace AgentCharacterEditor
 {
 	partial class MainForm
 	{
@@ -29,7 +49,7 @@
 		private void InitializeComponent ()
 		{
 			System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode ("Word Balloon");
-			System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode ("Voice");
+			System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode ("Text-to-Speech");
 			System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode ("Character", new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2});
@@ -80,7 +100,7 @@
 			this.PanelFrame = new AgentCharacterEditor.FrameForm ();
 			this.PanelBranching = new AgentCharacterEditor.BranchingForm ();
 			this.PanelOverlays = new AgentCharacterEditor.OverlayForm ();
-			this.ToolStripTop = new System.Windows.Forms.ToolStrip ();
+			this.ToolStripTop = new DoubleAgent.ToolStripEx ();
 			this.ToolButtonFileNew = new System.Windows.Forms.ToolStripButton ();
 			this.ToolButtonFileOpen = new System.Windows.Forms.ToolStripButton ();
 			this.ToolButtonFileSave = new System.Windows.Forms.ToolStripButton ();
@@ -181,7 +201,7 @@
 			this.SplitContainerMain.Panel2.Controls.Add (this.PanelOverlays);
 			this.SplitContainerMain.Panel2MinSize = 100;
 			this.SplitContainerMain.Size = new System.Drawing.Size (966, 481);
-			this.SplitContainerMain.SplitterDistance = 306;
+			this.SplitContainerMain.SplitterDistance = 200;
 			this.SplitContainerMain.SplitterWidth = 8;
 			this.SplitContainerMain.TabIndex = 0;
 			this.SplitContainerMain.TabStop = false;
@@ -199,7 +219,7 @@
 			treeNode1.Name = "NodeWordBalloon";
 			treeNode1.Text = "Word Balloon";
 			treeNode2.Name = "NodeTTSMode";
-			treeNode2.Text = "Voice";
+			treeNode2.Text = "Text-to-Speech";
 			treeNode3.ForeColor = System.Drawing.SystemColors.HotTrack;
 			treeNode3.Name = "NodeCharacter";
 			treeNode3.Text = "Character";
@@ -261,7 +281,7 @@
             treeNode3,
             treeNode4,
             treeNode21});
-			this.TreeViewMain.Size = new System.Drawing.Size (306, 480);
+			this.TreeViewMain.Size = new System.Drawing.Size (200, 480);
 			this.TreeViewMain.TabIndex = 0;
 			this.TreeViewMain.AfterSelect += new System.Windows.Forms.TreeViewEventHandler (this.TreeViewMain_AfterSelect);
 			// 
@@ -273,7 +293,7 @@
 			this.PanelBalloon.Margin = new System.Windows.Forms.Padding (0);
 			this.PanelBalloon.Name = "PanelBalloon";
 			this.PanelBalloon.Padding = new System.Windows.Forms.Padding (9, 0, 9, 0);
-			this.PanelBalloon.Size = new System.Drawing.Size (652, 481);
+			this.PanelBalloon.Size = new System.Drawing.Size (758, 481);
 			this.PanelBalloon.TabIndex = 0;
 			this.PanelBalloon.Visible = false;
 			// 
@@ -285,7 +305,7 @@
 			this.PanelCharacter.Margin = new System.Windows.Forms.Padding (0);
 			this.PanelCharacter.Name = "PanelCharacter";
 			this.PanelCharacter.Padding = new System.Windows.Forms.Padding (9, 0, 9, 0);
-			this.PanelCharacter.Size = new System.Drawing.Size (652, 481);
+			this.PanelCharacter.Size = new System.Drawing.Size (758, 481);
 			this.PanelCharacter.TabIndex = 0;
 			// 
 			// PanelTts
@@ -296,7 +316,7 @@
 			this.PanelTts.Margin = new System.Windows.Forms.Padding (0);
 			this.PanelTts.Name = "PanelTts";
 			this.PanelTts.Padding = new System.Windows.Forms.Padding (9, 0, 9, 0);
-			this.PanelTts.Size = new System.Drawing.Size (652, 481);
+			this.PanelTts.Size = new System.Drawing.Size (758, 481);
 			this.PanelTts.TabIndex = 0;
 			this.PanelTts.Visible = false;
 			// 
@@ -308,7 +328,7 @@
 			this.PanelAnimations.Margin = new System.Windows.Forms.Padding (0);
 			this.PanelAnimations.Name = "PanelAnimations";
 			this.PanelAnimations.Padding = new System.Windows.Forms.Padding (9, 0, 9, 0);
-			this.PanelAnimations.Size = new System.Drawing.Size (652, 481);
+			this.PanelAnimations.Size = new System.Drawing.Size (758, 481);
 			this.PanelAnimations.TabIndex = 0;
 			this.PanelAnimations.Visible = false;
 			this.PanelAnimations.AnimationAdded += new AgentCharacterEditor.AnimationsForm.AnimationAddedEvent (this.PanelAnimations_AnimationAdded);
@@ -324,7 +344,7 @@
 			this.PanelAnimation.Margin = new System.Windows.Forms.Padding (0);
 			this.PanelAnimation.Name = "PanelAnimation";
 			this.PanelAnimation.Padding = new System.Windows.Forms.Padding (9);
-			this.PanelAnimation.Size = new System.Drawing.Size (652, 481);
+			this.PanelAnimation.Size = new System.Drawing.Size (758, 481);
 			this.PanelAnimation.TabIndex = 0;
 			this.PanelAnimation.Visible = false;
 			this.PanelAnimation.AnimationNameChanged += new AgentCharacterEditor.AnimationForm.AnimationNameChangedEvent (this.PanelAnimation_AnimationNameChanged);
@@ -340,7 +360,7 @@
 			this.PanelState.Margin = new System.Windows.Forms.Padding (0);
 			this.PanelState.Name = "PanelState";
 			this.PanelState.Padding = new System.Windows.Forms.Padding (9);
-			this.PanelState.Size = new System.Drawing.Size (652, 481);
+			this.PanelState.Size = new System.Drawing.Size (758, 481);
 			this.PanelState.StateName = null;
 			this.PanelState.TabIndex = 0;
 			this.PanelState.Visible = false;
@@ -356,7 +376,7 @@
 			this.PanelFrame.Margin = new System.Windows.Forms.Padding (0);
 			this.PanelFrame.Name = "PanelFrame";
 			this.PanelFrame.Padding = new System.Windows.Forms.Padding (9);
-			this.PanelFrame.Size = new System.Drawing.Size (652, 481);
+			this.PanelFrame.Size = new System.Drawing.Size (758, 481);
 			this.PanelFrame.TabIndex = 0;
 			this.PanelFrame.Visible = false;
 			// 
@@ -371,7 +391,7 @@
 			this.PanelBranching.Margin = new System.Windows.Forms.Padding (0);
 			this.PanelBranching.Name = "PanelBranching";
 			this.PanelBranching.Padding = new System.Windows.Forms.Padding (9);
-			this.PanelBranching.Size = new System.Drawing.Size (652, 481);
+			this.PanelBranching.Size = new System.Drawing.Size (758, 481);
 			this.PanelBranching.TabIndex = 0;
 			this.PanelBranching.Visible = false;
 			// 
@@ -386,7 +406,7 @@
 			this.PanelOverlays.Margin = new System.Windows.Forms.Padding (0);
 			this.PanelOverlays.Name = "PanelOverlays";
 			this.PanelOverlays.Padding = new System.Windows.Forms.Padding (9);
-			this.PanelOverlays.Size = new System.Drawing.Size (652, 481);
+			this.PanelOverlays.Size = new System.Drawing.Size (758, 481);
 			this.PanelOverlays.TabIndex = 0;
 			this.PanelOverlays.Visible = false;
 			// 
@@ -412,6 +432,7 @@
 			this.ToolStripTop.Location = new System.Drawing.Point (0, 0);
 			this.ToolStripTop.Name = "ToolStripTop";
 			this.ToolStripTop.Padding = new System.Windows.Forms.Padding (8, 2, 8, 2);
+			this.ToolStripTop.RenderInline = false;
 			this.ToolStripTop.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
 			this.ToolStripTop.Size = new System.Drawing.Size (982, 30);
 			this.ToolStripTop.Stretch = true;
@@ -788,7 +809,7 @@
 			this.MinimumSize = new System.Drawing.Size (600, 400);
 			this.Name = "MainForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
-			this.Text = "Agent Character Editor";
+			this.Text = "Double Agent Character Editor";
 			this.Load += new System.EventHandler (this.MainForm_Load);
 			this.Shown += new System.EventHandler (this.MainForm_Shown);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler (this.MainForm_FormClosing);
@@ -812,7 +833,7 @@
 		#endregion
 
 		private System.Windows.Forms.ToolStripContainer ToolStripContainerMain;
-		private System.Windows.Forms.ToolStrip ToolStripTop;
+		private DoubleAgent.ToolStripEx ToolStripTop;
 		private System.Windows.Forms.ToolStripButton ToolButtonFileNew;
 		private System.Windows.Forms.ToolStripButton ToolButtonFileOpen;
 		private System.Windows.Forms.ToolStripButton ToolButtonFileSave;

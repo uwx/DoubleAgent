@@ -65,13 +65,13 @@ public:
 #else
 	DECLARE_DLL_OBJECT_EX(CAgentFile, _DACORE_IMPEXP)
 	_DACORE_IMPEXP static CAgentFile* CreateInstance (LPCTSTR pPath);
-#endif	
+#endif
 
 // Attributes
 public:
 #ifdef	_M_CEE
-	property const System::String^ Path {const System::String^ get();}
-	property const System::String^ FileName {const System::String^ get();}
+	property System::String^ Path {System::String^ get();}
+	property System::String^ FileName {System::String^ get();}
 
 	virtual property bool IsOpen {virtual bool get();}
 	virtual property bool IsReadOnly {virtual bool get();}
@@ -81,9 +81,9 @@ public:
 	virtual property bool IsAcdFile {virtual bool get();}
 
 	property UInt32 Version {UInt32 get();}
-	property const CAgentFileHeader^ Header {const CAgentFileHeader^ get();}
-	property const CAgentFileBalloon^ Balloon {const CAgentFileBalloon^ get();}
-	property const CAgentFileTts^ Tts {const CAgentFileTts^ get();}
+	property CAgentFileHeader^ Header {CAgentFileHeader^ get();}
+	property CAgentFileBalloon^ Balloon {CAgentFileBalloon^ get();}
+	property CAgentFileTts^ Tts {CAgentFileTts^ get();}
 #else
 	__declspec(property(get=get_Path))		tBstrPtr	Path;
 	__declspec(property(get=get_FileName))	tBstrPtr	FileName;
@@ -113,12 +113,12 @@ public:
 	_DACORE_IMPEXP const CAgentFileHeader& get_Header () const;
 	_DACORE_IMPEXP const CAgentFileBalloon& get_Balloon () const;
 	_DACORE_IMPEXP const CAgentFileTts& get_Tts () const;
-#endif	
+#endif
 
 #ifdef	_M_CEE
-	property const CAgentFileNames^ Names {const CAgentFileNames^ get();}
-	property const CAgentFileStates^ States {const CAgentFileStates^ get();}
-	property const CAgentFileGestures^ Gestures {const CAgentFileGestures^ get();}
+	property CAgentFileNames^ Names {CAgentFileNames^ get();}
+	property CAgentFileStates^ States {CAgentFileStates^ get();}
+	property CAgentFileGestures^ Gestures {CAgentFileGestures^ get();}
 #else
 	__declspec(property(get=get_Names))		const CAgentFileNames&		Names;
 	__declspec(property(get=get_States))	const CAgentFileStates&	States;
@@ -127,7 +127,7 @@ public:
 	_DACORE_IMPEXP const CAgentFileNames& get_Names () const;
 	_DACORE_IMPEXP const CAgentFileStates& get_States () const;
 	_DACORE_IMPEXP const CAgentFileGestures& get_Gestures () const;
-#endif	
+#endif
 
 #ifdef	_M_CEE
 	virtual array <System::String^>^ GetStateNames ();
@@ -137,13 +137,13 @@ public:
 	_DACORE_IMPEXP virtual SAFEARRAY* GetStateNames ();
 	_DACORE_IMPEXP virtual SAFEARRAY* GetGestureNames ();
 	_DACORE_IMPEXP virtual SAFEARRAY* GetAnimationNames ();
-#endif	
+#endif
 
 #ifdef	_M_CEE
 	virtual property System::String^ IconFilePath {virtual System::String^ get(); virtual void set (System::String^ pValue);}
 	virtual property System::String^ PaletteFilePath {virtual System::String^ get(); virtual void set (System::String^ pValue);}
 	virtual property UInt16 NewFrameDuration {virtual UInt16 get(); virtual void set (UInt16 pValue);}
-#endif	
+#endif
 
 // Operations
 public:
@@ -156,17 +156,22 @@ public:
 	_DACORE_IMPEXP static bool IsRelativeFilePath (LPCTSTR pPath);
 	_DACORE_IMPEXP static tBstrPtr ParseFilePath (LPCTSTR pPath);
 	_DACORE_IMPEXP tBstrPtr ParseRelativePath (LPCTSTR pRelativePath);
-#endif	
+#endif
 
 #ifdef	_M_CEE
-	HRESULT Open (const System::String^ pPath);
-	virtual HRESULT Open (const System::String^ pPath, UINT pLogLevel) = 0;
-	virtual HRESULT Save ();
+	bool Open (const System::String^ pPath);
+	virtual bool Open (const System::String^ pPath, UINT pLogLevel) = 0;
+	virtual bool Save ();
+	virtual bool Save (UINT pLogLevel);
+	virtual bool Save (const System::String^ pPath);
+	virtual bool Save (const System::String^ pPath, UINT pLogLevel);
+	virtual bool Save (const System::String^ pPath, CAgentFile^ pSource);
+	virtual bool Save (const System::String^ pPath, CAgentFile^ pSource, UINT pLogLevel);
 	virtual void Close ();
 #else
 	_DACORE_IMPEXP virtual HRESULT Open (LPCTSTR pPath, UINT pLogLevel = 15) = 0;
 	_DACORE_IMPEXP virtual void Close ();
-#endif	
+#endif
 
 #ifdef	_M_CEE
 	CAgentFileName^ GetDefaultName () {return FindName (LANG_USER_DEFAULT);}
@@ -182,7 +187,7 @@ public:
 	_DACORE_IMPEXP virtual const CAgentFileAnimation* GetAnimation (INT_PTR pAnimationNdx);
 	_DACORE_IMPEXP virtual const CAgentFileAnimation* GetGesture (LPCTSTR pGestureName);
 	_DACORE_IMPEXP virtual const CAgentFileAnimation* GetAnimation (LPCTSTR pAnimationName);
-#endif	
+#endif
 
 #ifdef	_M_CEE
 	virtual property int ImageCount {virtual int get();}
@@ -214,17 +219,18 @@ public:
 	_DACORE_IMPEXP UINT GetImageFormat (LPBITMAPINFO pImageInfo, const CAgentFileImage* pImage = NULL, bool p32Bit = false) const;
 	_DACORE_IMPEXP UINT GetImageBits (LPBYTE pImageBits, const CAgentFileImage* pImage, bool p32Bit = false) const;
 	_DACORE_IMPEXP UINT GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame, bool p32Bit = false, const COLORREF* pBkColor = NULL, SHORT pOverlayType = -1);
-#endif	
+#endif
 
 #ifdef	_M_CEE
 	virtual property int SoundCount {virtual int get();}
 	virtual int GetSoundSize (int pSoundNdx);
+	virtual array <BYTE>^ GetSound (int pSoundNdx);
 	virtual System::String^ GetSoundFilePath (int pSoundNdx);
 #else
 	_DACORE_IMPEXP virtual INT_PTR GetSoundCount () const;
 	_DACORE_IMPEXP virtual long GetSoundSize (INT_PTR pSoundNdx);
 	_DACORE_IMPEXP virtual LPCVOID GetSound (INT_PTR pSoundNdx);
-#endif	
+#endif
 
 // Implementation
 public:
@@ -235,7 +241,7 @@ public:
 	_DACORE_IMPEXP void LogGestures (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 	_DACORE_IMPEXP static void LogTts (const CAgentFileTts& pTts, UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
 	_DACORE_IMPEXP static void LogBalloon (const CAgentFileBalloon& pBalloon, UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
-#endif	
+#endif
 
 protected:
 	bool ReadNames ();
@@ -255,21 +261,21 @@ internal:
 	virtual bool RenameAnimation (CAgentFileAnimation^ pAnimation, System::String^ pNewName) {return false;}
 	virtual Int32 LoadImageFile (System::String^ pImageFilePath) {return -1;}
 	virtual Int32 LoadSoundFile (System::String^ pSoundFilePath) {return -1;}
-#endif	
+#endif
 
 protected:
 	DWORD										mSignature;
 	WORD										mVersionMajor;
 	WORD										mVersionMinor;
 #ifdef	_M_CEE
-	System::String^							mPath;
+	System::String^								mPath;
 internal:
 	CAgentFileHeader^							mHeader;
 	CAgentFileTts^								mTts;
 	CAgentFileBalloon^							mBalloon;
 	CAgentFileNames^							mNames;
 	CAgentFileStates^							mStates;
-	CAgentFileGestures^						mGestures;
+	CAgentFileGestures^							mGestures;
 #else
 	CAtlString									mPath;
 	CAgentFileHeader							mHeader;
@@ -278,7 +284,7 @@ internal:
 	CAtlOwnPtrArray <CAgentFileName>			mNames;
 	CAgentFileStates							mStates;
 	CAgentFileGestures							mGestures;
-#endif	
+#endif
 };
 
 /////////////////////////////////////////////////////////////////////////////
