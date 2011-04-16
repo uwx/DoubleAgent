@@ -64,7 +64,7 @@ namespace AgentCharacterEditor
 			this.PanelTop = new System.Windows.Forms.Panel ();
 			this.ToolStripAnimations = new DoubleAgent.ToolStripEx ();
 			this.ButtonAdd = new System.Windows.Forms.ToolStripButton ();
-			this.ButtonRemove = new System.Windows.Forms.ToolStripButton ();
+			this.ButtonDelete = new System.Windows.Forms.ToolStripButton ();
 			this.ListViewAnimations = new DoubleAgent.ListViewEx ();
 			this.TextBoxNewName = new DoubleAgent.TextBoxEx ();
 			this.LabelWidth = new System.Windows.Forms.Label ();
@@ -150,7 +150,6 @@ namespace AgentCharacterEditor
             this.ButtonPaletteExport});
 			this.ToolStripPaletteFile.Location = new System.Drawing.Point (571, 28);
 			this.ToolStripPaletteFile.Name = "ToolStripPaletteFile";
-			this.ToolStripPaletteFile.RenderInline = true;
 			this.ToolStripPaletteFile.Size = new System.Drawing.Size (49, 26);
 			this.ToolStripPaletteFile.TabIndex = 2;
 			// 
@@ -162,7 +161,7 @@ namespace AgentCharacterEditor
 			this.ButtonPaletteImport.Name = "ButtonPaletteImport";
 			this.ButtonPaletteImport.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
 			this.ButtonPaletteImport.Size = new System.Drawing.Size (23, 23);
-			this.ButtonPaletteImport.ToolTipText = "Import palette";
+			this.ButtonPaletteImport.Text = "Import palette";
 			this.ButtonPaletteImport.Click += new System.EventHandler (this.ButtonPaletteImport_Click);
 			// 
 			// ButtonPaletteExport
@@ -174,7 +173,7 @@ namespace AgentCharacterEditor
 			this.ButtonPaletteExport.Name = "ButtonPaletteExport";
 			this.ButtonPaletteExport.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
 			this.ButtonPaletteExport.Size = new System.Drawing.Size (23, 23);
-			this.ButtonPaletteExport.ToolTipText = "Save palette";
+			this.ButtonPaletteExport.Text = "Save palette";
 			// 
 			// LabelTransparencyClick
 			// 
@@ -265,11 +264,10 @@ namespace AgentCharacterEditor
 			this.ToolStripAnimations.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.ToolStripAnimations.Items.AddRange (new System.Windows.Forms.ToolStripItem[] {
             this.ButtonAdd,
-            this.ButtonRemove});
+            this.ButtonDelete});
 			this.ToolStripAnimations.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.ToolStripAnimations.Location = new System.Drawing.Point (0, 0);
 			this.ToolStripAnimations.Name = "ToolStripAnimations";
-			this.ToolStripAnimations.RenderInline = true;
 			this.ToolStripAnimations.Size = new System.Drawing.Size (49, 26);
 			this.ToolStripAnimations.TabIndex = 5;
 			// 
@@ -284,16 +282,16 @@ namespace AgentCharacterEditor
 			this.ButtonAdd.Text = "Add new animation";
 			this.ButtonAdd.Click += new System.EventHandler (this.ButtonAdd_Click);
 			// 
-			// ButtonRemove
+			// ButtonDelete
 			// 
-			this.ButtonRemove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonRemove.Image = ((System.Drawing.Image)(resources.GetObject ("ButtonRemove.Image")));
-			this.ButtonRemove.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonRemove.Name = "ButtonRemove";
-			this.ButtonRemove.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
-			this.ButtonRemove.Size = new System.Drawing.Size (23, 23);
-			this.ButtonRemove.Text = "Delete animation";
-			this.ButtonRemove.Click += new System.EventHandler (this.ButtonRemove_Click);
+			this.ButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonDelete.Image = ((System.Drawing.Image)(resources.GetObject ("ButtonDelete.Image")));
+			this.ButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonDelete.Name = "ButtonDelete";
+			this.ButtonDelete.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
+			this.ButtonDelete.Size = new System.Drawing.Size (23, 23);
+			this.ButtonDelete.Text = "Delete animation";
+			this.ButtonDelete.Click += new System.EventHandler (this.ButtonDelete_Click);
 			// 
 			// ListViewAnimations
 			// 
@@ -313,6 +311,7 @@ namespace AgentCharacterEditor
 			this.ListViewAnimations.TabIndex = 4;
 			this.ListViewAnimations.UseCompatibleStateImageBehavior = false;
 			this.ListViewAnimations.View = System.Windows.Forms.View.List;
+			this.ListViewAnimations.ItemActivate += new System.EventHandler (this.ListViewAnimations_ItemActivate);
 			this.ListViewAnimations.SelectedIndexChanged += new System.EventHandler (this.ListViewAnimations_SelectedIndexChanged);
 			// 
 			// TextBoxNewName
@@ -350,6 +349,8 @@ namespace AgentCharacterEditor
 			// 
 			this.NumericFrameHeight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.NumericFrameHeight.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericFrameHeight.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericFrameHeight.Highlighted = false;
 			this.NumericFrameHeight.Location = new System.Drawing.Point (191, 213);
 			this.NumericFrameHeight.Maximum = new decimal (new int[] {
             10000,
@@ -370,6 +371,8 @@ namespace AgentCharacterEditor
 			// 
 			this.NumericFrameWidth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.NumericFrameWidth.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericFrameWidth.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericFrameWidth.Highlighted = false;
 			this.NumericFrameWidth.Location = new System.Drawing.Point (50, 213);
 			this.NumericFrameWidth.Maximum = new decimal (new int[] {
             10000,
@@ -445,6 +448,6 @@ namespace AgentCharacterEditor
 		private DoubleAgent.ListViewEx ListViewAnimations;
 		private DoubleAgent.ToolStripEx ToolStripAnimations;
 		private System.Windows.Forms.ToolStripButton ButtonAdd;
-		private System.Windows.Forms.ToolStripButton ButtonRemove;
+		private System.Windows.Forms.ToolStripButton ButtonDelete;
 	}
 }

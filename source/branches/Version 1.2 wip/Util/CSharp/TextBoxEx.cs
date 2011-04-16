@@ -45,7 +45,7 @@ namespace DoubleAgent
 			return base.ProcessCmdKey (ref pMessage, pKeyData);
 		}
 
-		private bool ValidateNow ()
+		private Boolean ValidateNow ()
 		{
 			if (CausesValidation)
 			{

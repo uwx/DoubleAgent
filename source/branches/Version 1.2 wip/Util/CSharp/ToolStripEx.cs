@@ -42,7 +42,7 @@ namespace DoubleAgent
 		[System.ComponentModel.Category ("Appearance")]
 		[System.ComponentModel.DefaultValue (true)]
 		[System.ComponentModel.RefreshProperties (RefreshProperties.Repaint)]
-		public bool RenderInline
+		public Boolean RenderInline
 		{
 			get
 			{
@@ -68,7 +68,7 @@ namespace DoubleAgent
 
 		public void TipTextChanged ()
 		{
-			Win32Native.PopThreadToolTips (this.Handle);
+			Win32Native.PopThreadToolTips (this.Handle, true);
 		}
 
 		#endregion
@@ -197,7 +197,7 @@ namespace DoubleAgent
 			}
 		}
 
-		protected void StopRepeat (bool pNotify)
+		protected void StopRepeat (Boolean pNotify)
 		{
 #if DEBUG_NOT
 			System.Diagnostics.Debug.Print ("{0} StopRepeat {1} Notify {2}", this.Name, this.RepeatNum.ToString (), pNotify.ToString());
@@ -238,8 +238,8 @@ namespace DoubleAgent
 		///////////////////////////////////////////////////////////////////////////////
 		#region Events
 
-		public delegate void RepeatEndEvent (object sender, EventArgs e);
-		public event RepeatEndEvent RepeatEnd;
+		public delegate void RepeatEndEventHandler (object sender, EventArgs e);
+		public event RepeatEndEventHandler RepeatEnd;
 
 		///////////////////////////////////////////////////////////////////////////////
 

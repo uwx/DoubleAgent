@@ -347,7 +347,7 @@ void CAgentFile::Close ()
 	mBalloon.Empty ();
 #endif
 	mVersionMajor = 2;
-	mVersionMinor = 0;
+	mVersionMinor = 1;
 }
 
 /////////////////////////////////////////////////////////////////////////////

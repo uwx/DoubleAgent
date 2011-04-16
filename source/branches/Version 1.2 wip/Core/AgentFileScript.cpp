@@ -223,7 +223,7 @@ HRESULT CAgentFileScript::Open (LPCTSTR pPath, UINT pLogLevel)
 #endif
 
 #ifdef	_M_CEE
-bool CAgentFileScript::Save (const System::String^ pPath, UINT pLogLevel)
+bool CAgentFileScript::Save (const System::String^ pPath, CAgentFile^ pSource, UINT pLogLevel)
 {
 	bool				lRet = false;
 	String^				lOldPath = mPath;
@@ -233,14 +233,19 @@ bool CAgentFileScript::Save (const System::String^ pPath, UINT pLogLevel)
 	if	(!String::IsNullOrEmpty (const_cast <String^> (pPath)))
 	{
 		lNewPath = ParseFilePath (pPath);
-		if	(LogIsActive (pLogLevel))
+	}
+	if	(LogIsActive (pLogLevel))
+	{
+		if	(pSource == this)
 		{
 			LogMessage (pLogLevel, _T("Save [%s] as [%s]"), _B(mPath), _B(lNewPath));
 		}
-	}
-	else
-	{
-		if	(LogIsActive (pLogLevel))
+		else
+		if	(!String::IsNullOrEmpty (lNewPath))
+		{
+			LogMessage (pLogLevel, _T("Save [%s] as [%s]"), _B(pSource->Path), _B(lNewPath));
+		}
+		else
 		{
 			LogMessage (pLogLevel, _T("Save [%s]"), _B(mPath));
 		}
@@ -252,6 +257,10 @@ bool CAgentFileScript::Save (const System::String^ pPath, UINT pLogLevel)
 			&&	(!IsReadOnly)
 			)
 		||	(!String::IsNullOrEmpty (lNewPath))
+		||	(
+				(pSource != this)
+			&&	(pSource->IsOpen)
+			)
 		)
 	{
 		try
@@ -286,7 +295,11 @@ bool CAgentFileScript::Save (const System::String^ pPath, UINT pLogLevel)
 				&&	(lWriter = gcnew ScriptWriter (mFileStream))
 				)
 			{
-				lRet = WriteFile (lWriter);
+				if	(!pSource->IsAcdFile)
+				{
+					PrepareFileFolder (true);
+				}
+				lRet = WriteFile (lWriter, pSource);
 				lWriter->Close ();
 			}
 			if	(lRet)
@@ -395,15 +408,15 @@ bool CAgentFileScript::ParseFile (ScriptReader^ pReader)
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentFileScript::WriteFile (ScriptWriter^ pWriter)
+bool CAgentFileScript::WriteFile (ScriptWriter^ pWriter, CAgentFile^ pSource)
 {
 	bool	lRet = true;
 #ifdef	_M_CEE
 	pWriter->WriteComments ();
-	WriteHeader (pWriter);
-	WriteBalloon (pWriter);
-	WriteAnimations (pWriter);
-	WriteStates (pWriter);
+	WriteHeader (pWriter, pSource);
+	WriteBalloon (pWriter, pSource);
+	WriteAnimations (pWriter, pSource);
+	WriteStates (pWriter, pSource);
 #else
 #endif
 	return lRet;
@@ -591,30 +604,47 @@ UInt32 CAgentFileScript::ParseStyle (ScriptReader^ pReader, System::String^ pSty
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentFileScript::WriteHeader (ScriptWriter^ pWriter)
+bool CAgentFileScript::WriteHeader (ScriptWriter^ pWriter, CAgentFile^ pSource)
 {
 	bool	lRet = true;
 #ifdef	_M_CEE
+	String^	lIconFilePath = pSource->IconFilePath;
+	String^	lPaletteFilePath = pSource->PaletteFilePath;
+
 	pWriter->WriteLine ();
 	pWriter->WriteKeyword (pWriter->Keywords->StartHeader);
 	pWriter->WriteLine ();
 	pWriter->Indent++;
 
-	WriteNames (pWriter);
-	pWriter->WriteValue (pWriter->Keywords->HeaderGuid, pWriter->FormatGuid (mHeader->Guid));
-	if	(!String::IsNullOrEmpty (IconFilePath))
+	WriteNames (pWriter, pSource);
+	pWriter->WriteValue (pWriter->Keywords->HeaderGuid, pWriter->FormatGuid (pSource->Header->Guid));
+	if	(
+			(pSource->Header->Icon)
+		&&	(String::IsNullOrEmpty (lIconFilePath))
+		)
 	{
-		pWriter->WriteValue (pWriter->Keywords->HeaderIcon, pWriter->FormatText (IconFilePath));
+		lIconFilePath = WriteIconFile (pSource->Header);
 	}
-	pWriter->WriteValue (pWriter->Keywords->HeaderWidth, pWriter->FormatInt (mHeader->ImageSize.Width));
-	pWriter->WriteValue (pWriter->Keywords->HeaderHeight, pWriter->FormatInt (mHeader->ImageSize.Height));
-	pWriter->WriteValue (pWriter->Keywords->HeaderTransparency, pWriter->FormatInt (mHeader->Transparency));
-	pWriter->WriteValue (pWriter->Keywords->HeaderFrameDuration, pWriter->FormatInt (NewFrameDuration));
-	WriteStyle (pWriter, (UInt32)mHeader->Style);
-	WriteTts (pWriter);
-	if	(!String::IsNullOrEmpty (PaletteFilePath))
+	if	(!String::IsNullOrEmpty (lIconFilePath))
 	{
-		pWriter->WriteValue (pWriter->Keywords->HeaderPalette, pWriter->FormatText (PaletteFilePath));
+		pWriter->WriteValue (pWriter->Keywords->HeaderIcon, pWriter->FormatText (lIconFilePath));
+	}
+	pWriter->WriteValue (pWriter->Keywords->HeaderWidth, pWriter->FormatInt (pSource->Header->ImageSize.Width));
+	pWriter->WriteValue (pWriter->Keywords->HeaderHeight, pWriter->FormatInt (pSource->Header->ImageSize.Height));
+	pWriter->WriteValue (pWriter->Keywords->HeaderTransparency, pWriter->FormatInt (pSource->Header->Transparency));
+	pWriter->WriteValue (pWriter->Keywords->HeaderFrameDuration, pWriter->FormatInt (NewFrameDuration));
+	WriteStyle (pWriter, (UInt32)pSource->Header->Style);
+	WriteTts (pWriter, pSource);
+	if	(
+			(pSource->Header->Palette)
+		&&	(String::IsNullOrEmpty (lPaletteFilePath))
+		)
+	{
+		lPaletteFilePath = WritePaletteFile (pSource->Header);
+	}
+	if	(!String::IsNullOrEmpty (lPaletteFilePath))
+	{
+		pWriter->WriteValue (pWriter->Keywords->HeaderPalette, pWriter->FormatText (lPaletteFilePath));
 	}
 
 	pWriter->Indent--;
@@ -768,18 +798,18 @@ bool CAgentFileScript::ParseTtsLine (ScriptReader^ pReader, System::String^ pTok
 	return true;
 }
 
-bool CAgentFileScript::WriteTts (ScriptWriter^ pWriter)
+bool CAgentFileScript::WriteTts (ScriptWriter^ pWriter, CAgentFile^ pSource)
 {
 	bool	lRet = true;
 #ifdef	_M_CEE
-	if	(mTts)
+	if	(pSource->Tts)
 	{
-		pWriter->WriteValue (pWriter->Keywords->TtsEngine, pWriter->FormatGuid (mTts->Engine));
-		pWriter->WriteValue (pWriter->Keywords->TtsMode, pWriter->FormatGuid (mTts->Mode));
-		pWriter->WriteValue (pWriter->Keywords->TtsLanguage, pWriter->FormatHex (mTts->Language));
-		pWriter->WriteValue (pWriter->Keywords->TtsGender, pWriter->FormatInt (mTts->Gender));
-		//pWriter->WriteValue (pWriter->Keywords->TtsAge, pWriter->FormatInt (mTts->Age));
-		//pWriter->WriteValue (pWriter->Keywords->TtsStyle, pWriter->FormatText (mTts->Style));
+		pWriter->WriteValue (pWriter->Keywords->TtsEngine, pWriter->FormatGuid (pSource->Tts->Engine));
+		pWriter->WriteValue (pWriter->Keywords->TtsMode, pWriter->FormatGuid (pSource->Tts->Mode));
+		pWriter->WriteValue (pWriter->Keywords->TtsLanguage, pWriter->FormatHex (pSource->Tts->Language));
+		pWriter->WriteValue (pWriter->Keywords->TtsGender, pWriter->FormatInt (pSource->Tts->Gender));
+		//pWriter->WriteValue (pWriter->Keywords->TtsAge, pWriter->FormatInt (pSource->Tts->Age));
+		//pWriter->WriteValue (pWriter->Keywords->TtsStyle, pWriter->FormatText (pSource->Tts->Style));
 	}
 #else
 #endif
@@ -913,36 +943,36 @@ bool CAgentFileScript::ParseBalloon (ScriptReader^ pReader)
 	return lRet;
 }
 
-bool CAgentFileScript::WriteBalloon (ScriptWriter^ pWriter)
+bool CAgentFileScript::WriteBalloon (ScriptWriter^ pWriter, CAgentFile^ pSource)
 {
 	bool	lRet = true;
 #ifdef	_M_CEE
-	if	(mBalloon)
+	if	(pSource->Balloon)
 	{
 		pWriter->WriteLine ();
 		pWriter->WriteKeyword (pWriter->Keywords->StartBalloon);
 		pWriter->Indent++;
 
-		pWriter->WriteValue (pWriter->Keywords->BalloonLines, pWriter->FormatInt (mBalloon->Lines));
-		pWriter->WriteValue (pWriter->Keywords->BalloonPerLine, pWriter->FormatInt (mBalloon->PerLine));
-		if	(mBalloon->Font)
+		pWriter->WriteValue (pWriter->Keywords->BalloonLines, pWriter->FormatInt (pSource->Balloon->Lines));
+		pWriter->WriteValue (pWriter->Keywords->BalloonPerLine, pWriter->FormatInt (pSource->Balloon->PerLine));
+		if	(pSource->Balloon->Font)
 		{
 			List <String^>^	lStyle = gcnew List <String^>;
 
-			if	(mBalloon->Font->Bold)
+			if	(pSource->Balloon->Font->Bold)
 			{
 				lStyle->Add (pWriter->Keyword [pWriter->Keywords->BalloonFontBold]);
 			}
-			if	(mBalloon->Font->Italic)
+			if	(pSource->Balloon->Font->Italic)
 			{
 				lStyle->Add (pWriter->Keyword [pWriter->Keywords->BalloonFontItalic]);
 			}
-			pWriter->WriteValue (pWriter->Keywords->BalloonFontName, pWriter->FormatText (mBalloon->Font->OriginalFontName ? mBalloon->Font->OriginalFontName : mBalloon->Font->Name));
-			pWriter->WriteValue (pWriter->Keywords->BalloonFontHeight, pWriter->FormatInt ((int)(mBalloon->Font->SizeInPoints + 0.49f)));
+			pWriter->WriteValue (pWriter->Keywords->BalloonFontName, pWriter->FormatText (pSource->Balloon->Font->OriginalFontName ? pSource->Balloon->Font->OriginalFontName : pSource->Balloon->Font->Name));
+			pWriter->WriteValue (pWriter->Keywords->BalloonFontHeight, pWriter->FormatInt ((int)(pSource->Balloon->Font->SizeInPoints + 0.49f)));
 			pWriter->WriteValue (pWriter->Keywords->BalloonFontStyle, pWriter->GetFontStyles (lStyle->ToArray()));
-			pWriter->WriteValue (pWriter->Keywords->BalloonFgColor, pWriter->FormatColor (mBalloon->FgColor.ToArgb()));
-			pWriter->WriteValue (pWriter->Keywords->BalloonBkColor, pWriter->FormatColor (mBalloon->BkColor.ToArgb()));
-			pWriter->WriteValue (pWriter->Keywords->BalloonBrColor, pWriter->FormatColor (mBalloon->BrColor.ToArgb()));
+			pWriter->WriteValue (pWriter->Keywords->BalloonFgColor, pWriter->FormatColor (pSource->Balloon->FgColor.ToArgb()));
+			pWriter->WriteValue (pWriter->Keywords->BalloonBkColor, pWriter->FormatColor (pSource->Balloon->BkColor.ToArgb()));
+			pWriter->WriteValue (pWriter->Keywords->BalloonBrColor, pWriter->FormatColor (pSource->Balloon->BrColor.ToArgb()));
 		}
 
 		pWriter->Indent--;
@@ -1023,13 +1053,13 @@ bool CAgentFileScript::ParseName (ScriptReader^ pReader, LANGID pLangID)
 	return lRet;
 }
 
-bool CAgentFileScript::WriteNames (ScriptWriter^ pWriter)
+bool CAgentFileScript::WriteNames (ScriptWriter^ pWriter, CAgentFile^ pSource)
 {
 	bool	lRet = true;
 #ifdef	_M_CEE
-	if	(mNames)
+	if	(pSource->Names)
 	{
-		for each (CAgentFileName^ lName in mNames)
+		for each (CAgentFileName^ lName in pSource->Names)
 		{
 			WriteName (pWriter, lName);
 		}
@@ -1068,7 +1098,7 @@ bool CAgentFileScript::ParseAnimation (ScriptReader^ pReader, System::String^ pA
 #ifdef	_M_CEE
 	String^					lLine;
 	String^					lToken;
-	CAgentFileAnimation^	lAnimation = gcnew CAgentFileAnimation (this);
+	CAgentFileAnimation^	lAnimation = gcnew CAgentFileAnimation (this, mGestures);
 
 	lAnimation->mName = pAnimationName;
 
@@ -1124,15 +1154,15 @@ bool CAgentFileScript::ParseAnimation (ScriptReader^ pReader, System::String^ pA
 	return lRet;
 }
 
-bool CAgentFileScript::WriteAnimations (ScriptWriter^ pWriter)
+bool CAgentFileScript::WriteAnimations (ScriptWriter^ pWriter, CAgentFile^ pSource)
 {
 	bool	lRet = true;
 #ifdef	_M_CEE
-	if	(mGestures)
+	if	(pSource->Gestures)
 	{
-		for each (CAgentFileAnimation^ lAnimation in mGestures)
+		for each (CAgentFileAnimation^ lAnimation in pSource->Gestures)
 		{
-			WriteAnimation (pWriter, lAnimation);
+			WriteAnimation (pWriter, pSource, lAnimation);
 		}
 	}
 #else
@@ -1140,7 +1170,7 @@ bool CAgentFileScript::WriteAnimations (ScriptWriter^ pWriter)
 	return lRet;
 }
 
-bool CAgentFileScript::WriteAnimation (ScriptWriter^ pWriter, CAgentFileAnimation^ pAnimation)
+bool CAgentFileScript::WriteAnimation (ScriptWriter^ pWriter, CAgentFile^ pSource, CAgentFileAnimation^ pAnimation)
 {
 	bool	lRet = true;
 #ifdef	_M_CEE
@@ -1165,7 +1195,7 @@ bool CAgentFileScript::WriteAnimation (ScriptWriter^ pWriter, CAgentFileAnimatio
 	{
 		for each (CAgentFileFrame^ lFrame in pAnimation->mFrames)
 		{
-			WriteAnimationFrame (pWriter, lFrame);
+			WriteAnimationFrame (pWriter, pSource, lFrame);
 		}
 	}
 
@@ -1226,7 +1256,7 @@ bool CAgentFileScript::ParseAnimationFrame (ScriptReader^ pReader, CAgentFileAni
 #ifdef	_M_CEE
 	String^				lLine;
 	String^				lToken;
-	CAgentFileFrame^	lFrame = gcnew CAgentFileFrame (this);
+	CAgentFileFrame^	lFrame = gcnew CAgentFileFrame (this, pAnimation->Frames);
 
 	while (lLine = pReader->ReadLine ())
 	{
@@ -1285,7 +1315,7 @@ bool CAgentFileScript::ParseAnimationFrame (ScriptReader^ pReader, CAgentFileAni
 
 	if (!pAnimation->mFrames)
 	{
-		pAnimation->mFrames = gcnew CAgentFileFrames (this);
+		pAnimation->mFrames = gcnew CAgentFileFrames (this, pAnimation);
 	}
 	pAnimation->mFrames->Add (lFrame);
 #else
@@ -1293,10 +1323,12 @@ bool CAgentFileScript::ParseAnimationFrame (ScriptReader^ pReader, CAgentFileAni
 	return lRet;
 }
 
-bool CAgentFileScript::WriteAnimationFrame (ScriptWriter^ pWriter, CAgentFileFrame^ pFrame)
+bool CAgentFileScript::WriteAnimationFrame (ScriptWriter^ pWriter, CAgentFile^ pSource, CAgentFileFrame^ pFrame)
 {
 	bool	lRet = true;
 #ifdef	_M_CEE
+	String^	lSoundFilePath = pFrame->SoundFilePath;
+	
 	pWriter->WriteKeyword (pWriter->Keywords->StartFrame);
 	pWriter->Indent++;
 
@@ -1305,24 +1337,31 @@ bool CAgentFileScript::WriteAnimationFrame (ScriptWriter^ pWriter, CAgentFileFra
 	{
 		pWriter->WriteValue (pWriter->Keywords->FrameExitBranch, pWriter->FormatInt (pFrame->ExitFrame));
 	}
-	if	(!String::IsNullOrEmpty (pFrame->SoundFilePath))
+	if	(
+			(pFrame->SoundNdx >= 0)
+		&&	(String::IsNullOrEmpty (lSoundFilePath))
+		)
 	{
-		pWriter->WriteValue (pWriter->Keywords->FrameSound, pWriter->FormatText (pFrame->SoundFilePath));
+		lSoundFilePath = WriteSoundFile (pSource, pFrame->SoundNdx);
 	}
-	WriteFrameBranching (pWriter, pFrame);
+	if	(!String::IsNullOrEmpty (lSoundFilePath))
+	{
+		pWriter->WriteValue (pWriter->Keywords->FrameSound, pWriter->FormatText (lSoundFilePath));
+	}
+	WriteFrameBranching (pWriter, pSource, pFrame);
 
 	if	(pFrame->mOverlays)
 	{
 		for each (CAgentFileFrameOverlay^ lOverlay in pFrame->mOverlays)
 		{
-			WriteFrameOverlay (pWriter, lOverlay);
+			WriteFrameOverlay (pWriter, pSource, lOverlay);
 		}
 	}
 	if	(pFrame->mImages)
 	{
 		for each (CAgentFileFrameImage^ lImage in pFrame->mImages)
 		{
-			WriteFrameImage (pWriter, lImage);
+			WriteFrameImage (pWriter, pSource, lImage);
 		}
 	}
 
@@ -1401,7 +1440,7 @@ bool CAgentFileScript::ParseFrameBranching (ScriptReader^ pReader, CAgentFileFra
 	return lRet;
 }
 
-bool CAgentFileScript::WriteFrameBranching (ScriptWriter^ pWriter, CAgentFileFrame^ pFrame)
+bool CAgentFileScript::WriteFrameBranching (ScriptWriter^ pWriter, CAgentFile^ pSource, CAgentFileFrame^ pFrame)
 {
 	bool	lRet = true;
 #ifdef	_M_CEE
@@ -1438,7 +1477,7 @@ bool CAgentFileScript::ParseFrameImage (ScriptReader^ pReader, CAgentFileFrame^ 
 #ifdef	_M_CEE
 	String^					lLine;
 	String^					lToken;
-	CAgentFileFrameImage^	lImage = gcnew CAgentFileFrameImage (this);
+	CAgentFileFrameImage^	lImage = gcnew CAgentFileFrameImage (this, pFrame);
 
 	while (lLine = pReader->ReadLine ())
 	{
@@ -1482,7 +1521,7 @@ bool CAgentFileScript::ParseFrameImage (ScriptReader^ pReader, CAgentFileFrame^ 
 
 	if (!pFrame->mImages)
 	{
-		pFrame->mImages = gcnew CAgentFileFrameImages (this);
+		pFrame->mImages = gcnew CAgentFileFrameImages (this, pFrame);
 	}
 	pFrame->mImages->Add (lImage);
 #else
@@ -1490,16 +1529,25 @@ bool CAgentFileScript::ParseFrameImage (ScriptReader^ pReader, CAgentFileFrame^ 
 	return lRet;
 }
 
-bool CAgentFileScript::WriteFrameImage (ScriptWriter^ pWriter, CAgentFileFrameImage^ pFrameImage)
+bool CAgentFileScript::WriteFrameImage (ScriptWriter^ pWriter, CAgentFile^ pSource, CAgentFileFrameImage^ pFrameImage)
 {
 	bool	lRet = true;
 #ifdef	_M_CEE
+	String^	lImageFilePath = pFrameImage->ImageFilePath;
+	
 	pWriter->WriteKeyword (pWriter->Keywords->StartImage);
 	pWriter->Indent++;
 
-	if	(!String::IsNullOrEmpty (pFrameImage->ImageFilePath))
+	if	(
+			(pFrameImage->ImageNdx >= 0)
+		&&	(String::IsNullOrEmpty (lImageFilePath))
+		)
 	{
-		pWriter->WriteValue (pWriter->Keywords->ImageFile, pWriter->FormatText (pFrameImage->ImageFilePath));
+		lImageFilePath = WriteImageFile (pSource, pFrameImage->ImageNdx, false);
+	}
+	if	(!String::IsNullOrEmpty (lImageFilePath))
+	{
+		pWriter->WriteValue (pWriter->Keywords->ImageFile, pWriter->FormatText (lImageFilePath));
 	}
 	if	(
 			(pFrameImage->Offset.X != 0)
@@ -1525,7 +1573,7 @@ bool CAgentFileScript::ParseFrameOverlay (ScriptReader^ pReader, CAgentFileFrame
 #ifdef	_M_CEE
 	String^					lLine;
 	String^					lToken;
-	CAgentFileFrameOverlay^	lOverlay = gcnew CAgentFileFrameOverlay (this);
+	CAgentFileFrameOverlay^	lOverlay = gcnew CAgentFileFrameOverlay (this, pFrame);
 
 	while (lLine = pReader->ReadLine ())
 	{
@@ -1614,7 +1662,7 @@ bool CAgentFileScript::ParseFrameOverlay (ScriptReader^ pReader, CAgentFileFrame
 
 	if (!pFrame->mOverlays)
 	{
-		pFrame->mOverlays = gcnew CAgentFileFrameOverlays (this);
+		pFrame->mOverlays = gcnew CAgentFileFrameOverlays (this, pFrame);
 	}
 	pFrame->mOverlays->Add (lOverlay);
 #else
@@ -1622,10 +1670,12 @@ bool CAgentFileScript::ParseFrameOverlay (ScriptReader^ pReader, CAgentFileFrame
 	return lRet;
 }
 
-bool CAgentFileScript::WriteFrameOverlay (ScriptWriter^ pWriter, CAgentFileFrameOverlay^ pFrameOverlay)
+bool CAgentFileScript::WriteFrameOverlay (ScriptWriter^ pWriter, CAgentFile^ pSource, CAgentFileFrameOverlay^ pFrameOverlay)
 {
 	bool	lRet = true;
 #ifdef	_M_CEE
+	String^	lImageFilePath = pFrameOverlay->ImageFilePath;
+
 	pWriter->WriteKeyword (pWriter->Keywords->StartOverlay);
 	pWriter->Indent++;
 
@@ -1660,9 +1710,17 @@ bool CAgentFileScript::WriteFrameOverlay (ScriptWriter^ pWriter, CAgentFileFrame
 			pWriter->WriteValue (pWriter->Keywords->OverlayType, pWriter->Keyword [pWriter->Keywords->OverlayTypeNarrow]);
 		}	break;
 	}
-	if	(!String::IsNullOrEmpty (pFrameOverlay->ImageFilePath))
+	
+	if	(
+			(pFrameOverlay->ImageNdx >= 0)
+		&&	(String::IsNullOrEmpty (lImageFilePath))
+		)
 	{
-		pWriter->WriteValue (pWriter->Keywords->OverlayFile, pWriter->FormatText (pFrameOverlay->ImageFilePath));
+		lImageFilePath = WriteImageFile (pSource, pFrameOverlay->ImageNdx, true);
+	}
+	if	(!String::IsNullOrEmpty (lImageFilePath))
+	{
+		pWriter->WriteValue (pWriter->Keywords->OverlayFile, pWriter->FormatText (lImageFilePath));
 	}
 	if	(
 			(pFrameOverlay->Offset.X != 0)
@@ -1729,13 +1787,13 @@ bool CAgentFileScript::ParseState (ScriptReader^ pReader, System::String^ pState
 	return lRet;
 }
 
-bool CAgentFileScript::WriteStates (ScriptWriter^ pWriter)
+bool CAgentFileScript::WriteStates (ScriptWriter^ pWriter, CAgentFile^ pSource)
 {
 	bool	lRet = true;
 #ifdef	_M_CEE
-	if	(mStates)
+	if	(pSource->States)
 	{
-		for each (KeyValuePair <String^, array <String^>^> lState in mStates)
+		for each (KeyValuePair <String^, array <String^>^> lState in pSource->States)
 		{
 			pWriter->WriteLine ();
 			pWriter->WriteKeyword (pWriter->Keywords->StartState, pWriter->FormatText (lState.Key));
@@ -1756,6 +1814,209 @@ bool CAgentFileScript::WriteStates (ScriptWriter^ pWriter)
 	return lRet;
 }
 
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+#ifdef	_M_CEE
+/////////////////////////////////////////////////////////////////////////////
+
+String^ CAgentFileScript::PrepareFileFolder ()
+{
+	return PrepareFileFolder (false);
+}
+
+String^ CAgentFileScript::PrepareFileFolder (Boolean pEmptyFolder)
+{
+	String^			lPath = System::IO::Path::Combine (System::IO::Path::GetDirectoryName (mPath), System::IO::Path::GetFileNameWithoutExtension (mPath) + " files");
+	DirectoryInfo^	lDirectoryInfo = gcnew System::IO::DirectoryInfo (lPath);
+
+	if	(lDirectoryInfo)
+	{	
+		if	(
+				(lDirectoryInfo->Exists)
+			&&	(pEmptyFolder)
+			)
+		{
+			lDirectoryInfo->Delete (true);
+			lDirectoryInfo = gcnew System::IO::DirectoryInfo (lPath);
+		}
+		if	(!lDirectoryInfo->Exists)
+		{
+			lDirectoryInfo->Create ();
+			lDirectoryInfo = gcnew System::IO::DirectoryInfo (lPath);
+		}
+		if	(
+				(lDirectoryInfo)
+			&&	(lDirectoryInfo->Exists)
+			)
+		{
+			return lPath;
+		}
+	}
+	return nullptr;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+String^ CAgentFileScript::WriteIconFile (CAgentFileHeader^ pSource)
+{
+	String^	lRet = nullptr;
+
+	if	(
+			(pSource)	
+		&&	(pSource->Icon)
+		)
+	{
+		try
+		{
+			String^	lPath = PrepareFileFolder ();
+			
+			if	(lPath)
+			{
+				lPath = System::IO::Path::Combine (lPath, System::IO::Path::GetFileNameWithoutExtension (mPath) + ".ico");
+			}
+			if	(lPath)
+			{
+				FileStream^	lStream = gcnew FileStream (lPath, FileMode::Create);
+				
+				if	(lStream)
+				{
+					pSource->Icon->Save (lStream);
+					lStream->Close ();
+					lRet = lPath;
+				}
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	return lRet;
+}
+
+String^ CAgentFileScript::WritePaletteFile (CAgentFileHeader^ pSource)
+{
+	String^	lRet = nullptr;
+
+	if	(
+			(pSource)	
+		&&	(pSource->Palette)
+		&&	(pSource->Palette->Entries->Length == 256)
+		)
+	{
+		try
+		{
+			String^	lPath = PrepareFileFolder ();
+			
+			if	(lPath)
+			{
+				lPath = System::IO::Path::Combine (lPath, System::IO::Path::GetFileNameWithoutExtension (mPath) + ".bmp");
+			}
+			if	(lPath)
+			{
+				Bitmap^	lBitmap = gcnew Bitmap (16, 16, PixelFormat::Format8bppIndexed);
+				
+				lBitmap->Palette = pSource->Palette;
+
+				try
+				{
+					int			lColorNdx;
+					BitmapData^	lData;
+					LPBYTE		lBytes;
+
+					lData = lBitmap->LockBits (System::Drawing::Rectangle (0, 0, lBitmap->Width, lBitmap->Height), ImageLockMode::ReadWrite, PixelFormat::Format8bppIndexed);
+					lBytes = (LPBYTE)(INT_PTR)lData->Scan0;
+
+					for (lColorNdx = 0; lColorNdx < lData->Stride * lData->Height; lColorNdx++)
+					{
+						lBytes[lColorNdx] = (Byte)((lColorNdx / lData->Stride * 16) + (lColorNdx % lData->Stride));
+					}
+
+					lBitmap->UnlockBits (lData);
+				}
+				catch AnyExceptionDebug
+				
+				lBitmap->Save (lPath, ImageFormat::Bmp);
+				lRet = lPath;
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+String^ CAgentFileScript::WriteImageFile (CAgentFile^ pSource, int pImageNdx, Boolean pForOverlay)
+{
+	String^	lRet = nullptr;
+	Bitmap^	lBitmap;
+
+	if	(
+			(pSource)	
+		&&	(lBitmap = pSource->GetImageBitmap (pImageNdx))
+		)
+	{
+		try
+		{
+			String^	lPath = PrepareFileFolder ();
+			
+			if	(lPath)
+			{
+				lPath = System::IO::Path::Combine (lPath, String::Format ("{0} {1:D}", (pForOverlay ? "Overlay" : "Image"), pImageNdx+1) + ".bmp");
+			}
+			if	(lPath)
+			{
+				lBitmap->Save (lPath, ImageFormat::Bmp);
+				lRet = lPath;
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	return lRet;
+}
+
+String^ CAgentFileScript::WriteSoundFile (CAgentFile^ pSource, int pSoundNdx)
+{
+	String^			lRet = nullptr;
+	array <BYTE>^	lSound;
+
+	if	(
+			(pSource)	
+		&&	(lSound = pSource->GetSound (pSoundNdx))
+		)
+	{
+		try
+		{
+			String^	lPath = PrepareFileFolder ();
+			
+			if	(lPath)
+			{
+				lPath = System::IO::Path::Combine (lPath, String::Format ("Sound {0:D}", pSoundNdx+1) + ".wav");
+			}
+			if	(lPath)
+			{
+				FileStream^		lFileStream = nullptr;
+				BinaryWriter^	lFileWriter = nullptr;
+				
+				lFileStream = gcnew FileStream (lPath, FileMode::Create);
+				if	(lFileStream)
+				{
+					lFileWriter = gcnew BinaryWriter (lFileStream);
+				}
+				if	(lFileWriter)
+				{
+					lFileWriter->Write (lSound);
+					lFileWriter->Close ();
+					lRet = lPath;
+				}
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#endif	// _M_CEE
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -1988,6 +2249,8 @@ int CAgentFileScript::GetSoundSize (int pSoundNdx)
 	{
 		try
 		{
+			lSoundSize = (int)System::IO::FileInfo::FileInfo (mSoundFilePaths [pSoundNdx]).Length;
+/*			
 			System::Media::SoundPlayer^	lPlayer = mSounds [mSoundFilePaths [pSoundNdx]];
 
 			if	(
@@ -1997,11 +2260,46 @@ int CAgentFileScript::GetSoundSize (int pSoundNdx)
 			{
 				lSoundSize = (int)lPlayer->Stream->Length;
 			}
+*/			
 		}
 		catch AnyExceptionDebug
 	}
 
 	return lSoundSize;
+}
+
+array <BYTE>^ CAgentFileScript::GetSound (int pSoundNdx)
+{
+	array <BYTE>^	lSound = nullptr;
+	
+	if	(
+			(mSoundFilePaths)
+		&&	(mSounds)
+		&&	(pSoundNdx >= 0)
+		&&	(pSoundNdx < mSoundFilePaths->Count)
+		)
+	{
+		try
+		{
+			System::IO::FileStream^		lFileStream = nullptr;
+			System::IO::BinaryReader^	lFileReader = nullptr;
+			
+			lFileStream = gcnew FileStream (mSoundFilePaths [pSoundNdx], FileMode::Open, FileAccess::Read, FileShare::ReadWrite);
+			if	(
+					(lFileStream)
+				&&	(lFileStream->Length > 0)
+				)
+			{
+				lFileReader = gcnew System::IO::BinaryReader (lFileStream);
+			}
+			if	(lFileReader)
+			{
+				lSound = lFileReader->ReadBytes ((int)lFileStream->Length);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	return lSound;
 }
 
 System::String^ CAgentFileScript::GetSoundFilePath (int pSoundNdx)

@@ -120,10 +120,10 @@ protected:
 	DWORD WriteAcsHeader (DWORD pFileOffset, CAgentFile^ pSource);
 	DWORD WriteAcsHeader (DWORD pFileOffset, CAgentFile^ pSource, UINT pLogLevel);
 	LPVOID WriteBufferHeader (LPVOID pBuffer, CAgentFileHeader^ pHeader, UINT pLogLevel);
-	DWORD WriteImageIndex (DWORD pFileOffset);
-	DWORD WriteImageIndex (DWORD pFileOffset, UINT pLogLevel);
-	DWORD WriteSoundIndex (DWORD pFileOffset);
-	DWORD WriteSoundIndex (DWORD pFileOffset, UINT pLogLevel);
+	DWORD WriteImageIndex (DWORD pFileOffset, CAgentFile^ pSource);
+	DWORD WriteImageIndex (DWORD pFileOffset, CAgentFile^ pSource, UINT pLogLevel);
+	DWORD WriteSoundIndex (DWORD pFileOffset, CAgentFile^ pSource);
+	DWORD WriteSoundIndex (DWORD pFileOffset, CAgentFile^ pSource, UINT pLogLevel);
 
 	DWORD WriteGestures (DWORD pFileOffset, CAgentFile^ pSource);
 	DWORD WriteGestures (DWORD pFileOffset, CAgentFile^ pSource, UINT pLogLevel);

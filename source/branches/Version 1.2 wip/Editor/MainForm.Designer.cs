@@ -48,7 +48,7 @@ namespace AgentCharacterEditor
 		/// </summary>
 		private void InitializeComponent ()
 		{
-			System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode ("Word Balloon");
+			System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode (global::AgentCharacterEditor.Properties.Resources.TitleBalloon);
 			System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode ("Text-to-Speech");
 			System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode ("Character", new System.Windows.Forms.TreeNode[] {
             treeNode1,
@@ -217,9 +217,9 @@ namespace AgentCharacterEditor
 			this.TreeViewMain.Margin = new System.Windows.Forms.Padding (0);
 			this.TreeViewMain.Name = "TreeViewMain";
 			treeNode1.Name = "NodeWordBalloon";
-			treeNode1.Text = "Word Balloon";
+			treeNode1.Text = global::AgentCharacterEditor.Properties.Resources.TitleBalloon;
 			treeNode2.Name = "NodeTTSMode";
-			treeNode2.Text = "Text-to-Speech";
+			treeNode2.Text = global::AgentCharacterEditor.Properties.Resources.TitleTts;
 			treeNode3.ForeColor = System.Drawing.SystemColors.HotTrack;
 			treeNode3.Name = "NodeCharacter";
 			treeNode3.Text = "Character";
@@ -331,15 +331,15 @@ namespace AgentCharacterEditor
 			this.PanelAnimations.Size = new System.Drawing.Size (758, 481);
 			this.PanelAnimations.TabIndex = 0;
 			this.PanelAnimations.Visible = false;
-			this.PanelAnimations.AnimationAdded += new AgentCharacterEditor.AnimationsForm.AnimationAddedEvent (this.PanelAnimations_AnimationAdded);
-			this.PanelAnimations.AnimationRemoved += new AgentCharacterEditor.AnimationsForm.AnimationRemovedEvent (this.PanelAnimations_AnimationRemoved);
+			this.PanelAnimations.AnimationAdded += new AgentCharacterEditor.AnimationAddedEventHandler (this.PanelAnimations_AnimationAdded);
+			this.PanelAnimations.GoToAnimation += new AgentCharacterEditor.GoToAnimationEventHandler (this.PanelAnimations_GoToAnimation);
+			this.PanelAnimations.AnimationRemoved += new AgentCharacterEditor.AnimationRemovedEventHandler (this.PanelAnimations_AnimationRemoved);
 			// 
 			// PanelAnimation
 			// 
-			this.PanelAnimation.AnimationName = null;
+			this.PanelAnimation.Animation = null;
 			this.PanelAnimation.CharacterFile = null;
 			this.PanelAnimation.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PanelAnimation.FileAnimation = null;
 			this.PanelAnimation.Location = new System.Drawing.Point (0, 0);
 			this.PanelAnimation.Margin = new System.Windows.Forms.Padding (0);
 			this.PanelAnimation.Name = "PanelAnimation";
@@ -347,10 +347,12 @@ namespace AgentCharacterEditor
 			this.PanelAnimation.Size = new System.Drawing.Size (758, 481);
 			this.PanelAnimation.TabIndex = 0;
 			this.PanelAnimation.Visible = false;
-			this.PanelAnimation.AnimationNameChanged += new AgentCharacterEditor.AnimationForm.AnimationNameChangedEvent (this.PanelAnimation_AnimationNameChanged);
-			this.PanelAnimation.AnimationFrameRemoved += new AgentCharacterEditor.AnimationForm.AnimationFrameRemovedEvent (this.PanelAnimation_AnimationFrameRemoved);
-			this.PanelAnimation.AnimationFrameAdded += new AgentCharacterEditor.AnimationForm.AnimationFrameAddedEvent (this.PanelAnimation_AnimationFrameAdded);
-			this.PanelAnimation.AnimationFrameReordered += new AgentCharacterEditor.AnimationForm.AnimationFrameReorderedEvent (this.PanelAnimation_AnimationFrameReordered);
+			this.PanelAnimation.GoToState += new AgentCharacterEditor.GoToStateEventHandler (this.PanelAnimation_GoToState);
+			this.PanelAnimation.AnimationFrameReordered += new AgentCharacterEditor.AnimationFrameReorderedEventHandler (this.PanelAnimation_AnimationFrameReordered);
+			this.PanelAnimation.GoToFrame += new AgentCharacterEditor.GoToFrameEventHandler (this.PanelAnimation_GoToFrame);
+			this.PanelAnimation.AnimationFrameAdded += new AgentCharacterEditor.AnimationFrameAddedEventHandler (this.PanelAnimation_AnimationFrameAdded);
+			this.PanelAnimation.AnimationNameChanged += new AgentCharacterEditor.AnimationNameChangedEventHandler (this.PanelAnimation_AnimationNameChanged);
+			this.PanelAnimation.AnimationFrameRemoved += new AgentCharacterEditor.AnimationFrameRemovedEventHandler (this.PanelAnimation_AnimationFrameRemoved);
 			// 
 			// PanelState
 			// 
@@ -364,14 +366,13 @@ namespace AgentCharacterEditor
 			this.PanelState.StateName = null;
 			this.PanelState.TabIndex = 0;
 			this.PanelState.Visible = false;
+			this.PanelState.GoToAnimation += new AgentCharacterEditor.GoToAnimationEventHandler (this.PanelState_GoToAnimation);
 			// 
 			// PanelFrame
 			// 
-			this.PanelFrame.AnimationName = null;
 			this.PanelFrame.CharacterFile = null;
 			this.PanelFrame.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PanelFrame.FileFrame = null;
-			this.PanelFrame.FrameName = null;
+			this.PanelFrame.Frame = null;
 			this.PanelFrame.Location = new System.Drawing.Point (0, 0);
 			this.PanelFrame.Margin = new System.Windows.Forms.Padding (0);
 			this.PanelFrame.Name = "PanelFrame";
@@ -382,11 +383,9 @@ namespace AgentCharacterEditor
 			// 
 			// PanelBranching
 			// 
-			this.PanelBranching.AnimationName = null;
 			this.PanelBranching.CharacterFile = null;
 			this.PanelBranching.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PanelBranching.FileFrame = null;
-			this.PanelBranching.FrameName = null;
+			this.PanelBranching.Frame = null;
 			this.PanelBranching.Location = new System.Drawing.Point (0, 0);
 			this.PanelBranching.Margin = new System.Windows.Forms.Padding (0);
 			this.PanelBranching.Name = "PanelBranching";
@@ -397,11 +396,9 @@ namespace AgentCharacterEditor
 			// 
 			// PanelOverlays
 			// 
-			this.PanelOverlays.AnimationName = null;
 			this.PanelOverlays.CharacterFile = null;
 			this.PanelOverlays.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PanelOverlays.FileFrame = null;
-			this.PanelOverlays.FrameName = null;
+			this.PanelOverlays.Frame = null;
 			this.PanelOverlays.Location = new System.Drawing.Point (0, 0);
 			this.PanelOverlays.Margin = new System.Windows.Forms.Padding (0);
 			this.PanelOverlays.Name = "PanelOverlays";
@@ -613,6 +610,7 @@ namespace AgentCharacterEditor
 			// 
 			// MenuItemFileSave
 			// 
+			this.MenuItemFileSave.Enabled = false;
 			this.MenuItemFileSave.Image = ((System.Drawing.Image)(resources.GetObject ("MenuItemFileSave.Image")));
 			this.MenuItemFileSave.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.MenuItemFileSave.Name = "MenuItemFileSave";
@@ -767,32 +765,32 @@ namespace AgentCharacterEditor
 			// 
 			this.MenuItemHelpContents.Enabled = false;
 			this.MenuItemHelpContents.Name = "MenuItemHelpContents";
-			this.MenuItemHelpContents.Size = new System.Drawing.Size (136, 24);
+			this.MenuItemHelpContents.Size = new System.Drawing.Size (152, 24);
 			this.MenuItemHelpContents.Text = "&Contents";
 			// 
 			// MenuItemHelpIndex
 			// 
 			this.MenuItemHelpIndex.Enabled = false;
 			this.MenuItemHelpIndex.Name = "MenuItemHelpIndex";
-			this.MenuItemHelpIndex.Size = new System.Drawing.Size (136, 24);
+			this.MenuItemHelpIndex.Size = new System.Drawing.Size (152, 24);
 			this.MenuItemHelpIndex.Text = "&Index";
 			// 
 			// MenuItemHelpSearch
 			// 
 			this.MenuItemHelpSearch.Enabled = false;
 			this.MenuItemHelpSearch.Name = "MenuItemHelpSearch";
-			this.MenuItemHelpSearch.Size = new System.Drawing.Size (136, 24);
+			this.MenuItemHelpSearch.Size = new System.Drawing.Size (152, 24);
 			this.MenuItemHelpSearch.Text = "&Search";
 			// 
 			// MenuSepHelp1
 			// 
 			this.MenuSepHelp1.Name = "MenuSepHelp1";
-			this.MenuSepHelp1.Size = new System.Drawing.Size (133, 6);
+			this.MenuSepHelp1.Size = new System.Drawing.Size (149, 6);
 			// 
 			// MenuItemHelpAbout
 			// 
 			this.MenuItemHelpAbout.Name = "MenuItemHelpAbout";
-			this.MenuItemHelpAbout.Size = new System.Drawing.Size (136, 24);
+			this.MenuItemHelpAbout.Size = new System.Drawing.Size (152, 24);
 			this.MenuItemHelpAbout.Text = "&About...";
 			this.MenuItemHelpAbout.Click += new System.EventHandler (this.MenuItemHelpAbout_Click);
 			// 
@@ -805,7 +803,6 @@ namespace AgentCharacterEditor
 			this.Controls.Add (this.MenuStripMain);
 			this.Controls.Add (this.ToolStripContainerMain);
 			this.Font = new System.Drawing.Font ("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject ("$this.Icon")));
 			this.MinimumSize = new System.Drawing.Size (600, 400);
 			this.Name = "MainForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
@@ -873,15 +870,15 @@ namespace AgentCharacterEditor
 		private System.Windows.Forms.ToolStripSeparator MenuSepHelp1;
 		private System.Windows.Forms.ToolStripMenuItem MenuItemHelpAbout;
 		private System.Windows.Forms.TreeView TreeViewMain;
-		private AgentCharacterEditor.CharacterForm PanelCharacter;
-		private AgentCharacterEditor.BalloonForm PanelBalloon;
-		private AgentCharacterEditor.TtsForm PanelTts;
-		private AgentCharacterEditor.AnimationsForm PanelAnimations;
-		private AgentCharacterEditor.AnimationForm PanelAnimation;
-		private AgentCharacterEditor.StateForm PanelState;
-		private AgentCharacterEditor.FrameForm PanelFrame;
-		private AgentCharacterEditor.BranchingForm PanelBranching;
-		private AgentCharacterEditor.OverlayForm PanelOverlays;
+		public AgentCharacterEditor.CharacterForm PanelCharacter;
+		public AgentCharacterEditor.BalloonForm PanelBalloon;
+		public AgentCharacterEditor.TtsForm PanelTts;
+		public AgentCharacterEditor.AnimationsForm PanelAnimations;
+		public AgentCharacterEditor.AnimationForm PanelAnimation;
+		public AgentCharacterEditor.StateForm PanelState;
+		public AgentCharacterEditor.FrameForm PanelFrame;
+		public AgentCharacterEditor.BranchingForm PanelBranching;
+		public AgentCharacterEditor.OverlayForm PanelOverlays;
 	}
 }
 

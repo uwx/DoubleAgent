@@ -79,7 +79,7 @@ namespace AgentCharacterEditor
 			this.ColumnHeaderPath = new System.Windows.Forms.ColumnHeader ();
 			this.ToolStripImages = new DoubleAgent.ToolStripEx ();
 			this.ButtonAdd = new System.Windows.Forms.ToolStripButton ();
-			this.ButtonRemove = new System.Windows.Forms.ToolStripButton ();
+			this.ButtonDelete = new System.Windows.Forms.ToolStripButton ();
 			this.ButtonOpen = new System.Windows.Forms.ToolStripButton ();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator ();
 			this.ButtonMoveUp = new System.Windows.Forms.ToolStripButton ();
@@ -154,6 +154,8 @@ namespace AgentCharacterEditor
 			// NumericOffsetX
 			// 
 			this.NumericOffsetX.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericOffsetX.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericOffsetX.Highlighted = false;
 			this.NumericOffsetX.Location = new System.Drawing.Point (68, 3);
 			this.NumericOffsetX.Maximum = new decimal (new int[] {
             10000,
@@ -187,6 +189,8 @@ namespace AgentCharacterEditor
 			// NumericOffsetY
 			// 
 			this.NumericOffsetY.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericOffsetY.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericOffsetY.Highlighted = false;
 			this.NumericOffsetY.Location = new System.Drawing.Point (186, 3);
 			this.NumericOffsetY.Maximum = new decimal (new int[] {
             10000,
@@ -348,7 +352,7 @@ namespace AgentCharacterEditor
 			this.ButtonShiftUp.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
 			this.ButtonShiftUp.RepeatEnabled = true;
 			this.ButtonShiftUp.Size = new System.Drawing.Size (128, 23);
-			this.ButtonShiftUp.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEvent (this.ButtonShiftUp_RepeatEnd);
+			this.ButtonShiftUp.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler (this.ButtonShiftUp_RepeatEnd);
 			this.ButtonShiftUp.Click += new System.EventHandler (this.ButtonShiftUp_Click);
 			// 
 			// ToolStripShiftRight
@@ -384,7 +388,7 @@ namespace AgentCharacterEditor
 			this.ButtonShiftRight.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
 			this.ButtonShiftRight.RepeatEnabled = true;
 			this.ButtonShiftRight.Size = new System.Drawing.Size (23, 128);
-			this.ButtonShiftRight.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEvent (this.ButtonShiftRight_RepeatEnd);
+			this.ButtonShiftRight.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler (this.ButtonShiftRight_RepeatEnd);
 			this.ButtonShiftRight.Click += new System.EventHandler (this.ButtonShiftRight_Click);
 			// 
 			// ToolStripShiftDown
@@ -420,7 +424,7 @@ namespace AgentCharacterEditor
 			this.ButtonShiftDown.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
 			this.ButtonShiftDown.RepeatEnabled = true;
 			this.ButtonShiftDown.Size = new System.Drawing.Size (128, 23);
-			this.ButtonShiftDown.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEvent (this.ButtonShiftDown_RepeatEnd);
+			this.ButtonShiftDown.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler (this.ButtonShiftDown_RepeatEnd);
 			this.ButtonShiftDown.Click += new System.EventHandler (this.ButtonShiftDown_Click);
 			// 
 			// ToolStripShiftLeft
@@ -456,7 +460,7 @@ namespace AgentCharacterEditor
 			this.ButtonShiftLeft.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
 			this.ButtonShiftLeft.RepeatEnabled = true;
 			this.ButtonShiftLeft.Size = new System.Drawing.Size (23, 128);
-			this.ButtonShiftLeft.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEvent (this.ButtonShiftLeft_RepeatEnd);
+			this.ButtonShiftLeft.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler (this.ButtonShiftLeft_RepeatEnd);
 			this.ButtonShiftLeft.Click += new System.EventHandler (this.ButtonShiftLeft_Click);
 			// 
 			// CheckBoxTransparent
@@ -538,7 +542,7 @@ namespace AgentCharacterEditor
 			this.ToolStripImages.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.ToolStripImages.Items.AddRange (new System.Windows.Forms.ToolStripItem[] {
             this.ButtonAdd,
-            this.ButtonRemove,
+            this.ButtonDelete,
             this.ButtonOpen,
             this.toolStripSeparator1,
             this.ButtonMoveUp,
@@ -560,16 +564,16 @@ namespace AgentCharacterEditor
 			this.ButtonAdd.Text = "Add";
 			this.ButtonAdd.Click += new System.EventHandler (this.ButtonAdd_Click);
 			// 
-			// ButtonRemove
+			// ButtonDelete
 			// 
-			this.ButtonRemove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonRemove.Image = ((System.Drawing.Image)(resources.GetObject ("ButtonRemove.Image")));
-			this.ButtonRemove.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonRemove.Name = "ButtonRemove";
-			this.ButtonRemove.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
-			this.ButtonRemove.Size = new System.Drawing.Size (23, 23);
-			this.ButtonRemove.Text = "Remove";
-			this.ButtonRemove.Click += new System.EventHandler (this.ButtonRemove_Click);
+			this.ButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonDelete.Image = ((System.Drawing.Image)(resources.GetObject ("ButtonDelete.Image")));
+			this.ButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonDelete.Name = "ButtonDelete";
+			this.ButtonDelete.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
+			this.ButtonDelete.Size = new System.Drawing.Size (23, 23);
+			this.ButtonDelete.Text = "Remove";
+			this.ButtonDelete.Click += new System.EventHandler (this.ButtonDelete_Click);
 			// 
 			// ButtonOpen
 			// 
@@ -579,7 +583,7 @@ namespace AgentCharacterEditor
 			this.ButtonOpen.Name = "ButtonOpen";
 			this.ButtonOpen.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
 			this.ButtonOpen.Size = new System.Drawing.Size (23, 23);
-			this.ButtonOpen.ToolTipText = "Open image file";
+			this.ButtonOpen.Text = "Open image file";
 			this.ButtonOpen.Click += new System.EventHandler (this.ButtonOpen_Click);
 			// 
 			// toolStripSeparator1
@@ -692,7 +696,7 @@ namespace AgentCharacterEditor
 			this.ButtonSoundImport.Name = "ButtonSoundImport";
 			this.ButtonSoundImport.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
 			this.ButtonSoundImport.Size = new System.Drawing.Size (23, 23);
-			this.ButtonSoundImport.ToolTipText = "Open sound file";
+			this.ButtonSoundImport.Text = "Open sound file";
 			this.ButtonSoundImport.Click += new System.EventHandler (this.ButtonSoundImport_Click);
 			// 
 			// ButtonSoundExport
@@ -704,7 +708,7 @@ namespace AgentCharacterEditor
 			this.ButtonSoundExport.Name = "ButtonSoundExport";
 			this.ButtonSoundExport.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
 			this.ButtonSoundExport.Size = new System.Drawing.Size (23, 23);
-			this.ButtonSoundExport.ToolTipText = "Save sound";
+			this.ButtonSoundExport.Text = "Save sound";
 			// 
 			// TextBoxSoundFile
 			// 
@@ -755,6 +759,8 @@ namespace AgentCharacterEditor
 			// 
 			this.NumericDuration.AutoSize = true;
 			this.NumericDuration.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericDuration.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericDuration.Highlighted = false;
 			this.NumericDuration.Location = new System.Drawing.Point (140, 34);
 			this.NumericDuration.Maximum = new decimal (new int[] {
             10000,
@@ -791,6 +797,7 @@ namespace AgentCharacterEditor
 			this.Name = "FrameForm";
 			this.Padding = new System.Windows.Forms.Padding (9, 0, 9, 0);
 			this.Size = new System.Drawing.Size (700, 650);
+			this.VisibleChanged += new System.EventHandler (this.FrameForm_VisibleChanged);
 			this.PanelOverlayOffset.ResumeLayout (false);
 			this.PanelOverlayOffset.PerformLayout ();
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetX)).EndInit ();
@@ -841,7 +848,7 @@ namespace AgentCharacterEditor
 		private System.Windows.Forms.ColumnHeader ColumnHeaderSize;
 		private System.Windows.Forms.ColumnHeader ColumnHeaderPath;
 		private System.Windows.Forms.ToolStripButton ButtonAdd;
-		private System.Windows.Forms.ToolStripButton ButtonRemove;
+		private System.Windows.Forms.ToolStripButton ButtonDelete;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripButton ButtonMoveUp;
 		private System.Windows.Forms.ToolStripButton ButtonMoveDown;

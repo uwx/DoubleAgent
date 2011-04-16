@@ -55,17 +55,17 @@ namespace AgentCharacterEditor
 			this.NumericBranchingNot = new DoubleAgent.NumericUpDownEx ();
 			this.LabelBranchingNot = new System.Windows.Forms.Label ();
 			this.FlowLayout3 = new System.Windows.Forms.FlowLayoutPanel ();
-			this.NumericBranching3 = new DoubleAgent.NumericUpDownEx ();
-			this.LabelBranching3 = new System.Windows.Forms.Label ();
-			this.NumericTarget3 = new DoubleAgent.NumericUpDownEx ();
-			this.FlowLayout2 = new System.Windows.Forms.FlowLayoutPanel ();
 			this.NumericBranching2 = new DoubleAgent.NumericUpDownEx ();
-			this.LabelBranching2 = new System.Windows.Forms.Label ();
+			this.LabelBranching3 = new System.Windows.Forms.Label ();
 			this.NumericTarget2 = new DoubleAgent.NumericUpDownEx ();
-			this.FlowLayout1 = new System.Windows.Forms.FlowLayoutPanel ();
+			this.FlowLayout2 = new System.Windows.Forms.FlowLayoutPanel ();
 			this.NumericBranching1 = new DoubleAgent.NumericUpDownEx ();
-			this.LabelBranching1 = new System.Windows.Forms.Label ();
+			this.LabelBranching2 = new System.Windows.Forms.Label ();
 			this.NumericTarget1 = new DoubleAgent.NumericUpDownEx ();
+			this.FlowLayout1 = new System.Windows.Forms.FlowLayoutPanel ();
+			this.NumericBranching0 = new DoubleAgent.NumericUpDownEx ();
+			this.LabelBranching1 = new System.Windows.Forms.Label ();
+			this.NumericTarget0 = new DoubleAgent.NumericUpDownEx ();
 			this.GroupBoxExit = new System.Windows.Forms.GroupBox ();
 			this.FlowLayoutExit = new System.Windows.Forms.FlowLayoutPanel ();
 			this.CheckBoxExit = new System.Windows.Forms.CheckBox ();
@@ -74,14 +74,14 @@ namespace AgentCharacterEditor
 			this.FlowLayoutNot.SuspendLayout ();
 			((System.ComponentModel.ISupportInitialize)(this.NumericBranchingNot)).BeginInit ();
 			this.FlowLayout3.SuspendLayout ();
-			((System.ComponentModel.ISupportInitialize)(this.NumericBranching3)).BeginInit ();
-			((System.ComponentModel.ISupportInitialize)(this.NumericTarget3)).BeginInit ();
-			this.FlowLayout2.SuspendLayout ();
 			((System.ComponentModel.ISupportInitialize)(this.NumericBranching2)).BeginInit ();
 			((System.ComponentModel.ISupportInitialize)(this.NumericTarget2)).BeginInit ();
-			this.FlowLayout1.SuspendLayout ();
+			this.FlowLayout2.SuspendLayout ();
 			((System.ComponentModel.ISupportInitialize)(this.NumericBranching1)).BeginInit ();
 			((System.ComponentModel.ISupportInitialize)(this.NumericTarget1)).BeginInit ();
+			this.FlowLayout1.SuspendLayout ();
+			((System.ComponentModel.ISupportInitialize)(this.NumericBranching0)).BeginInit ();
+			((System.ComponentModel.ISupportInitialize)(this.NumericTarget0)).BeginInit ();
 			this.GroupBoxExit.SuspendLayout ();
 			this.FlowLayoutExit.SuspendLayout ();
 			((System.ComponentModel.ISupportInitialize)(this.NumericTargetExit)).BeginInit ();
@@ -140,11 +140,19 @@ namespace AgentCharacterEditor
 			// 
 			// NumericBranchingNot
 			// 
+			this.NumericBranchingNot.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericBranchingNot.Enabled = false;
+			this.NumericBranchingNot.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericBranchingNot.Highlighted = false;
 			this.NumericBranchingNot.Location = new System.Drawing.Point (3, 3);
 			this.NumericBranchingNot.Name = "NumericBranchingNot";
-			this.NumericBranchingNot.Enabled = false;
 			this.NumericBranchingNot.Size = new System.Drawing.Size (60, 22);
 			this.NumericBranchingNot.TabIndex = 0;
+			this.NumericBranchingNot.Value = new decimal (new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// LabelBranchingNot
 			// 
@@ -160,9 +168,9 @@ namespace AgentCharacterEditor
 			// 
 			this.FlowLayout3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.FlowLayout3.Controls.Add (this.NumericBranching3);
+			this.FlowLayout3.Controls.Add (this.NumericBranching2);
 			this.FlowLayout3.Controls.Add (this.LabelBranching3);
-			this.FlowLayout3.Controls.Add (this.NumericTarget3);
+			this.FlowLayout3.Controls.Add (this.NumericTarget2);
 			this.FlowLayout3.Location = new System.Drawing.Point (9, 90);
 			this.FlowLayout3.Margin = new System.Windows.Forms.Padding (0);
 			this.FlowLayout3.Name = "FlowLayout3";
@@ -170,13 +178,21 @@ namespace AgentCharacterEditor
 			this.FlowLayout3.TabIndex = 2;
 			this.FlowLayout3.WrapContents = false;
 			// 
-			// NumericBranching3
+			// NumericBranching2
 			// 
-			this.NumericBranching3.Location = new System.Drawing.Point (3, 3);
-			this.NumericBranching3.Name = "NumericBranching3";
-			this.NumericBranching3.Size = new System.Drawing.Size (60, 22);
-			this.NumericBranching3.TabIndex = 0;
-			this.NumericBranching3.Validated += new System.EventHandler (this.NumericBranching3_Validated);
+			this.NumericBranching2.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericBranching2.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericBranching2.Highlighted = false;
+			this.NumericBranching2.Location = new System.Drawing.Point (3, 3);
+			this.NumericBranching2.Name = "NumericBranching2";
+			this.NumericBranching2.Size = new System.Drawing.Size (60, 22);
+			this.NumericBranching2.TabIndex = 0;
+			this.NumericBranching2.Value = new decimal (new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.NumericBranching2.Validated += new System.EventHandler (this.NumericBranching2_Validated);
 			// 
 			// LabelBranching3
 			// 
@@ -188,26 +204,39 @@ namespace AgentCharacterEditor
 			this.LabelBranching3.TabIndex = 1;
 			this.LabelBranching3.Text = "% of the time, branch to frame";
 			// 
-			// NumericTarget3
+			// NumericTarget2
 			// 
-			this.NumericTarget3.Location = new System.Drawing.Point (273, 3);
-			this.NumericTarget3.Maximum = new decimal (new int[] {
+			this.NumericTarget2.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericTarget2.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericTarget2.Highlighted = false;
+			this.NumericTarget2.Location = new System.Drawing.Point (273, 3);
+			this.NumericTarget2.Maximum = new decimal (new int[] {
             10000,
             0,
             0,
             0});
-			this.NumericTarget3.Name = "NumericTarget3";
-			this.NumericTarget3.Size = new System.Drawing.Size (60, 22);
-			this.NumericTarget3.TabIndex = 2;
-			this.NumericTarget3.Validated += new System.EventHandler (this.NumericTarget3_Validated);
+			this.NumericTarget2.Minimum = new decimal (new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.NumericTarget2.Name = "NumericTarget2";
+			this.NumericTarget2.Size = new System.Drawing.Size (60, 22);
+			this.NumericTarget2.TabIndex = 2;
+			this.NumericTarget2.Value = new decimal (new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.NumericTarget2.Validated += new System.EventHandler (this.NumericTarget2_Validated);
 			// 
 			// FlowLayout2
 			// 
 			this.FlowLayout2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.FlowLayout2.Controls.Add (this.NumericBranching2);
+			this.FlowLayout2.Controls.Add (this.NumericBranching1);
 			this.FlowLayout2.Controls.Add (this.LabelBranching2);
-			this.FlowLayout2.Controls.Add (this.NumericTarget2);
+			this.FlowLayout2.Controls.Add (this.NumericTarget1);
 			this.FlowLayout2.Location = new System.Drawing.Point (9, 57);
 			this.FlowLayout2.Margin = new System.Windows.Forms.Padding (0);
 			this.FlowLayout2.Name = "FlowLayout2";
@@ -215,13 +244,21 @@ namespace AgentCharacterEditor
 			this.FlowLayout2.TabIndex = 1;
 			this.FlowLayout2.WrapContents = false;
 			// 
-			// NumericBranching2
+			// NumericBranching1
 			// 
-			this.NumericBranching2.Location = new System.Drawing.Point (3, 3);
-			this.NumericBranching2.Name = "NumericBranching2";
-			this.NumericBranching2.Size = new System.Drawing.Size (60, 22);
-			this.NumericBranching2.TabIndex = 0;
-			this.NumericBranching2.Validated += new System.EventHandler (this.NumericBranching2_Validated);
+			this.NumericBranching1.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericBranching1.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericBranching1.Highlighted = false;
+			this.NumericBranching1.Location = new System.Drawing.Point (3, 3);
+			this.NumericBranching1.Name = "NumericBranching1";
+			this.NumericBranching1.Size = new System.Drawing.Size (60, 22);
+			this.NumericBranching1.TabIndex = 0;
+			this.NumericBranching1.Value = new decimal (new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.NumericBranching1.Validated += new System.EventHandler (this.NumericBranching1_Validated);
 			// 
 			// LabelBranching2
 			// 
@@ -233,26 +270,39 @@ namespace AgentCharacterEditor
 			this.LabelBranching2.TabIndex = 1;
 			this.LabelBranching2.Text = "% of the time, branch to frame";
 			// 
-			// NumericTarget2
+			// NumericTarget1
 			// 
-			this.NumericTarget2.Location = new System.Drawing.Point (273, 3);
-			this.NumericTarget2.Maximum = new decimal (new int[] {
+			this.NumericTarget1.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericTarget1.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericTarget1.Highlighted = false;
+			this.NumericTarget1.Location = new System.Drawing.Point (273, 3);
+			this.NumericTarget1.Maximum = new decimal (new int[] {
             10000,
             0,
             0,
             0});
-			this.NumericTarget2.Name = "NumericTarget2";
-			this.NumericTarget2.Size = new System.Drawing.Size (60, 22);
-			this.NumericTarget2.TabIndex = 2;
-			this.NumericTarget2.Validated += new System.EventHandler (this.NumericTarget2_Validated);
+			this.NumericTarget1.Minimum = new decimal (new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.NumericTarget1.Name = "NumericTarget1";
+			this.NumericTarget1.Size = new System.Drawing.Size (60, 22);
+			this.NumericTarget1.TabIndex = 2;
+			this.NumericTarget1.Value = new decimal (new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.NumericTarget1.Validated += new System.EventHandler (this.NumericTarget1_Validated);
 			// 
 			// FlowLayout1
 			// 
 			this.FlowLayout1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.FlowLayout1.Controls.Add (this.NumericBranching1);
+			this.FlowLayout1.Controls.Add (this.NumericBranching0);
 			this.FlowLayout1.Controls.Add (this.LabelBranching1);
-			this.FlowLayout1.Controls.Add (this.NumericTarget1);
+			this.FlowLayout1.Controls.Add (this.NumericTarget0);
 			this.FlowLayout1.Location = new System.Drawing.Point (9, 24);
 			this.FlowLayout1.Margin = new System.Windows.Forms.Padding (0);
 			this.FlowLayout1.Name = "FlowLayout1";
@@ -260,13 +310,21 @@ namespace AgentCharacterEditor
 			this.FlowLayout1.TabIndex = 0;
 			this.FlowLayout1.WrapContents = false;
 			// 
-			// NumericBranching1
+			// NumericBranching0
 			// 
-			this.NumericBranching1.Location = new System.Drawing.Point (3, 3);
-			this.NumericBranching1.Name = "NumericBranching1";
-			this.NumericBranching1.Size = new System.Drawing.Size (60, 22);
-			this.NumericBranching1.TabIndex = 0;
-			this.NumericBranching1.Validated += new System.EventHandler (this.NumericBranching1_Validated);
+			this.NumericBranching0.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericBranching0.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericBranching0.Highlighted = false;
+			this.NumericBranching0.Location = new System.Drawing.Point (3, 3);
+			this.NumericBranching0.Name = "NumericBranching0";
+			this.NumericBranching0.Size = new System.Drawing.Size (60, 22);
+			this.NumericBranching0.TabIndex = 0;
+			this.NumericBranching0.Value = new decimal (new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.NumericBranching0.Validated += new System.EventHandler (this.NumericBranching0_Validated);
 			// 
 			// LabelBranching1
 			// 
@@ -278,18 +336,31 @@ namespace AgentCharacterEditor
 			this.LabelBranching1.TabIndex = 1;
 			this.LabelBranching1.Text = "% of the time, branch to frame";
 			// 
-			// NumericTarget1
+			// NumericTarget0
 			// 
-			this.NumericTarget1.Location = new System.Drawing.Point (273, 3);
-			this.NumericTarget1.Maximum = new decimal (new int[] {
+			this.NumericTarget0.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericTarget0.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericTarget0.Highlighted = false;
+			this.NumericTarget0.Location = new System.Drawing.Point (273, 3);
+			this.NumericTarget0.Maximum = new decimal (new int[] {
             10000,
             0,
             0,
             0});
-			this.NumericTarget1.Name = "NumericTarget1";
-			this.NumericTarget1.Size = new System.Drawing.Size (60, 22);
-			this.NumericTarget1.TabIndex = 2;
-			this.NumericTarget1.Validated += new System.EventHandler (this.NumericTarget1_Validated);
+			this.NumericTarget0.Minimum = new decimal (new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.NumericTarget0.Name = "NumericTarget0";
+			this.NumericTarget0.Size = new System.Drawing.Size (60, 22);
+			this.NumericTarget0.TabIndex = 2;
+			this.NumericTarget0.Value = new decimal (new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.NumericTarget0.Validated += new System.EventHandler (this.NumericTarget0_Validated);
 			// 
 			// GroupBoxExit
 			// 
@@ -333,15 +404,28 @@ namespace AgentCharacterEditor
 			// 
 			// NumericTargetExit
 			// 
+			this.NumericTargetExit.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericTargetExit.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericTargetExit.Highlighted = false;
 			this.NumericTargetExit.Location = new System.Drawing.Point (183, 3);
 			this.NumericTargetExit.Maximum = new decimal (new int[] {
             10000,
             0,
             0,
             0});
+			this.NumericTargetExit.Minimum = new decimal (new int[] {
+            1,
+            0,
+            0,
+            0});
 			this.NumericTargetExit.Name = "NumericTargetExit";
 			this.NumericTargetExit.Size = new System.Drawing.Size (60, 22);
 			this.NumericTargetExit.TabIndex = 1;
+			this.NumericTargetExit.Value = new decimal (new int[] {
+            1,
+            0,
+            0,
+            0});
 			this.NumericTargetExit.Validated += new System.EventHandler (this.NumericTargetExit_Validated);
 			// 
 			// BranchingForm
@@ -362,16 +446,16 @@ namespace AgentCharacterEditor
 			((System.ComponentModel.ISupportInitialize)(this.NumericBranchingNot)).EndInit ();
 			this.FlowLayout3.ResumeLayout (false);
 			this.FlowLayout3.PerformLayout ();
-			((System.ComponentModel.ISupportInitialize)(this.NumericBranching3)).EndInit ();
-			((System.ComponentModel.ISupportInitialize)(this.NumericTarget3)).EndInit ();
-			this.FlowLayout2.ResumeLayout (false);
-			this.FlowLayout2.PerformLayout ();
 			((System.ComponentModel.ISupportInitialize)(this.NumericBranching2)).EndInit ();
 			((System.ComponentModel.ISupportInitialize)(this.NumericTarget2)).EndInit ();
-			this.FlowLayout1.ResumeLayout (false);
-			this.FlowLayout1.PerformLayout ();
+			this.FlowLayout2.ResumeLayout (false);
+			this.FlowLayout2.PerformLayout ();
 			((System.ComponentModel.ISupportInitialize)(this.NumericBranching1)).EndInit ();
 			((System.ComponentModel.ISupportInitialize)(this.NumericTarget1)).EndInit ();
+			this.FlowLayout1.ResumeLayout (false);
+			this.FlowLayout1.PerformLayout ();
+			((System.ComponentModel.ISupportInitialize)(this.NumericBranching0)).EndInit ();
+			((System.ComponentModel.ISupportInitialize)(this.NumericTarget0)).EndInit ();
 			this.GroupBoxExit.ResumeLayout (false);
 			this.FlowLayoutExit.ResumeLayout (false);
 			this.FlowLayoutExit.PerformLayout ();
@@ -392,13 +476,13 @@ namespace AgentCharacterEditor
 		private System.Windows.Forms.Label LabelBranching2;
 		private System.Windows.Forms.Label LabelBranching1;
 		private DoubleAgent.NumericUpDownEx NumericBranchingNot;
-		private DoubleAgent.NumericUpDownEx NumericBranching3;
 		private DoubleAgent.NumericUpDownEx NumericBranching2;
 		private DoubleAgent.NumericUpDownEx NumericBranching1;
+		private DoubleAgent.NumericUpDownEx NumericBranching0;
 		private System.Windows.Forms.FlowLayoutPanel FlowLayout1;
-		private DoubleAgent.NumericUpDownEx NumericTarget1;
-		private DoubleAgent.NumericUpDownEx NumericTarget3;
+		private DoubleAgent.NumericUpDownEx NumericTarget0;
 		private DoubleAgent.NumericUpDownEx NumericTarget2;
+		private DoubleAgent.NumericUpDownEx NumericTarget1;
 		private System.Windows.Forms.FlowLayoutPanel FlowLayoutNot;
 		private System.Windows.Forms.FlowLayoutPanel FlowLayout3;
 		private System.Windows.Forms.FlowLayoutPanel FlowLayout2;

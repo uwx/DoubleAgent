@@ -33,7 +33,7 @@ namespace DoubleAgent
 		#region Properties
 
 		private int						mMaxCount = 16;
-		private bool					mShowRelativeMostRecent = false;
+		private Boolean					mShowRelativeMostRecent = false;
 		private List <ToolStripItem>	mMenuItems = null;
 
 		public String MostRecent
@@ -60,9 +60,12 @@ namespace DoubleAgent
 
 				if (!String.IsNullOrEmpty (lPath))
 				{
-					if (this.Contains (lPath))
+					for (int lNdx = this.Count - 1; lNdx >= 0; lNdx--)
 					{
-						this.Remove (lPath);
+						if (String.Compare (this[lNdx], lPath, true) == 0)
+						{
+							this.RemoveAt (lNdx);
+						}
 					}
 					this.Insert (0, lPath);
 					mShowRelativeMostRecent = true;
@@ -86,12 +89,12 @@ namespace DoubleAgent
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
-		public bool ShowPaths (ToolStripDropDown pFileMenu)
+		public Boolean ShowPaths (ToolStripDropDown pFileMenu)
 		{
 			return ShowPaths (pFileMenu, null);
 		}
 
-		public bool ShowPaths (ToolStripDropDown pFileMenu, ToolStripItem pAfterItem)
+		public Boolean ShowPaths (ToolStripDropDown pFileMenu, ToolStripItem pAfterItem)
 		{
 			if (mMenuItems != null)
 			{
@@ -147,10 +150,10 @@ namespace DoubleAgent
 			}
 			return false;
 		}
-		
-		public bool RemovePath (String pPath)
+
+		public Boolean RemovePath (String pPath)
 		{
-			bool	lRet = false;
+			Boolean	lRet = false;
 			String	lPath = null;
 
 			try
@@ -190,7 +193,7 @@ namespace DoubleAgent
 				if (!String.IsNullOrEmpty (lCurrent))
 				{
 					lCurrent = Path.GetFullPath (lCurrent);
-					if (Path.GetDirectoryName (lPath).Equals (Path.GetDirectoryName (lCurrent), StringComparison.InvariantCultureIgnoreCase))
+					if (String.Compare (Path.GetDirectoryName (lPath), Path.GetDirectoryName (lCurrent), true) == 0)
 					{
 						return Path.GetFileName (lPath);
 					}
@@ -212,7 +215,7 @@ namespace DoubleAgent
 
 				if (!String.IsNullOrEmpty (lMostRecent))
 				{
-					if (Path.GetDirectoryName (lPath).Equals (Path.GetDirectoryName (lMostRecent), StringComparison.InvariantCultureIgnoreCase))
+					if (String.Compare (Path.GetDirectoryName (lPath), Path.GetDirectoryName (lMostRecent), true) == 0)
 					{
 						return Path.GetFileName (lPath);
 					}
@@ -229,9 +232,8 @@ namespace DoubleAgent
 		///////////////////////////////////////////////////////////////////////////////
 		#region Events
 
-		public delegate void RecentItemClickEvent (object sender, String e);
-
-		public event RecentItemClickEvent RecentItemClick;
+		public delegate void RecentItemClickEventHandler (object sender, String e);
+		public event RecentItemClickEventHandler RecentItemClick;
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////

@@ -41,16 +41,42 @@ namespace AgentCharacterEditor
 		public CharacterForm ()
 		{
 			InitializeComponent ();
+
+			if (MainForm.Singleton != null)
+			{
+				MainForm.Singleton.LoadConfig += new EventHandler (MainForm_LoadConfig);
+				MainForm.Singleton.SaveConfig += new EventHandler (MainForm_SaveConfig);
+			}
 		}
 
-		public void LoadConfig ()
+		private void MainForm_LoadConfig (object sender, EventArgs e)
 		{
 			Properties.Settings	lSettings = Properties.Settings.Default;
 		}
 
-		public void SaveConfig ()
+		private void MainForm_SaveConfig (object sender, EventArgs e)
 		{
 			Properties.Settings	lSettings = Properties.Settings.Default;
+		}
+
+		private void CharacterForm_VisibleChanged (object sender, EventArgs e)
+		{
+			if (MainForm.Singleton != null)
+			{
+				MainForm.Singleton.CanEdit -= new EditEventHandler (MainForm_CanEdit);
+				MainForm.Singleton.EditCopy -= new EditEventHandler (MainForm_EditCopy);
+				MainForm.Singleton.EditCut -= new EditEventHandler (MainForm_EditCut);
+				MainForm.Singleton.EditDelete -= new EditEventHandler (MainForm_EditDelete);
+				MainForm.Singleton.EditPaste -= new EditEventHandler (MainForm_EditPaste);
+				if (this.Visible)
+				{
+					MainForm.Singleton.CanEdit += new EditEventHandler (MainForm_CanEdit);
+					MainForm.Singleton.EditCopy += new EditEventHandler (MainForm_EditCopy);
+					MainForm.Singleton.EditCut += new EditEventHandler (MainForm_EditCut);
+					MainForm.Singleton.EditDelete += new EditEventHandler (MainForm_EditDelete);
+					MainForm.Singleton.EditPaste += new EditEventHandler (MainForm_EditPaste);
+				}
+			}
 		}
 
 		#endregion
@@ -67,6 +93,14 @@ namespace AgentCharacterEditor
 			{
 				mCharacterFile = value;
 				ShowFileProperties ();
+			}
+		}
+
+		private Boolean IsEmpty
+		{
+			get
+			{
+				return (mCharacterFile == null);
 			}
 		}
 
@@ -90,20 +124,16 @@ namespace AgentCharacterEditor
 		{
 			foreach (ListViewItem lItem in ListViewLanguage.Items)
 			{
-				UInt16									lLangID = ListItemLangID (lItem);
+				UInt16				lLangID = ListItemLangID (lItem);
 				FileCharacterName	lName = null;
 
-				if (mCharacterFile == null)
+				if (IsEmpty)
 				{
 					lItem.ForeColor = ListViewLanguage.ForeColor;
 				}
 				else
 				{
-					lName = mCharacterFile.FindName (lLangID);
-					if ((lName != null) && ((Byte)lName.Language != (Byte)lLangID))
-					{
-						lName = null;
-					}
+					lName = LangIDName (lLangID, true);
 					if (lName == null)
 					{
 						lItem.ForeColor = ListViewLanguage.ForeColor;
@@ -123,11 +153,11 @@ namespace AgentCharacterEditor
 
 			if (ListViewLanguage.SelectedItems.Count > 0)
 			{
-				lLangID = ListItemLangID (ListViewLanguage.SelectedItems[0]);
+				lLangID = ListItemLangID (ListViewLanguage.SelectedItem);
 			}
-			if (mCharacterFile != null)
+			if (!IsEmpty)
 			{
-				lName = mCharacterFile.FindName (lLangID);
+				lName = LangIDName (lLangID, false);
 			}
 			if (lName == null)
 			{
@@ -145,9 +175,9 @@ namespace AgentCharacterEditor
 				TextBoxDescription.Text = lName.Desc1;
 				TextBoxExtra.Text = lName.Desc2;
 
-				TextBoxName.ReadOnly = Program.MainForm.FileIsReadOnly;
-				TextBoxDescription.ReadOnly = Program.MainForm.FileIsReadOnly || ((Byte)lName.Language != (Byte)lLangID);
-				TextBoxExtra.ReadOnly = Program.MainForm.FileIsReadOnly || ((Byte)lName.Language != (Byte)lLangID);
+				TextBoxName.ReadOnly = MainForm.Singleton.FileIsReadOnly;
+				TextBoxDescription.ReadOnly = MainForm.Singleton.FileIsReadOnly || !PrimaryLanguageMatch (lName, lLangID);
+				TextBoxExtra.ReadOnly = MainForm.Singleton.FileIsReadOnly || !PrimaryLanguageMatch (lName, lLangID);
 
 				TextBoxName.Enabled = true;
 				TextBoxDescription.Enabled = true;
@@ -161,6 +191,35 @@ namespace AgentCharacterEditor
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
+
+		private FileCharacterName LangIDName (UInt16 pLangID, Boolean pExactMatch)
+		{
+			FileCharacterName	lName = null;
+
+			if (!IsEmpty)
+			{
+				lName = mCharacterFile.FindName (pLangID);
+
+				if (pExactMatch && !PrimaryLanguageMatch (lName, pLangID))
+				{
+					lName = null;
+				}
+			}
+			return lName;
+		}
+
+		static private Boolean PrimaryLanguageMatch (FileCharacterName pName, UInt16 pLangID)
+		{
+			if (pName != null)
+			{
+				return PrimaryLanguageMatch (pName.Language, pLangID);
+			}
+			return false;
+		}
+		static private Boolean PrimaryLanguageMatch (UInt16 pLangID1, UInt16 pLangID2)
+		{
+			return ((Byte)pLangID1 == (Byte)pLangID2);
+		}
 
 		private UInt16 ListItemLangID (ListViewItem pListItem)
 		{
@@ -199,7 +258,7 @@ namespace AgentCharacterEditor
 			return null;
 		}
 
-		private bool SelectLangIDItem (UInt16 pLangID)
+		private Boolean SelectLangIDItem (UInt16 pLangID)
 		{
 			ListViewItem	lItem = ListLangIDItem (pLangID);
 
@@ -216,7 +275,7 @@ namespace AgentCharacterEditor
 
 		private void ShowCharacterIcon ()
 		{
-			if (mCharacterFile == null)
+			if (IsEmpty)
 			{
 				PictureBoxIconSmall.Image = null;
 				PictureBoxIconLarge.Image = null;
@@ -247,14 +306,14 @@ namespace AgentCharacterEditor
 					}
 				}
 
-				TextBoxIconFile.Enabled = !Program.MainForm.FileIsReadOnly;
-				ToolStripIconFile.Enabled = !Program.MainForm.FileIsReadOnly;
+				TextBoxIconFile.Enabled = !MainForm.Singleton.FileIsReadOnly;
+				ToolStripIconFile.Enabled = !MainForm.Singleton.FileIsReadOnly;
 			}
 		}
 
 		private void ShowCharacterGuid ()
 		{
-			if (mCharacterFile == null)
+			if (IsEmpty)
 			{
 				TextBoxGUID.ResetText ();
 				ButtonNewGUID.Enabled = false;
@@ -269,7 +328,7 @@ namespace AgentCharacterEditor
 				{
 					TextBoxGUID.Text = mCharacterFile.Header.Guid.ToString ().ToUpper ();
 				}
-				ButtonNewGUID.Enabled = !Program.MainForm.FileIsReadOnly;
+				ButtonNewGUID.Enabled = !MainForm.Singleton.FileIsReadOnly;
 			}
 		}
 
@@ -277,23 +336,31 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Update
 
-		internal class AddRemoveCharacterName : UndoableAddRemove<FileCharacterName>
+		internal class AddDeleteCharacterName : UndoableAddDelete<FileCharacterName>
 		{
-			public AddRemoveCharacterName (CharacterFile pCharacterFile, FileCharacterName pName, bool pRemove)
-				: base (pCharacterFile, pName)
+			public AddDeleteCharacterName (CharacterFile pCharacterFile, FileCharacterName pName, Boolean pRemove, Boolean pForClipboard)
+				: base (pCharacterFile, pName, pForClipboard)
 			{
-				this.IsRemove = pRemove;
+				this.IsDelete = pRemove;
+			}
+
+			public override String TargetDescription
+			{
+				get
+				{
+					return Program.TitleCharacterName (this.Target);
+				}
 			}
 
 			public override UndoUnit Apply ()
 			{
-				AddRemoveCharacterName	lApplied = null;
+				AddDeleteCharacterName	lApplied = null;
 
-				if (IsRemove)
+				if (IsDelete)
 				{
 					if (CharacterFile.Names.Remove (this.Target))
 					{
-						lApplied = new AddRemoveCharacterName (CharacterFile, this.Target, false);
+						lApplied = new AddDeleteCharacterName (CharacterFile, this.Target, false, this.ForClipboard);
 						lApplied.IsRedo = !IsRedo;
 					}
 				}
@@ -305,7 +372,7 @@ namespace AgentCharacterEditor
 					{
 						lName.Desc1 = this.Target.Desc1;
 						lName.Desc2 = this.Target.Desc2;
-						lApplied = new AddRemoveCharacterName (CharacterFile, lName, true);
+						lApplied = new AddDeleteCharacterName (CharacterFile, lName, true, this.ForClipboard);
 						lApplied.IsRedo = !IsRedo;
 					}
 				}
@@ -315,24 +382,28 @@ namespace AgentCharacterEditor
 				}
 				return null;
 			}
-
-			public override string ToString ()
-			{
-				return String.Format ("{0} {1} name \"{2}\"", this.AddRemoveTitle, new System.Globalization.CultureInfo (this.Target.Language).EnglishName, this.Target.Name);
-			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		internal class UpdateCharacterName : UndoableUpdate
+		internal class UpdateCharacterName : UndoableUpdate<CharacterFile>
 		{
 			public UpdateCharacterName (CharacterFile pCharacterFile, UInt16 pLanguage, String pName, String pDesc1, String pDesc2)
-				: base (pCharacterFile)
+				: base (pCharacterFile, pCharacterFile)
 			{
 				this.Language = pLanguage;
 				this.Name = pName;
 				this.Desc1 = pDesc1;
 				this.Desc2 = pDesc2;
+			}
+
+			public UpdateCharacterName (CharacterFile pCharacterFile, FileCharacterName pName, Boolean pForClipboard)
+				: base (pCharacterFile, pCharacterFile, pForClipboard)
+			{
+				this.Language = pName.Language;
+				this.Name = pName.Name;
+				this.Desc1 = pName.Desc1;
+				this.Desc2 = pName.Desc2;
 			}
 
 			public UInt16 Language
@@ -356,15 +427,34 @@ namespace AgentCharacterEditor
 				private set;
 			}
 
+			public override String TargetDescription
+			{
+				get
+				{
+					return Program.TitleCharacterName (this.Language);
+				}
+			}
+			public override String ActionDescription
+			{
+				get
+				{
+					return this.ForClipboard ? "paste " : "change ";
+				}
+			}
+
 			public override UndoUnit Apply ()
 			{
 				UpdateCharacterName	lApplied = null;
 				FileCharacterName	lName;
 				String				lSwap;
 
-				if (CharacterFile.Names.Contains (this.Language))
+				lName = CharacterFile.FindName (this.Language);
+				if (!CharacterForm.PrimaryLanguageMatch (lName, this.Language))
 				{
-					lName = CharacterFile.Names[this.Language];
+					lName = null;
+				}
+				if (lName != null)
+				{
 #if DEBUG_NOT
 					System.Diagnostics.Debug.Print ("Applying {0}", lName.ToString ());
 #endif
@@ -403,19 +493,14 @@ namespace AgentCharacterEditor
 				}
 				return null;
 			}
-
-			public override string ToString ()
-			{
-				return String.Format ("change {0} name", new System.Globalization.CultureInfo (this.Language).EnglishName);
-			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		internal class UpdateCharacterGuid : UndoableUpdate
+		internal class UpdateCharacterGuid : UndoableUpdate<CharacterFile>
 		{
 			public UpdateCharacterGuid (CharacterFile pCharacterFile, Guid pGuid)
-				: base (pCharacterFile)
+				: base (pCharacterFile, pCharacterFile)
 			{
 				this.Guid = pGuid;
 			}
@@ -424,6 +509,13 @@ namespace AgentCharacterEditor
 			{
 				get;
 				private set;
+			}
+			public override String TargetDescription
+			{
+				get
+				{
+					return "unique identifier";
+				}
 			}
 
 			public override UndoUnit Apply ()
@@ -440,17 +532,12 @@ namespace AgentCharacterEditor
 				}
 				return null;
 			}
-
-			public override string ToString ()
-			{
-				return "change unique identifier";
-			}
 		}
 
-		internal class UpdateCharacterIcon : UndoableUpdate
+		internal class UpdateCharacterIcon : UndoableUpdate<CharacterFile>
 		{
 			public UpdateCharacterIcon (CharacterFile pCharacterFile, String pIconPath)
-				: base (pCharacterFile)
+				: base (pCharacterFile, pCharacterFile)
 			{
 				this.IconPath = pIconPath;
 			}
@@ -459,6 +546,13 @@ namespace AgentCharacterEditor
 			{
 				get;
 				private set;
+			}
+			public override String TargetDescription
+			{
+				get
+				{
+					return "icon";
+				}
 			}
 
 			public override UndoUnit Apply ()
@@ -473,11 +567,6 @@ namespace AgentCharacterEditor
 				}
 				return null;
 			}
-
-			public override string ToString ()
-			{
-				return "icon";
-			}
 		}
 
 		#endregion
@@ -491,19 +580,19 @@ namespace AgentCharacterEditor
 
 		private void TextBoxName_Validated (object sender, EventArgs e)
 		{
-			if ((TextBoxName.Modified) && (!Program.MainForm.FileIsReadOnly))
+			if ((TextBoxName.Modified) && (!MainForm.Singleton.FileIsReadOnly))
 			{
-				FileCharacterName	lName = mCharacterFile.FindName (mLangCurrent);
+				FileCharacterName	lName =LangIDName (mLangCurrent, true);
 
-				if ((lName != null) && ((Byte)lName.Language == (Byte)mLangCurrent))
+				if (lName != null)
 				{
 					if (String.IsNullOrEmpty (TextBoxName.Text))
 					{
 						if (String.IsNullOrEmpty (lName.Desc1) && String.IsNullOrEmpty (lName.Desc2))
 						{
-							AddRemoveCharacterName lUpdate = new AddRemoveCharacterName (mCharacterFile, lName, true);
-							lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableNameStateUpdate_Applied);
-							AddRemoveCharacterName.PutUndo (lUpdate.Apply () as AddRemoveCharacterName);
+							AddDeleteCharacterName lUpdate = new AddDeleteCharacterName (mCharacterFile, lName, true, false);
+							lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableNameStateUpdate_Applied);
+							AddDeleteCharacterName.PutUndo (lUpdate.Apply () as AddDeleteCharacterName);
 						}
 						else
 						{
@@ -513,16 +602,16 @@ namespace AgentCharacterEditor
 					else
 					{
 						UpdateCharacterName lUpdate = new UpdateCharacterName (mCharacterFile, lName.Language, TextBoxName.Text, null, null);
-						lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableNameTextUpdate_Applied);
+						lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableNameTextUpdate_Applied);
 						UpdateCharacterName.PutUndo (lUpdate.Apply () as UpdateCharacterName);
 					}
 				}
 				else if ((!String.IsNullOrEmpty (TextBoxName.Text)) && ((lName == null) || (TextBoxName.Text != lName.Name)))
 				{
 					lName = new FileCharacterName (mLangCurrent, TextBoxName.Text);
-					AddRemoveCharacterName lUpdate = new AddRemoveCharacterName (mCharacterFile, lName, false);
-					lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableNameStateUpdate_Applied);
-					AddRemoveCharacterName.PutUndo (lUpdate.Apply () as AddRemoveCharacterName);
+					AddDeleteCharacterName lUpdate = new AddDeleteCharacterName (mCharacterFile, lName, false, false);
+					lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableNameStateUpdate_Applied);
+					AddDeleteCharacterName.PutUndo (lUpdate.Apply () as AddDeleteCharacterName);
 				}
 			}
 			TextBoxName.Modified = false;
@@ -538,16 +627,16 @@ namespace AgentCharacterEditor
 
 		private void TextBoxDescription_Validated (object sender, EventArgs e)
 		{
-			if ((TextBoxDescription.Modified) && (!Program.MainForm.FileIsReadOnly))
+			if ((TextBoxDescription.Modified) && (!MainForm.Singleton.FileIsReadOnly))
 			{
-				FileCharacterName	lName = mCharacterFile.FindName (mLangCurrent);
-				UndoableUpdate		lUpdate;
+				FileCharacterName	lName = LangIDName (mLangCurrent, true);
+				UpdateCharacterName	lUpdate;
 
-				if ((lName != null) && ((Byte)lName.Language == (Byte)mLangCurrent))
+				if (lName != null)
 				{
 					lUpdate = new UpdateCharacterName (mCharacterFile, lName.Language, null, TextBoxDescription.Text, null);
-					lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableNameTextUpdate_Applied);
-					UndoableUpdate.PutUndo (lUpdate.Apply () as UndoableUpdate);
+					lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableNameTextUpdate_Applied);
+					UpdateCharacterName.PutUndo (lUpdate.Apply () as UpdateCharacterName);
 				}
 			}
 			TextBoxDescription.Modified = false;
@@ -555,16 +644,16 @@ namespace AgentCharacterEditor
 
 		private void TextBoxExtra_Validated (object sender, EventArgs e)
 		{
-			if ((TextBoxExtra.Modified) && (!Program.MainForm.FileIsReadOnly))
+			if ((TextBoxExtra.Modified) && (!MainForm.Singleton.FileIsReadOnly))
 			{
-				FileCharacterName	lName = mCharacterFile.FindName (mLangCurrent);
-				UndoableUpdate		lUpdate;
+				FileCharacterName	lName = LangIDName (mLangCurrent, true);
+				UpdateCharacterName	lUpdate;
 
-				if ((lName != null) && ((Byte)lName.Language == (Byte)mLangCurrent))
+				if (lName != null)
 				{
 					lUpdate = new UpdateCharacterName (mCharacterFile, lName.Language, null, null, TextBoxExtra.Text);
-					lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableNameTextUpdate_Applied);
-					UndoableUpdate.PutUndo (lUpdate.Apply () as UndoableUpdate);
+					lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableNameTextUpdate_Applied);
+					UpdateCharacterName.PutUndo (lUpdate.Apply () as UpdateCharacterName);
 				}
 			}
 			TextBoxExtra.Modified = false;
@@ -579,27 +668,27 @@ namespace AgentCharacterEditor
 
 		private void TextBoxIconFile_Validated (object sender, EventArgs e)
 		{
-			if ((TextBoxIconFile.Modified) && (!Program.MainForm.FileIsReadOnly))
+			if ((TextBoxIconFile.Modified) && (!MainForm.Singleton.FileIsReadOnly))
 			{
-				UndoableUpdate	lUpdate = new UpdateCharacterIcon (mCharacterFile, TextBoxIconFile.Text);
+				UpdateCharacterIcon	lUpdate = new UpdateCharacterIcon (mCharacterFile, TextBoxIconFile.Text);
 
-				lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableIconUpdate_Applied);
-				UndoableUpdate.PutUndo (lUpdate.Apply () as UndoableUpdate);
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableIconUpdate_Applied);
+				UpdateCharacterIcon.PutUndo (lUpdate.Apply () as UpdateCharacterIcon);
 			}
 		}
 
 		private void ButtonIconImport_Click (object sender, EventArgs e)
 		{
-			if (!Program.MainForm.FileIsReadOnly)
+			if (!MainForm.Singleton.FileIsReadOnly)
 			{
-				String			lFilePath = mCharacterFile.IconFilePath;
-				UndoableUpdate	lUpdate;
+				String				lFilePath = mCharacterFile.IconFilePath;
+				UpdateCharacterIcon	lUpdate;
 
 				if (OpenFileDialogEx.OpenIconFile (ref lFilePath))
 				{
 					lUpdate = new UpdateCharacterIcon (mCharacterFile, lFilePath);
-					lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableIconUpdate_Applied);
-					UndoableUpdate.PutUndo (lUpdate.Apply () as UndoableUpdate);
+					lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableIconUpdate_Applied);
+					UpdateCharacterIcon.PutUndo (lUpdate.Apply () as UpdateCharacterIcon);
 				}
 			}
 		}
@@ -613,18 +702,135 @@ namespace AgentCharacterEditor
 
 		private void ButtonNewGUID_Click (object sender, EventArgs e)
 		{
-			if (!Program.MainForm.FileIsReadOnly)
+			if (!MainForm.Singleton.FileIsReadOnly)
 			{
-				UndoableUpdate	lUpdate = new UpdateCharacterGuid (mCharacterFile, System.Guid.NewGuid ());
+				UpdateCharacterGuid	lUpdate = new UpdateCharacterGuid (mCharacterFile, System.Guid.NewGuid ());
 
-				lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableGuidUpdate_Applied);
-				UndoableUpdate.PutUndo (lUpdate.Apply () as UndoableUpdate);
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableGuidUpdate_Applied);
+				UpdateCharacterGuid.PutUndo (lUpdate.Apply () as UpdateCharacterGuid);
 			}
 		}
 
 		private void UndoableGuidUpdate_Applied (object sender, EventArgs e)
 		{
 			ShowCharacterGuid ();
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region Internal Event Handlers
+
+		internal void MainForm_CanEdit (object sender, EditEventArgs e)
+		{
+			if (e.IsUsed && !IsEmpty && ListViewLanguage.ContainsFocus)
+			{
+				FileCharacterName	lName =LangIDName (mLangCurrent, true);
+
+				if (lName != null)
+				{
+					e.CopyObjectTitle = Program.TitleCharacterName (lName.Language);
+					if (!MainForm.Singleton.FileIsReadOnly && !PrimaryLanguageMatch (lName, mLangDefault))
+					{
+						e.CutObjectTitle = e.CopyObjectTitle;
+						e.DeleteObjectTitle = e.CopyObjectTitle;
+					}
+				}
+				if (!MainForm.Singleton.FileIsReadOnly && (e.PasteObject is FileCharacterName))
+				{
+					e.PasteObjectTitle = e.PasteTypeTitle (lName) + Program.TitleCharacterName (mLangCurrent);
+				}
+			}
+		}
+
+		internal void MainForm_EditCopy (object sender, EditEventArgs e)
+		{
+			if (e.IsUsed && !IsEmpty && ListViewLanguage.ContainsFocus)
+			{
+				FileCharacterName	lName = LangIDName (mLangCurrent, true);
+
+				if (lName != null)
+				{
+					e.IsUsed = true;
+					try
+					{
+						Clipboard.SetData (DataFormats.Serializable, lName);
+					}
+					catch
+					{
+					}
+				}
+			}
+		}
+
+		internal void MainForm_EditCut (object sender, EditEventArgs e)
+		{
+			if (e.IsUsed && !IsEmpty && !MainForm.Singleton.FileIsReadOnly && ListViewLanguage.ContainsFocus)
+			{
+				FileCharacterName		lName = LangIDName (mLangCurrent, true);
+				AddDeleteCharacterName	lUpdate;
+
+				if ((lName != null) && !PrimaryLanguageMatch (lName, mLangDefault))
+				{
+					e.IsUsed = true;
+					try
+					{
+						Clipboard.SetData (DataFormats.Serializable, lName);
+
+						lUpdate = new AddDeleteCharacterName (mCharacterFile, lName, true, true);
+						lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableNameStateUpdate_Applied);
+						AddDeleteCharacterName.PutUndo (lUpdate.Apply () as AddDeleteCharacterName);
+					}
+					catch
+					{
+					}
+				}
+			}
+		}
+
+		internal void MainForm_EditDelete (object sender, EditEventArgs e)
+		{
+			if (e.IsUsed && !IsEmpty && !MainForm.Singleton.FileIsReadOnly && ListViewLanguage.ContainsFocus)
+			{
+				FileCharacterName		lName = LangIDName (mLangCurrent, true);
+				AddDeleteCharacterName	lUpdate;
+
+				if ((lName != null) && !PrimaryLanguageMatch (lName, mLangDefault))
+				{
+					e.IsUsed = true;
+
+					lUpdate = new AddDeleteCharacterName (mCharacterFile, lName, true, false);
+					lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableNameStateUpdate_Applied);
+					AddDeleteCharacterName.PutUndo (lUpdate.Apply () as AddDeleteCharacterName);
+				}
+			}
+		}
+
+		internal void MainForm_EditPaste (object sender, EditEventArgs e)
+		{
+			if (e.IsUsed && !IsEmpty && !MainForm.Singleton.FileIsReadOnly && ListViewLanguage.ContainsFocus)
+			{
+				if (e.PasteObject is FileCharacterName)
+				{
+					FileCharacterName	lPasteName = new FileCharacterName (mLangCurrent, e.PasteObject as FileCharacterName);
+
+					e.IsUsed = true;
+
+					if (LangIDName (mLangCurrent, true) == null)
+					{
+						AddDeleteCharacterName	lUpdate = new AddDeleteCharacterName (mCharacterFile, lPasteName, false, true);
+
+						lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableNameStateUpdate_Applied);
+						AddDeleteCharacterName.PutUndo (lUpdate.Apply () as AddDeleteCharacterName);
+					}
+					else
+					{
+						UpdateCharacterName		lUpdate = new UpdateCharacterName (mCharacterFile, lPasteName, true);
+
+						lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableNameTextUpdate_Applied);
+						UpdateCharacterName.PutUndo (lUpdate.Apply () as UpdateCharacterName);
+					}
+				}
+			}
 		}
 
 		#endregion

@@ -32,6 +32,7 @@ namespace DoubleAgent
 		private const	int WM_KEYDOWN = 0x0100;
 		private TextBox	mTextBox = null;
 		private Color	mDefaultBackColor = SystemColors.Window;
+		private Color	mHighlightBackColor = Color.Pink;
 		private Timer	mWheelTimer = null;
 
 		public NumericUpDownEx ()
@@ -48,6 +49,16 @@ namespace DoubleAgent
 			}
 		}
 
+		[System.ComponentModel.Category ("Behavior")]
+		[System.ComponentModel.DefaultValue (true)]
+		public Boolean MouseWheelSingle
+		{
+			get;
+			set;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
 		public new System.Drawing.Color DefaultBackColor
 		{
 			get
@@ -60,12 +71,42 @@ namespace DoubleAgent
 			}
 		}
 
-		[System.ComponentModel.Category ("Behavior")]
-		[System.ComponentModel.DefaultValue (true)]
-		public Boolean MouseWheelSingle
+		public System.Drawing.Color HighlightBackColor
 		{
-			get;
-			set;
+			get
+			{
+				return mHighlightBackColor;
+			}
+			set
+			{
+				mHighlightBackColor = value;
+			}
+		}
+
+		[System.ComponentModel.Browsable (false)]
+		public Boolean Highlighted
+		{
+			get
+			{
+				return (this.BackColor == this.HighlightBackColor);
+			}
+			set
+			{
+				if (value)
+				{
+					if (this.BackColor != this.HighlightBackColor)
+					{
+						this.BackColor = this.HighlightBackColor;
+					}
+				}
+				else
+				{
+					if (this.BackColor != this.DefaultBackColor)
+					{
+						this.BackColor = this.DefaultBackColor;
+					}
+				}
+			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -81,11 +122,11 @@ namespace DoubleAgent
 				if ((value < Minimum) || (value > Maximum))
 				{
 					value = Math.Min (Math.Max (value, Minimum), Maximum);
-					BackColor = Color.Pink;
+					this.Highlighted = true;
 				}
-				else if (BackColor != DefaultBackColor)
+				else
 				{
-					BackColor = DefaultBackColor;
+					this.Highlighted = false;
 				}
 				if (base.Value != value) // Setting the same value causes to control to blank out
 				{
@@ -111,7 +152,7 @@ namespace DoubleAgent
 			return base.ProcessCmdKey (ref pMessage, pKeyData);
 		}
 
-		private bool ValidateNow ()
+		private Boolean ValidateNow ()
 		{
 			if (mWheelTimer != null)
 			{
@@ -186,7 +227,7 @@ namespace DoubleAgent
 		{
 			if (this.MouseWheelSingle)
 			{
-				this.Value += e.Delta / System.Windows.Forms.SystemInformation.MouseWheelScrollDelta;
+				this.Value = Math.Min (Math.Max (this.Value + (e.Delta / System.Windows.Forms.SystemInformation.MouseWheelScrollDelta), this.Minimum), this.Maximum);
 			}
 			else
 			{
@@ -196,7 +237,7 @@ namespace DoubleAgent
 			{
 				if (mWheelTimer == null)
 				{
-					mWheelTimer = new Timer();
+					mWheelTimer = new Timer ();
 					mWheelTimer.Tick += new EventHandler (WheelTimer_Tick);
 					mWheelTimer.Interval = System.Windows.Forms.SystemInformation.DoubleClickTime;
 				}

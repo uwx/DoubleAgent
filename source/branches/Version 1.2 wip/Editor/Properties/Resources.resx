@@ -121,16 +121,151 @@
   <data name="DoubleAgent" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\DoubleAgent.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="EditCopy" xml:space="preserve">
+    <value>&amp;Copy</value>
+  </data>
+  <data name="EditCopyText" xml:space="preserve">
+    <value>&amp;Copy selected text</value>
+  </data>
+  <data name="EditCopyThis" xml:space="preserve">
+    <value>&amp;Copy {0}</value>
+  </data>
+  <data name="EditCut" xml:space="preserve">
+    <value>Cu&amp;t</value>
+  </data>
+  <data name="EditCutText" xml:space="preserve">
+    <value>&amp;Cut selected text</value>
+  </data>
+  <data name="EditCutThis" xml:space="preserve">
+    <value>Cu&amp;t {0}</value>
+  </data>
+  <data name="EditDelete" xml:space="preserve">
+    <value>&amp;Delete</value>
+  </data>
+  <data name="EditDeleteText" xml:space="preserve">
+    <value>&amp;Delete selected text</value>
+  </data>
+  <data name="EditDeleteThis" xml:space="preserve">
+    <value>&amp;Delete {0}</value>
+  </data>
+  <data name="EditPaste" xml:space="preserve">
+    <value>&amp;Paste</value>
+  </data>
+  <data name="EditPasteText" xml:space="preserve">
+    <value>&amp;Paste text</value>
+  </data>
+  <data name="EditPasteThis" xml:space="preserve">
+    <value>&amp;Paste {0}</value>
+  </data>
+  <data name="EditRedo" xml:space="preserve">
+    <value>&amp;Redo</value>
+  </data>
+  <data name="EditRedoThis" xml:space="preserve">
+    <value>&amp;Redo {0}</value>
+  </data>
+  <data name="EditUndo" xml:space="preserve">
+    <value>&amp;Undo</value>
+  </data>
+  <data name="EditUndoText" xml:space="preserve">
+    <value>&amp;Undo typing</value>
+  </data>
+  <data name="EditUndoThis" xml:space="preserve">
+    <value>&amp;Undo {0}</value>
+  </data>
+  <data name="MouthOverlay" xml:space="preserve">
+    <value>Mouth</value>
+  </data>
+  <data name="MouthOverlayClosed" xml:space="preserve">
+    <value>Mouth-closed</value>
+  </data>
+  <data name="MouthOverlayMedium" xml:space="preserve">
+    <value>Mouth-medium</value>
+  </data>
+  <data name="MouthOverlayNarrow" xml:space="preserve">
+    <value>Mouth-narrow</value>
+  </data>
+  <data name="MouthOverlayWide1" xml:space="preserve">
+    <value>Mouth-wide-1</value>
+  </data>
+  <data name="MouthOverlayWide2" xml:space="preserve">
+    <value>Mouth-wide-2</value>
+  </data>
+  <data name="MouthOverlayWide3" xml:space="preserve">
+    <value>Mouth-wide-3</value>
+  </data>
+  <data name="MouthOverlayWide4" xml:space="preserve">
+    <value>Mouth-wide-4</value>
+  </data>
   <data name="MsgDuplicateAnimation" xml:space="preserve">
     <value>Animation "{0}" already exists.</value>
   </data>
+  <data name="MsgFailedSaveAs" xml:space="preserve">
+    <value>Save as {0} failed.</value>
+  </data>
   <data name="MsgInvalidFile" xml:space="preserve">
     <value>{0} is not a valid character file.</value>
+  </data>
+  <data name="MsgInvalidSaveAs" xml:space="preserve">
+    <value>You cannot use "Save As" with the same file name.</value>
   </data>
   <data name="MsgNoFilePalette" xml:space="preserve">
     <value>{0} does not contain a valid palette.</value>
   </data>
   <data name="MsgSaveFile" xml:space="preserve">
     <value>Save changes to {0}?</value>
+  </data>
+  <data name="TitleAnimation" xml:space="preserve">
+    <value>animation {0}</value>
+  </data>
+  <data name="TitleBalloon" xml:space="preserve">
+    <value>Word Balloon</value>
+  </data>
+  <data name="TitleCharacterName" xml:space="preserve">
+    <value>{0} name {1}</value>
+  </data>
+  <data name="TitleFrame" xml:space="preserve">
+    <value>Frame {0}</value>
+  </data>
+  <data name="TitleFrameAnimation" xml:space="preserve">
+    <value>{1} - {0}</value>
+  </data>
+  <data name="TitleImage" xml:space="preserve">
+    <value>Image {0}</value>
+  </data>
+  <data name="TitleImageFrame" xml:space="preserve">
+    <value>{1} - {0}</value>
+  </data>
+  <data name="TitleOverlay" xml:space="preserve">
+    <value>{0} overlay</value>
+  </data>
+  <data name="TitleOverlayFrame" xml:space="preserve">
+    <value>{1} - {0}</value>
+  </data>
+  <data name="TitleState" xml:space="preserve">
+    <value>state {0}</value>
+  </data>
+  <data name="TitleTts" xml:space="preserve">
+    <value>Text-to-Speech</value>
+  </data>
+  <data name="UndoAnimationName" xml:space="preserve">
+    <value>change {0}</value>
+  </data>
+  <data name="UndoAnimationNames" xml:space="preserve">
+    <value>{0} to {1}</value>
+  </data>
+  <data name="UndoAnimationSize" xml:space="preserve">
+    <value>size</value>
+  </data>
+  <data name="UndoFrameOrder" xml:space="preserve">
+    <value>frame order</value>
+  </data>
+  <data name="UndoNewFrameDuration" xml:space="preserve">
+    <value>new frame duration</value>
+  </data>
+  <data name="UndoPalette" xml:space="preserve">
+    <value>palette</value>
+  </data>
+  <data name="UndoReturnAnimation" xml:space="preserve">
+    <value>return animation</value>
   </data>
 </root>

@@ -30,7 +30,7 @@ namespace AgentCharacterEditor
 {
 	public class OpenFileDialogEx
 	{
-		static public bool OpenCharacterFile (ref String pFilePath)
+		static public Boolean OpenCharacterFile (ref String pFilePath)
 		{
 			OpenFileDialog	lDialog = new OpenFileDialog ();
 			StringBuilder	lFilter = new StringBuilder ();
@@ -51,7 +51,7 @@ namespace AgentCharacterEditor
 			return false;
 		}
 
-		static public bool SaveCharacterFile (ref String pFilePath)
+		static public Boolean SaveCharacterFile (ref String pFilePath)
 		{
 			SaveFileDialog	lDialog = new SaveFileDialog ();
 			StringBuilder	lFilter = new StringBuilder ();
@@ -75,7 +75,7 @@ namespace AgentCharacterEditor
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		static public bool OpenImageFile (ref String pFilePath)
+		static public Boolean OpenImageFile (ref String pFilePath)
 		{
 			OpenFileDialog	lDialog = new OpenFileDialog ();
 			StringBuilder	lFilter = new StringBuilder ();
@@ -99,7 +99,7 @@ namespace AgentCharacterEditor
 			return false;
 		}
 
-		static public bool OpenIconFile (ref String pFilePath)
+		static public Boolean OpenIconFile (ref String pFilePath)
 		{
 			OpenFileDialog	lDialog = new OpenFileDialog ();
 			StringBuilder	lFilter = new StringBuilder ();
@@ -119,7 +119,7 @@ namespace AgentCharacterEditor
 			return false;
 		}
 
-		static public bool OpenSoundFile (ref String pFilePath)
+		static public Boolean OpenSoundFile (ref String pFilePath)
 		{
 			OpenFileDialog	lDialog = new OpenFileDialog ();
 			StringBuilder	lFilter = new StringBuilder ();
@@ -139,7 +139,7 @@ namespace AgentCharacterEditor
 			return false;
 		}
 
-		static public bool OpenPaletteFile (ref String pFilePath)
+		static public Boolean OpenPaletteFile (ref String pFilePath)
 		{
 			OpenFileDialog	lDialog = new OpenFileDialog ();
 			StringBuilder	lFilter = new StringBuilder ();

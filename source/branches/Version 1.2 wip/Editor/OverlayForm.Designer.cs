@@ -87,7 +87,7 @@ namespace AgentCharacterEditor
 			this.MouthImageList = new System.Windows.Forms.ImageList (this.components);
 			this.ToolStripImages = new DoubleAgent.ToolStripEx ();
 			this.ButtonAdd = new System.Windows.Forms.ToolStripButton ();
-			this.ButtonRemove = new System.Windows.Forms.ToolStripButton ();
+			this.ButtonDelete = new System.Windows.Forms.ToolStripButton ();
 			this.ButtonOpen = new System.Windows.Forms.ToolStripButton ();
 			this.GroupBoxImages.SuspendLayout ();
 			this.TableLayoutImages.SuspendLayout ();
@@ -201,6 +201,8 @@ namespace AgentCharacterEditor
 			// NumericOffsetX
 			// 
 			this.NumericOffsetX.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericOffsetX.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericOffsetX.Highlighted = false;
 			this.NumericOffsetX.Location = new System.Drawing.Point (68, 3);
 			this.NumericOffsetX.Maximum = new decimal (new int[] {
             10000,
@@ -234,6 +236,8 @@ namespace AgentCharacterEditor
 			// NumericOffsetY
 			// 
 			this.NumericOffsetY.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericOffsetY.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericOffsetY.Highlighted = false;
 			this.NumericOffsetY.Location = new System.Drawing.Point (186, 3);
 			this.NumericOffsetY.Maximum = new decimal (new int[] {
             10000,
@@ -328,6 +332,7 @@ namespace AgentCharacterEditor
 			this.ButtonShiftUp.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
 			this.ButtonShiftUp.RepeatEnabled = true;
 			this.ButtonShiftUp.Size = new System.Drawing.Size (128, 23);
+			this.ButtonShiftUp.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler (this.ButtonShiftUp_RepeatEnd);
 			this.ButtonShiftUp.Click += new System.EventHandler (this.ButtonShiftUp_Click);
 			// 
 			// ToolStripShiftRight
@@ -363,6 +368,7 @@ namespace AgentCharacterEditor
 			this.ButtonShiftRight.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
 			this.ButtonShiftRight.RepeatEnabled = true;
 			this.ButtonShiftRight.Size = new System.Drawing.Size (23, 128);
+			this.ButtonShiftRight.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler (this.ButtonShiftRight_RepeatEnd);
 			this.ButtonShiftRight.Click += new System.EventHandler (this.ButtonShiftRight_Click);
 			// 
 			// ToolStripShiftDown
@@ -398,6 +404,7 @@ namespace AgentCharacterEditor
 			this.ButtonShiftDown.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
 			this.ButtonShiftDown.RepeatEnabled = true;
 			this.ButtonShiftDown.Size = new System.Drawing.Size (128, 23);
+			this.ButtonShiftDown.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler (this.ButtonShiftDown_RepeatEnd);
 			this.ButtonShiftDown.Click += new System.EventHandler (this.ButtonShiftDown_Click);
 			// 
 			// ToolStripShiftLeft
@@ -433,6 +440,7 @@ namespace AgentCharacterEditor
 			this.ButtonShiftLeft.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
 			this.ButtonShiftLeft.RepeatEnabled = true;
 			this.ButtonShiftLeft.Size = new System.Drawing.Size (23, 128);
+			this.ButtonShiftLeft.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler (this.ButtonShiftLeft_RepeatEnd);
 			this.ButtonShiftLeft.Click += new System.EventHandler (this.ButtonShiftLeft_Click);
 			// 
 			// CheckBoxReplace
@@ -441,9 +449,9 @@ namespace AgentCharacterEditor
 			this.CheckBoxReplace.Location = new System.Drawing.Point (15, 267);
 			this.CheckBoxReplace.Margin = new System.Windows.Forms.Padding (3, 12, 3, 3);
 			this.CheckBoxReplace.Name = "CheckBoxReplace";
-			this.CheckBoxReplace.Size = new System.Drawing.Size (223, 21);
+			this.CheckBoxReplace.Size = new System.Drawing.Size (222, 21);
 			this.CheckBoxReplace.TabIndex = 2;
-			this.CheckBoxReplace.Text = "Replace base frame top image";
+			this.CheckBoxReplace.Text = "Replace the frame\'s top image";
 			this.CheckBoxReplace.UseVisualStyleBackColor = true;
 			this.CheckBoxReplace.Click += new System.EventHandler (this.CheckBoxReplace_Click);
 			// 
@@ -534,7 +542,7 @@ namespace AgentCharacterEditor
 			this.ToolStripImages.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.ToolStripImages.Items.AddRange (new System.Windows.Forms.ToolStripItem[] {
             this.ButtonAdd,
-            this.ButtonRemove,
+            this.ButtonDelete,
             this.ButtonOpen});
 			this.ToolStripImages.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.ToolStripImages.Location = new System.Drawing.Point (0, 0);
@@ -553,16 +561,15 @@ namespace AgentCharacterEditor
 			this.ButtonAdd.Text = "Add";
 			this.ButtonAdd.Click += new System.EventHandler (this.ButtonAdd_Click);
 			// 
-			// ButtonRemove
+			// ButtonDelete
 			// 
-			this.ButtonRemove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonRemove.Image = ((System.Drawing.Image)(resources.GetObject ("ButtonRemove.Image")));
-			this.ButtonRemove.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonRemove.Name = "ButtonRemove";
-			this.ButtonRemove.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
-			this.ButtonRemove.Size = new System.Drawing.Size (23, 23);
-			this.ButtonRemove.Text = "Remove";
-			this.ButtonRemove.Click += new System.EventHandler (this.ButtonRemove_Click);
+			this.ButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonDelete.Image = ((System.Drawing.Image)(resources.GetObject ("ButtonDelete.Image")));
+			this.ButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonDelete.Name = "ButtonDelete";
+			this.ButtonDelete.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
+			this.ButtonDelete.Size = new System.Drawing.Size (23, 23);
+			this.ButtonDelete.Click += new System.EventHandler (this.ButtonDelete_Click);
 			// 
 			// ButtonOpen
 			// 
@@ -572,7 +579,7 @@ namespace AgentCharacterEditor
 			this.ButtonOpen.Name = "ButtonOpen";
 			this.ButtonOpen.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
 			this.ButtonOpen.Size = new System.Drawing.Size (23, 23);
-			this.ButtonOpen.ToolTipText = "Open image file";
+			this.ButtonOpen.Text = "Choose image file";
 			this.ButtonOpen.Click += new System.EventHandler (this.ButtonOpen_Click);
 			// 
 			// OverlayForm
@@ -586,6 +593,7 @@ namespace AgentCharacterEditor
 			this.Name = "OverlayForm";
 			this.Padding = new System.Windows.Forms.Padding (9, 0, 9, 0);
 			this.Size = new System.Drawing.Size (700, 600);
+			this.VisibleChanged += new System.EventHandler (this.OverlayForm_VisibleChanged);
 			this.Layout += new System.Windows.Forms.LayoutEventHandler (this.OverlayForm_Layout);
 			this.GroupBoxImages.ResumeLayout (false);
 			this.TableLayoutImages.ResumeLayout (false);
@@ -642,7 +650,7 @@ namespace AgentCharacterEditor
 		private System.Windows.Forms.ColumnHeader ColumnHeaderPath;
 		private DoubleAgent.ToolStripEx ToolStripImages;
 		private System.Windows.Forms.ToolStripButton ButtonAdd;
-		private System.Windows.Forms.ToolStripButton ButtonRemove;
+		private System.Windows.Forms.ToolStripButton ButtonDelete;
 		private System.Windows.Forms.ImageList MouthImageList;
 		private System.Windows.Forms.CheckBox CheckBoxReplace;
 		private System.Windows.Forms.Panel PanelOverlayOffset;

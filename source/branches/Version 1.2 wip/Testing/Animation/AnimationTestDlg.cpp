@@ -225,12 +225,15 @@ void CAnimationTestDlg::ShowCharacters ()
 
 /**/	mCharacterList.InsertItem (0, _T("C:\\DoubleAgent\\_Test\\Chars\\TestChar1.acs"));
 /**/	mCharacterList.InsertItem (0, _T("C:\\DoubleAgent\\_Test\\Chars\\TestChar1Copy.acs"));
+/**/	mCharacterList.InsertItem (0, _T("C:\\DoubleAgent\\_Test\\Chars\\Empty.acs"));
+/**/	mCharacterList.InsertItem (0, _T("C:\\DoubleAgent\\_Test\\Chars\\EmptyCopy.acs"));
 /**/	mCharacterList.InsertItem (0, _T("C:\\DoubleAgent\\_Test\\Chars\\MerlinCopy.acs"));
 /**/	mCharacterList.InsertItem (0, _T("file://C:/DoubleAgent/_Test/Chars/TestChar1.acf"));
 		mCharacterList.InsertItem (0, _T("<default>"));
 	}
 
 	mCharacterList.SetColumnWidth (0, lClientRect.Width());
+	mCharacterList.RedrawWindow ();
 }
 
 bool CAnimationTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
@@ -333,24 +336,23 @@ bool CAnimationTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 
 void CAnimationTestDlg::ShowCharacterDetails ()
 {
-	CString				lName;
-	CString				lDesc;
-	CAgentFileName*	lFileName;
-
-	if	(
-			(!mMsServer)
-		&&	(mAgentPreviewWnd)
-		&&	(mAgentPreviewWnd->IsWindow ())
-		&&	(mAgentPreviewWnd->GetAgentFile())
-		&&	(lFileName = mAgentPreviewWnd->GetAgentFile()->FindName ())
-		)
+	tBstrPtr	lName;
+	tBstrPtr	lDesc;
+	
+	if	(mDaCharacter)
 	{
-		lName = lFileName->Name;
-		lDesc = lFileName->Desc1;
+		mDaCharacter->GetName (lName.Free());
+		mDaCharacter->GetDescription (lDesc.Free());
+	}
+	else
+	if	(mMsCharacter)
+	{
+		mMsCharacter->GetName (lName.Free());
+		mMsCharacter->GetDescription (lDesc.Free());
 	}
 
-	mCharacterNameEdit.SetWindowText (lName);
-	mCharacterDescEdit.SetWindowText (lDesc);
+	mCharacterNameEdit.SetWindowText (CString ((BSTR)lName));
+	mCharacterDescEdit.SetWindowText (CString ((BSTR)lDesc));
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1255,6 +1257,8 @@ bool CAnimationTestDlg::LoadedAgentCharacter ()
 		SetWindowText (lWinTitle);
 		lRet = true;
 	}
+	
+	ShowCharacterDetails ();
 	return lRet;
 }
 
@@ -2420,7 +2424,6 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::RequestComplete (
 
 		if	(PathIsURL (pThis->mCharacterPath))
 		{
-			pThis->ShowCharacterDetails ();
 			pThis->ShowGestures ();
 			pThis->ShowStates ();
 			pThis->ShowCharacterState ();

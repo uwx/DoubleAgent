@@ -32,7 +32,9 @@ public:
 	static property Boolean IsMouseWheelPending {Boolean get();}
 	
 	static void PopThreadToolTips ();
+	static void PopThreadToolTips (Boolean pNoFade);
 	static void PopThreadToolTips (IntPtr pWindowHandle);
+	static void PopThreadToolTips (IntPtr pWindowHandle, Boolean pNoFade);
 };
 
 /////////////////////////////////////////////////////////////////////////////

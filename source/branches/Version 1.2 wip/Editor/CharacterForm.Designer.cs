@@ -284,6 +284,8 @@ namespace AgentCharacterEditor
 			this.ListViewLanguage.MultiSelect = false;
 			this.ListViewLanguage.Name = "ListViewLanguage";
 			this.LayoutPanelGeneral.SetRowSpan (this.ListViewLanguage, 3);
+			this.ListViewLanguage.SelectedIndex = -1;
+			this.ListViewLanguage.SelectedItem = null;
 			this.ListViewLanguage.ShowGroups = false;
 			this.ListViewLanguage.ShowItemToolTips = true;
 			this.ListViewLanguage.Size = new System.Drawing.Size (185, 416);
@@ -325,9 +327,9 @@ namespace AgentCharacterEditor
 			this.ToolStripIconFile.Items.AddRange (new System.Windows.Forms.ToolStripItem[] {
             this.ButtonIconImport,
             this.ButtonIconExport});
-			this.ToolStripIconFile.Location = new System.Drawing.Point (496, 24);
+			this.ToolStripIconFile.Location = new System.Drawing.Point (527, 24);
 			this.ToolStripIconFile.Name = "ToolStripIconFile";
-			this.ToolStripIconFile.Size = new System.Drawing.Size (80, 26);
+			this.ToolStripIconFile.Size = new System.Drawing.Size (49, 26);
 			this.ToolStripIconFile.TabIndex = 2;
 			// 
 			// ButtonIconImport
@@ -338,7 +340,7 @@ namespace AgentCharacterEditor
 			this.ButtonIconImport.Name = "ButtonIconImport";
 			this.ButtonIconImport.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
 			this.ButtonIconImport.Size = new System.Drawing.Size (23, 23);
-			this.ButtonIconImport.ToolTipText = "Open icon file";
+			this.ButtonIconImport.Text = "Open icon file";
 			this.ButtonIconImport.Click += new System.EventHandler (this.ButtonIconImport_Click);
 			// 
 			// ButtonIconExport
@@ -350,7 +352,7 @@ namespace AgentCharacterEditor
 			this.ButtonIconExport.Name = "ButtonIconExport";
 			this.ButtonIconExport.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
 			this.ButtonIconExport.Size = new System.Drawing.Size (23, 23);
-			this.ButtonIconExport.ToolTipText = "Save icon";
+			this.ButtonIconExport.Text = "Save icon";
 			// 
 			// TextBoxIconFile
 			// 
@@ -458,6 +460,7 @@ namespace AgentCharacterEditor
 			this.Name = "CharacterForm";
 			this.Padding = new System.Windows.Forms.Padding (9, 0, 9, 0);
 			this.Size = new System.Drawing.Size (600, 600);
+			this.VisibleChanged += new System.EventHandler (this.CharacterForm_VisibleChanged);
 			this.GroupBoxGeneral.ResumeLayout (false);
 			this.LayoutPanelGeneral.ResumeLayout (false);
 			this.LayoutPanelGeneral.PerformLayout ();

@@ -34,8 +34,6 @@ namespace AgentCharacterEditor
 	{
 		private CharacterFile		mCharacterFile = null;
 		private FileAnimationFrame	mFrame = null;
-		private String				mFrameName = null;
-		private String				mAnimationName = null;
 
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
@@ -43,12 +41,18 @@ namespace AgentCharacterEditor
 		public BranchingForm ()
 		{
 			InitializeComponent ();
+
+			if (MainForm.Singleton != null)
+			{
+				MainForm.Singleton.PanelAnimation.AnimationNameChanged += new AnimationNameChangedEventHandler (PanelAnimation_AnimationNameChanged);
+			}
 		}
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
 
+		[System.ComponentModel.Browsable (false)]
 		public CharacterFile CharacterFile
 		{
 			get
@@ -58,13 +62,28 @@ namespace AgentCharacterEditor
 			set
 			{
 				mCharacterFile = value;
-				FileFrame = null;
-				FrameName = null;
-				AnimationName = null;
+				this.Frame = null;
 			}
 		}
 
-		public FileAnimationFrame FileFrame
+		[System.ComponentModel.Browsable (false)]
+		public FileAnimation Animation
+		{
+			get
+			{
+				return (mFrame == null) ? null : mFrame.Animation;
+			}
+		}
+		[System.ComponentModel.Browsable (false)]
+		public String FrameTitle
+		{
+			get
+			{
+				return Program.TitleFrame (mFrame);
+			}
+		}
+		[System.ComponentModel.Browsable (false)]
+		public FileAnimationFrame Frame
 		{
 			get
 			{
@@ -73,43 +92,18 @@ namespace AgentCharacterEditor
 			set
 			{
 				mFrame = value;
-				FrameName = null;
-				mAnimationName = null;
-			}
-		}
 
-		public String FrameName
-		{
-			get
-			{
-				return mFrameName;
-			}
-			set
-			{
-				mFrameName = value;
-			}
-		}
-
-		public String AnimationName
-		{
-			get
-			{
-				return mAnimationName;
-			}
-			set
-			{
-				mAnimationName = value;
 				ShowFrameName ();
 				ShowFrameBranching ();
 				ShowExitFrame ();
 			}
 		}
 
-		private bool IsEmpty
+		private Boolean IsEmpty
 		{
 			get
 			{
-				return ((mCharacterFile == null) || (mFrame == null) || String.IsNullOrEmpty (mFrameName) || String.IsNullOrEmpty (mAnimationName));
+				return ((mCharacterFile == null) || (mFrame == null));
 			}
 		}
 
@@ -126,30 +120,37 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				TextBoxFrameName.Text = mAnimationName + " - " + mFrameName;
+				TextBoxFrameName.Text = Program.TitleFrameAnimation (mFrame);
 				TextBoxFrameName.Enabled = true;
 			}
 		}
 
 		private void ShowFrameBranching ()
 		{
+			NumericBranching0.Validated -= new System.EventHandler (NumericBranching0_Validated);
+			NumericBranching1.Validated -= new System.EventHandler (NumericBranching1_Validated);
+			NumericBranching2.Validated -= new System.EventHandler (NumericBranching2_Validated);
+			NumericTarget0.Validated -= new System.EventHandler (NumericTarget0_Validated);
+			NumericTarget1.Validated -= new System.EventHandler (NumericTarget1_Validated);
+			NumericTarget2.Validated -= new System.EventHandler (NumericTarget2_Validated);
+
 			if (IsEmpty)
 			{
+				NumericBranching0.ResetText ();
 				NumericBranching1.ResetText ();
 				NumericBranching2.ResetText ();
-				NumericBranching3.ResetText ();
 				NumericBranchingNot.ResetText ();
+				NumericTarget0.ResetText ();
 				NumericTarget1.ResetText ();
 				NumericTarget2.ResetText ();
-				NumericTarget3.ResetText ();
 
+				NumericBranching0.Enabled = false;
 				NumericBranching1.Enabled = false;
 				NumericBranching2.Enabled = false;
-				NumericBranching3.Enabled = false;
 				NumericBranchingNot.Enabled = false;
+				NumericTarget0.Enabled = false;
 				NumericTarget1.Enabled = false;
 				NumericTarget2.Enabled = false;
-				NumericTarget3.Enabled = false;
 			}
 			else
 			{
@@ -157,52 +158,65 @@ namespace AgentCharacterEditor
 
 				if ((mFrame.Branching != null) && (mFrame.Branching.Length >= 1))
 				{
-					NumericBranching1.Value = mFrame.Branching[0].mProbability;
-					NumericTarget1.Value = mFrame.Branching[0].mFrameNdx;
+					NumericTarget0.Maximum = this.Animation.Frames.Count;
+					NumericTarget0.Value = mFrame.Branching[0].mFrameNdx + 1;
+					NumericBranching0.Value = mFrame.Branching[0].mProbability;
 					lRemainder -= (Int16)mFrame.Branching[0].mProbability;
 				}
 				else
 				{
-					NumericBranching1.Value = 0;
-					NumericTarget1.ResetText ();
+					NumericTarget0.ResetText ();
+					NumericBranching0.Value = 0;
 				}
 				if ((mFrame.Branching != null) && (mFrame.Branching.Length >= 2))
 				{
-					NumericBranching2.Value = mFrame.Branching[1].mProbability;
-					NumericTarget2.Value = mFrame.Branching[1].mFrameNdx;
+					NumericTarget1.Maximum = this.Animation.Frames.Count;
+					NumericTarget1.Value = mFrame.Branching[1].mFrameNdx + 1;
+					NumericBranching1.Value = mFrame.Branching[1].mProbability;
 					lRemainder -= (Int16)mFrame.Branching[1].mProbability;
 				}
 				else
 				{
-					NumericBranching2.Value = 0;
-					NumericTarget2.ResetText ();
+					NumericTarget1.ResetText ();
+					NumericBranching1.Value = 0;
 				}
 				if ((mFrame.Branching != null) && (mFrame.Branching.Length >= 3))
 				{
-					NumericBranching3.Value = mFrame.Branching[2].mProbability;
-					NumericTarget3.Value = mFrame.Branching[2].mFrameNdx;
+					NumericTarget2.Maximum = this.Animation.Frames.Count;
+					NumericTarget2.Value = mFrame.Branching[2].mFrameNdx + 1;
+					NumericBranching2.Value = mFrame.Branching[2].mProbability;
 					lRemainder -= (Int16)mFrame.Branching[2].mProbability;
 				}
 				else
 				{
-					NumericBranching3.Value = 0;
-					NumericTarget3.ResetText ();
+					NumericTarget2.ResetText ();
+					NumericBranching2.Value = 0;
 				}
 
 				NumericBranchingNot.Value = lRemainder;
 
-				NumericBranching1.Enabled = !Program.MainForm.FileIsReadOnly;
-				NumericBranching2.Enabled = !Program.MainForm.FileIsReadOnly;
-				NumericBranching3.Enabled = !Program.MainForm.FileIsReadOnly;
+				NumericBranching0.Enabled = !MainForm.Singleton.FileIsReadOnly;
+				NumericBranching1.Enabled = !MainForm.Singleton.FileIsReadOnly;
+				NumericBranching2.Enabled = !MainForm.Singleton.FileIsReadOnly;
 				NumericBranchingNot.Enabled = false;
-				NumericTarget1.Enabled = (NumericBranching1.Value > 0) && !Program.MainForm.FileIsReadOnly;
-				NumericTarget2.Enabled = (NumericBranching2.Value > 0) && !Program.MainForm.FileIsReadOnly;
-				NumericTarget3.Enabled = (NumericBranching3.Value > 0) && !Program.MainForm.FileIsReadOnly;
+				NumericTarget0.Enabled = (NumericBranching0.Value > 0) && !MainForm.Singleton.FileIsReadOnly;
+				NumericTarget1.Enabled = (NumericBranching1.Value > 0) && !MainForm.Singleton.FileIsReadOnly;
+				NumericTarget2.Enabled = (NumericBranching2.Value > 0) && !MainForm.Singleton.FileIsReadOnly;
 			}
+
+			NumericBranching0.Validated += new System.EventHandler (NumericBranching0_Validated);
+			NumericBranching1.Validated += new System.EventHandler (NumericBranching1_Validated);
+			NumericBranching2.Validated += new System.EventHandler (NumericBranching2_Validated);
+			NumericTarget0.Validated += new System.EventHandler (NumericTarget0_Validated);
+			NumericTarget1.Validated += new System.EventHandler (NumericTarget1_Validated);
+			NumericTarget2.Validated += new System.EventHandler (NumericTarget2_Validated);
 		}
 
 		private void ShowExitFrame ()
 		{
+			CheckBoxExit.Click -= new System.EventHandler (CheckBoxExit_Click);
+			NumericTargetExit.Validated -= new System.EventHandler (NumericTargetExit_Validated);
+
 			if (IsEmpty)
 			{
 				CheckBoxExit.Checked = false;
@@ -215,8 +229,14 @@ namespace AgentCharacterEditor
 				if (mFrame.ExitFrame >= 0)
 				{
 					CheckBoxExit.Checked = true;
-					NumericTargetExit.Value = mFrame.ExitFrame;
-					NumericTargetExit.Enabled = !Program.MainForm.FileIsReadOnly;
+					NumericTargetExit.Maximum = this.Animation.Frames.Count;
+					NumericTargetExit.Value = mFrame.ExitFrame + 1;
+					NumericTargetExit.Enabled = !MainForm.Singleton.FileIsReadOnly;
+
+					if (mFrame.ExitFrame == (Int16)this.Animation.Frames.IndexOf (mFrame))
+					{
+						NumericTargetExit.Highlighted = true;
+					}
 				}
 				else
 				{
@@ -224,19 +244,122 @@ namespace AgentCharacterEditor
 					NumericTargetExit.ResetText ();
 					NumericTargetExit.Enabled = false;
 				}
-				CheckBoxExit.Enabled = !Program.MainForm.FileIsReadOnly;
+				CheckBoxExit.Enabled = !MainForm.Singleton.FileIsReadOnly;
 			}
+
+			CheckBoxExit.Click += new System.EventHandler (CheckBoxExit_Click);
+			NumericTargetExit.Validated += new System.EventHandler (NumericTargetExit_Validated);
 		}
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Update
 
-		private bool UpdateFrameBranching ()
+		internal class UpdateFrameExit : UndoableUpdate<FileAnimationFrame>
 		{
-			bool	lRet = false;
+			public UpdateFrameExit (CharacterFile pCharacterFile, FileAnimationFrame pFrame, Int16 pExitFrame)
+				: base (pCharacterFile, pFrame)
+			{
+				this.Frame = pFrame;
+				this.ExitFrame = pExitFrame;
+			}
 
-			if (!IsEmpty && !Program.MainForm.FileIsReadOnly)
+			public FileAnimationFrame Frame
+			{
+				get;
+				set;
+			}
+			public Int16 ExitFrame
+			{
+				get;
+				set;
+			}
+
+			public override String TargetDescription
+			{
+				get
+				{
+					return Program.QuotedTitle (Program.TitleFrameAnimation (this.Frame));
+				}
+			}
+			public override String ChangeDescription
+			{
+				get
+				{
+					return " exit branching";
+				}
+			}
+
+			public override UndoUnit Apply ()
+			{
+				if (Target.ExitFrame != this.ExitFrame)
+				{
+					Int16	lSwap = Target.ExitFrame;
+					Target.ExitFrame = this.ExitFrame;
+					this.ExitFrame = lSwap;
+
+					return OnApplied (this);
+				}
+				return null;
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		internal class UpdateFrameBranching : UndoableUpdate<FileAnimationFrame>
+		{
+			public UpdateFrameBranching (CharacterFile pCharacterFile, FileAnimationFrame pFrame, FileFrameBranch[] pBranching)
+				: base (pCharacterFile, pFrame)
+			{
+				this.Frame = pFrame;
+				this.Branching = pBranching;
+			}
+
+			public FileAnimationFrame Frame
+			{
+				get;
+				set;
+			}
+			public FileFrameBranch[] Branching
+			{
+				get;
+				set;
+			}
+
+			public override String TargetDescription
+			{
+				get
+				{
+					return Program.QuotedTitle (Program.TitleFrameAnimation (this.Frame));
+				}
+			}
+			public override String ChangeDescription
+			{
+				get
+				{
+					return " branching";
+				}
+			}
+
+			public override UndoUnit Apply ()
+			{
+				if (!BranchingEqual (Target.Branching, this.Branching))
+				{
+					FileFrameBranch[]	lSwap = Target.Branching;
+					Target.Branching = this.Branching;
+					this.Branching = lSwap;
+
+					return OnApplied (this);
+				}
+				return null;
+			}
+		}
+
+		private Boolean ApplyBranchingUpdates ()
+		{
+			Boolean	lRet = false;
+
+			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
 			{
 				Int16[]				lProbability = new Int16[3];
 				Int16[]				lTarget = new Int16[3];
@@ -244,32 +367,32 @@ namespace AgentCharacterEditor
 				int					lBranchingNdx;
 				int					lBranchingCount = 0;
 
-				lProbability[0] = (Int16)NumericBranching1.Value;
-				lProbability[1] = (Int16)NumericBranching2.Value;
-				lProbability[2] = (Int16)NumericBranching3.Value;
-				lTarget[0] = (Int16)NumericTarget1.Value;
-				lTarget[1] = (Int16)NumericTarget2.Value;
-				lTarget[2] = (Int16)NumericTarget3.Value;
+				lProbability[0] = (Int16)NumericBranching0.Value;
+				lProbability[1] = (Int16)NumericBranching1.Value;
+				lProbability[2] = (Int16)NumericBranching2.Value;
+				lTarget[0] = (Int16)(NumericTarget0.Value - 1);
+				lTarget[1] = (Int16)(NumericTarget1.Value - 1);
+				lTarget[2] = (Int16)(NumericTarget2.Value - 1);
 
 				if (lProbability[0] + lProbability[1] + lProbability[2] > 100)
 				{
 					lProbability[0] = (Int16)Math.Min (lProbability[0], (Int16)100);
 					lProbability[1] = (Int16)Math.Min (lProbability[1], Math.Max (100 - lProbability[0], 0));
 					lProbability[2] = (Int16)Math.Min (lProbability[2], Math.Max (100 - lProbability[1] - lProbability[0], 0));
-					lRet = true;
+				}
+				if (lProbability[0] > 0)
+				{
+					lBranchingCount++;
+				}
+				if (lProbability[1] > 0)
+				{
+					lBranchingCount++;
+				}
+				if (lProbability[2] > 0)
+				{
+					lBranchingCount++;
 				}
 
-				for (lBranchingNdx = 0; lBranchingNdx < 3; lBranchingNdx++)
-				{
-					if (lProbability[lBranchingNdx] > 0)
-					{
-						lBranchingCount++;
-					}
-					else if (lTarget[lBranchingNdx] > 0)
-					{
-						lRet = true;
-					}
-				}
 				if (lBranchingCount > 0)
 				{
 					lBranching = new FileFrameBranch[lBranchingCount];
@@ -286,14 +409,16 @@ namespace AgentCharacterEditor
 				}
 				if (!BranchingEqual (mFrame.Branching, lBranching))
 				{
-					mFrame.Branching = lBranching;
-					lRet = true;
+					UpdateFrameBranching	lUpdate = new UpdateFrameBranching (mCharacterFile, mFrame, lBranching);
+
+					lUpdate.Applied += new UndoUnit.AppliedEventHandler (UpdateBranching_Applied);
+					lRet = UpdateFrameBranching.PutUndo (lUpdate.Apply () as UpdateFrameBranching);
 				}
 			}
 			return lRet;
 		}
 
-		private static bool BranchingEqual (FileFrameBranch[] pSource, FileFrameBranch[] pTarget)
+		private static Boolean BranchingEqual (FileFrameBranch[] pSource, FileFrameBranch[] pTarget)
 		{
 			if ((pSource == null) != (pTarget == null))
 			{
@@ -320,74 +445,83 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Event Handlers
 
-		private void NumericBranching1_Validated (object sender, EventArgs e)
+		private void NumericBranching0_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !Program.MainForm.FileIsReadOnly)
+			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
 			{
-				if (UpdateFrameBranching ())
+				if (!ApplyBranchingUpdates ())
 				{
 					ShowFrameBranching ();
-					Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
+				}
+			}
+		}
+
+		private void NumericTarget0_Validated (object sender, EventArgs e)
+		{
+			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			{
+				if (!ApplyBranchingUpdates ())
+				{
+					ShowFrameBranching ();
+				}
+			}
+		}
+
+		private void NumericBranching1_Validated (object sender, EventArgs e)
+		{
+			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			{
+				if (!ApplyBranchingUpdates ())
+				{
+					ShowFrameBranching ();
 				}
 			}
 		}
 
 		private void NumericTarget1_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !Program.MainForm.FileIsReadOnly)
+			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
 			{
-				if (UpdateFrameBranching ())
+				if (!ApplyBranchingUpdates ())
 				{
 					ShowFrameBranching ();
-					Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
 				}
 			}
 		}
 
 		private void NumericBranching2_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !Program.MainForm.FileIsReadOnly)
+			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
 			{
-				if (UpdateFrameBranching ())
+				if (!ApplyBranchingUpdates ())
 				{
 					ShowFrameBranching ();
-					Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
 				}
 			}
 		}
 
 		private void NumericTarget2_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !Program.MainForm.FileIsReadOnly)
+			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
 			{
-				if (UpdateFrameBranching ())
+				if (!ApplyBranchingUpdates ())
 				{
 					ShowFrameBranching ();
-					Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
 				}
 			}
 		}
 
-		private void NumericBranching3_Validated (object sender, EventArgs e)
-		{
-			if (!IsEmpty && !Program.MainForm.FileIsReadOnly)
-			{
-				if (UpdateFrameBranching ())
-				{
-					ShowFrameBranching ();
-					Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
-				}
-			}
-		}
+		///////////////////////////////////////////////////////////////////////////////
 
-		private void NumericTarget3_Validated (object sender, EventArgs e)
+		void UpdateBranching_Applied (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !Program.MainForm.FileIsReadOnly)
+			if (!IsEmpty)
 			{
-				if (UpdateFrameBranching ())
+				UpdateFrameBranching	lUpdate = sender as UpdateFrameBranching;
+
+				if (lUpdate.Target == mFrame)
 				{
 					ShowFrameBranching ();
-					Program.MainForm.FileIsDirty = mCharacterFile.IsDirty;
 				}
 			}
 		}
@@ -396,17 +530,70 @@ namespace AgentCharacterEditor
 
 		private void CheckBoxExit_Click (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !Program.MainForm.FileIsReadOnly)
+			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
 			{
+				UpdateFrameExit	lUpdate;
+
+				if (CheckBoxExit.Checked)
+				{
+					Int16	lExitFrame = (Int16)Math.Min (Math.Max ((int)mFrame.ExitFrame, 0), this.Animation.Frames.Count - 1);
+
+					if (lExitFrame == (Int16)this.Animation.Frames.IndexOf (mFrame))
+					{
+						lExitFrame++;
+					}
+					lUpdate = new UpdateFrameExit (mCharacterFile, mFrame, lExitFrame);
+				}
+				else
+				{
+					lUpdate = new UpdateFrameExit (mCharacterFile, mFrame, -1);
+				}
+
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (ExitFrame_Applied);
+				if (!UpdateFrameExit.PutUndo (lUpdate.Apply () as UpdateFrameExit))
+				{
+					ShowExitFrame ();
+				}
 			}
 		}
 
 		private void NumericTargetExit_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !Program.MainForm.FileIsReadOnly)
+			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
 			{
+				UpdateFrameExit	lUpdate = new UpdateFrameExit (mCharacterFile, mFrame, (Int16)(NumericTargetExit.Value - 1));
+
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (ExitFrame_Applied);
+				if (!UpdateFrameExit.PutUndo (lUpdate.Apply () as UpdateFrameExit))
+				{
+					ShowExitFrame ();
+				}
 			}
 		}
+
+		void ExitFrame_Applied (object sender, EventArgs e)
+		{
+			if (!IsEmpty)
+			{
+				UpdateFrameExit	lUpdate = sender as UpdateFrameExit;
+
+				if ((lUpdate != null) && (lUpdate.Target == mFrame))
+				{
+					ShowExitFrame ();
+				}
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		internal void PanelAnimation_AnimationNameChanged (object sender, AnimationEventArgs e)
+		{
+			if (!IsEmpty && e.Animation == this.Animation)
+			{
+				ShowFrameName ();
+			}
+		}
+
 		#endregion
 	}
 }

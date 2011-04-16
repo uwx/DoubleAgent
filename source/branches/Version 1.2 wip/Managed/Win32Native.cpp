@@ -57,6 +57,10 @@ static BOOL CALLBACK PopTipsProg (HWND pHWnd, LPARAM pLparam)
 	::GetClassName (pHWnd, lClassName, sizeof(lClassName)/sizeof(WCHAR));
 	if	(_tcsstr (lClassName, TOOLTIPS_CLASS))
 	{
+		if	(pLparam)
+		{
+			::ShowWindow (pHWnd, SW_HIDE);
+		}
 		::SendMessage (pHWnd, TTM_POP, 0, 0);
 	}
 	return TRUE;
@@ -64,12 +68,22 @@ static BOOL CALLBACK PopTipsProg (HWND pHWnd, LPARAM pLparam)
 
 void Win32Native::PopThreadToolTips ()
 {
-	EnumThreadWindows (GetCurrentThreadId(), &PopTipsProg, 0);
+	PopThreadToolTips (false);
+}
+
+void Win32Native::PopThreadToolTips (Boolean pNoFade)
+{
+	EnumThreadWindows (GetCurrentThreadId(), &PopTipsProg, pNoFade?TRUE:FALSE);
 }
 
 void Win32Native::PopThreadToolTips (IntPtr pWindowHandle)
 {
-	EnumThreadWindows (GetWindowThreadProcessId ((HWND)(INT_PTR)pWindowHandle, NULL), &PopTipsProg, 0);
+	PopThreadToolTips (pWindowHandle, false);
+}
+
+void Win32Native::PopThreadToolTips (IntPtr pWindowHandle, Boolean pNoFade)
+{
+	EnumThreadWindows (GetWindowThreadProcessId ((HWND)(INT_PTR)pWindowHandle, NULL), &PopTipsProg, pNoFade?TRUE:FALSE);
 }
 
 /////////////////////////////////////////////////////////////////////////////

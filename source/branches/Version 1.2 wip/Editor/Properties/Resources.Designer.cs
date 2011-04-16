@@ -68,6 +68,231 @@ namespace AgentCharacterEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &amp;Copy.
+        /// </summary>
+        internal static string EditCopy {
+            get {
+                return ResourceManager.GetString("EditCopy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Copy selected text.
+        /// </summary>
+        internal static string EditCopyText {
+            get {
+                return ResourceManager.GetString("EditCopyText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Copy {0}.
+        /// </summary>
+        internal static string EditCopyThis {
+            get {
+                return ResourceManager.GetString("EditCopyThis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cu&amp;t.
+        /// </summary>
+        internal static string EditCut {
+            get {
+                return ResourceManager.GetString("EditCut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Cut selected text.
+        /// </summary>
+        internal static string EditCutText {
+            get {
+                return ResourceManager.GetString("EditCutText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cu&amp;t {0}.
+        /// </summary>
+        internal static string EditCutThis {
+            get {
+                return ResourceManager.GetString("EditCutThis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Delete.
+        /// </summary>
+        internal static string EditDelete {
+            get {
+                return ResourceManager.GetString("EditDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Delete selected text.
+        /// </summary>
+        internal static string EditDeleteText {
+            get {
+                return ResourceManager.GetString("EditDeleteText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Delete {0}.
+        /// </summary>
+        internal static string EditDeleteThis {
+            get {
+                return ResourceManager.GetString("EditDeleteThis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Paste.
+        /// </summary>
+        internal static string EditPaste {
+            get {
+                return ResourceManager.GetString("EditPaste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Paste text.
+        /// </summary>
+        internal static string EditPasteText {
+            get {
+                return ResourceManager.GetString("EditPasteText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Paste {0}.
+        /// </summary>
+        internal static string EditPasteThis {
+            get {
+                return ResourceManager.GetString("EditPasteThis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Redo.
+        /// </summary>
+        internal static string EditRedo {
+            get {
+                return ResourceManager.GetString("EditRedo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Redo {0}.
+        /// </summary>
+        internal static string EditRedoThis {
+            get {
+                return ResourceManager.GetString("EditRedoThis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Undo.
+        /// </summary>
+        internal static string EditUndo {
+            get {
+                return ResourceManager.GetString("EditUndo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Undo typing.
+        /// </summary>
+        internal static string EditUndoText {
+            get {
+                return ResourceManager.GetString("EditUndoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Undo {0}.
+        /// </summary>
+        internal static string EditUndoThis {
+            get {
+                return ResourceManager.GetString("EditUndoThis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mouth.
+        /// </summary>
+        internal static string MouthOverlay {
+            get {
+                return ResourceManager.GetString("MouthOverlay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mouth-closed.
+        /// </summary>
+        internal static string MouthOverlayClosed {
+            get {
+                return ResourceManager.GetString("MouthOverlayClosed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mouth-medium.
+        /// </summary>
+        internal static string MouthOverlayMedium {
+            get {
+                return ResourceManager.GetString("MouthOverlayMedium", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mouth-narrow.
+        /// </summary>
+        internal static string MouthOverlayNarrow {
+            get {
+                return ResourceManager.GetString("MouthOverlayNarrow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mouth-wide-1.
+        /// </summary>
+        internal static string MouthOverlayWide1 {
+            get {
+                return ResourceManager.GetString("MouthOverlayWide1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mouth-wide-2.
+        /// </summary>
+        internal static string MouthOverlayWide2 {
+            get {
+                return ResourceManager.GetString("MouthOverlayWide2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mouth-wide-3.
+        /// </summary>
+        internal static string MouthOverlayWide3 {
+            get {
+                return ResourceManager.GetString("MouthOverlayWide3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mouth-wide-4.
+        /// </summary>
+        internal static string MouthOverlayWide4 {
+            get {
+                return ResourceManager.GetString("MouthOverlayWide4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Animation &quot;{0}&quot; already exists..
         /// </summary>
         internal static string MsgDuplicateAnimation {
@@ -77,11 +302,29 @@ namespace AgentCharacterEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save as {0} failed..
+        /// </summary>
+        internal static string MsgFailedSaveAs {
+            get {
+                return ResourceManager.GetString("MsgFailedSaveAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} is not a valid character file..
         /// </summary>
         internal static string MsgInvalidFile {
             get {
                 return ResourceManager.GetString("MsgInvalidFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You cannot use &quot;Save As&quot; with the same file name..
+        /// </summary>
+        internal static string MsgInvalidSaveAs {
+            get {
+                return ResourceManager.GetString("MsgInvalidSaveAs", resourceCulture);
             }
         }
         
@@ -100,6 +343,168 @@ namespace AgentCharacterEditor.Properties {
         internal static string MsgSaveFile {
             get {
                 return ResourceManager.GetString("MsgSaveFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to animation {0}.
+        /// </summary>
+        internal static string TitleAnimation {
+            get {
+                return ResourceManager.GetString("TitleAnimation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Word Balloon.
+        /// </summary>
+        internal static string TitleBalloon {
+            get {
+                return ResourceManager.GetString("TitleBalloon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} name {1}.
+        /// </summary>
+        internal static string TitleCharacterName {
+            get {
+                return ResourceManager.GetString("TitleCharacterName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Frame {0}.
+        /// </summary>
+        internal static string TitleFrame {
+            get {
+                return ResourceManager.GetString("TitleFrame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1} - {0}.
+        /// </summary>
+        internal static string TitleFrameAnimation {
+            get {
+                return ResourceManager.GetString("TitleFrameAnimation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Image {0}.
+        /// </summary>
+        internal static string TitleImage {
+            get {
+                return ResourceManager.GetString("TitleImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1} - {0}.
+        /// </summary>
+        internal static string TitleImageFrame {
+            get {
+                return ResourceManager.GetString("TitleImageFrame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} overlay.
+        /// </summary>
+        internal static string TitleOverlay {
+            get {
+                return ResourceManager.GetString("TitleOverlay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1} - {0}.
+        /// </summary>
+        internal static string TitleOverlayFrame {
+            get {
+                return ResourceManager.GetString("TitleOverlayFrame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to state {0}.
+        /// </summary>
+        internal static string TitleState {
+            get {
+                return ResourceManager.GetString("TitleState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text-to-Speech.
+        /// </summary>
+        internal static string TitleTts {
+            get {
+                return ResourceManager.GetString("TitleTts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to change {0}.
+        /// </summary>
+        internal static string UndoAnimationName {
+            get {
+                return ResourceManager.GetString("UndoAnimationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} to {1}.
+        /// </summary>
+        internal static string UndoAnimationNames {
+            get {
+                return ResourceManager.GetString("UndoAnimationNames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to size.
+        /// </summary>
+        internal static string UndoAnimationSize {
+            get {
+                return ResourceManager.GetString("UndoAnimationSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to frame order.
+        /// </summary>
+        internal static string UndoFrameOrder {
+            get {
+                return ResourceManager.GetString("UndoFrameOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to new frame duration.
+        /// </summary>
+        internal static string UndoNewFrameDuration {
+            get {
+                return ResourceManager.GetString("UndoNewFrameDuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to palette.
+        /// </summary>
+        internal static string UndoPalette {
+            get {
+                return ResourceManager.GetString("UndoPalette", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to return animation.
+        /// </summary>
+        internal static string UndoReturnAnimation {
+            get {
+                return ResourceManager.GetString("UndoReturnAnimation", resourceCulture);
             }
         }
     }

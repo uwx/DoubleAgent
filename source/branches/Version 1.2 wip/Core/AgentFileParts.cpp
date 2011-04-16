@@ -282,6 +282,15 @@ CAgentFileName::CAgentFileName (LANGID pLanguage, System::String^ pName)
 	mName = pName;
 }
 
+CAgentFileName::CAgentFileName (LANGID pLanguage, CAgentFileName^ pSource)
+{
+	Empty ();
+	mLanguage = pLanguage;
+	mName = pSource->mName;
+	mDesc1 = pSource->mDesc1;
+	mDesc2 = pSource->mDesc2;
+}
+
 CAgentFileName::CAgentFileName (CharacterFile^ pOwner)
 :	mOwner (pOwner)
 {
@@ -928,10 +937,16 @@ System::String^ CAgentFileImage::ToString ()
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-CAgentFileFrameImage::CAgentFileFrameImage (CharacterFile^ pOwner)
-:	mOwner (pOwner)
+CAgentFileFrameImage::CAgentFileFrameImage (CharacterFile^ pOwner, FileAnimationFrame^ pFrame)
+:	mOwner (pOwner),
+	mContainer (pFrame->Images)
 {
 	Empty ();
+}
+
+FileAnimationFrame^ CAgentFileFrameImage::Frame::get()
+{
+	return (mContainer) ? mContainer->Frame : nullptr;
 }
 #endif
 
@@ -1010,7 +1025,8 @@ Boolean CAgentFileFrameImage::CopyTo (CAgentFileFrameImage^ pTarget)
 {
 	if	(
 			(pTarget)
-		&&	(pTarget->mOwner == mOwner)
+		&&	(pTarget->mOwner)
+		&&	(!pTarget->mOwner->IsReadOnly)
 		)
 	{
 		pTarget->mImageNdx = mImageNdx;
@@ -1035,8 +1051,9 @@ CAgentFileFrameImages::CAgentFileFrameImages ()
 {
 }
 
-CAgentFileFrameImages::CAgentFileFrameImages (CharacterFile^ pOwner)
-:	mOwner (pOwner)
+CAgentFileFrameImages::CAgentFileFrameImages (CharacterFile^ pOwner, FileAnimationFrame^ pFrame)
+:	mOwner (pOwner),
+	mFrame (pFrame)
 {
 }
 
@@ -1052,12 +1069,13 @@ CAgentFileFrameImage^ CAgentFileFrameImages::Insert (Int32 pNdx, System::String^
 	if	(
 			(mOwner)
 		&&	(!mOwner->IsReadOnly)
-		&&	(!String::IsNullOrEmpty (pFrameImagePath))
 		)
 	{
-		lImage = gcnew CAgentFileFrameImage (mOwner);
-		lImage->mImageNdx = mOwner->LoadImageFile (pFrameImagePath);
-
+		lImage = gcnew CAgentFileFrameImage (mOwner, mFrame);
+		if	(!String::IsNullOrEmpty (pFrameImagePath))
+		{
+			lImage->mImageNdx = mOwner->LoadImageFile (pFrameImagePath);
+		}
 		if	(pNdx < 0)
 		{
 			pNdx = Count;
@@ -1165,10 +1183,16 @@ bool CAgentFileFrameImages::Move (CAgentFileFrameImage^ pItem, CAgentFileFrameIm
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-CAgentFileFrameOverlay::CAgentFileFrameOverlay (CharacterFile^ pOwner)
-:	mOwner (pOwner)
+CAgentFileFrameOverlay::CAgentFileFrameOverlay (CharacterFile^ pOwner, FileAnimationFrame^ pFrame)
+:	mOwner (pOwner),
+	mContainer (pFrame->Overlays)
 {
 	Empty ();
+}
+
+FileAnimationFrame^ CAgentFileFrameOverlay::Frame::get()
+{
+	return (mContainer) ? mContainer->Frame : nullptr;
 }
 #endif
 
@@ -1287,10 +1311,10 @@ Boolean CAgentFileFrameOverlay::CopyTo (CAgentFileFrameOverlay^ pTarget)
 {
 	if	(
 			(pTarget)
-		&&	(pTarget->mOwner == mOwner)
+		&&	(pTarget->mOwner)
+		&&	(!pTarget->mOwner->IsReadOnly)
 		)
 	{
-		pTarget->mOverlayType = mOverlayType;
 		pTarget->mImageNdx = mImageNdx;
 		pTarget->mReplaceFlag = mReplaceFlag;
 		pTarget->mOffset = mOffset;
@@ -1314,8 +1338,9 @@ CAgentFileFrameOverlays::CAgentFileFrameOverlays ()
 {
 }
 
-CAgentFileFrameOverlays::CAgentFileFrameOverlays (CharacterFile^ pOwner)
-:	mOwner (pOwner)
+CAgentFileFrameOverlays::CAgentFileFrameOverlays (CharacterFile^ pOwner, FileAnimationFrame^ pFrame)
+:	mOwner (pOwner),
+	mFrame (pFrame)
 {
 }
 
@@ -1334,12 +1359,14 @@ CAgentFileFrameOverlay^ CAgentFileFrameOverlays::Add (AgentMouthOverlay pOverlay
 		&&	(!Contains (pOverlayType))
 		&&	(pOverlayType >= AgentMouthOverlay::MouthOverlayMin)
 		&&	(pOverlayType <= AgentMouthOverlay::MouthOverlayMax)
-		&&	(!String::IsNullOrEmpty (pOverlayImagePath))
 		)
 	{
-		lOverlay = gcnew CAgentFileFrameOverlay (mOwner);
+		lOverlay = gcnew CAgentFileFrameOverlay (mOwner, mFrame);
 		lOverlay->mOverlayType = pOverlayType;
-		lOverlay->mImageNdx = mOwner->LoadImageFile (pOverlayImagePath);
+		if	(!String::IsNullOrEmpty (pOverlayImagePath))
+		{
+			lOverlay->mImageNdx = mOwner->LoadImageFile (pOverlayImagePath);
+		}
 
 		__super::Add (lOverlay);
 		mOwner->IsDirty = true;
@@ -1381,10 +1408,16 @@ bool CAgentFileFrameOverlays::Remove (CAgentFileFrameOverlay^ pItem)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-CAgentFileFrame::CAgentFileFrame (CharacterFile^ pOwner)
-:	mOwner (pOwner)
+CAgentFileFrame::CAgentFileFrame (CharacterFile^ pOwner, FileFrames^ pContainer)
+:	mOwner (pOwner),
+	mContainer (pContainer)
 {
 	Empty ();
+}
+
+FileAnimation^ CAgentFileFrame::Animation::get()
+{
+	return (mContainer) ? mContainer->Animation : nullptr;
 }
 #endif
 
@@ -1397,8 +1430,8 @@ void CAgentFileFrame::Empty ()
 	mBranching = nullptr;
 	if (mOwner)
 	{
-		mImages = gcnew CAgentFileFrameImages (mOwner);
-		mOverlays = gcnew CAgentFileFrameOverlays (mOwner);
+		mImages = gcnew CAgentFileFrameImages (mOwner, this);
+		mOverlays = gcnew CAgentFileFrameOverlays (mOwner, this);
 	}
 	else
 	{
@@ -1564,7 +1597,8 @@ Boolean CAgentFileFrame::CopyTo (CAgentFileFrame^ pTarget)
 {
 	if	(
 			(pTarget)
-		&&	(pTarget->mOwner == mOwner)
+		&&	(pTarget->mOwner)
+		&&	(!pTarget->mOwner->IsReadOnly)
 		)
 	{
 		pTarget->mDuration = mDuration;
@@ -1593,8 +1627,9 @@ CAgentFileFrames::CAgentFileFrames ()
 {
 }
 
-CAgentFileFrames::CAgentFileFrames (CharacterFile^ pOwner)
-:	mOwner (pOwner)
+CAgentFileFrames::CAgentFileFrames (CharacterFile^ pOwner, FileAnimation^ pAnimation)
+:	mOwner (pOwner),
+	mAnimation (pAnimation)
 {
 }
 
@@ -1614,7 +1649,7 @@ CAgentFileFrame^ CAgentFileFrames::Insert (Int32 pNdx)
 		&&	(!mOwner->IsReadOnly)
 		)
 	{
-		lFrame = gcnew CAgentFileFrame (mOwner);
+		lFrame = gcnew CAgentFileFrame (mOwner, this);
 		lFrame->mDuration = mOwner->NewFrameDuration;
 
 		if	(pNdx < 0)
@@ -1724,8 +1759,9 @@ bool CAgentFileFrames::Move (CAgentFileFrame^ pItem, CAgentFileFrame^ pBefore)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-CAgentFileAnimation::CAgentFileAnimation (CharacterFile^ pOwner)
-:	mOwner (pOwner)
+CAgentFileAnimation::CAgentFileAnimation (CharacterFile^ pOwner, FileGestures^ pContainer)
+:	mOwner (pOwner),
+	mContainer (pContainer)
 {
 	Empty ();
 }
@@ -1741,7 +1777,7 @@ void CAgentFileAnimation::Empty ()
 	mAcaFileName = nullptr;
 	if	(mOwner)
 	{
-		mFrames = gcnew CAgentFileFrames (mOwner);
+		mFrames = gcnew CAgentFileFrames (mOwner, this);
 	}
 	else
 	{
@@ -1857,7 +1893,8 @@ Boolean CAgentFileAnimation::CopyTo (CAgentFileAnimation^ pTarget)
 {
 	if	(
 			(pTarget)
-		&&	(pTarget->mOwner == mOwner)
+		&&	(pTarget->mOwner)
+		&&	(!pTarget->mOwner->IsReadOnly)
 		)
 	{
 		pTarget->mName = mName;
@@ -1910,7 +1947,7 @@ CAgentFileAnimation^ CAgentFileGestures::Add (System::String^ pAnimationName)
 		&&	(!Contains (pAnimationName))
 		)
 	{
-		lAnimation = gcnew CAgentFileAnimation (mOwner);
+		lAnimation = gcnew CAgentFileAnimation (mOwner, this);
 		lAnimation->mName = pAnimationName;
 		Add (lAnimation);
 		mOwner->IsDirty = true;

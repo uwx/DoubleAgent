@@ -50,9 +50,9 @@ namespace AgentCharacterEditor
 		{
 			this.LabelName = new System.Windows.Forms.Label ();
 			this.TextBoxName = new System.Windows.Forms.TextBox ();
+			this.GroupBoxAnimations = new System.Windows.Forms.GroupBox ();
 			this.ListViewAnimations = new DoubleAgent.ListViewEx ();
 			this.Column1 = new System.Windows.Forms.ColumnHeader ();
-			this.GroupBoxAnimations = new System.Windows.Forms.GroupBox ();
 			this.GroupBoxAnimations.SuspendLayout ();
 			this.SuspendLayout ();
 			// 
@@ -76,34 +76,6 @@ namespace AgentCharacterEditor
 			this.TextBoxName.Size = new System.Drawing.Size (500, 22);
 			this.TextBoxName.TabIndex = 2;
 			// 
-			// ListViewAnimations
-			// 
-			this.ListViewAnimations.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.ListViewAnimations.CheckBoxes = true;
-			this.ListViewAnimations.Columns.AddRange (new System.Windows.Forms.ColumnHeader[] {
-            this.Column1});
-			this.ListViewAnimations.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-			this.ListViewAnimations.Location = new System.Drawing.Point (6, 21);
-			this.ListViewAnimations.MultiSelect = false;
-			this.ListViewAnimations.Name = "ListViewAnimations";
-			this.ListViewAnimations.SelectedIndex = -1;
-			this.ListViewAnimations.SelectedItem = null;
-			this.ListViewAnimations.ShowItemToolTips = true;
-			this.ListViewAnimations.Size = new System.Drawing.Size (620, 378);
-			this.ListViewAnimations.Sorting = System.Windows.Forms.SortOrder.Ascending;
-			this.ListViewAnimations.TabIndex = 6;
-			this.ListViewAnimations.UseCompatibleStateImageBehavior = false;
-			this.ListViewAnimations.View = System.Windows.Forms.View.List;
-			this.ListViewAnimations.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler (this.ListViewAnimations_ItemChecked);
-			this.ListViewAnimations.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler (this.ListViewAnimations_ItemCheck);
-			// 
-			// Column1
-			// 
-			this.Column1.Text = "";
-			this.Column1.Width = 160;
-			// 
 			// GroupBoxAnimations
 			// 
 			this.GroupBoxAnimations.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -118,6 +90,36 @@ namespace AgentCharacterEditor
 			this.GroupBoxAnimations.TabIndex = 7;
 			this.GroupBoxAnimations.TabStop = false;
 			this.GroupBoxAnimations.Text = "Animations";
+			// 
+			// ListViewAnimations
+			// 
+			this.ListViewAnimations.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.ListViewAnimations.CheckBoxes = true;
+			this.ListViewAnimations.CheckOnActivate = false;
+			this.ListViewAnimations.Columns.AddRange (new System.Windows.Forms.ColumnHeader[] {
+            this.Column1});
+			this.ListViewAnimations.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+			this.ListViewAnimations.Location = new System.Drawing.Point (6, 21);
+			this.ListViewAnimations.MultiSelect = false;
+			this.ListViewAnimations.Name = "ListViewAnimations";
+			this.ListViewAnimations.SelectedIndex = -1;
+			this.ListViewAnimations.SelectedItem = null;
+			this.ListViewAnimations.ShowItemToolTips = true;
+			this.ListViewAnimations.Size = new System.Drawing.Size (620, 378);
+			this.ListViewAnimations.Sorting = System.Windows.Forms.SortOrder.Ascending;
+			this.ListViewAnimations.TabIndex = 6;
+			this.ListViewAnimations.UseCompatibleStateImageBehavior = false;
+			this.ListViewAnimations.View = System.Windows.Forms.View.List;
+			this.ListViewAnimations.ItemActivate += new System.EventHandler (this.ListViewAnimations_ItemActivate);
+			this.ListViewAnimations.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler (this.ListViewAnimations_ItemChecked);
+			this.ListViewAnimations.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler (this.ListViewAnimations_ItemCheck);
+			// 
+			// Column1
+			// 
+			this.Column1.Text = "";
+			this.Column1.Width = 160;
 			// 
 			// StateForm
 			// 

@@ -33,6 +33,13 @@ namespace AgentCharacterEditor
 			: base (pTarget)
 		{
 			this.CharacterFile = pCharacterFile;
+			this.ForClipboard = false;
+		}
+		protected UndoableUpdate (CharacterFile pCharacterFile, T pTarget, Boolean pForClipboard)
+			: base (pTarget)
+		{
+			this.CharacterFile = pCharacterFile;
+			this.ForClipboard = pForClipboard;
 		}
 
 		public CharacterFile CharacterFile
@@ -40,14 +47,30 @@ namespace AgentCharacterEditor
 			get;
 			private set;
 		}
-
-		public virtual bool PutUndo ()
+		protected Boolean ForClipboard
 		{
-			Program.MainForm.FileIsDirty = CharacterFile.IsDirty;
-			return Program.MainForm.UndoManager.PutUndoUnit (this);
+			get;
+			set;
+		}
+		public override String ActionDescription
+		{
+			get
+			{
+				if (this.ForClipboard)
+				{
+					return "paste ";
+				}
+				return base.ActionDescription;
+			}
 		}
 
-		static public bool PutUndo (UndoableUpdate<T> pUndoableAction)
+		public virtual Boolean PutUndo ()
+		{
+			MainForm.Singleton.FileIsDirty = CharacterFile.IsDirty;
+			return MainForm.Singleton.UndoManager.PutUndoUnit (this);
+		}
+
+		static public Boolean PutUndo (UndoableUpdate<T> pUndoableAction)
 		{
 			if (pUndoableAction != null)
 			{
@@ -56,40 +79,48 @@ namespace AgentCharacterEditor
 			return false;
 		}
 
+#if DEBUG
 		public virtual String DebugString ()
 		{
 			return ToString ();
 		}
+#endif
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
 
-	internal abstract class UndoableUpdate : UndoableUpdate<CharacterFile>
+	internal abstract class UndoableAddDelete<T> : UndoableUpdate<T> where T : class
 	{
-		public UndoableUpdate (CharacterFile pCharacterFile)
-			: base (pCharacterFile, pCharacterFile)
-		{
-		}
-	}
-
-	///////////////////////////////////////////////////////////////////////////////
-
-	internal abstract class UndoableAddRemove<T> : UndoableUpdate<T> where T : class
-	{
-		public UndoableAddRemove (CharacterFile pCharacterFile)
+		public UndoableAddDelete (CharacterFile pCharacterFile)
 			: base (pCharacterFile, default (T))
 		{
-			this.IsRemove = false;
+			this.IsDelete = false;
 			this.IsRedo = false;
+			this.ForClipboard = false;
 		}
-		public UndoableAddRemove (CharacterFile pCharacterFile, T pTarget)
+		public UndoableAddDelete (CharacterFile pCharacterFile, T pTarget)
 			: base (pCharacterFile, pTarget)
 		{
-			this.IsRemove = true;
+			this.IsDelete = true;
 			this.IsRedo = false;
+			this.ForClipboard = false;
+		}
+		public UndoableAddDelete (CharacterFile pCharacterFile, Boolean pForClipboard)
+			: base (pCharacterFile, default (T))
+		{
+			this.IsDelete = false;
+			this.IsRedo = false;
+			this.ForClipboard = pForClipboard;
+		}
+		public UndoableAddDelete (CharacterFile pCharacterFile, T pTarget, Boolean pForClipboard)
+			: base (pCharacterFile, pTarget)
+		{
+			this.IsDelete = true;
+			this.IsRedo = false;
+			this.ForClipboard = pForClipboard;
 		}
 
-		public Boolean IsRemove
+		public Boolean IsDelete
 		{
 			get;
 			protected set;
@@ -99,12 +130,11 @@ namespace AgentCharacterEditor
 			get;
 			set;
 		}
-
-		protected String AddRemoveTitle
+		public override String ActionDescription
 		{
 			get
 			{
-				return (IsRemove == !IsRedo) ? "remove" : "add";
+				return (IsDelete == !IsRedo) ? this.ForClipboard ? "cut " : "delete " : this.ForClipboard ? "paste " : "add ";
 			}
 		}
 	}
@@ -190,3 +220,4 @@ namespace AgentCharacterEditor
 		}
 	}
 }
+

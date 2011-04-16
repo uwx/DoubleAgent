@@ -78,7 +78,7 @@ namespace AgentCharacterEditor
 			this.LabelDuration = new System.Windows.Forms.Label ();
 			this.ToolStripFrames = new DoubleAgent.ToolStripEx ();
 			this.ButtonAdd = new System.Windows.Forms.ToolStripButton ();
-			this.ButtonRemove = new System.Windows.Forms.ToolStripButton ();
+			this.ButtonDelete = new System.Windows.Forms.ToolStripButton ();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator ();
 			this.ButtonMoveUp = new System.Windows.Forms.ToolStripButton ();
 			this.ButtonMoveDown = new System.Windows.Forms.ToolStripButton ();
@@ -187,6 +187,7 @@ namespace AgentCharacterEditor
 			this.ListViewPreview.Size = new System.Drawing.Size (620, 128);
 			this.ListViewPreview.TabIndex = 0;
 			this.ListViewPreview.UseCompatibleStateImageBehavior = false;
+			this.ListViewPreview.ItemActivate += new System.EventHandler (this.ListViewPreview_ItemActivate);
 			this.ListViewPreview.SelectedIndexChanged += new System.EventHandler (this.ListViewPreview_SelectedIndexChanged);
 			// 
 			// PanelFramesTop
@@ -219,6 +220,8 @@ namespace AgentCharacterEditor
 			// 
 			this.NumericFrameDuration.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.NumericFrameDuration.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericFrameDuration.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericFrameDuration.Highlighted = false;
 			this.NumericFrameDuration.Location = new System.Drawing.Point (473, 0);
 			this.NumericFrameDuration.Maximum = new decimal (new int[] {
             10000,
@@ -253,15 +256,14 @@ namespace AgentCharacterEditor
 			this.ToolStripFrames.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.ToolStripFrames.Items.AddRange (new System.Windows.Forms.ToolStripItem[] {
             this.ButtonAdd,
-            this.ButtonRemove,
+            this.ButtonDelete,
             this.toolStripSeparator1,
             this.ButtonMoveUp,
             this.ButtonMoveDown});
 			this.ToolStripFrames.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.ToolStripFrames.Location = new System.Drawing.Point (0, 0);
 			this.ToolStripFrames.Name = "ToolStripFrames";
-			this.ToolStripFrames.RenderInline = true;
-			this.ToolStripFrames.Size = new System.Drawing.Size (132, 26);
+			this.ToolStripFrames.Size = new System.Drawing.Size (101, 26);
 			this.ToolStripFrames.TabIndex = 0;
 			// 
 			// ButtonAdd
@@ -275,16 +277,16 @@ namespace AgentCharacterEditor
 			this.ButtonAdd.Text = "Add a new frame";
 			this.ButtonAdd.Click += new System.EventHandler (this.ButtonAdd_Click);
 			// 
-			// ButtonRemove
+			// ButtonDelete
 			// 
-			this.ButtonRemove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonRemove.Image = ((System.Drawing.Image)(resources.GetObject ("ButtonRemove.Image")));
-			this.ButtonRemove.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonRemove.Name = "ButtonRemove";
-			this.ButtonRemove.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
-			this.ButtonRemove.Size = new System.Drawing.Size (23, 23);
-			this.ButtonRemove.Text = "Remove this frame";
-			this.ButtonRemove.Click += new System.EventHandler (this.ButtonRemove_Click);
+			this.ButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonDelete.Image = ((System.Drawing.Image)(resources.GetObject ("ButtonDelete.Image")));
+			this.ButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonDelete.Name = "ButtonDelete";
+			this.ButtonDelete.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
+			this.ButtonDelete.Size = new System.Drawing.Size (23, 23);
+			this.ButtonDelete.Text = "Remove this frame";
+			this.ButtonDelete.Click += new System.EventHandler (this.ButtonDelete_Click);
 			// 
 			// toolStripSeparator1
 			// 
@@ -399,6 +401,7 @@ namespace AgentCharacterEditor
 			this.ListViewStates.TabIndex = 0;
 			this.ListViewStates.UseCompatibleStateImageBehavior = false;
 			this.ListViewStates.View = System.Windows.Forms.View.Details;
+			this.ListViewStates.ItemActivate += new System.EventHandler (this.ListViewStates_ItemActivate);
 			// 
 			// Column1
 			// 
@@ -463,7 +466,7 @@ namespace AgentCharacterEditor
 		private System.Windows.Forms.TableLayoutPanel TableLayoutFrames;
 		private DoubleAgent.ToolStripEx ToolStripFrames;
 		private System.Windows.Forms.ToolStripButton ButtonAdd;
-		private System.Windows.Forms.ToolStripButton ButtonRemove;
+		private System.Windows.Forms.ToolStripButton ButtonDelete;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripButton ButtonMoveUp;
 		private System.Windows.Forms.ToolStripButton ButtonMoveDown;

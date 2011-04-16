@@ -40,16 +40,21 @@ namespace AgentCharacterEditor
 
 		public TtsForm ()
 		{
-			mCharacterFile = null;
 			InitializeComponent ();
+
+			if (MainForm.Singleton != null)
+			{
+				MainForm.Singleton.LoadConfig += new EventHandler (MainForm_LoadConfig);
+				MainForm.Singleton.SaveConfig += new EventHandler (MainForm_SaveConfig);
+			}
 		}
 
-		public void LoadConfig ()
+		void MainForm_LoadConfig (object sender, EventArgs e)
 		{
 			Properties.Settings	lSettings = Properties.Settings.Default;
 		}
 
-		public void SaveConfig ()
+		void MainForm_SaveConfig (object sender, EventArgs e)
 		{
 			Properties.Settings	lSettings = Properties.Settings.Default;
 		}
@@ -58,6 +63,7 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
 
+		[System.ComponentModel.Browsable (false)]
 		public CharacterFile CharacterFile
 		{
 			get
@@ -79,7 +85,7 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		private bool IsEmpty
+		private Boolean IsEmpty
 		{
 			get
 			{
@@ -122,11 +128,11 @@ namespace AgentCharacterEditor
 
 		private void ShowTtsProperties ()
 		{
-			CheckBoxUseTTS.Enabled = (mCharacterFile != null) && !Program.MainForm.FileIsReadOnly;
-			TextBoxTTSModeID.Enabled = !IsEmpty && !Program.MainForm.FileIsReadOnly;
-			TextBoxVendor.Enabled = !IsEmpty && !Program.MainForm.FileIsReadOnly;
-			TextBoxLanguage.Enabled = !IsEmpty && !Program.MainForm.FileIsReadOnly;
-			TextBoxGender.Enabled = !IsEmpty && !Program.MainForm.FileIsReadOnly;
+			CheckBoxUseTTS.Enabled = (mCharacterFile != null) && !MainForm.Singleton.FileIsReadOnly;
+			TextBoxTTSModeID.Enabled = !IsEmpty && !MainForm.Singleton.FileIsReadOnly;
+			TextBoxVendor.Enabled = !IsEmpty && !MainForm.Singleton.FileIsReadOnly;
+			TextBoxLanguage.Enabled = !IsEmpty && !MainForm.Singleton.FileIsReadOnly;
+			TextBoxGender.Enabled = !IsEmpty && !MainForm.Singleton.FileIsReadOnly;
 
 			CheckBoxUseTTS.CheckedChanged -= new System.EventHandler (CheckBoxUseTTS_CheckedChanged);
 			SuspendLayout ();
@@ -148,7 +154,7 @@ namespace AgentCharacterEditor
 				ShowAllVoices ();
 				lVoiceInfo = VoiceComboInfo (mFileTts.Mode);
 				ComboBoxName.SelectedIndex = VoiceComboNdx (mFileTts.Mode);
-				ComboBoxName.Enabled = !Program.MainForm.FileIsReadOnly;
+				ComboBoxName.Enabled = !MainForm.Singleton.FileIsReadOnly;
 
 				TextBoxTTSModeID.Text = mFileTts.ModeId.ToString ().ToUpper ();
 				TextBoxVendor.Text = (lVoiceInfo == null) ? "" : lVoiceInfo.Manufacturer.Replace ("&&", "&");
@@ -224,10 +230,10 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Update
 
-		internal class UpdateTts : UndoableUpdate
+		internal class UpdateTts : UndoableUpdate<CharacterFile>
 		{
 			public UpdateTts (CharacterFile pCharacterFile, Sapi4VoiceInfo pVoiceInfo)
-				: base (pCharacterFile)
+				: base (pCharacterFile, pCharacterFile)
 			{
 				this.CharacterStyle = pCharacterFile.Header.Style & CharacterStyle.CharStyleTts;
 				if (pVoiceInfo != null)
@@ -249,6 +255,14 @@ namespace AgentCharacterEditor
 			{
 				get;
 				private set;
+			}
+
+			public override String TargetDescription
+			{
+				get
+				{
+					return "Text-to-Speech";
+				}
 			}
 
 			public override UndoUnit Apply ()
@@ -288,11 +302,6 @@ namespace AgentCharacterEditor
 				}
 				return null;
 			}
-
-			public override string ToString ()
-			{
-				return "Text-to-Speech";
-			}
 		}
 
 		#endregion
@@ -301,7 +310,7 @@ namespace AgentCharacterEditor
 
 		private void CheckBoxUseTTS_CheckedChanged (object sender, EventArgs e)
 		{
-			if ((mCharacterFile != null) && !Program.MainForm.FileIsReadOnly)
+			if ((mCharacterFile != null) && !MainForm.Singleton.FileIsReadOnly)
 			{
 				UpdateTts	lUpdate = new UpdateTts (mCharacterFile, null);
 
@@ -313,14 +322,14 @@ namespace AgentCharacterEditor
 				{
 					lUpdate.CharacterStyle &= ~CharacterStyle.CharStyleTts;
 				}
-				lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableAction_Applied);
-				UndoableUpdate.PutUndo (lUpdate.Apply () as UpdateTts);
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableAction_Applied);
+				UpdateTts.PutUndo (lUpdate.Apply () as UpdateTts);
 			}
 		}
 
 		private void ComboBoxName_SelectionChangeCommitted (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !Program.MainForm.FileIsReadOnly)
+			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
 			{
 				Sapi4VoiceInfo	lVoiceInfo = VoiceComboInfo (ComboBoxName.SelectedIndex);
 
@@ -328,8 +337,8 @@ namespace AgentCharacterEditor
 				{
 					UpdateTts	lUpdate = new UpdateTts (mCharacterFile, lVoiceInfo);
 
-					lUpdate.Applied += new UndoUnit.AppliedEvent (UndoableAction_Applied);
-					UndoableUpdate.PutUndo (lUpdate.Apply () as UpdateTts);
+					lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableAction_Applied);
+					UpdateTts.PutUndo (lUpdate.Apply () as UpdateTts);
 				}
 			}
 		}

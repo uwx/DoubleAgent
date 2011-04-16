@@ -27,25 +27,46 @@ namespace DoubleAgent
 {
 	public abstract class UndoUnit
 	{
+		#region Properties
+
+		public abstract String TargetDescription
+		{
+			get;
+		}
+		public virtual String ActionDescription
+		{
+			get
+			{
+				return String.Empty;
+			}
+		}
+		public virtual String ChangeDescription
+		{
+			get
+			{
+				return String.Empty;
+			}
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region Events
+
+		public delegate void AppliedEventHandler (object sender, System.EventArgs e);
+		public event AppliedEventHandler Applied;
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
 		#region Methods
 
-#if DEBUG
-		public override string ToString ()
-		{
-			return "UndoUnit";
-		}
-#endif
-
 		public abstract UndoUnit Apply ();
-
-		///////////////////////////////////////////////////////////////////////////////
 
 		protected UndoUnit OnApplied (System.EventArgs pEventArgs, UndoUnit pRedoUnit)
 		{
 			OnApplied (pEventArgs);
 			if ((pRedoUnit != null) && (pRedoUnit != this) && (this.Applied != null))
 			{
-				pRedoUnit.Applied = (AppliedEvent)this.Applied.Clone ();
+				pRedoUnit.Applied = (AppliedEventHandler)this.Applied.Clone ();
 			}
 			return pRedoUnit;
 		}
@@ -69,13 +90,12 @@ namespace DoubleAgent
 			}
 		}
 
-		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Events
 
-		public delegate void AppliedEvent (object sender, System.EventArgs e);
-
-		public event AppliedEvent Applied;
+		public override String ToString ()
+		{
+			return this.ActionDescription + this.TargetDescription + this.ChangeDescription;
+		}
 
 		#endregion
 	}
@@ -96,6 +116,14 @@ namespace DoubleAgent
 		{
 			get;
 			protected set;
+		}
+
+		public override String TargetDescription
+		{
+			get
+			{
+				return (this.Target == null) ? String.Empty : this.Target.GetType ().Name;
+			}
 		}
 
 		#endregion
@@ -119,13 +147,6 @@ namespace DoubleAgent
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Methods
-
-#if DEBUG
-		public override string ToString ()
-		{
-			return "UndoUnit - " + typeof (T).Name;
-		}
-#endif
 
 		protected override void OnApplied ()
 		{
@@ -152,10 +173,10 @@ namespace DoubleAgent
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
 
-		private Stack <UndoUnit>	mUndoStack;
-		private Stack <UndoUnit>	mRedoStack;
+		protected Stack <UndoUnit>	mUndoStack;
+		protected Stack <UndoUnit>	mRedoStack;
 
-		public bool CanUndo
+		public Boolean CanUndo
 		{
 			get
 			{
@@ -163,7 +184,7 @@ namespace DoubleAgent
 			}
 		}
 
-		public bool CanRedo
+		public Boolean CanRedo
 		{
 			get
 			{
@@ -245,11 +266,11 @@ namespace DoubleAgent
 			}
 		}
 
-		public delegate void UndoneEvent (object sender, EventArgs e);
-		public delegate void RedoneEvent (object sender, EventArgs e);
+		public delegate void UndoneEventHandler (object sender, EventArgs e);
+		public event UndoneEventHandler Undone;
 
-		public event UndoneEvent Undone;
-		public event RedoneEvent Redone;
+		public delegate void RedoneEventHandler (object sender, EventArgs e);
+		public event RedoneEventHandler Redone;
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
@@ -261,11 +282,11 @@ namespace DoubleAgent
 			mRedoStack = new Stack<UndoUnit> ();
 		}
 
-		public bool PutUndoUnit (UndoUnit pUndoUnit)
+		public Boolean PutUndoUnit (UndoUnit pUndoUnit)
 		{
 			if (pUndoUnit != null)
 			{
-				pUndoUnit.Applied += new UndoUnit.AppliedEvent (UndoUnitApplied);
+				pUndoUnit.Applied += new UndoUnit.AppliedEventHandler (UndoUnitApplied);
 				mUndoStack.Push (pUndoUnit);
 				mRedoStack.Clear ();
 				return true;
@@ -273,7 +294,7 @@ namespace DoubleAgent
 			return false;
 		}
 
-		public bool Undo ()
+		public Boolean Undo ()
 		{
 			if (mUndoStack.Count > 0)
 			{
@@ -301,7 +322,7 @@ namespace DoubleAgent
 			return false;
 		}
 
-		public bool Redo ()
+		public Boolean Redo ()
 		{
 			if (mRedoStack.Count > 0)
 			{

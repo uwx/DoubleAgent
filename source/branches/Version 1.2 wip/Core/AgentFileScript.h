@@ -65,7 +65,7 @@ public:
 
 #ifdef	_M_CEE
 	virtual bool Open (const System::String^ pPath, UINT pLogLevel) override;
-	virtual bool Save (const System::String^ pPath, UINT pLogLevel) override;
+	virtual bool Save (const System::String^ pPath, CAgentFile^ pSource, UINT pLogLevel) override;
 	virtual void Close () override;
 #else
 	_DACORE_IMPEXP virtual HRESULT Open (LPCTSTR pPath, UINT pLogLevel = 15);
@@ -85,6 +85,7 @@ public:
 #ifdef	_M_CEE
 	virtual property int SoundCount {virtual int get() override;}
 	virtual int GetSoundSize (int pSoundNdx) override;
+	virtual array <BYTE>^ GetSound (int pSoundNdx) override;
 	virtual System::String^ GetSoundFilePath (int pSoundNdx) override;
 #else
 	_DACORE_IMPEXP virtual INT_PTR GetSoundCount () const;
@@ -125,33 +126,40 @@ protected:
 	bool ParseFrameOverlay (ScriptReader^ pReader, CAgentFileFrame^ pFrame);
 	bool ParseState (ScriptReader^ pReader, System::String^ pStateName);
 
-	bool WriteFile (ScriptWriter^ pWriter);
-	bool WriteHeader (ScriptWriter^ pWriter);
+	bool WriteFile (ScriptWriter^ pWriter, CAgentFile^ pSource);
+	bool WriteHeader (ScriptWriter^ pWriter, CAgentFile^ pSource);
 	bool WriteStyle (ScriptWriter^ pWriter, UInt32 pStyle);
-	bool WriteTts (ScriptWriter^ pWriter);
-	bool WriteBalloon (ScriptWriter^ pWriter);
-	bool WriteNames (ScriptWriter^ pWriter);
+	bool WriteTts (ScriptWriter^ pWriter, CAgentFile^ pSource);
+	bool WriteBalloon (ScriptWriter^ pWriter, CAgentFile^ pSource);
+	bool WriteNames (ScriptWriter^ pWriter, CAgentFile^ pSource);
 	bool WriteName (ScriptWriter^ pWriter, CAgentFileName^ pName);
-	bool WriteAnimations (ScriptWriter^ pWriter);
-	bool WriteAnimation (ScriptWriter^ pWriter, CAgentFileAnimation^ pAnimation);
-	bool WriteAnimationFrame (ScriptWriter^ pWriter, CAgentFileFrame^ pFrame);
-	bool WriteFrameBranching (ScriptWriter^ pWriter, CAgentFileFrame^ pFrame);
-	bool WriteFrameImage (ScriptWriter^ pWriter, CAgentFileFrameImage^ pFrameImage);
-	bool WriteFrameOverlay (ScriptWriter^ pWriter, CAgentFileFrameOverlay^ pFrameOverlay);
-	bool WriteStates (ScriptWriter^ pWriter);
+	bool WriteAnimations (ScriptWriter^ pWriter, CAgentFile^ pSource);
+	bool WriteAnimation (ScriptWriter^ pWriter, CAgentFile^ pSource, CAgentFileAnimation^ pAnimation);
+	bool WriteAnimationFrame (ScriptWriter^ pWriter, CAgentFile^ pSource, CAgentFileFrame^ pFrame);
+	bool WriteFrameBranching (ScriptWriter^ pWriter, CAgentFile^ pSource, CAgentFileFrame^ pFrame);
+	bool WriteFrameImage (ScriptWriter^ pWriter, CAgentFile^ pSource, CAgentFileFrameImage^ pFrameImage);
+	bool WriteFrameOverlay (ScriptWriter^ pWriter, CAgentFile^ pSource, CAgentFileFrameOverlay^ pFrameOverlay);
+	bool WriteStates (ScriptWriter^ pWriter, CAgentFile^ pSource);
+	
+	String^ PrepareFileFolder ();
+	String^ PrepareFileFolder (Boolean pEmptyFolder);
+	String^ WriteIconFile (CAgentFileHeader^ pSource);
+	String^ WritePaletteFile (CAgentFileHeader^ pSource);
+	String^ WriteImageFile (CAgentFile^ pSource, int pImageNdx, Boolean pForOverlay);
+	String^ WriteSoundFile (CAgentFile^ pSource, int pSoundNdx);
 #endif
 
 protected:
 #ifdef	_M_CEE
 	bool																						mIsDirty;
-	System::IO::FileStream^																	mFileStream;
+	System::IO::FileStream^																		mFileStream;
 	ScriptReader^																				mFileReader;
 	System::Collections::Generic::List <System::String^>^										mImageFilePaths;
 	System::Collections::Generic::Dictionary <System::String^, System::Drawing::Bitmap^>^		mImages;
 	System::Collections::Generic::List <System::String^>^										mSoundFilePaths;
 	System::Collections::Generic::Dictionary <System::String^, System::Media::SoundPlayer^>^	mSounds;
-	System::String^																			mIconFilePath;
-	System::String^																			mPaletteFilePath;
+	System::String^																				mIconFilePath;
+	System::String^																				mPaletteFilePath;
 	UInt16																						mNewFrameDuration;
 #else
 #endif

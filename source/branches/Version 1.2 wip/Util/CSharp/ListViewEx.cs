@@ -28,9 +28,14 @@ namespace DoubleAgent
 {
 	public class ListViewEx : System.Windows.Forms.ListView
 	{
-		public bool UpdateItemCount (int pItemCount)
+		public ListViewEx ()
 		{
-			bool lRet = false;
+			this.CheckOnActivate = true;
+		}
+
+		public Boolean UpdateItemCount (int pItemCount)
+		{
+			Boolean lRet = false;
 
 			while (Items.Count > pItemCount)
 			{
@@ -45,14 +50,14 @@ namespace DoubleAgent
 			return lRet;
 		}
 
-		public bool UpdateSubItemCount (ListViewItem pItem)
+		public Boolean UpdateSubItemCount (ListViewItem pItem)
 		{
 			return UpdateSubItemCount (pItem, Columns.Count);
 		}
 
-		static public bool UpdateSubItemCount (ListViewItem pItem, int pSubItemCount)
+		static public Boolean UpdateSubItemCount (ListViewItem pItem, int pSubItemCount)
 		{
-			bool lRet = false;
+			Boolean lRet = false;
 
 			if (pItem != null)
 			{
@@ -72,6 +77,7 @@ namespace DoubleAgent
 
 		///////////////////////////////////////////////////////////////////////////////
 
+		[System.ComponentModel.Browsable (false)]
 		public ListViewItem SelectedItem
 		{
 			get
@@ -96,7 +102,7 @@ namespace DoubleAgent
 			}
 		}
 
-		public ListViewItem GetSelectedItem (bool pIncludeFocus)
+		public ListViewItem GetSelectedItem (Boolean pIncludeFocus)
 		{
 			if (SelectedIndices.Count == 1)
 			{
@@ -112,6 +118,7 @@ namespace DoubleAgent
 			}
 		}
 
+		[System.ComponentModel.Browsable (false)]
 		public int SelectedIndex
 		{
 			get
@@ -132,7 +139,7 @@ namespace DoubleAgent
 			}
 		}
 
-		public int GetSelectedIndex (bool pIncludeFocus)
+		public int GetSelectedIndex (Boolean pIncludeFocus)
 		{
 			if (SelectedIndices.Count == 1)
 			{
@@ -159,6 +166,41 @@ namespace DoubleAgent
 			pColumnHeader.AutoResize (ColumnHeaderAutoResizeStyle.ColumnContent);
 			lColumnWidth = System.Math.Max (lColumnWidth, pColumnHeader.Width);
 			pColumnHeader.Width = lColumnWidth;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		[System.ComponentModel.Category ("Appearance")]
+		[System.ComponentModel.DefaultValue (true)]
+		public Boolean CheckOnActivate
+		{
+			get;
+			set;
+		}
+
+		private const int WM_LBUTTONDBLCLK = 0x0203;
+		private Boolean In_WM_LBUTTONDBLCLK = false;
+
+		protected override void WndProc (ref Message m)
+		{
+			if (m.Msg == WM_LBUTTONDBLCLK)
+			{
+				In_WM_LBUTTONDBLCLK = true;
+			}
+			base.WndProc (ref m);
+			if (m.Msg == WM_LBUTTONDBLCLK)
+			{
+				In_WM_LBUTTONDBLCLK = false;
+			}
+		}
+
+		protected override void OnItemCheck (ItemCheckEventArgs ice)
+		{
+			if (!this.CheckOnActivate && this.In_WM_LBUTTONDBLCLK)
+			{
+				ice.NewValue = ice.CurrentValue;
+			}
+			base.OnItemCheck (ice);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
