@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="UserMacros">
+    <LibDir>$(DOUBLE_AGENT_LIB)Lib\</LibDir>
+    <BinDir>$(DOUBLE_AGENT_BIN)Bin\</BinDir>
+    <TempDir>$(TEMP)</TempDir>
+  </PropertyGroup>
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <_PropertySheetDisplayName>Common Settings</_PropertySheetDisplayName>
+    <OutDir>$(BinDir)$(Configuration)$(PlatformDir)\</OutDir>
+    <IntDir>$(LibDir)$(Configuration)$(PlatformDir)\$(ProjectName)\</IntDir>
+    <GenerateManifest>false</GenerateManifest>
+    <EmbedManifest>false</EmbedManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Bscmake>
+      <OutputFile>$(IntDir)$(ProjectName).bsc</OutputFile>
+    </Bscmake>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Include;$(SolutionDir)\Core;$(SolutionDir)\Util;$(SolutionDir)\Common;$(SolutionDir)\Resources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <BrowseInformationFile>$(IntDir)</BrowseInformationFile>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <IgnoreSpecificDefaultLibraries>atlthunk.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>false</DataExecutionPrevention>
+      <ImportLibrary>$(IntDir)$(TargetName).lib</ImportLibrary>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>.\Core;.\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TypeLibraryName>$(ProjectDir)Resources\%(Filename)$(PlatformDir).tlb</TypeLibraryName>
+      <HeaderFileName>%(RootDir)%(Directory)..\Include\%(Filename)Odl.h</HeaderFileName>
+      <DllDataFileName>%(RootDir)%(Directory)%(Filename)_data$(PlatformDir).c</DllDataFileName>
+      <InterfaceIdentifierFileName>%(RootDir)%(Directory)..\Include\%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(RootDir)%(Directory)%(Filename)_p$(PlatformDir).c</ProxyFileName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>.\Resources;.\Include;.\Core;.\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="LibDir">
+      <Value>$(LibDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BinDir">
+      <Value>$(BinDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="TempDir">
+      <Value>$(TempDir)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

@@ -99,7 +99,7 @@ extern "C" __declspec(dllexport) int __stdcall StartTransaction (MSIHANDLE pInst
 
 /////////////////////////////////////////////////////////////////////////////
 
-extern "C" __declspec(dllexport) int __stdcall CommitTransaction (MSIHANDLE pInstall)
+__declspec(dllexport) int __stdcall CommitTransaction (MSIHANDLE pInstall)
 {
 	int	lRet = ERROR_SUCCESS;
 
@@ -153,7 +153,7 @@ extern "C" __declspec(dllexport) int __stdcall CommitTransaction (MSIHANDLE pIns
 
 /////////////////////////////////////////////////////////////////////////////
 
-extern "C" __declspec(dllexport) int __stdcall RollbackTransaction (MSIHANDLE pInstall)
+__declspec(dllexport) int __stdcall RollbackTransaction (MSIHANDLE pInstall)
 {
 	int	lRet = ERROR_SUCCESS;
 

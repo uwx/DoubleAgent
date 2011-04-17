@@ -21,7 +21,11 @@ BEGIN
 	"	name=""DoubleAgent.SpeechTest"" \r\n"
 	"	version=""1.0.0.0"" \r\n"
 	"	type=""win32"" \r\n"
-	"	processorArchitecture="_PROCESSOR_ARCHITECTURE" \r\n"
+#ifdef	_WIN64
+	"	processorArchitecture=x64 \r\n"
+#else
+	"	processorArchitecture=x86 \r\n"
+#endif
 	"/> \r\n"
 	"<description>Double Agent Speech Tests</description> \r\n"
 	"<dependency> \r\n"
@@ -30,7 +34,11 @@ BEGIN
 	"		name=""Microsoft.Windows.Common-Controls"" \r\n"
 	"		version=""6.0.0.0"" \r\n"
 	"		type=""win32"" \r\n"
-	"		processorArchitecture="_PROCESSOR_ARCHITECTURE" \r\n"
+#ifdef	_WIN64
+	"		processorArchitecture=x64 \r\n"
+#else
+	"		processorArchitecture=x86 \r\n"
+#endif
 	"		publicKeyToken=""6595b64144ccf1df"" \r\n"
 	"		language=""*"" \r\n"
 	"		/> \r\n"

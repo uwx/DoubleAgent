@@ -4,9 +4,9 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Wed Jan 26 02:39:11 2011
+/* at Sun Apr 17 00:13:46 2011
  */
-/* Compiler settings for .\Core\DaCore.odl:
+/* Compiler settings for Core\DaCore.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 

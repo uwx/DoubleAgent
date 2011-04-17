@@ -20,7 +20,6 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "AgentFile.h"
-#include "AgentFileCache.h"
 #include "DaCoreOdl.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -56,7 +55,7 @@ public:
 
 // Implementation
 protected:
-	void SetAgentFile (CAgentFile* pAgentFile, CAgentFileClient* pClient);
+	void SetAgentFile (CAgentFile* pAgentFile, class CAgentFileClient* pClient);
 	void SetAgentStreamInfo (_IAgentStreamInfo* pStreamInfo);
 	void SetAgentStreamInfo (CAgentStreamInfo* pStreamInfo);
 
