@@ -57,28 +57,24 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="VsProps\Dax86.props" />
-    <Import Project="VsProps\DaNoDelayLoad.props" />
     <Import Project="VsProps\DaRelease.props" />
     <Import Project="VsProps\DaAtl.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="VsProps\Dax86.props" />
-    <Import Project="VsProps\DaNoDelayLoad.props" />
     <Import Project="VsProps\DaDebug.props" />
     <Import Project="VsProps\DaAtl.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="VsProps\Dax64.props" />
-    <Import Project="VsProps\DaNoDelayLoad.props" />
     <Import Project="VsProps\DaRelease.props" />
     <Import Project="VsProps\DaAtl.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="VsProps\Dax64.props" />
-    <Import Project="VsProps\DaNoDelayLoad.props" />
     <Import Project="VsProps\DaDebug.props" />
     <Import Project="VsProps\DaAtl.props" />
   </ImportGroup>
@@ -98,44 +94,48 @@
     <Link />
     <CustomBuildStep>
       <Message>Creating interop assemblies for $(TargetFileName)</Message>
-      <Command>tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)
-"$(TargetDir)\tlbtoasm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)\Interop\DoubleAgentSvr.dll" "$(TargetDir)\Interop\DoubleAgent.Server.dll"
+      <Command>"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(TargetDir)$(TargetFrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
 
-</Command>
-      <Outputs>$(TargetDir)\Interop\DoubleAgentSvr.dll;$(TargetDir)\Interop\DoubleAgent.Server.dll;%(Outputs)</Outputs>
+"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(TargetDir)$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"</Command>
+      <Outputs>$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;%(Outputs)</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link />
     <CustomBuildStep>
       <Message>Creating interop assemblies for $(TargetFileName)</Message>
-      <Command>tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)
-"$(TargetDir)\tlbtoasm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)\Interop\DoubleAgentSvr.dll" "$(TargetDir)\Interop\DoubleAgent.Server.dll"
+      <Command>"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(TargetDir)$(TargetFrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
 
-</Command>
-      <Outputs>$(TargetDir)\Interop\DoubleAgentSvr.dll;$(TargetDir)\Interop\DoubleAgent.Server.dll;%(Outputs)</Outputs>
+"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(TargetDir)$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"</Command>
+      <Outputs>$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;%(Outputs)</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Link />
     <CustomBuildStep>
       <Message>Creating interop assemblies for $(TargetFileName)</Message>
-      <Command>tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)
-"$(TargetDir)\tlbtoasm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)\Interop\DoubleAgentSvr.dll" "$(TargetDir)\Interop\DoubleAgent.Server.dll"
-signtool sign /n "Cinnamon Software Inc." /t http://timestamp.comodoca.com/authenticode "$(TargetDir)\Interop\DoubleAgent.Server.dll"
-</Command>
-      <Outputs>$(TargetDir)\Interop\DoubleAgentSvr.dll;$(TargetDir)\Interop\DoubleAgent.Server.dll;%(Outputs)</Outputs>
+      <Command>"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(TargetDir)$(TargetFrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
+
+"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(TargetDir)$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"</Command>
+      <Outputs>$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;%(Outputs)</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Link />
     <CustomBuildStep>
       <Message>Creating interop assemblies for $(TargetFileName)</Message>
-      <Command>tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)
-"$(TargetDir)\tlbtoasm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)\Interop\DoubleAgentSvr.dll" "$(TargetDir)\Interop\DoubleAgent.Server.dll"
-signtool sign /n "Cinnamon Software Inc." /t http://timestamp.comodoca.com/authenticode "$(TargetDir)\Interop\DoubleAgent.Server.dll"
-</Command>
-      <Outputs>$(TargetDir)\Interop\DoubleAgentSvr.dll;$(TargetDir)\Interop\DoubleAgent.Server.dll;%(Outputs)</Outputs>
+      <Command>"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(TargetDir)$(TargetFrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
+
+"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(TargetDir)$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"</Command>
+      <Outputs>$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;%(Outputs)</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>

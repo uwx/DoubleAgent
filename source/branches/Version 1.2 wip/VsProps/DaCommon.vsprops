@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="Common Settings"
+	OutputDirectory="$(BinDir)$(ConfigurationName)$(PlatformDir)\"
+	IntermediateDirectory="$(LibDir)$(ConfigurationName)$(PlatformDir)\$(ProjectName)\"
+	>
+	<Tool
+		Name="VCBscMakeTool"
+		OutputFile="$(IntDir)/$(ProjectName).bsc"
+	/>
+	<Tool
+		Name="VCCLCompilerTool"
+		AdditionalIncludeDirectories="&quot;$(SolutionDir)\Include&quot;;&quot;$(SolutionDir)\Core&quot;;&quot;$(SolutionDir)\Util&quot;;&quot;$(SolutionDir)\Common&quot;;&quot;$(SolutionDir)\Resources&quot;"
+		PreprocessorDefinitions="_WINDOWS"
+		TreatWChar_tAsBuiltInType="false"
+		UsePrecompiledHeader="2"
+		BrowseInformationFile="$(IntDir)\"
+		WarningLevel="3"
+		WarnAsError="true"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		GenerateManifest="false"
+		IgnoreDefaultLibraryNames="atlthunk.lib"
+		RandomizedBaseAddress="1"
+		DataExecutionPrevention="1"
+		ImportLibrary="$(IntDir)\$(TargetName).lib"
+	/>
+	<Tool
+		Name="VCMIDLTool"
+		AdditionalIncludeDirectories=".\Core;.\Common"
+		TypeLibraryName="$(ProjectDir)Resources\$(InputName)$(PlatformDir).tlb"
+		HeaderFileName="$(InputDir)..\Include\$(InputName)Odl.h"
+		DLLDataFileName="$(InputDir)$(InputName)_data$(PlatformDir).c"
+		InterfaceIdentifierFileName="$(InputDir)..\Include\$(InputName)_i.c"
+		ProxyFileName="$(InputDir)$(InputName)_p$(PlatformDir).c"
+	/>
+	<Tool
+		Name="VCResourceCompilerTool"
+		AdditionalIncludeDirectories=".\Resources;.\Include;.\Core;.\Common"
+	/>
+	<Tool
+		Name="VCManifestTool"
+		EmbedManifest="false"
+	/>
+	<UserMacro
+		Name="LibDir"
+		Value="%DOUBLE_AGENT_LIB%Lib\"
+	/>
+	<UserMacro
+		Name="BinDir"
+		Value="%DOUBLE_AGENT_BIN%Bin\"
+	/>
+	<UserMacro
+		Name="TempDir"
+		Value="%TEMP%"
+	/>
+	<UserMacro
+		Name="TargetFrameworkVersion"
+		Value="v$(TargetFramework)"
+		InheritsFromParent="true"
+		Delimiter=";"
+	/>
+</VisualStudioPropertySheet>

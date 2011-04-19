@@ -833,7 +833,17 @@ bool FixupAssembly::UnhideGetEnumerator (Object^ pSource, Object^ pTarget, Custo
 		)
 	{
 #ifdef	_LOG_FIXES
-		int	lTypeLibFuncFlags = (Int16) pAttribute->ConstructorArguments [0].Value;
+		int	lTypeLibFuncFlags;
+		try
+		{
+			lTypeLibFuncFlags = (Int16) pAttribute->ConstructorArguments [0].Value;
+		}
+		catch AnyExceptionSilent
+		try
+		{
+			lTypeLibFuncFlags = (Int32) pAttribute->ConstructorArguments [0].Value;
+		}
+		catch AnyExceptionSilent
 		LogMessage (_LOG_FIXES, _T("---> Skip       [%s] for [%s.%s]"), _B(mCopy->TypeLibFuncFlagsStr((TypeLibFuncFlags)lTypeLibFuncFlags)), _BMT(lTargetMethod), _BM(lTargetMethod));
 #endif
 		lRet = true;

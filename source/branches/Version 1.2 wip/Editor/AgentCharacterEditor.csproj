@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AgentCharacterEditor</RootNamespace>
     <AssemblyName>DoubleACE</AssemblyName>
-    <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>AgentCharacterEditor.Program</StartupObject>
     <ApplicationIcon>
@@ -55,11 +55,14 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DaCharFileCLR, Version=1.0.4088.6175, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="DaCharFileCLR, Version=1.2.0.51, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\BinDa\Bin\Debug(x86)\DaCharFileCLR.dll</HintPath>
+      <HintPath>..\..\BinDa\Bin\Debug(x86)\v3.0\DaCharFileCLR.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />

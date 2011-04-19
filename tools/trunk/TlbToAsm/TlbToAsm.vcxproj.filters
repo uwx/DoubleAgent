@@ -110,4 +110,9 @@
   <ItemGroup>
     <None Include="..\..\..\Users\Don\Desktop\TlbToAsm.log" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AssemblyDlg.resx">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

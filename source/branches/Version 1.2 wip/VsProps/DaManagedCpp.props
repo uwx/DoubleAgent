@@ -6,6 +6,8 @@
     <LinkIncremental>false</LinkIncremental>
     <GenerateManifest>true</GenerateManifest>
     <EmbedManifest>true</EmbedManifest>
+    <OutDir>$(OutDir)$(TargetFrameworkVersion)\</OutDir>
+    <IntDir>$(IntDir)$(TargetFrameworkVersion)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>

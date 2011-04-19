@@ -15,9 +15,11 @@
 //#define	_DEBUG_TARGET_PROPERTY	LogNormal|LogHighVolume
 //#define	_DEBUG_TARGET_EVENT		LogNormal|LogHighVolume
 //#define	_DEBUG_CREATE_TYPE		LogNormal
-//#define	_DEBUG_RESOLVE_TYPE		LogNormal
+#define	_DEBUG_RESOLVE_TYPE		LogNormal
 //#define	_DEBUG_TARGET_CODE		LogDebug
 #endif
+
+//#pragma comment(linker, "\"/manifestdependency:name='mscorlib' version='2.0.0.0' Culture='neutral' publicKeyToken='b77a5c561934e089'\"")
 
 namespace DoubleAgent {
 namespace TlbToAsm {
@@ -89,6 +91,43 @@ AssemblyBuilder^ CopyAssembly::MakeCopy (Assembly^ pSourceAssembly, String^ pAss
 		String^			lFilePath = IO::Path::GetDirectoryName (pAssemblyName);
 		String^			lFileName = IO::Path::GetFileName (pAssemblyName);
 
+LogReferences (Assembly::GetExecutingAssembly());
+try
+{
+	array<Assembly^>^	lAssemblies = AppDomain::CurrentDomain->GetAssemblies();
+
+	if	(lAssemblies)
+	{
+		for each (Assembly^ lAssembly in lAssemblies)
+		{
+#ifdef	_DEBUG_RESOLVE_TYPE
+			LogMessage (_DEBUG_RESOLVE_TYPE, _T("%s  Loaded [%s]"), _B(LogIndent()), _B(lAssembly->FullName));
+#endif
+		}
+	}
+}
+catch AnyExceptionSilent
+
+try
+{
+	array<AssemblyName^>^	lReferences = Assembly::GetExecutingAssembly()->GetReferencedAssemblies ();
+
+	if	(lReferences)
+	{
+		for each (AssemblyName^ lReference in lReferences)
+		{
+			if	(lReference->Version->Major > 3)
+			{
+#ifdef	_DEBUG_RESOLVE_TYPE
+				LogMessage (_DEBUG_RESOLVE_TYPE, _T("%s  Remove? [%s]"), _B(LogIndent()), _B(lReference->FullName));
+#endif
+			}
+		}
+	}
+}
+catch AnyExceptionSilent
+LogReferences (Assembly::GetExecutingAssembly());
+
 		lAssemblyName->Name = IO::Path::GetFileNameWithoutExtension (pAssemblyName);
 		lAssemblyName->Version = safe_cast <System::Version^> (pSourceAssembly->GetName()->Version->Clone());
 		lAssemblyName->ProcessorArchitecture = pSourceAssembly->GetName()->ProcessorArchitecture;
@@ -103,6 +142,13 @@ AssemblyBuilder^ CopyAssembly::MakeCopy (Assembly^ pSourceAssembly, String^ pAss
 
 		LogMessage (LogNormal, _T("Copy [%s] Module [%s]"), _B(mSourceAssembly->FullName), _B(mSourceModule->FullyQualifiedName));
 		LogMessage (LogNormal, _T("  to [%s] Module [%s]"), _B(mAssemblyBuilder->FullName), _B(mModuleBuilder->FullyQualifiedName));
+
+//LogMessage (LogDebug, _T("Version [%s] [%s] [%s]"), _B(AppDomain::CurrentDomain->ApplicationIdentity->FullName), _B(pSourceAssembly->ImageRuntimeVersion), _B(mAssemblyBuilder->ImageRuntimeVersion));
+LogMessage (LogDebug, _T("Version [%s] [%s] [%s] [%s]"), _B(Environment::Version->ToString()), _B(Assembly::GetExecutingAssembly()->ImageRuntimeVersion), _B(pSourceAssembly->ImageRuntimeVersion), _B(mAssemblyBuilder->ImageRuntimeVersion));
+#ifdef	_DEBUG
+		LogReferences (mSourceAssembly);
+		LogReferences (mAssemblyBuilder);
+#endif
 	}
 	catch AnyExceptionDebug
 	{}
@@ -453,13 +499,29 @@ Assembly^ CopyAssembly::ResolveAssembly (Object^ pSender, ResolveEventArgs^ pEve
 
 	mLogIndent++;
 
+#ifdef	_DEBUG_RESOLVE_TYPE
+	LogMessage (_DEBUG_RESOLVE_TYPE, _T("%s  ResolveAssembly [%s]"), _B(LogIndent()), _B(pEventArgs->Name));
+#endif
+	try
+	{
+		array<AssemblyName^>^	lReferences = mSourceAssembly->GetReferencedAssemblies ();
+
+		if	(lReferences)
+		{
+			for each (AssemblyName^ lReference in lReferences)
+			{
+#ifdef	_DEBUG_RESOLVE_TYPE
+	LogMessage (_DEBUG_RESOLVE_TYPE, _T("%s  Reference? [%s]"), _B(LogIndent()), _B(lReference->FullName));
+#endif
+			}
+		}
+	}
+	catch AnyExceptionSilent
+
 	try
 	{
 		Assembly^	lAssembly;
 
-#ifdef	_DEBUG_RESOLVE_TYPE
-		LogMessage (_DEBUG_RESOLVE_TYPE, _T("%s  ResolveAssembly [%s]"), _B(LogIndent()), _B(pEventArgs->Name));
-#endif
 		for each (lAssembly in mSavedAssemblies)
 		{
 			if	(String::Compare (lAssembly->FullName, pEventArgs->Name) == 0)

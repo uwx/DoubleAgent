@@ -6,13 +6,15 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
     <_PropertySheetDisplayName>Managed Tool</_PropertySheetDisplayName>
-    <IntDir>$(LibDir)$(ConfigDir)$(PlatformDir)\Tools\$(ProjectName)\</IntDir>
+    <IntDir>$(IntDir)$(TargetFrameworkVersion)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <GenerateManifest>true</GenerateManifest>
     <EmbedManifest>true</EmbedManifest>
+    <OutDir>$(OutDir)$(TargetFrameworkVersion)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
+      <AdditionalIncludeDirectories>..\..\Managed;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>

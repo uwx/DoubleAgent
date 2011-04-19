@@ -119,9 +119,9 @@ BEGIN
 	"	version=""" _DOUBLEAGENT_VERSION_STR """ \r\n"
 	"	type=""win32"" \r\n"
 #ifdef	_WIN64
-	"	processorArchitecture=x64 \r\n"
+	"	processorArchitecture=""amd64"" \r\n"
 #else
-	"	processorArchitecture=x86 \r\n"
+	"	processorArchitecture=""x86"" \r\n"
 #endif
 	"/> \r\n"
 	"<description>""" _CORE_PROGID_NAME """</description> \r\n"
@@ -132,9 +132,9 @@ BEGIN
 	"		version=""6.0.0.0"" \r\n"
 	"		type=""win32"" \r\n"
 #ifdef	_WIN64
-	"		processorArchitecture=x64 \r\n"
+	"		processorArchitecture=""amd64"" \r\n"
 #else
-	"		processorArchitecture=x86 \r\n"
+	"		processorArchitecture=""x86"" \r\n"
 #endif
 	"		publicKeyToken=""6595b64144ccf1df"" \r\n"
 	"		language=""*"" \r\n"
@@ -163,9 +163,9 @@ BEGIN
 	"	version=""" _DOUBLEAGENT_VERSION_STR """ \r\n"
 	"	type=""win32"" \r\n"
 #ifdef	_WIN64
-	"	processorArchitecture=x64 \r\n"
+	"	processorArchitecture=""amd64"" \r\n"
 #else
-	"	processorArchitecture=x86 \r\n"
+	"	processorArchitecture=""x86"" \r\n"
 #endif
 	"/> \r\n"
 	"<description>""" _CORE_PROGID_NAME """</description> \r\n"
@@ -176,9 +176,9 @@ BEGIN
 	"		version=""6.0.0.0"" \r\n"
 	"		type=""win32"" \r\n"
 #ifdef	_WIN64
-	"		processorArchitecture=x64 \r\n"
+	"		processorArchitecture=""amd64"" \r\n"
 #else
-	"		processorArchitecture=x86 \r\n"
+	"		processorArchitecture=""x86"" \r\n"
 #endif
 	"		publicKeyToken=""6595b64144ccf1df"" \r\n"
 	"		language=""*"" \r\n"

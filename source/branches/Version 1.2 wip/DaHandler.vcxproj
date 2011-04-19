@@ -57,7 +57,6 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="VsProps\Dax86.props" />
-    <Import Project="VsProps\DaNoDelayLoad.props" />
     <Import Project="VsProps\DaDll.props" />
     <Import Project="VsProps\DaRelease.props" />
     <Import Project="VsProps\DaAtl.props" />
@@ -65,7 +64,6 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="VsProps\Dax86.props" />
-    <Import Project="VsProps\DaNoDelayLoad.props" />
     <Import Project="VsProps\DaDll.props" />
     <Import Project="VsProps\DaDebug.props" />
     <Import Project="VsProps\DaAtl.props" />
@@ -73,7 +71,6 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="VsProps\Dax64.props" />
-    <Import Project="VsProps\DaNoDelayLoad.props" />
     <Import Project="VsProps\DaDll.props" />
     <Import Project="VsProps\DaRelease.props" />
     <Import Project="VsProps\DaAtl.props" />
@@ -81,7 +78,6 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="VsProps\Dax64.props" />
-    <Import Project="VsProps\DaNoDelayLoad.props" />
     <Import Project="VsProps\DaDll.props" />
     <Import Project="VsProps\DaDebug.props" />
     <Import Project="VsProps\DaAtl.props" />

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="Managed C++"
+	OutputDirectory="$(BinDir)$(ConfigDir)$(PlatformDir)\$(TargetFrameworkVersion)\"
+	IntermediateDirectory="$(LibDir)$(ConfigDir)$(PlatformDir)\$(ProjectName)\$(TargetFrameworkVersion)\"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		AdditionalIncludeDirectories="&quot;$(SolutionDir)Managed&quot;;&quot;$(SolutionDir)Util\Atl&quot;"
+		MinimalRebuild="false"
+		BasicRuntimeChecks="0"
+		TreatWChar_tAsBuiltInType="true"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		LinkIncremental="1"
+		GenerateManifest="true"
+	/>
+	<Tool
+		Name="VCManifestTool"
+		EmbedManifest="true"
+	/>
+</VisualStudioPropertySheet>

@@ -4,6 +4,8 @@
     <LibDir>$(DOUBLE_AGENT_LIB)Lib\</LibDir>
     <BinDir>$(DOUBLE_AGENT_BIN)Bin\</BinDir>
     <TempDir>$(TEMP)</TempDir>
+    <TargetFrameworkVersion>$(FrameworkVersion)</TargetFrameworkVersion>
+    <Alt1FrameworkVersion>v3.0</Alt1FrameworkVersion>
   </PropertyGroup>
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
@@ -53,6 +55,12 @@
     </BuildMacro>
     <BuildMacro Include="TempDir">
       <Value>$(TempDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="TargetFrameworkVersion">
+      <Value>$(TargetFrameworkVersion)</Value>
+    </BuildMacro>
+    <BuildMacro Include="Alt1FrameworkVersion">
+      <Value>$(Alt1FrameworkVersion)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>
