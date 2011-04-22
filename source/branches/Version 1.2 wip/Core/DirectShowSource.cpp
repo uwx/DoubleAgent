@@ -264,7 +264,16 @@ HRESULT CDirectShowSource::OpenFile (LPCTSTR pFileName)
 				{
 					lAgentFileAcf->SetDownloadMode (false, false, false);
 				}
-				lResult = lAgentFile->Open (lFileName, _LOG_FILE_LOAD);
+#ifdef	_LOG_FILE_LOAD
+				UINT lLogLevel = lAgentFile->LogLevel;
+				lAgentFile->LogLevel = MinLogLevel (lAgentFile->LogLevel, _LOG_FILE_LOAD);
+#endif
+
+				lResult = lAgentFile->Open (lFileName);
+
+#ifdef	_LOG_FILE_LOAD
+				lAgentFile->LogLevel = lLogLevel;
+#endif
 
 				if	(SUCCEEDED (lResult))
 				{

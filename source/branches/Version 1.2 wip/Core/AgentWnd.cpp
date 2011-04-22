@@ -47,16 +47,12 @@
 #define	_DEBUG_ANIMATE_OPS		(GetProfileDebugInt(_T("DebugAnimateOps"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_DEBUG_QUEUE_CYCLES		(GetProfileDebugInt(_T("DebugQueueCycles"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_LOG_FILE_NAMES			(GetProfileDebugInt(_T("LogFileNames"),LogDetails,true)&0xFFFF|LogTimeMs)
-#define	_LOG_FILE_LOAD			(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF|LogTime)
 #define	_LOG_QUEUE_OPS			(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 //#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 //#define	_TRACE_RESOURCES_EX		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 #define	_TRACE_BUSY_TIME		LogIfActive|LogTimeMs|LogHighVolume
 #endif
 
-#ifndef	_LOG_FILE_LOAD
-#define	_LOG_FILE_LOAD	LogVerbose+1
-#endif
 #ifndef	_LOG_QUEUE_OPS
 #define	_LOG_QUEUE_OPS	LogDetails
 #endif
@@ -202,7 +198,7 @@ bool CAgentWnd::Open (LPCTSTR pFileName)
 		else
 		if	(
 				(lAgentFile = CAgentFile::CreateInstance (lFileName))
-			&&	(SUCCEEDED (lAgentFile->Open (lFileName, _LOG_FILE_LOAD)))
+			&&	(SUCCEEDED (lAgentFile->Open (lFileName)))
 			)
 		{
 			SetAgentFile (lAgentFile, NULL);

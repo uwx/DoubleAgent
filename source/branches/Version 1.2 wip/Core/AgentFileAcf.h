@@ -38,14 +38,14 @@ public:
 // Overrides
 public:
 	_DACORE_IMPEXP virtual bool get_IsAcfFile () const;
-	_DACORE_IMPEXP virtual HRESULT Open (LPCTSTR pPath, UINT pLogLevel = 15);
+	_DACORE_IMPEXP virtual HRESULT Open (LPCTSTR pPath);
 	_DACORE_IMPEXP virtual void Close ();
 
 	_DACORE_IMPEXP virtual const CAgentFileAnimation* GetGesture (INT_PTR pGestureNdx);
 	_DACORE_IMPEXP virtual const CAgentFileAnimation* GetAnimation (INT_PTR pAnimationNdx);
 
 	_DACORE_IMPEXP virtual INT_PTR GetImageCount () const;
-	_DACORE_IMPEXP virtual CAgentFileImage* GetImage (INT_PTR pImageNdx, bool p32Bit = false, const COLORREF* pBkColor = NULL, UINT pLogLevel = 15);
+	_DACORE_IMPEXP virtual CAgentFileImage* GetImage (INT_PTR pImageNdx, bool p32Bit = false, const COLORREF* pBkColor = NULL);
 
 	_DACORE_IMPEXP virtual INT_PTR GetSoundCount () const;
 	_DACORE_IMPEXP virtual long GetSoundSize (INT_PTR pSoundNdx);
@@ -54,7 +54,7 @@ public:
 // Operations
 public:
 	_DACORE_IMPEXP void SetDownloadMode (bool pRefresh = true, bool pReload = false, bool pSecure = true);
-	_DACORE_IMPEXP HRESULT LoadAcf (CFileDownload* pDownload, UINT pLogLevel = 15);
+	_DACORE_IMPEXP HRESULT LoadAcf (CFileDownload* pDownload);
 
 	_DACORE_IMPEXP bool IsAnimationLoaded (INT_PTR pAnimationNdx);
 	_DACORE_IMPEXP bool IsAnimationLoaded (LPCTSTR pAnimationName);
@@ -64,18 +64,18 @@ public:
 	_DACORE_IMPEXP tBstrPtr GetAnimationAcaPath (LPCTSTR pAnimationName);
 
 protected:
-	virtual HRESULT ReadHeader (UINT pLogLevel);
+	virtual HRESULT ReadHeader ();
 
 // Implementation
 protected:
-	bool ReadAcfHeader (UINT pLogLevel = 15);
+	bool ReadAcfHeader ();
 
 	CAtlString GetAcaPath (CAgentFileAnimation* pAnimation);
-	HRESULT ReadAcaFile (CAgentFileAnimation* pAnimation, bool p32Bit = false, UINT pLogLevel = 15);
-	HRESULT ReadAcaFile (CAgentFileAnimation* pAnimation, LPCTSTR pPath, bool p32Bit = false, UINT pLogLevel = 15);
-	HRESULT ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& pBuffer, DWORD& pBufferSize, WORD pImageStart, bool p32Bit = false, UINT pLogLevel = 15);
-	HRESULT ReadAcaImages (CAgentFileAnimation* pAnimation, LPCVOID& pBuffer, DWORD& pBufferSize, bool p32Bit = false, UINT pLogLevel = 15);
-	HRESULT ReadAcaSounds (CAgentFileAnimation* pAnimation, LPCVOID& pBuffer, DWORD& pBufferSize, bool p32Bit = false, UINT pLogLevel = 15);
+	HRESULT ReadAcaFile (CAgentFileAnimation* pAnimation, bool p32Bit = false);
+	HRESULT ReadAcaFile (CAgentFileAnimation* pAnimation, LPCTSTR pPath, bool p32Bit = false);
+	HRESULT ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& pBuffer, DWORD& pBufferSize, WORD pImageStart, bool p32Bit = false);
+	HRESULT ReadAcaImages (CAgentFileAnimation* pAnimation, LPCVOID& pBuffer, DWORD& pBufferSize, bool p32Bit = false);
+	HRESULT ReadAcaSounds (CAgentFileAnimation* pAnimation, LPCVOID& pBuffer, DWORD& pBufferSize, bool p32Bit = false);
 
 protected:
 	void DumpAcaImages (UINT pLogLevel);

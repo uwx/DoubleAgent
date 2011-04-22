@@ -257,16 +257,17 @@ void CAgentFileBinary::CloseFile ()
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-bool CAgentFileBinary::LoadFile (System::String^ pPath, UINT pLogLevel)
+bool CAgentFileBinary::LoadFile (System::String^ pPath)
 {
 	bool	lRet = false;
 
 #ifdef	_DEBUG_LOAD
-	pLogLevel = MinLogLevel (pLogLevel, _DEBUG_LOAD);
+	UINT lLogLevel = mLogLevel;
+	mLogLevel = MinLogLevel (mLogLevel, _DEBUG_LOAD);
 #endif
-	if	(LogIsActive (pLogLevel))
+	if	(LogIsActive (mLogLevel))
 	{
-		LogMessage (pLogLevel, _T("Load [%s]"), _B(pPath));
+		LogMessage (mLogLevel, _T("Load [%s]"), _B(pPath));
 	}
 
 	CloseFile ();
@@ -294,13 +295,13 @@ bool CAgentFileBinary::LoadFile (System::String^ pPath, UINT pLogLevel)
 	{
 		try
 		{
-			lRet = ReadHeader (pLogLevel);
+			lRet = ReadHeader ();
 
 			if	(lRet)
 			{
-				ReadNames (true, pLogLevel);
-				ReadStates (pLogLevel);
-				ReadGestures (pLogLevel);
+				ReadNames (true);
+				ReadStates ();
+				ReadGestures ();
 			}
 		}
 		catch (Exception^ pException)
@@ -324,19 +325,23 @@ bool CAgentFileBinary::LoadFile (System::String^ pPath, UINT pLogLevel)
 	{
 		LogMessage (LogNormal|LogTime, _T("Load [%s] [%u]"), _B(pPath), lRet);
 	}
+#ifdef	_DEBUG_LOAD
+	mLogLevel = lLogLevel;
+#endif	
 	return lRet;
 }
 #else
-HRESULT CAgentFileBinary::LoadFile (LPCTSTR pPath, UINT pLogLevel)
+HRESULT CAgentFileBinary::LoadFile (LPCTSTR pPath)
 {
 	HRESULT	lResult = E_FAIL;
 
 #ifdef	_DEBUG_LOAD
-	pLogLevel = MinLogLevel (pLogLevel, _DEBUG_LOAD);
+	UINT lLogLevel = mLogLevel;
+	mLogLevel = MinLogLevel (mLogLevel, _DEBUG_LOAD);
 #endif
-	if	(LogIsActive (pLogLevel))
+	if	(LogIsActive (mLogLevel))
 	{
-		LogMessage (pLogLevel, _T("Load [%s]"), pPath);
+		LogMessage (mLogLevel, _T("Load [%s]"), pPath);
 	}
 
 	mFileHandle = CreateFile (pPath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
@@ -361,15 +366,15 @@ HRESULT CAgentFileBinary::LoadFile (LPCTSTR pPath, UINT pLogLevel)
 
 	if	(SUCCEEDED (lResult))
 	{
-		lResult = ReadHeader (pLogLevel);
+		lResult = ReadHeader ();
 
 		if	(SUCCEEDED (lResult))
 		{
-			ReadNames (true, pLogLevel);
-			ReadStates (pLogLevel);
-			ReadGestures (pLogLevel);
+			ReadNames (true);
+			ReadStates ();
+			ReadGestures ();
 #ifdef	_DEBUG_DUMP
-			if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_DUMP)))
+			if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_DUMP)))
 			{
 				LogDump (_DEBUG_DUMP, mFileView, mFileSize, 0, true);
 			}
@@ -384,6 +389,9 @@ HRESULT CAgentFileBinary::LoadFile (LPCTSTR pPath, UINT pLogLevel)
 	{
 		LogComErr (((lResult==AGENTPROVERROR_MAGIC)?LogDetails:LogNormal)|LogTime, lResult, _T("Load [%s]"), pPath);
 	}
+#ifdef	_DEBUG_LOAD
+	mLogLevel = lLogLevel;
+#endif	
 	return lResult;
 }
 #endif
@@ -394,15 +402,6 @@ HRESULT CAgentFileBinary::LoadFile (LPCTSTR pPath, UINT pLogLevel)
 bool CAgentFileBinary::ReadHeader ()
 #else
 HRESULT CAgentFileBinary::ReadHeader ()
-#endif
-{
-	return ReadHeader (LogVerbose+1);
-}
-
-#ifdef	_M_CEE
-bool CAgentFileBinary::ReadHeader (UINT pLogLevel)
-#else
-HRESULT CAgentFileBinary::ReadHeader (UINT pLogLevel)
 #endif
 {
 	mSignature = 0;
@@ -421,9 +420,9 @@ HRESULT CAgentFileBinary::ReadHeader (UINT pLogLevel)
 			||	(mSignature == sAcfFileSignature)
 			)
 		{
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%s] Signature [%8.8X]"), _B(mPath), mSignature);
+				LogMessage (mLogLevel, _T("  [%s] Signature [%8.8X]"), _B(mPath), mSignature);
 			}
 		}
 		else
@@ -446,9 +445,9 @@ HRESULT CAgentFileBinary::ReadHeader (UINT pLogLevel)
 			)
 		{
 			mSignature = *lSignature;
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%s] Signature [%8.8X]"), mPath, *lSignature);
+				LogMessage (mLogLevel, _T("  [%s] Signature [%8.8X]"), mPath, *lSignature);
 			}
 		}
 		else
@@ -477,16 +476,16 @@ HRESULT CAgentFileBinary::ReadHeader (UINT pLogLevel)
 	LPCULARGE_INTEGER	lBlockDefs;
 
 	if	(
-			(LogIsActive (MinLogLevel (pLogLevel, _DEBUG_LOAD)))
+			(LogIsActive (MinLogLevel (mLogLevel, _DEBUG_LOAD)))
 		&&	(mFileView.SafeIsValid ())
 		&&	(lBlockDefs = (LPCULARGE_INTEGER)(((LPCBYTE)(LPVOID)mFileView)+sizeof(DWORD)))
 		)
 	{
-		LogMessage (pLogLevel, _T("  [%s] Blocks"), mPath);
-		LogMessage (pLogLevel, _T("    At [%8.8X (%u)] of [%8.8X (%u)]"), lBlockDefs[0].LowPart, lBlockDefs[0].LowPart, lBlockDefs[0].HighPart, lBlockDefs[0].HighPart);
-		LogMessage (pLogLevel, _T("    At [%8.8X (%u)] of [%8.8X (%u)]"), lBlockDefs[1].LowPart, lBlockDefs[1].LowPart, lBlockDefs[1].HighPart, lBlockDefs[1].HighPart);
-		LogMessage (pLogLevel, _T("    At [%8.8X (%u)] of [%8.8X (%u)]"), lBlockDefs[2].LowPart, lBlockDefs[2].LowPart, lBlockDefs[2].HighPart, lBlockDefs[2].HighPart);
-		LogMessage (pLogLevel, _T("    At [%8.8X (%u)] of [%8.8X (%u)]"), lBlockDefs[3].LowPart, lBlockDefs[3].LowPart, lBlockDefs[3].HighPart, lBlockDefs[3].HighPart);
+		LogMessage (mLogLevel, _T("  [%s] Blocks"), mPath);
+		LogMessage (mLogLevel, _T("    At [%8.8X (%u)] of [%8.8X (%u)]"), lBlockDefs[0].LowPart, lBlockDefs[0].LowPart, lBlockDefs[0].HighPart, lBlockDefs[0].HighPart);
+		LogMessage (mLogLevel, _T("    At [%8.8X (%u)] of [%8.8X (%u)]"), lBlockDefs[1].LowPart, lBlockDefs[1].LowPart, lBlockDefs[1].HighPart, lBlockDefs[1].HighPart);
+		LogMessage (mLogLevel, _T("    At [%8.8X (%u)] of [%8.8X (%u)]"), lBlockDefs[2].LowPart, lBlockDefs[2].LowPart, lBlockDefs[2].HighPart, lBlockDefs[2].HighPart);
+		LogMessage (mLogLevel, _T("    At [%8.8X (%u)] of [%8.8X (%u)]"), lBlockDefs[3].LowPart, lBlockDefs[3].LowPart, lBlockDefs[3].HighPart, lBlockDefs[3].HighPart);
 	}
 #endif
 
@@ -496,7 +495,7 @@ HRESULT CAgentFileBinary::ReadHeader (UINT pLogLevel)
 
 /////////////////////////////////////////////////////////////////////////////
 
-LPCVOID CAgentFileBinary::ReadBufferTts (LPCVOID pBuffer, bool pNullTerminated, UINT pLogLevel)
+LPCVOID CAgentFileBinary::ReadBufferTts (LPCVOID pBuffer, bool pNullTerminated)
 {
 	LPCBYTE	lByte = (LPCBYTE)pBuffer;
 
@@ -588,9 +587,9 @@ LPCVOID CAgentFileBinary::ReadBufferTts (LPCVOID pBuffer, bool pNullTerminated, 
 		}
 #endif
 
-		if	(LogIsActive(pLogLevel))
+		if	(LogIsActive(mLogLevel))
 		{
-			LogMessage (pLogLevel, _T("  [%s] Read Tts          of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, pBuffer);
+			LogMessage (mLogLevel, _T("  [%s] Read Tts          of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, pBuffer);
 		}
 	}
 	catch AnyExceptionDebug
@@ -599,7 +598,7 @@ LPCVOID CAgentFileBinary::ReadBufferTts (LPCVOID pBuffer, bool pNullTerminated, 
 }
 
 #ifdef	_M_CEE
-LPVOID CAgentFileBinary::WriteBufferTts (LPVOID pBuffer, CAgentFileTts^ pTts, bool pNullTerminated, UINT pLogLevel)
+LPVOID CAgentFileBinary::WriteBufferTts (LPVOID pBuffer, CAgentFileTts^ pTts, bool pNullTerminated)
 {
 	LPBYTE	lByte = (LPBYTE)pBuffer;
 
@@ -680,9 +679,9 @@ LPVOID CAgentFileBinary::WriteBufferTts (LPVOID pBuffer, CAgentFileTts^ pTts, bo
 			lByte += sizeof (DWORD);
 		}
 
-		if	(LogIsActive(pLogLevel))
+		if	(LogIsActive(mLogLevel))
 		{
-			LogMessage (pLogLevel, _T("  [%s] Write Tts         of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, pBuffer);
+			LogMessage (mLogLevel, _T("  [%s] Write Tts         of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, pBuffer);
 		}
 	}
 	catch AnyExceptionDebug
@@ -693,7 +692,7 @@ LPVOID CAgentFileBinary::WriteBufferTts (LPVOID pBuffer, CAgentFileTts^ pTts, bo
 
 /////////////////////////////////////////////////////////////////////////////
 
-LPCVOID CAgentFileBinary::ReadBufferBalloon (LPCVOID pBuffer, bool pNullTerminated, UINT pLogLevel)
+LPCVOID CAgentFileBinary::ReadBufferBalloon (LPCVOID pBuffer, bool pNullTerminated)
 {
 	LPCBYTE	lByte = (LPCBYTE)pBuffer;
 
@@ -790,9 +789,9 @@ LPCVOID CAgentFileBinary::ReadBufferBalloon (LPCVOID pBuffer, bool pNullTerminat
 		mBalloon.mFont.lfCharSet = DEFAULT_CHARSET;
 #endif
 
-		if	(LogIsActive(pLogLevel))
+		if	(LogIsActive(mLogLevel))
 		{
-			LogMessage (pLogLevel, _T("  [%s] Read Balloon      of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, pBuffer);
+			LogMessage (mLogLevel, _T("  [%s] Read Balloon      of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, pBuffer);
 		}
 	}
 	catch AnyExceptionDebug
@@ -801,7 +800,7 @@ LPCVOID CAgentFileBinary::ReadBufferBalloon (LPCVOID pBuffer, bool pNullTerminat
 }
 
 #ifdef	_M_CEE
-LPVOID CAgentFileBinary::WriteBufferBalloon (LPVOID pBuffer, CAgentFileBalloon^ pBalloon, bool pNullTerminated, UINT pLogLevel)
+LPVOID CAgentFileBinary::WriteBufferBalloon (LPVOID pBuffer, CAgentFileBalloon^ pBalloon, bool pNullTerminated)
 {
 	LPBYTE				lByte = (LPBYTE)pBuffer;
 	String^				lFontName = String::Empty;
@@ -885,9 +884,9 @@ LPVOID CAgentFileBinary::WriteBufferBalloon (LPVOID pBuffer, CAgentFileBalloon^ 
 	}
 	lByte += sizeof (WORD);
 
-	if	(LogIsActive(pLogLevel))
+	if	(LogIsActive(mLogLevel))
 	{
-		LogMessage (pLogLevel, _T("  [%s] Write Balloon     of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, pBuffer);
+		LogMessage (mLogLevel, _T("  [%s] Write Balloon     of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, pBuffer);
 	}
 	return lByte;
 }
@@ -895,7 +894,7 @@ LPVOID CAgentFileBinary::WriteBufferBalloon (LPVOID pBuffer, CAgentFileBalloon^ 
 
 /////////////////////////////////////////////////////////////////////////////
 
-LPCVOID CAgentFileBinary::ReadBufferPalette (LPCVOID pBuffer, UINT pLogLevel)
+LPCVOID CAgentFileBinary::ReadBufferPalette (LPCVOID pBuffer)
 {
 	LPCBYTE	lByte = (LPCBYTE)pBuffer;
 	DWORD	lPaletteSize;
@@ -945,14 +944,14 @@ LPCVOID CAgentFileBinary::ReadBufferPalette (LPCVOID pBuffer, UINT pLogLevel)
 #endif
 	}
 
-	if	(LogIsActive (pLogLevel))
+	if	(LogIsActive (mLogLevel))
 	{
-		LogMessage (pLogLevel, _T("  [%s] Read Palette      of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPCBYTE)pBuffer, pBuffer, pBuffer);
+		LogMessage (mLogLevel, _T("  [%s] Read Palette      of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPCBYTE)pBuffer, pBuffer, pBuffer);
 	}
 #ifdef	_SAVE_PALETTE
 	if	(
 			(mHeader.Palette)
-		&&	(LogIsActive (MaxLogLevel (pLogLevel, _SAVE_PALETTE)))
+		&&	(LogIsActive (MaxLogLevel (mLogLevel, _SAVE_PALETTE)))
 		)
 	{
 		DumpPalette (mHeader.Palette);
@@ -961,7 +960,7 @@ LPCVOID CAgentFileBinary::ReadBufferPalette (LPCVOID pBuffer, UINT pLogLevel)
 #ifdef	_DUMP_PALETTE
 	if	(
 			(mHeader.Palette)
-		&&	(LogIsActive (MaxLogLevel (pLogLevel, _DUMP_PALETTE)))
+		&&	(LogIsActive (MaxLogLevel (mLogLevel, _DUMP_PALETTE)))
 		)
 	{
 		DumpPalette (mHeader.Palette);
@@ -972,7 +971,7 @@ LPCVOID CAgentFileBinary::ReadBufferPalette (LPCVOID pBuffer, UINT pLogLevel)
 }
 
 #ifdef	_M_CEE
-LPVOID CAgentFileBinary::WriteBufferPalette (LPVOID pBuffer, CAgentFileHeader^ pHeader, UINT pLogLevel)
+LPVOID CAgentFileBinary::WriteBufferPalette (LPVOID pBuffer, CAgentFileHeader^ pHeader)
 {
 	LPBYTE	lByte = (LPBYTE)pBuffer;
 
@@ -1013,9 +1012,9 @@ LPVOID CAgentFileBinary::WriteBufferPalette (LPVOID pBuffer, CAgentFileHeader^ p
 			lByte += sizeof(DWORD);
 		}
 
-		if	(LogIsActive (pLogLevel))
+		if	(LogIsActive (mLogLevel))
 		{
-			LogMessage (pLogLevel, _T("  [%s] Write Palette     of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPCBYTE)pBuffer, pBuffer, pBuffer);
+			LogMessage (mLogLevel, _T("  [%s] Write Palette     of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPCBYTE)pBuffer, pBuffer, pBuffer);
 		}
 	}
 	catch AnyExceptionDebug
@@ -1026,7 +1025,7 @@ LPVOID CAgentFileBinary::WriteBufferPalette (LPVOID pBuffer, CAgentFileHeader^ p
 
 /////////////////////////////////////////////////////////////////////////////
 
-LPCVOID CAgentFileBinary::ReadBufferIcon (LPCVOID pBuffer, UINT pLogLevel)
+LPCVOID CAgentFileBinary::ReadBufferIcon (LPCVOID pBuffer)
 {
 	LPCBYTE	lByte = (LPCBYTE)pBuffer;
 
@@ -1076,7 +1075,7 @@ LPCVOID CAgentFileBinary::ReadBufferIcon (LPCVOID pBuffer, UINT pLogLevel)
 		lByte += lBitsSize;
 
 #ifdef	_DUMP_ICON
-		if	(LogIsActive (MaxLogLevel (pLogLevel, _DUMP_ICON)))
+		if	(LogIsActive (MaxLogLevel (mLogLevel, _DUMP_ICON)))
 		{
 			CImageDebugger::DumpBitmap (_DUMP_ICON, *lMaskBitmapInfo, (LPBYTE)lMaskBits, _T("Icon Mask"));
 			CImageDebugger::DumpBitmap (_DUMP_ICON, *lColorBitmapInfo, (LPBYTE)lColorBits, _T("Icon Color"));
@@ -1132,9 +1131,9 @@ LPCVOID CAgentFileBinary::ReadBufferIcon (LPCVOID pBuffer, UINT pLogLevel)
 #endif
 	}
 
-	if	(LogIsActive (pLogLevel))
+	if	(LogIsActive (mLogLevel))
 	{
-		LogMessage (pLogLevel, _T("  [%s] Read Icon         of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPCBYTE)pBuffer, pBuffer, pBuffer);
+		LogMessage (mLogLevel, _T("  [%s] Read Icon         of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPCBYTE)pBuffer, pBuffer, pBuffer);
 	}
 
 #ifdef	_M_CEE_NOT
@@ -1157,7 +1156,7 @@ if	(mHeader->mIcon)
 #ifdef	_SAVE_ICON
 	if	(
 			(mHeader.mIcon)
-		&&	(LogIsActive (MaxLogLevel (pLogLevel, _SAVE_ICON)))
+		&&	(LogIsActive (MaxLogLevel (mLogLevel, _SAVE_ICON)))
 		)
 	{
 		CAtlString	lDumpName (mPath);
@@ -1172,7 +1171,7 @@ if	(mHeader->mIcon)
 }
 
 #ifdef	_M_CEE
-LPVOID CAgentFileBinary::WriteBufferIcon (LPVOID pBuffer, CAgentFileHeader^ pHeader, UINT pLogLevel)
+LPVOID CAgentFileBinary::WriteBufferIcon (LPVOID pBuffer, CAgentFileHeader^ pHeader)
 {
 	LPBYTE	lByte = (LPBYTE)pBuffer;
 
@@ -1330,9 +1329,9 @@ LPVOID CAgentFileBinary::WriteBufferIcon (LPVOID pBuffer, CAgentFileHeader^ pHea
 			lByte++;
 		}
 
-		if	(LogIsActive (pLogLevel))
+		if	(LogIsActive (mLogLevel))
 		{
-			LogMessage (pLogLevel, _T("  [%s] Write Icon        of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPCBYTE)pBuffer, pBuffer, pBuffer);
+			LogMessage (mLogLevel, _T("  [%s] Write Icon        of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPCBYTE)pBuffer, pBuffer, pBuffer);
 		}
 	}
 	catch AnyExceptionDebug
@@ -1345,7 +1344,7 @@ LPVOID CAgentFileBinary::WriteBufferIcon (LPVOID pBuffer, CAgentFileHeader^ pHea
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LPCVOID CAgentFileBinary::ReadBufferNames (LPCVOID pBuffer, DWORD pBufferSize, bool pNullTerminated, bool pFirstLetterCaps, UINT pLogLevel)
+LPCVOID CAgentFileBinary::ReadBufferNames (LPCVOID pBuffer, DWORD pBufferSize, bool pNullTerminated, bool pFirstLetterCaps)
 {
 	LPCBYTE	lByte = (LPCBYTE)pBuffer;
 
@@ -1403,9 +1402,9 @@ LPCVOID CAgentFileBinary::ReadBufferNames (LPCVOID pBuffer, DWORD pBufferSize, b
 #endif
 			}
 
-			if	(LogIsActive(pLogLevel))
+			if	(LogIsActive(mLogLevel))
 			{
-				LogMessage (pLogLevel|LogHighVolume, _T("    NameCount [%hu] Language [%4.4hX] Name [%s]"), lNameCount, lName->mLanguage, _B(lName->mName));
+				LogMessage (mLogLevel|LogHighVolume, _T("    NameCount [%hu] Language [%4.4hX] Name [%s]"), lNameCount, lName->mLanguage, _B(lName->mName));
 			}
 
 			lNameCount--;
@@ -1420,9 +1419,9 @@ LPCVOID CAgentFileBinary::ReadBufferNames (LPCVOID pBuffer, DWORD pBufferSize, b
 #endif
 		}
 
-		if	(LogIsActive(pLogLevel))
+		if	(LogIsActive(mLogLevel))
 		{
-			LogMessage (pLogLevel, _T("  [%s] Read Names        of [%u (%u)] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBufferSize, pBuffer, pBuffer);
+			LogMessage (mLogLevel, _T("  [%s] Read Names        of [%u (%u)] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBufferSize, pBuffer, pBuffer);
 		}
 	}
 	catch AnyExceptionDebug
@@ -1431,7 +1430,7 @@ LPCVOID CAgentFileBinary::ReadBufferNames (LPCVOID pBuffer, DWORD pBufferSize, b
 }
 
 #ifdef	_M_CEE
-LPVOID CAgentFileBinary::WriteBufferNames (LPVOID pBuffer, CAgentFileNames^ pNames, bool pNullTerminated, UINT pLogLevel)
+LPVOID CAgentFileBinary::WriteBufferNames (LPVOID pBuffer, CAgentFileNames^ pNames, bool pNullTerminated)
 {
 	LPBYTE	lByte = (LPBYTE)pBuffer;
 
@@ -1465,9 +1464,9 @@ LPVOID CAgentFileBinary::WriteBufferNames (LPVOID pBuffer, CAgentFileNames^ pNam
 			}
 		}
 
-		if	(LogIsActive(pLogLevel))
+		if	(LogIsActive(mLogLevel))
 		{
-			LogMessage (pLogLevel, _T("  [%s] Write Names       of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, pBuffer);
+			LogMessage (mLogLevel, _T("  [%s] Write Names       of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, pBuffer);
 		}
 	}
 	catch AnyExceptionDebug
@@ -1511,7 +1510,7 @@ CAgentFileName* CAgentFileBinary::FindName (WORD pLangID)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LPCVOID CAgentFileBinary::ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize, bool pNullTerminated, UINT pLogLevel)
+LPCVOID CAgentFileBinary::ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize, bool pNullTerminated)
 {
 	LPCBYTE	lByte = (LPCBYTE)pBuffer;
 
@@ -1560,9 +1559,9 @@ LPCVOID CAgentFileBinary::ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize, 
 			lGestureCount = *(LPCWORD)lByte;
 			lByte += sizeof (WORD);
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel|LogHighVolume, _T("    State [%s] Gestures [%u]"), _B(lState), lGestureCount);
+				LogMessage (mLogLevel|LogHighVolume, _T("    State [%s] Gestures [%u]"), _B(lState), lGestureCount);
 			}
 
 			while	(
@@ -1579,9 +1578,9 @@ LPCVOID CAgentFileBinary::ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize, 
 #else
 				lGestures.Add (lGesture);
 #endif
-				if	(LogIsActive (pLogLevel))
+				if	(LogIsActive (mLogLevel))
 				{
-					LogMessage (pLogLevel|LogHighVolume, _T("      Gesture [%s]"), _B(lGesture));
+					LogMessage (mLogLevel|LogHighVolume, _T("      Gesture [%s]"), _B(lGesture));
 				}
 				lGestureCount--;
 			}
@@ -1592,9 +1591,9 @@ LPCVOID CAgentFileBinary::ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize, 
 #endif
 		}
 
-		if	(LogIsActive(pLogLevel))
+		if	(LogIsActive(mLogLevel))
 		{
-			LogMessage (pLogLevel, _T("  [%s] Read States       of [%u (%u)] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBufferSize, pBuffer, pBuffer);
+			LogMessage (mLogLevel, _T("  [%s] Read States       of [%u (%u)] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBufferSize, pBuffer, pBuffer);
 		}
 	}
 	catch AnyExceptionDebug
@@ -1603,7 +1602,7 @@ LPCVOID CAgentFileBinary::ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize, 
 }
 
 #ifdef	_M_CEE
-LPVOID CAgentFileBinary::WriteBufferStates (LPVOID pBuffer, CAgentFileStates^ pStates, bool pNullTerminated, UINT pLogLevel)
+LPVOID CAgentFileBinary::WriteBufferStates (LPVOID pBuffer, CAgentFileStates^ pStates, bool pNullTerminated)
 {
 	LPBYTE	lByte = (LPBYTE)pBuffer;
 
@@ -1645,9 +1644,9 @@ LPVOID CAgentFileBinary::WriteBufferStates (LPVOID pBuffer, CAgentFileStates^ pS
 			}
 		}
 
-		if	(LogIsActive(pLogLevel))
+		if	(LogIsActive(mLogLevel))
 		{
-			LogMessage (pLogLevel, _T("  [%s] Write States      of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, pBuffer);
+			LogMessage (mLogLevel, _T("  [%s] Write States      of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, pBuffer);
 		}
 	}
 	catch AnyExceptionDebug

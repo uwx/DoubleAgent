@@ -117,9 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="DoubleAgent" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\DoubleAgent.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EditAddAnimation" xml:space="preserve">
+    <value>Add new animation</value>
+  </data>
+  <data name="EditAddAnimation0" xml:space="preserve">
+    <value>To add an animation a new animation name is required</value>
+  </data>
+  <data name="EditAddAnimation1" xml:space="preserve">
+    <value>Add animation "{0}"</value>
   </data>
   <data name="EditCopy" xml:space="preserve">
     <value>&amp;Copy</value>
@@ -150,6 +159,27 @@
   </data>
   <data name="EditPaste" xml:space="preserve">
     <value>&amp;Paste</value>
+  </data>
+  <data name="EditPasteAdd" xml:space="preserve">
+    <value>(add) {0}</value>
+  </data>
+  <data name="EditPasteAnimation0" xml:space="preserve">
+    <value>To paste (add) an animation a new animation name is required</value>
+  </data>
+  <data name="EditPasteAs" xml:space="preserve">
+    <value>(add) {0} as {1}</value>
+  </data>
+  <data name="EditPasteFrameSource" xml:space="preserve">
+    <value>the copied frame</value>
+  </data>
+  <data name="EditPasteImageSource" xml:space="preserve">
+    <value>the copied image</value>
+  </data>
+  <data name="EditPasteOver" xml:space="preserve">
+    <value>(replace) {1} with {0}</value>
+  </data>
+  <data name="EditPasteReplace" xml:space="preserve">
+    <value>(replace) {0}</value>
   </data>
   <data name="EditPasteText" xml:space="preserve">
     <value>&amp;Paste text</value>
@@ -247,6 +277,21 @@
   <data name="TitleTts" xml:space="preserve">
     <value>Text-to-Speech</value>
   </data>
+  <data name="UndoActionAdd" xml:space="preserve">
+    <value>add</value>
+  </data>
+  <data name="UndoActionChange" xml:space="preserve">
+    <value>change</value>
+  </data>
+  <data name="UndoActionCut" xml:space="preserve">
+    <value>cut</value>
+  </data>
+  <data name="UndoActionDelete" xml:space="preserve">
+    <value>delete</value>
+  </data>
+  <data name="UndoActionPaste" xml:space="preserve">
+    <value>paste</value>
+  </data>
   <data name="UndoAnimationName" xml:space="preserve">
     <value>change {0}</value>
   </data>
@@ -256,16 +301,73 @@
   <data name="UndoAnimationSize" xml:space="preserve">
     <value>size</value>
   </data>
+  <data name="UndoBalloonColor" xml:space="preserve">
+    <value>color</value>
+  </data>
+  <data name="UndoBalloonFont" xml:space="preserve">
+    <value>font</value>
+  </data>
+  <data name="UndoBalloonSize" xml:space="preserve">
+    <value>size</value>
+  </data>
+  <data name="UndoBalloonStyle" xml:space="preserve">
+    <value>style</value>
+  </data>
+  <data name="UndoDescription" xml:space="preserve">
+    <value>{0} {1} {2}</value>
+  </data>
+  <data name="UndoFrameBranching" xml:space="preserve">
+    <value>branching</value>
+  </data>
+  <data name="UndoFrameDuration" xml:space="preserve">
+    <value>duration</value>
+  </data>
+  <data name="UndoFrameExit" xml:space="preserve">
+    <value>exit branching</value>
+  </data>
   <data name="UndoFrameOrder" xml:space="preserve">
     <value>frame order</value>
+  </data>
+  <data name="UndoFrameSoundPath" xml:space="preserve">
+    <value>sound</value>
+  </data>
+  <data name="UndoGuid" xml:space="preserve">
+    <value>unique identifier</value>
+  </data>
+  <data name="UndoIcon" xml:space="preserve">
+    <value>icon</value>
+  </data>
+  <data name="UndoImageFilePath" xml:space="preserve">
+    <value>path</value>
+  </data>
+  <data name="UndoImageOffset" xml:space="preserve">
+    <value>offset</value>
+  </data>
+  <data name="UndoImageOrder" xml:space="preserve">
+    <value>image order</value>
   </data>
   <data name="UndoNewFrameDuration" xml:space="preserve">
     <value>new frame duration</value>
   </data>
+  <data name="UndoOverlayImagePath" xml:space="preserve">
+    <value>image</value>
+  </data>
+  <data name="UndoOverlayOffset" xml:space="preserve">
+    <value>offset</value>
+  </data>
+  <data name="UndoOverlayReplaceFlag" xml:space="preserve">
+    <value>replace</value>
+  </data>
   <data name="UndoPalette" xml:space="preserve">
     <value>palette</value>
   </data>
+  <data name="UndoPaletteTransparency" xml:space="preserve">
+    <value>palette transparency</value>
+  </data>
   <data name="UndoReturnAnimation" xml:space="preserve">
     <value>return animation</value>
+  </data>
+  <data name="UndoStateAnimation" xml:space="preserve">
+    <value>uses {0}</value>
   </data>
 </root>

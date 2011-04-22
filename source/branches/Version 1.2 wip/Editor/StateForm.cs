@@ -26,6 +26,7 @@ using System.Text;
 using System.Windows.Forms;
 using DoubleAgent;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Updates;
 
 namespace AgentCharacterEditor
 {
@@ -41,17 +42,10 @@ namespace AgentCharacterEditor
 		{
 			InitializeComponent ();
 
-			if (MainForm.Singleton != null)
+			if (Program.MainForm != null)
 			{
-				MainForm.Singleton.InitializationComplete += new EventHandler (MainForm_InitializationComplete);
+				Program.MainForm.UpdateApplied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
 			}
-		}
-
-		void MainForm_InitializationComplete (object sender, EventArgs e)
-		{
-			MainForm.Singleton.PanelAnimations.AnimationAdded += new AnimationAddedEventHandler (PanelAnimations_AnimationAdded);
-			MainForm.Singleton.PanelAnimations.AnimationRemoved += new AnimationRemovedEventHandler (PanelAnimations_AnimationRemoved);
-			MainForm.Singleton.PanelAnimation.AnimationNameChanged += new AnimationNameChangedEventHandler (PanelAnimation_AnimationNameChanged);
 		}
 
 		#endregion
@@ -99,7 +93,7 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Events
 
-		public event GoToAnimationEventHandler GoToAnimation;
+		public event Global.GoToAnimationEventHandler GoToAnimation;
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
@@ -129,7 +123,7 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				ListViewAnimations.Enabled = true;//!MainForm.Singleton.FileIsReadOnly;
+				ListViewAnimations.Enabled = true;//!Program.FileIsReadOnly;
 
 				lFileStates = mCharacterFile.States;
 				if (lFileStates != null)
@@ -191,152 +185,44 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Update
 
-		internal class AddDeleteStateAnimation : UndoableUpdate<CharacterFile>
+		internal UndoableUpdate PasteStateAnimations (String pStateName, String[] pAnimationNames)
 		{
-			public AddDeleteStateAnimation (CharacterFile pCharacterFile, String pStateName, String pAnimationName, Boolean pIsDelete)
-				: base (pCharacterFile, pCharacterFile)
-			{
-				this.StateName = pStateName;
-				this.AnimationName = pAnimationName;
-				this.IsDelete = pIsDelete;
-			}
+			UpdateAllStateAnimations	lUpdate = null;
 
-			public String StateName
+			if ((mCharacterFile != null) && !String.IsNullOrEmpty (pStateName) && !Program.FileIsReadOnly)
 			{
-				get;
-				private set;
-			}
-			public String AnimationName
-			{
-				get;
-				private set;
-			}
-			public Boolean IsDelete
-			{
-				get;
-				private set;
-			}
-
-			public override String TargetDescription
-			{
-				get
+				lUpdate = new UpdateAllStateAnimations (mCharacterFile, pStateName, pAnimationNames);
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
+				if (!UpdateAllStateAnimations.PutUndo (lUpdate.Apply () as UpdateAllStateAnimations, this))
 				{
-					return Program.QuotedTitle (this.StateName);
+					lUpdate = null;
 				}
 			}
-			public override String ChangeDescription
-			{
-				get
-				{
-					return String.Format (" uses {0}", Program.QuotedTitle (this.AnimationName));
-				}
-			}
-
-			public override UndoUnit Apply ()
-			{
-				if (this.IsDelete)
-				{
-					if (CharacterFile.States.RemoveStateAnimation (this.StateName, this.AnimationName))
-					{
-						return OnApplied (new AddDeleteStateAnimation (CharacterFile, this.StateName, this.AnimationName, false));
-					}
-				}
-				else
-				{
-					if (CharacterFile.States.AddStateAnimation (this.StateName, this.AnimationName))
-					{
-						return OnApplied (new AddDeleteStateAnimation (CharacterFile, this.StateName, this.AnimationName, true));
-					}
-				}
-				return null;
-			}
-		}
-
-		internal class UpdateAllStateAnimations : UndoableUpdate<CharacterFile>
-		{
-			public UpdateAllStateAnimations (CharacterFile pCharacterFile, String pStateName, String[] pAnimationNames)
-				: base (pCharacterFile, pCharacterFile)
-			{
-				this.StateName = pStateName;
-				this.AnimationNames = pAnimationNames;
-			}
-
-			public String StateName
-			{
-				get;
-				private set;
-			}
-			public String[] AnimationNames
-			{
-				get;
-				private set;
-			}
-			public override String TargetDescription
-			{
-				get
-				{
-					return Program.TitleState (this.StateName);
-				}
-			}
-
-			public override UndoUnit Apply ()
-			{
-				UpdateAllStateAnimations	lApplied = null;
-				String[]					lAnimationNames = null;
-
-				if (this.CharacterFile.States.ContainsKey (this.StateName))
-				{
-					lAnimationNames = this.CharacterFile.States[this.StateName].Clone () as String[];
-				}
-				if (lAnimationNames != null)
-				{
-					foreach (String lAnimationName in lAnimationNames)
-					{
-						if ((this.AnimationNames == null) || !Array.Exists (this.AnimationNames, lAnimationName.Equals))
-						{
-							if (this.CharacterFile.States.RemoveStateAnimation (this.StateName, lAnimationName))
-							{
-								lApplied = this;
-							}
-						}
-					}
-				}
-				if (this.AnimationNames != null)
-				{
-					foreach (String lAnimationName in this.AnimationNames)
-					{
-						if ((lAnimationNames == null) || !Array.Exists (lAnimationNames, lAnimationName.Equals))
-						{
-							if (this.CharacterFile.States.AddStateAnimation (this.StateName, lAnimationName))
-							{
-								lApplied = this;
-							}
-						}
-					}
-				}
-				if (lApplied != null)
-				{
-					lApplied.AnimationNames = lAnimationNames;
-					return OnApplied (lApplied);
-				}
-				return null;
-			}
+			return lUpdate;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
-		
-		internal Boolean PasteStateAnimations (String pStateName, String[] pAnimationNames)
-		{
-			Boolean	lRet = false;
-			
-			if ((mCharacterFile != null) && !String.IsNullOrEmpty (pStateName) && !MainForm.Singleton.FileIsReadOnly)
-			{
-				UpdateAllStateAnimations	lUpdate = new UpdateAllStateAnimations (mCharacterFile, pStateName, pAnimationNames);
 
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableAction_Applied);
-				lRet = UpdateAllStateAnimations.PutUndo (lUpdate.Apply () as UpdateAllStateAnimations);
+		private void OnUpdateApplied (object sender, EventArgs e)
+		{
+			if (!IsEmpty)
+			{
+				AddDeleteStateAnimation		lAddDeleteStateAnimation = sender as AddDeleteStateAnimation;
+				UpdateAllStateAnimations	lUpdateAllStateAnimations = sender as UpdateAllStateAnimations;
+
+				if ((lAddDeleteStateAnimation != null) && (lAddDeleteStateAnimation.StateName == mStateName))
+				{
+					ShowStateAnimations ();
+				}
+				else if ((lUpdateAllStateAnimations != null) && (lUpdateAllStateAnimations.StateName == mStateName))
+				{
+					ShowStateAnimations ();
+				}
+				else if ((sender is AddDeleteAnimation) || (sender is UpdateAnimation))
+				{
+					ShowStateAnimations ();
+				}
 			}
-			return lRet;
 		}
 
 		#endregion
@@ -345,7 +231,7 @@ namespace AgentCharacterEditor
 
 		private void ListViewAnimations_ItemCheck (object sender, ItemCheckEventArgs e)
 		{
-			if (IsEmpty || MainForm.Singleton.FileIsReadOnly)
+			if (IsEmpty || Program.FileIsReadOnly)
 			{
 				e.NewValue = e.CurrentValue;
 			}
@@ -353,7 +239,7 @@ namespace AgentCharacterEditor
 
 		private void ListViewAnimations_ItemChecked (object sender, ItemCheckedEventArgs e)
 		{
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
 				AddDeleteStateAnimation	lUpdate;
 
@@ -366,8 +252,8 @@ namespace AgentCharacterEditor
 					lUpdate = new AddDeleteStateAnimation (mCharacterFile, mStateName, e.Item.Text, true);
 				}
 
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableAction_Applied);
-				AddDeleteStateAnimation.PutUndo (lUpdate.Apply () as AddDeleteStateAnimation);
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
+				AddDeleteStateAnimation.PutUndo (lUpdate.Apply () as AddDeleteStateAnimation, this);
 			}
 		}
 
@@ -381,57 +267,12 @@ namespace AgentCharacterEditor
 				{
 					try
 					{
-						GoToAnimation (this, new AnimationEventArgs (mCharacterFile.Gestures[lItem.Text]));
+						GoToAnimation (this, new Global.AnimationEventArgs (mCharacterFile.Gestures[lItem.Text]));
 					}
 					catch
 					{
 					}
 				}
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		private void UndoableAction_Applied (object sender, EventArgs e)
-		{
-			if (!IsEmpty)
-			{
-				if ((sender is AddDeleteStateAnimation) && ((sender as AddDeleteStateAnimation).StateName == mStateName))
-				{
-					ShowStateAnimations ();
-				}
-				else if ((sender is UpdateAllStateAnimations) && ((sender as UpdateAllStateAnimations).StateName == mStateName))
-				{
-					ShowStateAnimations ();
-				}
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
-		#region Internal Event Handlers
-
-		internal void PanelAnimations_AnimationAdded (object sender, AnimationEventArgs e)
-		{
-			if (!IsEmpty)
-			{
-				ShowStateAnimations ();
-			}
-		}
-
-		internal void PanelAnimations_AnimationRemoved (object sender, AnimationEventArgs e)
-		{
-			if (!IsEmpty)
-			{
-				ShowStateAnimations ();
-			}
-		}
-
-		internal void PanelAnimation_AnimationNameChanged (object sender, AnimationEventArgs e)
-		{
-			if (!IsEmpty)
-			{
-				ShowStateAnimations ();
 			}
 		}
 

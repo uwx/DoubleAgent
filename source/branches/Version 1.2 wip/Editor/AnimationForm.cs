@@ -26,6 +26,7 @@ using System.Text;
 using System.Windows.Forms;
 using DoubleAgent;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Updates;
 
 namespace AgentCharacterEditor
 {
@@ -50,6 +51,28 @@ namespace AgentCharacterEditor
 				mStateItems.Add (lListItem);
 			}
 			ListViewStates.Items.Clear ();
+		}
+
+		private void AnimationForm_VisibleChanged (object sender, EventArgs e)
+		{
+			if (Program.MainForm != null)
+			{
+				Program.MainForm.UpdateApplied -= new UndoUnit.AppliedEventHandler (OnUpdateApplied);
+				Program.MainForm.CanEdit -= new Global.EditEventHandler (MainForm_CanEdit);
+				Program.MainForm.EditCopy -= new Global.EditEventHandler (MainForm_EditCopy);
+				Program.MainForm.EditCut -= new Global.EditEventHandler (MainForm_EditCut);
+				Program.MainForm.EditDelete -= new Global.EditEventHandler (MainForm_EditDelete);
+				Program.MainForm.EditPaste -= new Global.EditEventHandler (MainForm_EditPaste);
+				if (this.Visible)
+				{
+					Program.MainForm.UpdateApplied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
+					Program.MainForm.CanEdit += new Global.EditEventHandler (MainForm_CanEdit);
+					Program.MainForm.EditCopy += new Global.EditEventHandler (MainForm_EditCopy);
+					Program.MainForm.EditCut += new Global.EditEventHandler (MainForm_EditCut);
+					Program.MainForm.EditDelete += new Global.EditEventHandler (MainForm_EditDelete);
+					Program.MainForm.EditPaste += new Global.EditEventHandler (MainForm_EditPaste);
+				}
+			}
 		}
 
 		#endregion
@@ -101,12 +124,8 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Events
 
-		public event AnimationNameChangedEventHandler AnimationNameChanged;
-		public event AnimationFrameAddedEventHandler AnimationFrameAdded;
-		public event AnimationFrameRemovedEventHandler AnimationFrameRemoved;
-		public event AnimationFrameReorderedEventHandler AnimationFrameReordered;
-		public event GoToFrameEventHandler GoToFrame;
-		public event GoToStateEventHandler GoToState;
+		public event Global.GoToFrameEventHandler GoToFrame;
+		public event Global.GoToStateEventHandler GoToState;
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
@@ -123,8 +142,8 @@ namespace AgentCharacterEditor
 			else
 			{
 				TextBoxName.Text = mAnimation.Name;
-				TextBoxName.Enabled = !MainForm.Singleton.FileIsReadOnly;
-				ToolStripFrames.Enabled = !MainForm.Singleton.FileIsReadOnly;
+				TextBoxName.Enabled = !Program.FileIsReadOnly;
+				ToolStripFrames.Enabled = !Program.FileIsReadOnly;
 			}
 			TextBoxName.Modified = false;
 		}
@@ -153,7 +172,7 @@ namespace AgentCharacterEditor
 						ComboBoxReturn.Items.Add (lAnimation);
 					}
 				}
-				ComboBoxReturn.Enabled = !MainForm.Singleton.FileIsReadOnly;
+				ComboBoxReturn.Enabled = !Program.FileIsReadOnly;
 			}
 
 			ComboBoxReturn.EndUpdate ();
@@ -193,7 +212,7 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				ListViewStates.Enabled = true;//!MainForm.Singleton.FileIsReadOnly;
+				ListViewStates.Enabled = true;//!Program.FileIsReadOnly;
 				lFileStates = mCharacterFile.States;
 			}
 
@@ -238,7 +257,7 @@ namespace AgentCharacterEditor
 			else
 			{
 				NumericFrameDuration.Value = mCharacterFile.NewFrameDuration;
-				NumericFrameDuration.Enabled = !MainForm.Singleton.FileIsReadOnly;
+				NumericFrameDuration.Enabled = !Program.FileIsReadOnly;
 			}
 			NumericFrameDuration.Validated += new System.EventHandler (NumericFrameDuration_Validated);
 
@@ -249,7 +268,7 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				CursorState	lCursorState = new CursorState (MainForm.Singleton);
+				CursorState	lCursorState = new CursorState (Program.MainForm);
 				ImageList	lImageList = new ImageList ();
 				int			lImageNdx = 0;
 				int			lItemNdx = 0;
@@ -276,7 +295,7 @@ namespace AgentCharacterEditor
 					{
 					}
 
-					lListItem = new ListViewItem (String.Format ("{0} ({1:D})", Program.TitleFrame (lItemNdx), lFrame.Duration));
+					lListItem = new ListViewItem (String.Format ("{0} ({1:D})", Global.TitleFrame (lItemNdx), lFrame.Duration));
 					lListItem.Tag = lFrame;
 					if (lImage != null)
 					{
@@ -298,9 +317,11 @@ namespace AgentCharacterEditor
 			}
 		}
 
+		///////////////////////////////////////////////////////////////////////////////
+
 		private void ShowSelectedFrame ()
 		{
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
 				int	lSelNdx = ListViewPreview.GetSelectedIndex (false);
 
@@ -310,324 +331,140 @@ namespace AgentCharacterEditor
 			}
 		}
 
+		private FileAnimationFrame GetSelectedFrame (Boolean pIncludeFocus)
+		{
+			return GetSelectedFrame (ListViewPreview.GetSelectedItem (pIncludeFocus));
+		}
+
+		private FileAnimationFrame GetSelectedFrame (ListViewItem pSelectedItem)
+		{
+			if (pSelectedItem != null)
+			{
+				return pSelectedItem.Tag as FileAnimationFrame;
+			}
+			return null;
+		}
+
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Update
 
-		internal class UpdateAnimation : UndoableUpdate<FileAnimation>
+		internal UndoableUpdate DeleteSelectedFrame (FileAnimationFrame pFrame, Boolean pForClipboard)
 		{
-			public UpdateAnimation (CharacterFile pCharacterFile, FileAnimation pAnimation)
-				: base (pCharacterFile, pAnimation)
+			if ((pFrame != null) && !Program.FileIsReadOnly)
 			{
-				this.Name = Target.Name;
-				this.ReturnType = Target.ReturnType;
-				this.ReturnName = Target.ReturnName;
-				this.IsRedo = false;
-			}
-
-			public String Name
-			{
-				get;
-				set;
-			}
-			public Byte ReturnType
-			{
-				get;
-				set;
-			}
-			public String ReturnName
-			{
-				get;
-				set;
-			}
-			public Boolean IsRedo
-			{
-				get;
-				private set;
-			}
-
-			public override String TargetDescription
-			{
-				get
+				AddDeleteAnimationFrame	lUpdate = new AddDeleteAnimationFrame (mCharacterFile, pFrame, pForClipboard);
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
+				if (AddDeleteAnimationFrame.PutUndo (lUpdate.Apply () as AddDeleteAnimationFrame, this))
 				{
-					return Program.QuotedTitle (Target.Name);
+					return lUpdate;
 				}
 			}
-			public override String ActionDescription
+			return null;
+		}
+
+		internal UndoableUpdate PasteSelectedFrame (FileAnimation pAnimation, FileAnimationFrame pFrame, FileAnimationFrame pPasteFrame)
+		{
+			if ((pAnimation != null) && (pPasteFrame != null) && !Program.FileIsReadOnly)
 			{
-				get
+				if (pFrame == null)
 				{
-					if (Target.Name != this.Name)
+					AddDeleteAnimationFrame	lUpdate = new AddDeleteAnimationFrame (mCharacterFile, pAnimation, pAnimation.FrameCount, true);
+
+					lUpdate = lUpdate.Apply () as AddDeleteAnimationFrame;
+					if (lUpdate != null)
 					{
-						if (this.IsRedo)
+						pPasteFrame.CopyTo (lUpdate.Target, true);
+						lUpdate = lUpdate.Apply () as AddDeleteAnimationFrame;
+					}
+					if (lUpdate != null)
+					{
+						lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
+						if (AddDeleteAnimationFrame.PutUndo (lUpdate.Apply () as AddDeleteAnimationFrame, this))
 						{
-							return String.Format (Properties.Resources.UndoAnimationName, String.Format (Properties.Resources.UndoAnimationNames, Program.QuotedTitle (this.Name), String.Empty));
-						}
-						else
-						{
-							return String.Format (Properties.Resources.UndoAnimationName, String.Empty);
+							return lUpdate;
 						}
 					}
-					return String.Empty;
+				}
+				else
+				{
+					UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mCharacterFile, pFrame, true);
+
+					pPasteFrame.CopyTo (pFrame, true);
+					lUpdate = lUpdate.Apply () as UpdateAnimationFrame;
+					if (lUpdate != null)
+					{
+						lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
+						if (!UpdateAnimationFrame.PutUndo (lUpdate.Apply () as UpdateAnimationFrame, this))
+						{
+							lUpdate = null;
+						}
+					}
 				}
 			}
-			public override String ChangeDescription
+			return null;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		private void OnUpdateApplied (object sender, EventArgs e)
+		{
+			if (!IsEmpty)
 			{
-				get
+				UpdateAnimation			lUpdateAnimation = sender as UpdateAnimation;
+				UpdateCharacterHeader	lUpdateCharacter = sender as UpdateCharacterHeader;
+				AddDeleteAnimationFrame	lAddDeleteFrame = sender as AddDeleteAnimationFrame;
+				ReorderAnimationFrame	lReorderFrame = sender as ReorderAnimationFrame;
+				UpdateAnimationFrame	lUpdateFrame = sender as UpdateAnimationFrame;
+				AddDeleteFrameImage		lAddDeleteImage = sender as AddDeleteFrameImage;
+				ReorderFrameImage		lReorderImage = sender as ReorderFrameImage;
+				UpdateFrameImage		lUpdateImage = sender as UpdateFrameImage;
+
+				if ((lUpdateAnimation != null) && (lUpdateAnimation.Target == mAnimation))
 				{
-					if (Target.Name != this.Name)
+					if (lUpdateAnimation.NameChanged)
 					{
-						if (!this.IsRedo)
-						{
-							return String.Format (Properties.Resources.UndoAnimationNames, String.Empty, Program.QuotedTitle (this.Name));
-						}
+						ShowAnimationName ();
 					}
 					else
 					{
-						return " " + Properties.Resources.UndoReturnAnimation;
+						ShowReturnAnimation ();
 					}
-					return String.Empty;
 				}
-			}
-
-			public override UndoUnit Apply ()
-			{
-				UpdateAnimation	lApplied = null;
-
-				if (!String.Equals (Target.Name, this.Name))
+				else if ((lUpdateCharacter != null) && (lUpdateCharacter.CharacterFile == mCharacterFile))
 				{
-					lApplied = new UpdateAnimation (this.CharacterFile, this.Target);
-					Target.Name = this.Name;
-					this.Name = lApplied.Name;
-					lApplied.IsRedo = !this.IsRedo;
+					NumericFrameDuration.Value = mCharacterFile.NewFrameDuration;
 				}
-				else
+				else if ((lAddDeleteFrame != null) && (lAddDeleteFrame.Animation == mAnimation))
 				{
-					if (Target.ReturnType != this.ReturnType)
+					ShowAnimationPreview ();
+					ListViewPreview.SelectedIndex = lAddDeleteFrame.FrameNdx;
+				}
+				else if ((lReorderFrame != null) && (lReorderFrame.Animation == mAnimation))
+				{
+					ShowAnimationPreview ();
+					ListViewPreview.SelectedIndex = mAnimation.Frames.IndexOf (lReorderFrame.Target);
+				}
+				else if ((lUpdateFrame != null) && (lUpdateFrame.Animation == mAnimation))
+				{
+					if (lUpdateFrame.DurationChanged)
 					{
-						Byte	lSwap = Target.ReturnType;
-						Target.ReturnType = this.ReturnType;
-						this.ReturnType = lSwap;
-						lApplied = this;
-					}
-					if (!String.Equals (Target.ReturnName, this.ReturnName))
-					{
-						String	lSwap = Target.ReturnName;
-						Target.ReturnName = this.ReturnName;
-						this.ReturnName = lSwap;
-						lApplied = this;
+						ShowAnimationPreview ();
 					}
 				}
-				if (lApplied != null)
+				else if ((lAddDeleteImage != null) && (lAddDeleteImage.Animation == mAnimation))
 				{
-					return OnApplied (lApplied);
+					ShowAnimationPreview ();
 				}
-				return null;
-			}
-		}
-
-		internal class UpdateNewFrameDuration : UndoableUpdate<CharacterFile>
-		{
-			public UpdateNewFrameDuration (CharacterFile pCharacterFile, UInt16 pNewFrameDuration)
-				: base (pCharacterFile, pCharacterFile)
-			{
-				this.NewFrameDuration = pNewFrameDuration;
-			}
-
-			public UInt16 NewFrameDuration
-			{
-				get;
-				private set;
-			}
-			public override String TargetDescription
-			{
-				get
+				else if ((lReorderImage != null) && (lReorderImage.Animation == mAnimation))
 				{
-					return Properties.Resources.UndoNewFrameDuration;
+					ShowAnimationPreview ();
+				}
+				else if ((lUpdateImage != null) && (lUpdateImage.Animation == mAnimation))
+				{
+					ShowAnimationPreview ();
 				}
 			}
-
-			public override UndoUnit Apply ()
-			{
-				if (CharacterFile.NewFrameDuration != this.NewFrameDuration)
-				{
-					UInt16	lSwap = Target.NewFrameDuration;
-					Target.NewFrameDuration = this.NewFrameDuration;
-					this.NewFrameDuration = lSwap;
-
-					return OnApplied (this);
-				}
-				return null;
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		internal class AddDeleteFrame : UndoableAddDelete<FileAnimationFrame>
-		{
-			public AddDeleteFrame (CharacterFile pCharacterFile, FileAnimation pAnimation, int pFrameNdx)
-				: base (pCharacterFile)
-			{
-				this.Animation = pAnimation;
-				this.FrameNdx = pFrameNdx;
-			}
-
-			public AddDeleteFrame (CharacterFile pCharacterFile, FileAnimationFrame pFrame, Boolean pForClipboard)
-				: base (pCharacterFile, pFrame, pForClipboard)
-			{
-				this.Animation = pFrame.Animation;
-				this.FrameNdx = pFrame.Container.IndexOf (this.Target);
-			}
-
-			public FileAnimation Animation
-			{
-				get;
-				private set;
-			}
-			public int FrameNdx
-			{
-				get;
-				private set;
-			}
-			public override String TargetDescription
-			{
-				get
-				{
-					return Program.QuotedTitle (Program.TitleFrameAnimation (this.FrameNdx, this.Animation));
-				}
-			}
-
-			public override UndoUnit Apply ()
-			{
-				AddDeleteFrame	lApplied = null;
-
-				if (IsDelete)
-				{
-					if (this.Animation.Frames.Contains (this.Target))
-					{
-						this.FrameNdx = this.Animation.Frames.IndexOf (this.Target);
-						lApplied = new AddDeleteFrame (this.CharacterFile, this.Target, this.ForClipboard);
-						if (this.Animation.Frames.Remove (this.Target))
-						{
-							lApplied.IsDelete = false;
-							lApplied.IsRedo = !IsRedo;
-						}
-						else
-						{
-							lApplied = null;
-						}
-					}
-				}
-				else
-				{
-					FileAnimationFrame	lFrame = this.Animation.Frames.Insert (this.FrameNdx);
-
-					if (lFrame != null)
-					{
-						if (this.Target != null)
-						{
-							this.Target.CopyTo (lFrame);
-						}
-						this.Target = lFrame;
-						this.FrameNdx = this.Animation.Frames.IndexOf (this.Target);
-						lApplied = new AddDeleteFrame (this.CharacterFile, this.Target, this.ForClipboard);
-						lApplied.IsDelete = true;
-						lApplied.IsRedo = !IsRedo;
-					}
-				}
-				if (lApplied != null)
-				{
-					return OnApplied (lApplied);
-				}
-				return null;
-			}
-		}
-
-		internal class ReorderFrame : UndoableUpdate<FileAnimationFrame>
-		{
-			public ReorderFrame (CharacterFile pCharacterFile, FileAnimation pAnimation, FileAnimationFrame pFrame, int pFrameNdxTo)
-				: base (pCharacterFile, pFrame)
-			{
-				this.Animation = pAnimation;
-				this.FrameNdxFrom = pAnimation.Frames.IndexOf (this.Target);
-				this.FrameNdxTo = pFrameNdxTo;
-			}
-
-			public FileAnimation Animation
-			{
-				get;
-				private set;
-			}
-			public int FrameNdxFrom
-			{
-				get;
-				private set;
-			}
-			public int FrameNdxTo
-			{
-				get;
-				private set;
-			}
-			public override String TargetDescription
-			{
-				get
-				{
-					return Program.TitleAnimation (this.Animation);
-				}
-			}
-			public override String ChangeDescription
-			{
-				get
-				{
-					return " " + Properties.Resources.UndoFrameOrder;
-				}
-			}
-
-			public override UndoUnit Apply ()
-			{
-				int	lSwap = Animation.Frames.IndexOf (Target);
-				if (Animation.Frames.Move (Target, this.FrameNdxTo))
-				{
-					this.FrameNdxFrom = Animation.Frames.IndexOf (Target);
-					this.FrameNdxTo = lSwap;
-
-					return OnApplied (this);
-				}
-				return null;
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		internal Boolean DeleteSelectedFrame (FileAnimationFrame pFrame, Boolean pForClipboard)
-		{
-			Boolean	lRet = false;
-
-			if ((pFrame != null) && !MainForm.Singleton.FileIsReadOnly)
-			{
-				AddDeleteFrame	lUpdate = new AddDeleteFrame (mCharacterFile, pFrame, pForClipboard);
-
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (AddDeleteFrame_Applied);
-				lRet = AddDeleteFrame.PutUndo (lUpdate.Apply () as AddDeleteFrame);
-			}
-			return lRet;
-		}
-
-		internal Boolean PasteSelectedFrame (FileAnimation pAnimation, FileAnimationFrame pPasteFrame)
-		{
-			Boolean	lRet = false;
-
-			if ((pAnimation != null) && (pPasteFrame != null) && !MainForm.Singleton.FileIsReadOnly)
-			{
-			}
-			return lRet;
-		}
-
-		internal Boolean PasteSelectedAnimation (FileAnimation pAnimation, FileAnimationFrame pPasteAnimation)
-		{
-			Boolean	lRet = false;
-
-			return lRet;
 		}
 
 		#endregion
@@ -636,15 +473,15 @@ namespace AgentCharacterEditor
 
 		private void TextBoxName_Validated (object sender, EventArgs e)
 		{
-			if (TextBoxName.Modified && !IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (TextBoxName.Modified && !IsEmpty && !Program.FileIsReadOnly)
 			{
 				if (!String.IsNullOrEmpty (TextBoxName.Text))
 				{
-					UpdateAnimation	lUpdate = new UpdateAnimation (mCharacterFile, mAnimation);
+					UpdateAnimation	lUpdate = new UpdateAnimation (mCharacterFile, mAnimation, false);
 
 					lUpdate.Name = TextBoxName.Text;
-					lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableAnimationUpdate_Applied);
-					UpdateAnimation.PutUndo (lUpdate.Apply () as UpdateAnimation);
+					lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
+					UpdateAnimation.PutUndo (lUpdate.Apply () as UpdateAnimation, this);
 				}
 				ShowAnimationName ();
 			}
@@ -653,9 +490,9 @@ namespace AgentCharacterEditor
 
 		private void ComboBoxReturn_SelectionChangeCommitted (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateAnimation	lUpdate = new UpdateAnimation (mCharacterFile, mAnimation);
+				UpdateAnimation	lUpdate = new UpdateAnimation (mCharacterFile, mAnimation, false);
 
 				if (ComboBoxReturn.SelectedIndex == mReturnItemNone)
 				{
@@ -673,38 +510,8 @@ namespace AgentCharacterEditor
 					lUpdate.ReturnName = ComboBoxReturn.SelectedItem.ToString ();
 				}
 
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableAnimationUpdate_Applied);
-				UpdateAnimation.PutUndo (lUpdate.Apply () as UpdateAnimation);
-			}
-		}
-
-		private void UndoableAnimationUpdate_Applied (object sender, EventArgs e)
-		{
-			if (!IsEmpty)
-			{
-				try
-				{
-					UpdateAnimation	lSender = (UpdateAnimation)sender;
-
-					if ((lSender != null) && (lSender.Target == mAnimation))
-					{
-						if (!String.Equals (lSender.Name, mAnimation.Name))
-						{
-							ShowAnimationName ();
-							if (AnimationNameChanged != null)
-							{
-								AnimationNameChanged (this, new AnimationEventArgs (mAnimation));
-							}
-						}
-						else
-						{
-							ShowReturnAnimation ();
-						}
-					}
-				}
-				catch
-				{
-				}
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
+				UpdateAnimation.PutUndo (lUpdate.Apply () as UpdateAnimation, this);
 			}
 		}
 
@@ -722,18 +529,13 @@ namespace AgentCharacterEditor
 		{
 			if (!IsEmpty && (GoToFrame != null))
 			{
-				ListViewItem		lItem = ListViewPreview.SelectedItem;
-				FileAnimationFrame	lFrame = null;
+				FileAnimationFrame	lFrame = GetSelectedFrame (false);
 
-				if (lItem != null)
-				{
-					lFrame = lItem.Tag as FileAnimationFrame;
-				}
 				if (lFrame != null)
 				{
 					try
 					{
-						GoToFrame (this, new AnimationFrameEventArgs (mAnimation, lFrame));
+						GoToFrame (this, new Global.AnimationFrameEventArgs (mAnimation, lFrame));
 					}
 					catch
 					{
@@ -752,7 +554,7 @@ namespace AgentCharacterEditor
 				{
 					try
 					{
-						GoToState (this, new StateEventArgs (lItem.Text));
+						GoToState (this, new Global.StateEventArgs (lItem.Text));
 					}
 					catch
 					{
@@ -765,73 +567,39 @@ namespace AgentCharacterEditor
 
 		private void NumericFrameDuration_Validated (object sender, EventArgs e)
 		{
-			if ((mCharacterFile != null) && !MainForm.Singleton.FileIsReadOnly)
+			if ((mCharacterFile != null) && !Program.FileIsReadOnly)
 			{
-				UpdateNewFrameDuration	lUpdate = new UpdateNewFrameDuration (mCharacterFile, (UInt16)NumericFrameDuration.Value);
+				UpdateCharacterHeader	lUpdate = new UpdateCharacterHeader (mCharacterFile);
 
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableDurationUpdate_Applied);
-				UpdateNewFrameDuration.PutUndo (lUpdate.Apply () as UpdateNewFrameDuration);
+				lUpdate.NewFrameDuration = (UInt16)NumericFrameDuration.Value;
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
+				UpdateCharacterHeader.PutUndo (lUpdate.Apply () as UpdateCharacterHeader, this);
 			}
-		}
-
-		private void UndoableDurationUpdate_Applied (object sender, EventArgs e)
-		{
-			NumericFrameDuration.Value = mCharacterFile.NewFrameDuration;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void ButtonAdd_Click (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
-				int				lSelNdx = ListViewPreview.GetSelectedIndex (false);
-				AddDeleteFrame	lUpdate = new AddDeleteFrame (mCharacterFile, mAnimation, (lSelNdx >= 0) ? lSelNdx + 1 : mAnimation.FrameCount);
+				int						lSelNdx = ListViewPreview.GetSelectedIndex (false);
+				AddDeleteAnimationFrame	lUpdate = new AddDeleteAnimationFrame (mCharacterFile, mAnimation, (lSelNdx >= 0) ? lSelNdx + 1 : mAnimation.FrameCount, false);
 
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (AddDeleteFrame_Applied);
-				AddDeleteFrame.PutUndo (lUpdate.Apply () as AddDeleteFrame);
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
+				AddDeleteAnimationFrame.PutUndo (lUpdate.Apply () as AddDeleteAnimationFrame, this);
 			}
 		}
 
 		private void ButtonDelete_Click (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
-				int					lSelNdx = ListViewPreview.GetSelectedIndex (false);
-				FileAnimationFrame	lFrame = null;
+				FileAnimationFrame	lFrame = GetSelectedFrame (false);
 
-				if (lSelNdx >= 0)
+				if (lFrame != null)
 				{
-					lFrame = mAnimation.Frames[lSelNdx];
 					DeleteSelectedFrame (lFrame, false);
-				}
-			}
-		}
-
-		private void AddDeleteFrame_Applied (object sender, EventArgs e)
-		{
-			AddDeleteFrame	lUpdate = sender as AddDeleteFrame;
-
-			if (lUpdate != null)
-			{
-				if (!IsEmpty && (lUpdate.Animation == mAnimation))
-				{
-					ShowAnimationPreview ();
-					ListViewPreview.SelectedIndex = lUpdate.FrameNdx;
-				}
-				if (lUpdate.IsDelete)
-				{
-					if (AnimationFrameRemoved != null)
-					{
-						AnimationFrameRemoved (this, new AnimationFrameEventArgs (lUpdate.Animation, lUpdate.Target));
-					}
-				}
-				else
-				{
-					if (AnimationFrameAdded != null)
-					{
-						AnimationFrameAdded (this, new AnimationFrameEventArgs (lUpdate.Animation, lUpdate.Target));
-					}
 				}
 			}
 		}
@@ -840,60 +608,140 @@ namespace AgentCharacterEditor
 
 		private void ButtonMoveUp_Click (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
-				int					lSelNdx = ListViewPreview.GetSelectedIndex (false);
-				FileAnimationFrame	lFrame = null;
-				ReorderFrame		lUpdate;
+				int						lSelNdx = ListViewPreview.GetSelectedIndex (false);
+				FileAnimationFrame		lFrame = GetSelectedFrame (false);
+				ReorderAnimationFrame	lUpdate;
 
-				if (lSelNdx > 0)
+				if ((lFrame != null) && (lSelNdx > 0))
 				{
-					lFrame = mAnimation.Frames[lSelNdx];
-				}
-				if (lFrame != null)
-				{
-					lUpdate = new ReorderFrame (mCharacterFile, mAnimation, lFrame, lSelNdx - 1);
-					lUpdate.Applied += new UndoUnit.AppliedEventHandler (ReorderFrame_Applied);
-					ReorderFrame.PutUndo (lUpdate.Apply () as ReorderFrame);
+					lUpdate = new ReorderAnimationFrame (mCharacterFile, mAnimation, lFrame, lSelNdx - 1);
+					lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
+					ReorderAnimationFrame.PutUndo (lUpdate.Apply () as ReorderAnimationFrame, this);
 				}
 			}
 		}
 
 		private void ButtonMoveDown_Click (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
-				int					lSelNdx = ListViewPreview.GetSelectedIndex (false);
-				FileAnimationFrame	lFrame = null;
-				ReorderFrame		lUpdate;
+				int						lSelNdx = ListViewPreview.GetSelectedIndex (false);
+				FileAnimationFrame		lFrame = GetSelectedFrame (false);
+				ReorderAnimationFrame	lUpdate;
 
-				if ((lSelNdx >= 0) && (lSelNdx < mAnimation.Frames.Count - 1))
+				if ((lFrame != null) && (lSelNdx >= 0) && (lSelNdx < mAnimation.Frames.Count - 1))
 				{
-					lFrame = mAnimation.Frames[lSelNdx];
-				}
-				if (lFrame != null)
-				{
-					lUpdate = new ReorderFrame (mCharacterFile, mAnimation, lFrame, lSelNdx + 1);
-					lUpdate.Applied += new UndoUnit.AppliedEventHandler (ReorderFrame_Applied);
-					ReorderFrame.PutUndo (lUpdate.Apply () as ReorderFrame);
+					lUpdate = new ReorderAnimationFrame (mCharacterFile, mAnimation, lFrame, lSelNdx + 1);
+					lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
+					ReorderAnimationFrame.PutUndo (lUpdate.Apply () as ReorderAnimationFrame, this);
 				}
 			}
 		}
 
-		private void ReorderFrame_Applied (object sender, EventArgs e)
-		{
-			ReorderFrame	lUpdate = sender as ReorderFrame;
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region Internal Event Handlers
 
-			if (lUpdate != null)
+		internal void MainForm_CanEdit (object sender, Global.EditEventArgs e)
+		{
+			if (!e.IsUsed && !IsEmpty && ListViewPreview.ContainsFocus)
 			{
-				if (!IsEmpty && (lUpdate.Animation == mAnimation))
+				FileAnimationFrame		lFrame = GetSelectedFrame (false);
+
+				if (lFrame != null)
 				{
-					ShowAnimationPreview ();
-					ListViewPreview.SelectedIndex = mAnimation.Frames.IndexOf (lUpdate.Target);
+					e.CopyObjectTitle = Global.QuotedTitle (Global.TitleFrameAnimation (lFrame));
+					if (!Program.FileIsReadOnly)
+					{
+						e.CutObjectTitle = e.CopyObjectTitle;
+						e.DeleteObjectTitle = e.CopyObjectTitle;
+					}
 				}
-				if (AnimationFrameReordered != null)
+				if (!Program.FileIsReadOnly && (e.PasteObject is FileAnimationFrame))
 				{
-					AnimationFrameReordered (this, new AnimationFrameEventArgs (lUpdate.Animation, lUpdate.Target));
+					if (lFrame == null)
+					{
+						e.PasteObjectTitle = e.PasteTypeTitle (lFrame, Properties.Resources.EditPasteFrameSource);
+					}
+					else
+					{
+						e.PasteObjectTitle = e.PasteTypeTitle (lFrame, Global.TitleFrameAnimation (lFrame), Properties.Resources.EditPasteFrameSource);
+					}
+				}
+			}
+		}
+
+		internal void MainForm_EditCopy (object sender, Global.EditEventArgs e)
+		{
+			if (!e.IsUsed && !IsEmpty && ListViewPreview.ContainsFocus)
+			{
+				FileAnimationFrame		lFrame = GetSelectedFrame (false);
+
+				if (lFrame != null)
+				{
+					e.IsUsed = true;
+					try
+					{
+						Clipboard.SetData (DataFormats.Serializable, lFrame);
+					}
+					catch
+					{
+					}
+				}
+			}
+		}
+
+		internal void MainForm_EditCut (object sender, Global.EditEventArgs e)
+		{
+			if (!e.IsUsed && !IsEmpty && !Program.FileIsReadOnly && ListViewPreview.ContainsFocus)
+			{
+				FileAnimationFrame		lFrame = GetSelectedFrame (false);
+
+				if (lFrame != null)
+				{
+					e.IsUsed = true;
+					try
+					{
+						Clipboard.SetData (DataFormats.Serializable, lFrame);
+						DeleteSelectedFrame (lFrame, true);
+					}
+					catch
+					{
+					}
+				}
+			}
+		}
+
+		internal void MainForm_EditDelete (object sender, Global.EditEventArgs e)
+		{
+			if (!e.IsUsed && !IsEmpty && !Program.FileIsReadOnly && ListViewPreview.ContainsFocus)
+			{
+				FileAnimationFrame		lFrame = GetSelectedFrame (false);
+
+				if (lFrame != null)
+				{
+					e.IsUsed = true;
+					DeleteSelectedFrame (lFrame, false);
+				}
+			}
+		}
+
+		internal void MainForm_EditPaste (object sender, Global.EditEventArgs e)
+		{
+			if (!e.IsUsed && !IsEmpty && !Program.FileIsReadOnly && ListViewPreview.ContainsFocus)
+			{
+				if (e.PasteObject is FileAnimationFrame)
+				{
+					FileAnimationFrame	lFrame = GetSelectedFrame (false);
+
+					e.IsUsed = true;
+					PasteSelectedFrame (mAnimation, lFrame, e.PasteObject as FileAnimationFrame);
+					if (lFrame == null)
+					{
+						ListViewPreview.SelectedItem = null;
+					}
 				}
 			}
 		}

@@ -61,16 +61,6 @@ namespace DoubleAgent
 
 		public abstract UndoUnit Apply ();
 
-		protected UndoUnit OnApplied (System.EventArgs pEventArgs, UndoUnit pRedoUnit)
-		{
-			OnApplied (pEventArgs);
-			if ((pRedoUnit != null) && (pRedoUnit != this) && (this.Applied != null))
-			{
-				pRedoUnit.Applied = (AppliedEventHandler)this.Applied.Clone ();
-			}
-			return pRedoUnit;
-		}
-
 		protected virtual void OnApplied ()
 		{
 			OnApplied (System.EventArgs.Empty);
@@ -90,72 +80,26 @@ namespace DoubleAgent
 			}
 		}
 
+		protected virtual UndoUnit OnApplied (UndoUnit pRedoUnit)
+		{
+			return OnApplied (pRedoUnit, System.EventArgs.Empty);
+		}
+
+		protected virtual UndoUnit OnApplied (UndoUnit pRedoUnit, System.EventArgs pEventArgs)
+		{
+			OnApplied (pEventArgs);
+			if ((pRedoUnit != null) && (pRedoUnit != this) && (this.Applied != null))
+			{
+				pRedoUnit.Applied = (AppliedEventHandler)this.Applied.Clone ();
+			}
+			return pRedoUnit;
+		}
+
 		///////////////////////////////////////////////////////////////////////////////
 
 		public override String ToString ()
 		{
-			return this.ActionDescription + this.TargetDescription + this.ChangeDescription;
-		}
-
-		#endregion
-	}
-
-	///////////////////////////////////////////////////////////////////////////////
-
-	public abstract class UndoUnit<T> : UndoUnit
-	{
-		public UndoUnit (T pTarget)
-		{
-			this.Target = pTarget;
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-		#region Properties
-
-		public T Target
-		{
-			get;
-			protected set;
-		}
-
-		public override String TargetDescription
-		{
-			get
-			{
-				return (this.Target == null) ? String.Empty : this.Target.GetType ().Name;
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
-		#region Events
-
-		public class EventArgs : System.EventArgs
-		{
-			public EventArgs (T pTarget)
-			{
-				this.Target = pTarget;
-			}
-
-			public T Target
-			{
-				get;
-				protected set;
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
-		#region Methods
-
-		protected override void OnApplied ()
-		{
-			base.OnApplied (new EventArgs (this.Target));
-		}
-
-		protected virtual UndoUnit OnApplied (UndoUnit pRedoUnit)
-		{
-			return base.OnApplied (new EventArgs (this.Target), pRedoUnit);
+			return String.Format ("{0} {1} {2}", this.ActionDescription.Trim (), this.TargetDescription.Trim (), this.ChangeDescription.Trim ()).Trim ();
 		}
 
 		#endregion

@@ -80,30 +80,28 @@ public:
 protected:
 #ifdef	_M_CEE
 	virtual void CloseFile ();
-	virtual bool LoadFile (System::String^, UINT pLogLevel);
-	bool ReadHeader ();
-	virtual bool ReadHeader (UINT pLogLevel);
+	virtual bool LoadFile (System::String^);
+	virtual bool ReadHeader ();
 #else
 	virtual void CloseFile ();
-	virtual HRESULT LoadFile (LPCTSTR pPath, UINT pLogLevel = 15);
-	HRESULT ReadHeader ();
-	virtual HRESULT ReadHeader (UINT pLogLevel);
+	virtual HRESULT LoadFile (LPCTSTR pPath);
+	virtual HRESULT ReadHeader ();
 #endif
 
-	LPCVOID ReadBufferNames (LPCVOID pBuffer, DWORD pBufferSize, bool pNullTerminated, bool pFirstLetterCaps, UINT pLogLevel);
-	LPCVOID ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize, bool pNullTerminated, UINT pLogLevel);
-	LPCVOID ReadBufferTts (LPCVOID pBuffer, bool pNullTerminated, UINT pLogLevel);
-	LPCVOID ReadBufferBalloon (LPCVOID pBuffer, bool pNullTerminated, UINT pLogLevel);
-	LPCVOID ReadBufferPalette (LPCVOID pBuffer, UINT pLogLevel);
-	LPCVOID ReadBufferIcon (LPCVOID pBuffer, UINT pLogLevel);
+	LPCVOID ReadBufferNames (LPCVOID pBuffer, DWORD pBufferSize, bool pNullTerminated, bool pFirstLetterCaps);
+	LPCVOID ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize, bool pNullTerminated);
+	LPCVOID ReadBufferTts (LPCVOID pBuffer, bool pNullTerminated);
+	LPCVOID ReadBufferBalloon (LPCVOID pBuffer, bool pNullTerminated);
+	LPCVOID ReadBufferPalette (LPCVOID pBuffer);
+	LPCVOID ReadBufferIcon (LPCVOID pBuffer);
 
 #ifdef	_M_CEE
-	LPVOID WriteBufferNames (LPVOID pBuffer, CAgentFileNames^ pNames, bool pNullTerminated, UINT pLogLevel);
-	LPVOID WriteBufferStates (LPVOID pBuffer, CAgentFileStates^ pStates, bool pNullTerminated, UINT pLogLevel);
-	LPVOID WriteBufferTts (LPVOID pBuffer, CAgentFileTts^ pTts, bool pNullTerminated, UINT pLogLevel);
-	LPVOID WriteBufferBalloon (LPVOID pBuffer, CAgentFileBalloon^ pBalloon, bool pNullTerminated, UINT pLogLevel);
-	LPVOID WriteBufferPalette (LPVOID pBuffer, CAgentFileHeader^ pHeader, UINT pLogLevel);
-	LPVOID WriteBufferIcon (LPVOID pBuffer, CAgentFileHeader^ pHeader, UINT pLogLevel);
+	LPVOID WriteBufferNames (LPVOID pBuffer, CAgentFileNames^ pNames, bool pNullTerminated);
+	LPVOID WriteBufferStates (LPVOID pBuffer, CAgentFileStates^ pStates, bool pNullTerminated);
+	LPVOID WriteBufferTts (LPVOID pBuffer, CAgentFileTts^ pTts, bool pNullTerminated);
+	LPVOID WriteBufferBalloon (LPVOID pBuffer, CAgentFileBalloon^ pBalloon, bool pNullTerminated);
+	LPVOID WriteBufferPalette (LPVOID pBuffer, CAgentFileHeader^ pHeader);
+	LPVOID WriteBufferIcon (LPVOID pBuffer, CAgentFileHeader^ pHeader);
 #endif
 
 #ifdef	_M_CEE

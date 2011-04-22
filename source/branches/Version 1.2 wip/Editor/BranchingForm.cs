@@ -27,6 +27,7 @@ using System.Text;
 using System.Windows.Forms;
 using DoubleAgent;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Updates;
 
 namespace AgentCharacterEditor
 {
@@ -41,10 +42,17 @@ namespace AgentCharacterEditor
 		public BranchingForm ()
 		{
 			InitializeComponent ();
+		}
 
-			if (MainForm.Singleton != null)
+		private void BranchingForm_VisibleChanged (object sender, EventArgs e)
+		{
+			if (Program.MainForm != null)
 			{
-				MainForm.Singleton.PanelAnimation.AnimationNameChanged += new AnimationNameChangedEventHandler (PanelAnimation_AnimationNameChanged);
+				Program.MainForm.UpdateApplied -= new UndoUnit.AppliedEventHandler (OnUpdateApplied);
+				if (this.Visible)
+				{
+					Program.MainForm.UpdateApplied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
+				}
 			}
 		}
 
@@ -79,7 +87,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return Program.TitleFrame (mFrame);
+				return Global.TitleFrame (mFrame);
 			}
 		}
 		[System.ComponentModel.Browsable (false)]
@@ -120,7 +128,7 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				TextBoxFrameName.Text = Program.TitleFrameAnimation (mFrame);
+				TextBoxFrameName.Text = Global.TitleFrameAnimation (mFrame);
 				TextBoxFrameName.Enabled = true;
 			}
 		}
@@ -195,13 +203,13 @@ namespace AgentCharacterEditor
 
 				NumericBranchingNot.Value = lRemainder;
 
-				NumericBranching0.Enabled = !MainForm.Singleton.FileIsReadOnly;
-				NumericBranching1.Enabled = !MainForm.Singleton.FileIsReadOnly;
-				NumericBranching2.Enabled = !MainForm.Singleton.FileIsReadOnly;
+				NumericBranching0.Enabled = !Program.FileIsReadOnly;
+				NumericBranching1.Enabled = !Program.FileIsReadOnly;
+				NumericBranching2.Enabled = !Program.FileIsReadOnly;
 				NumericBranchingNot.Enabled = false;
-				NumericTarget0.Enabled = (NumericBranching0.Value > 0) && !MainForm.Singleton.FileIsReadOnly;
-				NumericTarget1.Enabled = (NumericBranching1.Value > 0) && !MainForm.Singleton.FileIsReadOnly;
-				NumericTarget2.Enabled = (NumericBranching2.Value > 0) && !MainForm.Singleton.FileIsReadOnly;
+				NumericTarget0.Enabled = (NumericBranching0.Value > 0) && !Program.FileIsReadOnly;
+				NumericTarget1.Enabled = (NumericBranching1.Value > 0) && !Program.FileIsReadOnly;
+				NumericTarget2.Enabled = (NumericBranching2.Value > 0) && !Program.FileIsReadOnly;
 			}
 
 			NumericBranching0.Validated += new System.EventHandler (NumericBranching0_Validated);
@@ -231,7 +239,7 @@ namespace AgentCharacterEditor
 					CheckBoxExit.Checked = true;
 					NumericTargetExit.Maximum = this.Animation.Frames.Count;
 					NumericTargetExit.Value = mFrame.ExitFrame + 1;
-					NumericTargetExit.Enabled = !MainForm.Singleton.FileIsReadOnly;
+					NumericTargetExit.Enabled = !Program.FileIsReadOnly;
 
 					if (mFrame.ExitFrame == (Int16)this.Animation.Frames.IndexOf (mFrame))
 					{
@@ -244,7 +252,7 @@ namespace AgentCharacterEditor
 					NumericTargetExit.ResetText ();
 					NumericTargetExit.Enabled = false;
 				}
-				CheckBoxExit.Enabled = !MainForm.Singleton.FileIsReadOnly;
+				CheckBoxExit.Enabled = !Program.FileIsReadOnly;
 			}
 
 			CheckBoxExit.Click += new System.EventHandler (CheckBoxExit_Click);
@@ -255,111 +263,11 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Update
 
-		internal class UpdateFrameExit : UndoableUpdate<FileAnimationFrame>
-		{
-			public UpdateFrameExit (CharacterFile pCharacterFile, FileAnimationFrame pFrame, Int16 pExitFrame)
-				: base (pCharacterFile, pFrame)
-			{
-				this.Frame = pFrame;
-				this.ExitFrame = pExitFrame;
-			}
-
-			public FileAnimationFrame Frame
-			{
-				get;
-				set;
-			}
-			public Int16 ExitFrame
-			{
-				get;
-				set;
-			}
-
-			public override String TargetDescription
-			{
-				get
-				{
-					return Program.QuotedTitle (Program.TitleFrameAnimation (this.Frame));
-				}
-			}
-			public override String ChangeDescription
-			{
-				get
-				{
-					return " exit branching";
-				}
-			}
-
-			public override UndoUnit Apply ()
-			{
-				if (Target.ExitFrame != this.ExitFrame)
-				{
-					Int16	lSwap = Target.ExitFrame;
-					Target.ExitFrame = this.ExitFrame;
-					this.ExitFrame = lSwap;
-
-					return OnApplied (this);
-				}
-				return null;
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		internal class UpdateFrameBranching : UndoableUpdate<FileAnimationFrame>
-		{
-			public UpdateFrameBranching (CharacterFile pCharacterFile, FileAnimationFrame pFrame, FileFrameBranch[] pBranching)
-				: base (pCharacterFile, pFrame)
-			{
-				this.Frame = pFrame;
-				this.Branching = pBranching;
-			}
-
-			public FileAnimationFrame Frame
-			{
-				get;
-				set;
-			}
-			public FileFrameBranch[] Branching
-			{
-				get;
-				set;
-			}
-
-			public override String TargetDescription
-			{
-				get
-				{
-					return Program.QuotedTitle (Program.TitleFrameAnimation (this.Frame));
-				}
-			}
-			public override String ChangeDescription
-			{
-				get
-				{
-					return " branching";
-				}
-			}
-
-			public override UndoUnit Apply ()
-			{
-				if (!BranchingEqual (Target.Branching, this.Branching))
-				{
-					FileFrameBranch[]	lSwap = Target.Branching;
-					Target.Branching = this.Branching;
-					this.Branching = lSwap;
-
-					return OnApplied (this);
-				}
-				return null;
-			}
-		}
-
 		private Boolean ApplyBranchingUpdates ()
 		{
 			Boolean	lRet = false;
 
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
 				Int16[]				lProbability = new Int16[3];
 				Int16[]				lTarget = new Int16[3];
@@ -407,38 +315,43 @@ namespace AgentCharacterEditor
 						}
 					}
 				}
-				if (!BranchingEqual (mFrame.Branching, lBranching))
+				if (!UpdateAnimationFrame.BranchingEqual (mFrame.Branching, lBranching))
 				{
-					UpdateFrameBranching	lUpdate = new UpdateFrameBranching (mCharacterFile, mFrame, lBranching);
+					UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mCharacterFile, mFrame, false);
 
-					lUpdate.Applied += new UndoUnit.AppliedEventHandler (UpdateBranching_Applied);
-					lRet = UpdateFrameBranching.PutUndo (lUpdate.Apply () as UpdateFrameBranching);
+					lUpdate.Branching = lBranching;
+					lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
+					lRet = UpdateAnimationFrame.PutUndo (lUpdate.Apply () as UpdateAnimationFrame, this);
 				}
 			}
 			return lRet;
 		}
 
-		private static Boolean BranchingEqual (FileFrameBranch[] pSource, FileFrameBranch[] pTarget)
+		///////////////////////////////////////////////////////////////////////////////
+
+		private void OnUpdateApplied (object sender, EventArgs e)
 		{
-			if ((pSource == null) != (pTarget == null))
+			if (!IsEmpty)
 			{
-				return false;
-			}
-			if ((pSource != null) && (pTarget != null))
-			{
-				if (pSource.Length != pTarget.Length)
+				UpdateAnimation			lUpdateAnimation = sender as UpdateAnimation;
+				UpdateAnimationFrame	lUpdateFrame = sender as UpdateAnimationFrame;
+
+				if ((lUpdateAnimation != null) && (lUpdateAnimation.Target == this.Animation) && lUpdateAnimation.NameChanged)
 				{
-					return false;
+					ShowFrameName ();
 				}
-				for (int lNdx = 0; lNdx < pSource.Length; lNdx++)
+				else if ((lUpdateFrame != null) && (lUpdateFrame.Target == mFrame))
 				{
-					if ((pSource[lNdx].mFrameNdx != pTarget[lNdx].mFrameNdx) || (pSource[lNdx].mProbability != pTarget[lNdx].mProbability))
+					if (lUpdateFrame.BranchingChanged)
 					{
-						return false;
+						ShowFrameBranching ();
+					}
+					if (lUpdateFrame.ExitFrameChanged)
+					{
+						ShowExitFrame ();
 					}
 				}
 			}
-			return true;
 		}
 
 		#endregion
@@ -447,7 +360,7 @@ namespace AgentCharacterEditor
 
 		private void NumericBranching0_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
 				if (!ApplyBranchingUpdates ())
 				{
@@ -458,7 +371,7 @@ namespace AgentCharacterEditor
 
 		private void NumericTarget0_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
 				if (!ApplyBranchingUpdates ())
 				{
@@ -469,7 +382,7 @@ namespace AgentCharacterEditor
 
 		private void NumericBranching1_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
 				if (!ApplyBranchingUpdates ())
 				{
@@ -480,7 +393,7 @@ namespace AgentCharacterEditor
 
 		private void NumericTarget1_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
 				if (!ApplyBranchingUpdates ())
 				{
@@ -491,7 +404,7 @@ namespace AgentCharacterEditor
 
 		private void NumericBranching2_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
 				if (!ApplyBranchingUpdates ())
 				{
@@ -502,7 +415,7 @@ namespace AgentCharacterEditor
 
 		private void NumericTarget2_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
 				if (!ApplyBranchingUpdates ())
 				{
@@ -513,26 +426,11 @@ namespace AgentCharacterEditor
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		void UpdateBranching_Applied (object sender, EventArgs e)
-		{
-			if (!IsEmpty)
-			{
-				UpdateFrameBranching	lUpdate = sender as UpdateFrameBranching;
-
-				if (lUpdate.Target == mFrame)
-				{
-					ShowFrameBranching ();
-				}
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
 		private void CheckBoxExit_Click (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateFrameExit	lUpdate;
+				UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mCharacterFile, mFrame, false);
 
 				if (CheckBoxExit.Checked)
 				{
@@ -542,15 +440,15 @@ namespace AgentCharacterEditor
 					{
 						lExitFrame++;
 					}
-					lUpdate = new UpdateFrameExit (mCharacterFile, mFrame, lExitFrame);
+					lUpdate.ExitFrame = lExitFrame;
 				}
 				else
 				{
-					lUpdate = new UpdateFrameExit (mCharacterFile, mFrame, -1);
+					lUpdate.ExitFrame = -1;
 				}
 
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (ExitFrame_Applied);
-				if (!UpdateFrameExit.PutUndo (lUpdate.Apply () as UpdateFrameExit))
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
+				if (!UpdateAnimationFrame.PutUndo (lUpdate.Apply () as UpdateAnimationFrame, this))
 				{
 					ShowExitFrame ();
 				}
@@ -559,38 +457,16 @@ namespace AgentCharacterEditor
 
 		private void NumericTargetExit_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateFrameExit	lUpdate = new UpdateFrameExit (mCharacterFile, mFrame, (Int16)(NumericTargetExit.Value - 1));
+				UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mCharacterFile, mFrame, false);
 
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (ExitFrame_Applied);
-				if (!UpdateFrameExit.PutUndo (lUpdate.Apply () as UpdateFrameExit))
+				lUpdate.ExitFrame = (Int16)(NumericTargetExit.Value - 1);
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
+				if (!UpdateAnimationFrame.PutUndo (lUpdate.Apply () as UpdateAnimationFrame, this))
 				{
 					ShowExitFrame ();
 				}
-			}
-		}
-
-		void ExitFrame_Applied (object sender, EventArgs e)
-		{
-			if (!IsEmpty)
-			{
-				UpdateFrameExit	lUpdate = sender as UpdateFrameExit;
-
-				if ((lUpdate != null) && (lUpdate.Target == mFrame))
-				{
-					ShowExitFrame ();
-				}
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		internal void PanelAnimation_AnimationNameChanged (object sender, AnimationEventArgs e)
-		{
-			if (!IsEmpty && e.Animation == this.Animation)
-			{
-				ShowFrameName ();
 			}
 		}
 

@@ -104,59 +104,68 @@ bool CAgentFileAcs::get_IsAcsFile () const
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-bool CAgentFileAcs::Open (const System::String^ pPath, UINT pLogLevel)
+bool CAgentFileAcs::Open (const System::String^ pPath)
 {
 	bool	lRet = false;
 	String^	lPath = ParseFilePath (pPath);
 
 #ifdef	_DEBUG_LOAD
-	pLogLevel = MinLogLevel (pLogLevel, _DEBUG_LOAD);
+	UINT	lLogLevel = mLogLevel;
+	mLogLevel = MinLogLevel (mLogLevel, _DEBUG_LOAD);
 #endif
-	if	(LogIsActive (pLogLevel))
+	if	(LogIsActive (mLogLevel))
 	{
-		LogMessage (pLogLevel, _T("Open [%s]"), _B(lPath));
+		LogMessage (mLogLevel, _T("Open [%s]"), _B(lPath));
 	}
 
 	Close ();
 	mPath = lPath;
-	lRet = LoadFile (lPath, pLogLevel);
+	lRet = LoadFile (lPath);
 
 	if	(!lRet)
 	{
 		mPath = nullptr;
 	}
+
+#ifdef	_DEBUG_LOAD
+	mLogLevel = lLogLevel;
+#endif
 	return lRet;
 }
 #else
-HRESULT CAgentFileAcs::Open (LPCTSTR pPath, UINT pLogLevel)
+HRESULT CAgentFileAcs::Open (LPCTSTR pPath)
 {
 	HRESULT		lResult = S_OK;
 	CAtlString	lPath = ParseFilePath (pPath);
 
 #ifdef	_DEBUG_LOAD
-	pLogLevel = MinLogLevel (pLogLevel, _DEBUG_LOAD);
+	UINT lLogLevel = mLogLevel;
+	mLogLevel = MinLogLevel (mLogLevel, _DEBUG_LOAD);
 #endif
 
 	Close ();
 	mPath = lPath;
 
-	if	(LogIsActive (pLogLevel))
+	if	(LogIsActive (mLogLevel))
 	{
-		LogMessage (pLogLevel, _T("Open [%s]"), lPath);
+		LogMessage (mLogLevel, _T("Open [%s]"), lPath);
 	}
 
-	lResult = LoadFile (lPath, pLogLevel);
+	lResult = LoadFile (lPath);
 
 	if	(FAILED (lResult))
 	{
 		mPath.Empty ();
 	}
+#ifdef	_DEBUG_LOAD
+	mLogLevel = lLogLevel;
+#endif	
 	return lResult;
 }
 #endif
 
 #ifdef	_M_CEE
-bool CAgentFileAcs::Save (const System::String^ pPath, CAgentFile^ pSource, UINT pLogLevel)
+bool CAgentFileAcs::Save (const System::String^ pPath, CAgentFile^ pSource)
 {
 	bool	lRet = false;
 	String^	lOldPath = mPath;
@@ -166,20 +175,20 @@ bool CAgentFileAcs::Save (const System::String^ pPath, CAgentFile^ pSource, UINT
 	{
 		lNewPath = ParseFilePath (pPath);
 	}
-	if	(LogIsActive (pLogLevel))
+	if	(LogIsActive (mLogLevel))
 	{
 		if	(pSource == this)
 		{
-			LogMessage (pLogLevel, _T("Save [%s] as [%s]"), _B(mPath), _B(lNewPath));
+			LogMessage (mLogLevel, _T("Save [%s] as [%s]"), _B(mPath), _B(lNewPath));
 		}
 		else
 		if	(!String::IsNullOrEmpty (lNewPath))
 		{
-			LogMessage (pLogLevel, _T("Save [%s] as [%s]"), _B(pSource->Path), _B(lNewPath));
+			LogMessage (mLogLevel, _T("Save [%s] as [%s]"), _B(pSource->Path), _B(lNewPath));
 		}
 		else
 		{
-			LogMessage (pLogLevel, _T("Save [%s]"), _B(mPath));
+			LogMessage (mLogLevel, _T("Save [%s]"), _B(mPath));
 		}
 	}
 
@@ -217,12 +226,12 @@ bool CAgentFileAcs::Save (const System::String^ pPath, CAgentFile^ pSource, UINT
 				)
 			{
 				mFileSize = sizeof(DWORD)+(sizeof(ULARGE_INTEGER)*4);
-				mFileSize += WriteImages (mFileSize, pSource, LogNormal);
-				mFileSize += WriteSounds (mFileSize, pSource, LogNormal);
-				mFileSize += WriteGestures (mFileSize, pSource, LogNormal);
-				mFileSize += WriteImageIndex (mFileSize, pSource, LogNormal);
-				mFileSize += WriteSoundIndex (mFileSize, pSource, LogNormal);
-				mFileSize += WriteAcsHeader (mFileSize, pSource, LogNormal);
+				mFileSize += WriteImages (mFileSize, pSource);
+				mFileSize += WriteSounds (mFileSize, pSource);
+				mFileSize += WriteGestures (mFileSize, pSource);
+				mFileSize += WriteImageIndex (mFileSize, pSource);
+				mFileSize += WriteSoundIndex (mFileSize, pSource);
+				mFileSize += WriteAcsHeader (mFileSize, pSource);
 				mFileWriter->Flush ();
 				lRet = true;
 			}
@@ -272,15 +281,15 @@ void CAgentFileAcs::Close ()
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-bool CAgentFileAcs::LoadFile (System::String^ pPath, UINT pLogLevel)
+bool CAgentFileAcs::LoadFile (System::String^ pPath)
 #else
-HRESULT CAgentFileAcs::LoadFile (LPCTSTR pPath, UINT pLogLevel)
+HRESULT CAgentFileAcs::LoadFile (LPCTSTR pPath)
 #endif
 {
 #ifdef	_M_CEE
-	bool	lRet = __super::LoadFile (pPath, pLogLevel);
+	bool	lRet = __super::LoadFile (pPath);
 #else
-	HRESULT	lResult = __super::LoadFile (pPath, pLogLevel);
+	HRESULT	lResult = __super::LoadFile (pPath);
 #endif
 
 #ifdef	_M_CEE
@@ -289,8 +298,8 @@ HRESULT CAgentFileAcs::LoadFile (LPCTSTR pPath, UINT pLogLevel)
 	if	(SUCCEEDED (lResult))
 #endif
 	{
-		ReadImageIndex (pLogLevel);
-		ReadSoundIndex (pLogLevel);
+		ReadImageIndex ();
+		ReadSoundIndex ();
 
 #ifdef	_M_CEE
 #ifdef	_DEBUG_NOT
@@ -322,21 +331,21 @@ HRESULT CAgentFileAcs::LoadFile (LPCTSTR pPath, UINT pLogLevel)
 #endif
 
 #ifdef	_DUMP_IMAGE
-		if	(LogIsActive (MaxLogLevel (pLogLevel, _DUMP_IMAGE)))
+		if	(LogIsActive (MaxLogLevel (mLogLevel, _DUMP_IMAGE)))
 		{
-			DumpAcsImages (pLogLevel);
+			DumpAcsImages (mLogLevel);
 		}
 #endif
 #ifdef	_SAVE_IMAGE
-		if	(LogIsActive (MaxLogLevel (pLogLevel, _SAVE_IMAGE)))
+		if	(LogIsActive (MaxLogLevel (mLogLevel, _SAVE_IMAGE)))
 		{
-			DumpAcsImages (pLogLevel);
+			DumpAcsImages (mLogLevel);
 		}
 #endif
 #ifdef	_DEBUG_BLOCKS
 		if	(IsAcsFile ())
 		{
-			DumpBlocks (MaxLogLevel (pLogLevel,_DEBUG_BLOCKS));
+			DumpBlocks (MaxLogLevel (mLogLevel,_DEBUG_BLOCKS));
 		}
 #endif
 	}
@@ -382,9 +391,9 @@ INT_PTR CAgentFileAcs::GetImageCount () const
 #endif
 
 #ifdef	_M_CEE
-CAgentFileImage^ CAgentFileAcs::GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor, UINT pLogLevel)
+CAgentFileImage^ CAgentFileAcs::GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor)
 #else
-CAgentFileImage* CAgentFileAcs::GetImage (INT_PTR pImageNdx, bool p32Bit, const COLORREF* pBkColor, UINT pLogLevel)
+CAgentFileImage* CAgentFileAcs::GetImage (INT_PTR pImageNdx, bool p32Bit, const COLORREF* pBkColor)
 #endif
 {
 #ifdef	_M_CEE
@@ -397,7 +406,7 @@ CAgentFileImage* CAgentFileAcs::GetImage (INT_PTR pImageNdx, bool p32Bit, const 
 		&&	(pImageNdx < mImageIndex->Length)
 		)
 	{
-		lImage = ReadAcsImage (mImageIndex [pImageNdx].Key, mImageIndex [pImageNdx].Value, (UINT)pImageNdx, p32Bit, pBkColor, pLogLevel);
+		lImage = ReadAcsImage (mImageIndex [pImageNdx].Key, mImageIndex [pImageNdx].Value, (UINT)pImageNdx, p32Bit, pBkColor);
 	}
 	return lImage;
 #else
@@ -409,7 +418,7 @@ CAgentFileImage* CAgentFileAcs::GetImage (INT_PTR pImageNdx, bool p32Bit, const 
 		&&	(pImageNdx < (INT_PTR)mImageIndex.GetCount())
 		)
 	{
-		lImage = ReadAcsImage (mImageIndex [pImageNdx].LowPart, mImageIndex [pImageNdx].HighPart, (UINT)pImageNdx, p32Bit, pBkColor, pLogLevel);
+		lImage = ReadAcsImage (mImageIndex [pImageNdx].LowPart, mImageIndex [pImageNdx].HighPart, (UINT)pImageNdx, p32Bit, pBkColor);
 	}
 	return lImage.Detach ();
 #endif
@@ -494,7 +503,7 @@ array <BYTE>^ CAgentFileAcs::GetSound (int pSoundNdx)
 		&&	(pSoundNdx < mSoundIndex->Length)
 		)
 	{
-		lSound = ReadAcsSound (mSoundIndex [pSoundNdx].Key, mSoundIndex [pSoundNdx].Value, (UINT)pSoundNdx, LogVerbose+1);
+		lSound = ReadAcsSound (mSoundIndex [pSoundNdx].Key, mSoundIndex [pSoundNdx].Value, (UINT)pSoundNdx);
 	}
 	return lSound;
 }
@@ -520,15 +529,15 @@ LPCVOID CAgentFileAcs::GetSound (INT_PTR pSoundNdx)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-bool CAgentFileAcs::ReadHeader (UINT pLogLevel)
+bool CAgentFileAcs::ReadHeader ()
 #else
-HRESULT CAgentFileAcs::ReadHeader (UINT pLogLevel)
+HRESULT CAgentFileAcs::ReadHeader ()
 #endif
 {
 #ifdef	_M_CEE
-	bool	lRet = __super::ReadHeader (pLogLevel);
+	bool	lRet = __super::ReadHeader ();
 #else
-	HRESULT	lResult = __super::ReadHeader (pLogLevel);
+	HRESULT	lResult = __super::ReadHeader ();
 #endif
 
 	if	(
@@ -539,7 +548,7 @@ HRESULT CAgentFileAcs::ReadHeader (UINT pLogLevel)
 #endif
 		&&	(
 				(mSignature != sAcsFileSignature)
-			||	(!ReadAcsHeader (pLogLevel))
+			||	(!ReadAcsHeader ())
 			)
 		)
 	{
@@ -561,11 +570,6 @@ HRESULT CAgentFileAcs::ReadHeader (UINT pLogLevel)
 
 bool CAgentFileAcs::ReadAcsHeader ()
 {
-	return ReadAcsHeader (LogVerbose+1);
-}
-
-bool CAgentFileAcs::ReadAcsHeader (UINT pLogLevel)
-{
 	bool	lRet = false;
 
 #ifdef	_M_CEE
@@ -586,9 +590,9 @@ bool CAgentFileAcs::ReadAcsHeader (UINT pLogLevel)
 				mFileStream->Seek (lBlockOffset=lBlockDef.LowPart, SeekOrigin::Begin);
 				lBlockBuffer = mFileReader->ReadBytes (lBlockLength=lBlockDef.HighPart);
 			}
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%s] Read Header       of [%u] at [%8.8X (%u)]"), _B(mPath), lBlockLength, lBlockOffset, lBlockOffset);
+				LogMessage (mLogLevel, _T("  [%s] Read Header       of [%u] at [%8.8X (%u)]"), _B(mPath), lBlockLength, lBlockOffset, lBlockOffset);
 			}
 		}
 		catch AnyExceptionDebug
@@ -609,9 +613,9 @@ bool CAgentFileAcs::ReadAcsHeader (UINT pLogLevel)
 		&&	(lBlock = ((LPCBYTE)(LPVOID)mFileView)+(lBlockOffset=lBlockDefs[0].LowPart))
 		)
 	{
-		if	(LogIsActive (pLogLevel))
+		if	(LogIsActive (mLogLevel))
 		{
-			LogMessage (pLogLevel, _T("  [%s] Read Header       of [%u] at [%8.8X (%u)]"), mPath, lBlockLength, lBlockOffset, lBlockOffset);
+			LogMessage (mLogLevel, _T("  [%s] Read Header       of [%u] at [%8.8X (%u)]"), mPath, lBlockLength, lBlockOffset, lBlockOffset);
 		}
 #endif
 
@@ -623,7 +627,7 @@ bool CAgentFileAcs::ReadAcsHeader (UINT pLogLevel)
 #else
 			LPCBYTE			lByte = lBlock;
 #endif
-			lByte = (LPCBYTE)ReadBufferHeader (lByte, pLogLevel);
+			lByte = (LPCBYTE)ReadBufferHeader (lByte);
 
 #ifdef	_M_CEE
 			if	(mHeader->mStyle & (DWORD)AgentCharStyle::CharStyleTts)
@@ -631,7 +635,7 @@ bool CAgentFileAcs::ReadAcsHeader (UINT pLogLevel)
 			if	(mHeader.mStyle & CharStyleTts)
 #endif
 			{
-				lByte = (LPCBYTE)ReadBufferTts (lByte, true, pLogLevel);
+				lByte = (LPCBYTE)ReadBufferTts (lByte, true);
 			}
 #ifdef	_M_CEE
 			if	(mHeader->mStyle & (DWORD)AgentCharStyle::CharStyleBalloon)
@@ -639,27 +643,27 @@ bool CAgentFileAcs::ReadAcsHeader (UINT pLogLevel)
 			if	(mHeader.mStyle & CharStyleBalloon)
 #endif
 			{
-				lByte = (LPCBYTE)ReadBufferBalloon (lByte, true, pLogLevel);
+				lByte = (LPCBYTE)ReadBufferBalloon (lByte, true);
 			}
-			lByte = (LPCBYTE)ReadBufferPalette (lByte, pLogLevel);
-			lByte = (LPCBYTE)ReadBufferIcon (lByte, pLogLevel);
+			lByte = (LPCBYTE)ReadBufferPalette (lByte);
+			lByte = (LPCBYTE)ReadBufferIcon (lByte);
 
 			mFileNamesOffset -= lBlockOffset;
 			mFileStatesOffset = (DWORD)(lByte - (LPBYTE)lBlock);
 			mFileStatesSize = mFileNamesOffset - mFileStatesOffset;
 			lRet = true;
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%s] Read Header       of [%u] at [%8.8X (%u)] States Size [%d] Offset [%d] Names Size [%d] Offset [%d (%d)]"), _B(mPath), lBlockLength, lBlockOffset, lBlockOffset, mFileStatesSize, mFileStatesOffset, mFileNamesSize, mFileNamesOffset, mFileNamesOffset+lBlockOffset);
+				LogMessage (mLogLevel, _T("  [%s] Read Header       of [%u] at [%8.8X (%u)] States Size [%d] Offset [%d] Names Size [%d] Offset [%d (%d)]"), _B(mPath), lBlockLength, lBlockOffset, lBlockOffset, mFileStatesSize, mFileStatesOffset, mFileNamesSize, mFileNamesOffset, mFileNamesOffset+lBlockOffset);
 			}
 		}
 		catch AnyExceptionDebug
 
 #ifndef	_M_CEE
-		if	(LogIsActive (pLogLevel))
+		if	(LogIsActive (mLogLevel))
 		{
-			Log (pLogLevel);
+			Log (mLogLevel);
 		}
 #endif
 	}
@@ -667,7 +671,7 @@ bool CAgentFileAcs::ReadAcsHeader (UINT pLogLevel)
 	return lRet;
 }
 
-LPCVOID CAgentFileAcs::ReadBufferHeader (LPCVOID pBuffer, UINT pLogLevel)
+LPCVOID CAgentFileAcs::ReadBufferHeader (LPCVOID pBuffer)
 {
 	LPCBYTE	lByte = (LPCBYTE)pBuffer;
 
@@ -719,15 +723,10 @@ LPCVOID CAgentFileAcs::ReadBufferHeader (LPCVOID pBuffer, UINT pLogLevel)
 	return lByte;
 }
 
-#ifdef	_M_CEE
-DWORD CAgentFileAcs::WriteAcsHeader (DWORD pFileOffset, CAgentFile^ pSource)
-{
-	return WriteAcsHeader (pFileOffset, pSource, LogVerbose+1);
-}
-
 /////////////////////////////////////////////////////////////////////////////
 
-DWORD CAgentFileAcs::WriteAcsHeader (DWORD pFileOffset, CAgentFile^ pSource, UINT pLogLevel)
+#ifdef	_M_CEE
+DWORD CAgentFileAcs::WriteAcsHeader (DWORD pFileOffset, CAgentFile^ pSource)
 {
 	DWORD	lBlockLength = 0;
 
@@ -738,24 +737,24 @@ DWORD CAgentFileAcs::WriteAcsHeader (DWORD pFileOffset, CAgentFile^ pSource, UIN
 	{
 		array <BYTE>^	lBlockBuffer;
 
-		lBlockLength += (DWORD)WriteBufferHeader (NULL, pSource->Header, pLogLevel);
+		lBlockLength += (DWORD)WriteBufferHeader (NULL, pSource->Header);
 		if	(pSource->Header->mStyle & (DWORD)AgentCharStyle::CharStyleTts)
 		{
-			lBlockLength += (DWORD)WriteBufferTts (NULL, pSource->Tts, true, pLogLevel);
+			lBlockLength += (DWORD)WriteBufferTts (NULL, pSource->Tts, true);
 		}
 		if	(pSource->Header->mStyle & (DWORD)AgentCharStyle::CharStyleBalloon)
 		{
-			lBlockLength += (DWORD)WriteBufferBalloon (NULL, pSource->Balloon, true, pLogLevel);
+			lBlockLength += (DWORD)WriteBufferBalloon (NULL, pSource->Balloon, true);
 		}
-		lBlockLength += (DWORD)WriteBufferPalette (NULL, pSource->Header, pLogLevel);
-		lBlockLength += (DWORD)WriteBufferIcon (NULL, pSource->Header, pLogLevel);
+		lBlockLength += (DWORD)WriteBufferPalette (NULL, pSource->Header);
+		lBlockLength += (DWORD)WriteBufferIcon (NULL, pSource->Header);
 
 		mFileStatesOffset = lBlockLength;
-		mFileStatesSize = (DWORD)WriteBufferStates (NULL, pSource->States, true, pLogLevel);
+		mFileStatesSize = (DWORD)WriteBufferStates (NULL, pSource->States, true);
 		lBlockLength += mFileStatesSize;
 
 		mFileNamesOffset = lBlockLength + pFileOffset;
-		mFileNamesSize = (DWORD)WriteBufferNames (NULL, pSource->Names, true, pLogLevel);
+		mFileNamesSize = (DWORD)WriteBufferNames (NULL, pSource->Names, true);
 		lBlockLength += mFileNamesSize;
 
 		lBlockBuffer = gcnew array <BYTE> (lBlockLength);
@@ -765,23 +764,23 @@ DWORD CAgentFileAcs::WriteAcsHeader (DWORD pFileOffset, CAgentFile^ pSource, UIN
 			pin_ptr <BYTE>	lBlock = &lBlockBuffer[0];
 			LPBYTE			lByte = lBlock;
 
-			lByte = (LPBYTE)WriteBufferHeader (lByte, pSource->Header, pLogLevel);
+			lByte = (LPBYTE)WriteBufferHeader (lByte, pSource->Header);
 			if	(pSource->Header->mStyle & (DWORD)AgentCharStyle::CharStyleTts)
 			{
-				lByte = (LPBYTE)WriteBufferTts (lByte, pSource->Tts, true, pLogLevel);
+				lByte = (LPBYTE)WriteBufferTts (lByte, pSource->Tts, true);
 			}
 			if	(pSource->Header->mStyle & (DWORD)AgentCharStyle::CharStyleBalloon)
 			{
-				lByte = (LPBYTE)WriteBufferBalloon (lByte, pSource->Balloon, true, pLogLevel);
+				lByte = (LPBYTE)WriteBufferBalloon (lByte, pSource->Balloon, true);
 			}
-			lByte = (LPBYTE)WriteBufferPalette (lByte, pSource->Header, pLogLevel);
-			lByte = (LPBYTE)WriteBufferIcon (lByte, pSource->Header, pLogLevel);
+			lByte = (LPBYTE)WriteBufferPalette (lByte, pSource->Header);
+			lByte = (LPBYTE)WriteBufferIcon (lByte, pSource->Header);
 
 			lByte = lBlock + mFileStatesOffset;
-			lByte = (LPBYTE)WriteBufferStates (lByte, pSource->States, true, pLogLevel);
+			lByte = (LPBYTE)WriteBufferStates (lByte, pSource->States, true);
 
 			lByte = lBlock + mFileNamesOffset - pFileOffset;
-			lByte = (LPBYTE)WriteBufferNames (lByte, pSource->Names, true, pLogLevel);
+			lByte = (LPBYTE)WriteBufferNames (lByte, pSource->Names, true);
 		}
 		catch AnyExceptionDebug
 
@@ -799,9 +798,9 @@ DWORD CAgentFileAcs::WriteAcsHeader (DWORD pFileOffset, CAgentFile^ pSource, UIN
 			mFileStream->Seek (pFileOffset, SeekOrigin::Begin);
 			mFileWriter->Write (lBlockBuffer);
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%s] Write Header      of [%u] at [%8.8X (%u)] States Size [%d] Offset [%d] Names Size [%d] Offset [%d (%d)]"), _B(mPath), lBlockLength, pFileOffset, pFileOffset, mFileStatesSize, mFileStatesOffset, mFileNamesSize, mFileNamesOffset-pFileOffset, mFileNamesOffset);
+				LogMessage (mLogLevel, _T("  [%s] Write Header      of [%u] at [%8.8X (%u)] States Size [%d] Offset [%d] Names Size [%d] Offset [%d (%d)]"), _B(mPath), lBlockLength, pFileOffset, pFileOffset, mFileStatesSize, mFileStatesOffset, mFileNamesSize, mFileNamesOffset-pFileOffset, mFileNamesOffset);
 			}
 		}
 		catch AnyExceptionDebug
@@ -809,7 +808,7 @@ DWORD CAgentFileAcs::WriteAcsHeader (DWORD pFileOffset, CAgentFile^ pSource, UIN
 	return lBlockLength;
 }
 
-LPVOID CAgentFileAcs::WriteBufferHeader (LPVOID pBuffer, CAgentFileHeader^ pHeader, UINT pLogLevel)
+LPVOID CAgentFileAcs::WriteBufferHeader (LPVOID pBuffer, CAgentFileHeader^ pHeader)
 {
 	LPBYTE	lByte = (LPBYTE)pBuffer;
 
@@ -880,7 +879,7 @@ LPVOID CAgentFileAcs::WriteBufferHeader (LPVOID pBuffer, CAgentFileHeader^ pHead
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentFileAcs::ReadNames (bool pFirstLetterCaps, UINT pLogLevel)
+bool CAgentFileAcs::ReadNames (bool pFirstLetterCaps)
 {
 	bool	lRet = false;
 
@@ -907,16 +906,16 @@ bool CAgentFileAcs::ReadNames (bool pFirstLetterCaps, UINT pLogLevel)
 #ifdef	_DEBUG
 			System::Diagnostics::Debug::Assert (mFileNamesSize == lBlockLength);
 #endif
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%s] Read %3.3u Names    of [%d] at [%8.8X (%u)] in [%8.8X]"), _B(mPath), *(LPCWORD)lBlock, mFileNamesSize, mFileNamesOffset, mFileNamesOffset, lBlockOffset);
+				LogMessage (mLogLevel, _T("  [%s] Read %3.3u Names    of [%d] at [%8.8X (%u)] in [%8.8X]"), _B(mPath), *(LPCWORD)lBlock, mFileNamesSize, mFileNamesOffset, mFileNamesOffset, lBlockOffset);
 			}
 
-			ReadBufferNames (lBlock, mFileNamesSize, true, pFirstLetterCaps, pLogLevel);
+			ReadBufferNames (lBlock, mFileNamesSize, true, pFirstLetterCaps);
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%s] Read %3.3d Names"), _B(mPath), (mNames ? mNames->Count : 0));
+				LogMessage (mLogLevel, _T("  [%s] Read %3.3d Names"), _B(mPath), (mNames ? mNames->Count : 0));
 			}
 			lRet = true;
 		}
@@ -928,9 +927,9 @@ bool CAgentFileAcs::ReadNames (bool pFirstLetterCaps, UINT pLogLevel)
 	DWORD				lBlockLength;
 	LPCBYTE				lBlock;
 
-	if	(LogIsActive (pLogLevel))
+	if	(LogIsActive (mLogLevel))
 	{
-		LogMessage (pLogLevel, _T("ReadNames [%s]"), mPath);
+		LogMessage (mLogLevel, _T("ReadNames [%s]"), mPath);
 	}
 	FreeNames ();
 
@@ -947,22 +946,22 @@ bool CAgentFileAcs::ReadNames (bool pFirstLetterCaps, UINT pLogLevel)
 
 			ATLASSERT (mFileNamesOffset == ((LPCDWORD)lBlock) [1] - lBlockOffset);
 			ATLASSERT (mFileNamesSize == lBlockLength-mFileNamesOffset);
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel|LogHighVolume, _T("  [%s] Read %3.3u Names    of [%u] at [%8.8X] in [%8.8X]"), mPath, *(LPCWORD)lByte, mFileNamesSize, mFileNamesOffset, lBlockOffset);
+				LogMessage (mLogLevel|LogHighVolume, _T("  [%s] Read %3.3u Names    of [%u] at [%8.8X] in [%8.8X]"), mPath, *(LPCWORD)lByte, mFileNamesSize, mFileNamesOffset, lBlockOffset);
 			}
 
-			lByte = (LPCBYTE)ReadBufferNames (lByte, mFileNamesSize, true, pFirstLetterCaps, pLogLevel);
+			lByte = (LPCBYTE)ReadBufferNames (lByte, mFileNamesSize, true, pFirstLetterCaps);
 
 #ifdef	_DEBUG_LOAD
-			if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_LOAD)))
+			if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_LOAD)))
 			{
 				LogMessage (_DEBUG_LOAD, _T("    Left [%u]"), (long) lBlockLength - (long) (lByte-lBlock));
 			}
 #endif
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%s] Read %3.3d Names"), mPath, mNames.GetCount());
+				LogMessage (mLogLevel, _T("  [%s] Read %3.3d Names"), mPath, mNames.GetCount());
 			}
 			lRet = true;
 		}
@@ -974,7 +973,7 @@ bool CAgentFileAcs::ReadNames (bool pFirstLetterCaps, UINT pLogLevel)
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentFileAcs::ReadStates (UINT pLogLevel)
+bool CAgentFileAcs::ReadStates ()
 {
 	bool	lRet = false;
 #ifdef	_M_CEE
@@ -1001,16 +1000,16 @@ LogMessage (LogIfActive, _T("Block [%u] States [%d] [%d]"), lBlockDef.HighPart, 
 #ifdef	_DEBUG
 			System::Diagnostics::Debug::Assert (mFileStatesSize == lBlockLength);
 #endif
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel|LogHighVolume, _T("  [%s] Read %3.3u States   at [%8.8X (%d)] in [%8.8X]"), _B(mPath), *(LPCWORD)lBlock, mFileStatesSize, mFileStatesOffset, mFileStatesOffset, lBlockOffset);
+				LogMessage (mLogLevel|LogHighVolume, _T("  [%s] Read %3.3u States   at [%8.8X (%d)] in [%8.8X]"), _B(mPath), *(LPCWORD)lBlock, mFileStatesSize, mFileStatesOffset, mFileStatesOffset, lBlockOffset);
 			}
 
-			ReadBufferStates (lBlock, mFileStatesSize, true, pLogLevel);
+			ReadBufferStates (lBlock, mFileStatesSize, true);
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%s] Read %3.3d States"), _B(mPath), mStates->Count);
+				LogMessage (mLogLevel, _T("  [%s] Read %3.3d States"), _B(mPath), mStates->Count);
 			}
 			lRet = true;
 		}
@@ -1022,9 +1021,9 @@ LogMessage (LogIfActive, _T("Block [%u] States [%d] [%d]"), lBlockDef.HighPart, 
 	DWORD				lBlockLength;
 	LPCBYTE				lBlock;
 
-	if	(LogIsActive (pLogLevel))
+	if	(LogIsActive (mLogLevel))
 	{
-		LogMessage (pLogLevel, _T("ReadStates [%s]"), mPath);
+		LogMessage (mLogLevel, _T("ReadStates [%s]"), mPath);
 	}
 	FreeStates ();
 
@@ -1040,22 +1039,22 @@ LogMessage (LogIfActive, _T("Block [%u] States [%d] [%d]"), lBlockDef.HighPart, 
 			LPCBYTE	lByte = lBlock + mFileStatesOffset;
 
 			ATLASSERT (mFileStatesSize == mFileNamesOffset-mFileStatesOffset);
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel|LogHighVolume, _T("  [%s] Read %3.3u States   of [%u] at [%8.8X]"), mPath, *(LPCWORD)lByte, mFileStatesSize, lByte-lBlock);
+				LogMessage (mLogLevel|LogHighVolume, _T("  [%s] Read %3.3u States   of [%u] at [%8.8X]"), mPath, *(LPCWORD)lByte, mFileStatesSize, lByte-lBlock);
 			}
 #ifdef	_DEBUG_LOAD
-			if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_LOAD)))
+			if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_LOAD)))
 			{
 				LogDump (_DEBUG_LOAD|LogHighVolume, (LPBYTE)lByte, mFileStatesSize, _T("    "), true);
 			}
 #endif
 
-			lByte = (LPCBYTE)ReadBufferStates (lByte, mFileStatesSize, true, pLogLevel);
+			lByte = (LPCBYTE)ReadBufferStates (lByte, mFileStatesSize, true);
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%s] Read %3.3d States"), mPath, mStates.mGestures.GetCount());
+				LogMessage (mLogLevel, _T("  [%s] Read %3.3d States"), mPath, mStates.mGestures.GetCount());
 			}
 			lRet = true;
 		}
@@ -1067,7 +1066,7 @@ LogMessage (LogIfActive, _T("Block [%u] States [%d] [%d]"), lBlockDef.HighPart, 
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentFileAcs::ReadGestures (UINT pLogLevel)
+bool CAgentFileAcs::ReadGestures ()
 {
 	bool	lRet = false;
 #ifdef	_M_CEE
@@ -1102,9 +1101,9 @@ bool CAgentFileAcs::ReadGestures (UINT pLogLevel)
 	DWORD				lBlockLength;
 	LPCBYTE				lBlock;
 
-	if	(LogIsActive (pLogLevel))
+	if	(LogIsActive (mLogLevel))
 	{
-		LogMessage (pLogLevel, _T("ReadGestures [%s]"), mPath);
+		LogMessage (mLogLevel, _T("ReadGestures [%s]"), mPath);
 	}
 	FreeGestures ();
 
@@ -1130,12 +1129,12 @@ bool CAgentFileAcs::ReadGestures (UINT pLogLevel)
 			DWORD					lCount = *(LPCDWORD)lByte;
 			LPCDWORD				lAnimationRef;
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel|LogHighVolume, _T("  [%s] Read %3.3u Gestures at [%8.8X (%u)]"), _B(mPath), lCount, lBlockLength, lBlockOffset, lBlockOffset);
+				LogMessage (mLogLevel|LogHighVolume, _T("  [%s] Read %3.3u Gestures at [%8.8X (%u)]"), _B(mPath), lCount, lBlockLength, lBlockOffset, lBlockOffset);
 			}
 #ifdef	_DEBUG_LOAD
-			if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_LOAD)))
+			if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_LOAD)))
 			{
 				LogDump (_DEBUG_LOAD|LogHighVolume, (LPBYTE)lBlock, lBlockLength, _T("    "), true);
 			}
@@ -1149,32 +1148,32 @@ bool CAgentFileAcs::ReadGestures (UINT pLogLevel)
 				lByte += sizeof(DWORD)*2;
 
 #ifdef	_DEBUG_LOAD
-				if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_LOAD)))
+				if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_LOAD)))
 				{
 					LogMessage (_DEBUG_LOAD, _T("  Gesture [%s] at [%8.8X (%u)] of [%8.8X (%u)]"), lGestureName, lAnimationRef[0], lAnimationRef[0], lAnimationRef[1], lAnimationRef[1]);
 				}
 #else
-				if	(LogIsActive (pLogLevel))
+				if	(LogIsActive (mLogLevel))
 				{
-					LogMessage (pLogLevel|LogHighVolume, _T("    Gesture [%s] of [%u] at [%8.8X]"), _B(lGestureName), lAnimationRef[1], lAnimationRef[0]);
+					LogMessage (mLogLevel|LogHighVolume, _T("    Gesture [%s] of [%u] at [%8.8X]"), _B(lGestureName), lAnimationRef[1], lAnimationRef[0]);
 				}
 #endif
 #ifdef	_M_CEE
-				lAnimation = ReadAcsAnimation (lAnimationRef[0], lAnimationRef[1], pLogLevel);
+				lAnimation = ReadAcsAnimation (lAnimationRef[0], lAnimationRef[1]);
 				lAnimation->mName = lGestureName;
 				mGestures->Add (lAnimation);
 #else
-				mGestures.mAnimations.InsertAt (AddSortedString (mGestures.mNames, lGestureName), ReadAcsAnimation (lAnimationRef[0], lAnimationRef[1], pLogLevel));
+				mGestures.mAnimations.InsertAt (AddSortedString (mGestures.mNames, lGestureName), ReadAcsAnimation (lAnimationRef[0], lAnimationRef[1]));
 #endif
 				lCount--;
 			}
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
 #ifdef	_M_CEE
-				LogMessage (pLogLevel, _T("  [%s] Read %3.3d Gestures"), _B(mPath), mGestures->Count);
+				LogMessage (mLogLevel, _T("  [%s] Read %3.3d Gestures"), _B(mPath), mGestures->Count);
 #else				
-				LogMessage (pLogLevel, _T("  [%s] Read %3.3d Gestures"), mPath, mGestures.mAnimations.GetCount());
+				LogMessage (mLogLevel, _T("  [%s] Read %3.3d Gestures"), mPath, mGestures.mAnimations.GetCount());
 #endif				
 			}
 			lRet = true;
@@ -1186,9 +1185,9 @@ bool CAgentFileAcs::ReadGestures (UINT pLogLevel)
 }
 
 #ifdef	_M_CEE
-CAgentFileAnimation^ CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize, UINT pLogLevel)
+CAgentFileAnimation^ CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize)
 #else
-CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize, UINT pLogLevel)
+CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize)
 #endif
 {
 #ifdef	_M_CEE
@@ -1237,23 +1236,23 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 			lByte += sizeof (WORD);
 
 #ifdef	_DEBUG_ANIMATION
-			if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_ANIMATION)))
+			if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_ANIMATION)))
 			{
 				CAtlString	lReturnString = (lReturnType == 1) ? _T("<exit branching>") : (lReturnType == 2) ? _T("<none>") : lReturnName;
 				LogMessage (_DEBUG_ANIMATION, _T("    Animation [%s] Return [%u] [%s] Frames [%u]"), lName, lReturnType, lReturnString, lFrameCount);
 			}
 #else
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
 #ifdef	_M_CEE
-				LogMessage (pLogLevel|LogHighVolume, _T("    Animation [%s] Return [%u] [%s] Frames [%u]"), _B(lName), lReturnType, _B(lReturnName), lFrameCount);
+				LogMessage (mLogLevel|LogHighVolume, _T("    Animation [%s] Return [%u] [%s] Frames [%u]"), _B(lName), lReturnType, _B(lReturnName), lFrameCount);
 #else
-				LogMessage (pLogLevel|LogHighVolume, _T("    Animation [%s] Return [%u] [%s] Frames [%u]"), lName, lReturnType, lReturnName, lFrameCount);
+				LogMessage (mLogLevel|LogHighVolume, _T("    Animation [%s] Return [%u] [%s] Frames [%u]"), lName, lReturnType, lReturnName, lFrameCount);
 #endif
 			}
 #endif
 #ifdef	_DUMP_ANIMATION
-			if	(LogIsActive (MaxLogLevel (pLogLevel, _DUMP_ANIMATION)))
+			if	(LogIsActive (MaxLogLevel (mLogLevel, _DUMP_ANIMATION)))
 			{
 				LogDump (_DUMP_ANIMATION, (LPBYTE)lBlock, pSize, _T("        "));
 			}
@@ -1313,7 +1312,7 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 						lImageCount = *(LPCWORD)lByte;
 						lByte += sizeof(WORD);
 #ifdef	_DEBUG_ANIMATION
-						if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_ANIMATION)))
+						if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_ANIMATION)))
 						{
 							LogMessage (_DEBUG_ANIMATION, _T("      Frame [%hu] Images [%hu]"), lFrameNdx, lImageCount);
 						}
@@ -1355,7 +1354,7 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 								lFrame->mImages->Add (lFrameImage);
 #endif
 #ifdef	_DEBUG_ANIMATION
-								if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_ANIMATION)))
+								if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_ANIMATION)))
 								{
 									LogMessage (_DEBUG_ANIMATION, _T("        Image [%4u] at [%d %d]"), lFrameImage->mImageNdx, lFrameImage->mOffset.x, lFrameImage->mOffset.y);
 								}
@@ -1370,7 +1369,7 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 						lFrame->mExitFrame = *(LPCWORD)lByte;
 						lByte += sizeof(WORD);
 #ifdef	_DEBUG_ANIMATION
-						if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_ANIMATION)))
+						if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_ANIMATION)))
 						{
 							LogMessage (_DEBUG_ANIMATION, _T("        Duration [%hu] ExitFrame [%hd] Sound [%2hd]"), lFrame->mDuration, lFrame->mExitFrame, lFrame->mSoundNdx);
 						}
@@ -1398,7 +1397,7 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 						lByte += sizeof(WORD)*lBranchCount*2;
 
 #ifdef	_DEBUG_ANIMATION
-						if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_ANIMATION)))
+						if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_ANIMATION)))
 						{
 							for	(lNdx = 0; lNdx < min ((INT_PTR)lBranchCount, 3); lNdx++)
 							{
@@ -1467,7 +1466,7 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 								lFrame->mOverlays->Add (lOverlay);
 #endif
 #ifdef	_DEBUG_ANIMATION
-								if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_ANIMATION)))
+								if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_ANIMATION)))
 								{
 									LogMessage (_DEBUG_ANIMATION, _T("        Overlay [%hu] Replace [%u] Image [%4u] at [%d %d] something [%d] [%d]"), lOverlay->OverlayNdx, lOverlay->ReplaceFlag, lOverlay->ImageNdx, lOverlay->Offset.x, lOverlay->Offset.y, lOverlay->mSomething.x, lOverlay->mSomething.y);
 								}
@@ -1476,7 +1475,7 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 						}
 
 #ifdef	_DUMP_ANIMATION
-						if	(LogIsActive (MaxLogLevel (pLogLevel, _DUMP_ANIMATION)))
+						if	(LogIsActive (MaxLogLevel (mLogLevel, _DUMP_ANIMATION)))
 						{
 							LogDump (_DUMP_ANIMATION, (LPBYTE)lFrameStart, min(lByte-lFrameStart, pSize-(lFrameStart-lBlock)), _T("          "));
 						}
@@ -1513,11 +1512,6 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 #ifdef	_M_CEE
 DWORD CAgentFileAcs::WriteGestures (DWORD pFileOffset, CAgentFile^ pSource)
 {
-	return WriteGestures (pFileOffset, pSource, LogVerbose+1);
-}
-
-DWORD CAgentFileAcs::WriteGestures (DWORD pFileOffset, CAgentFile^ pSource, UINT pLogLevel)
-{
 	DWORD	lBlockLength = 0;
 
 	if	(
@@ -1547,7 +1541,7 @@ DWORD CAgentFileAcs::WriteGestures (DWORD pFileOffset, CAgentFile^ pSource, UINT
 			}
 			for each (CAgentFileAnimation^ lAnimation in pSource->Gestures)
 			{
-				lAnimationSize = (UInt32)WriteAcsAnimation (NULL, lAnimation, pLogLevel);
+				lAnimationSize = (UInt32)WriteAcsAnimation (NULL, lAnimation);
 				lGestureIndex [lIndexNdx++] = KeyValuePair <UInt32, UInt32> (pFileOffset+lBlockLength, lAnimationSize);
 				lBlockLength += lAnimationSize;
 			}
@@ -1582,7 +1576,7 @@ DWORD CAgentFileAcs::WriteGestures (DWORD pFileOffset, CAgentFile^ pSource, UINT
 
 				for each (CAgentFileAnimation^ lAnimation in pSource->Gestures)
 				{
-					lByte = (LPBYTE)WriteAcsAnimation (lByte, lAnimation, pLogLevel);
+					lByte = (LPBYTE)WriteAcsAnimation (lByte, lAnimation);
 				}
 			}
 			else
@@ -1604,9 +1598,9 @@ DWORD CAgentFileAcs::WriteGestures (DWORD pFileOffset, CAgentFile^ pSource, UINT
 			mFileStream->Seek (pFileOffset, SeekOrigin::Begin);
 			mFileWriter->Write (lBlockBuffer);
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%s] Write Gestures    of [%u] at [%8.8X (%u)]"), _B(mPath), lBlockLength, pFileOffset, pFileOffset);
+				LogMessage (mLogLevel, _T("  [%s] Write Gestures    of [%u] at [%8.8X (%u)]"), _B(mPath), lBlockLength, pFileOffset, pFileOffset);
 			}
 		}
 		catch AnyExceptionDebug
@@ -1614,7 +1608,7 @@ DWORD CAgentFileAcs::WriteGestures (DWORD pFileOffset, CAgentFile^ pSource, UINT
 	return lBlockLength;
 }
 
-LPVOID CAgentFileAcs::WriteAcsAnimation (LPVOID pBuffer, CAgentFileAnimation^ pAnimation, UINT pLogLevel)
+LPVOID CAgentFileAcs::WriteAcsAnimation (LPVOID pBuffer, CAgentFileAnimation^ pAnimation)
 {
 	LPBYTE	lByte = (LPBYTE)pBuffer;
 
@@ -1795,9 +1789,9 @@ LPVOID CAgentFileAcs::WriteAcsAnimation (LPVOID pBuffer, CAgentFileAnimation^ pA
 				}
 			}
 		}
-		if	(LogIsActive (pLogLevel))
+		if	(LogIsActive (mLogLevel))
 		{
-			LogMessage (pLogLevel, _T("  [%s] Write Animation   of [%u] at [%8.8X] [%s]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, _B(pAnimation->Name));
+			LogMessage (mLogLevel, _T("  [%s] Write Animation   of [%u] at [%8.8X] [%s]"), _B(mPath), lByte-(LPBYTE)pBuffer, pBuffer, _B(pAnimation->Name));
 		}
 	}
 	catch AnyExceptionDebug
@@ -1821,11 +1815,6 @@ void CAgentFileAcs::FreeImageIndex ()
 
 bool CAgentFileAcs::ReadImageIndex ()
 {
-	return ReadImageIndex (LogVerbose+1);
-}
-
-bool CAgentFileAcs::ReadImageIndex (UINT pLogLevel)
-{
 	bool	lRet = false;
 
 #ifdef	_M_CEE
@@ -1834,9 +1823,9 @@ bool CAgentFileAcs::ReadImageIndex (UINT pLogLevel)
 	DWORD			lBlockLength = 0;
 	pin_ptr <BYTE>	lBlock;
 
-	if	(LogIsActive (pLogLevel))
+	if	(LogIsActive (mLogLevel))
 	{
-		LogMessage (pLogLevel, _T("ReadImageIndex [%s]"), _B(mPath));
+		LogMessage (mLogLevel, _T("ReadImageIndex [%s]"), _B(mPath));
 	}
 	FreeImageIndex ();
 
@@ -1866,9 +1855,9 @@ bool CAgentFileAcs::ReadImageIndex (UINT pLogLevel)
 	DWORD				lBlockLength;
 	LPCBYTE				lBlock;
 
-	if	(LogIsActive (pLogLevel))
+	if	(LogIsActive (mLogLevel))
 	{
-		LogMessage (pLogLevel, _T("ReadImageIndex [%s]"), mPath);
+		LogMessage (mLogLevel, _T("ReadImageIndex [%s]"), mPath);
 	}
 	FreeImageIndex ();
 
@@ -1893,12 +1882,12 @@ bool CAgentFileAcs::ReadImageIndex (UINT pLogLevel)
 			ULARGE_INTEGER	lIndexEntry;
 #endif
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel|LogHighVolume, _T("  [%u] ImageIndex [%u] at [%8.8X (%u)]"), lCount, lBlockLength, lBlockOffset, lBlockOffset);
+				LogMessage (mLogLevel|LogHighVolume, _T("  [%u] ImageIndex [%u] at [%8.8X (%u)]"), lCount, lBlockLength, lBlockOffset, lBlockOffset);
 			}
 #ifdef	_DEBUG_LOAD
-			if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_LOAD)))
+			if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_LOAD)))
 			{
 				LogDump (_DEBUG_LOAD|LogHighVolume, (LPBYTE)lBlock, lBlockLength, _T("    "), true);
 			}
@@ -1924,18 +1913,18 @@ bool CAgentFileAcs::ReadImageIndex (UINT pLogLevel)
 				mImageIndex.Add (lIndexEntry);
 #endif
 #ifdef	_DEBUG_INDEX
-				if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_INDEX)))
+				if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_INDEX)))
 #else
-				if	(LogIsActive (pLogLevel))
+				if	(LogIsActive (mLogLevel))
 #endif
 				{
-					LogMessage (pLogLevel, _T("    Image [%4u] of [%6u] at [%8.8X] thru [%8.8X] chksum [%8.8X]"), lEntry, lIndex[1], lIndex[0], lIndex[0]+lIndex[1]-1, lIndex[2]);
+					LogMessage (mLogLevel, _T("    Image [%4u] of [%6u] at [%8.8X] thru [%8.8X] chksum [%8.8X]"), lEntry, lIndex[1], lIndex[0], lIndex[0]+lIndex[1]-1, lIndex[2]);
 				}
 			}
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%s] Read [%u] ImageIndex   of [%u] at [%8.8X (%u)]"), _B(mPath), lCount, lByte-(LPCBYTE)lBlock, (LPCBYTE)lBlock, (LPCBYTE)lBlock);
+				LogMessage (mLogLevel, _T("  [%s] Read [%u] ImageIndex   of [%u] at [%8.8X (%u)]"), _B(mPath), lCount, lByte-(LPCBYTE)lBlock, (LPCBYTE)lBlock, (LPCBYTE)lBlock);
 			}
 			lRet = true;
 		}
@@ -1947,11 +1936,6 @@ bool CAgentFileAcs::ReadImageIndex (UINT pLogLevel)
 
 #ifdef	_M_CEE
 DWORD CAgentFileAcs::WriteImageIndex (DWORD pFileOffset, CAgentFile^ pSource)
-{
-	return WriteImageIndex (pFileOffset, pSource, LogVerbose+1);
-}
-
-DWORD CAgentFileAcs::WriteImageIndex (DWORD pFileOffset, CAgentFile^ pSource, UINT pLogLevel)
 {
 	DWORD	lBlockLength = 0;
 
@@ -2030,9 +2014,9 @@ DWORD CAgentFileAcs::WriteImageIndex (DWORD pFileOffset, CAgentFile^ pSource, UI
 					}
 					lByte += sizeof(DWORD) * 3;
 
-					if	(LogIsActive (pLogLevel))
+					if	(LogIsActive (mLogLevel))
 					{
-						LogMessage (pLogLevel, _T("    Image [%4u] of [%6u] at [%8.8X] thru [%8.8X] chksum [%8.8X]"), lImageNdx, lIndex[1], lIndex[0], lIndex[0]+lIndex[1]-1, lIndex[2]);
+						LogMessage (mLogLevel, _T("    Image [%4u] of [%6u] at [%8.8X] thru [%8.8X] chksum [%8.8X]"), lImageNdx, lIndex[1], lIndex[0], lIndex[0]+lIndex[1]-1, lIndex[2]);
 					}
 				}
 			}
@@ -2054,9 +2038,9 @@ DWORD CAgentFileAcs::WriteImageIndex (DWORD pFileOffset, CAgentFile^ pSource, UI
 			mFileStream->Seek (pFileOffset, SeekOrigin::Begin);
 			mFileWriter->Write (lBlockBuffer);
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%s] Write ImageIndex  of [%u] at [%8.8X (%u)]"), _B(mPath), lBlockLength, pFileOffset, pFileOffset);
+				LogMessage (mLogLevel, _T("  [%s] Write ImageIndex  of [%u] at [%8.8X (%u)]"), _B(mPath), lBlockLength, pFileOffset, pFileOffset);
 			}
 		}
 		catch AnyExceptionDebug
@@ -2080,11 +2064,6 @@ void CAgentFileAcs::FreeSoundIndex ()
 
 bool CAgentFileAcs::ReadSoundIndex ()
 {
-	return ReadSoundIndex (LogVerbose+1);
-}
-
-bool CAgentFileAcs::ReadSoundIndex (UINT pLogLevel)
-{
 	bool	lRet = false;
 #ifdef	_M_CEE
 	array <BYTE>^	lBlockBuffer = nullptr;
@@ -2092,9 +2071,9 @@ bool CAgentFileAcs::ReadSoundIndex (UINT pLogLevel)
 	DWORD			lBlockLength = 0;
 	pin_ptr <BYTE>	lBlock;
 
-	if	(LogIsActive (pLogLevel))
+	if	(LogIsActive (mLogLevel))
 	{
-		LogMessage (pLogLevel, _T("ReadSoundIndex [%s]"), _B(mPath));
+		LogMessage (mLogLevel, _T("ReadSoundIndex [%s]"), _B(mPath));
 	}
 	FreeSoundIndex ();
 
@@ -2124,9 +2103,9 @@ bool CAgentFileAcs::ReadSoundIndex (UINT pLogLevel)
 	DWORD				lBlockLength;
 	LPCBYTE				lBlock;
 
-	if	(LogIsActive (pLogLevel))
+	if	(LogIsActive (mLogLevel))
 	{
-		LogMessage (pLogLevel, _T("ReadSoundIndex [%s]"), mPath);
+		LogMessage (mLogLevel, _T("ReadSoundIndex [%s]"), mPath);
 	}
 	FreeSoundIndex ();
 
@@ -2150,12 +2129,12 @@ bool CAgentFileAcs::ReadSoundIndex (UINT pLogLevel)
 			ULARGE_INTEGER	lIndexEntry;
 #endif
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel|LogHighVolume, _T("  [%u] SoundIndex [%u] at [%8.8X (%u)]"), lCount, lBlockLength, lBlockOffset, lBlockOffset);
+				LogMessage (mLogLevel|LogHighVolume, _T("  [%u] SoundIndex [%u] at [%8.8X (%u)]"), lCount, lBlockLength, lBlockOffset, lBlockOffset);
 			}
 #ifdef	_DEBUG_LOAD
-			if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_LOAD)))
+			if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_LOAD)))
 			{
 				LogDump (_DEBUG_LOAD|LogHighVolume, (LPBYTE)lBlock, lBlockLength, _T("    "), true);
 			}
@@ -2181,18 +2160,18 @@ bool CAgentFileAcs::ReadSoundIndex (UINT pLogLevel)
 				mSoundIndex.Add (lIndexEntry);
 #endif
 #ifdef	_DEBUG_INDEX
-				if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_INDEX)))
+				if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_INDEX)))
 #else
-				if	(LogIsActive (pLogLevel))
+				if	(LogIsActive (mLogLevel))
 #endif
 				{
-					LogMessage (pLogLevel, _T("    Sound [%2u] of [%6u] at [%8.8X] thru [%8.8X] chksum [%8.8X]"), lEntry, lIndex[1], lIndex[0], lIndex[0]+lIndex[1]-1, lIndex[2]);
+					LogMessage (mLogLevel, _T("    Sound [%2u] of [%6u] at [%8.8X] thru [%8.8X] chksum [%8.8X]"), lEntry, lIndex[1], lIndex[0], lIndex[0]+lIndex[1]-1, lIndex[2]);
 				}
 			}
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%s] Read [%u] SoundIndex   of [%u] at [%8.8X (%u)]"), _B(mPath), lCount, lByte-(LPCBYTE)lBlock, (LPCBYTE)lBlock, (LPCBYTE)lBlock);
+				LogMessage (mLogLevel, _T("  [%s] Read [%u] SoundIndex   of [%u] at [%8.8X (%u)]"), _B(mPath), lCount, lByte-(LPCBYTE)lBlock, (LPCBYTE)lBlock, (LPCBYTE)lBlock);
 			}
 			lRet = true;
 		}
@@ -2204,11 +2183,6 @@ bool CAgentFileAcs::ReadSoundIndex (UINT pLogLevel)
 
 #ifdef	_M_CEE
 DWORD CAgentFileAcs::WriteSoundIndex (DWORD pFileOffset, CAgentFile^ pSource)
-{
-	return WriteSoundIndex (pFileOffset, pSource, LogVerbose+1);
-}
-
-DWORD CAgentFileAcs::WriteSoundIndex (DWORD pFileOffset, CAgentFile^ pSource, UINT pLogLevel)
 {
 	DWORD	lBlockLength = 0;
 
@@ -2287,9 +2261,9 @@ DWORD CAgentFileAcs::WriteSoundIndex (DWORD pFileOffset, CAgentFile^ pSource, UI
 					}
 					lByte += sizeof(DWORD) * 3;
 
-					if	(LogIsActive (pLogLevel))
+					if	(LogIsActive (mLogLevel))
 					{
-						LogMessage (pLogLevel, _T("    Sound [%2u] of [%6u] at [%8.8X] thru [%8.8X] chksum [%8.8X]"), lSoundNdx, lIndex[1], lIndex[0], lIndex[0]+lIndex[1]-1, lIndex[2]);
+						LogMessage (mLogLevel, _T("    Sound [%2u] of [%6u] at [%8.8X] thru [%8.8X] chksum [%8.8X]"), lSoundNdx, lIndex[1], lIndex[0], lIndex[0]+lIndex[1]-1, lIndex[2]);
 					}
 				}
 			}
@@ -2312,9 +2286,9 @@ DWORD CAgentFileAcs::WriteSoundIndex (DWORD pFileOffset, CAgentFile^ pSource, UI
 			mFileStream->Seek (pFileOffset, SeekOrigin::Begin);
 			mFileWriter->Write (lBlockBuffer);
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%s] Write SoundIndex  of [%u] at [%8.8X (%u)]"), _B(mPath), lBlockLength, pFileOffset, pFileOffset);
+				LogMessage (mLogLevel, _T("  [%s] Write SoundIndex  of [%u] at [%8.8X (%u)]"), _B(mPath), lBlockLength, pFileOffset, pFileOffset);
 			}
 		}
 		catch AnyExceptionDebug
@@ -2328,9 +2302,9 @@ DWORD CAgentFileAcs::WriteSoundIndex (DWORD pFileOffset, CAgentFile^ pSource, UI
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-CAgentFileImage^ CAgentFileAcs::ReadAcsImage (DWORD pOffset, DWORD pSize, UINT pImageNum, bool p32Bit, System::Drawing::Color pBkColor, UINT pLogLevel)
+CAgentFileImage^ CAgentFileAcs::ReadAcsImage (DWORD pOffset, DWORD pSize, UINT pImageNum, bool p32Bit, System::Drawing::Color pBkColor)
 #else
-CAgentFileImage* CAgentFileAcs::ReadAcsImage (DWORD pOffset, DWORD pSize, UINT pImageNum, bool p32Bit, const COLORREF* pBkColor, UINT pLogLevel)
+CAgentFileImage* CAgentFileAcs::ReadAcsImage (DWORD pOffset, DWORD pSize, UINT pImageNum, bool p32Bit, const COLORREF* pBkColor)
 #endif
 {
 #ifdef	_M_CEE
@@ -2392,23 +2366,23 @@ CAgentFileImage* CAgentFileAcs::ReadAcsImage (DWORD pOffset, DWORD pSize, UINT p
 			lByteCount = *(LPCDWORD)lByte;
 			lByte += sizeof(DWORD);
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
 #ifdef	_M_CEE
-				LogMessage (pLogLevel, _T("[%s]    Read Image [%4u] of [%6u] at [%8.8X] thru [%8.8X] Size [%d %d] @1 [%u] Compressed [%u] Bytes [%u]"), _B(mPath), pImageNum, pSize, lBlock, lBlock+pSize-1, lImageSize.Width, lImageSize.Height, lFirstByte, lImageCompressed, lByteCount);
+				LogMessage (mLogLevel, _T("[%s]    Read Image [%4u] of [%6u] at [%8.8X] thru [%8.8X] Size [%d %d] @1 [%u] Compressed [%u] Bytes [%u]"), _B(mPath), pImageNum, pSize, lBlock, lBlock+pSize-1, lImageSize.Width, lImageSize.Height, lFirstByte, lImageCompressed, lByteCount);
 #else
-				LogMessage (pLogLevel, _T("[%s]    Read Image [%4u] of [%6u] at [%8.8X] thru [%8.8X] Size [%d %d] @1 [%u] Compressed [%u] Bytes [%u]"), mPath, pImageNum, pSize, lBlock, lBlock+pSize-1, lImageSize.cx, lImageSize.cy, lFirstByte, lImageCompressed, lByteCount);
+				LogMessage (mLogLevel, _T("[%s]    Read Image [%4u] of [%6u] at [%8.8X] thru [%8.8X] Size [%d %d] @1 [%u] Compressed [%u] Bytes [%u]"), mPath, pImageNum, pSize, lBlock, lBlock+pSize-1, lImageSize.cx, lImageSize.cy, lFirstByte, lImageCompressed, lByteCount);
 #endif
 			}
 
 #ifdef	_DUMP_IMAGE
-			if	(LogIsActive (MaxLogLevel (pLogLevel,_DUMP_IMAGE)))
+			if	(LogIsActive (MaxLogLevel (mLogLevel,_DUMP_IMAGE)))
 			{
 				LogDump (_DUMP_IMAGE, (LPBYTE)lBlock, lByteCount+10, _T("    "), true);
 				if	(lByteCount < pSize)
 				{
 					LPCDWORD	lPart2 = (LPCDWORD)(lBlock+lByteCount+10);
-					LogMessage (pLogLevel, _T("    Part 2 Compressed [%u] Decoded [%u]"), lPart2[0], lPart2[1]);
+					LogMessage (mLogLevel, _T("    Part 2 Compressed [%u] Decoded [%u]"), lPart2[0], lPart2[1]);
 					LogDump (_DUMP_IMAGE, (LPBYTE)lBlock+lByteCount+10, pSize-lByteCount-10, _T("      "), true);
 #if FALSE
 					if	(lPart2 [0])
@@ -2420,7 +2394,7 @@ CAgentFileImage* CAgentFileAcs::ReadAcsImage (DWORD pOffset, DWORD pSize, UINT p
 							&&	(DecodeImage ((LPCBYTE)(lPart2+2), lPart2[0], (LPCBYTE)lPart2Decoded, lPart2[1], 0, 0))
 							)
 						{
-							LogMessage (pLogLevel, _T("    Part 2 Decoded [%u]"), lPart2[1]);
+							LogMessage (mLogLevel, _T("    Part 2 Decoded [%u]"), lPart2[1]);
 							LogDump (_DUMP_IMAGE, (LPCBYTE)lPart2Decoded, lPart2[1], _T("      "), true);
 						}
 					}
@@ -2640,11 +2614,6 @@ CAgentFileImage* CAgentFileAcs::ReadAcsImage (DWORD pOffset, DWORD pSize, UINT p
 #ifdef	_M_CEE
 DWORD CAgentFileAcs::WriteImages (DWORD pFileOffset, CAgentFile^ pSource)
 {
-	return WriteImages (pFileOffset, pSource, LogVerbose+1);
-}
-
-DWORD CAgentFileAcs::WriteImages (DWORD pFileOffset, CAgentFile^ pSource, UINT pLogLevel)
-{
 	DWORD	lBlockLength = 0;
 
 	if	(
@@ -2716,7 +2685,7 @@ DWORD CAgentFileAcs::WriteImages (DWORD pFileOffset, CAgentFile^ pSource, UINT p
 					if	(lImage = pSource->GetImage (lImageNdx))
 					{
 						lImageStart = lByte;
-						lByte = (LPBYTE)WriteAcsImage (lImageStart, lImage, pLogLevel);
+						lByte = (LPBYTE)WriteAcsImage (lImageStart, lImage);
 
 						*(LPDWORD)lByte = 0; // Delimiter - always 0
 						lByte += sizeof(DWORD);
@@ -2734,9 +2703,9 @@ DWORD CAgentFileAcs::WriteImages (DWORD pFileOffset, CAgentFile^ pSource, UINT p
 
 				mImageIndex = lImageIndex->ToArray();
 
-				if	(LogIsActive (pLogLevel))
+				if	(LogIsActive (mLogLevel))
 				{
-					LogMessage (pLogLevel, _T("  [%s] Write Images      of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)lBlock, pFileOffset, pFileOffset);
+					LogMessage (mLogLevel, _T("  [%s] Write Images      of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)lBlock, pFileOffset, pFileOffset);
 				}
 			}
 			catch AnyExceptionDebug
@@ -2747,9 +2716,9 @@ DWORD CAgentFileAcs::WriteImages (DWORD pFileOffset, CAgentFile^ pSource, UINT p
 			mFileStream->Seek (pFileOffset, SeekOrigin::Begin);
 			mFileWriter->Write (lBlockBuffer);
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%s] Write Images      of [%u] at [%8.8X (%u)]"), _B(mPath), lBlockLength, pFileOffset, pFileOffset);
+				LogMessage (mLogLevel, _T("  [%s] Write Images      of [%u] at [%8.8X (%u)]"), _B(mPath), lBlockLength, pFileOffset, pFileOffset);
 			}
 		}
 		catch AnyExceptionDebug
@@ -2757,7 +2726,7 @@ DWORD CAgentFileAcs::WriteImages (DWORD pFileOffset, CAgentFile^ pSource, UINT p
 	return lBlockLength;
 }
 
-LPVOID CAgentFileAcs::WriteAcsImage (LPVOID pBuffer, CAgentFileImage^ pImage, UINT pLogLevel)
+LPVOID CAgentFileAcs::WriteAcsImage (LPVOID pBuffer, CAgentFileImage^ pImage)
 {
 	LPBYTE	lByte = (LPBYTE)pBuffer;
 
@@ -2817,15 +2786,15 @@ LPVOID CAgentFileAcs::WriteAcsImage (LPVOID pBuffer, CAgentFileImage^ pImage, UI
 			lByte += pImage->mBits->Length;
 		}
 
-		if	(LogIsActive (pLogLevel))
+		if	(LogIsActive (mLogLevel))
 		{
 			if	(pImage)
 			{
-				LogMessage (pLogLevel, _T("    Write Image [%4u] of [%6u] at [%8.8X] thru [%8.8X] Size [%d %d] Bytes [%u]"), pImage->ImageNum, lByte-(LPBYTE)pBuffer, pBuffer, lByte-1, pImage->ImageSize.Width, pImage->ImageSize.Height, pImage->BitsSize);
+				LogMessage (mLogLevel, _T("    Write Image [%4u] of [%6u] at [%8.8X] thru [%8.8X] Size [%d %d] Bytes [%u]"), pImage->ImageNum, lByte-(LPBYTE)pBuffer, pBuffer, lByte-1, pImage->ImageSize.Width, pImage->ImageSize.Height, pImage->BitsSize);
 			}
 			else
 			{
-				LogMessage (pLogLevel, _T("    NO Image of [%6u] at [%8.8X] thru [%8.8X]"), lByte-(LPBYTE)pBuffer, pBuffer, lByte-1);
+				LogMessage (mLogLevel, _T("    NO Image of [%6u] at [%8.8X] thru [%8.8X]"), lByte-(LPBYTE)pBuffer, pBuffer, lByte-1);
 			}
 		}
 	}
@@ -2840,9 +2809,9 @@ LPVOID CAgentFileAcs::WriteAcsImage (LPVOID pBuffer, CAgentFileImage^ pImage, UI
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-array <BYTE>^ CAgentFileAcs::ReadAcsSound (DWORD pOffset, DWORD pSize, UINT pSoundNum, UINT pLogLevel)
+array <BYTE>^ CAgentFileAcs::ReadAcsSound (DWORD pOffset, DWORD pSize, UINT pSoundNum)
 #else
-LPCVOID CAgentFileAcs::ReadAcsSound (DWORD pOffset, DWORD pSize, UINT pSoundNum, UINT pLogLevel)
+LPCVOID CAgentFileAcs::ReadAcsSound (DWORD pOffset, DWORD pSize, UINT pSoundNum)
 #endif
 {
 #ifdef	_M_CEE
@@ -2861,9 +2830,9 @@ LPCVOID CAgentFileAcs::ReadAcsSound (DWORD pOffset, DWORD pSize, UINT pSoundNum,
 			mFileStream->Seek (pOffset, SeekOrigin::Begin);
 			lBlockBuffer = mFileReader->ReadBytes (pSize);
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("    Sound [%4u] of [%5u] at [%8.8X] thru [%8.8X]"), pSoundNum, pSize, pOffset, pOffset+pSize-1);
+				LogMessage (mLogLevel, _T("    Sound [%4u] of [%5u] at [%8.8X] thru [%8.8X]"), pSoundNum, pSize, pOffset, pOffset+pSize-1);
 			}
 			lRet = lBlockBuffer;
 
@@ -2884,9 +2853,9 @@ LPCVOID CAgentFileAcs::ReadAcsSound (DWORD pOffset, DWORD pSize, UINT pSoundNum,
 			&&	(lBlock = ((LPCBYTE)(LPVOID)mFileView)+pOffset)
 			)
 		{
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("    Sound [%4u] of [%5u] at [%8.8X] thru [%8.8X]"), pSoundNum, pSize, lBlock, lBlock+pSize-1);
+				LogMessage (mLogLevel, _T("    Sound [%4u] of [%5u] at [%8.8X] thru [%8.8X]"), pSoundNum, pSize, lBlock, lBlock+pSize-1);
 			}
 			lRet = (LPCVOID) lBlock;
 		}
@@ -2901,11 +2870,6 @@ LPCVOID CAgentFileAcs::ReadAcsSound (DWORD pOffset, DWORD pSize, UINT pSoundNum,
 
 #ifdef	_M_CEE
 DWORD CAgentFileAcs::WriteSounds (DWORD pFileOffset, CAgentFile^ pSource)
-{
-	return WriteSounds (pFileOffset, pSource, LogVerbose+1);
-}
-
-DWORD CAgentFileAcs::WriteSounds (DWORD pFileOffset, CAgentFile^ pSource, UINT pLogLevel)
 {
 	DWORD	lBlockLength = 0;
 
@@ -2978,14 +2942,14 @@ DWORD CAgentFileAcs::WriteSounds (DWORD pFileOffset, CAgentFile^ pSource, UINT p
 						}
 #endif			
 						lSoundStart = lByte;
-						lByte = (LPBYTE)WriteAcsSound (lSoundStart, lSound, pLogLevel);
+						lByte = (LPBYTE)WriteAcsSound (lSoundStart, lSound);
 						lSoundIndex->Add (KeyValuePair <UInt32, UInt32> ((lSoundStart-lBlock) + pFileOffset, lByte-lSoundStart));
 					}
 				}
 
-				if	(LogIsActive (pLogLevel))
+				if	(LogIsActive (mLogLevel))
 				{
-					LogMessage (pLogLevel, _T("  [%s] Write Sounds      of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)lBlock, pFileOffset, pFileOffset);
+					LogMessage (mLogLevel, _T("  [%s] Write Sounds      of [%u] at [%8.8X (%u)]"), _B(mPath), lByte-(LPBYTE)lBlock, pFileOffset, pFileOffset);
 				}
 
 				mSoundIndex = lSoundIndex->ToArray();
@@ -2998,9 +2962,9 @@ DWORD CAgentFileAcs::WriteSounds (DWORD pFileOffset, CAgentFile^ pSource, UINT p
 			mFileStream->Seek (pFileOffset, SeekOrigin::Begin);
 			mFileWriter->Write (lBlockBuffer);
 
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%s] Write Sounds      of [%u] at [%8.8X (%u)]"), _B(mPath), lBlockLength, pFileOffset, pFileOffset);
+				LogMessage (mLogLevel, _T("  [%s] Write Sounds      of [%u] at [%8.8X (%u)]"), _B(mPath), lBlockLength, pFileOffset, pFileOffset);
 			}
 		}
 		catch AnyExceptionDebug
@@ -3008,7 +2972,7 @@ DWORD CAgentFileAcs::WriteSounds (DWORD pFileOffset, CAgentFile^ pSource, UINT p
 	return lBlockLength;
 }
 
-LPVOID CAgentFileAcs::WriteAcsSound (LPVOID pBuffer, array <BYTE>^ pSound, UINT pLogLevel)
+LPVOID CAgentFileAcs::WriteAcsSound (LPVOID pBuffer, array <BYTE>^ pSound)
 {
 	LPBYTE	lByte = (LPBYTE)pBuffer;
 
@@ -3026,15 +2990,15 @@ LPVOID CAgentFileAcs::WriteAcsSound (LPVOID pBuffer, array <BYTE>^ pSound, UINT 
 			}
 			lByte += pSound->Length;
 		}
-		if	(LogIsActive (pLogLevel))
+		if	(LogIsActive (mLogLevel))
 		{
 			if	(pSound)
 			{
-				LogMessage (pLogLevel, _T("    Write Sound of [%5u] at [%8.8X] thru [%8.8X]"), pSound->Length, (LPBYTE)pBuffer, lByte);
+				LogMessage (mLogLevel, _T("    Write Sound of [%5u] at [%8.8X] thru [%8.8X]"), pSound->Length, (LPBYTE)pBuffer, lByte);
 			}
 			else
 			{
-				LogMessage (pLogLevel, _T("    NO Sound at [%8.8X] thru [%8.8X]"), (LPBYTE)pBuffer, lByte);
+				LogMessage (mLogLevel, _T("    NO Sound at [%8.8X] thru [%8.8X]"), (LPBYTE)pBuffer, lByte);
 			}
 		}
 	}
@@ -3064,7 +3028,7 @@ void CAgentFileAcs::DumpAcsImages (UINT pLogLevel)
 
 			for	(lImageNdx = 0; lImageNdx < (INT_PTR)mImageIndex.GetCount(); lImageNdx++)
 			{
-				if	(lImage = ReadAcsImage (mImageIndex [lImageNdx].LowPart, mImageIndex [lImageNdx].HighPart, (UINT)lImageNdx, false, NULL, pLogLevel))
+				if	(lImage = ReadAcsImage (mImageIndex [lImageNdx].LowPart, mImageIndex [lImageNdx].HighPart, (UINT)lImageNdx, false, NULL))
 				{
 #ifdef	_SAVE_IMAGE
 					SaveImage (lImage);
@@ -3094,7 +3058,7 @@ void CAgentFileAcs::DumpAcsImage (INT_PTR pImageNdx, UINT pLogLevel)
 		{
 			tPtr <CAgentFileImage>	lImage;
 
-			if	(lImage = ReadAcsImage (mImageIndex [pImageNdx].LowPart, mImageIndex [pImageNdx].HighPart, (UINT)pImageNdx, false, NULL, pLogLevel))
+			if	(lImage = ReadAcsImage (mImageIndex [pImageNdx].LowPart, mImageIndex [pImageNdx].HighPart, (UINT)pImageNdx, false, NULL))
 			{
 #ifdef	_SAVE_IMAGE
 				SaveImage (lImage);

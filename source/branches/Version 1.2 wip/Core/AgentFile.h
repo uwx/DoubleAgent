@@ -84,6 +84,8 @@ public:
 	property CAgentFileHeader^ Header {CAgentFileHeader^ get();}
 	property CAgentFileBalloon^ Balloon {CAgentFileBalloon^ get();}
 	property CAgentFileTts^ Tts {CAgentFileTts^ get();}
+
+	property UInt32 LogLevel {UInt32 get() {return (UInt32)mLogLevel;} void set (UInt32 pLogLevel) {mLogLevel = (UINT)pLogLevel;}}
 #else
 	__declspec(property(get=get_Path))		tBstrPtr	Path;
 	__declspec(property(get=get_FileName))	tBstrPtr	FileName;
@@ -91,12 +93,13 @@ public:
 	_DACORE_IMPEXP tBstrPtr get_Path () const;
 	_DACORE_IMPEXP tBstrPtr get_FileName () const;
 
-	__declspec(property(get=get_IsOpen))					bool	IsOpen;
-	__declspec(property(get=get_IsReadOnly))				bool	IsReadOnly;
-	__declspec(property(get=get_IsDirty, put=put_IsDirty))	bool	IsDirty;
-	__declspec(property(get=get_IsAcsFile))					bool	IsAcsFile;
-	__declspec(property(get=get_IsAcfFile))					bool	IsAcfFile;
-	__declspec(property(get=get_IsAcdFile))					bool	IsAcdFile;
+	__declspec(property(get=get_IsOpen))						bool	IsOpen;
+	__declspec(property(get=get_IsReadOnly))					bool	IsReadOnly;
+	__declspec(property(get=get_IsDirty, put=put_IsDirty))		bool	IsDirty;
+	__declspec(property(get=get_IsAcsFile))						bool	IsAcsFile;
+	__declspec(property(get=get_IsAcfFile))						bool	IsAcfFile;
+	__declspec(property(get=get_IsAcdFile))						bool	IsAcdFile;
+	__declspec(property(get=get_LogLevel, put=put_LogLevel))	UINT	LogLevel;
 
 	_DACORE_IMPEXP virtual bool get_IsOpen () const;
 	_DACORE_IMPEXP virtual bool get_IsReadOnly () const;
@@ -105,7 +108,7 @@ public:
 	_DACORE_IMPEXP virtual bool get_IsAcdFile () const;
 
 	__declspec(property(get=get_Version))	DWORD						Version;
-	__declspec(property(get=get_Header))	const CAgentFileHeader&	Header;
+	__declspec(property(get=get_Header))	const CAgentFileHeader&		Header;
 	__declspec(property(get=get_Balloon))	const CAgentFileBalloon&	Balloon;
 	__declspec(property(get=get_Tts))		const CAgentFileTts&		Tts;
 
@@ -113,6 +116,9 @@ public:
 	_DACORE_IMPEXP const CAgentFileHeader& get_Header () const;
 	_DACORE_IMPEXP const CAgentFileBalloon& get_Balloon () const;
 	_DACORE_IMPEXP const CAgentFileTts& get_Tts () const;
+
+	_DACORE_IMPEXP UINT get_LogLevel () const {return mLogLevel;}
+	_DACORE_IMPEXP void put_LogLevel (UINT pLogLevel) {mLogLevel = pLogLevel;}
 #endif
 
 #ifdef	_M_CEE
@@ -159,17 +165,13 @@ public:
 #endif
 
 #ifdef	_M_CEE
-	bool Open (const System::String^ pPath);
-	virtual bool Open (const System::String^ pPath, UINT pLogLevel) = 0;
+	virtual bool Open (const System::String^ pPath) = 0;
 	virtual bool Save ();
-	virtual bool Save (UINT pLogLevel);
 	virtual bool Save (const System::String^ pPath);
-	virtual bool Save (const System::String^ pPath, UINT pLogLevel);
 	virtual bool Save (const System::String^ pPath, CAgentFile^ pSource);
-	virtual bool Save (const System::String^ pPath, CAgentFile^ pSource, UINT pLogLevel);
 	virtual void Close ();
 #else
-	_DACORE_IMPEXP virtual HRESULT Open (LPCTSTR pPath, UINT pLogLevel = 15) = 0;
+	_DACORE_IMPEXP virtual HRESULT Open (LPCTSTR pPath) = 0;
 	_DACORE_IMPEXP virtual void Close ();
 #endif
 
@@ -193,9 +195,7 @@ public:
 	virtual property int ImageCount {virtual int get();}
 	CAgentFileImage^ GetImage (int pImageNdx);
 	CAgentFileImage^ GetImage (int pImageNdx, bool p32Bit);
-	CAgentFileImage^ GetImage (int pImageNdx, bool p32Bit, UINT pLogLevel);
-	CAgentFileImage^ GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor);
-	virtual CAgentFileImage^ GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor, UINT pLogLevel);
+	virtual CAgentFileImage^ GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor);
 	virtual System::String^ GetImageFilePath (int pImageNdx);
 	UINT GetImageBits (LPBYTE pImageBits, int pImageNdx);
 	UINT GetImageBits (LPBYTE pImageBits, int pImageNdx, bool p32Bit);
@@ -215,7 +215,7 @@ public:
 	System::Drawing::Bitmap^ GetFrameBitmap (CAgentFileFrame^ pFrame, bool p32Bit, System::Drawing::Color pBkColor, Int16 pOverlayType);
 #else
 	_DACORE_IMPEXP virtual INT_PTR GetImageCount () const;
-	_DACORE_IMPEXP virtual CAgentFileImage* GetImage (INT_PTR pImageNdx, bool p32Bit = false, const COLORREF* pBkColor = NULL, UINT pLogLevel = 15);
+	_DACORE_IMPEXP virtual CAgentFileImage* GetImage (INT_PTR pImageNdx, bool p32Bit = false, const COLORREF* pBkColor = NULL);
 	_DACORE_IMPEXP UINT GetImageFormat (LPBITMAPINFO pImageInfo, const CAgentFileImage* pImage = NULL, bool p32Bit = false) const;
 	_DACORE_IMPEXP UINT GetImageBits (LPBYTE pImageBits, const CAgentFileImage* pImage, bool p32Bit = false) const;
 	_DACORE_IMPEXP UINT GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame, bool p32Bit = false, const COLORREF* pBkColor = NULL, SHORT pOverlayType = -1);
@@ -244,13 +244,10 @@ public:
 #endif
 
 protected:
-	bool ReadNames ();
-	bool ReadStates ();
-	bool ReadGestures ();
-
-	virtual bool ReadNames (bool pFirstLetterCaps, UINT pLogLevel);
-	virtual bool ReadStates (UINT pLogLevel);
-	virtual bool ReadGestures (UINT pLogLevel);
+	virtual bool ReadNames ();
+	virtual bool ReadNames (bool pFirstLetterCaps);
+	virtual bool ReadStates ();
+	virtual bool ReadGestures ();
 
 	virtual void FreeNames ();
 	virtual void FreeStates ();
@@ -285,6 +282,8 @@ internal:
 	CAgentFileStates							mStates;
 	CAgentFileGestures							mGestures;
 #endif
+public:
+	UINT										mLogLevel;
 };
 
 /////////////////////////////////////////////////////////////////////////////

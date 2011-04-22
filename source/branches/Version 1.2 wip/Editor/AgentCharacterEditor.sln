@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C# Express 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentCharacterEditor", "AgentCharacterEditor.csproj", "{CA0B7BE4-DE34-4F78-9C7D-2A1A4C3562DA}"
 EndProject
 Global

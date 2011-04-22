@@ -87,7 +87,7 @@ HRESULT CAgentFiles::Load (LPCTSTR pPath, UINT pLogLevel)
 				LogStart (true, lLogPath);
 #endif
 
-				if	(SUCCEEDED (lFile->Open (lFoundPath, pLogLevel)))
+				if	(SUCCEEDED (lFile->Open (lFoundPath)))
 				{
 					mFiles.Add (lFile.Detach ());
 					lResult = S_OK;

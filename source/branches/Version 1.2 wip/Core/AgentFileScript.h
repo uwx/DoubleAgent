@@ -64,22 +64,22 @@ public:
 #endif
 
 #ifdef	_M_CEE
-	virtual bool Open (const System::String^ pPath, UINT pLogLevel) override;
-	virtual bool Save (const System::String^ pPath, CAgentFile^ pSource, UINT pLogLevel) override;
+	virtual bool Open (const System::String^ pPath) override;
+	virtual bool Save (const System::String^ pPath, CAgentFile^ pSource) override;
 	virtual void Close () override;
 #else
-	_DACORE_IMPEXP virtual HRESULT Open (LPCTSTR pPath, UINT pLogLevel = 15);
+	_DACORE_IMPEXP virtual HRESULT Open (LPCTSTR pPath);
 	_DACORE_IMPEXP virtual void Close ();
 #endif
 
 #ifdef	_M_CEE
 	virtual property int ImageCount {virtual int get() override;}
 	virtual System::String^ GetImageFilePath (int pImageNdx) override;
-	virtual CAgentFileImage^ GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor, UINT pLogLevel) override;
+	virtual CAgentFileImage^ GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor) override;
 	virtual System::Drawing::Bitmap^ GetImageBitmap (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor) override;
 #else
 	_DACORE_IMPEXP virtual INT_PTR GetImageCount () const;
-	_DACORE_IMPEXP virtual CAgentFileImage* GetImage (INT_PTR pImageNdx, bool p32Bit = false, UINT pLogLevel = 15);
+	_DACORE_IMPEXP virtual CAgentFileImage* GetImage (INT_PTR pImageNdx, bool p32Bit = false);
 #endif
 
 #ifdef	_M_CEE

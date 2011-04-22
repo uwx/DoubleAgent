@@ -27,6 +27,7 @@ using System.Text;
 using System.Windows.Forms;
 using DoubleAgent;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Updates;
 
 namespace AgentCharacterEditor
 {
@@ -41,34 +42,26 @@ namespace AgentCharacterEditor
 		public OverlayForm ()
 		{
 			InitializeComponent ();
-
-			if (MainForm.Singleton != null)
-			{
-				MainForm.Singleton.InitializationComplete += new EventHandler (MainForm_InitializationComplete);
-			}
-		}
-
-		void MainForm_InitializationComplete (object sender, EventArgs e)
-		{
-			MainForm.Singleton.PanelAnimation.AnimationNameChanged += new AnimationNameChangedEventHandler (PanelAnimation_AnimationNameChanged);
 		}
 
 		private void OverlayForm_VisibleChanged (object sender, EventArgs e)
 		{
-			if (MainForm.Singleton != null)
+			if (Program.MainForm != null)
 			{
-				MainForm.Singleton.CanEdit -= new EditEventHandler (MainForm_CanEdit);
-				MainForm.Singleton.EditCopy -= new EditEventHandler (MainForm_EditCopy);
-				MainForm.Singleton.EditCut -= new EditEventHandler (MainForm_EditCut);
-				MainForm.Singleton.EditDelete -= new EditEventHandler (MainForm_EditDelete);
-				MainForm.Singleton.EditPaste -= new EditEventHandler (MainForm_EditPaste);
+				Program.MainForm.UpdateApplied -= new UndoUnit.AppliedEventHandler (OnUpdateApplied);
+				Program.MainForm.CanEdit -= new Global.EditEventHandler (MainForm_CanEdit);
+				Program.MainForm.EditCopy -= new Global.EditEventHandler (MainForm_EditCopy);
+				Program.MainForm.EditCut -= new Global.EditEventHandler (MainForm_EditCut);
+				Program.MainForm.EditDelete -= new Global.EditEventHandler (MainForm_EditDelete);
+				Program.MainForm.EditPaste -= new Global.EditEventHandler (MainForm_EditPaste);
 				if (this.Visible)
 				{
-					MainForm.Singleton.CanEdit += new EditEventHandler (MainForm_CanEdit);
-					MainForm.Singleton.EditCopy += new EditEventHandler (MainForm_EditCopy);
-					MainForm.Singleton.EditCut += new EditEventHandler (MainForm_EditCut);
-					MainForm.Singleton.EditDelete += new EditEventHandler (MainForm_EditDelete);
-					MainForm.Singleton.EditPaste += new EditEventHandler (MainForm_EditPaste);
+					Program.MainForm.UpdateApplied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
+					Program.MainForm.CanEdit += new Global.EditEventHandler (MainForm_CanEdit);
+					Program.MainForm.EditCopy += new Global.EditEventHandler (MainForm_EditCopy);
+					Program.MainForm.EditCut += new Global.EditEventHandler (MainForm_EditCut);
+					Program.MainForm.EditDelete += new Global.EditEventHandler (MainForm_EditDelete);
+					Program.MainForm.EditPaste += new Global.EditEventHandler (MainForm_EditPaste);
 				}
 			}
 		}
@@ -104,7 +97,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return Program.TitleFrame (mFrame);
+				return Global.TitleFrame (mFrame);
 			}
 		}
 		[System.ComponentModel.Browsable (false)]
@@ -148,7 +141,7 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				TextBoxFrameName.Text = Program.TitleFrameAnimation (mFrame);
+				TextBoxFrameName.Text = Global.TitleFrameAnimation (mFrame);
 				TextBoxFrameName.Enabled = true;
 			}
 		}
@@ -260,7 +253,7 @@ namespace AgentCharacterEditor
 				CheckBoxReplace.Enabled = false;
 				TableLayoutSample.Enabled = false;
 
-				ButtonAdd.Enabled = (ListViewOverlays.GetSelectedIndex (false) >= 0) && (!IsEmpty) && (!MainForm.Singleton.FileIsReadOnly);
+				ButtonAdd.Enabled = (ListViewOverlays.GetSelectedIndex (false) >= 0) && (!IsEmpty) && (!Program.FileIsReadOnly);
 				ButtonDelete.Enabled = false;
 				ButtonOpen.Enabled = false;
 
@@ -275,20 +268,20 @@ namespace AgentCharacterEditor
 				NumericOffsetY.Value = pFrameOverlay.Offset.Y;
 				CheckBoxReplace.Checked = pFrameOverlay.ReplaceFlag;
 
-				NumericOffsetX.Enabled = !MainForm.Singleton.FileIsReadOnly;
-				NumericOffsetY.Enabled = !MainForm.Singleton.FileIsReadOnly;
-				CheckBoxReplace.Enabled = !MainForm.Singleton.FileIsReadOnly;
-				TableLayoutSample.Enabled = !MainForm.Singleton.FileIsReadOnly;
+				NumericOffsetX.Enabled = !Program.FileIsReadOnly;
+				NumericOffsetY.Enabled = !Program.FileIsReadOnly;
+				CheckBoxReplace.Enabled = !Program.FileIsReadOnly;
+				TableLayoutSample.Enabled = !Program.FileIsReadOnly;
 
-				ButtonAdd.Enabled = (String.IsNullOrEmpty (pFrameOverlay.ImageFilePath)) && (!MainForm.Singleton.FileIsReadOnly);
-				ButtonDelete.Enabled = (!String.IsNullOrEmpty (pFrameOverlay.ImageFilePath)) && (!MainForm.Singleton.FileIsReadOnly);
-				ButtonOpen.Enabled = (!String.IsNullOrEmpty (pFrameOverlay.ImageFilePath)) && (!MainForm.Singleton.FileIsReadOnly);
+				ButtonAdd.Enabled = (String.IsNullOrEmpty (pFrameOverlay.ImageFilePath)) && (!Program.FileIsReadOnly);
+				ButtonDelete.Enabled = (!String.IsNullOrEmpty (pFrameOverlay.ImageFilePath)) && (!Program.FileIsReadOnly);
+				ButtonOpen.Enabled = (!String.IsNullOrEmpty (pFrameOverlay.ImageFilePath)) && (!Program.FileIsReadOnly);
 
 				lBitmap = mCharacterFile.GetFrameBitmap (mFrame, true, Color.Transparent, (Int16)pFrameOverlay.OverlayType);
 			}
 
-			ButtonAdd.Text = ButtonAdd.Enabled ? String.Format ("{0} {1} overlay", ButtonAdd.Text, Program.OverlayTypeName ((MouthOverlay)ListViewOverlays.GetSelectedIndex (false))) : ButtonAdd.Text;
-			ButtonDelete.Text = ButtonDelete.Enabled ? String.Format ("{0} overlay", String.Format (Properties.Resources.EditDeleteThis.Replace ("&", ""), Program.OverlayTypeName (pFrameOverlay.OverlayType))) : Properties.Resources.EditDelete.Replace ("&", "");
+			ButtonAdd.Text = ButtonAdd.Enabled ? String.Format ("{0} {1} overlay", ButtonAdd.Text, Global.OverlayTypeName ((MouthOverlay)ListViewOverlays.GetSelectedIndex (false))) : ButtonAdd.Text;
+			ButtonDelete.Text = ButtonDelete.Enabled ? String.Format ("{0} overlay", String.Format (Properties.Resources.EditDeleteThis.Replace ("&", ""), Global.OverlayTypeName (pFrameOverlay.OverlayType))) : Properties.Resources.EditDelete.Replace ("&", "");
 
 			if (lBitmap == null)
 			{
@@ -357,191 +350,13 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Update
 
-		internal class UpdateFrameOverlay : UndoableUpdate<FileFrameOverlay>
-		{
-			public UpdateFrameOverlay (CharacterFile pCharacterFile, FileFrameOverlay pOverlay, Boolean pForClipboard)
-				: base (pCharacterFile, pOverlay, pForClipboard)
-			{
-				this.ReplaceFlag = Target.ReplaceFlag;
-				this.Offset = Target.Offset;
-				this.OverlayImagePath = Target.ImageFilePath;
-			}
-
-			public FileAnimationFrame Frame
-			{
-				get
-				{
-					return this.Target.Frame;
-				}
-			}
-			public Boolean ReplaceFlag
-			{
-				get;
-				set;
-			}
-			public Point Offset
-			{
-				get;
-				set;
-			}
-			public String OverlayImagePath
-			{
-				get;
-				set;
-			}
-
-			public override String TargetDescription
-			{
-				get
-				{
-					return Program.QuotedTitle (Program.TitleOverlayFrameAnimation (this.Target));
-				}
-			}
-			public override String ChangeDescription
-			{
-				get
-				{
-					if (this.ForClipboard)
-					{
-						return base.ChangeDescription;
-					}
-					else
-					{
-						return (Target.ReplaceFlag != this.ReplaceFlag) ? " replace" : (Target.Offset != this.Offset) ? " offset" : (!String.Equals (Target.ImageFilePath, this.OverlayImagePath)) ? " image" : String.Empty;
-					}
-				}
-			}
-
-			public override UndoUnit Apply ()
-			{
-				UndoUnit	lApplied = null;
-
-				if (Target.ReplaceFlag != this.ReplaceFlag)
-				{
-					Boolean	lSwap = Target.ReplaceFlag;
-					Target.ReplaceFlag = this.ReplaceFlag;
-					this.ReplaceFlag = lSwap;
-					lApplied = this;
-				}
-				if (Target.Offset != this.Offset)
-				{
-					Point	lSwap = Target.Offset;
-					Target.Offset = this.Offset;
-					this.Offset = lSwap;
-					lApplied = this;
-				}
-				if (!String.Equals (Target.ImageFilePath, this.OverlayImagePath))
-				{
-					String	lSwap = Target.ImageFilePath;
-					Target.ImageFilePath = this.OverlayImagePath;
-					this.OverlayImagePath = lSwap;
-					lApplied = this;
-				}
-				if (lApplied != null)
-				{
-					return OnApplied (lApplied);
-				}
-				return null;
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		internal class AddDeleteFrameOverlay : UndoableAddDelete<FileFrameOverlay>
-		{
-			public AddDeleteFrameOverlay (CharacterFile pCharacterFile, FileFrameOverlay pOverlay, Boolean pForClipboard)
-				: base (pCharacterFile, pOverlay, pForClipboard)
-			{
-				this.Frame = pOverlay.Frame;
-				this.OverlayType = this.Target.OverlayType;
-				this.OverlayImagePath = this.Target.ImageFilePath;
-			}
-			public AddDeleteFrameOverlay (CharacterFile pCharacterFile, FileAnimationFrame pFrame, MouthOverlay pOverlayType, String pOverlayImagePath, Boolean pForClipboard)
-				: base (pCharacterFile, pForClipboard)
-			{
-				this.Frame = pFrame;
-				this.OverlayType = pOverlayType;
-				this.OverlayImagePath = pOverlayImagePath;
-			}
-
-
-			public FileAnimationFrame Frame
-			{
-				get;
-				private set;
-			}
-			public MouthOverlay OverlayType
-			{
-				get;
-				private set;
-			}
-			public String OverlayImagePath
-			{
-				get;
-				private set;
-			}
-
-			public override String TargetDescription
-			{
-				get
-				{
-					return Program.QuotedTitle (Program.TitleOverlayFrameAnimation (this.Frame, this.OverlayType));
-				}
-			}
-
-			public override UndoUnit Apply ()
-			{
-				AddDeleteFrameOverlay	lApplied = null;
-
-				if (IsDelete)
-				{
-					if (this.Frame.Overlays.Contains (this.Target))
-					{
-						lApplied = new AddDeleteFrameOverlay (this.CharacterFile, this.Target, this.ForClipboard);
-						if (this.Frame.Overlays.Remove (this.Target))
-						{
-							lApplied.IsDelete = false;
-							lApplied.IsRedo = !IsRedo;
-						}
-						else
-						{
-							lApplied = null;
-						}
-					}
-				}
-				else
-				{
-					FileFrameOverlay	lFrameOverlay = this.Frame.Overlays.Add (this.OverlayType, this.OverlayImagePath);
-
-					if (lFrameOverlay != null)
-					{
-						if (this.Target != null)
-						{
-							this.Target.CopyTo (lFrameOverlay);
-						}
-						this.Target = lFrameOverlay;
-						lApplied = new AddDeleteFrameOverlay (this.CharacterFile, this.Target, this.ForClipboard);
-						lApplied.IsDelete = true;
-						lApplied.IsRedo = !IsRedo;
-					}
-				}
-				if (lApplied != null)
-				{
-					return OnApplied (lApplied);
-				}
-				return null;
-			}
-		}
-
 		private RepeatingUpdate<UpdateFrameOverlay,FileFrameOverlay> mRepeatUpdateFrameOverlay = new RepeatingUpdate<UpdateFrameOverlay, FileFrameOverlay> ();
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private Boolean UpdateSelectedOverlay (FileFrameOverlay pFrameOverlay)
+		private UndoableUpdate UpdateSelectedOverlay (FileFrameOverlay pFrameOverlay)
 		{
-			Boolean	lRet = false;
-
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
 				int		lOverlayNdx = ListViewOverlays.GetSelectedIndex (false);
 				String	lFilePath = String.Empty;
@@ -557,40 +372,45 @@ namespace AgentCharacterEditor
 						UpdateFrameOverlay	lUpdate = new UpdateFrameOverlay (mCharacterFile, pFrameOverlay, false);
 
 						lUpdate.OverlayImagePath = lFilePath;
-						lUpdate.Applied += new UndoUnit.AppliedEventHandler (UpdateOverlay_Applied);
-						lRet = UpdateFrameOverlay.PutUndo (lUpdate.Apply () as UpdateFrameOverlay);
+						lUpdate.Applied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
+						if (UpdateFrameOverlay.PutUndo (lUpdate.Apply () as UpdateFrameOverlay, this))
+						{
+							return lUpdate;
+						}
 					}
 					else if ((lOverlayNdx >= 0) && !String.IsNullOrEmpty (lFilePath))
 					{
 						AddDeleteFrameOverlay	lUpdate = new AddDeleteFrameOverlay (mCharacterFile, mFrame, (MouthOverlay)lOverlayNdx, lFilePath, false);
 
-						lUpdate.Applied += new UndoUnit.AppliedEventHandler (AddDeleteOverlay_Applied);
-						lRet = AddDeleteFrameOverlay.PutUndo (lUpdate.Apply () as AddDeleteFrameOverlay);
+						lUpdate.Applied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
+						if (AddDeleteFrameOverlay.PutUndo (lUpdate.Apply () as AddDeleteFrameOverlay, this))
+						{
+							return lUpdate;
+						}
 					}
 				}
 			}
-			return lRet;
+			return null;
 		}
 
-		internal Boolean DeleteSelectedOverlay (FileFrameOverlay pFrameOverlay, Boolean pForClipboard)
+		internal UndoableUpdate DeleteSelectedOverlay (FileFrameOverlay pFrameOverlay, Boolean pForClipboard)
 		{
-			Boolean	lRet = false;
-
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly && (pFrameOverlay != null))
+			if (!IsEmpty && !Program.FileIsReadOnly && (pFrameOverlay != null))
 			{
 				AddDeleteFrameOverlay	lUpdate = new AddDeleteFrameOverlay (mCharacterFile, pFrameOverlay, pForClipboard);
 
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (AddDeleteOverlay_Applied);
-				lRet = AddDeleteFrameOverlay.PutUndo (lUpdate.Apply () as AddDeleteFrameOverlay);
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
+				if (AddDeleteFrameOverlay.PutUndo (lUpdate.Apply () as AddDeleteFrameOverlay, this))
+				{
+					return lUpdate;
+				}
 			}
-			return lRet;
+			return null;
 		}
 
-		internal Boolean PasteSelectedOverlay (FileFrameOverlay pFrameOverlay, FileFrameOverlay pPasteOverlay)
+		internal UndoableUpdate PasteSelectedOverlay (FileFrameOverlay pFrameOverlay, FileFrameOverlay pPasteOverlay)
 		{
-			Boolean	lRet = false;
-
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly && (pPasteOverlay != null))
+			if (!IsEmpty && !Program.FileIsReadOnly && (pPasteOverlay != null))
 			{
 				if (pFrameOverlay == null)
 				{
@@ -608,8 +428,11 @@ namespace AgentCharacterEditor
 						}
 						if (lUpdate != null)
 						{
-							lUpdate.Applied += new UndoUnit.AppliedEventHandler (AddDeleteOverlay_Applied);
-							lRet = AddDeleteFrameOverlay.PutUndo (lUpdate.Apply () as AddDeleteFrameOverlay);
+							lUpdate.Applied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
+							if (AddDeleteFrameOverlay.PutUndo (lUpdate.Apply () as AddDeleteFrameOverlay, this))
+							{
+								return lUpdate;
+							}
 						}
 					}
 				}
@@ -621,12 +444,52 @@ namespace AgentCharacterEditor
 					lUpdate = lUpdate.Apply () as UpdateFrameOverlay;
 					if (lUpdate != null)
 					{
-						lUpdate.Applied += new UndoUnit.AppliedEventHandler (UpdateOverlay_Applied);
-						lRet = UpdateFrameOverlay.PutUndo (lUpdate.Apply () as UpdateFrameOverlay);
+						lUpdate.Applied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
+						if (UpdateFrameOverlay.PutUndo (lUpdate.Apply () as UpdateFrameOverlay, this))
+						{
+							return lUpdate;
+						}
 					}
 				}
 			}
-			return lRet;
+			return null;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		private void OnUpdateApplied (object sender, EventArgs e)
+		{
+			if (!IsEmpty)
+			{
+				UpdateAnimation			lUpdateAnimation = sender as UpdateAnimation;
+				AddDeleteFrameOverlay	lAddDeleteOverlay = sender as AddDeleteFrameOverlay;
+				UpdateFrameOverlay		lUpdateOverlay = sender as UpdateFrameOverlay;
+				UpdateAnimationFrame	lUpdateFrame = sender as UpdateAnimationFrame;
+
+				if ((lUpdateAnimation != null) && (lUpdateAnimation.Target == this.Animation) && lUpdateAnimation.NameChanged)
+				{
+					ShowFrameName ();
+				}
+				else if ((lAddDeleteOverlay != null) && (lAddDeleteOverlay.Frame == mFrame))
+				{
+					int	lSelectedNdx = ListViewOverlays.SelectedIndex;
+					ShowFrameOverlays ();
+					ListViewOverlays.SelectedIndex = lSelectedNdx;
+					ShowSelectedOverlay ();
+				}
+				else if ((lUpdateOverlay != null) && (lUpdateOverlay.Frame == mFrame))
+				{
+					RefreshOverlayItem (lUpdateOverlay.Target);
+					ShowSelectedOverlay ();
+				}
+				else if ((lUpdateFrame != null) && (lUpdateFrame.Target == mFrame) && lUpdateFrame.ForClipboard)
+				{
+					int	lSelectedNdx = ListViewOverlays.SelectedIndex;
+					ShowFrameOverlays ();
+					ListViewOverlays.SelectedIndex = lSelectedNdx;
+					ShowSelectedOverlay ();
+				}
+			}
 		}
 
 		#endregion
@@ -670,22 +533,6 @@ namespace AgentCharacterEditor
 			UpdateSelectedOverlay (GetSelectedOverlay (false));
 		}
 
-		private void AddDeleteOverlay_Applied (object sender, EventArgs e)
-		{
-			if (!IsEmpty)
-			{
-				AddDeleteFrameOverlay	lUpdate = sender as AddDeleteFrameOverlay;
-
-				if ((lUpdate != null) && (lUpdate.Frame == mFrame))
-				{
-					int	lSelectedNdx = ListViewOverlays.SelectedIndex;
-					ShowFrameOverlays ();
-					ListViewOverlays.SelectedIndex = lSelectedNdx;
-					ShowSelectedOverlay ();
-				}
-			}
-		}
-
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void NumericOffsetX_Validated (object sender, EventArgs e)
@@ -693,12 +540,12 @@ namespace AgentCharacterEditor
 			FileFrameOverlay	lFrameOverlay = GetSelectedOverlay (false);
 			UpdateFrameOverlay	lUpdate;
 
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly && (lFrameOverlay != null))
+			if (!IsEmpty && !Program.FileIsReadOnly && (lFrameOverlay != null))
 			{
 				lUpdate = new UpdateFrameOverlay (mCharacterFile, lFrameOverlay, false);
 				lUpdate.Offset = new Point ((int)NumericOffsetX.Value, lFrameOverlay.Offset.Y);
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (UpdateOverlay_Applied);
-				UpdateFrameOverlay.PutUndo (lUpdate.Apply () as UpdateFrameOverlay);
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
+				UpdateFrameOverlay.PutUndo (lUpdate.Apply () as UpdateFrameOverlay, this);
 			}
 		}
 
@@ -707,12 +554,12 @@ namespace AgentCharacterEditor
 			FileFrameOverlay	lFrameOverlay = GetSelectedOverlay (false);
 			UpdateFrameOverlay	lUpdate;
 
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly && (lFrameOverlay != null))
+			if (!IsEmpty && !Program.FileIsReadOnly && (lFrameOverlay != null))
 			{
 				lUpdate = new UpdateFrameOverlay (mCharacterFile, lFrameOverlay, false);
 				lUpdate.Offset = new Point (lFrameOverlay.Offset.X, (int)NumericOffsetY.Value);
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (UpdateOverlay_Applied);
-				UpdateFrameOverlay.PutUndo (lUpdate.Apply () as UpdateFrameOverlay);
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
+				UpdateFrameOverlay.PutUndo (lUpdate.Apply () as UpdateFrameOverlay, this);
 			}
 		}
 
@@ -723,11 +570,11 @@ namespace AgentCharacterEditor
 			FileFrameOverlay	lFrameOverlay = GetSelectedOverlay (false);
 			UpdateFrameOverlay	lUpdate;
 
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly && (lFrameOverlay != null))
+			if (!IsEmpty && !Program.FileIsReadOnly && (lFrameOverlay != null))
 			{
 				lUpdate = new UpdateFrameOverlay (mCharacterFile, lFrameOverlay, false);
 				lUpdate.Offset = new Point (lFrameOverlay.Offset.X, lFrameOverlay.Offset.Y - 1);
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (UpdateOverlay_Applied);
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
 				mRepeatUpdateFrameOverlay.PutUpdate (lUpdate, ButtonShiftUp.ClickRepeatNum);
 			}
 		}
@@ -741,11 +588,11 @@ namespace AgentCharacterEditor
 			FileFrameOverlay	lFrameOverlay = GetSelectedOverlay (false);
 			UpdateFrameOverlay	lUpdate;
 
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly && (lFrameOverlay != null))
+			if (!IsEmpty && !Program.FileIsReadOnly && (lFrameOverlay != null))
 			{
 				lUpdate = new UpdateFrameOverlay (mCharacterFile, lFrameOverlay, false);
 				lUpdate.Offset = new Point (lFrameOverlay.Offset.X, lFrameOverlay.Offset.Y + 1);
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (UpdateOverlay_Applied);
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
 				mRepeatUpdateFrameOverlay.PutUpdate (lUpdate, ButtonShiftDown.ClickRepeatNum);
 			}
 		}
@@ -759,11 +606,11 @@ namespace AgentCharacterEditor
 			FileFrameOverlay	lFrameOverlay = GetSelectedOverlay (false);
 			UpdateFrameOverlay	lUpdate;
 
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly && (lFrameOverlay != null))
+			if (!IsEmpty && !Program.FileIsReadOnly && (lFrameOverlay != null))
 			{
 				lUpdate = new UpdateFrameOverlay (mCharacterFile, lFrameOverlay, false);
 				lUpdate.Offset = new Point (lFrameOverlay.Offset.X - 1, lFrameOverlay.Offset.Y);
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (UpdateOverlay_Applied);
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
 				mRepeatUpdateFrameOverlay.PutUpdate (lUpdate, ButtonShiftLeft.ClickRepeatNum);
 			}
 		}
@@ -777,11 +624,11 @@ namespace AgentCharacterEditor
 			FileFrameOverlay	lFrameOverlay = GetSelectedOverlay (false);
 			UpdateFrameOverlay	lUpdate;
 
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly && (lFrameOverlay != null))
+			if (!IsEmpty && !Program.FileIsReadOnly && (lFrameOverlay != null))
 			{
 				lUpdate = new UpdateFrameOverlay (mCharacterFile, lFrameOverlay, false);
 				lUpdate.Offset = new Point (lFrameOverlay.Offset.X + 1, lFrameOverlay.Offset.Y);
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (UpdateOverlay_Applied);
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
 				mRepeatUpdateFrameOverlay.PutUpdate (lUpdate, ButtonShiftRight.ClickRepeatNum);
 			}
 		}
@@ -797,68 +644,45 @@ namespace AgentCharacterEditor
 			FileFrameOverlay	lFrameOverlay = GetSelectedOverlay (false);
 			UpdateFrameOverlay	lUpdate;
 
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly && (lFrameOverlay != null))
+			if (!IsEmpty && !Program.FileIsReadOnly && (lFrameOverlay != null))
 			{
 				lUpdate = new UpdateFrameOverlay (mCharacterFile, lFrameOverlay, false);
 				lUpdate.ReplaceFlag = CheckBoxReplace.Checked;
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (UpdateOverlay_Applied);
-				UpdateFrameOverlay.PutUndo (lUpdate.Apply () as UpdateFrameOverlay);
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
+				UpdateFrameOverlay.PutUndo (lUpdate.Apply () as UpdateFrameOverlay, this);
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
-
-		private void UpdateOverlay_Applied (object sender, EventArgs e)
-		{
-			if (!IsEmpty)
-			{
-				UpdateFrameOverlay	lUpdate = sender as UpdateFrameOverlay;
-
-				if ((lUpdate != null) && (lUpdate.Frame == mFrame))
-				{
-					RefreshOverlayItem (lUpdate.Target);
-					ShowSelectedOverlay ();
-				}
-			}
-		}
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Internal Event Handlers
 
-		internal void PanelAnimation_AnimationNameChanged (object sender, AnimationEventArgs e)
+		internal void MainForm_CanEdit (object sender, Global.EditEventArgs e)
 		{
-			if (!IsEmpty && e.Animation == this.Animation)
-			{
-				ShowFrameName ();
-			}
-		}
-
-		internal void MainForm_CanEdit (object sender, EditEventArgs e)
-		{
-			if (e.IsUsed && !IsEmpty && ListViewOverlays.ContainsFocus)
+			if (!e.IsUsed && !IsEmpty && ListViewOverlays.ContainsFocus)
 			{
 				FileFrameOverlay	lFrameOverlay = GetSelectedOverlay (false);
 
 				if (lFrameOverlay != null)
 				{
-					e.CopyObjectTitle = Program.TitleOverlayFrameAnimation (lFrameOverlay);
-					if (!MainForm.Singleton.FileIsReadOnly)
+					e.CopyObjectTitle = Global.TitleOverlayFrameAnimation (lFrameOverlay);
+					if (!Program.FileIsReadOnly)
 					{
 						e.CutObjectTitle = e.CopyObjectTitle;
 						e.DeleteObjectTitle = e.CopyObjectTitle;
 					}
 				}
-				if (!MainForm.Singleton.FileIsReadOnly && (e.PasteObject is FileFrameOverlay))
+				if (!Program.FileIsReadOnly && (e.PasteObject is FileFrameOverlay))
 				{
-					e.PasteObjectTitle = e.PasteTypeTitle (lFrameOverlay) + Program.TitleOverlay ((MouthOverlay)ListViewOverlays.SelectedIndex);
+					e.PasteObjectTitle = e.PasteTypeTitle (lFrameOverlay, Global.TitleOverlay ((e.PasteObject as FileFrameOverlay).OverlayType), Global.TitleOverlay ((MouthOverlay)ListViewOverlays.SelectedIndex));
 				}
 			}
 		}
 
-		internal void MainForm_EditCopy (object sender, EditEventArgs e)
+		internal void MainForm_EditCopy (object sender, Global.EditEventArgs e)
 		{
-			if (e.IsUsed && !IsEmpty && ListViewOverlays.ContainsFocus)
+			if (!e.IsUsed && !IsEmpty && ListViewOverlays.ContainsFocus)
 			{
 				FileFrameOverlay	lFrameOverlay = GetSelectedOverlay (false);
 
@@ -876,9 +700,9 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		internal void MainForm_EditCut (object sender, EditEventArgs e)
+		internal void MainForm_EditCut (object sender, Global.EditEventArgs e)
 		{
-			if (e.IsUsed && !IsEmpty && !MainForm.Singleton.FileIsReadOnly && ListViewOverlays.ContainsFocus)
+			if (!e.IsUsed && !IsEmpty && !Program.FileIsReadOnly && ListViewOverlays.ContainsFocus)
 			{
 				FileFrameOverlay	lFrameOverlay = GetSelectedOverlay (false);
 
@@ -897,9 +721,9 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		internal void MainForm_EditDelete (object sender, EditEventArgs e)
+		internal void MainForm_EditDelete (object sender, Global.EditEventArgs e)
 		{
-			if (e.IsUsed && !IsEmpty && !MainForm.Singleton.FileIsReadOnly && ListViewOverlays.ContainsFocus)
+			if (!e.IsUsed && !IsEmpty && !Program.FileIsReadOnly && ListViewOverlays.ContainsFocus)
 			{
 				FileFrameOverlay	lFrameOverlay = GetSelectedOverlay (false);
 
@@ -911,9 +735,9 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		internal void MainForm_EditPaste (object sender, EditEventArgs e)
+		internal void MainForm_EditPaste (object sender, Global.EditEventArgs e)
 		{
-			if (e.IsUsed && !IsEmpty && !MainForm.Singleton.FileIsReadOnly && ListViewOverlays.ContainsFocus)
+			if (!e.IsUsed && !IsEmpty && !Program.FileIsReadOnly && ListViewOverlays.ContainsFocus)
 			{
 				if (e.PasteObject is FileFrameOverlay)
 				{

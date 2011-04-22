@@ -155,19 +155,20 @@ void CAgentFileScript::FreeStates ()
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
-bool CAgentFileScript::Open (const System::String^ pPath, UINT pLogLevel)
+bool CAgentFileScript::Open (const System::String^ pPath)
 {
 	bool			lRet = false;
 	String^			lPath = ParseFilePath (pPath);
 	ScriptReader^	lReader;
 
 #ifdef	_DEBUG_LOAD
-	pLogLevel = MinLogLevel (pLogLevel, _DEBUG_LOAD);
+	UINT lLogLevel = mLogLevel;
+	mLogLevel = MinLogLevel (mLogLevel, _DEBUG_LOAD);
 #endif
 	Close ();
-	if	(LogIsActive (pLogLevel))
+	if	(LogIsActive (mLogLevel))
 	{
-		LogMessage (pLogLevel, _T("Open [%s]"), _B(lPath));
+		LogMessage (mLogLevel, _T("Open [%s]"), _B(lPath));
 	}
 
 	try
@@ -213,17 +214,20 @@ bool CAgentFileScript::Open (const System::String^ pPath, UINT pLogLevel)
 		Close ();
 	}
 
+#ifdef	_DEBUG_LOAD
+	mLogLevel = lLogLevel;
+#endif	
 	return lRet;
 }
 #else
-HRESULT CAgentFileScript::Open (LPCTSTR pPath, UINT pLogLevel)
+HRESULT CAgentFileScript::Open (LPCTSTR pPath)
 {
 	return E_NOTIMPL;
 }
 #endif
 
 #ifdef	_M_CEE
-bool CAgentFileScript::Save (const System::String^ pPath, CAgentFile^ pSource, UINT pLogLevel)
+bool CAgentFileScript::Save (const System::String^ pPath, CAgentFile^ pSource)
 {
 	bool				lRet = false;
 	String^				lOldPath = mPath;
@@ -234,20 +238,20 @@ bool CAgentFileScript::Save (const System::String^ pPath, CAgentFile^ pSource, U
 	{
 		lNewPath = ParseFilePath (pPath);
 	}
-	if	(LogIsActive (pLogLevel))
+	if	(LogIsActive (mLogLevel))
 	{
 		if	(pSource == this)
 		{
-			LogMessage (pLogLevel, _T("Save [%s] as [%s]"), _B(mPath), _B(lNewPath));
+			LogMessage (mLogLevel, _T("Save [%s] as [%s]"), _B(mPath), _B(lNewPath));
 		}
 		else
 		if	(!String::IsNullOrEmpty (lNewPath))
 		{
-			LogMessage (pLogLevel, _T("Save [%s] as [%s]"), _B(pSource->Path), _B(lNewPath));
+			LogMessage (mLogLevel, _T("Save [%s] as [%s]"), _B(pSource->Path), _B(lNewPath));
 		}
 		else
 		{
-			LogMessage (pLogLevel, _T("Save [%s]"), _B(mPath));
+			LogMessage (mLogLevel, _T("Save [%s]"), _B(mPath));
 		}
 	}
 
@@ -2099,7 +2103,7 @@ Int32 CAgentFileScript::LoadSoundFile (System::String^ pSoundFilePath)
 
 /////////////////////////////////////////////////////////////////////////////
 
-CAgentFileImage^ CAgentFileScript::GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor, UINT pLogLevel)
+CAgentFileImage^ CAgentFileScript::GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor)
 {
 	CAgentFileImage^			lFileImage = nullptr;
 	System::Drawing::Bitmap^	lBitmap;

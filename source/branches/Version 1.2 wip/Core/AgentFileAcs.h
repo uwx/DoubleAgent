@@ -51,21 +51,21 @@ public:
 public:
 #ifdef	_M_CEE
 	virtual property bool IsAcsFile {virtual bool get() override;}
-	virtual bool Open (const System::String^ pPath, UINT pLogLevel) override;
-	virtual bool Save (const System::String^ pPath, CAgentFile^ pSource, UINT pLogLevel) override;
+	virtual bool Open (const System::String^ pPath) override;
+	virtual bool Save (const System::String^ pPath, CAgentFile^ pSource) override;
 	virtual void Close () override;
 #else
 	_DACORE_IMPEXP virtual bool get_IsAcsFile () const;
-	_DACORE_IMPEXP virtual HRESULT Open (LPCTSTR pPath, UINT pLogLevel = 15);
+	_DACORE_IMPEXP virtual HRESULT Open (LPCTSTR pPath);
 	_DACORE_IMPEXP virtual void Close ();
 #endif
 
 #ifdef	_M_CEE
 	virtual property int ImageCount {virtual int get() override;}
-	virtual CAgentFileImage^ GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor, UINT pLogLevel) override;
+	virtual CAgentFileImage^ GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor) override;
 #else
 	_DACORE_IMPEXP virtual INT_PTR GetImageCount () const;
-	_DACORE_IMPEXP virtual CAgentFileImage* GetImage (INT_PTR pImageNdx, bool p32Bit = false, const COLORREF* pBkColor = NULL, UINT pLogLevel = 15);
+	_DACORE_IMPEXP virtual CAgentFileImage* GetImage (INT_PTR pImageNdx, bool p32Bit = false, const COLORREF* pBkColor = NULL);
 #endif
 
 #ifdef	_M_CEE
@@ -80,62 +80,53 @@ public:
 
 protected:
 #ifdef	_M_CEE
-	virtual bool LoadFile (System::String^, UINT pLogLevel) override;
-	virtual bool ReadHeader (UINT pLogLevel) override;
-	virtual bool ReadNames (bool pFirstLetterCaps, UINT pLogLevel) override;
-	virtual bool ReadStates (UINT pLogLevel) override;
-	virtual bool ReadGestures (UINT pLogLevel) override;
+	virtual bool LoadFile (System::String^) override;
+	virtual bool ReadHeader () override;
+	virtual bool ReadNames (bool pFirstLetterCaps) override;
+	virtual bool ReadStates () override;
+	virtual bool ReadGestures () override;
 #else
-	virtual HRESULT LoadFile (LPCTSTR pPath, UINT pLogLevel = 15);
-	virtual HRESULT ReadHeader (UINT pLogLevel);
-	virtual bool ReadNames (bool pFirstLetterCaps, UINT pLogLevel);
-	virtual bool ReadStates (UINT pLogLevel);
-	virtual bool ReadGestures (UINT pLogLevel);
+	virtual HRESULT LoadFile (LPCTSTR pPath);
+	virtual HRESULT ReadHeader ();
+	virtual bool ReadNames (bool pFirstLetterCaps);
+	virtual bool ReadStates ();
+	virtual bool ReadGestures ();
 #endif
 
 // Implementation
 protected:
 	bool ReadAcsHeader ();
-	bool ReadAcsHeader (UINT pLogLevel);
-	LPCVOID ReadBufferHeader (LPCVOID pBuffer, UINT pLogLevel);
+	LPCVOID ReadBufferHeader (LPCVOID pBuffer);
 #ifdef	_M_CEE
-	CAgentFileAnimation^ ReadAcsAnimation (DWORD pOffset, DWORD pSize, UINT pLogLevel);
-	CAgentFileImage^ ReadAcsImage (DWORD pOffset, DWORD pSize, UINT pImageNum, bool p32Bit, System::Drawing::Color pBkColor, UINT pLogLevel);
-	array <BYTE>^ ReadAcsSound (DWORD pOffset, DWORD pSize, UINT pSoundNum, UINT pLogLevel);
+	CAgentFileAnimation^ ReadAcsAnimation (DWORD pOffset, DWORD pSize);
+	CAgentFileImage^ ReadAcsImage (DWORD pOffset, DWORD pSize, UINT pImageNum, bool p32Bit, System::Drawing::Color pBkColor);
+	array <BYTE>^ ReadAcsSound (DWORD pOffset, DWORD pSize, UINT pSoundNum);
 #else
-	CAgentFileAnimation* ReadAcsAnimation (DWORD pOffset, DWORD pSize, UINT pLogLevel = 15);
-	CAgentFileImage* ReadAcsImage (DWORD pOffset, DWORD pSize, UINT pImageNum, bool p32Bit = false, const COLORREF* pBkColor = NULL, UINT pLogLevel = 15);
-	LPCVOID ReadAcsSound (DWORD pOffset, DWORD pSize, UINT pSoundNum, UINT pLogLevel = 15);
+	CAgentFileAnimation* ReadAcsAnimation (DWORD pOffset, DWORD pSize);
+	CAgentFileImage* ReadAcsImage (DWORD pOffset, DWORD pSize, UINT pImageNum, bool p32Bit = false, const COLORREF* pBkColor = NULL);
+	LPCVOID ReadAcsSound (DWORD pOffset, DWORD pSize, UINT pSoundNum);
 #endif
 
 	bool ReadImageIndex ();
-	bool ReadImageIndex (UINT pLogLevel);
 	void FreeImageIndex ();
 
 	bool ReadSoundIndex ();
-	bool ReadSoundIndex (UINT pLogLevel);
 	void FreeSoundIndex ();
 
 #ifdef	_M_CEE
 	DWORD WriteAcsHeader (DWORD pFileOffset, CAgentFile^ pSource);
-	DWORD WriteAcsHeader (DWORD pFileOffset, CAgentFile^ pSource, UINT pLogLevel);
-	LPVOID WriteBufferHeader (LPVOID pBuffer, CAgentFileHeader^ pHeader, UINT pLogLevel);
+	LPVOID WriteBufferHeader (LPVOID pBuffer, CAgentFileHeader^ pHeader);
 	DWORD WriteImageIndex (DWORD pFileOffset, CAgentFile^ pSource);
-	DWORD WriteImageIndex (DWORD pFileOffset, CAgentFile^ pSource, UINT pLogLevel);
 	DWORD WriteSoundIndex (DWORD pFileOffset, CAgentFile^ pSource);
-	DWORD WriteSoundIndex (DWORD pFileOffset, CAgentFile^ pSource, UINT pLogLevel);
 
 	DWORD WriteGestures (DWORD pFileOffset, CAgentFile^ pSource);
-	DWORD WriteGestures (DWORD pFileOffset, CAgentFile^ pSource, UINT pLogLevel);
-	LPVOID WriteAcsAnimation (LPVOID pBuffer, CAgentFileAnimation^ pAnimation, UINT pLogLevel);
+	LPVOID WriteAcsAnimation (LPVOID pBuffer, CAgentFileAnimation^ pAnimation);
 
 	DWORD WriteImages (DWORD pFileOffset, CAgentFile^ pSource);
-	DWORD WriteImages (DWORD pFileOffset, CAgentFile^ pSource, UINT pLogLevel);
-	LPVOID WriteAcsImage (LPVOID pBuffer, CAgentFileImage^ pImage, UINT pLogLevel);
+	LPVOID WriteAcsImage (LPVOID pBuffer, CAgentFileImage^ pImage);
 
 	DWORD WriteSounds (DWORD pFileOffset, CAgentFile^ pSource);
-	DWORD WriteSounds (DWORD pFileOffset, CAgentFile^ pSource, UINT pLogLevel);
-	LPVOID WriteAcsSound (LPVOID pBuffer, array <BYTE>^ pSound, UINT pLogLevel);
+	LPVOID WriteAcsSound (LPVOID pBuffer, array <BYTE>^ pSound);
 #endif
 
 protected:

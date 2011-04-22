@@ -74,21 +74,22 @@ bool CAgentFileAcf::get_IsAcfFile () const
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CAgentFileAcf::Open (LPCTSTR pPath, UINT pLogLevel)
+HRESULT CAgentFileAcf::Open (LPCTSTR pPath)
 {
 	HRESULT		lResult = S_OK;
 	CAtlString	lPath = ParseFilePath (pPath);
 
 #ifdef	_DEBUG_LOAD
-	pLogLevel = MinLogLevel (pLogLevel, _DEBUG_LOAD);
+	UINT lLogLevel = mLogLevel;
+	mLogLevel = MinLogLevel (mLogLevel, _DEBUG_LOAD);
 #endif
 
 	Close ();
 	mPath = lPath;
 
-	if	(LogIsActive (pLogLevel))
+	if	(LogIsActive (mLogLevel))
 	{
-		LogMessage (pLogLevel, _T("Open [%s]"), lPath);
+		LogMessage (mLogLevel, _T("Open [%s]"), lPath);
 	}
 
 	if	(PathIsURL (lPath))
@@ -104,17 +105,20 @@ HRESULT CAgentFileAcf::Open (LPCTSTR pPath, UINT pLogLevel)
 
 		if	(SUCCEEDED (lResult = mFileDownload->Download ()))
 		{
-			lResult = LoadFile (CAtlString ((BSTR) mFileDownload->GetCacheName()), pLogLevel);
+			lResult = LoadFile (CAtlString ((BSTR) mFileDownload->GetCacheName()));
 		}
 	}
 	else
 	{
-		lResult = LoadFile (lPath, pLogLevel);
+		lResult = LoadFile (lPath);
 	}
 	if	(FAILED (lResult))
 	{
 		mPath.Empty ();
 	}
+#ifdef	_DEBUG_LOAD
+	mLogLevel = lLogLevel;
+#endif
 	return lResult;
 }
 
@@ -145,12 +149,13 @@ void CAgentFileAcf::SetDownloadMode (bool pRefresh, bool pReload, bool pSecure)
 	mFileDownload->SetSecurityMode (pSecure);
 }
 
-HRESULT CAgentFileAcf::LoadAcf (CFileDownload* pDownload, UINT pLogLevel)
+HRESULT CAgentFileAcf::LoadAcf (CFileDownload* pDownload)
 {
 	HRESULT	lResult = E_FAIL;
 
 #ifdef	_DEBUG_LOAD
-	pLogLevel = MinLogLevel (pLogLevel, _DEBUG_LOAD);
+	UINT lLogLevel = mLogLevel;
+	mLogLevel = MinLogLevel (mLogLevel, _DEBUG_LOAD);
 #endif
 	Close ();
 
@@ -159,12 +164,15 @@ HRESULT CAgentFileAcf::LoadAcf (CFileDownload* pDownload, UINT pLogLevel)
 		&&	(pDownload->IsDownloadComplete () == S_OK)
 		)
 	{
-		lResult = LoadFile (CAtlString ((BSTR) pDownload->GetCacheName()), pLogLevel);
+		lResult = LoadFile (CAtlString ((BSTR) pDownload->GetCacheName()));
 		if	(SUCCEEDED (lResult))
 		{
 			mPath = ParseFilePath (CAtlString ((BSTR) pDownload->GetURL ()));
 		}
 	}
+#ifdef	_DEBUG_LOAD
+	mLogLevel = lLogLevel;
+#endif
 	return lResult;
 }
 
@@ -298,7 +306,7 @@ INT_PTR CAgentFileAcf::GetImageCount () const
 	return mAcaImages.GetCount();
 }
 
-CAgentFileImage* CAgentFileAcf::GetImage (INT_PTR pImageNdx, bool p32Bit, const COLORREF* pBkColor, UINT pLogLevel)
+CAgentFileImage* CAgentFileAcf::GetImage (INT_PTR pImageNdx, bool p32Bit, const COLORREF* pBkColor)
 {
 	tPtr <CAgentFileImage>	lImage;
 	const CAgentFileImage*	lAcfImage;
@@ -358,15 +366,15 @@ LPCVOID CAgentFileAcf::GetSound (INT_PTR pSoundNdx)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CAgentFileAcf::ReadHeader (UINT pLogLevel)
+HRESULT CAgentFileAcf::ReadHeader ()
 {
-	HRESULT	lResult = __super::ReadHeader (pLogLevel);
+	HRESULT	lResult = __super::ReadHeader ();
 
 	if	(
 			(SUCCEEDED (lResult))
 		&&	(
 				(mSignature != sAcfFileSignature)
-			||	(!ReadAcfHeader (pLogLevel))
+			||	(!ReadAcfHeader ())
 			)
 		)
 	{
@@ -377,7 +385,7 @@ HRESULT CAgentFileAcf::ReadHeader (UINT pLogLevel)
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentFileAcf::ReadAcfHeader (UINT pLogLevel)
+bool CAgentFileAcf::ReadAcfHeader ()
 {
 	bool				lRet = false;
 	DWORD				lUncompressedSize;
@@ -397,9 +405,9 @@ bool CAgentFileAcf::ReadAcfHeader (UINT pLogLevel)
 		lUncompressedSize = ((LPCDWORD)(LPVOID)mFileView) [1];
 		lCompressedSize = ((LPCDWORD)(LPVOID)mFileView) [2];
 
-		if	(LogIsActive (pLogLevel))
+		if	(LogIsActive (mLogLevel))
 		{
-			LogMessage (pLogLevel, _T("  [%s] UncompressedSize [%u] CompressedSize [%u]"), mPath, lUncompressedSize, lCompressedSize);
+			LogMessage (mLogLevel, _T("  [%s] UncompressedSize [%u] CompressedSize [%u]"), mPath, lUncompressedSize, lCompressedSize);
 		}
 
 		if	(lCompressedSize == 0)
@@ -475,7 +483,7 @@ bool CAgentFileAcf::ReadAcfHeader (UINT pLogLevel)
 
 				mHeader.mGuid = *(LPCGUID)lByte;
 				lByte += sizeof (GUID);
-				lByte = (LPCBYTE)ReadBufferNames (lByte, 0, false, true, pLogLevel);
+				lByte = (LPCBYTE)ReadBufferNames (lByte, 0, false, true);
 
 				mHeader.mImageSize.cx = *(LPCWORD)lByte;
 				lByte += sizeof (WORD);
@@ -489,27 +497,27 @@ bool CAgentFileAcf::ReadAcfHeader (UINT pLogLevel)
 
 				if	(mHeader.mStyle & CharStyleTts)
 				{
-					lByte = (LPCBYTE)ReadBufferTts (lByte, false, pLogLevel);
+					lByte = (LPCBYTE)ReadBufferTts (lByte, false);
 				}
 				if	(mHeader.mStyle & CharStyleBalloon)
 				{
-					lByte = (LPCBYTE)ReadBufferBalloon (lByte, false, pLogLevel);
+					lByte = (LPCBYTE)ReadBufferBalloon (lByte, false);
 				}
-				lByte = (LPCBYTE)ReadBufferPalette (lByte, pLogLevel);
-				lByte = (LPCBYTE)ReadBufferIcon (lByte, pLogLevel);
-				lByte = (LPCBYTE)ReadBufferStates (lByte, lUncompressedSize-(DWORD)(lByte-lHeaderData), false, pLogLevel);
+				lByte = (LPCBYTE)ReadBufferPalette (lByte);
+				lByte = (LPCBYTE)ReadBufferIcon (lByte);
+				lByte = (LPCBYTE)ReadBufferStates (lByte, lUncompressedSize-(DWORD)(lByte-lHeaderData), false);
 
 				lRet = true;
 			}
 			catch AnyExceptionDebug
 		}
 
-		if	(LogIsActive (pLogLevel))
+		if	(LogIsActive (mLogLevel))
 		{
-			Log (pLogLevel);
-			LogNames (pLogLevel);
-			LogStates (pLogLevel);
-			LogGestures (pLogLevel);
+			Log (mLogLevel);
+			LogNames (mLogLevel);
+			LogStates (mLogLevel);
+			LogGestures (mLogLevel);
 		}
 	}
 
@@ -527,12 +535,13 @@ CAtlString CAgentFileAcf::GetAcaPath (CAgentFileAnimation* pAnimation)
 	return CAtlString();
 }
 
-HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, bool p32Bit, UINT pLogLevel)
+HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, bool p32Bit)
 {
 	HRESULT	lResult = S_FALSE;
 
 #ifdef	_DEBUG_LOAD
-	pLogLevel = MinLogLevel (pLogLevel, _DEBUG_LOAD);
+	UINT lLogLevel = mLogLevel;
+	mLogLevel = MinLogLevel (mLogLevel, _DEBUG_LOAD);
 #endif
 
 	if	(
@@ -558,12 +567,12 @@ HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, bool p32Bit
 
 				if	(SUCCEEDED (lResult = mFileDownload->Download ()))
 				{
-					lResult = ReadAcaFile (pAnimation, CAtlString ((BSTR) mFileDownload->GetCacheName()), p32Bit, pLogLevel);
+					lResult = ReadAcaFile (pAnimation, CAtlString ((BSTR) mFileDownload->GetCacheName()), p32Bit);
 				}
 			}
 			else
 			{
-				lResult = ReadAcaFile (pAnimation, lPath, p32Bit, pLogLevel);
+				lResult = ReadAcaFile (pAnimation, lPath, p32Bit);
 			}
 		}
 		catch AnyExceptionDebug
@@ -573,15 +582,19 @@ HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, bool p32Bit
 	{
 		pAnimation->mAcaChksum = (DWORD)-1;
 	}
+#ifdef	_DEBUG_LOAD
+	mLogLevel = lLogLevel;
+#endif
 	return lResult;
 }
 
-HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, LPCTSTR pPath, bool p32Bit, UINT pLogLevel)
+HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, LPCTSTR pPath, bool p32Bit)
 {
 	HRESULT	lResult = S_FALSE;
 
 #ifdef	_DEBUG_LOAD
-	pLogLevel = MinLogLevel (pLogLevel, _DEBUG_LOAD);
+	UINT lLogLevel = mLogLevel;
+	mLogLevel = MinLogLevel (mLogLevel, _DEBUG_LOAD);
 #endif
 
 	try
@@ -600,10 +613,10 @@ HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, LPCTSTR pPa
 			&&	((lFileView = MapViewOfFile (lFileMapping, FILE_MAP_READ, 0, 0, lFileSize)).SafeIsValid())
 			)
 		{
-			if	(LogIsActive (pLogLevel))
+			if	(LogIsActive (mLogLevel))
 			{
-				LogMessage (pLogLevel, _T(""));
-				LogMessage (pLogLevel, _T("Opened [%ls] [%ls] [%s] [%u]"), (BSTR)pAnimation->mName, (BSTR)pAnimation->mAcaFileName, pPath, lFileSize);
+				LogMessage (mLogLevel, _T(""));
+				LogMessage (mLogLevel, _T("Opened [%ls] [%ls] [%s] [%u]"), (BSTR)pAnimation->mName, (BSTR)pAnimation->mAcaFileName, pPath, lFileSize);
 			}
 
 			try
@@ -656,10 +669,10 @@ HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, LPCTSTR pPa
 					WORD	lImageStart = (WORD)mAcaImages.GetCount();
 
 					lByte = lAnimationData;
-					lResult = ReadAcaSounds (pAnimation, (LPCVOID&)lByte, lUncompressedSize, p32Bit, pLogLevel);
+					lResult = ReadAcaSounds (pAnimation, (LPCVOID&)lByte, lUncompressedSize, p32Bit);
 					if	(SUCCEEDED (lResult))
 					{
-						lResult = ReadAcaImages (pAnimation, (LPCVOID&)lByte, lUncompressedSize, p32Bit, pLogLevel);
+						lResult = ReadAcaImages (pAnimation, (LPCVOID&)lByte, lUncompressedSize, p32Bit);
 					}
 					if	(SUCCEEDED (lResult))
 					{
@@ -668,7 +681,7 @@ HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, LPCTSTR pPa
 #endif
 						lByte += sizeof(BYTE); // Unknown
 						lUncompressedSize -= sizeof(BYTE);
-						lResult = ReadAcaFrames (pAnimation, (LPCVOID&)lByte, lUncompressedSize, lImageStart, p32Bit, pLogLevel);
+						lResult = ReadAcaFrames (pAnimation, (LPCVOID&)lByte, lUncompressedSize, lImageStart, p32Bit);
 					}
 
 #ifdef	_DEBUG_LOAD
@@ -698,12 +711,15 @@ HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, LPCTSTR pPa
 	}
 	catch AnyExceptionDebug
 
+#ifdef	_DEBUG_LOAD
+	mLogLevel = lLogLevel;
+#endif
 	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& pBuffer, DWORD& pBufferSize, WORD pImageStart, bool p32Bit, UINT pLogLevel)
+HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& pBuffer, DWORD& pBufferSize, WORD pImageStart, bool p32Bit)
 {
 	HRESULT	lResult = S_OK;
 
@@ -718,7 +734,7 @@ HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& 
 		lFrameCount = *(LPCWORD)lByte;
 		lByte += sizeof(WORD);
 #ifdef	_DEBUG_ANIMATION
-		if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_ANIMATION)))
+		if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_ANIMATION)))
 		{
 			LogMessage (_DEBUG_ANIMATION, _T("[%ls] Aca Frames [%hu]"), (BSTR)pAnimation->mName, lFrameCount);
 		}
@@ -760,7 +776,7 @@ HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& 
 				lByte += sizeof(WORD);
 
 #ifdef	_DEBUG_ANIMATION
-				if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_ANIMATION)))
+				if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_ANIMATION)))
 				{
 					LogMessage (_DEBUG_ANIMATION, _T("  Frame [%u] Image [%hu] Duration [%hu] ExitFrame [%hd] Sound [%2hd] Something [%8.8X]"), lFrameNum, lFrame->mImages [0].mImageNdx, lFrame->mDuration, lFrame->mExitFrame, lFrame->mSoundNdx, lSomething);
 				}
@@ -785,7 +801,7 @@ HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& 
 				lByte += sizeof(WORD)*lBranchCount*2;
 
 #ifdef	_DEBUG_ANIMATION
-				if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_ANIMATION)))
+				if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_ANIMATION)))
 				{
 					for	(lNdx = 0; lNdx < min ((INT_PTR)lBranchCount, 3); lNdx++)
 					{
@@ -815,7 +831,7 @@ HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& 
 					lOverlayReplace = *lByte;
 					lByte += sizeof(BYTE);
 #ifdef	_DEBUG_ANIMATION
-					if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_ANIMATION)))
+					if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_ANIMATION)))
 					{
 						LogMessage (_DEBUG_ANIMATION, _T("  Overlays [%hu] Replace [%2.2X]"), lOverlayCount, lOverlayReplace);
 					}
@@ -874,7 +890,7 @@ HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& 
 							lByte += lRgnSize;
 						}
 #ifdef	_DEBUG_ANIMATION
-						if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_ANIMATION)))
+						if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_ANIMATION)))
 						{
 							LogMessage (_DEBUG_ANIMATION, _T("    Overlay [%hu] Replace [%u] Image [%u] [%d] [%d] of [%4u] at [%d %d]"), lOverlay->OverlayType, lOverlay->ReplaceFlag, lOverlay->ImageNdx, mAcaImages[(long)lOverlay->ImageNdx]->ImageSize.cx, mAcaImages[(long)lOverlay->ImageNdx]->ImageSize.cy, mAcaImages[(long)lOverlay->ImageNdx]->BitsSize, lOverlay->Offset.x, lOverlay->Offset.y);
 						}
@@ -906,7 +922,7 @@ HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& 
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CAgentFileAcf::ReadAcaImages (CAgentFileAnimation* pAnimation, LPCVOID& pBuffer, DWORD& pBufferSize, bool p32Bit, UINT pLogLevel)
+HRESULT CAgentFileAcf::ReadAcaImages (CAgentFileAnimation* pAnimation, LPCVOID& pBuffer, DWORD& pBufferSize, bool p32Bit)
 {
 	HRESULT	lResult = S_OK;
 
@@ -952,9 +968,9 @@ HRESULT CAgentFileAcf::ReadAcaImages (CAgentFileAnimation* pAnimation, LPCVOID& 
 				mAcaImages.Add (lImage.Detach ());
 
 #ifdef	_DUMP_IMAGE
-				//if	(LogIsActive (MaxLogLevel (pLogLevel, _DUMP_IMAGE)))
+				//if	(LogIsActive (MaxLogLevel (mLogLevel, _DUMP_IMAGE)))
 				//{
-				//	DumpAcaImage ((INT_PTR)mAcaImages.GetCount()-1, MaxLogLevel (pLogLevel, _DUMP_IMAGE));
+				//	DumpAcaImage ((INT_PTR)mAcaImages.GetCount()-1, MaxLogLevel (mLogLevel, _DUMP_IMAGE));
 				//}
 				if	(LogIsActive (_DUMP_IMAGE))
 				{
@@ -995,7 +1011,7 @@ HRESULT CAgentFileAcf::ReadAcaImages (CAgentFileAnimation* pAnimation, LPCVOID& 
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CAgentFileAcf::ReadAcaSounds (CAgentFileAnimation* pAnimation, LPCVOID& pBuffer, DWORD& pBufferSize, bool p32Bit, UINT pLogLevel)
+HRESULT CAgentFileAcf::ReadAcaSounds (CAgentFileAnimation* pAnimation, LPCVOID& pBuffer, DWORD& pBufferSize, bool p32Bit)
 {
 	HRESULT	lResult = S_OK;
 

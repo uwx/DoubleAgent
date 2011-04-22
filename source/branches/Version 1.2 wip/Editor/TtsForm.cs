@@ -26,6 +26,7 @@ using System.Text;
 using System.Windows.Forms;
 using DoubleAgent;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Updates;
 
 namespace AgentCharacterEditor
 {
@@ -42,10 +43,10 @@ namespace AgentCharacterEditor
 		{
 			InitializeComponent ();
 
-			if (MainForm.Singleton != null)
+			if (Program.MainForm != null)
 			{
-				MainForm.Singleton.LoadConfig += new EventHandler (MainForm_LoadConfig);
-				MainForm.Singleton.SaveConfig += new EventHandler (MainForm_SaveConfig);
+				Program.MainForm.LoadConfig += new EventHandler (MainForm_LoadConfig);
+				Program.MainForm.SaveConfig += new EventHandler (MainForm_SaveConfig);
 			}
 		}
 
@@ -128,11 +129,11 @@ namespace AgentCharacterEditor
 
 		private void ShowTtsProperties ()
 		{
-			CheckBoxUseTTS.Enabled = (mCharacterFile != null) && !MainForm.Singleton.FileIsReadOnly;
-			TextBoxTTSModeID.Enabled = !IsEmpty && !MainForm.Singleton.FileIsReadOnly;
-			TextBoxVendor.Enabled = !IsEmpty && !MainForm.Singleton.FileIsReadOnly;
-			TextBoxLanguage.Enabled = !IsEmpty && !MainForm.Singleton.FileIsReadOnly;
-			TextBoxGender.Enabled = !IsEmpty && !MainForm.Singleton.FileIsReadOnly;
+			CheckBoxUseTTS.Enabled = (mCharacterFile != null) && !Program.FileIsReadOnly;
+			TextBoxTTSModeID.Enabled = !IsEmpty && !Program.FileIsReadOnly;
+			TextBoxVendor.Enabled = !IsEmpty && !Program.FileIsReadOnly;
+			TextBoxLanguage.Enabled = !IsEmpty && !Program.FileIsReadOnly;
+			TextBoxGender.Enabled = !IsEmpty && !Program.FileIsReadOnly;
 
 			CheckBoxUseTTS.CheckedChanged -= new System.EventHandler (CheckBoxUseTTS_CheckedChanged);
 			SuspendLayout ();
@@ -154,7 +155,7 @@ namespace AgentCharacterEditor
 				ShowAllVoices ();
 				lVoiceInfo = VoiceComboInfo (mFileTts.Mode);
 				ComboBoxName.SelectedIndex = VoiceComboNdx (mFileTts.Mode);
-				ComboBoxName.Enabled = !MainForm.Singleton.FileIsReadOnly;
+				ComboBoxName.Enabled = !Program.FileIsReadOnly;
 
 				TextBoxTTSModeID.Text = mFileTts.ModeId.ToString ().ToUpper ();
 				TextBoxVendor.Text = (lVoiceInfo == null) ? "" : lVoiceInfo.Manufacturer.Replace ("&&", "&");
@@ -230,77 +231,22 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Update
 
-		internal class UpdateTts : UndoableUpdate<CharacterFile>
+		internal UndoableUpdate PasteTts (FileTts pPasteTts)
 		{
-			public UpdateTts (CharacterFile pCharacterFile, Sapi4VoiceInfo pVoiceInfo)
-				: base (pCharacterFile, pCharacterFile)
+			if ((mCharacterFile != null) && (pPasteTts != null) && !Program.FileIsReadOnly)
 			{
-				this.CharacterStyle = pCharacterFile.Header.Style & CharacterStyle.CharStyleTts;
-				if (pVoiceInfo != null)
-				{
-					this.VoiceInfo = new Sapi4VoiceInfo ();
-					this.VoiceInfo.EngineId = pVoiceInfo.EngineId;
-					this.VoiceInfo.ModeId = pVoiceInfo.ModeId;
-					this.VoiceInfo.LangId = pVoiceInfo.LangId;
-					this.VoiceInfo.SpeakerGender = pVoiceInfo.SpeakerGender;
-				}
+				System.Media.SystemSounds.Beep.Play ();
 			}
+			return null;
+		}
 
-			public CharacterStyle CharacterStyle
+		private void OnUpdateApplied (object sender, EventArgs e)
+		{
+			UpdateCharacterTts	lUpdate = sender as UpdateCharacterTts;
+
+			if ((lUpdate != null) && (lUpdate.CharacterFile == mCharacterFile))
 			{
-				get;
-				set;
-			}
-			public Sapi4VoiceInfo VoiceInfo
-			{
-				get;
-				private set;
-			}
-
-			public override String TargetDescription
-			{
-				get
-				{
-					return "Text-to-Speech";
-				}
-			}
-
-			public override UndoUnit Apply ()
-			{
-				UndoUnit	lApplied = null;
-
-				if ((CharacterFile.Header.Style & CharacterStyle.CharStyleTts) != (this.CharacterStyle & CharacterStyle.CharStyleTts))
-				{
-					CharacterStyle	lSwap = CharacterFile.Header.Style & CharacterStyle.CharStyleTts;
-					CharacterFile.Header.Style = (CharacterFile.Header.Style & ~CharacterStyle.CharStyleTts) | (this.CharacterStyle & CharacterStyle.CharStyleTts);
-					this.CharacterStyle = lSwap;
-					lApplied = this;
-				}
-				if ((CharacterFile.Tts != null) && (this.VoiceInfo != null))
-				{
-					Sapi4VoiceInfo	lVoiceInfo = new Sapi4VoiceInfo ();
-
-					lVoiceInfo.EngineId = CharacterFile.Tts.Engine;
-					lVoiceInfo.ModeId = CharacterFile.Tts.Mode;
-					lVoiceInfo.LangId = CharacterFile.Tts.Language;
-					lVoiceInfo.SpeakerGender = CharacterFile.Tts.Gender;
-
-					if (!lVoiceInfo.Equals (this.VoiceInfo))
-					{
-						CharacterFile.Tts.Engine = this.VoiceInfo.EngineId;
-						CharacterFile.Tts.Mode = this.VoiceInfo.ModeId;
-						CharacterFile.Tts.Language = this.VoiceInfo.LangId;
-						CharacterFile.Tts.Gender = this.VoiceInfo.SpeakerGender;
-						this.VoiceInfo = lVoiceInfo;
-						lApplied = this;
-					}
-				}
-
-				if (lApplied != null)
-				{
-					return OnApplied (lApplied);
-				}
-				return null;
+				ShowTtsProperties ();
 			}
 		}
 
@@ -310,9 +256,9 @@ namespace AgentCharacterEditor
 
 		private void CheckBoxUseTTS_CheckedChanged (object sender, EventArgs e)
 		{
-			if ((mCharacterFile != null) && !MainForm.Singleton.FileIsReadOnly)
+			if ((mCharacterFile != null) && !Program.FileIsReadOnly)
 			{
-				UpdateTts	lUpdate = new UpdateTts (mCharacterFile, null);
+				UpdateCharacterTts	lUpdate = new UpdateCharacterTts (mCharacterFile, null);
 
 				if (CheckBoxUseTTS.Checked)
 				{
@@ -322,32 +268,25 @@ namespace AgentCharacterEditor
 				{
 					lUpdate.CharacterStyle &= ~CharacterStyle.CharStyleTts;
 				}
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableAction_Applied);
-				UpdateTts.PutUndo (lUpdate.Apply () as UpdateTts);
+				lUpdate.Applied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
+				UpdateCharacterTts.PutUndo (lUpdate.Apply () as UpdateCharacterTts, this);
 			}
 		}
 
 		private void ComboBoxName_SelectionChangeCommitted (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !MainForm.Singleton.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
 				Sapi4VoiceInfo	lVoiceInfo = VoiceComboInfo (ComboBoxName.SelectedIndex);
 
 				if (lVoiceInfo != null)
 				{
-					UpdateTts	lUpdate = new UpdateTts (mCharacterFile, lVoiceInfo);
+					UpdateCharacterTts	lUpdate = new UpdateCharacterTts (mCharacterFile, lVoiceInfo);
 
-					lUpdate.Applied += new UndoUnit.AppliedEventHandler (UndoableAction_Applied);
-					UpdateTts.PutUndo (lUpdate.Apply () as UpdateTts);
+					lUpdate.Applied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
+					UpdateCharacterTts.PutUndo (lUpdate.Apply () as UpdateCharacterTts, this);
 				}
 			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		private void UndoableAction_Applied (object sender, EventArgs e)
-		{
-			ShowTtsProperties ();
 		}
 
 		#endregion

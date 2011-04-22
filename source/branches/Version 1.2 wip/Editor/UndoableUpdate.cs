@@ -27,196 +27,252 @@ using DoubleAgent.Character;
 
 namespace AgentCharacterEditor
 {
-	internal abstract class UndoableUpdate<T> : UndoUnit<T> where T : class
+	namespace Updates
 	{
-		protected UndoableUpdate (CharacterFile pCharacterFile, T pTarget)
-			: base (pTarget)
+		internal abstract class UndoableUpdate : UndoUnit
 		{
-			this.CharacterFile = pCharacterFile;
-			this.ForClipboard = false;
-		}
-		protected UndoableUpdate (CharacterFile pCharacterFile, T pTarget, Boolean pForClipboard)
-			: base (pTarget)
-		{
-			this.CharacterFile = pCharacterFile;
-			this.ForClipboard = pForClipboard;
-		}
-
-		public CharacterFile CharacterFile
-		{
-			get;
-			private set;
-		}
-		protected Boolean ForClipboard
-		{
-			get;
-			set;
-		}
-		public override String ActionDescription
-		{
-			get
+			protected UndoableUpdate (CharacterFile pCharacterFile, Boolean pForClipboard)
 			{
-				if (this.ForClipboard)
+				this.CharacterFile = pCharacterFile;
+				this.ForClipboard = pForClipboard;
+			}
+
+			public Object Source
+			{
+				get;
+				protected set;
+			}
+			public CharacterFile CharacterFile
+			{
+				get;
+				private set;
+			}
+			public Boolean ForClipboard
+			{
+				get;
+				protected set;
+			}
+			public override String ActionDescription
+			{
+				get
 				{
-					return "paste ";
+					if (this.ForClipboard)
+					{
+						return Properties.Resources.UndoActionPaste;
+					}
+					return base.ActionDescription;
 				}
-				return base.ActionDescription;
 			}
-		}
 
-		public virtual Boolean PutUndo ()
-		{
-			MainForm.Singleton.FileIsDirty = CharacterFile.IsDirty;
-			return MainForm.Singleton.UndoManager.PutUndoUnit (this);
-		}
+			///////////////////////////////////////////////////////////////////////////////
 
-		static public Boolean PutUndo (UndoableUpdate<T> pUndoableAction)
-		{
-			if (pUndoableAction != null)
+			protected override UndoUnit OnApplied (UndoUnit pRedoUnit, System.EventArgs pEventArgs)
 			{
-				return pUndoableAction.PutUndo ();
+				if (!Object.ReferenceEquals (pRedoUnit, this))
+				{
+					UndoableUpdate	lRedoUnit = pRedoUnit as UndoableUpdate;
+					if (lRedoUnit != null)
+					{
+						lRedoUnit.Source = Source;
+					}
+				}
+				return base.OnApplied (pRedoUnit, pEventArgs);
 			}
-			return false;
-		}
 
+			public virtual Boolean PutUndo ()
+			{
+				return PutUndo (null);
+			}
+
+			public virtual Boolean PutUndo (Object pSource)
+			{
+				if (pSource != null)
+				{
+					Source = pSource;
+				}
+				if (CharacterFile.IsDirty)
+				{
+					Program.MainForm.FileIsDirty ();
+				}
+				return Program.UndoManager.PutUndoUnit (this);
+			}
+
+			static public Boolean PutUndo (UndoableUpdate pUndoableAction, Object pSource)
+			{
+				if (pUndoableAction != null)
+				{
+					return pUndoableAction.PutUndo (pSource);
+				}
+				return false;
+			}
+
+			///////////////////////////////////////////////////////////////////////////////
+
+			public override String ToString ()
+			{
+				return String.Format (Properties.Resources.UndoDescription, this.ActionDescription.Trim (), this.TargetDescription.Trim (), this.ChangeDescription.Trim ()).Trim ();
+			}
 #if DEBUG
-		public virtual String DebugString ()
-		{
-			return ToString ();
-		}
+			public virtual String DebugString ()
+			{
+				return ToString ();
+			}
 #endif
-	}
-
-	///////////////////////////////////////////////////////////////////////////////
-
-	internal abstract class UndoableAddDelete<T> : UndoableUpdate<T> where T : class
-	{
-		public UndoableAddDelete (CharacterFile pCharacterFile)
-			: base (pCharacterFile, default (T))
-		{
-			this.IsDelete = false;
-			this.IsRedo = false;
-			this.ForClipboard = false;
-		}
-		public UndoableAddDelete (CharacterFile pCharacterFile, T pTarget)
-			: base (pCharacterFile, pTarget)
-		{
-			this.IsDelete = true;
-			this.IsRedo = false;
-			this.ForClipboard = false;
-		}
-		public UndoableAddDelete (CharacterFile pCharacterFile, Boolean pForClipboard)
-			: base (pCharacterFile, default (T))
-		{
-			this.IsDelete = false;
-			this.IsRedo = false;
-			this.ForClipboard = pForClipboard;
-		}
-		public UndoableAddDelete (CharacterFile pCharacterFile, T pTarget, Boolean pForClipboard)
-			: base (pCharacterFile, pTarget)
-		{
-			this.IsDelete = true;
-			this.IsRedo = false;
-			this.ForClipboard = pForClipboard;
-		}
-
-		public Boolean IsDelete
-		{
-			get;
-			protected set;
-		}
-		protected Boolean IsRedo
-		{
-			get;
-			set;
-		}
-		public override String ActionDescription
-		{
-			get
-			{
-				return (IsDelete == !IsRedo) ? this.ForClipboard ? "cut " : "delete " : this.ForClipboard ? "paste " : "add ";
-			}
-		}
-	}
-
-	///////////////////////////////////////////////////////////////////////////////
-
-	internal class RepeatingUpdate<T, TT>
-		where T : UndoableUpdate<TT>
-		where TT : class
-	{
-		public T UpdateStart
-		{
-			get;
-			private set;
-		}
-		public Boolean UpdateStarted
-		{
-			get
-			{
-				return (UpdateStart != null);
-			}
-		}
-
-		public RepeatingUpdate ()
-		{
-			this.UpdateStart = null;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		public void PutUpdate (T pUpdate, int pRepeatNum)
+		internal abstract class UndoableUpdate<T> : UndoableUpdate where T : class
 		{
-			if (pRepeatNum > 0)
+			protected UndoableUpdate (CharacterFile pCharacterFile, T pTarget)
+			:	base (pCharacterFile, false)
 			{
-				if (!this.UpdateStarted)
-				{
-#if DEBUG_NOT
-					System.Diagnostics.Debug.Print ("PutRepeat {0} Apply(First) [{1}]", pRepeatNum.ToString (), pUpdate.DebugString ());
-#endif
-					this.UpdateStart = pUpdate.Apply () as T;
-				}
-				else
-				{
-#if DEBUG_NOT
-					System.Diagnostics.Debug.Print ("PutRepeat {0} Apply(Repeat) [{1}]", pRepeatNum.ToString (), pUpdate.DebugString ());
-#endif
-					pUpdate.Apply ();
-				}
+				Target = pTarget;
 			}
-			else if (this.UpdateStarted)
+			protected UndoableUpdate (CharacterFile pCharacterFile, T pTarget, Boolean pForClipboard)
+			:	base (pCharacterFile, pForClipboard)
 			{
-#if DEBUG_NOT
-				System.Diagnostics.Debug.Print ("PutRepeat {0} Apply(Last) [{1}]", pRepeatNum.ToString (), pUpdate.DebugString ());
-#endif
-				pUpdate.Apply ();
-				EndUpdate ();
+				Target = pTarget;
 			}
-			else
+
+			public T Target
 			{
-#if DEBUG_NOT
-				System.Diagnostics.Debug.Print ("PutRepeat {0} Apply(Single) [{1}] PutUndo [{1}]", pRepeatNum.ToString (), pUpdate.DebugString ());
-#endif
-				T lUpdate = pUpdate.Apply () as T;
-				if (lUpdate != null)
+				get;
+				protected set;
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		internal abstract class UndoableAddDelete<T> : UndoableUpdate<T> where T : class
+		{
+			public UndoableAddDelete (CharacterFile pCharacterFile)
+				: base (pCharacterFile, default (T))
+			{
+				this.IsDelete = false;
+				this.IsRedo = false;
+				this.ForClipboard = false;
+			}
+			public UndoableAddDelete (CharacterFile pCharacterFile, T pTarget)
+				: base (pCharacterFile, pTarget)
+			{
+				this.IsDelete = (pTarget != null);
+				this.IsRedo = false;
+				this.ForClipboard = false;
+			}
+			public UndoableAddDelete (CharacterFile pCharacterFile, Boolean pForClipboard)
+				: base (pCharacterFile, default (T))
+			{
+				this.IsDelete = false;
+				this.IsRedo = false;
+				this.ForClipboard = pForClipboard;
+			}
+			public UndoableAddDelete (CharacterFile pCharacterFile, T pTarget, Boolean pForClipboard)
+				: base (pCharacterFile, pTarget)
+			{
+				this.IsDelete = (pTarget != null);
+				this.IsRedo = false;
+				this.ForClipboard = pForClipboard;
+			}
+
+			public Boolean IsDelete
+			{
+				get;
+				protected set;
+			}
+			protected Boolean IsRedo
+			{
+				get;
+				set;
+			}
+			public override String ActionDescription
+			{
+				get
 				{
-					lUpdate.PutUndo ();
+					return (IsDelete == !IsRedo) ? this.ForClipboard ? Properties.Resources.UndoActionCut : Properties.Resources.UndoActionDelete : this.ForClipboard ? Properties.Resources.UndoActionPaste : Properties.Resources.UndoActionAdd;
 				}
 			}
 		}
 
-		public void EndUpdate ()
+		///////////////////////////////////////////////////////////////////////////////
+
+		internal class RepeatingUpdate<T, TT>
+			where T : UndoableUpdate<TT>
+			where TT : class
 		{
-			if (this.UpdateStarted)
+			public T UpdateStart
 			{
-				T lUpdate = this.UpdateStart;
-				this.UpdateStart = null;
-#if DEBUG_NOT
-				System.Diagnostics.Debug.Print ("EndRepeat PutUndo [{0}]", lUpdate.DebugString ());
-#endif
-				lUpdate.PutUndo ();
+				get;
+				private set;
 			}
-			this.UpdateStart = null;
+			public Boolean UpdateStarted
+			{
+				get
+				{
+					return (UpdateStart != null);
+				}
+			}
+
+			public RepeatingUpdate ()
+			{
+				this.UpdateStart = null;
+			}
+
+			///////////////////////////////////////////////////////////////////////////////
+
+			public void PutUpdate (T pUpdate, int pRepeatNum)
+			{
+				if (pRepeatNum > 0)
+				{
+					if (!this.UpdateStarted)
+					{
+#if DEBUG_NOT
+						System.Diagnostics.Debug.Print ("PutRepeat {0} Apply(First) [{1}]", pRepeatNum.ToString (), pUpdate.DebugString ());
+#endif
+						this.UpdateStart = pUpdate.Apply () as T;
+					}
+					else
+					{
+#if DEBUG_NOT
+						System.Diagnostics.Debug.Print ("PutRepeat {0} Apply(Repeat) [{1}]", pRepeatNum.ToString (), pUpdate.DebugString ());
+#endif
+						pUpdate.Apply ();
+					}
+				}
+				else if (this.UpdateStarted)
+				{
+#if DEBUG_NOT
+				System.Diagnostics.Debug.Print ("PutRepeat {0} Apply(Last) [{1}]", pRepeatNum.ToString (), pUpdate.DebugString ());
+#endif
+					pUpdate.Apply ();
+					EndUpdate ();
+				}
+				else
+				{
+#if DEBUG_NOT
+					System.Diagnostics.Debug.Print ("PutRepeat {0} Apply(Single) [{1}] PutUndo [{1}]", pRepeatNum.ToString (), pUpdate.DebugString ());
+#endif
+					T lUpdate = pUpdate.Apply () as T;
+					if (lUpdate != null)
+					{
+						lUpdate.PutUndo ();
+					}
+				}
+			}
+
+			public void EndUpdate ()
+			{
+				if (this.UpdateStarted)
+				{
+					T lUpdate = this.UpdateStart;
+					this.UpdateStart = null;
+#if DEBUG_NOT
+					System.Diagnostics.Debug.Print ("EndRepeat PutUndo [{0}]", lUpdate.DebugString ());
+#endif
+					lUpdate.PutUndo ();
+				}
+				this.UpdateStart = null;
+			}
 		}
 	}
 }

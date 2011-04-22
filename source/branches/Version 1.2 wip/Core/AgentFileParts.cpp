@@ -47,7 +47,13 @@ IMPLEMENT_DLL_OBJECT(CAgentFileGestures)
 IMPLEMENT_DLL_OBJECT(CAgentFileStates)
 #endif
 
-#ifndef	_M_CEE
+#ifdef	_M_CEE
+#ifdef	_DEBUG
+//#define	_DEBUG_INSTANCE			LogNormal
+//#define	_DEBUG_INSTANCE_OWNED	MinLogLevel(mOwner->mLogLevel,_DEBUG_INSTANCE)
+//#define	_DEBUG_COPY				LogNormal
+#endif
+#else
 #ifdef	_DEBUG
 #define	_DEBUG_SEQUENCE_FRAMES	(GetProfileDebugInt(_T("DebugSequenceFrames"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 #endif
@@ -72,11 +78,34 @@ namespace Character {
 #endif
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef	_M_CEE
+#ifdef	_DEBUG_INSTANCE
+static gcroot<List<CAgentFileHeader^> ^>			sHeaderInstances = gcnew List<CAgentFileHeader^>;
+static gcroot<List<CAgentFileTts^> ^>				sTtsInstances = gcnew List<CAgentFileTts^>;
+static gcroot<List<CAgentFileBalloon^> ^>			sBalloonInstances = gcnew List<CAgentFileBalloon^>;
+static gcroot<List<CAgentFileAnimation^> ^>			sAnimationInstances = gcnew List<CAgentFileAnimation^>;
+static gcroot<List<CAgentFileFrame^> ^>				sFrameInstances = gcnew List<CAgentFileFrame^>;
+static gcroot<List<CAgentFileFrames^> ^>			sFramesInstances = gcnew List<CAgentFileFrames^>;
+static gcroot<List<CAgentFileFrameImage^> ^>		sFrameImageInstances = gcnew List<CAgentFileFrameImage^>;
+static gcroot<List<CAgentFileFrameImages^> ^>		sFrameImagesInstances = gcnew List<CAgentFileFrameImages^>;
+static gcroot<List<CAgentFileFrameOverlay^> ^>		sFrameOverlayInstances = gcnew List<CAgentFileFrameOverlay^>;
+static gcroot<List<CAgentFileFrameOverlays^> ^>		sFrameOverlaysInstances = gcnew List<CAgentFileFrameOverlays^>;
+#endif
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
 CAgentFileHeader::CAgentFileHeader ()
 #ifndef	_M_CEE
 :	mIcon (NULL)
 #endif
 {
+#ifdef	_DEBUG_INSTANCE
+	sHeaderInstances->Add (this);
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileHeader::CAgentFileHeader"), sHeaderInstances->IndexOf(this));
+#endif
 	Empty ();
 }
 
@@ -84,9 +113,29 @@ CAgentFileHeader::CAgentFileHeader ()
 CAgentFileHeader::CAgentFileHeader (CharacterFile^ pOwner)
 :	mOwner (pOwner)
 {
+#ifdef	_DEBUG_INSTANCE
+	sHeaderInstances->Add (this);
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (_DEBUG_INSTANCE_OWNED, _T("[%d] CAgentFileHeader::CAgentFileHeader (Owned)"), sHeaderInstances->IndexOf(this));
+#endif
+#endif
 	Empty ();
 }
 #endif
+
+CAgentFileHeader::~CAgentFileHeader ()
+{
+#ifdef	_M_CEE
+#ifdef	_DEBUG_INSTANCE
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileHeader::~CAgentFileHeader (Owned)"), sHeaderInstances->IndexOf(this));
+#else	
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileHeader::~CAgentFileHeader"), sHeaderInstances->IndexOf(this));
+#endif
+	sHeaderInstances->Remove (this);
+#endif
+#endif
+}
 
 void CAgentFileHeader::Empty ()
 {
@@ -101,7 +150,7 @@ void CAgentFileHeader::Empty ()
 #ifdef	_TRACE_RESOURCES
 		if	(LogIsActive (_TRACE_RESOURCES))
 		{
-			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CharacterFile::DestroyIcon [%p]"), this, mIcon);
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%d] CharacterFile::DestroyIcon [%p]"), this, mIcon);
 		}
 #endif
 
@@ -110,7 +159,7 @@ void CAgentFileHeader::Empty ()
 #ifdef	_TRACE_RESOURCES
 		if	(LogIsActive (_TRACE_RESOURCES))
 		{
-			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CharacterFile::DestroyIcon [%p] Done"), this, mIcon);
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%d] CharacterFile::DestroyIcon [%p] Done"), this, mIcon);
 		}
 #endif
 	}
@@ -274,6 +323,11 @@ System::String^ CAgentFileHeader::ToString ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+CAgentFileName::CAgentFileName ()
+{
+	Empty ();
+}
+
 #ifdef	_M_CEE
 CAgentFileName::CAgentFileName (LANGID pLanguage, System::String^ pName)
 {
@@ -286,9 +340,7 @@ CAgentFileName::CAgentFileName (LANGID pLanguage, CAgentFileName^ pSource)
 {
 	Empty ();
 	mLanguage = pLanguage;
-	mName = pSource->mName;
-	mDesc1 = pSource->mDesc1;
-	mDesc2 = pSource->mDesc2;
+	pSource->CopyTo (this);
 }
 
 CAgentFileName::CAgentFileName (CharacterFile^ pOwner)
@@ -297,6 +349,10 @@ CAgentFileName::CAgentFileName (CharacterFile^ pOwner)
 	Empty ();
 }
 #endif
+
+CAgentFileName::~CAgentFileName ()
+{
+}
 
 void CAgentFileName::Empty ()
 {
@@ -330,8 +386,10 @@ System::String^ CAgentFileName::Name::get ()
 void CAgentFileName::Name::set (System::String^ pValue)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(!String::IsNullOrEmpty (pValue))
 		&&	(
 				(String::IsNullOrEmpty (mName))
@@ -340,7 +398,10 @@ void CAgentFileName::Name::set (System::String^ pValue)
 		)
 	{
 		mName = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 #else
@@ -364,8 +425,10 @@ System::String^ CAgentFileName::Desc1::get ()
 void CAgentFileName::Desc1::set (System::String^ pValue)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(
 				(String::IsNullOrEmpty (mDesc1) != String::IsNullOrEmpty (pValue))
 			||	(
@@ -377,7 +440,10 @@ void CAgentFileName::Desc1::set (System::String^ pValue)
 		)
 	{
 		mDesc1 = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 #else
@@ -396,8 +462,10 @@ System::String^ CAgentFileName::Desc2::get ()
 void CAgentFileName::Desc2::set (System::String^ pValue)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(
 				(String::IsNullOrEmpty (mDesc2) != String::IsNullOrEmpty (pValue))
 			||	(
@@ -409,7 +477,10 @@ void CAgentFileName::Desc2::set (System::String^ pValue)
 		)
 	{
 		mDesc2 = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 #else
@@ -422,6 +493,39 @@ void CAgentFileName::put_Desc2 (LPCTSTR pDesc2)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
+Boolean CAgentFileName::CopyTo (CAgentFileName^ pTarget)
+{
+	if	(
+			(pTarget)
+		&&	(
+				(!pTarget->mOwner)
+			||	(!pTarget->mOwner->IsReadOnly)
+			)
+		)
+	{
+		pTarget->mName = (mName) ? gcnew String (mName) : nullptr;
+		pTarget->mDesc1 = (mDesc1) ? gcnew String (mDesc1) : nullptr;
+		pTarget->mDesc2 = (mDesc2) ? gcnew String (mDesc2) : nullptr;
+		return true;
+	}
+	return false;
+}
+
+Boolean CAgentFileName::Equals (CAgentFileName^ pTarget)
+{
+	if	(
+			(pTarget)
+		&&	(pTarget->mLanguage == mLanguage)
+		&&	(String::Compare (pTarget->mName, mName) == 0)
+		&&	(String::Compare (pTarget->mDesc1, mDesc1) == 0)
+		&&	(String::Compare (pTarget->mDesc2, mDesc2) == 0)
+		)
+	{
+		return true;
+	}
+	return false;
+}
+
 System::String^ CAgentFileName::ToString ()
 {
     return String::Format ("Name \"{0}\" Language {1:X} {1:D} \"{2}\" \"{3}\" \"{4}\"", Name, Language, (gcnew System::Globalization::CultureInfo (Language))->EnglishName, Desc1, Desc2);
@@ -434,6 +538,10 @@ System::String^ CAgentFileName::ToString ()
 
 #ifdef	_M_CEE
 CAgentFileNames::CAgentFileNames ()
+{
+}
+
+CAgentFileNames::~CAgentFileNames ()
 {
 }
 
@@ -452,8 +560,10 @@ CAgentFileName^ CAgentFileNames::Add (LANGID pLangID, System::String^ pName)
 	CAgentFileName^	lFileName = nullptr;
 
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(!Contains (pLangID))
 		&&	(!String::IsNullOrEmpty (pName))
 		)
@@ -463,7 +573,10 @@ CAgentFileName^ CAgentFileNames::Add (LANGID pLangID, System::String^ pName)
 		lFileName->mName = pName;
 
 		__super::Add (lFileName);
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 	return lFileName;
 }
@@ -471,12 +584,17 @@ CAgentFileName^ CAgentFileNames::Add (LANGID pLangID, System::String^ pName)
 bool CAgentFileNames::Remove (LANGID pLangID)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(__super::Remove (pLangID))
 		)
 	{
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 		return true;
 	}
 	return false;
@@ -485,12 +603,17 @@ bool CAgentFileNames::Remove (LANGID pLangID)
 bool CAgentFileNames::Remove (CAgentFileName^ pItem)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(__super::Remove (pItem))
 		)
 	{
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 		return true;
 	}
 	return false;
@@ -501,13 +624,42 @@ bool CAgentFileNames::Remove (CAgentFileName^ pItem)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+CAgentFileTts::CAgentFileTts ()
+{
+#ifdef	_DEBUG_INSTANCE
+	sTtsInstances->Add (this);
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileTts::CAgentFileTts"), sTtsInstances->IndexOf(this));
+#endif
+	Empty ();
+}
+
 #ifdef	_M_CEE
 CAgentFileTts::CAgentFileTts (CharacterFile^ pOwner)
 :	mOwner (pOwner)
 {
+#ifdef	_DEBUG_INSTANCE
+	sTtsInstances->Add (this);
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (_DEBUG_INSTANCE_OWNED, _T("[%d] CAgentFileTts::CAgentFileTts (Owned)"), sTtsInstances->IndexOf(this));
+#endif
+#endif
 	Empty ();
 }
 #endif
+
+CAgentFileTts::~CAgentFileTts ()
+{
+#ifdef	_M_CEE
+#ifdef	_DEBUG_INSTANCE
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileTts::~CAgentFileTts (Owned)"), sTtsInstances->IndexOf(this));
+#else	
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileTts::~CAgentFileTts"), sTtsInstances->IndexOf(this));
+#endif
+	sTtsInstances->Remove (this);
+#endif
+#endif
+}
 
 void CAgentFileTts::Empty ()
 {
@@ -539,12 +691,18 @@ System::Guid CAgentFileTts::Engine::get ()
 void CAgentFileTts::Engine::set (System::Guid pValue)
 {
 	if	(
-			(mOwner)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(!mEngine.Equals (pValue))
 		)
 	{
 		mEngine = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 #endif
@@ -558,7 +716,10 @@ System::Guid CAgentFileTts::Mode::get ()
 void CAgentFileTts::Mode::set (System::Guid pValue)
 {
 	if	(
-			(mOwner)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(!mMode.Equals (pValue))
 		)
 	{
@@ -571,7 +732,10 @@ void CAgentFileTts::Mode::set (System::Guid pValue)
 		{
 			mModeId = mMode.ToString()->ToUpper();
 		}
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 #else
@@ -606,13 +770,19 @@ LANGID CAgentFileTts::Language::get ()
 void CAgentFileTts::Language::set (LANGID pValue)
 {
 	if	(
-			(mOwner)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(pValue != 0)
 		&&	(mLanguage != pValue)
 		)
 	{
 		mLanguage = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 #else
@@ -631,14 +801,20 @@ UInt16 CAgentFileTts::Gender::get ()
 void CAgentFileTts::Gender::set (UInt16 pValue)
 {
 	if	(
-			(mOwner)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(pValue >= 0)
 		&&	(pValue <= 2)
 		&&	(mGender != pValue)
 		)
 	{
 		mGender = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 #else
@@ -657,6 +833,42 @@ void CAgentFileTts::put_Gender (USHORT pGender)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
+Boolean CAgentFileTts::CopyTo (CAgentFileTts^ pTarget)
+{
+	if	(
+			(pTarget)
+		&&	(
+				(!pTarget->mOwner)
+			||	(!pTarget->mOwner->IsReadOnly)
+			)
+		)
+	{
+		pTarget->mEngine = mEngine;
+		pTarget->mMode = mMode;
+		pTarget->mModeId = (mModeId) ? gcnew String (mModeId) : nullptr;
+		pTarget->mLanguage = mLanguage;
+		pTarget->mGender = mGender;
+		return true;
+	}
+	return false;
+}
+
+Boolean CAgentFileTts::Equals (CAgentFileTts^ pTarget)
+{
+	if	(
+			(pTarget)
+		&&	(pTarget->mEngine == mEngine)
+		&&	(pTarget->mMode == mMode)
+		&&	(String::Compare (pTarget->mModeId, mModeId) == 0)
+		&&	(pTarget->mLanguage == mLanguage)
+		&&	(pTarget->mGender == mGender)
+		)
+	{
+		return true;
+	}
+	return false;
+}
+
 System::String^ CAgentFileTts::ToString ()
 {
     return String::Format ("Tts {0}", (ModeId ? ModeId : "<empty>"));
@@ -667,13 +879,42 @@ System::String^ CAgentFileTts::ToString ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+CAgentFileBalloon::CAgentFileBalloon ()
+{
+#ifdef	_DEBUG_INSTANCE
+	sBalloonInstances->Add (this);
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileBalloon::CAgentFileBalloon"), sBalloonInstances->IndexOf(this));
+#endif
+	Empty ();
+}
+
 #ifdef	_M_CEE
 CAgentFileBalloon::CAgentFileBalloon (CharacterFile^ pOwner)
 :	mOwner (pOwner)
 {
+#ifdef	_DEBUG_INSTANCE
+	sBalloonInstances->Add (this);
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (_DEBUG_INSTANCE_OWNED, _T("[%d] CAgentFileBalloon::CAgentFileBalloon (Owned)"), sBalloonInstances->IndexOf(this));
+#endif
+#endif
 	Empty ();
 }
 #endif
+
+CAgentFileBalloon::~CAgentFileBalloon ()
+{
+#ifdef	_M_CEE
+#ifdef	_DEBUG_INSTANCE
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileBalloon::~CAgentFileBalloon (Owned)"), sBalloonInstances->IndexOf(this));
+#else	
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileBalloon::~CAgentFileBalloon"), sBalloonInstances->IndexOf(this));
+#endif
+	sBalloonInstances->Remove (this);
+#endif
+#endif
+}
 
 void CAgentFileBalloon::Empty ()
 {
@@ -699,12 +940,18 @@ void CAgentFileBalloon::Lines::set (UInt16 pValue)
 	pValue = min (max (pValue, MinLines), MaxLines);
 
 	if	(
-			(mOwner)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(mLines != pValue)
 		)
 	{
 		mLines = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 #else
@@ -725,12 +972,18 @@ void CAgentFileBalloon::PerLine::set (UInt16 pValue)
 	pValue = min (max (pValue, MinPerLine), MaxPerLine);
 
 	if	(
-			(mOwner)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(mPerLine != pValue)
 		)
 	{
 		mPerLine = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 #else
@@ -749,12 +1002,18 @@ System::Drawing::Color CAgentFileBalloon::FgColor::get ()
 void CAgentFileBalloon::FgColor::set (System::Drawing::Color pValue)
 {
 	if	(
-			(mOwner)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(mFgColor != pValue)
 		)
 	{
 		mFgColor = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 #else
@@ -773,12 +1032,18 @@ System::Drawing::Color CAgentFileBalloon::BkColor::get ()
 void CAgentFileBalloon::BkColor::set (System::Drawing::Color pValue)
 {
 	if	(
-			(mOwner)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(mBkColor != pValue)
 		)
 	{
 		mBkColor = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 #else
@@ -797,12 +1062,18 @@ System::Drawing::Color CAgentFileBalloon::BrColor::get ()
 void CAgentFileBalloon::BrColor::set (System::Drawing::Color pValue)
 {
 	if	(
-			(mOwner)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(mBrColor != pValue)
 		)
 	{
 		mBrColor = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 #else
@@ -821,7 +1092,10 @@ System::Drawing::Font^ CAgentFileBalloon::Font::get ()
 void CAgentFileBalloon::Font::set (System::Drawing::Font^ pValue)
 {
 	if	(
-			(mOwner)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(
 				((!mFont) != (!pValue))
 			||	(
@@ -833,7 +1107,10 @@ void CAgentFileBalloon::Font::set (System::Drawing::Font^ pValue)
 		)
 	{
 		mFont = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 #else
@@ -846,6 +1123,50 @@ void CAgentFileBalloon::put_Font (const LOGFONT& pFont)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
+Boolean CAgentFileBalloon::CopyTo (CAgentFileBalloon^ pTarget)
+{
+	if	(
+			(pTarget)
+		&&	(
+				(!pTarget->mOwner)
+			||	(!pTarget->mOwner->IsReadOnly)
+			)
+		)
+	{
+		pTarget->mLines = mLines;
+		pTarget->mPerLine = mPerLine;
+		pTarget->mFgColor = mFgColor;
+		pTarget->mBkColor = mBkColor;
+		pTarget->mBrColor = mBrColor;
+		pTarget->mFont = (mFont) ? safe_cast <System::Drawing::Font^> (mFont->Clone()) : nullptr;
+		return true;
+	}
+	return false;
+}
+
+Boolean CAgentFileBalloon::Equals (CAgentFileBalloon^ pTarget)
+{
+	if	(
+			(pTarget)
+		&&	(pTarget->mLines == mLines)
+		&&	(pTarget->mPerLine == mPerLine)
+		&&	(pTarget->mFgColor == mFgColor)
+		&&	(pTarget->mBkColor == mBkColor)
+		&&	(pTarget->mBrColor == mBrColor)
+		&&	(
+				((pTarget->mFont == nullptr) == (mFont == nullptr))
+			&&	(
+					(pTarget->mFont == nullptr)
+				||	(pTarget->mFont->Equals (mFont))
+				)
+			)
+		)
+	{
+		return true;
+	}
+	return false;
+}
+
 System::String^ CAgentFileBalloon::ToString ()
 {
     return String::Format ("Balloon {0:D} {1:D}", Lines, PerLine);
@@ -874,81 +1195,43 @@ const USHORT CAgentFileBalloon::DefPerLine = 32;
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentFileImage::Empty ()
+CAgentFileFrameImage::CAgentFileFrameImage ()
 {
-	mImageNum = 0;
-	mIs32Bit = false;
-#ifdef	_M_CEE
-	mImageSize.Width = 0;
-	mImageSize.Height = 0;
-	mBits = nullptr;
-#else
-	mImageSize.cx = mImageSize.cy = 0;
-	mBitsSize = 0;
-	mBits = NULL;
+#ifdef	_DEBUG_INSTANCE
+	sFrameImageInstances->Add (this);
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileFrameImage::CAgentFileFrameImage"), sFrameImageInstances->IndexOf(this));
 #endif
+	Empty ();
 }
-
-/////////////////////////////////////////////////////////////////////////////
-
-#ifdef	_M_CEE
-UInt32 CAgentFileImage::ImageNum::get()
-{
-	return mImageNum;
-}
-
-System::Drawing::Size CAgentFileImage::ImageSize::get()
-{
-	return mImageSize;
-}
-
-Boolean CAgentFileImage::Is32Bit::get()
-{
-	return mIs32Bit;
-}
-
-UInt32 CAgentFileImage::BitsSize::get()
-{
-	return (mBits) ? (UInt32)mBits->Length : 0;
-}
-
-array <BYTE>^ CAgentFileImage::Bits::get()
-{
-	return mBits;
-}
-#else
-void CAgentFileImage::put_ImageSize (const CSize& pImageSize)
-{
-	mImageSize = pImageSize;
-}
-#endif
-
-/////////////////////////////////////////////////////////////////////////////
-
-#ifdef	_M_CEE
-System::String^ CAgentFileImage::ToString ()
-{
-    return String::Format ("FileImage {0}", ImageSize.ToString());
-}
-#endif
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
 CAgentFileFrameImage::CAgentFileFrameImage (CharacterFile^ pOwner, FileAnimationFrame^ pFrame)
 :	mOwner (pOwner),
 	mContainer (pFrame->Images)
 {
+#ifdef	_DEBUG_INSTANCE
+	sFrameImageInstances->Add (this);
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (_DEBUG_INSTANCE_OWNED, _T("[%d] CAgentFileFrameImage::CAgentFileFrameImage (Owned) [%d]"), sFrameImageInstances->IndexOf(this), sFrameImagesInstances->IndexOf(mContainer));
+#endif
+#endif
 	Empty ();
 }
-
-FileAnimationFrame^ CAgentFileFrameImage::Frame::get()
-{
-	return (mContainer) ? mContainer->Frame : nullptr;
-}
 #endif
+
+CAgentFileFrameImage::~CAgentFileFrameImage ()
+{
+#ifdef	_M_CEE
+#ifdef	_DEBUG_INSTANCE
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileFrameImage::~CAgentFileFrameImage (Owned) [%d]"), sFrameImageInstances->IndexOf(this), sFrameImagesInstances->IndexOf(mContainer));
+#else
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileFrameImage::~CAgentFileFrameImage"), sFrameImageInstances->IndexOf(this));
+#endif
+	sFrameImageInstances->Remove (this);
+#endif
+#endif
+}
 
 void CAgentFileFrameImage::Empty ()
 {
@@ -964,6 +1247,11 @@ void CAgentFileFrameImage::Empty ()
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
+FileAnimationFrame^ CAgentFileFrameImage::Frame::get()
+{
+	return (mContainer) ? mContainer->Frame : nullptr;
+}
+
 Int32 CAgentFileFrameImage::ImageNdx::get()
 {
 	return mImageNdx;
@@ -1007,13 +1295,18 @@ System::Drawing::Point CAgentFileFrameImage::Offset::get()
 void CAgentFileFrameImage::Offset::set (System::Drawing::Point pValue)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(mOffset != pValue)
 		)
 	{
 		mOffset = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 #endif
@@ -1025,8 +1318,10 @@ Boolean CAgentFileFrameImage::CopyTo (CAgentFileFrameImage^ pTarget)
 {
 	if	(
 			(pTarget)
-		&&	(pTarget->mOwner)
-		&&	(!pTarget->mOwner->IsReadOnly)
+		&&	(
+				(!pTarget->mOwner)
+			||	(!pTarget->mOwner->IsReadOnly)
+			)
 		)
 	{
 		pTarget->mImageNdx = mImageNdx;
@@ -1049,13 +1344,37 @@ System::String^ CAgentFileFrameImage::ToString ()
 #ifdef	_M_CEE
 CAgentFileFrameImages::CAgentFileFrameImages ()
 {
+#ifdef	_DEBUG_INSTANCE
+	sFrameImagesInstances->Add (this);
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileFrameImages::CAgentFileFrameImages"), sFrameImagesInstances->IndexOf(this));
+#endif
 }
 
 CAgentFileFrameImages::CAgentFileFrameImages (CharacterFile^ pOwner, FileAnimationFrame^ pFrame)
 :	mOwner (pOwner),
 	mFrame (pFrame)
 {
+#ifdef	_DEBUG_INSTANCE
+	sFrameImagesInstances->Add (this);
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (_DEBUG_INSTANCE_OWNED, _T("[%d] CAgentFileFrameImages::CAgentFileFrameImages (Owned) [%d]"), sFrameImagesInstances->IndexOf(this), sFrameInstances->IndexOf(mFrame));
+#endif
+#endif
 }
+
+CAgentFileFrameImages::~CAgentFileFrameImages ()
+{
+#ifdef	_DEBUG_INSTANCE
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileFrameImages::~CAgentFileFrameImages (Owned) [%d]"), sFrameImagesInstances->IndexOf(this), sFrameInstances->IndexOf(mFrame));
+#else
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileFrameImages::~CAgentFileFrameImages"), sFrameImagesInstances->IndexOf(this));
+#endif
+	sFrameImagesInstances->Remove (this);
+#endif
+}
+
+/////////////////////////////////////////////////////////////////////////////
 
 CAgentFileFrameImage^ CAgentFileFrameImages::Add (System::String^ pFrameImagePath)
 {
@@ -1067,12 +1386,21 @@ CAgentFileFrameImage^ CAgentFileFrameImages::Insert (Int32 pNdx, System::String^
 	CAgentFileFrameImage^	lImage = nullptr;
 
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
+		&&	(
+				(mOwner)
+			||	(String::IsNullOrEmpty (pFrameImagePath))
+			)
 		)
 	{
 		lImage = gcnew CAgentFileFrameImage (mOwner, mFrame);
-		if	(!String::IsNullOrEmpty (pFrameImagePath))
+		if	(
+				(mOwner)
+			&&	(!String::IsNullOrEmpty (pFrameImagePath))
+			)
 		{
 			lImage->mImageNdx = mOwner->LoadImageFile (pFrameImagePath);
 		}
@@ -1081,7 +1409,10 @@ CAgentFileFrameImage^ CAgentFileFrameImages::Insert (Int32 pNdx, System::String^
 			pNdx = Count;
 		}
 		__super::Insert (min ((int)pNdx, Count), lImage);
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 	return lImage;
 }
@@ -1089,13 +1420,18 @@ CAgentFileFrameImage^ CAgentFileFrameImages::Insert (Int32 pNdx, System::String^
 bool CAgentFileFrameImages::Remove (CAgentFileFrameImage^ pItem)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(Contains (pItem))
 		)
 	{
 		RemoveItem (IndexOf (pItem));
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 		return true;
 	}
 	return false;
@@ -1104,14 +1440,19 @@ bool CAgentFileFrameImages::Remove (CAgentFileFrameImage^ pItem)
 bool CAgentFileFrameImages::RemoveAt (Int32 pNdx)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(pNdx >= 0)
 		&&	(pNdx < Count)
 		)
 	{
 		RemoveItem (pNdx);
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 		return true;
 	}
 	return false;
@@ -1120,8 +1461,10 @@ bool CAgentFileFrameImages::RemoveAt (Int32 pNdx)
 bool CAgentFileFrameImages::Move (Int32 pNdx, Int32 pNewNdx)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(pNdx >= 0)
 		&&	((int)pNdx < Count)
 		)
@@ -1133,7 +1476,10 @@ bool CAgentFileFrameImages::Move (Int32 pNdx, Int32 pNewNdx)
 
 			__super::Remove (lImage);
 			__super::Insert (pNewNdx, lImage);
-			mOwner->IsDirty = true;
+			if	(mOwner)
+			{
+				mOwner->IsDirty = true;
+			}
 			return true;
 		}
 	}
@@ -1143,8 +1489,10 @@ bool CAgentFileFrameImages::Move (Int32 pNdx, Int32 pNewNdx)
 bool CAgentFileFrameImages::Move (CAgentFileFrameImage^ pItem, Int32 pNewNdx)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(Contains (pItem))
 		)
 	{
@@ -1156,8 +1504,10 @@ bool CAgentFileFrameImages::Move (CAgentFileFrameImage^ pItem, Int32 pNewNdx)
 bool CAgentFileFrameImages::Move (CAgentFileFrameImage^ pItem, CAgentFileFrameImage^ pBefore)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(Contains (pItem))
 		&&	(
 				(!pBefore)
@@ -1182,19 +1532,43 @@ bool CAgentFileFrameImages::Move (CAgentFileFrameImage^ pItem, CAgentFileFrameIm
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+CAgentFileFrameOverlay::CAgentFileFrameOverlay ()
+{
+#ifdef	_DEBUG_INSTANCE
+	sFrameOverlayInstances->Add (this);
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileFrameOverlay::CAgentFileFrameOverlay"), sFrameOverlayInstances->IndexOf(this));
+#endif
+	Empty ();
+}
+
 #ifdef	_M_CEE
 CAgentFileFrameOverlay::CAgentFileFrameOverlay (CharacterFile^ pOwner, FileAnimationFrame^ pFrame)
 :	mOwner (pOwner),
 	mContainer (pFrame->Overlays)
 {
+#ifdef	_DEBUG_INSTANCE
+	sFrameOverlayInstances->Add (this);
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (_DEBUG_INSTANCE_OWNED, _T("[%d] CAgentFileFrameOverlay::CAgentFileFrameOverlay (Owned) [%d]"), sFrameOverlayInstances->IndexOf(this), sFrameOverlaysInstances->IndexOf(mContainer));
+#endif
+#endif
 	Empty ();
 }
-
-FileAnimationFrame^ CAgentFileFrameOverlay::Frame::get()
-{
-	return (mContainer) ? mContainer->Frame : nullptr;
-}
 #endif
+
+CAgentFileFrameOverlay::~CAgentFileFrameOverlay ()
+{
+#ifdef	_M_CEE
+#ifdef	_DEBUG_INSTANCE
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileFrameOverlay::~CAgentFileFrameOverlay (Owned) [%d]"), sFrameOverlayInstances->IndexOf(this), sFrameOverlaysInstances->IndexOf(mContainer));
+#else
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileFrameOverlay::~CAgentFileFrameOverlay"), sFrameOverlayInstances->IndexOf(this));
+#endif
+	sFrameOverlayInstances->Remove (this);
+#endif
+#endif
+}
 
 void CAgentFileFrameOverlay::Empty ()
 {
@@ -1212,6 +1586,11 @@ void CAgentFileFrameOverlay::Empty ()
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
+FileAnimationFrame^ CAgentFileFrameOverlay::Frame::get()
+{
+	return (mContainer) ? mContainer->Frame : nullptr;
+}
+
 AgentMouthOverlay CAgentFileFrameOverlay::OverlayType::get()
 {
 	return mOverlayType;
@@ -1220,15 +1599,20 @@ AgentMouthOverlay CAgentFileFrameOverlay::OverlayType::get()
 void CAgentFileFrameOverlay::OverlayType::set (AgentMouthOverlay pValue)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(pValue >= AgentMouthOverlay::MouthOverlayMin)
 		&&	(pValue <= AgentMouthOverlay::MouthOverlayMax)
 		&&	(mOverlayType != pValue)
 		)
 	{
 		mOverlayType = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 
@@ -1275,13 +1659,18 @@ Boolean CAgentFileFrameOverlay::ReplaceFlag::get()
 void CAgentFileFrameOverlay::ReplaceFlag::set (Boolean pValue)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(mReplaceFlag != pValue)
 		)
 	{
 		mReplaceFlag = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 
@@ -1293,13 +1682,18 @@ System::Drawing::Point CAgentFileFrameOverlay::Offset::get()
 void CAgentFileFrameOverlay::Offset::set (System::Drawing::Point pValue)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(mOffset != pValue)
 		)
 	{
 		mOffset = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 #endif
@@ -1311,8 +1705,10 @@ Boolean CAgentFileFrameOverlay::CopyTo (CAgentFileFrameOverlay^ pTarget)
 {
 	if	(
 			(pTarget)
-		&&	(pTarget->mOwner)
-		&&	(!pTarget->mOwner->IsReadOnly)
+		&&	(
+				(!pTarget->mOwner)
+			||	(!pTarget->mOwner->IsReadOnly)
+			)
 		)
 	{
 		pTarget->mImageNdx = mImageNdx;
@@ -1336,13 +1732,37 @@ System::String^ CAgentFileFrameOverlay::ToString ()
 #ifdef	_M_CEE
 CAgentFileFrameOverlays::CAgentFileFrameOverlays ()
 {
+#ifdef	_DEBUG_INSTANCE
+	sFrameOverlaysInstances->Add (this);
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileFrameOverlays::CAgentFileFrameOverlays"), sFrameOverlaysInstances->IndexOf(this));
+#endif
 }
 
 CAgentFileFrameOverlays::CAgentFileFrameOverlays (CharacterFile^ pOwner, FileAnimationFrame^ pFrame)
 :	mOwner (pOwner),
 	mFrame (pFrame)
 {
+#ifdef	_DEBUG_INSTANCE
+	sFrameOverlaysInstances->Add (this);
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (_DEBUG_INSTANCE_OWNED, _T("[%d] CAgentFileFrameOverlays::CAgentFileFrameOverlays (Owned) [%d]"), sFrameOverlaysInstances->IndexOf(this), sFrameInstances->IndexOf(mFrame));
+#endif
+#endif
 }
+
+CAgentFileFrameOverlays::~CAgentFileFrameOverlays ()
+{
+#ifdef	_DEBUG_INSTANCE
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileFrameOverlays::~CAgentFileFrameOverlays (Owned) [%d]"), sFrameOverlaysInstances->IndexOf(this), sFrameInstances->IndexOf(mFrame));
+#else
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileFrameOverlays::~CAgentFileFrameOverlays"), sFrameOverlaysInstances->IndexOf(this));
+#endif
+	sFrameOverlaysInstances->Remove (this);
+#endif
+}
+
+/////////////////////////////////////////////////////////////////////////////
 
 AgentMouthOverlay CAgentFileFrameOverlays::GetKeyForItem (CAgentFileFrameOverlay^ pItem)
 {
@@ -1354,8 +1774,10 @@ CAgentFileFrameOverlay^ CAgentFileFrameOverlays::Add (AgentMouthOverlay pOverlay
 	CAgentFileFrameOverlay^	lOverlay = nullptr;
 
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(!Contains (pOverlayType))
 		&&	(pOverlayType >= AgentMouthOverlay::MouthOverlayMin)
 		&&	(pOverlayType <= AgentMouthOverlay::MouthOverlayMax)
@@ -1369,7 +1791,10 @@ CAgentFileFrameOverlay^ CAgentFileFrameOverlays::Add (AgentMouthOverlay pOverlay
 		}
 
 		__super::Add (lOverlay);
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 	return lOverlay;
 }
@@ -1377,12 +1802,17 @@ CAgentFileFrameOverlay^ CAgentFileFrameOverlays::Add (AgentMouthOverlay pOverlay
 bool CAgentFileFrameOverlays::Remove (AgentMouthOverlay pOverlayType)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(__super::Remove (pOverlayType))
 		)
 	{
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 		return true;
 	}
 	return false;
@@ -1391,12 +1821,17 @@ bool CAgentFileFrameOverlays::Remove (AgentMouthOverlay pOverlayType)
 bool CAgentFileFrameOverlays::Remove (CAgentFileFrameOverlay^ pItem)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(__super::Remove (pItem))
 		)
 	{
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 		return true;
 	}
 	return false;
@@ -1407,19 +1842,45 @@ bool CAgentFileFrameOverlays::Remove (CAgentFileFrameOverlay^ pItem)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+CAgentFileFrame::CAgentFileFrame ()
+{
+#ifdef	_DEBUG_INSTANCE
+	sFrameInstances->Add (this);
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileFrame::CAgentFileFrame"), sFrameInstances->IndexOf(this));
+#endif
+	Empty ();
+}
+
 #ifdef	_M_CEE
 CAgentFileFrame::CAgentFileFrame (CharacterFile^ pOwner, FileFrames^ pContainer)
 :	mOwner (pOwner),
 	mContainer (pContainer)
 {
+#ifdef	_DEBUG_INSTANCE
+	sFrameInstances->Add (this);
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (_DEBUG_INSTANCE_OWNED, _T("[%d] CAgentFileFrame::CAgentFileFrame (Owned) [%d]"), sFrameInstances->IndexOf(this), sFramesInstances->IndexOf(mContainer));
+#endif
+#endif
 	Empty ();
 }
-
-FileAnimation^ CAgentFileFrame::Animation::get()
-{
-	return (mContainer) ? mContainer->Animation : nullptr;
-}
 #endif
+
+CAgentFileFrame::~CAgentFileFrame ()
+{
+#ifdef	_M_CEE
+#ifdef	_DEBUG_INSTANCE
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileFrame::~CAgentFileFrame (Owned) [%d]"), sFrameInstances->IndexOf(this), sFramesInstances->IndexOf(mContainer));
+#else
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileFrame::~CAgentFileFrame"), sFrameInstances->IndexOf(this));
+#endif
+	sFrameInstances->Remove (this);
+#endif
+#endif
+}
+
+/////////////////////////////////////////////////////////////////////////////
 
 void CAgentFileFrame::Empty ()
 {
@@ -1427,6 +1888,10 @@ void CAgentFileFrame::Empty ()
 	mExitFrame = -2;
 	mSoundNdx = -1;
 #ifdef	_M_CEE
+	if	(mOwner)
+	{
+		mDuration = mOwner->NewFrameDuration;
+	}
 	mBranching = nullptr;
 	if (mOwner)
 	{
@@ -1453,6 +1918,11 @@ void CAgentFileFrame::Empty ()
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
+FileAnimation^ CAgentFileFrame::Animation::get()
+{
+	return (mContainer) ? mContainer->Animation : nullptr;
+}
+
 UInt16 CAgentFileFrame::Duration::get()
 {
 	return mDuration;
@@ -1461,13 +1931,18 @@ UInt16 CAgentFileFrame::Duration::get()
 void CAgentFileFrame::Duration::set (UInt16 pValue)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(mDuration != pValue)
 		)
 	{
 		mDuration = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 
@@ -1527,13 +2002,18 @@ Int16 CAgentFileFrame::ExitFrame::get()
 void CAgentFileFrame::ExitFrame::set (Int16 pValue)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(mExitFrame != pValue)
 		)
 	{
 		mExitFrame = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 
@@ -1545,14 +2025,19 @@ array <CAgentFileFrameBranch>^ CAgentFileFrame::Branching::get()
 void CAgentFileFrame::Branching::set (array <CAgentFileFrameBranch>^ pValue)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(mBranching != pValue)
 		)
 	{
-		// Validation?
+//TODO Validation?
 		mBranching = pValue;
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 
@@ -1595,18 +2080,111 @@ USHORT CAgentFileFrame::get_Duration () const
 #ifdef	_M_CEE
 Boolean CAgentFileFrame::CopyTo (CAgentFileFrame^ pTarget)
 {
+	return CopyTo (pTarget, false);
+}
+
+Boolean CAgentFileFrame::CopyTo (CAgentFileFrame^ pTarget, Boolean pDeepCopy)
+{
+#ifdef	_DEBUG_COPY
+	if	(pTarget)
+	{
+		LogMessage (_DEBUG_COPY, _T("Copy CAgentFileFrame [%s] [%d] to [%s] [%d]"), mOwner?_B(mOwner->FileName):_B(nullptr), mContainer?mContainer->IndexOf(this):-1, pTarget->mOwner?_B(pTarget->mOwner->FileName):_B(nullptr), pTarget->mContainer?pTarget->mContainer->IndexOf(pTarget):-1);
+	}
+#endif	
+
 	if	(
 			(pTarget)
-		&&	(pTarget->mOwner)
-		&&	(!pTarget->mOwner->IsReadOnly)
+		&&	(
+				(!pTarget->mOwner)
+			||	(!pTarget->mOwner->IsReadOnly)
+			)
 		)
 	{
 		pTarget->mDuration = mDuration;
 		pTarget->mSoundNdx = mSoundNdx;
 		pTarget->mExitFrame = mExitFrame;
-		pTarget->mBranching = mBranching;
-		pTarget->mImages = mImages;
-		pTarget->mOverlays = mOverlays;
+		
+		if	(pDeepCopy)
+		{
+#ifdef	_DEBUG_COPY
+			LogMessage (_DEBUG_COPY, _T("  Deep"));
+#endif			
+			if	(mBranching)
+			{
+				pTarget->mBranching = gcnew array <CAgentFileFrameBranch> (mBranching->Length);
+				for	(int lNdx = 0; lNdx < mBranching->Length; lNdx++)
+				{
+					pTarget->mBranching [lNdx] = mBranching [lNdx];
+				}
+#ifdef	_DEBUG_COPY
+				LogMessage (_DEBUG_COPY, _T("  Branching [%d] [%d]"), mBranching->Length, pTarget->mBranching->Length);
+#endif				
+			}
+			else
+			{
+				pTarget->mBranching = nullptr;
+			}
+
+			if	(mImages)
+			{
+				pTarget->mImages = gcnew CAgentFileFrameImages (pTarget->mOwner, pTarget);
+				
+				for each (CAgentFileFrameImage^ lImage in mImages)
+				{
+					CAgentFileFrameImage^	lTargetImage = gcnew CAgentFileFrameImage (pTarget->mOwner, pTarget);
+					
+					lImage->CopyTo (lTargetImage);
+					pTarget->mImages->Add (lTargetImage);
+				}
+#ifdef	_DEBUG_COPY
+				LogMessage (_DEBUG_COPY, _T("  Images    [%d] [%d]"), mImages->Count, pTarget->mImages->Count);
+#endif				
+			}
+			else
+			if	(pTarget->mOwner)
+			{
+				pTarget->mImages = gcnew CAgentFileFrameImages (pTarget->mOwner, pTarget);
+			}
+			else
+			{
+				pTarget->mImages = nullptr;
+			}
+
+			if	(mOverlays)
+			{
+				pTarget->mOverlays = gcnew CAgentFileFrameOverlays (pTarget->mOwner, pTarget);
+
+				for each (CAgentFileFrameOverlay^ lOverlay in mOverlays)
+				{
+					CAgentFileFrameOverlay^	lTargetOverlay = gcnew CAgentFileFrameOverlay (pTarget->mOwner, pTarget);
+					
+					lTargetOverlay->mOverlayType = lOverlay->mOverlayType;
+					lOverlay->CopyTo (lTargetOverlay);
+					pTarget->mOverlays->Add (lTargetOverlay);
+				}
+			}
+			else
+			if	(pTarget->mOwner)
+			{
+				pTarget->mOverlays = gcnew CAgentFileFrameOverlays (pTarget->mOwner, pTarget);
+			}
+			else
+			{
+				pTarget->mOverlays = nullptr;
+			}
+#ifdef	_DEBUG_COPY
+				LogMessage (_DEBUG_COPY, _T("  Overlays  [%d] [%d]"), mOverlays->Count, pTarget->mOverlays->Count);
+#endif				
+		}
+		else
+		{
+#ifdef	_DEBUG_COPY
+			LogMessage (_DEBUG_COPY, _T("  Shallow"));
+#endif			
+			pTarget->mBranching = mBranching;
+			pTarget->mImages = mImages;
+			pTarget->mOverlays = mOverlays;
+		}
 		return true;
 	}
 	return false;
@@ -1625,12 +2203,34 @@ System::String^ CAgentFileFrame::ToString ()
 #ifdef	_M_CEE
 CAgentFileFrames::CAgentFileFrames ()
 {
+#ifdef	_DEBUG_INSTANCE
+	sFramesInstances->Add (this);
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileFrames::CAgentFileFrames"), sFramesInstances->IndexOf(this));
+#endif
 }
 
 CAgentFileFrames::CAgentFileFrames (CharacterFile^ pOwner, FileAnimation^ pAnimation)
 :	mOwner (pOwner),
 	mAnimation (pAnimation)
 {
+#ifdef	_DEBUG_INSTANCE
+	sFramesInstances->Add (this);
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (_DEBUG_INSTANCE_OWNED, _T("[%d] CAgentFileFrames::CAgentFileFrames (Owned) [%d]"), sFramesInstances->IndexOf(this), sAnimationInstances->IndexOf(mAnimation));
+#endif
+#endif
+}
+
+CAgentFileFrames::~CAgentFileFrames ()
+{
+#ifdef	_DEBUG_INSTANCE
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileFrames::CAgentFileFrames (Owned) [%d]"), sFramesInstances->IndexOf(this), sAnimationInstances->IndexOf(mAnimation));
+#else
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileFrames::CAgentFileFrames"), sFramesInstances->IndexOf(this));
+#endif
+	sFramesInstances->Remove (this);
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1645,19 +2245,21 @@ CAgentFileFrame^ CAgentFileFrames::Insert (Int32 pNdx)
 	CAgentFileFrame^	lFrame = nullptr;
 
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(!mOwner)
+		||	(!mOwner->IsReadOnly)
 		)
 	{
 		lFrame = gcnew CAgentFileFrame (mOwner, this);
-		lFrame->mDuration = mOwner->NewFrameDuration;
 
 		if	(pNdx < 0)
 		{
 			pNdx = Count;
 		}
 		__super::Insert (min ((int)pNdx, Count), lFrame);
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 	return lFrame;
 }
@@ -1665,13 +2267,18 @@ CAgentFileFrame^ CAgentFileFrames::Insert (Int32 pNdx)
 bool CAgentFileFrames::Remove (CAgentFileFrame^ pItem)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(Contains (pItem))
 		)
 	{
 		__super::Remove (pItem);
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 		return true;
 	}
 	return false;
@@ -1680,14 +2287,19 @@ bool CAgentFileFrames::Remove (CAgentFileFrame^ pItem)
 bool CAgentFileFrames::RemoveAt (Int32 pNdx)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(pNdx >= 0)
 		&&	((int)pNdx < Count)
 		)
 	{
 		__super::RemoveAt (pNdx);
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 		return true;
 	}
 	return false;
@@ -1696,8 +2308,10 @@ bool CAgentFileFrames::RemoveAt (Int32 pNdx)
 bool CAgentFileFrames::Move (Int32 pNdx, Int32 pNewNdx)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(pNdx >= 0)
 		&&	((int)pNdx < Count)
 		)
@@ -1709,7 +2323,10 @@ bool CAgentFileFrames::Move (Int32 pNdx, Int32 pNewNdx)
 
 			__super::Remove (lFrame);
 			__super::Insert (pNewNdx, lFrame);
-			mOwner->IsDirty = true;
+			if	(mOwner)
+			{
+				mOwner->IsDirty = true;
+			}
 			return true;
 		}
 	}
@@ -1719,8 +2336,10 @@ bool CAgentFileFrames::Move (Int32 pNdx, Int32 pNewNdx)
 bool CAgentFileFrames::Move (CAgentFileFrame^ pItem, Int32 pNewNdx)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(Contains (pItem))
 		)
 	{
@@ -1732,8 +2351,10 @@ bool CAgentFileFrames::Move (CAgentFileFrame^ pItem, Int32 pNewNdx)
 bool CAgentFileFrames::Move (CAgentFileFrame^ pItem, CAgentFileFrame^ pBefore)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(Contains (pItem))
 		&&	(
 				(!pBefore)
@@ -1758,14 +2379,43 @@ bool CAgentFileFrames::Move (CAgentFileFrame^ pItem, CAgentFileFrame^ pBefore)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+CAgentFileAnimation::CAgentFileAnimation ()
+{
+#ifdef	_DEBUG_INSTANCE
+	sAnimationInstances->Add (this);
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileAnimation::CAgentFileAnimation"), sAnimationInstances->IndexOf(this));
+#endif
+	Empty ();
+}
+
 #ifdef	_M_CEE
 CAgentFileAnimation::CAgentFileAnimation (CharacterFile^ pOwner, FileGestures^ pContainer)
 :	mOwner (pOwner),
 	mContainer (pContainer)
 {
+#ifdef	_DEBUG_INSTANCE
+	sAnimationInstances->Add (this);
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (_DEBUG_INSTANCE_OWNED, _T("[%d] CAgentFileAnimation::CAgentFileAnimation (Owned)"), sAnimationInstances->IndexOf(this));
+#endif
+#endif
 	Empty ();
 }
 #endif
+
+CAgentFileAnimation::~CAgentFileAnimation ()
+{
+#ifdef	_M_CEE
+#ifdef	_DEBUG_INSTANCE
+#ifdef	_DEBUG_INSTANCE_OWNED
+	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileAnimation::CAgentFileAnimation (Owned)"), sAnimationInstances->IndexOf(this));
+#else
+	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileAnimation::CAgentFileAnimation"), sAnimationInstances->IndexOf(this));
+#endif
+	sAnimationInstances->Remove (this);
+#endif
+#endif
+}
 
 void CAgentFileAnimation::Empty ()
 {
@@ -1803,17 +2453,28 @@ System::String^ CAgentFileAnimation::Name::get()
 void CAgentFileAnimation::Name::set (System::String^ pName)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(!String::IsNullOrEmpty (pName))
 		&&	(
 				(String::IsNullOrEmpty (mName))
 			||	(!mName->Equals (pName))
 			)
-		&&	(mOwner->RenameAnimation (this, pName))
 		)
 	{
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			if	(mOwner->RenameAnimation (this, pName))
+			{
+				mOwner->IsDirty = true;
+			}
+		}
+		else
+		{
+			mName = gcnew String (pName);
+		}
 	}
 }
 
@@ -1825,8 +2486,10 @@ Byte CAgentFileAnimation::ReturnType::get()
 void CAgentFileAnimation::ReturnType::set (Byte pReturnType)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(mReturnType != pReturnType)
 		)
 	{
@@ -1835,7 +2498,10 @@ void CAgentFileAnimation::ReturnType::set (Byte pReturnType)
 		{
 			mReturnName = nullptr;
 		}
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 
@@ -1847,8 +2513,10 @@ System::String^ CAgentFileAnimation::ReturnName::get()
 void CAgentFileAnimation::ReturnName::set (System::String^ pReturnName)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(
 				(String::IsNullOrEmpty (mReturnName) != String::IsNullOrEmpty (pReturnName))
 			||	(
@@ -1871,7 +2539,10 @@ void CAgentFileAnimation::ReturnName::set (System::String^ pReturnName)
 		{
 			mReturnType = 0;
 		}
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 }
 
@@ -1891,18 +2562,68 @@ CAgentFileFrames^ CAgentFileAnimation::Frames::get()
 #ifdef	_M_CEE
 Boolean CAgentFileAnimation::CopyTo (CAgentFileAnimation^ pTarget)
 {
+	return CopyTo (pTarget, false);
+}
+
+Boolean CAgentFileAnimation::CopyTo (CAgentFileAnimation^ pTarget, Boolean pDeepCopy)
+{
+#ifdef	_DEBUG_COPY
+	if	(pTarget)
+	{
+		LogMessage (_DEBUG_COPY, _T("Copy CAgentFileAnimation [%s] [%s] [%d] to [%s] [%s] [%d]"), mOwner?_B(mOwner->FileName):_B(nullptr), _B(Name), mContainer?mContainer->IndexOf(this):-1, pTarget->mOwner?_B(pTarget->mOwner->FileName):_B(nullptr), _B(pTarget->Name), pTarget->mContainer?pTarget->mContainer->IndexOf(pTarget):-1);
+	}
+#endif	
+
 	if	(
 			(pTarget)
-		&&	(pTarget->mOwner)
-		&&	(!pTarget->mOwner->IsReadOnly)
+		&&	(
+				(!pTarget->mOwner)
+			||	(!pTarget->mOwner->IsReadOnly)
+			)
 		)
 	{
-		pTarget->mName = mName;
 		pTarget->mReturnType = mReturnType;
 		pTarget->mReturnName = mReturnName;
-		pTarget->mFrames = mFrames;
 		pTarget->mAcaFileName = mAcaFileName;
 		pTarget->mAcaChksum = mAcaChksum;
+		
+		if	(pDeepCopy)
+		{
+#ifdef	_DEBUG_COPY
+			LogMessage (_DEBUG_COPY, _T("  Deep"));
+#endif			
+			if (mFrames)
+			{
+				pTarget->mFrames = gcnew CAgentFileFrames (pTarget->mOwner, pTarget);
+				
+				for each (CAgentFileFrame^ lFrame in mFrames)
+				{
+					CAgentFileFrame^	lTargetFrame = gcnew CAgentFileFrame (pTarget->mOwner, pTarget->mFrames);
+					
+					lFrame->CopyTo (lTargetFrame, true);
+					pTarget->mFrames->Add (lTargetFrame);
+				}
+#ifdef	_DEBUG_COPY
+				LogMessage (_DEBUG_COPY, _T("  Frames    [%d] [%d]"), mFrames->Count, pTarget->mFrames->Count);
+#endif				
+			}
+			else
+			if	(pTarget->mOwner)
+			{
+				pTarget->mFrames = gcnew CAgentFileFrames (pTarget->mOwner, pTarget);
+			}
+			else
+			{
+				pTarget->mFrames = nullptr;
+			}
+		}
+		else
+		{
+#ifdef	_DEBUG_COPY
+			LogMessage (_DEBUG_COPY, _T("  Shallow"));
+#endif			
+			pTarget->mFrames = mFrames;
+		}
 		return true;
 	}
 	return false;
@@ -1930,6 +2651,10 @@ CAgentFileGestures::CAgentFileGestures (CharacterFile^ pOwner)
 {
 }
 
+CAgentFileGestures::~CAgentFileGestures ()
+{
+}
+
 System::String^ CAgentFileGestures::GetKeyForItem (CAgentFileAnimation^ pItem)
 {
 	return pItem->Name;
@@ -1942,15 +2667,20 @@ CAgentFileAnimation^ CAgentFileGestures::Add (System::String^ pAnimationName)
 	CAgentFileAnimation^	lAnimation = nullptr;
 
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(!Contains (pAnimationName))
 		)
 	{
 		lAnimation = gcnew CAgentFileAnimation (mOwner, this);
 		lAnimation->mName = pAnimationName;
 		Add (lAnimation);
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 	}
 	return lAnimation;
 }
@@ -1958,13 +2688,18 @@ CAgentFileAnimation^ CAgentFileGestures::Add (System::String^ pAnimationName)
 bool CAgentFileGestures::Remove (System::String^ pAnimationName)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(Contains (pAnimationName))
 		)
 	{
 		__super::Remove (pAnimationName);
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 		return true;
 	}
 	return false;
@@ -1973,13 +2708,18 @@ bool CAgentFileGestures::Remove (System::String^ pAnimationName)
 bool CAgentFileGestures::Remove (CAgentFileAnimation^ pItem)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(!Contains (pItem))
 		)
 	{
 		__super::Remove (pItem);
-		mOwner->IsDirty = true;
+		if	(mOwner)
+		{
+			mOwner->IsDirty = true;
+		}
 		return true;
 	}
 	return false;
@@ -2029,13 +2769,19 @@ CAgentFileStates::CAgentFileStates (CharacterFile^ pOwner)
 {
 }
 
+CAgentFileStates::~CAgentFileStates ()
+{
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 bool CAgentFileStates::AddStateAnimation (System::String^ pStateName, System::String^ pAnimationName)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(!String::IsNullOrEmpty (pStateName))
 		&&	(!String::IsNullOrEmpty (pAnimationName))
 		)
@@ -2070,7 +2816,10 @@ bool CAgentFileStates::AddStateAnimation (System::String^ pStateName, System::St
 				}
 				lList->Insert (lNdx, gcnew String (pAnimationName));
 				this [pStateName] = lList->ToArray();
-				mOwner->IsDirty = true;
+				if	(mOwner)
+				{
+					mOwner->IsDirty = true;
+				}
 				return true;
 			}
 			catch AnyExceptionDebug
@@ -2082,8 +2831,10 @@ bool CAgentFileStates::AddStateAnimation (System::String^ pStateName, System::St
 bool CAgentFileStates::RemoveStateAnimation (System::String^ pStateName, System::String^ pAnimationName)
 {
 	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
+			(
+				(!mOwner)
+			||	(!mOwner->IsReadOnly)
+			)
 		&&	(!String::IsNullOrEmpty (pStateName))
 		&&	(!String::IsNullOrEmpty (pAnimationName))
 		&&	(ContainsKey (pStateName))
@@ -2102,13 +2853,87 @@ bool CAgentFileStates::RemoveStateAnimation (System::String^ pStateName, System:
 
 				lList->RemoveAt (lList->FindIndex (gcnew Predicate <String^> (pAnimationName, &String::Equals)));
 				this [pStateName] = lList->ToArray();
-				mOwner->IsDirty = true;
+				if	(mOwner)
+				{
+					mOwner->IsDirty = true;
+				}
 				return true;
 			}
 			catch AnyExceptionDebug
 		}
 	}
 	return false;
+}
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+CAgentFileImage::CAgentFileImage ()
+{
+	Empty ();
+}
+
+CAgentFileImage::~CAgentFileImage ()
+{
+}
+
+void CAgentFileImage::Empty ()
+{
+	mImageNum = 0;
+	mIs32Bit = false;
+#ifdef	_M_CEE
+	mImageSize.Width = 0;
+	mImageSize.Height = 0;
+	mBits = nullptr;
+#else
+	mImageSize.cx = mImageSize.cy = 0;
+	mBitsSize = 0;
+	mBits = NULL;
+#endif
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+#ifdef	_M_CEE
+UInt32 CAgentFileImage::ImageNum::get()
+{
+	return mImageNum;
+}
+
+System::Drawing::Size CAgentFileImage::ImageSize::get()
+{
+	return mImageSize;
+}
+
+Boolean CAgentFileImage::Is32Bit::get()
+{
+	return mIs32Bit;
+}
+
+UInt32 CAgentFileImage::BitsSize::get()
+{
+	return (mBits) ? (UInt32)mBits->Length : 0;
+}
+
+array <BYTE>^ CAgentFileImage::Bits::get()
+{
+	return mBits;
+}
+#else
+void CAgentFileImage::put_ImageSize (const CSize& pImageSize)
+{
+	mImageSize = pImageSize;
+}
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+
+#ifdef	_M_CEE
+System::String^ CAgentFileImage::ToString ()
+{
+    return String::Format ("FileImage {0}", ImageSize.ToString());
 }
 #endif
 

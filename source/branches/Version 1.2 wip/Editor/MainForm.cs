@@ -19,16 +19,10 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using System.IO;
-using System.Xml;
-using System.Xml.Serialization;
 using DoubleAgent;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Updates;
 
 namespace AgentCharacterEditor
 {
@@ -36,13 +30,7 @@ namespace AgentCharacterEditor
 	{
 		private CharacterFile	mCharacterFile = null;
 		private RecentFileList	mRecentFiles = new RecentFileList ();
-		private UndoManager		mUndoManager = new UndoManager ();
 		private String			mInitialFile = null;
-		private const String	mNodeCharacter = "NodeCharacter";
-		private const String	mNodeWordBalloon = "NodeWordBalloon";
-		private const String	mNodeTTSMode = "NodeTTSMode";
-		private const String	mNodeAnimations = "NodeAnimations";
-		private const String	mNodeStates = "NodeStates";
 
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
@@ -54,30 +42,26 @@ namespace AgentCharacterEditor
 
 		public MainForm (String[] args)
 		{
-			Singleton = this;
-
 			if ((args != null) && (args.Length > 0))
 			{
 				mInitialFile = args[0];
-			}
-			InitializeComponent ();
-
-			if (!this.DesignMode)
-			{
-				MainMenuStrip = MenuStripMain;
-				Application.Idle += new EventHandler (Application_Idle);
-				mRecentFiles.RecentItemClick += new RecentFileList.RecentItemClickEventHandler (RecentFiles_RecentItemClick);
-				mUndoManager.Undone += new UndoManager.UndoneEventHandler (UndoManager_Undone);
-				mUndoManager.Redone += new UndoManager.RedoneEventHandler (UndoManager_Redone);
-
-				InitializationComplete (this, EventArgs.Empty);
 			}
 		}
 
 		~MainForm ()
 		{
 			Application.Idle -= new EventHandler (Application_Idle);
-			Singleton = null;
+		}
+
+		public void Initialize ()
+		{
+			InitializeComponent ();
+
+			MainMenuStrip = MenuStripMain;
+			Application.Idle += new EventHandler (Application_Idle);
+			mRecentFiles.RecentItemClick += new RecentFileList.RecentItemClickEventHandler (RecentFiles_RecentItemClick);
+			Program.UndoManager.Undone += new UndoManager.UndoneEventHandler (UndoManager_Undone);
+			Program.UndoManager.Redone += new UndoManager.RedoneEventHandler (UndoManager_Redone);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -86,7 +70,7 @@ namespace AgentCharacterEditor
 		{
 			LoadConfig (this, EventArgs.Empty);
 			LoadRecentFiles ();
-			LoadTreeExpansion ();
+			TreeViewMain.LoadExpansion ();
 			LoadWindowState ();
 		}
 
@@ -104,50 +88,6 @@ namespace AgentCharacterEditor
 			if (lSettings.MainFormSplit > 0)
 			{
 				SplitContainerMain.SplitterDistance = lSettings.MainFormSplit;
-			}
-		}
-
-		private void LoadTreeExpansion ()
-		{
-			Properties.Settings	lSettings = Properties.Settings.Default;
-			TreeNode			lNode;
-
-			lNode = RootNode (mNodeCharacter);
-			if (lNode != null)
-			{
-				if (lSettings.CharacterNodeExpanded)
-				{
-					lNode.Expand ();
-				}
-				else
-				{
-					lNode.Collapse ();
-				}
-				TreeViewMain.SelectedNode = lNode;
-			}
-			lNode = RootNode (mNodeAnimations);
-			if (lNode != null)
-			{
-				if (lSettings.AnimationsNodeExpanded)
-				{
-					lNode.Expand ();
-				}
-				else
-				{
-					lNode.Collapse ();
-				}
-			}
-			lNode = RootNode (mNodeStates);
-			if (lNode != null)
-			{
-				if (lSettings.StatesNodeExpanded)
-				{
-					lNode.Expand ();
-				}
-				else
-				{
-					lNode.Collapse ();
-				}
 			}
 		}
 
@@ -174,7 +114,7 @@ namespace AgentCharacterEditor
 		private void SaveAllConfig ()
 		{
 			SaveConfig (this, EventArgs.Empty);
-			SaveTreeExpansion ();
+			TreeViewMain.SaveExpansion ();
 			SaveWindowState ();
 			SaveRecentFiles ();
 
@@ -198,28 +138,6 @@ namespace AgentCharacterEditor
 			lSettings.MainFormState = this.WindowState;
 
 			lSettings.MainFormSplit = SplitContainerMain.SplitterDistance;
-		}
-
-		private void SaveTreeExpansion ()
-		{
-			Properties.Settings	lSettings = Properties.Settings.Default;
-			TreeNode			lNode;
-
-			lNode = RootNode (mNodeCharacter);
-			if (lNode != null)
-			{
-				lSettings.CharacterNodeExpanded = lNode.IsExpanded;
-			}
-			lNode = RootNode (mNodeAnimations);
-			if (lNode != null)
-			{
-				lSettings.AnimationsNodeExpanded = lNode.IsExpanded;
-			}
-			lNode = RootNode (mNodeStates);
-			if (lNode != null)
-			{
-				lSettings.StatesNodeExpanded = lNode.IsExpanded;
-			}
 		}
 
 		private void SaveRecentFiles ()
@@ -250,12 +168,6 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
 
-		static public MainForm Singleton
-		{
-			get;
-			private set;
-		}
-
 		public CharacterFile CharacterFile
 		{
 			get
@@ -264,56 +176,85 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		public Boolean FileIsReadOnly
-		{
-			get
-			{
-				return ((mCharacterFile == null) || (mCharacterFile.IsReadOnly));
-			}
-		}
-
-		public Boolean FileIsDirty
-		{
-			get
-			{
-				if (CharacterFile != null)
-				{
-					return CharacterFile.IsDirty;
-				}
-				return false;
-			}
-			set
-			{
-				if (CharacterFile != null)
-				{
-					CharacterFile.IsDirty = value;
-					ShowFileState ();
-					ShowEditState ();
-				}
-			}
-		}
-
-		public UndoManager UndoManager
-		{
-			get
-			{
-				return mUndoManager;
-			}
-		}
-
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Events
 
-		public event EventHandler InitializationComplete;
 		public event EventHandler LoadConfig;
 		public event EventHandler SaveConfig;
 
-		public event EditEventHandler CanEdit;
-		public event EditEventHandler EditCopy;
-		public event EditEventHandler EditCut;
-		public event EditEventHandler EditDelete;
-		public event EditEventHandler EditPaste;
+		public event Global.EditEventHandler CanEdit;
+		public event Global.EditEventHandler EditCopy;
+		public event Global.EditEventHandler EditCut;
+		public event Global.EditEventHandler EditDelete;
+		public event Global.EditEventHandler EditPaste;
+
+		public event UndoUnit.AppliedEventHandler UpdateApplied;
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		public void FileIsDirty ()
+		{
+			if (CharacterFile != null)
+			{
+				CharacterFile.IsDirty = true;
+				ShowFileState ();
+				ShowEditState ();
+			}
+		}
+
+		public void OnUpdateApplied (object sender, EventArgs e)
+		{
+			AddDeleteAnimation		lAddDeleteAnimation = sender as AddDeleteAnimation;
+			UpdateAnimation			lUpdateAnimation = sender as UpdateAnimation;
+			AddDeleteAnimationFrame	lAddDeleteFrame = sender as AddDeleteAnimationFrame;
+			ReorderAnimationFrame	lReorderFrame = sender as ReorderAnimationFrame;
+
+			if (lAddDeleteAnimation != null)
+			{
+				TreeViewMain.ShowAnimationNames (CharacterFile);
+				if (lAddDeleteAnimation.IsDelete)
+				{
+					ShowSelectedTreeNode ();
+				}
+			}
+			else if ((lUpdateAnimation != null) && lUpdateAnimation.NameChanged)
+			{
+				TreeNode	lAnimationNode = (new PartsTreeSelection (lUpdateAnimation.Target)).SelectedNode ();
+
+				if (lAnimationNode != null)
+				{
+					lAnimationNode.Text = lUpdateAnimation.Target.Name;
+				}
+			}
+			else if (lAddDeleteFrame != null)
+			{
+				TreeNode	lAnimationNode = (new PartsTreeSelection (lAddDeleteFrame.Animation)).SelectedNode ();
+
+				if (lAnimationNode != null)
+				{
+					TreeViewMain.ShowAnimationFrames (lAddDeleteFrame.Animation, lAnimationNode);
+				}
+				if (lAddDeleteFrame.IsDelete)
+				{
+					ShowSelectedTreeNode ();
+				}
+			}
+			else if (lReorderFrame != null)
+			{
+				TreeNode	lAnimationNode = (new PartsTreeSelection (lReorderFrame.Animation)).SelectedNode ();
+
+				if (lAnimationNode != null)
+				{
+					TreeViewMain.ShowAnimationFrames (lReorderFrame.Animation, lAnimationNode);
+				}
+			}
+
+			if (UpdateApplied != null)
+			{
+				UpdateApplied (sender, e);
+			}
+		}
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
@@ -373,13 +314,13 @@ namespace AgentCharacterEditor
 			{
 				if (lOpened)
 				{
-					mUndoManager.Clear ();
+					Program.UndoManager.Clear ();
 					mCharacterFile = lCharacterFile;
 
 					ShowFileState ();
 					ShowEditState ();
-					ShowAnimationNames ();
-					LoadTreeExpansion ();
+					TreeViewMain.ShowAnimationNames (CharacterFile);
+					TreeViewMain.LoadExpansion ();
 
 					PanelCharacter.CharacterFile = mCharacterFile;
 					PanelBalloon.CharacterFile = mCharacterFile;
@@ -408,514 +349,19 @@ namespace AgentCharacterEditor
 			return lRet;
 		}
 
-		private void ShowAnimationNames ()
-		{
-			TreeNode	lAnimationsNode = RootNode (mNodeAnimations);
-
-			if (lAnimationsNode != null)
-			{
-				Boolean	lExpanded = lAnimationsNode.IsExpanded;
-
-				TreeViewMain.BeginUpdate ();
-				lAnimationsNode.Nodes.Clear ();
-
-				if (mCharacterFile != null)
-				{
-					String[]		lAnimations = mCharacterFile.GetAnimationNames ();
-					TreeNode		lAnimationNode;
-					FileGestures	lGestures = mCharacterFile.Gestures;
-
-					foreach (String lAnimationName in lAnimations)
-					{
-						FileAnimation	lAnimation = null;
-
-						try
-						{
-							lAnimation = lGestures[lAnimationName];
-						}
-						catch
-						{
-						}
-						if (lAnimation == null)
-						{
-							try
-							{
-								lAnimation = lGestures[lAnimationName.ToUpper ()];
-							}
-							catch
-							{
-							}
-						}
-
-						lAnimationNode = lAnimationsNode.Nodes.Add (lAnimationName);
-						lAnimationNode.Tag = lAnimation;
-
-						ShowAnimationFrames (lAnimation, lAnimationNode);
-					}
-				}
-
-				if (lExpanded)
-				{
-					lAnimationsNode.Expand ();
-				}
-				TreeViewMain.EndUpdate ();
-			}
-		}
-
-		private void ShowAnimationFrames (FileAnimation pAnimation, TreeNode pAnimationNode)
-		{
-			if ((pAnimation != null) && (pAnimationNode != null))
-			{
-				int			lFrameNdx;
-				String		lFrameName;
-				TreeNode	lFrameNode;
-				TreeNode	lFrameSubNode;
-
-				foreach (FileAnimationFrame lFrame in pAnimation.Frames)
-				{
-					lFrameNdx = pAnimation.Frames.IndexOf (lFrame);
-					lFrameName = Program.TitleFrame (lFrameNdx);
-					lFrameNode = (lFrameNdx < pAnimationNode.Nodes.Count) ? pAnimationNode.Nodes[lFrameNdx] : pAnimationNode.Nodes.Add (lFrameName);
-					lFrameNode.Text = lFrameName;
-					lFrameNode.Tag = lFrame;
-
-					lFrameSubNode = (lFrameNode.Nodes.Count >= 1) ? lFrameNode.Nodes[0] : lFrameNode.Nodes.Add ("");
-					lFrameSubNode.Text = "Branching";
-					lFrameSubNode.Tag = PanelBranching;
-					lFrameSubNode = (lFrameNode.Nodes.Count >= 2) ? lFrameNode.Nodes[1] : lFrameNode.Nodes.Add ("");
-					lFrameSubNode.Text = "Overlays";
-					lFrameSubNode.Tag = PanelOverlays;
-				}
-
-				while (pAnimationNode.Nodes.Count > pAnimation.Frames.Count)
-				{
-					pAnimationNode.Nodes.RemoveAt (pAnimationNode.Nodes.Count - 1);
-				}
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
-		#region Tree Selection
-
-		private TreeNode RootNode (String pNodeName)
-		{
-			foreach (TreeNode lNode in TreeViewMain.Nodes)
-			{
-				if (lNode.Name == pNodeName)
-				{
-					return lNode;
-				}
-			}
-			return null;
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		private class TreeSelection
-		{
-			public CharacterFile		mCharacterFile = null;
-			public FileAnimation		mAnimation = null;
-			public FileAnimationFrame	mFrame = null;
-			public String				mStateName = null;
-			public UserControl			mPanel = null;
-
-			public TreeSelection (TreeNode pTreeNode)
-			{
-				mCharacterFile = MainForm.Singleton.CharacterFile;
-
-				if (pTreeNode.Name == mNodeCharacter)
-				{
-					mPanel = MainForm.Singleton.PanelCharacter;
-				}
-				else if (pTreeNode.Name == mNodeWordBalloon)
-				{
-					mPanel = MainForm.Singleton.PanelBalloon;
-				}
-				else if (pTreeNode.Name == mNodeTTSMode)
-				{
-					mPanel = MainForm.Singleton.PanelTts;
-				}
-				else if (pTreeNode.Name == mNodeAnimations)
-				{
-					mPanel = MainForm.Singleton.PanelAnimations;
-				}
-				else if (pTreeNode.Parent != null)
-				{
-					if (pTreeNode.Parent.Parent != null)
-					{
-						if (pTreeNode.Parent.Parent.Parent != null)
-						{
-							if (pTreeNode.Parent.Parent.Parent.Name == mNodeAnimations)
-							{
-								mAnimation = pTreeNode.Parent.Parent.Tag as FileAnimation;
-								mFrame = pTreeNode.Parent.Tag as FileAnimationFrame;
-								mPanel = pTreeNode.Tag as UserControl;
-							}
-						}
-						else if (pTreeNode.Parent.Parent.Name == mNodeAnimations)
-						{
-							mAnimation = pTreeNode.Parent.Tag as FileAnimation;
-							mFrame = pTreeNode.Tag as FileAnimationFrame;
-							mPanel = MainForm.Singleton.PanelFrame;
-						}
-					}
-					else if (pTreeNode.Parent.Name == mNodeAnimations)
-					{
-						mAnimation = pTreeNode.Tag as FileAnimation;
-						mPanel = MainForm.Singleton.PanelAnimation;
-					}
-					else if (pTreeNode.Parent.Name == mNodeStates)
-					{
-						mStateName = pTreeNode.Text;
-						mPanel = MainForm.Singleton.PanelState;
-					}
-				}
-			}
-
-			public TreeNode SelectedNode ()
-			{
-				TreeNode	lSelectedNode = null;
-
-				if (mPanel == MainForm.Singleton.PanelCharacter)
-				{
-					lSelectedNode = MainForm.Singleton.RootNode (MainForm.mNodeCharacter);
-				}
-				else if (mPanel == MainForm.Singleton.PanelAnimations)
-				{
-					lSelectedNode = MainForm.Singleton.RootNode (MainForm.mNodeAnimations);
-				}
-				else if (mPanel == MainForm.Singleton.PanelState)
-				{
-					foreach (TreeNode lStateNode in MainForm.Singleton.RootNode (MainForm.mNodeStates).Nodes)
-					{
-						if (mStateName == lStateNode.Text)
-						{
-							lSelectedNode = lStateNode;
-							break;
-						}
-					}
-				}
-				else if (mAnimation != null)
-				{
-					foreach (TreeNode lAnimationNode in MainForm.Singleton.RootNode (MainForm.mNodeAnimations).Nodes)
-					{
-						if (mAnimation == lAnimationNode.Tag as FileAnimation)
-						{
-							if (mPanel == MainForm.Singleton.PanelAnimation)
-							{
-								lSelectedNode = lAnimationNode;
-							}
-							else
-							{
-								foreach (TreeNode lFrameNode in lAnimationNode.Nodes)
-								{
-									if (mFrame == lFrameNode.Tag as FileAnimationFrame)
-									{
-										if (mPanel == MainForm.Singleton.PanelFrame)
-										{
-											lSelectedNode = lFrameNode;
-										}
-										else
-										{
-											foreach (TreeNode lSubNode in lAnimationNode.Nodes)
-											{
-												if (mPanel == lSubNode.Tag as UserControl)
-												{
-													lSelectedNode = lSubNode;
-													break;
-												}
-											}
-										}
-										break;
-									}
-								}
-							}
-							break;
-						}
-					}
-				}
-
-				return lSelectedNode;
-			}
-
-			///////////////////////////////////////////////////////////////////////////////
-
-			public TreeSelection (FileAnimation pAnimation)
-			{
-				mCharacterFile = MainForm.Singleton.CharacterFile;
-				mAnimation = pAnimation;
-				mPanel = MainForm.Singleton.PanelAnimation;
-			}
-
-			public TreeSelection (FileAnimation pAnimation, FileAnimationFrame pFrame)
-			{
-				mCharacterFile = MainForm.Singleton.CharacterFile;
-				mAnimation = pAnimation;
-				mFrame = pFrame;
-				mPanel = MainForm.Singleton.PanelFrame;
-			}
-
-			public TreeSelection (String pStateName)
-			{
-				mCharacterFile = MainForm.Singleton.CharacterFile;
-				mStateName = pStateName;
-				mPanel = MainForm.Singleton.PanelState;
-			}
-
-			///////////////////////////////////////////////////////////////////////////////
-
-			public void CanEdit (EditEventArgs e)
-			{
-				if (this.HasNonEmptyBalloon)
-				{
-					e.CopyObjectTitle = Properties.Resources.TitleBalloon;
-				}
-				else if (this.HasNonEmptyTts)
-				{
-					e.CopyObjectTitle = Properties.Resources.TitleTts;
-				}
-				else if (mPanel == MainForm.Singleton.PanelFrame)
-				{
-					e.CopyObjectTitle = Program.QuotedTitle (Program.TitleFrameAnimation (mFrame));
-					if (!MainForm.Singleton.FileIsReadOnly)
-					{
-						e.CutObjectTitle = e.CopyObjectTitle;
-						e.DeleteObjectTitle = e.CopyObjectTitle;
-					}
-				}
-				else if (mPanel == MainForm.Singleton.PanelAnimation)
-				{
-					e.CopyObjectTitle = Program.TitleAnimation (mAnimation);
-					if (!MainForm.Singleton.FileIsReadOnly)
-					{
-						e.CutObjectTitle = e.CopyObjectTitle;
-						e.DeleteObjectTitle = e.CopyObjectTitle;
-					}
-				}
-				else if (!String.IsNullOrEmpty (mStateName))
-				{
-					if (this.HasNonEmptyState)
-					{
-						e.CopyObjectTitle = Program.TitleState (mStateName);
-					}
-					if (!MainForm.Singleton.FileIsReadOnly && (e.PasteObject is KeyValuePair<String, String[]>))
-					{
-						try
-						{
-							KeyValuePair<String, String[]>	lState = (KeyValuePair<String, String[]>)e.PasteObject;
-							e.PasteObjectTitle = Program.TitleState (lState.Key);
-						}
-						catch
-						{
-						}
-					}
-				}
-
-				if (!MainForm.Singleton.FileIsReadOnly && (e.PasteObject != null))
-				{
-					if (e.PasteObject is FileBalloon)
-					{
-						if (mPanel == MainForm.Singleton.PanelBalloon)
-						{
-							e.PasteObjectTitle = Properties.Resources.TitleBalloon;
-						}
-					}
-					else if (e.PasteObject is FileTts)
-					{
-						if (mPanel == MainForm.Singleton.PanelTts)
-						{
-							e.PasteObjectTitle = Properties.Resources.TitleTts;
-						}
-					}
-					else if (e.PasteObject is FileAnimationFrame)
-					{
-						if (mPanel == MainForm.Singleton.PanelFrame)
-						{
-							e.PasteObjectTitle = e.PasteReplaceTitle + Program.TitleFrame (e.PasteObject as FileAnimationFrame);
-						}
-						else if (mPanel == MainForm.Singleton.PanelAnimation)
-						{
-							e.PasteObjectTitle = e.PasteAddTitle + Program.TitleFrame (e.PasteObject as FileAnimationFrame);
-						}
-					}
-					else if (e.PasteObject is FileAnimation)
-					{
-						if (mAnimation != null)
-						{
-							e.PasteObjectTitle = e.PasteReplaceTitle + Program.TitleAnimation (e.PasteObject as FileAnimation);
-						}
-						else if (mPanel == MainForm.Singleton.PanelAnimations)
-						{
-							e.PasteObjectTitle = e.PasteAddTitle + Program.TitleAnimation (e.PasteObject as FileAnimation);
-						}
-					}
-				}
-			}
-
-			public void EditCopy (EditEventArgs e)
-			{
-				Object	lCopyObject = null;
-
-				if (this.HasNonEmptyBalloon)
-				{
-					lCopyObject = mCharacterFile.Balloon;
-				}
-				else if (this.HasNonEmptyTts)
-				{
-					lCopyObject = mCharacterFile.Tts;
-				}
-				else if (mPanel == MainForm.Singleton.PanelFrame)
-				{
-					lCopyObject = mFrame;
-				}
-				else if (mPanel == MainForm.Singleton.PanelAnimation)
-				{
-					lCopyObject = mAnimation;
-				}
-				else if (this.HasNonEmptyState)
-				{
-					KeyValuePair <String, String[]>	lState = new KeyValuePair<String, String[]> (mStateName, mCharacterFile.States[mStateName]);
-					lCopyObject = lState;
-				}
-				if (lCopyObject != null)
-				{
-					e.IsUsed = true;
-					try
-					{
-						Clipboard.SetData (DataFormats.Serializable, lCopyObject);
-					}
-					catch
-					{
-					}
-				}
-			}
-
-			public void EditCut (EditEventArgs e)
-			{
-				if (!MainForm.Singleton.FileIsReadOnly)
-				{
-					if (mPanel == MainForm.Singleton.PanelFrame)
-					{
-						e.IsUsed = true;
-						try
-						{
-							Clipboard.SetData (DataFormats.Serializable, mFrame);
-							MainForm.Singleton.PanelAnimation.DeleteSelectedFrame (mFrame, true);
-						}
-						catch
-						{
-						}
-					}
-					else if (mPanel == MainForm.Singleton.PanelAnimation)
-					{
-						e.IsUsed = true;
-						try
-						{
-							Clipboard.SetData (DataFormats.Serializable, mAnimation);
-							MainForm.Singleton.PanelAnimations.DeleteSelectedAnimation (mAnimation, true);
-						}
-						catch
-						{
-						}
-					}
-				}
-			}
-
-			public void EditDelete (EditEventArgs e)
-			{
-				if (!MainForm.Singleton.FileIsReadOnly)
-				{
-					if (mPanel == MainForm.Singleton.PanelFrame)
-					{
-						e.IsUsed = true;
-						MainForm.Singleton.PanelAnimation.DeleteSelectedFrame (mFrame, false);
-					}
-					else if (mPanel == MainForm.Singleton.PanelAnimation)
-					{
-						e.IsUsed = true;
-						MainForm.Singleton.PanelAnimations.DeleteSelectedAnimation (mAnimation, false);
-					}
-				}
-			}
-
-			public void EditPaste (EditEventArgs e)
-			{
-				if (!MainForm.Singleton.FileIsReadOnly)
-				{
-					if ((mPanel == MainForm.Singleton.PanelBalloon) && (e.PasteObject is FileBalloon))
-					{
-					}
-					else if ((mPanel == MainForm.Singleton.PanelTts) && (e.PasteObject is FileTts))
-					{
-					}
-					else if ((mPanel == MainForm.Singleton.PanelFrame) && (e.PasteObject is FileAnimationFrame))
-					{
-					}
-					else if ((mPanel == MainForm.Singleton.PanelAnimation) && (e.PasteObject is FileAnimationFrame))
-					{
-					}
-					else if ((mPanel == MainForm.Singleton.PanelAnimation) && (e.PasteObject is FileAnimation))
-					{
-					}
-					else if ((mPanel == MainForm.Singleton.PanelAnimations) && (e.PasteObject is FileAnimation))
-					{
-					}
-					else if (!String.IsNullOrEmpty (mStateName) && (e.PasteObject is KeyValuePair<String, String[]>))
-					{
-						try
-						{
-							KeyValuePair<String, String[]>	lState = (KeyValuePair<String, String[]>)e.PasteObject;
-							e.PasteObjectTitle = Program.TitleState (lState.Key);
-							MainForm.Singleton.PanelState.PasteStateAnimations (mStateName, lState.Value);
-						}
-						catch
-						{
-						}
-					}
-				}
-			}
-
-			///////////////////////////////////////////////////////////////////////////////
-
-			protected Boolean HasNonEmptyBalloon
-			{
-				get
-				{
-					return (mPanel == MainForm.Singleton.PanelBalloon) && ((mCharacterFile.Header.Style & CharacterStyle.CharStyleBalloon) != 0);
-				}
-			}
-
-			protected Boolean HasNonEmptyTts
-			{
-				get
-				{
-					return (mPanel == MainForm.Singleton.PanelTts) && ((mCharacterFile.Header.Style & CharacterStyle.CharStyleTts) != 0);
-				}
-			}
-
-			protected Boolean HasNonEmptyState
-			{
-				get
-				{
-					return (!String.IsNullOrEmpty (mStateName) && mCharacterFile.States.ContainsKey (mStateName) && (mCharacterFile.States[mStateName].Length > 0));
-				}
-			}
-		}
-
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void ShowSelectedTreeNode ()
 		{
 			if (TreeViewMain.SelectedNode == null)
 			{
-				TreeViewMain.SelectedNode = RootNode (mNodeCharacter);
+				TreeViewMain.SelectedNode = TreeViewMain.GetRootNode (PartsTreeView.NodeNameCharacter);
 			}
 			if (TreeViewMain.SelectedNode != null)
 			{
 				try
 				{
-					ShowSelectedPart (new TreeSelection (TreeViewMain.SelectedNode));
+					ShowSelectedPart (TreeViewMain.GetSelectedPart ());
 				}
 				finally
 				{
@@ -924,7 +370,7 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		private void ShowSelectedPart (TreeSelection pSelectedPart)
+		private void ShowSelectedPart (PartsTreeSelection pSelectedPart)
 		{
 			if (pSelectedPart.mPanel == PanelAnimation)
 			{
@@ -982,16 +428,71 @@ namespace AgentCharacterEditor
 
 		private void ShowEditState ()
 		{
-			TextBox			lTextBox = null;
-			Control			lActive = GetActiveControl (ref lTextBox);
-			TreeSelection	lTreeSelection = null;
+			TextBox					lTextBox = null;
+			Control					lActive = GetActiveControl (ref lTextBox);
+			Global.EditEventArgs	lEventArgs = null;
 
 			if (lActive == TreeViewMain)
 			{
-				lTreeSelection = new TreeSelection (TreeViewMain.SelectedNode);
+				TreeViewMain.GetSelectedPart ().CanEdit (lEventArgs = new Global.EditEventArgs (DataFormats.Serializable));
+			}
+			else if (CanEdit != null)
+			{
+				CanEdit (this, lEventArgs = new Global.EditEventArgs (DataFormats.Serializable));
 			}
 
-			if (lTextBox != null)
+			if ((lEventArgs != null) && lEventArgs.IsUsed)
+			{
+				if (!String.IsNullOrEmpty (lEventArgs.CopyObjectTitle))
+				{
+					MenuItemEditCopy.Enabled = true;
+					MenuItemEditCopy.Text = String.Format (lEventArgs.CopyTitle, lEventArgs.CopyObjectTitle);
+				}
+				else
+				{
+					MenuItemEditCopy.Enabled = false;
+					MenuItemEditCopy.Text = Properties.Resources.EditCopy;
+				}
+				if (!Program.FileIsReadOnly && !String.IsNullOrEmpty (lEventArgs.CutObjectTitle))
+				{
+					MenuItemEditCut.Enabled = true;
+					MenuItemEditCut.Text = String.Format (lEventArgs.CutTitle, lEventArgs.CutObjectTitle);
+				}
+				else
+				{
+					MenuItemEditCut.Enabled = false;
+					MenuItemEditCut.Text = Properties.Resources.EditCut;
+				}
+				if (!Program.FileIsReadOnly && !String.IsNullOrEmpty (lEventArgs.DeleteObjectTitle))
+				{
+					MenuItemEditDelete.Enabled = true;
+					MenuItemEditDelete.Text = String.Format (lEventArgs.DeleteTitle, lEventArgs.DeleteObjectTitle);
+				}
+				else
+				{
+					MenuItemEditDelete.Enabled = false;
+					MenuItemEditDelete.Text = Properties.Resources.EditDelete;
+				}
+				if (!Program.FileIsReadOnly && !String.IsNullOrEmpty (lEventArgs.PasteObjectTitle))
+				{
+					if (!String.IsNullOrEmpty (lEventArgs.PasteTitle))
+					{
+						MenuItemEditPaste.Enabled = true;
+						MenuItemEditPaste.Text = String.Format (lEventArgs.PasteTitle, lEventArgs.PasteObjectTitle);
+					}
+					else
+					{
+						MenuItemEditPaste.Enabled = false;
+						MenuItemEditPaste.Text = lEventArgs.PasteObjectTitle;
+					}
+				}
+				else
+				{
+					MenuItemEditPaste.Enabled = false;
+					MenuItemEditPaste.Text = Properties.Resources.EditPaste;
+				}
+			}
+			else if (lTextBox != null)
 			{
 				MenuItemEditCopy.Enabled = (lTextBox.SelectionLength > 0);
 				MenuItemEditCut.Enabled = !lTextBox.ReadOnly && (lTextBox.SelectionLength > 0);
@@ -1005,57 +506,14 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				EditEventArgs	lEventArgs = new EditEventArgs (DataFormats.Serializable);
-
-				if (lTreeSelection != null)
-				{
-					lTreeSelection.CanEdit (lEventArgs);
-				}
-				else if (CanEdit != null)
-				{
-					CanEdit (this, lEventArgs);
-				}
-
-				if (!String.IsNullOrEmpty (lEventArgs.CopyObjectTitle))
-				{
-					MenuItemEditCopy.Enabled = true;
-					MenuItemEditCopy.Text = String.Format (Properties.Resources.EditCopyThis, lEventArgs.CopyObjectTitle);
-				}
-				else
-				{
-					MenuItemEditCopy.Enabled = false;
-					MenuItemEditCopy.Text = Properties.Resources.EditCopy;
-				}
-				if (!MainForm.Singleton.FileIsReadOnly && !String.IsNullOrEmpty (lEventArgs.CutObjectTitle))
-				{
-					MenuItemEditCut.Enabled = true;
-					MenuItemEditCut.Text = String.Format (Properties.Resources.EditCutThis, lEventArgs.CutObjectTitle);
-				}
-				else
-				{
-					MenuItemEditCut.Enabled = false;
-					MenuItemEditCut.Text = Properties.Resources.EditCut;
-				}
-				if (!MainForm.Singleton.FileIsReadOnly && !String.IsNullOrEmpty (lEventArgs.DeleteObjectTitle))
-				{
-					MenuItemEditDelete.Enabled = true;
-					MenuItemEditDelete.Text = String.Format (Properties.Resources.EditDeleteThis, lEventArgs.DeleteObjectTitle);
-				}
-				else
-				{
-					MenuItemEditDelete.Enabled = false;
-					MenuItemEditDelete.Text = Properties.Resources.EditDelete;
-				}
-				if (!MainForm.Singleton.FileIsReadOnly && !String.IsNullOrEmpty (lEventArgs.PasteObjectTitle))
-				{
-					MenuItemEditPaste.Enabled = true;
-					MenuItemEditPaste.Text = String.Format (Properties.Resources.EditPasteThis, lEventArgs.PasteObjectTitle);
-				}
-				else
-				{
-					MenuItemEditPaste.Enabled = false;
-					MenuItemEditPaste.Text = Properties.Resources.EditPaste;
-				}
+				MenuItemEditCopy.Enabled = false;
+				MenuItemEditDelete.Enabled = false;
+				MenuItemEditCut.Enabled = false;
+				MenuItemEditPaste.Enabled = false;
+				MenuItemEditCopy.Text = Properties.Resources.EditCopy;
+				MenuItemEditDelete.Text = Properties.Resources.EditDelete;
+				MenuItemEditCut.Text = Properties.Resources.EditCut;
+				MenuItemEditPaste.Text = Properties.Resources.EditPaste;
 			}
 
 			ToolButtonEditCopy.Enabled = MenuItemEditCopy.Enabled;
@@ -1076,10 +534,10 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				MenuItemEditUndo.Enabled = UndoManager.CanUndo;
-				MenuItemEditRedo.Enabled = UndoManager.CanRedo;
-				MenuItemEditUndo.Text = UndoManager.CanUndo ? String.Format (Properties.Resources.EditUndoThis, UndoManager.UndoName) : Properties.Resources.EditUndo;
-				MenuItemEditRedo.Text = UndoManager.CanRedo ? String.Format (Properties.Resources.EditRedoThis, UndoManager.RedoName) : Properties.Resources.EditRedo;
+				MenuItemEditUndo.Enabled = Program.UndoManager.CanUndo;
+				MenuItemEditRedo.Enabled = Program.UndoManager.CanRedo;
+				MenuItemEditUndo.Text = Program.UndoManager.CanUndo ? String.Format (Properties.Resources.EditUndoThis, Program.UndoManager.UndoName) : Properties.Resources.EditUndo;
+				MenuItemEditRedo.Text = Program.UndoManager.CanRedo ? String.Format (Properties.Resources.EditRedoThis, Program.UndoManager.RedoName) : Properties.Resources.EditRedo;
 			}
 
 			ToolButtonEditUndo.Enabled = MenuItemEditUndo.Enabled;
@@ -1431,7 +889,7 @@ namespace AgentCharacterEditor
 					ValidateChildren ();
 				}
 			}
-			else if (UndoManager.Undo ())
+			else if (Program.UndoManager.Undo ())
 			{
 				ShowFileState ();
 				ShowEditState ();
@@ -1440,7 +898,7 @@ namespace AgentCharacterEditor
 
 		private void MenuItemEditRedo_Click (object sender, EventArgs e)
 		{
-			if (UndoManager.Redo ())
+			if (Program.UndoManager.Redo ())
 			{
 				ShowFileState ();
 				ShowEditState ();
@@ -1451,117 +909,104 @@ namespace AgentCharacterEditor
 
 		private void MenuItemEditCopy_Click (object sender, EventArgs e)
 		{
-			TextBox	lTextBox = null;
-			Control	lActive = GetActiveControl (ref lTextBox);
+			TextBox					lTextBox = null;
+			Control					lActive = GetActiveControl (ref lTextBox);
+			Global.EditEventArgs	lEventArgs = null;
 
-			if (lTextBox != null)
+			if (lActive == TreeViewMain)
+			{
+				TreeViewMain.GetSelectedPart ().EditCopy (lEventArgs = new Global.EditEventArgs ());
+			}
+			else if (EditCopy != null)
+			{
+				EditCopy (this, lEventArgs = new Global.EditEventArgs ());
+			}
+
+			if (lTextBox != null && ((lEventArgs == null) || !lEventArgs.IsUsed))
 			{
 				lTextBox.Copy ();
 				ValidateChildren ();
 			}
-			else
+			if ((lEventArgs != null) && !lEventArgs.IsUsed)
 			{
-				EditEventArgs	lEventArgs = new EditEventArgs ();
-
-				if (lActive == TreeViewMain)
-				{
-					(new TreeSelection (TreeViewMain.SelectedNode)).EditCopy (lEventArgs);
-				}
-				else if (EditCopy != null)
-				{
-					EditCopy (this, lEventArgs);
-				}
-				if (!lEventArgs.IsUsed)
-				{
-					ShowEditState ();
-				}
+				ShowEditState ();
 			}
 		}
 
 		private void MenuItemEditCut_Click (object sender, EventArgs e)
 		{
-			TextBox	lTextBox = null;
-			Control	lActive = GetActiveControl (ref lTextBox);
+			TextBox					lTextBox = null;
+			Control					lActive = GetActiveControl (ref lTextBox);
+			Global.EditEventArgs	lEventArgs = null;
 
-			if (lTextBox != null)
+			if (lActive == TreeViewMain)
+			{
+				TreeViewMain.GetSelectedPart ().EditCut (lEventArgs = new Global.EditEventArgs ());
+			}
+			else if (EditCut != null)
+			{
+				EditCut (this, lEventArgs = new Global.EditEventArgs ());
+			}
+
+			if (lTextBox != null && ((lEventArgs == null) || !lEventArgs.IsUsed))
 			{
 				lTextBox.Cut ();
 				ValidateChildren ();
 			}
-			else
+			if ((lEventArgs != null) && !lEventArgs.IsUsed)
 			{
-				EditEventArgs	lEventArgs = new EditEventArgs ();
-
-				if (lActive == TreeViewMain)
-				{
-					(new TreeSelection (TreeViewMain.SelectedNode)).EditCut (lEventArgs);
-				}
-				else if (EditCut != null)
-				{
-					EditCut (this, lEventArgs);
-				}
-				if (!lEventArgs.IsUsed)
-				{
-					ShowEditState ();
-				}
+				ShowEditState ();
 			}
 		}
 
 		private void MenuItemEditDelete_Click (object sender, EventArgs e)
 		{
-			TextBox	lTextBox = null;
-			Control	lActive = GetActiveControl (ref lTextBox);
+			TextBox					lTextBox = null;
+			Control					lActive = GetActiveControl (ref lTextBox);
+			Global.EditEventArgs	lEventArgs = null;
 
-			if (lTextBox != null)
+			if (lActive == TreeViewMain)
+			{
+				TreeViewMain.GetSelectedPart ().EditDelete (lEventArgs = new Global.EditEventArgs ());
+			}
+			else if (EditDelete != null)
+			{
+				EditDelete (this, lEventArgs = new Global.EditEventArgs ());
+			}
+
+			if (lTextBox != null && ((lEventArgs == null) || !lEventArgs.IsUsed))
 			{
 				lTextBox.Paste (String.Empty);
 				ValidateChildren ();
 			}
-			else
+			if ((lEventArgs != null) && !lEventArgs.IsUsed)
 			{
-				EditEventArgs	lEventArgs = new EditEventArgs ();
-
-				if (lActive == TreeViewMain)
-				{
-					(new TreeSelection (TreeViewMain.SelectedNode)).EditDelete (lEventArgs);
-				}
-				else if (EditDelete != null)
-				{
-					EditDelete (this, lEventArgs);
-				}
-				if (!lEventArgs.IsUsed)
-				{
-					ShowEditState ();
-				}
+				ShowEditState ();
 			}
 		}
 
 		private void MenuItemEditPaste_Click (object sender, EventArgs e)
 		{
-			TextBox	lTextBox = null;
-			Control	lActive = GetActiveControl (ref lTextBox);
+			TextBox					lTextBox = null;
+			Control					lActive = GetActiveControl (ref lTextBox);
+			Global.EditEventArgs	lEventArgs = null;
 
-			if (lTextBox != null)
+			if (lActive == TreeViewMain)
+			{
+				TreeViewMain.GetSelectedPart ().EditPaste (lEventArgs = new Global.EditEventArgs (DataFormats.Serializable));
+			}
+			else if (EditPaste != null)
+			{
+				EditPaste (this, lEventArgs = new Global.EditEventArgs (DataFormats.Serializable));
+			}
+
+			if (lTextBox != null && ((lEventArgs == null) || !lEventArgs.IsUsed))
 			{
 				lTextBox.Paste ();
 				ValidateChildren ();
 			}
-			else
+			if ((lEventArgs != null) && !lEventArgs.IsUsed)
 			{
-				EditEventArgs	lEventArgs = new EditEventArgs (DataFormats.Serializable);
-
-				if (lActive == TreeViewMain)
-				{
-					(new TreeSelection (TreeViewMain.SelectedNode)).EditPaste (lEventArgs);
-				}
-				else if (EditPaste != null)
-				{
-					EditPaste (this, lEventArgs);
-				}
-				if (lEventArgs.IsUsed)
-				{
-					ToolStripTop.TipTextChanged ();
-				}
 				ShowEditState ();
 			}
 		}
@@ -1586,7 +1031,7 @@ namespace AgentCharacterEditor
 
 		private void UndoManager_Undone (object sender, UndoManager.EventArgs e)
 		{
-			FileIsDirty = true;
+			FileIsDirty ();
 			ToolStripTop.TipTextChanged ();
 #if DEBUG
 			System.Diagnostics.Debug.Print ("[{0}] Undone", e.UndoUnit.ToString ());
@@ -1595,7 +1040,7 @@ namespace AgentCharacterEditor
 
 		private void UndoManager_Redone (object sender, UndoManager.EventArgs e)
 		{
-			FileIsDirty = true;
+			FileIsDirty ();
 			ToolStripTop.TipTextChanged ();
 #if DEBUG
 			System.Diagnostics.Debug.Print ("[{0}] Redone", e.UndoUnit.ToString ());
@@ -1604,63 +1049,9 @@ namespace AgentCharacterEditor
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private void PanelAnimations_AnimationAdded (object sender, AnimationEventArgs e)
+		private void PanelAnimations_GoToAnimation (object sender, Global.AnimationEventArgs e)
 		{
-			ShowAnimationNames ();
-		}
-
-		private void PanelAnimations_AnimationRemoved (object sender, AnimationEventArgs e)
-		{
-			ShowAnimationNames ();
-			ShowSelectedTreeNode ();
-		}
-
-		private void PanelAnimation_AnimationNameChanged (object sender, AnimationEventArgs e)
-		{
-			TreeNode	lAnimationNode = (new TreeSelection (e.Animation)).SelectedNode ();
-
-			if (lAnimationNode != null)
-			{
-				lAnimationNode.Text = e.Animation.Name;
-			}
-		}
-
-		private void PanelAnimation_AnimationFrameAdded (object sender, AnimationFrameEventArgs e)
-		{
-			TreeNode	lAnimationNode = (new TreeSelection (e.Animation)).SelectedNode ();
-
-			if (lAnimationNode != null)
-			{
-				ShowAnimationFrames (e.Animation, lAnimationNode);
-			}
-		}
-
-		private void PanelAnimation_AnimationFrameRemoved (object sender, AnimationFrameEventArgs e)
-		{
-			TreeNode	lAnimationNode = (new TreeSelection (e.Animation)).SelectedNode ();
-
-			if (lAnimationNode != null)
-			{
-				ShowAnimationFrames (e.Animation, lAnimationNode);
-				ShowSelectedTreeNode ();
-			}
-		}
-
-		private void PanelAnimation_AnimationFrameReordered (object sender, AnimationFrameEventArgs e)
-		{
-			TreeNode	lAnimationNode = (new TreeSelection (e.Animation)).SelectedNode ();
-
-			if (lAnimationNode != null)
-			{
-				ShowAnimationFrames (e.Animation, lAnimationNode);
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		private void PanelAnimations_GoToAnimation (object sender, AnimationEventArgs e)
-		{
-			TreeNode	lAnimationNode = (new TreeSelection (e.Animation)).SelectedNode ();
+			TreeNode	lAnimationNode = (new PartsTreeSelection (e.Animation)).SelectedNode ();
 
 			if (lAnimationNode != null)
 			{
@@ -1669,9 +1060,9 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		private void PanelAnimation_GoToFrame (object sender, AnimationFrameEventArgs e)
+		private void PanelAnimation_GoToFrame (object sender, Global.AnimationFrameEventArgs e)
 		{
-			TreeNode	lFrameNode = (new TreeSelection (e.Animation, e.Frame)).SelectedNode ();
+			TreeNode	lFrameNode = (new PartsTreeSelection (e.Animation, e.Frame)).SelectedNode ();
 
 			if (lFrameNode != null)
 			{
@@ -1680,9 +1071,9 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		private void PanelAnimation_GoToState (object sender, StateEventArgs e)
+		private void PanelAnimation_GoToState (object sender, Global.StateEventArgs e)
 		{
-			TreeNode	lStateNode = (new TreeSelection (e.StateName)).SelectedNode ();
+			TreeNode	lStateNode = (new PartsTreeSelection (e.StateName)).SelectedNode ();
 
 			if (lStateNode != null)
 			{
@@ -1691,9 +1082,9 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		private void PanelState_GoToAnimation (object sender, AnimationEventArgs e)
+		private void PanelState_GoToAnimation (object sender, Global.AnimationEventArgs e)
 		{
-			TreeNode	lAnimationNode = (new TreeSelection (e.Animation)).SelectedNode ();
+			TreeNode	lAnimationNode = (new PartsTreeSelection (e.Animation)).SelectedNode ();
 
 			if (lAnimationNode != null)
 			{

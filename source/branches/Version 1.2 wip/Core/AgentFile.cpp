@@ -56,7 +56,8 @@ namespace Character {
 /////////////////////////////////////////////////////////////////////////////
 
 CAgentFile::CAgentFile()
-:	mSignature (0)
+:	mLogLevel (LogVerbose+1),
+	mSignature (0)
 {
 	Close ();
 }
@@ -322,13 +323,6 @@ tBstrPtr CAgentFile::ParseRelativePath (LPCTSTR pRelativePath)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
-bool CAgentFile::Open (const System::String^ pPath)
-{
-	return Open (pPath, LogVerbose+1);
-}
-#endif
-
 void CAgentFile::Close ()
 {
 	FreeNames ();
@@ -358,27 +352,12 @@ bool CAgentFile::Save ()
 	return Save (nullptr);
 }
 
-bool CAgentFile::Save (UINT pLogLevel)
-{
-	return Save (nullptr, pLogLevel);
-}
-
 bool CAgentFile::Save (const System::String^ pPath)
 {
-	return Save (pPath, LogVerbose+1);
-}
-
-bool CAgentFile::Save (const System::String^ pPath, UINT pLogLevel)
-{
-	return Save (pPath, this, pLogLevel);
+	return Save (pPath, this);
 }
 
 bool CAgentFile::Save (const System::String^ pPath, CAgentFile^ pSource)
-{
-	return Save (pPath, pSource, LogVerbose+1);
-}
-
-bool CAgentFile::Save (const System::String^ pPath, CAgentFile^ pSource, UINT pLogLevel)
 {
 	return false;
 }
@@ -935,20 +914,10 @@ CAgentFileImage^ CAgentFile::GetImage (int pImageNdx)
 
 CAgentFileImage^ CAgentFile::GetImage (int pImageNdx, bool p32Bit)
 {
-	return GetImage (pImageNdx, p32Bit, LogVerbose+1);
-}
-
-CAgentFileImage^ CAgentFile::GetImage (int pImageNdx, bool p32Bit, UINT pLogLevel)
-{
-	return GetImage (pImageNdx, p32Bit, Color::Empty, pLogLevel);
+	return GetImage (pImageNdx, p32Bit, Color::Empty);
 }
 
 CAgentFileImage^ CAgentFile::GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor)
-{
-	return GetImage (pImageNdx, p32Bit, pBkColor, LogVerbose+1);
-}
-
-CAgentFileImage^ CAgentFile::GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor, UINT pLogLevel)
 {
 	return nullptr;
 }
@@ -963,7 +932,7 @@ INT_PTR CAgentFile::GetImageCount () const
 	return 0;
 }
 
-CAgentFileImage* CAgentFile::GetImage (INT_PTR pImageNdx, bool p32Bit, const COLORREF* pBkColor, UINT pLogLevel)
+CAgentFileImage* CAgentFile::GetImage (INT_PTR pImageNdx, bool p32Bit, const COLORREF* pBkColor)
 {
 	return NULL;
 }
@@ -1580,10 +1549,10 @@ void CAgentFile::FreeNames ()
 
 bool CAgentFile::ReadNames ()
 {
-	return ReadNames (true, LogVerbose+1);
+	return ReadNames (true);
 }
 
-bool CAgentFile::ReadNames (bool pFirstLetterCaps, UINT pLogLevel)
+bool CAgentFile::ReadNames (bool pFirstLetterCaps)
 {
 	return false;
 }
@@ -1743,11 +1712,6 @@ void CAgentFile::FreeStates ()
 
 bool CAgentFile::ReadStates ()
 {
-	return ReadStates (LogVerbose+1);
-}
-
-bool CAgentFile::ReadStates (UINT pLogLevel)
-{
 	return false;
 }
 
@@ -1764,11 +1728,6 @@ void CAgentFile::FreeGestures ()
 }
 
 bool CAgentFile::ReadGestures ()
-{
-	return ReadGestures (LogVerbose+1);
-}
-
-bool CAgentFile::ReadGestures (UINT pLogLevel)
 {
 	return false;
 }

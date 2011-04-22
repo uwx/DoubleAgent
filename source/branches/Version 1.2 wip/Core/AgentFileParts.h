@@ -143,7 +143,7 @@ internal:
 public:
 #endif
 	CAgentFileHeader ();
-	~CAgentFileHeader () {}
+	virtual ~CAgentFileHeader ();
 	void Empty ();
 
 #ifdef	_M_CEE
@@ -207,19 +207,20 @@ protected:
 	tBstrPtr						mDesc2;
 #endif
 
+public:
+	CAgentFileName ();
+	virtual ~CAgentFileName ();
 #ifdef	_M_CEE
 internal:
-#else
-public:
 #endif
-	CAgentFileName () {Empty ();}
-	~CAgentFileName () {}
 	void Empty ();
 
 #ifdef	_M_CEE
 public:
 	CAgentFileName (LANGID pLanguage, System::String^ pName);
 	CAgentFileName (LANGID pLanguage, CAgentFileName^ pSource);
+	Boolean CopyTo (CAgentFileName^ pTarget);
+	Boolean Equals (CAgentFileName^ pTarget);
     virtual System::String^ ToString() override;
 internal:
 	CAgentFileName (CharacterFile^ pOwner);
@@ -236,6 +237,7 @@ public ref class CAgentFileNames : public System::Collections::ObjectModel::Keye
 {
 public:
 	CAgentFileNames ();
+	virtual ~CAgentFileNames ();
 internal:
 	CAgentFileNames (CharacterFile^ pOwner);
 
@@ -327,17 +329,18 @@ protected:
 	short							mPitch;
 #endif
 
+public:
+	CAgentFileTts ();
+	virtual ~CAgentFileTts ();
 #ifdef	_M_CEE
 internal:
-#else
-public:
 #endif
-	CAgentFileTts () {Empty ();}
-	~CAgentFileTts () {}
 	void Empty ();
 
 #ifdef	_M_CEE
 public:
+	Boolean CopyTo (CAgentFileTts^ pTarget);
+	Boolean Equals (CAgentFileTts^ pTarget);
     virtual System::String^ ToString() override;
 internal:
 	CAgentFileTts (CharacterFile^ pOwner);
@@ -423,17 +426,18 @@ protected:
 	tS <LOGFONT>					mFont;
 #endif
 
+public:
+	CAgentFileBalloon ();
+	virtual ~CAgentFileBalloon ();
 #ifdef	_M_CEE
 internal:
-#else
-public:
 #endif
-	CAgentFileBalloon () {Empty ();}
-	~CAgentFileBalloon () {}
 	void Empty ();
 
 #ifdef	_M_CEE
 public:
+	Boolean CopyTo (CAgentFileBalloon^ pTarget);
+	Boolean Equals (CAgentFileBalloon^ pTarget);
     virtual System::String^ ToString() override;
 internal:
 	CAgentFileBalloon (CharacterFile^ pOwner);
@@ -485,13 +489,12 @@ protected:
 	CPoint								mOffset;
 #endif
 
+public:
+	CAgentFileFrameImage ();
+	virtual ~CAgentFileFrameImage ();
 #ifdef	_M_CEE
 internal:
-#else
-public:
 #endif
-	CAgentFileFrameImage () {Empty ();}
-	~CAgentFileFrameImage () {}
 	void Empty ();
 
 #ifdef	_M_CEE
@@ -514,6 +517,7 @@ public:
 {
 public:
 	CAgentFileFrameImages ();
+	virtual ~CAgentFileFrameImages ();
 internal:
 	CAgentFileFrameImages (CharacterFile^ pOwner, FileAnimationFrame^ pFrame);
 
@@ -593,13 +597,12 @@ protected:
 	CPoint									mSomething;
 #endif
 
+public:
+	CAgentFileFrameOverlay ();
+	virtual ~CAgentFileFrameOverlay ();
 #ifdef	_M_CEE
 internal:
-#else
-public:
 #endif
-	CAgentFileFrameOverlay () {Empty ();}
-	~CAgentFileFrameOverlay () {}
 	void Empty ();
 
 #ifdef	_M_CEE
@@ -622,6 +625,7 @@ public:
 {
 public:
 	CAgentFileFrameOverlays ();
+	virtual ~CAgentFileFrameOverlays ();
 internal:
 	CAgentFileFrameOverlays (CharacterFile^ pOwner, FileAnimationFrame^ pFrame);
 
@@ -736,18 +740,18 @@ protected:
 	CAgentFileFrameOverlays			mOverlays;
 #endif
 
+public:
+	CAgentFileFrame ();
+	virtual ~CAgentFileFrame ();
 #ifdef	_M_CEE
 internal:
-#else
-public:
 #endif
-	CAgentFileFrame () {Empty ();}
-	~CAgentFileFrame () {}
 	void Empty ();
 
 #ifdef	_M_CEE
 public:
 	Boolean CopyTo (CAgentFileFrame^ pTarget);
+	Boolean CopyTo (CAgentFileFrame^ pTarget, Boolean pDeepCopy);
     virtual System::String^ ToString() override;
 internal:
 	CAgentFileFrame (CharacterFile^ pOwner, FileFrames^ pContainer);
@@ -761,10 +765,11 @@ public:
 
 #ifdef	_M_CEE
 #define CAgentFileFrames FileFrames
-public ref class CAgentFileFrames : public System::Collections::ObjectModel::Collection <CAgentFileFrame^>
+[Serializable] public ref class CAgentFileFrames : public System::Collections::ObjectModel::Collection <CAgentFileFrame^>
 {
 public:
 	CAgentFileFrames ();
+	virtual ~CAgentFileFrames ();
 internal:
 	CAgentFileFrames (CharacterFile^ pOwner, FileAnimation^ pAnimation);
 
@@ -848,18 +853,18 @@ protected:
 	DWORD							mAcaChksum;
 #endif
 
+public:
+	CAgentFileAnimation ();
+	virtual ~CAgentFileAnimation ();
 #ifdef	_M_CEE
 internal:
-#else
-public:
 #endif
-	CAgentFileAnimation () {Empty ();}
-	~CAgentFileAnimation () {}
 	void Empty ();
 
 #ifdef	_M_CEE
 public:
 	Boolean CopyTo (CAgentFileAnimation^ pTarget);
+	Boolean CopyTo (CAgentFileAnimation^ pTarget, Boolean pDeepCopy);
     virtual System::String^ ToString() override;
 internal:
 	CAgentFileAnimation (CharacterFile^ pOwner, FileGestures^ pContainer);
@@ -878,6 +883,7 @@ public ref class CAgentFileGestures : public System::Collections::ObjectModel::K
 {
 public:
 	CAgentFileGestures ();
+	virtual ~CAgentFileGestures ();
 internal:
 	CAgentFileGestures (CharacterFile^ pOwner);
 
@@ -920,6 +926,7 @@ public ref class CAgentFileStates : public System::Collections::Generic::SortedL
 {
 public:
 	CAgentFileStates ();
+	virtual ~CAgentFileStates ();
 internal:
 	CAgentFileStates (CharacterFile^ pOwner);
 
@@ -1001,8 +1008,8 @@ internal:
 #else
 public:
 #endif
-	CAgentFileImage () {Empty ();}
-	~CAgentFileImage () {}
+	CAgentFileImage ();
+	virtual ~CAgentFileImage ();
 	void Empty ();
 
 #ifdef	_M_CEE
