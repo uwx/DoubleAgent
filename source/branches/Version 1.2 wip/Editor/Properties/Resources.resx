@@ -202,6 +202,13 @@
   <data name="EditUndoThis" xml:space="preserve">
     <value>&amp;Undo {0}</value>
   </data>
+  <data name="LicenseDetails" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>LicenseDetails.rtf;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="LicenseIntro" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>LicenseIntro.rtf;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
   <data name="MouthOverlay" xml:space="preserve">
     <value>Mouth</value>
   </data>

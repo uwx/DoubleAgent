@@ -22,9 +22,9 @@ BEGIN
 	"	version=""1.0.0.0"" \r\n"
 	"	type=""win32"" \r\n"
 #ifdef	_WIN64
-	"	processorArchitecture=x64 \r\n"
+	"	processorArchitecture=""x64"" \r\n"
 #else
-	"	processorArchitecture=x86 \r\n"
+	"	processorArchitecture=""x86"" \r\n"
 #endif
 	"/> \r\n"
 	"<description>Double Agent Sabotage Tests</description> \r\n"
@@ -35,9 +35,9 @@ BEGIN
 	"		version=""6.0.0.0"" \r\n"
 	"		type=""win32"" \r\n"
 #ifdef	_WIN64
-	"		processorArchitecture=x64 \r\n"
+	"		processorArchitecture=""x64"" \r\n"
 #else
-	"		processorArchitecture=x86 \r\n"
+	"		processorArchitecture=""x86"" \r\n"
 #endif
 	"		publicKeyToken=""6595b64144ccf1df"" \r\n"
 	"		language=""*"" \r\n"

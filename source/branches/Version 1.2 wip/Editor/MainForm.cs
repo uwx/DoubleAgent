@@ -748,7 +748,7 @@ namespace AgentCharacterEditor
 
 		private void MenuItemHelpAbout_Click (object sender, EventArgs e)
 		{
-			(new AgentCharacterEditor.AboutBox ()).ShowDialog ();
+			(new AgentCharacterEditor.AboutBox ()).ShowDialog (this);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

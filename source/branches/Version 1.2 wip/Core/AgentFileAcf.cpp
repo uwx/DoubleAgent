@@ -444,7 +444,7 @@ bool CAgentFileAcf::ReadAcfHeader ()
 
 				while (lGestureCount > 0)
 				{
-					lGesture = new tS <CAgentFileAnimation>;
+					lGesture = new CAgentFileAnimation;
 
 					lStrLen = *(LPCDWORD)lByte;
 					lByte += sizeof(DWORD);
@@ -740,7 +740,7 @@ HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& 
 		}
 #endif
 
-		if	(pAnimation->mFrames = new tS <CAgentFileFrame> [lFrameCount])
+		if	(pAnimation->mFrames = new CAgentFileFrame [lFrameCount])
 		{
 			pAnimation->mFrameCount = lFrameCount;
 		}
@@ -762,7 +762,7 @@ HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& 
 				//LogDump (LogDebugFast, (LPBYTE)lByte, sizeof(WORD)*7);
 
 				lFrame->mImageCount = 1;
-				lFrame->mImages = new tS <CAgentFileFrameImage> [1];
+				lFrame->mImages = new CAgentFileFrameImage [1];
 				lFrame->mImages [0].mImageNdx = *(LPCWORD)lByte + pImageStart;
 				lByte += sizeof(WORD);
 
@@ -813,7 +813,7 @@ HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& 
 				lByte++;
 				if	(lOverlayCount > 0)
 				{
-					if	(lFrame->mOverlays = new tS <CAgentFileFrameOverlay> [lOverlayCount])
+					if	(lFrame->mOverlays = new CAgentFileFrameOverlay [lOverlayCount])
 					{
 						lFrame->mOverlayCount = lOverlayCount;
 					}
@@ -845,7 +845,7 @@ HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& 
 					for	(lNdx = 0; lNdx < (INT_PTR)lOverlayCount; lNdx++)
 					{
 						CAgentFileFrameOverlay*	lOverlay = &lFrame->mOverlays [lNdx];
-						tPtr <CAgentFileImage>		lOverlayImage = new tS <CAgentFileImage>;
+						tPtr <CAgentFileImage>	lOverlayImage = new CAgentFileImage;
 
 						//LogDump (LogDebugFast, (LPBYTE)lByte, 15);
 

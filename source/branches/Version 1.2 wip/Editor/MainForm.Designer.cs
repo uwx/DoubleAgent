@@ -133,10 +133,6 @@ namespace AgentCharacterEditor
 			this.MenuItemEditPaste = new System.Windows.Forms.ToolStripMenuItem();
 			this.MenuItemEditDelete = new System.Windows.Forms.ToolStripMenuItem();
 			this.MenuItemHelp = new System.Windows.Forms.ToolStripMenuItem();
-			this.MenuItemHelpContents = new System.Windows.Forms.ToolStripMenuItem();
-			this.MenuItemHelpIndex = new System.Windows.Forms.ToolStripMenuItem();
-			this.MenuItemHelpSearch = new System.Windows.Forms.ToolStripMenuItem();
-			this.MenuSepHelp1 = new System.Windows.Forms.ToolStripSeparator();
 			this.MenuItemHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
 			this.ToolStripContainerMain.ContentPanel.SuspendLayout();
 			this.ToolStripContainerMain.TopToolStripPanel.SuspendLayout();
@@ -357,6 +353,7 @@ namespace AgentCharacterEditor
 			this.PanelState.Name = "PanelState";
 			this.PanelState.Padding = new System.Windows.Forms.Padding(9);
 			this.PanelState.Size = new System.Drawing.Size(758, 481);
+			this.PanelState.StateName = null;
 			this.PanelState.TabIndex = 0;
 			this.PanelState.Visible = false;
 			this.PanelState.GoToAnimation += new AgentCharacterEditor.Global.GoToAnimationEventHandler(this.PanelState_GoToAnimation);
@@ -745,45 +742,15 @@ namespace AgentCharacterEditor
 			// MenuItemHelp
 			// 
 			this.MenuItemHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MenuItemHelpContents,
-            this.MenuItemHelpIndex,
-            this.MenuItemHelpSearch,
-            this.MenuSepHelp1,
             this.MenuItemHelpAbout});
 			this.MenuItemHelp.Name = "MenuItemHelp";
 			this.MenuItemHelp.Size = new System.Drawing.Size(53, 24);
 			this.MenuItemHelp.Text = "&Help";
 			// 
-			// MenuItemHelpContents
-			// 
-			this.MenuItemHelpContents.Enabled = false;
-			this.MenuItemHelpContents.Name = "MenuItemHelpContents";
-			this.MenuItemHelpContents.Size = new System.Drawing.Size(136, 24);
-			this.MenuItemHelpContents.Text = "&Contents";
-			// 
-			// MenuItemHelpIndex
-			// 
-			this.MenuItemHelpIndex.Enabled = false;
-			this.MenuItemHelpIndex.Name = "MenuItemHelpIndex";
-			this.MenuItemHelpIndex.Size = new System.Drawing.Size(136, 24);
-			this.MenuItemHelpIndex.Text = "&Index";
-			// 
-			// MenuItemHelpSearch
-			// 
-			this.MenuItemHelpSearch.Enabled = false;
-			this.MenuItemHelpSearch.Name = "MenuItemHelpSearch";
-			this.MenuItemHelpSearch.Size = new System.Drawing.Size(136, 24);
-			this.MenuItemHelpSearch.Text = "&Search";
-			// 
-			// MenuSepHelp1
-			// 
-			this.MenuSepHelp1.Name = "MenuSepHelp1";
-			this.MenuSepHelp1.Size = new System.Drawing.Size(133, 6);
-			// 
 			// MenuItemHelpAbout
 			// 
 			this.MenuItemHelpAbout.Name = "MenuItemHelpAbout";
-			this.MenuItemHelpAbout.Size = new System.Drawing.Size(136, 24);
+			this.MenuItemHelpAbout.Size = new System.Drawing.Size(152, 24);
 			this.MenuItemHelpAbout.Text = "&About...";
 			this.MenuItemHelpAbout.Click += new System.EventHandler(this.MenuItemHelpAbout_Click);
 			// 
@@ -857,10 +824,6 @@ namespace AgentCharacterEditor
 		private System.Windows.Forms.ToolStripMenuItem MenuItemEditPaste;
 		private System.Windows.Forms.ToolStripMenuItem MenuItemEditDelete;
 		private System.Windows.Forms.ToolStripMenuItem MenuItemHelp;
-		private System.Windows.Forms.ToolStripMenuItem MenuItemHelpContents;
-		private System.Windows.Forms.ToolStripMenuItem MenuItemHelpIndex;
-		private System.Windows.Forms.ToolStripMenuItem MenuItemHelpSearch;
-		private System.Windows.Forms.ToolStripSeparator MenuSepHelp1;
 		private System.Windows.Forms.ToolStripMenuItem MenuItemHelpAbout;
 		public AgentCharacterEditor.CharacterForm PanelCharacter;
 		public AgentCharacterEditor.BalloonForm PanelBalloon;

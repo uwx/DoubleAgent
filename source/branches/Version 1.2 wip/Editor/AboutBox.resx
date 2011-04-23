@@ -117,11 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="BorderPanel.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="LogoPictureBox.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAAEnMAABJzAYwiuQcAAAxpSURBVHhezVt3kCRVGe9Vd/q9vbDb3YOYwFDmjBFDGUox
+        YQUAAAAJcEhZcwAAEnEAABJxAfPceo4AAAxpSURBVHhezVt3kCRVGe9Vd/q9vbDb3YOYwFDmjBFDGUox
         ggoGPMpSTIgCWoIZFQzgXd3t7U7Y5U5RDIUBc+DQP0ylHFrm8xRPDChSKocieEcQDvz9Xoft8NJMT13d
         VE3t7Mx7X3rf+3IHwX54bV0ddAdznSOHsXjPsCvP7yfyB8NE/mkQi3/g775BIm/i50Esfz+I5Hfw3VZ8
         flM/lo/ZGgTT+4HEyaMYROJxYOysQXfmp2D4lmF35rZx3hDCXgplkIi3z68N7z15SicIcXFVcDAYP7Wf

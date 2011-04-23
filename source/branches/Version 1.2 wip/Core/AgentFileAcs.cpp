@@ -1262,7 +1262,7 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 #ifdef	_M_CEE
 				&&	(lRet = gcnew CAgentFileAnimation (nullptr, mGestures))
 #else
-				&&	(lRet = new tS <CAgentFileAnimation>)
+				&&	(lRet = new CAgentFileAnimation)
 #endif
 				)
 			{
@@ -1286,7 +1286,7 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 #ifdef	_M_CEE
 					&&	(lRet->mFrames = gcnew CAgentFileFrames (nullptr, lRet))
 #else
-					&&	(lRet->mFrames = new tS <CAgentFileFrame> [lFrameCount])
+					&&	(lRet->mFrames = new CAgentFileFrame [lFrameCount])
 #endif
 					)
 				{
@@ -1322,7 +1322,7 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 #ifdef	_M_CEE
 							&&	(lFrame->mImages = gcnew CAgentFileFrameImages (nullptr, lFrame))
 #else
-							&&	(lFrame->mImages = new tS <CAgentFileFrameImage> [lImageCount])
+							&&	(lFrame->mImages = new CAgentFileFrameImage [lImageCount])
 #endif
 							)
 						{
@@ -1413,7 +1413,7 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 #ifdef	_M_CEE
 							&&	(lFrame->mOverlays = gcnew CAgentFileFrameOverlays (nullptr, lFrame))
 #else
-							&&	(lFrame->mOverlays = new tS <CAgentFileFrameOverlay> [lOverlayCount])
+							&&	(lFrame->mOverlays = new CAgentFileFrameOverlay [lOverlayCount])
 #endif
 							)
 						{
@@ -2411,7 +2411,7 @@ CAgentFileImage* CAgentFileAcs::ReadAcsImage (DWORD pOffset, DWORD pSize, UINT p
 #else
 				&&	(lImageSize.cx > 0)
 				&&	(lImageSize.cy > 0)
-				&&	(lRet = new tS <CAgentFileImage>)
+				&&	(lRet = new CAgentFileImage)
 #endif
 				)
 			{
@@ -2500,7 +2500,7 @@ CAgentFileImage* CAgentFileAcs::ReadAcsImage (DWORD pOffset, DWORD pSize, UINT p
 				&&	(l32BitImage->mBits = gcnew array <BYTE> (lBitsSize))
 #else
 				&&	(mHeader.Palette)
-				&&	(l32BitImage = new tS <CAgentFileImage>)
+				&&	(l32BitImage = new CAgentFileImage)
 				&&	(l32BitImage->mBitsSize = lRet->mImageSize.cx * lRet->mImageSize.cy * 4)
 				&&	(l32BitImage->mBits = new BYTE [l32BitImage->mBitsSize])
 #endif

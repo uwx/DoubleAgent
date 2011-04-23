@@ -87,7 +87,7 @@
   <ItemGroup>
     <Reference Include="DoubleAgent.AxControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Program Files (x86)\Double Agent\DoubleAgent.AxControl.dll</HintPath>
+      <HintPath>..\..\..\..\..\Program Files (x86)\Double Agent\Dev\DoubleAgent.AxControl.dll</HintPath>
     </Reference>
     <Reference Include="DoubleAgent.Control, Version=1.1.0.0, Culture=neutral, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

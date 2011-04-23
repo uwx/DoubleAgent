@@ -81,6 +81,12 @@
     <Compile Include="..\Util\CSharp\UndoManager.cs">
       <Link>UndoManager.cs</Link>
     </Compile>
+    <Compile Include="AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="FileDialogEx.cs">
     </Compile>
     <Compile Include="..\Util\CSharp\ListViewEx.cs">
@@ -97,12 +103,6 @@
     <Compile Include="..\Util\CSharp\TextBoxEx.cs">
       <Link>TextBoxEx.cs</Link>
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="AboutBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AboutBox.Designer.cs">
-      <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
     <Compile Include="AnimationForm.cs">
       <SubType>UserControl</SubType>
@@ -136,6 +136,12 @@
     </Compile>
     <Compile Include="Global.cs">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="LicenceBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LicenceBox.Designer.cs">
+      <DependentUpon>LicenceBox.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -180,6 +186,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrameForm.resx">
       <DependentUpon>FrameForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LicenceBox.resx">
+      <DependentUpon>LicenceBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -235,6 +244,8 @@
     <Compile Include="BalloonForm.Designer.cs">
       <DependentUpon>BalloonForm.cs</DependentUpon>
     </Compile>
+    <None Include="Properties\LicenseDetails.rtf" />
+    <None Include="Properties\LicenseIntro.rtf" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

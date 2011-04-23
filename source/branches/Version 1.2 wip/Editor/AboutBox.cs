@@ -38,8 +38,12 @@ namespace AgentCharacterEditor
 			LabelProductName.Text = Program.AssemblyTitle;
 			LabelVersion.Text = String.Format ("Version {0}", Program.AssemblyVersion);
 			LabelCopyright.Text = Program.AssemblyCopyright;
-			LabelCompanyName.Text = Program.AssemblyCompany;
-			TextBoxDescription.Text = Program.AssemblyDescription;
+			TextBoxLicenseIntro.Rtf = Properties.Resources.LicenseIntro;
+		}
+
+		private void LicenseButton_Click (object sender, EventArgs e)
+		{
+			(new AgentCharacterEditor.LicenseBox ()).ShowDialog (this);
 		}
 	}
 }

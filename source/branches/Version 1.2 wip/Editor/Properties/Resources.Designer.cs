@@ -311,6 +311,26 @@ namespace AgentCharacterEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {\rtf1\ansi\ansicpg1252\deff0\deflang4105\deflangfe4105{\fonttbl{\f0\fswiss\fprq2\fcharset0 Arial;}}
+        ///{\colortbl ;\red53\green56\blue42;\red0\green0\blue255;\red255\green255\blue255;}
+        ///{\stylesheet{ Normal;}{\s1 heading 1;}{\s2 heading 2;}{\s3 heading 3;}{\s4 heading 4;}}
+        ///{\*\generator Msftedit 5.41.21.2509;}\viewkind4\uc1\pard\cbpat3\nowidctlpar\s3\sa200\sl240\slmult1\qc\cf1\b\f0\fs22 GNU GENERAL PUBLIC LICENSE\par
+        ///\pard\cbpat3\nowidctlpar\sa200\sl240\slmult1\qc\b0\fs18 Version 3, 29 June 2007\par
+        ///\pard [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string LicenseDetails {
+            get {
+                return ResourceManager.GetString("LicenseDetails", resourceCulture);
+            }
+        }
+        
+        internal static string LicenseIntro {
+            get {
+                return ResourceManager.GetString("LicenseIntro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mouth.
         /// </summary>
         internal static string MouthOverlay {
