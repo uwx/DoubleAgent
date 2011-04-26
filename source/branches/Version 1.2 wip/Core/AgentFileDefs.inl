@@ -53,6 +53,7 @@ typedef const DWORD* LPCDWORD;
 typedef const GUID* LPCGUID;
 typedef const ULARGE_INTEGER* LPCULARGE_INTEGER;
 
+static LPCTSTR		sAcdFileExt = _T(".acd");
 static LPCTSTR		sAcsFileExt = _T(".acs");
 static LPCTSTR		sAcfFileExt = _T(".acf");
 static const DWORD	sAcsFileSignature = 0xABCDABC3;
@@ -63,7 +64,9 @@ static const DWORD	sAcfFileSignature = 0xABCDABC4;
 using namespace System;
 using namespace System::IO;
 using namespace System::Globalization;
+#pragma warning (disable : 4638)
 #else
 #define _B(x) x
+#pragma warning (disable : 4482)
 #endif
 /////////////////////////////////////////////////////////////////////////////

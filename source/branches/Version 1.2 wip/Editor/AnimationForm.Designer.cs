@@ -274,7 +274,7 @@ namespace AgentCharacterEditor
 			this.ButtonAdd.Name = "ButtonAdd";
 			this.ButtonAdd.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
 			this.ButtonAdd.Size = new System.Drawing.Size(23, 23);
-			this.ButtonAdd.Text = "Add a new frame";
+			this.ButtonAdd.Text = "Add a new Frame";
 			this.ButtonAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
 			// 
 			// ButtonDelete
@@ -285,7 +285,7 @@ namespace AgentCharacterEditor
 			this.ButtonDelete.Name = "ButtonDelete";
 			this.ButtonDelete.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
 			this.ButtonDelete.Size = new System.Drawing.Size(23, 23);
-			this.ButtonDelete.Text = "Remove this frame";
+			this.ButtonDelete.Text = "Delete frame";
 			this.ButtonDelete.Click += new System.EventHandler(this.ButtonDelete_Click);
 			// 
 			// toolStripSeparator1
@@ -301,7 +301,7 @@ namespace AgentCharacterEditor
 			this.ButtonMoveUp.Name = "ButtonMoveUp";
 			this.ButtonMoveUp.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
 			this.ButtonMoveUp.Size = new System.Drawing.Size(23, 23);
-			this.ButtonMoveUp.Text = "Move up";
+			this.ButtonMoveUp.Text = "Move frame up";
 			this.ButtonMoveUp.Click += new System.EventHandler(this.ButtonMoveUp_Click);
 			// 
 			// ButtonMoveDown
@@ -312,7 +312,7 @@ namespace AgentCharacterEditor
 			this.ButtonMoveDown.Name = "ButtonMoveDown";
 			this.ButtonMoveDown.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
 			this.ButtonMoveDown.Size = new System.Drawing.Size(23, 23);
-			this.ButtonMoveDown.Text = "Move down";
+			this.ButtonMoveDown.Text = "Move frame down";
 			this.ButtonMoveDown.Click += new System.EventHandler(this.ButtonMoveDown_Click);
 			// 
 			// TableLayoutMain

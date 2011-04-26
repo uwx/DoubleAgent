@@ -34,7 +34,10 @@ namespace Character {
 ref class ScriptReader;
 ref class ScriptWriter;
 #define CAgentFileScript ScriptFile
-public ref class CAgentFileScript : public CAgentFile
+/// <summary>
+///	An editable Agent Character defnition compatible with the Agent Character Editor.
+/// </summary>
+public ref class ScriptFile : public CAgentFile
 #else
 class CAgentFileScript : public CAgentFile
 #endif
@@ -99,11 +102,7 @@ public:
 	virtual property UInt16 NewFrameDuration {virtual UInt16 get() override; virtual void set (UInt16 pValue) override;}
 #endif
 
-protected:
 #ifdef	_M_CEE
-	virtual void FreeNames () override;
-	virtual void FreeStates () override;
-	virtual void FreeGestures () override;
 internal:
 	virtual bool RenameAnimation (CAgentFileAnimation^ pAnimation, System::String^ pNewName) override;
 	virtual Int32 LoadImageFile (System::String^ pImageFilePath) override;
@@ -140,7 +139,9 @@ protected:
 	bool WriteFrameImage (ScriptWriter^ pWriter, CAgentFile^ pSource, CAgentFileFrameImage^ pFrameImage);
 	bool WriteFrameOverlay (ScriptWriter^ pWriter, CAgentFile^ pSource, CAgentFileFrameOverlay^ pFrameOverlay);
 	bool WriteStates (ScriptWriter^ pWriter, CAgentFile^ pSource);
-	
+
+	void FreeUnusedImages ();	
+	void FreeUnusedSounds ();	
 	String^ PrepareFileFolder ();
 	String^ PrepareFileFolder (Boolean pEmptyFolder);
 	String^ WriteIconFile (CAgentFileHeader^ pSource);

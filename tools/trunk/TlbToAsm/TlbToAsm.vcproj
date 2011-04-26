@@ -6,7 +6,7 @@
 	ProjectGUID="{8052FC92-3A66-449E-85EC-626BD6A72782}"
 	RootNamespace="DoubleAgent"
 	Keyword="ManagedCProj"
-	TargetFrameworkVersion="196608"
+	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
 		<Platform

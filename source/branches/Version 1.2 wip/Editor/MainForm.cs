@@ -20,6 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 using System;
 using System.Windows.Forms;
+using System.Collections.Generic;
 using DoubleAgent;
 using DoubleAgent.Character;
 using AgentCharacterEditor.Updates;
@@ -188,20 +189,11 @@ namespace AgentCharacterEditor
 		public event Global.EditEventHandler EditCut;
 		public event Global.EditEventHandler EditDelete;
 		public event Global.EditEventHandler EditPaste;
+		public event Global.ContextMenuEventHandler EditMenu;
 
 		public event UndoUnit.AppliedEventHandler UpdateApplied;
 
 		///////////////////////////////////////////////////////////////////////////////
-
-		public void FileIsDirty ()
-		{
-			if (CharacterFile != null)
-			{
-				CharacterFile.IsDirty = true;
-				ShowFileState ();
-				ShowEditState ();
-			}
-		}
 
 		public void OnUpdateApplied (object sender, EventArgs e)
 		{
@@ -218,13 +210,20 @@ namespace AgentCharacterEditor
 					ShowSelectedTreeNode ();
 				}
 			}
-			else if ((lUpdateAnimation != null) && lUpdateAnimation.NameChanged)
+			else if ((lUpdateAnimation != null) && (lUpdateAnimation.NameChanged || lUpdateAnimation.ForClipboard))
 			{
 				TreeNode	lAnimationNode = (new PartsTreeSelection (lUpdateAnimation.Target)).SelectedNode ();
 
 				if (lAnimationNode != null)
 				{
-					lAnimationNode.Text = lUpdateAnimation.Target.Name;
+					if (lUpdateAnimation.NameChanged)
+					{
+						lAnimationNode.Text = lUpdateAnimation.Target.Name;
+					}
+					if (lUpdateAnimation.ForClipboard)
+					{
+						TreeViewMain.ShowAnimationFrames (lUpdateAnimation.Target, lAnimationNode);
+					}
 				}
 			}
 			else if (lAddDeleteFrame != null)
@@ -258,7 +257,17 @@ namespace AgentCharacterEditor
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Display
+		#region File
+
+		public void FileIsDirty ()
+		{
+			if (CharacterFile != null)
+			{
+				CharacterFile.IsDirty = true;
+				ShowFileState ();
+				ShowEditState ();
+			}
+		}
 
 		private Boolean OpenCharacterFile (String pFilePath)
 		{
@@ -269,7 +278,7 @@ namespace AgentCharacterEditor
 
 			try
 			{
-				if ((mCharacterFile != null) && (String.Compare (System.IO.Path.GetFullPath (pFilePath), System.IO.Path.GetFullPath (mCharacterFile.Path), true) == 0))
+				if ((mCharacterFile != null) && !String.IsNullOrEmpty (pFilePath) && (String.Compare (System.IO.Path.GetFullPath (pFilePath), System.IO.Path.GetFullPath (mCharacterFile.Path), true) == 0))
 				{
 					return true;
 				}
@@ -286,7 +295,14 @@ namespace AgentCharacterEditor
 
 			try
 			{
-				lCharacterFile = CharacterFile.CreateInstance (pFilePath);
+				if (String.IsNullOrEmpty (pFilePath))
+				{
+					lCharacterFile = CharacterFile.CreateInstance (CharacterFile.AcdFileExt);
+				}
+				else
+				{
+					lCharacterFile = CharacterFile.CreateInstance (pFilePath);
+				}
 			}
 			catch
 			{
@@ -296,11 +312,22 @@ namespace AgentCharacterEditor
 			{
 				try
 				{
+					if (String.IsNullOrEmpty (pFilePath))
+					{
+						lOpened = true;
+						lCharacterFile.Header.ImageSize = PictureBoxSample.DefaultImageSize;
+						lCharacterFile.Header.Guid = System.Guid.NewGuid ();
+						lCharacterFile.Names.Add (CharacterForm.mLangDefault, Properties.Resources.TitleNewFile);
+						lCharacterFile.IsDirty = false;
+					}
+					else
+					{
 #if DEBUG_NOT
-					lOpened = lCharacterFile.Open (pFilePath, 1);
+						lOpened = lCharacterFile.Open (pFilePath, 1);
 #else
-					lOpened = lCharacterFile.Open (pFilePath);
+						lOpened = lCharacterFile.Open (pFilePath);
 #endif
+					}
 				}
 				catch (Exception pException)
 				{
@@ -349,7 +376,215 @@ namespace AgentCharacterEditor
 			return lRet;
 		}
 
+		private Boolean SaveCharacterFile ()
+		{
+			return SaveCharacterFile (String.Empty);
+		}
+
+		private Boolean SaveCharacterFile (String pSaveAsPath)
+		{
+			Boolean		lRet = false;
+			CursorState	lCursorState = null;
+
+			if (mCharacterFile == null)
+			{
+				lRet = true;
+			}
+			else if (!String.IsNullOrEmpty (pSaveAsPath))
+			{
+				CharacterFile	lCharacterFile = null;
+
+				lCursorState = new CursorState (this);
+				lCursorState.ShowWait ();
+				SaveAllConfig ();
+
+				try
+				{
+					lCharacterFile = CharacterFile.CreateInstance (pSaveAsPath);
+				}
+				catch
+				{
+				}
+				if (lCharacterFile != null)
+				{
+					try
+					{
+#if DEBUG_NOT
+						lRet = lCharacterFile.Save (pSaveAsPath, mCharacterFile, 3);
+#else
+						lRet = lCharacterFile.Save (pSaveAsPath, mCharacterFile);
+#endif
+					}
+					catch (Exception pException)
+					{
+						MessageBox.Show (pException.Message);
+					}
+
+					try
+					{
+						lCharacterFile.Close ();
+						lCharacterFile = null;
+					}
+					catch
+					{
+					}
+
+					if (!lRet)
+					{
+						MessageBox.Show (String.Format (Properties.Resources.MsgFailedSaveAs, pSaveAsPath), Program.AssemblyTitle, MessageBoxButtons.OK);
+					}
+				}
+				else
+				{
+					MessageBox.Show ("Not implemented", Program.AssemblyTitle, MessageBoxButtons.OK);
+				}
+			}
+			else if (String.IsNullOrEmpty (mCharacterFile.Path) && !mCharacterFile.IsReadOnly)
+			{
+				String	lFilePath = String.Empty;
+
+				if (GetSaveNewPath (ref lFilePath))
+				{
+					lRet = SaveCharacterFile (lFilePath);
+				}
+			}
+			else if (mCharacterFile.IsDirty && !mCharacterFile.IsReadOnly)
+			{
+				lCursorState = new CursorState (this);
+				lCursorState.ShowWait ();
+				SaveAllConfig ();
+
+				try
+				{
+#if DEBUG_NOT
+					lRet = mCharacterFile.Save (3);
+#else
+					lRet = mCharacterFile.Save ();
+#endif
+				}
+				catch (Exception pException)
+				{
+					MessageBox.Show (pException.Message);
+				}
+			}
+
+			if (lCursorState != null)
+			{
+				lCursorState.RestoreCursor ();
+			}
+			return lRet;
+		}
+
+		private Boolean PromptSaveCharacterFile ()
+		{
+			Boolean	lRet = true;
+#if	!DEBUG
+			if (mCharacterFile.IsDirty && !mCharacterFile.IsReadOnly)
+			{
+				String	lMessage;
+
+				if (String.IsNullOrEmpty (mCharacterFile.Path))
+				{
+					String	lNewName = GetSaveNewName ();
+
+					if (String.IsNullOrEmpty (lNewName))
+					{
+						lNewName = Properties.Resources.TitleNewFile;
+					}
+					lMessage = String.Format (Properties.Resources.MsgSaveNew, lNewName);
+				}
+				else
+				{
+					lMessage = String.Format (Properties.Resources.MsgSaveFile, mCharacterFile.FileName);
+				}
+
+				switch (MessageBox.Show (lMessage, Program.AssemblyTitle, MessageBoxButtons.YesNoCancel))
+				{
+					case DialogResult.Yes:
+						{
+							lRet = SaveCharacterFile ();
+						}
+						break;
+					case DialogResult.Cancel:
+						{
+							lRet = false;
+						}
+						break;
+				}
+			}
+#endif
+			return lRet;
+		}
+
 		///////////////////////////////////////////////////////////////////////////////
+
+		private Boolean GetOpenPath (ref String pFilePath)
+		{
+			pFilePath = String.Empty;
+
+			if ((mCharacterFile != null) && !String.IsNullOrEmpty (mCharacterFile.Path))
+			{
+				try
+				{
+					pFilePath = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (mCharacterFile.Path), "*" + System.IO.Path.GetExtension (mCharacterFile.Path));
+				}
+				catch
+				{
+				}
+			}
+			return OpenFileDialogEx.OpenCharacterFile (ref pFilePath);
+		}
+
+		private Boolean GetSaveAsPath (ref String pFilePath)
+		{
+			pFilePath = String.Empty;
+
+			if ((mCharacterFile != null) && !String.IsNullOrEmpty (mCharacterFile.Path))
+			{
+				try
+				{
+					pFilePath = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (mCharacterFile.Path), "*" + System.IO.Path.GetExtension (mCharacterFile.Path));
+				}
+				catch
+				{
+				}
+				return OpenFileDialogEx.SaveCharacterFile (ref pFilePath);
+			}
+			else
+			{
+				return GetSaveNewPath (ref pFilePath);
+			}
+		}
+
+		private Boolean GetSaveNewPath (ref String pFilePath)
+		{
+			pFilePath = GetSaveNewName ();
+			if (String.IsNullOrEmpty (pFilePath))
+			{
+				pFilePath = "*";
+			}
+			pFilePath += CharacterFile.AcdFileExt;
+
+			return OpenFileDialogEx.SaveCharacterFile (ref pFilePath);
+		}
+
+		private String GetSaveNewName ()
+		{
+			if (mCharacterFile != null)
+			{
+				FileCharacterName	lName = mCharacterFile.FindName (0);
+
+				if ((lName != null) && !String.IsNullOrEmpty (lName.Name))
+				{
+					return lName.Name;
+				}
+			}
+			return String.Empty;
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region Display
 
 		private void ShowSelectedTreeNode ()
 		{
@@ -419,14 +654,14 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				this.Text = Program.AssemblyTitle + " [" + mCharacterFile.FileName + ((mCharacterFile.IsDirty) ? " *" : "") + "]";
-				MenuItemFileSave.Enabled = mCharacterFile.IsDirty;
+				this.Text = String.Format (mCharacterFile.IsDirty ? Properties.Resources.TitleDirtyFile : Properties.Resources.TitleOpenFile, Program.AssemblyTitle, String.IsNullOrEmpty (mCharacterFile.Path) ? Properties.Resources.TitleNewFile : mCharacterFile.Path);
+				MenuItemFileSave.Enabled = (mCharacterFile.IsDirty || String.IsNullOrEmpty (mCharacterFile.Path));
 				MenuItemFileSaveAs.Enabled = true;
-				ToolButtonFileSave.Enabled = mCharacterFile.IsDirty;
+				ToolButtonFileSave.Enabled = MenuItemFileSave.Enabled;
 			}
 		}
 
-		private void ShowEditState ()
+		public void ShowEditState ()
 		{
 			TextBox					lTextBox = null;
 			Control					lActive = GetActiveControl (ref lTextBox);
@@ -438,59 +673,13 @@ namespace AgentCharacterEditor
 			}
 			else if (CanEdit != null)
 			{
-				CanEdit (this, lEventArgs = new Global.EditEventArgs (DataFormats.Serializable));
+				lEventArgs = new Global.EditEventArgs (DataFormats.Serializable);
+				CanEdit (this, lEventArgs);
 			}
 
 			if ((lEventArgs != null) && lEventArgs.IsUsed)
 			{
-				if (!String.IsNullOrEmpty (lEventArgs.CopyObjectTitle))
-				{
-					MenuItemEditCopy.Enabled = true;
-					MenuItemEditCopy.Text = String.Format (lEventArgs.CopyTitle, lEventArgs.CopyObjectTitle);
-				}
-				else
-				{
-					MenuItemEditCopy.Enabled = false;
-					MenuItemEditCopy.Text = Properties.Resources.EditCopy;
-				}
-				if (!Program.FileIsReadOnly && !String.IsNullOrEmpty (lEventArgs.CutObjectTitle))
-				{
-					MenuItemEditCut.Enabled = true;
-					MenuItemEditCut.Text = String.Format (lEventArgs.CutTitle, lEventArgs.CutObjectTitle);
-				}
-				else
-				{
-					MenuItemEditCut.Enabled = false;
-					MenuItemEditCut.Text = Properties.Resources.EditCut;
-				}
-				if (!Program.FileIsReadOnly && !String.IsNullOrEmpty (lEventArgs.DeleteObjectTitle))
-				{
-					MenuItemEditDelete.Enabled = true;
-					MenuItemEditDelete.Text = String.Format (lEventArgs.DeleteTitle, lEventArgs.DeleteObjectTitle);
-				}
-				else
-				{
-					MenuItemEditDelete.Enabled = false;
-					MenuItemEditDelete.Text = Properties.Resources.EditDelete;
-				}
-				if (!Program.FileIsReadOnly && !String.IsNullOrEmpty (lEventArgs.PasteObjectTitle))
-				{
-					if (!String.IsNullOrEmpty (lEventArgs.PasteTitle))
-					{
-						MenuItemEditPaste.Enabled = true;
-						MenuItemEditPaste.Text = String.Format (lEventArgs.PasteTitle, lEventArgs.PasteObjectTitle);
-					}
-					else
-					{
-						MenuItemEditPaste.Enabled = false;
-						MenuItemEditPaste.Text = lEventArgs.PasteObjectTitle;
-					}
-				}
-				else
-				{
-					MenuItemEditPaste.Enabled = false;
-					MenuItemEditPaste.Text = Properties.Resources.EditPaste;
-				}
+				ShowEditState (lEventArgs, MenuItemEditCopy, MenuItemEditCut, MenuItemEditPaste, MenuItemEditDelete);
 			}
 			else if (lTextBox != null)
 			{
@@ -520,10 +709,10 @@ namespace AgentCharacterEditor
 			ToolButtonEditCut.Enabled = MenuItemEditCut.Enabled;
 			ToolButtonEditPaste.Enabled = MenuItemEditPaste.Enabled;
 			ToolButtonEditDelete.Enabled = MenuItemEditDelete.Enabled;
-			ToolButtonEditCopy.Text = MenuItemEditCopy.Text.Replace ("&", "");
-			ToolButtonEditCut.Text = MenuItemEditCut.Text.Replace ("&", "");
-			ToolButtonEditPaste.Text = MenuItemEditPaste.Text.Replace ("&", "");
-			ToolButtonEditDelete.Text = MenuItemEditDelete.Text.Replace ("&", "");
+			ToolButtonEditCopy.Text = MenuItemEditCopy.Text.NoMenuPrefix ();
+			ToolButtonEditCut.Text = MenuItemEditCut.Text.NoMenuPrefix ();
+			ToolButtonEditPaste.Text = MenuItemEditPaste.Text.NoMenuPrefix ();
+			ToolButtonEditDelete.Text = MenuItemEditDelete.Text.NoMenuPrefix ();
 
 			if ((lTextBox != null) && lTextBox.Modified)
 			{
@@ -542,8 +731,60 @@ namespace AgentCharacterEditor
 
 			ToolButtonEditUndo.Enabled = MenuItemEditUndo.Enabled;
 			ToolButtonEditRedo.Enabled = MenuItemEditRedo.Enabled;
-			ToolButtonEditUndo.Text = MenuItemEditUndo.Text.Replace ("&", "");
-			ToolButtonEditRedo.Text = MenuItemEditRedo.Text.Replace ("&", "");
+			ToolButtonEditUndo.Text = MenuItemEditUndo.Text.NoMenuPrefix ();
+			ToolButtonEditRedo.Text = MenuItemEditRedo.Text.NoMenuPrefix ();
+		}
+
+		public void ShowEditState (Global.EditEventArgs pEditArgs, ToolStripItem pCopyItem, ToolStripItem pCutItem, ToolStripItem pPasteItem, ToolStripItem pDeleteItem)
+		{
+			if (!String.IsNullOrEmpty (pEditArgs.CopyObjectTitle))
+			{
+				pCopyItem.Enabled = true;
+				pCopyItem.Text = String.Format (pEditArgs.CopyTitle, pEditArgs.CopyObjectTitle);
+			}
+			else
+			{
+				pCopyItem.Enabled = false;
+				pCopyItem.Text = Properties.Resources.EditCopy;
+			}
+			if (!Program.FileIsReadOnly && !String.IsNullOrEmpty (pEditArgs.CutObjectTitle))
+			{
+				pCutItem.Enabled = true;
+				pCutItem.Text = String.Format (pEditArgs.CutTitle, pEditArgs.CutObjectTitle);
+			}
+			else
+			{
+				pCutItem.Enabled = false;
+				pCutItem.Text = Properties.Resources.EditCut;
+			}
+			if (!Program.FileIsReadOnly && !String.IsNullOrEmpty (pEditArgs.DeleteObjectTitle))
+			{
+				pDeleteItem.Enabled = true;
+				pDeleteItem.Text = String.Format (pEditArgs.DeleteTitle, pEditArgs.DeleteObjectTitle);
+			}
+			else
+			{
+				pDeleteItem.Enabled = false;
+				pDeleteItem.Text = Properties.Resources.EditDelete;
+			}
+			if (!Program.FileIsReadOnly && !String.IsNullOrEmpty (pEditArgs.PasteObjectTitle))
+			{
+				if (!String.IsNullOrEmpty (pEditArgs.PasteTitle))
+				{
+					pPasteItem.Enabled = true;
+					pPasteItem.Text = String.Format (pEditArgs.PasteTitle, pEditArgs.PasteObjectTitle);
+				}
+				else
+				{
+					pPasteItem.Enabled = false;
+					pPasteItem.Text = pEditArgs.PasteObjectTitle;
+				}
+			}
+			else
+			{
+				pPasteItem.Enabled = false;
+				pPasteItem.Text = Properties.Resources.EditPaste;
+			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -635,25 +876,10 @@ namespace AgentCharacterEditor
 		private void MainForm_FormClosing (object sender, FormClosingEventArgs e)
 		{
 			SaveAllConfig ();
-
-#if	!DEBUG
-			if ((mCharacterFile != null) && (mCharacterFile.IsDirty))
+			if (!PromptSaveCharacterFile ())
 			{
-				switch (MessageBox.Show (String.Format (Properties.Resources.MsgSaveFile, mCharacterFile.FileName), Program.AssemblyTitle, MessageBoxButtons.YesNoCancel))
-				{
-					case DialogResult.Yes:
-						{
-							mCharacterFile.Save ();
-						}
-						break;
-					case DialogResult.Cancel:
-						{
-							e.Cancel = true;
-						}
-						break;
-				}
+				e.Cancel = true;
 			}
-#endif
 		}
 
 		private void MainForm_Shown (object sender, EventArgs e)
@@ -755,113 +981,67 @@ namespace AgentCharacterEditor
 
 		private void MenuItemFileNew_Click (object sender, EventArgs e)
 		{
-			MessageBox.Show ("Not implemented", Program.AssemblyTitle, MessageBoxButtons.OK);
+			if (PromptSaveCharacterFile ())
+			{
+				OpenCharacterFile (String.Empty);
+			}
 		}
 
 		private void MenuItemFileOpen_Click (object sender, EventArgs e)
 		{
-			String	lFilePath = String.Empty;
-
-			if (OpenFileDialogEx.OpenCharacterFile (ref lFilePath))
+			if (PromptSaveCharacterFile ())
 			{
-				OpenCharacterFile (lFilePath);
+				String	lFilePath = String.Empty;
+
+				if (GetOpenPath (ref lFilePath))
+				{
+					OpenCharacterFile (lFilePath);
+				}
 			}
 		}
 
 		private void MenuItemFileSave_Click (object sender, EventArgs e)
 		{
-			if ((mCharacterFile != null) && (!mCharacterFile.IsReadOnly) && (mCharacterFile.IsDirty))
+			if (mCharacterFile != null)
 			{
-				CursorState	lCursorState = new CursorState (this);
-
-				lCursorState.ShowWait ();
-
-				try
+				if (String.IsNullOrEmpty (mCharacterFile.Path))
 				{
-#if DEBUG_NOT
-					mCharacterFile.Save (3);
-#else
-					mCharacterFile.Save ();
-#endif
-					ShowFileState ();
-					ShowEditState ();
-				}
-				catch
-				{
-				}
+					String	lFilePath = String.Empty;
 
-				lCursorState.RestoreCursor ();
+					if ((GetSaveNewPath (ref lFilePath)) && SaveCharacterFile (lFilePath))
+					{
+						OpenCharacterFile (lFilePath);
+					}
+				}
+				else
+				{
+					SaveCharacterFile ();
+				}
+				ShowFileState ();
+				ShowEditState ();
 			}
 		}
 
 		private void MenuItemFileSaveAs_Click (object sender, EventArgs e)
 		{
-			if (mCharacterFile != null)
+			String	lFilePath = String.Empty;
+
+			if ((mCharacterFile != null) && GetSaveAsPath (ref lFilePath))
 			{
-				String	lFilePath = String.Empty;
-
-				if (!String.IsNullOrEmpty (mCharacterFile.Path))
+				if (String.Compare (mCharacterFile.Path, lFilePath, true) == 0)
 				{
-					lFilePath = "*" + System.IO.Path.GetExtension (mCharacterFile.Path);
+					MessageBox.Show (Properties.Resources.MsgInvalidSaveAs, Program.AssemblyTitle, MessageBoxButtons.OK);
 				}
-				if (OpenFileDialogEx.SaveCharacterFile (ref lFilePath))
+				else if (SaveCharacterFile (lFilePath))
 				{
-					CursorState		lCursorState = new CursorState (this);
-					CharacterFile	lCharacterFile = null;
-					Boolean			lSaved = false;
-
-					if (String.Compare (mCharacterFile.Path, lFilePath, true) == 0)
-					{
-						MessageBox.Show (Properties.Resources.MsgInvalidSaveAs, Program.AssemblyTitle, MessageBoxButtons.OK);
-					}
-					else
-					{
-						lCursorState.ShowWait ();
-
-						try
-						{
-							lCharacterFile = CharacterFile.CreateInstance (lFilePath);
-						}
-						catch
-						{
-						}
-						if (lCharacterFile != null)
-						{
-							try
-							{
-#if DEBUG_NOT
-								lSaved = lCharacterFile.Save (lFilePath, mCharacterFile, 3);
-#else
-								lSaved = lCharacterFile.Save (lFilePath, mCharacterFile);
-#endif
-							}
-							catch (Exception pException)
-							{
-								MessageBox.Show (pException.Message);
-							}
-
-							if (lSaved)
-							{
-								lFilePath = lCharacterFile.Path;
-								lCharacterFile.Close ();
-								lCharacterFile = null;
-								OpenCharacterFile (lFilePath);
-							}
-							else
-							{
-								MessageBox.Show (String.Format (Properties.Resources.MsgFailedSaveAs, lFilePath), Program.AssemblyTitle, MessageBoxButtons.OK);
-							}
-						}
-						else
-						{
-							MessageBox.Show ("Not implemented", Program.AssemblyTitle, MessageBoxButtons.OK);
-						}
-
-						lCursorState.RestoreCursor ();
-					}
+					OpenCharacterFile (lFilePath);
 				}
+				ShowFileState ();
+				ShowEditState ();
 			}
 		}
+
+		///////////////////////////////////////////////////////////////////////////////
 
 		private void MenuItemFilePrint_Click (object sender, EventArgs e)
 		{
@@ -889,19 +1069,33 @@ namespace AgentCharacterEditor
 					ValidateChildren ();
 				}
 			}
-			else if (Program.UndoManager.Undo ())
+			else if (Program.UndoManager.CanUndo)
 			{
-				ShowFileState ();
-				ShowEditState ();
+				if (Program.UndoManager.Undo ())
+				{
+					ShowFileState ();
+					ShowEditState ();
+				}
+				else
+				{
+					System.Media.SystemSounds.Asterisk.Play ();
+				}
 			}
 		}
 
 		private void MenuItemEditRedo_Click (object sender, EventArgs e)
 		{
-			if (Program.UndoManager.Redo ())
+			if (Program.UndoManager.CanRedo)
 			{
-				ShowFileState ();
-				ShowEditState ();
+				if (Program.UndoManager.Redo ())
+				{
+					ShowFileState ();
+					ShowEditState ();
+				}
+				else
+				{
+					System.Media.SystemSounds.Asterisk.Play ();
+				}
 			}
 		}
 
@@ -1013,17 +1207,106 @@ namespace AgentCharacterEditor
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Context Menu Event Handlers
+
+		private void ContextMenuEdit_Opening (object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			TextBox		lTextBox = null;
+			Control		lActive = GetActiveControl (ref lTextBox);
+
+			if (lTextBox != null)
+			{
+				e.Cancel = true;
+			}
+			else if ((lActive != null) && lActive.RectangleToScreen (lActive.ClientRectangle).Contains (Control.MousePosition))
+			{
+				Global.ContextMenuEventArgs	lEventArgs = new Global.ContextMenuEventArgs (ContextMenuEdit, lActive, DataFormats.Serializable);
+
+				if (EditMenu != null)
+				{
+					List <ToolStripItem>	lRemove = new List<ToolStripItem> ();
+
+					foreach (ToolStripItem lMenuItem in ContextMenuEdit.Items)
+					{
+						if (!Object.ReferenceEquals (lMenuItem, ContextItemEditCopy) && !Object.ReferenceEquals (lMenuItem, ContextItemEditCut) && !Object.ReferenceEquals (lMenuItem, ContextItemEditPaste) && !Object.ReferenceEquals (lMenuItem, ContextItemEditDelete))
+						{
+							lRemove.Add (lMenuItem);
+						}
+					}
+					foreach (ToolStripItem lMenuItem in lRemove)
+					{
+						ContextMenuEdit.Items.Remove (lMenuItem);
+					}
+
+					try
+					{
+						EditMenu (this, lEventArgs);
+					}
+					catch
+					{
+					}
+				}
+
+				if (lEventArgs.IsUsed)
+				{
+					ShowEditState (lEventArgs, ContextItemEditCopy, ContextItemEditCut, ContextItemEditPaste, ContextItemEditDelete);
+				}
+				else
+				{
+					ShowEditState ();
+
+					ContextItemEditCopy.Enabled = MenuItemEditCopy.Enabled;
+					ContextItemEditCopy.Text = MenuItemEditCopy.Text;
+					ContextItemEditCut.Enabled = MenuItemEditCut.Enabled;
+					ContextItemEditCut.Text = MenuItemEditCut.Text;
+					ContextItemEditPaste.Enabled = MenuItemEditPaste.Enabled;
+					ContextItemEditPaste.Text = MenuItemEditPaste.Text;
+					ContextItemEditDelete.Enabled = MenuItemEditDelete.Enabled;
+					ContextItemEditDelete.Text = MenuItemEditDelete.Text;
+				}
+			}
+			else
+			{
+				e.Cancel = true;
+			}
+		}
+
+		private void ContextItemEditCopy_Click (object sender, EventArgs e)
+		{
+			MenuItemEditCopy_Click (sender, e);
+		}
+
+		private void ContextItemEditCut_Click (object sender, EventArgs e)
+		{
+			MenuItemEditCut_Click (sender, e);
+		}
+
+		private void ContextItemEditPaste_Click (object sender, EventArgs e)
+		{
+			MenuItemEditPaste_Click (sender, e);
+		}
+
+		private void ContextItemEditDelete_Click (object sender, EventArgs e)
+		{
+			MenuItemEditDelete_Click (sender, e);
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
 		#region Internal Event Handlers
 
 		private void RecentFiles_RecentItemClick (object sender, String e)
 		{
-			if (!OpenCharacterFile (e))
+			if (PromptSaveCharacterFile ())
 			{
-				if (MessageBox.Show (String.Format ("Remove {0} from the recent files list?", e), Program.AssemblyTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
+				if (!OpenCharacterFile (e))
 				{
-					if (mRecentFiles.RemovePath (e))
+					if (MessageBox.Show (String.Format ("Remove {0} from the recent files list?", e), Program.AssemblyTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
 					{
-						UpdateRecentFiles ();
+						if (mRecentFiles.RemovePath (e))
+						{
+							UpdateRecentFiles ();
+						}
 					}
 				}
 			}
@@ -1034,7 +1317,7 @@ namespace AgentCharacterEditor
 			FileIsDirty ();
 			ToolStripTop.TipTextChanged ();
 #if DEBUG
-			System.Diagnostics.Debug.Print ("[{0}] Undone", e.UndoUnit.ToString ());
+			System.Diagnostics.Debug.Print ("UndoUnit [{0}] Undone", e.UndoUnit.ToString ());
 #endif
 		}
 
@@ -1043,7 +1326,7 @@ namespace AgentCharacterEditor
 			FileIsDirty ();
 			ToolStripTop.TipTextChanged ();
 #if DEBUG
-			System.Diagnostics.Debug.Print ("[{0}] Redone", e.UndoUnit.ToString ());
+			System.Diagnostics.Debug.Print ("UndoUnit [{0}] Redone", e.UndoUnit.ToString ());
 #endif
 		}
 

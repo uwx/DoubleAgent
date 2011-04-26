@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AgentCharacterEditor</RootNamespace>
     <AssemblyName>DoubleACE</AssemblyName>
-    <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>AgentCharacterEditor.Program</StartupObject>
     <ApplicationIcon>
@@ -24,7 +24,8 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -42,28 +43,35 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\BinDa\Bin\Debug%28x86%29\v3.0\</OutputPath>
+    <OutputPath>..\..\BinDa\Bin\Debug%28x86%29\v3.5\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <DocumentationFile>..\..\BinDa\Bin\Debug%28x86%29\v3.5\DoubleACE.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <OutputPath>..\..\BinDa\Bin\Release%28x86%29\v3.0\</OutputPath>
+    <OutputPath>..\..\BinDa\Bin\Release%28x86%29\v3.5\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <DocumentationFile>..\..\BinDa\Bin\Release%28x86%29\v3.5\DoubleACE.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DaCharFileCLR">
-      <HintPath>..\..\BinDa\Bin\Debug(x86)\v3.0\DaCharFileCLR.dll</HintPath>
+      <HintPath>..\..\BinDa\Bin\Debug(x86)\v3.5\DaCharFileCLR.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <HintPath>..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\v3.5\System.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -158,6 +166,7 @@
     <Compile Include="PartsTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="PartWrappers.cs" />
     <Compile Include="PictureBoxSample.cs">
       <SubType>Component</SubType>
     </Compile>

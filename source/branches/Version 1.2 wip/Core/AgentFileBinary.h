@@ -32,6 +32,11 @@ namespace Character {
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	_M_CEE
 #define CAgentFileBinary BinaryFile
+/// <summary>
+///	The abstract base class for a binary-formatted Agent Character definition.
+/// </summary>
+/// <seealso cref="AcsFile"/>
+/// <seealso cref="AcfFile"/>
 public ref class CAgentFileBinary abstract : public CAgentFile
 #else
 class CAgentFileBinary : public CAgentFile

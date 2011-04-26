@@ -26,6 +26,8 @@ using namespace System::Drawing;
 using namespace System::Drawing::Imaging;
 using namespace System::Collections;
 using namespace System::Collections::Generic;
+using namespace System::Runtime::Serialization;
+#pragma warning (disable : 4638)
 #else
 #include "DaCoreExp.h"
 #include "AtlCollEx.h"
@@ -36,6 +38,7 @@ using namespace System::Collections::Generic;
 namespace DoubleAgent {
 namespace Character {
 ref class CharacterFile;
+ref class FileCharacterNames;
 ref class FileAnimationFrame;
 ref class FileFrameImages;
 ref class FileFrameOverlays;
@@ -50,7 +53,10 @@ ref class FileGestures;
 
 #ifdef	_M_CEE
 #define AgentCharStyle CharacterStyle
-public enum class AgentCharStyle : UInt32
+/// <summary>
+///	<see cref="CharacterFile"/> style bits. 
+/// </summary>
+public enum class CharacterStyle : UInt32
 #else
 enum AgentCharStyle
 #endif
@@ -65,7 +71,10 @@ enum AgentCharStyle
 
 #ifdef	_M_CEE
 #define AgentMouthOverlay MouthOverlay
-public enum class AgentMouthOverlay
+/// <summary>
+///	The <see cref="FileFrameOverlay.OverlayType"/> of a <see cref="FileFrameOverlay"/> instance. 
+/// </summary>
+public enum class MouthOverlay
 #else
 enum AgentMouthOverlay
 #endif
@@ -86,21 +95,117 @@ enum AgentMouthOverlay
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
+#define CAgentFileImage FileImage
+public ref class CAgentFileImage
+#else
+class _DACORE_IMPEXP CAgentFileImage
+#endif
+{
+public:
+#ifdef	_M_CEE
+	property UInt32 ImageNum {UInt32 get();}
+	property System::Drawing::Size ImageSize {System::Drawing::Size get();}
+	property Boolean Is32Bit {Boolean get();}
+	property UInt32 BitsSize {UInt32 get();}
+	property array <BYTE>^ Bits {array <BYTE>^ get();}
+#else
+	__declspec(property(get=get_ImageNum))		ULONG			ImageNum;
+	__declspec(property(get=get_ImageSize))		const CSize&	ImageSize;
+	__declspec(property(get=get_Is32Bit))		bool			Is32Bit;
+	__declspec(property(get=get_BitsSize))		ULONG			BitsSize;
+	__declspec(property(get=get_Bits))			const BYTE*		Bits;
+
+	ULONG get_ImageNum () const {return mImageNum;}
+	const CSize& get_ImageSize () const {return mImageSize;}
+	bool get_Is32Bit () const {return mIs32Bit;}
+	ULONG get_BitsSize () const {return mBitsSize;}
+	const BYTE* get_Bits () const {return mBits;}
+
+	void put_ImageSize (const CSize& pImageSize);
+#endif
+
+#ifdef	_M_CEE
+internal:
+	UInt32					mImageNum;
+	System::Drawing::Size	mImageSize;
+	Boolean					mIs32Bit;
+	array <BYTE>^			mBits;
+#else
+protected:
+	ULONG					mImageNum;
+	CSize					mImageSize;
+	bool					mIs32Bit;
+	ULONG					mBitsSize;
+	tArrayPtr <BYTE>		mBits;
+#endif
+
+#ifdef	_M_CEE
+internal:
+#else
+public:
+#endif
+	CAgentFileImage ();
+	virtual ~CAgentFileImage ();
+	void Empty ();
+
+#ifdef	_M_CEE
+public:
+    virtual System::String^ ToString() override;
+#else
+public:
+	DECLARE_DLL_OBJECT(CAgentFileImage)
+	friend class CAgentFileAcs;
+	friend class CAgentFileAcf;
+#endif
+};
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+#ifdef	_M_CEE
 #define CAgentFileHeader FileHeader
-[Serializable] public ref class CAgentFileHeader
+/// <summary>
+///	General character information 
+/// </summary>
+[Serializable] public ref class FileHeader
 #else
 class _DACORE_IMPEXP CAgentFileHeader
 #endif
 {
 public:
 #ifdef	_M_CEE
+	/// <summary>
+	///	The <see cref="CharacterFile"/> object that owns this object (or null if unowned)
+	/// </summary>
 	property CharacterFile^ Owner {CharacterFile^ get() {return mOwner;}}
 
-	property AgentCharStyle Style {AgentCharStyle get(); void set (AgentCharStyle pValue);}
+	/// <summary>
+	/// Gets or sets the character's style. 
+	/// </summary>
+	/// <seealso cref="CharacterStyle"/>
+	property CharacterStyle Style {CharacterStyle get(); void set (CharacterStyle pValue);}
+	/// <summary>
+	/// Gets or sets the character's <see cref="System::Guid"/>. 
+	/// </summary>
 	property System::Guid Guid {System::Guid get(); void set (System::Guid pValue);}
+	/// <summary>
+	/// Gets the character's <see cref="System::Drawing::Icon"/>. 
+	/// </summary>
+	/// <seealso cref="CharacterFile.IconFilePath"/>
 	property System::Drawing::Icon^ Icon {System::Drawing::Icon^ get();}
+	/// <summary>
+	/// Gets or sets the dimensions of the character's frames. 
+	/// </summary>
 	property System::Drawing::Size ImageSize {System::Drawing::Size get(); void set (System::Drawing::Size pValue);}
+	/// <summary>
+	/// Gets the <see cref="System::Drawing::Imaging::ColorPalette"/> used for the character's frame and overlay images. 
+	/// </summary>
+	/// <seealso cref="CharacterFile.PaletteFilePath"/>
 	property System::Drawing::Imaging::ColorPalette^ Palette {System::Drawing::Imaging::ColorPalette^ get();}
+	/// <summary>
+	/// Gets or sets the value in the <see cref="Palette"/> that represents a transparent bit. 
+	/// </summary>
 	property Byte Transparency {Byte get(); void set (Byte pValue);}
 #else
 	__declspec(property(get=get_Style))			DWORD			Style;
@@ -148,11 +253,22 @@ public:
 
 #ifdef	_M_CEE
 public:
+	/// <summary>
+	/// See <see cref="System.Object.ToString"/>. 
+	/// </summary>
     virtual System::String^ ToString() override;
+	/// <summary>
+	/// Returns a description of a <see cref="CharacterStyle"/>. 
+	/// </summary>
+	/// <param name="pStyle">The <see cref="CharacterStyle"/> to use.</param>
+	/// <returns>A descriptive string.</returns>
+    static System::String^ StyleString (CharacterStyle pStyle);
 internal:
 	CAgentFileHeader (CharacterFile^ pOwner);
 #else
 public:
+    static CAtlString StyleString (AgentCharStyle pStyle);
+
 	DECLARE_DLL_OBJECT(CAgentFileHeader)
 	friend class CAgentFileBinary;
 	friend class CAgentFileAcs;
@@ -164,14 +280,21 @@ public:
 
 #ifdef	_M_CEE
 #define CAgentFileName FileCharacterName
-[Serializable] public ref class CAgentFileName
+/// <summary>
+///	A character name and optional description in a specific language
+/// </summary>
+[Serializable] public ref class FileCharacterName
 #else
 class _DACORE_IMPEXP CAgentFileName
 #endif
 {
 public:
 #ifdef	_M_CEE
+	/// <summary>
+	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
+	/// </summary>
 	property CharacterFile^ Owner {CharacterFile^ get() {return mOwner;}}
+	property FileCharacterNames^ Container {FileCharacterNames^ get() {return mContainer;}}
 
 	property LANGID Language {LANGID get();}
 	property System::String^ Name {System::String^ get(); void set (System::String^ pValue);}
@@ -194,17 +317,18 @@ public:
 
 #ifdef	_M_CEE
 internal:
-	[NonSerialized]	CharacterFile^	mOwner;
-	LANGID							mLanguage;
-	System::String^					mName;
-	System::String^					mDesc1;
-	System::String^					mDesc2;
+	[NonSerialized]	CharacterFile^		mOwner;
+	[NonSerialized] FileCharacterNames^	mContainer;
+	LANGID								mLanguage;
+	System::String^						mName;
+	System::String^						mDesc1;
+	System::String^						mDesc2;
 #else
 protected:
-	LANGID							mLanguage;
-	tBstrPtr						mName;
-	tBstrPtr						mDesc1;
-	tBstrPtr						mDesc2;
+	LANGID								mLanguage;
+	tBstrPtr							mName;
+	tBstrPtr							mDesc1;
+	tBstrPtr							mDesc2;
 #endif
 
 public:
@@ -217,13 +341,13 @@ internal:
 
 #ifdef	_M_CEE
 public:
-	CAgentFileName (LANGID pLanguage, System::String^ pName);
-	CAgentFileName (LANGID pLanguage, CAgentFileName^ pSource);
-	Boolean CopyTo (CAgentFileName^ pTarget);
-	Boolean Equals (CAgentFileName^ pTarget);
+	FileCharacterName (LANGID pLanguage, System::String^ pName);
+	FileCharacterName (LANGID pLanguage, FileCharacterName^ pSource);
+	Boolean CopyTo (FileCharacterName^ pTarget);
+	Boolean Equals (FileCharacterName^ pTarget);
     virtual System::String^ ToString() override;
 internal:
-	CAgentFileName (CharacterFile^ pOwner);
+	CAgentFileName (CharacterFile^ pOwner, FileCharacterNames^ pContainer);
 #else
 public:
 	DECLARE_DLL_OBJECT(CAgentFileName)
@@ -233,7 +357,10 @@ public:
 
 #ifdef	_M_CEE
 #define CAgentFileNames FileCharacterNames
-public ref class CAgentFileNames : public System::Collections::ObjectModel::KeyedCollection <LANGID, CAgentFileName^>
+/// <summary>
+///	A collection of <see cref="FileCharacterName"/> objects
+/// </summary>
+public ref class FileCharacterNames : public System::Collections::ObjectModel::KeyedCollection <LANGID, FileCharacterName^>
 {
 public:
 	CAgentFileNames ();
@@ -242,6 +369,9 @@ internal:
 	CAgentFileNames (CharacterFile^ pOwner);
 
 public:
+	/// <summary>
+	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
+	/// </summary>
 	property CharacterFile^ Owner {CharacterFile^ get() {return mOwner;}}
 
 	CAgentFileName^ Add (LANGID pLangID, System::String^ pName);
@@ -268,13 +398,19 @@ typedef	CAtlPtrTypeArray <CAgentFileName>	CAgentFileNames;
 
 #ifdef	_M_CEE
 #define CAgentFileTts FileTts
-[Serializable] public ref class CAgentFileTts
+/// <summary>
+///	Specifies a character's default text-to-speech voice
+/// </summary>
+[Serializable] public ref class FileTts
 #else
 class _DACORE_IMPEXP CAgentFileTts
 #endif
 {
 public:
 #ifdef	_M_CEE
+	/// <summary>
+	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
+	/// </summary>
 	property CharacterFile^ Owner {CharacterFile^ get() {return mOwner;}}
 
 	property System::Guid Engine {System::Guid get(); void set (System::Guid pValue);}
@@ -355,13 +491,16 @@ public:
 
 #ifdef	_M_CEE
 #define CAgentFileBalloon FileBalloon
-[Serializable] public ref class CAgentFileBalloon
+[Serializable] public ref class FileBalloon
 #else
 class _DACORE_IMPEXP CAgentFileBalloon
 #endif
 {
 public:
 #ifdef	_M_CEE
+	/// <summary>
+	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
+	/// </summary>
 	property CharacterFile^ Owner {CharacterFile^ get() {return mOwner;}}
 
 	property UInt16 Lines {UInt16 get(); void set (UInt16 pValue);}
@@ -455,13 +594,16 @@ public:
 
 #ifdef	_M_CEE
 #define CAgentFileFrameImage FileFrameImage
-[Serializable] public ref class CAgentFileFrameImage
+[Serializable] public ref class FileFrameImage
 #else
 class _DACORE_IMPEXP CAgentFileFrameImage
 #endif
 {
 public:
 #ifdef	_M_CEE
+	/// <summary>
+	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
+	/// </summary>
 	property CharacterFile^ Owner {CharacterFile^ get() {return mOwner;}}
 	property FileFrameImages^ Container {FileFrameImages^ get() {return mContainer;}}
 	property FileAnimationFrame^ Frame {FileAnimationFrame^ get();}
@@ -500,9 +642,17 @@ internal:
 #ifdef	_M_CEE
 public:
 	Boolean CopyTo (CAgentFileFrameImage^ pTarget);
+	Boolean Equals (CAgentFileFrameImage^ pTarget);
     virtual System::String^ ToString() override;
 internal:
 	CAgentFileFrameImage (CharacterFile^ pOwner, FileAnimationFrame^ pFrame);
+protected:
+	//[OnSerializingAttribute] void OnSerializing (StreamingContext pContext);	
+	//[OnSerializedAttribute] void OnSerialized (StreamingContext pContext);	
+	//[OnDeserializingAttribute] void OnDeserializing (StreamingContext pContext);	
+	//[OnDeserializedAttribute] void OnDeserialized (StreamingContext pContext);	
+	//System::String^		mImageFilePath;
+	//CAgentFileImage^	mImage;
 #else
 public:
 	DECLARE_DLL_OBJECT(CAgentFileFrameImage)
@@ -513,7 +663,7 @@ public:
 
 #ifdef	_M_CEE
 #define CAgentFileFrameImages FileFrameImages
-[Serializable] public ref class CAgentFileFrameImages : public System::Collections::ObjectModel::Collection <CAgentFileFrameImage^>
+[Serializable] public ref class FileFrameImages : public System::Collections::ObjectModel::Collection <FileFrameImage^>
 {
 public:
 	CAgentFileFrameImages ();
@@ -522,21 +672,24 @@ internal:
 	CAgentFileFrameImages (CharacterFile^ pOwner, FileAnimationFrame^ pFrame);
 
 public:
+	/// <summary>
+	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
+	/// </summary>
 	property CharacterFile^ Owner {CharacterFile^ get() {return mOwner;}}
 	property FileAnimationFrame^ Frame {FileAnimationFrame^ get() {return mFrame;}}
 
 public:
-	CAgentFileFrameImage^ Add (System::String^ pFrameImagePath);
-	CAgentFileFrameImage^ Insert (Int32 pNdx, System::String^ pFrameImagePath);
-	bool Remove (CAgentFileFrameImage^ pItem) new;
+	FileFrameImage^ Add (System::String^ pFrameImagePath);
+	FileFrameImage^ Insert (Int32 pNdx, System::String^ pFrameImagePath);
+	bool Remove (FileFrameImage^ pItem) new;
 	bool RemoveAt (Int32 pNdx) new;
 	bool Move (Int32 pNdx, Int32 pNewNdx);
-	bool Move (CAgentFileFrameImage^ pItem, Int32 pNewNdx);
-	bool Move (CAgentFileFrameImage^ pItem, CAgentFileFrameImage^ pBefore);
+	bool Move (FileFrameImage^ pItem, Int32 pNewNdx);
+	bool Move (FileFrameImage^ pItem, FileFrameImage^ pBefore);
 
 internal:
-	void Add (CAgentFileFrameImage^ pItem) new {__super::Add (pItem);}
-	void Insert (Int32 pNdx, CAgentFileFrameImage^ pItem) new {__super::Insert (pNdx, pItem);}
+	void Add (FileFrameImage^ pItem) new {__super::Add (pItem);}
+	void Insert (Int32 pNdx, FileFrameImage^ pItem) new {__super::Insert (pNdx, pItem);}
 	void Clear () new {__super::Clear ();}
 
 internal:
@@ -551,13 +704,16 @@ typedef tArrayPtr <CAgentFileFrameImage> CAgentFileFrameImages;
 
 #ifdef	_M_CEE
 #define CAgentFileFrameOverlay FileFrameOverlay
-[Serializable] public ref class CAgentFileFrameOverlay
+[Serializable] public ref class FileFrameOverlay
 #else
 class _DACORE_IMPEXP CAgentFileFrameOverlay
 #endif
 {
 public:
 #ifdef	_M_CEE
+	/// <summary>
+	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
+	/// </summary>
 	property CharacterFile^ Owner {CharacterFile^ get() {return mOwner;}}
 	property FileFrameOverlays^ Container {FileFrameOverlays^ get() {return mContainer;}}
 	property FileAnimationFrame^ Frame {FileAnimationFrame^ get();}
@@ -608,9 +764,17 @@ internal:
 #ifdef	_M_CEE
 public:
 	Boolean CopyTo (CAgentFileFrameOverlay^ pTarget);
+	Boolean Equals (CAgentFileFrameOverlay^ pTarget);
     virtual System::String^ ToString() override;
 internal:
 	CAgentFileFrameOverlay (CharacterFile^ pOwner, FileAnimationFrame^ pFrame);
+protected:
+	//[OnSerializingAttribute] void OnSerializing (StreamingContext pContext);	
+	//[OnSerializedAttribute] void OnSerialized (StreamingContext pContext);	
+	//[OnDeserializingAttribute] void OnDeserializing (StreamingContext pContext);	
+	//[OnDeserializedAttribute] void OnDeserialized (StreamingContext pContext);	
+	//System::String^		mImageFilePath;
+	//CAgentFileImage^	mImage;
 #else
 public:
 	DECLARE_DLL_OBJECT(CAgentFileFrameOverlay)
@@ -621,7 +785,7 @@ public:
 
 #ifdef	_M_CEE
 #define CAgentFileFrameOverlays FileFrameOverlays
-[Serializable] public ref class CAgentFileFrameOverlays : public System::Collections::ObjectModel::KeyedCollection <AgentMouthOverlay, CAgentFileFrameOverlay^>
+[Serializable] public ref class FileFrameOverlays : public System::Collections::ObjectModel::KeyedCollection <MouthOverlay, FileFrameOverlay^>
 {
 public:
 	CAgentFileFrameOverlays ();
@@ -630,22 +794,25 @@ internal:
 	CAgentFileFrameOverlays (CharacterFile^ pOwner, FileAnimationFrame^ pFrame);
 
 public:
+	/// <summary>
+	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
+	/// </summary>
 	property CharacterFile^ Owner {CharacterFile^ get() {return mOwner;}}
 	property FileAnimationFrame^ Frame {FileAnimationFrame^ get() {return mFrame;}}
 
 public:
-	CAgentFileFrameOverlay^ Add (AgentMouthOverlay pOverlayType, System::String^ pOverlayImagePath);
-	bool Remove (AgentMouthOverlay pOverlayType) new;
-	bool Remove (CAgentFileFrameOverlay^ pItem) new;
+	CAgentFileFrameOverlay^ Add (MouthOverlay pOverlayType, System::String^ pOverlayImagePath);
+	bool Remove (MouthOverlay pOverlayType) new;
+	bool Remove (FileFrameOverlay^ pItem) new;
 
 internal:
-	void Add (CAgentFileFrameOverlay^ pItem) new {__super::Add (pItem);}
-	void Insert (Int32 pNdx, CAgentFileFrameOverlay^ pItem) new {__super::Insert (pNdx, pItem);}
+	void Add (FileFrameOverlay^ pItem) new {__super::Add (pItem);}
+	void Insert (Int32 pNdx, FileFrameOverlay^ pItem) new {__super::Insert (pNdx, pItem);}
 	void RemoveAt (Int32 pNdx) new {__super::RemoveAt (pNdx);}
 	void Clear () new {__super::Clear ();}
 
 protected:
-	virtual AgentMouthOverlay GetKeyForItem (CAgentFileFrameOverlay^ pItem) override;
+	virtual MouthOverlay GetKeyForItem (FileFrameOverlay^ pItem) override;
 
 internal:
 	[NonSerialized]	CharacterFile^		mOwner;
@@ -659,7 +826,7 @@ typedef tArrayPtr <CAgentFileFrameOverlay> CAgentFileFrameOverlays;
 
 #ifdef	_M_CEE
 #define CAgentFileFrameBranch FileFrameBranch
-[Serializable] public value struct CAgentFileFrameBranch
+[Serializable] public value struct FileFrameBranch
 {
 	Int16	mFrameNdx;
 	UInt16	mProbability;
@@ -674,13 +841,16 @@ struct _DACORE_IMPEXP CAgentFileFrameBranch
 
 #ifdef	_M_CEE
 #define CAgentFileFrame FileAnimationFrame
-[Serializable] public ref class CAgentFileFrame
+[Serializable] public ref class FileAnimationFrame
 #else
 class _DACORE_IMPEXP CAgentFileFrame
 #endif
 {
 public:
 #ifdef	_M_CEE
+	/// <summary>
+	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
+	/// </summary>
 	property CharacterFile^ Owner {CharacterFile^ get() {return mOwner;}}
 	property FileFrames^ Container {FileFrames^ get() {return mContainer;}}
 	property FileAnimation^ Animation {FileAnimation^ get();}
@@ -689,11 +859,11 @@ public:
 	property Int16 SoundNdx {Int16 get();}
 	property System::String^ SoundFilePath {System::String^ get(); void set (System::String^ pValue);}
 	property Int16 ExitFrame {Int16 get(); void set (Int16 pValue);}
-	property array <CAgentFileFrameBranch>^ Branching {array <CAgentFileFrameBranch>^ get(); void set (array <CAgentFileFrameBranch>^ pValue);}
+	property array <FileFrameBranch>^ Branching {array <FileFrameBranch>^ get(); void set (array <FileFrameBranch>^ pValue);}
 	property UInt16 ImageCount {UInt16 get();}
-	property CAgentFileFrameImages^ Images {CAgentFileFrameImages^ get();}
+	property FileFrameImages^ Images {FileFrameImages^ get();}
 	property UInt16 OverlayCount {UInt16 get();}
-	property CAgentFileFrameOverlays^ Overlays {CAgentFileFrameOverlays^ get();}
+	property FileFrameOverlays^ Overlays {FileFrameOverlays^ get();}
 #else
 	__declspec(property(get=get_Duration))		USHORT							Duration;
 	__declspec(property(get=get_SoundNdx))		short							SoundNdx;
@@ -725,9 +895,9 @@ internal:
 	UInt16							mDuration;
 	Int16							mSoundNdx;
 	Int16							mExitFrame;
-	array <CAgentFileFrameBranch>^	mBranching;
-	CAgentFileFrameImages^			mImages;
-	CAgentFileFrameOverlays^		mOverlays;
+	array <FileFrameBranch>^		mBranching;
+	FileFrameImages^				mImages;
+	FileFrameOverlays^				mOverlays;
 #else
 protected:
 	USHORT							mDuration;
@@ -750,11 +920,18 @@ internal:
 
 #ifdef	_M_CEE
 public:
-	Boolean CopyTo (CAgentFileFrame^ pTarget);
-	Boolean CopyTo (CAgentFileFrame^ pTarget, Boolean pDeepCopy);
+	Boolean CopyTo (FileAnimationFrame^ pTarget);
+	Boolean CopyTo (FileAnimationFrame^ pTarget, Boolean pDeepCopy);
     virtual System::String^ ToString() override;
 internal:
 	CAgentFileFrame (CharacterFile^ pOwner, FileFrames^ pContainer);
+protected:
+	//[OnSerializingAttribute] void OnSerializing (StreamingContext pContext);	
+	//[OnSerializedAttribute] void OnSerialized (StreamingContext pContext);	
+	//[OnDeserializingAttribute] void OnDeserializing (StreamingContext pContext);	
+	//[OnDeserializedAttribute] void OnDeserialized (StreamingContext pContext);	
+	//System::String^		mSoundFilePath;
+	//array<Byte>^		mSound;
 #else
 public:
 	DECLARE_DLL_OBJECT(CAgentFileFrame)
@@ -765,7 +942,7 @@ public:
 
 #ifdef	_M_CEE
 #define CAgentFileFrames FileFrames
-[Serializable] public ref class CAgentFileFrames : public System::Collections::ObjectModel::Collection <CAgentFileFrame^>
+[Serializable] public ref class FileFrames : public System::Collections::ObjectModel::Collection <FileAnimationFrame^>
 {
 public:
 	CAgentFileFrames ();
@@ -774,21 +951,24 @@ internal:
 	CAgentFileFrames (CharacterFile^ pOwner, FileAnimation^ pAnimation);
 
 public:
+	/// <summary>
+	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
+	/// </summary>
 	property CharacterFile^ Owner {CharacterFile^ get() {return mOwner;}}
 	property FileAnimation^ Animation {FileAnimation^ get() {return mAnimation;}}
 
 public:
-	CAgentFileFrame^ Add ();
-	CAgentFileFrame^ Insert (Int32 pNdx);
-	bool Remove (CAgentFileFrame^ pItem) new;
+	FileAnimationFrame^ Add ();
+	FileAnimationFrame^ Insert (Int32 pNdx);
+	bool Remove (FileAnimationFrame^ pItem) new;
 	bool RemoveAt (Int32 pNdx) new;
 	bool Move (Int32 pNdx, Int32 pNewNdx);
-	bool Move (CAgentFileFrame^ pItem, Int32 pNewNdx);
-	bool Move (CAgentFileFrame^ pItem, CAgentFileFrame^ pBefore);
+	bool Move (FileAnimationFrame^ pItem, Int32 pNewNdx);
+	bool Move (FileAnimationFrame^ pItem, FileAnimationFrame^ pBefore);
 
 internal:
-	void Add (CAgentFileFrame^ pItem) new {__super::Add (pItem);}
-	void Insert (Int32 pNdx, CAgentFileFrame^ pItem) new {__super::Insert (pNdx, pItem);}
+	void Add (FileAnimationFrame^ pItem) new {__super::Add (pItem);}
+	void Insert (Int32 pNdx, FileAnimationFrame^ pItem) new {__super::Insert (pNdx, pItem);}
 	void Clear () new {__super::Clear ();}
 
 internal:
@@ -803,13 +983,16 @@ typedef	tArrayPtr <CAgentFileFrame> CAgentFileFrames;
 
 #ifdef	_M_CEE
 #define CAgentFileAnimation FileAnimation
-[Serializable] public ref class CAgentFileAnimation
+[Serializable] public ref class FileAnimation
 #else
 class _DACORE_IMPEXP CAgentFileAnimation
 #endif
 {
 public:
 #ifdef	_M_CEE
+	/// <summary>
+	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
+	/// </summary>
 	property CharacterFile^ Owner {CharacterFile^ get() {return mOwner;}}
 	property FileGestures^ Container {FileGestures^ get() {return mContainer;}}
 
@@ -817,7 +1000,7 @@ public:
 	property Byte ReturnType {Byte get(); void set (Byte pReturnType);}
 	property System::String^ ReturnName {System::String^ get(); void set (System::String^ pReturnName);}
 	property UInt16 FrameCount {UInt16 get();}
-	property CAgentFileFrames^ Frames {CAgentFileFrames^ get();}
+	property FileFrames^ Frames {FileFrames^ get();}
 #else
 	__declspec(property(get=get_Name))			tBstrPtr				Name;
 	__declspec(property(get=get_ReturnType))	BYTE					ReturnType;
@@ -839,7 +1022,7 @@ internal:
 	System::String^					mName;
 	Byte							mReturnType;
 	System::String^					mReturnName;
-	CAgentFileFrames^				mFrames;
+	FileFrames^						mFrames;
 	[NonSerialized]	System::String^	mAcaFileName;
 	[NonSerialized]	DWORD			mAcaChksum;
 #else
@@ -863,8 +1046,8 @@ internal:
 
 #ifdef	_M_CEE
 public:
-	Boolean CopyTo (CAgentFileAnimation^ pTarget);
-	Boolean CopyTo (CAgentFileAnimation^ pTarget, Boolean pDeepCopy);
+	Boolean CopyTo (FileAnimation^ pTarget);
+	Boolean CopyTo (FileAnimation^ pTarget, Boolean pDeepCopy);
     virtual System::String^ ToString() override;
 internal:
 	CAgentFileAnimation (CharacterFile^ pOwner, FileGestures^ pContainer);
@@ -879,29 +1062,32 @@ public:
 
 #ifdef	_M_CEE
 #define CAgentFileGestures FileGestures
-public ref class CAgentFileGestures : public System::Collections::ObjectModel::KeyedCollection <System::String^, CAgentFileAnimation^>
+public ref class CAgentFileGestures : public System::Collections::ObjectModel::KeyedCollection <System::String^, FileAnimation^>
 {
 public:
-	CAgentFileGestures ();
-	virtual ~CAgentFileGestures ();
+	FileGestures ();
+	virtual ~FileGestures ();
 internal:
-	CAgentFileGestures (CharacterFile^ pOwner);
+	FileGestures (CharacterFile^ pOwner);
 
 public:
+	/// <summary>
+	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
+	/// </summary>
 	property CharacterFile^ Owner {CharacterFile^ get() {return mOwner;}}
 public:
-	CAgentFileAnimation^ Add (System::String^ pAnimationName);
+	FileAnimation^ Add (System::String^ pAnimationName);
 	bool Remove (System::String^ pAnimationName) new;
-	bool Remove (CAgentFileAnimation^ pItem) new;
+	bool Remove (FileAnimation^ pItem) new;
 
 internal:
-	void Add (CAgentFileAnimation^ pItem) new;
+	void Add (FileAnimation^ pItem) new;
 	void RemoveAt (Int32 pNdx) new {__super::RemoveAt (pNdx);}
 	void Clear () new {__super::Clear ();}
-	void ChangeItemKey (CAgentFileAnimation^ pItem, String^ pNewKey);
+	void ChangeItemKey (FileAnimation^ pItem, String^ pNewKey);
 
 protected:
-	virtual System::String^ GetKeyForItem (CAgentFileAnimation^ pItem) override;
+	virtual System::String^ GetKeyForItem (FileAnimation^ pItem) override;
 
 internal:
 	[NonSerialized]	CharacterFile^	mOwner;
@@ -931,6 +1117,9 @@ internal:
 	CAgentFileStates (CharacterFile^ pOwner);
 
 public:
+	/// <summary>
+	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
+	/// </summary>
 	property CharacterFile^ Owner {CharacterFile^ get() {return mOwner;}}
 public:
 	bool AddStateAnimation (System::String^ pStateName, System::String^ pAnimationName);
@@ -953,75 +1142,6 @@ struct _DACORE_IMPEXP CAgentFileStates
 	DECLARE_DLL_OBJECT(CAgentFileStates)
 };
 #endif
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-#ifdef	_M_CEE
-#define CAgentFileImage FileImage
-public ref class CAgentFileImage
-#else
-class _DACORE_IMPEXP CAgentFileImage
-#endif
-{
-public:
-#ifdef	_M_CEE
-	property UInt32 ImageNum {UInt32 get();}
-	property System::Drawing::Size ImageSize {System::Drawing::Size get();}
-	property Boolean Is32Bit {Boolean get();}
-	property UInt32 BitsSize {UInt32 get();}
-	property array <BYTE>^ Bits {array <BYTE>^ get();}
-#else
-	__declspec(property(get=get_ImageNum))		ULONG			ImageNum;
-	__declspec(property(get=get_ImageSize))		const CSize&	ImageSize;
-	__declspec(property(get=get_Is32Bit))		bool			Is32Bit;
-	__declspec(property(get=get_BitsSize))		ULONG			BitsSize;
-	__declspec(property(get=get_Bits))			const BYTE*		Bits;
-
-	ULONG get_ImageNum () const {return mImageNum;}
-	const CSize& get_ImageSize () const {return mImageSize;}
-	bool get_Is32Bit () const {return mIs32Bit;}
-	ULONG get_BitsSize () const {return mBitsSize;}
-	const BYTE* get_Bits () const {return mBits;}
-
-	void put_ImageSize (const CSize& pImageSize);
-#endif
-
-#ifdef	_M_CEE
-internal:
-	UInt32					mImageNum;
-	System::Drawing::Size	mImageSize;
-	Boolean					mIs32Bit;
-	array <BYTE>^			mBits;
-#else
-protected:
-	ULONG					mImageNum;
-	CSize					mImageSize;
-	bool					mIs32Bit;
-	ULONG					mBitsSize;
-	tArrayPtr <BYTE>		mBits;
-#endif
-
-#ifdef	_M_CEE
-internal:
-#else
-public:
-#endif
-	CAgentFileImage ();
-	virtual ~CAgentFileImage ();
-	void Empty ();
-
-#ifdef	_M_CEE
-public:
-    virtual System::String^ ToString() override;
-#else
-public:
-	DECLARE_DLL_OBJECT(CAgentFileImage)
-	friend class CAgentFileAcs;
-	friend class CAgentFileAcf;
-#endif
-};
 
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	_M_CEE

@@ -61,6 +61,12 @@ namespace DoubleAgent
 
 		public abstract UndoUnit Apply ();
 
+		public virtual UndoUnit Apply (AppliedEventHandler pEventHandler)
+		{
+			Applied += pEventHandler;
+			return Apply ();
+		}
+
 		protected virtual void OnApplied ()
 		{
 			OnApplied (System.EventArgs.Empty);

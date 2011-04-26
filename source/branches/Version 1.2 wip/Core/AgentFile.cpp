@@ -78,7 +78,7 @@ CAgentFile* CAgentFile::CreateInstance (LPCTSTR pPath)
 	{
 		String^	lPath = ParseFilePath (pPath);
 
-		if	(String::Compare (System::IO::Path::GetExtension (lPath), ".acd", true) == 0)
+		if	(String::Compare (System::IO::Path::GetExtension (lPath), AcdFileExt, true) == 0)
 		{
 			return CAgentFileScript::CreateInstance ();
 		}
@@ -429,8 +429,10 @@ void CAgentFile::IsDirty::set (bool pIsDirty)
 }
 #endif
 
+/////////////////////////////////////////////////////////////////////////////
+
 #ifdef	_M_CEE
-bool CAgentFile::IsAcsFile::get ()
+Boolean CAgentFile::IsAcsFile::get ()
 {
 	return false;
 }
@@ -442,7 +444,7 @@ bool CAgentFile::get_IsAcsFile () const
 #endif
 
 #ifdef	_M_CEE
-bool CAgentFile::IsAcfFile::get ()
+Boolean CAgentFile::IsAcfFile::get ()
 {
 	return false;
 }
@@ -454,7 +456,7 @@ bool CAgentFile::get_IsAcfFile () const
 #endif
 
 #ifdef	_M_CEE
-bool CAgentFile::IsAcdFile::get ()
+Boolean CAgentFile::IsAcdFile::get ()
 {
 	return false;
 }
@@ -462,6 +464,23 @@ bool CAgentFile::IsAcdFile::get ()
 bool CAgentFile::get_IsAcdFile () const
 {
 	return false;
+}
+#endif
+
+#ifdef	_M_CEE
+System::String^ CAgentFile::AcsFileExt::get ()
+{
+	return gcnew String (sAcsFileExt);
+}
+
+System::String^ CAgentFile::AcfFileExt::get ()
+{
+	return gcnew String (sAcfFileExt);
+}
+
+System::String^ CAgentFile::AcdFileExt::get ()
+{
+	return gcnew String (sAcdFileExt);
 }
 #endif
 
@@ -1541,7 +1560,7 @@ LPCVOID CAgentFile::GetSound (INT_PTR pSoundNdx)
 void CAgentFile::FreeNames ()
 {
 #ifdef	_M_CEE
-	mNames = gcnew CAgentFileNames;
+	mNames = gcnew CAgentFileNames (this);
 #else
 	mNames.DeleteAll ();
 #endif
@@ -1703,7 +1722,7 @@ CAgentFileName* CAgentFile::FindName (WORD pLangID)
 void CAgentFile::FreeStates ()
 {
 #ifdef	_M_CEE
-	mStates = gcnew CAgentFileStates;
+	mStates = gcnew CAgentFileStates (this);
 #else
 	mStates.mGestures.RemoveAll ();
 	mStates.mNames.RemoveAll ();
@@ -1720,7 +1739,7 @@ bool CAgentFile::ReadStates ()
 void CAgentFile::FreeGestures ()
 {
 #ifdef	_M_CEE
-	mGestures = gcnew CAgentFileGestures ();
+	mGestures = gcnew CAgentFileGestures (this);
 #else
 	mGestures.mAnimations.DeleteAll ();
 	mGestures.mNames.RemoveAll ();

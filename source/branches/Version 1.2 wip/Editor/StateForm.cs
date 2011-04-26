@@ -41,11 +41,17 @@ namespace AgentCharacterEditor
 		public StateForm ()
 		{
 			InitializeComponent ();
+			CausesValidation = Visible;
 
 			if (Program.MainForm != null)
 			{
 				Program.MainForm.UpdateApplied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
 			}
+		}
+
+		private void StateForm_VisibleChanged (object sender, EventArgs e)
+		{
+			CausesValidation = Visible;
 		}
 
 		#endregion
@@ -146,8 +152,7 @@ namespace AgentCharacterEditor
 			String[]	lAnimations = mCharacterFile.GetAnimationNames ();
 			int			lListNdx = 0;
 
-			ListViewAnimations.ItemCheck -= new System.Windows.Forms.ItemCheckEventHandler (this.ListViewAnimations_ItemCheck);
-			ListViewAnimations.ItemChecked -= new System.Windows.Forms.ItemCheckedEventHandler (ListViewAnimations_ItemChecked);
+			CausesValidation = false;
 			ListViewAnimations.BeginUpdate ();
 			ListViewAnimations.UpdateItemCount (lAnimations.Length);
 
@@ -177,8 +182,7 @@ namespace AgentCharacterEditor
 
 			ListViewAnimations.EndUpdate ();
 			ListViewAnimations.ArrangeIcons ();
-			ListViewAnimations.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler (this.ListViewAnimations_ItemCheck);
-			ListViewAnimations.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler (ListViewAnimations_ItemChecked);
+			CausesValidation = Visible;
 		}
 
 		#endregion
@@ -191,9 +195,8 @@ namespace AgentCharacterEditor
 
 			if ((mCharacterFile != null) && !String.IsNullOrEmpty (pStateName) && !Program.FileIsReadOnly)
 			{
-				lUpdate = new UpdateAllStateAnimations (mCharacterFile, pStateName, pAnimationNames);
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
-				if (!UpdateAllStateAnimations.PutUndo (lUpdate.Apply () as UpdateAllStateAnimations, this))
+				lUpdate = new UpdateAllStateAnimations (pStateName, pAnimationNames);
+				if (!UpdateAllStateAnimations.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateAllStateAnimations, this))
 				{
 					lUpdate = null;
 				}
@@ -210,11 +213,11 @@ namespace AgentCharacterEditor
 				AddDeleteStateAnimation		lAddDeleteStateAnimation = sender as AddDeleteStateAnimation;
 				UpdateAllStateAnimations	lUpdateAllStateAnimations = sender as UpdateAllStateAnimations;
 
-				if ((lAddDeleteStateAnimation != null) && (lAddDeleteStateAnimation.StateName == mStateName))
+				if ((lAddDeleteStateAnimation != null) && (lAddDeleteStateAnimation.Target == mStateName))
 				{
 					ShowStateAnimations ();
 				}
-				else if ((lUpdateAllStateAnimations != null) && (lUpdateAllStateAnimations.StateName == mStateName))
+				else if ((lUpdateAllStateAnimations != null) && (lUpdateAllStateAnimations.Target == mStateName))
 				{
 					ShowStateAnimations ();
 				}
@@ -231,7 +234,7 @@ namespace AgentCharacterEditor
 
 		private void ListViewAnimations_ItemCheck (object sender, ItemCheckEventArgs e)
 		{
-			if (IsEmpty || Program.FileIsReadOnly)
+			if (CausesValidation && (IsEmpty || Program.FileIsReadOnly))
 			{
 				e.NewValue = e.CurrentValue;
 			}
@@ -239,21 +242,19 @@ namespace AgentCharacterEditor
 
 		private void ListViewAnimations_ItemChecked (object sender, ItemCheckedEventArgs e)
 		{
-			if (!IsEmpty && !Program.FileIsReadOnly)
+			if (CausesValidation && !IsEmpty && !Program.FileIsReadOnly)
 			{
 				AddDeleteStateAnimation	lUpdate;
 
 				if (e.Item.Checked)
 				{
-					lUpdate = new AddDeleteStateAnimation (mCharacterFile, mStateName, e.Item.Text, false);
+					lUpdate = new AddDeleteStateAnimation (mStateName, e.Item.Text, false);
 				}
 				else
 				{
-					lUpdate = new AddDeleteStateAnimation (mCharacterFile, mStateName, e.Item.Text, true);
+					lUpdate = new AddDeleteStateAnimation (mStateName, e.Item.Text, true);
 				}
-
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
-				AddDeleteStateAnimation.PutUndo (lUpdate.Apply () as AddDeleteStateAnimation, this);
+				AddDeleteStateAnimation.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as AddDeleteStateAnimation, this);
 			}
 		}
 

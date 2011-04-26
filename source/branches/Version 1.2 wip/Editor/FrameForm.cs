@@ -45,6 +45,7 @@ namespace AgentCharacterEditor
 		public FrameForm ()
 		{
 			InitializeComponent ();
+			CausesValidation = Visible;
 
 			if (Program.MainForm != null)
 			{
@@ -65,6 +66,8 @@ namespace AgentCharacterEditor
 
 		private void FrameForm_VisibleChanged (object sender, EventArgs e)
 		{
+			CausesValidation = Visible;
+
 			if (Program.MainForm != null)
 			{
 				Program.MainForm.UpdateApplied -= new UndoUnit.AppliedEventHandler (OnUpdateApplied);
@@ -73,7 +76,8 @@ namespace AgentCharacterEditor
 				Program.MainForm.EditCut -= new Global.EditEventHandler (MainForm_EditCut);
 				Program.MainForm.EditDelete -= new Global.EditEventHandler (MainForm_EditDelete);
 				Program.MainForm.EditPaste -= new Global.EditEventHandler (MainForm_EditPaste);
-				if (this.Visible)
+				Program.MainForm.EditMenu -= new Global.ContextMenuEventHandler (MainForm_EditMenu);
+				if (Visible)
 				{
 					Program.MainForm.UpdateApplied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
 					Program.MainForm.CanEdit += new Global.EditEventHandler (MainForm_CanEdit);
@@ -81,6 +85,7 @@ namespace AgentCharacterEditor
 					Program.MainForm.EditCut += new Global.EditEventHandler (MainForm_EditCut);
 					Program.MainForm.EditDelete += new Global.EditEventHandler (MainForm_EditDelete);
 					Program.MainForm.EditPaste += new Global.EditEventHandler (MainForm_EditPaste);
+					Program.MainForm.EditMenu += new Global.ContextMenuEventHandler (MainForm_EditMenu);
 				}
 			}
 		}
@@ -235,7 +240,6 @@ namespace AgentCharacterEditor
 			}
 		}
 
-
 		private void ShowImageItem (FileFrameImage pFrameImage, int pListNdx)
 		{
 			FileImage		lFrameImage = mCharacterFile.GetImage ((int)pFrameImage.ImageNdx);
@@ -280,11 +284,69 @@ namespace AgentCharacterEditor
 
 		///////////////////////////////////////////////////////////////////////////////
 
+		private void ShowSelectedImage ()
+		{
+			ShowFrameImage (GetSelectedImage (true));
+			ShowSelectionState (GetSelectedImage (false), ListViewImages.GetSelectedIndex (false));
+		}
+
+		private void ShowSelectionState (FileFrameImage pFrameImage, int pImageNdx)
+		{
+			ButtonAdd.Enabled = !IsEmpty && !Program.FileIsReadOnly;
+
+			if ((pFrameImage == null) || IsEmpty)
+			{
+				ButtonDelete.Enabled = false;
+				ButtonChooseFile.Enabled = false;
+				ButtonMoveUp.Enabled = false;
+				ButtonMoveDown.Enabled = false;
+			}
+			else
+			{
+				ButtonDelete.Enabled = !Program.FileIsReadOnly;
+				ButtonChooseFile.Enabled = !Program.FileIsReadOnly;
+				ButtonMoveUp.Enabled = !Program.FileIsReadOnly && (ListViewImages.Items.Count > 1) && (pImageNdx >= 1);
+				ButtonMoveDown.Enabled = !Program.FileIsReadOnly && (ListViewImages.Items.Count > 1) && (pImageNdx >= 0) && (pImageNdx < ListViewImages.Items.Count - 1);
+			}
+
+			ButtonDelete.Text = ButtonDelete.Enabled ? String.Format (Properties.Resources.EditDeleteThis.NoMenuPrefix (), Global.TitleImage (pFrameImage)) : Properties.Resources.EditDelete.NoMenuPrefix ();
+			ButtonChooseFile.Text = ButtonChooseFile.Enabled ? String.Format (Properties.Resources.EditChooseThisFile.NoMenuPrefix (), Global.TitleImage (pFrameImage)) : Properties.Resources.EditChooseFile.NoMenuPrefix ();
+			ButtonMoveUp.Text = String.Format (Properties.Resources.EditMoveImageUp.NoMenuPrefix (), Global.TitleImage (pFrameImage));
+			ButtonMoveDown.Text = String.Format (Properties.Resources.EditMoveImageDown.NoMenuPrefix (), Global.TitleImage (pFrameImage));
+		}
+
+		private void ShowEditState (Global.EditEventArgs pEventArgs)
+		{
+			FileFrameImage	lFrameImage = GetSelectedImage (false);
+
+			if (lFrameImage != null)
+			{
+				pEventArgs.CopyObjectTitle = (pEventArgs is Global.ContextMenuEventArgs) ? Global.TitleImage (lFrameImage) : Global.TitleImageFrameAnimation (lFrameImage).Quoted ();
+				if (!Program.FileIsReadOnly)
+				{
+					pEventArgs.CutObjectTitle = pEventArgs.CopyObjectTitle;
+					pEventArgs.DeleteObjectTitle = pEventArgs.CopyObjectTitle;
+				}
+			}
+			if (!Program.FileIsReadOnly && (pEventArgs.PasteObject is FileFrameImage))
+			{
+				if (lFrameImage == null)
+				{
+					pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (lFrameImage, Properties.Resources.EditPasteImageSource);
+				}
+				else
+				{
+					pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (lFrameImage, Global.TitleImage (lFrameImage), Properties.Resources.EditPasteImageSource);
+				}
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
 		private FileFrameImage GetSelectedImage (Boolean pIncludeFocus)
 		{
 			return GetSelectedImage (ListViewImages.GetSelectedIndex (pIncludeFocus));
 		}
-
 		private FileFrameImage GetSelectedImage (int pImageNdx)
 		{
 			FileFrameImage	lFrameImage = null;
@@ -297,11 +359,6 @@ namespace AgentCharacterEditor
 				}
 			}
 			return lFrameImage;
-		}
-
-		private void ShowSelectedImage ()
-		{
-			ShowFrameImage (GetSelectedImage (true));
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -329,9 +386,8 @@ namespace AgentCharacterEditor
 				}
 			}
 
+			CausesValidation = false;
 			TableLayoutSample.SuspendLayout ();
-			NumericOffsetX.Validated -= new System.EventHandler (NumericOffsetX_Validated);
-			NumericOffsetY.Validated -= new System.EventHandler (NumericOffsetY_Validated);
 
 			if (lFrameImage == null)
 			{
@@ -365,13 +421,12 @@ namespace AgentCharacterEditor
 			}
 
 			TableLayoutSample.ResumeLayout (true);
-			NumericOffsetX.Validated += new System.EventHandler (NumericOffsetX_Validated);
-			NumericOffsetY.Validated += new System.EventHandler (NumericOffsetY_Validated);
-
 			ButtonShiftUp.Width = ToolStripShiftUp.Width;
 			ButtonShiftDown.Width = ToolStripShiftDown.Width;
 			ButtonShiftLeft.Height = ToolStripShiftLeft.Height;
 			ButtonShiftRight.Height = ToolStripShiftRight.Height;
+
+			CausesValidation = Visible;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -427,10 +482,9 @@ namespace AgentCharacterEditor
 
 				if (OpenFileDialogEx.OpenImageFile (ref lFilePath))
 				{
-					lUpdate = new UpdateFrameImage (mCharacterFile, pFrameImage, false);
+					lUpdate = new UpdateFrameImage (pFrameImage, false);
 					lUpdate.ImageFilePath = lFilePath;
-					lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
-					if (UpdateFrameImage.PutUndo (lUpdate.Apply () as UpdateFrameImage, this))
+					if (UpdateFrameImage.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateFrameImage, this))
 					{
 						return lUpdate;
 					}
@@ -443,10 +497,9 @@ namespace AgentCharacterEditor
 		{
 			if (!IsEmpty && !Program.FileIsReadOnly && (pFrameImage != null))
 			{
-				AddDeleteFrameImage	lUpdate = new AddDeleteFrameImage (mCharacterFile, pFrameImage, pForClipboard);
+				AddDeleteFrameImage	lUpdate = new AddDeleteFrameImage (pFrameImage, pForClipboard);
 
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
-				if (AddDeleteFrameImage.PutUndo (lUpdate.Apply () as AddDeleteFrameImage, this))
+				if (AddDeleteFrameImage.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as AddDeleteFrameImage, this))
 				{
 					return lUpdate;
 				}
@@ -460,7 +513,7 @@ namespace AgentCharacterEditor
 			{
 				if (pFrameImage == null)
 				{
-					AddDeleteFrameImage	lUpdate = new AddDeleteFrameImage (mCharacterFile, mFrame, String.Empty, true);
+					AddDeleteFrameImage	lUpdate = new AddDeleteFrameImage (mFrame, String.Empty, true);
 
 					lUpdate = lUpdate.Apply () as AddDeleteFrameImage;
 					if (lUpdate != null)
@@ -468,28 +521,20 @@ namespace AgentCharacterEditor
 						pPasteImage.CopyTo (lUpdate.Target);
 						lUpdate = lUpdate.Apply () as AddDeleteFrameImage;
 					}
-					if (lUpdate != null)
+					if ((lUpdate != null) && AddDeleteFrameImage.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as AddDeleteFrameImage, this))
 					{
-						lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
-						if (AddDeleteFrameImage.PutUndo (lUpdate.Apply () as AddDeleteFrameImage, this))
-						{
-							return lUpdate;
-						}
+						return lUpdate;
 					}
 				}
 				else
 				{
-					UpdateFrameImage	lUpdate = new UpdateFrameImage (mCharacterFile, pFrameImage, true);
+					UpdateFrameImage	lUpdate = new UpdateFrameImage (pFrameImage, true);
 
 					pPasteImage.CopyTo (pFrameImage);
 					lUpdate = lUpdate.Apply () as UpdateFrameImage;
-					if (lUpdate != null)
+					if ((lUpdate != null) && UpdateFrameImage.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateFrameImage, this))
 					{
-						lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
-						if (UpdateFrameImage.PutUndo (lUpdate.Apply () as UpdateFrameImage, this))
-						{
-							return lUpdate;
-						}
+						return lUpdate;
 					}
 				}
 			}
@@ -554,11 +599,10 @@ namespace AgentCharacterEditor
 		{
 			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mCharacterFile, mFrame, false);
+				UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mFrame, false);
 
 				lUpdate.Duration = (UInt16)NumericDuration.Value;
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
-				UpdateAnimationFrame.PutUndo (lUpdate.Apply () as UpdateAnimationFrame, this);
+				UpdateAnimationFrame.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateAnimationFrame, this);
 			}
 		}
 
@@ -568,11 +612,10 @@ namespace AgentCharacterEditor
 		{
 			if ((TextBoxSoundFile.Modified) && !IsEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mCharacterFile, mFrame, false);
+				UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mFrame, false);
 
 				lUpdate.SoundFilePath = TextBoxSoundFile.Text;
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
-				UpdateAnimationFrame.PutUndo (lUpdate.Apply () as UpdateAnimationFrame, this);
+				UpdateAnimationFrame.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateAnimationFrame, this);
 			}
 		}
 
@@ -584,11 +627,10 @@ namespace AgentCharacterEditor
 
 				if (OpenFileDialogEx.OpenSoundFile (ref lFilePath))
 				{
-					UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mCharacterFile, mFrame, false);
+					UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mFrame, false);
 
 					lUpdate.SoundFilePath = lFilePath;
-					lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
-					UpdateAnimationFrame.PutUndo (lUpdate.Apply () as UpdateAnimationFrame, this);
+					UpdateAnimationFrame.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateAnimationFrame, this);
 				}
 			}
 		}
@@ -610,15 +652,6 @@ namespace AgentCharacterEditor
 			if (ListViewImages.SelectedIndex >= 0)
 			{
 				ShowSelectedImage ();
-			}
-			if (!IsEmpty && !Program.FileIsReadOnly)
-			{
-				int	lSelNdx = ListViewImages.GetSelectedIndex (false);
-
-				ButtonDelete.Enabled = (lSelNdx >= 0);
-				ButtonOpen.Enabled = (lSelNdx >= 0);
-				ButtonMoveUp.Enabled = (ListViewImages.Items.Count > 1) && (lSelNdx >= 1);
-				ButtonMoveDown.Enabled = (ListViewImages.Items.Count > 1) && (lSelNdx >= 0) && (lSelNdx < ListViewImages.Items.Count - 1);
 			}
 		}
 
@@ -645,9 +678,8 @@ namespace AgentCharacterEditor
 				{
 					if (!String.IsNullOrEmpty (lFilePath))
 					{
-						lUpdate = new AddDeleteFrameImage (mCharacterFile, mFrame, lFilePath, false);
-						lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
-						AddDeleteFrameImage.PutUndo (lUpdate.Apply () as AddDeleteFrameImage, this);
+						lUpdate = new AddDeleteFrameImage (mFrame, lFilePath, false);
+						AddDeleteFrameImage.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as AddDeleteFrameImage, this);
 					}
 				}
 			}
@@ -670,9 +702,8 @@ namespace AgentCharacterEditor
 
 				if ((lFrameImage != null) && (lSelNdx > 0))
 				{
-					lUpdate = new ReorderFrameImage (mCharacterFile, lFrameImage, lSelNdx - 1);
-					lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
-					ReorderFrameImage.PutUndo (lUpdate.Apply () as ReorderFrameImage, this);
+					lUpdate = new ReorderFrameImage (lFrameImage, lSelNdx - 1);
+					ReorderFrameImage.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as ReorderFrameImage, this);
 				}
 			}
 		}
@@ -687,9 +718,8 @@ namespace AgentCharacterEditor
 
 				if ((lFrameImage != null) && (lSelNdx >= 0) && (lSelNdx < mFrame.Images.Count - 1))
 				{
-					lUpdate = new ReorderFrameImage (mCharacterFile, lFrameImage, lSelNdx + 1);
-					lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
-					ReorderFrameImage.PutUndo (lUpdate.Apply () as ReorderFrameImage, this);
+					lUpdate = new ReorderFrameImage (lFrameImage, lSelNdx + 1);
+					ReorderFrameImage.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as ReorderFrameImage, this);
 				}
 			}
 		}
@@ -698,29 +728,33 @@ namespace AgentCharacterEditor
 
 		private void NumericOffsetX_Validated (object sender, EventArgs e)
 		{
-			FileFrameImage	lFrameImage = GetSelectedImage (false);
-
-			if (!IsEmpty && !Program.FileIsReadOnly && (lFrameImage != null))
+			if (CausesValidation)
 			{
-				UpdateFrameImage	lUpdate = new UpdateFrameImage (mCharacterFile, lFrameImage, false);
+				FileFrameImage	lFrameImage = GetSelectedImage (false);
 
-				lUpdate.Offset = new Point ((int)NumericOffsetX.Value, lFrameImage.Offset.Y);
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
-				UpdateFrameImage.PutUndo (lUpdate.Apply () as UpdateFrameImage, this);
+				if (!IsEmpty && !Program.FileIsReadOnly && (lFrameImage != null))
+				{
+					UpdateFrameImage	lUpdate = new UpdateFrameImage (lFrameImage, false);
+
+					lUpdate.Offset = new Point ((int)NumericOffsetX.Value, lFrameImage.Offset.Y);
+					UpdateFrameImage.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateFrameImage, this);
+				}
 			}
 		}
 
 		private void NumericOffsetY_Validated (object sender, EventArgs e)
 		{
-			FileFrameImage	lFrameImage = GetSelectedImage (false);
-
-			if (!IsEmpty && !Program.FileIsReadOnly && (lFrameImage != null))
+			if (CausesValidation)
 			{
-				UpdateFrameImage	lUpdate = new UpdateFrameImage (mCharacterFile, lFrameImage, false);
+				FileFrameImage	lFrameImage = GetSelectedImage (false);
 
-				lUpdate.Offset = new Point (lFrameImage.Offset.X, (int)NumericOffsetY.Value);
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
-				UpdateFrameImage.PutUndo (lUpdate.Apply () as UpdateFrameImage, this);
+				if (!IsEmpty && !Program.FileIsReadOnly && (lFrameImage != null))
+				{
+					UpdateFrameImage	lUpdate = new UpdateFrameImage (lFrameImage, false);
+
+					lUpdate.Offset = new Point (lFrameImage.Offset.X, (int)NumericOffsetY.Value);
+					UpdateFrameImage.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateFrameImage, this);
+				}
 			}
 		}
 
@@ -732,7 +766,7 @@ namespace AgentCharacterEditor
 
 			if (!IsEmpty && !Program.FileIsReadOnly && (lFrameImage != null))
 			{
-				UpdateFrameImage	lUpdate = new UpdateFrameImage (mCharacterFile, lFrameImage, false);
+				UpdateFrameImage	lUpdate = new UpdateFrameImage (lFrameImage, false);
 
 				lUpdate.Offset = new Point (lFrameImage.Offset.X, lFrameImage.Offset.Y - 1);
 				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
@@ -756,7 +790,7 @@ namespace AgentCharacterEditor
 
 			if (!IsEmpty && !Program.FileIsReadOnly && (lFrameImage != null))
 			{
-				UpdateFrameImage	lUpdate = new UpdateFrameImage (mCharacterFile, lFrameImage, false);
+				UpdateFrameImage	lUpdate = new UpdateFrameImage (lFrameImage, false);
 
 				lUpdate.Offset = new Point (lFrameImage.Offset.X, lFrameImage.Offset.Y + 1);
 				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
@@ -774,7 +808,7 @@ namespace AgentCharacterEditor
 
 			if (!IsEmpty && !Program.FileIsReadOnly && (lFrameImage != null))
 			{
-				UpdateFrameImage	lUpdate = new UpdateFrameImage (mCharacterFile, lFrameImage, false);
+				UpdateFrameImage	lUpdate = new UpdateFrameImage (lFrameImage, false);
 
 				lUpdate.Offset = new Point (lFrameImage.Offset.X - 1, lFrameImage.Offset.Y);
 				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
@@ -792,7 +826,7 @@ namespace AgentCharacterEditor
 
 			if (!IsEmpty && !Program.FileIsReadOnly && (lFrameImage != null))
 			{
-				UpdateFrameImage	lUpdate = new UpdateFrameImage (mCharacterFile, lFrameImage, false);
+				UpdateFrameImage	lUpdate = new UpdateFrameImage (lFrameImage, false);
 
 				lUpdate.Offset = new Point (lFrameImage.Offset.X + 1, lFrameImage.Offset.Y);
 				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
@@ -819,28 +853,7 @@ namespace AgentCharacterEditor
 		{
 			if (!e.IsUsed && !IsEmpty && ListViewImages.ContainsFocus)
 			{
-				FileFrameImage	lFrameImage = GetSelectedImage (false);
-
-				if (lFrameImage != null)
-				{
-					e.CopyObjectTitle = Global.QuotedTitle (Global.TitleImageFrameAnimation (lFrameImage));
-					if (!Program.FileIsReadOnly)
-					{
-						e.CutObjectTitle = e.CopyObjectTitle;
-						e.DeleteObjectTitle = e.CopyObjectTitle;
-					}
-				}
-				if (!Program.FileIsReadOnly && (e.PasteObject is FileFrameImage))
-				{
-					if (lFrameImage == null)
-					{
-						e.PasteObjectTitle = e.PasteTypeTitle (lFrameImage, Properties.Resources.EditPasteImageSource);
-					}
-					else
-					{
-						e.PasteObjectTitle = e.PasteTypeTitle (lFrameImage, Global.TitleImage (lFrameImage), Properties.Resources.EditPasteImageSource);
-					}
-				}
+				ShowEditState (e);
 			}
 		}
 
@@ -901,13 +914,37 @@ namespace AgentCharacterEditor
 
 		internal void MainForm_EditPaste (object sender, Global.EditEventArgs e)
 		{
-			if (e.IsUsed && !IsEmpty && !Program.FileIsReadOnly && ListViewImages.ContainsFocus)
+			if (!e.IsUsed && !IsEmpty && !Program.FileIsReadOnly && ListViewImages.ContainsFocus)
 			{
 				if (e.PasteObject is FileFrameImage)
 				{
 					e.IsUsed = true;
 					PasteSelectedImage (GetSelectedImage (false), e.PasteObject as FileFrameImage);
 				}
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		internal void MainForm_EditMenu (object sender, Global.ContextMenuEventArgs e)
+		{
+			ShowEditState (e);
+
+			if (!IsEmpty && !Program.FileIsReadOnly && Object.ReferenceEquals (e.ActiveControl, ListViewImages))
+			{
+				ToolStripMenuItem	lMenuItem;
+
+				e.ContextMenu.Items.Insert (0, new ToolStripSeparator ());
+				e.ContextMenu.Items.Insert (0, lMenuItem = new ToolStripMenuItem (ButtonChooseFile.Text, ButtonChooseFile.Image, ButtonOpen_Click));
+				lMenuItem.Enabled = ButtonChooseFile.Enabled;
+				e.ContextMenu.Items.Insert (0, lMenuItem = new ToolStripMenuItem (ButtonAdd.Text, ButtonAdd.Image, ButtonAdd_Click));
+				lMenuItem.Enabled = ButtonAdd.Enabled;
+
+				e.ContextMenu.Items.Add (new ToolStripSeparator ());
+				e.ContextMenu.Items.Add (lMenuItem = new ToolStripMenuItem (ButtonMoveUp.Text, ButtonMoveUp.Image, ButtonMoveUp_Click));
+				lMenuItem.Enabled = ButtonMoveUp.Enabled;
+				e.ContextMenu.Items.Add (lMenuItem = new ToolStripMenuItem (ButtonMoveDown.Text, ButtonMoveDown.Image, ButtonMoveDown_Click));
+				lMenuItem.Enabled = ButtonMoveDown.Enabled;
 			}
 		}
 

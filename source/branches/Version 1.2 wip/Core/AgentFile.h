@@ -51,6 +51,12 @@ namespace Character {
 
 #ifdef	_M_CEE
 #define CAgentFile CharacterFile
+/// <summary>
+///	The abstract base class for an Agent Character definition.
+/// </summary>
+/// <seealso cref="AcsFile"/>
+/// <seealso cref="AcfFile"/>
+/// <seealso cref="ScriptFile"/>
 public ref class CAgentFile abstract
 #else
 class CAgentFile
@@ -81,11 +87,14 @@ public:
 	virtual property bool IsAcdFile {virtual bool get();}
 
 	property UInt32 Version {UInt32 get();}
-	property CAgentFileHeader^ Header {CAgentFileHeader^ get();}
-	property CAgentFileBalloon^ Balloon {CAgentFileBalloon^ get();}
-	property CAgentFileTts^ Tts {CAgentFileTts^ get();}
+	property FileHeader^ Header {FileHeader^ get();}
+	property FileBalloon^ Balloon {FileBalloon^ get();}
+	property FileTts^ Tts {FileTts^ get();}
 
 	property UInt32 LogLevel {UInt32 get() {return (UInt32)mLogLevel;} void set (UInt32 pLogLevel) {mLogLevel = (UINT)pLogLevel;}}
+	static property System::String^ AcsFileExt {System::String^ get ();}
+	static property System::String^ AcfFileExt {System::String^ get ();}
+	static property System::String^ AcdFileExt {System::String^ get ();}
 #else
 	__declspec(property(get=get_Path))		tBstrPtr	Path;
 	__declspec(property(get=get_FileName))	tBstrPtr	FileName;
@@ -146,8 +155,17 @@ public:
 #endif
 
 #ifdef	_M_CEE
+	/// <summary>
+	/// Gets or sets the file that defines the character's <see cref="FileHeader.Icon"/>. 
+	/// </summary>
 	virtual property System::String^ IconFilePath {virtual System::String^ get(); virtual void set (System::String^ pValue);}
+	/// <summary>
+	/// Gets or sets the file that defines the character's <see cref="FileHeader.Palette"/>. 
+	/// </summary>
 	virtual property System::String^ PaletteFilePath {virtual System::String^ get(); virtual void set (System::String^ pValue);}
+	/// <summary>
+	/// Gets or sets default <see cref="FileAnimationFrame.Duration"/> used by the Agent Character Editor. 
+	/// </summary>
 	virtual property UInt16 NewFrameDuration {virtual UInt16 get(); virtual void set (UInt16 pValue);}
 #endif
 

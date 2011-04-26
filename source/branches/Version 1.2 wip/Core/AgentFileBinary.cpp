@@ -1369,7 +1369,11 @@ LPCVOID CAgentFileBinary::ReadBufferNames (LPCVOID pBuffer, DWORD pBufferSize, b
 				)
 		{
 #ifdef	_M_CEE
-			lName = gcnew CAgentFileName;
+			if	(!mNames)
+			{
+				mNames = gcnew CAgentFileNames (this);
+			}
+			lName = gcnew CAgentFileName (this, mNames);
 #else
 			lName = new CAgentFileName;
 #endif
@@ -1409,10 +1413,6 @@ LPCVOID CAgentFileBinary::ReadBufferNames (LPCVOID pBuffer, DWORD pBufferSize, b
 
 			lNameCount--;
 #ifdef	_M_CEE
-			if	(!mNames)
-			{
-				mNames = gcnew CAgentFileNames;
-			}
 			mNames->Add (lName);
 #else
 			mNames.Add (lName.Detach ());

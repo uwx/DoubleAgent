@@ -1806,10 +1806,19 @@ void CopyAssembly::CopyMethodBodies ()
 				try
 				{
 					MethodInfo^	lWrappedMethod = FindMethodOverride (lSourceMethod, lMethodBuilder);
+					if	(lWrappedMethod)
+					{
 #ifdef	_LOG_WRAPPERS
-					LogMessage (_LOG_WRAPPERS, _T("===> Method     [%s.%s] wraps [%s.%s]"), _BMT(lMethodBuilder), _BM(lMethodBuilder), _BMT(lWrappedMethod), _BM(lWrappedMethod));
+						LogMessage (_LOG_WRAPPERS, _T("===> Method     [%s.%s] wraps [%s.%s]"), _BMT(lMethodBuilder), _BM(lMethodBuilder), _BMT(lWrappedMethod), _BM(lWrappedMethod));
 #endif
-					lWrapper->MakeWrapperMethod (lSourceMethod, lMethodBuilder, lWrappedMethod);
+						lWrapper->MakeWrapperMethod (lSourceMethod, lMethodBuilder, lWrappedMethod);
+					}
+#ifdef	_LOG_WRAPPERS
+					else
+					{
+						LogMessage (_LOG_WRAPPERS, _T("*==> Method     [%s.%s] wraps <no interface>"), _BMT(lMethodBuilder), _BM(lMethodBuilder));
+					}
+#endif
 				}
 				catch AnyExceptionDebug
 			}

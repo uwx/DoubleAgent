@@ -29,34 +29,34 @@ namespace AgentCharacterEditor
 {
 	public class PartsTreeView : System.Windows.Forms.TreeView
 	{
-		public const String	NodeNameCharacter = "NodeCharacter";
-		public const String	NodeNameWordBalloon = "NodeWordBalloon";
-		public const String	NodeNameTTSMode = "NodeTTSMode";
-		public const String	NodeNameAnimations = "NodeAnimations";
-		public const String	NodeNameStates = "NodeStates";
+		public const String NodeNameCharacter = "NodeCharacter";
+		public const String NodeNameWordBalloon = "NodeWordBalloon";
+		public const String NodeNameTTSMode = "NodeTTSMode";
+		public const String NodeNameAnimations = "NodeAnimations";
+		public const String NodeNameStates = "NodeStates";
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		public void ShowAnimationNames (CharacterFile pCharacterFile)
 		{
-			TreeNode	lAnimationsNode = GetRootNode (NodeNameAnimations);
+			TreeNode lAnimationsNode = GetRootNode (NodeNameAnimations);
 
 			if (lAnimationsNode != null)
 			{
-				Boolean	lExpanded = lAnimationsNode.IsExpanded;
+				Boolean lExpanded = lAnimationsNode.IsExpanded;
 
 				BeginUpdate ();
 				lAnimationsNode.Nodes.Clear ();
 
 				if (pCharacterFile != null)
 				{
-					String[]		lAnimations = pCharacterFile.GetAnimationNames ();
-					TreeNode		lAnimationNode;
-					FileGestures	lGestures = pCharacterFile.Gestures;
+					String[] lAnimations = pCharacterFile.GetAnimationNames ();
+					TreeNode lAnimationNode;
+					FileGestures lGestures = pCharacterFile.Gestures;
 
 					foreach (String lAnimationName in lAnimations)
 					{
-						FileAnimation	lAnimation = null;
+						FileAnimation lAnimation = null;
 
 						try
 						{
@@ -79,7 +79,7 @@ namespace AgentCharacterEditor
 						lAnimationNode = lAnimationsNode.Nodes.Add (lAnimationName);
 						lAnimationNode.Tag = lAnimation;
 
-						ShowAnimationFrames (lAnimation, lAnimationNode);
+						ShowAnimationFrames (lAnimation, lAnimationNode, true);
 					}
 				}
 
@@ -93,12 +93,22 @@ namespace AgentCharacterEditor
 
 		public void ShowAnimationFrames (FileAnimation pAnimation, TreeNode pAnimationNode)
 		{
+			ShowAnimationFrames (pAnimation, pAnimationNode, false);
+		}
+
+		public void ShowAnimationFrames (FileAnimation pAnimation, TreeNode pAnimationNode, Boolean pInUpdate)
+		{
 			if ((pAnimation != null) && (pAnimationNode != null))
 			{
-				int			lFrameNdx;
-				String		lFrameName;
-				TreeNode	lFrameNode;
-				TreeNode	lFrameSubNode;
+				int lFrameNdx;
+				String lFrameName;
+				TreeNode lFrameNode;
+				TreeNode lFrameSubNode;
+
+				if (!pInUpdate)
+				{
+					BeginUpdate ();
+				}
 
 				foreach (FileAnimationFrame lFrame in pAnimation.Frames)
 				{
@@ -119,6 +129,11 @@ namespace AgentCharacterEditor
 				while (pAnimationNode.Nodes.Count > pAnimation.Frames.Count)
 				{
 					pAnimationNode.Nodes.RemoveAt (pAnimationNode.Nodes.Count - 1);
+				}
+
+				if (!pInUpdate)
+				{
+					EndUpdate ();
 				}
 			}
 		}
@@ -146,8 +161,10 @@ namespace AgentCharacterEditor
 
 		public void LoadExpansion ()
 		{
-			Properties.Settings	lSettings = Properties.Settings.Default;
-			TreeNode			lNode;
+			Properties.Settings lSettings = Properties.Settings.Default;
+			TreeNode lNode;
+
+			BeginUpdate ();
 
 			lNode = GetRootNode (NodeNameCharacter);
 			if (lNode != null)
@@ -186,12 +203,14 @@ namespace AgentCharacterEditor
 					lNode.Collapse ();
 				}
 			}
+
+			EndUpdate ();
 		}
 
 		public void SaveExpansion ()
 		{
-			Properties.Settings	lSettings = Properties.Settings.Default;
-			TreeNode			lNode;
+			Properties.Settings lSettings = Properties.Settings.Default;
+			TreeNode lNode;
 
 			lNode = GetRootNode (NodeNameCharacter);
 			if (lNode != null)
@@ -209,17 +228,25 @@ namespace AgentCharacterEditor
 				lSettings.StatesNodeExpanded = lNode.IsExpanded;
 			}
 		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		protected override void OnCreateControl ()
+		{
+			this.DoubleBuffered = true;
+			base.OnCreateControl ();
+		}
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
 
 	public class PartsTreeSelection
 	{
-		public CharacterFile		mCharacterFile = null;
-		public FileAnimation		mAnimation = null;
-		public FileAnimationFrame	mFrame = null;
-		public String				mStateName = null;
-		public UserControl			mPanel = null;
+		public CharacterFile mCharacterFile = null;
+		public FileAnimation mAnimation = null;
+		public FileAnimationFrame mFrame = null;
+		public String mStateName = null;
+		public UserControl mPanel = null;
 
 		public PartsTreeSelection (TreeNode pTreeNode)
 		{
@@ -302,7 +329,7 @@ namespace AgentCharacterEditor
 
 		public TreeNode SelectedNode ()
 		{
-			TreeNode	lSelectedNode = null;
+			TreeNode lSelectedNode = null;
 
 			if (mPanel == Program.MainForm.PanelCharacter)
 			{
@@ -380,7 +407,7 @@ namespace AgentCharacterEditor
 			}
 			else if (mPanel == Program.MainForm.PanelFrame)
 			{
-				e.CopyObjectTitle = Global.QuotedTitle (Global.TitleFrameAnimation (mFrame));
+				e.CopyObjectTitle = Global.TitleFrameAnimation (mFrame).Quoted ();
 				if (!Program.FileIsReadOnly)
 				{
 					e.CutObjectTitle = e.CopyObjectTitle;
@@ -406,7 +433,7 @@ namespace AgentCharacterEditor
 				{
 					try
 					{
-						KeyValuePair<String, String[]>	lState = (KeyValuePair<String, String[]>)e.PasteObject;
+						KeyValuePair<String, String[]> lState = (KeyValuePair<String, String[]>)e.PasteObject;
 						e.PasteObjectTitle = Global.TitleState (lState.Key);
 					}
 					catch
@@ -452,7 +479,7 @@ namespace AgentCharacterEditor
 					{
 						if (Program.MainForm.PanelAnimations.HasNewAnimationName () && !mCharacterFile.Gestures.Contains (Program.MainForm.PanelAnimations.GetNewAnimationName ()))
 						{
-							e.PasteObjectTitle = e.PasteTypeTitle (null, Global.QuotedTitle (Program.MainForm.PanelAnimations.GetNewAnimationName ()), Global.TitleAnimation (e.PasteObject as FileAnimation));
+							e.PasteObjectTitle = e.PasteTypeTitle (null, Program.MainForm.PanelAnimations.GetNewAnimationName ().Quoted (), Global.TitleAnimation (e.PasteObject as FileAnimation));
 						}
 						else
 						{
@@ -466,7 +493,7 @@ namespace AgentCharacterEditor
 
 		public void EditCopy (Global.EditEventArgs e)
 		{
-			Object	lCopyObject = null;
+			Object lCopyObject = null;
 
 			if (this.HasNonEmptyBalloon)
 			{
@@ -486,7 +513,7 @@ namespace AgentCharacterEditor
 			}
 			else if (this.HasNonEmptyState)
 			{
-				KeyValuePair <String, String[]>	lState = new KeyValuePair<String, String[]> (mStateName, mCharacterFile.States[mStateName]);
+				KeyValuePair<String, String[]> lState = new KeyValuePair<String, String[]> (mStateName, mCharacterFile.States[mStateName]);
 				lCopyObject = lState;
 			}
 			if (lCopyObject != null)
@@ -582,7 +609,7 @@ namespace AgentCharacterEditor
 				{
 					try
 					{
-						KeyValuePair<String, String[]>	lState = (KeyValuePair<String, String[]>)e.PasteObject;
+						KeyValuePair<String, String[]> lState = (KeyValuePair<String, String[]>)e.PasteObject;
 						e.PasteObjectTitle = Global.TitleState (lState.Key);
 						Program.MainForm.PanelState.PasteStateAnimations (mStateName, lState.Value);
 					}

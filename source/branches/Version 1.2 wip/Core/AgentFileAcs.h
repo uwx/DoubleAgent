@@ -32,7 +32,10 @@ namespace Character {
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	_M_CEE
 #define CAgentFileAcs AcsFile
-public ref class CAgentFileAcs : public CAgentFileBinary
+/// <summary>
+///	An Agent Character definition stored in a single binary-formatted file.
+/// </summary>
+public ref class AcsFile : public CAgentFileBinary
 #else
 class CAgentFileAcs : public CAgentFileBinary
 #endif
@@ -114,6 +117,9 @@ protected:
 	void FreeSoundIndex ();
 
 #ifdef	_M_CEE
+	void FreeUnusedImages ();	
+	void FreeUnusedSounds ();	
+
 	DWORD WriteAcsHeader (DWORD pFileOffset, CAgentFile^ pSource);
 	LPVOID WriteBufferHeader (LPVOID pBuffer, CAgentFileHeader^ pHeader);
 	DWORD WriteImageIndex (DWORD pFileOffset, CAgentFile^ pSource);

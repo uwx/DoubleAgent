@@ -25,16 +25,48 @@ using DoubleAgent.Character;
 
 namespace AgentCharacterEditor
 {
+	public static class StringExtensions
+	{
+		public static String Quoted (this String pString)
+		{
+			if (!String.IsNullOrEmpty (pString) && (pString[0] == '"') && (pString[pString.Length - 1] == '"'))
+			{
+				return pString;
+			}
+			else
+			{
+				return String.Format ("\"{0}\"", pString);
+			}
+		}
+		static public String NoMenuPrefix (this String pString)
+		{
+			return pString.Replace ("&", "");
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+
+	public static class LangIDExtensions
+	{
+		public static Boolean PrimaryLanguageEqual (this UInt16 pLangID, FileCharacterName pName)
+		{
+			if (pName != null)
+			{
+				return pLangID.PrimaryLanguageEqual (pName.Language);
+			}
+			return false;
+		}
+		public static Boolean PrimaryLanguageEqual (this UInt16 pLangID1, UInt16 pLangID2)
+		{
+			return ((Byte)pLangID1 == (Byte)pLangID2);
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+
 	public class Global
 	{
 		#region String formatting
-
-		static public String QuotedTitle (String pTitle)
-		{
-			return String.Format ("\"{0}\"", pTitle);
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
 
 		static public String TitleCharacterName (FileCharacterName pName)
 		{
@@ -65,7 +97,7 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				return String.Format (Properties.Resources.TitleCharacterName, (new System.Globalization.CultureInfo (pLanguage)).EnglishName, QuotedTitle (pName));
+				return String.Format (Properties.Resources.TitleCharacterName, (new System.Globalization.CultureInfo (pLanguage)).EnglishName, pName.Quoted ());
 			}
 		}
 
@@ -85,7 +117,7 @@ namespace AgentCharacterEditor
 
 		static public String TitleAnimation (String pAnimationName)
 		{
-			return String.Format (Properties.Resources.TitleAnimation, QuotedTitle (pAnimationName));
+			return String.Format (Properties.Resources.TitleAnimation, pAnimationName.Quoted ());
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -129,6 +161,11 @@ namespace AgentCharacterEditor
 			{
 				return TitleFrameAnimation (TitleFrame (pFrameNdx), pAnimation.Name);
 			}
+		}
+
+		static public String TitleFrameAnimation (int pFrameNdx, String pAnimationName)
+		{
+			return TitleFrameAnimation (TitleFrame (pFrameNdx), pAnimationName);
 		}
 
 		static public String TitleFrameAnimation (String pFrameTitle, String pAnimationName)
@@ -197,7 +234,7 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				return TitleImageFrameAnimation (pImage.Frame.Animation.Name, TitleImageFrame (pImage));
+				return TitleImageFrameAnimation (TitleImageFrame (pImage), pImage.Frame.Animation.Name);
 			}
 		}
 
@@ -209,7 +246,7 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				return TitleImageFrameAnimation (TitleFrameAnimation (pFrame), TitleImage (pImageNdx));
+				return TitleImageFrameAnimation (TitleImage (pImageNdx), TitleFrameAnimation (pFrame));
 			}
 		}
 
@@ -298,24 +335,7 @@ namespace AgentCharacterEditor
 
 		static public String TitleState (String pStateName)
 		{
-			return String.Format (Properties.Resources.TitleState, QuotedTitle (pStateName));
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
-		#region Utility Functions
-
-		static internal Boolean PrimaryLanguageEqual (FileCharacterName pName, UInt16 pLangID)
-		{
-			if (pName != null)
-			{
-				return PrimaryLanguageEqual (pName.Language, pLangID);
-			}
-			return false;
-		}
-		static internal Boolean PrimaryLanguageEqual (UInt16 pLangID1, UInt16 pLangID2)
-		{
-			return ((Byte)pLangID1 == (Byte)pLangID2);
+			return String.Format (Properties.Resources.TitleState, pStateName.Quoted ());
 		}
 
 		#endregion
@@ -409,8 +429,8 @@ namespace AgentCharacterEditor
 				}
 			}
 
-			private Boolean	mIsUsed = false;
-			private String	mPasteTitle = Properties.Resources.EditPasteThis;
+			private Boolean mIsUsed = false;
+			private String mPasteTitle = Properties.Resources.EditPasteThis;
 
 			///////////////////////////////////////////////////////////////////////////////
 
@@ -450,6 +470,36 @@ namespace AgentCharacterEditor
 		}
 
 		public delegate void EditEventHandler (object sender, EditEventArgs e);
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		public class ContextMenuEventArgs : EditEventArgs
+		{
+			public ContextMenuEventArgs (ContextMenuStrip pContextMenu, Control pActiveControl)
+			{
+				ContextMenu = pContextMenu;
+				ActiveControl = pActiveControl;
+			}
+			public ContextMenuEventArgs (ContextMenuStrip pContextMenu, Control pActiveControl, String pClipboardFormat)
+				: base (pClipboardFormat)
+			{
+				ContextMenu = pContextMenu;
+				ActiveControl = pActiveControl;
+			}
+
+			public ContextMenuStrip ContextMenu
+			{
+				get;
+				private set;
+			}
+			public Control ActiveControl
+			{
+				get;
+				private set;
+			}
+		}
+
+		public delegate void ContextMenuEventHandler (object sender, ContextMenuEventArgs e);
 
 		///////////////////////////////////////////////////////////////////////////////
 

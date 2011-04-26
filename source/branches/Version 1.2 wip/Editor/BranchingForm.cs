@@ -42,14 +42,17 @@ namespace AgentCharacterEditor
 		public BranchingForm ()
 		{
 			InitializeComponent ();
+			CausesValidation = Visible;
 		}
 
 		private void BranchingForm_VisibleChanged (object sender, EventArgs e)
 		{
+			CausesValidation = Visible;
+
 			if (Program.MainForm != null)
 			{
 				Program.MainForm.UpdateApplied -= new UndoUnit.AppliedEventHandler (OnUpdateApplied);
-				if (this.Visible)
+				if (Visible)
 				{
 					Program.MainForm.UpdateApplied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
 				}
@@ -135,12 +138,7 @@ namespace AgentCharacterEditor
 
 		private void ShowFrameBranching ()
 		{
-			NumericBranching0.Validated -= new System.EventHandler (NumericBranching0_Validated);
-			NumericBranching1.Validated -= new System.EventHandler (NumericBranching1_Validated);
-			NumericBranching2.Validated -= new System.EventHandler (NumericBranching2_Validated);
-			NumericTarget0.Validated -= new System.EventHandler (NumericTarget0_Validated);
-			NumericTarget1.Validated -= new System.EventHandler (NumericTarget1_Validated);
-			NumericTarget2.Validated -= new System.EventHandler (NumericTarget2_Validated);
+			CausesValidation = false;
 
 			if (IsEmpty)
 			{
@@ -212,18 +210,12 @@ namespace AgentCharacterEditor
 				NumericTarget2.Enabled = (NumericBranching2.Value > 0) && !Program.FileIsReadOnly;
 			}
 
-			NumericBranching0.Validated += new System.EventHandler (NumericBranching0_Validated);
-			NumericBranching1.Validated += new System.EventHandler (NumericBranching1_Validated);
-			NumericBranching2.Validated += new System.EventHandler (NumericBranching2_Validated);
-			NumericTarget0.Validated += new System.EventHandler (NumericTarget0_Validated);
-			NumericTarget1.Validated += new System.EventHandler (NumericTarget1_Validated);
-			NumericTarget2.Validated += new System.EventHandler (NumericTarget2_Validated);
+			CausesValidation = Visible;
 		}
 
 		private void ShowExitFrame ()
 		{
-			CheckBoxExit.Click -= new System.EventHandler (CheckBoxExit_Click);
-			NumericTargetExit.Validated -= new System.EventHandler (NumericTargetExit_Validated);
+			CausesValidation = false;
 
 			if (IsEmpty)
 			{
@@ -255,8 +247,7 @@ namespace AgentCharacterEditor
 				CheckBoxExit.Enabled = !Program.FileIsReadOnly;
 			}
 
-			CheckBoxExit.Click += new System.EventHandler (CheckBoxExit_Click);
-			NumericTargetExit.Validated += new System.EventHandler (NumericTargetExit_Validated);
+			CausesValidation = Visible;
 		}
 
 		#endregion
@@ -317,11 +308,10 @@ namespace AgentCharacterEditor
 				}
 				if (!UpdateAnimationFrame.BranchingEqual (mFrame.Branching, lBranching))
 				{
-					UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mCharacterFile, mFrame, false);
+					UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mFrame, false);
 
 					lUpdate.Branching = lBranching;
-					lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
-					lRet = UpdateAnimationFrame.PutUndo (lUpdate.Apply () as UpdateAnimationFrame, this);
+					lRet = UpdateAnimationFrame.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateAnimationFrame, this);
 				}
 			}
 			return lRet;
@@ -360,7 +350,7 @@ namespace AgentCharacterEditor
 
 		private void NumericBranching0_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !Program.FileIsReadOnly)
+			if (CausesValidation && !IsEmpty && !Program.FileIsReadOnly)
 			{
 				if (!ApplyBranchingUpdates ())
 				{
@@ -371,7 +361,7 @@ namespace AgentCharacterEditor
 
 		private void NumericTarget0_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !Program.FileIsReadOnly)
+			if (CausesValidation && !IsEmpty && !Program.FileIsReadOnly)
 			{
 				if (!ApplyBranchingUpdates ())
 				{
@@ -382,7 +372,7 @@ namespace AgentCharacterEditor
 
 		private void NumericBranching1_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !Program.FileIsReadOnly)
+			if (CausesValidation && !IsEmpty && !Program.FileIsReadOnly)
 			{
 				if (!ApplyBranchingUpdates ())
 				{
@@ -393,7 +383,7 @@ namespace AgentCharacterEditor
 
 		private void NumericTarget1_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !Program.FileIsReadOnly)
+			if (CausesValidation && !IsEmpty && !Program.FileIsReadOnly)
 			{
 				if (!ApplyBranchingUpdates ())
 				{
@@ -404,7 +394,7 @@ namespace AgentCharacterEditor
 
 		private void NumericBranching2_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !Program.FileIsReadOnly)
+			if (CausesValidation && !IsEmpty && !Program.FileIsReadOnly)
 			{
 				if (!ApplyBranchingUpdates ())
 				{
@@ -415,7 +405,7 @@ namespace AgentCharacterEditor
 
 		private void NumericTarget2_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !Program.FileIsReadOnly)
+			if (CausesValidation && !IsEmpty && !Program.FileIsReadOnly)
 			{
 				if (!ApplyBranchingUpdates ())
 				{
@@ -428,9 +418,9 @@ namespace AgentCharacterEditor
 
 		private void CheckBoxExit_Click (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !Program.FileIsReadOnly)
+			if (CausesValidation && !IsEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mCharacterFile, mFrame, false);
+				UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mFrame, false);
 
 				if (CheckBoxExit.Checked)
 				{
@@ -447,8 +437,7 @@ namespace AgentCharacterEditor
 					lUpdate.ExitFrame = -1;
 				}
 
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
-				if (!UpdateAnimationFrame.PutUndo (lUpdate.Apply () as UpdateAnimationFrame, this))
+				if (!UpdateAnimationFrame.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateAnimationFrame, this))
 				{
 					ShowExitFrame ();
 				}
@@ -457,13 +446,12 @@ namespace AgentCharacterEditor
 
 		private void NumericTargetExit_Validated (object sender, EventArgs e)
 		{
-			if (!IsEmpty && !Program.FileIsReadOnly)
+			if (CausesValidation && !IsEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mCharacterFile, mFrame, false);
+				UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mFrame, false);
 
 				lUpdate.ExitFrame = (Int16)(NumericTargetExit.Value - 1);
-				lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainForm.OnUpdateApplied);
-				if (!UpdateAnimationFrame.PutUndo (lUpdate.Apply () as UpdateAnimationFrame, this))
+				if (!UpdateAnimationFrame.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateAnimationFrame, this))
 				{
 					ShowExitFrame ();
 				}

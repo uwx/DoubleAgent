@@ -48,45 +48,46 @@ namespace AgentCharacterEditor
 		/// </summary>
 		private void InitializeComponent ()
 		{
-			System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode(global::AgentCharacterEditor.Properties.Resources.TitleBalloon);
-			System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode(global::AgentCharacterEditor.Properties.Resources.TitleTts);
-			System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Character", new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2});
-			System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Animations");
-			System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("GesturingDown");
-			System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("GesturingLeft");
-			System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("GesturingRight");
-			System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("GesturingUp");
-			System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Hearing");
-			System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Hiding");
-			System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("IdlingLevel1");
-			System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("IdlingLevel2");
-			System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("IdlingLevel3");
-			System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Listening");
-			System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("MovingDown");
-			System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("MovingLeft");
-			System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("MovingRight");
-			System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("MovingUp");
-			System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Showing");
-			System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Speaking");
-			System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("States", new System.Windows.Forms.TreeNode[] {
-            treeNode5,
-            treeNode6,
-            treeNode7,
-            treeNode8,
-            treeNode9,
-            treeNode10,
-            treeNode11,
-            treeNode12,
-            treeNode13,
-            treeNode14,
-            treeNode15,
-            treeNode16,
-            treeNode17,
-            treeNode18,
-            treeNode19,
-            treeNode20});
+			this.components = new System.ComponentModel.Container();
+			System.Windows.Forms.TreeNode treeNode64 = new System.Windows.Forms.TreeNode(global::AgentCharacterEditor.Properties.Resources.TitleBalloon);
+			System.Windows.Forms.TreeNode treeNode65 = new System.Windows.Forms.TreeNode(global::AgentCharacterEditor.Properties.Resources.TitleTts);
+			System.Windows.Forms.TreeNode treeNode66 = new System.Windows.Forms.TreeNode("Character", new System.Windows.Forms.TreeNode[] {
+            treeNode64,
+            treeNode65});
+			System.Windows.Forms.TreeNode treeNode67 = new System.Windows.Forms.TreeNode("Animations");
+			System.Windows.Forms.TreeNode treeNode68 = new System.Windows.Forms.TreeNode("GesturingDown");
+			System.Windows.Forms.TreeNode treeNode69 = new System.Windows.Forms.TreeNode("GesturingLeft");
+			System.Windows.Forms.TreeNode treeNode70 = new System.Windows.Forms.TreeNode("GesturingRight");
+			System.Windows.Forms.TreeNode treeNode71 = new System.Windows.Forms.TreeNode("GesturingUp");
+			System.Windows.Forms.TreeNode treeNode72 = new System.Windows.Forms.TreeNode("Hearing");
+			System.Windows.Forms.TreeNode treeNode73 = new System.Windows.Forms.TreeNode("Hiding");
+			System.Windows.Forms.TreeNode treeNode74 = new System.Windows.Forms.TreeNode("IdlingLevel1");
+			System.Windows.Forms.TreeNode treeNode75 = new System.Windows.Forms.TreeNode("IdlingLevel2");
+			System.Windows.Forms.TreeNode treeNode76 = new System.Windows.Forms.TreeNode("IdlingLevel3");
+			System.Windows.Forms.TreeNode treeNode77 = new System.Windows.Forms.TreeNode("Listening");
+			System.Windows.Forms.TreeNode treeNode78 = new System.Windows.Forms.TreeNode("MovingDown");
+			System.Windows.Forms.TreeNode treeNode79 = new System.Windows.Forms.TreeNode("MovingLeft");
+			System.Windows.Forms.TreeNode treeNode80 = new System.Windows.Forms.TreeNode("MovingRight");
+			System.Windows.Forms.TreeNode treeNode81 = new System.Windows.Forms.TreeNode("MovingUp");
+			System.Windows.Forms.TreeNode treeNode82 = new System.Windows.Forms.TreeNode("Showing");
+			System.Windows.Forms.TreeNode treeNode83 = new System.Windows.Forms.TreeNode("Speaking");
+			System.Windows.Forms.TreeNode treeNode84 = new System.Windows.Forms.TreeNode("States", new System.Windows.Forms.TreeNode[] {
+            treeNode68,
+            treeNode69,
+            treeNode70,
+            treeNode71,
+            treeNode72,
+            treeNode73,
+            treeNode74,
+            treeNode75,
+            treeNode76,
+            treeNode77,
+            treeNode78,
+            treeNode79,
+            treeNode80,
+            treeNode81,
+            treeNode82,
+            treeNode83});
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.ToolStripContainerMain = new System.Windows.Forms.ToolStripContainer();
 			this.SplitContainerMain = new System.Windows.Forms.SplitContainer();
@@ -134,6 +135,11 @@ namespace AgentCharacterEditor
 			this.MenuItemEditDelete = new System.Windows.Forms.ToolStripMenuItem();
 			this.MenuItemHelp = new System.Windows.Forms.ToolStripMenuItem();
 			this.MenuItemHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
+			this.ContextMenuEdit = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.ContextItemEditCut = new System.Windows.Forms.ToolStripMenuItem();
+			this.ContextItemEditCopy = new System.Windows.Forms.ToolStripMenuItem();
+			this.ContextItemEditPaste = new System.Windows.Forms.ToolStripMenuItem();
+			this.ContextItemEditDelete = new System.Windows.Forms.ToolStripMenuItem();
 			this.ToolStripContainerMain.ContentPanel.SuspendLayout();
 			this.ToolStripContainerMain.TopToolStripPanel.SuspendLayout();
 			this.ToolStripContainerMain.SuspendLayout();
@@ -142,6 +148,7 @@ namespace AgentCharacterEditor
 			this.SplitContainerMain.SuspendLayout();
 			this.ToolStripTop.SuspendLayout();
 			this.MenuStripMain.SuspendLayout();
+			this.ContextMenuEdit.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// ToolStripContainerMain
@@ -212,71 +219,71 @@ namespace AgentCharacterEditor
 			this.TreeViewMain.Location = new System.Drawing.Point(0, 0);
 			this.TreeViewMain.Margin = new System.Windows.Forms.Padding(0);
 			this.TreeViewMain.Name = "TreeViewMain";
-			treeNode1.Name = "NodeWordBalloon";
-			treeNode1.Text = global::AgentCharacterEditor.Properties.Resources.TitleBalloon;
-			treeNode2.Name = "NodeTTSMode";
-			treeNode2.Text = global::AgentCharacterEditor.Properties.Resources.TitleTts;
-			treeNode3.ForeColor = System.Drawing.SystemColors.HotTrack;
-			treeNode3.Name = "NodeCharacter";
-			treeNode3.Text = "Character";
-			treeNode4.ForeColor = System.Drawing.SystemColors.HotTrack;
-			treeNode4.Name = "NodeAnimations";
-			treeNode4.Text = "Animations";
-			treeNode5.Name = "NodeStateGesturingDown";
-			treeNode5.Tag = "GesturingDown";
-			treeNode5.Text = "GesturingDown";
-			treeNode6.Name = "NodeStateGesturingLeft";
-			treeNode6.Tag = "GesturingLeft";
-			treeNode6.Text = "GesturingLeft";
-			treeNode7.Name = "NodeStateGesturingRight";
-			treeNode7.Tag = "GesturingRight";
-			treeNode7.Text = "GesturingRight";
-			treeNode8.Name = "NodeStateGesturingUp";
-			treeNode8.Tag = "GesturingUp";
-			treeNode8.Text = "GesturingUp";
-			treeNode9.Name = "NodeStateHearing";
-			treeNode9.Tag = "Hearing";
-			treeNode9.Text = "Hearing";
-			treeNode10.Name = "NodeStateHiding";
-			treeNode10.Tag = "Hiding";
-			treeNode10.Text = "Hiding";
-			treeNode11.Name = "NodeStateIdlingLevel1";
-			treeNode11.Tag = "IdlingLevel1";
-			treeNode11.Text = "IdlingLevel1";
-			treeNode12.Name = "NodeStateIdlingLevel2";
-			treeNode12.Tag = "IdlingLevel2";
-			treeNode12.Text = "IdlingLevel2";
-			treeNode13.Name = "NodeStateIdlingLevel3";
-			treeNode13.Tag = "IdlingLevel3";
-			treeNode13.Text = "IdlingLevel3";
-			treeNode14.Name = "NodeStateListening";
-			treeNode14.Tag = "Listening";
-			treeNode14.Text = "Listening";
-			treeNode15.Name = "NodeStateMovingDown";
-			treeNode15.Tag = "MovingDown";
-			treeNode15.Text = "MovingDown";
-			treeNode16.Name = "NodeStateMovingLeft";
-			treeNode16.Tag = "MovingLeft";
-			treeNode16.Text = "MovingLeft";
-			treeNode17.Name = "NodeStateMovingRight";
-			treeNode17.Tag = "MovingRight";
-			treeNode17.Text = "MovingRight";
-			treeNode18.Name = "NodeStateMovingUp";
-			treeNode18.Tag = "MovingUp";
-			treeNode18.Text = "MovingUp";
-			treeNode19.Name = "NodeStateShowing";
-			treeNode19.Tag = "Showing";
-			treeNode19.Text = "Showing";
-			treeNode20.Name = "NodeStateSpeaking";
-			treeNode20.Tag = "Speaking";
-			treeNode20.Text = "Speaking";
-			treeNode21.ForeColor = System.Drawing.SystemColors.HotTrack;
-			treeNode21.Name = "NodeStates";
-			treeNode21.Text = "States";
+			treeNode64.Name = "NodeWordBalloon";
+			treeNode64.Text = global::AgentCharacterEditor.Properties.Resources.TitleBalloon;
+			treeNode65.Name = "NodeTTSMode";
+			treeNode65.Text = global::AgentCharacterEditor.Properties.Resources.TitleTts;
+			treeNode66.ForeColor = System.Drawing.SystemColors.HotTrack;
+			treeNode66.Name = "NodeCharacter";
+			treeNode66.Text = "Character";
+			treeNode67.ForeColor = System.Drawing.SystemColors.HotTrack;
+			treeNode67.Name = "NodeAnimations";
+			treeNode67.Text = "Animations";
+			treeNode68.Name = "NodeStateGesturingDown";
+			treeNode68.Tag = "GesturingDown";
+			treeNode68.Text = "GesturingDown";
+			treeNode69.Name = "NodeStateGesturingLeft";
+			treeNode69.Tag = "GesturingLeft";
+			treeNode69.Text = "GesturingLeft";
+			treeNode70.Name = "NodeStateGesturingRight";
+			treeNode70.Tag = "GesturingRight";
+			treeNode70.Text = "GesturingRight";
+			treeNode71.Name = "NodeStateGesturingUp";
+			treeNode71.Tag = "GesturingUp";
+			treeNode71.Text = "GesturingUp";
+			treeNode72.Name = "NodeStateHearing";
+			treeNode72.Tag = "Hearing";
+			treeNode72.Text = "Hearing";
+			treeNode73.Name = "NodeStateHiding";
+			treeNode73.Tag = "Hiding";
+			treeNode73.Text = "Hiding";
+			treeNode74.Name = "NodeStateIdlingLevel1";
+			treeNode74.Tag = "IdlingLevel1";
+			treeNode74.Text = "IdlingLevel1";
+			treeNode75.Name = "NodeStateIdlingLevel2";
+			treeNode75.Tag = "IdlingLevel2";
+			treeNode75.Text = "IdlingLevel2";
+			treeNode76.Name = "NodeStateIdlingLevel3";
+			treeNode76.Tag = "IdlingLevel3";
+			treeNode76.Text = "IdlingLevel3";
+			treeNode77.Name = "NodeStateListening";
+			treeNode77.Tag = "Listening";
+			treeNode77.Text = "Listening";
+			treeNode78.Name = "NodeStateMovingDown";
+			treeNode78.Tag = "MovingDown";
+			treeNode78.Text = "MovingDown";
+			treeNode79.Name = "NodeStateMovingLeft";
+			treeNode79.Tag = "MovingLeft";
+			treeNode79.Text = "MovingLeft";
+			treeNode80.Name = "NodeStateMovingRight";
+			treeNode80.Tag = "MovingRight";
+			treeNode80.Text = "MovingRight";
+			treeNode81.Name = "NodeStateMovingUp";
+			treeNode81.Tag = "MovingUp";
+			treeNode81.Text = "MovingUp";
+			treeNode82.Name = "NodeStateShowing";
+			treeNode82.Tag = "Showing";
+			treeNode82.Text = "Showing";
+			treeNode83.Name = "NodeStateSpeaking";
+			treeNode83.Tag = "Speaking";
+			treeNode83.Text = "Speaking";
+			treeNode84.ForeColor = System.Drawing.SystemColors.HotTrack;
+			treeNode84.Name = "NodeStates";
+			treeNode84.Text = "States";
 			this.TreeViewMain.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3,
-            treeNode4,
-            treeNode21});
+            treeNode66,
+            treeNode67,
+            treeNode84});
 			this.TreeViewMain.Size = new System.Drawing.Size(200, 480);
 			this.TreeViewMain.TabIndex = 0;
 			this.TreeViewMain.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewMain_AfterSelect);
@@ -428,7 +435,6 @@ namespace AgentCharacterEditor
 			// ToolButtonFileNew
 			// 
 			this.ToolButtonFileNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ToolButtonFileNew.Enabled = false;
 			this.ToolButtonFileNew.Image = ((System.Drawing.Image)(resources.GetObject("ToolButtonFileNew.Image")));
 			this.ToolButtonFileNew.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ToolButtonFileNew.Name = "ToolButtonFileNew";
@@ -574,7 +580,6 @@ namespace AgentCharacterEditor
 			// 
 			// MenuItemFileNew
 			// 
-			this.MenuItemFileNew.Enabled = false;
 			this.MenuItemFileNew.Image = ((System.Drawing.Image)(resources.GetObject("MenuItemFileNew.Image")));
 			this.MenuItemFileNew.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.MenuItemFileNew.Name = "MenuItemFileNew";
@@ -750,9 +755,64 @@ namespace AgentCharacterEditor
 			// MenuItemHelpAbout
 			// 
 			this.MenuItemHelpAbout.Name = "MenuItemHelpAbout";
-			this.MenuItemHelpAbout.Size = new System.Drawing.Size(152, 24);
+			this.MenuItemHelpAbout.Size = new System.Drawing.Size(128, 24);
 			this.MenuItemHelpAbout.Text = "&About...";
 			this.MenuItemHelpAbout.Click += new System.EventHandler(this.MenuItemHelpAbout_Click);
+			// 
+			// ContextMenuEdit
+			// 
+			this.ContextMenuEdit.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ContextItemEditCut,
+            this.ContextItemEditCopy,
+            this.ContextItemEditPaste,
+            this.ContextItemEditDelete});
+			this.ContextMenuEdit.Name = "ContextMenuEdit";
+			this.ContextMenuEdit.Size = new System.Drawing.Size(165, 122);
+			this.ContextMenuEdit.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuEdit_Opening);
+			// 
+			// ContextItemEditCut
+			// 
+			this.ContextItemEditCut.Enabled = false;
+			this.ContextItemEditCut.Image = ((System.Drawing.Image)(resources.GetObject("ContextItemEditCut.Image")));
+			this.ContextItemEditCut.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ContextItemEditCut.Name = "ContextItemEditCut";
+			this.ContextItemEditCut.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+			this.ContextItemEditCut.Size = new System.Drawing.Size(164, 24);
+			this.ContextItemEditCut.Text = "Cu&t";
+			this.ContextItemEditCut.Click += new System.EventHandler(this.ContextItemEditCut_Click);
+			// 
+			// ContextItemEditCopy
+			// 
+			this.ContextItemEditCopy.Enabled = false;
+			this.ContextItemEditCopy.Image = ((System.Drawing.Image)(resources.GetObject("ContextItemEditCopy.Image")));
+			this.ContextItemEditCopy.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ContextItemEditCopy.Name = "ContextItemEditCopy";
+			this.ContextItemEditCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+			this.ContextItemEditCopy.Size = new System.Drawing.Size(164, 24);
+			this.ContextItemEditCopy.Text = "&Copy";
+			this.ContextItemEditCopy.Click += new System.EventHandler(this.ContextItemEditCopy_Click);
+			// 
+			// ContextItemEditPaste
+			// 
+			this.ContextItemEditPaste.Enabled = false;
+			this.ContextItemEditPaste.Image = ((System.Drawing.Image)(resources.GetObject("ContextItemEditPaste.Image")));
+			this.ContextItemEditPaste.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ContextItemEditPaste.Name = "ContextItemEditPaste";
+			this.ContextItemEditPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
+			this.ContextItemEditPaste.Size = new System.Drawing.Size(164, 24);
+			this.ContextItemEditPaste.Text = "&Paste";
+			this.ContextItemEditPaste.Click += new System.EventHandler(this.ContextItemEditPaste_Click);
+			// 
+			// ContextItemEditDelete
+			// 
+			this.ContextItemEditDelete.Enabled = false;
+			this.ContextItemEditDelete.Image = ((System.Drawing.Image)(resources.GetObject("ContextItemEditDelete.Image")));
+			this.ContextItemEditDelete.Name = "ContextItemEditDelete";
+			this.ContextItemEditDelete.ShortcutKeyDisplayString = "";
+			this.ContextItemEditDelete.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+			this.ContextItemEditDelete.Size = new System.Drawing.Size(164, 24);
+			this.ContextItemEditDelete.Text = "&Delete";
+			this.ContextItemEditDelete.Click += new System.EventHandler(this.ContextItemEditDelete_Click);
 			// 
 			// MainForm
 			// 
@@ -760,6 +820,7 @@ namespace AgentCharacterEditor
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
 			this.ClientSize = new System.Drawing.Size(982, 555);
+			this.ContextMenuStrip = this.ContextMenuEdit;
 			this.Controls.Add(this.MenuStripMain);
 			this.Controls.Add(this.ToolStripContainerMain);
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -782,6 +843,7 @@ namespace AgentCharacterEditor
 			this.ToolStripTop.PerformLayout();
 			this.MenuStripMain.ResumeLayout(false);
 			this.MenuStripMain.PerformLayout();
+			this.ContextMenuEdit.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -819,10 +881,10 @@ namespace AgentCharacterEditor
 		private System.Windows.Forms.ToolStripMenuItem MenuItemEditUndo;
 		private System.Windows.Forms.ToolStripMenuItem MenuItemEditRedo;
 		private System.Windows.Forms.ToolStripSeparator MenuSepEdit1;
-		private System.Windows.Forms.ToolStripMenuItem MenuItemEditCut;
-		private System.Windows.Forms.ToolStripMenuItem MenuItemEditCopy;
-		private System.Windows.Forms.ToolStripMenuItem MenuItemEditPaste;
-		private System.Windows.Forms.ToolStripMenuItem MenuItemEditDelete;
+		public System.Windows.Forms.ToolStripMenuItem MenuItemEditCut;
+		public System.Windows.Forms.ToolStripMenuItem MenuItemEditCopy;
+		public System.Windows.Forms.ToolStripMenuItem MenuItemEditPaste;
+		public System.Windows.Forms.ToolStripMenuItem MenuItemEditDelete;
 		private System.Windows.Forms.ToolStripMenuItem MenuItemHelp;
 		private System.Windows.Forms.ToolStripMenuItem MenuItemHelpAbout;
 		public AgentCharacterEditor.CharacterForm PanelCharacter;
@@ -835,6 +897,11 @@ namespace AgentCharacterEditor
 		public AgentCharacterEditor.BranchingForm PanelBranching;
 		public AgentCharacterEditor.OverlayForm PanelOverlays;
 		internal PartsTreeView TreeViewMain;
+		public System.Windows.Forms.ContextMenuStrip ContextMenuEdit;
+		public System.Windows.Forms.ToolStripMenuItem ContextItemEditCut;
+		public System.Windows.Forms.ToolStripMenuItem ContextItemEditCopy;
+		public System.Windows.Forms.ToolStripMenuItem ContextItemEditPaste;
+		public System.Windows.Forms.ToolStripMenuItem ContextItemEditDelete;
 	}
 }
 

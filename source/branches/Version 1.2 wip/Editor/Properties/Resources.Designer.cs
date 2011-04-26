@@ -68,6 +68,15 @@ namespace AgentCharacterEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &amp;Add.
+        /// </summary>
+        internal static string EditAdd {
+            get {
+                return ResourceManager.GetString("EditAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add new animation.
         /// </summary>
         internal static string EditAddAnimation {
@@ -91,6 +100,33 @@ namespace AgentCharacterEditor.Properties {
         internal static string EditAddAnimation1 {
             get {
                 return ResourceManager.GetString("EditAddAnimation1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add {0}.
+        /// </summary>
+        internal static string EditAddThis {
+            get {
+                return ResourceManager.GetString("EditAddThis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose image file.
+        /// </summary>
+        internal static string EditChooseFile {
+            get {
+                return ResourceManager.GetString("EditChooseFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose {0} image file.
+        /// </summary>
+        internal static string EditChooseThisFile {
+            get {
+                return ResourceManager.GetString("EditChooseThisFile", resourceCulture);
             }
         }
         
@@ -176,6 +212,42 @@ namespace AgentCharacterEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Make {0} later.
+        /// </summary>
+        internal static string EditMoveFrameDown {
+            get {
+                return ResourceManager.GetString("EditMoveFrameDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Make {0} earlier.
+        /// </summary>
+        internal static string EditMoveFrameUp {
+            get {
+                return ResourceManager.GetString("EditMoveFrameUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bring {0} forward.
+        /// </summary>
+        internal static string EditMoveImageDown {
+            get {
+                return ResourceManager.GetString("EditMoveImageDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send {0} back.
+        /// </summary>
+        internal static string EditMoveImageUp {
+            get {
+                return ResourceManager.GetString("EditMoveImageUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &amp;Paste.
         /// </summary>
         internal static string EditPaste {
@@ -203,7 +275,7 @@ namespace AgentCharacterEditor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to (add) {0} as {1}.
+        ///   Looks up a localized string similar to (add) {1} from {0}.
         /// </summary>
         internal static string EditPasteAs {
             get {
@@ -324,6 +396,14 @@ namespace AgentCharacterEditor.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to {\rtf1\ansi\ansicpg1252\deff0\deflang4105{\fonttbl{\f0\fswiss\fcharset0 Arial;}}
+        ///{\*\generator Msftedit 5.41.21.2509;}\viewkind4\uc1\pard\f0\fs18 Double Agent is free software, distributed in the hope that it will be useful, but with ABSOLUTELY NO WARRANTY.\par
+        ///\par
+        ///You can redistribute it and/or modify it under the terms of the \b GNU General Public License\b0  as published by the Free Software Foundation.  Click below to read a copy of the license.\par
+        ///\par
+        ///Double Agent is available for download at h [rest of string was truncated]&quot;;.
+        /// </summary>
         internal static string LicenseIntro {
             get {
                 return ResourceManager.GetString("LicenseIntro", resourceCulture);
@@ -457,6 +537,15 @@ namespace AgentCharacterEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save changes to &quot;{0}&quot;?.
+        /// </summary>
+        internal static string MsgSaveNew {
+            get {
+                return ResourceManager.GetString("MsgSaveNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to animation {0}.
         /// </summary>
         internal static string TitleAnimation {
@@ -480,6 +569,15 @@ namespace AgentCharacterEditor.Properties {
         internal static string TitleCharacterName {
             get {
                 return ResourceManager.GetString("TitleCharacterName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} [{1} *].
+        /// </summary>
+        internal static string TitleDirtyFile {
+            get {
+                return ResourceManager.GetString("TitleDirtyFile", resourceCulture);
             }
         }
         
@@ -516,6 +614,24 @@ namespace AgentCharacterEditor.Properties {
         internal static string TitleImageFrame {
             get {
                 return ResourceManager.GetString("TitleImageFrame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to new character.
+        /// </summary>
+        internal static string TitleNewFile {
+            get {
+                return ResourceManager.GetString("TitleNewFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} [{1}].
+        /// </summary>
+        internal static string TitleOpenFile {
+            get {
+                return ResourceManager.GetString("TitleOpenFile", resourceCulture);
             }
         }
         

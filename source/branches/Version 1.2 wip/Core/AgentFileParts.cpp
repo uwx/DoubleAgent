@@ -182,8 +182,9 @@ void CAgentFileHeader::Empty ()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-
 #ifdef	_M_CEE
+/////////////////////////////////////////////////////////////////////////////
+
 AgentCharStyle CAgentFileHeader::Style::get ()
 {
 	return (AgentCharStyle)mStyle;
@@ -282,42 +283,61 @@ void CAgentFileHeader::Transparency::set (Byte pValue)
 		mOwner->IsDirty = true;
 	}
 }
-#endif
 
+/////////////////////////////////////////////////////////////////////////////
+#endif	// _M_CEE
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
 System::String^ CAgentFileHeader::ToString ()
 {
-	String^	lStyle = String::Empty;
+    return String::Format ("Style [{0}] ImageSize {1:D},{2:D} Transparency {3} GUID {4}", StyleString(Style), ImageSize.Width, ImageSize.Height, Transparency, Guid.ToString()->ToUpper());
+}
+#endif
 
-	if	((UInt32)Style & (UInt32)AgentCharStyle::CharStyleStandard)
+#ifdef	_M_CEE
+System::String^ CAgentFileHeader::StyleString (AgentCharStyle pStyle)
+#else
+CAtlString CAgentFileHeader::StyleString (AgentCharStyle pStyle)
+#endif
+{
+#ifdef	_M_CEE
+	String^		lStyle = String::Empty;
+#else
+	CAtlString	lStyle;
+#endif
+
+	if	((DWORD)pStyle & (DWORD)AgentCharStyle::CharStyleStandard)
 	{
 		lStyle += "Standard ";
 	}
-	if	((UInt32)Style & (UInt32)AgentCharStyle::CharStyleTts)
+	if	((DWORD)pStyle & (DWORD)AgentCharStyle::CharStyleTts)
 	{
 		lStyle += "Tts ";
 	}
-	if	((UInt32)Style & (UInt32)AgentCharStyle::CharStyleBalloon)
+	if	((DWORD)pStyle & (DWORD)AgentCharStyle::CharStyleBalloon)
 	{
 		lStyle += "Balloon ";
 	}
-	if	((UInt32)Style & (UInt32)AgentCharStyle::CharStyleSizeToText)
+	if	((DWORD)pStyle & (DWORD)AgentCharStyle::CharStyleSizeToText)
 	{
 		lStyle += "SizeToText ";
 	}
-	if	((UInt32)Style & (UInt32)AgentCharStyle::CharStyleNoAutoHide)
+	if	((DWORD)pStyle & (DWORD)AgentCharStyle::CharStyleNoAutoHide)
 	{
 		lStyle += "NoAutoHide ";
 	}
-	if	((UInt32)Style & (UInt32)AgentCharStyle::CharStyleNoAutoPace)
+	if	((DWORD)pStyle & (DWORD)AgentCharStyle::CharStyleNoAutoPace)
 	{
 		lStyle += "NoAutoPace ";
 	}
-    return String::Format ("Style [{0}] ImageSize {1},{2} Transparency {3} GUID {4}", lStyle, ImageSize.Width, ImageSize.Height, Transparency, Guid.ToString()->ToUpper());
+
+#ifdef	_M_CEE
+	return lStyle->Trim();
+#else	
+	return lStyle.Trim();	
+#endif	
 }
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -343,8 +363,9 @@ CAgentFileName::CAgentFileName (LANGID pLanguage, CAgentFileName^ pSource)
 	pSource->CopyTo (this);
 }
 
-CAgentFileName::CAgentFileName (CharacterFile^ pOwner)
-:	mOwner (pOwner)
+CAgentFileName::CAgentFileName (CharacterFile^ pOwner, FileCharacterNames^ pContainer)
+:	mOwner (pOwner),
+	mContainer (pContainer)
 {
 	Empty ();
 }
@@ -491,8 +512,9 @@ void CAgentFileName::put_Desc2 (LPCTSTR pDesc2)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-
 #ifdef	_M_CEE
+/////////////////////////////////////////////////////////////////////////////
+
 Boolean CAgentFileName::CopyTo (CAgentFileName^ pTarget)
 {
 	if	(
@@ -506,6 +528,14 @@ Boolean CAgentFileName::CopyTo (CAgentFileName^ pTarget)
 		pTarget->mName = (mName) ? gcnew String (mName) : nullptr;
 		pTarget->mDesc1 = (mDesc1) ? gcnew String (mDesc1) : nullptr;
 		pTarget->mDesc2 = (mDesc2) ? gcnew String (mDesc2) : nullptr;
+		
+		if	(
+				(pTarget->mOwner)
+			&&	(!pTarget->mOwner->IsReadOnly)
+			)
+		{
+			pTarget->mOwner->IsDirty = true;
+		}
 		return true;
 	}
 	return false;
@@ -528,15 +558,21 @@ Boolean CAgentFileName::Equals (CAgentFileName^ pTarget)
 
 System::String^ CAgentFileName::ToString ()
 {
-    return String::Format ("Name \"{0}\" Language {1:X} {1:D} \"{2}\" \"{3}\" \"{4}\"", Name, Language, (gcnew System::Globalization::CultureInfo (Language))->EnglishName, Desc1, Desc2);
+#ifdef	_DEBUG_NOT
+    return String::Format (" Name {0:X} {0:D} \"{1}\" \"{2}\" \"{3}\" \"{4}\"", Language, (gcnew System::Globalization::CultureInfo (Language))->EnglishName, Name, Desc1, Desc2);
+#else    
+    return String::Format (" Name {0:X} {0:D} \"{1}\"", Language, (gcnew System::Globalization::CultureInfo (Language))->EnglishName);
+#endif    
 }
-#endif
 
+/////////////////////////////////////////////////////////////////////////////
+#endif	// _M_CEE
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
-
 #ifdef	_M_CEE
+/////////////////////////////////////////////////////////////////////////////
+
 CAgentFileNames::CAgentFileNames ()
 {
 }
@@ -568,7 +604,7 @@ CAgentFileName^ CAgentFileNames::Add (LANGID pLangID, System::String^ pName)
 		&&	(!String::IsNullOrEmpty (pName))
 		)
 	{
-		lFileName = gcnew CAgentFileName (mOwner);
+		lFileName = gcnew CAgentFileName (mOwner, this);
 		lFileName->mLanguage = pLangID;
 		lFileName->mName = pName;
 
@@ -618,8 +654,9 @@ bool CAgentFileNames::Remove (CAgentFileName^ pItem)
 	}
 	return false;
 }
-#endif
 
+/////////////////////////////////////////////////////////////////////////////
+#endif	// _M_CEE
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -831,8 +868,9 @@ void CAgentFileTts::put_Gender (USHORT pGender)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-
 #ifdef	_M_CEE
+/////////////////////////////////////////////////////////////////////////////
+
 Boolean CAgentFileTts::CopyTo (CAgentFileTts^ pTarget)
 {
 	if	(
@@ -848,6 +886,14 @@ Boolean CAgentFileTts::CopyTo (CAgentFileTts^ pTarget)
 		pTarget->mModeId = (mModeId) ? gcnew String (mModeId) : nullptr;
 		pTarget->mLanguage = mLanguage;
 		pTarget->mGender = mGender;
+		
+		if	(
+				(pTarget->mOwner)
+			&&	(!pTarget->mOwner->IsReadOnly)
+			)
+		{
+			pTarget->mOwner->IsDirty = true;
+		}
 		return true;
 	}
 	return false;
@@ -873,8 +919,9 @@ System::String^ CAgentFileTts::ToString ()
 {
     return String::Format ("Tts {0}", (ModeId ? ModeId : "<empty>"));
 }
-#endif
 
+/////////////////////////////////////////////////////////////////////////////
+#endif	// _M_CEE
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -1123,6 +1170,25 @@ void CAgentFileBalloon::put_Font (const LOGFONT& pFont)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	_M_CEE
+UInt16 CAgentFileBalloon::MinLines::get() {return 1;}
+UInt16 CAgentFileBalloon::MaxLines::get() {return 128;}
+UInt16 CAgentFileBalloon::DefLines::get() {return 2;}
+UInt16 CAgentFileBalloon::MinPerLine::get() {return 8;}
+UInt16 CAgentFileBalloon::MaxPerLine::get() {return 255;}
+UInt16 CAgentFileBalloon::DefPerLine::get() {return 32;}
+#else
+const USHORT CAgentFileBalloon::MinLines = 1;
+const USHORT CAgentFileBalloon::MaxLines = 128;
+const USHORT CAgentFileBalloon::DefLines = 2;
+const USHORT CAgentFileBalloon::MinPerLine = 8;
+const USHORT CAgentFileBalloon::MaxPerLine = 255;
+const USHORT CAgentFileBalloon::DefPerLine = 32;
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#ifdef	_M_CEE
+/////////////////////////////////////////////////////////////////////////////
+
 Boolean CAgentFileBalloon::CopyTo (CAgentFileBalloon^ pTarget)
 {
 	if	(
@@ -1139,6 +1205,14 @@ Boolean CAgentFileBalloon::CopyTo (CAgentFileBalloon^ pTarget)
 		pTarget->mBkColor = mBkColor;
 		pTarget->mBrColor = mBrColor;
 		pTarget->mFont = (mFont) ? safe_cast <System::Drawing::Font^> (mFont->Clone()) : nullptr;
+		
+		if	(
+				(pTarget->mOwner)
+			&&	(!pTarget->mOwner->IsReadOnly)
+			)
+		{
+			pTarget->mOwner->IsDirty = true;
+		}
 		return true;
 	}
 	return false;
@@ -1171,26 +1245,9 @@ System::String^ CAgentFileBalloon::ToString ()
 {
     return String::Format ("Balloon {0:D} {1:D}", Lines, PerLine);
 }
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
-
-#ifdef	_M_CEE
-UInt16 CAgentFileBalloon::MinLines::get() {return 1;}
-UInt16 CAgentFileBalloon::MaxLines::get() {return 128;}
-UInt16 CAgentFileBalloon::DefLines::get() {return 2;}
-UInt16 CAgentFileBalloon::MinPerLine::get() {return 8;}
-UInt16 CAgentFileBalloon::MaxPerLine::get() {return 255;}
-UInt16 CAgentFileBalloon::DefPerLine::get() {return 32;}
-#else
-const USHORT CAgentFileBalloon::MinLines = 1;
-const USHORT CAgentFileBalloon::MaxLines = 128;
-const USHORT CAgentFileBalloon::DefLines = 2;
-const USHORT CAgentFileBalloon::MinPerLine = 8;
-const USHORT CAgentFileBalloon::MaxPerLine = 255;
-const USHORT CAgentFileBalloon::DefPerLine = 32;
-#endif
-
+#endif	// _M_CEE
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -1245,8 +1302,9 @@ void CAgentFileFrameImage::Empty ()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-
 #ifdef	_M_CEE
+/////////////////////////////////////////////////////////////////////////////
+
 FileAnimationFrame^ CAgentFileFrameImage::Frame::get()
 {
 	return (mContainer) ? mContainer->Frame : nullptr;
@@ -1309,11 +1367,9 @@ void CAgentFileFrameImage::Offset::set (System::Drawing::Point pValue)
 		}
 	}
 }
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
 Boolean CAgentFileFrameImage::CopyTo (CAgentFileFrameImage^ pTarget)
 {
 	if	(
@@ -1326,6 +1382,27 @@ Boolean CAgentFileFrameImage::CopyTo (CAgentFileFrameImage^ pTarget)
 	{
 		pTarget->mImageNdx = mImageNdx;
 		pTarget->mOffset = mOffset;
+		
+		if	(
+				(pTarget->mOwner)
+			&&	(!pTarget->mOwner->IsReadOnly)
+			)
+		{
+			pTarget->mOwner->IsDirty = true;
+		}
+		return true;
+	}
+	return false;
+}
+
+Boolean CAgentFileFrameImage::Equals (CAgentFileFrameImage^ pTarget)
+{
+	if	(
+			(pTarget)
+		&&	(pTarget->mImageNdx == mImageNdx)
+		&&	(pTarget->mOffset == mOffset)
+		)
+	{
 		return true;
 	}
 	return false;
@@ -1333,15 +1410,39 @@ Boolean CAgentFileFrameImage::CopyTo (CAgentFileFrameImage^ pTarget)
 
 System::String^ CAgentFileFrameImage::ToString ()
 {
-    return String::Format ("FrameImage {0:D} {%1}", ImageNdx, Offset.ToString());
+#ifdef	_DEBUG
+    return String::Format ("FrameImage {0:D} file {1:D} {2} at {3} in {4}", (mContainer)?mContainer->IndexOf(this):-1, ImageNdx, ImageFilePath, Offset.ToString(), (mContainer && mContainer->mFrame)?mContainer->mFrame->ToString():"<unowned>");
+#else
+    return String::Format ("FrameImage {0:D} in {1}", (mContainer)?mContainer->IndexOf(this):-1, (mContainer && mContainer->mFrame)?mContainer->mFrame->ToString():"<unowned>");
+#endif    
 }
-#endif
 
+/////////////////////////////////////////////////////////////////////////////
+
+//void CAgentFileFrameImage::OnSerializing (StreamingContext pContext)
+//{
+//}
+//	
+//void CAgentFileFrameImage::OnSerialized (StreamingContext pContext)
+//{
+//}
+//	
+//void CAgentFileFrameImage::OnDeserializing (StreamingContext pContext)
+//{
+//}
+//	
+//void CAgentFileFrameImage::OnDeserialized (StreamingContext pContext)	
+//{
+//}
+
+/////////////////////////////////////////////////////////////////////////////
+#endif	// _M_CEE
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
-
 #ifdef	_M_CEE
+/////////////////////////////////////////////////////////////////////////////
+
 CAgentFileFrameImages::CAgentFileFrameImages ()
 {
 #ifdef	_DEBUG_INSTANCE
@@ -1526,8 +1627,9 @@ bool CAgentFileFrameImages::Move (CAgentFileFrameImage^ pItem, CAgentFileFrameIm
 	}
 	return false;
 }
-#endif
 
+/////////////////////////////////////////////////////////////////////////////
+#endif	// _M_CEE
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -1584,8 +1686,9 @@ void CAgentFileFrameOverlay::Empty ()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-
 #ifdef	_M_CEE
+/////////////////////////////////////////////////////////////////////////////
+
 FileAnimationFrame^ CAgentFileFrameOverlay::Frame::get()
 {
 	return (mContainer) ? mContainer->Frame : nullptr;
@@ -1696,11 +1799,9 @@ void CAgentFileFrameOverlay::Offset::set (System::Drawing::Point pValue)
 		}
 	}
 }
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
 Boolean CAgentFileFrameOverlay::CopyTo (CAgentFileFrameOverlay^ pTarget)
 {
 	if	(
@@ -1714,6 +1815,28 @@ Boolean CAgentFileFrameOverlay::CopyTo (CAgentFileFrameOverlay^ pTarget)
 		pTarget->mImageNdx = mImageNdx;
 		pTarget->mReplaceFlag = mReplaceFlag;
 		pTarget->mOffset = mOffset;
+		
+		if	(
+				(pTarget->mOwner)
+			&&	(!pTarget->mOwner->IsReadOnly)
+			)
+		{
+			pTarget->mOwner->IsDirty = true;
+		}
+		return true;
+	}
+	return false;
+}
+
+Boolean CAgentFileFrameOverlay::Equals (CAgentFileFrameOverlay^ pTarget)
+{
+	if	(
+			(pTarget)
+		&&	(pTarget->mImageNdx == mImageNdx)
+		&&	(pTarget->mReplaceFlag == mReplaceFlag)
+		&&	(pTarget->mOffset == mOffset)
+		)
+	{
 		return true;
 	}
 	return false;
@@ -1721,15 +1844,35 @@ Boolean CAgentFileFrameOverlay::CopyTo (CAgentFileFrameOverlay^ pTarget)
 
 System::String^ CAgentFileFrameOverlay::ToString ()
 {
-    return String::Format ("FrameOverlay {0:D} {%1}", OverlayType, Offset.ToString());
+    return String::Format ("FrameOverlay {0:D} {1}", OverlayType, Offset.ToString());
 }
-#endif
 
+/////////////////////////////////////////////////////////////////////////////
+
+//void CAgentFileFrameOverlay::OnSerializing (StreamingContext pContext)
+//{
+//}
+//	
+//void CAgentFileFrameOverlay::OnSerialized (StreamingContext pContext)
+//{
+//}
+//	
+//void CAgentFileFrameOverlay::OnDeserializing (StreamingContext pContext)
+//{
+//}
+//	
+//void CAgentFileFrameOverlay::OnDeserialized (StreamingContext pContext)	
+//{
+//}
+
+/////////////////////////////////////////////////////////////////////////////
+#endif	// _M_CEE
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
-
 #ifdef	_M_CEE
+/////////////////////////////////////////////////////////////////////////////
+
 CAgentFileFrameOverlays::CAgentFileFrameOverlays ()
 {
 #ifdef	_DEBUG_INSTANCE
@@ -1836,8 +1979,9 @@ bool CAgentFileFrameOverlays::Remove (CAgentFileFrameOverlay^ pItem)
 	}
 	return false;
 }
-#endif
 
+/////////////////////////////////////////////////////////////////////////////
+#endif	// _M_CEE
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -2076,8 +2220,9 @@ USHORT CAgentFileFrame::get_Duration () const
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-
 #ifdef	_M_CEE
+/////////////////////////////////////////////////////////////////////////////
+
 Boolean CAgentFileFrame::CopyTo (CAgentFileFrame^ pTarget)
 {
 	return CopyTo (pTarget, false);
@@ -2185,6 +2330,14 @@ Boolean CAgentFileFrame::CopyTo (CAgentFileFrame^ pTarget, Boolean pDeepCopy)
 			pTarget->mImages = mImages;
 			pTarget->mOverlays = mOverlays;
 		}
+		
+		if	(
+				(pTarget->mOwner)
+			&&	(!pTarget->mOwner->IsReadOnly)
+			)
+		{
+			pTarget->mOwner->IsDirty = true;
+		}
 		return true;
 	}
 	return false;
@@ -2194,8 +2347,27 @@ System::String^ CAgentFileFrame::ToString ()
 {
     return String::Format ("Frame {0:D} Images {1:D} Overlays {2:D} Sound {3:D}", Duration, ImageCount, OverlayCount, SoundNdx);
 }
-#endif
 
+/////////////////////////////////////////////////////////////////////////////
+
+//void CAgentFileFrame::OnSerializing (StreamingContext pContext)
+//{
+//}
+//	
+//void CAgentFileFrame::OnSerialized (StreamingContext pContext)
+//{
+//}
+//	
+//void CAgentFileFrame::OnDeserializing (StreamingContext pContext)
+//{
+//}
+//	
+//void CAgentFileFrame::OnDeserialized (StreamingContext pContext)	
+//{
+//}
+
+/////////////////////////////////////////////////////////////////////////////
+#endif	// _M_CEE
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -2623,6 +2795,14 @@ Boolean CAgentFileAnimation::CopyTo (CAgentFileAnimation^ pTarget, Boolean pDeep
 			LogMessage (_DEBUG_COPY, _T("  Shallow"));
 #endif			
 			pTarget->mFrames = mFrames;
+		}
+		
+		if	(
+				(pTarget->mOwner)
+			&&	(!pTarget->mOwner->IsReadOnly)
+			)
+		{
+			pTarget->mOwner->IsDirty = true;
 		}
 		return true;
 	}

@@ -28,18 +28,25 @@ namespace AgentCharacterEditor
 {
 	namespace Updates
 	{
-		internal class UpdateCharacterHeader : UndoableUpdate<CharacterFile>
+		internal class UpdateCharacterHeader : UndoableUpdate<FileHeader>
 		{
-			public UpdateCharacterHeader (CharacterFile pCharacterFile)
-				: base (pCharacterFile, pCharacterFile)
+			public UpdateCharacterHeader ()
 			{
-				ImageSize = Target.Header.ImageSize;
-				Guid = Target.Header.Guid;
-				IconFilePath = Target.IconFilePath;
-				PaletteFilePath = Target.PaletteFilePath;
-				PaletteTransparency = Target.Header.Transparency;
+				ImageSize = Target.ImageSize;
+				Guid = Target.Guid;
+				IconFilePath = CharacterFile.IconFilePath;
+				PaletteFilePath = CharacterFile.PaletteFilePath;
+				PaletteTransparency = Target.Transparency;
+				NewFrameDuration = CharacterFile.NewFrameDuration;
 			}
 
+			public override FileHeader Target
+			{
+				get
+				{
+					return CharacterFile.Header;
+				}
+			}
 			public Size ImageSize
 			{
 				get;
@@ -80,47 +87,49 @@ namespace AgentCharacterEditor
 
 			public override UndoUnit Apply ()
 			{
-				UpdateCharacterHeader	lApplied = null;
-
+				UpdateCharacterHeader lApplied = null;
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
+#endif
 				if (ImageSizeChanged)
 				{
-					Size lSwap = Target.Header.ImageSize;
-					Target.Header.ImageSize = ImageSize;
+					Size lSwap = Target.ImageSize;
+					Target.ImageSize = ImageSize;
 					ImageSize = lSwap;
 					lApplied = this;
 				}
 				if (GuidChanged)
 				{
-					Guid lSwap = Target.Header.Guid;
-					Target.Header.Guid = Guid;
+					Guid lSwap = Target.Guid;
+					Target.Guid = Guid;
 					Guid = lSwap;
 					lApplied = this;
 				}
 				if (IconChanged)
 				{
-					String	lSwap = Target.IconFilePath;
-					Target.IconFilePath = IconFilePath;
+					String lSwap = CharacterFile.IconFilePath;
+					CharacterFile.IconFilePath = IconFilePath;
 					IconFilePath = lSwap;
 					lApplied = this;
 				}
 				if (PaletteChanged)
 				{
-					String	lSwap = Target.PaletteFilePath;
-					Target.PaletteFilePath = PaletteFilePath;
+					String lSwap = CharacterFile.PaletteFilePath;
+					CharacterFile.PaletteFilePath = PaletteFilePath;
 					PaletteFilePath = lSwap;
 					lApplied = this;
 				}
 				if (PaletteTransparencyChanged)
 				{
-					Byte lSwap = Target.Header.Transparency;
-					Target.Header.Transparency = PaletteTransparency;
+					Byte lSwap = Target.Transparency;
+					Target.Transparency = PaletteTransparency;
 					PaletteTransparency = lSwap;
 					lApplied = this;
 				}
 				if (NewFrameDurationChanged)
 				{
-					UInt16 lSwap = Target.NewFrameDuration;
-					Target.NewFrameDuration = NewFrameDuration;
+					UInt16 lSwap = CharacterFile.NewFrameDuration;
+					CharacterFile.NewFrameDuration = NewFrameDuration;
 					NewFrameDuration = lSwap;
 					lApplied = this;
 				}
@@ -135,61 +144,78 @@ namespace AgentCharacterEditor
 			{
 				get
 				{
-					return (Target.Header.ImageSize != ImageSize);
+					return (Target.ImageSize != ImageSize);
 				}
 			}
 			public Boolean GuidChanged
 			{
 				get
 				{
-					return (Target.Header.Guid != Guid);
+					return (Target.Guid != Guid);
 				}
 			}
 			public Boolean IconChanged
 			{
 				get
 				{
-					return !String.Equals (Target.IconFilePath, IconFilePath);
+					return !String.Equals (CharacterFile.IconFilePath, IconFilePath);
 				}
 			}
 			public Boolean PaletteChanged
 			{
 				get
 				{
-					return !String.Equals (Target.PaletteFilePath, PaletteFilePath);
+					return !String.Equals (CharacterFile.PaletteFilePath, PaletteFilePath);
 				}
 			}
 			public Boolean PaletteTransparencyChanged
 			{
 				get
 				{
-					return (Target.Header.Transparency != PaletteTransparency);
+					return (Target.Transparency != PaletteTransparency);
 				}
 			}
 			public Boolean NewFrameDurationChanged
 			{
 				get
 				{
-					return (Target.NewFrameDuration != NewFrameDuration);
+					return (CharacterFile.NewFrameDuration != NewFrameDuration);
 				}
 			}
+
+#if DEBUG
+			public override string DebugString
+			{
+				get
+				{
+					return String.Format ("From [{0:D},{1:D}] [{2}] [{3}] [{4} {5}] [{6}]", Target.ImageSize.Width, Target.ImageSize.Height, Target.Guid.ToString ().ToUpper (), CharacterFile.IconFilePath, CharacterFile.PaletteFilePath, Target.Transparency.ToString (), CharacterFile.NewFrameDuration.ToString ())
+					 + String.Format (" to [{0:D},{1:D}] [{2}] [{3}] [{4} {5}] [{6}]", ImageSize.Width, ImageSize.Height, Guid.ToString ().ToUpper (), IconFilePath, PaletteFilePath, PaletteTransparency.ToString (), NewFrameDuration.ToString ());
+				}
+			}
+#endif
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		internal class UpdateCharacterBalloon : UndoableUpdate<CharacterFile>
+		internal class UpdateCharacterBalloon : UndoableUpdate<FileBalloon>
 		{
-			public UpdateCharacterBalloon (CharacterFile pCharacterFile)
-				: base (pCharacterFile, pCharacterFile)
+			public UpdateCharacterBalloon ()
 			{
-				CharacterStyle = pCharacterFile.Header.Style & mStyleMask;
-				if (pCharacterFile.Balloon != null)
+				CharacterStyle = CharacterFile.Header.Style & mStyleMask;
+				if (Target != null)
 				{
 					UndoObject = new FileBalloon ();
-					pCharacterFile.Balloon.CopyTo (UndoObject);
+					Target.CopyTo (UndoObject);
 				}
 			}
 
+			public override FileBalloon Target
+			{
+				get
+				{
+					return CharacterFile.Balloon;
+				}
+			}
 			public CharacterStyle CharacterStyle
 			{
 				get;
@@ -290,20 +316,22 @@ namespace AgentCharacterEditor
 
 			public override UndoUnit Apply ()
 			{
-				UndoUnit	lApplied = null;
-
+				UndoUnit lApplied = null;
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
+#endif
 				if (StyleChanged)
 				{
-					CharacterStyle	lSwap = CharacterFile.Header.Style & mStyleMask;
+					CharacterStyle lSwap = CharacterFile.Header.Style & mStyleMask;
 					CharacterFile.Header.Style = (CharacterFile.Header.Style & ~mStyleMask) | (CharacterStyle & mStyleMask);
 					CharacterStyle = lSwap;
 					lApplied = this;
 				}
-				if ((CharacterFile.Balloon != null) && (UndoObject != null) && !UndoObject.Equals (CharacterFile.Balloon))
+				if ((Target != null) && (UndoObject != null) && !UndoObject.Equals (Target))
 				{
-					FileBalloon	lSwap = new FileBalloon ();
-					CharacterFile.Balloon.CopyTo (lSwap);
-					UndoObject.CopyTo (CharacterFile.Balloon);
+					FileBalloon lSwap = new FileBalloon ();
+					Target.CopyTo (lSwap);
+					UndoObject.CopyTo (Target);
 					lSwap.CopyTo (UndoObject);
 					lApplied = this;
 				}
@@ -314,7 +342,7 @@ namespace AgentCharacterEditor
 				return null;
 			}
 
-			private const CharacterStyle	mStyleMask = (CharacterStyle.CharStyleBalloon | CharacterStyle.CharStyleSizeToText | CharacterStyle.CharStyleNoAutoHide | CharacterStyle.CharStyleNoAutoPace);
+			private const CharacterStyle mStyleMask = (CharacterStyle.CharStyleBalloon | CharacterStyle.CharStyleSizeToText | CharacterStyle.CharStyleNoAutoHide | CharacterStyle.CharStyleNoAutoPace);
 
 			public Boolean StyleChanged
 			{
@@ -328,7 +356,7 @@ namespace AgentCharacterEditor
 			{
 				get
 				{
-					return (CharacterFile.Balloon != null) && ((CharacterFile.Balloon.Lines != Lines) || (CharacterFile.Balloon.PerLine != PerLine));
+					return (Target != null) && ((Target.Lines != Lines) || (Target.PerLine != PerLine));
 				}
 			}
 
@@ -336,7 +364,7 @@ namespace AgentCharacterEditor
 			{
 				get
 				{
-					return (CharacterFile.Balloon != null) && ((CharacterFile.Balloon.BkColor != BkColor) || (CharacterFile.Balloon.FgColor != FgColor) || (CharacterFile.Balloon.BrColor != BrColor));
+					return (Target != null) && ((Target.BkColor != BkColor) || (Target.FgColor != FgColor) || (Target.BrColor != BrColor));
 				}
 			}
 
@@ -346,7 +374,17 @@ namespace AgentCharacterEditor
 				{
 					try
 					{
-						return (CharacterFile.Balloon != null) && !CharacterFile.Balloon.Font.Equals (Font);
+						if (Target != null)
+						{
+							if ((Target.Font == null) != (Font == null))
+							{
+								return true;
+							}
+							else if ((Target.Font != null) && (Font != null))
+							{
+								return !Target.Font.Equals (Font);
+							}
+						}
 					}
 					catch
 					{
@@ -354,16 +392,27 @@ namespace AgentCharacterEditor
 					return false;
 				}
 			}
+
+#if DEBUG
+			public override string DebugString
+			{
+				get
+				{
+					return String.Format ("From [{0}]", FileHeader.StyleString (CharacterFile.Header.Style))
+					+ ((Target != null) ? String.Format (" [{0} {1}] [{2:X8} {3:X8} {4:X8}] {5}", Target.Lines.ToString (), Target.PerLine.ToString (), Target.FgColor.ToArgb (), Target.BkColor.ToArgb (), Target.BrColor.ToArgb (), (Target.Font != null) ? Target.Font.ToString () : "[]") : String.Empty)
+					+ String.Format (" to [{0}] [{1} {2}] [{3:X8} {4:X8} {5:X8}] {6}", FileHeader.StyleString (CharacterStyle), Lines.ToString (), PerLine.ToString (), FgColor.ToArgb (), BkColor.ToArgb (), BrColor.ToArgb (), (Font != null) ? Font.ToString () : "[]");
+				}
+			}
+#endif
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		internal class UpdateCharacterTts : UndoableUpdate<CharacterFile>
+		internal class UpdateCharacterTts : UndoableUpdate<FileTts>
 		{
-			public UpdateCharacterTts (CharacterFile pCharacterFile, Sapi4VoiceInfo pVoiceInfo)
-				: base (pCharacterFile, pCharacterFile)
+			public UpdateCharacterTts (Sapi4VoiceInfo pVoiceInfo)
 			{
-				CharacterStyle = pCharacterFile.Header.Style & CharacterStyle.CharStyleTts;
+				CharacterStyle = CharacterFile.Header.Style & CharacterStyle.CharStyleTts;
 				if (pVoiceInfo != null)
 				{
 					VoiceInfo = new Sapi4VoiceInfo ();
@@ -374,6 +423,13 @@ namespace AgentCharacterEditor
 				}
 			}
 
+			public override FileTts Target
+			{
+				get
+				{
+					return CharacterFile.Tts;
+				}
+			}
 			public CharacterStyle CharacterStyle
 			{
 				get;
@@ -395,30 +451,33 @@ namespace AgentCharacterEditor
 
 			public override UndoUnit Apply ()
 			{
-				UndoUnit	lApplied = null;
-
+				UndoUnit lApplied = null;
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
+#endif
 				if ((CharacterFile.Header.Style & CharacterStyle.CharStyleTts) != (CharacterStyle & CharacterStyle.CharStyleTts))
 				{
-					CharacterStyle	lSwap = CharacterFile.Header.Style & CharacterStyle.CharStyleTts;
+					CharacterStyle lSwap = CharacterFile.Header.Style & CharacterStyle.CharStyleTts;
 					CharacterFile.Header.Style = (CharacterFile.Header.Style & ~CharacterStyle.CharStyleTts) | (CharacterStyle & CharacterStyle.CharStyleTts);
 					CharacterStyle = lSwap;
+					Target = CharacterFile.Tts;
 					lApplied = this;
 				}
-				if ((CharacterFile.Tts != null) && (VoiceInfo != null))
+				if ((Target != null) && (VoiceInfo != null))
 				{
-					Sapi4VoiceInfo	lVoiceInfo = new Sapi4VoiceInfo ();
+					Sapi4VoiceInfo lVoiceInfo = new Sapi4VoiceInfo ();
 
-					lVoiceInfo.EngineId = CharacterFile.Tts.Engine;
-					lVoiceInfo.ModeId = CharacterFile.Tts.Mode;
-					lVoiceInfo.LangId = CharacterFile.Tts.Language;
-					lVoiceInfo.SpeakerGender = CharacterFile.Tts.Gender;
+					lVoiceInfo.EngineId = Target.Engine;
+					lVoiceInfo.ModeId = Target.Mode;
+					lVoiceInfo.LangId = Target.Language;
+					lVoiceInfo.SpeakerGender = Target.Gender;
 
 					if (!lVoiceInfo.Equals (VoiceInfo))
 					{
-						CharacterFile.Tts.Engine = VoiceInfo.EngineId;
-						CharacterFile.Tts.Mode = VoiceInfo.ModeId;
-						CharacterFile.Tts.Language = VoiceInfo.LangId;
-						CharacterFile.Tts.Gender = VoiceInfo.SpeakerGender;
+						Target.Engine = VoiceInfo.EngineId;
+						Target.Mode = VoiceInfo.ModeId;
+						Target.Language = VoiceInfo.LangId;
+						Target.Gender = VoiceInfo.SpeakerGender;
 						VoiceInfo = lVoiceInfo;
 						lApplied = this;
 					}
@@ -430,18 +489,38 @@ namespace AgentCharacterEditor
 				}
 				return null;
 			}
+
+#if DEBUG
+			public override string DebugString
+			{
+				get
+				{
+					return String.Format ("From [{0}]", FileHeader.StyleString (CharacterFile.Header.Style))
+					+ ((Target != null) ? String.Format (" [{0}] [{1}] [{2:D} {2:X4}] [{3}]", Target.Engine.ToString ().ToUpper (), Target.Mode.ToString ().ToUpper (), Target.Language, Target.Gender.ToString ()) : String.Empty)
+					+ String.Format (" to [{0}]", FileHeader.StyleString (CharacterStyle))
+					+ ((VoiceInfo != null) ? String.Format (" [{0}] [{1}] [{2:D} {2:X4}] [{3}]", VoiceInfo.EngineId.ToString ().ToUpper (), VoiceInfo.ModeId.ToString ().ToUpper (), VoiceInfo.LangId, VoiceInfo.SpeakerGender.ToString ()) : String.Empty);
+				}
+			}
+#endif
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		internal class AddDeleteCharacterName : UndoableAddDelete<FileCharacterName>
 		{
-			public AddDeleteCharacterName (CharacterFile pCharacterFile, FileCharacterName pName, Boolean pRemove, Boolean pForClipboard)
-				: base (pCharacterFile, pName, pForClipboard)
+			public AddDeleteCharacterName (FileCharacterName pName, Boolean pIsDelete, Boolean pForClipboard)
+				: base (new ResolveName (pName), pForClipboard)
 			{
-				IsDelete = pRemove;
+				IsDelete = pIsDelete;
 			}
 
+			public UInt16 Language
+			{
+				get
+				{
+					return (RawTarget as ResolveName).Language;
+				}
+			}
 			public override String TargetDescription
 			{
 				get
@@ -452,24 +531,27 @@ namespace AgentCharacterEditor
 
 			public override UndoUnit Apply ()
 			{
-				AddDeleteCharacterName	lApplied = null;
-
+				AddDeleteCharacterName lApplied = null;
+				FileCharacterName lTarget = Target;
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
+#endif
 				if (IsDelete)
 				{
-					if (CharacterFile.Names.Remove (Target))
+					if (CharacterFile.Names.Remove (lTarget))
 					{
-						lApplied = new AddDeleteCharacterName (CharacterFile, Target, false, ForClipboard);
+						lApplied = new AddDeleteCharacterName (lTarget, false, ForClipboard);
 						lApplied.IsRedo = !IsRedo;
 					}
 				}
 				else
 				{
-					FileCharacterName	lName = CharacterFile.Names.Add (Target.Language, Target.Name);
+					FileCharacterName lName = CharacterFile.Names.Add (Target.Language, Target.Name);
 
 					if (lName != null)
 					{
-						Target.CopyTo (lName);
-						lApplied = new AddDeleteCharacterName (CharacterFile, lName, true, ForClipboard);
+						lTarget.CopyTo (lName);
+						lApplied = new AddDeleteCharacterName (lName, true, ForClipboard);
 						lApplied.IsRedo = !IsRedo;
 					}
 				}
@@ -479,22 +561,33 @@ namespace AgentCharacterEditor
 				}
 				return null;
 			}
+
+#if DEBUG
+			public override string DebugString
+			{
+				get
+				{
+					return String.Format ("{0}({1}) [{2:D} {2:X4}]", ActionDescription, RedoString, Language);
+				}
+			}
+#endif
 		}
 
-		internal class UpdateCharacterName : UndoableUpdate<CharacterFile>
+		internal class UpdateCharacterName : UndoableUpdate<FileCharacterName>
 		{
-			public UpdateCharacterName (CharacterFile pCharacterFile, UInt16 pLanguage, String pName, String pDesc1, String pDesc2)
-				: base (pCharacterFile, pCharacterFile)
+			public UpdateCharacterName (UInt16 pLanguage, String pName, String pDesc1, String pDesc2)
+				: base (new ResolveName (pLanguage))
 			{
 				UndoObject = new FileCharacterName (pLanguage, pName);
 				UndoObject.Desc1 = pDesc1;
 				UndoObject.Desc2 = pDesc2;
 			}
 
-			public UpdateCharacterName (CharacterFile pCharacterFile, FileCharacterName pName, Boolean pForClipboard)
-				: base (pCharacterFile, pCharacterFile, pForClipboard)
+			public UpdateCharacterName (FileCharacterName pName, Boolean pForClipboard)
+				: base (new ResolveName (pName), pForClipboard)
 			{
 				UndoObject = new FileCharacterName (pName.Language, pName);
+				pName.CopyTo (UndoObject);
 			}
 
 			public UInt16 Language
@@ -549,33 +642,18 @@ namespace AgentCharacterEditor
 
 			public override UndoUnit Apply ()
 			{
-				UpdateCharacterName	lApplied = null;
-				FileCharacterName	lName;
-				FileCharacterName	lSwap;
-
-				lName = CharacterFile.FindName (Language);
-				if (!Global.PrimaryLanguageEqual (lName, Language))
-				{
-					lName = null;
-				}
-				if (lName != null)
-				{
-#if DEBUG_NOT
-					System.Diagnostics.Debug.Print ("Applying {0}", lName.ToString ());
+				UpdateCharacterName lApplied = null;
+				FileCharacterName lTarget = Target;
+				FileCharacterName lSwap;
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
 #endif
-					if (!UndoObject.Equals (lName))
-					{
-						lSwap = new FileCharacterName (lName.Language, lName);
-						UndoObject.CopyTo (lName);
-						lSwap.CopyTo (UndoObject);
-						lApplied = this;
-					}
-#if DEBUG_NOT
-				if (lApplied != null)
+				if ((lTarget != null) && !UndoObject.Equals (lTarget))
 				{
-					System.Diagnostics.Debug.Print ("Applyed  {0}", lName.ToString ());
-				}
-#endif
+					lSwap = new FileCharacterName (lTarget.Language, lTarget);
+					UndoObject.CopyTo (lTarget);
+					lSwap.CopyTo (UndoObject);
+					lApplied = this;
 				}
 				if (lApplied != null)
 				{
@@ -583,31 +661,31 @@ namespace AgentCharacterEditor
 				}
 				return null;
 			}
+#if DEBUG
+			public override string DebugString
+			{
+				get
+				{
+					FileCharacterName lTarget = Target;
+					return ((lTarget != null) ? String.Format ("From [{0:D} {0:X4}] [{1}] [{2}] [{3}]", lTarget.Language, lTarget.Name, lTarget.Desc1, lTarget.Desc2) : "From <empty>")
+					+ String.Format (" to [{0:D} {0:X4}] [{1}] [{2}] [{3}]", Language, Name, Desc1, Desc2);
+				}
+			}
+#endif
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		internal class AddDeleteStateAnimation : UndoableUpdate<CharacterFile>
+		internal class AddDeleteStateAnimation : UndoableAddDelete<String>
 		{
-			public AddDeleteStateAnimation (CharacterFile pCharacterFile, String pStateName, String pAnimationName, Boolean pIsDelete)
-				: base (pCharacterFile, pCharacterFile)
+			public AddDeleteStateAnimation (String pStateName, String pAnimationName, Boolean pIsDelete)
+				: base (pStateName)
 			{
-				StateName = pStateName;
 				AnimationName = pAnimationName;
 				IsDelete = pIsDelete;
 			}
 
-			public String StateName
-			{
-				get;
-				private set;
-			}
 			public String AnimationName
-			{
-				get;
-				private set;
-			}
-			public Boolean IsDelete
 			{
 				get;
 				private set;
@@ -617,51 +695,67 @@ namespace AgentCharacterEditor
 			{
 				get
 				{
-					return Global.QuotedTitle (StateName);
+					return Target.Quoted ();
 				}
 			}
 			public override String ChangeDescription
 			{
 				get
 				{
-					return String.Format (Properties.Resources.UndoStateAnimation, Global.QuotedTitle (AnimationName));
+					return String.Format (Properties.Resources.UndoStateAnimation, AnimationName.Quoted ());
 				}
 			}
 
 			public override UndoUnit Apply ()
 			{
+				UndoableUpdate lApplied = null;
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
+#endif
 				if (IsDelete)
 				{
-					if (CharacterFile.States.RemoveStateAnimation (StateName, AnimationName))
+					if (CharacterFile.States.RemoveStateAnimation (Target, AnimationName))
 					{
-						return OnApplied (new AddDeleteStateAnimation (CharacterFile, StateName, AnimationName, false));
+						IsDelete = false;
+						IsRedo = !IsRedo;
+						lApplied = this;
 					}
 				}
 				else
 				{
-					if (CharacterFile.States.AddStateAnimation (StateName, AnimationName))
+					if (CharacterFile.States.AddStateAnimation (Target, AnimationName))
 					{
-						return OnApplied (new AddDeleteStateAnimation (CharacterFile, StateName, AnimationName, true));
+						IsDelete = true;
+						IsRedo = !IsRedo;
+						lApplied = this;
 					}
+				}
+				if (lApplied != null)
+				{
+					return OnApplied (lApplied);
 				}
 				return null;
 			}
+
+#if DEBUG
+			public override string DebugString
+			{
+				get
+				{
+					return String.Format ("{0}({1}) [{2}] [{3}]", ActionDescription, RedoString, Target, AnimationName);
+				}
+			}
+#endif
 		}
 
-		internal class UpdateAllStateAnimations : UndoableUpdate<CharacterFile>
+		internal class UpdateAllStateAnimations : UndoableUpdate<String>
 		{
-			public UpdateAllStateAnimations (CharacterFile pCharacterFile, String pStateName, String[] pAnimationNames)
-				: base (pCharacterFile, pCharacterFile)
+			public UpdateAllStateAnimations (String pStateName, String[] pAnimationNames)
+				: base (pStateName)
 			{
-				StateName = pStateName;
 				AnimationNames = pAnimationNames;
 			}
 
-			public String StateName
-			{
-				get;
-				private set;
-			}
 			public String[] AnimationNames
 			{
 				get;
@@ -671,18 +765,22 @@ namespace AgentCharacterEditor
 			{
 				get
 				{
-					return Global.TitleState (StateName);
+					return Global.TitleState (Target);
 				}
 			}
 
 			public override UndoUnit Apply ()
 			{
-				UpdateAllStateAnimations	lApplied = null;
-				String[]					lAnimationNames = null;
+				UpdateAllStateAnimations lApplied = null;
+				String lStateName = Target;
+				String[] lAnimationNames = null;
 
-				if (CharacterFile.States.ContainsKey (StateName))
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
+#endif
+				if (CharacterFile.States.ContainsKey (lStateName))
 				{
-					lAnimationNames = CharacterFile.States[StateName].Clone () as String[];
+					lAnimationNames = CharacterFile.States[lStateName].Clone () as String[];
 				}
 				if (lAnimationNames != null)
 				{
@@ -690,7 +788,7 @@ namespace AgentCharacterEditor
 					{
 						if ((AnimationNames == null) || !Array.Exists (AnimationNames, lAnimationName.Equals))
 						{
-							if (CharacterFile.States.RemoveStateAnimation (StateName, lAnimationName))
+							if (CharacterFile.States.RemoveStateAnimation (lStateName, lAnimationName))
 							{
 								lApplied = this;
 							}
@@ -703,7 +801,7 @@ namespace AgentCharacterEditor
 					{
 						if ((lAnimationNames == null) || !Array.Exists (lAnimationNames, lAnimationName.Equals))
 						{
-							if (CharacterFile.States.AddStateAnimation (StateName, lAnimationName))
+							if (CharacterFile.States.AddStateAnimation (lStateName, lAnimationName))
 							{
 								lApplied = this;
 							}
@@ -717,28 +815,46 @@ namespace AgentCharacterEditor
 				}
 				return null;
 			}
+
+#if DEBUG
+			public override string DebugString
+			{
+				get
+				{
+					String[] lAnimationNames = null;
+
+					if (CharacterFile.States.ContainsKey (Target))
+					{
+						lAnimationNames = CharacterFile.States[Target];
+					}
+					return String.Format ("[{0}] from [{1}] to [{2}]", Target, (lAnimationNames == null) ? "<empty>" : String.Join (" ", lAnimationNames), (AnimationNames == null) ? "<empty>" : String.Join (" ", AnimationNames));
+				}
+			}
+#endif
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		internal class AddDeleteAnimation : UndoableAddDelete<FileAnimation>
 		{
-			public AddDeleteAnimation (CharacterFile pCharacterFile, String pAnimationName, Boolean pForClipboard)
-				: base (pCharacterFile, null, pForClipboard)
+			public AddDeleteAnimation (String pAnimationName, Boolean pForClipboard)
+				: base (new ResolveAnimation (pAnimationName), pForClipboard)
 			{
-				AnimationName = pAnimationName;
+				IsDelete = false;
 			}
 
-			public AddDeleteAnimation (CharacterFile pCharacterFile, FileAnimation pAnimation, Boolean pForClipboard)
-				: base (pCharacterFile, pAnimation, pForClipboard)
+			public AddDeleteAnimation (FileAnimation pAnimation, Boolean pForClipboard)
+				: base (new ResolveAnimation (pAnimation), pForClipboard)
 			{
-				AnimationName = pAnimation.Name;
+				IsDelete = true;
 			}
 
 			public String AnimationName
 			{
-				get;
-				private set;
+				get
+				{
+					return (RawTarget as ResolveAnimation).AnimationName;
+				}
 			}
 			public override String TargetDescription
 			{
@@ -750,34 +866,31 @@ namespace AgentCharacterEditor
 
 			public override UndoUnit Apply ()
 			{
-				AddDeleteAnimation	lApplied = null;
-				FileAnimation		lAnimation = null;
-
+				AddDeleteAnimation lApplied = null;
+				FileAnimation lTarget = Target;
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
+#endif
 				if (IsDelete)
 				{
-					if (CharacterFile.Gestures.Contains (AnimationName))
+					if (CharacterFile.Gestures.Remove (AnimationName))
 					{
-						lAnimation = CharacterFile.Gestures[AnimationName];
-
-						if (CharacterFile.Gestures.Remove (AnimationName))
-						{
-							lApplied = new AddDeleteAnimation (CharacterFile, lAnimation, ForClipboard);
-							lApplied.IsDelete = false;
-							lApplied.IsRedo = !IsRedo;
-						}
+						lApplied = new AddDeleteAnimation (lTarget, ForClipboard);
+						lApplied.IsDelete = false;
+						lApplied.IsRedo = !IsRedo;
 					}
 				}
 				else
 				{
-					lAnimation = CharacterFile.Gestures.Add (AnimationName);
+					FileAnimation lAnimation = CharacterFile.Gestures.Add (AnimationName);
 
 					if (lAnimation != null)
 					{
-						if (Target != null)
+						if (lTarget != null)
 						{
-							Target.CopyTo (lAnimation);
+							lTarget.CopyTo (lAnimation);
 						}
-						lApplied = new AddDeleteAnimation (CharacterFile, lAnimation, ForClipboard);
+						lApplied = new AddDeleteAnimation (lAnimation, ForClipboard);
 						lApplied.IsDelete = true;
 						lApplied.IsRedo = !IsRedo;
 					}
@@ -788,12 +901,22 @@ namespace AgentCharacterEditor
 				}
 				return null;
 			}
+
+#if DEBUG
+			public override string DebugString
+			{
+				get
+				{
+					return String.Format ("{0}({1}) [{2}]", ActionDescription, RedoString, AnimationName);
+				}
+			}
+#endif
 		}
 
 		internal class UpdateAnimation : UndoableUpdate<FileAnimation>
 		{
-			public UpdateAnimation (CharacterFile pCharacterFile, FileAnimation pAnimation, Boolean pForClipboard)
-				: base (pCharacterFile, pAnimation, pForClipboard)
+			public UpdateAnimation (FileAnimation pAnimation, Boolean pForClipboard)
+				: base (new ResolveAnimation (pAnimation), pForClipboard)
 			{
 				UndoObject = new FileAnimation ();
 				UndoObject.Name = Target.Name;
@@ -849,18 +972,22 @@ namespace AgentCharacterEditor
 			{
 				get
 				{
-					return Global.QuotedTitle (Target.Name);
+					return Target.Name.Quoted ();
 				}
 			}
 			public override String ActionDescription
 			{
 				get
 				{
-					if (NameChanged)
+					if (ForClipboard)
+					{
+						return base.ActionDescription;
+					}
+					else if (NameChanged)
 					{
 						if (IsRedo)
 						{
-							return String.Format (Properties.Resources.UndoAnimationName, String.Format (Properties.Resources.UndoAnimationNames, Global.QuotedTitle (Name), String.Empty));
+							return String.Format (Properties.Resources.UndoAnimationName, String.Format (Properties.Resources.UndoAnimationNames, Name.Quoted (), String.Empty));
 						}
 						else
 						{
@@ -874,11 +1001,15 @@ namespace AgentCharacterEditor
 			{
 				get
 				{
-					if (NameChanged)
+					if (ForClipboard)
+					{
+						return base.ChangeDescription;
+					}
+					else if (NameChanged)
 					{
 						if (!IsRedo)
 						{
-							return String.Format (Properties.Resources.UndoAnimationNames, String.Empty, Global.QuotedTitle (Name));
+							return String.Format (Properties.Resources.UndoAnimationNames, String.Empty, Name.Quoted ());
 						}
 					}
 					else
@@ -891,11 +1022,13 @@ namespace AgentCharacterEditor
 
 			public override UndoUnit Apply ()
 			{
-				UpdateAnimation	lApplied = null;
-
+				UpdateAnimation lApplied = null;
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
+#endif
 				if (NameChanged)
 				{
-					lApplied = new UpdateAnimation (CharacterFile, Target, ForClipboard);
+					lApplied = new UpdateAnimation (Target, ForClipboard);
 					Target.Name = Name;
 					Name = lApplied.Name;
 					lApplied.IsRedo = !IsRedo;
@@ -904,7 +1037,7 @@ namespace AgentCharacterEditor
 				{
 					if (ReturnTypeChanged || ReturnNameChanged)
 					{
-						FileAnimation	lSwap = new FileAnimation ();
+						FileAnimation lSwap = new FileAnimation ();
 						Target.CopyTo (lSwap);
 						UndoObject.CopyTo (Target);
 						lSwap.CopyTo (UndoObject);
@@ -939,78 +1072,93 @@ namespace AgentCharacterEditor
 					return !String.Equals (Target.ReturnName, ReturnName);
 				}
 			}
+
+#if DEBUG
+			public override string DebugString
+			{
+				get
+				{
+					return String.Format ("{0} [{1}]", ActionDescription, Target.Name);
+				}
+			}
+#endif
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		internal class AddDeleteAnimationFrame : UndoableAddDelete<FileAnimationFrame>
 		{
-			public AddDeleteAnimationFrame (CharacterFile pCharacterFile, FileAnimation pAnimation, int pFrameNdx, Boolean pForClipboard)
-				: base (pCharacterFile, null, pForClipboard)
+			public AddDeleteAnimationFrame (FileAnimation pAnimation, int pFrameNdx, Boolean pForClipboard)
+				: base (new ResolveAnimationFrame (pAnimation, pFrameNdx), pForClipboard)
 			{
-				Animation = pAnimation;
-				FrameNdx = pFrameNdx;
+				IsDelete = false;
 			}
 
-			public AddDeleteAnimationFrame (CharacterFile pCharacterFile, FileAnimationFrame pFrame, Boolean pForClipboard)
-				: base (pCharacterFile, pFrame, pForClipboard)
+			public AddDeleteAnimationFrame (FileAnimationFrame pFrame, Boolean pForClipboard)
+				: base (new ResolveAnimationFrame (pFrame), pForClipboard)
 			{
-				Animation = pFrame.Animation;
-				FrameNdx = pFrame.Container.IndexOf (Target);
+				IsDelete = true;
 			}
 
 			public FileAnimation Animation
 			{
-				get;
-				private set;
+				get
+				{
+					return (RawTarget as ResolveAnimationFrame).Animation.Target;
+				}
+
+			}
+			public String AnimationName
+			{
+				get
+				{
+					return (RawTarget as ResolveAnimationFrame).Animation.AnimationName;
+				}
 			}
 			public int FrameNdx
 			{
-				get;
-				private set;
+				get
+				{
+					return (RawTarget as ResolveAnimationFrame).FrameNdx;
+				}
 			}
 			public override String TargetDescription
 			{
 				get
 				{
-					return Global.QuotedTitle (Global.TitleFrameAnimation (FrameNdx, Animation));
+					return Global.TitleFrameAnimation (FrameNdx, AnimationName).Quoted ();
 				}
 			}
 
 			public override UndoUnit Apply ()
 			{
-				AddDeleteAnimationFrame	lApplied = null;
-
+				AddDeleteAnimationFrame lApplied = null;
+				FileAnimation lAnimation = Animation;
+				FileAnimationFrame lTarget = Target;
+				int lFrameNdx = FrameNdx;
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
+#endif
 				if (IsDelete)
 				{
-					if (Animation.Frames.Contains (Target))
+					if (Animation.Frames.Remove (lTarget))
 					{
-						FrameNdx = Animation.Frames.IndexOf (Target);
-						lApplied = new AddDeleteAnimationFrame (CharacterFile, Target, ForClipboard);
-						if (Animation.Frames.Remove (Target))
-						{
-							lApplied.IsDelete = false;
-							lApplied.IsRedo = !IsRedo;
-						}
-						else
-						{
-							lApplied = null;
-						}
+						lApplied = new AddDeleteAnimationFrame (lTarget, ForClipboard);
+						lApplied.IsDelete = false;
+						lApplied.IsRedo = !IsRedo;
 					}
 				}
 				else
 				{
-					FileAnimationFrame	lFrame = Animation.Frames.Insert (FrameNdx);
+					FileAnimationFrame lFrame = lAnimation.Frames.Insert (lFrameNdx);
 
 					if (lFrame != null)
 					{
-						if (Target != null)
+						if (lTarget != null)
 						{
-							Target.CopyTo (lFrame);
+							lTarget.CopyTo (lFrame);
 						}
-						Target = lFrame;
-						FrameNdx = Animation.Frames.IndexOf (Target);
-						lApplied = new AddDeleteAnimationFrame (CharacterFile, Target, ForClipboard);
+						lApplied = new AddDeleteAnimationFrame (lFrame, ForClipboard);
 						lApplied.IsDelete = true;
 						lApplied.IsRedo = !IsRedo;
 					}
@@ -1021,22 +1169,40 @@ namespace AgentCharacterEditor
 				}
 				return null;
 			}
+
+#if DEBUG
+			public override string DebugString
+			{
+				get
+				{
+					return String.Format ("{0}({1}) [{2} ({3})]", ActionDescription, RedoString, AnimationName, FrameNdx);
+				}
+			}
+#endif
 		}
 
 		internal class ReorderAnimationFrame : UndoableUpdate<FileAnimationFrame>
 		{
-			public ReorderAnimationFrame (CharacterFile pCharacterFile, FileAnimation pAnimation, FileAnimationFrame pFrame, int pFrameNdxTo)
-				: base (pCharacterFile, pFrame)
+			public ReorderAnimationFrame (FileAnimationFrame pFrame, int pFrameNdxTo)
+				: base (new ResolveAnimationFrame (pFrame))
 			{
-				Animation = pAnimation;
-				FrameNdxFrom = pAnimation.Frames.IndexOf (Target);
+				FrameNdxFrom = pFrame.Container.IndexOf (Target);
 				FrameNdxTo = pFrameNdxTo;
 			}
 
 			public FileAnimation Animation
 			{
-				get;
-				private set;
+				get
+				{
+					return (RawTarget as ResolveAnimationFrame).Animation.Target;
+				}
+			}
+			public String AnimationName
+			{
+				get
+				{
+					return (RawTarget as ResolveAnimationFrame).Animation.AnimationName;
+				}
 			}
 			public int FrameNdxFrom
 			{
@@ -1052,7 +1218,7 @@ namespace AgentCharacterEditor
 			{
 				get
 				{
-					return Global.TitleAnimation (Animation);
+					return Global.TitleAnimation (AnimationName);
 				}
 			}
 			public override String ChangeDescription
@@ -1065,22 +1231,35 @@ namespace AgentCharacterEditor
 
 			public override UndoUnit Apply ()
 			{
-				int	lSwap = Animation.Frames.IndexOf (Target);
-				if (Animation.Frames.Move (Target, FrameNdxTo))
+				FileAnimationFrame lTarget = Target;
+				int lSwap = lTarget.Container.IndexOf (lTarget);
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
+#endif
+				if (lTarget.Container.Move (lTarget, FrameNdxTo))
 				{
-					FrameNdxFrom = Animation.Frames.IndexOf (Target);
+					FrameNdxFrom = lTarget.Container.IndexOf (lTarget);
 					FrameNdxTo = lSwap;
-
 					return OnApplied (this);
 				}
 				return null;
 			}
+
+#if DEBUG
+			public override string DebugString
+			{
+				get
+				{
+					return String.Format ("{0} [{1}] [{2:D} to {3:D}]]", ActionDescription, AnimationName, FrameNdxFrom, FrameNdxTo);
+				}
+			}
+#endif
 		}
 
 		internal class UpdateAnimationFrame : UndoableUpdate<FileAnimationFrame>
 		{
-			public UpdateAnimationFrame (CharacterFile pCharacterFile, FileAnimationFrame pFrame, Boolean pForClipboard)
-				: base (pCharacterFile, pFrame, pForClipboard)
+			public UpdateAnimationFrame (FileAnimationFrame pFrame, Boolean pForClipboard)
+				: base (new ResolveAnimationFrame (pFrame), pForClipboard)
 			{
 				UndoObject = new FileAnimationFrame ();
 				SoundFilePath = pFrame.SoundFilePath;
@@ -1091,9 +1270,24 @@ namespace AgentCharacterEditor
 			{
 				get
 				{
-					return Target.Animation;
+					return (RawTarget as ResolveAnimationFrame).Animation.Target;
 				}
 			}
+			public String AnimationName
+			{
+				get
+				{
+					return (RawTarget as ResolveAnimationFrame).Animation.AnimationName;
+				}
+			}
+			public int FrameNdx
+			{
+				get
+				{
+					return (RawTarget as ResolveAnimationFrame).FrameNdx;
+				}
+			}
+
 			public UInt16 Duration
 			{
 				get
@@ -1143,7 +1337,7 @@ namespace AgentCharacterEditor
 			{
 				get
 				{
-					return Global.QuotedTitle (Global.TitleFrameAnimation (Target));
+					return Global.TitleFrameAnimation (Target).Quoted ();
 				}
 			}
 			public override String ChangeDescription
@@ -1163,11 +1357,13 @@ namespace AgentCharacterEditor
 
 			public override UndoUnit Apply ()
 			{
-				UndoUnit	lApplied = null;
-
+				UndoUnit lApplied = null;
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
+#endif
 				if (DurationChanged || ExitFrameChanged || BranchingChanged)
 				{
-					FileAnimationFrame	lSwap = new FileAnimationFrame ();
+					FileAnimationFrame lSwap = new FileAnimationFrame ();
 					Target.CopyTo (lSwap);
 					UndoObject.CopyTo (Target);
 					lSwap.CopyTo (UndoObject);
@@ -1175,7 +1371,7 @@ namespace AgentCharacterEditor
 				}
 				if (SoundChanged)
 				{
-					String	lSwap = Target.SoundFilePath;
+					String lSwap = Target.SoundFilePath;
 					Target.SoundFilePath = SoundFilePath;
 					SoundFilePath = lSwap;
 					lApplied = this;
@@ -1238,45 +1434,88 @@ namespace AgentCharacterEditor
 				}
 				return true;
 			}
+
+#if DEBUG
+			public override string DebugString
+			{
+				get
+				{
+					return String.Format ("{0} ({1:D}) From [{2:D}] [{3:D}] [{4} ({5:D})] [{6}]", AnimationName, FrameNdx, Target.Duration, Target.ExitFrame, Target.SoundFilePath, Target.SoundNdx, BranchingString (Target.Branching))
+					+ String.Format (" to [{0:D}] [{1:D}] [{2}] [{3}]", Duration, ExitFrame, SoundFilePath, BranchingString (Branching));
+				}
+			}
+
+			public static String BranchingString (FileFrameBranch[] pBranching)
+			{
+				StringBuilder lString = new StringBuilder ();
+
+				if (pBranching != null)
+				{
+					foreach (FileFrameBranch lBranching in pBranching)
+					{
+						lString.Append (String.Format ("({0:D} {1:D}) ", lBranching.mProbability, lBranching.mFrameNdx));
+					}
+				}
+				return lString.ToString ().Trim ();
+			}
+#endif
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		internal class AddDeleteFrameImage : UndoableAddDelete<FileFrameImage>
 		{
-			public AddDeleteFrameImage (CharacterFile pCharacterFile, FileAnimationFrame pFrame, String pImageFilePath, Boolean pForClipboard)
-				: base (pCharacterFile, pForClipboard)
+			public AddDeleteFrameImage (FileAnimationFrame pFrame, String pImageFilePath, Boolean pForClipboard)
+				: base (new ResolveFrameImage (pFrame, pFrame.ImageCount), pForClipboard)
 			{
-				Frame = pFrame;
+				IsDelete = false;
 				ImageFilePath = pImageFilePath;
 			}
 
-			public AddDeleteFrameImage (CharacterFile pCharacterFile, FileFrameImage pImage, Boolean pForClipboard)
-				: base (pCharacterFile, pImage, pForClipboard)
+			public AddDeleteFrameImage (FileFrameImage pImage, Boolean pForClipboard)
+				: base (new ResolveFrameImage (pImage), pForClipboard)
 			{
-				Frame = pImage.Frame;
-				ImageFilePath = Target.ImageFilePath;
-				ImageNdx = pImage.Container.IndexOf (Target);
+				IsDelete = true;
+				ImageFilePath = pImage.ImageFilePath;
 			}
 
 			public FileAnimation Animation
 			{
 				get
 				{
-					return Frame.Animation;
+					return (RawTarget as ResolveFrameImage).Frame.Animation.Target;
+				}
+			}
+			public String AnimationName
+			{
+				get
+				{
+					return (RawTarget as ResolveFrameImage).Frame.Animation.AnimationName;
 				}
 			}
 			public FileAnimationFrame Frame
 			{
-				get;
-				set;
+				get
+				{
+					return (RawTarget as ResolveFrameImage).Frame.Target;
+				}
 			}
-			public String ImageFilePath
+			public int FrameNdx
 			{
-				get;
-				private set;
+				get
+				{
+					return (RawTarget as ResolveFrameImage).Frame.FrameNdx;
+				}
 			}
 			public int ImageNdx
+			{
+				get
+				{
+					return (RawTarget as ResolveFrameImage).ImageNdx;
+				}
+			}
+
+			public String ImageFilePath
 			{
 				get;
 				private set;
@@ -1285,45 +1524,43 @@ namespace AgentCharacterEditor
 			{
 				get
 				{
-					return Global.QuotedTitle (Global.TitleImageFrameAnimation (ImageNdx, Frame));
+					return Global.TitleImageFrameAnimation (ImageNdx, Frame).Quoted ();
 				}
 			}
 
 			public override UndoUnit Apply ()
 			{
-				AddDeleteFrameImage	lApplied = null;
-
+				AddDeleteFrameImage lApplied = null;
+				FileAnimationFrame lFrame = Frame;
+				FileFrameImage lTarget = Target;
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
+#endif
 				if (IsDelete)
 				{
-					if (Frame.Images.Contains (Target))
+					lApplied = new AddDeleteFrameImage (lTarget, ForClipboard);
+					if (lFrame.Images.Remove (lTarget))
 					{
-						ImageNdx = Frame.Images.IndexOf (Target);
-						lApplied = new AddDeleteFrameImage (CharacterFile, Target, ForClipboard);
-						if (Frame.Images.Remove (Target))
-						{
-							lApplied.IsDelete = false;
-							lApplied.IsRedo = !IsRedo;
-						}
-						else
-						{
-							lApplied = null;
-						}
+						lApplied.IsDelete = false;
+						lApplied.IsRedo = !IsRedo;
+					}
+					else
+					{
+						lApplied = null;
 					}
 				}
 				else
 				{
-					FileFrameImage	lFrameImage = Frame.Images.Add (ImageFilePath);
+					FileFrameImage lFrameImage = lFrame.Images.Add (ImageFilePath);
 
 					if (lFrameImage != null)
 					{
-						if (Target != null)
+						lFrame.Images.Move (lFrameImage, ImageNdx);
+						if (lTarget != null)
 						{
-							Target.CopyTo (lFrameImage);
-							Frame.Images.Move (lFrameImage, ImageNdx);
+							lTarget.CopyTo (lFrameImage);
 						}
-						Target = lFrameImage;
-						ImageNdx = Frame.Images.IndexOf (Target);
-						lApplied = new AddDeleteFrameImage (CharacterFile, Target, ForClipboard);
+						lApplied = new AddDeleteFrameImage (lFrameImage, ForClipboard);
 						lApplied.IsDelete = true;
 						lApplied.IsRedo = !IsRedo;
 					}
@@ -1334,12 +1571,22 @@ namespace AgentCharacterEditor
 				}
 				return null;
 			}
+
+#if DEBUG
+			public override string DebugString
+			{
+				get
+				{
+					return String.Format ("{0}({1}) [{2} ({3}) ({4})]", ActionDescription, RedoString, AnimationName, FrameNdx, ImageNdx);
+				}
+			}
+#endif
 		}
 
 		internal class ReorderFrameImage : UndoableUpdate<FileFrameImage>
 		{
-			public ReorderFrameImage (CharacterFile pCharacterFile, FileFrameImage pImage, int pImageNdxTo)
-				: base (pCharacterFile, pImage)
+			public ReorderFrameImage (FileFrameImage pImage, int pImageNdxTo)
+				: base (new ResolveFrameImage (pImage))
 			{
 				ImageNdxFrom = Frame.Images.IndexOf (Target);
 				ImageNdxTo = pImageNdxTo;
@@ -1349,16 +1596,31 @@ namespace AgentCharacterEditor
 			{
 				get
 				{
-					return Frame.Animation;
+					return (RawTarget as ResolveFrameImage).Frame.Animation.Target;
+				}
+			}
+			public String AnimationName
+			{
+				get
+				{
+					return (RawTarget as ResolveFrameImage).Frame.Animation.AnimationName;
 				}
 			}
 			public FileAnimationFrame Frame
 			{
 				get
 				{
-					return Target.Frame;
+					return (RawTarget as ResolveFrameImage).Frame.Target;
 				}
 			}
+			public int FrameNdx
+			{
+				get
+				{
+					return (RawTarget as ResolveFrameImage).Frame.FrameNdx;
+				}
+			}
+
 			public int ImageNdxFrom
 			{
 				get;
@@ -1374,7 +1636,7 @@ namespace AgentCharacterEditor
 			{
 				get
 				{
-					return Global.QuotedTitle (Global.TitleFrameAnimation (Frame));
+					return Global.TitleFrameAnimation (Frame).Quoted ();
 				}
 			}
 			public override String ChangeDescription
@@ -1387,59 +1649,82 @@ namespace AgentCharacterEditor
 
 			public override UndoUnit Apply ()
 			{
-				int	lSwap = Frame.Images.IndexOf (Target);
-				if (Frame.Images.Move (Target, ImageNdxTo))
+				FileFrameImage lTarget = Target;
+				int lSwap = lTarget.Container.IndexOf (lTarget);
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
+#endif
+				if (lTarget.Container.Move (lTarget, ImageNdxTo))
 				{
-					ImageNdxFrom = Frame.Images.IndexOf (Target);
+					ImageNdxFrom = lTarget.Container.IndexOf (lTarget);
 					ImageNdxTo = lSwap;
-
 					return OnApplied (this);
 				}
 				return null;
 			}
+
+#if DEBUG
+			public override string DebugString
+			{
+				get
+				{
+					return String.Format ("{0} [{1} ({2:D})] [{3:D} to {4:D}]]", ActionDescription, AnimationName, FrameNdx, ImageNdxFrom, ImageNdxTo);
+				}
+			}
+#endif
 		}
 
 		internal class UpdateFrameImage : UndoableUpdate<FileFrameImage>
 		{
-			public UpdateFrameImage (CharacterFile pCharacterFile, FileFrameImage pImage, Boolean pForClipboard)
-				: base (pCharacterFile, pImage, pForClipboard)
+			public UpdateFrameImage (FileFrameImage pImage, Boolean pForClipboard)
+				: base (new ResolveFrameImage (pImage), pForClipboard)
 			{
-				UndoObject = new FileFrameImage ();
-				Target.CopyTo (UndoObject);
-				ImageFilePath = Target.ImageFilePath;
+				Offset = pImage.Offset;
+				ImageFilePath = pImage.ImageFilePath;
 			}
 
 			public FileAnimation Animation
 			{
 				get
 				{
-					return Frame.Animation;
+					return (RawTarget as ResolveFrameImage).Frame.Animation.Target;
+				}
+			}
+			public String AnimationName
+			{
+				get
+				{
+					return (RawTarget as ResolveFrameImage).Frame.Animation.AnimationName;
 				}
 			}
 			public FileAnimationFrame Frame
 			{
 				get
 				{
-					return Target.Frame;
+					return (RawTarget as ResolveFrameImage).Frame.Target;
 				}
 			}
-			public Point Offset
+			public int FrameNdx
 			{
 				get
 				{
-					return UndoObject.Offset;
-				}
-				set
-				{
-					UndoObject.Offset = value;
+					return (RawTarget as ResolveFrameImage).Frame.FrameNdx;
 				}
 			}
-			public String ImageFilePath
+			public int ImageNdx
+			{
+				get
+				{
+					return (RawTarget as ResolveFrameImage).ImageNdx;
+				}
+			}
+
+			public Point Offset
 			{
 				get;
 				set;
 			}
-			private FileFrameImage UndoObject
+			public String ImageFilePath
 			{
 				get;
 				set;
@@ -1449,7 +1734,7 @@ namespace AgentCharacterEditor
 			{
 				get
 				{
-					return Global.QuotedTitle (Global.TitleImageFrameAnimation (Target));
+					return Global.TitleImageFrameAnimation (Target).Quoted ();
 				}
 			}
 			public override String ChangeDescription
@@ -1462,27 +1747,30 @@ namespace AgentCharacterEditor
 					}
 					else
 					{
-						return (Target.Offset != Offset) ? Properties.Resources.UndoImageOffset : (!String.Equals (Target.ImageFilePath, ImageFilePath)) ? Properties.Resources.UndoImageFilePath : String.Empty;
+						FileFrameImage lTarget = Target;
+						return (lTarget.Offset != Offset) ? Properties.Resources.UndoImageOffset : !String.Equals (lTarget.ImageFilePath, ImageFilePath) ? Properties.Resources.UndoImageFilePath : String.Empty;
 					}
 				}
 			}
 
 			public override UndoUnit Apply ()
 			{
-				UndoUnit	lApplied = null;
-
-				if (Target.Offset != Offset)
+				UndoUnit lApplied = null;
+				FileFrameImage lTarget = Target;
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
+#endif
+				if (lTarget.Offset != Offset)
 				{
-					FileFrameImage	lSwap = new FileFrameImage ();
-					Target.CopyTo (lSwap);
-					UndoObject.CopyTo (Target);
-					lSwap.CopyTo (UndoObject);
+					Point lSwap = lTarget.Offset;
+					lTarget.Offset = Offset;
+					Offset = lSwap;
 					lApplied = this;
 				}
-				if (!String.Equals (Target.ImageFilePath, ImageFilePath))
+				if (!String.Equals (lTarget.ImageFilePath, ImageFilePath))
 				{
-					String	lSwap = Target.ImageFilePath;
-					Target.ImageFilePath = ImageFilePath;
+					String lSwap = lTarget.ImageFilePath;
+					lTarget.ImageFilePath = ImageFilePath;
 					ImageFilePath = lSwap;
 					lApplied = this;
 				}
@@ -1493,9 +1781,12 @@ namespace AgentCharacterEditor
 				return null;
 			}
 #if DEBUG
-			public override String DebugString ()
+			public override String DebugString
 			{
-				return String.Format ("UndoOffset {2:D},{3:D} TargetOffset {0:D},{1:D}", Offset.X, Offset.Y, Target.Offset.X, Target.Offset.Y);
+				get
+				{
+					return String.Format ("[{0} ({1:D}) ({2:D})] From [{3:D},{4:D}] [{5} ({6:D})] to [{7:D},{8:D}] [{9}]", AnimationName, FrameNdx, ImageNdx, Target.Offset.X, Target.Offset.Y, Target.ImageFilePath, Target.ImageNdx, Offset.X, Offset.Y, ImageFilePath);
+				}
 			}
 #endif
 		}
@@ -1504,55 +1795,82 @@ namespace AgentCharacterEditor
 
 		internal class AddDeleteFrameOverlay : UndoableAddDelete<FileFrameOverlay>
 		{
-			public AddDeleteFrameOverlay (CharacterFile pCharacterFile, FileFrameOverlay pOverlay, Boolean pForClipboard)
-				: base (pCharacterFile, pOverlay, pForClipboard)
+			public AddDeleteFrameOverlay (FileAnimationFrame pFrame, MouthOverlay pOverlayType, String pOverlayImagePath, Boolean pForClipboard)
+				: base (new ResolveFrameOverlay(pFrame,pOverlayType), pForClipboard)
 			{
-				Frame = pOverlay.Frame;
-				OverlayType = Target.OverlayType;
-				OverlayImagePath = Target.ImageFilePath;
-			}
-			public AddDeleteFrameOverlay (CharacterFile pCharacterFile, FileAnimationFrame pFrame, MouthOverlay pOverlayType, String pOverlayImagePath, Boolean pForClipboard)
-				: base (pCharacterFile, pForClipboard)
-			{
-				Frame = pFrame;
-				OverlayType = pOverlayType;
+				IsDelete = false;
 				OverlayImagePath = pOverlayImagePath;
 			}
+ 			public AddDeleteFrameOverlay (FileFrameOverlay pOverlay, Boolean pForClipboard)
+				: base (new ResolveFrameOverlay(pOverlay), pForClipboard)
+			{
+				IsDelete = true;
+				OverlayImagePath = Target.ImageFilePath;
+			}
 
+			public FileAnimation Animation
+			{
+				get
+				{
+					return (RawTarget as ResolveFrameOverlay).Frame.Animation.Target;
+				}
+			}
+			public String AnimationName
+			{
+				get
+				{
+					return (RawTarget as ResolveFrameOverlay).Frame.Animation.AnimationName;
+				}
+			}
 			public FileAnimationFrame Frame
 			{
-				get;
-				private set;
+				get
+				{
+					return (RawTarget as ResolveFrameOverlay).Frame.Target;
+				}
+			}
+			public int FrameNdx
+			{
+				get
+				{
+					return (RawTarget as ResolveFrameOverlay).Frame.FrameNdx;
+				}
 			}
 			public MouthOverlay OverlayType
 			{
-				get;
-				private set;
+				get
+				{
+					return (RawTarget as ResolveFrameOverlay).OverlayType;
+				}
 			}
+
 			public String OverlayImagePath
 			{
 				get;
 				private set;
 			}
-
 			public override String TargetDescription
 			{
 				get
 				{
-					return Global.QuotedTitle (Global.TitleOverlayFrameAnimation (Frame, OverlayType));
+					return Global.TitleOverlayFrameAnimation (Frame, OverlayType).Quoted ();
 				}
 			}
 
 			public override UndoUnit Apply ()
 			{
-				AddDeleteFrameOverlay	lApplied = null;
-
+				AddDeleteFrameOverlay lApplied = null;
+				FileAnimationFrame lFrame = Frame;
+				FileFrameOverlay lTarget = Target;
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
+#endif
 				if (IsDelete)
 				{
-					if (Frame.Overlays.Contains (Target))
+					if (lFrame.Overlays.Contains (lTarget))
 					{
-						lApplied = new AddDeleteFrameOverlay (CharacterFile, Target, ForClipboard);
-						if (Frame.Overlays.Remove (Target))
+						lApplied = new AddDeleteFrameOverlay (lTarget, ForClipboard);
+						if (lFrame.Overlays.Remove (lTarget))
 						{
 							lApplied.IsDelete = false;
 							lApplied.IsRedo = !IsRedo;
@@ -1565,16 +1883,15 @@ namespace AgentCharacterEditor
 				}
 				else
 				{
-					FileFrameOverlay	lFrameOverlay = Frame.Overlays.Add (OverlayType, OverlayImagePath);
+					FileFrameOverlay lFrameOverlay = lFrame.Overlays.Add (OverlayType, OverlayImagePath);
 
 					if (lFrameOverlay != null)
 					{
-						if (Target != null)
+						if (lTarget != null)
 						{
-							Target.CopyTo (lFrameOverlay);
+							lTarget.CopyTo (lFrameOverlay);
 						}
-						Target = lFrameOverlay;
-						lApplied = new AddDeleteFrameOverlay (CharacterFile, Target, ForClipboard);
+						lApplied = new AddDeleteFrameOverlay (lFrameOverlay, ForClipboard);
 						lApplied.IsDelete = true;
 						lApplied.IsRedo = !IsRedo;
 					}
@@ -1585,53 +1902,75 @@ namespace AgentCharacterEditor
 				}
 				return null;
 			}
+
+#if DEBUG
+			public override string DebugString
+			{
+				get
+				{
+					return String.Format ("{0}({1}) [{2} ({3}) ({4})]", ActionDescription, RedoString, AnimationName, FrameNdx, OverlayType);
+				}
+			}
+#endif
 		}
 
 		internal class UpdateFrameOverlay : UndoableUpdate<FileFrameOverlay>
 		{
-			public UpdateFrameOverlay (CharacterFile pCharacterFile, FileFrameOverlay pOverlay, Boolean pForClipboard)
-				: base (pCharacterFile, pOverlay, pForClipboard)
+			public UpdateFrameOverlay (FileFrameOverlay pOverlay, Boolean pForClipboard)
+				: base (new ResolveFrameOverlay (pOverlay), pForClipboard)
 			{
-				UndoObject = new FileFrameOverlay ();
-				Target.CopyTo (UndoObject);
-				OverlayImagePath = Target.ImageFilePath;
+				Offset = pOverlay.Offset;
+				ReplaceFlag = pOverlay.ReplaceFlag;
+				OverlayImagePath = pOverlay.ImageFilePath;
 			}
 
+			public FileAnimation Animation
+			{
+				get
+				{
+					return (RawTarget as ResolveFrameOverlay).Frame.Animation.Target;
+				}
+			}
+			public String AnimationName
+			{
+				get
+				{
+					return (RawTarget as ResolveFrameOverlay).Frame.Animation.AnimationName;
+				}
+			}
 			public FileAnimationFrame Frame
 			{
 				get
 				{
-					return Target.Frame;
+					return (RawTarget as ResolveFrameOverlay).Frame.Target;
 				}
 			}
+			public int FrameNdx
+			{
+				get
+				{
+					return (RawTarget as ResolveFrameOverlay).Frame.FrameNdx;
+				}
+			}
+			public MouthOverlay OverlayType
+			{
+				get
+				{
+					return (RawTarget as ResolveFrameOverlay).OverlayType;
+				}
+			}
+
 			public Boolean ReplaceFlag
-			{
-				get
-				{
-					return UndoObject.ReplaceFlag;
-				}
-				set
-				{
-					UndoObject.ReplaceFlag = value;
-				}
-			}
-			public Point Offset
-			{
-				get
-				{
-					return UndoObject.Offset;
-				}
-				set
-				{
-					UndoObject.Offset = value;
-				}
-			}
-			public String OverlayImagePath
 			{
 				get;
 				set;
 			}
-			private FileFrameOverlay UndoObject
+			public Point Offset
+			{
+				get;
+				set;
+			}
+			public String OverlayImagePath
 			{
 				get;
 				set;
@@ -1641,7 +1980,7 @@ namespace AgentCharacterEditor
 			{
 				get
 				{
-					return Global.QuotedTitle (Global.TitleOverlayFrameAnimation (Target));
+					return Global.TitleOverlayFrameAnimation (Target).Quoted ();
 				}
 			}
 			public override String ChangeDescription
@@ -1654,27 +1993,37 @@ namespace AgentCharacterEditor
 					}
 					else
 					{
-						return (Target.ReplaceFlag != ReplaceFlag) ? Properties.Resources.UndoOverlayReplaceFlag : (Target.Offset != Offset) ? Properties.Resources.UndoOverlayOffset : (!String.Equals (Target.ImageFilePath, OverlayImagePath)) ? Properties.Resources.UndoOverlayImagePath : String.Empty;
+						FileFrameOverlay lTarget = Target;
+						return (lTarget.ReplaceFlag != ReplaceFlag) ? Properties.Resources.UndoOverlayReplaceFlag : (lTarget.Offset != Offset) ? Properties.Resources.UndoOverlayOffset : (!String.Equals (lTarget.ImageFilePath, OverlayImagePath)) ? Properties.Resources.UndoOverlayImagePath : String.Empty;
 					}
 				}
 			}
 
 			public override UndoUnit Apply ()
 			{
-				UndoUnit	lApplied = null;
-
-				if ((Target.ReplaceFlag != ReplaceFlag) || (Target.Offset != Offset))
+				UndoUnit lApplied = null;
+				FileFrameOverlay lTarget = Target;
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
+#endif
+				if (lTarget.Offset != Offset)
 				{
-					FileFrameOverlay	lSwap = new FileFrameOverlay ();
-					Target.CopyTo (lSwap);
-					UndoObject.CopyTo (Target);
-					lSwap.CopyTo (UndoObject);
+					Point lSwap = lTarget.Offset;
+					lTarget.Offset = Offset;
+					Offset = lSwap;
 					lApplied = this;
 				}
-				if (!String.Equals (Target.ImageFilePath, OverlayImagePath))
+				if (lTarget.ReplaceFlag != ReplaceFlag)
 				{
-					String	lSwap = Target.ImageFilePath;
-					Target.ImageFilePath = OverlayImagePath;
+					Boolean lSwap = lTarget.ReplaceFlag;
+					lTarget.ReplaceFlag = ReplaceFlag;
+					ReplaceFlag = lSwap;
+					lApplied = this;
+				}
+				if (!String.Equals (lTarget.ImageFilePath, OverlayImagePath))
+				{
+					String lSwap = lTarget.ImageFilePath;
+					lTarget.ImageFilePath = OverlayImagePath;
 					OverlayImagePath = lSwap;
 					lApplied = this;
 				}
@@ -1684,6 +2033,16 @@ namespace AgentCharacterEditor
 				}
 				return null;
 			}
+
+#if DEBUG
+			public override String DebugString
+			{
+				get
+				{
+					return String.Format ("[{0} ({1:D}) ({2:D})] From [{3:D},{4:D}] [{5}] [{6} ({7:D})] to [{8:D},{9:D}] [{10}] [{11}]", AnimationName, FrameNdx, OverlayType, Target.Offset.X, Target.Offset.Y, Target.ReplaceFlag, Target.ImageFilePath, Target.ImageNdx, Offset.X, Offset.Y, ReplaceFlag, OverlayImagePath);
+				}
+			}
+#endif
 		}
 	}
 }

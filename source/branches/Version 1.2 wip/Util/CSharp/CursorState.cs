@@ -25,19 +25,35 @@ using System.Windows.Forms;
 
 namespace DoubleAgent
 {
+	/// <summary>
+	/// For use as a local variable to save/restore a <see cref="System.Windows.Forms.Form"/>'s current <see cref="System.Windows.Forms.Cursor"/>.
+	/// </summary>
 	public class CursorState
 	{
+		/// <summary>
+		/// The <see cref="System.Windows.Forms.Form"/> whose <see cref="System.Windows.Forms.Cursor"/> is being managed.
+		/// </summary>
 		public System.Windows.Forms.Form Form
 		{
 			get;
 			set;
 		}
+		/// <summary>
+		/// The <see cref="System.Windows.Forms.Form"/>'s <see cref="System.Windows.Forms.Cursor"/> at the time this object was constructed.
+		/// </summary>
 		public System.Windows.Forms.Cursor SavedCursor
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="pForm">The <see cref="System.Windows.Forms.Form"/> whose <see cref="System.Windows.Forms.Cursor"/> is being managed.</param>
+		/// <seealso cref="RestoreCursor"/>
+		/// <seealso cref="Form"/>
+		/// <seealso cref="SavedCursor"/>
 		public CursorState (System.Windows.Forms.Form pForm)
 		{
 			this.Form = pForm;
@@ -51,6 +67,12 @@ namespace DoubleAgent
 
 		///////////////////////////////////////////////////////////////////////////////
 
+		/// <summary>
+		/// Sets the managed <see cref="Form"/>'s current <see cref="System.Windows.Forms.Cursor"/>.
+		/// </summary>
+		/// <remarks>This method will fail if <see cref="RestoreCursor"/> has already been called.</remarks>
+		/// <param name="pCursor">The <see cref="System.Windows.Forms.Cursor"/> to show.</param>
+		/// <returns>True of successful</returns>
 		public Boolean ShowCursor (System.Windows.Forms.Cursor pCursor)
 		{
 			if ((pCursor != null) && (this.SavedCursor != null) && (this.Form != null))
@@ -67,6 +89,11 @@ namespace DoubleAgent
 			return false;
 		}
 
+		/// <summary>
+		/// Restores the managed <see cref="Form"/>'s <see cref="System.Windows.Forms.Cursor"/> to the <see cref="SavedCursor"/>
+		/// </summary>
+		/// <remarks>This method should be called once-and-only-once.</remarks>
+		/// <returns>True if successful</returns>
 		public Boolean RestoreCursor ()
 		{
 			if ((this.SavedCursor != null) && (this.Form != null))
@@ -86,6 +113,11 @@ namespace DoubleAgent
 
 		///////////////////////////////////////////////////////////////////////////////
 
+		/// <summary>
+		/// Sets the managed <see cref="Form"/>'s current <see cref="System.Windows.Forms.Cursor"/> to <see cref="System.Windows.Forms.Cursors.WaitCursor"/>.
+		/// </summary>
+		/// <returns>True if successful</returns>
+		/// <seealso cref="ShowCursor"/>
 		public Boolean ShowWait ()
 		{
 			return ShowCursor (System.Windows.Forms.Cursors.WaitCursor);

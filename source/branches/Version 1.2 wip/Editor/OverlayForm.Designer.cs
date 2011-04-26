@@ -88,7 +88,7 @@ namespace AgentCharacterEditor
 			this.ToolStripImages = new DoubleAgent.ToolStripEx ();
 			this.ButtonAdd = new System.Windows.Forms.ToolStripButton ();
 			this.ButtonDelete = new System.Windows.Forms.ToolStripButton ();
-			this.ButtonOpen = new System.Windows.Forms.ToolStripButton ();
+			this.ButtonChooseFile = new System.Windows.Forms.ToolStripButton ();
 			this.GroupBoxImages.SuspendLayout ();
 			this.TableLayoutImages.SuspendLayout ();
 			this.FlowLayoutRight.SuspendLayout ();
@@ -543,7 +543,7 @@ namespace AgentCharacterEditor
 			this.ToolStripImages.Items.AddRange (new System.Windows.Forms.ToolStripItem[] {
             this.ButtonAdd,
             this.ButtonDelete,
-            this.ButtonOpen});
+            this.ButtonChooseFile});
 			this.ToolStripImages.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.ToolStripImages.Location = new System.Drawing.Point (0, 0);
 			this.ToolStripImages.Name = "ToolStripImages";
@@ -573,14 +573,14 @@ namespace AgentCharacterEditor
 			// 
 			// ButtonOpen
 			// 
-			this.ButtonOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonOpen.Image = ((System.Drawing.Image)(resources.GetObject ("ButtonOpen.Image")));
-			this.ButtonOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonOpen.Name = "ButtonOpen";
-			this.ButtonOpen.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
-			this.ButtonOpen.Size = new System.Drawing.Size (23, 23);
-			this.ButtonOpen.Text = "Choose image file";
-			this.ButtonOpen.Click += new System.EventHandler (this.ButtonOpen_Click);
+			this.ButtonChooseFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonChooseFile.Image = ((System.Drawing.Image)(resources.GetObject ("ButtonOpen.Image")));
+			this.ButtonChooseFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonChooseFile.Name = "ButtonOpen";
+			this.ButtonChooseFile.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
+			this.ButtonChooseFile.Size = new System.Drawing.Size (23, 23);
+			this.ButtonChooseFile.Text = "Choose image file";
+			this.ButtonChooseFile.Click += new System.EventHandler (this.ButtonOpen_Click);
 			// 
 			// OverlayForm
 			// 
@@ -655,7 +655,7 @@ namespace AgentCharacterEditor
 		private System.Windows.Forms.CheckBox CheckBoxReplace;
 		private System.Windows.Forms.Panel PanelOverlayOffset;
 		private System.Windows.Forms.FlowLayoutPanel FlowLayoutRight;
-		private System.Windows.Forms.ToolStripButton ButtonOpen;
+		private System.Windows.Forms.ToolStripButton ButtonChooseFile;
 
 	}
 }

@@ -100,7 +100,10 @@ bool CAgentFileScript::get_IsOpen () const
 #ifdef	_M_CEE
 bool CAgentFileScript::IsReadOnly::get ()
 {
-	if	(mFileStream)
+	if	(
+			(mFileStream)
+		||	(String::IsNullOrEmpty (mPath))
+		)
 	{
 		return false;
 	}
@@ -125,28 +128,6 @@ void CAgentFileScript::IsDirty::set (bool pIsDirty)
 	{
 		mIsDirty = pIsDirty;
 	}
-}
-#endif
-
-/////////////////////////////////////////////////////////////////////////////
-
-#ifdef	_M_CEE
-void CAgentFileScript::FreeNames ()
-{
-	__super::FreeNames ();
-	mNames = gcnew CAgentFileNames (this);
-}
-
-void CAgentFileScript::FreeGestures ()
-{
-	__super::FreeGestures ();
-	mGestures = gcnew CAgentFileGestures (this);
-}
-
-void CAgentFileScript::FreeStates ()
-{
-	__super::FreeStates ();
-	mStates = gcnew CAgentFileStates (this);
 }
 #endif
 
@@ -299,6 +280,8 @@ bool CAgentFileScript::Save (const System::String^ pPath, CAgentFile^ pSource)
 				&&	(lWriter = gcnew ScriptWriter (mFileStream))
 				)
 			{
+				FreeUnusedImages ();
+				FreeUnusedSounds ();
 				if	(!pSource->IsAcdFile)
 				{
 					PrepareFileFolder (true);
@@ -996,7 +979,7 @@ bool CAgentFileScript::ParseName (ScriptReader^ pReader, LANGID pLangID)
 #ifdef	_M_CEE
 	String^			lLine;
 	String^			lToken;
-	CAgentFileName^	lName = gcnew CAgentFileName (this);
+	CAgentFileName^	lName = gcnew CAgentFileName (this, Names);
 
 	lName->mLanguage = pLangID;
 
@@ -1824,6 +1807,206 @@ bool CAgentFileScript::WriteStates (ScriptWriter^ pWriter, CAgentFile^ pSource)
 #ifdef	_M_CEE
 /////////////////////////////////////////////////////////////////////////////
 
+void CAgentFileScript::FreeUnusedImages ()
+{
+	if	(
+			(mImageFilePaths)
+		&&	(mImageFilePaths->Count > 0)
+		)
+	{
+		array <int>^	lImageUsage = gcnew array <int> (mImageFilePaths->Count);
+		int				lImageNdx;
+		int				lUnusedCount = 0;
+		
+		for (lImageNdx = 0; lImageNdx < lImageUsage->Length; lImageNdx++)
+		{
+			lImageUsage[lImageNdx] = 0;
+		}
+		
+		for each (CAgentFileAnimation^ lAnimation in Gestures)
+		{
+			if	(lAnimation->Frames)
+			{
+				for each (CAgentFileFrame^ lFrame in lAnimation->Frames)
+				{
+					if	(lFrame->Images)
+					{
+						for each (CAgentFileFrameImage^ lImage in lFrame->Images)
+						{
+							if	(
+									(lImage->mImageNdx >= 0)
+								&&	(lImage->mImageNdx < lImageUsage->Length)
+								)
+							{
+								lImageUsage[lImage->mImageNdx]++;
+							}
+						}
+					}
+					if	(lFrame->Overlays)
+					{
+						for each (CAgentFileFrameOverlay^ lOverlay in lFrame->Overlays)
+						{
+							if	(
+									(lOverlay->mImageNdx >= 0)
+								&&	(lOverlay->mImageNdx < lImageUsage->Length)
+								)
+							{
+								lImageUsage[lOverlay->mImageNdx]++;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		for (lImageNdx = 0; lImageNdx < lImageUsage->Length; lImageNdx++)
+		{
+			if	(lImageUsage[lImageNdx] > 0)
+			{
+				lImageUsage[lImageNdx] = lUnusedCount;
+			}
+			else
+			{
+				if	(LogIsActive (LogNormal))
+				{
+					LogMessage (LogNormal, _T("  [%s] Image [%d] [%s] unused"), _B(mPath), lImageNdx, _B(mImageFilePaths[lImageNdx-lUnusedCount])); 
+				}
+				if	(
+						(mImages)
+					&&	(mImages->ContainsKey (mImageFilePaths[lImageNdx-lUnusedCount]))
+					)
+				{
+					mImages->Remove (mImageFilePaths[lImageNdx-lUnusedCount]);
+				}
+				mImageFilePaths->RemoveAt (lImageNdx-lUnusedCount);
+				lUnusedCount++;
+			}
+		}
+		
+		if	(lUnusedCount > 0)
+		{
+			for each (CAgentFileAnimation^ lAnimation in Gestures)
+			{
+				if	(lAnimation->Frames)
+				{
+					for each (CAgentFileFrame^ lFrame in lAnimation->Frames)
+					{
+						if	(lFrame->Images)
+						{
+							for each (CAgentFileFrameImage^ lImage in lFrame->Images)
+							{
+								if	(
+										(lImage->ImageNdx >= 0)
+									&&	(lImage->ImageNdx < lImageUsage->Length)
+									)
+								{
+									lImage->mImageNdx -= lImageUsage[lImage->mImageNdx];
+								}
+							}
+						}
+						if	(lFrame->Overlays)
+						{
+							for each (CAgentFileFrameOverlay^ lOverlay in lFrame->Overlays)
+							{
+								if	(
+										(lOverlay->mImageNdx >= 0)
+									&&	(lOverlay->mImageNdx < lImageUsage->Length)
+									)
+								{
+									lOverlay->mImageNdx -= lImageUsage[lOverlay->mImageNdx];
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void CAgentFileScript::FreeUnusedSounds ()	
+{
+	if	(
+			(mSoundFilePaths)
+		&&	(mSoundFilePaths->Count > 0)
+		)
+	{
+		array <int>^	lSoundUsage = gcnew array <int> (mSoundFilePaths->Count);
+		int				lSoundNdx;
+		int				lUnusedCount = 0;
+		
+		for (lSoundNdx = 0; lSoundNdx < lSoundUsage->Length; lSoundNdx++)
+		{
+			lSoundUsage[lSoundNdx] = 0;
+		}
+		
+		for each (CAgentFileAnimation^ lAnimation in Gestures)
+		{
+			if	(lAnimation->Frames)
+			{
+				for each (CAgentFileFrame^ lFrame in lAnimation->Frames)
+				{
+					if	(
+							(lFrame->mSoundNdx >= 0)
+						&&	(lFrame->mSoundNdx < lSoundUsage->Length)
+						)
+					{
+						lSoundUsage[lFrame->mSoundNdx]++;
+					}
+				}
+			}
+		}
+
+		for (lSoundNdx = 0; lSoundNdx < lSoundUsage->Length; lSoundNdx++)
+		{
+			if	(lSoundUsage[lSoundNdx] > 0)
+			{
+				lSoundUsage[lSoundNdx] = lUnusedCount;
+			}
+			else
+			{
+				if	(LogIsActive (LogNormal))
+				{
+					LogMessage (LogNormal, _T("  [%s] Sound [%d] [%s] unused"), _B(mPath), lSoundNdx, _B(mSoundFilePaths[lSoundNdx-lUnusedCount])); 
+				}
+				if	(
+						(mSounds)
+					&&	(mSounds->ContainsKey (mSoundFilePaths[lSoundNdx-lUnusedCount]))
+					)
+				{
+					mSounds->Remove (mSoundFilePaths[lSoundNdx-lUnusedCount]);
+				}
+				mSoundFilePaths->RemoveAt (lSoundNdx-lUnusedCount);
+				lUnusedCount++;
+			}
+		}
+		
+		if	(lUnusedCount > 0)
+		{
+			for each (CAgentFileAnimation^ lAnimation in Gestures)
+			{
+				if	(lAnimation->Frames)
+				{
+					for each (CAgentFileFrame^ lFrame in lAnimation->Frames)
+					{
+						if	(
+								(lFrame->mSoundNdx >= 0)
+							&&	(lFrame->mSoundNdx < lSoundUsage->Length)
+							)
+						{
+							lFrame->mSoundNdx -= lSoundUsage[lFrame->mSoundNdx];
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
 String^ CAgentFileScript::PrepareFileFolder ()
 {
 	return PrepareFileFolder (false);
@@ -2051,7 +2234,11 @@ Int32 CAgentFileScript::LoadImageFile (System::String^ pImageFilePath)
 	{
 		String^	lPath = System::IO::Path::GetFullPath (pImageFilePath);
 
-		if	(!mImages->ContainsKey (lPath))
+		if	(mImages->ContainsKey (lPath))
+		{
+			lImageNdx = mImageFilePaths->FindIndex (gcnew Predicate <String^> (lPath, &String::Equals));
+		}
+		else
 		{
 			System::Drawing::Bitmap^	lBitmap = nullptr;
 
@@ -2061,11 +2248,10 @@ Int32 CAgentFileScript::LoadImageFile (System::String^ pImageFilePath)
 			}
 			catch AnyExceptionDebug
 
+			lImageNdx = (Int32)mImageFilePaths->Count;
 			mImages->Add (lPath, lBitmap);
+			mImageFilePaths->Add (lPath);
 		}
-
-		lImageNdx = (Int32)mImageFilePaths->Count;
-		mImageFilePaths->Add (lPath);
 	}
 	catch AnyExceptionDebug
 
@@ -2080,7 +2266,11 @@ Int32 CAgentFileScript::LoadSoundFile (System::String^ pSoundFilePath)
 	{
 		String^	lPath = System::IO::Path::GetFullPath (pSoundFilePath);
 
-		if	(!mSounds->ContainsKey (lPath))
+		if	(mSounds->ContainsKey (lPath))
+		{
+			lSoundNdx = mSoundFilePaths->FindIndex (gcnew Predicate <String^> (lPath, &String::Equals));
+		}
+		else
 		{
 			System::Media::SoundPlayer^	lPlayer = nullptr;
 
@@ -2090,11 +2280,10 @@ Int32 CAgentFileScript::LoadSoundFile (System::String^ pSoundFilePath)
 			}
 			catch AnyExceptionDebug
 
+			lSoundNdx = (Int16)mSoundFilePaths->Count;
 			mSounds->Add (lPath, lPlayer);
+			mSoundFilePaths->Add (lPath);
 		}
-
-		lSoundNdx = (Int16)mSoundFilePaths->Count;
-		mSoundFilePaths->Add (lPath);
 	}
 	catch AnyExceptionDebug
 
@@ -2237,7 +2426,7 @@ System::Drawing::Bitmap^ CAgentFileScript::GetImageBitmap (int pImageNdx, bool p
 
 int CAgentFileScript::SoundCount::get()
 {
-	return (mSounds) ? mSounds->Count : 0;
+	return (mSoundFilePaths) ? mSoundFilePaths->Count : 0;
 }
 
 int CAgentFileScript::GetSoundSize (int pSoundNdx)
@@ -2246,7 +2435,6 @@ int CAgentFileScript::GetSoundSize (int pSoundNdx)
 
 	if	(
 			(mSoundFilePaths)
-		&&	(mSounds)
 		&&	(pSoundNdx >= 0)
 		&&	(pSoundNdx < mSoundFilePaths->Count)
 		)
@@ -2254,17 +2442,6 @@ int CAgentFileScript::GetSoundSize (int pSoundNdx)
 		try
 		{
 			lSoundSize = (int)System::IO::FileInfo::FileInfo (mSoundFilePaths [pSoundNdx]).Length;
-/*			
-			System::Media::SoundPlayer^	lPlayer = mSounds [mSoundFilePaths [pSoundNdx]];
-
-			if	(
-					(lPlayer)
-				&&	(lPlayer->Stream)
-				)
-			{
-				lSoundSize = (int)lPlayer->Stream->Length;
-			}
-*/			
 		}
 		catch AnyExceptionDebug
 	}
@@ -2278,7 +2455,6 @@ array <BYTE>^ CAgentFileScript::GetSound (int pSoundNdx)
 	
 	if	(
 			(mSoundFilePaths)
-		&&	(mSounds)
 		&&	(pSoundNdx >= 0)
 		&&	(pSoundNdx < mSoundFilePaths->Count)
 		)

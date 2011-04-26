@@ -80,7 +80,7 @@ namespace AgentCharacterEditor
 			this.ToolStripImages = new DoubleAgent.ToolStripEx ();
 			this.ButtonAdd = new System.Windows.Forms.ToolStripButton ();
 			this.ButtonDelete = new System.Windows.Forms.ToolStripButton ();
-			this.ButtonOpen = new System.Windows.Forms.ToolStripButton ();
+			this.ButtonChooseFile = new System.Windows.Forms.ToolStripButton ();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator ();
 			this.ButtonMoveUp = new System.Windows.Forms.ToolStripButton ();
 			this.ButtonMoveDown = new System.Windows.Forms.ToolStripButton ();
@@ -543,7 +543,7 @@ namespace AgentCharacterEditor
 			this.ToolStripImages.Items.AddRange (new System.Windows.Forms.ToolStripItem[] {
             this.ButtonAdd,
             this.ButtonDelete,
-            this.ButtonOpen,
+            this.ButtonChooseFile,
             this.toolStripSeparator1,
             this.ButtonMoveUp,
             this.ButtonMoveDown});
@@ -561,7 +561,7 @@ namespace AgentCharacterEditor
 			this.ButtonAdd.Name = "ButtonAdd";
 			this.ButtonAdd.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
 			this.ButtonAdd.Size = new System.Drawing.Size (23, 23);
-			this.ButtonAdd.Text = "Add";
+			this.ButtonAdd.Text = "Add a new image";
 			this.ButtonAdd.Click += new System.EventHandler (this.ButtonAdd_Click);
 			// 
 			// ButtonDelete
@@ -577,14 +577,14 @@ namespace AgentCharacterEditor
 			// 
 			// ButtonOpen
 			// 
-			this.ButtonOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonOpen.Image = ((System.Drawing.Image)(resources.GetObject ("ButtonOpen.Image")));
-			this.ButtonOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonOpen.Name = "ButtonOpen";
-			this.ButtonOpen.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
-			this.ButtonOpen.Size = new System.Drawing.Size (23, 23);
-			this.ButtonOpen.Text = "Open image file";
-			this.ButtonOpen.Click += new System.EventHandler (this.ButtonOpen_Click);
+			this.ButtonChooseFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonChooseFile.Image = ((System.Drawing.Image)(resources.GetObject ("ButtonOpen.Image")));
+			this.ButtonChooseFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonChooseFile.Name = "ButtonOpen";
+			this.ButtonChooseFile.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
+			this.ButtonChooseFile.Size = new System.Drawing.Size (23, 23);
+			this.ButtonChooseFile.Text = "Open image file";
+			this.ButtonChooseFile.Click += new System.EventHandler (this.ButtonOpen_Click);
 			// 
 			// toolStripSeparator1
 			// 
@@ -599,7 +599,7 @@ namespace AgentCharacterEditor
 			this.ButtonMoveUp.Name = "ButtonMoveUp";
 			this.ButtonMoveUp.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
 			this.ButtonMoveUp.Size = new System.Drawing.Size (23, 23);
-			this.ButtonMoveUp.Text = "Move up";
+			this.ButtonMoveUp.Text = "Move image up";
 			this.ButtonMoveUp.Click += new System.EventHandler (this.ButtonMoveUp_Click);
 			// 
 			// ButtonMoveDown
@@ -610,7 +610,7 @@ namespace AgentCharacterEditor
 			this.ButtonMoveDown.Name = "ButtonMoveDown";
 			this.ButtonMoveDown.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
 			this.ButtonMoveDown.Size = new System.Drawing.Size (23, 23);
-			this.ButtonMoveDown.Text = "Move down";
+			this.ButtonMoveDown.Text = "Move image down";
 			this.ButtonMoveDown.Click += new System.EventHandler (this.ButtonMoveDown_Click);
 			// 
 			// LabelDurationUnits
@@ -880,7 +880,7 @@ namespace AgentCharacterEditor
 		private System.Windows.Forms.FlowLayoutPanel FlowLayoutRight;
 		private System.Windows.Forms.Panel PanelImagesLeft;
 		private System.Windows.Forms.TableLayoutPanel TableLayoutImages;
-		private System.Windows.Forms.ToolStripButton ButtonOpen;
+		private System.Windows.Forms.ToolStripButton ButtonChooseFile;
 		private System.Windows.Forms.TableLayoutPanel TableLayoutSample;
 		private System.Windows.Forms.Panel PanelOverlayOffset;
 		private System.Windows.Forms.CheckBox CheckBoxTransparent;

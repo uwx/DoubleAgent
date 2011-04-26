@@ -225,6 +225,9 @@ bool CAgentFileAcs::Save (const System::String^ pPath, CAgentFile^ pSource)
 				&&	(mFileWriter)
 				)
 			{
+				FreeUnusedImages ();
+				FreeUnusedSounds ();
+
 				mFileSize = sizeof(DWORD)+(sizeof(ULARGE_INTEGER)*4);
 				mFileSize += WriteImages (mFileSize, pSource);
 				mFileSize += WriteSounds (mFileSize, pSource);
@@ -3008,6 +3011,206 @@ LPVOID CAgentFileAcs::WriteAcsSound (LPVOID pBuffer, array <BYTE>^ pSound)
 }
 #endif
 
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+#ifdef	_M_CEE
+/////////////////////////////////////////////////////////////////////////////
+
+void CAgentFileAcs::FreeUnusedImages ()
+{
+#if	FALSE
+	if	(
+			(mImageIndex)
+		&&	(mImageIndex->Length > 0)
+		)
+	{
+		array <int>^							lImageUsage = gcnew array <int> (mImageIndex->Length);
+		int										lImageNdx;
+		List <KeyValuePair <UInt32, UInt32> >^	lImageList = gcnew List <KeyValuePair <UInt32, UInt32> >;
+		int										lUnusedCount = 0;
+		
+		for (lImageNdx = 0; lImageNdx < lImageUsage->Length; lImageNdx++)
+		{
+			lImageUsage[lImageNdx] = 0;
+		}
+
+		for each (CAgentFileAnimation^ lAnimation in Gestures)
+		{
+			if	(lAnimation->Frames)
+			{
+				for each (CAgentFileFrame^ lFrame in lAnimation->Frames)
+				{
+					if	(lFrame->Images)
+					{
+						for each (CAgentFileFrameImage^ lImage in lFrame->Images)
+						{
+							if	(
+									(lImage->mImageNdx >= 0)
+								&&	(lImage->mImageNdx < lImageUsage->Length)
+								)
+							{
+								lImageUsage[lImage->mImageNdx]++;
+							}
+						}
+					}
+					if	(lFrame->Overlays)
+					{
+						for each (CAgentFileFrameOverlay^ lOverlay in lFrame->Overlays)
+						{
+							if	(
+									(lOverlay->mImageNdx >= 0)
+								&&	(lOverlay->mImageNdx < lImageUsage->Length)
+								)
+							{
+								lImageUsage[lOverlay->mImageNdx]++;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		for (lImageNdx = 0; lImageNdx < mImageIndex->Length; lImageNdx++)
+		{
+			if	(lImageUsage[lImageNdx] > 0)
+			{
+				lImageList->Add (mImageIndex[lImageNdx]);
+				lImageUsage[lImageNdx] = lUnusedCount;
+			}
+			else
+			{
+				lUnusedCount++;
+				if	(LogIsActive (mLogLevel))
+				{
+					LogMessage (mLogLevel, _T("  [%s] Image [%d] unused"), _B(mPath), lImageNdx); 
+				}
+			}
+		}
+		
+		if	(lUnusedCount > 0)
+		{
+			mImageIndex = lImageList->ToArray();
+
+			for each (CAgentFileAnimation^ lAnimation in Gestures)
+			{
+				if	(lAnimation->Frames)
+				{
+					for each (CAgentFileFrame^ lFrame in lAnimation->Frames)
+					{
+						if	(lFrame->Images)
+						{
+							for each (CAgentFileFrameImage^ lImage in lFrame->Images)
+							{
+								if	(
+										(lImage->ImageNdx >= 0)
+									&&	(lImage->ImageNdx < lImageUsage->Length)
+									)
+								{
+									lImage->mImageNdx -= lImageUsage[lImage->mImageNdx];
+								}
+							}
+						}
+						if	(lFrame->Overlays)
+						{
+							for each (CAgentFileFrameOverlay^ lOverlay in lFrame->Overlays)
+							{
+								if	(
+										(lOverlay->mImageNdx >= 0)
+									&&	(lOverlay->mImageNdx < lImageUsage->Length)
+									)
+								{
+									lOverlay->mImageNdx -= lImageUsage[lOverlay->mImageNdx];
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+#endif	
+}
+
+void CAgentFileAcs::FreeUnusedSounds ()	
+{
+#if	FALSE
+	if	(
+			(mSoundIndex)
+		&&	(mSoundIndex->Length > 0)
+		)
+	{
+		array <int>^							lSoundUsage = gcnew array <int> (mSoundIndex->Length);
+		int										lSoundNdx;
+		List <KeyValuePair <UInt32, UInt32> >^	lSoundList = gcnew List <KeyValuePair <UInt32, UInt32> >;
+		int										lUnusedCount = 0;
+		
+		for (lSoundNdx = 0; lSoundNdx < lSoundUsage->Length; lSoundNdx++)
+		{
+			lSoundUsage[lSoundNdx] = 0;
+		}
+
+		for each (CAgentFileAnimation^ lAnimation in Gestures)
+		{
+			if	(lAnimation->Frames)
+			{
+				for each (CAgentFileFrame^ lFrame in lAnimation->Frames)
+				{
+					if	(
+							(lFrame->mSoundNdx >= 0)
+						&&	(lFrame->mSoundNdx < lSoundUsage->Length)
+						)
+					{
+						lSoundUsage[lFrame->mSoundNdx]++;
+					}
+				}
+			}
+		}
+
+		for (lSoundNdx = 0; lSoundNdx < mSoundIndex->Length; lSoundNdx++)
+		{
+			if	(lSoundUsage[lSoundNdx] > 0)
+			{
+				lSoundList->Add (mSoundIndex[lSoundNdx]);
+				lSoundUsage[lSoundNdx] = lUnusedCount;
+			}
+			else
+			{
+				lUnusedCount++;
+				if	(LogIsActive (mLogLevel))
+				{
+					LogMessage (mLogLevel, _T("  [%s] Sound [%d] unused"), _B(mPath), lSoundNdx); 
+				}
+			}
+		}
+		
+		if	(lUnusedCount > 0)
+		{
+			mSoundIndex = lSoundList->ToArray();
+
+			for each (CAgentFileAnimation^ lAnimation in Gestures)
+			{
+				if	(lAnimation->Frames)
+				{
+					for each (CAgentFileFrame^ lFrame in lAnimation->Frames)
+					{
+						if	(
+								(lFrame->mSoundNdx >= 0)
+							&&	(lFrame->mSoundNdx < lSoundUsage->Length)
+							)
+						{
+							lFrame->mSoundNdx -= lSoundUsage[lFrame->mSoundNdx];
+						}
+					}
+				}
+			}
+		}
+	}
+#endif	
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#endif	// _M_CEE
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////

@@ -121,6 +121,9 @@
   <data name="DoubleAgent" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\DoubleAgent.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="EditAdd" xml:space="preserve">
+    <value>&amp;Add</value>
+  </data>
   <data name="EditAddAnimation" xml:space="preserve">
     <value>Add new animation</value>
   </data>
@@ -129,6 +132,15 @@
   </data>
   <data name="EditAddAnimation1" xml:space="preserve">
     <value>Add animation "{0}"</value>
+  </data>
+  <data name="EditAddThis" xml:space="preserve">
+    <value>Add {0}</value>
+  </data>
+  <data name="EditChooseFile" xml:space="preserve">
+    <value>Choose image file</value>
+  </data>
+  <data name="EditChooseThisFile" xml:space="preserve">
+    <value>Choose {0} image file</value>
   </data>
   <data name="EditCopy" xml:space="preserve">
     <value>&amp;Copy</value>
@@ -157,6 +169,18 @@
   <data name="EditDeleteThis" xml:space="preserve">
     <value>&amp;Delete {0}</value>
   </data>
+  <data name="EditMoveFrameDown" xml:space="preserve">
+    <value>Make {0} later</value>
+  </data>
+  <data name="EditMoveFrameUp" xml:space="preserve">
+    <value>Make {0} earlier</value>
+  </data>
+  <data name="EditMoveImageDown" xml:space="preserve">
+    <value>Bring {0} forward</value>
+  </data>
+  <data name="EditMoveImageUp" xml:space="preserve">
+    <value>Send {0} back</value>
+  </data>
   <data name="EditPaste" xml:space="preserve">
     <value>&amp;Paste</value>
   </data>
@@ -167,7 +191,7 @@
     <value>To paste (add) an animation a new animation name is required</value>
   </data>
   <data name="EditPasteAs" xml:space="preserve">
-    <value>(add) {0} as {1}</value>
+    <value>(add) {1} from {0}</value>
   </data>
   <data name="EditPasteFrameSource" xml:space="preserve">
     <value>the copied frame</value>
@@ -205,7 +229,6 @@
   <data name="LicenseDetails" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>LicenseDetails.rtf;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="LicenseIntro" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>LicenseIntro.rtf;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
@@ -251,6 +274,9 @@
   <data name="MsgSaveFile" xml:space="preserve">
     <value>Save changes to {0}?</value>
   </data>
+  <data name="MsgSaveNew" xml:space="preserve">
+    <value>Save changes to "{0}"?</value>
+  </data>
   <data name="TitleAnimation" xml:space="preserve">
     <value>animation {0}</value>
   </data>
@@ -259,6 +285,9 @@
   </data>
   <data name="TitleCharacterName" xml:space="preserve">
     <value>{0} name {1}</value>
+  </data>
+  <data name="TitleDirtyFile" xml:space="preserve">
+    <value>{0} [{1} *]</value>
   </data>
   <data name="TitleFrame" xml:space="preserve">
     <value>Frame {0}</value>
@@ -271,6 +300,12 @@
   </data>
   <data name="TitleImageFrame" xml:space="preserve">
     <value>{1} - {0}</value>
+  </data>
+  <data name="TitleNewFile" xml:space="preserve">
+    <value>new character</value>
+  </data>
+  <data name="TitleOpenFile" xml:space="preserve">
+    <value>{0} [{1}]</value>
   </data>
   <data name="TitleOverlay" xml:space="preserve">
     <value>{0} overlay</value>

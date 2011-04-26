@@ -191,20 +191,38 @@ namespace AgentCharacterEditor
 
 		static public void InitFilePath (FileDialog pFileDialog, String pFilePath, String pDefaultExt)
 		{
-			if (!String.IsNullOrEmpty (pFilePath) && !pFilePath.Contains ("*"))
+			if (!String.IsNullOrEmpty (pFilePath))
 			{
-				pFileDialog.FileName = pFilePath;
-				try
+				if (pFilePath.Contains ("*"))
 				{
-					pFileDialog.FileName = System.IO.Path.GetFullPath (pFilePath);
-					pFileDialog.InitialDirectory = System.IO.Path.GetDirectoryName (pFileDialog.FileName);
-					if (pFileDialog.FileName.StartsWith (pFileDialog.InitialDirectory))
+					try
 					{
-						pFileDialog.FileName = System.IO.Path.GetFileName (pFileDialog.FileName);
+						pFileDialog.InitialDirectory = System.IO.Path.GetFullPath (System.IO.Path.GetDirectoryName (pFilePath));
+					}
+					catch
+					{
 					}
 				}
-				catch
+				else
 				{
+					pFileDialog.FileName = pFilePath;
+					try
+					{
+						pFileDialog.FileName = System.IO.Path.GetFullPath (pFilePath);
+						pFileDialog.InitialDirectory = System.IO.Path.GetDirectoryName (pFileDialog.FileName);
+						if (pFileDialog.FileName.StartsWith (pFileDialog.InitialDirectory))
+						{
+							pFileDialog.FileName = System.IO.Path.GetFileName (pFileDialog.FileName);
+						}
+					}
+					catch
+					{
+					}
+				}
+
+				if (System.IO.Path.HasExtension (pFilePath))
+				{
+					pDefaultExt = System.IO.Path.GetExtension (pFilePath);
 				}
 			}
 			if (!String.IsNullOrEmpty (pDefaultExt))

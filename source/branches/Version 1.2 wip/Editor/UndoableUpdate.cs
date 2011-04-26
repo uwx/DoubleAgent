@@ -31,21 +31,22 @@ namespace AgentCharacterEditor
 	{
 		internal abstract class UndoableUpdate : UndoUnit
 		{
-			protected UndoableUpdate (CharacterFile pCharacterFile, Boolean pForClipboard)
+			protected UndoableUpdate (Boolean pForClipboard)
 			{
-				this.CharacterFile = pCharacterFile;
 				this.ForClipboard = pForClipboard;
 			}
 
+			public CharacterFile CharacterFile
+			{
+				get
+				{
+					return Program.MainForm.CharacterFile;
+				}
+			}
 			public Object Source
 			{
 				get;
 				protected set;
-			}
-			public CharacterFile CharacterFile
-			{
-				get;
-				private set;
 			}
 			public Boolean ForClipboard
 			{
@@ -70,7 +71,7 @@ namespace AgentCharacterEditor
 			{
 				if (!Object.ReferenceEquals (pRedoUnit, this))
 				{
-					UndoableUpdate	lRedoUnit = pRedoUnit as UndoableUpdate;
+					UndoableUpdate lRedoUnit = pRedoUnit as UndoableUpdate;
 					if (lRedoUnit != null)
 					{
 						lRedoUnit.Source = Source;
@@ -113,9 +114,12 @@ namespace AgentCharacterEditor
 				return String.Format (Properties.Resources.UndoDescription, this.ActionDescription.Trim (), this.TargetDescription.Trim (), this.ChangeDescription.Trim ()).Trim ();
 			}
 #if DEBUG
-			public virtual String DebugString ()
+			public virtual String DebugString
 			{
-				return ToString ();
+				get
+				{
+					return ToString ();
+				}
 			}
 #endif
 		}
@@ -124,21 +128,55 @@ namespace AgentCharacterEditor
 
 		internal abstract class UndoableUpdate<T> : UndoableUpdate where T : class
 		{
-			protected UndoableUpdate (CharacterFile pCharacterFile, T pTarget)
-			:	base (pCharacterFile, false)
+			protected UndoableUpdate ()
+				: base (false)
 			{
-				Target = pTarget;
 			}
-			protected UndoableUpdate (CharacterFile pCharacterFile, T pTarget, Boolean pForClipboard)
-			:	base (pCharacterFile, pForClipboard)
+			protected UndoableUpdate (Object pTarget)
+				: base (false)
 			{
-				Target = pTarget;
+				RawTarget = pTarget;
+#if DEBUG
+				if (RawTarget != null)
+				{
+					System.Diagnostics.Debug.Assert ((RawTarget is ResolvePart<T>) || (RawTarget is T));
+				}
+#endif
+			}
+			protected UndoableUpdate (Object pTarget, Boolean pForClipboard)
+				: base (pForClipboard)
+			{
+				RawTarget = pTarget;
+#if DEBUG
+				if (RawTarget != null)
+				{
+					System.Diagnostics.Debug.Assert ((RawTarget is ResolvePart<T>) || (RawTarget is T));
+				}
+#endif
 			}
 
-			public T Target
+			public virtual T Target
+			{
+				get
+				{
+					if (RawTarget is ResolvePart<T>)
+					{
+						return (RawTarget as ResolvePart<T>).Target;
+					}
+					else
+					{
+						return RawTarget as T;
+					}
+				}
+				protected set
+				{
+					RawTarget = value;
+				}
+			}
+			protected Object RawTarget
 			{
 				get;
-				protected set;
+				private set;
 			}
 		}
 
@@ -146,31 +184,31 @@ namespace AgentCharacterEditor
 
 		internal abstract class UndoableAddDelete<T> : UndoableUpdate<T> where T : class
 		{
-			public UndoableAddDelete (CharacterFile pCharacterFile)
-				: base (pCharacterFile, default (T))
+			public UndoableAddDelete ()
+				: base (default (T))
 			{
 				this.IsDelete = false;
 				this.IsRedo = false;
 				this.ForClipboard = false;
 			}
-			public UndoableAddDelete (CharacterFile pCharacterFile, T pTarget)
-				: base (pCharacterFile, pTarget)
+			public UndoableAddDelete (Object pTarget)
+				: base (pTarget)
 			{
-				this.IsDelete = (pTarget != null);
+				this.IsDelete = (pTarget is T);
 				this.IsRedo = false;
 				this.ForClipboard = false;
 			}
-			public UndoableAddDelete (CharacterFile pCharacterFile, Boolean pForClipboard)
-				: base (pCharacterFile, default (T))
+			public UndoableAddDelete (Boolean pForClipboard)
+				: base (default (T))
 			{
 				this.IsDelete = false;
 				this.IsRedo = false;
 				this.ForClipboard = pForClipboard;
 			}
-			public UndoableAddDelete (CharacterFile pCharacterFile, T pTarget, Boolean pForClipboard)
-				: base (pCharacterFile, pTarget)
+			public UndoableAddDelete (Object pTarget, Boolean pForClipboard)
+				: base (pTarget)
 			{
-				this.IsDelete = (pTarget != null);
+				this.IsDelete = (pTarget is T);
 				this.IsRedo = false;
 				this.ForClipboard = pForClipboard;
 			}
@@ -192,6 +230,15 @@ namespace AgentCharacterEditor
 					return (IsDelete == !IsRedo) ? this.ForClipboard ? Properties.Resources.UndoActionCut : Properties.Resources.UndoActionDelete : this.ForClipboard ? Properties.Resources.UndoActionPaste : Properties.Resources.UndoActionAdd;
 				}
 			}
+#if DEBUG
+			protected String RedoString
+			{
+				get
+				{
+					return IsRedo ? "redo" : "undo";
+				}
+			}
+#endif
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -227,14 +274,14 @@ namespace AgentCharacterEditor
 					if (!this.UpdateStarted)
 					{
 #if DEBUG_NOT
-						System.Diagnostics.Debug.Print ("PutRepeat {0} Apply(First) [{1}]", pRepeatNum.ToString (), pUpdate.DebugString ());
+						System.Diagnostics.Debug.Print ("PutRepeat {0} Apply(First) [{1}]", pRepeatNum.ToString (), pUpdate.DebugString);
 #endif
 						this.UpdateStart = pUpdate.Apply () as T;
 					}
 					else
 					{
 #if DEBUG_NOT
-						System.Diagnostics.Debug.Print ("PutRepeat {0} Apply(Repeat) [{1}]", pRepeatNum.ToString (), pUpdate.DebugString ());
+						System.Diagnostics.Debug.Print ("PutRepeat {0} Apply(Repeat) [{1}]", pRepeatNum.ToString (), pUpdate.DebugString);
 #endif
 						pUpdate.Apply ();
 					}
@@ -242,7 +289,7 @@ namespace AgentCharacterEditor
 				else if (this.UpdateStarted)
 				{
 #if DEBUG_NOT
-				System.Diagnostics.Debug.Print ("PutRepeat {0} Apply(Last) [{1}]", pRepeatNum.ToString (), pUpdate.DebugString ());
+					System.Diagnostics.Debug.Print ("PutRepeat {0} Apply(Last) [{1}]", pRepeatNum.ToString (), pUpdate.DebugString);
 #endif
 					pUpdate.Apply ();
 					EndUpdate ();
@@ -250,7 +297,7 @@ namespace AgentCharacterEditor
 				else
 				{
 #if DEBUG_NOT
-					System.Diagnostics.Debug.Print ("PutRepeat {0} Apply(Single) [{1}] PutUndo [{1}]", pRepeatNum.ToString (), pUpdate.DebugString ());
+					System.Diagnostics.Debug.Print ("PutRepeat {0} Apply(Single) [{1}] PutUndo [{1}]", pRepeatNum.ToString (), pUpdate.DebugString);
 #endif
 					T lUpdate = pUpdate.Apply () as T;
 					if (lUpdate != null)
@@ -267,7 +314,7 @@ namespace AgentCharacterEditor
 					T lUpdate = this.UpdateStart;
 					this.UpdateStart = null;
 #if DEBUG_NOT
-					System.Diagnostics.Debug.Print ("EndRepeat PutUndo [{0}]", lUpdate.DebugString ());
+					System.Diagnostics.Debug.Print ("EndRepeat PutUndo [{0}]", lUpdate.DebugString);
 #endif
 					lUpdate.PutUndo ();
 				}

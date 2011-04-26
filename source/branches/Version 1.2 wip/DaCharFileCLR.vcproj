@@ -6,7 +6,7 @@
 	ProjectGUID="{07318ED8-0E83-46FF-9DF0-82AC9DF7BCBD}"
 	RootNamespace="CharFileCLR"
 	Keyword="ManagedCProj"
-	TargetFrameworkVersion="196608"
+	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
 		<Platform
@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				RuntimeLibrary="3"
+				GenerateXMLDocumentationFiles="true"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -103,6 +104,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				RuntimeLibrary="2"
+				GenerateXMLDocumentationFiles="true"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -156,6 +158,11 @@
 		<AssemblyReference
 			RelativePath="System.Drawing.dll"
 			AssemblyName="System.Drawing, Version=2.0.0.0, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
+			MinFrameworkVersion="131072"
+		/>
+		<AssemblyReference
+			RelativePath="mscorlib.dll"
+			AssemblyName="mscorlib, Version=2.0.0.0, PublicKeyToken=b77a5c561934e089, processorArchitecture=IA64"
 			MinFrameworkVersion="131072"
 		/>
 	</References>
