@@ -19,19 +19,18 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 using System;
-using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using DoubleAgent;
 using DoubleAgent.Character;
-using AgentCharacterEditor.Updates;
 
 namespace AgentCharacterEditor
 {
 	public partial class MainForm : Form
 	{
-		private CharacterFile	mCharacterFile = null;
-		private RecentFileList	mRecentFiles = new RecentFileList ();
-		private String			mInitialFile = null;
+		private CharacterFile mCharacterFile = null;
+		private RecentFileList mRecentFiles = new RecentFileList ();
+		private String mInitialFile = null;
 
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
@@ -71,13 +70,12 @@ namespace AgentCharacterEditor
 		{
 			LoadConfig (this, EventArgs.Empty);
 			LoadRecentFiles ();
-			TreeViewMain.LoadExpansion ();
 			LoadWindowState ();
 		}
 
 		private void LoadWindowState ()
 		{
-			Properties.Settings	lSettings = Properties.Settings.Default;
+			Properties.Settings lSettings = Properties.Settings.Default;
 
 			if ((lSettings.MainFormSize.X > 0) && (lSettings.MainFormSize.Y > 0))
 			{
@@ -94,7 +92,7 @@ namespace AgentCharacterEditor
 
 		private void LoadRecentFiles ()
 		{
-			Properties.Settings	lSettings = Properties.Settings.Default;
+			Properties.Settings lSettings = Properties.Settings.Default;
 
 			mRecentFiles.Clear ();
 			if (lSettings.RecentFiles != null)
@@ -115,7 +113,6 @@ namespace AgentCharacterEditor
 		private void SaveAllConfig ()
 		{
 			SaveConfig (this, EventArgs.Empty);
-			TreeViewMain.SaveExpansion ();
 			SaveWindowState ();
 			SaveRecentFiles ();
 
@@ -124,7 +121,7 @@ namespace AgentCharacterEditor
 
 		private void SaveWindowState ()
 		{
-			Properties.Settings	lSettings = Properties.Settings.Default;
+			Properties.Settings lSettings = Properties.Settings.Default;
 
 			if (this.WindowState == FormWindowState.Normal)
 			{
@@ -143,7 +140,7 @@ namespace AgentCharacterEditor
 
 		private void SaveRecentFiles ()
 		{
-			Properties.Settings	lSettings = Properties.Settings.Default;
+			Properties.Settings lSettings = Properties.Settings.Default;
 
 			lSettings.RecentFiles = new System.Collections.Specialized.StringCollection ();
 			foreach (String lPath in mRecentFiles)
@@ -184,7 +181,7 @@ namespace AgentCharacterEditor
 		public event EventHandler LoadConfig;
 		public event EventHandler SaveConfig;
 
-		public event Global.EditEventHandler CanEdit;
+		public event Global.CanEditEventHandler CanEdit;
 		public event Global.EditEventHandler EditCopy;
 		public event Global.EditEventHandler EditCut;
 		public event Global.EditEventHandler EditDelete;
@@ -197,58 +194,6 @@ namespace AgentCharacterEditor
 
 		public void OnUpdateApplied (object sender, EventArgs e)
 		{
-			AddDeleteAnimation		lAddDeleteAnimation = sender as AddDeleteAnimation;
-			UpdateAnimation			lUpdateAnimation = sender as UpdateAnimation;
-			AddDeleteAnimationFrame	lAddDeleteFrame = sender as AddDeleteAnimationFrame;
-			ReorderAnimationFrame	lReorderFrame = sender as ReorderAnimationFrame;
-
-			if (lAddDeleteAnimation != null)
-			{
-				TreeViewMain.ShowAnimationNames (CharacterFile);
-				if (lAddDeleteAnimation.IsDelete)
-				{
-					ShowSelectedTreeNode ();
-				}
-			}
-			else if ((lUpdateAnimation != null) && (lUpdateAnimation.NameChanged || lUpdateAnimation.ForClipboard))
-			{
-				TreeNode	lAnimationNode = (new PartsTreeSelection (lUpdateAnimation.Target)).SelectedNode ();
-
-				if (lAnimationNode != null)
-				{
-					if (lUpdateAnimation.NameChanged)
-					{
-						lAnimationNode.Text = lUpdateAnimation.Target.Name;
-					}
-					if (lUpdateAnimation.ForClipboard)
-					{
-						TreeViewMain.ShowAnimationFrames (lUpdateAnimation.Target, lAnimationNode);
-					}
-				}
-			}
-			else if (lAddDeleteFrame != null)
-			{
-				TreeNode	lAnimationNode = (new PartsTreeSelection (lAddDeleteFrame.Animation)).SelectedNode ();
-
-				if (lAnimationNode != null)
-				{
-					TreeViewMain.ShowAnimationFrames (lAddDeleteFrame.Animation, lAnimationNode);
-				}
-				if (lAddDeleteFrame.IsDelete)
-				{
-					ShowSelectedTreeNode ();
-				}
-			}
-			else if (lReorderFrame != null)
-			{
-				TreeNode	lAnimationNode = (new PartsTreeSelection (lReorderFrame.Animation)).SelectedNode ();
-
-				if (lAnimationNode != null)
-				{
-					TreeViewMain.ShowAnimationFrames (lReorderFrame.Animation, lAnimationNode);
-				}
-			}
-
 			if (UpdateApplied != null)
 			{
 				UpdateApplied (sender, e);
@@ -271,10 +216,10 @@ namespace AgentCharacterEditor
 
 		private Boolean OpenCharacterFile (String pFilePath)
 		{
-			Boolean			lRet = false;
-			CursorState		lCursorState = new CursorState (this);
-			CharacterFile	lCharacterFile = null;
-			Boolean			lOpened = false;
+			Boolean lRet = false;
+			CursorState lCursorState = new CursorState (this);
+			CharacterFile lCharacterFile = null;
+			Boolean lOpened = false;
 
 			try
 			{
@@ -317,7 +262,7 @@ namespace AgentCharacterEditor
 						lOpened = true;
 						lCharacterFile.Header.ImageSize = PictureBoxSample.DefaultImageSize;
 						lCharacterFile.Header.Guid = System.Guid.NewGuid ();
-						lCharacterFile.Names.Add (CharacterForm.mLangDefault, Properties.Resources.TitleNewFile);
+						lCharacterFile.Names.Add (CharacterPanel.mLangDefault, Properties.Resources.TitleNewFile);
 						lCharacterFile.IsDirty = false;
 					}
 					else
@@ -346,9 +291,8 @@ namespace AgentCharacterEditor
 
 					ShowFileState ();
 					ShowEditState ();
-					TreeViewMain.ShowAnimationNames (CharacterFile);
-					TreeViewMain.LoadExpansion ();
 
+					PanelPartsTree.CharacterFile = mCharacterFile;
 					PanelCharacter.CharacterFile = mCharacterFile;
 					PanelBalloon.CharacterFile = mCharacterFile;
 					PanelTts.CharacterFile = mCharacterFile;
@@ -359,7 +303,8 @@ namespace AgentCharacterEditor
 					PanelOverlays.CharacterFile = mCharacterFile;
 					PanelState.CharacterFile = mCharacterFile;
 
-					ShowSelectedTreeNode ();
+					PanelPartsTree.LoadExpansion ();
+					ShowSelectedPart ();
 					UpdateRecentFiles ();
 					lRet = true;
 				}
@@ -383,8 +328,8 @@ namespace AgentCharacterEditor
 
 		private Boolean SaveCharacterFile (String pSaveAsPath)
 		{
-			Boolean		lRet = false;
-			CursorState	lCursorState = null;
+			Boolean lRet = false;
+			CursorState lCursorState = null;
 
 			if (mCharacterFile == null)
 			{
@@ -392,7 +337,7 @@ namespace AgentCharacterEditor
 			}
 			else if (!String.IsNullOrEmpty (pSaveAsPath))
 			{
-				CharacterFile	lCharacterFile = null;
+				CharacterFile lCharacterFile = null;
 
 				lCursorState = new CursorState (this);
 				lCursorState.ShowWait ();
@@ -441,7 +386,7 @@ namespace AgentCharacterEditor
 			}
 			else if (String.IsNullOrEmpty (mCharacterFile.Path) && !mCharacterFile.IsReadOnly)
 			{
-				String	lFilePath = String.Empty;
+				String lFilePath = String.Empty;
 
 				if (GetSaveNewPath (ref lFilePath))
 				{
@@ -477,7 +422,7 @@ namespace AgentCharacterEditor
 
 		private Boolean PromptSaveCharacterFile ()
 		{
-			Boolean	lRet = true;
+			Boolean lRet = true;
 #if	!DEBUG
 			if (mCharacterFile.IsDirty && !mCharacterFile.IsReadOnly)
 			{
@@ -572,7 +517,7 @@ namespace AgentCharacterEditor
 		{
 			if (mCharacterFile != null)
 			{
-				FileCharacterName	lName = mCharacterFile.FindName (0);
+				FileCharacterName lName = mCharacterFile.FindName (0);
 
 				if ((lName != null) && !String.IsNullOrEmpty (lName.Name))
 				{
@@ -586,57 +531,55 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
-		private void ShowSelectedTreeNode ()
+		private void ShowSelectedPart ()
 		{
-			if (TreeViewMain.SelectedNode == null)
-			{
-				TreeViewMain.SelectedNode = TreeViewMain.GetRootNode (PartsTreeView.NodeNameCharacter);
-			}
-			if (TreeViewMain.SelectedNode != null)
-			{
-				try
-				{
-					ShowSelectedPart (TreeViewMain.GetSelectedPart ());
-				}
-				finally
-				{
-					ResumeLayout (true);
-				}
-			}
+			ShowSelectedPart (PanelPartsTree.SelectedPart);
 		}
 
-		private void ShowSelectedPart (PartsTreeSelection pSelectedPart)
+		private void ShowSelectedPart (ResolvePart pSelectedPart)
 		{
-			if (pSelectedPart.mPanel == PanelAnimation)
+			ResolveCharacter lResolveCharacter = pSelectedPart as ResolveCharacter;
+			ResolveAnimationFrame lResolveAnimationFrame = pSelectedPart as ResolveAnimationFrame;
+
+			if (pSelectedPart is ResolveAnimation)
 			{
-				PanelAnimation.Animation = pSelectedPart.mAnimation;
+				PanelAnimation.Animation = pSelectedPart.Part as FileAnimation;
 			}
-			else if (pSelectedPart.mPanel == PanelFrame)
+			else if (pSelectedPart is ResolveState)
 			{
-				PanelFrame.Frame = pSelectedPart.mFrame;
+				PanelState.StateName = pSelectedPart.Part as String;
 			}
-			else if (pSelectedPart.mPanel == PanelBranching)
+			else if (lResolveAnimationFrame != null)
 			{
-				PanelBranching.Frame = pSelectedPart.mFrame;
-			}
-			else if (pSelectedPart.mPanel == PanelOverlays)
-			{
-				PanelOverlays.Frame = pSelectedPart.mFrame;
-			}
-			else if (pSelectedPart.mPanel == PanelState)
-			{
-				PanelState.StateName = pSelectedPart.mStateName;
+				switch (lResolveAnimationFrame.Scope)
+				{
+					case ResolveAnimationFrame.ScopeType.ScopeFrame:
+						{
+							PanelFrame.Frame = pSelectedPart.Part as FileAnimationFrame;
+						}
+						break;
+					case ResolveAnimationFrame.ScopeType.ScopeBranching:
+						{
+							PanelBranching.Frame = pSelectedPart.Part as FileAnimationFrame;
+						}
+						break;
+					case ResolveAnimationFrame.ScopeType.ScopeOverlays:
+						{
+							PanelOverlays.Frame = pSelectedPart.Part as FileAnimationFrame;
+						}
+						break;
+				}
 			}
 
-			PanelCharacter.Visible = (pSelectedPart.mPanel == PanelCharacter);
-			PanelBalloon.Visible = (pSelectedPart.mPanel == PanelBalloon);
-			PanelTts.Visible = (pSelectedPart.mPanel == PanelTts);
-			PanelAnimations.Visible = (pSelectedPart.mPanel == PanelAnimations);
-			PanelAnimation.Visible = (pSelectedPart.mPanel == PanelAnimation);
-			PanelFrame.Visible = (pSelectedPart.mPanel == PanelFrame);
-			PanelBranching.Visible = (pSelectedPart.mPanel == PanelBranching);
-			PanelOverlays.Visible = (pSelectedPart.mPanel == PanelOverlays);
-			PanelState.Visible = (pSelectedPart.mPanel == PanelState);
+			PanelCharacter.Visible = (lResolveCharacter != null) && (lResolveCharacter.Scope == ResolveCharacter.ScopeType.ScopeCharacter);
+			PanelBalloon.Visible = (pSelectedPart is ResolveBalloon);
+			PanelTts.Visible = (pSelectedPart is ResolveTts);
+			PanelAnimations.Visible = (lResolveCharacter != null) && (lResolveCharacter.Scope == ResolveCharacter.ScopeType.ScopeAnimations);
+			PanelAnimation.Visible = (pSelectedPart is ResolveAnimation);
+			PanelFrame.Visible = (lResolveAnimationFrame != null) && (lResolveAnimationFrame.Scope == ResolveAnimationFrame.ScopeType.ScopeFrame);
+			PanelBranching.Visible = (lResolveAnimationFrame != null) && (lResolveAnimationFrame.Scope == ResolveAnimationFrame.ScopeType.ScopeBranching);
+			PanelOverlays.Visible = (lResolveAnimationFrame != null) && (lResolveAnimationFrame.Scope == ResolveAnimationFrame.ScopeType.ScopeOverlays);
+			PanelState.Visible = (pSelectedPart is ResolveState);
 		}
 
 		#endregion
@@ -663,17 +606,13 @@ namespace AgentCharacterEditor
 
 		public void ShowEditState ()
 		{
-			TextBox					lTextBox = null;
-			Control					lActive = GetActiveControl (ref lTextBox);
-			Global.EditEventArgs	lEventArgs = null;
+			TextBox lTextBox = null;
+			Control lActive = GetActiveControl (ref lTextBox);
+			Global.CanEditEventArgs lEventArgs = null;
 
-			if (lActive == TreeViewMain)
+			if (CanEdit != null)
 			{
-				TreeViewMain.GetSelectedPart ().CanEdit (lEventArgs = new Global.EditEventArgs (DataFormats.Serializable));
-			}
-			else if (CanEdit != null)
-			{
-				lEventArgs = new Global.EditEventArgs (DataFormats.Serializable);
+				lEventArgs = new Global.CanEditEventArgs (DataFormats.Serializable);
 				CanEdit (this, lEventArgs);
 			}
 
@@ -735,7 +674,7 @@ namespace AgentCharacterEditor
 			ToolButtonEditRedo.Text = MenuItemEditRedo.Text.NoMenuPrefix ();
 		}
 
-		public void ShowEditState (Global.EditEventArgs pEditArgs, ToolStripItem pCopyItem, ToolStripItem pCutItem, ToolStripItem pPasteItem, ToolStripItem pDeleteItem)
+		public void ShowEditState (Global.CanEditEventArgs pEditArgs, ToolStripItem pCopyItem, ToolStripItem pCutItem, ToolStripItem pPasteItem, ToolStripItem pDeleteItem)
 		{
 			if (!String.IsNullOrEmpty (pEditArgs.CopyObjectTitle))
 			{
@@ -793,14 +732,14 @@ namespace AgentCharacterEditor
 		{
 			try
 			{
-				Control	lActive = this.ActiveControl;
+				Control lActive = this.ActiveControl;
 
 				if ((lActive != null) && (lActive.Enabled))
 				{
 					while (!lActive.Focused && lActive.HasChildren && lActive.ContainsFocus)
 					{
-						ContainerControl	lContainer = null;
-						Control				lContained = null;
+						ContainerControl lContainer = null;
+						Control lContained = null;
 
 						lContainer = lActive as ContainerControl;
 						if (lContainer != null)
@@ -832,8 +771,8 @@ namespace AgentCharacterEditor
 
 		internal Control GetActiveControl (ref TextBox pTextBox)
 		{
-			NumericUpDownEx	lNumeric = null;
-			Control			lActive = GetActiveControl (ref pTextBox, ref lNumeric);
+			NumericUpDownEx lNumeric = null;
+			Control lActive = GetActiveControl (ref pTextBox, ref lNumeric);
 
 			if (lNumeric != null)
 			{
@@ -844,7 +783,7 @@ namespace AgentCharacterEditor
 
 		internal Control GetActiveControl (ref TextBox pTextBox, ref NumericUpDownEx pNumeric)
 		{
-			Control	lActive = GetActiveControl ();
+			Control lActive = GetActiveControl ();
 
 			pTextBox = null;
 			pNumeric = null;
@@ -889,10 +828,6 @@ namespace AgentCharacterEditor
 				Update ();
 				OpenCharacterFile (mInitialFile);
 			}
-			if (TreeViewMain.SelectedNode != null)
-			{
-				TreeViewMain.SelectedNode.EnsureVisible ();
-			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -910,13 +845,7 @@ namespace AgentCharacterEditor
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Tree and ToolStrip Event Handlers
-
-		private void TreeViewMain_AfterSelect (object sender, TreeViewEventArgs e)
-		{
-			ShowSelectedTreeNode ();
-			ShowEditState ();
-		}
+		#region ToolStrip Event Handlers
 
 		private void ToolButtonFileNew_Click (object sender, EventArgs e)
 		{
@@ -991,7 +920,7 @@ namespace AgentCharacterEditor
 		{
 			if (PromptSaveCharacterFile ())
 			{
-				String	lFilePath = String.Empty;
+				String lFilePath = String.Empty;
 
 				if (GetOpenPath (ref lFilePath))
 				{
@@ -1006,7 +935,7 @@ namespace AgentCharacterEditor
 			{
 				if (String.IsNullOrEmpty (mCharacterFile.Path))
 				{
-					String	lFilePath = String.Empty;
+					String lFilePath = String.Empty;
 
 					if ((GetSaveNewPath (ref lFilePath)) && SaveCharacterFile (lFilePath))
 					{
@@ -1024,7 +953,7 @@ namespace AgentCharacterEditor
 
 		private void MenuItemFileSaveAs_Click (object sender, EventArgs e)
 		{
-			String	lFilePath = String.Empty;
+			String lFilePath = String.Empty;
 
 			if ((mCharacterFile != null) && GetSaveAsPath (ref lFilePath))
 			{
@@ -1057,8 +986,8 @@ namespace AgentCharacterEditor
 
 		private void MenuItemEditUndo_Click (object sender, EventArgs e)
 		{
-			TextBox	lTextBox = null;
-			Control	lActive = GetActiveControl (ref lTextBox);
+			TextBox lTextBox = null;
+			Control lActive = GetActiveControl (ref lTextBox);
 
 			if ((lTextBox != null) && lTextBox.Modified)
 			{
@@ -1103,19 +1032,14 @@ namespace AgentCharacterEditor
 
 		private void MenuItemEditCopy_Click (object sender, EventArgs e)
 		{
-			TextBox					lTextBox = null;
-			Control					lActive = GetActiveControl (ref lTextBox);
-			Global.EditEventArgs	lEventArgs = null;
+			TextBox lTextBox = null;
+			Control lActive = GetActiveControl (ref lTextBox);
+			Global.EditEventArgs lEventArgs = null;
 
-			if (lActive == TreeViewMain)
-			{
-				TreeViewMain.GetSelectedPart ().EditCopy (lEventArgs = new Global.EditEventArgs ());
-			}
-			else if (EditCopy != null)
+			if (EditCopy != null)
 			{
 				EditCopy (this, lEventArgs = new Global.EditEventArgs ());
 			}
-
 			if (lTextBox != null && ((lEventArgs == null) || !lEventArgs.IsUsed))
 			{
 				lTextBox.Copy ();
@@ -1129,15 +1053,11 @@ namespace AgentCharacterEditor
 
 		private void MenuItemEditCut_Click (object sender, EventArgs e)
 		{
-			TextBox					lTextBox = null;
-			Control					lActive = GetActiveControl (ref lTextBox);
-			Global.EditEventArgs	lEventArgs = null;
+			TextBox lTextBox = null;
+			Control lActive = GetActiveControl (ref lTextBox);
+			Global.EditEventArgs lEventArgs = null;
 
-			if (lActive == TreeViewMain)
-			{
-				TreeViewMain.GetSelectedPart ().EditCut (lEventArgs = new Global.EditEventArgs ());
-			}
-			else if (EditCut != null)
+			if (EditCut != null)
 			{
 				EditCut (this, lEventArgs = new Global.EditEventArgs ());
 			}
@@ -1155,15 +1075,11 @@ namespace AgentCharacterEditor
 
 		private void MenuItemEditDelete_Click (object sender, EventArgs e)
 		{
-			TextBox					lTextBox = null;
-			Control					lActive = GetActiveControl (ref lTextBox);
-			Global.EditEventArgs	lEventArgs = null;
+			TextBox lTextBox = null;
+			Control lActive = GetActiveControl (ref lTextBox);
+			Global.EditEventArgs lEventArgs = null;
 
-			if (lActive == TreeViewMain)
-			{
-				TreeViewMain.GetSelectedPart ().EditDelete (lEventArgs = new Global.EditEventArgs ());
-			}
-			else if (EditDelete != null)
+			if (EditDelete != null)
 			{
 				EditDelete (this, lEventArgs = new Global.EditEventArgs ());
 			}
@@ -1181,15 +1097,11 @@ namespace AgentCharacterEditor
 
 		private void MenuItemEditPaste_Click (object sender, EventArgs e)
 		{
-			TextBox					lTextBox = null;
-			Control					lActive = GetActiveControl (ref lTextBox);
-			Global.EditEventArgs	lEventArgs = null;
+			TextBox lTextBox = null;
+			Control lActive = GetActiveControl (ref lTextBox);
+			Global.EditEventArgs lEventArgs = null;
 
-			if (lActive == TreeViewMain)
-			{
-				TreeViewMain.GetSelectedPart ().EditPaste (lEventArgs = new Global.EditEventArgs (DataFormats.Serializable));
-			}
-			else if (EditPaste != null)
+			if (EditPaste != null)
 			{
 				EditPaste (this, lEventArgs = new Global.EditEventArgs (DataFormats.Serializable));
 			}
@@ -1211,8 +1123,8 @@ namespace AgentCharacterEditor
 
 		private void ContextMenuEdit_Opening (object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			TextBox		lTextBox = null;
-			Control		lActive = GetActiveControl (ref lTextBox);
+			TextBox lTextBox = null;
+			Control lActive = GetActiveControl (ref lTextBox);
 
 			if (lTextBox != null)
 			{
@@ -1220,11 +1132,11 @@ namespace AgentCharacterEditor
 			}
 			else if ((lActive != null) && lActive.RectangleToScreen (lActive.ClientRectangle).Contains (Control.MousePosition))
 			{
-				Global.ContextMenuEventArgs	lEventArgs = new Global.ContextMenuEventArgs (ContextMenuEdit, lActive, DataFormats.Serializable);
+				Global.ContextMenuEventArgs lEventArgs = new Global.ContextMenuEventArgs (ContextMenuEdit, lActive, DataFormats.Serializable);
 
 				if (EditMenu != null)
 				{
-					List <ToolStripItem>	lRemove = new List<ToolStripItem> ();
+					List<ToolStripItem> lRemove = new List<ToolStripItem> ();
 
 					foreach (ToolStripItem lMenuItem in ContextMenuEdit.Items)
 					{
@@ -1312,6 +1224,16 @@ namespace AgentCharacterEditor
 			}
 		}
 
+		private void OnNavigate (object sender, Global.NavigationEventArgs e)
+		{
+			ShowSelectedPart (e.Part);
+			ShowEditState ();
+			if (!Object.ReferenceEquals (sender, PanelPartsTree))
+			{
+				PanelPartsTree.SelectedPart = e.Part;
+			}
+		}
+
 		private void UndoManager_Undone (object sender, UndoManager.EventArgs e)
 		{
 			FileIsDirty ();
@@ -1328,52 +1250,6 @@ namespace AgentCharacterEditor
 #if DEBUG
 			System.Diagnostics.Debug.Print ("UndoUnit [{0}] Redone", e.UndoUnit.ToString ());
 #endif
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		private void PanelAnimations_GoToAnimation (object sender, Global.AnimationEventArgs e)
-		{
-			TreeNode	lAnimationNode = (new PartsTreeSelection (e.Animation)).SelectedNode ();
-
-			if (lAnimationNode != null)
-			{
-				TreeViewMain.SelectedNode = lAnimationNode;
-				ShowSelectedTreeNode ();
-			}
-		}
-
-		private void PanelAnimation_GoToFrame (object sender, Global.AnimationFrameEventArgs e)
-		{
-			TreeNode	lFrameNode = (new PartsTreeSelection (e.Animation, e.Frame)).SelectedNode ();
-
-			if (lFrameNode != null)
-			{
-				TreeViewMain.SelectedNode = lFrameNode;
-				ShowSelectedTreeNode ();
-			}
-		}
-
-		private void PanelAnimation_GoToState (object sender, Global.StateEventArgs e)
-		{
-			TreeNode	lStateNode = (new PartsTreeSelection (e.StateName)).SelectedNode ();
-
-			if (lStateNode != null)
-			{
-				TreeViewMain.SelectedNode = lStateNode;
-				ShowSelectedTreeNode ();
-			}
-		}
-
-		private void PanelState_GoToAnimation (object sender, Global.AnimationEventArgs e)
-		{
-			TreeNode	lAnimationNode = (new PartsTreeSelection (e.Animation)).SelectedNode ();
-
-			if (lAnimationNode != null)
-			{
-				TreeViewMain.SelectedNode = lAnimationNode;
-				ShowSelectedTreeNode ();
-			}
 		}
 
 		#endregion

@@ -293,6 +293,14 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\BinDa\Bin\Debug(x86)\v3.5\DaCharFileCLR.xml"
+			>
+		</File>
+		<File
+			RelativePath=".\_Test\Chars\TestChar1.acd"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

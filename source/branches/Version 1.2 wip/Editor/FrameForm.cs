@@ -71,7 +71,7 @@ namespace AgentCharacterEditor
 			if (Program.MainForm != null)
 			{
 				Program.MainForm.UpdateApplied -= new UndoUnit.AppliedEventHandler (OnUpdateApplied);
-				Program.MainForm.CanEdit -= new Global.EditEventHandler (MainForm_CanEdit);
+				Program.MainForm.CanEdit -= new Global.CanEditEventHandler (MainForm_CanEdit);
 				Program.MainForm.EditCopy -= new Global.EditEventHandler (MainForm_EditCopy);
 				Program.MainForm.EditCut -= new Global.EditEventHandler (MainForm_EditCut);
 				Program.MainForm.EditDelete -= new Global.EditEventHandler (MainForm_EditDelete);
@@ -80,7 +80,7 @@ namespace AgentCharacterEditor
 				if (Visible)
 				{
 					Program.MainForm.UpdateApplied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
-					Program.MainForm.CanEdit += new Global.EditEventHandler (MainForm_CanEdit);
+					Program.MainForm.CanEdit += new Global.CanEditEventHandler (MainForm_CanEdit);
 					Program.MainForm.EditCopy += new Global.EditEventHandler (MainForm_EditCopy);
 					Program.MainForm.EditCut += new Global.EditEventHandler (MainForm_EditCut);
 					Program.MainForm.EditDelete += new Global.EditEventHandler (MainForm_EditDelete);
@@ -315,7 +315,7 @@ namespace AgentCharacterEditor
 			ButtonMoveDown.Text = String.Format (Properties.Resources.EditMoveImageDown.NoMenuPrefix (), Global.TitleImage (pFrameImage));
 		}
 
-		private void ShowEditState (Global.EditEventArgs pEventArgs)
+		private void ShowEditState (Global.CanEditEventArgs pEventArgs)
 		{
 			FileFrameImage	lFrameImage = GetSelectedImage (false);
 
@@ -413,8 +413,8 @@ namespace AgentCharacterEditor
 
 				PanelImageClip.ClientSize = PictureBoxFrameSample.ClientSize;
 				PictureBoxImageSample.SuspendLayout ();
-				PictureBoxImageSample.ClientSize = PictureBoxFrameSample.ScaledSize (lBitmap.Size);
-				PictureBoxImageSample.Location = PictureBoxFrameSample.ScaledPoint (pFrameImage.Offset);
+				PictureBoxImageSample.ClientSize = PictureBoxFrameSample.ImageToClient (lBitmap.Size);
+				PictureBoxImageSample.Location = PictureBoxFrameSample.ImageToClient (pFrameImage.Offset);
 				PictureBoxImageSample.Image = lBitmap;
 				PictureBoxImageSample.ResumeLayout (true);
 				TableLayoutSample.Enabled = !Program.FileIsReadOnly;
@@ -849,7 +849,7 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Internal Event Handlers
 
-		internal void MainForm_CanEdit (object sender, Global.EditEventArgs e)
+		internal void MainForm_CanEdit (object sender, Global.CanEditEventArgs e)
 		{
 			if (!e.IsUsed && !IsEmpty && ListViewImages.ContainsFocus)
 			{

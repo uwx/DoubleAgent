@@ -27,6 +27,12 @@ namespace AgentCharacterEditor
 {
 	public static class StringExtensions
 	{
+		/// <summary>
+		/// Surrounds a <see cref="System.String"/> value with quotes.
+		/// </summary>
+		/// <param name="pString">The initial string value.</param>
+		/// <returns>The string value with quotes.</returns>
+		/// <remarks>If the initial string value is empty or already quoted it is returned unchanged.</remarks>
 		public static String Quoted (this String pString)
 		{
 			if (!String.IsNullOrEmpty (pString) && (pString[0] == '"') && (pString[pString.Length - 1] == '"'))
@@ -38,6 +44,12 @@ namespace AgentCharacterEditor
 				return String.Format ("\"{0}\"", pString);
 			}
 		}
+
+		/// <summary>
+		/// Strips the '&' mnemonic prefix indicator from a string.
+		/// </summary>
+		/// <param name="pString">The initial string value.</param>
+		/// <returns>The string value with any '&' characters removed.</returns>
 		static public String NoMenuPrefix (this String pString)
 		{
 			return pString.Replace ("&", "");
@@ -48,6 +60,13 @@ namespace AgentCharacterEditor
 
 	public static class LangIDExtensions
 	{
+		/// <summary>
+		/// Determines if a <see cref="DoubleAgent.Character.FileCharacterName"/> has the specified Primary Language ID.
+		/// </summary>
+		/// <param name="pLangID">The Language ID to check.</param>
+		/// <param name="pName">The <see cref="DoubleAgent.Character.FileCharacterName"/> to check.</param>
+		/// <returns>True if the Primary Language ID's match.</returns>
+		/// <see cref="DoubleAgent.Character.FileCharacterName.Language"/>
 		public static Boolean PrimaryLanguageEqual (this UInt16 pLangID, FileCharacterName pName)
 		{
 			if (pName != null)
@@ -56,6 +75,13 @@ namespace AgentCharacterEditor
 			}
 			return false;
 		}
+
+		/// <summary>
+		/// Determines of the Primary portion of two Language ID's is equal.
+		/// </summary>
+		/// <param name="pLangID1">The first Language ID</param>
+		/// <param name="pLangID2">The second Language ID</param>
+		/// <returns>True if the two Language ID's have the same Primary language.</returns>
 		public static Boolean PrimaryLanguageEqual (this UInt16 pLangID1, UInt16 pLangID2)
 		{
 			return ((Byte)pLangID1 == (Byte)pLangID2);
@@ -342,18 +368,64 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Events
 
+		public class NavigationEventArgs : EventArgs
+		{
+			public NavigationEventArgs (ResolvePart pPart)
+			{
+				Part = pPart;
+			}
+			public ResolvePart Part
+			{
+				get;
+				private set;
+			}
+		}
+
+		public delegate void NavigationEventHandler (object sender, NavigationEventArgs e);
+
+		///////////////////////////////////////////////////////////////////////////////
+
 		public class EditEventArgs : EventArgs
 		{
 			public EditEventArgs ()
 			{
 			}
-
 			public EditEventArgs (String pClipboardFormat)
 			{
 				if (Clipboard.ContainsData (pClipboardFormat))
 				{
 					PasteObject = Clipboard.GetData (pClipboardFormat);
 				}
+			}
+
+			public Object PasteObject
+			{
+				get;
+				private set;
+			}
+
+			public virtual Boolean IsUsed
+			{
+				get
+				{
+					return mIsUsed;
+				}
+				set
+				{
+					mIsUsed = value;
+				}
+			}
+			private Boolean mIsUsed = false;
+		}
+
+		public class CanEditEventArgs : EditEventArgs
+		{
+			public CanEditEventArgs ()
+			{
+			}
+			public CanEditEventArgs (String pClipboardFormat)
+			: base (pClipboardFormat)
+			{
 			}
 
 			public String CopyTitle
@@ -411,25 +483,6 @@ namespace AgentCharacterEditor
 				get;
 				set;
 			}
-			public Object PasteObject
-			{
-				get;
-				private set;
-			}
-
-			public Boolean IsUsed
-			{
-				get
-				{
-					return (mIsUsed) || (CopyObjectTitle != null) || (CutObjectTitle != null) || (DeleteObjectTitle != null) || (PasteObjectTitle != null);
-				}
-				set
-				{
-					mIsUsed = value;
-				}
-			}
-
-			private Boolean mIsUsed = false;
 			private String mPasteTitle = Properties.Resources.EditPasteThis;
 
 			///////////////////////////////////////////////////////////////////////////////
@@ -470,10 +523,11 @@ namespace AgentCharacterEditor
 		}
 
 		public delegate void EditEventHandler (object sender, EditEventArgs e);
+		public delegate void CanEditEventHandler (object sender, CanEditEventArgs e);
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		public class ContextMenuEventArgs : EditEventArgs
+		public class ContextMenuEventArgs : CanEditEventArgs
 		{
 			public ContextMenuEventArgs (ContextMenuStrip pContextMenu, Control pActiveControl)
 			{
@@ -500,77 +554,6 @@ namespace AgentCharacterEditor
 		}
 
 		public delegate void ContextMenuEventHandler (object sender, ContextMenuEventArgs e);
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		public class AnimationEventArgs : EventArgs
-		{
-			public AnimationEventArgs (FileAnimation pAnimation)
-			{
-				Animation = pAnimation;
-				AnimationName = pAnimation.Name;
-			}
-			public AnimationEventArgs (String pAnimationName)
-			{
-				Animation = null;
-				AnimationName = pAnimationName;
-			}
-
-			public FileAnimation Animation
-			{
-				get;
-				private set;
-			}
-			public String AnimationName
-			{
-				get;
-				private set;
-			}
-		}
-
-		public delegate void GoToAnimationEventHandler (object sender, AnimationEventArgs e);
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		public class AnimationFrameEventArgs : EventArgs
-		{
-			public AnimationFrameEventArgs (FileAnimation pAnimation, FileAnimationFrame pFrame)
-			{
-				Animation = pAnimation;
-				Frame = pFrame;
-			}
-
-			public DoubleAgent.Character.FileAnimation Animation
-			{
-				get;
-				private set;
-			}
-			public DoubleAgent.Character.FileAnimationFrame Frame
-			{
-				get;
-				private set;
-			}
-		}
-
-		public delegate void GoToFrameEventHandler (object sender, AnimationFrameEventArgs e);
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		public class StateEventArgs : EventArgs
-		{
-			public StateEventArgs (String pStateName)
-			{
-				StateName = pStateName;
-			}
-
-			public String StateName
-			{
-				get;
-				private set;
-			}
-		}
-
-		public delegate void GoToStateEventHandler (object sender, StateEventArgs e);
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////

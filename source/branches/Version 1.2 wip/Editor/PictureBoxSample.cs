@@ -26,15 +26,54 @@ using System.Drawing.Imaging;
 
 namespace AgentCharacterEditor
 {
+	/// <summary>
+	/// A <see cref="System.Windows.Forms.PictureBox"/> with extra functionality to support isometric scaling.
+	/// </summary>
+	/// <remarks>The <see cref="SizeMode"/> is initialized to <see cref="PictureBoxSizeMode.Zoom"/> and cannot be changed.</remarks>
 	public class PictureBoxSample : System.Windows.Forms.PictureBox
 	{
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public PictureBoxSample ()
 		{
-			this.SizeMode = PictureBoxSizeMode.Zoom;
+			base.SizeMode = PictureBoxSizeMode.Zoom;
+		}
+
+		/// <summary>
+		/// Override of <see cref="System.Windows.Forms.PictureBox.SizeMode"/> that limits possible values to <see cref="PictureBoxSizeMode.Zoom"/> .
+		/// </summary>
+		public new PictureBoxSizeMode SizeMode
+		{
+			get
+			{
+				return base.SizeMode;
+			}
+			set
+			{
+				if (value == PictureBoxSizeMode.Zoom)
+				{
+					base.SizeMode = value;
+				}
+#if DEBUG
+				else
+				{
+					System.Diagnostics.Debug.Print ("SizeMode change ignored");
+				}
+#endif
+			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
+		/// <summary>
+		/// Gets or sets the control's client area dimensions.<para>Override of <see cref="System.Windows.Forms.PictureBox.ClientSize"/>.</para>
+		/// </summary>
+		/// <remarks>When the ClientSize is changed, it is constrained by the <see cref="MinimumSize"/> and <see cref="MaximumSize"/>.
+		/// However, the constraints are not applied independently to the Width and Height.  Instead, the control's original aspect ratio
+		/// is retained.
+		/// </remarks>
+		/// <seealso cref="MaximumImageSize"/>
 		public new System.Drawing.Size ClientSize
 		{
 			get
@@ -47,9 +86,9 @@ namespace AgentCharacterEditor
 
 				if (this.DisplayRectangle.Size != value)   // Adjust for Min/Max size
 				{
-					SizeF	lDisplaySize = new SizeF ((float)this.DisplayRectangle.Width, (float)this.DisplayRectangle.Height);
-					SizeF	lScaledSize = new SizeF ((float)value.Width, (float)value.Height);
-					PointF	lScale = new PointF (lScaledSize.Width / lDisplaySize.Width, lScaledSize.Height / lDisplaySize.Height);
+					SizeF lDisplaySize = new SizeF ((float)this.DisplayRectangle.Width, (float)this.DisplayRectangle.Height);
+					SizeF lScaledSize = new SizeF ((float)value.Width, (float)value.Height);
+					PointF lScale = new PointF (lScaledSize.Width / lDisplaySize.Width, lScaledSize.Height / lDisplaySize.Height);
 
 					if (lScale.X < lScale.Y)
 					{
@@ -73,15 +112,18 @@ namespace AgentCharacterEditor
 			}
 		}
 
+		/// <summary>
+		/// Gets the scaling (zoom) factor applied to the displayed image.
+		/// </summary>
 		public float ImageScale
 		{
 			get
 			{
 				try
 				{
-					Size	lDisplaySize = this.DisplayRectangle.Size;
-					Size	lImageSize;
-					PointF	lScale;
+					Size lDisplaySize = this.DisplayRectangle.Size;
+					Size lImageSize;
+					PointF lScale;
 
 					if (this.SizeMode == PictureBoxSizeMode.Zoom)
 					{
@@ -111,45 +153,75 @@ namespace AgentCharacterEditor
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		public System.Drawing.Point ScaledPoint (System.Drawing.Point pPoint)
+		/// <summary>
+		/// Converts a <see cref="System.Drawing.Point"/> from Image coordinates to Client coordinates.
+		/// </summary>
+		/// <param name="pPoint">The <see cref="System.Drawing.Point"/> in Image coordinates.</param>
+		/// <returns>The <see cref="System.Drawing.Point"/> in Client coordinates</returns>
+		/// <seealso cref="ImageScale"/>
+		public System.Drawing.Point ImageToClient (System.Drawing.Point pPoint)
 		{
-			float	lImageScale = this.ImageScale;
-			PointF	lScaledPoint = new PointF ((float)pPoint.X * lImageScale, (float)pPoint.Y * lImageScale);
+			float lImageScale = this.ImageScale;
+			PointF lScaledPoint = new PointF ((float)pPoint.X * lImageScale, (float)pPoint.Y * lImageScale);
 			return Point.Round (lScaledPoint);
 		}
 
-		public System.Drawing.Point UnscaledPoint (System.Drawing.Point pPoint)
+		/// <summary>
+		/// Converts a <see cref="System.Drawing.Point"/> from Client coordinates to Image coordinates.
+		/// </summary>
+		/// <param name="pPoint">The <see cref="System.Drawing.Point"/> in Client coordinates.</param>
+		/// <returns>The <see cref="System.Drawing.Point"/> in Image coordinates</returns>
+		/// <seealso cref="ImageScale"/>
+		public System.Drawing.Point ClientToImage (System.Drawing.Point pPoint)
 		{
-			float	lImageScale = this.ImageScale;
-			PointF	lScaledPoint = new PointF ((float)pPoint.X / lImageScale, (float)pPoint.Y / lImageScale);
+			float lImageScale = this.ImageScale;
+			PointF lScaledPoint = new PointF ((float)pPoint.X / lImageScale, (float)pPoint.Y / lImageScale);
 			return Point.Round (lScaledPoint);
 		}
 
-		public System.Drawing.Size ScaledSize (System.Drawing.Size pSize)
+		/// <summary>
+		/// Converts a <see cref="System.Drawing.Size"/> from Image coordinates to Client coordinates.
+		/// </summary>
+		/// <param name="pPoint">The <see cref="System.Drawing.Size"/> in Image coordinates.</param>
+		/// <returns>The <see cref="System.Drawing.Size"/> in Client coordinates</returns>
+		/// <seealso cref="ImageScale"/>
+		public System.Drawing.Size ImageToClient (System.Drawing.Size pSize)
 		{
-			float	lImageScale = this.ImageScale;
-			SizeF	lScaledSize = new SizeF ((float)pSize.Width * lImageScale, (float)pSize.Height * lImageScale);
+			float lImageScale = this.ImageScale;
+			SizeF lScaledSize = new SizeF ((float)pSize.Width * lImageScale, (float)pSize.Height * lImageScale);
 			return Size.Round (lScaledSize);
 		}
 
-		public System.Drawing.Size UnscaledSize (System.Drawing.Size pSize)
+		/// <summary>
+		/// Converts a <see cref="System.Drawing.Size"/> from Client coordinates to Image coordinates.
+		/// </summary>
+		/// <param name="pPoint">The <see cref="System.Drawing.Size"/> in Client coordinates.</param>
+		/// <returns>The <see cref="System.Drawing.Size"/> in Image coordinates</returns>
+		/// <seealso cref="ImageScale"/>
+		public System.Drawing.Size ClientToImage (System.Drawing.Size pSize)
 		{
-			float	lImageScale = this.ImageScale;
-			SizeF	lScaledSize = new SizeF ((float)pSize.Width / lImageScale, (float)pSize.Height / lImageScale);
+			float lImageScale = this.ImageScale;
+			SizeF lScaledSize = new SizeF ((float)pSize.Width / lImageScale, (float)pSize.Height / lImageScale);
 			return Size.Round (lScaledSize);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
-		
-		public static Size DefaultImageSize 
+
+		/// <summary>
+		/// The suggested default dimensions of a sample image.
+		/// </summary>
+		public static Size DefaultImageSize
 		{
 			get
 			{
-				return new Size (128,128);
+				return new Size (128, 128);
 			}
 		}
 
-		public static Size MaxImageSize
+		/// <summary>
+		/// The suggested maximum dimensions of a sample image.
+		/// </summary>
+		public static Size MaximumImageSize
 		{
 			get
 			{

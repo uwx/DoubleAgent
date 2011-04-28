@@ -26,13 +26,28 @@ using DoubleAgent.Character;
 
 namespace AgentCharacterEditor
 {
-	internal abstract class ResolvePart<T> where T : class
+	public abstract class ResolvePart
 	{
 		public CharacterFile CharacterFile
 		{
 			get
 			{
 				return Program.MainForm.CharacterFile;
+			}
+		}
+		public abstract Object Part
+		{
+			get;
+		}
+	}
+
+	internal abstract class ResolvePart<T> : ResolvePart where T : class
+	{
+		public override Object Part
+		{
+			get
+			{
+				return Target;
 			}
 		}
 		public abstract T Target
@@ -60,7 +75,7 @@ namespace AgentCharacterEditor
 
 	///////////////////////////////////////////////////////////////////////////////
 
-	internal class ResolveFile : ResolvePart<CharacterFile>
+	internal class ResolveCharacter : ResolvePart<CharacterFile>
 	{
 		public override CharacterFile Target
 		{
@@ -76,6 +91,18 @@ namespace AgentCharacterEditor
 				return null;
 			}
 		}
+
+		public enum ScopeType
+		{
+			ScopeCharacter,
+			ScopeAnimations,
+			ScopeStates
+		}
+		public ScopeType Scope
+		{
+			get;
+			set;
+		}
 	}
 
 	internal class ResolveHeader : ResolvePart<FileHeader>
@@ -86,7 +113,7 @@ namespace AgentCharacterEditor
 			{
 				try
 				{
-					return CharacterFile.Header;
+					return (CharacterFile != null) ? CharacterFile.Header : null;
 				}
 				catch
 				{
@@ -104,7 +131,7 @@ namespace AgentCharacterEditor
 			{
 				try
 				{
-					return CharacterFile.Balloon;
+					return (CharacterFile != null) && ((CharacterFile.Header.Style & CharacterStyle.CharStyleBalloon) != 0) ? CharacterFile.Balloon : null;
 				}
 				catch
 				{
@@ -122,12 +149,57 @@ namespace AgentCharacterEditor
 			{
 				try
 				{
-					return CharacterFile.Tts;
+					return (CharacterFile != null) && ((CharacterFile.Header.Style & CharacterStyle.CharStyleTts) != 0) ? CharacterFile.Tts : null;
 				}
 				catch
 				{
 				}
 				return null;
+			}
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+
+	internal class ResolveState : ResolvePart<String>
+	{
+		public ResolveState (String pStateName)
+		{
+			StateName = pStateName;
+			TargetContained = true;
+			TargetContained = (Target != null);
+		}
+
+		public String StateName
+		{
+			get;
+			protected set;
+		}
+		public override String Target
+		{
+			get
+			{
+				try
+				{
+					if (TargetContained && (CharacterFile != null))
+					{
+						CachedTarget = (!String.IsNullOrEmpty (StateName) && CharacterFile.States.ContainsKey (StateName)) ? StateName : null;
+					}
+					else if (!TargetCached)
+					{
+						CachedTarget = StateName;
+					}
+				}
+				catch
+				{
+				}
+#if DEBUG_NOT
+				if (!TargetCached)
+				{
+					System.Diagnostics.Debug.Print ("State [{0}] not found", StateName);
+				}
+#endif
+				return CachedTarget;
 			}
 		}
 	}
@@ -160,7 +232,7 @@ namespace AgentCharacterEditor
 			{
 				try
 				{
-					if (!TargetCached || (TargetContained && !CharacterFile.Names.Contains (CachedTarget)))
+					if (!TargetCached || (TargetContained && (CharacterFile != null) && !CharacterFile.Names.Contains (CachedTarget)))
 					{
 						CachedTarget = CharacterFile.FindName (Language);
 						if (!Language.PrimaryLanguageEqual (CachedTarget))
@@ -211,7 +283,7 @@ namespace AgentCharacterEditor
 			{
 				try
 				{
-					if (!TargetCached || (TargetContained && !CharacterFile.Gestures.Contains (CachedTarget)))
+					if (!TargetCached || (TargetContained && (CharacterFile != null) && !CharacterFile.Gestures.Contains (CachedTarget)))
 					{
 						CachedTarget = CharacterFile.Gestures[AnimationName];
 					}
@@ -247,6 +319,18 @@ namespace AgentCharacterEditor
 			FrameNdx = (pFrame.Container != null) ? pFrame.Container.IndexOf (pFrame) : -1;
 			CachedTarget = pFrame;
 			TargetContained = (Animation.TargetContained) && (pFrame.Container != null) && pFrame.Container.Contains (pFrame);
+		}
+
+		public enum ScopeType
+		{
+			ScopeFrame,
+			ScopeOverlays,
+			ScopeBranching
+		}
+		public ScopeType Scope
+		{
+			get;
+			set;
 		}
 
 		public ResolveAnimation Animation

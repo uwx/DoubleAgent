@@ -2384,8 +2384,9 @@ DWORD LogStart (bool pNewLogFile, LPCTSTR pLogFileName, UINT pLogLevel)
 
 void LogStop (unsigned int pPutLogEnd)
 {
+#ifdef	_CRTDBG_ALLOC_MEM_DF
 	LogDebugRuntime (false);
-
+#endif
 #ifdef __cplusplus
 	if	(gLogLevel & LogToCache)
 	{
@@ -2916,6 +2917,7 @@ int __cdecl LogCrtDbgReport (int pRptType, char * pMsg, int * pRetVal)
 /////////////////////////////////////////////////////////////////////////////
 void LogDebugRuntime (bool pDebugRuntime, bool pAsserts, bool pErrors, bool pWarnings)
 {
+#ifndef	_M_CEE
 #ifdef	_DEBUG
 	_LOG_TRY
 	{
@@ -2937,11 +2939,13 @@ void LogDebugRuntime (bool pDebugRuntime, bool pAsserts, bool pErrors, bool pWar
 	}
 	_LOG_CATCH
 #endif
+#endif
 }
 
 int LogDebugMemory (int pDbgFlag)
 {
 	int	lDbgFlag = 0;
+#ifndef	_M_CEE
 #ifdef	_DEBUG
 	_LOG_TRY
 	{
@@ -2950,6 +2954,7 @@ int LogDebugMemory (int pDbgFlag)
 		LogMessage (LogIfActive, _T("_CrgDbgFlag from [%4.4X] to [%4.4X]"), lDbgFlag, _CrtSetDbgFlag (_CRTDBG_REPORT_FLAG));
 	}
 	_LOG_CATCH
+#endif
 #endif
 	return lDbgFlag;
 }

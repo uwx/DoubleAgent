@@ -96,7 +96,7 @@ enum AgentMouthOverlay
 
 #ifdef	_M_CEE
 #define CAgentFileImage FileImage
-public ref class CAgentFileImage
+[Serializable] public ref class FileImage
 #else
 class _DACORE_IMPEXP CAgentFileImage
 #endif
@@ -126,7 +126,7 @@ public:
 
 #ifdef	_M_CEE
 internal:
-	UInt32					mImageNum;
+	[NonSerialized]	UInt32	mImageNum;
 	System::Drawing::Size	mImageSize;
 	Boolean					mIs32Bit;
 	array <BYTE>^			mBits;
@@ -647,12 +647,11 @@ public:
 internal:
 	CAgentFileFrameImage (CharacterFile^ pOwner, FileAnimationFrame^ pFrame);
 protected:
-	//[OnSerializingAttribute] void OnSerializing (StreamingContext pContext);	
-	//[OnSerializedAttribute] void OnSerialized (StreamingContext pContext);	
-	//[OnDeserializingAttribute] void OnDeserializing (StreamingContext pContext);	
-	//[OnDeserializedAttribute] void OnDeserialized (StreamingContext pContext);	
-	//System::String^		mImageFilePath;
-	//CAgentFileImage^	mImage;
+	[OnSerializingAttribute] void OnSerializing (StreamingContext pContext);	
+	[OnSerializedAttribute] void OnSerialized (StreamingContext pContext);	
+private:	
+	System::String^		mImageFilePath;
+	CAgentFileImage^	mImage;
 #else
 public:
 	DECLARE_DLL_OBJECT(CAgentFileFrameImage)
@@ -769,12 +768,11 @@ public:
 internal:
 	CAgentFileFrameOverlay (CharacterFile^ pOwner, FileAnimationFrame^ pFrame);
 protected:
-	//[OnSerializingAttribute] void OnSerializing (StreamingContext pContext);	
-	//[OnSerializedAttribute] void OnSerialized (StreamingContext pContext);	
-	//[OnDeserializingAttribute] void OnDeserializing (StreamingContext pContext);	
-	//[OnDeserializedAttribute] void OnDeserialized (StreamingContext pContext);	
-	//System::String^		mImageFilePath;
-	//CAgentFileImage^	mImage;
+	[OnSerializingAttribute] void OnSerializing (StreamingContext pContext);	
+	[OnSerializedAttribute] void OnSerialized (StreamingContext pContext);	
+private:	
+	System::String^		mImageFilePath;
+	CAgentFileImage^	mImage;
 #else
 public:
 	DECLARE_DLL_OBJECT(CAgentFileFrameOverlay)
@@ -926,12 +924,11 @@ public:
 internal:
 	CAgentFileFrame (CharacterFile^ pOwner, FileFrames^ pContainer);
 protected:
-	//[OnSerializingAttribute] void OnSerializing (StreamingContext pContext);	
-	//[OnSerializedAttribute] void OnSerialized (StreamingContext pContext);	
-	//[OnDeserializingAttribute] void OnDeserializing (StreamingContext pContext);	
-	//[OnDeserializedAttribute] void OnDeserialized (StreamingContext pContext);	
-	//System::String^		mSoundFilePath;
-	//array<Byte>^		mSound;
+	[OnSerializingAttribute] void OnSerializing (StreamingContext pContext);	
+	[OnSerializedAttribute] void OnSerialized (StreamingContext pContext);	
+private:	
+	System::String^		mSoundFilePath;
+	array<Byte>^		mSound;
 #else
 public:
 	DECLARE_DLL_OBJECT(CAgentFileFrame)

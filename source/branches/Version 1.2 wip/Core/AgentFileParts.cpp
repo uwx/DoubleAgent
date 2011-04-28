@@ -1321,26 +1321,36 @@ System::String^ CAgentFileFrameImage::ImageFilePath::get()
 	{
 		return mOwner->GetImageFilePath (mImageNdx);
 	}
-	return nullptr;
+	else
+	{
+		return mImageFilePath;
+	}
 }
 
 void CAgentFileFrameImage::ImageFilePath::set (System::String^ pValue)
 {
-	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
-		&&	(!String::IsNullOrEmpty (pValue))
-		)
+	if	(!String::IsNullOrEmpty (pValue))
 	{
-		Int32	lImageNdx = mOwner->LoadImageFile (pValue);
-
 		if	(
-				(lImageNdx >= 0)
-			&&	(mImageNdx != lImageNdx)
+				(mOwner)
+			&&	(!mOwner->IsReadOnly)
 			)
 		{
-			mImageNdx = lImageNdx;
-			mOwner->IsDirty = true;
+			Int32	lImageNdx = mOwner->LoadImageFile (pValue);
+
+			if	(
+					(lImageNdx >= 0)
+				&&	(mImageNdx != lImageNdx)
+				)
+			{
+				mImageNdx = lImageNdx;
+				mOwner->IsDirty = true;
+			}
+		}
+		else
+		if	(!mOwner)
+		{
+			mImageFilePath = gcnew String (pValue);
 		}
 	}
 }
@@ -1380,8 +1390,19 @@ Boolean CAgentFileFrameImage::CopyTo (CAgentFileFrameImage^ pTarget)
 			)
 		)
 	{
-		pTarget->mImageNdx = mImageNdx;
 		pTarget->mOffset = mOffset;
+		if	(
+				(!mOwner)
+			||	(!pTarget->mOwner)
+			||	(!Object::ReferenceEquals (mOwner, pTarget->mOwner))
+			)
+		{
+			pTarget->ImageFilePath = ImageFilePath;
+		}
+		else
+		{
+			pTarget->mImageNdx = mImageNdx;
+		}
 		
 		if	(
 				(pTarget->mOwner)
@@ -1399,18 +1420,32 @@ Boolean CAgentFileFrameImage::Equals (CAgentFileFrameImage^ pTarget)
 {
 	if	(
 			(pTarget)
-		&&	(pTarget->mImageNdx == mImageNdx)
 		&&	(pTarget->mOffset == mOffset)
 		)
 	{
-		return true;
+		if	(
+				(!mOwner)
+			||	(!pTarget->mOwner)
+			||	(!Object::ReferenceEquals (mOwner, pTarget->mOwner))
+			)
+		{
+			if	(String::Equals (ImageFilePath, pTarget->ImageFilePath))
+			{
+				return true;
+			}
+		}
+		else
+		if	(pTarget->mImageNdx == mImageNdx)
+		{
+			return true;
+		}
 	}
 	return false;
 }
 
 System::String^ CAgentFileFrameImage::ToString ()
 {
-#ifdef	_DEBUG
+#ifdef	_DEBUG_NOT
     return String::Format ("FrameImage {0:D} file {1:D} {2} at {3} in {4}", (mContainer)?mContainer->IndexOf(this):-1, ImageNdx, ImageFilePath, Offset.ToString(), (mContainer && mContainer->mFrame)?mContainer->mFrame->ToString():"<unowned>");
 #else
     return String::Format ("FrameImage {0:D} in {1}", (mContainer)?mContainer->IndexOf(this):-1, (mContainer && mContainer->mFrame)?mContainer->mFrame->ToString():"<unowned>");
@@ -1419,21 +1454,25 @@ System::String^ CAgentFileFrameImage::ToString ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-//void CAgentFileFrameImage::OnSerializing (StreamingContext pContext)
-//{
-//}
-//	
-//void CAgentFileFrameImage::OnSerialized (StreamingContext pContext)
-//{
-//}
-//	
-//void CAgentFileFrameImage::OnDeserializing (StreamingContext pContext)
-//{
-//}
-//	
-//void CAgentFileFrameImage::OnDeserialized (StreamingContext pContext)	
-//{
-//}
+void CAgentFileFrameImage::OnSerializing (StreamingContext pContext)
+{
+	if	(mOwner)
+	{
+		mImageFilePath = ImageFilePath;
+		mImage = mOwner->GetImage (ImageNdx);
+	}
+	else
+	{
+		mImageFilePath = nullptr;
+		mImage = nullptr;
+	}
+}
+	
+void CAgentFileFrameImage::OnSerialized (StreamingContext pContext)
+{
+	mImageFilePath = nullptr;
+	mImage = nullptr;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 #endif	// _M_CEE
@@ -1730,26 +1769,36 @@ System::String^ CAgentFileFrameOverlay::ImageFilePath::get()
 	{
 		return mOwner->GetImageFilePath (mImageNdx);
 	}
-	return nullptr;
+	else
+	{
+		return mImageFilePath;
+	}
 }
 
 void CAgentFileFrameOverlay::ImageFilePath::set (System::String^ pValue)
 {
-	if	(
-			(mOwner)
-		&&	(!mOwner->IsReadOnly)
-		&&	(!String::IsNullOrEmpty (pValue))
-		)
+	if	(!String::IsNullOrEmpty (pValue))
 	{
-		Int32	lImageNdx = mOwner->LoadImageFile (pValue);
-
 		if	(
-				(lImageNdx >= 0)
-			&&	(mImageNdx != lImageNdx)
+				(mOwner)
+			&&	(!mOwner->IsReadOnly)
 			)
 		{
-			mImageNdx = lImageNdx;
-			mOwner->IsDirty = true;
+			Int32	lImageNdx = mOwner->LoadImageFile (pValue);
+
+			if	(
+					(lImageNdx >= 0)
+				&&	(mImageNdx != lImageNdx)
+				)
+			{
+				mImageNdx = lImageNdx;
+				mOwner->IsDirty = true;
+			}
+		}
+		else
+		if	(!mOwner)
+		{
+			mImageFilePath = gcnew String (pValue);
 		}
 	}
 }
@@ -1812,9 +1861,20 @@ Boolean CAgentFileFrameOverlay::CopyTo (CAgentFileFrameOverlay^ pTarget)
 			)
 		)
 	{
-		pTarget->mImageNdx = mImageNdx;
 		pTarget->mReplaceFlag = mReplaceFlag;
 		pTarget->mOffset = mOffset;
+		if	(
+				(!mOwner)
+			||	(!pTarget->mOwner)
+			||	(!Object::ReferenceEquals (mOwner, pTarget->mOwner))
+			)
+		{
+			pTarget->ImageFilePath = ImageFilePath;
+		}
+		else
+		{
+			pTarget->mImageNdx = mImageNdx;
+		}
 		
 		if	(
 				(pTarget->mOwner)
@@ -1832,12 +1892,26 @@ Boolean CAgentFileFrameOverlay::Equals (CAgentFileFrameOverlay^ pTarget)
 {
 	if	(
 			(pTarget)
-		&&	(pTarget->mImageNdx == mImageNdx)
 		&&	(pTarget->mReplaceFlag == mReplaceFlag)
 		&&	(pTarget->mOffset == mOffset)
 		)
 	{
-		return true;
+		if	(
+				(!mOwner)
+			||	(!pTarget->mOwner)
+			||	(!Object::ReferenceEquals (mOwner, pTarget->mOwner))
+			)
+		{
+			if	(String::Equals (ImageFilePath, pTarget->ImageFilePath))
+			{
+				return true;
+			}
+		}
+		else
+		if	(pTarget->mImageNdx == mImageNdx)
+		{
+			return true;
+		}
 	}
 	return false;
 }
@@ -1849,21 +1923,25 @@ System::String^ CAgentFileFrameOverlay::ToString ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-//void CAgentFileFrameOverlay::OnSerializing (StreamingContext pContext)
-//{
-//}
-//	
-//void CAgentFileFrameOverlay::OnSerialized (StreamingContext pContext)
-//{
-//}
-//	
-//void CAgentFileFrameOverlay::OnDeserializing (StreamingContext pContext)
-//{
-//}
-//	
-//void CAgentFileFrameOverlay::OnDeserialized (StreamingContext pContext)	
-//{
-//}
+void CAgentFileFrameOverlay::OnSerializing (StreamingContext pContext)
+{
+	if	(mOwner)
+	{
+		mImageFilePath = ImageFilePath;
+		mImage = mOwner->GetImage (ImageNdx);
+	}
+	else
+	{
+		mImageFilePath = nullptr;
+		mImage = nullptr;
+	}
+}
+	
+void CAgentFileFrameOverlay::OnSerialized (StreamingContext pContext)
+{
+	mImageFilePath = nullptr;
+	mImage = nullptr;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 #endif	// _M_CEE
@@ -2097,14 +2175,21 @@ Int16 CAgentFileFrame::SoundNdx::get()
 
 System::String^ CAgentFileFrame::SoundFilePath::get()
 {
-	if	(
-			(mOwner)
-		&&	(mSoundNdx >= 0)
-		)
+	if	(mOwner)
 	{
-		return mOwner->GetSoundFilePath (mSoundNdx);
+		if	(mSoundNdx >= 0)
+		{
+			return mOwner->GetSoundFilePath (mSoundNdx);
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
-	return nullptr;
+	else
+	{
+		return mSoundFilePath;
+	}
 }
 
 void CAgentFileFrame::SoundFilePath::set (System::String^ pValue)
@@ -2135,6 +2220,11 @@ void CAgentFileFrame::SoundFilePath::set (System::String^ pValue)
 				mOwner->IsDirty = true;
 			}
 		}
+	}
+	else
+	if	(!mOwner)
+	{
+		mSoundFilePath = gcnew String (pValue);
 	}
 }
 
@@ -2246,8 +2336,20 @@ Boolean CAgentFileFrame::CopyTo (CAgentFileFrame^ pTarget, Boolean pDeepCopy)
 		)
 	{
 		pTarget->mDuration = mDuration;
-		pTarget->mSoundNdx = mSoundNdx;
 		pTarget->mExitFrame = mExitFrame;
+		
+		if	(
+				(!mOwner)
+			||	(!pTarget->mOwner)
+			||	(!Object::ReferenceEquals (mOwner, pTarget->mOwner))
+			)
+		{
+			pTarget->SoundFilePath = SoundFilePath;
+		}
+		else
+		{
+			pTarget->mSoundNdx = mSoundNdx;
+		}
 		
 		if	(pDeepCopy)
 		{
@@ -2350,21 +2452,25 @@ System::String^ CAgentFileFrame::ToString ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-//void CAgentFileFrame::OnSerializing (StreamingContext pContext)
-//{
-//}
-//	
-//void CAgentFileFrame::OnSerialized (StreamingContext pContext)
-//{
-//}
-//	
-//void CAgentFileFrame::OnDeserializing (StreamingContext pContext)
-//{
-//}
-//	
-//void CAgentFileFrame::OnDeserialized (StreamingContext pContext)	
-//{
-//}
+void CAgentFileFrame::OnSerializing (StreamingContext pContext)
+{
+	if	(mOwner)
+	{
+		mSoundFilePath = SoundFilePath;
+		mSound = mOwner->GetSound (SoundNdx);
+	}
+	else
+	{
+		mSoundFilePath = nullptr;
+		mSound = nullptr;
+	}
+}
+	
+void CAgentFileFrame::OnSerialized (StreamingContext pContext)
+{
+	mSoundFilePath = nullptr;
+	mSound = nullptr;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 #endif	// _M_CEE

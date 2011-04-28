@@ -22,17 +22,27 @@
 /////////////////////////////////////////////////////////////////////////////
 using System;
 using System.Windows.Forms;
-using System.ComponentModel;
 
 namespace DoubleAgent
 {
+	/// <summary>
+	/// A <see cref="System.Windows.Forms.ListView"/> with a bit of extra functionality an double-buffering enabled
+	/// </summary>
 	public class ListViewEx : System.Windows.Forms.ListView
 	{
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public ListViewEx ()
 		{
 			this.CheckOnActivate = true;
 		}
 
+		/// <summary>
+		/// Updates the <see cref="ListView.Items"/> collection to contain a specific number of items.
+		/// </summary>
+		/// <param name="pItemCount">The number of items required.</param>
+		/// <returns>True if items were added or removed.</returns>
 		public Boolean UpdateItemCount (int pItemCount)
 		{
 			Boolean lRet = false;
@@ -50,11 +60,22 @@ namespace DoubleAgent
 			return lRet;
 		}
 
+		/// <summary>
+		/// Updates a <see cref="ListViewItem"/> to contain a subitem for each column.
+		/// </summary>
+		/// <param name="pItem">The <see cref="ListViewItem"/> to update.</param>
+		/// <seealso cref="Boolean UpdateSubItemCount (ListViewItem)"/>
 		public Boolean UpdateSubItemCount (ListViewItem pItem)
 		{
 			return UpdateSubItemCount (pItem, Columns.Count);
 		}
 
+		/// <summary>
+		/// Updates the <see cref="ListViewItem.Items"/> collection to contain a specific number of subitems.
+		/// </summary>
+		/// <param name="pItem">The <see cref="ListViewItem"/> to update.</param>
+		/// <param name="pSubItemCount">The number of subitems required.</param>
+		/// <returns>True if subitems were added or removed.</returns>
 		static public Boolean UpdateSubItemCount (ListViewItem pItem, int pSubItemCount)
 		{
 			Boolean lRet = false;
@@ -77,6 +98,10 @@ namespace DoubleAgent
 
 		///////////////////////////////////////////////////////////////////////////////
 
+		/// <summary>
+		/// Gets or sets the selected <see cref="ListViewItem"/> in single-selection mode.
+		/// </summary>
+		/// <remarks>Setting the selected item also sets the <see cref="FocusedItem"/></remarks>
 		[System.ComponentModel.Browsable (false)]
 		public ListViewItem SelectedItem
 		{
@@ -102,6 +127,11 @@ namespace DoubleAgent
 			}
 		}
 
+		/// <summary>
+		/// Retrieves the selected <see cref="ListViewItem"/> in single-selection mode.
+		/// </summary>
+		/// <param name="pIncludeFocus">True if the <see cref="FocusedItem"/> should be returned when there is no selected item.</param>
+		/// <returns>The selected (or focused) item, or null if not found.</returns>
 		public ListViewItem GetSelectedItem (Boolean pIncludeFocus)
 		{
 			if (SelectedIndices.Count == 1)
@@ -118,6 +148,9 @@ namespace DoubleAgent
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the index of the selected <see cref="ListViewItem"/> in single-selection mode.
+		/// </summary>
 		[System.ComponentModel.Browsable (false)]
 		public int SelectedIndex
 		{
@@ -139,6 +172,11 @@ namespace DoubleAgent
 			}
 		}
 
+		/// <summary>
+		/// Retrieves the index of the selected <see cref="ListViewItem"/> in single-selection mode.
+		/// </summary>
+		/// <param name="pIncludeFocus">True if the <see cref="FocusedItem"/> should be returned when there is no selected item.</param>
+		/// <returns>The index of the selected (or focused) item, or -1 if not found.</returns>
 		public int GetSelectedIndex (Boolean pIncludeFocus)
 		{
 			if (SelectedIndices.Count == 1)
@@ -157,6 +195,10 @@ namespace DoubleAgent
 
 		///////////////////////////////////////////////////////////////////////////////
 
+		/// <summary>
+		/// Updates a column's width to fully show both the header and content (whichever is wider).
+		/// </summary>
+		/// <param name="pColumnHeader">The <see cref="ColumnHeader"/> to update.</param>
 		public void AutoSizeColumn (ColumnHeader pColumnHeader)
 		{
 			int	lColumnWidth;
@@ -170,6 +212,9 @@ namespace DoubleAgent
 
 		///////////////////////////////////////////////////////////////////////////////
 
+		/// <summary>
+		/// Determines if the checked state is changed when a list item is activated.
+		/// </summary>
 		[System.ComponentModel.Category ("Appearance")]
 		[System.ComponentModel.DefaultValue (true)]
 		public Boolean CheckOnActivate
@@ -205,6 +250,9 @@ namespace DoubleAgent
 
 		///////////////////////////////////////////////////////////////////////////////
 
+		/// <summary>
+		/// Enables double buffering.
+		/// </summary>
 		protected override void OnCreateControl ()
 		{
 			this.DoubleBuffered = true;

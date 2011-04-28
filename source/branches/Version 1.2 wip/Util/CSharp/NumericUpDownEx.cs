@@ -27,6 +27,10 @@ using System.Drawing;
 
 namespace DoubleAgent
 {
+	/// <summary>
+	/// A <see cref="System.Windows.Forms.NumericUpDown"/> with a bit of extra functionality.
+	/// </summary>
+	/// <remarks>Validation is triggered after the mouse wheel is used and after the up/down buttons are used.</remarks>
 	public class NumericUpDownEx : System.Windows.Forms.NumericUpDown
 	{
 		private const	int WM_KEYDOWN = 0x0100;
@@ -35,11 +39,18 @@ namespace DoubleAgent
 		private Color	mHighlightBackColor = Color.Pink;
 		private Timer	mWheelTimer = null;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public NumericUpDownEx ()
 		{
+			this.ValidateOnReturnKey = true;
 			this.MouseWheelSingle = true;
 		}
 
+		/// <summary>
+		/// The <see cref="System.Windows.Forms.TextBox"/> contained by this control.
+		/// </summary>
 		[System.ComponentModel.Browsable (false)]
 		public System.Windows.Forms.TextBox TextBox
 		{
@@ -49,6 +60,20 @@ namespace DoubleAgent
 			}
 		}
 
+		/// <summary>
+		/// Indicates if validation should be triggered when the return key is pressed.
+		/// </summary>
+		[System.ComponentModel.Category ("Behavior")]
+		[System.ComponentModel.DefaultValue (true)]
+		public Boolean ValidateOnReturnKey
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Indicates if mouse wheel increments and decrements should be limited to +/- 1.
+		/// </summary>
 		[System.ComponentModel.Category ("Behavior")]
 		[System.ComponentModel.DefaultValue (true)]
 		public Boolean MouseWheelSingle
@@ -59,6 +84,10 @@ namespace DoubleAgent
 
 		///////////////////////////////////////////////////////////////////////////////
 
+		/// <summary>
+		/// The default background color.
+		/// </summary>
+		/// <seealso cref="HighlightBackColor"/>
 		public new System.Drawing.Color DefaultBackColor
 		{
 			get
@@ -71,6 +100,12 @@ namespace DoubleAgent
 			}
 		}
 
+		/// <summary>
+		/// The highlighted background color.
+		/// </summary>
+		/// <remarks>The highlighted background color is used when the control's value is not in range.</remarks>
+		/// <seealso cref="Highlighted"/>
+		/// <seealso cref="DefaultBackColor"/>
 		public System.Drawing.Color HighlightBackColor
 		{
 			get
@@ -83,6 +118,13 @@ namespace DoubleAgent
 			}
 		}
 
+		/// <summary>
+		/// Indicates if the control is highlighted.
+		/// </summary>
+		/// <remarks>If the control is highlighted, it will use the <see cref="HighlightBackColor"/>. Otherwise, it will use the <see cref="DefaultBackColor"/></remarks>
+		/// <seealso cref="HighlightBackColor"/>
+		/// <seealso cref="MinimumValue"/>
+		/// <seealso cref="MaximumValue"/>
 		[System.ComponentModel.Browsable (false)]
 		public Boolean Highlighted
 		{
@@ -111,6 +153,12 @@ namespace DoubleAgent
 
 		///////////////////////////////////////////////////////////////////////////////
 
+		/// <summary>
+		/// This is an override of <see cref="NumericUpDown.Value"/>.  Instead of throwing an exception when the value is out of range, it highlights the control.
+		/// </summary>
+		/// <seealso cref="MinimumValue"/>
+		/// <seealso cref="MaximumValue"/>
+		/// <seealso cref="Highlighted"/>
 		public new decimal Value
 		{
 			get
@@ -144,7 +192,7 @@ namespace DoubleAgent
 
 		protected override bool ProcessCmdKey (ref Message pMessage, Keys pKeyData)
 		{
-			if ((pMessage.Msg == WM_KEYDOWN) && (pKeyData == Keys.Return))
+			if ((pMessage.Msg == WM_KEYDOWN) && (pKeyData == Keys.Return) && ValidateOnReturnKey)
 			{
 				ValidateNow ();
 				return true;
@@ -191,6 +239,9 @@ namespace DoubleAgent
 
 		///////////////////////////////////////////////////////////////////////////////
 
+		/// <summary>
+		/// Sets up the internal event handlers and retrieves the contained TextBox.
+		/// </summary>
 		protected override void OnControlAdded (ControlEventArgs e)
 		{
 			if (e.Control is TextBox)
@@ -223,6 +274,9 @@ namespace DoubleAgent
 			base.OnControlAdded (e);
 		}
 
+		/// <summary>
+		/// Overrides mouse wheel processing.
+		/// </summary>
 		protected override void OnMouseWheel (MouseEventArgs e)
 		{
 			if (this.MouseWheelSingle)
@@ -253,6 +307,10 @@ namespace DoubleAgent
 			//}
 		}
 
+		/// <summary>
+		/// Causes validation when the mouse wheel has stopped turning.
+		/// </summary>
+		/// <param name="sender"></param>
 		void WheelTimer_Tick (object sender, EventArgs e)
 		{
 			ValidateNow ();

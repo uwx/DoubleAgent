@@ -2509,7 +2509,7 @@ void CAgentFileScript::IconFilePath::set (System::String^ pValue)
 {
 	if	(!IsReadOnly)
 	{
-		String^				lFullPath = nullptr;
+		String^					lFullPath = nullptr;
 		System::Drawing::Icon^	lIcon = nullptr;
 
 		if	(String::IsNullOrEmpty (pValue))
@@ -2577,7 +2577,7 @@ void CAgentFileScript::PaletteFilePath::set (System::String^ pValue)
 		&&	(!String::IsNullOrEmpty (pValue))
 		)
 	{
-		String^					lFullPath = nullptr;
+		String^						lFullPath = nullptr;
 		System::Drawing::Bitmap^	lBitmap = nullptr;
 
 		try

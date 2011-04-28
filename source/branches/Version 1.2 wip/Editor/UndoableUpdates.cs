@@ -679,7 +679,7 @@ namespace AgentCharacterEditor
 		internal class AddDeleteStateAnimation : UndoableAddDelete<String>
 		{
 			public AddDeleteStateAnimation (String pStateName, String pAnimationName, Boolean pIsDelete)
-				: base (pStateName)
+				: base (new ResolveState (pStateName))
 			{
 				AnimationName = pAnimationName;
 				IsDelete = pIsDelete;
@@ -751,7 +751,7 @@ namespace AgentCharacterEditor
 		internal class UpdateAllStateAnimations : UndoableUpdate<String>
 		{
 			public UpdateAllStateAnimations (String pStateName, String[] pAnimationNames)
-				: base (pStateName)
+				: base (new ResolveState(pStateName))
 			{
 				AnimationNames = pAnimationNames;
 			}
@@ -1262,7 +1262,6 @@ namespace AgentCharacterEditor
 				: base (new ResolveAnimationFrame (pFrame), pForClipboard)
 			{
 				UndoObject = new FileAnimationFrame ();
-				SoundFilePath = pFrame.SoundFilePath;
 				pFrame.CopyTo (UndoObject);
 			}
 
@@ -1323,8 +1322,14 @@ namespace AgentCharacterEditor
 			}
 			public String SoundFilePath
 			{
-				get;
-				set;
+				get
+				{
+					return UndoObject.SoundFilePath;
+				}
+				set
+				{
+					UndoObject.SoundFilePath = value;
+				}
 			}
 			private FileAnimationFrame UndoObject
 			{
@@ -1361,19 +1366,12 @@ namespace AgentCharacterEditor
 #if DEBUG
 				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
 #endif
-				if (DurationChanged || ExitFrameChanged || BranchingChanged)
+				if (DurationChanged || ExitFrameChanged || BranchingChanged || SoundChanged)
 				{
 					FileAnimationFrame lSwap = new FileAnimationFrame ();
 					Target.CopyTo (lSwap);
 					UndoObject.CopyTo (Target);
 					lSwap.CopyTo (UndoObject);
-					lApplied = this;
-				}
-				if (SoundChanged)
-				{
-					String lSwap = Target.SoundFilePath;
-					Target.SoundFilePath = SoundFilePath;
-					SoundFilePath = lSwap;
 					lApplied = this;
 				}
 				if (lApplied != null)
@@ -1679,8 +1677,8 @@ namespace AgentCharacterEditor
 			public UpdateFrameImage (FileFrameImage pImage, Boolean pForClipboard)
 				: base (new ResolveFrameImage (pImage), pForClipboard)
 			{
-				Offset = pImage.Offset;
-				ImageFilePath = pImage.ImageFilePath;
+				UndoObject = new FileFrameImage ();
+				pImage.CopyTo (UndoObject);
 			}
 
 			public FileAnimation Animation
@@ -1721,10 +1719,27 @@ namespace AgentCharacterEditor
 
 			public Point Offset
 			{
-				get;
-				set;
+				get
+				{
+					return UndoObject.Offset;
+				}
+				set
+				{
+					UndoObject.Offset = value;
+				}
 			}
 			public String ImageFilePath
+			{
+				get
+				{
+					return UndoObject.ImageFilePath;
+				}
+				set
+				{
+					UndoObject.ImageFilePath = value;
+				}
+			}
+			private FileFrameImage UndoObject
 			{
 				get;
 				set;
@@ -1760,18 +1775,12 @@ namespace AgentCharacterEditor
 #if DEBUG
 				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
 #endif
-				if (lTarget.Offset != Offset)
+				if (!lTarget.Equals (UndoObject))
 				{
-					Point lSwap = lTarget.Offset;
-					lTarget.Offset = Offset;
-					Offset = lSwap;
-					lApplied = this;
-				}
-				if (!String.Equals (lTarget.ImageFilePath, ImageFilePath))
-				{
-					String lSwap = lTarget.ImageFilePath;
-					lTarget.ImageFilePath = ImageFilePath;
-					ImageFilePath = lSwap;
+					FileFrameImage lSwap = new FileFrameImage();
+					lTarget.CopyTo (lSwap);
+					UndoObject.CopyTo (lTarget);
+					UndoObject = lSwap;
 					lApplied = this;
 				}
 				if (lApplied != null)
@@ -1796,13 +1805,13 @@ namespace AgentCharacterEditor
 		internal class AddDeleteFrameOverlay : UndoableAddDelete<FileFrameOverlay>
 		{
 			public AddDeleteFrameOverlay (FileAnimationFrame pFrame, MouthOverlay pOverlayType, String pOverlayImagePath, Boolean pForClipboard)
-				: base (new ResolveFrameOverlay(pFrame,pOverlayType), pForClipboard)
+				: base (new ResolveFrameOverlay (pFrame, pOverlayType), pForClipboard)
 			{
 				IsDelete = false;
 				OverlayImagePath = pOverlayImagePath;
 			}
- 			public AddDeleteFrameOverlay (FileFrameOverlay pOverlay, Boolean pForClipboard)
-				: base (new ResolveFrameOverlay(pOverlay), pForClipboard)
+			public AddDeleteFrameOverlay (FileFrameOverlay pOverlay, Boolean pForClipboard)
+				: base (new ResolveFrameOverlay (pOverlay), pForClipboard)
 			{
 				IsDelete = true;
 				OverlayImagePath = Target.ImageFilePath;
@@ -1919,9 +1928,8 @@ namespace AgentCharacterEditor
 			public UpdateFrameOverlay (FileFrameOverlay pOverlay, Boolean pForClipboard)
 				: base (new ResolveFrameOverlay (pOverlay), pForClipboard)
 			{
-				Offset = pOverlay.Offset;
-				ReplaceFlag = pOverlay.ReplaceFlag;
-				OverlayImagePath = pOverlay.ImageFilePath;
+				UndoObject = new FileFrameOverlay ();
+				pOverlay.CopyTo (UndoObject);
 			}
 
 			public FileAnimation Animation
@@ -1962,18 +1970,40 @@ namespace AgentCharacterEditor
 
 			public Boolean ReplaceFlag
 			{
-				get;
-				set;
+				get
+				{
+					return UndoObject.ReplaceFlag;
+				}
+				set
+				{
+					UndoObject.ReplaceFlag = value;
+				}
 			}
 			public Point Offset
 			{
-				get;
-				set;
+				get
+				{
+					return UndoObject.Offset;
+				}
+				set
+				{
+					UndoObject.Offset = value;
+				}
 			}
 			public String OverlayImagePath
 			{
-				get;
-				set;
+				get
+				{
+					return UndoObject.ImageFilePath;
+				}
+				set
+				{
+					UndoObject.ImageFilePath = value;
+				}
+			}
+			private FileFrameOverlay UndoObject
+			{
+				get;set;
 			}
 
 			public override String TargetDescription
@@ -2006,25 +2036,12 @@ namespace AgentCharacterEditor
 #if DEBUG
 				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
 #endif
-				if (lTarget.Offset != Offset)
+				if (!lTarget.Equals (UndoObject))
 				{
-					Point lSwap = lTarget.Offset;
-					lTarget.Offset = Offset;
-					Offset = lSwap;
-					lApplied = this;
-				}
-				if (lTarget.ReplaceFlag != ReplaceFlag)
-				{
-					Boolean lSwap = lTarget.ReplaceFlag;
-					lTarget.ReplaceFlag = ReplaceFlag;
-					ReplaceFlag = lSwap;
-					lApplied = this;
-				}
-				if (!String.Equals (lTarget.ImageFilePath, OverlayImagePath))
-				{
-					String lSwap = lTarget.ImageFilePath;
-					lTarget.ImageFilePath = OverlayImagePath;
-					OverlayImagePath = lSwap;
+					FileFrameOverlay lSwap = new FileFrameOverlay ();
+					lTarget.CopyTo (lSwap);
+					UndoObject.CopyTo (lTarget);
+					UndoObject = lSwap;
 					lApplied = this;
 				}
 				if (lApplied != null)
