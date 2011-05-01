@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using System.Collections;
-using System.ComponentModel;
-using System.Text;
 using System.Diagnostics;
 
 namespace CtlAndSvr

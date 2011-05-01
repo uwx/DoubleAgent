@@ -15,6 +15,9 @@ public:
 public:
 
 // Overrides
+public:
+	virtual bool IsCoClassWrapper (Type^ pSourceType) override;
+
 protected:
 	virtual String^ RenameClass (Type^ pSourceType, String^ pTypeName) override;
 	virtual String^ RenameControlClass (Type^ pSourceType, String^ pTypeName) override;
@@ -36,6 +39,7 @@ protected:
 	virtual void FixEventFieldName (FieldInfo^ pSourceField, String^& pFieldName) override;
 
 	virtual void SetActiveXControlAttributes (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) override;
+	virtual void SetActiveXEnumAttributes (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) override;
 	virtual void SetActiveXMethodVisibility (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) override;
 	virtual void SetActiveXPropertyVisibility (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) override;
 	virtual void SetActiveXPropertyCategory (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) override;

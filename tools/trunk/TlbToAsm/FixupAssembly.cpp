@@ -258,6 +258,7 @@ bool FixupAssembly::FixupCustomAttribute (Object^ pSource, Object^ pTarget, Cust
 				(TypeBuilder::typeid->IsInstanceOfType (pTarget))
 			||	(MethodBuilder::typeid->IsInstanceOfType (pTarget))
 			||	(PropertyBuilder::typeid->IsInstanceOfType (pTarget))
+			||	(AssemblyBuilder::typeid->IsInstanceOfType (pTarget))
 			)
 		)
 	{
@@ -269,7 +270,17 @@ bool FixupAssembly::FixupCustomAttribute (Object^ pSource, Object^ pTarget, Cust
 		&&	(TypeBuilder::typeid->IsInstanceOfType (pTarget))
 		)
 	{
+		HideRestrictedCoClass (pSource, pTarget, pAttribute, pAttributeValues);
+		HideInternalClass (pSource, pTarget, pAttribute, pAttributeValues);
 		lRet = UnhideDelegate (pSource, pTarget, pAttribute, pAttributeValues);
+	}
+
+	if	(
+			(!lRet)
+		&&	(EnumBuilder::typeid->IsInstanceOfType (pTarget))
+		)
+	{
+		lRet = RemoveEnumGuid (pSource, pTarget, pAttribute, pAttributeValues);
 	}
 
 	if	(
@@ -308,16 +319,17 @@ void FixupAssembly::FixupCustomAttributes (Object^ pSource, Object^ pTarget, Lis
 	if	(TypeBuilder::typeid->IsInstanceOfType (pTarget))
 	{
 		HideRestrictedCoClassInterface (pSource, pTarget, pCustomAttributes);
-	}
-
-	if	(TypeBuilder::typeid->IsInstanceOfType (pTarget))
-	{
 		HideInternalClass (pSource, pTarget, pCustomAttributes);
 	}
 
 	if	(TypeBuilder::typeid->IsInstanceOfType (pTarget))
 	{
 		SetActiveXControlAttributes (pSource, pTarget, pCustomAttributes);
+	}
+
+	if	(EnumBuilder::typeid->IsInstanceOfType (pTarget))
+	{
+		SetActiveXEnumAttributes (pSource, pTarget, pCustomAttributes);
 	}
 
 	if	(MethodBuilder::typeid->IsInstanceOfType (pTarget))
@@ -362,6 +374,7 @@ void FixupAssembly::FixupCustomAttributes (Object^ pSource, Object^ pTarget, Lis
 
 	if	(AssemblyBuilder::typeid->IsInstanceOfType (pTarget))
 	{
+		MarkAssemblyVersion (pSource, pTarget, pCustomAttributes);
 		AllowPartiallyTrustedCallers (pSource, pTarget, pCustomAttributes);
 	}
 }

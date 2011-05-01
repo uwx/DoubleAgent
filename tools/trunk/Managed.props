@@ -7,6 +7,8 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
     <_PropertySheetDisplayName>Managed Tool</_PropertySheetDisplayName>
+    <OutDir>$(BinDir)$(ConfigDir)$(PlatformDir)\$(TargetFrameworkVersion)\</OutDir>
+    <IntDir>$(LibDir)$(ConfigDir)$(PlatformDir)\$(ProjectName)\$(TargetFrameworkVersion)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile />

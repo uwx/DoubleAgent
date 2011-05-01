@@ -6,8 +6,8 @@
     <LinkIncremental>false</LinkIncremental>
     <GenerateManifest>true</GenerateManifest>
     <EmbedManifest>true</EmbedManifest>
-    <OutDir>$(OutDir)$(TargetFrameworkVersion)\</OutDir>
-    <IntDir>$(IntDir)$(TargetFrameworkVersion)\</IntDir>
+    <OutDir>$(BinDir)$(ConfigDir)$(PlatformDir)\$(TargetFrameworkVersion)\</OutDir>
+    <IntDir>$(LibDir)$(ConfigDir)$(PlatformDir)\$(ProjectName)\$(TargetFrameworkVersion)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>

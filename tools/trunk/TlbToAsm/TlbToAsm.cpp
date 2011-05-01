@@ -39,6 +39,12 @@ int main(array<System::String ^> ^args)
 
 	lTlbToAsm = gcnew DoubleAgent::TlbToAsm::TlbToAsm (lRestartLog);
 	lTlbToAsm->ProcessCmdLine (Environment::GetCommandLineArgs ());
+	
+	try
+	{
+		GC::Collect ();
+	}
+	catch AnyExceptionSilent
 
     LogStop (LogIfActive);
     return 0;
@@ -104,7 +110,8 @@ int TlbToAsm::ProcessCmdLine (array <String^>^ pCmdArgs)
 						if	(String::Compare (lCmdOpt, "Keyfile", true) == 0)
 						{
 							lCmdArgNdx++;
-							mStrongName = GetStrongName (CmdArg (pCmdArgs, ++lCmdArgNdx));
+							lCmdArgNdx++;
+							mStrongName = GetStrongName (CmdArg (pCmdArgs, lCmdArgNdx));
 						}
 						else
 						{
@@ -153,13 +160,12 @@ int TlbToAsm::ProcessCmdLine (array <String^>^ pCmdArgs)
 			{
 				try
 				{
-					String^					lSourcePath;
-					String^					lTargetPath;
-					String^					lNamespace ("DoubleAgent");
-					Generic::List<String^>^	lFriendAssemblies = nullptr;
-					bool					lLog = false;
-					bool					lShow = false;
-					bool					lSave = false;
+					String^	lSourcePath;
+					String^	lTargetPath;
+					String^	lNamespace = gcnew String ("DoubleAgent");
+					bool	lLog = false;
+					bool	lShow = false;
+					bool	lSave = false;
 
 					while (lCmdOpt = CmdOpt (pCmdArgs, lCmdArgNdx+1))
 					{
@@ -191,33 +197,13 @@ int TlbToAsm::ProcessCmdLine (array <String^>^ pCmdArgs)
 						else
 						if	(String::Compare (lCmdOpt, "Keyfile", true) == 0)
 						{
-							lCmdArgNdx++;
-							mStrongName = GetStrongName (CmdArg (pCmdArgs, ++lCmdArgNdx));
+							lCmdArgNdx++;											
+							lCmdArgNdx++;											
+							mStrongName = GetStrongName (CmdArg (pCmdArgs, lCmdArgNdx));
 						}
 						else
 						{
 							break;
-						}
-					}
-
-					if	(mStrongName)
-					{
-						int		lNextArgNdx = lCmdArgNdx;
-						String^	lNextOpt;
-
-						for	(lNextArgNdx = lCmdArgNdx+1; lNextArgNdx < pCmdArgs->Length; lNextArgNdx++)
-						{
-							if	(
-									(lNextOpt = CmdOpt (pCmdArgs, lNextArgNdx))
-								&&	(String::Compare (lNextOpt, "Namespace", true) == 0)
-								)
-							{
-								if	(!lFriendAssemblies)
-								{
-									lFriendAssemblies = gcnew Generic::List<String^>;
-								}
-								lFriendAssemblies->Add (CmdArg (pCmdArgs, ++lNextArgNdx));
-							}
 						}
 					}
 
@@ -240,7 +226,7 @@ int TlbToAsm::ProcessCmdLine (array <String^>^ pCmdArgs)
 							lAssembly = Assembly::LoadFrom (lSourcePath);
 						}
 
-						if	(lAssembly = FixAssembly (lAssembly, lTargetPath, lNamespace, lFriendAssemblies, lSave))
+						if	(lAssembly = FixAssembly (lAssembly, lTargetPath, lNamespace, lSave))
 						{
 							if	(lLog)
 							{
@@ -333,7 +319,7 @@ String^ TlbToAsm::CmdArg (array <String^>^ pCmdArgs, int pCmdArgNdx)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-AssemblyBuilder^ TlbToAsm::FixAssembly (Assembly^ pAssembly, String^ pAssemblyName, String^ pModuleName, Generic::List<String^>^ pFriendAssemblies, bool pSaveAssembly)
+AssemblyBuilder^ TlbToAsm::FixAssembly (Assembly^ pAssembly, String^ pAssemblyName, String^ pModuleName, bool pSaveAssembly)
 {
 	AssemblyBuilder^	lRet = nullptr;
 
@@ -375,84 +361,6 @@ AssemblyBuilder^ TlbToAsm::FixAssembly (Assembly^ pAssembly, String^ pAssemblyNa
 				if	(mStrongName)
 				{
 					MarkPrimaryAssembly (lAssemblyBuilder);
-
-#if	FALSE
-					if	(pFriendAssemblies)
-					{
-						String^	lFriendAssembly;
-
-						for each (lFriendAssembly in pFriendAssemblies)
-						{
-							try
-							{
-								CustomAttributeBuilder^	lAttributeBuilder;
-								array<Type^>^			lConstructorTypes = gcnew array<Type^> (1);
-								array<Object^>^			lConstructorArgs = gcnew array<Object^> (1);
-								array<PropertyInfo^>^	lPropertyTypes = gcnew array<PropertyInfo^> (3);
-								array<Object^>^			lPropertyArgs = gcnew array<Object^> (3);
-								array<PropertyInfo^>^	lProperties = System::Security::Permissions::StrongNameIdentityPermissionAttribute::typeid->GetProperties();
-								PropertyInfo^			lProperty;
-								StringBuilder^			lPublicKey = gcnew StringBuilder;
-								int						lPublicKeyNdx;
-
-								for (lPublicKeyNdx = 0; lPublicKeyNdx < mStrongName->PublicKey->Length; lPublicKeyNdx++)
-								{
-									lPublicKey->AppendFormat ("{0:X2}", mStrongName->PublicKey[lPublicKeyNdx]);
-								}
-
-								lConstructorTypes[0] = System::Security::Permissions::SecurityAction::typeid;
-								lConstructorArgs[0] = System::Security::Permissions::SecurityAction::Assert;
-
-								for each (lProperty in lProperties)
-								{
-									if	(lProperty->Name == "Name")
-									{
-										lPropertyTypes[0] = lProperty;
-									}
-									else
-									if	(lProperty->Name == "PublicKey")
-									{
-										lPropertyTypes[1] = lProperty;
-									}
-									else
-									if	(lProperty->Name == "Unrestricted")
-									{
-										lPropertyTypes[2] = lProperty;
-									}
-								}
-								lPropertyArgs[0] = lFriendAssembly;
-								lPropertyArgs[1] = lPublicKey->ToString();
-								lPropertyArgs[2] = true;
-
-								if	(lAttributeBuilder = gcnew CustomAttributeBuilder (System::Security::Permissions::StrongNameIdentityPermissionAttribute::typeid->GetConstructor(lConstructorTypes), lConstructorArgs, lPropertyTypes, lPropertyArgs))
-								{
-									lAssemblyBuilder->SetCustomAttribute (lAttributeBuilder);
-								}
-							}
-							catch AnyExceptionDebug
-						}
-					}
-#endif
-#if	FALSE
-					if	(pFriendAssemblies)
-					{
-						String^					lFriendAssembly;
-						String^					lPublicKey;
-						array<Type^>^			lAttrArgTypes = gcnew array<Type^> (1);
-						array<Object^>^			lAttrArgValues = gcnew array<Object^> (1);
-						CustomAttributeBuilder^	lAttributeBuilder;
-
-						lPublicKey = lAssemblyBuilder->FullName->Substring (lAssemblyBuilder->FullName->IndexOf("PublicKeyToken="));
-						lAttrArgTypes[0] = String::typeid;
-
-						for each (lFriendAssembly in pFriendAssemblies)
-						{
-							lAttrArgValues[0] = String::Format ("{0}, {1}", lFriendAssembly, lPublicKey);
-							lAttributeBuilder = gcnew CustomAttributeBuilder (System::Runtime::CompilerServices::InternalsVisibleToAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues);
-							mCopyAssembly->mAssemblyBuilder->SetCustomAttribute (lAttributeBuilder);
-						}
-					}
-#endif
 				}
 
 				if	(pSaveAssembly)
@@ -482,7 +390,13 @@ AssemblyBuilder^ TlbToAsm::FixAssembly (Assembly^ pAssembly, String^ pAssemblyNa
 		}
 	}
 	catch AnyExceptionDebug
-
+	
+	try
+	{
+		GC::Collect ();
+	}
+	catch AnyExceptionSilent
+	
 	return lRet;
 }
 
@@ -535,6 +449,12 @@ Assembly^ TlbToAsm::OutputAssembly (String^ pFileName, bool pLogAssembly, bool p
 		}
 	}
 	catch AnyExceptionDebug
+	
+	try
+	{
+		GC::Collect ();
+	}
+	catch AnyExceptionSilent
 
 	return lAssembly;
 }

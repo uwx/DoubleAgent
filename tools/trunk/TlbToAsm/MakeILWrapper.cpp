@@ -171,7 +171,7 @@ void MakeILWrapper::MakeEnumerator (MethodInfo^ pSourceMethod, MethodBuilder^ pT
 			lTypeBuilder->DefineMethodOverride (pTargetMethod, lWrappedMethod);
 
 			if	(
-					(lEnumeratedType = CopyAssembly::GetEnumeratedType (pSourceMethod->DeclaringType))
+					(lEnumeratedType = CopyAssembly::GetEnumerableType (pSourceMethod->DeclaringType))
 				&&	(lEnumeratedType->IsInterface)
 				&&	(lEnumeratedWrapper = mCopy->GetCoClassWrapper (lEnumeratedType))
 				&&	(lEnumeratedType = mCopy->GetTargetType (lEnumeratedType, false))
@@ -572,6 +572,7 @@ ConstructorInfo^ MakeILWrapper::GetWrapperConstructor (Type^ pWrapperType, Type^
 			lConstructor = lConstructors[0];
 		}
 	}
+
 #ifdef	_DEBUG
 	if	(!lConstructor)
 	{
@@ -864,16 +865,46 @@ bool MakeILWrapper::InterfaceToWrapper (MethodInfo^ pMethod, ParameterInfo^ pPar
 			Type^				lWrapperType;
 			ConstructorInfo^	lConstructor;
 
+#ifdef	_DEBUG_NOT
+			try
+			{
+				Type^	lInterfaceType;
+				Type^	lWrapperType1;
+				Type^	lWrapperType2;
+
+				if	(mTranslator->TranslateType (pParameter->ParameterType, lInterfaceType))
+				{
+					if	(lWrapperType1 = mCopy->GetCoClassWrapper (pParameter->ParameterType))
+					{
+						lWrapperType1 = mCopy->GetTargetType (lWrapperType1, false);
+					}
+					mTranslator->TranslateParameter (pParameter, lWrapperType2);
+
+					if	(
+							(
+								(lWrapperType1)
+							&&	(!ReferenceEquals (lWrapperType1, lInterfaceType))
+							)
+						||	(
+								(lWrapperType2)
+							&&	(!ReferenceEquals (lWrapperType2, lInterfaceType))
+							)
+						)
+					{
+						LogMessage (LogDebugFast, _T("InterfaceToWrapper [%s][%u] ForEvent [%u]"), _BT(pParameter->ParameterType), mCopy->IsCoClassWrapper (pParameter->ParameterType), pIsEvent);
+						LogMessage (LogDebugFast, _T("  Interface        [%s][%u]"), _BT(lInterfaceType), mCopy->IsCoClassWrapper (lInterfaceType));
+						LogMessage (LogDebugFast, _T("  Wrapper1         [%s][%u]"), _BT(lWrapperType1), mCopy->IsCoClassWrapper (lWrapperType1));
+						LogMessage (LogDebugFast, _T("  Wrapper2         [%s][%u]"), _BT(lWrapperType2), mCopy->IsCoClassWrapper (lWrapperType2));
+					}
+				}
+			}
+			catch AnyExceptionSilent
+#endif			
+
 			if	(
 					(mTranslator->TranslateType (pParameter->ParameterType, lInterfaceType))
-				&&	(
-						(pIsEvent)
-					?	(
-							(lWrapperType = mCopy->GetCoClassWrapper (pParameter->ParameterType))
-						&&	(lWrapperType = mCopy->GetTargetType (lWrapperType, false))
-						)
-					:	(mTranslator->TranslateParameter (pParameter, lWrapperType))
-					)
+				&&	(lWrapperType = mCopy->GetCoClassWrapper (pParameter->ParameterType))
+				&&	(lWrapperType = mCopy->GetTargetType (lWrapperType, false))
 				&&	(!ReferenceEquals (lWrapperType, lInterfaceType))
 				&&	(lConstructor = GetWrapperConstructor (lWrapperType, lInterfaceType))
 				)

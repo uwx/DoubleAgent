@@ -44,6 +44,7 @@ public:
 	virtual void FixupCustomAttributes (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) {}
 	virtual bool FixupMarshalAttribute (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, ParameterInfo^ pSourceParameter, ParameterBuilder^ pTargetParameter, MarshalAsAttribute^ pCustomAttribute, CustomAttributeBuilder^& pAttributeBuilder) {return false;}
 
+	virtual bool CreateClassWrappers () {return false;}
 	virtual bool IsCoClassWrapper (Type^ pSourceType) {return false;}
 	virtual Type^ GetCoClassInterface (Type^ pSourceType) {return nullptr;}
 	virtual Type^ GetCoClassWrapper (Type^ pSourceType) {return nullptr;}
@@ -96,6 +97,9 @@ public:
 
 	void CreateTypes ();
 	Type^ CreateType (Type^ pSourceType, Type^ pTargetType);
+	
+	static int AssemblyRuntimeVersion ();
+	static int AssemblyRuntimeVersion (Assembly^ pAssembly);
 
 // Implementation
 private:
@@ -133,7 +137,7 @@ public:
 	array<Type^>^ GetParameterTypes (MethodBase^ pMethod, bool pTargetTypes);
 	array<Type^>^ GetParameterTypes (ConstructorInfo^ pConstuctor, bool pTargetTypes);
 	String^ GetMethodSignature (MethodBase^ pMethod);
-	static Type^ GetEnumeratedType (Type^ pType);
+	static Type^ GetEnumerableType (Type^ pType);
 
 	static TypeLibFuncFlags GetTypeLibFuncFlags (MethodInfo^ pMethod);
 	static bool GetTypeLibFuncFlags (MethodInfo^ pMethod, TypeLibFuncFlags & pFuncFlags);

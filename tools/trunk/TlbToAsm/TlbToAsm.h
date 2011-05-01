@@ -18,7 +18,7 @@ public:
 
 	int ProcessCmdLine (array <String^>^ pCmdArgs);
 
-	AssemblyBuilder^ FixAssembly (Assembly^ pAssembly, String^ pAssemblyName, String^ pModuleName, Generic::List<String^>^ pFriendAssemblies, bool pSaveAssembly);
+	AssemblyBuilder^ FixAssembly (Assembly^ pAssembly, String^ pAssemblyName, String^ pModuleName, bool pSaveAssembly);
 	Assembly^ ConvertTypeLib (String^ pTlbFileName, String^ pAssemblyFileName, bool pSaveAssembly);
 
 	Assembly^ OutputAssembly (String^ pFileName, bool pLogAssembly, bool pLogCode, bool pShowAssembly);

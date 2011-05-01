@@ -15,11 +15,9 @@
 //#define	_DEBUG_TARGET_PROPERTY	LogNormal|LogHighVolume
 //#define	_DEBUG_TARGET_EVENT		LogNormal|LogHighVolume
 //#define	_DEBUG_CREATE_TYPE		LogNormal
-#define	_DEBUG_RESOLVE_TYPE		LogNormal
+//#define	_DEBUG_RESOLVE_TYPE		LogNormal
 //#define	_DEBUG_TARGET_CODE		LogDebug
 #endif
-
-//#pragma comment(linker, "\"/manifestdependency:name='mscorlib' version='2.0.0.0' Culture='neutral' publicKeyToken='b77a5c561934e089'\"")
 
 namespace DoubleAgent {
 namespace TlbToAsm {
@@ -91,42 +89,42 @@ AssemblyBuilder^ CopyAssembly::MakeCopy (Assembly^ pSourceAssembly, String^ pAss
 		String^			lFilePath = IO::Path::GetDirectoryName (pAssemblyName);
 		String^			lFileName = IO::Path::GetFileName (pAssemblyName);
 
-LogReferences (Assembly::GetExecutingAssembly());
-try
-{
-	array<Assembly^>^	lAssemblies = AppDomain::CurrentDomain->GetAssemblies();
-
-	if	(lAssemblies)
-	{
-		for each (Assembly^ lAssembly in lAssemblies)
+#if	FALSE
+		try
 		{
-#ifdef	_DEBUG_RESOLVE_TYPE
-			LogMessage (_DEBUG_RESOLVE_TYPE, _T("%s  Loaded [%s]"), _B(LogIndent()), _B(lAssembly->FullName));
-#endif
-		}
-	}
-}
-catch AnyExceptionSilent
+			array<Assembly^>^	lAssemblies = AppDomain::CurrentDomain->GetAssemblies();
 
-try
-{
-	array<AssemblyName^>^	lReferences = Assembly::GetExecutingAssembly()->GetReferencedAssemblies ();
-
-	if	(lReferences)
-	{
-		for each (AssemblyName^ lReference in lReferences)
-		{
-			if	(lReference->Version->Major > 3)
+			if	(lAssemblies)
 			{
+				for each (Assembly^ lAssembly in lAssemblies)
+				{
 #ifdef	_DEBUG_RESOLVE_TYPE
-				LogMessage (_DEBUG_RESOLVE_TYPE, _T("%s  Remove? [%s]"), _B(LogIndent()), _B(lReference->FullName));
+					LogMessage (_DEBUG_RESOLVE_TYPE, _T("%s  Loaded [%s]"), _B(LogIndent()), _B(lAssembly->FullName));
 #endif
+				}
 			}
 		}
-	}
-}
-catch AnyExceptionSilent
-LogReferences (Assembly::GetExecutingAssembly());
+		catch AnyExceptionSilent
+
+		try
+		{
+			array<AssemblyName^>^	lReferences = Assembly::GetExecutingAssembly()->GetReferencedAssemblies ();
+
+			if	(lReferences)
+			{
+				for each (AssemblyName^ lReference in lReferences)
+				{
+					if	(lReference->Version->Major > 3)
+					{
+#ifdef	_DEBUG_RESOLVE_TYPE
+						LogMessage (_DEBUG_RESOLVE_TYPE, _T("%s  Remove? [%s]"), _B(LogIndent()), _B(lReference->FullName));
+#endif
+					}
+				}
+			}
+		}
+		catch AnyExceptionSilent
+#endif		
 
 		lAssemblyName->Name = IO::Path::GetFileNameWithoutExtension (pAssemblyName);
 		lAssemblyName->Version = safe_cast <System::Version^> (pSourceAssembly->GetName()->Version->Clone());
@@ -142,10 +140,7 @@ LogReferences (Assembly::GetExecutingAssembly());
 
 		LogMessage (LogNormal, _T("Copy [%s] Module [%s]"), _B(mSourceAssembly->FullName), _B(mSourceModule->FullyQualifiedName));
 		LogMessage (LogNormal, _T("  to [%s] Module [%s]"), _B(mAssemblyBuilder->FullName), _B(mModuleBuilder->FullyQualifiedName));
-
-//LogMessage (LogDebug, _T("Version [%s] [%s] [%s]"), _B(AppDomain::CurrentDomain->ApplicationIdentity->FullName), _B(pSourceAssembly->ImageRuntimeVersion), _B(mAssemblyBuilder->ImageRuntimeVersion));
-LogMessage (LogDebug, _T("Version [%s] [%s] [%s] [%s]"), _B(Environment::Version->ToString()), _B(Assembly::GetExecutingAssembly()->ImageRuntimeVersion), _B(pSourceAssembly->ImageRuntimeVersion), _B(mAssemblyBuilder->ImageRuntimeVersion));
-#ifdef	_DEBUG
+#ifdef	_DEBUG_NOT
 		LogReferences (mSourceAssembly);
 		LogReferences (mAssemblyBuilder);
 #endif
@@ -462,7 +457,7 @@ Assembly^ CopyAssembly::ResolveType (Object^ pSender, ResolveEventArgs^ pEventAr
 		Type^							lTargetType = nullptr;
 
 #ifdef	_DEBUG_RESOLVE_TYPE
-		LogMessage (_DEBUG_RESOLVE_TYPE, _T("%s  Resolve   [%s]"), _B(LogIndent()), _B(pEventArgs->Name));
+		LogMessage (_DEBUG_RESOLVE_TYPE, _T("%s   Resolve    [%s]"), _B(LogIndent()), _B(pEventArgs->Name));
 #endif
 		for each (lTranslateType in mTranslateTypes)
 		{
@@ -472,15 +467,15 @@ Assembly^ CopyAssembly::ResolveType (Object^ pSender, ResolveEventArgs^ pEventAr
 				)
 			{
 #ifdef	_DEBUG_RESOLVE_TYPE
-				LogMessage (_DEBUG_RESOLVE_TYPE, _T("%s  Resolving [%s] from [%s]"), _B(LogIndent()), _BT(lTranslateType->Value), _BT(lTranslateType->Key));
+				LogMessage (_DEBUG_RESOLVE_TYPE, _T("%s   Resolving  [%s] from [%s]"), _B(LogIndent()), _BT(lTranslateType->Value), _BT(lTranslateType->Key));
 #endif
 				lTargetType = CreateType (lTranslateType->Key, lTranslateType->Value);
 
 				if	(lTargetType)
 				{
 #ifdef	_DEBUG_RESOLVE_TYPE
-					LogMessage (_DEBUG_RESOLVE_TYPE, _T("%s  Resolved [%s]"), _B(LogIndent()), _BT(lTargetType));
-#endif
+					LogMessage (_DEBUG_RESOLVE_TYPE, _T("%s   Resolved   [%s]"), _B(LogIndent()), _BT(lTargetType));
+#endif																    
 					lRet = lTargetType->Assembly;
 				}
 				break;
@@ -1613,9 +1608,9 @@ List<CustomAttributeBuilder^>^ CopyAssembly::CopyAttributes (Object^ pSource, Ob
 	{
 		try
 		{
-			CustomAttributeData^			lAttribute = nullptr;
-			int								lAttributeNdx = 0;
-			CustomAttributeBuilder^			lCustomAttrBuilder = nullptr;
+			CustomAttributeData^	lAttribute = nullptr;
+			int						lAttributeNdx = 0;
+			CustomAttributeBuilder^	lCustomAttrBuilder = nullptr;
 
 			for	(lAttributeNdx = 0; lAttributeNdx < pAttributes->Count; lAttributeNdx++)
 			{
@@ -2155,7 +2150,7 @@ bool CopyAssembly::TranslateField (FieldInfo^ pSourceField, FieldInfo^& pTargetF
 		return true;
 	}
 #ifdef	_DEBUG_TARGET_CODE
-	LogMessage (LogDebug, _T("!!! Field [%s.%s] to [%s.%s]"), _BT(lSourceType), _BM(pSourceField), _BT(lTargetType), _BM(pSourceField));
+	LogMessage (_DEBUG_TARGET_CODE, _T("!!! Field [%s.%s] to [%s.%s]"), _BT(lSourceType), _BM(pSourceField), _BT(lTargetType), _BM(pSourceField));
 #endif
 	return false;
 }
@@ -2275,7 +2270,7 @@ Type^ CopyAssembly::GetTargetType (Type^ pSourceType, bool pCreate)
 #ifdef	_DEBUG_TARGET_TYPE
 			LogMessage (_DEBUG_TARGET_TYPE, _T("%s==>"), _B(LogIndent()));
 #endif
-
+			
 			lTargetType = CopyType (lSourceType);
 
 #ifdef	_DEBUG_TARGET_TYPE
@@ -2405,6 +2400,8 @@ Type^ CopyAssembly::GetTargetArgumentType (Type^ pSourceType, bool pCreate)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
 
 array<Type^>^ CopyAssembly::GetParameterTypes (MethodBase^ pMethod, bool pTargetTypes)
 {
@@ -2503,7 +2500,7 @@ String^ CopyAssembly::GetMethodSignature (MethodBase^ pMethod)
 
 /////////////////////////////////////////////////////////////////////////////
 
-Type^ CopyAssembly::GetEnumeratedType (Type^ pType)
+Type^ CopyAssembly::GetEnumerableType (Type^ pType)
 {
 	Type^	lRet = nullptr;
 
@@ -2773,6 +2770,32 @@ CoClassAttribute^ CopyAssembly::GetCoClass (Type^ pType)
 String^ CopyAssembly::LogIndent ()
 {
 	return gcnew String(' ', mLogIndent*2);
+}
+
+int CopyAssembly::AssemblyRuntimeVersion ()
+{
+	return AssemblyRuntimeVersion (Assembly::GetExecutingAssembly());
+}
+
+int CopyAssembly::AssemblyRuntimeVersion (Assembly^ pAssembly)
+{
+	int	lRet = 0;
+	
+	if	(pAssembly)
+	{
+		try
+		{
+			String^	lRuntimeVersion = pAssembly->ImageRuntimeVersion;
+			
+			lRuntimeVersion = lRuntimeVersion->TrimStart ('V');
+			lRuntimeVersion = lRuntimeVersion->TrimStart ('v');
+			lRuntimeVersion = lRuntimeVersion->Substring (0, lRuntimeVersion->IndexOf ('.'));
+			lRet = System::Int32::Parse (lRuntimeVersion);
+		}
+		catch AnyExceptionSilent
+	}
+	
+	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////

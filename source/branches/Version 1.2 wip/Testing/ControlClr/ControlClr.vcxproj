@@ -55,45 +55,45 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\VsProps\Dax86.props" />
+    <Import Project="..\..\VsProps\Dax86(v10).props" />
     <Import Project="..\..\VsProps\DaRelease.props" />
-    <Import Project="..\Testing.props" />
     <Import Project="..\..\VsProps\DaManagedCpp.props" />
+    <Import Project="..\Testing.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\VsProps\Dax86.props" />
+    <Import Project="..\..\VsProps\Dax86(v10).props" />
     <Import Project="..\..\VsProps\DaDebug.props" />
-    <Import Project="..\Testing.props" />
     <Import Project="..\..\VsProps\DaManagedCpp.props" />
+    <Import Project="..\Testing.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\VsProps\Dax64.props" />
+    <Import Project="..\..\VsProps\Dax64(v10).props" />
     <Import Project="..\..\VsProps\DaRelease.props" />
-    <Import Project="..\Testing.props" />
     <Import Project="..\..\VsProps\DaManagedCpp.props" />
+    <Import Project="..\Testing.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\VsProps\Dax64.props" />
+    <Import Project="..\..\VsProps\Dax64(v10).props" />
     <Import Project="..\..\VsProps\DaDebug.props" />
-    <Import Project="..\Testing.props" />
     <Import Project="..\..\VsProps\DaManagedCpp.props" />
+    <Import Project="..\Testing.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
-    <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Managed\CinSoft.snk</LinkKeyFile>
-    <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Managed\CinSoft.snk</LinkKeyFile>
-    <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Managed\CinSoft.snk</LinkKeyFile>
     <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</PostBuildEventUseInBuild>
-    <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Managed\CinSoft.snk</LinkKeyFile>
     <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</PostBuildEventUseInBuild>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)$(InteropOutputPath)</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)$(InteropOutputPath)</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)$(InteropOutputPath)</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)$(InteropOutputPath)</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(BinDir)$(ConfigDir)$(PlatformDir)\$(TargetFrameworkVersion)\$(InteropOutputPath)</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(BinDir)$(ConfigDir)$(PlatformDir)\$(TargetFrameworkVersion)\$(InteropOutputPath)</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(BinDir)$(ConfigDir)$(PlatformDir)\$(TargetFrameworkVersion)\$(InteropOutputPath)</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(BinDir)$(ConfigDir)$(PlatformDir)\$(TargetFrameworkVersion)\$(InteropOutputPath)</OutDir>
+    <ReferencePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir);$(ReferencePath)</ReferencePath>
+    <ReferencePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir);$(ReferencePath)</ReferencePath>
+    <ReferencePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir);$(ReferencePath)</ReferencePath>
+    <ReferencePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir);$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -263,12 +263,6 @@
     <EmbeddedResource Include="LoadCharacter.resx">
       <DependentUpon>LoadCharacter.h</DependentUpon>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\DaControl.vcxproj">
-      <Project>{394447b3-9ad8-49fc-90b0-9f208f649936}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

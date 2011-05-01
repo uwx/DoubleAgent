@@ -18,7 +18,7 @@ namespace TlbToAsm {
 String^ FixupAssemblySpecific::RenameClass (Type^ pSourceType, String^ pTypeName)
 {
 	String^	lNewName = nullptr;
-
+#if	TRUE
 	if	(
 			(pSourceType->IsClass)
 		&&	(!pSourceType->IsAbstract)
@@ -37,16 +37,27 @@ String^ FixupAssemblySpecific::RenameClass (Type^ pSourceType, String^ pTypeName
 			&&	(pTypeName->EndsWith ("Class"))
 			)
 		{
-			lNewName = pTypeName->Substring (2, pTypeName->Length-7);
+			if	(CreateClassWrappers())
+			{
+				lNewName = pTypeName->Substring (2, pTypeName->Length-7);
+			}
+			else
+			{
+				lNewName = pTypeName->Substring (2);
+			}
 		}
 		if	(
 				(!lNewName)
 			&&	(pTypeName->EndsWith ("Class"))
 			)
 		{
-			lNewName = pTypeName->Substring (0, pTypeName->Length-5);
+			if	(CreateClassWrappers())
+			{
+				lNewName = pTypeName->Substring (0, pTypeName->Length-5);
+			}
 		}
 	}
+#endif	
 #ifdef	_LOG_FIXES
 	if	(lNewName)
 	{
@@ -59,7 +70,7 @@ String^ FixupAssemblySpecific::RenameClass (Type^ pSourceType, String^ pTypeName
 String^ FixupAssemblySpecific::RenameInterface (Type^ pSourceType, String^ pTypeName)
 {
 	String^	lNewName = nullptr;
-
+#if	TRUE
 	if	(pSourceType->IsInterface)
 	{
 		lNewName = RenameControlInterface (pSourceType, pTypeName);
@@ -79,13 +90,21 @@ String^ FixupAssemblySpecific::RenameInterface (Type^ pSourceType, String^ pType
 			&&	(pTypeName->StartsWith ("Da"))
 			)
 		{
-			lNewName = String::Concat ("I", pTypeName->Substring (2));
+			if	(CreateClassWrappers())
+			{
+				lNewName = String::Concat ("I", pTypeName->Substring (2));
+			}
+			else
+			{
+				lNewName = pTypeName->Substring (2);
+			}
 		}
 		if	(!lNewName)
 		{
 			lNewName = String::Concat ("I", pTypeName);
 		}
 	}
+#endif	
 #ifdef	_LOG_FIXES
 	if	(lNewName)
 	{
@@ -100,13 +119,20 @@ String^ FixupAssemblySpecific::RenameInterface (Type^ pSourceType, String^ pType
 String^ FixupAssemblySpecific::RenameControlClass (Type^ pSourceType, String^ pTypeName)
 {
 	String^	lNewName = nullptr;
-
+#if	TRUE
 	if	(
 			(pTypeName->StartsWith ("DaCtl"))
 		&&	(pTypeName->EndsWith ("Class"))
 		)
 	{
-		lNewName = pTypeName->Substring (5, pTypeName->Length-10);
+			if	(CreateClassWrappers())
+		{
+			lNewName = pTypeName->Substring (5, pTypeName->Length-10);
+		}
+		else
+		{
+			lNewName = pTypeName->Substring (5);
+		}
 	}
 	else
 	if	(pTypeName->StartsWith ("AxDa"))
@@ -158,19 +184,27 @@ String^ FixupAssemblySpecific::RenameControlClass (Type^ pSourceType, String^ pT
 			lNewName = pTypeName->Replace ("_DaCtlEvents2_", "Event")->Replace ("_DaCtlEvents_", "Event");
 		}
 	}
+#endif	
 	return lNewName;
 }
 
 String^ FixupAssemblySpecific::RenameServerClass (Type^ pSourceType, String^ pTypeName)
 {
 	String^	lNewName = nullptr;
-
+#if	TRUE
 	if	(
 			(pTypeName->StartsWith ("DaSvr"))
 		&&	(pTypeName->EndsWith ("Class"))
 		)
 	{
-		lNewName = pTypeName->Substring (5, pTypeName->Length-10);
+			if	(CreateClassWrappers())
+		{
+			lNewName = pTypeName->Substring (5, pTypeName->Length-10);
+		}
+		else
+		{
+			lNewName = pTypeName->Substring (5);
+		}
 	}
 	else
 	if	(pTypeName->StartsWith ("_DaSvrEvents2_"))
@@ -188,6 +222,7 @@ String^ FixupAssemblySpecific::RenameServerClass (Type^ pSourceType, String^ pTy
 			lNewName = pTypeName->Replace ("_DaSvrEvents2_", "Event");
 		}
 	}
+#endif	
 	return lNewName;
 }
 
@@ -196,10 +231,17 @@ String^ FixupAssemblySpecific::RenameServerClass (Type^ pSourceType, String^ pTy
 String^ FixupAssemblySpecific::RenameControlInterface (Type^ pSourceType, String^ pTypeName)
 {
 	String^	lNewName = nullptr;
-
+#if	TRUE
 	if	(pTypeName->StartsWith ("DaCtl"))
 	{
-		lNewName = String::Concat ("I", pTypeName->Substring (5));
+		if	(CreateClassWrappers())
+		{
+			lNewName = String::Concat ("I", pTypeName->Substring (5));
+		}
+		else
+		{
+			lNewName = pTypeName->Substring (5);
+		}
 	}
 	else
 	if	(
@@ -226,16 +268,24 @@ String^ FixupAssemblySpecific::RenameControlInterface (Type^ pSourceType, String
 			lNewName = pTypeName->Replace ("_DaCtlEvents2_", "IEvents2_")->Replace ("_DaCtlEvents_", "IEvents_");
 		}
 	}
+#endif	
 	return lNewName;
 }
 
 String^ FixupAssemblySpecific::RenameServerInterface (Type^ pSourceType, String^ pTypeName)
 {
 	String^	lNewName = nullptr;
-
+#if	TRUE
 	if	(pTypeName->StartsWith ("DaSvr"))
 	{
-		lNewName = String::Concat ("I", pTypeName->Substring (5));
+		if	(CreateClassWrappers())
+		{
+			lNewName = String::Concat ("I", pTypeName->Substring (5));
+		}
+		else
+		{
+			lNewName = pTypeName->Substring (5);
+		}
 	}
 	else
 	if	(
@@ -252,6 +302,7 @@ String^ FixupAssemblySpecific::RenameServerInterface (Type^ pSourceType, String^
 			lNewName = pTypeName->Replace ("_DaSvrEvents2_", "IEvents_");
 		}
 	}
+#endif	
 	return lNewName;
 }
 
@@ -283,6 +334,28 @@ String^ FixupAssemblySpecific::RenameNativeInterface (Type^ pSourceType, String^
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
+/////////////////////////////////////////////////////////////////////////////
+//
+//	Don't wrap obsolete classes?
+//
+bool FixupAssemblySpecific::IsCoClassWrapper (Type^ pSourceType)
+{
+#if	FALSE
+	if	(
+			(pSourceType)
+		&&	(
+				(pSourceType->Name->Contains ("AudioOutput"))
+			||	(pSourceType->Name->Contains ("SpeechInput"))
+			||	(pSourceType->Name->Contains ("AnimationNames"))
+			)
+		)
+	{
+		return false;
+	}
+#endif
+	return FixupAssembly::IsCoClassWrapper (pSourceType);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Hide classes that are only used internally
@@ -328,6 +401,7 @@ void FixupAssemblySpecific::HideInternalClass (Object^ pSource, Object^ pTarget,
 		catch AnyExceptionSilent
 	}
 #endif
+	FixupAssembly::HideInternalClass (pSource, pTarget, pCustomAttributes);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -386,7 +460,6 @@ bool FixupAssemblySpecific::SkipGeneratedMethod (MethodInfo^ pSourceMethod, Meth
 bool FixupAssemblySpecific::SkipObsoleteProperty (MethodInfo^ pSourceMethod, MethodAttributes & pMethodAttributes)
 {
 	bool	lRet = false;
-
 #if	TRUE
 	try
 	{
@@ -422,7 +495,6 @@ bool FixupAssemblySpecific::SkipObsoleteProperty (MethodInfo^ pSourceMethod, Met
 bool FixupAssemblySpecific::SkipObsoleteProperty (PropertyInfo^ pSourceProperty, Reflection::PropertyAttributes & pPropertyAttributes)
 {
 	bool	lRet = false;
-
 #if	TRUE
 	try
 	{
@@ -527,6 +599,7 @@ bool FixupAssemblySpecific::SkipObsoleteEvent (EventInfo^ pSourceEvent, EventAtt
 //
 void FixupAssemblySpecific::FixMethodName (MethodBase^ pSourceMethod, String^& pMethodName)
 {
+#if	TRUE
 	try
 	{
 		PropertyInfo^		lMethodProperty;
@@ -584,12 +657,14 @@ void FixupAssemblySpecific::FixMethodName (MethodBase^ pSourceMethod, String^& p
 		}
 	}
 	catch AnyExceptionSilent
+#endif	
 }
 //
 //	Rename ActiveX properties to highlight them and avoid naming collisions
 //
 void FixupAssemblySpecific::FixPropertyName (PropertyInfo^ pSourceProperty, String^& pPropertyName)
 {
+#if	TRUE
 	try
 	{
 		DispIdAttribute^	lDispIdAttribute = nullptr;
@@ -624,12 +699,14 @@ void FixupAssemblySpecific::FixPropertyName (PropertyInfo^ pSourceProperty, Stri
 		}
 	}
 	catch AnyExceptionSilent
+#endif
 }
 //
 //	Apply consistent naming conventions to event names
 //
 void FixupAssemblySpecific::FixEventName (EventInfo^ pSourceEvent, String^& pEventName)
 {
+#if	TRUE
 	if	(pSourceEvent->DeclaringType->IsSubclassOf (System::Windows::Forms::AxHost::typeid))
 	{
 		if	(pEventName->EndsWith ("Event"))
@@ -644,12 +721,14 @@ void FixupAssemblySpecific::FixEventName (EventInfo^ pSourceEvent, String^& pEve
 		LogMessage (_LOG_FIXES, _T("---> Event      [%s.%s] as [%s]"), _BMT(pSourceEvent), _BM(pSourceEvent), _B(pEventName));
 #endif
 	}
+#endif	
 }
 //
 //	Reflect event name changes in multicast delegate fields
 //
 void FixupAssemblySpecific::FixEventFieldName (FieldInfo^ pSourceField, String^& pFieldName)
 {
+#if	TRUE
 	if	(pSourceField->DeclaringType->IsSubclassOf (System::Windows::Forms::AxHost::typeid))
 	{
 		if	(pSourceField->FieldType->Name->EndsWith ("EventHandler"))
@@ -660,6 +739,7 @@ void FixupAssemblySpecific::FixEventFieldName (FieldInfo^ pSourceField, String^&
 #endif
 		}
 	}
+#endif	
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -668,6 +748,7 @@ void FixupAssemblySpecific::FixEventFieldName (FieldInfo^ pSourceField, String^&
 
 void FixupAssemblySpecific::SetActiveXControlAttributes (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes)
 {
+#if	TRUE
 	Type^			lSourceType = nullptr;
 	TypeBuilder^	lTargetType = nullptr;
 
@@ -700,12 +781,47 @@ void FixupAssemblySpecific::SetActiveXControlAttributes (Object^ pSource, Object
 		catch AnyExceptionSilent
 		{}
 	}
+#endif	
+}
+/////////////////////////////////////////////////////////////////////////////
+
+void FixupAssemblySpecific::SetActiveXEnumAttributes (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes)
+{
+#if	TRUE
+	Type^			lSourceType = nullptr;
+	EnumBuilder^	lTargetType = nullptr;
+
+	try
+	{
+		lSourceType = safe_cast <Type^> (pSource);
+		lTargetType = safe_cast <EnumBuilder^> (pTarget);
+	}
+	catch AnyExceptionSilent
+
+	if	(
+			(lSourceType)
+		&&	(lTargetType)
+		&&	(lSourceType->IsEnum)
+		&&	(lSourceType->Name->Contains ("Flags"))
+		)
+	{
+		try
+		{
+#ifdef	_LOG_FIXES
+			LogMessage (_LOG_FIXES, _T("---> Flags      [%s]"), _BT(lSourceType));
+#endif
+			pCustomAttributes->Add (gcnew CustomAttributeBuilder (FlagsAttribute::typeid->GetConstructor(gcnew array <Type^> (0)), gcnew array <Object^> (0)));
+		}
+		catch AnyExceptionSilent			
+	}
+#endif	
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
 void FixupAssemblySpecific::SetActiveXMethodVisibility (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes)
 {
+#if	TRUE
 	MethodInfo^			lSourceMethod = nullptr;
 	MethodBuilder^		lTargetMethod = nullptr;
 	DispIdAttribute^	lDispIdAttribute = nullptr;
@@ -764,12 +880,14 @@ void FixupAssemblySpecific::SetActiveXMethodVisibility (Object^ pSource, Object^
 		catch AnyExceptionSilent
 		{}
 	}
+#endif	
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
 void FixupAssemblySpecific::SetActiveXPropertyVisibility (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes)
 {
+#if	TRUE
 	PropertyInfo^		lSourceProperty = nullptr;
 	PropertyBuilder^	lTargetProperty = nullptr;
 	DispIdAttribute^	lDispIdAttribute = nullptr;
@@ -910,6 +1028,7 @@ void FixupAssemblySpecific::SetActiveXPropertyVisibility (Object^ pSource, Objec
 		catch AnyExceptionSilent
 		{}
 	}
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -918,6 +1037,7 @@ void FixupAssemblySpecific::SetActiveXPropertyVisibility (Object^ pSource, Objec
 //
 void FixupAssemblySpecific::SetActiveXPropertyCategory (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes)
 {
+#if	TRUE
 	PropertyInfo^		lSourceProperty = nullptr;
 	PropertyBuilder^	lTargetProperty = nullptr;
 	DispIdAttribute^	lDispIdAttribute = nullptr;
@@ -969,6 +1089,7 @@ void FixupAssemblySpecific::SetActiveXPropertyCategory (Object^ pSource, Object^
 		catch AnyExceptionSilent
 		{}
 	}
+#endif	
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -977,6 +1098,7 @@ void FixupAssemblySpecific::SetActiveXPropertyCategory (Object^ pSource, Object^
 //
 void FixupAssemblySpecific::SetActiveXEventCategory (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes)
 {
+#if	TRUE
 	EventInfo^			lSourceEvent = nullptr;
 	EventBuilder^		lTargetEvent = nullptr;
 
@@ -1079,6 +1201,7 @@ void FixupAssemblySpecific::SetActiveXEventCategory (Object^ pSource, Object^ pT
 		catch AnyExceptionSilent
 		{}
 	}
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////

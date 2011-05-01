@@ -88,7 +88,7 @@ HRESULT WINAPI CDaServerHandler::DelegateInterface (void* pv, REFIID iid, LPVOID
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaServerHandler::QueryInterface [%s]"), lHandler, lHandler->m_dwRef, CGuidStr::GuidName(iid));
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaServerHandler::QueryInterface [%p] [%s]"), lHandler, lHandler->m_dwRef, lHandler->mProxyManager.GetInterfacePtr(), CGuidStr::GuidName(iid));
 	}
 #endif
 

@@ -38,18 +38,18 @@ void LogAssembly::Log (Reflection::Assembly^ pAssembly, bool pLogCode)
 		else
 		{
 			LogMessage (mLogLevel, _T("%s FullName [%s] RuntimeVersion [%s] ReflectionOnly [%d]"), _B(pAssembly->FullName->Split(',')[0]), _B(pAssembly->FullName), _B(pAssembly->ImageRuntimeVersion), (int)pAssembly->ReflectionOnly);
-			try
-			{
-				LogMessage (mLogLevel, _T("%s CodeBase [%s]"), _B(pAssembly->FullName->Split(',')[0]), _B(pAssembly->CodeBase));
-			}
-			catch AnyExceptionSilent
-			{}
-			try
-			{
-				LogMessage (mLogLevel, _T("%s Location [%s]"), _B(pAssembly->FullName->Split(',')[0]), _B(pAssembly->Location));
-			}
-			catch AnyExceptionSilent
-			{}
+			//try
+			//{
+			//	LogMessage (mLogLevel, _T("%s CodeBase [%s]"), _B(pAssembly->FullName->Split(',')[0]), _B(pAssembly->CodeBase));
+			//}
+			//catch AnyExceptionSilent
+			//{}
+			//try
+			//{
+			//	LogMessage (mLogLevel, _T("%s Location [%s]"), _B(pAssembly->FullName->Split(',')[0]), _B(pAssembly->Location));
+			//}
+			//catch AnyExceptionSilent
+			//{}
 
 			if	(pLogCode)
 			{
@@ -900,7 +900,10 @@ bool LogAssembly::IsInterfaceImplemented (Type^ pType, Type^ pInterface)
 
 	try
 	{
-		lMapping = pType->GetInterfaceMap (pInterface);
+		if	(!pType->IsInterface)
+		{
+			lMapping = pType->GetInterfaceMap (pInterface);
+		}
 	}
 	catch AnyExceptionSilent
 
@@ -1272,6 +1275,15 @@ String^ LogAssembly::TypeProps (Type^ pType)
 		if	(pType->IsVisible)
 		{
 			lProps.Append ("Visible ");
+		}
+	}
+	catch AnyExceptionSilent
+	{}
+	try
+	{
+		if	(pType->IsImport)
+		{
+			lProps.Append ("Import ");
 		}
 	}
 	catch AnyExceptionSilent

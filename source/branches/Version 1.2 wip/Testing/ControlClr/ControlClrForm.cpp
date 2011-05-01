@@ -306,7 +306,8 @@ System::Void ControlClrForm::SelectCharacter (DoubleAgent::Control::Character^ p
 	{
 		if	(pCharacter)
 		{
-			CommandBinding->DataSource = gcnew Generic::List<DoubleAgent::Control::Command^> (pCharacter->Commands);
+			//CommandBinding->DataSource = gcnew Generic::List<DoubleAgent::Control::Command^> (pCharacter->Commands);
+			CommandBinding->DataSource = pCharacter->Commands;
 			CharCommands->DataSource = CommandBinding;
 		}
 		else
