@@ -5160,7 +5160,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SuspendHide (VARIANT_BOOL *Suspend
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_SuspendHide"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 #endif
-	HRESULT	lResult;
+	HRESULT	lResult = E_NOTIMPL;
 
 	if	(!SuspendHide)
 	{

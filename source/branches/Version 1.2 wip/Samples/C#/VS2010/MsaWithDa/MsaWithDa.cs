@@ -349,7 +349,7 @@ namespace MsaWithDa
 				mDaControl.RaiseRequestErrors = false;
 				mDaControl.Characters.Load(mDaCharacterName, mDaCharacterFile);
 				mDaControl.RaiseRequestErrors = true;
-				mDaControlChar = mDaControl.Characters.Character(mDaCharacterName);
+				mDaControlChar = mDaControl.Characters[mDaCharacterName];
 				if (mDaControlChar != null)
 				{
 					mDaControlChar.MoveTo(700, 300, null);

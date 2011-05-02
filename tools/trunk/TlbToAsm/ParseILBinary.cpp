@@ -299,6 +299,7 @@ MethodBase^ ParseILBinary::GetTokenMethod (OpCode & pOpCode, DWORD pToken, array
 	if	(
 			(TypeFromToken (pToken) == mdtMethodDef)
 		||	(TypeFromToken (pToken) == mdtMemberRef)
+		||	(TypeFromToken (pToken) == mdtMethodSpec)
 		)
 	{
 		try

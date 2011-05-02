@@ -835,9 +835,38 @@ void FixupAssembly::MarkAssemblyVersion (Object^ pSource, Object^ pTarget, List<
 
 /////////////////////////////////////////////////////////////////////////////
 //
-//	Add the AllowPartiallyTrustedCallers attribute to the target assembly
+//	Set the target assembly security attributes
 //
-void FixupAssembly::AllowPartiallyTrustedCallers (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes)
+bool FixupAssembly::RemoveAssemblySecurity (Object^ pSource, Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues)
+{
+	bool	lRet = false;
+#if	TRUE
+	__if_exists(Security::SecurityRulesAttribute)
+	{
+		AssemblyBuilder^	lTargetAssembly = nullptr;
+
+		try
+		{
+			lTargetAssembly = safe_cast <AssemblyBuilder^> (pTarget);
+		}
+		catch AnyExceptionSilent
+
+		if	(
+				(lTargetAssembly)
+			&&	(Security::SecurityRulesAttribute::typeid->IsAssignableFrom (pAttribute->Constructor->DeclaringType))
+			)
+		{
+#ifdef	_LOG_FIXES
+			LogMessage (_LOG_FIXES, _T("===> Assembly   skip [%s]"), _B(pAttribute->ToString()));
+#endif
+			lRet = true;
+		}
+	}
+#endif
+	return lRet;
+}
+
+void FixupAssembly::MarkAssemblySecurity (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes)
 {
 #if	TRUE
 	AssemblyBuilder^	lTargetAssembly = nullptr;
@@ -850,6 +879,18 @@ void FixupAssembly::AllowPartiallyTrustedCallers (Object^ pSource, Object^ pTarg
 
 	if	(lTargetAssembly)
 	{
+#if	FALSE
+		try
+		{
+#ifdef	_LOG_FIXES
+			LogMessage (_LOG_FIXES, _T("---> Assembly   [%s] SecurityTransparentAttribute"), _B(lTargetAssembly->FullName));
+#endif
+			pCustomAttributes->Add (gcnew CustomAttributeBuilder (Security::SecurityTransparentAttribute::typeid->GetConstructor(gcnew array <Type^> (0)), gcnew array <Object^> (0)));
+		}
+		catch AnyExceptionDebug
+#endif
+
+#if	TRUE
 		try
 		{
 #ifdef	_LOG_FIXES
@@ -858,6 +899,26 @@ void FixupAssembly::AllowPartiallyTrustedCallers (Object^ pSource, Object^ pTarg
 			pCustomAttributes->Add (gcnew CustomAttributeBuilder (Security::AllowPartiallyTrustedCallersAttribute::typeid->GetConstructor(gcnew array <Type^> (0)), gcnew array <Object^> (0)));
 		}
 		catch AnyExceptionDebug
+#endif
+
+#if	TRUE
+		__if_exists(Security::SecurityRulesAttribute)
+		{
+			try
+			{
+				array <Type^>^		lAttrArgTypes = gcnew array <Type^> (1);
+				array <Object^>^	lAttrArgValues = gcnew array <Object^> (1);
+
+				lAttrArgTypes[0] = System::Security::SecurityRuleSet::typeid;
+				lAttrArgValues[0] = System::Security::SecurityRuleSet::Level1;
+#ifdef	_LOG_FIXES
+				LogMessage (_LOG_FIXES, _T("---> Assembly   [%s] Level 1 Transparency"), _B(lTargetAssembly->FullName));
+#endif
+				pCustomAttributes->Add (gcnew CustomAttributeBuilder (Security::SecurityRulesAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
+			}
+			catch AnyExceptionDebug
+		}
+#endif
 	}
 #endif
 }

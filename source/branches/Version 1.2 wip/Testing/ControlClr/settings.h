@@ -16,7 +16,10 @@ public:
 		{
 			try
 			{
-				return (System::Drawing::Point) this["Location"];
+				if	(this["Location"])
+				{
+					return (System::Drawing::Point) this["Location"];
+				}
 			}
 			catch (...)
 			{}
@@ -35,7 +38,10 @@ public:
 		{
 			try
 			{
-				return (System::Boolean) this["RaiseRequestErrors"];
+				if	(this["RaiseRequestErrors"])
+				{
+					return (System::Boolean) this["RaiseRequestErrors"];
+				}
 			}
 			catch (...)
 			{}
@@ -54,7 +60,10 @@ public:
 		{
 			try
 			{
-				return (System::Int16) this["AutoConnect"];
+				if	(this["AutoConnect"])
+				{
+					return (System::Int16) this["AutoConnect"];
+				}
 			}
 			catch (...)
 			{}
@@ -73,7 +82,10 @@ public:
 		{
 			try
 			{
-				return (System::Int16) this["MainPage"];
+				if	(this["MainPage"])
+				{
+					return (System::Int16) this["MainPage"];
+				}
 			}
 			catch (...)
 			{}
@@ -92,7 +104,10 @@ public:
 		{
 			try
 			{
-				return (System::Int16) this["ControlPage"];
+				if	(this["ControlPage"])
+				{
+					return (System::Int16) this["ControlPage"];
+				}
 			}
 			catch (...)
 			{}
@@ -111,7 +126,10 @@ public:
 		{
 			try
 			{
-				return (System::Int16) this["CharacterPage"];
+				if	(this["CharacterPage"])
+				{
+					return (System::Int16) this["CharacterPage"];
+				}
 			}
 			catch (...)
 			{}
@@ -130,7 +148,10 @@ public:
 		{
 			try
 			{
-				return (System::String^) this["SpeakText"];
+				if	(this["SpeakText"])
+				{
+					return (System::String^) this["SpeakText"];
+				}
 			}
 			catch (...)
 			{}
@@ -149,7 +170,10 @@ public:
 		{
 			try
 			{
-				return (System::String^) this["ThinkText"];
+				if	(this["ThinkText"])
+				{
+					return (System::String^) this["ThinkText"];
+				}
 			}
 			catch (...)
 			{}

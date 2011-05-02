@@ -94,7 +94,10 @@ static inline System::String^ FormatMethodArguments (System::Reflection::MethodB
 
 	if	(
 			(pMethod)
-		&&	(pMethod->IsGenericMethodDefinition)
+		&&	(
+				(pMethod->IsGenericMethod)
+			||	(pMethod->IsGenericMethodDefinition)
+			)
 		&&	(lArguments = pMethod->GetGenericArguments ())
 		)
 	{
@@ -212,11 +215,14 @@ static inline tBstrPtr _BM (System::Reflection::ParameterInfo^ pParameter)
 	}
 }
 
-static inline tBstrPtr _BM (System::Reflection::MethodInfo^ pMethod)
+static inline tBstrPtr _BM (System::Reflection::MethodBase^ pMethod)
 {
 	if	(pMethod)
 	{
-		if	(pMethod->IsGenericMethodDefinition)
+		if	(
+				(pMethod->IsGenericMethod)
+			||	(pMethod->IsGenericMethodDefinition)
+			)
 		{
 			return _B(pMethod->Name+FormatMethodArguments(pMethod));
 		}

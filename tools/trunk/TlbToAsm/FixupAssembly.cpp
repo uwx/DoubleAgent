@@ -267,6 +267,14 @@ bool FixupAssembly::FixupCustomAttribute (Object^ pSource, Object^ pTarget, Cust
 
 	if	(
 			(!lRet)
+		&&	(AssemblyBuilder::typeid->IsInstanceOfType (pTarget))
+		)
+	{
+		lRet = RemoveAssemblySecurity (pSource, pTarget, pAttribute, pAttributeValues);
+	}
+
+	if	(
+			(!lRet)
 		&&	(TypeBuilder::typeid->IsInstanceOfType (pTarget))
 		)
 	{
@@ -375,7 +383,7 @@ void FixupAssembly::FixupCustomAttributes (Object^ pSource, Object^ pTarget, Lis
 	if	(AssemblyBuilder::typeid->IsInstanceOfType (pTarget))
 	{
 		MarkAssemblyVersion (pSource, pTarget, pCustomAttributes);
-		AllowPartiallyTrustedCallers (pSource, pTarget, pCustomAttributes);
+		MarkAssemblySecurity (pSource, pTarget, pCustomAttributes);
 	}
 }
 

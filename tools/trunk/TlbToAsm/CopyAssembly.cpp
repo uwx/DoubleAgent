@@ -175,6 +175,10 @@ AssemblyBuilder^ CopyAssembly::CreateCopy ()
 		try
 		{
 			mModuleBuilder->CreateGlobalFunctions ();
+			if	(AssemblyRuntimeVersion () >= 4)
+			{
+				mAssemblyBuilder->SetCustomAttribute (gcnew CustomAttributeBuilder (System::Security::UnverifiableCodeAttribute::typeid->GetConstructor(gcnew array <Type^> (0)), gcnew array <Object^> (0)));
+			}
 		}
 		catch AnyExceptionDebug
 
@@ -2061,6 +2065,32 @@ bool CopyAssembly::TranslateMethod (MethodBase^ pSourceMethod, MethodInfo^& pTar
 		catch AnyExceptionDebug
 	}
 
+	if	(
+			(pSourceMethod->IsGenericMethod)
+		&&	(!pSourceMethod->IsGenericMethodDefinition)
+		)
+	{
+		try
+		{
+			MethodInfo^				lSourceMethod = safe_cast <MethodInfo^> (pSourceMethod);
+			MethodInfo^				lGenericMethod;
+			array<System::Type^>^	lGenericArguments;
+
+			if	(
+					(lSourceMethod)
+				&&	(lSourceMethod = lSourceMethod->GetGenericMethodDefinition())
+				&&	(lGenericArguments = pSourceMethod->GetGenericArguments())
+				&&	(GetTargetArgumentTypes (lGenericArguments, false))
+				&&	(lGenericMethod = lSourceMethod->MakeGenericMethod (lGenericArguments))
+				)
+			{
+				//LogMessage (LogDebug, _T("--- [%s.%s] to [%s.%s] to [%s.%s]"), _BMT(pSourceMethod), _BM(pSourceMethod), _BMT(lTargetMethod), _BM(lTargetMethod), _BMT(lGenericMethod), _BM(lGenericMethod));
+				lTargetMethod = lGenericMethod;
+			}
+		}
+		catch AnyExceptionDebug
+	}
+
 	if	(lTargetMethod)
 	{
 		pTargetMethod = lTargetMethod;
@@ -2384,7 +2414,7 @@ Type^ CopyAssembly::GetTargetParameterType (MethodBase^ pSourceMethod, Parameter
 
 Type^ CopyAssembly::GetTargetArgumentType (Type^ pSourceType, bool pCreate)
 {
-	Type^	lArgumentType;
+	Type^	lArgumentType = pSourceType;
 
 	if	(
 			(pSourceType)
@@ -2397,6 +2427,26 @@ Type^ CopyAssembly::GetTargetArgumentType (Type^ pSourceType, bool pCreate)
 		}
 	}
 	return lArgumentType;
+}
+
+bool CopyAssembly::GetTargetArgumentTypes (array<Type^>^ pArgumentTypes, bool pCreate)
+{
+	bool	lRet = false;
+	int		lNdx;
+	Type^	lArgumentType;
+
+	for	(lNdx = 0; lNdx < pArgumentTypes->Length; lNdx++)
+	{
+		if	(
+				(lArgumentType = GetTargetArgumentType (pArgumentTypes [lNdx], pCreate))
+			&&	(!Object::ReferenceEquals (pArgumentTypes [lNdx], lArgumentType))
+			)
+		{
+			pArgumentTypes [lNdx] = lArgumentType;
+			lRet= true;
+		}
+	} 
+	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -3,13 +3,6 @@
 #include "MakeILWrapper.h"
 #include "CopyAssembly.h"
 
-#ifdef	_DEBUG
-//#define	_DEBUG_CODE			LogDebugFast
-//#define	_DEBUG_TOKENS		LogDebugFast
-//#define	_DEBUG_OPCODES		LogDebugFast
-//#define	_DEBUG_EXCEPTIONS	LogDebugFast
-#endif
-
 /////////////////////////////////////////////////////////////////////////////
 
 using namespace System::Runtime::InteropServices;

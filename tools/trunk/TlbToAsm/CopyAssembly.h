@@ -133,6 +133,7 @@ public:
 	Type^ GetTargetReturnType (MethodInfo^ pSourceMethod, bool pCreate);
 	Type^ GetTargetParameterType (MethodBase^ pSourceMethod, ParameterInfo^ pSourceParameter, bool pCreate);
 	Type^ GetTargetArgumentType (Type^ pSourceType, bool pCreate);
+	bool GetTargetArgumentTypes (array<Type^>^ pArgumentTypes, bool pCreate);
 
 	array<Type^>^ GetParameterTypes (MethodBase^ pMethod, bool pTargetTypes);
 	array<Type^>^ GetParameterTypes (ConstructorInfo^ pConstuctor, bool pTargetTypes);
