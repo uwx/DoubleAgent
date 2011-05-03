@@ -892,7 +892,7 @@ bool MakeILWrapper::InterfaceToWrapper (MethodInfo^ pMethod, ParameterInfo^ pPar
 				}
 			}
 			catch AnyExceptionSilent
-#endif			
+#endif
 
 			if	(
 					(mTranslator->TranslateType (pParameter->ParameterType, lInterfaceType))

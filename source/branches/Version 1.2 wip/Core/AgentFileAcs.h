@@ -117,8 +117,8 @@ protected:
 	void FreeSoundIndex ();
 
 #ifdef	_M_CEE
-	void FreeUnusedImages ();	
-	void FreeUnusedSounds ();	
+	void FreeUnusedImages ();
+	void FreeUnusedSounds ();
 
 	DWORD WriteAcsHeader (DWORD pFileOffset, CAgentFile^ pSource);
 	LPVOID WriteBufferHeader (LPVOID pBuffer, CAgentFileHeader^ pHeader);

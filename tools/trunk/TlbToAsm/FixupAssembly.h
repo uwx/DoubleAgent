@@ -82,7 +82,6 @@ protected:
 	virtual void FixEventFieldName (FieldInfo^ pSourceField, String^& pFieldName) {}
 
 	virtual bool RemoveAssemblySecurity (Object^ pSource, Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues);
-	virtual void MarkAssemblyVersion (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes);
 	virtual void MarkAssemblySecurity (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes);
 	virtual void RenameAttributeTypes (Object^ pSource, Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues);
 	virtual bool UnhideGetEnumerator (Object^ pSource, Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues);

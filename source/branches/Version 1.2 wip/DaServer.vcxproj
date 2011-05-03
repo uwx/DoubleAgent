@@ -95,7 +95,7 @@
     <CustomBuildStep>
       <Message>Creating interop assemblies for $(TargetFileName)</Message>
       <Command>"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
-"$(TargetDir)$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
+"$(TargetDir)$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /version 1.1 /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
 
 tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
 "$(TargetDir)$(TargetFrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
@@ -121,7 +121,7 @@ if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.
     <CustomBuildStep>
       <Message>Creating interop assemblies for $(TargetFileName)</Message>
       <Command>"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
-"$(TargetDir)$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
+"$(TargetDir)$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /version 1.1 /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
 
 tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
 "$(TargetDir)$(TargetFrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
@@ -144,7 +144,7 @@ if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.
     <CustomBuildStep>
       <Message>Creating interop assemblies for $(TargetFileName)</Message>
       <Command>"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
-"$(TargetDir)$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
+"$(TargetDir)$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /version 1.1 /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
 
 tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
 "$(TargetDir)$(TargetFrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
@@ -167,7 +167,7 @@ if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.
     <CustomBuildStep>
       <Message>Creating interop assemblies for $(TargetFileName)</Message>
       <Command>"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
-"$(TargetDir)$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
+"$(TargetDir)$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /version 1.1 /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
 
 tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
 "$(TargetDir)$(TargetFrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
@@ -346,10 +346,6 @@ if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.
     </ProjectReference>
     <ProjectReference Include="DaUtil.vcxproj">
       <Project>{d42ca861-d64a-4dc8-9948-b3e83c300bdf}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="tools\TlbToAsm\TlbToAsm.vcxproj">
-      <Project>{8052fc92-3a66-449e-85ec-626bd6a72782}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>

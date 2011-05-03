@@ -1560,9 +1560,18 @@ HWND DaControl::CreateControlWindow(HWND hWndParent, RECT& rcPos)
 	return lWindow;
 }
 
-HRESULT DaControl::CanCreateControlWindow ()
+HRESULT DaControl::CanCreateControlWindow (HWND * hWndParent, RECT * rcPos)
 {
 	HRESULT	lResult = S_OK;
+
+	if	(hWndParent)
+	{
+		(*hWndParent) = NULL;
+	}
+	if	(rcPos)
+	{
+		::SetRect (rcPos, 0,0,0,0);
+	}
 
 	try
 	{
@@ -1581,6 +1590,36 @@ HRESULT DaControl::CanCreateControlWindow ()
 		{
 			lResult = E_UNEXPECTED;
 		}
+
+		if	(
+				(SUCCEEDED (lResult))
+			&&	(hWndParent)
+			)
+		{
+			(*hWndParent) = lParentWnd;
+		}
+
+		if	(
+				(SUCCEEDED (lResult))
+			&&	(rcPos)
+			)
+		{
+			try
+			{
+				IOleInPlaceFramePtr				lInPlaceFrame;
+				IOleInPlaceUIWindowPtr			lInPlaceWindow;
+				CRect							lInPlaceRect;
+				CRect							lInPlaceClipRect;
+				tSS <OLEINPLACEFRAMEINFO, UINT>	lInPlaceFrameInfo;
+
+				if	(SUCCEEDED (LogComErr (LogNormal, lResult = lInPlaceSite->GetWindowContext (&lInPlaceFrame, &lInPlaceWindow, &lInPlaceRect, &lInPlaceClipRect, &lInPlaceFrameInfo))))
+				{
+					::CopyRect (rcPos, &lInPlaceRect);
+				}
+			}
+			catch AnyExceptionSilent
+		}
+
 	}
 	catch AnyExceptionSilent
 
@@ -4097,17 +4136,42 @@ STDMETHODIMP DaControl::put_ControlCharacter (IDaCtlCharacter2 *ControlCharacter
 			lResult = E_INVALIDARG;
 		}
 	}
-	if	(mControlCharacter)
+
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(!m_hWnd)
+		)
 	{
-		try
+		HWND	lParentWnd = NULL;
+		CRect	lControlRect (0,0,0,0);
+
+		if	(
+				(SUCCEEDED (lResult = CanCreateControlWindow (&lParentWnd, &lControlRect)))
+			&&	(lParentWnd != NULL)
+			)
 		{
-			lPrevCharacter = dynamic_cast <DaCtlCharacter *> (mControlCharacter.GetInterfacePtr());
+			CreateControlWindow (lParentWnd, lControlRect);
 		}
-		catch AnyExceptionDebug
+	}
+
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(!m_hWnd)
+		)
+	{
+		lResult = E_UNEXPECTED;
 	}
 
 	if	(SUCCEEDED (lResult))
 	{
+		if	(mControlCharacter)
+		{
+			try
+			{
+				lPrevCharacter = dynamic_cast <DaCtlCharacter *> (mControlCharacter.GetInterfacePtr());
+			}
+			catch AnyExceptionDebug
+		}
 		if	(lPrevCharacter)
 		{
 			lPrevCharacter->SetContained (false, mLocalCharacterStyle);

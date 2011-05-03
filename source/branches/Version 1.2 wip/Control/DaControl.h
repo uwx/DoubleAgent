@@ -104,8 +104,8 @@ public:
 
 // Overrides
 public:
-	virtual HWND CreateControlWindow(HWND hWndParent, RECT& rcPos);
-	HRESULT CanCreateControlWindow ();
+	virtual HWND CreateControlWindow (HWND hWndParent, RECT& rcPos);
+	HRESULT CanCreateControlWindow (HWND * hWndParent = NULL, RECT * rcPos = NULL);
 	HRESULT OnPreVerbInPlaceActivate();
 	HRESULT OnPreVerbUIActivate();
 	HRESULT OnPreVerbShow();

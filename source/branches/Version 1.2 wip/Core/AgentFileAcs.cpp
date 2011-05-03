@@ -159,7 +159,7 @@ HRESULT CAgentFileAcs::Open (LPCTSTR pPath)
 	}
 #ifdef	_DEBUG_LOAD
 	mLogLevel = lLogLevel;
-#endif	
+#endif
 	return lResult;
 }
 #endif
@@ -312,7 +312,7 @@ HRESULT CAgentFileAcs::LoadFile (LPCTSTR pPath)
 			)
 		{
 			CAgentFileImage^		lImage;
-			
+
 			for (int lNdx = 0; lNdx < mImageIndex->Length; lNdx++)
 			{
 				lImage = GetImage (lNdx, false, Color::Transparent, LogDebugFast);
@@ -324,7 +324,7 @@ HRESULT CAgentFileAcs::LoadFile (LPCTSTR pPath)
 		if	(mImageIndex.GetCount() > 0)
 		{
 			tPtr <CAgentFileImage>	lImage;
-			
+
 			for (int lNdx = 0; lNdx < (int)mImageIndex.GetCount(); lNdx++)
 			{
 				lImage = GetImage (lNdx, false, NULL, LogDebugFast);
@@ -995,7 +995,7 @@ bool CAgentFileAcs::ReadStates ()
 
 			mFileStream->Seek (sizeof(DWORD), SeekOrigin::Begin);
 			lBlockDef.QuadPart = mFileReader->ReadUInt64 ();
-LogMessage (LogIfActive, _T("Block [%u] States [%d] [%d]"), lBlockDef.HighPart, mFileStatesSize, mFileNamesOffset-mFileStatesOffset);			
+LogMessage (LogIfActive, _T("Block [%u] States [%d] [%d]"), lBlockDef.HighPart, mFileStatesSize, mFileNamesOffset-mFileStatesOffset);
 			mFileStream->Seek ((lBlockOffset=lBlockDef.LowPart)+mFileStatesOffset, SeekOrigin::Begin);
 			lBlockBuffer = mFileReader->ReadBytes (lBlockLength=mFileNamesOffset-mFileStatesOffset);
 			lBlock = &lBlockBuffer [0];
@@ -1175,9 +1175,9 @@ bool CAgentFileAcs::ReadGestures ()
 			{
 #ifdef	_M_CEE
 				LogMessage (mLogLevel, _T("  [%s] Read %3.3d Gestures"), _B(mPath), mGestures->Count);
-#else				
+#else
 				LogMessage (mLogLevel, _T("  [%s] Read %3.3d Gestures"), mPath, mGestures.mAnimations.GetCount());
-#endif				
+#endif
 			}
 			lRet = true;
 		}
@@ -1948,7 +1948,7 @@ DWORD CAgentFileAcs::WriteImageIndex (DWORD pFileOffset, CAgentFile^ pSource)
 		)
 	{
 		array <BYTE>^	lBlockBuffer;
-#if	FALSE		
+#if	FALSE
 		CAgentFileAcs^	lSourceAcs = safe_cast <CAgentFileAcs^> (pSource);
 		array <BYTE>^	lSourceBlockBuffer;
 		pin_ptr <BYTE>	lSourceBlockPinned;
@@ -2005,13 +2005,13 @@ DWORD CAgentFileAcs::WriteImageIndex (DWORD pFileOffset, CAgentFile^ pSource)
 					lIndex = (LPDWORD)lByte;
 					lIndex[0] = mImageIndex [lImageNdx].Key;
 					lIndex[1] = mImageIndex [lImageNdx].Value;
-#if	FALSE					
+#if	FALSE
 					if	(lSourceImageIndex)
 					{
 						lIndex[2] = lSourceImageIndex[(lImageNdx*3)+2]; // chksum
 					}
 					else
-#endif					
+#endif
 					{
 						lIndex[2] = 0; // chksum
 					}
@@ -2195,7 +2195,7 @@ DWORD CAgentFileAcs::WriteSoundIndex (DWORD pFileOffset, CAgentFile^ pSource)
 		)
 	{
 		array <BYTE>^	lBlockBuffer;
-#if	FALSE		
+#if	FALSE
 		CAgentFileAcs^	lSourceAcs = safe_cast <CAgentFileAcs^> (pSource);
 		array <BYTE>^	lSourceBlockBuffer;
 		pin_ptr <BYTE>	lSourceBlockPinned;
@@ -2252,13 +2252,13 @@ DWORD CAgentFileAcs::WriteSoundIndex (DWORD pFileOffset, CAgentFile^ pSource)
 					lIndex = (LPDWORD)lByte;
 					lIndex[0] = mSoundIndex [lSoundNdx].Key;
 					lIndex[1] = mSoundIndex [lSoundNdx].Value;
-#if	FALSE					
+#if	FALSE
 					if	(lSourceSoundIndex)
 					{
 						lIndex[2] = lSourceSoundIndex[(lSoundNdx*3)+2]; // chksum
 					}
 					else
-#endif					
+#endif
 					{
 						lIndex[2] = 0; // chksum
 					}
@@ -2488,9 +2488,9 @@ CAgentFileImage* CAgentFileAcs::ReadAcsImage (DWORD pOffset, DWORD pSize, UINT p
 #ifdef	_M_CEE
 					LogDumpWords (LogDebugFast, lByte, min (pSize - (lByte-(LPCBYTE)lBlock), 256));
 					LogMessage (LogDebug, _T("------"));
-#endif					
+#endif
 				}
-#endif						
+#endif
 			}
 
 			if	(
@@ -2626,7 +2626,7 @@ DWORD CAgentFileAcs::WriteImages (DWORD pFileOffset, CAgentFile^ pSource)
 		)
 	{
 		array <BYTE>^	lBlockBuffer;
-#if	FALSE		
+#if	FALSE
 		CAgentFileAcs^	lSourceAcs = safe_cast <CAgentFileAcs^> (pSource);
 
 		if	(lSourceAcs)
@@ -2657,7 +2657,7 @@ DWORD CAgentFileAcs::WriteImages (DWORD pFileOffset, CAgentFile^ pSource)
 			lBlockBuffer = lSourceAcs->mFileReader->ReadBytes (lBlockLength);
 		}
 		else
-#endif		
+#endif
 		{
 			int										lImageNdx;
 			List <KeyValuePair <UInt32, UInt32> >^	lImageIndex = gcnew List <KeyValuePair <UInt32, UInt32> >;
@@ -2841,12 +2841,12 @@ LPCVOID CAgentFileAcs::ReadAcsSound (DWORD pOffset, DWORD pSize, UINT pSoundNum)
 
 #ifdef	_DEBUG_NOT
 			{
-				pin_ptr <BYTE> lPinned = &lRet[0];			
+				pin_ptr <BYTE> lPinned = &lRet[0];
 				LogMessage (LogDebug, _T("--- Sound [%u] of [%u] ---"), pSoundNum, pSize);
 				LogDump (LogDebugFast, (LPBYTE)lPinned, min (pSize, 256));
 				LogMessage (LogDebug, _T("------"));
 			}
-#endif			
+#endif
 		}
 #else
 		LPCBYTE	lBlock;
@@ -2883,7 +2883,7 @@ DWORD CAgentFileAcs::WriteSounds (DWORD pFileOffset, CAgentFile^ pSource)
 		)
 	{
 		array <BYTE>^	lBlockBuffer;
-#if	FALSE		
+#if	FALSE
 		CAgentFileAcs^	lSourceAcs = safe_cast <CAgentFileAcs^> (pSource);
 
 		if	(lSourceAcs)
@@ -2914,7 +2914,7 @@ DWORD CAgentFileAcs::WriteSounds (DWORD pFileOffset, CAgentFile^ pSource)
 			lBlockBuffer = lSourceAcs->mFileReader->ReadBytes (lBlockLength);
 		}
 		else
-#endif		
+#endif
 		{
 			int										lSoundNdx;
 			List <KeyValuePair <UInt32, UInt32> >^	lSoundIndex = gcnew List <KeyValuePair <UInt32, UInt32> >;
@@ -2938,12 +2938,12 @@ DWORD CAgentFileAcs::WriteSounds (DWORD pFileOffset, CAgentFile^ pSource)
 					{
 #ifdef	_DEBUG_NOT
 						{
-							pin_ptr <BYTE> lPinned = &lSound[0];			
+							pin_ptr <BYTE> lPinned = &lSound[0];
 							LogMessage (LogDebug, _T("--- Sound [%u] of [%u] ---"), lSoundNdx, lSound->Length);
 							LogDump (LogDebugFast, (LPBYTE)lPinned, min (lSound->Length, 256));
 							LogMessage (LogDebug, _T("------"));
 						}
-#endif			
+#endif
 						lSoundStart = lByte;
 						lByte = (LPBYTE)WriteAcsSound (lSoundStart, lSound);
 						lSoundIndex->Add (KeyValuePair <UInt32, UInt32> ((lSoundStart-lBlock) + pFileOffset, lByte-lSoundStart));
@@ -3029,7 +3029,7 @@ void CAgentFileAcs::FreeUnusedImages ()
 		int										lImageNdx;
 		List <KeyValuePair <UInt32, UInt32> >^	lImageList = gcnew List <KeyValuePair <UInt32, UInt32> >;
 		int										lUnusedCount = 0;
-		
+
 		for (lImageNdx = 0; lImageNdx < lImageUsage->Length; lImageNdx++)
 		{
 			lImageUsage[lImageNdx] = 0;
@@ -3083,11 +3083,11 @@ void CAgentFileAcs::FreeUnusedImages ()
 				lUnusedCount++;
 				if	(LogIsActive (mLogLevel))
 				{
-					LogMessage (mLogLevel, _T("  [%s] Image [%d] unused"), _B(mPath), lImageNdx); 
+					LogMessage (mLogLevel, _T("  [%s] Image [%d] unused"), _B(mPath), lImageNdx);
 				}
 			}
 		}
-		
+
 		if	(lUnusedCount > 0)
 		{
 			mImageIndex = lImageList->ToArray();
@@ -3129,10 +3129,10 @@ void CAgentFileAcs::FreeUnusedImages ()
 			}
 		}
 	}
-#endif	
+#endif
 }
 
-void CAgentFileAcs::FreeUnusedSounds ()	
+void CAgentFileAcs::FreeUnusedSounds ()
 {
 #if	FALSE
 	if	(
@@ -3144,7 +3144,7 @@ void CAgentFileAcs::FreeUnusedSounds ()
 		int										lSoundNdx;
 		List <KeyValuePair <UInt32, UInt32> >^	lSoundList = gcnew List <KeyValuePair <UInt32, UInt32> >;
 		int										lUnusedCount = 0;
-		
+
 		for (lSoundNdx = 0; lSoundNdx < lSoundUsage->Length; lSoundNdx++)
 		{
 			lSoundUsage[lSoundNdx] = 0;
@@ -3179,11 +3179,11 @@ void CAgentFileAcs::FreeUnusedSounds ()
 				lUnusedCount++;
 				if	(LogIsActive (mLogLevel))
 				{
-					LogMessage (mLogLevel, _T("  [%s] Sound [%d] unused"), _B(mPath), lSoundNdx); 
+					LogMessage (mLogLevel, _T("  [%s] Sound [%d] unused"), _B(mPath), lSoundNdx);
 				}
 			}
 		}
-		
+
 		if	(lUnusedCount > 0)
 		{
 			mSoundIndex = lSoundList->ToArray();
@@ -3206,7 +3206,7 @@ void CAgentFileAcs::FreeUnusedSounds ()
 			}
 		}
 	}
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////

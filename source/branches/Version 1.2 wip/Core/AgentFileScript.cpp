@@ -197,7 +197,7 @@ bool CAgentFileScript::Open (const System::String^ pPath)
 
 #ifdef	_DEBUG_LOAD
 	mLogLevel = lLogLevel;
-#endif	
+#endif
 	return lRet;
 }
 #else
@@ -1315,7 +1315,7 @@ bool CAgentFileScript::WriteAnimationFrame (ScriptWriter^ pWriter, CAgentFile^ p
 	bool	lRet = true;
 #ifdef	_M_CEE
 	String^	lSoundFilePath = pFrame->SoundFilePath;
-	
+
 	pWriter->WriteKeyword (pWriter->Keywords->StartFrame);
 	pWriter->Indent++;
 
@@ -1521,7 +1521,7 @@ bool CAgentFileScript::WriteFrameImage (ScriptWriter^ pWriter, CAgentFile^ pSour
 	bool	lRet = true;
 #ifdef	_M_CEE
 	String^	lImageFilePath = pFrameImage->ImageFilePath;
-	
+
 	pWriter->WriteKeyword (pWriter->Keywords->StartImage);
 	pWriter->Indent++;
 
@@ -1697,7 +1697,7 @@ bool CAgentFileScript::WriteFrameOverlay (ScriptWriter^ pWriter, CAgentFile^ pSo
 			pWriter->WriteValue (pWriter->Keywords->OverlayType, pWriter->Keyword [pWriter->Keywords->OverlayTypeNarrow]);
 		}	break;
 	}
-	
+
 	if	(
 			(pFrameOverlay->ImageNdx >= 0)
 		&&	(String::IsNullOrEmpty (lImageFilePath))
@@ -1817,12 +1817,12 @@ void CAgentFileScript::FreeUnusedImages ()
 		array <int>^	lImageUsage = gcnew array <int> (mImageFilePaths->Count);
 		int				lImageNdx;
 		int				lUnusedCount = 0;
-		
+
 		for (lImageNdx = 0; lImageNdx < lImageUsage->Length; lImageNdx++)
 		{
 			lImageUsage[lImageNdx] = 0;
 		}
-		
+
 		for each (CAgentFileAnimation^ lAnimation in Gestures)
 		{
 			if	(lAnimation->Frames)
@@ -1869,7 +1869,7 @@ void CAgentFileScript::FreeUnusedImages ()
 			{
 				if	(LogIsActive (LogNormal))
 				{
-					LogMessage (LogNormal, _T("  [%s] Image [%d] [%s] unused"), _B(mPath), lImageNdx, _B(mImageFilePaths[lImageNdx-lUnusedCount])); 
+					LogMessage (LogNormal, _T("  [%s] Image [%d] [%s] unused"), _B(mPath), lImageNdx, _B(mImageFilePaths[lImageNdx-lUnusedCount]));
 				}
 				if	(
 						(mImages)
@@ -1882,7 +1882,7 @@ void CAgentFileScript::FreeUnusedImages ()
 				lUnusedCount++;
 			}
 		}
-		
+
 		if	(lUnusedCount > 0)
 		{
 			for each (CAgentFileAnimation^ lAnimation in Gestures)
@@ -1924,7 +1924,7 @@ void CAgentFileScript::FreeUnusedImages ()
 	}
 }
 
-void CAgentFileScript::FreeUnusedSounds ()	
+void CAgentFileScript::FreeUnusedSounds ()
 {
 	if	(
 			(mSoundFilePaths)
@@ -1934,12 +1934,12 @@ void CAgentFileScript::FreeUnusedSounds ()
 		array <int>^	lSoundUsage = gcnew array <int> (mSoundFilePaths->Count);
 		int				lSoundNdx;
 		int				lUnusedCount = 0;
-		
+
 		for (lSoundNdx = 0; lSoundNdx < lSoundUsage->Length; lSoundNdx++)
 		{
 			lSoundUsage[lSoundNdx] = 0;
 		}
-		
+
 		for each (CAgentFileAnimation^ lAnimation in Gestures)
 		{
 			if	(lAnimation->Frames)
@@ -1967,7 +1967,7 @@ void CAgentFileScript::FreeUnusedSounds ()
 			{
 				if	(LogIsActive (LogNormal))
 				{
-					LogMessage (LogNormal, _T("  [%s] Sound [%d] [%s] unused"), _B(mPath), lSoundNdx, _B(mSoundFilePaths[lSoundNdx-lUnusedCount])); 
+					LogMessage (LogNormal, _T("  [%s] Sound [%d] [%s] unused"), _B(mPath), lSoundNdx, _B(mSoundFilePaths[lSoundNdx-lUnusedCount]));
 				}
 				if	(
 						(mSounds)
@@ -1980,7 +1980,7 @@ void CAgentFileScript::FreeUnusedSounds ()
 				lUnusedCount++;
 			}
 		}
-		
+
 		if	(lUnusedCount > 0)
 		{
 			for each (CAgentFileAnimation^ lAnimation in Gestures)
@@ -2018,7 +2018,7 @@ String^ CAgentFileScript::PrepareFileFolder (Boolean pEmptyFolder)
 	DirectoryInfo^	lDirectoryInfo = gcnew System::IO::DirectoryInfo (lPath);
 
 	if	(lDirectoryInfo)
-	{	
+	{
 		if	(
 				(lDirectoryInfo->Exists)
 			&&	(pEmptyFolder)
@@ -2050,14 +2050,14 @@ String^ CAgentFileScript::WriteIconFile (CAgentFileHeader^ pSource)
 	String^	lRet = nullptr;
 
 	if	(
-			(pSource)	
+			(pSource)
 		&&	(pSource->Icon)
 		)
 	{
 		try
 		{
 			String^	lPath = PrepareFileFolder ();
-			
+
 			if	(lPath)
 			{
 				lPath = System::IO::Path::Combine (lPath, System::IO::Path::GetFileNameWithoutExtension (mPath) + ".ico");
@@ -2065,7 +2065,7 @@ String^ CAgentFileScript::WriteIconFile (CAgentFileHeader^ pSource)
 			if	(lPath)
 			{
 				FileStream^	lStream = gcnew FileStream (lPath, FileMode::Create);
-				
+
 				if	(lStream)
 				{
 					pSource->Icon->Save (lStream);
@@ -2084,7 +2084,7 @@ String^ CAgentFileScript::WritePaletteFile (CAgentFileHeader^ pSource)
 	String^	lRet = nullptr;
 
 	if	(
-			(pSource)	
+			(pSource)
 		&&	(pSource->Palette)
 		&&	(pSource->Palette->Entries->Length == 256)
 		)
@@ -2092,7 +2092,7 @@ String^ CAgentFileScript::WritePaletteFile (CAgentFileHeader^ pSource)
 		try
 		{
 			String^	lPath = PrepareFileFolder ();
-			
+
 			if	(lPath)
 			{
 				lPath = System::IO::Path::Combine (lPath, System::IO::Path::GetFileNameWithoutExtension (mPath) + ".bmp");
@@ -2100,7 +2100,7 @@ String^ CAgentFileScript::WritePaletteFile (CAgentFileHeader^ pSource)
 			if	(lPath)
 			{
 				Bitmap^	lBitmap = gcnew Bitmap (16, 16, PixelFormat::Format8bppIndexed);
-				
+
 				lBitmap->Palette = pSource->Palette;
 
 				try
@@ -2120,7 +2120,7 @@ String^ CAgentFileScript::WritePaletteFile (CAgentFileHeader^ pSource)
 					lBitmap->UnlockBits (lData);
 				}
 				catch AnyExceptionDebug
-				
+
 				lBitmap->Save (lPath, ImageFormat::Bmp);
 				lRet = lPath;
 			}
@@ -2138,14 +2138,14 @@ String^ CAgentFileScript::WriteImageFile (CAgentFile^ pSource, int pImageNdx, Bo
 	Bitmap^	lBitmap;
 
 	if	(
-			(pSource)	
+			(pSource)
 		&&	(lBitmap = pSource->GetImageBitmap (pImageNdx))
 		)
 	{
 		try
 		{
 			String^	lPath = PrepareFileFolder ();
-			
+
 			if	(lPath)
 			{
 				lPath = System::IO::Path::Combine (lPath, String::Format ("{0} {1:D}", (pForOverlay ? "Overlay" : "Image"), pImageNdx+1) + ".bmp");
@@ -2167,14 +2167,14 @@ String^ CAgentFileScript::WriteSoundFile (CAgentFile^ pSource, int pSoundNdx)
 	array <BYTE>^	lSound;
 
 	if	(
-			(pSource)	
+			(pSource)
 		&&	(lSound = pSource->GetSound (pSoundNdx))
 		)
 	{
 		try
 		{
 			String^	lPath = PrepareFileFolder ();
-			
+
 			if	(lPath)
 			{
 				lPath = System::IO::Path::Combine (lPath, String::Format ("Sound {0:D}", pSoundNdx+1) + ".wav");
@@ -2183,7 +2183,7 @@ String^ CAgentFileScript::WriteSoundFile (CAgentFile^ pSource, int pSoundNdx)
 			{
 				FileStream^		lFileStream = nullptr;
 				BinaryWriter^	lFileWriter = nullptr;
-				
+
 				lFileStream = gcnew FileStream (lPath, FileMode::Create);
 				if	(lFileStream)
 				{
@@ -2452,7 +2452,7 @@ int CAgentFileScript::GetSoundSize (int pSoundNdx)
 array <BYTE>^ CAgentFileScript::GetSound (int pSoundNdx)
 {
 	array <BYTE>^	lSound = nullptr;
-	
+
 	if	(
 			(mSoundFilePaths)
 		&&	(pSoundNdx >= 0)
@@ -2463,7 +2463,7 @@ array <BYTE>^ CAgentFileScript::GetSound (int pSoundNdx)
 		{
 			System::IO::FileStream^		lFileStream = nullptr;
 			System::IO::BinaryReader^	lFileReader = nullptr;
-			
+
 			lFileStream = gcnew FileStream (mSoundFilePaths [pSoundNdx], FileMode::Open, FileAccess::Read, FileShare::ReadWrite);
 			if	(
 					(lFileStream)

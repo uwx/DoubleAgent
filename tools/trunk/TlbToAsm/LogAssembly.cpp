@@ -38,18 +38,18 @@ void LogAssembly::Log (Reflection::Assembly^ pAssembly, bool pLogCode)
 		else
 		{
 			LogMessage (mLogLevel, _T("%s FullName [%s] RuntimeVersion [%s] ReflectionOnly [%d]"), _B(pAssembly->FullName->Split(',')[0]), _B(pAssembly->FullName), _B(pAssembly->ImageRuntimeVersion), (int)pAssembly->ReflectionOnly);
-			//try
-			//{
-			//	LogMessage (mLogLevel, _T("%s CodeBase [%s]"), _B(pAssembly->FullName->Split(',')[0]), _B(pAssembly->CodeBase));
-			//}
-			//catch AnyExceptionSilent
-			//{}
-			//try
-			//{
-			//	LogMessage (mLogLevel, _T("%s Location [%s]"), _B(pAssembly->FullName->Split(',')[0]), _B(pAssembly->Location));
-			//}
-			//catch AnyExceptionSilent
-			//{}
+			try
+			{
+				array<Module^>^	lModules = pAssembly->GetModules();
+
+				LogMessage (mLogLevel, _T("Modules [%d]"), lModules->Length);
+				for (int lNdx = 0; lNdx < lModules->Length; lNdx++)
+				{
+					LogMessage (mLogLevel, _T("    [%s]"), _B(lModules[lNdx]->FullyQualifiedName));
+				}
+			}
+			catch AnyExceptionSilent
+			{}
 
 			if	(pLogCode)
 			{

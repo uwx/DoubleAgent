@@ -57,7 +57,7 @@ String^ FixupAssemblySpecific::RenameClass (Type^ pSourceType, String^ pTypeName
 			}
 		}
 	}
-#endif	
+#endif
 #ifdef	_LOG_FIXES
 	if	(lNewName)
 	{
@@ -104,7 +104,7 @@ String^ FixupAssemblySpecific::RenameInterface (Type^ pSourceType, String^ pType
 			lNewName = String::Concat ("I", pTypeName);
 		}
 	}
-#endif	
+#endif
 #ifdef	_LOG_FIXES
 	if	(lNewName)
 	{
@@ -184,7 +184,7 @@ String^ FixupAssemblySpecific::RenameControlClass (Type^ pSourceType, String^ pT
 			lNewName = pTypeName->Replace ("_DaCtlEvents2_", "Event")->Replace ("_DaCtlEvents_", "Event");
 		}
 	}
-#endif	
+#endif
 	return lNewName;
 }
 
@@ -222,7 +222,7 @@ String^ FixupAssemblySpecific::RenameServerClass (Type^ pSourceType, String^ pTy
 			lNewName = pTypeName->Replace ("_DaSvrEvents2_", "Event");
 		}
 	}
-#endif	
+#endif
 	return lNewName;
 }
 
@@ -268,7 +268,7 @@ String^ FixupAssemblySpecific::RenameControlInterface (Type^ pSourceType, String
 			lNewName = pTypeName->Replace ("_DaCtlEvents2_", "IEvents2_")->Replace ("_DaCtlEvents_", "IEvents_");
 		}
 	}
-#endif	
+#endif
 	return lNewName;
 }
 
@@ -302,7 +302,7 @@ String^ FixupAssemblySpecific::RenameServerInterface (Type^ pSourceType, String^
 			lNewName = pTypeName->Replace ("_DaSvrEvents2_", "IEvents_");
 		}
 	}
-#endif	
+#endif
 	return lNewName;
 }
 
@@ -657,7 +657,7 @@ void FixupAssemblySpecific::FixMethodName (MethodBase^ pSourceMethod, String^& p
 		}
 	}
 	catch AnyExceptionSilent
-#endif	
+#endif
 }
 //
 //	Rename ActiveX properties to highlight them and avoid naming collisions
@@ -721,7 +721,7 @@ void FixupAssemblySpecific::FixEventName (EventInfo^ pSourceEvent, String^& pEve
 		LogMessage (_LOG_FIXES, _T("---> Event      [%s.%s] as [%s]"), _BMT(pSourceEvent), _BM(pSourceEvent), _B(pEventName));
 #endif
 	}
-#endif	
+#endif
 }
 //
 //	Reflect event name changes in multicast delegate fields
@@ -739,7 +739,7 @@ void FixupAssemblySpecific::FixEventFieldName (FieldInfo^ pSourceField, String^&
 #endif
 		}
 	}
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -781,7 +781,7 @@ void FixupAssemblySpecific::SetActiveXControlAttributes (Object^ pSource, Object
 		catch AnyExceptionSilent
 		{}
 	}
-#endif	
+#endif
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -812,9 +812,9 @@ void FixupAssemblySpecific::SetActiveXEnumAttributes (Object^ pSource, Object^ p
 #endif
 			pCustomAttributes->Add (gcnew CustomAttributeBuilder (FlagsAttribute::typeid->GetConstructor(gcnew array <Type^> (0)), gcnew array <Object^> (0)));
 		}
-		catch AnyExceptionSilent			
+		catch AnyExceptionSilent
 	}
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -880,7 +880,7 @@ void FixupAssemblySpecific::SetActiveXMethodVisibility (Object^ pSource, Object^
 		catch AnyExceptionSilent
 		{}
 	}
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1089,7 +1089,7 @@ void FixupAssemblySpecific::SetActiveXPropertyCategory (Object^ pSource, Object^
 		catch AnyExceptionSilent
 		{}
 	}
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////

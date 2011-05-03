@@ -125,6 +125,10 @@ bool CDirectShowWnd::Open (LPCTSTR pFileName)
 {
 	bool	lRet = false;
 
+	if	(LogIsActive ())
+	{
+		LogMessage (LogVerbose, _T("CDirectShowWnd::Open [%s]"), pFileName);
+	}
 	try
 	{
 		Opening (pFileName);
@@ -155,6 +159,10 @@ bool CDirectShowWnd::Open (LPCTSTR pFileName)
 			Opened ();
 		}
 		catch AnyExceptionSilent
+	}
+	if	(LogIsActive ())
+	{
+		LogMessage (LogVerbose, _T("CDirectShowWnd::Open [%s] [%u]"), pFileName, lRet);
 	}
 	return lRet;
 }

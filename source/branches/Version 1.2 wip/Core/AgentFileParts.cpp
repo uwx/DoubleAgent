@@ -129,7 +129,7 @@ CAgentFileHeader::~CAgentFileHeader ()
 #ifdef	_DEBUG_INSTANCE
 #ifdef	_DEBUG_INSTANCE_OWNED
 	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileHeader::~CAgentFileHeader (Owned)"), sHeaderInstances->IndexOf(this));
-#else	
+#else
 	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileHeader::~CAgentFileHeader"), sHeaderInstances->IndexOf(this));
 #endif
 	sHeaderInstances->Remove (this);
@@ -334,9 +334,9 @@ CAtlString CAgentFileHeader::StyleString (AgentCharStyle pStyle)
 
 #ifdef	_M_CEE
 	return lStyle->Trim();
-#else	
-	return lStyle.Trim();	
-#endif	
+#else
+	return lStyle.Trim();
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -528,7 +528,7 @@ Boolean CAgentFileName::CopyTo (CAgentFileName^ pTarget)
 		pTarget->mName = (mName) ? gcnew String (mName) : nullptr;
 		pTarget->mDesc1 = (mDesc1) ? gcnew String (mDesc1) : nullptr;
 		pTarget->mDesc2 = (mDesc2) ? gcnew String (mDesc2) : nullptr;
-		
+
 		if	(
 				(pTarget->mOwner)
 			&&	(!pTarget->mOwner->IsReadOnly)
@@ -560,9 +560,9 @@ System::String^ CAgentFileName::ToString ()
 {
 #ifdef	_DEBUG_NOT
     return String::Format (" Name {0:X} {0:D} \"{1}\" \"{2}\" \"{3}\" \"{4}\"", Language, (gcnew System::Globalization::CultureInfo (Language))->EnglishName, Name, Desc1, Desc2);
-#else    
+#else
     return String::Format (" Name {0:X} {0:D} \"{1}\"", Language, (gcnew System::Globalization::CultureInfo (Language))->EnglishName);
-#endif    
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -690,7 +690,7 @@ CAgentFileTts::~CAgentFileTts ()
 #ifdef	_DEBUG_INSTANCE
 #ifdef	_DEBUG_INSTANCE_OWNED
 	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileTts::~CAgentFileTts (Owned)"), sTtsInstances->IndexOf(this));
-#else	
+#else
 	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileTts::~CAgentFileTts"), sTtsInstances->IndexOf(this));
 #endif
 	sTtsInstances->Remove (this);
@@ -886,7 +886,7 @@ Boolean CAgentFileTts::CopyTo (CAgentFileTts^ pTarget)
 		pTarget->mModeId = (mModeId) ? gcnew String (mModeId) : nullptr;
 		pTarget->mLanguage = mLanguage;
 		pTarget->mGender = mGender;
-		
+
 		if	(
 				(pTarget->mOwner)
 			&&	(!pTarget->mOwner->IsReadOnly)
@@ -955,7 +955,7 @@ CAgentFileBalloon::~CAgentFileBalloon ()
 #ifdef	_DEBUG_INSTANCE
 #ifdef	_DEBUG_INSTANCE_OWNED
 	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileBalloon::~CAgentFileBalloon (Owned)"), sBalloonInstances->IndexOf(this));
-#else	
+#else
 	LogMessage (_DEBUG_INSTANCE, _T("[%d] CAgentFileBalloon::~CAgentFileBalloon"), sBalloonInstances->IndexOf(this));
 #endif
 	sBalloonInstances->Remove (this);
@@ -1205,7 +1205,7 @@ Boolean CAgentFileBalloon::CopyTo (CAgentFileBalloon^ pTarget)
 		pTarget->mBkColor = mBkColor;
 		pTarget->mBrColor = mBrColor;
 		pTarget->mFont = (mFont) ? safe_cast <System::Drawing::Font^> (mFont->Clone()) : nullptr;
-		
+
 		if	(
 				(pTarget->mOwner)
 			&&	(!pTarget->mOwner->IsReadOnly)
@@ -1403,7 +1403,7 @@ Boolean CAgentFileFrameImage::CopyTo (CAgentFileFrameImage^ pTarget)
 		{
 			pTarget->mImageNdx = mImageNdx;
 		}
-		
+
 		if	(
 				(pTarget->mOwner)
 			&&	(!pTarget->mOwner->IsReadOnly)
@@ -1449,7 +1449,7 @@ System::String^ CAgentFileFrameImage::ToString ()
     return String::Format ("FrameImage {0:D} file {1:D} {2} at {3} in {4}", (mContainer)?mContainer->IndexOf(this):-1, ImageNdx, ImageFilePath, Offset.ToString(), (mContainer && mContainer->mFrame)?mContainer->mFrame->ToString():"<unowned>");
 #else
     return String::Format ("FrameImage {0:D} in {1}", (mContainer)?mContainer->IndexOf(this):-1, (mContainer && mContainer->mFrame)?mContainer->mFrame->ToString():"<unowned>");
-#endif    
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1467,7 +1467,7 @@ void CAgentFileFrameImage::OnSerializing (StreamingContext pContext)
 		mImage = nullptr;
 	}
 }
-	
+
 void CAgentFileFrameImage::OnSerialized (StreamingContext pContext)
 {
 	mImageFilePath = nullptr;
@@ -1875,7 +1875,7 @@ Boolean CAgentFileFrameOverlay::CopyTo (CAgentFileFrameOverlay^ pTarget)
 		{
 			pTarget->mImageNdx = mImageNdx;
 		}
-		
+
 		if	(
 				(pTarget->mOwner)
 			&&	(!pTarget->mOwner->IsReadOnly)
@@ -1936,7 +1936,7 @@ void CAgentFileFrameOverlay::OnSerializing (StreamingContext pContext)
 		mImage = nullptr;
 	}
 }
-	
+
 void CAgentFileFrameOverlay::OnSerialized (StreamingContext pContext)
 {
 	mImageFilePath = nullptr;
@@ -2325,7 +2325,7 @@ Boolean CAgentFileFrame::CopyTo (CAgentFileFrame^ pTarget, Boolean pDeepCopy)
 	{
 		LogMessage (_DEBUG_COPY, _T("Copy CAgentFileFrame [%s] [%d] to [%s] [%d]"), mOwner?_B(mOwner->FileName):_B(nullptr), mContainer?mContainer->IndexOf(this):-1, pTarget->mOwner?_B(pTarget->mOwner->FileName):_B(nullptr), pTarget->mContainer?pTarget->mContainer->IndexOf(pTarget):-1);
 	}
-#endif	
+#endif
 
 	if	(
 			(pTarget)
@@ -2337,7 +2337,7 @@ Boolean CAgentFileFrame::CopyTo (CAgentFileFrame^ pTarget, Boolean pDeepCopy)
 	{
 		pTarget->mDuration = mDuration;
 		pTarget->mExitFrame = mExitFrame;
-		
+
 		if	(
 				(!mOwner)
 			||	(!pTarget->mOwner)
@@ -2350,12 +2350,12 @@ Boolean CAgentFileFrame::CopyTo (CAgentFileFrame^ pTarget, Boolean pDeepCopy)
 		{
 			pTarget->mSoundNdx = mSoundNdx;
 		}
-		
+
 		if	(pDeepCopy)
 		{
 #ifdef	_DEBUG_COPY
 			LogMessage (_DEBUG_COPY, _T("  Deep"));
-#endif			
+#endif
 			if	(mBranching)
 			{
 				pTarget->mBranching = gcnew array <CAgentFileFrameBranch> (mBranching->Length);
@@ -2365,7 +2365,7 @@ Boolean CAgentFileFrame::CopyTo (CAgentFileFrame^ pTarget, Boolean pDeepCopy)
 				}
 #ifdef	_DEBUG_COPY
 				LogMessage (_DEBUG_COPY, _T("  Branching [%d] [%d]"), mBranching->Length, pTarget->mBranching->Length);
-#endif				
+#endif
 			}
 			else
 			{
@@ -2375,17 +2375,17 @@ Boolean CAgentFileFrame::CopyTo (CAgentFileFrame^ pTarget, Boolean pDeepCopy)
 			if	(mImages)
 			{
 				pTarget->mImages = gcnew CAgentFileFrameImages (pTarget->mOwner, pTarget);
-				
+
 				for each (CAgentFileFrameImage^ lImage in mImages)
 				{
 					CAgentFileFrameImage^	lTargetImage = gcnew CAgentFileFrameImage (pTarget->mOwner, pTarget);
-					
+
 					lImage->CopyTo (lTargetImage);
 					pTarget->mImages->Add (lTargetImage);
 				}
 #ifdef	_DEBUG_COPY
 				LogMessage (_DEBUG_COPY, _T("  Images    [%d] [%d]"), mImages->Count, pTarget->mImages->Count);
-#endif				
+#endif
 			}
 			else
 			if	(pTarget->mOwner)
@@ -2404,7 +2404,7 @@ Boolean CAgentFileFrame::CopyTo (CAgentFileFrame^ pTarget, Boolean pDeepCopy)
 				for each (CAgentFileFrameOverlay^ lOverlay in mOverlays)
 				{
 					CAgentFileFrameOverlay^	lTargetOverlay = gcnew CAgentFileFrameOverlay (pTarget->mOwner, pTarget);
-					
+
 					lTargetOverlay->mOverlayType = lOverlay->mOverlayType;
 					lOverlay->CopyTo (lTargetOverlay);
 					pTarget->mOverlays->Add (lTargetOverlay);
@@ -2421,18 +2421,18 @@ Boolean CAgentFileFrame::CopyTo (CAgentFileFrame^ pTarget, Boolean pDeepCopy)
 			}
 #ifdef	_DEBUG_COPY
 				LogMessage (_DEBUG_COPY, _T("  Overlays  [%d] [%d]"), mOverlays->Count, pTarget->mOverlays->Count);
-#endif				
+#endif
 		}
 		else
 		{
 #ifdef	_DEBUG_COPY
 			LogMessage (_DEBUG_COPY, _T("  Shallow"));
-#endif			
+#endif
 			pTarget->mBranching = mBranching;
 			pTarget->mImages = mImages;
 			pTarget->mOverlays = mOverlays;
 		}
-		
+
 		if	(
 				(pTarget->mOwner)
 			&&	(!pTarget->mOwner->IsReadOnly)
@@ -2465,7 +2465,7 @@ void CAgentFileFrame::OnSerializing (StreamingContext pContext)
 		mSound = nullptr;
 	}
 }
-	
+
 void CAgentFileFrame::OnSerialized (StreamingContext pContext)
 {
 	mSoundFilePath = nullptr;
@@ -2850,7 +2850,7 @@ Boolean CAgentFileAnimation::CopyTo (CAgentFileAnimation^ pTarget, Boolean pDeep
 	{
 		LogMessage (_DEBUG_COPY, _T("Copy CAgentFileAnimation [%s] [%s] [%d] to [%s] [%s] [%d]"), mOwner?_B(mOwner->FileName):_B(nullptr), _B(Name), mContainer?mContainer->IndexOf(this):-1, pTarget->mOwner?_B(pTarget->mOwner->FileName):_B(nullptr), _B(pTarget->Name), pTarget->mContainer?pTarget->mContainer->IndexOf(pTarget):-1);
 	}
-#endif	
+#endif
 
 	if	(
 			(pTarget)
@@ -2864,26 +2864,26 @@ Boolean CAgentFileAnimation::CopyTo (CAgentFileAnimation^ pTarget, Boolean pDeep
 		pTarget->mReturnName = mReturnName;
 		pTarget->mAcaFileName = mAcaFileName;
 		pTarget->mAcaChksum = mAcaChksum;
-		
+
 		if	(pDeepCopy)
 		{
 #ifdef	_DEBUG_COPY
 			LogMessage (_DEBUG_COPY, _T("  Deep"));
-#endif			
+#endif
 			if (mFrames)
 			{
 				pTarget->mFrames = gcnew CAgentFileFrames (pTarget->mOwner, pTarget);
-				
+
 				for each (CAgentFileFrame^ lFrame in mFrames)
 				{
 					CAgentFileFrame^	lTargetFrame = gcnew CAgentFileFrame (pTarget->mOwner, pTarget->mFrames);
-					
+
 					lFrame->CopyTo (lTargetFrame, true);
 					pTarget->mFrames->Add (lTargetFrame);
 				}
 #ifdef	_DEBUG_COPY
 				LogMessage (_DEBUG_COPY, _T("  Frames    [%d] [%d]"), mFrames->Count, pTarget->mFrames->Count);
-#endif				
+#endif
 			}
 			else
 			if	(pTarget->mOwner)
@@ -2899,10 +2899,10 @@ Boolean CAgentFileAnimation::CopyTo (CAgentFileAnimation^ pTarget, Boolean pDeep
 		{
 #ifdef	_DEBUG_COPY
 			LogMessage (_DEBUG_COPY, _T("  Shallow"));
-#endif			
+#endif
 			pTarget->mFrames = mFrames;
 		}
-		
+
 		if	(
 				(pTarget->mOwner)
 			&&	(!pTarget->mOwner->IsReadOnly)
@@ -3032,7 +3032,7 @@ void CAgentFileGestures::ChangeItemKey (CAgentFileAnimation^ pItem, String^ pNew
 //	__super::ChangeItemKey (pItem, pItem->Name);
 //
 //	Instead - Remove/Add to resort
-//	
+//
 	__super::Remove (pItem);
 	pItem->mName = pNewKey;
 	Add (pItem);

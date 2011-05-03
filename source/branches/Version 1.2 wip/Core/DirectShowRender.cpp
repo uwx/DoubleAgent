@@ -1387,10 +1387,12 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::put_DestinationLeft (long Destinati
 	HRESULT	lResult = S_OK;
 	CRect	lClientRect;
 
-	mSourceRect.OffsetRect (DestinationLeft - mSourceRect.left, 0);
+	mRenderRect.OffsetRect (DestinationLeft - mRenderRect.left, 0);
 	if	(IsWindow (mRenderWnd))
 	{
 		::GetClientRect (mRenderWnd, &lClientRect);
+		mRenderRect.OffsetRect (min (lClientRect.right - mRenderRect.right, 0), min (lClientRect.bottom - mRenderRect.bottom, 0));
+		mRenderRect.OffsetRect (max (lClientRect.left - mRenderRect.left, 0), max (lClientRect.top - mRenderRect.top, 0));
 		::IntersectRect (&mRenderRect, &mRenderRect, &lClientRect);
 	}
 	return lResult;
@@ -1426,6 +1428,8 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::put_DestinationWidth (long Destinat
 		if	(IsWindow (mRenderWnd))
 		{
 			::GetClientRect (mRenderWnd, &lClientRect);
+			mRenderRect.OffsetRect (min (lClientRect.right - mRenderRect.right, 0), min (lClientRect.bottom - mRenderRect.bottom, 0));
+			mRenderRect.OffsetRect (max (lClientRect.left - mRenderRect.left, 0), max (lClientRect.top - mRenderRect.top, 0));
 			::IntersectRect (&mRenderRect, &mRenderRect, &lClientRect);
 		}
 	}
@@ -1456,6 +1460,8 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::put_DestinationTop (long Destinatio
 	if	(IsWindow (mRenderWnd))
 	{
 		::GetClientRect (mRenderWnd, &lClientRect);
+		mRenderRect.OffsetRect (min (lClientRect.right - mRenderRect.right, 0), min (lClientRect.bottom - mRenderRect.bottom, 0));
+		mRenderRect.OffsetRect (max (lClientRect.left - mRenderRect.left, 0), max (lClientRect.top - mRenderRect.top, 0));
 		::IntersectRect (&mRenderRect, &mRenderRect, &lClientRect);
 	}
 	return lResult;
@@ -1491,6 +1497,8 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::put_DestinationHeight (long Destina
 		if	(IsWindow (mRenderWnd))
 		{
 			::GetClientRect (mRenderWnd, &lClientRect);
+			mRenderRect.OffsetRect (min (lClientRect.right - mRenderRect.right, 0), min (lClientRect.bottom - mRenderRect.bottom, 0));
+			mRenderRect.OffsetRect (max (lClientRect.left - mRenderRect.left, 0), max (lClientRect.top - mRenderRect.top, 0));
 			::IntersectRect (&mRenderRect, &mRenderRect, &lClientRect);
 		}
 	}
@@ -1593,6 +1601,8 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::SetDestinationPosition (long Left, 
 		if	(IsWindow (mRenderWnd))
 		{
 			::GetClientRect (mRenderWnd, &lClientRect);
+			mRenderRect.OffsetRect (min (lClientRect.right - mRenderRect.right, 0), min (lClientRect.bottom - mRenderRect.bottom, 0));
+			mRenderRect.OffsetRect (max (lClientRect.left - mRenderRect.left, 0), max (lClientRect.top - mRenderRect.top, 0));
 			::IntersectRect (&mRenderRect, &mRenderRect, &lClientRect);
 		}
 	}

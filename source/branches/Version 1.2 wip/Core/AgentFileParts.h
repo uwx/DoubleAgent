@@ -54,7 +54,7 @@ ref class FileGestures;
 #ifdef	_M_CEE
 #define AgentCharStyle CharacterStyle
 /// <summary>
-///	<see cref="CharacterFile"/> style bits. 
+///	<see cref="CharacterFile"/> style bits.
 /// </summary>
 public enum class CharacterStyle : UInt32
 #else
@@ -72,7 +72,7 @@ enum AgentCharStyle
 #ifdef	_M_CEE
 #define AgentMouthOverlay MouthOverlay
 /// <summary>
-///	The <see cref="FileFrameOverlay.OverlayType"/> of a <see cref="FileFrameOverlay"/> instance. 
+///	The <see cref="FileFrameOverlay.OverlayType"/> of a <see cref="FileFrameOverlay"/> instance.
 /// </summary>
 public enum class MouthOverlay
 #else
@@ -166,7 +166,7 @@ public:
 #ifdef	_M_CEE
 #define CAgentFileHeader FileHeader
 /// <summary>
-///	General character information 
+///	General character information
 /// </summary>
 [Serializable] public ref class FileHeader
 #else
@@ -181,30 +181,30 @@ public:
 	property CharacterFile^ Owner {CharacterFile^ get() {return mOwner;}}
 
 	/// <summary>
-	/// Gets or sets the character's style. 
+	/// Gets or sets the character's style.
 	/// </summary>
 	/// <seealso cref="CharacterStyle"/>
 	property CharacterStyle Style {CharacterStyle get(); void set (CharacterStyle pValue);}
 	/// <summary>
-	/// Gets or sets the character's <see cref="System::Guid"/>. 
+	/// Gets or sets the character's <see cref="System::Guid"/>.
 	/// </summary>
 	property System::Guid Guid {System::Guid get(); void set (System::Guid pValue);}
 	/// <summary>
-	/// Gets the character's <see cref="System::Drawing::Icon"/>. 
+	/// Gets the character's <see cref="System::Drawing::Icon"/>.
 	/// </summary>
 	/// <seealso cref="CharacterFile.IconFilePath"/>
 	property System::Drawing::Icon^ Icon {System::Drawing::Icon^ get();}
 	/// <summary>
-	/// Gets or sets the dimensions of the character's frames. 
+	/// Gets or sets the dimensions of the character's frames.
 	/// </summary>
 	property System::Drawing::Size ImageSize {System::Drawing::Size get(); void set (System::Drawing::Size pValue);}
 	/// <summary>
-	/// Gets the <see cref="System::Drawing::Imaging::ColorPalette"/> used for the character's frame and overlay images. 
+	/// Gets the <see cref="System::Drawing::Imaging::ColorPalette"/> used for the character's frame and overlay images.
 	/// </summary>
 	/// <seealso cref="CharacterFile.PaletteFilePath"/>
 	property System::Drawing::Imaging::ColorPalette^ Palette {System::Drawing::Imaging::ColorPalette^ get();}
 	/// <summary>
-	/// Gets or sets the value in the <see cref="Palette"/> that represents a transparent bit. 
+	/// Gets or sets the value in the <see cref="Palette"/> that represents a transparent bit.
 	/// </summary>
 	property Byte Transparency {Byte get(); void set (Byte pValue);}
 #else
@@ -254,11 +254,11 @@ public:
 #ifdef	_M_CEE
 public:
 	/// <summary>
-	/// See <see cref="System.Object.ToString"/>. 
+	/// See <see cref="System.Object.ToString"/>.
 	/// </summary>
     virtual System::String^ ToString() override;
 	/// <summary>
-	/// Returns a description of a <see cref="CharacterStyle"/>. 
+	/// Returns a description of a <see cref="CharacterStyle"/>.
 	/// </summary>
 	/// <param name="pStyle">The <see cref="CharacterStyle"/> to use.</param>
 	/// <returns>A descriptive string.</returns>
@@ -647,9 +647,9 @@ public:
 internal:
 	CAgentFileFrameImage (CharacterFile^ pOwner, FileAnimationFrame^ pFrame);
 protected:
-	[OnSerializingAttribute] void OnSerializing (StreamingContext pContext);	
-	[OnSerializedAttribute] void OnSerialized (StreamingContext pContext);	
-private:	
+	[OnSerializingAttribute] void OnSerializing (StreamingContext pContext);
+	[OnSerializedAttribute] void OnSerialized (StreamingContext pContext);
+private:
 	System::String^		mImageFilePath;
 	CAgentFileImage^	mImage;
 #else
@@ -768,9 +768,9 @@ public:
 internal:
 	CAgentFileFrameOverlay (CharacterFile^ pOwner, FileAnimationFrame^ pFrame);
 protected:
-	[OnSerializingAttribute] void OnSerializing (StreamingContext pContext);	
-	[OnSerializedAttribute] void OnSerialized (StreamingContext pContext);	
-private:	
+	[OnSerializingAttribute] void OnSerializing (StreamingContext pContext);
+	[OnSerializedAttribute] void OnSerialized (StreamingContext pContext);
+private:
 	System::String^		mImageFilePath;
 	CAgentFileImage^	mImage;
 #else
@@ -924,9 +924,9 @@ public:
 internal:
 	CAgentFileFrame (CharacterFile^ pOwner, FileFrames^ pContainer);
 protected:
-	[OnSerializingAttribute] void OnSerializing (StreamingContext pContext);	
-	[OnSerializedAttribute] void OnSerialized (StreamingContext pContext);	
-private:	
+	[OnSerializingAttribute] void OnSerializing (StreamingContext pContext);
+	[OnSerializedAttribute] void OnSerialized (StreamingContext pContext);
+private:
 	System::String^		mSoundFilePath;
 	array<Byte>^		mSound;
 #else

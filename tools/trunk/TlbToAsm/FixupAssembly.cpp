@@ -382,7 +382,6 @@ void FixupAssembly::FixupCustomAttributes (Object^ pSource, Object^ pTarget, Lis
 
 	if	(AssemblyBuilder::typeid->IsInstanceOfType (pTarget))
 	{
-		MarkAssemblyVersion (pSource, pTarget, pCustomAttributes);
 		MarkAssemblySecurity (pSource, pTarget, pCustomAttributes);
 	}
 }

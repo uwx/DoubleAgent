@@ -132,7 +132,7 @@ HWND CAgentWnd::Create (HWND hWndParent, _U_RECT rect, LPCTSTR szWindowName, DWO
 bool CAgentWnd::Open (CAgentFile* pAgentFile)
 {
 	bool			lRet = false;
-	CAgentFile*	lAgentFile;
+	CAgentFile*		lAgentFile;
 	CAgentFileAcf*	lAgentFileAcf;
 
 	if	(lAgentFile = GetAgentFile())

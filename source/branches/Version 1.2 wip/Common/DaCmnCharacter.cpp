@@ -300,7 +300,7 @@ HRESULT CDaCmnCharacter::OpenFile (CAgentFile* pFile, bool pIsDefault)
 
 HRESULT CDaCmnCharacter::Realize (CAgentCharacterWnd* pCharacterWnd, DWORD pInitialStyle)
 {
-	HRESULT				lResult = S_OK;
+	HRESULT			lResult = S_OK;
 	CAgentPopupWnd*	lPopupWnd;
 
 	if	(
@@ -2956,6 +2956,15 @@ HRESULT CDaCmnCharacter::SetPosition (long Left, long Top)
 	if	(lCharacterWnd = GetCharacterWnd ())
 	{
 		lResult = lCharacterWnd->SetVideoRect (CRect (CPoint (Left, Top), lCharacterWnd->GetVideoRect().Size()));
+
+		if	(
+				(SUCCEEDED (lResult))
+			&&	(lCharacterWnd->GetBalloonWnd ())
+			)
+		{
+			lCharacterWnd->RedrawWindow ();
+			lCharacterWnd->GetBalloonWnd ()->MoveBalloon ();
+		}
 	}
 	else
 	{
@@ -3016,6 +3025,15 @@ HRESULT CDaCmnCharacter::SetSize (long Width, long Height)
 	if	(lCharacterWnd = GetCharacterWnd ())
 	{
 		lResult = lCharacterWnd->SetVideoRect (CRect (lCharacterWnd->GetVideoRect().TopLeft(), CSize (Width, Height)));
+
+		if	(
+				(SUCCEEDED (lResult))
+			&&	(lCharacterWnd->GetBalloonWnd ())
+			)
+		{
+			lCharacterWnd->RedrawWindow ();
+			lCharacterWnd->GetBalloonWnd ()->MoveBalloon ();
+		}
 	}
 	else
 	{
@@ -4312,10 +4330,10 @@ HRESULT CDaCmnCharacter::get_Left (short *Left)
 
 HRESULT CDaCmnCharacter::put_Left (short Left)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
 	CAgentPopupWnd*		lPopupWnd;
-	CRect					lRect;
+	CRect				lRect;
 
 	if	(lPopupWnd = GetPopupWnd ())
 	{
@@ -4331,6 +4349,15 @@ HRESULT CDaCmnCharacter::put_Left (short Left)
 		lRect = lCharacterWnd->GetVideoRect();
 		lRect.OffsetRect (Left - lRect.left, 0);
 		lResult = lCharacterWnd->SetVideoRect (lRect);
+
+		if	(
+				(SUCCEEDED (lResult))
+			&&	(lCharacterWnd->GetBalloonWnd ())
+			)
+		{
+			lCharacterWnd->RedrawWindow ();
+			lCharacterWnd->GetBalloonWnd ()->MoveBalloon ();
+		}
 	}
 	else
 	{
@@ -4343,10 +4370,10 @@ HRESULT CDaCmnCharacter::put_Left (short Left)
 
 HRESULT CDaCmnCharacter::get_Top (short *Top)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
 	CAgentPopupWnd*		lPopupWnd;
-	CRect					lRect (0,0,0,0);
+	CRect				lRect (0,0,0,0);
 
 	if	(!Top)
 	{
@@ -4374,10 +4401,10 @@ HRESULT CDaCmnCharacter::get_Top (short *Top)
 
 HRESULT CDaCmnCharacter::put_Top (short Top)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
 	CAgentPopupWnd*		lPopupWnd;
-	CRect					lRect;
+	CRect				lRect;
 
 	if	(lPopupWnd = GetPopupWnd ())
 	{
@@ -4393,6 +4420,15 @@ HRESULT CDaCmnCharacter::put_Top (short Top)
 		lRect = lCharacterWnd->GetVideoRect();
 		lRect.OffsetRect (0, Top - lRect.top);
 		lResult = lCharacterWnd->SetVideoRect (lRect);
+
+		if	(
+				(SUCCEEDED (lResult))
+			&&	(lCharacterWnd->GetBalloonWnd ())
+			)
+		{
+			lCharacterWnd->RedrawWindow ();
+			lCharacterWnd->GetBalloonWnd ()->MoveBalloon ();
+		}
 	}
 	else
 	{
@@ -4405,10 +4441,10 @@ HRESULT CDaCmnCharacter::put_Top (short Top)
 
 HRESULT CDaCmnCharacter::get_Width (short *Width)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
 	CAgentPopupWnd*		lPopupWnd;
-	CRect					lRect (0,0,0,0);
+	CRect				lRect (0,0,0,0);
 
 	if	(!Width)
 	{
@@ -4436,10 +4472,10 @@ HRESULT CDaCmnCharacter::get_Width (short *Width)
 
 HRESULT CDaCmnCharacter::put_Width (short Width)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
 	CAgentPopupWnd*		lPopupWnd;
-	CRect					lRect;
+	CRect				lRect;
 
 	if	(lPopupWnd = GetPopupWnd ())
 	{
@@ -4455,6 +4491,15 @@ HRESULT CDaCmnCharacter::put_Width (short Width)
 		lRect = lCharacterWnd->GetVideoRect();
 		lRect.InflateRect (0, 0, Width - lRect.Width(), 0);
 		lResult = lCharacterWnd->SetVideoRect (lRect);
+
+		if	(
+				(SUCCEEDED (lResult))
+			&&	(lCharacterWnd->GetBalloonWnd ())
+			)
+		{
+			lCharacterWnd->RedrawWindow ();
+			lCharacterWnd->GetBalloonWnd ()->MoveBalloon ();
+		}
 	}
 	else
 	{
@@ -4467,10 +4512,10 @@ HRESULT CDaCmnCharacter::put_Width (short Width)
 
 HRESULT CDaCmnCharacter::get_Height (short *Height)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
 	CAgentPopupWnd*		lPopupWnd;
-	CRect					lRect (0,0,0,0);
+	CRect				lRect (0,0,0,0);
 
 	if	(!Height)
 	{
@@ -4498,10 +4543,10 @@ HRESULT CDaCmnCharacter::get_Height (short *Height)
 
 HRESULT CDaCmnCharacter::put_Height (short Height)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
 	CAgentPopupWnd*		lPopupWnd;
-	CRect					lRect;
+	CRect				lRect;
 
 	if	(lPopupWnd = GetPopupWnd ())
 	{
@@ -4517,6 +4562,15 @@ HRESULT CDaCmnCharacter::put_Height (short Height)
 		lRect = lCharacterWnd->GetVideoRect();
 		lRect.InflateRect (0, 0, 0, Height - lRect.Height());
 		lResult = lCharacterWnd->SetVideoRect (lRect);
+
+		if	(
+				(SUCCEEDED (lResult))
+			&&	(lCharacterWnd->GetBalloonWnd ())
+			)
+		{
+			lCharacterWnd->RedrawWindow ();
+			lCharacterWnd->GetBalloonWnd ()->MoveBalloon ();
+		}
 	}
 	else
 	{

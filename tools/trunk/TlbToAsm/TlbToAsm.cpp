@@ -39,7 +39,7 @@ int main(array<System::String ^> ^args)
 
 	lTlbToAsm = gcnew DoubleAgent::TlbToAsm::TlbToAsm (lRestartLog);
 	lTlbToAsm->ProcessCmdLine (Environment::GetCommandLineArgs ());
-	
+
 	try
 	{
 		GC::Collect ();
@@ -54,6 +54,12 @@ int main(array<System::String ^> ^args)
 namespace DoubleAgent {
 namespace TlbToAsm {
 /////////////////////////////////////////////////////////////////////////////
+
+TlbToAsm::TlbToAsm (bool pRestartLog)
+:	mRestartLog (pRestartLog)
+{
+	mAssemblyVersion = gcnew System::Version (_DOUBLEAGENT_VERSION_STR);
+}
 
 int TlbToAsm::ProcessCmdLine (array <String^>^ pCmdArgs)
 {
@@ -105,6 +111,13 @@ int TlbToAsm::ProcessCmdLine (array <String^>^ pCmdArgs)
 						{
 							lCmdArgNdx++;
 							lSave = true;
+						}
+						else
+						if	(String::Compare (lCmdOpt, "Version", true) == 0)
+						{
+							lCmdArgNdx++;
+							lCmdArgNdx++;
+							mAssemblyVersion = gcnew Version (CmdArg (pCmdArgs, lCmdArgNdx));
 						}
 						else
 						if	(String::Compare (lCmdOpt, "Keyfile", true) == 0)
@@ -195,10 +208,17 @@ int TlbToAsm::ProcessCmdLine (array <String^>^ pCmdArgs)
 							lNamespace = CmdArg (pCmdArgs, ++lCmdArgNdx);
 						}
 						else
+						if	(String::Compare (lCmdOpt, "Version", true) == 0)
+						{
+							lCmdArgNdx++;
+							lCmdArgNdx++;
+							mAssemblyVersion = gcnew Version (CmdArg (pCmdArgs, lCmdArgNdx));
+						}
+						else
 						if	(String::Compare (lCmdOpt, "Keyfile", true) == 0)
 						{
-							lCmdArgNdx++;											
-							lCmdArgNdx++;											
+							lCmdArgNdx++;
+							lCmdArgNdx++;
 							mStrongName = GetStrongName (CmdArg (pCmdArgs, lCmdArgNdx));
 						}
 						else
@@ -345,7 +365,7 @@ AssemblyBuilder^ TlbToAsm::FixAssembly (Assembly^ pAssembly, String^ pAssemblyNa
 			mCopyAssembly->mFixups = gcnew FixupAssemblySpecific (mCopyAssembly);
 		}
 
-		if	(lAssemblyBuilder = mCopyAssembly->MakeCopy (pAssembly, pAssemblyName, pModuleName, mStrongName))
+		if	(lAssemblyBuilder = mCopyAssembly->MakeCopy (pAssembly, pAssemblyName, pModuleName, mAssemblyVersion, mStrongName))
 		{
 			try
 			{
@@ -356,8 +376,7 @@ AssemblyBuilder^ TlbToAsm::FixAssembly (Assembly^ pAssembly, String^ pAssemblyNa
 
 			if	(lAssemblyBuilder = mCopyAssembly->CreateCopy ())
 			{
-				lAssemblyBuilder->DefineVersionInfoResource (_DOUBLEAGENT_NAME, _DOUBLEAGENT_VERSION_STR, _DOUBLEAGENT_COMPANY, _DOUBLEAGENT_COPYRIGHT, nullptr);
-
+				MarkAssemblyVersion (lAssemblyBuilder);
 				if	(mStrongName)
 				{
 					MarkPrimaryAssembly (lAssemblyBuilder);
@@ -390,13 +409,13 @@ AssemblyBuilder^ TlbToAsm::FixAssembly (Assembly^ pAssembly, String^ pAssemblyNa
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	try
 	{
 		GC::Collect ();
 	}
 	catch AnyExceptionSilent
-	
+
 	return lRet;
 }
 
@@ -449,7 +468,7 @@ Assembly^ TlbToAsm::OutputAssembly (String^ pFileName, bool pLogAssembly, bool p
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	try
 	{
 		GC::Collect ();
@@ -507,27 +526,50 @@ StrongNameKeyPair^ TlbToAsm::GetStrongName (String^ pKeyFilePath)
 	return lStrongName;
 }
 
+bool TlbToAsm::MarkAssemblyVersion (AssemblyBuilder^ pAssembly)
+{
+	bool	lRet = false;
+
+	mAssemblyVersion = gcnew Version (mAssemblyVersion->Major, Math::Max(mAssemblyVersion->Minor,0), Math::Max((int)mAssemblyVersion->MajorRevision,0), Math::Max((int)mAssemblyVersion->MinorRevision,0));
+
+	try
+	{
+		pAssembly->DefineVersionInfoResource (_DOUBLEAGENT_NAME, mAssemblyVersion->ToString(), _DOUBLEAGENT_COMPANY, _DOUBLEAGENT_COPYRIGHT, nullptr);
+	}
+	catch AnyExceptionDebug
+
+	try
+	{
+		array <Type^>^		lAttrArgTypes = gcnew array <Type^> (1);
+		array <Object^>^	lAttrArgValues = gcnew array <Object^> (1);
+
+		lAttrArgTypes[0] = System::String::typeid;
+		lAttrArgValues[0] = gcnew String (mAssemblyVersion->ToString());
+
+		pAssembly->SetCustomAttribute (gcnew CustomAttributeBuilder (AssemblyVersionAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
+		lRet = true;
+	}
+	catch AnyExceptionSilent
+
+	return lRet;
+}
+
 bool TlbToAsm::MarkPrimaryAssembly (AssemblyBuilder^ pAssembly)
 {
 	bool	lRet = false;
 
 	try
 	{
-		TypeLibVersionAttribute^	lTypeLibVersionAttribute;
-		CustomAttributeBuilder^		lAttributeBuilder;
-		array<Type^>^				lTypes = gcnew array<Type^> (2);
-		array<Object^>^				lVersion = gcnew array<Object^> (2);
+		array<Type^>^	lAttrArgTypes = gcnew array<Type^> (2);
+		array<Object^>^	lAttrArgValues = gcnew array<Object^> (2);
 
-		lTypeLibVersionAttribute = safe_cast <TypeLibVersionAttribute^> (Attribute::GetCustomAttribute (pAssembly, TypeLibVersionAttribute::typeid));
-		if	(lTypeLibVersionAttribute)
-		{
-			lTypes [0] = Int32::typeid;
-			lTypes [1] = Int32::typeid;
-			lVersion [0] = gcnew Int32(lTypeLibVersionAttribute->MajorVersion);
-			lVersion [1] = gcnew Int32(lTypeLibVersionAttribute->MinorVersion);
-			lAttributeBuilder = gcnew CustomAttributeBuilder (PrimaryInteropAssemblyAttribute::typeid->GetConstructor(lTypes), lVersion);
-			pAssembly->SetCustomAttribute (lAttributeBuilder);
-		}
+		lAttrArgTypes [0] = Int32::typeid;
+		lAttrArgTypes [1] = Int32::typeid;
+		lAttrArgValues [0] = gcnew Int32(mAssemblyVersion->Major);
+		lAttrArgValues [1] = gcnew Int32(mAssemblyVersion->Minor);
+
+		pAssembly->SetCustomAttribute (gcnew CustomAttributeBuilder (PrimaryInteropAssemblyAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
+		lRet = true;
 	}
 	catch AnyExceptionDebug
 

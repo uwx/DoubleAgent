@@ -327,7 +327,7 @@ bool CAgentFileBinary::LoadFile (System::String^ pPath)
 	}
 #ifdef	_DEBUG_LOAD
 	mLogLevel = lLogLevel;
-#endif	
+#endif
 	return lRet;
 }
 #else
@@ -391,7 +391,7 @@ HRESULT CAgentFileBinary::LoadFile (LPCTSTR pPath)
 	}
 #ifdef	_DEBUG_LOAD
 	mLogLevel = lLogLevel;
-#endif	
+#endif
 	return lResult;
 }
 #endif

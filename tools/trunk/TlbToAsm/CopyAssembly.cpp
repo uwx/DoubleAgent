@@ -81,7 +81,17 @@ void CopyAssembly::Construct ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-AssemblyBuilder^ CopyAssembly::MakeCopy (Assembly^ pSourceAssembly, String^ pAssemblyName, String^ pModuleName, StrongNameKeyPair^ pStrongName)
+AssemblyBuilder^ CopyAssembly::MakeCopy (Assembly^ pSourceAssembly, String^ pTargetName, String^ pModuleName)
+{
+	return MakeCopy (pSourceAssembly, pTargetName, pModuleName, nullptr, nullptr);
+}
+
+AssemblyBuilder^ CopyAssembly::MakeCopy (Assembly^ pSourceAssembly, String^ pTargetName, String^ pModuleName, Version^ pAssemblyVersion)
+{
+	return MakeCopy (pSourceAssembly, pTargetName, pModuleName, pAssemblyVersion, nullptr);
+}
+
+AssemblyBuilder^ CopyAssembly::MakeCopy (Assembly^ pSourceAssembly, String^ pAssemblyName, String^ pModuleName, Version^ pAssemblyVersion, StrongNameKeyPair^ pStrongName)
 {
 	try
 	{
@@ -124,10 +134,10 @@ AssemblyBuilder^ CopyAssembly::MakeCopy (Assembly^ pSourceAssembly, String^ pAss
 			}
 		}
 		catch AnyExceptionSilent
-#endif		
+#endif
 
 		lAssemblyName->Name = IO::Path::GetFileNameWithoutExtension (pAssemblyName);
-		lAssemblyName->Version = safe_cast <System::Version^> (pSourceAssembly->GetName()->Version->Clone());
+		lAssemblyName->Version = (pAssemblyVersion) ? pAssemblyVersion : safe_cast <System::Version^> (pSourceAssembly->GetName()->Version->Clone());
 		lAssemblyName->ProcessorArchitecture = pSourceAssembly->GetName()->ProcessorArchitecture;
 		lAssemblyName->KeyPair = pStrongName;
 
@@ -479,7 +489,7 @@ Assembly^ CopyAssembly::ResolveType (Object^ pSender, ResolveEventArgs^ pEventAr
 				{
 #ifdef	_DEBUG_RESOLVE_TYPE
 					LogMessage (_DEBUG_RESOLVE_TYPE, _T("%s   Resolved   [%s]"), _B(LogIndent()), _BT(lTargetType));
-#endif																    
+#endif
 					lRet = lTargetType->Assembly;
 				}
 				break;
@@ -2300,7 +2310,7 @@ Type^ CopyAssembly::GetTargetType (Type^ pSourceType, bool pCreate)
 #ifdef	_DEBUG_TARGET_TYPE
 			LogMessage (_DEBUG_TARGET_TYPE, _T("%s==>"), _B(LogIndent()));
 #endif
-			
+
 			lTargetType = CopyType (lSourceType);
 
 #ifdef	_DEBUG_TARGET_TYPE
@@ -2445,7 +2455,7 @@ bool CopyAssembly::GetTargetArgumentTypes (array<Type^>^ pArgumentTypes, bool pC
 			pArgumentTypes [lNdx] = lArgumentType;
 			lRet= true;
 		}
-	} 
+	}
 	return lRet;
 }
 
@@ -2830,13 +2840,13 @@ int CopyAssembly::AssemblyRuntimeVersion ()
 int CopyAssembly::AssemblyRuntimeVersion (Assembly^ pAssembly)
 {
 	int	lRet = 0;
-	
+
 	if	(pAssembly)
 	{
 		try
 		{
 			String^	lRuntimeVersion = pAssembly->ImageRuntimeVersion;
-			
+
 			lRuntimeVersion = lRuntimeVersion->TrimStart ('V');
 			lRuntimeVersion = lRuntimeVersion->TrimStart ('v');
 			lRuntimeVersion = lRuntimeVersion->Substring (0, lRuntimeVersion->IndexOf ('.'));
@@ -2844,7 +2854,7 @@ int CopyAssembly::AssemblyRuntimeVersion (Assembly^ pAssembly)
 		}
 		catch AnyExceptionSilent
 	}
-	
+
 	return lRet;
 }
 

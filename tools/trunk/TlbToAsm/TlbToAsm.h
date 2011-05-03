@@ -13,7 +13,7 @@ namespace TlbToAsm {
 ref class TlbToAsm
 {
 public:
-	TlbToAsm (bool pRestartLog) : mRestartLog (pRestartLog) {}
+	TlbToAsm (bool pRestartLog);
 	~TlbToAsm () {}
 
 	int ProcessCmdLine (array <String^>^ pCmdArgs);
@@ -26,6 +26,7 @@ public:
 	void ShowAssembly (Assembly^ pAssembly);
 
 	StrongNameKeyPair^ GetStrongName (String^ pKeyFilePath);
+	bool MarkAssemblyVersion (AssemblyBuilder^ pAssembly);
 	bool MarkPrimaryAssembly (AssemblyBuilder^ pAssembly);
 
 protected:
@@ -35,6 +36,7 @@ protected:
 public:
 	bool				mRestartLog;
 	StrongNameKeyPair^	mStrongName;
+	System::Version^	mAssemblyVersion;
 	CopyAssembly^		mCopyAssembly;
 };
 

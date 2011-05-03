@@ -233,7 +233,7 @@ void FixupAssembly::FixupWrapperMethod (MethodInfo^ pSourceMethod, MethodBuilder
 bool FixupAssembly::FixupWrapperAttribute (Object^ pSource, Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues)
 {
 	bool	lRet = false;
-	
+
 	if	(CreateClassWrappers())
 	{
 		Type^			lSourceType;
@@ -318,8 +318,7 @@ bool FixupAssembly::FixupWrapperAttribute (Object^ pSource, Object^ pTarget, Cus
 			&&	(
 					(System::Runtime::InteropServices::ImportedFromTypeLibAttribute::typeid->IsAssignableFrom (pAttribute->Constructor->DeclaringType))
 				||	(System::Runtime::InteropServices::GuidAttribute::typeid->IsAssignableFrom (pAttribute->Constructor->DeclaringType))
-// Keep this one so it can be used to generate the PrimaryInteropAssemblyAttribute
-//				||	(System::Runtime::InteropServices::TypeLibVersionAttribute::typeid->IsAssignableFrom (pAttribute->Constructor->DeclaringType))
+				||	(System::Runtime::InteropServices::TypeLibVersionAttribute::typeid->IsAssignableFrom (pAttribute->Constructor->DeclaringType))
 				||	(System::Windows::Forms::AxHost::TypeLibraryTimeStampAttribute::typeid->IsAssignableFrom (pAttribute->Constructor->DeclaringType))
 				)
 			)
@@ -688,7 +687,7 @@ void FixupAssembly::FixParameterName (MethodBase^ pSourceMethod, ParameterInfo^ 
 			pParameterName = lParameterName;
 		}
 	}
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -757,7 +756,7 @@ void FixupAssembly::FixFieldName (FieldInfo^ pSourceField, String^& pFieldName)
 			pFieldName = lFieldName;
 		}
 	}
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -788,51 +787,11 @@ void FixupAssembly::FixEnumFieldName (FieldInfo^ pSourceField, String^& pFieldNa
 		LogMessage (_LOG_FIXES, _T("---> Field      [%s.%s] as [%s]"), _BT(pEnumBuilder), _BM(pSourceField), _B(pFieldName));
 #endif
 	}
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
-/////////////////////////////////////////////////////////////////////////////
-//
-//	Add the AssemblyVersion attribute to the target assembly
-//
-void FixupAssembly::MarkAssemblyVersion (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes)
-{
-#if	TRUE
-	Assembly^			lSourceAssembly = nullptr;
-	AssemblyBuilder^	lTargetAssembly = nullptr;
-
-	try
-	{
-		lSourceAssembly = safe_cast <Assembly^> (pSource);
-		lTargetAssembly = safe_cast <AssemblyBuilder^> (pTarget);
-	}
-	catch AnyExceptionSilent
-
-	if	(
-			(lSourceAssembly)
-		&&	(lTargetAssembly)
-		)
-	{
-		try
-		{
-			System::Version^	lAssemblyVersion = lSourceAssembly->GetName()->Version;
-			array <Type^>^		lAttrArgTypes = gcnew array <Type^> (1);
-			array <Object^>^	lAttrArgValues = gcnew array <Object^> (1);
-
-			lAttrArgTypes[0] = System::String::typeid;
-			lAttrArgValues[0] = lAssemblyVersion->ToString();
-#ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("---> Assembly   [%s] Version [%s]"), _B(lTargetAssembly->FullName), _B(lAssemblyVersion->ToString()));
-#endif
-			pCustomAttributes->Add (gcnew CustomAttributeBuilder (AssemblyVersionAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
-		}
-		catch AnyExceptionSilent		
-	}
-#endif	
-}
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Set the target assembly security attributes
@@ -1127,7 +1086,7 @@ void FixupAssembly::SetPropertyBindable (Object^ pSource, Object^ pTarget, Custo
 			pAttributeValues[0] = lBindable;
 		}
 	}
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1189,7 +1148,7 @@ void FixupAssembly::SetPropertyBindable (Object^ pSource, Object^ pTarget, List<
 //
 void FixupAssembly::HideRestrictedCoClass (Object^ pSource, Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues)
 {
-#if	TRUE 
+#if	TRUE
 	Type^			lSourceType = nullptr;
 	TypeBuilder^	lTargetType = nullptr;
 
@@ -1236,7 +1195,7 @@ void FixupAssembly::HideRestrictedCoClass (Object^ pSource, Object^ pTarget, Cus
 //
 void FixupAssembly::HideRestrictedCoClassInterface (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes)
 {
-#if	TRUE 
+#if	TRUE
 	Type^			lSourceType = nullptr;
 	TypeBuilder^	lTargetType = nullptr;
 
@@ -1286,7 +1245,7 @@ void FixupAssembly::HideRestrictedCoClassInterface (Object^ pSource, Object^ pTa
 //
 void FixupAssembly::HideInternalClass (Object^ pSource, Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues)
 {
-#if	TRUE 
+#if	TRUE
 	if	(!CreateClassWrappers())
 	{
 		Type^			lSourceType = nullptr;
@@ -1324,7 +1283,7 @@ void FixupAssembly::HideInternalClass (Object^ pSource, Object^ pTarget, CustomA
 			{}
 		}
 	}
-#endif	
+#endif
 }
 
 void FixupAssembly::HideInternalClass (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes)

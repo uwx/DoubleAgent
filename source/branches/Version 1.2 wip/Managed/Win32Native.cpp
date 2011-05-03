@@ -53,7 +53,7 @@ static BOOL CALLBACK PopTipsProg (HWND pHWnd, LPARAM pLparam)
 {
 	WCHAR	lClassName [256];
 
-	memset (lClassName, 0, sizeof(lClassName));	
+	memset (lClassName, 0, sizeof(lClassName));
 	::GetClassName (pHWnd, lClassName, sizeof(lClassName)/sizeof(WCHAR));
 	if	(_tcsstr (lClassName, TOOLTIPS_CLASS))
 	{

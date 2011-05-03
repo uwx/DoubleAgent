@@ -74,7 +74,9 @@ public:
 
 // Operations
 public:
-	AssemblyBuilder^ MakeCopy (Assembly^ pSourceAssembly, String^ pTargetName, String^ pModuleName, StrongNameKeyPair^ pStrongName);
+	AssemblyBuilder^ MakeCopy (Assembly^ pSourceAssembly, String^ pTargetName, String^ pModuleName);
+	AssemblyBuilder^ MakeCopy (Assembly^ pSourceAssembly, String^ pTargetName, String^ pModuleName, Version^ pAssemblyVersion);
+	AssemblyBuilder^ MakeCopy (Assembly^ pSourceAssembly, String^ pTargetName, String^ pModuleName, Version^ pAssemblyVersion, StrongNameKeyPair^ pStrongName);
 	AssemblyBuilder^ CreateCopy ();
 
 	void CopyTypes ();
@@ -97,7 +99,7 @@ public:
 
 	void CreateTypes ();
 	Type^ CreateType (Type^ pSourceType, Type^ pTargetType);
-	
+
 	static int AssemblyRuntimeVersion ();
 	static int AssemblyRuntimeVersion (Assembly^ pAssembly);
 

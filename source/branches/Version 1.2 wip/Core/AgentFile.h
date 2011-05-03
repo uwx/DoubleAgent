@@ -156,15 +156,15 @@ public:
 
 #ifdef	_M_CEE
 	/// <summary>
-	/// Gets or sets the file that defines the character's <see cref="FileHeader.Icon"/>. 
+	/// Gets or sets the file that defines the character's <see cref="FileHeader.Icon"/>.
 	/// </summary>
 	virtual property System::String^ IconFilePath {virtual System::String^ get(); virtual void set (System::String^ pValue);}
 	/// <summary>
-	/// Gets or sets the file that defines the character's <see cref="FileHeader.Palette"/>. 
+	/// Gets or sets the file that defines the character's <see cref="FileHeader.Palette"/>.
 	/// </summary>
 	virtual property System::String^ PaletteFilePath {virtual System::String^ get(); virtual void set (System::String^ pValue);}
 	/// <summary>
-	/// Gets or sets default <see cref="FileAnimationFrame.Duration"/> used by the Agent Character Editor. 
+	/// Gets or sets default <see cref="FileAnimationFrame.Duration"/> used by the Agent Character Editor.
 	/// </summary>
 	virtual property UInt16 NewFrameDuration {virtual UInt16 get(); virtual void set (UInt16 pValue);}
 #endif

@@ -140,8 +140,8 @@ protected:
 	bool WriteFrameOverlay (ScriptWriter^ pWriter, CAgentFile^ pSource, CAgentFileFrameOverlay^ pFrameOverlay);
 	bool WriteStates (ScriptWriter^ pWriter, CAgentFile^ pSource);
 
-	void FreeUnusedImages ();	
-	void FreeUnusedSounds ();	
+	void FreeUnusedImages ();
+	void FreeUnusedSounds ();
 	String^ PrepareFileFolder ();
 	String^ PrepareFileFolder (Boolean pEmptyFolder);
 	String^ WriteIconFile (CAgentFileHeader^ pSource);
