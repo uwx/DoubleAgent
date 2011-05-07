@@ -33,11 +33,11 @@ namespace DoubleAgent
 	/// <remarks>Validation is triggered after the mouse wheel is used and after the up/down buttons are used.</remarks>
 	public class NumericUpDownEx : System.Windows.Forms.NumericUpDown
 	{
-		private const	int WM_KEYDOWN = 0x0100;
-		private TextBox	mTextBox = null;
-		private Color	mDefaultBackColor = SystemColors.Window;
-		private Color	mHighlightBackColor = Color.Pink;
-		private Timer	mWheelTimer = null;
+		private const int WM_KEYDOWN = 0x0100;
+		private TextBox mTextBox = null;
+		private Color mDefaultBackColor = SystemColors.Window;
+		private Color mHighlightBackColor = Color.Pink;
+		private Timer mWheelTimer = null;
 
 		/// <summary>
 		/// Constructor
@@ -52,6 +52,8 @@ namespace DoubleAgent
 		/// The <see cref="System.Windows.Forms.TextBox"/> contained by this control.
 		/// </summary>
 		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public System.Windows.Forms.TextBox TextBox
 		{
 			get
@@ -123,9 +125,11 @@ namespace DoubleAgent
 		/// </summary>
 		/// <remarks>If the control is highlighted, it will use the <see cref="HighlightBackColor"/>. Otherwise, it will use the <see cref="DefaultBackColor"/></remarks>
 		/// <seealso cref="HighlightBackColor"/>
-		/// <seealso cref="MinimumValue"/>
-		/// <seealso cref="MaximumValue"/>
+		/// <seealso cref="NumericUpDown.Minimum"/>
+		/// <seealso cref="NumericUpDown.Maximum"/>
 		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public Boolean Highlighted
 		{
 			get
@@ -156,8 +160,8 @@ namespace DoubleAgent
 		/// <summary>
 		/// This is an override of <see cref="NumericUpDown.Value"/>.  Instead of throwing an exception when the value is out of range, it highlights the control.
 		/// </summary>
-		/// <seealso cref="MinimumValue"/>
-		/// <seealso cref="MaximumValue"/>
+		/// <seealso cref="NumericUpDown.Minimum"/>
+		/// <seealso cref="NumericUpDown.Maximum"/>
 		/// <seealso cref="Highlighted"/>
 		public new decimal Value
 		{
@@ -209,7 +213,7 @@ namespace DoubleAgent
 			}
 			if (CausesValidation)
 			{
-				CancelEventArgs	lEventArgs = new CancelEventArgs ();
+				CancelEventArgs lEventArgs = new CancelEventArgs ();
 				OnValidating (lEventArgs);
 				if (!lEventArgs.Cancel)
 				{
@@ -252,13 +256,13 @@ namespace DoubleAgent
 			{
 				try
 				{
-					System.Type					lControlType = e.Control.GetType ();
+					System.Type lControlType = e.Control.GetType ();
 					System.Reflection.EventInfo lControlEvent = lControlType.GetEvent ("UpDown");
 
 					if (lControlEvent != null)
 					{
-						System.Reflection.MethodInfo	lAddHandlerMethod = lControlEvent.GetAddMethod ();
-						System.Object[]					lAddHandlerParms = new System.Object[1];
+						System.Reflection.MethodInfo lAddHandlerMethod = lControlEvent.GetAddMethod ();
+						System.Object[] lAddHandlerParms = new System.Object[1];
 
 						lAddHandlerParms[0] = new UpDownEventHandler (UpDownButtons_UpDown);
 						lAddHandlerMethod.Invoke (e.Control, lAddHandlerParms);
@@ -311,6 +315,7 @@ namespace DoubleAgent
 		/// Causes validation when the mouse wheel has stopped turning.
 		/// </summary>
 		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		void WheelTimer_Tick (object sender, EventArgs e)
 		{
 			ValidateNow ();
@@ -320,7 +325,7 @@ namespace DoubleAgent
 
 		private void UpDownButtons_MouseCaptureChanged (object sender, EventArgs e)
 		{
-			Control	lControl = (Control)sender;
+			Control lControl = (Control)sender;
 #if DEBUG_NOT
 			System.Diagnostics.Debug.Print ("UpDownButtons_MouseCaptureChanged {0:B}", lControl.Capture);
 #endif

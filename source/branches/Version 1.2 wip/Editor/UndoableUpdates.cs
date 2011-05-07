@@ -342,7 +342,15 @@ namespace AgentCharacterEditor
 				return null;
 			}
 
-			private const CharacterStyle mStyleMask = (CharacterStyle.CharStyleBalloon | CharacterStyle.CharStyleSizeToText | CharacterStyle.CharStyleNoAutoHide | CharacterStyle.CharStyleNoAutoPace);
+			private const CharacterStyle mStyleMask = (CharacterStyle.Balloon | CharacterStyle.SizeToText | CharacterStyle.NoAutoHide | CharacterStyle.NoAutoPace);
+
+			public Boolean EnabledChanged
+			{
+				get
+				{
+					return (CharacterFile.Header.Style & CharacterStyle.Balloon) != (CharacterStyle & CharacterStyle.Balloon);
+				}
+			}
 
 			public Boolean StyleChanged
 			{
@@ -412,7 +420,7 @@ namespace AgentCharacterEditor
 		{
 			public UpdateCharacterTts (Sapi4VoiceInfo pVoiceInfo)
 			{
-				CharacterStyle = CharacterFile.Header.Style & CharacterStyle.CharStyleTts;
+				CharacterStyle = CharacterFile.Header.Style & CharacterStyle.Tts;
 				if (pVoiceInfo != null)
 				{
 					VoiceInfo = new Sapi4VoiceInfo ();
@@ -455,10 +463,10 @@ namespace AgentCharacterEditor
 #if DEBUG
 				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
 #endif
-				if ((CharacterFile.Header.Style & CharacterStyle.CharStyleTts) != (CharacterStyle & CharacterStyle.CharStyleTts))
+				if (EnabledChanged)
 				{
-					CharacterStyle lSwap = CharacterFile.Header.Style & CharacterStyle.CharStyleTts;
-					CharacterFile.Header.Style = (CharacterFile.Header.Style & ~CharacterStyle.CharStyleTts) | (CharacterStyle & CharacterStyle.CharStyleTts);
+					CharacterStyle lSwap = CharacterFile.Header.Style & CharacterStyle.Tts;
+					CharacterFile.Header.Style = (CharacterFile.Header.Style & ~CharacterStyle.Tts) | (CharacterStyle & CharacterStyle.Tts);
 					CharacterStyle = lSwap;
 					Target = CharacterFile.Tts;
 					lApplied = this;
@@ -490,6 +498,13 @@ namespace AgentCharacterEditor
 				return null;
 			}
 
+			public Boolean EnabledChanged
+			{
+				get
+				{
+					return (CharacterFile.Header.Style & CharacterStyle.Tts) != (CharacterStyle & CharacterStyle.Tts);
+				}
+			}
 #if DEBUG
 			public override string DebugString
 			{
@@ -676,7 +691,7 @@ namespace AgentCharacterEditor
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		internal class AddDeleteStateAnimation : UndoableAddDelete<String>
+		internal class AddDeleteStateAnimation : UndoableAddDelete<FileState>
 		{
 			public AddDeleteStateAnimation (String pStateName, String pAnimationName, Boolean pIsDelete)
 				: base (new ResolveState (pStateName))
@@ -685,6 +700,13 @@ namespace AgentCharacterEditor
 				IsDelete = pIsDelete;
 			}
 
+			public String StateName
+			{
+				get
+				{
+					return (Target == null) ? (RawTarget as ResolveState).StateName : Target.StateName;
+				}
+			}
 			public String AnimationName
 			{
 				get;
@@ -695,7 +717,7 @@ namespace AgentCharacterEditor
 			{
 				get
 				{
-					return Target.Quoted ();
+					return Target.StateName.Quoted ();
 				}
 			}
 			public override String ChangeDescription
@@ -714,7 +736,7 @@ namespace AgentCharacterEditor
 #endif
 				if (IsDelete)
 				{
-					if (CharacterFile.States.RemoveStateAnimation (Target, AnimationName))
+					if (CharacterFile.States.RemoveStateAnimation (StateName, AnimationName))
 					{
 						IsDelete = false;
 						IsRedo = !IsRedo;
@@ -723,7 +745,7 @@ namespace AgentCharacterEditor
 				}
 				else
 				{
-					if (CharacterFile.States.AddStateAnimation (Target, AnimationName))
+					if (CharacterFile.States.AddStateAnimation (StateName, AnimationName))
 					{
 						IsDelete = true;
 						IsRedo = !IsRedo;
@@ -748,14 +770,21 @@ namespace AgentCharacterEditor
 #endif
 		}
 
-		internal class UpdateAllStateAnimations : UndoableUpdate<String>
+		internal class UpdateAllStateAnimations : UndoableUpdate<FileState>
 		{
 			public UpdateAllStateAnimations (String pStateName, String[] pAnimationNames)
-				: base (new ResolveState(pStateName))
+				: base (new ResolveState (pStateName))
 			{
 				AnimationNames = pAnimationNames;
 			}
 
+			public String StateName
+			{
+				get
+				{
+					return (Target == null) ? (RawTarget as ResolveState).StateName : Target.StateName;
+				}
+			}
 			public String[] AnimationNames
 			{
 				get;
@@ -772,15 +801,15 @@ namespace AgentCharacterEditor
 			public override UndoUnit Apply ()
 			{
 				UpdateAllStateAnimations lApplied = null;
-				String lStateName = Target;
+				FileState lState = Target;
 				String[] lAnimationNames = null;
 
 #if DEBUG
 				System.Diagnostics.Debug.Print ("Apply {0}", DebugString);
 #endif
-				if (CharacterFile.States.ContainsKey (lStateName))
+				if (lState != null)
 				{
-					lAnimationNames = CharacterFile.States[lStateName].Clone () as String[];
+					lAnimationNames = lState.AnimationNames.Clone () as String[];
 				}
 				if (lAnimationNames != null)
 				{
@@ -788,7 +817,7 @@ namespace AgentCharacterEditor
 					{
 						if ((AnimationNames == null) || !Array.Exists (AnimationNames, lAnimationName.Equals))
 						{
-							if (CharacterFile.States.RemoveStateAnimation (lStateName, lAnimationName))
+							if (CharacterFile.States.RemoveStateAnimation (StateName, lAnimationName))
 							{
 								lApplied = this;
 							}
@@ -801,7 +830,7 @@ namespace AgentCharacterEditor
 					{
 						if ((lAnimationNames == null) || !Array.Exists (lAnimationNames, lAnimationName.Equals))
 						{
-							if (CharacterFile.States.AddStateAnimation (lStateName, lAnimationName))
+							if (CharacterFile.States.AddStateAnimation (StateName, lAnimationName))
 							{
 								lApplied = this;
 							}
@@ -823,11 +852,11 @@ namespace AgentCharacterEditor
 				{
 					String[] lAnimationNames = null;
 
-					if (CharacterFile.States.ContainsKey (Target))
+					if (CharacterFile.States.Contains (Target))
 					{
-						lAnimationNames = CharacterFile.States[Target];
+						lAnimationNames = Target.AnimationNames;
 					}
-					return String.Format ("[{0}] from [{1}] to [{2}]", Target, (lAnimationNames == null) ? "<empty>" : String.Join (" ", lAnimationNames), (AnimationNames == null) ? "<empty>" : String.Join (" ", AnimationNames));
+					return String.Format ("[{0}] from [{1}] to [{2}]", StateName, (lAnimationNames == null) ? "<empty>" : String.Join (" ", lAnimationNames), (AnimationNames == null) ? "<empty>" : String.Join (" ", AnimationNames));
 				}
 			}
 #endif
@@ -1777,7 +1806,7 @@ namespace AgentCharacterEditor
 #endif
 				if (!lTarget.Equals (UndoObject))
 				{
-					FileFrameImage lSwap = new FileFrameImage();
+					FileFrameImage lSwap = new FileFrameImage ();
 					lTarget.CopyTo (lSwap);
 					UndoObject.CopyTo (lTarget);
 					UndoObject = lSwap;
@@ -2003,7 +2032,8 @@ namespace AgentCharacterEditor
 			}
 			private FileFrameOverlay UndoObject
 			{
-				get;set;
+				get;
+				set;
 			}
 
 			public override String TargetDescription

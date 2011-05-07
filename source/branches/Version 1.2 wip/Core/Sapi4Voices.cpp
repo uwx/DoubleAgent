@@ -20,7 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "Sapi4Voices.h"
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #include "InitGuid.h"
 #include "Sapi4Err.h"
 #else
@@ -34,7 +34,7 @@
 #endif
 #endif
 
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 #ifdef	_DEBUG
 #define	_DEBUG_VOICES		(GetProfileDebugInt(_T("LogVoices"),LogVerbose,true)&0xFFFF|LogTime)
 #define	_DEBUG_TTS_MATCH	(GetProfileDebugInt(_T("LogVoiceMatch"),LogVerbose,true)&0xFFFF|LogTime)
@@ -46,7 +46,7 @@
 _COM_SMARTPTR_TYPEDEF (ITTSEnum, IID_ITTSEnum);
 
 //////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 namespace DoubleAgent {
 #else
 IMPLEMENT_DLL_OBJECT(CSapi4Voices)
@@ -59,7 +59,7 @@ IMPLEMENT_DLL_OBJECT(CSapi4VoiceInfo)
 
 CSapi4VoiceInfo::CSapi4VoiceInfo ()
 {
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	LangId = MAKELANGID (LANG_NEUTRAL, SUBLANG_NEUTRAL);
 	SpeakerGender = GENDER_NEUTRAL;
 	SpeakerAge = TTSAGE_ADULT;
@@ -80,7 +80,7 @@ CSapi4VoiceInfo::~CSapi4VoiceInfo ()
 
 //////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 System::String^ CSapi4VoiceInfo::ToString()
 {
 	return String::Format ("\"{0}\" [{1}] [{2:X4} {2:D4}] [{3:D}]", VoiceName, ModeId.ToString()->ToUpper(), LangId, SpeakerGender);
@@ -102,7 +102,7 @@ CSapi4Voices::CSapi4Voices ()
 
 CSapi4Voices::~CSapi4Voices ()
 {
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	Clear ();
 #else
 	try
@@ -118,7 +118,7 @@ CSapi4Voices::~CSapi4Voices ()
 #endif
 }
 
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 CSapi4Voices * CSapi4Voices::CreateInstance ()
 {
 	return new CSapi4Voices;
@@ -166,13 +166,13 @@ void CSapi4Voices::Enumerate ()
 {
 	ITTSEnumPtr			lEnum;
 	tS <TTSMODEINFO>	lModeInfo;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	CSapi4VoiceInfo^	lVoiceInfo;
 #else
 	CSapi4VoiceInfo*	lVoiceInfo;
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	Clear ();
 #else
 	DeleteAll ();
@@ -183,7 +183,7 @@ void CSapi4Voices::Enumerate ()
 		&&	(lEnum != NULL)
 		)
 	{
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		Guid	lKnownEngine1 ("{E0725551-286F-11D0-8E73-00A0C9083363}");
 #else
 		GUID	lKnownEngine1 = CGuidStr::Parse (_T("{E0725551-286F-11D0-8E73-00A0C9083363}"));
@@ -196,7 +196,7 @@ void CSapi4Voices::Enumerate ()
 				LogModeInfo (mLogLevelDebug, &lModeInfo);
 			}
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 			if	(lVoiceInfo = gcnew CSapi4VoiceInfo)
 			{
 				lVoiceInfo->EngineId = Guid (lModeInfo.gEngineID.Data1, lModeInfo.gEngineID.Data2, lModeInfo.gEngineID.Data3, lModeInfo.gEngineID.Data4[0], lModeInfo.gEngineID.Data4[1], lModeInfo.gEngineID.Data4[2], lModeInfo.gEngineID.Data4[3], lModeInfo.gEngineID.Data4[4], lModeInfo.gEngineID.Data4[5], lModeInfo.gEngineID.Data4[6], lModeInfo.gEngineID.Data4[7]);
@@ -243,7 +243,7 @@ void CSapi4Voices::Enumerate ()
 //////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 //////////////////////////////////////////////////////////////////////
 
 INT_PTR CSapi4Voices::FindModeId (const GUID& pModeId)
@@ -533,7 +533,7 @@ bool CSapi4Voices::VoiceSupportsLanguage (CSapi4VoiceInfo* pVoiceInfo, LANGID pL
 }
 
 //////////////////////////////////////////////////////////////////////
-#else	// _M_CEE
+#else	// __cplusplus_cli
 //////////////////////////////////////////////////////////////////////
 
 System::Guid CSapi4Voices::GetKeyForItem (CSapi4VoiceInfo^ pItem)
@@ -542,12 +542,12 @@ System::Guid CSapi4Voices::GetKeyForItem (CSapi4VoiceInfo^ pItem)
 }
 
 //////////////////////////////////////////////////////////////////////
-#endif	// _M_CEE
+#endif	// __cplusplus_cli
 //////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 void CSapi4Voices::Log (UINT pLogLevel)
 {
 	Log (pLogLevel, nullptr);
@@ -567,7 +567,7 @@ void CSapi4Voices::Log (UINT pLogLevel, LPCTSTR pTitle, LPCTSTR pIndent)
 	{
 		try
 		{
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #else
 			CAtlString	lTitle (pTitle);
 			CAtlString	lIndent (pIndent);
@@ -593,7 +593,7 @@ void CSapi4Voices::Log (UINT pLogLevel, LPCTSTR pTitle, LPCTSTR pIndent)
 
 //////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 void CSapi4Voices::LogVoiceInfo (UINT pLogLevel, CSapi4VoiceInfo^ pVoiceInfo)
 {
 	LogVoiceInfo (pLogLevel, pVoiceInfo, nullptr);
@@ -613,7 +613,7 @@ void CSapi4Voices::LogVoiceInfo (UINT pLogLevel, CSapi4VoiceInfo& pVoiceInfo, LP
 	{
 		try
 		{
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #else
 			CAtlString	lTitle (pTitle);
 			CAtlString	lIndent (pIndent);
@@ -641,7 +641,7 @@ void CSapi4Voices::LogVoiceInfo (UINT pLogLevel, CSapi4VoiceInfo& pVoiceInfo, LP
 
 //////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 void CSapi4Voices::LogModeInfo (UINT pLogLevel, LPVOID pModeInfo)
 {
 	LogModeInfo (pLogLevel, pModeInfo, nullptr);
@@ -656,7 +656,7 @@ void CSapi4Voices::LogModeInfo (UINT pLogLevel, LPVOID pModeInfo, LPCTSTR pTitle
 	{
 		try
 		{
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #else
 			PTTSMODEINFO	lModeInfo = (PTTSMODEINFO) pModeInfo;
 			CAtlString		lTitle (pTitle);
@@ -788,7 +788,7 @@ void CSapi4Voices::LogModeInfo (UINT pLogLevel, LPVOID pModeInfo, LPCTSTR pTitle
 }
 
 //////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 } // namespace DoubleAgent
 #endif
 /////////////////////////////////////////////////////////////////////////////

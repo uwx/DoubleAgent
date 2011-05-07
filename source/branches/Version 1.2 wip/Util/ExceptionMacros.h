@@ -93,7 +93,7 @@ catch
 #endif
 
 #define	__CatchCliException(lvl) \
-(Exception^ pException) \
+(System::Exception^ pException) \
 { \
 	__LogCliException (lvl) \
 } \

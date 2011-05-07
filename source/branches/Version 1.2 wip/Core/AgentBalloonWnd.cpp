@@ -24,6 +24,7 @@
 #include "AgentBalloonWnd.h"
 #include "AgentBalloonShape.h"
 #include "AgentCharacterWnd.h"
+#include "AgentTextParse.h"
 #include "ImageAlpha.h"
 #include "Sapi5Voice.h"
 #include "StringArrayEx.h"
@@ -63,8 +64,6 @@ const UINT		CAgentBalloonWnd::mVoiceStartMsg = RegisterWindowMessage (_T("7781F0
 const UINT		CAgentBalloonWnd::mVoiceEndMsg = RegisterWindowMessage (_T("0BEA4D03-95C6-4c2f-A5BF-EFFE63D24D8F"));
 const UINT		CAgentBalloonWnd::mVoiceWordMsg = RegisterWindowMessage (_T("82C73827-F1B8-4223-824B-BC0953892D56"));
 
-static const int	sSpeechPacingLookAhead = 2;
-
 /////////////////////////////////////////////////////////////////////////////
 
 IMPLEMENT_DLL_OBJECT(CAgentBalloonWnd)
@@ -72,7 +71,7 @@ IMPLEMENT_DLL_OBJECT(CAgentBalloonWnd)
 CAgentBalloonWnd::CAgentBalloonWnd ()
 :	mCharID (0),
 	mAutoPaceDisabled (false),
-	mAutoPaceTime (300),
+	mAutoPaceTime (CAgentTextDraw::mDefaultAutoPaceTime),
 	mAutoPaceTimer (0),
 	mAutoHideTimer (0),
 	mAutoHideTime (0),
@@ -1041,7 +1040,7 @@ bool CAgentBalloonWnd::Pause (bool pPause)
 bool CAgentBalloonWnd::CalcLayoutRects (CRect& pTextRect, CRect& pOwnerRect, CRect& pBounds)
 {
 	bool						lRet = false;
-	CAgentCharacterWnd*		lOwner;
+	CAgentCharacterWnd*			lOwner;
 	HMONITOR					lMonitor;
 	tSS <MONITORINFO, DWORD>	lMonitorInfo;
 
@@ -1242,7 +1241,7 @@ bool CAgentBalloonWnd::StartAutoPace ()
 	if	(
 			(IsWindow ())
 		&&	(IsAutoPace ())
-		&&	(mText.GetWordCount() > 0)
+		&&	(mText.CanPace())
 		)
 	{
 #ifdef	_TRACE_RESOURCES_EX
@@ -1316,7 +1315,7 @@ bool CAgentBalloonWnd::StopAutoPace ()
 
 bool CAgentBalloonWnd::StartAutoHide ()
 {
-	bool					lRet = false;
+	bool				lRet = false;
 	CAgentCharacterWnd*	lOwner;
 
 	if	(IsWindow ())
@@ -2190,7 +2189,7 @@ void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect& pDrawRect)
 	CRect	lClipRect;
 	CRect	lTextBounds;
 	int		lTextLength = mText.GetFullText().GetLength();
-	INT_PTR	lPaceLookAhead = min (mText.GetWordCount() - mText.GetWordDisplayed() - 1, sSpeechPacingLookAhead);
+	INT_PTR	lPaceLookAhead = mText.GetLookAhead();
 #ifdef	DebugTimeStart
 	DebugTimeStart
 #endif
@@ -2218,8 +2217,8 @@ void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect& pDrawRect)
 //
 //		When using BalloonStyle_AutoPace with speech
 //		  Measure for the next word so scrolling gets started early
-//		When NOT using BalloonStyle_AutoPace with speech
-//		  Measure for the current word so scrolling matches the speech
+//		When using BalloonStyle_AutoPace WITHOUT speech
+//		  Measure for the current word so scrolling matches the pacing
 
 		if	(
 				(IsAutoPace ())

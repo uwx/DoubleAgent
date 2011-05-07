@@ -20,8 +20,9 @@
     along with this file.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef	_USEGDIPLUS_H
-#define	_USEGDIPLUS_H
+#pragma once
+/////////////////////////////////////////////////////////////////////////////
+#pragma managed(push,off)
 ////////////////////////////////////////////////////////////////////////
 #include <gdiplus.h>
 #pragma comment(lib, "gdiplus.lib")
@@ -61,7 +62,8 @@ public:
 				lInput.GdiplusVersion = 1;
 				Status = Gdiplus::GdiplusStartup (&mToken, &lInput, &lOutput);
 			}
-			catch AnyExceptionSilent
+			catch (...)
+			{}
 
 #ifdef	_DEBUG_GDIPLUS_TOKEN
 			if	(LogIsActive (_DEBUG_GDIPLUS_TOKEN))
@@ -90,7 +92,8 @@ public:
 			{
 				Gdiplus::GdiplusShutdown (lToken);
 			}
-			catch AnyExceptionSilent
+			catch (...)
+			{}
 
 #ifdef	_DEBUG_GDIPLUS_TOKEN
 			if	(LogIsActive (_DEBUG_GDIPLUS_TOKEN))
@@ -107,5 +110,6 @@ private:
 	ULONG_PTR	mToken;
 };
 
+/////////////////////////////////////////////////////////////////////////////
+#pragma managed(pop)
 ////////////////////////////////////////////////////////////////////////
-#endif // _USEGDIPLUS_H

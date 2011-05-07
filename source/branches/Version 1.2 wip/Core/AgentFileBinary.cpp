@@ -21,8 +21,7 @@
 #include "StdAfx.h"
 #include "AgentFileBinary.h"
 #include "AgentFileAcs.h"
-#ifdef	_M_CEE
-#include "HandleTemplates.h"
+#ifdef	__cplusplus_cli
 #include "AgtErr.h"
 #else
 #include <shlwapi.h>
@@ -40,14 +39,14 @@
 #endif
 #include "AgentFileDefs.inl"
 
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 IMPLEMENT_DLL_OBJECT(CAgentFileBinary)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 namespace DoubleAgent {
 namespace Character {
 #endif
@@ -61,13 +60,13 @@ CAgentFileBinary::~CAgentFileBinary ()
 {
 }
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 CAgentFileBinary^ CAgentFileBinary::CreateInstance (const System::String^ pPath)
 #else
 CAgentFileBinary* CAgentFileBinary::CreateInstance (LPCTSTR pPath)
 #endif
 {
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	return gcnew CAgentFileAcs;
 #else
 	if	(
@@ -88,7 +87,7 @@ CAgentFileBinary* CAgentFileBinary::CreateInstance (LPCTSTR pPath)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 bool CAgentFileBinary::IsOpen::get ()
 {
 	if	(
@@ -110,7 +109,7 @@ bool CAgentFileBinary::get_IsOpen () const
 }
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 bool CAgentFileBinary::IsReadOnly::get ()
 {
 	if	(
@@ -132,7 +131,7 @@ bool CAgentFileBinary::get_IsReadOnly () const
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 
 INT_PTR CAgentFileBinary::FindGesture (LPCTSTR pGestureName)
@@ -186,7 +185,7 @@ const CAgentFileAnimation* CAgentFileBinary::GetAnimation (INT_PTR pAnimationNdx
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#endif	// _M_CEE
+#endif	// __cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -199,7 +198,7 @@ void CAgentFileBinary::Close ()
 
 void CAgentFileBinary::CloseFile ()
 {
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	mFileSize = 0;
 
 	if	(mFileReader)
@@ -256,7 +255,7 @@ void CAgentFileBinary::CloseFile ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 bool CAgentFileBinary::LoadFile (System::String^ pPath)
 {
 	bool	lRet = false;
@@ -398,7 +397,7 @@ HRESULT CAgentFileBinary::LoadFile (LPCTSTR pPath)
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 bool CAgentFileBinary::ReadHeader ()
 #else
 HRESULT CAgentFileBinary::ReadHeader ()
@@ -406,7 +405,7 @@ HRESULT CAgentFileBinary::ReadHeader ()
 {
 	mSignature = 0;
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	if	(
 			(mFileStream)
 		&&	(mFileReader)
@@ -501,33 +500,33 @@ LPCVOID CAgentFileBinary::ReadBufferTts (LPCVOID pBuffer, bool pNullTerminated)
 
 	try
 	{
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		String^		lUnknownStr;
 #else
 		CAtlString	lUnknownStr;
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		mTts = gcnew CAgentFileTts;
 		mTts->mEngine = System::Guid (*(LPCDWORD)lByte, *(LPCWORD)(lByte+4), *(LPCWORD)(lByte+6), lByte[8], lByte[9], lByte[10], lByte[11], lByte[12], lByte[13], lByte[14], lByte[15]);
 #else
 		mTts.mEngine = *(LPCGUID)lByte;
 #endif
 		lByte += sizeof (GUID);
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		mTts->mMode = System::Guid (*(LPCDWORD)lByte, *(LPCWORD)(lByte+4), *(LPCWORD)(lByte+6), lByte[8], lByte[9], lByte[10], lByte[11], lByte[12], lByte[13], lByte[14], lByte[15]);
 #else
 		mTts.mMode = *(LPCGUID)lByte;
 #endif
 		lByte += sizeof (GUID);
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		//mTts->mSpeed = *(long*)lByte;
 #else
 		mTts.mSpeed = *(long*)lByte;
 #endif
 		lByte += sizeof (long);
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		//mTts->mPitch = *(short*)lByte;
 #else
 		mTts.mPitch = *(short*)lByte;
@@ -537,26 +536,26 @@ LPCVOID CAgentFileBinary::ReadBufferTts (LPCVOID pBuffer, bool pNullTerminated)
 		if	(*lByte)
 		{
 			lByte += sizeof (BYTE);	// TRUE
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 			mTts->mLanguage = *(LPCWORD)lByte;
 #else
 			mTts.mLanguage = *(LPCWORD)lByte;
 #endif
 			lByte += sizeof (WORD);
 			lByte = (LPCBYTE)ReadBufferString (lByte, pNullTerminated, lUnknownStr);
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 			mTts->mGender = *(LPCWORD)lByte;
 #else
 			mTts.mGender = *(LPCWORD)lByte;
 #endif
 			lByte += sizeof (WORD);
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 			//mTts->mAge = *(LPCWORD)lByte;
 #else
 			mTts.mAge = *(LPCWORD)lByte;
 #endif
 			lByte += sizeof (WORD);
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 			lByte = (LPCBYTE)ReadBufferString (lByte, pNullTerminated, lUnknownStr); // Style
 #else
 			lByte = (LPCBYTE)ReadBufferString (lByte, pNullTerminated, mTts.mStyle);
@@ -567,7 +566,7 @@ LPCVOID CAgentFileBinary::ReadBufferTts (LPCVOID pBuffer, bool pNullTerminated)
 			lByte += sizeof (BYTE);	// FALSE
 		}
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		if	(mTts->mMode.Equals (Guid::Empty))
 		{
 			mTts->mModeId = nullptr;
@@ -597,7 +596,7 @@ LPCVOID CAgentFileBinary::ReadBufferTts (LPCVOID pBuffer, bool pNullTerminated)
 	return lByte;
 }
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 LPVOID CAgentFileBinary::WriteBufferTts (LPVOID pBuffer, CAgentFileTts^ pTts, bool pNullTerminated)
 {
 	LPBYTE	lByte = (LPBYTE)pBuffer;
@@ -698,7 +697,7 @@ LPCVOID CAgentFileBinary::ReadBufferBalloon (LPCVOID pBuffer, bool pNullTerminat
 
 	try
 	{
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		String^		lFontName = nullptr;
 		long		lFontHeight = 0;
 		int			lFontStyle = (int)System::Drawing::FontStyle::Regular;
@@ -706,34 +705,34 @@ LPCVOID CAgentFileBinary::ReadBufferBalloon (LPCVOID pBuffer, bool pNullTerminat
 		CAtlString	lFontName;
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		mBalloon = gcnew CAgentFileBalloon;
 		mBalloon->mLines = *lByte;
 #else
 		mBalloon.mLines = *lByte;
 #endif
 		lByte++;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		mBalloon->mPerLine = *lByte;
 #else
 		mBalloon.mPerLine = *lByte;
 #endif
 		lByte++;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 //		mBalloon->mFgColor = System::Drawing::ColorTranslator::FromWin32 (*(LPCOLORREF)lByte);
 		mBalloon->mFgColor = System::Drawing::Color::FromArgb (255, (int)lByte[2], (int)lByte[1], (int)lByte[0]); // BGRA
 #else
 		mBalloon.mFgColor = *(LPCDWORD)lByte;
 #endif
 		lByte += sizeof(DWORD);
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 //		mBalloon->mBkColor = System::Drawing::ColorTranslator::FromWin32 (*(LPCOLORREF)lByte);
 		mBalloon->mBkColor = System::Drawing::Color::FromArgb (255, (int)lByte[2], (int)lByte[1], (int)lByte[0]); // BGRA
 #else
 		mBalloon.mBkColor = *(LPCDWORD)lByte;
 #endif
 		lByte += sizeof(DWORD);
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 //		mBalloon->mBrColor = System::Drawing::ColorTranslator::FromWin32 (*(LPCOLORREF)lByte);
 		mBalloon->mBrColor = System::Drawing::Color::FromArgb (255, (int)lByte[2], (int)lByte[1], (int)lByte[0]); // BGRA
 #else
@@ -742,16 +741,16 @@ LPCVOID CAgentFileBinary::ReadBufferBalloon (LPCVOID pBuffer, bool pNullTerminat
 		lByte += sizeof(DWORD);
 
 		lByte = (LPCBYTE)ReadBufferString (lByte, pNullTerminated, lFontName);
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 		_tcsncpy (mBalloon.mFont.lfFaceName, lFontName, (sizeof(mBalloon.mFont.lfFaceName)/sizeof(WCHAR))-1);
 #endif
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		lFontHeight = labs (*(long*) lByte);
 #else
 		mBalloon.mFont.lfHeight = *(long*) lByte;
 #endif
 		lByte += sizeof (long);
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		if	((*(LPCWORD)lByte) >= FW_BOLD)
 		{
 			lFontStyle |= (int)System::Drawing::FontStyle::Bold;
@@ -760,7 +759,7 @@ LPCVOID CAgentFileBinary::ReadBufferBalloon (LPCVOID pBuffer, bool pNullTerminat
 		mBalloon.mFont.lfWeight = ((*(LPCWORD)lByte) >= FW_BOLD) ? FW_BOLD : FW_NORMAL;
 #endif
 		lByte += sizeof (WORD);
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		if	(*lByte)
 		{
 			lFontStyle |= (int)System::Drawing::FontStyle::Strikeout;
@@ -769,7 +768,7 @@ LPCVOID CAgentFileBinary::ReadBufferBalloon (LPCVOID pBuffer, bool pNullTerminat
 		mBalloon.mFont.lfStrikeOut = *lByte; // Unsure, and where is underline?
 #endif
 		lByte += sizeof (WORD);
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		if	(*lByte)
 		{
 			lFontStyle |= (int)System::Drawing::FontStyle::Italic;
@@ -779,7 +778,7 @@ LPCVOID CAgentFileBinary::ReadBufferBalloon (LPCVOID pBuffer, bool pNullTerminat
 #endif
 		lByte += sizeof (WORD);
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		try
 		{
 			mBalloon->mFont = gcnew System::Drawing::Font (lFontName, (float)lFontHeight, (FontStyle)lFontStyle, GraphicsUnit::Pixel);
@@ -799,7 +798,7 @@ LPCVOID CAgentFileBinary::ReadBufferBalloon (LPCVOID pBuffer, bool pNullTerminat
 	return lByte;
 }
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 LPVOID CAgentFileBinary::WriteBufferBalloon (LPVOID pBuffer, CAgentFileBalloon^ pBalloon, bool pNullTerminated)
 {
 	LPBYTE				lByte = (LPBYTE)pBuffer;
@@ -903,7 +902,7 @@ LPCVOID CAgentFileBinary::ReadBufferPalette (LPCVOID pBuffer)
 	lByte += sizeof(DWORD);
 	if	(lPaletteSize > 0)
 	{
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		System::Drawing::Bitmap^		lBitmap;
 		array <System::Drawing::Color>^	lColors;
 		int								lNdx;
@@ -937,7 +936,7 @@ LPCVOID CAgentFileBinary::ReadBufferPalette (LPCVOID pBuffer)
 	}
 	else
 	{
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		mHeader->mPalette = nullptr;
 #else
 		mHeader.mPalette = NULL;
@@ -970,7 +969,7 @@ LPCVOID CAgentFileBinary::ReadBufferPalette (LPCVOID pBuffer)
 	return lByte;
 }
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 LPVOID CAgentFileBinary::WriteBufferPalette (LPVOID pBuffer, CAgentFileHeader^ pHeader)
 {
 	LPBYTE	lByte = (LPBYTE)pBuffer;
@@ -1029,7 +1028,7 @@ LPCVOID CAgentFileBinary::ReadBufferIcon (LPCVOID pBuffer)
 {
 	LPCBYTE	lByte = (LPCBYTE)pBuffer;
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	if	(mHeader->mIcon)
 	{
 		DestroyIcon ((HICON)(INT_PTR)mHeader->mIcon->Handle);
@@ -1087,7 +1086,7 @@ LPCVOID CAgentFileBinary::ReadBufferIcon (LPCVOID pBuffer)
 			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentFile::CreateIcon [%p]"), this, mHeader.mIcon);
 		}
 #endif
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		HICON	lIcon = NULL;
 #endif
 
@@ -1097,7 +1096,7 @@ LPCVOID CAgentFileBinary::ReadBufferIcon (LPCVOID pBuffer)
 			lIconInfo.hbmColor = ::CreateDIBitmap (lDC, &lColorBitmapInfo->bmiHeader, CBM_INIT, lColorBits, lColorBitmapInfo, DIB_RGB_COLORS);
 
 			lIconInfo.fIcon = TRUE;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 			lIcon = ::CreateIconIndirect (&lIconInfo);
 #else
 			mHeader.mIcon = CreateIconIndirect (&lIconInfo);
@@ -1113,7 +1112,7 @@ LPCVOID CAgentFileBinary::ReadBufferIcon (LPCVOID pBuffer)
 			::DeleteObject (lIconInfo.hbmColor);
 		}
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		if	(lIcon)
 		{
 			try
@@ -1170,7 +1169,7 @@ if	(mHeader->mIcon)
 	return lByte;
 }
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 LPVOID CAgentFileBinary::WriteBufferIcon (LPVOID pBuffer, CAgentFileHeader^ pHeader)
 {
 	LPBYTE	lByte = (LPBYTE)pBuffer;
@@ -1351,7 +1350,7 @@ LPCVOID CAgentFileBinary::ReadBufferNames (LPCVOID pBuffer, DWORD pBufferSize, b
 	try
 	{
 		WORD					lNameCount;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 		CAgentFileName^			lName;
 #else
 		tPtr <CAgentFileName>	lName;
@@ -1368,7 +1367,7 @@ LPCVOID CAgentFileBinary::ReadBufferNames (LPCVOID pBuffer, DWORD pBufferSize, b
 					)
 				)
 		{
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 			if	(!mNames)
 			{
 				mNames = gcnew CAgentFileNames (this);
@@ -1387,7 +1386,7 @@ LPCVOID CAgentFileBinary::ReadBufferNames (LPCVOID pBuffer, DWORD pBufferSize, b
 
 			if	(pFirstLetterCaps)
 			{
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 				if	(!lName->mName->IsNullOrEmpty (lName->mName))
 				{
 					lName->mName = String::Concat (lName->mName->Substring (0,1)->ToUpper() + lName->mName->Substring (1));
@@ -1412,7 +1411,7 @@ LPCVOID CAgentFileBinary::ReadBufferNames (LPCVOID pBuffer, DWORD pBufferSize, b
 			}
 
 			lNameCount--;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 			mNames->Add (lName);
 #else
 			mNames.Add (lName.Detach ());
@@ -1429,7 +1428,7 @@ LPCVOID CAgentFileBinary::ReadBufferNames (LPCVOID pBuffer, DWORD pBufferSize, b
 	return lByte;
 }
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 LPVOID CAgentFileBinary::WriteBufferNames (LPVOID pBuffer, CAgentFileNames^ pNames, bool pNullTerminated)
 {
 	LPBYTE	lByte = (LPBYTE)pBuffer;
@@ -1477,13 +1476,13 @@ LPVOID CAgentFileBinary::WriteBufferNames (LPVOID pBuffer, CAgentFileNames^ pNam
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 CAgentFileName^ CAgentFileBinary::FindName (WORD pLangID)
 #else
 CAgentFileName* CAgentFileBinary::FindName (WORD pLangID)
 #endif
 {
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	if	(
 			(
 				(!mNames)
@@ -1529,7 +1528,7 @@ LPCVOID CAgentFileBinary::ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize, 
 					)
 				)
 		{
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 			String^			lState;
 			List <String^>^	lGestures;
 			String^			lGesture;
@@ -1540,7 +1539,7 @@ LPCVOID CAgentFileBinary::ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize, 
 #endif
 
 			lByte = (LPCBYTE)ReadBufferString (lByte, pNullTerminated, lState);
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 			lGestures = gcnew List<String^>;
 #else
 			lStateNdx = FindSortedString (mStates.mNames, lState);
@@ -1551,7 +1550,7 @@ LPCVOID CAgentFileBinary::ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize, 
 			}
 #endif
 
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 			CAtlStringArray&	lGestures  = mStates.mGestures [lStateNdx];
 #endif
 			WORD				lGestureCount;
@@ -1573,7 +1572,7 @@ LPCVOID CAgentFileBinary::ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize, 
 					)
 			{
 				lByte = (LPCBYTE)ReadBufferString (lByte, pNullTerminated, lGesture);
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 				lGestures->Add (lGesture);
 #else
 				lGestures.Add (lGesture);
@@ -1586,7 +1585,7 @@ LPCVOID CAgentFileBinary::ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize, 
 			}
 			lStateCount--;
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 			mStates->Add (lState, lGestures->ToArray());
 #endif
 		}
@@ -1601,7 +1600,7 @@ LPCVOID CAgentFileBinary::ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize, 
 	return lByte;
 }
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 LPVOID CAgentFileBinary::WriteBufferStates (LPVOID pBuffer, CAgentFileStates^ pStates, bool pNullTerminated)
 {
 	LPBYTE	lByte = (LPBYTE)pBuffer;
@@ -1614,24 +1613,24 @@ LPVOID CAgentFileBinary::WriteBufferStates (LPVOID pBuffer, CAgentFileStates^ pS
 		}
 		lByte += sizeof (WORD);
 
-		for each (KeyValuePair <System::String^, array <System::String^>^> lState in pStates)
+		for each (CAgentFileState^ lState in pStates)
 		{
 			if	(pBuffer)
 			{
-				lByte = (LPBYTE)WriteBufferString (lByte, pNullTerminated, lState.Key);
+				lByte = (LPBYTE)WriteBufferString (lByte, pNullTerminated, lState->StateName);
 			}
 			else
 			{
-				lByte += (DWORD)WriteBufferString (NULL, pNullTerminated, lState.Key);
+				lByte += (DWORD)WriteBufferString (NULL, pNullTerminated, lState->StateName);
 			}
 
 			if	(pBuffer)
 			{
-				*(LPWORD)lByte = lState.Value->Length;
+				*(LPWORD)lByte = lState->AnimationNames->Length;
 			}
 			lByte += sizeof (WORD);
 
-			for each (String^ lGesture in lState.Value)
+			for each (String^ lGesture in lState->AnimationNames)
 			{
 				if	(pBuffer)
 				{
@@ -1655,7 +1654,7 @@ LPVOID CAgentFileBinary::WriteBufferStates (LPVOID pBuffer, CAgentFileStates^ pS
 }
 #endif
 
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 INT_PTR CAgentFileBinary::FindState (LPCTSTR pStateName)
 {
 	if	(
@@ -1673,7 +1672,7 @@ INT_PTR CAgentFileBinary::FindState (LPCTSTR pStateName)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 LPCVOID CAgentFileBinary::ReadBufferString (LPCVOID pBuffer, bool pNullTerminated, System::String^% pString)
 {
 	LPCBYTE	lByte = (LPCBYTE)pBuffer;
@@ -2003,7 +2002,7 @@ ULONG CAgentFileBinary::DecodeData (LPCVOID pSrcData, ULONG pSrcSize, LPVOID pTr
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 
 void CAgentFileBinary::DumpBlocks (UINT pLogLevel, UINT pMaxBlockSize)
@@ -2297,9 +2296,9 @@ void CAgentFileBinary::SaveImage (CAgentFileImage* pImage)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#endif	// _M_CEE
+#endif	// __cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 } // namespace Character
 } // namespace DoubleAgent
 #endif

@@ -22,7 +22,7 @@
 #include "AgentFile.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 namespace DoubleAgent {
 namespace Character {
 #else
@@ -30,7 +30,7 @@ namespace Character {
 #pragma warning (disable:4251)
 #endif
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CAgentFileBinary BinaryFile
 /// <summary>
 ///	The abstract base class for a binary-formatted Agent Character definition.
@@ -46,7 +46,7 @@ protected:
 	CAgentFileBinary ();
 public:
 	_DACORE_IMPEXP virtual ~CAgentFileBinary ();
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	static CAgentFileBinary^ CreateInstance (const System::String^ pPath);
 #else
 	DECLARE_DLL_OBJECT_EX(CAgentFileBinary, _DACORE_IMPEXP)
@@ -55,7 +55,7 @@ public:
 
 // Overrides
 public:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	virtual property bool IsOpen {virtual bool get() override;}
 	virtual property bool IsReadOnly {virtual bool get() override;}
 #else
@@ -63,7 +63,7 @@ public:
 	_DACORE_IMPEXP virtual bool get_IsReadOnly () const;
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	virtual CAgentFileName^ FindName (WORD pLangID) override;
 #else
 	_DACORE_IMPEXP virtual CAgentFileName* FindName (WORD pLangID = LANG_USER_DEFAULT);
@@ -75,7 +75,7 @@ public:
 	_DACORE_IMPEXP virtual const CAgentFileAnimation* GetAnimation (INT_PTR pAnimationNdx);
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	virtual void Close () override;
 #else
 	_DACORE_IMPEXP virtual void Close ();
@@ -83,7 +83,7 @@ public:
 
 // Implementation
 protected:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	virtual void CloseFile ();
 	virtual bool LoadFile (System::String^);
 	virtual bool ReadHeader ();
@@ -100,7 +100,7 @@ protected:
 	LPCVOID ReadBufferPalette (LPCVOID pBuffer);
 	LPCVOID ReadBufferIcon (LPCVOID pBuffer);
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	LPVOID WriteBufferNames (LPVOID pBuffer, CAgentFileNames^ pNames, bool pNullTerminated);
 	LPVOID WriteBufferStates (LPVOID pBuffer, CAgentFileStates^ pStates, bool pNullTerminated);
 	LPVOID WriteBufferTts (LPVOID pBuffer, CAgentFileTts^ pTts, bool pNullTerminated);
@@ -109,7 +109,7 @@ protected:
 	LPVOID WriteBufferIcon (LPVOID pBuffer, CAgentFileHeader^ pHeader);
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	static LPCVOID ReadBufferString (LPCVOID pBuffer, bool pNullTerminated, System::String^% pString);
 	static LPVOID WriteBufferString (LPVOID pBuffer, bool pNullTerminated, System::String^ pString);
 #else
@@ -121,14 +121,14 @@ protected:
 	ULONG DecodeData (LPCVOID pSrcData, ULONG pSrcSize, LPVOID pTrgData, ULONG pTrgSize);
 
 protected:
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 	void DumpBlocks (UINT pLogLevel, UINT pMaxBlockSize=512);
 	void DumpPalette (LPVOID pPalette);
 	void SaveImage (CAgentFileImage* pImage);
 #endif
 
 protected:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	System::IO::FileStream^						mFileStream;
 	System::IO::BinaryReader^					mFileReader;
 	System::IO::BinaryWriter^					mFileWriter;
@@ -142,7 +142,7 @@ protected:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 } // namespace Character
 } // namespace DoubleAgent
 #else

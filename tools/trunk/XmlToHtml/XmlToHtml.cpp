@@ -3,6 +3,8 @@
 #include "XmlFormatWriter.h"
 #include "DaVersion.h"
 
+using namespace System;
+using namespace System::Text;
 using namespace System::Collections;
 using namespace System::Collections::Specialized;
 using namespace System::Xml;

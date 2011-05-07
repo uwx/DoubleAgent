@@ -25,6 +25,7 @@
 #include "AgentBalloonWnd.h"
 #include "AgentListeningWnd.h"
 #include "AgentStreamInfo.h"
+#include "AgentTextParse.h"
 #include "DirectShowSource.h"
 #include "DirectShowRender.h"
 #include "DirectSoundLipSync.h"

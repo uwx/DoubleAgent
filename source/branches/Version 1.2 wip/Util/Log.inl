@@ -2917,7 +2917,7 @@ int __cdecl LogCrtDbgReport (int pRptType, char * pMsg, int * pRetVal)
 /////////////////////////////////////////////////////////////////////////////
 void LogDebugRuntime (bool pDebugRuntime, bool pAsserts, bool pErrors, bool pWarnings)
 {
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 #ifdef	_DEBUG
 	_LOG_TRY
 	{
@@ -2945,7 +2945,7 @@ void LogDebugRuntime (bool pDebugRuntime, bool pAsserts, bool pErrors, bool pWar
 int LogDebugMemory (int pDbgFlag)
 {
 	int	lDbgFlag = 0;
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 #ifdef	_DEBUG
 	_LOG_TRY
 	{

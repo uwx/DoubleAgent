@@ -30,68 +30,62 @@ using AgentCharacterEditor.Updates;
 
 namespace AgentCharacterEditor
 {
-	public partial class StatePanel : UserControl
+	public partial class StatePanel : FilePartPanel
 	{
-		private CharacterFile	mCharacterFile = null;
-		private String			mStateName = null;
-
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
 		public StatePanel ()
 		{
 			InitializeComponent ();
-			CausesValidation = Visible;
-
-			if (Program.MainForm != null)
-			{
-				Program.MainForm.UpdateApplied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
-			}
-		}
-
-		private void StateForm_VisibleChanged (object sender, EventArgs e)
-		{
-			CausesValidation = Visible;
 		}
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
 
-		[System.ComponentModel.Browsable (false)]
-		public CharacterFile CharacterFile
+		public override ResolvePart FilePart
 		{
 			get
 			{
-				return mCharacterFile;
+				return base.FilePart;
 			}
 			set
 			{
-				mCharacterFile = value;
-				ShowStateAnimations ();
-			}
-		}
+				base.FilePart = value;
+				State = (FilePart is ResolveState) ? (FilePart as ResolveState).Target : null;
 
-		[System.ComponentModel.Browsable (false)]
-		public String StateName
-		{
-			get
-			{
-				return mStateName;
-			}
-			set
-			{
-				mStateName = value;
 				ShowStateName ();
 				ShowStateAnimations ();
 			}
 		}
 
-		private Boolean IsEmpty
+		protected FileState State
+		{
+			get;
+			set;
+		}
+		protected String StateName
 		{
 			get
 			{
-				return ((mCharacterFile == null) || String.IsNullOrEmpty (mStateName));
+				return (State != null) ? State.StateName : (FilePart is ResolveState) ? (FilePart as ResolveState).StateName : null;
+			}
+		}
+
+
+		protected override Boolean IsEmpty
+		{
+			get
+			{
+				return base.IsEmpty || String.IsNullOrEmpty (StateName);
+			}
+		}
+		protected override bool TrackUpdatesWhenHidden
+		{
+			get
+			{
+				return true;
 			}
 		}
 
@@ -113,14 +107,14 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				TextBoxName.Text = mStateName;
+				TextBoxName.Text = StateName;
 			}
 		}
 
 		private void ShowStateAnimations ()
 		{
-			FileStates	lFileStates;
-			String[]	lStateAnimations = null;
+			// Refresh it just in case the state was newly added
+			State = (FilePart is ResolveState) ? (FilePart as ResolveState).Target : null;
 
 			if (IsEmpty)
 			{
@@ -130,27 +124,21 @@ namespace AgentCharacterEditor
 			else
 			{
 				ListViewAnimations.Enabled = true;//!Program.FileIsReadOnly;
-
-				lFileStates = mCharacterFile.States;
-				if (lFileStates != null)
+				if (State == null)
 				{
-					if (lFileStates.ContainsKey (mStateName))
-					{
-						lStateAnimations = lFileStates[mStateName];
-					}
-					else if (lFileStates.ContainsKey (mStateName.ToUpper ()))
-					{
-						lStateAnimations = lFileStates[mStateName.ToUpper ()];
-					}
+					ShowFileAnimations (null);
 				}
-				ShowFileAnimations (lStateAnimations);
+				else
+				{
+					ShowFileAnimations (State.AnimationNames);
+				}
 			}
 		}
 
 		private void ShowFileAnimations (String[] pStateAnimations)
 		{
-			String[]	lAnimations = mCharacterFile.GetAnimationNames ();
-			int			lListNdx = 0;
+			String[] lAnimations = CharacterFile.GetAnimationNames ();
+			int lListNdx = 0;
 
 			CausesValidation = false;
 			ListViewAnimations.BeginUpdate ();
@@ -158,7 +146,7 @@ namespace AgentCharacterEditor
 
 			foreach (String lAnimation in lAnimations)
 			{
-				ListViewItem	lListItem;
+				ListViewItem lListItem;
 
 				lListItem = (lListNdx < ListViewAnimations.Items.Count) ? ListViewAnimations.Items[lListNdx] : ListViewAnimations.Items.Add (lAnimation);
 				lListItem.Text = lAnimation;
@@ -191,9 +179,9 @@ namespace AgentCharacterEditor
 
 		internal UndoableUpdate PasteStateAnimations (String pStateName, String[] pAnimationNames)
 		{
-			UpdateAllStateAnimations	lUpdate = null;
+			UpdateAllStateAnimations lUpdate = null;
 
-			if ((mCharacterFile != null) && !String.IsNullOrEmpty (pStateName) && !Program.FileIsReadOnly)
+			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
 				lUpdate = new UpdateAllStateAnimations (pStateName, pAnimationNames);
 				if (!UpdateAllStateAnimations.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateAllStateAnimations, this))
@@ -206,25 +194,22 @@ namespace AgentCharacterEditor
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private void OnUpdateApplied (object sender, EventArgs e)
+		protected override void UpdateApplied (object pUpdate)
 		{
-			if (!IsEmpty)
-			{
-				AddDeleteStateAnimation		lAddDeleteStateAnimation = sender as AddDeleteStateAnimation;
-				UpdateAllStateAnimations	lUpdateAllStateAnimations = sender as UpdateAllStateAnimations;
+			AddDeleteStateAnimation lAddDeleteStateAnimation = pUpdate as AddDeleteStateAnimation;
+			UpdateAllStateAnimations lUpdateAllStateAnimations = pUpdate as UpdateAllStateAnimations;
 
-				if ((lAddDeleteStateAnimation != null) && (lAddDeleteStateAnimation.Target == mStateName))
-				{
-					ShowStateAnimations ();
-				}
-				else if ((lUpdateAllStateAnimations != null) && (lUpdateAllStateAnimations.Target == mStateName))
-				{
-					ShowStateAnimations ();
-				}
-				else if ((sender is AddDeleteAnimation) || (sender is UpdateAnimation))
-				{
-					ShowStateAnimations ();
-				}
+			if ((lAddDeleteStateAnimation != null) && (lAddDeleteStateAnimation.StateName == StateName))
+			{
+				ShowStateAnimations ();
+			}
+			else if ((lUpdateAllStateAnimations != null) && (lUpdateAllStateAnimations.StateName == StateName))
+			{
+				ShowStateAnimations ();
+			}
+			else if ((pUpdate is AddDeleteAnimation) || (pUpdate is UpdateAnimation))
+			{
+				ShowStateAnimations ();
 			}
 		}
 
@@ -244,15 +229,15 @@ namespace AgentCharacterEditor
 		{
 			if (CausesValidation && !IsEmpty && !Program.FileIsReadOnly)
 			{
-				AddDeleteStateAnimation	lUpdate;
+				AddDeleteStateAnimation lUpdate;
 
 				if (e.Item.Checked)
 				{
-					lUpdate = new AddDeleteStateAnimation (mStateName, e.Item.Text, false);
+					lUpdate = new AddDeleteStateAnimation (StateName, e.Item.Text, false);
 				}
 				else
 				{
-					lUpdate = new AddDeleteStateAnimation (mStateName, e.Item.Text, true);
+					lUpdate = new AddDeleteStateAnimation (StateName, e.Item.Text, true);
 				}
 				AddDeleteStateAnimation.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as AddDeleteStateAnimation, this);
 			}
@@ -262,9 +247,9 @@ namespace AgentCharacterEditor
 		{
 			if (!IsEmpty && (Navigate != null))
 			{
-				ListViewItem	lItem = ListViewAnimations.SelectedItem;
+				ListViewItem lItem = ListViewAnimations.SelectedItem;
 
-				if ((lItem != null) && mCharacterFile.Gestures.Contains (lItem.Text))
+				if ((lItem != null) && CharacterFile.Gestures.Contains (lItem.Text))
 				{
 					try
 					{

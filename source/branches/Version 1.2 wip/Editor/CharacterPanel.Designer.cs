@@ -460,7 +460,6 @@ namespace AgentCharacterEditor
 			this.Name = "CharacterForm";
 			this.Padding = new System.Windows.Forms.Padding (9, 0, 9, 0);
 			this.Size = new System.Drawing.Size (600, 600);
-			this.VisibleChanged += new System.EventHandler (this.CharacterForm_VisibleChanged);
 			this.GroupBoxGeneral.ResumeLayout (false);
 			this.LayoutPanelGeneral.ResumeLayout (false);
 			this.LayoutPanelGeneral.PerformLayout ();

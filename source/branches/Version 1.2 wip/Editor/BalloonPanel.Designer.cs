@@ -60,15 +60,17 @@ namespace AgentCharacterEditor
 			this.ButtonBalloonBackground = new System.Windows.Forms.Button();
 			this.CheckBoxAutoHide = new System.Windows.Forms.CheckBox();
 			this.ButtonBalloonForeground = new System.Windows.Forms.Button();
-			this.NumericNumLines = new DoubleAgent.NumericUpDownEx();
 			this.ButtonBalloonFont = new System.Windows.Forms.Button();
 			this.RadioButtonSizeToText = new System.Windows.Forms.RadioButton();
 			this.RadioButtonNumLines = new System.Windows.Forms.RadioButton();
-			this.NumericCharsPerLine = new DoubleAgent.NumericUpDownEx();
 			this.LabelCharsPerLine = new System.Windows.Forms.Label();
-			this.GroupBoxBalloonSample = new System.Windows.Forms.GroupBox();
+			this.GroupBoxBalloonPreview = new System.Windows.Forms.GroupBox();
+			this.WordBalloonPreview = new AgentCharacterEditor.BalloonPreview();
+			this.NumericNumLines = new DoubleAgent.NumericUpDownEx();
+			this.NumericCharsPerLine = new DoubleAgent.NumericUpDownEx();
 			this.LayoutPanelMain.SuspendLayout();
 			this.GroupBoxBalloonDisplay.SuspendLayout();
+			this.GroupBoxBalloonPreview.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericNumLines)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.NumericCharsPerLine)).BeginInit();
 			this.SuspendLayout();
@@ -82,7 +84,7 @@ namespace AgentCharacterEditor
 			this.LayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.LayoutPanelMain.Controls.Add(this.CheckBoxWordBalloon, 0, 0);
 			this.LayoutPanelMain.Controls.Add(this.GroupBoxBalloonDisplay, 0, 1);
-			this.LayoutPanelMain.Controls.Add(this.GroupBoxBalloonSample, 0, 2);
+			this.LayoutPanelMain.Controls.Add(this.GroupBoxBalloonPreview, 0, 2);
 			this.LayoutPanelMain.Location = new System.Drawing.Point(9, 0);
 			this.LayoutPanelMain.Margin = new System.Windows.Forms.Padding(0);
 			this.LayoutPanelMain.Name = "LayoutPanelMain";
@@ -222,32 +224,6 @@ namespace AgentCharacterEditor
 			this.ButtonBalloonForeground.UseVisualStyleBackColor = true;
 			this.ButtonBalloonForeground.Click += new System.EventHandler(this.ButtonBalloonForeground_Click);
 			// 
-			// NumericNumLines
-			// 
-			this.NumericNumLines.DefaultBackColor = System.Drawing.SystemColors.Window;
-			this.NumericNumLines.HighlightBackColor = System.Drawing.Color.Pink;
-			this.NumericNumLines.Highlighted = false;
-			this.NumericNumLines.Location = new System.Drawing.Point(140, 58);
-			this.NumericNumLines.Maximum = new decimal(new int[] {
-            128,
-            0,
-            0,
-            0});
-			this.NumericNumLines.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.NumericNumLines.Name = "NumericNumLines";
-			this.NumericNumLines.Size = new System.Drawing.Size(57, 22);
-			this.NumericNumLines.TabIndex = 3;
-			this.NumericNumLines.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-			this.NumericNumLines.Validated += new System.EventHandler(this.NumericNumLines_Validated);
-			// 
 			// ButtonBalloonFont
 			// 
 			this.ButtonBalloonFont.Location = new System.Drawing.Point(235, 25);
@@ -282,6 +258,66 @@ namespace AgentCharacterEditor
 			this.RadioButtonNumLines.UseVisualStyleBackColor = true;
 			this.RadioButtonNumLines.CheckedChanged += new System.EventHandler(this.RadioButtonNumLines_CheckedChanged);
 			// 
+			// LabelCharsPerLine
+			// 
+			this.LabelCharsPerLine.AutoSize = true;
+			this.LabelCharsPerLine.Location = new System.Drawing.Point(9, 29);
+			this.LabelCharsPerLine.Name = "LabelCharsPerLine";
+			this.LabelCharsPerLine.Size = new System.Drawing.Size(128, 17);
+			this.LabelCharsPerLine.TabIndex = 0;
+			this.LabelCharsPerLine.Text = "Characters per line";
+			// 
+			// GroupBoxBalloonPreview
+			// 
+			this.GroupBoxBalloonPreview.Controls.Add(this.WordBalloonPreview);
+			this.GroupBoxBalloonPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.GroupBoxBalloonPreview.Enabled = false;
+			this.GroupBoxBalloonPreview.Location = new System.Drawing.Point(0, 237);
+			this.GroupBoxBalloonPreview.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
+			this.GroupBoxBalloonPreview.MaximumSize = new System.Drawing.Size(730, 10000);
+			this.GroupBoxBalloonPreview.Name = "GroupBoxBalloonPreview";
+			this.GroupBoxBalloonPreview.Padding = new System.Windows.Forms.Padding(6, 9, 6, 6);
+			this.GroupBoxBalloonPreview.Size = new System.Drawing.Size(582, 363);
+			this.GroupBoxBalloonPreview.TabIndex = 2;
+			this.GroupBoxBalloonPreview.TabStop = false;
+			this.GroupBoxBalloonPreview.Text = "Sample";
+			// 
+			// WordBalloonPreview
+			// 
+			this.WordBalloonPreview.CharacterFile = null;
+			this.WordBalloonPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.WordBalloonPreview.Location = new System.Drawing.Point(6, 24);
+			this.WordBalloonPreview.Name = "WordBalloonPreview";
+			this.WordBalloonPreview.Size = new System.Drawing.Size(570, 333);
+			this.WordBalloonPreview.TabIndex = 0;
+			this.WordBalloonPreview.TabStop = false;
+			// 
+			// NumericNumLines
+			// 
+			this.NumericNumLines.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericNumLines.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericNumLines.Highlighted = false;
+			this.NumericNumLines.Location = new System.Drawing.Point(140, 58);
+			this.NumericNumLines.Maximum = new decimal(new int[] {
+            128,
+            0,
+            0,
+            0});
+			this.NumericNumLines.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.NumericNumLines.Name = "NumericNumLines";
+			this.NumericNumLines.Size = new System.Drawing.Size(57, 22);
+			this.NumericNumLines.TabIndex = 3;
+			this.NumericNumLines.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+			this.NumericNumLines.Validated += new System.EventHandler(this.NumericNumLines_Validated);
+			// 
 			// NumericCharsPerLine
 			// 
 			this.NumericCharsPerLine.DefaultBackColor = System.Drawing.SystemColors.Window;
@@ -308,43 +344,20 @@ namespace AgentCharacterEditor
             0});
 			this.NumericCharsPerLine.Validated += new System.EventHandler(this.NumericCharsPerLine_Validated);
 			// 
-			// LabelCharsPerLine
-			// 
-			this.LabelCharsPerLine.AutoSize = true;
-			this.LabelCharsPerLine.Location = new System.Drawing.Point(9, 29);
-			this.LabelCharsPerLine.Name = "LabelCharsPerLine";
-			this.LabelCharsPerLine.Size = new System.Drawing.Size(128, 17);
-			this.LabelCharsPerLine.TabIndex = 0;
-			this.LabelCharsPerLine.Text = "Characters per line";
-			// 
-			// GroupBoxBalloonSample
-			// 
-			this.GroupBoxBalloonSample.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.GroupBoxBalloonSample.Enabled = false;
-			this.GroupBoxBalloonSample.Location = new System.Drawing.Point(0, 237);
-			this.GroupBoxBalloonSample.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
-			this.GroupBoxBalloonSample.MaximumSize = new System.Drawing.Size(730, 10000);
-			this.GroupBoxBalloonSample.Name = "GroupBoxBalloonSample";
-			this.GroupBoxBalloonSample.Padding = new System.Windows.Forms.Padding(6, 0, 6, 6);
-			this.GroupBoxBalloonSample.Size = new System.Drawing.Size(582, 363);
-			this.GroupBoxBalloonSample.TabIndex = 2;
-			this.GroupBoxBalloonSample.TabStop = false;
-			this.GroupBoxBalloonSample.Text = "Sample";
-			// 
-			// BalloonForm
+			// BalloonPanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.LayoutPanelMain);
 			this.Margin = new System.Windows.Forms.Padding(0);
-			this.Name = "BalloonForm";
+			this.Name = "BalloonPanel";
 			this.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
 			this.Size = new System.Drawing.Size(600, 600);
-			this.VisibleChanged += new System.EventHandler(this.BalloonForm_VisibleChanged);
 			this.LayoutPanelMain.ResumeLayout(false);
 			this.LayoutPanelMain.PerformLayout();
 			this.GroupBoxBalloonDisplay.ResumeLayout(false);
 			this.GroupBoxBalloonDisplay.PerformLayout();
+			this.GroupBoxBalloonPreview.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.NumericNumLines)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.NumericCharsPerLine)).EndInit();
 			this.ResumeLayout(false);
@@ -360,7 +373,7 @@ namespace AgentCharacterEditor
 		private System.Windows.Forms.RadioButton RadioButtonNumLines;
 		private DoubleAgent.NumericUpDownEx NumericCharsPerLine;
 		private System.Windows.Forms.Label LabelCharsPerLine;
-		private System.Windows.Forms.GroupBox GroupBoxBalloonSample;
+		private System.Windows.Forms.GroupBox GroupBoxBalloonPreview;
 		private DoubleAgent.NumericUpDownEx NumericNumLines;
 		private System.Windows.Forms.CheckBox CheckBoxAutoPace;
 		private System.Windows.Forms.CheckBox CheckBoxAutoHide;
@@ -372,5 +385,6 @@ namespace AgentCharacterEditor
 		private System.Windows.Forms.Label LabelBalloonBackgroundSample;
 		private System.Windows.Forms.Label LabelBalloonForegroundSample;
 		private System.Windows.Forms.Label LabelBalloonFontSample;
+		private BalloonPreview WordBalloonPreview;
 	}
 }

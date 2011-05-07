@@ -20,13 +20,13 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #ifndef	_DACORE_IMPEXP
 #define	_DACORE_IMPEXP
 #endif
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 using namespace System;
 using namespace System::Collections;
 using namespace System::Collections::Generic;
@@ -54,7 +54,7 @@ using namespace System::Collections::ObjectModel;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 namespace DoubleAgent {
 #else
 #pragma warning (push)
@@ -62,7 +62,7 @@ namespace DoubleAgent {
 #endif
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CSapi4VoiceInfo Sapi4VoiceInfo
 public ref class CSapi4VoiceInfo
 #else
@@ -74,7 +74,7 @@ public:
 	virtual ~CSapi4VoiceInfo ();
 
 public:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	System::String^	VoiceName;
 	System::Guid	ModeId;
 	System::Guid	EngineId;
@@ -94,7 +94,7 @@ public:
 	tBstrPtr		mManufacturer;
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 public:
     virtual System::String^ ToString() override;
 #else
@@ -104,7 +104,7 @@ public:
 
 //////////////////////////////////////////////////////////////////////
 
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 class CSapi4VoiceIndexArray : public CAtlTypeArray <INT_PTR>
 {
 	DECLARE_DLL_OBJECT(CSapi4VoiceIndexArray)
@@ -137,14 +137,14 @@ public:
 
 //////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CSapi4Voices Sapi4Voices
 public ref class CSapi4Voices : public System::Collections::ObjectModel::KeyedCollection <System::Guid, CSapi4VoiceInfo^>
 #else
 class CSapi4Voices : public CAtlOwnPtrArray <CSapi4VoiceInfo>, protected CSapiLanguageMatch
 #endif
 {
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 public:
 	CSapi4Voices();
 	virtual ~CSapi4Voices();
@@ -161,7 +161,7 @@ public:
 	const UINT	mLogLevelDebug;
 
 // Operations
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	static bool IsSapi4Installed ();
 	void Enumerate ();
 #else
@@ -186,7 +186,7 @@ public:
 	_DACORE_IMPEXP bool VoiceSupportsLanguage (CSapi4VoiceInfo* pVoiceInfo, LANGID pLangId, bool pUseDefaults);
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	void Log (UINT pLogLevel);
 	void Log (UINT pLogLevel, System::String^ pTitle);
 	void Log (UINT pLogLevel, System::String^ pTitle, System::String^ pIndent);
@@ -200,7 +200,7 @@ public:
 
 // Implementation
 protected:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	virtual System::Guid GetKeyForItem (CSapi4VoiceInfo^ pItem) override;
 
 	void Add (CSapi4VoiceInfo^ pItem) new {__super::Add (pItem);}
@@ -217,7 +217,7 @@ protected:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 } // namespace DoubleAgent
 #else
 #pragma warning (pop)

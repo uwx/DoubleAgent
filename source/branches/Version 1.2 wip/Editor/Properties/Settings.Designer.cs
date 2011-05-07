@@ -127,5 +127,17 @@ namespace AgentCharacterEditor.Properties {
                 this["MainFormSplit"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public short SelectedNameLanguage {
+            get {
+                return ((short)(this["SelectedNameLanguage"]));
+            }
+            set {
+                this["SelectedNameLanguage"] = value;
+            }
+        }
     }
 }

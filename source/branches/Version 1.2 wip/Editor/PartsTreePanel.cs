@@ -20,19 +20,17 @@
 /////////////////////////////////////////////////////////////////////////////
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using DoubleAgent;
-using DoubleAgent.Character;
 using AgentCharacterEditor.Updates;
+using DoubleAgent.Character;
 
 namespace AgentCharacterEditor
 {
-	public partial class PartsTreePanel : UserControl
+	public partial class PartsTreePanel : FilePartPanel
 	{
-		private CharacterFile mCharacterFile = null;
+		///////////////////////////////////////////////////////////////////////////////
+		#region Initialization
+
 		public const String NodeNameCharacter = "NodeCharacter";
 		public const String NodeNameWordBalloon = "NodeWordBalloon";
 		public const String NodeNameTTSMode = "NodeTTSMode";
@@ -40,31 +38,18 @@ namespace AgentCharacterEditor
 		public const String NodeNameStates = "NodeStates";
 
 		///////////////////////////////////////////////////////////////////////////////
-		#region Initialization
 
 		public PartsTreePanel ()
 		{
 			InitializeComponent ();
-
-			if (Program.MainForm != null)
-			{
-				Program.MainForm.LoadConfig += new EventHandler (MainForm_LoadConfig);
-				Program.MainForm.SaveConfig += new EventHandler (MainForm_SaveConfig);
-				Program.MainForm.UpdateApplied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
-				Program.MainForm.CanEdit += new Global.CanEditEventHandler (MainForm_CanEdit);
-				Program.MainForm.EditCopy += new Global.EditEventHandler (MainForm_EditCopy);
-				Program.MainForm.EditCut += new Global.EditEventHandler (MainForm_EditCut);
-				Program.MainForm.EditDelete += new Global.EditEventHandler (MainForm_EditDelete);
-				Program.MainForm.EditPaste += new Global.EditEventHandler (MainForm_EditPaste);
-			}
 		}
 
-		void MainForm_LoadConfig (object sender, EventArgs e)
+		protected override void OnLoadConfig (object sender, EventArgs e)
 		{
 			LoadExpansion ();
 		}
 
-		void MainForm_SaveConfig (object sender, EventArgs e)
+		protected override void OnSaveConfig (object sender, EventArgs e)
 		{
 			SaveExpansion ();
 		}
@@ -187,16 +172,16 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
 
-		[System.ComponentModel.Browsable (false)]
-		public CharacterFile CharacterFile
+		public override ResolvePart FilePart
 		{
 			get
 			{
-				return mCharacterFile;
+				return base.FilePart;
 			}
 			set
 			{
-				mCharacterFile = value;
+				base.FilePart = value;
+
 				InitNodeTags ();
 				ShowAnimationNames ();
 				if (TreeViewMain.SelectedNode != null)
@@ -207,6 +192,8 @@ namespace AgentCharacterEditor
 		}
 
 		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public ResolvePart SelectedPart
 		{
 			get
@@ -216,14 +203,6 @@ namespace AgentCharacterEditor
 			set
 			{
 				SelectPartNode (value);
-			}
-		}
-
-		private Boolean IsEmpty
-		{
-			get
-			{
-				return (mCharacterFile == null);
 			}
 		}
 
@@ -250,8 +229,8 @@ namespace AgentCharacterEditor
 
 				if (!IsEmpty)
 				{
-					String[] lAnimations = mCharacterFile.GetAnimationNames ();
-					FileGestures lGestures = mCharacterFile.Gestures;
+					String[] lAnimations = CharacterFile.GetAnimationNames ();
+					FileGestures lGestures = CharacterFile.Gestures;
 					TreeNode lAnimationNode;
 
 					foreach (String lAnimationName in lAnimations)
@@ -459,54 +438,275 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Update
 
-		private void OnUpdateApplied (object sender, EventArgs e)
+		protected override void ShowEditState (Global.CanEditEventArgs pEventArgs)
 		{
-			if (!IsEmpty)
+			if (TreeViewMain.ContainsFocus)
 			{
-				AddDeleteAnimation lAddDeleteAnimation = sender as AddDeleteAnimation;
-				UpdateAnimation lUpdateAnimation = sender as UpdateAnimation;
-				AddDeleteAnimationFrame lAddDeleteFrame = sender as AddDeleteAnimationFrame;
-				ReorderAnimationFrame lReorderFrame = sender as ReorderAnimationFrame;
+				ResolvePart lSelectedPart = SelectedPart;
+				Object lSelectedObject = (lSelectedPart == null) ? null : lSelectedPart.Part;
 
-				if (lAddDeleteAnimation != null)
+				if (lSelectedObject is FileBalloon)
 				{
-					ShowAnimationNames ();
+					pEventArgs.CopyObjectTitle = Properties.Resources.TitleBalloon;
 				}
-				else if ((lUpdateAnimation != null) && (lUpdateAnimation.NameChanged || lUpdateAnimation.ForClipboard))
+				else if (lSelectedObject is FileTts)
 				{
-					TreeNode lAnimationNode = GetObjectNode (lUpdateAnimation.Target);
-
-					if (lAnimationNode != null)
+					pEventArgs.CopyObjectTitle = Properties.Resources.TitleTts;
+				}
+				else if (lSelectedObject is FileAnimation)
+				{
+					pEventArgs.CopyObjectTitle = Global.TitleAnimation (lSelectedObject as FileAnimation);
+					if (!Program.FileIsReadOnly)
 					{
-						if (lUpdateAnimation.NameChanged)
+						pEventArgs.CutObjectTitle = pEventArgs.CopyObjectTitle;
+						pEventArgs.DeleteObjectTitle = pEventArgs.CopyObjectTitle;
+					}
+				}
+				else if (lSelectedObject is FileAnimationFrame)
+				{
+					pEventArgs.CopyObjectTitle = Global.TitleFrameAnimation (lSelectedObject as FileAnimationFrame).Quoted ();
+					if (!Program.FileIsReadOnly)
+					{
+						pEventArgs.CutObjectTitle = pEventArgs.CopyObjectTitle;
+						pEventArgs.DeleteObjectTitle = pEventArgs.CopyObjectTitle;
+					}
+				}
+				else if ((lSelectedPart is ResolveState) && (lSelectedObject != null))
+				{
+					pEventArgs.CopyObjectTitle = Global.TitleState (lSelectedObject as String);
+				}
+
+				if (!Program.FileIsReadOnly && (pEventArgs.PasteObject != null))
+				{
+					if ((pEventArgs.PasteObject is FileBalloon) && (lSelectedPart is ResolveBalloon))
+					{
+						pEventArgs.PasteObjectTitle = Properties.Resources.TitleBalloon;
+					}
+					else if ((pEventArgs.PasteObject is FileTts) && (lSelectedPart is ResolveTts))
+					{
+						pEventArgs.PasteObjectTitle = Properties.Resources.TitleTts;
+					}
+					else if (pEventArgs.PasteObject is FileAnimation)
+					{
+						if ((lSelectedPart is ResolveAnimation) && (lSelectedObject is FileAnimation))
 						{
-							lAnimationNode.Text = lUpdateAnimation.Target.Name;
+							pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (lSelectedObject as FileAnimation, Global.TitleAnimation (lSelectedObject as FileAnimation), Global.TitleAnimation (pEventArgs.PasteObject as FileAnimation));
 						}
-						if (lUpdateAnimation.ForClipboard)
+						else if ((lSelectedPart is ResolveCharacter) && ((lSelectedPart as ResolveCharacter).Scope == ResolveCharacter.ScopeType.ScopeAnimations))
 						{
-							ShowAnimationFrames (lUpdateAnimation.Target, lAnimationNode);
+							if (Program.MainForm.PanelAnimations.HasNewAnimationName () && !CharacterFile.Gestures.Contains (Program.MainForm.PanelAnimations.GetNewAnimationName ()))
+							{
+								pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (null, Program.MainForm.PanelAnimations.GetNewAnimationName ().Quoted (), Global.TitleAnimation (pEventArgs.PasteObject as FileAnimation));
+							}
+							else
+							{
+								pEventArgs.PasteTitle = null;
+								pEventArgs.PasteObjectTitle = Properties.Resources.EditPasteAnimation0;
+							}
 						}
 					}
-				}
-				else if (lAddDeleteFrame != null)
-				{
-					TreeNode lAnimationNode = GetObjectNode (lAddDeleteFrame.Animation);
-
-					if (lAnimationNode != null)
+					else if (pEventArgs.PasteObject is FileAnimationFrame)
 					{
-						ShowAnimationFrames (lAddDeleteFrame.Animation, lAnimationNode);
+						if ((lSelectedPart is ResolveAnimationFrame) && (lSelectedObject is FileAnimationFrame) && ((lSelectedPart as ResolveAnimationFrame).Scope == ResolveAnimationFrame.ScopeType.ScopeFrame))
+						{
+							pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (lSelectedObject as FileAnimationFrame, Global.TitleFrameAnimation (lSelectedObject as FileAnimationFrame), Global.TitleFrame (pEventArgs.PasteObject as FileAnimationFrame));
+
+						}
+						else if ((lSelectedPart is ResolveAnimation) && (lSelectedObject is FileAnimation))
+						{
+							pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (null, Global.TitleFrame (pEventArgs.PasteObject as FileAnimationFrame));
+						}
+					}
+					else if ((pEventArgs.PasteObject is FileState) && (lSelectedPart is ResolveState))
+					{
+						pEventArgs.PasteObjectTitle = Global.TitleState (pEventArgs.PasteObject as FileState);
 					}
 				}
-				else if (lReorderFrame != null)
-				{
-					TreeNode lAnimationNode = GetObjectNode (lReorderFrame.Animation);
+			}
+		}
 
-					if (lAnimationNode != null)
+		///////////////////////////////////////////////////////////////////////////////
+
+		protected override bool EditCopy (Global.EditEventArgs pEventArgs)
+		{
+			if (TreeViewMain.ContainsFocus)
+			{
+				ResolvePart lSelectedPart = SelectedPart;
+				Object lSelectedObject = (lSelectedPart == null) ? null : lSelectedPart.Part;
+
+				if (lSelectedObject != null)
+				{
+					try
 					{
-						ShowAnimationFrames (lReorderFrame.Animation, lAnimationNode);
+						Clipboard.SetData (DataFormats.Serializable, lSelectedObject);
+					}
+					catch
+					{
+					}
+					return true;
+				}
+			}
+			return false;
+		}
+
+		protected override bool EditCut (Global.EditEventArgs pEventArgs)
+		{
+			if (TreeViewMain.ContainsFocus)
+			{
+				ResolvePart lSelectedPart = SelectedPart;
+				Object lSelectedObject = (lSelectedPart == null) ? null : lSelectedPart.Part;
+
+				if (lSelectedObject is FileAnimation)
+				{
+					try
+					{
+						Clipboard.SetData (DataFormats.Serializable, lSelectedObject);
+						Program.MainForm.PanelAnimations.DeleteSelectedAnimation (lSelectedObject as FileAnimation, true);
+					}
+					catch
+					{
+						System.Media.SystemSounds.Asterisk.Play ();
+					}
+					return true;
+				}
+				else if (lSelectedObject is FileAnimationFrame)
+				{
+					try
+					{
+						Clipboard.SetData (DataFormats.Serializable, lSelectedObject);
+						Program.MainForm.PanelAnimation.DeleteSelectedFrame (lSelectedObject as FileAnimationFrame, true);
+					}
+					catch
+					{
+						System.Media.SystemSounds.Asterisk.Play ();
+					}
+					return true;
+				}
+			}
+			return false;
+		}
+
+		protected override bool EditDelete (Global.EditEventArgs pEventArgs)
+		{
+			if (TreeViewMain.ContainsFocus)
+			{
+				ResolvePart lSelectedPart = SelectedPart;
+				Object lSelectedObject = (lSelectedPart == null) ? null : lSelectedPart.Part;
+
+				if (lSelectedObject is FileAnimation)
+				{
+					Program.MainForm.PanelAnimations.DeleteSelectedAnimation (lSelectedObject as FileAnimation, true);
+					return true;
+				}
+				else if (lSelectedObject is FileAnimationFrame)
+				{
+					Program.MainForm.PanelAnimation.DeleteSelectedFrame (lSelectedObject as FileAnimationFrame, true);
+					return true;
+				}
+			}
+			return false;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		protected override bool EditPaste (Global.EditEventArgs pEventArgs)
+		{
+			if (TreeViewMain.ContainsFocus)
+			{
+				ResolvePart lSelectedPart = SelectedPart;
+				Object lSelectedObject = (lSelectedPart == null) ? null : lSelectedPart.Part;
+
+				if ((pEventArgs.PasteObject is FileBalloon) && (lSelectedPart is ResolveBalloon))
+				{
+					Program.MainForm.PanelBalloon.PasteBalloon (pEventArgs.PasteObject as FileBalloon);
+					return true;
+				}
+				else if ((pEventArgs.PasteObject is FileTts) && (lSelectedPart is ResolveTts))
+				{
+					Program.MainForm.PanelTts.PasteTts (pEventArgs.PasteObject as FileTts);
+					return true;
+				}
+				else if (pEventArgs.PasteObject is FileAnimation)
+				{
+					if ((lSelectedPart is ResolveAnimation) && (lSelectedObject is FileAnimation))
+					{
+						Program.MainForm.PanelAnimations.PasteSelectedAnimation (lSelectedObject as FileAnimation, pEventArgs.PasteObject as FileAnimation);
+						return true;
+					}
+					else if ((lSelectedPart is ResolveCharacter) && ((lSelectedPart as ResolveCharacter).Scope == ResolveCharacter.ScopeType.ScopeAnimations))
+					{
+						Program.MainForm.PanelAnimations.PasteSelectedAnimation (null, pEventArgs.PasteObject as FileAnimation);
+						return true;
 					}
 				}
+				else if (pEventArgs.PasteObject is FileAnimationFrame)
+				{
+					if ((lSelectedPart is ResolveAnimationFrame) && (lSelectedObject is FileAnimationFrame) && ((lSelectedPart as ResolveAnimationFrame).Scope == ResolveAnimationFrame.ScopeType.ScopeFrame))
+					{
+						Program.MainForm.PanelAnimation.PasteSelectedFrame ((lSelectedObject as FileAnimationFrame).Animation, lSelectedObject as FileAnimationFrame, pEventArgs.PasteObject as FileAnimationFrame);
+						return true;
+					}
+					else if ((lSelectedPart is ResolveAnimation) && (lSelectedObject is FileAnimation))
+					{
+						Program.MainForm.PanelAnimation.PasteSelectedFrame (lSelectedObject as FileAnimation, null, pEventArgs.PasteObject as FileAnimationFrame);
+						return true;
+					}
+				}
+				else if ((pEventArgs.PasteObject is FileState) && (lSelectedPart is ResolveState))
+				{
+					Program.MainForm.PanelState.PasteStateAnimations ((lSelectedPart as ResolveState).StateName, (pEventArgs.PasteObject as FileState).AnimationNames);
+					return true;
+				}
+			}
+			return false;
+		}
 
+		///////////////////////////////////////////////////////////////////////////////
+
+		protected override void UpdateApplied (object pUpdate)
+		{
+			AddDeleteAnimation lAddDeleteAnimation = pUpdate as AddDeleteAnimation;
+			UpdateAnimation lUpdateAnimation = pUpdate as UpdateAnimation;
+			AddDeleteAnimationFrame lAddDeleteFrame = pUpdate as AddDeleteAnimationFrame;
+			ReorderAnimationFrame lReorderFrame = pUpdate as ReorderAnimationFrame;
+
+			if (lAddDeleteAnimation != null)
+			{
+				ShowAnimationNames ();
+			}
+			else if ((lUpdateAnimation != null) && (lUpdateAnimation.NameChanged || lUpdateAnimation.ForClipboard))
+			{
+				TreeNode lAnimationNode = GetObjectNode (lUpdateAnimation.Target);
+
+				if (lAnimationNode != null)
+				{
+					if (lUpdateAnimation.NameChanged)
+					{
+						lAnimationNode.Text = lUpdateAnimation.Target.Name;
+					}
+					if (lUpdateAnimation.ForClipboard)
+					{
+						ShowAnimationFrames (lUpdateAnimation.Target, lAnimationNode);
+					}
+				}
+			}
+			else if (lAddDeleteFrame != null)
+			{
+				TreeNode lAnimationNode = GetObjectNode (lAddDeleteFrame.Animation);
+
+				if (lAnimationNode != null)
+				{
+					ShowAnimationFrames (lAddDeleteFrame.Animation, lAnimationNode);
+				}
+			}
+			else if (lReorderFrame != null)
+			{
+				TreeNode lAnimationNode = GetObjectNode (lReorderFrame.Animation);
+
+				if (lAnimationNode != null)
+				{
+					ShowAnimationFrames (lReorderFrame.Animation, lAnimationNode);
+				}
 			}
 		}
 
@@ -524,249 +724,6 @@ namespace AgentCharacterEditor
 				}
 				catch
 				{
-				}
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
-		#region Internal Event Handlers
-
-		internal void MainForm_CanEdit (object sender, Global.CanEditEventArgs e)
-		{
-			if (!e.IsUsed && !IsEmpty && TreeViewMain.ContainsFocus)
-			{
-				ResolvePart lSelectedPart = SelectedPart;
-				Object lSelectedObject = (lSelectedPart == null) ? null : lSelectedPart.Part;
-
-				if (lSelectedObject is FileBalloon)
-				{
-					e.CopyObjectTitle = Properties.Resources.TitleBalloon;
-				}
-				else if (lSelectedObject is FileTts)
-				{
-					e.CopyObjectTitle = Properties.Resources.TitleTts;
-				}
-				else if (lSelectedObject is FileAnimation)
-				{
-					e.CopyObjectTitle = Global.TitleAnimation (lSelectedObject as FileAnimation);
-					if (!Program.FileIsReadOnly)
-					{
-						e.CutObjectTitle = e.CopyObjectTitle;
-						e.DeleteObjectTitle = e.CopyObjectTitle;
-					}
-				}
-				else if (lSelectedObject is FileAnimationFrame)
-				{
-					e.CopyObjectTitle = Global.TitleFrameAnimation (lSelectedObject as FileAnimationFrame).Quoted ();
-					if (!Program.FileIsReadOnly)
-					{
-						e.CutObjectTitle = e.CopyObjectTitle;
-						e.DeleteObjectTitle = e.CopyObjectTitle;
-					}
-				}
-				else if ((lSelectedPart is ResolveState) && (lSelectedObject != null))
-				{
-					e.CopyObjectTitle = Global.TitleState (lSelectedObject as String);
-				}
-
-				if (!Program.FileIsReadOnly && (e.PasteObject != null))
-				{
-					if ((e.PasteObject is FileBalloon) && (lSelectedPart is ResolveBalloon))
-					{
-						e.PasteObjectTitle = Properties.Resources.TitleBalloon;
-					}
-					else if ((e.PasteObject is FileTts) && (lSelectedPart is ResolveTts))
-					{
-						e.PasteObjectTitle = Properties.Resources.TitleTts;
-					}
-					else if (e.PasteObject is FileAnimation)
-					{
-						if ((lSelectedPart is ResolveAnimation) && (lSelectedObject is FileAnimation))
-						{
-							e.PasteObjectTitle = e.PasteTypeTitle (lSelectedObject as FileAnimation, Global.TitleAnimation (lSelectedObject as FileAnimation), Global.TitleAnimation (e.PasteObject as FileAnimation));
-						}
-						else if ((lSelectedPart is ResolveCharacter) && ((lSelectedPart as ResolveCharacter).Scope == ResolveCharacter.ScopeType.ScopeAnimations))
-						{
-							if (Program.MainForm.PanelAnimations.HasNewAnimationName () && !mCharacterFile.Gestures.Contains (Program.MainForm.PanelAnimations.GetNewAnimationName ()))
-							{
-								e.PasteObjectTitle = e.PasteTypeTitle (null, Program.MainForm.PanelAnimations.GetNewAnimationName ().Quoted (), Global.TitleAnimation (e.PasteObject as FileAnimation));
-							}
-							else
-							{
-								e.PasteTitle = null;
-								e.PasteObjectTitle = Properties.Resources.EditPasteAnimation0;
-							}
-						}
-					}
-					else if (e.PasteObject is FileAnimationFrame)
-					{
-						if ((lSelectedPart is ResolveAnimationFrame) && (lSelectedObject is FileAnimationFrame) && ((lSelectedPart as ResolveAnimationFrame).Scope == ResolveAnimationFrame.ScopeType.ScopeFrame))
-						{
-							e.PasteObjectTitle = e.PasteTypeTitle (lSelectedObject as FileAnimationFrame, Global.TitleFrameAnimation (lSelectedObject as FileAnimationFrame), Global.TitleFrame (e.PasteObject as FileAnimationFrame));
-
-						}
-						else if ((lSelectedPart is ResolveAnimation) && (lSelectedObject is FileAnimation))
-						{
-							e.PasteObjectTitle = e.PasteTypeTitle (null, Global.TitleFrame (e.PasteObject as FileAnimationFrame));
-						}
-					}
-					else if ((e.PasteObject is KeyValuePair<String, String[]>) && (lSelectedPart is ResolveState) && (lSelectedObject is String))
-					{
-						try
-						{
-							KeyValuePair<String, String[]> lState = (KeyValuePair<String, String[]>)e.PasteObject;
-							e.PasteObjectTitle = Global.TitleState (lState.Key);
-						}
-						catch
-						{
-						}
-					}
-				}
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		internal void MainForm_EditCopy (object sender, Global.EditEventArgs e)
-		{
-			if (!e.IsUsed && !IsEmpty && TreeViewMain.ContainsFocus)
-			{
-				ResolvePart lSelectedPart = SelectedPart;
-				Object lSelectedObject = (lSelectedPart == null) ? null : lSelectedPart.Part;
-
-				if ((lSelectedObject != null) && (lSelectedPart is ResolveState))
-				{
-					String lStateName = lSelectedObject as String;
-					KeyValuePair<String, String[]> lState = new KeyValuePair<String, String[]> (lStateName, mCharacterFile.States[lStateName]);
-					lSelectedObject = lState;
-				}
-				if (lSelectedObject != null)
-				{
-					e.IsUsed = true;
-					try
-					{
-						Clipboard.SetData (DataFormats.Serializable, lSelectedObject);
-					}
-					catch
-					{
-					}
-				}
-			}
-		}
-
-		internal void MainForm_EditCut (object sender, Global.EditEventArgs e)
-		{
-			if (!e.IsUsed && !IsEmpty && !Program.FileIsReadOnly && TreeViewMain.ContainsFocus)
-			{
-				ResolvePart lSelectedPart = SelectedPart;
-				Object lSelectedObject = (lSelectedPart == null) ? null : lSelectedPart.Part;
-
-				if (lSelectedObject is FileAnimation)
-				{
-					e.IsUsed = true;
-					try
-					{
-						Clipboard.SetData (DataFormats.Serializable, lSelectedObject);
-						Program.MainForm.PanelAnimations.DeleteSelectedAnimation (lSelectedObject as FileAnimation, true);
-					}
-					catch
-					{
-						System.Media.SystemSounds.Asterisk.Play ();
-					}
-				}
-				else if (lSelectedObject is FileAnimationFrame)
-				{
-					e.IsUsed = true;
-					try
-					{
-						Clipboard.SetData (DataFormats.Serializable, lSelectedObject);
-						Program.MainForm.PanelAnimation.DeleteSelectedFrame (lSelectedObject as FileAnimationFrame, true);
-					}
-					catch
-					{
-						System.Media.SystemSounds.Asterisk.Play ();
-					}
-				}
-			}
-		}
-
-		internal void MainForm_EditDelete (object sender, Global.EditEventArgs e)
-		{
-			if (!e.IsUsed && !IsEmpty && !Program.FileIsReadOnly && TreeViewMain.ContainsFocus)
-			{
-				ResolvePart lSelectedPart = SelectedPart;
-				Object lSelectedObject = (lSelectedPart == null) ? null : lSelectedPart.Part;
-
-				if (lSelectedObject is FileAnimation)
-				{
-					e.IsUsed = true;
-					Program.MainForm.PanelAnimations.DeleteSelectedAnimation (lSelectedObject as FileAnimation, true);
-				}
-				else if (lSelectedObject is FileAnimationFrame)
-				{
-					e.IsUsed = true;
-					Program.MainForm.PanelAnimation.DeleteSelectedFrame (lSelectedObject as FileAnimationFrame, true);
-				}
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		internal void MainForm_EditPaste (object sender, Global.EditEventArgs e)
-		{
-			if (!e.IsUsed && !IsEmpty && !Program.FileIsReadOnly && TreeViewMain.ContainsFocus)
-			{
-				ResolvePart lSelectedPart = SelectedPart;
-				Object lSelectedObject = (lSelectedPart == null) ? null : lSelectedPart.Part;
-
-				if ((e.PasteObject is FileBalloon) && (lSelectedPart is ResolveBalloon))
-				{
-					e.IsUsed = true;
-					Program.MainForm.PanelBalloon.PasteBalloon (e.PasteObject as FileBalloon);
-				}
-				else if ((e.PasteObject is FileTts) && (lSelectedPart is ResolveTts))
-				{
-					e.IsUsed = true;
-					Program.MainForm.PanelTts.PasteTts (e.PasteObject as FileTts);
-				}
-				else if (e.PasteObject is FileAnimation)
-				{
-					if ((lSelectedPart is ResolveAnimation) && (lSelectedObject is FileAnimation))
-					{
-						e.IsUsed = true;
-						Program.MainForm.PanelAnimations.PasteSelectedAnimation (lSelectedObject as FileAnimation, e.PasteObject as FileAnimation);
-					}
-					else if ((lSelectedPart is ResolveCharacter) && ((lSelectedPart as ResolveCharacter).Scope == ResolveCharacter.ScopeType.ScopeAnimations))
-					{
-						e.IsUsed = true;
-						Program.MainForm.PanelAnimations.PasteSelectedAnimation (null, e.PasteObject as FileAnimation);
-					}
-				}
-				else if (e.PasteObject is FileAnimationFrame)
-				{
-					if ((lSelectedPart is ResolveAnimationFrame) && (lSelectedObject is FileAnimationFrame) && ((lSelectedPart as ResolveAnimationFrame).Scope == ResolveAnimationFrame.ScopeType.ScopeFrame))
-					{
-						e.IsUsed = true;
-						Program.MainForm.PanelAnimation.PasteSelectedFrame ((lSelectedObject as FileAnimationFrame).Animation, lSelectedObject as FileAnimationFrame, e.PasteObject as FileAnimationFrame);
-					}
-					else if ((lSelectedPart is ResolveAnimation) && (lSelectedObject is FileAnimation))
-					{
-						e.IsUsed = true;
-						Program.MainForm.PanelAnimation.PasteSelectedFrame (lSelectedObject as FileAnimation, null, e.PasteObject as FileAnimationFrame);
-					}
-				}
-				else if ((e.PasteObject is KeyValuePair<String, String[]>) && (lSelectedPart is ResolveState) && (lSelectedObject is String))
-				{
-					try
-					{
-						e.IsUsed = true;
-						KeyValuePair<String, String[]> lState = (KeyValuePair<String, String[]>)e.PasteObject;
-						Program.MainForm.PanelState.PasteStateAnimations (lSelectedObject as String, lState.Value);
-					}
-					catch
-					{
-					}
 				}
 			}
 		}

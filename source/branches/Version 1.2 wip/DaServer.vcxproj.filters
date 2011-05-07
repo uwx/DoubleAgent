@@ -166,6 +166,9 @@
     <ClCompile Include="Include\DaServer_i.c">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="Core\AgentTextParse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="Common\DaCommon.odl">

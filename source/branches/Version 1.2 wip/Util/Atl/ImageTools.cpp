@@ -21,6 +21,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#pragma unmanaged
 #include "ImageTools.h"
 #include "ImageBuffer.h"
 #include "Log.h"

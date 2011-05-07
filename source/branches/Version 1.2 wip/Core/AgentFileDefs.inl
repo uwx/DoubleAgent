@@ -19,7 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	_DEBUG
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 //#define	_DEBUG_INSTANCE		LogNormal
 //#define	_DEBUG_DUMP			LogDebugFast
 //#define	_DEBUG_FIND_NAME	LogDebugFast
@@ -60,7 +60,7 @@ static const DWORD	sAcsFileSignature = 0xABCDABC3;
 static const DWORD	sAcfFileSignature = 0xABCDABC4;
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 using namespace System;
 using namespace System::IO;
 using namespace System::Globalization;

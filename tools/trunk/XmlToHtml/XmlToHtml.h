@@ -1,5 +1,7 @@
 #pragma once
 
+using namespace System;
+
 namespace DoubleAgent {
 namespace XmlToHtml {
 /////////////////////////////////////////////////////////////////////////////
@@ -103,7 +105,7 @@ protected:
 	void ResolveEntities (System::Xml::XmlNode^ pXmlNode);
 
 protected:
-	Generic::List<System::Xml::XmlNode^>^ NodeList (System::Xml::XmlNodeList^ pNodeList);
+	System::Collections::Generic::List<System::Xml::XmlNode^>^ NodeList (System::Xml::XmlNodeList^ pNodeList);
 	void CopyNodeAttributes (System::Xml::XmlNode^ pSrcNode, System::Xml::XmlNode^ pTrgNode);
 	void CopyNodeChildren (System::Xml::XmlNode^ pSrcNode, System::Xml::XmlNode^ pTrgNode, System::Xml::XmlSpace pXmlSpace);
 	System::Xml::XmlNode^ CopyNodeOuterXml (System::Xml::XmlNode^ pXmlNode, System::Xml::XmlDocument^ pDocument);
@@ -128,7 +130,7 @@ protected:
 	bool																							mOutputHtml;
 	bool																							mOutputIntellisense;
 	bool																							mOutputSandcastle;
-	Generic::Dictionary<String^, System::Xml::XmlDocument^>^										mLoadedIncludes;
+	System::Collections::Generic::Dictionary<String^, System::Xml::XmlDocument^>^					mLoadedIncludes;
 	System::Reflection::Assembly^																	mSourceAssembly;
 	System::Collections::Generic::SortedDictionary <String^, System::Type^>^						mSourceTypes;
 	System::Collections::Generic::SortedDictionary <String^, System::Reflection::MethodInfo^>^		mSourceMethods;

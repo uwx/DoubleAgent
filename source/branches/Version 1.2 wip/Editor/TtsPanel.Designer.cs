@@ -227,7 +227,6 @@ namespace AgentCharacterEditor
 			this.Name = "TtsForm";
 			this.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
 			this.Size = new System.Drawing.Size(600, 600);
-			this.VisibleChanged += new System.EventHandler(this.TtsForm_VisibleChanged);
 			this.LayoutPanelMain.ResumeLayout(false);
 			this.LayoutPanelMain.PerformLayout();
 			this.GroupBoxTTS.ResumeLayout(false);

@@ -20,7 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "AgentFileScript.h"
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #include "HandleTemplates.h"
 #include "AgtErr.h"
 #include "ScriptStream.h"
@@ -28,12 +28,12 @@
 #endif
 #include "AgentFileDefs.inl"
 
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 IMPLEMENT_DLL_OBJECT(CAgentFileScript)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 namespace DoubleAgent {
 namespace Character {
 #endif
@@ -49,13 +49,13 @@ CAgentFileScript::~CAgentFileScript ()
 	Close ();
 }
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 CAgentFileScript^ CAgentFileScript::CreateInstance ()
 #else
 CAgentFileScript* CAgentFileScript::CreateInstance ()
 #endif
 {
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	LogStart (false);
 	return gcnew CAgentFileScript;
 #else
@@ -65,7 +65,7 @@ CAgentFileScript* CAgentFileScript::CreateInstance ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 bool CAgentFileScript::IsAcdFile::get ()
 {
 	return true;
@@ -81,7 +81,7 @@ bool CAgentFileScript::get_IsAcdFile () const
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 bool CAgentFileScript::IsOpen::get ()
 {
 	if	(mFileStream)
@@ -97,7 +97,7 @@ bool CAgentFileScript::get_IsOpen () const
 }
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 bool CAgentFileScript::IsReadOnly::get ()
 {
 	if	(
@@ -116,7 +116,7 @@ bool CAgentFileScript::get_IsReadOnly () const
 }
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 bool CAgentFileScript::IsDirty::get ()
 {
 	return mIsDirty;
@@ -135,7 +135,7 @@ void CAgentFileScript::IsDirty::set (bool pIsDirty)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 bool CAgentFileScript::Open (const System::String^ pPath)
 {
 	bool			lRet = false;
@@ -207,7 +207,7 @@ HRESULT CAgentFileScript::Open (LPCTSTR pPath)
 }
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 bool CAgentFileScript::Save (const System::String^ pPath, CAgentFile^ pSource)
 {
 	bool				lRet = false;
@@ -311,7 +311,7 @@ bool CAgentFileScript::Save (const System::String^ pPath, CAgentFile^ pSource)
 
 void CAgentFileScript::Close ()
 {
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	mIsDirty = false;
 	if	(mFileStream)
 	{
@@ -338,7 +338,7 @@ void CAgentFileScript::Close ()
 #endif
 	__super::Close ();
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	mHeader = gcnew CAgentFileHeader (this);
 #endif
 }
@@ -350,7 +350,7 @@ void CAgentFileScript::Close ()
 bool CAgentFileScript::ParseFile (ScriptReader^ pReader)
 {
 	bool	lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	String^	lLine;
 	String^	lToken;
 
@@ -398,7 +398,7 @@ bool CAgentFileScript::ParseFile (ScriptReader^ pReader)
 bool CAgentFileScript::WriteFile (ScriptWriter^ pWriter, CAgentFile^ pSource)
 {
 	bool	lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	pWriter->WriteComments ();
 	WriteHeader (pWriter, pSource);
 	WriteBalloon (pWriter, pSource);
@@ -416,7 +416,7 @@ bool CAgentFileScript::WriteFile (ScriptWriter^ pWriter, CAgentFile^ pSource)
 bool CAgentFileScript::ParseHeader (ScriptReader^ pReader)
 {
 	bool	lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	String^	lLine;
 	String^	lToken;
 
@@ -549,37 +549,37 @@ UInt32 CAgentFileScript::ParseStyle (ScriptReader^ pReader, System::String^ pSty
 	{
 		if	(pReader->IsKeyword (lParts[lNdx], pReader->Keywords->StyleSystem))
 		{
-			lStyle |= (UInt32)AgentCharStyle::CharStyleStandard;
+			lStyle |= (UInt32)CharacterStyle::Standard;
 		}
 		else
 		if	(pReader->IsKeyword (lParts[lNdx], pReader->Keywords->StyleTts))
 		{
-			lStyle |= (UInt32)AgentCharStyle::CharStyleTts;
+			lStyle |= (UInt32)CharacterStyle::Tts;
 		}
 		else
 		if	(pReader->IsKeyword (lParts[lNdx], pReader->Keywords->StyleBalloon))
 		{
-			lStyle |= (UInt32)AgentCharStyle::CharStyleBalloon;
+			lStyle |= (UInt32)CharacterStyle::Balloon;
 		}
 		else
 		if	(pReader->IsKeyword (lParts[lNdx], pReader->Keywords->StyleBalloonNone))
 		{
-			lStyle &= ~(UInt32)AgentCharStyle::CharStyleBalloon;
+			lStyle &= ~(UInt32)CharacterStyle::Balloon;
 		}
 		else
 		if	(pReader->IsKeyword (lParts[lNdx], pReader->Keywords->StyleBalloonSizeToText))
 		{
-			lStyle |= (UInt32)AgentCharStyle::CharStyleSizeToText;
+			lStyle |= (UInt32)CharacterStyle::SizeToText;
 		}
 		else
 		if	(pReader->IsKeyword (lParts[lNdx], pReader->Keywords->StyleBalloonNoAutoHide))
 		{
-			lStyle |= (UInt32)AgentCharStyle::CharStyleNoAutoHide;
+			lStyle |= (UInt32)CharacterStyle::NoAutoHide;
 		}
 		else
 		if	(pReader->IsKeyword (lParts[lNdx], pReader->Keywords->StyleBalloonNoAutoPace))
 		{
-			lStyle |= (UInt32)AgentCharStyle::CharStyleNoAutoPace;
+			lStyle |= (UInt32)CharacterStyle::NoAutoPace;
 		}
 		else
 		{
@@ -594,7 +594,7 @@ UInt32 CAgentFileScript::ParseStyle (ScriptReader^ pReader, System::String^ pSty
 bool CAgentFileScript::WriteHeader (ScriptWriter^ pWriter, CAgentFile^ pSource)
 {
 	bool	lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	String^	lIconFilePath = pSource->IconFilePath;
 	String^	lPaletteFilePath = pSource->PaletteFilePath;
 
@@ -646,18 +646,18 @@ bool CAgentFileScript::WriteHeader (ScriptWriter^ pWriter, CAgentFile^ pSource)
 bool CAgentFileScript::WriteStyle (ScriptWriter^ pWriter, UInt32 pStyle)
 {
 	bool	lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	List <System::String^>^	lStyle = gcnew List <String^>;
 
-	if	(pStyle & (UInt32)AgentCharStyle::CharStyleStandard)
+	if	(pStyle & (UInt32)CharacterStyle::Standard)
 	{
 		lStyle->Add (pWriter->Keyword [pWriter->Keywords->StyleSystem]);
 	}
-	if	(pStyle & (UInt32)AgentCharStyle::CharStyleTts)
+	if	(pStyle & (UInt32)CharacterStyle::Tts)
 	{
 		lStyle->Add (pWriter->Keyword [pWriter->Keywords->StyleTts]);
 	}
-	if	(pStyle & (UInt32)AgentCharStyle::CharStyleBalloon)
+	if	(pStyle & (UInt32)CharacterStyle::Balloon)
 	{
 		lStyle->Add (pWriter->Keyword [pWriter->Keywords->StyleBalloon]);
 	}
@@ -665,15 +665,15 @@ bool CAgentFileScript::WriteStyle (ScriptWriter^ pWriter, UInt32 pStyle)
 	{
 		lStyle->Add (pWriter->Keyword [pWriter->Keywords->StyleBalloon]);
 	}
-	if	(pStyle & (UInt32)AgentCharStyle::CharStyleSizeToText)
+	if	(pStyle & (UInt32)CharacterStyle::SizeToText)
 	{
 		lStyle->Add (pWriter->Keyword [pWriter->Keywords->StyleBalloonSizeToText]);
 	}
-	if	(pStyle & (UInt32)AgentCharStyle::CharStyleNoAutoHide)
+	if	(pStyle & (UInt32)CharacterStyle::NoAutoHide)
 	{
 		lStyle->Add (pWriter->Keyword [pWriter->Keywords->StyleBalloonNoAutoHide]);
 	}
-	if	(pStyle & (UInt32)AgentCharStyle::CharStyleNoAutoPace)
+	if	(pStyle & (UInt32)CharacterStyle::NoAutoPace)
 	{
 		lStyle->Add (pWriter->Keyword [pWriter->Keywords->StyleBalloonNoAutoPace]);
 	}
@@ -788,7 +788,7 @@ bool CAgentFileScript::ParseTtsLine (ScriptReader^ pReader, System::String^ pTok
 bool CAgentFileScript::WriteTts (ScriptWriter^ pWriter, CAgentFile^ pSource)
 {
 	bool	lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	if	(pSource->Tts)
 	{
 		pWriter->WriteValue (pWriter->Keywords->TtsEngine, pWriter->FormatGuid (pSource->Tts->Engine));
@@ -808,7 +808,7 @@ bool CAgentFileScript::WriteTts (ScriptWriter^ pWriter, CAgentFile^ pSource)
 bool CAgentFileScript::ParseBalloon (ScriptReader^ pReader)
 {
 	bool						lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	String^						lLine;
 	String^						lToken;
 	String^						lFontName = nullptr;
@@ -933,7 +933,7 @@ bool CAgentFileScript::ParseBalloon (ScriptReader^ pReader)
 bool CAgentFileScript::WriteBalloon (ScriptWriter^ pWriter, CAgentFile^ pSource)
 {
 	bool	lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	if	(pSource->Balloon)
 	{
 		pWriter->WriteLine ();
@@ -976,7 +976,7 @@ bool CAgentFileScript::WriteBalloon (ScriptWriter^ pWriter, CAgentFile^ pSource)
 bool CAgentFileScript::ParseName (ScriptReader^ pReader, LANGID pLangID)
 {
 	bool			lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	String^			lLine;
 	String^			lToken;
 	CAgentFileName^	lName = gcnew CAgentFileName (this, Names);
@@ -1043,7 +1043,7 @@ bool CAgentFileScript::ParseName (ScriptReader^ pReader, LANGID pLangID)
 bool CAgentFileScript::WriteNames (ScriptWriter^ pWriter, CAgentFile^ pSource)
 {
 	bool	lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	if	(pSource->Names)
 	{
 		for each (CAgentFileName^ lName in pSource->Names)
@@ -1059,7 +1059,7 @@ bool CAgentFileScript::WriteNames (ScriptWriter^ pWriter, CAgentFile^ pSource)
 bool CAgentFileScript::WriteName (ScriptWriter^ pWriter, CAgentFileName^ pName)
 {
 	bool	lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	pWriter->WriteKeyword (pWriter->Keywords->StartName, pWriter->FormatHex (pName->Language));
 	pWriter->Indent++;
 
@@ -1082,7 +1082,7 @@ bool CAgentFileScript::WriteName (ScriptWriter^ pWriter, CAgentFileName^ pName)
 bool CAgentFileScript::ParseAnimation (ScriptReader^ pReader, System::String^ pAnimationName)
 {
 	bool					lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	String^					lLine;
 	String^					lToken;
 	CAgentFileAnimation^	lAnimation = gcnew CAgentFileAnimation (this, mGestures);
@@ -1144,7 +1144,7 @@ bool CAgentFileScript::ParseAnimation (ScriptReader^ pReader, System::String^ pA
 bool CAgentFileScript::WriteAnimations (ScriptWriter^ pWriter, CAgentFile^ pSource)
 {
 	bool	lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	if	(pSource->Gestures)
 	{
 		for each (CAgentFileAnimation^ lAnimation in pSource->Gestures)
@@ -1160,7 +1160,7 @@ bool CAgentFileScript::WriteAnimations (ScriptWriter^ pWriter, CAgentFile^ pSour
 bool CAgentFileScript::WriteAnimation (ScriptWriter^ pWriter, CAgentFile^ pSource, CAgentFileAnimation^ pAnimation)
 {
 	bool	lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	pWriter->WriteLine ();
 	pWriter->WriteKeyword (pWriter->Keywords->StartAnimation, pWriter->FormatText (pAnimation->Name));
 	pWriter->WriteLine ();
@@ -1217,13 +1217,13 @@ bool CAgentFileScript::RenameAnimation (CAgentFileAnimation^ pAnimation, System:
 		}
 		if	(mStates)
 		{
-			for each (KeyValuePair <String^, array <String^>^> lState in mStates)
+			for each (CAgentFileState^ lState in mStates)
 			{
-				for (int lNdx = 0; lNdx < lState.Value->Length; lNdx++)
+				for (int lNdx = 0; lNdx < lState->AnimationNames->Length; lNdx++)
 				{
-					if	(String::Compare (lState.Value[lNdx], pAnimation->mName, true) == 0)
+					if	(String::Compare (lState->AnimationNames[lNdx], pAnimation->mName, true) == 0)
 					{
-						lState.Value[lNdx] = String::Copy (pNewName);
+						lState->AnimationNames[lNdx] = String::Copy (pNewName);
 					}
 				}
 			}
@@ -1240,7 +1240,7 @@ bool CAgentFileScript::RenameAnimation (CAgentFileAnimation^ pAnimation, System:
 bool CAgentFileScript::ParseAnimationFrame (ScriptReader^ pReader, CAgentFileAnimation^ pAnimation)
 {
 	bool				lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	String^				lLine;
 	String^				lToken;
 	CAgentFileFrame^	lFrame = gcnew CAgentFileFrame (this, pAnimation->Frames);
@@ -1313,7 +1313,7 @@ bool CAgentFileScript::ParseAnimationFrame (ScriptReader^ pReader, CAgentFileAni
 bool CAgentFileScript::WriteAnimationFrame (ScriptWriter^ pWriter, CAgentFile^ pSource, CAgentFileFrame^ pFrame)
 {
 	bool	lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	String^	lSoundFilePath = pFrame->SoundFilePath;
 
 	pWriter->WriteKeyword (pWriter->Keywords->StartFrame);
@@ -1365,7 +1365,7 @@ bool CAgentFileScript::WriteAnimationFrame (ScriptWriter^ pWriter, CAgentFile^ p
 bool CAgentFileScript::ParseFrameBranching (ScriptReader^ pReader, CAgentFileFrame^ pFrame)
 {
 	bool	lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	String^	lLine;
 	String^	lToken;
 	Int16	lBranchTarget = -1;
@@ -1419,6 +1419,9 @@ bool CAgentFileScript::ParseFrameBranching (ScriptReader^ pReader, CAgentFileFra
 			}
 			pFrame->mBranching[lBranchNdx].mFrameNdx = lBranchTarget;
 			pFrame->mBranching[lBranchNdx].mProbability = lBranchProbability;
+
+			lBranchTarget = 0;
+			lBranchProbability = 0;
 			lBranchNdx++;
 		}
 	}
@@ -1430,7 +1433,7 @@ bool CAgentFileScript::ParseFrameBranching (ScriptReader^ pReader, CAgentFileFra
 bool CAgentFileScript::WriteFrameBranching (ScriptWriter^ pWriter, CAgentFile^ pSource, CAgentFileFrame^ pFrame)
 {
 	bool	lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	if	(
 			(pFrame->mBranching)
 		&&	(pFrame->mBranching->Length > 0)
@@ -1461,7 +1464,7 @@ bool CAgentFileScript::WriteFrameBranching (ScriptWriter^ pWriter, CAgentFile^ p
 bool CAgentFileScript::ParseFrameImage (ScriptReader^ pReader, CAgentFileFrame^ pFrame)
 {
 	bool					lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	String^					lLine;
 	String^					lToken;
 	CAgentFileFrameImage^	lImage = gcnew CAgentFileFrameImage (this, pFrame);
@@ -1519,7 +1522,7 @@ bool CAgentFileScript::ParseFrameImage (ScriptReader^ pReader, CAgentFileFrame^ 
 bool CAgentFileScript::WriteFrameImage (ScriptWriter^ pWriter, CAgentFile^ pSource, CAgentFileFrameImage^ pFrameImage)
 {
 	bool	lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	String^	lImageFilePath = pFrameImage->ImageFilePath;
 
 	pWriter->WriteKeyword (pWriter->Keywords->StartImage);
@@ -1557,7 +1560,7 @@ bool CAgentFileScript::WriteFrameImage (ScriptWriter^ pWriter, CAgentFile^ pSour
 bool CAgentFileScript::ParseFrameOverlay (ScriptReader^ pReader, CAgentFileFrame^ pFrame)
 {
 	bool					lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	String^					lLine;
 	String^					lToken;
 	CAgentFileFrameOverlay^	lOverlay = gcnew CAgentFileFrameOverlay (this, pFrame);
@@ -1660,7 +1663,7 @@ bool CAgentFileScript::ParseFrameOverlay (ScriptReader^ pReader, CAgentFileFrame
 bool CAgentFileScript::WriteFrameOverlay (ScriptWriter^ pWriter, CAgentFile^ pSource, CAgentFileFrameOverlay^ pFrameOverlay)
 {
 	bool	lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	String^	lImageFilePath = pFrameOverlay->ImageFilePath;
 
 	pWriter->WriteKeyword (pWriter->Keywords->StartOverlay);
@@ -1732,7 +1735,7 @@ bool CAgentFileScript::WriteFrameOverlay (ScriptWriter^ pWriter, CAgentFile^ pSo
 bool CAgentFileScript::ParseState (ScriptReader^ pReader, System::String^ pStateName)
 {
 	bool			lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	String^			lLine;
 	String^			lToken;
 	List <String^>^	lAnimations = gcnew List <String^>;
@@ -1777,18 +1780,18 @@ bool CAgentFileScript::ParseState (ScriptReader^ pReader, System::String^ pState
 bool CAgentFileScript::WriteStates (ScriptWriter^ pWriter, CAgentFile^ pSource)
 {
 	bool	lRet = true;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	if	(pSource->States)
 	{
-		for each (KeyValuePair <String^, array <String^>^> lState in pSource->States)
+		for each (CAgentFileState^ lState in pSource->States)
 		{
 			pWriter->WriteLine ();
-			pWriter->WriteKeyword (pWriter->Keywords->StartState, pWriter->FormatText (lState.Key));
+			pWriter->WriteKeyword (pWriter->Keywords->StartState, pWriter->FormatText (lState->StateName));
 			pWriter->Indent++;
 
-			for (int lNdx = 0; lNdx < lState.Value->Length; lNdx++)
+			for (int lNdx = 0; lNdx < lState->AnimationNames->Length; lNdx++)
 			{
-				pWriter->WriteValue (pWriter->Keywords->StateAnimation, pWriter->FormatText (lState.Value[lNdx]));
+				pWriter->WriteValue (pWriter->Keywords->StateAnimation, pWriter->FormatText (lState->AnimationNames[lNdx]));
 			}
 
 			pWriter->Indent--;
@@ -1804,7 +1807,7 @@ bool CAgentFileScript::WriteStates (ScriptWriter^ pWriter, CAgentFile^ pSource)
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 
 void CAgentFileScript::FreeUnusedImages ()
@@ -2203,7 +2206,7 @@ String^ CAgentFileScript::WriteSoundFile (CAgentFile^ pSource, int pSoundNdx)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#endif	// _M_CEE
+#endif	// __cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -2499,7 +2502,7 @@ System::String^ CAgentFileScript::GetSoundFilePath (int pSoundNdx)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 System::String^ CAgentFileScript::IconFilePath::get()
 {
 	return mIconFilePath;
@@ -2640,7 +2643,7 @@ void CAgentFileScript::NewFrameDuration::set (UInt16 pValue)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 } // namespace Character
 } // namespace DoubleAgent
 #endif

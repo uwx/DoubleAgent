@@ -30,73 +30,48 @@ using AgentCharacterEditor.Updates;
 
 namespace AgentCharacterEditor
 {
-	public partial class TtsPanel : UserControl
+	public partial class TtsPanel : FilePartPanel
 	{
-		private CharacterFile	mCharacterFile = null;
-		private Sapi4Voices		mVoices = null;
-
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
+
+		private Sapi4Voices mVoices = null;
 
 		public TtsPanel ()
 		{
 			InitializeComponent ();
-			CausesValidation = Visible;
-
-			if (Program.MainForm != null)
-			{
-				Program.MainForm.LoadConfig += new EventHandler (MainForm_LoadConfig);
-				Program.MainForm.SaveConfig += new EventHandler (MainForm_SaveConfig);
-			}
-		}
-
-		void MainForm_LoadConfig (object sender, EventArgs e)
-		{
-			Properties.Settings	lSettings = Properties.Settings.Default;
-		}
-
-		void MainForm_SaveConfig (object sender, EventArgs e)
-		{
-			Properties.Settings	lSettings = Properties.Settings.Default;
-		}
-
-		private void TtsForm_VisibleChanged (object sender, EventArgs e)
-		{
-			CausesValidation = Visible;
 		}
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
 
-		[System.ComponentModel.Browsable (false)]
-		public CharacterFile CharacterFile
+		public override ResolvePart FilePart
 		{
 			get
 			{
-				return mCharacterFile;
+				return base.FilePart;
 			}
 			set
 			{
-				mCharacterFile = value;
+				base.FilePart = value;
 				ShowTtsProperties ();
 			}
 		}
 
-		[System.ComponentModel.Browsable (false)]
-		public FileTts FileTts
+		protected FileTts FileTts
 		{
 			get
 			{
-				return (mCharacterFile == null) ? null : mCharacterFile.Tts;
+				return (CharacterFile == null) ? null : CharacterFile.Tts;
 			}
 		}
 
-		private Boolean IsEmpty
+		protected override Boolean IsEmpty
 		{
 			get
 			{
-				return ((FileTts == null) || ((mCharacterFile.Header.Style & CharacterStyle.CharStyleTts) == 0));
+				return ((FileTts == null) || ((CharacterFile.Header.Style & CharacterStyle.Tts) == CharacterStyle.None));
 			}
 		}
 
@@ -106,7 +81,7 @@ namespace AgentCharacterEditor
 
 		class VoiceComboItem
 		{
-			public Sapi4VoiceInfo	VoiceInfo;
+			public Sapi4VoiceInfo VoiceInfo;
 
 			public VoiceComboItem (Sapi4VoiceInfo pVoiceInfo)
 			{
@@ -135,7 +110,8 @@ namespace AgentCharacterEditor
 
 		private void ShowTtsProperties ()
 		{
-			CheckBoxUseTTS.Enabled = (mCharacterFile != null) && !Program.FileIsReadOnly;
+			CheckBoxUseTTS.Enabled = (CharacterFile != null) && !Program.FileIsReadOnly;
+			GroupBoxTTS.Enabled = !IsEmpty;
 			TextBoxTTSModeID.Enabled = !IsEmpty && !Program.FileIsReadOnly;
 			TextBoxVendor.Enabled = !IsEmpty && !Program.FileIsReadOnly;
 			TextBoxLanguage.Enabled = !IsEmpty && !Program.FileIsReadOnly;
@@ -155,7 +131,7 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				Sapi4VoiceInfo	lVoiceInfo;
+				Sapi4VoiceInfo lVoiceInfo;
 
 				CheckBoxUseTTS.Checked = true;
 				ShowAllVoices ();
@@ -193,11 +169,11 @@ namespace AgentCharacterEditor
 
 		private int VoiceComboNdx (Guid pModeId)
 		{
-			int	lNdx;
+			int lNdx;
 
 			for (lNdx = 0; lNdx < ComboBoxName.Items.Count; lNdx++)
 			{
-				VoiceComboItem	lItem = (VoiceComboItem)ComboBoxName.Items[lNdx];
+				VoiceComboItem lItem = (VoiceComboItem)ComboBoxName.Items[lNdx];
 
 				if (lItem.VoiceInfo.ModeId.Equals (pModeId))
 				{
@@ -209,11 +185,11 @@ namespace AgentCharacterEditor
 
 		private Sapi4VoiceInfo VoiceComboInfo (Guid pModeId)
 		{
-			int	lNdx;
+			int lNdx;
 
 			for (lNdx = 0; lNdx < ComboBoxName.Items.Count; lNdx++)
 			{
-				VoiceComboItem	lItem = (VoiceComboItem)ComboBoxName.Items[lNdx];
+				VoiceComboItem lItem = (VoiceComboItem)ComboBoxName.Items[lNdx];
 
 				if (lItem.VoiceInfo.ModeId.Equals (pModeId))
 				{
@@ -227,7 +203,7 @@ namespace AgentCharacterEditor
 		{
 			if ((pComboNdx >= 0) && (pComboNdx < ComboBoxName.Items.Count))
 			{
-				VoiceComboItem	lItem = (VoiceComboItem)ComboBoxName.Items[pComboNdx];
+				VoiceComboItem lItem = (VoiceComboItem)ComboBoxName.Items[pComboNdx];
 				return lItem.VoiceInfo;
 			}
 			return null;
@@ -239,18 +215,18 @@ namespace AgentCharacterEditor
 
 		internal UndoableUpdate PasteTts (FileTts pPasteTts)
 		{
-			if ((mCharacterFile != null) && (pPasteTts != null) && !Program.FileIsReadOnly)
+			if ((CharacterFile != null) && (pPasteTts != null) && !Program.FileIsReadOnly)
 			{
 				System.Media.SystemSounds.Beep.Play ();
 			}
 			return null;
 		}
 
-		private void OnUpdateApplied (object sender, EventArgs e)
+		protected override void UpdateApplied (Object pUpdate)
 		{
-			UpdateCharacterTts	lUpdate = sender as UpdateCharacterTts;
+			UpdateCharacterTts lUpdate = pUpdate as UpdateCharacterTts;
 
-			if ((lUpdate != null) && (lUpdate.CharacterFile == mCharacterFile))
+			if ((lUpdate != null) && (lUpdate.CharacterFile == CharacterFile))
 			{
 				ShowTtsProperties ();
 			}
@@ -262,19 +238,19 @@ namespace AgentCharacterEditor
 
 		private void CheckBoxUseTTS_CheckedChanged (object sender, EventArgs e)
 		{
-			if (CausesValidation && (mCharacterFile != null) && !Program.FileIsReadOnly)
+			if (CausesValidation && (CharacterFile != null) && !Program.FileIsReadOnly)
 			{
-				UpdateCharacterTts	lUpdate = new UpdateCharacterTts (null);
+				UpdateCharacterTts lUpdate = new UpdateCharacterTts (null);
 
 				if (CheckBoxUseTTS.Checked)
 				{
-					lUpdate.CharacterStyle |= CharacterStyle.CharStyleTts;
+					lUpdate.CharacterStyle |= CharacterStyle.Tts;
 				}
 				else
 				{
-					lUpdate.CharacterStyle &= ~CharacterStyle.CharStyleTts;
+					lUpdate.CharacterStyle &= ~CharacterStyle.Tts;
 				}
-				UpdateCharacterTts.PutUndo (lUpdate.Apply (OnUpdateApplied) as UpdateCharacterTts, this);
+				UpdateCharacterTts.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateCharacterTts, this);
 			}
 		}
 
@@ -282,13 +258,13 @@ namespace AgentCharacterEditor
 		{
 			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
-				Sapi4VoiceInfo	lVoiceInfo = VoiceComboInfo (ComboBoxName.SelectedIndex);
+				Sapi4VoiceInfo lVoiceInfo = VoiceComboInfo (ComboBoxName.SelectedIndex);
 
 				if (lVoiceInfo != null)
 				{
-					UpdateCharacterTts	lUpdate = new UpdateCharacterTts (lVoiceInfo);
+					UpdateCharacterTts lUpdate = new UpdateCharacterTts (lVoiceInfo);
 
-					UpdateCharacterTts.PutUndo (lUpdate.Apply (OnUpdateApplied) as UpdateCharacterTts, this);
+					UpdateCharacterTts.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateCharacterTts, this);
 				}
 			}
 		}

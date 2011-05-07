@@ -12,10 +12,11 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
+using namespace System;
+using namespace System::Collections::Generic;
 using namespace System::Runtime::InteropServices;
 using namespace System::Reflection;
 using namespace System::Reflection::Emit;
-using namespace System::Collections::Generic;
 
 namespace DoubleAgent {
 namespace TlbToAsm {

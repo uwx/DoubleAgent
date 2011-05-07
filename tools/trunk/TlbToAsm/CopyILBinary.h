@@ -30,8 +30,8 @@ protected:
 	{
 		System::Collections::Generic::Dictionary <int, System::Reflection::Emit::Label>^	mLabelsAt;
 		System::Reflection::Emit::ILGenerator^												mGenerator;
-		array<Type^>^																		mGenericTypeArguments;
-		array<Type^>^																		mGenericMethodArguments;
+		array<System::Type^>^																mGenericTypeArguments;
+		array<System::Type^>^																mGenericMethodArguments;
 	};
 
 	virtual void DefineBodyLabel (Object^ pData, int pLabelTarget) override;
@@ -42,10 +42,10 @@ protected:
 	void LogOpCode (System::Reflection::Emit::OpCode & pOpCode, LPBYTE pOperand, int pOffset, LPBYTE pBinary);
 
 protected:
-	virtual System::Type^ GetTokenType (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments) override;
-	virtual System::Reflection::MethodInfo^ GetTokenMethodInfo (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
-	virtual System::Reflection::ConstructorInfo^ GetTokenConstructor (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
-	virtual System::Reflection::FieldInfo^ GetTokenField (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments) override;
+	virtual System::Type^ GetTokenType (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<System::Type^>^ pGenericTypeArguments, array<System::Type^>^ pGenericMethodArguments) override;
+	virtual System::Reflection::MethodInfo^ GetTokenMethodInfo (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<System::Type^>^ pGenericTypeArguments, array<System::Type^>^ pGenericMethodArguments);
+	virtual System::Reflection::ConstructorInfo^ GetTokenConstructor (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<System::Type^>^ pGenericTypeArguments, array<System::Type^>^ pGenericMethodArguments);
+	virtual System::Reflection::FieldInfo^ GetTokenField (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<System::Type^>^ pGenericTypeArguments, array<System::Type^>^ pGenericMethodArguments) override;
 
 protected:
 	System::Reflection::Emit::ModuleBuilder^	mTargetModule;

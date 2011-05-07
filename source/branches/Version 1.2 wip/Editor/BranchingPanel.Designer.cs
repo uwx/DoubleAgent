@@ -143,7 +143,6 @@ namespace AgentCharacterEditor
 			this.NumericBranchingNot.DefaultBackColor = System.Drawing.SystemColors.Window;
 			this.NumericBranchingNot.Enabled = false;
 			this.NumericBranchingNot.HighlightBackColor = System.Drawing.Color.Pink;
-			this.NumericBranchingNot.Highlighted = false;
 			this.NumericBranchingNot.Location = new System.Drawing.Point(3, 3);
 			this.NumericBranchingNot.Name = "NumericBranchingNot";
 			this.NumericBranchingNot.Size = new System.Drawing.Size(60, 22);
@@ -182,7 +181,6 @@ namespace AgentCharacterEditor
 			// 
 			this.NumericBranching2.DefaultBackColor = System.Drawing.SystemColors.Window;
 			this.NumericBranching2.HighlightBackColor = System.Drawing.Color.Pink;
-			this.NumericBranching2.Highlighted = false;
 			this.NumericBranching2.Location = new System.Drawing.Point(3, 3);
 			this.NumericBranching2.Name = "NumericBranching2";
 			this.NumericBranching2.Size = new System.Drawing.Size(60, 22);
@@ -208,7 +206,6 @@ namespace AgentCharacterEditor
 			// 
 			this.NumericTarget2.DefaultBackColor = System.Drawing.SystemColors.Window;
 			this.NumericTarget2.HighlightBackColor = System.Drawing.Color.Pink;
-			this.NumericTarget2.Highlighted = false;
 			this.NumericTarget2.Location = new System.Drawing.Point(273, 3);
 			this.NumericTarget2.Maximum = new decimal(new int[] {
             10000,
@@ -248,7 +245,6 @@ namespace AgentCharacterEditor
 			// 
 			this.NumericBranching1.DefaultBackColor = System.Drawing.SystemColors.Window;
 			this.NumericBranching1.HighlightBackColor = System.Drawing.Color.Pink;
-			this.NumericBranching1.Highlighted = false;
 			this.NumericBranching1.Location = new System.Drawing.Point(3, 3);
 			this.NumericBranching1.Name = "NumericBranching1";
 			this.NumericBranching1.Size = new System.Drawing.Size(60, 22);
@@ -274,7 +270,6 @@ namespace AgentCharacterEditor
 			// 
 			this.NumericTarget1.DefaultBackColor = System.Drawing.SystemColors.Window;
 			this.NumericTarget1.HighlightBackColor = System.Drawing.Color.Pink;
-			this.NumericTarget1.Highlighted = false;
 			this.NumericTarget1.Location = new System.Drawing.Point(273, 3);
 			this.NumericTarget1.Maximum = new decimal(new int[] {
             10000,
@@ -314,7 +309,6 @@ namespace AgentCharacterEditor
 			// 
 			this.NumericBranching0.DefaultBackColor = System.Drawing.SystemColors.Window;
 			this.NumericBranching0.HighlightBackColor = System.Drawing.Color.Pink;
-			this.NumericBranching0.Highlighted = false;
 			this.NumericBranching0.Location = new System.Drawing.Point(3, 3);
 			this.NumericBranching0.Name = "NumericBranching0";
 			this.NumericBranching0.Size = new System.Drawing.Size(60, 22);
@@ -340,7 +334,6 @@ namespace AgentCharacterEditor
 			// 
 			this.NumericTarget0.DefaultBackColor = System.Drawing.SystemColors.Window;
 			this.NumericTarget0.HighlightBackColor = System.Drawing.Color.Pink;
-			this.NumericTarget0.Highlighted = false;
 			this.NumericTarget0.Location = new System.Drawing.Point(273, 3);
 			this.NumericTarget0.Maximum = new decimal(new int[] {
             10000,
@@ -406,7 +399,6 @@ namespace AgentCharacterEditor
 			// 
 			this.NumericTargetExit.DefaultBackColor = System.Drawing.SystemColors.Window;
 			this.NumericTargetExit.HighlightBackColor = System.Drawing.Color.Pink;
-			this.NumericTargetExit.Highlighted = false;
 			this.NumericTargetExit.Location = new System.Drawing.Point(183, 3);
 			this.NumericTargetExit.Maximum = new decimal(new int[] {
             10000,
@@ -428,7 +420,7 @@ namespace AgentCharacterEditor
             0});
 			this.NumericTargetExit.Validated += new System.EventHandler(this.NumericTargetExit_Validated);
 			// 
-			// BranchingForm
+			// BranchingPanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -436,11 +428,8 @@ namespace AgentCharacterEditor
 			this.Controls.Add(this.GroupBoxBranching);
 			this.Controls.Add(this.LabelFrameName);
 			this.Controls.Add(this.TextBoxFrameName);
-			this.Margin = new System.Windows.Forms.Padding(0);
-			this.Name = "BranchingForm";
-			this.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
+			this.Name = "BranchingPanel";
 			this.Size = new System.Drawing.Size(600, 600);
-			this.VisibleChanged += new System.EventHandler(this.BranchingForm_VisibleChanged);
 			this.GroupBoxBranching.ResumeLayout(false);
 			this.FlowLayoutNot.ResumeLayout(false);
 			this.FlowLayoutNot.PerformLayout();

@@ -19,9 +19,6 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 using System;
-using System.Text;
-using System.Drawing;
-using DoubleAgent;
 using DoubleAgent.Character;
 
 namespace AgentCharacterEditor
@@ -131,7 +128,7 @@ namespace AgentCharacterEditor
 			{
 				try
 				{
-					return (CharacterFile != null) && ((CharacterFile.Header.Style & CharacterStyle.CharStyleBalloon) != 0) ? CharacterFile.Balloon : null;
+					return (CharacterFile != null) && ((CharacterFile.Header.Style & CharacterStyle.Balloon) != CharacterStyle.None) ? CharacterFile.Balloon : null;
 				}
 				catch
 				{
@@ -149,7 +146,7 @@ namespace AgentCharacterEditor
 			{
 				try
 				{
-					return (CharacterFile != null) && ((CharacterFile.Header.Style & CharacterStyle.CharStyleTts) != 0) ? CharacterFile.Tts : null;
+					return (CharacterFile != null) && ((CharacterFile.Header.Style & CharacterStyle.Tts) != CharacterStyle.None) ? CharacterFile.Tts : null;
 				}
 				catch
 				{
@@ -161,7 +158,7 @@ namespace AgentCharacterEditor
 
 	///////////////////////////////////////////////////////////////////////////////
 
-	internal class ResolveState : ResolvePart<String>
+	internal class ResolveState : ResolvePart<FileState>
 	{
 		public ResolveState (String pStateName)
 		{
@@ -175,19 +172,26 @@ namespace AgentCharacterEditor
 			get;
 			protected set;
 		}
-		public override String Target
+		public override FileState Target
 		{
 			get
 			{
 				try
 				{
-					if (TargetContained && (CharacterFile != null))
+					if ((CharacterFile != null) && (CharacterFile.States != null) && (!TargetCached || (TargetContained && !CharacterFile.States.Contains (CachedTarget))))
 					{
-						CachedTarget = (!String.IsNullOrEmpty (StateName) && CharacterFile.States.ContainsKey (StateName)) ? StateName : null;
-					}
-					else if (!TargetCached)
-					{
-						CachedTarget = StateName;
+						CachedTarget = null;
+						if (!String.IsNullOrEmpty (StateName))
+						{
+							if (CharacterFile.States.Contains (StateName))
+							{
+								CachedTarget = CharacterFile.States[StateName];
+							}
+							else if (CharacterFile.States.Contains (StateName.ToUpper ()))
+							{
+								CachedTarget = CharacterFile.States[StateName.ToUpper ()];
+							}
+						}
 					}
 				}
 				catch

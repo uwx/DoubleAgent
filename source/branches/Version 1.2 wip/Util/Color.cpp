@@ -21,6 +21,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
+#pragma unmanaged
 #include <math.h>
 #include <float.h>
 #include "Color.h"

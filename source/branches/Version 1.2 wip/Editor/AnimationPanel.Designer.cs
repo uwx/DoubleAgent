@@ -70,8 +70,7 @@ namespace AgentCharacterEditor
 			this.ComboBoxReturn = new System.Windows.Forms.ComboBox();
 			this.GroupBoxFrames = new System.Windows.Forms.GroupBox();
 			this.TableLayoutFrames = new System.Windows.Forms.TableLayoutPanel();
-			this.ListViewPreview = new DoubleAgent.ListViewEx();
-			this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.FramesView = new AgentCharacterEditor.FramesPreview();
 			this.PanelFramesTop = new System.Windows.Forms.Panel();
 			this.LabelDurationDesc = new System.Windows.Forms.Label();
 			this.NumericFrameDuration = new DoubleAgent.NumericUpDownEx();
@@ -82,6 +81,10 @@ namespace AgentCharacterEditor
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.ButtonMoveUp = new System.Windows.Forms.ToolStripButton();
 			this.ButtonMoveDown = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.ButtonViewSmall = new System.Windows.Forms.ToolStripButton();
+			this.ButtonViewMedium = new System.Windows.Forms.ToolStripButton();
+			this.ButtonViewLarge = new System.Windows.Forms.ToolStripButton();
 			this.TableLayoutMain = new System.Windows.Forms.TableLayoutPanel();
 			this.GroupBoxStates = new System.Windows.Forms.GroupBox();
 			this.ListViewStates = new DoubleAgent.ListViewEx();
@@ -130,8 +133,7 @@ namespace AgentCharacterEditor
 			// 
 			// GroupBoxFrames
 			// 
-			this.GroupBoxFrames.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+			this.GroupBoxFrames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.GroupBoxFrames.AutoSize = true;
 			this.GroupBoxFrames.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -140,7 +142,7 @@ namespace AgentCharacterEditor
 			this.GroupBoxFrames.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
 			this.GroupBoxFrames.Name = "GroupBoxFrames";
 			this.GroupBoxFrames.Padding = new System.Windows.Forms.Padding(6, 12, 6, 6);
-			this.GroupBoxFrames.Size = new System.Drawing.Size(632, 190);
+			this.GroupBoxFrames.Size = new System.Drawing.Size(632, 266);
 			this.GroupBoxFrames.TabIndex = 0;
 			this.GroupBoxFrames.TabStop = false;
 			this.GroupBoxFrames.Text = "Frames";
@@ -151,7 +153,7 @@ namespace AgentCharacterEditor
 			this.TableLayoutFrames.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.TableLayoutFrames.ColumnCount = 1;
 			this.TableLayoutFrames.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.TableLayoutFrames.Controls.Add(this.ListViewPreview, 0, 1);
+			this.TableLayoutFrames.Controls.Add(this.FramesView, 0, 1);
 			this.TableLayoutFrames.Controls.Add(this.PanelFramesTop, 0, 0);
 			this.TableLayoutFrames.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TableLayoutFrames.Location = new System.Drawing.Point(6, 27);
@@ -159,36 +161,24 @@ namespace AgentCharacterEditor
 			this.TableLayoutFrames.Name = "TableLayoutFrames";
 			this.TableLayoutFrames.RowCount = 2;
 			this.TableLayoutFrames.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TableLayoutFrames.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TableLayoutFrames.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TableLayoutFrames.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TableLayoutFrames.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TableLayoutFrames.Size = new System.Drawing.Size(620, 157);
+			this.TableLayoutFrames.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.TableLayoutFrames.Size = new System.Drawing.Size(620, 233);
 			this.TableLayoutFrames.TabIndex = 0;
 			// 
-			// ListViewPreview
+			// FramesView
 			// 
-			this.ListViewPreview.Alignment = System.Windows.Forms.ListViewAlignment.Left;
-			this.ListViewPreview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.FramesView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.ListViewPreview.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1});
-			this.ListViewPreview.GridLines = true;
-			this.ListViewPreview.HideSelection = false;
-			this.ListViewPreview.LabelWrap = false;
-			this.ListViewPreview.Location = new System.Drawing.Point(0, 29);
-			this.ListViewPreview.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
-			this.ListViewPreview.MinimumSize = new System.Drawing.Size(128, 128);
-			this.ListViewPreview.MultiSelect = false;
-			this.ListViewPreview.Name = "ListViewPreview";
-			this.ListViewPreview.SelectedIndex = -1;
-			this.ListViewPreview.SelectedItem = null;
-			this.ListViewPreview.ShowGroups = false;
-			this.ListViewPreview.Size = new System.Drawing.Size(620, 128);
-			this.ListViewPreview.TabIndex = 0;
-			this.ListViewPreview.UseCompatibleStateImageBehavior = false;
-			this.ListViewPreview.ItemActivate += new System.EventHandler(this.ListViewPreview_ItemActivate);
-			this.ListViewPreview.SelectedIndexChanged += new System.EventHandler(this.ListViewPreview_SelectedIndexChanged);
+			this.FramesView.AutoScroll = true;
+			this.FramesView.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.FramesView.BackColor = System.Drawing.SystemColors.Window;
+			this.FramesView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.FramesView.Location = new System.Drawing.Point(0, 29);
+			this.FramesView.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
+			this.FramesView.MinimumSize = new System.Drawing.Size(64, 64);
+			this.FramesView.Name = "FramesView";
+			this.FramesView.Size = new System.Drawing.Size(620, 204);
+			this.FramesView.TabIndex = 0;
 			// 
 			// PanelFramesTop
 			// 
@@ -221,7 +211,6 @@ namespace AgentCharacterEditor
 			this.NumericFrameDuration.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.NumericFrameDuration.DefaultBackColor = System.Drawing.SystemColors.Window;
 			this.NumericFrameDuration.HighlightBackColor = System.Drawing.Color.Pink;
-			this.NumericFrameDuration.Highlighted = false;
 			this.NumericFrameDuration.Location = new System.Drawing.Point(473, 0);
 			this.NumericFrameDuration.Maximum = new decimal(new int[] {
             10000,
@@ -259,11 +248,15 @@ namespace AgentCharacterEditor
             this.ButtonDelete,
             this.toolStripSeparator1,
             this.ButtonMoveUp,
-            this.ButtonMoveDown});
+            this.ButtonMoveDown,
+            this.toolStripSeparator2,
+            this.ButtonViewSmall,
+            this.ButtonViewMedium,
+            this.ButtonViewLarge});
 			this.ToolStripFrames.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.ToolStripFrames.Location = new System.Drawing.Point(0, 0);
 			this.ToolStripFrames.Name = "ToolStripFrames";
-			this.ToolStripFrames.Size = new System.Drawing.Size(101, 26);
+			this.ToolStripFrames.Size = new System.Drawing.Size(176, 26);
 			this.ToolStripFrames.TabIndex = 0;
 			// 
 			// ButtonAdd
@@ -315,6 +308,44 @@ namespace AgentCharacterEditor
 			this.ButtonMoveDown.Text = "Move frame down";
 			this.ButtonMoveDown.Click += new System.EventHandler(this.ButtonMoveDown_Click);
 			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 26);
+			// 
+			// ButtonViewSmall
+			// 
+			this.ButtonViewSmall.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonViewSmall.Image = ((System.Drawing.Image)(resources.GetObject("ButtonViewSmall.Image")));
+			this.ButtonViewSmall.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonViewSmall.Name = "ButtonViewSmall";
+			this.ButtonViewSmall.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.ButtonViewSmall.Size = new System.Drawing.Size(23, 23);
+			this.ButtonViewSmall.Text = "Small";
+			this.ButtonViewSmall.Click += new System.EventHandler(this.ButtonViewSmall_Click);
+			// 
+			// ButtonViewMedium
+			// 
+			this.ButtonViewMedium.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonViewMedium.Image = ((System.Drawing.Image)(resources.GetObject("ButtonViewMedium.Image")));
+			this.ButtonViewMedium.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonViewMedium.Name = "ButtonViewMedium";
+			this.ButtonViewMedium.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.ButtonViewMedium.Size = new System.Drawing.Size(23, 23);
+			this.ButtonViewMedium.Text = "Medium";
+			this.ButtonViewMedium.Click += new System.EventHandler(this.ButtonViewMedium_Click);
+			// 
+			// ButtonViewLarge
+			// 
+			this.ButtonViewLarge.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonViewLarge.Image = ((System.Drawing.Image)(resources.GetObject("ButtonViewLarge.Image")));
+			this.ButtonViewLarge.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonViewLarge.Name = "ButtonViewLarge";
+			this.ButtonViewLarge.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.ButtonViewLarge.Size = new System.Drawing.Size(23, 23);
+			this.ButtonViewLarge.Text = "Large";
+			this.ButtonViewLarge.Click += new System.EventHandler(this.ButtonViewLarge_Click);
+			// 
 			// TableLayoutMain
 			// 
 			this.TableLayoutMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -339,23 +370,21 @@ namespace AgentCharacterEditor
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.GroupBoxStates.Controls.Add(this.ListViewStates);
-			this.GroupBoxStates.Location = new System.Drawing.Point(0, 208);
+			this.GroupBoxStates.Location = new System.Drawing.Point(0, 284);
 			this.GroupBoxStates.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
 			this.GroupBoxStates.MaximumSize = new System.Drawing.Size(730, 10000);
 			this.GroupBoxStates.Name = "GroupBoxStates";
 			this.GroupBoxStates.Padding = new System.Windows.Forms.Padding(6, 12, 6, 6);
-			this.GroupBoxStates.Size = new System.Drawing.Size(632, 334);
+			this.GroupBoxStates.Size = new System.Drawing.Size(632, 258);
 			this.GroupBoxStates.TabIndex = 1;
 			this.GroupBoxStates.TabStop = false;
 			this.GroupBoxStates.Text = "Used by state(s)";
 			// 
 			// ListViewStates
 			// 
-			this.ListViewStates.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
 			this.ListViewStates.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.Column1});
+			this.ListViewStates.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ListViewStates.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
 			listViewItem1.StateImageIndex = 0;
 			listViewItem2.StateImageIndex = 0;
@@ -394,10 +423,8 @@ namespace AgentCharacterEditor
 			this.ListViewStates.Margin = new System.Windows.Forms.Padding(0);
 			this.ListViewStates.MultiSelect = false;
 			this.ListViewStates.Name = "ListViewStates";
-			this.ListViewStates.SelectedIndex = -1;
-			this.ListViewStates.SelectedItem = null;
 			this.ListViewStates.ShowGroups = false;
-			this.ListViewStates.Size = new System.Drawing.Size(620, 301);
+			this.ListViewStates.Size = new System.Drawing.Size(620, 225);
 			this.ListViewStates.TabIndex = 0;
 			this.ListViewStates.UseCompatibleStateImageBehavior = false;
 			this.ListViewStates.View = System.Windows.Forms.View.Details;
@@ -420,7 +447,7 @@ namespace AgentCharacterEditor
 			this.TextBoxName.TabIndex = 1;
 			this.TextBoxName.Validated += new System.EventHandler(this.TextBoxName_Validated);
 			// 
-			// AnimationForm
+			// AnimationPanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -429,11 +456,7 @@ namespace AgentCharacterEditor
 			this.Controls.Add(this.LabelReturn);
 			this.Controls.Add(this.TextBoxName);
 			this.Controls.Add(this.LabelName);
-			this.Margin = new System.Windows.Forms.Padding(0);
-			this.Name = "AnimationForm";
-			this.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-			this.Size = new System.Drawing.Size(650, 600);
-			this.VisibleChanged += new System.EventHandler(this.AnimationForm_VisibleChanged);
+			this.Name = "AnimationPanel";
 			this.GroupBoxFrames.ResumeLayout(false);
 			this.GroupBoxFrames.PerformLayout();
 			this.TableLayoutFrames.ResumeLayout(false);
@@ -458,9 +481,8 @@ namespace AgentCharacterEditor
 		private System.Windows.Forms.Label LabelReturn;
 		private System.Windows.Forms.ComboBox ComboBoxReturn;
 		private System.Windows.Forms.GroupBox GroupBoxFrames;
-		private DoubleAgent.ListViewEx ListViewPreview;
+		private FramesPreview FramesView;
 		private System.Windows.Forms.TableLayoutPanel TableLayoutMain;
-		private System.Windows.Forms.ColumnHeader columnHeader1;
 		private System.Windows.Forms.GroupBox GroupBoxStates;
 		private DoubleAgent.ListViewEx ListViewStates;
 		private System.Windows.Forms.ColumnHeader Column1;
@@ -475,5 +497,9 @@ namespace AgentCharacterEditor
 		private System.Windows.Forms.Label LabelDurationDesc;
 		private DoubleAgent.NumericUpDownEx NumericFrameDuration;
 		private System.Windows.Forms.Label LabelDuration;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+		private System.Windows.Forms.ToolStripButton ButtonViewSmall;
+		private System.Windows.Forms.ToolStripButton ButtonViewMedium;
+		private System.Windows.Forms.ToolStripButton ButtonViewLarge;
 	}
 }

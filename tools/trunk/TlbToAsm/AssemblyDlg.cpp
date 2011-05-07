@@ -2,6 +2,8 @@
 #include "AssemblyDlg.h"
 #include "LogAssembly.h"
 
+using namespace System;
+using namespace System::Text;
 using namespace System::Windows::Forms;
 using namespace System::Reflection;
 using namespace System::Collections::Generic;

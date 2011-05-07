@@ -22,7 +22,7 @@
 #include "AgentFile.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 namespace DoubleAgent {
 namespace Character {
 #else
@@ -30,7 +30,7 @@ namespace Character {
 #pragma warning (disable:4251)
 #endif
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 ref class ScriptReader;
 ref class ScriptWriter;
 #define CAgentFileScript ScriptFile
@@ -46,7 +46,7 @@ protected:
 	CAgentFileScript ();
 public:
 	_DACORE_IMPEXP virtual ~CAgentFileScript ();
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	static CAgentFileScript^ CreateInstance ();
 #else
 	DECLARE_DLL_OBJECT_EX(CAgentFileScript, _DACORE_IMPEXP)
@@ -55,7 +55,7 @@ public:
 
 // Overrides
 public:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	virtual property bool IsAcdFile {virtual bool get() override;}
 	virtual property bool IsOpen {virtual bool get() override;}
 	virtual property bool IsReadOnly {virtual bool get() override;}
@@ -66,7 +66,7 @@ public:
 	_DACORE_IMPEXP virtual bool IsReadOnly () const;
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	virtual bool Open (const System::String^ pPath) override;
 	virtual bool Save (const System::String^ pPath, CAgentFile^ pSource) override;
 	virtual void Close () override;
@@ -75,7 +75,7 @@ public:
 	_DACORE_IMPEXP virtual void Close ();
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	virtual property int ImageCount {virtual int get() override;}
 	virtual System::String^ GetImageFilePath (int pImageNdx) override;
 	virtual CAgentFileImage^ GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor) override;
@@ -85,7 +85,7 @@ public:
 	_DACORE_IMPEXP virtual CAgentFileImage* GetImage (INT_PTR pImageNdx, bool p32Bit = false);
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	virtual property int SoundCount {virtual int get() override;}
 	virtual int GetSoundSize (int pSoundNdx) override;
 	virtual array <BYTE>^ GetSound (int pSoundNdx) override;
@@ -96,13 +96,13 @@ public:
 	_DACORE_IMPEXP virtual LPCVOID GetSound (INT_PTR pSoundNdx);
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	virtual property System::String^ IconFilePath {virtual System::String^ get() override; virtual void set (System::String^ pValue) override;}
 	virtual property System::String^ PaletteFilePath {virtual System::String^ get() override; virtual void set (System::String^ pValue) override;}
 	virtual property UInt16 NewFrameDuration {virtual UInt16 get() override; virtual void set (UInt16 pValue) override;}
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 	virtual bool RenameAnimation (CAgentFileAnimation^ pAnimation, System::String^ pNewName) override;
 	virtual Int32 LoadImageFile (System::String^ pImageFilePath) override;
@@ -111,7 +111,7 @@ internal:
 
 // Implementation
 protected:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	bool ParseFile (ScriptReader^ pReader);
 	bool ParseHeader (ScriptReader^ pReader);
 	UInt32 ParseStyle (ScriptReader^ pReader, System::String^ pStyle);
@@ -151,7 +151,7 @@ protected:
 #endif
 
 protected:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	bool																						mIsDirty;
 	System::IO::FileStream^																		mFileStream;
 	ScriptReader^																				mFileReader;
@@ -167,7 +167,7 @@ protected:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 } // namespace Character
 } // namespace DoubleAgent
 #else

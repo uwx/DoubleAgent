@@ -20,6 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "DaCmnFormattedText.h"
+#include "AgentTextParse.h"
 #include "SapiVoice.h"
 #include "DebugStr.h"
 

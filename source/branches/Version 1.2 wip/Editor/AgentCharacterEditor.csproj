@@ -98,6 +98,27 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="FilePartPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FilePartPanel.Designer.cs">
+      <DependentUpon>FilePartPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FramesPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FramesPreview.Designer.cs">
+      <DependentUpon>FramesPreview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FramesListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="BalloonPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BalloonPreview.Designer.cs">
+      <DependentUpon>BalloonPreview.cs</DependentUpon>
+    </Compile>
     <Compile Include="FileDialogEx.cs">
     </Compile>
     <Compile Include="..\Util\CSharp\ListViewEx.cs">
@@ -139,11 +160,11 @@
     <Compile Include="CharacterPanel.Designer.cs">
       <DependentUpon>CharacterPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrameForm.cs">
+    <Compile Include="FramePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FrameForm.Designer.cs">
-      <DependentUpon>FrameForm.cs</DependentUpon>
+    <Compile Include="FramePanel.Designer.cs">
+      <DependentUpon>FramePanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Global.cs">
       <SubType>Code</SubType>
@@ -193,11 +214,23 @@
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FilePartPanel.resx">
+      <DependentUpon>FilePartPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FramesPreview.resx">
+      <DependentUpon>FramesPreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FramesListView.resx">
+      <DependentUpon>FramesListView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AnimationPanel.resx">
       <DependentUpon>AnimationPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AnimationsPanel.resx">
       <DependentUpon>AnimationsPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BalloonPreview.resx">
+      <DependentUpon>BalloonPreview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="BranchingPanel.resx">
       <DependentUpon>BranchingPanel.cs</DependentUpon>
@@ -205,8 +238,8 @@
     <EmbeddedResource Include="CharacterPanel.resx">
       <DependentUpon>CharacterPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrameForm.resx">
-      <DependentUpon>FrameForm.cs</DependentUpon>
+    <EmbeddedResource Include="FramePanel.resx">
+      <DependentUpon>FramePanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LicenceBox.resx">
       <DependentUpon>LicenceBox.cs</DependentUpon>

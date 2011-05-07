@@ -60,7 +60,7 @@ namespace AgentCharacterEditor
 			this.PanelAnimations = new AgentCharacterEditor.AnimationsPanel();
 			this.PanelAnimation = new AgentCharacterEditor.AnimationPanel();
 			this.PanelState = new AgentCharacterEditor.StatePanel();
-			this.PanelFrame = new AgentCharacterEditor.FrameForm();
+			this.PanelFrame = new AgentCharacterEditor.FramePanel();
 			this.PanelBranching = new AgentCharacterEditor.BranchingPanel();
 			this.PanelOverlays = new AgentCharacterEditor.OverlayPanel();
 			this.ToolStripTop = new DoubleAgent.ToolStripEx();
@@ -176,7 +176,6 @@ namespace AgentCharacterEditor
 			this.PanelPartsTree.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.PanelPartsTree.CharacterFile = null;
 			this.PanelPartsTree.Location = new System.Drawing.Point(0, 0);
 			this.PanelPartsTree.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelPartsTree.Name = "PanelPartsTree";
@@ -188,7 +187,6 @@ namespace AgentCharacterEditor
 			// 
 			// PanelBalloon
 			// 
-			this.PanelBalloon.CharacterFile = null;
 			this.PanelBalloon.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PanelBalloon.Location = new System.Drawing.Point(0, 0);
 			this.PanelBalloon.Margin = new System.Windows.Forms.Padding(0);
@@ -200,7 +198,6 @@ namespace AgentCharacterEditor
 			// 
 			// PanelCharacter
 			// 
-			this.PanelCharacter.CharacterFile = null;
 			this.PanelCharacter.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PanelCharacter.Location = new System.Drawing.Point(0, 0);
 			this.PanelCharacter.Margin = new System.Windows.Forms.Padding(0);
@@ -211,7 +208,6 @@ namespace AgentCharacterEditor
 			// 
 			// PanelTts
 			// 
-			this.PanelTts.CharacterFile = null;
 			this.PanelTts.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PanelTts.Location = new System.Drawing.Point(0, 0);
 			this.PanelTts.Margin = new System.Windows.Forms.Padding(0);
@@ -223,7 +219,6 @@ namespace AgentCharacterEditor
 			// 
 			// PanelAnimations
 			// 
-			this.PanelAnimations.CharacterFile = null;
 			this.PanelAnimations.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PanelAnimations.Location = new System.Drawing.Point(0, 0);
 			this.PanelAnimations.Margin = new System.Windows.Forms.Padding(0);
@@ -236,8 +231,6 @@ namespace AgentCharacterEditor
 			// 
 			// PanelAnimation
 			// 
-			this.PanelAnimation.Animation = null;
-			this.PanelAnimation.CharacterFile = null;
 			this.PanelAnimation.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PanelAnimation.Location = new System.Drawing.Point(0, 0);
 			this.PanelAnimation.Margin = new System.Windows.Forms.Padding(0);
@@ -250,23 +243,19 @@ namespace AgentCharacterEditor
 			// 
 			// PanelState
 			// 
-			this.PanelState.CharacterFile = null;
 			this.PanelState.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PanelState.Location = new System.Drawing.Point(0, 0);
 			this.PanelState.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelState.Name = "PanelState";
 			this.PanelState.Padding = new System.Windows.Forms.Padding(9);
 			this.PanelState.Size = new System.Drawing.Size(758, 481);
-			this.PanelState.StateName = null;
 			this.PanelState.TabIndex = 0;
 			this.PanelState.Visible = false;
 			this.PanelState.Navigate += new AgentCharacterEditor.Global.NavigationEventHandler(this.OnNavigate);
 			// 
 			// PanelFrame
 			// 
-			this.PanelFrame.CharacterFile = null;
 			this.PanelFrame.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PanelFrame.Frame = null;
 			this.PanelFrame.Location = new System.Drawing.Point(0, 0);
 			this.PanelFrame.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelFrame.Name = "PanelFrame";
@@ -277,9 +266,7 @@ namespace AgentCharacterEditor
 			// 
 			// PanelBranching
 			// 
-			this.PanelBranching.CharacterFile = null;
 			this.PanelBranching.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PanelBranching.Frame = null;
 			this.PanelBranching.Location = new System.Drawing.Point(0, 0);
 			this.PanelBranching.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelBranching.Name = "PanelBranching";
@@ -290,9 +277,7 @@ namespace AgentCharacterEditor
 			// 
 			// PanelOverlays
 			// 
-			this.PanelOverlays.CharacterFile = null;
 			this.PanelOverlays.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PanelOverlays.Frame = null;
 			this.PanelOverlays.Location = new System.Drawing.Point(0, 0);
 			this.PanelOverlays.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelOverlays.Name = "PanelOverlays";
@@ -790,7 +775,7 @@ namespace AgentCharacterEditor
 		public AgentCharacterEditor.AnimationsPanel PanelAnimations;
 		public AgentCharacterEditor.AnimationPanel PanelAnimation;
 		public AgentCharacterEditor.StatePanel PanelState;
-		public AgentCharacterEditor.FrameForm PanelFrame;
+		public AgentCharacterEditor.FramePanel PanelFrame;
 		public AgentCharacterEditor.BranchingPanel PanelBranching;
 		public AgentCharacterEditor.OverlayPanel PanelOverlays;
 		public System.Windows.Forms.ContextMenuStrip ContextMenuEdit;

@@ -338,7 +338,7 @@ void CAnimationTestDlg::ShowCharacterDetails ()
 {
 	tBstrPtr	lName;
 	tBstrPtr	lDesc;
-	
+
 	if	(mDaCharacter)
 	{
 		mDaCharacter->GetName (lName.Free());
@@ -394,7 +394,7 @@ void CAnimationTestDlg::ShowGestures ()
 			}
 
 			if	(
-					(	
+					(
 						(mDaCharacter)
 					||	(mMsCharacter)
 					)
@@ -1257,7 +1257,7 @@ bool CAnimationTestDlg::LoadedAgentCharacter ()
 		SetWindowText (lWinTitle);
 		lRet = true;
 	}
-	
+
 	ShowCharacterDetails ();
 	return lRet;
 }
@@ -1472,7 +1472,7 @@ bool CAnimationTestDlg::IsCharacterVisible ()
 	if	(mMsCharacter)
 	{
 		long	lVisible = FALSE;
-		
+
 		if	(
 				(SUCCEEDED (mMsCharacter->GetVisible (&lVisible)))
 			&&	(lVisible)

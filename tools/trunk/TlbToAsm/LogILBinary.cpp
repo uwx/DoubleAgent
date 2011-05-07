@@ -4,9 +4,12 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
+using namespace System;
+using namespace System::Text;
+using namespace System::Collections;
+using namespace System::Collections::Generic;
 using namespace System::Reflection;
 using namespace System::Reflection::Emit;
-using namespace System::Collections::Generic;
 
 namespace DoubleAgent {
 namespace TlbToAsm {

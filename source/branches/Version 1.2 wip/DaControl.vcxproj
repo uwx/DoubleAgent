@@ -290,6 +290,7 @@ if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.
     <ClCompile Include="Control\DaCtlTTSEngine.cpp" />
     <ClCompile Include="Control\DaCtlTTSEngines.cpp" />
     <ClCompile Include="Control\DaCtlUserInput.cpp" />
+    <ClCompile Include="Core\AgentTextParse.cpp" />
     <ClCompile Include="Core\DaError.cpp" />
     <ClCompile Include="Common\EventNotify.cpp" />
     <ClCompile Include="Common\ListeningState.cpp" />

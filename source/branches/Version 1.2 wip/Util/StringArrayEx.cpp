@@ -21,6 +21,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#pragma unmanaged
 #include <search.h>
 #include "StringArrayEx.h"
 

@@ -20,7 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 using namespace System;
 using namespace System::Drawing;
 using namespace System::Drawing::Imaging;
@@ -34,7 +34,7 @@ using namespace System::Runtime::Serialization;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 namespace DoubleAgent {
 namespace Character {
 ref class CharacterFile;
@@ -51,11 +51,18 @@ ref class FileGestures;
 #endif
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define AgentCharStyle CharacterStyle
+#define CharStyleTts Tts
+#define CharStyleBalloon Balloon
+#define CharStyleSizeToText SizeToText
+#define CharStyleNoAutoHide NoAutoHide
+#define CharStyleNoAutoPace NoAutoPace
+#define CharStyleStandard Standard
 /// <summary>
 ///	<see cref="CharacterFile"/> style bits.
 /// </summary>
+[FlagsAttribute]
 public enum class CharacterStyle : UInt32
 #else
 enum AgentCharStyle
@@ -66,10 +73,11 @@ enum AgentCharStyle
 	CharStyleSizeToText = 0x00010000,
 	CharStyleNoAutoHide = 0x00020000,
 	CharStyleNoAutoPace = 0x00040000,
-	CharStyleStandard = 0x00100000
+	CharStyleStandard = 0x00100000,
+	None = 0
 };
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define AgentMouthOverlay MouthOverlay
 /// <summary>
 ///	The <see cref="FileFrameOverlay.OverlayType"/> of a <see cref="FileFrameOverlay"/> instance.
@@ -94,7 +102,7 @@ enum AgentMouthOverlay
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CAgentFileImage FileImage
 [Serializable] public ref class FileImage
 #else
@@ -102,7 +110,7 @@ class _DACORE_IMPEXP CAgentFileImage
 #endif
 {
 public:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	property UInt32 ImageNum {UInt32 get();}
 	property System::Drawing::Size ImageSize {System::Drawing::Size get();}
 	property Boolean Is32Bit {Boolean get();}
@@ -124,7 +132,7 @@ public:
 	void put_ImageSize (const CSize& pImageSize);
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 	[NonSerialized]	UInt32	mImageNum;
 	System::Drawing::Size	mImageSize;
@@ -139,7 +147,7 @@ protected:
 	tArrayPtr <BYTE>		mBits;
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 #else
 public:
@@ -148,7 +156,7 @@ public:
 	virtual ~CAgentFileImage ();
 	void Empty ();
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 public:
     virtual System::String^ ToString() override;
 #else
@@ -163,7 +171,7 @@ public:
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CAgentFileHeader FileHeader
 /// <summary>
 ///	General character information
@@ -174,7 +182,7 @@ class _DACORE_IMPEXP CAgentFileHeader
 #endif
 {
 public:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	/// <summary>
 	///	The <see cref="CharacterFile"/> object that owns this object (or null if unowned)
 	/// </summary>
@@ -223,7 +231,7 @@ public:
 	BYTE get_Transparency () const {return mTransparency;}
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 	[NonSerialized]	CharacterFile^				mOwner;
 	UInt32										mStyle;
@@ -242,7 +250,7 @@ protected:
 	BYTE										mTransparency;
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 #else
 public:
@@ -251,7 +259,7 @@ public:
 	virtual ~CAgentFileHeader ();
 	void Empty ();
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 public:
 	/// <summary>
 	/// See <see cref="System.Object.ToString"/>.
@@ -278,7 +286,7 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CAgentFileName FileCharacterName
 /// <summary>
 ///	A character name and optional description in a specific language
@@ -289,7 +297,7 @@ class _DACORE_IMPEXP CAgentFileName
 #endif
 {
 public:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	/// <summary>
 	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
 	/// </summary>
@@ -315,7 +323,7 @@ public:
 	void put_Desc2 (LPCTSTR pDesc2);
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 	[NonSerialized]	CharacterFile^		mOwner;
 	[NonSerialized] FileCharacterNames^	mContainer;
@@ -334,12 +342,12 @@ protected:
 public:
 	CAgentFileName ();
 	virtual ~CAgentFileName ();
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 #endif
 	void Empty ();
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 public:
 	FileCharacterName (LANGID pLanguage, System::String^ pName);
 	FileCharacterName (LANGID pLanguage, FileCharacterName^ pSource);
@@ -355,7 +363,7 @@ public:
 #endif
 };
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CAgentFileNames FileCharacterNames
 /// <summary>
 ///	A collection of <see cref="FileCharacterName"/> objects
@@ -396,7 +404,7 @@ typedef	CAtlPtrTypeArray <CAgentFileName>	CAgentFileNames;
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CAgentFileTts FileTts
 /// <summary>
 ///	Specifies a character's default text-to-speech voice
@@ -407,7 +415,7 @@ class _DACORE_IMPEXP CAgentFileTts
 #endif
 {
 public:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	/// <summary>
 	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
 	/// </summary>
@@ -444,7 +452,7 @@ public:
 	void put_Gender (USHORT pGender);
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 	[NonSerialized]	CharacterFile^	mOwner;
 	System::Guid					mEngine;
@@ -468,12 +476,12 @@ protected:
 public:
 	CAgentFileTts ();
 	virtual ~CAgentFileTts ();
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 #endif
 	void Empty ();
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 public:
 	Boolean CopyTo (CAgentFileTts^ pTarget);
 	Boolean Equals (CAgentFileTts^ pTarget);
@@ -489,7 +497,7 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CAgentFileBalloon FileBalloon
 [Serializable] public ref class FileBalloon
 #else
@@ -497,7 +505,7 @@ class _DACORE_IMPEXP CAgentFileBalloon
 #endif
 {
 public:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	/// <summary>
 	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
 	/// </summary>
@@ -546,7 +554,7 @@ public:
 	static const USHORT	DefPerLine;
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 	[NonSerialized]	CharacterFile^	mOwner;
 	UInt16							mLines;
@@ -568,12 +576,12 @@ protected:
 public:
 	CAgentFileBalloon ();
 	virtual ~CAgentFileBalloon ();
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 #endif
 	void Empty ();
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 public:
 	Boolean CopyTo (CAgentFileBalloon^ pTarget);
 	Boolean Equals (CAgentFileBalloon^ pTarget);
@@ -592,7 +600,7 @@ public:
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CAgentFileFrameImage FileFrameImage
 [Serializable] public ref class FileFrameImage
 #else
@@ -600,7 +608,7 @@ class _DACORE_IMPEXP CAgentFileFrameImage
 #endif
 {
 public:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	/// <summary>
 	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
 	/// </summary>
@@ -619,7 +627,7 @@ public:
 	const CPoint& get_Offset () const {return mOffset;}
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 	[NonSerialized]	CharacterFile^		mOwner;
 	[NonSerialized]	FileFrameImages^	mContainer;
@@ -634,12 +642,12 @@ protected:
 public:
 	CAgentFileFrameImage ();
 	virtual ~CAgentFileFrameImage ();
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 #endif
 	void Empty ();
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 public:
 	Boolean CopyTo (CAgentFileFrameImage^ pTarget);
 	Boolean Equals (CAgentFileFrameImage^ pTarget);
@@ -660,7 +668,7 @@ public:
 #endif
 };
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CAgentFileFrameImages FileFrameImages
 [Serializable] public ref class FileFrameImages : public System::Collections::ObjectModel::Collection <FileFrameImage^>
 {
@@ -701,7 +709,7 @@ typedef tArrayPtr <CAgentFileFrameImage> CAgentFileFrameImages;
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CAgentFileFrameOverlay FileFrameOverlay
 [Serializable] public ref class FileFrameOverlay
 #else
@@ -709,7 +717,7 @@ class _DACORE_IMPEXP CAgentFileFrameOverlay
 #endif
 {
 public:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	/// <summary>
 	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
 	/// </summary>
@@ -734,7 +742,7 @@ public:
 	const CPoint& get_Offset () const {return mOffset;}
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 	[NonSerialized]	CharacterFile^			mOwner;
 	[NonSerialized]	FileFrameOverlays^		mContainer;
@@ -755,12 +763,12 @@ protected:
 public:
 	CAgentFileFrameOverlay ();
 	virtual ~CAgentFileFrameOverlay ();
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 #endif
 	void Empty ();
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 public:
 	Boolean CopyTo (CAgentFileFrameOverlay^ pTarget);
 	Boolean Equals (CAgentFileFrameOverlay^ pTarget);
@@ -781,7 +789,7 @@ public:
 #endif
 };
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CAgentFileFrameOverlays FileFrameOverlays
 [Serializable] public ref class FileFrameOverlays : public System::Collections::ObjectModel::KeyedCollection <MouthOverlay, FileFrameOverlay^>
 {
@@ -822,7 +830,7 @@ typedef tArrayPtr <CAgentFileFrameOverlay> CAgentFileFrameOverlays;
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CAgentFileFrameBranch FileFrameBranch
 [Serializable] public value struct FileFrameBranch
 {
@@ -837,7 +845,7 @@ struct _DACORE_IMPEXP CAgentFileFrameBranch
 };
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CAgentFileFrame FileAnimationFrame
 [Serializable] public ref class FileAnimationFrame
 #else
@@ -845,7 +853,7 @@ class _DACORE_IMPEXP CAgentFileFrame
 #endif
 {
 public:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	/// <summary>
 	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
 	/// </summary>
@@ -886,7 +894,7 @@ public:
 	const CAgentFileFrameOverlay* get_Overlays () const {return mOverlays;}
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 	[NonSerialized]	CharacterFile^	mOwner;
 	[NonSerialized]	FileFrames^		mContainer;
@@ -911,12 +919,12 @@ protected:
 public:
 	CAgentFileFrame ();
 	virtual ~CAgentFileFrame ();
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 #endif
 	void Empty ();
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 public:
 	Boolean CopyTo (FileAnimationFrame^ pTarget);
 	Boolean CopyTo (FileAnimationFrame^ pTarget, Boolean pDeepCopy);
@@ -937,7 +945,7 @@ public:
 #endif
 };
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CAgentFileFrames FileFrames
 [Serializable] public ref class FileFrames : public System::Collections::ObjectModel::Collection <FileAnimationFrame^>
 {
@@ -978,7 +986,7 @@ typedef	tArrayPtr <CAgentFileFrame> CAgentFileFrames;
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CAgentFileAnimation FileAnimation
 [Serializable] public ref class FileAnimation
 #else
@@ -986,7 +994,7 @@ class _DACORE_IMPEXP CAgentFileAnimation
 #endif
 {
 public:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	/// <summary>
 	///	The <see cref="CharacterFile"/> that owns this object (or null if unowned)
 	/// </summary>
@@ -1012,7 +1020,7 @@ public:
 	const CAgentFileFrame* get_Frames () const {return mFrames;}
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 	[NonSerialized]	CharacterFile^	mOwner;
 	[NonSerialized]	FileGestures^	mContainer;
@@ -1036,12 +1044,12 @@ protected:
 public:
 	CAgentFileAnimation ();
 	virtual ~CAgentFileAnimation ();
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 #endif
 	void Empty ();
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 public:
 	Boolean CopyTo (FileAnimation^ pTarget);
 	Boolean CopyTo (FileAnimation^ pTarget, Boolean pDeepCopy);
@@ -1057,7 +1065,7 @@ public:
 #endif
 };
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CAgentFileGestures FileGestures
 public ref class CAgentFileGestures : public System::Collections::ObjectModel::KeyedCollection <System::String^, FileAnimation^>
 {
@@ -1103,9 +1111,29 @@ struct _DACORE_IMPEXP CAgentFileGestures
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
+#define CAgentFileState FileState
+[Serializable] public ref class FileState
+{
+public:
+	CAgentFileState ();
+	virtual ~CAgentFileState ();
+internal:
+	CAgentFileState (CharacterFile^ pOwner);
+
+public:
+	property CharacterFile^ Owner {CharacterFile^ get() {return mOwner;}}
+	property String^ StateName {String^ get() {return mStateName;}}
+	property array <System::String^>^ AnimationNames {array <System::String^>^ get() {return mAnimationNames;}}
+	
+internal:
+	[NonSerialized]	CharacterFile^	mOwner;
+	String^							mStateName;
+	array <System::String^>^		mAnimationNames;
+};
+
 #define CAgentFileStates FileStates
-public ref class CAgentFileStates : public System::Collections::Generic::SortedList <System::String^, array <System::String^>^>
+public ref class CAgentFileStates : public System::Collections::ObjectModel::KeyedCollection <System::String^, FileState^>
 {
 public:
 	CAgentFileStates ();
@@ -1123,7 +1151,11 @@ public:
 	bool RemoveStateAnimation (System::String^ pStateName, System::String^ pAnimationName);
 
 internal:
-	void Add (System::String^ pStateName, array <System::String^>^ pAnimations) new {__super::Add (pStateName, pAnimations);}
+	void Add (System::String^ pStateName, array <System::String^>^ pAnimationNames);
+	void Add (FileState^ pState) new;
+
+protected:
+	virtual System::String^ GetKeyForItem (FileState^ pItem) override;
 
 internal:
 	[NonSerialized]	CharacterFile^	mOwner;
@@ -1141,7 +1173,7 @@ struct _DACORE_IMPEXP CAgentFileStates
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 } // namespace Character
 } // namespace DoubleAgent
 #else

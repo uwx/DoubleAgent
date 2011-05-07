@@ -20,13 +20,13 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #ifndef	_DACORE_IMPEXP
 #define	_DACORE_IMPEXP
 #endif
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 using namespace System;
 using namespace System::Drawing;
 using namespace System::Drawing::Imaging;
@@ -40,7 +40,7 @@ using namespace System::Collections::ObjectModel;
 #include "AgentFileParts.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 namespace DoubleAgent {
 namespace Character {
 #else
@@ -49,7 +49,7 @@ namespace Character {
 #endif
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CAgentFile CharacterFile
 /// <summary>
 ///	The abstract base class for an Agent Character definition.
@@ -66,7 +66,7 @@ protected:
 	CAgentFile ();
 public:
 	_DACORE_IMPEXP virtual ~CAgentFile ();
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	static CAgentFile^ CreateInstance (const System::String^ pPath);
 #else
 	DECLARE_DLL_OBJECT_EX(CAgentFile, _DACORE_IMPEXP)
@@ -75,7 +75,7 @@ public:
 
 // Attributes
 public:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	property System::String^ Path {System::String^ get();}
 	property System::String^ FileName {System::String^ get();}
 
@@ -130,7 +130,7 @@ public:
 	_DACORE_IMPEXP void put_LogLevel (UINT pLogLevel) {mLogLevel = pLogLevel;}
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	property CAgentFileNames^ Names {CAgentFileNames^ get();}
 	property CAgentFileStates^ States {CAgentFileStates^ get();}
 	property CAgentFileGestures^ Gestures {CAgentFileGestures^ get();}
@@ -144,7 +144,7 @@ public:
 	_DACORE_IMPEXP const CAgentFileGestures& get_Gestures () const;
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	virtual array <System::String^>^ GetStateNames ();
 	virtual array <System::String^>^ GetGestureNames ();
 	virtual array <System::String^>^ GetAnimationNames ();
@@ -154,7 +154,7 @@ public:
 	_DACORE_IMPEXP virtual SAFEARRAY* GetAnimationNames ();
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	/// <summary>
 	/// Gets or sets the file that defines the character's <see cref="FileHeader.Icon"/>.
 	/// </summary>
@@ -171,7 +171,7 @@ public:
 
 // Operations
 public:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	static bool IsProperFilePath (const System::String^ pPath);
 	static bool IsRelativeFilePath (const System::String^ pPath);
 	static System::String^ ParseFilePath (const System::String^ pPath);
@@ -182,7 +182,7 @@ public:
 	_DACORE_IMPEXP tBstrPtr ParseRelativePath (LPCTSTR pRelativePath);
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	virtual bool Open (const System::String^ pPath) = 0;
 	virtual bool Save ();
 	virtual bool Save (const System::String^ pPath);
@@ -193,7 +193,7 @@ public:
 	_DACORE_IMPEXP virtual void Close ();
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	CAgentFileName^ GetDefaultName () {return FindName (LANG_USER_DEFAULT);}
 	virtual CAgentFileName^ FindName (WORD pLangID);
 #else
@@ -209,7 +209,7 @@ public:
 	_DACORE_IMPEXP virtual const CAgentFileAnimation* GetAnimation (LPCTSTR pAnimationName);
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	virtual property int ImageCount {virtual int get();}
 	CAgentFileImage^ GetImage (int pImageNdx);
 	CAgentFileImage^ GetImage (int pImageNdx, bool p32Bit);
@@ -239,7 +239,7 @@ public:
 	_DACORE_IMPEXP UINT GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame, bool p32Bit = false, const COLORREF* pBkColor = NULL, SHORT pOverlayType = -1);
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	virtual property int SoundCount {virtual int get();}
 	virtual int GetSoundSize (int pSoundNdx);
 	virtual array <BYTE>^ GetSound (int pSoundNdx);
@@ -252,7 +252,7 @@ public:
 
 // Implementation
 public:
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 	_DACORE_IMPEXP void Log (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 	_DACORE_IMPEXP void LogNames (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 	_DACORE_IMPEXP void LogStates (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
@@ -271,7 +271,7 @@ protected:
 	virtual void FreeStates ();
 	virtual void FreeGestures ();
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 internal:
 	virtual bool RenameAnimation (CAgentFileAnimation^ pAnimation, System::String^ pNewName) {return false;}
 	virtual Int32 LoadImageFile (System::String^ pImageFilePath) {return -1;}
@@ -282,7 +282,7 @@ protected:
 	DWORD										mSignature;
 	WORD										mVersionMajor;
 	WORD										mVersionMinor;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	System::String^								mPath;
 internal:
 	CAgentFileHeader^							mHeader;
@@ -305,7 +305,7 @@ public:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 } // namespace Character
 } // namespace DoubleAgent
 #else

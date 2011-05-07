@@ -43,11 +43,11 @@ protected:
 
 protected:
 	virtual System::Type^ GetTokenType (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken);
-	virtual System::Type^ GetTokenType (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
+	virtual System::Type^ GetTokenType (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<System::Type^>^ pGenericTypeArguments, array<System::Type^>^ pGenericMethodArguments);
 	virtual System::Reflection::MethodBase^ GetTokenMethod (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken);
-	virtual System::Reflection::MethodBase^ GetTokenMethod (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
+	virtual System::Reflection::MethodBase^ GetTokenMethod (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<System::Type^>^ pGenericTypeArguments, array<System::Type^>^ pGenericMethodArguments);
 	virtual System::Reflection::FieldInfo^ GetTokenField (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken);
-	virtual System::Reflection::FieldInfo^ GetTokenField (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
+	virtual System::Reflection::FieldInfo^ GetTokenField (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<System::Type^>^ pGenericTypeArguments, array<System::Type^>^ pGenericMethodArguments);
 	virtual System::String^ GetTokenString (DWORD pToken);
 
 protected:

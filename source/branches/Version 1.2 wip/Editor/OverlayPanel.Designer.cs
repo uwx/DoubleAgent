@@ -593,7 +593,6 @@ namespace AgentCharacterEditor
 			this.Name = "OverlayForm";
 			this.Padding = new System.Windows.Forms.Padding (9, 0, 9, 0);
 			this.Size = new System.Drawing.Size (700, 600);
-			this.VisibleChanged += new System.EventHandler (this.OverlayForm_VisibleChanged);
 			this.Layout += new System.Windows.Forms.LayoutEventHandler (this.OverlayForm_Layout);
 			this.GroupBoxImages.ResumeLayout (false);
 			this.TableLayoutImages.ResumeLayout (false);

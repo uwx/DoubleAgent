@@ -9,7 +9,7 @@ ref class LogAssembly
 {
 public:
 	LogAssembly ();
-	LogAssembly (UInt32 pLogLevel);
+	LogAssembly (System::UInt32 pLogLevel);
 	~LogAssembly () {}
 
 	void Log (System::Reflection::Assembly^ pAssembly, bool pLogCode);
@@ -26,8 +26,8 @@ public:
 	void LogParameter (System::Reflection::ParameterInfo^ pParameter, System::Int32 pOrder, System::UInt32 pIndent);
 	void LogAttributes (System::Collections::Generic::IList <System::Reflection::CustomAttributeData^>^ pAttributes, System::UInt32 pIndent);
 
-	static bool IsInterfaceImplemented (Type^ pType, Type^ pInterface);
-	static bool IsInterfaceInherited (Type^ pType, Type^ pInterface);
+	static bool IsInterfaceImplemented (System::Type^ pType, System::Type^ pInterface);
+	static bool IsInterfaceInherited (System::Type^ pType, System::Type^ pInterface);
 	System::Reflection::MethodInfo^ IsMethodOverride (System::Reflection::MethodBase ^ pMethod);
 	System::Reflection::MethodInfo^ IsMethodOverride (System::Reflection::MethodBase ^ pMethod, int pInheritanceLevels);
 
@@ -50,10 +50,10 @@ public:
 	static System::String^ TypeLibVarFlagsStr (System::Runtime::InteropServices::TypeLibVarFlags pFlags);
 
 protected:
-	typedef System::Collections::Generic::Dictionary <String^, array<System::Reflection::InterfaceMapping>^> InterfaceMappings;
+	typedef System::Collections::Generic::Dictionary <System::String^, array<System::Reflection::InterfaceMapping>^> InterfaceMappings;
 
-	void GetInterfaceMappings (array<Type^>^ pTypes);
-	void GetInterfaceMappings (Type^ pType);
+	void GetInterfaceMappings (array<System::Type^>^ pTypes);
+	void GetInterfaceMappings (System::Type^ pType);
 
 public:
 	System::UInt32		mLogLevel;

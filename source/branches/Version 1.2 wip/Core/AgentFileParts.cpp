@@ -20,8 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "AgentFile.h"
-#ifdef	_M_CEE
-#include "HandleTemplates.h"
+#ifdef	__cplusplus_cli
 #else
 #include "DaCore.h"
 #include "GuidStr.h"
@@ -33,7 +32,7 @@
 #endif
 #include "AgentFileDefs.inl"
 
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 IMPLEMENT_DLL_OBJECT(CAgentFileHeader)
 IMPLEMENT_DLL_OBJECT(CAgentFileName)
 IMPLEMENT_DLL_OBJECT(CAgentFileTts)
@@ -47,7 +46,7 @@ IMPLEMENT_DLL_OBJECT(CAgentFileGestures)
 IMPLEMENT_DLL_OBJECT(CAgentFileStates)
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #ifdef	_DEBUG
 //#define	_DEBUG_INSTANCE			LogNormal
 //#define	_DEBUG_INSTANCE_OWNED	MinLogLevel(mOwner->mLogLevel,_DEBUG_INSTANCE)
@@ -61,7 +60,7 @@ IMPLEMENT_DLL_OBJECT(CAgentFileStates)
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 CAgentFileAnimation* CAgentFileGestures::operator() (const CAtlString& pName) {return mAnimations (FindSortedString (mNames, pName));}
 const CAgentFileAnimation* CAgentFileGestures::operator() (const CAtlString& pName) const {return mAnimations (FindSortedString (mNames, pName));}
 
@@ -72,13 +71,13 @@ const CAtlStringArray* CAgentFileStates::operator() (const CAtlString& pName) co
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 namespace DoubleAgent {
 namespace Character {
 #endif
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #ifdef	_DEBUG_INSTANCE
 static gcroot<List<CAgentFileHeader^> ^>			sHeaderInstances = gcnew List<CAgentFileHeader^>;
 static gcroot<List<CAgentFileTts^> ^>				sTtsInstances = gcnew List<CAgentFileTts^>;
@@ -98,7 +97,7 @@ static gcroot<List<CAgentFileFrameOverlays^> ^>		sFrameOverlaysInstances = gcnew
 /////////////////////////////////////////////////////////////////////////////
 
 CAgentFileHeader::CAgentFileHeader ()
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 :	mIcon (NULL)
 #endif
 {
@@ -109,7 +108,7 @@ CAgentFileHeader::CAgentFileHeader ()
 	Empty ();
 }
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 CAgentFileHeader::CAgentFileHeader (CharacterFile^ pOwner)
 :	mOwner (pOwner)
 {
@@ -125,7 +124,7 @@ CAgentFileHeader::CAgentFileHeader (CharacterFile^ pOwner)
 
 CAgentFileHeader::~CAgentFileHeader ()
 {
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #ifdef	_DEBUG_INSTANCE
 #ifdef	_DEBUG_INSTANCE_OWNED
 	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileHeader::~CAgentFileHeader (Owned)"), sHeaderInstances->IndexOf(this));
@@ -139,7 +138,7 @@ CAgentFileHeader::~CAgentFileHeader ()
 
 void CAgentFileHeader::Empty ()
 {
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	if	(mIcon)
 	{
 		DestroyIcon ((HICON)(INT_PTR)mIcon->Handle);
@@ -167,7 +166,7 @@ void CAgentFileHeader::Empty ()
 
 	mTransparency = 0;
 	mStyle = 0;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	mImageSize.Width = 0;
 	mImageSize.Height = 0;
 	mIcon = nullptr;
@@ -182,7 +181,7 @@ void CAgentFileHeader::Empty ()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 
 AgentCharStyle CAgentFileHeader::Style::get ()
@@ -200,14 +199,14 @@ void CAgentFileHeader::Style::set (AgentCharStyle pValue)
 	{
 		mStyle = (UInt32)pValue;
 		if	(
-				(mStyle & (UInt32)AgentCharStyle::CharStyleBalloon)
+				(mStyle & (UInt32)CharacterStyle::Balloon)
 			&&	(!mOwner->mBalloon)
 			)
 		{
 			mOwner->mBalloon = gcnew CAgentFileBalloon (mOwner);
 		}
 		if	(
-				(mStyle & (UInt32)AgentCharStyle::CharStyleTts)
+				(mStyle & (UInt32)CharacterStyle::Tts)
 			&&	(!mOwner->mTts)
 			)
 		{
@@ -285,23 +284,23 @@ void CAgentFileHeader::Transparency::set (Byte pValue)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#endif	// _M_CEE
+#endif	// __cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 System::String^ CAgentFileHeader::ToString ()
 {
     return String::Format ("Style [{0}] ImageSize {1:D},{2:D} Transparency {3} GUID {4}", StyleString(Style), ImageSize.Width, ImageSize.Height, Transparency, Guid.ToString()->ToUpper());
 }
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 System::String^ CAgentFileHeader::StyleString (AgentCharStyle pStyle)
 #else
 CAtlString CAgentFileHeader::StyleString (AgentCharStyle pStyle)
 #endif
 {
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	String^		lStyle = String::Empty;
 #else
 	CAtlString	lStyle;
@@ -332,7 +331,7 @@ CAtlString CAgentFileHeader::StyleString (AgentCharStyle pStyle)
 		lStyle += "NoAutoPace ";
 	}
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	return lStyle->Trim();
 #else
 	return lStyle.Trim();
@@ -348,7 +347,7 @@ CAgentFileName::CAgentFileName ()
 	Empty ();
 }
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 CAgentFileName::CAgentFileName (LANGID pLanguage, System::String^ pName)
 {
 	Empty ();
@@ -378,7 +377,7 @@ CAgentFileName::~CAgentFileName ()
 void CAgentFileName::Empty ()
 {
 	mLanguage = 0;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	mName = String::Empty;
 	mDesc1 = nullptr;
 	mDesc2 = nullptr;
@@ -391,14 +390,14 @@ void CAgentFileName::Empty ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 LANGID CAgentFileName::Language::get ()
 {
 	return mLanguage;
 }
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 System::String^ CAgentFileName::Name::get ()
 {
 	return mName;
@@ -437,7 +436,7 @@ void CAgentFileName::put_Name (LPCTSTR pName)
 }
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 System::String^ CAgentFileName::Desc1::get ()
 {
 	return mDesc1;
@@ -474,7 +473,7 @@ void CAgentFileName::put_Desc1 (LPCTSTR pDesc1)
 }
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 System::String^ CAgentFileName::Desc2::get ()
 {
 	return mDesc2;
@@ -512,7 +511,7 @@ void CAgentFileName::put_Desc2 (LPCTSTR pDesc2)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 
 Boolean CAgentFileName::CopyTo (CAgentFileName^ pTarget)
@@ -566,11 +565,11 @@ System::String^ CAgentFileName::ToString ()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#endif	// _M_CEE
+#endif	// __cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 
 CAgentFileNames::CAgentFileNames ()
@@ -656,7 +655,7 @@ bool CAgentFileNames::Remove (CAgentFileName^ pItem)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#endif	// _M_CEE
+#endif	// __cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -670,7 +669,7 @@ CAgentFileTts::CAgentFileTts ()
 	Empty ();
 }
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 CAgentFileTts::CAgentFileTts (CharacterFile^ pOwner)
 :	mOwner (pOwner)
 {
@@ -686,7 +685,7 @@ CAgentFileTts::CAgentFileTts (CharacterFile^ pOwner)
 
 CAgentFileTts::~CAgentFileTts ()
 {
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #ifdef	_DEBUG_INSTANCE
 #ifdef	_DEBUG_INSTANCE_OWNED
 	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileTts::~CAgentFileTts (Owned)"), sTtsInstances->IndexOf(this));
@@ -702,7 +701,7 @@ void CAgentFileTts::Empty ()
 {
 	mGender = 0;
 	mLanguage = 0;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	mEngine = Guid::Empty;
 	mMode = Guid::Empty;
 	mModeId = String::Empty;
@@ -719,7 +718,7 @@ void CAgentFileTts::Empty ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 System::Guid CAgentFileTts::Engine::get ()
 {
 	return mEngine;
@@ -744,7 +743,7 @@ void CAgentFileTts::Engine::set (System::Guid pValue)
 }
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 System::Guid CAgentFileTts::Mode::get ()
 {
 	return mMode;
@@ -791,14 +790,14 @@ void CAgentFileTts::put_Mode (const GUID& pMode)
 }
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 System::String^ CAgentFileTts::ModeId::get ()
 {
 	return mModeId;
 }
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 LANGID CAgentFileTts::Language::get ()
 {
 	return mLanguage;
@@ -829,7 +828,7 @@ void CAgentFileTts::put_Language (LANGID pLanguage)
 }
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 UInt16 CAgentFileTts::Gender::get ()
 {
 	return mGender;
@@ -868,7 +867,7 @@ void CAgentFileTts::put_Gender (USHORT pGender)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 
 Boolean CAgentFileTts::CopyTo (CAgentFileTts^ pTarget)
@@ -921,7 +920,7 @@ System::String^ CAgentFileTts::ToString ()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#endif	// _M_CEE
+#endif	// __cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -935,7 +934,7 @@ CAgentFileBalloon::CAgentFileBalloon ()
 	Empty ();
 }
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 CAgentFileBalloon::CAgentFileBalloon (CharacterFile^ pOwner)
 :	mOwner (pOwner)
 {
@@ -951,7 +950,7 @@ CAgentFileBalloon::CAgentFileBalloon (CharacterFile^ pOwner)
 
 CAgentFileBalloon::~CAgentFileBalloon ()
 {
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #ifdef	_DEBUG_INSTANCE
 #ifdef	_DEBUG_INSTANCE_OWNED
 	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileBalloon::~CAgentFileBalloon (Owned)"), sBalloonInstances->IndexOf(this));
@@ -967,7 +966,7 @@ void CAgentFileBalloon::Empty ()
 {
 	mLines = DefLines;
 	mPerLine = DefPerLine;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	mFont = nullptr;
 #else
 	mFont.Clear ();
@@ -976,7 +975,7 @@ void CAgentFileBalloon::Empty ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 UInt16 CAgentFileBalloon::Lines::get ()
 {
 	return mLines;
@@ -1008,7 +1007,7 @@ void CAgentFileBalloon::put_Lines (USHORT pLines)
 }
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 UInt16 CAgentFileBalloon::PerLine::get ()
 {
 	return mPerLine;
@@ -1040,7 +1039,7 @@ void CAgentFileBalloon::put_PerLine (USHORT pPerLine)
 }
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 System::Drawing::Color CAgentFileBalloon::FgColor::get ()
 {
 	return mFgColor;
@@ -1070,7 +1069,7 @@ void CAgentFileBalloon::put_FgColor (COLORREF pFgColor)
 }
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 System::Drawing::Color CAgentFileBalloon::BkColor::get ()
 {
 	return mBkColor;
@@ -1100,7 +1099,7 @@ void CAgentFileBalloon::put_BkColor (COLORREF pBkColor)
 }
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 System::Drawing::Color CAgentFileBalloon::BrColor::get ()
 {
 	return mBrColor;
@@ -1130,7 +1129,7 @@ void CAgentFileBalloon::put_BrColor (COLORREF pBrColor)
 }
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 System::Drawing::Font^ CAgentFileBalloon::Font::get ()
 {
 	return mFont;
@@ -1169,7 +1168,7 @@ void CAgentFileBalloon::put_Font (const LOGFONT& pFont)
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 UInt16 CAgentFileBalloon::MinLines::get() {return 1;}
 UInt16 CAgentFileBalloon::MaxLines::get() {return 128;}
 UInt16 CAgentFileBalloon::DefLines::get() {return 2;}
@@ -1186,7 +1185,7 @@ const USHORT CAgentFileBalloon::DefPerLine = 32;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 
 Boolean CAgentFileBalloon::CopyTo (CAgentFileBalloon^ pTarget)
@@ -1247,7 +1246,7 @@ System::String^ CAgentFileBalloon::ToString ()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#endif	// _M_CEE
+#endif	// __cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -1261,7 +1260,7 @@ CAgentFileFrameImage::CAgentFileFrameImage ()
 	Empty ();
 }
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 CAgentFileFrameImage::CAgentFileFrameImage (CharacterFile^ pOwner, FileAnimationFrame^ pFrame)
 :	mOwner (pOwner),
 	mContainer (pFrame->Images)
@@ -1278,7 +1277,7 @@ CAgentFileFrameImage::CAgentFileFrameImage (CharacterFile^ pOwner, FileAnimation
 
 CAgentFileFrameImage::~CAgentFileFrameImage ()
 {
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #ifdef	_DEBUG_INSTANCE
 #ifdef	_DEBUG_INSTANCE_OWNED
 	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileFrameImage::~CAgentFileFrameImage (Owned) [%d]"), sFrameImageInstances->IndexOf(this), sFrameImagesInstances->IndexOf(mContainer));
@@ -1293,7 +1292,7 @@ CAgentFileFrameImage::~CAgentFileFrameImage ()
 void CAgentFileFrameImage::Empty ()
 {
 	mImageNdx = 0;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	mOffset.X = 0;
 	mOffset.Y = 0;
 #else
@@ -1302,7 +1301,7 @@ void CAgentFileFrameImage::Empty ()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 
 FileAnimationFrame^ CAgentFileFrameImage::Frame::get()
@@ -1475,11 +1474,11 @@ void CAgentFileFrameImage::OnSerialized (StreamingContext pContext)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#endif	// _M_CEE
+#endif	// __cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 
 CAgentFileFrameImages::CAgentFileFrameImages ()
@@ -1668,7 +1667,7 @@ bool CAgentFileFrameImages::Move (CAgentFileFrameImage^ pItem, CAgentFileFrameIm
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#endif	// _M_CEE
+#endif	// __cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -1682,7 +1681,7 @@ CAgentFileFrameOverlay::CAgentFileFrameOverlay ()
 	Empty ();
 }
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 CAgentFileFrameOverlay::CAgentFileFrameOverlay (CharacterFile^ pOwner, FileAnimationFrame^ pFrame)
 :	mOwner (pOwner),
 	mContainer (pFrame->Overlays)
@@ -1699,7 +1698,7 @@ CAgentFileFrameOverlay::CAgentFileFrameOverlay (CharacterFile^ pOwner, FileAnima
 
 CAgentFileFrameOverlay::~CAgentFileFrameOverlay ()
 {
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #ifdef	_DEBUG_INSTANCE
 #ifdef	_DEBUG_INSTANCE_OWNED
 	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileFrameOverlay::~CAgentFileFrameOverlay (Owned) [%d]"), sFrameOverlayInstances->IndexOf(this), sFrameOverlaysInstances->IndexOf(mContainer));
@@ -1716,7 +1715,7 @@ void CAgentFileFrameOverlay::Empty ()
 	mOverlayType = (AgentMouthOverlay)0;
 	mImageNdx = 0;
 	mReplaceFlag = false;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	mOffset.X = 0;
 	mOffset.Y = 0;
 #else
@@ -1725,7 +1724,7 @@ void CAgentFileFrameOverlay::Empty ()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 
 FileAnimationFrame^ CAgentFileFrameOverlay::Frame::get()
@@ -1944,11 +1943,11 @@ void CAgentFileFrameOverlay::OnSerialized (StreamingContext pContext)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#endif	// _M_CEE
+#endif	// __cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 
 CAgentFileFrameOverlays::CAgentFileFrameOverlays ()
@@ -2059,7 +2058,7 @@ bool CAgentFileFrameOverlays::Remove (CAgentFileFrameOverlay^ pItem)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#endif	// _M_CEE
+#endif	// __cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -2073,7 +2072,7 @@ CAgentFileFrame::CAgentFileFrame ()
 	Empty ();
 }
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 CAgentFileFrame::CAgentFileFrame (CharacterFile^ pOwner, FileFrames^ pContainer)
 :	mOwner (pOwner),
 	mContainer (pContainer)
@@ -2090,7 +2089,7 @@ CAgentFileFrame::CAgentFileFrame (CharacterFile^ pOwner, FileFrames^ pContainer)
 
 CAgentFileFrame::~CAgentFileFrame ()
 {
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #ifdef	_DEBUG_INSTANCE
 #ifdef	_DEBUG_INSTANCE_OWNED
 	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileFrame::~CAgentFileFrame (Owned) [%d]"), sFrameInstances->IndexOf(this), sFramesInstances->IndexOf(mContainer));
@@ -2109,7 +2108,7 @@ void CAgentFileFrame::Empty ()
 	mDuration = 0;
 	mExitFrame = -2;
 	mSoundNdx = -1;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	if	(mOwner)
 	{
 		mDuration = mOwner->NewFrameDuration;
@@ -2139,7 +2138,7 @@ void CAgentFileFrame::Empty ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 FileAnimation^ CAgentFileFrame::Animation::get()
 {
 	return (mContainer) ? mContainer->Animation : nullptr;
@@ -2310,7 +2309,7 @@ USHORT CAgentFileFrame::get_Duration () const
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 
 Boolean CAgentFileFrame::CopyTo (CAgentFileFrame^ pTarget)
@@ -2473,12 +2472,12 @@ void CAgentFileFrame::OnSerialized (StreamingContext pContext)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#endif	// _M_CEE
+#endif	// __cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 CAgentFileFrames::CAgentFileFrames ()
 {
 #ifdef	_DEBUG_INSTANCE
@@ -2666,7 +2665,7 @@ CAgentFileAnimation::CAgentFileAnimation ()
 	Empty ();
 }
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 CAgentFileAnimation::CAgentFileAnimation (CharacterFile^ pOwner, FileGestures^ pContainer)
 :	mOwner (pOwner),
 	mContainer (pContainer)
@@ -2683,7 +2682,7 @@ CAgentFileAnimation::CAgentFileAnimation (CharacterFile^ pOwner, FileGestures^ p
 
 CAgentFileAnimation::~CAgentFileAnimation ()
 {
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #ifdef	_DEBUG_INSTANCE
 #ifdef	_DEBUG_INSTANCE_OWNED
 	LogMessage (mOwner?_DEBUG_INSTANCE_OWNED:_DEBUG_INSTANCE, _T("[%d] CAgentFileAnimation::CAgentFileAnimation (Owned)"), sAnimationInstances->IndexOf(this));
@@ -2699,7 +2698,7 @@ void CAgentFileAnimation::Empty ()
 {
 	mAcaChksum = 0;
 	mReturnType = 2;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	mName = String::Empty;
 	mReturnName = nullptr;
 	mAcaFileName = nullptr;
@@ -2722,7 +2721,7 @@ void CAgentFileAnimation::Empty ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 System::String^ CAgentFileAnimation::Name::get()
 {
 	return mName;
@@ -2837,7 +2836,7 @@ CAgentFileFrames^ CAgentFileAnimation::Frames::get()
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 Boolean CAgentFileAnimation::CopyTo (CAgentFileAnimation^ pTarget)
 {
 	return CopyTo (pTarget, false);
@@ -2925,7 +2924,7 @@ System::String^ CAgentFileAnimation::ToString ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 CAgentFileGestures::CAgentFileGestures ()
 :	KeyedCollection <System::String^, CAgentFileAnimation^> (StringComparer::InvariantCultureIgnoreCase)
 {
@@ -3042,21 +3041,42 @@ void CAgentFileGestures::ChangeItemKey (CAgentFileAnimation^ pItem, String^ pNew
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
+#ifdef	__cplusplus_cli
+/////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+CAgentFileState::CAgentFileState ()
+{
+}
+
+CAgentFileState::CAgentFileState (CharacterFile^ pOwner)
+:	mOwner (pOwner)
+{
+}
+
+CAgentFileState::~CAgentFileState ()
+{
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
 CAgentFileStates::CAgentFileStates ()
-:	SortedList <System::String^, array <System::String^>^> (StringComparer::InvariantCultureIgnoreCase)
 {
 }
 
 CAgentFileStates::CAgentFileStates (CharacterFile^ pOwner)
-:	SortedList <System::String^, array <System::String^>^> (StringComparer::InvariantCultureIgnoreCase),
-	mOwner (pOwner)
+:	mOwner (pOwner)
 {
 }
 
 CAgentFileStates::~CAgentFileStates ()
 {
+}
+
+System::String^ CAgentFileStates::GetKeyForItem (FileState^ pItem)
+{
+	return pItem->StateName;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -3072,25 +3092,25 @@ bool CAgentFileStates::AddStateAnimation (System::String^ pStateName, System::St
 		&&	(!String::IsNullOrEmpty (pAnimationName))
 		)
 	{
-		array <String^>^	lAnimations = nullptr;
+		array <String^>^	lAnimationNames = nullptr;
 
-		if	(ContainsKey (pStateName))
+		if	(Contains (pStateName))
 		{
-			lAnimations = this [pStateName];
+			lAnimationNames = this [pStateName]->AnimationNames;
 		}
 		else
-		if	(lAnimations = gcnew array <String^> (0))
+		if	(lAnimationNames = gcnew array <String^> (0))
 		{
-			Add (pStateName, lAnimations);
+			Add (pStateName, lAnimationNames);
 		}
 		if	(
-				(lAnimations)
-			&&	(!lAnimations->Find (lAnimations, gcnew Predicate <String^> (pAnimationName, &String::Equals)))
+				(lAnimationNames)
+			&&	(!lAnimationNames->Find (lAnimationNames, gcnew Predicate <String^> (pAnimationName, &String::Equals)))
 			)
 		{
 			try
 			{
-				List <String^>^	lList = gcnew List <String^> (lAnimations);
+				List <String^>^	lList = gcnew List <String^> (lAnimationNames);
 				int				lNdx;
 
 				for (lNdx = 0; lNdx < lList->Count; lNdx++)
@@ -3101,7 +3121,7 @@ bool CAgentFileStates::AddStateAnimation (System::String^ pStateName, System::St
 					}
 				}
 				lList->Insert (lNdx, gcnew String (pAnimationName));
-				this [pStateName] = lList->ToArray();
+				this [pStateName]->mAnimationNames = lList->ToArray();
 				if	(mOwner)
 				{
 					mOwner->IsDirty = true;
@@ -3123,22 +3143,22 @@ bool CAgentFileStates::RemoveStateAnimation (System::String^ pStateName, System:
 			)
 		&&	(!String::IsNullOrEmpty (pStateName))
 		&&	(!String::IsNullOrEmpty (pAnimationName))
-		&&	(ContainsKey (pStateName))
+		&&	(Contains (pStateName))
 		)
 	{
-		array <String^>^	lAnimations = this [pStateName];
+		array <String^>^	lAnimationNames = this [pStateName]->AnimationNames;
 
 		if	(
-				(lAnimations)
-			&&	(lAnimations->Find (lAnimations, gcnew Predicate <String^> (pAnimationName, &String::Equals)))
+				(lAnimationNames)
+			&&	(lAnimationNames->Find (lAnimationNames, gcnew Predicate <String^> (pAnimationName, &String::Equals)))
 			)
 		{
 			try
 			{
-				List <String^>^	lList = gcnew List <String^> (lAnimations);
+				List <String^>^	lList = gcnew List <String^> (lAnimationNames);
 
 				lList->RemoveAt (lList->FindIndex (gcnew Predicate <String^> (pAnimationName, &String::Equals)));
-				this [pStateName] = lList->ToArray();
+				this [pStateName]->mAnimationNames = lList->ToArray();
 				if	(mOwner)
 				{
 					mOwner->IsDirty = true;
@@ -3150,8 +3170,34 @@ bool CAgentFileStates::RemoveStateAnimation (System::String^ pStateName, System:
 	}
 	return false;
 }
-#endif
 
+/////////////////////////////////////////////////////////////////////////////
+
+void CAgentFileStates::Add (System::String^ pStateName, array <System::String^>^ pAnimationNames)
+{
+	FileState^	lState = gcnew FileState (mOwner);
+	
+	lState->mStateName = pStateName;
+	lState->mAnimationNames = pAnimationNames;
+	Add (lState);
+}
+
+void CAgentFileStates::Add (FileState^ pState)
+{
+	int	lNdx;
+
+	for (lNdx = 0; lNdx < Count; lNdx++)
+	{
+		if	(String::Compare (this [lNdx]->StateName, pState->StateName) > 0)
+		{
+			break;
+		}
+	}
+	__super::Insert (lNdx, pState);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#endif	// __cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -3169,7 +3215,7 @@ void CAgentFileImage::Empty ()
 {
 	mImageNum = 0;
 	mIs32Bit = false;
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	mImageSize.Width = 0;
 	mImageSize.Height = 0;
 	mBits = nullptr;
@@ -3182,7 +3228,7 @@ void CAgentFileImage::Empty ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 UInt32 CAgentFileImage::ImageNum::get()
 {
 	return mImageNum;
@@ -3216,7 +3262,7 @@ void CAgentFileImage::put_ImageSize (const CSize& pImageSize)
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 System::String^ CAgentFileImage::ToString ()
 {
     return String::Format ("FileImage {0}", ImageSize.ToString());
@@ -3224,7 +3270,7 @@ System::String^ CAgentFileImage::ToString ()
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 } // namespace Character
 } // namespace DoubleAgent
 #endif

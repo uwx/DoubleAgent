@@ -22,7 +22,7 @@
 #include "AgentFileBinary.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 namespace DoubleAgent {
 namespace Character {
 #else
@@ -30,7 +30,7 @@ namespace Character {
 #pragma warning (disable:4251)
 #endif
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 #define CAgentFileAcs AcsFile
 /// <summary>
 ///	An Agent Character definition stored in a single binary-formatted file.
@@ -43,7 +43,7 @@ class CAgentFileAcs : public CAgentFileBinary
 public:
 	CAgentFileAcs ();
 	_DACORE_IMPEXP virtual ~CAgentFileAcs ();
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	static CAgentFileAcs^ CreateInstance ();
 #else
 	DECLARE_DLL_OBJECT_EX(CAgentFileAcs, _DACORE_IMPEXP)
@@ -52,7 +52,7 @@ public:
 
 // Overrides
 public:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	virtual property bool IsAcsFile {virtual bool get() override;}
 	virtual bool Open (const System::String^ pPath) override;
 	virtual bool Save (const System::String^ pPath, CAgentFile^ pSource) override;
@@ -63,7 +63,7 @@ public:
 	_DACORE_IMPEXP virtual void Close ();
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	virtual property int ImageCount {virtual int get() override;}
 	virtual CAgentFileImage^ GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor) override;
 #else
@@ -71,7 +71,7 @@ public:
 	_DACORE_IMPEXP virtual CAgentFileImage* GetImage (INT_PTR pImageNdx, bool p32Bit = false, const COLORREF* pBkColor = NULL);
 #endif
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	virtual property int SoundCount {virtual int get() override;}
 	virtual int GetSoundSize (int pSoundNdx) override;
 	virtual array <BYTE>^ GetSound (int pSoundNdx) override;
@@ -82,7 +82,7 @@ public:
 #endif
 
 protected:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	virtual bool LoadFile (System::String^) override;
 	virtual bool ReadHeader () override;
 	virtual bool ReadNames (bool pFirstLetterCaps) override;
@@ -100,7 +100,7 @@ protected:
 protected:
 	bool ReadAcsHeader ();
 	LPCVOID ReadBufferHeader (LPCVOID pBuffer);
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	CAgentFileAnimation^ ReadAcsAnimation (DWORD pOffset, DWORD pSize);
 	CAgentFileImage^ ReadAcsImage (DWORD pOffset, DWORD pSize, UINT pImageNum, bool p32Bit, System::Drawing::Color pBkColor);
 	array <BYTE>^ ReadAcsSound (DWORD pOffset, DWORD pSize, UINT pSoundNum);
@@ -116,7 +116,7 @@ protected:
 	bool ReadSoundIndex ();
 	void FreeSoundIndex ();
 
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	void FreeUnusedImages ();
 	void FreeUnusedSounds ();
 
@@ -136,13 +136,13 @@ protected:
 #endif
 
 protected:
-#ifndef	_M_CEE
+#ifndef	__cplusplus_cli
 	void DumpAcsImages (UINT pLogLevel);
 	void DumpAcsImage (INT_PTR pImageNdx, UINT pLogLevel);
 #endif
 
 protected:
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 	UInt32										mFileNamesOffset;
 	UInt32										mFileNamesSize;
 	UInt32										mFileStatesOffset;
@@ -160,7 +160,7 @@ protected:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_M_CEE
+#ifdef	__cplusplus_cli
 } // namespace Character
 } // namespace DoubleAgent
 #else

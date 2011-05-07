@@ -2,11 +2,14 @@
 #include "CopyILBinary.h"
 #include "LogAssembly.h"
 
+using namespace System;
+using namespace System::Text;
+using namespace System::Collections;
+using namespace System::Collections::Generic;
 using namespace System::Runtime::InteropServices;
 using namespace System::Runtime::InteropServices::ComTypes;
 using namespace System::Reflection;
 using namespace System::Reflection::Emit;
-using namespace System::Collections::Generic;
 using namespace System::ComponentModel;
 
 namespace DoubleAgent {

@@ -21,6 +21,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#pragma unmanaged
 #include <math.h>
 #include "HelperTemplates.h"
 #include "ImageAlpha.h"

@@ -74,41 +74,50 @@ public:
 	}
 };
 
-template <typename TYPE, typename aHandleType> class CElementTraits <tHandle <TYPE, aHandleType> > : public CPrimitiveElementTraits <TYPE>
+__if_exists (tHandle)
 {
-public:
-	typedef TYPE INARGTYPE;
-	typedef tHandle <TYPE, aHandleType>& OUTARGTYPE;
-
-	static void CopyElements( tHandle <TYPE, aHandleType>* pDest, const tHandle <TYPE, aHandleType>* pSrc, size_t nElements )
+	template <typename TYPE, typename aHandleType> class CElementTraits <tHandle <TYPE, aHandleType> > : public CPrimitiveElementTraits <TYPE>
 	{
-		for( size_t iElement = 0; iElement < nElements; iElement++ )
+	public:
+		typedef TYPE INARGTYPE;
+		typedef tHandle <TYPE, aHandleType>& OUTARGTYPE;
+
+		static void CopyElements( tHandle <TYPE, aHandleType>* pDest, const tHandle <TYPE, aHandleType>* pSrc, size_t nElements )
 		{
-			pDest[iElement].Attach (pSrc[iElement].Detach());
+			for( size_t iElement = 0; iElement < nElements; iElement++ )
+			{
+				pDest[iElement].Attach (pSrc[iElement].Detach());
+			}
 		}
-	}
 
-	static void RelocateElements( tHandle <TYPE, aHandleType>* pDest, tHandle <TYPE, aHandleType>* pSrc, size_t nElements )
-	{
-		Checked::memmove_s( pDest, nElements*sizeof( tHandle <TYPE, aHandleType> ), pSrc, nElements*sizeof( tHandle <TYPE, aHandleType> ));
-	}
-};
+		static void RelocateElements( tHandle <TYPE, aHandleType>* pDest, tHandle <TYPE, aHandleType>* pSrc, size_t nElements )
+		{
+			Checked::memmove_s( pDest, nElements*sizeof( tHandle <TYPE, aHandleType> ), pSrc, nElements*sizeof( tHandle <TYPE, aHandleType> ));
+		}
+	};
+}
 
 ////////////////////////////////////////////////////////////////////////
 
-template<> class CElementTraits <IUnknownPtr> : public CDefaultElementTraits <IUnknownPtr>
+__if_exists (IUnknownPtr)
 {
-public:
-	typedef LPUNKNOWN INARGTYPE;
-	typedef IUnknownPtr& OUTARGTYPE;
-};
+	template<> class CElementTraits <IUnknownPtr> : public CDefaultElementTraits <IUnknownPtr>
+	{
+	public:
+		typedef LPUNKNOWN INARGTYPE;
+		typedef IUnknownPtr& OUTARGTYPE;
+	};
+}
 
-template<> class CElementTraits <IDispatchPtr> : public CDefaultElementTraits <IDispatchPtr>
+__if_exists (IDispatchPtr)
 {
-public:
-	typedef LPDISPATCH INARGTYPE;
-	typedef IDispatchPtr& OUTARGTYPE;
-};
+	template<> class CElementTraits <IDispatchPtr> : public CDefaultElementTraits <IDispatchPtr>
+	{
+	public:
+		typedef LPDISPATCH INARGTYPE;
+		typedef IDispatchPtr& OUTARGTYPE;
+	};
+}
 
 template <typename P, typename I> class CComPtrElementTraits : public CDefaultElementTraits <P>
 {
@@ -982,11 +991,14 @@ public:
 #pragma page()
 ////////////////////////////////////////////////////////////////////////
 
-typedef ATL::CComEnum <IEnumVARIANT, &__uuidof(IEnumVARIANT), VARIANT, _Copy<VARIANT> >					CEnumVARIANT;
-typedef ATL::CComEnumImpl <IEnumVARIANT, &__uuidof(IEnumVARIANT), VARIANT, _Copy<VARIANT> >				CEnumVARIANTImpl;
+__if_exists (CComEnum)
+{
+	typedef ATL::CComEnum <IEnumVARIANT, &__uuidof(IEnumVARIANT), VARIANT, _Copy<VARIANT> >					CEnumVARIANT;
+	typedef ATL::CComEnumImpl <IEnumVARIANT, &__uuidof(IEnumVARIANT), VARIANT, _Copy<VARIANT> >				CEnumVARIANTImpl;
 
-typedef ATL::CComEnum <IEnumUnknown, &__uuidof(IEnumUnknown), LPUNKNOWN, _CopyInterface<IUnknown> >		CEnumUnknown;
-typedef ATL::CComEnumImpl <IEnumUnknown, &__uuidof(IEnumUnknown), LPUNKNOWN, _CopyInterface<IUnknown> >	CEnumUnknownImpl;
+	typedef ATL::CComEnum <IEnumUnknown, &__uuidof(IEnumUnknown), LPUNKNOWN, _CopyInterface<IUnknown> >		CEnumUnknown;
+	typedef ATL::CComEnumImpl <IEnumUnknown, &__uuidof(IEnumUnknown), LPUNKNOWN, _CopyInterface<IUnknown> >	CEnumUnknownImpl;
+}
 
 typedef CAtlArrayEx <CAtlString, ATL::CStringElementTraits <CAtlString> >	CAtlStringArray;
 typedef CAtlArrayEx <CAtlString, ATL::CStringElementTraitsI <CAtlString> >	CAtlStringArrayI;

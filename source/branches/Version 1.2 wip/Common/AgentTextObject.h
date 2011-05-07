@@ -72,7 +72,7 @@ protected:
 
 protected:
 	long										mCharID;
-	CSapiVoice*								mVoice;
+	CSapiVoice*									mVoice;
 	tPtr <CMsgPostingWnd <CAgentTextObject> >	mMsgPostingWnd;
 	bool										mVoiceStartNotified;
 	bool										mVoiceEndNotified;

@@ -31,78 +31,30 @@ using AgentCharacterEditor.Updates;
 
 namespace AgentCharacterEditor
 {
-	public partial class BranchingPanel : UserControl
+	public partial class BranchingPanel : FilePartPanel
 	{
-		private CharacterFile		mCharacterFile = null;
-		private FileAnimationFrame	mFrame = null;
-
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
 		public BranchingPanel ()
 		{
 			InitializeComponent ();
-			CausesValidation = Visible;
-		}
-
-		private void BranchingForm_VisibleChanged (object sender, EventArgs e)
-		{
-			CausesValidation = Visible;
-
-			if (Program.MainForm != null)
-			{
-				Program.MainForm.UpdateApplied -= new UndoUnit.AppliedEventHandler (OnUpdateApplied);
-				if (Visible)
-				{
-					Program.MainForm.UpdateApplied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
-				}
-			}
 		}
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
 
-		[System.ComponentModel.Browsable (false)]
-		public CharacterFile CharacterFile
+		public override ResolvePart FilePart
 		{
 			get
 			{
-				return mCharacterFile;
+				return base.FilePart;
 			}
 			set
 			{
-				mCharacterFile = value;
-				this.Frame = null;
-			}
-		}
-
-		[System.ComponentModel.Browsable (false)]
-		public FileAnimation Animation
-		{
-			get
-			{
-				return (mFrame == null) ? null : mFrame.Animation;
-			}
-		}
-		[System.ComponentModel.Browsable (false)]
-		public String FrameTitle
-		{
-			get
-			{
-				return Global.TitleFrame (mFrame);
-			}
-		}
-		[System.ComponentModel.Browsable (false)]
-		public FileAnimationFrame Frame
-		{
-			get
-			{
-				return mFrame;
-			}
-			set
-			{
-				mFrame = value;
+				base.FilePart = value;
+				Frame = (base.FilePart is ResolveAnimationFrame) ? (base.FilePart as ResolveAnimationFrame).Target : null;
 
 				ShowFrameName ();
 				ShowFrameBranching ();
@@ -110,11 +62,33 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		private Boolean IsEmpty
+		protected FileAnimationFrame Frame
+		{
+			get;
+			set;
+		}
+
+		protected FileAnimation Animation
 		{
 			get
 			{
-				return ((mCharacterFile == null) || (mFrame == null));
+				return (Frame == null) ? null : Frame.Animation;
+			}
+		}
+
+		protected String FrameTitle
+		{
+			get
+			{
+				return Global.TitleFrame (Frame);
+			}
+		}
+
+		protected override Boolean IsEmpty
+		{
+			get
+			{
+				return base.IsEmpty || (Frame == null);
 			}
 		}
 
@@ -131,7 +105,7 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				TextBoxFrameName.Text = Global.TitleFrameAnimation (mFrame);
+				TextBoxFrameName.Text = Global.TitleFrameAnimation (Frame);
 				TextBoxFrameName.Enabled = true;
 			}
 		}
@@ -160,38 +134,38 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				Int16	lRemainder = 100;
+				Int16 lRemainder = 100;
 
-				if ((mFrame.Branching != null) && (mFrame.Branching.Length >= 1))
+				if ((Frame.Branching != null) && (Frame.Branching.Length >= 1))
 				{
 					NumericTarget0.Maximum = this.Animation.Frames.Count;
-					NumericTarget0.Value = mFrame.Branching[0].mFrameNdx + 1;
-					NumericBranching0.Value = mFrame.Branching[0].mProbability;
-					lRemainder -= (Int16)mFrame.Branching[0].mProbability;
+					NumericTarget0.Value = Frame.Branching[0].mFrameNdx + 1;
+					NumericBranching0.Value = Frame.Branching[0].mProbability;
+					lRemainder -= (Int16)Frame.Branching[0].mProbability;
 				}
 				else
 				{
 					NumericTarget0.ResetText ();
 					NumericBranching0.Value = 0;
 				}
-				if ((mFrame.Branching != null) && (mFrame.Branching.Length >= 2))
+				if ((Frame.Branching != null) && (Frame.Branching.Length >= 2))
 				{
 					NumericTarget1.Maximum = this.Animation.Frames.Count;
-					NumericTarget1.Value = mFrame.Branching[1].mFrameNdx + 1;
-					NumericBranching1.Value = mFrame.Branching[1].mProbability;
-					lRemainder -= (Int16)mFrame.Branching[1].mProbability;
+					NumericTarget1.Value = Frame.Branching[1].mFrameNdx + 1;
+					NumericBranching1.Value = Frame.Branching[1].mProbability;
+					lRemainder -= (Int16)Frame.Branching[1].mProbability;
 				}
 				else
 				{
 					NumericTarget1.ResetText ();
 					NumericBranching1.Value = 0;
 				}
-				if ((mFrame.Branching != null) && (mFrame.Branching.Length >= 3))
+				if ((Frame.Branching != null) && (Frame.Branching.Length >= 3))
 				{
 					NumericTarget2.Maximum = this.Animation.Frames.Count;
-					NumericTarget2.Value = mFrame.Branching[2].mFrameNdx + 1;
-					NumericBranching2.Value = mFrame.Branching[2].mProbability;
-					lRemainder -= (Int16)mFrame.Branching[2].mProbability;
+					NumericTarget2.Value = Frame.Branching[2].mFrameNdx + 1;
+					NumericBranching2.Value = Frame.Branching[2].mProbability;
+					lRemainder -= (Int16)Frame.Branching[2].mProbability;
 				}
 				else
 				{
@@ -226,14 +200,14 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				if (mFrame.ExitFrame >= 0)
+				if (Frame.ExitFrame >= 0)
 				{
 					CheckBoxExit.Checked = true;
 					NumericTargetExit.Maximum = this.Animation.Frames.Count;
-					NumericTargetExit.Value = mFrame.ExitFrame + 1;
+					NumericTargetExit.Value = Frame.ExitFrame + 1;
 					NumericTargetExit.Enabled = !Program.FileIsReadOnly;
 
-					if (mFrame.ExitFrame == (Int16)this.Animation.Frames.IndexOf (mFrame))
+					if (Frame.ExitFrame == (Int16)this.Animation.Frames.IndexOf (Frame))
 					{
 						NumericTargetExit.Highlighted = true;
 					}
@@ -256,15 +230,15 @@ namespace AgentCharacterEditor
 
 		private Boolean ApplyBranchingUpdates ()
 		{
-			Boolean	lRet = false;
+			Boolean lRet = false;
 
 			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
-				Int16[]				lProbability = new Int16[3];
-				Int16[]				lTarget = new Int16[3];
-				FileFrameBranch[]	lBranching = null;
-				int					lBranchingNdx;
-				int					lBranchingCount = 0;
+				Int16[] lProbability = new Int16[3];
+				Int16[] lTarget = new Int16[3];
+				FileFrameBranch[] lBranching = null;
+				int lBranchingNdx;
+				int lBranchingCount = 0;
 
 				lProbability[0] = (Int16)NumericBranching0.Value;
 				lProbability[1] = (Int16)NumericBranching1.Value;
@@ -306,9 +280,9 @@ namespace AgentCharacterEditor
 						}
 					}
 				}
-				if (!UpdateAnimationFrame.BranchingEqual (mFrame.Branching, lBranching))
+				if (!UpdateAnimationFrame.BranchingEqual (Frame.Branching, lBranching))
 				{
-					UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mFrame, false);
+					UpdateAnimationFrame lUpdate = new UpdateAnimationFrame (Frame, false);
 
 					lUpdate.Branching = lBranching;
 					lRet = UpdateAnimationFrame.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateAnimationFrame, this);
@@ -319,27 +293,24 @@ namespace AgentCharacterEditor
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private void OnUpdateApplied (object sender, EventArgs e)
+		protected override void UpdateApplied (object pUpdate)
 		{
-			if (!IsEmpty)
-			{
-				UpdateAnimation			lUpdateAnimation = sender as UpdateAnimation;
-				UpdateAnimationFrame	lUpdateFrame = sender as UpdateAnimationFrame;
+			UpdateAnimation lUpdateAnimation = pUpdate as UpdateAnimation;
+			UpdateAnimationFrame lUpdateFrame = pUpdate as UpdateAnimationFrame;
 
-				if ((lUpdateAnimation != null) && (lUpdateAnimation.Target == this.Animation) && lUpdateAnimation.NameChanged)
+			if ((lUpdateAnimation != null) && (lUpdateAnimation.Target == this.Animation) && lUpdateAnimation.NameChanged)
+			{
+				ShowFrameName ();
+			}
+			else if ((lUpdateFrame != null) && (lUpdateFrame.Target == Frame))
+			{
+				if (lUpdateFrame.BranchingChanged)
 				{
-					ShowFrameName ();
+					ShowFrameBranching ();
 				}
-				else if ((lUpdateFrame != null) && (lUpdateFrame.Target == mFrame))
+				if (lUpdateFrame.ExitFrameChanged)
 				{
-					if (lUpdateFrame.BranchingChanged)
-					{
-						ShowFrameBranching ();
-					}
-					if (lUpdateFrame.ExitFrameChanged)
-					{
-						ShowExitFrame ();
-					}
+					ShowExitFrame ();
 				}
 			}
 		}
@@ -420,13 +391,13 @@ namespace AgentCharacterEditor
 		{
 			if (CausesValidation && !IsEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mFrame, false);
+				UpdateAnimationFrame lUpdate = new UpdateAnimationFrame (Frame, false);
 
 				if (CheckBoxExit.Checked)
 				{
-					Int16	lExitFrame = (Int16)Math.Min (Math.Max ((int)mFrame.ExitFrame, 0), this.Animation.Frames.Count - 1);
+					Int16 lExitFrame = (Int16)Math.Min (Math.Max ((int)Frame.ExitFrame, 0), this.Animation.Frames.Count - 1);
 
-					if (lExitFrame == (Int16)this.Animation.Frames.IndexOf (mFrame))
+					if (lExitFrame == (Int16)this.Animation.Frames.IndexOf (Frame))
 					{
 						lExitFrame++;
 					}
@@ -448,7 +419,7 @@ namespace AgentCharacterEditor
 		{
 			if (CausesValidation && !IsEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateAnimationFrame	lUpdate = new UpdateAnimationFrame (mFrame, false);
+				UpdateAnimationFrame lUpdate = new UpdateAnimationFrame (Frame, false);
 
 				lUpdate.ExitFrame = (Int16)(NumericTargetExit.Value - 1);
 				if (!UpdateAnimationFrame.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateAnimationFrame, this))

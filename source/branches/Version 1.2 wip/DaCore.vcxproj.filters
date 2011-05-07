@@ -213,6 +213,9 @@
     <ClCompile Include="Include\DaCore_i.c">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="Core\AgentTextParse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\DaCore.def">
@@ -447,6 +450,9 @@
     </ClInclude>
     <ClInclude Include="Include\DaCoreOdl.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\AgentTextParse.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

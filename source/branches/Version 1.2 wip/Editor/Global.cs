@@ -19,6 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 using DoubleAgent;
 using DoubleAgent.Character;
@@ -46,10 +47,10 @@ namespace AgentCharacterEditor
 		}
 
 		/// <summary>
-		/// Strips the '&' mnemonic prefix indicator from a string.
+		/// Strips the '&amp;' mnemonic prefix indicator from a string.
 		/// </summary>
 		/// <param name="pString">The initial string value.</param>
-		/// <returns>The string value with any '&' characters removed.</returns>
+		/// <returns>The string value with any '&amp;' characters removed.</returns>
 		static public String NoMenuPrefix (this String pString)
 		{
 			return pString.Replace ("&", "");
@@ -85,6 +86,100 @@ namespace AgentCharacterEditor
 		public static Boolean PrimaryLanguageEqual (this UInt16 pLangID1, UInt16 pLangID2)
 		{
 			return ((Byte)pLangID1 == (Byte)pLangID2);
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+
+	public static class SizeExtensions
+	{
+
+		/// <summary>
+		/// Limits a <see cref="System.Drawing.Size"/> to a maximum value while maintaining the original aspect ratio.
+		/// </summary>
+		/// <param name="pSize">The original <see cref="System.Drawing.Size"/>.</param>
+		/// <param name="pMaxSize">The maximum <see cref="System.Drawing.Size"/>.</param>
+		/// <returns>The <see cref="System.Drawing.SizeF"/> with the aspect ratio of <paramref name="pSize"/> that is at most <paramref name="pMaxSize"/>.</returns>
+		static public System.Drawing.SizeF Min (this System.Drawing.Size pSize, System.Drawing.Size pMaxSize)
+		{
+			SizeF lMaxSize = new SizeF ((float)pMaxSize.Width, (float)pMaxSize.Height);
+			SizeF lScaledSize = new SizeF ((float)pSize.Width, (float)pSize.Height);
+			PointF lScale = new PointF (lScaledSize.Width / lMaxSize.Width, lScaledSize.Height / lMaxSize.Height);
+
+			if (lScale.X < lScale.Y)
+			{
+				lScaledSize.Width = lMaxSize.Width * lScale.X / lScale.Y;
+				lScaledSize.Height = lMaxSize.Height;
+			}
+			else
+			{
+				lScaledSize.Width = lMaxSize.Width;
+				lScaledSize.Height = lMaxSize.Height * lScale.Y / lScale.X;
+			}
+			return lScaledSize;
+		}
+
+		/// <summary>
+		/// Limits a <see cref="System.Drawing.Size"/> to a minumim value while maintaining the original aspect ratio.
+		/// </summary>
+		/// <param name="pSize">The original <see cref="System.Drawing.Size"/>.</param>
+		/// <param name="pMinSize">The minimum <see cref="System.Drawing.Size"/>.</param>
+		/// <returns>The <see cref="System.Drawing.SizeF"/> with the aspect ratio of <paramref name="pSize"/> that is at least <paramref name="pMinSize"/>.</returns>
+		static public System.Drawing.SizeF Max (this System.Drawing.Size pSize, System.Drawing.Size pMinSize)
+		{
+			SizeF lMinSize = new SizeF ((float)pMinSize.Width, (float)pMinSize.Height);
+			SizeF lScaledSize = new SizeF ((float)pSize.Width, (float)pSize.Height);
+			PointF lScale = new PointF (lScaledSize.Width / lMinSize.Width, lScaledSize.Height / lMinSize.Height);
+
+			if (lScale.X > lScale.Y)
+			{
+				lScaledSize.Width = lMinSize.Width * lScale.X / lScale.Y;
+				lScaledSize.Height = lMinSize.Height;
+			}
+			else
+			{
+				lScaledSize.Width = lMinSize.Width;
+				lScaledSize.Height = lMinSize.Height * lScale.Y / lScale.X;
+			}
+			return lScaledSize;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		static public Boolean EitherLT (this System.Drawing.Size pSize, System.Drawing.Size pMaxSize)
+		{
+			return (pSize.Width < pMaxSize.Width) || (pSize.Height < pMaxSize.Height);
+		}
+		static public Boolean EitherGT (this System.Drawing.Size pSize, System.Drawing.Size pMinSize)
+		{
+			return (pSize.Width > pMinSize.Width) || (pSize.Height > pMinSize.Height);
+		}
+
+		static public Boolean EitherLE (this System.Drawing.Size pSize, System.Drawing.Size pMaxSize)
+		{
+			return (pSize.Width <= pMaxSize.Width) || (pSize.Height <= pMaxSize.Height);
+		}
+		static public Boolean EitherGE (this System.Drawing.Size pSize, System.Drawing.Size pMinSize)
+		{
+			return (pSize.Width >= pMinSize.Width) || (pSize.Height >= pMinSize.Height);
+		}
+
+		static public Boolean BothLT (this System.Drawing.Size pSize, System.Drawing.Size pMaxSize)
+		{
+			return (pSize.Width < pMaxSize.Width) && (pSize.Height < pMaxSize.Height);
+		}
+		static public Boolean BothGT (this System.Drawing.Size pSize, System.Drawing.Size pMinSize)
+		{
+			return (pSize.Width > pMinSize.Width) && (pSize.Height > pMinSize.Height);
+		}
+
+		static public Boolean BothLE (this System.Drawing.Size pSize, System.Drawing.Size pMaxSize)
+		{
+			return (pSize.Width <= pMaxSize.Width) && (pSize.Height <= pMaxSize.Height);
+		}
+		static public Boolean BothGE (this System.Drawing.Size pSize, System.Drawing.Size pMinSize)
+		{
+			return (pSize.Width >= pMinSize.Width) && (pSize.Height >= pMinSize.Height);
 		}
 	}
 
@@ -359,6 +454,18 @@ namespace AgentCharacterEditor
 
 		///////////////////////////////////////////////////////////////////////////////
 
+		static public String TitleState (FileState pState)
+		{
+			if (pState == null)
+			{
+				return String.Format (Properties.Resources.TitleState, String.Empty).Trim ();
+			}
+			else
+			{
+				return TitleState (pState.StateName);
+			}
+		}
+
 		static public String TitleState (String pStateName)
 		{
 			return String.Format (Properties.Resources.TitleState, pStateName.Quoted ());
@@ -424,9 +531,23 @@ namespace AgentCharacterEditor
 			{
 			}
 			public CanEditEventArgs (String pClipboardFormat)
-			: base (pClipboardFormat)
+				: base (pClipboardFormat)
 			{
 			}
+
+			public override Boolean IsUsed
+			{
+				get
+				{
+					return base.IsUsed || !String.IsNullOrEmpty (CopyObjectTitle) || !String.IsNullOrEmpty (CutObjectTitle) || !String.IsNullOrEmpty (DeleteObjectTitle) || !String.IsNullOrEmpty (PasteObjectTitle);
+				}
+				set
+				{
+					base.IsUsed = value;
+				}
+			}
+
+			///////////////////////////////////////////////////////////////////////////////
 
 			public String CopyTitle
 			{

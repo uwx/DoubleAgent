@@ -19,10 +19,8 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 using System;
-using System.Windows.Forms;
-using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Imaging;
+using System.Windows.Forms;
 
 namespace AgentCharacterEditor
 {
@@ -67,9 +65,9 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 
 		/// <summary>
-		/// Gets or sets the control's client area dimensions.<para>Override of <see cref="System.Windows.Forms.PictureBox.ClientSize"/>.</para>
+		/// Gets or sets the control's client area dimensions.<para>Override of <see cref="System.Windows.Forms.Control.ClientSize"/>.</para>
 		/// </summary>
-		/// <remarks>When the ClientSize is changed, it is constrained by the <see cref="MinimumSize"/> and <see cref="MaximumSize"/>.
+		/// <remarks>When the ClientSize is changed, it is constrained by the <see cref="System.Windows.Forms.Control.MinimumSize"/> and <see cref="System.Windows.Forms.Control.MaximumSize"/>.
 		/// However, the constraints are not applied independently to the Width and Height.  Instead, the control's original aspect ratio
 		/// is retained.
 		/// </remarks>
@@ -86,24 +84,7 @@ namespace AgentCharacterEditor
 
 				if (this.DisplayRectangle.Size != value)   // Adjust for Min/Max size
 				{
-					SizeF lDisplaySize = new SizeF ((float)this.DisplayRectangle.Width, (float)this.DisplayRectangle.Height);
-					SizeF lScaledSize = new SizeF ((float)value.Width, (float)value.Height);
-					PointF lScale = new PointF (lScaledSize.Width / lDisplaySize.Width, lScaledSize.Height / lDisplaySize.Height);
-
-					if (lScale.X < lScale.Y)
-					{
-						lScaledSize.Width = lDisplaySize.Width * lScale.X / lScale.Y;
-						lScaledSize.Height = lDisplaySize.Height;
-					}
-					else
-					{
-						lScaledSize.Width = lDisplaySize.Width;
-						lScaledSize.Height = lDisplaySize.Height * lScale.Y / lScale.X;
-					}
-
-#if DEBUG_NOT
-					System.Diagnostics.Debug.Print ("Scale {0} by {1} to {2}", value.ToString (), lScale.ToString (), lScaledSize.ToString ());
-#endif
+					SizeF lScaledSize = value.Min (this.DisplayRectangle.Size);
 					this.Size = this.Size + Size.Round (lScaledSize) - this.DisplayRectangle.Size;
 				}
 #if DEBUG_NOT
@@ -182,7 +163,7 @@ namespace AgentCharacterEditor
 		/// <summary>
 		/// Converts a <see cref="System.Drawing.Size"/> from Image coordinates to Client coordinates.
 		/// </summary>
-		/// <param name="pPoint">The <see cref="System.Drawing.Size"/> in Image coordinates.</param>
+		/// <param name="pSize">The <see cref="System.Drawing.Size"/> in Image coordinates.</param>
 		/// <returns>The <see cref="System.Drawing.Size"/> in Client coordinates</returns>
 		/// <seealso cref="ImageScale"/>
 		public System.Drawing.Size ImageToClient (System.Drawing.Size pSize)
@@ -195,7 +176,7 @@ namespace AgentCharacterEditor
 		/// <summary>
 		/// Converts a <see cref="System.Drawing.Size"/> from Client coordinates to Image coordinates.
 		/// </summary>
-		/// <param name="pPoint">The <see cref="System.Drawing.Size"/> in Client coordinates.</param>
+		/// <param name="pSize">The <see cref="System.Drawing.Size"/> in Client coordinates.</param>
 		/// <returns>The <see cref="System.Drawing.Size"/> in Image coordinates</returns>
 		/// <seealso cref="ImageScale"/>
 		public System.Drawing.Size ClientToImage (System.Drawing.Size pSize)

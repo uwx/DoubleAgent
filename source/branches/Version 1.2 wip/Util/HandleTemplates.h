@@ -43,7 +43,8 @@ protected:
 				lRet = __Close (lHandle);
 			}
 		}
-		catch AnyExceptionSilent
+		catch (...)
+		{}
 		return lRet;
 	}
 private:

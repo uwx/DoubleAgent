@@ -21,6 +21,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#pragma unmanaged
 #include <shlwapi.h>
 #include "TextWrap.h"
 #include "DebugStr.h"

@@ -19,9 +19,11 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
-
 #include "UseGdiplus.h"
+#include <math.h>
 
+/////////////////////////////////////////////////////////////////////////////
+#pragma managed(push,off)
 /////////////////////////////////////////////////////////////////////////////
 
 class CAgentBalloonShape
@@ -45,6 +47,7 @@ public:
 
 	virtual HRGN GetBalloonRgn () = 0;
 	virtual bool Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor) = 0;
+	virtual bool Draw (Gdiplus::Graphics & pGraphics, Gdiplus::Color & pBkColor, Gdiplus::Color & pBrColor) = 0;
 
 // Overrides
 
@@ -103,6 +106,7 @@ public:
 	virtual void InitLayout ();
 	virtual HRGN GetBalloonRgn ();
 	virtual bool Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor);
+	virtual bool Draw (Gdiplus::Graphics & pGraphics, Gdiplus::Color & pBkColor, Gdiplus::Color & pBrColor);
 
 // Implementation
 protected:
@@ -130,10 +134,13 @@ public:
 	virtual void InitLayout ();
 	virtual HRGN GetBalloonRgn ();
 	virtual bool Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor);
+	virtual bool Draw (Gdiplus::Graphics & pGraphics, Gdiplus::Color & pBkColor, Gdiplus::Color & pBrColor);
 
 // Implementation
 protected:
 	void GetCalloutEllipses (Gdiplus::RectF* pEllipses);
 };
 
+/////////////////////////////////////////////////////////////////////////////
+#pragma managed(pop)
 /////////////////////////////////////////////////////////////////////////////

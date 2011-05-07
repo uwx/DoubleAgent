@@ -29,7 +29,7 @@ namespace DoubleAgent
 	/// <summary>
 	/// A <see cref="System.Windows.Forms.TextBox"/> that triggers validation when the return key is pressed.
 	/// </summary>
-	/// <remarks>The <see cref="AcceptsReturn"/> property is initialized to True.</remarks>
+	/// <remarks>The <see cref="System.Windows.Forms.TextBox.AcceptsReturn"/> property is initialized to True.</remarks>
 	public class TextBoxEx : System.Windows.Forms.TextBox
 	{
 		private const int WM_KEYDOWN = 0x0100;

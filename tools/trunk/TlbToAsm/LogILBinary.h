@@ -24,12 +24,12 @@ protected:
 	virtual bool PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCode & pOpCode, LPBYTE pOperand, int pOffset, LPBYTE pBinary) override;
 
 protected:
-	static String^ OpCodeTypeName (System::Reflection::Emit::OpCode pOpCode);
-	static String^ OpCodeFlowName (System::Reflection::Emit::OpCode pOpCode);
-	static String^ OperandTypeName (System::Reflection::Emit::OpCode pOpCode);
+	static System::String^ OpCodeTypeName (System::Reflection::Emit::OpCode pOpCode);
+	static System::String^ OpCodeFlowName (System::Reflection::Emit::OpCode pOpCode);
+	static System::String^ OperandTypeName (System::Reflection::Emit::OpCode pOpCode);
 
 private:
-	String^ LogIndent ();
+	System::String^ LogIndent ();
 };
 
 /////////////////////////////////////////////////////////////////////////////

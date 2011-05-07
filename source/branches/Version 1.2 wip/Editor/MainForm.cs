@@ -79,10 +79,15 @@ namespace AgentCharacterEditor
 
 			if ((lSettings.MainFormSize.X > 0) && (lSettings.MainFormSize.Y > 0))
 			{
-				this.Location = lSettings.MainFormLocation;
-				this.Size = (System.Drawing.Size)lSettings.MainFormSize;
+				System.Drawing.Point lLocation = lSettings.MainFormLocation;
+				System.Drawing.Size lSize = (System.Drawing.Size)lSettings.MainFormSize;
+
+				lSize.Width = Math.Max (lSize.Width, MinimumSize.Width);
+				lSize.Height = Math.Max (lSize.Height, MinimumSize.Height);
+				Location = lLocation;
+				Size = lSize;
 			}
-			this.WindowState = lSettings.MainFormState;
+			WindowState = (lSettings.MainFormState == FormWindowState.Minimized) ? FormWindowState.Normal : lSettings.MainFormState;
 
 			if (lSettings.MainFormSplit > 0)
 			{
@@ -133,7 +138,7 @@ namespace AgentCharacterEditor
 				lSettings.MainFormLocation = (System.Drawing.Point)this.RestoreBounds.Location;
 				lSettings.MainFormSize = (System.Drawing.Point)this.RestoreBounds.Size;
 			}
-			lSettings.MainFormState = this.WindowState;
+			lSettings.MainFormState = (WindowState == FormWindowState.Minimized) ? FormWindowState.Normal : WindowState;
 
 			lSettings.MainFormSplit = SplitContainerMain.SplitterDistance;
 		}
@@ -292,16 +297,16 @@ namespace AgentCharacterEditor
 					ShowFileState ();
 					ShowEditState ();
 
-					PanelPartsTree.CharacterFile = mCharacterFile;
-					PanelCharacter.CharacterFile = mCharacterFile;
-					PanelBalloon.CharacterFile = mCharacterFile;
-					PanelTts.CharacterFile = mCharacterFile;
-					PanelAnimations.CharacterFile = mCharacterFile;
-					PanelAnimation.CharacterFile = mCharacterFile;
-					PanelFrame.CharacterFile = mCharacterFile;
-					PanelBranching.CharacterFile = mCharacterFile;
-					PanelOverlays.CharacterFile = mCharacterFile;
-					PanelState.CharacterFile = mCharacterFile;
+					PanelPartsTree.FilePart = new ResolveCharacter ();
+					PanelCharacter.FilePart = new ResolveCharacter ();
+					PanelBalloon.FilePart = new ResolveBalloon ();
+					PanelTts.FilePart = new ResolveTts ();
+					PanelAnimations.FilePart = new ResolveCharacter ();
+					PanelAnimation.FilePart = new ResolveCharacter ();
+					PanelFrame.FilePart = new ResolveCharacter ();
+					PanelBranching.FilePart = new ResolveCharacter ();
+					PanelOverlays.FilePart = new ResolveCharacter ();
+					PanelState.FilePart = new ResolveCharacter ();
 
 					PanelPartsTree.LoadExpansion ();
 					ShowSelectedPart ();
@@ -543,11 +548,11 @@ namespace AgentCharacterEditor
 
 			if (pSelectedPart is ResolveAnimation)
 			{
-				PanelAnimation.Animation = pSelectedPart.Part as FileAnimation;
+				PanelAnimation.FilePart = pSelectedPart;
 			}
 			else if (pSelectedPart is ResolveState)
 			{
-				PanelState.StateName = pSelectedPart.Part as String;
+				PanelState.FilePart = pSelectedPart;
 			}
 			else if (lResolveAnimationFrame != null)
 			{
@@ -555,17 +560,17 @@ namespace AgentCharacterEditor
 				{
 					case ResolveAnimationFrame.ScopeType.ScopeFrame:
 						{
-							PanelFrame.Frame = pSelectedPart.Part as FileAnimationFrame;
+							PanelFrame.FilePart = pSelectedPart;
 						}
 						break;
 					case ResolveAnimationFrame.ScopeType.ScopeBranching:
 						{
-							PanelBranching.Frame = pSelectedPart.Part as FileAnimationFrame;
+							PanelBranching.FilePart = pSelectedPart;
 						}
 						break;
 					case ResolveAnimationFrame.ScopeType.ScopeOverlays:
 						{
-							PanelOverlays.Frame = pSelectedPart.Part as FileAnimationFrame;
+							PanelOverlays.FilePart = pSelectedPart;
 						}
 						break;
 				}

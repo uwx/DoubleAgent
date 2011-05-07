@@ -35,16 +35,23 @@
 #include <oleauto.h>
 #pragma managed(pop)
 
+#ifdef	_M_CEE
 #include <vcclr.h>
 #include <msclr\marshal.h>
 #include <msclr\marshal_windows.h>
 using namespace msclr::interop;
+#endif	// _M_CEE
 
 #pragma managed(push,off)
 #include "Log.h"
 #include "ExceptionMacros.h"
 #include "HelperTemplates.h"
 #pragma managed(pop)
+#include "HandleTemplates.h"
+#include <atltypes.h>
+#include <atlstr.h>
+#include <atlcom.h>
+#include "AtlCollEx.h"
 #endif	// _M_CEE_XXXX
 
 #ifdef	ReportEvent
@@ -59,12 +66,10 @@ using namespace msclr::interop;
 
 #include "DaVersion.h"
 
-using namespace System;
-using namespace System::Text;
-using namespace System::Collections;
-
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
+/////////////////////////////////////////////////////////////////////////////
+#ifdef	_M_CEE
 /////////////////////////////////////////////////////////////////////////////
 
 static inline System::String^ FormatArguments (array<System::Type^>^ pArguments)
@@ -103,7 +108,7 @@ static inline System::String^ FormatMethodArguments (System::Reflection::MethodB
 	{
 		return FormatArguments (lArguments);
 	}
-	return String::Empty;
+	return System::String::Empty;
 }
 
 static inline System::String^ FormatTypeArguments (System::Type^ pType)
@@ -118,7 +123,7 @@ static inline System::String^ FormatTypeArguments (System::Type^ pType)
 	{
 		return FormatArguments (lArguments);
 	}
-	return String::Empty;
+	return System::String::Empty;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -142,18 +147,18 @@ static inline tBstrPtr _BT (System::Type^ pType)
 	{
 		if	(
 				(pType->IsGenericParameter)
-			&&	(!String::IsNullOrEmpty (pType->Name))
+			&&	(!System::String::IsNullOrEmpty (pType->Name))
 			)
 		{
 			return _B(pType->Name);
 		}
 		else
-		if	(!String::IsNullOrEmpty (pType->FullName))
+		if	(!System::String::IsNullOrEmpty (pType->FullName))
 		{
 			return _B(pType->FullName+FormatTypeArguments(pType));
 		}
 		else
-		if	(!String::IsNullOrEmpty (pType->Namespace))
+		if	(!System::String::IsNullOrEmpty (pType->Namespace))
 		{
 			return _B(pType->Namespace+"."+pType->Name+FormatTypeArguments(pType));
 		}
@@ -181,7 +186,7 @@ static inline tBstrPtr _BM (System::Reflection::MemberInfo^ pMember)
 {
 	if	(pMember)
 	{
-		if	(String::IsNullOrEmpty (pMember->Name))
+		if	(System::String::IsNullOrEmpty (pMember->Name))
 		{
 			return _B("<unnamed>");
 		}
@@ -200,7 +205,7 @@ static inline tBstrPtr _BM (System::Reflection::ParameterInfo^ pParameter)
 {
 	if	(pParameter)
 	{
-		if	(String::IsNullOrEmpty (pParameter->Name))
+		if	(System::String::IsNullOrEmpty (pParameter->Name))
 		{
 			return _B("<unnamed>");
 		}
@@ -245,5 +250,6 @@ static inline System::String^ DebugStr (System::String^ pString)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#endif
+#endif	// _M_CEE_XXXX
+#endif	// _M_CEE
 /////////////////////////////////////////////////////////////////////////////

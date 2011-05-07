@@ -159,6 +159,7 @@
     <ClCompile Include="Core\AgentStreamUtils.cpp" />
     <ClCompile Include="Core\AgentText.cpp" />
     <ClCompile Include="Common\AgentTextObject.cpp" />
+    <ClCompile Include="Core\AgentTextParse.cpp" />
     <ClCompile Include="Core\AgentWnd.cpp" />
     <ClCompile Include="Core\DaCore.cpp" />
     <ClCompile Include="Core\DaGlobalConfig.cpp" />
@@ -271,6 +272,7 @@
     <ClInclude Include="Core\AgentStreamUtils.h" />
     <ClInclude Include="Core\AgentText.h" />
     <ClInclude Include="Common\AgentTextObject.h" />
+    <ClInclude Include="Core\AgentTextParse.h" />
     <ClInclude Include="Core\AgentWnd.h" />
     <ClInclude Include="Core\DaCore.h" />
     <ClInclude Include="Core\DaCoreExp.h" />

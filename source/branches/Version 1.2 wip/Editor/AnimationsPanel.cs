@@ -30,45 +30,21 @@ using AgentCharacterEditor.Updates;
 
 namespace AgentCharacterEditor
 {
-	public partial class AnimationsPanel : UserControl
+	public partial class AnimationsPanel : FilePartPanel
 	{
-		private CharacterFile	mCharacterFile = null;
-
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
 		public AnimationsPanel ()
 		{
 			InitializeComponent ();
-			CausesValidation = Visible;
-
-			if (Program.MainForm != null)
-			{
-				Program.MainForm.UpdateApplied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
-			}
 		}
 
-		private void AnimationsForm_VisibleChanged (object sender, EventArgs e)
+		protected override Boolean TrackUpdatesWhenHidden
 		{
-			CausesValidation = Visible;
-
-			if (Program.MainForm != null)
+			get
 			{
-				Program.MainForm.CanEdit -= new Global.CanEditEventHandler (MainForm_CanEdit);
-				Program.MainForm.EditCopy -= new Global.EditEventHandler (MainForm_EditCopy);
-				Program.MainForm.EditCut -= new Global.EditEventHandler (MainForm_EditCut);
-				Program.MainForm.EditDelete -= new Global.EditEventHandler (MainForm_EditDelete);
-				Program.MainForm.EditPaste -= new Global.EditEventHandler (MainForm_EditPaste);
-				Program.MainForm.EditMenu -= new Global.ContextMenuEventHandler (MainForm_EditMenu);
-				if (Visible)
-				{
-					Program.MainForm.CanEdit += new Global.CanEditEventHandler (MainForm_CanEdit);
-					Program.MainForm.EditCopy += new Global.EditEventHandler (MainForm_EditCopy);
-					Program.MainForm.EditCut += new Global.EditEventHandler (MainForm_EditCut);
-					Program.MainForm.EditDelete += new Global.EditEventHandler (MainForm_EditDelete);
-					Program.MainForm.EditPaste += new Global.EditEventHandler (MainForm_EditPaste);
-					Program.MainForm.EditMenu += new Global.ContextMenuEventHandler (MainForm_EditMenu);
-				}
+				return true;
 			}
 		}
 
@@ -76,27 +52,18 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
 
-		[System.ComponentModel.Browsable (false)]
-		public CharacterFile CharacterFile
+		public override ResolvePart FilePart
 		{
 			get
 			{
-				return mCharacterFile;
+				return base.FilePart;
 			}
 			set
 			{
-				mCharacterFile = value;
+				base.FilePart = value;
 				ShowAnimationNames ();
 				ShowFrameProperties ();
 				ShowPalette ();
-			}
-		}
-
-		private Boolean IsEmpty
-		{
-			get
-			{
-				return (mCharacterFile == null);
 			}
 		}
 
@@ -122,8 +89,8 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				String[]	lAnimations = mCharacterFile.GetAnimationNames ();
-				int			lNdx;
+				String[] lAnimations = CharacterFile.GetAnimationNames ();
+				int lNdx;
 
 				ListViewAnimations.BeginUpdate ();
 				if ((lAnimations == null) || (lAnimations.Length <= 0))
@@ -157,7 +124,7 @@ namespace AgentCharacterEditor
 				ButtonAdd.Enabled = false;
 				ButtonAdd.Text = Properties.Resources.EditAddAnimation;
 			}
-			else if (HasNewAnimationName () && !mCharacterFile.Gestures.Contains (GetNewAnimationName ()))
+			else if (HasNewAnimationName () && !CharacterFile.Gestures.Contains (GetNewAnimationName ()))
 			{
 				ButtonAdd.Enabled = true;
 				ButtonAdd.Text = String.Format (Properties.Resources.EditAddAnimation1, GetNewAnimationName ());
@@ -187,7 +154,7 @@ namespace AgentCharacterEditor
 		{
 			if (!pEventArgs.IsUsed && pListIsFocused)
 			{
-				FileAnimation	lAnimation = GetSelectedAnimation (false);
+				FileAnimation lAnimation = GetSelectedAnimation (false);
 
 				if (lAnimation != null)
 				{
@@ -202,7 +169,7 @@ namespace AgentCharacterEditor
 
 			if (!Program.FileIsReadOnly && (pEventArgs.PasteObject is FileAnimation))
 			{
-				FileAnimation	lAnimation = null;
+				FileAnimation lAnimation = null;
 
 				if (pListIsFocused)
 				{
@@ -214,7 +181,7 @@ namespace AgentCharacterEditor
 				}
 				else if (pListIsFocused || pNewNameIsFocused)
 				{
-					if (HasNewAnimationName () && !mCharacterFile.Gestures.Contains (GetNewAnimationName ()))
+					if (HasNewAnimationName () && !CharacterFile.Gestures.Contains (GetNewAnimationName ()))
 					{
 						pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (null, GetNewAnimationName ().Quoted (), Global.TitleAnimation (pEventArgs.PasteObject as FileAnimation));
 					}
@@ -224,6 +191,27 @@ namespace AgentCharacterEditor
 						pEventArgs.PasteObjectTitle = Properties.Resources.EditPasteAnimation0;
 					}
 				}
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		protected override void ShowEditState (Global.CanEditEventArgs pEventArgs)
+		{
+			ShowEditState (pEventArgs, ListViewAnimations.ContainsFocus, TextBoxNewName.ContainsFocus);
+		}
+
+		protected override void OnEditMenu (object sender, Global.ContextMenuEventArgs e)
+		{
+			ShowEditState (e, true, false);
+
+			if (!IsEmpty && !Program.FileIsReadOnly && Object.ReferenceEquals (e.ActiveControl, ListViewAnimations))
+			{
+				ToolStripMenuItem lMenuItem;
+
+				e.ContextMenu.Items.Insert (0, new ToolStripSeparator ());
+				e.ContextMenu.Items.Insert (0, lMenuItem = new ToolStripMenuItem (ButtonAdd.Text, ButtonAdd.Image, ButtonAdd_Click));
+				lMenuItem.Enabled = ButtonAdd.Enabled;
 			}
 		}
 
@@ -248,11 +236,11 @@ namespace AgentCharacterEditor
 		}
 		private FileAnimation GetSelectedAnimation (ListViewItem pItem)
 		{
-			FileAnimation	lAnimation = null;
+			FileAnimation lAnimation = null;
 
-			if ((pItem != null) && (mCharacterFile.Gestures.Contains (pItem.Text)))
+			if ((pItem != null) && (CharacterFile.Gestures.Contains (pItem.Text)))
 			{
-				lAnimation = mCharacterFile.Gestures[pItem.Text];
+				lAnimation = CharacterFile.Gestures[pItem.Text];
 			}
 			return lAnimation;
 		}
@@ -282,8 +270,8 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				NumericFrameWidth.Value = mCharacterFile.Header.ImageSize.Width;
-				NumericFrameHeight.Value = mCharacterFile.Header.ImageSize.Height;
+				NumericFrameWidth.Value = CharacterFile.Header.ImageSize.Width;
+				NumericFrameHeight.Value = CharacterFile.Header.ImageSize.Height;
 
 				NumericFrameWidth.Enabled = !Program.FileIsReadOnly;
 				NumericFrameHeight.Enabled = !Program.FileIsReadOnly;
@@ -294,9 +282,9 @@ namespace AgentCharacterEditor
 
 		private void ShowPalette ()
 		{
-			System.Drawing.Imaging.ColorPalette	lPalette = null;
+			System.Drawing.Imaging.ColorPalette lPalette = null;
 
-			if (mCharacterFile == null)
+			if (CharacterFile == null)
 			{
 				TextBoxPaletteFile.ResetText ();
 				TextBoxPaletteFile.Enabled = false;
@@ -304,18 +292,18 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				TextBoxPaletteFile.Text = mCharacterFile.PaletteFilePath;
+				TextBoxPaletteFile.Text = CharacterFile.PaletteFilePath;
 				TextBoxPaletteFile.Enabled = !Program.FileIsReadOnly;
 				ToolStripPaletteFile.Enabled = !Program.FileIsReadOnly;
-				lPalette = mCharacterFile.Header.Palette;
+				lPalette = CharacterFile.Header.Palette;
 			}
 			if ((lPalette != null) && (lPalette.Entries.Length == 256))
 			{
-				System.Drawing.Bitmap				lBitmap = new System.Drawing.Bitmap (256, 256, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
-				System.Drawing.Color[]				lColors = lPalette.Entries;
-				int									lColorNdx = 0;
-				System.Drawing.Imaging.BitmapData	lData;
-				Byte[]								lBytes;
+				System.Drawing.Bitmap lBitmap = new System.Drawing.Bitmap (256, 256, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+				System.Drawing.Color[] lColors = lPalette.Entries;
+				int lColorNdx = 0;
+				System.Drawing.Imaging.BitmapData lData;
+				Byte[] lBytes;
 
 				try
 				{
@@ -337,9 +325,9 @@ namespace AgentCharacterEditor
 				}
 
 				PictureBoxPalette.Image = lBitmap;
-				LabelTransparencySample.BackColor = lColors[mCharacterFile.Header.Transparency];
+				LabelTransparencySample.BackColor = lColors[CharacterFile.Header.Transparency];
 				LabelTransparencySample.ForeColor = (LabelTransparencySample.BackColor.GetBrightness () > 0.5) ? Color.Black : Color.White;
-				LabelTransparencySample.Text = mCharacterFile.Header.Transparency.ToString ();
+				LabelTransparencySample.Text = CharacterFile.Header.Transparency.ToString ();
 				LabelTransparency.Enabled = true;
 			}
 			else
@@ -357,12 +345,12 @@ namespace AgentCharacterEditor
 
 		private void ShowPaletteMouseColor (Point pMousePos)
 		{
-			System.Drawing.Imaging.ColorPalette	lPalette = null;
-			int									lColorNdx;
+			System.Drawing.Imaging.ColorPalette lPalette = null;
+			int lColorNdx;
 
-			if (mCharacterFile != null)
+			if (CharacterFile != null)
 			{
-				lPalette = mCharacterFile.Header.Palette;
+				lPalette = CharacterFile.Header.Palette;
 			}
 			if (lPalette != null)
 			{
@@ -383,12 +371,12 @@ namespace AgentCharacterEditor
 
 		private int PaletteMouseColorNdx (Point pMousePos)
 		{
-			System.Drawing.Imaging.ColorPalette	lPalette = null;
-			System.Drawing.Point				lColorPos;
+			System.Drawing.Imaging.ColorPalette lPalette = null;
+			System.Drawing.Point lColorPos;
 
-			if (mCharacterFile != null)
+			if (CharacterFile != null)
 			{
-				lPalette = mCharacterFile.Header.Palette;
+				lPalette = CharacterFile.Header.Palette;
 			}
 			if (lPalette != null)
 			{
@@ -414,7 +402,7 @@ namespace AgentCharacterEditor
 		{
 			if ((pAnimation != null) && !Program.FileIsReadOnly)
 			{
-				AddDeleteAnimation	lUpdate = new AddDeleteAnimation (pAnimation, pForClipboard);
+				AddDeleteAnimation lUpdate = new AddDeleteAnimation (pAnimation, pForClipboard);
 
 				if (AddDeleteAnimation.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as AddDeleteAnimation, this))
 				{
@@ -426,9 +414,9 @@ namespace AgentCharacterEditor
 
 		internal UndoableUpdate PasteSelectedAnimation (FileAnimation pAnimation, FileAnimation pPasteAnimation)
 		{
-			if ((mCharacterFile != null) && (pPasteAnimation != null) && !Program.FileIsReadOnly)
+			if ((CharacterFile != null) && (pPasteAnimation != null) && !Program.FileIsReadOnly)
 			{
-				String	lAnimationName = GetNewAnimationName ();
+				String lAnimationName = GetNewAnimationName ();
 
 				if (pAnimation == null)
 				{
@@ -436,13 +424,13 @@ namespace AgentCharacterEditor
 					{
 						System.Media.SystemSounds.Beep.Play ();
 					}
-					else if (mCharacterFile.Gestures.Contains (lAnimationName))
+					else if (CharacterFile.Gestures.Contains (lAnimationName))
 					{
 						MessageBox.Show (String.Format (Properties.Resources.MsgDuplicateAnimation, lAnimationName), Program.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					}
 					else
 					{
-						AddDeleteAnimation	lUpdate = new AddDeleteAnimation (lAnimationName, true);
+						AddDeleteAnimation lUpdate = new AddDeleteAnimation (lAnimationName, true);
 
 						lUpdate = lUpdate.Apply () as AddDeleteAnimation;
 						if (lUpdate != null)
@@ -462,7 +450,7 @@ namespace AgentCharacterEditor
 				}
 				else
 				{
-					UpdateAnimation	lUpdate = new UpdateAnimation (pAnimation, true);
+					UpdateAnimation lUpdate = new UpdateAnimation (pAnimation, true);
 
 					pPasteAnimation.CopyTo (pAnimation, true);
 					lUpdate = lUpdate.Apply () as UpdateAnimation;
@@ -477,37 +465,113 @@ namespace AgentCharacterEditor
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private void OnUpdateApplied (object sender, EventArgs e)
+		protected override bool EditCopy (Global.EditEventArgs pEventArgs)
 		{
-			if (!IsEmpty)
+			if (ListViewAnimations.ContainsFocus)
 			{
-				UpdateCharacterHeader	lUpdateCharacter = sender as UpdateCharacterHeader;
-				AddDeleteAnimation		lAddDeleteAnimation = sender as AddDeleteAnimation;
-				UpdateAnimation			lUpdateAnimation = sender as UpdateAnimation;
+				FileAnimation lAnimation = GetSelectedAnimation (false);
 
-				if ((lUpdateCharacter != null) && (lUpdateCharacter.CharacterFile == mCharacterFile))
+				if (lAnimation != null)
 				{
-					if (lUpdateCharacter.ImageSizeChanged)
+					try
 					{
-						ShowFrameProperties ();
+						Clipboard.SetData (DataFormats.Serializable, lAnimation);
 					}
-					if (lUpdateCharacter.PaletteChanged || lUpdateCharacter.PaletteTransparencyChanged)
+					catch
 					{
-						ShowPalette ();
 					}
+					return true;
 				}
+			}
+			return false;
+		}
 
-				if ((lAddDeleteAnimation != null) && (lAddDeleteAnimation.CharacterFile == mCharacterFile))
-				{
-					int	lSelNdx = ListViewAnimations.SelectedIndex;
-					ShowAnimationNames ();
-					ListViewAnimations.SelectedIndex = lSelNdx;
-				}
+		protected override bool EditCut (Global.EditEventArgs pEventArgs)
+		{
+			if (ListViewAnimations.ContainsFocus)
+			{
+				FileAnimation lAnimation = GetSelectedAnimation (false);
 
-				if ((lUpdateAnimation != null) && lUpdateAnimation.NameChanged)
+				if (lAnimation != null)
 				{
-					ShowAnimationNames ();
+					try
+					{
+						Clipboard.SetData (DataFormats.Serializable, lAnimation);
+						DeleteSelectedAnimation (lAnimation, true);
+					}
+					catch
+					{
+					}
+					return true;
 				}
+			}
+			return false;
+		}
+
+		protected override bool EditDelete (Global.EditEventArgs pEventArgs)
+		{
+			if (ListViewAnimations.ContainsFocus)
+			{
+				FileAnimation lAnimation = GetSelectedAnimation (false);
+
+				if (lAnimation != null)
+				{
+					DeleteSelectedAnimation (lAnimation, false);
+					return true;
+				}
+			}
+			return false;
+		}
+
+		protected override bool EditPaste (Global.EditEventArgs pEventArgs)
+		{
+			if (pEventArgs.PasteObject is FileAnimation)
+			{
+				if (ListViewAnimations.ContainsFocus)
+				{
+					FileAnimation lAnimation = GetSelectedAnimation (false);
+
+					PasteSelectedAnimation (lAnimation, pEventArgs.PasteObject as FileAnimation);
+					return true;
+				}
+				else if (HasNewAnimationName ())
+				{
+					PasteSelectedAnimation (null, pEventArgs.PasteObject as FileAnimation);
+				}
+			}
+			return false;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		protected override void UpdateApplied (Object pUpdate)
+		{
+			UpdateCharacterHeader lUpdateCharacter = pUpdate as UpdateCharacterHeader;
+			AddDeleteAnimation lAddDeleteAnimation = pUpdate as AddDeleteAnimation;
+			UpdateAnimation lUpdateAnimation = pUpdate as UpdateAnimation;
+
+			if ((lUpdateCharacter != null) && (lUpdateCharacter.CharacterFile == CharacterFile))
+			{
+				if (lUpdateCharacter.ImageSizeChanged)
+				{
+					ShowFrameProperties ();
+				}
+				if (lUpdateCharacter.PaletteChanged || lUpdateCharacter.PaletteTransparencyChanged)
+				{
+					ShowPalette ();
+				}
+			}
+
+			if ((lAddDeleteAnimation != null) && (lAddDeleteAnimation.CharacterFile == CharacterFile))
+			{
+				int lSelNdx = ListViewAnimations.SelectedIndex;
+				ShowAnimationNames ();
+				ListViewAnimations.SelectedIndex = lSelNdx;
+			}
+
+			if ((lUpdateAnimation != null) && lUpdateAnimation.NameChanged)
+			{
+				ShowAnimationNames ();
 			}
 		}
 
@@ -550,14 +614,14 @@ namespace AgentCharacterEditor
 		{
 			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
-				String				lAnimationName = GetNewAnimationName ();
-				AddDeleteAnimation	lUpdate;
+				String lAnimationName = GetNewAnimationName ();
+				AddDeleteAnimation lUpdate;
 
 				if (String.IsNullOrEmpty (lAnimationName))
 				{
 					System.Media.SystemSounds.Beep.Play ();
 				}
-				else if (mCharacterFile.Gestures.Contains (lAnimationName))
+				else if (CharacterFile.Gestures.Contains (lAnimationName))
 				{
 					MessageBox.Show (String.Format (Properties.Resources.MsgDuplicateAnimation, lAnimationName), Program.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				}
@@ -580,12 +644,12 @@ namespace AgentCharacterEditor
 		{
 			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
-				ListViewItem	lSelItem = ListViewAnimations.SelectedItem;
+				ListViewItem lSelItem = ListViewAnimations.SelectedItem;
 
-				if ((lSelItem != null) && mCharacterFile.Gestures.Contains (lSelItem.Text))
+				if ((lSelItem != null) && CharacterFile.Gestures.Contains (lSelItem.Text))
 				{
-					int				lSelNdx = lSelItem.Index;
-					FileAnimation	lAnimation = mCharacterFile.Gestures[lSelItem.Text];
+					int lSelNdx = lSelItem.Index;
+					FileAnimation lAnimation = CharacterFile.Gestures[lSelItem.Text];
 
 					if (DeleteSelectedAnimation (lAnimation, false) != null)
 					{
@@ -605,9 +669,9 @@ namespace AgentCharacterEditor
 		{
 			if (CausesValidation && !IsEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateCharacterHeader	lUpdate = new UpdateCharacterHeader ();
+				UpdateCharacterHeader lUpdate = new UpdateCharacterHeader ();
 
-				lUpdate.ImageSize = new System.Drawing.Size ((int)NumericFrameWidth.Value, mCharacterFile.Header.ImageSize.Height);
+				lUpdate.ImageSize = new System.Drawing.Size ((int)NumericFrameWidth.Value, CharacterFile.Header.ImageSize.Height);
 				UpdateCharacterHeader.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateCharacterHeader, this);
 			}
 		}
@@ -616,9 +680,9 @@ namespace AgentCharacterEditor
 		{
 			if (CausesValidation && !IsEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateCharacterHeader	lUpdate = new UpdateCharacterHeader ();
+				UpdateCharacterHeader lUpdate = new UpdateCharacterHeader ();
 
-				lUpdate.ImageSize = new System.Drawing.Size (mCharacterFile.Header.ImageSize.Width, (int)NumericFrameHeight.Value);
+				lUpdate.ImageSize = new System.Drawing.Size (CharacterFile.Header.ImageSize.Width, (int)NumericFrameHeight.Value);
 				UpdateCharacterHeader.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateCharacterHeader, this);
 			}
 		}
@@ -629,7 +693,7 @@ namespace AgentCharacterEditor
 		{
 			if (CausesValidation && TextBoxPaletteFile.Modified && !IsEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateCharacterHeader	lUpdate = new UpdateCharacterHeader ();
+				UpdateCharacterHeader lUpdate = new UpdateCharacterHeader ();
 
 				lUpdate.PaletteFilePath = TextBoxPaletteFile.Text;
 				UpdateCharacterHeader.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateCharacterHeader, this);
@@ -640,8 +704,8 @@ namespace AgentCharacterEditor
 		{
 			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
-				String					lFilePath = mCharacterFile.PaletteFilePath;
-				UpdateCharacterHeader	lUpdate;
+				String lFilePath = CharacterFile.PaletteFilePath;
+				UpdateCharacterHeader lUpdate;
 
 				if (OpenFileDialogEx.OpenPaletteFile (ref lFilePath))
 				{
@@ -669,8 +733,8 @@ namespace AgentCharacterEditor
 		{
 			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
-				int						lColorNdx = PaletteMouseColorNdx (e.Location);
-				UpdateCharacterHeader	lUpdate;
+				int lColorNdx = PaletteMouseColorNdx (e.Location);
+				UpdateCharacterHeader lUpdate;
 
 				if (lColorNdx >= 0)
 				{
@@ -678,108 +742,6 @@ namespace AgentCharacterEditor
 					lUpdate.PaletteTransparency = (Byte)lColorNdx;
 					UpdateCharacterHeader.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateCharacterHeader, this);
 				}
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
-		#region Internal Event Handlers
-
-		internal void MainForm_CanEdit (object sender, Global.CanEditEventArgs e)
-		{
-			if (!IsEmpty)
-			{
-				ShowEditState (e, ListViewAnimations.ContainsFocus, TextBoxNewName.ContainsFocus);
-			}
-		}
-
-		internal void MainForm_EditCopy (object sender, Global.EditEventArgs e)
-		{
-			if (!e.IsUsed && !IsEmpty && ListViewAnimations.ContainsFocus)
-			{
-				FileAnimation	lAnimation = GetSelectedAnimation (false);
-
-				if (lAnimation != null)
-				{
-					e.IsUsed = true;
-					try
-					{
-						Clipboard.SetData (DataFormats.Serializable, lAnimation);
-					}
-					catch
-					{
-					}
-				}
-			}
-		}
-
-		internal void MainForm_EditCut (object sender, Global.EditEventArgs e)
-		{
-			if (!e.IsUsed && !IsEmpty && !Program.FileIsReadOnly && ListViewAnimations.ContainsFocus)
-			{
-				FileAnimation	lAnimation = GetSelectedAnimation (false);
-
-				if (lAnimation != null)
-				{
-					e.IsUsed = true;
-					try
-					{
-						Clipboard.SetData (DataFormats.Serializable, lAnimation);
-						DeleteSelectedAnimation (lAnimation, true);
-					}
-					catch
-					{
-					}
-				}
-			}
-		}
-
-		internal void MainForm_EditDelete (object sender, Global.EditEventArgs e)
-		{
-			if (e.IsUsed && !IsEmpty && !Program.FileIsReadOnly && ListViewAnimations.ContainsFocus)
-			{
-				FileAnimation	lAnimation = GetSelectedAnimation (false);
-
-				if (lAnimation != null)
-				{
-					e.IsUsed = true;
-					DeleteSelectedAnimation (lAnimation, false);
-				}
-			}
-		}
-
-		internal void MainForm_EditPaste (object sender, Global.EditEventArgs e)
-		{
-			if (!e.IsUsed && !IsEmpty && !Program.FileIsReadOnly && (e.PasteObject is FileAnimation))
-			{
-				if (ListViewAnimations.ContainsFocus)
-				{
-					FileAnimation	lAnimation = GetSelectedAnimation (false);
-
-					e.IsUsed = true;
-					PasteSelectedAnimation (lAnimation, e.PasteObject as FileAnimation);
-				}
-				else if (HasNewAnimationName ())
-				{
-					e.IsUsed = true;
-					PasteSelectedAnimation (null, e.PasteObject as FileAnimation);
-				}
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		internal void MainForm_EditMenu (object sender, Global.ContextMenuEventArgs e)
-		{
-			ShowEditState (e, true, false);
-
-			if (!IsEmpty && !Program.FileIsReadOnly && Object.ReferenceEquals (e.ActiveControl, ListViewAnimations))
-			{
-				ToolStripMenuItem	lMenuItem;
-
-				e.ContextMenu.Items.Insert (0, new ToolStripSeparator ());
-				e.ContextMenu.Items.Insert (0, lMenuItem = new ToolStripMenuItem (ButtonAdd.Text, ButtonAdd.Image, ButtonAdd_Click));
-				lMenuItem.Enabled = ButtonAdd.Enabled;
 			}
 		}
 

@@ -132,7 +132,6 @@ namespace AgentCharacterEditor
 			this.Name = "StateForm";
 			this.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
 			this.Size = new System.Drawing.Size(650, 450);
-			this.VisibleChanged += new System.EventHandler(this.StateForm_VisibleChanged);
 			this.GroupBoxAnimations.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();

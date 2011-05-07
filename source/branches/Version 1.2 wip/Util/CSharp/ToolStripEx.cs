@@ -118,7 +118,8 @@ namespace DoubleAgent
 			}
 		}
 		[System.ComponentModel.Browsable (false)]
-		[System.ComponentModel.DesignerSerializationVisibility (DesignerSerializationVisibility.Hidden)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		//[System.ComponentModel.Category ("Behavior")]
 		//[System.ComponentModel.DefaultValue (0)]
 		public int RepeatDelay
@@ -127,7 +128,8 @@ namespace DoubleAgent
 			set;
 		}
 		[System.ComponentModel.Browsable (false)]
-		[System.ComponentModel.DesignerSerializationVisibility (DesignerSerializationVisibility.Hidden)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		//[System.ComponentModel.Category ("Behavior")]
 		//[System.ComponentModel.DefaultValue (0)]
 		public int RepeatSpeed
@@ -152,18 +154,24 @@ namespace DoubleAgent
 		}
 
 		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public System.Windows.Forms.Timer ClickRepeatTimer
 		{
 			get;
 			protected set;
 		}
 		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public int ClickRepeatNum
 		{
 			get;
 			protected set;
 		}
 		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public Boolean ClickIsRepeat
 		{
 			get;

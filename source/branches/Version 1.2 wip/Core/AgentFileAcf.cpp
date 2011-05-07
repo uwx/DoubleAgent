@@ -32,7 +32,7 @@
 #endif
 #include "AgentFileDefs.inl"
 
-#ifndef _M_CEE
+#ifndef __cplusplus_cli
 IMPLEMENT_DLL_OBJECT(CAgentFileAcf)
 #endif
 

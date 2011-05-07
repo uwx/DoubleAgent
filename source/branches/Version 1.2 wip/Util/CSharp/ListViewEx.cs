@@ -39,7 +39,7 @@ namespace DoubleAgent
 		}
 
 		/// <summary>
-		/// Updates the <see cref="ListView.Items"/> collection to contain a specific number of items.
+		/// Updates the <see cref="System.Windows.Forms.ListView.Items"/> collection to contain a specific number of items.
 		/// </summary>
 		/// <param name="pItemCount">The number of items required.</param>
 		/// <returns>True if items were added or removed.</returns>
@@ -64,14 +64,14 @@ namespace DoubleAgent
 		/// Updates a <see cref="ListViewItem"/> to contain a subitem for each column.
 		/// </summary>
 		/// <param name="pItem">The <see cref="ListViewItem"/> to update.</param>
-		/// <seealso cref="Boolean UpdateSubItemCount (ListViewItem)"/>
+		/// <seealso cref="UpdateSubItemCount (ListViewItem, int)"/>
 		public Boolean UpdateSubItemCount (ListViewItem pItem)
 		{
 			return UpdateSubItemCount (pItem, Columns.Count);
 		}
 
 		/// <summary>
-		/// Updates the <see cref="ListViewItem.Items"/> collection to contain a specific number of subitems.
+		/// Updates the <see cref="ListViewItem.SubItems"/> collection to contain a specific number of subitems.
 		/// </summary>
 		/// <param name="pItem">The <see cref="ListViewItem"/> to update.</param>
 		/// <param name="pSubItemCount">The number of subitems required.</param>
@@ -101,8 +101,10 @@ namespace DoubleAgent
 		/// <summary>
 		/// Gets or sets the selected <see cref="ListViewItem"/> in single-selection mode.
 		/// </summary>
-		/// <remarks>Setting the selected item also sets the <see cref="FocusedItem"/></remarks>
+		/// <remarks>Setting the selected item also sets the <see cref="ListView.FocusedItem"/></remarks>
 		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public ListViewItem SelectedItem
 		{
 			get
@@ -130,7 +132,7 @@ namespace DoubleAgent
 		/// <summary>
 		/// Retrieves the selected <see cref="ListViewItem"/> in single-selection mode.
 		/// </summary>
-		/// <param name="pIncludeFocus">True if the <see cref="FocusedItem"/> should be returned when there is no selected item.</param>
+		/// <param name="pIncludeFocus">True if the <see cref="ListView.FocusedItem"/> should be returned when there is no selected item.</param>
 		/// <returns>The selected (or focused) item, or null if not found.</returns>
 		public ListViewItem GetSelectedItem (Boolean pIncludeFocus)
 		{
@@ -152,6 +154,8 @@ namespace DoubleAgent
 		/// Gets or sets the index of the selected <see cref="ListViewItem"/> in single-selection mode.
 		/// </summary>
 		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public int SelectedIndex
 		{
 			get
@@ -175,7 +179,7 @@ namespace DoubleAgent
 		/// <summary>
 		/// Retrieves the index of the selected <see cref="ListViewItem"/> in single-selection mode.
 		/// </summary>
-		/// <param name="pIncludeFocus">True if the <see cref="FocusedItem"/> should be returned when there is no selected item.</param>
+		/// <param name="pIncludeFocus">True if the <see cref="ListView.FocusedItem"/> should be returned when there is no selected item.</param>
 		/// <returns>The index of the selected (or focused) item, or -1 if not found.</returns>
 		public int GetSelectedIndex (Boolean pIncludeFocus)
 		{
@@ -201,7 +205,7 @@ namespace DoubleAgent
 		/// <param name="pColumnHeader">The <see cref="ColumnHeader"/> to update.</param>
 		public void AutoSizeColumn (ColumnHeader pColumnHeader)
 		{
-			int	lColumnWidth;
+			int lColumnWidth;
 
 			pColumnHeader.AutoResize (ColumnHeaderAutoResizeStyle.HeaderSize);
 			lColumnWidth = pColumnHeader.Width;

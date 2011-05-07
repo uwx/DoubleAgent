@@ -27,14 +27,14 @@ namespace DoubleAgent {
 public ref class Win32Native
 {
 public:
-	static property Boolean IsInputPending {Boolean get();}
-	static property Boolean IsMouseInputPending {Boolean get();}
-	static property Boolean IsMouseWheelPending {Boolean get();}
+	static property System::Boolean IsInputPending {System::Boolean get();}
+	static property System::Boolean IsMouseInputPending {System::Boolean get();}
+	static property System::Boolean IsMouseWheelPending {System::Boolean get();}
 
 	static void PopThreadToolTips ();
-	static void PopThreadToolTips (Boolean pNoFade);
-	static void PopThreadToolTips (IntPtr pWindowHandle);
-	static void PopThreadToolTips (IntPtr pWindowHandle, Boolean pNoFade);
+	static void PopThreadToolTips (System::Boolean pNoFade);
+	static void PopThreadToolTips (System::IntPtr pWindowHandle);
+	static void PopThreadToolTips (System::IntPtr pWindowHandle, System::Boolean pNoFade);
 };
 
 /////////////////////////////////////////////////////////////////////////////
