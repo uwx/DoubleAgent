@@ -45,5 +45,10 @@ namespace AgentCharacterEditor
 		{
 			(new AgentCharacterEditor.LicenseBox ()).ShowDialog (this);
 		}
+
+		private void TextBoxLicenseIntro_LinkClicked (object sender, LinkClickedEventArgs e)
+		{
+			System.Diagnostics.Process.Start (e.LinkText);
+		}
 	}
 }

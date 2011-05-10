@@ -29,11 +29,11 @@ namespace AgentCharacterEditor
 {
 	public partial class CharacterPanel : FilePartPanel
 	{
-		internal const UInt16 mLangDefault = 0x0409;
-		private UInt16 mLangCurrent = 0;
-
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
+
+		internal const UInt16 mLangDefault = 0x0409;
+		private UInt16 mLangCurrent = 0;
 
 		public CharacterPanel ()
 		{
@@ -71,7 +71,55 @@ namespace AgentCharacterEditor
 			set
 			{
 				base.FilePart = value;
+				if (FilePart is ResolveCharacter)
+				{
+					(FilePart as ResolveCharacter).Scope = ResolveCharacter.ScopeType.ScopeCharacter;
+				}
 				ShowFileProperties ();
+			}
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region Navigation
+
+		public override object NavigationContext
+		{
+			get
+			{
+				return new PanelContext (this);
+			}
+			set
+			{
+				if (value is PanelContext)
+				{
+					(value as PanelContext).RestoreContext (this);
+				}
+				else
+				{
+					base.NavigationContext = value;
+				}
+			}
+		}
+
+		public new class PanelContext : FilePartPanel.PanelContext
+		{
+			public PanelContext (CharacterPanel pPanel)
+				: base (pPanel)
+			{
+				SelectedName = pPanel.ListItemLangID (pPanel.ListViewLanguage.SelectedItem);
+			}
+
+			public void RestoreContext (CharacterPanel pPanel)
+			{
+				base.RestoreContext (pPanel);
+				pPanel.SelectLangIDItem (SelectedName);
+			}
+
+			public UInt16 SelectedName
+			{
+				get;
+				protected set;
 			}
 		}
 

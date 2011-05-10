@@ -114,6 +114,7 @@ namespace AgentCharacterEditor
 			this.TextBoxLicenseDetails.TabIndex = 0;
 			this.TextBoxLicenseDetails.TabStop = false;
 			this.TextBoxLicenseDetails.Text = "";
+			this.TextBoxLicenseDetails.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.TextBoxLicenseDetails_LinkClicked);
 			// 
 			// LicenseBox
 			// 

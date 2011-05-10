@@ -114,13 +114,35 @@ namespace AgentCharacterEditor
 		[System.ComponentModel.Browsable (false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
 		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public virtual Object NavigationContext
+		{
+			get
+			{
+				return new PanelContext (this);
+			}
+			set
+			{
+				if (value is PanelContext)
+				{
+					(value as PanelContext).RestoreContext (this);
+				}
+				else  if (value is ResolvePart)
+				{
+					FilePart = value as ResolvePart;
+				}
+			}
+		}
+
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public CharacterFile CharacterFile
 		{
 			get;
 			protected set;
 		}
 
-		protected virtual Boolean IsEmpty
+		public virtual Boolean IsEmpty
 		{
 			get
 			{
@@ -133,6 +155,41 @@ namespace AgentCharacterEditor
 			get
 			{
 				return false;
+			}
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region Navigation
+
+		public class PanelContext
+		{
+			public PanelContext (FilePartPanel pPanel)
+			{
+				FilePart = pPanel.FilePart;
+				if (pPanel.ContainsFocus)
+				{
+					ActiveControl = Program.MainForm.GetActiveControl ();
+				}
+			}
+			public void RestoreContext (FilePartPanel pPanel)
+			{
+				pPanel.FilePart = FilePart;
+				if (ActiveControl != null)
+				{
+					ActiveControl.Focus ();
+				}
+			}
+
+			public ResolvePart FilePart
+			{
+				get;
+				protected set;
+			}
+			public Control ActiveControl
+			{
+				get;
+				protected set;
 			}
 		}
 

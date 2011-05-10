@@ -91,6 +91,7 @@ namespace AgentCharacterEditor
 			this.TextBoxLicenseIntro.TabIndex = 0;
 			this.TextBoxLicenseIntro.TabStop = false;
 			this.TextBoxLicenseIntro.Text = "";
+			this.TextBoxLicenseIntro.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.TextBoxLicenseIntro_LinkClicked);
 			// 
 			// LogoPictureBox
 			// 

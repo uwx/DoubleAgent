@@ -61,6 +61,10 @@ namespace AgentCharacterEditor
 			set
 			{
 				base.FilePart = value;
+				if (FilePart is ResolveCharacter)
+				{
+					(FilePart as ResolveCharacter).Scope = ResolveCharacter.ScopeType.ScopeAnimations;
+				}
 				ShowAnimationNames ();
 				ShowFrameProperties ();
 				ShowPalette ();
@@ -72,6 +76,50 @@ namespace AgentCharacterEditor
 		#region Events
 
 		public event Global.NavigationEventHandler Navigate;
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region Navigation
+
+		public override object NavigationContext
+		{
+			get
+			{
+				return new PanelContext (this);
+			}
+			set
+			{
+				if (value is PanelContext)
+				{
+					(value as PanelContext).RestoreContext (this);
+				}
+				else
+				{
+					base.NavigationContext = value;
+				}
+			}
+		}
+
+		public new class PanelContext : FilePartPanel.PanelContext
+		{
+			public PanelContext (AnimationsPanel pPanel)
+				: base (pPanel)
+			{
+				SelectedAnimation = pPanel.ListViewAnimations.SelectedIndex;
+			}
+
+			public void RestoreContext (AnimationsPanel pPanel)
+			{
+				base.RestoreContext (pPanel);
+				pPanel.ListViewAnimations.SelectedIndex = SelectedAnimation;
+			}
+
+			public int SelectedAnimation
+			{
+				get;
+				protected set;
+			}
+		}
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////

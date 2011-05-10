@@ -365,47 +365,58 @@ namespace AgentCharacterEditor
 
 		public TreeNode GetPartNode (ResolvePart pPart)
 		{
+			TreeNode lPartNode = null;
+
 			if (pPart != null)
-			{
-				return GetObjectNode (pPart.Part);
-			}
-			return null;
-		}
-
-		public TreeNode GetObjectNode (Object pObject)
-		{
-			TreeNode lObjectNode = null;
-
-			if (pObject != null)
 			{
 				foreach (TreeNode lNode in TreeViewMain.Nodes)
 				{
-					if ((lObjectNode = GetObjectNode (lNode, pObject)) != null)
+					if ((lPartNode = GetPartNode (lNode, pPart)) != null)
 					{
 						break;
 					}
 				}
 			}
-			return lObjectNode;
+			return lPartNode;
 		}
 
-		public TreeNode GetObjectNode (TreeNode pParentNode, Object pObject)
+		public TreeNode GetPartNode (TreeNode pNode, ResolvePart pPart)
 		{
 			TreeNode lObjectNode = null;
 
-			if ((pObject != null) && (pParentNode != null))
+			if ((pPart != null) && (pNode != null))
 			{
-				foreach (TreeNode lNode in pParentNode.Nodes)
+				ResolvePart lPart = pNode.Tag as ResolvePart;
+
+				if ((lPart != null) && Object.ReferenceEquals (lPart.Part, pPart.Part))
 				{
-					ResolvePart lPart = lNode.Tag as ResolvePart;
-					if ((lPart != null) && Object.ReferenceEquals (lPart.Part, pObject))
+					if ((pPart is ResolveCharacter) && (lPart is ResolveCharacter))
 					{
-						lObjectNode = lNode;
-						break;
+						if ((pPart as ResolveCharacter).Scope == (lPart as ResolveCharacter).Scope)
+						{
+							lObjectNode = pNode;
+						}
 					}
-					else if ((lObjectNode = GetObjectNode (lNode, pObject)) != null)
+					else if ((pPart is ResolveAnimationFrame) && (lPart is ResolveAnimationFrame))
 					{
-						break;
+						if ((pPart as ResolveAnimationFrame).Scope == (lPart as ResolveAnimationFrame).Scope)
+						{
+							lObjectNode = pNode;
+						}
+					}
+					else
+					{
+						lObjectNode = pNode;
+					}
+				}
+				if (lObjectNode == null)
+				{
+					foreach (TreeNode lNode in pNode.Nodes)
+					{
+						if ((lObjectNode = GetPartNode (lNode, pPart)) != null)
+						{
+							break;
+						}
 					}
 				}
 			}
@@ -418,18 +429,15 @@ namespace AgentCharacterEditor
 		{
 			if (pPart != null)
 			{
-				return SelectObjectNode (pPart.Part);
-			}
-			return false;
-		}
+				TreeNode lPartNode = GetPartNode (pPart);
 
-		public Boolean SelectObjectNode (Object pObject)
-		{
-			TreeNode lObjectNode = GetObjectNode (pObject);
-			if (lObjectNode != null)
-			{
-				TreeViewMain.SelectedNode = lObjectNode;
-				return true;
+				if ((lPartNode != null) && (TreeViewMain.SelectedNode != lPartNode))
+				{
+					CausesValidation = false;
+					TreeViewMain.SelectedNode = lPartNode;
+					CausesValidation = Visible;
+					return true;
+				}
 			}
 			return false;
 		}
@@ -676,7 +684,7 @@ namespace AgentCharacterEditor
 			}
 			else if ((lUpdateAnimation != null) && (lUpdateAnimation.NameChanged || lUpdateAnimation.ForClipboard))
 			{
-				TreeNode lAnimationNode = GetObjectNode (lUpdateAnimation.Target);
+				TreeNode lAnimationNode = GetPartNode (new ResolveAnimation (lUpdateAnimation.Target));
 
 				if (lAnimationNode != null)
 				{
@@ -692,7 +700,7 @@ namespace AgentCharacterEditor
 			}
 			else if (lAddDeleteFrame != null)
 			{
-				TreeNode lAnimationNode = GetObjectNode (lAddDeleteFrame.Animation);
+				TreeNode lAnimationNode = GetPartNode (new ResolveAnimation (lAddDeleteFrame.Animation));
 
 				if (lAnimationNode != null)
 				{
@@ -701,7 +709,7 @@ namespace AgentCharacterEditor
 			}
 			else if (lReorderFrame != null)
 			{
-				TreeNode lAnimationNode = GetObjectNode (lReorderFrame.Animation);
+				TreeNode lAnimationNode = GetPartNode (new ResolveAnimation (lReorderFrame.Animation));
 
 				if (lAnimationNode != null)
 				{
@@ -716,7 +724,7 @@ namespace AgentCharacterEditor
 
 		private void TreeViewMain_AfterSelect (object sender, TreeViewEventArgs e)
 		{
-			if (Navigate != null)
+			if (CausesValidation && (Navigate != null))
 			{
 				try
 				{

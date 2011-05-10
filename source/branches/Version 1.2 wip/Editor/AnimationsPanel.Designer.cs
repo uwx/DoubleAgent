@@ -48,7 +48,6 @@ namespace AgentCharacterEditor
 		/// </summary>
 		private void InitializeComponent ()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnimationsPanel));
 			this.LayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
 			this.GroupBoxPalette = new System.Windows.Forms.GroupBox();
 			this.PictureBoxPalette = new System.Windows.Forms.PictureBox();
@@ -84,20 +83,19 @@ namespace AgentCharacterEditor
 			// 
 			// LayoutPanelMain
 			// 
-			this.LayoutPanelMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
 			this.LayoutPanelMain.ColumnCount = 1;
 			this.LayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.LayoutPanelMain.Controls.Add(this.GroupBoxPalette, 0, 1);
 			this.LayoutPanelMain.Controls.Add(this.PanelTop, 0, 0);
-			this.LayoutPanelMain.Location = new System.Drawing.Point(12, 3);
+			this.LayoutPanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LayoutPanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+			this.LayoutPanelMain.Location = new System.Drawing.Point(9, 0);
 			this.LayoutPanelMain.Margin = new System.Windows.Forms.Padding(0);
 			this.LayoutPanelMain.Name = "LayoutPanelMain";
 			this.LayoutPanelMain.RowCount = 2;
 			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanelMain.Size = new System.Drawing.Size(626, 594);
+			this.LayoutPanelMain.Size = new System.Drawing.Size(632, 600);
 			this.LayoutPanelMain.TabIndex = 0;
 			// 
 			// GroupBoxPalette
@@ -113,12 +111,12 @@ namespace AgentCharacterEditor
 			this.GroupBoxPalette.Controls.Add(this.LabelTransparencySample);
 			this.GroupBoxPalette.Controls.Add(this.TextBoxPaletteFile);
 			this.GroupBoxPalette.Controls.Add(this.LabelPaletteFile);
-			this.GroupBoxPalette.Location = new System.Drawing.Point(0, 254);
+			this.GroupBoxPalette.Location = new System.Drawing.Point(0, 260);
 			this.GroupBoxPalette.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
 			this.GroupBoxPalette.MaximumSize = new System.Drawing.Size(628, 10000);
 			this.GroupBoxPalette.Name = "GroupBoxPalette";
 			this.GroupBoxPalette.Padding = new System.Windows.Forms.Padding(6, 12, 6, 6);
-			this.GroupBoxPalette.Size = new System.Drawing.Size(626, 340);
+			this.GroupBoxPalette.Size = new System.Drawing.Size(628, 340);
 			this.GroupBoxPalette.TabIndex = 2;
 			this.GroupBoxPalette.TabStop = false;
 			this.GroupBoxPalette.Text = "Palette";
@@ -148,7 +146,7 @@ namespace AgentCharacterEditor
 			this.ToolStripPaletteFile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ButtonPaletteImport,
             this.ButtonPaletteExport});
-			this.ToolStripPaletteFile.Location = new System.Drawing.Point(571, 28);
+			this.ToolStripPaletteFile.Location = new System.Drawing.Point(573, 28);
 			this.ToolStripPaletteFile.Name = "ToolStripPaletteFile";
 			this.ToolStripPaletteFile.Size = new System.Drawing.Size(49, 26);
 			this.ToolStripPaletteFile.TabIndex = 2;
@@ -156,7 +154,7 @@ namespace AgentCharacterEditor
 			// ButtonPaletteImport
 			// 
 			this.ButtonPaletteImport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonPaletteImport.Image = ((System.Drawing.Image)(resources.GetObject("ButtonPaletteImport.Image")));
+			this.ButtonPaletteImport.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
 			this.ButtonPaletteImport.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonPaletteImport.Name = "ButtonPaletteImport";
 			this.ButtonPaletteImport.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
@@ -168,7 +166,7 @@ namespace AgentCharacterEditor
 			// 
 			this.ButtonPaletteExport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.ButtonPaletteExport.Enabled = false;
-			this.ButtonPaletteExport.Image = ((System.Drawing.Image)(resources.GetObject("ButtonPaletteExport.Image")));
+			this.ButtonPaletteExport.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileSave;
 			this.ButtonPaletteExport.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonPaletteExport.Name = "ButtonPaletteExport";
 			this.ButtonPaletteExport.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
@@ -224,7 +222,7 @@ namespace AgentCharacterEditor
 			this.TextBoxPaletteFile.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
 			this.TextBoxPaletteFile.Location = new System.Drawing.Point(147, 30);
 			this.TextBoxPaletteFile.Name = "TextBoxPaletteFile";
-			this.TextBoxPaletteFile.Size = new System.Drawing.Size(421, 22);
+			this.TextBoxPaletteFile.Size = new System.Drawing.Size(423, 22);
 			this.TextBoxPaletteFile.TabIndex = 1;
 			this.TextBoxPaletteFile.Validated += new System.EventHandler(this.TextBoxPaletteFile_Validated);
 			// 
@@ -253,7 +251,7 @@ namespace AgentCharacterEditor
 			this.PanelTop.Location = new System.Drawing.Point(0, 0);
 			this.PanelTop.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelTop.Name = "PanelTop";
-			this.PanelTop.Size = new System.Drawing.Size(626, 245);
+			this.PanelTop.Size = new System.Drawing.Size(632, 251);
 			this.PanelTop.TabIndex = 3;
 			// 
 			// ToolStripAnimations
@@ -266,26 +264,26 @@ namespace AgentCharacterEditor
             this.ButtonAdd,
             this.ButtonDelete});
 			this.ToolStripAnimations.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-			this.ToolStripAnimations.Location = new System.Drawing.Point(0, 0);
+			this.ToolStripAnimations.Location = new System.Drawing.Point(0, 3);
 			this.ToolStripAnimations.Name = "ToolStripAnimations";
-			this.ToolStripAnimations.Size = new System.Drawing.Size(49, 26);
+			this.ToolStripAnimations.Size = new System.Drawing.Size(80, 26);
 			this.ToolStripAnimations.TabIndex = 5;
 			// 
 			// ButtonAdd
 			// 
 			this.ButtonAdd.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonAdd.Image = ((System.Drawing.Image)(resources.GetObject("ButtonAdd.Image")));
+			this.ButtonAdd.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileNew;
 			this.ButtonAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonAdd.Name = "ButtonAdd";
 			this.ButtonAdd.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
 			this.ButtonAdd.Size = new System.Drawing.Size(23, 23);
-			this.ButtonAdd.Text = Properties.Resources.EditAddAnimation;
+			this.ButtonAdd.Text = global::AgentCharacterEditor.Properties.Resources.EditAddAnimation;
 			this.ButtonAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
 			// 
 			// ButtonDelete
 			// 
 			this.ButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonDelete.Image = ((System.Drawing.Image)(resources.GetObject("ButtonDelete.Image")));
+			this.ButtonDelete.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditDelete;
 			this.ButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonDelete.Name = "ButtonDelete";
 			this.ButtonDelete.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
@@ -300,13 +298,11 @@ namespace AgentCharacterEditor
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.ListViewAnimations.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
 			this.ListViewAnimations.HideSelection = false;
-			this.ListViewAnimations.Location = new System.Drawing.Point(0, 29);
+			this.ListViewAnimations.Location = new System.Drawing.Point(0, 32);
 			this.ListViewAnimations.MultiSelect = false;
 			this.ListViewAnimations.Name = "ListViewAnimations";
-			this.ListViewAnimations.SelectedIndex = -1;
-			this.ListViewAnimations.SelectedItem = null;
 			this.ListViewAnimations.ShowItemToolTips = true;
-			this.ListViewAnimations.Size = new System.Drawing.Size(626, 166);
+			this.ListViewAnimations.Size = new System.Drawing.Size(632, 172);
 			this.ListViewAnimations.Sorting = System.Windows.Forms.SortOrder.Ascending;
 			this.ListViewAnimations.TabIndex = 4;
 			this.ListViewAnimations.UseCompatibleStateImageBehavior = false;
@@ -318,7 +314,7 @@ namespace AgentCharacterEditor
 			// 
 			this.TextBoxNewName.AcceptsReturn = true;
 			this.TextBoxNewName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.TextBoxNewName.Location = new System.Drawing.Point(336, 0);
+			this.TextBoxNewName.Location = new System.Drawing.Point(342, 3);
 			this.TextBoxNewName.MaxLength = 255;
 			this.TextBoxNewName.Name = "TextBoxNewName";
 			this.TextBoxNewName.Size = new System.Drawing.Size(290, 22);
@@ -329,7 +325,7 @@ namespace AgentCharacterEditor
 			// 
 			this.LabelWidth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.LabelWidth.AutoSize = true;
-			this.LabelWidth.Location = new System.Drawing.Point(0, 215);
+			this.LabelWidth.Location = new System.Drawing.Point(0, 221);
 			this.LabelWidth.Name = "LabelWidth";
 			this.LabelWidth.Size = new System.Drawing.Size(44, 17);
 			this.LabelWidth.TabIndex = 0;
@@ -339,7 +335,7 @@ namespace AgentCharacterEditor
 			// 
 			this.LabelNewName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.LabelNewName.AutoSize = true;
-			this.LabelNewName.Location = new System.Drawing.Point(191, 3);
+			this.LabelNewName.Location = new System.Drawing.Point(197, 6);
 			this.LabelNewName.Name = "LabelNewName";
 			this.LabelNewName.Size = new System.Drawing.Size(139, 17);
 			this.LabelNewName.TabIndex = 0;
@@ -350,8 +346,7 @@ namespace AgentCharacterEditor
 			this.NumericFrameHeight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.NumericFrameHeight.DefaultBackColor = System.Drawing.SystemColors.Window;
 			this.NumericFrameHeight.HighlightBackColor = System.Drawing.Color.Pink;
-			this.NumericFrameHeight.Highlighted = false;
-			this.NumericFrameHeight.Location = new System.Drawing.Point(191, 213);
+			this.NumericFrameHeight.Location = new System.Drawing.Point(191, 219);
 			this.NumericFrameHeight.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -372,8 +367,7 @@ namespace AgentCharacterEditor
 			this.NumericFrameWidth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.NumericFrameWidth.DefaultBackColor = System.Drawing.SystemColors.Window;
 			this.NumericFrameWidth.HighlightBackColor = System.Drawing.Color.Pink;
-			this.NumericFrameWidth.Highlighted = false;
-			this.NumericFrameWidth.Location = new System.Drawing.Point(50, 213);
+			this.NumericFrameWidth.Location = new System.Drawing.Point(50, 219);
 			this.NumericFrameWidth.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -393,21 +387,18 @@ namespace AgentCharacterEditor
 			// 
 			this.LabelHeight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.LabelHeight.AutoSize = true;
-			this.LabelHeight.Location = new System.Drawing.Point(136, 215);
+			this.LabelHeight.Location = new System.Drawing.Point(136, 221);
 			this.LabelHeight.Name = "LabelHeight";
 			this.LabelHeight.Size = new System.Drawing.Size(49, 17);
 			this.LabelHeight.TabIndex = 2;
 			this.LabelHeight.Text = "Height";
 			// 
-			// AnimationsForm
+			// AnimationsPanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.LayoutPanelMain);
-			this.Margin = new System.Windows.Forms.Padding(0);
-			this.Name = "AnimationsForm";
-			this.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-			this.Size = new System.Drawing.Size(650, 600);
+			this.Name = "AnimationsPanel";
 			this.LayoutPanelMain.ResumeLayout(false);
 			this.GroupBoxPalette.ResumeLayout(false);
 			this.GroupBoxPalette.PerformLayout();

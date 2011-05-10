@@ -29,5 +29,10 @@ namespace AgentCharacterEditor
 			InitializeComponent ();
 			TextBoxLicenseDetails.Rtf = Properties.Resources.LicenseDetails;
 		}
+
+		private void TextBoxLicenseDetails_LinkClicked (object sender, LinkClickedEventArgs e)
+		{
+		   System.Diagnostics.Process.Start (e.LinkText);
+		}
 	}
 }

@@ -30,6 +30,8 @@ namespace AgentCharacterEditor
 	{
 		private CharacterFile mCharacterFile = null;
 		private RecentFileList mRecentFiles = new RecentFileList ();
+		private Stack<KeyValuePair<FilePartPanel, Object>> mNavigateBackStack = new Stack<KeyValuePair<FilePartPanel, Object>> ();
+		private Stack<KeyValuePair<FilePartPanel, Object>> mNavigateForwardStack = new Stack<KeyValuePair<FilePartPanel, Object>> ();
 		private String mInitialFile = null;
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -56,6 +58,9 @@ namespace AgentCharacterEditor
 		public void Initialize ()
 		{
 			InitializeComponent ();
+			CausesValidation = Visible;
+			Icon = Properties.Resources.IconDoubleAgent;
+			ToolStripMain.Left = ToolStripNavigation.Right;
 
 			MainMenuStrip = MenuStripMain;
 			Application.Idle += new EventHandler (Application_Idle);
@@ -291,11 +296,16 @@ namespace AgentCharacterEditor
 			{
 				if (lOpened)
 				{
+					CausesValidation = false;
+
 					Program.UndoManager.Clear ();
+					mNavigateBackStack.Clear ();
+					mNavigateForwardStack.Clear ();
 					mCharacterFile = lCharacterFile;
 
 					ShowFileState ();
 					ShowEditState ();
+					ShowNavigateState ();
 
 					PanelPartsTree.FilePart = new ResolveCharacter ();
 					PanelCharacter.FilePart = new ResolveCharacter ();
@@ -311,6 +321,8 @@ namespace AgentCharacterEditor
 					PanelPartsTree.LoadExpansion ();
 					ShowSelectedPart ();
 					UpdateRecentFiles ();
+
+					CausesValidation = Visible;
 					lRet = true;
 				}
 				else
@@ -534,7 +546,7 @@ namespace AgentCharacterEditor
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Display
+		#region Navigation
 
 		private void ShowSelectedPart ()
 		{
@@ -543,48 +555,138 @@ namespace AgentCharacterEditor
 
 		private void ShowSelectedPart (ResolvePart pSelectedPart)
 		{
-			ResolveCharacter lResolveCharacter = pSelectedPart as ResolveCharacter;
-			ResolveAnimationFrame lResolveAnimationFrame = pSelectedPart as ResolveAnimationFrame;
+			FilePartPanel lSelectedPanel = null;
 
-			if (pSelectedPart is ResolveAnimation)
+			if (pSelectedPart is ResolveCharacter)
+			{
+				ResolveCharacter lResolveCharacter = pSelectedPart as ResolveCharacter;
+				if (lResolveCharacter.Scope == ResolveCharacter.ScopeType.ScopeCharacter)
+				{
+					lSelectedPanel = PanelCharacter;
+				}
+				else if (lResolveCharacter.Scope == ResolveCharacter.ScopeType.ScopeAnimations)
+				{
+					lSelectedPanel = PanelAnimations;
+				}
+			}
+			else if (pSelectedPart is ResolveBalloon)
+			{
+				lSelectedPanel = PanelBalloon;
+			}
+			else if (pSelectedPart is ResolveTts)
+			{
+				lSelectedPanel = PanelTts;
+			}
+			else if (pSelectedPart is ResolveAnimation)
 			{
 				PanelAnimation.FilePart = pSelectedPart;
+				lSelectedPanel = PanelAnimation;
 			}
-			else if (pSelectedPart is ResolveState)
+			else if (pSelectedPart is ResolveAnimationFrame)
 			{
-				PanelState.FilePart = pSelectedPart;
-			}
-			else if (lResolveAnimationFrame != null)
-			{
+				ResolveAnimationFrame lResolveAnimationFrame = pSelectedPart as ResolveAnimationFrame;
 				switch (lResolveAnimationFrame.Scope)
 				{
 					case ResolveAnimationFrame.ScopeType.ScopeFrame:
 						{
 							PanelFrame.FilePart = pSelectedPart;
+							lSelectedPanel = PanelFrame;
 						}
 						break;
 					case ResolveAnimationFrame.ScopeType.ScopeBranching:
 						{
 							PanelBranching.FilePart = pSelectedPart;
+							lSelectedPanel = PanelBranching;
 						}
 						break;
 					case ResolveAnimationFrame.ScopeType.ScopeOverlays:
 						{
 							PanelOverlays.FilePart = pSelectedPart;
+							lSelectedPanel = PanelOverlays;
 						}
 						break;
 				}
 			}
+			else if (pSelectedPart is ResolveState)
+			{
+				PanelState.FilePart = pSelectedPart;
+				lSelectedPanel = PanelState;
+			}
 
-			PanelCharacter.Visible = (lResolveCharacter != null) && (lResolveCharacter.Scope == ResolveCharacter.ScopeType.ScopeCharacter);
-			PanelBalloon.Visible = (pSelectedPart is ResolveBalloon);
-			PanelTts.Visible = (pSelectedPart is ResolveTts);
-			PanelAnimations.Visible = (lResolveCharacter != null) && (lResolveCharacter.Scope == ResolveCharacter.ScopeType.ScopeAnimations);
-			PanelAnimation.Visible = (pSelectedPart is ResolveAnimation);
-			PanelFrame.Visible = (lResolveAnimationFrame != null) && (lResolveAnimationFrame.Scope == ResolveAnimationFrame.ScopeType.ScopeFrame);
-			PanelBranching.Visible = (lResolveAnimationFrame != null) && (lResolveAnimationFrame.Scope == ResolveAnimationFrame.ScopeType.ScopeBranching);
-			PanelOverlays.Visible = (lResolveAnimationFrame != null) && (lResolveAnimationFrame.Scope == ResolveAnimationFrame.ScopeType.ScopeOverlays);
-			PanelState.Visible = (pSelectedPart is ResolveState);
+			ShowSelectedPanel (lSelectedPanel);
+		}
+
+		private void ShowSelectedPanel (FilePartPanel pSelectedPanel)
+		{
+			PanelCharacter.Visible = Object.ReferenceEquals (PanelCharacter, pSelectedPanel);
+			PanelBalloon.Visible = Object.ReferenceEquals (PanelBalloon, pSelectedPanel);
+			PanelTts.Visible = Object.ReferenceEquals (PanelTts, pSelectedPanel);
+			PanelAnimations.Visible = Object.ReferenceEquals (PanelAnimations, pSelectedPanel);
+			PanelAnimation.Visible = Object.ReferenceEquals (PanelAnimation, pSelectedPanel);
+			PanelFrame.Visible = Object.ReferenceEquals (PanelFrame, pSelectedPanel);
+			PanelBranching.Visible = Object.ReferenceEquals (PanelBranching, pSelectedPanel);
+			PanelOverlays.Visible = Object.ReferenceEquals (PanelOverlays, pSelectedPanel);
+			PanelState.Visible = Object.ReferenceEquals (PanelState, pSelectedPanel);
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		private KeyValuePair<FilePartPanel, Object> GetNavigationContext ()
+		{
+			if (PanelCharacter.Visible)
+			{
+				return new KeyValuePair<FilePartPanel, Object> (PanelCharacter, PanelCharacter.NavigationContext);
+			}
+			else if (PanelBalloon.Visible)
+			{
+				return new KeyValuePair<FilePartPanel, Object> (PanelBalloon, PanelBalloon.NavigationContext);
+			}
+			else if (PanelTts.Visible)
+			{
+				return new KeyValuePair<FilePartPanel, Object> (PanelTts, PanelTts.NavigationContext);
+			}
+			else if (PanelAnimations.Visible)
+			{
+				return new KeyValuePair<FilePartPanel, Object> (PanelAnimations, PanelAnimations.NavigationContext);
+			}
+			else if (PanelAnimation.Visible)
+			{
+				return new KeyValuePair<FilePartPanel, Object> (PanelAnimation, PanelAnimation.NavigationContext);
+			}
+			else if (PanelFrame.Visible)
+			{
+				return new KeyValuePair<FilePartPanel, Object> (PanelFrame, PanelFrame.NavigationContext);
+			}
+			else if (PanelBranching.Visible)
+			{
+				return new KeyValuePair<FilePartPanel, Object> (PanelBranching, PanelBranching.NavigationContext);
+			}
+			else if (PanelOverlays.Visible)
+			{
+				return new KeyValuePair<FilePartPanel, Object> (PanelOverlays, PanelOverlays.NavigationContext);
+			}
+			else if (PanelState.Visible)
+			{
+				return new KeyValuePair<FilePartPanel, Object> (PanelState, PanelState.NavigationContext);
+			}
+
+			return new KeyValuePair<FilePartPanel, Object> (null, null);
+		}
+
+		private Boolean ShowNavigationContext (KeyValuePair<FilePartPanel, Object> pContext)
+		{
+			if (pContext.Key != null)
+			{
+				ShowSelectedPanel (pContext.Key);
+				pContext.Key.NavigationContext = pContext.Value;
+
+				if (!pContext.Key.IsEmpty)
+				{
+					PanelPartsTree.SelectedPart = pContext.Key.FilePart;
+					return true;
+				}
+			}
+			return false;
 		}
 
 		#endregion
@@ -607,6 +709,12 @@ namespace AgentCharacterEditor
 				MenuItemFileSaveAs.Enabled = true;
 				ToolButtonFileSave.Enabled = MenuItemFileSave.Enabled;
 			}
+		}
+
+		public void ShowNavigateState ()
+		{
+			ToolButtonNavigateBack.Enabled = mNavigateBackStack.Count > 0;
+			ToolButtonNavigateForward.Enabled = mNavigateForwardStack.Count > 0;
 		}
 
 		public void ShowEditState ()
@@ -833,6 +941,7 @@ namespace AgentCharacterEditor
 				Update ();
 				OpenCharacterFile (mInitialFile);
 			}
+			CausesValidation = Visible;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -851,6 +960,36 @@ namespace AgentCharacterEditor
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region ToolStrip Event Handlers
+
+		private void ToolButtonNavigateBack_Click (object sender, EventArgs e)
+		{
+			KeyValuePair<FilePartPanel, Object> lContext = GetNavigationContext ();
+			while (mNavigateBackStack.Count > 0)
+			{
+				if (ShowNavigationContext (mNavigateBackStack.Pop ()))
+				{
+					mNavigateForwardStack.Push (lContext);
+					break;
+				}
+			}
+			ShowNavigateState ();
+		}
+
+		private void ToolButtonNavigateForward_Click (object sender, EventArgs e)
+		{
+			KeyValuePair<FilePartPanel, Object> lContext = GetNavigationContext ();
+			while (mNavigateForwardStack.Count > 0)
+			{
+				if (ShowNavigationContext (mNavigateForwardStack.Pop ()))
+				{
+					mNavigateBackStack.Push (lContext);
+					break;
+				}
+			}
+			ShowNavigateState ();
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
 
 		private void ToolButtonFileNew_Click (object sender, EventArgs e)
 		{
@@ -999,7 +1138,7 @@ namespace AgentCharacterEditor
 				if (lTextBox.CanUndo)
 				{
 					lTextBox.Undo ();
-					ToolStripTop.TipTextChanged ();
+					ToolStripMain.TipTextChanged ();
 					ValidateChildren ();
 				}
 			}
@@ -1231,18 +1370,24 @@ namespace AgentCharacterEditor
 
 		private void OnNavigate (object sender, Global.NavigationEventArgs e)
 		{
+			if (CausesValidation)
+			{
+				mNavigateBackStack.Push (GetNavigationContext ());
+				mNavigateForwardStack.Clear ();
+			}
 			ShowSelectedPart (e.Part);
-			ShowEditState ();
 			if (!Object.ReferenceEquals (sender, PanelPartsTree))
 			{
 				PanelPartsTree.SelectedPart = e.Part;
 			}
+			ShowEditState ();
+			ShowNavigateState ();
 		}
 
 		private void UndoManager_Undone (object sender, UndoManager.EventArgs e)
 		{
 			FileIsDirty ();
-			ToolStripTop.TipTextChanged ();
+			ToolStripMain.TipTextChanged ();
 #if DEBUG
 			System.Diagnostics.Debug.Print ("UndoUnit [{0}] Undone", e.UndoUnit.ToString ());
 #endif
@@ -1251,7 +1396,7 @@ namespace AgentCharacterEditor
 		private void UndoManager_Redone (object sender, UndoManager.EventArgs e)
 		{
 			FileIsDirty ();
-			ToolStripTop.TipTextChanged ();
+			ToolStripMain.TipTextChanged ();
 #if DEBUG
 			System.Diagnostics.Debug.Print ("UndoUnit [{0}] Redone", e.UndoUnit.ToString ());
 #endif

@@ -60,10 +60,52 @@ namespace AgentCharacterEditor.Properties {
             }
         }
         
-        internal static System.Drawing.Icon DoubleAgent {
+        internal static System.Drawing.Bitmap BmpMouthClosed {
             get {
-                object obj = ResourceManager.GetObject("DoubleAgent", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                object obj = ResourceManager.GetObject("BmpMouthClosed", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap BmpMouthMedium {
+            get {
+                object obj = ResourceManager.GetObject("BmpMouthMedium", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap BmpMouthNarrow {
+            get {
+                object obj = ResourceManager.GetObject("BmpMouthNarrow", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap BmpMouthWide1 {
+            get {
+                object obj = ResourceManager.GetObject("BmpMouthWide1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap BmpMouthWide2 {
+            get {
+                object obj = ResourceManager.GetObject("BmpMouthWide2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap BmpMouthWide3 {
+            get {
+                object obj = ResourceManager.GetObject("BmpMouthWide3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap BmpMouthWide4 {
+            get {
+                object obj = ResourceManager.GetObject("BmpMouthWide4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -379,6 +421,209 @@ namespace AgentCharacterEditor.Properties {
         internal static string EditUndoThis {
             get {
                 return ResourceManager.GetString("EditUndoThis", resourceCulture);
+            }
+        }
+        
+        internal static System.Drawing.Icon IconDoubleAgent {
+            get {
+                object obj = ResourceManager.GetObject("IconDoubleAgent", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgEditCopy {
+            get {
+                object obj = ResourceManager.GetObject("ImgEditCopy", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgEditCut {
+            get {
+                object obj = ResourceManager.GetObject("ImgEditCut", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgEditDelete {
+            get {
+                object obj = ResourceManager.GetObject("ImgEditDelete", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgEditPaste {
+            get {
+                object obj = ResourceManager.GetObject("ImgEditPaste", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgEditRedo {
+            get {
+                object obj = ResourceManager.GetObject("ImgEditRedo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgEditUndo {
+            get {
+                object obj = ResourceManager.GetObject("ImgEditUndo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgFileNew {
+            get {
+                object obj = ResourceManager.GetObject("ImgFileNew", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgFileOpen {
+            get {
+                object obj = ResourceManager.GetObject("ImgFileOpen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgFilePrint {
+            get {
+                object obj = ResourceManager.GetObject("ImgFilePrint", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgFilePrintPreview {
+            get {
+                object obj = ResourceManager.GetObject("ImgFilePrintPreview", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgFileSave {
+            get {
+                object obj = ResourceManager.GetObject("ImgFileSave", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgHelpAbout {
+            get {
+                object obj = ResourceManager.GetObject("ImgHelpAbout", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgMoveDown {
+            get {
+                object obj = ResourceManager.GetObject("ImgMoveDown", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgMoveLeft {
+            get {
+                object obj = ResourceManager.GetObject("ImgMoveLeft", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgMoveRight {
+            get {
+                object obj = ResourceManager.GetObject("ImgMoveRight", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgMoveUp {
+            get {
+                object obj = ResourceManager.GetObject("ImgMoveUp", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgNavigateBack {
+            get {
+                object obj = ResourceManager.GetObject("ImgNavigateBack", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgNavigateForward {
+            get {
+                object obj = ResourceManager.GetObject("ImgNavigateForward", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgPlay {
+            get {
+                object obj = ResourceManager.GetObject("ImgPlay", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgShiftDown {
+            get {
+                object obj = ResourceManager.GetObject("ImgShiftDown", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgShiftLeft {
+            get {
+                object obj = ResourceManager.GetObject("ImgShiftLeft", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgShiftRight {
+            get {
+                object obj = ResourceManager.GetObject("ImgShiftRight", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgShiftUp {
+            get {
+                object obj = ResourceManager.GetObject("ImgShiftUp", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgShowBranching {
+            get {
+                object obj = ResourceManager.GetObject("ImgShowBranching", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgShowExitBranching {
+            get {
+                object obj = ResourceManager.GetObject("ImgShowExitBranching", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgViewLarge {
+            get {
+                object obj = ResourceManager.GetObject("ImgViewLarge", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgViewMedium {
+            get {
+                object obj = ResourceManager.GetObject("ImgViewMedium", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgViewSmall {
+            get {
+                object obj = ResourceManager.GetObject("ImgViewSmall", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

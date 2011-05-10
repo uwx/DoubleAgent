@@ -80,6 +80,9 @@ namespace DoubleAgent
 	{
 		public ToolStripButtonEx ()
 		{
+			this.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
+ 			this.ImageTransparentColor = System.Drawing.Color.Magenta;
+
 			this.RepeatEnabled = false;
 			this.ClickRepeatNum = 0;
 			this.ClickIsRepeat = false;

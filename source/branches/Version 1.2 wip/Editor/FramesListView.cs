@@ -78,29 +78,13 @@ namespace AgentCharacterEditor
 
 		protected override void OnDrawItem (DrawListViewItemEventArgs e)
 		{
-			Bitmap lImage = null;
+			Bitmap lImage = GetItemImage (e.Item, e.ItemIndex);
 			Rectangle lItemRect;
 			RectangleF lImageRect;
 
 			e.DrawDefault = true;
 			base.OnDrawItem (e);
 
-			try
-			{
-				if (e.Item.Tag is Bitmap)
-				{
-					lImage = e.Item.Tag as Bitmap;
-				}
-				else if ((e.Item.Tag == null) && (CharacterFile != null) && (Animation != null))
-				{
-					e.Item.Tag = Boolean.FalseString;
-					lImage = CharacterFile.GetFrameBitmap (Animation.Frames[e.ItemIndex], true, Color.Transparent);
-					e.Item.Tag = lImage;
-				}
-			}
-			catch
-			{
-			}
 			if (lImage != null)
 			{
 				lItemRect = GetItemRect (e.ItemIndex, ItemBoundsPortion.Icon);
@@ -110,6 +94,35 @@ namespace AgentCharacterEditor
 
 				e.Graphics.DrawImage (lImage, lImageRect);
 			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		public Bitmap GetItemImage (ListViewItem pItem)
+		{
+			return GetItemImage (pItem, pItem.Index);
+		}
+
+		public Bitmap GetItemImage (ListViewItem pItem, int pItemIndex)
+		{
+			Bitmap lImage = null;
+			try
+			{
+				if (pItem.Tag is Bitmap)
+				{
+					lImage = pItem.Tag as Bitmap;
+				}
+				else if ((pItem.Tag == null) && (CharacterFile != null) && (Animation != null))
+				{
+					pItem.Tag = Boolean.FalseString;
+					lImage = CharacterFile.GetFrameBitmap (Animation.Frames[pItemIndex], true, Color.Transparent);
+					pItem.Tag = lImage;
+				}
+			}
+			catch
+			{
+			}
+			return lImage;
 		}
 
 		#endregion

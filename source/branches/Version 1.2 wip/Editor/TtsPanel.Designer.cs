@@ -67,13 +67,12 @@ namespace AgentCharacterEditor
 			// 
 			// LayoutPanelMain
 			// 
-			this.LayoutPanelMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
 			this.LayoutPanelMain.ColumnCount = 1;
 			this.LayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.LayoutPanelMain.Controls.Add(this.CheckBoxUseTTS, 0, 0);
 			this.LayoutPanelMain.Controls.Add(this.GroupBoxTTS, 0, 1);
+			this.LayoutPanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LayoutPanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
 			this.LayoutPanelMain.Location = new System.Drawing.Point(9, 0);
 			this.LayoutPanelMain.Margin = new System.Windows.Forms.Padding(0);
 			this.LayoutPanelMain.Name = "LayoutPanelMain";
@@ -218,20 +217,19 @@ namespace AgentCharacterEditor
 			this.LabelName.TabIndex = 0;
 			this.LabelName.Text = "Name";
 			// 
-			// TtsForm
+			// TtsPanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.LayoutPanelMain);
-			this.Margin = new System.Windows.Forms.Padding(0);
-			this.Name = "TtsForm";
-			this.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
+			this.Name = "TtsPanel";
 			this.Size = new System.Drawing.Size(600, 600);
 			this.LayoutPanelMain.ResumeLayout(false);
 			this.LayoutPanelMain.PerformLayout();
 			this.GroupBoxTTS.ResumeLayout(false);
 			this.GroupBoxTTS.PerformLayout();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 

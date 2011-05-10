@@ -19,6 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#include <math.h>
 #include "AgentFileBinary.h"
 #include "AgentFileAcs.h"
 #ifdef	__cplusplus_cli
@@ -842,7 +843,7 @@ LPVOID CAgentFileBinary::WriteBufferBalloon (LPVOID pBuffer, CAgentFileBalloon^ 
 	if	(pBalloon->mFont)
 	{
 		lFontName = (String::IsNullOrEmpty (pBalloon->mFont->OriginalFontName)) ? pBalloon->mFont->Name : pBalloon->mFont->OriginalFontName;
-		lFontHeight = (long)(pBalloon->Font->Size + 0.49);
+		lFontHeight = (long)(ceil(pBalloon->Font->GetHeight(96.0f)));
 		if	(pBalloon->mFont->Bold)
 		{
 			lFontWeight = FW_BOLD;
@@ -851,6 +852,19 @@ LPVOID CAgentFileBinary::WriteBufferBalloon (LPVOID pBuffer, CAgentFileBalloon^ 
 		{
 			lFontItalic = TRUE;
 		}
+		
+		//if	(pBalloon->Font->Unit != System::Drawing::GraphicsUnit::Pixel)
+		//{
+		//	try
+		//	{
+		//		System::Drawing::FontConverter::FontUnitConverter^	lConverter = gcnew System::Drawing::FontConverter::FontUnitConverter();
+		//		
+		//		bool lCanConvertTo = lConverter->CanConvertTo (System::Drawing::GraphicsUnit::typeid);
+		//		bool lCanConvertFrom = lConverter->CanConvertFrom (System::Drawing::GraphicsUnit::typeid);
+		//		bool lIsValid = lConverter->IsValid (pBalloon->Font->Unit);
+		//	}
+		//	catch AnyExceptionDebug
+		//}	
 	}
 
 	if	(pBuffer)

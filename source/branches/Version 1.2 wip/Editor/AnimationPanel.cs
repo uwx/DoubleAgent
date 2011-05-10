@@ -51,6 +51,30 @@ namespace AgentCharacterEditor
 			ListViewStates.Items.Clear ();
 		}
 
+		protected override void OnLoadConfig (object sender, EventArgs e)
+		{
+			Properties.Settings lSettings = Properties.Settings.Default;
+
+			FramesView.ShowBranching = lSettings.FramesViewBranching;
+			FramesView.ShowExitBranching = lSettings.FramesViewExitBranching;
+			try
+			{
+				FramesView.RecalcLayout ((FramesPreview.ImageScaleType)lSettings.FramesViewScale);
+			}
+			catch
+			{
+			}
+		}
+
+		protected override void OnSaveConfig (object sender, EventArgs e)
+		{
+			Properties.Settings lSettings = Properties.Settings.Default;
+
+			lSettings.FramesViewBranching = FramesView.ShowBranching;
+			lSettings.FramesViewExitBranching = FramesView.ShowExitBranching;
+			lSettings.FramesViewScale = (int)FramesView.ImageScale;
+		}
+
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
@@ -80,7 +104,7 @@ namespace AgentCharacterEditor
 			set;
 		}
 
-		protected override Boolean IsEmpty
+		public override Boolean IsEmpty
 		{
 			get
 			{
@@ -93,6 +117,57 @@ namespace AgentCharacterEditor
 		#region Events
 
 		public event Global.NavigationEventHandler Navigate;
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region Navigation
+
+		public override object NavigationContext
+		{
+			get
+			{
+				return new PanelContext (this);
+			}
+			set
+			{
+				if (value is PanelContext)
+				{
+					(value as PanelContext).RestoreContext (this);
+				}
+				else
+				{
+					base.NavigationContext = value;
+				}
+			}
+		}
+
+		public new class PanelContext : FilePartPanel.PanelContext
+		{
+			public PanelContext (AnimationPanel pPanel)
+				: base (pPanel)
+			{
+				SelectedState = pPanel.ListViewStates.SelectedIndex;
+				SelectedFrame = pPanel.FramesView.Frames.SelectedIndex;
+			}
+
+			public void RestoreContext (AnimationPanel pPanel)
+			{
+				base.RestoreContext (pPanel);
+				pPanel.ListViewStates.SelectedIndex = SelectedState;
+				pPanel.FramesView.Frames.SelectedIndex = SelectedFrame;
+			}
+
+			public int SelectedState
+			{
+				get;
+				protected set;
+			}
+			public int SelectedFrame
+			{
+				get;
+				protected set;
+			}
+		}
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
@@ -242,7 +317,7 @@ namespace AgentCharacterEditor
 				FramesView.ShowAnimationFrames (CharacterFile, Animation);
 				FramesView.Enabled = true;
 
-				ShowPreviewScale ();
+				ShowPreviewState ();
 				ShowSelectedFrame ();
 				lCursorState.RestoreCursor ();
 			}
@@ -251,10 +326,15 @@ namespace AgentCharacterEditor
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private void ShowPreviewScale ()
+		private void ShowPreviewState ()
 		{
 			if (IsEmpty)
 			{
+				ButtonShowBranching.Checked = true;
+				ButtonShowExitBranching.Checked = true;
+				ButtonShowBranching.Enabled = false;
+				ButtonShowExitBranching.Enabled = false;
+
 				ButtonViewSmall.Checked = false;
 				ButtonViewMedium.Checked = false;
 				ButtonViewLarge.Checked = false;
@@ -264,6 +344,11 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
+				ButtonShowBranching.Checked = FramesView.ShowBranching;
+				ButtonShowExitBranching.Checked = FramesView.ShowExitBranching;
+				ButtonShowBranching.Enabled = true;
+				ButtonShowExitBranching.Enabled = true;
+
 				ButtonViewSmall.Checked = (FramesView.ImageScale == FramesPreview.ImageScaleType.Small);
 				ButtonViewMedium.Checked = (FramesView.ImageScale == FramesPreview.ImageScaleType.Medium);
 				ButtonViewLarge.Checked = (FramesView.ImageScale == FramesPreview.ImageScaleType.Large);
@@ -737,12 +822,34 @@ namespace AgentCharacterEditor
 		}
 		///////////////////////////////////////////////////////////////////////////////
 
+		private void ButtonShowBranching_Click (object sender, EventArgs e)
+		{
+			if (!IsEmpty)
+			{
+				FramesView.ShowBranching = !FramesView.ShowBranching;
+				FramesView.ShowBranchingGraphs ();
+				FramesView.RecalcLayout ();
+				ShowPreviewState ();
+			}
+		}
+
+		private void ButtonShowExitBranching_Click (object sender, EventArgs e)
+		{
+			if (!IsEmpty)
+			{
+				FramesView.ShowExitBranching = !FramesView.ShowExitBranching;
+				FramesView.ShowBranchingGraphs ();
+				FramesView.RecalcLayout ();
+				ShowPreviewState ();
+			}
+		}
+
 		private void ButtonViewSmall_Click (object sender, EventArgs e)
 		{
 			if (!IsEmpty)
 			{
 				FramesView.RecalcLayout (FramesPreview.ImageScaleType.Small);
-				ShowPreviewScale ();
+				ShowPreviewState ();
 			}
 		}
 
@@ -751,7 +858,7 @@ namespace AgentCharacterEditor
 			if (!IsEmpty)
 			{
 				FramesView.RecalcLayout (FramesPreview.ImageScaleType.Medium);
-				ShowPreviewScale ();
+				ShowPreviewState ();
 			}
 		}
 
@@ -760,7 +867,7 @@ namespace AgentCharacterEditor
 			if (!IsEmpty)
 			{
 				FramesView.RecalcLayout (FramesPreview.ImageScaleType.Large);
-				ShowPreviewScale ();
+				ShowPreviewState ();
 			}
 		}
 

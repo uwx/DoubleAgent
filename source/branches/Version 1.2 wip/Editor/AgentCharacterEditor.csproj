@@ -13,11 +13,9 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>AgentCharacterEditor.Program</StartupObject>
-    <ApplicationIcon>
-    </ApplicationIcon>
-    <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <ApplicationIcon>DoubleAgent.ico</ApplicationIcon>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>CinSoft.snk</AssemblyOriginatorKeyFile>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -62,6 +60,15 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <DocumentationFile>..\..\BinDa\Bin\Release%28x86%29\v3.5\DoubleACE.XML</DocumentationFile>
     <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>B1BE236295BEC8C63851C7802E4112F58BDE722E</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestTimestampUrl>http://timestamp.comodoca.com/authenticode</ManifestTimestampUrl>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DaCharFileCLR">
@@ -249,6 +256,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="OverlayPanel.resx">
       <DependentUpon>OverlayPanel.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="PartsTreePanel.resx">
       <DependentUpon>PartsTreePanel.cs</DependentUpon>
@@ -273,6 +281,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
+    <None Include="CinSoft.snk" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -295,8 +304,8 @@
     <Compile Include="BalloonPanel.Designer.cs">
       <DependentUpon>BalloonPanel.cs</DependentUpon>
     </Compile>
-    <None Include="Properties\LicenseDetails.rtf" />
-    <None Include="Properties\LicenseIntro.rtf" />
+    <None Include="Resources\LicenseDetails.rtf" />
+    <None Include="Resources\LicenseIntro.rtf" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -329,6 +338,61 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MoveDown.Png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MoveLeft.Png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MoveRight.Png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MoveUp.Png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ShiftUp.Png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ShiftDown.Png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ShiftLeft.Png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ShiftRight.Png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\About.png" />
+    <Content Include="DoubleAgent.ico" />
+    <Content Include="Resources\DoubleAgent.ico" />
+    <None Include="Resources\Play.png" />
+    <None Include="Resources\FileSave.png" />
+    <None Include="Resources\ViewSmall.png" />
+    <None Include="Resources\ViewMedium.png" />
+    <None Include="Resources\ViewLarge.png" />
+    <None Include="Resources\ShowExitBranching.png" />
+    <None Include="Resources\ShowBranching.png" />
+    <None Include="Resources\FileNew.png" />
+    <None Include="Resources\EditDelete.png" />
+    <None Include="Resources\FileOpen.png" />
+    <None Include="Resources\EditCopy.png" />
+    <None Include="Resources\EditPaste.png" />
+    <None Include="Resources\EditCut.png" />
+    <None Include="Resources\EditRedo.png" />
+    <None Include="Resources\EditUndo.png" />
+    <None Include="Resources\FilePrint.png" />
+    <None Include="Resources\FilePrintPreview.png" />
+    <Content Include="Resources\MouthClosed.bmp" />
+    <Content Include="Resources\MouthMedium.bmp" />
+    <Content Include="Resources\MouthNarrow.bmp" />
+    <Content Include="Resources\MouthWide1.bmp" />
+    <Content Include="Resources\MouthWide2.bmp" />
+    <Content Include="Resources\MouthWide3.bmp" />
+    <Content Include="Resources\MouthWide4.bmp" />
+    <None Include="Resources\NavigateBack.png" />
+    <None Include="Resources\NavigateForward.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

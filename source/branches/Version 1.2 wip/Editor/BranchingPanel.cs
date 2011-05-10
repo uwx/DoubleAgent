@@ -54,6 +54,10 @@ namespace AgentCharacterEditor
 			set
 			{
 				base.FilePart = value;
+				if (FilePart is ResolveAnimationFrame)
+				{
+					(FilePart as ResolveAnimationFrame).Scope = ResolveAnimationFrame.ScopeType.ScopeBranching;
+				}
 				Frame = (base.FilePart is ResolveAnimationFrame) ? (base.FilePart as ResolveAnimationFrame).Target : null;
 
 				ShowFrameName ();
@@ -84,7 +88,7 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		protected override Boolean IsEmpty
+		public override Boolean IsEmpty
 		{
 			get
 			{

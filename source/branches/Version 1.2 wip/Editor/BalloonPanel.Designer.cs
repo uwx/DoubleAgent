@@ -60,31 +60,30 @@ namespace AgentCharacterEditor
 			this.ButtonBalloonBackground = new System.Windows.Forms.Button();
 			this.CheckBoxAutoHide = new System.Windows.Forms.CheckBox();
 			this.ButtonBalloonForeground = new System.Windows.Forms.Button();
+			this.NumericNumLines = new DoubleAgent.NumericUpDownEx();
 			this.ButtonBalloonFont = new System.Windows.Forms.Button();
 			this.RadioButtonSizeToText = new System.Windows.Forms.RadioButton();
 			this.RadioButtonNumLines = new System.Windows.Forms.RadioButton();
+			this.NumericCharsPerLine = new DoubleAgent.NumericUpDownEx();
 			this.LabelCharsPerLine = new System.Windows.Forms.Label();
 			this.GroupBoxBalloonPreview = new System.Windows.Forms.GroupBox();
 			this.WordBalloonPreview = new AgentCharacterEditor.BalloonPreview();
-			this.NumericNumLines = new DoubleAgent.NumericUpDownEx();
-			this.NumericCharsPerLine = new DoubleAgent.NumericUpDownEx();
 			this.LayoutPanelMain.SuspendLayout();
 			this.GroupBoxBalloonDisplay.SuspendLayout();
-			this.GroupBoxBalloonPreview.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericNumLines)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.NumericCharsPerLine)).BeginInit();
+			this.GroupBoxBalloonPreview.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// LayoutPanelMain
 			// 
-			this.LayoutPanelMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
 			this.LayoutPanelMain.ColumnCount = 1;
 			this.LayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.LayoutPanelMain.Controls.Add(this.CheckBoxWordBalloon, 0, 0);
 			this.LayoutPanelMain.Controls.Add(this.GroupBoxBalloonDisplay, 0, 1);
 			this.LayoutPanelMain.Controls.Add(this.GroupBoxBalloonPreview, 0, 2);
+			this.LayoutPanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LayoutPanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
 			this.LayoutPanelMain.Location = new System.Drawing.Point(9, 0);
 			this.LayoutPanelMain.Margin = new System.Windows.Forms.Padding(0);
 			this.LayoutPanelMain.Name = "LayoutPanelMain";
@@ -224,6 +223,31 @@ namespace AgentCharacterEditor
 			this.ButtonBalloonForeground.UseVisualStyleBackColor = true;
 			this.ButtonBalloonForeground.Click += new System.EventHandler(this.ButtonBalloonForeground_Click);
 			// 
+			// NumericNumLines
+			// 
+			this.NumericNumLines.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericNumLines.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericNumLines.Location = new System.Drawing.Point(140, 58);
+			this.NumericNumLines.Maximum = new decimal(new int[] {
+            128,
+            0,
+            0,
+            0});
+			this.NumericNumLines.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.NumericNumLines.Name = "NumericNumLines";
+			this.NumericNumLines.Size = new System.Drawing.Size(57, 22);
+			this.NumericNumLines.TabIndex = 3;
+			this.NumericNumLines.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+			this.NumericNumLines.Validated += new System.EventHandler(this.NumericNumLines_Validated);
+			// 
 			// ButtonBalloonFont
 			// 
 			this.ButtonBalloonFont.Location = new System.Drawing.Point(235, 25);
@@ -258,6 +282,31 @@ namespace AgentCharacterEditor
 			this.RadioButtonNumLines.UseVisualStyleBackColor = true;
 			this.RadioButtonNumLines.CheckedChanged += new System.EventHandler(this.RadioButtonNumLines_CheckedChanged);
 			// 
+			// NumericCharsPerLine
+			// 
+			this.NumericCharsPerLine.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericCharsPerLine.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericCharsPerLine.Location = new System.Drawing.Point(140, 26);
+			this.NumericCharsPerLine.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+			this.NumericCharsPerLine.Minimum = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+			this.NumericCharsPerLine.Name = "NumericCharsPerLine";
+			this.NumericCharsPerLine.Size = new System.Drawing.Size(57, 22);
+			this.NumericCharsPerLine.TabIndex = 1;
+			this.NumericCharsPerLine.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+			this.NumericCharsPerLine.Validated += new System.EventHandler(this.NumericCharsPerLine_Validated);
+			// 
 			// LabelCharsPerLine
 			// 
 			this.LabelCharsPerLine.AutoSize = true;
@@ -284,7 +333,6 @@ namespace AgentCharacterEditor
 			// 
 			// WordBalloonPreview
 			// 
-			this.WordBalloonPreview.CharacterFile = null;
 			this.WordBalloonPreview.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.WordBalloonPreview.Location = new System.Drawing.Point(6, 24);
 			this.WordBalloonPreview.Name = "WordBalloonPreview";
@@ -292,75 +340,22 @@ namespace AgentCharacterEditor
 			this.WordBalloonPreview.TabIndex = 0;
 			this.WordBalloonPreview.TabStop = false;
 			// 
-			// NumericNumLines
-			// 
-			this.NumericNumLines.DefaultBackColor = System.Drawing.SystemColors.Window;
-			this.NumericNumLines.HighlightBackColor = System.Drawing.Color.Pink;
-			this.NumericNumLines.Highlighted = false;
-			this.NumericNumLines.Location = new System.Drawing.Point(140, 58);
-			this.NumericNumLines.Maximum = new decimal(new int[] {
-            128,
-            0,
-            0,
-            0});
-			this.NumericNumLines.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.NumericNumLines.Name = "NumericNumLines";
-			this.NumericNumLines.Size = new System.Drawing.Size(57, 22);
-			this.NumericNumLines.TabIndex = 3;
-			this.NumericNumLines.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-			this.NumericNumLines.Validated += new System.EventHandler(this.NumericNumLines_Validated);
-			// 
-			// NumericCharsPerLine
-			// 
-			this.NumericCharsPerLine.DefaultBackColor = System.Drawing.SystemColors.Window;
-			this.NumericCharsPerLine.HighlightBackColor = System.Drawing.Color.Pink;
-			this.NumericCharsPerLine.Highlighted = false;
-			this.NumericCharsPerLine.Location = new System.Drawing.Point(140, 26);
-			this.NumericCharsPerLine.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-			this.NumericCharsPerLine.Minimum = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-			this.NumericCharsPerLine.Name = "NumericCharsPerLine";
-			this.NumericCharsPerLine.Size = new System.Drawing.Size(57, 22);
-			this.NumericCharsPerLine.TabIndex = 1;
-			this.NumericCharsPerLine.Value = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-			this.NumericCharsPerLine.Validated += new System.EventHandler(this.NumericCharsPerLine_Validated);
-			// 
 			// BalloonPanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.LayoutPanelMain);
-			this.Margin = new System.Windows.Forms.Padding(0);
 			this.Name = "BalloonPanel";
-			this.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
 			this.Size = new System.Drawing.Size(600, 600);
 			this.LayoutPanelMain.ResumeLayout(false);
 			this.LayoutPanelMain.PerformLayout();
 			this.GroupBoxBalloonDisplay.ResumeLayout(false);
 			this.GroupBoxBalloonDisplay.PerformLayout();
-			this.GroupBoxBalloonPreview.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.NumericNumLines)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.NumericCharsPerLine)).EndInit();
+			this.GroupBoxBalloonPreview.ResumeLayout(false);
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 

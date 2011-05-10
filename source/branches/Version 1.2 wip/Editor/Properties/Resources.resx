@@ -118,8 +118,26 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="DoubleAgent" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\DoubleAgent.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="BmpMouthClosed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MouthClosed.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BmpMouthMedium" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MouthMedium.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BmpMouthNarrow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MouthNarrow.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BmpMouthWide1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MouthWide1.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BmpMouthWide2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MouthWide2.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BmpMouthWide3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MouthWide3.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BmpMouthWide4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MouthWide4.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="EditAdd" xml:space="preserve">
     <value>&amp;Add</value>
@@ -226,11 +244,98 @@
   <data name="EditUndoThis" xml:space="preserve">
     <value>&amp;Undo {0}</value>
   </data>
+  <data name="IconDoubleAgent" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DoubleAgent.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgEditCopy" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EditCopy.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgEditCut" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EditCut.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgEditDelete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EditDelete.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgEditPaste" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EditPaste.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgEditRedo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EditRedo.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgEditUndo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EditUndo.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgFileNew" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FileNew.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgFileOpen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FileOpen.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgFilePrint" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FilePrint.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgFilePrintPreview" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FilePrintPreview.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgFileSave" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FileSave.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgHelpAbout" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\About.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgMoveDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MoveDown.Png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgMoveLeft" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MoveLeft.Png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgMoveRight" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MoveRight.Png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgMoveUp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MoveUp.Png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgNavigateBack" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NavigateBack.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgNavigateForward" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NavigateForward.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgPlay" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Play.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgShiftDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ShiftDown.Png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgShiftLeft" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ShiftLeft.Png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgShiftRight" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ShiftRight.Png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgShiftUp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ShiftUp.Png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgShowBranching" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ShowBranching.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgShowExitBranching" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ShowExitBranching.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgViewLarge" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ViewLarge.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgViewMedium" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ViewMedium.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgViewSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ViewSmall.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="LicenseDetails" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>LicenseDetails.rtf;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\LicenseDetails.rtf;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="LicenseIntro" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>LicenseIntro.rtf;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\LicenseIntro.rtf;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="MouthOverlay" xml:space="preserve">
     <value>Mouth</value>

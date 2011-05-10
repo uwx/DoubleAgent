@@ -68,6 +68,10 @@ namespace AgentCharacterEditor
 			set
 			{
 				base.FilePart = value;
+				if (FilePart is ResolveAnimationFrame)
+				{
+					(FilePart as ResolveAnimationFrame).Scope = ResolveAnimationFrame.ScopeType.ScopeFrame;
+				}
 				Frame = (FilePart is ResolveAnimationFrame) ? (FilePart as ResolveAnimationFrame).Target : null;
 
 				ShowFrameName ();
@@ -100,11 +104,55 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		protected override Boolean IsEmpty
+		public override Boolean IsEmpty
 		{
 			get
 			{
 				return base.IsEmpty || (Frame == null);
+			}
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region Navigation
+
+		public override object NavigationContext
+		{
+			get
+			{
+				return new PanelContext (this);
+			}
+			set
+			{
+				if (value is PanelContext)
+				{
+					(value as PanelContext).RestoreContext (this);
+				}
+				else
+				{
+					base.NavigationContext = value;
+				}
+			}
+		}
+
+		public new class PanelContext : FilePartPanel.PanelContext
+		{
+			public PanelContext (FramePanel pPanel)
+				: base (pPanel)
+			{
+				SelectedImage = pPanel.ListViewImages.SelectedIndex;
+			}
+
+			public void RestoreContext (FramePanel pPanel)
+			{
+				base.RestoreContext (pPanel);
+				pPanel.ListViewImages.SelectedIndex = SelectedImage;
+			}
+
+			public int SelectedImage
+			{
+				get;
+				protected set;
 			}
 		}
 
@@ -142,7 +190,7 @@ namespace AgentCharacterEditor
 
 		private void ShowFrameSample ()
 		{
-			TableLayoutMain.SuspendLayout ();
+			LayoutPanelMain.SuspendLayout ();
 			if (IsEmpty || (Frame.Images == null))
 			{
 				PictureBoxFrameSample.Image = null;
@@ -153,7 +201,7 @@ namespace AgentCharacterEditor
 				PictureBoxFrameSample.Image = CharacterFile.GetFrameBitmap (Frame, true, Color.Transparent);
 				PictureBoxFrameSample.ClientSize = CharacterFile.Header.ImageSize;
 			}
-			TableLayoutMain.ResumeLayout (true);
+			LayoutPanelMain.ResumeLayout (true);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -318,7 +366,7 @@ namespace AgentCharacterEditor
 			}
 
 			CausesValidation = false;
-			TableLayoutSample.SuspendLayout ();
+			LayoutPanelSample.SuspendLayout ();
 
 			if (lFrameImage == null)
 			{
@@ -333,7 +381,7 @@ namespace AgentCharacterEditor
 				PictureBoxImageSample.Location = new Point (0, 0);
 				PictureBoxImageSample.Image = null;
 				PictureBoxImageSample.ResumeLayout (true);
-				TableLayoutSample.Enabled = false;
+				LayoutPanelSample.Enabled = false;
 			}
 			else
 			{
@@ -348,10 +396,10 @@ namespace AgentCharacterEditor
 				PictureBoxImageSample.Location = PictureBoxFrameSample.ImageToClient (pFrameImage.Offset);
 				PictureBoxImageSample.Image = lBitmap;
 				PictureBoxImageSample.ResumeLayout (true);
-				TableLayoutSample.Enabled = !Program.FileIsReadOnly;
+				LayoutPanelSample.Enabled = !Program.FileIsReadOnly;
 			}
 
-			TableLayoutSample.ResumeLayout (true);
+			LayoutPanelSample.ResumeLayout (true);
 			ButtonShiftUp.Width = ToolStripShiftUp.Width;
 			ButtonShiftDown.Width = ToolStripShiftDown.Width;
 			ButtonShiftLeft.Height = ToolStripShiftLeft.Height;

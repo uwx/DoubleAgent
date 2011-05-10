@@ -67,7 +67,7 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		protected override Boolean IsEmpty
+		public override Boolean IsEmpty
 		{
 			get
 			{

@@ -35,6 +35,14 @@ namespace AgentCharacterEditor
 		public OverlayPanel ()
 		{
 			InitializeComponent ();
+
+			MouthImages.Images.Add (Properties.Resources.BmpMouthClosed);
+			MouthImages.Images.Add (Properties.Resources.BmpMouthWide1);
+			MouthImages.Images.Add (Properties.Resources.BmpMouthWide2);
+			MouthImages.Images.Add (Properties.Resources.BmpMouthWide3);
+			MouthImages.Images.Add (Properties.Resources.BmpMouthWide4);
+			MouthImages.Images.Add (Properties.Resources.BmpMouthMedium);
+			MouthImages.Images.Add (Properties.Resources.BmpMouthNarrow);
 		}
 
 		#endregion
@@ -50,6 +58,10 @@ namespace AgentCharacterEditor
 			set
 			{
 				base.FilePart = value;
+				if (FilePart is ResolveAnimationFrame)
+				{
+					(FilePart as ResolveAnimationFrame).Scope = ResolveAnimationFrame.ScopeType.ScopeOverlays;
+				}
 				Frame = (FilePart is ResolveAnimationFrame) ? (FilePart as ResolveAnimationFrame).Target : null;
 
 				ShowFrameName ();
@@ -83,11 +95,55 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		protected override Boolean IsEmpty
+		public override Boolean IsEmpty
 		{
 			get
 			{
 				return base.IsEmpty || (Frame == null);
+			}
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region Navigation
+
+		public override object NavigationContext
+		{
+			get
+			{
+				return new PanelContext (this);
+			}
+			set
+			{
+				if (value is PanelContext)
+				{
+					(value as PanelContext).RestoreContext (this);
+				}
+				else
+				{
+					base.NavigationContext = value;
+				}
+			}
+		}
+
+		public new class PanelContext : FilePartPanel.PanelContext
+		{
+			public PanelContext (OverlayPanel pPanel)
+				: base (pPanel)
+			{
+				SelectedOverlay = pPanel.ListViewOverlays.SelectedIndex;
+			}
+
+			public void RestoreContext (OverlayPanel pPanel)
+			{
+				base.RestoreContext (pPanel);
+				pPanel.ListViewOverlays.SelectedIndex = SelectedOverlay;
+			}
+
+			public int SelectedOverlay
+			{
+				get;
+				protected set;
 			}
 		}
 
@@ -202,7 +258,7 @@ namespace AgentCharacterEditor
 			System.Drawing.Bitmap lBitmap = null;
 
 			CausesValidation = false;
-			TableLayoutSample.SuspendLayout ();
+			LayoutPanelSample.SuspendLayout ();
 
 			if (pFrameOverlay == null)
 			{
@@ -213,7 +269,7 @@ namespace AgentCharacterEditor
 				NumericOffsetX.Enabled = false;
 				NumericOffsetY.Enabled = false;
 				CheckBoxReplace.Enabled = false;
-				TableLayoutSample.Enabled = false;
+				LayoutPanelSample.Enabled = false;
 
 				if (!IsEmpty)
 				{
@@ -229,7 +285,7 @@ namespace AgentCharacterEditor
 				NumericOffsetX.Enabled = !Program.FileIsReadOnly;
 				NumericOffsetY.Enabled = !Program.FileIsReadOnly;
 				CheckBoxReplace.Enabled = !Program.FileIsReadOnly;
-				TableLayoutSample.Enabled = !Program.FileIsReadOnly;
+				LayoutPanelSample.Enabled = !Program.FileIsReadOnly;
 
 				lBitmap = CharacterFile.GetFrameBitmap (Frame, true, Color.Transparent, (Int16)pFrameOverlay.OverlayType);
 			}
@@ -245,7 +301,7 @@ namespace AgentCharacterEditor
 				PictureBoxImageSample.ClientSize = CharacterFile.Header.ImageSize;
 			}
 
-			TableLayoutSample.ResumeLayout (true);
+			LayoutPanelSample.ResumeLayout (true);
 			ButtonShiftUp.Width = ToolStripShiftUp.Width;
 			ButtonShiftDown.Width = ToolStripShiftDown.Width;
 			ButtonShiftLeft.Height = ToolStripShiftLeft.Height;
