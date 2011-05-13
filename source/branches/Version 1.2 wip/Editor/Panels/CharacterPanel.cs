@@ -21,7 +21,6 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using AgentCharacterEditor.Updates;
 using DoubleAgent;
 using DoubleAgent.Character;
 
@@ -55,7 +54,7 @@ namespace AgentCharacterEditor
 		{
 			Properties.Settings lSettings = Properties.Settings.Default;
 
-			lSettings.SelectedNameLanguage = (Int16)ListItemLangID (ListViewLanguage.SelectedItem);
+			lSettings.SelectedNameLanguage = (Int16)ListItemLangID (ListViewLanguage.SelectedOrFocusedItem);
 		}
 
 		#endregion
@@ -170,7 +169,7 @@ namespace AgentCharacterEditor
 			FileCharacterName lName = null;
 			UInt16 lLangID = mLangDefault;
 
-			if (ListViewLanguage.SelectedItems.Count > 0)
+			if (ListViewLanguage.SelectedItem != null)
 			{
 				lLangID = ListItemLangID (ListViewLanguage.SelectedItem);
 			}

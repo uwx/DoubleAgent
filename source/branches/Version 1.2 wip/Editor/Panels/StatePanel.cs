@@ -26,7 +26,6 @@ using System.Text;
 using System.Windows.Forms;
 using DoubleAgent;
 using DoubleAgent.Character;
-using AgentCharacterEditor.Updates;
 
 namespace AgentCharacterEditor
 {
@@ -124,15 +123,22 @@ namespace AgentCharacterEditor
 				: base (pPanel)
 			{
 				SelectedAnimation = pPanel.ListViewAnimations.SelectedIndex;
+				FocusedAnimation = pPanel.ListViewAnimations.FocusedIndex;
 			}
 
 			public void RestoreContext (StatePanel pPanel)
 			{
 				base.RestoreContext (pPanel);
 				pPanel.ListViewAnimations.SelectedIndex = SelectedAnimation;
+				pPanel.ListViewAnimations.FocusedIndex = FocusedAnimation;
 			}
 
 			public int SelectedAnimation
+			{
+				get;
+				protected set;
+			}
+			public int FocusedAnimation
 			{
 				get;
 				protected set;

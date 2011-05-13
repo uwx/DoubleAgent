@@ -1,4 +1,4 @@
-﻿namespace AgentCharacterEditor
+﻿namespace AgentCharacterEditor.Previews
 {
 	partial class BalloonPreview
 	{

@@ -23,7 +23,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using DoubleAgent.Character;
 
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.Previews
 {
 	public class FramesListView : DoubleAgent.ListViewEx
 	{
@@ -74,6 +74,33 @@ namespace AgentCharacterEditor
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Methods
+
+		public new void EnsureVisible (int pItemIndex)
+		{
+			if ((pItemIndex >= 0) && (pItemIndex < Items.Count))
+			{
+				Rectangle lItemRect = GetItemRect (pItemIndex);
+				Rectangle lVisibleRect = ClientRectangle;
+				FramesPreview lContainer = (Parent as FramesPreview);
+
+				lItemRect = Parent.RectangleToClient (RectangleToScreen (lItemRect));
+				lVisibleRect = Parent.RectangleToClient (RectangleToScreen (lVisibleRect));
+				lVisibleRect.Intersect (Parent.ClientRectangle);
+
+				if (lItemRect.Left < lVisibleRect.Left)
+				{
+					lContainer.AutoScrollPosition = new Point (Math.Max (lContainer.HorizontalScroll.Value + (lItemRect.Left - lVisibleRect.Left), lContainer.HorizontalScroll.Minimum), 0);
+				}
+				else if (lItemRect.Right > lVisibleRect.Right)
+				{
+					lContainer.AutoScrollPosition = new Point (Math.Min (lContainer.HorizontalScroll.Value + (lItemRect.Right - lVisibleRect.Right), lContainer.HorizontalScroll.Maximum), 0);
+				}
+			}
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
 		#region Drawing
 
 		protected override void OnDrawItem (DrawListViewItemEventArgs e)
@@ -88,9 +115,11 @@ namespace AgentCharacterEditor
 			if (lImage != null)
 			{
 				lItemRect = GetItemRect (e.ItemIndex, ItemBoundsPortion.Icon);
+				lItemRect.Inflate (-2,-2);
 				lImageRect = new RectangleF (lItemRect.Left, lItemRect.Top, lItemRect.Width, lItemRect.Height);
 				lImageRect.Width = lImage.Width * lImageRect.Height / (float)lImage.Height;
 				lImageRect.Offset (((float)lItemRect.Width - lImageRect.Width) / 2.0f, 0.0f);
+				//System.Diagnostics.Debug.Print ("Draw {0} in {1}", lImage.Size, lImageRect);
 
 				e.Graphics.DrawImage (lImage, lImageRect);
 			}
@@ -106,21 +135,63 @@ namespace AgentCharacterEditor
 		public Bitmap GetItemImage (ListViewItem pItem, int pItemIndex)
 		{
 			Bitmap lImage = null;
-			try
+			if (pItem.Tag is Bitmap)
 			{
-				if (pItem.Tag is Bitmap)
+				lImage = pItem.Tag as Bitmap;
+			}
+			else if ((pItem.Tag == null) && (CharacterFile != null) && (Animation != null))
+			{
+				try
 				{
-					lImage = pItem.Tag as Bitmap;
+					lImage = GetFrameImage (CharacterFile, Animation.Frames[pItemIndex]);
 				}
-				else if ((pItem.Tag == null) && (CharacterFile != null) && (Animation != null))
+				catch
 				{
-					pItem.Tag = Boolean.FalseString;
-					lImage = CharacterFile.GetFrameBitmap (Animation.Frames[pItemIndex], true, Color.Transparent);
+				}
+				if (lImage != null)
+				{
 					pItem.Tag = lImage;
 				}
+				else
+				{
+					pItem.Tag = Boolean.FalseString;
+				}
 			}
-			catch
+			return lImage;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		static public Bitmap GetFrameImage (CharacterFile pCharacterFile, FileAnimationFrame pFrame)
+		{
+			Bitmap lImage = null;
+
+			if ((pCharacterFile != null) && (pFrame != null))
 			{
+				try
+				{
+					if (pFrame.ImageCount > 0)
+					{
+						lImage = pCharacterFile.GetFrameBitmap (pFrame, true, Color.Transparent);
+					}
+					else
+					{
+						lImage = new Bitmap (pCharacterFile.Header.ImageSize.Width, pCharacterFile.Header.ImageSize.Height);
+						Graphics lGraphics = Graphics.FromImage (lImage);
+						Pen lPen = new Pen (Color.Pink, 5.0f);
+
+						lGraphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.None;
+						lGraphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+
+						lGraphics.DrawRectangle (lPen, 3.0f, 3.0f, (float)lImage.Width - 7.0f, (float)lImage.Height - 7.0f);
+						lGraphics.DrawLine (lPen, 3.0f, 3.0f, (float)lImage.Width - 4.0f, (float)lImage.Height - 4.0f);
+						lGraphics.DrawLine (lPen, 3.0f, (float)lImage.Height - 4.0f, (float)lImage.Width - 4.0f, 3.0f);
+						lGraphics.Dispose ();
+					}
+				}
+				catch
+				{
+				}
 			}
 			return lImage;
 		}

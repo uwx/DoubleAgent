@@ -21,7 +21,6 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using AgentCharacterEditor.Updates;
 using DoubleAgent;
 using DoubleAgent.Character;
 
@@ -66,8 +65,9 @@ namespace AgentCharacterEditor
 
 				ShowFrameName ();
 				ShowFrameOverlays ();
-				if (!IsEmpty && SelectFirstOverlay ())
+				if (!IsEmpty)
 				{
+					SelectFirstOverlay ();
 					ShowSelectedOverlay ();
 				}
 			}
@@ -132,15 +132,22 @@ namespace AgentCharacterEditor
 				: base (pPanel)
 			{
 				SelectedOverlay = pPanel.ListViewOverlays.SelectedIndex;
+				FocusedOverlay = pPanel.ListViewOverlays.FocusedIndex;
 			}
 
 			public void RestoreContext (OverlayPanel pPanel)
 			{
 				base.RestoreContext (pPanel);
 				pPanel.ListViewOverlays.SelectedIndex = SelectedOverlay;
+				pPanel.ListViewOverlays.FocusedIndex = FocusedOverlay;
 			}
 
 			public int SelectedOverlay
+			{
+				get;
+				protected set;
+			}
+			public int FocusedOverlay
 			{
 				get;
 				protected set;
@@ -313,14 +320,14 @@ namespace AgentCharacterEditor
 		private void ShowSelectedOverlay ()
 		{
 			ShowFrameOverlay (GetSelectedOverlay (true));
-			ShowSelectionState (GetSelectedOverlay (false), ListViewOverlays.GetSelectedIndex (false));
+			ShowSelectionState (GetSelectedOverlay (false), ListViewOverlays.SelectedIndex);
 		}
 
 		private void ShowSelectionState (FileFrameOverlay pFrameOverlay, int pOverlayNdx)
 		{
 			if (pFrameOverlay == null)
 			{
-				ButtonAdd.Enabled = !IsEmpty && !Program.FileIsReadOnly && (ListViewOverlays.GetSelectedIndex (false) >= 0);
+				ButtonAdd.Enabled = !IsEmpty && !Program.FileIsReadOnly && (ListViewOverlays.SelectedIndex >= 0);
 				ButtonDelete.Enabled = false;
 				ButtonChooseFile.Enabled = false;
 			}
@@ -331,7 +338,7 @@ namespace AgentCharacterEditor
 				ButtonChooseFile.Enabled = !Program.FileIsReadOnly && !String.IsNullOrEmpty (pFrameOverlay.ImageFilePath);
 			}
 
-			ButtonAdd.Text = ButtonAdd.Enabled ? String.Format (Properties.Resources.EditAddThis.NoMenuPrefix (), Global.TitleOverlay ((MouthOverlay)ListViewOverlays.GetSelectedIndex (false))) : Properties.Resources.EditAdd.NoMenuPrefix ();
+			ButtonAdd.Text = ButtonAdd.Enabled ? String.Format (Properties.Resources.EditAddThis.NoMenuPrefix (), Global.TitleOverlay ((MouthOverlay)ListViewOverlays.SelectedIndex)) : Properties.Resources.EditAdd.NoMenuPrefix ();
 			ButtonDelete.Text = ButtonDelete.Enabled ? String.Format (Properties.Resources.EditDeleteThis.NoMenuPrefix (), Global.TitleOverlay (pFrameOverlay)) : Properties.Resources.EditDelete.NoMenuPrefix ();
 			ButtonChooseFile.Text = ButtonChooseFile.Enabled ? String.Format (Properties.Resources.EditChooseThisFile.NoMenuPrefix (), Global.OverlayTypeName (pFrameOverlay.OverlayType)) : Properties.Resources.EditChooseFile.NoMenuPrefix ();
 		}
@@ -384,7 +391,7 @@ namespace AgentCharacterEditor
 		{
 			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
-				int lOverlayNdx = ListViewOverlays.GetSelectedIndex (false);
+				int lOverlayNdx = ListViewOverlays.SelectedIndex;
 				String lFilePath = String.Empty;
 
 				if (pFrameOverlay != null)
@@ -437,7 +444,7 @@ namespace AgentCharacterEditor
 			{
 				if (pFrameOverlay == null)
 				{
-					int lOverlayNdx = ListViewOverlays.GetSelectedIndex (false);
+					int lOverlayNdx = ListViewOverlays.SelectedIndex;
 
 					if (lOverlayNdx >= 0)
 					{
@@ -596,8 +603,10 @@ namespace AgentCharacterEditor
 			else if ((lAddDeleteOverlay != null) && (lAddDeleteOverlay.Frame == Frame))
 			{
 				int lSelectedNdx = ListViewOverlays.SelectedIndex;
+				int lFocusedNdx = ListViewOverlays.FocusedIndex;
 				ShowFrameOverlays ();
 				ListViewOverlays.SelectedIndex = lSelectedNdx;
+				ListViewOverlays.FocusedIndex = lFocusedNdx;
 				ShowSelectedOverlay ();
 			}
 			else if ((lUpdateOverlay != null) && (lUpdateOverlay.Frame == Frame))
@@ -608,8 +617,10 @@ namespace AgentCharacterEditor
 			else if ((lUpdateFrame != null) && (lUpdateFrame.Target == Frame) && lUpdateFrame.ForClipboard)
 			{
 				int lSelectedNdx = ListViewOverlays.SelectedIndex;
+				int lFocusedNdx = ListViewOverlays.FocusedIndex;
 				ShowFrameOverlays ();
 				ListViewOverlays.SelectedIndex = lSelectedNdx;
+				ListViewOverlays.FocusedIndex = lFocusedNdx;
 				ShowSelectedOverlay ();
 			}
 		}

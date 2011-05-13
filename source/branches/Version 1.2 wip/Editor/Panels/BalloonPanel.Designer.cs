@@ -67,7 +67,7 @@ namespace AgentCharacterEditor
 			this.NumericCharsPerLine = new DoubleAgent.NumericUpDownEx();
 			this.LabelCharsPerLine = new System.Windows.Forms.Label();
 			this.GroupBoxBalloonPreview = new System.Windows.Forms.GroupBox();
-			this.WordBalloonPreview = new AgentCharacterEditor.BalloonPreview();
+			this.WordBalloonPreview = new AgentCharacterEditor.Previews.BalloonPreview();
 			this.LayoutPanelMain.SuspendLayout();
 			this.GroupBoxBalloonDisplay.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericNumLines)).BeginInit();
@@ -380,6 +380,6 @@ namespace AgentCharacterEditor
 		private System.Windows.Forms.Label LabelBalloonBackgroundSample;
 		private System.Windows.Forms.Label LabelBalloonForegroundSample;
 		private System.Windows.Forms.Label LabelBalloonFontSample;
-		private BalloonPreview WordBalloonPreview;
+		private AgentCharacterEditor.Previews.BalloonPreview WordBalloonPreview;
 	}
 }

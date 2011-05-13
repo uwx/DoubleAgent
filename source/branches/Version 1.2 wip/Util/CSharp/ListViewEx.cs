@@ -109,7 +109,7 @@ namespace DoubleAgent
 		{
 			get
 			{
-				return GetSelectedItem (true);
+				return GetSelectedItem (false);
 			}
 			set
 			{
@@ -126,6 +126,21 @@ namespace DoubleAgent
 					value.Selected = true;
 					value.Focused = true;
 				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the selected <see cref="ListViewItem"/> in single-selection mode.
+		/// If there is no selection, the <see cref="ListView.FocusedItem"/> is returned.
+		/// </summary>
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public ListViewItem SelectedOrFocusedItem
+		{
+			get
+			{
+				return GetSelectedItem (true);
 			}
 		}
 
@@ -150,9 +165,12 @@ namespace DoubleAgent
 			}
 		}
 
+		///////////////////////////////////////////////////////////////////////////////
+
 		/// <summary>
 		/// Gets or sets the index of the selected <see cref="ListViewItem"/> in single-selection mode.
 		/// </summary>
+		/// <remarks>Setting the selected item also sets the <see cref="ListView.FocusedItem"/></remarks>
 		[System.ComponentModel.Browsable (false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
 		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
@@ -160,7 +178,7 @@ namespace DoubleAgent
 		{
 			get
 			{
-				return GetSelectedIndex (true);
+				return GetSelectedIndex (false);
 			}
 			set
 			{
@@ -173,6 +191,21 @@ namespace DoubleAgent
 				{
 					SelectedItem = null;
 				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the index of the selected <see cref="ListViewItem"/> in single-selection mode.
+		/// If there is no selection, the <see cref="ListView.FocusedItem"/> is returned.
+		/// </summary>
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public int SelectedOrFocusedIndex
+		{
+			get
+			{
+				return GetSelectedIndex (true);
 			}
 		}
 
@@ -194,6 +227,30 @@ namespace DoubleAgent
 			else
 			{
 				return -1;
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		/// <summary>
+		/// Gets the index of the <see cref="ListView.FocusedItem"/>.
+		/// </summary>
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public int FocusedIndex
+		{
+			get
+			{
+				ListViewItem lFocusedItem = FocusedItem;
+				return (lFocusedItem == null) ? -1 : lFocusedItem.Index;
+			}
+			set
+			{
+				if ((value >= 0) && (value < Items.Count))
+				{
+					FocusedItem = Items[value];
+				}
 			}
 		}
 

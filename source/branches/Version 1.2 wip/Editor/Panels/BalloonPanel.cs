@@ -26,7 +26,6 @@ using System.Text;
 using System.Windows.Forms;
 using DoubleAgent;
 using DoubleAgent.Character;
-using AgentCharacterEditor.Updates;
 
 namespace AgentCharacterEditor
 {

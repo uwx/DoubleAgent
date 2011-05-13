@@ -19,12 +19,10 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 using System;
-using System.Windows.Forms;
-using System.ComponentModel;
-using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
-using Microsoft.Win32;
+using System.Text;
+using System.Windows.Forms;
 
 namespace AgentCharacterEditor
 {
@@ -32,8 +30,8 @@ namespace AgentCharacterEditor
 	{
 		static public Boolean OpenCharacterFile (ref String pFilePath)
 		{
-			OpenFileDialog	lDialog = new OpenFileDialog ();
-			StringBuilder	lFilter = new StringBuilder ();
+			System.Windows.Forms.OpenFileDialog lDialog = new System.Windows.Forms.OpenFileDialog ();
+			StringBuilder lFilter = new StringBuilder ();
 
 			lFilter.Append (FileExtTypeName (".acd", "Character Definition Files") + " (*.acd)|*.acd");
 			lFilter.Append ("|" + FileExtTypeName (".acs", "Character Files") + " (*.acs)|*.acs");
@@ -53,8 +51,8 @@ namespace AgentCharacterEditor
 
 		static public Boolean SaveCharacterFile (ref String pFilePath)
 		{
-			SaveFileDialog	lDialog = new SaveFileDialog ();
-			StringBuilder	lFilter = new StringBuilder ();
+			System.Windows.Forms.SaveFileDialog lDialog = new System.Windows.Forms.SaveFileDialog ();
+			StringBuilder lFilter = new StringBuilder ();
 
 			lFilter.Append (FileExtTypeName (".acd", "Character Definition Files") + " (*.acd)|*.acd");
 			lFilter.Append ("|" + FileExtTypeName (".acs", "Character Files") + " (*.acs)|*.acs");
@@ -77,8 +75,8 @@ namespace AgentCharacterEditor
 
 		static public Boolean OpenImageFile (ref String pFilePath)
 		{
-			OpenFileDialog	lDialog = new OpenFileDialog ();
-			StringBuilder	lFilter = new StringBuilder ();
+			System.Windows.Forms.OpenFileDialog lDialog = new System.Windows.Forms.OpenFileDialog ();
+			StringBuilder lFilter = new StringBuilder ();
 
 			lFilter.Append (FileExtTypeName (".bmp", "Bitmap Files") + " (*.bmp)|*.bmp");
 			lFilter.Append ("|" + FileExtTypeName (".gif", "GIF Files") + " (*.gif)|*.gif");
@@ -101,8 +99,8 @@ namespace AgentCharacterEditor
 
 		static public Boolean OpenIconFile (ref String pFilePath)
 		{
-			OpenFileDialog	lDialog = new OpenFileDialog ();
-			StringBuilder	lFilter = new StringBuilder ();
+			System.Windows.Forms.OpenFileDialog lDialog = new System.Windows.Forms.OpenFileDialog ();
+			StringBuilder lFilter = new StringBuilder ();
 
 			lFilter.Append (FileExtTypeName (".ico", "Icon Files") + " (*.ico)|*.ico");
 			lFilter.Append ("|All Files (*.*)|*.*");
@@ -121,8 +119,8 @@ namespace AgentCharacterEditor
 
 		static public Boolean OpenSoundFile (ref String pFilePath)
 		{
-			OpenFileDialog	lDialog = new OpenFileDialog ();
-			StringBuilder	lFilter = new StringBuilder ();
+			System.Windows.Forms.OpenFileDialog lDialog = new System.Windows.Forms.OpenFileDialog ();
+			StringBuilder lFilter = new StringBuilder ();
 
 			lFilter.Append (FileExtTypeName (".wav", "Sound Files") + " (*.wav)|*.wav");
 			lFilter.Append ("|All Files (*.*)|*.*");
@@ -141,8 +139,8 @@ namespace AgentCharacterEditor
 
 		static public Boolean OpenPaletteFile (ref String pFilePath)
 		{
-			OpenFileDialog	lDialog = new OpenFileDialog ();
-			StringBuilder	lFilter = new StringBuilder ();
+			System.Windows.Forms.OpenFileDialog lDialog = new System.Windows.Forms.OpenFileDialog ();
+			StringBuilder lFilter = new StringBuilder ();
 
 			lFilter.Append (FileExtTypeName (".bmp", "Bitmap Files") + " (*.bmp)|*.bmp");
 			lFilter.Append ("|" + FileExtTypeName (".gif", "GIF Files") + " (*.gif)|*.gif");
@@ -154,8 +152,8 @@ namespace AgentCharacterEditor
 			InitFilterIndex (lDialog);
 			if (lDialog.ShowDialog () == DialogResult.OK)
 			{
-				Bitmap			lBitmap = null;
-				ColorPalette	lPalette = null;
+				Bitmap lBitmap = null;
+				ColorPalette lPalette = null;
 
 				try
 				{
@@ -184,12 +182,12 @@ namespace AgentCharacterEditor
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		static public void InitFilePath (FileDialog pFileDialog, String pFilePath)
+		static public void InitFilePath (System.Windows.Forms.FileDialog pFileDialog, String pFilePath)
 		{
 			InitFilePath (pFileDialog, pFilePath, null);
 		}
 
-		static public void InitFilePath (FileDialog pFileDialog, String pFilePath, String pDefaultExt)
+		static public void InitFilePath (System.Windows.Forms.FileDialog pFileDialog, String pFilePath, String pDefaultExt)
 		{
 			if (!String.IsNullOrEmpty (pFilePath))
 			{
@@ -246,13 +244,13 @@ namespace AgentCharacterEditor
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		static public void InitFilterIndex (FileDialog pFileDialog)
+		static public void InitFilterIndex (System.Windows.Forms.FileDialog pFileDialog)
 		{
 			if (!String.IsNullOrEmpty (pFileDialog.Filter) && !String.IsNullOrEmpty (pFileDialog.DefaultExt))
 			{
-				Char[]		lDelim = { '|' };
-				String[]	lFilters = pFileDialog.Filter.Split (lDelim);
-				int			lNdx;
+				Char[] lDelim = { '|' };
+				String[] lFilters = pFileDialog.Filter.Split (lDelim);
+				int lNdx;
 
 				for (lNdx = 0; lNdx < lFilters.Length; lNdx++)
 				{
@@ -269,7 +267,7 @@ namespace AgentCharacterEditor
 
 		static public String FileExtTypeName (String pFileExt)
 		{
-			String	lFileType = pFileExt;
+			String lFileType = pFileExt;
 
 			if (lFileType.StartsWith ("."))
 			{
@@ -282,12 +280,12 @@ namespace AgentCharacterEditor
 
 		static public String FileExtTypeName (String pFileExt, String pDefault)
 		{
-			String	lTypeName = pDefault;
+			String lTypeName = pDefault;
 
 			try
 			{
-				Microsoft.Win32.RegistryKey	lFileExtKey = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey (pFileExt, false);
-				Microsoft.Win32.RegistryKey	lProgIdKey = null;
+				Microsoft.Win32.RegistryKey lFileExtKey = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey (pFileExt, false);
+				Microsoft.Win32.RegistryKey lProgIdKey = null;
 
 				if (lFileExtKey != null)
 				{

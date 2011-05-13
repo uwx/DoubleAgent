@@ -29,7 +29,6 @@ using System.Media;
 using System.IO;
 using DoubleAgent;
 using DoubleAgent.Character;
-using AgentCharacterEditor.Updates;
 
 namespace AgentCharacterEditor
 {
@@ -141,15 +140,22 @@ namespace AgentCharacterEditor
 				: base (pPanel)
 			{
 				SelectedImage = pPanel.ListViewImages.SelectedIndex;
+				FocusedImage = pPanel.ListViewImages.FocusedIndex;
 			}
 
 			public void RestoreContext (FramePanel pPanel)
 			{
 				base.RestoreContext (pPanel);
 				pPanel.ListViewImages.SelectedIndex = SelectedImage;
+				pPanel.ListViewImages.FocusedIndex = FocusedImage;
 			}
 
 			public int SelectedImage
+			{
+				get;
+				protected set;
+			}
+			public int FocusedImage
 			{
 				get;
 				protected set;
@@ -292,7 +298,7 @@ namespace AgentCharacterEditor
 		private void ShowSelectedImage ()
 		{
 			ShowFrameImage (GetSelectedImage (true));
-			ShowSelectionState (GetSelectedImage (false), ListViewImages.GetSelectedIndex (false));
+			ShowSelectionState (GetSelectedImage (false), ListViewImages.SelectedIndex);
 		}
 
 		private void ShowSelectionState (FileFrameImage pFrameImage, int pImageNdx)
@@ -798,7 +804,7 @@ namespace AgentCharacterEditor
 			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
 				FileFrameImage lFrameImage = GetSelectedImage (false);
-				int lSelNdx = ListViewImages.GetSelectedIndex (false);
+				int lSelNdx = ListViewImages.SelectedIndex;
 				ReorderFrameImage lUpdate;
 
 				if ((lFrameImage != null) && (lSelNdx > 0))
@@ -814,7 +820,7 @@ namespace AgentCharacterEditor
 			if (!IsEmpty && !Program.FileIsReadOnly)
 			{
 				FileFrameImage lFrameImage = GetSelectedImage (false);
-				int lSelNdx = ListViewImages.GetSelectedIndex (false);
+				int lSelNdx = ListViewImages.SelectedIndex;
 				ReorderFrameImage lUpdate;
 
 				if ((lFrameImage != null) && (lSelNdx >= 0) && (lSelNdx < Frame.Images.Count - 1))

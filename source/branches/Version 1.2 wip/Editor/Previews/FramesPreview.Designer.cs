@@ -1,4 +1,4 @@
-﻿namespace AgentCharacterEditor
+﻿namespace AgentCharacterEditor.Previews
 {
 	partial class FramesPreview
 	{
@@ -29,7 +29,7 @@
 		private void InitializeComponent ()
 		{
 			System.Windows.Forms.ColumnHeader columnHeader1;
-			this.Frames = new AgentCharacterEditor.FramesListView();
+			this.Frames = new AgentCharacterEditor.Previews.FramesListView();
 			columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.SuspendLayout();
 			// 
@@ -48,7 +48,6 @@
 			this.Frames.Name = "Frames";
 			this.Frames.OwnerDraw = true;
 			this.Frames.Scrollable = false;
-			this.Frames.SelectedIndex = -1;
 			this.Frames.ShowGroups = false;
 			this.Frames.Size = new System.Drawing.Size(398, 198);
 			this.Frames.TabIndex = 0;

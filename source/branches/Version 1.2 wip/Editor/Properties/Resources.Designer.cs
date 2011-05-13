@@ -557,9 +557,30 @@ namespace AgentCharacterEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap ImgPause {
+            get {
+                object obj = ResourceManager.GetObject("ImgPause", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap ImgPlay {
             get {
                 object obj = ResourceManager.GetObject("ImgPlay", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgRepeat {
+            get {
+                object obj = ResourceManager.GetObject("ImgRepeat", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgRun {
+            get {
+                object obj = ResourceManager.GetObject("ImgRun", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -602,6 +623,27 @@ namespace AgentCharacterEditor.Properties {
         internal static System.Drawing.Bitmap ImgShowExitBranching {
             get {
                 object obj = ResourceManager.GetObject("ImgShowExitBranching", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgSkipBack {
+            get {
+                object obj = ResourceManager.GetObject("ImgSkipBack", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgSkipForward {
+            get {
+                object obj = ResourceManager.GetObject("ImgSkipForward", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgStop {
+            get {
+                object obj = ResourceManager.GetObject("ImgStop", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

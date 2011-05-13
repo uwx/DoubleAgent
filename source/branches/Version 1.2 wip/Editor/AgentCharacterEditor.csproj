@@ -15,7 +15,8 @@
     <StartupObject>AgentCharacterEditor.Program</StartupObject>
     <ApplicationIcon>DoubleAgent.ico</ApplicationIcon>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>CinSoft.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -75,6 +76,8 @@
       <HintPath>..\..\BinDa\Bin\Debug(x86)\v3.5\DaCharFileCLR.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <HintPath>..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\v3.5\System.Core.dll</HintPath>
@@ -84,102 +87,109 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Util\CSharp\CursorState.cs">
-      <Link>CursorState.cs</Link>
+      <Link>Classes\CursorState.cs</Link>
     </Compile>
     <Compile Include="..\Util\CSharp\ToolStripEx.cs">
-      <Link>ToolStripEx.cs</Link>
+      <Link>Classes\ToolStripEx.cs</Link>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="..\Util\CSharp\TreeViewEx.cs">
+      <Link>Classes\TreeViewEx.cs</Link>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="..\Util\CSharp\UndoManager.cs">
-      <Link>UndoManager.cs</Link>
+      <Link>Classes\UndoManager.cs</Link>
     </Compile>
-    <Compile Include="AboutBox.cs">
+    <Compile Include="About\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AboutBox.Designer.cs">
+    <Compile Include="About\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="FilePartPanel.cs">
+    <Compile Include="Previews\AnimationPreview.cs" />
+    <Compile Include="Previews\AnimationPreviewAnimation.cs" />
+    <Compile Include="Previews\AnimationPreviewFrame.cs" />
+    <Compile Include="Panels\FilePartPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FilePartPanel.Designer.cs">
+    <Compile Include="Panels\FilePartPanel.Designer.cs">
       <DependentUpon>FilePartPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="FramesPreview.cs">
+    <Compile Include="Previews\FramesPreview.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FramesPreview.Designer.cs">
+    <Compile Include="Previews\FramesPreview.Designer.cs">
       <DependentUpon>FramesPreview.cs</DependentUpon>
     </Compile>
-    <Compile Include="FramesListView.cs">
+    <Compile Include="Previews\FramesListView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="BalloonPreview.cs">
+    <Compile Include="Previews\BalloonPreview.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="BalloonPreview.Designer.cs">
+    <Compile Include="Previews\BalloonPreview.Designer.cs">
       <DependentUpon>BalloonPreview.cs</DependentUpon>
     </Compile>
-    <Compile Include="FileDialogEx.cs">
+    <Compile Include="Classes\FileDialogEx.cs">
     </Compile>
     <Compile Include="..\Util\CSharp\ListViewEx.cs">
-      <Link>ListViewEx.cs</Link>
+      <Link>Classes\ListViewEx.cs</Link>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="..\Util\CSharp\NumericUpDownEx.cs">
-      <Link>NumericUpDownEx.cs</Link>
+      <Link>Classes\NumericUpDownEx.cs</Link>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="..\Util\CSharp\RecentFileList.cs">
-      <Link>RecentFileList.cs</Link>
+      <Link>Classes\RecentFileList.cs</Link>
     </Compile>
     <Compile Include="..\Util\CSharp\TextBoxEx.cs">
-      <Link>TextBoxEx.cs</Link>
+      <Link>Classes\TextBoxEx.cs</Link>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="AnimationPanel.cs">
+    <Compile Include="Panels\AnimationPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="AnimationPanel.Designer.cs">
+    <Compile Include="Panels\AnimationPanel.Designer.cs">
       <DependentUpon>AnimationPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="AnimationsPanel.cs">
+    <Compile Include="Panels\AnimationsPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="AnimationsPanel.Designer.cs">
+    <Compile Include="Panels\AnimationsPanel.Designer.cs">
       <DependentUpon>AnimationsPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="BranchingPanel.cs">
+    <Compile Include="Panels\BranchingPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="BranchingPanel.Designer.cs">
+    <Compile Include="Panels\BranchingPanel.Designer.cs">
       <DependentUpon>BranchingPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="CharacterPanel.cs">
+    <Compile Include="Panels\CharacterPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CharacterPanel.Designer.cs">
+    <Compile Include="Panels\CharacterPanel.Designer.cs">
       <DependentUpon>CharacterPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="FramePanel.cs">
+    <Compile Include="Panels\FramePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FramePanel.Designer.cs">
+    <Compile Include="Panels\FramePanel.Designer.cs">
       <DependentUpon>FramePanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Global.cs">
+    <Compile Include="Classes\Global.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="LicenceBox.cs">
+    <Compile Include="About\LicenceBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LicenceBox.Designer.cs">
+    <Compile Include="About\LicenceBox.Designer.cs">
       <DependentUpon>LicenceBox.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
@@ -188,77 +198,74 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="OverlayPanel.cs">
+    <Compile Include="Panels\OverlayPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="OverlayPanel.Designer.cs">
+    <Compile Include="Panels\OverlayPanel.Designer.cs">
       <DependentUpon>OverlayPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="PartsTreePanel.cs">
+    <Compile Include="Panels\PartsTreePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="PartsTreePanel.Designer.cs">
+    <Compile Include="Panels\PartsTreePanel.Designer.cs">
       <DependentUpon>PartsTreePanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="PartWrappers.cs" />
-    <Compile Include="PictureBoxSample.cs">
+    <Compile Include="Classes\PartWrappers.cs" />
+    <Compile Include="Classes\PictureBoxSample.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StatePanel.cs">
+    <Compile Include="Panels\StatePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="StatePanel.Designer.cs">
+    <Compile Include="Panels\StatePanel.Designer.cs">
       <DependentUpon>StatePanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="UndoableUpdate.cs">
+    <Compile Include="Updates\UndoableUpdate.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UndoableUpdates.cs" />
-    <EmbeddedResource Include="AboutBox.resx">
+    <Compile Include="Updates\UndoableUpdates.cs" />
+    <EmbeddedResource Include="About\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FilePartPanel.resx">
+    <EmbeddedResource Include="Panels\FilePartPanel.resx">
       <DependentUpon>FilePartPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FramesPreview.resx">
+    <EmbeddedResource Include="Previews\FramesPreview.resx">
       <DependentUpon>FramesPreview.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FramesListView.resx">
-      <DependentUpon>FramesListView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="AnimationPanel.resx">
+    <EmbeddedResource Include="Panels\AnimationPanel.resx">
       <DependentUpon>AnimationPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AnimationsPanel.resx">
+    <EmbeddedResource Include="Panels\AnimationsPanel.resx">
       <DependentUpon>AnimationsPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BalloonPreview.resx">
+    <EmbeddedResource Include="Previews\BalloonPreview.resx">
       <DependentUpon>BalloonPreview.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BranchingPanel.resx">
+    <EmbeddedResource Include="Panels\BranchingPanel.resx">
       <DependentUpon>BranchingPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CharacterPanel.resx">
+    <EmbeddedResource Include="Panels\CharacterPanel.resx">
       <DependentUpon>CharacterPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FramePanel.resx">
+    <EmbeddedResource Include="Panels\FramePanel.resx">
       <DependentUpon>FramePanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LicenceBox.resx">
+    <EmbeddedResource Include="About\LicenceBox.resx">
       <DependentUpon>LicenceBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OverlayPanel.resx">
+    <EmbeddedResource Include="Panels\OverlayPanel.resx">
       <DependentUpon>OverlayPanel.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="PartsTreePanel.resx">
+    <EmbeddedResource Include="Panels\PartsTreePanel.resx">
       <DependentUpon>PartsTreePanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -266,13 +273,13 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="StatePanel.resx">
+    <EmbeddedResource Include="Panels\StatePanel.resx">
       <DependentUpon>StatePanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TtsPanel.resx">
+    <EmbeddedResource Include="Panels\TtsPanel.resx">
       <DependentUpon>TtsPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BalloonPanel.resx">
+    <EmbeddedResource Include="Panels\BalloonPanel.resx">
       <DependentUpon>BalloonPanel.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
@@ -281,7 +288,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
-    <None Include="CinSoft.snk" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -292,20 +298,18 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Properties\Settings.cs" />
-    <Compile Include="TtsPanel.cs">
+    <Compile Include="Panels\TtsPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="TtsPanel.Designer.cs">
+    <Compile Include="Panels\TtsPanel.Designer.cs">
       <DependentUpon>TtsPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="BalloonPanel.cs">
+    <Compile Include="Panels\BalloonPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="BalloonPanel.Designer.cs">
+    <Compile Include="Panels\BalloonPanel.Designer.cs">
       <DependentUpon>BalloonPanel.cs</DependentUpon>
     </Compile>
-    <None Include="Resources\LicenseDetails.rtf" />
-    <None Include="Resources\LicenseIntro.rtf" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -340,33 +344,24 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\LicenseDetails.rtf" />
+    <None Include="Resources\LicenseIntro.rtf" />
     <None Include="Resources\MoveDown.Png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\MoveLeft.Png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\MoveRight.Png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\MoveUp.Png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\ShiftUp.Png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\ShiftDown.Png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\ShiftLeft.Png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\ShiftRight.Png" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Resources\SkipForward.png" />
+    <None Include="Resources\SkipBack.png" />
+    <None Include="Resources\Repeat.png" />
+    <None Include="Resources\Run.png" />
+    <None Include="Resources\Pause.png" />
+    <None Include="Resources\Stop.png" />
     <None Include="Resources\About.png" />
-    <Content Include="DoubleAgent.ico" />
-    <Content Include="Resources\DoubleAgent.ico" />
+    <None Include="DoubleAgent.ico" />
     <None Include="Resources\Play.png" />
     <None Include="Resources\FileSave.png" />
     <None Include="Resources\ViewSmall.png" />
@@ -384,16 +379,17 @@
     <None Include="Resources\EditUndo.png" />
     <None Include="Resources\FilePrint.png" />
     <None Include="Resources\FilePrintPreview.png" />
-    <Content Include="Resources\MouthClosed.bmp" />
-    <Content Include="Resources\MouthMedium.bmp" />
-    <Content Include="Resources\MouthNarrow.bmp" />
-    <Content Include="Resources\MouthWide1.bmp" />
-    <Content Include="Resources\MouthWide2.bmp" />
-    <Content Include="Resources\MouthWide3.bmp" />
-    <Content Include="Resources\MouthWide4.bmp" />
+    <None Include="Resources\MouthClosed.bmp" />
+    <None Include="Resources\MouthMedium.bmp" />
+    <None Include="Resources\MouthNarrow.bmp" />
+    <None Include="Resources\MouthWide1.bmp" />
+    <None Include="Resources\MouthWide2.bmp" />
+    <None Include="Resources\MouthWide3.bmp" />
+    <None Include="Resources\MouthWide4.bmp" />
     <None Include="Resources\NavigateBack.png" />
     <None Include="Resources\NavigateForward.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

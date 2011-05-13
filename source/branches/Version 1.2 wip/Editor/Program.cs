@@ -48,6 +48,10 @@ namespace AgentCharacterEditor
 			Program.MainForm.Initialize ();
 
 			Application.Run (Program.MainForm);
+
+#if DEBUG
+			System.Diagnostics.Debug.Flush();
+#endif
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

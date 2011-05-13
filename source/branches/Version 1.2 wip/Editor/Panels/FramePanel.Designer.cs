@@ -20,7 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 namespace AgentCharacterEditor
 {
-	partial class OverlayPanel
+	partial class FramePanel
 	{
 		/// <summary> 
 		/// Required designer variable.
@@ -48,26 +48,20 @@ namespace AgentCharacterEditor
 		/// </summary>
 		private void InitializeComponent ()
 		{
-			this.components = new System.ComponentModel.Container();
-			this.OverlayItemClosed = new System.Windows.Forms.ListViewItem ("Closed",0);
-			this.OverlayItemWide1 = new System.Windows.Forms.ListViewItem ("Wide 1",1);
-			this.OverlayItemWide2 = new System.Windows.Forms.ListViewItem ("Wide 2",2);
-			this.OverlayItemWide3 = new System.Windows.Forms.ListViewItem ("Wide 3",3);
-			this.OverlayItemWide4 = new System.Windows.Forms.ListViewItem ("Wide 4",4);
-			this.OverlayItemMedium = new System.Windows.Forms.ListViewItem ("Medium",5);
-			this.OverlayItemNarrow = new System.Windows.Forms.ListViewItem ("Narrow",6);
-			this.TextBoxFrameName = new System.Windows.Forms.TextBox();
+			System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 			this.LabelFrameName = new System.Windows.Forms.Label();
-			this.GroupBoxImages = new System.Windows.Forms.GroupBox();
-			this.LayoutPanelImages = new System.Windows.Forms.TableLayoutPanel();
-			this.FlowLayoutRight = new System.Windows.Forms.FlowLayoutPanel();
 			this.PanelOverlayOffset = new System.Windows.Forms.Panel();
 			this.LabelOffsetX = new System.Windows.Forms.Label();
 			this.NumericOffsetX = new DoubleAgent.NumericUpDownEx();
 			this.LabelOffsetY = new System.Windows.Forms.Label();
 			this.NumericOffsetY = new DoubleAgent.NumericUpDownEx();
+			this.TextBoxFrameName = new System.Windows.Forms.TextBox();
+			this.GroupBoxImages = new System.Windows.Forms.GroupBox();
+			this.LayoutPanelImages = new System.Windows.Forms.TableLayoutPanel();
+			this.FlowLayoutRight = new System.Windows.Forms.FlowLayoutPanel();
 			this.LayoutPanelSample = new System.Windows.Forms.TableLayoutPanel();
-			this.PictureBoxImageSample = new System.Windows.Forms.PictureBox();
+			this.PanelImageClip = new System.Windows.Forms.Panel();
+			this.PictureBoxImageSample = new AgentCharacterEditor.PictureBoxSample();
 			this.ToolStripShiftUp = new DoubleAgent.ToolStripEx();
 			this.ButtonShiftUp = new DoubleAgent.ToolStripButtonEx();
 			this.ToolStripShiftRight = new DoubleAgent.ToolStripEx();
@@ -76,27 +70,41 @@ namespace AgentCharacterEditor
 			this.ButtonShiftDown = new DoubleAgent.ToolStripButtonEx();
 			this.ToolStripShiftLeft = new DoubleAgent.ToolStripEx();
 			this.ButtonShiftLeft = new DoubleAgent.ToolStripButtonEx();
-			this.CheckBoxReplace = new System.Windows.Forms.CheckBox();
+			this.CheckBoxTransparent = new System.Windows.Forms.CheckBox();
 			this.PanelImagesLeft = new System.Windows.Forms.Panel();
-			this.ListViewOverlays = new DoubleAgent.ListViewEx();
-			this.ColumnHeaderMouth = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.ListViewImages = new DoubleAgent.ListViewEx();
+			this.ColumnHeaderImage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.ColumnHeaderPosition = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.ColumnHeaderReplace = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.ColumnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.ColumnHeaderPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.MouthImages = new System.Windows.Forms.ImageList(this.components);
 			this.ToolStripImages = new DoubleAgent.ToolStripEx();
 			this.ButtonAdd = new System.Windows.Forms.ToolStripButton();
 			this.ButtonDelete = new System.Windows.Forms.ToolStripButton();
 			this.ButtonChooseFile = new System.Windows.Forms.ToolStripButton();
+			this.ButtonMoveUp = new System.Windows.Forms.ToolStripButton();
+			this.ButtonMoveDown = new System.Windows.Forms.ToolStripButton();
+			this.LabelDurationUnits = new System.Windows.Forms.Label();
+			this.LabelDuration = new System.Windows.Forms.Label();
+			this.GroupBoxSound = new System.Windows.Forms.GroupBox();
+			this.ToolStripSound = new DoubleAgent.ToolStripEx();
+			this.ButtonSoundPreview = new System.Windows.Forms.ToolStripButton();
+			this.ToolStripSoundFile = new DoubleAgent.ToolStripEx();
+			this.ButtonSoundImport = new System.Windows.Forms.ToolStripButton();
+			this.ButtonSoundExport = new System.Windows.Forms.ToolStripButton();
+			this.TextBoxSoundFile = new DoubleAgent.TextBoxEx();
 			this.LayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
 			this.PanelTop = new System.Windows.Forms.Panel();
-			this.GroupBoxImages.SuspendLayout();
-			this.LayoutPanelImages.SuspendLayout();
-			this.FlowLayoutRight.SuspendLayout();
+			this.NumericDuration = new DoubleAgent.NumericUpDownEx();
+			this.PictureBoxFrameSample = new AgentCharacterEditor.PictureBoxSample();
+			toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.PanelOverlayOffset.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetX)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetY)).BeginInit();
+			this.GroupBoxImages.SuspendLayout();
+			this.LayoutPanelImages.SuspendLayout();
+			this.FlowLayoutRight.SuspendLayout();
 			this.LayoutPanelSample.SuspendLayout();
+			this.PanelImageClip.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxImageSample)).BeginInit();
 			this.ToolStripShiftUp.SuspendLayout();
 			this.ToolStripShiftRight.SuspendLayout();
@@ -104,20 +112,19 @@ namespace AgentCharacterEditor
 			this.ToolStripShiftLeft.SuspendLayout();
 			this.PanelImagesLeft.SuspendLayout();
 			this.ToolStripImages.SuspendLayout();
+			this.GroupBoxSound.SuspendLayout();
+			this.ToolStripSound.SuspendLayout();
+			this.ToolStripSoundFile.SuspendLayout();
 			this.LayoutPanelMain.SuspendLayout();
 			this.PanelTop.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.NumericDuration)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.PictureBoxFrameSample)).BeginInit();
 			this.SuspendLayout();
 			// 
-			// TextBoxFrameName
+			// toolStripSeparator1
 			// 
-			this.TextBoxFrameName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.TextBoxFrameName.Location = new System.Drawing.Point(131, 3);
-			this.TextBoxFrameName.MaximumSize = new System.Drawing.Size(600, 50);
-			this.TextBoxFrameName.Name = "TextBoxFrameName";
-			this.TextBoxFrameName.ReadOnly = true;
-			this.TextBoxFrameName.Size = new System.Drawing.Size(551, 22);
-			this.TextBoxFrameName.TabIndex = 1;
+			toolStripSeparator1.Name = "toolStripSeparator1";
+			toolStripSeparator1.Size = new System.Drawing.Size(6, 26);
 			// 
 			// LabelFrameName
 			// 
@@ -125,58 +132,8 @@ namespace AgentCharacterEditor
 			this.LabelFrameName.Location = new System.Drawing.Point(0, 6);
 			this.LabelFrameName.Name = "LabelFrameName";
 			this.LabelFrameName.Size = new System.Drawing.Size(48, 17);
-			this.LabelFrameName.TabIndex = 0;
+			this.LabelFrameName.TabIndex = 1;
 			this.LabelFrameName.Text = "Frame";
-			// 
-			// GroupBoxImages
-			// 
-			this.GroupBoxImages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.GroupBoxImages.Controls.Add(this.LayoutPanelImages);
-			this.GroupBoxImages.Location = new System.Drawing.Point(0, 37);
-			this.GroupBoxImages.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
-			this.GroupBoxImages.Name = "GroupBoxImages";
-			this.GroupBoxImages.Padding = new System.Windows.Forms.Padding(6, 9, 6, 6);
-			this.GroupBoxImages.Size = new System.Drawing.Size(682, 563);
-			this.GroupBoxImages.TabIndex = 0;
-			this.GroupBoxImages.TabStop = false;
-			this.GroupBoxImages.Text = "Mouth Overlays";
-			// 
-			// LayoutPanelImages
-			// 
-			this.LayoutPanelImages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.LayoutPanelImages.ColumnCount = 2;
-			this.LayoutPanelImages.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
-			this.LayoutPanelImages.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
-			this.LayoutPanelImages.Controls.Add(this.FlowLayoutRight, 1, 0);
-			this.LayoutPanelImages.Controls.Add(this.PanelImagesLeft, 0, 0);
-			this.LayoutPanelImages.Location = new System.Drawing.Point(6, 24);
-			this.LayoutPanelImages.Margin = new System.Windows.Forms.Padding(0);
-			this.LayoutPanelImages.Name = "LayoutPanelImages";
-			this.LayoutPanelImages.RowCount = 1;
-			this.LayoutPanelImages.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanelImages.Size = new System.Drawing.Size(670, 533);
-			this.LayoutPanelImages.TabIndex = 14;
-			// 
-			// FlowLayoutRight
-			// 
-			this.FlowLayoutRight.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.FlowLayoutRight.Controls.Add(this.PanelOverlayOffset);
-			this.FlowLayoutRight.Controls.Add(this.LayoutPanelSample);
-			this.FlowLayoutRight.Controls.Add(this.CheckBoxReplace);
-			this.FlowLayoutRight.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-			this.FlowLayoutRight.Location = new System.Drawing.Point(402, 0);
-			this.FlowLayoutRight.Margin = new System.Windows.Forms.Padding(0);
-			this.FlowLayoutRight.Name = "FlowLayoutRight";
-			this.FlowLayoutRight.Padding = new System.Windows.Forms.Padding(12, 0, 6, 6);
-			this.FlowLayoutRight.Size = new System.Drawing.Size(268, 533);
-			this.FlowLayoutRight.TabIndex = 0;
-			this.FlowLayoutRight.WrapContents = false;
 			// 
 			// PanelOverlayOffset
 			// 
@@ -260,6 +217,65 @@ namespace AgentCharacterEditor
             0});
 			this.NumericOffsetY.Validated += new System.EventHandler(this.NumericOffsetY_Validated);
 			// 
+			// TextBoxFrameName
+			// 
+			this.TextBoxFrameName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.TextBoxFrameName.Location = new System.Drawing.Point(132, 3);
+			this.TextBoxFrameName.MaximumSize = new System.Drawing.Size(600, 50);
+			this.TextBoxFrameName.Name = "TextBoxFrameName";
+			this.TextBoxFrameName.ReadOnly = true;
+			this.TextBoxFrameName.Size = new System.Drawing.Size(550, 22);
+			this.TextBoxFrameName.TabIndex = 2;
+			// 
+			// GroupBoxImages
+			// 
+			this.GroupBoxImages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.GroupBoxImages.Controls.Add(this.LayoutPanelImages);
+			this.GroupBoxImages.Location = new System.Drawing.Point(0, 197);
+			this.GroupBoxImages.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
+			this.GroupBoxImages.Name = "GroupBoxImages";
+			this.GroupBoxImages.Padding = new System.Windows.Forms.Padding(6, 9, 6, 6);
+			this.GroupBoxImages.Size = new System.Drawing.Size(682, 382);
+			this.GroupBoxImages.TabIndex = 0;
+			this.GroupBoxImages.TabStop = false;
+			this.GroupBoxImages.Text = "Images";
+			// 
+			// LayoutPanelImages
+			// 
+			this.LayoutPanelImages.ColumnCount = 2;
+			this.LayoutPanelImages.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
+			this.LayoutPanelImages.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
+			this.LayoutPanelImages.Controls.Add(this.FlowLayoutRight, 1, 0);
+			this.LayoutPanelImages.Controls.Add(this.PanelImagesLeft, 0, 0);
+			this.LayoutPanelImages.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LayoutPanelImages.Location = new System.Drawing.Point(6, 24);
+			this.LayoutPanelImages.Margin = new System.Windows.Forms.Padding(0);
+			this.LayoutPanelImages.Name = "LayoutPanelImages";
+			this.LayoutPanelImages.RowCount = 1;
+			this.LayoutPanelImages.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.LayoutPanelImages.Size = new System.Drawing.Size(670, 352);
+			this.LayoutPanelImages.TabIndex = 0;
+			// 
+			// FlowLayoutRight
+			// 
+			this.FlowLayoutRight.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.FlowLayoutRight.Controls.Add(this.PanelOverlayOffset);
+			this.FlowLayoutRight.Controls.Add(this.LayoutPanelSample);
+			this.FlowLayoutRight.Controls.Add(this.CheckBoxTransparent);
+			this.FlowLayoutRight.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.FlowLayoutRight.Location = new System.Drawing.Point(402, 0);
+			this.FlowLayoutRight.Margin = new System.Windows.Forms.Padding(0);
+			this.FlowLayoutRight.Name = "FlowLayoutRight";
+			this.FlowLayoutRight.Padding = new System.Windows.Forms.Padding(12, 0, 6, 6);
+			this.FlowLayoutRight.Size = new System.Drawing.Size(268, 352);
+			this.FlowLayoutRight.TabIndex = 1;
+			this.FlowLayoutRight.WrapContents = false;
+			// 
 			// LayoutPanelSample
 			// 
 			this.LayoutPanelSample.AutoSize = true;
@@ -268,7 +284,7 @@ namespace AgentCharacterEditor
 			this.LayoutPanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 28F));
 			this.LayoutPanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.LayoutPanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-			this.LayoutPanelSample.Controls.Add(this.PictureBoxImageSample, 1, 1);
+			this.LayoutPanelSample.Controls.Add(this.PanelImageClip, 1, 1);
 			this.LayoutPanelSample.Controls.Add(this.ToolStripShiftUp, 1, 0);
 			this.LayoutPanelSample.Controls.Add(this.ToolStripShiftRight, 2, 1);
 			this.LayoutPanelSample.Controls.Add(this.ToolStripShiftDown, 1, 2);
@@ -284,20 +300,28 @@ namespace AgentCharacterEditor
 			this.LayoutPanelSample.Size = new System.Drawing.Size(186, 186);
 			this.LayoutPanelSample.TabIndex = 1;
 			// 
+			// PanelImageClip
+			// 
+			this.PanelImageClip.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+			this.PanelImageClip.BackColor = System.Drawing.SystemColors.ControlDark;
+			this.PanelImageClip.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.PanelImageClip.Controls.Add(this.PictureBoxImageSample);
+			this.PanelImageClip.Location = new System.Drawing.Point(28, 28);
+			this.PanelImageClip.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelImageClip.Name = "PanelImageClip";
+			this.PanelImageClip.Size = new System.Drawing.Size(130, 130);
+			this.PanelImageClip.TabIndex = 4;
+			// 
 			// PictureBoxImageSample
 			// 
-			this.PictureBoxImageSample.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
 			this.PictureBoxImageSample.BackColor = System.Drawing.SystemColors.Window;
-			this.PictureBoxImageSample.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.PictureBoxImageSample.Location = new System.Drawing.Point(28, 28);
+			this.PictureBoxImageSample.Location = new System.Drawing.Point(0, 0);
 			this.PictureBoxImageSample.Margin = new System.Windows.Forms.Padding(0);
-			this.PictureBoxImageSample.MaximumSize = new System.Drawing.Size(258, 258);
 			this.PictureBoxImageSample.Name = "PictureBoxImageSample";
-			this.PictureBoxImageSample.Size = new System.Drawing.Size(130, 130);
+			this.PictureBoxImageSample.Size = new System.Drawing.Size(128, 128);
 			this.PictureBoxImageSample.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-			this.PictureBoxImageSample.TabIndex = 4;
+			this.PictureBoxImageSample.TabIndex = 2;
 			this.PictureBoxImageSample.TabStop = false;
 			// 
 			// ToolStripShiftUp
@@ -448,89 +472,74 @@ namespace AgentCharacterEditor
 			this.ButtonShiftLeft.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftLeft_RepeatEnd);
 			this.ButtonShiftLeft.Click += new System.EventHandler(this.ButtonShiftLeft_Click);
 			// 
-			// CheckBoxReplace
+			// CheckBoxTransparent
 			// 
-			this.CheckBoxReplace.AutoSize = true;
-			this.CheckBoxReplace.Location = new System.Drawing.Point(15, 267);
-			this.CheckBoxReplace.Margin = new System.Windows.Forms.Padding(3, 12, 3, 3);
-			this.CheckBoxReplace.Name = "CheckBoxReplace";
-			this.CheckBoxReplace.Size = new System.Drawing.Size(222, 21);
-			this.CheckBoxReplace.TabIndex = 2;
-			this.CheckBoxReplace.Text = "Replace the frame\'s top image";
-			this.CheckBoxReplace.UseVisualStyleBackColor = true;
-			this.CheckBoxReplace.Click += new System.EventHandler(this.CheckBoxReplace_Click);
+			this.CheckBoxTransparent.AutoSize = true;
+			this.CheckBoxTransparent.Location = new System.Drawing.Point(15, 267);
+			this.CheckBoxTransparent.Margin = new System.Windows.Forms.Padding(3, 12, 3, 3);
+			this.CheckBoxTransparent.Name = "CheckBoxTransparent";
+			this.CheckBoxTransparent.Size = new System.Drawing.Size(151, 21);
+			this.CheckBoxTransparent.TabIndex = 2;
+			this.CheckBoxTransparent.Text = "Show transparency";
+			this.CheckBoxTransparent.UseVisualStyleBackColor = true;
+			this.CheckBoxTransparent.CheckedChanged += new System.EventHandler(this.CheckBoxTransparent_CheckedChanged);
 			// 
 			// PanelImagesLeft
 			// 
-			this.PanelImagesLeft.Controls.Add(this.ListViewOverlays);
+			this.PanelImagesLeft.Controls.Add(this.ListViewImages);
 			this.PanelImagesLeft.Controls.Add(this.ToolStripImages);
 			this.PanelImagesLeft.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PanelImagesLeft.Location = new System.Drawing.Point(0, 0);
 			this.PanelImagesLeft.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelImagesLeft.Name = "PanelImagesLeft";
-			this.PanelImagesLeft.Size = new System.Drawing.Size(402, 533);
-			this.PanelImagesLeft.TabIndex = 0;
+			this.PanelImagesLeft.Size = new System.Drawing.Size(402, 352);
+			this.PanelImagesLeft.TabIndex = 2;
 			// 
-			// ListViewOverlays
+			// ListViewImages
 			// 
-			this.ListViewOverlays.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.ListViewImages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.ListViewOverlays.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.ColumnHeaderMouth,
+			this.ListViewImages.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ColumnHeaderImage,
             this.ColumnHeaderPosition,
-            this.ColumnHeaderReplace,
+            this.ColumnHeaderSize,
             this.ColumnHeaderPath});
-			this.ListViewOverlays.FullRowSelect = true;
-			this.ListViewOverlays.GridLines = true;
-			this.ListViewOverlays.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-			this.ListViewOverlays.HideSelection = false;
-			this.ListViewOverlays.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            OverlayItemClosed,
-            OverlayItemWide1,
-            OverlayItemWide2,
-            OverlayItemWide3,
-            OverlayItemWide4,
-            OverlayItemMedium,
-            OverlayItemNarrow});
-			this.ListViewOverlays.LargeImageList = this.MouthImages;
-			this.ListViewOverlays.Location = new System.Drawing.Point(0, 29);
-			this.ListViewOverlays.MultiSelect = false;
-			this.ListViewOverlays.Name = "ListViewOverlays";
-			this.ListViewOverlays.ShowGroups = false;
-			this.ListViewOverlays.ShowItemToolTips = true;
-			this.ListViewOverlays.Size = new System.Drawing.Size(402, 315);
-			this.ListViewOverlays.SmallImageList = this.MouthImages;
-			this.ListViewOverlays.TabIndex = 1;
-			this.ListViewOverlays.UseCompatibleStateImageBehavior = false;
-			this.ListViewOverlays.View = System.Windows.Forms.View.Details;
-			this.ListViewOverlays.ItemActivate += new System.EventHandler(this.ListViewOverlays_ItemActivate);
-			this.ListViewOverlays.SelectedIndexChanged += new System.EventHandler(this.ListViewImages_SelectedIndexChanged);
+			this.ListViewImages.FullRowSelect = true;
+			this.ListViewImages.GridLines = true;
+			this.ListViewImages.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+			this.ListViewImages.HideSelection = false;
+			this.ListViewImages.Location = new System.Drawing.Point(0, 29);
+			this.ListViewImages.MultiSelect = false;
+			this.ListViewImages.Name = "ListViewImages";
+			this.ListViewImages.ShowGroups = false;
+			this.ListViewImages.ShowItemToolTips = true;
+			this.ListViewImages.Size = new System.Drawing.Size(402, 323);
+			this.ListViewImages.TabIndex = 1;
+			this.ListViewImages.UseCompatibleStateImageBehavior = false;
+			this.ListViewImages.View = System.Windows.Forms.View.Details;
+			this.ListViewImages.ItemActivate += new System.EventHandler(this.ListViewImages_ItemActivate);
+			this.ListViewImages.SelectedIndexChanged += new System.EventHandler(this.ListViewImages_SelectedIndexChanged);
 			// 
-			// ColumnHeaderMouth
+			// ColumnHeaderImage
 			// 
-			this.ColumnHeaderMouth.Text = "Mouth";
-			this.ColumnHeaderMouth.Width = 100;
+			this.ColumnHeaderImage.Text = "Image";
+			this.ColumnHeaderImage.Width = 100;
 			// 
 			// ColumnHeaderPosition
 			// 
 			this.ColumnHeaderPosition.Text = "Offset";
 			this.ColumnHeaderPosition.Width = 90;
 			// 
-			// ColumnHeaderReplace
+			// ColumnHeaderSize
 			// 
-			this.ColumnHeaderReplace.Text = "Replace?";
-			this.ColumnHeaderReplace.Width = 80;
+			this.ColumnHeaderSize.Text = "Dimensions";
+			this.ColumnHeaderSize.Width = 90;
 			// 
 			// ColumnHeaderPath
 			// 
 			this.ColumnHeaderPath.Text = "Path";
 			this.ColumnHeaderPath.Width = 100;
-			// 
-			// MouthImages
-			// 
-			this.MouthImages.ColorDepth = System.Windows.Forms.ColorDepth.Depth4Bit;
-			this.MouthImages.ImageSize = new System.Drawing.Size(32, 32);
-			this.MouthImages.TransparentColor = System.Drawing.Color.Transparent;
 			// 
 			// ToolStripImages
 			// 
@@ -541,11 +550,14 @@ namespace AgentCharacterEditor
 			this.ToolStripImages.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ButtonAdd,
             this.ButtonDelete,
-            this.ButtonChooseFile});
+            this.ButtonChooseFile,
+            toolStripSeparator1,
+            this.ButtonMoveUp,
+            this.ButtonMoveDown});
 			this.ToolStripImages.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.ToolStripImages.Location = new System.Drawing.Point(0, 0);
 			this.ToolStripImages.Name = "ToolStripImages";
-			this.ToolStripImages.Size = new System.Drawing.Size(72, 26);
+			this.ToolStripImages.Size = new System.Drawing.Size(124, 26);
 			this.ToolStripImages.TabIndex = 0;
 			// 
 			// ButtonAdd
@@ -556,7 +568,7 @@ namespace AgentCharacterEditor
 			this.ButtonAdd.Name = "ButtonAdd";
 			this.ButtonAdd.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
 			this.ButtonAdd.Size = new System.Drawing.Size(23, 23);
-			this.ButtonAdd.Text = "Add";
+			this.ButtonAdd.Text = "Add a new image";
 			this.ButtonAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
 			// 
 			// ButtonDelete
@@ -567,6 +579,7 @@ namespace AgentCharacterEditor
 			this.ButtonDelete.Name = "ButtonDelete";
 			this.ButtonDelete.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
 			this.ButtonDelete.Size = new System.Drawing.Size(23, 23);
+			this.ButtonDelete.Text = "Remove";
 			this.ButtonDelete.Click += new System.EventHandler(this.ButtonDelete_Click);
 			// 
 			// ButtonChooseFile
@@ -577,52 +590,230 @@ namespace AgentCharacterEditor
 			this.ButtonChooseFile.Name = "ButtonChooseFile";
 			this.ButtonChooseFile.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
 			this.ButtonChooseFile.Size = new System.Drawing.Size(23, 23);
-			this.ButtonChooseFile.Text = "Choose image file";
+			this.ButtonChooseFile.Text = "Open image file";
 			this.ButtonChooseFile.Click += new System.EventHandler(this.ButtonOpen_Click);
+			// 
+			// ButtonMoveUp
+			// 
+			this.ButtonMoveUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonMoveUp.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveUp;
+			this.ButtonMoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonMoveUp.Name = "ButtonMoveUp";
+			this.ButtonMoveUp.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.ButtonMoveUp.Size = new System.Drawing.Size(23, 23);
+			this.ButtonMoveUp.Text = "Move image up";
+			this.ButtonMoveUp.Click += new System.EventHandler(this.ButtonMoveUp_Click);
+			// 
+			// ButtonMoveDown
+			// 
+			this.ButtonMoveDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonMoveDown.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveDown;
+			this.ButtonMoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonMoveDown.Name = "ButtonMoveDown";
+			this.ButtonMoveDown.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.ButtonMoveDown.Size = new System.Drawing.Size(23, 23);
+			this.ButtonMoveDown.Text = "Move image down";
+			this.ButtonMoveDown.Click += new System.EventHandler(this.ButtonMoveDown_Click);
+			// 
+			// LabelDurationUnits
+			// 
+			this.LabelDurationUnits.AutoSize = true;
+			this.LabelDurationUnits.Location = new System.Drawing.Point(202, 33);
+			this.LabelDurationUnits.Name = "LabelDurationUnits";
+			this.LabelDurationUnits.Size = new System.Drawing.Size(111, 17);
+			this.LabelDurationUnits.TabIndex = 4;
+			this.LabelDurationUnits.Text = "(1/100 seconds)";
+			// 
+			// LabelDuration
+			// 
+			this.LabelDuration.AutoSize = true;
+			this.LabelDuration.Location = new System.Drawing.Point(0, 33);
+			this.LabelDuration.Name = "LabelDuration";
+			this.LabelDuration.Size = new System.Drawing.Size(62, 17);
+			this.LabelDuration.TabIndex = 2;
+			this.LabelDuration.Text = "Duration";
+			// 
+			// GroupBoxSound
+			// 
+			this.GroupBoxSound.Controls.Add(this.ToolStripSound);
+			this.GroupBoxSound.Controls.Add(this.ToolStripSoundFile);
+			this.GroupBoxSound.Controls.Add(this.TextBoxSoundFile);
+			this.GroupBoxSound.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.GroupBoxSound.Location = new System.Drawing.Point(0, 588);
+			this.GroupBoxSound.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
+			this.GroupBoxSound.MaximumSize = new System.Drawing.Size(730, 10000);
+			this.GroupBoxSound.Name = "GroupBoxSound";
+			this.GroupBoxSound.Padding = new System.Windows.Forms.Padding(6, 9, 6, 6);
+			this.GroupBoxSound.Size = new System.Drawing.Size(682, 62);
+			this.GroupBoxSound.TabIndex = 1;
+			this.GroupBoxSound.TabStop = false;
+			this.GroupBoxSound.Text = "Sound Effect";
+			// 
+			// ToolStripSound
+			// 
+			this.ToolStripSound.BackColor = System.Drawing.Color.Transparent;
+			this.ToolStripSound.CanOverflow = false;
+			this.ToolStripSound.Dock = System.Windows.Forms.DockStyle.None;
+			this.ToolStripSound.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.ToolStripSound.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ButtonSoundPreview});
+			this.ToolStripSound.Location = new System.Drawing.Point(6, 25);
+			this.ToolStripSound.Name = "ToolStripSound";
+			this.ToolStripSound.Size = new System.Drawing.Size(57, 26);
+			this.ToolStripSound.TabIndex = 0;
+			// 
+			// ButtonSoundPreview
+			// 
+			this.ButtonSoundPreview.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonSoundPreview.Enabled = false;
+			this.ButtonSoundPreview.Image = global::AgentCharacterEditor.Properties.Resources.ImgRun;
+			this.ButtonSoundPreview.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonSoundPreview.Name = "ButtonSoundPreview";
+			this.ButtonSoundPreview.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.ButtonSoundPreview.Size = new System.Drawing.Size(23, 23);
+			this.ButtonSoundPreview.Text = "Preview";
+			this.ButtonSoundPreview.Click += new System.EventHandler(this.ButtonSoundPreview_Click);
+			// 
+			// ToolStripSoundFile
+			// 
+			this.ToolStripSoundFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.ToolStripSoundFile.BackColor = System.Drawing.Color.Transparent;
+			this.ToolStripSoundFile.CanOverflow = false;
+			this.ToolStripSoundFile.Dock = System.Windows.Forms.DockStyle.None;
+			this.ToolStripSoundFile.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.ToolStripSoundFile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ButtonSoundImport,
+            this.ButtonSoundExport});
+			this.ToolStripSoundFile.Location = new System.Drawing.Point(621, 25);
+			this.ToolStripSoundFile.Name = "ToolStripSoundFile";
+			this.ToolStripSoundFile.Size = new System.Drawing.Size(49, 26);
+			this.ToolStripSoundFile.TabIndex = 2;
+			// 
+			// ButtonSoundImport
+			// 
+			this.ButtonSoundImport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonSoundImport.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
+			this.ButtonSoundImport.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonSoundImport.Name = "ButtonSoundImport";
+			this.ButtonSoundImport.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.ButtonSoundImport.Size = new System.Drawing.Size(23, 23);
+			this.ButtonSoundImport.Text = "Open sound file";
+			this.ButtonSoundImport.Click += new System.EventHandler(this.ButtonSoundImport_Click);
+			// 
+			// ButtonSoundExport
+			// 
+			this.ButtonSoundExport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonSoundExport.Enabled = false;
+			this.ButtonSoundExport.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileSave;
+			this.ButtonSoundExport.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonSoundExport.Name = "ButtonSoundExport";
+			this.ButtonSoundExport.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.ButtonSoundExport.Size = new System.Drawing.Size(23, 23);
+			this.ButtonSoundExport.Text = "Save sound";
+			// 
+			// TextBoxSoundFile
+			// 
+			this.TextBoxSoundFile.AcceptsReturn = true;
+			this.TextBoxSoundFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.TextBoxSoundFile.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+			this.TextBoxSoundFile.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
+			this.TextBoxSoundFile.Location = new System.Drawing.Point(35, 27);
+			this.TextBoxSoundFile.Name = "TextBoxSoundFile";
+			this.TextBoxSoundFile.Size = new System.Drawing.Size(583, 22);
+			this.TextBoxSoundFile.TabIndex = 1;
+			this.TextBoxSoundFile.Validated += new System.EventHandler(this.TextBoxSoundFile_Validated);
 			// 
 			// LayoutPanelMain
 			// 
 			this.LayoutPanelMain.ColumnCount = 1;
 			this.LayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.LayoutPanelMain.Controls.Add(this.PanelTop, 0, 0);
-			this.LayoutPanelMain.Controls.Add(this.GroupBoxImages, 0, 1);
+			this.LayoutPanelMain.Controls.Add(this.GroupBoxImages, 0, 2);
+			this.LayoutPanelMain.Controls.Add(this.GroupBoxSound, 0, 3);
+			this.LayoutPanelMain.Controls.Add(this.PictureBoxFrameSample, 0, 1);
 			this.LayoutPanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LayoutPanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
 			this.LayoutPanelMain.Location = new System.Drawing.Point(9, 0);
 			this.LayoutPanelMain.Margin = new System.Windows.Forms.Padding(0);
 			this.LayoutPanelMain.Name = "LayoutPanelMain";
-			this.LayoutPanelMain.RowCount = 2;
+			this.LayoutPanelMain.RowCount = 4;
+			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanelMain.Size = new System.Drawing.Size(682, 600);
+			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.LayoutPanelMain.Size = new System.Drawing.Size(682, 650);
 			this.LayoutPanelMain.TabIndex = 0;
 			// 
 			// PanelTop
 			// 
 			this.PanelTop.Controls.Add(this.LabelFrameName);
+			this.PanelTop.Controls.Add(this.LabelDuration);
 			this.PanelTop.Controls.Add(this.TextBoxFrameName);
+			this.PanelTop.Controls.Add(this.LabelDurationUnits);
+			this.PanelTop.Controls.Add(this.NumericDuration);
 			this.PanelTop.Location = new System.Drawing.Point(0, 0);
 			this.PanelTop.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelTop.Name = "PanelTop";
-			this.PanelTop.Size = new System.Drawing.Size(676, 28);
-			this.PanelTop.TabIndex = 1;
+			this.PanelTop.Size = new System.Drawing.Size(682, 60);
+			this.PanelTop.TabIndex = 2;
 			// 
-			// OverlayPanel
+			// NumericDuration
+			// 
+			this.NumericDuration.AutoSize = true;
+			this.NumericDuration.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericDuration.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericDuration.Location = new System.Drawing.Point(132, 31);
+			this.NumericDuration.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+			this.NumericDuration.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.NumericDuration.Name = "NumericDuration";
+			this.NumericDuration.Size = new System.Drawing.Size(64, 22);
+			this.NumericDuration.TabIndex = 3;
+			this.NumericDuration.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.NumericDuration.Validated += new System.EventHandler(this.NumericDuration_Validated);
+			// 
+			// PictureBoxFrameSample
+			// 
+			this.PictureBoxFrameSample.BackColor = System.Drawing.SystemColors.Window;
+			this.PictureBoxFrameSample.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.PictureBoxFrameSample.Location = new System.Drawing.Point(132, 60);
+			this.PictureBoxFrameSample.Margin = new System.Windows.Forms.Padding(132, 0, 0, 0);
+			this.PictureBoxFrameSample.MaximumSize = new System.Drawing.Size(258, 258);
+			this.PictureBoxFrameSample.Name = "PictureBoxFrameSample";
+			this.PictureBoxFrameSample.Size = new System.Drawing.Size(128, 128);
+			this.PictureBoxFrameSample.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.PictureBoxFrameSample.TabIndex = 2;
+			this.PictureBoxFrameSample.TabStop = false;
+			// 
+			// FramePanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.LayoutPanelMain);
-			this.Name = "OverlayPanel";
-			this.Size = new System.Drawing.Size(700, 600);
-			this.Layout += new System.Windows.Forms.LayoutEventHandler(this.OverlayForm_Layout);
-			this.GroupBoxImages.ResumeLayout(false);
-			this.LayoutPanelImages.ResumeLayout(false);
-			this.FlowLayoutRight.ResumeLayout(false);
-			this.FlowLayoutRight.PerformLayout();
+			this.Name = "FramePanel";
+			this.Size = new System.Drawing.Size(700, 650);
 			this.PanelOverlayOffset.ResumeLayout(false);
 			this.PanelOverlayOffset.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetX)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetY)).EndInit();
+			this.GroupBoxImages.ResumeLayout(false);
+			this.LayoutPanelImages.ResumeLayout(false);
+			this.FlowLayoutRight.ResumeLayout(false);
+			this.FlowLayoutRight.PerformLayout();
 			this.LayoutPanelSample.ResumeLayout(false);
+			this.PanelImageClip.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxImageSample)).EndInit();
 			this.ToolStripShiftUp.ResumeLayout(false);
 			this.ToolStripShiftUp.PerformLayout();
@@ -636,56 +827,69 @@ namespace AgentCharacterEditor
 			this.PanelImagesLeft.PerformLayout();
 			this.ToolStripImages.ResumeLayout(false);
 			this.ToolStripImages.PerformLayout();
+			this.GroupBoxSound.ResumeLayout(false);
+			this.GroupBoxSound.PerformLayout();
+			this.ToolStripSound.ResumeLayout(false);
+			this.ToolStripSound.PerformLayout();
+			this.ToolStripSoundFile.ResumeLayout(false);
+			this.ToolStripSoundFile.PerformLayout();
 			this.LayoutPanelMain.ResumeLayout(false);
 			this.PanelTop.ResumeLayout(false);
 			this.PanelTop.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.NumericDuration)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.PictureBoxFrameSample)).EndInit();
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
 
-		private System.Windows.Forms.TextBox TextBoxFrameName;
 		private System.Windows.Forms.Label LabelFrameName;
+		private System.Windows.Forms.TextBox TextBoxFrameName;
 		private System.Windows.Forms.GroupBox GroupBoxImages;
-		private System.Windows.Forms.TableLayoutPanel LayoutPanelImages;
-		private System.Windows.Forms.TableLayoutPanel LayoutPanelSample;
-		private System.Windows.Forms.PictureBox PictureBoxImageSample;
-		private DoubleAgent.ToolStripEx ToolStripShiftUp;
-		private DoubleAgent.ToolStripButtonEx ButtonShiftUp;
-		private DoubleAgent.ToolStripEx ToolStripShiftRight;
-		private DoubleAgent.ToolStripButtonEx ButtonShiftRight;
-		private DoubleAgent.ToolStripEx ToolStripShiftDown;
-		private DoubleAgent.ToolStripButtonEx ButtonShiftDown;
-		private DoubleAgent.ToolStripEx ToolStripShiftLeft;
-		private DoubleAgent.ToolStripButtonEx ButtonShiftLeft;
-		private System.Windows.Forms.Label LabelOffsetX;
-		private DoubleAgent.NumericUpDownEx NumericOffsetY;
-		private System.Windows.Forms.Label LabelOffsetY;
-		private DoubleAgent.NumericUpDownEx NumericOffsetX;
-		private System.Windows.Forms.Panel PanelImagesLeft;
-		private DoubleAgent.ListViewEx ListViewOverlays;
-		private System.Windows.Forms.ColumnHeader ColumnHeaderMouth;
-		private System.Windows.Forms.ColumnHeader ColumnHeaderPosition;
-		private System.Windows.Forms.ColumnHeader ColumnHeaderReplace;
-		private System.Windows.Forms.ColumnHeader ColumnHeaderPath;
+		private System.Windows.Forms.GroupBox GroupBoxSound;
 		private DoubleAgent.ToolStripEx ToolStripImages;
+		private DoubleAgent.ListViewEx ListViewImages;
+		private System.Windows.Forms.ColumnHeader ColumnHeaderImage;
+		private System.Windows.Forms.ColumnHeader ColumnHeaderPosition;
+		private System.Windows.Forms.ColumnHeader ColumnHeaderSize;
+		private System.Windows.Forms.ColumnHeader ColumnHeaderPath;
 		private System.Windows.Forms.ToolStripButton ButtonAdd;
 		private System.Windows.Forms.ToolStripButton ButtonDelete;
-		private System.Windows.Forms.CheckBox CheckBoxReplace;
-		private System.Windows.Forms.Panel PanelOverlayOffset;
-		private System.Windows.Forms.FlowLayoutPanel FlowLayoutRight;
-		private System.Windows.Forms.ToolStripButton ButtonChooseFile;
+		private System.Windows.Forms.ToolStripButton ButtonMoveUp;
+		private System.Windows.Forms.ToolStripButton ButtonMoveDown;
+		private DoubleAgent.TextBoxEx TextBoxSoundFile;
+		private DoubleAgent.ToolStripEx ToolStripSoundFile;
+		private System.Windows.Forms.ToolStripButton ButtonSoundImport;
+		private System.Windows.Forms.ToolStripButton ButtonSoundExport;
+		private DoubleAgent.ToolStripEx ToolStripSound;
+		private System.Windows.Forms.ToolStripButton ButtonSoundPreview;
+		private PictureBoxSample PictureBoxImageSample;
+		private System.Windows.Forms.Label LabelOffsetY;
+		private System.Windows.Forms.Label LabelOffsetX;
+		private DoubleAgent.NumericUpDownEx NumericOffsetY;
+		private DoubleAgent.NumericUpDownEx NumericOffsetX;
+		private DoubleAgent.NumericUpDownEx NumericDuration;
+		private System.Windows.Forms.Label LabelDurationUnits;
+		private System.Windows.Forms.Label LabelDuration;
+		private DoubleAgent.ToolStripEx ToolStripShiftUp;
+		private DoubleAgent.ToolStripEx ToolStripShiftDown;
+		private DoubleAgent.ToolStripEx ToolStripShiftLeft;
+		private DoubleAgent.ToolStripEx ToolStripShiftRight;
+		private DoubleAgent.ToolStripButtonEx ButtonShiftUp;
+		private DoubleAgent.ToolStripButtonEx ButtonShiftDown;
+		private DoubleAgent.ToolStripButtonEx ButtonShiftLeft;
+		private DoubleAgent.ToolStripButtonEx ButtonShiftRight;
+		private PictureBoxSample PictureBoxFrameSample;
 		private System.Windows.Forms.TableLayoutPanel LayoutPanelMain;
+		private System.Windows.Forms.Panel PanelImageClip;
+		private System.Windows.Forms.FlowLayoutPanel FlowLayoutRight;
+		private System.Windows.Forms.Panel PanelImagesLeft;
+		private System.Windows.Forms.TableLayoutPanel LayoutPanelImages;
+		private System.Windows.Forms.ToolStripButton ButtonChooseFile;
+		private System.Windows.Forms.TableLayoutPanel LayoutPanelSample;
+		private System.Windows.Forms.Panel PanelOverlayOffset;
+		private System.Windows.Forms.CheckBox CheckBoxTransparent;
 		private System.Windows.Forms.Panel PanelTop;
-		private System.Windows.Forms.ImageList MouthImages;
-		private System.Windows.Forms.ListViewItem OverlayItemClosed;
-		private System.Windows.Forms.ListViewItem OverlayItemWide1;
-		private System.Windows.Forms.ListViewItem OverlayItemWide2;
-		private System.Windows.Forms.ListViewItem OverlayItemWide3;
-		private System.Windows.Forms.ListViewItem OverlayItemWide4;
-		private System.Windows.Forms.ListViewItem OverlayItemMedium;
-		private System.Windows.Forms.ListViewItem OverlayItemNarrow;
-
 	}
 }

@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using DoubleAgent;
 using DoubleAgent.Character;
 
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.Previews
 {
 	public partial class BalloonPreview : UserControl
 	{

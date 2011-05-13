@@ -21,7 +21,6 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using AgentCharacterEditor.Updates;
 using DoubleAgent.Character;
 
 namespace AgentCharacterEditor

@@ -70,6 +70,10 @@ namespace AgentCharacterEditor
 			System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem("Showing");
 			System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem("Speaking");
 			System.Windows.Forms.ColumnHeader Column1;
+			System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+			System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+			System.Windows.Forms.Label LabelSlow;
+			System.Windows.Forms.Label LabelFast;
 			this.LabelName = new System.Windows.Forms.Label();
 			this.TextBoxName = new DoubleAgent.TextBoxEx();
 			this.LabelReturn = new System.Windows.Forms.Label();
@@ -78,7 +82,7 @@ namespace AgentCharacterEditor
 			this.LabelStates = new System.Windows.Forms.Label();
 			this.GroupBoxFrames = new System.Windows.Forms.GroupBox();
 			this.LayoutPanelFrames = new System.Windows.Forms.TableLayoutPanel();
-			this.FramesView = new AgentCharacterEditor.FramesPreview();
+			this.FramesView = new AgentCharacterEditor.Previews.FramesPreview();
 			this.PanelFramesTop = new System.Windows.Forms.Panel();
 			this.LabelDurationDesc = new System.Windows.Forms.Label();
 			this.NumericFrameDuration = new DoubleAgent.NumericUpDownEx();
@@ -95,12 +99,29 @@ namespace AgentCharacterEditor
 			this.ButtonViewLarge = new System.Windows.Forms.ToolStripButton();
 			this.LayoutPanelTop = new System.Windows.Forms.TableLayoutPanel();
 			this.LayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
+			this.GroupBoxPreview = new System.Windows.Forms.GroupBox();
+			this.LayoutPanelPreview = new System.Windows.Forms.TableLayoutPanel();
+			this.PanelPreviewControls = new System.Windows.Forms.Panel();
+			this.TrackBarRate = new System.Windows.Forms.TrackBar();
+			this.ToolStripPreview = new DoubleAgent.ToolStripEx();
+			this.PreviewButtonPlay = new System.Windows.Forms.ToolStripButton();
+			this.PreviewButtonPause = new System.Windows.Forms.ToolStripButton();
+			this.PreviewButtonStop = new System.Windows.Forms.ToolStripButton();
+			this.PreviewButtonSkipBack = new System.Windows.Forms.ToolStripButton();
+			this.PreviewButtonSkipForward = new System.Windows.Forms.ToolStripButton();
+			this.PreviewButtonRepeat = new System.Windows.Forms.ToolStripButton();
+			this.AnimationPreviewBorder = new System.Windows.Forms.Panel();
+			this.AnimationPreview = new AgentCharacterEditor.Previews.AnimationPreview ();
 			toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			PanelTopLeft = new System.Windows.Forms.Panel();
 			PanelTopRight = new System.Windows.Forms.Panel();
 			Column1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+			toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+			LabelSlow = new System.Windows.Forms.Label();
+			LabelFast = new System.Windows.Forms.Label();
 			PanelTopLeft.SuspendLayout();
 			PanelTopRight.SuspendLayout();
 			this.GroupBoxFrames.SuspendLayout();
@@ -110,6 +131,12 @@ namespace AgentCharacterEditor
 			this.ToolStripFrames.SuspendLayout();
 			this.LayoutPanelTop.SuspendLayout();
 			this.LayoutPanelMain.SuspendLayout();
+			this.GroupBoxPreview.SuspendLayout();
+			this.LayoutPanelPreview.SuspendLayout();
+			this.PanelPreviewControls.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.TrackBarRate)).BeginInit();
+			this.ToolStripPreview.SuspendLayout();
+			this.AnimationPreviewBorder.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// toolStripSeparator1
@@ -167,7 +194,7 @@ namespace AgentCharacterEditor
 			this.LabelReturn.Location = new System.Drawing.Point(0, 34);
 			this.LabelReturn.Name = "LabelReturn";
 			this.LabelReturn.Size = new System.Drawing.Size(116, 17);
-			this.LabelReturn.TabIndex = 2;
+			this.LabelReturn.TabIndex = 1;
 			this.LabelReturn.Text = "Return animation";
 			// 
 			// ComboBoxReturn
@@ -259,16 +286,49 @@ namespace AgentCharacterEditor
 			this.LabelStates.TabIndex = 0;
 			this.LabelStates.Text = "Used by state(s)";
 			// 
+			// toolStripSeparator4
+			// 
+			toolStripSeparator4.Name = "toolStripSeparator4";
+			toolStripSeparator4.Size = new System.Drawing.Size(6, 26);
+			// 
+			// toolStripSeparator5
+			// 
+			toolStripSeparator5.Name = "toolStripSeparator5";
+			toolStripSeparator5.Size = new System.Drawing.Size(6, 26);
+			// 
+			// LabelSlow
+			// 
+			LabelSlow.AutoSize = true;
+			LabelSlow.Location = new System.Drawing.Point(3, 40);
+			LabelSlow.Name = "LabelSlow";
+			LabelSlow.Size = new System.Drawing.Size(35, 17);
+			LabelSlow.TabIndex = 2;
+			LabelSlow.Text = "slow";
+			LabelSlow.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// LabelFast
+			// 
+			LabelFast.AutoSize = true;
+			LabelFast.Location = new System.Drawing.Point(130, 40);
+			LabelFast.Name = "LabelFast";
+			LabelFast.Size = new System.Drawing.Size(31, 17);
+			LabelFast.TabIndex = 3;
+			LabelFast.Text = "fast";
+			LabelFast.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
 			// GroupBoxFrames
 			// 
+			this.GroupBoxFrames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.GroupBoxFrames.AutoSize = true;
+			this.GroupBoxFrames.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.GroupBoxFrames.Controls.Add(this.LayoutPanelFrames);
-			this.GroupBoxFrames.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GroupBoxFrames.Location = new System.Drawing.Point(0, 86);
 			this.GroupBoxFrames.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
 			this.GroupBoxFrames.Name = "GroupBoxFrames";
 			this.GroupBoxFrames.Padding = new System.Windows.Forms.Padding(6, 12, 6, 6);
-			this.GroupBoxFrames.Size = new System.Drawing.Size(632, 514);
-			this.GroupBoxFrames.TabIndex = 0;
+			this.GroupBoxFrames.Size = new System.Drawing.Size(632, 266);
+			this.GroupBoxFrames.TabIndex = 1;
 			this.GroupBoxFrames.TabStop = false;
 			this.GroupBoxFrames.Text = "Frames";
 			// 
@@ -287,8 +347,9 @@ namespace AgentCharacterEditor
 			this.LayoutPanelFrames.Name = "LayoutPanelFrames";
 			this.LayoutPanelFrames.RowCount = 2;
 			this.LayoutPanelFrames.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanelFrames.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanelFrames.Size = new System.Drawing.Size(620, 481);
+			this.LayoutPanelFrames.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.LayoutPanelFrames.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.LayoutPanelFrames.Size = new System.Drawing.Size(620, 233);
 			this.LayoutPanelFrames.TabIndex = 0;
 			// 
 			// FramesView
@@ -387,7 +448,7 @@ namespace AgentCharacterEditor
 			this.ToolStripFrames.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.ToolStripFrames.Location = new System.Drawing.Point(0, 0);
 			this.ToolStripFrames.Name = "ToolStripFrames";
-			this.ToolStripFrames.Size = new System.Drawing.Size(259, 26);
+			this.ToolStripFrames.Size = new System.Drawing.Size(228, 26);
 			this.ToolStripFrames.TabIndex = 0;
 			// 
 			// ButtonAdd
@@ -505,7 +566,7 @@ namespace AgentCharacterEditor
 			this.LayoutPanelTop.RowCount = 1;
 			this.LayoutPanelTop.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.LayoutPanelTop.Size = new System.Drawing.Size(632, 77);
-			this.LayoutPanelTop.TabIndex = 5;
+			this.LayoutPanelTop.TabIndex = 0;
 			// 
 			// LayoutPanelMain
 			// 
@@ -513,16 +574,177 @@ namespace AgentCharacterEditor
 			this.LayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.LayoutPanelMain.Controls.Add(this.LayoutPanelTop, 0, 0);
 			this.LayoutPanelMain.Controls.Add(this.GroupBoxFrames, 0, 1);
+			this.LayoutPanelMain.Controls.Add(this.GroupBoxPreview, 0, 2);
 			this.LayoutPanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LayoutPanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
 			this.LayoutPanelMain.Location = new System.Drawing.Point(9, 0);
 			this.LayoutPanelMain.Margin = new System.Windows.Forms.Padding(0);
 			this.LayoutPanelMain.Name = "LayoutPanelMain";
-			this.LayoutPanelMain.RowCount = 2;
+			this.LayoutPanelMain.RowCount = 3;
+			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.LayoutPanelMain.Size = new System.Drawing.Size(632, 600);
 			this.LayoutPanelMain.TabIndex = 6;
+			// 
+			// GroupBoxPreview
+			// 
+			this.GroupBoxPreview.Controls.Add(this.LayoutPanelPreview);
+			this.GroupBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.GroupBoxPreview.Location = new System.Drawing.Point(0, 361);
+			this.GroupBoxPreview.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
+			this.GroupBoxPreview.Name = "GroupBoxPreview";
+			this.GroupBoxPreview.Padding = new System.Windows.Forms.Padding(6, 12, 6, 6);
+			this.GroupBoxPreview.Size = new System.Drawing.Size(632, 239);
+			this.GroupBoxPreview.TabIndex = 2;
+			this.GroupBoxPreview.TabStop = false;
+			this.GroupBoxPreview.Text = "Preview";
+			// 
+			// LayoutPanelPreview
+			// 
+			this.LayoutPanelPreview.ColumnCount = 2;
+			this.LayoutPanelPreview.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.LayoutPanelPreview.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.LayoutPanelPreview.Controls.Add(this.PanelPreviewControls, 1, 0);
+			this.LayoutPanelPreview.Controls.Add(this.AnimationPreviewBorder, 0, 0);
+			this.LayoutPanelPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LayoutPanelPreview.Location = new System.Drawing.Point(6, 27);
+			this.LayoutPanelPreview.Margin = new System.Windows.Forms.Padding(0);
+			this.LayoutPanelPreview.Name = "LayoutPanelPreview";
+			this.LayoutPanelPreview.RowCount = 1;
+			this.LayoutPanelPreview.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.LayoutPanelPreview.Size = new System.Drawing.Size(620, 206);
+			this.LayoutPanelPreview.TabIndex = 0;
+			// 
+			// PanelPreviewControls
+			// 
+			this.PanelPreviewControls.Controls.Add(LabelFast);
+			this.PanelPreviewControls.Controls.Add(LabelSlow);
+			this.PanelPreviewControls.Controls.Add(this.TrackBarRate);
+			this.PanelPreviewControls.Controls.Add(this.ToolStripPreview);
+			this.PanelPreviewControls.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelPreviewControls.Location = new System.Drawing.Point(142, 0);
+			this.PanelPreviewControls.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelPreviewControls.Name = "PanelPreviewControls";
+			this.PanelPreviewControls.Size = new System.Drawing.Size(478, 206);
+			this.PanelPreviewControls.TabIndex = 2;
+			// 
+			// TrackBarRate
+			// 
+			this.TrackBarRate.LargeChange = 1;
+			this.TrackBarRate.Location = new System.Drawing.Point(0, 57);
+			this.TrackBarRate.Margin = new System.Windows.Forms.Padding(0);
+			this.TrackBarRate.Maximum = 1;
+			this.TrackBarRate.Minimum = -2;
+			this.TrackBarRate.Name = "TrackBarRate";
+			this.TrackBarRate.Size = new System.Drawing.Size(161, 56);
+			this.TrackBarRate.TabIndex = 1;
+			this.TrackBarRate.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.TrackBarRate.Scroll += new System.EventHandler(this.TrackBarRate_Scroll);
+			// 
+			// ToolStripPreview
+			// 
+			this.ToolStripPreview.CanOverflow = false;
+			this.ToolStripPreview.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.ToolStripPreview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.PreviewButtonPlay,
+            this.PreviewButtonPause,
+            this.PreviewButtonStop,
+            toolStripSeparator4,
+            this.PreviewButtonSkipBack,
+            this.PreviewButtonSkipForward,
+            toolStripSeparator5,
+            this.PreviewButtonRepeat});
+			this.ToolStripPreview.Location = new System.Drawing.Point(0, 0);
+			this.ToolStripPreview.Name = "ToolStripPreview";
+			this.ToolStripPreview.Size = new System.Drawing.Size(478, 26);
+			this.ToolStripPreview.TabIndex = 0;
+			this.ToolStripPreview.Text = "toolStripEx1";
+			// 
+			// PreviewButtonPlay
+			// 
+			this.PreviewButtonPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.PreviewButtonPlay.Image = global::AgentCharacterEditor.Properties.Resources.ImgPlay;
+			this.PreviewButtonPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.PreviewButtonPlay.Name = "PreviewButtonPlay";
+			this.PreviewButtonPlay.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.PreviewButtonPlay.Size = new System.Drawing.Size(23, 23);
+			this.PreviewButtonPlay.Text = "Play";
+			this.PreviewButtonPlay.Click += new System.EventHandler(this.PreviewButtonPlay_Click);
+			// 
+			// PreviewButtonPause
+			// 
+			this.PreviewButtonPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.PreviewButtonPause.Image = global::AgentCharacterEditor.Properties.Resources.ImgPause;
+			this.PreviewButtonPause.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.PreviewButtonPause.Name = "PreviewButtonPause";
+			this.PreviewButtonPause.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.PreviewButtonPause.Size = new System.Drawing.Size(23, 23);
+			this.PreviewButtonPause.Text = "Pause";
+			this.PreviewButtonPause.Click += new System.EventHandler(this.PreviewButtonPause_Click);
+			// 
+			// PreviewButtonStop
+			// 
+			this.PreviewButtonStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.PreviewButtonStop.Image = global::AgentCharacterEditor.Properties.Resources.ImgStop;
+			this.PreviewButtonStop.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.PreviewButtonStop.Name = "PreviewButtonStop";
+			this.PreviewButtonStop.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.PreviewButtonStop.Size = new System.Drawing.Size(23, 23);
+			this.PreviewButtonStop.Text = "Stop";
+			this.PreviewButtonStop.Click += new System.EventHandler(this.PreviewButtonStop_Click);
+			// 
+			// PreviewButtonSkipBack
+			// 
+			this.PreviewButtonSkipBack.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.PreviewButtonSkipBack.Image = global::AgentCharacterEditor.Properties.Resources.ImgSkipBack;
+			this.PreviewButtonSkipBack.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.PreviewButtonSkipBack.Name = "PreviewButtonSkipBack";
+			this.PreviewButtonSkipBack.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.PreviewButtonSkipBack.Size = new System.Drawing.Size(23, 23);
+			this.PreviewButtonSkipBack.Text = "Back";
+			this.PreviewButtonSkipBack.Click += new System.EventHandler(this.PreviewButtonSkipBack_Click);
+			// 
+			// PreviewButtonSkipForward
+			// 
+			this.PreviewButtonSkipForward.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.PreviewButtonSkipForward.Image = global::AgentCharacterEditor.Properties.Resources.ImgSkipForward;
+			this.PreviewButtonSkipForward.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.PreviewButtonSkipForward.Name = "PreviewButtonSkipForward";
+			this.PreviewButtonSkipForward.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.PreviewButtonSkipForward.Size = new System.Drawing.Size(23, 23);
+			this.PreviewButtonSkipForward.Text = "Forward";
+			this.PreviewButtonSkipForward.Click += new System.EventHandler(this.PreviewButtonSkipForward_Click);
+			// 
+			// PreviewButtonRepeat
+			// 
+			this.PreviewButtonRepeat.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.PreviewButtonRepeat.Image = global::AgentCharacterEditor.Properties.Resources.ImgRepeat;
+			this.PreviewButtonRepeat.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.PreviewButtonRepeat.Name = "PreviewButtonRepeat";
+			this.PreviewButtonRepeat.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.PreviewButtonRepeat.Size = new System.Drawing.Size(23, 23);
+			this.PreviewButtonRepeat.Text = "Repeat";
+			this.PreviewButtonRepeat.Click += new System.EventHandler(this.PreviewButtonRepeat_Click);
+			// 
+			// AnimationPreviewBorder
+			// 
+			this.AnimationPreviewBorder.AutoSize = true;
+			this.AnimationPreviewBorder.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.AnimationPreviewBorder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.AnimationPreviewBorder.Controls.Add(this.AnimationPreview);
+			this.AnimationPreviewBorder.Location = new System.Drawing.Point(0, 0);
+			this.AnimationPreviewBorder.Margin = new System.Windows.Forms.Padding(0, 0, 12, 0);
+			this.AnimationPreviewBorder.Name = "AnimationPreviewBorder";
+			this.AnimationPreviewBorder.Size = new System.Drawing.Size(130, 130);
+			this.AnimationPreviewBorder.TabIndex = 0;
+			// 
+			// AnimationPreview
+			// 
+			this.AnimationPreview.BackColor = System.Drawing.SystemColors.Window;
+			this.AnimationPreview.Location = new System.Drawing.Point(0, 0);
+			this.AnimationPreview.Name = "AnimationPreview";
+			this.AnimationPreview.TabIndex = 0;
 			// 
 			// AnimationPanel
 			// 
@@ -544,6 +766,16 @@ namespace AgentCharacterEditor
 			this.ToolStripFrames.PerformLayout();
 			this.LayoutPanelTop.ResumeLayout(false);
 			this.LayoutPanelMain.ResumeLayout(false);
+			this.LayoutPanelMain.PerformLayout();
+			this.GroupBoxPreview.ResumeLayout(false);
+			this.LayoutPanelPreview.ResumeLayout(false);
+			this.LayoutPanelPreview.PerformLayout();
+			this.PanelPreviewControls.ResumeLayout(false);
+			this.PanelPreviewControls.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.TrackBarRate)).EndInit();
+			this.ToolStripPreview.ResumeLayout(false);
+			this.ToolStripPreview.PerformLayout();
+			this.AnimationPreviewBorder.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -555,7 +787,7 @@ namespace AgentCharacterEditor
 		private System.Windows.Forms.Label LabelReturn;
 		private System.Windows.Forms.ComboBox ComboBoxReturn;
 		private System.Windows.Forms.GroupBox GroupBoxFrames;
-		private FramesPreview FramesView;
+		private AgentCharacterEditor.Previews.FramesPreview FramesView;
 		private DoubleAgent.ListViewEx ListViewStates;
 		private System.Windows.Forms.TableLayoutPanel LayoutPanelFrames;
 		private DoubleAgent.ToolStripEx ToolStripFrames;
@@ -575,5 +807,18 @@ namespace AgentCharacterEditor
 		private System.Windows.Forms.TableLayoutPanel LayoutPanelTop;
 		private System.Windows.Forms.Label LabelStates;
 		private System.Windows.Forms.TableLayoutPanel LayoutPanelMain;
+		private System.Windows.Forms.GroupBox GroupBoxPreview;
+		private System.Windows.Forms.TableLayoutPanel LayoutPanelPreview;
+		private System.Windows.Forms.Panel AnimationPreviewBorder;
+		private AgentCharacterEditor.Previews.AnimationPreview AnimationPreview;
+		private System.Windows.Forms.Panel PanelPreviewControls;
+		private System.Windows.Forms.TrackBar TrackBarRate;
+		private DoubleAgent.ToolStripEx ToolStripPreview;
+		private System.Windows.Forms.ToolStripButton PreviewButtonPlay;
+		private System.Windows.Forms.ToolStripButton PreviewButtonPause;
+		private System.Windows.Forms.ToolStripButton PreviewButtonStop;
+		private System.Windows.Forms.ToolStripButton PreviewButtonSkipBack;
+		private System.Windows.Forms.ToolStripButton PreviewButtonSkipForward;
+		private System.Windows.Forms.ToolStripButton PreviewButtonRepeat;
 	}
 }

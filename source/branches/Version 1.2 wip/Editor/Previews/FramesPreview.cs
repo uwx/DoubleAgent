@@ -10,7 +10,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using DoubleAgent.Character;
 
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.Previews
 {
 	public partial class FramesPreview : UserControl
 	{
