@@ -57,29 +57,19 @@ namespace AgentCharacterEditor
 			System.Windows.Forms.ToolStripSeparator ToolStripSeparator2;
 			this.ToolStripContainerMain = new System.Windows.Forms.ToolStripContainer();
 			this.SplitContainerMain = new System.Windows.Forms.SplitContainer();
-			this.PanelPartsTree = new AgentCharacterEditor.Panels.PartsTreePanel ();
-			this.PanelBalloon = new AgentCharacterEditor.Panels.BalloonPanel ();
-			this.PanelCharacter = new AgentCharacterEditor.Panels.CharacterPanel ();
-			this.PanelTts = new AgentCharacterEditor.Panels.TtsPanel ();
-			this.PanelAnimations = new AgentCharacterEditor.Panels.AnimationsPanel ();
-			this.PanelAnimation = new AgentCharacterEditor.Panels.AnimationPanel ();
-			this.PanelState = new AgentCharacterEditor.Panels.StatePanel ();
-			this.PanelFrame = new AgentCharacterEditor.Panels.FramePanel ();
-			this.PanelBranching = new AgentCharacterEditor.Panels.BranchingPanel ();
-			this.PanelOverlays = new AgentCharacterEditor.Panels.OverlayPanel ();
+			this.PanelPartsTree = new AgentCharacterEditor.Panels.PartsTreePanel();
+			this.PanelBalloon = new AgentCharacterEditor.Panels.BalloonPanel();
+			this.PanelCharacter = new AgentCharacterEditor.Panels.CharacterPanel();
+			this.PanelTts = new AgentCharacterEditor.Panels.TtsPanel();
+			this.PanelAnimations = new AgentCharacterEditor.Panels.AnimationsPanel();
+			this.PanelAnimation = new AgentCharacterEditor.Panels.AnimationPanel();
+			this.PanelState = new AgentCharacterEditor.Panels.StatePanel();
+			this.PanelFrame = new AgentCharacterEditor.Panels.FramePanel();
+			this.PanelBranching = new AgentCharacterEditor.Panels.BranchingPanel();
+			this.PanelOverlays = new AgentCharacterEditor.Panels.OverlayPanel();
 			this.ToolStripNavigation = new DoubleAgent.ToolStripEx();
 			this.ToolButtonNavigateBack = new System.Windows.Forms.ToolStripButton();
 			this.ToolButtonNavigateForward = new System.Windows.Forms.ToolStripButton();
-			this.ToolStripMain = new DoubleAgent.ToolStripEx();
-			this.ToolButtonFileNew = new System.Windows.Forms.ToolStripButton();
-			this.ToolButtonFileOpen = new System.Windows.Forms.ToolStripButton();
-			this.ToolButtonFileSave = new System.Windows.Forms.ToolStripButton();
-			this.ToolButtonEditUndo = new System.Windows.Forms.ToolStripButton();
-			this.ToolButtonEditRedo = new System.Windows.Forms.ToolStripButton();
-			this.ToolButtonEditCut = new System.Windows.Forms.ToolStripButton();
-			this.ToolButtonEditCopy = new System.Windows.Forms.ToolStripButton();
-			this.ToolButtonEditPaste = new System.Windows.Forms.ToolStripButton();
-			this.ToolButtonEditDelete = new System.Windows.Forms.ToolStripButton();
 			this.MenuStripMain = new System.Windows.Forms.MenuStrip();
 			this.MenuItemFile = new System.Windows.Forms.ToolStripMenuItem();
 			this.MenuItemFileNew = new System.Windows.Forms.ToolStripMenuItem();
@@ -103,6 +93,16 @@ namespace AgentCharacterEditor
 			this.ContextItemEditCopy = new System.Windows.Forms.ToolStripMenuItem();
 			this.ContextItemEditPaste = new System.Windows.Forms.ToolStripMenuItem();
 			this.ContextItemEditDelete = new System.Windows.Forms.ToolStripMenuItem();
+			this.ToolStripMain = new DoubleAgent.ToolStripEx();
+			this.ToolButtonFileNew = new System.Windows.Forms.ToolStripButton();
+			this.ToolButtonFileOpen = new System.Windows.Forms.ToolStripButton();
+			this.ToolButtonFileSave = new System.Windows.Forms.ToolStripButton();
+			this.ToolButtonEditUndo = new System.Windows.Forms.ToolStripButton();
+			this.ToolButtonEditRedo = new System.Windows.Forms.ToolStripButton();
+			this.ToolButtonEditCut = new System.Windows.Forms.ToolStripButton();
+			this.ToolButtonEditCopy = new System.Windows.Forms.ToolStripButton();
+			this.ToolButtonEditPaste = new System.Windows.Forms.ToolStripButton();
+			this.ToolButtonEditDelete = new System.Windows.Forms.ToolStripButton();
 			MenuSepFile1 = new System.Windows.Forms.ToolStripSeparator();
 			MenuSepFile2 = new System.Windows.Forms.ToolStripSeparator();
 			MenuSepFile3 = new System.Windows.Forms.ToolStripSeparator();
@@ -116,9 +116,9 @@ namespace AgentCharacterEditor
 			this.SplitContainerMain.Panel2.SuspendLayout();
 			this.SplitContainerMain.SuspendLayout();
 			this.ToolStripNavigation.SuspendLayout();
-			this.ToolStripMain.SuspendLayout();
 			this.MenuStripMain.SuspendLayout();
 			this.ContextMenuEdit.SuspendLayout();
+			this.ToolStripMain.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// MenuSepFile1
@@ -144,12 +144,12 @@ namespace AgentCharacterEditor
 			// ToolStripSeparator1
 			// 
 			ToolStripSeparator1.Name = "ToolStripSeparator1";
-			ToolStripSeparator1.Size = new System.Drawing.Size(6, 26);
+			ToolStripSeparator1.Size = new System.Drawing.Size(6, 27);
 			// 
 			// ToolStripSeparator2
 			// 
 			ToolStripSeparator2.Name = "ToolStripSeparator2";
-			ToolStripSeparator2.Size = new System.Drawing.Size(6, 26);
+			ToolStripSeparator2.Size = new System.Drawing.Size(6, 27);
 			// 
 			// ToolStripContainerMain
 			// 
@@ -163,7 +163,7 @@ namespace AgentCharacterEditor
 			this.ToolStripContainerMain.ContentPanel.Controls.Add(this.SplitContainerMain);
 			this.ToolStripContainerMain.ContentPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.ToolStripContainerMain.ContentPanel.Padding = new System.Windows.Forms.Padding(8);
-			this.ToolStripContainerMain.ContentPanel.Size = new System.Drawing.Size(982, 497);
+			this.ToolStripContainerMain.ContentPanel.Size = new System.Drawing.Size(982, 496);
 			this.ToolStripContainerMain.LeftToolStripPanelVisible = false;
 			this.ToolStripContainerMain.Location = new System.Drawing.Point(0, 28);
 			this.ToolStripContainerMain.Margin = new System.Windows.Forms.Padding(0);
@@ -176,7 +176,6 @@ namespace AgentCharacterEditor
 			// 
 			this.ToolStripContainerMain.TopToolStripPanel.BackColor = System.Drawing.SystemColors.Control;
 			this.ToolStripContainerMain.TopToolStripPanel.Controls.Add(this.ToolStripNavigation);
-			this.ToolStripContainerMain.TopToolStripPanel.Controls.Add(this.ToolStripMain);
 			// 
 			// SplitContainerMain
 			// 
@@ -204,7 +203,7 @@ namespace AgentCharacterEditor
 			this.SplitContainerMain.Panel2.Controls.Add(this.PanelBranching);
 			this.SplitContainerMain.Panel2.Controls.Add(this.PanelOverlays);
 			this.SplitContainerMain.Panel2MinSize = 100;
-			this.SplitContainerMain.Size = new System.Drawing.Size(966, 481);
+			this.SplitContainerMain.Size = new System.Drawing.Size(966, 480);
 			this.SplitContainerMain.SplitterDistance = 200;
 			this.SplitContainerMain.SplitterWidth = 8;
 			this.SplitContainerMain.TabIndex = 0;
@@ -219,7 +218,7 @@ namespace AgentCharacterEditor
 			this.PanelPartsTree.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelPartsTree.Name = "PanelPartsTree";
 			this.PanelPartsTree.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-			this.PanelPartsTree.Size = new System.Drawing.Size(200, 480);
+			this.PanelPartsTree.Size = new System.Drawing.Size(200, 479);
 			this.PanelPartsTree.TabIndex = 0;
 			this.PanelPartsTree.Navigate += new AgentCharacterEditor.Navigation.NavigationEventHandler(this.OnNavigate);
 			// 
@@ -230,7 +229,7 @@ namespace AgentCharacterEditor
 			this.PanelBalloon.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelBalloon.Name = "PanelBalloon";
 			this.PanelBalloon.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-			this.PanelBalloon.Size = new System.Drawing.Size(758, 481);
+			this.PanelBalloon.Size = new System.Drawing.Size(758, 480);
 			this.PanelBalloon.TabIndex = 0;
 			this.PanelBalloon.Visible = false;
 			// 
@@ -241,7 +240,7 @@ namespace AgentCharacterEditor
 			this.PanelCharacter.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelCharacter.Name = "PanelCharacter";
 			this.PanelCharacter.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-			this.PanelCharacter.Size = new System.Drawing.Size(758, 481);
+			this.PanelCharacter.Size = new System.Drawing.Size(758, 480);
 			this.PanelCharacter.TabIndex = 0;
 			// 
 			// PanelTts
@@ -251,7 +250,7 @@ namespace AgentCharacterEditor
 			this.PanelTts.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelTts.Name = "PanelTts";
 			this.PanelTts.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-			this.PanelTts.Size = new System.Drawing.Size(758, 481);
+			this.PanelTts.Size = new System.Drawing.Size(758, 480);
 			this.PanelTts.TabIndex = 0;
 			this.PanelTts.Visible = false;
 			// 
@@ -262,7 +261,7 @@ namespace AgentCharacterEditor
 			this.PanelAnimations.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelAnimations.Name = "PanelAnimations";
 			this.PanelAnimations.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-			this.PanelAnimations.Size = new System.Drawing.Size(758, 481);
+			this.PanelAnimations.Size = new System.Drawing.Size(758, 480);
 			this.PanelAnimations.TabIndex = 0;
 			this.PanelAnimations.Visible = false;
 			this.PanelAnimations.Navigate += new AgentCharacterEditor.Navigation.NavigationEventHandler(this.OnNavigate);
@@ -274,7 +273,7 @@ namespace AgentCharacterEditor
 			this.PanelAnimation.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelAnimation.Name = "PanelAnimation";
 			this.PanelAnimation.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-			this.PanelAnimation.Size = new System.Drawing.Size(758, 481);
+			this.PanelAnimation.Size = new System.Drawing.Size(758, 480);
 			this.PanelAnimation.TabIndex = 0;
 			this.PanelAnimation.Visible = false;
 			this.PanelAnimation.Navigate += new AgentCharacterEditor.Navigation.NavigationEventHandler(this.OnNavigate);
@@ -286,7 +285,7 @@ namespace AgentCharacterEditor
 			this.PanelState.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelState.Name = "PanelState";
 			this.PanelState.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-			this.PanelState.Size = new System.Drawing.Size(758, 481);
+			this.PanelState.Size = new System.Drawing.Size(758, 480);
 			this.PanelState.TabIndex = 0;
 			this.PanelState.Visible = false;
 			this.PanelState.Navigate += new AgentCharacterEditor.Navigation.NavigationEventHandler(this.OnNavigate);
@@ -298,7 +297,7 @@ namespace AgentCharacterEditor
 			this.PanelFrame.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelFrame.Name = "PanelFrame";
 			this.PanelFrame.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-			this.PanelFrame.Size = new System.Drawing.Size(758, 481);
+			this.PanelFrame.Size = new System.Drawing.Size(758, 480);
 			this.PanelFrame.TabIndex = 0;
 			this.PanelFrame.Visible = false;
 			// 
@@ -309,7 +308,7 @@ namespace AgentCharacterEditor
 			this.PanelBranching.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelBranching.Name = "PanelBranching";
 			this.PanelBranching.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-			this.PanelBranching.Size = new System.Drawing.Size(758, 481);
+			this.PanelBranching.Size = new System.Drawing.Size(758, 480);
 			this.PanelBranching.TabIndex = 0;
 			this.PanelBranching.Visible = false;
 			// 
@@ -320,7 +319,7 @@ namespace AgentCharacterEditor
 			this.PanelOverlays.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelOverlays.Name = "PanelOverlays";
 			this.PanelOverlays.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-			this.PanelOverlays.Size = new System.Drawing.Size(758, 481);
+			this.PanelOverlays.Size = new System.Drawing.Size(758, 480);
 			this.PanelOverlays.TabIndex = 0;
 			this.PanelOverlays.Visible = false;
 			// 
@@ -336,7 +335,7 @@ namespace AgentCharacterEditor
 			this.ToolStripNavigation.Location = new System.Drawing.Point(3, 0);
 			this.ToolStripNavigation.Name = "ToolStripNavigation";
 			this.ToolStripNavigation.Padding = new System.Windows.Forms.Padding(8, 2, 8, 2);
-			this.ToolStripNavigation.Size = new System.Drawing.Size(64, 30);
+			this.ToolStripNavigation.Size = new System.Drawing.Size(66, 31);
 			this.ToolStripNavigation.TabIndex = 0;
 			// 
 			// ToolButtonNavigateBack
@@ -345,8 +344,8 @@ namespace AgentCharacterEditor
 			this.ToolButtonNavigateBack.Image = global::AgentCharacterEditor.Properties.Resources.ImgNavigateBack;
 			this.ToolButtonNavigateBack.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ToolButtonNavigateBack.Name = "ToolButtonNavigateBack";
-			this.ToolButtonNavigateBack.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ToolButtonNavigateBack.Size = new System.Drawing.Size(23, 23);
+			this.ToolButtonNavigateBack.Padding = new System.Windows.Forms.Padding(2);
+			this.ToolButtonNavigateBack.Size = new System.Drawing.Size(24, 24);
 			this.ToolButtonNavigateBack.Text = "Back";
 			this.ToolButtonNavigateBack.Click += new System.EventHandler(this.ToolButtonNavigateBack_Click);
 			// 
@@ -356,141 +355,10 @@ namespace AgentCharacterEditor
 			this.ToolButtonNavigateForward.Image = global::AgentCharacterEditor.Properties.Resources.ImgNavigateForward;
 			this.ToolButtonNavigateForward.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ToolButtonNavigateForward.Name = "ToolButtonNavigateForward";
-			this.ToolButtonNavigateForward.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ToolButtonNavigateForward.Size = new System.Drawing.Size(23, 23);
+			this.ToolButtonNavigateForward.Padding = new System.Windows.Forms.Padding(2);
+			this.ToolButtonNavigateForward.Size = new System.Drawing.Size(24, 24);
 			this.ToolButtonNavigateForward.Text = "Forward";
 			this.ToolButtonNavigateForward.Click += new System.EventHandler(this.ToolButtonNavigateForward_Click);
-			// 
-			// ToolStripMain
-			// 
-			this.ToolStripMain.AllowMerge = false;
-			this.ToolStripMain.CanOverflow = false;
-			this.ToolStripMain.Dock = System.Windows.Forms.DockStyle.None;
-			this.ToolStripMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-			this.ToolStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ToolButtonFileNew,
-            this.ToolButtonFileOpen,
-            this.ToolButtonFileSave,
-            ToolStripSeparator1,
-            this.ToolButtonEditUndo,
-            this.ToolButtonEditRedo,
-            ToolStripSeparator2,
-            this.ToolButtonEditCut,
-            this.ToolButtonEditCopy,
-            this.ToolButtonEditPaste,
-            this.ToolButtonEditDelete});
-			this.ToolStripMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-			this.ToolStripMain.Location = new System.Drawing.Point(67, 0);
-			this.ToolStripMain.Name = "ToolStripMain";
-			this.ToolStripMain.Padding = new System.Windows.Forms.Padding(8, 2, 8, 2);
-			this.ToolStripMain.Size = new System.Drawing.Size(237, 30);
-			this.ToolStripMain.TabIndex = 1;
-			// 
-			// ToolButtonFileNew
-			// 
-			this.ToolButtonFileNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ToolButtonFileNew.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileNew;
-			this.ToolButtonFileNew.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ToolButtonFileNew.Name = "ToolButtonFileNew";
-			this.ToolButtonFileNew.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ToolButtonFileNew.Size = new System.Drawing.Size(23, 23);
-			this.ToolButtonFileNew.Text = "New";
-			this.ToolButtonFileNew.Click += new System.EventHandler(this.ToolButtonFileNew_Click);
-			// 
-			// ToolButtonFileOpen
-			// 
-			this.ToolButtonFileOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ToolButtonFileOpen.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
-			this.ToolButtonFileOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ToolButtonFileOpen.Name = "ToolButtonFileOpen";
-			this.ToolButtonFileOpen.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ToolButtonFileOpen.Size = new System.Drawing.Size(23, 23);
-			this.ToolButtonFileOpen.Text = "Open";
-			this.ToolButtonFileOpen.Click += new System.EventHandler(this.ToolButtonFileOpen_Click);
-			// 
-			// ToolButtonFileSave
-			// 
-			this.ToolButtonFileSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ToolButtonFileSave.Enabled = false;
-			this.ToolButtonFileSave.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileSave;
-			this.ToolButtonFileSave.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ToolButtonFileSave.Name = "ToolButtonFileSave";
-			this.ToolButtonFileSave.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ToolButtonFileSave.Size = new System.Drawing.Size(23, 23);
-			this.ToolButtonFileSave.Text = "Save";
-			this.ToolButtonFileSave.Click += new System.EventHandler(this.ToolButtonFileSave_Click);
-			// 
-			// ToolButtonEditUndo
-			// 
-			this.ToolButtonEditUndo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ToolButtonEditUndo.Enabled = false;
-			this.ToolButtonEditUndo.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditUndo;
-			this.ToolButtonEditUndo.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ToolButtonEditUndo.Name = "ToolButtonEditUndo";
-			this.ToolButtonEditUndo.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ToolButtonEditUndo.Size = new System.Drawing.Size(23, 23);
-			this.ToolButtonEditUndo.Text = "Undo";
-			this.ToolButtonEditUndo.Click += new System.EventHandler(this.ToolButtonEditUndo_Click);
-			// 
-			// ToolButtonEditRedo
-			// 
-			this.ToolButtonEditRedo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ToolButtonEditRedo.Enabled = false;
-			this.ToolButtonEditRedo.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditRedo;
-			this.ToolButtonEditRedo.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ToolButtonEditRedo.Name = "ToolButtonEditRedo";
-			this.ToolButtonEditRedo.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ToolButtonEditRedo.Size = new System.Drawing.Size(23, 23);
-			this.ToolButtonEditRedo.Text = "Redo";
-			this.ToolButtonEditRedo.Click += new System.EventHandler(this.ToolButtonEditRedo_Click);
-			// 
-			// ToolButtonEditCut
-			// 
-			this.ToolButtonEditCut.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ToolButtonEditCut.Enabled = false;
-			this.ToolButtonEditCut.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditCut;
-			this.ToolButtonEditCut.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ToolButtonEditCut.Name = "ToolButtonEditCut";
-			this.ToolButtonEditCut.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ToolButtonEditCut.Size = new System.Drawing.Size(23, 23);
-			this.ToolButtonEditCut.Text = "Cut";
-			this.ToolButtonEditCut.Click += new System.EventHandler(this.ToolButtonEditCut_Click);
-			// 
-			// ToolButtonEditCopy
-			// 
-			this.ToolButtonEditCopy.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ToolButtonEditCopy.Enabled = false;
-			this.ToolButtonEditCopy.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditCopy;
-			this.ToolButtonEditCopy.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ToolButtonEditCopy.Name = "ToolButtonEditCopy";
-			this.ToolButtonEditCopy.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ToolButtonEditCopy.Size = new System.Drawing.Size(23, 23);
-			this.ToolButtonEditCopy.Text = "Copy";
-			this.ToolButtonEditCopy.Click += new System.EventHandler(this.ToolButtonEditCopy_Click);
-			// 
-			// ToolButtonEditPaste
-			// 
-			this.ToolButtonEditPaste.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ToolButtonEditPaste.Enabled = false;
-			this.ToolButtonEditPaste.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditPaste;
-			this.ToolButtonEditPaste.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ToolButtonEditPaste.Name = "ToolButtonEditPaste";
-			this.ToolButtonEditPaste.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ToolButtonEditPaste.Size = new System.Drawing.Size(23, 23);
-			this.ToolButtonEditPaste.Text = "Paste";
-			this.ToolButtonEditPaste.Click += new System.EventHandler(this.ToolButtonEditPaste_Click);
-			// 
-			// ToolButtonEditDelete
-			// 
-			this.ToolButtonEditDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ToolButtonEditDelete.Enabled = false;
-			this.ToolButtonEditDelete.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditDelete;
-			this.ToolButtonEditDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ToolButtonEditDelete.Name = "ToolButtonEditDelete";
-			this.ToolButtonEditDelete.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ToolButtonEditDelete.Size = new System.Drawing.Size(23, 23);
-			this.ToolButtonEditDelete.Text = "Delete";
-			this.ToolButtonEditDelete.Click += new System.EventHandler(this.ToolButtonEditDelete_Click);
 			// 
 			// MenuStripMain
 			// 
@@ -739,6 +607,137 @@ namespace AgentCharacterEditor
 			this.ContextItemEditDelete.Text = "&Delete";
 			this.ContextItemEditDelete.Click += new System.EventHandler(this.ContextItemEditDelete_Click);
 			// 
+			// ToolStripMain
+			// 
+			this.ToolStripMain.AllowMerge = false;
+			this.ToolStripMain.CanOverflow = false;
+			this.ToolStripMain.Dock = System.Windows.Forms.DockStyle.None;
+			this.ToolStripMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.ToolStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ToolButtonFileNew,
+            this.ToolButtonFileOpen,
+            this.ToolButtonFileSave,
+            ToolStripSeparator1,
+            this.ToolButtonEditUndo,
+            this.ToolButtonEditRedo,
+            ToolStripSeparator2,
+            this.ToolButtonEditCut,
+            this.ToolButtonEditCopy,
+            this.ToolButtonEditPaste,
+            this.ToolButtonEditDelete});
+			this.ToolStripMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+			this.ToolStripMain.Location = new System.Drawing.Point(70, 28);
+			this.ToolStripMain.Name = "ToolStripMain";
+			this.ToolStripMain.Padding = new System.Windows.Forms.Padding(8, 2, 8, 2);
+			this.ToolStripMain.Size = new System.Drawing.Size(277, 31);
+			this.ToolStripMain.TabIndex = 1;
+			// 
+			// ToolButtonFileNew
+			// 
+			this.ToolButtonFileNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ToolButtonFileNew.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileNew;
+			this.ToolButtonFileNew.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ToolButtonFileNew.Name = "ToolButtonFileNew";
+			this.ToolButtonFileNew.Padding = new System.Windows.Forms.Padding(2);
+			this.ToolButtonFileNew.Size = new System.Drawing.Size(24, 24);
+			this.ToolButtonFileNew.Text = "New";
+			this.ToolButtonFileNew.Click += new System.EventHandler(this.ToolButtonFileNew_Click);
+			// 
+			// ToolButtonFileOpen
+			// 
+			this.ToolButtonFileOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ToolButtonFileOpen.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
+			this.ToolButtonFileOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ToolButtonFileOpen.Name = "ToolButtonFileOpen";
+			this.ToolButtonFileOpen.Padding = new System.Windows.Forms.Padding(2);
+			this.ToolButtonFileOpen.Size = new System.Drawing.Size(24, 24);
+			this.ToolButtonFileOpen.Text = "Open";
+			this.ToolButtonFileOpen.Click += new System.EventHandler(this.ToolButtonFileOpen_Click);
+			// 
+			// ToolButtonFileSave
+			// 
+			this.ToolButtonFileSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ToolButtonFileSave.Enabled = false;
+			this.ToolButtonFileSave.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileSave;
+			this.ToolButtonFileSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ToolButtonFileSave.Name = "ToolButtonFileSave";
+			this.ToolButtonFileSave.Padding = new System.Windows.Forms.Padding(2);
+			this.ToolButtonFileSave.Size = new System.Drawing.Size(24, 24);
+			this.ToolButtonFileSave.Text = "Save";
+			this.ToolButtonFileSave.Click += new System.EventHandler(this.ToolButtonFileSave_Click);
+			// 
+			// ToolButtonEditUndo
+			// 
+			this.ToolButtonEditUndo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ToolButtonEditUndo.Enabled = false;
+			this.ToolButtonEditUndo.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditUndo;
+			this.ToolButtonEditUndo.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ToolButtonEditUndo.Name = "ToolButtonEditUndo";
+			this.ToolButtonEditUndo.Padding = new System.Windows.Forms.Padding(2);
+			this.ToolButtonEditUndo.Size = new System.Drawing.Size(24, 24);
+			this.ToolButtonEditUndo.Text = "Undo";
+			this.ToolButtonEditUndo.Click += new System.EventHandler(this.ToolButtonEditUndo_Click);
+			// 
+			// ToolButtonEditRedo
+			// 
+			this.ToolButtonEditRedo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ToolButtonEditRedo.Enabled = false;
+			this.ToolButtonEditRedo.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditRedo;
+			this.ToolButtonEditRedo.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ToolButtonEditRedo.Name = "ToolButtonEditRedo";
+			this.ToolButtonEditRedo.Padding = new System.Windows.Forms.Padding(2);
+			this.ToolButtonEditRedo.Size = new System.Drawing.Size(24, 24);
+			this.ToolButtonEditRedo.Text = "Redo";
+			this.ToolButtonEditRedo.Click += new System.EventHandler(this.ToolButtonEditRedo_Click);
+			// 
+			// ToolButtonEditCut
+			// 
+			this.ToolButtonEditCut.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ToolButtonEditCut.Enabled = false;
+			this.ToolButtonEditCut.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditCut;
+			this.ToolButtonEditCut.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ToolButtonEditCut.Name = "ToolButtonEditCut";
+			this.ToolButtonEditCut.Padding = new System.Windows.Forms.Padding(2);
+			this.ToolButtonEditCut.Size = new System.Drawing.Size(24, 24);
+			this.ToolButtonEditCut.Text = "Cut";
+			this.ToolButtonEditCut.Click += new System.EventHandler(this.ToolButtonEditCut_Click);
+			// 
+			// ToolButtonEditCopy
+			// 
+			this.ToolButtonEditCopy.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ToolButtonEditCopy.Enabled = false;
+			this.ToolButtonEditCopy.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditCopy;
+			this.ToolButtonEditCopy.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ToolButtonEditCopy.Name = "ToolButtonEditCopy";
+			this.ToolButtonEditCopy.Padding = new System.Windows.Forms.Padding(2);
+			this.ToolButtonEditCopy.Size = new System.Drawing.Size(24, 24);
+			this.ToolButtonEditCopy.Text = "Copy";
+			this.ToolButtonEditCopy.Click += new System.EventHandler(this.ToolButtonEditCopy_Click);
+			// 
+			// ToolButtonEditPaste
+			// 
+			this.ToolButtonEditPaste.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ToolButtonEditPaste.Enabled = false;
+			this.ToolButtonEditPaste.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditPaste;
+			this.ToolButtonEditPaste.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ToolButtonEditPaste.Name = "ToolButtonEditPaste";
+			this.ToolButtonEditPaste.Padding = new System.Windows.Forms.Padding(2);
+			this.ToolButtonEditPaste.Size = new System.Drawing.Size(24, 24);
+			this.ToolButtonEditPaste.Text = "Paste";
+			this.ToolButtonEditPaste.Click += new System.EventHandler(this.ToolButtonEditPaste_Click);
+			// 
+			// ToolButtonEditDelete
+			// 
+			this.ToolButtonEditDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ToolButtonEditDelete.Enabled = false;
+			this.ToolButtonEditDelete.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditDelete;
+			this.ToolButtonEditDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ToolButtonEditDelete.Name = "ToolButtonEditDelete";
+			this.ToolButtonEditDelete.Padding = new System.Windows.Forms.Padding(2);
+			this.ToolButtonEditDelete.Size = new System.Drawing.Size(24, 24);
+			this.ToolButtonEditDelete.Text = "Delete";
+			this.ToolButtonEditDelete.Click += new System.EventHandler(this.ToolButtonEditDelete_Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -747,6 +746,7 @@ namespace AgentCharacterEditor
 			this.ClientSize = new System.Drawing.Size(982, 555);
 			this.ContextMenuStrip = this.ContextMenuEdit;
 			this.Controls.Add(this.MenuStripMain);
+			this.Controls.Add(this.ToolStripMain);
 			this.Controls.Add(this.ToolStripContainerMain);
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.MinimumSize = new System.Drawing.Size(600, 400);
@@ -766,11 +766,11 @@ namespace AgentCharacterEditor
 			this.SplitContainerMain.ResumeLayout(false);
 			this.ToolStripNavigation.ResumeLayout(false);
 			this.ToolStripNavigation.PerformLayout();
-			this.ToolStripMain.ResumeLayout(false);
-			this.ToolStripMain.PerformLayout();
 			this.MenuStripMain.ResumeLayout(false);
 			this.MenuStripMain.PerformLayout();
 			this.ContextMenuEdit.ResumeLayout(false);
+			this.ToolStripMain.ResumeLayout(false);
+			this.ToolStripMain.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

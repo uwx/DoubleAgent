@@ -20,13 +20,14 @@
 /////////////////////////////////////////////////////////////////////////////
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
-using DoubleAgent;
-using DoubleAgent.Character;
 using AgentCharacterEditor.Global;
 using AgentCharacterEditor.Navigation;
-using AgentCharacterEditor.Updates;
 using AgentCharacterEditor.Previews;
+using AgentCharacterEditor.Updates;
+using DoubleAgent;
+using DoubleAgent.Character;
 
 namespace AgentCharacterEditor.Panels
 {
@@ -46,12 +47,8 @@ namespace AgentCharacterEditor.Panels
 			FramesView.Frames.ItemActivate += new System.EventHandler (FramesView_ItemActivate);
 			FramesView.Frames.SelectedIndexChanged += new System.EventHandler (FramesView_SelectedIndexChanged);
 
-			mStateItems = new List<ListViewItem> ();
-			foreach (ListViewItem lListItem in ListViewStates.Items)
-			{
-				mStateItems.Add (lListItem);
-			}
-			ListViewStates.Items.Clear ();
+			InitAnimationStates ();
+			InitPreviewLayout ();
 		}
 
 		protected override void OnLoadConfig (object sender, EventArgs e)
@@ -71,6 +68,7 @@ namespace AgentCharacterEditor.Panels
 				}
 				TrackBarRate.Value = Math.Min (Math.Max (lSettings.AnimationPreviewRate, TrackBarRate.Minimum), TrackBarRate.Maximum);
 				PreviewButtonRepeat.Checked = lSettings.AnimationPreviewRepeat;
+				PreviewButtonMute.Checked = lSettings.AnimationPreviewMute;
 			}
 		}
 
@@ -83,6 +81,7 @@ namespace AgentCharacterEditor.Panels
 			lSettings.FramesViewScale = (int)FramesView.ImageScale;
 			lSettings.AnimationPreviewRate = TrackBarRate.Value;
 			lSettings.AnimationPreviewRepeat = PreviewButtonRepeat.Checked;
+			lSettings.AnimationPreviewMute = PreviewButtonMute.Checked;
 		}
 
 		protected override void OnVisibleChanged (object sender, EventArgs e)
@@ -97,6 +96,28 @@ namespace AgentCharacterEditor.Panels
 			{
 				AnimationPreview.StopAnimation ();
 			}
+		}
+
+		private void InitPreviewLayout ()
+		{
+			Rectangle lToolStripRect = ToolStripPreview.Parent.RectangleToScreen (new Rectangle (ToolStripPreview.Location, ToolStripPreview.Size));
+			Rectangle lTrackBarRect = TrackBarRate.Parent.RectangleToScreen (new Rectangle (TrackBarRate.Location, TrackBarRate.Size));
+			Rectangle lSlowLabelRect = LabelSlow.Parent.RectangleToScreen (new Rectangle (LabelSlow.Location, LabelSlow.Size));
+			Rectangle lFastLabelRect = LabelFast.Parent.RectangleToScreen (new Rectangle (LabelFast.Location, LabelFast.Size));
+
+			lTrackBarRect.Offset (lToolStripRect.Left - lTrackBarRect.Left, 0);
+			lTrackBarRect.Size = new Size (lToolStripRect.Width, lTrackBarRect.Height);
+			lSlowLabelRect.Offset (lTrackBarRect.Left - lSlowLabelRect.Left, 0);
+			lFastLabelRect.Offset (lTrackBarRect.Right - lFastLabelRect.Right, 0);
+
+			lTrackBarRect = TrackBarRate.Parent.RectangleToClient (lTrackBarRect);
+			lSlowLabelRect = LabelSlow.Parent.RectangleToClient (lSlowLabelRect);
+			lFastLabelRect = LabelFast.Parent.RectangleToClient (lFastLabelRect);
+
+			TrackBarRate.Location = lTrackBarRect.Location;
+			TrackBarRate.Size = lTrackBarRect.Size;
+			LabelSlow.Location = lSlowLabelRect.Location;
+			LabelFast.Location = lFastLabelRect.Location;
 		}
 
 		#endregion
@@ -282,6 +303,18 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
+		///////////////////////////////////////////////////////////////////////////////
+
+		private void InitAnimationStates ()
+		{
+			mStateItems = new List<ListViewItem> ();
+			foreach (ListViewItem lListItem in ListViewStates.Items)
+			{
+				mStateItems.Add (lListItem);
+			}
+			ListViewStates.Items.Clear ();
+		}
+
 		private void ShowAnimationStates ()
 		{
 			FileStates lFileStates = null;
@@ -326,6 +359,8 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
+		///////////////////////////////////////////////////////////////////////////////
+
 		private void ShowAnimationFrames ()
 		{
 			CausesValidation = false;
@@ -349,7 +384,6 @@ namespace AgentCharacterEditor.Panels
 			else
 			{
 				CursorState lCursorState = new CursorState (Program.MainForm);
-
 				lCursorState.ShowWait ();
 
 				FramesView.ShowAnimationFrames (CharacterFile, Animation);
@@ -362,6 +396,17 @@ namespace AgentCharacterEditor.Panels
 
 			AnimationPreview.DeleteAnimation ();
 			CausesValidation = Visible;
+		}
+
+		private void ShowSelectedFrame ()
+		{
+			FramesView.Frames.EnsureVisible (FramesView.Frames.SelectedOrFocusedIndex);
+
+			ShowSelectionState (GetSelectedFrame (false), FramesView.Frames.SelectedIndex);
+
+			AnimationPreview.StopAnimation ();
+			AnimationPreview.ShowAnimationFrame (CharacterFile, GetSelectedFrame (true));
+			ShowPreviewState ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -396,17 +441,6 @@ namespace AgentCharacterEditor.Panels
 				ButtonViewMedium.Enabled = true;
 				ButtonViewLarge.Enabled = FramesView.GetImageScaleSize (FramesPreview.ImageScaleType.Large).EitherGT (FramesView.GetImageScaleSize (FramesPreview.ImageScaleType.Medium));
 			}
-		}
-
-		private void ShowSelectedFrame ()
-		{
-			FramesView.Frames.EnsureVisible (FramesView.Frames.SelectedOrFocusedIndex);
-
-			ShowSelectionState (GetSelectedFrame (false), FramesView.Frames.SelectedIndex);
-
-			AnimationPreview.StopAnimation ();
-			AnimationPreview.ShowAnimationFrame (CharacterFile, GetSelectedFrame (true));
-			ShowPreviewState ();
 		}
 
 		private void ShowSelectionState (FileAnimationFrame pFrame, int pFrameNdx)
@@ -463,6 +497,26 @@ namespace AgentCharacterEditor.Panels
 
 		///////////////////////////////////////////////////////////////////////////////
 
+		private int mLastSelectedFrameNdx = -1;
+
+		private void PushSelectedFrame ()
+		{
+			mLastSelectedFrameNdx = FramesView.Frames.SelectedIndex;
+		}
+
+		private void PopSelectedFrame ()
+		{
+			if (mLastSelectedFrameNdx >= 0)
+			{
+				CausesValidation = false;
+				FramesView.Frames.SelectedIndex = mLastSelectedFrameNdx;
+				CausesValidation = Visible;
+			}
+			mLastSelectedFrameNdx = -1;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
 		private void ShowPreviewState ()
 		{
 			ShowPreviewState (false);
@@ -474,11 +528,12 @@ namespace AgentCharacterEditor.Panels
 			PreviewButtonPause.Enabled = !IsEmpty && AnimationPreview.IsPlaying;
 			PreviewButtonStop.Enabled = !IsEmpty && AnimationPreview.IsPlaying;
 			PreviewButtonRepeat.Enabled = PreviewButtonPlay.Enabled && !AnimationPreview.IsPlaying;
+			PreviewButtonMute.Enabled = PreviewButtonPlay.Enabled && !AnimationPreview.IsPlaying;
 
-			if (AnimationPreview.IsAnimating)
+			if (AnimationPreview.IsAnimated)
 			{
 				PreviewButtonPause.Checked = PreviewButtonPause.Enabled && AnimationPreview.IsPaused;
-				PreviewButtonRepeat.Checked = PreviewButtonRepeat.Enabled && AnimationPreview.IsRepeating;
+				PreviewButtonRepeat.Checked = PreviewButtonPlay.Enabled && AnimationPreview.IsRepeating;
 			}
 			else
 			{
@@ -500,7 +555,8 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (AnimationPreview.IsPlaying)
 			{
-				ShowPreviewSkipState (AnimationPreview.TimeToFrameIndex (AnimationPreview.CurrentTime));
+				//ShowPreviewSkipState (AnimationPreview.TimeToFrameIndex (AnimationPreview.CurrentTime));
+				ShowPreviewSkipState (-1);
 			}
 			else
 			{
@@ -981,20 +1037,30 @@ namespace AgentCharacterEditor.Panels
 
 		private void PreviewButtonPlay_Click (object sender, EventArgs e)
 		{
-			if (!AnimationPreview.IsAnimating && AnimationPreview.CreateAnimation (CharacterFile, Animation))
+			if (!AnimationPreview.IsAnimated)
 			{
-				AnimationPreview.MasterTimeline.Completed += new EventHandler (PreviewTimeline_Completed);
-				AnimationPreview.MasterTimeline.CurrentStateInvalidated += new EventHandler (PreviewTimeline_CurrentStateInvalidated);
-				AnimationPreview.MasterTimeline.CurrentTimeInvalidated += new EventHandler (PreviewTimeline_CurrentTimeInvalidated);
+				CursorState lCursorState = new CursorState (Program.MainForm);
+				lCursorState.ShowWait ();
+
+				if (AnimationPreview.CreateAnimation (CharacterFile, Animation, !PreviewButtonMute.Checked))
+				{
+					AnimationPreview.MasterTimeline.CurrentStateInvalidated += new EventHandler (PreviewTimeline_CurrentStateInvalidated);
+					AnimationPreview.MasterTimeline.CurrentTimeInvalidated += new EventHandler (PreviewTimeline_CurrentTimeInvalidated);
+				}
+
+				lCursorState.RestoreCursor ();
 			}
-			if (AnimationPreview.IsAnimating)
+
+			if (AnimationPreview.IsAnimated)
 			{
+				AnimationPreview.StopAnimation ();
 				AnimationPreview.IsPaused = false;
 				AnimationPreview.IsRepeating = PreviewButtonRepeat.Checked;
 				AnimationPreview.AnimationRate = (double)TrackBarRate.Value;
 #if DEBUG_NOT
 				System.Diagnostics.Debug.Print ("StartAnimation Repeat [{0}] Rate [{1}]", AnimationPreview.AnimationIsRepeating, AnimationPreview.AnimationRate);		
 #endif
+				PushSelectedFrame ();
 				AnimationPreview.StartAnimation ();
 			}
 			ShowPreviewState (true);
@@ -1022,7 +1088,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (AnimationPreview.IsPlaying)
 			{
-				AnimationPreview.CurrentFrameIndex--;
+				//AnimationPreview.CurrentFrameIndex--;
 			}
 			else if (!IsEmpty)
 			{
@@ -1037,7 +1103,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (AnimationPreview.IsPlaying)
 			{
-				AnimationPreview.CurrentFrameIndex++;
+				//AnimationPreview.CurrentFrameIndex++;
 			}
 			else if (!IsEmpty)
 			{
@@ -1063,9 +1129,22 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
+		private void PreviewButtonMute_Click (object sender, EventArgs e)
+		{
+			if (AnimationPreview.IsPlaying)
+			{
+				System.Media.SystemSounds.Beep.Play ();
+			}
+			else
+			{
+				PreviewButtonMute.Checked = !PreviewButtonMute.Checked;
+				AnimationPreview.DeleteAnimation ();
+			}
+		}
+
 		private void TrackBarRate_Scroll (object sender, EventArgs e)
 		{
-			if (AnimationPreview.IsAnimating)
+			if (AnimationPreview.IsAnimated)
 			{
 				AnimationPreview.AnimationRate = (double)TrackBarRate.Value;
 			}
@@ -1073,43 +1152,28 @@ namespace AgentCharacterEditor.Panels
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		//private int mLastSelectedFrameNdx = -1;
-
 		void PreviewTimeline_CurrentStateInvalidated (object sender, EventArgs e)
 		{
 #if DEBUG_NOT
 			try
 			{
 				System.Windows.Media.Animation.ClockGroup lClock = sender as System.Windows.Media.Animation.ClockGroup;
-				System.Diagnostics.Debug.Print ("StateInvalidated [{0}] Time [{1}] Progress [{2}] Iteration [{3}]", lClock.CurrentState, lClock.CurrentTime, lClock.CurrentProgress, lClock.CurrentIteration);
+				System.Diagnostics.Debug.Print ("PreviewState [{0}] Time [{1}] Progress [{2}] Iteration [{3}]", lClock.CurrentState, lClock.CurrentTime, lClock.CurrentProgress, lClock.CurrentIteration);
 			}
 			catch (Exception pException)
 			{
 				System.Diagnostics.Debug.Print (pException.Message);
 			}
 #endif
-			//
-			//TODO - limit replay to selected frames?
-			//
 			try
 			{
 				if (AnimationPreview.IsPlaying)
 				{
-					//if (mLastSelectedFrameNdx < 0)
-					//{
-					//    mLastSelectedFrameNdx = FramesView.Frames.SelectedIndex;
-					//}
-					ShowPreviewState ();
+					ShowPreviewState (true);
 				}
 				else
 				{
-					//if (mLastSelectedFrameNdx >= 0)
-					//{
-					//    CausesValidation = false;
-					//    FramesView.Frames.SelectedIndex = mLastSelectedFrameNdx;
-					//    CausesValidation = Visible;
-					//    mLastSelectedFrameNdx = -1;
-					//}
+					PopSelectedFrame ();
 					ShowSelectedFrame ();
 				}
 			}
@@ -1140,15 +1204,6 @@ namespace AgentCharacterEditor.Panels
 					System.Diagnostics.Debug.Print (pException.Message);
 				}
 			}
-		}
-
-		void PreviewTimeline_Completed (object sender, EventArgs e)
-		{
-#if DEBUG_NOT
-			System.Windows.Media.Animation.ClockGroup lClock = sender as System.Windows.Media.Animation.ClockGroup;
-			System.Diagnostics.Debug.Print ("Completed        [{0}] Time [{1}] Progress [{2}] Iteration [{3}]", lClock.CurrentState, lClock.CurrentTime, lClock.CurrentProgress, lClock.CurrentIteration);
-#endif
-			ShowPreviewState (true);
 		}
 
 		#endregion

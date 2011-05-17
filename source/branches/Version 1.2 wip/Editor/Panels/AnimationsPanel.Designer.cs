@@ -157,8 +157,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonPaletteImport.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
 			this.ButtonPaletteImport.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonPaletteImport.Name = "ButtonPaletteImport";
-			this.ButtonPaletteImport.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonPaletteImport.Size = new System.Drawing.Size(23, 23);
 			this.ButtonPaletteImport.Text = "Import palette";
 			this.ButtonPaletteImport.Click += new System.EventHandler(this.ButtonPaletteImport_Click);
 			// 
@@ -169,8 +167,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonPaletteExport.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileSave;
 			this.ButtonPaletteExport.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonPaletteExport.Name = "ButtonPaletteExport";
-			this.ButtonPaletteExport.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonPaletteExport.Size = new System.Drawing.Size(23, 23);
 			this.ButtonPaletteExport.Text = "Save palette";
 			// 
 			// LabelTransparencyClick
@@ -275,8 +271,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonAdd.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileNew;
 			this.ButtonAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonAdd.Name = "ButtonAdd";
-			this.ButtonAdd.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonAdd.Size = new System.Drawing.Size(23, 23);
 			this.ButtonAdd.Text = global::AgentCharacterEditor.Properties.Resources.EditAddAnimation;
 			this.ButtonAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
 			// 
@@ -286,8 +280,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonDelete.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditDelete;
 			this.ButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonDelete.Name = "ButtonDelete";
-			this.ButtonDelete.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonDelete.Size = new System.Drawing.Size(23, 23);
 			this.ButtonDelete.Text = "Delete animation";
 			this.ButtonDelete.Click += new System.EventHandler(this.ButtonDelete_Click);
 			// 

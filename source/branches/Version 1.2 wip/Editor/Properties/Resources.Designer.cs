@@ -543,6 +543,13 @@ namespace AgentCharacterEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap ImgMute {
+            get {
+                object obj = ResourceManager.GetObject("ImgMute", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap ImgNavigateBack {
             get {
                 object obj = ResourceManager.GetObject("ImgNavigateBack", resourceCulture);

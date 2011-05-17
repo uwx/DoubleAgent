@@ -30,6 +30,11 @@ namespace AgentCharacterEditor.Previews
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
+#if DEBUG
+		static private int mNextInstanceNum = 1;
+		private int mInstanceNum = mNextInstanceNum++;
+#endif
+
 		public AnimationPreviewTimeline ()
 		{
 #if DEBUG_NOT
@@ -42,11 +47,6 @@ namespace AgentCharacterEditor.Previews
 			RemoveRequested += new EventHandler (OnRemoveRequested);
 #endif
 		}
-
-#if DEBUG
-		static private int mNextInstanceNum = 1;
-		private int mInstanceNum = mNextInstanceNum++;
-#endif
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////

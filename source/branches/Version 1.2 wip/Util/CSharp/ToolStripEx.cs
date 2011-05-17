@@ -81,7 +81,7 @@ namespace DoubleAgent
 		public ToolStripButtonEx ()
 		{
 			this.Padding = new System.Windows.Forms.Padding (0, 1, 0, 2);
- 			this.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ImageTransparentColor = System.Drawing.Color.Magenta;
 
 			this.RepeatEnabled = false;
 			this.ClickRepeatNum = 0;
@@ -323,8 +323,25 @@ namespace DoubleAgent
 
 	internal class InlineToolStripRenderer : ToolStripSystemRenderer
 	{
+		protected override void InitializeItem (ToolStripItem item)
+		{
+			base.InitializeItem (item);
+			if (item is ToolStripButton)
+			{
+				item.Padding = new System.Windows.Forms.Padding (2, 2, 2, 2);
+				item.Size = new System.Drawing.Size (24, 24);
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
 		protected override void OnRenderToolStripBorder (ToolStripRenderEventArgs e)
 		{
+		}
+
+		protected override void OnRenderToolStripBackground (ToolStripRenderEventArgs e)
+		{
+			e.Graphics.FillRectangle (new System.Drawing.SolidBrush (System.Drawing.SystemColors.Control), e.AffectedBounds);
 		}
 	}
 

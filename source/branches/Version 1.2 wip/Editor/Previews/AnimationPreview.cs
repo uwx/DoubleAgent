@@ -95,7 +95,7 @@ namespace AgentCharacterEditor.Previews
 		[System.ComponentModel.Browsable (false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
 		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-		public Boolean IsAnimating
+		public Boolean IsAnimated
 		{
 			get
 			{
@@ -254,7 +254,7 @@ namespace AgentCharacterEditor.Previews
 						System.Diagnostics.Debug.Print (pException.Message);
 					}
 				}
-				else if (MasterTimeline != null)
+				if (MasterTimeline != null)
 				{
 					try
 					{
@@ -315,7 +315,7 @@ namespace AgentCharacterEditor.Previews
 			{
 				int lFrameNdx = -1;
 
-				if (IsAnimating)
+				if (IsAnimated)
 				{
 					TimeSpan? lTime = CurrentTime;
 
@@ -328,7 +328,7 @@ namespace AgentCharacterEditor.Previews
 			}
 			set
 			{
-				if (IsAnimating)
+				if (IsAnimated)
 				{
 					TimeSpan? lTime = ImageTimeline.FrameIndexToTime (value);
 
@@ -355,6 +355,11 @@ namespace AgentCharacterEditor.Previews
 
 		public Boolean CreateAnimation (CharacterFile pCharacterFile, FileAnimation pAnimation)
 		{
+			return CreateAnimation (pCharacterFile, pAnimation, true);
+		}
+
+		public Boolean CreateAnimation (CharacterFile pCharacterFile, FileAnimation pAnimation, Boolean pIncludeSound)
+		{
 			Boolean lRet = false;
 
 			DeleteAnimation ();
@@ -367,26 +372,30 @@ namespace AgentCharacterEditor.Previews
 					MasterTimeline = new AnimationPreviewTimeline ();
 					MasterTimeline.Name = pAnimation.Name;
 					MasterTimeline.FillBehavior = FillBehavior.Stop;
+					MasterTimeline.SlipBehavior = SlipBehavior.Grow;
 
 					ImageTimeline = new AnimationPreviewFrames (pCharacterFile, pAnimation, WPFTarget.Image);
 					MasterTimeline.Children.Add (ImageTimeline);
-#if true
-					foreach (AnimationPreviewFrame lImageFrame in ImageTimeline.KeyFrames)
+
+					if (pIncludeSound)
 					{
-						if ((lImageFrame.FileFrame != null) && (lImageFrame.FileFrame.SoundNdx >= 0))
+						foreach (AnimationPreviewFrame lImageFrame in ImageTimeline.KeyFrames)
 						{
-							try
+							if ((lImageFrame.FileFrame != null) && (lImageFrame.FileFrame.SoundNdx >= 0))
 							{
-								AnimationPreviewSound lSound = new AnimationPreviewSound (pCharacterFile, lImageFrame.FileFrame, lImageFrame.BeginTime);
-								MasterTimeline.Children.Add (lSound);
-							}
-							catch (Exception pException)
-							{
-								System.Diagnostics.Debug.Print (pException.Message);
+								try
+								{
+									AnimationPreviewSound lSound = new AnimationPreviewSound (pCharacterFile, lImageFrame.FileFrame, lImageFrame.BeginTime);
+									MasterTimeline.Children.Add (lSound);
+								}
+								catch (Exception pException)
+								{
+									System.Diagnostics.Debug.Print (pException.Message);
+								}
 							}
 						}
 					}
-#endif
+
 					lRet = true;
 				}
 				catch (Exception pException)
@@ -419,9 +428,9 @@ namespace AgentCharacterEditor.Previews
 		{
 			Boolean lRet = false;
 
-			if (IsAnimating)
+			if (IsAnimated)
 			{
-#if true
+#if false // Recreating the clock each time is more reliable
 				if (MasterClock != null)
 				{
 					try
@@ -440,7 +449,8 @@ namespace AgentCharacterEditor.Previews
 					try
 					{
 						this.MasterClock = MasterTimeline.CreateClock (true) as ClockGroup;
-#if true
+
+#if false // Let the timelines take care of this - it's more accurate for the sounds
 						foreach (System.Windows.Media.Animation.Clock lClock in MasterClock.Children)
 						{
 							System.Windows.Media.Animation.AnimationClock lAnimationClock = lClock as System.Windows.Media.Animation.AnimationClock;
@@ -492,7 +502,7 @@ namespace AgentCharacterEditor.Previews
 				}
 			}
 #if true
-			MasterClock = null;	
+			MasterClock = null;
 #endif
 
 			return lRet;

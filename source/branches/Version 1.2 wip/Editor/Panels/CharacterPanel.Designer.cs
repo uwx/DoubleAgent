@@ -338,8 +338,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonIconImport.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
 			this.ButtonIconImport.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonIconImport.Name = "ButtonIconImport";
-			this.ButtonIconImport.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonIconImport.Size = new System.Drawing.Size(23, 23);
 			this.ButtonIconImport.Text = "Open icon file";
 			this.ButtonIconImport.Click += new System.EventHandler(this.ButtonIconImport_Click);
 			// 
@@ -350,8 +348,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonIconExport.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileSave;
 			this.ButtonIconExport.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonIconExport.Name = "ButtonIconExport";
-			this.ButtonIconExport.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonIconExport.Size = new System.Drawing.Size(23, 23);
 			this.ButtonIconExport.Text = "Save icon";
 			// 
 			// TextBoxIconFile

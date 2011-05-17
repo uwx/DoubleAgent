@@ -72,14 +72,14 @@ namespace AgentCharacterEditor.Panels
 			System.Windows.Forms.ColumnHeader Column1;
 			System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
 			System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-			System.Windows.Forms.Label LabelSlow;
-			System.Windows.Forms.Label LabelFast;
 			this.LabelName = new System.Windows.Forms.Label();
 			this.TextBoxName = new DoubleAgent.TextBoxEx();
 			this.LabelReturn = new System.Windows.Forms.Label();
 			this.ComboBoxReturn = new System.Windows.Forms.ComboBox();
 			this.ListViewStates = new DoubleAgent.ListViewEx();
 			this.LabelStates = new System.Windows.Forms.Label();
+			this.LabelSlow = new System.Windows.Forms.Label();
+			this.LabelFast = new System.Windows.Forms.Label();
 			this.GroupBoxFrames = new System.Windows.Forms.GroupBox();
 			this.LayoutPanelFrames = new System.Windows.Forms.TableLayoutPanel();
 			this.FramesView = new AgentCharacterEditor.Previews.FramesPreview();
@@ -110,6 +110,7 @@ namespace AgentCharacterEditor.Panels
 			this.PreviewButtonSkipBack = new System.Windows.Forms.ToolStripButton();
 			this.PreviewButtonSkipForward = new System.Windows.Forms.ToolStripButton();
 			this.PreviewButtonRepeat = new System.Windows.Forms.ToolStripButton();
+			this.PreviewButtonMute = new System.Windows.Forms.ToolStripButton();
 			this.AnimationPreview = new AgentCharacterEditor.Previews.AnimationPreview();
 			toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -119,8 +120,6 @@ namespace AgentCharacterEditor.Panels
 			Column1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-			LabelSlow = new System.Windows.Forms.Label();
-			LabelFast = new System.Windows.Forms.Label();
 			PanelTopLeft.SuspendLayout();
 			PanelTopRight.SuspendLayout();
 			this.GroupBoxFrames.SuspendLayout();
@@ -296,23 +295,23 @@ namespace AgentCharacterEditor.Panels
 			// 
 			// LabelSlow
 			// 
-			LabelSlow.AutoSize = true;
-			LabelSlow.Location = new System.Drawing.Point(3, 40);
-			LabelSlow.Name = "LabelSlow";
-			LabelSlow.Size = new System.Drawing.Size(35, 17);
-			LabelSlow.TabIndex = 2;
-			LabelSlow.Text = "slow";
-			LabelSlow.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.LabelSlow.AutoSize = true;
+			this.LabelSlow.Location = new System.Drawing.Point(3, 40);
+			this.LabelSlow.Name = "LabelSlow";
+			this.LabelSlow.Size = new System.Drawing.Size(35, 17);
+			this.LabelSlow.TabIndex = 2;
+			this.LabelSlow.Text = "slow";
+			this.LabelSlow.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// LabelFast
 			// 
-			LabelFast.AutoSize = true;
-			LabelFast.Location = new System.Drawing.Point(130, 40);
-			LabelFast.Name = "LabelFast";
-			LabelFast.Size = new System.Drawing.Size(31, 17);
-			LabelFast.TabIndex = 3;
-			LabelFast.Text = "fast";
-			LabelFast.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.LabelFast.AutoSize = true;
+			this.LabelFast.Location = new System.Drawing.Point(130, 40);
+			this.LabelFast.Name = "LabelFast";
+			this.LabelFast.Size = new System.Drawing.Size(31, 17);
+			this.LabelFast.TabIndex = 3;
+			this.LabelFast.Text = "fast";
+			this.LabelFast.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// GroupBoxFrames
 			// 
@@ -455,8 +454,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonAdd.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileNew;
 			this.ButtonAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonAdd.Name = "ButtonAdd";
-			this.ButtonAdd.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonAdd.Size = new System.Drawing.Size(23, 23);
 			this.ButtonAdd.Text = "Add a new Frame";
 			this.ButtonAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
 			// 
@@ -466,8 +463,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonDelete.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditDelete;
 			this.ButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonDelete.Name = "ButtonDelete";
-			this.ButtonDelete.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonDelete.Size = new System.Drawing.Size(23, 23);
 			this.ButtonDelete.Text = "Delete frame";
 			this.ButtonDelete.Click += new System.EventHandler(this.ButtonDelete_Click);
 			// 
@@ -477,8 +472,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonMoveUp.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveLeft;
 			this.ButtonMoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonMoveUp.Name = "ButtonMoveUp";
-			this.ButtonMoveUp.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonMoveUp.Size = new System.Drawing.Size(23, 23);
 			this.ButtonMoveUp.Text = "Move frame up";
 			this.ButtonMoveUp.Click += new System.EventHandler(this.ButtonMoveUp_Click);
 			// 
@@ -488,8 +481,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonMoveDown.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveRight;
 			this.ButtonMoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonMoveDown.Name = "ButtonMoveDown";
-			this.ButtonMoveDown.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonMoveDown.Size = new System.Drawing.Size(23, 23);
 			this.ButtonMoveDown.Text = "Move frame down";
 			this.ButtonMoveDown.Click += new System.EventHandler(this.ButtonMoveDown_Click);
 			// 
@@ -499,8 +490,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonShowBranching.Image = global::AgentCharacterEditor.Properties.Resources.ImgShowBranching;
 			this.ButtonShowBranching.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonShowBranching.Name = "ButtonShowBranching";
-			this.ButtonShowBranching.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonShowBranching.Size = new System.Drawing.Size(23, 23);
 			this.ButtonShowBranching.Text = "Show branching";
 			this.ButtonShowBranching.Click += new System.EventHandler(this.ButtonShowBranching_Click);
 			// 
@@ -510,8 +499,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonShowExitBranching.Image = global::AgentCharacterEditor.Properties.Resources.ImgShowExitBranching;
 			this.ButtonShowExitBranching.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonShowExitBranching.Name = "ButtonShowExitBranching";
-			this.ButtonShowExitBranching.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonShowExitBranching.Size = new System.Drawing.Size(23, 23);
 			this.ButtonShowExitBranching.Text = "Show exit branching";
 			this.ButtonShowExitBranching.Click += new System.EventHandler(this.ButtonShowExitBranching_Click);
 			// 
@@ -521,8 +508,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonViewSmall.Image = global::AgentCharacterEditor.Properties.Resources.ImgViewSmall;
 			this.ButtonViewSmall.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonViewSmall.Name = "ButtonViewSmall";
-			this.ButtonViewSmall.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonViewSmall.Size = new System.Drawing.Size(23, 23);
 			this.ButtonViewSmall.Text = "Small";
 			this.ButtonViewSmall.Click += new System.EventHandler(this.ButtonViewSmall_Click);
 			// 
@@ -532,8 +517,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonViewMedium.Image = global::AgentCharacterEditor.Properties.Resources.ImgViewMedium;
 			this.ButtonViewMedium.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonViewMedium.Name = "ButtonViewMedium";
-			this.ButtonViewMedium.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonViewMedium.Size = new System.Drawing.Size(23, 23);
 			this.ButtonViewMedium.Text = "Medium";
 			this.ButtonViewMedium.Click += new System.EventHandler(this.ButtonViewMedium_Click);
 			// 
@@ -543,8 +526,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonViewLarge.Image = global::AgentCharacterEditor.Properties.Resources.ImgViewLarge;
 			this.ButtonViewLarge.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonViewLarge.Name = "ButtonViewLarge";
-			this.ButtonViewLarge.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonViewLarge.Size = new System.Drawing.Size(23, 23);
 			this.ButtonViewLarge.Text = "Large";
 			this.ButtonViewLarge.Click += new System.EventHandler(this.ButtonViewLarge_Click);
 			// 
@@ -616,15 +597,15 @@ namespace AgentCharacterEditor.Panels
 			// 
 			// PanelPreviewControls
 			// 
-			this.PanelPreviewControls.Controls.Add(LabelFast);
-			this.PanelPreviewControls.Controls.Add(LabelSlow);
+			this.PanelPreviewControls.Controls.Add(this.LabelFast);
+			this.PanelPreviewControls.Controls.Add(this.LabelSlow);
 			this.PanelPreviewControls.Controls.Add(this.TrackBarRate);
 			this.PanelPreviewControls.Controls.Add(this.ToolStripPreview);
 			this.PanelPreviewControls.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PanelPreviewControls.Location = new System.Drawing.Point(128, 0);
+			this.PanelPreviewControls.Location = new System.Drawing.Point(142, 0);
 			this.PanelPreviewControls.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelPreviewControls.Name = "PanelPreviewControls";
-			this.PanelPreviewControls.Size = new System.Drawing.Size(492, 206);
+			this.PanelPreviewControls.Size = new System.Drawing.Size(478, 206);
 			this.PanelPreviewControls.TabIndex = 2;
 			// 
 			// TrackBarRate
@@ -643,6 +624,7 @@ namespace AgentCharacterEditor.Panels
 			// ToolStripPreview
 			// 
 			this.ToolStripPreview.CanOverflow = false;
+			this.ToolStripPreview.Dock = System.Windows.Forms.DockStyle.None;
 			this.ToolStripPreview.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.ToolStripPreview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.PreviewButtonPlay,
@@ -652,10 +634,12 @@ namespace AgentCharacterEditor.Panels
             this.PreviewButtonSkipBack,
             this.PreviewButtonSkipForward,
             toolStripSeparator5,
-            this.PreviewButtonRepeat});
+            this.PreviewButtonRepeat,
+            this.PreviewButtonMute});
+			this.ToolStripPreview.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.ToolStripPreview.Location = new System.Drawing.Point(0, 0);
 			this.ToolStripPreview.Name = "ToolStripPreview";
-			this.ToolStripPreview.Size = new System.Drawing.Size(492, 26);
+			this.ToolStripPreview.Size = new System.Drawing.Size(176, 26);
 			this.ToolStripPreview.TabIndex = 0;
 			this.ToolStripPreview.Text = "toolStripEx1";
 			// 
@@ -665,8 +649,6 @@ namespace AgentCharacterEditor.Panels
 			this.PreviewButtonPlay.Image = global::AgentCharacterEditor.Properties.Resources.ImgPlay;
 			this.PreviewButtonPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.PreviewButtonPlay.Name = "PreviewButtonPlay";
-			this.PreviewButtonPlay.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.PreviewButtonPlay.Size = new System.Drawing.Size(23, 23);
 			this.PreviewButtonPlay.Text = "Play";
 			this.PreviewButtonPlay.Click += new System.EventHandler(this.PreviewButtonPlay_Click);
 			// 
@@ -676,8 +658,6 @@ namespace AgentCharacterEditor.Panels
 			this.PreviewButtonPause.Image = global::AgentCharacterEditor.Properties.Resources.ImgPause;
 			this.PreviewButtonPause.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.PreviewButtonPause.Name = "PreviewButtonPause";
-			this.PreviewButtonPause.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.PreviewButtonPause.Size = new System.Drawing.Size(23, 23);
 			this.PreviewButtonPause.Text = "Pause";
 			this.PreviewButtonPause.Click += new System.EventHandler(this.PreviewButtonPause_Click);
 			// 
@@ -687,8 +667,6 @@ namespace AgentCharacterEditor.Panels
 			this.PreviewButtonStop.Image = global::AgentCharacterEditor.Properties.Resources.ImgStop;
 			this.PreviewButtonStop.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.PreviewButtonStop.Name = "PreviewButtonStop";
-			this.PreviewButtonStop.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.PreviewButtonStop.Size = new System.Drawing.Size(23, 23);
 			this.PreviewButtonStop.Text = "Stop";
 			this.PreviewButtonStop.Click += new System.EventHandler(this.PreviewButtonStop_Click);
 			// 
@@ -698,8 +676,6 @@ namespace AgentCharacterEditor.Panels
 			this.PreviewButtonSkipBack.Image = global::AgentCharacterEditor.Properties.Resources.ImgSkipBack;
 			this.PreviewButtonSkipBack.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.PreviewButtonSkipBack.Name = "PreviewButtonSkipBack";
-			this.PreviewButtonSkipBack.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.PreviewButtonSkipBack.Size = new System.Drawing.Size(23, 23);
 			this.PreviewButtonSkipBack.Text = "Back";
 			this.PreviewButtonSkipBack.Click += new System.EventHandler(this.PreviewButtonSkipBack_Click);
 			// 
@@ -709,8 +685,6 @@ namespace AgentCharacterEditor.Panels
 			this.PreviewButtonSkipForward.Image = global::AgentCharacterEditor.Properties.Resources.ImgSkipForward;
 			this.PreviewButtonSkipForward.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.PreviewButtonSkipForward.Name = "PreviewButtonSkipForward";
-			this.PreviewButtonSkipForward.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.PreviewButtonSkipForward.Size = new System.Drawing.Size(23, 23);
 			this.PreviewButtonSkipForward.Text = "Forward";
 			this.PreviewButtonSkipForward.Click += new System.EventHandler(this.PreviewButtonSkipForward_Click);
 			// 
@@ -720,21 +694,31 @@ namespace AgentCharacterEditor.Panels
 			this.PreviewButtonRepeat.Image = global::AgentCharacterEditor.Properties.Resources.ImgRepeat;
 			this.PreviewButtonRepeat.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.PreviewButtonRepeat.Name = "PreviewButtonRepeat";
-			this.PreviewButtonRepeat.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.PreviewButtonRepeat.Size = new System.Drawing.Size(23, 23);
 			this.PreviewButtonRepeat.Text = "Repeat";
 			this.PreviewButtonRepeat.Click += new System.EventHandler(this.PreviewButtonRepeat_Click);
+			// 
+			// PreviewButtonMute
+			// 
+			this.PreviewButtonMute.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.PreviewButtonMute.Image = global::AgentCharacterEditor.Properties.Resources.ImgMute;
+			this.PreviewButtonMute.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.PreviewButtonMute.Name = "PreviewButtonMute";
+			this.PreviewButtonMute.Text = "Mute";
+			this.PreviewButtonMute.Click += new System.EventHandler (this.PreviewButtonMute_Click);
 			// 
 			// AnimationPreview
 			// 
 			this.AnimationPreview.AutoSize = true;
 			this.AnimationPreview.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.AnimationPreview.BackColor = System.Drawing.SystemColors.Window;
+			this.AnimationPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.AnimationPreview.CausesValidation = false;
 			this.AnimationPreview.Location = new System.Drawing.Point(0, 0);
-			this.AnimationPreview.Margin = new System.Windows.Forms.Padding(0);
+			this.AnimationPreview.Margin = new System.Windows.Forms.Padding(0, 0, 12, 0);
+			this.AnimationPreview.MaximumSize = new System.Drawing.Size(258, 258);
+			this.AnimationPreview.MinimumSize = new System.Drawing.Size(18, 18);
 			this.AnimationPreview.Name = "AnimationPreview";
-			this.AnimationPreview.Size = new System.Drawing.Size(128, 128);
+			this.AnimationPreview.Size = new System.Drawing.Size(130, 130);
 			this.AnimationPreview.TabIndex = 0;
 			this.AnimationPreview.TabStop = false;
 			// 
@@ -810,5 +794,8 @@ namespace AgentCharacterEditor.Panels
 		private System.Windows.Forms.ToolStripButton PreviewButtonSkipBack;
 		private System.Windows.Forms.ToolStripButton PreviewButtonSkipForward;
 		private System.Windows.Forms.ToolStripButton PreviewButtonRepeat;
+		private System.Windows.Forms.ToolStripButton PreviewButtonMute;
+		private System.Windows.Forms.Label LabelSlow;
+		private System.Windows.Forms.Label LabelFast;
 	}
 }

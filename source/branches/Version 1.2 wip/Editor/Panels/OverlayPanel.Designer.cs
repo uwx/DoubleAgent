@@ -554,8 +554,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonAdd.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileNew;
 			this.ButtonAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonAdd.Name = "ButtonAdd";
-			this.ButtonAdd.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonAdd.Size = new System.Drawing.Size(23, 23);
 			this.ButtonAdd.Text = "Add";
 			this.ButtonAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
 			// 
@@ -565,8 +563,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonDelete.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditDelete;
 			this.ButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonDelete.Name = "ButtonDelete";
-			this.ButtonDelete.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonDelete.Size = new System.Drawing.Size(23, 23);
 			this.ButtonDelete.Click += new System.EventHandler(this.ButtonDelete_Click);
 			// 
 			// ButtonChooseFile
@@ -575,8 +571,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonChooseFile.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
 			this.ButtonChooseFile.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonChooseFile.Name = "ButtonChooseFile";
-			this.ButtonChooseFile.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonChooseFile.Size = new System.Drawing.Size(23, 23);
 			this.ButtonChooseFile.Text = "Choose image file";
 			this.ButtonChooseFile.Click += new System.EventHandler(this.ButtonOpen_Click);
 			// 

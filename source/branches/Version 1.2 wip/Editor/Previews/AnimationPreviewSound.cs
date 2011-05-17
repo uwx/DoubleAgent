@@ -22,6 +22,7 @@ using System;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.IO;
 using DoubleAgent.Character;
 
 namespace AgentCharacterEditor.Previews
@@ -31,16 +32,22 @@ namespace AgentCharacterEditor.Previews
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
+		private System.IO.FileStream mTempFile = null;
+#if DEBUG
+		static private int mNextInstanceNum = 1;
+		private int mInstanceNum = mNextInstanceNum++;
+#endif
+
 		public AnimationPreviewSound (CharacterFile pCharacterFile, FileAnimationFrame pFileFrame, TimeSpan? pBeginTime)
-			: base (SoundFileUri (pCharacterFile, pFileFrame))
+			: base (pBeginTime)
 		{
 			FileFrame = pFileFrame;
 			Player = new System.Windows.Media.MediaPlayer ();
 
 			Name = String.Format ("Sound{0}_{1}", pFileFrame.SoundNdx, pFileFrame.Container.IndexOf (pFileFrame));
-			BeginTime = pBeginTime;
 			FillBehavior = FillBehavior.Stop;
-#if DEBUG_NOT
+			SetSourcePath (pCharacterFile, pFileFrame);
+#if DEBUG
 			System.Diagnostics.Debug.Print ("  Frame [{0}] Sound [{1}] at [{2}] Source [{3}]", pFileFrame.Container.IndexOf (pFileFrame), Name, BeginTime, Source);
 #endif
 
@@ -70,18 +77,6 @@ namespace AgentCharacterEditor.Previews
 			//
 		}
 
-		static private System.Uri SoundFileUri (CharacterFile pCharacterFile, FileAnimationFrame pFileFrame)
-		{
-			UriBuilder lUriBuilder = new UriBuilder (Uri.UriSchemeFile, String.Empty);
-			lUriBuilder.Path = pCharacterFile.GetSoundFilePath (pFileFrame.SoundNdx);
-			return lUriBuilder.Uri;
-		}
-
-#if DEBUG
-		static private int mNextInstanceNum = 1;
-		private int mInstanceNum = mNextInstanceNum++;
-#endif
-
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
@@ -99,7 +94,55 @@ namespace AgentCharacterEditor.Previews
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Methods
+
+		private Boolean SetSourcePath (CharacterFile pCharacterFile, FileAnimationFrame pFileFrame)
+		{
+			String lSoundFilePath = pCharacterFile.GetSoundFilePath (pFileFrame.SoundNdx);
+
+			if (String.IsNullOrEmpty (lSoundFilePath))
+			{
+				try
+				{
+					Byte[] lSound = pCharacterFile.GetSound (pFileFrame.SoundNdx);
+
+					if ((lSound != null) && lSound.Length > 0)
+					{
+						mTempFile = new FileStream (Path.GetTempFileName(), FileMode.Create, FileAccess.ReadWrite, FileShare.None, 8, FileOptions.DeleteOnClose);
+						mTempFile = new FileStream (Path.ChangeExtension (mTempFile.Name, ".wav"), FileMode.Create, FileAccess.ReadWrite, (FileShare.ReadWrite | FileShare.Delete));
+						mTempFile.Write (lSound, 0, lSound.Length);
+						mTempFile.Flush ();
+						mTempFile = new FileStream (mTempFile.Name, FileMode.Open, FileAccess.Read, (FileShare.ReadWrite | FileShare.Delete), 8, FileOptions.DeleteOnClose);
+						lSoundFilePath = mTempFile.Name;
+					}
+				}
+				catch (Exception pException)
+				{
+					System.Diagnostics.Debug.Print (pException.Message);
+				}
+			}
+			if (!String.IsNullOrEmpty (lSoundFilePath))
+			{
+				SetValue (SourceProperty, SoundFileUri (lSoundFilePath));
+				return true;
+			}
+			return false;
+		}
+
+		static private System.Uri SoundFileUri (String pSoundFilePath)
+		{
+			UriBuilder lUriBuilder = new UriBuilder (Uri.UriSchemeFile, String.Empty);
+			lUriBuilder.Path = pSoundFilePath;
+			return lUriBuilder.Uri;
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
 		#region Infrastructure
+
+		//
+		//	Note - mTempFile is not copied to clones
+		//
 
 		protected override System.Windows.Freezable CreateInstanceCore ()
 		{
@@ -174,7 +217,6 @@ namespace AgentCharacterEditor.Previews
 				System.Diagnostics.Debug.Print (pException.Message);
 			}
 #endif
-#if false
 			try
 			{
 				if (lClock.CurrentState == ClockState.Active)
@@ -190,7 +232,6 @@ namespace AgentCharacterEditor.Previews
 			{
 				System.Diagnostics.Debug.Print (pException.Message);
 			}
-#endif
 		}
 
 		void OnCurrentGlobalSpeedInvalidated (object sender, EventArgs e)

@@ -30,6 +30,11 @@ namespace AgentCharacterEditor.Previews
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
+#if DEBUG
+		static private int mNextInstanceNum = 1;
+		private int mInstanceNum = mNextInstanceNum++;
+#endif
+
 		public AnimationPreviewFrames (CharacterFile pCharacterFile, FileAnimation pFileAnimation, System.Windows.Media.ImageDrawing pTarget)
 		{
 			TimeSpan lStartTime = new TimeSpan ();
@@ -83,11 +88,6 @@ namespace AgentCharacterEditor.Previews
 			RemoveRequested += new EventHandler (OnRemoveRequested);
 #endif
 		}
-
-#if DEBUG
-		static private int mNextInstanceNum = 1;
-		private int mInstanceNum = mNextInstanceNum++;
-#endif
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
@@ -397,7 +397,6 @@ namespace AgentCharacterEditor.Previews
 				System.Diagnostics.Debug.Print (pException.Message);
 			}
 #endif
-#if false
 			try
 			{
 				if (lClock.CurrentState == ClockState.Active)
@@ -413,7 +412,6 @@ namespace AgentCharacterEditor.Previews
 			{
 				System.Diagnostics.Debug.Print (pException.Message);
 			}
-#endif
 		}
 
 		void OnCurrentGlobalSpeedInvalidated (object sender, EventArgs e)

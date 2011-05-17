@@ -566,8 +566,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonAdd.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileNew;
 			this.ButtonAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonAdd.Name = "ButtonAdd";
-			this.ButtonAdd.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonAdd.Size = new System.Drawing.Size(23, 23);
 			this.ButtonAdd.Text = "Add a new image";
 			this.ButtonAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
 			// 
@@ -577,8 +575,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonDelete.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditDelete;
 			this.ButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonDelete.Name = "ButtonDelete";
-			this.ButtonDelete.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonDelete.Size = new System.Drawing.Size(23, 23);
 			this.ButtonDelete.Text = "Remove";
 			this.ButtonDelete.Click += new System.EventHandler(this.ButtonDelete_Click);
 			// 
@@ -588,8 +584,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonChooseFile.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
 			this.ButtonChooseFile.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonChooseFile.Name = "ButtonChooseFile";
-			this.ButtonChooseFile.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonChooseFile.Size = new System.Drawing.Size(23, 23);
 			this.ButtonChooseFile.Text = "Open image file";
 			this.ButtonChooseFile.Click += new System.EventHandler(this.ButtonOpen_Click);
 			// 
@@ -599,8 +593,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonMoveUp.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveUp;
 			this.ButtonMoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonMoveUp.Name = "ButtonMoveUp";
-			this.ButtonMoveUp.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonMoveUp.Size = new System.Drawing.Size(23, 23);
 			this.ButtonMoveUp.Text = "Move image up";
 			this.ButtonMoveUp.Click += new System.EventHandler(this.ButtonMoveUp_Click);
 			// 
@@ -610,8 +602,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonMoveDown.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveDown;
 			this.ButtonMoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonMoveDown.Name = "ButtonMoveDown";
-			this.ButtonMoveDown.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonMoveDown.Size = new System.Drawing.Size(23, 23);
 			this.ButtonMoveDown.Text = "Move image down";
 			this.ButtonMoveDown.Click += new System.EventHandler(this.ButtonMoveDown_Click);
 			// 
@@ -669,8 +659,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonSoundPreview.Image = global::AgentCharacterEditor.Properties.Resources.ImgRun;
 			this.ButtonSoundPreview.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonSoundPreview.Name = "ButtonSoundPreview";
-			this.ButtonSoundPreview.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonSoundPreview.Size = new System.Drawing.Size(23, 23);
 			this.ButtonSoundPreview.Text = "Preview";
 			this.ButtonSoundPreview.Click += new System.EventHandler(this.ButtonSoundPreview_Click);
 			// 
@@ -695,8 +683,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonSoundImport.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
 			this.ButtonSoundImport.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonSoundImport.Name = "ButtonSoundImport";
-			this.ButtonSoundImport.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonSoundImport.Size = new System.Drawing.Size(23, 23);
 			this.ButtonSoundImport.Text = "Open sound file";
 			this.ButtonSoundImport.Click += new System.EventHandler(this.ButtonSoundImport_Click);
 			// 
@@ -707,8 +693,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonSoundExport.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileSave;
 			this.ButtonSoundExport.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonSoundExport.Name = "ButtonSoundExport";
-			this.ButtonSoundExport.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
-			this.ButtonSoundExport.Size = new System.Drawing.Size(23, 23);
 			this.ButtonSoundExport.Text = "Save sound";
 			// 
 			// TextBoxSoundFile
