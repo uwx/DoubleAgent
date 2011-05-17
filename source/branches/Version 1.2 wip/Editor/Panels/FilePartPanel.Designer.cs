@@ -1,4 +1,4 @@
-﻿namespace AgentCharacterEditor
+﻿namespace AgentCharacterEditor.Panels
 {
 	partial class FilePartPanel
 	{

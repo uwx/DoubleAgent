@@ -42,7 +42,6 @@ namespace AgentCharacterEditor
 			System.Diagnostics.Debug.Listeners.Add (new System.Diagnostics.TextWriterTraceListener (System.IO.Path.Combine (System.Environment.GetFolderPath (Environment.SpecialFolder.DesktopDirectory), "DoubleACE.Log")));
 			System.Diagnostics.Debug.AutoFlush = true;
 #endif
-			Program.Global = new Global ();
 			Program.UndoManager = new UndoManager ();
 			Program.MainForm = new MainForm (args);
 			Program.MainForm.Initialize ();
@@ -58,12 +57,6 @@ namespace AgentCharacterEditor
 		#region Properties
 
 		static internal MainForm MainForm
-		{
-			get;
-			private set;
-		}
-
-		static internal Global Global
 		{
 			get;
 			private set;

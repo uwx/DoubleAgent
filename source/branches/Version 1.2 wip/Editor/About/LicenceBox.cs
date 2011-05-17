@@ -20,7 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 using System.Windows.Forms;
 
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.About
 {
 	partial class LicenseBox : Form
 	{

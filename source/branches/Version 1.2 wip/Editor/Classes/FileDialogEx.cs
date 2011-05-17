@@ -24,7 +24,7 @@ using System.Drawing.Imaging;
 using System.Text;
 using System.Windows.Forms;
 
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.Global
 {
 	public class OpenFileDialogEx
 	{

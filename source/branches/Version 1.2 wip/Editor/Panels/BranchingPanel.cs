@@ -27,8 +27,10 @@ using System.Text;
 using System.Windows.Forms;
 using DoubleAgent;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Navigation;
+using AgentCharacterEditor.Updates;
 
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.Panels
 {
 	public partial class BranchingPanel : FilePartPanel
 	{
@@ -83,7 +85,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return Global.TitleFrame (Frame);
+				return Properties.Titles.Frame (Frame);
 			}
 		}
 
@@ -108,7 +110,7 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				TextBoxFrameName.Text = Global.TitleFrameAnimation (Frame);
+				TextBoxFrameName.Text = Properties.Titles.FrameAnimation (Frame);
 				TextBoxFrameName.Enabled = true;
 			}
 		}

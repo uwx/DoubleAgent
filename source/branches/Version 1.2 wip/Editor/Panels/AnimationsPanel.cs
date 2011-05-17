@@ -26,8 +26,11 @@ using System.Text;
 using System.Windows.Forms;
 using DoubleAgent;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Global;
+using AgentCharacterEditor.Navigation;
+using AgentCharacterEditor.Updates;
 
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.Panels
 {
 	public partial class AnimationsPanel : FilePartPanel
 	{
@@ -74,7 +77,7 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Events
 
-		public event Global.NavigationEventHandler Navigate;
+		public event NavigationEventHandler Navigate;
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
@@ -195,12 +198,12 @@ namespace AgentCharacterEditor
 			if (IsEmpty || Program.FileIsReadOnly)
 			{
 				ButtonDelete.Enabled = false;
-				ButtonDelete.Text = String.Format (Properties.Resources.EditDeleteThis.NoMenuPrefix (), Global.TitleAnimation ((FileAnimation)null));
+				ButtonDelete.Text = String.Format (Properties.Resources.EditDeleteThis.NoMenuPrefix (), Properties.Titles.Animation ((FileAnimation)null));
 			}
 			else
 			{
 				ButtonDelete.Enabled = (GetSelectedAnimation (false) != null);
-				ButtonDelete.Text = String.Format (Properties.Resources.EditDeleteThis.NoMenuPrefix (), Global.TitleAnimation (GetSelectedAnimation (false)));
+				ButtonDelete.Text = String.Format (Properties.Resources.EditDeleteThis.NoMenuPrefix (), Properties.Titles.Animation (GetSelectedAnimation (false)));
 			}
 		}
 
@@ -212,7 +215,7 @@ namespace AgentCharacterEditor
 
 				if (lAnimation != null)
 				{
-					pEventArgs.CopyObjectTitle = Global.TitleAnimation (lAnimation);
+					pEventArgs.CopyObjectTitle = Properties.Titles.Animation (lAnimation);
 					if (!Program.FileIsReadOnly)
 					{
 						pEventArgs.CutObjectTitle = pEventArgs.CopyObjectTitle;
@@ -231,13 +234,13 @@ namespace AgentCharacterEditor
 				}
 				if ((lAnimation != null) && pListIsFocused)
 				{
-					pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (lAnimation, Global.TitleAnimation (lAnimation), Global.TitleAnimation (pEventArgs.PasteObject as FileAnimation));
+					pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (lAnimation, Properties.Titles.Animation (lAnimation), Properties.Titles.Animation (pEventArgs.PasteObject as FileAnimation));
 				}
 				else if (pListIsFocused || pNewNameIsFocused)
 				{
 					if (HasNewAnimationName () && !CharacterFile.Gestures.Contains (GetNewAnimationName ()))
 					{
-						pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (null, GetNewAnimationName ().Quoted (), Global.TitleAnimation (pEventArgs.PasteObject as FileAnimation));
+						pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (null, GetNewAnimationName ().Quoted (), Properties.Titles.Animation (pEventArgs.PasteObject as FileAnimation));
 					}
 					else
 					{
@@ -653,7 +656,7 @@ namespace AgentCharacterEditor
 				{
 					try
 					{
-						Navigate (this, new Global.NavigationEventArgs (new ResolveAnimation (lAnimation)));
+						Navigate (this, new NavigationEventArgs (new ResolveAnimation (lAnimation)));
 					}
 					catch
 					{

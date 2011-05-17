@@ -24,7 +24,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.About
 {
 	partial class AboutBox : Form
 	{
@@ -43,7 +43,7 @@ namespace AgentCharacterEditor
 
 		private void LicenseButton_Click (object sender, EventArgs e)
 		{
-			(new AgentCharacterEditor.LicenseBox ()).ShowDialog (this);
+			(new AgentCharacterEditor.About.LicenseBox ()).ShowDialog (this);
 		}
 
 		private void TextBoxLicenseIntro_LinkClicked (object sender, LinkClickedEventArgs e)

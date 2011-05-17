@@ -18,7 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.Panels
 {
 	partial class AnimationPanel
 	{
@@ -110,8 +110,7 @@ namespace AgentCharacterEditor
 			this.PreviewButtonSkipBack = new System.Windows.Forms.ToolStripButton();
 			this.PreviewButtonSkipForward = new System.Windows.Forms.ToolStripButton();
 			this.PreviewButtonRepeat = new System.Windows.Forms.ToolStripButton();
-			this.AnimationPreviewBorder = new System.Windows.Forms.Panel();
-			this.AnimationPreview = new AgentCharacterEditor.Previews.AnimationPreview ();
+			this.AnimationPreview = new AgentCharacterEditor.Previews.AnimationPreview();
 			toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -136,7 +135,6 @@ namespace AgentCharacterEditor
 			this.PanelPreviewControls.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.TrackBarRate)).BeginInit();
 			this.ToolStripPreview.SuspendLayout();
-			this.AnimationPreviewBorder.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// toolStripSeparator1
@@ -606,7 +604,7 @@ namespace AgentCharacterEditor
 			this.LayoutPanelPreview.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.LayoutPanelPreview.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.LayoutPanelPreview.Controls.Add(this.PanelPreviewControls, 1, 0);
-			this.LayoutPanelPreview.Controls.Add(this.AnimationPreviewBorder, 0, 0);
+			this.LayoutPanelPreview.Controls.Add(this.AnimationPreview, 0, 0);
 			this.LayoutPanelPreview.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LayoutPanelPreview.Location = new System.Drawing.Point(6, 27);
 			this.LayoutPanelPreview.Margin = new System.Windows.Forms.Padding(0);
@@ -623,10 +621,10 @@ namespace AgentCharacterEditor
 			this.PanelPreviewControls.Controls.Add(this.TrackBarRate);
 			this.PanelPreviewControls.Controls.Add(this.ToolStripPreview);
 			this.PanelPreviewControls.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PanelPreviewControls.Location = new System.Drawing.Point(142, 0);
+			this.PanelPreviewControls.Location = new System.Drawing.Point(128, 0);
 			this.PanelPreviewControls.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelPreviewControls.Name = "PanelPreviewControls";
-			this.PanelPreviewControls.Size = new System.Drawing.Size(478, 206);
+			this.PanelPreviewControls.Size = new System.Drawing.Size(492, 206);
 			this.PanelPreviewControls.TabIndex = 2;
 			// 
 			// TrackBarRate
@@ -657,7 +655,7 @@ namespace AgentCharacterEditor
             this.PreviewButtonRepeat});
 			this.ToolStripPreview.Location = new System.Drawing.Point(0, 0);
 			this.ToolStripPreview.Name = "ToolStripPreview";
-			this.ToolStripPreview.Size = new System.Drawing.Size(478, 26);
+			this.ToolStripPreview.Size = new System.Drawing.Size(492, 26);
 			this.ToolStripPreview.TabIndex = 0;
 			this.ToolStripPreview.Text = "toolStripEx1";
 			// 
@@ -727,24 +725,18 @@ namespace AgentCharacterEditor
 			this.PreviewButtonRepeat.Text = "Repeat";
 			this.PreviewButtonRepeat.Click += new System.EventHandler(this.PreviewButtonRepeat_Click);
 			// 
-			// AnimationPreviewBorder
-			// 
-			this.AnimationPreviewBorder.AutoSize = true;
-			this.AnimationPreviewBorder.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.AnimationPreviewBorder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.AnimationPreviewBorder.Controls.Add(this.AnimationPreview);
-			this.AnimationPreviewBorder.Location = new System.Drawing.Point(0, 0);
-			this.AnimationPreviewBorder.Margin = new System.Windows.Forms.Padding(0, 0, 12, 0);
-			this.AnimationPreviewBorder.Name = "AnimationPreviewBorder";
-			this.AnimationPreviewBorder.Size = new System.Drawing.Size(130, 130);
-			this.AnimationPreviewBorder.TabIndex = 0;
-			// 
 			// AnimationPreview
 			// 
+			this.AnimationPreview.AutoSize = true;
+			this.AnimationPreview.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.AnimationPreview.BackColor = System.Drawing.SystemColors.Window;
+			this.AnimationPreview.CausesValidation = false;
 			this.AnimationPreview.Location = new System.Drawing.Point(0, 0);
+			this.AnimationPreview.Margin = new System.Windows.Forms.Padding(0);
 			this.AnimationPreview.Name = "AnimationPreview";
+			this.AnimationPreview.Size = new System.Drawing.Size(128, 128);
 			this.AnimationPreview.TabIndex = 0;
+			this.AnimationPreview.TabStop = false;
 			// 
 			// AnimationPanel
 			// 
@@ -775,7 +767,6 @@ namespace AgentCharacterEditor
 			((System.ComponentModel.ISupportInitialize)(this.TrackBarRate)).EndInit();
 			this.ToolStripPreview.ResumeLayout(false);
 			this.ToolStripPreview.PerformLayout();
-			this.AnimationPreviewBorder.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -809,7 +800,6 @@ namespace AgentCharacterEditor
 		private System.Windows.Forms.TableLayoutPanel LayoutPanelMain;
 		private System.Windows.Forms.GroupBox GroupBoxPreview;
 		private System.Windows.Forms.TableLayoutPanel LayoutPanelPreview;
-		private System.Windows.Forms.Panel AnimationPreviewBorder;
 		private AgentCharacterEditor.Previews.AnimationPreview AnimationPreview;
 		private System.Windows.Forms.Panel PanelPreviewControls;
 		private System.Windows.Forms.TrackBar TrackBarRate;

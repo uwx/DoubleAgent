@@ -22,8 +22,11 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Global;
+using AgentCharacterEditor.Navigation;
+using AgentCharacterEditor.Updates;
 
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.Panels
 {
 	public partial class PartsTreePanel : FilePartPanel
 	{
@@ -58,49 +61,53 @@ namespace AgentCharacterEditor
 		public void LoadExpansion ()
 		{
 			Properties.Settings lSettings = Properties.Settings.Default;
-			TreeNode lNode;
 
-			TreeViewMain.BeginUpdate ();
+			if (lSettings.IsValid)
+			{
+				TreeNode lNode;
 
-			lNode = GetRootNode (NodeNameCharacter);
-			if (lNode != null)
-			{
-				if (lSettings.CharacterNodeExpanded)
-				{
-					lNode.Expand ();
-				}
-				else
-				{
-					lNode.Collapse ();
-				}
-				TreeViewMain.SelectedNode = lNode;
-			}
-			lNode = GetRootNode (NodeNameAnimations);
-			if (lNode != null)
-			{
-				if (lSettings.AnimationsNodeExpanded)
-				{
-					lNode.Expand ();
-				}
-				else
-				{
-					lNode.Collapse ();
-				}
-			}
-			lNode = GetRootNode (NodeNameStates);
-			if (lNode != null)
-			{
-				if (lSettings.StatesNodeExpanded)
-				{
-					lNode.Expand ();
-				}
-				else
-				{
-					lNode.Collapse ();
-				}
-			}
+				TreeViewMain.BeginUpdate ();
 
-			TreeViewMain.EndUpdate ();
+				lNode = GetRootNode (NodeNameCharacter);
+				if (lNode != null)
+				{
+					if (lSettings.CharacterNodeExpanded)
+					{
+						lNode.Expand ();
+					}
+					else
+					{
+						lNode.Collapse ();
+					}
+					TreeViewMain.SelectedNode = lNode;
+				}
+				lNode = GetRootNode (NodeNameAnimations);
+				if (lNode != null)
+				{
+					if (lSettings.AnimationsNodeExpanded)
+					{
+						lNode.Expand ();
+					}
+					else
+					{
+						lNode.Collapse ();
+					}
+				}
+				lNode = GetRootNode (NodeNameStates);
+				if (lNode != null)
+				{
+					if (lSettings.StatesNodeExpanded)
+					{
+						lNode.Expand ();
+					}
+					else
+					{
+						lNode.Collapse ();
+					}
+				}
+
+				TreeViewMain.EndUpdate ();
+			}
 		}
 
 		public void SaveExpansion ()
@@ -209,7 +216,7 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Events
 
-		public event Global.NavigationEventHandler Navigate;
+		public event NavigationEventHandler Navigate;
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
@@ -311,7 +318,7 @@ namespace AgentCharacterEditor
 				foreach (FileAnimationFrame lFrame in pAnimation.Frames)
 				{
 					lFrameNdx = pAnimation.Frames.IndexOf (lFrame);
-					lFrameName = Global.TitleFrame (lFrameNdx);
+					lFrameName = Properties.Titles.Frame (lFrameNdx);
 					lFrameNode = (lFrameNdx < pAnimationNode.Nodes.Count) ? pAnimationNode.Nodes[lFrameNdx] : pAnimationNode.Nodes.Add (lFrameName);
 					lFrameNode.Text = lFrameName;
 					lFrameNode.Tag = new ResolveAnimationFrame (lFrame);
@@ -462,7 +469,7 @@ namespace AgentCharacterEditor
 				}
 				else if (lSelectedObject is FileAnimation)
 				{
-					pEventArgs.CopyObjectTitle = Global.TitleAnimation (lSelectedObject as FileAnimation);
+					pEventArgs.CopyObjectTitle = Properties.Titles.Animation (lSelectedObject as FileAnimation);
 					if (!Program.FileIsReadOnly)
 					{
 						pEventArgs.CutObjectTitle = pEventArgs.CopyObjectTitle;
@@ -471,7 +478,7 @@ namespace AgentCharacterEditor
 				}
 				else if (lSelectedObject is FileAnimationFrame)
 				{
-					pEventArgs.CopyObjectTitle = Global.TitleFrameAnimation (lSelectedObject as FileAnimationFrame).Quoted ();
+					pEventArgs.CopyObjectTitle = Properties.Titles.FrameAnimation (lSelectedObject as FileAnimationFrame).Quoted ();
 					if (!Program.FileIsReadOnly)
 					{
 						pEventArgs.CutObjectTitle = pEventArgs.CopyObjectTitle;
@@ -480,7 +487,7 @@ namespace AgentCharacterEditor
 				}
 				else if ((lSelectedPart is ResolveState) && (lSelectedObject != null))
 				{
-					pEventArgs.CopyObjectTitle = Global.TitleState (lSelectedObject as String);
+					pEventArgs.CopyObjectTitle = Properties.Titles.State (lSelectedObject as String);
 				}
 
 				if (!Program.FileIsReadOnly && (pEventArgs.PasteObject != null))
@@ -497,13 +504,13 @@ namespace AgentCharacterEditor
 					{
 						if ((lSelectedPart is ResolveAnimation) && (lSelectedObject is FileAnimation))
 						{
-							pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (lSelectedObject as FileAnimation, Global.TitleAnimation (lSelectedObject as FileAnimation), Global.TitleAnimation (pEventArgs.PasteObject as FileAnimation));
+							pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (lSelectedObject as FileAnimation, Properties.Titles.Animation (lSelectedObject as FileAnimation), Properties.Titles.Animation (pEventArgs.PasteObject as FileAnimation));
 						}
 						else if ((lSelectedPart is ResolveCharacter) && ((lSelectedPart as ResolveCharacter).Scope == ResolveCharacter.ScopeType.ScopeAnimations))
 						{
 							if (Program.MainForm.PanelAnimations.HasNewAnimationName () && !CharacterFile.Gestures.Contains (Program.MainForm.PanelAnimations.GetNewAnimationName ()))
 							{
-								pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (null, Program.MainForm.PanelAnimations.GetNewAnimationName ().Quoted (), Global.TitleAnimation (pEventArgs.PasteObject as FileAnimation));
+								pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (null, Program.MainForm.PanelAnimations.GetNewAnimationName ().Quoted (), Properties.Titles.Animation (pEventArgs.PasteObject as FileAnimation));
 							}
 							else
 							{
@@ -516,17 +523,17 @@ namespace AgentCharacterEditor
 					{
 						if ((lSelectedPart is ResolveAnimationFrame) && (lSelectedObject is FileAnimationFrame) && ((lSelectedPart as ResolveAnimationFrame).Scope == ResolveAnimationFrame.ScopeType.ScopeFrame))
 						{
-							pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (lSelectedObject as FileAnimationFrame, Global.TitleFrameAnimation (lSelectedObject as FileAnimationFrame), Global.TitleFrame (pEventArgs.PasteObject as FileAnimationFrame));
+							pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (lSelectedObject as FileAnimationFrame, Properties.Titles.FrameAnimation (lSelectedObject as FileAnimationFrame), Properties.Titles.Frame (pEventArgs.PasteObject as FileAnimationFrame));
 
 						}
 						else if ((lSelectedPart is ResolveAnimation) && (lSelectedObject is FileAnimation))
 						{
-							pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (null, Global.TitleFrame (pEventArgs.PasteObject as FileAnimationFrame));
+							pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (null, Properties.Titles.Frame (pEventArgs.PasteObject as FileAnimationFrame));
 						}
 					}
 					else if ((pEventArgs.PasteObject is FileState) && (lSelectedPart is ResolveState))
 					{
-						pEventArgs.PasteObjectTitle = Global.TitleState (pEventArgs.PasteObject as FileState);
+						pEventArgs.PasteObjectTitle = Properties.Titles.State (pEventArgs.PasteObject as FileState);
 					}
 				}
 			}
@@ -727,7 +734,7 @@ namespace AgentCharacterEditor
 			{
 				try
 				{
-					Navigate (this, new Global.NavigationEventArgs (SelectedPart));
+					Navigate (this, new NavigationEventArgs (SelectedPart));
 				}
 				catch
 				{

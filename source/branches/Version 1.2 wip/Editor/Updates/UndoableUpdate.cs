@@ -21,8 +21,9 @@
 using System;
 using DoubleAgent;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Navigation;
 
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.Updates
 {
 	internal abstract class UndoableUpdate : UndoUnit
 	{

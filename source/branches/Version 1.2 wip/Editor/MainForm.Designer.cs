@@ -57,16 +57,16 @@ namespace AgentCharacterEditor
 			System.Windows.Forms.ToolStripSeparator ToolStripSeparator2;
 			this.ToolStripContainerMain = new System.Windows.Forms.ToolStripContainer();
 			this.SplitContainerMain = new System.Windows.Forms.SplitContainer();
-			this.PanelPartsTree = new AgentCharacterEditor.PartsTreePanel();
-			this.PanelBalloon = new AgentCharacterEditor.BalloonPanel();
-			this.PanelCharacter = new AgentCharacterEditor.CharacterPanel();
-			this.PanelTts = new AgentCharacterEditor.TtsPanel();
-			this.PanelAnimations = new AgentCharacterEditor.AnimationsPanel();
-			this.PanelAnimation = new AgentCharacterEditor.AnimationPanel();
-			this.PanelState = new AgentCharacterEditor.StatePanel();
-			this.PanelFrame = new AgentCharacterEditor.FramePanel();
-			this.PanelBranching = new AgentCharacterEditor.BranchingPanel();
-			this.PanelOverlays = new AgentCharacterEditor.OverlayPanel();
+			this.PanelPartsTree = new AgentCharacterEditor.Panels.PartsTreePanel ();
+			this.PanelBalloon = new AgentCharacterEditor.Panels.BalloonPanel ();
+			this.PanelCharacter = new AgentCharacterEditor.Panels.CharacterPanel ();
+			this.PanelTts = new AgentCharacterEditor.Panels.TtsPanel ();
+			this.PanelAnimations = new AgentCharacterEditor.Panels.AnimationsPanel ();
+			this.PanelAnimation = new AgentCharacterEditor.Panels.AnimationPanel ();
+			this.PanelState = new AgentCharacterEditor.Panels.StatePanel ();
+			this.PanelFrame = new AgentCharacterEditor.Panels.FramePanel ();
+			this.PanelBranching = new AgentCharacterEditor.Panels.BranchingPanel ();
+			this.PanelOverlays = new AgentCharacterEditor.Panels.OverlayPanel ();
 			this.ToolStripNavigation = new DoubleAgent.ToolStripEx();
 			this.ToolButtonNavigateBack = new System.Windows.Forms.ToolStripButton();
 			this.ToolButtonNavigateForward = new System.Windows.Forms.ToolStripButton();
@@ -221,7 +221,7 @@ namespace AgentCharacterEditor
 			this.PanelPartsTree.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
 			this.PanelPartsTree.Size = new System.Drawing.Size(200, 480);
 			this.PanelPartsTree.TabIndex = 0;
-			this.PanelPartsTree.Navigate += new AgentCharacterEditor.Global.NavigationEventHandler(this.OnNavigate);
+			this.PanelPartsTree.Navigate += new AgentCharacterEditor.Navigation.NavigationEventHandler(this.OnNavigate);
 			// 
 			// PanelBalloon
 			// 
@@ -265,7 +265,7 @@ namespace AgentCharacterEditor
 			this.PanelAnimations.Size = new System.Drawing.Size(758, 481);
 			this.PanelAnimations.TabIndex = 0;
 			this.PanelAnimations.Visible = false;
-			this.PanelAnimations.Navigate += new AgentCharacterEditor.Global.NavigationEventHandler(this.OnNavigate);
+			this.PanelAnimations.Navigate += new AgentCharacterEditor.Navigation.NavigationEventHandler(this.OnNavigate);
 			// 
 			// PanelAnimation
 			// 
@@ -277,7 +277,7 @@ namespace AgentCharacterEditor
 			this.PanelAnimation.Size = new System.Drawing.Size(758, 481);
 			this.PanelAnimation.TabIndex = 0;
 			this.PanelAnimation.Visible = false;
-			this.PanelAnimation.Navigate += new AgentCharacterEditor.Global.NavigationEventHandler(this.OnNavigate);
+			this.PanelAnimation.Navigate += new AgentCharacterEditor.Navigation.NavigationEventHandler(this.OnNavigate);
 			// 
 			// PanelState
 			// 
@@ -289,7 +289,7 @@ namespace AgentCharacterEditor
 			this.PanelState.Size = new System.Drawing.Size(758, 481);
 			this.PanelState.TabIndex = 0;
 			this.PanelState.Visible = false;
-			this.PanelState.Navigate += new AgentCharacterEditor.Global.NavigationEventHandler(this.OnNavigate);
+			this.PanelState.Navigate += new AgentCharacterEditor.Navigation.NavigationEventHandler(this.OnNavigate);
 			// 
 			// PanelFrame
 			// 
@@ -808,21 +808,21 @@ namespace AgentCharacterEditor
 		public System.Windows.Forms.ToolStripMenuItem MenuItemEditDelete;
 		private System.Windows.Forms.ToolStripMenuItem MenuItemHelp;
 		private System.Windows.Forms.ToolStripMenuItem MenuItemHelpAbout;
-		public AgentCharacterEditor.CharacterPanel PanelCharacter;
-		public AgentCharacterEditor.BalloonPanel PanelBalloon;
-		public AgentCharacterEditor.TtsPanel PanelTts;
-		public AgentCharacterEditor.AnimationsPanel PanelAnimations;
-		public AgentCharacterEditor.AnimationPanel PanelAnimation;
-		public AgentCharacterEditor.StatePanel PanelState;
-		public AgentCharacterEditor.FramePanel PanelFrame;
-		public AgentCharacterEditor.BranchingPanel PanelBranching;
-		public AgentCharacterEditor.OverlayPanel PanelOverlays;
+		public AgentCharacterEditor.Panels.CharacterPanel PanelCharacter;
+		public AgentCharacterEditor.Panels.BalloonPanel PanelBalloon;
+		public AgentCharacterEditor.Panels.TtsPanel PanelTts;
+		public AgentCharacterEditor.Panels.AnimationsPanel PanelAnimations;
+		public AgentCharacterEditor.Panels.AnimationPanel PanelAnimation;
+		public AgentCharacterEditor.Panels.StatePanel PanelState;
+		public AgentCharacterEditor.Panels.FramePanel PanelFrame;
+		public AgentCharacterEditor.Panels.BranchingPanel PanelBranching;
+		public AgentCharacterEditor.Panels.OverlayPanel PanelOverlays;
 		public System.Windows.Forms.ContextMenuStrip ContextMenuEdit;
 		public System.Windows.Forms.ToolStripMenuItem ContextItemEditCut;
 		public System.Windows.Forms.ToolStripMenuItem ContextItemEditCopy;
 		public System.Windows.Forms.ToolStripMenuItem ContextItemEditPaste;
 		public System.Windows.Forms.ToolStripMenuItem ContextItemEditDelete;
-		private PartsTreePanel PanelPartsTree;
+		private AgentCharacterEditor.Panels.PartsTreePanel PanelPartsTree;
 		private DoubleAgent.ToolStripEx ToolStripNavigation;
 		private System.Windows.Forms.ToolStripButton ToolButtonNavigateBack;
 		private System.Windows.Forms.ToolStripButton ToolButtonNavigateForward;

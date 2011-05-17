@@ -26,8 +26,10 @@ using System.Text;
 using System.Windows.Forms;
 using DoubleAgent;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Navigation;
+using AgentCharacterEditor.Updates;
 
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.Panels
 {
 	public partial class StatePanel : FilePartPanel
 	{
@@ -92,7 +94,7 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Events
 
-		public event Global.NavigationEventHandler Navigate;
+		public event NavigationEventHandler Navigate;
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
@@ -303,7 +305,7 @@ namespace AgentCharacterEditor
 				{
 					try
 					{
-						Navigate (this, new Global.NavigationEventArgs (new ResolveAnimation (lItem.Text)));
+						Navigate (this, new NavigationEventArgs (new ResolveAnimation (lItem.Text)));
 					}
 					catch
 					{

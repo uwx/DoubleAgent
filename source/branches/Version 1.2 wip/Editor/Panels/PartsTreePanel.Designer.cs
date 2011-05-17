@@ -18,7 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.Panels
 {
 	partial class PartsTreePanel
 	{

@@ -23,6 +23,9 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using DoubleAgent;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Global;
+using AgentCharacterEditor.Navigation;
+using AgentCharacterEditor.Panels;
 
 namespace AgentCharacterEditor
 {
@@ -82,21 +85,24 @@ namespace AgentCharacterEditor
 		{
 			Properties.Settings lSettings = Properties.Settings.Default;
 
-			if ((lSettings.MainFormSize.X > 0) && (lSettings.MainFormSize.Y > 0))
+			if (lSettings.IsValid)
 			{
-				System.Drawing.Point lLocation = lSettings.MainFormLocation;
-				System.Drawing.Size lSize = (System.Drawing.Size)lSettings.MainFormSize;
+				if ((lSettings.MainFormSize.X > 0) && (lSettings.MainFormSize.Y > 0))
+				{
+					System.Drawing.Point lLocation = lSettings.MainFormLocation;
+					System.Drawing.Size lSize = (System.Drawing.Size)lSettings.MainFormSize;
 
-				lSize.Width = Math.Max (lSize.Width, MinimumSize.Width);
-				lSize.Height = Math.Max (lSize.Height, MinimumSize.Height);
-				Location = lLocation;
-				Size = lSize;
-			}
-			WindowState = (lSettings.MainFormState == FormWindowState.Minimized) ? FormWindowState.Normal : lSettings.MainFormState;
+					lSize.Width = Math.Max (lSize.Width, MinimumSize.Width);
+					lSize.Height = Math.Max (lSize.Height, MinimumSize.Height);
+					Location = lLocation;
+					Size = lSize;
+				}
+				WindowState = (lSettings.MainFormState == FormWindowState.Minimized) ? FormWindowState.Normal : lSettings.MainFormState;
 
-			if (lSettings.MainFormSplit > 0)
-			{
-				SplitContainerMain.SplitterDistance = lSettings.MainFormSplit;
+				if (lSettings.MainFormSplit > 0)
+				{
+					SplitContainerMain.SplitterDistance = lSettings.MainFormSplit;
+				}
 			}
 		}
 
@@ -104,15 +110,18 @@ namespace AgentCharacterEditor
 		{
 			Properties.Settings lSettings = Properties.Settings.Default;
 
-			mRecentFiles.Clear ();
-			if (lSettings.RecentFiles != null)
+			if (lSettings.IsValid)
 			{
-				foreach (String lPath in lSettings.RecentFiles)
+				mRecentFiles.Clear ();
+				if (lSettings.RecentFiles != null)
 				{
-					mRecentFiles.Add (lPath);
+					foreach (String lPath in lSettings.RecentFiles)
+					{
+						mRecentFiles.Add (lPath);
 #if DEBUG_NOT
-					System.Diagnostics.Debug.Print ("Load Recent [{0}]", lPath);
+						System.Diagnostics.Debug.Print ("Load Recent [{0}]", lPath);
 #endif
+					}
 				}
 			}
 			mRecentFiles.ShowPaths (MenuItemFile.DropDown, MenuItemFilePrintPreview);
@@ -1047,7 +1056,7 @@ namespace AgentCharacterEditor
 
 		private void MenuItemHelpAbout_Click (object sender, EventArgs e)
 		{
-			(new AgentCharacterEditor.AboutBox ()).ShowDialog (this);
+			(new AgentCharacterEditor.About.AboutBox ()).ShowDialog (this);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -1368,7 +1377,7 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		private void OnNavigate (object sender, Global.NavigationEventArgs e)
+		private void OnNavigate (object sender, NavigationEventArgs e)
 		{
 			if (CausesValidation)
 			{

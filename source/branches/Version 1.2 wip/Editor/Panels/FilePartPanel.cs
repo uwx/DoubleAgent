@@ -22,8 +22,9 @@ using System;
 using System.Windows.Forms;
 using DoubleAgent;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Navigation;
 
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.Panels
 {
 	public partial class FilePartPanel : UserControl
 	{

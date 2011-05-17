@@ -20,8 +20,9 @@
 /////////////////////////////////////////////////////////////////////////////
 using System;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Global;
 
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.Navigation
 {
 	public abstract class ResolvePart
 	{
@@ -479,5 +480,22 @@ namespace AgentCharacterEditor
 			}
 		}
 	}
+
+	///////////////////////////////////////////////////////////////////////////////
+
+	public class NavigationEventArgs : EventArgs
+	{
+		public NavigationEventArgs (ResolvePart pPart)
+		{
+			Part = pPart;
+		}
+		public ResolvePart Part
+		{
+			get;
+			private set;
+		}
+	}
+
+	public delegate void NavigationEventHandler (object sender, NavigationEventArgs e);
 }
 

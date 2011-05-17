@@ -29,8 +29,11 @@ using System.Media;
 using System.IO;
 using DoubleAgent;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Global;
+using AgentCharacterEditor.Navigation;
+using AgentCharacterEditor.Updates;
 
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.Panels
 {
 	public partial class FramePanel : FilePartPanel
 	{
@@ -46,7 +49,10 @@ namespace AgentCharacterEditor
 
 		protected override void OnLoadConfig (object sender, EventArgs e)
 		{
-			CheckBoxTransparent.Checked = Properties.Settings.Default.ShowFrameTransparency;
+			if (Properties.Settings.Default.IsValid)
+			{
+				CheckBoxTransparent.Checked = Properties.Settings.Default.ShowFrameTransparency;
+			}
 		}
 
 		protected override void OnSaveConfig (object sender, EventArgs e)
@@ -99,7 +105,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return Global.TitleFrame (Frame);
+				return Properties.Titles.Frame (Frame);
 			}
 		}
 
@@ -175,7 +181,7 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				TextBoxFrameName.Text = Global.TitleFrameAnimation (Frame);
+				TextBoxFrameName.Text = Properties.Titles.FrameAnimation (Frame);
 				TextBoxFrameName.Enabled = true;
 			}
 		}
@@ -320,10 +326,10 @@ namespace AgentCharacterEditor
 				ButtonMoveDown.Enabled = !Program.FileIsReadOnly && (ListViewImages.Items.Count > 1) && (pImageNdx >= 0) && (pImageNdx < ListViewImages.Items.Count - 1);
 			}
 
-			ButtonDelete.Text = ButtonDelete.Enabled ? String.Format (Properties.Resources.EditDeleteThis.NoMenuPrefix (), Global.TitleImage (pFrameImage)) : Properties.Resources.EditDelete.NoMenuPrefix ();
-			ButtonChooseFile.Text = ButtonChooseFile.Enabled ? String.Format (Properties.Resources.EditChooseThisFile.NoMenuPrefix (), Global.TitleImage (pFrameImage)) : Properties.Resources.EditChooseFile.NoMenuPrefix ();
-			ButtonMoveUp.Text = String.Format (Properties.Resources.EditMoveImageUp.NoMenuPrefix (), Global.TitleImage (pFrameImage));
-			ButtonMoveDown.Text = String.Format (Properties.Resources.EditMoveImageDown.NoMenuPrefix (), Global.TitleImage (pFrameImage));
+			ButtonDelete.Text = ButtonDelete.Enabled ? String.Format (Properties.Resources.EditDeleteThis.NoMenuPrefix (), Properties.Titles.Image (pFrameImage)) : Properties.Resources.EditDelete.NoMenuPrefix ();
+			ButtonChooseFile.Text = ButtonChooseFile.Enabled ? String.Format (Properties.Resources.EditChooseThisFile.NoMenuPrefix (), Properties.Titles.Image (pFrameImage)) : Properties.Resources.EditChooseFile.NoMenuPrefix ();
+			ButtonMoveUp.Text = String.Format (Properties.Resources.EditMoveImageUp.NoMenuPrefix (), Properties.Titles.Image (pFrameImage));
+			ButtonMoveDown.Text = String.Format (Properties.Resources.EditMoveImageDown.NoMenuPrefix (), Properties.Titles.Image (pFrameImage));
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -536,7 +542,7 @@ namespace AgentCharacterEditor
 
 				if (lFrameImage != null)
 				{
-					pEventArgs.CopyObjectTitle = (pEventArgs is Global.ContextMenuEventArgs) ? Global.TitleImage (lFrameImage) : Global.TitleImageFrameAnimation (lFrameImage).Quoted ();
+					pEventArgs.CopyObjectTitle = (pEventArgs is Global.ContextMenuEventArgs) ? Properties.Titles.Image (lFrameImage) : Properties.Titles.ImageFrameAnimation (lFrameImage).Quoted ();
 					if (!Program.FileIsReadOnly)
 					{
 						pEventArgs.CutObjectTitle = pEventArgs.CopyObjectTitle;
@@ -551,7 +557,7 @@ namespace AgentCharacterEditor
 					}
 					else
 					{
-						pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (lFrameImage, Global.TitleImage (lFrameImage), Properties.Resources.EditPasteImageSource);
+						pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (lFrameImage, Properties.Titles.Image (lFrameImage), Properties.Resources.EditPasteImageSource);
 					}
 				}
 			}

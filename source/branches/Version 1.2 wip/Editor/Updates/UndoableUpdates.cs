@@ -23,8 +23,10 @@ using System.Text;
 using System.Drawing;
 using DoubleAgent;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Global;
+using AgentCharacterEditor.Navigation;
 
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.Updates
 {
 	internal class UpdateCharacterHeader : UndoableUpdate<FileHeader>
 	{
@@ -79,7 +81,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return ImageSizeChanged ? Global.TitleAnimation ((FileAnimation)null) + " " + Properties.Resources.UndoAnimationSize : GuidChanged ? Properties.Resources.UndoGuid : IconChanged ? Properties.Resources.UndoIcon : PaletteChanged ? Properties.Resources.UndoPalette : PaletteTransparencyChanged ? Properties.Resources.UndoPaletteTransparency : NewFrameDurationChanged ? Properties.Resources.UndoNewFrameDuration : String.Empty;
+				return ImageSizeChanged ? Properties.Titles.Animation ((FileAnimation)null) + " " + Properties.Resources.UndoAnimationSize : GuidChanged ? Properties.Resources.UndoGuid : IconChanged ? Properties.Resources.UndoIcon : PaletteChanged ? Properties.Resources.UndoPalette : PaletteTransparencyChanged ? Properties.Resources.UndoPaletteTransparency : NewFrameDurationChanged ? Properties.Resources.UndoNewFrameDuration : String.Empty;
 			}
 		}
 
@@ -538,7 +540,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return Global.TitleCharacterName (Target);
+				return Properties.Titles.CharacterName (Target);
 			}
 		}
 
@@ -642,7 +644,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return Global.TitleCharacterName (Language);
+				return Properties.Titles.CharacterName (Language);
 			}
 		}
 		public override String ActionDescription
@@ -792,7 +794,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return Global.TitleState (Target);
+				return Properties.Titles.State (Target);
 			}
 		}
 
@@ -887,7 +889,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return Global.TitleAnimation (AnimationName);
+				return Properties.Titles.Animation (AnimationName);
 			}
 		}
 
@@ -1153,7 +1155,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return Global.TitleFrameAnimation (FrameNdx, AnimationName).Quoted ();
+				return Properties.Titles.FrameAnimation (FrameNdx, AnimationName).Quoted ();
 			}
 		}
 
@@ -1245,7 +1247,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return Global.TitleAnimation (AnimationName);
+				return Properties.Titles.Animation (AnimationName);
 			}
 		}
 		public override String ChangeDescription
@@ -1369,7 +1371,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return Global.TitleFrameAnimation (Target).Quoted ();
+				return Properties.Titles.FrameAnimation (Target).Quoted ();
 			}
 		}
 		public override String ChangeDescription
@@ -1549,7 +1551,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return Global.TitleImageFrameAnimation (ImageNdx, Frame).Quoted ();
+				return Properties.Titles.ImageFrameAnimation (ImageNdx, Frame).Quoted ();
 			}
 		}
 
@@ -1661,7 +1663,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return Global.TitleFrameAnimation (Frame).Quoted ();
+				return Properties.Titles.FrameAnimation (Frame).Quoted ();
 			}
 		}
 		public override String ChangeDescription
@@ -1776,7 +1778,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return Global.TitleImageFrameAnimation (Target).Quoted ();
+				return Properties.Titles.ImageFrameAnimation (Target).Quoted ();
 			}
 		}
 		public override String ChangeDescription
@@ -1889,7 +1891,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return Global.TitleOverlayFrameAnimation (Frame, OverlayType).Quoted ();
+				return Properties.Titles.OverlayFrameAnimation (Frame, OverlayType).Quoted ();
 			}
 		}
 
@@ -2038,7 +2040,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return Global.TitleOverlayFrameAnimation (Target).Quoted ();
+				return Properties.Titles.OverlayFrameAnimation (Target).Quoted ();
 			}
 		}
 		public override String ChangeDescription

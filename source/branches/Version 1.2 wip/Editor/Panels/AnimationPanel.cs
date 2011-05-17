@@ -23,9 +23,12 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using DoubleAgent;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Global;
+using AgentCharacterEditor.Navigation;
+using AgentCharacterEditor.Updates;
 using AgentCharacterEditor.Previews;
 
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.Panels
 {
 	public partial class AnimationPanel : FilePartPanel
 	{
@@ -55,17 +58,20 @@ namespace AgentCharacterEditor
 		{
 			Properties.Settings lSettings = Properties.Settings.Default;
 
-			FramesView.ShowBranching = lSettings.FramesViewBranching;
-			FramesView.ShowExitBranching = lSettings.FramesViewExitBranching;
-			try
+			if (lSettings.IsValid)
 			{
-				FramesView.RecalcLayout ((FramesPreview.ImageScaleType)lSettings.FramesViewScale);
+				FramesView.ShowBranching = lSettings.FramesViewBranching;
+				FramesView.ShowExitBranching = lSettings.FramesViewExitBranching;
+				try
+				{
+					FramesView.RecalcLayout ((FramesPreview.ImageScaleType)lSettings.FramesViewScale);
+				}
+				catch
+				{
+				}
+				TrackBarRate.Value = Math.Min (Math.Max (lSettings.AnimationPreviewRate, TrackBarRate.Minimum), TrackBarRate.Maximum);
+				PreviewButtonRepeat.Checked = lSettings.AnimationPreviewRepeat;
 			}
-			catch
-			{
-			}
-			TrackBarRate.Value = Math.Min (Math.Max (lSettings.AnimationPreviewRate, TrackBarRate.Minimum), TrackBarRate.Maximum);
-			PreviewButtonRepeat.Checked = lSettings.AnimationPreviewRepeat;
 		}
 
 		protected override void OnSaveConfig (object sender, EventArgs e)
@@ -134,7 +140,7 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Events
 
-		public event Global.NavigationEventHandler Navigate;
+		public event NavigationEventHandler Navigate;
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
@@ -399,7 +405,7 @@ namespace AgentCharacterEditor
 			ShowSelectionState (GetSelectedFrame (false), FramesView.Frames.SelectedIndex);
 
 			AnimationPreview.StopAnimation ();
-			AnimationPreview.ShowFramePreview (CharacterFile, GetSelectedFrame (true));
+			AnimationPreview.ShowAnimationFrame (CharacterFile, GetSelectedFrame (true));
 			ShowPreviewState ();
 		}
 
@@ -420,9 +426,9 @@ namespace AgentCharacterEditor
 				ButtonMoveDown.Enabled = !Program.FileIsReadOnly && (pFrameNdx >= 0) && (pFrameNdx < FramesView.Frames.Items.Count - 1);
 			}
 
-			ButtonDelete.Text = String.Format (Properties.Resources.EditDeleteThis.NoMenuPrefix (), Global.TitleFrame (ButtonDelete.Enabled ? pFrame : null));
-			ButtonMoveUp.Text = String.Format (Properties.Resources.EditMoveFrameUp.NoMenuPrefix (), Global.TitleFrame (ButtonMoveUp.Enabled ? pFrame : null));
-			ButtonMoveDown.Text = String.Format (Properties.Resources.EditMoveFrameDown.NoMenuPrefix (), Global.TitleFrame (ButtonMoveDown.Enabled ? pFrame : null));
+			ButtonDelete.Text = String.Format (Properties.Resources.EditDeleteThis.NoMenuPrefix (), Properties.Titles.Frame (ButtonDelete.Enabled ? pFrame : null));
+			ButtonMoveUp.Text = String.Format (Properties.Resources.EditMoveFrameUp.NoMenuPrefix (), Properties.Titles.Frame (ButtonMoveUp.Enabled ? pFrame : null));
+			ButtonMoveDown.Text = String.Format (Properties.Resources.EditMoveFrameDown.NoMenuPrefix (), Properties.Titles.Frame (ButtonMoveDown.Enabled ? pFrame : null));
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -465,14 +471,14 @@ namespace AgentCharacterEditor
 		private void ShowPreviewState (Boolean pUpdateNow)
 		{
 			PreviewButtonPlay.Enabled = !IsEmpty && (Animation.Frames.Count > 1);
-			PreviewButtonPause.Enabled = !IsEmpty && AnimationPreview.AnimationIsPlaying;
-			PreviewButtonStop.Enabled = !IsEmpty && AnimationPreview.AnimationIsPlaying;
-			PreviewButtonRepeat.Enabled = PreviewButtonPlay.Enabled && !AnimationPreview.AnimationIsPlaying;
+			PreviewButtonPause.Enabled = !IsEmpty && AnimationPreview.IsPlaying;
+			PreviewButtonStop.Enabled = !IsEmpty && AnimationPreview.IsPlaying;
+			PreviewButtonRepeat.Enabled = PreviewButtonPlay.Enabled && !AnimationPreview.IsPlaying;
 
 			if (AnimationPreview.IsAnimating)
 			{
-				PreviewButtonPause.Checked = PreviewButtonPause.Enabled && AnimationPreview.AnimationIsPaused;
-				PreviewButtonRepeat.Checked = PreviewButtonRepeat.Enabled && AnimationPreview.AnimationIsRepeating;
+				PreviewButtonPause.Checked = PreviewButtonPause.Enabled && AnimationPreview.IsPaused;
+				PreviewButtonRepeat.Checked = PreviewButtonRepeat.Enabled && AnimationPreview.IsRepeating;
 			}
 			else
 			{
@@ -492,9 +498,9 @@ namespace AgentCharacterEditor
 
 		private void ShowPreviewSkipState ()
 		{
-			if (AnimationPreview.AnimationIsPlaying)
+			if (AnimationPreview.IsPlaying)
 			{
-				ShowPreviewSkipState (AnimationPreview.FrameIndexFromTime (AnimationPreview.AnimationTime, Animation));
+				ShowPreviewSkipState (AnimationPreview.TimeToFrameIndex (AnimationPreview.CurrentTime));
 			}
 			else
 			{
@@ -569,7 +575,7 @@ namespace AgentCharacterEditor
 
 				if (lFrame != null)
 				{
-					pEventArgs.CopyObjectTitle = (pEventArgs is Global.ContextMenuEventArgs) ? Global.TitleFrame (lFrame) : Global.TitleFrameAnimation (lFrame).Quoted ();
+					pEventArgs.CopyObjectTitle = (pEventArgs is Global.ContextMenuEventArgs) ? Properties.Titles.Frame (lFrame) : Properties.Titles.FrameAnimation (lFrame).Quoted ();
 					if (!Program.FileIsReadOnly)
 					{
 						pEventArgs.CutObjectTitle = pEventArgs.CopyObjectTitle;
@@ -584,7 +590,7 @@ namespace AgentCharacterEditor
 					}
 					else
 					{
-						pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (lFrame, (pEventArgs is Global.ContextMenuEventArgs) ? Global.TitleFrame (lFrame) : Global.TitleFrameAnimation (lFrame).Quoted (), Properties.Resources.EditPasteFrameSource);
+						pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (lFrame, (pEventArgs is Global.ContextMenuEventArgs) ? Properties.Titles.Frame (lFrame) : Properties.Titles.FrameAnimation (lFrame).Quoted (), Properties.Resources.EditPasteFrameSource);
 					}
 				}
 			}
@@ -820,7 +826,7 @@ namespace AgentCharacterEditor
 				{
 					try
 					{
-						Navigate (this, new Global.NavigationEventArgs (new ResolveAnimationFrame (lFrame)));
+						Navigate (this, new NavigationEventArgs (new ResolveAnimationFrame (lFrame)));
 					}
 					catch
 					{
@@ -839,7 +845,7 @@ namespace AgentCharacterEditor
 				{
 					try
 					{
-						Navigate (this, new Global.NavigationEventArgs (new ResolveState (lItem.Text)));
+						Navigate (this, new NavigationEventArgs (new ResolveState (lItem.Text)));
 					}
 					catch
 					{
@@ -977,14 +983,14 @@ namespace AgentCharacterEditor
 		{
 			if (!AnimationPreview.IsAnimating && AnimationPreview.CreateAnimation (CharacterFile, Animation))
 			{
-				AnimationPreview.AnimationStoryboard.Completed += new EventHandler (AnimationPreviewStoryboard_Completed);
-				AnimationPreview.AnimationStoryboard.CurrentStateInvalidated += new EventHandler (AnimationPreviewStoryboard_CurrentStateInvalidated);
-				AnimationPreview.AnimationStoryboard.CurrentTimeInvalidated += new EventHandler (AnimationPreviewStoryboard_CurrentTimeInvalidated);
+				AnimationPreview.MasterTimeline.Completed += new EventHandler (PreviewTimeline_Completed);
+				AnimationPreview.MasterTimeline.CurrentStateInvalidated += new EventHandler (PreviewTimeline_CurrentStateInvalidated);
+				AnimationPreview.MasterTimeline.CurrentTimeInvalidated += new EventHandler (PreviewTimeline_CurrentTimeInvalidated);
 			}
 			if (AnimationPreview.IsAnimating)
 			{
-				AnimationPreview.AnimationIsPaused = false;
-				AnimationPreview.AnimationIsRepeating = PreviewButtonRepeat.Checked;
+				AnimationPreview.IsPaused = false;
+				AnimationPreview.IsRepeating = PreviewButtonRepeat.Checked;
 				AnimationPreview.AnimationRate = (double)TrackBarRate.Value;
 #if DEBUG_NOT
 				System.Diagnostics.Debug.Print ("StartAnimation Repeat [{0}] Rate [{1}]", AnimationPreview.AnimationIsRepeating, AnimationPreview.AnimationRate);		
@@ -1003,9 +1009,9 @@ namespace AgentCharacterEditor
 		private void PreviewButtonPause_Click (object sender, EventArgs e)
 		{
 			PreviewButtonPause.Checked = !PreviewButtonPause.Checked;
-			if (AnimationPreview.AnimationIsPlaying)
+			if (AnimationPreview.IsPlaying)
 			{
-				AnimationPreview.AnimationIsPaused = PreviewButtonPause.Checked;
+				AnimationPreview.IsPaused = PreviewButtonPause.Checked;
 				ShowPreviewSkipState ();
 			}
 		}
@@ -1014,24 +1020,9 @@ namespace AgentCharacterEditor
 
 		private void PreviewButtonSkipBack_Click (object sender, EventArgs e)
 		{
-			if (AnimationPreview.AnimationIsPlaying)
+			if (AnimationPreview.IsPlaying)
 			{
-				TimeSpan? lTime = AnimationPreview.AnimationTime;
-
-				if (lTime.HasValue)
-				{
-					int lFrameNdx = AnimationPreview.FrameIndexFromTime (lTime.Value, Animation);
-
-					if (lFrameNdx > 0)
-					{
-						lTime = AnimationPreview.TimeFromFrameIndex (lFrameNdx - 1, Animation);
-
-						if (lTime.HasValue)
-						{
-							AnimationPreview.AnimationTime = lTime;
-						}
-					}
-				}
+				AnimationPreview.CurrentFrameIndex--;
 			}
 			else if (!IsEmpty)
 			{
@@ -1044,24 +1035,9 @@ namespace AgentCharacterEditor
 
 		private void PreviewButtonSkipForward_Click (object sender, EventArgs e)
 		{
-			if (AnimationPreview.AnimationIsPlaying)
+			if (AnimationPreview.IsPlaying)
 			{
-				TimeSpan? lTime = AnimationPreview.AnimationTime;
-
-				if (lTime.HasValue)
-				{
-					int lFrameNdx = AnimationPreview.FrameIndexFromTime (lTime.Value, Animation);
-
-					if (lFrameNdx >= 0)
-					{
-						lTime = AnimationPreview.TimeFromFrameIndex (lFrameNdx + 1, Animation);
-
-						if (lTime.HasValue)
-						{
-							AnimationPreview.AnimationTime = lTime;
-						}
-					}
-				}
+				AnimationPreview.CurrentFrameIndex++;
 			}
 			else if (!IsEmpty)
 			{
@@ -1076,14 +1052,14 @@ namespace AgentCharacterEditor
 
 		private void PreviewButtonRepeat_Click (object sender, EventArgs e)
 		{
-			if (AnimationPreview.AnimationIsPlaying)
+			if (AnimationPreview.IsPlaying)
 			{
 				System.Media.SystemSounds.Beep.Play ();
 			}
 			else
 			{
 				PreviewButtonRepeat.Checked = !PreviewButtonRepeat.Checked;
-				AnimationPreview.AnimationIsRepeating = PreviewButtonRepeat.Checked;
+				AnimationPreview.IsRepeating = PreviewButtonRepeat.Checked;
 			}
 		}
 
@@ -1097,39 +1073,76 @@ namespace AgentCharacterEditor
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		void AnimationPreviewStoryboard_CurrentStateInvalidated (object sender, EventArgs e)
+		//private int mLastSelectedFrameNdx = -1;
+
+		void PreviewTimeline_CurrentStateInvalidated (object sender, EventArgs e)
 		{
 #if DEBUG_NOT
-			System.Windows.Media.Animation.ClockGroup lClock = sender as System.Windows.Media.Animation.ClockGroup;
-			System.Diagnostics.Debug.Print ("StateInvalidated [{0}] Time [{1}] Progress [{2}] Iteration [{3}]", lClock.CurrentState, lClock.CurrentTime, lClock.CurrentProgress, lClock.CurrentIteration);
+			try
+			{
+				System.Windows.Media.Animation.ClockGroup lClock = sender as System.Windows.Media.Animation.ClockGroup;
+				System.Diagnostics.Debug.Print ("StateInvalidated [{0}] Time [{1}] Progress [{2}] Iteration [{3}]", lClock.CurrentState, lClock.CurrentTime, lClock.CurrentProgress, lClock.CurrentIteration);
+			}
+			catch (Exception pException)
+			{
+				System.Diagnostics.Debug.Print (pException.Message);
+			}
 #endif
-			ShowPreviewState ();
+			//
+			//TODO - limit replay to selected frames?
+			//
+			try
+			{
+				if (AnimationPreview.IsPlaying)
+				{
+					//if (mLastSelectedFrameNdx < 0)
+					//{
+					//    mLastSelectedFrameNdx = FramesView.Frames.SelectedIndex;
+					//}
+					ShowPreviewState ();
+				}
+				else
+				{
+					//if (mLastSelectedFrameNdx >= 0)
+					//{
+					//    CausesValidation = false;
+					//    FramesView.Frames.SelectedIndex = mLastSelectedFrameNdx;
+					//    CausesValidation = Visible;
+					//    mLastSelectedFrameNdx = -1;
+					//}
+					ShowSelectedFrame ();
+				}
+			}
+			catch (Exception pException)
+			{
+				System.Diagnostics.Debug.Print (pException.Message);
+			}
 		}
 
-		void AnimationPreviewStoryboard_CurrentTimeInvalidated (object sender, EventArgs e)
+		void PreviewTimeline_CurrentTimeInvalidated (object sender, EventArgs e)
 		{
-			if (AnimationPreview.AnimationIsPlaying)
+			if (AnimationPreview.IsPlaying)
 			{
 				try
 				{
 					System.Windows.Media.Animation.ClockGroup lClock = sender as System.Windows.Media.Animation.ClockGroup;
-					int lFrameNdx = AnimationPreview.FrameIndexFromTime (lClock.CurrentTime.Value, Animation);
+					int lFrameNdx = AnimationPreview.TimeToFrameIndex (lClock.CurrentTime);
 					if (lFrameNdx >= 0)
 					{
 						CausesValidation = false;
-						FramesView.Frames.EnsureVisible (lFrameNdx);
 						FramesView.Frames.SelectedIndex = lFrameNdx;
+						FramesView.Frames.EnsureVisible (lFrameNdx, true);
 						CausesValidation = Visible;
 					}
 				}
-				catch (Exception ex)
+				catch (Exception pException)
 				{
-					System.Diagnostics.Debug.Print (ex.Message);
+					System.Diagnostics.Debug.Print (pException.Message);
 				}
 			}
 		}
 
-		void AnimationPreviewStoryboard_Completed (object sender, EventArgs e)
+		void PreviewTimeline_Completed (object sender, EventArgs e)
 		{
 #if DEBUG_NOT
 			System.Windows.Media.Animation.ClockGroup lClock = sender as System.Windows.Media.Animation.ClockGroup;

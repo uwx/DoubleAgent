@@ -1,22 +1,39 @@
-﻿using System;
+﻿/////////////////////////////////////////////////////////////////////////////
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+/////////////////////////////////////////////////////////////////////////////
+/*
+	This file is part of Double Agent.
+
+    Double Agent is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Double Agent is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/////////////////////////////////////////////////////////////////////////////
+using System;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 using DoubleAgent.Character;
 
 namespace AgentCharacterEditor.Previews
 {
-	public class AnimationPreview : System.Windows.Forms.Integration.ElementHost
+	//	public class AnimationPreview : System.Windows.Forms.Integration.ElementHost
+	public partial class AnimationPreview : System.Windows.Forms.UserControl
 	{
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
 		public AnimationPreview ()
 		{
-			this.Margin = new System.Windows.Forms.Padding (0);
-			this.MaximumSize = new System.Drawing.Size (256, 256);
-			this.MinimumSize = new System.Drawing.Size (16, 16);
-			this.Size = new System.Drawing.Size (128, 128);
-
-			this.AnimationImage = new System.Windows.Controls.Image ();
-			this.Child = this.AnimationImage;
+			InitializeComponent ();
 		}
 
 		protected override void OnHandleCreated (EventArgs e)
@@ -24,15 +41,13 @@ namespace AgentCharacterEditor.Previews
 			base.OnHandleCreated (e);
 
 			System.Drawing.Graphics lGraphics = System.Drawing.Graphics.FromHwnd (this.Handle);
-			this.AnimationImage.LayoutTransform = new System.Windows.Media.ScaleTransform (96.0 / (double)lGraphics.DpiX, 96.0 / (double)lGraphics.DpiY);
-			this.AnimationImage.Stretch = System.Windows.Media.Stretch.Uniform;
-			this.AnimationImage.UpdateLayout ();
+			this.WPFTarget.LayoutTransform = new ScaleTransform (96.0 / (double)lGraphics.DpiX, 96.0 / (double)lGraphics.DpiY);
+			this.WPFTarget.UpdateLayout ();
 		}
 
 		protected override void OnHandleDestroyed (EventArgs e)
 		{
 			base.OnHandleDestroyed (e);
-
 			DeleteAnimation ();
 		}
 
@@ -40,41 +55,66 @@ namespace AgentCharacterEditor.Previews
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
 
-		public Boolean IsAnimating
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public AgentCharacterEditor.Previews.AnimationPreviewTimeline MasterTimeline
+		{
+			get;
+			protected set;
+		}
+
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public System.Windows.Media.Animation.ClockGroup MasterClock
+		{
+			get;
+			protected set;
+		}
+
+		protected AgentCharacterEditor.Previews.AnimationPreviewFrames ImageTimeline
+		{
+			get;
+			set;
+		}
+
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public System.Windows.FrameworkElement AnimationTarget
 		{
 			get
 			{
-				return (AnimationStoryboard != null) && (AnimationTimeline != null) && (AnimationTimeline.KeyFrames.Count > 0);
+				return this.WPFTarget;
 			}
-		}
-
-		public System.Windows.Controls.Image AnimationImage
-		{
-			get;
-			protected set;
-		}
-		public System.Windows.Media.Animation.Storyboard AnimationStoryboard
-		{
-			get;
-			protected set;
-		}
-		public AgentCharacterEditor.Previews.AnimationPreviewAnimation AnimationTimeline
-		{
-			get;
-			protected set;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		public Boolean AnimationIsPlaying
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public Boolean IsAnimating
 		{
 			get
 			{
-				if (AnimationStoryboard != null)
+				return (MasterTimeline != null) && (ImageTimeline != null) && (ImageTimeline.KeyFrames.Count > 0);
+			}
+		}
+
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public Boolean IsPlaying
+		{
+			get
+			{
+				if (MasterClock != null)
 				{
 					try
 					{
-						return (AnimationStoryboard.GetCurrentState (AnimationImage) == System.Windows.Media.Animation.ClockState.Active);
+						return (this.MasterClock.CurrentState == ClockState.Active);
 					}
 					catch
 					{
@@ -84,54 +124,18 @@ namespace AgentCharacterEditor.Previews
 			}
 		}
 
-		public Boolean AnimationIsPaused
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public Boolean IsPaused
 		{
 			get
 			{
-				if (AnimationStoryboard != null)
+				if (MasterClock != null)
 				{
 					try
 					{
-						return AnimationStoryboard.GetIsPaused (AnimationImage);
-					}
-					catch
-					{
-					}
-				}
-				return false;
-			}
-			set
-			{
-				if (AnimationStoryboard != null)
-				{
-					try
-					{
-						if (value)
-						{
-							AnimationStoryboard.Pause (AnimationImage);
-						}
-						else
-						{
-							AnimationStoryboard.Resume (AnimationImage);
-						}
-					}
-					catch (Exception ex)
-					{
-						System.Diagnostics.Debug.Print (ex.Message);
-					}
-				}
-			}
-		}
-
-		public Boolean AnimationIsRepeating
-		{
-			get
-			{
-				if (AnimationStoryboard != null)
-				{
-					try
-					{
-						return (AnimationStoryboard.RepeatBehavior == System.Windows.Media.Animation.RepeatBehavior.Forever);
+						return this.MasterClock.IsPaused;
 					}
 					catch
 					{
@@ -141,92 +145,160 @@ namespace AgentCharacterEditor.Previews
 			}
 			set
 			{
-				if (AnimationStoryboard != null)
+				if (MasterClock != null)
 				{
 					try
 					{
 						if (value)
 						{
-							AnimationStoryboard.RepeatBehavior = System.Windows.Media.Animation.RepeatBehavior.Forever;
+							this.MasterClock.Controller.Pause ();
 						}
 						else
 						{
-							AnimationStoryboard.ClearValue (System.Windows.Media.Animation.Storyboard.RepeatBehaviorProperty);
+							this.MasterClock.Controller.Resume ();
 						}
 					}
-					catch (Exception e)
+					catch (Exception pException)
 					{
-						System.Diagnostics.Debug.Print (e.Message);
+						System.Diagnostics.Debug.Print (pException.Message);
 					}
 				}
 			}
 		}
 
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public Boolean IsRepeating
+		{
+			get
+			{
+				if (MasterTimeline != null)
+				{
+					try
+					{
+						return (MasterTimeline.RepeatBehavior == RepeatBehavior.Forever);
+					}
+					catch
+					{
+					}
+				}
+				return false;
+			}
+			set
+			{
+				if (MasterTimeline != null)
+				{
+					try
+					{
+						if (value)
+						{
+							MasterTimeline.RepeatBehavior = RepeatBehavior.Forever;
+						}
+						else
+						{
+							MasterTimeline.ClearValue (Timeline.RepeatBehaviorProperty);
+						}
+					}
+					catch (Exception pException)
+					{
+						System.Diagnostics.Debug.Print (pException.Message);
+					}
+				}
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public Double AnimationRate
 		{
 			get
 			{
-				if (AnimationStoryboard != null)
+				if (MasterClock != null)
 				{
 					try
 					{
-						return Math.Log (AnimationStoryboard.SpeedRatio, 2.0);
+						return Math.Log (this.MasterClock.Controller.SpeedRatio, 2.0);
 					}
-					catch (Exception e)
+					catch (Exception pException)
 					{
-						System.Diagnostics.Debug.Print (e.Message);
+						System.Diagnostics.Debug.Print (pException.Message);
+					}
+				}
+				else if (MasterTimeline != null)
+				{
+					try
+					{
+						return Math.Log (this.MasterTimeline.SpeedRatio, 2.0);
+					}
+					catch (Exception pException)
+					{
+						System.Diagnostics.Debug.Print (pException.Message);
 					}
 				}
 				return 0.0;
 			}
 			set
 			{
-				if (AnimationStoryboard != null)
+				if (MasterClock != null)
 				{
 					try
 					{
-						AnimationStoryboard.SpeedRatio = Math.Pow (2.0, value);
-						if (AnimationIsPlaying)
-						{
-							AnimationStoryboard.SetSpeedRatio (AnimationImage, AnimationStoryboard.SpeedRatio);
-						}
+						this.MasterClock.Controller.SpeedRatio = Math.Pow (2.0, value);
 					}
-					catch (Exception e)
+					catch (Exception pException)
 					{
-						System.Diagnostics.Debug.Print (e.Message);
+						System.Diagnostics.Debug.Print (pException.Message);
+					}
+				}
+				else if (MasterTimeline != null)
+				{
+					try
+					{
+						this.MasterTimeline.SpeedRatio = Math.Pow (2.0, value);
+					}
+					catch (Exception pException)
+					{
+						System.Diagnostics.Debug.Print (pException.Message);
 					}
 				}
 			}
 		}
 
-		public TimeSpan? AnimationTime
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public TimeSpan? CurrentTime
 		{
 			get
 			{
-				if (AnimationStoryboard != null)
+				if (MasterClock != null)
 				{
 					try
 					{
-						return AnimationStoryboard.GetCurrentTime (AnimationImage);
+						return this.MasterClock.CurrentTime;
 					}
-					catch (Exception e)
+					catch (Exception pException)
 					{
-						System.Diagnostics.Debug.Print (e.Message);
+						System.Diagnostics.Debug.Print (pException.Message);
 					}
 				}
 				return null;
 			}
 			set
 			{
-				if (AnimationStoryboard != null)
+				if (MasterClock != null)
 				{
 					try
 					{
-						AnimationStoryboard.SeekAlignedToLastTick (AnimationImage, value.Value, System.Windows.Media.Animation.TimeSeekOrigin.BeginTime);
+						this.MasterClock.Controller.SeekAlignedToLastTick (value.Value, TimeSeekOrigin.BeginTime);
 					}
-					catch (Exception e)
+					catch (Exception pException)
 					{
-						System.Diagnostics.Debug.Print (e.Message);
+						System.Diagnostics.Debug.Print (pException.Message);
 					}
 				}
 			}
@@ -234,39 +306,47 @@ namespace AgentCharacterEditor.Previews
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		public TimeSpan? TimeFromFrame (FileAnimationFrame pFrame)
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public int CurrentFrameIndex
 		{
-			return (AnimationTimeline != null) ? AnimationTimeline.TimeFromFrame (pFrame) : null;
-		}
-		public TimeSpan? TimeFromFrameIndex (int pFrameIndex, FileAnimation pFileAnimation)
-		{
-			return (AnimationTimeline != null) ? AnimationTimeline.TimeFromFrameIndex (pFrameIndex, pFileAnimation) : null;
+			get
+			{
+				int lFrameNdx = -1;
+
+				if (IsAnimating)
+				{
+					TimeSpan? lTime = CurrentTime;
+
+					if (lTime.HasValue)
+					{
+						lFrameNdx = ImageTimeline.TimeToFrameIndex (lTime.Value);
+					}
+				}
+				return lFrameNdx;
+			}
+			set
+			{
+				if (IsAnimating)
+				{
+					TimeSpan? lTime = ImageTimeline.FrameIndexToTime (value);
+
+					if (lTime.HasValue)
+					{
+						CurrentTime = lTime;
+					}
+				}
+			}
 		}
 
-		public FileAnimationFrame FrameFromTime (TimeSpan pTime)
+		public int TimeToFrameIndex (TimeSpan pTime)
 		{
-			return (AnimationTimeline != null) ? AnimationTimeline.FrameFromTime (pTime) : null;
+			return (ImageTimeline != null) ? ImageTimeline.TimeToFrameIndex (pTime) : -1;
 		}
-		public int FrameIndexFromTime (TimeSpan pTime)
+		public int TimeToFrameIndex (TimeSpan? pTime)
 		{
-			return (AnimationTimeline != null) ? AnimationTimeline.FrameIndexFromTime (pTime) : -1;
-		}
-		public int FrameIndexFromTime (TimeSpan pTime, FileAnimation pFileAnimation)
-		{
-			return (AnimationTimeline != null) ? AnimationTimeline.FrameIndexFromTime (pTime, pFileAnimation) : -1;
-		}
-
-		public FileAnimationFrame FrameFromTime (TimeSpan? pTime)
-		{
-			return (AnimationTimeline != null) ? AnimationTimeline.FrameFromTime (pTime) : null;
-		}
-		public int FrameIndexFromTime (TimeSpan? pTime)
-		{
-			return (AnimationTimeline != null) ? AnimationTimeline.FrameIndexFromTime (pTime) : -1;
-		}
-		public int FrameIndexFromTime (TimeSpan? pTime, FileAnimation pFileAnimation)
-		{
-			return (AnimationTimeline != null) ? AnimationTimeline.FrameIndexFromTime (pTime, pFileAnimation) : -1;
+			return (ImageTimeline != null) ? ImageTimeline.TimeToFrameIndex (pTime) : -1;
 		}
 
 		#endregion
@@ -278,28 +358,44 @@ namespace AgentCharacterEditor.Previews
 			Boolean lRet = false;
 
 			DeleteAnimation ();
+			InitImageTarget (pCharacterFile);
 
 			if ((pCharacterFile != null) && (pAnimation != null))
 			{
 				try
 				{
-					AnimationStoryboard = new System.Windows.Media.Animation.Storyboard ();
-					AnimationTimeline = new AnimationPreviewAnimation (pCharacterFile, pAnimation);
+					MasterTimeline = new AnimationPreviewTimeline ();
+					MasterTimeline.Name = pAnimation.Name;
+					MasterTimeline.FillBehavior = FillBehavior.Stop;
 
-					AnimationStoryboard.Name = pAnimation.Name;
-					AnimationStoryboard.Children.Add (AnimationTimeline);
-					System.Windows.Media.Animation.Storyboard.SetTarget (AnimationStoryboard, AnimationImage);
-					System.Windows.Media.Animation.Storyboard.SetTargetProperty (AnimationStoryboard, new System.Windows.PropertyPath (System.Windows.Controls.Image.SourceProperty));
-					//System.Windows.Media.Animation.Timeline.SetDesiredFrameRate (AnimationStoryboard, 100);
-
+					ImageTimeline = new AnimationPreviewFrames (pCharacterFile, pAnimation, WPFTarget.Image);
+					MasterTimeline.Children.Add (ImageTimeline);
+#if true
+					foreach (AnimationPreviewFrame lImageFrame in ImageTimeline.KeyFrames)
+					{
+						if ((lImageFrame.FileFrame != null) && (lImageFrame.FileFrame.SoundNdx >= 0))
+						{
+							try
+							{
+								AnimationPreviewSound lSound = new AnimationPreviewSound (pCharacterFile, lImageFrame.FileFrame, lImageFrame.BeginTime);
+								MasterTimeline.Children.Add (lSound);
+							}
+							catch (Exception pException)
+							{
+								System.Diagnostics.Debug.Print (pException.Message);
+							}
+						}
+					}
+#endif
 					lRet = true;
 				}
-				catch (Exception e)
+				catch (Exception pException)
 				{
-					System.Diagnostics.Debug.Print (e.Message);
+					System.Diagnostics.Debug.Print (pException.Message);
 				}
 			}
 
+			WPFTarget.UpdateLayout ();
 			return lRet;
 		}
 
@@ -308,21 +404,11 @@ namespace AgentCharacterEditor.Previews
 			Boolean lRet = false;
 
 			StopAnimation ();
+			WPFTarget.StopImageAnimation ();
 
-			if (AnimationStoryboard != null)
-			{
-				try
-				{
-					AnimationStoryboard.Remove (AnimationImage);
-					lRet = true;
-				}
-				catch (Exception e)
-				{
-					System.Diagnostics.Debug.Print (e.Message);
-				}
-			}
-			AnimationTimeline = null;
-			AnimationStoryboard = null;
+			this.ImageTimeline = null;
+			this.MasterTimeline = null;
+			this.MasterClock = null;
 
 			return lRet;
 		}
@@ -333,16 +419,57 @@ namespace AgentCharacterEditor.Previews
 		{
 			Boolean lRet = false;
 
-			if (AnimationStoryboard != null)
+			if (IsAnimating)
 			{
-				try
+#if true
+				if (MasterClock != null)
 				{
-					AnimationStoryboard.Begin (AnimationImage, true);
-					lRet = true;
+					try
+					{
+						this.MasterClock.Controller.Begin ();
+						lRet = true;
+					}
+					catch (Exception pException)
+					{
+						System.Diagnostics.Debug.Print (pException.Message);
+					}
 				}
-				catch (Exception e)
+				else
+#endif
 				{
-					System.Diagnostics.Debug.Print (e.Message);
+					try
+					{
+						this.MasterClock = MasterTimeline.CreateClock (true) as ClockGroup;
+#if true
+						foreach (System.Windows.Media.Animation.Clock lClock in MasterClock.Children)
+						{
+							System.Windows.Media.Animation.AnimationClock lAnimationClock = lClock as System.Windows.Media.Animation.AnimationClock;
+							System.Windows.Media.MediaClock lMediaClock = lClock as System.Windows.Media.MediaClock;
+
+							if (lAnimationClock != null)
+							{
+								AnimationPreviewFrames lFrames = lAnimationClock.Timeline as AnimationPreviewFrames;
+								if (lFrames != null)
+								{
+									lFrames.Target.ApplyAnimationClock (System.Windows.Media.ImageDrawing.ImageSourceProperty, lAnimationClock);
+								}
+							}
+							if (lMediaClock != null)
+							{
+								AnimationPreviewSound lSound = lMediaClock.Timeline as AnimationPreviewSound;
+								if (lSound != null)
+								{
+									lSound.Player.Clock = lMediaClock;
+								}
+							}
+						}
+#endif
+						lRet = true;
+					}
+					catch (Exception pException)
+					{
+						System.Diagnostics.Debug.Print (pException.Message);
+					}
 				}
 			}
 			return lRet;
@@ -352,36 +479,59 @@ namespace AgentCharacterEditor.Previews
 		{
 			Boolean lRet = false;
 
-			if (AnimationStoryboard != null)
+			if (MasterClock != null)
 			{
 				try
 				{
-					AnimationStoryboard.Stop (AnimationImage);
+					this.MasterClock.Controller.Stop ();
 					lRet = true;
 				}
-				catch (Exception e)
+				catch (Exception pException)
 				{
-					System.Diagnostics.Debug.Print (e.Message);
+					System.Diagnostics.Debug.Print (pException.Message);
 				}
 			}
+#if true
+			MasterClock = null;	
+#endif
+
 			return lRet;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		public void ShowFramePreview (CharacterFile pCharacterFile, FileAnimationFrame pFrame)
+		public void ShowAnimationFrame (CharacterFile pCharacterFile, FileAnimationFrame pFrame)
 		{
+			StopAnimation ();
+			InitImageTarget (pCharacterFile);
+
 			if (pCharacterFile != null)
 			{
-				Size = pCharacterFile.Header.ImageSize;
-				AnimationImage.Source = AnimationPreviewFrame.MakeImageSource (pCharacterFile, pFrame);
+				WPFTarget.Image.ImageSource = AnimationPreviewFrame.MakeImageSource (pCharacterFile, pFrame);
 			}
 			else
 			{
-				Size = PictureBoxSample.DefaultImageSize;
-				AnimationImage.Source = null;
+				WPFTarget.Image.ImageSource = null;
 			}
-			AnimationImage.UpdateLayout ();
+
+			WPFTarget.UpdateLayout ();
+			WPFTarget.InvalidateVisual ();
+		}
+
+		private void InitImageTarget (CharacterFile pCharacterFile)
+		{
+			WPFTarget.StopImageAnimation ();
+
+			if (pCharacterFile != null)
+			{
+				WPFHost.Size = pCharacterFile.Header.ImageSize;
+			}
+			else
+			{
+				WPFHost.Size = PictureBoxSample.DefaultImageSize;
+			}
+
+			WPFTarget.Image.Rect = new System.Windows.Rect (0, 0, WPFHost.Size.Width, WPFHost.Size.Height);
 		}
 
 		#endregion

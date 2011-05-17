@@ -23,8 +23,11 @@ using System.Drawing;
 using System.Windows.Forms;
 using DoubleAgent;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Global;
+using AgentCharacterEditor.Navigation;
+using AgentCharacterEditor.Updates;
 
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.Panels
 {
 	public partial class OverlayPanel : FilePartPanel
 	{
@@ -91,7 +94,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return Global.TitleFrame (Frame);
+				return Properties.Titles.Frame (Frame);
 			}
 		}
 
@@ -167,7 +170,7 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				TextBoxFrameName.Text = Global.TitleFrameAnimation (Frame);
+				TextBoxFrameName.Text = Properties.Titles.FrameAnimation (Frame);
 				TextBoxFrameName.Enabled = true;
 			}
 		}
@@ -338,9 +341,9 @@ namespace AgentCharacterEditor
 				ButtonChooseFile.Enabled = !Program.FileIsReadOnly && !String.IsNullOrEmpty (pFrameOverlay.ImageFilePath);
 			}
 
-			ButtonAdd.Text = ButtonAdd.Enabled ? String.Format (Properties.Resources.EditAddThis.NoMenuPrefix (), Global.TitleOverlay ((MouthOverlay)ListViewOverlays.SelectedIndex)) : Properties.Resources.EditAdd.NoMenuPrefix ();
-			ButtonDelete.Text = ButtonDelete.Enabled ? String.Format (Properties.Resources.EditDeleteThis.NoMenuPrefix (), Global.TitleOverlay (pFrameOverlay)) : Properties.Resources.EditDelete.NoMenuPrefix ();
-			ButtonChooseFile.Text = ButtonChooseFile.Enabled ? String.Format (Properties.Resources.EditChooseThisFile.NoMenuPrefix (), Global.OverlayTypeName (pFrameOverlay.OverlayType)) : Properties.Resources.EditChooseFile.NoMenuPrefix ();
+			ButtonAdd.Text = ButtonAdd.Enabled ? String.Format (Properties.Resources.EditAddThis.NoMenuPrefix (), Properties.Titles.Overlay ((MouthOverlay)ListViewOverlays.SelectedIndex)) : Properties.Resources.EditAdd.NoMenuPrefix ();
+			ButtonDelete.Text = ButtonDelete.Enabled ? String.Format (Properties.Resources.EditDeleteThis.NoMenuPrefix (), Properties.Titles.Overlay (pFrameOverlay)) : Properties.Resources.EditDelete.NoMenuPrefix ();
+			ButtonChooseFile.Text = ButtonChooseFile.Enabled ? String.Format (Properties.Resources.EditChooseThisFile.NoMenuPrefix (), Properties.Titles.OverlayTypeName (pFrameOverlay.OverlayType)) : Properties.Resources.EditChooseFile.NoMenuPrefix ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -487,7 +490,7 @@ namespace AgentCharacterEditor
 
 				if (lFrameOverlay != null)
 				{
-					pEventArgs.CopyObjectTitle = (pEventArgs is Global.ContextMenuEventArgs) ? Global.TitleOverlay (lFrameOverlay) : Global.TitleOverlayFrameAnimation (lFrameOverlay).Quoted ();
+					pEventArgs.CopyObjectTitle = (pEventArgs is Global.ContextMenuEventArgs) ? Properties.Titles.Overlay (lFrameOverlay) : Properties.Titles.OverlayFrameAnimation (lFrameOverlay).Quoted ();
 					if (!Program.FileIsReadOnly)
 					{
 						pEventArgs.CutObjectTitle = pEventArgs.CopyObjectTitle;
@@ -496,7 +499,7 @@ namespace AgentCharacterEditor
 				}
 				if (!Program.FileIsReadOnly && (pEventArgs.PasteObject is FileFrameOverlay))
 				{
-					pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (lFrameOverlay, Global.TitleOverlay ((pEventArgs.PasteObject as FileFrameOverlay).OverlayType), Global.TitleOverlay ((MouthOverlay)ListViewOverlays.SelectedIndex));
+					pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (lFrameOverlay, Properties.Titles.Overlay ((pEventArgs.PasteObject as FileFrameOverlay).OverlayType), Properties.Titles.Overlay ((MouthOverlay)ListViewOverlays.SelectedIndex));
 				}
 			}
 		}

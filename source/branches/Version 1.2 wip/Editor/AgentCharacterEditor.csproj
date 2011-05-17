@@ -112,8 +112,25 @@
     <Compile Include="About\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Previews\AnimationPreview.cs" />
-    <Compile Include="Previews\AnimationPreviewAnimation.cs" />
+    <Compile Include="Classes\EditEvents.cs" />
+    <Compile Include="Classes\Extensions.cs" />
+    <Compile Include="Previews\AnimationPreview.Designer.cs">
+      <DependentUpon>AnimationPreview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Previews\AnimationPreviewFrames.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Previews\AnimationPreviewSound.cs" />
+    <Compile Include="Previews\AnimationPreviewTimeline.cs" />
+    <Compile Include="Previews\AnimationPreviewWPF.xaml.cs">
+      <DependentUpon>AnimationPreviewWPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Titles.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Previews\AnimationPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Previews\AnimationPreviewFrame.cs" />
     <Compile Include="Panels\FilePartPanel.cs">
       <SubType>UserControl</SubType>
@@ -183,9 +200,6 @@
     <Compile Include="Panels\FramePanel.Designer.cs">
       <DependentUpon>FramePanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\Global.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="About\LicenceBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -210,7 +224,7 @@
     <Compile Include="Panels\PartsTreePanel.Designer.cs">
       <DependentUpon>PartsTreePanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\PartWrappers.cs" />
+    <Compile Include="Classes\ResolvePart.cs" />
     <Compile Include="Classes\PictureBoxSample.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -233,6 +247,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Panels\FilePartPanel.resx">
       <DependentUpon>FilePartPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Previews\AnimationPreview.resx">
+      <DependentUpon>AnimationPreview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Previews\FramesPreview.resx">
       <DependentUpon>FramesPreview.cs</DependentUpon>
@@ -297,7 +314,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Properties\Settings.cs" />
+    <Compile Include="Properties\Settings.cs">
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Panels\TtsPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -389,7 +408,12 @@
     <None Include="Resources\NavigateBack.png" />
     <None Include="Resources\NavigateForward.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Page Include="Previews\AnimationPreviewWPF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

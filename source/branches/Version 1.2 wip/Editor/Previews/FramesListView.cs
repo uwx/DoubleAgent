@@ -78,6 +78,11 @@ namespace AgentCharacterEditor.Previews
 
 		public new void EnsureVisible (int pItemIndex)
 		{
+			EnsureVisible (pItemIndex, false);
+		}
+
+		public void EnsureVisible (int pItemIndex, Boolean pRedrawNow)
+		{
 			if ((pItemIndex >= 0) && (pItemIndex < Items.Count))
 			{
 				Rectangle lItemRect = GetItemRect (pItemIndex);
@@ -95,6 +100,11 @@ namespace AgentCharacterEditor.Previews
 				else if (lItemRect.Right > lVisibleRect.Right)
 				{
 					lContainer.AutoScrollPosition = new Point (Math.Min (lContainer.HorizontalScroll.Value + (lItemRect.Right - lVisibleRect.Right), lContainer.HorizontalScroll.Maximum), 0);
+				}
+
+				if (pRedrawNow)
+				{
+					lContainer.Refresh ();
 				}
 			}
 		}

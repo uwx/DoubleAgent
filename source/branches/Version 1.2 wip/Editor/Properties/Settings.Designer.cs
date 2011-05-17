@@ -8,196 +8,245 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AgentCharacterEditor.Properties {
-    
-    
-    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "10.0.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
-        
-        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-        
-        public static Settings Default {
-            get {
-                return defaultInstance;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool CharacterNodeExpanded {
-            get {
-                return ((bool)(this["CharacterNodeExpanded"]));
-            }
-            set {
-                this["CharacterNodeExpanded"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool AnimationsNodeExpanded {
-            get {
-                return ((bool)(this["AnimationsNodeExpanded"]));
-            }
-            set {
-                this["AnimationsNodeExpanded"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool StatesNodeExpanded {
-            get {
-                return ((bool)(this["StatesNodeExpanded"]));
-            }
-            set {
-                this["StatesNodeExpanded"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
-        public global::System.Windows.Forms.FormWindowState MainFormState {
-            get {
-                return ((global::System.Windows.Forms.FormWindowState)(this["MainFormState"]));
-            }
-            set {
-                this["MainFormState"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Drawing.Point MainFormLocation {
-            get {
-                return ((global::System.Drawing.Point)(this["MainFormLocation"]));
-            }
-            set {
-                this["MainFormLocation"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Drawing.Point MainFormSize {
-            get {
-                return ((global::System.Drawing.Point)(this["MainFormSize"]));
-            }
-            set {
-                this["MainFormSize"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Collections.Specialized.StringCollection RecentFiles {
-            get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["RecentFiles"]));
-            }
-            set {
-                this["RecentFiles"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ShowFrameTransparency {
-            get {
-                return ((bool)(this["ShowFrameTransparency"]));
-            }
-            set {
-                this["ShowFrameTransparency"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int MainFormSplit {
-            get {
-                return ((int)(this["MainFormSplit"]));
-            }
-            set {
-                this["MainFormSplit"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public short SelectedNameLanguage {
-            get {
-                return ((short)(this["SelectedNameLanguage"]));
-            }
-            set {
-                this["SelectedNameLanguage"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int FramesViewScale {
-            get {
-                return ((int)(this["FramesViewScale"]));
-            }
-            set {
-                this["FramesViewScale"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool FramesViewBranching {
-            get {
-                return ((bool)(this["FramesViewBranching"]));
-            }
-            set {
-                this["FramesViewBranching"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool FramesViewExitBranching {
-            get {
-                return ((bool)(this["FramesViewExitBranching"]));
-            }
-            set {
-                this["FramesViewExitBranching"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int AnimationPreviewRate {
-            get {
-                return ((int)(this["AnimationPreviewRate"]));
-            }
-            set {
-                this["AnimationPreviewRate"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool AnimationPreviewRepeat {
-            get {
-                return ((bool)(this["AnimationPreviewRepeat"]));
-            }
-            set {
-                this["AnimationPreviewRepeat"] = value;
-            }
-        }
-    }
+namespace AgentCharacterEditor.Properties
+{
+
+
+	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute ()]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute ("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "10.0.0.0")]
+	internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
+	{
+
+		private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized (new Settings ())));
+
+		public static Settings Default
+		{
+			get
+			{
+				return defaultInstance;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute ()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute ()]
+		[global::System.Configuration.DefaultSettingValueAttribute ("False")]
+		public bool CharacterNodeExpanded
+		{
+			get
+			{
+				return ((bool)(this["CharacterNodeExpanded"]));
+			}
+			set
+			{
+				this["CharacterNodeExpanded"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute ()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute ()]
+		[global::System.Configuration.DefaultSettingValueAttribute ("False")]
+		public bool AnimationsNodeExpanded
+		{
+			get
+			{
+				return ((bool)(this["AnimationsNodeExpanded"]));
+			}
+			set
+			{
+				this["AnimationsNodeExpanded"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute ()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute ()]
+		[global::System.Configuration.DefaultSettingValueAttribute ("False")]
+		public bool StatesNodeExpanded
+		{
+			get
+			{
+				return ((bool)(this["StatesNodeExpanded"]));
+			}
+			set
+			{
+				this["StatesNodeExpanded"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute ()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute ()]
+		[global::System.Configuration.DefaultSettingValueAttribute ("Normal")]
+		public global::System.Windows.Forms.FormWindowState MainFormState
+		{
+			get
+			{
+				return ((global::System.Windows.Forms.FormWindowState)(this["MainFormState"]));
+			}
+			set
+			{
+				this["MainFormState"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute ()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute ()]
+		public global::System.Drawing.Point MainFormLocation
+		{
+			get
+			{
+				return ((global::System.Drawing.Point)(this["MainFormLocation"]));
+			}
+			set
+			{
+				this["MainFormLocation"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute ()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute ()]
+		public global::System.Drawing.Point MainFormSize
+		{
+			get
+			{
+				return ((global::System.Drawing.Point)(this["MainFormSize"]));
+			}
+			set
+			{
+				this["MainFormSize"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute ()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute ()]
+		public global::System.Collections.Specialized.StringCollection RecentFiles
+		{
+			get
+			{
+				return ((global::System.Collections.Specialized.StringCollection)(this["RecentFiles"]));
+			}
+			set
+			{
+				this["RecentFiles"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute ()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute ()]
+		[global::System.Configuration.DefaultSettingValueAttribute ("False")]
+		public bool ShowFrameTransparency
+		{
+			get
+			{
+				return ((bool)(this["ShowFrameTransparency"]));
+			}
+			set
+			{
+				this["ShowFrameTransparency"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute ()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute ()]
+		[global::System.Configuration.DefaultSettingValueAttribute ("0")]
+		public int MainFormSplit
+		{
+			get
+			{
+				return ((int)(this["MainFormSplit"]));
+			}
+			set
+			{
+				this["MainFormSplit"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute ()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute ()]
+		[global::System.Configuration.DefaultSettingValueAttribute ("0")]
+		public short SelectedNameLanguage
+		{
+			get
+			{
+				return ((short)(this["SelectedNameLanguage"]));
+			}
+			set
+			{
+				this["SelectedNameLanguage"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute ()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute ()]
+		[global::System.Configuration.DefaultSettingValueAttribute ("1")]
+		public int FramesViewScale
+		{
+			get
+			{
+				return ((int)(this["FramesViewScale"]));
+			}
+			set
+			{
+				this["FramesViewScale"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute ()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute ()]
+		[global::System.Configuration.DefaultSettingValueAttribute ("True")]
+		public bool FramesViewBranching
+		{
+			get
+			{
+				return ((bool)(this["FramesViewBranching"]));
+			}
+			set
+			{
+				this["FramesViewBranching"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute ()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute ()]
+		[global::System.Configuration.DefaultSettingValueAttribute ("True")]
+		public bool FramesViewExitBranching
+		{
+			get
+			{
+				return ((bool)(this["FramesViewExitBranching"]));
+			}
+			set
+			{
+				this["FramesViewExitBranching"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute ()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute ()]
+		[global::System.Configuration.DefaultSettingValueAttribute ("0")]
+		public int AnimationPreviewRate
+		{
+			get
+			{
+				return ((int)(this["AnimationPreviewRate"]));
+			}
+			set
+			{
+				this["AnimationPreviewRate"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute ()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute ()]
+		[global::System.Configuration.DefaultSettingValueAttribute ("False")]
+		public bool AnimationPreviewRepeat
+		{
+			get
+			{
+				return ((bool)(this["AnimationPreviewRepeat"]));
+			}
+			set
+			{
+				this["AnimationPreviewRepeat"] = value;
+			}
+		}
+	}
 }

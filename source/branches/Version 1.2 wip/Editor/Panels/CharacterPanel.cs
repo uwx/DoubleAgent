@@ -23,8 +23,11 @@ using System.Drawing;
 using System.Windows.Forms;
 using DoubleAgent;
 using DoubleAgent.Character;
+using AgentCharacterEditor.Global;
+using AgentCharacterEditor.Navigation;
+using AgentCharacterEditor.Updates;
 
-namespace AgentCharacterEditor
+namespace AgentCharacterEditor.Panels
 {
 	public partial class CharacterPanel : FilePartPanel
 	{
@@ -42,11 +45,15 @@ namespace AgentCharacterEditor
 		protected override void OnLoadConfig (object sender, EventArgs e)
 		{
 			Properties.Settings lSettings = Properties.Settings.Default;
-			UInt16 lSelectedLangID = (UInt16)lSettings.SelectedNameLanguage;
 
-			if (lSelectedLangID > 0)
+			if (lSettings.IsValid)
 			{
-				SelectLangIDItem (lSelectedLangID);
+				UInt16 lSelectedLangID = (UInt16)lSettings.SelectedNameLanguage;
+
+				if (lSelectedLangID > 0)
+				{
+					SelectLangIDItem (lSelectedLangID);
+				}
 			}
 		}
 
@@ -349,7 +356,7 @@ namespace AgentCharacterEditor
 
 				if (lName != null)
 				{
-					pEventArgs.CopyObjectTitle = Global.TitleCharacterName (lName.Language);
+					pEventArgs.CopyObjectTitle = Properties.Titles.CharacterName (lName.Language);
 					if (!Program.FileIsReadOnly && !mLangDefault.PrimaryLanguageEqual (lName))
 					{
 						pEventArgs.CutObjectTitle = pEventArgs.CopyObjectTitle;
@@ -358,7 +365,7 @@ namespace AgentCharacterEditor
 				}
 				if (!Program.FileIsReadOnly && (pEventArgs.PasteObject is FileCharacterName))
 				{
-					pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (lName, Global.TitleCharacterName (mLangCurrent), Global.TitleCharacterName ((pEventArgs.PasteObject as FileCharacterName).Language));
+					pEventArgs.PasteObjectTitle = pEventArgs.PasteTypeTitle (lName, Properties.Titles.CharacterName (mLangCurrent), Properties.Titles.CharacterName ((pEventArgs.PasteObject as FileCharacterName).Language));
 				}
 			}
 		}
