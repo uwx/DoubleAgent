@@ -327,9 +327,9 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripIconFile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ButtonIconImport,
             this.ButtonIconExport});
-			this.ToolStripIconFile.Location = new System.Drawing.Point(496, 24);
+			this.ToolStripIconFile.Location = new System.Drawing.Point(525, 24);
 			this.ToolStripIconFile.Name = "ToolStripIconFile";
-			this.ToolStripIconFile.Size = new System.Drawing.Size(80, 26);
+			this.ToolStripIconFile.Size = new System.Drawing.Size(51, 27);
 			this.ToolStripIconFile.TabIndex = 2;
 			// 
 			// ButtonIconImport
@@ -338,6 +338,8 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonIconImport.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
 			this.ButtonIconImport.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonIconImport.Name = "ButtonIconImport";
+			this.ButtonIconImport.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonIconImport.Size = new System.Drawing.Size(24, 24);
 			this.ButtonIconImport.Text = "Open icon file";
 			this.ButtonIconImport.Click += new System.EventHandler(this.ButtonIconImport_Click);
 			// 
@@ -348,6 +350,8 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonIconExport.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileSave;
 			this.ButtonIconExport.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonIconExport.Name = "ButtonIconExport";
+			this.ButtonIconExport.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonIconExport.Size = new System.Drawing.Size(24, 24);
 			this.ButtonIconExport.Text = "Save icon";
 			// 
 			// TextBoxIconFile
@@ -444,7 +448,7 @@ namespace AgentCharacterEditor.Panels
 			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.LayoutPanelMain.Size = new System.Drawing.Size(582, 600);
-			this.LayoutPanelMain.TabIndex = 3;
+			this.LayoutPanelMain.TabIndex = 0;
 			// 
 			// CharacterPanel
 			// 

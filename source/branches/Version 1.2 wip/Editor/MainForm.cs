@@ -31,14 +31,14 @@ namespace AgentCharacterEditor
 {
 	public partial class MainForm : Form
 	{
+		///////////////////////////////////////////////////////////////////////////////
+		#region Initialization
+
 		private CharacterFile mCharacterFile = null;
 		private RecentFileList mRecentFiles = new RecentFileList ();
 		private Stack<KeyValuePair<FilePartPanel, Object>> mNavigateBackStack = new Stack<KeyValuePair<FilePartPanel, Object>> ();
 		private Stack<KeyValuePair<FilePartPanel, Object>> mNavigateForwardStack = new Stack<KeyValuePair<FilePartPanel, Object>> ();
 		private String mInitialFile = null;
-
-		///////////////////////////////////////////////////////////////////////////////
-		#region Initialization
 
 		public MainForm ()
 		{
@@ -185,6 +185,9 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
 
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public CharacterFile CharacterFile
 		{
 			get

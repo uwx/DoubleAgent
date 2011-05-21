@@ -83,6 +83,7 @@ namespace AgentCharacterEditor
 				return ((MainForm.CharacterFile != null) && (MainForm.CharacterFile.IsDirty));
 			}
 		}
+
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Assembly Attribute Accessors

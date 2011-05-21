@@ -25,7 +25,6 @@ using DoubleAgent.Character;
 
 namespace AgentCharacterEditor.Previews
 {
-	//	public class AnimationPreview : System.Windows.Forms.Integration.ElementHost
 	public partial class AnimationPreview : System.Windows.Forms.UserControl
 	{
 		///////////////////////////////////////////////////////////////////////////////
@@ -43,6 +42,7 @@ namespace AgentCharacterEditor.Previews
 			System.Drawing.Graphics lGraphics = System.Drawing.Graphics.FromHwnd (this.Handle);
 			this.WPFTarget.LayoutTransform = new ScaleTransform (96.0 / (double)lGraphics.DpiX, 96.0 / (double)lGraphics.DpiY);
 			this.WPFTarget.UpdateLayout ();
+			this.WPFTarget.Image.Changed += new EventHandler (WPFTarget_ImageChanged);
 		}
 
 		protected override void OnHandleDestroyed (EventArgs e)
@@ -340,15 +340,6 @@ namespace AgentCharacterEditor.Previews
 			}
 		}
 
-		public int TimeToFrameIndex (TimeSpan pTime)
-		{
-			return (ImageTimeline != null) ? ImageTimeline.TimeToFrameIndex (pTime) : -1;
-		}
-		public int TimeToFrameIndex (TimeSpan? pTime)
-		{
-			return (ImageTimeline != null) ? ImageTimeline.TimeToFrameIndex (pTime) : -1;
-		}
-
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Methods
@@ -449,6 +440,7 @@ namespace AgentCharacterEditor.Previews
 					try
 					{
 						this.MasterClock = MasterTimeline.CreateClock (true) as ClockGroup;
+						this.MasterClock.CurrentStateInvalidated += new EventHandler (MasterClock_CurrentStateInvalidated);
 
 #if false // Let the timelines take care of this - it's more accurate for the sounds
 						foreach (System.Windows.Media.Animation.Clock lClock in MasterClock.Children)
@@ -542,6 +534,45 @@ namespace AgentCharacterEditor.Previews
 			}
 
 			WPFTarget.Image.Rect = new System.Windows.Rect (0, 0, WPFHost.Size.Width, WPFHost.Size.Height);
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region Events
+
+		public event EventHandler AnimationStateChanged;
+		public event EventHandler AnimationImageChanged;
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region EventHandlers
+
+		private void MasterClock_CurrentStateInvalidated (object sender, EventArgs e)
+		{
+			if (AnimationStateChanged != null)
+			{
+				try
+				{
+					AnimationStateChanged (this, e);
+				}
+				catch
+				{
+				}
+			}
+		}
+
+		private void WPFTarget_ImageChanged (object sender, EventArgs e)
+		{
+			if (AnimationImageChanged != null)
+			{
+				try
+				{
+					AnimationImageChanged (this, e);
+				}
+				catch
+				{
+				}
+			}
 		}
 
 		#endregion

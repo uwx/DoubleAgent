@@ -587,6 +587,7 @@ namespace AgentCharacterEditor.Panels
 				lUpdate.IconFilePath = TextBoxIconFile.Text;
 				UpdateCharacterHeader.PutUndo (lUpdate.Apply (Program.MainForm.OnUpdateApplied) as UpdateCharacterHeader, this);
 			}
+			TextBoxIconFile.Modified = false;
 		}
 
 		private void ButtonIconImport_Click (object sender, EventArgs e)

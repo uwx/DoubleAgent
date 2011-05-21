@@ -487,7 +487,7 @@ namespace AgentCharacterEditor.Panels
 				}
 				else if ((lSelectedPart is ResolveState) && (lSelectedObject != null))
 				{
-					pEventArgs.CopyObjectTitle = Properties.Titles.State (lSelectedObject as String);
+					pEventArgs.CopyObjectTitle = Properties.Titles.State ((lSelectedPart as ResolveState).StateName);
 				}
 
 				if (!Program.FileIsReadOnly && (pEventArgs.PasteObject != null))

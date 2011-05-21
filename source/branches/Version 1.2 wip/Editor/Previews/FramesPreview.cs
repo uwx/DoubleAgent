@@ -290,7 +290,7 @@ namespace AgentCharacterEditor.Previews
 				lMaxBranchingOffset.X = Math.Max (lMaxBranchingOffset.X, lMaxExitBranchingOffset.X);
 				if (lMaxBranchingOffset.X > 0)
 				{
-					mBranchingOffset.Width = Math.Min (mBranchingOffset.Width, (ImageSize.Width * 2) / (lMaxBranchingOffset.X * 3));
+					mBranchingOffset.Width = Math.Min (mBranchingOffset.Width, ImageSize.Width / lMaxBranchingOffset.X);
 				}
 
 				if (lMaxBranchingOffset.Y > 0)

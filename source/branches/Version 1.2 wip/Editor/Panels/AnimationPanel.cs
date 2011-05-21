@@ -47,8 +47,10 @@ namespace AgentCharacterEditor.Panels
 			FramesView.Frames.ItemActivate += new System.EventHandler (FramesView_ItemActivate);
 			FramesView.Frames.SelectedIndexChanged += new System.EventHandler (FramesView_SelectedIndexChanged);
 
+			AnimationPreview.AnimationStateChanged += new EventHandler (AnimationPreview_StateChanged);
+			AnimationPreview.AnimationImageChanged += new EventHandler (AnimationPreview_ImageChanged);
+
 			InitAnimationStates ();
-			InitPreviewLayout ();
 		}
 
 		protected override void OnLoadConfig (object sender, EventArgs e)
@@ -98,8 +100,10 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		private void InitPreviewLayout ()
+		protected override void InitLayout ()
 		{
+			base.InitLayout ();
+
 			Rectangle lToolStripRect = ToolStripPreview.Parent.RectangleToScreen (new Rectangle (ToolStripPreview.Location, ToolStripPreview.Size));
 			Rectangle lTrackBarRect = TrackBarRate.Parent.RectangleToScreen (new Rectangle (TrackBarRate.Location, TrackBarRate.Size));
 			Rectangle lSlowLabelRect = LabelSlow.Parent.RectangleToScreen (new Rectangle (LabelSlow.Location, LabelSlow.Size));
@@ -555,7 +559,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (AnimationPreview.IsPlaying)
 			{
-				//ShowPreviewSkipState (AnimationPreview.TimeToFrameIndex (AnimationPreview.CurrentTime));
+				//ShowPreviewSkipState (AnimationPreview.CurrentFrameIndex);
 				ShowPreviewSkipState (-1);
 			}
 			else
@@ -1042,11 +1046,7 @@ namespace AgentCharacterEditor.Panels
 				CursorState lCursorState = new CursorState (Program.MainForm);
 				lCursorState.ShowWait ();
 
-				if (AnimationPreview.CreateAnimation (CharacterFile, Animation, !PreviewButtonMute.Checked))
-				{
-					AnimationPreview.MasterTimeline.CurrentStateInvalidated += new EventHandler (PreviewTimeline_CurrentStateInvalidated);
-					AnimationPreview.MasterTimeline.CurrentTimeInvalidated += new EventHandler (PreviewTimeline_CurrentTimeInvalidated);
-				}
+				AnimationPreview.CreateAnimation (CharacterFile, Animation, !PreviewButtonMute.Checked);
 
 				lCursorState.RestoreCursor ();
 			}
@@ -1152,7 +1152,7 @@ namespace AgentCharacterEditor.Panels
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		void PreviewTimeline_CurrentStateInvalidated (object sender, EventArgs e)
+		void AnimationPreview_StateChanged (object sender, EventArgs e)
 		{
 #if DEBUG_NOT
 			try
@@ -1183,14 +1183,13 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		void PreviewTimeline_CurrentTimeInvalidated (object sender, EventArgs e)
+		void AnimationPreview_ImageChanged (object sender, EventArgs e)
 		{
 			if (AnimationPreview.IsPlaying)
 			{
 				try
 				{
-					System.Windows.Media.Animation.ClockGroup lClock = sender as System.Windows.Media.Animation.ClockGroup;
-					int lFrameNdx = AnimationPreview.TimeToFrameIndex (lClock.CurrentTime);
+					int lFrameNdx = AnimationPreview.CurrentFrameIndex;
 					if (lFrameNdx >= 0)
 					{
 						CausesValidation = false;
