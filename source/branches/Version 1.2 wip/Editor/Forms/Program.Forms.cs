@@ -29,7 +29,7 @@ using DoubleAgent.Character;
 
 namespace AgentCharacterEditor
 {
-	static internal class Program
+	static public partial class Program
 	{
 		[STAThread]
 		static void Main (String[] args)
@@ -43,10 +43,10 @@ namespace AgentCharacterEditor
 			System.Diagnostics.Debug.AutoFlush = true;
 #endif
 			Program.UndoManager = new UndoManager ();
-			Program.MainForm = new MainForm (args);
-			Program.MainForm.Initialize ();
+			Program.MainWindow = new MainWindow (args);
+			Program.MainWindow.Initialize ();
 
-			Application.Run (Program.MainForm);
+			Application.Run (Program.MainWindow);
 
 #if DEBUG
 			System.Diagnostics.Debug.Flush();
@@ -56,7 +56,7 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
 
-		static internal MainForm MainForm
+		static internal MainWindow MainWindow
 		{
 			get;
 			private set;
@@ -72,7 +72,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return ((MainForm.CharacterFile == null) || (MainForm.CharacterFile.IsReadOnly));
+				return ((MainWindow.CharacterFile == null) || (MainWindow.CharacterFile.IsReadOnly));
 			}
 		}
 
@@ -80,7 +80,7 @@ namespace AgentCharacterEditor
 		{
 			get
 			{
-				return ((MainForm.CharacterFile != null) && (MainForm.CharacterFile.IsDirty));
+				return ((MainWindow.CharacterFile != null) && (MainWindow.CharacterFile.IsDirty));
 			}
 		}
 

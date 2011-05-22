@@ -20,7 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 namespace AgentCharacterEditor
 {
-	partial class MainForm
+	partial class MainWindow
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -220,7 +220,6 @@ namespace AgentCharacterEditor
 			this.PanelPartsTree.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
 			this.PanelPartsTree.Size = new System.Drawing.Size(200, 479);
 			this.PanelPartsTree.TabIndex = 0;
-			this.PanelPartsTree.Navigate += new AgentCharacterEditor.Navigation.NavigationEventHandler(this.OnNavigate);
 			// 
 			// PanelBalloon
 			// 

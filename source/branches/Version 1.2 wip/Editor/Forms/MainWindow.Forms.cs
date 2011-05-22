@@ -21,31 +21,26 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using DoubleAgent;
-using DoubleAgent.Character;
 using AgentCharacterEditor.Global;
-using AgentCharacterEditor.Navigation;
-using AgentCharacterEditor.Panels;
+using AgentCharacterEditor.Properties;
+using DoubleAgent;
+using AppResources = AgentCharacterEditor.Resources;
 
 namespace AgentCharacterEditor
 {
-	public partial class MainForm : Form
+	public partial class MainWindow : Form
 	{
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
-		private CharacterFile mCharacterFile = null;
-		private RecentFileList mRecentFiles = new RecentFileList ();
-		private Stack<KeyValuePair<FilePartPanel, Object>> mNavigateBackStack = new Stack<KeyValuePair<FilePartPanel, Object>> ();
-		private Stack<KeyValuePair<FilePartPanel, Object>> mNavigateForwardStack = new Stack<KeyValuePair<FilePartPanel, Object>> ();
 		private String mInitialFile = null;
 
-		public MainForm ()
+		public MainWindow ()
 		{
 			InitializeComponent ();
 		}
 
-		public MainForm (String[] args)
+		public MainWindow (String[] args)
 		{
 			if ((args != null) && (args.Length > 0))
 			{
@@ -53,7 +48,7 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		~MainForm ()
+		~MainWindow ()
 		{
 			Application.Idle -= new EventHandler (Application_Idle);
 		}
@@ -61,29 +56,21 @@ namespace AgentCharacterEditor
 		public void Initialize ()
 		{
 			InitializeComponent ();
-			CausesValidation = Visible;
+			InitializeCommon ();
+
+			IsWindowShowing = false;
 			Icon = Properties.Resources.IconDoubleAgent;
 			ToolStripMain.Left = ToolStripNavigation.Right;
 
 			MainMenuStrip = MenuStripMain;
 			Application.Idle += new EventHandler (Application_Idle);
-			mRecentFiles.RecentItemClick += new RecentFileList.RecentItemClickEventHandler (RecentFiles_RecentItemClick);
-			Program.UndoManager.Undone += new UndoManager.UndoneEventHandler (UndoManager_Undone);
-			Program.UndoManager.Redone += new UndoManager.RedoneEventHandler (UndoManager_Redone);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private void LoadAllConfig ()
-		{
-			LoadConfig (this, EventArgs.Empty);
-			LoadRecentFiles ();
-			LoadWindowState ();
-		}
-
 		private void LoadWindowState ()
 		{
-			Properties.Settings lSettings = Properties.Settings.Default;
+			Settings lSettings = Settings.Default;
 
 			if (lSettings.IsValid)
 			{
@@ -108,7 +95,7 @@ namespace AgentCharacterEditor
 
 		private void LoadRecentFiles ()
 		{
-			Properties.Settings lSettings = Properties.Settings.Default;
+			Settings lSettings = Settings.Default;
 
 			if (lSettings.IsValid)
 			{
@@ -129,18 +116,14 @@ namespace AgentCharacterEditor
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private void SaveAllConfig ()
+		private void SaveSettings ()
 		{
-			SaveConfig (this, EventArgs.Empty);
-			SaveWindowState ();
-			SaveRecentFiles ();
-
-			Properties.Settings.Default.Save ();
+			Settings.Default.Save ();
 		}
 
 		private void SaveWindowState ()
 		{
-			Properties.Settings lSettings = Properties.Settings.Default;
+			Settings lSettings = Settings.Default;
 
 			if (this.WindowState == FormWindowState.Normal)
 			{
@@ -159,7 +142,7 @@ namespace AgentCharacterEditor
 
 		private void SaveRecentFiles ()
 		{
-			Properties.Settings lSettings = Properties.Settings.Default;
+			Settings lSettings = Settings.Default;
 
 			lSettings.RecentFiles = new System.Collections.Specialized.StringCollection ();
 			foreach (String lPath in mRecentFiles)
@@ -185,23 +168,21 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
 
-		[System.ComponentModel.Browsable (false)]
-		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
-		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-		public CharacterFile CharacterFile
+		protected Boolean IsWindowShowing
 		{
 			get
 			{
-				return mCharacterFile;
+				return !CausesValidation;
+			}
+			set
+			{
+				CausesValidation = !value && Visible;
 			}
 		}
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Events
-
-		public event EventHandler LoadConfig;
-		public event EventHandler SaveConfig;
 
 		public event Global.CanEditEventHandler CanEdit;
 		public event Global.EditEventHandler EditCopy;
@@ -210,244 +191,9 @@ namespace AgentCharacterEditor
 		public event Global.EditEventHandler EditPaste;
 		public event Global.ContextMenuEventHandler EditMenu;
 
-		public event UndoUnit.AppliedEventHandler UpdateApplied;
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		public void OnUpdateApplied (object sender, EventArgs e)
-		{
-			if (UpdateApplied != null)
-			{
-				UpdateApplied (sender, e);
-			}
-		}
-
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region File
-
-		public void FileIsDirty ()
-		{
-			if (CharacterFile != null)
-			{
-				CharacterFile.IsDirty = true;
-				ShowFileState ();
-				ShowEditState ();
-			}
-		}
-
-		private Boolean OpenCharacterFile (String pFilePath)
-		{
-			Boolean lRet = false;
-			CursorState lCursorState = new CursorState (this);
-			CharacterFile lCharacterFile = null;
-			Boolean lOpened = false;
-
-			try
-			{
-				if ((mCharacterFile != null) && !String.IsNullOrEmpty (pFilePath) && (String.Compare (System.IO.Path.GetFullPath (pFilePath), System.IO.Path.GetFullPath (mCharacterFile.Path), true) == 0))
-				{
-					return true;
-				}
-			}
-			catch
-			{
-			}
-
-			lCursorState.ShowWait ();
-			if (mCharacterFile != null)
-			{
-				SaveAllConfig ();
-			}
-
-			try
-			{
-				if (String.IsNullOrEmpty (pFilePath))
-				{
-					lCharacterFile = CharacterFile.CreateInstance (CharacterFile.AcdFileExt);
-				}
-				else
-				{
-					lCharacterFile = CharacterFile.CreateInstance (pFilePath);
-				}
-			}
-			catch
-			{
-			}
-
-			if (lCharacterFile != null)
-			{
-				try
-				{
-					if (String.IsNullOrEmpty (pFilePath))
-					{
-						lOpened = true;
-						lCharacterFile.Header.ImageSize = PictureBoxSample.DefaultImageSize;
-						lCharacterFile.Header.Guid = System.Guid.NewGuid ();
-						lCharacterFile.Names.Add (CharacterPanel.mLangDefault, Properties.Resources.TitleNewFile);
-						lCharacterFile.IsDirty = false;
-					}
-					else
-					{
-#if DEBUG_NOT
-						lOpened = lCharacterFile.Open (pFilePath, 1);
-#else
-						lOpened = lCharacterFile.Open (pFilePath);
-#endif
-					}
-				}
-				catch (Exception pException)
-				{
-					MessageBox.Show (pException.Message);
-					lCursorState.RestoreCursor ();
-					return false;
-				}
-			}
-
-			try
-			{
-				if (lOpened)
-				{
-					CausesValidation = false;
-
-					Program.UndoManager.Clear ();
-					mNavigateBackStack.Clear ();
-					mNavigateForwardStack.Clear ();
-					mCharacterFile = lCharacterFile;
-
-					ShowFileState ();
-					ShowEditState ();
-					ShowNavigateState ();
-
-					PanelPartsTree.FilePart = new ResolveCharacter ();
-					PanelCharacter.FilePart = new ResolveCharacter ();
-					PanelBalloon.FilePart = new ResolveBalloon ();
-					PanelTts.FilePart = new ResolveTts ();
-					PanelAnimations.FilePart = new ResolveCharacter ();
-					PanelAnimation.FilePart = new ResolveCharacter ();
-					PanelFrame.FilePart = new ResolveCharacter ();
-					PanelBranching.FilePart = new ResolveCharacter ();
-					PanelOverlays.FilePart = new ResolveCharacter ();
-					PanelState.FilePart = new ResolveCharacter ();
-
-					PanelPartsTree.LoadExpansion ();
-					ShowSelectedPart ();
-					UpdateRecentFiles ();
-
-					CausesValidation = Visible;
-					lRet = true;
-				}
-				else
-				{
-					MessageBox.Show (String.Format (Properties.Resources.MsgInvalidFile, pFilePath), Program.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-				}
-			}
-			catch
-			{
-			}
-
-			lCursorState.RestoreCursor ();
-			return lRet;
-		}
-
-		private Boolean SaveCharacterFile ()
-		{
-			return SaveCharacterFile (String.Empty);
-		}
-
-		private Boolean SaveCharacterFile (String pSaveAsPath)
-		{
-			Boolean lRet = false;
-			CursorState lCursorState = null;
-
-			if (mCharacterFile == null)
-			{
-				lRet = true;
-			}
-			else if (!String.IsNullOrEmpty (pSaveAsPath))
-			{
-				CharacterFile lCharacterFile = null;
-
-				lCursorState = new CursorState (this);
-				lCursorState.ShowWait ();
-				SaveAllConfig ();
-
-				try
-				{
-					lCharacterFile = CharacterFile.CreateInstance (pSaveAsPath);
-				}
-				catch
-				{
-				}
-				if (lCharacterFile != null)
-				{
-					try
-					{
-#if DEBUG_NOT
-						lRet = lCharacterFile.Save (pSaveAsPath, mCharacterFile, 3);
-#else
-						lRet = lCharacterFile.Save (pSaveAsPath, mCharacterFile);
-#endif
-					}
-					catch (Exception pException)
-					{
-						MessageBox.Show (pException.Message);
-					}
-
-					try
-					{
-						lCharacterFile.Close ();
-						lCharacterFile = null;
-					}
-					catch
-					{
-					}
-
-					if (!lRet)
-					{
-						MessageBox.Show (String.Format (Properties.Resources.MsgFailedSaveAs, pSaveAsPath), Program.AssemblyTitle, MessageBoxButtons.OK);
-					}
-				}
-				else
-				{
-					MessageBox.Show ("Not implemented", Program.AssemblyTitle, MessageBoxButtons.OK);
-				}
-			}
-			else if (String.IsNullOrEmpty (mCharacterFile.Path) && !mCharacterFile.IsReadOnly)
-			{
-				String lFilePath = String.Empty;
-
-				if (GetSaveNewPath (ref lFilePath))
-				{
-					lRet = SaveCharacterFile (lFilePath);
-				}
-			}
-			else if (mCharacterFile.IsDirty && !mCharacterFile.IsReadOnly)
-			{
-				lCursorState = new CursorState (this);
-				lCursorState.ShowWait ();
-				SaveAllConfig ();
-
-				try
-				{
-#if DEBUG_NOT
-					lRet = mCharacterFile.Save (3);
-#else
-					lRet = mCharacterFile.Save ();
-#endif
-				}
-				catch (Exception pException)
-				{
-					MessageBox.Show (pException.Message);
-				}
-			}
-
-			if (lCursorState != null)
-			{
-				lCursorState.RestoreCursor ();
-			}
-			return lRet;
-		}
 
 		private Boolean PromptSaveCharacterFile ()
 		{
@@ -455,21 +201,21 @@ namespace AgentCharacterEditor
 #if	!DEBUG
 			if (mCharacterFile.IsDirty && !mCharacterFile.IsReadOnly)
 			{
-				String	lMessage;
+				String lMessage;
 
 				if (String.IsNullOrEmpty (mCharacterFile.Path))
 				{
-					String	lNewName = GetSaveNewName ();
+					String lNewName = GetSaveNewName ();
 
 					if (String.IsNullOrEmpty (lNewName))
 					{
-						lNewName = Properties.Resources.TitleNewFile;
+						lNewName = AppResources.Resources.TitleNewFile;
 					}
-					lMessage = String.Format (Properties.Resources.MsgSaveNew, lNewName);
+					lMessage = String.Format (AppResources.Resources.MsgSaveNew, lNewName);
 				}
 				else
 				{
-					lMessage = String.Format (Properties.Resources.MsgSaveFile, mCharacterFile.FileName);
+					lMessage = String.Format (AppResources.Resources.MsgSaveFile, mCharacterFile.FileName);
 				}
 
 				switch (MessageBox.Show (lMessage, Program.AssemblyTitle, MessageBoxButtons.YesNoCancel))
@@ -490,215 +236,40 @@ namespace AgentCharacterEditor
 			return lRet;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
-
-		private Boolean GetOpenPath (ref String pFilePath)
+		private Boolean PromptRemoveRecent (String pFilePath)
 		{
-			pFilePath = String.Empty;
-
-			if ((mCharacterFile != null) && !String.IsNullOrEmpty (mCharacterFile.Path))
+			if (MessageBox.Show (String.Format ("Remove {0} from the recent files list?", pFilePath), Program.AssemblyTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
-				try
-				{
-					pFilePath = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (mCharacterFile.Path), "*" + System.IO.Path.GetExtension (mCharacterFile.Path));
-				}
-				catch
-				{
-				}
-			}
-			return OpenFileDialogEx.OpenCharacterFile (ref pFilePath);
-		}
-
-		private Boolean GetSaveAsPath (ref String pFilePath)
-		{
-			pFilePath = String.Empty;
-
-			if ((mCharacterFile != null) && !String.IsNullOrEmpty (mCharacterFile.Path))
-			{
-				try
-				{
-					pFilePath = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (mCharacterFile.Path), "*" + System.IO.Path.GetExtension (mCharacterFile.Path));
-				}
-				catch
-				{
-				}
-				return OpenFileDialogEx.SaveCharacterFile (ref pFilePath);
-			}
-			else
-			{
-				return GetSaveNewPath (ref pFilePath);
-			}
-		}
-
-		private Boolean GetSaveNewPath (ref String pFilePath)
-		{
-			pFilePath = GetSaveNewName ();
-			if (String.IsNullOrEmpty (pFilePath))
-			{
-				pFilePath = "*";
-			}
-			pFilePath += CharacterFile.AcdFileExt;
-
-			return OpenFileDialogEx.SaveCharacterFile (ref pFilePath);
-		}
-
-		private String GetSaveNewName ()
-		{
-			if (mCharacterFile != null)
-			{
-				FileCharacterName lName = mCharacterFile.FindName (0);
-
-				if ((lName != null) && !String.IsNullOrEmpty (lName.Name))
-				{
-					return lName.Name;
-				}
-			}
-			return String.Empty;
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
-		#region Navigation
-
-		private void ShowSelectedPart ()
-		{
-			ShowSelectedPart (PanelPartsTree.SelectedPart);
-		}
-
-		private void ShowSelectedPart (ResolvePart pSelectedPart)
-		{
-			FilePartPanel lSelectedPanel = null;
-
-			if (pSelectedPart is ResolveCharacter)
-			{
-				ResolveCharacter lResolveCharacter = pSelectedPart as ResolveCharacter;
-				if (lResolveCharacter.Scope == ResolveCharacter.ScopeType.ScopeCharacter)
-				{
-					lSelectedPanel = PanelCharacter;
-				}
-				else if (lResolveCharacter.Scope == ResolveCharacter.ScopeType.ScopeAnimations)
-				{
-					lSelectedPanel = PanelAnimations;
-				}
-			}
-			else if (pSelectedPart is ResolveBalloon)
-			{
-				lSelectedPanel = PanelBalloon;
-			}
-			else if (pSelectedPart is ResolveTts)
-			{
-				lSelectedPanel = PanelTts;
-			}
-			else if (pSelectedPart is ResolveAnimation)
-			{
-				PanelAnimation.FilePart = pSelectedPart;
-				lSelectedPanel = PanelAnimation;
-			}
-			else if (pSelectedPart is ResolveAnimationFrame)
-			{
-				ResolveAnimationFrame lResolveAnimationFrame = pSelectedPart as ResolveAnimationFrame;
-				switch (lResolveAnimationFrame.Scope)
-				{
-					case ResolveAnimationFrame.ScopeType.ScopeFrame:
-						{
-							PanelFrame.FilePart = pSelectedPart;
-							lSelectedPanel = PanelFrame;
-						}
-						break;
-					case ResolveAnimationFrame.ScopeType.ScopeBranching:
-						{
-							PanelBranching.FilePart = pSelectedPart;
-							lSelectedPanel = PanelBranching;
-						}
-						break;
-					case ResolveAnimationFrame.ScopeType.ScopeOverlays:
-						{
-							PanelOverlays.FilePart = pSelectedPart;
-							lSelectedPanel = PanelOverlays;
-						}
-						break;
-				}
-			}
-			else if (pSelectedPart is ResolveState)
-			{
-				PanelState.FilePart = pSelectedPart;
-				lSelectedPanel = PanelState;
-			}
-
-			ShowSelectedPanel (lSelectedPanel);
-		}
-
-		private void ShowSelectedPanel (FilePartPanel pSelectedPanel)
-		{
-			PanelCharacter.Visible = Object.ReferenceEquals (PanelCharacter, pSelectedPanel);
-			PanelBalloon.Visible = Object.ReferenceEquals (PanelBalloon, pSelectedPanel);
-			PanelTts.Visible = Object.ReferenceEquals (PanelTts, pSelectedPanel);
-			PanelAnimations.Visible = Object.ReferenceEquals (PanelAnimations, pSelectedPanel);
-			PanelAnimation.Visible = Object.ReferenceEquals (PanelAnimation, pSelectedPanel);
-			PanelFrame.Visible = Object.ReferenceEquals (PanelFrame, pSelectedPanel);
-			PanelBranching.Visible = Object.ReferenceEquals (PanelBranching, pSelectedPanel);
-			PanelOverlays.Visible = Object.ReferenceEquals (PanelOverlays, pSelectedPanel);
-			PanelState.Visible = Object.ReferenceEquals (PanelState, pSelectedPanel);
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		private KeyValuePair<FilePartPanel, Object> GetNavigationContext ()
-		{
-			if (PanelCharacter.Visible)
-			{
-				return new KeyValuePair<FilePartPanel, Object> (PanelCharacter, PanelCharacter.NavigationContext);
-			}
-			else if (PanelBalloon.Visible)
-			{
-				return new KeyValuePair<FilePartPanel, Object> (PanelBalloon, PanelBalloon.NavigationContext);
-			}
-			else if (PanelTts.Visible)
-			{
-				return new KeyValuePair<FilePartPanel, Object> (PanelTts, PanelTts.NavigationContext);
-			}
-			else if (PanelAnimations.Visible)
-			{
-				return new KeyValuePair<FilePartPanel, Object> (PanelAnimations, PanelAnimations.NavigationContext);
-			}
-			else if (PanelAnimation.Visible)
-			{
-				return new KeyValuePair<FilePartPanel, Object> (PanelAnimation, PanelAnimation.NavigationContext);
-			}
-			else if (PanelFrame.Visible)
-			{
-				return new KeyValuePair<FilePartPanel, Object> (PanelFrame, PanelFrame.NavigationContext);
-			}
-			else if (PanelBranching.Visible)
-			{
-				return new KeyValuePair<FilePartPanel, Object> (PanelBranching, PanelBranching.NavigationContext);
-			}
-			else if (PanelOverlays.Visible)
-			{
-				return new KeyValuePair<FilePartPanel, Object> (PanelOverlays, PanelOverlays.NavigationContext);
-			}
-			else if (PanelState.Visible)
-			{
-				return new KeyValuePair<FilePartPanel, Object> (PanelState, PanelState.NavigationContext);
-			}
-
-			return new KeyValuePair<FilePartPanel, Object> (null, null);
-		}
-
-		private Boolean ShowNavigationContext (KeyValuePair<FilePartPanel, Object> pContext)
-		{
-			if (pContext.Key != null)
-			{
-				ShowSelectedPanel (pContext.Key);
-				pContext.Key.NavigationContext = pContext.Value;
-
-				if (!pContext.Key.IsEmpty)
-				{
-					PanelPartsTree.SelectedPart = pContext.Key.FilePart;
-					return true;
-				}
+				return true;
 			}
 			return false;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		private void ShowFileInvalid (String pFilePath)
+		{
+			MessageBox.Show (String.Format (AppResources.Resources.MsgInvalidFile, pFilePath), Program.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+		}
+
+		private void ShowFileSaveError (String pSaveAsPath)
+		{
+			MessageBox.Show (String.Format (AppResources.Resources.MsgFailedSaveAs, pSaveAsPath), Program.AssemblyTitle, MessageBoxButtons.OK);
+		}
+
+		private void ShowFileSaveInvalid (String pSaveAsPath)
+		{
+			MessageBox.Show ("Not implemented", Program.AssemblyTitle, MessageBoxButtons.OK);
+		}
+
+		private void ShowFileSaveAsInvalid (String pSaveAsPath)
+		{
+			MessageBox.Show (AppResources.Resources.MsgInvalidSaveAs, Program.AssemblyTitle, MessageBoxButtons.OK);
+		}
+
+		private void ShowFileException (Exception pException)
+		{
+			MessageBox.Show (pException.Message);
 		}
 
 		#endregion
@@ -716,17 +287,17 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				this.Text = String.Format (mCharacterFile.IsDirty ? Properties.Resources.TitleDirtyFile : Properties.Resources.TitleOpenFile, Program.AssemblyTitle, String.IsNullOrEmpty (mCharacterFile.Path) ? Properties.Resources.TitleNewFile : mCharacterFile.Path);
-				MenuItemFileSave.Enabled = (mCharacterFile.IsDirty || String.IsNullOrEmpty (mCharacterFile.Path));
-				MenuItemFileSaveAs.Enabled = true;
+				this.Text = String.Format (mCharacterFile.IsDirty ? AppResources.Resources.TitleDirtyFile : AppResources.Resources.TitleOpenFile, Program.AssemblyTitle, String.IsNullOrEmpty (mCharacterFile.Path) ? AppResources.Resources.TitleNewFile : mCharacterFile.Path);
+				MenuItemFileSave.Enabled = CanHandleFileSave;
+				MenuItemFileSaveAs.Enabled = CanHandleFileSaveAs;
 				ToolButtonFileSave.Enabled = MenuItemFileSave.Enabled;
 			}
 		}
 
 		public void ShowNavigateState ()
 		{
-			ToolButtonNavigateBack.Enabled = mNavigateBackStack.Count > 0;
-			ToolButtonNavigateForward.Enabled = mNavigateForwardStack.Count > 0;
+			ToolButtonNavigateBack.Enabled = CanHandleNavigateBack;
+			ToolButtonNavigateForward.Enabled = CanHandleNavigateForward;
 		}
 
 		public void ShowEditState ()
@@ -752,10 +323,10 @@ namespace AgentCharacterEditor
 				MenuItemEditDelete.Enabled = !lTextBox.ReadOnly && (lTextBox.SelectionLength > 0);
 				MenuItemEditPaste.Enabled = !lTextBox.ReadOnly && (Clipboard.ContainsText (TextDataFormat.Text) || Clipboard.ContainsText (TextDataFormat.UnicodeText));
 
-				MenuItemEditCopy.Text = MenuItemEditCopy.Enabled ? Properties.Resources.EditCopyText : Properties.Resources.EditCopy;
-				MenuItemEditCut.Text = MenuItemEditCut.Enabled ? Properties.Resources.EditCutText : Properties.Resources.EditCut;
-				MenuItemEditDelete.Text = MenuItemEditDelete.Enabled ? Properties.Resources.EditDeleteText : Properties.Resources.EditDelete;
-				MenuItemEditPaste.Text = MenuItemEditPaste.Enabled ? Properties.Resources.EditPasteText : Properties.Resources.EditPaste;
+				MenuItemEditCopy.Text = MenuItemEditCopy.Enabled ? AppResources.Resources.EditCopyText : AppResources.Resources.EditCopy;
+				MenuItemEditCut.Text = MenuItemEditCut.Enabled ? AppResources.Resources.EditCutText : AppResources.Resources.EditCut;
+				MenuItemEditDelete.Text = MenuItemEditDelete.Enabled ? AppResources.Resources.EditDeleteText : AppResources.Resources.EditDelete;
+				MenuItemEditPaste.Text = MenuItemEditPaste.Enabled ? AppResources.Resources.EditPasteText : AppResources.Resources.EditPaste;
 			}
 			else
 			{
@@ -763,10 +334,10 @@ namespace AgentCharacterEditor
 				MenuItemEditDelete.Enabled = false;
 				MenuItemEditCut.Enabled = false;
 				MenuItemEditPaste.Enabled = false;
-				MenuItemEditCopy.Text = Properties.Resources.EditCopy;
-				MenuItemEditDelete.Text = Properties.Resources.EditDelete;
-				MenuItemEditCut.Text = Properties.Resources.EditCut;
-				MenuItemEditPaste.Text = Properties.Resources.EditPaste;
+				MenuItemEditCopy.Text = AppResources.Resources.EditCopy;
+				MenuItemEditDelete.Text = AppResources.Resources.EditDelete;
+				MenuItemEditCut.Text = AppResources.Resources.EditCut;
+				MenuItemEditPaste.Text = AppResources.Resources.EditPaste;
 			}
 
 			ToolButtonEditCopy.Enabled = MenuItemEditCopy.Enabled;
@@ -778,25 +349,35 @@ namespace AgentCharacterEditor
 			ToolButtonEditPaste.Text = MenuItemEditPaste.Text.NoMenuPrefix ();
 			ToolButtonEditDelete.Text = MenuItemEditDelete.Text.NoMenuPrefix ();
 
+			MenuItemEditCopy.Text = MenuItemEditCopy.Text.FixMenuPrefix ();
+			MenuItemEditDelete.Text = MenuItemEditDelete.Text.FixMenuPrefix ();
+			MenuItemEditCut.Text = MenuItemEditCut.Text.FixMenuPrefix ();
+			MenuItemEditPaste.Text = MenuItemEditPaste.Text.FixMenuPrefix ();
+
 			if ((lTextBox != null) && lTextBox.Modified)
 			{
 				MenuItemEditUndo.Enabled = lTextBox.CanUndo;
 				MenuItemEditRedo.Enabled = false;
-				MenuItemEditUndo.Text = MenuItemEditUndo.Enabled ? Properties.Resources.EditUndoText : Properties.Resources.EditUndo;
-				MenuItemEditRedo.Text = Properties.Resources.EditRedo;
+				MenuItemEditUndo.Text = MenuItemEditUndo.Enabled ? AppResources.Resources.EditUndoText.FixMenuPrefix () : AppResources.Resources.EditUndo.FixMenuPrefix ();
+				MenuItemEditRedo.Text = AppResources.Resources.EditRedo.FixMenuPrefix ();
+
+				ToolButtonEditUndo.Enabled = MenuItemEditUndo.Enabled;
+				ToolButtonEditRedo.Enabled = MenuItemEditRedo.Enabled;
+				ToolButtonEditUndo.Text = ToolButtonEditUndo.Enabled ? AppResources.Resources.EditUndoText.NoMenuPrefix () : AppResources.Resources.EditUndo.NoMenuPrefix ();
+				ToolButtonEditRedo.Text = AppResources.Resources.EditRedo.NoMenuPrefix ();
 			}
 			else
 			{
 				MenuItemEditUndo.Enabled = Program.UndoManager.CanUndo;
 				MenuItemEditRedo.Enabled = Program.UndoManager.CanRedo;
-				MenuItemEditUndo.Text = Program.UndoManager.CanUndo ? String.Format (Properties.Resources.EditUndoThis, Program.UndoManager.UndoName) : Properties.Resources.EditUndo;
-				MenuItemEditRedo.Text = Program.UndoManager.CanRedo ? String.Format (Properties.Resources.EditRedoThis, Program.UndoManager.RedoName) : Properties.Resources.EditRedo;
-			}
+				MenuItemEditUndo.Text = Program.UndoManager.CanUndo ? String.Format (AppResources.Resources.EditUndoThis.FixMenuPrefix (), Program.UndoManager.UndoName) : AppResources.Resources.EditUndo.FixMenuPrefix ();
+				MenuItemEditRedo.Text = Program.UndoManager.CanRedo ? String.Format (AppResources.Resources.EditRedoThis.FixMenuPrefix (), Program.UndoManager.RedoName) : AppResources.Resources.EditRedo.FixMenuPrefix ();
 
-			ToolButtonEditUndo.Enabled = MenuItemEditUndo.Enabled;
-			ToolButtonEditRedo.Enabled = MenuItemEditRedo.Enabled;
-			ToolButtonEditUndo.Text = MenuItemEditUndo.Text.NoMenuPrefix ();
-			ToolButtonEditRedo.Text = MenuItemEditRedo.Text.NoMenuPrefix ();
+				ToolButtonEditUndo.Enabled = MenuItemEditUndo.Enabled;
+				ToolButtonEditRedo.Enabled = MenuItemEditRedo.Enabled;
+				ToolButtonEditUndo.Text = Program.UndoManager.CanUndo ? String.Format (AppResources.Resources.EditUndoThis.NoMenuPrefix (), Program.UndoManager.UndoName) : AppResources.Resources.EditUndo.NoMenuPrefix ();
+				ToolButtonEditRedo.Text = Program.UndoManager.CanRedo ? String.Format (AppResources.Resources.EditRedoThis.NoMenuPrefix (), Program.UndoManager.RedoName) : AppResources.Resources.EditRedo.NoMenuPrefix ();
+			}
 		}
 
 		public void ShowEditState (Global.CanEditEventArgs pEditArgs, ToolStripItem pCopyItem, ToolStripItem pCutItem, ToolStripItem pPasteItem, ToolStripItem pDeleteItem)
@@ -804,32 +385,32 @@ namespace AgentCharacterEditor
 			if (!String.IsNullOrEmpty (pEditArgs.CopyObjectTitle))
 			{
 				pCopyItem.Enabled = true;
-				pCopyItem.Text = String.Format (pEditArgs.CopyTitle, pEditArgs.CopyObjectTitle);
+				pCopyItem.Text = String.Format (AppResources.Resources.EditCopyThis, pEditArgs.CopyObjectTitle);
 			}
 			else
 			{
 				pCopyItem.Enabled = false;
-				pCopyItem.Text = Properties.Resources.EditCopy;
+				pCopyItem.Text = AppResources.Resources.EditCopy;
 			}
 			if (!Program.FileIsReadOnly && !String.IsNullOrEmpty (pEditArgs.CutObjectTitle))
 			{
 				pCutItem.Enabled = true;
-				pCutItem.Text = String.Format (pEditArgs.CutTitle, pEditArgs.CutObjectTitle);
+				pCutItem.Text = String.Format (AppResources.Resources.EditCutThis, pEditArgs.CutObjectTitle);
 			}
 			else
 			{
 				pCutItem.Enabled = false;
-				pCutItem.Text = Properties.Resources.EditCut;
+				pCutItem.Text = AppResources.Resources.EditCut;
 			}
 			if (!Program.FileIsReadOnly && !String.IsNullOrEmpty (pEditArgs.DeleteObjectTitle))
 			{
 				pDeleteItem.Enabled = true;
-				pDeleteItem.Text = String.Format (pEditArgs.DeleteTitle, pEditArgs.DeleteObjectTitle);
+				pDeleteItem.Text = String.Format (AppResources.Resources.EditDeleteThis, pEditArgs.DeleteObjectTitle);
 			}
 			else
 			{
 				pDeleteItem.Enabled = false;
-				pDeleteItem.Text = Properties.Resources.EditDelete;
+				pDeleteItem.Text = AppResources.Resources.EditDelete;
 			}
 			if (!Program.FileIsReadOnly && !String.IsNullOrEmpty (pEditArgs.PasteObjectTitle))
 			{
@@ -847,7 +428,7 @@ namespace AgentCharacterEditor
 			else
 			{
 				pPasteItem.Enabled = false;
-				pPasteItem.Text = Properties.Resources.EditPaste;
+				pPasteItem.Text = AppResources.Resources.EditPaste;
 			}
 		}
 
@@ -953,7 +534,7 @@ namespace AgentCharacterEditor
 				Update ();
 				OpenCharacterFile (mInitialFile);
 			}
-			CausesValidation = Visible;
+			IsWindowShowing = false;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -975,47 +556,29 @@ namespace AgentCharacterEditor
 
 		private void ToolButtonNavigateBack_Click (object sender, EventArgs e)
 		{
-			KeyValuePair<FilePartPanel, Object> lContext = GetNavigationContext ();
-			while (mNavigateBackStack.Count > 0)
-			{
-				if (ShowNavigationContext (mNavigateBackStack.Pop ()))
-				{
-					mNavigateForwardStack.Push (lContext);
-					break;
-				}
-			}
-			ShowNavigateState ();
+			HandleNavigateBack ();
 		}
 
 		private void ToolButtonNavigateForward_Click (object sender, EventArgs e)
 		{
-			KeyValuePair<FilePartPanel, Object> lContext = GetNavigationContext ();
-			while (mNavigateForwardStack.Count > 0)
-			{
-				if (ShowNavigationContext (mNavigateForwardStack.Pop ()))
-				{
-					mNavigateBackStack.Push (lContext);
-					break;
-				}
-			}
-			ShowNavigateState ();
+			HandleNavigateForward ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void ToolButtonFileNew_Click (object sender, EventArgs e)
 		{
-			MenuItemFileNew_Click (sender, e);
+			HandleFileNew ();
 		}
 
 		private void ToolButtonFileOpen_Click (object sender, EventArgs e)
 		{
-			MenuItemFileOpen_Click (sender, e);
+			HandleFileOpen ();
 		}
 
 		private void ToolButtonFileSave_Click (object sender, EventArgs e)
 		{
-			MenuItemFileSave_Click (sender, e);
+			HandleFileSave ();
 		}
 
 		private void ToolButtonEditUndo_Click (object sender, EventArgs e)
@@ -1066,64 +629,22 @@ namespace AgentCharacterEditor
 
 		private void MenuItemFileNew_Click (object sender, EventArgs e)
 		{
-			if (PromptSaveCharacterFile ())
-			{
-				OpenCharacterFile (String.Empty);
-			}
+			HandleFileNew ();
 		}
 
 		private void MenuItemFileOpen_Click (object sender, EventArgs e)
 		{
-			if (PromptSaveCharacterFile ())
-			{
-				String lFilePath = String.Empty;
-
-				if (GetOpenPath (ref lFilePath))
-				{
-					OpenCharacterFile (lFilePath);
-				}
-			}
+			HandleFileOpen ();
 		}
 
 		private void MenuItemFileSave_Click (object sender, EventArgs e)
 		{
-			if (mCharacterFile != null)
-			{
-				if (String.IsNullOrEmpty (mCharacterFile.Path))
-				{
-					String lFilePath = String.Empty;
-
-					if ((GetSaveNewPath (ref lFilePath)) && SaveCharacterFile (lFilePath))
-					{
-						OpenCharacterFile (lFilePath);
-					}
-				}
-				else
-				{
-					SaveCharacterFile ();
-				}
-				ShowFileState ();
-				ShowEditState ();
-			}
+			HandleFileSave ();
 		}
 
 		private void MenuItemFileSaveAs_Click (object sender, EventArgs e)
 		{
-			String lFilePath = String.Empty;
-
-			if ((mCharacterFile != null) && GetSaveAsPath (ref lFilePath))
-			{
-				if (String.Compare (mCharacterFile.Path, lFilePath, true) == 0)
-				{
-					MessageBox.Show (Properties.Resources.MsgInvalidSaveAs, Program.AssemblyTitle, MessageBoxButtons.OK);
-				}
-				else if (SaveCharacterFile (lFilePath))
-				{
-					OpenCharacterFile (lFilePath);
-				}
-				ShowFileState ();
-				ShowEditState ();
-			}
+			HandleFileSaveAs ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -1154,34 +675,15 @@ namespace AgentCharacterEditor
 					ValidateChildren ();
 				}
 			}
-			else if (Program.UndoManager.CanUndo)
+			else
 			{
-				if (Program.UndoManager.Undo ())
-				{
-					ShowFileState ();
-					ShowEditState ();
-				}
-				else
-				{
-					System.Media.SystemSounds.Asterisk.Play ();
-				}
+				HandleEditUndo ();
 			}
 		}
 
 		private void MenuItemEditRedo_Click (object sender, EventArgs e)
 		{
-			if (Program.UndoManager.CanRedo)
-			{
-				if (Program.UndoManager.Redo ())
-				{
-					ShowFileState ();
-					ShowEditState ();
-				}
-				else
-				{
-					System.Media.SystemSounds.Asterisk.Play ();
-				}
-			}
+			HandleEditRedo ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -1362,39 +864,6 @@ namespace AgentCharacterEditor
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Internal Event Handlers
-
-		private void RecentFiles_RecentItemClick (object sender, String e)
-		{
-			if (PromptSaveCharacterFile ())
-			{
-				if (!OpenCharacterFile (e))
-				{
-					if (MessageBox.Show (String.Format ("Remove {0} from the recent files list?", e), Program.AssemblyTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
-					{
-						if (mRecentFiles.RemovePath (e))
-						{
-							UpdateRecentFiles ();
-						}
-					}
-				}
-			}
-		}
-
-		private void OnNavigate (object sender, NavigationEventArgs e)
-		{
-			if (CausesValidation)
-			{
-				mNavigateBackStack.Push (GetNavigationContext ());
-				mNavigateForwardStack.Clear ();
-			}
-			ShowSelectedPart (e.Part);
-			if (!Object.ReferenceEquals (sender, PanelPartsTree))
-			{
-				PanelPartsTree.SelectedPart = e.Part;
-			}
-			ShowEditState ();
-			ShowNavigateState ();
-		}
 
 		private void UndoManager_Undone (object sender, UndoManager.EventArgs e)
 		{
