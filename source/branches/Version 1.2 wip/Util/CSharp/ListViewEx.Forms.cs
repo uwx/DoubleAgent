@@ -28,8 +28,11 @@ namespace DoubleAgent
 	/// <summary>
 	/// A <see cref="System.Windows.Forms.ListView"/> with a bit of extra functionality an double-buffering enabled
 	/// </summary>
-	public class ListViewEx : System.Windows.Forms.ListView
+	public partial class ListViewEx : System.Windows.Forms.ListView
 	{
+		///////////////////////////////////////////////////////////////////////////////
+		#region Initialization
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -37,6 +40,19 @@ namespace DoubleAgent
 		{
 			this.CheckOnActivate = true;
 		}
+
+		/// <summary>
+		/// Enables double buffering.
+		/// </summary>
+		protected override void OnCreateControl ()
+		{
+			this.DoubleBuffered = true;
+			base.OnCreateControl ();
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region Item counts
 
 		/// <summary>
 		/// Updates the <see cref="System.Windows.Forms.ListView.Items"/> collection to contain a specific number of items.
@@ -96,7 +112,9 @@ namespace DoubleAgent
 			return lRet;
 		}
 
+		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Single selection
 
 		/// <summary>
 		/// Gets or sets the selected <see cref="ListViewItem"/> in single-selection mode.
@@ -254,7 +272,9 @@ namespace DoubleAgent
 			}
 		}
 
+		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Column sizing
 
 		/// <summary>
 		/// Updates a column's width to fully show both the header and content (whichever is wider).
@@ -271,7 +291,9 @@ namespace DoubleAgent
 			pColumnHeader.Width = lColumnWidth;
 		}
 
+		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Pseudo-readonly
 
 		/// <summary>
 		/// Determines if the checked state is changed when a list item is activated.
@@ -309,15 +331,6 @@ namespace DoubleAgent
 			base.OnItemCheck (ice);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
-
-		/// <summary>
-		/// Enables double buffering.
-		/// </summary>
-		protected override void OnCreateControl ()
-		{
-			this.DoubleBuffered = true;
-			base.OnCreateControl ();
-		}
+		#endregion
 	}
 }

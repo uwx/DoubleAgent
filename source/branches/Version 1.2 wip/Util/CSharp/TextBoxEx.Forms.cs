@@ -30,7 +30,7 @@ namespace DoubleAgent
 	/// A <see cref="System.Windows.Forms.TextBox"/> that triggers validation when the return key is pressed.
 	/// </summary>
 	/// <remarks>The <see cref="System.Windows.Forms.TextBox.AcceptsReturn"/> property is initialized to True.</remarks>
-	public class TextBoxEx : System.Windows.Forms.TextBox
+	public partial class TextBoxEx : System.Windows.Forms.TextBox
 	{
 		private const int WM_KEYDOWN = 0x0100;
 
@@ -39,8 +39,14 @@ namespace DoubleAgent
 		/// </summary>
 		public TextBoxEx ()
 		{
-			AcceptsReturn = true;
 		}
+
+		///////////////////////////////////////////////////////////////////////////////
+		#region Return key processing
+
+		//
+		//	Note that AcceptsReturn in Windows Forms is the opposite of AcceptsReturn is WPF 
+		//
 
 		protected override bool ProcessCmdKey (ref Message pMessage, Keys pKeyData)
 		{
@@ -56,7 +62,7 @@ namespace DoubleAgent
 		{
 			if (CausesValidation)
 			{
-				CancelEventArgs	lEventArgs = new CancelEventArgs ();
+				CancelEventArgs lEventArgs = new CancelEventArgs ();
 				OnValidating (lEventArgs);
 				if (!lEventArgs.Cancel)
 				{
@@ -66,5 +72,7 @@ namespace DoubleAgent
 			}
 			return false;
 		}
+
+		#endregion
 	}
 }
