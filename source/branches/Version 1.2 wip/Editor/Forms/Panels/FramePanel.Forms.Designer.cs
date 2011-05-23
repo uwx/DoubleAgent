@@ -55,8 +55,8 @@ namespace AgentCharacterEditor.Panels
 			this.NumericOffsetX = new DoubleAgent.NumericUpDownEx();
 			this.LabelOffsetY = new System.Windows.Forms.Label();
 			this.NumericOffsetY = new DoubleAgent.NumericUpDownEx();
-			this.TextBoxFrameName = new System.Windows.Forms.TextBox();
-			this.GroupBoxImages = new System.Windows.Forms.GroupBox();
+			this.TextBoxFrameName = new DoubleAgent.TextBoxEx();
+			this.GroupBoxImages = new DoubleAgent.GroupBoxEx();
 			this.LayoutPanelImages = new System.Windows.Forms.TableLayoutPanel();
 			this.FlowLayoutRight = new System.Windows.Forms.FlowLayoutPanel();
 			this.LayoutPanelSample = new System.Windows.Forms.TableLayoutPanel();
@@ -70,7 +70,7 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonShiftDown = new DoubleAgent.ToolStripButtonEx();
 			this.ToolStripShiftLeft = new DoubleAgent.ToolStripEx();
 			this.ButtonShiftLeft = new DoubleAgent.ToolStripButtonEx();
-			this.CheckBoxTransparent = new System.Windows.Forms.CheckBox();
+			this.CheckBoxTransparent = new DoubleAgent.CheckBoxEx();
 			this.PanelImagesLeft = new System.Windows.Forms.Panel();
 			this.ListViewImages = new DoubleAgent.ListViewEx();
 			this.ColumnHeaderImage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -85,7 +85,7 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonMoveDown = new System.Windows.Forms.ToolStripButton();
 			this.LabelDurationUnits = new System.Windows.Forms.Label();
 			this.LabelDuration = new System.Windows.Forms.Label();
-			this.GroupBoxSound = new System.Windows.Forms.GroupBox();
+			this.GroupBoxSound = new DoubleAgent.GroupBoxEx();
 			this.ToolStripSound = new DoubleAgent.ToolStripEx();
 			this.ButtonSoundPreview = new System.Windows.Forms.ToolStripButton();
 			this.ToolStripSoundFile = new DoubleAgent.ToolStripEx();
@@ -829,9 +829,9 @@ namespace AgentCharacterEditor.Panels
 		#endregion
 
 		private System.Windows.Forms.Label LabelFrameName;
-		private System.Windows.Forms.TextBox TextBoxFrameName;
-		private System.Windows.Forms.GroupBox GroupBoxImages;
-		private System.Windows.Forms.GroupBox GroupBoxSound;
+		private DoubleAgent.TextBoxEx TextBoxFrameName;
+		private DoubleAgent.GroupBoxEx GroupBoxImages;
+		private DoubleAgent.GroupBoxEx GroupBoxSound;
 		private DoubleAgent.ToolStripEx ToolStripImages;
 		private DoubleAgent.ListViewEx ListViewImages;
 		private System.Windows.Forms.ColumnHeader ColumnHeaderImage;
@@ -873,7 +873,7 @@ namespace AgentCharacterEditor.Panels
 		private System.Windows.Forms.ToolStripButton ButtonChooseFile;
 		private System.Windows.Forms.TableLayoutPanel LayoutPanelSample;
 		private System.Windows.Forms.Panel PanelOverlayOffset;
-		private System.Windows.Forms.CheckBox CheckBoxTransparent;
+		private DoubleAgent.CheckBoxEx CheckBoxTransparent;
 		private System.Windows.Forms.Panel PanelTop;
 	}
 }

@@ -49,7 +49,7 @@ namespace AgentCharacterEditor.Panels
 		private void InitializeComponent ()
 		{
 			this.LayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
-			this.GroupBoxPalette = new System.Windows.Forms.GroupBox();
+			this.GroupBoxPalette = new DoubleAgent.GroupBoxEx();
 			this.PictureBoxPalette = new System.Windows.Forms.PictureBox();
 			this.ToolStripPaletteFile = new DoubleAgent.ToolStripEx();
 			this.ButtonPaletteImport = new System.Windows.Forms.ToolStripButton();
@@ -410,7 +410,7 @@ namespace AgentCharacterEditor.Panels
 		#endregion
 
 		private System.Windows.Forms.TableLayoutPanel LayoutPanelMain;
-		private System.Windows.Forms.GroupBox GroupBoxPalette;
+		private DoubleAgent.GroupBoxEx GroupBoxPalette;
 		private System.Windows.Forms.Label LabelTransparencySample;
 		private DoubleAgent.TextBoxEx TextBoxPaletteFile;
 		private System.Windows.Forms.Label LabelPaletteFile;

@@ -20,5 +20,13 @@ namespace AgentCharacterEditor.Panels
 		{
 			InitializeComponent ();
 		}
+		internal String GetNewAnimationName ()
+		{
+			return String.Empty;
+		}
+		internal Boolean HasNewAnimationName ()
+		{
+			return false;
+		}
 	}
 }

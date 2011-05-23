@@ -232,7 +232,9 @@ namespace AgentCharacterEditor.Updates
 			set
 			{
 				if (UndoObject != null)
-					UndoObject.Lines = value;
+				{
+					UndoObject.Lines = Math.Min (Math.Max (value, FileBalloon.MinLines), FileBalloon.MaxLines);
+				}
 			}
 		}
 		public UInt16 PerLine
@@ -244,7 +246,9 @@ namespace AgentCharacterEditor.Updates
 			set
 			{
 				if (UndoObject != null)
-					UndoObject.PerLine = value;
+				{
+					UndoObject.PerLine = Math.Min (Math.Max (value, FileBalloon.MinPerLine), FileBalloon.MaxPerLine);
+				}
 			}
 		}
 		public Color BkColor
@@ -256,7 +260,9 @@ namespace AgentCharacterEditor.Updates
 			set
 			{
 				if (UndoObject != null)
+				{
 					UndoObject.BkColor = value;
+				}
 			}
 		}
 		public Color FgColor
@@ -268,7 +274,9 @@ namespace AgentCharacterEditor.Updates
 			set
 			{
 				if (UndoObject != null)
+				{
 					UndoObject.FgColor = value;
+				}
 			}
 		}
 		public Color BrColor
@@ -280,7 +288,9 @@ namespace AgentCharacterEditor.Updates
 			set
 			{
 				if (UndoObject != null)
+				{
 					UndoObject.BrColor = value;
+				}
 			}
 		}
 		public Font Font
@@ -292,7 +302,9 @@ namespace AgentCharacterEditor.Updates
 			set
 			{
 				if (UndoObject != null)
+				{
 					UndoObject.Font = value;
+				}
 			}
 		}
 		private FileBalloon UndoObject

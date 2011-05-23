@@ -11,12 +11,12 @@
 				BorderBrush="{StaticResource {x:Static SystemColors.WindowFrameBrushKey}}" Margin="5,5,0,5"
 				SelectedItemChanged="TreeViewMain_SelectedItemChanged">
 			<Control.CommandBindings>
-				<CommandBinding Command="Copy" CanExecute="TreeViewMain_CanEditCopy" Executed="TreeViewMain_OnEditCopy" />
-				<CommandBinding Command="Cut" CanExecute="TreeViewMain_CanEditCut" Executed="TreeViewMain_OnEditCut" />
-				<CommandBinding Command="Delete" CanExecute="TreeViewMain_CanEditDelete"
-						Executed="TreeViewMain_OnEditDelete" />
-				<CommandBinding Command="Paste" CanExecute="TreeViewMain_CanEditPaste"
-						Executed="TreeViewMain_OnEditPaste" />
+				<CommandBinding Command="Copy" CanExecute="CanEditCopy" Executed="OnEditCopy" />
+				<CommandBinding Command="Cut" CanExecute="CanEditCut" Executed="OnEditCut" />
+				<CommandBinding Command="Delete" CanExecute="CanEditDelete"
+						Executed="OnEditDelete" />
+				<CommandBinding Command="Paste" CanExecute="CanEditPaste"
+						Executed="OnEditPaste" />
 			</Control.CommandBindings>
 			<TreeViewItem Header="Character" Name="NodeCharacter">
 				<TreeViewItem Header="Word Balloon" Name="NodeWordBalloon" />

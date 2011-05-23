@@ -19,11 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 using System;
-using System.Drawing;
 using System.Windows.Forms;
-using DoubleAgent;
-using DoubleAgent.Character;
-using AgentCharacterEditor.Properties;
 using AppResources = AgentCharacterEditor.Resources;
 
 namespace AgentCharacterEditor.Global
@@ -33,42 +29,62 @@ namespace AgentCharacterEditor.Global
 		public EditEventArgs ()
 		{
 		}
-		public EditEventArgs (String pClipboardFormat)
-		{
-			if (Clipboard.ContainsData (pClipboardFormat))
-			{
-				PasteObject = Clipboard.GetData (pClipboardFormat);
-			}
-		}
-
-		public Object PasteObject
-		{
-			get;
-			private set;
-		}
 
 		public virtual Boolean IsUsed
 		{
-			get
-			{
-				return mIsUsed;
-			}
-			set
-			{
-				mIsUsed = value;
-			}
+			get;
+			set;
 		}
-		private Boolean mIsUsed = false;
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		public Boolean PutCopyObject (Object pCopyObject)
+		{
+			if (pCopyObject != null)
+			{
+				try
+				{
+					Clipboard.SetData (DataFormats.Serializable, pCopyObject);
+					return true;
+				}
+				catch
+				{
+				}
+			}
+			return false;
+		}
+
+		public Object GetPasteObject ()
+		{
+			if (!PasteObjectRetrieved)
+			{
+				PasteObjectRetrieved = true;
+				if (Clipboard.ContainsData (DataFormats.Serializable))
+				{
+					PasteObject = Clipboard.GetData (DataFormats.Serializable);
+				}
+			}
+			return PasteObject;
+		}
+		private Object PasteObject
+		{
+			get;
+			set;
+		}
+		private Boolean PasteObjectRetrieved
+		{
+			get;
+			set;
+		}
 	}
+
+	///////////////////////////////////////////////////////////////////////////////
 
 	public class CanEditEventArgs : EditEventArgs
 	{
 		public CanEditEventArgs ()
 		{
-		}
-		public CanEditEventArgs (String pClipboardFormat)
-			: base (pClipboardFormat)
-		{
+			PasteTypeTitle = AppResources.Resources.EditPasteThis;
 		}
 
 		public override Boolean IsUsed
@@ -103,23 +119,15 @@ namespace AgentCharacterEditor.Global
 			protected set;
 		}
 
-		public String PasteTitle
-		{
-			get
-			{
-				return mPasteTitle;
-			}
-			set
-			{
-				mPasteTitle = value;
-			}
-		}
 		public String PasteObjectTitle
 		{
 			get;
 			set;
 		}
-		private String mPasteTitle = AppResources.Resources.EditPasteThis;
+ 		public String PasteTypeTitle
+		{
+			get; set;
+		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
@@ -138,8 +146,14 @@ namespace AgentCharacterEditor.Global
 			DeleteObjectTitle = pObjectTitle;
 		}
 
+		public void PutPasteTitle (String pObjectTitle)
+		{
+			PasteObjectTitle = pObjectTitle;
+		}
 		public void PutPasteTitle (String pPasteTypeTitle, String pObjectTitle)
 		{
+			PasteTypeTitle = pPasteTypeTitle;
+			PasteObjectTitle = pObjectTitle;
 		}
 	}
 
@@ -151,12 +165,6 @@ namespace AgentCharacterEditor.Global
 	public class ContextMenuEventArgs : CanEditEventArgs
 	{
 		public ContextMenuEventArgs (ContextMenuStrip pContextMenu, Control pActiveControl)
-		{
-			ContextMenu = pContextMenu;
-			ActiveControl = pActiveControl;
-		}
-		public ContextMenuEventArgs (ContextMenuStrip pContextMenu, Control pActiveControl, String pClipboardFormat)
-			: base (pClipboardFormat)
 		{
 			ContextMenu = pContextMenu;
 			ActiveControl = pActiveControl;

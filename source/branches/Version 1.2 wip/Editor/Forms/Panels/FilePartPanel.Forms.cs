@@ -127,29 +127,45 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
+		///////////////////////////////////////////////////////////////////////////////
+
+		protected Boolean IsControlFocused (Control pControl)
+		{
+			return (pControl == null) ? this.ContainsFocus : pControl.ContainsFocus;
+		}
+
+		protected Control GetFocusedControl ()
+		{
+			if (this.ContainsFocus)
+			{
+				return Program.MainWindow.GetActiveControl ();
+			}
+			return null;
+		}
+
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Edit Menu
 
 		protected virtual void ShowEditState (Global.CanEditEventArgs pEventArgs)
 		{
+			HandleCanEditCopy (pEventArgs);
+			if (!Program.FileIsReadOnly)
+			{
+				HandleCanEditCut (pEventArgs);
+				HandleCanEditDelete (pEventArgs);
+				HandleCanEditPaste (pEventArgs);
+			}
 		}
 
-		protected virtual Boolean EditCopy (Global.EditEventArgs pEventArgs)
+		protected Boolean IsControlEditTarget (Control pControl, Global.CanEditEventArgs e)
 		{
-			return false;
+			return IsControlFocused (pControl);
 		}
-		protected virtual Boolean EditCut (Global.EditEventArgs pEventArgs)
+
+		protected Boolean IsControlEditTarget (Control pControl, Global.EditEventArgs e)
 		{
-			return false;
-		}
-		protected virtual Boolean EditDelete (Global.EditEventArgs pEventArgs)
-		{
-			return false;
-		}
-		protected virtual Boolean EditPaste (Global.EditEventArgs pEventArgs)
-		{
-			return false;
+			return IsControlFocused (pControl);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -190,7 +206,7 @@ namespace AgentCharacterEditor.Panels
 			{
 				try
 				{
-					if (EditCopy (e))
+					if (HandleEditCopy (e))
 					{
 						e.IsUsed = true;
 					}
@@ -207,7 +223,7 @@ namespace AgentCharacterEditor.Panels
 			{
 				try
 				{
-					if (EditCut (e))
+					if (HandleEditCut (e))
 					{
 						e.IsUsed = true;
 					}
@@ -224,7 +240,7 @@ namespace AgentCharacterEditor.Panels
 			{
 				try
 				{
-					if (EditDelete (e))
+					if (HandleEditDelete (e))
 					{
 						e.IsUsed = true;
 					}
@@ -241,7 +257,7 @@ namespace AgentCharacterEditor.Panels
 			{
 				try
 				{
-					if (EditPaste (e))
+					if (HandleEditPaste (e))
 					{
 						e.IsUsed = true;
 					}

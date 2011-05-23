@@ -501,9 +501,9 @@ namespace AgentCharacterEditor.Panels
 						pEventArgs.PutDeleteTitle (lObjectTitle);
 					}
 				}
-				if (!Program.FileIsReadOnly && (pEventArgs.PasteObject is FileFrameOverlay))
+				if (!Program.FileIsReadOnly && (pEventArgs.GetPasteObject () is FileFrameOverlay))
 				{
-					pEventArgs.PasteObjectTitle = Titles.PasteTypeTitle (lFrameOverlay, Titles.Overlay ((pEventArgs.PasteObject as FileFrameOverlay).OverlayType), Titles.Overlay ((MouthOverlay)ListViewOverlays.SelectedIndex));
+					pEventArgs.PasteObjectTitle = Titles.PasteTypeTitle (lFrameOverlay, Titles.Overlay ((pEventArgs.GetPasteObject () as FileFrameOverlay).OverlayType), Titles.Overlay ((MouthOverlay)ListViewOverlays.SelectedIndex));
 				}
 			}
 		}
@@ -526,7 +526,7 @@ namespace AgentCharacterEditor.Panels
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		protected override bool EditCopy (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditCopy (Global.EditEventArgs pEventArgs)
 		{
 			if (ListViewOverlays.ContainsFocus)
 			{
@@ -534,20 +534,14 @@ namespace AgentCharacterEditor.Panels
 
 				if (lFrameOverlay != null)
 				{
-					try
-					{
-						Clipboard.SetData (DataFormats.Serializable, lFrameOverlay);
-					}
-					catch
-					{
-					}
+					pEventArgs.PutCopyObject (lFrameOverlay);
 					return true;
 				}
 			}
 			return false;
 		}
 
-		protected override bool EditCut (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditCut (Global.EditEventArgs pEventArgs)
 		{
 			if (ListViewOverlays.ContainsFocus)
 			{
@@ -555,21 +549,17 @@ namespace AgentCharacterEditor.Panels
 
 				if (lFrameOverlay != null)
 				{
-					try
+					if (pEventArgs.PutCopyObject (lFrameOverlay))
 					{
-						Clipboard.SetData (DataFormats.Serializable, lFrameOverlay);
 						DeleteSelectedOverlay (lFrameOverlay, true);
 					}
-					catch
-					{
-					}
 					return true;
 				}
 			}
 			return false;
 		}
 
-		protected override bool EditDelete (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditDelete (Global.EditEventArgs pEventArgs)
 		{
 			if (ListViewOverlays.ContainsFocus)
 			{
@@ -584,11 +574,11 @@ namespace AgentCharacterEditor.Panels
 			return false;
 		}
 
-		protected override bool EditPaste (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditPaste (Global.EditEventArgs pEventArgs)
 		{
-			if (ListViewOverlays.ContainsFocus && (pEventArgs.PasteObject is FileFrameOverlay))
+			if (ListViewOverlays.ContainsFocus && (pEventArgs.GetPasteObject () is FileFrameOverlay))
 			{
-				PasteSelectedOverlay (GetSelectedOverlay (false), pEventArgs.PasteObject as FileFrameOverlay);
+				PasteSelectedOverlay (GetSelectedOverlay (false), pEventArgs.GetPasteObject () as FileFrameOverlay);
 				return true;
 			}
 			return false;

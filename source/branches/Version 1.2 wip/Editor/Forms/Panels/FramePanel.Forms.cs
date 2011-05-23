@@ -549,7 +549,7 @@ namespace AgentCharacterEditor.Panels
 						pEventArgs.PutDeleteTitle (lObjectTitle);
 					}
 				}
-				if (!Program.FileIsReadOnly && (pEventArgs.PasteObject is FileFrameImage))
+				if (!Program.FileIsReadOnly && (pEventArgs.GetPasteObject () is FileFrameImage))
 				{
 					if (lFrameImage == null)
 					{
@@ -586,7 +586,7 @@ namespace AgentCharacterEditor.Panels
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		protected override bool EditCopy (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditCopy (Global.EditEventArgs pEventArgs)
 		{
 			if (ListViewImages.ContainsFocus)
 			{
@@ -594,20 +594,14 @@ namespace AgentCharacterEditor.Panels
 
 				if (lFrameImage != null)
 				{
-					try
-					{
-						Clipboard.SetData (DataFormats.Serializable, lFrameImage);
-					}
-					catch
-					{
-					}
+					pEventArgs.PutCopyObject (lFrameImage);
 					return true;
 				}
 			}
 			return false;
 		}
 
-		protected override bool EditCut (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditCut (Global.EditEventArgs pEventArgs)
 		{
 			if (ListViewImages.ContainsFocus)
 			{
@@ -615,21 +609,17 @@ namespace AgentCharacterEditor.Panels
 
 				if (lFrameImage != null)
 				{
-					try
+					if (pEventArgs.PutCopyObject (lFrameImage))
 					{
-						Clipboard.SetData (DataFormats.Serializable, lFrameImage);
 						DeleteSelectedImage (lFrameImage, true);
 					}
-					catch
-					{
-					}
 					return true;
 				}
 			}
 			return false;
 		}
 
-		protected override bool EditDelete (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditDelete (Global.EditEventArgs pEventArgs)
 		{
 			if (ListViewImages.ContainsFocus)
 			{
@@ -644,13 +634,13 @@ namespace AgentCharacterEditor.Panels
 			return false;
 		}
 
-		protected override bool EditPaste (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditPaste (Global.EditEventArgs pEventArgs)
 		{
 			if (ListViewImages.ContainsFocus)
 			{
-				if (pEventArgs.PasteObject is FileFrameImage)
+				if (pEventArgs.GetPasteObject () is FileFrameImage)
 				{
-					PasteSelectedImage (GetSelectedImage (false), pEventArgs.PasteObject as FileFrameImage);
+					PasteSelectedImage (GetSelectedImage (false), pEventArgs.GetPasteObject () as FileFrameImage);
 					return true;
 				}
 			}

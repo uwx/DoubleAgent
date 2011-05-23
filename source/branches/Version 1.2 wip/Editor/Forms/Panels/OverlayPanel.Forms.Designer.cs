@@ -56,9 +56,9 @@ namespace AgentCharacterEditor.Panels
 			this.OverlayItemWide4 = new System.Windows.Forms.ListViewItem ("Wide 4",4);
 			this.OverlayItemMedium = new System.Windows.Forms.ListViewItem ("Medium",5);
 			this.OverlayItemNarrow = new System.Windows.Forms.ListViewItem ("Narrow",6);
-			this.TextBoxFrameName = new System.Windows.Forms.TextBox();
+			this.TextBoxFrameName = new DoubleAgent.TextBoxEx();
 			this.LabelFrameName = new System.Windows.Forms.Label();
-			this.GroupBoxImages = new System.Windows.Forms.GroupBox();
+			this.GroupBoxImages = new DoubleAgent.GroupBoxEx();
 			this.LayoutPanelImages = new System.Windows.Forms.TableLayoutPanel();
 			this.FlowLayoutRight = new System.Windows.Forms.FlowLayoutPanel();
 			this.PanelOverlayOffset = new System.Windows.Forms.Panel();
@@ -76,7 +76,7 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonShiftDown = new DoubleAgent.ToolStripButtonEx();
 			this.ToolStripShiftLeft = new DoubleAgent.ToolStripEx();
 			this.ButtonShiftLeft = new DoubleAgent.ToolStripButtonEx();
-			this.CheckBoxReplace = new System.Windows.Forms.CheckBox();
+			this.CheckBoxReplace = new DoubleAgent.CheckBoxEx();
 			this.PanelImagesLeft = new System.Windows.Forms.Panel();
 			this.ListViewOverlays = new DoubleAgent.ListViewEx();
 			this.ColumnHeaderMouth = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -639,9 +639,9 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 
-		private System.Windows.Forms.TextBox TextBoxFrameName;
+		private DoubleAgent.TextBoxEx TextBoxFrameName;
 		private System.Windows.Forms.Label LabelFrameName;
-		private System.Windows.Forms.GroupBox GroupBoxImages;
+		private DoubleAgent.GroupBoxEx GroupBoxImages;
 		private System.Windows.Forms.TableLayoutPanel LayoutPanelImages;
 		private System.Windows.Forms.TableLayoutPanel LayoutPanelSample;
 		private AgentCharacterEditor.PictureBoxSample PictureBoxImageSample;
@@ -666,7 +666,7 @@ namespace AgentCharacterEditor.Panels
 		private DoubleAgent.ToolStripEx ToolStripImages;
 		private System.Windows.Forms.ToolStripButton ButtonAdd;
 		private System.Windows.Forms.ToolStripButton ButtonDelete;
-		private System.Windows.Forms.CheckBox CheckBoxReplace;
+		private DoubleAgent.CheckBoxEx CheckBoxReplace;
 		private System.Windows.Forms.Panel PanelOverlayOffset;
 		private System.Windows.Forms.FlowLayoutPanel FlowLayoutRight;
 		private System.Windows.Forms.ToolStripButton ButtonChooseFile;

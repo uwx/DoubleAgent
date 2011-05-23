@@ -3,8 +3,8 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-		xmlns:local="clr-namespace:AgentCharacterEditor.Panels" mc:Ignorable="d" d:DesignHeight="600"
-		d:DesignWidth="600">
+		xmlns:local="clr-namespace:AgentCharacterEditor.Panels" xmlns:custom="clr-namespace:DoubleAgent"
+		mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="600">
 	<Grid Style="{StaticResource x:MainGrid}">
 		<Grid.RowDefinitions>
 			<RowDefinition />
@@ -28,20 +28,22 @@
 						<ColumnDefinition Width="Auto" />
 						<ColumnDefinition Width="*" />
 					</Grid.ColumnDefinitions>
-					<Label Content="Name" HorizontalAlignment="Left" Name="LabelName" VerticalAlignment="Top" />
+					<Label Content="Name" HorizontalAlignment="Left" Name="LabelName" VerticalAlignment="Top"
+							Style="{StaticResource NormalLabel}" />
 					<Label Content="Description" Grid.Row="1" Name="LabelDescription" VerticalAlignment="Top"
-							HorizontalAlignment="Left" />
+							HorizontalAlignment="Left" Style="{StaticResource NormalLabel}" />
 					<Label Content="Extra" Grid.Row="2" HorizontalAlignment="Left" Name="LabelExtra"
-							VerticalAlignment="Top" />
-					<TextBox Grid.Column="1" Name="TextBoxName" VerticalAlignment="Top" TabIndex="1" MaxLines="1"
-							Margin="0,0,0,5" TextChanged="TextBoxName_TextChanged" />
-					<TextBox Grid.Column="1" Grid.Row="1" Name="TextBoxDescription" TabIndex="2" Margin="0,0,0,5"
-							TextChanged="TextBoxDescription_TextChanged" />
-					<TextBox Grid.Column="1" Grid.Row="2" Name="TextBoxExtra" TabIndex="3"
-							TextChanged="TextBoxExtra_TextChanged" />
+							VerticalAlignment="Top" Style="{StaticResource NormalLabel}" />
+					<custom:TextBoxEx Grid.Column="1" x:Name="TextBoxName" VerticalAlignment="Top" TabIndex="1" MaxLines="1"
+							IsModifiedChanged="TextBoxName_IsModifiedChanged" />
+					<custom:TextBoxEx Grid.Column="1" Grid.Row="1" x:Name="TextBoxDescription" TabIndex="2" Margin="2"
+							AcceptsReturn="True"
+							IsModifiedChanged="TextBoxDescription_IsModifiedChanged" />
+					<custom:TextBoxEx Grid.Column="1" Grid.Row="2" x:Name="TextBoxExtra" TabIndex="3"
+							AcceptsReturn="True" IsModifiedChanged="TextBoxExtra_IsModifiedChanged" />
 				</Grid>
-				<ListView Name="ListViewLanguage" TabIndex="0" Margin="0,0,5,0" IsTabStop="True"
-						SelectionChanged="ListViewLanguage_SelectionChanged">
+				<ListView Name="ListViewLanguage" TabIndex="0" Margin="0,0,10,0" IsTabStop="True"
+						SelectionChanged="ListViewLanguage_SelectionChanged" Width="150">
 					<ListViewItem Content="Arabic" Tag="ar-SA-0401" />
 					<ListViewItem Content="Basque" Tag="eu-ES-042D" />
 					<ListViewItem Content="Chinese (Simplified)" Tag="zh-CN-0804" />
@@ -73,14 +75,10 @@
 					<ListViewItem Content="Thai" Tag="th-TH-041E" />
 					<ListViewItem Content="Turkish" Tag="tr-TR-041F" />
 					<Control.CommandBindings>
-						<CommandBinding Command="Copy" CanExecute="ListViewLanguage_CanEditCopy"
-								Executed="ListViewLanguage_OnEditCopy" />
-						<CommandBinding Command="Cut" CanExecute="ListViewLanguage_CanEditCut"
-								Executed="ListViewLanguage_OnEditCut" />
-						<CommandBinding Command="Delete" CanExecute="ListViewLanguage_CanEditDelete"
-								Executed="ListViewLanguage_OnEditDelete" />
-						<CommandBinding Command="Paste" CanExecute="ListViewLanguage_CanEditPaste"
-								Executed="ListViewLanguage_OnEditPaste" />
+						<CommandBinding Command="Copy" CanExecute="CanEditCopy" Executed="OnEditCopy" />
+						<CommandBinding Command="Cut" CanExecute="CanEditCut" Executed="OnEditCut" />
+						<CommandBinding Command="Delete" CanExecute="CanEditDelete" Executed="OnEditDelete" />
+						<CommandBinding Command="Paste" CanExecute="CanEditPaste" Executed="OnEditPaste" />
 					</Control.CommandBindings>
 				</ListView>
 			</Grid>
@@ -105,8 +103,9 @@
 						Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}">
 					<Image Name="ImageIconLarge" Stretch="Uniform" Width="32" Height="32" />
 				</Border>
-				<TextBox Name="TextBoxIconFile" Margin="5,0,2,0" HorizontalAlignment="Stretch" Grid.Column="2"
-						VerticalAlignment="Top" TabIndex="4" TextChanged="TextBoxIconFile_TextChanged" />
+				<custom:TextBoxEx x:Name="TextBoxIconFile" Margin="5,0,2,0" HorizontalAlignment="Stretch" Grid.Column="2"
+						VerticalAlignment="Top" TabIndex="4"
+						IsModifiedChanged="TextBoxIconFile_IsModifiedChanged" />
 				<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Height="Auto" Name="ButtonIconImport"
 						Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="3"
 						Focusable="false" Click="ButtonIconImport_Click">
@@ -128,7 +127,7 @@
 					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition Width="315*" />
 				</Grid.ColumnDefinitions>
-				<TextBox Height="Auto" HorizontalAlignment="Left" Name="TextBoxGUID" VerticalAlignment="Top" Width="300"
+				<custom:TextBoxEx Height="Auto" HorizontalAlignment="Left" x:Name="TextBoxGUID" VerticalAlignment="Top" Width="300"
 						IsReadOnly="True" IsTabStop="False" IsUndoEnabled="False" MaxLines="1" TabIndex="7" />
 				<Button Content="New GUID" Height="Auto" Name="ButtonNewGUID" Width="Auto" HorizontalAlignment="Left"
 						VerticalAlignment="Top" Padding="10,1" Margin="5,0,0,0" Grid.Column="1" TabIndex="8"

@@ -646,7 +646,7 @@ namespace AgentCharacterEditor.Panels
 						pEventArgs.PutDeleteTitle (lObjectTitle);
 					}
 				}
-				if (!Program.FileIsReadOnly && (pEventArgs.PasteObject is FileAnimationFrame))
+				if (!Program.FileIsReadOnly && (pEventArgs.GetPasteObject () is FileAnimationFrame))
 				{
 					if (lFrame == null)
 					{
@@ -682,7 +682,7 @@ namespace AgentCharacterEditor.Panels
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		protected override bool EditCopy (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditCopy (Global.EditEventArgs pEventArgs)
 		{
 			if (FramesView.Frames.ContainsFocus)
 			{
@@ -690,20 +690,14 @@ namespace AgentCharacterEditor.Panels
 
 				if (lFrame != null)
 				{
-					try
-					{
-						Clipboard.SetData (DataFormats.Serializable, lFrame);
-					}
-					catch
-					{
-					}
+					pEventArgs.PutCopyObject (lFrame);
 					return true;
 				}
 			}
 			return false;
 		}
 
-		protected override bool EditCut (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditCut (Global.EditEventArgs pEventArgs)
 		{
 			if (FramesView.Frames.ContainsFocus)
 			{
@@ -711,21 +705,17 @@ namespace AgentCharacterEditor.Panels
 
 				if (lFrame != null)
 				{
-					try
+					if (pEventArgs.PutCopyObject (lFrame))
 					{
-						Clipboard.SetData (DataFormats.Serializable, lFrame);
 						DeleteSelectedFrame (lFrame, true);
 					}
-					catch
-					{
-					}
 					return true;
 				}
 			}
 			return false;
 		}
 
-		protected override bool EditDelete (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditDelete (Global.EditEventArgs pEventArgs)
 		{
 			if (FramesView.Frames.ContainsFocus)
 			{
@@ -740,15 +730,15 @@ namespace AgentCharacterEditor.Panels
 			return false;
 		}
 
-		protected override bool EditPaste (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditPaste (Global.EditEventArgs pEventArgs)
 		{
 			if (FramesView.Frames.ContainsFocus)
 			{
-				if (pEventArgs.PasteObject is FileAnimationFrame)
+				if (pEventArgs.GetPasteObject () is FileAnimationFrame)
 				{
 					FileAnimationFrame lFrame = GetSelectedFrame (false);
 
-					PasteSelectedFrame (Animation, lFrame, pEventArgs.PasteObject as FileAnimationFrame);
+					PasteSelectedFrame (Animation, lFrame, pEventArgs.GetPasteObject () as FileAnimationFrame);
 					if (lFrame == null)
 					{
 						FramesView.Frames.SelectedItem = null;

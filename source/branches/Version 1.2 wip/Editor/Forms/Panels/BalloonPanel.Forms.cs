@@ -19,15 +19,12 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using DoubleAgent;
-using DoubleAgent.Character;
+using AgentCharacterEditor.Global;
 using AgentCharacterEditor.Navigation;
 using AgentCharacterEditor.Updates;
+using DoubleAgent;
+using DoubleAgent.Character;
 
 namespace AgentCharacterEditor.Panels
 {
@@ -48,47 +45,15 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Properties
-
-		public override ResolvePart FilePart
-		{
-			get
-			{
-				return base.FilePart;
-			}
-			set
-			{
-				base.FilePart = value;
-				ShowBalloonProperties ();
-			}
-		}
-
-		protected FileBalloon FileBalloon
-		{
-			get
-			{
-				return (CharacterFile == null) ? null : CharacterFile.Balloon;
-			}
-		}
-
-		public override Boolean IsPanelEmpty
-		{
-			get
-			{
-				return ((FileBalloon == null) || ((CharacterFile.Header.Style & CharacterStyle.Balloon) == CharacterStyle.None));
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
 		private void ShowBalloonProperties ()
 		{
+			Boolean lWasShowing = PushIsPanelShowing (true);
+
 			CheckBoxWordBalloon.Enabled = (CharacterFile != null) && (!Program.FileIsReadOnly);
 			GroupBoxBalloonDisplay.Enabled = !IsPanelEmpty;
 
-			CausesValidation = false;
 			if (IsPanelEmpty)
 			{
 				CheckBoxWordBalloon.Checked = false;
@@ -97,17 +62,18 @@ namespace AgentCharacterEditor.Panels
 			{
 				CheckBoxWordBalloon.Checked = ((CharacterFile.Header.Style & CharacterStyle.Balloon) != CharacterStyle.None);
 			}
-			CausesValidation = Visible;
 
 			ShowBalloonStyle ();
 			ShowBalloonColors ();
 			ShowBalloonFont ();
 			ShowBalloonPreview ();
+
+			PopIsPanelShowing (lWasShowing);
 		}
 
 		private void ShowBalloonStyle ()
 		{
-			CausesValidation = false;
+			Boolean lWasShowing = PushIsPanelShowing (true);
 
 			if (IsPanelEmpty)
 			{
@@ -147,11 +113,15 @@ namespace AgentCharacterEditor.Panels
 			CheckBoxAutoHide.Enabled = !IsPanelEmpty && !Program.FileIsReadOnly;
 			CheckBoxAutoPace.Enabled = !IsPanelEmpty && !Program.FileIsReadOnly;
 
-			CausesValidation = Visible;
+			PopIsPanelShowing (lWasShowing);
 		}
+
+		///////////////////////////////////////////////////////////////////////////////
 
 		private void ShowBalloonFont ()
 		{
+			Boolean lWasShowing = PushIsPanelShowing (true);
+
 			if (IsPanelEmpty)
 			{
 				LabelBalloonFontSample.ResetText ();
@@ -167,44 +137,34 @@ namespace AgentCharacterEditor.Panels
 				}
 				else
 				{
-					System.Drawing.Font lFont = FileBalloon.Font;
-					String lFontName = String.IsNullOrEmpty (lFont.OriginalFontName) ? lFont.Name : lFont.OriginalFontName;
-
-					LabelBalloonFontSample.Text = lFontName + " " + ((int)(lFont.SizeInPoints + 0.4999)).ToString ();
-					if (lFont.Bold)
-					{
-						LabelBalloonFontSample.Text += " Bold";
-					}
-					if (lFont.Italic)
-					{
-						LabelBalloonFontSample.Text += " Italic";
-					}
-					LabelBalloonFontSample.Font = lFont;
-
-					if ((lFont.Name != lFont.OriginalFontName)
-						|| (lFont.SizeInPoints != (float)(int)lFont.SizeInPoints)
-						)
-					{
-						LabelBalloonFontSample.Text += " (" + lFont.Name + " " + lFont.SizeInPoints.ToString () + ")";
-					}
+					LabelBalloonFontSample.Text = FormatFontName (FileBalloon.Font);
+					LabelBalloonFontSample.Font = FileBalloon.Font;
 				}
 				ButtonBalloonFont.Enabled = !Program.FileIsReadOnly;
 			}
+
+			PopIsPanelShowing (lWasShowing);
 		}
 
 		private void ShowBalloonColors ()
 		{
+			Boolean lWasShowing = PushIsPanelShowing (true);
+
 			if (IsPanelEmpty)
 			{
 				LabelBalloonForegroundSample.BackColor = BackColor;
 				LabelBalloonBackgroundSample.BackColor = BackColor;
 				LabelBalloonBorderSample.BackColor = BackColor;
+				LabelBalloonFontSample.ForeColor = ForeColor;
+				LabelBalloonFontSample.BackColor = BackColor;
 			}
 			else
 			{
 				LabelBalloonForegroundSample.BackColor = FileBalloon.FgColor;
 				LabelBalloonBackgroundSample.BackColor = FileBalloon.BkColor;
 				LabelBalloonBorderSample.BackColor = FileBalloon.BrColor;
+				LabelBalloonFontSample.ForeColor = LabelBalloonForegroundSample.BackColor;
+				LabelBalloonFontSample.BackColor = LabelBalloonBackgroundSample.BackColor;
 			}
 
 			ButtonBalloonForeground.Enabled = !IsPanelEmpty && !Program.FileIsReadOnly;
@@ -213,10 +173,16 @@ namespace AgentCharacterEditor.Panels
 			LabelBalloonForegroundSample.Enabled = !IsPanelEmpty;
 			LabelBalloonBackgroundSample.Enabled = !IsPanelEmpty;
 			LabelBalloonBorderSample.Enabled = !IsPanelEmpty;
+
+			PopIsPanelShowing (lWasShowing);
 		}
+
+		///////////////////////////////////////////////////////////////////////////////
 
 		private void ShowBalloonPreview ()
 		{
+			Boolean lWasShowing = PushIsPanelShowing (true);
+
 			if (IsPanelEmpty)
 			{
 				GroupBoxBalloonPreview.Enabled = false;
@@ -228,57 +194,8 @@ namespace AgentCharacterEditor.Panels
 				WordBalloonPreview.CharacterFile = CharacterFile;
 			}
 			WordBalloonPreview.Refresh ();
-		}
 
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
-		#region Update
-
-		internal UndoableUpdate PasteBalloon (FileBalloon pPasteBalloon)
-		{
-			if ((CharacterFile != null) && (pPasteBalloon != null) && !Program.FileIsReadOnly)
-			{
-				System.Media.SystemSounds.Beep.Play ();
-			}
-			return null;
-		}
-
-		protected override void UpdateApplied (Object pUpdate)
-		{
-			UpdateCharacterBalloon lUpdateCharacterBalloon = pUpdate as UpdateCharacterBalloon;
-			UpdateCharacterTts lUpdateCharacterTts = pUpdate as UpdateCharacterTts;
-
-			if ((lUpdateCharacterBalloon != null) && (lUpdateCharacterBalloon.CharacterFile == CharacterFile))
-			{
-				if (lUpdateCharacterBalloon.EnabledChanged)
-				{
-					ShowBalloonProperties ();
-				}
-				else if (!IsPanelEmpty)
-				{
-					if (lUpdateCharacterBalloon.StyleChanged || lUpdateCharacterBalloon.SizeChanged)
-					{
-						ShowBalloonStyle ();
-					}
-					if (lUpdateCharacterBalloon.ColorChanged)
-					{
-						ShowBalloonColors ();
-					}
-					if (lUpdateCharacterBalloon.FontChanged)
-					{
-						ShowBalloonFont ();
-					}
-					ShowBalloonPreview ();
-				}
-			}
-
-			if ((lUpdateCharacterTts != null) && (lUpdateCharacterTts.CharacterFile == CharacterFile))
-			{
-				if (!IsPanelEmpty && lUpdateCharacterTts.EnabledChanged)
-				{
-					ShowBalloonPreview ();
-				}
-			}
+			PopIsPanelShowing (lWasShowing);
 		}
 
 		#endregion
@@ -287,19 +204,9 @@ namespace AgentCharacterEditor.Panels
 
 		private void CheckBoxWordBalloon_CheckedChanged (object sender, EventArgs e)
 		{
-			if (CausesValidation && (CharacterFile != null) && !Program.FileIsReadOnly)
+			if (!IsPanelShowing && (CharacterFile != null) && !Program.FileIsReadOnly)
 			{
-				UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
-
-				if (CheckBoxWordBalloon.Checked)
-				{
-					lUpdate.CharacterStyle |= CharacterStyle.Balloon;
-				}
-				else
-				{
-					lUpdate.CharacterStyle &= ~CharacterStyle.Balloon;
-				}
-				UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+				HandleEnabledChanged ();
 			}
 		}
 
@@ -307,7 +214,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void NumericCharsPerLine_Validated (object sender, EventArgs e)
 		{
-			if (CausesValidation && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelShowing && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
 				UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
 
@@ -318,7 +225,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void NumericNumLines_Validated (object sender, EventArgs e)
 		{
-			if (CausesValidation && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelShowing && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
 				UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
 
@@ -329,65 +236,33 @@ namespace AgentCharacterEditor.Panels
 
 		private void RadioButtonNumLines_CheckedChanged (object sender, EventArgs e)
 		{
-			if (CausesValidation && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelShowing && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				if (RadioButtonNumLines.Checked)
-				{
-					UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
-
-					lUpdate.CharacterStyle &= ~CharacterStyle.SizeToText;
-					UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
-				}
+				HandleSizeToTextChanged ();
 			}
 		}
 
 		private void RadioButtonSizeToText_CheckedChanged (object sender, EventArgs e)
 		{
-			if (CausesValidation && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelShowing && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				if (RadioButtonSizeToText.Checked)
-				{
-					UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
-
-					lUpdate.CharacterStyle |= CharacterStyle.SizeToText;
-					UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
-				}
+				HandleSizeToTextChanged ();
 			}
 		}
 
 		private void CheckBoxAutoHide_CheckedChanged (object sender, EventArgs e)
 		{
-			if (CausesValidation && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelShowing && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
-
-				if (CheckBoxAutoHide.Checked)
-				{
-					lUpdate.CharacterStyle &= ~CharacterStyle.NoAutoHide;
-				}
-				else
-				{
-					lUpdate.CharacterStyle |= CharacterStyle.NoAutoHide;
-				}
-				UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+				HandleAutoHideChanged ();
 			}
 		}
 
 		private void CheckBoxAutoPace_CheckedChanged (object sender, EventArgs e)
 		{
-			if (CausesValidation && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelShowing && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
-
-				if (CheckBoxAutoPace.Checked)
-				{
-					lUpdate.CharacterStyle &= ~CharacterStyle.NoAutoPace;
-				}
-				else
-				{
-					lUpdate.CharacterStyle |= CharacterStyle.NoAutoPace;
-				}
-				UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+				HandleAutoPaceChanged ();
 			}
 		}
 
@@ -395,75 +270,33 @@ namespace AgentCharacterEditor.Panels
 
 		private void ButtonBalloonFont_Click (object sender, EventArgs e)
 		{
-			if (CausesValidation && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelShowing && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				FontDialog lFontDialog = new FontDialog ();
-
-				lFontDialog.ShowEffects = false;
-				lFontDialog.Font = FileBalloon.Font;
-				if (lFontDialog.ShowDialog () == DialogResult.OK)
-				{
-					UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
-
-					lUpdate.Font = lFontDialog.Font;
-					UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
-				}
+				UpdateFont ();
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
-
 		private void ButtonBalloonForeground_Click (object sender, EventArgs e)
 		{
-			if (CausesValidation && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelShowing && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				ColorDialog lColorDialog = new ColorDialog ();
-
-				lColorDialog.Color = FileBalloon.FgColor;
-				lColorDialog.FullOpen = true;
-				if (lColorDialog.ShowDialog () == DialogResult.OK)
-				{
-					UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
-
-					lUpdate.FgColor = lColorDialog.Color;
-					UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
-				}
+				UpdateForeground ();
 			}
 		}
 
 		private void ButtonBalloonBackground_Click (object sender, EventArgs e)
 		{
-			if (CausesValidation && (!IsPanelEmpty) && (!Program.FileIsReadOnly))
+			if (!IsPanelShowing && (!IsPanelEmpty) && (!Program.FileIsReadOnly))
 			{
-				ColorDialog lColorDialog = new ColorDialog ();
-
-				lColorDialog.Color = FileBalloon.BkColor;
-				lColorDialog.FullOpen = true;
-				if (lColorDialog.ShowDialog () == DialogResult.OK)
-				{
-					UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
-
-					lUpdate.BkColor = lColorDialog.Color;
-					UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
-				}
+				UpdateBackground ();
 			}
 		}
 
 		private void ButtonBalloonBorder_Click (object sender, EventArgs e)
 		{
-			if (CausesValidation && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelShowing && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				ColorDialog lColorDialog = new ColorDialog ();
-
-				lColorDialog.Color = FileBalloon.BrColor;
-				lColorDialog.FullOpen = true;
-				if (lColorDialog.ShowDialog () == DialogResult.OK)
-				{
-					UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
-
-					lUpdate.BrColor = lColorDialog.Color;
-					UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
-				}
+				UpdateBorder ();
 			}
 		}
 

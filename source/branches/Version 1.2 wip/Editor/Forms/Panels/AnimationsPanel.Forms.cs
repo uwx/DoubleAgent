@@ -228,7 +228,7 @@ namespace AgentCharacterEditor.Panels
 				}
 			}
 
-			if (!Program.FileIsReadOnly && (pEventArgs.PasteObject is FileAnimation))
+			if (!Program.FileIsReadOnly && (pEventArgs.GetPasteObject () is FileAnimation))
 			{
 				FileAnimation lAnimation = null;
 
@@ -238,17 +238,17 @@ namespace AgentCharacterEditor.Panels
 				}
 				if ((lAnimation != null) && pListIsFocused)
 				{
-					pEventArgs.PasteObjectTitle = Titles.PasteTypeTitle (lAnimation, Titles.Animation (lAnimation), Titles.Animation (pEventArgs.PasteObject as FileAnimation));
+					pEventArgs.PasteObjectTitle = Titles.PasteTypeTitle (lAnimation, Titles.Animation (lAnimation), Titles.Animation (pEventArgs.GetPasteObject () as FileAnimation));
 				}
 				else if (pListIsFocused || pNewNameIsFocused)
 				{
 					if (HasNewAnimationName () && !CharacterFile.Gestures.Contains (GetNewAnimationName ()))
 					{
-						pEventArgs.PasteObjectTitle = Titles.PasteTypeTitle (null, GetNewAnimationName ().Quoted (), Titles.Animation (pEventArgs.PasteObject as FileAnimation));
+						pEventArgs.PasteObjectTitle = Titles.PasteTypeTitle (null, GetNewAnimationName ().Quoted (), Titles.Animation (pEventArgs.GetPasteObject () as FileAnimation));
 					}
 					else
 					{
-						pEventArgs.PasteTitle = null;
+						pEventArgs.PasteTypeTitle = null;
 						pEventArgs.PasteObjectTitle = AppResources.Resources.EditPasteAnimation0;
 					}
 				}
@@ -526,7 +526,7 @@ namespace AgentCharacterEditor.Panels
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		protected override bool EditCopy (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditCopy (Global.EditEventArgs pEventArgs)
 		{
 			if (ListViewAnimations.ContainsFocus)
 			{
@@ -534,20 +534,14 @@ namespace AgentCharacterEditor.Panels
 
 				if (lAnimation != null)
 				{
-					try
-					{
-						Clipboard.SetData (DataFormats.Serializable, lAnimation);
-					}
-					catch
-					{
-					}
+					pEventArgs.PutCopyObject (lAnimation);
 					return true;
 				}
 			}
 			return false;
 		}
 
-		protected override bool EditCut (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditCut (Global.EditEventArgs pEventArgs)
 		{
 			if (ListViewAnimations.ContainsFocus)
 			{
@@ -555,21 +549,17 @@ namespace AgentCharacterEditor.Panels
 
 				if (lAnimation != null)
 				{
-					try
+					if (pEventArgs.PutCopyObject (lAnimation))
 					{
-						Clipboard.SetData (DataFormats.Serializable, lAnimation);
 						DeleteSelectedAnimation (lAnimation, true);
 					}
-					catch
-					{
-					}
 					return true;
 				}
 			}
 			return false;
 		}
 
-		protected override bool EditDelete (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditDelete (Global.EditEventArgs pEventArgs)
 		{
 			if (ListViewAnimations.ContainsFocus)
 			{
@@ -584,20 +574,20 @@ namespace AgentCharacterEditor.Panels
 			return false;
 		}
 
-		protected override bool EditPaste (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditPaste (Global.EditEventArgs pEventArgs)
 		{
-			if (pEventArgs.PasteObject is FileAnimation)
+			if (pEventArgs.GetPasteObject () is FileAnimation)
 			{
 				if (ListViewAnimations.ContainsFocus)
 				{
 					FileAnimation lAnimation = GetSelectedAnimation (false);
 
-					PasteSelectedAnimation (lAnimation, pEventArgs.PasteObject as FileAnimation);
+					PasteSelectedAnimation (lAnimation, pEventArgs.GetPasteObject () as FileAnimation);
 					return true;
 				}
 				else if (HasNewAnimationName ())
 				{
-					PasteSelectedAnimation (null, pEventArgs.PasteObject as FileAnimation);
+					PasteSelectedAnimation (null, pEventArgs.GetPasteObject () as FileAnimation);
 				}
 			}
 			return false;

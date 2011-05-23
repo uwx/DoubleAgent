@@ -170,6 +170,46 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Edit Menu
+
+		protected virtual Boolean HandleCanEditCut (Global.CanEditEventArgs pEventArgs)
+		{
+			return false;
+		}
+		protected virtual Boolean HandleCanEditCopy (Global.CanEditEventArgs pEventArgs)
+		{
+			return false;
+		}
+		protected virtual Boolean HandleCanEditDelete (Global.CanEditEventArgs pEventArgs)
+		{
+			return false;
+		}
+		protected virtual Boolean HandleCanEditPaste (Global.CanEditEventArgs pEventArgs)
+		{
+			return false;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		protected virtual Boolean HandleEditCopy (Global.EditEventArgs pEventArgs)
+		{
+			return false;
+		}
+		protected virtual Boolean HandleEditCut (Global.EditEventArgs pEventArgs)
+		{
+			return false;
+		}
+		protected virtual Boolean HandleEditDelete (Global.EditEventArgs pEventArgs)
+		{
+			return false;
+		}
+		protected virtual Boolean HandleEditPaste (Global.EditEventArgs pEventArgs)
+		{
+			return false;
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
 		#region Undoable Updates
 
 		private void OnUpdateApplied (Object sender, EventArgs e)

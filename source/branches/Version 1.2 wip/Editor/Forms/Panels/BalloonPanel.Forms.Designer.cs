@@ -49,24 +49,24 @@ namespace AgentCharacterEditor.Panels
 		private void InitializeComponent ()
 		{
 			this.LayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
-			this.CheckBoxWordBalloon = new System.Windows.Forms.CheckBox();
-			this.GroupBoxBalloonDisplay = new System.Windows.Forms.GroupBox();
+			this.CheckBoxWordBalloon = new DoubleAgent.CheckBoxEx();
+			this.GroupBoxBalloonDisplay = new DoubleAgent.GroupBoxEx();
 			this.LabelBalloonBorderSample = new System.Windows.Forms.Label();
 			this.LabelBalloonBackgroundSample = new System.Windows.Forms.Label();
 			this.LabelBalloonFontSample = new System.Windows.Forms.Label();
 			this.LabelBalloonForegroundSample = new System.Windows.Forms.Label();
 			this.ButtonBalloonBorder = new System.Windows.Forms.Button();
-			this.CheckBoxAutoPace = new System.Windows.Forms.CheckBox();
+			this.CheckBoxAutoPace = new DoubleAgent.CheckBoxEx();
 			this.ButtonBalloonBackground = new System.Windows.Forms.Button();
-			this.CheckBoxAutoHide = new System.Windows.Forms.CheckBox();
+			this.CheckBoxAutoHide = new DoubleAgent.CheckBoxEx();
 			this.ButtonBalloonForeground = new System.Windows.Forms.Button();
 			this.NumericNumLines = new DoubleAgent.NumericUpDownEx();
 			this.ButtonBalloonFont = new System.Windows.Forms.Button();
-			this.RadioButtonSizeToText = new System.Windows.Forms.RadioButton();
-			this.RadioButtonNumLines = new System.Windows.Forms.RadioButton();
+			this.RadioButtonSizeToText = new DoubleAgent.RadioButtonEx();
+			this.RadioButtonNumLines = new DoubleAgent.RadioButtonEx();
 			this.NumericCharsPerLine = new DoubleAgent.NumericUpDownEx();
 			this.LabelCharsPerLine = new System.Windows.Forms.Label();
-			this.GroupBoxBalloonPreview = new System.Windows.Forms.GroupBox();
+			this.GroupBoxBalloonPreview = new DoubleAgent.GroupBoxEx();
 			this.WordBalloonPreview = new AgentCharacterEditor.Previews.BalloonPreview();
 			this.LayoutPanelMain.SuspendLayout();
 			this.GroupBoxBalloonDisplay.SuspendLayout();
@@ -97,6 +97,8 @@ namespace AgentCharacterEditor.Panels
 			// CheckBoxWordBalloon
 			// 
 			this.CheckBoxWordBalloon.AutoSize = true;
+			this.CheckBoxWordBalloon.IsChecked = false;
+			this.CheckBoxWordBalloon.IsEnabled = true;
 			this.CheckBoxWordBalloon.Location = new System.Drawing.Point(9, 9);
 			this.CheckBoxWordBalloon.Margin = new System.Windows.Forms.Padding(9);
 			this.CheckBoxWordBalloon.Name = "CheckBoxWordBalloon";
@@ -124,6 +126,7 @@ namespace AgentCharacterEditor.Panels
 			this.GroupBoxBalloonDisplay.Controls.Add(this.NumericCharsPerLine);
 			this.GroupBoxBalloonDisplay.Controls.Add(this.LabelCharsPerLine);
 			this.GroupBoxBalloonDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.GroupBoxBalloonDisplay.IsEnabled = true;
 			this.GroupBoxBalloonDisplay.Location = new System.Drawing.Point(0, 48);
 			this.GroupBoxBalloonDisplay.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
 			this.GroupBoxBalloonDisplay.MaximumSize = new System.Drawing.Size(730, 10000);
@@ -184,6 +187,8 @@ namespace AgentCharacterEditor.Panels
 			// CheckBoxAutoPace
 			// 
 			this.CheckBoxAutoPace.AutoSize = true;
+			this.CheckBoxAutoPace.IsChecked = false;
+			this.CheckBoxAutoPace.IsEnabled = true;
 			this.CheckBoxAutoPace.Location = new System.Drawing.Point(12, 144);
 			this.CheckBoxAutoPace.Name = "CheckBoxAutoPace";
 			this.CheckBoxAutoPace.Size = new System.Drawing.Size(95, 21);
@@ -205,6 +210,8 @@ namespace AgentCharacterEditor.Panels
 			// CheckBoxAutoHide
 			// 
 			this.CheckBoxAutoHide.AutoSize = true;
+			this.CheckBoxAutoHide.IsChecked = false;
+			this.CheckBoxAutoHide.IsEnabled = true;
 			this.CheckBoxAutoHide.Location = new System.Drawing.Point(12, 117);
 			this.CheckBoxAutoHide.Name = "CheckBoxAutoHide";
 			this.CheckBoxAutoHide.Size = new System.Drawing.Size(91, 21);
@@ -261,6 +268,8 @@ namespace AgentCharacterEditor.Panels
 			// RadioButtonSizeToText
 			// 
 			this.RadioButtonSizeToText.AutoSize = true;
+			this.RadioButtonSizeToText.IsChecked = false;
+			this.RadioButtonSizeToText.IsEnabled = true;
 			this.RadioButtonSizeToText.Location = new System.Drawing.Point(12, 85);
 			this.RadioButtonSizeToText.Name = "RadioButtonSizeToText";
 			this.RadioButtonSizeToText.Size = new System.Drawing.Size(98, 21);
@@ -273,6 +282,8 @@ namespace AgentCharacterEditor.Panels
 			// RadioButtonNumLines
 			// 
 			this.RadioButtonNumLines.AutoSize = true;
+			this.RadioButtonNumLines.IsChecked = false;
+			this.RadioButtonNumLines.IsEnabled = true;
 			this.RadioButtonNumLines.Location = new System.Drawing.Point(12, 58);
 			this.RadioButtonNumLines.Name = "RadioButtonNumLines";
 			this.RadioButtonNumLines.Size = new System.Drawing.Size(128, 21);
@@ -321,6 +332,7 @@ namespace AgentCharacterEditor.Panels
 			this.GroupBoxBalloonPreview.Controls.Add(this.WordBalloonPreview);
 			this.GroupBoxBalloonPreview.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GroupBoxBalloonPreview.Enabled = false;
+			this.GroupBoxBalloonPreview.IsEnabled = true;
 			this.GroupBoxBalloonPreview.Location = new System.Drawing.Point(0, 237);
 			this.GroupBoxBalloonPreview.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
 			this.GroupBoxBalloonPreview.MaximumSize = new System.Drawing.Size(730, 10000);
@@ -355,23 +367,22 @@ namespace AgentCharacterEditor.Panels
 			((System.ComponentModel.ISupportInitialize)(this.NumericCharsPerLine)).EndInit();
 			this.GroupBoxBalloonPreview.ResumeLayout(false);
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 
 		#endregion
 
 		private System.Windows.Forms.TableLayoutPanel LayoutPanelMain;
-		private System.Windows.Forms.CheckBox CheckBoxWordBalloon;
-		private System.Windows.Forms.GroupBox GroupBoxBalloonDisplay;
-		private System.Windows.Forms.RadioButton RadioButtonSizeToText;
-		private System.Windows.Forms.RadioButton RadioButtonNumLines;
+		private DoubleAgent.CheckBoxEx CheckBoxWordBalloon;
+		private DoubleAgent.GroupBoxEx GroupBoxBalloonDisplay;
+		private DoubleAgent.RadioButtonEx RadioButtonSizeToText;
+		private DoubleAgent.RadioButtonEx RadioButtonNumLines;
 		private DoubleAgent.NumericUpDownEx NumericCharsPerLine;
 		private System.Windows.Forms.Label LabelCharsPerLine;
-		private System.Windows.Forms.GroupBox GroupBoxBalloonPreview;
+		private DoubleAgent.GroupBoxEx GroupBoxBalloonPreview;
 		private DoubleAgent.NumericUpDownEx NumericNumLines;
-		private System.Windows.Forms.CheckBox CheckBoxAutoPace;
-		private System.Windows.Forms.CheckBox CheckBoxAutoHide;
+		private DoubleAgent.CheckBoxEx CheckBoxAutoPace;
+		private DoubleAgent.CheckBoxEx CheckBoxAutoHide;
 		private System.Windows.Forms.Button ButtonBalloonBorder;
 		private System.Windows.Forms.Button ButtonBalloonBackground;
 		private System.Windows.Forms.Button ButtonBalloonForeground;

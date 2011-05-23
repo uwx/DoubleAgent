@@ -30,32 +30,14 @@ using AppResources = AgentCharacterEditor.Resources;
 
 namespace AgentCharacterEditor.Panels
 {
-	public partial class PartsTreePanel : FilePartPanel
+	public partial class PartsTreePanel : AgentCharacterEditor.Panels.FilePartPanel
 	{
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
-		public const String NodeNameCharacter = "NodeCharacter";
-		public const String NodeNameWordBalloon = "NodeWordBalloon";
-		public const String NodeNameTTSMode = "NodeTTSMode";
-		public const String NodeNameAnimations = "NodeAnimations";
-		public const String NodeNameStates = "NodeStates";
-
-		///////////////////////////////////////////////////////////////////////////////
-
 		public PartsTreePanel ()
 		{
 			InitializeComponent ();
-		}
-
-		protected override void OnLoadConfig (object sender, EventArgs e)
-		{
-			LoadExpansion ();
-		}
-
-		protected override void OnSaveConfig (object sender, EventArgs e)
-		{
-			SaveExpansion ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -70,7 +52,7 @@ namespace AgentCharacterEditor.Panels
 
 				TreeViewMain.BeginUpdate ();
 
-				lNode = GetRootNode (NodeNameCharacter);
+				lNode = GetRootNode (ItemNameCharacter);
 				if (lNode != null)
 				{
 					if (lSettings.CharacterNodeExpanded)
@@ -83,7 +65,7 @@ namespace AgentCharacterEditor.Panels
 					}
 					TreeViewMain.SelectedNode = lNode;
 				}
-				lNode = GetRootNode (NodeNameAnimations);
+				lNode = GetRootNode (ItemNameAnimations);
 				if (lNode != null)
 				{
 					if (lSettings.AnimationsNodeExpanded)
@@ -95,7 +77,7 @@ namespace AgentCharacterEditor.Panels
 						lNode.Collapse ();
 					}
 				}
-				lNode = GetRootNode (NodeNameStates);
+				lNode = GetRootNode (ItemNameStates);
 				if (lNode != null)
 				{
 					if (lSettings.StatesNodeExpanded)
@@ -117,17 +99,17 @@ namespace AgentCharacterEditor.Panels
 			Settings lSettings = Settings.Default;
 			TreeNode lNode;
 
-			lNode = GetRootNode (NodeNameCharacter);
+			lNode = GetRootNode (ItemNameCharacter);
 			if (lNode != null)
 			{
 				lSettings.CharacterNodeExpanded = lNode.IsExpanded;
 			}
-			lNode = GetRootNode (NodeNameAnimations);
+			lNode = GetRootNode (ItemNameAnimations);
 			if (lNode != null)
 			{
 				lSettings.AnimationsNodeExpanded = lNode.IsExpanded;
 			}
-			lNode = GetRootNode (NodeNameStates);
+			lNode = GetRootNode (ItemNameStates);
 			if (lNode != null)
 			{
 				lSettings.StatesNodeExpanded = lNode.IsExpanded;
@@ -140,30 +122,30 @@ namespace AgentCharacterEditor.Panels
 		{
 			TreeNode lNode;
 
-			lNode = GetRootNode (NodeNameCharacter);
+			lNode = GetRootNode (ItemNameCharacter);
 			if (lNode != null)
 			{
 				lNode.Tag = new ResolveCharacter ();
 
 				foreach (TreeNode lSubNode in lNode.Nodes)
 				{
-					if (lSubNode.Name == NodeNameWordBalloon)
+					if (lSubNode.Name == ItemNameWordBalloon)
 					{
 						lSubNode.Tag = new ResolveBalloon ();
 					}
-					else if (lSubNode.Name == NodeNameTTSMode)
+					else if (lSubNode.Name == ItemNameTTSMode)
 					{
 						lSubNode.Tag = new ResolveTts ();
 					}
 				}
 			}
-			lNode = GetRootNode (NodeNameAnimations);
+			lNode = GetRootNode (ItemNameAnimations);
 			if (lNode != null)
 			{
 				lNode.Tag = new ResolveCharacter ();
 				(lNode.Tag as ResolveCharacter).Scope = ResolveCharacter.ScopeType.ScopeAnimations;
 			}
-			lNode = GetRootNode (NodeNameStates);
+			lNode = GetRootNode (ItemNameStates);
 			if (lNode != null)
 			{
 				lNode.Tag = new ResolveCharacter ();
@@ -179,25 +161,6 @@ namespace AgentCharacterEditor.Panels
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
-
-		public override ResolvePart FilePart
-		{
-			get
-			{
-				return base.FilePart;
-			}
-			set
-			{
-				base.FilePart = value;
-
-				InitNodeTags ();
-				ShowAnimationNames ();
-				if (TreeViewMain.SelectedNode != null)
-				{
-					TreeViewMain.SelectedNode.EnsureVisible ();
-				}
-			}
-		}
 
 		[System.ComponentModel.Browsable (false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
@@ -216,17 +179,21 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Events
-
-		public event NavigationEventHandler Navigate;
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
 		#region Display
+
+		public void ShowFilePart ()
+		{
+			InitNodeTags ();
+			ShowAnimationNames ();
+			if (TreeViewMain.SelectedNode != null)
+			{
+				TreeViewMain.SelectedNode.EnsureVisible ();
+			}
+		}
 
 		public void ShowAnimationNames ()
 		{
-			TreeNode lAnimationsNode = GetRootNode (NodeNameAnimations);
+			TreeNode lAnimationsNode = GetRootNode (ItemNameAnimations);
 			TreeNode lSelectedNode = TreeViewMain.SelectedNode;
 
 			if (lAnimationsNode != null)
@@ -294,7 +261,7 @@ namespace AgentCharacterEditor.Panels
 			}
 			if (TreeViewMain.SelectedNode == null)
 			{
-				TreeViewMain.SelectedNode = GetRootNode (NodeNameCharacter);
+				TreeViewMain.SelectedNode = GetRootNode (ItemNameCharacter);
 			}
 		}
 
@@ -441,9 +408,9 @@ namespace AgentCharacterEditor.Panels
 
 				if ((lPartNode != null) && (TreeViewMain.SelectedNode != lPartNode))
 				{
-					CausesValidation = false;
+					Boolean lWasShowing = PushIsPanelShowing (true);
 					TreeViewMain.SelectedNode = lPartNode;
-					CausesValidation = Visible;
+					PopIsPanelShowing (lWasShowing);
 					return true;
 				}
 			}
@@ -471,7 +438,7 @@ namespace AgentCharacterEditor.Panels
 				}
 				else if (lSelectedObject is FileAnimation)
 				{
-					String lObjectTitle  = Titles.Animation (lSelectedObject as FileAnimation);
+					String lObjectTitle = Titles.Animation (lSelectedObject as FileAnimation);
 
 					pEventArgs.PutCopyTitle (lObjectTitle);
 					if (!Program.FileIsReadOnly)
@@ -496,50 +463,50 @@ namespace AgentCharacterEditor.Panels
 					pEventArgs.PutCopyTitle (Titles.State ((lSelectedPart as ResolveState).StateName));
 				}
 
-				if (!Program.FileIsReadOnly && (pEventArgs.PasteObject != null))
+				if (!Program.FileIsReadOnly && (pEventArgs.GetPasteObject () != null))
 				{
-					if ((pEventArgs.PasteObject is FileBalloon) && (lSelectedPart is ResolveBalloon))
+					if ((pEventArgs.GetPasteObject () is FileBalloon) && (lSelectedPart is ResolveBalloon))
 					{
 						pEventArgs.PasteObjectTitle = AppResources.Resources.TitleBalloon;
 					}
-					else if ((pEventArgs.PasteObject is FileTts) && (lSelectedPart is ResolveTts))
+					else if ((pEventArgs.GetPasteObject () is FileTts) && (lSelectedPart is ResolveTts))
 					{
 						pEventArgs.PasteObjectTitle = AppResources.Resources.TitleTts;
 					}
-					else if (pEventArgs.PasteObject is FileAnimation)
+					else if (pEventArgs.GetPasteObject () is FileAnimation)
 					{
 						if ((lSelectedPart is ResolveAnimation) && (lSelectedObject is FileAnimation))
 						{
-							pEventArgs.PasteObjectTitle = Titles.PasteTypeTitle (lSelectedObject as FileAnimation, Titles.Animation (lSelectedObject as FileAnimation), Titles.Animation (pEventArgs.PasteObject as FileAnimation));
+							pEventArgs.PasteObjectTitle = Titles.PasteTypeTitle (lSelectedObject as FileAnimation, Titles.Animation (lSelectedObject as FileAnimation), Titles.Animation (pEventArgs.GetPasteObject () as FileAnimation));
 						}
 						else if ((lSelectedPart is ResolveCharacter) && ((lSelectedPart as ResolveCharacter).Scope == ResolveCharacter.ScopeType.ScopeAnimations))
 						{
 							if (Program.MainWindow.PanelAnimations.HasNewAnimationName () && !CharacterFile.Gestures.Contains (Program.MainWindow.PanelAnimations.GetNewAnimationName ()))
 							{
-								pEventArgs.PasteObjectTitle = Titles.PasteTypeTitle (null, Program.MainWindow.PanelAnimations.GetNewAnimationName ().Quoted (), Titles.Animation (pEventArgs.PasteObject as FileAnimation));
+								pEventArgs.PasteObjectTitle = Titles.PasteTypeTitle (null, Program.MainWindow.PanelAnimations.GetNewAnimationName ().Quoted (), Titles.Animation (pEventArgs.GetPasteObject () as FileAnimation));
 							}
 							else
 							{
-								pEventArgs.PasteTitle = null;
+								pEventArgs.PasteTypeTitle = null;
 								pEventArgs.PasteObjectTitle = AppResources.Resources.EditPasteAnimation0;
 							}
 						}
 					}
-					else if (pEventArgs.PasteObject is FileAnimationFrame)
+					else if (pEventArgs.GetPasteObject () is FileAnimationFrame)
 					{
 						if ((lSelectedPart is ResolveAnimationFrame) && (lSelectedObject is FileAnimationFrame) && ((lSelectedPart as ResolveAnimationFrame).Scope == ResolveAnimationFrame.ScopeType.ScopeFrame))
 						{
-							pEventArgs.PasteObjectTitle = Titles.PasteTypeTitle (lSelectedObject as FileAnimationFrame, Titles.FrameAnimation (lSelectedObject as FileAnimationFrame), Titles.Frame (pEventArgs.PasteObject as FileAnimationFrame));
+							pEventArgs.PasteObjectTitle = Titles.PasteTypeTitle (lSelectedObject as FileAnimationFrame, Titles.FrameAnimation (lSelectedObject as FileAnimationFrame), Titles.Frame (pEventArgs.GetPasteObject () as FileAnimationFrame));
 
 						}
 						else if ((lSelectedPart is ResolveAnimation) && (lSelectedObject is FileAnimation))
 						{
-							pEventArgs.PasteObjectTitle = Titles.PasteTypeTitle (null, Titles.Frame (pEventArgs.PasteObject as FileAnimationFrame));
+							pEventArgs.PasteObjectTitle = Titles.PasteTypeTitle (null, Titles.Frame (pEventArgs.GetPasteObject () as FileAnimationFrame));
 						}
 					}
-					else if ((pEventArgs.PasteObject is FileState) && (lSelectedPart is ResolveState))
+					else if ((pEventArgs.GetPasteObject () is FileState) && (lSelectedPart is ResolveState))
 					{
-						pEventArgs.PasteObjectTitle = Titles.State (pEventArgs.PasteObject as FileState);
+						pEventArgs.PasteObjectTitle = Titles.State (pEventArgs.GetPasteObject () as FileState);
 					}
 				}
 			}
@@ -547,58 +514,26 @@ namespace AgentCharacterEditor.Panels
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		protected override bool EditCopy (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditCut (Global.EditEventArgs pEventArgs)
 		{
-			if (TreeViewMain.ContainsFocus)
-			{
-				ResolvePart lSelectedPart = SelectedPart;
-				Object lSelectedObject = (lSelectedPart == null) ? null : lSelectedPart.Part;
-
-				if (lSelectedObject != null)
-				{
-					try
-					{
-						Clipboard.SetData (DataFormats.Serializable, lSelectedObject);
-					}
-					catch
-					{
-					}
-					return true;
-				}
-			}
-			return false;
-		}
-
-		protected override bool EditCut (Global.EditEventArgs pEventArgs)
-		{
-			if (TreeViewMain.ContainsFocus)
+			if (IsControlEditTarget (TreeViewMain, pEventArgs))
 			{
 				ResolvePart lSelectedPart = SelectedPart;
 				Object lSelectedObject = (lSelectedPart == null) ? null : lSelectedPart.Part;
 
 				if (lSelectedObject is FileAnimation)
 				{
-					try
+					if (pEventArgs.PutCopyObject (lSelectedObject))
 					{
-						Clipboard.SetData (DataFormats.Serializable, lSelectedObject);
 						Program.MainWindow.PanelAnimations.DeleteSelectedAnimation (lSelectedObject as FileAnimation, true);
-					}
-					catch
-					{
-						System.Media.SystemSounds.Asterisk.Play ();
 					}
 					return true;
 				}
 				else if (lSelectedObject is FileAnimationFrame)
 				{
-					try
+					if (pEventArgs.PutCopyObject (lSelectedObject))
 					{
-						Clipboard.SetData (DataFormats.Serializable, lSelectedObject);
 						Program.MainWindow.PanelAnimation.DeleteSelectedFrame (lSelectedObject as FileAnimationFrame, true);
-					}
-					catch
-					{
-						System.Media.SystemSounds.Asterisk.Play ();
 					}
 					return true;
 				}
@@ -606,9 +541,9 @@ namespace AgentCharacterEditor.Panels
 			return false;
 		}
 
-		protected override bool EditDelete (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditDelete (Global.EditEventArgs pEventArgs)
 		{
-			if (TreeViewMain.ContainsFocus)
+			if (IsControlEditTarget (TreeViewMain, pEventArgs))
 			{
 				ResolvePart lSelectedPart = SelectedPart;
 				Object lSelectedObject = (lSelectedPart == null) ? null : lSelectedPart.Part;
@@ -629,52 +564,52 @@ namespace AgentCharacterEditor.Panels
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		protected override bool EditPaste (Global.EditEventArgs pEventArgs)
+		protected override bool HandleEditPaste (Global.EditEventArgs pEventArgs)
 		{
-			if (TreeViewMain.ContainsFocus)
+			if (IsControlEditTarget (TreeViewMain, pEventArgs))
 			{
 				ResolvePart lSelectedPart = SelectedPart;
 				Object lSelectedObject = (lSelectedPart == null) ? null : lSelectedPart.Part;
 
-				if ((pEventArgs.PasteObject is FileBalloon) && (lSelectedPart is ResolveBalloon))
+				if ((pEventArgs.GetPasteObject () is FileBalloon) && (lSelectedPart is ResolveBalloon))
 				{
-					Program.MainWindow.PanelBalloon.PasteBalloon (pEventArgs.PasteObject as FileBalloon);
+					Program.MainWindow.PanelBalloon.PasteBalloon (pEventArgs.GetPasteObject () as FileBalloon);
 					return true;
 				}
-				else if ((pEventArgs.PasteObject is FileTts) && (lSelectedPart is ResolveTts))
+				else if ((pEventArgs.GetPasteObject () is FileTts) && (lSelectedPart is ResolveTts))
 				{
-					Program.MainWindow.PanelTts.PasteTts (pEventArgs.PasteObject as FileTts);
+					Program.MainWindow.PanelTts.PasteTts (pEventArgs.GetPasteObject () as FileTts);
 					return true;
 				}
-				else if (pEventArgs.PasteObject is FileAnimation)
+				else if (pEventArgs.GetPasteObject () is FileAnimation)
 				{
 					if ((lSelectedPart is ResolveAnimation) && (lSelectedObject is FileAnimation))
 					{
-						Program.MainWindow.PanelAnimations.PasteSelectedAnimation (lSelectedObject as FileAnimation, pEventArgs.PasteObject as FileAnimation);
+						Program.MainWindow.PanelAnimations.PasteSelectedAnimation (lSelectedObject as FileAnimation, pEventArgs.GetPasteObject () as FileAnimation);
 						return true;
 					}
 					else if ((lSelectedPart is ResolveCharacter) && ((lSelectedPart as ResolveCharacter).Scope == ResolveCharacter.ScopeType.ScopeAnimations))
 					{
-						Program.MainWindow.PanelAnimations.PasteSelectedAnimation (null, pEventArgs.PasteObject as FileAnimation);
+						Program.MainWindow.PanelAnimations.PasteSelectedAnimation (null, pEventArgs.GetPasteObject () as FileAnimation);
 						return true;
 					}
 				}
-				else if (pEventArgs.PasteObject is FileAnimationFrame)
+				else if (pEventArgs.GetPasteObject () is FileAnimationFrame)
 				{
 					if ((lSelectedPart is ResolveAnimationFrame) && (lSelectedObject is FileAnimationFrame) && ((lSelectedPart as ResolveAnimationFrame).Scope == ResolveAnimationFrame.ScopeType.ScopeFrame))
 					{
-						Program.MainWindow.PanelAnimation.PasteSelectedFrame ((lSelectedObject as FileAnimationFrame).Animation, lSelectedObject as FileAnimationFrame, pEventArgs.PasteObject as FileAnimationFrame);
+						Program.MainWindow.PanelAnimation.PasteSelectedFrame ((lSelectedObject as FileAnimationFrame).Animation, lSelectedObject as FileAnimationFrame, pEventArgs.GetPasteObject () as FileAnimationFrame);
 						return true;
 					}
 					else if ((lSelectedPart is ResolveAnimation) && (lSelectedObject is FileAnimation))
 					{
-						Program.MainWindow.PanelAnimation.PasteSelectedFrame (lSelectedObject as FileAnimation, null, pEventArgs.PasteObject as FileAnimationFrame);
+						Program.MainWindow.PanelAnimation.PasteSelectedFrame (lSelectedObject as FileAnimation, null, pEventArgs.GetPasteObject () as FileAnimationFrame);
 						return true;
 					}
 				}
-				else if ((pEventArgs.PasteObject is FileState) && (lSelectedPart is ResolveState))
+				else if ((pEventArgs.GetPasteObject () is FileState) && (lSelectedPart is ResolveState))
 				{
-					Program.MainWindow.PanelState.PasteStateAnimations ((lSelectedPart as ResolveState).StateName, (pEventArgs.PasteObject as FileState).AnimationNames);
+					Program.MainWindow.PanelState.PasteStateAnimations ((lSelectedPart as ResolveState).StateName, (pEventArgs.GetPasteObject () as FileState).AnimationNames);
 					return true;
 				}
 			}
@@ -683,50 +618,23 @@ namespace AgentCharacterEditor.Panels
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		protected override void UpdateApplied (object pUpdate)
+		protected void RefreshAnimationName (FileAnimation pAnimation)
 		{
-			AddDeleteAnimation lAddDeleteAnimation = pUpdate as AddDeleteAnimation;
-			UpdateAnimation lUpdateAnimation = pUpdate as UpdateAnimation;
-			AddDeleteAnimationFrame lAddDeleteFrame = pUpdate as AddDeleteAnimationFrame;
-			ReorderAnimationFrame lReorderFrame = pUpdate as ReorderAnimationFrame;
+			TreeNode lAnimationNode = GetPartNode (new ResolveAnimation (pAnimation));
 
-			if (lAddDeleteAnimation != null)
+			if (lAnimationNode != null)
 			{
-				ShowAnimationNames ();
+				lAnimationNode.Text = pAnimation.Name;
 			}
-			else if ((lUpdateAnimation != null) && (lUpdateAnimation.NameChanged || lUpdateAnimation.ForClipboard))
-			{
-				TreeNode lAnimationNode = GetPartNode (new ResolveAnimation (lUpdateAnimation.Target));
+		}
 
-				if (lAnimationNode != null)
-				{
-					if (lUpdateAnimation.NameChanged)
-					{
-						lAnimationNode.Text = lUpdateAnimation.Target.Name;
-					}
-					if (lUpdateAnimation.ForClipboard)
-					{
-						ShowAnimationFrames (lUpdateAnimation.Target, lAnimationNode);
-					}
-				}
-			}
-			else if (lAddDeleteFrame != null)
-			{
-				TreeNode lAnimationNode = GetPartNode (new ResolveAnimation (lAddDeleteFrame.Animation));
+		protected void RefreshAnimationFrames (FileAnimation pAnimation)
+		{
+			TreeNode lAnimationNode = GetPartNode (new ResolveAnimation (pAnimation));
 
-				if (lAnimationNode != null)
-				{
-					ShowAnimationFrames (lAddDeleteFrame.Animation, lAnimationNode);
-				}
-			}
-			else if (lReorderFrame != null)
+			if (lAnimationNode != null)
 			{
-				TreeNode lAnimationNode = GetPartNode (new ResolveAnimation (lReorderFrame.Animation));
-
-				if (lAnimationNode != null)
-				{
-					ShowAnimationFrames (lReorderFrame.Animation, lAnimationNode);
-				}
+				ShowAnimationFrames (pAnimation, lAnimationNode);
 			}
 		}
 
@@ -736,7 +644,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void TreeViewMain_AfterSelect (object sender, TreeViewEventArgs e)
 		{
-			if (CausesValidation && (Navigate != null))
+			if (!IsPanelShowing && (Navigate != null))
 			{
 				try
 				{

@@ -49,15 +49,15 @@ namespace AgentCharacterEditor.Panels
 		private void InitializeComponent ()
 		{
 			this.LayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
-			this.CheckBoxUseTTS = new System.Windows.Forms.CheckBox();
-			this.GroupBoxTTS = new System.Windows.Forms.GroupBox();
-			this.TextBoxGender = new System.Windows.Forms.TextBox();
+			this.CheckBoxUseTTS = new DoubleAgent.CheckBoxEx();
+			this.GroupBoxTTS = new DoubleAgent.GroupBoxEx();
+			this.TextBoxGender = new DoubleAgent.TextBoxEx();
 			this.LabelGender = new System.Windows.Forms.Label();
-			this.TextBoxLanguage = new System.Windows.Forms.TextBox();
+			this.TextBoxLanguage = new DoubleAgent.TextBoxEx();
 			this.LabelLanguage = new System.Windows.Forms.Label();
-			this.TextBoxVendor = new System.Windows.Forms.TextBox();
+			this.TextBoxVendor = new DoubleAgent.TextBoxEx();
 			this.LabelVendor = new System.Windows.Forms.Label();
-			this.TextBoxTTSModeID = new System.Windows.Forms.TextBox();
+			this.TextBoxTTSModeID = new DoubleAgent.TextBoxEx();
 			this.LabelModeID = new System.Windows.Forms.Label();
 			this.ComboBoxName = new System.Windows.Forms.ComboBox();
 			this.LabelName = new System.Windows.Forms.Label();
@@ -85,6 +85,8 @@ namespace AgentCharacterEditor.Panels
 			// CheckBoxUseTTS
 			// 
 			this.CheckBoxUseTTS.AutoSize = true;
+			this.CheckBoxUseTTS.IsChecked = false;
+			this.CheckBoxUseTTS.IsEnabled = true;
 			this.CheckBoxUseTTS.Location = new System.Drawing.Point(9, 9);
 			this.CheckBoxUseTTS.Margin = new System.Windows.Forms.Padding(9);
 			this.CheckBoxUseTTS.Name = "CheckBoxUseTTS";
@@ -107,6 +109,7 @@ namespace AgentCharacterEditor.Panels
 			this.GroupBoxTTS.Controls.Add(this.ComboBoxName);
 			this.GroupBoxTTS.Controls.Add(this.LabelName);
 			this.GroupBoxTTS.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.GroupBoxTTS.IsEnabled = true;
 			this.GroupBoxTTS.Location = new System.Drawing.Point(0, 48);
 			this.GroupBoxTTS.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
 			this.GroupBoxTTS.MaximumSize = new System.Drawing.Size(730, 10000);
@@ -120,10 +123,13 @@ namespace AgentCharacterEditor.Panels
 			// TextBoxGender
 			// 
 			this.TextBoxGender.BackColor = System.Drawing.SystemColors.Window;
+			this.TextBoxGender.IsEnabled = true;
+			this.TextBoxGender.IsModified = false;
+			this.TextBoxGender.IsReadOnly = true;
 			this.TextBoxGender.Location = new System.Drawing.Point(98, 55);
 			this.TextBoxGender.Name = "TextBoxGender";
 			this.TextBoxGender.ReadOnly = true;
-			this.TextBoxGender.Size = new System.Drawing.Size(99, 22);
+			this.TextBoxGender.Size = new System.Drawing.Size(100, 22);
 			this.TextBoxGender.TabIndex = 5;
 			// 
 			// LabelGender
@@ -140,16 +146,19 @@ namespace AgentCharacterEditor.Panels
 			this.TextBoxLanguage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.TextBoxLanguage.BackColor = System.Drawing.SystemColors.Window;
-			this.TextBoxLanguage.Location = new System.Drawing.Point(281, 55);
+			this.TextBoxLanguage.IsEnabled = true;
+			this.TextBoxLanguage.IsModified = false;
+			this.TextBoxLanguage.IsReadOnly = true;
+			this.TextBoxLanguage.Location = new System.Drawing.Point(282, 55);
 			this.TextBoxLanguage.Name = "TextBoxLanguage";
 			this.TextBoxLanguage.ReadOnly = true;
-			this.TextBoxLanguage.Size = new System.Drawing.Size(292, 22);
+			this.TextBoxLanguage.Size = new System.Drawing.Size(291, 22);
 			this.TextBoxLanguage.TabIndex = 7;
 			// 
 			// LabelLanguage
 			// 
 			this.LabelLanguage.AutoSize = true;
-			this.LabelLanguage.Location = new System.Drawing.Point(203, 58);
+			this.LabelLanguage.Location = new System.Drawing.Point(204, 58);
 			this.LabelLanguage.Name = "LabelLanguage";
 			this.LabelLanguage.Size = new System.Drawing.Size(72, 17);
 			this.LabelLanguage.TabIndex = 6;
@@ -160,6 +169,9 @@ namespace AgentCharacterEditor.Panels
 			this.TextBoxVendor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.TextBoxVendor.BackColor = System.Drawing.SystemColors.Window;
+			this.TextBoxVendor.IsEnabled = true;
+			this.TextBoxVendor.IsModified = false;
+			this.TextBoxVendor.IsReadOnly = true;
 			this.TextBoxVendor.Location = new System.Drawing.Point(98, 83);
 			this.TextBoxVendor.Name = "TextBoxVendor";
 			this.TextBoxVendor.ReadOnly = true;
@@ -180,6 +192,9 @@ namespace AgentCharacterEditor.Panels
 			this.TextBoxTTSModeID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.TextBoxTTSModeID.BackColor = System.Drawing.SystemColors.Window;
+			this.TextBoxTTSModeID.IsEnabled = true;
+			this.TextBoxTTSModeID.IsModified = false;
+			this.TextBoxTTSModeID.IsReadOnly = true;
 			this.TextBoxTTSModeID.Location = new System.Drawing.Point(98, 27);
 			this.TextBoxTTSModeID.Name = "TextBoxTTSModeID";
 			this.TextBoxTTSModeID.ReadOnly = true;
@@ -229,24 +244,23 @@ namespace AgentCharacterEditor.Panels
 			this.GroupBoxTTS.ResumeLayout(false);
 			this.GroupBoxTTS.PerformLayout();
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 
 		#endregion
 
 		private System.Windows.Forms.TableLayoutPanel LayoutPanelMain;
-		private System.Windows.Forms.CheckBox CheckBoxUseTTS;
-		private System.Windows.Forms.GroupBox GroupBoxTTS;
-		private System.Windows.Forms.TextBox TextBoxTTSModeID;
+		private DoubleAgent.CheckBoxEx CheckBoxUseTTS;
+		private DoubleAgent.GroupBoxEx GroupBoxTTS;
+		private DoubleAgent.TextBoxEx TextBoxTTSModeID;
 		private System.Windows.Forms.Label LabelModeID;
 		private System.Windows.Forms.ComboBox ComboBoxName;
 		private System.Windows.Forms.Label LabelName;
-		private System.Windows.Forms.TextBox TextBoxVendor;
+		private DoubleAgent.TextBoxEx TextBoxVendor;
 		private System.Windows.Forms.Label LabelVendor;
-		private System.Windows.Forms.TextBox TextBoxGender;
+		private DoubleAgent.TextBoxEx TextBoxGender;
 		private System.Windows.Forms.Label LabelGender;
-		private System.Windows.Forms.TextBox TextBoxLanguage;
+		private DoubleAgent.TextBoxEx TextBoxLanguage;
 		private System.Windows.Forms.Label LabelLanguage;
 	}
 }

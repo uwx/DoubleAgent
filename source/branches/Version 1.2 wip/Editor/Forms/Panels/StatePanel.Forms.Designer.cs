@@ -49,8 +49,8 @@ namespace AgentCharacterEditor.Panels
 		private void InitializeComponent ()
 		{
 			this.LabelName = new System.Windows.Forms.Label();
-			this.TextBoxName = new System.Windows.Forms.TextBox();
-			this.GroupBoxAnimations = new System.Windows.Forms.GroupBox();
+			this.TextBoxName = new DoubleAgent.TextBoxEx();
+			this.GroupBoxAnimations = new DoubleAgent.GroupBoxEx();
 			this.ListViewAnimations = new DoubleAgent.ListViewEx();
 			this.Column1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.PanelTop = new System.Windows.Forms.Panel();
@@ -167,10 +167,10 @@ namespace AgentCharacterEditor.Panels
 		#endregion
 
 		private System.Windows.Forms.Label LabelName;
-		private System.Windows.Forms.TextBox TextBoxName;
+		private DoubleAgent.TextBoxEx TextBoxName;
 		private DoubleAgent.ListViewEx ListViewAnimations;
 		private System.Windows.Forms.ColumnHeader Column1;
-		private System.Windows.Forms.GroupBox GroupBoxAnimations;
+		private DoubleAgent.GroupBoxEx GroupBoxAnimations;
 		private System.Windows.Forms.Panel PanelTop;
 		private System.Windows.Forms.TableLayoutPanel LayoutPanelMain;
 	}

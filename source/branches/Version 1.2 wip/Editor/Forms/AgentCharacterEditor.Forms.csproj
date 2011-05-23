@@ -103,6 +103,10 @@
       <Link>Classes\TreeViewEx.Forms.cs</Link>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="..\..\Util\CSharp\ControlInterop.Forms.cs">
+      <Link>Classes\ControlInterop.Forms.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="..\..\Util\CSharp\UndoManager.Common.cs">
       <Link>Classes\UndoManager.Common.cs</Link>
     </Compile>
@@ -136,6 +140,18 @@
     <Compile Include="..\Common\Panels\FilePartPanel.Common.cs">
       <Link>Panels\FilePartPanel.Common.cs</Link>
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="..\Common\Panels\PartsTreePanel.Common.cs">
+      <Link>Panels\PartsTreePanel.Common.cs</Link>
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="..\Common\Panels\BalloonPanel.Common.cs">
+      <Link>Panels\BalloonPanel.Common.cs</Link>
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="..\Common\Panels\TtsPanel.Common.cs">
+      <Link>Panels\TtsPanel.Common.cs</Link>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Previews\AnimationPreview.Designer.cs">
       <SubType>Code</SubType>

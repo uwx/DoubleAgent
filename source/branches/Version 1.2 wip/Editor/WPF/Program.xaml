@@ -1,6 +1,6 @@
 ﻿<Application x:Class="AgentCharacterEditor.Program" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" StartupUri="MainWindow.xaml"
-		Startup="Application_Startup">
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:custom="clr-namespace:DoubleAgent"
+		StartupUri="MainWindow.xaml" Startup="Application_Startup">
 	<Application.Resources>
 		<ResourceDictionary>
 
@@ -48,7 +48,7 @@
 										Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Grid.ColumnSpan="3" />
 								<Rectangle RadiusX="10" RadiusY="10" Fill="{StaticResource VerticalFade}"
 										Margin="0,0,0,-10" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" />
-								<ContentPresenter ContentSource="Header" Grid.Row="0" Grid.Column="1" Margin="2,2,2,2"
+								<ContentPresenter ContentSource="Header" Grid.Row="0" Grid.Column="1" Margin="2,2,2,7"
 										VerticalAlignment="Top" HorizontalAlignment="Center" RecognizesAccessKey="True"
 										TextBlock.FontSize="16"
 										SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
@@ -91,20 +91,31 @@
 				<Setter Property="Background"
 						Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ToolBarTray}, Path=Background}" />
 			</Style>
-			<Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type Thumb}, ResourceId=ToolBarThumbStyle}">
+			<Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type Thumb}, ResourceId=ToolBarThumbStyle}" TargetType="{x:Type Thumb}">
 				<Setter Property="Thumb.Visibility" Value="Collapsed" />
 			</Style>
 
 			<Style x:Key="{x:Static ToolBar.ButtonStyleKey}" TargetType="{x:Type Button}">
 				<Style.Triggers>
 					<Trigger Property="IsEnabled" Value="false">
-						<Setter Property="Effect">
+						<Setter Property="Opacity" Value="0.3" />
+						<!--<Setter Property="Effect">
 							<Setter.Value>
 								<BlurEffect Radius="3.0" />
 							</Setter.Value>
-						</Setter>
+						</Setter>-->
 					</Trigger>
 				</Style.Triggers>
+			</Style>
+
+			<Style x:Key="NormalLabel" TargetType="{x:Type Label}">
+				<Setter Property="Padding" Value="0,2,5,2"/>
+				<Setter Property="Foreground" Value="GhostWhite"/>
+			</Style>
+
+			<Style x:Key="{x:Type custom:TextBoxEx}" TargetType="{x:Type custom:TextBoxEx}"
+					BasedOn="{StaticResource {x:Type TextBox}}">
+				<Setter Property="Margin" Value="2"/>
 			</Style>
 
 			<BitmapImage x:Key="ImgNavigateBack" UriSource="Resources/NavigateBack.png" />

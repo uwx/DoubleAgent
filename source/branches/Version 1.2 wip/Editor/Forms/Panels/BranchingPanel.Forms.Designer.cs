@@ -49,8 +49,8 @@ namespace AgentCharacterEditor.Panels
 		private void InitializeComponent ()
 		{
 			this.LabelFrameName = new System.Windows.Forms.Label();
-			this.TextBoxFrameName = new System.Windows.Forms.TextBox();
-			this.GroupBoxBranching = new System.Windows.Forms.GroupBox();
+			this.TextBoxFrameName = new DoubleAgent.TextBoxEx();
+			this.GroupBoxBranching = new DoubleAgent.GroupBoxEx();
 			this.FlowLayoutNot = new System.Windows.Forms.FlowLayoutPanel();
 			this.NumericBranchingNot = new DoubleAgent.NumericUpDownEx();
 			this.LabelBranchingNot = new System.Windows.Forms.Label();
@@ -66,9 +66,9 @@ namespace AgentCharacterEditor.Panels
 			this.NumericBranching0 = new DoubleAgent.NumericUpDownEx();
 			this.LabelBranching1 = new System.Windows.Forms.Label();
 			this.NumericTarget0 = new DoubleAgent.NumericUpDownEx();
-			this.GroupBoxExit = new System.Windows.Forms.GroupBox();
+			this.GroupBoxExit = new DoubleAgent.GroupBoxEx();
 			this.FlowLayoutExit = new System.Windows.Forms.FlowLayoutPanel();
-			this.CheckBoxExit = new System.Windows.Forms.CheckBox();
+			this.CheckBoxExit = new DoubleAgent.CheckBoxEx();
 			this.NumericTargetExit = new DoubleAgent.NumericUpDownEx();
 			this.GroupBoxBranching.SuspendLayout();
 			this.FlowLayoutNot.SuspendLayout();
@@ -458,9 +458,9 @@ namespace AgentCharacterEditor.Panels
 		#endregion
 
 		private System.Windows.Forms.Label LabelFrameName;
-		private System.Windows.Forms.TextBox TextBoxFrameName;
-		private System.Windows.Forms.GroupBox GroupBoxBranching;
-		private System.Windows.Forms.GroupBox GroupBoxExit;
+		private DoubleAgent.TextBoxEx TextBoxFrameName;
+		private DoubleAgent.GroupBoxEx GroupBoxBranching;
+		private DoubleAgent.GroupBoxEx GroupBoxExit;
 		private System.Windows.Forms.Label LabelBranchingNot;
 		private System.Windows.Forms.Label LabelBranching3;
 		private System.Windows.Forms.Label LabelBranching2;
@@ -477,7 +477,7 @@ namespace AgentCharacterEditor.Panels
 		private System.Windows.Forms.FlowLayoutPanel FlowLayout3;
 		private System.Windows.Forms.FlowLayoutPanel FlowLayout2;
 		private System.Windows.Forms.FlowLayoutPanel FlowLayoutExit;
-		private System.Windows.Forms.CheckBox CheckBoxExit;
+		private DoubleAgent.CheckBoxEx CheckBoxExit;
 		private DoubleAgent.NumericUpDownEx NumericTargetExit;
 
 	}

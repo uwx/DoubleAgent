@@ -308,7 +308,7 @@ namespace AgentCharacterEditor
 
 			if (CanEdit != null)
 			{
-				lEventArgs = new Global.CanEditEventArgs (DataFormats.Serializable);
+				lEventArgs = new Global.CanEditEventArgs ();
 				CanEdit (this, lEventArgs);
 			}
 
@@ -414,10 +414,10 @@ namespace AgentCharacterEditor
 			}
 			if (!Program.FileIsReadOnly && !String.IsNullOrEmpty (pEditArgs.PasteObjectTitle))
 			{
-				if (!String.IsNullOrEmpty (pEditArgs.PasteTitle))
+				if (!String.IsNullOrEmpty (pEditArgs.PasteTypeTitle))
 				{
 					pPasteItem.Enabled = true;
-					pPasteItem.Text = String.Format (pEditArgs.PasteTitle, pEditArgs.PasteObjectTitle);
+					pPasteItem.Text = String.Format (pEditArgs.PasteTypeTitle, pEditArgs.PasteObjectTitle);
 				}
 				else
 				{
@@ -761,7 +761,7 @@ namespace AgentCharacterEditor
 
 			if (EditPaste != null)
 			{
-				EditPaste (this, lEventArgs = new Global.EditEventArgs (DataFormats.Serializable));
+				EditPaste (this, lEventArgs = new Global.EditEventArgs ());
 			}
 
 			if (lTextBox != null && ((lEventArgs == null) || !lEventArgs.IsUsed))
@@ -790,7 +790,7 @@ namespace AgentCharacterEditor
 			}
 			else if ((lActive != null) && lActive.RectangleToScreen (lActive.ClientRectangle).Contains (Control.MousePosition))
 			{
-				Global.ContextMenuEventArgs lEventArgs = new Global.ContextMenuEventArgs (ContextMenuEdit, lActive, DataFormats.Serializable);
+				Global.ContextMenuEventArgs lEventArgs = new Global.ContextMenuEventArgs (ContextMenuEdit, lActive);
 
 				if (EditMenu != null)
 				{

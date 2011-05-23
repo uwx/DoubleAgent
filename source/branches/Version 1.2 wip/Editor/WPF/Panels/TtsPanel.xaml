@@ -3,9 +3,54 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-		xmlns:local="clr-namespace:AgentCharacterEditor.Panels" mc:Ignorable="d" d:DesignHeight="600"
-		d:DesignWidth="600">
-	<Grid Margin="9,0">
-
+		xmlns:local="clr-namespace:AgentCharacterEditor.Panels" xmlns:custom="clr-namespace:DoubleAgent"
+		mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="600">
+	<Grid Style="{StaticResource x:MainGrid}">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="498*" />
+		</Grid.RowDefinitions>
+		<CheckBox Content="Use Text-to-Speech for voice output" HorizontalAlignment="Left" Margin="4"
+				Name="CheckBoxUseTTS" VerticalAlignment="Top" FontSize="14" TabIndex="0" />
+		<GroupBox Grid.Row="1" Header="Voice Engine" Name="GroupBoxTTS">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="428*" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+				<Label Content="TTSModeID" HorizontalAlignment="Left" Name="LabelModeID" VerticalAlignment="Center"
+						Style="{StaticResource NormalLabel}" />
+				<custom:TextBoxEx Grid.Column="1" HorizontalAlignment="Stretch" x:Name="TextBoxTTSModeID"
+						VerticalAlignment="Center" IsReadOnly="True" MaxLines="1" Grid.ColumnSpan="3" Margin="2"
+						TabIndex="2" />
+				<Label Content="Gender" HorizontalAlignment="Left" Name="LabelGender" VerticalAlignment="Center"
+						Style="{StaticResource NormalLabel}" Grid.Row="1" />
+				<custom:TextBoxEx Grid.Column="1" HorizontalAlignment="Left" x:Name="TextBoxGender"
+						VerticalAlignment="Top" Width="100" IsReadOnly="True" MaxLines="1" Grid.Row="1" Margin="2,2,0,0"
+						TabIndex="3" />
+				<Label Content="Vendor" HorizontalAlignment="Left" Name="LabelVendor" VerticalAlignment="Center"
+						Style="{StaticResource NormalLabel}" Grid.Row="2" />
+				<custom:TextBoxEx Grid.Column="1" HorizontalAlignment="Stretch" x:Name="TextBoxVendor"
+						VerticalAlignment="Center" IsReadOnly="True" MaxLines="1" Grid.Row="2" Grid.ColumnSpan="3"
+						Margin="2" TabIndex="5" />
+				<Label Content="Name" HorizontalAlignment="Left" Name="label1" VerticalAlignment="Top" Grid.Row="3"
+						Style="{StaticResource NormalLabel}" Margin="0,12,0,0" />
+				<Label Content="Language" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left" Name="LabelLanguage"
+						Style="{StaticResource NormalLabel}" VerticalAlignment="Center" Margin="10,0,0,0" />
+				<custom:TextBoxEx Grid.Column="3" Grid.Row="1" x:Name="TextBoxLanguage" IsReadOnly="True" MaxLines="1"
+						VerticalAlignment="Center" TabIndex="4" />
+				<ComboBox Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" Name="ComboBoxName" VerticalAlignment="Top"
+						Margin="2,12,2,2" TabIndex="1" />
+			</Grid>
+		</GroupBox>
 	</Grid>
 </local:FilePartPanel>

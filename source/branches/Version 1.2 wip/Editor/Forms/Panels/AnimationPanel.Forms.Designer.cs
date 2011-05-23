@@ -80,7 +80,7 @@ namespace AgentCharacterEditor.Panels
 			this.LabelStates = new System.Windows.Forms.Label();
 			this.LabelSlow = new System.Windows.Forms.Label();
 			this.LabelFast = new System.Windows.Forms.Label();
-			this.GroupBoxFrames = new System.Windows.Forms.GroupBox();
+			this.GroupBoxFrames = new DoubleAgent.GroupBoxEx();
 			this.LayoutPanelFrames = new System.Windows.Forms.TableLayoutPanel();
 			this.FramesView = new AgentCharacterEditor.Previews.FramesPreview();
 			this.PanelFramesTop = new System.Windows.Forms.Panel();
@@ -99,7 +99,7 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonViewLarge = new System.Windows.Forms.ToolStripButton();
 			this.LayoutPanelTop = new System.Windows.Forms.TableLayoutPanel();
 			this.LayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
-			this.GroupBoxPreview = new System.Windows.Forms.GroupBox();
+			this.GroupBoxPreview = new DoubleAgent.GroupBoxEx();
 			this.LayoutPanelPreview = new System.Windows.Forms.TableLayoutPanel();
 			this.PanelPreviewControls = new System.Windows.Forms.Panel();
 			this.TrackBarRate = new System.Windows.Forms.TrackBar();
@@ -761,7 +761,7 @@ namespace AgentCharacterEditor.Panels
 		private DoubleAgent.TextBoxEx TextBoxName;
 		private System.Windows.Forms.Label LabelReturn;
 		private System.Windows.Forms.ComboBox ComboBoxReturn;
-		private System.Windows.Forms.GroupBox GroupBoxFrames;
+		private DoubleAgent.GroupBoxEx GroupBoxFrames;
 		private AgentCharacterEditor.Previews.FramesPreview FramesView;
 		private DoubleAgent.ListViewEx ListViewStates;
 		private System.Windows.Forms.TableLayoutPanel LayoutPanelFrames;
@@ -782,7 +782,7 @@ namespace AgentCharacterEditor.Panels
 		private System.Windows.Forms.TableLayoutPanel LayoutPanelTop;
 		private System.Windows.Forms.Label LabelStates;
 		private System.Windows.Forms.TableLayoutPanel LayoutPanelMain;
-		private System.Windows.Forms.GroupBox GroupBoxPreview;
+		private DoubleAgent.GroupBoxEx GroupBoxPreview;
 		private System.Windows.Forms.TableLayoutPanel LayoutPanelPreview;
 		private AgentCharacterEditor.Previews.AnimationPreview AnimationPreview;
 		private System.Windows.Forms.Panel PanelPreviewControls;
