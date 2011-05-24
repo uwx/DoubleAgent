@@ -82,10 +82,10 @@ namespace AgentCharacterEditor.Panels
 			System.Windows.Forms.ListViewItem listViewItem30 = new System.Windows.Forms.ListViewItem("Turkish");
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterPanel));
 			this.GroupBoxGeneral = new DoubleAgent.GroupBoxEx();
-			this.LayoutPanelGeneral = new System.Windows.Forms.TableLayoutPanel();
-			this.LabelName = new System.Windows.Forms.Label();
-			this.LabelDescription = new System.Windows.Forms.Label();
-			this.LabelExtra = new System.Windows.Forms.Label();
+			this.PanelGeneral = new System.Windows.Forms.TableLayoutPanel();
+			this.LabelName = new DoubleAgent.LabelEx();
+			this.LabelDescription = new DoubleAgent.LabelEx();
+			this.LabelExtra = new DoubleAgent.LabelEx();
 			this.TextBoxName = new DoubleAgent.TextBoxEx();
 			this.TextBoxDescription = new DoubleAgent.TextBoxEx();
 			this.TextBoxExtra = new DoubleAgent.TextBoxEx();
@@ -99,17 +99,17 @@ namespace AgentCharacterEditor.Panels
 			this.PictureBoxIconSmall = new System.Windows.Forms.PictureBox();
 			this.GroupBoxGUID = new DoubleAgent.GroupBoxEx();
 			this.TextBoxGUID = new DoubleAgent.TextBoxEx();
-			this.ButtonNewGUID = new System.Windows.Forms.Button();
-			this.LayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
+			this.ButtonNewGUID = new DoubleAgent.ButtonEx();
+			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
 			columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.GroupBoxGeneral.SuspendLayout();
-			this.LayoutPanelGeneral.SuspendLayout();
+			this.PanelGeneral.SuspendLayout();
 			this.GroupBoxIcon.SuspendLayout();
 			this.ToolStripIconFile.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxIconLarge)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxIconSmall)).BeginInit();
 			this.GroupBoxGUID.SuspendLayout();
-			this.LayoutPanelMain.SuspendLayout();
+			this.PanelMain.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// columnHeader1
@@ -119,7 +119,7 @@ namespace AgentCharacterEditor.Panels
 			// 
 			// GroupBoxGeneral
 			// 
-			this.GroupBoxGeneral.Controls.Add(this.LayoutPanelGeneral);
+			this.GroupBoxGeneral.Controls.Add(this.PanelGeneral);
 			this.GroupBoxGeneral.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GroupBoxGeneral.Location = new System.Drawing.Point(0, 0);
 			this.GroupBoxGeneral.Margin = new System.Windows.Forms.Padding(0);
@@ -131,30 +131,30 @@ namespace AgentCharacterEditor.Panels
 			this.GroupBoxGeneral.TabStop = false;
 			this.GroupBoxGeneral.Text = "General";
 			// 
-			// LayoutPanelGeneral
+			// PanelGeneral
 			// 
-			this.LayoutPanelGeneral.ColumnCount = 3;
-			this.LayoutPanelGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.LayoutPanelGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.LayoutPanelGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanelGeneral.Controls.Add(this.LabelName, 1, 0);
-			this.LayoutPanelGeneral.Controls.Add(this.LabelDescription, 1, 1);
-			this.LayoutPanelGeneral.Controls.Add(this.LabelExtra, 1, 2);
-			this.LayoutPanelGeneral.Controls.Add(this.TextBoxName, 2, 0);
-			this.LayoutPanelGeneral.Controls.Add(this.TextBoxDescription, 2, 1);
-			this.LayoutPanelGeneral.Controls.Add(this.TextBoxExtra, 2, 2);
-			this.LayoutPanelGeneral.Controls.Add(this.ListViewLanguage, 0, 0);
-			this.LayoutPanelGeneral.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LayoutPanelGeneral.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-			this.LayoutPanelGeneral.Location = new System.Drawing.Point(6, 24);
-			this.LayoutPanelGeneral.Margin = new System.Windows.Forms.Padding(0);
-			this.LayoutPanelGeneral.Name = "LayoutPanelGeneral";
-			this.LayoutPanelGeneral.RowCount = 3;
-			this.LayoutPanelGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanelGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.LayoutPanelGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.LayoutPanelGeneral.Size = new System.Drawing.Size(570, 422);
-			this.LayoutPanelGeneral.TabIndex = 0;
+			this.PanelGeneral.ColumnCount = 3;
+			this.PanelGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.PanelGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.PanelGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelGeneral.Controls.Add(this.LabelName, 1, 0);
+			this.PanelGeneral.Controls.Add(this.LabelDescription, 1, 1);
+			this.PanelGeneral.Controls.Add(this.LabelExtra, 1, 2);
+			this.PanelGeneral.Controls.Add(this.TextBoxName, 2, 0);
+			this.PanelGeneral.Controls.Add(this.TextBoxDescription, 2, 1);
+			this.PanelGeneral.Controls.Add(this.TextBoxExtra, 2, 2);
+			this.PanelGeneral.Controls.Add(this.ListViewLanguage, 0, 0);
+			this.PanelGeneral.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelGeneral.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+			this.PanelGeneral.Location = new System.Drawing.Point(6, 24);
+			this.PanelGeneral.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelGeneral.Name = "PanelGeneral";
+			this.PanelGeneral.RowCount = 3;
+			this.PanelGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.PanelGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.PanelGeneral.Size = new System.Drawing.Size(570, 422);
+			this.PanelGeneral.TabIndex = 0;
 			// 
 			// LabelName
 			// 
@@ -290,7 +290,7 @@ namespace AgentCharacterEditor.Panels
 			this.ListViewLanguage.MinimumSize = new System.Drawing.Size(185, 4);
 			this.ListViewLanguage.MultiSelect = false;
 			this.ListViewLanguage.Name = "ListViewLanguage";
-			this.LayoutPanelGeneral.SetRowSpan(this.ListViewLanguage, 3);
+			this.PanelGeneral.SetRowSpan(this.ListViewLanguage, 3);
 			this.ListViewLanguage.ShowGroups = false;
 			this.ListViewLanguage.ShowItemToolTips = true;
 			this.ListViewLanguage.Size = new System.Drawing.Size(185, 416);
@@ -431,35 +431,35 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonNewGUID.UseVisualStyleBackColor = true;
 			this.ButtonNewGUID.Click += new System.EventHandler(this.ButtonNewGUID_Click);
 			// 
-			// LayoutPanelMain
+			// PanelMain
 			// 
-			this.LayoutPanelMain.ColumnCount = 1;
-			this.LayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanelMain.Controls.Add(this.GroupBoxGUID, 0, 2);
-			this.LayoutPanelMain.Controls.Add(this.GroupBoxGeneral, 0, 0);
-			this.LayoutPanelMain.Controls.Add(this.GroupBoxIcon, 0, 1);
-			this.LayoutPanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LayoutPanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-			this.LayoutPanelMain.Location = new System.Drawing.Point(9, 0);
-			this.LayoutPanelMain.Margin = new System.Windows.Forms.Padding(0);
-			this.LayoutPanelMain.Name = "LayoutPanelMain";
-			this.LayoutPanelMain.RowCount = 3;
-			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanelMain.Size = new System.Drawing.Size(582, 600);
-			this.LayoutPanelMain.TabIndex = 0;
+			this.PanelMain.ColumnCount = 1;
+			this.PanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.Controls.Add(this.GroupBoxGUID, 0, 2);
+			this.PanelMain.Controls.Add(this.GroupBoxGeneral, 0, 0);
+			this.PanelMain.Controls.Add(this.GroupBoxIcon, 0, 1);
+			this.PanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+			this.PanelMain.Location = new System.Drawing.Point(9, 0);
+			this.PanelMain.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelMain.Name = "PanelMain";
+			this.PanelMain.RowCount = 3;
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.Size = new System.Drawing.Size(582, 600);
+			this.PanelMain.TabIndex = 0;
 			// 
 			// CharacterPanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this.LayoutPanelMain);
+			this.Controls.Add(this.PanelMain);
 			this.Name = "CharacterPanel";
 			this.Size = new System.Drawing.Size(600, 600);
 			this.GroupBoxGeneral.ResumeLayout(false);
-			this.LayoutPanelGeneral.ResumeLayout(false);
-			this.LayoutPanelGeneral.PerformLayout();
+			this.PanelGeneral.ResumeLayout(false);
+			this.PanelGeneral.PerformLayout();
 			this.GroupBoxIcon.ResumeLayout(false);
 			this.GroupBoxIcon.PerformLayout();
 			this.ToolStripIconFile.ResumeLayout(false);
@@ -468,7 +468,7 @@ namespace AgentCharacterEditor.Panels
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxIconSmall)).EndInit();
 			this.GroupBoxGUID.ResumeLayout(false);
 			this.GroupBoxGUID.PerformLayout();
-			this.LayoutPanelMain.ResumeLayout(false);
+			this.PanelMain.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -476,17 +476,17 @@ namespace AgentCharacterEditor.Panels
 		#endregion
 
 		private DoubleAgent.GroupBoxEx GroupBoxGeneral;
-		private System.Windows.Forms.TableLayoutPanel LayoutPanelGeneral;
-		private System.Windows.Forms.Label LabelName;
-		private System.Windows.Forms.Label LabelDescription;
-		private System.Windows.Forms.Label LabelExtra;
+		private System.Windows.Forms.TableLayoutPanel PanelGeneral;
+		private DoubleAgent.LabelEx LabelName;
+		private DoubleAgent.LabelEx LabelDescription;
+		private DoubleAgent.LabelEx LabelExtra;
 		private DoubleAgent.TextBoxEx TextBoxName;
 		private DoubleAgent.TextBoxEx TextBoxDescription;
 		private DoubleAgent.TextBoxEx TextBoxExtra;
 		private DoubleAgent.GroupBoxEx GroupBoxIcon;
 		private DoubleAgent.GroupBoxEx GroupBoxGUID;
-		private System.Windows.Forms.TableLayoutPanel LayoutPanelMain;
-		private System.Windows.Forms.Button ButtonNewGUID;
+		private System.Windows.Forms.TableLayoutPanel PanelMain;
+		private DoubleAgent.ButtonEx ButtonNewGUID;
 		private System.Windows.Forms.PictureBox PictureBoxIconSmall;
 		private DoubleAgent.TextBoxEx TextBoxIconFile;
 		private DoubleAgent.ToolStripEx ToolStripIconFile;

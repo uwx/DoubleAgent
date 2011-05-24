@@ -200,7 +200,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowFrameSample ()
 		{
-			LayoutPanelMain.SuspendLayout ();
+			PanelMain.SuspendLayout ();
 			if (IsPanelEmpty || (Frame.Images == null))
 			{
 				PictureBoxFrameSample.Image = null;
@@ -211,7 +211,7 @@ namespace AgentCharacterEditor.Panels
 				PictureBoxFrameSample.Image = CharacterFile.GetFrameBitmap (Frame, true, Color.Transparent);
 				PictureBoxFrameSample.ClientSize = CharacterFile.Header.ImageSize;
 			}
-			LayoutPanelMain.ResumeLayout (true);
+			PanelMain.ResumeLayout (true);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -376,7 +376,7 @@ namespace AgentCharacterEditor.Panels
 			}
 
 			CausesValidation = false;
-			LayoutPanelSample.SuspendLayout ();
+			PanelSample.SuspendLayout ();
 
 			if (lFrameImage == null)
 			{
@@ -391,7 +391,7 @@ namespace AgentCharacterEditor.Panels
 				PictureBoxImageSample.Location = new Point (0, 0);
 				PictureBoxImageSample.Image = null;
 				PictureBoxImageSample.ResumeLayout (true);
-				LayoutPanelSample.Enabled = false;
+				PanelSample.Enabled = false;
 			}
 			else
 			{
@@ -406,10 +406,10 @@ namespace AgentCharacterEditor.Panels
 				PictureBoxImageSample.Location = PictureBoxFrameSample.ImageToClient (pFrameImage.Offset);
 				PictureBoxImageSample.Image = lBitmap;
 				PictureBoxImageSample.ResumeLayout (true);
-				LayoutPanelSample.Enabled = !Program.FileIsReadOnly;
+				PanelSample.Enabled = !Program.FileIsReadOnly;
 			}
 
-			LayoutPanelSample.ResumeLayout (true);
+			PanelSample.ResumeLayout (true);
 			ButtonShiftUp.Width = ToolStripShiftUp.Width;
 			ButtonShiftDown.Width = ToolStripShiftDown.Width;
 			ButtonShiftLeft.Height = ToolStripShiftLeft.Height;

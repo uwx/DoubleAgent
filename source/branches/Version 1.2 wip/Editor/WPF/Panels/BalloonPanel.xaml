@@ -1,20 +1,33 @@
-﻿<local:FilePartPanel x:Class="AgentCharacterEditor.Panels.BalloonPanel"
-		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-		xmlns:local="clr-namespace:AgentCharacterEditor.Panels" xmlns:custom="clr-namespace:DoubleAgent"
-		mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="600">
-	<Grid Style="{StaticResource x:MainGrid}">
+﻿<panels:FilePartPanel x:Class="AgentCharacterEditor.Panels.BalloonPanel"
+					  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+					  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+					  xmlns:panels="clr-namespace:AgentCharacterEditor.Panels"
+					  xmlns:custom="clr-namespace:DoubleAgent"
+					  mc:Ignorable="d"
+					  d:DesignHeight="600"
+					  d:DesignWidth="600">
+	<Grid Style="{StaticResource PanelMainGrid}">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
-		<CheckBox Content="Use the Word Balloon" HorizontalAlignment="Left" Name="CheckBoxWordBalloon"
-				VerticalAlignment="Top" Margin="4" FontSize="14" TabIndex="0" Checked="CheckBoxWordBalloon_Checked" />
-		<GroupBox Grid.Row="1" Header="Default Display Settings" HorizontalAlignment="Stretch"
-				VerticalAlignment="Stretch" Name="GroupBoxBalloonDisplay">
+		<CheckBox Content="Use the Word Balloon"
+				  HorizontalAlignment="Left"
+				  Name="CheckBoxWordBalloon"
+				  VerticalAlignment="Top"
+				  Margin="4"
+				  FontSize="14"
+				  TabIndex="0"
+				  Checked="CheckBoxWordBalloon_Checked" />
+		<GroupBox Grid.Row="1"
+				  Header="Default Display Settings"
+				  HorizontalAlignment="Stretch"
+				  VerticalAlignment="Stretch"
+				  Name="GroupBoxBalloonDisplay"
+				  Style="{StaticResource PanelGroupBox}">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto" />
@@ -22,31 +35,70 @@
 				</Grid.ColumnDefinitions>
 				<StackPanel>
 					<Grid>
-						<Label Content="Characters per line" Name="LabelCharsPerLine" HorizontalAlignment="Left"
-								VerticalAlignment="Center" Foreground="GhostWhite" Style="{StaticResource NormalLabel}" />
-						<custom:TextBoxEx x:Name="TextBoxCharsPerLine" Width="30" Text="8" HorizontalAlignment="Left"
-								VerticalAlignment="Center" Margin="110,2,12,2" TabIndex="1"
-								IsModifiedChanged="TextBoxCharsPerLine_IsModifiedChanged" />
+						<Label Content="Characters per line"
+							   Name="LabelCharsPerLine"
+							   HorizontalAlignment="Left"
+							   VerticalAlignment="Center"
+							   Style="{StaticResource PanelLabel}" />
+						<custom:TextBoxEx x:Name="TextBoxCharsPerLine"
+										  Width="30"
+										  Text="8"
+										  HorizontalAlignment="Left"
+										  VerticalAlignment="Center"
+										  Margin="110,2,12,2"
+										  TabIndex="1"
+										  IsModifiedChanged="TextBoxCharsPerLine_IsModifiedChanged"
+										  Style="{StaticResource PanelTextBox}" />
 					</Grid>
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="62" />
 							<ColumnDefinition Width="90" />
 						</Grid.ColumnDefinitions>
-						<RadioButton Content="Number of lines" Name="RadioButtonNumLines" HorizontalAlignment="Left"
-								VerticalAlignment="Center" Margin="0,2" GroupName="SizeToText" Foreground="GhostWhite"
-								Grid.ColumnSpan="2" TabIndex="2" Checked="RadioButtonNumLines_Checked" />
-						<custom:TextBoxEx x:Name="TextBoxNumLines" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center"
-								Margin="48,2,0,2" Text="2" Grid.Column="1" TabIndex="3"
-								IsModifiedChanged="TextBoxNumLines_IsModifiedChanged" />
+						<RadioButton Content="Number of lines"
+									 Name="RadioButtonNumLines"
+									 HorizontalAlignment="Left"
+									 VerticalAlignment="Center"
+									 Margin="0,2"
+									 GroupName="SizeToText"
+									 Grid.ColumnSpan="2"
+									 TabIndex="2"
+									 Style="{StaticResource PanelToggleButton}"
+									 Checked="RadioButtonNumLines_Checked" />
+						<custom:TextBoxEx x:Name="TextBoxNumLines"
+										  Width="30"
+										  HorizontalAlignment="Left"
+										  VerticalAlignment="Center"
+										  Margin="48,2,0,2"
+										  Text="2"
+										  Grid.Column="1"
+										  TabIndex="3"
+										  IsModifiedChanged="TextBoxNumLines_IsModifiedChanged"
+										  Style="{StaticResource PanelTextBox}" />
 					</Grid>
-					<RadioButton Content="Size to text" Name="RadioButtonSizeToText" HorizontalAlignment="Left"
-							Margin="0,0,0,2" GroupName="SizeToText" Foreground="GhostWhite" TabIndex="3"
-							Checked="RadioButtonSizeToText_Checked" />
-					<CheckBox Content="Auto-hide" Name="CheckBoxAutoHide" HorizontalAlignment="Left" Margin="0,7,0,2"
-							Foreground="GhostWhite" TabIndex="4" Checked="CheckBoxAutoHide_Checked" />
-					<CheckBox Content="Auto-pace" Name="CheckBoxAutoPace" Margin="0,2" HorizontalAlignment="Left"
-							Foreground="GhostWhite" TabIndex="5" Checked="CheckBoxAutoPace_Checked" />
+					<RadioButton Content="Size to text"
+								 Name="RadioButtonSizeToText"
+								 HorizontalAlignment="Left"
+								 Margin="0,0,0,2"
+								 GroupName="SizeToText"
+								 TabIndex="3"
+								 Style="{StaticResource PanelToggleButton}"
+								 Checked="RadioButtonSizeToText_Checked" />
+					<CheckBox Content="Auto-hide"
+							  Name="CheckBoxAutoHide"
+							  HorizontalAlignment="Left"
+							  Margin="0,7,0,2"
+							  Foreground="GhostWhite"
+							  TabIndex="4"
+							  Checked="CheckBoxAutoHide_Checked"
+							  Style="{StaticResource PanelToggleButton}" />
+					<CheckBox Content="Auto-pace"
+							  Name="CheckBoxAutoPace"
+							  Margin="0,2"
+							  HorizontalAlignment="Left"
+							  TabIndex="5"
+							  Checked="CheckBoxAutoPace_Checked"
+							  Style="{StaticResource PanelToggleButton}" />
 				</StackPanel>
 				<StackPanel Grid.Column="1">
 					<Grid>
@@ -54,23 +106,47 @@
 							<ColumnDefinition Width="Auto" />
 							<ColumnDefinition Width="*" />
 						</Grid.ColumnDefinitions>
-						<Button Content="Font..." Name="ButtonBalloonFont" Width="150" HorizontalAlignment="Left"
-								VerticalAlignment="Top" Margin="5,0,5,5" TabIndex="6" Click="ButtonBalloonFont_Click" />
-						<Label Content="&lt;font&gt;" Name="LabelBalloonFontSample" HorizontalAlignment="Left"
-								Grid.Column="1" VerticalAlignment="Top" Padding="5,3" />
+						<Button Content="Font..."
+								Name="ButtonBalloonFont"
+								Width="150"
+								HorizontalAlignment="Left"
+								VerticalAlignment="Top"
+								Margin="5,0,5,5"
+								TabIndex="6"
+								Click="ButtonBalloonFont_Click" />
+						<Label 
+							   Name="LabelBalloonFontSample"
+							   HorizontalAlignment="Left"
+							   Grid.Column="1"
+							   VerticalAlignment="Top"
+							   Padding="5,3">
+							<TextBlock Name="TextBalloonFontSample" Text="&lt;font&gt;"
+									   TextTrimming="CharacterEllipsis" />
+						</Label>
 					</Grid>
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="Auto" />
 							<ColumnDefinition Width="*" />
 						</Grid.ColumnDefinitions>
-						<Button Content="Foreground color..." Name="ButtonBalloonForeground" Width="150"
-								HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" TabIndex="7"
+						<Button Content="Foreground color..."
+								Name="ButtonBalloonForeground"
+								Width="150"
+								HorizontalAlignment="Left"
+								VerticalAlignment="Center"
+								Margin="5"
+								TabIndex="7"
 								Click="ButtonBalloonForeground_Click" />
-						<Border BorderBrush="{StaticResource HeaderDarkBrush}" BorderThickness="1" Grid.ColumnSpan="1"
-								Grid.Column="1" HorizontalAlignment="Left" Margin="0,5">
-							<Label Name="LabelBalloonForegroundSample" Width="50" HorizontalAlignment="Left"
-									VerticalAlignment="Stretch" />
+						<Border BorderBrush="{StaticResource HeaderTextBrush}"
+								BorderThickness="1"
+								Grid.ColumnSpan="1"
+								Grid.Column="1"
+								HorizontalAlignment="Left"
+								Margin="0,5">
+							<Label Name="LabelBalloonForegroundSample"
+								   Width="50"
+								   HorizontalAlignment="Left"
+								   VerticalAlignment="Stretch" />
 						</Border>
 					</Grid>
 					<Grid>
@@ -78,13 +154,23 @@
 							<ColumnDefinition Width="Auto" />
 							<ColumnDefinition Width="*" />
 						</Grid.ColumnDefinitions>
-						<Button Content="Background color..." Name="ButtonBalloonBackground" Width="150"
-								HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" TabIndex="8"
+						<Button Content="Background color..."
+								Name="ButtonBalloonBackground"
+								Width="150"
+								HorizontalAlignment="Left"
+								VerticalAlignment="Center"
+								Margin="5"
+								TabIndex="8"
 								Click="ButtonBalloonBackground_Click" />
-						<Border BorderBrush="{StaticResource HeaderDarkBrush}" BorderThickness="1" Margin="0,5"
-								HorizontalAlignment="Left" Grid.Column="1">
-							<Label Name="LabelBalloonBackgroundSample" Width="50" HorizontalAlignment="Left"
-									VerticalAlignment="Stretch" />
+						<Border BorderBrush="{StaticResource HeaderTextBrush}"
+								BorderThickness="1"
+								Margin="0,5"
+								HorizontalAlignment="Left"
+								Grid.Column="1">
+							<Label Name="LabelBalloonBackgroundSample"
+								   Width="50"
+								   HorizontalAlignment="Left"
+								   VerticalAlignment="Stretch" />
 						</Border>
 					</Grid>
 					<Grid>
@@ -92,20 +178,34 @@
 							<ColumnDefinition Width="Auto" />
 							<ColumnDefinition Width="*" />
 						</Grid.ColumnDefinitions>
-						<Button Content="Border color..." Name="ButtonBalloonBorder" Width="150"
-								HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" TabIndex="9"
+						<Button Content="Border color..."
+								Name="ButtonBalloonBorder"
+								Width="150"
+								HorizontalAlignment="Left"
+								VerticalAlignment="Center"
+								Margin="5"
+								TabIndex="9"
 								Click="ButtonBalloonBorder_Click" />
-						<Border BorderBrush="{StaticResource HeaderDarkBrush}" BorderThickness="1" Margin="0,5"
-								HorizontalAlignment="Left" Grid.Column="1">
-							<Label Name="LabelBalloonBorderSample" Width="50" HorizontalAlignment="Left"
-									VerticalAlignment="Stretch" />
+						<Border BorderBrush="{StaticResource HeaderTextBrush}"
+								BorderThickness="1"
+								Margin="0,5"
+								HorizontalAlignment="Left"
+								Grid.Column="1">
+							<Label Name="LabelBalloonBorderSample"
+								   Width="50"
+								   HorizontalAlignment="Left"
+								   VerticalAlignment="Stretch" />
 						</Border>
 					</Grid>
 				</StackPanel>
 			</Grid>
 		</GroupBox>
-		<GroupBox Grid.Row="2" Header="Sample" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+		<GroupBox Grid.Row="2"
+				  Header="Sample"
+				  VerticalAlignment="Stretch"
+				  HorizontalAlignment="Stretch"
+				  Style="{StaticResource PanelGroupBox}">
 			<Grid />
 		</GroupBox>
 	</Grid>
-</local:FilePartPanel>
+</panels:FilePartPanel>

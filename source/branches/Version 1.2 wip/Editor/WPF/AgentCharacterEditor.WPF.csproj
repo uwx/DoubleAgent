@@ -219,6 +219,9 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Resource Include="StyleNamed.xaml">
+      <SubType>Designer</SubType>
+    </Resource>
     <Page Include="Panels\AnimationPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -269,6 +272,9 @@
     </None>
     <None Include="Themes\Royale.NormalColor.xaml">
     </None>
+    <Resource Include="StyleDefaults.xaml">
+      <SubType>Designer</SubType>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

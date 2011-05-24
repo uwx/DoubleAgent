@@ -19,20 +19,10 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using DoubleAgent.Character;
 using AgentCharacterEditor.Updates;
+using DoubleAgent.Character;
 
 namespace AgentCharacterEditor.Panels
 {
@@ -45,30 +35,6 @@ namespace AgentCharacterEditor.Panels
 
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
-
-		private void ShowBalloonProperties ()
-		{
-			Boolean lWasShowing = PushIsPanelShowing (true);
-
-			CheckBoxWordBalloon.IsEnabled = (CharacterFile != null) && (!Program.FileIsReadOnly);
-			GroupBoxBalloonDisplay.IsEnabled = !IsPanelEmpty;
-
-			if (IsPanelEmpty)
-			{
-				CheckBoxWordBalloon.IsChecked = false;
-			}
-			else
-			{
-				CheckBoxWordBalloon.IsChecked = ((CharacterFile.Header.Style & CharacterStyle.Balloon) != CharacterStyle.None);
-			}
-
-			ShowBalloonStyle ();
-			ShowBalloonColors ();
-			ShowBalloonFont ();
-			ShowBalloonPreview ();
-
-			PopIsPanelShowing (lWasShowing);
-		}
 
 		private void ShowBalloonStyle ()
 		{
@@ -105,7 +71,7 @@ namespace AgentCharacterEditor.Panels
 				CheckBoxAutoPace.IsChecked = ((CharacterFile.Header.Style & CharacterStyle.NoAutoPace) == CharacterStyle.None);
 			}
 
-			LabelCharsPerLine.IsEnabled = !IsPanelEmpty;
+			LabelCharsPerLine.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
 			TextBoxCharsPerLine.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
 			RadioButtonSizeToText.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
 			RadioButtonNumLines.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
@@ -147,7 +113,7 @@ namespace AgentCharacterEditor.Panels
 				{
 					System.Drawing.Font lFont = FileBalloon.Font;
 
-					LabelBalloonFontSample.Content = FormatFontName (lFont);
+					TextBalloonFontSample.Text = FormatFontName (lFont);
 					try
 					{
 						LabelBalloonFontSample.FontFamily = (new FontFamilyConverter ()).ConvertFrom (GetFontFamilyName (lFont)) as FontFamily;

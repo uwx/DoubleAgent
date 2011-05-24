@@ -48,7 +48,7 @@ namespace AgentCharacterEditor.Panels
 		/// </summary>
 		private void InitializeComponent ()
 		{
-			this.LayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
+			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
 			this.GroupBoxPalette = new DoubleAgent.GroupBoxEx();
 			this.PictureBoxPalette = new System.Windows.Forms.PictureBox();
 			this.ToolStripPaletteFile = new DoubleAgent.ToolStripEx();
@@ -71,7 +71,7 @@ namespace AgentCharacterEditor.Panels
 			this.NumericFrameHeight = new DoubleAgent.NumericUpDownEx();
 			this.NumericFrameWidth = new DoubleAgent.NumericUpDownEx();
 			this.LabelHeight = new System.Windows.Forms.Label();
-			this.LayoutPanelMain.SuspendLayout();
+			this.PanelMain.SuspendLayout();
 			this.GroupBoxPalette.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxPalette)).BeginInit();
 			this.ToolStripPaletteFile.SuspendLayout();
@@ -81,22 +81,22 @@ namespace AgentCharacterEditor.Panels
 			((System.ComponentModel.ISupportInitialize)(this.NumericFrameWidth)).BeginInit();
 			this.SuspendLayout();
 			// 
-			// LayoutPanelMain
+			// PanelMain
 			// 
-			this.LayoutPanelMain.ColumnCount = 1;
-			this.LayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanelMain.Controls.Add(this.GroupBoxPalette, 0, 1);
-			this.LayoutPanelMain.Controls.Add(this.PanelTop, 0, 0);
-			this.LayoutPanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LayoutPanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-			this.LayoutPanelMain.Location = new System.Drawing.Point(9, 0);
-			this.LayoutPanelMain.Margin = new System.Windows.Forms.Padding(0);
-			this.LayoutPanelMain.Name = "LayoutPanelMain";
-			this.LayoutPanelMain.RowCount = 2;
-			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanelMain.Size = new System.Drawing.Size(632, 600);
-			this.LayoutPanelMain.TabIndex = 0;
+			this.PanelMain.ColumnCount = 1;
+			this.PanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.Controls.Add(this.GroupBoxPalette, 0, 1);
+			this.PanelMain.Controls.Add(this.PanelTop, 0, 0);
+			this.PanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+			this.PanelMain.Location = new System.Drawing.Point(9, 0);
+			this.PanelMain.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelMain.Name = "PanelMain";
+			this.PanelMain.RowCount = 2;
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.Size = new System.Drawing.Size(632, 600);
+			this.PanelMain.TabIndex = 0;
 			// 
 			// GroupBoxPalette
 			// 
@@ -146,9 +146,9 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripPaletteFile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ButtonPaletteImport,
             this.ButtonPaletteExport});
-			this.ToolStripPaletteFile.Location = new System.Drawing.Point(573, 28);
+			this.ToolStripPaletteFile.Location = new System.Drawing.Point(571, 28);
 			this.ToolStripPaletteFile.Name = "ToolStripPaletteFile";
-			this.ToolStripPaletteFile.Size = new System.Drawing.Size(49, 26);
+			this.ToolStripPaletteFile.Size = new System.Drawing.Size(51, 27);
 			this.ToolStripPaletteFile.TabIndex = 2;
 			// 
 			// ButtonPaletteImport
@@ -157,6 +157,8 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonPaletteImport.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
 			this.ButtonPaletteImport.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonPaletteImport.Name = "ButtonPaletteImport";
+			this.ButtonPaletteImport.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonPaletteImport.Size = new System.Drawing.Size(24, 24);
 			this.ButtonPaletteImport.Text = "Import palette";
 			this.ButtonPaletteImport.Click += new System.EventHandler(this.ButtonPaletteImport_Click);
 			// 
@@ -167,6 +169,8 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonPaletteExport.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileSave;
 			this.ButtonPaletteExport.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonPaletteExport.Name = "ButtonPaletteExport";
+			this.ButtonPaletteExport.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonPaletteExport.Size = new System.Drawing.Size(24, 24);
 			this.ButtonPaletteExport.Text = "Save palette";
 			// 
 			// LabelTransparencyClick
@@ -262,7 +266,7 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripAnimations.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.ToolStripAnimations.Location = new System.Drawing.Point(0, 3);
 			this.ToolStripAnimations.Name = "ToolStripAnimations";
-			this.ToolStripAnimations.Size = new System.Drawing.Size(80, 26);
+			this.ToolStripAnimations.Size = new System.Drawing.Size(51, 27);
 			this.ToolStripAnimations.TabIndex = 5;
 			// 
 			// ButtonAdd
@@ -271,6 +275,8 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonAdd.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileNew;
 			this.ButtonAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonAdd.Name = "ButtonAdd";
+			this.ButtonAdd.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonAdd.Size = new System.Drawing.Size(24, 24);
 			this.ButtonAdd.Text = global::AgentCharacterEditor.Resources.Resources.EditAddAnimation;
 			this.ButtonAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
 			// 
@@ -280,6 +286,8 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonDelete.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditDelete;
 			this.ButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonDelete.Name = "ButtonDelete";
+			this.ButtonDelete.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonDelete.Size = new System.Drawing.Size(24, 24);
 			this.ButtonDelete.Text = "Delete animation";
 			this.ButtonDelete.Click += new System.EventHandler(this.ButtonDelete_Click);
 			// 
@@ -389,9 +397,9 @@ namespace AgentCharacterEditor.Panels
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this.LayoutPanelMain);
+			this.Controls.Add(this.PanelMain);
 			this.Name = "AnimationsPanel";
-			this.LayoutPanelMain.ResumeLayout(false);
+			this.PanelMain.ResumeLayout(false);
 			this.GroupBoxPalette.ResumeLayout(false);
 			this.GroupBoxPalette.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxPalette)).EndInit();
@@ -409,7 +417,7 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 
-		private System.Windows.Forms.TableLayoutPanel LayoutPanelMain;
+		private System.Windows.Forms.TableLayoutPanel PanelMain;
 		private DoubleAgent.GroupBoxEx GroupBoxPalette;
 		private System.Windows.Forms.Label LabelTransparencySample;
 		private DoubleAgent.TextBoxEx TextBoxPaletteFile;

@@ -47,32 +47,32 @@ namespace AgentCharacterEditor.About
 		/// </summary>
 		private void InitializeComponent ()
 		{
-			System.Windows.Forms.TableLayoutPanel LayoutPanel;
-			System.Windows.Forms.Panel BorderPanel;
+			System.Windows.Forms.TableLayoutPanel PanelMain;
+			System.Windows.Forms.Panel PanelBorder;
 			this.OkButton = new System.Windows.Forms.Button();
 			this.TextBoxLicenseDetails = new System.Windows.Forms.RichTextBox();
-			LayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-			BorderPanel = new System.Windows.Forms.Panel();
-			LayoutPanel.SuspendLayout();
-			BorderPanel.SuspendLayout();
+			PanelMain = new System.Windows.Forms.TableLayoutPanel();
+			PanelBorder = new System.Windows.Forms.Panel();
+			PanelMain.SuspendLayout();
+			PanelBorder.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// LayoutPanel
+			// PanelMain
 			// 
-			LayoutPanel.ColumnCount = 1;
-			LayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			LayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			LayoutPanel.Controls.Add(this.OkButton, 0, 1);
-			LayoutPanel.Controls.Add(BorderPanel, 0, 0);
-			LayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			LayoutPanel.Location = new System.Drawing.Point(12, 11);
-			LayoutPanel.Margin = new System.Windows.Forms.Padding(4);
-			LayoutPanel.Name = "LayoutPanel";
-			LayoutPanel.RowCount = 2;
-			LayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			LayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			LayoutPanel.Size = new System.Drawing.Size(670, 495);
-			LayoutPanel.TabIndex = 0;
+			PanelMain.ColumnCount = 1;
+			PanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			PanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			PanelMain.Controls.Add(this.OkButton, 0, 1);
+			PanelMain.Controls.Add(PanelBorder, 0, 0);
+			PanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+			PanelMain.Location = new System.Drawing.Point(12, 11);
+			PanelMain.Margin = new System.Windows.Forms.Padding(4);
+			PanelMain.Name = "PanelMain";
+			PanelMain.RowCount = 2;
+			PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			PanelMain.Size = new System.Drawing.Size(670, 495);
+			PanelMain.TabIndex = 0;
 			// 
 			// OkButton
 			// 
@@ -87,17 +87,17 @@ namespace AgentCharacterEditor.About
 			// 
 			// BorderPanel
 			// 
-			BorderPanel.BackColor = System.Drawing.SystemColors.Window;
-			BorderPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			BorderPanel.CausesValidation = false;
-			BorderPanel.Controls.Add(this.TextBoxLicenseDetails);
-			BorderPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			BorderPanel.Location = new System.Drawing.Point(0, 0);
-			BorderPanel.Margin = new System.Windows.Forms.Padding(0, 0, 0, 4);
-			BorderPanel.Name = "BorderPanel";
-			BorderPanel.Padding = new System.Windows.Forms.Padding(4, 4, 0, 4);
-			BorderPanel.Size = new System.Drawing.Size(670, 456);
-			BorderPanel.TabIndex = 1;
+			PanelBorder.BackColor = System.Drawing.SystemColors.Window;
+			PanelBorder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			PanelBorder.CausesValidation = false;
+			PanelBorder.Controls.Add(this.TextBoxLicenseDetails);
+			PanelBorder.Dock = System.Windows.Forms.DockStyle.Fill;
+			PanelBorder.Location = new System.Drawing.Point(0, 0);
+			PanelBorder.Margin = new System.Windows.Forms.Padding(0, 0, 0, 4);
+			PanelBorder.Name = "BorderPanel";
+			PanelBorder.Padding = new System.Windows.Forms.Padding(4, 4, 0, 4);
+			PanelBorder.Size = new System.Drawing.Size(670, 456);
+			PanelBorder.TabIndex = 1;
 			// 
 			// TextBoxLicenseDetails
 			// 
@@ -122,7 +122,7 @@ namespace AgentCharacterEditor.About
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(694, 517);
-			this.Controls.Add(LayoutPanel);
+			this.Controls.Add(PanelMain);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Margin = new System.Windows.Forms.Padding(4);
 			this.MaximizeBox = false;
@@ -133,8 +133,8 @@ namespace AgentCharacterEditor.About
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "GNU Public License";
-			LayoutPanel.ResumeLayout(false);
-			BorderPanel.ResumeLayout(false);
+			PanelMain.ResumeLayout(false);
+			PanelBorder.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}

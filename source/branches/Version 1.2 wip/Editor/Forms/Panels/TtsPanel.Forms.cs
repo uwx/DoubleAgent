@@ -19,24 +19,17 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using DoubleAgent;
-using DoubleAgent.Character;
 using AgentCharacterEditor.Navigation;
 using AgentCharacterEditor.Updates;
+using DoubleAgent;
+using DoubleAgent.Character;
 
 namespace AgentCharacterEditor.Panels
 {
-	public partial class TtsPanel : FilePartPanel
+	public partial class TtsPanel : AgentCharacterEditor.Panels.FilePartPanel
 	{
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
-
-		private Sapi4Voices mVoices = null;
 
 		public TtsPanel ()
 		{
@@ -45,108 +38,24 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Properties
-
-		public override ResolvePart FilePart
-		{
-			get
-			{
-				return base.FilePart;
-			}
-			set
-			{
-				base.FilePart = value;
-				ShowTtsProperties ();
-			}
-		}
-
-		protected FileTts FileTts
-		{
-			get
-			{
-				return (CharacterFile == null) ? null : CharacterFile.Tts;
-			}
-		}
-
-		public override Boolean IsPanelEmpty
-		{
-			get
-			{
-				return ((FileTts == null) || ((CharacterFile.Header.Style & CharacterStyle.Tts) == CharacterStyle.None));
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
-		class VoiceComboItem
+		protected override bool PushIsPanelShowing (bool pIsPanelShowing)
 		{
-			public Sapi4VoiceInfo VoiceInfo;
-
-			public VoiceComboItem (Sapi4VoiceInfo pVoiceInfo)
+			if (pIsPanelShowing && !IsPanelShowing)
 			{
-				VoiceInfo = pVoiceInfo;
+				SuspendLayout ();
 			}
-
-			public override String ToString ()
-			{
-				if (String.IsNullOrEmpty (VoiceInfo.Manufacturer))
-				{
-					return String.Format ("{0} - {1} {2}", VoiceInfo.VoiceName, GenderName (VoiceInfo.SpeakerGender), new System.Globalization.CultureInfo (VoiceInfo.LangId).EnglishName);
-				}
-				else
-				{
-					return String.Format ("{0} - {1} {2} - {3}", VoiceInfo.VoiceName, GenderName (VoiceInfo.SpeakerGender), new System.Globalization.CultureInfo (VoiceInfo.LangId).EnglishName, VoiceInfo.Manufacturer.Replace ("&&", "&"));
-				}
-			}
-
-			static public String GenderName (int pGender)
-			{
-				return (pGender == 1) ? "Female" : (pGender == 2) ? "Male" : "";
-			}
+			return base.PushIsPanelShowing (pIsPanelShowing);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
-
-		private void ShowTtsProperties ()
+		protected override void PopIsPanelShowing (bool pWasPanelShowing)
 		{
-			CheckBoxUseTTS.Enabled = (CharacterFile != null) && !Program.FileIsReadOnly;
-			GroupBoxTTS.Enabled = !IsPanelEmpty;
-			TextBoxTTSModeID.Enabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			TextBoxVendor.Enabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			TextBoxLanguage.Enabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			TextBoxGender.Enabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-
-			CausesValidation = false;
-			SuspendLayout ();
-			if (IsPanelEmpty)
+			if (!pWasPanelShowing && IsPanelShowing)
 			{
-				CheckBoxUseTTS.Checked = false;
-				ComboBoxName.SelectedIndex = -1;
-				ComboBoxName.Enabled = false;
-				TextBoxTTSModeID.ResetText ();
-				TextBoxVendor.ResetText ();
-				TextBoxLanguage.ResetText ();
-				TextBoxGender.ResetText ();
+				ResumeLayout (true);
 			}
-			else
-			{
-				Sapi4VoiceInfo lVoiceInfo;
-
-				CheckBoxUseTTS.Checked = true;
-				ShowAllVoices ();
-				lVoiceInfo = VoiceComboInfo (FileTts.Mode);
-				ComboBoxName.SelectedIndex = VoiceComboNdx (FileTts.Mode);
-				ComboBoxName.Enabled = !Program.FileIsReadOnly;
-
-				TextBoxTTSModeID.Text = FileTts.ModeId.ToString ().ToUpper ();
-				TextBoxVendor.Text = (lVoiceInfo == null) ? "" : lVoiceInfo.Manufacturer.Replace ("&&", "&");
-				TextBoxLanguage.Text = new System.Globalization.CultureInfo (FileTts.Language).DisplayName;
-				TextBoxGender.Text = VoiceComboItem.GenderName (FileTts.Gender);
-			}
-			ResumeLayout (true);
-			CausesValidation = Visible;
+			base.PopIsPanelShowing (pWasPanelShowing);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -168,105 +77,23 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		private int VoiceComboNdx (Guid pModeId)
-		{
-			int lNdx;
-
-			for (lNdx = 0; lNdx < ComboBoxName.Items.Count; lNdx++)
-			{
-				VoiceComboItem lItem = (VoiceComboItem)ComboBoxName.Items[lNdx];
-
-				if (lItem.VoiceInfo.ModeId.Equals (pModeId))
-				{
-					return lNdx;
-				}
-			}
-			return -1;
-		}
-
-		private Sapi4VoiceInfo VoiceComboInfo (Guid pModeId)
-		{
-			int lNdx;
-
-			for (lNdx = 0; lNdx < ComboBoxName.Items.Count; lNdx++)
-			{
-				VoiceComboItem lItem = (VoiceComboItem)ComboBoxName.Items[lNdx];
-
-				if (lItem.VoiceInfo.ModeId.Equals (pModeId))
-				{
-					return lItem.VoiceInfo;
-				}
-			}
-			return null;
-		}
-
-		private Sapi4VoiceInfo VoiceComboInfo (int pComboNdx)
-		{
-			if ((pComboNdx >= 0) && (pComboNdx < ComboBoxName.Items.Count))
-			{
-				VoiceComboItem lItem = (VoiceComboItem)ComboBoxName.Items[pComboNdx];
-				return lItem.VoiceInfo;
-			}
-			return null;
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
-		#region Update
-
-		internal UndoableUpdate PasteTts (FileTts pPasteTts)
-		{
-			if ((CharacterFile != null) && (pPasteTts != null) && !Program.FileIsReadOnly)
-			{
-				System.Media.SystemSounds.Beep.Play ();
-			}
-			return null;
-		}
-
-		protected override void UpdateApplied (Object pUpdate)
-		{
-			UpdateCharacterTts lUpdate = pUpdate as UpdateCharacterTts;
-
-			if ((lUpdate != null) && (lUpdate.CharacterFile == CharacterFile))
-			{
-				ShowTtsProperties ();
-			}
-		}
-
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Event Handlers
 
 		private void CheckBoxUseTTS_CheckedChanged (object sender, EventArgs e)
 		{
-			if (CausesValidation && (CharacterFile != null) && !Program.FileIsReadOnly)
+			if (!IsPanelShowing && (CharacterFile != null) && !Program.FileIsReadOnly)
 			{
-				UpdateCharacterTts lUpdate = new UpdateCharacterTts (null);
-
-				if (CheckBoxUseTTS.Checked)
-				{
-					lUpdate.CharacterStyle |= CharacterStyle.Tts;
-				}
-				else
-				{
-					lUpdate.CharacterStyle &= ~CharacterStyle.Tts;
-				}
-				UpdateCharacterTts.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterTts, this);
+				HandleEnabledChanged ();
 			}
 		}
 
 		private void ComboBoxName_SelectionChangeCommitted (object sender, EventArgs e)
 		{
-			if (!IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelShowing && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				Sapi4VoiceInfo lVoiceInfo = VoiceComboInfo (ComboBoxName.SelectedIndex);
-
-				if (lVoiceInfo != null)
-				{
-					UpdateCharacterTts lUpdate = new UpdateCharacterTts (lVoiceInfo);
-
-					UpdateCharacterTts.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterTts, this);
-				}
+				HandleVoiceChanged ();
 			}
 		}
 

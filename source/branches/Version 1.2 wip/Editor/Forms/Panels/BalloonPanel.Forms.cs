@@ -47,30 +47,6 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
-		private void ShowBalloonProperties ()
-		{
-			Boolean lWasShowing = PushIsPanelShowing (true);
-
-			CheckBoxWordBalloon.Enabled = (CharacterFile != null) && (!Program.FileIsReadOnly);
-			GroupBoxBalloonDisplay.Enabled = !IsPanelEmpty;
-
-			if (IsPanelEmpty)
-			{
-				CheckBoxWordBalloon.Checked = false;
-			}
-			else
-			{
-				CheckBoxWordBalloon.Checked = ((CharacterFile.Header.Style & CharacterStyle.Balloon) != CharacterStyle.None);
-			}
-
-			ShowBalloonStyle ();
-			ShowBalloonColors ();
-			ShowBalloonFont ();
-			ShowBalloonPreview ();
-
-			PopIsPanelShowing (lWasShowing);
-		}
-
 		private void ShowBalloonStyle ()
 		{
 			Boolean lWasShowing = PushIsPanelShowing (true);
@@ -106,7 +82,7 @@ namespace AgentCharacterEditor.Panels
 				CheckBoxAutoPace.Checked = ((CharacterFile.Header.Style & CharacterStyle.NoAutoPace) == CharacterStyle.None);
 			}
 
-			LabelCharsPerLine.Enabled = !IsPanelEmpty;
+			LabelCharsPerLine.Enabled = !IsPanelEmpty && !Program.FileIsReadOnly;
 			NumericCharsPerLine.Enabled = !IsPanelEmpty && !Program.FileIsReadOnly;
 			RadioButtonSizeToText.Enabled = !IsPanelEmpty && !Program.FileIsReadOnly;
 			RadioButtonNumLines.Enabled = !IsPanelEmpty && !Program.FileIsReadOnly;

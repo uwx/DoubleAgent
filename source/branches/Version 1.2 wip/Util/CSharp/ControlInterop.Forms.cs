@@ -27,6 +27,9 @@ namespace DoubleAgent
 {
 	public partial class TextBoxEx : System.Windows.Forms.TextBox
 	{
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public Boolean IsEnabled
 		{
 			get
@@ -39,6 +42,9 @@ namespace DoubleAgent
 			}
 		}
 
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public Boolean IsModified
 		{
 			get
@@ -51,6 +57,9 @@ namespace DoubleAgent
 			}
 		}
 
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public Boolean IsReadOnly
 		{
 			get
@@ -68,6 +77,9 @@ namespace DoubleAgent
 
 	public partial class ListViewEx : System.Windows.Forms.ListView
 	{
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public Boolean IsEnabled
 		{
 			get
@@ -85,6 +97,29 @@ namespace DoubleAgent
 
 	public partial class TreeViewEx : System.Windows.Forms.TreeView
 	{
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public Boolean IsEnabled
+		{
+			get
+			{
+				return Enabled;
+			}
+			set
+			{
+				Enabled = value;
+			}
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+
+	public partial class ComboBoxEx : System.Windows.Forms.ComboBox
+	{
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public Boolean IsEnabled
 		{
 			get
@@ -102,6 +137,9 @@ namespace DoubleAgent
 
 	public class ButtonEx : System.Windows.Forms.Button
 	{
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public Boolean IsEnabled
 		{
 			get
@@ -119,6 +157,9 @@ namespace DoubleAgent
 
 	public class CheckBoxEx : System.Windows.Forms.CheckBox
 	{
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public Boolean IsEnabled
 		{
 			get
@@ -131,6 +172,9 @@ namespace DoubleAgent
 			}
 		}
 
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public Boolean? IsChecked
 		{
 			get
@@ -148,6 +192,9 @@ namespace DoubleAgent
 
 	public class RadioButtonEx : System.Windows.Forms.RadioButton
 	{
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public Boolean IsEnabled
 		{
 			get
@@ -160,6 +207,9 @@ namespace DoubleAgent
 			}
 		}
 
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public Boolean? IsChecked
 		{
 			get
@@ -177,6 +227,9 @@ namespace DoubleAgent
 
 	public class LabelEx : System.Windows.Forms.Label
 	{
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public Boolean IsEnabled
 		{
 			get
@@ -194,6 +247,9 @@ namespace DoubleAgent
 
 	public class GroupBoxEx : System.Windows.Forms.GroupBox
 	{
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public Boolean IsEnabled
 		{
 			get

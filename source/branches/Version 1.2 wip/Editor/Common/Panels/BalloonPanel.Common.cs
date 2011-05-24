@@ -64,6 +64,32 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
+		private void ShowBalloonProperties ()
+		{
+			Boolean lWasShowing = PushIsPanelShowing (true);
+
+			CheckBoxWordBalloon.IsEnabled = (CharacterFile != null) && (!Program.FileIsReadOnly);
+			GroupBoxBalloonDisplay.IsEnabled = !IsPanelEmpty;
+
+			if (IsPanelEmpty)
+			{
+				CheckBoxWordBalloon.IsChecked = false;
+			}
+			else
+			{
+				CheckBoxWordBalloon.IsChecked = ((CharacterFile.Header.Style & CharacterStyle.Balloon) != CharacterStyle.None);
+			}
+
+			ShowBalloonStyle ();
+			ShowBalloonColors ();
+			ShowBalloonFont ();
+			ShowBalloonPreview ();
+
+			PopIsPanelShowing (lWasShowing);
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
 		protected String GetFontFamilyName (System.Drawing.Font pFont)
 		{
 			return String.IsNullOrEmpty (pFont.OriginalFontName) ? pFont.Name : pFont.OriginalFontName;

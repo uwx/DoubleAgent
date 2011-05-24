@@ -48,39 +48,39 @@ namespace AgentCharacterEditor.Panels
 		/// </summary>
 		private void InitializeComponent ()
 		{
-			this.LayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
+			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
 			this.CheckBoxUseTTS = new DoubleAgent.CheckBoxEx();
 			this.GroupBoxTTS = new DoubleAgent.GroupBoxEx();
 			this.TextBoxGender = new DoubleAgent.TextBoxEx();
-			this.LabelGender = new System.Windows.Forms.Label();
+			this.LabelGender = new DoubleAgent.LabelEx();
 			this.TextBoxLanguage = new DoubleAgent.TextBoxEx();
-			this.LabelLanguage = new System.Windows.Forms.Label();
+			this.LabelLanguage = new DoubleAgent.LabelEx();
 			this.TextBoxVendor = new DoubleAgent.TextBoxEx();
-			this.LabelVendor = new System.Windows.Forms.Label();
+			this.LabelVendor = new DoubleAgent.LabelEx();
 			this.TextBoxTTSModeID = new DoubleAgent.TextBoxEx();
-			this.LabelModeID = new System.Windows.Forms.Label();
-			this.ComboBoxName = new System.Windows.Forms.ComboBox();
-			this.LabelName = new System.Windows.Forms.Label();
-			this.LayoutPanelMain.SuspendLayout();
+			this.LabelModeID = new DoubleAgent.LabelEx();
+			this.ComboBoxName = new DoubleAgent.ComboBoxEx();
+			this.LabelName = new DoubleAgent.LabelEx();
+			this.PanelMain.SuspendLayout();
 			this.GroupBoxTTS.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// LayoutPanelMain
+			// PanelMain
 			// 
-			this.LayoutPanelMain.ColumnCount = 1;
-			this.LayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanelMain.Controls.Add(this.CheckBoxUseTTS, 0, 0);
-			this.LayoutPanelMain.Controls.Add(this.GroupBoxTTS, 0, 1);
-			this.LayoutPanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LayoutPanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-			this.LayoutPanelMain.Location = new System.Drawing.Point(9, 0);
-			this.LayoutPanelMain.Margin = new System.Windows.Forms.Padding(0);
-			this.LayoutPanelMain.Name = "LayoutPanelMain";
-			this.LayoutPanelMain.RowCount = 2;
-			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanelMain.Size = new System.Drawing.Size(582, 600);
-			this.LayoutPanelMain.TabIndex = 0;
+			this.PanelMain.ColumnCount = 1;
+			this.PanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.Controls.Add(this.CheckBoxUseTTS, 0, 0);
+			this.PanelMain.Controls.Add(this.GroupBoxTTS, 0, 1);
+			this.PanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+			this.PanelMain.Location = new System.Drawing.Point(9, 0);
+			this.PanelMain.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelMain.Name = "PanelMain";
+			this.PanelMain.RowCount = 2;
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.Size = new System.Drawing.Size(582, 600);
+			this.PanelMain.TabIndex = 0;
 			// 
 			// CheckBoxUseTTS
 			// 
@@ -236,11 +236,11 @@ namespace AgentCharacterEditor.Panels
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this.LayoutPanelMain);
+			this.Controls.Add(this.PanelMain);
 			this.Name = "TtsPanel";
 			this.Size = new System.Drawing.Size(600, 600);
-			this.LayoutPanelMain.ResumeLayout(false);
-			this.LayoutPanelMain.PerformLayout();
+			this.PanelMain.ResumeLayout(false);
+			this.PanelMain.PerformLayout();
 			this.GroupBoxTTS.ResumeLayout(false);
 			this.GroupBoxTTS.PerformLayout();
 			this.ResumeLayout(false);
@@ -249,18 +249,18 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 
-		private System.Windows.Forms.TableLayoutPanel LayoutPanelMain;
+		private System.Windows.Forms.TableLayoutPanel PanelMain;
 		private DoubleAgent.CheckBoxEx CheckBoxUseTTS;
 		private DoubleAgent.GroupBoxEx GroupBoxTTS;
 		private DoubleAgent.TextBoxEx TextBoxTTSModeID;
-		private System.Windows.Forms.Label LabelModeID;
-		private System.Windows.Forms.ComboBox ComboBoxName;
-		private System.Windows.Forms.Label LabelName;
+		private DoubleAgent.LabelEx LabelModeID;
+		private DoubleAgent.ComboBoxEx ComboBoxName;
+		private DoubleAgent.LabelEx LabelName;
 		private DoubleAgent.TextBoxEx TextBoxVendor;
-		private System.Windows.Forms.Label LabelVendor;
+		private DoubleAgent.LabelEx LabelVendor;
 		private DoubleAgent.TextBoxEx TextBoxGender;
-		private System.Windows.Forms.Label LabelGender;
+		private DoubleAgent.LabelEx LabelGender;
 		private DoubleAgent.TextBoxEx TextBoxLanguage;
-		private System.Windows.Forms.Label LabelLanguage;
+		private DoubleAgent.LabelEx LabelLanguage;
 	}
 }

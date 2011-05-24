@@ -711,7 +711,7 @@ namespace AgentCharacterEditor
 		{
 			if (PromptSaveCharacterFile ())
 			{
-				if (OpenCharacterFile (e))
+				if (!OpenCharacterFile (e))
 				{
 					if (PromptRemoveRecent (e))
 					{

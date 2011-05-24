@@ -156,14 +156,14 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
-		protected Boolean PushIsPanelShowing (Boolean pIsPanelShowing)
+		protected virtual Boolean PushIsPanelShowing (Boolean pIsPanelShowing)
 		{
 			Boolean lRet = IsPanelShowing;
 			IsPanelShowing = pIsPanelShowing;
 			return lRet;
 		}
 
-		protected void PopIsPanelShowing (Boolean pWasPanelShowing)
+		protected virtual void PopIsPanelShowing (Boolean pWasPanelShowing)
 		{
 			IsPanelShowing = pWasPanelShowing;
 		}

@@ -57,9 +57,9 @@ namespace AgentCharacterEditor.Panels
 			this.NumericOffsetY = new DoubleAgent.NumericUpDownEx();
 			this.TextBoxFrameName = new DoubleAgent.TextBoxEx();
 			this.GroupBoxImages = new DoubleAgent.GroupBoxEx();
-			this.LayoutPanelImages = new System.Windows.Forms.TableLayoutPanel();
+			this.PanelImages = new System.Windows.Forms.TableLayoutPanel();
 			this.FlowLayoutRight = new System.Windows.Forms.FlowLayoutPanel();
-			this.LayoutPanelSample = new System.Windows.Forms.TableLayoutPanel();
+			this.PanelSample = new System.Windows.Forms.TableLayoutPanel();
 			this.PanelImageClip = new System.Windows.Forms.Panel();
 			this.PictureBoxImageSample = new AgentCharacterEditor.PictureBoxSample();
 			this.ToolStripShiftUp = new DoubleAgent.ToolStripEx();
@@ -92,7 +92,7 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonSoundImport = new System.Windows.Forms.ToolStripButton();
 			this.ButtonSoundExport = new System.Windows.Forms.ToolStripButton();
 			this.TextBoxSoundFile = new DoubleAgent.TextBoxEx();
-			this.LayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
+			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
 			this.PanelTop = new System.Windows.Forms.Panel();
 			this.NumericDuration = new DoubleAgent.NumericUpDownEx();
 			this.PictureBoxFrameSample = new AgentCharacterEditor.PictureBoxSample();
@@ -101,9 +101,9 @@ namespace AgentCharacterEditor.Panels
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetX)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetY)).BeginInit();
 			this.GroupBoxImages.SuspendLayout();
-			this.LayoutPanelImages.SuspendLayout();
+			this.PanelImages.SuspendLayout();
 			this.FlowLayoutRight.SuspendLayout();
-			this.LayoutPanelSample.SuspendLayout();
+			this.PanelSample.SuspendLayout();
 			this.PanelImageClip.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxImageSample)).BeginInit();
 			this.ToolStripShiftUp.SuspendLayout();
@@ -115,7 +115,7 @@ namespace AgentCharacterEditor.Panels
 			this.GroupBoxSound.SuspendLayout();
 			this.ToolStripSound.SuspendLayout();
 			this.ToolStripSoundFile.SuspendLayout();
-			this.LayoutPanelMain.SuspendLayout();
+			this.PanelMain.SuspendLayout();
 			this.PanelTop.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericDuration)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxFrameSample)).BeginInit();
@@ -233,7 +233,7 @@ namespace AgentCharacterEditor.Panels
 			this.GroupBoxImages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.GroupBoxImages.Controls.Add(this.LayoutPanelImages);
+			this.GroupBoxImages.Controls.Add(this.PanelImages);
 			this.GroupBoxImages.Location = new System.Drawing.Point(0, 197);
 			this.GroupBoxImages.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
 			this.GroupBoxImages.Name = "GroupBoxImages";
@@ -243,21 +243,21 @@ namespace AgentCharacterEditor.Panels
 			this.GroupBoxImages.TabStop = false;
 			this.GroupBoxImages.Text = "Images";
 			// 
-			// LayoutPanelImages
+			// PanelImages
 			// 
-			this.LayoutPanelImages.ColumnCount = 2;
-			this.LayoutPanelImages.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
-			this.LayoutPanelImages.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
-			this.LayoutPanelImages.Controls.Add(this.FlowLayoutRight, 1, 0);
-			this.LayoutPanelImages.Controls.Add(this.PanelImagesLeft, 0, 0);
-			this.LayoutPanelImages.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LayoutPanelImages.Location = new System.Drawing.Point(6, 24);
-			this.LayoutPanelImages.Margin = new System.Windows.Forms.Padding(0);
-			this.LayoutPanelImages.Name = "LayoutPanelImages";
-			this.LayoutPanelImages.RowCount = 1;
-			this.LayoutPanelImages.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanelImages.Size = new System.Drawing.Size(670, 352);
-			this.LayoutPanelImages.TabIndex = 0;
+			this.PanelImages.ColumnCount = 2;
+			this.PanelImages.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
+			this.PanelImages.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
+			this.PanelImages.Controls.Add(this.FlowLayoutRight, 1, 0);
+			this.PanelImages.Controls.Add(this.PanelImagesLeft, 0, 0);
+			this.PanelImages.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelImages.Location = new System.Drawing.Point(6, 24);
+			this.PanelImages.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelImages.Name = "PanelImages";
+			this.PanelImages.RowCount = 1;
+			this.PanelImages.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelImages.Size = new System.Drawing.Size(670, 352);
+			this.PanelImages.TabIndex = 0;
 			// 
 			// FlowLayoutRight
 			// 
@@ -265,7 +265,7 @@ namespace AgentCharacterEditor.Panels
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.FlowLayoutRight.Controls.Add(this.PanelOverlayOffset);
-			this.FlowLayoutRight.Controls.Add(this.LayoutPanelSample);
+			this.FlowLayoutRight.Controls.Add(this.PanelSample);
 			this.FlowLayoutRight.Controls.Add(this.CheckBoxTransparent);
 			this.FlowLayoutRight.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
 			this.FlowLayoutRight.Location = new System.Drawing.Point(402, 0);
@@ -276,29 +276,29 @@ namespace AgentCharacterEditor.Panels
 			this.FlowLayoutRight.TabIndex = 1;
 			this.FlowLayoutRight.WrapContents = false;
 			// 
-			// LayoutPanelSample
+			// PanelSample
 			// 
-			this.LayoutPanelSample.AutoSize = true;
-			this.LayoutPanelSample.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.LayoutPanelSample.ColumnCount = 3;
-			this.LayoutPanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-			this.LayoutPanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.LayoutPanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-			this.LayoutPanelSample.Controls.Add(this.PanelImageClip, 1, 1);
-			this.LayoutPanelSample.Controls.Add(this.ToolStripShiftUp, 1, 0);
-			this.LayoutPanelSample.Controls.Add(this.ToolStripShiftRight, 2, 1);
-			this.LayoutPanelSample.Controls.Add(this.ToolStripShiftDown, 1, 2);
-			this.LayoutPanelSample.Controls.Add(this.ToolStripShiftLeft, 0, 1);
-			this.LayoutPanelSample.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-			this.LayoutPanelSample.Location = new System.Drawing.Point(12, 69);
-			this.LayoutPanelSample.Margin = new System.Windows.Forms.Padding(0);
-			this.LayoutPanelSample.Name = "LayoutPanelSample";
-			this.LayoutPanelSample.RowCount = 3;
-			this.LayoutPanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-			this.LayoutPanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-			this.LayoutPanelSample.Size = new System.Drawing.Size(186, 186);
-			this.LayoutPanelSample.TabIndex = 1;
+			this.PanelSample.AutoSize = true;
+			this.PanelSample.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.PanelSample.ColumnCount = 3;
+			this.PanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+			this.PanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.PanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+			this.PanelSample.Controls.Add(this.PanelImageClip, 1, 1);
+			this.PanelSample.Controls.Add(this.ToolStripShiftUp, 1, 0);
+			this.PanelSample.Controls.Add(this.ToolStripShiftRight, 2, 1);
+			this.PanelSample.Controls.Add(this.ToolStripShiftDown, 1, 2);
+			this.PanelSample.Controls.Add(this.ToolStripShiftLeft, 0, 1);
+			this.PanelSample.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+			this.PanelSample.Location = new System.Drawing.Point(12, 69);
+			this.PanelSample.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelSample.Name = "PanelSample";
+			this.PanelSample.RowCount = 3;
+			this.PanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+			this.PanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+			this.PanelSample.Size = new System.Drawing.Size(186, 186);
+			this.PanelSample.TabIndex = 1;
 			// 
 			// PanelImageClip
 			// 
@@ -708,26 +708,26 @@ namespace AgentCharacterEditor.Panels
 			this.TextBoxSoundFile.TabIndex = 1;
 			this.TextBoxSoundFile.Validated += new System.EventHandler(this.TextBoxSoundFile_Validated);
 			// 
-			// LayoutPanelMain
+			// PanelMain
 			// 
-			this.LayoutPanelMain.ColumnCount = 1;
-			this.LayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanelMain.Controls.Add(this.PanelTop, 0, 0);
-			this.LayoutPanelMain.Controls.Add(this.GroupBoxImages, 0, 2);
-			this.LayoutPanelMain.Controls.Add(this.GroupBoxSound, 0, 3);
-			this.LayoutPanelMain.Controls.Add(this.PictureBoxFrameSample, 0, 1);
-			this.LayoutPanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LayoutPanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-			this.LayoutPanelMain.Location = new System.Drawing.Point(9, 0);
-			this.LayoutPanelMain.Margin = new System.Windows.Forms.Padding(0);
-			this.LayoutPanelMain.Name = "LayoutPanelMain";
-			this.LayoutPanelMain.RowCount = 4;
-			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanelMain.Size = new System.Drawing.Size(682, 650);
-			this.LayoutPanelMain.TabIndex = 0;
+			this.PanelMain.ColumnCount = 1;
+			this.PanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.Controls.Add(this.PanelTop, 0, 0);
+			this.PanelMain.Controls.Add(this.GroupBoxImages, 0, 2);
+			this.PanelMain.Controls.Add(this.GroupBoxSound, 0, 3);
+			this.PanelMain.Controls.Add(this.PictureBoxFrameSample, 0, 1);
+			this.PanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+			this.PanelMain.Location = new System.Drawing.Point(9, 0);
+			this.PanelMain.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelMain.Name = "PanelMain";
+			this.PanelMain.RowCount = 4;
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.Size = new System.Drawing.Size(682, 650);
+			this.PanelMain.TabIndex = 0;
 			// 
 			// PanelTop
 			// 
@@ -785,7 +785,7 @@ namespace AgentCharacterEditor.Panels
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this.LayoutPanelMain);
+			this.Controls.Add(this.PanelMain);
 			this.Name = "FramePanel";
 			this.Size = new System.Drawing.Size(700, 650);
 			this.PanelOverlayOffset.ResumeLayout(false);
@@ -793,10 +793,10 @@ namespace AgentCharacterEditor.Panels
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetX)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetY)).EndInit();
 			this.GroupBoxImages.ResumeLayout(false);
-			this.LayoutPanelImages.ResumeLayout(false);
+			this.PanelImages.ResumeLayout(false);
 			this.FlowLayoutRight.ResumeLayout(false);
 			this.FlowLayoutRight.PerformLayout();
-			this.LayoutPanelSample.ResumeLayout(false);
+			this.PanelSample.ResumeLayout(false);
 			this.PanelImageClip.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxImageSample)).EndInit();
 			this.ToolStripShiftUp.ResumeLayout(false);
@@ -817,7 +817,7 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripSound.PerformLayout();
 			this.ToolStripSoundFile.ResumeLayout(false);
 			this.ToolStripSoundFile.PerformLayout();
-			this.LayoutPanelMain.ResumeLayout(false);
+			this.PanelMain.ResumeLayout(false);
 			this.PanelTop.ResumeLayout(false);
 			this.PanelTop.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericDuration)).EndInit();
@@ -865,13 +865,13 @@ namespace AgentCharacterEditor.Panels
 		private DoubleAgent.ToolStripButtonEx ButtonShiftLeft;
 		private DoubleAgent.ToolStripButtonEx ButtonShiftRight;
 		private PictureBoxSample PictureBoxFrameSample;
-		private System.Windows.Forms.TableLayoutPanel LayoutPanelMain;
+		private System.Windows.Forms.TableLayoutPanel PanelMain;
 		private System.Windows.Forms.Panel PanelImageClip;
 		private System.Windows.Forms.FlowLayoutPanel FlowLayoutRight;
 		private System.Windows.Forms.Panel PanelImagesLeft;
-		private System.Windows.Forms.TableLayoutPanel LayoutPanelImages;
+		private System.Windows.Forms.TableLayoutPanel PanelImages;
 		private System.Windows.Forms.ToolStripButton ButtonChooseFile;
-		private System.Windows.Forms.TableLayoutPanel LayoutPanelSample;
+		private System.Windows.Forms.TableLayoutPanel PanelSample;
 		private System.Windows.Forms.Panel PanelOverlayOffset;
 		private DoubleAgent.CheckBoxEx CheckBoxTransparent;
 		private System.Windows.Forms.Panel PanelTop;

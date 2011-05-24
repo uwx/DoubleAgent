@@ -270,7 +270,7 @@ namespace AgentCharacterEditor.Panels
 			System.Drawing.Bitmap lBitmap = null;
 
 			CausesValidation = false;
-			LayoutPanelSample.SuspendLayout ();
+			PanelSample.SuspendLayout ();
 
 			if (pFrameOverlay == null)
 			{
@@ -281,7 +281,7 @@ namespace AgentCharacterEditor.Panels
 				NumericOffsetX.Enabled = false;
 				NumericOffsetY.Enabled = false;
 				CheckBoxReplace.Enabled = false;
-				LayoutPanelSample.Enabled = false;
+				PanelSample.Enabled = false;
 
 				if (!IsPanelEmpty)
 				{
@@ -297,7 +297,7 @@ namespace AgentCharacterEditor.Panels
 				NumericOffsetX.Enabled = !Program.FileIsReadOnly;
 				NumericOffsetY.Enabled = !Program.FileIsReadOnly;
 				CheckBoxReplace.Enabled = !Program.FileIsReadOnly;
-				LayoutPanelSample.Enabled = !Program.FileIsReadOnly;
+				PanelSample.Enabled = !Program.FileIsReadOnly;
 
 				lBitmap = CharacterFile.GetFrameBitmap (Frame, true, Color.Transparent, (Int16)pFrameOverlay.OverlayType);
 			}
@@ -313,7 +313,7 @@ namespace AgentCharacterEditor.Panels
 				PictureBoxImageSample.ClientSize = CharacterFile.Header.ImageSize;
 			}
 
-			LayoutPanelSample.ResumeLayout (true);
+			PanelSample.ResumeLayout (true);
 			ButtonShiftUp.Width = ToolStripShiftUp.Width;
 			ButtonShiftDown.Width = ToolStripShiftDown.Width;
 			ButtonShiftLeft.Height = ToolStripShiftLeft.Height;

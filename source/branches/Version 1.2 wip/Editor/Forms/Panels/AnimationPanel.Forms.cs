@@ -70,7 +70,7 @@ namespace AgentCharacterEditor.Panels
 				catch
 				{
 				}
-				TrackBarRate.Value = Math.Min (Math.Max (lSettings.AnimationPreviewRate, TrackBarRate.Minimum), TrackBarRate.Maximum);
+				SliderRate.Value = Math.Min (Math.Max (lSettings.AnimationPreviewRate, SliderRate.Minimum), SliderRate.Maximum);
 				PreviewButtonRepeat.Checked = lSettings.AnimationPreviewRepeat;
 				PreviewButtonMute.Checked = lSettings.AnimationPreviewMute;
 			}
@@ -83,7 +83,7 @@ namespace AgentCharacterEditor.Panels
 			lSettings.FramesViewBranching = FramesView.ShowBranching;
 			lSettings.FramesViewExitBranching = FramesView.ShowExitBranching;
 			lSettings.FramesViewScale = (int)FramesView.ImageScale;
-			lSettings.AnimationPreviewRate = TrackBarRate.Value;
+			lSettings.AnimationPreviewRate = SliderRate.Value;
 			lSettings.AnimationPreviewRepeat = PreviewButtonRepeat.Checked;
 			lSettings.AnimationPreviewMute = PreviewButtonMute.Checked;
 		}
@@ -100,30 +100,6 @@ namespace AgentCharacterEditor.Panels
 			{
 				AnimationPreview.StopAnimation ();
 			}
-		}
-
-		protected override void InitLayout ()
-		{
-			base.InitLayout ();
-
-			Rectangle lToolStripRect = ToolStripPreview.Parent.RectangleToScreen (new Rectangle (ToolStripPreview.Location, ToolStripPreview.Size));
-			Rectangle lTrackBarRect = TrackBarRate.Parent.RectangleToScreen (new Rectangle (TrackBarRate.Location, TrackBarRate.Size));
-			Rectangle lSlowLabelRect = LabelSlow.Parent.RectangleToScreen (new Rectangle (LabelSlow.Location, LabelSlow.Size));
-			Rectangle lFastLabelRect = LabelFast.Parent.RectangleToScreen (new Rectangle (LabelFast.Location, LabelFast.Size));
-
-			lTrackBarRect.Offset (lToolStripRect.Left - lTrackBarRect.Left, 0);
-			lTrackBarRect.Size = new Size (lToolStripRect.Width, lTrackBarRect.Height);
-			lSlowLabelRect.Offset (lTrackBarRect.Left - lSlowLabelRect.Left, 0);
-			lFastLabelRect.Offset (lTrackBarRect.Right - lFastLabelRect.Right, 0);
-
-			lTrackBarRect = TrackBarRate.Parent.RectangleToClient (lTrackBarRect);
-			lSlowLabelRect = LabelSlow.Parent.RectangleToClient (lSlowLabelRect);
-			lFastLabelRect = LabelFast.Parent.RectangleToClient (lFastLabelRect);
-
-			TrackBarRate.Location = lTrackBarRect.Location;
-			TrackBarRate.Size = lTrackBarRect.Size;
-			LabelSlow.Location = lSlowLabelRect.Location;
-			LabelFast.Location = lFastLabelRect.Location;
 		}
 
 		#endregion
@@ -1050,7 +1026,7 @@ namespace AgentCharacterEditor.Panels
 				AnimationPreview.StopAnimation ();
 				AnimationPreview.IsPaused = false;
 				AnimationPreview.IsRepeating = PreviewButtonRepeat.Checked;
-				AnimationPreview.AnimationRate = (double)TrackBarRate.Value;
+				AnimationPreview.AnimationRate = (double)SliderRate.Value;
 #if DEBUG_NOT
 				System.Diagnostics.Debug.Print ("StartAnimation Repeat [{0}] Rate [{1}]", AnimationPreview.AnimationIsRepeating, AnimationPreview.AnimationRate);		
 #endif
@@ -1140,7 +1116,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (AnimationPreview.IsAnimated)
 			{
-				AnimationPreview.AnimationRate = (double)TrackBarRate.Value;
+				AnimationPreview.AnimationRate = (double)SliderRate.Value;
 			}
 		}
 

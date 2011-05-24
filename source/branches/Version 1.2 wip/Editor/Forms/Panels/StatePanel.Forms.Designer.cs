@@ -54,10 +54,10 @@ namespace AgentCharacterEditor.Panels
 			this.ListViewAnimations = new DoubleAgent.ListViewEx();
 			this.Column1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.PanelTop = new System.Windows.Forms.Panel();
-			this.LayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
+			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
 			this.GroupBoxAnimations.SuspendLayout();
 			this.PanelTop.SuspendLayout();
-			this.LayoutPanelMain.SuspendLayout();
+			this.PanelMain.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// LabelName
@@ -133,33 +133,33 @@ namespace AgentCharacterEditor.Panels
 			this.PanelTop.Size = new System.Drawing.Size(632, 28);
 			this.PanelTop.TabIndex = 1;
 			// 
-			// LayoutPanelMain
+			// PanelMain
 			// 
-			this.LayoutPanelMain.ColumnCount = 1;
-			this.LayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanelMain.Controls.Add(this.PanelTop, 0, 0);
-			this.LayoutPanelMain.Controls.Add(this.GroupBoxAnimations, 0, 1);
-			this.LayoutPanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LayoutPanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-			this.LayoutPanelMain.Location = new System.Drawing.Point(9, 0);
-			this.LayoutPanelMain.Margin = new System.Windows.Forms.Padding(0);
-			this.LayoutPanelMain.Name = "LayoutPanelMain";
-			this.LayoutPanelMain.RowCount = 2;
-			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanelMain.Size = new System.Drawing.Size(632, 600);
-			this.LayoutPanelMain.TabIndex = 0;
+			this.PanelMain.ColumnCount = 1;
+			this.PanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.Controls.Add(this.PanelTop, 0, 0);
+			this.PanelMain.Controls.Add(this.GroupBoxAnimations, 0, 1);
+			this.PanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+			this.PanelMain.Location = new System.Drawing.Point(9, 0);
+			this.PanelMain.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelMain.Name = "PanelMain";
+			this.PanelMain.RowCount = 2;
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.Size = new System.Drawing.Size(632, 600);
+			this.PanelMain.TabIndex = 0;
 			// 
 			// StatePanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this.LayoutPanelMain);
+			this.Controls.Add(this.PanelMain);
 			this.Name = "StatePanel";
 			this.GroupBoxAnimations.ResumeLayout(false);
 			this.PanelTop.ResumeLayout(false);
 			this.PanelTop.PerformLayout();
-			this.LayoutPanelMain.ResumeLayout(false);
+			this.PanelMain.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -172,6 +172,6 @@ namespace AgentCharacterEditor.Panels
 		private System.Windows.Forms.ColumnHeader Column1;
 		private DoubleAgent.GroupBoxEx GroupBoxAnimations;
 		private System.Windows.Forms.Panel PanelTop;
-		private System.Windows.Forms.TableLayoutPanel LayoutPanelMain;
+		private System.Windows.Forms.TableLayoutPanel PanelMain;
 	}
 }

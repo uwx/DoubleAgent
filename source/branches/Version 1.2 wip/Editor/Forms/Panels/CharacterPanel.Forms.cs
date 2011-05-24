@@ -201,31 +201,6 @@ namespace AgentCharacterEditor.Panels
 			PopIsPanelShowing (lWasShowing);
 		}
 
-		private void ShowCharacterGuid ()
-		{
-			Boolean lWasShowing = PushIsPanelShowing (true);
-
-			if (IsPanelEmpty)
-			{
-				TextBoxGUID.ResetText ();
-				ButtonNewGUID.Enabled = false;
-			}
-			else
-			{
-				if (CharacterFile.Header.Guid == null)
-				{
-					TextBoxGUID.ResetText ();
-				}
-				else
-				{
-					TextBoxGUID.Text = CharacterFile.Header.Guid.ToString ().ToUpper ();
-				}
-				ButtonNewGUID.Enabled = !Program.FileIsReadOnly;
-			}
-
-			PopIsPanelShowing (lWasShowing);
-		}
-
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Event Handlers

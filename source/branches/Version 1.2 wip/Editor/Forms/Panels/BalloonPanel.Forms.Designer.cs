@@ -48,7 +48,7 @@ namespace AgentCharacterEditor.Panels
 		/// </summary>
 		private void InitializeComponent ()
 		{
-			this.LayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
+			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
 			this.CheckBoxWordBalloon = new DoubleAgent.CheckBoxEx();
 			this.GroupBoxBalloonDisplay = new DoubleAgent.GroupBoxEx();
 			this.LabelBalloonBorderSample = new System.Windows.Forms.Label();
@@ -68,31 +68,31 @@ namespace AgentCharacterEditor.Panels
 			this.LabelCharsPerLine = new System.Windows.Forms.Label();
 			this.GroupBoxBalloonPreview = new DoubleAgent.GroupBoxEx();
 			this.WordBalloonPreview = new AgentCharacterEditor.Previews.BalloonPreview();
-			this.LayoutPanelMain.SuspendLayout();
+			this.PanelMain.SuspendLayout();
 			this.GroupBoxBalloonDisplay.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericNumLines)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.NumericCharsPerLine)).BeginInit();
 			this.GroupBoxBalloonPreview.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// LayoutPanelMain
+			// PanelMain
 			// 
-			this.LayoutPanelMain.ColumnCount = 1;
-			this.LayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanelMain.Controls.Add(this.CheckBoxWordBalloon, 0, 0);
-			this.LayoutPanelMain.Controls.Add(this.GroupBoxBalloonDisplay, 0, 1);
-			this.LayoutPanelMain.Controls.Add(this.GroupBoxBalloonPreview, 0, 2);
-			this.LayoutPanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LayoutPanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-			this.LayoutPanelMain.Location = new System.Drawing.Point(9, 0);
-			this.LayoutPanelMain.Margin = new System.Windows.Forms.Padding(0);
-			this.LayoutPanelMain.Name = "LayoutPanelMain";
-			this.LayoutPanelMain.RowCount = 3;
-			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanelMain.Size = new System.Drawing.Size(582, 600);
-			this.LayoutPanelMain.TabIndex = 0;
+			this.PanelMain.ColumnCount = 1;
+			this.PanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.Controls.Add(this.CheckBoxWordBalloon, 0, 0);
+			this.PanelMain.Controls.Add(this.GroupBoxBalloonDisplay, 0, 1);
+			this.PanelMain.Controls.Add(this.GroupBoxBalloonPreview, 0, 2);
+			this.PanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+			this.PanelMain.Location = new System.Drawing.Point(9, 0);
+			this.PanelMain.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelMain.Name = "PanelMain";
+			this.PanelMain.RowCount = 3;
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.Size = new System.Drawing.Size(582, 600);
+			this.PanelMain.TabIndex = 0;
 			// 
 			// CheckBoxWordBalloon
 			// 
@@ -356,11 +356,11 @@ namespace AgentCharacterEditor.Panels
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this.LayoutPanelMain);
+			this.Controls.Add(this.PanelMain);
 			this.Name = "BalloonPanel";
 			this.Size = new System.Drawing.Size(600, 600);
-			this.LayoutPanelMain.ResumeLayout(false);
-			this.LayoutPanelMain.PerformLayout();
+			this.PanelMain.ResumeLayout(false);
+			this.PanelMain.PerformLayout();
 			this.GroupBoxBalloonDisplay.ResumeLayout(false);
 			this.GroupBoxBalloonDisplay.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericNumLines)).EndInit();
@@ -372,7 +372,7 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 
-		private System.Windows.Forms.TableLayoutPanel LayoutPanelMain;
+		private System.Windows.Forms.TableLayoutPanel PanelMain;
 		private DoubleAgent.CheckBoxEx CheckBoxWordBalloon;
 		private DoubleAgent.GroupBoxEx GroupBoxBalloonDisplay;
 		private DoubleAgent.RadioButtonEx RadioButtonSizeToText;

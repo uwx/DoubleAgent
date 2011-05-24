@@ -106,9 +106,45 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
+		private void ShowFileProperties ()
+		{
+			Boolean lWasShowing = PushIsPanelShowing (true);
+
+			ShowCharacterIcon ();
+			ShowCharacterGuid ();
+			ShowNameStates ();
+			if (ListViewLanguage.SelectedItems.Count <= 0)
+			{
+				SelectLangIDItem (mLangDefault);
+			}
+			mLangCurrent = ShowCharacterName ();
+
+			PopIsPanelShowing (lWasShowing);
+		}
+
+		private UInt16 ShowCharacterName ()
+		{
+			Boolean lWasShowing = PushIsPanelShowing (true);
+			FileCharacterName lName = null;
+			UInt16 lLangID = SelectedLangID (true);
+
+			if (!IsPanelEmpty)
+			{
+				lName = LangIDName (lLangID, false);
+			}
+			ShowCharacterName (lName, lLangID);
+
+			PopIsPanelShowing (lWasShowing);
+			return lLangID;
+		}
+ 
 		private void ShowCharacterName (FileCharacterName pName, UInt16 pLangID)
 		{
 			Boolean lWasShowing = PushIsPanelShowing (true);
+
+			LabelName.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly; 
+			LabelDescription.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly; 
+			LabelExtra.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly; 
 
 			if (pName == null)
 			{
@@ -141,36 +177,29 @@ namespace AgentCharacterEditor.Panels
 			PopIsPanelShowing (lWasShowing);
 		}
 
-		private void ShowFileProperties ()
+		private void ShowCharacterGuid ()
 		{
 			Boolean lWasShowing = PushIsPanelShowing (true);
 
-			ShowCharacterIcon ();
-			ShowCharacterGuid ();
-			ShowNameStates ();
-			if (ListViewLanguage.SelectedItems.Count <= 0)
+			if (IsPanelEmpty)
 			{
-				SelectLangIDItem (mLangDefault);
+				TextBoxGUID.Clear ();
+				ButtonNewGUID.IsEnabled = false;
 			}
-			mLangCurrent = ShowCharacterName ();
+			else
+			{
+				if (CharacterFile.Header.Guid == null)
+				{
+					TextBoxGUID.Clear ();
+				}
+				else
+				{
+					TextBoxGUID.Text = CharacterFile.Header.Guid.ToString ().ToUpper ();
+				}
+				ButtonNewGUID.IsEnabled = !Program.FileIsReadOnly;
+			}
 
 			PopIsPanelShowing (lWasShowing);
-		}
-
-		private UInt16 ShowCharacterName ()
-		{
-			Boolean lWasShowing = PushIsPanelShowing (true);
-			FileCharacterName lName = null;
-			UInt16 lLangID = SelectedLangID (true);
-
-			if (!IsPanelEmpty)
-			{
-				lName = LangIDName (lLangID, false);
-			}
-			ShowCharacterName (lName, lLangID);
-
-			PopIsPanelShowing (lWasShowing);
-			return lLangID;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

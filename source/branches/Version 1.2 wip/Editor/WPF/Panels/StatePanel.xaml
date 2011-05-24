@@ -1,11 +1,44 @@
-﻿<local:FilePartPanel x:Class="AgentCharacterEditor.Panels.StatePanel"
-		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-		xmlns:local="clr-namespace:AgentCharacterEditor.Panels" mc:Ignorable="d" d:DesignHeight="300"
-		d:DesignWidth="300">
-	<Grid>
-
+﻿<panels:FilePartPanel x:Class="AgentCharacterEditor.Panels.StatePanel"
+					  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+					  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+					  xmlns:panels="clr-namespace:AgentCharacterEditor.Panels"
+					  mc:Ignorable="d"
+					  d:DesignHeight="600"
+					  d:DesignWidth="600">
+	<Grid Style="{StaticResource PanelMainGrid}">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		<GroupBox VerticalAlignment="Top"
+				  Style="{StaticResource PanelGroupBox}">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="100" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Label Content="State name"
+					   HorizontalAlignment="Left"
+					   Name="LabelName"
+					   VerticalAlignment="Center"
+					   Style="{StaticResource PanelLabel}" />
+				<TextBox Grid.Column="1"
+						 Name="TextBoxName"
+						 VerticalAlignment="Center"
+						 IsReadOnly="True"
+						 Style="{StaticResource PanelTextBox}" />
+			</Grid>
+		</GroupBox>
+		<GroupBox Header="Animations"
+				  Name="GroupBoxAnimations"
+				  Grid.Row="1"
+				  Style="{StaticResource PanelGroupBox}">
+			<Grid>
+				<ListView Name="ListViewAnimations"
+						  Style="{StaticResource PanelListView}" />
+			</Grid>
+		</GroupBox>
 	</Grid>
-</local:FilePartPanel>
+</panels:FilePartPanel>

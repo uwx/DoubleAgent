@@ -256,11 +256,11 @@ namespace AgentCharacterEditor
 
 				if (lOverflow != null)
 				{
-					lOverflow.Visibility = Visibility.Collapsed;
+				    lOverflow.Visibility = Visibility.Collapsed;
 				}
 				if (lThumb != null)
 				{
-					lThumb.Visibility = Visibility.Collapsed;
+				    lThumb.Visibility = Visibility.Collapsed;
 				}
 			}
 			catch

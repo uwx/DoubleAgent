@@ -1,11 +1,242 @@
-﻿<local:FilePartPanel x:Class="AgentCharacterEditor.Panels.AnimationsPanel"
-		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-		xmlns:local="clr-namespace:AgentCharacterEditor.Panels" mc:Ignorable="d" d:DesignHeight="300"
-		d:DesignWidth="300">
-	<Grid>
-
+﻿<panels:FilePartPanel x:Class="AgentCharacterEditor.Panels.AnimationsPanel"
+					  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+					  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+					  xmlns:panels="clr-namespace:AgentCharacterEditor.Panels"
+					  mc:Ignorable="d"
+					  d:DesignHeight="600"
+					  d:DesignWidth="600">
+	<Grid Style="{StaticResource PanelMainGrid}">
+		<Grid.RowDefinitions>
+			<RowDefinition />
+			<RowDefinition  Height="Auto" />
+		</Grid.RowDefinitions>
+		<GroupBox Style="{StaticResource PanelGroupBox}">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition  Height="Auto" />
+					<RowDefinition />
+					<RowDefinition  Height="Auto" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition />
+					<ColumnDefinition  Width="Auto" />
+					<ColumnDefinition  Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<Label Content="New animation name"
+					   Grid.Column="1"
+					   HorizontalAlignment="Right"
+					   Name="LabelNewName"
+					   VerticalAlignment="Center"
+					   Style="{StaticResource PanelLabel}" />
+				<TextBox Grid.Column="2"
+						 HorizontalAlignment="Right"
+						 Name="TextBoxNewName"
+						 VerticalAlignment="Center"
+						 Width="200"
+						 Style="{StaticResource PanelTextBox}"
+						 MaxLines="1" />
+				<ListView Grid.ColumnSpan="3"
+						  Grid.Row="1"
+						  Name="ListViewAnimations"
+						  VerticalAlignment="Stretch"
+						  Style="{StaticResource PanelListView}" />
+				<StackPanel HorizontalAlignment="Left"
+							VerticalAlignment="Center"
+							Orientation="Horizontal">
+					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							Height="Auto"
+							Name="ButtonAdd"
+							Width="Auto"
+							ToolTip="Add new animation">
+						<Image Source="{StaticResource ImgFileNew}"
+							   Stretch="None"
+							   Width="Auto"
+							   Height="Auto"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center"></Image>
+					</Button>
+					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							Height="Auto"
+							Name="ButtonDelete"
+							Width="Auto"
+							ToolTip="Delete animation">
+						<Image Source="{StaticResource ImgEditDelete}"
+							   Stretch="None"
+							   Width="Auto"
+							   Height="Auto"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center"></Image>
+					</Button>
+				</StackPanel>
+				<StackPanel Grid.ColumnSpan="3"
+							Grid.Row="2"
+							HorizontalAlignment="Left"
+							VerticalAlignment="Bottom"
+							Orientation="Horizontal">
+					<Label Content="Width"
+						   Name="LabelWidth"
+						   Style="{StaticResource PanelLabel}"
+						   HorizontalAlignment="Left"
+						   VerticalAlignment="Center" />
+					<TextBox Name="TextBoxFrameWidth"
+							 Width="80"
+							 Style="{StaticResource PanelTextBox}"
+							 HorizontalAlignment="Left"
+							 VerticalAlignment="Center"
+							 MaxLines="1" />
+					<Label Content="Height"
+						   Name="LabelHeight"
+						   Style="{StaticResource PanelLabel}"
+						   HorizontalAlignment="Left"
+						   VerticalAlignment="Center"
+						   Margin="10,0,0,0" />
+					<TextBox Name="TextBoxFrameHeight"
+							 Width="80"
+							 Style="{StaticResource PanelTextBox}"
+							 MaxLines="1"
+							 HorizontalAlignment="Left"
+							 VerticalAlignment="Center" />
+				</StackPanel>
+			</Grid>
+		</GroupBox>
+		<GroupBox Grid.Row="1"
+				  Header="Palette"
+				  Name="GroupBoxPalette"
+				  Style="{StaticResource PanelGroupBox}"
+				  VerticalAlignment="Bottom"
+				  Height="Auto">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition  Height="Auto" />
+					<RowDefinition  Height="Auto" />
+				</Grid.RowDefinitions>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition />
+						<ColumnDefinition Width="Auto" />
+					</Grid.ColumnDefinitions>
+					<Label Content="Image file name"
+						   Name="LabelPaletteFile"
+						   VerticalAlignment="Center"
+						   Style="{StaticResource PanelLabel}" />
+					<TextBox Grid.Column="1"
+							 Name="TextBoxPaletteFile"
+							 VerticalAlignment="Center"
+							 Style="{StaticResource PanelTextBox}"
+							 MaxLines="1" />
+					<StackPanel Grid.Column="2"
+								Orientation="Horizontal"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Right">
+						<Button Focusable="false"
+								Height="Auto"
+								HorizontalAlignment="Right"
+								Name="ButtonPaletteImport"
+								Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+								VerticalAlignment="Center"
+								Width="Auto">
+							<Image Height="Auto"
+								   HorizontalAlignment="Center"
+								   Source="{StaticResource ImgFileOpen}"
+								   Stretch="None"
+								   VerticalAlignment="Center"
+								   Width="Auto" />
+						</Button>
+						<Button Focusable="false"
+								Height="Auto"
+								HorizontalAlignment="Right"
+								Name="ButtonPaletteExport"
+								Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+								VerticalAlignment="Center"
+								Width="Auto">
+							<Image Height="Auto"
+								   HorizontalAlignment="Center"
+								   Source="{StaticResource ImgFileSave}"
+								   Stretch="None"
+								   VerticalAlignment="Center"
+								   Width="Auto" />
+						</Button>
+					</StackPanel>
+				</Grid>
+				<Grid Grid.Row="1"
+					  VerticalAlignment="Bottom"
+					  Height="Auto"
+					  Margin="0,10,0,0">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition  Width="Auto" />
+						<ColumnDefinition />
+					</Grid.ColumnDefinitions>
+					<Border BorderBrush="Black"
+							BorderThickness="1"
+							Grid.RowSpan="4"
+							HorizontalAlignment="Left"
+							Name="PictureBoxPalette"
+							VerticalAlignment="Top"
+							Margin="0,0,10,0">
+						<Image Height="200"
+							   Name="ImagePalette"
+							   Stretch="UniformToFill"
+							   Width="200"
+							   MinWidth="200"
+							   MinHeight="200"
+							   MaxWidth="200"
+							   MaxHeight="200" />
+					</Border>
+					<Grid Grid.Column="1">
+						<Grid.RowDefinitions>
+							<RowDefinition  Height="Auto" />
+							<RowDefinition  Height="Auto" />
+							<RowDefinition  Height="Auto" />
+							<RowDefinition  Height="Auto" />
+						</Grid.RowDefinitions>
+						<Label Content="Transparency"
+							   Name="LabelTransparency"
+							   VerticalAlignment="Top"
+							   HorizontalAlignment="Left"
+							   HorizontalContentAlignment="Center"
+							   VerticalContentAlignment="Center"
+							   Style="{StaticResource PanelLabel}"
+							   Width="100"
+							   Margin="0"
+							   Padding="0,0,0,2" />
+						<Label Height="30"
+							   Name="LabelTransparencySample"
+							   Width="100"
+							   Grid.Row="1"
+							   HorizontalAlignment="Left"
+							   VerticalAlignment="Top"
+							   BorderThickness="1"
+							   BorderBrush="Black"
+							   Padding="0"
+							   IsHitTestVisible="False" />
+						<Label Grid.Row="3"
+							   HorizontalAlignment="Left"
+							   Name="LabelTransparencyClick"
+							   VerticalAlignment="Top"
+							   Foreground="{StaticResource HeaderTextBrush}"
+							   Effect="{StaticResource HeaderTextShadow}"
+							   Style="{StaticResource PanelLabel}">
+							<TextBlock Text="Click to set the Transparency"
+									   Width="100"
+									   TextWrapping="Wrap"
+									   FontSize="14" />
+						</Label>
+						<Label Height="100"
+							   Name="LabelColorSample"
+							   Width="100"
+							   Grid.Row="2"
+							   HorizontalAlignment="Left"
+							   VerticalAlignment="Center"
+							   Padding="0"
+							   BorderThickness="1"
+							   BorderBrush="Black"
+							   Margin="0,10,0,2" />
+					</Grid>
+				</Grid>
+			</Grid>
+		</GroupBox>
 	</Grid>
-</local:FilePartPanel>
+</panels:FilePartPanel>

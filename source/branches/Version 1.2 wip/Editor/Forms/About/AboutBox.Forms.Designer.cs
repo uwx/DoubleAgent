@@ -51,7 +51,7 @@ namespace AgentCharacterEditor.About
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutBox));
 			this.TextBoxLicenseIntro = new System.Windows.Forms.RichTextBox();
 			this.LogoPictureBox = new System.Windows.Forms.PictureBox();
-			this.LayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
 			this.LabelProductName = new System.Windows.Forms.Label();
 			this.LabelVersion = new System.Windows.Forms.Label();
 			this.LabelCopyright = new System.Windows.Forms.Label();
@@ -60,13 +60,13 @@ namespace AgentCharacterEditor.About
 			BorderPanel = new System.Windows.Forms.Panel();
 			BorderPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.LogoPictureBox)).BeginInit();
-			this.LayoutPanel.SuspendLayout();
+			this.PanelMain.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// BorderPanel
 			// 
 			BorderPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.LayoutPanel.SetColumnSpan(BorderPanel, 3);
+			this.PanelMain.SetColumnSpan(BorderPanel, 3);
 			BorderPanel.Controls.Add(this.TextBoxLicenseIntro);
 			BorderPanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			BorderPanel.Location = new System.Drawing.Point(4, 90);
@@ -101,42 +101,42 @@ namespace AgentCharacterEditor.About
 			this.LogoPictureBox.Location = new System.Drawing.Point(4, 4);
 			this.LogoPictureBox.Margin = new System.Windows.Forms.Padding(4);
 			this.LogoPictureBox.Name = "LogoPictureBox";
-			this.LayoutPanel.SetRowSpan(this.LogoPictureBox, 4);
+			this.PanelMain.SetRowSpan(this.LogoPictureBox, 4);
 			this.LogoPictureBox.Size = new System.Drawing.Size(64, 64);
 			this.LogoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.LogoPictureBox.TabIndex = 12;
 			this.LogoPictureBox.TabStop = false;
 			// 
-			// LayoutPanel
+			// PanelMain
 			// 
-			this.LayoutPanel.ColumnCount = 3;
-			this.LayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.LayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.LayoutPanel.Controls.Add(this.LogoPictureBox, 0, 0);
-			this.LayoutPanel.Controls.Add(this.LabelProductName, 1, 0);
-			this.LayoutPanel.Controls.Add(this.LabelVersion, 1, 1);
-			this.LayoutPanel.Controls.Add(this.LabelCopyright, 1, 2);
-			this.LayoutPanel.Controls.Add(this.OkButton, 2, 5);
-			this.LayoutPanel.Controls.Add(this.LicenseButton, 0, 5);
-			this.LayoutPanel.Controls.Add(BorderPanel, 0, 4);
-			this.LayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LayoutPanel.Location = new System.Drawing.Point(12, 11);
-			this.LayoutPanel.Margin = new System.Windows.Forms.Padding(4);
-			this.LayoutPanel.Name = "LayoutPanel";
-			this.LayoutPanel.RowCount = 6;
-			this.LayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.LayoutPanel.Size = new System.Drawing.Size(405, 337);
-			this.LayoutPanel.TabIndex = 0;
+			this.PanelMain.ColumnCount = 3;
+			this.PanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.PanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.PanelMain.Controls.Add(this.LogoPictureBox, 0, 0);
+			this.PanelMain.Controls.Add(this.LabelProductName, 1, 0);
+			this.PanelMain.Controls.Add(this.LabelVersion, 1, 1);
+			this.PanelMain.Controls.Add(this.LabelCopyright, 1, 2);
+			this.PanelMain.Controls.Add(this.OkButton, 2, 5);
+			this.PanelMain.Controls.Add(this.LicenseButton, 0, 5);
+			this.PanelMain.Controls.Add(BorderPanel, 0, 4);
+			this.PanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelMain.Location = new System.Drawing.Point(12, 11);
+			this.PanelMain.Margin = new System.Windows.Forms.Padding(4);
+			this.PanelMain.Name = "PanelMain";
+			this.PanelMain.RowCount = 6;
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.Size = new System.Drawing.Size(405, 337);
+			this.PanelMain.TabIndex = 0;
 			// 
 			// LabelProductName
 			// 
-			this.LayoutPanel.SetColumnSpan(this.LabelProductName, 2);
+			this.PanelMain.SetColumnSpan(this.LabelProductName, 2);
 			this.LabelProductName.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LabelProductName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.LabelProductName.Location = new System.Drawing.Point(80, 0);
@@ -148,7 +148,7 @@ namespace AgentCharacterEditor.About
 			// 
 			// LabelVersion
 			// 
-			this.LayoutPanel.SetColumnSpan(this.LabelVersion, 2);
+			this.PanelMain.SetColumnSpan(this.LabelVersion, 2);
 			this.LabelVersion.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LabelVersion.Location = new System.Drawing.Point(80, 32);
 			this.LabelVersion.Margin = new System.Windows.Forms.Padding(8, 0, 4, 0);
@@ -161,7 +161,7 @@ namespace AgentCharacterEditor.About
 			// 
 			// LabelCopyright
 			// 
-			this.LayoutPanel.SetColumnSpan(this.LabelCopyright, 2);
+			this.PanelMain.SetColumnSpan(this.LabelCopyright, 2);
 			this.LabelCopyright.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LabelCopyright.Location = new System.Drawing.Point(80, 53);
 			this.LabelCopyright.Margin = new System.Windows.Forms.Padding(8, 0, 4, 0);
@@ -186,7 +186,7 @@ namespace AgentCharacterEditor.About
 			// LicenseButton
 			// 
 			this.LicenseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.LayoutPanel.SetColumnSpan(this.LicenseButton, 2);
+			this.PanelMain.SetColumnSpan(this.LicenseButton, 2);
 			this.LicenseButton.Location = new System.Drawing.Point(4, 306);
 			this.LicenseButton.Margin = new System.Windows.Forms.Padding(4);
 			this.LicenseButton.Name = "LicenseButton";
@@ -202,7 +202,7 @@ namespace AgentCharacterEditor.About
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(429, 359);
-			this.Controls.Add(this.LayoutPanel);
+			this.Controls.Add(this.PanelMain);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Margin = new System.Windows.Forms.Padding(4);
 			this.MaximizeBox = false;
@@ -215,14 +215,14 @@ namespace AgentCharacterEditor.About
 			this.Text = "About";
 			BorderPanel.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.LogoPictureBox)).EndInit();
-			this.LayoutPanel.ResumeLayout(false);
+			this.PanelMain.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
 
-		private System.Windows.Forms.TableLayoutPanel LayoutPanel;
+		private System.Windows.Forms.TableLayoutPanel PanelMain;
 		private System.Windows.Forms.Label LabelProductName;
 		private System.Windows.Forms.Label LabelVersion;
 		private System.Windows.Forms.Label LabelCopyright;
