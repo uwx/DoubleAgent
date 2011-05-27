@@ -62,98 +62,26 @@ namespace AgentCharacterEditor.Panels
 		{
 			Settings lSettings = Settings.Default;
 
-			lSettings.SelectedNameLanguage = (Int16)ListItemLangID (ListViewLanguage.SelectedItem as ListViewItem);
+			lSettings.SelectedNameLanguage = (Int16)ListItemLangID (ListViewLanguage.SelectedItem as ListViewItemCommon);
 		}
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
-		private void ShowNameStates ()
+		private void ShowNameItemState (ListViewItemCommon pItem, Boolean pPresent)
 		{
-			Boolean lWasShowing = PushIsPanelShowing (true);
-
-			foreach (ListViewItem lItem in ListViewLanguage.Items)
-			{
-				UInt16 lLangID = ListItemLangID (lItem);
-				FileCharacterName lName = null;
-
-				if (IsPanelEmpty)
-				{
-					lItem.Foreground = ListViewLanguage.Foreground;
-				}
-				else
-				{
-					lName = LangIDName (lLangID, true);
-					if (lName == null)
-					{
-						lItem.Foreground = ListViewLanguage.Foreground;
-					}
-					else
-					{
-						lItem.Foreground = SystemColors.HotTrackBrush;
-					}
-				}
-			}
-
-			PopIsPanelShowing (lWasShowing);
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		private UInt16 ListItemLangID (ListViewItem pListItem)
-		{
-			UInt16 lLangID = mLangDefault;
-			String lLanguage;
-
-			if (pListItem != null)
-			{
-				lLanguage = pListItem.Tag.ToString ();
-				if (!UInt16.TryParse (lLanguage.Substring (lLanguage.LastIndexOf ('-') + 1), System.Globalization.NumberStyles.HexNumber, null, out lLangID))
-				{
-					lLangID = mLangDefault;
-				}
-			}
-			return lLangID;
-		}
-
-		private ListViewItem ListLangIDItem (UInt16 pLangID)
-		{
-			UInt16 lLangID;
-
-			foreach (ListViewItem lItem in ListViewLanguage.Items)
-			{
-				lLangID = ListItemLangID (lItem);
-				if (
-						(lLangID == pLangID)
-					|| (
-							((UInt16)(Byte)pLangID == pLangID)
-						&& ((Byte)lLangID == (Byte)pLangID)
-						)
-					)
-				{
-					return lItem;
-				}
-			}
-			return null;
-		}
-
-		private UInt16 SelectedLangID (Boolean pUseDefault)
-		{
-			if (ListViewLanguage.SelectedItem != null)
-			{
-				return ListItemLangID (ListViewLanguage.SelectedItem as ListViewItem);
-			}
-			return pUseDefault ? mLangDefault : (UInt16)0;
+			pItem.Foreground = pPresent ? SystemColors.HotTrackBrush : ListViewLanguage.Foreground;
 		}
 
 		private Boolean SelectLangIDItem (UInt16 pLangID)
 		{
-			ListViewItem lItem = ListLangIDItem (pLangID);
+			ListViewItemCommon lItem = ListLangIDItem (pLangID);
 
 			if (lItem != null)
 			{
 				lItem.IsSelected = true;
+				//ListViewLanguage.FocusedItem = lItem;
 				return true;
 			}
 			return false;
@@ -161,79 +89,34 @@ namespace AgentCharacterEditor.Panels
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private void ShowCharacterIcon ()
+		private void ShowSmallIcon (System.Drawing.Bitmap pIcon)
 		{
-			Boolean lWasShowing = PushIsPanelShowing (true);
-
-			if (IsPanelEmpty)
-			{
-				ImageIconSmall.Source = null;
-				ImageIconLarge.Source = null;
-				TextBoxIconFile.Clear ();
-				TextBoxIconFile.IsEnabled = false;
-				ButtonIconImport.IsEnabled = false;
-				ButtonIconExport.IsEnabled = false;
-			}
-			else
-			{
-				TextBoxIconFile.Text = CharacterFile.IconFilePath;
-
-				if (CharacterFile.Header.Icon == null)
-				{
-					ImageIconSmall.Source = null;
-					ImageIconLarge.Source = null;
-				}
-				else
-				{
-					try
-					{
-						ImageIconSmall.Source = CharacterFile.Header.Icon.ToBitmap ().MakeImageSource ();
-						ImageIconLarge.Source = CharacterFile.Header.Icon.ToBitmap ().MakeImageSource ();
-					}
-					catch
-					{
-						ImageIconSmall.Source = null;
-						ImageIconLarge.Source = null;
-					}
-				}
-				TextBoxIconFile.IsEnabled = !Program.FileIsReadOnly;
-				ButtonIconImport.IsEnabled = !Program.FileIsReadOnly;
-				ButtonIconExport.IsEnabled = false;
-			}
-
+			ImageIconSmall.Source = (pIcon == null) ? null : pIcon.MakeImageSource ();
 			try
 			{
-				if (ImageIconSmall.Source == null)
-				{
-					(ImageIconSmall.Parent as FrameworkElement).Effect = null;
-				}
-				else if ((ImageIconSmall.Parent as FrameworkElement).Effect == null)
-				{
-					(ImageIconSmall.Parent as FrameworkElement).Effect = new DropShadowEffect ();
-				}
-				if (ImageIconLarge.Source == null)
-				{
-					(ImageIconLarge.Parent as FrameworkElement).Effect = null;
-				}
-				else if ((ImageIconLarge.Parent as FrameworkElement).Effect == null)
-				{
-					(ImageIconLarge.Parent as FrameworkElement).Effect = new DropShadowEffect ();
-				}
-
 				if ((ImageIconSmall.Parent as FrameworkElement).Effect is DropShadowEffect)
 				{
-					((ImageIconSmall.Parent as FrameworkElement).Effect as DropShadowEffect).Opacity = 0.3;
-				}
-				if ((ImageIconLarge.Parent as FrameworkElement).Effect is DropShadowEffect)
-				{
-					((ImageIconLarge.Parent as FrameworkElement).Effect as DropShadowEffect).Opacity = 0.3;
+					((ImageIconSmall.Parent as FrameworkElement).Effect as DropShadowEffect).Opacity = (ImageIconSmall.Source == null) ? 0.0 : 0.5;
 				}
 			}
 			catch
 			{
 			}
+		}
 
-			PopIsPanelShowing (lWasShowing);
+		private void ShowLargeIcon (System.Drawing.Bitmap pIcon)
+		{
+			ImageIconLarge.Source = (pIcon == null) ? null : pIcon.MakeImageSource ();
+			try
+			{
+				if ((ImageIconLarge.Parent as FrameworkElement).Effect is DropShadowEffect)
+				{
+					((ImageIconLarge.Parent as FrameworkElement).Effect as DropShadowEffect).Opacity = (ImageIconLarge.Source == null) ? 0.0 : 0.5;
+				}
+			}
+			catch
+			{
+			}
 		}
 
 		#endregion
@@ -242,7 +125,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ListViewLanguage_SelectionChanged (object sender, SelectionChangedEventArgs e)
 		{
-			if (!IsPanelShowing && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && !Program.FileIsReadOnly)
 			{
 				mLangCurrent = ShowCharacterName ();
 			}
@@ -250,7 +133,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void TextBoxName_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelShowing && TextBoxName.IsModified && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && TextBoxName.IsModified && !Program.FileIsReadOnly)
 			{
 				HandleNameChanged ();
 				TextBoxName.IsModified = false;
@@ -261,7 +144,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void TextBoxDescription_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelShowing && TextBoxDescription.IsModified && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && TextBoxDescription.IsModified && !Program.FileIsReadOnly)
 			{
 				HandleDescriptionChanged ();
 				TextBoxDescription.IsModified = false;
@@ -270,7 +153,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void TextBoxExtra_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelShowing && TextBoxExtra.IsModified && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && TextBoxExtra.IsModified && !Program.FileIsReadOnly)
 			{
 				HandleExtraChanged ();
 				TextBoxExtra.IsModified = false;
@@ -281,7 +164,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void TextBoxIconFile_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelShowing && TextBoxIconFile.IsModified && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && TextBoxIconFile.IsModified && !Program.FileIsReadOnly)
 			{
 				HandleIconFileChanged ();
 			}
@@ -289,7 +172,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ButtonIconImport_Click (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelShowing && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && !Program.FileIsReadOnly)
 			{
 				HandleIconImport ();
 			}
@@ -299,7 +182,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ButtonNewGUID_Click (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelShowing && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && !Program.FileIsReadOnly)
 			{
 				HandleNewGUID ();
 			}

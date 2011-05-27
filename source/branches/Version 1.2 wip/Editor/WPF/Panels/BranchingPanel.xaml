@@ -4,10 +4,160 @@
 					  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 					  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 					  xmlns:panels="clr-namespace:AgentCharacterEditor.Panels"
+					  xmlns:custom="clr-namespace:DoubleAgent"
 					  mc:Ignorable="d"
 					  d:DesignHeight="600"
 					  d:DesignWidth="600">
+	<Control.CommandBindings>
+		<CommandBinding Command="Copy"
+						CanExecute="CanEditCopy"
+						Executed="OnEditCopy" />
+		<CommandBinding Command="Cut"
+						CanExecute="CanEditCut"
+						Executed="OnEditCut" />
+		<CommandBinding Command="Delete"
+						CanExecute="CanEditDelete"
+						Executed="OnEditDelete" />
+		<CommandBinding Command="Paste"
+						CanExecute="CanEditPaste"
+						Executed="OnEditPaste" />
+	</Control.CommandBindings>
 	<Grid Style="{StaticResource PanelMainGrid}">
-
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition  Height="Auto" />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		<GroupBox Style="{StaticResource PanelGroupBox}">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="100" />
+					<ColumnDefinition Width="371*" />
+				</Grid.ColumnDefinitions>
+				<Label Content="Frame"
+					   HorizontalAlignment="Left"
+					   Name="LabelFrameName"
+					   VerticalAlignment="Center"
+					   Style="{StaticResource PanelLabel}" />
+				<custom:TextBoxEx Grid.Column="1"
+								  HorizontalAlignment="Stretch"
+								  x:Name="TextBoxFrameName"
+								  VerticalAlignment="Center"
+								  MaxLines="1"
+								  IsReadOnly="True"
+								  Style="{StaticResource PanelTextBox}" />
+			</Grid>
+		</GroupBox>
+		<GroupBox Header="Normal Branching"
+				  Name="GroupBoxBranching"
+				  Grid.Row="1"
+				  Style="{StaticResource PanelGroupBox}">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+				<Label Content="% of the time, branch to frame"
+					   Grid.Column="1"
+					   HorizontalAlignment="Left"
+					   Name="LabelBranching1"
+					   VerticalAlignment="Center"
+					   Style="{StaticResource PanelLabel}" />
+				<Label Content="% of the time, branch to frame"
+					   Grid.Column="1"
+					   Grid.Row="1"
+					   HorizontalAlignment="Left"
+					   Name="LabelBranching2"
+					   VerticalAlignment="Center"
+					   Style="{StaticResource PanelLabel}" />
+				<Label Content="% of the time, branch to frame"
+					   Grid.Column="1"
+					   Grid.Row="2"
+					   HorizontalAlignment="Left"
+					   Name="LabelBranching3"
+					   VerticalAlignment="Center"
+					   Style="{StaticResource PanelLabel}" />
+				<Label Content="% of the time, don't branch"
+					   Grid.Column="1"
+					   Grid.Row="3"
+					   HorizontalAlignment="Left"
+					   Name="LabelBranchingNot"
+					   VerticalAlignment="Center"
+					   Style="{StaticResource PanelLabel}" />
+				<custom:NumericUpDown HorizontalAlignment="Left"
+									  x:Name="NumericBranching0"
+									  VerticalAlignment="Center"
+									  Width="60"
+									  Style="{StaticResource PanelTextBox}" />
+				<custom:NumericUpDown Grid.Column="2"
+									  HorizontalAlignment="Left"
+									  x:Name="NumericTarget0"
+									  VerticalAlignment="Center"
+									  Width="60"
+									  Style="{StaticResource PanelTextBox}" />
+				<custom:NumericUpDown Grid.Row="1"
+									  HorizontalAlignment="Left"
+									  x:Name="NumericBranching1"
+									  VerticalAlignment="Center"
+									  Width="60"
+									  Style="{StaticResource PanelTextBox}" />
+				<custom:NumericUpDown Grid.Column="2"
+									  Grid.Row="1"
+									  HorizontalAlignment="Left"
+									  x:Name="NumericTarget1"
+									  VerticalAlignment="Center"
+									  Width="60"
+									  Style="{StaticResource PanelTextBox}" />
+				<custom:NumericUpDown Grid.Row="2"
+									  HorizontalAlignment="Left"
+									  x:Name="NumericBranching2"
+									  VerticalAlignment="Center"
+									  Width="60"
+									  Style="{StaticResource PanelTextBox}" />
+				<custom:NumericUpDown Grid.Column="2"
+									  Grid.Row="2"
+									  HorizontalAlignment="Left"
+									  x:Name="NumericTarget2"
+									  VerticalAlignment="Center"
+									  Width="60"
+									  Style="{StaticResource PanelTextBox}" />
+				<custom:NumericUpDown Grid.Row="3"
+									  HorizontalAlignment="Left"
+									  x:Name="NumericBranchingNot"
+									  VerticalAlignment="Center"
+									  Width="60"
+									  Style="{StaticResource PanelTextBox}" />
+			</Grid>
+		</GroupBox>
+		<GroupBox Grid.Row="2"
+				  Header="Exit Branching"
+				  Name="GroupBoxExit"
+				  Style="{StaticResource PanelGroupBox}">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+				<CheckBox Content="Exit after Stop to frame"
+						  HorizontalAlignment="Left"
+						  Name="CheckBoxExit"
+						  VerticalAlignment="Center"
+						  Margin="0,0,5,0" />
+				<custom:NumericUpDown Grid.Column="1"
+									  HorizontalAlignment="Left"
+									  x:Name="NumericTargetExit"
+									  VerticalAlignment="Center"
+									  Width="60"
+									  Style="{StaticResource PanelTextBox}" />
+			</Grid>
+		</GroupBox>
 	</Grid>
 </panels:FilePartPanel>

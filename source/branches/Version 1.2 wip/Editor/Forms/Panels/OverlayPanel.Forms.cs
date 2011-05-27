@@ -205,9 +205,9 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		private ListViewItem ShowOverlayItem (MouthOverlay pOverlayType, FileFrameOverlay pFrameOverlay)
+		private ListViewItemCommon ShowOverlayItem (MouthOverlay pOverlayType, FileFrameOverlay pFrameOverlay)
 		{
-			ListViewItem lOverlayItem = ListViewOverlays.Items[(int)pOverlayType];
+			ListViewItemCommon lOverlayItem = ListViewOverlays.Items[(int)pOverlayType] as ListViewItemCommon;
 
 			if (pFrameOverlay != null)
 			{
@@ -241,7 +241,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			ListViewOverlays.BeginUpdate ();
 
-			foreach (ListViewItem lOverlayItem in ListViewOverlays.Items)
+			foreach (ListViewItemCommon lOverlayItem in ListViewOverlays.Items)
 			{
 				lOverlayItem.SubItems.Clear ();
 			}
@@ -354,7 +354,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (ListViewOverlays.Items.Count > 0)
 			{
-				foreach (ListViewItem lItem in ListViewOverlays.Items)
+				foreach (ListViewItemCommon lItem in ListViewOverlays.Items)
 				{
 					if (lItem.SubItems.Count > 1)
 					{

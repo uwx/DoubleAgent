@@ -1,25 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using DoubleAgent;
 using DoubleAgent.Character;
 
 namespace AgentCharacterEditor.Previews
 {
 	public partial class BalloonPreview : UserControl
 	{
+		///////////////////////////////////////////////////////////////////////////////
+		#region Initialization
+
 		private CharacterFile mCharacterFile;
 		private DoubleAgent.BalloonPreview mBalloonPreview = new DoubleAgent.BalloonPreview ();
 		private Timer mAutoPaceTimer = null;
 		private Timer mAutoScrollTimer = null;
-
-		///////////////////////////////////////////////////////////////////////////////
-		#region Initialization
 
 		public BalloonPreview ()
 		{
@@ -160,7 +153,7 @@ namespace AgentCharacterEditor.Previews
 
 			if (Enabled && Visible)
 			{
-				int lAutoScrollTime = mBalloonPreview.AutoScrollTime;
+				Int32 lAutoScrollTime = mBalloonPreview.AutoScrollTime;
 
 				if (lAutoScrollTime > 0)
 				{
@@ -244,18 +237,6 @@ namespace AgentCharacterEditor.Previews
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		protected override void OnEnabledChanged (EventArgs e)
-		{
-			base.OnEnabledChanged (e);
-			CharacterFile = CharacterFile;
-		}
-
-		protected override void OnVisibleChanged (EventArgs e)
-		{
-			base.OnVisibleChanged (e);
-			CharacterFile = CharacterFile;
-		}
-
 		protected override void OnPaint (PaintEventArgs e)
 		{
 			// Pause AutoPace while drawing
@@ -271,6 +252,20 @@ namespace AgentCharacterEditor.Previews
 			{
 				mAutoPaceTimer.Start ();
 			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		protected override void OnEnabledChanged (EventArgs e)
+		{
+			base.OnEnabledChanged (e);
+			CharacterFile = CharacterFile;
+		}
+
+		protected override void OnVisibleChanged (EventArgs e)
+		{
+			base.OnVisibleChanged (e);
+			CharacterFile = CharacterFile;
 		}
 
 		#endregion

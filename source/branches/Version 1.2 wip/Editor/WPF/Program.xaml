@@ -92,6 +92,37 @@
 						 UriSource="Resources/MouthWide4.bmp" />
 			<BitmapImage x:Key="IconDoubleAgent"
 						 UriSource="Resources/DoubleAgent.ico" />
+
+			<ContextMenu x:Key="ContextMenuEdit">
+				<MenuItem Header="_Cut"
+						  Command="ApplicationCommands.Cut"
+						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
+					<MenuItem.Icon>
+						<Image Source="{StaticResource ImgEditCut}" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Header="_Copy"
+						  Command="ApplicationCommands.Copy"
+						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
+					<MenuItem.Icon>
+						<Image Source="{StaticResource ImgEditCopy}" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Header="_Paste"
+						  Command="ApplicationCommands.Paste"
+						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
+					<MenuItem.Icon>
+						<Image Source="{StaticResource ImgEditPaste}" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Header="_Delete"
+						  Command="ApplicationCommands.Delete"
+						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
+					<MenuItem.Icon>
+						<Image Source="{StaticResource ImgEditDelete}" />
+					</MenuItem.Icon>
+				</MenuItem>
+			</ContextMenu>
 		</ResourceDictionary>
 	</Application.Resources>
 </Application>

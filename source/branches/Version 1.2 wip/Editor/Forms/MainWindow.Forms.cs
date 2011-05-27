@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using AgentCharacterEditor.Global;
 using AgentCharacterEditor.Properties;
+using AgentCharacterEditor.Panels;
 using DoubleAgent;
 using AppResources = AgentCharacterEditor.Resources;
 
@@ -245,31 +246,13 @@ namespace AgentCharacterEditor
 			return false;
 		}
 
+		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Navigation
 
-		private void ShowFileInvalid (String pFilePath)
+		private void FadeShowSelectedPanel (FilePartPanel pSelectedPanel)
 		{
-			MessageBox.Show (String.Format (AppResources.Resources.MsgInvalidFile, pFilePath), Program.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-		}
-
-		private void ShowFileSaveError (String pSaveAsPath)
-		{
-			MessageBox.Show (String.Format (AppResources.Resources.MsgFailedSaveAs, pSaveAsPath), Program.AssemblyTitle, MessageBoxButtons.OK);
-		}
-
-		private void ShowFileSaveInvalid (String pSaveAsPath)
-		{
-			MessageBox.Show ("Not implemented", Program.AssemblyTitle, MessageBoxButtons.OK);
-		}
-
-		private void ShowFileSaveAsInvalid (String pSaveAsPath)
-		{
-			MessageBox.Show (AppResources.Resources.MsgInvalidSaveAs, Program.AssemblyTitle, MessageBoxButtons.OK);
-		}
-
-		private void ShowFileException (Exception pException)
-		{
-			MessageBox.Show (pException.Message);
+			ShowSelectedPanel (pSelectedPanel);
 		}
 
 		#endregion
@@ -304,19 +287,33 @@ namespace AgentCharacterEditor
 		{
 			TextBox lTextBox = null;
 			Control lActive = GetActiveControl (ref lTextBox);
-			Global.CanEditEventArgs lEventArgs = null;
+			Boolean lMenuInitialized = false;
 
-			if (CanEdit != null)
+			if ((lTextBox == null) || (CanEdit != null))
 			{
-				lEventArgs = new Global.CanEditEventArgs ();
-				CanEdit (this, lEventArgs);
+				Global.CanEditEventArgs lEventArgs = new Global.CanEditEventArgs ();
+
+				if (CanEdit != null)
+				{
+					try
+					{
+						CanEdit (this, lEventArgs);
+					}
+					catch
+					{
+					}
+				}
+
+				lMenuInitialized = lEventArgs.IsUsed;
+
+				if ((lTextBox == null) || lMenuInitialized)
+				{
+					lEventArgs.UpdateMenuItems (MenuItemEditCopy, MenuItemEditCut, MenuItemEditDelete, MenuItemEditPaste);
+					lEventArgs.UpdateToolStripButtons (ToolButtonEditCopy, ToolButtonEditCut, ToolButtonEditDelete, ToolButtonEditPaste);
+				}
 			}
 
-			if ((lEventArgs != null) && lEventArgs.IsUsed)
-			{
-				ShowEditState (lEventArgs, MenuItemEditCopy, MenuItemEditCut, MenuItemEditPaste, MenuItemEditDelete);
-			}
-			else if (lTextBox != null)
+			if ((lTextBox != null) && !lMenuInitialized)
 			{
 				MenuItemEditCopy.Enabled = (lTextBox.SelectionLength > 0);
 				MenuItemEditCut.Enabled = !lTextBox.ReadOnly && (lTextBox.SelectionLength > 0);
@@ -327,32 +324,21 @@ namespace AgentCharacterEditor
 				MenuItemEditCut.Text = MenuItemEditCut.Enabled ? AppResources.Resources.EditCutText : AppResources.Resources.EditCut;
 				MenuItemEditDelete.Text = MenuItemEditDelete.Enabled ? AppResources.Resources.EditDeleteText : AppResources.Resources.EditDelete;
 				MenuItemEditPaste.Text = MenuItemEditPaste.Enabled ? AppResources.Resources.EditPasteText : AppResources.Resources.EditPaste;
-			}
-			else
-			{
-				MenuItemEditCopy.Enabled = false;
-				MenuItemEditDelete.Enabled = false;
-				MenuItemEditCut.Enabled = false;
-				MenuItemEditPaste.Enabled = false;
-				MenuItemEditCopy.Text = AppResources.Resources.EditCopy;
-				MenuItemEditDelete.Text = AppResources.Resources.EditDelete;
-				MenuItemEditCut.Text = AppResources.Resources.EditCut;
-				MenuItemEditPaste.Text = AppResources.Resources.EditPaste;
-			}
 
-			ToolButtonEditCopy.Enabled = MenuItemEditCopy.Enabled;
-			ToolButtonEditCut.Enabled = MenuItemEditCut.Enabled;
-			ToolButtonEditPaste.Enabled = MenuItemEditPaste.Enabled;
-			ToolButtonEditDelete.Enabled = MenuItemEditDelete.Enabled;
-			ToolButtonEditCopy.Text = MenuItemEditCopy.Text.NoMenuPrefix ();
-			ToolButtonEditCut.Text = MenuItemEditCut.Text.NoMenuPrefix ();
-			ToolButtonEditPaste.Text = MenuItemEditPaste.Text.NoMenuPrefix ();
-			ToolButtonEditDelete.Text = MenuItemEditDelete.Text.NoMenuPrefix ();
+				ToolButtonEditCopy.Enabled = MenuItemEditCopy.Enabled;
+				ToolButtonEditCut.Enabled = MenuItemEditCut.Enabled;
+				ToolButtonEditPaste.Enabled = MenuItemEditPaste.Enabled;
+				ToolButtonEditDelete.Enabled = MenuItemEditDelete.Enabled;
+				ToolButtonEditCopy.Text = MenuItemEditCopy.Text.NoMenuPrefix ();
+				ToolButtonEditCut.Text = MenuItemEditCut.Text.NoMenuPrefix ();
+				ToolButtonEditPaste.Text = MenuItemEditPaste.Text.NoMenuPrefix ();
+				ToolButtonEditDelete.Text = MenuItemEditDelete.Text.NoMenuPrefix ();
 
-			MenuItemEditCopy.Text = MenuItemEditCopy.Text.FixMenuPrefix ();
-			MenuItemEditDelete.Text = MenuItemEditDelete.Text.FixMenuPrefix ();
-			MenuItemEditCut.Text = MenuItemEditCut.Text.FixMenuPrefix ();
-			MenuItemEditPaste.Text = MenuItemEditPaste.Text.FixMenuPrefix ();
+				MenuItemEditCopy.Text = MenuItemEditCopy.Text.FixMenuPrefix ();
+				MenuItemEditDelete.Text = MenuItemEditDelete.Text.FixMenuPrefix ();
+				MenuItemEditCut.Text = MenuItemEditCut.Text.FixMenuPrefix ();
+				MenuItemEditPaste.Text = MenuItemEditPaste.Text.FixMenuPrefix ();
+			}
 
 			if ((lTextBox != null) && lTextBox.Modified)
 			{
@@ -377,58 +363,6 @@ namespace AgentCharacterEditor
 				ToolButtonEditRedo.Enabled = MenuItemEditRedo.Enabled;
 				ToolButtonEditUndo.Text = Program.UndoManager.CanUndo ? String.Format (AppResources.Resources.EditUndoThis.NoMenuPrefix (), Program.UndoManager.UndoName) : AppResources.Resources.EditUndo.NoMenuPrefix ();
 				ToolButtonEditRedo.Text = Program.UndoManager.CanRedo ? String.Format (AppResources.Resources.EditRedoThis.NoMenuPrefix (), Program.UndoManager.RedoName) : AppResources.Resources.EditRedo.NoMenuPrefix ();
-			}
-		}
-
-		public void ShowEditState (Global.CanEditEventArgs pEditArgs, ToolStripItem pCopyItem, ToolStripItem pCutItem, ToolStripItem pPasteItem, ToolStripItem pDeleteItem)
-		{
-			if (!String.IsNullOrEmpty (pEditArgs.CopyObjectTitle))
-			{
-				pCopyItem.Enabled = true;
-				pCopyItem.Text = String.Format (AppResources.Resources.EditCopyThis, pEditArgs.CopyObjectTitle);
-			}
-			else
-			{
-				pCopyItem.Enabled = false;
-				pCopyItem.Text = AppResources.Resources.EditCopy;
-			}
-			if (!Program.FileIsReadOnly && !String.IsNullOrEmpty (pEditArgs.CutObjectTitle))
-			{
-				pCutItem.Enabled = true;
-				pCutItem.Text = String.Format (AppResources.Resources.EditCutThis, pEditArgs.CutObjectTitle);
-			}
-			else
-			{
-				pCutItem.Enabled = false;
-				pCutItem.Text = AppResources.Resources.EditCut;
-			}
-			if (!Program.FileIsReadOnly && !String.IsNullOrEmpty (pEditArgs.DeleteObjectTitle))
-			{
-				pDeleteItem.Enabled = true;
-				pDeleteItem.Text = String.Format (AppResources.Resources.EditDeleteThis, pEditArgs.DeleteObjectTitle);
-			}
-			else
-			{
-				pDeleteItem.Enabled = false;
-				pDeleteItem.Text = AppResources.Resources.EditDelete;
-			}
-			if (!Program.FileIsReadOnly && !String.IsNullOrEmpty (pEditArgs.PasteObjectTitle))
-			{
-				if (!String.IsNullOrEmpty (pEditArgs.PasteTypeTitle))
-				{
-					pPasteItem.Enabled = true;
-					pPasteItem.Text = String.Format (pEditArgs.PasteTypeTitle, pEditArgs.PasteObjectTitle);
-				}
-				else
-				{
-					pPasteItem.Enabled = false;
-					pPasteItem.Text = pEditArgs.PasteObjectTitle;
-				}
-			}
-			else
-			{
-				pPasteItem.Enabled = false;
-				pPasteItem.Text = AppResources.Resources.EditPaste;
 			}
 		}
 
@@ -779,7 +713,7 @@ namespace AgentCharacterEditor
 		///////////////////////////////////////////////////////////////////////////////
 		#region Context Menu Event Handlers
 
-		private void ContextMenuEdit_Opening (object sender, System.ComponentModel.CancelEventArgs e)
+		private void ContextMenuStub_Opening (object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			TextBox lTextBox = null;
 			Control lActive = GetActiveControl (ref lTextBox);
@@ -790,23 +724,20 @@ namespace AgentCharacterEditor
 			}
 			else if ((lActive != null) && lActive.RectangleToScreen (lActive.ClientRectangle).Contains (Control.MousePosition))
 			{
-				Global.ContextMenuEventArgs lEventArgs = new Global.ContextMenuEventArgs (ContextMenuEdit, lActive);
+				ContextMenuEdit lContextMenu = new ContextMenuEdit (components);
+				ToolStripMenuItem lCopyMenuItem;
+				ToolStripMenuItem lCutMenuItem;
+				ToolStripMenuItem lDeleteMenuItem;
+				ToolStripMenuItem lPasteMenuItem;
+
+				(lCopyMenuItem = lContextMenu.AddMenuItemClone (MenuItemEditCut)).Click += new EventHandler (MenuItemEditCut_Click);
+				(lCutMenuItem = lContextMenu.AddMenuItemClone (MenuItemEditCopy)).Click += new EventHandler (MenuItemEditCopy_Click);
+				(lDeleteMenuItem = lContextMenu.AddMenuItemClone (MenuItemEditPaste)).Click += new EventHandler (MenuItemEditPaste_Click);
+				(lPasteMenuItem = lContextMenu.AddMenuItemClone (MenuItemEditDelete)).Click += new EventHandler (MenuItemEditDelete_Click);
 
 				if (EditMenu != null)
 				{
-					List<ToolStripItem> lRemove = new List<ToolStripItem> ();
-
-					foreach (ToolStripItem lMenuItem in ContextMenuEdit.Items)
-					{
-						if (!Object.ReferenceEquals (lMenuItem, ContextItemEditCopy) && !Object.ReferenceEquals (lMenuItem, ContextItemEditCut) && !Object.ReferenceEquals (lMenuItem, ContextItemEditPaste) && !Object.ReferenceEquals (lMenuItem, ContextItemEditDelete))
-						{
-							lRemove.Add (lMenuItem);
-						}
-					}
-					foreach (ToolStripItem lMenuItem in lRemove)
-					{
-						ContextMenuEdit.Items.Remove (lMenuItem);
-					}
+					Global.ContextMenuEventArgs lEventArgs = new Global.ContextMenuEventArgs (lContextMenu, lActive);
 
 					try
 					{
@@ -815,50 +746,31 @@ namespace AgentCharacterEditor
 					catch
 					{
 					}
+
+					lEventArgs.UpdateMenuItems (lCopyMenuItem, lCutMenuItem, lDeleteMenuItem, lPasteMenuItem);
+				}
+				else if (CanEdit != null)
+				{
+					Global.CanEditEventArgs lEventArgs = new Global.CanEditEventArgs ();
+
+					try
+					{
+						CanEdit (this, lEventArgs);
+					}
+					catch
+					{
+					}
+
+					lEventArgs.UpdateMenuItems (lCopyMenuItem, lCutMenuItem, lDeleteMenuItem, lPasteMenuItem);
 				}
 
-				if (lEventArgs.IsUsed)
-				{
-					ShowEditState (lEventArgs, ContextItemEditCopy, ContextItemEditCut, ContextItemEditPaste, ContextItemEditDelete);
-				}
-				else
-				{
-					ShowEditState ();
-
-					ContextItemEditCopy.Enabled = MenuItemEditCopy.Enabled;
-					ContextItemEditCopy.Text = MenuItemEditCopy.Text;
-					ContextItemEditCut.Enabled = MenuItemEditCut.Enabled;
-					ContextItemEditCut.Text = MenuItemEditCut.Text;
-					ContextItemEditPaste.Enabled = MenuItemEditPaste.Enabled;
-					ContextItemEditPaste.Text = MenuItemEditPaste.Text;
-					ContextItemEditDelete.Enabled = MenuItemEditDelete.Enabled;
-					ContextItemEditDelete.Text = MenuItemEditDelete.Text;
-				}
+				lContextMenu.Show (Control.MousePosition);
+				e.Cancel = true;
 			}
 			else
 			{
 				e.Cancel = true;
 			}
-		}
-
-		private void ContextItemEditCopy_Click (object sender, EventArgs e)
-		{
-			MenuItemEditCopy_Click (sender, e);
-		}
-
-		private void ContextItemEditCut_Click (object sender, EventArgs e)
-		{
-			MenuItemEditCut_Click (sender, e);
-		}
-
-		private void ContextItemEditPaste_Click (object sender, EventArgs e)
-		{
-			MenuItemEditPaste_Click (sender, e);
-		}
-
-		private void ContextItemEditDelete_Click (object sender, EventArgs e)
-		{
-			MenuItemEditDelete_Click (sender, e);
 		}
 
 		#endregion

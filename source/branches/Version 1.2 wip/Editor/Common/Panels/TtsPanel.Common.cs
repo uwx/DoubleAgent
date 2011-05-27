@@ -105,7 +105,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowTtsProperties ()
 		{
-			Boolean lWasShowing = PushIsPanelShowing (true);
+			Boolean lWasFilling = PushIsPanelFilling (true);
 
 			CheckBoxUseTTS.IsEnabled = (CharacterFile != null) && !Program.FileIsReadOnly;
 			GroupBoxTTS.IsEnabled = !IsPanelEmpty;
@@ -146,7 +146,7 @@ namespace AgentCharacterEditor.Panels
 				TextBoxGender.Text = VoiceComboItem.GenderName (FileTts.Gender);
 			}
 
-			PopIsPanelShowing (lWasShowing);
+			PopIsPanelFilling (lWasFilling);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

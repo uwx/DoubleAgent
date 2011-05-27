@@ -408,9 +408,9 @@ namespace AgentCharacterEditor.Panels
 
 				if ((lPartNode != null) && (TreeViewMain.SelectedNode != lPartNode))
 				{
-					Boolean lWasShowing = PushIsPanelShowing (true);
+					Boolean lWasFilling = PushIsPanelFilling (true);
 					TreeViewMain.SelectedNode = lPartNode;
-					PopIsPanelShowing (lWasShowing);
+					PopIsPanelFilling (lWasFilling);
 					return true;
 				}
 			}
@@ -644,7 +644,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void TreeViewMain_AfterSelect (object sender, TreeViewEventArgs e)
 		{
-			if (!IsPanelShowing && (Navigate != null))
+			if (!IsPanelFilling && (Navigate != null))
 			{
 				try
 				{

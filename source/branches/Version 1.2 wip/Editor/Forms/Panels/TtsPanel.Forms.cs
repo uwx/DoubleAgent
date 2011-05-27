@@ -40,22 +40,22 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
-		protected override bool PushIsPanelShowing (bool pIsPanelShowing)
+		protected override bool PushIsPanelFilling (bool pIsPanelFilling)
 		{
-			if (pIsPanelShowing && !IsPanelShowing)
+			if (pIsPanelFilling && !IsPanelFilling)
 			{
 				SuspendLayout ();
 			}
-			return base.PushIsPanelShowing (pIsPanelShowing);
+			return base.PushIsPanelFilling (pIsPanelFilling);
 		}
 
-		protected override void PopIsPanelShowing (bool pWasPanelShowing)
+		protected override void PopIsPanelFilling (bool pWasPanelShowing)
 		{
-			if (!pWasPanelShowing && IsPanelShowing)
+			if (!pWasPanelShowing && IsPanelFilling)
 			{
 				ResumeLayout (true);
 			}
-			base.PopIsPanelShowing (pWasPanelShowing);
+			base.PopIsPanelFilling (pWasPanelShowing);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void CheckBoxUseTTS_CheckedChanged (object sender, EventArgs e)
 		{
-			if (!IsPanelShowing && (CharacterFile != null) && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && (CharacterFile != null) && !Program.FileIsReadOnly)
 			{
 				HandleEnabledChanged ();
 			}
@@ -91,7 +91,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ComboBoxName_SelectionChangeCommitted (object sender, EventArgs e)
 		{
-			if (!IsPanelShowing && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
 				HandleVoiceChanged ();
 			}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using AgentCharacterEditor.Global;
 using AgentCharacterEditor.Navigation;
 using AgentCharacterEditor.Panels;
@@ -190,33 +191,6 @@ namespace AgentCharacterEditor
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private void ShowFileInvalid (String pFilePath)
-		{
-			MessageBox.Show (String.Format (AppResources.Resources.MsgInvalidFile, pFilePath), Program.AssemblyTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
-		}
-
-		private void ShowFileSaveError (String pSaveAsPath)
-		{
-			MessageBox.Show (String.Format (AppResources.Resources.MsgFailedSaveAs, pSaveAsPath), Program.AssemblyTitle, MessageBoxButton.OK);
-		}
-
-		private void ShowFileSaveInvalid (String pSaveAsPath)
-		{
-			MessageBox.Show ("Not implemented", Program.AssemblyTitle, MessageBoxButton.OK);
-		}
-
-		private void ShowFileSaveAsInvalid (String pSaveAsPath)
-		{
-			MessageBox.Show (AppResources.Resources.MsgInvalidSaveAs, Program.AssemblyTitle, MessageBoxButton.OK);
-		}
-
-		private void ShowFileException (Exception pException)
-		{
-			MessageBox.Show (pException.Message);
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
 		private void ShowFileState ()
 		{
 			if (mCharacterFile == null)
@@ -239,6 +213,136 @@ namespace AgentCharacterEditor
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Navigation
+
+		private void FadeShowSelectedPanel (FilePartPanel pSelectedPanel)
+		{
+#if false
+			Storyboard lMainStoryboard = new Storyboard ();
+			Storyboard lPanelStoryboard;
+
+			if ((lPanelStoryboard = GetPanelFadeIn (pSelectedPanel)) != null)
+			{
+				lMainStoryboard.Children.Add (lPanelStoryboard);
+			}
+
+			if ((lPanelStoryboard = GetPanelFadeOut (PanelCharacter, pSelectedPanel)) != null)
+			{
+				lMainStoryboard.Children.Add (lPanelStoryboard);
+			}
+			if ((lPanelStoryboard = GetPanelFadeOut (PanelBalloon, pSelectedPanel)) != null)
+			{
+				lMainStoryboard.Children.Add (lPanelStoryboard);
+			}
+			if ((lPanelStoryboard = GetPanelFadeOut (PanelTts, pSelectedPanel)) != null)
+			{
+				lMainStoryboard.Children.Add (lPanelStoryboard);
+			}
+			if ((lPanelStoryboard = GetPanelFadeOut (PanelAnimations, pSelectedPanel)) != null)
+			{
+				lMainStoryboard.Children.Add (lPanelStoryboard);
+			}
+			if ((lPanelStoryboard = GetPanelFadeOut (PanelAnimation, pSelectedPanel)) != null)
+			{
+				lMainStoryboard.Children.Add (lPanelStoryboard);
+			}
+			if ((lPanelStoryboard = GetPanelFadeOut (PanelFrame, pSelectedPanel)) != null)
+			{
+				lMainStoryboard.Children.Add (lPanelStoryboard);
+			}
+			if ((lPanelStoryboard = GetPanelFadeOut (PanelBranching, pSelectedPanel)) != null)
+			{
+				lMainStoryboard.Children.Add (lPanelStoryboard);
+			}
+			if ((lPanelStoryboard = GetPanelFadeOut (PanelOverlays, pSelectedPanel)) != null)
+			{
+				lMainStoryboard.Children.Add (lPanelStoryboard);
+			}
+			if ((lPanelStoryboard = GetPanelFadeOut (PanelState, pSelectedPanel)) != null)
+			{
+				lMainStoryboard.Children.Add (lPanelStoryboard);
+			}
+
+			if ((lMainStoryboard.Children.Count > 0) && PanelFader.StartStoryboard (lMainStoryboard, this))
+			{
+				PutPanelFadeIn (lMainStoryboard, pSelectedPanel);
+				PutPanelFadeOut (lMainStoryboard, PanelCharacter, pSelectedPanel);
+				PutPanelFadeOut (lMainStoryboard, PanelBalloon, pSelectedPanel);
+				PutPanelFadeOut (lMainStoryboard, PanelTts, pSelectedPanel);
+				PutPanelFadeOut (lMainStoryboard, PanelAnimations, pSelectedPanel);
+				PutPanelFadeOut (lMainStoryboard, PanelAnimation, pSelectedPanel);
+				PutPanelFadeOut (lMainStoryboard, PanelFrame, pSelectedPanel);
+				PutPanelFadeOut (lMainStoryboard, PanelBranching, pSelectedPanel);
+				PutPanelFadeOut (lMainStoryboard, PanelOverlays, pSelectedPanel);
+				PutPanelFadeOut (lMainStoryboard, PanelState, pSelectedPanel);
+			}
+			else
+			{
+				ShowSelectedPanel (pSelectedPanel);
+			}
+#else
+			PanelCharacter.Fader.IsPanelVisible = Object.ReferenceEquals (PanelCharacter, pSelectedPanel);
+			PanelBalloon.Fader.IsPanelVisible = Object.ReferenceEquals (PanelBalloon, pSelectedPanel);
+			PanelTts.Fader.IsPanelVisible = Object.ReferenceEquals (PanelTts, pSelectedPanel);
+			PanelAnimations.Fader.IsPanelVisible = Object.ReferenceEquals (PanelAnimations, pSelectedPanel);
+			PanelAnimation.Fader.IsPanelVisible = Object.ReferenceEquals (PanelAnimation, pSelectedPanel);
+			PanelFrame.Fader.IsPanelVisible = Object.ReferenceEquals (PanelFrame, pSelectedPanel);
+			PanelBranching.Fader.IsPanelVisible = Object.ReferenceEquals (PanelBranching, pSelectedPanel);
+			PanelOverlays.Fader.IsPanelVisible = Object.ReferenceEquals (PanelOverlays, pSelectedPanel);
+			PanelState.Fader.IsPanelVisible = Object.ReferenceEquals (PanelState, pSelectedPanel);
+#endif
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		private Storyboard GetPanelFadeIn (FilePartPanel pPanel)
+		{
+			Storyboard lPanelStoryboard = null;
+
+			if ((pPanel != null) && (pPanel.Fader != null))
+			{
+				lPanelStoryboard = pPanel.Fader.GetPanelFadeIn ();
+			}
+			return lPanelStoryboard;
+		}
+
+		private Storyboard GetPanelFadeOut (FilePartPanel pPanel, FilePartPanel pSelectedPanel)
+		{
+			Storyboard lPanelStoryboard = null;
+
+			if ((pPanel != null) && (pPanel.Fader != null) && !Object.ReferenceEquals (pPanel, pSelectedPanel))
+			{
+				lPanelStoryboard = pPanel.Fader.GetPanelFadeOut ();
+			}
+			return lPanelStoryboard;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		private void PutPanelFadeIn (Storyboard pFadeIn, FilePartPanel pPanel)
+		{
+			if ((pFadeIn != null) && (pPanel != null) && (pPanel.Fader != null))
+			{
+				PanelFader.StopStoryboard (pPanel.Fader.FadeOutStoryboard, this);
+				pPanel.Fader.StopStoryboard (pPanel.Fader.FadeOutStoryboard);
+				pPanel.Fader.FadeOutStoryboard = null;
+				pPanel.Fader.FadeInStoryboard = pFadeIn;
+			}
+		}
+
+		private void PutPanelFadeOut (Storyboard pFadeOut, FilePartPanel pPanel, FilePartPanel pSelectedPanel)
+		{
+			if ((pFadeOut != null) && (pPanel != null) && (pPanel.Fader != null) && !Object.ReferenceEquals (pPanel, pSelectedPanel))
+			{
+				PanelFader.StopStoryboard (pPanel.Fader.FadeInStoryboard, this);
+				pPanel.Fader.StopStoryboard (pPanel.Fader.FadeInStoryboard);
+				pPanel.Fader.FadeInStoryboard = null;
+				pPanel.Fader.FadeOutStoryboard = pFadeOut;
+			}
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
 		#region Window Event Handlers
 
 		private void Window_Initialized (object sender, EventArgs e)
@@ -256,11 +360,11 @@ namespace AgentCharacterEditor
 
 				if (lOverflow != null)
 				{
-				    lOverflow.Visibility = Visibility.Collapsed;
+					lOverflow.Visibility = Visibility.Collapsed;
 				}
 				if (lThumb != null)
 				{
-				    lThumb.Visibility = Visibility.Collapsed;
+					lThumb.Visibility = Visibility.Collapsed;
 				}
 			}
 			catch
@@ -405,9 +509,21 @@ namespace AgentCharacterEditor
 		}
 		private void CanEditUndo (object sender, CanExecuteRoutedEventArgs e)
 		{
+			if (Program.UndoManager.CanUndo)
+			{
+				e.CanExecute = true;
+				e.PutUndoTitle (Program.UndoManager.UndoName);
+			}
+			else
+			{
+				e.CanExecute = false;
+				e.PutUndoTitle ();
+			}
+			e.Handled = true;
 		}
 		private void OnEditUndo (object sender, ExecutedRoutedEventArgs e)
 		{
+			HandleEditUndo ();
 		}
 
 		private void PreviewCanEditRedo (object sender, CanExecuteRoutedEventArgs e)
@@ -419,9 +535,21 @@ namespace AgentCharacterEditor
 		}
 		private void CanEditRedo (object sender, CanExecuteRoutedEventArgs e)
 		{
+			if (Program.UndoManager.CanRedo)
+			{
+				e.CanExecute = true;
+				e.PutRedoTitle (Program.UndoManager.RedoName);
+			}
+			else
+			{
+				e.CanExecute = false;
+				e.PutRedoTitle ();
+			}
+			e.Handled = true;
 		}
 		private void OnEditRedo (object sender, ExecutedRoutedEventArgs e)
 		{
+			HandleEditRedo ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

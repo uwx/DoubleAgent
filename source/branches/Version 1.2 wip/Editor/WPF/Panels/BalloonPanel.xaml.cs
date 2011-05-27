@@ -28,67 +28,26 @@ namespace AgentCharacterEditor.Panels
 {
 	public partial class BalloonPanel : AgentCharacterEditor.Panels.FilePartPanel
 	{
+		///////////////////////////////////////////////////////////////////////////////
+		#region Initialization
+
 		public BalloonPanel ()
 		{
 			InitializeComponent ();
+
+			NumericNumLines.Minimum = (decimal)FileBalloon.MinLines;
+			NumericNumLines.Maximum = (decimal)FileBalloon.MaxLines;
+			NumericCharsPerLine.Minimum = (decimal)FileBalloon.MinPerLine;
+			NumericCharsPerLine.Maximum = (decimal)FileBalloon.MaxPerLine;
 		}
 
+		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
-		private void ShowBalloonStyle ()
-		{
-			Boolean lWasShowing = PushIsPanelShowing (true);
-
-			if (IsPanelEmpty)
-			{
-				TextBoxCharsPerLine.Clear ();
-				TextBoxNumLines.Clear ();
-				RadioButtonSizeToText.IsChecked = false;
-				RadioButtonNumLines.IsChecked = false;
-				CheckBoxAutoHide.IsChecked = false;
-				CheckBoxAutoPace.IsChecked = false;
-			}
-			else
-			{
-				TextBoxCharsPerLine.Text = FileBalloon.PerLine.ToString ();
-				TextBoxNumLines.Text = FileBalloon.Lines.ToString ();
-
-				if ((CharacterFile.Header.Style & CharacterStyle.SizeToText) != CharacterStyle.None)
-				{
-					RadioButtonSizeToText.IsChecked = true;
-					RadioButtonNumLines.IsChecked = false;
-					TextBoxNumLines.IsEnabled = false;
-				}
-				else
-				{
-					RadioButtonSizeToText.IsChecked = false;
-					RadioButtonNumLines.IsChecked = true;
-					TextBoxNumLines.IsEnabled = !Program.FileIsReadOnly;
-				}
-
-				CheckBoxAutoHide.IsChecked = ((CharacterFile.Header.Style & CharacterStyle.NoAutoHide) == CharacterStyle.None);
-				CheckBoxAutoPace.IsChecked = ((CharacterFile.Header.Style & CharacterStyle.NoAutoPace) == CharacterStyle.None);
-			}
-
-			LabelCharsPerLine.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			TextBoxCharsPerLine.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			RadioButtonSizeToText.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			RadioButtonNumLines.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			CheckBoxAutoHide.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			CheckBoxAutoPace.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-
-			TextBoxCharsPerLine.IsModified = false;
-			TextBoxNumLines.IsModified = false;
-
-			PopIsPanelShowing (lWasShowing);
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
 		private void ShowBalloonFont ()
 		{
-			Boolean lWasShowing = PushIsPanelShowing (true);
+			Boolean lWasFilling = PushIsPanelFilling (true);
 
 			if (IsPanelEmpty)
 			{
@@ -134,14 +93,14 @@ namespace AgentCharacterEditor.Panels
 				ButtonBalloonFont.IsEnabled = !Program.FileIsReadOnly;
 			}
 
-			PopIsPanelShowing (lWasShowing);
+			PopIsPanelFilling (lWasFilling);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void ShowBalloonColors ()
 		{
-			Boolean lWasShowing = PushIsPanelShowing (true);
+			Boolean lWasFilling = PushIsPanelFilling (true);
 
 			if (IsPanelEmpty)
 			{
@@ -170,13 +129,29 @@ namespace AgentCharacterEditor.Panels
 			LabelBalloonBackgroundSample.IsEnabled = !IsPanelEmpty;
 			LabelBalloonBorderSample.IsEnabled = !IsPanelEmpty;
 
-			PopIsPanelShowing (lWasShowing);
+			PopIsPanelFilling (lWasFilling);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void ShowBalloonPreview ()
 		{
+			Boolean lWasFilling = PushIsPanelFilling (true);
+
+			if (IsPanelEmpty)
+			{
+				GroupBoxBalloonPreview.IsEnabled = false;
+				WordBalloonPreview.CharacterFile = null;
+			}
+			else
+			{
+				GroupBoxBalloonPreview.IsEnabled = true;
+				WordBalloonPreview.CharacterFile = CharacterFile;
+			}
+			WordBalloonPreview.InvalidateArrange ();
+			WordBalloonPreview.InvalidateVisual ();
+
+			PopIsPanelFilling (lWasFilling);
 		}
 
 		#endregion
@@ -185,7 +160,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void CheckBoxWordBalloon_Checked (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelShowing && (CharacterFile != null) && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && (CharacterFile != null) && !Program.FileIsReadOnly)
 			{
 				HandleEnabledChanged ();
 			}
@@ -193,55 +168,29 @@ namespace AgentCharacterEditor.Panels
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private void TextBoxCharsPerLine_IsModifiedChanged (object sender, RoutedEventArgs e)
+		private void NumericCharsPerLine_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelShowing && TextBoxCharsPerLine.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && NumericCharsPerLine.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
-
-				try
-				{
-					lUpdate.PerLine = UInt16.Parse (TextBoxCharsPerLine.Text);
-				}
-				catch
-				{
-				}
-				PushIsPanelShowing (true);
-				TextBoxCharsPerLine.Text = lUpdate.PerLine.ToString ();
-				PopIsPanelShowing (false);
-
-				UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+				HandleCharsPerLineChanged ();
 			}
-			TextBoxCharsPerLine.IsModified = false;
+			NumericCharsPerLine.IsModified = false;
 		}
 
-		private void TextBoxNumLines_IsModifiedChanged (object sender, RoutedEventArgs e)
+		private void NumericNumLines_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelShowing && TextBoxNumLines.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && NumericNumLines.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
-
-				try
-				{
-					lUpdate.Lines = UInt16.Parse (TextBoxNumLines.Text);
-				}
-				catch
-				{
-				}
-				PushIsPanelShowing (true);
-				TextBoxNumLines.Text = lUpdate.Lines.ToString ();
-				PopIsPanelShowing (false);
-
-				UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+				HandleNumLinesChanged ();
 			}
-			TextBoxNumLines.IsModified = false;
+			NumericNumLines.IsModified = false;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void RadioButtonNumLines_Checked (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelShowing && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
 				HandleSizeToTextChanged ();
 			}
@@ -249,7 +198,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void RadioButtonSizeToText_Checked (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelShowing && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
 				HandleSizeToTextChanged ();
 			}
@@ -257,7 +206,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void CheckBoxAutoHide_Checked (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelShowing && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
 				HandleAutoHideChanged ();
 			}
@@ -265,7 +214,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void CheckBoxAutoPace_Checked (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelShowing && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
 				HandleAutoPaceChanged ();
 			}
@@ -275,7 +224,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ButtonBalloonFont_Click (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelShowing && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
 				UpdateFont ();
 			}
@@ -283,7 +232,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ButtonBalloonForeground_Click (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelShowing && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
 				UpdateForeground ();
 			}
@@ -291,7 +240,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ButtonBalloonBackground_Click (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelShowing && (!IsPanelEmpty) && (!Program.FileIsReadOnly))
+			if (!IsPanelFilling && (!IsPanelEmpty) && (!Program.FileIsReadOnly))
 			{
 				UpdateBackground ();
 			}
@@ -299,7 +248,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ButtonBalloonBorder_Click (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelShowing && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
 				UpdateBorder ();
 			}

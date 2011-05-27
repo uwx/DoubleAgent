@@ -6,7 +6,7 @@
 		WindowStyle="SingleBorderWindow"
 		MinWidth="600"
 		MinHeight="400"
-		Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
+		Background="{StaticResource BackgroundLighterBrush}"
 		Foreground="{StaticResource {x:Static SystemColors.WindowTextBrushKey}}"
 		UseLayoutRounding="True"
 		mc:Ignorable="d"
@@ -116,7 +116,8 @@
 									Width="Auto"
 									Height="Auto"
 									HorizontalAlignment="Stretch"
-									VerticalAlignment="Stretch" />
+									VerticalAlignment="Stretch"
+									Visibility="Hidden" />
 			<panels:AnimationPanel Grid.Column="2"
 								   x:Name="PanelAnimation"
 								   Width="Auto"
@@ -224,12 +225,12 @@
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"></Image>
 				</Button>
+				<Separator />
 				<Button Name="ButtonEditUndo"
 						Command="Undo"
 						CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
 						Focusable="False"
-						IsTabStop="False"
-						Margin="4,0,0,0">
+						IsTabStop="False">
 					<Image Source="{StaticResource ImgEditUndo}"
 						   Stretch="None"
 						   Width="Auto"
@@ -302,7 +303,6 @@
 		</ToolBarTray>
 		<Menu Height="Auto"
 			  HorizontalAlignment="Stretch"
-			  Margin="0"
 			  Name="MainMenu"
 			  VerticalAlignment="Top"
 			  Width="Auto">
@@ -364,6 +364,7 @@
 			</MenuItem>
 			<MenuItem Header="_Edit"
 					  Name="MenuItemEdit"
+					  Template="{DynamicResource {ComponentResourceKey TypeInTargetAssembly={x:Type MenuItem}, ResourceId=TopLevelHeaderTemplateKey}}"
 					  IsTabStop="False">
 				<MenuItem Name="MenuItemEditUndo"
 						  Header="_Undo"

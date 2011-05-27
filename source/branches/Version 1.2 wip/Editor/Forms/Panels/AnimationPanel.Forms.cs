@@ -20,7 +20,6 @@
 /////////////////////////////////////////////////////////////////////////////
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 using AgentCharacterEditor.Global;
 using AgentCharacterEditor.Navigation;
@@ -40,7 +39,7 @@ namespace AgentCharacterEditor.Panels
 
 		private int mReturnItemNone = -1;
 		private int mReturnItemExit = -1;
-		private List<ListViewItem> mStateItems;
+		private List<ListViewItemCommon> mStateItems;
 
 		public AnimationPanel ()
 		{
@@ -289,8 +288,8 @@ namespace AgentCharacterEditor.Panels
 
 		private void InitAnimationStates ()
 		{
-			mStateItems = new List<ListViewItem> ();
-			foreach (ListViewItem lListItem in ListViewStates.Items)
+			mStateItems = new List<ListViewItemCommon> ();
+			foreach (ListViewItemCommon lListItem in ListViewStates.Items)
 			{
 				mStateItems.Add (lListItem);
 			}
@@ -313,7 +312,7 @@ namespace AgentCharacterEditor.Panels
 
 			ListViewStates.Items.Clear ();
 
-			foreach (ListViewItem lListItem in mStateItems)
+			foreach (ListViewItemCommon lListItem in mStateItems)
 			{
 				String[] lStateAnimations = null;
 
@@ -460,7 +459,7 @@ namespace AgentCharacterEditor.Panels
 				return GetSelectedFrame (FramesView.Frames.SelectedIndex);
 			}
 		}
-		private FileAnimationFrame GetSelectedFrame (ListViewItem pSelectedItem)
+		private FileAnimationFrame GetSelectedFrame (ListViewItemCommon pSelectedItem)
 		{
 			if (pSelectedItem != null)
 			{
@@ -869,7 +868,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelEmpty && (Navigate != null))
 			{
-				ListViewItem lItem = ListViewStates.SelectedItem;
+				ListViewItemCommon lItem = ListViewStates.SelectedItem as ListViewItemCommon;
 
 				if (lItem != null)
 				{

@@ -7,6 +7,20 @@
 					  mc:Ignorable="d"
 					  d:DesignHeight="600"
 					  d:DesignWidth="600">
+	<Control.CommandBindings>
+		<CommandBinding Command="Copy"
+						CanExecute="CanEditCopy"
+						Executed="OnEditCopy" />
+		<CommandBinding Command="Cut"
+						CanExecute="CanEditCut"
+						Executed="OnEditCut" />
+		<CommandBinding Command="Delete"
+						CanExecute="CanEditDelete"
+						Executed="OnEditDelete" />
+		<CommandBinding Command="Paste"
+						CanExecute="CanEditPaste"
+						Executed="OnEditPaste" />
+	</Control.CommandBindings>
 	<Grid Style="{StaticResource PanelMainGrid}">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
@@ -37,7 +51,14 @@
 				  Style="{StaticResource PanelGroupBox}">
 			<Grid>
 				<ListView Name="ListViewAnimations"
-						  Style="{StaticResource PanelListView}" />
+						  Style="{StaticResource PanelListView}"
+						  SelectionMode="Single">
+					<ListView.ItemsPanel>
+						<ItemsPanelTemplate>
+							<WrapPanel Orientation="Vertical" />
+						</ItemsPanelTemplate>
+					</ListView.ItemsPanel>
+				</ListView>
 			</Grid>
 		</GroupBox>
 	</Grid>

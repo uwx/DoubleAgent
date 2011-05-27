@@ -117,8 +117,9 @@
     <Compile Include="About\AboutBox.Forms.Designer.cs">
       <DependentUpon>AboutBox.Forms.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\EditEvents.Forms.cs">
-      <SubType>Code</SubType>
+    <Compile Include="Classes\Classes.Forms.cs" />
+    <Compile Include="Classes\EditMenu.Forms.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="..\Common\Classes\Extensions.Common.cs">
       <Link>Classes\Extensions.Common.cs</Link>
@@ -152,6 +153,30 @@
     </Compile>
     <Compile Include="..\Common\Panels\TtsPanel.Common.cs">
       <Link>Panels\TtsPanel.Common.cs</Link>
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="..\Common\Panels\StatePanel.Common.cs">
+      <Link>Panels\StatePanel.Common.cs</Link>
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="..\Common\Panels\AnimationsPanel.Common.cs">
+      <Link>Panels\AnimationsPanel.Common.cs</Link>
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="..\Common\Panels\AnimationPanel.Common.cs">
+      <Link>Panels\AnimationPanel.Common.cs</Link>
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="..\Common\Panels\FramePanel.Common.cs">
+      <Link>Panels\FramePanel.Common.cs</Link>
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="..\Common\Panels\BranchingPanel.Common.cs">
+      <Link>Panels\BranchingPanel.Common.cs</Link>
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="..\Common\Panels\OverlayPanel.Common.cs">
+      <Link>Panels\OverlayPanel.Common.cs</Link>
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Previews\AnimationPreview.Designer.cs">
@@ -195,11 +220,11 @@
     <Compile Include="Previews\FramesListView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Previews\BalloonPreview.cs">
+    <Compile Include="Previews\BalloonPreview.Forms.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Previews\BalloonPreview.Designer.cs">
-      <DependentUpon>BalloonPreview.cs</DependentUpon>
+    <Compile Include="Previews\BalloonPreview.Forms.Designer.cs">
+      <DependentUpon>BalloonPreview.Forms.cs</DependentUpon>
     </Compile>
     <Compile Include="..\Common\Classes\FileDialogEx.Common.cs">
       <Link>Classes\FileDialogEx.Common.cs</Link>
@@ -324,8 +349,8 @@
     <EmbeddedResource Include="Panels\AnimationsPanel.Forms.resx">
       <DependentUpon>AnimationsPanel.Forms.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Previews\BalloonPreview.resx">
-      <DependentUpon>BalloonPreview.cs</DependentUpon>
+    <EmbeddedResource Include="Previews\BalloonPreview.Forms.resx">
+      <DependentUpon>BalloonPreview.Forms.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Panels\BranchingPanel.Forms.resx">
       <DependentUpon>BranchingPanel.Forms.cs</DependentUpon>

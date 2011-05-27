@@ -86,6 +86,25 @@ namespace AgentCharacterEditor
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Message Boxes
+
+		public static void ShowInfoMessage (String pMessage)
+		{
+			MessageBox.Show (pMessage, Program.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+		}
+
+		public static void ShowWarningMessage (String pMessage)
+		{
+			MessageBox.Show (pMessage, Program.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+		}
+
+		public static void ShowErrorMessage (String pMessage)
+		{
+			MessageBox.Show (pMessage, Program.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
 		#region Assembly Attribute Accessors
 
 		static public String AssemblyTitle

@@ -405,9 +405,9 @@ namespace AgentCharacterEditor.Panels
 
 				if ((lPartItem != null) && (TreeViewMain.SelectedItem != lPartItem))
 				{
-					Boolean lWasShowing = PushIsPanelShowing (true);
+					Boolean lWasFilling = PushIsPanelFilling (true);
 					lPartItem.IsSelected = true;
-					PopIsPanelShowing (lWasShowing);
+					PopIsPanelFilling (lWasFilling);
 					return true;
 				}
 			}
@@ -432,6 +432,25 @@ namespace AgentCharacterEditor.Panels
 			{
 				ResolvePart lSelectedPart = SelectedPart;
 				Object lSelectedObject = (lSelectedPart == null) ? null : lSelectedPart.Part;
+
+				if (pEventArgs.GetPasteObject () is FileAnimation)
+				{
+					if ((lSelectedPart is ResolveAnimation) && (lSelectedObject is FileAnimation))
+					{
+						Program.MainWindow.PanelAnimations.PasteSelectedAnimation (lSelectedObject as FileAnimation, pEventArgs.GetPasteObject () as FileAnimation);
+						return true;
+					}
+					else if ((lSelectedPart is ResolveCharacter) && ((lSelectedPart as ResolveCharacter).Scope == ResolveCharacter.ScopeType.ScopeAnimations))
+					{
+						Program.MainWindow.PanelAnimations.PasteSelectedAnimation (null, pEventArgs.GetPasteObject () as FileAnimation);
+						return true;
+					}
+				}
+				else if ((pEventArgs.GetPasteObject () is FileState) && (lSelectedPart is ResolveState))
+				{
+					Program.MainWindow.PanelState.PasteStateAnimations ((lSelectedPart as ResolveState).StateName, (pEventArgs.GetPasteObject () as FileState).AnimationNames);
+					return true;
+				}
 			}
 			return false;
 		}
@@ -464,7 +483,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void TreeViewMain_SelectedItemChanged (object sender, RoutedPropertyChangedEventArgs<object> e)
 		{
-			if (!IsPanelShowing && (Navigate != null))
+			if (!IsPanelFilling && (Navigate != null))
 			{
 				try
 				{

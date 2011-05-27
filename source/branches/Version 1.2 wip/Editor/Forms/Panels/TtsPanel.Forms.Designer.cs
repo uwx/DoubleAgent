@@ -49,18 +49,18 @@ namespace AgentCharacterEditor.Panels
 		private void InitializeComponent ()
 		{
 			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
-			this.CheckBoxUseTTS = new DoubleAgent.CheckBoxEx();
-			this.GroupBoxTTS = new DoubleAgent.GroupBoxEx();
+			this.CheckBoxUseTTS = new DoubleAgent.CheckBoxCompat();
+			this.GroupBoxTTS = new DoubleAgent.GroupBoxCompat();
 			this.TextBoxGender = new DoubleAgent.TextBoxEx();
-			this.LabelGender = new DoubleAgent.LabelEx();
+			this.LabelGender = new DoubleAgent.LabelCompat();
 			this.TextBoxLanguage = new DoubleAgent.TextBoxEx();
-			this.LabelLanguage = new DoubleAgent.LabelEx();
+			this.LabelLanguage = new DoubleAgent.LabelCompat();
 			this.TextBoxVendor = new DoubleAgent.TextBoxEx();
-			this.LabelVendor = new DoubleAgent.LabelEx();
+			this.LabelVendor = new DoubleAgent.LabelCompat();
 			this.TextBoxTTSModeID = new DoubleAgent.TextBoxEx();
-			this.LabelModeID = new DoubleAgent.LabelEx();
-			this.ComboBoxName = new DoubleAgent.ComboBoxEx();
-			this.LabelName = new DoubleAgent.LabelEx();
+			this.LabelModeID = new DoubleAgent.LabelCompat();
+			this.ComboBoxName = new DoubleAgent.ComboBoxCompat();
+			this.LabelName = new DoubleAgent.LabelCompat();
 			this.PanelMain.SuspendLayout();
 			this.GroupBoxTTS.SuspendLayout();
 			this.SuspendLayout();
@@ -250,17 +250,17 @@ namespace AgentCharacterEditor.Panels
 		#endregion
 
 		private System.Windows.Forms.TableLayoutPanel PanelMain;
-		private DoubleAgent.CheckBoxEx CheckBoxUseTTS;
-		private DoubleAgent.GroupBoxEx GroupBoxTTS;
+		private DoubleAgent.CheckBoxCompat CheckBoxUseTTS;
+		private DoubleAgent.GroupBoxCompat GroupBoxTTS;
 		private DoubleAgent.TextBoxEx TextBoxTTSModeID;
-		private DoubleAgent.LabelEx LabelModeID;
-		private DoubleAgent.ComboBoxEx ComboBoxName;
-		private DoubleAgent.LabelEx LabelName;
+		private DoubleAgent.LabelCompat LabelModeID;
+		private DoubleAgent.ComboBoxCompat ComboBoxName;
+		private DoubleAgent.LabelCompat LabelName;
 		private DoubleAgent.TextBoxEx TextBoxVendor;
-		private DoubleAgent.LabelEx LabelVendor;
+		private DoubleAgent.LabelCompat LabelVendor;
 		private DoubleAgent.TextBoxEx TextBoxGender;
-		private DoubleAgent.LabelEx LabelGender;
+		private DoubleAgent.LabelCompat LabelGender;
 		private DoubleAgent.TextBoxEx TextBoxLanguage;
-		private DoubleAgent.LabelEx LabelLanguage;
+		private DoubleAgent.LabelCompat LabelLanguage;
 	}
 }

@@ -31,12 +31,13 @@ namespace DoubleAgent
 	/// A <see cref="System.Windows.Forms.NumericUpDown"/> with a bit of extra functionality.
 	/// </summary>
 	/// <remarks>Validation is triggered after the mouse wheel is used and after the up/down buttons are used.</remarks>
-	public class NumericUpDownEx : System.Windows.Forms.NumericUpDown
+	public partial class NumericUpDownEx : System.Windows.Forms.NumericUpDown
 	{
+		///////////////////////////////////////////////////////////////////////////////
+		#region Initialization
+
 		private const int WM_KEYDOWN = 0x0100;
 		private TextBox mTextBox = null;
-		private Color mDefaultBackColor = SystemColors.Window;
-		private Color mHighlightBackColor = Color.Pink;
 		private Timer mWheelTimer = null;
 
 		/// <summary>
@@ -44,9 +45,15 @@ namespace DoubleAgent
 		/// </summary>
 		public NumericUpDownEx ()
 		{
-			this.ValidateOnReturnKey = true;
+			this.DefaultBackColor = SystemColors.Window;
+			this.HighlightBackColor = Color.Pink;
 			this.MouseWheelSingle = true;
+			this.ValidateOnReturnKey = true;
 		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region Properties
 
 		/// <summary>
 		/// The <see cref="System.Windows.Forms.TextBox"/> contained by this control.
@@ -59,6 +66,21 @@ namespace DoubleAgent
 			get
 			{
 				return mTextBox;
+			}
+		}
+
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public Boolean Modified
+		{
+			get
+			{
+				return TextBox.Modified;
+			}
+			set
+			{
+				TextBox.Modified = value;
 			}
 		}
 
@@ -92,14 +114,8 @@ namespace DoubleAgent
 		/// <seealso cref="HighlightBackColor"/>
 		public new System.Drawing.Color DefaultBackColor
 		{
-			get
-			{
-				return mDefaultBackColor;
-			}
-			set
-			{
-				mDefaultBackColor = value;
-			}
+			get;
+			set;
 		}
 
 		/// <summary>
@@ -110,14 +126,8 @@ namespace DoubleAgent
 		/// <seealso cref="DefaultBackColor"/>
 		public System.Drawing.Color HighlightBackColor
 		{
-			get
-			{
-				return mHighlightBackColor;
-			}
-			set
-			{
-				mHighlightBackColor = value;
-			}
+			get;
+			set;
 		}
 
 		/// <summary>
@@ -192,7 +202,9 @@ namespace DoubleAgent
 			}
 		}
 
+		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Implementation
 
 		protected override bool ProcessCmdKey (ref Message pMessage, Keys pKeyData)
 		{
@@ -342,5 +354,7 @@ namespace DoubleAgent
 			System.Diagnostics.Debug.Print ("UpDownButtons_UpDown {0:B} {1:D}", lControl.Capture, e.ButtonID);
 #endif
 		}
+
+		#endregion
 	}
 }

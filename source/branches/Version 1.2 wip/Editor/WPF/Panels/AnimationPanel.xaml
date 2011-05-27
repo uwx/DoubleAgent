@@ -4,10 +4,24 @@
 					  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 					  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 					  xmlns:panels="clr-namespace:AgentCharacterEditor.Panels"
+					  xmlns:custom="clr-namespace:DoubleAgent"
 					  mc:Ignorable="d"
 					  d:DesignHeight="600"
-					  d:DesignWidth="600"
-					  xmlns:my="clr-namespace:DoubleAgent">
+					  d:DesignWidth="600">
+	<Control.CommandBindings>
+		<CommandBinding Command="Copy"
+						CanExecute="CanEditCopy"
+						Executed="OnEditCopy" />
+		<CommandBinding Command="Cut"
+						CanExecute="CanEditCut"
+						Executed="OnEditCut" />
+		<CommandBinding Command="Delete"
+						CanExecute="CanEditDelete"
+						Executed="OnEditDelete" />
+		<CommandBinding Command="Paste"
+						CanExecute="CanEditPaste"
+						Executed="OnEditPaste" />
+	</Control.CommandBindings>
 	<Grid Style="{StaticResource PanelMainGrid}">
 		<Grid.RowDefinitions>
 			<RowDefinition  Height="Auto" />
@@ -36,11 +50,11 @@
 						   VerticalAlignment="Center"
 						   Style="{StaticResource PanelLabel}"
 						   Width="100" />
-					<my:TextBoxEx Grid.Column="1"
-								  HorizontalAlignment="Stretch"
-								  x:Name="TextBoxName"
-								  VerticalAlignment="Center"
-								  Style="{StaticResource PanelTextBox}" />
+					<custom:TextBoxEx Grid.Column="1"
+									  HorizontalAlignment="Stretch"
+									  x:Name="TextBoxName"
+									  VerticalAlignment="Center"
+									  Style="{StaticResource PanelTextBox}" />
 					<Label Content="Return animation"
 						   HorizontalAlignment="Left"
 						   Name="LabelReturn"
@@ -72,7 +86,14 @@
 						  VerticalAlignment="Stretch"
 						  Width="120"
 						  MinHeight="70"
-						  Style="{StaticResource PanelListView}" />
+						  SelectionMode="Single"
+						  Style="{StaticResource PanelListView}">
+					<ListView.ItemsPanel>
+						<ItemsPanelTemplate>
+							<WrapPanel Orientation="Vertical" />
+						</ItemsPanelTemplate>
+					</ListView.ItemsPanel>
+				</ListView>
 			</Grid>
 		</GroupBox>
 		<GroupBox Grid.Row="1"
@@ -218,13 +239,12 @@
 						   Name="LabelDuration"
 						   VerticalAlignment="Center"
 						   Style="{StaticResource PanelLabel}" />
-					<my:TextBoxEx Grid.Column="2"
-								  HorizontalAlignment="Right"
-								  x:Name="TextBoxFrameDuration"
-								  VerticalAlignment="Center"
-								  Width="60"
-								  MaxLines="1"
-								  Style="{StaticResource PanelTextBox}" />
+					<custom:TextBoxEx Grid.Column="2"
+									  HorizontalAlignment="Right"
+									  x:Name="TextBoxFrameDuration"
+									  VerticalAlignment="Center"
+									  Width="60"
+									  Style="{StaticResource PanelTextBox}" />
 					<Label Content="(1/100 sec)"
 						   Grid.Column="3"
 						   HorizontalAlignment="Right"

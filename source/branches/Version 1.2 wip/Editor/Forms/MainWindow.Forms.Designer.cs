@@ -68,8 +68,8 @@ namespace AgentCharacterEditor
 			this.PanelBranching = new AgentCharacterEditor.Panels.BranchingPanel();
 			this.PanelOverlays = new AgentCharacterEditor.Panels.OverlayPanel();
 			this.ToolStripNavigation = new DoubleAgent.ToolStripEx();
-			this.ToolButtonNavigateBack = new System.Windows.Forms.ToolStripButton();
-			this.ToolButtonNavigateForward = new System.Windows.Forms.ToolStripButton();
+			this.ToolButtonNavigateBack = new DoubleAgent.ToolStripButtonCompat();
+			this.ToolButtonNavigateForward = new DoubleAgent.ToolStripButtonCompat();
 			this.MenuStripMain = new System.Windows.Forms.MenuStrip();
 			this.MenuItemFile = new System.Windows.Forms.ToolStripMenuItem();
 			this.MenuItemFileNew = new System.Windows.Forms.ToolStripMenuItem();
@@ -88,21 +88,17 @@ namespace AgentCharacterEditor
 			this.MenuItemEditDelete = new System.Windows.Forms.ToolStripMenuItem();
 			this.MenuItemHelp = new System.Windows.Forms.ToolStripMenuItem();
 			this.MenuItemHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
-			this.ContextMenuEdit = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.ContextItemEditCut = new System.Windows.Forms.ToolStripMenuItem();
-			this.ContextItemEditCopy = new System.Windows.Forms.ToolStripMenuItem();
-			this.ContextItemEditPaste = new System.Windows.Forms.ToolStripMenuItem();
-			this.ContextItemEditDelete = new System.Windows.Forms.ToolStripMenuItem();
+			this.ContextMenuStub = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.ToolStripMain = new DoubleAgent.ToolStripEx();
-			this.ToolButtonFileNew = new System.Windows.Forms.ToolStripButton();
-			this.ToolButtonFileOpen = new System.Windows.Forms.ToolStripButton();
-			this.ToolButtonFileSave = new System.Windows.Forms.ToolStripButton();
-			this.ToolButtonEditUndo = new System.Windows.Forms.ToolStripButton();
-			this.ToolButtonEditRedo = new System.Windows.Forms.ToolStripButton();
-			this.ToolButtonEditCut = new System.Windows.Forms.ToolStripButton();
-			this.ToolButtonEditCopy = new System.Windows.Forms.ToolStripButton();
-			this.ToolButtonEditPaste = new System.Windows.Forms.ToolStripButton();
-			this.ToolButtonEditDelete = new System.Windows.Forms.ToolStripButton();
+			this.ToolButtonFileNew = new DoubleAgent.ToolStripButtonCompat();
+			this.ToolButtonFileOpen = new DoubleAgent.ToolStripButtonCompat();
+			this.ToolButtonFileSave = new DoubleAgent.ToolStripButtonCompat();
+			this.ToolButtonEditUndo = new DoubleAgent.ToolStripButtonCompat();
+			this.ToolButtonEditRedo = new DoubleAgent.ToolStripButtonCompat();
+			this.ToolButtonEditCut = new DoubleAgent.ToolStripButtonCompat();
+			this.ToolButtonEditCopy = new DoubleAgent.ToolStripButtonCompat();
+			this.ToolButtonEditPaste = new DoubleAgent.ToolStripButtonCompat();
+			this.ToolButtonEditDelete = new DoubleAgent.ToolStripButtonCompat();
 			MenuSepFile1 = new System.Windows.Forms.ToolStripSeparator();
 			MenuSepFile2 = new System.Windows.Forms.ToolStripSeparator();
 			MenuSepFile3 = new System.Windows.Forms.ToolStripSeparator();
@@ -117,29 +113,28 @@ namespace AgentCharacterEditor
 			this.SplitContainerMain.SuspendLayout();
 			this.ToolStripNavigation.SuspendLayout();
 			this.MenuStripMain.SuspendLayout();
-			this.ContextMenuEdit.SuspendLayout();
 			this.ToolStripMain.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// MenuSepFile1
 			// 
 			MenuSepFile1.Name = "MenuSepFile1";
-			MenuSepFile1.Size = new System.Drawing.Size(173, 6);
+			MenuSepFile1.Size = new System.Drawing.Size(193, 6);
 			// 
 			// MenuSepFile2
 			// 
 			MenuSepFile2.Name = "MenuSepFile2";
-			MenuSepFile2.Size = new System.Drawing.Size(173, 6);
+			MenuSepFile2.Size = new System.Drawing.Size(193, 6);
 			// 
 			// MenuSepFile3
 			// 
 			MenuSepFile3.Name = "MenuSepFile3";
-			MenuSepFile3.Size = new System.Drawing.Size(173, 6);
+			MenuSepFile3.Size = new System.Drawing.Size(193, 6);
 			// 
 			// MenuSepEdit1
 			// 
 			MenuSepEdit1.Name = "MenuSepEdit1";
-			MenuSepEdit1.Size = new System.Drawing.Size(162, 6);
+			MenuSepEdit1.Size = new System.Drawing.Size(178, 6);
 			// 
 			// ToolStripSeparator1
 			// 
@@ -263,7 +258,6 @@ namespace AgentCharacterEditor
 			this.PanelAnimations.Size = new System.Drawing.Size(758, 480);
 			this.PanelAnimations.TabIndex = 0;
 			this.PanelAnimations.Visible = false;
-			this.PanelAnimations.Navigate += new AgentCharacterEditor.Navigation.NavigationEventHandler(this.OnNavigate);
 			// 
 			// PanelAnimation
 			// 
@@ -287,7 +281,6 @@ namespace AgentCharacterEditor
 			this.PanelState.Size = new System.Drawing.Size(758, 480);
 			this.PanelState.TabIndex = 0;
 			this.PanelState.Visible = false;
-			this.PanelState.Navigate += new AgentCharacterEditor.Navigation.NavigationEventHandler(this.OnNavigate);
 			// 
 			// PanelFrame
 			// 
@@ -368,7 +361,7 @@ namespace AgentCharacterEditor
 			this.MenuStripMain.Location = new System.Drawing.Point(0, 0);
 			this.MenuStripMain.Name = "MenuStripMain";
 			this.MenuStripMain.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-			this.MenuStripMain.Size = new System.Drawing.Size(982, 28);
+			this.MenuStripMain.Size = new System.Drawing.Size(982, 31);
 			this.MenuStripMain.TabIndex = 1;
 			this.MenuStripMain.Text = "MenuStripMain";
 			// 
@@ -386,7 +379,7 @@ namespace AgentCharacterEditor
             MenuSepFile3,
             this.MenuItemExit});
 			this.MenuItemFile.Name = "MenuItemFile";
-			this.MenuItemFile.Size = new System.Drawing.Size(44, 24);
+			this.MenuItemFile.Size = new System.Drawing.Size(47, 27);
 			this.MenuItemFile.Text = "&File";
 			// 
 			// MenuItemFileNew
@@ -395,7 +388,7 @@ namespace AgentCharacterEditor
 			this.MenuItemFileNew.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.MenuItemFileNew.Name = "MenuItemFileNew";
 			this.MenuItemFileNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-			this.MenuItemFileNew.Size = new System.Drawing.Size(176, 24);
+			this.MenuItemFileNew.Size = new System.Drawing.Size(196, 28);
 			this.MenuItemFileNew.Text = "&New";
 			this.MenuItemFileNew.Click += new System.EventHandler(this.MenuItemFileNew_Click);
 			// 
@@ -405,7 +398,7 @@ namespace AgentCharacterEditor
 			this.MenuItemFileOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.MenuItemFileOpen.Name = "MenuItemFileOpen";
 			this.MenuItemFileOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-			this.MenuItemFileOpen.Size = new System.Drawing.Size(176, 24);
+			this.MenuItemFileOpen.Size = new System.Drawing.Size(196, 28);
 			this.MenuItemFileOpen.Text = "&Open...";
 			this.MenuItemFileOpen.Click += new System.EventHandler(this.MenuItemFileOpen_Click);
 			// 
@@ -416,7 +409,7 @@ namespace AgentCharacterEditor
 			this.MenuItemFileSave.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.MenuItemFileSave.Name = "MenuItemFileSave";
 			this.MenuItemFileSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.MenuItemFileSave.Size = new System.Drawing.Size(176, 24);
+			this.MenuItemFileSave.Size = new System.Drawing.Size(196, 28);
 			this.MenuItemFileSave.Text = "&Save";
 			this.MenuItemFileSave.Click += new System.EventHandler(this.MenuItemFileSave_Click);
 			// 
@@ -425,7 +418,7 @@ namespace AgentCharacterEditor
 			this.MenuItemFileSaveAs.Enabled = false;
 			this.MenuItemFileSaveAs.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileSave;
 			this.MenuItemFileSaveAs.Name = "MenuItemFileSaveAs";
-			this.MenuItemFileSaveAs.Size = new System.Drawing.Size(176, 24);
+			this.MenuItemFileSaveAs.Size = new System.Drawing.Size(196, 28);
 			this.MenuItemFileSaveAs.Text = "Save &As...";
 			this.MenuItemFileSaveAs.Click += new System.EventHandler(this.MenuItemFileSaveAs_Click);
 			// 
@@ -436,7 +429,7 @@ namespace AgentCharacterEditor
 			this.MenuItemFilePrint.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.MenuItemFilePrint.Name = "MenuItemFilePrint";
 			this.MenuItemFilePrint.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-			this.MenuItemFilePrint.Size = new System.Drawing.Size(176, 24);
+			this.MenuItemFilePrint.Size = new System.Drawing.Size(196, 28);
 			this.MenuItemFilePrint.Text = "&Print";
 			this.MenuItemFilePrint.Click += new System.EventHandler(this.MenuItemFilePrint_Click);
 			// 
@@ -446,14 +439,14 @@ namespace AgentCharacterEditor
 			this.MenuItemFilePrintPreview.Image = global::AgentCharacterEditor.Properties.Resources.ImgFilePrintPreview;
 			this.MenuItemFilePrintPreview.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.MenuItemFilePrintPreview.Name = "MenuItemFilePrintPreview";
-			this.MenuItemFilePrintPreview.Size = new System.Drawing.Size(176, 24);
+			this.MenuItemFilePrintPreview.Size = new System.Drawing.Size(196, 28);
 			this.MenuItemFilePrintPreview.Text = "Print Pre&view";
 			this.MenuItemFilePrintPreview.Click += new System.EventHandler(this.MenuItemFilePrintPreview_Click);
 			// 
 			// MenuItemExit
 			// 
 			this.MenuItemExit.Name = "MenuItemExit";
-			this.MenuItemExit.Size = new System.Drawing.Size(176, 24);
+			this.MenuItemExit.Size = new System.Drawing.Size(196, 28);
 			this.MenuItemExit.Text = "E&xit";
 			this.MenuItemExit.Click += new System.EventHandler(this.MenuItemExit_Click);
 			// 
@@ -468,7 +461,7 @@ namespace AgentCharacterEditor
             this.MenuItemEditPaste,
             this.MenuItemEditDelete});
 			this.MenuItemEdit.Name = "MenuItemEdit";
-			this.MenuItemEdit.Size = new System.Drawing.Size(47, 24);
+			this.MenuItemEdit.Size = new System.Drawing.Size(51, 27);
 			this.MenuItemEdit.Text = "&Edit";
 			// 
 			// MenuItemEditUndo
@@ -477,7 +470,7 @@ namespace AgentCharacterEditor
 			this.MenuItemEditUndo.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditUndo;
 			this.MenuItemEditUndo.Name = "MenuItemEditUndo";
 			this.MenuItemEditUndo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-			this.MenuItemEditUndo.Size = new System.Drawing.Size(165, 24);
+			this.MenuItemEditUndo.Size = new System.Drawing.Size(181, 28);
 			this.MenuItemEditUndo.Text = "&Undo";
 			this.MenuItemEditUndo.Click += new System.EventHandler(this.MenuItemEditUndo_Click);
 			// 
@@ -487,7 +480,7 @@ namespace AgentCharacterEditor
 			this.MenuItemEditRedo.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditRedo;
 			this.MenuItemEditRedo.Name = "MenuItemEditRedo";
 			this.MenuItemEditRedo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-			this.MenuItemEditRedo.Size = new System.Drawing.Size(165, 24);
+			this.MenuItemEditRedo.Size = new System.Drawing.Size(181, 28);
 			this.MenuItemEditRedo.Text = "&Redo";
 			this.MenuItemEditRedo.Click += new System.EventHandler(this.MenuItemEditRedo_Click);
 			// 
@@ -498,7 +491,7 @@ namespace AgentCharacterEditor
 			this.MenuItemEditCut.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.MenuItemEditCut.Name = "MenuItemEditCut";
 			this.MenuItemEditCut.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-			this.MenuItemEditCut.Size = new System.Drawing.Size(165, 24);
+			this.MenuItemEditCut.Size = new System.Drawing.Size(181, 28);
 			this.MenuItemEditCut.Text = "Cu&t";
 			this.MenuItemEditCut.Click += new System.EventHandler(this.MenuItemEditCut_Click);
 			// 
@@ -509,7 +502,7 @@ namespace AgentCharacterEditor
 			this.MenuItemEditCopy.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.MenuItemEditCopy.Name = "MenuItemEditCopy";
 			this.MenuItemEditCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-			this.MenuItemEditCopy.Size = new System.Drawing.Size(165, 24);
+			this.MenuItemEditCopy.Size = new System.Drawing.Size(181, 28);
 			this.MenuItemEditCopy.Text = "&Copy";
 			this.MenuItemEditCopy.Click += new System.EventHandler(this.MenuItemEditCopy_Click);
 			// 
@@ -520,7 +513,7 @@ namespace AgentCharacterEditor
 			this.MenuItemEditPaste.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.MenuItemEditPaste.Name = "MenuItemEditPaste";
 			this.MenuItemEditPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-			this.MenuItemEditPaste.Size = new System.Drawing.Size(165, 24);
+			this.MenuItemEditPaste.Size = new System.Drawing.Size(181, 28);
 			this.MenuItemEditPaste.Text = "&Paste";
 			this.MenuItemEditPaste.Click += new System.EventHandler(this.MenuItemEditPaste_Click);
 			// 
@@ -531,7 +524,7 @@ namespace AgentCharacterEditor
 			this.MenuItemEditDelete.Name = "MenuItemEditDelete";
 			this.MenuItemEditDelete.ShortcutKeyDisplayString = "";
 			this.MenuItemEditDelete.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-			this.MenuItemEditDelete.Size = new System.Drawing.Size(165, 24);
+			this.MenuItemEditDelete.Size = new System.Drawing.Size(181, 28);
 			this.MenuItemEditDelete.Text = "&Delete";
 			this.MenuItemEditDelete.Click += new System.EventHandler(this.MenuItemEditDelete_Click);
 			// 
@@ -540,71 +533,22 @@ namespace AgentCharacterEditor
 			this.MenuItemHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuItemHelpAbout});
 			this.MenuItemHelp.Name = "MenuItemHelp";
-			this.MenuItemHelp.Size = new System.Drawing.Size(53, 24);
+			this.MenuItemHelp.Size = new System.Drawing.Size(57, 27);
 			this.MenuItemHelp.Text = "&Help";
 			// 
 			// MenuItemHelpAbout
 			// 
 			this.MenuItemHelpAbout.Image = global::AgentCharacterEditor.Properties.Resources.ImgHelpAbout;
 			this.MenuItemHelpAbout.Name = "MenuItemHelpAbout";
-			this.MenuItemHelpAbout.Size = new System.Drawing.Size(128, 24);
+			this.MenuItemHelpAbout.Size = new System.Drawing.Size(139, 28);
 			this.MenuItemHelpAbout.Text = "&About...";
 			this.MenuItemHelpAbout.Click += new System.EventHandler(this.MenuItemHelpAbout_Click);
 			// 
-			// ContextMenuEdit
+			// ContextMenuStub
 			// 
-			this.ContextMenuEdit.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ContextItemEditCut,
-            this.ContextItemEditCopy,
-            this.ContextItemEditPaste,
-            this.ContextItemEditDelete});
-			this.ContextMenuEdit.Name = "ContextMenuEdit";
-			this.ContextMenuEdit.Size = new System.Drawing.Size(165, 100);
-			this.ContextMenuEdit.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuEdit_Opening);
-			// 
-			// ContextItemEditCut
-			// 
-			this.ContextItemEditCut.Enabled = false;
-			this.ContextItemEditCut.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditCut;
-			this.ContextItemEditCut.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ContextItemEditCut.Name = "ContextItemEditCut";
-			this.ContextItemEditCut.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-			this.ContextItemEditCut.Size = new System.Drawing.Size(164, 24);
-			this.ContextItemEditCut.Text = "Cu&t";
-			this.ContextItemEditCut.Click += new System.EventHandler(this.ContextItemEditCut_Click);
-			// 
-			// ContextItemEditCopy
-			// 
-			this.ContextItemEditCopy.Enabled = false;
-			this.ContextItemEditCopy.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditCopy;
-			this.ContextItemEditCopy.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ContextItemEditCopy.Name = "ContextItemEditCopy";
-			this.ContextItemEditCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-			this.ContextItemEditCopy.Size = new System.Drawing.Size(164, 24);
-			this.ContextItemEditCopy.Text = "&Copy";
-			this.ContextItemEditCopy.Click += new System.EventHandler(this.ContextItemEditCopy_Click);
-			// 
-			// ContextItemEditPaste
-			// 
-			this.ContextItemEditPaste.Enabled = false;
-			this.ContextItemEditPaste.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditPaste;
-			this.ContextItemEditPaste.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ContextItemEditPaste.Name = "ContextItemEditPaste";
-			this.ContextItemEditPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-			this.ContextItemEditPaste.Size = new System.Drawing.Size(164, 24);
-			this.ContextItemEditPaste.Text = "&Paste";
-			this.ContextItemEditPaste.Click += new System.EventHandler(this.ContextItemEditPaste_Click);
-			// 
-			// ContextItemEditDelete
-			// 
-			this.ContextItemEditDelete.Enabled = false;
-			this.ContextItemEditDelete.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditDelete;
-			this.ContextItemEditDelete.Name = "ContextItemEditDelete";
-			this.ContextItemEditDelete.ShortcutKeyDisplayString = "";
-			this.ContextItemEditDelete.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-			this.ContextItemEditDelete.Size = new System.Drawing.Size(164, 24);
-			this.ContextItemEditDelete.Text = "&Delete";
-			this.ContextItemEditDelete.Click += new System.EventHandler(this.ContextItemEditDelete_Click);
+			this.ContextMenuStub.Name = "ContextMenuStub";
+			this.ContextMenuStub.Size = new System.Drawing.Size(153, 26);
+			this.ContextMenuStub.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStub_Opening);
 			// 
 			// ToolStripMain
 			// 
@@ -628,7 +572,7 @@ namespace AgentCharacterEditor
 			this.ToolStripMain.Location = new System.Drawing.Point(70, 28);
 			this.ToolStripMain.Name = "ToolStripMain";
 			this.ToolStripMain.Padding = new System.Windows.Forms.Padding(8, 2, 8, 2);
-			this.ToolStripMain.Size = new System.Drawing.Size(277, 31);
+			this.ToolStripMain.Size = new System.Drawing.Size(246, 31);
 			this.ToolStripMain.TabIndex = 1;
 			// 
 			// ToolButtonFileNew
@@ -737,19 +681,19 @@ namespace AgentCharacterEditor
 			this.ToolButtonEditDelete.Text = "Delete";
 			this.ToolButtonEditDelete.Click += new System.EventHandler(this.ToolButtonEditDelete_Click);
 			// 
-			// MainForm
+			// MainWindow
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
 			this.ClientSize = new System.Drawing.Size(982, 555);
-			this.ContextMenuStrip = this.ContextMenuEdit;
+			this.ContextMenuStrip = this.ContextMenuStub;
 			this.Controls.Add(this.MenuStripMain);
 			this.Controls.Add(this.ToolStripMain);
 			this.Controls.Add(this.ToolStripContainerMain);
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.MinimumSize = new System.Drawing.Size(600, 400);
-			this.Name = "MainForm";
+			this.Name = "MainWindow";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
 			this.Text = "Double Agent Character Editor";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
@@ -767,7 +711,6 @@ namespace AgentCharacterEditor
 			this.ToolStripNavigation.PerformLayout();
 			this.MenuStripMain.ResumeLayout(false);
 			this.MenuStripMain.PerformLayout();
-			this.ContextMenuEdit.ResumeLayout(false);
 			this.ToolStripMain.ResumeLayout(false);
 			this.ToolStripMain.PerformLayout();
 			this.ResumeLayout(false);
@@ -779,15 +722,15 @@ namespace AgentCharacterEditor
 
 		private System.Windows.Forms.ToolStripContainer ToolStripContainerMain;
 		private DoubleAgent.ToolStripEx ToolStripMain;
-		private System.Windows.Forms.ToolStripButton ToolButtonFileNew;
-		private System.Windows.Forms.ToolStripButton ToolButtonFileOpen;
-		private System.Windows.Forms.ToolStripButton ToolButtonFileSave;
-		private System.Windows.Forms.ToolStripButton ToolButtonEditCut;
-		private System.Windows.Forms.ToolStripButton ToolButtonEditCopy;
-		private System.Windows.Forms.ToolStripButton ToolButtonEditPaste;
-		private System.Windows.Forms.ToolStripButton ToolButtonEditDelete;
-		private System.Windows.Forms.ToolStripButton ToolButtonEditUndo;
-		private System.Windows.Forms.ToolStripButton ToolButtonEditRedo;
+		private DoubleAgent.ToolStripButtonCompat ToolButtonFileNew;
+		private DoubleAgent.ToolStripButtonCompat ToolButtonFileOpen;
+		private DoubleAgent.ToolStripButtonCompat ToolButtonFileSave;
+		private DoubleAgent.ToolStripButtonCompat ToolButtonEditCut;
+		private DoubleAgent.ToolStripButtonCompat ToolButtonEditCopy;
+		private DoubleAgent.ToolStripButtonCompat ToolButtonEditPaste;
+		private DoubleAgent.ToolStripButtonCompat ToolButtonEditDelete;
+		private DoubleAgent.ToolStripButtonCompat ToolButtonEditUndo;
+		private DoubleAgent.ToolStripButtonCompat ToolButtonEditRedo;
 		private System.Windows.Forms.SplitContainer SplitContainerMain;
 		private System.Windows.Forms.MenuStrip MenuStripMain;
 		private System.Windows.Forms.ToolStripMenuItem MenuItemFile;
@@ -816,15 +759,11 @@ namespace AgentCharacterEditor
 		public AgentCharacterEditor.Panels.FramePanel PanelFrame;
 		public AgentCharacterEditor.Panels.BranchingPanel PanelBranching;
 		public AgentCharacterEditor.Panels.OverlayPanel PanelOverlays;
-		public System.Windows.Forms.ContextMenuStrip ContextMenuEdit;
-		public System.Windows.Forms.ToolStripMenuItem ContextItemEditCut;
-		public System.Windows.Forms.ToolStripMenuItem ContextItemEditCopy;
-		public System.Windows.Forms.ToolStripMenuItem ContextItemEditPaste;
-		public System.Windows.Forms.ToolStripMenuItem ContextItemEditDelete;
+		public System.Windows.Forms.ContextMenuStrip ContextMenuStub;
 		private AgentCharacterEditor.Panels.PartsTreePanel PanelPartsTree;
 		private DoubleAgent.ToolStripEx ToolStripNavigation;
-		private System.Windows.Forms.ToolStripButton ToolButtonNavigateBack;
-		private System.Windows.Forms.ToolStripButton ToolButtonNavigateForward;
+		private DoubleAgent.ToolStripButtonCompat ToolButtonNavigateBack;
+		private DoubleAgent.ToolStripButtonCompat ToolButtonNavigateForward;
 	}
 }
 

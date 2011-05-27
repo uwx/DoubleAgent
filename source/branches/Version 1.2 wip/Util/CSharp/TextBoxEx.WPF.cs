@@ -11,13 +11,6 @@ namespace DoubleAgent
 	/// </summary>
 	public class TextBoxEx : System.Windows.Controls.TextBox
 	{
-		public TextBoxEx ()
-		{
-			TextChanged += new TextChangedEventHandler (TextBoxEx_TextChanged);
-			LostFocus += new RoutedEventHandler (TextBoxEx_LostFocus);
-			KeyDown += new System.Windows.Input.KeyEventHandler (TextBoxEx_KeyDown);
-		}
-
 		///////////////////////////////////////////////////////////////////////////////
 		#region IsModified Property
 
@@ -75,19 +68,20 @@ namespace DoubleAgent
 		///////////////////////////////////////////////////////////////////////////////
 		#region Event Handlers
 
-		private Boolean HasChanged
+		protected Boolean HasChanged
 		{
-			get;
-			set;
+			get; set;
 		}
 
-		private void TextBoxEx_TextChanged (object sender, TextChangedEventArgs e)
+		protected override void OnTextChanged (TextChangedEventArgs e)
 		{
+			base.OnTextChanged (e);
 			HasChanged = true;
 		}
 
-		private void TextBoxEx_LostFocus (object sender, RoutedEventArgs e)
+		protected override void OnLostFocus (RoutedEventArgs e)
 		{
+			base.OnLostFocus (e);
 			if (HasChanged && !IsModified)
 			{
 				IsModified = true;
@@ -95,8 +89,9 @@ namespace DoubleAgent
 			HasChanged = false;
 		}
 
-		void TextBoxEx_KeyDown (object sender, System.Windows.Input.KeyEventArgs e)
+		protected override void OnKeyDown (KeyEventArgs e)
 		{
+			base.OnKeyDown (e);
 			if ((e.Key == Key.Return) && !AcceptsReturn)
 			{
 				if (HasChanged && !IsModified)

@@ -52,68 +52,6 @@ namespace DoubleAgent
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Item counts
-
-		/// <summary>
-		/// Updates the <see cref="System.Windows.Forms.ListView.Items"/> collection to contain a specific number of items.
-		/// </summary>
-		/// <param name="pItemCount">The number of items required.</param>
-		/// <returns>True if items were added or removed.</returns>
-		public Boolean UpdateItemCount (int pItemCount)
-		{
-			Boolean lRet = false;
-
-			while (Items.Count > pItemCount)
-			{
-				Items.RemoveAt (Items.Count - 1);
-				lRet = true;
-			}
-			while (Items.Count < pItemCount)
-			{
-				Items.Add ("");
-				lRet = true;
-			}
-			return lRet;
-		}
-
-		/// <summary>
-		/// Updates a <see cref="ListViewItem"/> to contain a subitem for each column.
-		/// </summary>
-		/// <param name="pItem">The <see cref="ListViewItem"/> to update.</param>
-		/// <seealso cref="UpdateSubItemCount (ListViewItem, int)"/>
-		public Boolean UpdateSubItemCount (ListViewItem pItem)
-		{
-			return UpdateSubItemCount (pItem, Columns.Count);
-		}
-
-		/// <summary>
-		/// Updates the <see cref="ListViewItem.SubItems"/> collection to contain a specific number of subitems.
-		/// </summary>
-		/// <param name="pItem">The <see cref="ListViewItem"/> to update.</param>
-		/// <param name="pSubItemCount">The number of subitems required.</param>
-		/// <returns>True if subitems were added or removed.</returns>
-		static public Boolean UpdateSubItemCount (ListViewItem pItem, int pSubItemCount)
-		{
-			Boolean lRet = false;
-
-			if (pItem != null)
-			{
-				while (pItem.SubItems.Count > pSubItemCount)
-				{
-					pItem.SubItems.RemoveAt (pItem.SubItems.Count - 1);
-					lRet = true;
-				}
-				while (pItem.SubItems.Count < pSubItemCount)
-				{
-					pItem.SubItems.Add ("");
-					lRet = true;
-				}
-			}
-			return lRet;
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
 		#region Single selection
 
 		/// <summary>

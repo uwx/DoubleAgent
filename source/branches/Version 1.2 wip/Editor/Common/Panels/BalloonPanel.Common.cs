@@ -66,7 +66,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowBalloonProperties ()
 		{
-			Boolean lWasShowing = PushIsPanelShowing (true);
+			Boolean lWasFilling = PushIsPanelFilling (true);
 
 			CheckBoxWordBalloon.IsEnabled = (CharacterFile != null) && (!Program.FileIsReadOnly);
 			GroupBoxBalloonDisplay.IsEnabled = !IsPanelEmpty;
@@ -85,7 +85,57 @@ namespace AgentCharacterEditor.Panels
 			ShowBalloonFont ();
 			ShowBalloonPreview ();
 
-			PopIsPanelShowing (lWasShowing);
+			PopIsPanelFilling (lWasFilling);
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		private void ShowBalloonStyle ()
+		{
+			Boolean lWasFilling = PushIsPanelFilling (true);
+
+			if (IsPanelEmpty)
+			{
+				NumericCharsPerLine.Clear ();
+				NumericNumLines.Clear ();
+				RadioButtonSizeToText.IsChecked = false;
+				RadioButtonNumLines.IsChecked = false;
+				CheckBoxAutoHide.IsChecked = false;
+				CheckBoxAutoPace.IsChecked = false;
+			}
+			else
+			{
+				NumericCharsPerLine.Value = FileBalloon.PerLine;
+				NumericNumLines.Value = FileBalloon.Lines;
+
+				if ((CharacterFile.Header.Style & CharacterStyle.SizeToText) != CharacterStyle.None)
+				{
+					RadioButtonSizeToText.IsChecked = true;
+					RadioButtonNumLines.IsChecked = false;
+					NumericNumLines.IsEnabled = false;
+				}
+				else
+				{
+					RadioButtonSizeToText.IsChecked = false;
+					RadioButtonNumLines.IsChecked = true;
+					NumericNumLines.IsEnabled = !Program.FileIsReadOnly;
+				}
+
+				CheckBoxAutoHide.IsChecked = ((CharacterFile.Header.Style & CharacterStyle.NoAutoHide) == CharacterStyle.None);
+				CheckBoxAutoPace.IsChecked = ((CharacterFile.Header.Style & CharacterStyle.NoAutoPace) == CharacterStyle.None);
+			}
+
+			LabelCharsPerLine.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+			NumericCharsPerLine.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+			RadioButtonSizeToText.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+			RadioButtonNumLines.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+			CheckBoxAutoHide.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+			CheckBoxAutoPace.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+
+			NumericCharsPerLine.IsModified = false;
+			NumericNumLines.IsModified = false;
+
+			PopIsPanelFilling (lWasFilling);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -144,6 +194,34 @@ namespace AgentCharacterEditor.Panels
 			else
 			{
 				lUpdate.CharacterStyle &= ~CharacterStyle.Balloon;
+			}
+			UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+		}
+
+		protected void HandleCharsPerLineChanged ()
+		{
+			UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
+
+			lUpdate.PerLine = (UInt16)NumericCharsPerLine.Value;
+			if (NumericCharsPerLine.Value != (Decimal)lUpdate.PerLine)
+			{
+				PushIsPanelFilling (true);
+				NumericCharsPerLine.Value = (Decimal)lUpdate.PerLine;
+				PopIsPanelFilling (false);
+			}
+			UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+		}
+
+		protected void HandleNumLinesChanged ()
+		{
+			UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
+
+			lUpdate.Lines = (UInt16)NumericNumLines.Value;
+			if (NumericNumLines.Value != (Decimal)lUpdate.Lines)
+			{
+				PushIsPanelFilling (true);
+				NumericNumLines.Value = (Decimal)lUpdate.Lines;
+				PopIsPanelFilling (false);
 			}
 			UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
 		}

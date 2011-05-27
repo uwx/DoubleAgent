@@ -50,7 +50,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			this.LabelName = new System.Windows.Forms.Label();
 			this.TextBoxName = new DoubleAgent.TextBoxEx();
-			this.GroupBoxAnimations = new DoubleAgent.GroupBoxEx();
+			this.GroupBoxAnimations = new DoubleAgent.GroupBoxCompat();
 			this.ListViewAnimations = new DoubleAgent.ListViewEx();
 			this.Column1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.PanelTop = new System.Windows.Forms.Panel();
@@ -170,7 +170,7 @@ namespace AgentCharacterEditor.Panels
 		private DoubleAgent.TextBoxEx TextBoxName;
 		private DoubleAgent.ListViewEx ListViewAnimations;
 		private System.Windows.Forms.ColumnHeader Column1;
-		private DoubleAgent.GroupBoxEx GroupBoxAnimations;
+		private DoubleAgent.GroupBoxCompat GroupBoxAnimations;
 		private System.Windows.Forms.Panel PanelTop;
 		private System.Windows.Forms.TableLayoutPanel PanelMain;
 	}

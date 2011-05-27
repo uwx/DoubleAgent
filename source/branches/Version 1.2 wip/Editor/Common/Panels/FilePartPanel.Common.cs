@@ -35,7 +35,7 @@ namespace AgentCharacterEditor.Panels
 
 		protected virtual void InitializeCommon ()
 		{
-			IsPanelShowing = false;
+			IsPanelFilling = false;
 
 			if (Program.MainWindow != null)
 			{
@@ -51,7 +51,7 @@ namespace AgentCharacterEditor.Panels
 
 		protected virtual void HandleVisibleChanged ()
 		{
-			IsPanelShowing = false;
+			IsPanelFilling = false;
 
 			if (Program.MainWindow != null)
 			{
@@ -156,16 +156,16 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
-		protected virtual Boolean PushIsPanelShowing (Boolean pIsPanelShowing)
+		protected virtual Boolean PushIsPanelFilling (Boolean pIsPanelFilling)
 		{
-			Boolean lRet = IsPanelShowing;
-			IsPanelShowing = pIsPanelShowing;
+			Boolean lRet = IsPanelFilling;
+			IsPanelFilling = pIsPanelFilling;
 			return lRet;
 		}
 
-		protected virtual void PopIsPanelShowing (Boolean pWasPanelShowing)
+		protected virtual void PopIsPanelFilling (Boolean pWasPanelShowing)
 		{
-			IsPanelShowing = pWasPanelShowing;
+			IsPanelFilling = pWasPanelShowing;
 		}
 
 		#endregion

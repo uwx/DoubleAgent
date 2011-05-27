@@ -50,7 +50,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			this.LabelFrameName = new System.Windows.Forms.Label();
 			this.TextBoxFrameName = new DoubleAgent.TextBoxEx();
-			this.GroupBoxBranching = new DoubleAgent.GroupBoxEx();
+			this.GroupBoxBranching = new DoubleAgent.GroupBoxCompat();
 			this.FlowLayoutNot = new System.Windows.Forms.FlowLayoutPanel();
 			this.NumericBranchingNot = new DoubleAgent.NumericUpDownEx();
 			this.LabelBranchingNot = new System.Windows.Forms.Label();
@@ -66,9 +66,9 @@ namespace AgentCharacterEditor.Panels
 			this.NumericBranching0 = new DoubleAgent.NumericUpDownEx();
 			this.LabelBranching1 = new System.Windows.Forms.Label();
 			this.NumericTarget0 = new DoubleAgent.NumericUpDownEx();
-			this.GroupBoxExit = new DoubleAgent.GroupBoxEx();
+			this.GroupBoxExit = new DoubleAgent.GroupBoxCompat();
 			this.FlowLayoutExit = new System.Windows.Forms.FlowLayoutPanel();
-			this.CheckBoxExit = new DoubleAgent.CheckBoxEx();
+			this.CheckBoxExit = new DoubleAgent.CheckBoxCompat();
 			this.NumericTargetExit = new DoubleAgent.NumericUpDownEx();
 			this.GroupBoxBranching.SuspendLayout();
 			this.FlowLayoutNot.SuspendLayout();
@@ -459,8 +459,8 @@ namespace AgentCharacterEditor.Panels
 
 		private System.Windows.Forms.Label LabelFrameName;
 		private DoubleAgent.TextBoxEx TextBoxFrameName;
-		private DoubleAgent.GroupBoxEx GroupBoxBranching;
-		private DoubleAgent.GroupBoxEx GroupBoxExit;
+		private DoubleAgent.GroupBoxCompat GroupBoxBranching;
+		private DoubleAgent.GroupBoxCompat GroupBoxExit;
 		private System.Windows.Forms.Label LabelBranchingNot;
 		private System.Windows.Forms.Label LabelBranching3;
 		private System.Windows.Forms.Label LabelBranching2;
@@ -477,7 +477,7 @@ namespace AgentCharacterEditor.Panels
 		private System.Windows.Forms.FlowLayoutPanel FlowLayout3;
 		private System.Windows.Forms.FlowLayoutPanel FlowLayout2;
 		private System.Windows.Forms.FlowLayoutPanel FlowLayoutExit;
-		private DoubleAgent.CheckBoxEx CheckBoxExit;
+		private DoubleAgent.CheckBoxCompat CheckBoxExit;
 		private DoubleAgent.NumericUpDownEx NumericTargetExit;
 
 	}

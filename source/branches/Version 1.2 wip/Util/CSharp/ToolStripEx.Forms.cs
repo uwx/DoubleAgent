@@ -76,7 +76,7 @@ namespace DoubleAgent
 
 	///////////////////////////////////////////////////////////////////////////////
 
-	public class ToolStripButtonEx : ToolStripButton
+	public partial class ToolStripButtonEx : ToolStripButton
 	{
 		public ToolStripButtonEx ()
 		{

@@ -97,7 +97,8 @@
     <Compile Include="About\LicenseBox.xaml.cs">
       <DependentUpon>LicenseBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Classes\EditEvents.WPF.cs" />
+    <Compile Include="Classes\Classes.WPF.cs" />
+    <Compile Include="Classes\EditMenu.WPF.cs" />
     <Compile Include="Classes\Extensions.WPF.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -122,6 +123,14 @@
     </Compile>
     <Compile Include="..\..\Util\CSharp\TextBoxEx.WPF.cs">
       <Link>Classes\TextBoxEx.WPF.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\..\Util\CSharp\NumericUpDown.WPF.cs">
+      <Link>Classes\NumericUpDown.WPF.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\PanelFader.WPF.cs">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Panels\AnimationPanel.xaml.cs">
       <DependentUpon>AnimationPanel.xaml</DependentUpon>
@@ -161,6 +170,30 @@
       <Link>Panels\TtsPanel.Common.cs</Link>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="..\Common\Panels\StatePanel.Common.cs">
+      <Link>Panels\StatePanel.Common.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\Common\Panels\AnimationsPanel.Common.cs">
+      <Link>Panels\AnimationsPanel.Common.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\Common\Panels\AnimationPanel.Common.cs">
+      <Link>Panels\AnimationPanel.Common.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\Common\Panels\FramePanel.Common.cs">
+      <Link>Panels\FramePanel.Common.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\Common\Panels\BranchingPanel.Common.cs">
+      <Link>Panels\BranchingPanel.Common.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\Common\Panels\OverlayPanel.Common.cs">
+      <Link>Panels\OverlayPanel.Common.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Panels\FramePanel.xaml.cs">
       <DependentUpon>FramePanel.xaml</DependentUpon>
     </Compile>
@@ -176,6 +209,7 @@
     <Compile Include="Panels\TtsPanel.xaml.cs">
       <DependentUpon>TtsPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Previews\BalloonPreview.WPF.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -448,6 +482,7 @@
       <Link>Resources\DoubleAgent.ico</Link>
     </Resource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

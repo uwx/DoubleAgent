@@ -258,7 +258,7 @@ namespace AgentCharacterEditor.Panels
 		private void ShowImageItem (FileFrameImage pFrameImage, int pListNdx)
 		{
 			FileImage lFrameImage = CharacterFile.GetImage ((int)pFrameImage.ImageNdx);
-			ListViewItem lImageItem = (pListNdx < ListViewImages.Items.Count) ? ListViewImages.Items[pListNdx] : ListViewImages.Items.Add ("");
+			ListViewItemCommon lImageItem = ((pListNdx < ListViewImages.Items.Count) ? ListViewImages.Items[pListNdx] : ListViewImages.Items.Add (new ListViewItemCommon (""))) as ListViewItemCommon;
 
 			ListViewImages.UpdateSubItemCount (lImageItem);
 

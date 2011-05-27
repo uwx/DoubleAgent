@@ -34,7 +34,7 @@ namespace AgentCharacterEditor.Global
 		/// <returns>The string value with any mnemonic prefix updated for the current application build.</returns>
 		static public String FixMenuPrefix (this String pString)
 		{
-			return pString.Replace ("&", "_");
+			return String.IsNullOrEmpty (pString) ? String.Empty : pString.Replace ("&", "_");
 		}
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace AgentCharacterEditor.Global
 		/// <returns>The string value with any mnemonic prefix removed.</returns>
 		static public String NoMenuPrefix (this String pString)
 		{
-			return pString.Replace ("&", "");
+			return String.IsNullOrEmpty (pString) ? String.Empty : pString.Replace ("&", "");
 		}
 	}
 
@@ -65,7 +65,7 @@ namespace AgentCharacterEditor.Global
 			}
 			if (pEventArgs.Parameter is MenuItem)
 			{
-				(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditCutThis.FixMenuPrefix(), pObjectTitle);
+				(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditCutThis.FixMenuPrefix (), pObjectTitle);
 			}
 			if (!String.IsNullOrEmpty (pObjectTitle))
 			{
@@ -88,7 +88,7 @@ namespace AgentCharacterEditor.Global
 			}
 			if (pEventArgs.Parameter is MenuItem)
 			{
-				(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditCopyThis.FixMenuPrefix(), pObjectTitle);
+				(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditCopyThis.FixMenuPrefix (), pObjectTitle);
 			}
 			if (!String.IsNullOrEmpty (pObjectTitle))
 			{
@@ -111,7 +111,7 @@ namespace AgentCharacterEditor.Global
 			}
 			if (pEventArgs.Parameter is MenuItem)
 			{
-				(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditDeleteThis.FixMenuPrefix(), pObjectTitle);
+				(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditDeleteThis.FixMenuPrefix (), pObjectTitle);
 			}
 			if (!String.IsNullOrEmpty (pObjectTitle))
 			{
@@ -134,7 +134,7 @@ namespace AgentCharacterEditor.Global
 			}
 			if (pEventArgs.Parameter is MenuItem)
 			{
-				(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditPasteThis.FixMenuPrefix(), pObjectTitle);
+				(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditPasteThis.FixMenuPrefix (), pObjectTitle);
 			}
 			if (!String.IsNullOrEmpty (pObjectTitle))
 			{
@@ -150,7 +150,7 @@ namespace AgentCharacterEditor.Global
 			}
 			if (pEventArgs.Parameter is MenuItem)
 			{
-				(pEventArgs.Parameter as MenuItem).Header = String.Format (pPasteTypeTitle.FixMenuPrefix(), pObjectTitle);
+				(pEventArgs.Parameter as MenuItem).Header = String.Format (pPasteTypeTitle.FixMenuPrefix (), pObjectTitle);
 			}
 			if (!String.IsNullOrEmpty (pObjectTitle))
 			{
@@ -169,11 +169,25 @@ namespace AgentCharacterEditor.Global
 		{
 			if (pEventArgs.Parameter is Button)
 			{
-				(pEventArgs.Parameter as Button).ToolTip = String.Format (AppResources.Resources.EditUndoThis.NoMenuPrefix (), pObjectTitle);
+				if (String.IsNullOrEmpty (pObjectTitle))
+				{
+					(pEventArgs.Parameter as Button).ToolTip = AppResources.Resources.EditUndo.NoMenuPrefix ();
+				}
+				else
+				{
+					(pEventArgs.Parameter as Button).ToolTip = String.Format (AppResources.Resources.EditUndoThis.NoMenuPrefix (), pObjectTitle);
+				}
 			}
 			if (pEventArgs.Parameter is MenuItem)
 			{
-				(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditUndoThis.FixMenuPrefix(), pObjectTitle);
+				if (String.IsNullOrEmpty (pObjectTitle))
+				{
+					(pEventArgs.Parameter as MenuItem).Header = AppResources.Resources.EditUndo.FixMenuPrefix ();
+				}
+				else
+				{
+					(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditUndoThis.FixMenuPrefix (), pObjectTitle);
+				}
 			}
 			if (!String.IsNullOrEmpty (pObjectTitle))
 			{
@@ -192,16 +206,99 @@ namespace AgentCharacterEditor.Global
 		{
 			if (pEventArgs.Parameter is Button)
 			{
-				(pEventArgs.Parameter as Button).ToolTip = String.Format (AppResources.Resources.EditRedoThis.NoMenuPrefix (), pObjectTitle);
+				if (String.IsNullOrEmpty (pObjectTitle))
+				{
+					(pEventArgs.Parameter as Button).ToolTip = AppResources.Resources.EditRedo.NoMenuPrefix ();
+				}
+				else
+				{
+					(pEventArgs.Parameter as Button).ToolTip = String.Format (AppResources.Resources.EditRedoThis.NoMenuPrefix (), pObjectTitle);
+				}
 			}
 			if (pEventArgs.Parameter is MenuItem)
 			{
-				(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditRedoThis.FixMenuPrefix(), pObjectTitle);
+				if (String.IsNullOrEmpty (pObjectTitle))
+				{
+					(pEventArgs.Parameter as MenuItem).Header = AppResources.Resources.EditRedo.FixMenuPrefix ();
+				}
+				else
+				{
+					(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditRedoThis.FixMenuPrefix (), pObjectTitle);
+				}
 			}
 			if (!String.IsNullOrEmpty (pObjectTitle))
 			{
 				pEventArgs.CanExecute = true;
 			}
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+
+	public static partial class ListViewExtensions
+	{
+		/// <summary>
+		/// Updates the <see cref="System.Windows.Controls.ListView.Items"/> collection to contain a specific number of items.
+		/// </summary>
+		/// <param name="pItemCount">The number of items required.</param>
+		/// <returns>True if items were added or removed.</returns>
+		public static Boolean UpdateItemCount (this ListView pListView, int pItemCount)
+		{
+			Boolean lRet = false;
+
+			while (pListView.Items.Count > pItemCount)
+			{
+				pListView.Items.RemoveAt (pListView.Items.Count - 1);
+				lRet = true;
+			}
+			while (pListView.Items.Count < pItemCount)
+			{
+				pListView.Items.Add (new ListViewItemCommon (""));
+				lRet = true;
+			}
+			return lRet;
+		}
+
+		public static ScrollBarVisibility GetVerticalScrollBarVisibility (this ListView pListView)
+		{
+			ScrollViewer lScrollHost = pListView.Template.FindName ("ScrollHost", pListView) as ScrollViewer;
+			if (lScrollHost != null)
+			{
+				return lScrollHost.VerticalScrollBarVisibility;
+			}
+			return ScrollBarVisibility.Auto;
+		}
+
+		public static Boolean SetVerticalScrollBarVisibility (this ListView pListView, ScrollBarVisibility pScrollBarVisibility)
+		{
+			ScrollViewer lScrollHost = pListView.Template.FindName ("ScrollHost", pListView) as ScrollViewer;
+			if (lScrollHost != null)
+			{
+				lScrollHost.VerticalScrollBarVisibility = pScrollBarVisibility;
+				return true;
+			}
+			return false;
+		}
+
+		public static ScrollBarVisibility GetHorizontalScrollBarVisibility (this ListView pListView)
+		{
+			ScrollViewer lScrollHost = pListView.Template.FindName ("ScrollHost", pListView) as ScrollViewer;
+			if (lScrollHost != null)
+			{
+				return lScrollHost.HorizontalScrollBarVisibility;
+			}
+			return ScrollBarVisibility.Auto;
+		}
+
+		public static Boolean SetHorizontalScrollBarVisibility (this ListView pListView, ScrollBarVisibility pScrollBarVisibility)
+		{
+			ScrollViewer lScrollHost = pListView.Template.FindName ("ScrollHost", pListView) as ScrollViewer;
+			if (lScrollHost != null)
+			{
+				lScrollHost.HorizontalScrollBarVisibility = pScrollBarVisibility;
+				return true;
+			}
+			return false;
 		}
 	}
 }

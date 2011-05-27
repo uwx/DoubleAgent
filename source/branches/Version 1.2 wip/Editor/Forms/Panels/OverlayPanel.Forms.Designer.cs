@@ -49,16 +49,16 @@ namespace AgentCharacterEditor.Panels
 		private void InitializeComponent ()
 		{
 			this.components = new System.ComponentModel.Container();
-			this.OverlayItemClosed = new System.Windows.Forms.ListViewItem ("Closed",0);
-			this.OverlayItemWide1 = new System.Windows.Forms.ListViewItem ("Wide 1",1);
-			this.OverlayItemWide2 = new System.Windows.Forms.ListViewItem ("Wide 2",2);
-			this.OverlayItemWide3 = new System.Windows.Forms.ListViewItem ("Wide 3",3);
-			this.OverlayItemWide4 = new System.Windows.Forms.ListViewItem ("Wide 4",4);
-			this.OverlayItemMedium = new System.Windows.Forms.ListViewItem ("Medium",5);
-			this.OverlayItemNarrow = new System.Windows.Forms.ListViewItem ("Narrow",6);
+			this.OverlayItemClosed = new AgentCharacterEditor.ListViewItemCommon ("Closed",0);
+			this.OverlayItemWide1 = new AgentCharacterEditor.ListViewItemCommon ("Wide 1",1);
+			this.OverlayItemWide2 = new AgentCharacterEditor.ListViewItemCommon ("Wide 2",2);
+			this.OverlayItemWide3 = new AgentCharacterEditor.ListViewItemCommon ("Wide 3",3);
+			this.OverlayItemWide4 = new AgentCharacterEditor.ListViewItemCommon ("Wide 4",4);
+			this.OverlayItemMedium = new AgentCharacterEditor.ListViewItemCommon ("Medium",5);
+			this.OverlayItemNarrow = new AgentCharacterEditor.ListViewItemCommon ("Narrow",6);
 			this.TextBoxFrameName = new DoubleAgent.TextBoxEx();
 			this.LabelFrameName = new System.Windows.Forms.Label();
-			this.GroupBoxImages = new DoubleAgent.GroupBoxEx();
+			this.GroupBoxImages = new DoubleAgent.GroupBoxCompat();
 			this.PanelImages = new System.Windows.Forms.TableLayoutPanel();
 			this.FlowLayoutRight = new System.Windows.Forms.FlowLayoutPanel();
 			this.PanelOverlayOffset = new System.Windows.Forms.Panel();
@@ -76,7 +76,7 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonShiftDown = new DoubleAgent.ToolStripButtonEx();
 			this.ToolStripShiftLeft = new DoubleAgent.ToolStripEx();
 			this.ButtonShiftLeft = new DoubleAgent.ToolStripButtonEx();
-			this.CheckBoxReplace = new DoubleAgent.CheckBoxEx();
+			this.CheckBoxReplace = new DoubleAgent.CheckBoxCompat();
 			this.PanelImagesLeft = new System.Windows.Forms.Panel();
 			this.ListViewOverlays = new DoubleAgent.ListViewEx();
 			this.ColumnHeaderMouth = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -85,9 +85,9 @@ namespace AgentCharacterEditor.Panels
 			this.ColumnHeaderPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.MouthImages = new System.Windows.Forms.ImageList(this.components);
 			this.ToolStripImages = new DoubleAgent.ToolStripEx();
-			this.ButtonAdd = new System.Windows.Forms.ToolStripButton();
-			this.ButtonDelete = new System.Windows.Forms.ToolStripButton();
-			this.ButtonChooseFile = new System.Windows.Forms.ToolStripButton();
+			this.ButtonAdd = new DoubleAgent.ToolStripButtonCompat();
+			this.ButtonDelete = new DoubleAgent.ToolStripButtonCompat();
+			this.ButtonChooseFile = new DoubleAgent.ToolStripButtonCompat();
 			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
 			this.PanelTop = new System.Windows.Forms.Panel();
 			this.GroupBoxImages.SuspendLayout();
@@ -484,7 +484,7 @@ namespace AgentCharacterEditor.Panels
 			this.ListViewOverlays.GridLines = true;
 			this.ListViewOverlays.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.ListViewOverlays.HideSelection = false;
-			this.ListViewOverlays.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+			this.ListViewOverlays.Items.AddRange(new AgentCharacterEditor.ListViewItemCommon[] {
             OverlayItemClosed,
             OverlayItemWide1,
             OverlayItemWide2,
@@ -641,7 +641,7 @@ namespace AgentCharacterEditor.Panels
 
 		private DoubleAgent.TextBoxEx TextBoxFrameName;
 		private System.Windows.Forms.Label LabelFrameName;
-		private DoubleAgent.GroupBoxEx GroupBoxImages;
+		private DoubleAgent.GroupBoxCompat GroupBoxImages;
 		private System.Windows.Forms.TableLayoutPanel PanelImages;
 		private System.Windows.Forms.TableLayoutPanel PanelSample;
 		private AgentCharacterEditor.PictureBoxSample PictureBoxImageSample;
@@ -664,22 +664,22 @@ namespace AgentCharacterEditor.Panels
 		private System.Windows.Forms.ColumnHeader ColumnHeaderReplace;
 		private System.Windows.Forms.ColumnHeader ColumnHeaderPath;
 		private DoubleAgent.ToolStripEx ToolStripImages;
-		private System.Windows.Forms.ToolStripButton ButtonAdd;
-		private System.Windows.Forms.ToolStripButton ButtonDelete;
-		private DoubleAgent.CheckBoxEx CheckBoxReplace;
+		private DoubleAgent.ToolStripButtonCompat ButtonAdd;
+		private DoubleAgent.ToolStripButtonCompat ButtonDelete;
+		private DoubleAgent.CheckBoxCompat CheckBoxReplace;
 		private System.Windows.Forms.Panel PanelOverlayOffset;
 		private System.Windows.Forms.FlowLayoutPanel FlowLayoutRight;
-		private System.Windows.Forms.ToolStripButton ButtonChooseFile;
+		private DoubleAgent.ToolStripButtonCompat ButtonChooseFile;
 		private System.Windows.Forms.TableLayoutPanel PanelMain;
 		private System.Windows.Forms.Panel PanelTop;
 		private System.Windows.Forms.ImageList MouthImages;
-		private System.Windows.Forms.ListViewItem OverlayItemClosed;
-		private System.Windows.Forms.ListViewItem OverlayItemWide1;
-		private System.Windows.Forms.ListViewItem OverlayItemWide2;
-		private System.Windows.Forms.ListViewItem OverlayItemWide3;
-		private System.Windows.Forms.ListViewItem OverlayItemWide4;
-		private System.Windows.Forms.ListViewItem OverlayItemMedium;
-		private System.Windows.Forms.ListViewItem OverlayItemNarrow;
+		private AgentCharacterEditor.ListViewItemCommon OverlayItemClosed;
+		private AgentCharacterEditor.ListViewItemCommon OverlayItemWide1;
+		private AgentCharacterEditor.ListViewItemCommon OverlayItemWide2;
+		private AgentCharacterEditor.ListViewItemCommon OverlayItemWide3;
+		private AgentCharacterEditor.ListViewItemCommon OverlayItemWide4;
+		private AgentCharacterEditor.ListViewItemCommon OverlayItemMedium;
+		private AgentCharacterEditor.ListViewItemCommon OverlayItemNarrow;
 
 	}
 }

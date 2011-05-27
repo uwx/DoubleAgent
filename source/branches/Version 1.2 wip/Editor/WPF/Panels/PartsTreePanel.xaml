@@ -7,6 +7,20 @@
 					  mc:Ignorable="d"
 					  d:DesignHeight="300"
 					  d:DesignWidth="300">
+	<Control.CommandBindings>
+		<CommandBinding Command="Copy"
+						CanExecute="CanEditCopy"
+						Executed="OnEditCopy" />
+		<CommandBinding Command="Cut"
+						CanExecute="CanEditCut"
+						Executed="OnEditCut" />
+		<CommandBinding Command="Delete"
+						CanExecute="CanEditDelete"
+						Executed="OnEditDelete" />
+		<CommandBinding Command="Paste"
+						CanExecute="CanEditPaste"
+						Executed="OnEditPaste" />
+	</Control.CommandBindings>
 	<Grid>
 		<TreeView Name="TreeViewMain"
 				  Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
@@ -15,20 +29,6 @@
 				  Margin="5,5,0,5"
 				  SelectedItemChanged="TreeViewMain_SelectedItemChanged"
 				  Style="{StaticResource PanelTreeView}">
-			<Control.CommandBindings>
-				<CommandBinding Command="Copy"
-								CanExecute="CanEditCopy"
-								Executed="OnEditCopy" />
-				<CommandBinding Command="Cut"
-								CanExecute="CanEditCut"
-								Executed="OnEditCut" />
-				<CommandBinding Command="Delete"
-								CanExecute="CanEditDelete"
-								Executed="OnEditDelete" />
-				<CommandBinding Command="Paste"
-								CanExecute="CanEditPaste"
-								Executed="OnEditPaste" />
-			</Control.CommandBindings>
 			<TreeViewItem Header="Character"
 						  Name="NodeCharacter">
 				<TreeViewItem Header="Word Balloon"

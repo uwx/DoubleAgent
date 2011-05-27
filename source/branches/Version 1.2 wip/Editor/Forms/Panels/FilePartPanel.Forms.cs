@@ -80,7 +80,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		protected virtual Boolean IsPanelShowing
+		protected virtual Boolean IsPanelFilling
 		{
 			get
 			{
@@ -166,6 +166,11 @@ namespace AgentCharacterEditor.Panels
 		protected Boolean IsControlEditTarget (Control pControl, Global.EditEventArgs e)
 		{
 			return IsControlFocused (pControl);
+		}
+
+		protected Boolean IsControlEditTarget (Control pControl, Global.ContextMenuEventArgs e)
+		{
+			return Object.ReferenceEquals (pControl, e.ActiveControl);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

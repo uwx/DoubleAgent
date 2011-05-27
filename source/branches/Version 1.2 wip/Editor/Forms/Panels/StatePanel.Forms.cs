@@ -19,15 +19,11 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using DoubleAgent;
-using DoubleAgent.Character;
 using AgentCharacterEditor.Navigation;
 using AgentCharacterEditor.Updates;
+using AgentCharacterEditor.Global;
+using DoubleAgent.Character;
 
 namespace AgentCharacterEditor.Panels
 {
@@ -43,81 +39,7 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Properties
-
-		public override ResolvePart FilePart
-		{
-			get
-			{
-				return base.FilePart;
-			}
-			set
-			{
-				base.FilePart = value;
-				State = (FilePart is ResolveState) ? (FilePart as ResolveState).Target : null;
-
-				ShowStateName ();
-				ShowStateAnimations ();
-			}
-		}
-
-		protected FileState State
-		{
-			get;
-			set;
-		}
-		protected String StateName
-		{
-			get
-			{
-				return (State != null) ? State.StateName : (FilePart is ResolveState) ? (FilePart as ResolveState).StateName : null;
-			}
-		}
-
-
-		public override Boolean IsPanelEmpty
-		{
-			get
-			{
-				return base.IsPanelEmpty || String.IsNullOrEmpty (StateName);
-			}
-		}
-		protected override bool TrackUpdatesWhenHidden
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
-		#region Events
-
-		public event NavigationEventHandler Navigate;
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
 		#region Navigation
-
-		public override object NavigationContext
-		{
-			get
-			{
-				return new PanelContext (this);
-			}
-			set
-			{
-				if (value is PanelContext)
-				{
-					(value as PanelContext).RestoreContext (this);
-				}
-				else
-				{
-					base.NavigationContext = value;
-				}
-			}
-		}
 
 		public new class PanelContext : FilePartPanel.PanelContext
 		{
@@ -151,20 +73,10 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
-		private void ShowStateName ()
-		{
-			if (IsPanelEmpty)
-			{
-				TextBoxName.ResetText ();
-			}
-			else
-			{
-				TextBoxName.Text = StateName;
-			}
-		}
-
 		private void ShowStateAnimations ()
 		{
+			Boolean lWasFilling = PushIsPanelFilling (true);
+
 			// Refresh it just in case the state was newly added
 			State = (FilePart is ResolveState) ? (FilePart as ResolveState).Target : null;
 
@@ -185,22 +97,24 @@ namespace AgentCharacterEditor.Panels
 					ShowFileAnimations (State.AnimationNames);
 				}
 			}
+
+			PopIsPanelFilling (lWasFilling);
 		}
 
 		private void ShowFileAnimations (String[] pStateAnimations)
 		{
+			Boolean lWasFilling = PushIsPanelFilling (true);
 			String[] lAnimations = CharacterFile.GetAnimationNames ();
 			int lListNdx = 0;
 
-			CausesValidation = false;
 			ListViewAnimations.BeginUpdate ();
 			ListViewAnimations.UpdateItemCount (lAnimations.Length);
 
 			foreach (String lAnimation in lAnimations)
 			{
-				ListViewItem lListItem;
+				ListViewItemCommon lListItem;
 
-				lListItem = (lListNdx < ListViewAnimations.Items.Count) ? ListViewAnimations.Items[lListNdx] : ListViewAnimations.Items.Add (lAnimation);
+				lListItem = ((lListNdx < ListViewAnimations.Items.Count) ? ListViewAnimations.Items[lListNdx] : ListViewAnimations.Items.Add (lAnimation)) as ListViewItemCommon;
 				lListItem.Text = lAnimation;
 
 				if (
@@ -222,47 +136,8 @@ namespace AgentCharacterEditor.Panels
 
 			ListViewAnimations.EndUpdate ();
 			ListViewAnimations.ArrangeIcons ();
-			CausesValidation = Visible;
-		}
 
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
-		#region Update
-
-		internal UndoableUpdate PasteStateAnimations (String pStateName, String[] pAnimationNames)
-		{
-			UpdateAllStateAnimations lUpdate = null;
-
-			if (!IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				lUpdate = new UpdateAllStateAnimations (pStateName, pAnimationNames);
-				if (!UpdateAllStateAnimations.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateAllStateAnimations, this))
-				{
-					lUpdate = null;
-				}
-			}
-			return lUpdate;
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		protected override void UpdateApplied (object pUpdate)
-		{
-			AddDeleteStateAnimation lAddDeleteStateAnimation = pUpdate as AddDeleteStateAnimation;
-			UpdateAllStateAnimations lUpdateAllStateAnimations = pUpdate as UpdateAllStateAnimations;
-
-			if ((lAddDeleteStateAnimation != null) && (lAddDeleteStateAnimation.StateName == StateName))
-			{
-				ShowStateAnimations ();
-			}
-			else if ((lUpdateAllStateAnimations != null) && (lUpdateAllStateAnimations.StateName == StateName))
-			{
-				ShowStateAnimations ();
-			}
-			else if ((pUpdate is AddDeleteAnimation) || (pUpdate is UpdateAnimation))
-			{
-				ShowStateAnimations ();
-			}
+			PopIsPanelFilling (lWasFilling);
 		}
 
 		#endregion
@@ -271,7 +146,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ListViewAnimations_ItemCheck (object sender, ItemCheckEventArgs e)
 		{
-			if (CausesValidation && (IsPanelEmpty || Program.FileIsReadOnly))
+			if (!IsPanelFilling && (IsPanelEmpty || Program.FileIsReadOnly))
 			{
 				e.NewValue = e.CurrentValue;
 			}
@@ -279,37 +154,21 @@ namespace AgentCharacterEditor.Panels
 
 		private void ListViewAnimations_ItemChecked (object sender, ItemCheckedEventArgs e)
 		{
-			if (CausesValidation && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				AddDeleteStateAnimation lUpdate;
-
-				if (e.Item.Checked)
-				{
-					lUpdate = new AddDeleteStateAnimation (StateName, e.Item.Text, false);
-				}
-				else
-				{
-					lUpdate = new AddDeleteStateAnimation (StateName, e.Item.Text, true);
-				}
-				AddDeleteStateAnimation.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteStateAnimation, this);
+				HandleItemChecked (e.Item.Text, e.Item.Checked);
 			}
 		}
 
 		private void ListViewAnimations_ItemActivate (object sender, EventArgs e)
 		{
-			if (!IsPanelEmpty && (Navigate != null))
+			if (!IsPanelFilling)
 			{
-				ListViewItem lItem = ListViewAnimations.SelectedItem;
+				ListViewItemCommon lItem = ListViewAnimations.SelectedItem as ListViewItemCommon;
 
-				if ((lItem != null) && CharacterFile.Gestures.Contains (lItem.Text))
+				if (lItem != null)
 				{
-					try
-					{
-						Navigate (this, new NavigationEventArgs (new ResolveAnimation (lItem.Text)));
-					}
-					catch
-					{
-					}
+					NavigateToItem (lItem.Text);
 				}
 			}
 		}

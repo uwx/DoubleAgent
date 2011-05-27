@@ -49,11 +49,11 @@ namespace AgentCharacterEditor.Panels
 		private void InitializeComponent ()
 		{
 			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
-			this.GroupBoxPalette = new DoubleAgent.GroupBoxEx();
+			this.GroupBoxPalette = new DoubleAgent.GroupBoxCompat();
 			this.PictureBoxPalette = new System.Windows.Forms.PictureBox();
 			this.ToolStripPaletteFile = new DoubleAgent.ToolStripEx();
-			this.ButtonPaletteImport = new System.Windows.Forms.ToolStripButton();
-			this.ButtonPaletteExport = new System.Windows.Forms.ToolStripButton();
+			this.ButtonPaletteImport = new DoubleAgent.ToolStripButtonCompat();
+			this.ButtonPaletteExport = new DoubleAgent.ToolStripButtonCompat();
 			this.LabelTransparencyClick = new System.Windows.Forms.Label();
 			this.LabelTransparency = new System.Windows.Forms.Label();
 			this.LabelColorSample = new System.Windows.Forms.Label();
@@ -62,8 +62,8 @@ namespace AgentCharacterEditor.Panels
 			this.LabelPaletteFile = new System.Windows.Forms.Label();
 			this.PanelTop = new System.Windows.Forms.Panel();
 			this.ToolStripAnimations = new DoubleAgent.ToolStripEx();
-			this.ButtonAdd = new System.Windows.Forms.ToolStripButton();
-			this.ButtonDelete = new System.Windows.Forms.ToolStripButton();
+			this.ButtonAdd = new DoubleAgent.ToolStripButtonCompat();
+			this.ButtonDelete = new DoubleAgent.ToolStripButtonCompat();
 			this.ListViewAnimations = new DoubleAgent.ListViewEx();
 			this.TextBoxNewName = new DoubleAgent.TextBoxEx();
 			this.LabelWidth = new System.Windows.Forms.Label();
@@ -418,13 +418,13 @@ namespace AgentCharacterEditor.Panels
 		#endregion
 
 		private System.Windows.Forms.TableLayoutPanel PanelMain;
-		private DoubleAgent.GroupBoxEx GroupBoxPalette;
+		private DoubleAgent.GroupBoxCompat GroupBoxPalette;
 		private System.Windows.Forms.Label LabelTransparencySample;
 		private DoubleAgent.TextBoxEx TextBoxPaletteFile;
 		private System.Windows.Forms.Label LabelPaletteFile;
 		private DoubleAgent.ToolStripEx ToolStripPaletteFile;
-		private System.Windows.Forms.ToolStripButton ButtonPaletteImport;
-		private System.Windows.Forms.ToolStripButton ButtonPaletteExport;
+		private DoubleAgent.ToolStripButtonCompat ButtonPaletteImport;
+		private DoubleAgent.ToolStripButtonCompat ButtonPaletteExport;
 		private System.Windows.Forms.PictureBox PictureBoxPalette;
 		private System.Windows.Forms.Label LabelColorSample;
 		private System.Windows.Forms.Label LabelTransparency;
@@ -438,7 +438,7 @@ namespace AgentCharacterEditor.Panels
 		private System.Windows.Forms.Panel PanelTop;
 		private DoubleAgent.ListViewEx ListViewAnimations;
 		private DoubleAgent.ToolStripEx ToolStripAnimations;
-		private System.Windows.Forms.ToolStripButton ButtonAdd;
-		private System.Windows.Forms.ToolStripButton ButtonDelete;
+		private DoubleAgent.ToolStripButtonCompat ButtonAdd;
+		private DoubleAgent.ToolStripButtonCompat ButtonDelete;
 	}
 }

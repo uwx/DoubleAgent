@@ -49,24 +49,24 @@ namespace AgentCharacterEditor.Panels
 		private void InitializeComponent ()
 		{
 			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
-			this.CheckBoxWordBalloon = new DoubleAgent.CheckBoxEx();
-			this.GroupBoxBalloonDisplay = new DoubleAgent.GroupBoxEx();
-			this.LabelBalloonBorderSample = new System.Windows.Forms.Label();
-			this.LabelBalloonBackgroundSample = new System.Windows.Forms.Label();
-			this.LabelBalloonFontSample = new System.Windows.Forms.Label();
-			this.LabelBalloonForegroundSample = new System.Windows.Forms.Label();
-			this.ButtonBalloonBorder = new System.Windows.Forms.Button();
-			this.CheckBoxAutoPace = new DoubleAgent.CheckBoxEx();
-			this.ButtonBalloonBackground = new System.Windows.Forms.Button();
-			this.CheckBoxAutoHide = new DoubleAgent.CheckBoxEx();
-			this.ButtonBalloonForeground = new System.Windows.Forms.Button();
+			this.CheckBoxWordBalloon = new DoubleAgent.CheckBoxCompat();
+			this.GroupBoxBalloonDisplay = new DoubleAgent.GroupBoxCompat();
+			this.LabelBalloonBorderSample = new DoubleAgent.LabelCompat();
+			this.LabelBalloonBackgroundSample = new DoubleAgent.LabelCompat();
+			this.LabelBalloonFontSample = new DoubleAgent.LabelCompat();
+			this.LabelBalloonForegroundSample = new DoubleAgent.LabelCompat();
+			this.ButtonBalloonBorder = new DoubleAgent.ButtonCompat();
+			this.CheckBoxAutoPace = new DoubleAgent.CheckBoxCompat();
+			this.ButtonBalloonBackground = new DoubleAgent.ButtonCompat();
+			this.CheckBoxAutoHide = new DoubleAgent.CheckBoxCompat();
+			this.ButtonBalloonForeground = new DoubleAgent.ButtonCompat();
 			this.NumericNumLines = new DoubleAgent.NumericUpDownEx();
-			this.ButtonBalloonFont = new System.Windows.Forms.Button();
-			this.RadioButtonSizeToText = new DoubleAgent.RadioButtonEx();
-			this.RadioButtonNumLines = new DoubleAgent.RadioButtonEx();
+			this.ButtonBalloonFont = new DoubleAgent.ButtonCompat();
+			this.RadioButtonSizeToText = new DoubleAgent.RadioButtonCompat();
+			this.RadioButtonNumLines = new DoubleAgent.RadioButtonCompat();
 			this.NumericCharsPerLine = new DoubleAgent.NumericUpDownEx();
-			this.LabelCharsPerLine = new System.Windows.Forms.Label();
-			this.GroupBoxBalloonPreview = new DoubleAgent.GroupBoxEx();
+			this.LabelCharsPerLine = new DoubleAgent.LabelCompat();
+			this.GroupBoxBalloonPreview = new DoubleAgent.GroupBoxCompat();
 			this.WordBalloonPreview = new AgentCharacterEditor.Previews.BalloonPreview();
 			this.PanelMain.SuspendLayout();
 			this.GroupBoxBalloonDisplay.SuspendLayout();
@@ -373,24 +373,24 @@ namespace AgentCharacterEditor.Panels
 		#endregion
 
 		private System.Windows.Forms.TableLayoutPanel PanelMain;
-		private DoubleAgent.CheckBoxEx CheckBoxWordBalloon;
-		private DoubleAgent.GroupBoxEx GroupBoxBalloonDisplay;
-		private DoubleAgent.RadioButtonEx RadioButtonSizeToText;
-		private DoubleAgent.RadioButtonEx RadioButtonNumLines;
+		private DoubleAgent.CheckBoxCompat CheckBoxWordBalloon;
+		private DoubleAgent.GroupBoxCompat GroupBoxBalloonDisplay;
+		private DoubleAgent.RadioButtonCompat RadioButtonSizeToText;
+		private DoubleAgent.RadioButtonCompat RadioButtonNumLines;
 		private DoubleAgent.NumericUpDownEx NumericCharsPerLine;
-		private System.Windows.Forms.Label LabelCharsPerLine;
-		private DoubleAgent.GroupBoxEx GroupBoxBalloonPreview;
+		private DoubleAgent.LabelCompat LabelCharsPerLine;
+		private DoubleAgent.GroupBoxCompat GroupBoxBalloonPreview;
 		private DoubleAgent.NumericUpDownEx NumericNumLines;
-		private DoubleAgent.CheckBoxEx CheckBoxAutoPace;
-		private DoubleAgent.CheckBoxEx CheckBoxAutoHide;
-		private System.Windows.Forms.Button ButtonBalloonBorder;
-		private System.Windows.Forms.Button ButtonBalloonBackground;
-		private System.Windows.Forms.Button ButtonBalloonForeground;
-		private System.Windows.Forms.Button ButtonBalloonFont;
-		private System.Windows.Forms.Label LabelBalloonBorderSample;
-		private System.Windows.Forms.Label LabelBalloonBackgroundSample;
-		private System.Windows.Forms.Label LabelBalloonForegroundSample;
-		private System.Windows.Forms.Label LabelBalloonFontSample;
+		private DoubleAgent.CheckBoxCompat CheckBoxAutoPace;
+		private DoubleAgent.CheckBoxCompat CheckBoxAutoHide;
+		private DoubleAgent.ButtonCompat ButtonBalloonBorder;
+		private DoubleAgent.ButtonCompat ButtonBalloonBackground;
+		private DoubleAgent.ButtonCompat ButtonBalloonForeground;
+		private DoubleAgent.ButtonCompat ButtonBalloonFont;
+		private DoubleAgent.LabelCompat LabelBalloonBorderSample;
+		private DoubleAgent.LabelCompat LabelBalloonBackgroundSample;
+		private DoubleAgent.LabelCompat LabelBalloonForegroundSample;
+		private DoubleAgent.LabelCompat LabelBalloonFontSample;
 		private AgentCharacterEditor.Previews.BalloonPreview WordBalloonPreview;
 	}
 }

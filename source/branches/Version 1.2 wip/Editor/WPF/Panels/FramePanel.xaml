@@ -7,7 +7,19 @@
 					  mc:Ignorable="d"
 					  d:DesignHeight="600"
 					  d:DesignWidth="600">
-	<Grid Style="{StaticResource PanelMainGrid}">
-
-	</Grid>
+	<Control.CommandBindings>
+		<CommandBinding Command="Copy"
+						CanExecute="CanEditCopy"
+						Executed="OnEditCopy" />
+		<CommandBinding Command="Cut"
+						CanExecute="CanEditCut"
+						Executed="OnEditCut" />
+		<CommandBinding Command="Delete"
+						CanExecute="CanEditDelete"
+						Executed="OnEditDelete" />
+		<CommandBinding Command="Paste"
+						CanExecute="CanEditPaste"
+						Executed="OnEditPaste" />
+	</Control.CommandBindings>
+	<Grid Style="{StaticResource PanelMainGrid}"></Grid>
 </panels:FilePartPanel>

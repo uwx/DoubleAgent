@@ -108,7 +108,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowFileProperties ()
 		{
-			Boolean lWasShowing = PushIsPanelShowing (true);
+			Boolean lWasFilling = PushIsPanelFilling (true);
 
 			ShowCharacterIcon ();
 			ShowCharacterGuid ();
@@ -119,12 +119,12 @@ namespace AgentCharacterEditor.Panels
 			}
 			mLangCurrent = ShowCharacterName ();
 
-			PopIsPanelShowing (lWasShowing);
+			PopIsPanelFilling (lWasFilling);
 		}
 
 		private UInt16 ShowCharacterName ()
 		{
-			Boolean lWasShowing = PushIsPanelShowing (true);
+			Boolean lWasFilling = PushIsPanelFilling (true);
 			FileCharacterName lName = null;
 			UInt16 lLangID = SelectedLangID (true);
 
@@ -134,13 +134,13 @@ namespace AgentCharacterEditor.Panels
 			}
 			ShowCharacterName (lName, lLangID);
 
-			PopIsPanelShowing (lWasShowing);
+			PopIsPanelFilling (lWasFilling);
 			return lLangID;
 		}
  
 		private void ShowCharacterName (FileCharacterName pName, UInt16 pLangID)
 		{
-			Boolean lWasShowing = PushIsPanelShowing (true);
+			Boolean lWasFilling = PushIsPanelFilling (true);
 
 			LabelName.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly; 
 			LabelDescription.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly; 
@@ -174,12 +174,12 @@ namespace AgentCharacterEditor.Panels
 			TextBoxDescription.IsModified = false;
 			TextBoxExtra.IsModified = false;
 
-			PopIsPanelShowing (lWasShowing);
+			PopIsPanelFilling (lWasFilling);
 		}
 
 		private void ShowCharacterGuid ()
 		{
-			Boolean lWasShowing = PushIsPanelShowing (true);
+			Boolean lWasFilling = PushIsPanelFilling (true);
 
 			if (IsPanelEmpty)
 			{
@@ -199,7 +199,84 @@ namespace AgentCharacterEditor.Panels
 				ButtonNewGUID.IsEnabled = !Program.FileIsReadOnly;
 			}
 
-			PopIsPanelShowing (lWasShowing);
+			PopIsPanelFilling (lWasFilling);
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		private void ShowCharacterIcon ()
+		{
+			Boolean lWasFilling = PushIsPanelFilling (true);
+
+			if (IsPanelEmpty)
+			{
+				ShowSmallIcon (null);
+				ShowLargeIcon (null);
+				TextBoxIconFile.Clear ();
+				TextBoxIconFile.IsEnabled = false;
+				ButtonIconImport.IsEnabled = false;
+				ButtonIconExport.IsEnabled = false;
+			}
+			else
+			{
+				TextBoxIconFile.Text = CharacterFile.IconFilePath;
+
+				if (CharacterFile.Header.Icon == null)
+				{
+					ShowSmallIcon (null);
+					ShowLargeIcon (null);
+				}
+				else
+				{
+					try
+					{
+						ShowSmallIcon (CharacterFile.Header.Icon.ToBitmap ());
+						ShowLargeIcon (CharacterFile.Header.Icon.ToBitmap ());
+					}
+					catch
+					{
+						ShowSmallIcon (null);
+						ShowLargeIcon (null);
+					}
+				}
+				TextBoxIconFile.IsEnabled = !Program.FileIsReadOnly;
+				ButtonIconImport.IsEnabled = !Program.FileIsReadOnly;
+				ButtonIconExport.IsEnabled = false;
+			}
+
+			PopIsPanelFilling (lWasFilling);
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		private void ShowNameStates ()
+		{
+			Boolean lWasFilling = PushIsPanelFilling (true);
+
+			foreach (ListViewItemCommon lItem in ListViewLanguage.Items)
+			{
+				UInt16 lLangID = ListItemLangID (lItem);
+				FileCharacterName lName = null;
+
+				if (IsPanelEmpty)
+				{
+					ShowNameItemState (lItem, false);
+				}
+				else
+				{
+					lName = LangIDName (lLangID, true);
+					if (lName == null)
+					{
+						ShowNameItemState (lItem, false);
+					}
+					else
+					{
+						ShowNameItemState (lItem, true);
+					}
+				}
+			}
+
+			PopIsPanelFilling (lWasFilling);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -218,6 +295,52 @@ namespace AgentCharacterEditor.Panels
 				}
 			}
 			return lName;
+		}
+
+		private UInt16 ListItemLangID (ListViewItemCommon pListItem)
+		{
+			UInt16 lLangID = mLangDefault;
+			String lLanguage;
+
+			if (pListItem != null)
+			{
+				lLanguage = pListItem.Tag.ToString ();
+				if (!UInt16.TryParse (lLanguage.Substring (lLanguage.LastIndexOf ('-') + 1), System.Globalization.NumberStyles.HexNumber, null, out lLangID))
+				{
+					lLangID = mLangDefault;
+				}
+			}
+			return lLangID;
+		}
+
+		private ListViewItemCommon ListLangIDItem (UInt16 pLangID)
+		{
+			UInt16 lLangID;
+
+			foreach (ListViewItemCommon lItem in ListViewLanguage.Items)
+			{
+				lLangID = ListItemLangID (lItem);
+				if (
+						(lLangID == pLangID)
+					|| (
+							((UInt16)(Byte)pLangID == pLangID)
+						&& ((Byte)lLangID == (Byte)pLangID)
+						)
+					)
+				{
+					return lItem;
+				}
+			}
+			return null;
+		}
+
+		private UInt16 SelectedLangID (Boolean pUseDefault)
+		{
+			if (ListViewLanguage.SelectedItem != null)
+			{
+				return ListItemLangID (ListViewLanguage.SelectedItem as ListViewItemCommon);
+			}
+			return pUseDefault ? mLangDefault : (UInt16)0;
 		}
 
 		#endregion

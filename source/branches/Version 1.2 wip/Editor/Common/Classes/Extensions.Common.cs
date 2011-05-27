@@ -177,6 +177,16 @@ namespace AgentCharacterEditor.Global
 	{
 		public static System.Windows.Media.ImageSource MakeImageSource (this System.Drawing.Bitmap pBitmap)
 		{
+			return pBitmap.MakeImageSource (96.0);
+		}
+
+		public static System.Windows.Media.ImageSource MakeImageSource (this System.Drawing.Bitmap pBitmap, double pDpi)
+		{
+			return pBitmap.MakeImageSource (pDpi, pDpi);
+		}
+
+		public static System.Windows.Media.ImageSource MakeImageSource (this System.Drawing.Bitmap pBitmap, double pDpiX, double pDpiY)
+		{
 			System.Windows.Media.ImageSource lImageSource = null;
 
 			if (pBitmap != null)
@@ -187,16 +197,26 @@ namespace AgentCharacterEditor.Global
 					lBitmapData = pBitmap.LockBits (new System.Drawing.Rectangle (0, 0, pBitmap.Width, pBitmap.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 					try
 					{
-						lImageSource = System.Windows.Media.Imaging.BitmapSource.Create (lBitmapData.Width, lBitmapData.Height, 96.0, 96.0, System.Windows.Media.PixelFormats.Bgra32, null, lBitmapData.Scan0, lBitmapData.Height * lBitmapData.Stride, lBitmapData.Stride);
+						lImageSource = System.Windows.Media.Imaging.BitmapSource.Create (lBitmapData.Width, lBitmapData.Height, pDpiX, pDpiY, System.Windows.Media.PixelFormats.Bgra32, null, lBitmapData.Scan0, lBitmapData.Height * lBitmapData.Stride, lBitmapData.Stride);
 					}
-					catch
+#if DEBUG
+					catch (Exception pException)
 					{
+						System.Diagnostics.Debug.Print (pException.Message);
 					}
+#else
+					catch {}
+#endif
 					pBitmap.UnlockBits (lBitmapData);
 				}
-				catch
+#if DEBUG
+				catch (Exception pException)
 				{
+					System.Diagnostics.Debug.Print (pException.Message);
 				}
+#else
+				catch {}
+#endif
 			}
 			return lImageSource;
 		}

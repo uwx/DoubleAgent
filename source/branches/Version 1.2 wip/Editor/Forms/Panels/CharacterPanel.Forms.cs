@@ -59,98 +59,25 @@ namespace AgentCharacterEditor.Panels
 		{
 			Settings lSettings = Settings.Default;
 
-			lSettings.SelectedNameLanguage = (Int16)ListItemLangID (ListViewLanguage.SelectedOrFocusedItem);
+			lSettings.SelectedNameLanguage = (Int16)ListItemLangID (ListViewLanguage.SelectedOrFocusedItem as ListViewItemCommon);
 		}
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
-		private void ShowNameStates ()
+		private void ShowNameItemState (ListViewItemCommon pItem, Boolean pPresent)
 		{
-			Boolean lWasShowing = PushIsPanelShowing (true);
-
-			foreach (ListViewItem lItem in ListViewLanguage.Items)
-			{
-				UInt16 lLangID = ListItemLangID (lItem);
-				FileCharacterName lName = null;
-
-				if (IsPanelEmpty)
-				{
-					lItem.ForeColor = ListViewLanguage.ForeColor;
-				}
-				else
-				{
-					lName = LangIDName (lLangID, true);
-					if (lName == null)
-					{
-						lItem.ForeColor = ListViewLanguage.ForeColor;
-					}
-					else
-					{
-						lItem.ForeColor = SystemColors.HotTrack;
-					}
-				}
-			}
-
-			PopIsPanelShowing (lWasShowing);
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		private UInt16 ListItemLangID (ListViewItem pListItem)
-		{
-			UInt16 lLangID = mLangDefault;
-			String lLanguage;
-
-			if (pListItem != null)
-			{
-				lLanguage = pListItem.Tag.ToString ();
-				if (!UInt16.TryParse (lLanguage.Substring (lLanguage.LastIndexOf ('-') + 1), System.Globalization.NumberStyles.HexNumber, null, out lLangID))
-				{
-					lLangID = mLangDefault;
-				}
-			}
-			return lLangID;
-		}
-
-		private ListViewItem ListLangIDItem (UInt16 pLangID)
-		{
-			UInt16 lLangID;
-
-			foreach (ListViewItem lItem in ListViewLanguage.Items)
-			{
-				lLangID = ListItemLangID (lItem);
-				if (
-						(lLangID == pLangID)
-					|| (
-							((UInt16)(Byte)pLangID == pLangID)
-						&& ((Byte)lLangID == (Byte)pLangID)
-						)
-					)
-				{
-					return lItem;
-				}
-			}
-			return null;
-		}
-
-		private UInt16 SelectedLangID (Boolean pUseDefault)
-		{
-			if (ListViewLanguage.SelectedItem != null)
-			{
-				return ListItemLangID (ListViewLanguage.SelectedItem);
-			}
-			return pUseDefault ? mLangDefault : (UInt16)0;
+			pItem.ForeColor = pPresent ? SystemColors.HotTrack : ListViewLanguage.ForeColor;
 		}
 
 		private Boolean SelectLangIDItem (UInt16 pLangID)
 		{
-			ListViewItem lItem = ListLangIDItem (pLangID);
+			ListViewItemCommon lItem = ListLangIDItem (pLangID);
 
 			if (lItem != null)
 			{
-				lItem.Selected = true;
+				lItem.IsSelected = true;
 				ListViewLanguage.FocusedItem = lItem;
 				return true;
 			}
@@ -159,46 +86,14 @@ namespace AgentCharacterEditor.Panels
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private void ShowCharacterIcon ()
+		private void ShowSmallIcon (System.Drawing.Bitmap pIcon)
 		{
-			Boolean lWasShowing = PushIsPanelShowing (true);
+			PictureBoxIconSmall.Image = pIcon;
+		}
 
-			if (IsPanelEmpty)
-			{
-				PictureBoxIconSmall.Image = null;
-				PictureBoxIconLarge.Image = null;
-				TextBoxIconFile.ResetText ();
-				TextBoxIconFile.Enabled = false;
-				ToolStripIconFile.Enabled = false;
-			}
-			else
-			{
-				TextBoxIconFile.Text = CharacterFile.IconFilePath;
-
-				if (CharacterFile.Header.Icon == null)
-				{
-					PictureBoxIconSmall.Image = null;
-					PictureBoxIconLarge.Image = null;
-				}
-				else
-				{
-					try
-					{
-						PictureBoxIconSmall.Image = CharacterFile.Header.Icon.ToBitmap ();
-						PictureBoxIconLarge.Image = CharacterFile.Header.Icon.ToBitmap ();
-					}
-					catch
-					{
-						PictureBoxIconSmall.Image = null;
-						PictureBoxIconLarge.Image = null;
-					}
-				}
-
-				TextBoxIconFile.Enabled = !Program.FileIsReadOnly;
-				ToolStripIconFile.Enabled = !Program.FileIsReadOnly;
-			}
-
-			PopIsPanelShowing (lWasShowing);
+		private void ShowLargeIcon (System.Drawing.Bitmap pIcon)
+		{
+			PictureBoxIconLarge.Image = pIcon;
 		}
 
 		#endregion

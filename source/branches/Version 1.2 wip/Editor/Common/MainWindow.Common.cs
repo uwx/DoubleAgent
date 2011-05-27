@@ -42,6 +42,8 @@ namespace AgentCharacterEditor
 		protected void InitializeCommon ()
 		{
 			PanelPartsTree.Navigate += new NavigationEventHandler (OnNavigate);
+			PanelAnimations.Navigate += new NavigationEventHandler (OnNavigate);
+			PanelState.Navigate += new NavigationEventHandler (OnNavigate);
 
 			mRecentFiles.RecentItemClick += new RecentFileList.RecentItemClickEventHandler (RecentFiles_RecentItemClick);
 
@@ -53,6 +55,7 @@ namespace AgentCharacterEditor
 
 		private void LoadAllConfig ()
 		{
+			IsWindowShowing = true;
 			try
 			{
 				LoadConfig (this, EventArgs.Empty);
@@ -62,6 +65,7 @@ namespace AgentCharacterEditor
 			catch
 			{
 			}
+			IsWindowShowing = false;
 		}
 
 		private void SaveAllConfig ()
@@ -189,7 +193,7 @@ namespace AgentCharacterEditor
 				}
 				catch (Exception pException)
 				{
-					ShowFileException (pException);
+					Program.ShowErrorMessage (pException.Message);
 					lCursorState.RestoreCursor ();
 					return false;
 				}
@@ -230,7 +234,7 @@ namespace AgentCharacterEditor
 				}
 				else
 				{
-					ShowFileInvalid (pFilePath);
+					Program.ShowWarningMessage (String.Format (AppResources.Resources.MsgInvalidFile, pFilePath));
 				}
 			}
 			catch
@@ -282,7 +286,7 @@ namespace AgentCharacterEditor
 					}
 					catch (Exception pException)
 					{
-						ShowFileException (pException);
+						Program.ShowErrorMessage (pException.Message);
 					}
 
 					try
@@ -296,12 +300,12 @@ namespace AgentCharacterEditor
 
 					if (!lRet)
 					{
-						ShowFileSaveError (pSaveAsPath);
+						Program.ShowWarningMessage (String.Format (AppResources.Resources.MsgFailedSaveAs, pSaveAsPath));
 					}
 				}
 				else
 				{
-					ShowFileSaveInvalid (pSaveAsPath);
+					Program.ShowInfoMessage ("Not implemented");
 				}
 			}
 			else if (String.IsNullOrEmpty (mCharacterFile.Path) && !mCharacterFile.IsReadOnly)
@@ -329,7 +333,7 @@ namespace AgentCharacterEditor
 				}
 				catch (Exception pException)
 				{
-					ShowFileException (pException);
+					Program.ShowErrorMessage (pException.Message);
 				}
 			}
 
@@ -475,7 +479,14 @@ namespace AgentCharacterEditor
 				lSelectedPanel = PanelState;
 			}
 
-			ShowSelectedPanel (lSelectedPanel);
+			if (IsWindowShowing)
+			{
+				ShowSelectedPanel (lSelectedPanel);
+			}
+			else
+			{
+				FadeShowSelectedPanel (lSelectedPanel);
+			}
 		}
 
 		private void ShowSelectedPanel (FilePartPanel pSelectedPanel)
@@ -539,7 +550,7 @@ namespace AgentCharacterEditor
 		{
 			if (pContext.Key != null)
 			{
-				ShowSelectedPanel (pContext.Key);
+				FadeShowSelectedPanel (pContext.Key);
 				pContext.Key.NavigationContext = pContext.Value;
 
 				if (!pContext.Key.IsPanelEmpty)
@@ -620,7 +631,7 @@ namespace AgentCharacterEditor
 			{
 				if (String.Compare (mCharacterFile.Path, lFilePath, true) == 0)
 				{
-					ShowFileSaveAsInvalid (lFilePath);
+					Program.ShowInfoMessage (AppResources.Resources.MsgInvalidSaveAs);
 				}
 				else if (SaveCharacterFile (lFilePath))
 				{
@@ -669,7 +680,10 @@ namespace AgentCharacterEditor
 
 		private Boolean CanHandleNavigateBack
 		{
-			get{return mNavigateBackStack.Count > 0;}
+			get
+			{
+				return mNavigateBackStack.Count > 0;
+			}
 		}
 		private void HandleNavigateBack ()
 		{
@@ -687,7 +701,10 @@ namespace AgentCharacterEditor
 
 		private Boolean CanHandleNavigateForward
 		{
-			get{return mNavigateForwardStack.Count > 0;}
+			get
+			{
+				return mNavigateForwardStack.Count > 0;
+			}
 		}
 		private void HandleNavigateForward ()
 		{
