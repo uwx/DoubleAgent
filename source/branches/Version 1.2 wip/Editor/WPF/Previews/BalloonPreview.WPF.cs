@@ -349,25 +349,14 @@ namespace AgentCharacterEditor.Previews
 
 		protected void Refresh ()
 		{
-			// Pause AutoPace while drawing
-			Boolean lAutoPacing = StopAutoPace ();
-
 #if DEBUG_NOT
 			System.Diagnostics.Debug.Print ("Refresh [{0} {1}] [{2}]", ActualWidth, ActualHeight, RenderSize);
 #endif
 			try
 			{
-				System.Drawing.Bitmap lBitmap = new System.Drawing.Bitmap ((int)Math.Ceiling (RenderSize.Width), (int)Math.Ceiling (RenderSize.Height), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-				System.Drawing.Graphics lGraphics = System.Drawing.Graphics.FromImage (lBitmap);
-				System.Windows.Point lDpi = new System.Windows.Point (lGraphics.DpiX, lGraphics.DpiY);
-
-				lGraphics.Clear (System.Drawing.Color.FromArgb (0, System.Drawing.Color.White));
-				mBalloonPreview.Draw (lGraphics);
-				lGraphics.Dispose ();
-				lGraphics = null;
-
-				RenderTransform = new ScaleTransform (96.0 / lDpi.X, 96.0 / lDpi.Y);
-				Source = lBitmap.MakeImageSource (lDpi.X, lDpi.Y);
+				Drawing lDrawing = mBalloonPreview.MakeDrawing ();
+				Source = new DrawingImage (lDrawing);
+				RenderTransform = new ScaleTransform (Source.Width / ActualWidth, Source.Height / ActualHeight);
 			}
 #if DEBUG
 			catch (Exception pException)
@@ -377,10 +366,6 @@ namespace AgentCharacterEditor.Previews
 #else
 			catch {}
 #endif
-			if (lAutoPacing)
-			{
-				StartAutoPace ();
-			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

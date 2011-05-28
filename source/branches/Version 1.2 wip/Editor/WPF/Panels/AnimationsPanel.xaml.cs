@@ -163,8 +163,8 @@ namespace AgentCharacterEditor.Panels
 			}
 			else
 			{
-				LabelTransparencySample.Background = MakeColorBrush (pTransparencyColor);
-				LabelTransparencySample.Foreground = MakeColorBrush (GetContrastingColor (pTransparencyColor));
+				LabelTransparencySample.Background = pTransparencyColor.ToWPFBrush();
+				LabelTransparencySample.Foreground = GetContrastingColor (pTransparencyColor).ToWPFBrush();
 				LabelTransparency.IsEnabled = true;
 			}
 			if (pTransparencyNdx < 0)
@@ -187,8 +187,8 @@ namespace AgentCharacterEditor.Panels
 			}
 			else
 			{
-				LabelColorSample.Background = MakeColorBrush (pTransparencyColor);
-				LabelColorSample.Foreground = MakeColorBrush (GetContrastingColor (pTransparencyColor));
+				LabelColorSample.Background = pTransparencyColor.ToWPFBrush ();
+				LabelColorSample.Foreground = GetContrastingColor (pTransparencyColor).ToWPFBrush();
 				LabelColorSample.Content = pTransparencyNdx.ToString ();
 				LabelColorSample.Visibility = Visibility.Visible;
 				LabelTransparencyClick.Visibility = Program.FileIsReadOnly ? Visibility.Collapsed : Visibility.Visible;
@@ -196,11 +196,6 @@ namespace AgentCharacterEditor.Panels
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
-
-		private System.Windows.Media.Brush MakeColorBrush (System.Drawing.Color pColor)
-		{
-			return new SolidColorBrush (Color.FromArgb (pColor.A, pColor.R, pColor.G, pColor.B));
-		}
 
 		private int PaletteMouseColorNdx (System.Windows.Point pMousePos)
 		{

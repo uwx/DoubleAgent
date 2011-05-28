@@ -21,7 +21,11 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#pragma unmanaged
+#ifdef	__cplusplus_cli__NOT
+#include "TextWrap.h"
+using namespace System;
+using namespace System::Drawing;
+#else
 #include <shlwapi.h>
 #include "TextWrap.h"
 #include "DebugStr.h"
@@ -36,7 +40,86 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 #endif
+#endif
 
+//////////////////////////////////////////////////////////////////////
+#ifdef	__cplusplus_cli__NOT
+//////////////////////////////////////////////////////////////////////
+
+CTextWrap::CTextWrap ()
+:	mBounds (0,0,0,0),
+	mSize (0,0),
+	mWrapIndent (0)
+{
+}
+
+CTextWrap::CTextWrap (System::String^ pBreakBefore, System::String^ pBreakAfter)
+:	mBounds (0,0,0,0),
+	mSize (0,0),
+	mWrapIndent (0),
+	mBreakBefore (pBreakBefore),
+	mBreakAfter (pBreakAfter)
+{
+}
+
+CTextWrap::CTextWrap (System::String^ pBreakBefore, System::String^ pBreakAfter, System::Single pWrapIndent)
+:	mBounds (0,0,0,0),
+	mSize (0,0),
+	mWrapIndent (pWrapIndent),
+	mBreakBefore (pBreakBefore),
+	mBreakAfter (pBreakAfter)
+{
+}
+
+CTextWrap::CTextWrap (System::Drawing::RectangleF pBounds)
+:	mBounds (pBounds),
+	mSize (0,0),
+	mWrapIndent (0)
+{
+}
+
+CTextWrap::CTextWrap (System::Drawing::RectangleF pBounds, System::String^ pBreakBefore, System::String^ pBreakAfter)
+:	mBounds (pBounds),
+	mSize (0,0),
+	mWrapIndent (0),
+	mBreakBefore (pBreakBefore),
+	mBreakAfter (pBreakAfter)
+{
+}
+
+CTextWrap::CTextWrap (System::Drawing::RectangleF pBounds, System::String^ pBreakBefore, System::String^ pBreakAfter, System::Single pWrapIndent)
+:	mBounds (pBounds),
+	mSize (0,0),
+	mWrapIndent (pWrapIndent),
+	mBreakBefore (pBreakBefore),
+	mBreakAfter (pBreakAfter)
+{
+}
+
+CTextWrap::CTextWrap (CTextWrap^ pSource)
+{
+	operator= (pSource);
+}
+
+//////////////////////////////////////////////////////////////////////
+
+CTextWrap^ CTextWrap::operator= (CTextWrap^ pSource)
+{
+	mBounds = pSource->mBounds;
+	mSize = pSource->mSize;
+	mWrapIndent = pSource->mWrapIndent;
+	mBreakBefore = pSource->mBreakBefore;
+	mBreakAfter = pSource->mBreakAfter;
+	mTextLines = nullptr;
+	return this;
+}
+
+CTextWrap::TextLine::TextLine ()
+{
+}
+
+//////////////////////////////////////////////////////////////////////
+#else	// __cplusplus_cli__NOT
 //////////////////////////////////////////////////////////////////////
 
 CTextWrap::CTextWrap (LPCTSTR pBreakBefore, LPCTSTR pBreakAfter, int pWrapIndent)
@@ -86,25 +169,79 @@ CTextWrap& CTextWrap::operator= (const CTextWrap& pSource)
 }
 
 //////////////////////////////////////////////////////////////////////
+#endif	// __cplusplus_cli__NOT
+//////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-CSize CTextWrap::MeasureText (LPCTSTR pText, HDC pDC, HFONT pFont, bool* pWordBroken)
+#ifdef	__cplusplus_cli__NOT
+System::Drawing::SizeF CTextWrap::MeasureText (System::String^ pText)
 {
-	HDC					lTempDC = NULL;
-	CSize				lVptExt;
-	CSize				lWinExt;
-	HGDIOBJ				lOldFont;
-	tS <TEXTMETRIC>		lFontMetrics;
-	CRect				lBounds (mBounds);
-	LPCTSTR				lText = pText;
-	int					lTextLen = (int)_tcslen (pText);
-	tPtr <POLYTEXT>		lTextLine;
-	CSize				lLineSize;
-	CSize				lFitSize;
-	int					lFitCount;
-	LPCTSTR				lEolChar;
+	return MeasureText (pText, nullptr, nullptr);
+}
 
+System::Drawing::SizeF CTextWrap::MeasureText (System::String^ pText, System::Drawing::Graphics^ pGraphics, System::Drawing::Font^ pFont)
+{
+	Boolean lWordBroken;
+	return MeasureText (pText, pGraphics, pFont, lWordBroken);
+}
+#endif
+
+//////////////////////////////////////////////////////////////////////
+
+#ifdef	__cplusplus_cli__NOT
+System::Drawing::SizeF CTextWrap::MeasureText (System::String^ pText, System::Drawing::Graphics^ pGraphics, System::Drawing::Font^ pFont, System::Boolean% pWordBroken)
+#else
+CSize CTextWrap::MeasureText (LPCTSTR pText, HDC pDC, HFONT pFont, bool* pWordBroken)
+#endif
+{
+#ifdef	__cplusplus_cli__NOT
+	HDC						lTempDC = NULL;
+	Graphics^				lGraphics = pGraphics;
+	System::Drawing::Font^	lFont = pFont;
+	RectangleF				lBounds (mBounds);
+	String^					lText = pText;
+	TextLine^				lTextLine;
+	SizeF					lLineSize;
+	SizeF					lFitSize;
+	int						lFitCount;
+	int						lFitLines;
+#else
+	HDC						lTempDC = NULL;
+	CSize					lVptExt;
+	CSize					lWinExt;
+	HGDIOBJ					lOldFont;
+	tS <TEXTMETRIC>			lFontMetrics;
+	CRect					lBounds (mBounds);
+	LPCTSTR					lText = pText;
+	int						lTextLen = (int)_tcslen (pText);
+	tPtr <POLYTEXT>			lTextLine;
+	CSize					lLineSize;
+	CSize					lFitSize;
+	int						lFitCount;
+	LPCTSTR					lEolChar;
+#endif	
+
+#ifdef	__cplusplus_cli__NOT
+	pWordBroken = false;
+#else	
+	if	(pWordBroken)
+	{
+		(*pWordBroken) = false;
+	}
+#endif
+	
+#ifdef	__cplusplus_cli__NOT
+	if	(!pGraphics)
+	{
+		lTempDC = CreateCompatibleDC (0);
+		lGraphics = Graphics::FromHdc ((IntPtr)lTempDC);
+	}
+	if	(!pFont)
+	{
+		lFont = System::Drawing::SystemFonts::DefaultFont;
+	}
+#else
 	if	(
 			(!pDC)
 		&&	(lTempDC = CreateCompatibleDC (0))
@@ -112,7 +249,13 @@ CSize CTextWrap::MeasureText (LPCTSTR pText, HDC pDC, HFONT pFont, bool* pWordBr
 	{
 		pDC = lTempDC;
 	}
+#endif	
 
+#ifdef	__cplusplus_cli__NOT
+	mSize.Width = 0;
+	mSize.Height = 0;
+	mTextLines = gcnew array <TextLine^> (0);
+#else
 	mSize.cx = 0;
 	mSize.cy = 0;
 	mTextLines.DeleteAll ();
@@ -122,31 +265,48 @@ CSize CTextWrap::MeasureText (LPCTSTR pText, HDC pDC, HFONT pFont, bool* pWordBr
 		::SetWindowExtEx (pDC, 1, 1, &lWinExt);
 		::SetViewportExtEx (pDC, 1, 1, &lVptExt);
 	}
-
 	if	(pFont)
 	{
 		lOldFont = ::SelectObject (pDC, pFont);
 	}
-	if	(pWordBroken)
-	{
-		(*pWordBroken) = false;
-	}
-
 	GetTextMetrics (pDC, &lFontMetrics);
+#endif	
 
 	try
 	{
+#ifdef	__cplusplus_cli__NOT
+		while	(
+					(lText->Length > 0)
+				&&	((lTextLine = gcnew TextLine) != nullptr)
+				)
+#else
 		while	(
 					(lTextLen > 0)
 				&&	(lTextLine = new tS <POLYTEXT>)
 				)
+#endif				
 		{
+#ifdef	__cplusplus_cli__NOT
+			lTextLine->mString = lText;
+			lTextLine->mBounds.X = GetLineIndent (lText, lText->Length, lGraphics, lFont, mTextLines->Length);
+			lBounds.X = mBounds.X + lTextLine->mBounds.X;
+			lBounds.Width = mBounds.Width - lTextLine->mBounds.X;
+#else
 			lTextLine->lpstr = lText;
 			lTextLine->x = GetLineIndent (lText, lTextLen, pDC, (int)mTextLines.GetCount ());
 			lBounds.left = mBounds.left + lTextLine->x;
+#endif			
 
+#ifdef	__cplusplus_cli__NOT
+			lFitSize = lGraphics->MeasureString (lText, lFont, SizeF(lBounds.Width,1), System::Drawing::StringFormat::GenericTypographic, (lFitCount = 0), (lFitLines=0));
+			if	(lFitCount > 0)
+#else
 			if	(::GetTextExtentExPoint (pDC, lText, lTextLen, lBounds.Width (), &(lFitCount = 0), NULL, &lFitSize))
+#endif			
 			{
+#ifdef	__cplusplus_cli__NOT
+//TODO
+#else
 				lFitCount = max (lFitCount, min (lTextLen, 2));
 				if	(
 						(lEolChar = _tcschr (lText, _T('\n')))
@@ -295,15 +455,19 @@ CSize CTextWrap::MeasureText (LPCTSTR pText, HDC pDC, HFONT pFont, bool* pWordBr
 				}
 
 				mTextLines.Add (lTextLine.Detach ());
+#endif		
 			}
+#ifndef	__cplusplus_cli__NOT			
 			else
 			{
 				LogWinErr (LogIfActive|LogTime, GetLastError (), _T("GetTextExtentExPoint"));
 				mTextLines.DeleteAll ();
 				break;
 			}
+#endif			
 		}
 
+#ifndef	__cplusplus_cli__NOT			
 		if	(
 				(mTextLines.GetCount () > 1)
 			&&	(!mUseInternalLeading)
@@ -311,35 +475,80 @@ CSize CTextWrap::MeasureText (LPCTSTR pText, HDC pDC, HFONT pFont, bool* pWordBr
 		{
 			mSize.cy += lFontMetrics.tmInternalLeading;
 		}
+#endif		
 	}
 	catch AnyExceptionDebug
 
+#ifndef	__cplusplus_cli__NOT			
 	if	(::GetMapMode (pDC) != MM_TWIPS)
 	{
 		::SetWindowExtEx (pDC, lWinExt.cx, lWinExt.cy, NULL);
 		::SetViewportExtEx (pDC, lVptExt.cx, lVptExt.cy, NULL);
 	}
-
 	if	(pFont)
 	{
 		::SelectObject (pDC, lOldFont);
 	}
+#endif
 	if	(lTempDC)
 	{
 		DeleteDC (lTempDC);
 	}
 
+#ifdef	__cplusplus_cli__NOT			
+	mBounds.Width = mSize.Width;
+#else
 	mBounds.bottom = mBounds.top + mSize.cy;
+#endif	
 	return mSize;
 }
 
+//////////////////////////////////////////////////////////////////////
+#pragma page()
+//////////////////////////////////////////////////////////////////////
+
+#ifdef	__cplusplus_cli__NOT
+void CTextWrap::DrawText (System::Drawing::Graphics^ pGraphics)
+{
+	DrawText (pGraphics, nullptr);
+}
+
+void CTextWrap::DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::Font^ pFont)
+{
+	DrawText (pGraphics, pFont, nullptr);
+}
+
+void CTextWrap::DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::Font^ pFont, System::Drawing::RectangleF^ pClipRect)
+{
+	DrawText (pGraphics, mBounds, nullptr, pFont, pClipRect);
+}
+ 
+void CTextWrap::DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::RectangleF pBounds, System::String^ pText)
+{
+	DrawText (pGraphics, mBounds, pText, nullptr, nullptr);
+}
+
+void CTextWrap::DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::RectangleF pBounds, System::String^ pText, System::Drawing::Font^ pFont)
+{
+	DrawText (pGraphics, mBounds, pText, pFont, nullptr);
+}
+#else
 void CTextWrap::DrawText (HDC pDC, HFONT pFont, const CRect* pClipRect, HDC pAttribDC)
 {
 	DrawText (pDC, mBounds, NULL, pFont, pClipRect, pAttribDC);
 }
+#endif
 
+//////////////////////////////////////////////////////////////////////
+
+#ifdef	__cplusplus_cli__NOT
+void CTextWrap::DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::RectangleF pBounds, System::String^ pText, System::Drawing::Font^ pFont, System::Drawing::RectangleF^ pClipRect)
+#else
 void CTextWrap::DrawText (HDC pDC, const CRect& pBounds, LPCTSTR pText, HFONT pFont, const CRect* pClipRect, HDC pAttribDC)
+#endif
 {
+#ifdef	__cplusplus_cli__NOT
+#else
 	HGDIOBJ	lOldFont = NULL;
 
 	if	(pClipRect)
@@ -431,22 +640,56 @@ void CTextWrap::DrawText (HDC pDC, const CRect& pBounds, LPCTSTR pText, HFONT pF
 	{
 		RestoreDC (pDC, -1);
 	}
+#endif	
 }
 
+#ifndef	__cplusplus_cli__NOT
 void CTextWrap::DrawLine (HDC pDC, int pLineNum, LPCTSTR pLineText, int pLineLength, CPoint& pLinePos, CRect& pLineRect)
 {
 	ExtTextOut (pDC, pLinePos.x, pLinePos.y, 0, &pLineRect, pLineText, pLineLength, NULL);
 }
+#endif
 
 //////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__cplusplus_cli__NOT
+void CTextWrap::Offset (System::Drawing::PointF pOffset)
+{
+	Offset (pOffset.X, pOffset.Y);
+}
+void CTextWrap::Offset (System::Single pXOffset, System::Single pYOffset)
+{
+	mBounds.Offset (pXOffset, pYOffset);
+}
+#else
 void CTextWrap::Offset (int pXOffset, int pYOffset)
 {
 	mBounds.OffsetRect (pXOffset, pYOffset);
 }
+#endif
 
+#ifdef	__cplusplus_cli__NOT
+System::UInt32 CTextWrap::CenterLines ()
+{
+	System::UInt32	lRet = 0;
+	TextLine^		lLine;
+	
+	if (mTextLines)
+	{
+		for each (lLine in mTextLines)
+		{
+			if	(lLine->mBounds.X != (mBounds.Width - lLine->mBounds.Width) / 2)
+			{
+				lLine->mBounds.X = (mBounds.Width - lLine->mBounds.Width) / 2;
+				lRet++;
+			}
+		}
+	}
+	return lRet;
+}
+#else
 UINT CTextWrap::CenterLines ()
 {
 	UINT		lRet = 0;
@@ -458,13 +701,40 @@ UINT CTextWrap::CenterLines ()
 		if	(lLine->x != (mBounds.Width () - lLine->rcl.right + lLine->rcl.left) / 2)
 		{
 			lLine->x = (mBounds.Width () - lLine->rcl.right + lLine->rcl.left) / 2;
+			lRet++;
 		}
 	}
 	return lRet;
 }
+#endif
 
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__cplusplus_cli__NOT
+System::String^ CTextWrap::GetWrappedText ()
+{
+	System::String^	lWrappedText = String::Empty;
+	Boolean			lFirstLine = true;
+	TextLine^		lLine;
+
+	if (mTextLines)
+	{
+		for each (lLine in mTextLines)
+		{
+			if	(lFirstLine)
+			{
+				lFirstLine = false;
+			}
+			else
+			{
+				lWrappedText += "\n";
+			}
+			lWrappedText += lLine->mString;
+		}
+	}
+	return lWrappedText;
+}
+#else
 CString CTextWrap::GetWrappedText () const
 {
 	CString				lWrappedText;
@@ -481,7 +751,25 @@ CString CTextWrap::GetWrappedText () const
 	}
 	return lWrappedText;
 }
+#endif
 
+#ifdef	__cplusplus_cli__NOT
+//TODO
+System::Drawing::RectangleF CTextWrap::GetUsedRect ()
+{
+	return GetUsedRect (false);
+}
+
+System::Drawing::RectangleF CTextWrap::GetUsedRect (System::Boolean pClipPartialLines)
+{
+	return GetUsedRect (pClipPartialLines, nullptr);
+}
+
+System::Drawing::RectangleF CTextWrap::GetUsedRect (System::Boolean pClipPartialLines, System::String^ pText)
+{
+	return System::Drawing::RectangleF (0,0,0,0);
+}
+#else
 CRect CTextWrap::GetUsedRect (bool pClipPartialLines, LPCTSTR pText) const
 {
 	CRect		lUsedRect (mBounds.right, mBounds.top, mBounds.left, mBounds.top);
@@ -553,9 +841,27 @@ CRect CTextWrap::GetUsedRect (bool pClipPartialLines, LPCTSTR pText) const
 	}
 	return lUsedRect;
 }
+#endif
 
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__cplusplus_cli__NOT
+System::String^ CTextWrap::GetLineText (System::Int32 pLineNdx)
+{
+	TextLine^	lLine;
+
+	if	(
+			(mTextLines)
+		&&	(pLineNdx >= 0)
+		&&	(pLineNdx < mTextLines->Length)
+		&&	(lLine = mTextLines [pLineNdx])
+		)
+	{
+		return lLine->mString;
+	}
+	return String::Empty;
+}
+#else
 CString CTextWrap::GetLineText (int pLineNdx) const
 {
 	CString				lLineText;
@@ -567,7 +873,29 @@ CString CTextWrap::GetLineText (int pLineNdx) const
 	}
 	return lLineText;
 }
+#endif
 
+#ifdef	__cplusplus_cli__NOT
+System::Drawing::RectangleF CTextWrap::GetLineRect (System::Int32 pLineNdx)
+{
+	System::Drawing::RectangleF	lLineRect (0,0,0,0);
+	TextLine^					lLine;
+	
+	if	(
+			(mTextLines)
+		&&	(pLineNdx >= 0)
+		&&	(pLineNdx < mTextLines->Length)
+		&&	(lLine = mTextLines [pLineNdx])
+		)
+	{
+		lLineRect.X = mBounds.X;
+		lLineRect.Y = mBounds.Y + lLine->mBounds.Y;
+		lLineRect.Width = mBounds.Width;
+		lLineRect.Height = lLine->mBounds.Height;
+	}
+	return lLineRect;
+}
+#else
 CRect CTextWrap::GetLineRect (int pLineNdx) const
 {
 	CRect				lLineRect (0,0,0,0);
@@ -579,7 +907,27 @@ CRect CTextWrap::GetLineRect (int pLineNdx) const
 	}
 	return lLineRect;
 }
+#endif
 
+#ifdef	__cplusplus_cli__NOT
+System::Drawing::PointF CTextWrap::GetLinePos (System::Int32 pLineNdx)
+{
+	System::Drawing::PointF	lLinePos (0,0);
+	TextLine^				lLine;
+	
+	if	(
+			(mTextLines)
+		&&	(pLineNdx >= 0)
+		&&	(pLineNdx < mTextLines->Length)
+		&&	(lLine = mTextLines [pLineNdx])
+		)
+	{
+		lLinePos.X = mBounds.X + lLine->mBounds.X;
+		lLinePos.Y = mBounds.Y + lLine->mBounds.Y;
+	}
+	return lLinePos;
+}
+#else
 CPoint CTextWrap::GetLinePos (int pLineNdx) const
 {
 	CPoint				lLinePos (0,0);
@@ -592,7 +940,25 @@ CPoint CTextWrap::GetLinePos (int pLineNdx) const
 	}
 	return lLinePos;
 }
+#endif
 
+#ifdef	__cplusplus_cli__NOT
+System::Int32 CTextWrap::GetLineWidth (System::Int32 pLineNdx)
+{
+	TextLine^	lLine;
+	
+	if	(
+			(mTextLines)
+		&&	(pLineNdx >= 0)
+		&&	(pLineNdx < mTextLines->Length)
+		&&	(lLine = mTextLines [pLineNdx])
+		)
+	{
+		lLine->mBounds.Width;
+	}
+	return 0;
+}
+#else
 int CTextWrap::GetLineWidth (int pLineNdx) const
 {
 	int					lLineWidth = 0;
@@ -604,7 +970,25 @@ int CTextWrap::GetLineWidth (int pLineNdx) const
 	}
 	return lLineWidth;
 }
+#endif
 
+#ifdef	__cplusplus_cli__NOT
+System::Int32 CTextWrap::GetLineHeight (System::Int32 pLineNdx)
+{
+	TextLine^	lLine;
+	
+	if	(
+			(mTextLines)
+		&&	(pLineNdx >= 0)
+		&&	(pLineNdx < mTextLines->Length)
+		&&	(lLine = mTextLines [pLineNdx])
+		)
+	{
+		lLine->mBounds.Height;
+	}
+	return 0;
+}
+#else
 int CTextWrap::GetLineHeight (int pLineNdx) const
 {
 	int					lLineHeight = 0;
@@ -616,11 +1000,53 @@ int CTextWrap::GetLineHeight (int pLineNdx) const
 	}
 	return lLineHeight;
 }
+#endif
 
 //////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__cplusplus_cli__NOT
+System::Boolean CTextWrap::IsBreakChar (System::String^ pText, int pNdx, UINT pPriority, System::Boolean% pBreakAfter)
+{
+	Char									lChar = pText [pNdx];
+	System::Globalization::UnicodeCategory	lCharCategory;
+
+	if	(pPriority > 0)
+	{
+		if	(
+				(!String::IsNullOrEmpty (mBreakAfter))
+			&&	(mBreakAfter->IndexOf (lChar) >= 0)
+			)
+		{
+			pBreakAfter = true;
+			return true;
+		}
+		else
+		if	(
+				(pNdx > 0)
+			&&	(!String::IsNullOrEmpty (mBreakBefore))
+			&&	(mBreakBefore->IndexOf (lChar) >= 0)
+			)
+		{
+			pBreakAfter = false;
+			return true;
+		}
+	}
+
+	lCharCategory = Char::GetUnicodeCategory (lChar);
+	if	(
+			(lCharCategory == System::Globalization::UnicodeCategory::SpaceSeparator)
+		||	(lCharCategory == System::Globalization::UnicodeCategory::LineSeparator)
+		||	(lCharCategory == System::Globalization::UnicodeCategory::ParagraphSeparator)
+		)
+	{
+		pBreakAfter = false;
+		return true;
+	}
+	return false;
+}
+#else
 bool CTextWrap::IsBreakChar (LPCTSTR pText, int pNdx, UINT pPriority, bool& pBreakAfter)
 {
 	TCHAR	lChar = pText [pNdx];
@@ -654,7 +1080,25 @@ bool CTextWrap::IsBreakChar (LPCTSTR pText, int pNdx, UINT pPriority, bool& pBre
 	}
 	return false;
 }
+#endif
 
+#ifdef	__cplusplus_cli__NOT
+System::Single CTextWrap::GetLineIndent (System::String^ pText, int pTextLen, System::Drawing::Graphics^ pGraphics, System::Drawing::Font^ pFont, int pLineNdx)
+{
+	if	(mWrapIndent < 0)
+	{
+		mWrapIndent = pGraphics->MeasureString (pText->Substring (0, Math::Min (pTextLen, Math::Abs((int)mWrapIndent))), pFont).Width;
+	}
+	if	(pLineNdx > 0)
+	{
+		return Math::Max (mWrapIndent, 0.0f);
+	}
+	else
+	{
+		return 0;
+	}
+}
+#else
 int CTextWrap::GetLineIndent (LPCTSTR pText, int pTextLen, HDC pDC, int pLineNdx)
 {
 	if	(mWrapIndent < 0)
@@ -670,9 +1114,12 @@ int CTextWrap::GetLineIndent (LPCTSTR pText, int pTextLen, HDC pDC, int pLineNdx
 		return 0;
 	}
 }
+#endif
 
 //////////////////////////////////////////////////////////////////////
 #pragma page()
+//////////////////////////////////////////////////////////////////////
+#ifndef	__cplusplus_cli__NOT
 //////////////////////////////////////////////////////////////////////
 
 CTextWrapPath::CTextWrapPath ()
@@ -743,3 +1190,6 @@ bool CTextWrapPath::IsBreakChar (LPCTSTR pText, int pNdx, UINT pPriority, bool& 
 
 	return false;
 }
+//////////////////////////////////////////////////////////////////////
+#endif	// __cplusplus_cli__NOT
+//////////////////////////////////////////////////////////////////////

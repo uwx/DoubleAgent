@@ -32,7 +32,6 @@
 #include <tchar.h>
 #include <comdef.h>
 #include <windows.h>
-#include <oleauto.h>
 #pragma managed(pop)
 
 #ifdef	_M_CEE

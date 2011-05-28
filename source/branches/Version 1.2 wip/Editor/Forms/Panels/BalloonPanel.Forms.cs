@@ -131,7 +131,7 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Event Handlers
 
-		private void CheckBoxWordBalloon_CheckedChanged (object sender, EventArgs e)
+		private void CheckBoxWordBalloon_CheckChangedChanged (object sender, EventArgs e)
 		{
 			if (!IsPanelFilling && (CharacterFile != null) && !Program.FileIsReadOnly)
 			{
@@ -175,7 +175,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		private void CheckBoxAutoHide_CheckedChanged (object sender, EventArgs e)
+		private void CheckBoxAutoHide_CheckChangedChanged (object sender, EventArgs e)
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
@@ -183,7 +183,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		private void CheckBoxAutoPace_CheckedChanged (object sender, EventArgs e)
+		private void CheckBoxAutoPace_CheckChangedChanged (object sender, EventArgs e)
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{

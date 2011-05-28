@@ -122,7 +122,7 @@ namespace DoubleAgent
 		/// The highlighted background color.
 		/// </summary>
 		/// <remarks>The highlighted background color is used when the control's value is not in range.</remarks>
-		/// <seealso cref="Highlighted"/>
+		/// <seealso cref="IsHighlighted"/>
 		/// <seealso cref="DefaultBackColor"/>
 		public System.Drawing.Color HighlightBackColor
 		{
@@ -140,7 +140,7 @@ namespace DoubleAgent
 		[System.ComponentModel.Browsable (false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
 		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-		public Boolean Highlighted
+		public Boolean IsHighlighted
 		{
 			get
 			{
@@ -172,7 +172,7 @@ namespace DoubleAgent
 		/// </summary>
 		/// <seealso cref="NumericUpDown.Minimum"/>
 		/// <seealso cref="NumericUpDown.Maximum"/>
-		/// <seealso cref="Highlighted"/>
+		/// <seealso cref="IsHighlighted"/>
 		public new decimal Value
 		{
 			get
@@ -184,11 +184,11 @@ namespace DoubleAgent
 				if ((value < Minimum) || (value > Maximum))
 				{
 					value = Math.Min (Math.Max (value, Minimum), Maximum);
-					this.Highlighted = true;
+					this.IsHighlighted = true;
 				}
 				else
 				{
-					this.Highlighted = false;
+					this.IsHighlighted = false;
 				}
 				if (base.Value != value) // Setting the same value causes to control to blank out
 				{

@@ -21,6 +21,7 @@
 using System;
 using System.Windows;
 using System.Windows.Media;
+using AgentCharacterEditor.Global;
 using AgentCharacterEditor.Updates;
 using DoubleAgent.Character;
 
@@ -72,6 +73,10 @@ namespace AgentCharacterEditor.Panels
 				{
 					System.Drawing.Font lFont = FileBalloon.Font;
 
+#if DEBUG_NOT
+					System.Diagnostics.Debug.Print ("Font [{0}] Size [{1}] [{2} {3}] [{4} {5}]", GetFontFamilyName (lFont), lFont.SizeInPoints, lFont.Size, lFont.Unit, lFont.GetHeight(), lFont.GetHeight(96.0f));
+#endif
+
 					TextBalloonFontSample.Text = FormatFontName (lFont);
 					try
 					{
@@ -82,7 +87,7 @@ namespace AgentCharacterEditor.Panels
 					}
 					try
 					{
-						LabelBalloonFontSample.FontSize = lFont.SizeInPoints;
+						LabelBalloonFontSample.FontSize = lFont.GetHeight (96.0f);
 						LabelBalloonFontSample.FontWeight = lFont.Bold ? FontWeights.Bold : FontWeights.Normal;
 						LabelBalloonFontSample.FontStyle = ((lFont.Style & System.Drawing.FontStyle.Italic) != 0) ? FontStyles.Italic : FontStyles.Normal;
 					}
@@ -113,9 +118,9 @@ namespace AgentCharacterEditor.Panels
 			}
 			else
 			{
-				LabelBalloonForegroundSample.Background = new SolidColorBrush (Color.FromArgb (FileBalloon.FgColor.A, FileBalloon.FgColor.R, FileBalloon.FgColor.G, FileBalloon.FgColor.B));
-				LabelBalloonBackgroundSample.Background = new SolidColorBrush (Color.FromArgb (FileBalloon.BkColor.A, FileBalloon.BkColor.R, FileBalloon.BkColor.G, FileBalloon.BkColor.B));
-				LabelBalloonBorderSample.Background = new SolidColorBrush (Color.FromArgb (FileBalloon.BrColor.A, FileBalloon.BrColor.R, FileBalloon.BrColor.G, FileBalloon.BrColor.B));
+				LabelBalloonForegroundSample.Background = FileBalloon.FgColor.ToWPFBrush ();
+				LabelBalloonBackgroundSample.Background = FileBalloon.BkColor.ToWPFBrush ();
+				LabelBalloonBorderSample.Background = FileBalloon.BrColor.ToWPFBrush ();
 				LabelBalloonFontSample.Foreground = LabelBalloonForegroundSample.Background;
 				LabelBalloonFontSample.Background = LabelBalloonBackgroundSample.Background;
 				LabelBalloonFontSample.BorderBrush = LabelBalloonBorderSample.Background;
@@ -158,7 +163,7 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Event Handlers
 
-		private void CheckBoxWordBalloon_Checked (object sender, RoutedEventArgs e)
+		private void CheckBoxWordBalloon_CheckChanged (object sender, RoutedEventArgs e)
 		{
 			if (!IsPanelFilling && (CharacterFile != null) && !Program.FileIsReadOnly)
 			{
@@ -204,7 +209,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		private void CheckBoxAutoHide_Checked (object sender, RoutedEventArgs e)
+		private void CheckBoxAutoHide_CheckChanged (object sender, RoutedEventArgs e)
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
@@ -212,7 +217,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		private void CheckBoxAutoPace_Checked (object sender, RoutedEventArgs e)
+		private void CheckBoxAutoPace_CheckChanged (object sender, RoutedEventArgs e)
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{

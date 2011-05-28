@@ -1,4 +1,24 @@
-﻿using System;
+﻿/////////////////////////////////////////////////////////////////////////////
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+/////////////////////////////////////////////////////////////////////////////
+/*
+	This file is part of Double Agent.
+
+    Double Agent is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Double Agent is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/////////////////////////////////////////////////////////////////////////////
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,9 +36,108 @@ namespace AgentCharacterEditor.Panels
 {
 	public partial class BranchingPanel : AgentCharacterEditor.Panels.FilePartPanel
 	{
+		///////////////////////////////////////////////////////////////////////////////
+		#region Initialization
+
 		public BranchingPanel ()
 		{
 			InitializeComponent ();
 		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region Event Handlers
+
+		private void NumericBranching0_IsModifiedChanged (object sender, RoutedEventArgs e)
+		{
+			if (!IsPanelFilling && NumericBranching0.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			{
+				if (!ApplyBranchingUpdates ())
+				{
+					ShowFrameBranching ();
+				}
+			}
+			NumericBranching0.IsModified = false;
+		}
+
+		private void NumericTarget0_IsModifiedChanged (object sender, RoutedEventArgs e)
+		{
+			if (!IsPanelFilling && NumericTarget0.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			{
+				if (!ApplyBranchingUpdates ())
+				{
+					ShowFrameBranching ();
+				}
+			}
+			NumericTarget0.IsModified = false;
+		}
+
+		private void NumericBranching1_IsModifiedChanged (object sender, RoutedEventArgs e)
+		{
+			if (!IsPanelFilling && NumericBranching1.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			{
+				if (!ApplyBranchingUpdates ())
+				{
+					ShowFrameBranching ();
+				}
+			}
+			NumericBranching1.IsModified = false;
+		}
+
+		private void NumericTarget1_IsModifiedChanged (object sender, RoutedEventArgs e)
+		{
+			if (!IsPanelFilling && NumericTarget1.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			{
+				if (!ApplyBranchingUpdates ())
+				{
+					ShowFrameBranching ();
+				}
+			}
+			NumericTarget1.IsModified = false;
+		}
+
+		private void NumericBranching2_IsModifiedChanged (object sender, RoutedEventArgs e)
+		{
+			if (!IsPanelFilling && NumericBranching2.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			{
+				if (!ApplyBranchingUpdates ())
+				{
+					ShowFrameBranching ();
+				}
+			}
+			NumericBranching2.IsModified = false;
+		}
+
+		private void NumericTarget2_IsModifiedChanged (object sender, RoutedEventArgs e)
+		{
+			if (!IsPanelFilling && NumericTarget2.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			{
+				if (!ApplyBranchingUpdates ())
+				{
+					ShowFrameBranching ();
+				}
+			}
+			NumericTarget2.IsModified = false;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		private void CheckBoxExit_CheckChanged (object sender, RoutedEventArgs e)
+		{
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
+			{
+				HandleExitTypeChanged ();
+			}
+		}
+
+		private void NumericTargetExit_IsModifiedChanged (object sender, RoutedEventArgs e)
+		{
+			if (!IsPanelFilling && NumericTargetExit.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			{
+				HandleExitFrameChanged ();
+			}
+			NumericTargetExit.IsModified = false;
+		}
+		#endregion
 	}
 }

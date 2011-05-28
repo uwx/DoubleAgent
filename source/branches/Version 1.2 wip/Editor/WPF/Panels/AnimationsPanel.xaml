@@ -154,7 +154,8 @@
 										  HorizontalAlignment="Left"
 										  VerticalAlignment="Center"
 										  MaxLines="1"
-										  IsModifiedChanged="NumericFrameWidth_IsModifiedChanged" />
+										  IsModifiedChanged="NumericFrameWidth_IsModifiedChanged"
+										  Minimum="0" />
 					<Label Content="Height"
 						   Name="LabelHeight"
 						   Style="{StaticResource PanelLabel}"
@@ -167,7 +168,8 @@
 										  MaxLines="1"
 										  HorizontalAlignment="Left"
 										  VerticalAlignment="Center"
-										  IsModifiedChanged="NumericFrameHeight_IsModifiedChanged" />
+										  IsModifiedChanged="NumericFrameHeight_IsModifiedChanged"
+										  Minimum="0" />
 				</StackPanel>
 			</Grid>
 		</GroupBox>

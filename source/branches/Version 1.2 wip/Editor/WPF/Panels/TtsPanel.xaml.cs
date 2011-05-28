@@ -70,7 +70,7 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Event Handlers
 
-		private void CheckBoxUseTTS_Checked (object sender, RoutedEventArgs e)
+		private void CheckBoxUseTTS_CheckChanged (object sender, RoutedEventArgs e)
 		{
 			if (!IsPanelFilling && (CharacterFile != null) && !Program.FileIsReadOnly)
 			{

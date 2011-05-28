@@ -35,7 +35,8 @@
 				  VerticalAlignment="Top"
 				  FontSize="14"
 				  TabIndex="0"
-				  Checked="CheckBoxUseTTS_Checked" />
+				  Checked="CheckBoxUseTTS_CheckChanged"
+				  Unchecked="CheckBoxUseTTS_CheckChanged" />
 		<GroupBox Grid.Row="1"
 				  Header="Voice Engine"
 				  Name="GroupBoxTTS"

@@ -478,7 +478,9 @@ double DegreesToRadians<double> (double);
 float DegreesToRadians<float> (float);
 #endif
 
+#ifndef	__cplusplus_cli
 #define PI 3.1415926535f
+#endif
 
 ////////////////////////////////////////////////////////////////////////
 #endif	// _HELPERTEMPLATES_H2

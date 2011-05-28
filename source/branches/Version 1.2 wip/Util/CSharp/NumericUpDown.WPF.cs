@@ -71,7 +71,7 @@ namespace DoubleAgent
 		/// The highlighted background color.
 		/// </summary>
 		/// <remarks>The highlighted background color is used when the control's value is not in range.</remarks>
-		/// <seealso cref="Highlighted"/>
+		/// <seealso cref="IsHighlighted"/>
 		/// <seealso cref="DefaultBackground"/>
 		public System.Windows.Media.Brush HighlightBackground
 		{
@@ -89,7 +89,7 @@ namespace DoubleAgent
 		[System.ComponentModel.Browsable (false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
 		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-		public Boolean Highlighted
+		public Boolean IsHighlighted
 		{
 			get
 			{
@@ -129,11 +129,11 @@ namespace DoubleAgent
 				if ((value < Minimum) || (value > Maximum))
 				{
 					value = Math.Min (Math.Max (value, Minimum), Maximum);
-					this.Highlighted = true;
+					this.IsHighlighted = true;
 				}
 				else
 				{
-					this.Highlighted = false;
+					this.IsHighlighted = false;
 				}
 				if (base.Text != value.ToString ())
 				{

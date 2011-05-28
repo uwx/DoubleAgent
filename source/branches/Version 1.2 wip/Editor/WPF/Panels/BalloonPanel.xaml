@@ -36,7 +36,8 @@
 				  Margin="4"
 				  FontSize="14"
 				  TabIndex="0"
-				  Checked="CheckBoxWordBalloon_Checked" />
+				  Checked="CheckBoxWordBalloon_CheckChanged"
+				  Unchecked="CheckBoxWordBalloon_CheckChanged" />
 		<GroupBox Grid.Row="1"
 				  Header="Default Display Settings"
 				  HorizontalAlignment="Stretch"
@@ -105,14 +106,16 @@
 							  Margin="0,7,0,2"
 							  Foreground="GhostWhite"
 							  TabIndex="4"
-							  Checked="CheckBoxAutoHide_Checked"
+							  Checked="CheckBoxAutoHide_CheckChanged"
+							  Unchecked="CheckBoxAutoHide_CheckChanged"
 							  Style="{StaticResource PanelToggleButton}" />
 					<CheckBox Content="Auto-pace"
 							  Name="CheckBoxAutoPace"
 							  Margin="0,2"
 							  HorizontalAlignment="Left"
 							  TabIndex="5"
-							  Checked="CheckBoxAutoPace_Checked"
+							  Checked="CheckBoxAutoPace_CheckChanged"
+							  Unchecked="CheckBoxAutoPace_CheckChanged"
 							  Style="{StaticResource PanelToggleButton}" />
 				</StackPanel>
 				<StackPanel Grid.Column="1">

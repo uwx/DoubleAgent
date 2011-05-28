@@ -54,13 +54,7 @@
     <ClCompile Include="Core\AgentTextParse.cpp">
       <Filter>Source Files %28Native%29</Filter>
     </ClCompile>
-    <ClCompile Include="Core\AgentBalloonShape.cpp">
-      <Filter>Source Files %28Native%29</Filter>
-    </ClCompile>
     <ClCompile Include="Core\AgentText.cpp">
-      <Filter>Source Files %28Native%29</Filter>
-    </ClCompile>
-    <ClCompile Include="Util\TextWrap.cpp">
       <Filter>Source Files %28Native%29</Filter>
     </ClCompile>
     <ClCompile Include="Util\TextSize.cpp">
@@ -69,13 +63,10 @@
     <ClCompile Include="Util\StringArrayEx.cpp">
       <Filter>Source Files %28Native%29</Filter>
     </ClCompile>
-    <ClCompile Include="Util\Atl\ImageAlpha.cpp">
-      <Filter>Source Files %28Native%29</Filter>
+    <ClCompile Include="Core\AgentBalloonShape.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Util\Atl\ImageTools.cpp">
-      <Filter>Source Files %28Native%29</Filter>
-    </ClCompile>
-    <ClCompile Include="Util\Color.cpp">
+    <ClCompile Include="Util\TextWrap.cpp">
       <Filter>Source Files %28Native%29</Filter>
     </ClCompile>
   </ItemGroup>
@@ -114,6 +105,9 @@
       <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="Managed\BalloonPreview.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\AgentBalloonShape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

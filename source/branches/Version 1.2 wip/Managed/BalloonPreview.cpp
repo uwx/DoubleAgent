@@ -20,8 +20,8 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "BalloonPreview.h"
-#pragma managed(push,off)
 #include "AgentBalloonShape.h"
+#pragma managed(push,off)
 #include "AgentText.h"
 #include "AgentTextParse.h"
 #include "DebugStr.h"
@@ -29,6 +29,14 @@
 
 using namespace System;
 using namespace System::Drawing;
+using namespace System::Threading;
+
+/////////////////////////////////////////////////////////////////////////////
+
+static CRect RectangleFtoCRect (RectangleF pRect)
+{
+	return CRect ((long)Math::Floor(pRect.Left), (long)Math::Floor(pRect.Top), (long)Math::Ceiling(pRect.Right), (long)Math::Ceiling(pRect.Bottom));
+}
 
 /////////////////////////////////////////////////////////////////////////////
 namespace DoubleAgent {
@@ -39,8 +47,8 @@ BalloonPreview::BalloonPreview ()
 	mAutoRepeat (true),
 	mAutoRepeatDelay (0),
 	mAutoScrollTime (0),
-	mShape (NULL),
-	mTextDraw (NULL)
+	mShape (nullptr),
+	mTextDraw (nullptr)
 {
 	Style = CharacterStyle::Balloon;
 	Text = GetNextText();
@@ -62,33 +70,83 @@ BalloonPreview::~BalloonPreview ()
 
 System::Boolean BalloonPreview::IsEnabled::get()
 {
-	if	(!Balloon)
+	Boolean lRet = false;
+	
+	Monitor::Enter (this);
+	try 
 	{
-		return false;
+		if	(Balloon)
+		{
+			lRet = ((Style & CharacterStyle::Balloon) != CharacterStyle::None);
+		}
+		else
+		{
+			lRet = true;
+		}
 	}
-	return ((Style & CharacterStyle::Balloon) != CharacterStyle::None);
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+	return lRet;
 }
 
 System::Boolean BalloonPreview::IsAutoSize::get()
 {
-	if	(
-			(Balloon)
-		&&	(Balloon->Lines < FileBalloon::MinLines)
-		)
+	Boolean lRet = false;
+	
+	Monitor::Enter (this);
+	try 
 	{
-		return true;
+		if	(
+				(Balloon)
+			&&	(Balloon->Lines < FileBalloon::MinLines)
+			)
+		{
+			lRet = true;
+		}
+		else
+		{
+			lRet = ((Style & CharacterStyle::SizeToText) != CharacterStyle::None);
+		}
 	}
-	return ((Style & CharacterStyle::SizeToText) != CharacterStyle::None);
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+	return lRet;
 }
 
 System::Boolean BalloonPreview::IsAutoPace::get()
 {
-	return ((Style & CharacterStyle::NoAutoPace) == CharacterStyle::None);
+	Boolean lRet = false;
+	
+	Monitor::Enter (this);
+	try 
+	{
+		lRet = ((Style & CharacterStyle::NoAutoPace) == CharacterStyle::None);
+	}
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+	return lRet;
 }
 
 System::Boolean BalloonPreview::IsAutoHide::get()
 {
-	return ((Style & CharacterStyle::NoAutoHide) == CharacterStyle::None);
+	Boolean lRet = false;
+	
+	Monitor::Enter (this);
+	try 
+	{
+		lRet = ((Style & CharacterStyle::NoAutoHide) == CharacterStyle::None);
+	}
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -97,120 +155,56 @@ System::Boolean BalloonPreview::IsAutoHide::get()
 
 CharacterStyle BalloonPreview::Style::get()
 {
-	return mStyle;
+	CharacterStyle lRet = CharacterStyle::None;
+	
+	Monitor::Enter (this);
+	try 
+	{
+		lRet = mStyle;
+	}
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+	return lRet;
 }
 
 void BalloonPreview::Style::set (CharacterStyle pStyle)
 {
-	CharacterStyle	lPrevStyle = mStyle;
-
-	mStyle = pStyle;
-
-	if	(
-			((mStyle & CharacterStyle::Tts) != (lPrevStyle & CharacterStyle::Tts))
-		||	(!mShape)
-		)
+	Monitor::Enter (this);
+	try 
 	{
-		if	((mStyle & CharacterStyle::Tts) != CharacterStyle::None)
+		CharacterStyle	lPrevStyle = mStyle;
+
+		mStyle = pStyle;
+
+		if	(
+				((mStyle & CharacterStyle::Tts) != (lPrevStyle & CharacterStyle::Tts))
+			||	(!mShape)
+			)
 		{
-			mShape = new CAgentBalloonSpeak();
+			if	((mStyle & CharacterStyle::Tts) != CharacterStyle::None)
+			{
+				mShape = gcnew CAgentBalloonSpeak();
+			}
+			else
+			{
+				mShape = gcnew CAgentBalloonThink();
+			}
+			CalcShapeRect ();
 		}
 		else
+		if	((mStyle & CharacterStyle::SizeToText) != (lPrevStyle & CharacterStyle::SizeToText))
 		{
-			mShape = new CAgentBalloonThink();
+			if	((mStyle & CharacterStyle::SizeToText) != CharacterStyle::None)
+			{
+				Text = NextText;
+			}
+			CalcShapeRect ();
 		}
-		CalcShapeRect ();
-	}
-	else
-	if	((mStyle & CharacterStyle::SizeToText) != (lPrevStyle & CharacterStyle::SizeToText))
-	{
-		if	((mStyle & CharacterStyle::SizeToText) != CharacterStyle::None)
+
+		if	((mStyle & CharacterStyle::NoAutoPace) != (lPrevStyle & CharacterStyle::NoAutoPace))
 		{
-			Text = NextText;
-		}
-		CalcShapeRect ();
-	}
-
-	if	((mStyle & CharacterStyle::NoAutoPace) != (lPrevStyle & CharacterStyle::NoAutoPace))
-	{
-		if (IsAutoPace)
-		{
-			mTextDraw->DisplayFirstWord ();
-		}
-		else
-		{
-			mTextDraw->DisplayAllWords ();
-		}
-	}
-}
-
-FileBalloon^ BalloonPreview::Balloon::get()
-{
-	return mBalloon;
-}
-
-void BalloonPreview::Balloon::set (FileBalloon^ pBalloon)
-{
-	mBalloon = pBalloon;
-	CalcShapeRect ();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-System::String^ BalloonPreview::Text::get ()
-{
-	return mText;
-}
-
-void BalloonPreview::Text::set (System::String^ pText)
-{
-	mText = gcnew String (pText);
-
-	if	(mTextDraw)
-	{
-		delete mTextDraw;
-		mTextDraw = NULL;
-	}
-	if	(!String::IsNullOrEmpty (mText))
-	{
-		CAtlString		lText = CAtlString (mText);
-		CAgentTextParse	lTextParse (lText);
-
-		mTextDraw = new CAgentTextDraw (lTextParse);
-		if (IsAutoPace)
-		{
-			mTextDraw->DisplayFirstWord ();
-		}
-		else
-		{
-			mTextDraw->DisplayAllWords ();
-		}
-	}
-	CalcShapeRect ();
-}
-
-System::String^ BalloonPreview::NextText::get ()
-{
-	return GetNextText ();
-}
-
-void BalloonPreview::NextText::set (System::String^ pText)
-{
-	mText = gcnew String (pText);
-
-	if	(!mTextDraw)
-	{
-		Text = NextText;
-	}
-	else
-	if	(!String::IsNullOrEmpty (pText))
-	{
-		CAtlString		lText = CAtlString (mText);
-		CAgentTextParse	lTextParse (lText);
-
-		if (IsAutoSize)
-		{
-			(*mTextDraw) = lTextParse;
 			if (IsAutoPace)
 			{
 				mTextDraw->DisplayFirstWord ();
@@ -220,16 +214,156 @@ void BalloonPreview::NextText::set (System::String^ pText)
 				mTextDraw->DisplayAllWords ();
 			}
 		}
-		else
+	}
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+}
+
+FileBalloon^ BalloonPreview::Balloon::get()
+{
+	FileBalloon^ lRet = nullptr;
+	
+	Monitor::Enter (this);
+	try 
+	{
+		lRet = mBalloon;
+	}
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+	return lRet;
+}
+
+void BalloonPreview::Balloon::set (FileBalloon^ pBalloon)
+{
+	Monitor::Enter (this);
+	try 
+	{
+		mBalloon = pBalloon;
+		CalcShapeRect ();
+	}
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+System::String^ BalloonPreview::Text::get ()
+{
+	String^	lRet = String::Empty;
+	
+	Monitor::Enter (this);
+	try 
+	{
+		lRet = mText;
+	}
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+	return lRet;
+}
+
+void BalloonPreview::Text::set (System::String^ pText)
+{
+	Monitor::Enter (this);
+	try 
+	{
+		mText = gcnew String (pText);
+
+		if	(mTextDraw)
 		{
-			(*mTextDraw) += lTextParse;
-			if (!IsAutoPace)
+			delete mTextDraw;
+			mTextDraw = NULL;
+		}
+		if	(!String::IsNullOrEmpty (mText))
+		{
+			CAtlString		lText = CAtlString (mText);
+			CAgentTextParse	lTextParse (lText);
+
+			mTextDraw = new CAgentTextDraw (lTextParse);
+			if (IsAutoPace)
+			{
+				mTextDraw->DisplayFirstWord ();
+			}
+			else
 			{
 				mTextDraw->DisplayAllWords ();
 			}
 		}
 		CalcShapeRect ();
 	}
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+}
+
+System::String^ BalloonPreview::NextText::get ()
+{
+	String^	lRet = String::Empty;
+
+	Monitor::Enter (this);
+	try 
+	{
+		lRet = GetNextText ();
+	}
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+	return lRet;
+}
+
+void BalloonPreview::NextText::set (System::String^ pText)
+{
+	Monitor::Enter (this);
+	try 
+	{
+		mText = gcnew String (pText);
+
+		if	(!mTextDraw)
+		{
+			Text = NextText;
+		}
+		else
+		if	(!String::IsNullOrEmpty (pText))
+		{
+			CAtlString		lText = CAtlString (mText);
+			CAgentTextParse	lTextParse (lText);
+
+			if (IsAutoSize)
+			{
+				(*mTextDraw) = lTextParse;
+				if (IsAutoPace)
+				{
+					mTextDraw->DisplayFirstWord ();
+				}
+				else
+				{
+					mTextDraw->DisplayAllWords ();
+				}
+			}
+			else
+			{
+				(*mTextDraw) += lTextParse;
+				if (!IsAutoPace)
+				{
+					mTextDraw->DisplayAllWords ();
+				}
+			}
+			CalcShapeRect ();
+		}
+	}
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
 }
 
 System::String^ BalloonPreview::DefaultText::get ()
@@ -243,29 +377,58 @@ System::String^ BalloonPreview::DefaultText::get ()
 
 System::Boolean BalloonPreview::AutoRepeat::get()
 {
-	return mAutoRepeat;
+	Boolean lRet = false;
+
+	Monitor::Enter (this);
+	try 
+	{
+		lRet = mAutoRepeat;
+	}
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+	return lRet;
 }
 
 void BalloonPreview::AutoRepeat::set (System::Boolean pAutoRepeat)
 {
-	mAutoRepeat = pAutoRepeat;
+	Monitor::Enter (this);
+	try 
+	{
+		mAutoRepeat = pAutoRepeat;
+	}
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
 }
 
 System::Int32 BalloonPreview::AutoPaceTime::get()
 {
-	if	(
-			(IsEnabled)
-		&&	(IsAutoPace)
-		&&	(mTextDraw)
-		&&	(
-				(mTextDraw->CanPace())
-			||	(AutoRepeat)
-			)
-		)
+	Int32 lRet = 0;
+
+	Monitor::Enter (this);
+	try 
 	{
-		return DefaultAutoPaceTime;
+		if	(
+				(IsEnabled)
+			&&	(IsAutoPace)
+			&&	(mTextDraw)
+			&&	(
+					(mTextDraw->CanPace())
+				||	(AutoRepeat)
+				)
+			)
+		{
+			lRet = DefaultAutoPaceTime;
+		}
 	}
-	return 0;
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+	return lRet;
 }
 
 System::Int32 BalloonPreview::DefaultAutoPaceTime::get()
@@ -275,16 +438,26 @@ System::Int32 BalloonPreview::DefaultAutoPaceTime::get()
 
 System::Int32 BalloonPreview::AutoScrollTime::get()
 {
-	if	(
-			(IsEnabled)
-		&&	(!IsAutoSize)
-		&&	(mShape)
-		&&	(mTextDraw)
-		)
+	Int32 lRet = 0;
+
+	Monitor::Enter (this);
+	try 
 	{
-		return mAutoScrollTime;
+		if	(
+				(IsEnabled)
+			&&	(!IsAutoSize)
+			&&	(mShape)
+			&&	(mTextDraw)
+			)
+		{
+			lRet = mAutoScrollTime;
+		}
 	}
-	return 0;
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -296,66 +469,86 @@ System::Boolean BalloonPreview::AutoPaceStarted ()
 
 System::Boolean BalloonPreview::AutoPaceStopped ()
 {
-	if	(
-			(!IsAutoPace)
-		&&	(mTextDraw)
-		&&	(mTextDraw->DisplayAllWords())
-		)
+	Boolean	lRet = false;
+
+	Monitor::Enter (this);
+	try 
 	{
-		return true;
+		if	(
+				(!IsAutoPace)
+			&&	(mTextDraw)
+			&&	(mTextDraw->DisplayAllWords())
+			)
+		{
+			lRet = true;
+		}
 	}
-	return false;
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+	return lRet;
 }
 
 System::Boolean BalloonPreview::OnAutoPace (System::Boolean% pRefresh)
 {
+	Boolean	lRet = false;
+
 	pRefresh = false;
 
-	if	(
-			(mShape)
-		&&	(mTextDraw)
-		)
+	Monitor::Enter (this);
+	try 
 	{
-		if	(mTextDraw->DisplayNextWord())
-		{
-			pRefresh = true;
-			return true;
-		}
-		else
 		if	(
-				(IsEnabled)
-			&&	(AutoRepeat)
+				(mShape)
+			&&	(mTextDraw)
 			)
 		{
-			if	(
-					(IsAutoSize)
-				||	(mTextDraw->GetScrollMax() >= mShape->mTextRect.Height()*2)
-				)
+			if	(mTextDraw->DisplayNextWord())
 			{
-				if	(++mAutoRepeatDelay > 10)
-				{
-					mAutoRepeatDelay = 0;
-					Text = NextText;
-					pRefresh = true;
-				}
+				pRefresh = true;
+				lRet = true;
 			}
 			else
 			if	(
-					(
-						(mTextDraw->GetScrollMax() > 0)
-					&&	(!mTextDraw->CanScroll (mShape->mTextRect))
-					)
-				||	(++mAutoRepeatDelay > 10)
+					(IsEnabled)
+				&&	(AutoRepeat)
 				)
 			{
-				mAutoRepeatDelay = 0;
-				NextText = NextText;
-				pRefresh = true;
+				if	(
+						(IsAutoSize)
+					||	(mTextDraw->GetScrollMax() >= mShape->mTextRect.Height*2)
+					)
+				{
+					if	(++mAutoRepeatDelay > 10)
+					{
+						mAutoRepeatDelay = 0;
+						Text = NextText;
+						pRefresh = true;
+					}
+				}
+				else
+				if	(
+						(
+							(mTextDraw->GetScrollMax() > 0)
+						&&	(!mTextDraw->CanScroll (RectangleFtoCRect (mShape->mTextRect)))
+						)
+					||	(++mAutoRepeatDelay > 10)
+					)
+				{
+					mAutoRepeatDelay = 0;
+					NextText = NextText;
+					pRefresh = true;
+				}
+				lRet = true;
 			}
-			return true;
 		}
 	}
-	return false;
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -367,31 +560,51 @@ System::Boolean BalloonPreview::AutoScrollStarted ()
 
 System::Boolean BalloonPreview::AutoScrollStopped ()
 {
-	if	(mAutoScrollTime > 0)
+	Boolean	lRet = false;
+
+	Monitor::Enter (this);
+	try 
 	{
-		mAutoScrollTime = 0;
-		return true;
+		if	(mAutoScrollTime > 0)
+		{
+			mAutoScrollTime = 0;
+			lRet = true;
+		}
 	}
-	return false;
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+	return lRet;
 }
 
 System::Boolean BalloonPreview::OnAutoScroll (System::Boolean% pRefresh)
 {
+	Boolean	lRet = false;
+	
 	pRefresh = false;
 
-	if	(
-			(mShape)
-		&&	(mTextDraw)
-		&&	(mTextDraw->CanScroll (mShape->mTextRect))
-		)
+	Monitor::Enter (this);
+	try 
 	{
-		if	(mTextDraw->Scroll ())
+		if	(
+				(mShape)
+			&&	(mTextDraw)
+			&&	(mTextDraw->CanScroll (RectangleFtoCRect (mShape->mTextRect)))
+			)
 		{
-			pRefresh = true;
+			if	(mTextDraw->Scroll ())
+			{
+				pRefresh = true;
+			}
+			lRet = true;
 		}
-		return true;
 	}
-	return false;
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -402,113 +615,281 @@ System::Boolean BalloonPreview::Draw (System::Drawing::Graphics^ pGraphics)
 {
 	Boolean	lRet = false;
 
-	if	(
-			(mBalloon)
-		&&	(mShape)
-		)
+	Monitor::Enter (this);
+	try 
 	{
-		Gdiplus::Graphics	lGraphics ((HDC)(INT_PTR)pGraphics->GetHdc());
-		Gdiplus::Color		lBkColor ((Gdiplus::ARGB) mBalloon->BkColor.ToArgb());
-		Gdiplus::Color		lBrColor ((Gdiplus::ARGB) mBalloon->BrColor.ToArgb());
-
-		try
+		if	(
+				(mBalloon)
+			&&	(mShape)
+			)
 		{
-			mShape->Draw (lGraphics, lBkColor, lBrColor);
+			try
+			{
+				mShape->Draw (pGraphics, mBalloon->BkColor, mBalloon->BrColor);
+
+				if	(mTextDraw)
+				{
+					HDC	lDC = (HDC)(INT_PTR)pGraphics->GetHdc();
+
+					try
+					{
+						HFONT		lFont = (mBalloon->Font) ? (HFONT)(INT_PTR)mBalloon->Font->ToHfont() : (HFONT)::GetStockObject (DEFAULT_GUI_FONT);
+						COLORREF	lTextColor = mBalloon->FgColor.ToArgb();
+						CRect		lTextBounds;
+						CRect		lClipRect = RectangleFtoCRect (mShape->mTextRect);
+						bool		lClipPartialLines = true;
+
+						::SetBkMode (lDC, TRANSPARENT);
+						::SetTextColor (lDC, RGB (GetBValue(lTextColor), GetGValue(lTextColor), GetRValue(lTextColor)));
+
+						if	(mTextDraw->mBounds.IsRectEmpty ())
+						{
+							mTextDraw->mBounds = RectangleFtoCRect (mShape->mTextRect);
+							mTextDraw->MeasureText (mTextDraw->GetFullText(), lDC, lFont);
+						}
+						lTextBounds = mTextDraw->mBounds;
+
+						if	(
+								(!IsAutoSize)
+							&&	(mTextDraw->CanScroll (RectangleFtoCRect (mShape->mTextRect)))
+							)
+						{
+							mTextDraw->mBounds = mTextDraw->GetUsedRect (false, mTextDraw->GetDisplayText ());
+							mTextDraw->mBounds.left = lTextBounds.left;
+							mTextDraw->mBounds.right = lTextBounds.right;
+							mAutoScrollTime = mTextDraw->InitScroll (RectangleFtoCRect (mShape->mTextRect), (mAutoScrollTime<=0), lClipPartialLines, DefaultAutoPaceTime);
+							if	(lClipPartialLines)
+							{
+								mTextDraw->ApplyScroll (RectangleFtoCRect (mShape->mTextRect), &lClipRect);
+							}
+							else
+							{
+								mTextDraw->ApplyScroll (RectangleFtoCRect (mShape->mTextRect));
+							}
+						}
+
+						if	(
+								(IsAutoPace)
+							&&	(mTextDraw->GetWordDisplayed() < mTextDraw->GetWordCount())
+							)
+						{
+							mTextDraw->DrawText (lDC, &mTextDraw->mBounds, mTextDraw->GetDisplayText(), lFont, &lClipRect);
+						}
+						else
+						{
+							mTextDraw->DrawText (lDC, lFont, &lClipRect);
+						}
+						mTextDraw->mBounds = lTextBounds;
+					}
+					catch AnyExceptionDebug
+
+					pGraphics->ReleaseHdc ((IntPtr)lDC);
+				}
+				lRet = true;
+			}
+			catch AnyExceptionDebug
+		}
+	}
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+#if	(__CLR_VER >= 40000000)
+static void MakeDrawingText (System::Windows::Media::DrawingGroup^ pDrawing, CAgentTextDraw & pTextDraw, System::Drawing::Font^ pFont, System::Windows::Media::Brush^ pBrush, CRect & pClipRect)
+{
+	System::Windows::Media::DrawingContext^ lDrawingContext = pDrawing->Append ();
+
+	System::Windows::Media::Typeface^	lFontFace = nullptr;
+	Single								lFontSize = pFont->GetHeight (96.0);
+	System::Windows::FontWeight			lFontWeight = pFont->Bold ? System::Windows::FontWeights::Bold : System::Windows::FontWeights::Normal;
+	System::Windows::FontStyle			lFontStyle  = (((int)pFont->Style & (int)System::Drawing::FontStyle::Italic) != 0) ? System::Windows::FontStyles::Italic : System::Windows::FontStyles::Normal;
+	System::Globalization::CultureInfo^	lTextCulture = System::Globalization::CultureInfo::CurrentUICulture;
+	System::Windows::FlowDirection		lTextFlow = System::Windows::FlowDirection::LeftToRight;
+
+	try
+	{
+		lFontFace = gcnew System::Windows::Media::Typeface (String::IsNullOrEmpty (pFont->OriginalFontName) ? pFont->Name : pFont->OriginalFontName);
+		//LogMessage (LogNormal, _T("Font [%s] Style [%s] Weight [%s] Stretch [%s] Underline [%s %s] Strikethrough [%s %s]"), _B(lFontFace->FontFamily->ToString()), _B(lFontFace->Style.ToString()), _B(lFontFace->Weight.ToString()), _B(lFontFace->Stretch.ToString()), _B(lFontFace->UnderlinePosition.ToString()), _B(lFontFace->UnderlineThickness.ToString()), _B(lFontFace->StrikethroughPosition.ToString()), _B(lFontFace->StrikethroughThickness.ToString()));
+	}
+	catch AnyExceptionSilent
+
+	try
+	{
+		int			lNdx;
+		POLYTEXT *	lLine;
+		CPoint		lLinePos;
+		CRect		lLineRect;
+		LPCTSTR		lLineText;
+		int			lLineStart = 0;
+		int			lLineLength;
+		CAtlString	lText = pTextDraw.GetDisplayText();
+		LPCTSTR		lTextEnd = (LPCTSTR)lText + lText.GetLength();
+
+		//LogMessage (LogNormal, _T("Text [%s]"), DebugStr(lText));
+
+		lDrawingContext->PushClip (gcnew System::Windows::Media::RectangleGeometry (System::Windows::Rect (pClipRect.left, pClipRect.top, pClipRect.Width(), pClipRect.Height())));
+
+		for	(lNdx = 0; lLine = pTextDraw.GetLines() (lNdx); lNdx++)
+		{
+			lLineLength = lLine->n;
+
+			lLineText = (LPCTSTR)lText + lLineStart;
+			while	(
+						(lLineText < lTextEnd)
+					&&	(*lLineText == _T('\n'))
+					)
+			{
+				lLineStart++;
+				lLineText++;
+			}
+			if	(lLineText >= lTextEnd)
+			{
+				break;
+			}
+			lLineLength = min (lLineLength, lTextEnd - lLineText);
+
+			lLinePos.x = pTextDraw.mBounds.left + lLine->x;
+			lLinePos.y = pTextDraw.mBounds.top + lLine->rcl.top + lLine->y;
+			lLineRect.SetRect (pTextDraw.mBounds.left, pTextDraw.mBounds.top + lLine->rcl.top, pTextDraw.mBounds.right, pTextDraw.mBounds.top + lLine->rcl.bottom);
+
+			lDrawingContext->PushClip (gcnew System::Windows::Media::RectangleGeometry (System::Windows::Rect (lLineRect.left, lLineRect.top, lLineRect.Width(), lLineRect.Height())));
+			
+			System::Windows::Media::FormattedText^	lFormattedText = gcnew System::Windows::Media::FormattedText (gcnew String(lLineText, 0, lLineLength), lTextCulture, lTextFlow, lFontFace, lFontSize, pBrush);
+			lDrawingContext->DrawText (lFormattedText, System::Windows::Point (lLinePos.x, lLinePos.y));
+			//LogMessage (LogNormal, _T("Line [%s (%d %d)] at [%d %d]"), _B(lFormattedText->Text), lLineStart, lLineLength, lLinePos.x, lLinePos.y);
+
+			lDrawingContext->Pop ();
+
+			lLineStart += lLine->n;
+		}
+
+		lDrawingContext->Pop ();
+	}
+	catch AnyExceptionDebug
+
+	lDrawingContext->Close ();
+}
+
+System::Windows::Media::Drawing^ BalloonPreview::MakeDrawing ()
+{
+	System::Windows::Media::Drawing^	lRet = nullptr;
+
+	Monitor::Enter (this);
+	try 
+	{
+		if	(
+				(mBalloon)
+			&&	(mShape)
+			)
+		{
+			System::Windows::Media::DrawingGroup^	lDrawingGroup = gcnew System::Windows::Media::DrawingGroup;
+
+			lDrawingGroup->Children->Add (mShape->MakeDrawing (mBalloon->BkColor, mBalloon->BrColor));
 
 			if	(mTextDraw)
 			{
-				HDC	lDC = lGraphics.GetHDC();
-
 				try
 				{
-					HFONT		lFont = (mBalloon->Font) ? (HFONT)(INT_PTR)mBalloon->Font->ToHfont() : (HFONT)::GetStockObject (DEFAULT_GUI_FONT);
-					COLORREF	lTextColor = mBalloon->FgColor.ToArgb();
-					CRect		lTextBounds;
-					CRect		lClipRect = mShape->mTextRect;
-					bool		lClipPartialLines = true;
-
-					::SetBkMode (lDC, TRANSPARENT);
-					::SetTextColor (lDC, RGB (GetBValue(lTextColor), GetGValue(lTextColor), GetRValue(lTextColor)));
+					System::Windows::Media::Brush^	lTextBrush = gcnew System::Windows::Media::SolidColorBrush (System::Windows::Media::Color::FromArgb (mBalloon->FgColor.A, mBalloon->FgColor.R, mBalloon->FgColor.G, mBalloon->FgColor.B));
+					CRect							lTextBounds;
+					CRect							lClipRect = RectangleFtoCRect (mShape->mTextRect);
+					bool							lClipPartialLines = true;
 
 					if	(mTextDraw->mBounds.IsRectEmpty ())
 					{
-						mTextDraw->mBounds = mShape->mTextRect;
+						HDC		lDC = CreateCompatibleDC (0);
+						HFONT	lFont = (mBalloon->Font) ? (HFONT)(INT_PTR)mBalloon->Font->ToHfont() : (HFONT)::GetStockObject (DEFAULT_GUI_FONT);
+
+						mTextDraw->mBounds = RectangleFtoCRect (mShape->mTextRect);
 						mTextDraw->MeasureText (mTextDraw->GetFullText(), lDC, lFont);
+
+						DeleteDC (lDC);
 					}
 					lTextBounds = mTextDraw->mBounds;
 
 					if	(
 							(!IsAutoSize)
-						&&	(mTextDraw->CanScroll (mShape->mTextRect))
+						&&	(mTextDraw->CanScroll (RectangleFtoCRect (mShape->mTextRect)))
 						)
 					{
 						mTextDraw->mBounds = mTextDraw->GetUsedRect (false, mTextDraw->GetDisplayText ());
 						mTextDraw->mBounds.left = lTextBounds.left;
 						mTextDraw->mBounds.right = lTextBounds.right;
-						mAutoScrollTime = mTextDraw->InitScroll (mShape->mTextRect, (mAutoScrollTime<=0), lClipPartialLines, DefaultAutoPaceTime);
+						mAutoScrollTime = mTextDraw->InitScroll (RectangleFtoCRect (mShape->mTextRect), (mAutoScrollTime<=0), lClipPartialLines, DefaultAutoPaceTime);
 						if	(lClipPartialLines)
 						{
-							mTextDraw->ApplyScroll (mShape->mTextRect, &lClipRect);
+							mTextDraw->ApplyScroll (RectangleFtoCRect (mShape->mTextRect), &lClipRect);
 						}
 						else
 						{
-							mTextDraw->ApplyScroll (mShape->mTextRect);
+							mTextDraw->ApplyScroll (RectangleFtoCRect (mShape->mTextRect));
 						}
 					}
 
-					if	(
-							(IsAutoPace)
-						&&	(mTextDraw->GetWordDisplayed() < mTextDraw->GetWordCount())
-						)
-					{
-						mTextDraw->DrawText (lDC, &mTextDraw->mBounds, mTextDraw->GetDisplayText(), lFont, &lClipRect);
-					}
-					else
-					{
-						mTextDraw->DrawText (lDC, lFont, &lClipRect);
-					}
+					MakeDrawingText (lDrawingGroup, *mTextDraw, mBalloon->Font, lTextBrush, lClipRect);
+
+					//if	(
+					//		(IsAutoPace)
+					//	&&	(mTextDraw->GetWordDisplayed() < mTextDraw->GetWordCount())
+					//	)
+					//{
+					//	mTextDraw->DrawText (lDC, &mTextDraw->mBounds, mTextDraw->GetDisplayText(), lFont, &lClipRect);
+					//}
+					//else
+					//{
+					//	mTextDraw->DrawText (lDC, lFont, &lClipRect);
+					//}
 					mTextDraw->mBounds = lTextBounds;
 				}
 				catch AnyExceptionDebug
-
-				lGraphics.ReleaseHDC (lDC);
 			}
-			lRet = true;
-		}
-		catch AnyExceptionDebug
 
-		pGraphics->ReleaseHdc ();
+			lRet = lDrawingGroup;
+		}
 	}
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
 	return lRet;
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
 
-System::Drawing::Rectangle BalloonPreview::CalcShapeRect ()
+System::Drawing::RectangleF BalloonPreview::CalcShapeRect ()
 {
 	if	(
 			(mBalloon)
 		&&	(mShape)
 		)
 	{
-		System::Drawing::Size	lTextSize = GetTextSize();
-		CRect					lTextRect (CPoint (0, 0), CSize (lTextSize.Width, lTextSize.Height));
-		CRect					lOwnerRect (CPoint (0, lTextSize.Height), CSize (lTextSize.Width, lTextSize.Height+40));
-		CRect					lBounds (0, 0, SHRT_MAX, SHRT_MAX);
-		CRect					lShapeRect;
+		System::Drawing::SizeF		lTextSize = GetTextSize();
+		System::Drawing::RectangleF	lTextRect (0, 0, lTextSize.Width, lTextSize.Height);
+		System::Drawing::RectangleF	lOwnerRect (0, lTextRect.Bottom+mShape->LayoutMargin.Height*2, lTextSize.Width, mShape->LayoutMargin.Height*4);
+		System::Drawing::RectangleF	lBounds (0, 0, Single::MaxValue, Single::MaxValue);
+		System::Drawing::RectangleF	lShapeRect;
 
 		lShapeRect = mShape->RecalcLayout (lTextRect, lOwnerRect, lBounds);
 		if	(mTextDraw)
 		{
-			mTextDraw->mBounds.OffsetRect (mShape->mTextRect.left - mTextDraw->mBounds.left, mShape->mTextRect.top - mTextDraw->mBounds.top);
+			mTextDraw->mBounds.OffsetRect (RectangleFtoCRect (mShape->mTextRect).left - mTextDraw->mBounds.left, RectangleFtoCRect (mShape->mTextRect).top - mTextDraw->mBounds.top);
 		}
-
-		return System::Drawing::Rectangle (0, 0, lShapeRect.Width(), lShapeRect.Height());
+		return System::Drawing::RectangleF (lShapeRect.X, lShapeRect.Y, lShapeRect.Width, lShapeRect.Height);
 	}
-	return System::Drawing::Rectangle (0,0,0,0);
+	return System::Drawing::RectangleF (0,0,0,0);
 }
 
-System::Drawing::Size BalloonPreview::GetTextSize ()
+System::Drawing::SizeF BalloonPreview::GetTextSize ()
 {
 	if	(
 			(mBalloon)
@@ -532,7 +913,7 @@ System::Drawing::Size BalloonPreview::GetTextSize ()
 		mTextDraw->mBounds.SetRect (0, 0, lTextSize.cx, lTextSize.cy);
 		mTextDraw->MeasureText (mTextDraw->GetFullText(), NULL, lFont);
 
-		return System::Drawing::Size (lTextSize.cx, lTextSize.cy);
+		return System::Drawing::SizeF ((float)lTextSize.cx, (float)lTextSize.cy);
 	}
 	return System::Drawing::Size (32,16);
 }

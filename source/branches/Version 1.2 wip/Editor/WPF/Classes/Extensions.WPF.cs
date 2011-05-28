@@ -50,6 +50,63 @@ namespace AgentCharacterEditor.Global
 
 	///////////////////////////////////////////////////////////////////////////////
 
+	public static class DrawingExtensions
+	{
+		static public System.Windows.Point ToWPF (this System.Drawing.Point pPoint)
+		{
+			return new System.Windows.Point (pPoint.X, pPoint.Y);
+		}
+		static public System.Windows.Point ToWPF (this System.Drawing.PointF pPoint)
+		{
+			return new System.Windows.Point (pPoint.X, pPoint.Y);
+		}
+		static public System.Drawing.PointF FromWPF (this System.Windows.Point pPoint)
+		{
+			return new System.Drawing.PointF ((Single)pPoint.X, (Single)pPoint.Y);
+		}
+
+		static public System.Windows.Size ToWPF (this System.Drawing.Size pSize)
+		{
+			return new System.Windows.Size (pSize.Width, pSize.Width);
+		}
+		static public System.Windows.Size ToWPF (this System.Drawing.SizeF pSize)
+		{
+			return new System.Windows.Size (pSize.Width, pSize.Width);
+		}
+		static public System.Drawing.SizeF FromWPF (this System.Windows.Size pSize)
+		{
+			return new System.Drawing.SizeF ((Single)pSize.Width, (Single)pSize.Width);
+		}
+
+		static public System.Windows.Rect ToWPF (this System.Drawing.Rectangle pRect)
+		{
+			return new System.Windows.Rect (pRect.X, pRect.Y, pRect.Width, pRect.Width);
+		}
+		static public System.Windows.Rect ToWPF (this System.Drawing.RectangleF pRect)
+		{
+			return new System.Windows.Rect (pRect.X, pRect.Y, pRect.Width, pRect.Width);
+		}
+		static public System.Drawing.RectangleF FromWPF (this System.Windows.Rect pRect)
+		{
+			return new System.Drawing.RectangleF ((Single)pRect.X, (Single)pRect.Y, (Single)pRect.Width, (Single)pRect.Width);
+		}
+
+		static public System.Windows.Media.Color ToWPF (this System.Drawing.Color pColor)
+		{
+			return System.Windows.Media.Color.FromArgb (pColor.A, pColor.R, pColor.G, pColor.B);
+		}
+		static public System.Windows.Media.Brush ToWPFBrush (this System.Drawing.Color pColor)
+		{
+			return new System.Windows.Media.SolidColorBrush (pColor.ToWPF());
+		}
+		static public System.Drawing.Color FromWPF (this System.Windows.Media.Color pColor)
+		{
+			return System.Drawing.Color.FromArgb (pColor.A, pColor.R, pColor.G, pColor.B);
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+
 	public static class EditEventsExtensions
 	{
 		static public void PutCutTitle (this CanExecuteRoutedEventArgs pEventArgs)

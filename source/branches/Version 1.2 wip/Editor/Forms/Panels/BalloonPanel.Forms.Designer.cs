@@ -106,7 +106,7 @@ namespace AgentCharacterEditor.Panels
 			this.CheckBoxWordBalloon.TabIndex = 0;
 			this.CheckBoxWordBalloon.Text = "Use the Word Balloon";
 			this.CheckBoxWordBalloon.UseVisualStyleBackColor = true;
-			this.CheckBoxWordBalloon.CheckedChanged += new System.EventHandler(this.CheckBoxWordBalloon_CheckedChanged);
+			this.CheckBoxWordBalloon.CheckedChanged += new System.EventHandler(this.CheckBoxWordBalloon_CheckChangedChanged);
 			// 
 			// GroupBoxBalloonDisplay
 			// 
@@ -195,7 +195,7 @@ namespace AgentCharacterEditor.Panels
 			this.CheckBoxAutoPace.TabIndex = 6;
 			this.CheckBoxAutoPace.Text = "Auto-pace";
 			this.CheckBoxAutoPace.UseVisualStyleBackColor = true;
-			this.CheckBoxAutoPace.CheckedChanged += new System.EventHandler(this.CheckBoxAutoPace_CheckedChanged);
+			this.CheckBoxAutoPace.CheckedChanged += new System.EventHandler(this.CheckBoxAutoPace_CheckChangedChanged);
 			// 
 			// ButtonBalloonBackground
 			// 
@@ -218,7 +218,7 @@ namespace AgentCharacterEditor.Panels
 			this.CheckBoxAutoHide.TabIndex = 5;
 			this.CheckBoxAutoHide.Text = "Auto-hide";
 			this.CheckBoxAutoHide.UseVisualStyleBackColor = true;
-			this.CheckBoxAutoHide.CheckedChanged += new System.EventHandler(this.CheckBoxAutoHide_CheckedChanged);
+			this.CheckBoxAutoHide.CheckedChanged += new System.EventHandler(this.CheckBoxAutoHide_CheckChangedChanged);
 			// 
 			// ButtonBalloonForeground
 			// 

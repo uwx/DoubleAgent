@@ -19,9 +19,13 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#pragma unmanaged
-/////////////////////////////////////////////////////////////////////////////
 #include "AgentBalloonShape.h"
+#ifdef	__cplusplus_cli
+using namespace System;
+using namespace System::Drawing;
+using namespace System::Drawing::Imaging;
+using namespace System::Drawing::Drawing2D;
+#else
 #include "ImageAlpha.h"
 #include "ImageBuffer.h"
 #include "ImageTools.h"
@@ -30,32 +34,46 @@
 #include "ImageDebugger.h"
 #endif
 
+#ifndef	PI
+#define	PI 3.141592
+#endif
+#endif
+
 #ifdef	_DEBUG
 //#define	_DEBUG_LAYOUT		LogDebug
 //#define	_TRACE_LAYOUT		LogDebug
 //#define	_DEBUG_DRAW			LogDebug
 #endif
 
-#ifndef	PI
-#define	PI 3.141592
-#endif
-
 /////////////////////////////////////////////////////////////////////////////
 
 CAgentBalloonShape::CAgentBalloonShape()
-:	mShadowOffset (3,3)
 {
+#ifdef	__cplusplus_cli
+	mShadowOffset.X = 3;
+	mShadowOffset.Y = 3;
+#else
+	mShadowOffset.x = mShadowOffset.y = 3;
+#endif
 	InitLayout ();
 }
 
+#ifndef	__cplusplus_cli
 CAgentBalloonShape::~CAgentBalloonShape()
 {
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
 void CAgentBalloonShape::InitLayout ()
 {
+#ifdef	__cplusplus_cli
+	mRounding.Width = 7;
+	mRounding.Height = 7;
+	mCalloutSize.Width = 4;
+	mCalloutSize.Height = 8;
+#else
 	DWORD	lDialogUnits = MAKELONG (12,6); //GetDialogBaseUnits ();
 
 	mRounding.cx = MulDiv (LOWORD (lDialogUnits), 2, 1);
@@ -67,15 +85,69 @@ void CAgentBalloonShape::InitLayout ()
 	mCalloutSize.cy = MulDiv (LOWORD (lDialogUnits), 2, 3);
 
 	mBalloonRect.SetRectEmpty ();
+#endif
 }
 
-CRect CAgentBalloonShape::RecalcLayout (const CRect& pTextRect, const CRect& pRefRect, const CRect& pBounds)
+#ifdef	__cplusplus_cli
+System::Drawing::SizeF CAgentBalloonShape::Rounding::get()
 {
+	return mRounding;
+}
+
+System::Drawing::SizeF CAgentBalloonShape::LayoutMargin::get()
+{
+	return mCalloutSize;
+}
+#else
+CSize CAgentBalloonShape::GetRounding () const
+{
+	return mRounding;
+}
+
+CSize CAgentBalloonShape::GetLayoutMargin () const
+{
+	return mCalloutSize;
+}
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+
+#ifdef	__cplusplus_cli
+System::Drawing::RectangleF CAgentBalloonShape::RecalcLayout (System::Drawing::RectangleF pTextRect, System::Drawing::RectangleF pRefRect, System::Drawing::RectangleF pBounds)
+#else
+CRect CAgentBalloonShape::RecalcLayout (const CRect& pTextRect, const CRect& pRefRect, const CRect& pBounds)
+#endif
+{
+#ifdef	_TRACE_LAYOUT
+#ifdef	__cplusplus_cli
+	LogMessage (_TRACE_LAYOUT, _T("RecalcLayout Text [%.1f %.1f %.1f %.1f] Ref [%.1f %.1f %.1f %.1f] Bounds [%.1f %.1f %.1f %.1f]"), pTextRect.Left, pTextRect.Top, pTextRect.Right, pTextRect.Bottom, pRefRect.Left, pRefRect.Top, pRefRect.Right, pRefRect.Bottom, pBounds.Left, pBounds.Top, pBounds.Right, pBounds.Bottom);
+#else
+	LogMessage (_TRACE_LAYOUT, _T("RecalcLayout Text [%d %d %d %d] Ref [%d %d %d %d] Bounds [%d %d %d %d]"), pTextRect.left, pTextRect.top, pTextRect.right, pTextRect.bottom, pRefRect.left, pRefRect.top, pRefRect.right, pRefRect.bottom, pBounds.left, pBounds.top, pBounds.right, pBounds.bottom);
+#endif	
+#endif	
+
 	CalcLayout (pTextRect, pRefRect, pBounds, mBalloonRect, mCalloutBeg, mCalloutEnd);
 
+#ifdef	__cplusplus_cli
+	mBounds.X = min (mBalloonRect.Left, mCalloutBeg.X);
+	mBounds.Y = min (mBalloonRect.Top, mCalloutBeg.Y);
+	mBounds.Width = max (mBalloonRect.Width, mCalloutBeg.X-mBounds.X);
+	mBounds.Height = max (mBalloonRect.Height, mCalloutBeg.Y-mBounds.Y);
+
+	mBalloonRect.Offset (-mBounds.Left, -mBounds.Top);
+	mCalloutBeg.X -= mBounds.Left;
+	mCalloutBeg.Y -= mBounds.Top;
+	mCalloutEnd.X -= mBounds.Left;
+	mCalloutEnd.Y -= mBounds.Top;
+	mTextRect = pTextRect;
+	mTextRect.Offset (mBalloonRect.Left + mRounding.Width - mTextRect.Left, mBalloonRect.Top + mRounding.Height - mTextRect.Top);
+
+	mBounds.Width += mShadowOffset.X*2;
+	mBounds.Height += mShadowOffset.Y*2;
+#else
 	mBounds.left = min (mBalloonRect.left, mCalloutBeg.x);
-	mBounds.right = max (mBalloonRect.right, mCalloutBeg.x+1);
 	mBounds.top = min (mBalloonRect.top, mCalloutBeg.y);
+	mBounds.right = max (mBalloonRect.right, mCalloutBeg.x+1);
 	mBounds.bottom = max (mBalloonRect.bottom, mCalloutBeg.y+1);
 
 	mBalloonRect.OffsetRect (-mBounds.left, -mBounds.top);
@@ -88,21 +160,48 @@ CRect CAgentBalloonShape::RecalcLayout (const CRect& pTextRect, const CRect& pRe
 
 	mBounds.right += mShadowOffset.x*2;
 	mBounds.bottom += mShadowOffset.y*2;
+#endif
+
+#ifdef	_TRACE_LAYOUT
+#ifdef	__cplusplus_cli
+	LogMessage (_TRACE_LAYOUT, _T("RecalcLayout Text [%.1f %.1f %.1f %.1f] Balloon [%.1f %.1f %.1f %.1f] Bounds [%.1f %.1f %.1f %.1f]"), mTextRect.Left, mTextRect.Top, mTextRect.Right, mTextRect.Bottom, mBalloonRect.Left, mBalloonRect.Top, mBalloonRect.Right, mBalloonRect.Bottom, mBounds.Left, mBounds.Top, mBounds.Right, mBounds.Bottom);
+#else
+	LogMessage (_TRACE_LAYOUT, _T("RecalcLayout Text [%d %d %d %d] Balloon [%d %d %d %d] Bounds [%d %d %d %d]"), mTextRect.left, mTextRect.top, mTextRect.right, mTextRect.bottom, mBalloonRect.left, mBalloonRect.top, mBalloonRect.right, mBalloonRect.bottom, mBounds.left, mBounds.top, mBounds.right, mBounds.bottom);
+#endif	
+#endif	
 
 	return mBounds;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef	__cplusplus_cli
+void CAgentBalloonShape::CalcLayout (System::Drawing::RectangleF pTextRect, System::Drawing::RectangleF pRefRect, System::Drawing::RectangleF pBounds, System::Drawing::RectangleF% pBalloonRect, System::Drawing::PointF% pCalloutBeg, System::Drawing::PointF% pCalloutEnd)
+#else
 void CAgentBalloonShape::CalcLayout (const CRect& pTextRect, const CRect& pRefRect, const CRect& pBounds, CRect& pBalloonRect, CPoint& pCalloutBeg, CPoint& pCalloutEnd)
+#endif
 {
+#ifdef	__cplusplus_cli
+	SizeF		lRefSize;
+	PointF		lRefCenter;
+	SizeF		lBalloonSize;
+	PointF		lBalloonCenter;
+#else
 	_complex	lRefSize;
 	_complex	lRefCenter;
 	_complex	lBalloonSize;
 	_complex	lBalloonCenter;
 	_complex	lBegPos;
 	_complex	lEndPos;
+#endif
 
+#ifdef	__cplusplus_cli
+	pBalloonRect = pTextRect;
+	pBalloonRect.Inflate (mRounding.Width, mRounding.Height);
+	pBalloonRect.Inflate (mRounding.Width, mRounding.Height);
+	ValidateBalloonRect (pBalloonRect, pRefRect, pBounds);
+	pBalloonRect.Inflate (-mRounding.Width, -mRounding.Height);
+#else
 	pBalloonRect = pTextRect;
 	pBalloonRect.InflateRect (mRounding.cx, mRounding.cy);
 	pBalloonRect.InflateRect (mRounding.cx, mRounding.cy);
@@ -115,15 +214,31 @@ void CAgentBalloonShape::CalcLayout (const CRect& pTextRect, const CRect& pRefRe
 	TraceRect (pRefRect, RGB(0x00,0xFF,0x00));
 	TraceRect (pTextRect, RGB(0x00,0xFF,0xFF));
 #endif
+#endif
 
+#ifdef	__cplusplus_cli
+	lRefSize.Width = pRefRect.Width;
+	lRefSize.Height = pRefRect.Height;
+	lRefCenter.X = pRefRect.X + lRefSize.Width/2.0f;
+	lRefCenter.Y = pRefRect.Y + lRefSize.Height/2.0f;
+	lBalloonSize.Width = pBalloonRect.Width;
+	lBalloonSize.Height = pBalloonRect.Height;
+	lBalloonCenter.X = pBalloonRect.X + lBalloonSize.Width/2.0f;
+	lBalloonCenter.Y = pBalloonRect.Y + lBalloonSize.Height/2.0f;
+
+#ifdef	_TRACE_LAYOUT
+	LogMessage (_TRACE_LAYOUT, _T("Text [%.1f %.1f %.1f %.1f] Balloon [%.1f %.1f %.1f %.1f] Ref [%.1f %.1f %.1f %.1f] Bounds [%.1f %.1f %.1f %.1f]"), pTextRect.Left, pTextRect.Top, pTextRect.Right, pTextRect.Bottom, pBalloonRect.Left, pBalloonRect.Top, pBalloonRect.Right, pBalloonRect.Bottom, pRefRect.Left, pRefRect.Top, pRefRect.Right, pRefRect.Bottom, pBounds.Left, pBounds.Top, pBounds.Right, pBounds.Bottom);
+	LogMessage (_TRACE_LAYOUT, _T("  Balloon [%.1f %.1f] center [%.1f %.1f] Ref [%.1f %.1f] center [%.1f %.1f]"), lBalloonSize.Width, lBalloonSize.Height, lBalloonCenter.X, lBalloonCenter.Y, lRefSize.Width, lRefSize.Height, lRefCenter.X, lRefCenter.Y);
+#endif
+#else
 	lRefSize.x = (double)pRefRect.Width();
 	lRefSize.y = (double)pRefRect.Height();
-	lRefCenter.x = (double)pRefRect.left + lRefSize.x/2.0 - 0.5;
-	lRefCenter.y = (double)pRefRect.top + lRefSize.y/2.0 - 0.5;
+	lRefCenter.x = (double)pRefRect.left + lRefSize.x/2.0f - 0.5f;
+	lRefCenter.y = (double)pRefRect.top + lRefSize.y/2.0f - 0.5f;
 	lBalloonSize.x = (double)pBalloonRect.Width();
 	lBalloonSize.y = (double)pBalloonRect.Height();
-	lBalloonCenter.x = (double)pBalloonRect.left + lBalloonSize.x/2.0 - 0.5;
-	lBalloonCenter.y = (double)pBalloonRect.top + lBalloonSize.y/2.0 - 0.5;
+	lBalloonCenter.x = (double)pBalloonRect.left + lBalloonSize.x/2.0f - 0.5f;
+	lBalloonCenter.y = (double)pBalloonRect.top + lBalloonSize.y/2.0f - 0.5f;
 
 #ifdef	_TRACE_LAYOUT
 	LogMessage (_TRACE_LAYOUT, _T("Text [%d %d %d %d] Balloon [%d %d %d %d] Ref [%d %d %d %d] Bounds [%d %d %d %d]"), pTextRect.left, pTextRect.top, pTextRect.right, pTextRect.bottom, pBalloonRect.left, pBalloonRect.top, pBalloonRect.right, pBalloonRect.bottom, pRefRect.left, pRefRect.top, pRefRect.right, pRefRect.bottom, pBounds.left, pBounds.top, pBounds.right, pBounds.bottom);
@@ -131,10 +246,17 @@ void CAgentBalloonShape::CalcLayout (const CRect& pTextRect, const CRect& pRefRe
 	TracePointFill (lBalloonCenter, RGB(0xFF,0x00,0x00));
 	TracePointFill (lRefCenter, RGB(0x00,0xFF,0x00));
 #endif
+#endif
 
-	CalcRectIntersect (lRefCenter, lBalloonCenter, lBalloonSize, lEndPos, 0.5);
-	CalcRectIntersect (lEndPos, lRefCenter, lRefSize, lBegPos);
+	CalcRectIntersect (lRefCenter, lBalloonCenter, lBalloonSize, pCalloutEnd, 0.5);
+	CalcRectIntersect (pCalloutEnd, lRefCenter, lRefSize, pCalloutBeg);
 
+#ifdef	__cplusplus_cli
+#ifdef	_TRACE_LAYOUT
+	Single lCalloutLgth = Math::Sqrt ((pCalloutEnd.X-pCalloutBeg.X)+(pCalloutEnd.X-pCalloutBeg.X) + (pCalloutEnd.Y-pCalloutBeg.Y)*(pCalloutEnd.Y-pCalloutBeg.Y));
+	LogMessage (_TRACE_LAYOUT, _T("  Callout Beg [%.1f %.1f] End [%.1f %.1f] Length [%.1f]"), pCalloutBeg.X, pCalloutBeg.Y, pCalloutEnd.X, pCalloutEnd.Y, lCalloutLgth);
+#endif
+#else
 #ifdef	_TRACE_LAYOUT
 	TracePointFill (lRefCenter, RGB(0x00,0xFF,0x00));
 	TracePointFill (lBegPos, RGB(0x80,0xFF,0x00));
@@ -143,9 +265,15 @@ void CAgentBalloonShape::CalcLayout (const CRect& pTextRect, const CRect& pRefRe
 
 #ifdef	_TRACE_LAYOUT
 	double lCalloutLgth = _hypot (lEndPos.x - lBegPos.x, lEndPos.y - lBegPos.y);
-	LogMessage (_TRACE_LAYOUT, _T("  Beg [%.1f %.1f] End [%.1f %.1f] Length [%d]"), lBegPos.x, lBegPos.y, lEndPos.x, lEndPos.y, dtol(lCalloutLgth));
+	LogMessage (_TRACE_LAYOUT, _T("  Callout Beg [%.1f %.1f] End [%.1f %.1f] Length [%d]"), lBegPos.x, lBegPos.y, lEndPos.x, lEndPos.y, dtol(lCalloutLgth));
+#endif
 #endif
 
+#ifdef	__cplusplus_cli
+	pBalloonRect = RectangleF (lBalloonCenter.X-lBalloonSize.Width/2.0f, lBalloonCenter.Y-lBalloonSize.Height/2.0f, pBalloonRect.Width, pBalloonRect.Height);
+	FixupNearPoint (pCalloutBeg, pRefRect);
+	FixupNearPoint (pCalloutEnd, pBalloonRect);
+#else
 	pBalloonRect = CRect (CPoint (dtolUp(lBalloonCenter.x-lBalloonSize.x/2.0), dtolUp(lBalloonCenter.y-lBalloonSize.y/2.0)), pBalloonRect.Size());
 	pCalloutBeg.x = dtol(lBegPos.x);
 	pCalloutBeg.y = dtol(lBegPos.y);
@@ -153,13 +281,32 @@ void CAgentBalloonShape::CalcLayout (const CRect& pTextRect, const CRect& pRefRe
 	pCalloutEnd.y = dtol(lEndPos.y);
 	FixupNearPoint (pCalloutBeg, pRefRect);
 	FixupNearPoint (pCalloutEnd, pBalloonRect);
+#endif
 
+#ifdef	__cplusplus_cli
+	if	(
+			(pCalloutEnd.X <= pBalloonRect.Left + mRounding.Width)
+		||	(pCalloutEnd.X > pBalloonRect.Right - mRounding.Width)
+		)
+	{
+		pCalloutEnd.Y = Math::Min (Math::Max (pCalloutEnd.Y, pBalloonRect.Top + mRounding.Height + mCalloutSize.Height*2), pBalloonRect.Bottom - mRounding.Height - mCalloutSize.Height*2);
+	}
+	else
+	{
+		pCalloutEnd.X = Math::Min (Math::Max (pCalloutEnd.X, pBalloonRect.Left + mRounding.Width + mCalloutSize.Width*2), pBalloonRect.Right - mRounding.Width - mCalloutSize.Width*2);
+	}
+
+#ifdef	_TRACE_LAYOUT
+	LogMessage (_TRACE_LAYOUT, _T("  Text [%.1f %.1f %.1f %.1f] Balloon [%.1f %.1f %.1f %.1f] Ref [%.1f %.1f %.1f %.1f] Bounds [%.1f %.1f %.1f %.1f]"), pTextRect.Left, pTextRect.Top, pTextRect.Right, pTextRect.Bottom, pBalloonRect.Left, pBalloonRect.Top, pBalloonRect.Right, pBalloonRect.Bottom, pRefRect.Left, pRefRect.Top, pRefRect.Right, pRefRect.Bottom, pBounds.Left, pBounds.Top, pBounds.Right, pBounds.Bottom);
+	LogMessage (_TRACE_LAYOUT, _T("  Callout Beg [%.1f %.1f] End [%.1f %.1f]"), pCalloutBeg.X, pCalloutBeg.Y, pCalloutEnd.X, pCalloutEnd.Y);
+#endif	
+#else
 	if	(
 			(pCalloutEnd.x <= pBalloonRect.left + mRounding.cx)
 		||	(pCalloutEnd.x > pBalloonRect.right - mRounding.cx)
 		)
 	{
-		pCalloutEnd.y = min (max (pCalloutEnd.y, pBalloonRect.top + mRounding.cy + mCalloutSize.cx*2), pBalloonRect.bottom - mRounding.cy - mCalloutSize.cx*2);
+		pCalloutEnd.y = min (max (pCalloutEnd.y, pBalloonRect.top + mRounding.cy + mCalloutSize.cy*2), pBalloonRect.bottom - mRounding.cy - mCalloutSize.cy*2);
 	}
 	else
 	{
@@ -174,6 +321,7 @@ void CAgentBalloonShape::CalcLayout (const CRect& pTextRect, const CRect& pRefRe
 	TracePointFrame (pCalloutEnd, RGB(0xFF,0xFF,0xFF));
 	ShowTrace ();
 #endif
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -183,17 +331,60 @@ void CAgentBalloonShape::CalcLayout (const CRect& pTextRect, const CRect& pRefRe
 //
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentBalloonShape::CalcRectIntersect (const _complex& pRefPoint, const _complex& pRectCenter, const _complex& pRectSize, _complex& pRectIntersect, double pMinAngle)
+#ifdef	__cplusplus_cli
+void CAgentBalloonShape::CalcRectIntersect (System::Drawing::PointF pRefPoint, System::Drawing::PointF pRectCenter, System::Drawing::SizeF pRectSize, System::Drawing::PointF% pRectIntersect)
 {
+	CalcRectIntersect (pRefPoint, pRectCenter, pRectSize, pRectIntersect, 0.0);
+}
+
+void CAgentBalloonShape::CalcRectIntersect (System::Drawing::PointF pRefPoint, System::Drawing::PointF pRectCenter, System::Drawing::SizeF pRectSize, System::Drawing::PointF% pRectIntersect, System::Single pMinAngle)
+#else
+void CAgentBalloonShape::CalcRectIntersect (const _complex& pRefPoint, const _complex& pRectCenter, const _complex& pRectSize, _complex& pRectIntersect, double pMinAngle)
+#endif
+{
+#ifdef	__cplusplus_cli
+	PointF		lRefPoint (pRefPoint);
+	PointF		lRectHalf (pRectSize.Width / 2.0f, pRectSize.Height / 2.0f);
+	Single		lAngle = (Single)Math::Atan2 (pRectCenter.Y - pRefPoint.Y, pRectCenter.X - pRefPoint.X);
+#else
 	_complex	lRefPoint = {pRefPoint.x, pRefPoint.y};
 	_complex	lRectHalf = {pRectSize.x / 2.0, pRectSize.y / 2.0};
 	double		lAngle = atan2 (pRectCenter.y - lRefPoint.y, pRectCenter.x - lRefPoint.x);
+#endif
 
 #ifdef	_TRACE_LAYOUT
+#ifdef	__cplusplus_cli
+	LogMessage (_TRACE_LAYOUT, _T("  Point [%.1f %.1f] to center [%.1f %.1f] = Angle [%f]"), lRefPoint.X, lRefPoint.Y, pRectCenter.X, pRectCenter.Y, lAngle);
+#else
 	LogMessage (_TRACE_LAYOUT, _T("  Point [%d %d] to center [%d %d] = Angle [%f]"), (int)lRefPoint.x, (int)lRefPoint.y, (int)pRectCenter.x, (int)pRectCenter.y, lAngle);
+#endif	
 #endif
+
 	if	(pMinAngle > 0.0)
 	{
+#ifdef	__cplusplus_cli
+		Single	lLength = (Single)Math::Sqrt ((pRectCenter.Y-lRefPoint.Y)*(pRectCenter.Y-lRefPoint.Y) + (pRectCenter.X-lRefPoint.X)*(pRectCenter.X-lRefPoint.X));
+
+		if	(Math::Abs (lAngle) <= pMinAngle)
+		{
+			lAngle = 0.0;
+		}
+		else
+		if	(Math::Abs (Math::PI/2.0*Math::Sign(lAngle) - lAngle) <= pMinAngle)
+		{
+			lAngle = (Single)(Math::PI/2.0*Math::Sign(lAngle));
+		}
+		if	(Math::Abs (Math::PI*Math::Sign(lAngle) - lAngle) <= pMinAngle)
+		{
+			lAngle = (Single)(Math::PI*Math::Sign(lAngle));
+		}
+
+		lRefPoint.X = pRectCenter.X - (Single)Math::Cos (lAngle) * lLength;
+		lRefPoint.Y = pRectCenter.Y - (Single)Math::Sin (lAngle) * lLength;
+#ifdef	_TRACE_LAYOUT
+		LogMessage (_TRACE_LAYOUT, _T("  Point [%.1f %.1f] to center [%.1f %.1f] = Angle [%f] Min [%f]"), lRefPoint.X, lRefPoint.Y, pRectCenter.X, pRectCenter.Y, lAngle, pMinAngle);
+#endif
+#else
 		double	lLength = _hypot (pRectCenter.y - lRefPoint.y, pRectCenter.x - lRefPoint.x);
 
 		if	(fabs (lAngle) <= pMinAngle)
@@ -215,8 +406,39 @@ void CAgentBalloonShape::CalcRectIntersect (const _complex& pRefPoint, const _co
 #ifdef	_TRACE_LAYOUT
 		LogMessage (_TRACE_LAYOUT, _T("  Point [%d %d] to center [%d %d] = Angle [%f] Min [%f]"), (int)lRefPoint.x, (int)lRefPoint.y, (int)pRectCenter.x, (int)pRectCenter.y, lAngle, pMinAngle);
 #endif
+#endif
 	}
 
+#ifdef	__cplusplus_cli
+	if	(Math::Round (lRefPoint.X) == Math::Round (pRectCenter.X))
+	{
+		pRectIntersect.X = 0.0;
+		pRectIntersect.Y = lRectHalf.Y * Math::Sign(lRefPoint.Y - pRectCenter.Y);
+	}
+	else
+	if	(Math::Round (lRefPoint.Y) == Math::Round (pRectCenter.Y))
+	{
+		pRectIntersect.X = lRectHalf.X * Math::Sign(lRefPoint.X - pRectCenter.X);
+		pRectIntersect.Y = 0.0;
+	}
+	else
+	{
+		pRectIntersect.X = (float)((lRectHalf.Y / Math::Tan (lAngle)) * Math::Sign(lRefPoint.X - pRectCenter.X));
+		pRectIntersect.Y = (float)((Math::Tan (lAngle) * lRectHalf.X) * Math::Sign(lRefPoint.Y - pRectCenter.Y));
+	}
+
+	if	(Math::Abs (pRectIntersect.X) > lRectHalf.X)
+	{
+		pRectIntersect.X = lRectHalf.X * Math::Sign(pRectIntersect.X);
+	}
+	if	(Math::Abs (pRectIntersect.Y) > lRectHalf.Y)
+	{
+		pRectIntersect.Y = lRectHalf.Y * Math::Sign(pRectIntersect.Y);
+	}
+
+	pRectIntersect.X += pRectCenter.X;
+	pRectIntersect.Y += pRectCenter.Y;
+#else
 	if	(lRefPoint.x == pRectCenter.x)
 	{
 		pRectIntersect.x = 0.0;
@@ -245,6 +467,7 @@ void CAgentBalloonShape::CalcRectIntersect (const _complex& pRefPoint, const _co
 
 	pRectIntersect.x += pRectCenter.x;
 	pRectIntersect.y += pRectCenter.y;
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -254,20 +477,69 @@ void CAgentBalloonShape::CalcRectIntersect (const _complex& pRefPoint, const _co
 //
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef	__cplusplus_cli
+System::Boolean CAgentBalloonShape::ValidateBalloonRect (System::Drawing::RectangleF% pBalloonRect, System::Drawing::RectangleF pRefRect, System::Drawing::RectangleF pBounds)
+#else
 bool CAgentBalloonShape::ValidateBalloonRect (CRect& pBalloonRect, const CRect& pRefRect, const CRect& pBounds)
+#endif
 {
 	bool	lRet = false;
-	CRect	lRefRect (pRefRect);
-	CRect	lBounds (pBounds);
-	CRect	lIntersect;
-	CPoint	lCenter = pBalloonRect.CenterPoint();
-	CPoint	lRefCenter = pRefRect.CenterPoint();
+#ifdef	__cplusplus_cli
+	RectangleF	lRefRect (pRefRect);
+	RectangleF	lBounds (pBounds);
+	RectangleF	lIntersect;
+	PointF		lCenter (pBalloonRect.Left + pBalloonRect.Width/2.0f, pBalloonRect.Top + pBalloonRect.Height/2.0f);
+	PointF		lRefCenter (pRefRect.Left + pRefRect.Width/2.0f, pRefRect.Top + pRefRect.Height/2.0f);
+#else
+	CRect		lRefRect (pRefRect);
+	CRect		lBounds (pBounds);
+	CRect		lIntersect;
+	CPoint		lCenter = pBalloonRect.CenterPoint();
+	CPoint		lRefCenter = pRefRect.CenterPoint();
+#endif	
 
+#ifdef	_TRACE_LAYOUT
+#ifdef	__cplusplus_cli
+	LogMessage (_TRACE_LAYOUT, _T("  Validate [%.1f %.1f %.1f %.1f] Ref [%.1f %.1f %.1f %.1f] Bounds [%.1f %.1f %.1f %.1f]"), pBalloonRect.Left, pBalloonRect.Top, pBalloonRect.Right, pBalloonRect.Bottom, pRefRect.Left, pRefRect.Top, pRefRect.Right, pRefRect.Bottom, pBounds.Left, pBounds.Top, pBounds.Right, pBounds.Bottom);
+#else
+	LogMessage (_TRACE_LAYOUT, _T("  Validate [%d %d %d %d] Ref [%d %d %d %d] Bounds [%d %d %d %d]"), pBalloonRect.left, pBalloonRect.top, pBalloonRect.right, pBalloonRect.bottom, pRefRect.left, pRefRect.top, pRefRect.right, pRefRect.bottom, pBounds.left, pBounds.top, pBounds.right, pBounds.bottom);
+#endif	
+#endif	
+
+#ifdef	__cplusplus_cli
+	lRefRect.Inflate (mCalloutSize.Width, mCalloutSize.Height);
+	lRefRect.Inflate (pBalloonRect.Width, pBalloonRect.Height);
+	lBounds.Intersect (lBounds, lRefRect);
+	lRefRect.Inflate (-pBalloonRect.Width, -pBalloonRect.Height);
+#else
 	lRefRect.InflateRect (mCalloutSize.cy, mCalloutSize.cy);
 	lRefRect.InflateRect (pBalloonRect.Width(), pBalloonRect.Height());
 	lBounds.IntersectRect (lBounds, lRefRect);
 	lRefRect.DeflateRect (pBalloonRect.Width(), pBalloonRect.Height());
+#endif	
 
+#ifdef	__cplusplus_cli
+	if	(pBalloonRect.Right > lBounds.Right)
+	{
+		pBalloonRect.Offset (lBounds.Right - pBalloonRect.Right, 0);
+		lRet = true;
+	}
+	if	(pBalloonRect.Bottom > lBounds.Bottom)
+	{
+		pBalloonRect.Offset (0, lBounds.Bottom - pBalloonRect.Bottom);
+		lRet = true;
+	}
+	if	(pBalloonRect.Left < lBounds.Left)
+	{
+		pBalloonRect.Offset (lBounds.Left - pBalloonRect.Left, 0);
+		lRet = true;
+	}
+	if	(pBalloonRect.Left < lBounds.Left)
+	{
+		pBalloonRect.Offset (0, lBounds.Left - pBalloonRect.Left);
+		lRet = true;
+	}
+#else
 	if	(pBalloonRect.right > lBounds.right)
 	{
 		pBalloonRect.OffsetRect (lBounds.right - pBalloonRect.right, 0);
@@ -288,7 +560,91 @@ bool CAgentBalloonShape::ValidateBalloonRect (CRect& pBalloonRect, const CRect& 
 		pBalloonRect.OffsetRect (0, lBounds.top - pBalloonRect.top);
 		lRet = true;
 	}
+#endif	
 
+#ifdef	__cplusplus_cli
+	lIntersect.Intersect (pBalloonRect, lRefRect);
+	if	(!lIntersect.IsEmpty)
+	{
+		bool	lOffsetVertical = (Math::Abs (lCenter.X - lRefCenter.X) <= Math::Abs (lCenter.Y - lRefCenter.Y));
+		bool	lDidVertical = lOffsetVertical;
+		bool	lMoved = false;
+
+		while	(!lMoved)
+		{
+			if	(
+					(lOffsetVertical)
+				&&	(lCenter.Y >= lRefCenter.Y)
+				&&	(lRefRect.Bottom >= lBounds.Top)
+				&&	(pBalloonRect.Bottom + lRefRect.Bottom - pBalloonRect.Top <= lBounds.Bottom)
+				)
+			{
+				pBalloonRect.Offset (0, lRefRect.Bottom - pBalloonRect.Top);
+				lMoved = true;
+			}
+			else
+			if	(
+					(lOffsetVertical)
+				&&	(lCenter.Y <= lRefCenter.Y)
+				&&	(lRefRect.Top <= lBounds.Bottom)
+				&&	(pBalloonRect.Top + lRefRect.Top - pBalloonRect.Bottom >= lBounds.Top)
+				)
+			{
+				pBalloonRect.Offset (0, lRefRect.Top - pBalloonRect.Bottom);
+				lMoved = true;
+			}
+			else
+			if	(
+					(!lOffsetVertical)
+				&&	(lCenter.X >= lRefCenter.X)
+				&&	(lRefRect.Right >= pBalloonRect.Left)
+				&&	(pBalloonRect.Right + lRefRect.Right - pBalloonRect.Left <= lBounds.Right)
+				)
+			{
+				pBalloonRect.Offset (lRefRect.Right - pBalloonRect.Left, 0);
+				lMoved = true;
+			}
+			else
+			if	(
+					(!lOffsetVertical)
+				&&	(lCenter.X <= lRefCenter.X)
+				&&	(lRefRect.Left <= lBounds.Right)
+				&&	(pBalloonRect.Left + lRefRect.Left - pBalloonRect.Right >= lBounds.Left)
+				)
+			{
+				pBalloonRect.Offset (lRefRect.Left - pBalloonRect.Right, 0);
+				lMoved = true;
+			}
+
+			if	(lMoved)
+			{
+				break;
+			}
+			else
+			if	(lDidVertical == lOffsetVertical)
+			{
+				lOffsetVertical = !lOffsetVertical;
+			}
+			else
+			if	(
+					(lRefCenter.X != lCenter.X)
+				||	(lRefCenter.Y != lCenter.Y)
+				)
+			{
+				lRefCenter = lCenter;
+				lOffsetVertical = !lOffsetVertical;
+			}
+			else
+			{
+				break;
+			}
+		}
+		if	(lMoved)
+		{
+			lRet = true;
+		}
+	}
+#else
 	if	(lIntersect.IntersectRect (&pBalloonRect, &lRefRect))
 	{
 		bool	lOffsetVertical = (labs (lCenter.x - lRefCenter.x) <= labs (lCenter.y - lRefCenter.y));
@@ -369,6 +725,18 @@ bool CAgentBalloonShape::ValidateBalloonRect (CRect& pBalloonRect, const CRect& 
 			lRet = true;
 		}
 	}
+#endif
+
+#ifdef	_TRACE_LAYOUT
+	if	(lRet)
+	{
+#ifdef	__cplusplus_cli
+		LogMessage (_TRACE_LAYOUT, _T("  Validate [%.1f %.1f %.1f %.1f]"), pBalloonRect.Left, pBalloonRect.Top, pBalloonRect.Right, pBalloonRect.Bottom);
+#else
+		LogMessage (_TRACE_LAYOUT, _T("  Validate [%d %d %d %d]"), pBalloonRect.left, pBalloonRect.top, pBalloonRect.right, pBalloonRect.bottom);
+#endif	
+	}
+#endif	
 	return lRet;
 }
 
@@ -379,8 +747,38 @@ bool CAgentBalloonShape::ValidateBalloonRect (CRect& pBalloonRect, const CRect& 
 //
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentBalloonShape::FixupNearPoint (CPoint& pPoint, const CRect& pRefRect, long pNearness)
+#ifdef	__cplusplus_cli
+void CAgentBalloonShape::FixupNearPoint (System::Drawing::PointF% pPoint, System::Drawing::RectangleF pRefRect)
 {
+	FixupNearPoint (pPoint, pRefRect, 2);
+}
+
+void CAgentBalloonShape::FixupNearPoint (System::Drawing::PointF% pPoint, System::Drawing::RectangleF pRefRect, long pNearness)
+#else
+void CAgentBalloonShape::FixupNearPoint (CPoint& pPoint, const CRect& pRefRect, long pNearness)
+#endif
+{
+#ifdef	__cplusplus_cli
+	if	(Math::Abs (pPoint.X - pRefRect.Left) <= (Single)pNearness)
+	{
+		pPoint.X = pRefRect.Left;
+	}
+	else
+	if	(Math::Abs (pPoint.X - pRefRect.Right) <= (Single)pNearness)
+	{
+		pPoint.X = pRefRect.Right;
+	}
+
+	if	(Math::Abs (pPoint.Y - pRefRect.Top) <= (Single)pNearness)
+	{
+		pPoint.Y = pRefRect.Top;
+	}
+	else
+	if	(Math::Abs (pPoint.Y - pRefRect.Bottom) <= (Single)pNearness)
+	{
+		pPoint.Y = pRefRect.Bottom;
+	}
+#else
 	if	(labs (pPoint.x - pRefRect.left) <= pNearness)
 	{
 		pPoint.x = pRefRect.left;
@@ -400,37 +798,83 @@ void CAgentBalloonShape::FixupNearPoint (CPoint& pPoint, const CRect& pRefRect, 
 	{
 		pPoint.y = pRefRect.bottom - 1;
 	}
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef	__cplusplus_cli
+void CAgentBalloonShape::MakeRoundRect (System::Drawing::Drawing2D::GraphicsPath^ pShapePath)
+#else
 void CAgentBalloonShape::MakeRoundRect (Gdiplus::GraphicsPath& pShapePath)
+#endif
 {
+#ifdef	__cplusplus_cli
+	SizeF		lRounding (mRounding);
+	RectangleF	lShapeRect (mBalloonRect.Left+1, mBalloonRect.Top+1, mBalloonRect.Width-2, mBalloonRect.Height-2);
+
+	lRounding.Width = Math::Min (lRounding.Width, lShapeRect.Width/2.0f-2.0f);
+	lRounding.Height = Math::Min (lRounding.Height, lShapeRect.Height/2.0f-2.0f);
+
+	pShapePath->AddLine (lShapeRect.Left+lRounding.Width, lShapeRect.Top, lShapeRect.Right-+lRounding.Width, lShapeRect.Top);
+	pShapePath->AddArc (lShapeRect.Right-lRounding.Width*2.0f, lShapeRect.Top, lRounding.Width*2.0f, lRounding.Height*2.0f, 270.0f, 90.0f);
+	pShapePath->AddLine (lShapeRect.Right, lShapeRect.Top+lRounding.Height, lShapeRect.Right, lShapeRect.Bottom-lRounding.Height);
+	pShapePath->AddArc (lShapeRect.Right-lRounding.Width*2.0f, lShapeRect.Bottom-lRounding.Height*2.0f, lRounding.Width*2.0f, lRounding.Height*2.0f, 0.0f, 90.0f);
+	pShapePath->AddLine (lShapeRect.Right-lRounding.Width, lShapeRect.Bottom, lShapeRect.Left+lRounding.Width, lShapeRect.Bottom);
+	pShapePath->AddArc (lShapeRect.Left, lShapeRect.Bottom-lRounding.Height*2.0f, lRounding.Width*2.0f, lRounding.Height*2.0f, 90.0f, 90.0f);
+	pShapePath->AddLine (lShapeRect.Left, lShapeRect.Bottom-lRounding.Height, lShapeRect.Left, lShapeRect.Top+lRounding.Height);
+	pShapePath->AddArc (lShapeRect.Left, lShapeRect.Top, lRounding.Width*2.0f, lRounding.Height*2.0f, 180.0f, 90.0f);
+#else
 	Gdiplus::SizeF	lRounding ((Gdiplus::REAL)mRounding.cx, (Gdiplus::REAL)mRounding.cy);
 	Gdiplus::RectF	lShapeRect ((Gdiplus::REAL)mBalloonRect.left+1, (Gdiplus::REAL)mBalloonRect.top+1, (Gdiplus::REAL)mBalloonRect.Width()-2, (Gdiplus::REAL)mBalloonRect.Height()-2);
 
 	lRounding.Width = min (lRounding.Width, lShapeRect.Width/2.0f-2.0f);
 	lRounding.Height = min (lRounding.Height, lShapeRect.Height/2.0f-2.0f);
 
-	pShapePath.AddLine (lShapeRect.GetLeft ()+lRounding.Width, lShapeRect.GetTop (), lShapeRect.GetRight ()-+lRounding.Width, lShapeRect.GetTop ());
-	pShapePath.AddArc (lShapeRect.GetRight ()-lRounding.Width*2.0f, lShapeRect.GetTop (), lRounding.Width*2.0f, lRounding.Height*2.0f, 270.0f, 90.0f);
-	pShapePath.AddLine (lShapeRect.GetRight (), lShapeRect.GetTop ()+lRounding.Height, lShapeRect.GetRight (), lShapeRect.GetBottom ()-lRounding.Height);
-	pShapePath.AddArc (lShapeRect.GetRight ()-lRounding.Width*2.0f, lShapeRect.GetBottom ()-lRounding.Height*2.0f, lRounding.Width*2.0f, lRounding.Height*2.0f, 0.0f, 90.0f);
-	pShapePath.AddLine (lShapeRect.GetRight ()-lRounding.Width, lShapeRect.GetBottom (), lShapeRect.GetLeft ()+lRounding.Width, lShapeRect.GetBottom ());
-	pShapePath.AddArc (lShapeRect.GetLeft (), lShapeRect.GetBottom ()-lRounding.Height*2.0f, lRounding.Width*2.0f, lRounding.Height*2.0f, 90.0f, 90.0f);
-	pShapePath.AddLine (lShapeRect.GetLeft (), lShapeRect.GetBottom ()-lRounding.Height, lShapeRect.GetLeft (), lShapeRect.GetTop ()+lRounding.Height);
-	pShapePath.AddArc (lShapeRect.GetLeft (), lShapeRect.GetTop (), lRounding.Width*2.0f, lRounding.Height*2.0f, 180.0f, 90.0f);
+	pShapePath.AddLine (lShapeRect.GetLeft()+lRounding.Width, lShapeRect.GetTop(), lShapeRect.GetRight()-+lRounding.Width, lShapeRect.GetTop());
+	pShapePath.AddArc (lShapeRect.GetRight()-lRounding.Width*2.0f, lShapeRect.GetTop(), lRounding.Width*2.0f, lRounding.Height*2.0f, 270.0f, 90.0f);
+	pShapePath.AddLine (lShapeRect.GetRight(), lShapeRect.GetTop()+lRounding.Height, lShapeRect.GetRight(), lShapeRect.GetBottom()-lRounding.Height);
+	pShapePath.AddArc (lShapeRect.GetRight()-lRounding.Width*2.0f, lShapeRect.GetBottom()-lRounding.Height*2.0f, lRounding.Width*2.0f, lRounding.Height*2.0f, 0.0f, 90.0f);
+	pShapePath.AddLine (lShapeRect.GetRight()-lRounding.Width, lShapeRect.GetBottom(), lShapeRect.GetLeft()+lRounding.Width, lShapeRect.GetBottom());
+	pShapePath.AddArc (lShapeRect.GetLeft(), lShapeRect.GetBottom()-lRounding.Height*2.0f, lRounding.Width*2.0f, lRounding.Height*2.0f, 90.0f, 90.0f);
+	pShapePath.AddLine (lShapeRect.GetLeft(), lShapeRect.GetBottom()-lRounding.Height, lShapeRect.GetLeft(), lShapeRect.GetTop()+lRounding.Height);
+	pShapePath.AddArc (lShapeRect.GetLeft(), lShapeRect.GetTop(), lRounding.Width*2.0f, lRounding.Height*2.0f, 180.0f, 90.0f);
+#endif
 }
 
+#ifdef	__cplusplus_cli
+void CAgentBalloonShape::DrawShadow (System::Drawing::Drawing2D::GraphicsPath^ pShapePath, System::Drawing::Graphics^ pGraphics)
+#else
 void CAgentBalloonShape::DrawShadow (Gdiplus::GraphicsPath& pShapePath, Gdiplus::Graphics& pGraphics)
+#endif
 {
-	Gdiplus::Bitmap			lShadow (mBounds.Width()+mShadowOffset.x, mBounds.Height()+mShadowOffset.x, PixelFormat32bppPARGB);
-	Gdiplus::Pen			lClipPen (Gdiplus::Color::Black, (Gdiplus::REAL)mShadowOffset.x+1);
-	Gdiplus::GraphicsPath	lClipPath;
+#ifdef	__cplusplus_cli
+	System::Drawing::Bitmap^	lShadow = gcnew System::Drawing::Bitmap ((int)Math::Ceiling(mBounds.Width+mShadowOffset.X), (int)Math::Ceiling(mBounds.Height+mShadowOffset.Y), PixelFormat::Format32bppArgb);
+#else
+	Gdiplus::Bitmap				lShadow (mBounds.Width()+mShadowOffset.x, mBounds.Height()+mShadowOffset.y, PixelFormat32bppPARGB);
+	Gdiplus::Pen				lClipPen (Gdiplus::Color::Black, (Gdiplus::REAL)mShadowOffset.x+1);
+	Gdiplus::GraphicsPath		lClipPath;
+#endif	
 
+#ifndef	__cplusplus_cli
 	lClipPath.AddPath (&pShapePath, FALSE);
 	lClipPath.Widen (&lClipPen);
+#endif	
 
+#ifdef	__cplusplus_cli
+	{
+		Graphics^	lGraphics = Graphics::FromImage (lShadow);
+		SolidBrush^	lBrush = gcnew SolidBrush (Color::Black);
+
+		lGraphics->Clear (Color::Transparent);
+		lGraphics->CompositingMode = CompositingMode::SourceOver;
+		lGraphics->CompositingQuality = CompositingQuality::HighQuality;
+		lGraphics->SmoothingMode = SmoothingMode::HighQuality;
+		lGraphics->PixelOffsetMode = PixelOffsetMode::HighQuality;
+
+		lGraphics->FillPath (lBrush, pShapePath);
+	}
+#else
 	{
 		Gdiplus::Graphics	lGraphics (&lShadow);
 		Gdiplus::SolidBrush	lBrush (Gdiplus::Color::Black);
@@ -444,6 +888,88 @@ void CAgentBalloonShape::DrawShadow (Gdiplus::GraphicsPath& pShapePath, Gdiplus:
 		lGraphics.SetClip (&lClipPath, Gdiplus::CombineModeExclude);
 		lGraphics.FillPath (&lBrush, &pShapePath);
 	}
+#endif
+
+#ifdef	__cplusplus_cli
+	try
+	{
+		Boolean		lSmeared = false;
+		Bitmap^		lTarget = gcnew Bitmap (lShadow->Width, lShadow->Height, PixelFormat::Format32bppArgb);
+		BitmapData^	lSrcData;
+		BitmapData^	lTrgData;
+		LPBYTE		lSrcBytes;
+		LPBYTE		lTrgBytes;
+
+		lSrcData = lShadow->LockBits (System::Drawing::Rectangle (0, 0, lShadow->Width, lShadow->Height), ImageLockMode::ReadWrite, PixelFormat::Format32bppArgb);
+		lSrcBytes = (LPBYTE)(INT_PTR)lSrcData->Scan0;
+		lTrgData = lTarget->LockBits (System::Drawing::Rectangle (0, 0, lTarget->Width, lTarget->Height), ImageLockMode::ReadWrite, PixelFormat::Format32bppArgb);
+		lTrgBytes = (LPBYTE)(INT_PTR)lTrgData->Scan0;
+
+		try
+		{
+			Point	lMaxPixel;
+			Point	lTrgPixel;
+			Point	lSrcPixel;
+			long	lNdx;
+			long	lTrgNdx;
+			long	lSrcNdx;
+			long	lAperture = 3;
+			long	lPixel [4];
+			long	lCount;
+
+			lMaxPixel.X = lShadow->Width-1;
+			lMaxPixel.Y = lShadow->Height-1;
+
+			for	(lTrgPixel.Y = 0; lTrgPixel.Y <= lMaxPixel.Y; lTrgPixel.Y++)
+			{
+				for	(lTrgPixel.X = 0; lTrgPixel.X <= lMaxPixel.X; lTrgPixel.X++)
+				{
+					memset (lPixel, 0, sizeof (lPixel));
+					lCount = 0;
+
+					for	(lSrcPixel.Y = max (lTrgPixel.Y - lAperture, 0); lSrcPixel.Y <= min (lTrgPixel.Y + lAperture, lMaxPixel.Y); lSrcPixel.Y++)
+					{
+						for	(lSrcPixel.X = max (lTrgPixel.X - lAperture, 0); lSrcPixel.X <= min (lTrgPixel.X + lAperture, lMaxPixel.X); lSrcPixel.X++)
+						{
+							lSrcNdx = (lSrcPixel.Y * lSrcData->Stride) + (lSrcPixel.X * 4);
+
+							for	(lNdx = 0; lNdx < 4; lNdx++)
+							{
+								lPixel [lNdx] += (ULONG) lSrcBytes [lSrcNdx+lNdx];
+							}
+							lCount++;
+						}
+					}
+
+					for	(lNdx = 0; lNdx < 4; lNdx++)
+					{
+						lPixel [lNdx] /= lCount;
+					}
+
+					lTrgNdx = (lTrgPixel.Y * lTrgData->Stride) + (lTrgPixel.X * 4);
+
+					for	(lNdx = 0; lNdx < 4; lNdx++)
+					{
+						lTrgBytes [lTrgNdx+lNdx] = (BYTE) min (lPixel [lNdx], 255);
+					}
+				}
+			}
+			lSmeared = true;
+		}
+		catch AnyExceptionSilent
+
+		lShadow->UnlockBits (lSrcData);
+		lTarget->UnlockBits (lTrgData);
+		
+		if	(lSmeared)
+		{
+			lShadow = lTarget;
+		}
+	}
+	catch AnyExceptionDebug
+
+	pGraphics->DrawImage (lShadow, mShadowOffset.X, mShadowOffset.Y);
+#else	
 #if	(GDIPVER < 0x0110)
 	{
 		HBITMAP		lBitmap;
@@ -467,10 +993,30 @@ void CAgentBalloonShape::DrawShadow (Gdiplus::GraphicsPath& pShapePath, Gdiplus:
 		lBlur.SetParameters (&lBlurParams);
 		lShadow.ApplyEffect (&lBlur, NULL);
 	}
+#endif
 	pGraphics.DrawImage (&lShadow, mShadowOffset.x, mShadowOffset.y);
 #endif
 }
 
+
+/////////////////////////////////////////////////////////////////////////////
+#ifdef	__cplusplus_cli
+#if	(__CLR_VER >= 40000000)
+/////////////////////////////////////////////////////////////////////////////
+
+System::Windows::Media::Drawing^ CAgentBalloonShape::MakeDrawing (System::Drawing::Color pBkColor, System::Drawing::Color pBrColor)
+{
+	return MakeDrawing (System::Windows::Media::Color::FromArgb (pBkColor.A, pBkColor.R, pBkColor.G, pBkColor.B), System::Windows::Media::Color::FromArgb (pBrColor.A, pBrColor.R, pBrColor.G, pBrColor.B));
+}
+
+System::Windows::Media::Drawing^ CAgentBalloonShape::MakeDrawing (System::Windows::Media::Color pBkColor, System::Windows::Media::Color pBrColor)
+{
+	return MakeDrawing (gcnew System::Windows::Media::SolidColorBrush (pBkColor), gcnew System::Windows::Media::SolidColorBrush (pBrColor));
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#endif
+#endif
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -480,16 +1026,22 @@ CAgentBalloonSpeak::CAgentBalloonSpeak()
 	InitLayout ();
 }
 
+#ifndef	__cplusplus_cli
 CAgentBalloonSpeak::~CAgentBalloonSpeak()
 {
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
 void CAgentBalloonSpeak::InitLayout ()
 {
 	CAgentBalloonShape::InitLayout ();
-
+#ifdef	__cplusplus_cli
+#ifdef	_DEBUG_LAYOUT
+	LogMessage (_DEBUG_LAYOUT, _T("%s Rounding [%f %f] Callout [%f %f]"), _B(GetType()->Name), mRounding.Width, mRounding.Height, mCalloutSize.Width, mCalloutSize.Height);
+#endif
+#else
 #ifdef	_TRACE_LAYOUT
 	mCalloutSize.cx = MulDiv (mCalloutSize.cx, 5, 4);
 	mCalloutSize.cy = MulDiv (mCalloutSize.cy, 4, 1);
@@ -497,14 +1049,23 @@ void CAgentBalloonSpeak::InitLayout ()
 #ifdef	_DEBUG_LAYOUT
 	LogMessage (_DEBUG_LAYOUT, _T("%s Rounding [%d %d] Callout [%d %d]"), ObjClassName(this), mRounding.cx, mRounding.cy, mCalloutSize.cx, mCalloutSize.cy);
 #endif
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef	__cplusplus_cli
+GraphicsPath^ CAgentBalloonSpeak::GetBalloonRgn ()
+#else
 HRGN CAgentBalloonSpeak::GetBalloonRgn ()
+#endif
 {
+#ifdef	__cplusplus_cli
+//TODO
+	return nullptr;
+#else
 	if	(mUseGdiplus)
 	{
 		return NULL;
@@ -542,10 +1103,12 @@ HRGN CAgentBalloonSpeak::GetBalloonRgn ()
 		}
 		return lRgn1.Detach();
 	}
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
+#ifndef	__cplusplus_cli
 bool CAgentBalloonSpeak::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor)
 {
 #ifdef	_DEBUG_DRAW
@@ -594,9 +1157,47 @@ bool CAgentBalloonSpeak::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor)
 	}
 	return false;
 }
+#endif
 
+#ifdef	__cplusplus_cli
+System::Boolean CAgentBalloonSpeak::Draw (System::Drawing::Graphics^ pGraphics, System::Drawing::Color pBkColor, System::Drawing::Color pBrColor)
+#else
 bool CAgentBalloonSpeak::Draw (Gdiplus::Graphics & pGraphics, Gdiplus::Color & pBkColor, Gdiplus::Color & pBrColor)
+#endif
 {
+#ifdef	__cplusplus_cli
+	if	(!mBalloonRect.IsEmpty)
+	{
+		GraphicsPath^	lShapePath = gcnew GraphicsPath;
+		GraphicsPath^	lOutlinePath;
+		array<PointF>^	lCalloutPoints = gcnew array<PointF> (3);
+		SolidBrush^		lFillBrush = gcnew SolidBrush (pBkColor);
+		SolidBrush^		lOutlineBrush = gcnew SolidBrush (pBrColor);
+		Pen^			lOutlinePen = gcnew Pen (pBrColor, 1.9f);
+
+		lShapePath->StartFigure ();
+		MakeRoundRect (lShapePath);
+		lShapePath->CloseFigure ();
+
+		GetCalloutPoints (lCalloutPoints);
+		lShapePath->AddLine (lCalloutPoints [1], lCalloutPoints [0]);
+		lShapePath->AddLine (lCalloutPoints [0], lCalloutPoints [2]);
+		lShapePath->FillMode = FillMode::Winding;
+		lOutlinePath = safe_cast<GraphicsPath^> (lShapePath->Clone());
+		lOutlinePath->Widen (lOutlinePen);
+
+		pGraphics->CompositingMode = CompositingMode::SourceOver;
+		pGraphics->CompositingQuality = CompositingQuality::HighQuality;
+		pGraphics->SmoothingMode = SmoothingMode::HighQuality;
+		pGraphics->PixelOffsetMode = PixelOffsetMode::HighQuality;
+
+		DrawShadow (lShapePath, pGraphics);
+		pGraphics->FillPath (lOutlineBrush, lOutlinePath);
+		pGraphics->FillPath (lFillBrush, lShapePath);
+
+		return true;
+	}
+#else
 	if	(!mBalloonRect.IsRectEmpty())
 	{
 		Gdiplus::GraphicsPath	lShapePath;
@@ -625,11 +1226,24 @@ bool CAgentBalloonSpeak::Draw (Gdiplus::Graphics & pGraphics, Gdiplus::Color & p
 
 		return true;
 	}
+#endif
 	return false;
 }
 
+#ifdef	__cplusplus_cli
+void CAgentBalloonSpeak::GetCalloutPoints (array<System::Drawing::PointF>^ pPoints)
+#else
 void CAgentBalloonSpeak::GetCalloutPoints (Gdiplus::PointF* pPoints)
+#endif
 {
+#ifdef	__cplusplus_cli
+	RectangleF		lBalloonRect (mBalloonRect);
+	Single			lCalloutAngle;
+	Single			lCalloutExtension;
+	INT_PTR			lPointNdx;
+	INT_PTR			lExtendCount;
+	PointF			lExtendPoint;
+#else
 	Gdiplus::RectF	lBalloonRect ((Gdiplus::REAL)mBalloonRect.left+1, (Gdiplus::REAL)mBalloonRect.top+1, (Gdiplus::REAL)mBalloonRect.Width()-2, (Gdiplus::REAL)mBalloonRect.Height()-2);
 	double			lCalloutAngle;
 	double			lCalloutWidth;
@@ -637,7 +1251,19 @@ void CAgentBalloonSpeak::GetCalloutPoints (Gdiplus::PointF* pPoints)
 	INT_PTR			lPointNdx;
 	INT_PTR			lExtendCount;
 	Gdiplus::PointF	lExtendPoint;
+#endif	
 
+#ifdef	__cplusplus_cli
+	lCalloutAngle = (Single)Math::Atan2 (mCalloutEnd.Y-mCalloutBeg.Y, mCalloutEnd.X-mCalloutBeg.X);
+	lCalloutExtension = mCalloutSize.Width * 2;
+
+	pPoints [0].X = mCalloutBeg.X;
+	pPoints [0].Y = mCalloutBeg.Y;
+	pPoints [1].X = mCalloutEnd.X + (Single)(Math::Cos (lCalloutAngle + Math::PI/2.0) * mCalloutSize.Width);
+	pPoints [1].Y = mCalloutEnd.Y + (Single)(Math::Sin (lCalloutAngle + Math::PI/2.0) * mCalloutSize.Width);
+	pPoints [2].X = mCalloutEnd.X + (Single)(Math::Cos (lCalloutAngle - Math::PI/2.0) * mCalloutSize.Width);
+	pPoints [2].Y = mCalloutEnd.Y + (Single)(Math::Sin (lCalloutAngle - Math::PI/2.0) * mCalloutSize.Width);
+#else
 	lCalloutAngle = atan2 ((double)(mCalloutEnd.y-mCalloutBeg.y), (double)(mCalloutEnd.x-mCalloutBeg.x));
 	lCalloutWidth = (double)(mCalloutSize.cx);
 	lCalloutExtension = lCalloutWidth * 2.0;
@@ -648,19 +1274,28 @@ void CAgentBalloonSpeak::GetCalloutPoints (Gdiplus::PointF* pPoints)
 	pPoints [1].Y = (Gdiplus::REAL)mCalloutEnd.y + (Gdiplus::REAL)(sin (lCalloutAngle + PI/2.0) * lCalloutWidth);
 	pPoints [2].X = (Gdiplus::REAL)mCalloutEnd.x + (Gdiplus::REAL)(cos (lCalloutAngle - PI/2.0) * lCalloutWidth);
 	pPoints [2].Y = (Gdiplus::REAL)mCalloutEnd.y + (Gdiplus::REAL)(sin (lCalloutAngle - PI/2.0) * lCalloutWidth);
+#endif	
 
 	for	(lPointNdx = 1; lPointNdx <= 2; lPointNdx++)
 	{
 		if	(!lBalloonRect.Contains (pPoints [lPointNdx]))
 		{
 			lExtendPoint = pPoints [lPointNdx];
+#ifdef	__cplusplus_cli
+			lCalloutAngle =(Single)Math::Atan2 (lExtendPoint.Y-mCalloutBeg.Y, lExtendPoint.X-mCalloutBeg.X);
+#else
 			lCalloutAngle = atan2 (lExtendPoint.Y-(double)mCalloutBeg.y, lExtendPoint.X-(double)mCalloutBeg.x);
+#endif			
 
 			for	(lExtendCount = 1; lExtendCount <= 10; lExtendCount++)
 			{
+#ifdef	__cplusplus_cli
+				pPoints [lPointNdx].X = lExtendPoint.X + (Single)(Math::Cos (lCalloutAngle) * lCalloutExtension * (Single)lExtendCount);
+				pPoints [lPointNdx].Y = lExtendPoint.Y + (Single)(Math::Sin (lCalloutAngle) * lCalloutExtension * (Single)lExtendCount);
+#else
 				pPoints [lPointNdx].X = lExtendPoint.X + (Gdiplus::REAL)(cos (lCalloutAngle) * lCalloutExtension * (double)lExtendCount);
 				pPoints [lPointNdx].Y = lExtendPoint.Y + (Gdiplus::REAL)(sin (lCalloutAngle) * lCalloutExtension * (double)lExtendCount);
-
+#endif			
 				if	(lBalloonRect.Contains (pPoints [lPointNdx]))
 				{
 					break;
@@ -671,6 +1306,52 @@ void CAgentBalloonSpeak::GetCalloutPoints (Gdiplus::PointF* pPoints)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+#ifdef	__cplusplus_cli
+#if	(__CLR_VER >= 40000000)
+/////////////////////////////////////////////////////////////////////////////
+
+System::Windows::Media::Drawing^ CAgentBalloonSpeak::MakeDrawing (System::Windows::Media::Brush^ pBkBrush, System::Windows::Media::Brush^ pBrBrush)
+{
+	System::Windows::Media::Drawing^	lDrawing = nullptr;
+
+	if	(!mBalloonRect.IsEmpty)
+	{
+		System::Windows::Media::Pen^				lOutlinePen = gcnew System::Windows::Media::Pen (pBrBrush, 1);
+		System::Windows::Media::DrawingGroup^		lDrawingGroup = gcnew System::Windows::Media::DrawingGroup ();
+		System::Windows::Media::PathGeometry^		lPathGeometry;
+		System::Windows::Media::RectangleGeometry^	lRectGeometry;
+		System::Windows::Media::PathGeometry^		lCalloutGeometry;
+		System::Windows::Media::PathFigure^			lCalloutFigure;
+		array<PointF>^								lCalloutPoints = gcnew array<PointF> (3);
+
+		lPathGeometry = gcnew System::Windows::Media::PathGeometry ();
+		lPathGeometry->FillRule = System::Windows::Media::FillRule::Nonzero;
+
+		lRectGeometry = gcnew System::Windows::Media::RectangleGeometry (System::Windows::Rect (mBalloonRect.Left+1, mBalloonRect.Top+1, mBalloonRect.Width-2, mBalloonRect.Height-2), mRounding.Width, mRounding.Height);
+		lPathGeometry->AddGeometry (lRectGeometry->GetFlattenedPathGeometry ());
+
+		lCalloutGeometry = gcnew System::Windows::Media::PathGeometry ();
+		lCalloutGeometry->FillRule = System::Windows::Media::FillRule::Nonzero;
+		GetCalloutPoints (lCalloutPoints);
+		lCalloutFigure = gcnew System::Windows::Media::PathFigure ();
+		lCalloutFigure->IsClosed = false;
+		lCalloutFigure->IsFilled = true;
+		lCalloutFigure->StartPoint = System::Windows::Point (lCalloutPoints[1].X, lCalloutPoints[1].Y);
+		lCalloutFigure->Segments->Add (gcnew System::Windows::Media::LineSegment (System::Windows::Point (lCalloutPoints[0].X, lCalloutPoints[0].Y), true));
+		lCalloutFigure->Segments->Add (gcnew System::Windows::Media::LineSegment (System::Windows::Point (lCalloutPoints[2].X, lCalloutPoints[2].Y), true));
+		lCalloutGeometry->Figures->Add (lCalloutFigure);
+		lPathGeometry->AddGeometry (lCalloutGeometry);
+
+		lPathGeometry = lPathGeometry->GetOutlinedPathGeometry ();
+		lDrawingGroup->Children->Add (gcnew System::Windows::Media::GeometryDrawing (pBkBrush, lOutlinePen, lPathGeometry));
+		lDrawing = lDrawingGroup;
+	}
+	return lDrawing;
+}
+
+#endif
+#endif
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
@@ -679,9 +1360,11 @@ CAgentBalloonThink::CAgentBalloonThink()
 	InitLayout ();
 }
 
+#ifndef	__cplusplus_cli
 CAgentBalloonThink::~CAgentBalloonThink()
 {
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -689,10 +1372,13 @@ void CAgentBalloonThink::InitLayout ()
 {
 	CAgentBalloonShape::InitLayout ();
 
+#ifdef	__cplusplus_cli
+#else
 	mCalloutSize.cx = MulDiv (mCalloutSize.cx, 3, 2);
 	mCalloutSize.cy = MulDiv (mCalloutSize.cy, 4, 1);
 #ifdef	_DEBUG_LAYOUT
 	LogMessage (_DEBUG_LAYOUT, _T("%s Rounding [%d %d] Callout [%d %d]"), ObjClassName(this), mRounding.cx, mRounding.cy, mCalloutSize.cx, mCalloutSize.cy);
+#endif
 #endif
 }
 
@@ -700,8 +1386,16 @@ void CAgentBalloonThink::InitLayout ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef	__cplusplus_cli
+GraphicsPath^ CAgentBalloonThink::GetBalloonRgn ()
+#else
 HRGN CAgentBalloonThink::GetBalloonRgn ()
+#endif
 {
+#ifdef	__cplusplus_cli
+//TODO
+	return nullptr;
+#else
 	if	(mUseGdiplus)
 	{
 		return NULL;
@@ -738,10 +1432,12 @@ HRGN CAgentBalloonThink::GetBalloonRgn ()
 		}
 		return lRgn1.Detach();
 	}
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
+#ifndef	__cplusplus_cli
 bool CAgentBalloonThink::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor)
 {
 #ifdef	_DEBUG_DRAW
@@ -790,9 +1486,49 @@ bool CAgentBalloonThink::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor)
 	}
 	return false;
 }
+#endif
 
+#ifdef	__cplusplus_cli
+System::Boolean CAgentBalloonThink::Draw (System::Drawing::Graphics^ pGraphics, System::Drawing::Color pBkColor, System::Drawing::Color pBrColor)
+#else
 bool CAgentBalloonThink::Draw (Gdiplus::Graphics & pGraphics, Gdiplus::Color & pBkColor, Gdiplus::Color & pBrColor)
+#endif
 {
+#ifdef	__cplusplus_cli
+	if	(!mBalloonRect.IsEmpty)
+	{
+		GraphicsPath^		lShapePath = gcnew GraphicsPath;
+		GraphicsPath^		lOutlinePath;
+		array<RectangleF>^	lEllipses = gcnew array<RectangleF> (3);
+		SolidBrush^			lFillBrush = gcnew SolidBrush (pBkColor);
+		SolidBrush^			lOutlineBrush = gcnew SolidBrush (pBrColor);
+		Pen^				lOutlinePen = gcnew Pen (pBrColor, 1.9f);
+
+		lShapePath->StartFigure ();
+		MakeRoundRect (lShapePath);
+		lShapePath->CloseFigure ();
+
+		GetCalloutEllipses (lEllipses);
+		for each (RectangleF lEllipse in lEllipses)
+		{
+			lShapePath->AddEllipse (lEllipse);
+		}
+		lShapePath->FillMode = FillMode::Winding;
+		lOutlinePath = safe_cast<GraphicsPath^> (lShapePath->Clone());
+		lOutlinePath->Widen (lOutlinePen);
+
+		pGraphics->CompositingMode = CompositingMode::SourceOver;
+		pGraphics->CompositingQuality = CompositingQuality::HighQuality;
+		pGraphics->SmoothingMode = SmoothingMode::HighQuality;
+		pGraphics->PixelOffsetMode = PixelOffsetMode::HighQuality;
+
+		DrawShadow (lShapePath, pGraphics);
+		pGraphics->FillPath (lOutlineBrush, lOutlinePath);
+		pGraphics->FillPath (lFillBrush, lShapePath);
+
+		return true;
+	}
+#else
 	if	(!mBalloonRect.IsRectEmpty())
 	{
 		Gdiplus::GraphicsPath	lShapePath;
@@ -822,11 +1558,25 @@ bool CAgentBalloonThink::Draw (Gdiplus::Graphics & pGraphics, Gdiplus::Color & p
 
 		return true;
 	}
+#endif
 	return false;
 }
 
+#ifdef	__cplusplus_cli
+void CAgentBalloonThink::GetCalloutEllipses (array<System::Drawing::RectangleF>^ pEllipses)
+#else
 void CAgentBalloonThink::GetCalloutEllipses (Gdiplus::RectF* pEllipses)
+#endif
 {
+#ifdef	__cplusplus_cli
+	Single		lCalloutAngle = (Single)Math::Atan2 ((mCalloutEnd.Y-mCalloutBeg.Y), (mCalloutEnd.X-mCalloutBeg.X));
+	Single		lCalloutWidth = mCalloutSize.Width;
+	Single		lCalloutLength = (Single)Math::Sqrt ((mCalloutEnd.Y-mCalloutBeg.Y)*(mCalloutEnd.Y-mCalloutBeg.Y) + (mCalloutEnd.X-mCalloutBeg.X)*(mCalloutEnd.X-mCalloutBeg.X));
+	Single		lEllipseRadius [3];
+	Single		lEllipseOffset [3];
+	PointF		lEllipseCenter;
+	int			lEllipseNdx;
+#else
 	double		lCalloutAngle = atan2 ((double)(mCalloutEnd.y-mCalloutBeg.y), (double)(mCalloutEnd.x-mCalloutBeg.x));
 	double		lCalloutWidth = (double)(mCalloutSize.cx);
 	double		lCalloutLength = _hypot ((double)(mCalloutEnd.y-mCalloutBeg.y), (double)(mCalloutEnd.x-mCalloutBeg.x));
@@ -834,7 +1584,13 @@ void CAgentBalloonThink::GetCalloutEllipses (Gdiplus::RectF* pEllipses)
 	double		lEllipseOffset [3];
 	_complex	lEllipseCenter;
 	INT_PTR		lEllipseNdx;
+#endif	
 
+#ifdef	__cplusplus_cli
+	lEllipseRadius [0] = lCalloutWidth * 0.5f;
+	lEllipseRadius [1] = lCalloutWidth * 0.7f;
+	lEllipseRadius [2] = lCalloutWidth * 0.9f;
+#else
 	if	(mUseGdiplus)
 	{
 		lEllipseRadius [0] = lCalloutWidth * 0.5;
@@ -847,14 +1603,27 @@ void CAgentBalloonThink::GetCalloutEllipses (Gdiplus::RectF* pEllipses)
 		lEllipseRadius [1] = lCalloutWidth * 0.75;
 		lEllipseRadius [2] = lCalloutWidth;
 	}
-	lEllipseOffset [0] = lCalloutLength * 0.12;
-	lEllipseOffset [1] = lCalloutLength * 0.4;
-	lEllipseOffset [2] = lCalloutLength * 0.75;
+#endif	
+	lEllipseOffset [0] = lCalloutLength * 0.12f;
+	lEllipseOffset [1] = lCalloutLength * 0.4f;
+	lEllipseOffset [2] = lCalloutLength * 0.75f;
 
 	for	(lEllipseNdx = 0; lEllipseNdx < 3; lEllipseNdx++)
 	{
-		lEllipseCenter.x = (cos (lCalloutAngle) * lEllipseOffset [lEllipseNdx]);
-		lEllipseCenter.y = (sin (lCalloutAngle) * lEllipseOffset [lEllipseNdx]);
+#ifdef	__cplusplus_cli
+		lEllipseCenter.X = (float)(Math::Cos (lCalloutAngle) * lEllipseOffset [lEllipseNdx]);
+		lEllipseCenter.Y = (float)(Math::Sin (lCalloutAngle) * lEllipseOffset [lEllipseNdx]);
+
+		pEllipses [lEllipseNdx].X = (float)(lEllipseCenter.X - lEllipseRadius [lEllipseNdx]);
+		pEllipses [lEllipseNdx].Y = (float)(lEllipseCenter.Y - lEllipseRadius [lEllipseNdx]);
+		pEllipses [lEllipseNdx].Width = (float)(lEllipseRadius [lEllipseNdx] * 2.0);
+		pEllipses [lEllipseNdx].Height = pEllipses [lEllipseNdx].Width;
+
+		pEllipses [lEllipseNdx].X += mCalloutBeg.X;
+		pEllipses [lEllipseNdx].Y += mCalloutBeg.Y;
+#else
+		lEllipseCenter.x = cos (lCalloutAngle) * lEllipseOffset [lEllipseNdx];
+		lEllipseCenter.y = sin (lCalloutAngle) * lEllipseOffset [lEllipseNdx];
 
 		if	(mUseGdiplus)
 		{
@@ -879,13 +1648,57 @@ void CAgentBalloonThink::GetCalloutEllipses (Gdiplus::RectF* pEllipses)
 
 		pEllipses [lEllipseNdx].X += mCalloutBeg.x;
 		pEllipses [lEllipseNdx].Y += mCalloutBeg.y;
+#endif
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
+#ifdef	__cplusplus_cli
+#if	(__CLR_VER >= 40000000)
+/////////////////////////////////////////////////////////////////////////////
+
+System::Windows::Media::Drawing^ CAgentBalloonThink::MakeDrawing (System::Windows::Media::Brush^ pBkBrush, System::Windows::Media::Brush^ pBrBrush)
+{
+	System::Windows::Media::Drawing^	lDrawing = nullptr;
+
+	if	(!mBalloonRect.IsEmpty)
+	{
+		System::Windows::Media::Pen^				lOutlinePen = gcnew System::Windows::Media::Pen (pBrBrush, 1);
+		System::Windows::Media::DrawingGroup^		lDrawingGroup = gcnew System::Windows::Media::DrawingGroup ();
+		System::Windows::Media::PathGeometry^		lPathGeometry;
+		System::Windows::Media::RectangleGeometry^	lRectGeometry;
+		System::Windows::Media::PathGeometry^		lCalloutGeometry;
+		array<RectangleF>^							lEllipses = gcnew array<RectangleF> (3);
+
+		lPathGeometry = gcnew System::Windows::Media::PathGeometry ();
+		lPathGeometry->FillRule = System::Windows::Media::FillRule::Nonzero;
+
+		lRectGeometry = gcnew System::Windows::Media::RectangleGeometry (System::Windows::Rect (mBalloonRect.Left+1, mBalloonRect.Top+1, mBalloonRect.Width-2, mBalloonRect.Height-2), mRounding.Width, mRounding.Height);
+		lPathGeometry->AddGeometry (lRectGeometry->GetFlattenedPathGeometry ());
+
+		lCalloutGeometry = gcnew System::Windows::Media::PathGeometry ();
+		lCalloutGeometry->FillRule = System::Windows::Media::FillRule::Nonzero;
+		GetCalloutEllipses (lEllipses);
+		for each (RectangleF lEllipse in lEllipses)
+		{
+			lCalloutGeometry->AddGeometry (gcnew System::Windows::Media::EllipseGeometry (System::Windows::Rect (lEllipse.Left, lEllipse.Top, lEllipse.Width, lEllipse.Height)));
+		}
+		lPathGeometry->AddGeometry (lCalloutGeometry);
+
+		lPathGeometry = lPathGeometry->GetOutlinedPathGeometry ();
+		lDrawingGroup->Children->Add (gcnew System::Windows::Media::GeometryDrawing (pBkBrush, lOutlinePen, lPathGeometry));
+		lDrawing = lDrawingGroup;
+	}
+	return lDrawing;
+}
+
+#endif
+#endif
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	_DEBUG
+#ifndef	__cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 
 void CAgentBalloonShape::InitTrace (const CRect& pRect)
@@ -987,5 +1800,6 @@ void CAgentBalloonShape::TracePointFrame (const _complex& pPoint, COLORREF pColo
 }
 
 /////////////////////////////////////////////////////////////////////////////
+#endif	// __cplusplus_cli
 #endif	// _DEBUG
 /////////////////////////////////////////////////////////////////////////////

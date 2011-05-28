@@ -22,7 +22,7 @@
 #include "AgentFileParts.h"
 
 using namespace DoubleAgent::Character;
-class CAgentBalloonShape;
+ref class CAgentBalloonShape;
 class CAgentTextDraw;
 
 /////////////////////////////////////////////////////////////////////////////
@@ -57,6 +57,9 @@ public:
 // Methods
 public:
 	System::Boolean Draw (System::Drawing::Graphics^ pGraphics);
+#if	(__CLR_VER >= 40000000)
+	System::Windows::Media::Drawing^ MakeDrawing ();
+#endif
 
 	System::Boolean AutoPaceStarted ();
 	System::Boolean AutoPaceStopped ();
@@ -69,8 +72,8 @@ public:
 // Implementation
 protected:
 	System::String^ GetNextText ();
-	System::Drawing::Rectangle CalcShapeRect ();
-	System::Drawing::Size GetTextSize ();
+	System::Drawing::RectangleF CalcShapeRect ();
+	System::Drawing::SizeF GetTextSize ();
 
 private:
 	CharacterStyle				mStyle;
@@ -79,7 +82,7 @@ private:
 	System::Boolean				mAutoRepeat;
 	System::Int32				mAutoRepeatDelay;
 	System::Int32				mAutoScrollTime;
-	::CAgentBalloonShape *		mShape;
+	::CAgentBalloonShape ^		mShape;
 	::CAgentTextDraw *			mTextDraw;
 };
 

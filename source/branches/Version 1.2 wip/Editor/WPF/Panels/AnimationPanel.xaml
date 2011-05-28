@@ -239,12 +239,13 @@
 						   Name="LabelDuration"
 						   VerticalAlignment="Center"
 						   Style="{StaticResource PanelLabel}" />
-					<custom:TextBoxEx Grid.Column="2"
+					<custom:NumericUpDown Grid.Column="2"
 									  HorizontalAlignment="Right"
-									  x:Name="TextBoxFrameDuration"
+									  x:Name="NumericFrameDuration"
 									  VerticalAlignment="Center"
 									  Width="60"
-									  Style="{StaticResource PanelTextBox}" />
+									  Style="{StaticResource PanelTextBox}"
+										  Minimum="0" />
 					<Label Content="(1/100 sec)"
 						   Grid.Column="3"
 						   HorizontalAlignment="Right"
