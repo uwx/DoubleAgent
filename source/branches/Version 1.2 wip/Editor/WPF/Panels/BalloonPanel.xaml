@@ -131,7 +131,9 @@
 								VerticalAlignment="Top"
 								Margin="5,0,5,5"
 								TabIndex="6"
-								Click="ButtonBalloonFont_Click" />
+								Style="{StaticResource PanelPushButton}"
+								Click="ButtonBalloonFont_Click"
+								 />
 						<Label Name="LabelBalloonFontSample"
 							   HorizontalAlignment="Left"
 							   Grid.Column="1"
@@ -154,7 +156,9 @@
 								VerticalAlignment="Center"
 								Margin="5"
 								TabIndex="7"
-								Click="ButtonBalloonForeground_Click" />
+								Style="{StaticResource PanelPushButton}"
+								Click="ButtonBalloonForeground_Click"
+								 />
 						<Border BorderBrush="{StaticResource HeaderTextBrush}"
 								BorderThickness="1"
 								Grid.ColumnSpan="1"
@@ -179,6 +183,7 @@
 								VerticalAlignment="Center"
 								Margin="5"
 								TabIndex="8"
+								Style="{StaticResource PanelPushButton}"
 								Click="ButtonBalloonBackground_Click" />
 						<Border BorderBrush="{StaticResource HeaderTextBrush}"
 								BorderThickness="1"
@@ -203,6 +208,7 @@
 								VerticalAlignment="Center"
 								Margin="5"
 								TabIndex="9"
+								Style="{StaticResource PanelPushButton}"
 								Click="ButtonBalloonBorder_Click" />
 						<Border BorderBrush="{StaticResource HeaderTextBrush}"
 								BorderThickness="1"

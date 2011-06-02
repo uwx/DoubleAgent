@@ -96,45 +96,19 @@
     <ClCompile Include="Core\AgentFileBinary.cpp" />
     <ClCompile Include="Core\AgentFileParts.cpp" />
     <ClCompile Include="Core\AgentFileScript.cpp" />
-    <ClCompile Include="Core\AgentText.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Core\AgentTextParse.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="Core\AgentText.cpp" />
+    <ClCompile Include="Core\AgentTextParse.cpp" />
     <ClCompile Include="Managed\BalloonPreview.cpp" />
     <ClCompile Include="Managed\CharFileCLR.cpp" />
     <ClCompile Include="Core\Sapi4Voices.cpp" />
+    <ClCompile Include="Managed\FontProperties.cpp" />
     <ClCompile Include="Managed\ScriptStream.cpp" />
     <ClCompile Include="Managed\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Managed\Win32Native.cpp" />
-    <ClCompile Include="Util\StringArrayEx.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Util\TextSize.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Util\TextWrap.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="Util\TextWrap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AgentBalloonShape.h" />
@@ -143,9 +117,12 @@
     <ClInclude Include="Core\AgentFileBinary.h" />
     <ClInclude Include="Core\AgentFileParts.h" />
     <ClInclude Include="Core\AgentFileScript.h" />
+    <ClInclude Include="Core\AgentText.h" />
+    <ClInclude Include="Core\AgentTextParse.h" />
     <ClInclude Include="Include\DaVersion.h" />
     <ClInclude Include="Core\Sapi4Voices.h" />
     <ClInclude Include="Managed\BalloonPreview.h" />
+    <ClInclude Include="Managed\FontProperties.h" />
     <ClInclude Include="Managed\ScriptStream.h" />
     <ClInclude Include="Managed\StdAfx.h" />
     <ClInclude Include="Managed\Win32Native.h" />

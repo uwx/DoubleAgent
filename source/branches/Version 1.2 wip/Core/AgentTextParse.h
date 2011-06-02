@@ -21,8 +21,15 @@
 #pragma once
 
 #include "AgentText.h"
+
 /////////////////////////////////////////////////////////////////////////////
-#pragma managed(push,off)
+#ifdef	__cplusplus_cli
+namespace DoubleAgent {
+#endif
+/////////////////////////////////////////////////////////////////////////////
+#ifdef	__cplusplus_cli
+private ref class CAgentTextParse : public CAgentText
+#else	// __cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 #include <msxml6.h>
 
@@ -44,31 +51,75 @@ public:
 };
 
 class CAgentTextParse : public CComObjectNoLock<CAgentSaxParse>, public CAgentText
+#endif
 {
 public:
+#ifdef	__cplusplus_cli
+	CAgentTextParse ();
+	CAgentTextParse (UINT pSapiVersion);
+	CAgentTextParse (System::String^ pText);
+	CAgentTextParse (System::String^ pText, UINT pSapiVersion);
+	CAgentTextParse (array<System::String^>^ pWords);
+	CAgentTextParse (array<System::String^>^ pWords, UINT pSapiVersion);
+	CAgentTextParse (CAgentText^ pText);
+	CAgentTextParse (CAgentText^ pText, UINT pSapiVersion);
+#else
 	CAgentTextParse (LPCTSTR pText = NULL, UINT pSapiVersion = 5);
 	CAgentTextParse (const CAtlStringArray& pWords, UINT pSapiVersion = 5);
 	CAgentTextParse (const CAgentText& pText, UINT pSapiVersion = 5);
 	virtual ~CAgentTextParse ();
+#endif	
 
 // Attributes
 public:
 
 // Operations
 public:
+#ifdef	__cplusplus_cli
+	CAgentTextParse^ operator= (System::String^ pText);
+	CAgentTextParse^ operator+= (System::String^ pText);
+	CAgentTextParse^ operator= (array<System::String^>^ pWords);
+	CAgentTextParse^ operator+= (array<System::String^>^ pWords);
+	CAgentTextParse^ operator= (CAgentText^ pText);
+	CAgentTextParse^ operator+= (CAgentText^ pText);
+#else
 	CAgentTextParse& operator= (LPCTSTR pText);
 	CAgentTextParse& operator+= (LPCTSTR pText);
 	CAgentTextParse& operator= (const CAtlStringArray& pWords);
 	CAgentTextParse& operator+= (const CAtlStringArray& pWords);
 	CAgentTextParse& operator= (const CAgentText& pText);
 	CAgentTextParse& operator+= (const CAgentText& pText);
+#endif	
 
 // Overrides
 
 // Implementation
 public:
+#ifdef	__cplusplus_cli
+	static int SplitText (System::String^ pText,array<System::String^>^% pTextWords);
+#else
 	static int SplitText (LPCTSTR pText, CAtlStringArray& pTextWords);
+#endif	
 protected:
+#ifdef	__cplusplus_cli
+	static const System::Char* CAgentTextParse::MatchTag (System::String^ pText, int pStartAt);
+	int SplitMap (System::String^ pText, System::String^% pSpeechWords, System::String^% pTextWords);
+
+	void ParseText (System::String^ pText, array<System::String^>^% pTextWords, array<System::String^>^% pSpeechWords);
+	void ParseTags (System::String^ pText, array<System::String^>^% pTextWords, array<System::String^>^% pSpeechWords, System::Boolean pOuterParse);
+	void PutTag (const System::Char* pTag, System::String^ pText, array<System::String^>^% pTextWords, array<System::String^>^% pSpeechWords, bool pOuterParse);
+
+	void UnquoteMappedText (System::String^% pText);
+	void AppendWords (array<System::String^>^ pAppend, array<System::String^>^% pWords);
+	void AppendWords (array<System::String^>^ pAppend, array<System::String^>^% pWords, UINT pSapiVersion);
+	void PadWords (array<System::String^>^% pWords);
+	void PadWords (array<System::String^>^% pWords, UINT pSapiVersion);
+	void FinishWords (array<System::String^>^% pWords);
+	void FinishWords (array<System::String^>^% pWords, UINT pSapiVersion);
+	void SpeechFromText (array<System::String^>^ pTextWords, array<System::String^>^% pSpeechWords);
+	void FinishSpeech (array<System::String^>^% pSpeechWords);
+#else
+	static LPCTSTR MatchTag (LPCTSTR pText);
 	int SplitMap (LPCTSTR pText, CAtlString* pSpeechWords, CAtlString* pTextWords);
 
 	void ParseText (LPCTSTR pText, CAtlStringArray& pTextWords, CAtlStringArray& pSpeechWords);
@@ -81,7 +132,9 @@ protected:
 	void FinishWords (CAtlStringArray& pWords, UINT pSapiVersion = 0);
 	void SpeechFromText (const CAtlStringArray& pTextWords, CAtlStringArray& pSpeechWords);
 	void FinishSpeech (CAtlStringArray& pSpeechWords);
+#endif	
 
+#ifndef	__cplusplus_cli
 // ISAXContentHandler
 	HRESULT STDMETHODCALLTYPE putDocumentLocator (ISAXLocator *pLocator);
 	HRESULT STDMETHODCALLTYPE startDocument (void);
@@ -99,15 +152,24 @@ protected:
 	HRESULT STDMETHODCALLTYPE error (ISAXLocator *pLocator, const wchar_t *pwchErrorMessage, HRESULT hrErrorCode);
 	HRESULT STDMETHODCALLTYPE fatalError (ISAXLocator *pLocator, const wchar_t *pwchErrorMessage, HRESULT hrErrorCode);
 	HRESULT STDMETHODCALLTYPE ignorableWarning (ISAXLocator *pLocator, const wchar_t *pwchErrorMessage, HRESULT hrErrorCode);
+#endif	
 
 private:
-	ISAXXMLReaderPtr	mSaxReader;
-	ISAXLocatorPtr		mSaxLocator;
-	CAtlStringArray		mSaxElements;
-	CAtlStringArray		mSaxTextWords;
-	CAtlStringArray		mSaxSpeechWords;
+#ifdef	__cplusplus_cli
+	static CAgentTextParse::CAgentTextParse ();
+	static array<const System::Char*>^	mTags;
+#else
+	static CAtlTypeArray <LPCTSTR>		mTags;
+	ISAXXMLReaderPtr					mSaxReader;
+	ISAXLocatorPtr						mSaxLocator;
+	CAtlStringArray						mSaxElements;
+	CAtlStringArray						mSaxTextWords;
+	CAtlStringArray						mSaxSpeechWords;
+#endif	
 };
 
-//////////////////////////////////////////////////////////////////////
-#pragma managed(pop)
+/////////////////////////////////////////////////////////////////////////////
+#ifdef	__cplusplus_cli
+} // namespace DoubleAgent
+#endif
 /////////////////////////////////////////////////////////////////////////////

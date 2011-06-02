@@ -79,12 +79,13 @@ namespace AgentCharacterEditor.Panels
 
 				lListItem.IsTabStop = false;
 				lListItem.Focusable = false;
+				lListItem.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
 				lListItem.Content = lListItemContent;
 
 				lListItemContent.Content = lAnimation;
 				lListItemContent.IsEnabled = !Program.FileIsReadOnly;
 				lListItemContent.Checked += new RoutedEventHandler (ListItemContent_CheckedChanged);
-				lListItemContent.Unchecked +=new RoutedEventHandler(ListItemContent_CheckedChanged);
+				lListItemContent.Unchecked += new RoutedEventHandler (ListItemContent_CheckedChanged);
 
 				if (
 						(pStateAnimations != null)

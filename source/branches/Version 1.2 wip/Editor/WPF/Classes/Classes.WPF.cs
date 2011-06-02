@@ -19,6 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace AgentCharacterEditor
@@ -27,14 +28,33 @@ namespace AgentCharacterEditor
 	{
 		public ListViewItemCommon ()
 		{
+			InitializeComponent ();
 		}
 		public ListViewItemCommon (string text)
 		{
+			InitializeComponent ();
 			this.Content = text;
 		}
 		public ListViewItemCommon (string text, int imageIndex)
 		{
+			InitializeComponent ();
 			this.Content = text;
+		}
+
+		/////////////////////////////////////////////////////////////////////////////
+
+		protected virtual void InitializeComponent ()
+		{
+			try
+			{
+				ResourceDictionary lResources = Program.Current.Resources;
+				Style = lResources["ListViewItemCommon"] as Style;
+				//Template = lResources["ListViewItemTemplate"] as ControlTemplate;
+			}
+			catch (Exception pException)
+			{
+				System.Diagnostics.Debug.Print (pException.Message);
+			}
 		}
 	}
 }

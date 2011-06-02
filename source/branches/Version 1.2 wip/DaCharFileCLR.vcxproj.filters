@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
-    <Filter Include="Source Files %28Native%29">
-      <UniqueIdentifier>{8298882a-f51c-4e33-85eb-61d794397a38}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\AgentFile.cpp">
@@ -51,23 +48,20 @@
     <ClCompile Include="Managed\BalloonPreview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\AgentTextParse.cpp">
-      <Filter>Source Files %28Native%29</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\AgentText.cpp">
-      <Filter>Source Files %28Native%29</Filter>
-    </ClCompile>
-    <ClCompile Include="Util\TextSize.cpp">
-      <Filter>Source Files %28Native%29</Filter>
-    </ClCompile>
-    <ClCompile Include="Util\StringArrayEx.cpp">
-      <Filter>Source Files %28Native%29</Filter>
-    </ClCompile>
     <ClCompile Include="Core\AgentBalloonShape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Core\AgentText.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Util\TextWrap.cpp">
-      <Filter>Source Files %28Native%29</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\AgentTextParse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Managed\FontProperties.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +102,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Core\AgentBalloonShape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\AgentText.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\AgentTextParse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Managed\FontProperties.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

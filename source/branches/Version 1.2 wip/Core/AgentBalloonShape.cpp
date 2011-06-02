@@ -46,6 +46,10 @@ using namespace System::Drawing::Drawing2D;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
+#ifdef	__cplusplus_cli
+namespace DoubleAgent {
+#endif
+/////////////////////////////////////////////////////////////////////////////
 
 CAgentBalloonShape::CAgentBalloonShape()
 {
@@ -248,32 +252,32 @@ void CAgentBalloonShape::CalcLayout (const CRect& pTextRect, const CRect& pRefRe
 #endif
 #endif
 
+#ifdef	__cplusplus_cli
 	CalcRectIntersect (lRefCenter, lBalloonCenter, lBalloonSize, pCalloutEnd, 0.5);
 	CalcRectIntersect (pCalloutEnd, lRefCenter, lRefSize, pCalloutBeg);
 
-#ifdef	__cplusplus_cli
 #ifdef	_TRACE_LAYOUT
 	Single lCalloutLgth = Math::Sqrt ((pCalloutEnd.X-pCalloutBeg.X)+(pCalloutEnd.X-pCalloutBeg.X) + (pCalloutEnd.Y-pCalloutBeg.Y)*(pCalloutEnd.Y-pCalloutBeg.Y));
 	LogMessage (_TRACE_LAYOUT, _T("  Callout Beg [%.1f %.1f] End [%.1f %.1f] Length [%.1f]"), pCalloutBeg.X, pCalloutBeg.Y, pCalloutEnd.X, pCalloutEnd.Y, lCalloutLgth);
 #endif
+
+	pBalloonRect = RectangleF (lBalloonCenter.X-lBalloonSize.Width/2.0f, lBalloonCenter.Y-lBalloonSize.Height/2.0f, pBalloonRect.Width, pBalloonRect.Height);
+	FixupNearPoint (pCalloutBeg, pRefRect);
+	FixupNearPoint (pCalloutEnd, pBalloonRect);
 #else
+	CalcRectIntersect (lRefCenter, lBalloonCenter, lBalloonSize, lEndPos, 0.5);
+	CalcRectIntersect (lEndPos, lRefCenter, lRefSize, lBegPos);
+
 #ifdef	_TRACE_LAYOUT
 	TracePointFill (lRefCenter, RGB(0x00,0xFF,0x00));
 	TracePointFill (lBegPos, RGB(0x80,0xFF,0x00));
 	TracePointFill (lEndPos, RGB(0xFF,0x80,0x00));
 #endif
-
 #ifdef	_TRACE_LAYOUT
 	double lCalloutLgth = _hypot (lEndPos.x - lBegPos.x, lEndPos.y - lBegPos.y);
 	LogMessage (_TRACE_LAYOUT, _T("  Callout Beg [%.1f %.1f] End [%.1f %.1f] Length [%d]"), lBegPos.x, lBegPos.y, lEndPos.x, lEndPos.y, dtol(lCalloutLgth));
 #endif
-#endif
 
-#ifdef	__cplusplus_cli
-	pBalloonRect = RectangleF (lBalloonCenter.X-lBalloonSize.Width/2.0f, lBalloonCenter.Y-lBalloonSize.Height/2.0f, pBalloonRect.Width, pBalloonRect.Height);
-	FixupNearPoint (pCalloutBeg, pRefRect);
-	FixupNearPoint (pCalloutEnd, pBalloonRect);
-#else
 	pBalloonRect = CRect (CPoint (dtolUp(lBalloonCenter.x-lBalloonSize.x/2.0), dtolUp(lBalloonCenter.y-lBalloonSize.y/2.0)), pBalloonRect.Size());
 	pCalloutBeg.x = dtol(lBegPos.x);
 	pCalloutBeg.y = dtol(lBegPos.y);
@@ -998,10 +1002,8 @@ void CAgentBalloonShape::DrawShadow (Gdiplus::GraphicsPath& pShapePath, Gdiplus:
 #endif
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	__cplusplus_cli
-#if	(__CLR_VER >= 40000000)
 /////////////////////////////////////////////////////////////////////////////
 
 System::Windows::Media::Drawing^ CAgentBalloonShape::MakeDrawing (System::Drawing::Color pBkColor, System::Drawing::Color pBrColor)
@@ -1015,7 +1017,6 @@ System::Windows::Media::Drawing^ CAgentBalloonShape::MakeDrawing (System::Window
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#endif
 #endif
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -1307,7 +1308,6 @@ void CAgentBalloonSpeak::GetCalloutPoints (Gdiplus::PointF* pPoints)
 
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	__cplusplus_cli
-#if	(__CLR_VER >= 40000000)
 /////////////////////////////////////////////////////////////////////////////
 
 System::Windows::Media::Drawing^ CAgentBalloonSpeak::MakeDrawing (System::Windows::Media::Brush^ pBkBrush, System::Windows::Media::Brush^ pBrBrush)
@@ -1344,12 +1344,14 @@ System::Windows::Media::Drawing^ CAgentBalloonSpeak::MakeDrawing (System::Window
 
 		lPathGeometry = lPathGeometry->GetOutlinedPathGeometry ();
 		lDrawingGroup->Children->Add (gcnew System::Windows::Media::GeometryDrawing (pBkBrush, lOutlinePen, lPathGeometry));
+//
+//TODO - Draw Shadow
+//
 		lDrawing = lDrawingGroup;
 	}
 	return lDrawing;
 }
 
-#endif
 #endif
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -1654,7 +1656,6 @@ void CAgentBalloonThink::GetCalloutEllipses (Gdiplus::RectF* pEllipses)
 
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	__cplusplus_cli
-#if	(__CLR_VER >= 40000000)
 /////////////////////////////////////////////////////////////////////////////
 
 System::Windows::Media::Drawing^ CAgentBalloonThink::MakeDrawing (System::Windows::Media::Brush^ pBkBrush, System::Windows::Media::Brush^ pBrBrush)
@@ -1687,12 +1688,14 @@ System::Windows::Media::Drawing^ CAgentBalloonThink::MakeDrawing (System::Window
 
 		lPathGeometry = lPathGeometry->GetOutlinedPathGeometry ();
 		lDrawingGroup->Children->Add (gcnew System::Windows::Media::GeometryDrawing (pBkBrush, lOutlinePen, lPathGeometry));
+//
+//TODO - Draw Shadow
+//
 		lDrawing = lDrawingGroup;
 	}
 	return lDrawing;
 }
 
-#endif
 #endif
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -1802,4 +1805,8 @@ void CAgentBalloonShape::TracePointFrame (const _complex& pPoint, COLORREF pColo
 /////////////////////////////////////////////////////////////////////////////
 #endif	// __cplusplus_cli
 #endif	// _DEBUG
+/////////////////////////////////////////////////////////////////////////////
+#ifdef	__cplusplus_cli
+} // namespace DoubleAgent
+#endif
 /////////////////////////////////////////////////////////////////////////////

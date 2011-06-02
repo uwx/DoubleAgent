@@ -72,6 +72,8 @@ namespace AgentCharacterEditor.Panels
 		{
 			Boolean lWasFilling = PushIsPanelFilling (true);
 
+			ListViewAnimations.SetVerticalScrollBarVisibility (ScrollBarVisibility.Disabled);
+
 			if ((pAnimationNames == null) || (pAnimationNames.Length <= 0))
 			{
 				ListViewAnimations.Items.Clear ();
@@ -86,6 +88,7 @@ namespace AgentCharacterEditor.Panels
 				for (lNdx = 0; lNdx < pAnimationNames.Length; lNdx++)
 				{
 					lItem = ListViewAnimations.Items[lNdx] as ListViewItemCommon;
+					lItem.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
 					lItem.Content = pAnimationNames[lNdx];
 				}
 			}

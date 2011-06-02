@@ -26,9 +26,13 @@
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
+#ifdef	__cplusplus_cli
+namespace DoubleAgent {
+#endif
+/////////////////////////////////////////////////////////////////////////////
 
 #ifdef	__cplusplus_cli
-ref class CAgentBalloonShape abstract
+private ref class CAgentBalloonShape abstract
 #else
 class CAgentBalloonShape
 #endif
@@ -69,11 +73,10 @@ public:
 	virtual System::Drawing::RectangleF RecalcLayout (System::Drawing::RectangleF pTextRect, System::Drawing::RectangleF pRefRect, System::Drawing::RectangleF pBounds);
 	virtual System::Drawing::Drawing2D::GraphicsPath^ GetBalloonRgn () = 0;
 	virtual System::Boolean Draw (System::Drawing::Graphics^ pGraphics, System::Drawing::Color pBkColor, System::Drawing::Color pBrColor) = 0;
-#if	(__CLR_VER >= 40000000)
+
 	virtual System::Windows::Media::Drawing^ MakeDrawing (System::Drawing::Color pBkColor, System::Drawing::Color pBrColor);
 	virtual System::Windows::Media::Drawing^ MakeDrawing (System::Windows::Media::Color pBkColor, System::Windows::Media::Color pBrColor);
 	virtual System::Windows::Media::Drawing^ MakeDrawing (System::Windows::Media::Brush^ pBkBrush, System::Windows::Media::Brush^ pBrBrush) = 0;
-#endif
 #else
 	virtual CRect RecalcLayout (const CRect& pTextRect, const CRect& pRefRect, const CRect& pBounds);
 	virtual HRGN GetBalloonRgn () = 0;
@@ -143,7 +146,7 @@ protected:
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	__cplusplus_cli
-ref class CAgentBalloonSpeak : public CAgentBalloonShape
+private ref class CAgentBalloonSpeak : public CAgentBalloonShape
 #else
 class CAgentBalloonSpeak : public CAgentBalloonShape
 #endif
@@ -166,9 +169,7 @@ public:
 	virtual void InitLayout () override;
 	virtual System::Drawing::Drawing2D::GraphicsPath^ GetBalloonRgn () override;
 	virtual System::Boolean Draw (System::Drawing::Graphics^ pGraphics, System::Drawing::Color pBkColor, System::Drawing::Color pBrColor) override;
-#if	(__CLR_VER >= 40000000)
 	virtual System::Windows::Media::Drawing^ MakeDrawing (System::Windows::Media::Brush^ pBkBrush, System::Windows::Media::Brush^ pBrBrush) override;
-#endif
 #else
 	virtual void InitLayout ();
 	virtual HRGN GetBalloonRgn ();
@@ -190,7 +191,7 @@ protected:
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	__cplusplus_cli
-ref class CAgentBalloonThink : public CAgentBalloonShape
+private ref class CAgentBalloonThink : public CAgentBalloonShape
 #else
 class CAgentBalloonThink : public CAgentBalloonShape
 #endif
@@ -213,9 +214,7 @@ public:
 	virtual void InitLayout () override;
 	virtual System::Drawing::Drawing2D::GraphicsPath^ GetBalloonRgn () override;
 	virtual System::Boolean Draw (System::Drawing::Graphics^ pGraphics, System::Drawing::Color pBkColor, System::Drawing::Color pBrColor) override;
-#if	(__CLR_VER >= 40000000)
 	virtual System::Windows::Media::Drawing^ MakeDrawing (System::Windows::Media::Brush^ pBkBrush, System::Windows::Media::Brush^ pBrBrush) override;
-#endif
 #else
 	virtual void InitLayout ();
 	virtual HRGN GetBalloonRgn ();
@@ -232,4 +231,8 @@ protected:
 #endif
 };
 
+/////////////////////////////////////////////////////////////////////////////
+#ifdef	__cplusplus_cli
+} // namespace DoubleAgent
+#endif
 /////////////////////////////////////////////////////////////////////////////

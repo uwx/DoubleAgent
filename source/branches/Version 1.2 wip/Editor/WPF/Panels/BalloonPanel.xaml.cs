@@ -63,37 +63,30 @@ namespace AgentCharacterEditor.Panels
 			{
 				if (FileBalloon.Font == null)
 				{
-					LabelBalloonFontSample.Content = null;
-					LabelBalloonFontSample.FontFamily = FontFamily;
-					LabelBalloonFontSample.FontSize = FontSize;
-					LabelBalloonFontSample.FontStyle = FontStyle;
-					LabelBalloonFontSample.FontWeight = FontWeight;
+					TextBalloonFontSample.Text = String.Empty;
+					TextBalloonFontSample.FontFamily = FontFamily;
+					TextBalloonFontSample.FontSize = FontSize;
+					TextBalloonFontSample.FontStyle = FontStyle;
+					TextBalloonFontSample.FontWeight = FontWeight;
+					TextBalloonFontSample.TextDecorations = null;
+					TextBalloonFontSample.TextEffects = null;
 				}
 				else
 				{
 					System.Drawing.Font lFont = FileBalloon.Font;
+					DoubleAgent.FontProperties lFontProperties = new DoubleAgent.FontProperties (lFont);
 
 #if DEBUG_NOT
 					System.Diagnostics.Debug.Print ("Font [{0}] Size [{1}] [{2} {3}] [{4} {5}]", GetFontFamilyName (lFont), lFont.SizeInPoints, lFont.Size, lFont.Unit, lFont.GetHeight(), lFont.GetHeight(96.0f));
 #endif
-
 					TextBalloonFontSample.Text = FormatFontName (lFont);
-					try
-					{
-						LabelBalloonFontSample.FontFamily = (new FontFamilyConverter ()).ConvertFrom (GetFontFamilyName (lFont)) as FontFamily;
-					}
-					catch
-					{
-					}
-					try
-					{
-						LabelBalloonFontSample.FontSize = lFont.GetHeight (96.0f);
-						LabelBalloonFontSample.FontWeight = lFont.Bold ? FontWeights.Bold : FontWeights.Normal;
-						LabelBalloonFontSample.FontStyle = ((lFont.Style & System.Drawing.FontStyle.Italic) != 0) ? FontStyles.Italic : FontStyles.Normal;
-					}
-					catch
-					{
-					}
+					TextBalloonFontSample.FontFamily = lFontProperties.Typeface.FontFamily;
+					TextBalloonFontSample.FontSize = lFontProperties.FontRenderingEmSize;
+					TextBalloonFontSample.FontStyle = lFontProperties.Typeface.Style;
+					TextBalloonFontSample.FontWeight = lFontProperties.Typeface.Weight;
+					TextBalloonFontSample.FontStretch = lFontProperties.Typeface.Stretch;
+					TextBalloonFontSample.TextDecorations = lFontProperties.TextDecorations;
+					TextBalloonFontSample.TextEffects = lFontProperties.TextEffects;
 				}
 				ButtonBalloonFont.IsEnabled = !Program.FileIsReadOnly;
 			}

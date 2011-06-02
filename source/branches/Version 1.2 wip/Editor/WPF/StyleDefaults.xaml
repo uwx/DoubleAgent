@@ -1,7 +1,70 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:sys="clr-namespace:System;assembly=mscorlib"
+					xmlns:local="clr-namespace:AgentCharacterEditor"
 					xmlns:ui="clr-namespace:System.Windows.Documents;assembly=PresentationUI">
+
+	<!-- =========================================================================== -->
+	<!-- Shared                                                                       -->
+	<!-- =========================================================================== -->
+
+	<sys:Double x:Key="ItemSelectionStroke">1</sys:Double>
+	<sys:Double x:Key="ItemSelectionRounding">2</sys:Double>
+	<Color x:Key="ItemSelectionInnerColor">#40FFFFFF</Color>
+
+	<Color x:Key="ItemHighlitedOuterColor">#8071CBF1</Color>
+	<Color x:Key="ItemHighlitedTopColor">#34C5EBFF</Color>
+	<Color x:Key="ItemHighlitedBottomColor">#3481D8FF</Color>
+
+	<Color x:Key="ItemUnfocusedOuterColor">#90717070</Color>
+	<Color x:Key="ItemUnfocusedTopColor">#28717070</Color>
+	<Color x:Key="ItemUnfocusedBottomColor">#50717070</Color>
+
+	<Color x:Key="ItemSelectedOuterColor">#FF8AD1F5</Color>
+	<Color x:Key="ItemSelectedTopColor">#FFDCF0FA</Color>
+	<Color x:Key="ItemSelectedBottomColor">#FFC5E6F7</Color>
+
+	<SolidColorBrush x:Key="ItemSelectionInnerBrush"
+					 Color="{StaticResource ItemSelectionInnerColor}" />
+
+	<SolidColorBrush x:Key="ItemHighlitedOuterBrush"
+					 Color="{StaticResource ItemHighlitedOuterColor}" />
+	<LinearGradientBrush x:Key="ItemHighlitedFillBrush"
+						 StartPoint="0,0"
+						 EndPoint="0,1">
+		<LinearGradientBrush.GradientStops>
+			<GradientStop Color="{StaticResource ItemHighlitedTopColor}"
+						  Offset="0" />
+			<GradientStop Color="{StaticResource ItemHighlitedBottomColor}"
+						  Offset="1" />
+		</LinearGradientBrush.GradientStops>
+	</LinearGradientBrush>
+
+	<SolidColorBrush x:Key="ItemUnfocusedOuterBrush"
+					 Color="{StaticResource ItemUnfocusedOuterColor}" />
+	<LinearGradientBrush x:Key="ItemUnfocusedFillBrush"
+						 StartPoint="0,0"
+						 EndPoint="0,1">
+		<LinearGradientBrush.GradientStops>
+			<GradientStop Color="{StaticResource ItemUnfocusedTopColor}"
+						  Offset="0" />
+			<GradientStop Color="{StaticResource ItemUnfocusedBottomColor}"
+						  Offset="1" />
+		</LinearGradientBrush.GradientStops>
+	</LinearGradientBrush>
+
+	<SolidColorBrush x:Key="ItemSelectedOuterBrush"
+					 Color="{StaticResource ItemSelectedOuterColor}" />
+	<LinearGradientBrush x:Key="ItemSelectedFillBrush"
+						 StartPoint="0,0"
+						 EndPoint="0,1">
+		<LinearGradientBrush.GradientStops>
+			<GradientStop Color="{StaticResource ItemSelectedTopColor}"
+						  Offset="0" />
+			<GradientStop Color="{StaticResource ItemSelectedBottomColor}"
+						  Offset="1" />
+		</LinearGradientBrush.GradientStops>
+	</LinearGradientBrush>
 
 	<!-- =========================================================================== -->
 	<!-- Menus                                                                       -->
@@ -20,8 +83,6 @@
 
 	<!-- =========================================================================== -->
 
-	<Color x:Key="MenuItemDisabledColor">#FF9A9A9A</Color>
-
 	<!--<Color x:Key="MenuItemGlyphBackgroundColor_Aero">#FFE6EFF4</Color>-->
 	<!--<Color x:Key="MenuItemGlyphBorderColor_Aero">#FFCDD3E6</Color>-->
 	<Color x:Key="MenuItemGlyphBackgroundColor">#FFE6F0FA</Color>
@@ -31,13 +92,6 @@
 	<Color x:Key="MenuItemGlyphDisabledBorderColor">#FFDBD6D6</Color>
 	<Color x:Key="MenuItemGlyphDisabledColor">#FF848589</Color>
 
-	<Color x:Key="MenuItemSelectionTopColor">#34C5EBFF</Color>
-	<Color x:Key="MenuItemSelectionlBottomColor">#3481D8FF</Color>
-	<Color x:Key="MenuItemSelectionOuterColor">#8071CBF1</Color>
-	<Color x:Key="MenuItemSelectionInnerColor">#40FFFFFF</Color>
-
-	<SolidColorBrush x:Key="MenuItemDisabledBrush"
-					 Color="{StaticResource MenuItemDisabledColor}" />
 	<SolidColorBrush x:Key="MenuItemGlyphBackgroundBrush"
 					 Color="{StaticResource MenuItemGlyphBackgroundColor}" />
 	<SolidColorBrush x:Key="MenuItemGlyphBorderBrush"
@@ -51,25 +105,8 @@
 	<SolidColorBrush x:Key="MenuItemGlyphDisabledBrush"
 					 Color="{StaticResource MenuItemGlyphDisabledColor}" />
 
-	<SolidColorBrush x:Key="MenuItemSelectionOuterBrush"
-					 Color="{StaticResource MenuItemSelectionOuterColor}" />
-	<SolidColorBrush x:Key="MenuItemSelectionInnerBrush"
-					 Color="{StaticResource MenuItemSelectionInnerColor}" />
-	<LinearGradientBrush x:Key="MenuItemSelectionFillBrush"
-						 StartPoint="0,0"
-						 EndPoint="0,1">
-		<LinearGradientBrush.GradientStops>
-			<GradientStop Color="{StaticResource MenuItemSelectionTopColor}"
-						  Offset="0" />
-			<GradientStop Color="{StaticResource MenuItemSelectionlBottomColor}"
-						  Offset="1" />
-		</LinearGradientBrush.GradientStops>
-	</LinearGradientBrush>
-
 	<Thickness x:Key="MenuIconMargin">4,0,6,0</Thickness>
 	<Thickness x:Key="MenuGlyphMargin">7,0,0,0</Thickness>
-	<sys:Double x:Key="MenuItemSelectionStroke">1</sys:Double>
-	<sys:Double x:Key="MenuItemSelectionRounding">2</sys:Double>
 
 	<!-- =========================================================================== -->
 
@@ -93,10 +130,10 @@
 	</LinearGradientBrush>
 
 	<MenuScrollingVisibilityConverter x:Key="MenuScrollingVisibilityConverter" />
-	<Geometry x:Key="DownArrow">M 0,0 L 3.5,4 L 7,0 Z</Geometry>
-	<Geometry x:Key="UpArrow">M 0,4 L 3.5,0 L 7,4 Z</Geometry>
-	<Geometry x:Key="RightArrow">M 0,0 L 4,3.5 L 0,7 Z</Geometry>
-	<Geometry x:Key="Checkmark">M 0,5.1 L 1.7,5.2 L 3.4,7.1 L 8,0.4 L 9.2,0 L 3.3,10.8 Z</Geometry>
+	<Geometry x:Key="MenuDownArrow">M 0,0 L 3.5,4 L 7,0 Z</Geometry>
+	<Geometry x:Key="MenuUpArrow">M 0,4 L 3.5,0 L 7,4 Z</Geometry>
+	<Geometry x:Key="MenuRightArrow">M 0,0 L 4,3.5 L 0,7 Z</Geometry>
+	<Geometry x:Key="MenuCheckmark">M 0,5.1 L 1.7,5.2 L 3.4,7.1 L 8,0.4 L 9.2,0 L 3.3,10.8 Z</Geometry>
 
 	<sys:Double x:Key="SubMenuLeftWidth">28</sys:Double>
 	<sys:Double x:Key="SubMenuIconWidth">24</sys:Double>
@@ -173,13 +210,13 @@
 			<Rectangle Name="Bg"
 					   Fill="{TemplateBinding MenuItem.Background}"
 					   Stroke="{TemplateBinding MenuItem.BorderBrush}"
-					   StrokeThickness="{StaticResource MenuItemSelectionStroke}"
-					   RadiusX="{StaticResource MenuItemSelectionRounding}"
-					   RadiusY="{StaticResource MenuItemSelectionRounding}" />
+					   StrokeThickness="{StaticResource ItemSelectionStroke}"
+					   RadiusX="{StaticResource ItemSelectionRounding}"
+					   RadiusY="{StaticResource ItemSelectionRounding}" />
 			<Rectangle x:Name="InnerBorder"
 					   Margin="1"
-					   RadiusX="{StaticResource MenuItemSelectionRounding}"
-					   RadiusY="{StaticResource MenuItemSelectionRounding}" />
+					   RadiusX="{StaticResource ItemSelectionRounding}"
+					   RadiusY="{StaticResource ItemSelectionRounding}" />
 			<DockPanel>
 				<ContentPresenter x:Name="Icon"
 								  Margin="{StaticResource MenuIconMargin}"
@@ -192,7 +229,7 @@
 					  VerticalAlignment="Center"
 					  Fill="{TemplateBinding MenuItem.Foreground}"
 					  FlowDirection="LeftToRight"
-					  Data="{StaticResource Checkmark}" />
+					  Data="{StaticResource MenuCheckmark}" />
 				<ContentPresenter ContentSource="Header"
 								  Margin="{TemplateBinding MenuItem.Padding}"
 								  RecognizesAccessKey="True"
@@ -287,13 +324,13 @@
 					 Value="true">
 				<Setter TargetName="Bg"
 						Property="Fill"
-						Value="{StaticResource MenuItemSelectionFillBrush}" />
+						Value="{StaticResource ItemHighlitedFillBrush}" />
 				<Setter TargetName="Bg"
 						Property="Stroke"
-						Value="{StaticResource MenuItemSelectionOuterBrush}" />
+						Value="{StaticResource ItemHighlitedOuterBrush}" />
 				<Setter TargetName="InnerBorder"
 						Property="Stroke"
-						Value="{StaticResource MenuItemSelectionInnerBrush}" />
+						Value="{StaticResource ItemSelectionInnerBrush}" />
 			</Trigger>
 			<Trigger Property="IsSubmenuOpen"
 					 Value="true">
@@ -305,18 +342,12 @@
 						Value="{StaticResource SubMenuBorderBrush}" />
 				<Setter TargetName="InnerBorder"
 						Property="Stroke"
-						Value="{StaticResource MenuItemSelectionInnerBrush}" />
-				<!--<Setter TargetName="Bg"
-						Property="Margin"
-						Value="0,0,0,-2" />
-				<Setter TargetName="InnerBorder"
-						Property="Margin"
-						Value="0,0,0,-2" />-->
+						Value="{StaticResource ItemSelectionInnerBrush}" />
 			</Trigger>
 			<Trigger Property="IsEnabled"
 					 Value="false">
 				<Setter Property="Foreground"
-						Value="{StaticResource MenuItemDisabledBrush}" />
+						Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
 				<Setter TargetName="GlyphPanel"
 						Property="Fill"
 						Value="{StaticResource MenuItemGlyphDisabledBrush}" />
@@ -333,13 +364,13 @@
 			<Rectangle Name="Bg"
 					   Fill="Transparent"
 					   Stroke="{TemplateBinding MenuItem.BorderBrush}"
-					   StrokeThickness="{StaticResource MenuItemSelectionStroke}"
-					   RadiusX="{StaticResource MenuItemSelectionRounding}"
-					   RadiusY="{StaticResource MenuItemSelectionRounding}" />
+					   StrokeThickness="{StaticResource ItemSelectionStroke}"
+					   RadiusX="{StaticResource ItemSelectionRounding}"
+					   RadiusY="{StaticResource ItemSelectionRounding}" />
 			<Rectangle x:Name="InnerBorder"
 					   Margin="1"
-					   RadiusX="{StaticResource MenuItemSelectionRounding}"
-					   RadiusY="{StaticResource MenuItemSelectionRounding}" />
+					   RadiusX="{StaticResource ItemSelectionRounding}"
+					   RadiusY="{StaticResource ItemSelectionRounding}" />
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition MinWidth="{StaticResource SubMenuIconWidth}"
@@ -377,7 +408,7 @@
 						  Height="{StaticResource SubMenuGlyphHeight}"
 						  Fill="{StaticResource MenuItemGlyphFillBrush}"
 						  FlowDirection="LeftToRight"
-						  Data="{StaticResource Checkmark}" />
+						  Data="{StaticResource MenuCheckmark}" />
 				</Border>
 				<ContentPresenter Grid.Column="2"
 								  ContentSource="Header"
@@ -409,18 +440,18 @@
 					 Value="true">
 				<Setter TargetName="Bg"
 						Property="Fill"
-						Value="{StaticResource MenuItemSelectionFillBrush}" />
+						Value="{StaticResource ItemHighlitedFillBrush}" />
 				<Setter TargetName="Bg"
 						Property="Stroke"
-						Value="{StaticResource MenuItemSelectionOuterBrush}" />
+						Value="{StaticResource ItemHighlitedOuterBrush}" />
 				<Setter TargetName="InnerBorder"
 						Property="Stroke"
-						Value="{StaticResource MenuItemSelectionInnerBrush}" />
+						Value="{StaticResource ItemSelectionInnerBrush}" />
 			</Trigger>
 			<Trigger Property="IsEnabled"
 					 Value="false">
 				<Setter Property="Foreground"
-						Value="{StaticResource MenuItemDisabledBrush}" />
+						Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
 				<Setter TargetName="GlyphPanel"
 						Property="Background"
 						Value="{StaticResource MenuItemGlyphDisabledBackgroundBrush}" />
@@ -441,13 +472,13 @@
 			<Rectangle Name="Bg"
 					   Fill="Transparent"
 					   Stroke="{TemplateBinding MenuItem.BorderBrush}"
-					   StrokeThickness="{StaticResource MenuItemSelectionStroke}"
-					   RadiusX="{StaticResource MenuItemSelectionRounding}"
-					   RadiusY="{StaticResource MenuItemSelectionRounding}" />
+					   StrokeThickness="{StaticResource ItemSelectionStroke}"
+					   RadiusX="{StaticResource ItemSelectionRounding}"
+					   RadiusY="{StaticResource ItemSelectionRounding}" />
 			<Rectangle x:Name="InnerBorder"
 					   Margin="1"
-					   RadiusX="{StaticResource MenuItemSelectionRounding}"
-					   RadiusY="{StaticResource MenuItemSelectionRounding}" />
+					   RadiusX="{StaticResource ItemSelectionRounding}"
+					   RadiusY="{StaticResource ItemSelectionRounding}" />
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition MinWidth="{StaticResource SubMenuIconWidth}"
@@ -485,7 +516,7 @@
 						  Height="{StaticResource SubMenuGlyphHeight}"
 						  Fill="{StaticResource MenuItemGlyphFillBrush}"
 						  FlowDirection="LeftToRight"
-						  Data="{StaticResource Checkmark}" />
+						  Data="{StaticResource MenuCheckmark}" />
 				</Border>
 				<ContentPresenter Grid.Column="2"
 								  ContentSource="Header"
@@ -500,7 +531,7 @@
 					  VerticalAlignment="Center"
 					  Margin="{StaticResource SubMenuExpandGlyphMargin}"
 					  Fill="{TemplateBinding MenuItem.Foreground}"
-					  Data="{StaticResource RightArrow}" />
+					  Data="{StaticResource MenuRightArrow}" />
 			</Grid>
 			<Popup x:Name="PART_Popup"
 				   AllowsTransparency="true"
@@ -581,18 +612,18 @@
 					 Value="true">
 				<Setter TargetName="Bg"
 						Property="Fill"
-						Value="{StaticResource MenuItemSelectionFillBrush}" />
+						Value="{StaticResource ItemHighlitedFillBrush}" />
 				<Setter TargetName="Bg"
 						Property="Stroke"
-						Value="{StaticResource MenuItemSelectionOuterBrush}" />
+						Value="{StaticResource ItemHighlitedOuterBrush}" />
 				<Setter TargetName="InnerBorder"
 						Property="Stroke"
-						Value="{StaticResource MenuItemSelectionInnerBrush}" />
+						Value="{StaticResource ItemSelectionInnerBrush}" />
 			</Trigger>
 			<Trigger Property="IsEnabled"
 					 Value="false">
 				<Setter Property="Foreground"
-						Value="{StaticResource MenuItemDisabledBrush}" />
+						Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
 				<Setter TargetName="GlyphPanel"
 						Property="Background"
 						Value="{StaticResource MenuItemGlyphDisabledBackgroundBrush}" />
@@ -623,10 +654,10 @@
 					<Grid Background="Transparent"
 						  SnapsToDevicePixels="true">
 						<Rectangle x:Name="Bg"
-								   Fill="Transparent" 
+								   Fill="Transparent"
 								   Stroke="Transparent"
 								   StrokeThickness="1"
-								   Margin="-1,0,-1,0"/>
+								   Margin="-1,0,-1,0" />
 						<ContentPresenter x:Name="ContentContainer"
 										  Margin="2,2,2,2"
 										  VerticalAlignment="Center"
@@ -692,7 +723,7 @@
 								</MultiBinding>
 							</RepeatButton.Visibility>
 							<Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}"
-								  Data="{StaticResource UpArrow}" />
+								  Data="{StaticResource MenuUpArrow}" />
 						</RepeatButton>
 						<RepeatButton Style="{StaticResource MenuScrollButton}"
 									  Grid.Row="2"
@@ -715,7 +746,7 @@
 								</MultiBinding>
 							</RepeatButton.Visibility>
 							<Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}"
-								  Data="{StaticResource DownArrow}" />
+								  Data="{StaticResource MenuDownArrow}" />
 						</RepeatButton>
 					</Grid>
 				</ControlTemplate>
@@ -836,18 +867,6 @@
 							BorderThickness="{TemplateBinding BorderThickness}"
 							Padding="{TemplateBinding Padding}"
 							SnapsToDevicePixels="true">
-						<!--<Border.Background>
-							<SolidColorBrush>
-								<SolidColorBrush.Color>
-									<Binding RelativeSource="{RelativeSource TemplatedParent}"
-											 Path="(Button.Background).(SolidColorBrush.Color)" />
-								</SolidColorBrush.Color>
-								<SolidColorBrush.Opacity>
-									<Binding RelativeSource="{RelativeSource TemplatedParent}"
-											 Path="(Button.Background).(SolidColorBrush.Opacity)" />
-								</SolidColorBrush.Opacity>
-							</SolidColorBrush>
-						</Border.Background>-->
 						<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
 										  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
 										  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
@@ -883,7 +902,7 @@
 						<Trigger Property="IsEnabled"
 								 Value="false">
 							<Setter Property="Foreground"
-									Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+									Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
 							<Setter Property="Opacity"
 									Value="0.3" />
 						</Trigger>
@@ -989,7 +1008,7 @@
 						<Trigger Property="IsEnabled"
 								 Value="false">
 							<Setter Property="Foreground"
-									Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+									Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
 							<Setter Property="Opacity"
 									Value="0.3" />
 						</Trigger>

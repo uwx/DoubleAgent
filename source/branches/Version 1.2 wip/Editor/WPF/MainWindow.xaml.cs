@@ -355,24 +355,6 @@ namespace AgentCharacterEditor
 		{
 			try
 			{
-				FrameworkElement lOverflow = ToolBarNavigation.Template.FindName ("OverflowButton", ToolBarNavigation) as FrameworkElement;
-				FrameworkElement lThumb = ToolBarNavigation.Template.FindName ("ToolBarThumb", ToolBarNavigation) as FrameworkElement;
-
-				if (lOverflow != null)
-				{
-					lOverflow.Visibility = Visibility.Collapsed;
-				}
-				if (lThumb != null)
-				{
-					lThumb.Visibility = Visibility.Collapsed;
-				}
-			}
-			catch
-			{
-			}
-
-			try
-			{
 				FrameworkElement lOverflow = ToolBarMain.Template.FindName ("OverflowButton", ToolBarMain) as FrameworkElement;
 				FrameworkElement lThumb = ToolBarMain.Template.FindName ("ToolBarThumb", ToolBarMain) as FrameworkElement;
 

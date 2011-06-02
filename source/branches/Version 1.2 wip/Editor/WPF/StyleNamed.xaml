@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:sys="clr-namespace:System;assembly=mscorlib"
 					xmlns:ui="clr-namespace:System.Windows.Documents;assembly=PresentationUI">
 
 	<ResourceDictionary.MergedDictionaries>
@@ -23,6 +24,16 @@
 	<SolidColorBrush x:Key="BackgroundDarkishBrush"
 					 Color="{StaticResource BackgroundDarkColor}" />
 
+	<Thickness x:Key="BorderMargin">2,2,2,2</Thickness>
+	<Thickness x:Key="BorderPadding">1,1,1,1</Thickness>
+	<Thickness x:Key="BorderThickness">2,2,2,2</Thickness>
+	<Thickness x:Key="BorderPaddingFocused">0,0,0,0</Thickness>
+	<Thickness x:Key="BorderThicknessFocused">3,3,3,3</Thickness>
+	<CornerRadius x:Key="BorderRounding">2</CornerRadius>
+	<Duration x:Key="BorderTransitionDuration">0:0:0.2</Duration>
+
+	<!-- =========================================================================== -->
+	<!-- Panel Grid & GroupBox                                                       -->
 	<!-- =========================================================================== -->
 
 	<Style x:Key="PanelMainGrid"
@@ -116,6 +127,8 @@
 	</Style>
 
 	<!-- =========================================================================== -->
+	<!-- Label                                                                       -->
+	<!-- =========================================================================== -->
 
 	<SolidColorBrush x:Key="LabelTextBrush"
 					 Color="GhostWhite" />
@@ -130,14 +143,14 @@
 		<Setter Property="Padding"
 				Value="2,2,5,2" />
 		<Setter Property="Foreground"
-				Value="{DynamicResource LabelTextBrush}" />
+				Value="{StaticResource LabelTextBrush}" />
 		<Setter Property="Effect"
-				Value="{DynamicResource LabelTextShadow}" />
+				Value="{StaticResource LabelTextShadow}" />
 		<Style.Triggers>
 			<Trigger Property="IsEnabled"
 					 Value="false">
 				<Setter Property="Foreground"
-						Value="{DynamicResource LabelTextBrush}" />
+						Value="{StaticResource LabelTextBrush}" />
 				<Setter Property="Effect"
 						Value="{x:Null}" />
 			</Trigger>
@@ -145,26 +158,418 @@
 	</Style>
 
 	<!-- =========================================================================== -->
+	<!-- ToggleButton                                                                -->
+	<!-- =========================================================================== -->
+
+	<Geometry x:Key="ToggleButtonCheckmark">M 0,5.1 L 1.7,5.2 L 3.4,7.1 L 8,0.4 L 9.2,0 L 3.3,10.8 Z</Geometry>
+	<Duration x:Key="ToggleButtonTransitionDuration">0:0:0.2</Duration>
+
+	<Style x:Key="PanelToggleButton"
+		   TargetType="{x:Type ToggleButton}">
+		<Setter Property="Background"
+				Value="Transparent" />
+		<Setter Property="Foreground"
+				Value="{StaticResource LabelTextBrush}" />
+		<Setter Property="FocusVisualStyle"
+				Value="{DynamicResource {x:Static SystemParameters.FocusVisualStyleKey}}" />
+		<Setter Property="Padding"
+				Value="2,2,2,2" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ToggleButton}">
+					<BulletDecorator SnapsToDevicePixels="true">
+						<BulletDecorator.Bullet>
+							<Grid Name="BulletContainer"
+								  Margin="0,2,2,2">
+								<Border Name="BulletHilite"
+										Opacity="0"
+										Background="{StaticResource ToolBarButtonHover}"
+										BorderBrush="{StaticResource ToolBarButtonHoverBorder}"
+										BorderThickness="{Binding ElementName=BulletBorder, Path=BorderThickness, Mode=OneWay}"
+										Width="{Binding ElementName=BulletBorder, Path=ActualWidth, Mode=OneWay}"
+										Height="{Binding ElementName=BulletBorder, Path=ActualHeight, Mode=OneWay}"
+										SnapsToDevicePixels="{Binding ElementName=BulletBorder, Path=SnapsToDevicePixels, Mode=OneWay}" />
+								<Border Name="BulletPress"
+										Opacity="0"
+										Background="{StaticResource ToolBarButtonPressed}"
+										BorderBrush="{StaticResource ToolBarButtonPressedBorder}"
+										BorderThickness="{Binding ElementName=BulletBorder, Path=BorderThickness, Mode=OneWay}"
+										Width="{Binding ElementName=BulletBorder, Path=ActualWidth, Mode=OneWay}"
+										Height="{Binding ElementName=BulletBorder, Path=ActualHeight, Mode=OneWay}"
+										SnapsToDevicePixels="{Binding ElementName=BulletBorder, Path=SnapsToDevicePixels, Mode=OneWay}" />
+								<Border Name="BulletBorder"
+										Background="Transparent"
+										BorderBrush="Transparent"
+										BorderThickness="1"
+										SnapsToDevicePixels="true">
+									<Path Name="Bullet"
+										  VerticalAlignment="Center"
+										  HorizontalAlignment="Center"
+										  FlowDirection="LeftToRight"
+										  Margin="2"
+										  Width="12"
+										  Height="12"
+										  Fill="{StaticResource LabelTextBrush}"
+										  Data="{StaticResource ToggleButtonCheckmark}"
+										  Effect="{StaticResource LabelTextShadow}" />
+								</Border>
+							</Grid>
+						</BulletDecorator.Bullet>
+						<ContentPresenter Name="Content"
+										  Margin="{TemplateBinding Padding}"
+										  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+										  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+										  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+										  RecognizesAccessKey="True"
+										  Effect="{StaticResource LabelTextShadow}">
+						</ContentPresenter>
+					</BulletDecorator>
+					<ControlTemplate.Triggers>
+						<Trigger Property="HasContent"
+								 Value="false">
+							<Setter TargetName="BulletContainer"
+									Property="Margin"
+									Value="0" />
+						</Trigger>
+						<Trigger Property="IsMouseOver"
+								 Value="true">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="BulletHilite"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource ToggleButtonTransitionDuration}"
+														 To="1" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="BulletHilite"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource ToggleButtonTransitionDuration}"
+														 To="0" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<Trigger Property="IsPressed"
+								 Value="true">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="BulletPress"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource ToggleButtonTransitionDuration}"
+														 To="1" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="BulletPress"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource ToggleButtonTransitionDuration}"
+														 To="0" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsChecked"
+										   Value="false" />
+								<Condition Property="IsEnabled"
+										   Value="true" />
+								<!--<Condition Property="IsMouseOver"
+										   Value="false" />-->
+								<!--<Condition Property="IsPressed"
+										   Value="false" />-->
+							</MultiTrigger.Conditions>
+							<MultiTrigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Bullet"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource ToggleButtonTransitionDuration}"
+														 To="0.3" />
+									</Storyboard>
+								</BeginStoryboard>
+							</MultiTrigger.EnterActions>
+							<MultiTrigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Bullet"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource ToggleButtonTransitionDuration}"
+														 To="1" />
+									</Storyboard>
+								</BeginStoryboard>
+							</MultiTrigger.ExitActions>
+						</MultiTrigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsChecked"
+										   Value="false" />
+								<Condition Property="IsEnabled"
+										   Value="false" />
+							</MultiTrigger.Conditions>
+							<Setter TargetName="Bullet"
+									Property="Fill"
+									Value="Transparent" />
+							<Setter TargetName="Content"
+									Property="Opacity"
+									Value="0.3" />
+						</MultiTrigger>
+						<Trigger Property="IsEnabled"
+								 Value="false">
+							<Setter TargetName="Bullet"
+									Property="Effect"
+									Value="{x:Null}" />
+							<Setter TargetName="Content"
+									Property="Effect"
+									Value="{x:Null}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<!-- =========================================================================== -->
+	<!-- Button                                                                      -->
+	<!-- =========================================================================== -->
+
+	<Color x:Key="PushButtonBorderColor">#FF8AD1F5</Color>
+	<Color x:Key="PushButtonTopColor">#FFDCF0FA</Color>
+	<Color x:Key="PushButtonBottomColor">#FFB5D6E7</Color>
+
+	<Color x:Key="PushButtonHighlitedTopColor">#FFF3FBFF</Color>
+	<Color x:Key="PushButtonHighlitedBottomColor">#FFC5E6F7</Color>
+	<SolidColorBrush x:Key="PushButtonBorderBrush"
+					 Color="DeepSkyBlue" />
+	<LinearGradientBrush x:Key="PushButtonFillBrush"
+						 StartPoint="0,0"
+						 EndPoint="0,1">
+		<LinearGradientBrush.GradientStops>
+			<GradientStop Color="{StaticResource PushButtonTopColor}"
+						  Offset="0" />
+			<GradientStop Color="{StaticResource PushButtonBottomColor}"
+						  Offset="1" />
+		</LinearGradientBrush.GradientStops>
+	</LinearGradientBrush>
+
+	<LinearGradientBrush x:Key="PushButtonHighlitedFillBrush"
+						 StartPoint="0,0"
+						 EndPoint="0,1">
+		<LinearGradientBrush.GradientStops>
+			<GradientStop Color="{StaticResource PushButtonHighlitedTopColor}"
+						  Offset="0" />
+			<GradientStop Color="{StaticResource PushButtonHighlitedBottomColor}"
+						  Offset="1" />
+		</LinearGradientBrush.GradientStops>
+	</LinearGradientBrush>
+
+	<Thickness x:Key="PushButtonDefaultPadding">0,0,0,0</Thickness>
+	<Thickness x:Key="PushButtonBorderPadding">2,2,2,2</Thickness>
+	<Thickness x:Key="PushButtonBorderThickness">1,1,1,1</Thickness>
+	<Thickness x:Key="PushButtonBorderPaddingPressed">0,0,0,0</Thickness>
+	<Thickness x:Key="PushButtonBorderThicknessPressed">3,3,3,3</Thickness>
+	<CornerRadius x:Key="PushButtonRounding">3</CornerRadius>
+	<Duration x:Key="PushButtonTransitionDuration">0:0:0.2</Duration>
+
+	<Thickness x:Key="PushButtonGlowMargin">1,1,1,1</Thickness>
+	<Thickness x:Key="PushButtonGlowMarginNot">-1,-1,-1,-1</Thickness>
+
+	<!-- =========================================================================== -->
+
+	<Style x:Key="ButtonFocusVisual">
+		<Setter Property="Control.Template">
+			<Setter.Value>
+				<ControlTemplate>
+					<Rectangle Margin="3"
+							   StrokeThickness="1"
+							   RadiusX="3"
+							   RadiusY="3"
+							   Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+							   StrokeDashArray="1 2"
+							   SnapsToDevicePixels="true" />
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="PanelPushButton"
+		   TargetType="{x:Type Button}">
+		<Setter Property="FocusVisualStyle"
+				Value="{StaticResource ButtonFocusVisual}" />
+		<Setter Property="Background"
+				Value="{StaticResource PushButtonFillBrush}" />
+		<Setter Property="BorderBrush"
+				Value="{StaticResource PushButtonBorderBrush}" />
+		<Setter Property="BorderThickness"
+				Value="{StaticResource PushButtonBorderThickness}" />
+		<Setter Property="Padding"
+				Value="{StaticResource PushButtonDefaultPadding}" />
+		<Setter Property="Foreground"
+				Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+		<Setter Property="HorizontalContentAlignment"
+				Value="Center" />
+		<Setter Property="VerticalContentAlignment"
+				Value="Center" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ButtonBase}">
+					<ContentControl>
+						<Grid Background="Transparent">
+							<Rectangle Name="Glow"
+									   Fill="White"
+									   Opacity="0"
+									   RadiusX="3"
+									   RadiusY="3"
+									   Margin="{StaticResource PushButtonGlowMarginNot}"
+									   SnapsToDevicePixels="true"
+									   ClipToBounds="False">
+								<Rectangle.Effect>
+									<BlurEffect  Radius="4"
+												 RenderingBias="Performance"
+												 KernelType="Gaussian" />
+								</Rectangle.Effect>
+							</Rectangle>
+							<Grid Margin="{StaticResource PushButtonGlowMargin}">
+								<Border Name="Chrome"
+										Background="{TemplateBinding Background}"
+										BorderBrush="{TemplateBinding BorderBrush}"
+										BorderThickness="{StaticResource PushButtonBorderThickness}"
+										CornerRadius="{StaticResource PushButtonRounding}"
+										Padding="{StaticResource PushButtonBorderPadding}"
+										SnapsToDevicePixels="true" />
+								<Border Name="Highlite"
+										Background="{StaticResource PushButtonHighlitedFillBrush}"
+										BorderBrush="{TemplateBinding BorderBrush}"
+										BorderThickness="{StaticResource PushButtonBorderThickness}"
+										CornerRadius="{StaticResource PushButtonRounding}"
+										Padding="{StaticResource PushButtonBorderPadding}"
+										Opacity="0"
+										SnapsToDevicePixels="true" />
+								<Border Background="Transparent"
+										BorderBrush="Transparent"
+										BorderThickness="{StaticResource PushButtonBorderThickness}"
+										CornerRadius="{StaticResource PushButtonRounding}"
+										Padding="{StaticResource PushButtonBorderPadding}"
+										SnapsToDevicePixels="true">
+									<ContentPresenter Margin="{TemplateBinding Padding}"
+													  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+													  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+													  RecognizesAccessKey="True"
+													  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+								</Border>
+							</Grid>
+						</Grid>
+					</ContentControl>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsKeyboardFocused"
+								 Value="true">
+						</Trigger>
+						<Trigger Property="Button.IsDefault"
+								 Value="true">
+							<Setter TargetName="Chrome"
+									Property="BorderThickness"
+									Value="2" />
+							<Setter TargetName="Chrome"
+									Property="Padding"
+									Value="1" />
+							<Setter TargetName="Highlite"
+									Property="BorderThickness"
+									Value="2" />
+							<Setter TargetName="Highlite"
+									Property="Padding"
+									Value="1" />
+						</Trigger>
+						<Trigger Property="IsMouseOver"
+								 Value="true">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Highlite"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource BorderTransitionDuration}"
+														 To="1" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Highlite"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource BorderTransitionDuration}"
+														 To="0" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<Trigger Property="Button.IsPressed"
+								 Value="true">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Glow"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource BorderTransitionDuration}"
+														 To="1" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Glow"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource BorderTransitionDuration}"
+														 To="0" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<Trigger Property="IsEnabled"
+								 Value="false">
+							<!--<Setter Property="Foreground"
+									Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />-->
+							<Setter TargetName="Chrome"
+									Property="Opacity"
+									Value="0.3" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<!-- =========================================================================== -->
+	<!-- TextBox                                                                     -->
+	<!-- =========================================================================== -->
 
 	<Color x:Key="TextBoxBorderColor">#FF4C84B6</Color>
 	<Color x:Key="TextBoxBorderColorFocused">#FF15487B</Color>
-	<Duration x:Key="TextBorderTransitionDuration">0:0:0.2</Duration>
 
 	<Style x:Key="PanelTextBox"
 		   TargetType="{x:Type TextBox}">
 		<Setter Property="Padding"
 				Value="0,1,0,1" />
 		<Setter Property="Margin"
-				Value="2" />
+				Value="{StaticResource BorderMargin}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type TextBox}">
 					<Grid>
 						<Border x:Name="Bd"
 								Background="{TemplateBinding Background}"
-								BorderThickness="2"
-								Padding="1"
-								CornerRadius="3"
+								BorderThickness="{StaticResource BorderThickness}"
+								Padding="{StaticResource BorderPadding}"
+								CornerRadius="{StaticResource BorderRounding}"
 								SnapsToDevicePixels="true">
 							<Border.BorderBrush>
 								<SolidColorBrush Color="{StaticResource TextBoxBorderColor}" />
@@ -176,8 +581,9 @@
 						<Border x:Name="BdFocused"
 								Background="{x:Null}"
 								Opacity="0"
-								BorderThickness="3"
-								CornerRadius="3"
+								Padding="{StaticResource BorderPaddingFocused}"
+								BorderThickness="{StaticResource BorderThicknessFocused}"
+								CornerRadius="{StaticResource BorderRounding}"
 								SnapsToDevicePixels="true">
 							<Border.BorderBrush>
 								<SolidColorBrush Color="{StaticResource TextBoxBorderColorFocused}" />
@@ -199,7 +605,7 @@
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="BdFocused"
 														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource TextBorderTransitionDuration}"
+														 Duration="{StaticResource BorderTransitionDuration}"
 														 To="1" />
 									</Storyboard>
 								</BeginStoryboard>
@@ -209,7 +615,7 @@
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="BdFocused"
 														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource TextBorderTransitionDuration}"
+														 Duration="{StaticResource BorderTransitionDuration}"
 														 To="0" />
 									</Storyboard>
 								</BeginStoryboard>
@@ -231,7 +637,7 @@
 									<Storyboard>
 										<ColorAnimation Storyboard.TargetName="Bd"
 														Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-														Duration="{StaticResource TextBorderTransitionDuration}"
+														Duration="{StaticResource BorderTransitionDuration}"
 														To="{StaticResource TextBoxBorderColorFocused}" />
 									</Storyboard>
 								</BeginStoryboard>
@@ -241,7 +647,7 @@
 									<Storyboard>
 										<ColorAnimation Storyboard.TargetName="Bd"
 														Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-														Duration="{StaticResource TextBorderTransitionDuration}"
+														Duration="{StaticResource BorderTransitionDuration}"
 														To="{StaticResource TextBoxBorderColor}" />
 									</Storyboard>
 								</BeginStoryboard>
@@ -254,24 +660,7 @@
 	</Style>
 
 	<!-- =========================================================================== -->
-
-	<Style x:Key="PanelToggleButton"
-		   TargetType="{x:Type ToggleButton}">
-		<Setter Property="Foreground"
-				Value="{DynamicResource LabelTextBrush}" />
-		<Setter Property="Effect"
-				Value="{DynamicResource LabelTextShadow}" />
-		<Style.Triggers>
-			<Trigger Property="IsEnabled"
-					 Value="false">
-				<Setter Property="Foreground"
-						Value="{DynamicResource LabelTextBrush}" />
-				<Setter Property="Effect"
-						Value="{x:Null}" />
-			</Trigger>
-		</Style.Triggers>
-	</Style>
-
+	<!-- ListBox/ListView                                                            -->
 	<!-- =========================================================================== -->
 
 	<Color x:Key="ListBoxBorderColor">#FF4C84B6</Color>
@@ -282,29 +671,31 @@
 		<Setter Property="Padding"
 				Value="0" />
 		<Setter Property="Margin"
-				Value="2" />
+				Value="{StaticResource BorderMargin}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type ListBox}">
 					<Grid>
 						<Border x:Name="Bd"
 								Background="{TemplateBinding Background}"
-								BorderThickness="2"
-								Padding="1"
-								CornerRadius="3"
+								BorderThickness="{StaticResource BorderThickness}"
+								Padding="{StaticResource BorderPadding}"
+								CornerRadius="{StaticResource BorderRounding}"
 								SnapsToDevicePixels="true">
 							<Border.BorderBrush>
 								<SolidColorBrush Color="{StaticResource ListBoxBorderColor}" />
 							</Border.BorderBrush>
-							<ScrollViewer Name="ScrollHost" Padding="{TemplateBinding Padding}">
+							<ScrollViewer Name="ScrollHost"
+										  Padding="{TemplateBinding Padding}">
 								<ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
 							</ScrollViewer>
 						</Border>
 						<Border x:Name="BdFocused"
 								Background="{x:Null}"
 								Opacity="0"
-								BorderThickness="3"
-								CornerRadius="3"
+								Padding="{StaticResource BorderPaddingFocused}"
+								BorderThickness="{StaticResource BorderThicknessFocused}"
+								CornerRadius="{StaticResource BorderRounding}"
 								SnapsToDevicePixels="true">
 							<Border.BorderBrush>
 								<SolidColorBrush Color="{StaticResource ListBoxBorderColorFocused}" />
@@ -324,7 +715,7 @@
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="BdFocused"
 														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource TextBorderTransitionDuration}"
+														 Duration="{StaticResource BorderTransitionDuration}"
 														 To="1" />
 									</Storyboard>
 								</BeginStoryboard>
@@ -334,7 +725,7 @@
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="BdFocused"
 														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource TextBorderTransitionDuration}"
+														 Duration="{StaticResource BorderTransitionDuration}"
 														 To="0" />
 									</Storyboard>
 								</BeginStoryboard>
@@ -354,7 +745,7 @@
 									<Storyboard>
 										<ColorAnimation Storyboard.TargetName="Bd"
 														Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-														Duration="{StaticResource TextBorderTransitionDuration}"
+														Duration="{StaticResource BorderTransitionDuration}"
 														To="{StaticResource ListBoxBorderColorFocused}" />
 									</Storyboard>
 								</BeginStoryboard>
@@ -364,7 +755,7 @@
 									<Storyboard>
 										<ColorAnimation Storyboard.TargetName="Bd"
 														Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-														Duration="{StaticResource TextBorderTransitionDuration}"
+														Duration="{StaticResource BorderTransitionDuration}"
 														To="{StaticResource ListBoxBorderColor}" />
 									</Storyboard>
 								</BeginStoryboard>
@@ -382,6 +773,112 @@
 
 	<!-- =========================================================================== -->
 
+	<ControlTemplate x:Key="ListViewItemTemplate"
+					 TargetType="{x:Type ListBoxItem}">
+		<Border Name="Bd"
+				Background="{TemplateBinding Background}"
+				BorderBrush="{TemplateBinding BorderBrush}"
+				BorderThickness="{TemplateBinding BorderThickness}"
+				SnapsToDevicePixels="true">
+			<Grid Background="Transparent">
+				<Rectangle Name="Bg"
+						   Fill="Transparent"
+						   Stroke="{TemplateBinding MenuItem.BorderBrush}"
+						   StrokeThickness="{StaticResource ItemSelectionStroke}"
+						   RadiusX="{StaticResource ItemSelectionRounding}"
+						   RadiusY="{StaticResource ItemSelectionRounding}" />
+				<Rectangle x:Name="InnerBorder"
+						   Margin="1"
+						   RadiusX="{StaticResource ItemSelectionRounding}"
+						   RadiusY="{StaticResource ItemSelectionRounding}" />
+				<ContentPresenter Margin="{TemplateBinding Padding}"
+								  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+								  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+								  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+			</Grid>
+		</Border>
+		<ControlTemplate.Triggers>
+			<MultiTrigger>
+				<MultiTrigger.Conditions>
+					<Condition Property="Focusable"
+							   Value="true" />
+					<Condition Property="IsMouseOver"
+							   Value="true" />
+				</MultiTrigger.Conditions>
+				<Setter TargetName="Bg"
+						Property="Fill"
+						Value="{StaticResource ItemHighlitedFillBrush}" />
+				<Setter TargetName="Bg"
+						Property="Stroke"
+						Value="{StaticResource ItemHighlitedOuterBrush}" />
+				<Setter TargetName="InnerBorder"
+						Property="Stroke"
+						Value="{StaticResource ItemSelectionInnerBrush}" />
+			</MultiTrigger>
+			<MultiTrigger>
+				<MultiTrigger.Conditions>
+					<Condition Property="Focusable"
+							   Value="true" />
+					<Condition Property="IsSelected"
+							   Value="true" />
+				</MultiTrigger.Conditions>
+				<Setter TargetName="Bg"
+						Property="Fill"
+						Value="{StaticResource ItemSelectedFillBrush}" />
+				<Setter TargetName="Bg"
+						Property="Stroke"
+						Value="{StaticResource ItemSelectedOuterBrush}" />
+				<Setter TargetName="InnerBorder"
+						Property="Stroke"
+						Value="{StaticResource ItemSelectionInnerBrush}" />
+			</MultiTrigger>
+			<MultiTrigger>
+				<MultiTrigger.Conditions>
+					<Condition Property="Focusable"
+							   Value="true" />
+					<Condition Property="IsSelected"
+							   Value="true" />
+					<Condition Property="Selector.IsSelectionActive"
+							   Value="false" />
+				</MultiTrigger.Conditions>
+				<Setter TargetName="Bg"
+						Property="Fill"
+						Value="{StaticResource ItemUnfocusedFillBrush}" />
+				<Setter TargetName="Bg"
+						Property="Stroke"
+						Value="{StaticResource ItemUnfocusedOuterBrush}" />
+				<Setter TargetName="InnerBorder"
+						Property="Stroke"
+						Value="{StaticResource ItemSelectionInnerBrush}" />
+			</MultiTrigger>
+			<Trigger Property="IsEnabled"
+					 Value="false">
+				<Setter Property="Foreground"
+						Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+			</Trigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+
+	<Style x:Key="ListViewItemCommon"
+		   TargetType="{x:Type ListBoxItem}">
+		<Setter Property="Background"
+				Value="Transparent" />
+		<Setter Property="HorizontalContentAlignment"
+				Value="{Binding Path=HorizontalContentAlignment,RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+		<Setter Property="VerticalContentAlignment"
+				Value="{Binding Path=VerticalContentAlignment,RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+		<Setter Property="Margin"
+				Value="1,1,1,1" />
+		<Setter Property="Padding"
+				Value="2,1,2,1" />
+		<Setter Property="Template"
+				Value="{StaticResource ListViewItemTemplate}" />
+	</Style>
+
+	<!-- =========================================================================== -->
+	<!-- TreeView                                                                    -->
+	<!-- =========================================================================== -->
+
 	<Color x:Key="TreeViewBorderColor">#FF4C84B6</Color>
 	<Color x:Key="TreeViewBorderColorFocused">#FF15487B</Color>
 
@@ -390,16 +887,16 @@
 		<Setter Property="Padding"
 				Value="0" />
 		<Setter Property="Margin"
-				Value="2" />
+				Value="{StaticResource BorderMargin}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type TreeView}">
 					<Grid>
 						<Border x:Name="Bd"
 								Background="{TemplateBinding Background}"
-								BorderThickness="2"
-								Padding="1"
-								CornerRadius="3"
+								BorderThickness="{StaticResource BorderThickness}"
+								Padding="{StaticResource BorderPadding}"
+								CornerRadius="{StaticResource BorderRounding}"
 								SnapsToDevicePixels="true">
 							<Border.BorderBrush>
 								<SolidColorBrush Color="{StaticResource TreeViewBorderColor}" />
@@ -418,8 +915,9 @@
 						<Border x:Name="BdFocused"
 								Background="{x:Null}"
 								Opacity="0"
-								BorderThickness="3"
-								CornerRadius="3"
+								Padding="{StaticResource BorderPaddingFocused}"
+								BorderThickness="{StaticResource BorderThicknessFocused}"
+								CornerRadius="{StaticResource BorderRounding}"
 								SnapsToDevicePixels="true">
 							<Border.BorderBrush>
 								<SolidColorBrush Color="{StaticResource TreeViewBorderColorFocused}" />
@@ -439,7 +937,7 @@
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="BdFocused"
 														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource TextBorderTransitionDuration}"
+														 Duration="{StaticResource BorderTransitionDuration}"
 														 To="1" />
 									</Storyboard>
 								</BeginStoryboard>
@@ -449,7 +947,7 @@
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="BdFocused"
 														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource TextBorderTransitionDuration}"
+														 Duration="{StaticResource BorderTransitionDuration}"
 														 To="0" />
 									</Storyboard>
 								</BeginStoryboard>
@@ -469,7 +967,7 @@
 									<Storyboard>
 										<ColorAnimation Storyboard.TargetName="Bd"
 														Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-														Duration="{StaticResource TextBorderTransitionDuration}"
+														Duration="{StaticResource BorderTransitionDuration}"
 														To="{StaticResource TreeViewBorderColorFocused}" />
 									</Storyboard>
 								</BeginStoryboard>
@@ -479,7 +977,7 @@
 									<Storyboard>
 										<ColorAnimation Storyboard.TargetName="Bd"
 														Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-														Duration="{StaticResource TextBorderTransitionDuration}"
+														Duration="{StaticResource BorderTransitionDuration}"
 														To="{StaticResource TreeViewBorderColor}" />
 									</Storyboard>
 								</BeginStoryboard>
@@ -490,5 +988,9 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
+
+	<!-- =========================================================================== -->
+
+	<!-- =========================================================================== -->
 
 </ResourceDictionary>

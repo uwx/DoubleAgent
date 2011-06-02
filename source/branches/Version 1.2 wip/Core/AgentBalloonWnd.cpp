@@ -1440,7 +1440,10 @@ bool CAgentBalloonWnd::StartAutoScroll ()
 	if	(
 			(IsWindow ())
 		&&	(mShape)
-		&&	(mText.CanScroll (mShape->mTextRect))
+		&&	(
+				(mText.GetScrollBounds().IsRectEmpty())
+			||	(mText.CanScroll ())
+			)
 		)
 	{
 		if	(lScrollTime = mText.InitScroll (mShape->mTextRect, (mAutoScrollTimer==0), ((!IsAutoPace()) && ClipPartialLines()), mAutoPaceTime))
@@ -1846,7 +1849,7 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 	{
 		if	(
 				(!mShape)
-			||	(!mText.CanScroll (mShape->mTextRect))
+			||	(!mText.CanScroll ())
 			)
 		{
 #ifdef	_DEBUG_AUTO_SCROLL
@@ -2201,17 +2204,24 @@ void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect& pDrawRect)
 	::SetBkMode (pDC, TRANSPARENT);
 	::SetTextColor (pDC, mOptions.mFgColor);
 
-	if	(mText.mBounds.IsRectEmpty ())
+	if	(mText.GetTextBounds().IsRectEmpty ())
 	{
-		mText.mBounds = mShape->mTextRect;
-		mText.MeasureText (mText.GetFullText(), pDC);
+		mText.SetTextBounds (mShape->mTextRect);
+		mText.CalcTextSize (pDC);
 	}
-	lTextBounds = mText.mBounds;
+	if	(
+			(!IsAutoSize ())
+		&&	(mText.GetScrollBounds().IsRectEmpty ())
+		)
+	{
+		mText.InitScroll (mShape->mTextRect, (mAutoScrollTimer==0), ((!IsAutoPace()) && ClipPartialLines()), mAutoPaceTime);
+	}
+	lTextBounds = mText.GetTextBounds();
 	lClipRect = mShape->mTextRect;
 
 	if	(
 			(!IsAutoSize ())
-		&&	(mText.CanScroll (mShape->mTextRect))
+		&&	(mText.CanScroll ())
 		)
 	{
 //
@@ -2230,14 +2240,13 @@ void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect& pDrawRect)
 				&&	(lPaceLookAhead > 0)
 				)
 			{
-				mText.mBounds = mText.GetUsedRect (false, mText.GetDisplayText(lPaceLookAhead));
+				mText.SetTextBounds (mText.GetUsedRect (false, mText.GetDisplayText(lPaceLookAhead)));
 			}
 			else
 			{
-				mText.mBounds = mText.GetUsedRect (false, mText.GetDisplayText());
+				mText.SetTextBounds (mText.GetUsedRect (false, mText.GetDisplayText()));
 			}
-			mText.mBounds.left = lTextBounds.left;
-			mText.mBounds.right = lTextBounds.right;
+			mText.SetTextBounds (CRect (lTextBounds.left, mText.GetTextBounds().top, lTextBounds.right, mText.GetTextBounds().bottom));
 		}
 
 		if	(StartAutoScroll ())
@@ -2245,29 +2254,29 @@ void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect& pDrawRect)
 #ifdef	_DEBUG_AUTO_SCROLL_NOT
 			if	(LogIsActive (_DEBUG_AUTO_SCROLL))
 			{
-				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%d)][(%u)] Clip [%d] Text [%d (%d)] Lines [%d]"), this, mCharID, IsPaused(), mShape->mTextRect.Height(), mText.GetSize().cy, mText.mBounds.Height(), mText.GetLineCount());
+				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%d)][(%u)] Clip [%d] Text [%d (%d)] Lines [%d]"), this, mCharID, IsPaused(), mShape->mTextRect.Height(), mText.GetSize().cy, mText.GetTextBounds().Height(), mText.GetLineCount());
 			}
 #endif
 		}
 		if	(ClipPartialLines())
 		{
-			mText.ApplyScroll (mShape->mTextRect, &lClipRect);
+			mText.ApplyScroll (&lClipRect);
 		}
 		else
 		{
-			mText.ApplyScroll (mShape->mTextRect);
+			mText.ApplyScroll ();
 		}
 #ifdef	_DEBUG_AUTO_SCROLL_NOT
 		if	(LogIsActive (_DEBUG_AUTO_SCROLL))
 		{
-			LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%d)][(%u)] Clip [%d] Text [%d (%d)] Scroll [%d (%d)]"), this, mCharID, IsPaused(), mShape->mTextRect.Height(), mText.GetSize().cy, mText.mBounds.Height(), mText.GetScrollPos(), mShape->mTextRect.top - mText.mBounds.top);
+			LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%d)][(%u)] Clip [%d] Text [%d (%d)] Scroll [%d (%d)]"), this, mCharID, IsPaused(), mShape->mTextRect.Height(), mText.GetSize().cy, mText.GetTextBounds().Height(), mText.GetScrollPos(), mShape->mTextRect.top - mText.GetTextBounds().top);
 		}
 #endif
 	}
 
 	lLayout = ApplyFontLayout (pDC);
-	lClipRect.left = mText.mBounds.left;
-	lClipRect.right = mText.mBounds.right;
+	lClipRect.left = mText.GetTextBounds().left;
+	lClipRect.right = mText.GetTextBounds().right;
 
 	if	(
 			(IsAutoPace ())
@@ -2278,13 +2287,13 @@ void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect& pDrawRect)
 		//	Note - AutoPace AND AutoScroll (i.e. !AutoSize) AND !ClipPartial actually does show partial lines,
 		//	it's just that the partial line at the end is empty.  It looks like a bug, but it's not.
 		//
-		mText.DrawText (pDC, mText.mBounds, mText.GetDisplayText(), NULL, &lClipRect);
+		mText.DrawText (pDC, mText.GetTextBounds(), mText.GetDisplayText(), NULL, &lClipRect);
 	}
 	else
 	{
 		mText.DrawText (pDC, NULL, &lClipRect);
 	}
-	mText.mBounds = lTextBounds;
+	mText.SetTextBounds (lTextBounds);
 
 	::SetLayout (pDC, lLayout);
 	if	(lOldFont)
@@ -2345,10 +2354,9 @@ DWORD CAgentBalloonWnd::ApplyFontLayout (HDC pDC)
 				lClientRect.right = max (lClientRect.right, lClipRect.right);
 
 				::SetLayout (pDC, LAYOUT_RTL);
-				mText.mBounds.left = lClientRect.right - mShape->mTextRect.right;
-				mText.mBounds.right = lClientRect.right - mShape->mTextRect.left;
+				mText.SetTextBounds (CRect (lClientRect.right - mShape->mTextRect.right, mText.GetTextBounds().top, lClientRect.right - mShape->mTextRect.left, mText.GetTextBounds().bottom));
 #ifdef	_DEBUG_RTL
-				LogMessage (_DEBUG_RTL, _T("LAYOUT_RTL Client [%s] Shape [%s] Text [%s] Line [%s]"), FormatRect(lClientRect), FormatRect(mShape->mTextRect), FormatRect(mText.mBounds), FormatPoint(mText.GetLinePos(0)));
+				LogMessage (_DEBUG_RTL, _T("LAYOUT_RTL Client [%s] Shape [%s] Text [%s] Line [%s]"), FormatRect(lClientRect), FormatRect(mShape->mTextRect), FormatRect(mText.GetTextBounds()), FormatPoint(mText.GetLinePos(0)));
 #endif
 			}
 		}
@@ -2364,10 +2372,9 @@ DWORD CAgentBalloonWnd::ApplyFontLayout (HDC pDC)
 				lClientRect.right = max (lClientRect.right, lClipRect.right);
 
 				::SetLayout (pDC, 0);
-				mText.mBounds.left = lClientRect.right - mShape->mTextRect.right;
-				mText.mBounds.right = lClientRect.right - mShape->mTextRect.left;
+				mText.SetTextBounds (CRect (lClientRect.right - mShape->mTextRect.right, mText.GetTextBounds().top, lClientRect.right - mShape->mTextRect.left, mText.GetTextBounds().bottom));
 #ifdef	_DEBUG_RTL
-				LogMessage (_DEBUG_RTL, _T("~LAYOUT_RTL Client [%s] Shape [%s] Text [%s] Line [%s]"), FormatRect(lClientRect), FormatRect(mShape->mTextRect), FormatRect(mText.mBounds), FormatPoint(mText.GetLinePos(0)));
+				LogMessage (_DEBUG_RTL, _T("~LAYOUT_RTL Client [%s] Shape [%s] Text [%s] Line [%s]"), FormatRect(lClientRect), FormatRect(mShape->mTextRect), FormatRect(mText.GetTextBounds()), FormatPoint(mText.GetLinePos(0)));
 #endif
 			}
 		}

@@ -162,7 +162,7 @@
 					 Orientation="Horizontal"
 					 Grid.Row="1"
 					 ToolBarTray.IsLocked="true">
-			<ToolBar Name="ToolBarNavigation">
+			<ToolBar Name="ToolBarMain">
 				<Button Name="ButtonNavigateBack"
 						ToolTip="Back"
 						Command="BrowseBack"
@@ -187,8 +187,7 @@
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"></Image>
 				</Button>
-			</ToolBar>
-			<ToolBar Name="ToolBarMain">
+				<Separator />
 				<Button Name="ButtonFileNew"
 						ToolTip="New"
 						Command="New"
@@ -250,12 +249,12 @@
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"></Image>
 				</Button>
+				<Separator />
 				<Button Name="ButtonEditCut"
 						Command="Cut"
 						CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
 						Focusable="False"
-						IsTabStop="False"
-						Margin="4,0,0,0">
+						IsTabStop="False">
 					<Image Source="{StaticResource ImgEditCut}"
 						   Stretch="None"
 						   Width="Auto"

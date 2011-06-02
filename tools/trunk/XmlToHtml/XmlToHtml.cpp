@@ -2,6 +2,7 @@
 #include "XmlToHtml.h"
 #include "XmlFormatWriter.h"
 #include "DaVersion.h"
+#include "DebugStr.h"
 
 using namespace System;
 using namespace System::Text;

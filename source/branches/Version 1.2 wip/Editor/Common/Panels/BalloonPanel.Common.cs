@@ -280,7 +280,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			System.Windows.Forms.FontDialog lFontDialog = new System.Windows.Forms.FontDialog ();
 
-			lFontDialog.ShowEffects = false;
+			lFontDialog.ShowEffects = true;
 			lFontDialog.Font = FileBalloon.Font;
 			if (lFontDialog.ShowDialog () == System.Windows.Forms.DialogResult.OK)
 			{

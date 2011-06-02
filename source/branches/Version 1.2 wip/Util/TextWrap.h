@@ -22,20 +22,22 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#ifndef	__cplusplus_cli__NOT
+/////////////////////////////////////////////////////////////////////////////
+#ifdef	__cplusplus_cli
+namespace DoubleAgent {
+#else
 #include "TextSize.h"
 #endif
-
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	__cplusplus_cli__NOT
-ref class CTextWrap
+#ifdef	__cplusplus_cli
+private ref class CTextWrap
 #else
 class CTextWrap
 #endif
 {
 public:
-#ifdef	__cplusplus_cli__NOT
+#ifdef	__cplusplus_cli
 	CTextWrap ();
 	CTextWrap (System::String^ pBreakBefore, System::String^ pBreakAfter);
 	CTextWrap (System::String^ pBreakBefore, System::String^ pBreakAfter, System::Single pWrapIndent);
@@ -51,7 +53,7 @@ public:
 #endif
 
 // Attributes
-#ifdef	__cplusplus_cli__NOT
+#ifdef	__cplusplus_cli
 	System::Drawing::RectangleF	mBounds;
 	System::Single				mWrapIndent;
 #else
@@ -61,7 +63,7 @@ public:
 	bool						mUseInternalLeading;
 #endif	
 
-#ifdef	__cplusplus_cli__NOT
+#ifdef	__cplusplus_cli
 	ref struct TextLine
 	{
 		System::String^				mString;
@@ -71,7 +73,7 @@ public:
 	};
 #endif
 
-#ifdef	__cplusplus_cli__NOT
+#ifdef	__cplusplus_cli
 	property System::Drawing::SizeF Size {System::Drawing::SizeF get();}
 	property System::Int32 LineCount {System::Int32 get();}
 	property array <TextLine^>^ Lines {array <TextLine^>^ get();}
@@ -82,16 +84,22 @@ public:
 #endif	
 
 // Operations
-#ifdef	__cplusplus_cli__NOT
+#ifdef	__cplusplus_cli
 	System::Drawing::SizeF MeasureText (System::String^ pText);
 	System::Drawing::SizeF MeasureText (System::String^ pText, System::Drawing::Graphics^ pGraphics, System::Drawing::Font^ pFont);
 	virtual System::Drawing::SizeF MeasureText (System::String^ pText, System::Drawing::Graphics^ pGraphics, System::Drawing::Font^ pFont, System::Boolean% pWordBroken);
-	void DrawText (System::Drawing::Graphics^ pGraphics);
-	void DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::Font^ pFont);
-	virtual void DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::Font^ pFont, System::Drawing::RectangleF^ pClipRect);
-	void DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::RectangleF pBounds, System::String^ pText);
-	void DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::RectangleF pBounds, System::String^ pText, System::Drawing::Font^ pFont);
-	virtual void DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::RectangleF pBounds, System::String^ pText, System::Drawing::Font^ pFont, System::Drawing::RectangleF^ pClipRect);
+	void DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::Color pColor);
+	void DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::Color pColor, System::Drawing::Font^ pFont);
+	void DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::Color pColor, System::Drawing::Font^ pFont, System::Drawing::RectangleF^ pClipRect);
+	void DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::Brush^ pBrush);
+	void DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::Brush^ pBrush, System::Drawing::Font^ pFont);
+	virtual void DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::Brush^ pBrush, System::Drawing::Font^ pFont, System::Drawing::RectangleF^ pClipRect);
+	void DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::RectangleF pBounds, System::String^ pText, System::Drawing::Color pColor);
+	void DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::RectangleF pBounds, System::String^ pText, System::Drawing::Color pColor, System::Drawing::Font^ pFont);
+	void DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::RectangleF pBounds, System::String^ pText, System::Drawing::Color pColor, System::Drawing::Font^ pFont, System::Drawing::RectangleF^ pClipRect);
+	void DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::RectangleF pBounds, System::String^ pText, System::Drawing::Brush^ pBrush);
+	void DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::RectangleF pBounds, System::String^ pText, System::Drawing::Brush^ pBrush, System::Drawing::Font^ pFont);
+	virtual void DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing::RectangleF pBounds, System::String^ pText, System::Drawing::Brush^ pBrush, System::Drawing::Font^ pFont, System::Drawing::RectangleF^ pClipRect);
 #else
 	virtual CSize MeasureText (LPCTSTR pText, HDC pDC = NULL, HFONT pFont = NULL, bool* pWordBroken = NULL);
 	virtual void DrawText (HDC pDC, HFONT pFont = NULL, const CRect* pClipRect = NULL, HDC pAttribDC = NULL);
@@ -104,7 +112,7 @@ public:
 	void DrawText (CDC& pDC, const CRect& pBounds, LPCTSTR pText, HFONT pFont = NULL, const CRect* pClipRect = NULL) {DrawText (pDC.m_hDC, pBounds, pText, pFont, pClipRect, pDC.IsPrinting() ? NULL : pDC.m_hAttribDC);}
 #endif
 
-#ifdef	__cplusplus_cli__NOT
+#ifdef	__cplusplus_cli
 	void Offset (System::Single pXOffset, System::Single pYOffset);
 	void Offset (System::Drawing::PointF pOffset);
 	System::UInt32 CenterLines ();
@@ -114,7 +122,7 @@ public:
 	UINT CenterLines ();
 #endif	
 
-#ifdef	__cplusplus_cli__NOT
+#ifdef	__cplusplus_cli
 	System::String^ GetWrappedText ();
 	System::Drawing::RectangleF GetUsedRect ();
 	System::Drawing::RectangleF GetUsedRect (System::Boolean pClipPartialLines);
@@ -136,10 +144,10 @@ public:
 
 // Implementation
 protected:
-#ifdef	__cplusplus_cli__NOT
+#ifdef	__cplusplus_cli
 	virtual System::Boolean IsBreakChar (System::String^ pText, int pNdx, UINT pPriority, System::Boolean% pBreakAfter);
 	virtual System::Single GetLineIndent (System::String^ pText, int pTextLen, System::Drawing::Graphics^ pGraphics, System::Drawing::Font^ pFont, int pLineNdx);
-
+internal:
 	CTextWrap^ operator= (CTextWrap^ pSource);
 #else
 	virtual void DrawLine (HDC pDC, int pLineNum, LPCTSTR pLineText, int pLineLength, CPoint& pLinePos, CRect& pLineRect);
@@ -150,7 +158,7 @@ protected:
 #endif	
 
 protected:
-#ifdef	__cplusplus_cli__NOT
+#ifdef	__cplusplus_cli
 	System::Drawing::SizeF	mSize;
 	System::String^			mBreakBefore;
 	System::String^			mBreakAfter;
@@ -166,7 +174,7 @@ protected:
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
-#ifndef	__cplusplus_cli__NOT
+#ifndef	__cplusplus_cli
 
 class CTextWrapPath : public CTextWrap
 {
@@ -180,5 +188,9 @@ protected:
 	virtual bool IsBreakChar (LPCTSTR pText, int pNdx, UINT pPriority, bool& pBreakAfter);
 };
 
+#endif
+/////////////////////////////////////////////////////////////////////////////
+#ifdef	__cplusplus_cli
+} // namespace DoubleAgent
 #endif
 /////////////////////////////////////////////////////////////////////////////

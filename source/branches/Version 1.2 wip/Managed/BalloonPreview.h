@@ -21,13 +21,15 @@
 #pragma once
 #include "AgentFileParts.h"
 
-using namespace DoubleAgent::Character;
-ref class CAgentBalloonShape;
-class CAgentTextDraw;
-
 /////////////////////////////////////////////////////////////////////////////
 namespace DoubleAgent {
 /////////////////////////////////////////////////////////////////////////////
+
+using namespace Character;
+ref class CAgentBalloonShape;
+ref class CAgentTextDraw;
+ref class CAgentTextDrawForms;
+ref class CAgentTextDrawWPF;
 
 public ref class BalloonPreview
 {
@@ -57,9 +59,7 @@ public:
 // Methods
 public:
 	System::Boolean Draw (System::Drawing::Graphics^ pGraphics);
-#if	(__CLR_VER >= 40000000)
 	System::Windows::Media::Drawing^ MakeDrawing ();
-#endif
 
 	System::Boolean AutoPaceStarted ();
 	System::Boolean AutoPaceStopped ();
@@ -74,16 +74,20 @@ protected:
 	System::String^ GetNextText ();
 	System::Drawing::RectangleF CalcShapeRect ();
 	System::Drawing::SizeF GetTextSize ();
+	System::Drawing::RectangleF PrepareTextDraw (System::Drawing::Graphics^ pGraphics, System::Boolean pClipPartialLines);
+	
+	CAgentTextDrawForms^ GetTextDrawForms (System::Boolean pCreate);
+	CAgentTextDrawWPF^ GetTextDrawWPF (System::Boolean pCreate);
 
 private:
-	CharacterStyle				mStyle;
-	FileBalloon^				mBalloon;
-	System::String^				mText;
-	System::Boolean				mAutoRepeat;
-	System::Int32				mAutoRepeatDelay;
-	System::Int32				mAutoScrollTime;
-	::CAgentBalloonShape ^		mShape;
-	::CAgentTextDraw *			mTextDraw;
+	CharacterStyle			mStyle;
+	FileBalloon^			mBalloon;
+	System::String^			mText;
+	System::Boolean			mAutoRepeat;
+	System::Int32			mAutoRepeatDelay;
+	System::Int32			mAutoScrollTime;
+	CAgentBalloonShape^		mShape;
+	CAgentTextDraw^			mTextDraw;
 };
 
 /////////////////////////////////////////////////////////////////////////////
