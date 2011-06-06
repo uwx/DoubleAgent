@@ -200,6 +200,55 @@ namespace AgentCharacterEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap ImgMouthClosed {
+            get {
+                object obj = ResourceManager.GetObject("ImgMouthClosed", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgMouthMedium {
+            get {
+                object obj = ResourceManager.GetObject("ImgMouthMedium", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgMouthNarrow {
+            get {
+                object obj = ResourceManager.GetObject("ImgMouthNarrow", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgMouthWide1 {
+            get {
+                object obj = ResourceManager.GetObject("ImgMouthWide1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgMouthWide2 {
+            get {
+                object obj = ResourceManager.GetObject("ImgMouthWide2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgMouthWide3 {
+            get {
+                object obj = ResourceManager.GetObject("ImgMouthWide3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgMouthWide4 {
+            get {
+                object obj = ResourceManager.GetObject("ImgMouthWide4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap ImgMoveDown {
             get {
                 object obj = ResourceManager.GetObject("ImgMoveDown", resourceCulture);

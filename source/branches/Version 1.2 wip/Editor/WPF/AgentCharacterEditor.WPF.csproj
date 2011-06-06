@@ -129,6 +129,7 @@
       <Link>Classes\NumericUpDown.WPF.cs</Link>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Classes\FrameSample.WPF.cs" />
     <Compile Include="Classes\PanelFader.WPF.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -382,26 +383,26 @@
     <Resource Include="..\Common\Resources\FileSave.png">
       <Link>Resources\FileSave.png</Link>
     </Resource>
-    <Resource Include="..\Common\Resources\MouthClosed.bmp">
-      <Link>Resources\MouthClosed.bmp</Link>
+    <Resource Include="..\Common\Resources\MouthClosed.png">
+      <Link>Resources\MouthClosed.png</Link>
     </Resource>
-    <Resource Include="..\Common\Resources\MouthMedium.bmp">
-      <Link>Resources\MouthMedium.bmp</Link>
+    <Resource Include="..\Common\Resources\MouthMedium.png">
+      <Link>Resources\MouthMedium.png</Link>
     </Resource>
-    <Resource Include="..\Common\Resources\MouthNarrow.bmp">
-      <Link>Resources\MouthNarrow.bmp</Link>
+    <Resource Include="..\Common\Resources\MouthNarrow.png">
+      <Link>Resources\MouthNarrow.png</Link>
     </Resource>
-    <Resource Include="..\Common\Resources\MouthWide1.bmp">
-      <Link>Resources\MouthWide1.bmp</Link>
+    <Resource Include="..\Common\Resources\MouthWide1.png">
+      <Link>Resources\MouthWide1.png</Link>
     </Resource>
-    <Resource Include="..\Common\Resources\MouthWide2.bmp">
-      <Link>Resources\MouthWide2.bmp</Link>
+    <Resource Include="..\Common\Resources\MouthWide2.png">
+      <Link>Resources\MouthWide2.png</Link>
     </Resource>
-    <Resource Include="..\Common\Resources\MouthWide3.bmp">
-      <Link>Resources\MouthWide3.bmp</Link>
+    <Resource Include="..\Common\Resources\MouthWide3.png">
+      <Link>Resources\MouthWide3.png</Link>
     </Resource>
-    <Resource Include="..\Common\Resources\MouthWide4.bmp">
-      <Link>Resources\MouthWide4.bmp</Link>
+    <Resource Include="..\Common\Resources\MouthWide4.png">
+      <Link>Resources\MouthWide4.png</Link>
     </Resource>
     <Resource Include="..\Common\Resources\MoveDown.Png">
       <Link>Resources\MoveDown.png</Link>

@@ -97,7 +97,7 @@ namespace AgentCharacterEditor.Global
 		}
 		static public System.Windows.Media.Brush ToWPFBrush (this System.Drawing.Color pColor)
 		{
-			return new System.Windows.Media.SolidColorBrush (pColor.ToWPF());
+			return new System.Windows.Media.SolidColorBrush (pColor.ToWPF ());
 		}
 		static public System.Drawing.Color FromWPF (this System.Windows.Media.Color pColor)
 		{
@@ -315,6 +315,20 @@ namespace AgentCharacterEditor.Global
 			}
 			return lRet;
 		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		public static ListViewItem GetSelectedItem (this ListView pListView, Boolean pIncludeFocus)
+		{
+			return pListView.SelectedItem as ListViewItem;
+		}
+
+		public static int GetSelectedIndex (this ListView pListView, Boolean pIncludeFocus)
+		{
+			return pListView.SelectedIndex;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
 
 		public static ScrollBarVisibility GetVerticalScrollBarVisibility (this ListView pListView)
 		{

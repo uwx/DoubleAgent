@@ -177,7 +177,8 @@ namespace AgentCharacterEditor.Global
 	{
 		public static System.Windows.Media.ImageSource MakeImageSource (this System.Drawing.Bitmap pBitmap)
 		{
-			return pBitmap.MakeImageSource (96.0);
+			//			return pBitmap.MakeImageSource (96.0);
+			return pBitmap.MakeImageSource (pBitmap.HorizontalResolution, pBitmap.VerticalResolution);
 		}
 
 		public static System.Windows.Media.ImageSource MakeImageSource (this System.Drawing.Bitmap pBitmap, double pDpi)
@@ -193,11 +194,17 @@ namespace AgentCharacterEditor.Global
 			{
 				try
 				{
+#if DEBUG_NOT
+					System.Diagnostics.Debug.Print ("Bitmap Size [{0}] Resolution [{2} {3}] Flags [{1}] Dpi [{4} {5}]", pBitmap.Size, pBitmap.Flags, pBitmap.HorizontalResolution, pBitmap.VerticalResolution, pDpiX, pDpiY);
+#endif
 					System.Drawing.Imaging.BitmapData lBitmapData;
 					lBitmapData = pBitmap.LockBits (new System.Drawing.Rectangle (0, 0, pBitmap.Width, pBitmap.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 					try
 					{
 						lImageSource = System.Windows.Media.Imaging.BitmapSource.Create (lBitmapData.Width, lBitmapData.Height, pDpiX, pDpiY, System.Windows.Media.PixelFormats.Bgra32, null, lBitmapData.Scan0, lBitmapData.Height * lBitmapData.Stride, lBitmapData.Stride);
+#if DEBUG_NOT
+						System.Diagnostics.Debug.Print ("Image Size [{0} {1}]", lImageSource.Width, lImageSource.Height);
+#endif
 					}
 #if DEBUG
 					catch (Exception pException)
@@ -217,6 +224,7 @@ namespace AgentCharacterEditor.Global
 #else
 				catch {}
 #endif
+
 			}
 			return lImageSource;
 		}

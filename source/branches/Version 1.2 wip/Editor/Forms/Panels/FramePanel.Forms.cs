@@ -60,63 +60,6 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Properties
-
-		public override ResolvePart FilePart
-		{
-			get
-			{
-				return base.FilePart;
-			}
-			set
-			{
-				base.FilePart = value;
-				if (FilePart is ResolveAnimationFrame)
-				{
-					(FilePart as ResolveAnimationFrame).Scope = ResolveAnimationFrame.ScopeType.ScopeFrame;
-				}
-				Frame = (FilePart is ResolveAnimationFrame) ? (FilePart as ResolveAnimationFrame).Target : null;
-
-				ShowFrameName ();
-				ShowFrameDuration ();
-				ShowFrameSample ();
-				ShowFrameImages ();
-				ShowFrameSound ();
-			}
-		}
-
-		protected FileAnimationFrame Frame
-		{
-			get;
-			set;
-		}
-
-		protected FileAnimation Animation
-		{
-			get
-			{
-				return (Frame == null) ? null : Frame.Animation;
-			}
-		}
-
-		protected String FrameTitle
-		{
-			get
-			{
-				return Titles.Frame (Frame);
-			}
-		}
-
-		public override Boolean IsPanelEmpty
-		{
-			get
-			{
-				return base.IsPanelEmpty || (Frame == null);
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
 		#region Navigation
 
 		public override object NavigationContext
@@ -170,41 +113,13 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
-		private void ShowFrameName ()
-		{
-			if (IsPanelEmpty)
-			{
-				TextBoxFrameName.ResetText ();
-				TextBoxFrameName.Enabled = false;
-			}
-			else
-			{
-				TextBoxFrameName.Text = Titles.FrameAnimation (Frame);
-				TextBoxFrameName.Enabled = true;
-			}
-		}
-
-		private void ShowFrameDuration ()
-		{
-			if (IsPanelEmpty)
-			{
-				NumericDuration.ResetText ();
-				NumericDuration.Enabled = false;
-			}
-			else
-			{
-				NumericDuration.Value = Frame.Duration;
-				NumericDuration.Enabled = !Program.FileIsReadOnly;
-			}
-		}
-
 		private void ShowFrameSample ()
 		{
 			PanelMain.SuspendLayout ();
 			if (IsPanelEmpty || (Frame.Images == null))
 			{
 				PictureBoxFrameSample.Image = null;
-				PictureBoxFrameSample.ClientSize = PictureBoxSample.DefaultImageSize;
+				PictureBoxFrameSample.ClientSize = FrameSample.DefaultImageSize;
 			}
 			else
 			{
@@ -385,9 +300,9 @@ namespace AgentCharacterEditor.Panels
 				NumericOffsetX.Enabled = false;
 				NumericOffsetY.Enabled = false;
 
-				PanelImageClip.ClientSize = PictureBoxSample.DefaultImageSize;
+				PanelImageClip.ClientSize = FrameSample.DefaultImageSize;
 				PictureBoxImageSample.SuspendLayout ();
-				PictureBoxImageSample.ClientSize = PictureBoxSample.DefaultImageSize;
+				PictureBoxImageSample.ClientSize = FrameSample.DefaultImageSize;
 				PictureBoxImageSample.Location = new Point (0, 0);
 				PictureBoxImageSample.Image = null;
 				PictureBoxImageSample.ResumeLayout (true);

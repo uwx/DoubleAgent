@@ -49,7 +49,6 @@ namespace AgentCharacterEditor
 			{
 				ResourceDictionary lResources = Program.Current.Resources;
 				Style = lResources["ListViewItemCommon"] as Style;
-				//Template = lResources["ListViewItemTemplate"] as ControlTemplate;
 			}
 			catch (Exception pException)
 			{

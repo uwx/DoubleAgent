@@ -29,12 +29,12 @@ namespace AgentCharacterEditor
 	/// A <see cref="System.Windows.Forms.PictureBox"/> with extra functionality to support isometric scaling.
 	/// </summary>
 	/// <remarks>The <see cref="SizeMode"/> is initialized to <see cref="PictureBoxSizeMode.Zoom"/> and cannot be changed.</remarks>
-	public class PictureBoxSample : System.Windows.Forms.PictureBox
+	public class FrameSample : System.Windows.Forms.PictureBox
 	{
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public PictureBoxSample ()
+		public FrameSample ()
 		{
 			base.SizeMode = PictureBoxSizeMode.Zoom;
 		}
@@ -192,22 +192,22 @@ namespace AgentCharacterEditor
 		/// <summary>
 		/// The suggested default dimensions of a sample image.
 		/// </summary>
-		public static Size DefaultImageSize
+		public static System.Drawing.Size DefaultImageSize
 		{
 			get
 			{
-				return new Size (128, 128);
+				return new System.Drawing.Size (128, 128);
 			}
 		}
 
 		/// <summary>
 		/// The suggested maximum dimensions of a sample image.
 		/// </summary>
-		public static Size MaximumImageSize
+		public static System.Drawing.Size MaximumImageSize
 		{
 			get
 			{
-				return new Size (256, 256);
+				return new System.Drawing.Size (256, 256);
 			}
 		}
 	}

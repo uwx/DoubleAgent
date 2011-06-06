@@ -229,7 +229,8 @@
 							HorizontalAlignment="Right"
 							VerticalAlignment="Top"
 							Focusable="false"
-							Click="ButtonIconImport_Click">
+							Click="ButtonIconImport_Click"
+							ToolTip="Open icon file">
 						<Image Source="{StaticResource ImgFileOpen}"
 							   Stretch="None"
 							   Width="Auto"
@@ -243,7 +244,8 @@
 							Width="Auto"
 							HorizontalAlignment="Right"
 							VerticalAlignment="Top"
-							Focusable="false">
+							Focusable="false"
+							ToolTip="Save icon">
 						<Image Source="{StaticResource ImgFileSave}"
 							   Stretch="None"
 							   Width="Auto"
@@ -265,7 +267,7 @@
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="315*" />
+					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
 				<custom:TextBoxEx Height="Auto"
 								  HorizontalAlignment="Left"

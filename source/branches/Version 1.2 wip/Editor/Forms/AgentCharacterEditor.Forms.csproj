@@ -1,619 +1,640 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{CA0B7BE4-DE34-4F78-9C7D-2A1A4C3562DA}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AgentCharacterEditor</RootNamespace>
-    <AssemblyName>DoubleACE</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <StartupObject>AgentCharacterEditor.Program</StartupObject>
-    <ApplicationIcon>DoubleAgent.ico</ApplicationIcon>
-    <SignAssembly>true</SignAssembly>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>51</ApplicationRevision>
-    <ApplicationVersion>1.2.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <BaseIntermediateOutputPath>\BinDa\Lib\Editor\Forms</BaseIntermediateOutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\..\BinDa\Bin\Debug%28x86%29\v3.5\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <DocumentationFile>..\..\..\BinDa\Bin\Debug%28x86%29\v3.5\DoubleACE.XML</DocumentationFile>
-    <NoWarn>1591</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <OutputPath>..\..\..\BinDa\Bin\Release%28x86%29\v3.5\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <DocumentationFile>..\..\..\BinDa\Bin\Release%28x86%29\v3.5\DoubleACE.XML</DocumentationFile>
-    <NoWarn>1591</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignManifests>true</SignManifests>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ManifestCertificateThumbprint>B1BE236295BEC8C63851C7802E4112F58BDE722E</ManifestCertificateThumbprint>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ManifestKeyFile>..\..\ksc_signing.pfx</ManifestKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ManifestTimestampUrl>http://timestamp.comodoca.com/authenticode</ManifestTimestampUrl>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>CinSoft.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="DaCharFileCLR">
-      <HintPath>..\..\..\BinDa\Bin\Debug(x86)\v3.5\DaCharFileCLR.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Core">
-      <HintPath>..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\v3.5\System.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="UIAutomationProvider" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="WindowsFormsIntegration" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\..\Util\CSharp\CursorState.Forms.cs">
-      <Link>Classes\CursorState.Forms.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Util\CSharp\ToolStripEx.Forms.cs">
-      <Link>Classes\ToolStripEx.Forms.cs</Link>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="..\..\Util\CSharp\TreeViewEx.Forms.cs">
-      <Link>Classes\TreeViewEx.Forms.cs</Link>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="..\..\Util\CSharp\ControlInterop.Forms.cs">
-      <Link>Classes\ControlInterop.Forms.cs</Link>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="..\..\Util\CSharp\UndoManager.Common.cs">
-      <Link>Classes\UndoManager.Common.cs</Link>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="About\AboutBox.Forms.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="About\AboutBox.Forms.Designer.cs">
-      <DependentUpon>AboutBox.Forms.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Classes\Classes.Forms.cs" />
-    <Compile Include="Classes\EditMenu.Forms.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="..\Common\Classes\Extensions.Common.cs">
-      <Link>Classes\Extensions.Common.cs</Link>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Classes\Extensions.Forms.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Classes\FileDialogEx.Forms.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\Common\MainWindow.Common.cs">
-      <Link>MainWindow.Common.cs</Link>
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="..\Common\Panels\CharacterPanel.Common.cs">
-      <Link>Panels\CharacterPanel.Common.cs</Link>
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="..\Common\Panels\FilePartPanel.Common.cs">
-      <Link>Panels\FilePartPanel.Common.cs</Link>
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="..\Common\Panels\PartsTreePanel.Common.cs">
-      <Link>Panels\PartsTreePanel.Common.cs</Link>
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="..\Common\Panels\BalloonPanel.Common.cs">
-      <Link>Panels\BalloonPanel.Common.cs</Link>
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="..\Common\Panels\TtsPanel.Common.cs">
-      <Link>Panels\TtsPanel.Common.cs</Link>
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="..\Common\Panels\StatePanel.Common.cs">
-      <Link>Panels\StatePanel.Common.cs</Link>
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="..\Common\Panels\AnimationsPanel.Common.cs">
-      <Link>Panels\AnimationsPanel.Common.cs</Link>
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="..\Common\Panels\AnimationPanel.Common.cs">
-      <Link>Panels\AnimationPanel.Common.cs</Link>
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="..\Common\Panels\FramePanel.Common.cs">
-      <Link>Panels\FramePanel.Common.cs</Link>
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="..\Common\Panels\BranchingPanel.Common.cs">
-      <Link>Panels\BranchingPanel.Common.cs</Link>
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="..\Common\Panels\OverlayPanel.Common.cs">
-      <Link>Panels\OverlayPanel.Common.cs</Link>
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Previews\AnimationPreview.Designer.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>AnimationPreview.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Previews\AnimationPreviewFrames.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Previews\AnimationPreviewSound.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Previews\AnimationPreviewTimeline.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Previews\AnimationPreviewWPF.xaml.cs">
-      <DependentUpon>AnimationPreviewWPF.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Classes\Titles.Common.cs">
-      <Link>Classes\Titles.Common.cs</Link>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Previews\AnimationPreview.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Previews\AnimationPreviewFrame.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Panels\FilePartPanel.Forms.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Panels\FilePartPanel.Forms.Designer.cs">
-      <DependentUpon>FilePartPanel.Forms.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Previews\FramesPreview.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Previews\FramesPreview.Designer.cs">
-      <DependentUpon>FramesPreview.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Previews\FramesListView.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Previews\BalloonPreview.Forms.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Previews\BalloonPreview.Forms.Designer.cs">
-      <DependentUpon>BalloonPreview.Forms.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Classes\FileDialogEx.Common.cs">
-      <Link>Classes\FileDialogEx.Common.cs</Link>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\..\Util\CSharp\ListViewEx.Forms.cs">
-      <Link>Classes\ListViewEx.Forms.cs</Link>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="..\..\Util\CSharp\NumericUpDownEx.Forms.cs">
-      <Link>Classes\NumericUpDownEx.Forms.cs</Link>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="..\..\Util\CSharp\RecentFileList.Common.cs">
-      <Link>Classes\RecentFileList.Common.cs</Link>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\..\Util\CSharp\RecentFileList.Forms.cs">
-      <Link>Classes\RecentFileList.Forms.cs</Link>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\..\Util\CSharp\TextBoxEx.Forms.cs">
-      <Link>Classes\TextBoxEx.Forms.cs</Link>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Panels\AnimationPanel.Forms.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Panels\AnimationPanel.Forms.Designer.cs">
-      <DependentUpon>AnimationPanel.Forms.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Panels\AnimationsPanel.Forms.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Panels\AnimationsPanel.Forms.Designer.cs">
-      <DependentUpon>AnimationsPanel.Forms.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Panels\BranchingPanel.Forms.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Panels\BranchingPanel.Forms.Designer.cs">
-      <DependentUpon>BranchingPanel.Forms.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Panels\CharacterPanel.Forms.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Panels\CharacterPanel.Forms.Designer.cs">
-      <DependentUpon>CharacterPanel.Forms.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Panels\FramePanel.Forms.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Panels\FramePanel.Forms.Designer.cs">
-      <DependentUpon>FramePanel.Forms.cs</DependentUpon>
-    </Compile>
-    <Compile Include="About\LicenceBox.Forms.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="About\LicenceBox.Forms.Designer.cs">
-      <DependentUpon>LicenceBox.Forms.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MainWindow.Forms.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MainWindow.Forms.Designer.cs">
-      <DependentUpon>MainWindow.Forms.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Panels\OverlayPanel.Forms.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Panels\OverlayPanel.Forms.Designer.cs">
-      <DependentUpon>OverlayPanel.Forms.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Panels\PartsTreePanel.Forms.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Panels\PartsTreePanel.Forms.Designer.cs">
-      <DependentUpon>PartsTreePanel.Forms.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Classes\ResolvePart.Common.cs">
-      <Link>Classes\ResolvePart.Common.cs</Link>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Classes\PictureBoxSample.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Program.Forms.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Panels\StatePanel.Forms.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Panels\StatePanel.Forms.Designer.cs">
-      <DependentUpon>StatePanel.Forms.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\Common\Updates\UndoableUpdate.Common.cs">
-      <Link>Updates\UndoableUpdate.Common.cs</Link>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\Common\Updates\UndoableUpdates.Common.cs">
-      <Link>Updates\UndoableUpdates.Common.cs</Link>
-      <SubType>Code</SubType>
-    </Compile>
-    <EmbeddedResource Include="About\AboutBox.Forms.resx">
-      <DependentUpon>AboutBox.Forms.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Panels\FilePartPanel.Forms.resx">
-      <DependentUpon>FilePartPanel.Forms.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Previews\AnimationPreview.resx">
-      <DependentUpon>AnimationPreview.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Previews\FramesPreview.resx">
-      <DependentUpon>FramesPreview.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Panels\AnimationPanel.Forms.resx">
-      <DependentUpon>AnimationPanel.Forms.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Panels\AnimationsPanel.Forms.resx">
-      <DependentUpon>AnimationsPanel.Forms.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Previews\BalloonPreview.Forms.resx">
-      <DependentUpon>BalloonPreview.Forms.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Panels\BranchingPanel.Forms.resx">
-      <DependentUpon>BranchingPanel.Forms.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Panels\CharacterPanel.Forms.resx">
-      <DependentUpon>CharacterPanel.Forms.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Panels\FramePanel.Forms.resx">
-      <DependentUpon>FramePanel.Forms.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="About\LicenceBox.Forms.resx">
-      <DependentUpon>LicenceBox.Forms.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MainWindow.Forms.resx">
-      <DependentUpon>MainWindow.Forms.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Panels\OverlayPanel.Forms.resx">
-      <DependentUpon>OverlayPanel.Forms.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Panels\PartsTreePanel.Forms.resx">
-      <DependentUpon>PartsTreePanel.Forms.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Panels\StatePanel.Forms.resx">
-      <DependentUpon>StatePanel.Forms.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Panels\TtsPanel.Forms.resx">
-      <DependentUpon>TtsPanel.Forms.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Panels\BalloonPanel.Forms.resx">
-      <DependentUpon>BalloonPanel.Forms.cs</DependentUpon>
-    </EmbeddedResource>
-    <Compile Include="Panels\TtsPanel.Forms.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Panels\TtsPanel.Forms.Designer.cs">
-      <DependentUpon>TtsPanel.Forms.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Panels\BalloonPanel.Forms.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Panels\BalloonPanel.Forms.Designer.cs">
-      <DependentUpon>BalloonPanel.Forms.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\Common\Resources\Resources.resx">
-      <Link>Resources\Resources.resx</Link>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="..\Common\Resources\Resources.Designer.cs">
-      <Link>Resources\Resources.Designer.cs</Link>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <SubType>Designer</SubType>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <DependentUpon>Resources.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <None Include="CinSoft.snk" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="Properties\Settings.cs">
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="..\Common\Resources\EditCopy.png">
-      <Link>Resources\EditCopy.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\EditCut.png">
-      <Link>Resources\EditCut.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\EditDelete.png">
-      <Link>Resources\EditDelete.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\EditPaste.png">
-      <Link>Resources\EditPaste.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\EditRedo.png">
-      <Link>Resources\EditRedo.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\EditUndo.png">
-      <Link>Resources\EditUndo.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\FileNew.png">
-      <Link>Resources\FileNew.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\FileOpen.png">
-      <Link>Resources\FileOpen.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\FilePrint.png">
-      <Link>Resources\FilePrint.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\FilePrintPreview.png">
-      <Link>Resources\FilePrintPreview.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\FileSave.png">
-      <Link>Resources\FileSave.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\MouthClosed.bmp">
-      <Link>Resources\MouthClosed.bmp</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\MouthMedium.bmp">
-      <Link>Resources\MouthMedium.bmp</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\MouthNarrow.bmp">
-      <Link>Resources\MouthNarrow.bmp</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\MouthWide1.bmp">
-      <Link>Resources\MouthWide1.bmp</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\MouthWide2.bmp">
-      <Link>Resources\MouthWide2.bmp</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\MouthWide3.bmp">
-      <Link>Resources\MouthWide3.bmp</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\MouthWide4.bmp">
-      <Link>Resources\MouthWide4.bmp</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\MoveDown.Png">
-      <Link>Resources\MoveDown.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\MoveLeft.Png">
-      <Link>Resources\MoveLeft.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\MoveRight.Png">
-      <Link>Resources\MoveRight.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\MoveUp.Png">
-      <Link>Resources\MoveUp.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\Mute.Png">
-      <Link>Resources\Mute.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\NavigateBack.png">
-      <Link>Resources\NavigateBack.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\NavigateForward.png">
-      <Link>Resources\NavigateForward.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\Pause.png">
-      <Link>Resources\Pause.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\Play.png">
-      <Link>Resources\Play.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\Repeat.png">
-      <Link>Resources\Repeat.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\Run.png">
-      <Link>Resources\Run.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\ShiftDown.Png">
-      <Link>Resources\ShiftDown.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\ShiftLeft.Png">
-      <Link>Resources\ShiftLeft.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\ShiftRight.Png">
-      <Link>Resources\ShiftRight.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\ShiftUp.Png">
-      <Link>Resources\ShiftUp.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\ShowBranching.png">
-      <Link>Resources\ShowBranching.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\ShowExitBranching.png">
-      <Link>Resources\ShowExitBranching.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\SkipBack.png">
-      <Link>Resources\SkipBack.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\SkipForward.png">
-      <Link>Resources\SkipForward.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\Stop.png">
-      <Link>Resources\Stop.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\ViewLarge.png">
-      <Link>Resources\ViewLarge.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\ViewMedium.png">
-      <Link>Resources\ViewMedium.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\ViewSmall.png">
-      <Link>Resources\ViewSmall.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\Zoom.png">
-      <Link>Resources\Zoom.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\About.png">
-      <Link>Resources\About.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\DoubleAgent.ico">
-      <Link>Resources\DoubleAgent.ico</Link>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="DoubleAgent.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Previews\AnimationPreviewWPF.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	<PropertyGroup>
+		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+		<ProductVersion>9.0.30729</ProductVersion>
+		<SchemaVersion>2.0</SchemaVersion>
+		<ProjectGuid>{CA0B7BE4-DE34-4F78-9C7D-2A1A4C3562DA}</ProjectGuid>
+		<OutputType>WinExe</OutputType>
+		<AppDesignerFolder>Properties</AppDesignerFolder>
+		<RootNamespace>AgentCharacterEditor</RootNamespace>
+		<AssemblyName>DoubleACE</AssemblyName>
+		<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+		<FileAlignment>512</FileAlignment>
+		<StartupObject>AgentCharacterEditor.Program</StartupObject>
+		<ApplicationIcon>DoubleAgent.ico</ApplicationIcon>
+		<SignAssembly>true</SignAssembly>
+		<IsWebBootstrapper>false</IsWebBootstrapper>
+		<TargetFrameworkProfile>
+		</TargetFrameworkProfile>
+		<PublishUrl>publish\</PublishUrl>
+		<Install>true</Install>
+		<InstallFrom>Disk</InstallFrom>
+		<UpdateEnabled>false</UpdateEnabled>
+		<UpdateMode>Foreground</UpdateMode>
+		<UpdateInterval>7</UpdateInterval>
+		<UpdateIntervalUnits>Days</UpdateIntervalUnits>
+		<UpdatePeriodically>false</UpdatePeriodically>
+		<UpdateRequired>false</UpdateRequired>
+		<MapFileExtensions>true</MapFileExtensions>
+		<ApplicationRevision>51</ApplicationRevision>
+		<ApplicationVersion>1.2.0.%2a</ApplicationVersion>
+		<UseApplicationTrust>false</UseApplicationTrust>
+		<BootstrapperEnabled>true</BootstrapperEnabled>
+		<BaseIntermediateOutputPath>\BinDa\Lib\Editor\Forms</BaseIntermediateOutputPath>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+		<DebugSymbols>true</DebugSymbols>
+		<OutputPath>..\..\..\BinDa\Bin\Debug%28x86%29\v3.5\</OutputPath>
+		<DefineConstants>TRACE;DEBUG</DefineConstants>
+		<DebugType>full</DebugType>
+		<PlatformTarget>x86</PlatformTarget>
+		<ErrorReport>prompt</ErrorReport>
+		<UseVSHostingProcess>false</UseVSHostingProcess>
+		<DocumentationFile>..\..\..\BinDa\Bin\Debug%28x86%29\v3.5\DoubleACE.XML</DocumentationFile>
+		<NoWarn>1591</NoWarn>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+		<OutputPath>..\..\..\BinDa\Bin\Release%28x86%29\v3.5\</OutputPath>
+		<DefineConstants>TRACE</DefineConstants>
+		<Optimize>true</Optimize>
+		<DebugType>pdbonly</DebugType>
+		<PlatformTarget>x86</PlatformTarget>
+		<ErrorReport>prompt</ErrorReport>
+		<UseVSHostingProcess>false</UseVSHostingProcess>
+		<DocumentationFile>..\..\..\BinDa\Bin\Release%28x86%29\v3.5\DoubleACE.XML</DocumentationFile>
+		<NoWarn>1591</NoWarn>
+	</PropertyGroup>
+	<PropertyGroup>
+		<SignManifests>true</SignManifests>
+	</PropertyGroup>
+	<PropertyGroup>
+		<ManifestCertificateThumbprint>B1BE236295BEC8C63851C7802E4112F58BDE722E</ManifestCertificateThumbprint>
+	</PropertyGroup>
+	<PropertyGroup>
+		<ManifestKeyFile>..\..\ksc_signing.pfx</ManifestKeyFile>
+	</PropertyGroup>
+	<PropertyGroup>
+		<ManifestTimestampUrl>http://timestamp.comodoca.com/authenticode</ManifestTimestampUrl>
+	</PropertyGroup>
+	<PropertyGroup>
+		<AssemblyOriginatorKeyFile>CinSoft.snk</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
+	<ItemGroup>
+		<Reference Include="DaCharFileCLR">
+			<HintPath>..\..\..\BinDa\Bin\Debug(x86)\v3.5\DaCharFileCLR.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="PresentationCore" />
+		<Reference Include="PresentationFramework" />
+		<Reference Include="System" />
+		<Reference Include="System.Core">
+			<HintPath>..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\v3.5\System.Core.dll</HintPath>
+		</Reference>
+		<Reference Include="System.Data" />
+		<Reference Include="System.Deployment" />
+		<Reference Include="System.Drawing" />
+		<Reference Include="System.Windows.Forms" />
+		<Reference Include="System.Xml" />
+		<Reference Include="UIAutomationProvider" />
+		<Reference Include="WindowsBase" />
+		<Reference Include="WindowsFormsIntegration" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Include="..\..\Util\CSharp\CursorState.Forms.cs">
+			<Link>Classes\CursorState.Forms.cs</Link>
+		</Compile>
+		<Compile Include="..\..\Util\CSharp\ToolStripEx.Forms.cs">
+			<Link>Classes\ToolStripEx.Forms.cs</Link>
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Include="..\..\Util\CSharp\TreeViewEx.Forms.cs">
+			<Link>Classes\TreeViewEx.Forms.cs</Link>
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Include="..\..\Util\CSharp\ControlInterop.Forms.cs">
+			<Link>Classes\ControlInterop.Forms.cs</Link>
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Include="..\..\Util\CSharp\UndoManager.Common.cs">
+			<Link>Classes\UndoManager.Common.cs</Link>
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Include="About\AboutBox.Forms.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="About\AboutBox.Forms.Designer.cs">
+			<DependentUpon>AboutBox.Forms.cs</DependentUpon>
+		</Compile>
+		<Compile Include="Classes\Classes.Forms.cs" />
+		<Compile Include="Classes\EditMenu.Forms.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Include="..\Common\Classes\Extensions.Common.cs">
+			<Link>Classes\Extensions.Common.cs</Link>
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Include="Classes\Extensions.Forms.cs">
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Include="Classes\FileDialogEx.Forms.cs">
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Include="..\Common\MainWindow.Common.cs">
+			<Link>MainWindow.Common.cs</Link>
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="..\Common\Panels\CharacterPanel.Common.cs">
+			<Link>Panels\CharacterPanel.Common.cs</Link>
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="..\Common\Panels\FilePartPanel.Common.cs">
+			<Link>Panels\FilePartPanel.Common.cs</Link>
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="..\Common\Panels\PartsTreePanel.Common.cs">
+			<Link>Panels\PartsTreePanel.Common.cs</Link>
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="..\Common\Panels\BalloonPanel.Common.cs">
+			<Link>Panels\BalloonPanel.Common.cs</Link>
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="..\Common\Panels\TtsPanel.Common.cs">
+			<Link>Panels\TtsPanel.Common.cs</Link>
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="..\Common\Panels\StatePanel.Common.cs">
+			<Link>Panels\StatePanel.Common.cs</Link>
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="..\Common\Panels\AnimationsPanel.Common.cs">
+			<Link>Panels\AnimationsPanel.Common.cs</Link>
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="..\Common\Panels\AnimationPanel.Common.cs">
+			<Link>Panels\AnimationPanel.Common.cs</Link>
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="..\Common\Panels\FramePanel.Common.cs">
+			<Link>Panels\FramePanel.Common.cs</Link>
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="..\Common\Panels\BranchingPanel.Common.cs">
+			<Link>Panels\BranchingPanel.Common.cs</Link>
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="..\Common\Panels\OverlayPanel.Common.cs">
+			<Link>Panels\OverlayPanel.Common.cs</Link>
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="Previews\AnimationPreview.Designer.cs">
+			<SubType>Code</SubType>
+			<DependentUpon>AnimationPreview.cs</DependentUpon>
+		</Compile>
+		<Compile Include="Previews\AnimationPreviewFrames.cs">
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Include="Previews\AnimationPreviewSound.cs">
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Include="Previews\AnimationPreviewTimeline.cs">
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Include="Previews\AnimationPreviewWPF.xaml.cs">
+			<DependentUpon>AnimationPreviewWPF.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="..\Common\Classes\Titles.Common.cs">
+			<Link>Classes\Titles.Common.cs</Link>
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Include="Previews\AnimationPreview.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="Previews\AnimationPreviewFrame.cs">
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Include="Panels\FilePartPanel.Forms.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="Panels\FilePartPanel.Forms.Designer.cs">
+			<DependentUpon>FilePartPanel.Forms.cs</DependentUpon>
+		</Compile>
+		<Compile Include="Previews\FramesPreview.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="Previews\FramesPreview.Designer.cs">
+			<DependentUpon>FramesPreview.cs</DependentUpon>
+		</Compile>
+		<Compile Include="Previews\FramesListView.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Include="Previews\BalloonPreview.Forms.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="Previews\BalloonPreview.Forms.Designer.cs">
+			<DependentUpon>BalloonPreview.Forms.cs</DependentUpon>
+		</Compile>
+		<Compile Include="..\Common\Classes\FileDialogEx.Common.cs">
+			<Link>Classes\FileDialogEx.Common.cs</Link>
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Include="..\..\Util\CSharp\ListViewEx.Forms.cs">
+			<Link>Classes\ListViewEx.Forms.cs</Link>
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Include="..\..\Util\CSharp\NumericUpDownEx.Forms.cs">
+			<Link>Classes\NumericUpDownEx.Forms.cs</Link>
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Include="..\..\Util\CSharp\RecentFileList.Common.cs">
+			<Link>Classes\RecentFileList.Common.cs</Link>
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Include="..\..\Util\CSharp\RecentFileList.Forms.cs">
+			<Link>Classes\RecentFileList.Forms.cs</Link>
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Include="..\..\Util\CSharp\TextBoxEx.Forms.cs">
+			<Link>Classes\TextBoxEx.Forms.cs</Link>
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Include="Panels\AnimationPanel.Forms.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="Panels\AnimationPanel.Forms.Designer.cs">
+			<DependentUpon>AnimationPanel.Forms.cs</DependentUpon>
+		</Compile>
+		<Compile Include="Panels\AnimationsPanel.Forms.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="Panels\AnimationsPanel.Forms.Designer.cs">
+			<DependentUpon>AnimationsPanel.Forms.cs</DependentUpon>
+		</Compile>
+		<Compile Include="Panels\BranchingPanel.Forms.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="Panels\BranchingPanel.Forms.Designer.cs">
+			<DependentUpon>BranchingPanel.Forms.cs</DependentUpon>
+		</Compile>
+		<Compile Include="Panels\CharacterPanel.Forms.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="Panels\CharacterPanel.Forms.Designer.cs">
+			<DependentUpon>CharacterPanel.Forms.cs</DependentUpon>
+		</Compile>
+		<Compile Include="Panels\FramePanel.Forms.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="Panels\FramePanel.Forms.Designer.cs">
+			<DependentUpon>FramePanel.Forms.cs</DependentUpon>
+		</Compile>
+		<Compile Include="About\LicenceBox.Forms.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="About\LicenceBox.Forms.Designer.cs">
+			<DependentUpon>LicenceBox.Forms.cs</DependentUpon>
+		</Compile>
+		<Compile Include="MainWindow.Forms.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Include="MainWindow.Forms.Designer.cs">
+			<DependentUpon>MainWindow.Forms.cs</DependentUpon>
+		</Compile>
+		<Compile Include="Panels\OverlayPanel.Forms.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="Panels\OverlayPanel.Forms.Designer.cs">
+			<DependentUpon>OverlayPanel.Forms.cs</DependentUpon>
+		</Compile>
+		<Compile Include="Panels\PartsTreePanel.Forms.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="Panels\PartsTreePanel.Forms.Designer.cs">
+			<DependentUpon>PartsTreePanel.Forms.cs</DependentUpon>
+		</Compile>
+		<Compile Include="..\Common\Classes\ResolvePart.Common.cs">
+			<Link>Classes\ResolvePart.Common.cs</Link>
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Include="Classes\FrameSample.Forms.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Include="Program.Forms.cs">
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Include="Panels\StatePanel.Forms.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="Panels\StatePanel.Forms.Designer.cs">
+			<DependentUpon>StatePanel.Forms.cs</DependentUpon>
+		</Compile>
+		<Compile Include="Properties\AssemblyInfo.cs">
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Include="..\Common\Updates\UndoableUpdate.Common.cs">
+			<Link>Updates\UndoableUpdate.Common.cs</Link>
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Include="..\Common\Updates\UndoableUpdates.Common.cs">
+			<Link>Updates\UndoableUpdates.Common.cs</Link>
+			<SubType>Code</SubType>
+		</Compile>
+		<EmbeddedResource Include="About\AboutBox.Forms.resx">
+			<DependentUpon>AboutBox.Forms.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Panels\FilePartPanel.Forms.resx">
+			<DependentUpon>FilePartPanel.Forms.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Previews\AnimationPreview.resx">
+			<DependentUpon>AnimationPreview.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Previews\FramesPreview.resx">
+			<DependentUpon>FramesPreview.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Panels\AnimationPanel.Forms.resx">
+			<DependentUpon>AnimationPanel.Forms.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Panels\AnimationsPanel.Forms.resx">
+			<DependentUpon>AnimationsPanel.Forms.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Previews\BalloonPreview.Forms.resx">
+			<DependentUpon>BalloonPreview.Forms.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Panels\BranchingPanel.Forms.resx">
+			<DependentUpon>BranchingPanel.Forms.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Panels\CharacterPanel.Forms.resx">
+			<DependentUpon>CharacterPanel.Forms.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Panels\FramePanel.Forms.resx">
+			<DependentUpon>FramePanel.Forms.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="About\LicenceBox.Forms.resx">
+			<DependentUpon>LicenceBox.Forms.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="MainWindow.Forms.resx">
+			<DependentUpon>MainWindow.Forms.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Panels\OverlayPanel.Forms.resx">
+			<DependentUpon>OverlayPanel.Forms.cs</DependentUpon>
+			<SubType>Designer</SubType>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Panels\PartsTreePanel.Forms.resx">
+			<DependentUpon>PartsTreePanel.Forms.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Panels\StatePanel.Forms.resx">
+			<DependentUpon>StatePanel.Forms.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Panels\TtsPanel.Forms.resx">
+			<DependentUpon>TtsPanel.Forms.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Panels\BalloonPanel.Forms.resx">
+			<DependentUpon>BalloonPanel.Forms.cs</DependentUpon>
+		</EmbeddedResource>
+		<Compile Include="Panels\TtsPanel.Forms.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="Panels\TtsPanel.Forms.Designer.cs">
+			<DependentUpon>TtsPanel.Forms.cs</DependentUpon>
+		</Compile>
+		<Compile Include="Panels\BalloonPanel.Forms.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="Panels\BalloonPanel.Forms.Designer.cs">
+			<DependentUpon>BalloonPanel.Forms.cs</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="app.config" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="..\Common\Resources\Resources.resx">
+			<Link>Resources\Resources.resx</Link>
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+			<SubType>Designer</SubType>
+		</EmbeddedResource>
+		<Compile Include="..\Common\Resources\Resources.Designer.cs">
+			<Link>Resources\Resources.Designer.cs</Link>
+			<DependentUpon>Resources.resx</DependentUpon>
+			<AutoGen>True</AutoGen>
+			<DesignTime>True</DesignTime>
+		</Compile>
+		<EmbeddedResource Include="Properties\Resources.resx">
+			<SubType>Designer</SubType>
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+		<Compile Include="Properties\Resources.Designer.cs">
+			<DependentUpon>Resources.resx</DependentUpon>
+			<AutoGen>True</AutoGen>
+			<DesignTime>True</DesignTime>
+		</Compile>
+		<None Include="CinSoft.snk" />
+		<None Include="Properties\Settings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+			<SubType>Designer</SubType>
+		</None>
+		<Compile Include="Properties\Settings.Designer.cs">
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Settings.settings</DependentUpon>
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+		</Compile>
+		<Compile Include="Properties\Settings.cs">
+			<DependentUpon>Settings.settings</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<Resource Include="..\Common\Resources\EditCopy.png">
+			<Link>Resources\EditCopy.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\EditCut.png">
+			<Link>Resources\EditCut.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\EditDelete.png">
+			<Link>Resources\EditDelete.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\EditPaste.png">
+			<Link>Resources\EditPaste.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\EditRedo.png">
+			<Link>Resources\EditRedo.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\EditUndo.png">
+			<Link>Resources\EditUndo.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\FileNew.png">
+			<Link>Resources\FileNew.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\FileOpen.png">
+			<Link>Resources\FileOpen.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\FilePrint.png">
+			<Link>Resources\FilePrint.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\FilePrintPreview.png">
+			<Link>Resources\FilePrintPreview.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\FileSave.png">
+			<Link>Resources\FileSave.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\MouthClosed.bmp">
+			<Link>Resources\MouthClosed.bmp</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\MouthMedium.bmp">
+			<Link>Resources\MouthMedium.bmp</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\MouthNarrow.bmp">
+			<Link>Resources\MouthNarrow.bmp</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\MouthWide1.bmp">
+			<Link>Resources\MouthWide1.bmp</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\MouthWide2.bmp">
+			<Link>Resources\MouthWide2.bmp</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\MouthWide3.bmp">
+			<Link>Resources\MouthWide3.bmp</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\MouthWide4.bmp">
+			<Link>Resources\MouthWide4.bmp</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\MoveDown.Png">
+			<Link>Resources\MoveDown.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\MoveLeft.Png">
+			<Link>Resources\MoveLeft.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\MoveRight.Png">
+			<Link>Resources\MoveRight.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\MoveUp.Png">
+			<Link>Resources\MoveUp.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\Mute.Png">
+			<Link>Resources\Mute.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\NavigateBack.png">
+			<Link>Resources\NavigateBack.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\NavigateForward.png">
+			<Link>Resources\NavigateForward.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\Pause.png">
+			<Link>Resources\Pause.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\Play.png">
+			<Link>Resources\Play.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\Repeat.png">
+			<Link>Resources\Repeat.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\Run.png">
+			<Link>Resources\Run.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\ShiftDown.Png">
+			<Link>Resources\ShiftDown.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\ShiftLeft.Png">
+			<Link>Resources\ShiftLeft.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\ShiftRight.Png">
+			<Link>Resources\ShiftRight.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\ShiftUp.Png">
+			<Link>Resources\ShiftUp.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\ShowBranching.png">
+			<Link>Resources\ShowBranching.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\ShowExitBranching.png">
+			<Link>Resources\ShowExitBranching.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\SkipBack.png">
+			<Link>Resources\SkipBack.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\SkipForward.png">
+			<Link>Resources\SkipForward.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\Stop.png">
+			<Link>Resources\Stop.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\ViewLarge.png">
+			<Link>Resources\ViewLarge.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\ViewMedium.png">
+			<Link>Resources\ViewMedium.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\ViewSmall.png">
+			<Link>Resources\ViewSmall.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\Zoom.png">
+			<Link>Resources\Zoom.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\About.png">
+			<Link>Resources\About.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\MouthClosed.png" >
+			<Link>Resources\MouthClosed.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\MouthWide4.png" >
+			<Link>Resources\MouthWide4.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\MouthMedium.png" >
+			<Link>Resources\MouthMedium.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\MouthNarrow.png" >
+			<Link>Resources\MouthNarrow.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\MouthWide1.png" >
+			<Link>Resources\MouthWide1.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\MouthWide2.png" >
+			<Link>Resources\MouthWide2.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\MouthWide3.png">
+			<Link>Resources\MouthWide3.png</Link>
+		</Resource>
+		<Resource Include="..\Common\Resources\DoubleAgent.ico">
+			<Link>Resources\DoubleAgent.ico</Link>
+		</Resource>
+	</ItemGroup>
+	<ItemGroup>
+		<BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+			<Visible>False</Visible>
+			<ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+			<Install>false</Install>
+		</BootstrapperPackage>
+		<BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+			<Visible>False</Visible>
+			<ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+			<Install>false</Install>
+		</BootstrapperPackage>
+		<BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+			<Visible>False</Visible>
+			<ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+			<Install>true</Install>
+		</BootstrapperPackage>
+		<BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+			<Visible>False</Visible>
+			<ProductName>.NET Framework 3.5</ProductName>
+			<Install>false</Install>
+		</BootstrapperPackage>
+		<BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+			<Visible>False</Visible>
+			<ProductName>.NET Framework 3.5 SP1</ProductName>
+			<Install>false</Install>
+		</BootstrapperPackage>
+		<BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+			<Visible>False</Visible>
+			<ProductName>Windows Installer 3.1</ProductName>
+			<Install>true</Install>
+		</BootstrapperPackage>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="DoubleAgent.ico" />
+	</ItemGroup>
+	<ItemGroup>
+		<Page Include="Previews\AnimationPreviewWPF.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+	<!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

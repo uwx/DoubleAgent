@@ -530,7 +530,7 @@ namespace AgentCharacterEditor.Previews
 			}
 			else
 			{
-				WPFHost.Size = PictureBoxSample.DefaultImageSize;
+				WPFHost.Size = FrameSample.DefaultImageSize;
 			}
 
 			WPFTarget.Image.Rect = new System.Windows.Rect (0, 0, WPFHost.Size.Width, WPFHost.Size.Height);

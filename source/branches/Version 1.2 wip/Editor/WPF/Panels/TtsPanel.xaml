@@ -23,17 +23,26 @@
 						Executed="OnEditPaste" />
 	</Control.CommandBindings>
 	<Grid Style="{StaticResource PanelMainGrid}">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"
+							  MaxWidth="600" />
+		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition />
 		</Grid.RowDefinitions>
-		<CheckBox Content="Use Text-to-Speech for voice output"
+		<CheckBox Name="CheckBoxUseTTS"
+				  Content="Use Text-to-Speech for voice output"
+				  Style="{StaticResource PanelToggleButton}"
+				  Foreground="{StaticResource HeaderTextBrush}"
+				  Effect="{StaticResource HeaderTextShadow}"
 				  HorizontalAlignment="Left"
-				  Margin="4"
-				  Name="CheckBoxUseTTS"
 				  VerticalAlignment="Top"
-				  FontSize="14"
+				  VerticalContentAlignment="Center"
+				  Margin="4,0,4,0"
+				  Padding="2,0,2,2"
+				  FontSize="16"
 				  TabIndex="0"
 				  Checked="CheckBoxUseTTS_CheckChanged"
 				  Unchecked="CheckBoxUseTTS_CheckChanged" />
@@ -135,7 +144,9 @@
 						  VerticalAlignment="Top"
 						  Margin="2,12,2,2"
 						  TabIndex="1"
-						  SelectionChanged="ComboBoxName_SelectionChanged" />
+						  SelectionChanged="ComboBoxName_SelectionChanged"
+						  Style="{StaticResource PanelComboBox}"
+						  ItemContainerStyle="{StaticResource PanelComboBoxItem}" />
 			</Grid>
 		</GroupBox>
 	</Grid>

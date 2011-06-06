@@ -177,7 +177,7 @@ namespace AgentCharacterEditor
 					if (String.IsNullOrEmpty (pFilePath))
 					{
 						lOpened = true;
-						//lCharacterFile.Header.ImageSize = PictureBoxSample.DefaultImageSize;
+						lCharacterFile.Header.ImageSize = FrameSample.DefaultImageSize;
 						lCharacterFile.Header.Guid = System.Guid.NewGuid ();
 						lCharacterFile.Names.Add (CharacterPanel.mLangDefault, AppResources.Resources.TitleNewFile);
 						lCharacterFile.IsDirty = false;

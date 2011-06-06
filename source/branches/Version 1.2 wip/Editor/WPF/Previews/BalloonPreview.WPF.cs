@@ -10,13 +10,14 @@ using AgentCharacterEditor.Global;
 
 namespace AgentCharacterEditor.Previews
 {
-	public partial class BalloonPreview : System.Windows.Controls.Image
+	public partial class BalloonPreview : System.Windows.Controls.Canvas
 	{
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
 		private CharacterFile mCharacterFile;
 		private DoubleAgent.BalloonPreview mBalloonPreview = new DoubleAgent.BalloonPreview ();
+		private Visual mBalloonVisual = null;
 		private Timer mAutoPaceTimer = null;
 		private Timer mAutoScrollTimer = null;
 		private AsyncOperation mAutoPaceAsync = null;
@@ -24,6 +25,7 @@ namespace AgentCharacterEditor.Previews
 
 		public BalloonPreview ()
 		{
+			ClipToBounds = true;
 			IsEnabledChanged += new DependencyPropertyChangedEventHandler (HandleIsEnabledChanged);
 			IsVisibleChanged += new DependencyPropertyChangedEventHandler (HandleIsVisibleChanged);
 		}
@@ -350,36 +352,63 @@ namespace AgentCharacterEditor.Previews
 		protected void Refresh ()
 		{
 #if DEBUG_NOT
-			System.Diagnostics.Debug.Print ("Refresh [{0} {1}] [{2}]", ActualWidth, ActualHeight, RenderSize);
+            System.Diagnostics.Debug.Print ("Refresh [{0} {1}] [{2}]", ActualWidth, ActualHeight, RenderSize);
 #endif
-			try
-			{
-				Drawing lDrawing = mBalloonPreview.MakeDrawing ();
-				Source = new DrawingImage (lDrawing);
-				RenderTransform = new ScaleTransform (Source.Width / ActualWidth, Source.Height / ActualHeight);
-			}
+            try
+            {
+				if (mBalloonVisual != null)
+				{
+					RemoveVisualChild (mBalloonVisual);
+				}
+				if ((mBalloonVisual = mBalloonPreview.MakeVisual ()) != null)
+				{
+					AddVisualChild (mBalloonVisual);
+				}
+            }
 #if DEBUG
-			catch (Exception pException)
-			{
-				System.Diagnostics.Debug.Print (pException.Message);
-			}
+            catch (Exception pException)
+            {
+                System.Diagnostics.Debug.Print (pException.Message);
+            }
 #else
-			catch {}
+            catch {}
 #endif
 		}
+
+        protected override int VisualChildrenCount
+        {
+            get
+            {
+				int lRet = base.VisualChildrenCount;
+				if (mBalloonVisual != null)
+				{
+					lRet++;
+				}
+				return lRet;
+            }
+        }
+
+        protected override Visual GetVisualChild (int index)
+        {
+            if  (index == base.VisualChildrenCount)
+            {
+                return mBalloonVisual;
+            }
+            return base.GetVisualChild (index);
+        }
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		protected override System.Windows.Size MeasureOverride (System.Windows.Size constraint)
 		{
-			base.MeasureOverride (constraint);
-			return constraint;
+		    base.MeasureOverride (constraint);
+		    return constraint;
 		}
 
 		protected override System.Windows.Size ArrangeOverride (System.Windows.Size arrangeSize)
 		{
-			base.ArrangeOverride (arrangeSize);
-			return arrangeSize;
+		    base.ArrangeOverride (arrangeSize);
+		    return arrangeSize;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

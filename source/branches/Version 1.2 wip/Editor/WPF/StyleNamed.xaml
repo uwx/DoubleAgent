@@ -22,13 +22,21 @@
 	<SolidColorBrush x:Key="BackgroundDarkBrush"
 					 Color="{StaticResource BackgroundDarkColor}" />
 	<SolidColorBrush x:Key="BackgroundDarkishBrush"
-					 Color="{StaticResource BackgroundDarkColor}" />
+					 Color="{StaticResource BackgroundDarkishColor}" />
 
+	<Color x:Key="BorderNormalColor">#FF4C84B6</Color>
+	<Color x:Key="BorderFocusedColor">#FF15487B</Color>
+
+	<SolidColorBrush x:Key="BorderNormalBrush"
+					 Color="{StaticResource BorderNormalColor}" />
+	<SolidColorBrush x:Key="BorderFocusedBrush"
+					 Color="{StaticResource BorderFocusedColor}" />
+
+	<Thickness x:Key="BorderNormalThickness">2,2,2,2</Thickness>
+	<Thickness x:Key="BorderNormalPadding">1,1,1,1</Thickness>
+	<Thickness x:Key="BorderFocusedThickness">3,3,3,3</Thickness>
+	<Thickness x:Key="BorderFocusedPadding">0,0,0,0</Thickness>
 	<Thickness x:Key="BorderMargin">2,2,2,2</Thickness>
-	<Thickness x:Key="BorderPadding">1,1,1,1</Thickness>
-	<Thickness x:Key="BorderThickness">2,2,2,2</Thickness>
-	<Thickness x:Key="BorderPaddingFocused">0,0,0,0</Thickness>
-	<Thickness x:Key="BorderThicknessFocused">3,3,3,3</Thickness>
 	<CornerRadius x:Key="BorderRounding">2</CornerRadius>
 	<Duration x:Key="BorderTransitionDuration">0:0:0.2</Duration>
 
@@ -40,6 +48,8 @@
 		   TargetType="{x:Type Grid}">
 		<Setter Property="Margin"
 				Value="2" />
+		<Setter Property="UseLayoutRounding"
+				Value="true" />
 	</Style>
 
 	<!-- =========================================================================== -->
@@ -161,8 +171,17 @@
 	<!-- ToggleButton                                                                -->
 	<!-- =========================================================================== -->
 
-	<Geometry x:Key="ToggleButtonCheckmark">M 0,5.1 L 1.7,5.2 L 3.4,7.1 L 8,0.4 L 9.2,0 L 3.3,10.8 Z</Geometry>
+	<Geometry x:Key="ToggleButtonCheckmark">M 1,5.1 L 2.7,5.2 L 4.4,7.1 L 9,0.4 L 10.2,0 L 4.3,10.8 Z</Geometry>
 	<Duration x:Key="ToggleButtonTransitionDuration">0:0:0.2</Duration>
+
+	<Thickness x:Key="ToggleButtonHiliteThickness">1,1,1,1</Thickness>
+	<Thickness x:Key="ToggleButtonHilitePadding">2,2,2,2</Thickness>
+	<Thickness x:Key="ToggleButtonCheckMargin">0,2,2,2</Thickness>
+	<Thickness x:Key="ToggleButtonGlowMargin">-2,-2,-2,-2</Thickness>
+	<BlurEffect x:Key="ToggleButtonGlowEffect"
+				Radius="4"
+				RenderingBias="Quality"
+				KernelType="Gaussian" />
 
 	<Style x:Key="PanelToggleButton"
 		   TargetType="{x:Type ToggleButton}">
@@ -177,45 +196,61 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type ToggleButton}">
-					<BulletDecorator SnapsToDevicePixels="true">
-						<BulletDecorator.Bullet>
-							<Grid Name="BulletContainer"
-								  Margin="0,2,2,2">
-								<Border Name="BulletHilite"
-										Opacity="0"
-										Background="{StaticResource ToolBarButtonHover}"
-										BorderBrush="{StaticResource ToolBarButtonHoverBorder}"
-										BorderThickness="{Binding ElementName=BulletBorder, Path=BorderThickness, Mode=OneWay}"
-										Width="{Binding ElementName=BulletBorder, Path=ActualWidth, Mode=OneWay}"
-										Height="{Binding ElementName=BulletBorder, Path=ActualHeight, Mode=OneWay}"
-										SnapsToDevicePixels="{Binding ElementName=BulletBorder, Path=SnapsToDevicePixels, Mode=OneWay}" />
-								<Border Name="BulletPress"
-										Opacity="0"
-										Background="{StaticResource ToolBarButtonPressed}"
-										BorderBrush="{StaticResource ToolBarButtonPressedBorder}"
-										BorderThickness="{Binding ElementName=BulletBorder, Path=BorderThickness, Mode=OneWay}"
-										Width="{Binding ElementName=BulletBorder, Path=ActualWidth, Mode=OneWay}"
-										Height="{Binding ElementName=BulletBorder, Path=ActualHeight, Mode=OneWay}"
-										SnapsToDevicePixels="{Binding ElementName=BulletBorder, Path=SnapsToDevicePixels, Mode=OneWay}" />
-								<Border Name="BulletBorder"
-										Background="Transparent"
-										BorderBrush="Transparent"
-										BorderThickness="1"
-										SnapsToDevicePixels="true">
-									<Path Name="Bullet"
-										  VerticalAlignment="Center"
-										  HorizontalAlignment="Center"
-										  FlowDirection="LeftToRight"
-										  Margin="2"
-										  Width="12"
-										  Height="12"
-										  Fill="{StaticResource LabelTextBrush}"
-										  Data="{StaticResource ToggleButtonCheckmark}"
-										  Effect="{StaticResource LabelTextShadow}" />
-								</Border>
-							</Grid>
-						</BulletDecorator.Bullet>
+					<Grid SnapsToDevicePixels="true">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<Border Name="BulletPress"
+								Opacity="0"
+								Background="Transparent"
+								BorderBrush="Transparent"
+								BorderThickness="0"
+								Width="{Binding ElementName=BulletBorder, Path=ActualWidth, Mode=OneWay}"
+								Height="{Binding ElementName=BulletBorder, Path=ActualHeight, Mode=OneWay}"
+								VerticalAlignment="{Binding ElementName=BulletBorder, Path=VerticalAlignment, Mode=OneWay}"
+								HorizontalAlignment="{Binding ElementName=BulletBorder, Path=HorizontalAlignment, Mode=OneWay}"
+								Margin="{Binding ElementName=BulletBorder, Path=Margin, Mode=OneWay}">
+							<Rectangle ClipToBounds="False"
+									   Fill="White"
+									   Stroke="White"
+									   StrokeThickness="{StaticResource ItemSelectionStroke}"
+									   RadiusX="{StaticResource ItemSelectionRounding}"
+									   RadiusY="{StaticResource ItemSelectionRounding}"
+									   Margin="{StaticResource ToggleButtonGlowMargin}"
+									   Effect="{StaticResource ToggleButtonGlowEffect}" />
+						</Border>
+						<Rectangle Name="BulletHilite"
+								   Opacity="0"
+								   Fill="{StaticResource ItemSelectedFillBrush}"
+								   Stroke="{StaticResource ItemSelectedOuterBrush}"
+								   StrokeThickness="{StaticResource ItemSelectionStroke}"
+								   RadiusX="{StaticResource ItemSelectionRounding}"
+								   RadiusY="{StaticResource ItemSelectionRounding}"
+								   Width="{Binding ElementName=BulletBorder, Path=ActualWidth, Mode=OneWay}"
+								   Height="{Binding ElementName=BulletBorder, Path=ActualHeight, Mode=OneWay}"
+								   VerticalAlignment="{Binding ElementName=BulletBorder, Path=VerticalAlignment, Mode=OneWay}"
+								   HorizontalAlignment="{Binding ElementName=BulletBorder, Path=HorizontalAlignment, Mode=OneWay}"
+								   Margin="{Binding ElementName=BulletBorder, Path=Margin, Mode=OneWay}" />
+						<Border Name="BulletBorder"
+								Background="Transparent"
+								BorderBrush="Transparent"
+								BorderThickness="{StaticResource ToggleButtonHiliteThickness}"
+								Padding="{StaticResource ToggleButtonHilitePadding}"
+								Margin="{StaticResource ToggleButtonCheckMargin}"
+								VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+								HorizontalAlignment="Left">
+							<Path Name="Bullet"
+								  VerticalAlignment="Center"
+								  HorizontalAlignment="Center"
+								  FlowDirection="LeftToRight"
+								  Width="12"
+								  Height="12"
+								  Fill="{StaticResource BackgroundDarkBrush}"
+								  Data="{StaticResource ToggleButtonCheckmark}" />
+						</Border>
 						<ContentPresenter Name="Content"
+										  Grid.Column="1"
 										  Margin="{TemplateBinding Padding}"
 										  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
 										  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -223,11 +258,11 @@
 										  RecognizesAccessKey="True"
 										  Effect="{StaticResource LabelTextShadow}">
 						</ContentPresenter>
-					</BulletDecorator>
+					</Grid>
 					<ControlTemplate.Triggers>
 						<Trigger Property="HasContent"
 								 Value="false">
-							<Setter TargetName="BulletContainer"
+							<Setter TargetName="BulletBorder"
 									Property="Margin"
 									Value="0" />
 						</Trigger>
@@ -339,17 +374,16 @@
 	</Style>
 
 	<!-- =========================================================================== -->
-	<!-- Button                                                                      -->
+	<!-- PushButton                                                                  -->
 	<!-- =========================================================================== -->
 
-	<Color x:Key="PushButtonBorderColor">#FF8AD1F5</Color>
 	<Color x:Key="PushButtonTopColor">#FFDCF0FA</Color>
 	<Color x:Key="PushButtonBottomColor">#FFB5D6E7</Color>
-
 	<Color x:Key="PushButtonHighlitedTopColor">#FFF3FBFF</Color>
 	<Color x:Key="PushButtonHighlitedBottomColor">#FFC5E6F7</Color>
+
 	<SolidColorBrush x:Key="PushButtonBorderBrush"
-					 Color="DeepSkyBlue" />
+					 Color="{StaticResource ItemSelectedOuterColor}" />
 	<LinearGradientBrush x:Key="PushButtonFillBrush"
 						 StartPoint="0,0"
 						 EndPoint="0,1">
@@ -380,12 +414,16 @@
 	<CornerRadius x:Key="PushButtonRounding">3</CornerRadius>
 	<Duration x:Key="PushButtonTransitionDuration">0:0:0.2</Duration>
 
-	<Thickness x:Key="PushButtonGlowMargin">1,1,1,1</Thickness>
-	<Thickness x:Key="PushButtonGlowMarginNot">-1,-1,-1,-1</Thickness>
+	<Thickness x:Key="PushButtonGlowMargin">-2,-2,-2,-2</Thickness>
+	<BlurEffect x:Key="PushButtonGlowEffect"
+				Radius="4"
+				RenderingBias="Quality"
+				KernelType="Gaussian" />
 
 	<!-- =========================================================================== -->
 
-	<Style x:Key="ButtonFocusVisual">
+	<Style x:Key="PushButtonFocusVisual"
+		   TargetType="{x:Type Button}">
 		<Setter Property="Control.Template">
 			<Setter.Value>
 				<ControlTemplate>
@@ -404,7 +442,7 @@
 	<Style x:Key="PanelPushButton"
 		   TargetType="{x:Type Button}">
 		<Setter Property="FocusVisualStyle"
-				Value="{StaticResource ButtonFocusVisual}" />
+				Value="{StaticResource PushButtonFocusVisual}" />
 		<Setter Property="Background"
 				Value="{StaticResource PushButtonFillBrush}" />
 		<Setter Property="BorderBrush"
@@ -429,44 +467,37 @@
 									   Opacity="0"
 									   RadiusX="3"
 									   RadiusY="3"
-									   Margin="{StaticResource PushButtonGlowMarginNot}"
+									   Margin="{StaticResource PushButtonGlowMargin}"
+									   Effect="{StaticResource PushButtonGlowEffect}"
 									   SnapsToDevicePixels="true"
-									   ClipToBounds="False">
-								<Rectangle.Effect>
-									<BlurEffect  Radius="4"
-												 RenderingBias="Performance"
-												 KernelType="Gaussian" />
-								</Rectangle.Effect>
-							</Rectangle>
-							<Grid Margin="{StaticResource PushButtonGlowMargin}">
-								<Border Name="Chrome"
-										Background="{TemplateBinding Background}"
-										BorderBrush="{TemplateBinding BorderBrush}"
-										BorderThickness="{StaticResource PushButtonBorderThickness}"
-										CornerRadius="{StaticResource PushButtonRounding}"
-										Padding="{StaticResource PushButtonBorderPadding}"
-										SnapsToDevicePixels="true" />
-								<Border Name="Highlite"
-										Background="{StaticResource PushButtonHighlitedFillBrush}"
-										BorderBrush="{TemplateBinding BorderBrush}"
-										BorderThickness="{StaticResource PushButtonBorderThickness}"
-										CornerRadius="{StaticResource PushButtonRounding}"
-										Padding="{StaticResource PushButtonBorderPadding}"
-										Opacity="0"
-										SnapsToDevicePixels="true" />
-								<Border Background="Transparent"
-										BorderBrush="Transparent"
-										BorderThickness="{StaticResource PushButtonBorderThickness}"
-										CornerRadius="{StaticResource PushButtonRounding}"
-										Padding="{StaticResource PushButtonBorderPadding}"
-										SnapsToDevicePixels="true">
-									<ContentPresenter Margin="{TemplateBinding Padding}"
-													  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-													  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-													  RecognizesAccessKey="True"
-													  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-								</Border>
-							</Grid>
+									   ClipToBounds="False" />
+							<Border Name="Chrome"
+									Background="{TemplateBinding Background}"
+									BorderBrush="{TemplateBinding BorderBrush}"
+									BorderThickness="{StaticResource PushButtonBorderThickness}"
+									CornerRadius="{StaticResource PushButtonRounding}"
+									Padding="{StaticResource PushButtonBorderPadding}"
+									SnapsToDevicePixels="true" />
+							<Border Name="Highlite"
+									Background="{StaticResource PushButtonHighlitedFillBrush}"
+									BorderBrush="{TemplateBinding BorderBrush}"
+									BorderThickness="{StaticResource PushButtonBorderThickness}"
+									CornerRadius="{StaticResource PushButtonRounding}"
+									Padding="{StaticResource PushButtonBorderPadding}"
+									Opacity="0"
+									SnapsToDevicePixels="true" />
+							<Border Background="Transparent"
+									BorderBrush="Transparent"
+									BorderThickness="{StaticResource PushButtonBorderThickness}"
+									CornerRadius="{StaticResource PushButtonRounding}"
+									Padding="{StaticResource PushButtonBorderPadding}"
+									SnapsToDevicePixels="true">
+								<ContentPresenter Margin="{TemplateBinding Padding}"
+												  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+												  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+												  RecognizesAccessKey="True"
+												  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+							</Border>
 						</Grid>
 					</ContentControl>
 					<ControlTemplate.Triggers>
@@ -549,11 +580,141 @@
 	</Style>
 
 	<!-- =========================================================================== -->
-	<!-- TextBox                                                                     -->
+	<!-- Control Borders                                                             -->
 	<!-- =========================================================================== -->
 
-	<Color x:Key="TextBoxBorderColor">#FF4C84B6</Color>
-	<Color x:Key="TextBoxBorderColorFocused">#FF15487B</Color>
+	<Style x:Key="BorderNormal"
+		   TargetType="{x:Type Border}">
+		<Setter Property="Padding"
+				Value="{StaticResource BorderNormalPadding}" />
+		<Setter Property="BorderThickness"
+				Value="{StaticResource BorderNormalThickness}" />
+		<Setter Property="CornerRadius"
+				Value="{StaticResource BorderRounding}" />
+		<Setter Property="SnapsToDevicePixels"
+				Value="true" />
+		<Setter Property="BorderBrush">
+			<Setter.Value>
+				<SolidColorBrush Color="{StaticResource BorderNormalColor}" />
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="BorderFocused"
+		   TargetType="{x:Type Border}">
+		<Setter Property="Background"
+				Value="{x:Null}" />
+		<Setter Property="Opacity"
+				Value="0" />
+		<Setter Property="Padding"
+				Value="{StaticResource BorderFocusedPadding}" />
+		<Setter Property="BorderThickness"
+				Value="{StaticResource BorderFocusedThickness}" />
+		<Setter Property="CornerRadius"
+				Value="{StaticResource BorderRounding}" />
+		<Setter Property="SnapsToDevicePixels"
+				Value="true" />
+		<Setter Property="BorderBrush">
+			<Setter.Value>
+				<SolidColorBrush Color="{StaticResource BorderFocusedColor}" />
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Storyboard x:Key="ShowBorderFocused">
+		<DoubleAnimation Storyboard.TargetName="BdFocused"
+						 Storyboard.TargetProperty="Opacity"
+						 Duration="{StaticResource BorderTransitionDuration}"
+						 To="1" />
+	</Storyboard>
+
+	<Storyboard x:Key="HideBorderFocused">
+		<DoubleAnimation Storyboard.TargetName="BdFocused"
+						 Storyboard.TargetProperty="Opacity"
+						 Duration="{StaticResource BorderTransitionDuration}"
+						 To="0" />
+	</Storyboard>
+
+	<Storyboard x:Key="BorderNormalHit">
+		<ColorAnimation Storyboard.TargetName="BdNormal"
+						Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
+						Duration="{StaticResource BorderTransitionDuration}"
+						To="{StaticResource BorderFocusedColor}" />
+	</Storyboard>
+
+	<Storyboard x:Key="BorderNormalUnhit">
+		<ColorAnimation Storyboard.TargetName="BdNormal"
+						Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
+						Duration="{StaticResource BorderTransitionDuration}"
+						To="{StaticResource BorderNormalColor}" />
+	</Storyboard>
+
+	<!-- =========================================================================== -->
+	<!-- ContentControl                                                              -->
+	<!-- =========================================================================== -->
+
+	<Style x:Key="PanelContent"
+		   TargetType="{x:Type ContentControl}">
+		<Setter Property="Padding"
+				Value="0" />
+		<Setter Property="Margin"
+				Value="{StaticResource BorderMargin}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ContentControl}">
+					<Grid>
+						<Border x:Name="BdNormal"
+								Style="{StaticResource BorderNormal}"
+								Background="{TemplateBinding Background}">
+							<ContentPresenter Name="Content"
+											  Margin="{TemplateBinding Padding}"
+											  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+											  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+											  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+						</Border>
+						<Border x:Name="BdFocused"
+								Style="{StaticResource BorderFocused}" />
+					</Grid>
+					<ControlTemplate.Triggers>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsKeyboardFocusWithin"
+										   Value="true" />
+								<Condition Property="IsEnabled"
+										   Value="true" />
+							</MultiTrigger.Conditions>
+							<MultiTrigger.EnterActions>
+								<BeginStoryboard Storyboard="{StaticResource ShowBorderFocused}" />
+							</MultiTrigger.EnterActions>
+							<MultiTrigger.ExitActions>
+								<BeginStoryboard Storyboard="{StaticResource HideBorderFocused}" />
+							</MultiTrigger.ExitActions>
+						</MultiTrigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsMouseOver"
+										   Value="true" />
+								<Condition Property="IsKeyboardFocusWithin"
+										   Value="false" />
+								<Condition Property="IsEnabled"
+										   Value="true" />
+							</MultiTrigger.Conditions>
+							<MultiTrigger.EnterActions>
+								<BeginStoryboard Storyboard="{StaticResource BorderNormalHit}" />
+							</MultiTrigger.EnterActions>
+							<MultiTrigger.ExitActions>
+								<BeginStoryboard Storyboard="{StaticResource BorderNormalUnhit}" />
+							</MultiTrigger.ExitActions>
+						</MultiTrigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<!-- =========================================================================== -->
+	<!-- TextBox                                                                     -->
+	<!-- =========================================================================== -->
 
 	<Style x:Key="PanelTextBox"
 		   TargetType="{x:Type TextBox}">
@@ -565,30 +726,15 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type TextBox}">
 					<Grid>
-						<Border x:Name="Bd"
-								Background="{TemplateBinding Background}"
-								BorderThickness="{StaticResource BorderThickness}"
-								Padding="{StaticResource BorderPadding}"
-								CornerRadius="{StaticResource BorderRounding}"
-								SnapsToDevicePixels="true">
-							<Border.BorderBrush>
-								<SolidColorBrush Color="{StaticResource TextBoxBorderColor}" />
-							</Border.BorderBrush>
+						<Border x:Name="BdNormal"
+								Style="{StaticResource BorderNormal}"
+								Background="{TemplateBinding Background}">
 							<ScrollViewer x:Name="PART_ContentHost"
 										  Margin="{TemplateBinding Padding}"
 										  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
 						</Border>
 						<Border x:Name="BdFocused"
-								Background="{x:Null}"
-								Opacity="0"
-								Padding="{StaticResource BorderPaddingFocused}"
-								BorderThickness="{StaticResource BorderThicknessFocused}"
-								CornerRadius="{StaticResource BorderRounding}"
-								SnapsToDevicePixels="true">
-							<Border.BorderBrush>
-								<SolidColorBrush Color="{StaticResource TextBoxBorderColorFocused}" />
-							</Border.BorderBrush>
-						</Border>
+								Style="{StaticResource BorderFocused}" />
 					</Grid>
 					<ControlTemplate.Triggers>
 						<MultiTrigger>
@@ -601,24 +747,26 @@
 										   Value="false" />
 							</MultiTrigger.Conditions>
 							<MultiTrigger.EnterActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="BdFocused"
-														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource BorderTransitionDuration}"
-														 To="1" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource ShowBorderFocused}" />
 							</MultiTrigger.EnterActions>
 							<MultiTrigger.ExitActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="BdFocused"
-														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource BorderTransitionDuration}"
-														 To="0" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource HideBorderFocused}" />
+							</MultiTrigger.ExitActions>
+						</MultiTrigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsFocused"
+										   Value="true" />
+								<Condition Property="IsEnabled"
+										   Value="true" />
+								<Condition Property="IsReadOnly"
+										   Value="true" />
+							</MultiTrigger.Conditions>
+							<MultiTrigger.EnterActions>
+								<BeginStoryboard Storyboard="{StaticResource BorderNormalHit}" />
+							</MultiTrigger.EnterActions>
+							<MultiTrigger.ExitActions>
+								<BeginStoryboard Storyboard="{StaticResource BorderNormalUnhit}" />
 							</MultiTrigger.ExitActions>
 						</MultiTrigger>
 						<MultiTrigger>
@@ -633,24 +781,10 @@
 										   Value="false" />
 							</MultiTrigger.Conditions>
 							<MultiTrigger.EnterActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<ColorAnimation Storyboard.TargetName="Bd"
-														Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-														Duration="{StaticResource BorderTransitionDuration}"
-														To="{StaticResource TextBoxBorderColorFocused}" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource BorderNormalHit}" />
 							</MultiTrigger.EnterActions>
 							<MultiTrigger.ExitActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<ColorAnimation Storyboard.TargetName="Bd"
-														Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-														Duration="{StaticResource BorderTransitionDuration}"
-														To="{StaticResource TextBoxBorderColor}" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource BorderNormalUnhit}" />
 							</MultiTrigger.ExitActions>
 						</MultiTrigger>
 					</ControlTemplate.Triggers>
@@ -660,11 +794,8 @@
 	</Style>
 
 	<!-- =========================================================================== -->
-	<!-- ListBox/ListView                                                            -->
+	<!-- ListBox                                                           -->
 	<!-- =========================================================================== -->
-
-	<Color x:Key="ListBoxBorderColor">#FF4C84B6</Color>
-	<Color x:Key="ListBoxBorderColorFocused">#FF15487B</Color>
 
 	<Style x:Key="PanelListBox"
 		   TargetType="{x:Type ListBox}">
@@ -676,31 +807,16 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type ListBox}">
 					<Grid>
-						<Border x:Name="Bd"
-								Background="{TemplateBinding Background}"
-								BorderThickness="{StaticResource BorderThickness}"
-								Padding="{StaticResource BorderPadding}"
-								CornerRadius="{StaticResource BorderRounding}"
-								SnapsToDevicePixels="true">
-							<Border.BorderBrush>
-								<SolidColorBrush Color="{StaticResource ListBoxBorderColor}" />
-							</Border.BorderBrush>
+						<Border x:Name="BdNormal"
+								Style="{StaticResource BorderNormal}"
+								Background="{TemplateBinding Background}">
 							<ScrollViewer Name="ScrollHost"
 										  Padding="{TemplateBinding Padding}">
 								<ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
 							</ScrollViewer>
 						</Border>
 						<Border x:Name="BdFocused"
-								Background="{x:Null}"
-								Opacity="0"
-								Padding="{StaticResource BorderPaddingFocused}"
-								BorderThickness="{StaticResource BorderThicknessFocused}"
-								CornerRadius="{StaticResource BorderRounding}"
-								SnapsToDevicePixels="true">
-							<Border.BorderBrush>
-								<SolidColorBrush Color="{StaticResource ListBoxBorderColorFocused}" />
-							</Border.BorderBrush>
-						</Border>
+								Style="{StaticResource BorderFocused}" />
 					</Grid>
 					<ControlTemplate.Triggers>
 						<MultiTrigger>
@@ -711,24 +827,10 @@
 										   Value="true" />
 							</MultiTrigger.Conditions>
 							<MultiTrigger.EnterActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="BdFocused"
-														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource BorderTransitionDuration}"
-														 To="1" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource ShowBorderFocused}" />
 							</MultiTrigger.EnterActions>
 							<MultiTrigger.ExitActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="BdFocused"
-														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource BorderTransitionDuration}"
-														 To="0" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource HideBorderFocused}" />
 							</MultiTrigger.ExitActions>
 						</MultiTrigger>
 						<MultiTrigger>
@@ -741,24 +843,10 @@
 										   Value="true" />
 							</MultiTrigger.Conditions>
 							<MultiTrigger.EnterActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<ColorAnimation Storyboard.TargetName="Bd"
-														Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-														Duration="{StaticResource BorderTransitionDuration}"
-														To="{StaticResource ListBoxBorderColorFocused}" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource BorderNormalHit}" />
 							</MultiTrigger.EnterActions>
 							<MultiTrigger.ExitActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<ColorAnimation Storyboard.TargetName="Bd"
-														Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-														Duration="{StaticResource BorderTransitionDuration}"
-														To="{StaticResource ListBoxBorderColor}" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource BorderNormalUnhit}" />
 							</MultiTrigger.ExitActions>
 						</MultiTrigger>
 					</ControlTemplate.Triggers>
@@ -767,23 +855,86 @@
 		</Setter>
 	</Style>
 
+	<!-- =========================================================================== -->
+	<!-- ListView                                                                    -->
+	<!-- =========================================================================== -->
+
+	<ControlTemplate x:Key="ListViewGridTemplate"
+					 TargetType="{x:Type ListView}">
+		<Grid>
+			<Border x:Name="BdNormal"
+					Style="{StaticResource BorderNormal}"
+					Background="{TemplateBinding Background}">
+				<ScrollViewer Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}"
+							  Padding="{TemplateBinding Padding}">
+					<ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+				</ScrollViewer>
+			</Border>
+			<Border x:Name="BdFocused"
+					Style="{StaticResource BorderFocused}" />
+		</Grid>
+		<ControlTemplate.Triggers>
+			<Trigger Property="IsGrouping"
+					 Value="true">
+				<Setter Property="ScrollViewer.CanContentScroll"
+						Value="false" />
+			</Trigger>
+			<MultiTrigger>
+				<MultiTrigger.Conditions>
+					<Condition Property="IsKeyboardFocusWithin"
+							   Value="true" />
+					<Condition Property="IsEnabled"
+							   Value="true" />
+				</MultiTrigger.Conditions>
+				<MultiTrigger.EnterActions>
+					<BeginStoryboard Storyboard="{StaticResource ShowBorderFocused}" />
+				</MultiTrigger.EnterActions>
+				<MultiTrigger.ExitActions>
+					<BeginStoryboard Storyboard="{StaticResource HideBorderFocused}" />
+				</MultiTrigger.ExitActions>
+			</MultiTrigger>
+			<MultiTrigger>
+				<MultiTrigger.Conditions>
+					<Condition Property="IsMouseOver"
+							   Value="true" />
+					<Condition Property="IsKeyboardFocusWithin"
+							   Value="false" />
+					<Condition Property="IsEnabled"
+							   Value="true" />
+				</MultiTrigger.Conditions>
+				<MultiTrigger.EnterActions>
+					<BeginStoryboard Storyboard="{StaticResource BorderNormalHit}" />
+				</MultiTrigger.EnterActions>
+				<MultiTrigger.ExitActions>
+					<BeginStoryboard Storyboard="{StaticResource BorderNormalUnhit}" />
+				</MultiTrigger.ExitActions>
+			</MultiTrigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+
 	<Style x:Key="PanelListView"
 		   BasedOn="{StaticResource PanelListBox}"
 		   TargetType="{x:Type ListView}" />
+
+	<Style x:Key="PanelListViewGrid"
+		   BasedOn="{StaticResource PanelListBox}"
+		   TargetType="{x:Type ListView}">
+		<Setter Property="Template"
+				Value="{StaticResource ListViewGridTemplate}" />
+	</Style>
 
 	<!-- =========================================================================== -->
 
 	<ControlTemplate x:Key="ListViewItemTemplate"
 					 TargetType="{x:Type ListBoxItem}">
-		<Border Name="Bd"
-				Background="{TemplateBinding Background}"
+		<Border Background="{TemplateBinding Background}"
 				BorderBrush="{TemplateBinding BorderBrush}"
 				BorderThickness="{TemplateBinding BorderThickness}"
 				SnapsToDevicePixels="true">
 			<Grid Background="Transparent">
 				<Rectangle Name="Bg"
 						   Fill="Transparent"
-						   Stroke="{TemplateBinding MenuItem.BorderBrush}"
+						   Stroke="Transparent"
 						   StrokeThickness="{StaticResource ItemSelectionStroke}"
 						   RadiusX="{StaticResource ItemSelectionRounding}"
 						   RadiusY="{StaticResource ItemSelectionRounding}" />
@@ -795,6 +946,92 @@
 								  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
 								  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
 								  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+			</Grid>
+		</Border>
+		<ControlTemplate.Triggers>
+			<MultiTrigger>
+				<MultiTrigger.Conditions>
+					<Condition Property="Focusable"
+							   Value="true" />
+					<Condition Property="IsMouseOver"
+							   Value="true" />
+				</MultiTrigger.Conditions>
+				<Setter TargetName="Bg"
+						Property="Fill"
+						Value="{StaticResource ItemHighlitedFillBrush}" />
+				<Setter TargetName="Bg"
+						Property="Stroke"
+						Value="{StaticResource ItemHighlitedOuterBrush}" />
+				<Setter TargetName="InnerBorder"
+						Property="Stroke"
+						Value="{StaticResource ItemSelectionInnerBrush}" />
+			</MultiTrigger>
+			<MultiTrigger>
+				<MultiTrigger.Conditions>
+					<Condition Property="Focusable"
+							   Value="true" />
+					<Condition Property="IsSelected"
+							   Value="true" />
+				</MultiTrigger.Conditions>
+				<Setter TargetName="Bg"
+						Property="Fill"
+						Value="{StaticResource ItemSelectedFillBrush}" />
+				<Setter TargetName="Bg"
+						Property="Stroke"
+						Value="{StaticResource ItemSelectedOuterBrush}" />
+				<Setter TargetName="InnerBorder"
+						Property="Stroke"
+						Value="{StaticResource ItemSelectionInnerBrush}" />
+			</MultiTrigger>
+			<MultiTrigger>
+				<MultiTrigger.Conditions>
+					<Condition Property="Focusable"
+							   Value="true" />
+					<Condition Property="IsSelected"
+							   Value="true" />
+					<Condition Property="Selector.IsSelectionActive"
+							   Value="false" />
+				</MultiTrigger.Conditions>
+				<Setter TargetName="Bg"
+						Property="Fill"
+						Value="{StaticResource ItemUnfocusedFillBrush}" />
+				<Setter TargetName="Bg"
+						Property="Stroke"
+						Value="{StaticResource ItemUnfocusedOuterBrush}" />
+				<Setter TargetName="InnerBorder"
+						Property="Stroke"
+						Value="{StaticResource ItemSelectionInnerBrush}" />
+			</MultiTrigger>
+			<Trigger Property="IsEnabled"
+					 Value="false">
+				<Setter Property="Foreground"
+						Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+			</Trigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+
+	<ControlTemplate x:Key="ListViewGridItemTemplate"
+					 TargetType="{x:Type ListViewItem}">
+		<Border Background="{TemplateBinding Background}"
+				BorderBrush="{TemplateBinding BorderBrush}"
+				BorderThickness="{TemplateBinding BorderThickness}"
+				SnapsToDevicePixels="true">
+			<Grid Background="Transparent">
+				<Rectangle Name="Bg"
+						   Fill="Transparent"
+						   Stroke="Transparent"
+						   StrokeThickness="{StaticResource ItemSelectionStroke}"
+						   RadiusX="{StaticResource ItemSelectionRounding}"
+						   RadiusY="{StaticResource ItemSelectionRounding}" />
+				<Rectangle x:Name="InnerBorder"
+						   Margin="1"
+						   RadiusX="{StaticResource ItemSelectionRounding}"
+						   RadiusY="{StaticResource ItemSelectionRounding}" />
+				<GridViewRowPresenter Columns="{TemplateBinding GridView.ColumnCollection}"
+									  Content="{TemplateBinding Content}"
+									  Margin="{TemplateBinding Padding}"
+									  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+									  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
 			</Grid>
 		</Border>
 		<ControlTemplate.Triggers>
@@ -875,12 +1112,25 @@
 				Value="{StaticResource ListViewItemTemplate}" />
 	</Style>
 
+	<Style x:Key="ListViewItemCommonNpNm"
+		   BasedOn="{StaticResource ListViewItemCommon}"
+		   TargetType="{x:Type ListBoxItem}">
+		<Setter Property="Margin"
+				Value="0,0,0,0" />
+		<Setter Property="Padding"
+				Value="0,0,0,0" />
+	</Style>
+
+	<Style x:Key="ListViewGridItemCommon"
+		   TargetType="{x:Type ListViewItem}"
+		   BasedOn="{StaticResource ListViewItemCommon}">
+		<Setter Property="Template"
+				Value="{StaticResource ListViewGridItemTemplate}" />
+	</Style>
+
 	<!-- =========================================================================== -->
 	<!-- TreeView                                                                    -->
 	<!-- =========================================================================== -->
-
-	<Color x:Key="TreeViewBorderColor">#FF4C84B6</Color>
-	<Color x:Key="TreeViewBorderColorFocused">#FF15487B</Color>
 
 	<Style x:Key="PanelTreeView"
 		   TargetType="{x:Type TreeView}">
@@ -892,15 +1142,9 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type TreeView}">
 					<Grid>
-						<Border x:Name="Bd"
-								Background="{TemplateBinding Background}"
-								BorderThickness="{StaticResource BorderThickness}"
-								Padding="{StaticResource BorderPadding}"
-								CornerRadius="{StaticResource BorderRounding}"
-								SnapsToDevicePixels="true">
-							<Border.BorderBrush>
-								<SolidColorBrush Color="{StaticResource TreeViewBorderColor}" />
-							</Border.BorderBrush>
+						<Border x:Name="BdNormal"
+								Style="{StaticResource BorderNormal}"
+								Background="{TemplateBinding Background}">
 							<ScrollViewer Name="_tv_scrollviewer_"
 										  Background="{TemplateBinding Background}"
 										  Focusable="false"
@@ -913,16 +1157,7 @@
 							</ScrollViewer>
 						</Border>
 						<Border x:Name="BdFocused"
-								Background="{x:Null}"
-								Opacity="0"
-								Padding="{StaticResource BorderPaddingFocused}"
-								BorderThickness="{StaticResource BorderThicknessFocused}"
-								CornerRadius="{StaticResource BorderRounding}"
-								SnapsToDevicePixels="true">
-							<Border.BorderBrush>
-								<SolidColorBrush Color="{StaticResource TreeViewBorderColorFocused}" />
-							</Border.BorderBrush>
-						</Border>
+								Style="{StaticResource BorderFocused}" />
 					</Grid>
 					<ControlTemplate.Triggers>
 						<MultiTrigger>
@@ -933,24 +1168,10 @@
 										   Value="true" />
 							</MultiTrigger.Conditions>
 							<MultiTrigger.EnterActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="BdFocused"
-														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource BorderTransitionDuration}"
-														 To="1" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource ShowBorderFocused}" />
 							</MultiTrigger.EnterActions>
 							<MultiTrigger.ExitActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="BdFocused"
-														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource BorderTransitionDuration}"
-														 To="0" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource HideBorderFocused}" />
 							</MultiTrigger.ExitActions>
 						</MultiTrigger>
 						<MultiTrigger>
@@ -963,24 +1184,10 @@
 										   Value="true" />
 							</MultiTrigger.Conditions>
 							<MultiTrigger.EnterActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<ColorAnimation Storyboard.TargetName="Bd"
-														Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-														Duration="{StaticResource BorderTransitionDuration}"
-														To="{StaticResource TreeViewBorderColorFocused}" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource BorderNormalHit}" />
 							</MultiTrigger.EnterActions>
 							<MultiTrigger.ExitActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<ColorAnimation Storyboard.TargetName="Bd"
-														Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-														Duration="{StaticResource BorderTransitionDuration}"
-														To="{StaticResource TreeViewBorderColor}" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource BorderNormalUnhit}" />
 							</MultiTrigger.ExitActions>
 						</MultiTrigger>
 					</ControlTemplate.Triggers>
@@ -990,6 +1197,581 @@
 	</Style>
 
 	<!-- =========================================================================== -->
+	<!-- TreeViewItem                                                                -->
+	<!-- =========================================================================== -->
+
+	<PathGeometry x:Key="TreeArrow">
+		<PathGeometry.Figures>
+			<PathFigureCollection>
+				<PathFigure IsFilled="True"
+							StartPoint="0 0"
+							IsClosed="True">
+					<PathFigure.Segments>
+						<PathSegmentCollection>
+							<LineSegment Point="0 6" />
+							<LineSegment Point="6 0" />
+						</PathSegmentCollection>
+					</PathFigure.Segments>
+				</PathFigure>
+			</PathFigureCollection>
+		</PathGeometry.Figures>
+	</PathGeometry>
+
+	<Style x:Key="ExpandCollapseToggleStyle"
+		   TargetType="{x:Type ToggleButton}">
+		<Setter Property="Focusable"
+				Value="False" />
+		<Setter Property="Width"
+				Value="16" />
+		<Setter Property="Height"
+				Value="16" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ToggleButton}">
+					<Border Width="16"
+							Height="16"
+							Background="Transparent"
+							Padding="5,5,5,5">
+						<Path x:Name="ExpandPath"
+							  Fill="Transparent"
+							  Stroke="#FF989898"
+							  Data="{StaticResource TreeArrow}">
+							<Path.RenderTransform>
+								<RotateTransform Angle="135"
+												 CenterX="3"
+												 CenterY="3" />
+							</Path.RenderTransform>
+						</Path>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver"
+								 Value="True">
+							<Setter TargetName="ExpandPath"
+									Property="Stroke"
+									Value="#FF1BBBFA" />
+							<Setter TargetName="ExpandPath"
+									Property="Fill"
+									Value="Transparent" />
+						</Trigger>
+
+						<Trigger Property="IsChecked"
+								 Value="True">
+							<Setter TargetName="ExpandPath"
+									Property="RenderTransform">
+								<Setter.Value>
+									<RotateTransform Angle="180"
+													 CenterX="3"
+													 CenterY="3" />
+								</Setter.Value>
+							</Setter>
+							<Setter TargetName="ExpandPath"
+									Property="Fill"
+									Value="#FF595959" />
+							<Setter TargetName="ExpandPath"
+									Property="Stroke"
+									Value="#FF262626" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="PanelTreeViewItem"
+		   TargetType="{x:Type TreeViewItem}">
+		<Setter Property="Background"
+				Value="Transparent" />
+		<Setter Property="HorizontalContentAlignment"
+				Value="{Binding Path=HorizontalContentAlignment,RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+		<Setter Property="VerticalContentAlignment"
+				Value="{Binding Path=VerticalContentAlignment,RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+		<Setter Property="Padding"
+				Value="2,1,2,1" />
+		<Setter Property="Foreground"
+				Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+		<!--<Setter Property="FocusVisualStyle"
+				Value="{StaticResource TreeViewItemFocusVisual}" />-->
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type TreeViewItem}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition MinWidth="19"
+											  Width="Auto" />
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+							<RowDefinition />
+						</Grid.RowDefinitions>
+						<ToggleButton x:Name="Expander"
+									  Style="{StaticResource ExpandCollapseToggleStyle}"
+									  IsChecked="{Binding Path=IsExpanded,RelativeSource={RelativeSource TemplatedParent}}"
+									  ClickMode="Press" />
+						<Border Name="HeaderBorder"
+								Background="{TemplateBinding Background}"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="{TemplateBinding BorderThickness}"
+								SnapsToDevicePixels="true"
+								Grid.Column="1">
+							<Grid Background="Transparent">
+								<Rectangle Name="Bg"
+										   Fill="Transparent"
+										   Stroke="Transparent"
+										   StrokeThickness="{StaticResource ItemSelectionStroke}"
+										   RadiusX="{StaticResource ItemSelectionRounding}"
+										   RadiusY="{StaticResource ItemSelectionRounding}" />
+								<Rectangle x:Name="InnerBorder"
+										   Margin="1"
+										   RadiusX="{StaticResource ItemSelectionRounding}"
+										   RadiusY="{StaticResource ItemSelectionRounding}" />
+								<ContentPresenter x:Name="PART_Header"
+												  ContentSource="Header"
+												  Margin="{TemplateBinding Padding}"
+												  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+												  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+							</Grid>
+						</Border>
+						<ItemsPresenter x:Name="ItemsHost"
+										Grid.Row="1"
+										Grid.Column="1"
+										Grid.ColumnSpan="2" />
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsExpanded"
+								 Value="false">
+							<Setter TargetName="ItemsHost"
+									Property="Visibility"
+									Value="Collapsed" />
+						</Trigger>
+						<Trigger Property="HasItems"
+								 Value="false">
+							<Setter TargetName="Expander"
+									Property="Visibility"
+									Value="Collapsed" />
+							<Setter TargetName="HeaderBorder"
+									Property="Grid.Column"
+									Value="0" />
+						</Trigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition SourceName="PART_Header"
+										   Property="IsMouseOver"
+										   Value="true" />
+							</MultiTrigger.Conditions>
+							<Setter TargetName="Bg"
+									Property="Fill"
+									Value="{StaticResource ItemHighlitedFillBrush}" />
+							<Setter TargetName="Bg"
+									Property="Stroke"
+									Value="{StaticResource ItemHighlitedOuterBrush}" />
+							<Setter TargetName="InnerBorder"
+									Property="Stroke"
+									Value="{StaticResource ItemSelectionInnerBrush}" />
+						</MultiTrigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsSelected"
+										   Value="true" />
+							</MultiTrigger.Conditions>
+							<Setter TargetName="Bg"
+									Property="Fill"
+									Value="{StaticResource ItemSelectedFillBrush}" />
+							<Setter TargetName="Bg"
+									Property="Stroke"
+									Value="{StaticResource ItemSelectedOuterBrush}" />
+							<Setter TargetName="InnerBorder"
+									Property="Stroke"
+									Value="{StaticResource ItemSelectionInnerBrush}" />
+						</MultiTrigger>
+						<!--<Trigger Property="IsSelected"
+								 Value="true">
+							<Setter TargetName="Bd"
+									Property="Background"
+									Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+							<Setter Property="Foreground"
+									Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+						</Trigger>-->
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsSelected"
+										   Value="true" />
+								<Condition Property="Selector.IsSelectionActive"
+										   Value="false" />
+							</MultiTrigger.Conditions>
+							<Setter TargetName="Bg"
+									Property="Fill"
+									Value="{StaticResource ItemUnfocusedFillBrush}" />
+							<Setter TargetName="Bg"
+									Property="Stroke"
+									Value="{StaticResource ItemUnfocusedOuterBrush}" />
+							<Setter TargetName="InnerBorder"
+									Property="Stroke"
+									Value="{StaticResource ItemSelectionInnerBrush}" />
+						</MultiTrigger>
+						<!--<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsSelected"
+										   Value="true" />
+								<Condition Property="IsSelectionActive"
+										   Value="false" />
+							</MultiTrigger.Conditions>
+							<Setter TargetName="Bd"
+									Property="Background"
+									Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+							<Setter Property="Foreground"
+									Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+						</MultiTrigger>-->
+						<Trigger Property="IsEnabled"
+								 Value="false">
+							<Setter Property="Foreground"
+									Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="VirtualizingStackPanel.IsVirtualizing"
+					 Value="true">
+				<Setter Property="ItemsPanel">
+					<Setter.Value>
+						<ItemsPanelTemplate>
+							<VirtualizingStackPanel />
+						</ItemsPanelTemplate>
+					</Setter.Value>
+				</Setter>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+
+	<!-- =========================================================================== -->
+	<!-- ComboBox                                                                    -->
+	<!-- =========================================================================== -->
+
+	<Style x:Key="ComboBoxReadonlyToggleButton"
+		   TargetType="{x:Type ToggleButton}">
+		<Setter Property="OverridesDefaultStyle"
+				Value="true" />
+		<Setter Property="IsTabStop"
+				Value="false" />
+		<Setter Property="Focusable"
+				Value="false" />
+		<Setter Property="ClickMode"
+				Value="Press" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ToggleButton}">
+					<ContentControl>
+						<Grid Background="Transparent">
+							<Rectangle Name="Glow"
+									   Fill="White"
+									   Opacity="0"
+									   RadiusX="3"
+									   RadiusY="3"
+									   Margin="{StaticResource ToggleButtonGlowMargin}"
+									   Effect="{StaticResource ToggleButtonGlowEffect}"
+									   SnapsToDevicePixels="true"
+									   ClipToBounds="False" />
+							<Border Name="Chrome"
+									Background="{TemplateBinding Background}"
+									BorderBrush="{TemplateBinding BorderBrush}"
+									BorderThickness="{StaticResource PushButtonBorderThickness}"
+									CornerRadius="{StaticResource PushButtonRounding}"
+									Padding="{StaticResource PushButtonBorderPadding}"
+									SnapsToDevicePixels="true" />
+							<Border Name="Highlite"
+									Background="{StaticResource PushButtonHighlitedFillBrush}"
+									BorderBrush="{TemplateBinding BorderBrush}"
+									BorderThickness="{StaticResource PushButtonBorderThickness}"
+									CornerRadius="{StaticResource PushButtonRounding}"
+									Padding="{StaticResource PushButtonBorderPadding}"
+									Opacity="0"
+									SnapsToDevicePixels="true" />
+							<Border Background="Transparent"
+									BorderBrush="Transparent"
+									BorderThickness="{StaticResource PushButtonBorderThickness}"
+									CornerRadius="{StaticResource PushButtonRounding}"
+									Padding="{StaticResource PushButtonBorderPadding}"
+									SnapsToDevicePixels="true">
+								<Grid Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"
+									  HorizontalAlignment="Right">
+									<Path Name="Arrow"
+										  Margin="3,1,0,0"
+										  Fill="Black"
+										  Data="{StaticResource MenuDownArrow}"
+										  HorizontalAlignment="Center"
+										  VerticalAlignment="Center" />
+								</Grid>
+							</Border>
+						</Grid>
+					</ContentControl>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver"
+								 Value="true">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Highlite"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource BorderTransitionDuration}"
+														 To="1" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Highlite"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource BorderTransitionDuration}"
+														 To="0" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<Trigger Property="IsChecked"
+								 Value="true">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Glow"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource BorderTransitionDuration}"
+														 To="1" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Glow"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource BorderTransitionDuration}"
+														 To="0" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<Trigger Property="IsEnabled"
+								 Value="false">
+							<Setter TargetName="Arrow"
+									Property="Fill"
+									Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="PanelComboBox"
+		   TargetType="{x:Type ComboBox}">
+		<Setter Property="FocusVisualStyle"
+				Value="{StaticResource PushButtonFocusVisual}" />
+		<Setter Property="Background"
+				Value="{StaticResource PushButtonFillBrush}" />
+		<Setter Property="BorderBrush"
+				Value="{StaticResource PushButtonBorderBrush}" />
+		<Setter Property="BorderThickness"
+				Value="{StaticResource PushButtonBorderThickness}" />
+		<Setter Property="Padding"
+				Value="4,3" />
+		<Setter Property="Foreground"
+				Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
+		<Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
+				Value="Auto" />
+		<Setter Property="ScrollViewer.VerticalScrollBarVisibility"
+				Value="Auto" />
+		<Setter Property="ScrollViewer.CanContentScroll"
+				Value="true" />
+		<Setter Property="ScrollViewer.PanningMode"
+				Value="Both" />
+		<Setter Property="Stylus.IsFlicksEnabled"
+				Value="False" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ComboBox}">
+					<Grid Name="MainGrid"
+						  SnapsToDevicePixels="true">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition
+									MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"
+											  Width="0" />
+						</Grid.ColumnDefinitions>
+						<Popup Name="PART_Popup"
+							   AllowsTransparency="true"
+							   Grid.ColumnSpan="2"
+							   Placement="Bottom"
+							   Margin="1"
+							   MaxHeight="{TemplateBinding MaxDropDownHeight}"
+							   IsOpen="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"
+							   PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
+							<Border x:Name="DropDownBorder"
+									BorderThickness="1"
+									BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
+									Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+								<Border.Effect>
+									<DropShadowEffect Color="Black"
+													  ShadowDepth="3"
+													  Opacity="0.5" />
+								</Border.Effect>
+								<ScrollViewer Name="DropDownScrollViewer">
+									<Grid RenderOptions.ClearTypeHint="Enabled">
+										<Canvas Height="0"
+												Width="0"
+												HorizontalAlignment="Left"
+												VerticalAlignment="Top">
+											<Rectangle Name="OpaqueRect"
+													   Height="{Binding ElementName=DropDownBorder,Path=ActualHeight}"
+													   Width="{Binding ElementName=DropDownBorder,Path=ActualWidth}"
+													   Fill="{Binding ElementName=DropDownBorder,Path=Background}" />
+										</Canvas>
+										<ItemsPresenter Name="ItemsPresenter"
+														KeyboardNavigation.DirectionalNavigation="Contained"
+														SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+									</Grid>
+								</ScrollViewer>
+							</Border>
+						</Popup>
+						<ToggleButton Grid.ColumnSpan="2"
+									  Background="{TemplateBinding Background}"
+									  BorderBrush="{TemplateBinding BorderBrush}"
+									  Style="{StaticResource ComboBoxReadonlyToggleButton}"
+									  IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" />
+						<ContentPresenter IsHitTestVisible="false"
+										  Margin="{TemplateBinding Padding}"
+										  Content="{TemplateBinding SelectionBoxItem}"
+										  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+										  ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+										  ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
+										  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+										  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+										  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger SourceName="PART_Popup"
+								 Property="Popup.HasDropShadow"
+								 Value="false">
+							<Setter TargetName="DropDownBorder"
+									Property="Effect"
+									Value="{x:Null}" />
+						</Trigger>
+						<Trigger Property="HasItems"
+								 Value="false">
+							<Setter TargetName="DropDownBorder"
+									Property="Height"
+									Value="95" />
+						</Trigger>
+						<Trigger Property="IsEnabled"
+								 Value="false">
+							<Setter Property="Foreground"
+									Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+						</Trigger>
+						<Trigger Property="IsGrouping"
+								 Value="true">
+							<Setter Property="ScrollViewer.CanContentScroll"
+									Value="false" />
+						</Trigger>
+						<Trigger SourceName="DropDownScrollViewer"
+								 Property="ScrollViewer.CanContentScroll"
+								 Value="false">
+							<Setter TargetName="OpaqueRect"
+									Property="Canvas.Top"
+									Value="{Binding ElementName=DropDownScrollViewer, Path=VerticalOffset}" />
+							<Setter TargetName="OpaqueRect"
+									Property="Canvas.Left"
+									Value="{Binding ElementName=DropDownScrollViewer, Path=HorizontalOffset}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<!-- =========================================================================== -->
+	<!-- ComboBoxItem                                                                -->
+	<!-- =========================================================================== -->
+
+	<Style x:Key="PanelComboBoxItem"
+		   TargetType="{x:Type ComboBoxItem}">
+		<Setter Property="Background"
+				Value="Transparent" />
+		<Setter Property="HorizontalContentAlignment"
+				Value="{Binding Path=HorizontalContentAlignment,RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+		<Setter Property="VerticalContentAlignment"
+				Value="{Binding Path=VerticalContentAlignment,RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+		<Setter Property="Margin"
+				Value="1,1,1,1" />
+		<Setter Property="Padding"
+				Value="2,1,2,1" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ComboBoxItem}">
+					<Border Background="{TemplateBinding Background}"
+							BorderBrush="{TemplateBinding BorderBrush}"
+							BorderThickness="{TemplateBinding BorderThickness}"
+							SnapsToDevicePixels="true">
+						<Grid Background="Transparent">
+							<Rectangle Name="Bg"
+									   Fill="Transparent"
+									   Stroke="Transparent"
+									   StrokeThickness="{StaticResource ItemSelectionStroke}"
+									   RadiusX="{StaticResource ItemSelectionRounding}"
+									   RadiusY="{StaticResource ItemSelectionRounding}" />
+							<Rectangle x:Name="InnerBorder"
+									   Margin="1"
+									   RadiusX="{StaticResource ItemSelectionRounding}"
+									   RadiusY="{StaticResource ItemSelectionRounding}" />
+							<ContentPresenter Margin="{TemplateBinding Padding}"
+											  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+											  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+											  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+						</Grid>
+					</Border>
+					<ControlTemplate.Triggers>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsMouseOver"
+										   Value="true" />
+							</MultiTrigger.Conditions>
+							<Setter TargetName="Bg"
+									Property="Fill"
+									Value="{StaticResource ItemHighlitedFillBrush}" />
+							<Setter TargetName="Bg"
+									Property="Stroke"
+									Value="{StaticResource ItemHighlitedOuterBrush}" />
+							<Setter TargetName="InnerBorder"
+									Property="Stroke"
+									Value="{StaticResource ItemSelectionInnerBrush}" />
+						</MultiTrigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsSelected"
+										   Value="true" />
+							</MultiTrigger.Conditions>
+							<Setter TargetName="Bg"
+									Property="Fill"
+									Value="{StaticResource ItemSelectedFillBrush}" />
+							<Setter TargetName="Bg"
+									Property="Stroke"
+									Value="{StaticResource ItemSelectedOuterBrush}" />
+							<Setter TargetName="InnerBorder"
+									Property="Stroke"
+									Value="{StaticResource ItemSelectionInnerBrush}" />
+						</MultiTrigger>
+						<Trigger Property="IsEnabled"
+								 Value="false">
+							<Setter Property="Foreground"
+									Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 
 	<!-- =========================================================================== -->
 

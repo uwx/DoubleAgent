@@ -10,45 +10,40 @@
 
 	<sys:Double x:Key="ItemSelectionStroke">1</sys:Double>
 	<sys:Double x:Key="ItemSelectionRounding">2</sys:Double>
-	<Color x:Key="ItemSelectionInnerColor">#40FFFFFF</Color>
-
-	<Color x:Key="ItemHighlitedOuterColor">#8071CBF1</Color>
-	<Color x:Key="ItemHighlitedTopColor">#34C5EBFF</Color>
-	<Color x:Key="ItemHighlitedBottomColor">#3481D8FF</Color>
-
-	<Color x:Key="ItemUnfocusedOuterColor">#90717070</Color>
-	<Color x:Key="ItemUnfocusedTopColor">#28717070</Color>
-	<Color x:Key="ItemUnfocusedBottomColor">#50717070</Color>
 
 	<Color x:Key="ItemSelectedOuterColor">#FF8AD1F5</Color>
 	<Color x:Key="ItemSelectedTopColor">#FFDCF0FA</Color>
 	<Color x:Key="ItemSelectedBottomColor">#FFC5E6F7</Color>
 
 	<SolidColorBrush x:Key="ItemSelectionInnerBrush"
-					 Color="{StaticResource ItemSelectionInnerColor}" />
+					 Color="White" Opacity="0.25" />
 
 	<SolidColorBrush x:Key="ItemHighlitedOuterBrush"
-					 Color="{StaticResource ItemHighlitedOuterColor}" />
+					 Color="{StaticResource ItemSelectedOuterColor}"
+					 Opacity="0.6" />
 	<LinearGradientBrush x:Key="ItemHighlitedFillBrush"
 						 StartPoint="0,0"
-						 EndPoint="0,1">
+						 EndPoint="0,1"
+						 Opacity="0.3">
 		<LinearGradientBrush.GradientStops>
-			<GradientStop Color="{StaticResource ItemHighlitedTopColor}"
+			<GradientStop Color="{StaticResource ItemSelectedTopColor}"
 						  Offset="0" />
-			<GradientStop Color="{StaticResource ItemHighlitedBottomColor}"
+			<GradientStop Color="{StaticResource ItemSelectedBottomColor}"
 						  Offset="1" />
 		</LinearGradientBrush.GradientStops>
 	</LinearGradientBrush>
 
 	<SolidColorBrush x:Key="ItemUnfocusedOuterBrush"
-					 Color="{StaticResource ItemUnfocusedOuterColor}" />
+					 Color="{StaticResource {x:Static SystemColors.ControlDarkDarkColorKey}}"
+					 Opacity="0.6" />
 	<LinearGradientBrush x:Key="ItemUnfocusedFillBrush"
 						 StartPoint="0,0"
-						 EndPoint="0,1">
+						 EndPoint="0,1"
+						 Opacity="0.3">
 		<LinearGradientBrush.GradientStops>
-			<GradientStop Color="{StaticResource ItemUnfocusedTopColor}"
+			<GradientStop Color="{StaticResource {x:Static SystemColors.ControlDarkColorKey}}"
 						  Offset="0" />
-			<GradientStop Color="{StaticResource ItemUnfocusedBottomColor}"
+			<GradientStop Color="{StaticResource {x:Static SystemColors.ControlDarkDarkColorKey}}"
 						  Offset="1" />
 		</LinearGradientBrush.GradientStops>
 	</LinearGradientBrush>
@@ -88,9 +83,6 @@
 	<Color x:Key="MenuItemGlyphBackgroundColor">#FFE6F0FA</Color>
 	<Color x:Key="MenuItemGlyphBorderColor">#FF3399FF</Color>
 	<Color x:Key="MenuItemGlyphColor">#FF0C12A1</Color>
-	<Color x:Key="MenuItemGlyphDisabledBackgroundColor">#FFEEE9E9</Color>
-	<Color x:Key="MenuItemGlyphDisabledBorderColor">#FFDBD6D6</Color>
-	<Color x:Key="MenuItemGlyphDisabledColor">#FF848589</Color>
 
 	<SolidColorBrush x:Key="MenuItemGlyphBackgroundBrush"
 					 Color="{StaticResource MenuItemGlyphBackgroundColor}" />
@@ -99,21 +91,17 @@
 	<SolidColorBrush x:Key="MenuItemGlyphFillBrush"
 					 Color="{StaticResource MenuItemGlyphColor}" />
 	<SolidColorBrush x:Key="MenuItemGlyphDisabledBackgroundBrush"
-					 Color="{StaticResource MenuItemGlyphDisabledBackgroundColor}" />
+					 Color="{StaticResource {x:Static SystemColors.ControlLightColorKey}}" />
 	<SolidColorBrush x:Key="MenuItemGlyphDisabledBorderBrush"
-					 Color="{StaticResource MenuItemGlyphDisabledBorderColor}" />
+					 Color="{StaticResource {x:Static SystemColors.ControlDarkColorKey}}" />
 	<SolidColorBrush x:Key="MenuItemGlyphDisabledBrush"
-					 Color="{StaticResource MenuItemGlyphDisabledColor}" />
+					 Color="{StaticResource {x:Static SystemColors.ControlDarkDarkColorKey}}" />
 
 	<Thickness x:Key="MenuIconMargin">4,0,6,0</Thickness>
 	<Thickness x:Key="MenuGlyphMargin">7,0,0,0</Thickness>
 
 	<!-- =========================================================================== -->
 
-	<Color x:Key="SubMenuBackgroundTopColor">#FFF5F5F5</Color>
-	<Color x:Key="SubMenuBackgroundBottomColor">#FFE0E0E0</Color>
-	<Color x:Key="SubMenuBorderColor">#FF959595</Color>
-	<Color x:Key="SubMenuLeftColor">#FFF5F5F5</Color>
 	<SolidColorBrush x:Key="SubMenuBorderBrush"
 					 Color="{StaticResource {x:Static SystemColors.ControlDarkDarkColorKey}}" />
 	<SolidColorBrush x:Key="SubMenuLeftBrush"
@@ -781,17 +769,17 @@
 				Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ToolBarTray}, Path=Background}" />
 	</Style>
 
-	<Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type Thumb}, ResourceId=ToolBarThumbStyle}"
+	<!--<Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type Thumb}, ResourceId=ToolBarThumbStyle}"
 		   TargetType="{x:Type Thumb}">
 		<Setter Property="Thumb.Visibility"
 				Value="Collapsed" />
-	</Style>
+	</Style>-->
 
-	<Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type ToggleButton}, ResourceId=ToolBarHorizontalOverflowButtonStyle}"
+	<!--<Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type ToggleButton}, ResourceId=ToolBarHorizontalOverflowButtonStyle}"
 		   TargetType="{x:Type ToggleButton}">
 		<Setter Property="ToggleButton.Visibility"
 				Value="Collapsed" />
-	</Style>
+	</Style>-->
 
 	<!-- =========================================================================== -->
 
@@ -833,7 +821,7 @@
 	<!-- =========================================================================== -->
 
 	<Style x:Key="{x:Static ToolBar.ButtonStyleKey}"
-		   TargetType="{x:Type Button}">
+		   TargetType="{x:Type ButtonBase}">
 		<Setter Property="OverridesDefaultStyle"
 				Value="true" />
 		<Setter Property="Foreground"
@@ -860,7 +848,7 @@
 				Value="False" />
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type Button}">
+				<ControlTemplate TargetType="{x:Type ButtonBase}">
 					<Border Name="Bd"
 							Background="{TemplateBinding Background}"
 							BorderBrush="{TemplateBinding BorderBrush}"

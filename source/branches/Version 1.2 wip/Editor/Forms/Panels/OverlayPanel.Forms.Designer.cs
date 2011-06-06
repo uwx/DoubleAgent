@@ -49,13 +49,13 @@ namespace AgentCharacterEditor.Panels
 		private void InitializeComponent ()
 		{
 			this.components = new System.ComponentModel.Container();
-			this.OverlayItemClosed = new AgentCharacterEditor.ListViewItemCommon ("Closed",0);
-			this.OverlayItemWide1 = new AgentCharacterEditor.ListViewItemCommon ("Wide 1",1);
-			this.OverlayItemWide2 = new AgentCharacterEditor.ListViewItemCommon ("Wide 2",2);
-			this.OverlayItemWide3 = new AgentCharacterEditor.ListViewItemCommon ("Wide 3",3);
-			this.OverlayItemWide4 = new AgentCharacterEditor.ListViewItemCommon ("Wide 4",4);
-			this.OverlayItemMedium = new AgentCharacterEditor.ListViewItemCommon ("Medium",5);
-			this.OverlayItemNarrow = new AgentCharacterEditor.ListViewItemCommon ("Narrow",6);
+			AgentCharacterEditor.ListViewItemCommon listViewItemCommon8 = new AgentCharacterEditor.ListViewItemCommon("Closed", 0);
+			AgentCharacterEditor.ListViewItemCommon listViewItemCommon9 = new AgentCharacterEditor.ListViewItemCommon("Wide 1", 1);
+			AgentCharacterEditor.ListViewItemCommon listViewItemCommon10 = new AgentCharacterEditor.ListViewItemCommon("Wide 2", 2);
+			AgentCharacterEditor.ListViewItemCommon listViewItemCommon11 = new AgentCharacterEditor.ListViewItemCommon("Wide 3", 3);
+			AgentCharacterEditor.ListViewItemCommon listViewItemCommon12 = new AgentCharacterEditor.ListViewItemCommon("Wide 4", 4);
+			AgentCharacterEditor.ListViewItemCommon listViewItemCommon13 = new AgentCharacterEditor.ListViewItemCommon("Medium", 5);
+			AgentCharacterEditor.ListViewItemCommon listViewItemCommon14 = new AgentCharacterEditor.ListViewItemCommon("Narrow", 6);
 			this.TextBoxFrameName = new DoubleAgent.TextBoxEx();
 			this.LabelFrameName = new System.Windows.Forms.Label();
 			this.GroupBoxImages = new DoubleAgent.GroupBoxCompat();
@@ -67,7 +67,7 @@ namespace AgentCharacterEditor.Panels
 			this.LabelOffsetY = new System.Windows.Forms.Label();
 			this.NumericOffsetY = new DoubleAgent.NumericUpDownEx();
 			this.PanelSample = new System.Windows.Forms.TableLayoutPanel();
-			this.PictureBoxImageSample = new AgentCharacterEditor.PictureBoxSample ();
+			this.PictureBoxImageSample = new AgentCharacterEditor.FrameSample();
 			this.ToolStripShiftUp = new DoubleAgent.ToolStripEx();
 			this.ButtonShiftUp = new DoubleAgent.ToolStripButtonEx();
 			this.ToolStripShiftRight = new DoubleAgent.ToolStripEx();
@@ -331,9 +331,9 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonShiftUp.Margin = new System.Windows.Forms.Padding(0);
 			this.ButtonShiftUp.Name = "ButtonShiftUp";
 			this.ButtonShiftUp.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-			this.ButtonShiftUp.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.ButtonShiftUp.Padding = new System.Windows.Forms.Padding(2);
 			this.ButtonShiftUp.RepeatEnabled = true;
-			this.ButtonShiftUp.Size = new System.Drawing.Size(128, 23);
+			this.ButtonShiftUp.Size = new System.Drawing.Size(24, 24);
 			this.ButtonShiftUp.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftUp_RepeatEnd);
 			this.ButtonShiftUp.Click += new System.EventHandler(this.ButtonShiftUp_Click);
 			// 
@@ -368,9 +368,9 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonShiftRight.Margin = new System.Windows.Forms.Padding(0);
 			this.ButtonShiftRight.Name = "ButtonShiftRight";
 			this.ButtonShiftRight.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-			this.ButtonShiftRight.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.ButtonShiftRight.Padding = new System.Windows.Forms.Padding(2);
 			this.ButtonShiftRight.RepeatEnabled = true;
-			this.ButtonShiftRight.Size = new System.Drawing.Size(23, 128);
+			this.ButtonShiftRight.Size = new System.Drawing.Size(24, 24);
 			this.ButtonShiftRight.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftRight_RepeatEnd);
 			this.ButtonShiftRight.Click += new System.EventHandler(this.ButtonShiftRight_Click);
 			// 
@@ -405,9 +405,9 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonShiftDown.Margin = new System.Windows.Forms.Padding(0);
 			this.ButtonShiftDown.Name = "ButtonShiftDown";
 			this.ButtonShiftDown.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-			this.ButtonShiftDown.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.ButtonShiftDown.Padding = new System.Windows.Forms.Padding(2);
 			this.ButtonShiftDown.RepeatEnabled = true;
-			this.ButtonShiftDown.Size = new System.Drawing.Size(128, 23);
+			this.ButtonShiftDown.Size = new System.Drawing.Size(24, 24);
 			this.ButtonShiftDown.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftDown_RepeatEnd);
 			this.ButtonShiftDown.Click += new System.EventHandler(this.ButtonShiftDown_Click);
 			// 
@@ -442,9 +442,9 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonShiftLeft.Margin = new System.Windows.Forms.Padding(0);
 			this.ButtonShiftLeft.Name = "ButtonShiftLeft";
 			this.ButtonShiftLeft.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-			this.ButtonShiftLeft.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.ButtonShiftLeft.Padding = new System.Windows.Forms.Padding(2);
 			this.ButtonShiftLeft.RepeatEnabled = true;
-			this.ButtonShiftLeft.Size = new System.Drawing.Size(23, 128);
+			this.ButtonShiftLeft.Size = new System.Drawing.Size(24, 24);
 			this.ButtonShiftLeft.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftLeft_RepeatEnd);
 			this.ButtonShiftLeft.Click += new System.EventHandler(this.ButtonShiftLeft_Click);
 			// 
@@ -484,14 +484,14 @@ namespace AgentCharacterEditor.Panels
 			this.ListViewOverlays.GridLines = true;
 			this.ListViewOverlays.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.ListViewOverlays.HideSelection = false;
-			this.ListViewOverlays.Items.AddRange(new AgentCharacterEditor.ListViewItemCommon[] {
-            OverlayItemClosed,
-            OverlayItemWide1,
-            OverlayItemWide2,
-            OverlayItemWide3,
-            OverlayItemWide4,
-            OverlayItemMedium,
-            OverlayItemNarrow});
+			this.ListViewOverlays.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItemCommon8,
+            listViewItemCommon9,
+            listViewItemCommon10,
+            listViewItemCommon11,
+            listViewItemCommon12,
+            listViewItemCommon13,
+            listViewItemCommon14});
 			this.ListViewOverlays.LargeImageList = this.MouthImages;
 			this.ListViewOverlays.Location = new System.Drawing.Point(0, 29);
 			this.ListViewOverlays.MultiSelect = false;
@@ -528,8 +528,8 @@ namespace AgentCharacterEditor.Panels
 			// 
 			// MouthImages
 			// 
-			this.MouthImages.ColorDepth = System.Windows.Forms.ColorDepth.Depth4Bit;
-			this.MouthImages.ImageSize = new System.Drawing.Size(32, 32);
+			this.MouthImages.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+			this.MouthImages.ImageSize = new System.Drawing.Size(24, 24);
 			this.MouthImages.TransparentColor = System.Drawing.Color.Transparent;
 			// 
 			// ToolStripImages
@@ -545,7 +545,7 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripImages.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.ToolStripImages.Location = new System.Drawing.Point(0, 0);
 			this.ToolStripImages.Name = "ToolStripImages";
-			this.ToolStripImages.Size = new System.Drawing.Size(72, 26);
+			this.ToolStripImages.Size = new System.Drawing.Size(106, 27);
 			this.ToolStripImages.TabIndex = 0;
 			// 
 			// ButtonAdd
@@ -554,6 +554,8 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonAdd.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileNew;
 			this.ButtonAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonAdd.Name = "ButtonAdd";
+			this.ButtonAdd.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonAdd.Size = new System.Drawing.Size(24, 24);
 			this.ButtonAdd.Text = "Add";
 			this.ButtonAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
 			// 
@@ -563,6 +565,9 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonDelete.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditDelete;
 			this.ButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonDelete.Name = "ButtonDelete";
+			this.ButtonDelete.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonDelete.Size = new System.Drawing.Size(24, 24);
+			this.ButtonDelete.Text = "Delete";
 			this.ButtonDelete.Click += new System.EventHandler(this.ButtonDelete_Click);
 			// 
 			// ButtonChooseFile
@@ -571,6 +576,8 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonChooseFile.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
 			this.ButtonChooseFile.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonChooseFile.Name = "ButtonChooseFile";
+			this.ButtonChooseFile.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonChooseFile.Size = new System.Drawing.Size(24, 24);
 			this.ButtonChooseFile.Text = "Choose image file";
 			this.ButtonChooseFile.Click += new System.EventHandler(this.ButtonOpen_Click);
 			// 
@@ -644,7 +651,7 @@ namespace AgentCharacterEditor.Panels
 		private DoubleAgent.GroupBoxCompat GroupBoxImages;
 		private System.Windows.Forms.TableLayoutPanel PanelImages;
 		private System.Windows.Forms.TableLayoutPanel PanelSample;
-		private AgentCharacterEditor.PictureBoxSample PictureBoxImageSample;
+		private AgentCharacterEditor.FrameSample PictureBoxImageSample;
 		private DoubleAgent.ToolStripEx ToolStripShiftUp;
 		private DoubleAgent.ToolStripButtonEx ButtonShiftUp;
 		private DoubleAgent.ToolStripEx ToolStripShiftRight;

@@ -162,16 +162,21 @@ namespace AgentCharacterEditor.Panels
 
 		public void ShowFilePart ()
 		{
-						InitItemTags ();
-				ShowAnimationNames ();
-				if (TreeViewMain.SelectedItem != null)
-				{
-					LogicalTreeHelper.BringIntoView (TreeViewMain.SelectedItem as TreeViewItem);
-				}
-}
+			Boolean lWasFilling = PushIsPanelFilling (true);
+
+			InitItemTags ();
+			ShowAnimationNames ();
+			if (TreeViewMain.SelectedItem != null)
+			{
+				LogicalTreeHelper.BringIntoView (TreeViewMain.SelectedItem as TreeViewItem);
+			}
+
+			PopIsPanelFilling (lWasFilling);
+		}
 
 		public void ShowAnimationNames ()
 		{
+			Boolean lWasFilling = PushIsPanelFilling (true);
 			TreeViewItem lAnimationsItem = GetRootItem (ItemNameAnimations);
 			TreeViewItem lSelectedItem = TreeViewMain.SelectedItem as TreeViewItem;
 
@@ -211,6 +216,7 @@ namespace AgentCharacterEditor.Panels
 						if (lAnimationItem == null)
 						{
 							lAnimationsItem.Items.Add (lAnimationItem = new TreeViewItem ());
+							lAnimationItem.Style = lAnimationsItem.Style;
 						}
 						lAnimationItem.Header = lAnimationName;
 						lAnimationItem.Tag = new ResolveAnimation (lAnimation);
@@ -227,6 +233,8 @@ namespace AgentCharacterEditor.Panels
 				}
 				TreeViewMain.InvalidateVisual ();
 			}
+
+			PopIsPanelFilling (lWasFilling);
 
 			try
 			{
@@ -256,6 +264,8 @@ namespace AgentCharacterEditor.Panels
 
 		public void ShowAnimationFrames (FileAnimation pAnimation, TreeViewItem pAnimationItem, Boolean pInUpdate)
 		{
+			Boolean lWasFilling = PushIsPanelFilling (true);
+
 			if ((pAnimation != null) && (pAnimationItem != null))
 			{
 				int lFrameNdx;
@@ -263,25 +273,23 @@ namespace AgentCharacterEditor.Panels
 				TreeViewItem lFrameItem;
 				TreeViewItem lFrameSubItem;
 
-				if (!pInUpdate)
-				{
-					//TreeViewMain.BeginUpdate ();
-				}
-
 				foreach (FileAnimationFrame lFrame in pAnimation.Frames)
 				{
 					lFrameNdx = pAnimation.Frames.IndexOf (lFrame);
 					lFrameName = Titles.Frame (lFrameNdx);
 					lFrameItem = ((lFrameNdx < pAnimationItem.Items.Count) ? pAnimationItem.Items[lFrameNdx] : pAnimationItem.Items[pAnimationItem.Items.Add (new TreeViewItem ())]) as TreeViewItem;
+					lFrameItem.Style = pAnimationItem.Style;
 					lFrameItem.Header = lFrameName;
 					lFrameItem.Tag = new ResolveAnimationFrame (lFrame);
 
 					lFrameSubItem = ((lFrameItem.Items.Count >= 1) ? lFrameItem.Items[0] : lFrameItem.Items[lFrameItem.Items.Add (new TreeViewItem ())]) as TreeViewItem;
+					lFrameSubItem.Style = pAnimationItem.Style;
 					lFrameSubItem.Header = "Branching";
 					lFrameSubItem.Tag = new ResolveAnimationFrame (lFrame);
 					(lFrameSubItem.Tag as ResolveAnimationFrame).Scope = ResolveAnimationFrame.ScopeType.ScopeBranching;
 
 					lFrameSubItem = ((lFrameItem.Items.Count >= 2) ? lFrameItem.Items[1] : lFrameItem.Items[lFrameItem.Items.Add (new TreeViewItem ())]) as TreeViewItem;
+					lFrameSubItem.Style = pAnimationItem.Style;
 					lFrameSubItem.Header = "Overlays";
 					lFrameSubItem.Tag = new ResolveAnimationFrame (lFrame);
 					(lFrameSubItem.Tag as ResolveAnimationFrame).Scope = ResolveAnimationFrame.ScopeType.ScopeOverlays;
@@ -294,10 +302,11 @@ namespace AgentCharacterEditor.Panels
 
 				if (!pInUpdate)
 				{
-					//TreeViewMain.EndUpdate ();
 					TreeViewMain.InvalidateVisual ();
 				}
 			}
+
+			PopIsPanelFilling (lWasFilling);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

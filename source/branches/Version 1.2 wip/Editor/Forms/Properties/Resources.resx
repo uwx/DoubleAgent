@@ -178,6 +178,28 @@
   <data name="ImgHelpAbout" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\Common\Resources\About.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="ImgMouthClosed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Common\Resources\MouthClosed.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgMouthMedium" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Common\Resources\MouthMedium.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgMouthNarrow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Common\Resources\MouthNarrow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgMouthWide1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Common\Resources\MouthWide1.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgMouthWide2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Common\Resources\MouthWide2.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgMouthWide3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Common\Resources\MouthWide3.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgMouthWide4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Common\Resources\MouthWide4.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="ImgMoveDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\Common\Resources\MoveDown.Png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

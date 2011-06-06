@@ -49,13 +49,13 @@ namespace AgentCharacterEditor.Panels
 			return base.PushIsPanelFilling (pIsPanelFilling);
 		}
 
-		protected override void PopIsPanelFilling (bool pWasPanelShowing)
+		protected override void PopIsPanelFilling (bool pWasPanelFilling)
 		{
-			if (!pWasPanelShowing && IsPanelFilling)
+			if (!pWasPanelFilling && IsPanelFilling)
 			{
 				ResumeLayout (true);
 			}
-			base.PopIsPanelFilling (pWasPanelShowing);
+			base.PopIsPanelFilling (pWasPanelFilling);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

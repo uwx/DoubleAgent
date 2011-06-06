@@ -33,7 +33,7 @@
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="100" />
-					<ColumnDefinition Width="371*" />
+					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
 				<Label Content="Frame"
 					   HorizontalAlignment="Left"
@@ -164,7 +164,8 @@
 						  VerticalAlignment="Center"
 						  Margin="0,0,5,0"
 						  Checked="CheckBoxExit_CheckChanged"
-						  Unchecked="CheckBoxExit_CheckChanged" />
+						  Unchecked="CheckBoxExit_CheckChanged"
+						  Style="{StaticResource PanelToggleButton}" />
 				<custom:NumericUpDown Grid.Column="1"
 									  HorizontalAlignment="Left"
 									  x:Name="NumericTargetExit"

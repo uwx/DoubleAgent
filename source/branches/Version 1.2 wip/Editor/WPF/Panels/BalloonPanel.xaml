@@ -24,17 +24,26 @@
 						Executed="OnEditPaste" />
 	</Control.CommandBindings>
 	<Grid Style="{StaticResource PanelMainGrid}">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"
+							  MaxWidth="600" />
+		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
-		<CheckBox Content="Use the Word Balloon"
+		<CheckBox Name="CheckBoxWordBalloon"
+				  Content="Use the Word Balloon"
+				  Style="{StaticResource PanelToggleButton}"
+				  Foreground="{StaticResource HeaderTextBrush}"
+				  Effect="{StaticResource HeaderTextShadow}"
 				  HorizontalAlignment="Left"
-				  Name="CheckBoxWordBalloon"
 				  VerticalAlignment="Top"
-				  Margin="4"
-				  FontSize="14"
+				  VerticalContentAlignment="Center"
+				  Margin="4,0,4,0"
+				  Padding="2,0,2,2"
+				  FontSize="16"
 				  TabIndex="0"
 				  Checked="CheckBoxWordBalloon_CheckChanged"
 				  Unchecked="CheckBoxWordBalloon_CheckChanged" />
@@ -49,8 +58,12 @@
 					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
-				<StackPanel>
+				<StackPanel Grid.IsSharedSizeScope="True">
 					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition SharedSizeGroup="Labels" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
 						<Label Content="Characters per line"
 							   Name="LabelCharsPerLine"
 							   HorizontalAlignment="Left"
@@ -61,21 +74,22 @@
 											  Text="8"
 											  HorizontalAlignment="Left"
 											  VerticalAlignment="Center"
-											  Margin="110,2,12,2"
+											  Margin="10,2"
 											  TabIndex="1"
+											  Grid.Column="1"
 											  IsModifiedChanged="NumericCharsPerLine_IsModifiedChanged"
 											  Style="{StaticResource PanelTextBox}" />
 					</Grid>
 					<Grid>
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="62" />
-							<ColumnDefinition Width="90" />
+							<ColumnDefinition SharedSizeGroup="Labels" />
+							<ColumnDefinition Width="*" />
 						</Grid.ColumnDefinitions>
 						<RadioButton Content="Number of lines"
 									 Name="RadioButtonNumLines"
 									 HorizontalAlignment="Left"
 									 VerticalAlignment="Center"
-									 Margin="0,2"
+									 Margin="0,2,2,2"
 									 GroupName="SizeToText"
 									 Grid.ColumnSpan="2"
 									 TabIndex="2"
@@ -85,7 +99,7 @@
 											  Width="30"
 											  HorizontalAlignment="Left"
 											  VerticalAlignment="Center"
-											  Margin="48,2,0,2"
+											  Margin="10,2"
 											  Text="2"
 											  Grid.Column="1"
 											  TabIndex="3"
@@ -129,16 +143,16 @@
 								Width="150"
 								HorizontalAlignment="Left"
 								VerticalAlignment="Top"
-								Margin="5,0,5,5"
+								Margin="5"
 								TabIndex="6"
 								Style="{StaticResource PanelPushButton}"
-								Click="ButtonBalloonFont_Click"
-								 />
+								Click="ButtonBalloonFont_Click" />
 						<Label Name="LabelBalloonFontSample"
 							   HorizontalAlignment="Left"
 							   Grid.Column="1"
 							   VerticalAlignment="Top"
-							   Padding="5,3">
+							   Padding="5,3"
+							   Margin="0,5,0,0">
 							<TextBlock Name="TextBalloonFontSample"
 									   Text="&lt;font&gt;"
 									   TextTrimming="CharacterEllipsis" />
@@ -157,8 +171,7 @@
 								Margin="5"
 								TabIndex="7"
 								Style="{StaticResource PanelPushButton}"
-								Click="ButtonBalloonForeground_Click"
-								 />
+								Click="ButtonBalloonForeground_Click" />
 						<Border BorderBrush="{StaticResource HeaderTextBrush}"
 								BorderThickness="1"
 								Grid.ColumnSpan="1"
@@ -225,6 +238,7 @@
 			</Grid>
 		</GroupBox>
 		<GroupBox Grid.Row="2"
+				  Grid.ColumnSpan="2"
 				  Header="Sample"
 				  VerticalAlignment="Stretch"
 				  HorizontalAlignment="Stretch"
@@ -239,7 +253,7 @@
 								VerticalContentAlignment="Stretch">
 					<previews:BalloonPreview x:Name="WordBalloonPreview"
 											 IsHitTestVisible="False"
-											 Stretch="None" />
+											 Margin="10" />
 				</ContentControl>
 			</Grid>
 		</GroupBox>

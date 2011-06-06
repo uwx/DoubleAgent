@@ -377,6 +377,8 @@ namespace AgentCharacterEditor
 			{
 				OpenCharacterFile (Program.CommandLineArgs[0]);
 			}
+
+			PanelPartsTree.TreeViewMain.Focus ();
 		}
 
 		private void Window_Closing (object sender, System.ComponentModel.CancelEventArgs e)

@@ -61,7 +61,7 @@ namespace AgentCharacterEditor.Panels
 			this.FlowLayoutRight = new System.Windows.Forms.FlowLayoutPanel();
 			this.PanelSample = new System.Windows.Forms.TableLayoutPanel();
 			this.PanelImageClip = new System.Windows.Forms.Panel();
-			this.PictureBoxImageSample = new AgentCharacterEditor.PictureBoxSample();
+			this.PictureBoxImageSample = new AgentCharacterEditor.FrameSample();
 			this.ToolStripShiftUp = new DoubleAgent.ToolStripEx();
 			this.ButtonShiftUp = new DoubleAgent.ToolStripButtonEx();
 			this.ToolStripShiftRight = new DoubleAgent.ToolStripEx();
@@ -95,7 +95,7 @@ namespace AgentCharacterEditor.Panels
 			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
 			this.PanelTop = new System.Windows.Forms.Panel();
 			this.NumericDuration = new DoubleAgent.NumericUpDownEx();
-			this.PictureBoxFrameSample = new AgentCharacterEditor.PictureBoxSample();
+			this.PictureBoxFrameSample = new AgentCharacterEditor.FrameSample();
 			toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.PanelOverlayOffset.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetX)).BeginInit();
@@ -124,7 +124,7 @@ namespace AgentCharacterEditor.Panels
 			// toolStripSeparator1
 			// 
 			toolStripSeparator1.Name = "toolStripSeparator1";
-			toolStripSeparator1.Size = new System.Drawing.Size(6, 26);
+			toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
 			// 
 			// LabelFrameName
 			// 
@@ -355,9 +355,9 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonShiftUp.Margin = new System.Windows.Forms.Padding(0);
 			this.ButtonShiftUp.Name = "ButtonShiftUp";
 			this.ButtonShiftUp.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-			this.ButtonShiftUp.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.ButtonShiftUp.Padding = new System.Windows.Forms.Padding(2);
 			this.ButtonShiftUp.RepeatEnabled = true;
-			this.ButtonShiftUp.Size = new System.Drawing.Size(128, 23);
+			this.ButtonShiftUp.Size = new System.Drawing.Size(24, 24);
 			this.ButtonShiftUp.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftUp_RepeatEnd);
 			this.ButtonShiftUp.Click += new System.EventHandler(this.ButtonShiftUp_Click);
 			// 
@@ -392,9 +392,9 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonShiftRight.Margin = new System.Windows.Forms.Padding(0);
 			this.ButtonShiftRight.Name = "ButtonShiftRight";
 			this.ButtonShiftRight.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-			this.ButtonShiftRight.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.ButtonShiftRight.Padding = new System.Windows.Forms.Padding(2);
 			this.ButtonShiftRight.RepeatEnabled = true;
-			this.ButtonShiftRight.Size = new System.Drawing.Size(23, 128);
+			this.ButtonShiftRight.Size = new System.Drawing.Size(24, 24);
 			this.ButtonShiftRight.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftRight_RepeatEnd);
 			this.ButtonShiftRight.Click += new System.EventHandler(this.ButtonShiftRight_Click);
 			// 
@@ -429,9 +429,9 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonShiftDown.Margin = new System.Windows.Forms.Padding(0);
 			this.ButtonShiftDown.Name = "ButtonShiftDown";
 			this.ButtonShiftDown.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-			this.ButtonShiftDown.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.ButtonShiftDown.Padding = new System.Windows.Forms.Padding(2);
 			this.ButtonShiftDown.RepeatEnabled = true;
-			this.ButtonShiftDown.Size = new System.Drawing.Size(128, 23);
+			this.ButtonShiftDown.Size = new System.Drawing.Size(24, 24);
 			this.ButtonShiftDown.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftDown_RepeatEnd);
 			this.ButtonShiftDown.Click += new System.EventHandler(this.ButtonShiftDown_Click);
 			// 
@@ -466,9 +466,9 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonShiftLeft.Margin = new System.Windows.Forms.Padding(0);
 			this.ButtonShiftLeft.Name = "ButtonShiftLeft";
 			this.ButtonShiftLeft.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-			this.ButtonShiftLeft.Padding = new System.Windows.Forms.Padding(0, 1, 0, 2);
+			this.ButtonShiftLeft.Padding = new System.Windows.Forms.Padding(2);
 			this.ButtonShiftLeft.RepeatEnabled = true;
-			this.ButtonShiftLeft.Size = new System.Drawing.Size(23, 128);
+			this.ButtonShiftLeft.Size = new System.Drawing.Size(24, 24);
 			this.ButtonShiftLeft.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftLeft_RepeatEnd);
 			this.ButtonShiftLeft.Click += new System.EventHandler(this.ButtonShiftLeft_Click);
 			// 
@@ -557,7 +557,7 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripImages.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.ToolStripImages.Location = new System.Drawing.Point(0, 0);
 			this.ToolStripImages.Name = "ToolStripImages";
-			this.ToolStripImages.Size = new System.Drawing.Size(124, 26);
+			this.ToolStripImages.Size = new System.Drawing.Size(160, 27);
 			this.ToolStripImages.TabIndex = 0;
 			// 
 			// ButtonAdd
@@ -566,6 +566,8 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonAdd.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileNew;
 			this.ButtonAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonAdd.Name = "ButtonAdd";
+			this.ButtonAdd.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonAdd.Size = new System.Drawing.Size(24, 24);
 			this.ButtonAdd.Text = "Add a new image";
 			this.ButtonAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
 			// 
@@ -575,6 +577,8 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonDelete.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditDelete;
 			this.ButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonDelete.Name = "ButtonDelete";
+			this.ButtonDelete.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonDelete.Size = new System.Drawing.Size(24, 24);
 			this.ButtonDelete.Text = "Remove";
 			this.ButtonDelete.Click += new System.EventHandler(this.ButtonDelete_Click);
 			// 
@@ -584,6 +588,8 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonChooseFile.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
 			this.ButtonChooseFile.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonChooseFile.Name = "ButtonChooseFile";
+			this.ButtonChooseFile.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonChooseFile.Size = new System.Drawing.Size(24, 24);
 			this.ButtonChooseFile.Text = "Open image file";
 			this.ButtonChooseFile.Click += new System.EventHandler(this.ButtonOpen_Click);
 			// 
@@ -593,6 +599,8 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonMoveUp.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveUp;
 			this.ButtonMoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonMoveUp.Name = "ButtonMoveUp";
+			this.ButtonMoveUp.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonMoveUp.Size = new System.Drawing.Size(24, 24);
 			this.ButtonMoveUp.Text = "Move image up";
 			this.ButtonMoveUp.Click += new System.EventHandler(this.ButtonMoveUp_Click);
 			// 
@@ -602,6 +610,8 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonMoveDown.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveDown;
 			this.ButtonMoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonMoveDown.Name = "ButtonMoveDown";
+			this.ButtonMoveDown.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonMoveDown.Size = new System.Drawing.Size(24, 24);
 			this.ButtonMoveDown.Text = "Move image down";
 			this.ButtonMoveDown.Click += new System.EventHandler(this.ButtonMoveDown_Click);
 			// 
@@ -649,7 +659,7 @@ namespace AgentCharacterEditor.Panels
             this.ButtonSoundPreview});
 			this.ToolStripSound.Location = new System.Drawing.Point(6, 25);
 			this.ToolStripSound.Name = "ToolStripSound";
-			this.ToolStripSound.Size = new System.Drawing.Size(57, 26);
+			this.ToolStripSound.Size = new System.Drawing.Size(27, 27);
 			this.ToolStripSound.TabIndex = 0;
 			// 
 			// ButtonSoundPreview
@@ -659,6 +669,8 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonSoundPreview.Image = global::AgentCharacterEditor.Properties.Resources.ImgRun;
 			this.ButtonSoundPreview.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonSoundPreview.Name = "ButtonSoundPreview";
+			this.ButtonSoundPreview.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonSoundPreview.Size = new System.Drawing.Size(24, 24);
 			this.ButtonSoundPreview.Text = "Preview";
 			this.ButtonSoundPreview.Click += new System.EventHandler(this.ButtonSoundPreview_Click);
 			// 
@@ -672,9 +684,9 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripSoundFile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ButtonSoundImport,
             this.ButtonSoundExport});
-			this.ToolStripSoundFile.Location = new System.Drawing.Point(621, 25);
+			this.ToolStripSoundFile.Location = new System.Drawing.Point(619, 25);
 			this.ToolStripSoundFile.Name = "ToolStripSoundFile";
-			this.ToolStripSoundFile.Size = new System.Drawing.Size(49, 26);
+			this.ToolStripSoundFile.Size = new System.Drawing.Size(51, 27);
 			this.ToolStripSoundFile.TabIndex = 2;
 			// 
 			// ButtonSoundImport
@@ -683,6 +695,8 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonSoundImport.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
 			this.ButtonSoundImport.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonSoundImport.Name = "ButtonSoundImport";
+			this.ButtonSoundImport.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonSoundImport.Size = new System.Drawing.Size(24, 24);
 			this.ButtonSoundImport.Text = "Open sound file";
 			this.ButtonSoundImport.Click += new System.EventHandler(this.ButtonSoundImport_Click);
 			// 
@@ -693,6 +707,8 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonSoundExport.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileSave;
 			this.ButtonSoundExport.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.ButtonSoundExport.Name = "ButtonSoundExport";
+			this.ButtonSoundExport.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonSoundExport.Size = new System.Drawing.Size(24, 24);
 			this.ButtonSoundExport.Text = "Save sound";
 			// 
 			// TextBoxSoundFile
@@ -848,7 +864,7 @@ namespace AgentCharacterEditor.Panels
 		private DoubleAgent.ToolStripButtonCompat ButtonSoundExport;
 		private DoubleAgent.ToolStripEx ToolStripSound;
 		private DoubleAgent.ToolStripButtonCompat ButtonSoundPreview;
-		private PictureBoxSample PictureBoxImageSample;
+		private FrameSample PictureBoxImageSample;
 		private System.Windows.Forms.Label LabelOffsetY;
 		private System.Windows.Forms.Label LabelOffsetX;
 		private DoubleAgent.NumericUpDownEx NumericOffsetY;
@@ -864,7 +880,7 @@ namespace AgentCharacterEditor.Panels
 		private DoubleAgent.ToolStripButtonEx ButtonShiftDown;
 		private DoubleAgent.ToolStripButtonEx ButtonShiftLeft;
 		private DoubleAgent.ToolStripButtonEx ButtonShiftRight;
-		private PictureBoxSample PictureBoxFrameSample;
+		private FrameSample PictureBoxFrameSample;
 		private System.Windows.Forms.TableLayoutPanel PanelMain;
 		private System.Windows.Forms.Panel PanelImageClip;
 		private System.Windows.Forms.FlowLayoutPanel FlowLayoutRight;
