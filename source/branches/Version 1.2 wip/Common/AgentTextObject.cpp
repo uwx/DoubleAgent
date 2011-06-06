@@ -62,7 +62,7 @@ void CAgentTextObject::Attach (long pCharID, CEventNotify* pNotify, CSapiVoice* 
 		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p] CAgentTextObject Attach [%d] [%p] [%p] [%p]"), m_pOuterUnknown, pCharID, pNotify, pVoice, mMsgPostingWnd.Ptr());
 	}
 #endif
-	mText.ResetState (true);
+	mText.DisplayNoWords ();
 	mCharID = pCharID;
 	mNotify = pNotify;
 	mVoiceStartNotified = false;
@@ -183,7 +183,7 @@ void CAgentTextObject::OnVoiceWord (long pCharID, UINT pWordPos, int pWordLength
 		&&	(mMsgPostingWnd->IsWindow())
 		)
 	{
-		mMsgPostingWnd->PostMessage (mVoiceWordMsg, pCharID, (LPARAM)mText.GetWordDisplayed());
+		mMsgPostingWnd->PostMessage (mVoiceWordMsg, pCharID, (LPARAM)mText.WordDisplayed);
 	}
 }
 

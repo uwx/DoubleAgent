@@ -55,11 +55,13 @@ public:
 	property System::Boolean IsAutoSize {System::Boolean get();}
 	property System::Boolean IsAutoPace {System::Boolean get();}
 	property System::Boolean IsAutoHide {System::Boolean get();}
+	property System::Boolean ClipPartialLines {System::Boolean get();}
 
 // Methods
 public:
 	System::Boolean Draw (System::Drawing::Graphics^ pGraphics);
 	System::Windows::Media::Drawing^ MakeDrawing ();
+	System::Windows::Media::Visual^ MakeVisual ();
 
 	System::Boolean AutoPaceStarted ();
 	System::Boolean AutoPaceStopped ();
@@ -74,7 +76,8 @@ protected:
 	System::String^ GetNextText ();
 	System::Drawing::RectangleF CalcShapeRect ();
 	System::Drawing::SizeF GetTextSize ();
-	System::Drawing::RectangleF PrepareTextDraw (System::Drawing::Graphics^ pGraphics, System::Boolean pClipPartialLines);
+	System::Boolean InitTextLayout (System::Drawing::Graphics^ pGraphics);
+	System::Boolean InitTextLayout ();
 	
 	CAgentTextDrawForms^ GetTextDrawForms (System::Boolean pCreate);
 	CAgentTextDrawWPF^ GetTextDrawWPF (System::Boolean pCreate);
@@ -85,7 +88,6 @@ private:
 	System::String^			mText;
 	System::Boolean			mAutoRepeat;
 	System::Int32			mAutoRepeatDelay;
-	System::Int32			mAutoScrollTime;
 	CAgentBalloonShape^		mShape;
 	CAgentTextDraw^			mTextDraw;
 };

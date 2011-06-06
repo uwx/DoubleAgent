@@ -189,6 +189,7 @@ protected:
 
 	void DrawBalloon (HDC pDC, const CRect& pDrawRect);
 	void DrawBalloonText (HDC pDC, const CRect& pDrawRect);
+	bool InitBalloonTextLayout (HDC pDC);
 	DWORD ApplyFontLayout (HDC pDC);
 	void ShowedVoiceWord (bool pFastRefresh);
 

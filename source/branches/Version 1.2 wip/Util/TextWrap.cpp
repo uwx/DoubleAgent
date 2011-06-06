@@ -58,7 +58,8 @@ static char THIS_FILE[]=__FILE__;
 CTextWrap::CTextWrap ()
 :	mBounds (0,0,0,0),
 	mSize (0,0),
-	mWrapIndent (0)
+	mWrapIndent (0),
+	mClipPartialLines (false)
 {
 }
 
@@ -66,6 +67,7 @@ CTextWrap::CTextWrap (System::String^ pBreakBefore, System::String^ pBreakAfter)
 :	mBounds (0,0,0,0),
 	mSize (0,0),
 	mWrapIndent (0),
+	mClipPartialLines (false),
 	mBreakBefore (pBreakBefore),
 	mBreakAfter (pBreakAfter)
 {
@@ -75,6 +77,7 @@ CTextWrap::CTextWrap (System::String^ pBreakBefore, System::String^ pBreakAfter,
 :	mBounds (0,0,0,0),
 	mSize (0,0),
 	mWrapIndent (pWrapIndent),
+	mClipPartialLines (false),
 	mBreakBefore (pBreakBefore),
 	mBreakAfter (pBreakAfter)
 {
@@ -83,7 +86,8 @@ CTextWrap::CTextWrap (System::String^ pBreakBefore, System::String^ pBreakAfter,
 CTextWrap::CTextWrap (System::Drawing::RectangleF pBounds)
 :	mBounds (pBounds),
 	mSize (0,0),
-	mWrapIndent (0)
+	mWrapIndent (0),
+	mClipPartialLines (false)
 {
 }
 
@@ -91,6 +95,7 @@ CTextWrap::CTextWrap (System::Drawing::RectangleF pBounds, System::String^ pBrea
 :	mBounds (pBounds),
 	mSize (0,0),
 	mWrapIndent (0),
+	mClipPartialLines (false),
 	mBreakBefore (pBreakBefore),
 	mBreakAfter (pBreakAfter)
 {
@@ -100,6 +105,7 @@ CTextWrap::CTextWrap (System::Drawing::RectangleF pBounds, System::String^ pBrea
 :	mBounds (pBounds),
 	mSize (0,0),
 	mWrapIndent (pWrapIndent),
+	mClipPartialLines (false),
 	mBreakBefore (pBreakBefore),
 	mBreakAfter (pBreakAfter)
 {
@@ -117,6 +123,7 @@ CTextWrap^ CTextWrap::operator= (CTextWrap^ pSource)
 	mBounds = pSource->mBounds;
 	mSize = pSource->mSize;
 	mWrapIndent = pSource->mWrapIndent;
+	mClipPartialLines = pSource->mClipPartialLines;
 	mBreakBefore = pSource->mBreakBefore;
 	mBreakAfter = pSource->mBreakAfter;
 	mTextLines = nullptr;
@@ -154,6 +161,7 @@ CTextWrap::CTextWrap (LPCTSTR pBreakBefore, LPCTSTR pBreakAfter, int pWrapIndent
 	mBreakBefore (pBreakBefore),
 	mBreakAfter (pBreakAfter),
 	mWrapIndent (pWrapIndent),
+	mClipPartialLines (false),
 	mUseExternalLeading (false),
 	mUseInternalLeading (true)
 {
@@ -165,6 +173,7 @@ CTextWrap::CTextWrap (const CRect& pBounds, LPCTSTR pBreakBefore, LPCTSTR pBreak
 	mBreakBefore (pBreakBefore),
 	mBreakAfter (pBreakAfter),
 	mWrapIndent (pWrapIndent),
+	mClipPartialLines (false),
 	mUseExternalLeading (false),
 	mUseInternalLeading (true)
 {
@@ -186,6 +195,7 @@ CTextWrap& CTextWrap::operator= (const CTextWrap& pSource)
 	mBounds = pSource.mBounds;
 	mSize = pSource.mSize;
 	mWrapIndent = pSource.mWrapIndent;
+	mClipPartialLines = pSource.mClipPartialLines;
 	mBreakBefore = pSource.mBreakBefore;
 	mBreakAfter = pSource.mBreakAfter;
 	mUseExternalLeading = pSource.mUseExternalLeading;
@@ -723,12 +733,22 @@ void CTextWrap::DrawText (System::Drawing::Graphics^ pGraphics, System::Drawing:
 
 		for each (TextLine^ lLine in mTextLines)
 		{
-			if	(
-					(pClipRect)
-				&&	(lLine->mBounds.Bottom + mBounds.Top > pClipRect->Bottom)
-				)
+			if	(pClipRect)
 			{
-				break;
+				if	(lLine->mBounds.Top + mBounds.Top > pClipRect->Bottom)
+				{
+					break;
+				}
+				if	(
+						(mClipPartialLines)
+					&&	(
+							(lLine->mBounds.Bottom + mBounds.Top > pClipRect->Bottom)
+						&&	(lLine->mBounds.Top + mBounds.Top <= pClipRect->Bottom)
+						)
+					)
+				{
+					break;
+				}
 			}
 
 			if	(pText)
@@ -820,6 +840,28 @@ void CTextWrap::DrawText (HDC pDC, const CRect& pBounds, LPCTSTR pText, HFONT pF
 
 		for	(lNdx = 0; lLine = mTextLines (lNdx); lNdx++)
 		{
+			lLinePos.x = pBounds.left + lLine->x;
+			lLinePos.y = pBounds.top + lLine->rcl.top + lLine->y;
+			lLineRect.SetRect (pBounds.left, pBounds.top + lLine->rcl.top, pBounds.right, pBounds.top + lLine->rcl.bottom);
+
+			if	(pClipRect)			
+			{
+				if	(lLineRect.top >= pClipRect->bottom)
+				{
+					break;
+				}
+				if	(
+						(mClipPartialLines)
+					&&	(
+							(lLineRect.bottom > pClipRect->bottom)
+						&&	(lLineRect.top <= pClipRect->bottom)
+						)
+					)
+				{
+					break;
+				}
+			}
+
 			lLineLength = lLine->n;
 
 			if	(pText)
@@ -843,10 +885,6 @@ void CTextWrap::DrawText (HDC pDC, const CRect& pBounds, LPCTSTR pText, HFONT pF
 			{
 				lLineText = lLine->lpstr;
 			}
-
-			lLinePos.x = pBounds.left + lLine->x;
-			lLinePos.y = pBounds.top + lLine->rcl.top + lLine->y;
-			lLineRect.SetRect (pBounds.left, pBounds.top + lLine->rcl.top, pBounds.right, pBounds.top + lLine->rcl.bottom);
 
 			if	(
 					(pAttribDC)

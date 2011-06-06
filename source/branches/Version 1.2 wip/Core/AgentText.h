@@ -147,9 +147,13 @@ public:
 	property int WordDisplayed {int get();}
 	property int LookAhead {int get();}
 #else
-	INT_PTR GetWordCount () const {return mTextWords.GetCount();}
-	INT_PTR GetWordDisplayed () const {return mWordDisplayed;}
-	INT_PTR GetLookAhead () const {return min (GetWordCount() - GetWordDisplayed() - 1, mDefaultLookAhead);}
+	__declspec(property(get=get_WordCount))			INT_PTR	WordCount;
+	__declspec(property(get=get_WordDisplayed))		INT_PTR	WordDisplayed;
+	__declspec(property(get=get_LookAhead))			INT_PTR	LookAhead;
+
+	INT_PTR get_WordCount () const {return mTextWords.GetCount();}
+	INT_PTR get_WordDisplayed () const {return mWordDisplayed;}
+	INT_PTR get_LookAhead () const {return min (WordCount - WordDisplayed - 1, mDefaultLookAhead);}
 #endif
 
 #ifdef	__cplusplus_cli
@@ -159,17 +163,30 @@ public:
 	property System::Int32 ScrollInc {System::Int32 get();}
 	property System::Int32 ScrollMin {System::Int32 get();}
 	property System::Int32 ScrollMax {System::Int32 get();}
+	property System::UInt32 ScrollTime {System::UInt32 get();}
 #else
-	CRect GetTextBounds () const;
-	bool SetTextBounds (const CRect & pTextBounds);
+	__declspec(property(get=get_TextBounds, put=put_TextBounds))		CRect	TextBounds;
+	__declspec(property(get=get_CanPace))								bool	CanPace;
+	__declspec(property(get=get_CanScroll))								bool	CanScroll;
+	__declspec(property(get=get_ScrollBounds, put=put_ScrollBounds))	CRect	ScrollBounds;
+	__declspec(property(get=get_ScrollPos))								long	ScrollPos;
+	__declspec(property(get=get_ScrollInc))								long	ScrollInc;
+	__declspec(property(get=get_ScrollMin))								long	ScrollMin;
+	__declspec(property(get=get_ScrollMax))								long	ScrollMax;
+	__declspec(property(get=get_ScrollTime))							DWORD	ScrollTime;
 
-	bool CanPace () const;
-	bool CanScroll () const;
-	CRect GetScrollBounds () const {return mScrollBounds;}
-	long GetScrollPos () const {return mScrollPos;}
-	long GetScrollInc () const {return mScrollInc;}
-	long GetScrollMin () const {return mScrollMin;}
-	long GetScrollMax () const {return mScrollMax;}
+	CRect get_TextBounds () const {return mBounds;}
+	void put_TextBounds (const CRect & pTextBounds) {mBounds = pTextBounds;}
+
+	bool get_CanPace () const;
+	bool get_CanScroll () const;
+	CRect get_ScrollBounds () const {return mScrollBounds;}
+	void put_ScrollBounds (const CRect & pScrollBounds) {mScrollBounds = pScrollBounds;}
+	long get_ScrollPos () const {return mScrollPos;}
+	long get_ScrollInc () const {return mScrollInc;}
+	long get_ScrollMin () const {return mScrollMin;}
+	long get_ScrollMax () const {return mScrollMax;}
+	DWORD get_ScrollTime () const {return mScrollTime;}
 #endif
 
 #ifdef	__cplusplus_cli
@@ -218,30 +235,38 @@ public:
 	CSize CalcTextSize (HFONT pFont, USHORT pPerLine);
 	CSize CalcTextSize (HFONT pFont);
 	CSize CalcTextSize (HDC pDC);
+#endif
 
-	DWORD InitScroll (const CRect& pScrollBounds, bool pForceReinit = false, bool pClipLines = false, DWORD pMaxLineTime = 0);
-	bool ApplyScroll (CRect* pClipRect = NULL);
-	bool Scroll ();
+#ifdef	__cplusplus_cli
+	virtual void ResetScroll ();
+	virtual System::Boolean Scroll ();
+#else
+	virtual bool InitScroll (const CRect& pScrollBounds, bool pDelayed = false, DWORD pMaxLineTime = 0);
+	virtual bool ApplyScroll ();
+	virtual void ResetScroll ();
+	virtual bool Scroll ();
 #endif
 
 // Implementation
 public:
 #ifdef	__cplusplus_cli
-	virtual void ResetState (System::Boolean pFullReset);
+	virtual void ResetState ();
 #else
-	void ResetState (bool pFullReset);
-#endif	
+	void ResetState ();
+#endif
+	void DisplayNoWords ();
+
 protected:
 #ifdef	__cplusplus_cli
-	System::Boolean InitScroll (System::Boolean pForceReinit, System::UInt32 pScrollTime, System::Int32 pScrollInc, System::Int32 pScrollMin, System::Int32 pScrollMax);
+	System::Boolean InitScroll (System::Int32 pScrollInc, System::Int32 pScrollMin, System::Int32 pScrollMax);
 	System::UInt32 CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax);
-	System::UInt32 CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Boolean pClipLines);
-	virtual System::UInt32 CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Boolean pClipLines, System::UInt32 pMaxLineTime);
-	System::UInt32 CalcScroll (System::Double pLineHeight, System::Double pTextHeight, System::Double pScrollHeight, System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Boolean pClipLines, System::UInt32 pMaxLineTime);
+	System::UInt32 CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Boolean pDelayed);
+	virtual System::UInt32 CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Boolean pDelayed, System::UInt32 pMaxLineTime);
+	System::UInt32 CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Double pTextHeight, System::Double pScrollHeight, int pLineCount, System::Boolean pDelayed, System::UInt32 pMaxLineTime);
 #else
-	bool InitScroll (bool pForceReinit, DWORD pScrollTime, long pScrollInc, long pScrollMin, long pScrollMax);
-	DWORD CalcScroll (long& pScrollInc, long& pScrollMin, long& pScrollMax, bool pClipLines, DWORD pMaxLineTime) const;
-	DWORD CalcScroll (long pLineHeight, long pTextHeight, long pScrollHeight, long& pScrollInc, long& pScrollMin, long& pScrollMax, bool pClipLines, DWORD pMaxLineTime) const;
+	bool InitScroll (long pScrollInc, long pScrollMin, long pScrollMax);
+	DWORD CalcScroll (long& pScrollInc, long& pScrollMin, long& pScrollMax, bool pDelayed, DWORD pMaxLineTime) const;
+	DWORD CalcScroll (long& pScrollInc, long& pScrollMin, long& pScrollMax, long pTextHeight, long pScrollHeight, INT_PTR pLineCount, bool pDelayed, DWORD pMaxLineTime) const;
 	virtual bool IsBreakChar (LPCTSTR pText, int pNdx, UINT pPriority, bool& pBreakAfter);
 #endif	
 
@@ -252,6 +277,7 @@ protected:
 	System::Int32							mScrollInc;
 	System::Int32							mScrollMin;
 	System::Int32							mScrollMax;
+	System::UInt32							mScrollTime;
 #else
 	INT_PTR									mWordDisplayed;
 	CRect									mScrollBounds;
@@ -259,6 +285,7 @@ protected:
 	long									mScrollInc;
 	long									mScrollMin;
 	long									mScrollMax;
+	DWORD									mScrollTime;
 #endif	
 private:
 #ifdef	__cplusplus_cli
@@ -300,19 +327,17 @@ public:
 	System::Drawing::SizeF CalcTextSize (System::Drawing::Font^ pFont);
 	System::Drawing::SizeF CalcTextSize (System::Drawing::Font^ pFont, System::Drawing::Graphics^ pGraphics);
 
-	System::UInt32 InitScroll (System::Drawing::RectangleF pScrollBounds);
-	System::UInt32 InitScroll (System::Drawing::RectangleF pScrollBounds, System::Boolean pForceReinit);
-	System::UInt32 InitScroll (System::Drawing::RectangleF pScrollBounds, System::Boolean pForceReinit, System::Boolean pClipLines);
-	System::UInt32 InitScroll (System::Drawing::RectangleF pScrollBounds, System::Boolean pForceReinit, System::Boolean pClipLines, System::UInt32 pMaxLineTime);
+	System::Boolean InitScroll (System::Drawing::RectangleF pScrollBounds);
+	System::Boolean InitScroll (System::Drawing::RectangleF pScrollBounds, System::Boolean pDelayed);
+	System::Boolean InitScroll (System::Drawing::RectangleF pScrollBounds, System::Boolean pDelayed, System::UInt32 pMaxLineTime);
 	System::Boolean ApplyScroll ();
-	System::Boolean ApplyScroll (System::Drawing::RectangleF^ pClipRect);
-	System::Boolean Scroll ();
+	virtual void ResetScroll () override;
 
 // Implementation
 public:
-	virtual void ResetState (System::Boolean pFullReset) override;
+	virtual void ResetState () override;
 protected:
-	virtual System::UInt32 CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Boolean pClipLines, System::UInt32 pMaxLineTime) override;
+	virtual System::UInt32 CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Boolean pDelayed, System::UInt32 pMaxLineTime) override;
 
 protected:
 	CTextWrap^					mTextWrap;
@@ -348,21 +373,23 @@ public:
 	System::Windows::Size CalcTextSize (System::Drawing::Font^ pFont);
 	System::Windows::Size CalcTextSize (System::Windows::Media::TextFormatting::TextRunProperties^ pFontProperties);
 
-	System::UInt32 InitScroll (System::Windows::Rect pScrollBounds);
-	System::UInt32 InitScroll (System::Windows::Rect pScrollBounds, System::Boolean pForceReinit);
-	System::UInt32 InitScroll (System::Windows::Rect pScrollBounds, System::Boolean pForceReinit, System::Boolean pClipLines);
-	System::UInt32 InitScroll (System::Windows::Rect pScrollBounds, System::Boolean pForceReinit, System::Boolean pClipLines, System::UInt32 pMaxLineTime);
+	void CalcUsedHeight (System::Drawing::Font^ pFont);
+	void CalcUsedHeight (System::Windows::Media::TextFormatting::TextRunProperties^ pFontProperties);
+
+	System::Boolean InitScroll (System::Windows::Rect pScrollBounds);
+	System::Boolean InitScroll (System::Windows::Rect pScrollBounds, System::Boolean pDelayed);
+	System::Boolean InitScroll (System::Windows::Rect pScrollBounds, System::Boolean pDelayed, System::UInt32 pMaxLineTime);
 	System::Boolean ApplyScroll ();
-	System::Boolean Scroll ();
+	virtual void ResetScroll () override;
 
 	void Draw (System::Windows::Media::DrawingGroup^ pDrawing, System::Drawing::Font^ pFont, System::Drawing::Color pColor, System::Drawing::RectangleF pClipRect, System::Boolean pClipPartialLines);
 	void Draw (System::Windows::Media::DrawingGroup^ pDrawing, System::Windows::Media::TextFormatting::TextRunProperties^ pFontProperties, System::Windows::Rect pClipRect, System::Boolean pClipPartialLines);
 
 // Implementation
 public:
-	virtual void ResetState (System::Boolean pFullReset) override;
+	virtual void ResetState () override;
 protected:
-	virtual System::UInt32 CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Boolean pClipLines, System::UInt32 pMaxLineTime) override;
+	virtual System::UInt32 CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Boolean pDelayed, System::UInt32 pMaxLineTime) override;
 
 protected:
 	ref class TextDrawSource : System::Windows::Media::TextFormatting::TextSource
@@ -397,7 +424,6 @@ protected:
 	System::Windows::Media::TextFormatting::TextFormatter^	mTextFormatter;
 	System::Windows::Rect									mScrollBounds;
 	System::Windows::Rect									mTextBounds;
-	System::Double											mLineHeight;
 	int														mLineCount;
 };
 #endif	

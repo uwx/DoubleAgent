@@ -30,6 +30,7 @@ using namespace System;
 using namespace System::Drawing;
 using namespace System::Windows;
 using namespace System::Windows::Media;
+using namespace System::Windows::Media::Effects;
 using namespace System::Windows::Media::TextFormatting;
 using namespace System::Threading;
 
@@ -41,7 +42,6 @@ BalloonPreview::BalloonPreview ()
 :	mStyle (CharacterStyle::None),
 	mAutoRepeat (true),
 	mAutoRepeatDelay (0),
-	mAutoScrollTime (0),
 	mShape (nullptr),
 	mTextDraw (nullptr)
 {
@@ -142,6 +142,11 @@ System::Boolean BalloonPreview::IsAutoHide::get()
  		Monitor::Exit (this);
     }
 	return lRet;
+}
+
+System::Boolean BalloonPreview::ClipPartialLines::get()
+{
+	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -450,7 +455,7 @@ System::Int32 BalloonPreview::AutoScrollTime::get()
 			&&	(mTextDraw)
 			)
 		{
-			lRet = mAutoScrollTime;
+			lRet = (Int32)mTextDraw->ScrollTime;
 		}
 	}
     finally
@@ -560,22 +565,7 @@ System::Boolean BalloonPreview::AutoScrollStarted ()
 
 System::Boolean BalloonPreview::AutoScrollStopped ()
 {
-	Boolean	lRet = false;
-
-	Monitor::Enter (this);
-	try 
-	{
-		if	(mAutoScrollTime > 0)
-		{
-			mAutoScrollTime = 0;
-			lRet = true;
-		}
-	}
-    finally
-    {
- 		Monitor::Exit (this);
-    }
-	return lRet;
+	return false;
 }
 
 System::Boolean BalloonPreview::OnAutoScroll (System::Boolean% pRefresh)
@@ -650,9 +640,20 @@ System::Boolean BalloonPreview::Draw (System::Drawing::Graphics^ pGraphics)
 					try
 					{
 						RectangleF	lTextBounds;
-						Boolean		lClipPartialLines = true;
 
-						lTextBounds = PrepareTextDraw (pGraphics, lClipPartialLines);
+						InitTextLayout (pGraphics);
+						lTextBounds = lTextDrawForms->TextBounds;
+
+						if	(
+								(!IsAutoSize)
+							&&	(lTextDrawForms->CanScroll)
+							)
+						{
+							lTextDrawForms->TextBounds = lTextDrawForms->TextWrap->GetUsedRect (false, lTextDrawForms->DisplayText);
+							lTextDrawForms->TextBounds = RectangleF (lTextBounds.X, lTextDrawForms->TextBounds.Y, lTextBounds.Width, lTextDrawForms->TextBounds.Height);
+							lTextDrawForms->InitScroll (mShape->mTextRect, !IsAutoPace, DefaultAutoPaceTime);
+							lTextDrawForms->ApplyScroll ();
+						}
 
 						if	(
 								(IsAutoPace)
@@ -682,10 +683,10 @@ System::Boolean BalloonPreview::Draw (System::Drawing::Graphics^ pGraphics)
 	return lRet;
 }
 
-System::Drawing::RectangleF BalloonPreview::PrepareTextDraw (System::Drawing::Graphics^ pGraphics, System::Boolean pClipPartialLines)
+System::Boolean BalloonPreview::InitTextLayout (System::Drawing::Graphics^ pGraphics)
 {
-	CAgentTextDrawForms^		lTextDrawForms;
-	System::Drawing::RectangleF	lTextBounds = System::Drawing::RectangleF::Empty;
+	System::Boolean			lRet = false;
+	CAgentTextDrawForms^	lTextDrawForms;
 	
 	if	(
 			(mBalloon)
@@ -694,42 +695,31 @@ System::Drawing::RectangleF BalloonPreview::PrepareTextDraw (System::Drawing::Gr
 	{
 		try
 		{
+			lTextDrawForms->TextWrap->mClipPartialLines = ClipPartialLines;
+			
 			if	(lTextDrawForms->TextBounds.IsEmpty)
 			{
 				lTextDrawForms->TextBounds = mShape->mTextRect;
 				lTextDrawForms->CalcTextSize (mBalloon->Font, pGraphics);
+				lRet = true;
 			}
 			if	(
 					(!IsAutoSize)
-				&&	(lTextDrawForms->ScrollBounds.IsEmpty)
+				&&	(
+						(lRet)
+					||	(lTextDrawForms->ScrollBounds.IsEmpty)
+					)
+				&&	(lTextDrawForms->InitScroll (mShape->mTextRect, !IsAutoPace, DefaultAutoPaceTime))
 				)
 			{
-				lTextDrawForms->InitScroll (mShape->mTextRect, (mAutoScrollTime<=0), pClipPartialLines, DefaultAutoPaceTime);
-			}
-			lTextBounds = lTextDrawForms->TextBounds;
-
-			if	(
-					(!IsAutoSize)
-				&&	(lTextDrawForms->CanScroll)
-				)
-			{
-				lTextDrawForms->TextBounds = lTextDrawForms->TextWrap->GetUsedRect (false, lTextDrawForms->DisplayText);
-				lTextDrawForms->TextBounds = RectangleF (lTextBounds.X, lTextDrawForms->TextBounds.Y, lTextBounds.Width, lTextDrawForms->TextBounds.Height);
-				mAutoScrollTime = lTextDrawForms->InitScroll (mShape->mTextRect, (mAutoScrollTime<=0), pClipPartialLines, DefaultAutoPaceTime);
-				if	(pClipPartialLines)
-				{
-					lTextDrawForms->ApplyScroll (mShape->mTextRect);
-				}
-				else
-				{
-					lTextDrawForms->ApplyScroll ();
-				}
+				lRet = true;
 			}
 		}
 		catch AnyExceptionDebug
 	}
-	return lTextBounds;
+	return lRet;
 }
+
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -755,22 +745,12 @@ System::Windows::Media::Drawing^ BalloonPreview::MakeDrawing ()
 			{
 				try
 				{
-					System::Windows::Rect	lTextBounds;
-					System::Windows::Rect	lScrollBounds (mShape->mTextRect.X, mShape->mTextRect.Y, mShape->mTextRect.Width, mShape->mTextRect.Height);
-					Boolean					lClipPartialLines = true;
+					System::Windows::Rect			lTextBounds;
+					System::Windows::Rect			lTextRect (mShape->mTextRect.X, mShape->mTextRect.Y, mShape->mTextRect.Width, mShape->mTextRect.Height);
+					System::Windows::Media::Brush^	lBrush = gcnew System::Windows::Media::SolidColorBrush (System::Windows::Media::Color::FromArgb (mBalloon->FgColor.A, mBalloon->FgColor.R, mBalloon->FgColor.G, mBalloon->FgColor.B));
+					TextRunProperties^				lFontProperties = gcnew FontProperties (mBalloon->Font, lBrush);
 
-					if	(lTextDrawWPF->TextBounds.IsEmpty)
-					{
-						lTextDrawWPF->TextBounds = lScrollBounds;
-						lTextDrawWPF->CalcTextSize (mBalloon->Font);
-					}
-					if	(
-							(!IsAutoSize)
-						&&	(lTextDrawWPF->ScrollBounds.IsEmpty)
-						)
-					{
-						lTextDrawWPF->InitScroll (lScrollBounds, (mAutoScrollTime<=0), lClipPartialLines, DefaultAutoPaceTime);
-					}
+					InitTextLayout ();
 					lTextBounds = lTextDrawWPF->TextBounds;
 
 					if	(
@@ -778,13 +758,12 @@ System::Windows::Media::Drawing^ BalloonPreview::MakeDrawing ()
 						&&	(lTextDrawWPF->CanScroll)
 						)
 					{
-						//lTextDrawWPF->TextBounds = lTextDrawWPF->GetUsedRect (false, lTextDrawWPF->DisplayText);
-						lTextDrawWPF->TextBounds = System::Windows::Rect (lTextBounds.X, lTextDrawWPF->TextBounds.Y, lTextBounds.Width, lTextDrawWPF->TextBounds.Height);
-						mAutoScrollTime = lTextDrawWPF->InitScroll (lScrollBounds, (mAutoScrollTime<=0), lClipPartialLines, DefaultAutoPaceTime);
+						lTextDrawWPF->CalcUsedHeight (lFontProperties);
+						lTextDrawWPF->InitScroll (lTextRect, !IsAutoPace, DefaultAutoPaceTime);
 						lTextDrawWPF->ApplyScroll ();
 					}
 
-					lTextDrawWPF->Draw (lDrawingGroup, mBalloon->Font, mBalloon->FgColor, mShape->mTextRect, lClipPartialLines);
+					lTextDrawWPF->Draw (lDrawingGroup, lFontProperties, lTextRect, ClipPartialLines);
 					lTextDrawWPF->TextBounds = lTextBounds;
 				}
 				catch AnyExceptionDebug
@@ -800,7 +779,81 @@ System::Windows::Media::Drawing^ BalloonPreview::MakeDrawing ()
 	return lRet;
 }
 
+System::Boolean BalloonPreview::InitTextLayout ()
+{
+	System::Boolean		lRet = false;
+	CAgentTextDrawWPF^	lTextDrawWPF;
+	
+	if	(
+			(mBalloon)
+		&&	(lTextDrawWPF = GetTextDrawWPF (true))
+		)
+	{
+		try
+		{
+			System::Windows::Rect	lTextRect (mShape->mTextRect.X, mShape->mTextRect.Y, mShape->mTextRect.Width, mShape->mTextRect.Height);
 
+			if	(lTextDrawWPF->TextBounds.IsEmpty)
+			{
+				lTextDrawWPF->TextBounds = lTextRect;
+				lTextDrawWPF->CalcTextSize (mBalloon->Font);
+				lRet = true;
+			}
+			if	(
+					(!IsAutoSize)
+				&&	(
+						(lRet)
+					||	(lTextDrawWPF->ScrollBounds.IsEmpty)
+					)
+				&&	(lTextDrawWPF->InitScroll (lTextRect, !IsAutoPace, DefaultAutoPaceTime))
+				)
+			{
+				lRet = true;
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	return lRet;
+}
+ 
+/////////////////////////////////////////////////////////////////////////////
+
+System::Windows::Media::Visual^ BalloonPreview::MakeVisual ()
+{
+	System::Windows::Media::Visual^	lRet = nullptr;
+
+	Monitor::Enter (this);
+	try 
+	{
+		System::Windows::Media::Drawing^		lDrawing;
+		System::Windows::Media::DrawingVisual^	lDrawingVisual;
+		DrawingContext^							lDrawingContext;
+		DropShadowEffect^						lDropShadow;
+		
+		if	(
+				(lDrawing = MakeDrawing ())
+			&&	(lDrawingVisual = gcnew DrawingVisual ())
+			&&	(lDrawingContext = lDrawingVisual->RenderOpen ())
+			)
+		{
+			lDrawingContext->DrawDrawing (lDrawing);
+			lDrawingContext->Close ();
+
+			if	(lDropShadow = gcnew DropShadowEffect ())
+			{
+				lDropShadow->Opacity = 0.25;
+				lDrawingVisual->Effect = lDropShadow;
+			}
+			lRet = lDrawingVisual;
+		}
+	}
+    finally
+    {
+ 		Monitor::Exit (this);
+    }
+	return lRet;
+}
+ 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////

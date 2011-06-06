@@ -1344,9 +1344,8 @@ System::Windows::Media::Drawing^ CAgentBalloonSpeak::MakeDrawing (System::Window
 
 		lPathGeometry = lPathGeometry->GetOutlinedPathGeometry ();
 		lDrawingGroup->Children->Add (gcnew System::Windows::Media::GeometryDrawing (pBkBrush, lOutlinePen, lPathGeometry));
-//
-//TODO - Draw Shadow
-//
+
+// Shadow added by caller
 		lDrawing = lDrawingGroup;
 	}
 	return lDrawing;
@@ -1688,9 +1687,8 @@ System::Windows::Media::Drawing^ CAgentBalloonThink::MakeDrawing (System::Window
 
 		lPathGeometry = lPathGeometry->GetOutlinedPathGeometry ();
 		lDrawingGroup->Children->Add (gcnew System::Windows::Media::GeometryDrawing (pBkBrush, lOutlinePen, lPathGeometry));
-//
-//TODO - Draw Shadow
-//
+
+// Shadow added by caller
 		lDrawing = lDrawingGroup;
 	}
 	return lDrawing;

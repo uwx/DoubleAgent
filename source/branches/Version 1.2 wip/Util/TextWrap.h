@@ -56,9 +56,11 @@ public:
 #ifdef	__cplusplus_cli
 	System::Drawing::RectangleF	mBounds;
 	System::Single				mWrapIndent;
+	System::Boolean				mClipPartialLines;
 #else
 	CRect						mBounds;
 	int							mWrapIndent;
+	bool						mClipPartialLines;
 	bool						mUseExternalLeading;
 	bool						mUseInternalLeading;
 #endif	

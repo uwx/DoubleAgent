@@ -528,19 +528,19 @@ int CAgentTextDraw::LookAhead::get()
 CAgentTextDraw::CAgentTextDraw (UINT pSapiVersion)
 :	CAgentText (pSapiVersion)
 {
-	ResetState (true);
+	DisplayNoWords ();
 }
 
 CAgentTextDraw::CAgentTextDraw (const CAgentText& pText, UINT pSapiVersion)
 :	CAgentText (pText, pSapiVersion)
 {
-	ResetState (true);
+	DisplayNoWords ();
 }
 
 CAgentTextDraw::CAgentTextDraw (const CAgentTextDraw& pText, UINT pSapiVersion)
 :	CAgentText (pText, pSapiVersion)
 {
-	ResetState (true);
+	DisplayNoWords ();
 }
 
 CAgentTextDraw::~CAgentTextDraw ()
@@ -557,7 +557,7 @@ CAgentTextDraw::~CAgentTextDraw ()
 CAgentTextDraw^ CAgentTextDraw::operator= (CAgentText^ pText)
 {
 	CAgentText::operator= (pText);
-	ResetState (true);
+	DisplayNoWords ();
 	DisplayFirstWord ();
 	return this;
 }
@@ -565,27 +565,28 @@ CAgentTextDraw^ CAgentTextDraw::operator= (CAgentText^ pText)
 CAgentTextDraw^ CAgentTextDraw::operator+= (CAgentText^ pText)
 {
 	CAgentText::operator+= (pText);
-	ResetState (false);
+	ResetState ();
 	return this;
 }
 
 CAgentTextDraw^ CAgentTextDraw::operator= (CAgentTextDraw^ pText)
 {
 	CAgentText::operator= (pText);
-	ResetState (true);
+	ResetState ();
 
 	mWordDisplayed = pText->mWordDisplayed;
 	mScrollPos = pText->mScrollPos;
 	mScrollInc = pText->mScrollInc;
 	mScrollMin = pText->mScrollMin;
 	mScrollMax = pText->mScrollMax;
+	mScrollTime = pText->mScrollTime;
 	return this;
 }
 
 CAgentTextDraw^ CAgentTextDraw::operator+= (CAgentTextDraw^ pText)
 {
 	CAgentText::operator+= (pText);
-	ResetState (false);
+	ResetState ();
 	return this;
 }
 
@@ -595,7 +596,7 @@ CAgentTextDraw^ CAgentTextDraw::operator+= (CAgentTextDraw^ pText)
 CAgentTextDraw& CAgentTextDraw::operator= (const CAgentText& pText)
 {
 	CAgentText::operator= (pText);
-	ResetState (true);
+	DisplayNoWords ();
 	DisplayFirstWord ();
 	return *this;
 }
@@ -603,7 +604,7 @@ CAgentTextDraw& CAgentTextDraw::operator= (const CAgentText& pText)
 CAgentTextDraw& CAgentTextDraw::operator+= (const CAgentText& pText)
 {
 	CAgentText::operator+= (pText);
-	ResetState (false);
+	ResetState ();
 	return *this;
 }
 
@@ -613,7 +614,7 @@ CAgentTextDraw& CAgentTextDraw::operator= (const CAgentTextDraw& pText)
 {
 	CTextWrap::operator= (pText);
 	CAgentText::operator= (pText);
-	ResetState (true);
+	ResetState ();
 
 	mWordDisplayed = pText.mWordDisplayed;
 	mScrollBounds = pText.mScrollBounds;
@@ -621,13 +622,14 @@ CAgentTextDraw& CAgentTextDraw::operator= (const CAgentTextDraw& pText)
 	mScrollInc = pText.mScrollInc;
 	mScrollMin = pText.mScrollMin;
 	mScrollMax = pText.mScrollMax;
+	mScrollTime = pText.mScrollTime;
 	return *this;
 }
 
 CAgentTextDraw& CAgentTextDraw::operator+= (const CAgentTextDraw& pText)
 {
 	CAgentText::operator+= (pText);
-	ResetState (false);
+	ResetState ();
 	return *this;
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -635,35 +637,22 @@ CAgentTextDraw& CAgentTextDraw::operator+= (const CAgentTextDraw& pText)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	__cplusplus_cli
-void CAgentTextDraw::ResetState (Boolean pFullReset)
-#else
-void CAgentTextDraw::ResetState (bool pFullReset)
-#endif
+void CAgentTextDraw::ResetState ()
 {
-#ifndef	__cplusplus_cli
-	mBounds.SetRectEmpty ();
-#endif	
-
-	mTextCacheLimit = 5;
+	mTextCacheLimit = 10;
 	mTextCacheStart = 0;
-#ifdef	__cplusplus_cli
 	mTextCache = gcnew System::Collections::Generic::List <System::String^> (mTextCacheLimit);
-#else
-	mTextCache.DeleteAll ();
-#endif	
-
-	if	(pFullReset)
-	{
-		mWordDisplayed = -1;
-#ifndef	__cplusplus_cli
-		mScrollBounds.SetRectEmpty ();
-#endif		
-		mScrollPos = LONG_MIN;
-		mScrollInc = 0;
-		mScrollMin = 0;
-		mScrollMax = 0;
-	}
 }
+#else
+void CAgentTextDraw::ResetState ()
+{
+	mTextCacheLimit = 10;
+	mTextCacheStart = 0;
+	mTextCache.DeleteAll ();
+
+	mBounds.SetRectEmpty ();
+}
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -908,7 +897,7 @@ bool CAgentTextDraw::DisplayFirstWord (bool pForSpeech)
 	}
 #endif
 	
-	ResetState (false);
+	ResetState ();
 	return (mWordDisplayed >= 0);
 }
 
@@ -1130,27 +1119,17 @@ bool CAgentTextDraw::DisplayAllWords (bool pForSpeech)
 	return false;
 }
 
+void CAgentTextDraw::DisplayNoWords ()
+{
+	mWordDisplayed = -1;
+	ResetState ();
+	ResetScroll ();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 #ifndef	__cplusplus_cli
-/////////////////////////////////////////////////////////////////////////////
-
-CRect CAgentTextDraw::GetTextBounds () const
-{
-	return mBounds;
-}
-
-bool CAgentTextDraw::SetTextBounds (const CRect & pTextBounds)
-{
-	if	(!mBounds.EqualRect (pTextBounds))
-	{
-		mBounds = pTextBounds;
-		return true;
-	}
-	return false;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 
 CSize CAgentTextDraw::CalcTextSize (HFONT pFont, USHORT pPerLine, USHORT pLines)
@@ -1203,9 +1182,9 @@ Boolean CAgentTextDraw::CanPace::get ()
 	return (WordCount > 0);
 }
 #else
-bool CAgentTextDraw::CanPace () const
+bool CAgentTextDraw::get_CanPace () const
 {
-	return (GetWordCount() > 0);
+	return (WordCount > 0);
 }
 #endif
 
@@ -1215,7 +1194,7 @@ System::Boolean CAgentTextDraw::CanScroll::get ()
 	return false;
 }
 #else
-bool CAgentTextDraw::CanScroll () const
+bool CAgentTextDraw::get_CanScroll () const
 {
 	if	(mScrollBounds.IsRectEmpty())
 	{
@@ -1235,6 +1214,7 @@ System::Int32 CAgentTextDraw::ScrollPos::get() {return mScrollPos;}
 System::Int32 CAgentTextDraw::ScrollInc::get() {return mScrollInc;}
 System::Int32 CAgentTextDraw::ScrollMin::get() {return mScrollMin;}
 System::Int32 CAgentTextDraw::ScrollMax::get() {return mScrollMax;}
+System::UInt32 CAgentTextDraw::ScrollTime::get() {return mScrollTime;}
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1244,46 +1224,26 @@ System::UInt32 CAgentTextDraw::CalcScroll (System::Int32% pScrollInc, System::In
 {
 	return CalcScroll (pScrollInc, pScrollMin, pScrollMax, false);
 }
-System::UInt32 CAgentTextDraw::CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Boolean pClipLines)
+System::UInt32 CAgentTextDraw::CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Boolean pDelayed)
 {
-	return CalcScroll (pScrollInc, pScrollMin, pScrollMax, pClipLines, 0);
+	return CalcScroll (pScrollInc, pScrollMin, pScrollMax, pDelayed, 0);
 }
-System::UInt32 CAgentTextDraw::CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Boolean pClipLines, System::UInt32 pMaxLineTime)
+System::UInt32 CAgentTextDraw::CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Boolean pDelayed, System::UInt32 pMaxLineTime)
 {
 	return 0;
 }
 #else
-DWORD CAgentTextDraw::CalcScroll (long& pScrollInc, long& pScrollMin, long& pScrollMax, bool pClipLines, DWORD pMaxLineTime) const
+DWORD CAgentTextDraw::CalcScroll (long& pScrollInc, long& pScrollMin, long& pScrollMax, bool pDelayed, DWORD pMaxLineTime) const
 {
 	DWORD	lScrollTime = 0;
 
 	if	(mBounds.bottom > mScrollBounds.bottom)
 	{
-		long	lScrollScale;
-		long	lScrollInc;
-
-		pScrollMin = pClipLines ? GetLineRect(0).bottom - mScrollBounds.bottom : 0;
-		pScrollMax = mBounds.Height() - mScrollBounds.Height();
-		pScrollInc = max (MulDiv (GetSize().cy, 1, GetLineCount()*4), 1);
-
-		lScrollTime = GetProfileInt (_T("windows"), _T("DragScrollInterval"), DD_DEFSCROLLINTERVAL) * 2;
-		lScrollScale = ((long)lScrollTime + 9) / 10;
-		lScrollInc = max (MulDiv (pScrollInc, 1, lScrollScale), 1);
-		if	(lScrollInc < pScrollInc)
-		{
-			lScrollTime = max (MulDiv (lScrollTime, lScrollInc, pScrollInc), 10);
-			pScrollInc = lScrollInc;
-		}
-		if	(
-				(pMaxLineTime > 0)
-			&&	(MulDiv (GetSize().cy, lScrollTime, GetLineCount() * pScrollInc) > (long)pMaxLineTime)
-			)
-		{
-			lScrollTime = MulDiv (GetLineCount(), pMaxLineTime * pScrollInc, GetSize().cy);
-		}
+		lScrollTime = CalcScroll (pScrollInc, pScrollMin, pScrollMax, mBounds.Height(), mScrollBounds.Height(), GetLineCount(), pDelayed, pMaxLineTime);
 	}
 	else
 	{
+		pScrollMin = mScrollMin;
 		pScrollInc = 0;
 		pScrollMax = 0;
 	}
@@ -1292,58 +1252,104 @@ DWORD CAgentTextDraw::CalcScroll (long& pScrollInc, long& pScrollMin, long& pScr
 #endif
 
 #ifdef	__cplusplus_cli
-System::UInt32 CAgentTextDraw::CalcScroll (System::Double pLineHeight, System::Double pTextHeight, System::Double pScrollHeight, System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Boolean pClipLines, System::UInt32 pMaxLineTime)
+System::UInt32 CAgentTextDraw::CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Double pTextHeight, System::Double pScrollHeight, int pLineCount, System::Boolean pDelayed, System::UInt32 pMaxLineTime)
 #else
-DWORD CAgentTextDraw::CalcScroll (long pLineHeight, long pTextHeight, long pScrollHeight, long& pScrollInc, long& pScrollMin, long& pScrollMax, bool pClipLines, DWORD pMaxLineTime) const
+DWORD CAgentTextDraw::CalcScroll (long& pScrollInc, long& pScrollMin, long& pScrollMax, long pTextHeight, long pScrollHeight, INT_PTR pLineCount, bool pDelayed, DWORD pMaxLineTime) const
 #endif
 {
-	return 0;
+#ifdef	__cplusplus_cli
+	System::UInt32	lScrollTime = 0;
+	Int32			lScrollScale;
+	Int32			lScrollInc;
+#else
+	DWORD			lScrollTime = 0;
+	long			lScrollScale;
+	long			lScrollInc;
+#endif	
+
+#ifdef	__cplusplus_cli
+	pScrollMin = 0;
+	pScrollMax = (Int32)Math::Ceiling (pTextHeight - pScrollHeight);
+	pScrollInc = Math::Max ((Int32)Math::Round(pTextHeight / ((Double)pLineCount*4.0)), 1);
+#else
+	pScrollMin = 0;
+	pScrollMax = pTextHeight - pScrollHeight;
+	pScrollInc = max (MulDiv (pTextHeight, 1, (long)pLineCount*4), 1);
+#endif		
+
+#ifdef	__cplusplus_cli
+	lScrollTime = (UInt32)System::Windows::SystemParameters::MouseHoverTime.TotalMilliseconds/4;
+	lScrollScale = ((Int32)lScrollTime + 9) / 10;
+	lScrollInc = Math::Max ((Int32)Math::Round ((Single)pScrollInc / (Single)lScrollScale), 1);
+	if	(lScrollInc < pScrollInc)
+	{
+		lScrollTime = Math::Max ((UInt32)Math::Round ((Double)lScrollTime * (Double)lScrollInc / (Double)pScrollInc), (UInt32)10);
+		pScrollInc = lScrollInc;
+	}
+	if	(
+			(pMaxLineTime > 0)
+		&&	((UInt32)Math::Round (pTextHeight * (Double)lScrollTime / ((Double)pLineCount * (Double)pScrollInc)) > pMaxLineTime)
+		)
+	{
+		lScrollTime = (UInt32)Math::Round ((Double)pLineCount * (Double)pMaxLineTime * (Double)pScrollInc / pTextHeight);
+	}
+#else
+	lScrollTime = GetProfileInt (_T("windows"), _T("DragScrollInterval"), DD_DEFSCROLLINTERVAL) * 2;
+	lScrollScale = ((long)lScrollTime + 9) / 10;
+	lScrollInc = max (MulDiv (pScrollInc, 1, lScrollScale), 1);
+	if	(lScrollInc < pScrollInc)
+	{
+		lScrollTime = max (MulDiv (lScrollTime, lScrollInc, pScrollInc), 10);
+		pScrollInc = lScrollInc;
+	}
+	if	(
+			(pMaxLineTime > 0)
+		&&	(MulDiv (pTextHeight, lScrollTime, (long)pLineCount * pScrollInc) > (long)pMaxLineTime)
+		)
+	{
+		lScrollTime = MulDiv ((long)pLineCount, pMaxLineTime * pScrollInc, pTextHeight);
+	}
+#endif		
+
+	if	(pDelayed)
+	{
+#ifdef	__cplusplus_cli
+		pScrollMin = (Int32)Math::Round (Math::Max (pScrollHeight - (Double)Math::Max (mScrollPos, 0), 0.0) * -1.0 / (Double)pScrollInc);
+#else
+		pScrollMin = MulDiv (max (pScrollHeight - max (mScrollPos, 0), 0), -1, pScrollInc);
+#endif			
+	}
+
+	return lScrollTime;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef	__cplusplus_cli
-System::Boolean CAgentTextDraw::InitScroll (System::Boolean pForceReinit, System::UInt32 pScrollTime, System::Int32 pScrollInc, System::Int32 pScrollMin, System::Int32 pScrollMax)
-#else
-DWORD CAgentTextDraw::InitScroll (const CRect& pScrollBounds, bool pForceReinit, bool pClipLines, DWORD pMaxLineTime)
+#ifndef	__cplusplus_cli
+bool CAgentTextDraw::InitScroll (const CRect& pScrollBounds, bool pDelayed, DWORD pMaxLineTime)
 {
-	DWORD	lScrollTime;
 	long	lScrollInc = mScrollInc;
 	long	lScrollMin = mScrollMin;
 	long	lScrollMax = mScrollMax;
 
 	mScrollBounds = pScrollBounds;
-	lScrollTime = CalcScroll (lScrollInc, lScrollMin, lScrollMax, pClipLines, pMaxLineTime);
-	
-	if	(InitScroll (pForceReinit, lScrollTime, lScrollInc, lScrollMin, lScrollMax))
-	{
-		return lScrollTime;
-	}
-	return 0;
+	mScrollTime = CalcScroll (lScrollInc, lScrollMin, lScrollMax, pDelayed, pMaxLineTime);
+	return InitScroll (lScrollInc, lScrollMin, lScrollMax);
 }
+#endif
 
-bool CAgentTextDraw::InitScroll (bool pForceReinit, DWORD pScrollTime, long pScrollInc, long pScrollMin, long pScrollMax)
+#ifdef	__cplusplus_cli
+System::Boolean CAgentTextDraw::InitScroll (System::Int32 pScrollInc, System::Int32 pScrollMin, System::Int32 pScrollMax)
+#else
+bool CAgentTextDraw::InitScroll (long pScrollInc, long pScrollMin, long pScrollMax)
 #endif
 {
-	if	(pScrollTime == 0)
-	{
-#ifdef	__cplusplus_cli
-		mScrollPos = Int32::MinValue;
-#else
-		mScrollPos = LONG_MIN;
-#endif	
-	}
-
 	if	(
 			(mScrollInc != pScrollInc)
 		||	(mScrollMin != pScrollMin)
 		||	(mScrollMax != pScrollMax)
 		||	(mScrollPos < pScrollMin)
 		||	(mScrollPos > pScrollMax)
-		||	(
-				(pForceReinit)
-			&&	(mScrollPos < pScrollMax)
-			)
 		)
 	{
 		mScrollInc = pScrollInc;
@@ -1359,40 +1365,25 @@ bool CAgentTextDraw::InitScroll (bool pForceReinit, DWORD pScrollTime, long pScr
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-#ifndef	__cplusplus_cli
-/////////////////////////////////////////////////////////////////////////////
-
-bool CAgentTextDraw::ApplyScroll (CRect* pClipRect)
+void CAgentTextDraw::ResetScroll ()
 {
-	if	(mScrollPos > 0)
-	{
-		mBounds.OffsetRect (0, -min (mScrollPos, max (mBounds.bottom - mScrollBounds.bottom, 0)));
-
-		if	(pClipRect)
-		{
-			int			lLineNdx;
-			CRect		lLineRect;
-
-			for	(lLineNdx = (int)mTextLines.GetCount()-1; lLineNdx >= 1; lLineNdx--)
-			{
-				lLineRect = GetLineRect (lLineNdx);
-				if	(
-						(lLineRect.bottom > pClipRect->bottom)
-					&&	(lLineRect.top <= pClipRect->bottom)
-					)
-				{
-					pClipRect->bottom = lLineRect.top;
-					break;
-				}
-			}
-		}
-		return true;
-	}
-	return false;
+#ifdef	__cplusplus_cli
+	mScrollPos = Int32::MinValue;
+#else
+	mScrollBounds.SetRectEmpty ();
+	mScrollPos = LONG_MIN;
+#endif		
+	mScrollInc = 0;
+	mScrollMin = 0;
+	mScrollMax = 0;
+	mScrollTime = 0;
 }
 
+#ifdef	__cplusplus_cli
+System::Boolean CAgentTextDraw::Scroll ()
+#else
 bool CAgentTextDraw::Scroll ()
+#endif
 {
 	if	(
 			(mScrollPos < mScrollMax)
@@ -1406,7 +1397,19 @@ bool CAgentTextDraw::Scroll ()
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+#ifndef	__cplusplus_cli
+bool CAgentTextDraw::ApplyScroll ()
+{
+	if	(mScrollPos > 0)
+	{
+		mBounds.OffsetRect (0, -min (mScrollPos, max (mBounds.bottom - mScrollBounds.bottom, 0)));
+		return true;
+	}
+	return false;
+}
 #endif	//	__cplusplus_cli
+
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -1483,7 +1486,7 @@ CAgentTextDrawForms::CAgentTextDrawForms (CAgentTextDraw^ pTextDraw)
 :	CAgentTextDraw (pTextDraw)
 {
 	mTextWrap = gcnew CAgentTextDraw_TextWrap (this);
-	ResetState (true);
+	ResetState ();
 }
 
 CAgentTextDrawForms::CAgentTextDrawForms (CAgentTextDrawForms^ pTextDraw)
@@ -1494,10 +1497,10 @@ CAgentTextDrawForms::CAgentTextDrawForms (CAgentTextDrawForms^ pTextDraw)
 
 CAgentTextDrawForms^ CAgentTextDrawForms::operator= (CAgentTextDrawForms^ pTextDraw)
 {
+	ResetState ();
 	CAgentTextDraw::operator= (pTextDraw);
 	mTextWrap->operator= (pTextDraw->mTextWrap);
 	mScrollBounds = pTextDraw->mScrollBounds;
-	ResetState (true);
 	return this;
 }
 
@@ -1519,14 +1522,10 @@ CAgentTextDrawForms^ CAgentTextDrawForms::Downcast (CAgentTextDraw^ pTextDraw)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentTextDrawForms::ResetState (System::Boolean pFullReset)
+void CAgentTextDrawForms::ResetState ()
 {
 	mTextWrap->mBounds = RectangleF::Empty;
-	if	(pFullReset)
-	{
-		mScrollBounds = RectangleF::Empty;
-	}
-	__super::ResetState (pFullReset);
+	__super::ResetState ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1633,63 +1632,32 @@ System::Boolean CAgentTextDrawForms::CanScroll::get ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-System::UInt32 CAgentTextDrawForms::InitScroll (System::Drawing::RectangleF pScrollBounds)
+System::Boolean CAgentTextDrawForms::InitScroll (System::Drawing::RectangleF pScrollBounds)
 {
 	return InitScroll (pScrollBounds, false);
 }
-System::UInt32 CAgentTextDrawForms::InitScroll (System::Drawing::RectangleF pScrollBounds, System::Boolean pForceReinit)
+System::Boolean CAgentTextDrawForms::InitScroll (System::Drawing::RectangleF pScrollBounds, System::Boolean pDelayed)
 {
-	return InitScroll (pScrollBounds, pForceReinit, false);
+	return InitScroll (pScrollBounds, pDelayed, 0);
 }
-System::UInt32 CAgentTextDrawForms::InitScroll (System::Drawing::RectangleF pScrollBounds, System::Boolean pForceReinit, System::Boolean pClipLines)
+System::Boolean CAgentTextDrawForms::InitScroll (System::Drawing::RectangleF pScrollBounds, System::Boolean pDelayed, System::UInt32 pMaxLineTime)
 {
-	return InitScroll (pScrollBounds, pForceReinit, pClipLines, 0);
-}
-System::UInt32 CAgentTextDrawForms::InitScroll (System::Drawing::RectangleF pScrollBounds, System::Boolean pForceReinit, System::Boolean pClipLines, System::UInt32 pMaxLineTime)
-{
-	UInt32	lScrollTime;
 	Int32	lScrollInc = mScrollInc;
 	Int32	lScrollMin = mScrollMin;
 	Int32	lScrollMax = mScrollMax;
 
 	mScrollBounds = pScrollBounds;
-	lScrollTime = CalcScroll (lScrollInc, lScrollMin, lScrollMax, pClipLines, pMaxLineTime);
-
-	if	(InitScroll (pForceReinit, lScrollTime, lScrollInc, lScrollMin, lScrollMax))
-	{
-		return lScrollTime;
-	}
-	return 0;
+	mScrollTime = CalcScroll (lScrollInc, lScrollMin, lScrollMax, pDelayed, pMaxLineTime);
+	return InitScroll (lScrollInc, lScrollMin, lScrollMax);
 }
 
-System::UInt32 CAgentTextDrawForms::CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Boolean pClipLines, System::UInt32 pMaxLineTime)
+System::UInt32 CAgentTextDrawForms::CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Boolean pDelayed, System::UInt32 pMaxLineTime)
 {
 	UInt32	lScrollTime = 0;
 
 	if	(mTextWrap->mBounds.Bottom > mScrollBounds.Bottom)
 	{
-		Int32	lScrollScale;
-		Int32	lScrollInc;
-
-		pScrollMin = pClipLines ? (Int32)Math::Ceiling(mTextWrap->GetLineRect(0).Bottom - mScrollBounds.Bottom) : 0;
-		pScrollMax = (Int32)Math::Ceiling (mTextWrap->mBounds.Height - mScrollBounds.Height);
-		pScrollInc = Math::Max ((Int32)Math::Round(mTextWrap->Size.Height / ((Single)mTextWrap->LineCount*4.0f)), 1);
-
-		lScrollTime = (UInt32)System::Windows::SystemParameters::MouseHoverTime.TotalMilliseconds/4;
-		lScrollScale = ((Int32)lScrollTime + 9) / 10;
-		lScrollInc = Math::Max ((Int32)Math::Round ((Single)pScrollInc / (Single)lScrollScale), 1);
-		if	(lScrollInc < pScrollInc)
-		{
-			lScrollTime = Math::Max ((UInt32)Math::Round ((Single)lScrollTime * (Single)lScrollInc / (Single)pScrollInc), (UInt32)10);
-			pScrollInc = lScrollInc;
-		}
-		if	(
-				(pMaxLineTime > 0)
-			&&	((UInt32)Math::Round (mTextWrap->Size.Height * (Single)lScrollTime / ((Single)mTextWrap->LineCount * (Single)pScrollInc)) > pMaxLineTime)
-			)
-		{
-			lScrollTime = (UInt32)Math::Round ((Single)mTextWrap->LineCount * (Single)pMaxLineTime * (Single)pScrollInc / mTextWrap->Size.Height);
-		}
+		lScrollTime = CalcScroll (pScrollInc, pScrollMin, pScrollMax, mTextWrap->mBounds.Height, mScrollBounds.Height, mTextWrap->LineCount, pDelayed, pMaxLineTime);
 	}
 	else
 	{
@@ -1703,48 +1671,18 @@ System::UInt32 CAgentTextDrawForms::CalcScroll (System::Int32% pScrollInc, Syste
 
 System::Boolean CAgentTextDrawForms::ApplyScroll ()
 {
-	return ApplyScroll (nullptr);
-}
-System::Boolean CAgentTextDrawForms::ApplyScroll (System::Drawing::RectangleF^ pClipRect)
-{
 	if	(mScrollPos > 0)
 	{
 		mTextWrap->mBounds.Offset (0.0f, -Math::Min ((Single)mScrollPos, Math::Max (mTextWrap->mBounds.Bottom - mScrollBounds.Bottom, 0.0f)));
-
-		if	(pClipRect)
-		{
-			int			lLineNdx;
-			RectangleF	lLineRect;
-
-			for	(lLineNdx = mTextWrap->LineCount-1; lLineNdx >= 1; lLineNdx--)
-			{
-				lLineRect = mTextWrap->GetLineRect (lLineNdx);
-				if	(
-						(lLineRect.Bottom > pClipRect->Bottom)
-					&&	(lLineRect.Top <= pClipRect->Bottom)
-					)
-				{
-					pClipRect->Height = lLineRect.Top - pClipRect->Top;
-					break;
-				}
-			}
-		}
 		return true;
 	}
 	return false;
 }
 
-System::Boolean CAgentTextDrawForms::Scroll ()
+void CAgentTextDrawForms::ResetScroll ()
 {
-	if	(
-			(mScrollPos < mScrollMax)
-		&&	(mScrollInc > 0)
-		)
-	{
-		mScrollPos = Math::Min (mScrollPos + mScrollInc, mScrollMax);
-		return (mScrollPos > 0);
-	}
-	return false;
+	__super::ResetScroll ();
+	mScrollBounds = RectangleF::Empty;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1755,7 +1693,7 @@ CAgentTextDrawWPF::CAgentTextDrawWPF (CAgentTextDraw^ pTextDraw)
 :	CAgentTextDraw (pTextDraw)
 {
 	mTextFormatter = System::Windows::Media::TextFormatting::TextFormatter::Create ();
-	ResetState (true);
+	ResetState ();
 }
 
 CAgentTextDrawWPF::CAgentTextDrawWPF (CAgentTextDrawWPF^ pTextDraw)
@@ -1765,10 +1703,10 @@ CAgentTextDrawWPF::CAgentTextDrawWPF (CAgentTextDrawWPF^ pTextDraw)
 
 CAgentTextDrawWPF^ CAgentTextDrawWPF::operator= (CAgentTextDrawWPF^ pTextDraw)
 {
+	ResetState ();
 	CAgentTextDraw::operator= (pTextDraw);
 	mTextFormatter = pTextDraw->mTextFormatter;
 	mScrollBounds = pTextDraw->mScrollBounds;
-	ResetState (true);
 	return this;
 }
 
@@ -1790,16 +1728,11 @@ CAgentTextDrawWPF^ CAgentTextDrawWPF::Downcast (CAgentTextDraw^ pTextDraw)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentTextDrawWPF::ResetState (System::Boolean pFullReset)
+void CAgentTextDrawWPF::ResetState ()
 {
 	mTextBounds = System::Windows::Rect::Empty;
 	mLineCount = 0;
-	mLineHeight = 0;
-	if	(pFullReset)
-	{
-		mScrollBounds = System::Windows::Rect::Empty;
-	}
-	__super::ResetState (pFullReset);
+	__super::ResetState ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1819,7 +1752,7 @@ System::Windows::Size CAgentTextDrawWPF::CalcTextSize (System::Windows::Media::T
 
 		lTextLine = mTextFormatter->FormatLine (gcnew TextStringSource ("x", pFontProperties), 0, Int16::MaxValue, lParagraphProperties, nullptr);
 		lTextSize.Width = lTextLine->Width * (Double)pPerLine;
-		lTextSize.Height = lTextLine->TextHeight * (Double)pLines;
+		lTextSize.Height = Math::Ceiling (lTextLine->TextHeight) * (Double)pLines;
 	}
 	catch AnyExceptionDebug
 
@@ -1847,13 +1780,15 @@ System::Windows::Size CAgentTextDrawWPF::CalcTextSize (System::Windows::Media::T
 
 		for	(lLineNdx = 0; (!lTextSource->mComplete) && (lTextLine = mTextFormatter->FormatLine (lTextSource, lLineNdx, lTextSize.Width, lParagraphProperties, lLineBreak)); lLineNdx += lTextLine->Length, lLineBreak = lTextLine->GetTextLineBreak ())
 		{
-			lTextSize.Height += lTextLine->TextHeight;
+			lTextSize.Height += Math::Ceiling (lTextLine->TextHeight);
 		}
 	}
 	catch AnyExceptionDebug
 	
 	return lTextSize;
 }
+
+/////////////////////////////////////////////////////////////////////////////
 
 System::Windows::Size CAgentTextDrawWPF::CalcTextSize (System::Drawing::Font^ pFont)
 {
@@ -1872,17 +1807,12 @@ System::Windows::Size CAgentTextDrawWPF::CalcTextSize (System::Windows::Media::T
 		int							lLineNdx;
 
 		mLineCount = 0;
-		mLineHeight = 0;
 
 		for	(lLineNdx = 0; (!lTextSource->mComplete) && (lTextLine = mTextFormatter->FormatLine (lTextSource, lLineNdx, mTextBounds.Width, lParagraphProperties, lLineBreak)); lLineNdx += lTextLine->Length, lLineBreak = lTextLine->GetTextLineBreak ())
 		{
 			//LogMessage (LogDebugFast, _T("Line [%d] [%d] [%f %f]"), lLineNdx, lTextLine->Length, lTextLine->Width, lTextLine->TextHeight);
 			lTextSize.Width = Math::Max (lTextSize.Width, lTextLine->Width);
-			lTextSize.Height += lTextLine->TextHeight;
-			if	(mLineCount == 0)
-			{
-				mLineHeight = lTextLine->TextHeight;
-			}
+			lTextSize.Height += Math::Ceiling (lTextLine->TextHeight);
 			mLineCount++;
 		}
 
@@ -1892,6 +1822,32 @@ System::Windows::Size CAgentTextDrawWPF::CalcTextSize (System::Windows::Media::T
 	catch AnyExceptionDebug
 	
 	return lTextSize;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CAgentTextDrawWPF::CalcUsedHeight (System::Drawing::Font^ pFont)
+{
+	CalcUsedHeight (gcnew FontProperties (pFont));
+}
+void CAgentTextDrawWPF::CalcUsedHeight (System::Windows::Media::TextFormatting::TextRunProperties^ pFontProperties)
+{
+	try
+	{	
+		TextDrawSource^				lTextSource = gcnew TextDrawSource (this, pFontProperties, WordDisplayed+1);
+		TextParagraphProperties^	lParagraphProperties = gcnew FontParagraphProperties (pFontProperties);
+		TextLine^					lTextLine;
+		TextLineBreak^				lLineBreak = nullptr;
+		int							lLineNdx;
+
+		mTextBounds.Height = 0;
+
+		for	(lLineNdx = 0; (!lTextSource->mComplete) && (lTextLine = mTextFormatter->FormatLine (lTextSource, lLineNdx, mTextBounds.Width, lParagraphProperties, lLineBreak)); lLineNdx += lTextLine->Length, lLineBreak = lTextLine->GetTextLineBreak ())
+		{
+			mTextBounds.Height += Math::Ceiling (lTextLine->TextHeight);
+		}
+	}
+	catch AnyExceptionDebug
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1918,24 +1874,26 @@ void CAgentTextDrawWPF::Draw (System::Windows::Media::DrawingGroup^ pDrawing, Sy
 		TextLineBreak^				lLineBreak = nullptr;
 		int							lLineNdx;
 		System::Windows::Point		lLinePos = TextBounds.Location;
+		Double						lLineHeight;
 
 		for	(lLineNdx = 0; (!lTextSource->mComplete) && (lTextLine = mTextFormatter->FormatLine (lTextSource, lLineNdx, TextBounds.Width, lParagraphProperties, lLineBreak)); lLineNdx += lTextLine->Length, lLineBreak = lTextLine->GetTextLineBreak ())
 		{
+			lLineHeight = Math::Ceiling (lTextLine->TextHeight);
 			if	(
 					(pClipPartialLines)
-				&&	(lLinePos.Y + lTextLine->TextHeight >= pClipRect.Bottom)
+				&&	(lLinePos.Y + lLineHeight > pClipRect.Bottom)
 				)
 			{
 				break;
 			}
-			if	(lLinePos.Y + lTextLine->TextHeight > pClipRect.Top)
+			if	(lLinePos.Y + lLineHeight > pClipRect.Top)
 			{
 				lTextLine->Draw (lDrawingContext, lLinePos, InvertAxes::None);
 			}
-			lLinePos.Y += lTextLine->TextHeight;
+			lLinePos.Y += lLineHeight;
 			if	(
-					(lLinePos.Y >= mTextBounds.Bottom)
-				||	(lLinePos.Y >= pClipRect.Bottom)
+					(lLinePos.Y > mTextBounds.Bottom)
+				||	(lLinePos.Y > pClipRect.Bottom)
 				)
 			{
 				break;
@@ -1988,63 +1946,32 @@ System::Boolean CAgentTextDrawWPF::CanScroll::get ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-System::UInt32 CAgentTextDrawWPF::InitScroll (System::Windows::Rect pScrollBounds)
+System::Boolean CAgentTextDrawWPF::InitScroll (System::Windows::Rect pScrollBounds)
 {
 	return InitScroll (pScrollBounds, false);
 }
-System::UInt32 CAgentTextDrawWPF::InitScroll (System::Windows::Rect pScrollBounds, System::Boolean pForceReinit)
+System::Boolean CAgentTextDrawWPF::InitScroll (System::Windows::Rect pScrollBounds, System::Boolean pDelayed)
 {
-	return InitScroll (pScrollBounds, pForceReinit, false);
+	return InitScroll (pScrollBounds, pDelayed, 0);
 }
-System::UInt32 CAgentTextDrawWPF::InitScroll (System::Windows::Rect pScrollBounds, System::Boolean pForceReinit, System::Boolean pClipLines)
+System::Boolean CAgentTextDrawWPF::InitScroll (System::Windows::Rect pScrollBounds, System::Boolean pDelayed, System::UInt32 pMaxLineTime)
 {
-	return InitScroll (pScrollBounds, pForceReinit, pClipLines, 0);
-}
-System::UInt32 CAgentTextDrawWPF::InitScroll (System::Windows::Rect pScrollBounds, System::Boolean pForceReinit, System::Boolean pClipLines, System::UInt32 pMaxLineTime)
-{
-	UInt32	lScrollTime;
 	Int32	lScrollInc = mScrollInc;
 	Int32	lScrollMin = mScrollMin;
 	Int32	lScrollMax = mScrollMax;
 
 	mScrollBounds = pScrollBounds;
-	lScrollTime = CalcScroll (lScrollInc, lScrollMin, lScrollMax, pClipLines, pMaxLineTime);
-
-	if	(InitScroll (pForceReinit, lScrollTime, lScrollInc, lScrollMin, lScrollMax))
-	{
-		return lScrollTime;
-	}
-	return 0;
+	mScrollTime = CalcScroll (lScrollInc, lScrollMin, lScrollMax, pDelayed, pMaxLineTime);
+	return InitScroll (lScrollInc, lScrollMin, lScrollMax);
 }
 
-System::UInt32 CAgentTextDrawWPF::CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Boolean pClipLines, System::UInt32 pMaxLineTime)
+System::UInt32 CAgentTextDrawWPF::CalcScroll (System::Int32% pScrollInc, System::Int32% pScrollMin, System::Int32% pScrollMax, System::Boolean pDelayed, System::UInt32 pMaxLineTime)
 {
 	UInt32	lScrollTime = 0;
 
 	if	(mTextBounds.Bottom > mScrollBounds.Bottom)
 	{
-		Int32	lScrollScale;
-		Int32	lScrollInc;
-
-		pScrollMin = 0;//pClipLines ? (Int32)Math::Ceiling(mTextWrap->GetLineRect(0).Bottom - mScrollBounds.Bottom) : 0;
-		pScrollMax = (Int32)Math::Ceiling (mTextBounds.Height - mScrollBounds.Height);
-		pScrollInc = Math::Max ((Int32)Math::Round(mTextBounds.Height / ((Double)mLineCount*4.0)), 1);
-
-		lScrollTime = (UInt32)System::Windows::SystemParameters::MouseHoverTime.TotalMilliseconds/4;
-		lScrollScale = ((Int32)lScrollTime + 9) / 10;
-		lScrollInc = Math::Max ((Int32)Math::Round ((Double)pScrollInc / (Double)lScrollScale), 1);
-		if	(lScrollInc < pScrollInc)
-		{
-			lScrollTime = Math::Max ((UInt32)Math::Round ((Double)lScrollTime * (Single)lScrollInc / (Double)pScrollInc), (UInt32)10);
-			pScrollInc = lScrollInc;
-		}
-		if	(
-				(pMaxLineTime > 0)
-			&&	((UInt32)Math::Round (mTextBounds.Height * (Double)lScrollTime / ((Double)mLineCount * (Double)pScrollInc)) > pMaxLineTime)
-			)
-		{
-			lScrollTime = (UInt32)Math::Round ((Double)mLineCount * (Double)pMaxLineTime * (Double)pScrollInc / mTextBounds.Height);
-		}
+		lScrollTime = CalcScroll (pScrollInc, pScrollMin, pScrollMax, mTextBounds.Height, mScrollBounds.Height, mLineCount, pDelayed, pMaxLineTime); 
 	}
 	else
 	{
@@ -2066,17 +1993,10 @@ System::Boolean CAgentTextDrawWPF::ApplyScroll ()
 	return false;
 }
 
-System::Boolean CAgentTextDrawWPF::Scroll ()
+void CAgentTextDrawWPF::ResetScroll ()
 {
-	if	(
-			(mScrollPos < mScrollMax)
-		&&	(mScrollInc > 0)
-		)
-	{
-		mScrollPos = Math::Min (mScrollPos + mScrollInc, mScrollMax);
-		return (mScrollPos > 0);
-	}
-	return false;
+	__super::ResetScroll ();
+	mScrollBounds = System::Windows::Rect::Empty;
 }
 
 /////////////////////////////////////////////////////////////////////////////
