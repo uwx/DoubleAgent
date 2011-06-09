@@ -11,16 +11,16 @@
 					  d:DesignWidth="600">
 	<Control.CommandBindings>
 		<CommandBinding Command="Copy"
-						CanExecute="CanEditCopy"
+						CanExecute="OnCanEditCopy"
 						Executed="OnEditCopy" />
 		<CommandBinding Command="Cut"
-						CanExecute="CanEditCut"
+						CanExecute="OnCanEditCut"
 						Executed="OnEditCut" />
 		<CommandBinding Command="Delete"
-						CanExecute="CanEditDelete"
+						CanExecute="OnCanEditDelete"
 						Executed="OnEditDelete" />
 		<CommandBinding Command="Paste"
-						CanExecute="CanEditPaste"
+						CanExecute="OnCanEditPaste"
 						Executed="OnEditPaste" />
 	</Control.CommandBindings>
 	<Grid Style="{StaticResource PanelMainGrid}">
@@ -74,7 +74,8 @@
 									  TabIndex="1"
 									  MaxLines="1"
 									  IsModifiedChanged="TextBoxName_IsModifiedChanged"
-									  Style="{StaticResource PanelTextBox}" />
+									  Style="{StaticResource PanelTextBox}"
+									  ContextMenu="{StaticResource ContextMenuTextBox}" />
 					<custom:TextBoxEx Grid.Column="1"
 									  Grid.Row="1"
 									  x:Name="TextBoxDescription"
@@ -83,14 +84,16 @@
 									  AcceptsReturn="True"
 									  IsModifiedChanged="TextBoxDescription_IsModifiedChanged"
 									  DataContext="{Binding}"
-									  Style="{StaticResource PanelTextBox}" />
+									  Style="{StaticResource PanelTextBox}"
+									  ContextMenu="{StaticResource ContextMenuTextBox}" />
 					<custom:TextBoxEx Grid.Column="1"
 									  Grid.Row="2"
 									  x:Name="TextBoxExtra"
 									  TabIndex="3"
 									  AcceptsReturn="True"
 									  IsModifiedChanged="TextBoxExtra_IsModifiedChanged"
-									  Style="{StaticResource PanelTextBox}" />
+									  Style="{StaticResource PanelTextBox}"
+									  ContextMenu="{StaticResource ContextMenuTextBox}" />
 				</Grid>
 				<ListView Name="ListViewLanguage"
 						  TabIndex="0"
@@ -217,7 +220,8 @@
 								  VerticalAlignment="Center"
 								  TabIndex="4"
 								  IsModifiedChanged="TextBoxIconFile_IsModifiedChanged"
-								  Style="{StaticResource PanelTextBox}" />
+								  Style="{StaticResource PanelTextBox}"
+								  ContextMenu="{StaticResource ContextMenuTextBox}" />
 				<StackPanel Grid.Column="3"
 							Orientation="Horizontal"
 							HorizontalAlignment="Right"
@@ -232,9 +236,9 @@
 							Click="ButtonIconImport_Click"
 							ToolTip="Open icon file">
 						<Image Source="{StaticResource ImgFileOpen}"
-							   Stretch="None"
-							   Width="Auto"
-							   Height="Auto"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16"
 							   HorizontalAlignment="Center"
 							   VerticalAlignment="Center"></Image>
 					</Button>
@@ -247,9 +251,9 @@
 							Focusable="false"
 							ToolTip="Save icon">
 						<Image Source="{StaticResource ImgFileSave}"
-							   Stretch="None"
-							   Width="Auto"
-							   Height="Auto"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16"
 							   HorizontalAlignment="Center"
 							   VerticalAlignment="Center"></Image>
 					</Button>
@@ -279,7 +283,8 @@
 								  IsUndoEnabled="False"
 								  MaxLines="1"
 								  TabIndex="7"
-								  Style="{StaticResource PanelTextBox}" />
+								  Style="{StaticResource PanelTextBox}"
+								  ContextMenu="{StaticResource ContextMenuTextBox}" />
 				<Button Content="New GUID"
 						Height="Auto"
 						Name="ButtonNewGUID"

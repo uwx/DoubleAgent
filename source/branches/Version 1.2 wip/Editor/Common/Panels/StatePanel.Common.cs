@@ -85,7 +85,7 @@ namespace AgentCharacterEditor.Panels
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Navigation
- 
+
 		public override object NavigationContext
 		{
 			get
@@ -125,18 +125,17 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowStateName ()
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			if (IsPanelEmpty)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				TextBoxName.Clear ();
+				if (IsPanelEmpty)
+				{
+					TextBoxName.Clear ();
+				}
+				else
+				{
+					TextBoxName.Text = StateName;
+				}
 			}
-			else
-			{
-				TextBoxName.Text = StateName;
-			}
-
-			PopIsPanelFilling (lWasFilling);
 		}
 
 		#endregion
@@ -147,7 +146,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			UpdateAllStateAnimations lUpdate = null;
 
-			if (!IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
 				lUpdate = new UpdateAllStateAnimations (pStateName, pAnimationNames);
 				if (!UpdateAllStateAnimations.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateAllStateAnimations, this))
@@ -162,6 +161,8 @@ namespace AgentCharacterEditor.Panels
 
 		private void HandleItemChecked (String pAnimationName, Boolean pItemChecked)
 		{
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
+			{
 				AddDeleteStateAnimation lUpdate;
 
 				if (pItemChecked)
@@ -170,9 +171,10 @@ namespace AgentCharacterEditor.Panels
 				}
 				else
 				{
-					lUpdate = new AddDeleteStateAnimation (StateName,pAnimationName, true);
+					lUpdate = new AddDeleteStateAnimation (StateName, pAnimationName, true);
 				}
 				AddDeleteStateAnimation.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteStateAnimation, this);
+			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

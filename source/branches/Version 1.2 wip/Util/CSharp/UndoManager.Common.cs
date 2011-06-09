@@ -80,9 +80,14 @@ namespace DoubleAgent
 				{
 					this.Applied (this, pEventArgs);
 				}
-				catch
+#if DEBUG
+				catch (Exception pException)
 				{
+					System.Diagnostics.Debug.Print (pException.Message);
 				}
+#else
+				catch {}
+#endif
 			}
 		}
 
@@ -123,8 +128,8 @@ namespace DoubleAgent
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
 
-		protected Stack <UndoUnit>	mUndoStack;
-		protected Stack <UndoUnit>	mRedoStack;
+		protected Stack<UndoUnit> mUndoStack;
+		protected Stack<UndoUnit> mRedoStack;
 
 		public Boolean CanUndo
 		{
@@ -170,7 +175,7 @@ namespace DoubleAgent
 		{
 			get
 			{
-				String	lTitle = "Undo";
+				String lTitle = "Undo";
 
 				if (this.mUndoStack.Count > 0)
 				{
@@ -184,7 +189,7 @@ namespace DoubleAgent
 		{
 			get
 			{
-				String	lTitle = "Redo";
+				String lTitle = "Redo";
 
 				if (this.mRedoStack.Count > 0)
 				{
@@ -205,7 +210,7 @@ namespace DoubleAgent
 				this.mUndoUnit = pUndoUnit;
 			}
 
-			private UndoUnit	mUndoUnit;
+			private UndoUnit mUndoUnit;
 
 			public UndoUnit UndoUnit
 			{
@@ -248,16 +253,21 @@ namespace DoubleAgent
 		{
 			if (mUndoStack.Count > 0)
 			{
-				UndoUnit	lUndoUnit = mUndoStack.Pop ();
-				UndoUnit	lRedoUnit = null;
+				UndoUnit lUndoUnit = mUndoStack.Pop ();
+				UndoUnit lRedoUnit = null;
 
 				try
 				{
 					lRedoUnit = lUndoUnit.Apply ();
 				}
-				catch
+#if DEBUG
+				catch (Exception pException)
 				{
+					System.Diagnostics.Debug.Print (pException.Message);
 				}
+#else
+				catch {}
+#endif
 
 				if (lRedoUnit != null)
 				{
@@ -276,16 +286,21 @@ namespace DoubleAgent
 		{
 			if (mRedoStack.Count > 0)
 			{
-				UndoUnit	lRedoUnit = mRedoStack.Pop ();
-				UndoUnit	lUndoUnit = null;
+				UndoUnit lRedoUnit = mRedoStack.Pop ();
+				UndoUnit lUndoUnit = null;
 
 				try
 				{
 					lUndoUnit = lRedoUnit.Apply ();
 				}
-				catch
+#if DEBUG
+				catch (Exception pException)
 				{
+					System.Diagnostics.Debug.Print (pException.Message);
 				}
+#else
+				catch {}
+#endif
 
 				if (lUndoUnit != null)
 				{

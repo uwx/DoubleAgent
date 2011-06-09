@@ -37,21 +37,26 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
-		private int mReturnItemNone = -1;
-		private int mReturnItemExit = -1;
-		private List<ListViewItemCommon> mStateItems;
-
 		public AnimationPanel ()
 		{
 			InitializeComponent ();
+			InitAnimationStates ();
+
+			if (Program.MainWindow != null)
+			{
+				Program.MainWindow.InitializeContextMenu (FramesView.ContextMenuFrames);
+			}
 
 			FramesView.Frames.ItemActivate += new System.EventHandler (FramesView_ItemActivate);
 			FramesView.Frames.SelectedIndexChanged += new System.EventHandler (FramesView_SelectedIndexChanged);
+			FramesView.ContextMenuFrames.Opening += new System.ComponentModel.CancelEventHandler (ContextMenuFrames_Opening);
+			FramesView.MenuItemAdd.Click += new EventHandler (ButtonAdd_Click);
+			FramesView.MenuItemMoveUp.Click += new EventHandler (ButtonMoveUp_Click);
+			FramesView.MenuItemMoveDown.Click += new EventHandler (ButtonMoveDown_Click);
 
 			AnimationPreview.AnimationStateChanged += new EventHandler (AnimationPreview_StateChanged);
 			AnimationPreview.AnimationImageChanged += new EventHandler (AnimationPreview_ImageChanged);
 
-			InitAnimationStates ();
 		}
 
 		protected override void OnLoadConfig (object sender, EventArgs e)
@@ -87,85 +92,9 @@ namespace AgentCharacterEditor.Panels
 			lSettings.AnimationPreviewMute = PreviewButtonMute.Checked;
 		}
 
-		protected override void OnVisibleChanged (object sender, EventArgs e)
-		{
-			base.OnVisibleChanged (sender, e);
-
-			if (Visible)
-			{
-				ShowPreviewState ();
-			}
-			else
-			{
-				AnimationPreview.StopAnimation ();
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
-		#region Properties
-
-		public override ResolvePart FilePart
-		{
-			get
-			{
-				return base.FilePart;
-			}
-			set
-			{
-				base.FilePart = value;
-				Animation = (FilePart is ResolveAnimation) ? (FilePart as ResolveAnimation).Target : null;
-
-				ShowAnimationName ();
-				ShowReturnAnimations ();
-				ShowReturnAnimation ();
-				ShowAnimationStates ();
-				ShowAnimationFrames ();
-			}
-		}
-
-		protected FileAnimation Animation
-		{
-			get;
-			set;
-		}
-
-		public override Boolean IsPanelEmpty
-		{
-			get
-			{
-				return base.IsPanelEmpty || (Animation == null);
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
-		#region Events
-
-		public event NavigationEventHandler Navigate;
-
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Navigation
-
-		public override object NavigationContext
-		{
-			get
-			{
-				return new PanelContext (this);
-			}
-			set
-			{
-				if (value is PanelContext)
-				{
-					(value as PanelContext).RestoreContext (this);
-				}
-				else
-				{
-					base.NavigationContext = value;
-				}
-			}
-		}
 
 		public new class PanelContext : FilePartPanel.PanelContext
 		{
@@ -213,130 +142,36 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
-		private void ShowAnimationName ()
-		{
-			if (IsPanelEmpty)
-			{
-				TextBoxName.ResetText ();
-				TextBoxName.Enabled = false;
-				ToolStripFrames.Enabled = false;
-			}
-			else
-			{
-				TextBoxName.Text = Animation.Name;
-				TextBoxName.Enabled = !Program.FileIsReadOnly;
-				ToolStripFrames.Enabled = true;
-			}
-			TextBoxName.Modified = false;
-		}
-
 		private void ShowReturnAnimations ()
 		{
-			ComboBoxReturn.BeginUpdate ();
-			ComboBoxReturn.Items.Clear ();
-			mReturnItemNone = ComboBoxReturn.Items.Add ("None");
-			mReturnItemExit = -1;
-
-			if (IsPanelEmpty)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				ComboBoxReturn.SelectedIndex = -1;
-				ComboBoxReturn.Enabled = false;
-			}
-			else
-			{
-				String[] lAnimations = CharacterFile.GetAnimationNames ();
+				ComboBoxReturn.BeginUpdate ();
+				ComboBoxReturn.Items.Clear ();
+				mReturnItemNone = ComboBoxReturn.Items.Add ("None");
+				mReturnItemExit = -1;
 
-				mReturnItemExit = ComboBoxReturn.Items.Add ("Use Exit Branching");
-				foreach (String lAnimation in lAnimations)
+				if (IsPanelEmpty)
 				{
-					if (String.Compare (lAnimation, Animation.Name, true) != 0)
+					ComboBoxReturn.SelectedIndex = -1;
+					ComboBoxReturn.Enabled = false;
+				}
+				else
+				{
+					String[] lAnimations = CharacterFile.GetAnimationNames ();
+
+					mReturnItemExit = ComboBoxReturn.Items.Add ("Use Exit Branching");
+					foreach (String lAnimation in lAnimations)
 					{
-						ComboBoxReturn.Items.Add (lAnimation);
+						if (String.Compare (lAnimation, Animation.Name, true) != 0)
+						{
+							ComboBoxReturn.Items.Add (lAnimation);
+						}
 					}
+					ComboBoxReturn.Enabled = !Program.FileIsReadOnly;
 				}
-				ComboBoxReturn.Enabled = !Program.FileIsReadOnly;
-			}
 
-			ComboBoxReturn.EndUpdate ();
-		}
-
-		private void ShowReturnAnimation ()
-		{
-			if (IsPanelEmpty)
-			{
-				ComboBoxReturn.SelectedIndex = mReturnItemNone;
-			}
-			else if (Animation.ReturnType == 1)
-			{
-				ComboBoxReturn.SelectedIndex = mReturnItemExit;
-			}
-			else if ((Animation.ReturnType != 0) || (String.IsNullOrEmpty (Animation.ReturnName)))
-			{
-				ComboBoxReturn.SelectedIndex = mReturnItemNone;
-			}
-			else
-			{
-				ComboBoxReturn.SelectedIndex = ComboBoxReturn.FindStringExact (Animation.ReturnName);
-				if (ComboBoxReturn.SelectedIndex < 0)
-				{
-					ComboBoxReturn.SelectedIndex = mReturnItemNone;
-				}
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		private void InitAnimationStates ()
-		{
-			mStateItems = new List<ListViewItemCommon> ();
-			foreach (ListViewItemCommon lListItem in ListViewStates.Items)
-			{
-				mStateItems.Add (lListItem);
-			}
-			ListViewStates.Items.Clear ();
-		}
-
-		private void ShowAnimationStates ()
-		{
-			FileStates lFileStates = null;
-
-			if (IsPanelEmpty)
-			{
-				ListViewStates.Enabled = false;
-			}
-			else
-			{
-				ListViewStates.Enabled = true;//!Program.FileIsReadOnly;
-				lFileStates = CharacterFile.States;
-			}
-
-			ListViewStates.Items.Clear ();
-
-			foreach (ListViewItemCommon lListItem in mStateItems)
-			{
-				String[] lStateAnimations = null;
-
-				if (lFileStates != null)
-				{
-					if (lFileStates.Contains (lListItem.Text))
-					{
-						lStateAnimations = lFileStates[lListItem.Text].AnimationNames;
-					}
-					else if (lFileStates.Contains (lListItem.Text.ToUpper ()))
-					{
-						lStateAnimations = lFileStates[lListItem.Text.ToUpper ()].AnimationNames;
-					}
-				}
-				if (
-						(lStateAnimations != null)
-					&& (
-							(Array.IndexOf (lStateAnimations, Animation.Name) >= 0)
-						|| (Array.IndexOf (lStateAnimations, Animation.Name.ToUpper ()) >= 0)
-						)
-					)
-				{
-					ListViewStates.Items.Add (lListItem);
-				}
+				ComboBoxReturn.EndUpdate ();
 			}
 		}
 
@@ -344,156 +179,40 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowAnimationFrames ()
 		{
-			CausesValidation = false;
-
-			if (CharacterFile == null)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				NumericFrameDuration.ResetText ();
-				NumericFrameDuration.Enabled = false;
-			}
-			else
-			{
-				NumericFrameDuration.Value = CharacterFile.NewFrameDuration;
-				NumericFrameDuration.Enabled = !Program.FileIsReadOnly;
-			}
+				if (IsPanelEmpty)
+				{
+					FramesView.Clear ();
+					FramesView.Enabled = false;
+				}
+				else
+				{
+					using (CursorState lCursorState = new CursorState (Program.MainWindow))
+					{
+						lCursorState.ShowWait ();
 
-			if (IsPanelEmpty)
-			{
-				FramesView.Clear ();
-				FramesView.Enabled = false;
+						FramesView.ShowAnimationFrames (CharacterFile, Animation);
+						FramesView.Enabled = true;
+
+						ShowFramesState ();
+						ShowSelectedFrame ();
+					}
+				}
+
+				AnimationPreview.DeleteAnimation ();
 			}
-			else
-			{
-				CursorState lCursorState = new CursorState (Program.MainWindow);
-				lCursorState.ShowWait ();
-
-				FramesView.ShowAnimationFrames (CharacterFile, Animation);
-				FramesView.Enabled = true;
-
-				ShowFramesState ();
-				ShowSelectedFrame ();
-				lCursorState.RestoreCursor ();
-			}
-
-			AnimationPreview.DeleteAnimation ();
-			CausesValidation = Visible;
 		}
 
 		private void ShowSelectedFrame ()
 		{
 			FramesView.Frames.EnsureVisible (FramesView.Frames.SelectedOrFocusedIndex);
 
-			ShowSelectionState (GetSelectedFrame (false), FramesView.Frames.SelectedIndex);
+			ShowSelectionState ();
 
 			AnimationPreview.StopAnimation ();
 			AnimationPreview.ShowAnimationFrame (CharacterFile, GetSelectedFrame (true));
 			ShowPreviewState ();
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		private void ShowFramesState ()
-		{
-			if (IsPanelEmpty)
-			{
-				ButtonShowBranching.Checked = true;
-				ButtonShowExitBranching.Checked = true;
-				ButtonShowBranching.Enabled = false;
-				ButtonShowExitBranching.Enabled = false;
-
-				ButtonViewSmall.Checked = false;
-				ButtonViewMedium.Checked = false;
-				ButtonViewLarge.Checked = false;
-				ButtonViewSmall.Enabled = false;
-				ButtonViewMedium.Enabled = false;
-				ButtonViewLarge.Enabled = false;
-			}
-			else
-			{
-				ButtonShowBranching.Checked = FramesView.ShowBranching;
-				ButtonShowExitBranching.Checked = FramesView.ShowExitBranching;
-				ButtonShowBranching.Enabled = true;
-				ButtonShowExitBranching.Enabled = true;
-
-				ButtonViewSmall.Checked = (FramesView.ImageScale == FramesPreview.ImageScaleType.Small);
-				ButtonViewMedium.Checked = (FramesView.ImageScale == FramesPreview.ImageScaleType.Medium);
-				ButtonViewLarge.Checked = (FramesView.ImageScale == FramesPreview.ImageScaleType.Large);
-				ButtonViewSmall.Enabled = FramesView.GetImageScaleSize (FramesPreview.ImageScaleType.Small).EitherLT (FramesView.GetImageScaleSize (FramesPreview.ImageScaleType.Medium));
-				ButtonViewMedium.Enabled = true;
-				ButtonViewLarge.Enabled = FramesView.GetImageScaleSize (FramesPreview.ImageScaleType.Large).EitherGT (FramesView.GetImageScaleSize (FramesPreview.ImageScaleType.Medium));
-			}
-		}
-
-		private void ShowSelectionState (FileAnimationFrame pFrame, int pFrameNdx)
-		{
-			if ((pFrame == null) || IsPanelEmpty)
-			{
-				ButtonAdd.Enabled = false;
-				ButtonDelete.Enabled = false;
-				ButtonMoveUp.Enabled = false;
-				ButtonMoveDown.Enabled = false;
-			}
-			else
-			{
-				ButtonAdd.Enabled = !Program.FileIsReadOnly;
-				ButtonDelete.Enabled = !Program.FileIsReadOnly && (pFrameNdx >= 0);
-				ButtonMoveUp.Enabled = !Program.FileIsReadOnly && (pFrameNdx > 0);
-				ButtonMoveDown.Enabled = !Program.FileIsReadOnly && (pFrameNdx >= 0) && (pFrameNdx < FramesView.Frames.Items.Count - 1);
-			}
-
-			ButtonDelete.Text = String.Format (AppResources.Resources.EditDeleteThis.NoMenuPrefix (), Titles.Frame (ButtonDelete.Enabled ? pFrame : null));
-			ButtonMoveUp.Text = String.Format (AppResources.Resources.EditMoveFrameUp.NoMenuPrefix (), Titles.Frame (ButtonMoveUp.Enabled ? pFrame : null));
-			ButtonMoveDown.Text = String.Format (AppResources.Resources.EditMoveFrameDown.NoMenuPrefix (), Titles.Frame (ButtonMoveDown.Enabled ? pFrame : null));
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		private FileAnimationFrame GetSelectedFrame (Boolean pIncludeFocus)
-		{
-			if (pIncludeFocus)
-			{
-				return GetSelectedFrame (Math.Min (Math.Max (FramesView.Frames.SelectedOrFocusedIndex, 0), FramesView.Frames.Items.Count - 1));
-			}
-			else
-			{
-				return GetSelectedFrame (FramesView.Frames.SelectedIndex);
-			}
-		}
-		private FileAnimationFrame GetSelectedFrame (ListViewItemCommon pSelectedItem)
-		{
-			if (pSelectedItem != null)
-			{
-				return GetSelectedFrame (pSelectedItem.Index);
-			}
-			return null;
-		}
-		private FileAnimationFrame GetSelectedFrame (int pFrameNdx)
-		{
-			if ((Animation != null) && (pFrameNdx >= 0) && (pFrameNdx < Animation.FrameCount))
-			{
-				return Animation.Frames[pFrameNdx];
-			}
-			return null;
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		private int mLastSelectedFrameNdx = -1;
-
-		private void PushSelectedFrame ()
-		{
-			mLastSelectedFrameNdx = FramesView.Frames.SelectedIndex;
-		}
-
-		private void PopSelectedFrame ()
-		{
-			if (mLastSelectedFrameNdx >= 0)
-			{
-				CausesValidation = false;
-				FramesView.Frames.SelectedIndex = mLastSelectedFrameNdx;
-				CausesValidation = Visible;
-			}
-			mLastSelectedFrameNdx = -1;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -553,293 +272,27 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Update
-
-		internal UndoableUpdate DeleteSelectedFrame (FileAnimationFrame pFrame, Boolean pForClipboard)
-		{
-			if ((pFrame != null) && !Program.FileIsReadOnly)
-			{
-				AddDeleteAnimationFrame lUpdate = new AddDeleteAnimationFrame (pFrame, pForClipboard);
-				if (AddDeleteAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimationFrame, this))
-				{
-					return lUpdate;
-				}
-			}
-			return null;
-		}
-
-		internal UndoableUpdate PasteSelectedFrame (FileAnimation pAnimation, FileAnimationFrame pFrame, FileAnimationFrame pPasteFrame)
-		{
-			if ((pAnimation != null) && (pPasteFrame != null) && !Program.FileIsReadOnly)
-			{
-				if (pFrame == null)
-				{
-					AddDeleteAnimationFrame lUpdate = new AddDeleteAnimationFrame (pAnimation, pAnimation.FrameCount, true);
-
-					lUpdate = lUpdate.Apply () as AddDeleteAnimationFrame;
-					if (lUpdate != null)
-					{
-						pPasteFrame.CopyTo (lUpdate.Target, true);
-						lUpdate = lUpdate.Apply () as AddDeleteAnimationFrame;
-					}
-					if ((lUpdate != null) && AddDeleteAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimationFrame, this))
-					{
-						return lUpdate;
-					}
-				}
-				else
-				{
-					UpdateAnimationFrame lUpdate = new UpdateAnimationFrame (pFrame, true);
-
-					pPasteFrame.CopyTo (pFrame, true);
-					lUpdate = lUpdate.Apply () as UpdateAnimationFrame;
-					if ((lUpdate != null) && UpdateAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateAnimationFrame, this))
-					{
-						return lUpdate;
-					}
-				}
-			}
-			return null;
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		protected override void ShowEditState (Global.CanEditEventArgs pEventArgs)
-		{
-			if (FramesView.Frames.ContainsFocus)
-			{
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
-
-				if (lFrame != null)
-				{
-					String lObjectTitle = (pEventArgs is Global.ContextMenuEventArgs) ? Titles.Frame (lFrame) : Titles.FrameAnimation (lFrame).Quoted ();
-
-					pEventArgs.PutCopyTitle (lObjectTitle);
-					if (!Program.FileIsReadOnly)
-					{
-						pEventArgs.PutCutTitle (lObjectTitle);
-						pEventArgs.PutDeleteTitle (lObjectTitle);
-					}
-				}
-				if (!Program.FileIsReadOnly && (pEventArgs.GetPasteObject () is FileAnimationFrame))
-				{
-					if (lFrame == null)
-					{
-						pEventArgs.PasteObjectTitle = Titles.PasteTypeTitle (lFrame, AppResources.Resources.EditPasteFrameSource);
-					}
-					else
-					{
-						pEventArgs.PasteObjectTitle = Titles.PasteTypeTitle (lFrame, (pEventArgs is Global.ContextMenuEventArgs) ? Titles.Frame (lFrame) : Titles.FrameAnimation (lFrame).Quoted (), AppResources.Resources.EditPasteFrameSource);
-					}
-				}
-			}
-		}
-
-		protected override void OnEditMenu (object sender, Global.ContextMenuEventArgs e)
-		{
-			ShowEditState (e);
-
-			if (!IsPanelEmpty && !Program.FileIsReadOnly && Object.ReferenceEquals (e.ActiveControl, FramesView.Frames))
-			{
-				ToolStripMenuItem lMenuItem;
-
-				e.ContextMenu.Items.Insert (0, new ToolStripSeparator ());
-				e.ContextMenu.Items.Insert (0, lMenuItem = new ToolStripMenuItem (ButtonAdd.Text, ButtonAdd.Image, ButtonAdd_Click));
-				lMenuItem.Enabled = ButtonAdd.Enabled;
-
-				e.ContextMenu.Items.Add (new ToolStripSeparator ());
-				e.ContextMenu.Items.Add (lMenuItem = new ToolStripMenuItem (ButtonMoveUp.Text, ButtonMoveUp.Image, ButtonMoveUp_Click));
-				lMenuItem.Enabled = ButtonMoveUp.Enabled;
-				e.ContextMenu.Items.Add (lMenuItem = new ToolStripMenuItem (ButtonMoveDown.Text, ButtonMoveDown.Image, ButtonMoveDown_Click));
-				lMenuItem.Enabled = ButtonMoveDown.Enabled;
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		protected override bool HandleEditCopy (Global.EditEventArgs pEventArgs)
-		{
-			if (FramesView.Frames.ContainsFocus)
-			{
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
-
-				if (lFrame != null)
-				{
-					pEventArgs.PutCopyObject (lFrame);
-					return true;
-				}
-			}
-			return false;
-		}
-
-		protected override bool HandleEditCut (Global.EditEventArgs pEventArgs)
-		{
-			if (FramesView.Frames.ContainsFocus)
-			{
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
-
-				if (lFrame != null)
-				{
-					if (pEventArgs.PutCopyObject (lFrame))
-					{
-						DeleteSelectedFrame (lFrame, true);
-					}
-					return true;
-				}
-			}
-			return false;
-		}
-
-		protected override bool HandleEditDelete (Global.EditEventArgs pEventArgs)
-		{
-			if (FramesView.Frames.ContainsFocus)
-			{
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
-
-				if (lFrame != null)
-				{
-					DeleteSelectedFrame (lFrame, false);
-					return true;
-				}
-			}
-			return false;
-		}
-
-		protected override bool HandleEditPaste (Global.EditEventArgs pEventArgs)
-		{
-			if (FramesView.Frames.ContainsFocus)
-			{
-				if (pEventArgs.GetPasteObject () is FileAnimationFrame)
-				{
-					FileAnimationFrame lFrame = GetSelectedFrame (false);
-
-					PasteSelectedFrame (Animation, lFrame, pEventArgs.GetPasteObject () as FileAnimationFrame);
-					if (lFrame == null)
-					{
-						FramesView.Frames.SelectedItem = null;
-					}
-					return true;
-				}
-			}
-			return false;
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		protected override void UpdateApplied (Object pUpdate)
-		{
-			UpdateAnimation lUpdateAnimation = pUpdate as UpdateAnimation;
-			UpdateCharacterHeader lUpdateCharacter = pUpdate as UpdateCharacterHeader;
-			AddDeleteAnimationFrame lAddDeleteFrame = pUpdate as AddDeleteAnimationFrame;
-			ReorderAnimationFrame lReorderFrame = pUpdate as ReorderAnimationFrame;
-			UpdateAnimationFrame lUpdateFrame = pUpdate as UpdateAnimationFrame;
-			AddDeleteFrameImage lAddDeleteImage = pUpdate as AddDeleteFrameImage;
-			ReorderFrameImage lReorderImage = pUpdate as ReorderFrameImage;
-			UpdateFrameImage lUpdateImage = pUpdate as UpdateFrameImage;
-
-			if ((lUpdateAnimation != null) && (lUpdateAnimation.Target == Animation))
-			{
-				if ((lUpdateAnimation != null) && lUpdateAnimation.ForClipboard)
-				{
-					ShowAnimationName ();
-					ShowReturnAnimation ();
-					ShowAnimationFrames ();
-				}
-				else if (lUpdateAnimation.NameChanged)
-				{
-					ShowAnimationName ();
-				}
-				else
-				{
-					ShowReturnAnimation ();
-				}
-			}
-			else if ((lUpdateCharacter != null) && (lUpdateCharacter.CharacterFile == CharacterFile))
-			{
-				NumericFrameDuration.Value = CharacterFile.NewFrameDuration;
-			}
-			else if ((lAddDeleteFrame != null) && (lAddDeleteFrame.Animation == Animation))
-			{
-				ShowAnimationFrames ();
-				FramesView.Frames.SelectedIndex = lAddDeleteFrame.FrameNdx;
-			}
-			else if ((lReorderFrame != null) && (lReorderFrame.Animation == Animation))
-			{
-				ShowAnimationFrames ();
-				FramesView.Frames.SelectedIndex = Animation.Frames.IndexOf (lReorderFrame.Target);
-			}
-			else if ((lUpdateFrame != null) && (lUpdateFrame.Animation == Animation))
-			{
-				if (lUpdateFrame.DurationChanged || lUpdateFrame.BranchingChanged)
-				{
-					ShowAnimationFrames ();
-				}
-			}
-			else if ((lAddDeleteImage != null) && (lAddDeleteImage.Animation == Animation))
-			{
-				ShowAnimationFrames ();
-			}
-			else if ((lReorderImage != null) && (lReorderImage.Animation == Animation))
-			{
-				ShowAnimationFrames ();
-			}
-			else if ((lUpdateImage != null) && (lUpdateImage.Animation == Animation))
-			{
-				ShowAnimationFrames ();
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
 		#region Event Handlers
 
 		private void TextBoxName_Validated (object sender, EventArgs e)
 		{
-			if (CausesValidation && TextBoxName.Modified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (TextBoxName.IsModified)
 			{
-				if (!String.IsNullOrEmpty (TextBoxName.Text))
-				{
-					UpdateAnimation lUpdate = new UpdateAnimation (Animation, false);
-
-					lUpdate.Name = TextBoxName.Text;
-					UpdateAnimation.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateAnimation, this);
-				}
-				ShowAnimationName ();
+				HandleAnimationNameChanged ();
 			}
-			TextBoxName.Modified = false;
+			TextBoxName.IsModified = false;
 		}
 
 		private void ComboBoxReturn_SelectionChangeCommitted (object sender, EventArgs e)
 		{
-			if (!IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				UpdateAnimation lUpdate = new UpdateAnimation (Animation, false);
-
-				if (ComboBoxReturn.SelectedIndex == mReturnItemNone)
-				{
-					lUpdate.ReturnType = 2;
-					lUpdate.ReturnName = String.Empty;
-				}
-				else if (ComboBoxReturn.SelectedIndex == mReturnItemExit)
-				{
-					lUpdate.ReturnType = 1;
-					lUpdate.ReturnName = String.Empty;
-				}
-				else if (ComboBoxReturn.SelectedIndex >= 0)
-				{
-					lUpdate.ReturnType = 0;
-					lUpdate.ReturnName = ComboBoxReturn.SelectedItem.ToString ();
-				}
-
-				UpdateAnimation.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateAnimation, this);
-			}
+			HandleReturnAnimationChanged ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void FramesView_SelectedIndexChanged (object sender, EventArgs e)
 		{
-			if (!IsPanelEmpty && CausesValidation)
+			if (!IsPanelEmpty && !IsPanelFilling)
 			{
 				ShowSelectedFrame ();
 			}
@@ -864,6 +317,27 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
+		void ContextMenuFrames_Opening (object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			if (IsPanelEmpty || Program.FileIsReadOnly)
+			{
+				e.Cancel = true;
+			}
+			else
+			{
+				Program.MainWindow.ShowEditState (FramesView.ContextMenuFrames);
+
+				FramesView.MenuItemAdd.Enabled = CanAddFrame;
+				FramesView.MenuItemMoveUp.Enabled = CanMoveFrameUp;
+				FramesView.MenuItemMoveDown.Enabled = CanMoveFrameDown;
+
+				FramesView.MenuItemMoveUp.SetTitle (MoveFrameUpTitle);
+				FramesView.MenuItemMoveDown.SetTitle (MoveFrameDownTitle);
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
 		private void ListViewStates_ItemActivate (object sender, EventArgs e)
 		{
 			if (!IsPanelEmpty && (Navigate != null))
@@ -874,7 +348,7 @@ namespace AgentCharacterEditor.Panels
 				{
 					try
 					{
-						Navigate (this, new NavigationEventArgs (new ResolveState (lItem.Text)));
+						Navigate (this, new NavigationEventArgs (new ResolveState (lItem.Tag as String)));
 					}
 					catch
 					{
@@ -887,123 +361,56 @@ namespace AgentCharacterEditor.Panels
 
 		private void NumericFrameDuration_Validated (object sender, EventArgs e)
 		{
-			if (CausesValidation && (CharacterFile != null) && !Program.FileIsReadOnly)
-			{
-				UpdateCharacterHeader lUpdate = new UpdateCharacterHeader ();
-
-				lUpdate.NewFrameDuration = (UInt16)NumericFrameDuration.Value;
-				UpdateCharacterHeader.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterHeader, this);
-			}
+			HandleDefaultDurationChanged ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void ButtonAdd_Click (object sender, EventArgs e)
 		{
-			if (!IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				int lSelNdx = FramesView.Frames.SelectedIndex;
-				AddDeleteAnimationFrame lUpdate = new AddDeleteAnimationFrame (Animation, (lSelNdx >= 0) ? lSelNdx + 1 : Animation.FrameCount, false);
-
-				AddDeleteAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimationFrame, this);
-			}
+			HandleAddFrame ();
 		}
 
 		private void ButtonDelete_Click (object sender, EventArgs e)
 		{
-			if (!IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
-
-				if (lFrame != null)
-				{
-					DeleteSelectedFrame (lFrame, false);
-				}
-			}
+			HandleDeleteFrame ();
 		}
-
-		///////////////////////////////////////////////////////////////////////////////
 
 		private void ButtonMoveUp_Click (object sender, EventArgs e)
 		{
-			if (!IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				int lSelNdx = FramesView.Frames.SelectedIndex;
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
-				ReorderAnimationFrame lUpdate;
-
-				if ((lFrame != null) && (lSelNdx > 0))
-				{
-					lUpdate = new ReorderAnimationFrame (lFrame, lSelNdx - 1);
-					ReorderAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as ReorderAnimationFrame, this);
-				}
-			}
+			HandleMoveFrameUp ();
 		}
 
 		private void ButtonMoveDown_Click (object sender, EventArgs e)
 		{
-			if (!IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				int lSelNdx = FramesView.Frames.SelectedIndex;
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
-				ReorderAnimationFrame lUpdate;
-
-				if ((lFrame != null) && (lSelNdx >= 0) && (lSelNdx < Animation.Frames.Count - 1))
-				{
-					lUpdate = new ReorderAnimationFrame (lFrame, lSelNdx + 1);
-					ReorderAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as ReorderAnimationFrame, this);
-				}
-			}
+			HandleMoveFrameDown ();
 		}
+
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void ButtonShowBranching_Click (object sender, EventArgs e)
 		{
-			if (!IsPanelEmpty)
-			{
-				FramesView.ShowBranching = !FramesView.ShowBranching;
-				FramesView.ShowBranchingGraphs ();
-				FramesView.RecalcLayout ();
-				ShowFramesState ();
-			}
+			HandleShowBranching ();
 		}
 
 		private void ButtonShowExitBranching_Click (object sender, EventArgs e)
 		{
-			if (!IsPanelEmpty)
-			{
-				FramesView.ShowExitBranching = !FramesView.ShowExitBranching;
-				FramesView.ShowBranchingGraphs ();
-				FramesView.RecalcLayout ();
-				ShowFramesState ();
-			}
+			HandleShowExitBranching ();
 		}
 
 		private void ButtonViewSmall_Click (object sender, EventArgs e)
 		{
-			if (!IsPanelEmpty)
-			{
-				FramesView.RecalcLayout (FramesPreview.ImageScaleType.Small);
-				ShowFramesState ();
-			}
+			HandleViewSmall ();
 		}
 
 		private void ButtonViewMedium_Click (object sender, EventArgs e)
 		{
-			if (!IsPanelEmpty)
-			{
-				FramesView.RecalcLayout (FramesPreview.ImageScaleType.Medium);
-				ShowFramesState ();
-			}
+			HandleViewMedium ();
 		}
 
 		private void ButtonViewLarge_Click (object sender, EventArgs e)
 		{
-			if (!IsPanelEmpty)
-			{
-				FramesView.RecalcLayout (FramesPreview.ImageScaleType.Large);
-				ShowFramesState ();
-			}
+			HandleViewLarge ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -1012,12 +419,11 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!AnimationPreview.IsAnimated)
 			{
-				CursorState lCursorState = new CursorState (Program.MainWindow);
-				lCursorState.ShowWait ();
-
-				AnimationPreview.CreateAnimation (CharacterFile, Animation, !PreviewButtonMute.Checked);
-
-				lCursorState.RestoreCursor ();
+				using (CursorState lCursorState = new CursorState (Program.MainWindow))
+				{
+					lCursorState.ShowWait ();
+					AnimationPreview.CreateAnimation (CharacterFile, Animation, !PreviewButtonMute.Checked);
+				}
 			}
 
 			if (AnimationPreview.IsAnimated)

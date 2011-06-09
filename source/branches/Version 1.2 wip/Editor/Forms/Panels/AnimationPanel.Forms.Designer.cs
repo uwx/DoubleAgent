@@ -53,22 +53,6 @@ namespace AgentCharacterEditor.Panels
 			System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 			System.Windows.Forms.Panel PanelTopLeft;
 			System.Windows.Forms.Panel PanelTopRight;
-			AgentCharacterEditor.ListViewItemCommon listViewItem17 = new AgentCharacterEditor.ListViewItemCommon("GesturingDown");
-			AgentCharacterEditor.ListViewItemCommon listViewItem18 = new AgentCharacterEditor.ListViewItemCommon("GesturingLeft");
-			AgentCharacterEditor.ListViewItemCommon listViewItem19 = new AgentCharacterEditor.ListViewItemCommon("GesturingRight");
-			AgentCharacterEditor.ListViewItemCommon listViewItem20 = new AgentCharacterEditor.ListViewItemCommon("GesturingUp");
-			AgentCharacterEditor.ListViewItemCommon listViewItem21 = new AgentCharacterEditor.ListViewItemCommon("Listening");
-			AgentCharacterEditor.ListViewItemCommon listViewItem22 = new AgentCharacterEditor.ListViewItemCommon("Hearing");
-			AgentCharacterEditor.ListViewItemCommon listViewItem23 = new AgentCharacterEditor.ListViewItemCommon("Hiding");
-			AgentCharacterEditor.ListViewItemCommon listViewItem24 = new AgentCharacterEditor.ListViewItemCommon("IdlingLevel1");
-			AgentCharacterEditor.ListViewItemCommon listViewItem25 = new AgentCharacterEditor.ListViewItemCommon("IdlingLevel2");
-			AgentCharacterEditor.ListViewItemCommon listViewItem26 = new AgentCharacterEditor.ListViewItemCommon("IdlingLevel3");
-			AgentCharacterEditor.ListViewItemCommon listViewItem27 = new AgentCharacterEditor.ListViewItemCommon("MovingDown");
-			AgentCharacterEditor.ListViewItemCommon listViewItem28 = new AgentCharacterEditor.ListViewItemCommon("MovingLeft");
-			AgentCharacterEditor.ListViewItemCommon listViewItem29 = new AgentCharacterEditor.ListViewItemCommon("MovingRight");
-			AgentCharacterEditor.ListViewItemCommon listViewItem30 = new AgentCharacterEditor.ListViewItemCommon("MovingUp");
-			AgentCharacterEditor.ListViewItemCommon listViewItem31 = new AgentCharacterEditor.ListViewItemCommon("Showing");
-			AgentCharacterEditor.ListViewItemCommon listViewItem32 = new AgentCharacterEditor.ListViewItemCommon("Speaking");
 			System.Windows.Forms.ColumnHeader Column1;
 			System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
 			System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
@@ -228,39 +212,6 @@ namespace AgentCharacterEditor.Panels
 			this.ListViewStates.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             Column1});
 			this.ListViewStates.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-			listViewItem17.StateImageIndex = 0;
-			listViewItem18.StateImageIndex = 0;
-			listViewItem19.StateImageIndex = 0;
-			listViewItem20.StateImageIndex = 0;
-			listViewItem21.StateImageIndex = 0;
-			listViewItem22.StateImageIndex = 0;
-			listViewItem23.StateImageIndex = 0;
-			listViewItem24.StateImageIndex = 0;
-			listViewItem25.StateImageIndex = 0;
-			listViewItem26.StateImageIndex = 0;
-			listViewItem27.StateImageIndex = 0;
-			listViewItem28.StateImageIndex = 0;
-			listViewItem29.StateImageIndex = 0;
-			listViewItem30.StateImageIndex = 0;
-			listViewItem31.StateImageIndex = 0;
-			listViewItem32.StateImageIndex = 0;
-			this.ListViewStates.Items.AddRange(new AgentCharacterEditor.ListViewItemCommon[] {
-            listViewItem17,
-            listViewItem18,
-            listViewItem19,
-            listViewItem20,
-            listViewItem21,
-            listViewItem22,
-            listViewItem23,
-            listViewItem24,
-            listViewItem25,
-            listViewItem26,
-            listViewItem27,
-            listViewItem28,
-            listViewItem29,
-            listViewItem30,
-            listViewItem31,
-            listViewItem32});
 			this.ListViewStates.Location = new System.Drawing.Point(80, 3);
 			this.ListViewStates.Margin = new System.Windows.Forms.Padding(0);
 			this.ListViewStates.MultiSelect = false;

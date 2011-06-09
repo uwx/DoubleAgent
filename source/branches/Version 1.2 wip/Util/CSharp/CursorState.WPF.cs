@@ -29,7 +29,7 @@ namespace DoubleAgent
 	/// <summary>
 	/// For use as a local variable to save/restore a <see cref="System.Windows.Forms.Form"/>'s current <see cref="System.Windows.Forms.Cursor"/>.
 	/// </summary>
-	public class CursorState
+	public class CursorState : IDisposable
 	{
 		/// <summary>
 		/// The <see cref="System.Windows.Window"/> whose <see cref="System.Windows.Forms.Cursor"/> is being managed.
@@ -49,6 +49,8 @@ namespace DoubleAgent
 			set;
 		}
 
+		///////////////////////////////////////////////////////////////////////////////
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -61,10 +63,29 @@ namespace DoubleAgent
 			this.Window = pWindow;
 			this.SavedCursor = pWindow.Cursor;
 		}
-
 		~CursorState ()
 		{
-			RestoreCursor ();
+			Dispose (false);
+		}
+
+		public void Dispose ()
+		{
+			Dispose (true);
+			GC.SuppressFinalize (this);
+		}
+		protected virtual void Dispose (bool disposing)
+		{
+			try
+			{
+				if (this.Window != null)
+				{
+					this.Window.Cursor = this.SavedCursor;
+					this.Window = null;
+				}
+			}
+			catch
+			{
+			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -77,7 +98,7 @@ namespace DoubleAgent
 		/// <returns>True of successful</returns>
 		public Boolean ShowCursor (System.Windows.Input.Cursor pCursor)
 		{
-			if ((pCursor != null) && (this.SavedCursor != null) && (this.Window != null))
+			if (this.Window != null)
 			{
 				try
 				{
@@ -98,19 +119,13 @@ namespace DoubleAgent
 		/// <returns>True if successful</returns>
 		public Boolean RestoreCursor ()
 		{
-			if ((this.SavedCursor != null) && (this.Window != null))
+			Boolean lRet = false;
+			if (this.Window != null)
 			{
-				try
-				{
-					this.Window.Cursor = this.SavedCursor;
-					this.SavedCursor = null;
-				}
-				catch
-				{
-				}
-				return true;
+				lRet = true;
 			}
-			return false;
+			Dispose (false);
+			return lRet;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

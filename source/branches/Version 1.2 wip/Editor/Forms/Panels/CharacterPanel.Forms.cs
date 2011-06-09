@@ -107,60 +107,54 @@ namespace AgentCharacterEditor.Panels
 
 		private void TextBoxName_Validated (object sender, EventArgs e)
 		{
-			if (TextBoxName.Modified && !Program.FileIsReadOnly)
+			if (TextBoxName.Modified)
 			{
 				HandleNameChanged ();
-				TextBoxName.Modified = false;
 			}
+			TextBoxName.Modified = false;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void TextBoxDescription_Validated (object sender, EventArgs e)
 		{
-			if (TextBoxDescription.Modified && !Program.FileIsReadOnly)
+			if (TextBoxDescription.Modified)
 			{
 				HandleDescriptionChanged ();
-				TextBoxDescription.Modified = false;
 			}
+			TextBoxDescription.Modified = false;
 		}
 
 		private void TextBoxExtra_Validated (object sender, EventArgs e)
 		{
-			if (TextBoxExtra.Modified && !Program.FileIsReadOnly)
+			if (TextBoxExtra.Modified)
 			{
 				HandleExtraChanged ();
-				TextBoxExtra.Modified = false;
 			}
+			TextBoxExtra.Modified = false;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void TextBoxIconFile_Validated (object sender, EventArgs e)
 		{
-			if (TextBoxIconFile.Modified && !Program.FileIsReadOnly)
+			if (TextBoxIconFile.Modified)
 			{
 				HandleIconFileChanged ();
-				TextBoxIconFile.Modified = false;
 			}
+			TextBoxIconFile.Modified = false;
 		}
 
 		private void ButtonIconImport_Click (object sender, EventArgs e)
 		{
-			if (!Program.FileIsReadOnly)
-			{
-				HandleIconImport ();
-			}
+			HandleIconImport ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void ButtonNewGUID_Click (object sender, EventArgs e)
 		{
-			if (!Program.FileIsReadOnly)
-			{
-				HandleNewGUID ();
-			}
+			HandleNewGUID ();
 		}
 
 		#endregion

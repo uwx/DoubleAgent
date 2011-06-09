@@ -49,86 +49,69 @@ namespace AgentCharacterEditor.Panels
 
 		private void NumericBranching0_Validated (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!ApplyBranchingUpdates ())
 			{
-				if (!ApplyBranchingUpdates ())
-				{
-					ShowFrameBranching ();
-				}
+				ShowFrameBranching ();
 			}
+			NumericBranching0.IsModified = false;
 		}
 
 		private void NumericTarget0_Validated (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!ApplyBranchingUpdates ())
 			{
-				if (!ApplyBranchingUpdates ())
-				{
-					ShowFrameBranching ();
-				}
+				ShowFrameBranching ();
 			}
+			NumericTarget0.IsModified = false;
 		}
 
 		private void NumericBranching1_Validated (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!ApplyBranchingUpdates ())
 			{
-				if (!ApplyBranchingUpdates ())
-				{
-					ShowFrameBranching ();
-				}
+				ShowFrameBranching ();
 			}
+			NumericBranching1.IsModified = false;
 		}
 
 		private void NumericTarget1_Validated (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!ApplyBranchingUpdates ())
 			{
-				if (!ApplyBranchingUpdates ())
-				{
-					ShowFrameBranching ();
-				}
+				ShowFrameBranching ();
 			}
+			NumericTarget1.IsModified = false;
 		}
 
 		private void NumericBranching2_Validated (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!ApplyBranchingUpdates ())
 			{
-				if (!ApplyBranchingUpdates ())
-				{
-					ShowFrameBranching ();
-				}
+				ShowFrameBranching ();
 			}
+			NumericBranching2.IsModified = false;
 		}
 
 		private void NumericTarget2_Validated (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!ApplyBranchingUpdates ())
 			{
-				if (!ApplyBranchingUpdates ())
-				{
-					ShowFrameBranching ();
-				}
+				ShowFrameBranching ();
 			}
+			NumericTarget2.IsModified = false;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void CheckBoxExit_Click (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleExitTypeChanged ();
-			}
+			HandleExitTypeChanged ();
 		}
 
 		private void NumericTargetExit_Validated (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleExitFrameChanged ();
-			}
+			HandleExitFrameChanged ();
+			NumericTargetExit.IsModified = false;
 		}
 
 		#endregion

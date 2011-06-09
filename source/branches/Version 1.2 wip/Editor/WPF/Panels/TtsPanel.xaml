@@ -10,16 +10,16 @@
 					  d:DesignWidth="600">
 	<Control.CommandBindings>
 		<CommandBinding Command="Copy"
-						CanExecute="CanEditCopy"
+						CanExecute="OnCanEditCopy"
 						Executed="OnEditCopy" />
 		<CommandBinding Command="Cut"
-						CanExecute="CanEditCut"
+						CanExecute="OnCanEditCut"
 						Executed="OnEditCut" />
 		<CommandBinding Command="Delete"
-						CanExecute="CanEditDelete"
+						CanExecute="OnCanEditDelete"
 						Executed="OnEditDelete" />
 		<CommandBinding Command="Paste"
-						CanExecute="CanEditPaste"
+						CanExecute="OnCanEditPaste"
 						Executed="OnEditPaste" />
 	</Control.CommandBindings>
 	<Grid Style="{StaticResource PanelMainGrid}">
@@ -35,8 +35,7 @@
 		<CheckBox Name="CheckBoxUseTTS"
 				  Content="Use Text-to-Speech for voice output"
 				  Style="{StaticResource PanelToggleButton}"
-				  Foreground="{StaticResource HeaderTextBrush}"
-				  Effect="{StaticResource HeaderTextShadow}"
+				  Foreground="{StaticResource BackgroundDarkishBrush}"
 				  HorizontalAlignment="Left"
 				  VerticalAlignment="Top"
 				  VerticalContentAlignment="Center"
@@ -78,7 +77,8 @@
 								  Grid.ColumnSpan="3"
 								  Margin="2"
 								  TabIndex="2"
-								  Style="{StaticResource PanelTextBox}" />
+								  Style="{StaticResource PanelTextBox}"
+								  ContextMenu="{StaticResource ContextMenuTextBox}" />
 				<Label Content="Gender"
 					   HorizontalAlignment="Left"
 					   Name="LabelGender"
@@ -95,7 +95,8 @@
 								  Grid.Row="1"
 								  Margin="2,2,0,0"
 								  TabIndex="3"
-								  Style="{StaticResource PanelTextBox}" />
+								  Style="{StaticResource PanelTextBox}"
+								  ContextMenu="{StaticResource ContextMenuTextBox}" />
 				<Label Content="Vendor"
 					   HorizontalAlignment="Left"
 					   Name="LabelVendor"
@@ -112,7 +113,8 @@
 								  Grid.ColumnSpan="3"
 								  Margin="2"
 								  TabIndex="5"
-								  Style="{StaticResource PanelTextBox}" />
+								  Style="{StaticResource PanelTextBox}"
+								  ContextMenu="{StaticResource ContextMenuTextBox}" />
 				<Label Content="Name"
 					   HorizontalAlignment="Left"
 					   Name="LabelName"
@@ -136,7 +138,8 @@
 								  VerticalAlignment="Center"
 								  TabIndex="4"
 								  DataContext="{Binding}"
-								  Style="{StaticResource PanelTextBox}" />
+								  Style="{StaticResource PanelTextBox}"
+								  ContextMenu="{StaticResource ContextMenuTextBox}" />
 				<ComboBox Grid.Column="1"
 						  Grid.ColumnSpan="3"
 						  Grid.Row="3"

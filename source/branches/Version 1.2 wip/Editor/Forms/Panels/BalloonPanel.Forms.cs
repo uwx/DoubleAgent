@@ -49,82 +49,79 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowBalloonFont ()
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			if (IsPanelEmpty)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				LabelBalloonFontSample.ResetText ();
-				LabelBalloonFontSample.Font = Font;
-				ButtonBalloonFont.Enabled = false;
-			}
-			else
-			{
-				if (FileBalloon.Font == null)
+				if (IsPanelEmpty)
 				{
 					LabelBalloonFontSample.ResetText ();
 					LabelBalloonFontSample.Font = Font;
+					ButtonBalloonFont.Enabled = false;
 				}
 				else
 				{
-					LabelBalloonFontSample.Text = FormatFontName (FileBalloon.Font);
-					LabelBalloonFontSample.Font = FileBalloon.Font;
+					if (FileBalloon.Font == null)
+					{
+						LabelBalloonFontSample.ResetText ();
+						LabelBalloonFontSample.Font = Font;
+					}
+					else
+					{
+						LabelBalloonFontSample.Text = FormatFontName (FileBalloon.Font);
+						LabelBalloonFontSample.Font = FileBalloon.Font;
+					}
+					ButtonBalloonFont.Enabled = !Program.FileIsReadOnly;
 				}
-				ButtonBalloonFont.Enabled = !Program.FileIsReadOnly;
 			}
-
-			PopIsPanelFilling (lWasFilling);
 		}
 
 		private void ShowBalloonColors ()
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			if (IsPanelEmpty)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				LabelBalloonForegroundSample.BackColor = BackColor;
-				LabelBalloonBackgroundSample.BackColor = BackColor;
-				LabelBalloonBorderSample.BackColor = BackColor;
-				LabelBalloonFontSample.ForeColor = ForeColor;
-				LabelBalloonFontSample.BackColor = BackColor;
-			}
-			else
-			{
-				LabelBalloonForegroundSample.BackColor = FileBalloon.FgColor;
-				LabelBalloonBackgroundSample.BackColor = FileBalloon.BkColor;
-				LabelBalloonBorderSample.BackColor = FileBalloon.BrColor;
-				LabelBalloonFontSample.ForeColor = LabelBalloonForegroundSample.BackColor;
-				LabelBalloonFontSample.BackColor = LabelBalloonBackgroundSample.BackColor;
-			}
+				if (IsPanelEmpty)
+				{
+					LabelBalloonForegroundSample.BackColor = BackColor;
+					LabelBalloonBackgroundSample.BackColor = BackColor;
+					LabelBalloonBorderSample.BackColor = BackColor;
+					LabelBalloonFontSample.ForeColor = ForeColor;
+					LabelBalloonFontSample.BackColor = BackColor;
+				}
+				else
+				{
+					LabelBalloonForegroundSample.BackColor = FileBalloon.FgColor;
+					LabelBalloonBackgroundSample.BackColor = FileBalloon.BkColor;
+					LabelBalloonBorderSample.BackColor = FileBalloon.BrColor;
+					LabelBalloonFontSample.ForeColor = LabelBalloonForegroundSample.BackColor;
+					LabelBalloonFontSample.BackColor = LabelBalloonBackgroundSample.BackColor;
+				}
 
-			ButtonBalloonForeground.Enabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			ButtonBalloonBackground.Enabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			ButtonBalloonBorder.Enabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			LabelBalloonForegroundSample.Enabled = !IsPanelEmpty;
-			LabelBalloonBackgroundSample.Enabled = !IsPanelEmpty;
-			LabelBalloonBorderSample.Enabled = !IsPanelEmpty;
-
-			PopIsPanelFilling (lWasFilling);
+				ButtonBalloonForeground.Enabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+				ButtonBalloonBackground.Enabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+				ButtonBalloonBorder.Enabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+				LabelBalloonForegroundSample.Enabled = !IsPanelEmpty;
+				LabelBalloonBackgroundSample.Enabled = !IsPanelEmpty;
+				LabelBalloonBorderSample.Enabled = !IsPanelEmpty;
+			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void ShowBalloonPreview ()
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			if (IsPanelEmpty)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				GroupBoxBalloonPreview.Enabled = false;
-				WordBalloonPreview.CharacterFile = null;
+				if (IsPanelEmpty)
+				{
+					GroupBoxBalloonPreview.Enabled = false;
+					WordBalloonPreview.CharacterFile = null;
+				}
+				else
+				{
+					GroupBoxBalloonPreview.Enabled = true;
+					WordBalloonPreview.CharacterFile = CharacterFile;
+				}
+				WordBalloonPreview.Refresh ();
 			}
-			else
-			{
-				GroupBoxBalloonPreview.Enabled = true;
-				WordBalloonPreview.CharacterFile = CharacterFile;
-			}
-			WordBalloonPreview.Refresh ();
-
-			PopIsPanelFilling (lWasFilling);
 		}
 
 		#endregion
@@ -133,96 +130,63 @@ namespace AgentCharacterEditor.Panels
 
 		private void CheckBoxWordBalloon_CheckChangedChanged (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && (CharacterFile != null) && !Program.FileIsReadOnly)
-			{
-				HandleEnabledChanged ();
-			}
+			HandleEnabledChanged ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void NumericCharsPerLine_Validated (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleCharsPerLineChanged ();
-			}
+			HandleCharsPerLineChanged ();
 			NumericCharsPerLine.IsModified = false;
 		}
 
 		private void NumericNumLines_Validated (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleNumLinesChanged ();
-			}
+			HandleNumLinesChanged ();
 			NumericNumLines.IsModified = false;
 		}
 
 		private void RadioButtonNumLines_CheckedChanged (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleSizeToTextChanged ();
-			}
+			HandleSizeToTextChanged ();
 		}
 
 		private void RadioButtonSizeToText_CheckedChanged (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleSizeToTextChanged ();
-			}
+			HandleSizeToTextChanged ();
 		}
 
 		private void CheckBoxAutoHide_CheckChangedChanged (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleAutoHideChanged ();
-			}
+			HandleAutoHideChanged ();
 		}
 
 		private void CheckBoxAutoPace_CheckChangedChanged (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleAutoPaceChanged ();
-			}
+			HandleAutoPaceChanged ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void ButtonBalloonFont_Click (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				UpdateFont ();
-			}
+			HandleUpdateFont ();
 		}
 
 		private void ButtonBalloonForeground_Click (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				UpdateForeground ();
-			}
+			HandleUpdateForeground ();
 		}
 
 		private void ButtonBalloonBackground_Click (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && (!IsPanelEmpty) && (!Program.FileIsReadOnly))
-			{
-				UpdateBackground ();
-			}
+			HandleUpdateBackground ();
 		}
 
 		private void ButtonBalloonBorder_Click (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				UpdateBorder ();
-			}
+			HandleUpdateBorder ();
 		}
 
 		#endregion

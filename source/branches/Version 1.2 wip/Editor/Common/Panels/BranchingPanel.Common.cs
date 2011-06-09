@@ -89,143 +89,140 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowFrameName ()
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			if (IsPanelEmpty)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				TextBoxFrameName.Clear ();
-				TextBoxFrameName.IsEnabled = false;
+				if (IsPanelEmpty)
+				{
+					TextBoxFrameName.Clear ();
+					TextBoxFrameName.IsEnabled = false;
+				}
+				else
+				{
+					TextBoxFrameName.Text = Titles.FrameAnimation (Frame);
+					TextBoxFrameName.IsEnabled = true;
+				}
 			}
-			else
-			{
-				TextBoxFrameName.Text = Titles.FrameAnimation (Frame);
-				TextBoxFrameName.IsEnabled = true;
-			}
-
-			PopIsPanelFilling (lWasFilling);
 		}
 
 		private void ShowFrameBranching ()
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			if (IsPanelEmpty)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				NumericBranching0.Clear ();
-				NumericBranching1.Clear ();
-				NumericBranching2.Clear ();
-				NumericBranchingNot.Clear ();
-				NumericTarget0.Clear ();
-				NumericTarget1.Clear ();
-				NumericTarget2.Clear ();
-
-				NumericBranching0.IsEnabled = false;
-				NumericBranching1.IsEnabled = false;
-				NumericBranching2.IsEnabled = false;
-				NumericBranchingNot.IsEnabled = false;
-				NumericTarget0.IsEnabled = false;
-				NumericTarget1.IsEnabled = false;
-				NumericTarget2.IsEnabled = false;
-			}
-			else
-			{
-				Int16 lRemainder = 100;
-
-				if ((Frame.Branching != null) && (Frame.Branching.Length >= 1))
+				if (IsPanelEmpty)
 				{
-					NumericTarget0.Maximum = this.Animation.Frames.Count;
-					NumericTarget0.Value = Frame.Branching[0].mFrameNdx + 1;
-					NumericBranching0.Value = Frame.Branching[0].mProbability;
-					lRemainder -= (Int16)Frame.Branching[0].mProbability;
-				}
-				else
-				{
+					NumericBranching0.Clear ();
+					NumericBranching1.Clear ();
+					NumericBranching2.Clear ();
+					NumericBranchingNot.Clear ();
 					NumericTarget0.Clear ();
-					NumericBranching0.Value = 0;
-				}
-				if ((Frame.Branching != null) && (Frame.Branching.Length >= 2))
-				{
-					NumericTarget1.Maximum = this.Animation.Frames.Count;
-					NumericTarget1.Value = Frame.Branching[1].mFrameNdx + 1;
-					NumericBranching1.Value = Frame.Branching[1].mProbability;
-					lRemainder -= (Int16)Frame.Branching[1].mProbability;
-				}
-				else
-				{
 					NumericTarget1.Clear ();
-					NumericBranching1.Value = 0;
-				}
-				if ((Frame.Branching != null) && (Frame.Branching.Length >= 3))
-				{
-					NumericTarget2.Maximum = this.Animation.Frames.Count;
-					NumericTarget2.Value = Frame.Branching[2].mFrameNdx + 1;
-					NumericBranching2.Value = Frame.Branching[2].mProbability;
-					lRemainder -= (Int16)Frame.Branching[2].mProbability;
+					NumericTarget2.Clear ();
+
+					NumericBranching0.IsEnabled = false;
+					NumericBranching1.IsEnabled = false;
+					NumericBranching2.IsEnabled = false;
+					NumericBranchingNot.IsEnabled = false;
+					NumericTarget0.IsEnabled = false;
+					NumericTarget1.IsEnabled = false;
+					NumericTarget2.IsEnabled = false;
 				}
 				else
 				{
-					NumericTarget2.Clear ();
-					NumericBranching2.Value = 0;
+					Int16 lRemainder = 100;
+
+					if ((Frame.Branching != null) && (Frame.Branching.Length >= 1))
+					{
+						NumericTarget0.Maximum = this.Animation.Frames.Count;
+						NumericTarget0.Value = Frame.Branching[0].mFrameNdx + 1;
+						NumericBranching0.Value = Frame.Branching[0].mProbability;
+						lRemainder -= (Int16)Frame.Branching[0].mProbability;
+					}
+					else
+					{
+						NumericTarget0.Clear ();
+						NumericBranching0.Value = 0;
+					}
+					if ((Frame.Branching != null) && (Frame.Branching.Length >= 2))
+					{
+						NumericTarget1.Maximum = this.Animation.Frames.Count;
+						NumericTarget1.Value = Frame.Branching[1].mFrameNdx + 1;
+						NumericBranching1.Value = Frame.Branching[1].mProbability;
+						lRemainder -= (Int16)Frame.Branching[1].mProbability;
+					}
+					else
+					{
+						NumericTarget1.Clear ();
+						NumericBranching1.Value = 0;
+					}
+					if ((Frame.Branching != null) && (Frame.Branching.Length >= 3))
+					{
+						NumericTarget2.Maximum = this.Animation.Frames.Count;
+						NumericTarget2.Value = Frame.Branching[2].mFrameNdx + 1;
+						NumericBranching2.Value = Frame.Branching[2].mProbability;
+						lRemainder -= (Int16)Frame.Branching[2].mProbability;
+					}
+					else
+					{
+						NumericTarget2.Clear ();
+						NumericBranching2.Value = 0;
+					}
+
+					NumericBranchingNot.Value = lRemainder;
+
+					NumericBranching0.IsEnabled = !Program.FileIsReadOnly;
+					NumericBranching1.IsEnabled = !Program.FileIsReadOnly;
+					NumericBranching2.IsEnabled = !Program.FileIsReadOnly;
+					NumericBranchingNot.IsEnabled = false;
+					NumericTarget0.IsEnabled = (NumericBranching0.Value > 0) && !Program.FileIsReadOnly;
+					NumericTarget1.IsEnabled = (NumericBranching1.Value > 0) && !Program.FileIsReadOnly;
+					NumericTarget2.IsEnabled = (NumericBranching2.Value > 0) && !Program.FileIsReadOnly;
 				}
 
-				NumericBranchingNot.Value = lRemainder;
-
-				NumericBranching0.IsEnabled = !Program.FileIsReadOnly;
-				NumericBranching1.IsEnabled = !Program.FileIsReadOnly;
-				NumericBranching2.IsEnabled = !Program.FileIsReadOnly;
-				NumericBranchingNot.IsEnabled = false;
-				NumericTarget0.IsEnabled = (NumericBranching0.Value > 0) && !Program.FileIsReadOnly;
-				NumericTarget1.IsEnabled = (NumericBranching1.Value > 0) && !Program.FileIsReadOnly;
-				NumericTarget2.IsEnabled = (NumericBranching2.Value > 0) && !Program.FileIsReadOnly;
+				NumericBranching0.IsModified = false;
+				NumericBranching1.IsModified = false;
+				NumericBranching2.IsModified = false;
+				NumericBranchingNot.IsModified = false;
+				NumericTarget0.IsModified = false;
+				NumericTarget1.IsModified = false;
+				NumericTarget2.IsModified = false;
 			}
-
-			NumericBranching0.IsModified = false;
-			NumericBranching1.IsModified = false;
-			NumericBranching2.IsModified = false;
-			NumericBranchingNot.IsModified = false;
-			NumericTarget0.IsModified = false;
-			NumericTarget1.IsModified = false;
-			NumericTarget2.IsModified = false;
-
-			PopIsPanelFilling (lWasFilling);
 		}
 
 		private void ShowExitFrame ()
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			if (IsPanelEmpty)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				CheckBoxExit.IsChecked = false;
-				CheckBoxExit.IsEnabled = false;
-				NumericTargetExit.Clear ();
-				NumericTargetExit.IsEnabled = false;
-			}
-			else
-			{
-				if (Frame.ExitFrame >= 0)
-				{
-					CheckBoxExit.IsChecked = true;
-					NumericTargetExit.Maximum = this.Animation.Frames.Count;
-					NumericTargetExit.Value = Frame.ExitFrame + 1;
-					NumericTargetExit.IsEnabled = !Program.FileIsReadOnly;
-
-					if (Frame.ExitFrame == (Int16)this.Animation.Frames.IndexOf (Frame))
-					{
-						NumericTargetExit.IsHighlighted = true;
-					}
-				}
-				else
+				if (IsPanelEmpty)
 				{
 					CheckBoxExit.IsChecked = false;
+					CheckBoxExit.IsEnabled = false;
 					NumericTargetExit.Clear ();
 					NumericTargetExit.IsEnabled = false;
 				}
-				CheckBoxExit.IsEnabled = !Program.FileIsReadOnly;
-			}
-			NumericTargetExit.IsModified = false;
+				else
+				{
+					if (Frame.ExitFrame >= 0)
+					{
+						CheckBoxExit.IsChecked = true;
+						NumericTargetExit.Maximum = this.Animation.Frames.Count;
+						NumericTargetExit.Value = Frame.ExitFrame + 1;
+						NumericTargetExit.IsEnabled = !Program.FileIsReadOnly;
 
-			PopIsPanelFilling (lWasFilling);
+						if (Frame.ExitFrame == (Int16)this.Animation.Frames.IndexOf (Frame))
+						{
+							NumericTargetExit.IsHighlighted = true;
+						}
+					}
+					else
+					{
+						CheckBoxExit.IsChecked = false;
+						NumericTargetExit.Clear ();
+						NumericTargetExit.IsEnabled = false;
+					}
+					CheckBoxExit.IsEnabled = !Program.FileIsReadOnly;
+				}
+				NumericTargetExit.IsModified = false;
+			}
 		}
 
 		#endregion
@@ -236,7 +233,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			Boolean lRet = false;
 
-			if (!IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
 				Int16[] lProbability = new Int16[3];
 				Int16[] lTarget = new Int16[3];
@@ -292,6 +289,14 @@ namespace AgentCharacterEditor.Panels
 					lRet = UpdateAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateAnimationFrame, this);
 				}
 			}
+
+			NumericBranching0.IsModified = false;
+			NumericBranching1.IsModified = false;
+			NumericBranching2.IsModified = false;
+			NumericTarget0.IsModified = false;
+			NumericTarget1.IsModified = false;
+			NumericTarget2.IsModified = false;
+
 			return lRet;
 		}
 
@@ -299,38 +304,46 @@ namespace AgentCharacterEditor.Panels
 
 		private void HandleExitTypeChanged ()
 		{
-			UpdateAnimationFrame lUpdate = new UpdateAnimationFrame (Frame, false);
-
-			if (CheckBoxExit.IsChecked.Value)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				Int16 lExitFrame = (Int16)Math.Min (Math.Max ((int)Frame.ExitFrame, 0), this.Animation.Frames.Count - 1);
+				UpdateAnimationFrame lUpdate = new UpdateAnimationFrame (Frame, false);
 
-				if (lExitFrame == (Int16)this.Animation.Frames.IndexOf (Frame))
+				if (CheckBoxExit.IsChecked.Value)
 				{
-					lExitFrame++;
+					Int16 lExitFrame = (Int16)Math.Min (Math.Max ((int)Frame.ExitFrame, 0), this.Animation.Frames.Count - 1);
+
+					if (lExitFrame == (Int16)this.Animation.Frames.IndexOf (Frame))
+					{
+						lExitFrame++;
+					}
+					lUpdate.ExitFrame = lExitFrame;
 				}
-				lUpdate.ExitFrame = lExitFrame;
-			}
-			else
-			{
-				lUpdate.ExitFrame = -1;
+				else
+				{
+					lUpdate.ExitFrame = -1;
+				}
+
+				if (!UpdateAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateAnimationFrame, this))
+				{
+					ShowExitFrame ();
+				}
 			}
 
-			if (!UpdateAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateAnimationFrame, this))
-			{
-				ShowExitFrame ();
-			}
 		}
 
 		private void HandleExitFrameChanged ()
 		{
-			UpdateAnimationFrame lUpdate = new UpdateAnimationFrame (Frame, false);
-
-			lUpdate.ExitFrame = (Int16)(NumericTargetExit.Value - 1);
-			if (!UpdateAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateAnimationFrame, this))
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				ShowExitFrame ();
+				UpdateAnimationFrame lUpdate = new UpdateAnimationFrame (Frame, false);
+
+				lUpdate.ExitFrame = (Int16)(NumericTargetExit.Value - 1);
+				if (!UpdateAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateAnimationFrame, this))
+				{
+					ShowExitFrame ();
+				}
 			}
+			NumericTargetExit.IsModified = false;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

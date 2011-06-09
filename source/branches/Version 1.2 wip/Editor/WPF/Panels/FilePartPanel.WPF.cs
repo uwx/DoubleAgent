@@ -157,7 +157,7 @@ namespace AgentCharacterEditor.Panels
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		protected void CanEditCut (object sender, CanExecuteRoutedEventArgs e)
+		protected void OnCanEditCut (object sender, CanExecuteRoutedEventArgs e)
 		{
 			if (HandleCanEditCut (new Global.CanEditEventArgs (e)))
 			{
@@ -165,7 +165,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		protected void CanEditCopy (object sender, CanExecuteRoutedEventArgs e)
+		protected void OnCanEditCopy (object sender, CanExecuteRoutedEventArgs e)
 		{
 			if (HandleCanEditCopy (new Global.CanEditEventArgs (e)))
 			{
@@ -173,7 +173,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		protected void CanEditDelete (object sender, CanExecuteRoutedEventArgs e)
+		protected void OnCanEditDelete (object sender, CanExecuteRoutedEventArgs e)
 		{
 			if (HandleCanEditDelete (new Global.CanEditEventArgs (e)))
 			{
@@ -181,7 +181,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		protected void CanEditPaste (object sender, CanExecuteRoutedEventArgs e)
+		protected void OnCanEditPaste (object sender, CanExecuteRoutedEventArgs e)
 		{
 			if (HandleCanEditPaste (new Global.CanEditEventArgs (e)))
 			{

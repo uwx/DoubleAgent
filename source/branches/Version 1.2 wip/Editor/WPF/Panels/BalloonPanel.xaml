@@ -11,16 +11,16 @@
 					  d:DesignWidth="600">
 	<Control.CommandBindings>
 		<CommandBinding Command="Copy"
-						CanExecute="CanEditCopy"
+						CanExecute="OnCanEditCopy"
 						Executed="OnEditCopy" />
 		<CommandBinding Command="Cut"
-						CanExecute="CanEditCut"
+						CanExecute="OnCanEditCut"
 						Executed="OnEditCut" />
 		<CommandBinding Command="Delete"
-						CanExecute="CanEditDelete"
+						CanExecute="OnCanEditDelete"
 						Executed="OnEditDelete" />
 		<CommandBinding Command="Paste"
-						CanExecute="CanEditPaste"
+						CanExecute="OnCanEditPaste"
 						Executed="OnEditPaste" />
 	</Control.CommandBindings>
 	<Grid Style="{StaticResource PanelMainGrid}">
@@ -36,8 +36,7 @@
 		<CheckBox Name="CheckBoxWordBalloon"
 				  Content="Use the Word Balloon"
 				  Style="{StaticResource PanelToggleButton}"
-				  Foreground="{StaticResource HeaderTextBrush}"
-				  Effect="{StaticResource HeaderTextShadow}"
+				  Foreground="{StaticResource BackgroundDarkishBrush}"
 				  HorizontalAlignment="Left"
 				  VerticalAlignment="Top"
 				  VerticalContentAlignment="Center"
@@ -78,7 +77,8 @@
 											  TabIndex="1"
 											  Grid.Column="1"
 											  IsModifiedChanged="NumericCharsPerLine_IsModifiedChanged"
-											  Style="{StaticResource PanelTextBox}" />
+											  Style="{StaticResource PanelTextBox}"
+											  ContextMenu="{StaticResource ContextMenuTextBox}" />
 					</Grid>
 					<Grid>
 						<Grid.ColumnDefinitions>
@@ -104,7 +104,8 @@
 											  Grid.Column="1"
 											  TabIndex="3"
 											  IsModifiedChanged="NumericNumLines_IsModifiedChanged"
-											  Style="{StaticResource PanelTextBox}" />
+											  Style="{StaticResource PanelTextBox}"
+											  ContextMenu="{StaticResource ContextMenuTextBox}" />
 					</Grid>
 					<RadioButton Content="Size to text"
 								 Name="RadioButtonSizeToText"
@@ -152,7 +153,8 @@
 							   Grid.Column="1"
 							   VerticalAlignment="Top"
 							   Padding="5,3"
-							   Margin="0,5,0,0">
+							   Margin="5,5,0,0"
+							   UseLayoutRounding="False">
 							<TextBlock Name="TextBalloonFontSample"
 									   Text="&lt;font&gt;"
 									   TextTrimming="CharacterEllipsis" />
@@ -172,17 +174,15 @@
 								TabIndex="7"
 								Style="{StaticResource PanelPushButton}"
 								Click="ButtonBalloonForeground_Click" />
-						<Border BorderBrush="{StaticResource HeaderTextBrush}"
-								BorderThickness="1"
-								Grid.ColumnSpan="1"
-								Grid.Column="1"
-								HorizontalAlignment="Left"
-								Margin="0,5">
-							<Label Name="LabelBalloonForegroundSample"
-								   Width="50"
-								   HorizontalAlignment="Left"
-								   VerticalAlignment="Stretch" />
-						</Border>
+						<Label Name="LabelBalloonForegroundSample"
+							   BorderBrush="{StaticResource BackgroundDarkBrush}"
+							   BorderThickness="1"
+							   Grid.Column="1"
+							   Margin="5,5,0,5"
+							   Width="50"
+							   HorizontalAlignment="Left"
+							   VerticalAlignment="Stretch"
+							   UseLayoutRounding="False" />
 					</Grid>
 					<Grid>
 						<Grid.ColumnDefinitions>
@@ -198,16 +198,15 @@
 								TabIndex="8"
 								Style="{StaticResource PanelPushButton}"
 								Click="ButtonBalloonBackground_Click" />
-						<Border BorderBrush="{StaticResource HeaderTextBrush}"
-								BorderThickness="1"
-								Margin="0,5"
-								HorizontalAlignment="Left"
-								Grid.Column="1">
-							<Label Name="LabelBalloonBackgroundSample"
-								   Width="50"
-								   HorizontalAlignment="Left"
-								   VerticalAlignment="Stretch" />
-						</Border>
+						<Label Name="LabelBalloonBackgroundSample"
+							   BorderBrush="{StaticResource BackgroundDarkBrush}"
+							   BorderThickness="1"
+							   Width="50"
+							   Margin="5,5,0,5"
+							   Grid.Column="1"
+							   HorizontalAlignment="Left"
+							   VerticalAlignment="Stretch"
+							   UseLayoutRounding="False" />
 					</Grid>
 					<Grid>
 						<Grid.ColumnDefinitions>
@@ -223,16 +222,15 @@
 								TabIndex="9"
 								Style="{StaticResource PanelPushButton}"
 								Click="ButtonBalloonBorder_Click" />
-						<Border BorderBrush="{StaticResource HeaderTextBrush}"
-								BorderThickness="1"
-								Margin="0,5"
-								HorizontalAlignment="Left"
-								Grid.Column="1">
-							<Label Name="LabelBalloonBorderSample"
-								   Width="50"
-								   HorizontalAlignment="Left"
-								   VerticalAlignment="Stretch" />
-						</Border>
+						<Label Name="LabelBalloonBorderSample"
+							   BorderBrush="{StaticResource BackgroundDarkBrush}"
+							   BorderThickness="1"
+							   Margin="5,5,0,5"
+							   Grid.Column="1"
+							   Width="50"
+							   HorizontalAlignment="Left"
+							   VerticalAlignment="Stretch"
+							   UseLayoutRounding="False" />
 					</Grid>
 				</StackPanel>
 			</Grid>

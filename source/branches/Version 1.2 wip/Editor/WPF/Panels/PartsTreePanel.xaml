@@ -9,16 +9,16 @@
 					  d:DesignWidth="300">
 	<Control.CommandBindings>
 		<CommandBinding Command="Copy"
-						CanExecute="CanEditCopy"
+						CanExecute="OnCanEditCopy"
 						Executed="OnEditCopy" />
 		<CommandBinding Command="Cut"
-						CanExecute="CanEditCut"
+						CanExecute="OnCanEditCut"
 						Executed="OnEditCut" />
 		<CommandBinding Command="Delete"
-						CanExecute="CanEditDelete"
+						CanExecute="OnCanEditDelete"
 						Executed="OnEditDelete" />
 		<CommandBinding Command="Paste"
-						CanExecute="CanEditPaste"
+						CanExecute="OnCanEditPaste"
 						Executed="OnEditPaste" />
 	</Control.CommandBindings>
 	<Grid>
@@ -30,7 +30,8 @@
 				  SelectedItemChanged="TreeViewMain_SelectedItemChanged"
 				  Style="{StaticResource PanelTreeView}"
 				  TabIndex="0"
-				  ItemContainerStyle="{StaticResource PanelTreeViewItem}">
+				  ItemContainerStyle="{StaticResource PanelTreeViewItem}"
+				  MouseUp="TreeViewMain_MouseUp">
 			<TreeViewItem Header="Character"
 						  Name="NodeCharacter"
 						  Style="{StaticResource PanelTreeViewItem}">

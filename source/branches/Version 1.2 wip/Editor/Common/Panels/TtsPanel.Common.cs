@@ -105,48 +105,47 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowTtsProperties ()
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			CheckBoxUseTTS.IsEnabled = (CharacterFile != null) && !Program.FileIsReadOnly;
-			GroupBoxTTS.IsEnabled = !IsPanelEmpty;
-			TextBoxTTSModeID.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			TextBoxVendor.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			TextBoxLanguage.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			TextBoxGender.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-
-			LabelName.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly; 
-			LabelGender.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly; 
-			LabelLanguage.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly; 
-			LabelVendor.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly; 
-			LabelModeID.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly; 
-
-			if (IsPanelEmpty)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				CheckBoxUseTTS.IsChecked = false;
-				ComboBoxName.SelectedIndex = -1;
-				ComboBoxName.IsEnabled = false;
-				TextBoxTTSModeID.Clear ();
-				TextBoxVendor.Clear ();
-				TextBoxLanguage.Clear ();
-				TextBoxGender.Clear ();
+				CheckBoxUseTTS.IsEnabled = (CharacterFile != null) && !Program.FileIsReadOnly;
+				GroupBoxTTS.IsEnabled = !IsPanelEmpty;
+				TextBoxTTSModeID.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+				TextBoxVendor.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+				TextBoxLanguage.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+				TextBoxGender.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+
+				LabelName.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+				LabelGender.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+				LabelLanguage.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+				LabelVendor.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+				LabelModeID.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+
+				if (IsPanelEmpty)
+				{
+					CheckBoxUseTTS.IsChecked = false;
+					ComboBoxName.SelectedIndex = -1;
+					ComboBoxName.IsEnabled = false;
+					TextBoxTTSModeID.Clear ();
+					TextBoxVendor.Clear ();
+					TextBoxLanguage.Clear ();
+					TextBoxGender.Clear ();
+				}
+				else
+				{
+					Sapi4VoiceInfo lVoiceInfo;
+
+					CheckBoxUseTTS.IsChecked = true;
+					ShowAllVoices ();
+					lVoiceInfo = VoiceComboInfo (FileTts.Mode);
+					ComboBoxName.SelectedIndex = VoiceComboNdx (FileTts.Mode);
+					ComboBoxName.IsEnabled = !Program.FileIsReadOnly;
+
+					TextBoxTTSModeID.Text = FileTts.ModeId.ToString ().ToUpper ();
+					TextBoxVendor.Text = (lVoiceInfo == null) ? "" : lVoiceInfo.Manufacturer.Replace ("&&", "&");
+					TextBoxLanguage.Text = new System.Globalization.CultureInfo (FileTts.Language).DisplayName;
+					TextBoxGender.Text = VoiceComboItem.GenderName (FileTts.Gender);
+				}
 			}
-			else
-			{
-				Sapi4VoiceInfo lVoiceInfo;
-
-				CheckBoxUseTTS.IsChecked = true;
-				ShowAllVoices ();
-				lVoiceInfo = VoiceComboInfo (FileTts.Mode);
-				ComboBoxName.SelectedIndex = VoiceComboNdx (FileTts.Mode);
-				ComboBoxName.IsEnabled = !Program.FileIsReadOnly;
-
-				TextBoxTTSModeID.Text = FileTts.ModeId.ToString ().ToUpper ();
-				TextBoxVendor.Text = (lVoiceInfo == null) ? "" : lVoiceInfo.Manufacturer.Replace ("&&", "&");
-				TextBoxLanguage.Text = new System.Globalization.CultureInfo (FileTts.Language).DisplayName;
-				TextBoxGender.Text = VoiceComboItem.GenderName (FileTts.Gender);
-			}
-
-			PopIsPanelFilling (lWasFilling);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -210,28 +209,34 @@ namespace AgentCharacterEditor.Panels
 
 		protected void HandleEnabledChanged ()
 		{
-			UpdateCharacterTts lUpdate = new UpdateCharacterTts (null);
+			if (!IsPanelFilling && (CharacterFile != null) && !Program.FileIsReadOnly)
+			{
+				UpdateCharacterTts lUpdate = new UpdateCharacterTts (null);
 
-			if (CheckBoxUseTTS.IsChecked.Value)
-			{
-				lUpdate.CharacterStyle |= CharacterStyle.Tts;
+				if (CheckBoxUseTTS.IsChecked.Value)
+				{
+					lUpdate.CharacterStyle |= CharacterStyle.Tts;
+				}
+				else
+				{
+					lUpdate.CharacterStyle &= ~CharacterStyle.Tts;
+				}
+				UpdateCharacterTts.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterTts, this);
 			}
-			else
-			{
-				lUpdate.CharacterStyle &= ~CharacterStyle.Tts;
-			}
-			UpdateCharacterTts.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterTts, this);
 		}
 
 		protected void HandleVoiceChanged ()
 		{
-			Sapi4VoiceInfo lVoiceInfo = VoiceComboInfo (ComboBoxName.SelectedIndex);
-
-			if (lVoiceInfo != null)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateCharacterTts lUpdate = new UpdateCharacterTts (lVoiceInfo);
+				Sapi4VoiceInfo lVoiceInfo = VoiceComboInfo (ComboBoxName.SelectedIndex);
 
-				UpdateCharacterTts.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterTts, this);
+				if (lVoiceInfo != null)
+				{
+					UpdateCharacterTts lUpdate = new UpdateCharacterTts (lVoiceInfo);
+
+					UpdateCharacterTts.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterTts, this);
+				}
 			}
 		}
 

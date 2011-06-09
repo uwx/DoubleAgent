@@ -25,6 +25,82 @@ using AppResources = AgentCharacterEditor.Resources;
 
 namespace AgentCharacterEditor.Global
 {
+	public class ContextMenuEdit : ContextMenuStrip
+	{
+		public ToolStripMenuItem MenuItemCut;
+		public ToolStripMenuItem MenuItemCopy;
+		public ToolStripMenuItem MenuItemPaste;
+		public ToolStripMenuItem MenuItemDelete;
+
+		public ContextMenuEdit (IContainer pContainer)
+			: base (pContainer)
+		{
+			Name = "ContextMenuEdit";
+		}
+
+		public void InitializeComponent ()
+		{
+			this.MenuItemCut = new System.Windows.Forms.ToolStripMenuItem ();
+			this.MenuItemCopy = new System.Windows.Forms.ToolStripMenuItem ();
+			this.MenuItemPaste = new System.Windows.Forms.ToolStripMenuItem ();
+			this.MenuItemDelete = new System.Windows.Forms.ToolStripMenuItem ();
+			this.SuspendLayout ();
+			// 
+			// MenuItemCut
+			// 
+			this.MenuItemCut.Enabled = false;
+			this.MenuItemCut.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditCut;
+			this.MenuItemCut.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.MenuItemCut.Name = "MenuItemCut";
+			this.MenuItemCut.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+			this.MenuItemCut.Size = new System.Drawing.Size (181, 28);
+			this.MenuItemCut.Text = "Cu&t";
+			// 
+			// MenuItemCopy
+			// 
+			this.MenuItemCopy.Enabled = false;
+			this.MenuItemCopy.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditCopy;
+			this.MenuItemCopy.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.MenuItemCopy.Name = "MenuItemCopy";
+			this.MenuItemCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+			this.MenuItemCopy.Size = new System.Drawing.Size (181, 28);
+			this.MenuItemCopy.Text = "&Copy";
+			// 
+			// MenuItemPaste
+			// 
+			this.MenuItemPaste.Enabled = false;
+			this.MenuItemPaste.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditPaste;
+			this.MenuItemPaste.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.MenuItemPaste.Name = "MenuItemPaste";
+			this.MenuItemPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
+			this.MenuItemPaste.Size = new System.Drawing.Size (181, 28);
+			this.MenuItemPaste.Text = "&Paste";
+			// 
+			// MenuItemDelete
+			// 
+			this.MenuItemDelete.Enabled = false;
+			this.MenuItemDelete.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditDelete;
+			this.MenuItemDelete.Name = "MenuItemDelete";
+			this.MenuItemDelete.ShortcutKeyDisplayString = "";
+			this.MenuItemDelete.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+			this.MenuItemDelete.Size = new System.Drawing.Size (181, 28);
+			this.MenuItemDelete.Text = "&Delete";
+			// 
+			// ContextMenuEdit
+			// 
+			this.Items.AddRange (new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItemCut,
+            this.MenuItemCopy,
+            this.MenuItemPaste,
+            this.MenuItemDelete});
+			this.Size = new System.Drawing.Size (234, 88);
+			this.ResumeLayout (false);
+
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+
 	public class EditEventArgs : EventArgs
 	{
 		public EditEventArgs ()
@@ -300,51 +376,21 @@ namespace AgentCharacterEditor.Global
 
 	///////////////////////////////////////////////////////////////////////////////
 
-	public class ContextMenuEdit : ContextMenuStrip
+	public static partial class EditEventsExtensions
 	{
-		public ContextMenuEdit (IContainer pContainer)
-			: base (pContainer)
+		public static void SetTipText (this ToolStripButton pButton, String pTipText)
 		{
-			Name = "ContextMenuStub";
+			pButton.Text = pTipText;
 		}
 
-		public ToolStripMenuItem AddMenuItemClone (ToolStripMenuItem pMenuItem)
+		public static void SetTitle (this ToolStripButton pButton, String pTitle)
 		{
-			ToolStripMenuItem lMenuItem = new ToolStripMenuItem ();
+			pButton.Text = pTitle.NoMenuPrefix ();
+		}
 
-			lMenuItem.Name = pMenuItem.Name;
-			lMenuItem.Text = pMenuItem.Text;
-			lMenuItem.Image = pMenuItem.Image;
-			lMenuItem.ImageTransparentColor = pMenuItem.ImageTransparentColor;
-			lMenuItem.ShortcutKeys = lMenuItem.ShortcutKeys;
-			lMenuItem.Enabled = pMenuItem.Enabled;
-
-			Items.Add (lMenuItem);
-			return lMenuItem;
+		public static void SetTitle (this ToolStripMenuItem pMenuItem, String pTitle)
+		{
+			pMenuItem.Text = pTitle;
 		}
 	}
-
-	///////////////////////////////////////////////////////////////////////////////
-
-	public class ContextMenuEventArgs : CanEditEventArgs
-	{
-		public ContextMenuEventArgs (ContextMenuStrip pContextMenu, Control pActiveControl)
-		{
-			ContextMenu = pContextMenu;
-			ActiveControl = pActiveControl;
-		}
-
-		public ContextMenuStrip ContextMenu
-		{
-			get;
-			private set;
-		}
-		public Control ActiveControl
-		{
-			get;
-			private set;
-		}
-	}
-
-	public delegate void ContextMenuEventHandler (object sender, ContextMenuEventArgs e);
 }

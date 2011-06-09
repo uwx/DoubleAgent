@@ -20,8 +20,6 @@
 /////////////////////////////////////////////////////////////////////////////
 using System;
 using System.Windows.Controls;
-using System.Windows.Input;
-using AppResources = AgentCharacterEditor.Resources;
 
 namespace AgentCharacterEditor.Global
 {
@@ -107,193 +105,22 @@ namespace AgentCharacterEditor.Global
 
 	///////////////////////////////////////////////////////////////////////////////
 
-	public static class EditEventsExtensions
-	{
-		static public void PutCutTitle (this CanExecuteRoutedEventArgs pEventArgs)
-		{
-			pEventArgs.PutCutTitle (String.Empty);
-		}
-
-		static public void PutCutTitle (this CanExecuteRoutedEventArgs pEventArgs, String pObjectTitle)
-		{
-			if (pEventArgs.Parameter is Button)
-			{
-				(pEventArgs.Parameter as Button).ToolTip = String.Format (AppResources.Resources.EditCutThis.NoMenuPrefix (), pObjectTitle);
-			}
-			if (pEventArgs.Parameter is MenuItem)
-			{
-				(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditCutThis.FixMenuPrefix (), pObjectTitle);
-			}
-			if (!String.IsNullOrEmpty (pObjectTitle))
-			{
-				pEventArgs.CanExecute = true;
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		static public void PutCopyTitle (this CanExecuteRoutedEventArgs pEventArgs)
-		{
-			pEventArgs.PutCopyTitle (String.Empty);
-		}
-
-		static public void PutCopyTitle (this CanExecuteRoutedEventArgs pEventArgs, String pObjectTitle)
-		{
-			if (pEventArgs.Parameter is Button)
-			{
-				(pEventArgs.Parameter as Button).ToolTip = String.Format (AppResources.Resources.EditCopyThis.NoMenuPrefix (), pObjectTitle);
-			}
-			if (pEventArgs.Parameter is MenuItem)
-			{
-				(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditCopyThis.FixMenuPrefix (), pObjectTitle);
-			}
-			if (!String.IsNullOrEmpty (pObjectTitle))
-			{
-				pEventArgs.CanExecute = true;
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		static public void PutDeleteTitle (this CanExecuteRoutedEventArgs pEventArgs)
-		{
-			pEventArgs.PutDeleteTitle (String.Empty);
-		}
-
-		static public void PutDeleteTitle (this CanExecuteRoutedEventArgs pEventArgs, String pObjectTitle)
-		{
-			if (pEventArgs.Parameter is Button)
-			{
-				(pEventArgs.Parameter as Button).ToolTip = String.Format (AppResources.Resources.EditDeleteThis.NoMenuPrefix (), pObjectTitle);
-			}
-			if (pEventArgs.Parameter is MenuItem)
-			{
-				(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditDeleteThis.FixMenuPrefix (), pObjectTitle);
-			}
-			if (!String.IsNullOrEmpty (pObjectTitle))
-			{
-				pEventArgs.CanExecute = true;
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		static public void PutPasteTitle (this CanExecuteRoutedEventArgs pEventArgs)
-		{
-			pEventArgs.PutPasteTitle (String.Empty);
-		}
-
-		static public void PutPasteTitle (this CanExecuteRoutedEventArgs pEventArgs, String pObjectTitle)
-		{
-			if (pEventArgs.Parameter is Button)
-			{
-				(pEventArgs.Parameter as Button).ToolTip = String.Format (AppResources.Resources.EditPasteThis.NoMenuPrefix (), pObjectTitle);
-			}
-			if (pEventArgs.Parameter is MenuItem)
-			{
-				(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditPasteThis.FixMenuPrefix (), pObjectTitle);
-			}
-			if (!String.IsNullOrEmpty (pObjectTitle))
-			{
-				pEventArgs.CanExecute = true;
-			}
-		}
-
-		static public void PutPasteTitle (this CanExecuteRoutedEventArgs pEventArgs, String pPasteTypeTitle, String pObjectTitle)
-		{
-			if (pEventArgs.Parameter is Button)
-			{
-				(pEventArgs.Parameter as Button).ToolTip = String.Format (pPasteTypeTitle.NoMenuPrefix (), pObjectTitle);
-			}
-			if (pEventArgs.Parameter is MenuItem)
-			{
-				(pEventArgs.Parameter as MenuItem).Header = String.Format (pPasteTypeTitle.FixMenuPrefix (), pObjectTitle);
-			}
-			if (!String.IsNullOrEmpty (pObjectTitle))
-			{
-				pEventArgs.CanExecute = true;
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		static public void PutUndoTitle (this CanExecuteRoutedEventArgs pEventArgs)
-		{
-			pEventArgs.PutUndoTitle (String.Empty);
-		}
-
-		static public void PutUndoTitle (this CanExecuteRoutedEventArgs pEventArgs, String pObjectTitle)
-		{
-			if (pEventArgs.Parameter is Button)
-			{
-				if (String.IsNullOrEmpty (pObjectTitle))
-				{
-					(pEventArgs.Parameter as Button).ToolTip = AppResources.Resources.EditUndo.NoMenuPrefix ();
-				}
-				else
-				{
-					(pEventArgs.Parameter as Button).ToolTip = String.Format (AppResources.Resources.EditUndoThis.NoMenuPrefix (), pObjectTitle);
-				}
-			}
-			if (pEventArgs.Parameter is MenuItem)
-			{
-				if (String.IsNullOrEmpty (pObjectTitle))
-				{
-					(pEventArgs.Parameter as MenuItem).Header = AppResources.Resources.EditUndo.FixMenuPrefix ();
-				}
-				else
-				{
-					(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditUndoThis.FixMenuPrefix (), pObjectTitle);
-				}
-			}
-			if (!String.IsNullOrEmpty (pObjectTitle))
-			{
-				pEventArgs.CanExecute = true;
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		static public void PutRedoTitle (this CanExecuteRoutedEventArgs pEventArgs)
-		{
-			pEventArgs.PutRedoTitle (String.Empty);
-		}
-
-		static public void PutRedoTitle (this CanExecuteRoutedEventArgs pEventArgs, String pObjectTitle)
-		{
-			if (pEventArgs.Parameter is Button)
-			{
-				if (String.IsNullOrEmpty (pObjectTitle))
-				{
-					(pEventArgs.Parameter as Button).ToolTip = AppResources.Resources.EditRedo.NoMenuPrefix ();
-				}
-				else
-				{
-					(pEventArgs.Parameter as Button).ToolTip = String.Format (AppResources.Resources.EditRedoThis.NoMenuPrefix (), pObjectTitle);
-				}
-			}
-			if (pEventArgs.Parameter is MenuItem)
-			{
-				if (String.IsNullOrEmpty (pObjectTitle))
-				{
-					(pEventArgs.Parameter as MenuItem).Header = AppResources.Resources.EditRedo.FixMenuPrefix ();
-				}
-				else
-				{
-					(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditRedoThis.FixMenuPrefix (), pObjectTitle);
-				}
-			}
-			if (!String.IsNullOrEmpty (pObjectTitle))
-			{
-				pEventArgs.CanExecute = true;
-			}
-		}
-	}
-
-	///////////////////////////////////////////////////////////////////////////////
-
 	public static partial class ListViewExtensions
 	{
+		public static void BeginUpdate (this ListView pListView)
+		{
+		}
+
+		public static void EndUpdate (this ListView pListView)
+		{
+			pListView.InvalidateArrange ();
+		}
+
+		public static void Clear (this ListView pListView)
+		{
+			pListView.Items.Clear ();
+		}
+
 		/// <summary>
 		/// Updates the <see cref="System.Windows.Controls.ListView.Items"/> collection to contain a specific number of items.
 		/// </summary>
@@ -342,7 +169,11 @@ namespace AgentCharacterEditor.Global
 
 		public static Boolean SetVerticalScrollBarVisibility (this ListView pListView, ScrollBarVisibility pScrollBarVisibility)
 		{
-			ScrollViewer lScrollHost = pListView.Template.FindName ("ScrollHost", pListView) as ScrollViewer;
+			ScrollViewer lScrollHost = null;
+			if (pListView.Template != null)
+			{
+				lScrollHost = pListView.Template.FindName ("ScrollHost", pListView) as ScrollViewer;
+			}
 			if (lScrollHost != null)
 			{
 				lScrollHost.VerticalScrollBarVisibility = pScrollBarVisibility;
@@ -363,13 +194,47 @@ namespace AgentCharacterEditor.Global
 
 		public static Boolean SetHorizontalScrollBarVisibility (this ListView pListView, ScrollBarVisibility pScrollBarVisibility)
 		{
-			ScrollViewer lScrollHost = pListView.Template.FindName ("ScrollHost", pListView) as ScrollViewer;
+			ScrollViewer lScrollHost = null;
+			if (pListView.Template != null)
+			{
+				lScrollHost = pListView.Template.FindName ("ScrollHost", pListView) as ScrollViewer;
+			}
 			if (lScrollHost != null)
 			{
 				lScrollHost.HorizontalScrollBarVisibility = pScrollBarVisibility;
 				return true;
 			}
 			return false;
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+
+	public static partial class ComboBoxExtensions
+	{
+		public static void BeginUpdate (this ComboBox pComboBox)
+		{
+		}
+
+		public static void EndUpdate (this ComboBox pComboBox)
+		{
+			pComboBox.InvalidateArrange ();
+		}
+
+		public static int FindStringExact (this ComboBox pComboBox, String pString)
+		{
+			foreach (Object lItem in pComboBox.Items)
+			{
+				if ((lItem is String) && ((lItem as String) == pString))
+				{
+					return pComboBox.Items.IndexOf (lItem);
+				}
+				else if ((lItem is ComboBoxItem) && ((lItem as ComboBoxItem).Content.ToString () == pString))
+				{
+					return pComboBox.Items.IndexOf (lItem);
+				}
+			}
+			return -1;
 		}
 	}
 }

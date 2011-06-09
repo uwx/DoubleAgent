@@ -108,175 +108,170 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowFileProperties ()
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			ShowCharacterIcon ();
-			ShowCharacterGuid ();
-			ShowNameStates ();
-			if (ListViewLanguage.SelectedItems.Count <= 0)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				SelectLangIDItem (mLangDefault);
+				ShowCharacterIcon ();
+				ShowCharacterGuid ();
+				ShowNameStates ();
+				if (ListViewLanguage.SelectedItems.Count <= 0)
+				{
+					SelectLangIDItem (mLangDefault);
+				}
+				mLangCurrent = ShowCharacterName ();
 			}
-			mLangCurrent = ShowCharacterName ();
-
-			PopIsPanelFilling (lWasFilling);
 		}
 
 		private UInt16 ShowCharacterName ()
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-			FileCharacterName lName = null;
 			UInt16 lLangID = SelectedLangID (true);
+			FileCharacterName lName = null;
 
-			if (!IsPanelEmpty)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				lName = LangIDName (lLangID, false);
+				if (!IsPanelEmpty)
+				{
+					lName = LangIDName (lLangID, false);
+				}
+				ShowCharacterName (lName, lLangID);
 			}
-			ShowCharacterName (lName, lLangID);
-
-			PopIsPanelFilling (lWasFilling);
 			return lLangID;
 		}
- 
+
 		private void ShowCharacterName (FileCharacterName pName, UInt16 pLangID)
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			LabelName.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly; 
-			LabelDescription.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly; 
-			LabelExtra.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly; 
-
-			if (pName == null)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				TextBoxName.Clear ();
-				TextBoxDescription.Clear ();
-				TextBoxExtra.Clear ();
+				LabelName.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+				LabelDescription.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+				LabelExtra.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
 
-				TextBoxName.IsEnabled = false;
-				TextBoxDescription.IsEnabled = false;
-				TextBoxExtra.IsEnabled = false;
+				if (pName == null)
+				{
+					TextBoxName.Clear ();
+					TextBoxDescription.Clear ();
+					TextBoxExtra.Clear ();
+
+					TextBoxName.IsEnabled = false;
+					TextBoxDescription.IsEnabled = false;
+					TextBoxExtra.IsEnabled = false;
+				}
+				else
+				{
+					TextBoxName.Text = pName.Name;
+					TextBoxDescription.Text = pName.Desc1;
+					TextBoxExtra.Text = pName.Desc2;
+
+					TextBoxName.IsReadOnly = Program.FileIsReadOnly;
+					TextBoxDescription.IsReadOnly = Program.FileIsReadOnly || !pLangID.PrimaryLanguageEqual (pName);
+					TextBoxExtra.IsReadOnly = Program.FileIsReadOnly || !pLangID.PrimaryLanguageEqual (pName);
+
+					TextBoxName.IsEnabled = true;
+					TextBoxDescription.IsEnabled = true;
+					TextBoxExtra.IsEnabled = true;
+				}
+				TextBoxName.IsModified = false;
+				TextBoxDescription.IsModified = false;
+				TextBoxExtra.IsModified = false;
 			}
-			else
-			{
-				TextBoxName.Text = pName.Name;
-				TextBoxDescription.Text = pName.Desc1;
-				TextBoxExtra.Text = pName.Desc2;
-
-				TextBoxName.IsReadOnly = Program.FileIsReadOnly;
-				TextBoxDescription.IsReadOnly = Program.FileIsReadOnly || !pLangID.PrimaryLanguageEqual (pName);
-				TextBoxExtra.IsReadOnly = Program.FileIsReadOnly || !pLangID.PrimaryLanguageEqual (pName);
-
-				TextBoxName.IsEnabled = true;
-				TextBoxDescription.IsEnabled = true;
-				TextBoxExtra.IsEnabled = true;
-			}
-			TextBoxName.IsModified = false;
-			TextBoxDescription.IsModified = false;
-			TextBoxExtra.IsModified = false;
-
-			PopIsPanelFilling (lWasFilling);
 		}
 
 		private void ShowCharacterGuid ()
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			if (IsPanelEmpty)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				TextBoxGUID.Clear ();
-				ButtonNewGUID.IsEnabled = false;
-			}
-			else
-			{
-				if (CharacterFile.Header.Guid == null)
+				if (IsPanelEmpty)
 				{
 					TextBoxGUID.Clear ();
+					ButtonNewGUID.IsEnabled = false;
 				}
 				else
 				{
-					TextBoxGUID.Text = CharacterFile.Header.Guid.ToString ().ToUpper ();
+					if (CharacterFile.Header.Guid == null)
+					{
+						TextBoxGUID.Clear ();
+					}
+					else
+					{
+						TextBoxGUID.Text = CharacterFile.Header.Guid.ToString ().ToUpper ();
+					}
+					ButtonNewGUID.IsEnabled = !Program.FileIsReadOnly;
 				}
-				ButtonNewGUID.IsEnabled = !Program.FileIsReadOnly;
 			}
-
-			PopIsPanelFilling (lWasFilling);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void ShowCharacterIcon ()
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			if (IsPanelEmpty)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				ShowSmallIcon (null);
-				ShowLargeIcon (null);
-				TextBoxIconFile.Clear ();
-				TextBoxIconFile.IsEnabled = false;
-				ButtonIconImport.IsEnabled = false;
-				ButtonIconExport.IsEnabled = false;
-			}
-			else
-			{
-				TextBoxIconFile.Text = CharacterFile.IconFilePath;
-
-				if (CharacterFile.Header.Icon == null)
+				if (IsPanelEmpty)
 				{
 					ShowSmallIcon (null);
 					ShowLargeIcon (null);
+					TextBoxIconFile.Clear ();
+					TextBoxIconFile.IsEnabled = false;
+					ButtonIconImport.IsEnabled = false;
+					ButtonIconExport.IsEnabled = false;
 				}
 				else
 				{
-					try
-					{
-						ShowSmallIcon (CharacterFile.Header.Icon.ToBitmap ());
-						ShowLargeIcon (CharacterFile.Header.Icon.ToBitmap ());
-					}
-					catch
+					TextBoxIconFile.Text = CharacterFile.IconFilePath;
+
+					if (CharacterFile.Header.Icon == null)
 					{
 						ShowSmallIcon (null);
 						ShowLargeIcon (null);
 					}
+					else
+					{
+						try
+						{
+							ShowSmallIcon (CharacterFile.Header.Icon.ToBitmap ());
+							ShowLargeIcon (CharacterFile.Header.Icon.ToBitmap ());
+						}
+						catch
+						{
+							ShowSmallIcon (null);
+							ShowLargeIcon (null);
+						}
+					}
+					TextBoxIconFile.IsEnabled = !Program.FileIsReadOnly;
+					ButtonIconImport.IsEnabled = !Program.FileIsReadOnly;
+					ButtonIconExport.IsEnabled = false;
 				}
-				TextBoxIconFile.IsEnabled = !Program.FileIsReadOnly;
-				ButtonIconImport.IsEnabled = !Program.FileIsReadOnly;
-				ButtonIconExport.IsEnabled = false;
 			}
-
-			PopIsPanelFilling (lWasFilling);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void ShowNameStates ()
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			foreach (ListViewItemCommon lItem in ListViewLanguage.Items)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				UInt16 lLangID = ListItemLangID (lItem);
-				FileCharacterName lName = null;
+				foreach (ListViewItemCommon lItem in ListViewLanguage.Items)
+				{
+					UInt16 lLangID = ListItemLangID (lItem);
+					FileCharacterName lName = null;
 
-				if (IsPanelEmpty)
-				{
-					ShowNameItemState (lItem, false);
-				}
-				else
-				{
-					lName = LangIDName (lLangID, true);
-					if (lName == null)
+					if (IsPanelEmpty)
 					{
 						ShowNameItemState (lItem, false);
 					}
 					else
 					{
-						ShowNameItemState (lItem, true);
+						lName = LangIDName (lLangID, true);
+						if (lName == null)
+						{
+							ShowNameItemState (lItem, false);
+						}
+						else
+						{
+							ShowNameItemState (lItem, true);
+						}
 					}
 				}
 			}
-
-			PopIsPanelFilling (lWasFilling);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -505,89 +500,111 @@ namespace AgentCharacterEditor.Panels
 
 		protected void HandleNameChanged ()
 		{
-			FileCharacterName lName = LangIDName (mLangCurrent, true);
-
-			if (lName != null)
+			if (!IsPanelFilling && !Program.FileIsReadOnly)
 			{
-				if (String.IsNullOrEmpty (TextBoxName.Text))
+				FileCharacterName lName = LangIDName (mLangCurrent, true);
+
+				if (lName != null)
 				{
-					if (String.IsNullOrEmpty (lName.Desc1) && String.IsNullOrEmpty (lName.Desc2) && !mLangDefault.PrimaryLanguageEqual (lName))
+					if (String.IsNullOrEmpty (TextBoxName.Text))
 					{
-						AddDeleteCharacterName lUpdate = new AddDeleteCharacterName (lName, true, false);
-						AddDeleteCharacterName.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteCharacterName, this);
+						if (String.IsNullOrEmpty (lName.Desc1) && String.IsNullOrEmpty (lName.Desc2) && !mLangDefault.PrimaryLanguageEqual (lName))
+						{
+							AddDeleteCharacterName lUpdate = new AddDeleteCharacterName (lName, true, false);
+							AddDeleteCharacterName.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteCharacterName, this);
+						}
+						else
+						{
+							TextBoxName.Text = lName.Name;
+						}
 					}
 					else
 					{
-						TextBoxName.Text = lName.Name;
+						UpdateCharacterName lUpdate = new UpdateCharacterName (lName.Language, TextBoxName.Text, TextBoxDescription.Text, TextBoxExtra.Text);
+						UpdateCharacterName.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterName, this);
 					}
 				}
-				else
+				else if ((!String.IsNullOrEmpty (TextBoxName.Text)) && ((lName == null) || (TextBoxName.Text != lName.Name)))
 				{
-					UpdateCharacterName lUpdate = new UpdateCharacterName (lName.Language, TextBoxName.Text, TextBoxDescription.Text, TextBoxExtra.Text);
-					UpdateCharacterName.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterName, this);
+					lName = new FileCharacterName (mLangCurrent, TextBoxName.Text);
+					AddDeleteCharacterName lUpdate = new AddDeleteCharacterName (lName, false, false);
+					AddDeleteCharacterName.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteCharacterName, this);
 				}
 			}
-			else if ((!String.IsNullOrEmpty (TextBoxName.Text)) && ((lName == null) || (TextBoxName.Text != lName.Name)))
-			{
-				lName = new FileCharacterName (mLangCurrent, TextBoxName.Text);
-				AddDeleteCharacterName lUpdate = new AddDeleteCharacterName (lName, false, false);
-				AddDeleteCharacterName.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteCharacterName, this);
-			}
+			TextBoxName.IsModified = false;
 		}
 
 		protected void HandleDescriptionChanged ()
 		{
-			FileCharacterName lName = LangIDName (mLangCurrent, true);
-			UpdateCharacterName lUpdate;
-
-			if (lName != null)
+			if (!IsPanelFilling && !Program.FileIsReadOnly)
 			{
-				lUpdate = new UpdateCharacterName (lName.Language, TextBoxName.Text, TextBoxDescription.Text, TextBoxExtra.Text);
-				UpdateCharacterName.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterName, this);
+				FileCharacterName lName = LangIDName (mLangCurrent, true);
+				UpdateCharacterName lUpdate;
+
+				if (lName != null)
+				{
+					lUpdate = new UpdateCharacterName (lName.Language, TextBoxName.Text, TextBoxDescription.Text, TextBoxExtra.Text);
+					UpdateCharacterName.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterName, this);
+				}
 			}
+			TextBoxDescription.IsModified = false;
 		}
 
 		protected void HandleExtraChanged ()
 		{
-			FileCharacterName lName = LangIDName (mLangCurrent, true);
-			UpdateCharacterName lUpdate;
-
-			if (lName != null)
+			if (!IsPanelFilling && !Program.FileIsReadOnly)
 			{
-				lUpdate = new UpdateCharacterName (lName.Language, TextBoxName.Text, TextBoxDescription.Text, TextBoxExtra.Text);
-				UpdateCharacterName.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterName, this);
+				FileCharacterName lName = LangIDName (mLangCurrent, true);
+				UpdateCharacterName lUpdate;
+
+				if (lName != null)
+				{
+					lUpdate = new UpdateCharacterName (lName.Language, TextBoxName.Text, TextBoxDescription.Text, TextBoxExtra.Text);
+					UpdateCharacterName.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterName, this);
+				}
 			}
+			TextBoxExtra.IsModified = false;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		protected void HandleIconFileChanged ()
 		{
-			UpdateCharacterHeader lUpdate = new UpdateCharacterHeader ();
+			if (!IsPanelFilling && !Program.FileIsReadOnly)
+			{
+				UpdateCharacterHeader lUpdate = new UpdateCharacterHeader ();
 
-			lUpdate.IconFilePath = TextBoxIconFile.Text;
-			UpdateCharacterHeader.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterHeader, this);
+				lUpdate.IconFilePath = TextBoxIconFile.Text;
+				UpdateCharacterHeader.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterHeader, this);
+			}
+			TextBoxIconFile.IsModified = false;
 		}
 
 		protected void HandleIconImport ()
 		{
-			String lFilePath = CharacterFile.IconFilePath;
-			UpdateCharacterHeader lUpdate;
-
-			if (OpenFileDialogEx.OpenIconFile (ref lFilePath))
+			if (!IsPanelFilling && !Program.FileIsReadOnly)
 			{
-				lUpdate = new UpdateCharacterHeader ();
-				lUpdate.IconFilePath = lFilePath;
-				UpdateCharacterHeader.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterHeader, this);
+				String lFilePath = CharacterFile.IconFilePath;
+				UpdateCharacterHeader lUpdate;
+
+				if (OpenFileDialogEx.OpenIconFile (ref lFilePath))
+				{
+					lUpdate = new UpdateCharacterHeader ();
+					lUpdate.IconFilePath = lFilePath;
+					UpdateCharacterHeader.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterHeader, this);
+				}
 			}
 		}
 
 		protected void HandleNewGUID ()
 		{
-			UpdateCharacterHeader lUpdate = new UpdateCharacterHeader ();
+			if (!IsPanelFilling && !Program.FileIsReadOnly)
+			{
+				UpdateCharacterHeader lUpdate = new UpdateCharacterHeader ();
 
-			lUpdate.Guid = System.Guid.NewGuid ();
-			UpdateCharacterHeader.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterHeader, this);
+				lUpdate.Guid = System.Guid.NewGuid ();
+				UpdateCharacterHeader.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterHeader, this);
+			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

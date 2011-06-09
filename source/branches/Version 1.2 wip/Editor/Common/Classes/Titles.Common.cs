@@ -250,6 +250,11 @@ namespace AgentCharacterEditor.Properties
 			}
 		}
 
+		static public String OverlayTypeName (FileFrameOverlay pOverlay)
+		{
+			return (pOverlay == null) ? String.Empty : OverlayTypeName (pOverlay.OverlayType);
+		}
+
 		static public String Overlay (FileFrameOverlay pOverlay)
 		{
 			if (pOverlay == null)

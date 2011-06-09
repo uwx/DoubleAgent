@@ -46,7 +46,7 @@ namespace AgentCharacterEditor.Panels
 				{
 					Program.MainWindow.UpdateApplied += new UndoUnit.AppliedEventHandler (OnUpdateApplied);
 				}
-			 }
+			}
 		}
 
 		protected virtual void HandleVisibleChanged ()
@@ -162,10 +162,40 @@ namespace AgentCharacterEditor.Panels
 			IsPanelFilling = pIsPanelFilling;
 			return lRet;
 		}
-
 		protected virtual void PopIsPanelFilling (Boolean pWasPanelShowing)
 		{
 			IsPanelFilling = pWasPanelShowing;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		public sealed class PanelFillingState : IDisposable
+		{
+			public PanelFillingState (FilePartPanel pPanel)
+			{
+				Panel = pPanel;
+				WasFilling = pPanel.PushIsPanelFilling (true);
+			}
+			~PanelFillingState ()
+			{
+				Dispose ();
+			}
+			public void Dispose ()
+			{
+				Panel.PopIsPanelFilling (WasFilling);
+				GC.SuppressFinalize (this);
+			}
+
+			private FilePartPanel Panel
+			{
+				get;
+				set;
+			}
+			private Boolean WasFilling
+			{
+				get;
+				set;
+			}
 		}
 
 		#endregion
@@ -214,15 +244,12 @@ namespace AgentCharacterEditor.Panels
 
 		private void OnUpdateApplied (Object sender, EventArgs e)
 		{
-			if (!IsPanelEmpty)
+			try
 			{
-				try
-				{
-					UpdateApplied (sender);
-				}
-				catch
-				{
-				}
+				UpdateApplied (sender);
+			}
+			catch
+			{
 			}
 		}
 

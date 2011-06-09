@@ -10,13 +10,16 @@
 
 	<sys:Double x:Key="ItemSelectionStroke">1</sys:Double>
 	<sys:Double x:Key="ItemSelectionRounding">2</sys:Double>
+	<Thickness x:Key="ItemSelectionThickness">1</Thickness>
+	<CornerRadius x:Key="ItemSelectionRadius">2</CornerRadius>
 
 	<Color x:Key="ItemSelectedOuterColor">#FF8AD1F5</Color>
 	<Color x:Key="ItemSelectedTopColor">#FFDCF0FA</Color>
 	<Color x:Key="ItemSelectedBottomColor">#FFC5E6F7</Color>
 
 	<SolidColorBrush x:Key="ItemSelectionInnerBrush"
-					 Color="White" Opacity="0.25" />
+					 Color="White"
+					 Opacity="0.25" />
 
 	<SolidColorBrush x:Key="ItemHighlitedOuterBrush"
 					 Color="{StaticResource ItemSelectedOuterColor}"
@@ -129,8 +132,8 @@
 	<sys:Double x:Key="SubMenuGestureMarginWidth">37</sys:Double>
 	<sys:Double x:Key="SubMenuExpandMarginWidth">17</sys:Double>
 
-	<sys:Double x:Key="SubMenuGlyphBorderWidth">18</sys:Double>
-	<sys:Double x:Key="SubMenuGlyphBorderHeight">18</sys:Double>
+	<sys:Double x:Key="SubMenuGlyphBorderWidth">22</sys:Double>
+	<sys:Double x:Key="SubMenuGlyphBorderHeight">22</sys:Double>
 	<sys:Double x:Key="SubMenuGlyphWidth">9</sys:Double>
 	<sys:Double x:Key="SubMenuGlyphHeight">11</sys:Double>
 
@@ -224,10 +227,10 @@
 								  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
 			</DockPanel>
 			<Popup x:Name="PART_Popup"
+				   Placement="Bottom"
 				   HorizontalOffset="0"
 				   VerticalOffset="-3"
 				   AllowsTransparency="true"
-				   Placement="Bottom"
 				   IsOpen="{Binding Path=IsSubmenuOpen,RelativeSource={RelativeSource TemplatedParent}}"
 				   Focusable="false"
 				   PopupAnimation="None">
@@ -336,6 +339,9 @@
 					 Value="false">
 				<Setter Property="Foreground"
 						Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+				<Setter TargetName="Icon"
+						Property="Opacity"
+						Value="0.3" />
 				<Setter TargetName="GlyphPanel"
 						Property="Fill"
 						Value="{StaticResource MenuItemGlyphDisabledBrush}" />
@@ -377,11 +383,6 @@
 									  MinWidth="{StaticResource SubMenuExpandMarginWidth}"
 									  MaxWidth="{StaticResource SubMenuExpandMarginWidth}" />
 				</Grid.ColumnDefinitions>
-				<ContentPresenter x:Name="Icon"
-								  Margin="{StaticResource SubMenuIconMargin}"
-								  VerticalAlignment="Center"
-								  ContentSource="Icon"
-								  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
 				<Border x:Name="GlyphPanel"
 						Background="{StaticResource MenuItemGlyphBackgroundBrush}"
 						BorderBrush="{StaticResource MenuItemGlyphBorderBrush}"
@@ -392,12 +393,18 @@
 						Width="{StaticResource SubMenuGlyphBorderWidth}"
 						Height="{StaticResource SubMenuGlyphBorderHeight}">
 					<Path Name="Glyph"
+						  Visibility="Hidden"
 						  Width="{StaticResource SubMenuGlyphWidth}"
 						  Height="{StaticResource SubMenuGlyphHeight}"
 						  Fill="{StaticResource MenuItemGlyphFillBrush}"
 						  FlowDirection="LeftToRight"
 						  Data="{StaticResource MenuCheckmark}" />
 				</Border>
+				<ContentPresenter x:Name="Icon"
+								  Margin="{StaticResource SubMenuIconMargin}"
+								  VerticalAlignment="Center"
+								  ContentSource="Icon"
+								  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
 				<ContentPresenter Grid.Column="2"
 								  ContentSource="Header"
 								  Margin="{TemplateBinding MenuItem.Padding}"
@@ -414,15 +421,15 @@
 				<Setter TargetName="Icon"
 						Property="Visibility"
 						Value="Collapsed" />
+				<Setter TargetName="Glyph"
+						Property="Visibility"
+						Value="Visible" />
 			</Trigger>
 			<Trigger Property="IsChecked"
 					 Value="true">
 				<Setter TargetName="GlyphPanel"
 						Property="Visibility"
 						Value="Visible" />
-				<Setter TargetName="Icon"
-						Property="Visibility"
-						Value="Collapsed" />
 			</Trigger>
 			<Trigger Property="IsHighlighted"
 					 Value="true">
@@ -440,6 +447,9 @@
 					 Value="false">
 				<Setter Property="Foreground"
 						Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+				<Setter TargetName="Icon"
+						Property="Opacity"
+						Value="0.3" />
 				<Setter TargetName="GlyphPanel"
 						Property="Background"
 						Value="{StaticResource MenuItemGlyphDisabledBackgroundBrush}" />
@@ -485,11 +495,6 @@
 									  MinWidth="{StaticResource SubMenuExpandMarginWidth}"
 									  MaxWidth="{StaticResource SubMenuExpandMarginWidth}" />
 				</Grid.ColumnDefinitions>
-				<ContentPresenter x:Name="Icon"
-								  Margin="{StaticResource SubMenuIconMargin}"
-								  VerticalAlignment="Center"
-								  ContentSource="Icon"
-								  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
 				<Border x:Name="GlyphPanel"
 						Background="{StaticResource MenuItemGlyphBackgroundBrush}"
 						BorderBrush="{StaticResource MenuItemGlyphBorderBrush}"
@@ -500,12 +505,18 @@
 						Width="{StaticResource SubMenuGlyphBorderWidth}"
 						Height="{StaticResource SubMenuGlyphBorderHeight}">
 					<Path Name="Glyph"
+						  Visibility="Hidden"
 						  Width="{StaticResource SubMenuGlyphWidth}"
 						  Height="{StaticResource SubMenuGlyphHeight}"
 						  Fill="{StaticResource MenuItemGlyphFillBrush}"
 						  FlowDirection="LeftToRight"
 						  Data="{StaticResource MenuCheckmark}" />
 				</Border>
+				<ContentPresenter x:Name="Icon"
+								  Margin="{StaticResource SubMenuIconMargin}"
+								  VerticalAlignment="Center"
+								  ContentSource="Icon"
+								  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
 				<ContentPresenter Grid.Column="2"
 								  ContentSource="Header"
 								  Margin="{TemplateBinding MenuItem.Padding}"
@@ -586,15 +597,15 @@
 				<Setter TargetName="Icon"
 						Property="Visibility"
 						Value="Collapsed" />
+				<Setter TargetName="Glyph"
+						Property="Visibility"
+						Value="Visible" />
 			</Trigger>
 			<Trigger Property="IsChecked"
 					 Value="true">
 				<Setter TargetName="GlyphPanel"
 						Property="Visibility"
 						Value="Visible" />
-				<Setter TargetName="Icon"
-						Property="Visibility"
-						Value="Collapsed" />
 			</Trigger>
 			<Trigger Property="IsHighlighted"
 					 Value="true">
@@ -612,6 +623,9 @@
 					 Value="false">
 				<Setter Property="Foreground"
 						Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+				<Setter TargetName="Icon"
+						Property="Opacity"
+						Value="0.3" />
 				<Setter TargetName="GlyphPanel"
 						Property="Background"
 						Value="{StaticResource MenuItemGlyphDisabledBackgroundBrush}" />
@@ -1005,5 +1019,12 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
+
+	<Style x:Key="{x:Static ToolBar.CheckBoxStyleKey}"
+		   BasedOn="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}"
+		   TargetType="{x:Type CheckBox}" />
+	<Style x:Key="{x:Static ToolBar.RadioButtonStyleKey}"
+		   BasedOn="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}"
+		   TargetType="{x:Type RadioButton}" />
 
 </ResourceDictionary>

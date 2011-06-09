@@ -50,7 +50,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void NumericBranching0_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && NumericBranching0.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (NumericBranching0.IsModified)
 			{
 				if (!ApplyBranchingUpdates ())
 				{
@@ -62,7 +62,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void NumericTarget0_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && NumericTarget0.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (NumericTarget0.IsModified)
 			{
 				if (!ApplyBranchingUpdates ())
 				{
@@ -74,7 +74,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void NumericBranching1_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && NumericBranching1.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (NumericBranching1.IsModified)
 			{
 				if (!ApplyBranchingUpdates ())
 				{
@@ -86,7 +86,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void NumericTarget1_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && NumericTarget1.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (NumericTarget1.IsModified)
 			{
 				if (!ApplyBranchingUpdates ())
 				{
@@ -98,7 +98,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void NumericBranching2_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && NumericBranching2.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (NumericBranching2.IsModified)
 			{
 				if (!ApplyBranchingUpdates ())
 				{
@@ -110,7 +110,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void NumericTarget2_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && NumericTarget2.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (NumericTarget2.IsModified)
 			{
 				if (!ApplyBranchingUpdates ())
 				{
@@ -124,15 +124,12 @@ namespace AgentCharacterEditor.Panels
 
 		private void CheckBoxExit_CheckChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleExitTypeChanged ();
-			}
+			HandleExitTypeChanged ();
 		}
 
 		private void NumericTargetExit_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && NumericTargetExit.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (NumericTargetExit.IsModified)
 			{
 				HandleExitFrameChanged ();
 			}

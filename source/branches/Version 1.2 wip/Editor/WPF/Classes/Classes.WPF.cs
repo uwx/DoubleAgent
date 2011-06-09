@@ -35,6 +35,12 @@ namespace AgentCharacterEditor
 			InitializeComponent ();
 			this.Content = text;
 		}
+		public ListViewItemCommon (string text, string tag)
+		{
+			InitializeComponent ();
+			this.Content = text;
+			this.Tag = tag;
+		}
 		public ListViewItemCommon (string text, int imageIndex)
 		{
 			InitializeComponent ();

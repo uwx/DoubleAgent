@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -12,7 +10,7 @@ namespace DoubleAgent
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
-		private Timer mWheelTimer = null;
+		private AsyncTimer mWheelTimer = null;
 
 		public NumericUpDown ()
 		{
@@ -185,7 +183,9 @@ namespace DoubleAgent
 #if DEBUG_NOT
 				System.Diagnostics.Debug.Print ("StartWheelTimer");
 #endif
-				mWheelTimer = new Timer (WheelTimerCallback, AsyncOperationManager.CreateOperation (this), System.Windows.Forms.SystemInformation.DoubleClickTime, Timeout.Infinite);
+				mWheelTimer = new AsyncTimer ();
+				mWheelTimer.TimerPulse += new AsyncTimer.TimerPulseHandler (WheelTimerComplete);
+				mWheelTimer.Start (System.Windows.Forms.SystemInformation.DoubleClickTime);
 			}
 		}
 
@@ -207,21 +207,7 @@ namespace DoubleAgent
 			}
 		}
 
-		private void WheelTimerCallback (Object state)
-		{
-#if DEBUG_NOT
-			System.Diagnostics.Debug.Print ("WheelTimerCallback");
-#endif
-			try
-			{
-				(state as AsyncOperation).PostOperationCompleted (WheelTimerComplete, null);
-			}
-			catch
-			{
-			}
-		}
-
-		private void WheelTimerComplete (Object state)
+		private void WheelTimerComplete (object sender, AsyncTimer.TimerEventArgs e)
 		{
 #if DEBUG_NOT
 			System.Diagnostics.Debug.Print ("WheelTimerComplete");

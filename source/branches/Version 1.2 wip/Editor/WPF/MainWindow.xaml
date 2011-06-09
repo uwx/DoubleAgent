@@ -24,19 +24,25 @@
 		<CommandBinding Command="ApplicationCommands.Open"
 						Executed="OnFileOpen" />
 		<CommandBinding Command="ApplicationCommands.Save"
-						CanExecute="CanFileSave"
+						CanExecute="OnCanFileSave"
 						Executed="OnFileSave" />
 		<CommandBinding Command="ApplicationCommands.SaveAs"
-						CanExecute="CanFileSaveAs"
+						CanExecute="OnCanFileSaveAs"
 						Executed="OnFileSaveAs" />
 		<CommandBinding Command="ApplicationCommands.Close"
 						Executed="OnFileClose" />
 		<CommandBinding Command="NavigationCommands.BrowseBack"
-						CanExecute="CanBrowseBack"
+						CanExecute="OnCanBrowseBack"
 						Executed="OnBrowseBack" />
 		<CommandBinding Command="NavigationCommands.BrowseForward"
-						CanExecute="CanBrowseForward"
+						CanExecute="OnCanBrowseForward"
 						Executed="OnBrowseForward" />
+		<CommandBinding Command="IncreaseZoom"
+						CanExecute="OnCanViewLarge"
+						Executed="OnViewLarge" />
+		<CommandBinding Command="DecreaseZoom"
+						CanExecute="OnCanViewSmall"
+						Executed="OnViewSmall" />
 		<CommandBinding Command="ApplicationCommands.Cut"
 						PreviewCanExecute="PreviewCanEditCut" />
 		<CommandBinding Command="ApplicationCommands.Copy"
@@ -47,11 +53,11 @@
 						PreviewCanExecute="PreviewCanEditPaste" />
 		<CommandBinding Command="ApplicationCommands.Undo"
 						PreviewCanExecute="PreviewCanEditUndo"
-						CanExecute="CanEditUndo"
+						CanExecute="OnCanEditUndo"
 						Executed="OnEditUndo" />
 		<CommandBinding Command="ApplicationCommands.Redo"
 						PreviewCanExecute="PreviewCanEditRedo"
-						CanExecute="CanEditRedo"
+						CanExecute="OnCanEditRedo"
 						Executed="OnEditRedo" />
 	</Window.CommandBindings>
 	<Grid Background="{StaticResource BackgroundLighterBrush}">
@@ -170,8 +176,8 @@
 						IsTabStop="False">
 					<Image Source="{StaticResource ImgNavigateBack}"
 						   Stretch="None"
-						   Width="Auto"
-						   Height="Auto"
+						   Width="16"
+						   Height="16"
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"></Image>
 				</Button>
@@ -182,8 +188,8 @@
 						IsTabStop="False">
 					<Image Source="{StaticResource ImgNavigateForward}"
 						   Stretch="None"
-						   Width="Auto"
-						   Height="Auto"
+						   Width="16"
+						   Height="16"
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"></Image>
 				</Button>
@@ -194,9 +200,9 @@
 						Focusable="False"
 						IsTabStop="False">
 					<Image Source="{StaticResource ImgFileNew}"
-						   Stretch="None"
-						   Width="Auto"
-						   Height="Auto"
+						   Stretch="UniformToFill"
+						   Width="16"
+						   Height="16"
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"></Image>
 				</Button>
@@ -206,9 +212,9 @@
 						Focusable="False"
 						IsTabStop="False">
 					<Image Source="{StaticResource ImgFileOpen}"
-						   Stretch="None"
-						   Width="Auto"
-						   Height="Auto"
+						   Stretch="UniformToFill"
+						   Width="16"
+						   Height="16"
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"></Image>
 				</Button>
@@ -218,9 +224,9 @@
 						Focusable="False"
 						IsTabStop="False">
 					<Image Source="{StaticResource ImgFileSave}"
-						   Stretch="None"
-						   Width="Auto"
-						   Height="Auto"
+						   Stretch="UniformToFill"
+						   Width="16"
+						   Height="16"
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"></Image>
 				</Button>
@@ -231,9 +237,9 @@
 						Focusable="False"
 						IsTabStop="False">
 					<Image Source="{StaticResource ImgEditUndo}"
-						   Stretch="None"
-						   Width="Auto"
-						   Height="Auto"
+						   Stretch="UniformToFill"
+						   Width="16"
+						   Height="16"
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"></Image>
 				</Button>
@@ -243,9 +249,9 @@
 						Focusable="False"
 						IsTabStop="False">
 					<Image Source="{StaticResource ImgEditRedo}"
-						   Stretch="None"
-						   Width="Auto"
-						   Height="Auto"
+						   Stretch="UniformToFill"
+						   Width="16"
+						   Height="16"
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"></Image>
 				</Button>
@@ -256,9 +262,9 @@
 						Focusable="False"
 						IsTabStop="False">
 					<Image Source="{StaticResource ImgEditCut}"
-						   Stretch="None"
-						   Width="Auto"
-						   Height="Auto"
+						   Stretch="UniformToFill"
+						   Width="16"
+						   Height="16"
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"></Image>
 				</Button>
@@ -268,9 +274,9 @@
 						Focusable="False"
 						IsTabStop="False">
 					<Image Source="{StaticResource ImgEditCopy}"
-						   Stretch="None"
-						   Width="Auto"
-						   Height="Auto"
+						   Stretch="UniformToFill"
+						   Width="16"
+						   Height="16"
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"></Image>
 				</Button>
@@ -280,9 +286,9 @@
 						Focusable="False"
 						IsTabStop="False">
 					<Image Source="{StaticResource ImgEditPaste}"
-						   Stretch="None"
-						   Width="Auto"
-						   Height="Auto"
+						   Stretch="UniformToFill"
+						   Width="16"
+						   Height="16"
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"></Image>
 				</Button>
@@ -292,12 +298,39 @@
 						Focusable="False"
 						IsTabStop="False">
 					<Image Source="{StaticResource ImgEditDelete}"
-						   Stretch="None"
-						   Width="Auto"
-						   Height="Auto"
+						   Stretch="UniformToFill"
+						   Width="16"
+						   Height="16"
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"></Image>
 				</Button>
+				<Separator />
+				<ToggleButton Name="ButtonViewSmall"
+							  ToolTip="View small"
+							  Command="DecreaseZoom"
+							  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
+							  Focusable="False"
+							  IsTabStop="False">
+					<Image Source="{StaticResource ImgSmallFont}"
+						   Stretch="UniformToFill"
+						   Width="16"
+						   Height="16"
+						   HorizontalAlignment="Center"
+						   VerticalAlignment="Center"></Image>
+				</ToggleButton>
+				<ToggleButton Name="ButtonViewLarge"
+							  ToolTip="View large"
+							  Command="IncreaseZoom"
+							  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
+							  Focusable="False"
+							  IsTabStop="False">
+					<Image Source="{StaticResource ImgLargeFont}"
+						   Stretch="UniformToFill"
+						   Width="16"
+						   Height="16"
+						   HorizontalAlignment="Center"
+						   VerticalAlignment="Center"></Image>
+				</ToggleButton>
 			</ToolBar>
 		</ToolBarTray>
 		<Menu Height="Auto"
@@ -313,14 +346,20 @@
 						  Header="_New"
 						  Name="MenuItemFileNew">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgFileNew}" />
+						<Image Source="{StaticResource ImgFileNew}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Command="Open"
 						  Header="_Open"
 						  Name="MenuItemFileOpen">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgFileOpen}" />
+						<Image Source="{StaticResource ImgFileOpen}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<Separator />
@@ -328,14 +367,20 @@
 						  Header="_Save"
 						  Name="MenuItemFileSave">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgFileSave}" />
+						<Image Source="{StaticResource ImgFileSave}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Command="SaveAs"
 						  Header="Save _As..."
 						  Name="MenuItemFileSaveAs">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgFileSave}" />
+						<Image Source="{StaticResource ImgFileSaveAs}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<Separator />
@@ -344,7 +389,10 @@
 						  IsEnabled="False"
 						  Name="MenuItemFilePrint">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgFilePrint}" />
+						<Image Source="{StaticResource ImgFilePrint}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Command="PrintPreview"
@@ -352,7 +400,10 @@
 						  IsEnabled="False"
 						  Name="MenuItemFilePrintPreview">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgFilePrintPreview}" />
+						<Image Source="{StaticResource ImgFilePrintPreview}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<Separator />
@@ -370,7 +421,10 @@
 						  Command="ApplicationCommands.Undo"
 						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditUndo}" />
+						<Image Source="{StaticResource ImgEditUndo}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Name="MenuItemEditRedo"
@@ -378,7 +432,10 @@
 						  Command="ApplicationCommands.Redo"
 						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditRedo}" />
+						<Image Source="{StaticResource ImgEditRedo}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<Separator Style="{StaticResource {x:Static MenuItem.SeparatorStyleKey}}" />
@@ -387,7 +444,10 @@
 						  Command="ApplicationCommands.Cut"
 						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditCut}" />
+						<Image Source="{StaticResource ImgEditCut}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Name="MenuItemEditCopy"
@@ -395,7 +455,10 @@
 						  Command="ApplicationCommands.Copy"
 						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditCopy}" />
+						<Image Source="{StaticResource ImgEditCopy}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Name="MenuItemEditPaste"
@@ -403,7 +466,10 @@
 						  Command="ApplicationCommands.Paste"
 						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditPaste}" />
+						<Image Source="{StaticResource ImgEditPaste}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Name="MenuItemEditDelete"
@@ -411,7 +477,59 @@
 						  Command="ApplicationCommands.Delete"
 						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditDelete}" />
+						<Image Source="{StaticResource ImgEditDelete}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
+					</MenuItem.Icon>
+				</MenuItem>
+			</MenuItem>
+			<MenuItem Header="_View"
+					  Name="MenuItemView"
+					  IsTabStop="False">
+				<MenuItem Name="MenuItemNavigateBack"
+						  Header="Go _back"
+						  Command="NavigationCommands.BrowseBack"
+						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
+					<MenuItem.Icon>
+						<Image Source="{StaticResource ImgNavigateBack}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Name="MenuItemNavigateForward"
+						  Header="Go _forward"
+						  Command="NavigationCommands.BrowseForward"
+						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
+					<MenuItem.Icon>
+						<Image Source="{StaticResource ImgNavigateForward}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<Separator />
+				<MenuItem Name="MenuItemViewSmall"
+						  Header="Small"
+						  Command="DecreaseZoom"
+						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
+					<MenuItem.Icon>
+						<Image Source="{StaticResource ImgSmallFont}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Name="MenuItemViewLarge"
+						  Header="Large"
+						  Command="IncreaseZoom"
+						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
+					<MenuItem.Icon>
+						<Image Source="{StaticResource ImgLargeFont}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 			</MenuItem>
@@ -422,7 +540,10 @@
 						  Name="MenuItemHelpAbout"
 						  Click="OnHelpAbout">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgHelpAbout}" />
+						<Image Source="{StaticResource ImgHelpAbout}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 			</MenuItem>

@@ -49,22 +49,16 @@ namespace AgentCharacterEditor.Panels
 		private void InitializeComponent ()
 		{
 			this.components = new System.ComponentModel.Container();
-			AgentCharacterEditor.ListViewItemCommon listViewItemCommon8 = new AgentCharacterEditor.ListViewItemCommon("Closed", 0);
-			AgentCharacterEditor.ListViewItemCommon listViewItemCommon9 = new AgentCharacterEditor.ListViewItemCommon("Wide 1", 1);
-			AgentCharacterEditor.ListViewItemCommon listViewItemCommon10 = new AgentCharacterEditor.ListViewItemCommon("Wide 2", 2);
-			AgentCharacterEditor.ListViewItemCommon listViewItemCommon11 = new AgentCharacterEditor.ListViewItemCommon("Wide 3", 3);
-			AgentCharacterEditor.ListViewItemCommon listViewItemCommon12 = new AgentCharacterEditor.ListViewItemCommon("Wide 4", 4);
-			AgentCharacterEditor.ListViewItemCommon listViewItemCommon13 = new AgentCharacterEditor.ListViewItemCommon("Medium", 5);
-			AgentCharacterEditor.ListViewItemCommon listViewItemCommon14 = new AgentCharacterEditor.ListViewItemCommon("Narrow", 6);
+			System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 			this.TextBoxFrameName = new DoubleAgent.TextBoxEx();
-			this.LabelFrameName = new System.Windows.Forms.Label();
+			this.LabelFrameName = new DoubleAgent.LabelCompat();
 			this.GroupBoxImages = new DoubleAgent.GroupBoxCompat();
 			this.PanelImages = new System.Windows.Forms.TableLayoutPanel();
 			this.FlowLayoutRight = new System.Windows.Forms.FlowLayoutPanel();
 			this.PanelOverlayOffset = new System.Windows.Forms.Panel();
-			this.LabelOffsetX = new System.Windows.Forms.Label();
+			this.LabelOffsetX = new DoubleAgent.LabelCompat();
 			this.NumericOffsetX = new DoubleAgent.NumericUpDownEx();
-			this.LabelOffsetY = new System.Windows.Forms.Label();
+			this.LabelOffsetY = new DoubleAgent.LabelCompat();
 			this.NumericOffsetY = new DoubleAgent.NumericUpDownEx();
 			this.PanelSample = new System.Windows.Forms.TableLayoutPanel();
 			this.PictureBoxImageSample = new AgentCharacterEditor.FrameSample();
@@ -90,6 +84,10 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonChooseFile = new DoubleAgent.ToolStripButtonCompat();
 			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
 			this.PanelTop = new System.Windows.Forms.Panel();
+			this.ContextMenuOverlaysList = new AgentCharacterEditor.Global.ContextMenuEdit(this.components);
+			this.MenuItemAdd = new System.Windows.Forms.ToolStripMenuItem();
+			this.MenuItemChooseFile = new System.Windows.Forms.ToolStripMenuItem();
+			toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.GroupBoxImages.SuspendLayout();
 			this.PanelImages.SuspendLayout();
 			this.FlowLayoutRight.SuspendLayout();
@@ -106,6 +104,7 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripImages.SuspendLayout();
 			this.PanelMain.SuspendLayout();
 			this.PanelTop.SuspendLayout();
+			this.ContextMenuOverlaysList.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// TextBoxFrameName
@@ -480,18 +479,11 @@ namespace AgentCharacterEditor.Panels
             this.ColumnHeaderPosition,
             this.ColumnHeaderReplace,
             this.ColumnHeaderPath});
+			this.ListViewOverlays.ContextMenuStrip = this.ContextMenuOverlaysList;
 			this.ListViewOverlays.FullRowSelect = true;
 			this.ListViewOverlays.GridLines = true;
 			this.ListViewOverlays.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.ListViewOverlays.HideSelection = false;
-			this.ListViewOverlays.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItemCommon8,
-            listViewItemCommon9,
-            listViewItemCommon10,
-            listViewItemCommon11,
-            listViewItemCommon12,
-            listViewItemCommon13,
-            listViewItemCommon14});
 			this.ListViewOverlays.LargeImageList = this.MouthImages;
 			this.ListViewOverlays.Location = new System.Drawing.Point(0, 29);
 			this.ListViewOverlays.MultiSelect = false;
@@ -545,7 +537,7 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripImages.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.ToolStripImages.Location = new System.Drawing.Point(0, 0);
 			this.ToolStripImages.Name = "ToolStripImages";
-			this.ToolStripImages.Size = new System.Drawing.Size(106, 27);
+			this.ToolStripImages.Size = new System.Drawing.Size(75, 27);
 			this.ToolStripImages.TabIndex = 0;
 			// 
 			// ButtonAdd
@@ -607,6 +599,39 @@ namespace AgentCharacterEditor.Panels
 			this.PanelTop.Size = new System.Drawing.Size(676, 28);
 			this.PanelTop.TabIndex = 1;
 			// 
+			// ContextMenuOverlaysList
+			// 
+			this.ContextMenuOverlaysList.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItemAdd,
+            this.MenuItemChooseFile,
+            toolStripSeparator1});
+			this.ContextMenuOverlaysList.Name = "OverlaysList";
+			this.ContextMenuOverlaysList.Size = new System.Drawing.Size(217, 200);
+			this.ContextMenuOverlaysList.Opening += new System.ComponentModel.CancelEventHandler (ContextMenuOverlaysList_Opening);
+			// 
+			// toolStripSeparator1
+			// 
+			toolStripSeparator1.Name = "toolStripSeparator1";
+			toolStripSeparator1.Size = new System.Drawing.Size(213, 6);
+			// 
+			// MenuItemAdd
+			// 
+			this.MenuItemAdd.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileNew;
+			this.MenuItemAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.MenuItemAdd.Name = "MenuItemAdd";
+			this.MenuItemAdd.Size = new System.Drawing.Size(216, 28);
+			this.MenuItemAdd.Text = "Add";
+			this.MenuItemAdd.Click += new System.EventHandler (this.ButtonAdd_Click);
+			// 
+			// MenuItemChooseFile
+			// 
+			this.MenuItemChooseFile.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
+			this.MenuItemChooseFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.MenuItemChooseFile.Name = "MenuItemChooseFile";
+			this.MenuItemChooseFile.Size = new System.Drawing.Size(216, 28);
+			this.MenuItemChooseFile.Text = "Choose image file";
+			this.MenuItemChooseFile.Click += new System.EventHandler (this.ButtonOpen_Click);
+			// 
 			// OverlayPanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -640,6 +665,7 @@ namespace AgentCharacterEditor.Panels
 			this.PanelMain.ResumeLayout(false);
 			this.PanelTop.ResumeLayout(false);
 			this.PanelTop.PerformLayout();
+			this.ContextMenuOverlaysList.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -647,7 +673,7 @@ namespace AgentCharacterEditor.Panels
 		#endregion
 
 		private DoubleAgent.TextBoxEx TextBoxFrameName;
-		private System.Windows.Forms.Label LabelFrameName;
+		private DoubleAgent.LabelCompat LabelFrameName;
 		private DoubleAgent.GroupBoxCompat GroupBoxImages;
 		private System.Windows.Forms.TableLayoutPanel PanelImages;
 		private System.Windows.Forms.TableLayoutPanel PanelSample;
@@ -660,9 +686,9 @@ namespace AgentCharacterEditor.Panels
 		private DoubleAgent.ToolStripButtonEx ButtonShiftDown;
 		private DoubleAgent.ToolStripEx ToolStripShiftLeft;
 		private DoubleAgent.ToolStripButtonEx ButtonShiftLeft;
-		private System.Windows.Forms.Label LabelOffsetX;
+		private DoubleAgent.LabelCompat LabelOffsetX;
 		private DoubleAgent.NumericUpDownEx NumericOffsetY;
-		private System.Windows.Forms.Label LabelOffsetY;
+		private DoubleAgent.LabelCompat LabelOffsetY;
 		private DoubleAgent.NumericUpDownEx NumericOffsetX;
 		private System.Windows.Forms.Panel PanelImagesLeft;
 		private DoubleAgent.ListViewEx ListViewOverlays;
@@ -680,13 +706,9 @@ namespace AgentCharacterEditor.Panels
 		private System.Windows.Forms.TableLayoutPanel PanelMain;
 		private System.Windows.Forms.Panel PanelTop;
 		private System.Windows.Forms.ImageList MouthImages;
-		private AgentCharacterEditor.ListViewItemCommon OverlayItemClosed;
-		private AgentCharacterEditor.ListViewItemCommon OverlayItemWide1;
-		private AgentCharacterEditor.ListViewItemCommon OverlayItemWide2;
-		private AgentCharacterEditor.ListViewItemCommon OverlayItemWide3;
-		private AgentCharacterEditor.ListViewItemCommon OverlayItemWide4;
-		private AgentCharacterEditor.ListViewItemCommon OverlayItemMedium;
-		private AgentCharacterEditor.ListViewItemCommon OverlayItemNarrow;
+		private Global.ContextMenuEdit ContextMenuOverlaysList;
+		private System.Windows.Forms.ToolStripMenuItem MenuItemAdd;
+		private System.Windows.Forms.ToolStripMenuItem MenuItemChooseFile;
 
 	}
 }

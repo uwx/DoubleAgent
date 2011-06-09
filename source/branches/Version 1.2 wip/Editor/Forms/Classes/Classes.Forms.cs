@@ -37,6 +37,11 @@ namespace AgentCharacterEditor
 			: base (text, imageIndex)
 		{
 		}
+		public ListViewItemCommon (string text, string tag)
+			: base (text)
+		{
+			this.Tag = tag;
+		}
 		public ListViewItemCommon (string[] items)
 			: base (items)
 		{

@@ -20,6 +20,8 @@
 /////////////////////////////////////////////////////////////////////////////
 using System;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using AppResources = AgentCharacterEditor.Resources;
 
@@ -144,6 +146,276 @@ namespace AgentCharacterEditor.Global
 		{
 			get;
 			set;
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+
+	public static class EditEventsExtensions
+	{
+		public static void SetTipText (this Button pButton, String pTipText)
+		{
+			pButton.ToolTip = pTipText;
+		}
+
+		public static void SetTitle (this Button pButton, String pTitle)
+		{
+			pButton.ToolTip = pTitle.NoMenuPrefix();
+		}
+
+		public static void SetTitle (this MenuItem pMenuItem, String pTitle)
+		{
+			pMenuItem.Header = pTitle;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		public static void SetTipText (this Control pControl, String pTipText)
+		{
+			if (pControl is Button)
+			{
+				(pControl as Button).ToolTip = pTipText;
+			}
+		}
+
+		public static void SetTitle (this Control pControl, String pTitle)
+		{
+			if (pControl is Button)
+			{
+				(pControl as Button).ToolTip = pTitle.NoMenuPrefix ();
+			}
+			if (pControl is MenuItem)
+			{
+				(pControl as MenuItem).Header = pTitle.FixMenuPrefix ();
+			}
+		}
+
+		public static void SetChecked (this Control pControl, Boolean pChecked)
+		{
+			if (pControl is ToggleButton)
+			{
+				(pControl as ToggleButton).IsChecked = pChecked;
+			}
+			if (pControl is MenuItem)
+			{
+				(pControl as MenuItem).IsChecked = pChecked;
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		public static void SetTipText (this CanExecuteRoutedEventArgs pEventArgs, String pTipText)
+		{
+			if (pEventArgs.Parameter is Button)
+			{
+				(pEventArgs.Parameter as Button).ToolTip = pTipText;
+			}
+		}
+
+		public static void SetTitle (this CanExecuteRoutedEventArgs pEventArgs, String pTitle)
+		{
+			if (pEventArgs.Parameter is Button)
+			{
+				(pEventArgs.Parameter as Button).ToolTip = pTitle.NoMenuPrefix ();
+			}
+			if (pEventArgs.Parameter is MenuItem)
+			{
+				(pEventArgs.Parameter as MenuItem).Header = pTitle.FixMenuPrefix ();
+			}
+		}
+
+		static public void SetChecked (this CanExecuteRoutedEventArgs pEventArgs, Boolean pChecked)
+		{
+			if (pEventArgs.Parameter is ToggleButton)
+			{
+				(pEventArgs.Parameter as ToggleButton).IsChecked = pChecked;
+			}
+			if (pEventArgs.Parameter is MenuItem)
+			{
+				(pEventArgs.Parameter as MenuItem).IsChecked = pChecked;
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		static public void PutCutTitle (this CanExecuteRoutedEventArgs pEventArgs)
+		{
+			pEventArgs.PutCutTitle (String.Empty);
+		}
+
+		static public void PutCutTitle (this CanExecuteRoutedEventArgs pEventArgs, String pObjectTitle)
+		{
+			if (pEventArgs.Parameter is Button)
+			{
+				(pEventArgs.Parameter as Button).ToolTip = String.Format (AppResources.Resources.EditCutThis.NoMenuPrefix (), pObjectTitle);
+			}
+			if (pEventArgs.Parameter is MenuItem)
+			{
+				(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditCutThis.FixMenuPrefix (), pObjectTitle);
+			}
+			if (!String.IsNullOrEmpty (pObjectTitle))
+			{
+				pEventArgs.CanExecute = true;
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		static public void PutCopyTitle (this CanExecuteRoutedEventArgs pEventArgs)
+		{
+			pEventArgs.PutCopyTitle (String.Empty);
+		}
+
+		static public void PutCopyTitle (this CanExecuteRoutedEventArgs pEventArgs, String pObjectTitle)
+		{
+			if (pEventArgs.Parameter is Button)
+			{
+				(pEventArgs.Parameter as Button).ToolTip = String.Format (AppResources.Resources.EditCopyThis.NoMenuPrefix (), pObjectTitle);
+			}
+			if (pEventArgs.Parameter is MenuItem)
+			{
+				(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditCopyThis.FixMenuPrefix (), pObjectTitle);
+			}
+			if (!String.IsNullOrEmpty (pObjectTitle))
+			{
+				pEventArgs.CanExecute = true;
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		static public void PutDeleteTitle (this CanExecuteRoutedEventArgs pEventArgs)
+		{
+			pEventArgs.PutDeleteTitle (String.Empty);
+		}
+
+		static public void PutDeleteTitle (this CanExecuteRoutedEventArgs pEventArgs, String pObjectTitle)
+		{
+			if (pEventArgs.Parameter is Button)
+			{
+				(pEventArgs.Parameter as Button).ToolTip = String.Format (AppResources.Resources.EditDeleteThis.NoMenuPrefix (), pObjectTitle);
+			}
+			if (pEventArgs.Parameter is MenuItem)
+			{
+				(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditDeleteThis.FixMenuPrefix (), pObjectTitle);
+			}
+			if (!String.IsNullOrEmpty (pObjectTitle))
+			{
+				pEventArgs.CanExecute = true;
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		static public void PutPasteTitle (this CanExecuteRoutedEventArgs pEventArgs)
+		{
+			pEventArgs.PutPasteTitle (String.Empty);
+		}
+
+		static public void PutPasteTitle (this CanExecuteRoutedEventArgs pEventArgs, String pObjectTitle)
+		{
+			if (pEventArgs.Parameter is Button)
+			{
+				(pEventArgs.Parameter as Button).ToolTip = String.Format (AppResources.Resources.EditPasteThis.NoMenuPrefix (), pObjectTitle);
+			}
+			if (pEventArgs.Parameter is MenuItem)
+			{
+				(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditPasteThis.FixMenuPrefix (), pObjectTitle);
+			}
+			if (!String.IsNullOrEmpty (pObjectTitle))
+			{
+				pEventArgs.CanExecute = true;
+			}
+		}
+
+		static public void PutPasteTitle (this CanExecuteRoutedEventArgs pEventArgs, String pPasteTypeTitle, String pObjectTitle)
+		{
+			if (pEventArgs.Parameter is Button)
+			{
+				(pEventArgs.Parameter as Button).ToolTip = String.Format (pPasteTypeTitle.NoMenuPrefix (), pObjectTitle);
+			}
+			if (pEventArgs.Parameter is MenuItem)
+			{
+				(pEventArgs.Parameter as MenuItem).Header = String.Format (pPasteTypeTitle.FixMenuPrefix (), pObjectTitle);
+			}
+			if (!String.IsNullOrEmpty (pObjectTitle))
+			{
+				pEventArgs.CanExecute = true;
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		static public void PutUndoTitle (this CanExecuteRoutedEventArgs pEventArgs)
+		{
+			pEventArgs.PutUndoTitle (String.Empty);
+		}
+
+		static public void PutUndoTitle (this CanExecuteRoutedEventArgs pEventArgs, String pObjectTitle)
+		{
+			if (pEventArgs.Parameter is Button)
+			{
+				if (String.IsNullOrEmpty (pObjectTitle))
+				{
+					(pEventArgs.Parameter as Button).ToolTip = AppResources.Resources.EditUndo.NoMenuPrefix ();
+				}
+				else
+				{
+					(pEventArgs.Parameter as Button).ToolTip = String.Format (AppResources.Resources.EditUndoThis.NoMenuPrefix (), pObjectTitle);
+				}
+			}
+			if (pEventArgs.Parameter is MenuItem)
+			{
+				if (String.IsNullOrEmpty (pObjectTitle))
+				{
+					(pEventArgs.Parameter as MenuItem).Header = AppResources.Resources.EditUndo.FixMenuPrefix ();
+				}
+				else
+				{
+					(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditUndoThis.FixMenuPrefix (), pObjectTitle);
+				}
+			}
+			if (!String.IsNullOrEmpty (pObjectTitle))
+			{
+				pEventArgs.CanExecute = true;
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		static public void PutRedoTitle (this CanExecuteRoutedEventArgs pEventArgs)
+		{
+			pEventArgs.PutRedoTitle (String.Empty);
+		}
+
+		static public void PutRedoTitle (this CanExecuteRoutedEventArgs pEventArgs, String pObjectTitle)
+		{
+			if (pEventArgs.Parameter is Button)
+			{
+				if (String.IsNullOrEmpty (pObjectTitle))
+				{
+					(pEventArgs.Parameter as Button).ToolTip = AppResources.Resources.EditRedo.NoMenuPrefix ();
+				}
+				else
+				{
+					(pEventArgs.Parameter as Button).ToolTip = String.Format (AppResources.Resources.EditRedoThis.NoMenuPrefix (), pObjectTitle);
+				}
+			}
+			if (pEventArgs.Parameter is MenuItem)
+			{
+				if (String.IsNullOrEmpty (pObjectTitle))
+				{
+					(pEventArgs.Parameter as MenuItem).Header = AppResources.Resources.EditRedo.FixMenuPrefix ();
+				}
+				else
+				{
+					(pEventArgs.Parameter as MenuItem).Header = String.Format (AppResources.Resources.EditRedoThis.FixMenuPrefix (), pObjectTitle);
+				}
+			}
+			if (!String.IsNullOrEmpty (pObjectTitle))
+			{
+				pEventArgs.CanExecute = true;
+			}
 		}
 	}
 }

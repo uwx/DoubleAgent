@@ -31,6 +31,8 @@ namespace AgentCharacterEditor
 		{
 			Settings lSettings = Settings.Default;
 
+			InitializeViewSize ();
+
 			if (lSettings.IsValid)
 			{
 				if ((lSettings.MainFormSize.Width > 0) && (lSettings.MainFormSize.Height > 0))
@@ -50,6 +52,15 @@ namespace AgentCharacterEditor
 				if (lSettings.MainFormSplit > 0)
 				{
 					MainGrid.ColumnDefinitions[0].Width = new GridLength (lSettings.MainFormSplit);
+				}
+
+				if (lSettings.ViewLarge)
+				{
+					ViewLarge ();
+				}
+				else if (lSettings.ViewSmall)
+				{
+					ViewSmall ();
 				}
 			}
 		}
@@ -99,6 +110,8 @@ namespace AgentCharacterEditor
 			lSettings.MainFormState = (WindowState == WindowState.Minimized) ? WindowState.Normal : WindowState;
 
 			lSettings.MainFormSplit = MainGrid.ColumnDefinitions[0].Width.Value;
+			lSettings.ViewLarge = IsViewLarge;
+			lSettings.ViewSmall = IsViewSmall;
 		}
 
 		private void SaveRecentFiles ()
@@ -134,6 +147,12 @@ namespace AgentCharacterEditor
 			get;
 			set;
 		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region Events
+
+		public event EventHandler ViewChanged;
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
@@ -343,6 +362,155 @@ namespace AgentCharacterEditor
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Display Resolution
+
+		public Boolean IsViewLarge
+		{
+			get
+			{
+				return (DefaultViewLarge == (CurrentView == System.Windows.Media.Transform.Identity));
+			}
+		}
+
+		public Boolean IsViewSmall
+		{
+			get
+			{
+				return !IsViewLarge;
+			}
+		}
+
+		public Boolean CanViewLarge
+		{
+			get;
+			protected set;
+		}
+
+		public Boolean CanViewSmall
+		{
+			get;
+			protected set;
+		}
+
+		public Boolean DefaultViewLarge
+		{
+			get;
+			protected set;
+		}
+
+		public System.Windows.Media.Transform CurrentView
+		{
+			get
+			{
+				return MainGrid.LayoutTransform;
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		public Boolean ViewLarge ()
+		{
+			Boolean lRet = false;
+
+			if (CanViewLarge && !IsViewLarge)
+			{
+				try
+				{
+					if (DefaultViewLarge)
+					{
+						MainGrid.LayoutTransform = System.Windows.Media.Transform.Identity;
+						ToolBarPanel.LayoutTransform = System.Windows.Media.Transform.Identity;
+					}
+					else
+					{
+						Size lResolution = ImageExtensions.GuessScreenResolution ().ToWPF ();
+
+						if ((lResolution.Width >= 96.0) || (lResolution.Height >= 96.0))
+						{
+							MainGrid.LayoutTransform = new System.Windows.Media.ScaleTransform (120.0 / lResolution.Width, 120.0 / lResolution.Width);
+							ToolBarPanel.LayoutTransform = new System.Windows.Media.ScaleTransform (120.0 / lResolution.Width, 120.0 / lResolution.Width);
+						}
+						else
+						{
+							MainGrid.LayoutTransform = new System.Windows.Media.ScaleTransform (96.0 / lResolution.Width, 96.0 / lResolution.Height);
+							ToolBarPanel.LayoutTransform = new System.Windows.Media.ScaleTransform (96.0 / lResolution.Width, 96.0 / lResolution.Height);
+						}
+					}
+					lRet = true;
+
+					if (ViewChanged != null)
+					{
+						ViewChanged (this, new EventArgs ());
+					}
+				}
+				catch (Exception pException)
+				{
+					System.Diagnostics.Debug.Print (pException.Message);
+				}
+				InvalidateArrange ();
+			}
+			return lRet;
+		}
+
+		public Boolean ViewSmall ()
+		{
+			Boolean lRet = false;
+
+			if (CanViewSmall && !IsViewSmall)
+			{
+				try
+				{
+					if (DefaultViewLarge)
+					{
+						Size lResolution = ImageExtensions.GuessScreenResolution ().ToWPF ();
+						MainGrid.LayoutTransform = new System.Windows.Media.ScaleTransform (96.0 / lResolution.Width, 96.0 / lResolution.Height);
+						ToolBarPanel.LayoutTransform = new System.Windows.Media.ScaleTransform (96.0 / lResolution.Width, 96.0 / lResolution.Height);
+					}
+					else
+					{
+						MainGrid.LayoutTransform = System.Windows.Media.Transform.Identity;
+						ToolBarPanel.LayoutTransform = System.Windows.Media.Transform.Identity;
+					}
+					lRet = true;
+
+					if (ViewChanged != null)
+					{
+						ViewChanged (this, new EventArgs ());
+					}
+				}
+				catch (Exception pException)
+				{
+					System.Diagnostics.Debug.Print (pException.Message);
+				}
+				InvalidateArrange ();
+			}
+			return lRet;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		private void InitializeViewSize ()
+		{
+			Size lResolution = ImageExtensions.GuessScreenResolution ().ToWPF ();
+#if DEBUG
+			System.Diagnostics.Debug.Print ("ScreenResolution [{0}]", lResolution);
+#endif
+			if ((lResolution.Width > 96) && (lResolution.Height > 96))
+			{
+				CanViewSmall = true;
+				CanViewLarge = true;
+				DefaultViewLarge = true;
+			}
+			else
+			{
+				CanViewSmall = true;
+				CanViewLarge = true;
+				DefaultViewLarge = false;
+			}
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
 		#region Window Event Handlers
 
 		private void Window_Initialized (object sender, EventArgs e)
@@ -404,7 +572,7 @@ namespace AgentCharacterEditor
 			HandleFileOpen ();
 		}
 
-		private void CanFileSave (object sender, CanExecuteRoutedEventArgs e)
+		private void OnCanFileSave (object sender, CanExecuteRoutedEventArgs e)
 		{
 			e.CanExecute = CanHandleFileSave;
 			e.Handled = true;
@@ -414,7 +582,7 @@ namespace AgentCharacterEditor
 			HandleFileSave ();
 		}
 
-		private void CanFileSaveAs (object sender, CanExecuteRoutedEventArgs e)
+		private void OnCanFileSaveAs (object sender, CanExecuteRoutedEventArgs e)
 		{
 			e.CanExecute = CanHandleFileSaveAs;
 			e.Handled = true;
@@ -431,7 +599,7 @@ namespace AgentCharacterEditor
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private void CanBrowseBack (object sender, CanExecuteRoutedEventArgs e)
+		private void OnCanBrowseBack (object sender, CanExecuteRoutedEventArgs e)
 		{
 			e.CanExecute = CanHandleNavigateBack;
 			e.Handled = true;
@@ -441,7 +609,7 @@ namespace AgentCharacterEditor
 			HandleNavigateBack ();
 		}
 
-		private void CanBrowseForward (object sender, CanExecuteRoutedEventArgs e)
+		private void OnCanBrowseForward (object sender, CanExecuteRoutedEventArgs e)
 		{
 			e.CanExecute = CanHandleNavigateForward;
 			e.Handled = true;
@@ -491,7 +659,7 @@ namespace AgentCharacterEditor
 				e.PutUndoTitle ();
 			}
 		}
-		private void CanEditUndo (object sender, CanExecuteRoutedEventArgs e)
+		private void OnCanEditUndo (object sender, CanExecuteRoutedEventArgs e)
 		{
 			if (Program.UndoManager.CanUndo)
 			{
@@ -517,7 +685,7 @@ namespace AgentCharacterEditor
 				e.PutRedoTitle ();
 			}
 		}
-		private void CanEditRedo (object sender, CanExecuteRoutedEventArgs e)
+		private void OnCanEditRedo (object sender, CanExecuteRoutedEventArgs e)
 		{
 			if (Program.UndoManager.CanRedo)
 			{
@@ -544,6 +712,32 @@ namespace AgentCharacterEditor
 
 			lDialog.Owner = this;
 			lDialog.ShowDialog ();
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		private void OnCanViewLarge (object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = CanViewLarge;
+			e.SetChecked (IsViewLarge);
+			e.Handled = true;
+		}
+		private void OnViewLarge (object sender, ExecutedRoutedEventArgs e)
+		{
+			ViewLarge ();
+			e.Handled = true;
+		}
+
+		private void OnCanViewSmall (object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = CanViewSmall;
+			e.SetChecked (IsViewSmall);
+			e.Handled = true;
+		}
+		private void OnViewSmall (object sender, ExecutedRoutedEventArgs e)
+		{
+			ViewSmall ();
+			e.Handled = true;
 		}
 
 		#endregion

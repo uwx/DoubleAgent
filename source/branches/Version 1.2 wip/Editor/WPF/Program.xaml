@@ -11,11 +11,6 @@
 				<ResourceDictionary Source="StyleNamed.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 
-			<Style x:Key="{x:Type custom:TextBoxEx}"
-				   TargetType="{x:Type custom:TextBoxEx}"
-				   BasedOn="{StaticResource {x:Type TextBox}}">
-			</Style>
-
 			<BitmapImage x:Key="ImgNavigateBack"
 						 UriSource="Resources/NavigateBack.png" />
 			<BitmapImage x:Key="ImgNavigateForward"
@@ -26,6 +21,8 @@
 						 UriSource="Resources/FileOpen.png" />
 			<BitmapImage x:Key="ImgFileSave"
 						 UriSource="Resources/FileSave.png" />
+			<BitmapImage x:Key="ImgFileSaveAs"
+						 UriSource="Resources/FileSaveAs.png" />
 			<BitmapImage x:Key="ImgFilePrint"
 						 UriSource="Resources/FilePrint.png" />
 			<BitmapImage x:Key="ImgFilePrintPreview"
@@ -98,6 +95,10 @@
 						 UriSource="Resources/MouthWide3.png" />
 			<BitmapImage x:Key="ImgMouthWide4"
 						 UriSource="Resources/MouthWide4.png" />
+			<BitmapImage x:Key="ImgLargeFont"
+						 UriSource="Resources/LargeFont.png" />
+			<BitmapImage x:Key="ImgSmallFont"
+						 UriSource="Resources/SmallFont.png" />
 			<BitmapImage x:Key="IconDoubleAgent"
 						 UriSource="Resources/DoubleAgent.ico" />
 
@@ -106,31 +107,82 @@
 						  Command="ApplicationCommands.Cut"
 						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditCut}" />
+						<Image Source="{StaticResource ImgEditCut}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Header="_Copy"
 						  Command="ApplicationCommands.Copy"
 						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditCopy}" />
+						<Image Source="{StaticResource ImgEditCopy}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Header="_Paste"
 						  Command="ApplicationCommands.Paste"
 						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditPaste}" />
+						<Image Source="{StaticResource ImgEditPaste}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Header="_Delete"
 						  Command="ApplicationCommands.Delete"
 						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditDelete}" />
+						<Image Source="{StaticResource ImgEditDelete}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 			</ContextMenu>
+
+			<ContextMenu x:Key="ContextMenuTextBox">
+				<MenuItem Header="_Cut"
+						  Command="ApplicationCommands.Cut"
+						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
+					<MenuItem.Icon>
+						<Image Source="{StaticResource ImgEditCut}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Header="_Copy"
+						  Command="ApplicationCommands.Copy"
+						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
+					<MenuItem.Icon>
+						<Image Source="{StaticResource ImgEditCopy}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Header="_Paste"
+						  Command="ApplicationCommands.Paste"
+						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
+					<MenuItem.Icon>
+						<Image Source="{StaticResource ImgEditPaste}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
+					</MenuItem.Icon>
+				</MenuItem>
+			</ContextMenu>
+
+			<Style x:Key="{x:Type custom:TextBoxEx}"
+				   TargetType="{x:Type custom:TextBoxEx}"
+				   BasedOn="{StaticResource {x:Type TextBox}}">
+				<Setter Property="ContextMenu" Value="{StaticResource ContextMenuTextBox}"/>
+			</Style>
 		</ResourceDictionary>
 	</Application.Resources>
 </Application>

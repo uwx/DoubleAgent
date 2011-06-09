@@ -46,7 +46,6 @@ namespace AgentCharacterEditor.Panels
 				Program.MainWindow.EditCut -= new Global.EditEventHandler (OnEditCut);
 				Program.MainWindow.EditDelete -= new Global.EditEventHandler (OnEditDelete);
 				Program.MainWindow.EditPaste -= new Global.EditEventHandler (OnEditPaste);
-				Program.MainWindow.EditMenu -= new Global.ContextMenuEventHandler (OnEditMenu);
 				if (Visible)
 				{
 					Program.MainWindow.CanEdit += new Global.CanEditEventHandler (OnCanEdit);
@@ -54,7 +53,6 @@ namespace AgentCharacterEditor.Panels
 					Program.MainWindow.EditCut += new Global.EditEventHandler (OnEditCut);
 					Program.MainWindow.EditDelete += new Global.EditEventHandler (OnEditDelete);
 					Program.MainWindow.EditPaste += new Global.EditEventHandler (OnEditPaste);
-					Program.MainWindow.EditMenu += new Global.ContextMenuEventHandler (OnEditMenu);
 				}
 			}
 
@@ -168,30 +166,11 @@ namespace AgentCharacterEditor.Panels
 			return IsControlFocused (pControl);
 		}
 
-		protected Boolean IsControlEditTarget (Control pControl, Global.ContextMenuEventArgs e)
-		{
-			return Object.ReferenceEquals (pControl, e.ActiveControl);
-		}
-
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void OnCanEdit (object sender, Global.CanEditEventArgs e)
 		{
 			if (!e.IsUsed && !IsPanelEmpty)
-			{
-				try
-				{
-					ShowEditState (e);
-				}
-				catch
-				{
-				}
-			}
-		}
-
-		protected virtual void OnEditMenu (object sender, Global.ContextMenuEventArgs e)
-		{
-			if (!IsPanelEmpty)
 			{
 				try
 				{

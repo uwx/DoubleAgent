@@ -66,76 +66,74 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowBalloonProperties ()
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			CheckBoxWordBalloon.IsEnabled = (CharacterFile != null) && (!Program.FileIsReadOnly);
-			GroupBoxBalloonDisplay.IsEnabled = !IsPanelEmpty;
-
-			if (IsPanelEmpty)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				CheckBoxWordBalloon.IsChecked = false;
-			}
-			else
-			{
-				CheckBoxWordBalloon.IsChecked = ((CharacterFile.Header.Style & CharacterStyle.Balloon) != CharacterStyle.None);
-			}
+				CheckBoxWordBalloon.IsEnabled = (CharacterFile != null) && (!Program.FileIsReadOnly);
+				GroupBoxBalloonDisplay.IsEnabled = !IsPanelEmpty;
 
-			ShowBalloonStyle ();
-			ShowBalloonColors ();
-			ShowBalloonFont ();
-			ShowBalloonPreview ();
+				if (IsPanelEmpty)
+				{
+					CheckBoxWordBalloon.IsChecked = false;
+				}
+				else
+				{
+					CheckBoxWordBalloon.IsChecked = ((CharacterFile.Header.Style & CharacterStyle.Balloon) != CharacterStyle.None);
+				}
 
-			PopIsPanelFilling (lWasFilling);
+				ShowBalloonStyle ();
+				ShowBalloonColors ();
+				ShowBalloonFont ();
+				ShowBalloonPreview ();
+			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void ShowBalloonStyle ()
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			if (IsPanelEmpty)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				NumericCharsPerLine.Clear ();
-				NumericNumLines.Clear ();
-				RadioButtonSizeToText.IsChecked = false;
-				RadioButtonNumLines.IsChecked = false;
-				CheckBoxAutoHide.IsChecked = false;
-				CheckBoxAutoPace.IsChecked = false;
-			}
-			else
-			{
-				NumericCharsPerLine.Value = FileBalloon.PerLine;
-				NumericNumLines.Value = FileBalloon.Lines;
-
-				if ((CharacterFile.Header.Style & CharacterStyle.SizeToText) != CharacterStyle.None)
+				if (IsPanelEmpty)
 				{
-					RadioButtonSizeToText.IsChecked = true;
+					NumericCharsPerLine.Clear ();
+					NumericNumLines.Clear ();
+					RadioButtonSizeToText.IsChecked = false;
 					RadioButtonNumLines.IsChecked = false;
-					NumericNumLines.IsEnabled = false;
+					CheckBoxAutoHide.IsChecked = false;
+					CheckBoxAutoPace.IsChecked = false;
 				}
 				else
 				{
-					RadioButtonSizeToText.IsChecked = false;
-					RadioButtonNumLines.IsChecked = true;
-					NumericNumLines.IsEnabled = !Program.FileIsReadOnly;
+					NumericCharsPerLine.Value = FileBalloon.PerLine;
+					NumericNumLines.Value = FileBalloon.Lines;
+
+					if ((CharacterFile.Header.Style & CharacterStyle.SizeToText) != CharacterStyle.None)
+					{
+						RadioButtonSizeToText.IsChecked = true;
+						RadioButtonNumLines.IsChecked = false;
+						NumericNumLines.IsEnabled = false;
+					}
+					else
+					{
+						RadioButtonSizeToText.IsChecked = false;
+						RadioButtonNumLines.IsChecked = true;
+						NumericNumLines.IsEnabled = !Program.FileIsReadOnly;
+					}
+
+					CheckBoxAutoHide.IsChecked = ((CharacterFile.Header.Style & CharacterStyle.NoAutoHide) == CharacterStyle.None);
+					CheckBoxAutoPace.IsChecked = ((CharacterFile.Header.Style & CharacterStyle.NoAutoPace) == CharacterStyle.None);
 				}
 
-				CheckBoxAutoHide.IsChecked = ((CharacterFile.Header.Style & CharacterStyle.NoAutoHide) == CharacterStyle.None);
-				CheckBoxAutoPace.IsChecked = ((CharacterFile.Header.Style & CharacterStyle.NoAutoPace) == CharacterStyle.None);
+				LabelCharsPerLine.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+				NumericCharsPerLine.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+				RadioButtonSizeToText.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+				RadioButtonNumLines.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+				CheckBoxAutoHide.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+				CheckBoxAutoPace.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
+
+				NumericCharsPerLine.IsModified = false;
+				NumericNumLines.IsModified = false;
 			}
-
-			LabelCharsPerLine.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			NumericCharsPerLine.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			RadioButtonSizeToText.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			RadioButtonNumLines.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			CheckBoxAutoHide.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-			CheckBoxAutoPace.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly;
-
-			NumericCharsPerLine.IsModified = false;
-			NumericNumLines.IsModified = false;
-
-			PopIsPanelFilling (lWasFilling);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -185,154 +183,190 @@ namespace AgentCharacterEditor.Panels
 
 		protected void HandleEnabledChanged ()
 		{
-			UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
+			if (!IsPanelFilling && (CharacterFile != null) && !Program.FileIsReadOnly)
+			{
+				UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
 
-			if (CheckBoxWordBalloon.IsChecked.Value)
-			{
-				lUpdate.CharacterStyle |= CharacterStyle.Balloon;
+				if (CheckBoxWordBalloon.IsChecked.Value)
+				{
+					lUpdate.CharacterStyle |= CharacterStyle.Balloon;
+				}
+				else
+				{
+					lUpdate.CharacterStyle &= ~CharacterStyle.Balloon;
+				}
+				UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
 			}
-			else
-			{
-				lUpdate.CharacterStyle &= ~CharacterStyle.Balloon;
-			}
-			UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
 		}
 
 		protected void HandleCharsPerLineChanged ()
 		{
-			UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
-
-			lUpdate.PerLine = (UInt16)NumericCharsPerLine.Value;
-			if (NumericCharsPerLine.Value != (Decimal)lUpdate.PerLine)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				PushIsPanelFilling (true);
-				NumericCharsPerLine.Value = (Decimal)lUpdate.PerLine;
-				PopIsPanelFilling (false);
+				UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
+
+				lUpdate.PerLine = (UInt16)NumericCharsPerLine.Value;
+				if (NumericCharsPerLine.Value != (Decimal)lUpdate.PerLine)
+				{
+					using (PanelFillingState lFillingState = new PanelFillingState (this))
+					{
+						NumericCharsPerLine.Value = (Decimal)lUpdate.PerLine;
+						NumericCharsPerLine.IsModified = false;
+					}
+				}
+				UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
 			}
-			UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+			NumericCharsPerLine.IsModified = false;
 		}
 
 		protected void HandleNumLinesChanged ()
 		{
-			UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
-
-			lUpdate.Lines = (UInt16)NumericNumLines.Value;
-			if (NumericNumLines.Value != (Decimal)lUpdate.Lines)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				PushIsPanelFilling (true);
-				NumericNumLines.Value = (Decimal)lUpdate.Lines;
-				PopIsPanelFilling (false);
+				UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
+
+				lUpdate.Lines = (UInt16)NumericNumLines.Value;
+				if (NumericNumLines.Value != (Decimal)lUpdate.Lines)
+				{
+					using (PanelFillingState lFillingState = new PanelFillingState (this))
+					{
+						NumericNumLines.Value = (Decimal)lUpdate.Lines;
+						NumericNumLines.IsModified = false;
+					}
+				}
+				UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
 			}
-			UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+			NumericNumLines.IsModified = false;
 		}
 
 		protected void HandleSizeToTextChanged ()
 		{
-			if (RadioButtonSizeToText.IsChecked.Value)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
+				if (RadioButtonSizeToText.IsChecked.Value)
+				{
+					UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
 
-				lUpdate.CharacterStyle |= CharacterStyle.SizeToText;
-				UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
-			}
-			else if (RadioButtonNumLines.IsChecked.Value)
-			{
-				UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
+					lUpdate.CharacterStyle |= CharacterStyle.SizeToText;
+					UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+				}
+				else if (RadioButtonNumLines.IsChecked.Value)
+				{
+					UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
 
-				lUpdate.CharacterStyle &= ~CharacterStyle.SizeToText;
-				UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+					lUpdate.CharacterStyle &= ~CharacterStyle.SizeToText;
+					UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+				}
 			}
 		}
 
 		protected void HandleAutoHideChanged ()
 		{
-			UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
+			{
+				UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
 
-			if (CheckBoxAutoHide.IsChecked.Value)
-			{
-				lUpdate.CharacterStyle &= ~CharacterStyle.NoAutoHide;
+				if (CheckBoxAutoHide.IsChecked.Value)
+				{
+					lUpdate.CharacterStyle &= ~CharacterStyle.NoAutoHide;
+				}
+				else
+				{
+					lUpdate.CharacterStyle |= CharacterStyle.NoAutoHide;
+				}
+				UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
 			}
-			else
-			{
-				lUpdate.CharacterStyle |= CharacterStyle.NoAutoHide;
-			}
-			UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
 		}
 
 		protected void HandleAutoPaceChanged ()
 		{
-			UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
+			{
+				UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
 
-			if (CheckBoxAutoPace.IsChecked.Value)
-			{
-				lUpdate.CharacterStyle &= ~CharacterStyle.NoAutoPace;
+				if (CheckBoxAutoPace.IsChecked.Value)
+				{
+					lUpdate.CharacterStyle &= ~CharacterStyle.NoAutoPace;
+				}
+				else
+				{
+					lUpdate.CharacterStyle |= CharacterStyle.NoAutoPace;
+				}
+				UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
 			}
-			else
-			{
-				lUpdate.CharacterStyle |= CharacterStyle.NoAutoPace;
-			}
-			UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		protected void UpdateFont ()
+		protected void HandleUpdateFont ()
 		{
-			System.Windows.Forms.FontDialog lFontDialog = new System.Windows.Forms.FontDialog ();
-
-			lFontDialog.ShowEffects = true;
-			lFontDialog.Font = FileBalloon.Font;
-			if (lFontDialog.ShowDialog () == System.Windows.Forms.DialogResult.OK)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
+				System.Windows.Forms.FontDialog lFontDialog = new System.Windows.Forms.FontDialog ();
 
-				lUpdate.Font = lFontDialog.Font;
-				UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+				lFontDialog.ShowEffects = true;
+				lFontDialog.Font = FileBalloon.Font;
+				if (lFontDialog.ShowDialog () == System.Windows.Forms.DialogResult.OK)
+				{
+					UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
+
+					lUpdate.Font = lFontDialog.Font;
+					UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+				}
 			}
 		}
 
-		protected void UpdateForeground ()
+		protected void HandleUpdateForeground ()
 		{
-			System.Windows.Forms.ColorDialog lColorDialog = new System.Windows.Forms.ColorDialog ();
-
-			lColorDialog.Color = FileBalloon.FgColor;
-			lColorDialog.FullOpen = true;
-			if (lColorDialog.ShowDialog () == System.Windows.Forms.DialogResult.OK)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
+				System.Windows.Forms.ColorDialog lColorDialog = new System.Windows.Forms.ColorDialog ();
 
-				lUpdate.FgColor = lColorDialog.Color;
-				UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+				lColorDialog.Color = FileBalloon.FgColor;
+				lColorDialog.FullOpen = true;
+				if (lColorDialog.ShowDialog () == System.Windows.Forms.DialogResult.OK)
+				{
+					UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
+
+					lUpdate.FgColor = lColorDialog.Color;
+					UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+				}
 			}
 		}
 
-		protected void UpdateBackground ()
+		protected void HandleUpdateBackground ()
 		{
-			System.Windows.Forms.ColorDialog lColorDialog = new System.Windows.Forms.ColorDialog ();
-
-			lColorDialog.Color = FileBalloon.BkColor;
-			lColorDialog.FullOpen = true;
-			if (lColorDialog.ShowDialog () == System.Windows.Forms.DialogResult.OK)
+			if (!IsPanelFilling && (!IsPanelEmpty) && (!Program.FileIsReadOnly))
 			{
-				UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
+				System.Windows.Forms.ColorDialog lColorDialog = new System.Windows.Forms.ColorDialog ();
 
-				lUpdate.BkColor = lColorDialog.Color;
-				UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+				lColorDialog.Color = FileBalloon.BkColor;
+				lColorDialog.FullOpen = true;
+				if (lColorDialog.ShowDialog () == System.Windows.Forms.DialogResult.OK)
+				{
+					UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
+
+					lUpdate.BkColor = lColorDialog.Color;
+					UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+				}
 			}
 		}
 
-		protected void UpdateBorder ()
+		protected void HandleUpdateBorder ()
 		{
-			System.Windows.Forms.ColorDialog lColorDialog = new System.Windows.Forms.ColorDialog ();
-
-			lColorDialog.Color = FileBalloon.BrColor;
-			lColorDialog.FullOpen = true;
-			if (lColorDialog.ShowDialog () == System.Windows.Forms.DialogResult.OK)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
+				System.Windows.Forms.ColorDialog lColorDialog = new System.Windows.Forms.ColorDialog ();
 
-				lUpdate.BrColor = lColorDialog.Color;
-				UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+				lColorDialog.Color = FileBalloon.BrColor;
+				lColorDialog.FullOpen = true;
+				if (lColorDialog.ShowDialog () == System.Windows.Forms.DialogResult.OK)
+				{
+					UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
+
+					lUpdate.BrColor = lColorDialog.Color;
+					UpdateCharacterBalloon.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateCharacterBalloon, this);
+				}
 			}
 		}
 

@@ -23,7 +23,9 @@ using AgentCharacterEditor.Global;
 using AgentCharacterEditor.Navigation;
 using AgentCharacterEditor.Properties;
 using AgentCharacterEditor.Updates;
+using DoubleAgent;
 using DoubleAgent.Character;
+using AppResources = AgentCharacterEditor.Resources;
 
 namespace AgentCharacterEditor.Panels
 {
@@ -116,58 +118,134 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowFrameName ()
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			if (IsPanelEmpty)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				TextBoxFrameName.Clear ();
-				TextBoxFrameName.IsEnabled = false;
+				if (IsPanelEmpty)
+				{
+					TextBoxFrameName.Clear ();
+					TextBoxFrameName.IsEnabled = false;
+				}
+				else
+				{
+					TextBoxFrameName.Text = Titles.FrameAnimation (Frame);
+					TextBoxFrameName.IsEnabled = true;
+				}
 			}
-			else
-			{
-				TextBoxFrameName.Text = Titles.FrameAnimation (Frame);
-				TextBoxFrameName.IsEnabled = true;
-			}
-
-			PopIsPanelFilling (lWasFilling);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void ShowFrameOverlay (FileFrameOverlay pFrameOverlay)
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			if (pFrameOverlay == null)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				NumericOffsetX.Clear ();
-				NumericOffsetY.Clear ();
-				CheckBoxReplace.IsChecked = false;
+				if (pFrameOverlay == null)
+				{
+					NumericOffsetX.Clear ();
+					NumericOffsetY.Clear ();
+					CheckBoxReplace.IsChecked = false;
 
-				NumericOffsetX.IsEnabled = false;
-				NumericOffsetY.IsEnabled = false;
-				CheckBoxReplace.IsEnabled = false;
+					NumericOffsetX.IsEnabled = false;
+					NumericOffsetY.IsEnabled = false;
+					LabelOffsetX.IsEnabled = false;
+					LabelOffsetY.IsEnabled = false;
+					CheckBoxReplace.IsEnabled = false;
+				}
+				else
+				{
+					NumericOffsetX.Value = pFrameOverlay.Offset.X;
+					NumericOffsetY.Value = pFrameOverlay.Offset.Y;
+					CheckBoxReplace.IsChecked = pFrameOverlay.ReplaceFlag;
+
+					NumericOffsetX.IsEnabled = !Program.FileIsReadOnly;
+					NumericOffsetY.IsEnabled = !Program.FileIsReadOnly;
+					LabelOffsetX.IsEnabled = !Program.FileIsReadOnly;
+					LabelOffsetY.IsEnabled = !Program.FileIsReadOnly;
+					CheckBoxReplace.IsEnabled = !Program.FileIsReadOnly;
+				}
+				NumericOffsetX.IsModified = false;
+				NumericOffsetY.IsModified = false;
+
+				ShowFrameSample (pFrameOverlay);
 			}
-			else
-			{
-				NumericOffsetX.Value = pFrameOverlay.Offset.X;
-				NumericOffsetY.Value = pFrameOverlay.Offset.Y;
-				CheckBoxReplace.IsChecked = pFrameOverlay.ReplaceFlag;
-
-				NumericOffsetX.IsEnabled = !Program.FileIsReadOnly;
-				NumericOffsetY.IsEnabled = !Program.FileIsReadOnly;
-				CheckBoxReplace.IsEnabled = !Program.FileIsReadOnly;
-			}
-			NumericOffsetX.IsModified = false;
-			NumericOffsetY.IsModified = false;
-
-			ShowFrameSample (pFrameOverlay);
 		}
 
 		private void ShowSelectedOverlay ()
 		{
 			ShowFrameOverlay (GetSelectedOverlay (true));
-			ShowSelectionState (GetSelectedOverlay (false), ListViewOverlays.SelectedIndex);
+
+			ButtonAdd.IsEnabled = CanAddOverlay;
+			ButtonDelete.IsEnabled = CanDeleteOverlay;
+			ButtonChooseFile.IsEnabled = CanDeleteOverlay;
+
+			ButtonAdd.SetTipText (AddOverlayTitle);
+			ButtonDelete.SetTipText (DeleteOverlayTitle);
+			ButtonChooseFile.SetTipText (ChooseOverlayFileTitle);
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		public Boolean CanAddOverlay
+		{
+			get
+			{
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				if (lFrameOverlay == null)
+				{
+					return !IsPanelEmpty && !Program.FileIsReadOnly && (ListViewOverlays.SelectedIndex >= 0);
+				}
+				else
+				{
+					return !Program.FileIsReadOnly && String.IsNullOrEmpty (lFrameOverlay.ImageFilePath);
+				}
+			}
+		}
+		public String AddOverlayTitle
+		{
+			get
+			{
+				return CanAddOverlay ? String.Format (AppResources.Resources.EditAddThis.NoMenuPrefix (), Titles.Overlay ((MouthOverlay)ListViewOverlays.SelectedIndex)) : AppResources.Resources.EditAdd.NoMenuPrefix ();
+			}
+		}
+
+		public Boolean CanDeleteOverlay
+		{
+			get
+			{
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				if (lFrameOverlay != null)
+				{
+					return !Program.FileIsReadOnly && !String.IsNullOrEmpty (lFrameOverlay.ImageFilePath);
+				}
+				return false;
+			}
+		}
+		public String DeleteOverlayTitle
+		{
+			get
+			{
+				return CanDeleteOverlay ? String.Format (AppResources.Resources.EditDeleteThis.NoMenuPrefix (), Titles.Overlay (GetSelectedOverlay (false))) : AppResources.Resources.EditDelete.NoMenuPrefix ();
+			}
+		}
+
+		public Boolean CanChooseOverlayFile
+		{
+			get
+			{
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				if (lFrameOverlay != null)
+				{
+					return !Program.FileIsReadOnly && !String.IsNullOrEmpty (lFrameOverlay.ImageFilePath);
+				}
+				return false;
+			}
+		}
+		public String ChooseOverlayFileTitle
+		{
+			get
+			{
+				return CanChooseOverlayFile ? String.Format (AppResources.Resources.EditChooseThisFile.NoMenuPrefix (), Titles.OverlayTypeName (GetSelectedOverlay (false))) : AppResources.Resources.EditChooseFile.NoMenuPrefix ();
+			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -214,7 +292,7 @@ namespace AgentCharacterEditor.Panels
 
 		private UndoableUpdate UpdateSelectedOverlay (FileFrameOverlay pFrameOverlay)
 		{
-			if (!IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
 				int lOverlayNdx = ListViewOverlays.SelectedIndex;
 				String lFilePath = String.Empty;
@@ -415,61 +493,129 @@ namespace AgentCharacterEditor.Panels
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private void HandleNumericOffsetXChanged ()
+		private void HandleOffsetXChanged ()
 		{
-			FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
-			UpdateFrameOverlay lUpdate;
-
-			if (!IsPanelEmpty && !Program.FileIsReadOnly && (lFrameOverlay != null))
+			if (!IsPanelFilling && !Program.FileIsReadOnly)
 			{
-				lUpdate = new UpdateFrameOverlay (lFrameOverlay, false);
-				lUpdate.Offset = new System.Drawing.Point ((int)NumericOffsetX.Value, lFrameOverlay.Offset.Y);
-				UpdateFrameOverlay.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateFrameOverlay, this);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				UpdateFrameOverlay lUpdate;
+
+				if (lFrameOverlay != null)
+				{
+					lUpdate = new UpdateFrameOverlay (lFrameOverlay, false);
+					lUpdate.Offset = new System.Drawing.Point ((int)NumericOffsetX.Value, lFrameOverlay.Offset.Y);
+					UpdateFrameOverlay.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateFrameOverlay, this);
+				}
 			}
+			NumericOffsetX.IsModified = false;
 		}
 
-		private void HandleNumericOffsetYChanged ()
+		private void HandleOffsetYChanged ()
 		{
-			FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
-			UpdateFrameOverlay lUpdate;
-
-			if (!IsPanelEmpty && !Program.FileIsReadOnly && (lFrameOverlay != null))
+			if (!IsPanelFilling && !Program.FileIsReadOnly)
 			{
-				lUpdate = new UpdateFrameOverlay (lFrameOverlay, false);
-				lUpdate.Offset = new System.Drawing.Point (lFrameOverlay.Offset.X, (int)NumericOffsetY.Value);
-				UpdateFrameOverlay.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateFrameOverlay, this);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				UpdateFrameOverlay lUpdate;
+
+				if (lFrameOverlay != null)
+				{
+					lUpdate = new UpdateFrameOverlay (lFrameOverlay, false);
+					lUpdate.Offset = new System.Drawing.Point (lFrameOverlay.Offset.X, (int)NumericOffsetY.Value);
+					UpdateFrameOverlay.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateFrameOverlay, this);
+				}
 			}
+			NumericOffsetY.IsModified = false;
 		}
 
 		private void HandleReplaceChanged ()
 		{
-			FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
-			UpdateFrameOverlay lUpdate;
-
-			if (!IsPanelEmpty && !Program.FileIsReadOnly && (lFrameOverlay != null))
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				lUpdate = new UpdateFrameOverlay (lFrameOverlay, false);
-				lUpdate.ReplaceFlag = CheckBoxReplace.IsChecked.Value;
-				UpdateFrameOverlay.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateFrameOverlay, this);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				UpdateFrameOverlay lUpdate;
+
+				if (lFrameOverlay != null)
+				{
+					lUpdate = new UpdateFrameOverlay (lFrameOverlay, false);
+					lUpdate.ReplaceFlag = CheckBoxReplace.IsChecked.Value;
+					UpdateFrameOverlay.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as UpdateFrameOverlay, this);
+				}
 			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private void HandleShiftUp ()
+		private void HandleShiftUpClick (int pRepeatNum)
 		{
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
+			{
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				UpdateFrameOverlay lUpdate;
+
+				if (lFrameOverlay != null)
+				{
+					lUpdate = new UpdateFrameOverlay (lFrameOverlay, false);
+					lUpdate.Offset = new System.Drawing.Point (lFrameOverlay.Offset.X, lFrameOverlay.Offset.Y - 1);
+					lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainWindow.OnUpdateApplied);
+					mRepeatUpdateFrameOverlay.PutUpdate (lUpdate, pRepeatNum);
+				}
+			}
 		}
 
-		private void HandleShiftDown ()
+		private void HandleShiftDownClick (int pRepeatNum)
 		{
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
+			{
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				UpdateFrameOverlay lUpdate;
+
+				if (lFrameOverlay != null)
+				{
+					lUpdate = new UpdateFrameOverlay (lFrameOverlay, false);
+					lUpdate.Offset = new System.Drawing.Point (lFrameOverlay.Offset.X, lFrameOverlay.Offset.Y + 1);
+					lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainWindow.OnUpdateApplied);
+					mRepeatUpdateFrameOverlay.PutUpdate (lUpdate, pRepeatNum);
+				}
+			}
 		}
 
-		private void HandleShiftLeft ()
+		private void HandleShiftLeftClick (int pRepeatNum)
 		{
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
+			{
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				UpdateFrameOverlay lUpdate;
+
+				if (lFrameOverlay != null)
+				{
+					lUpdate = new UpdateFrameOverlay (lFrameOverlay, false);
+					lUpdate.Offset = new System.Drawing.Point (lFrameOverlay.Offset.X - 1, lFrameOverlay.Offset.Y);
+					lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainWindow.OnUpdateApplied);
+					mRepeatUpdateFrameOverlay.PutUpdate (lUpdate, pRepeatNum);
+				}
+			}
 		}
 
-		private void HandleShiftRight ()
+		private void HandleShiftRightClick (int pRepeatNum)
 		{
+			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
+			{
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				UpdateFrameOverlay lUpdate;
+
+				if (lFrameOverlay != null)
+				{
+					lUpdate = new UpdateFrameOverlay (lFrameOverlay, false);
+					lUpdate.Offset = new System.Drawing.Point (lFrameOverlay.Offset.X + 1, lFrameOverlay.Offset.Y);
+					lUpdate.Applied += new UndoUnit.AppliedEventHandler (Program.MainWindow.OnUpdateApplied);
+					mRepeatUpdateFrameOverlay.PutUpdate (lUpdate, pRepeatNum);
+				}
+			}
+		}
+
+		private void HandleShiftComplete ()
+		{
+			mRepeatUpdateFrameOverlay.EndUpdate ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

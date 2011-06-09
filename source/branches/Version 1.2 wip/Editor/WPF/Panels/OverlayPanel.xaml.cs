@@ -2,10 +2,12 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using AgentCharacterEditor.Global;
 using AgentCharacterEditor.Properties;
+using DoubleAgent;
 using DoubleAgent.Character;
 using AppResources = AgentCharacterEditor.Resources;
 
@@ -16,9 +18,20 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
+		private AsyncTimer mShiftRepeatTimer = null;
+
 		public OverlayPanel ()
 		{
 			InitializeComponent ();
+			if (Program.MainWindow != null)
+			{
+				Program.MainWindow.ViewChanged += new EventHandler (OnViewChanged);
+			}
+		}
+
+		~OverlayPanel ()
+		{
+			StopShiftRepeat ();
 		}
 
 		#endregion
@@ -117,56 +130,61 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowFrameSample (FileFrameOverlay pFrameOverlay)
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-			System.Drawing.Bitmap lBitmap = null;
-
-			if (pFrameOverlay == null)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				PanelSample.IsEnabled = false;
-				if (!IsPanelEmpty)
+				System.Drawing.Bitmap lBitmap = null;
+
+				if (pFrameOverlay == null)
 				{
-					lBitmap = CharacterFile.GetFrameBitmap (Frame, true, System.Drawing.Color.Transparent);
+					PanelSample.IsEnabled = false;
+					if (!IsPanelEmpty)
+					{
+						try
+						{
+							lBitmap = CharacterFile.GetFrameBitmap (Frame, true, System.Drawing.Color.Transparent);
+						}
+						catch
+						{
+						}
+					}
+				}
+				else
+				{
+					PanelSample.IsEnabled = !Program.FileIsReadOnly;
+					try
+					{
+						lBitmap = CharacterFile.GetFrameBitmap (Frame, true, System.Drawing.Color.Transparent, (Int16)pFrameOverlay.OverlayType);
+					}
+					catch (Exception pException)
+					{
+						System.Diagnostics.Debug.Print (pException.Message);
+					}
+				}
+
+				try
+				{
+					if (lBitmap == null)
+					{
+						ImageSample.Source = null;
+					}
+					else
+					{
+						ImageSample.Source = lBitmap.MakeImageSource ();
+					}
+				}
+				catch (Exception pException)
+				{
+					System.Diagnostics.Debug.Print (pException.Message);
+				}
+				try
+				{
+					ImageSample.LayoutTransform = Program.MainWindow.CurrentView.Inverse as Transform;
+				}
+				catch (Exception pException)
+				{
+					System.Diagnostics.Debug.Print (pException.Message);
 				}
 			}
-			else
-			{
-				PanelSample.IsEnabled = !Program.FileIsReadOnly;
-				lBitmap = CharacterFile.GetFrameBitmap (Frame, true, System.Drawing.Color.Transparent, (Int16)pFrameOverlay.OverlayType);
-			}
-
-			if (lBitmap == null)
-			{
-				ImageSample.Source = null;
-				//PictureBoxImageSample.Image = null;
-				//PictureBoxImageSample.ClientSize = FrameSample.DefaultImageSize;
-			}
-			else
-			{
-				ImageSample.Source = lBitmap.MakeImageSource (96.0);
-				//PictureBoxImageSample.Image = lBitmap;
-				//PictureBoxImageSample.ClientSize = CharacterFile.Header.ImageSize;
-			}
-			PopIsPanelFilling (lWasFilling);
-		}
-
-		private void ShowSelectionState (FileFrameOverlay pFrameOverlay, int pOverlayNdx)
-		{
-			if (pFrameOverlay == null)
-			{
-				ButtonAdd.IsEnabled = !IsPanelEmpty && !Program.FileIsReadOnly && (pOverlayNdx >= 0);
-				ButtonDelete.IsEnabled = false;
-				ButtonChooseFile.IsEnabled = false;
-			}
-			else
-			{
-				ButtonAdd.IsEnabled = !Program.FileIsReadOnly && String.IsNullOrEmpty (pFrameOverlay.ImageFilePath);
-				ButtonDelete.IsEnabled = !Program.FileIsReadOnly && !String.IsNullOrEmpty (pFrameOverlay.ImageFilePath);
-				ButtonChooseFile.IsEnabled = !Program.FileIsReadOnly && !String.IsNullOrEmpty (pFrameOverlay.ImageFilePath);
-			}
-
-			ButtonAdd.ToolTip = ButtonAdd.IsEnabled ? String.Format (AppResources.Resources.EditAddThis.NoMenuPrefix (), Titles.Overlay ((MouthOverlay)pOverlayNdx)) : AppResources.Resources.EditAdd.NoMenuPrefix ();
-			ButtonDelete.ToolTip = ButtonDelete.IsEnabled ? String.Format (AppResources.Resources.EditDeleteThis.NoMenuPrefix (), Titles.Overlay (pFrameOverlay)) : AppResources.Resources.EditDelete.NoMenuPrefix ();
-			ButtonChooseFile.ToolTip = ButtonChooseFile.IsEnabled ? String.Format (AppResources.Resources.EditChooseThisFile.NoMenuPrefix (), Titles.OverlayTypeName (pFrameOverlay.OverlayType)) : AppResources.Resources.EditChooseFile.NoMenuPrefix ();
 		}
 
 		#endregion
@@ -176,6 +194,11 @@ namespace AgentCharacterEditor.Panels
 		private void Overlays_LayoutUpdated (object sender, EventArgs e)
 		{
 			ArrangeOverlaysList ();
+		}
+
+		void OnViewChanged (object sender, EventArgs e)
+		{
+			ShowSelectedOverlay ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -214,18 +237,18 @@ namespace AgentCharacterEditor.Panels
 
 		private void NumericOffsetX_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && NumericOffsetX.IsModified && !Program.FileIsReadOnly)
+			if (NumericOffsetX.IsModified)
 			{
-				HandleNumericOffsetXChanged ();
+				HandleOffsetXChanged ();
 			}
 			NumericOffsetX.IsModified = false;
 		}
 
 		private void NumericOffsetY_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && NumericOffsetY.IsModified && !Program.FileIsReadOnly)
+			if (NumericOffsetY.IsModified)
 			{
-				HandleNumericOffsetYChanged ();
+				HandleOffsetYChanged ();
 			}
 			NumericOffsetY.IsModified = false;
 		}
@@ -239,7 +262,60 @@ namespace AgentCharacterEditor.Panels
 
 		private void ButtonShiftUp_Click (object sender, RoutedEventArgs e)
 		{
-			System.Diagnostics.Debug.Print ("ButtonShiftUp_Click");
+			StartShiftRepeat (ButtonShiftUp);
+			HandleShiftUpClick (1);
+		}
+
+		private void ButtonShiftDown_Click (object sender, RoutedEventArgs e)
+		{
+			StartShiftRepeat (ButtonShiftDown);
+			HandleShiftDownClick (1);
+		}
+
+		private void ButtonShiftLeft_Click (object sender, RoutedEventArgs e)
+		{
+			StartShiftRepeat (ButtonShiftLeft);
+			HandleShiftLeftClick (1);
+		}
+
+		private void ButtonShiftRight_Click (object sender, RoutedEventArgs e)
+		{
+			StartShiftRepeat (ButtonShiftRight);
+			HandleShiftRightClick (1);
+		}
+
+		private void ShiftRepeatTimer_TimerPulse (object sender, AsyncTimer.TimerEventArgs e)
+		{
+			RepeatButton lRepeatButton = e.TimerId as RepeatButton;
+			if (!lRepeatButton.IsPressed)
+			{
+				HandleShiftComplete ();
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		private void StartShiftRepeat (RepeatButton pRepeatButton)
+		{
+			if (mShiftRepeatTimer == null)
+			{
+				mShiftRepeatTimer = new AsyncTimer ();
+				mShiftRepeatTimer.TimerPulse += new AsyncTimer.TimerPulseHandler (ShiftRepeatTimer_TimerPulse);
+			}
+			if (mShiftRepeatTimer != null)
+			{
+				mShiftRepeatTimer.Stop ();
+				mShiftRepeatTimer.Start (pRepeatButton.Delay, pRepeatButton);
+			}
+		}
+
+		private void StopShiftRepeat ()
+		{
+			if (mShiftRepeatTimer != null)
+			{
+				mShiftRepeatTimer.Dispose ();
+				mShiftRepeatTimer = null;
+			}
 		}
 
 		#endregion

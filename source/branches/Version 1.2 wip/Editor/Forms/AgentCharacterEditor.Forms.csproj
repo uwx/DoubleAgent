@@ -92,6 +92,11 @@
 		<Reference Include="WindowsFormsIntegration" />
 	</ItemGroup>
 	<ItemGroup>
+		<None Include="app.config" />
+		<None Include="CinSoft.snk" />
+		<None Include="DoubleAgent.ico" />
+	</ItemGroup>
+	<ItemGroup>
 		<Compile Include="..\..\Util\CSharp\CursorState.Forms.cs">
 			<Link>Classes\CursorState.Forms.cs</Link>
 		</Compile>
@@ -179,31 +184,49 @@
 			<Link>Panels\OverlayPanel.Common.cs</Link>
 			<SubType>UserControl</SubType>
 		</Compile>
-		<Compile Include="Previews\AnimationPreview.Designer.cs">
-			<SubType>Code</SubType>
-			<DependentUpon>AnimationPreview.cs</DependentUpon>
+		<Compile Include="..\Common\Previews\FramesPreview.Common.cs">
+			<Link>Previews\FramesPreview.Common.cs</Link>
+			<SubType>UserControl</SubType>
 		</Compile>
-		<Compile Include="Previews\AnimationPreviewFrames.cs">
+		<Compile Include="..\Common\Previews\FramesListView.Common.cs">
+			<Link>Previews\FramesListView.Common.cs</Link>
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Include="Previews\AnimationPreview.Forms.Designer.cs">
+			<SubType>Code</SubType>
+			<DependentUpon>AnimationPreview.Forms.cs</DependentUpon>
+		</Compile>
+		<Compile Include="..\Common\Previews\AnimationPreviewFrames.cs">
+			<Link>Previews\AnimationPreviewFrames.cs</Link>
 			<SubType>Code</SubType>
 		</Compile>
-		<Compile Include="Previews\AnimationPreviewSound.cs">
+		<Compile Include="..\Common\Previews\AnimationPreviewSound.cs">
+			<Link>Previews\AnimationPreviewSound.cs</Link>
 			<SubType>Code</SubType>
 		</Compile>
-		<Compile Include="Previews\AnimationPreviewTimeline.cs">
+		<Compile Include="..\Common\Previews\AnimationPreviewTimeline.cs">
+			<Link>Previews\AnimationPreviewTimeline.cs</Link>
 			<SubType>Code</SubType>
 		</Compile>
-		<Compile Include="Previews\AnimationPreviewWPF.xaml.cs">
-			<DependentUpon>AnimationPreviewWPF.xaml</DependentUpon>
+		<Compile Include="..\Common\Previews\AnimationPreviewFrame.cs">
+			<Link>Previews\AnimationPreviewFrame.cs</Link>
+			<SubType>Code</SubType>
+		</Compile>
+		<Page Include="..\Common\Previews\AnimationPreview.Common.xaml">
+			<Link>Previews\AnimationPreview.Common.xaml</Link>
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Compile Include="..\Common\Previews\AnimationPreview.Common.xaml.cs">
+			<Link>Previews\AnimationPreview.Common.xaml.cs</Link>
+			<DependentUpon>AnimationPreview.Common.xaml</DependentUpon>
 		</Compile>
 		<Compile Include="..\Common\Classes\Titles.Common.cs">
 			<Link>Classes\Titles.Common.cs</Link>
 			<SubType>Code</SubType>
 		</Compile>
-		<Compile Include="Previews\AnimationPreview.cs">
+		<Compile Include="Previews\AnimationPreview.Forms.cs">
 			<SubType>UserControl</SubType>
-		</Compile>
-		<Compile Include="Previews\AnimationPreviewFrame.cs">
-			<SubType>Code</SubType>
 		</Compile>
 		<Compile Include="Panels\FilePartPanel.Forms.cs">
 			<SubType>UserControl</SubType>
@@ -211,13 +234,13 @@
 		<Compile Include="Panels\FilePartPanel.Forms.Designer.cs">
 			<DependentUpon>FilePartPanel.Forms.cs</DependentUpon>
 		</Compile>
-		<Compile Include="Previews\FramesPreview.cs">
+		<Compile Include="Previews\FramesPreview.Forms.cs">
 			<SubType>UserControl</SubType>
 		</Compile>
-		<Compile Include="Previews\FramesPreview.Designer.cs">
-			<DependentUpon>FramesPreview.cs</DependentUpon>
+		<Compile Include="Previews\FramesPreview.Forms.Designer.cs">
+			<DependentUpon>FramesPreview.Forms.cs</DependentUpon>
 		</Compile>
-		<Compile Include="Previews\FramesListView.cs">
+		<Compile Include="Previews\FramesListView.Forms.cs">
 			<SubType>Component</SubType>
 		</Compile>
 		<Compile Include="Previews\BalloonPreview.Forms.cs">
@@ -337,11 +360,8 @@
 		<EmbeddedResource Include="Panels\FilePartPanel.Forms.resx">
 			<DependentUpon>FilePartPanel.Forms.cs</DependentUpon>
 		</EmbeddedResource>
-		<EmbeddedResource Include="Previews\AnimationPreview.resx">
-			<DependentUpon>AnimationPreview.cs</DependentUpon>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Previews\FramesPreview.resx">
-			<DependentUpon>FramesPreview.cs</DependentUpon>
+		<EmbeddedResource Include="Previews\FramesPreview.Forms.resx">
+			<DependentUpon>FramesPreview.Forms.cs</DependentUpon>
 		</EmbeddedResource>
 		<EmbeddedResource Include="Panels\AnimationPanel.Forms.resx">
 			<DependentUpon>AnimationPanel.Forms.cs</DependentUpon>
@@ -395,11 +415,6 @@
 		<Compile Include="Panels\BalloonPanel.Forms.Designer.cs">
 			<DependentUpon>BalloonPanel.Forms.cs</DependentUpon>
 		</Compile>
-	</ItemGroup>
-	<ItemGroup>
-		<None Include="app.config" />
-	</ItemGroup>
-	<ItemGroup>
 		<EmbeddedResource Include="..\Common\Resources\Resources.resx">
 			<Link>Resources\Resources.resx</Link>
 			<Generator>ResXFileCodeGenerator</Generator>
@@ -422,7 +437,6 @@
 			<AutoGen>True</AutoGen>
 			<DesignTime>True</DesignTime>
 		</Compile>
-		<None Include="CinSoft.snk" />
 		<None Include="Properties\Settings.settings">
 			<Generator>SettingsSingleFileGenerator</Generator>
 			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -567,22 +581,22 @@
 		<Resource Include="..\Common\Resources\About.png">
 			<Link>Resources\About.png</Link>
 		</Resource>
-		<Resource Include="..\Common\Resources\MouthClosed.png" >
+		<Resource Include="..\Common\Resources\MouthClosed.png">
 			<Link>Resources\MouthClosed.png</Link>
 		</Resource>
-		<Resource Include="..\Common\Resources\MouthWide4.png" >
+		<Resource Include="..\Common\Resources\MouthWide4.png">
 			<Link>Resources\MouthWide4.png</Link>
 		</Resource>
-		<Resource Include="..\Common\Resources\MouthMedium.png" >
+		<Resource Include="..\Common\Resources\MouthMedium.png">
 			<Link>Resources\MouthMedium.png</Link>
 		</Resource>
-		<Resource Include="..\Common\Resources\MouthNarrow.png" >
+		<Resource Include="..\Common\Resources\MouthNarrow.png">
 			<Link>Resources\MouthNarrow.png</Link>
 		</Resource>
-		<Resource Include="..\Common\Resources\MouthWide1.png" >
+		<Resource Include="..\Common\Resources\MouthWide1.png">
 			<Link>Resources\MouthWide1.png</Link>
 		</Resource>
-		<Resource Include="..\Common\Resources\MouthWide2.png" >
+		<Resource Include="..\Common\Resources\MouthWide2.png">
 			<Link>Resources\MouthWide2.png</Link>
 		</Resource>
 		<Resource Include="..\Common\Resources\MouthWide3.png">
@@ -623,15 +637,6 @@
 			<ProductName>Windows Installer 3.1</ProductName>
 			<Install>true</Install>
 		</BootstrapperPackage>
-	</ItemGroup>
-	<ItemGroup>
-		<None Include="DoubleAgent.ico" />
-	</ItemGroup>
-	<ItemGroup>
-		<Page Include="Previews\AnimationPreviewWPF.xaml">
-			<SubType>Designer</SubType>
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
 	</ItemGroup>
 	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 	<!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -211,5 +211,29 @@ namespace AgentCharacterEditor.Properties {
                 this["AnimationPreviewMute"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ViewLarge {
+            get {
+                return ((bool)(this["ViewLarge"]));
+            }
+            set {
+                this["ViewLarge"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ViewSmall {
+            get {
+                return ((bool)(this["ViewSmall"]));
+            }
+            set {
+                this["ViewSmall"] = value;
+            }
+        }
     }
 }

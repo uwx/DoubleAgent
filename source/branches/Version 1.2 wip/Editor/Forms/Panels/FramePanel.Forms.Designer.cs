@@ -48,12 +48,15 @@ namespace AgentCharacterEditor.Panels
 		/// </summary>
 		private void InitializeComponent ()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-			this.LabelFrameName = new System.Windows.Forms.Label();
+			System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+			System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+			this.LabelFrameName = new DoubleAgent.LabelCompat();
 			this.PanelOverlayOffset = new System.Windows.Forms.Panel();
-			this.LabelOffsetX = new System.Windows.Forms.Label();
+			this.LabelOffsetX = new DoubleAgent.LabelCompat();
 			this.NumericOffsetX = new DoubleAgent.NumericUpDownEx();
-			this.LabelOffsetY = new System.Windows.Forms.Label();
+			this.LabelOffsetY = new DoubleAgent.LabelCompat();
 			this.NumericOffsetY = new DoubleAgent.NumericUpDownEx();
 			this.TextBoxFrameName = new DoubleAgent.TextBoxEx();
 			this.GroupBoxImages = new DoubleAgent.GroupBoxCompat();
@@ -77,14 +80,19 @@ namespace AgentCharacterEditor.Panels
 			this.ColumnHeaderPosition = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.ColumnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.ColumnHeaderPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.ContextMenuImages = new AgentCharacterEditor.Global.ContextMenuEdit(this.components);
+			this.MenuItemAdd = new System.Windows.Forms.ToolStripMenuItem();
+			this.MenuItemChooseFile = new System.Windows.Forms.ToolStripMenuItem();
+			this.MenuItemMoveUp = new System.Windows.Forms.ToolStripMenuItem();
+			this.MenuItemMoveDown = new System.Windows.Forms.ToolStripMenuItem();
 			this.ToolStripImages = new DoubleAgent.ToolStripEx();
 			this.ButtonAdd = new DoubleAgent.ToolStripButtonCompat();
 			this.ButtonDelete = new DoubleAgent.ToolStripButtonCompat();
 			this.ButtonChooseFile = new DoubleAgent.ToolStripButtonCompat();
 			this.ButtonMoveUp = new DoubleAgent.ToolStripButtonCompat();
 			this.ButtonMoveDown = new DoubleAgent.ToolStripButtonCompat();
-			this.LabelDurationUnits = new System.Windows.Forms.Label();
-			this.LabelDuration = new System.Windows.Forms.Label();
+			this.LabelDurationUnits = new DoubleAgent.LabelCompat();
+			this.LabelDuration = new DoubleAgent.LabelCompat();
 			this.GroupBoxSound = new DoubleAgent.GroupBoxCompat();
 			this.ToolStripSound = new DoubleAgent.ToolStripEx();
 			this.ButtonSoundPreview = new DoubleAgent.ToolStripButtonCompat();
@@ -97,6 +105,8 @@ namespace AgentCharacterEditor.Panels
 			this.NumericDuration = new DoubleAgent.NumericUpDownEx();
 			this.PictureBoxFrameSample = new AgentCharacterEditor.FrameSample();
 			toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			this.PanelOverlayOffset.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetX)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetY)).BeginInit();
@@ -111,6 +121,7 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripShiftDown.SuspendLayout();
 			this.ToolStripShiftLeft.SuspendLayout();
 			this.PanelImagesLeft.SuspendLayout();
+			this.ContextMenuImages.SuspendLayout();
 			this.ToolStripImages.SuspendLayout();
 			this.GroupBoxSound.SuspendLayout();
 			this.ToolStripSound.SuspendLayout();
@@ -125,6 +136,16 @@ namespace AgentCharacterEditor.Panels
 			// 
 			toolStripSeparator1.Name = "toolStripSeparator1";
 			toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
+			// 
+			// toolStripSeparator2
+			// 
+			toolStripSeparator2.Name = "toolStripSeparator2";
+			toolStripSeparator2.Size = new System.Drawing.Size(218, 6);
+			// 
+			// toolStripSeparator3
+			// 
+			toolStripSeparator3.Name = "toolStripSeparator3";
+			toolStripSeparator3.Size = new System.Drawing.Size(218, 6);
 			// 
 			// LabelFrameName
 			// 
@@ -505,6 +526,7 @@ namespace AgentCharacterEditor.Panels
             this.ColumnHeaderPosition,
             this.ColumnHeaderSize,
             this.ColumnHeaderPath});
+			this.ListViewImages.ContextMenuStrip = this.ContextMenuImages;
 			this.ListViewImages.FullRowSelect = true;
 			this.ListViewImages.GridLines = true;
 			this.ListViewImages.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
@@ -541,6 +563,55 @@ namespace AgentCharacterEditor.Panels
 			this.ColumnHeaderPath.Text = "Path";
 			this.ColumnHeaderPath.Width = 100;
 			// 
+			// ContextMenuImages
+			// 
+			this.ContextMenuImages.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItemAdd,
+            this.MenuItemChooseFile,
+            toolStripSeparator2,
+            this.MenuItemMoveUp,
+            this.MenuItemMoveDown,
+            toolStripSeparator3});
+			this.ContextMenuImages.Name = "ContextMenuEdit";
+			this.ContextMenuImages.Size = new System.Drawing.Size(222, 150);
+			this.ContextMenuImages.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuImages_Opening);
+			// 
+			// MenuItemAdd
+			// 
+			this.MenuItemAdd.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileNew;
+			this.MenuItemAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.MenuItemAdd.Name = "MenuItemAdd";
+			this.MenuItemAdd.Size = new System.Drawing.Size(221, 28);
+			this.MenuItemAdd.Text = "Add a new image";
+			this.MenuItemAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
+			// 
+			// MenuItemChooseFile
+			// 
+			this.MenuItemChooseFile.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
+			this.MenuItemChooseFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.MenuItemChooseFile.Name = "MenuItemChooseFile";
+			this.MenuItemChooseFile.Size = new System.Drawing.Size(221, 28);
+			this.MenuItemChooseFile.Text = "Open image file";
+			this.MenuItemChooseFile.Click += new System.EventHandler(this.ButtonOpen_Click);
+			// 
+			// MenuItemMoveUp
+			// 
+			this.MenuItemMoveUp.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveUp;
+			this.MenuItemMoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.MenuItemMoveUp.Name = "MenuItemMoveUp";
+			this.MenuItemMoveUp.Size = new System.Drawing.Size(221, 28);
+			this.MenuItemMoveUp.Text = "Move image up";
+			this.MenuItemMoveUp.Click += new System.EventHandler(this.ButtonMoveUp_Click);
+			// 
+			// MenuItemMoveDown
+			// 
+			this.MenuItemMoveDown.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveDown;
+			this.MenuItemMoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.MenuItemMoveDown.Name = "MenuItemMoveDown";
+			this.MenuItemMoveDown.Size = new System.Drawing.Size(221, 28);
+			this.MenuItemMoveDown.Text = "Move image down";
+			this.MenuItemMoveDown.Click += new System.EventHandler(this.ButtonMoveDown_Click);
+			// 
 			// ToolStripImages
 			// 
 			this.ToolStripImages.BackColor = System.Drawing.Color.Transparent;
@@ -557,7 +628,7 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripImages.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.ToolStripImages.Location = new System.Drawing.Point(0, 0);
 			this.ToolStripImages.Name = "ToolStripImages";
-			this.ToolStripImages.Size = new System.Drawing.Size(160, 27);
+			this.ToolStripImages.Size = new System.Drawing.Size(129, 27);
 			this.ToolStripImages.TabIndex = 0;
 			// 
 			// ButtonAdd
@@ -825,6 +896,7 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripShiftLeft.PerformLayout();
 			this.PanelImagesLeft.ResumeLayout(false);
 			this.PanelImagesLeft.PerformLayout();
+			this.ContextMenuImages.ResumeLayout(false);
 			this.ToolStripImages.ResumeLayout(false);
 			this.ToolStripImages.PerformLayout();
 			this.GroupBoxSound.ResumeLayout(false);
@@ -844,7 +916,7 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 
-		private System.Windows.Forms.Label LabelFrameName;
+		private DoubleAgent.LabelCompat LabelFrameName;
 		private DoubleAgent.TextBoxEx TextBoxFrameName;
 		private DoubleAgent.GroupBoxCompat GroupBoxImages;
 		private DoubleAgent.GroupBoxCompat GroupBoxSound;
@@ -865,13 +937,13 @@ namespace AgentCharacterEditor.Panels
 		private DoubleAgent.ToolStripEx ToolStripSound;
 		private DoubleAgent.ToolStripButtonCompat ButtonSoundPreview;
 		private FrameSample PictureBoxImageSample;
-		private System.Windows.Forms.Label LabelOffsetY;
-		private System.Windows.Forms.Label LabelOffsetX;
+		private DoubleAgent.LabelCompat LabelOffsetY;
+		private DoubleAgent.LabelCompat LabelOffsetX;
 		private DoubleAgent.NumericUpDownEx NumericOffsetY;
 		private DoubleAgent.NumericUpDownEx NumericOffsetX;
 		private DoubleAgent.NumericUpDownEx NumericDuration;
-		private System.Windows.Forms.Label LabelDurationUnits;
-		private System.Windows.Forms.Label LabelDuration;
+		private DoubleAgent.LabelCompat LabelDurationUnits;
+		private DoubleAgent.LabelCompat LabelDuration;
 		private DoubleAgent.ToolStripEx ToolStripShiftUp;
 		private DoubleAgent.ToolStripEx ToolStripShiftDown;
 		private DoubleAgent.ToolStripEx ToolStripShiftLeft;
@@ -891,5 +963,10 @@ namespace AgentCharacterEditor.Panels
 		private System.Windows.Forms.Panel PanelOverlayOffset;
 		private DoubleAgent.CheckBoxCompat CheckBoxTransparent;
 		private System.Windows.Forms.Panel PanelTop;
+		private Global.ContextMenuEdit ContextMenuImages;
+		private System.Windows.Forms.ToolStripMenuItem MenuItemAdd;
+		private System.Windows.Forms.ToolStripMenuItem MenuItemChooseFile;
+		private System.Windows.Forms.ToolStripMenuItem MenuItemMoveUp;
+		private System.Windows.Forms.ToolStripMenuItem MenuItemMoveDown;
 	}
 }

@@ -134,7 +134,6 @@ namespace AgentCharacterEditor
 		private Boolean OpenCharacterFile (String pFilePath)
 		{
 			Boolean lRet = false;
-			CursorState lCursorState = new CursorState (this);
 			CharacterFile lCharacterFile = null;
 			Boolean lOpened = false;
 
@@ -149,99 +148,99 @@ namespace AgentCharacterEditor
 			{
 			}
 
-			lCursorState.ShowWait ();
-			if (mCharacterFile != null)
+			using (CursorState lCursorState = new CursorState (this))
 			{
-				SaveAllConfig ();
-			}
-
-			try
-			{
-				if (String.IsNullOrEmpty (pFilePath))
+				lCursorState.ShowWait ();
+				if (mCharacterFile != null)
 				{
-					lCharacterFile = CharacterFile.CreateInstance (CharacterFile.AcdFileExt);
+					SaveAllConfig ();
 				}
-				else
-				{
-					lCharacterFile = CharacterFile.CreateInstance (pFilePath);
-				}
-			}
-			catch
-			{
-			}
 
-			if (lCharacterFile != null)
-			{
 				try
 				{
 					if (String.IsNullOrEmpty (pFilePath))
 					{
-						lOpened = true;
-						lCharacterFile.Header.ImageSize = FrameSample.DefaultImageSize;
-						lCharacterFile.Header.Guid = System.Guid.NewGuid ();
-						lCharacterFile.Names.Add (CharacterPanel.mLangDefault, AppResources.Resources.TitleNewFile);
-						lCharacterFile.IsDirty = false;
+						lCharacterFile = CharacterFile.CreateInstance (CharacterFile.AcdFileExt);
 					}
 					else
 					{
-#if DEBUG_NOT
-						lOpened = lCharacterFile.Open (pFilePath, 1);
-#else
-						lOpened = lCharacterFile.Open (pFilePath);
-#endif
+						lCharacterFile = CharacterFile.CreateInstance (pFilePath);
 					}
 				}
-				catch (Exception pException)
+				catch
 				{
-					Program.ShowErrorMessage (pException.Message);
-					lCursorState.RestoreCursor ();
-					return false;
+				}
+
+				if (lCharacterFile != null)
+				{
+					try
+					{
+						if (String.IsNullOrEmpty (pFilePath))
+						{
+							lOpened = true;
+							lCharacterFile.Header.ImageSize = FrameSample.DefaultImageSize;
+							lCharacterFile.Header.Guid = System.Guid.NewGuid ();
+							lCharacterFile.Names.Add (CharacterPanel.mLangDefault, AppResources.Resources.TitleNewFile);
+							lCharacterFile.IsDirty = false;
+						}
+						else
+						{
+#if DEBUG_NOT
+							lOpened = lCharacterFile.Open (pFilePath, 1);
+#else
+							lOpened = lCharacterFile.Open (pFilePath);
+#endif
+						}
+					}
+					catch (Exception pException)
+					{
+						Program.ShowErrorMessage (pException.Message);
+						return false;
+					}
+				}
+
+				try
+				{
+					if (lOpened)
+					{
+						IsWindowShowing = true;
+
+						Program.UndoManager.Clear ();
+						mNavigateBackStack.Clear ();
+						mNavigateForwardStack.Clear ();
+						mCharacterFile = lCharacterFile;
+
+						ShowFileState ();
+						ShowEditState ();
+						ShowNavigateState ();
+
+						PanelPartsTree.FilePart = new ResolveCharacter ();
+						PanelCharacter.FilePart = new ResolveCharacter ();
+						PanelBalloon.FilePart = new ResolveBalloon ();
+						PanelTts.FilePart = new ResolveTts ();
+						PanelAnimations.FilePart = new ResolveCharacter ();
+						PanelAnimation.FilePart = new ResolveCharacter ();
+						PanelFrame.FilePart = new ResolveCharacter ();
+						PanelBranching.FilePart = new ResolveCharacter ();
+						PanelOverlays.FilePart = new ResolveCharacter ();
+						PanelState.FilePart = new ResolveCharacter ();
+
+						PanelPartsTree.LoadExpansion ();
+						ShowSelectedPart ();
+						UpdateRecentFiles ();
+
+						IsWindowShowing = false;
+						lRet = true;
+					}
+					else
+					{
+						Program.ShowWarningMessage (String.Format (AppResources.Resources.MsgInvalidFile, pFilePath));
+					}
+				}
+				catch
+				{
 				}
 			}
-
-			try
-			{
-				if (lOpened)
-				{
-					IsWindowShowing = true;
-
-					Program.UndoManager.Clear ();
-					mNavigateBackStack.Clear ();
-					mNavigateForwardStack.Clear ();
-					mCharacterFile = lCharacterFile;
-
-					ShowFileState ();
-					ShowEditState ();
-					ShowNavigateState ();
-
-					PanelPartsTree.FilePart = new ResolveCharacter ();
-					PanelCharacter.FilePart = new ResolveCharacter ();
-					PanelBalloon.FilePart = new ResolveBalloon ();
-					PanelTts.FilePart = new ResolveTts ();
-					PanelAnimations.FilePart = new ResolveCharacter ();
-					PanelAnimation.FilePart = new ResolveCharacter ();
-					PanelFrame.FilePart = new ResolveCharacter ();
-					PanelBranching.FilePart = new ResolveCharacter ();
-					PanelOverlays.FilePart = new ResolveCharacter ();
-					PanelState.FilePart = new ResolveCharacter ();
-
-					PanelPartsTree.LoadExpansion ();
-					ShowSelectedPart ();
-					UpdateRecentFiles ();
-
-					IsWindowShowing = false;
-					lRet = true;
-				}
-				else
-				{
-					Program.ShowWarningMessage (String.Format (AppResources.Resources.MsgInvalidFile, pFilePath));
-				}
-			}
-			catch
-			{
-			}
-
-			lCursorState.RestoreCursor ();
 			return lRet;
 		}
 
@@ -253,7 +252,6 @@ namespace AgentCharacterEditor
 		private Boolean SaveCharacterFile (String pSaveAsPath)
 		{
 			Boolean lRet = false;
-			CursorState lCursorState = null;
 
 			if (mCharacterFile == null)
 			{
@@ -263,49 +261,51 @@ namespace AgentCharacterEditor
 			{
 				CharacterFile lCharacterFile = null;
 
-				lCursorState = new CursorState (this);
-				lCursorState.ShowWait ();
-				SaveAllConfig ();
-
-				try
+				using (CursorState lCursorState = new CursorState (this))
 				{
-					lCharacterFile = CharacterFile.CreateInstance (pSaveAsPath);
-				}
-				catch
-				{
-				}
-				if (lCharacterFile != null)
-				{
-					try
-					{
-#if DEBUG_NOT
-						lRet = lCharacterFile.Save (pSaveAsPath, mCharacterFile, 3);
-#else
-						lRet = lCharacterFile.Save (pSaveAsPath, mCharacterFile);
-#endif
-					}
-					catch (Exception pException)
-					{
-						Program.ShowErrorMessage (pException.Message);
-					}
+					lCursorState.ShowWait ();
+					SaveAllConfig ();
 
 					try
 					{
-						lCharacterFile.Close ();
-						lCharacterFile = null;
+						lCharacterFile = CharacterFile.CreateInstance (pSaveAsPath);
 					}
 					catch
 					{
 					}
-
-					if (!lRet)
+					if (lCharacterFile != null)
 					{
-						Program.ShowWarningMessage (String.Format (AppResources.Resources.MsgFailedSaveAs, pSaveAsPath));
+						try
+						{
+#if DEBUG_NOT
+							lRet = lCharacterFile.Save (pSaveAsPath, mCharacterFile, 3);
+#else
+							lRet = lCharacterFile.Save (pSaveAsPath, mCharacterFile);
+#endif
+						}
+						catch (Exception pException)
+						{
+							Program.ShowErrorMessage (pException.Message);
+						}
+
+						try
+						{
+							lCharacterFile.Close ();
+							lCharacterFile = null;
+						}
+						catch
+						{
+						}
+
+						if (!lRet)
+						{
+							Program.ShowWarningMessage (String.Format (AppResources.Resources.MsgFailedSaveAs, pSaveAsPath));
+						}
 					}
-				}
-				else
-				{
-					Program.ShowInfoMessage ("Not implemented");
+					else
+					{
+						Program.ShowInfoMessage ("Not implemented");
+					}
 				}
 			}
 			else if (String.IsNullOrEmpty (mCharacterFile.Path) && !mCharacterFile.IsReadOnly)
@@ -319,28 +319,26 @@ namespace AgentCharacterEditor
 			}
 			else if (mCharacterFile.IsDirty && !mCharacterFile.IsReadOnly)
 			{
-				lCursorState = new CursorState (this);
-				lCursorState.ShowWait ();
-				SaveAllConfig ();
-
-				try
+				using (CursorState lCursorState = new CursorState (this))
 				{
+					lCursorState.ShowWait ();
+					SaveAllConfig ();
+
+					try
+					{
 #if DEBUG_NOT
-					lRet = mCharacterFile.Save (3);
+						lRet = mCharacterFile.Save (3);
 #else
-					lRet = mCharacterFile.Save ();
+						lRet = mCharacterFile.Save ();
 #endif
-				}
-				catch (Exception pException)
-				{
-					Program.ShowErrorMessage (pException.Message);
+					}
+					catch (Exception pException)
+					{
+						Program.ShowErrorMessage (pException.Message);
+					}
 				}
 			}
 
-			if (lCursorState != null)
-			{
-				lCursorState.RestoreCursor ();
-			}
 			return lRet;
 		}
 

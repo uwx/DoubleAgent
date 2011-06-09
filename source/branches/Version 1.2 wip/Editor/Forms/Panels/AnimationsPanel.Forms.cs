@@ -38,6 +38,11 @@ namespace AgentCharacterEditor.Panels
 		public AnimationsPanel ()
 		{
 			InitializeComponent ();
+
+			if (Program.MainWindow != null)
+			{
+				Program.MainWindow.InitializeContextMenu (ContextMenuAnimations);
+			}
 		}
 
 		#endregion
@@ -78,61 +83,26 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowAnimationNames (String[] pAnimationNames)
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			ListViewAnimations.BeginUpdate ();
-			if ((pAnimationNames == null) || (pAnimationNames.Length <= 0))
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				ListViewAnimations.Items.Clear ();
-			}
-			else
-			{
-				int lNdx;
-
-				ListViewAnimations.UpdateItemCount (pAnimationNames.Length);
-
-				for (lNdx = 0; lNdx < pAnimationNames.Length; lNdx++)
+				ListViewAnimations.BeginUpdate ();
+				if ((pAnimationNames == null) || (pAnimationNames.Length <= 0))
 				{
-					ListViewAnimations.Items[lNdx].Text = pAnimationNames[lNdx];
+					ListViewAnimations.Items.Clear ();
 				}
-			}
-			ListViewAnimations.EndUpdate ();
-			ListViewAnimations.ArrangeIcons ();
+				else
+				{
+					int lNdx;
 
-			PopIsPanelFilling (lWasFilling);
-		}
+					ListViewAnimations.UpdateItemCount (pAnimationNames.Length);
 
-		private void ShowAddState (Object pAddUiObject, Boolean pAddEnabled, String pAddText)
-		{
-			if (pAddUiObject is ToolStripItem)
-			{
-				(pAddUiObject as ToolStripItem).Enabled = pAddEnabled;
-				(pAddUiObject as ToolStripItem).Text = pAddText.NoMenuPrefix();
-			}
-		}
-
-		private void ShowDeleteState (Object pDeleteUiObject, Boolean pDeleteEnabled, String pDeleteText)
-		{
-			if (pDeleteUiObject is ToolStripItem)
-			{
-				(pDeleteUiObject as ToolStripItem).Enabled = pDeleteEnabled;
-				(pDeleteUiObject as ToolStripItem).Text = pDeleteText.NoMenuPrefix();
-			}
-		}
-
-		/////////////////////////////////////////////////////////////////////////////
-
-		protected override void OnEditMenu (object sender, Global.ContextMenuEventArgs e)
-		{
-			base.OnEditMenu (sender, e);
-
-			if (!IsPanelEmpty && !Program.FileIsReadOnly && IsControlEditTarget (ListViewAnimations, e))
-			{
-				ToolStripMenuItem lMenuItem;
-
-				e.ContextMenu.Items.Insert (0, new ToolStripSeparator ());
-				e.ContextMenu.Items.Insert (0, lMenuItem = new ToolStripMenuItem (ButtonAdd.Text, ButtonAdd.Image, ButtonAdd_Click));
-				lMenuItem.Enabled = ButtonAdd.Enabled;
+					for (lNdx = 0; lNdx < pAnimationNames.Length; lNdx++)
+					{
+						ListViewAnimations.Items[lNdx].Text = pAnimationNames[lNdx];
+					}
+				}
+				ListViewAnimations.EndUpdate ();
+				ListViewAnimations.ArrangeIcons ();
 			}
 		}
 
@@ -183,16 +153,16 @@ namespace AgentCharacterEditor.Panels
 			{
 				LabelTransparencySample.BackColor = pTransparencyColor;
 				LabelTransparencySample.ForeColor = (LabelTransparencySample.BackColor.GetBrightness () > 0.5) ? Color.Black : Color.White;
-				LabelTransparency.Enabled = true;
 			}
 			if (pTransparencyNdx < 0)
 			{
 				LabelTransparencySample.ResetText ();
+				LabelTransparency.Enabled = false;
 			}
 			else
 			{
 				LabelTransparencySample.Text = pTransparencyNdx.ToString ();
-				LabelTransparency.Enabled = false;
+				LabelTransparency.Enabled = !Program.FileIsReadOnly;
 			}
 		}
 
@@ -258,58 +228,61 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
+		private void ContextMenuAnimations_Opening (object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			if (IsPanelEmpty || Program.FileIsReadOnly)
+			{
+				e.Cancel = true;
+			}
+			else
+			{
+				Program.MainWindow.ShowEditState (ContextMenuAnimations);
+
+				MenuItemAdd.Enabled = CanAddAnimation;
+				MenuItemAdd.SetTitle (AddAnimationTitle);
+			}
+		}
+
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void ButtonAdd_Click (object sender, EventArgs e)
 		{
-			if (!IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleAddAnimation ();
-			}
+			HandleAddAnimation ();
 		}
 
 		private void ButtonDelete_Click (object sender, EventArgs e)
 		{
-			if (!IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleDeleteAnimation ();
-			}
+			HandleDeleteAnimation ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void NumericFrameWidth_Validated (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleUpdateFrameWidth ();
-			}
+			HandleUpdateFrameWidth ();
+			NumericFrameWidth.IsModified = false;
 		}
 
 		private void NumericFrameHeight_Validated (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleUpdateFrameHeight ();
-			}
+			HandleUpdateFrameHeight ();
+			NumericFrameHeight.IsModified = false;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void TextBoxPaletteFile_Validated (object sender, EventArgs e)
 		{
-			if (!IsPanelFilling && TextBoxPaletteFile.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (TextBoxPaletteFile.IsModified)
 			{
 				HandleUpdatePaletteFile ();
 			}
+			TextBoxPaletteFile.IsModified = false;
 		}
 
 		private void ButtonPaletteImport_Click (object sender, EventArgs e)
 		{
-			if (!IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleImportPalette ();
-			}
+			HandleImportPalette ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -326,10 +299,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void PictureBoxPalette_MouseClick (object sender, MouseEventArgs e)
 		{
-			if (!IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleUpdatePaletteTransparency (PaletteMouseColorNdx (e.Location));
-			}
+			HandleUpdatePaletteTransparency (PaletteMouseColorNdx (e.Location));
 		}
 
 		#endregion

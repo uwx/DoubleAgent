@@ -12,16 +12,16 @@
 					  d:DesignWidth="600">
 	<Control.CommandBindings>
 		<CommandBinding Command="Copy"
-						CanExecute="CanEditCopy"
+						CanExecute="OnCanEditCopy"
 						Executed="OnEditCopy" />
 		<CommandBinding Command="Cut"
-						CanExecute="CanEditCut"
+						CanExecute="OnCanEditCut"
 						Executed="OnEditCut" />
 		<CommandBinding Command="Delete"
-						CanExecute="CanEditDelete"
+						CanExecute="OnCanEditDelete"
 						Executed="OnEditDelete" />
 		<CommandBinding Command="Paste"
-						CanExecute="CanEditPaste"
+						CanExecute="OnCanEditPaste"
 						Executed="OnEditPaste" />
 	</Control.CommandBindings>
 	<Control.Resources>
@@ -101,7 +101,8 @@
 								  VerticalAlignment="Center"
 								  MaxLines="1"
 								  IsReadOnly="True"
-								  Style="{StaticResource PanelTextBox}" />
+								  Style="{StaticResource PanelTextBox}"
+								  ContextMenu="{StaticResource ContextMenuTextBox}" />
 			</Grid>
 		</GroupBox>
 		<GroupBox Header="Mouth Overlays"
@@ -130,12 +131,12 @@
 								 Focusable="False"
 								 HorizontalAlignment="Left"
 								 Click="ButtonAdd_Click">
-							<Image Stretch="None"
-								   Width="Auto"
-								   Height="Auto"
+							<Image Source="{StaticResource ImgFileNew}"
+								   Stretch="UniformToFill"
+								   Width="16"
+								   Height="16"
 								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"
-								   Source="{StaticResource ImgFileNew}" />
+								   VerticalAlignment="Center" />
 						</Button>
 						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 								Name="ButtonDelete"
@@ -144,9 +145,9 @@
 								HorizontalAlignment="Left"
 								Click="ButtonDelete_Click">
 							<Image Source="{StaticResource ImgEditDelete}"
-								   Stretch="None"
-								   Width="Auto"
-								   Height="Auto"
+								   Stretch="UniformToFill"
+								   Width="16"
+								   Height="16"
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center" />
 						</Button>
@@ -157,9 +158,9 @@
 								HorizontalAlignment="Left"
 								Click="ButtonChooseFile_Click">
 							<Image Source="{StaticResource ImgFileOpen}"
-								   Stretch="None"
-								   Width="Auto"
-								   Height="Auto"
+								   Stretch="UniformToFill"
+								   Width="16"
+								   Height="16"
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center" />
 						</Button>
@@ -354,6 +355,7 @@
 											  HorizontalAlignment="Left"
 											  VerticalAlignment="Center"
 											  Style="{StaticResource PanelTextBox}"
+											  ContextMenu="{StaticResource ContextMenuTextBox}"
 											  IsModifiedChanged="NumericOffsetX_IsModifiedChanged" />
 						<Label Content="Y Offset"
 							   Name="LabelOffsetY"
@@ -365,6 +367,7 @@
 											  HorizontalAlignment="Left"
 											  VerticalAlignment="Center"
 											  Style="{StaticResource PanelTextBox}"
+											  ContextMenu="{StaticResource ContextMenuTextBox}"
 											  IsModifiedChanged="NumericOffsetY_IsModifiedChanged" />
 					</StackPanel>
 					<Grid Name="PanelSample"
@@ -390,39 +393,50 @@
 									  Grid.Column="2"
 									  HorizontalAlignment="Stretch"
 									  Click="ButtonShiftUp_Click">
-							<Image Stretch="None"
+							<Image Source="{StaticResource ImgShiftUp}"
+								   Stretch="UniformToFill"
+								   Width="16"
+								   Height="16"
 								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"
-								   Source="{StaticResource ImgShiftUp}" />
+								   VerticalAlignment="Center" />
 						</RepeatButton>
 						<RepeatButton Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 									  Name="ButtonShiftDown"
 									  Grid.Column="2"
 									  Grid.Row="4"
-									  HorizontalAlignment="Stretch">
-							<Image Stretch="None"
+									  HorizontalAlignment="Stretch"
+									  Click="ButtonShiftDown_Click">
+							<Image Source="{StaticResource ImgShiftDown}"
+								   Stretch="UniformToFill"
+								   Width="16"
+								   Height="16"
 								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"
-								   Source="{StaticResource ImgShiftDown}" />
+								   VerticalAlignment="Center" />
 						</RepeatButton>
 						<RepeatButton Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 									  Name="ButtonShiftLeft"
 									  Grid.Row="2"
-									  VerticalAlignment="Stretch">
-							<Image Stretch="None"
+									  VerticalAlignment="Stretch"
+									  Click="ButtonShiftLeft_Click">
+							<Image Source="{StaticResource ImgShiftLeft}"
+								   Stretch="UniformToFill"
+								   Width="16"
+								   Height="16"
 								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"
-								   Source="{StaticResource ImgShiftLeft}" />
+								   VerticalAlignment="Center" />
 						</RepeatButton>
 						<RepeatButton Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 									  Name="ButtonShiftRight"
 									  Grid.Column="4"
 									  Grid.Row="2"
-									  VerticalAlignment="Stretch">
-							<Image Stretch="None"
+									  VerticalAlignment="Stretch"
+									  Click="ButtonShiftRight_Click">
+							<Image Source="{StaticResource ImgShiftRight}"
+								   Stretch="UniformToFill"
+								   Width="16"
+								   Height="16"
 								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"
-								   Source="{StaticResource ImgShiftRight}" />
+								   VerticalAlignment="Center" />
 						</RepeatButton>
 						<Border Grid.Column="2"
 								Grid.Row="2"

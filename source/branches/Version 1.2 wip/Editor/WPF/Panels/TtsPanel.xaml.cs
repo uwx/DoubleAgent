@@ -72,18 +72,12 @@ namespace AgentCharacterEditor.Panels
 
 		private void CheckBoxUseTTS_CheckChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && (CharacterFile != null) && !Program.FileIsReadOnly)
-			{
-				HandleEnabledChanged ();
-			}
+			HandleEnabledChanged ();
 		}
 
 		private void ComboBoxName_SelectionChanged (object sender, SelectionChangedEventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleVoiceChanged ();
-			}
+			HandleVoiceChanged ();
 		}
 
 		#endregion

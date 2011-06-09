@@ -34,77 +34,76 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowStateAnimations ()
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			// Refresh it just in case the state was newly added
-			State = (FilePart is ResolveState) ? (FilePart as ResolveState).Target : null;
-
-			if (IsPanelEmpty)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				ListViewAnimations.Items.Clear ();
-				ListViewAnimations.IsEnabled = false;
-			}
-			else
-			{
-				ListViewAnimations.IsEnabled = true;//!Program.FileIsReadOnly;
-				if (State == null)
+				// Refresh it just in case the state was newly added
+				State = (FilePart is ResolveState) ? (FilePart as ResolveState).Target : null;
+
+				if (IsPanelEmpty)
 				{
-					ShowFileAnimations (null);
+					ListViewAnimations.Items.Clear ();
+					ListViewAnimations.IsEnabled = false;
 				}
 				else
 				{
-					ShowFileAnimations (State.AnimationNames);
+					ListViewAnimations.IsEnabled = true;//!Program.FileIsReadOnly;
+					if (State == null)
+					{
+						ShowFileAnimations (null);
+					}
+					else
+					{
+						ShowFileAnimations (State.AnimationNames);
+					}
 				}
 			}
-
-			PopIsPanelFilling (lWasFilling);
 		}
 
 		private void ShowFileAnimations (String[] pStateAnimations)
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-			String[] lAnimations = CharacterFile.GetAnimationNames ();
-			int lListNdx = 0;
-
-			ListViewAnimations.SetVerticalScrollBarVisibility (ScrollBarVisibility.Disabled);
-			ListViewAnimations.UpdateItemCount (lAnimations.Length);
-
-			foreach (String lAnimation in lAnimations)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				ListViewItemCommon lListItem;
-				CheckBox lListItemContent;
+				String[] lAnimations = CharacterFile.GetAnimationNames ();
+				int lListNdx = 0;
 
-				lListItem = ((lListNdx < ListViewAnimations.Items.Count) ? ListViewAnimations.Items[lListNdx] : ListViewAnimations.Items.Add (lAnimation)) as ListViewItemCommon;
-				lListItemContent = (lListItem.Content is CheckBox) ? lListItem.Content as CheckBox : new CheckBox ();
+				ListViewAnimations.SetVerticalScrollBarVisibility (ScrollBarVisibility.Disabled);
+				ListViewAnimations.UpdateItemCount (lAnimations.Length);
 
-				lListItem.IsTabStop = false;
-				lListItem.Focusable = false;
-				lListItem.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-				lListItem.Content = lListItemContent;
+				foreach (String lAnimation in lAnimations)
+				{
+					ListViewItemCommon lListItem;
+					CheckBox lListItemContent;
 
-				lListItemContent.Content = lAnimation;
-				lListItemContent.IsEnabled = !Program.FileIsReadOnly;
-				lListItemContent.Checked += new RoutedEventHandler (ListItemContent_CheckedChanged);
-				lListItemContent.Unchecked += new RoutedEventHandler (ListItemContent_CheckedChanged);
+					lListItem = ((lListNdx < ListViewAnimations.Items.Count) ? ListViewAnimations.Items[lListNdx] : ListViewAnimations.Items.Add (lAnimation)) as ListViewItemCommon;
+					lListItemContent = (lListItem.Content is CheckBox) ? lListItem.Content as CheckBox : new CheckBox ();
 
-				if (
-						(pStateAnimations != null)
-					&& (
-							(Array.IndexOf (pStateAnimations, lAnimation) >= 0)
-						|| (Array.IndexOf (pStateAnimations, lAnimation.ToUpper ()) >= 0)
+					lListItem.IsTabStop = false;
+					lListItem.Focusable = false;
+					lListItem.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+					lListItem.Content = lListItemContent;
+
+					lListItemContent.Content = lAnimation;
+					lListItemContent.IsEnabled = !Program.FileIsReadOnly;
+					lListItemContent.Checked += new RoutedEventHandler (ListItemContent_CheckedChanged);
+					lListItemContent.Unchecked += new RoutedEventHandler (ListItemContent_CheckedChanged);
+
+					if (
+							(pStateAnimations != null)
+						&& (
+								(Array.IndexOf (pStateAnimations, lAnimation) >= 0)
+							|| (Array.IndexOf (pStateAnimations, lAnimation.ToUpper ()) >= 0)
+							)
 						)
-					)
-				{
-					lListItemContent.IsChecked = true;
+					{
+						lListItemContent.IsChecked = true;
+					}
+					else
+					{
+						lListItemContent.IsChecked = false;
+					}
+					lListNdx++;
 				}
-				else
-				{
-					lListItemContent.IsChecked = false;
-				}
-				lListNdx++;
 			}
-
-			PopIsPanelFilling (lWasFilling);
 		}
 
 		#endregion
@@ -139,7 +138,7 @@ namespace AgentCharacterEditor.Panels
 		void ListItemContent_CheckedChanged (object sender, RoutedEventArgs e)
 		{
 			CheckBox lItemContent = e.Source as CheckBox;
-			if ((lItemContent != null) && !IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if ((lItemContent != null) && !IsPanelFilling)
 			{
 				HandleItemChecked (lItemContent.Content as String, lItemContent.IsChecked.Value);
 			}

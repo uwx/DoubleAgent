@@ -75,69 +75,68 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowStateAnimations ()
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			// Refresh it just in case the state was newly added
-			State = (FilePart is ResolveState) ? (FilePart as ResolveState).Target : null;
-
-			if (IsPanelEmpty)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				ListViewAnimations.Items.Clear ();
-				ListViewAnimations.Enabled = false;
-			}
-			else
-			{
-				ListViewAnimations.Enabled = true;//!Program.FileIsReadOnly;
-				if (State == null)
+				// Refresh it just in case the state was newly added
+				State = (FilePart is ResolveState) ? (FilePart as ResolveState).Target : null;
+
+				if (IsPanelEmpty)
 				{
-					ShowFileAnimations (null);
+					ListViewAnimations.Items.Clear ();
+					ListViewAnimations.Enabled = false;
 				}
 				else
 				{
-					ShowFileAnimations (State.AnimationNames);
+					ListViewAnimations.Enabled = true;//!Program.FileIsReadOnly;
+					if (State == null)
+					{
+						ShowFileAnimations (null);
+					}
+					else
+					{
+						ShowFileAnimations (State.AnimationNames);
+					}
 				}
 			}
-
-			PopIsPanelFilling (lWasFilling);
 		}
 
 		private void ShowFileAnimations (String[] pStateAnimations)
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-			String[] lAnimations = CharacterFile.GetAnimationNames ();
-			int lListNdx = 0;
-
-			ListViewAnimations.BeginUpdate ();
-			ListViewAnimations.UpdateItemCount (lAnimations.Length);
-
-			foreach (String lAnimation in lAnimations)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				ListViewItemCommon lListItem;
+				String[] lAnimations = CharacterFile.GetAnimationNames ();
+				int lListNdx = 0;
 
-				lListItem = ((lListNdx < ListViewAnimations.Items.Count) ? ListViewAnimations.Items[lListNdx] : ListViewAnimations.Items.Add (lAnimation)) as ListViewItemCommon;
-				lListItem.Text = lAnimation;
+				ListViewAnimations.BeginUpdate ();
+				ListViewAnimations.UpdateItemCount (lAnimations.Length);
 
-				if (
-						(pStateAnimations != null)
-					&& (
-							(Array.IndexOf (pStateAnimations, lAnimation) >= 0)
-						|| (Array.IndexOf (pStateAnimations, lAnimation.ToUpper ()) >= 0)
+				foreach (String lAnimation in lAnimations)
+				{
+					ListViewItemCommon lListItem;
+
+					lListItem = ((lListNdx < ListViewAnimations.Items.Count) ? ListViewAnimations.Items[lListNdx] : ListViewAnimations.Items.Add (lAnimation)) as ListViewItemCommon;
+					lListItem.Text = lAnimation;
+
+					if (
+							(pStateAnimations != null)
+						&& (
+								(Array.IndexOf (pStateAnimations, lAnimation) >= 0)
+							|| (Array.IndexOf (pStateAnimations, lAnimation.ToUpper ()) >= 0)
+							)
 						)
-					)
-				{
-					lListItem.Checked = true;
+					{
+						lListItem.Checked = true;
+					}
+					else
+					{
+						lListItem.Checked = false;
+					}
+					lListNdx++;
 				}
-				else
-				{
-					lListItem.Checked = false;
-				}
-				lListNdx++;
+
+				ListViewAnimations.EndUpdate ();
+				ListViewAnimations.ArrangeIcons ();
 			}
-
-			ListViewAnimations.EndUpdate ();
-			ListViewAnimations.ArrangeIcons ();
-
-			PopIsPanelFilling (lWasFilling);
 		}
 
 		#endregion
@@ -154,7 +153,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ListViewAnimations_ItemChecked (object sender, ItemCheckedEventArgs e)
 		{
-			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (!IsPanelFilling)
 			{
 				HandleItemChecked (e.Item.Text, e.Item.Checked);
 			}

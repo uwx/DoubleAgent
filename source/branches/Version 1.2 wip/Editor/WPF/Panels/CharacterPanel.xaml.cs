@@ -133,59 +133,54 @@ namespace AgentCharacterEditor.Panels
 
 		private void TextBoxName_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && TextBoxName.IsModified && !Program.FileIsReadOnly)
+			if (TextBoxName.IsModified)
 			{
 				HandleNameChanged ();
-				TextBoxName.IsModified = false;
 			}
+			TextBoxName.IsModified = false;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void TextBoxDescription_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && TextBoxDescription.IsModified && !Program.FileIsReadOnly)
+			if (TextBoxDescription.IsModified)
 			{
 				HandleDescriptionChanged ();
-				TextBoxDescription.IsModified = false;
 			}
+			TextBoxDescription.IsModified = false;
 		}
 
 		private void TextBoxExtra_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && TextBoxExtra.IsModified && !Program.FileIsReadOnly)
+			if (TextBoxExtra.IsModified)
 			{
 				HandleExtraChanged ();
-				TextBoxExtra.IsModified = false;
 			}
+			TextBoxExtra.IsModified = false;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void TextBoxIconFile_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && TextBoxIconFile.IsModified && !Program.FileIsReadOnly)
+			if (TextBoxIconFile.IsModified)
 			{
 				HandleIconFileChanged ();
 			}
+			TextBoxIconFile.IsModified = false;
 		}
 
 		private void ButtonIconImport_Click (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && !Program.FileIsReadOnly)
-			{
-				HandleIconImport ();
-			}
+			HandleIconImport ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void ButtonNewGUID_Click (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && !Program.FileIsReadOnly)
-			{
-				HandleNewGUID ();
-			}
+			HandleNewGUID ();
 		}
 
 		#endregion

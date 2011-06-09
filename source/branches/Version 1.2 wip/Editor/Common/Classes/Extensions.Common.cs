@@ -175,10 +175,37 @@ namespace AgentCharacterEditor.Global
 
 	public static class ImageExtensions
 	{
+		public static System.Drawing.SizeF GuessScreenResolution ()
+		{
+			System.Drawing.SizeF lResolution = new System.Drawing.SizeF (96.0f, 96.0f);
+			GuessScreenResolution (ref lResolution);
+			return lResolution;
+		}
+
+		public static void GuessScreenResolution (ref System.Drawing.SizeF pResolution)
+		{
+			if (pResolution == null)
+			{
+				pResolution = new System.Drawing.SizeF (96.0f, 96.0f);
+			}
+			try
+			{
+				System.Drawing.Bitmap lBitmap = new System.Drawing.Bitmap (1, 1);
+				pResolution.Width = lBitmap.HorizontalResolution;
+				pResolution.Height = lBitmap.VerticalResolution;
+			}
+			catch
+			{
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
 		public static System.Windows.Media.ImageSource MakeImageSource (this System.Drawing.Bitmap pBitmap)
 		{
-			//			return pBitmap.MakeImageSource (96.0);
-			return pBitmap.MakeImageSource (pBitmap.HorizontalResolution, pBitmap.VerticalResolution);
+			System.Drawing.SizeF lResolution = new System.Drawing.SizeF (pBitmap.HorizontalResolution, pBitmap.VerticalResolution);
+			GuessScreenResolution (ref lResolution);
+			return pBitmap.MakeImageSource (lResolution.Width, lResolution.Height);
 		}
 
 		public static System.Windows.Media.ImageSource MakeImageSource (this System.Drawing.Bitmap pBitmap, double pDpi)

@@ -1,25 +1,45 @@
-﻿#if DEBUG
+﻿/////////////////////////////////////////////////////////////////////////////
+//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+/////////////////////////////////////////////////////////////////////////////
+/*
+	This file is part of Double Agent.
+
+    Double Agent is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Double Agent is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/////////////////////////////////////////////////////////////////////////////
+#if DEBUG
 //#define DEBUG_LAYOUT
 //#define DEBUG_BRANCHING
 #endif
-
+/////////////////////////////////////////////////////////////////////////////
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
 using DoubleAgent.Character;
+using AgentCharacterEditor;
 using AgentCharacterEditor.Global;
-using AgentCharacterEditor.Properties;
+using AppResources = AgentCharacterEditor.Resources;
 
 namespace AgentCharacterEditor.Previews
 {
-	public partial class FramesPreview : UserControl
+	public partial class FramesPreview
 	{
-		public FramesPreview ()
-		{
-			InitializeComponent ();
+		///////////////////////////////////////////////////////////////////////////////
+		#region Initialization
 
+		private void InitializeCommon ()
+		{
 			ShowBranching = true;
 			ShowExitBranching = true;
 			if (Program.MainWindow != null)
@@ -28,6 +48,7 @@ namespace AgentCharacterEditor.Previews
 			}
 		}
 
+		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
 
@@ -69,7 +90,7 @@ namespace AgentCharacterEditor.Previews
 		[System.ComponentModel.Browsable (false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
 		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-		public Size ImageSize
+		public System.Drawing.Size ImageSize
 		{
 			get;
 			protected set;
@@ -78,22 +99,22 @@ namespace AgentCharacterEditor.Previews
 		[System.ComponentModel.Browsable (false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
 		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-		public Size MinImageSize
+		public System.Drawing.Size MinImageSize
 		{
 			get
 			{
-				return new Size (16, 16);
+				return new System.Drawing.Size (16, 16);
 			}
 		}
 
 		[System.ComponentModel.Browsable (false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
 		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-		public Size MaxImageSize
+		public System.Drawing.Size MaxImageSize
 		{
 			get
 			{
-				return new Size (256, 256);
+				return new System.Drawing.Size (256, 256);
 			}
 		}
 
@@ -110,8 +131,6 @@ namespace AgentCharacterEditor.Previews
 			get;
 			set;
 		}
-
-		///////////////////////////////////////////////////////////////////////////////
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
@@ -130,26 +149,9 @@ namespace AgentCharacterEditor.Previews
 		{
 			CharacterFile = pCharacterFile;
 			Animation = pAnimation;
-			Frames.CharacterFile = CharacterFile;
-			Frames.Animation = Animation;
 
-			Frames.BeginUpdate ();
-			Frames.Items.Clear ();
-
-			foreach (FileAnimationFrame lFrame in pAnimation.Frames)
-			{
-				ListViewItem lListItem;
-
-				lListItem = new ListViewItem (String.Format ("{0} ({1:D})", Titles.Frame (lFrame), lFrame.Duration));
-				lListItem.Tag = null;
-				Frames.Items.Add (lListItem);
-				Frames.GetItemImage (lListItem); // Pre-cache all images now - all images drawn immediately anyway.
-			}
-
-			Frames.ArrangeIcons (Frames.Alignment);
-			Frames.EndUpdate ();
-
-			ShowBranchingGraphs ();
+			Frames.ShowAnimationFrames (CharacterFile, Animation);
+			BuildBranchingGraphs ();
 			RecalcLayout (ImageScale);
 		}
 
@@ -224,6 +226,14 @@ namespace AgentCharacterEditor.Previews
 				}
 			}
 
+			public virtual String Label
+			{
+				get
+				{
+					return "exit";
+				}
+			}
+
 			public Boolean Overlaps (BranchingItem pItem)
 			{
 				if ((MaxFrameNdx <= pItem.MinFrameNdx) || (MinFrameNdx >= pItem.MaxFrameNdx))
@@ -250,6 +260,14 @@ namespace AgentCharacterEditor.Previews
 			{
 				Probability = pProbability;
 			}
+
+			public override String Label
+			{
+				get
+				{
+					return String.Format ("{0}%", Probability);
+				}
+			}
 		}
 
 		private class BranchingByMinNdx : IComparer
@@ -271,19 +289,19 @@ namespace AgentCharacterEditor.Previews
 		private BranchingItem[] mExitBranching = new BranchingItem[0];
 		private int mBranchingHeight = 0;
 		private int mExitBranchingHeight = 0;
-		private Size mBranchingOffset = new Size ();
+		private System.Drawing.Size mBranchingOffset = new System.Drawing.Size ();
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		public void ShowBranchingGraphs ()
+		public void BuildBranchingGraphs (int pDefaultBranchingHeight)
 		{
-			Point lMaxBranchingOffset = new Point (0, 0);
-			Point lMaxExitBranchingOffset = new Point (0, 0);
+			System.Drawing.Point lMaxBranchingOffset = new System.Drawing.Point (0, 0);
+			System.Drawing.Point lMaxExitBranchingOffset = new System.Drawing.Point (0, 0);
 
 			mBranchingOffset.Width = 4;
-			mBranchingOffset.Height = Font.Height;
+			mBranchingOffset.Height = pDefaultBranchingHeight;
 
-			if (ShowBranchingGraphs (ref lMaxBranchingOffset, ref lMaxExitBranchingOffset))
+			if (BuildBranchingGraphs (ref lMaxBranchingOffset, ref lMaxExitBranchingOffset))
 			{
 #if DEBUG_BRANCHING
 				System.Diagnostics.Debug.Print ("Branching [{0} {1}] Exit [{2} {3}]", lMaxBranchingOffset.X, lMaxBranchingOffset.Y, lMaxExitBranchingOffset.X, lMaxExitBranchingOffset.Y);
@@ -311,7 +329,7 @@ namespace AgentCharacterEditor.Previews
 			mExitBranchingHeight = (ShowExitBranching) ? lMaxExitBranchingOffset.Y * mBranchingOffset.Height : 0;
 		}
 
-		private Boolean ShowBranchingGraphs (ref Point pMaxBranchingOffset, ref Point pMaxExitBranchingOffset)
+		private Boolean BuildBranchingGraphs (ref System.Drawing.Point pMaxBranchingOffset, ref System.Drawing.Point pMaxExitBranchingOffset)
 		{
 #if DEBUG_BRANCHING
 			System.Diagnostics.Debug.Print ("Show Branching");
@@ -369,6 +387,8 @@ namespace AgentCharacterEditor.Previews
 #endif
 			return (mBranching.Length > 0) || (mExitBranching.Length > 0);
 		}
+
+		///////////////////////////////////////////////////////////////////////////////
 
 		private Boolean InitBranching ()
 		{
@@ -635,156 +655,21 @@ namespace AgentCharacterEditor.Previews
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Drawing
-
-		protected override void OnPaint (PaintEventArgs e)
-		{
-			base.OnPaint (e);
-
-			if ((ShowBranching && (mBranching.Length > 0)) || (ShowExitBranching && (mExitBranching.Length > 0)))
-			{
-				LineDrawStuff lLineStuff = new LineDrawStuff (this, e.Graphics);
-				StringDrawStuff lStringStuff = new StringDrawStuff (this, e.Graphics);
-
-				if (ShowBranching && (mBranching.Length > 0))
-				{
-					Dictionary<BranchingItem, PointF> lLineCenter = new Dictionary<BranchingItem, PointF> ();
-
-					foreach (BranchingItemP lBranching in mBranching)
-					{
-						lLineCenter[lBranching] = DrawBranchingLine (Frames.Top, -1, lBranching, lLineStuff);
-					}
-					foreach (BranchingItemP lBranching in mBranching)
-					{
-						DrawLineLabel (String.Format ("{0}%", lBranching.Probability), lLineCenter[lBranching], lBranching, lStringStuff);
-					}
-				}
-
-				if (ShowExitBranching && (mExitBranching.Length > 0))
-				{
-					Dictionary<BranchingItem, PointF> lLineCenter = new Dictionary<BranchingItem, PointF> ();
-
-					foreach (BranchingItem lBranching in mExitBranching)
-					{
-						lLineCenter[lBranching] = DrawBranchingLine (Frames.Bottom, 1, lBranching, lLineStuff);
-					}
-					foreach (BranchingItem lBranching in mExitBranching)
-					{
-						DrawLineLabel ("exit", lLineCenter[lBranching], lBranching, lStringStuff);
-					}
-				}
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		private class StringDrawStuff
-		{
-			public Graphics Graphics;
-			public Font Font;
-			public Brush ForeBrush;
-			public Brush BackBrush;
-			public StringFormat Format;
-
-			public StringDrawStuff (Control pOwner, Graphics pGraphics)
-			{
-				Graphics = pGraphics;
-				Font = pOwner.Font;
-				ForeBrush = new SolidBrush (pOwner.ForeColor);
-				BackBrush = new SolidBrush (pOwner.BackColor);
-
-				Format = new StringFormat (StringFormatFlags.NoWrap);
-				Format.Alignment = StringAlignment.Center;
-				Format.LineAlignment = StringAlignment.Center;
-			}
-		}
-
-		private class LineDrawStuff
-		{
-			public Graphics Graphics;
-			public Pen Pen;
-
-			public LineDrawStuff (Control pOwner, Graphics pGraphics)
-			{
-				Graphics = pGraphics;
-				Pen = new Pen (pOwner.ForeColor, 2.0f);
-
-				Pen.ScaleTransform (0.5f, 0.5f);
-				Pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
-			}
-		}
-
-		private PointF DrawBranchingLine (int pAnchorY, int pOffsetX, BranchingItem pBranching, LineDrawStuff pLineStuff)
-		{
-			Rectangle lItemRect;
-			PointF[] lLinePoints = new PointF[4];
-
-			try
-			{
-				lItemRect = Frames.GetItemRect (pBranching.SrcFrameNdx);
-				lLinePoints[0].X = (float)Frames.Left + (float)lItemRect.Left + ((float)lItemRect.Width / 2.0f) + (float)(pBranching.SrcOffset * mBranchingOffset.Width);
-				lLinePoints[0].Y = (float)pAnchorY;
-				lItemRect = Frames.GetItemRect (pBranching.DstFrameNdx);
-				lLinePoints[3].X = (float)Frames.Left + (float)lItemRect.Left + ((float)lItemRect.Width / 2.0f) + (float)(pBranching.DstOffset * mBranchingOffset.Width);
-				lLinePoints[3].Y = (float)pAnchorY;
-
-				lLinePoints[1].X = lLinePoints[0].X;
-				lLinePoints[1].Y = lLinePoints[0].Y + (pBranching.Height * mBranchingOffset.Height * pOffsetX);
-				lLinePoints[2].X = lLinePoints[3].X;
-				lLinePoints[2].Y = lLinePoints[1].Y;
-
-				pLineStuff.Graphics.DrawLines (pLineStuff.Pen, lLinePoints);
-			}
-			catch
-			{
-			}
-			return new PointF ((lLinePoints[1].X + lLinePoints[2].X) / 2.0f, lLinePoints[1].Y);
-		}
-
-		private void DrawLineLabel (String pLabel, PointF pCenter, BranchingItem pBranching, StringDrawStuff pStringStuff)
-		{
-			PointF lCenter = pCenter;
-			RectangleF lRect;
-
-			try
-			{
-				lRect = new RectangleF (new PointF (), pStringStuff.Graphics.MeasureString (pLabel, pStringStuff.Font, pCenter, pStringStuff.Format));
-				lRect.Offset (lRect.Size.Width / -2.0f, lRect.Size.Height / -2.0f);
-				if (pBranching.LabelOffset < 0)
-				{
-					lCenter.X -= lRect.Size.Width + ((float)pBranching.LabelOffset * (float)mBranchingOffset.Width);
-				}
-				else if (pBranching.LabelOffset > 0)
-				{
-					lCenter.X += lRect.Size.Width + ((float)pBranching.LabelOffset * (float)mBranchingOffset.Width);
-				}
-				lRect.Offset (lCenter);
-
-				pStringStuff.Graphics.FillRectangle (pStringStuff.BackBrush, lRect);
-				pStringStuff.Graphics.DrawString (pLabel, pStringStuff.Font, pStringStuff.ForeBrush, lCenter, pStringStuff.Format);
-			}
-			catch
-			{
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
 		#region Sizing Adjustments
 
-		public Size GetImageScaleSize (ImageScaleType pImageScale)
+		public System.Drawing.Size GetImageScaleSize (ImageScaleType pImageScale)
 		{
-			Size lImageSize = (CharacterFile != null) ? CharacterFile.Header.ImageSize : new Size (128, 128);
-			SizeF lSmallSize = new SizeF (lImageSize.Width, lImageSize.Height);
-			SizeF lMediumSize = new SizeF (lImageSize.Width, lImageSize.Height);
-			SizeF lLargeSize = new SizeF (lImageSize.Width, lImageSize.Height);
+			System.Drawing.Size lImageSize = (CharacterFile != null) ? CharacterFile.Header.ImageSize : new System.Drawing.Size (128, 128);
+			System.Drawing.SizeF lSmallSize = new System.Drawing.SizeF (lImageSize.Width, lImageSize.Height);
+			System.Drawing.SizeF lMediumSize = new System.Drawing.SizeF (lImageSize.Width, lImageSize.Height);
+			System.Drawing.SizeF lLargeSize = new System.Drawing.SizeF (lImageSize.Width, lImageSize.Height);
 
 			lSmallSize.Width /= 4.0f;
 			lSmallSize.Height /= 4.0f;
 			lMediumSize.Width /= 2.0f;
 			lMediumSize.Height /= 2.0f;
 
-			while (Size.Round (lSmallSize).EitherLT (MinImageSize))
+			while (System.Drawing.Size.Round (lSmallSize).EitherLT (MinImageSize))
 			{
 				lSmallSize.Width *= 2.0f;
 				lSmallSize.Height *= 2.0f;
@@ -794,7 +679,7 @@ namespace AgentCharacterEditor.Previews
 				lLargeSize.Height *= 2.0f;
 			}
 
-			while (Size.Round (lLargeSize).EitherGT (MaxImageSize))
+			while (System.Drawing.Size.Round (lLargeSize).EitherGT (MaxImageSize))
 			{
 				lSmallSize.Width /= 2.0f;
 				lSmallSize.Height /= 2.0f;
@@ -806,147 +691,18 @@ namespace AgentCharacterEditor.Previews
 
 			if (pImageScale == ImageScaleType.Small)
 			{
-				return Size.Round (lSmallSize);
+				return System.Drawing.Size.Round (lSmallSize);
 			}
 			else if (pImageScale == ImageScaleType.Large)
 			{
-				return Size.Round (lLargeSize);
+				return System.Drawing.Size.Round (lLargeSize);
 			}
 			else
 			{
-				return Size.Round (lMediumSize);
+				return System.Drawing.Size.Round (lMediumSize);
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
-
-		public void RecalcLayout (ImageScaleType pImageScale)
-		{
-			ImageList lImageList = new ImageList ();
-
-			ImageScale = pImageScale;
-			ImageSize = GetImageScaleSize (pImageScale);
-
-			lImageList.ColorDepth = ColorDepth.Depth32Bit;
-			lImageList.ImageSize = ImageSize;
-			Frames.LargeImageList = lImageList;
-
-#if DEBUG_LAYOUT
-			Size lCharImageSize = (CharacterFile != null) ? CharacterFile.Header.ImageSize : new Size (128, 128);
-			System.Diagnostics.Debug.Print ("RecalcLayout {0} ImageSize {1} Character {2}", ImageScale, ImageSize, lCharImageSize);
-			System.Diagnostics.Debug.Print ("   Small {0} Medium {1} Large {2}", GetImageScaleSize (ImageScaleType.Small), GetImageScaleSize (ImageScaleType.Medium), GetImageScaleSize (ImageScaleType.Large));
-#endif
-			RecalcLayout ();
-		}
-
-		public void RecalcLayout ()
-		{
-			Size lListSize = ImageSize;
-
-			foreach (ListViewItem lListItem in Frames.Items)
-			{
-				Rectangle lItemRect = Frames.GetItemRect (lListItem.Index);
-
-				lListSize.Height = Math.Max (lListSize.Height, lItemRect.Height);
-				lListSize.Width = Math.Max (lListSize.Width, lItemRect.Right);
-			}
-
-#if DEBUG_LAYOUT
-			System.Diagnostics.Debug.Print ("RecalcLayout List {0}", lListSize);
-#endif
-			Invalidate ();
-			SuspendLayout ();
-			Frames.Size = lListSize;
-			ResumeLayout ();
-			PerformLayout ();
-#if DEBUG_LAYOUT
-			DebugLayout ("RecalcLayout");
-#endif
-		}
-
-		protected override void OnLayout (LayoutEventArgs e)
-		{
-			Size lClientSize = new Size ();
-
-#if DEBUG_LAYOUT
-			DebugLayout ("  OnLayout");
-#endif
-			VerticalScroll.Value = 0;
-			Frames.Location = new Point (-HorizontalScroll.Value, Math.Max ((ShowBranching) ? mBranchingHeight : 0, 4));
-
-			lClientSize.Width = ClientSize.Width;
-			lClientSize.Height = Frames.Height + ((ShowBranching) ? mBranchingHeight : 0) + Math.Max (ShowExitBranching ? mExitBranchingHeight : 0, 4);
-			lClientSize.Height = Math.Max (lClientSize.Height, MinimumSize.Height);
-
-			if (ClientSize.Height != lClientSize.Height)
-			{
-				try
-				{
-#if DEBUG_LAYOUT
-					System.Diagnostics.Debug.Print ("  SetClient {0}", lClientSize);
-#endif
-					Height += lClientSize.Height - ClientSize.Height;
-#if DEBUG_LAYOUT
-					System.Diagnostics.Debug.Print ("  NewClient {0}", ClientSize);
-#endif
-				}
-				catch
-				{
-				}
-			}
-
-			base.OnLayout (e);
-
-#if DEBUG_LAYOUT
-			DebugLayout ("  OnLayout(base)");
-#endif
-			//
-			//	Second round for cases when there is just a bit of horizonal scroll so the vertical scroll bar shows up
-			//
-			if (ClientSize.Height != lClientSize.Height)
-			{
-				try
-				{
-#if DEBUG_LAYOUT
-					lClientSize.Width = ClientSize.Width;
-					System.Diagnostics.Debug.Print ("  SetClient {0}", lClientSize);
-#endif
-					Height += lClientSize.Height - ClientSize.Height;
-#if DEBUG_LAYOUT
-					System.Diagnostics.Debug.Print ("  NewClient {0}", ClientSize);
-#endif
-					base.OnLayout (e);
-				}
-				catch
-				{
-				}
-#if DEBUG_LAYOUT
-				DebugLayout ("  OnLayout(done)");
-#endif
-			}
-		}
-
-		private void FramesPreview_VisibleChanged (object sender, EventArgs e)
-		{
-#if DEBUG_LAYOUT
-			if (Visible)
-			{
-				DebugLayout ("  VisibleChanged");
-			}
-#endif
-		}
-
-#if DEBUG_LAYOUT
-		private void DebugLayout (String pTitle)
-		{
-			String lSpacing = new String (' ', 16);
-			String lTitle = (pTitle + lSpacing).Substring (0, lSpacing.Length);
-
-			System.Diagnostics.Debug.Print ("{0} List   {1} Margin {2} {3}", lTitle, new Rectangle (Frames.Location, Frames.Size), mBranchingHeight * mBranchingOffset.Height, mExitBranchingHeight * mBranchingOffset.Height);
-			System.Diagnostics.Debug.Print ("{0} Client {1} Scroll {2} {3}", lSpacing, ClientSize, HorizontalScroll.Visible, VerticalScroll.Visible);
-			System.Diagnostics.Debug.Print ("{0} Frame  {1} Win {2}", lSpacing, (Size - ClientSize), Size);
-		}
-#endif
 		#endregion
 	}
 }

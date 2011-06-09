@@ -58,6 +58,7 @@ namespace AgentCharacterEditor
 		{
 			InitializeComponent ();
 			InitializeCommon ();
+			InitializeContextMenu (ContextMenuEdit);
 
 			IsWindowShowing = false;
 			Icon = Properties.Resources.IconDoubleAgent;
@@ -65,6 +66,15 @@ namespace AgentCharacterEditor
 
 			MainMenuStrip = MenuStripMain;
 			Application.Idle += new EventHandler (Application_Idle);
+		}
+
+		public void InitializeContextMenu (ContextMenuEdit pContextMenu)
+		{
+			pContextMenu.InitializeComponent ();
+			pContextMenu.MenuItemCut.Click += new EventHandler (MenuItemEditCut_Click);
+			pContextMenu.MenuItemCopy.Click += new EventHandler (MenuItemEditCopy_Click);
+			pContextMenu.MenuItemDelete.Click += new EventHandler (MenuItemEditDelete_Click);
+			pContextMenu.MenuItemPaste.Click += new EventHandler (MenuItemEditPaste_Click);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -190,7 +200,6 @@ namespace AgentCharacterEditor
 		public event Global.EditEventHandler EditCut;
 		public event Global.EditEventHandler EditDelete;
 		public event Global.EditEventHandler EditPaste;
-		public event Global.ContextMenuEventHandler EditMenu;
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
@@ -279,8 +288,10 @@ namespace AgentCharacterEditor
 
 		public void ShowNavigateState ()
 		{
-			ToolButtonNavigateBack.Enabled = CanHandleNavigateBack;
-			ToolButtonNavigateForward.Enabled = CanHandleNavigateForward;
+			MenuItemNavigateBack.Enabled = CanHandleNavigateBack;
+			MenuItemNavigateForward.Enabled = CanHandleNavigateForward;
+			ToolButtonNavigateBack.Enabled = MenuItemNavigateBack.Enabled;
+			ToolButtonNavigateForward.Enabled = MenuItemNavigateForward.Enabled;
 		}
 
 		public void ShowEditState ()
@@ -363,6 +374,24 @@ namespace AgentCharacterEditor
 				ToolButtonEditRedo.Enabled = MenuItemEditRedo.Enabled;
 				ToolButtonEditUndo.Text = Program.UndoManager.CanUndo ? String.Format (AppResources.Resources.EditUndoThis.NoMenuPrefix (), Program.UndoManager.UndoName) : AppResources.Resources.EditUndo.NoMenuPrefix ();
 				ToolButtonEditRedo.Text = Program.UndoManager.CanRedo ? String.Format (AppResources.Resources.EditRedoThis.NoMenuPrefix (), Program.UndoManager.RedoName) : AppResources.Resources.EditRedo.NoMenuPrefix ();
+			}
+		}
+
+		public void ShowEditState (ContextMenuEdit pContextMenu)
+		{
+			if (CanEdit != null)
+			{
+				Global.CanEditEventArgs lEventArgs = new Global.CanEditEventArgs ();
+
+				try
+				{
+					CanEdit (this, lEventArgs);
+				}
+				catch
+				{
+				}
+
+				lEventArgs.UpdateMenuItems (pContextMenu.MenuItemCopy, pContextMenu.MenuItemCut, pContextMenu.MenuItemDelete, pContextMenu.MenuItemPaste);
 			}
 		}
 
@@ -559,6 +588,16 @@ namespace AgentCharacterEditor
 			(new AgentCharacterEditor.About.AboutBox ()).ShowDialog (this);
 		}
 
+		private void MenuItemNavigateBack_Click (object sender, EventArgs e)
+		{
+			HandleNavigateBack ();
+		}
+
+		private void MenuItemNavigateForward_Click (object sender, EventArgs e)
+		{
+			HandleNavigateForward ();
+		}
+
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void MenuItemFileNew_Click (object sender, EventArgs e)
@@ -724,48 +763,7 @@ namespace AgentCharacterEditor
 			}
 			else if ((lActive != null) && lActive.RectangleToScreen (lActive.ClientRectangle).Contains (Control.MousePosition))
 			{
-				ContextMenuEdit lContextMenu = new ContextMenuEdit (components);
-				ToolStripMenuItem lCopyMenuItem;
-				ToolStripMenuItem lCutMenuItem;
-				ToolStripMenuItem lDeleteMenuItem;
-				ToolStripMenuItem lPasteMenuItem;
-
-				(lCopyMenuItem = lContextMenu.AddMenuItemClone (MenuItemEditCut)).Click += new EventHandler (MenuItemEditCut_Click);
-				(lCutMenuItem = lContextMenu.AddMenuItemClone (MenuItemEditCopy)).Click += new EventHandler (MenuItemEditCopy_Click);
-				(lDeleteMenuItem = lContextMenu.AddMenuItemClone (MenuItemEditPaste)).Click += new EventHandler (MenuItemEditPaste_Click);
-				(lPasteMenuItem = lContextMenu.AddMenuItemClone (MenuItemEditDelete)).Click += new EventHandler (MenuItemEditDelete_Click);
-
-				if (EditMenu != null)
-				{
-					Global.ContextMenuEventArgs lEventArgs = new Global.ContextMenuEventArgs (lContextMenu, lActive);
-
-					try
-					{
-						EditMenu (this, lEventArgs);
-					}
-					catch
-					{
-					}
-
-					lEventArgs.UpdateMenuItems (lCopyMenuItem, lCutMenuItem, lDeleteMenuItem, lPasteMenuItem);
-				}
-				else if (CanEdit != null)
-				{
-					Global.CanEditEventArgs lEventArgs = new Global.CanEditEventArgs ();
-
-					try
-					{
-						CanEdit (this, lEventArgs);
-					}
-					catch
-					{
-					}
-
-					lEventArgs.UpdateMenuItems (lCopyMenuItem, lCutMenuItem, lDeleteMenuItem, lPasteMenuItem);
-				}
-
-				lContextMenu.Show (Control.MousePosition);
-				e.Cancel = true;
+				ShowEditState (ContextMenuEdit);
 			}
 			else
 			{

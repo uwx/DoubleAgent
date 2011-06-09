@@ -86,9 +86,12 @@ namespace AgentCharacterEditor
 			this.MenuItemEditCopy = new System.Windows.Forms.ToolStripMenuItem();
 			this.MenuItemEditPaste = new System.Windows.Forms.ToolStripMenuItem();
 			this.MenuItemEditDelete = new System.Windows.Forms.ToolStripMenuItem();
+			this.MenuItemView = new System.Windows.Forms.ToolStripMenuItem();
+			this.MenuItemNavigateBack = new System.Windows.Forms.ToolStripMenuItem();
+			this.MenuItemNavigateForward = new System.Windows.Forms.ToolStripMenuItem();
 			this.MenuItemHelp = new System.Windows.Forms.ToolStripMenuItem();
 			this.MenuItemHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
-			this.ContextMenuStub = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.ContextMenuEdit = new Global.ContextMenuEdit(this.components);
 			this.ToolStripMain = new DoubleAgent.ToolStripEx();
 			this.ToolButtonFileNew = new DoubleAgent.ToolStripButtonCompat();
 			this.ToolButtonFileOpen = new DoubleAgent.ToolStripButtonCompat();
@@ -357,6 +360,7 @@ namespace AgentCharacterEditor
 			this.MenuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuItemFile,
             this.MenuItemEdit,
+            this.MenuItemView,
             this.MenuItemHelp});
 			this.MenuStripMain.Location = new System.Drawing.Point(0, 0);
 			this.MenuStripMain.Name = "MenuStripMain";
@@ -528,6 +532,31 @@ namespace AgentCharacterEditor
 			this.MenuItemEditDelete.Text = "&Delete";
 			this.MenuItemEditDelete.Click += new System.EventHandler(this.MenuItemEditDelete_Click);
 			// 
+			// MenuItemView
+			// 
+			this.MenuItemView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItemNavigateBack,
+            this.MenuItemNavigateForward});
+			this.MenuItemView.Name = "MenuItemView";
+			this.MenuItemView.Size = new System.Drawing.Size(58, 27);
+			this.MenuItemView.Text = "&View";
+			// 
+			// MenuItemNavigateBack
+			// 
+			this.MenuItemNavigateBack.Image = global::AgentCharacterEditor.Properties.Resources.ImgNavigateBack;
+			this.MenuItemNavigateBack.Name = "MenuItemNavigateBack";
+			this.MenuItemNavigateBack.Size = new System.Drawing.Size(165, 28);
+			this.MenuItemNavigateBack.Text = "Go &back";
+			this.MenuItemNavigateBack.Click += new System.EventHandler(this.MenuItemNavigateBack_Click);
+			// 
+			// MenuItemNavigateForward
+			// 
+			this.MenuItemNavigateForward.Image = global::AgentCharacterEditor.Properties.Resources.ImgNavigateForward;
+			this.MenuItemNavigateForward.Name = "MenuItemNavigateForward";
+			this.MenuItemNavigateForward.Size = new System.Drawing.Size(165, 28);
+			this.MenuItemNavigateForward.Text = "Go &forward";
+			this.MenuItemNavigateForward.Click += new System.EventHandler(this.MenuItemNavigateForward_Click);
+			// 
 			// MenuItemHelp
 			// 
 			this.MenuItemHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -544,11 +573,11 @@ namespace AgentCharacterEditor
 			this.MenuItemHelpAbout.Text = "&About...";
 			this.MenuItemHelpAbout.Click += new System.EventHandler(this.MenuItemHelpAbout_Click);
 			// 
-			// ContextMenuStub
+			// ContextMenuEdit
 			// 
-			this.ContextMenuStub.Name = "ContextMenuStub";
-			this.ContextMenuStub.Size = new System.Drawing.Size(153, 26);
-			this.ContextMenuStub.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStub_Opening);
+			this.ContextMenuEdit.Name = "ContextMenuEdit";
+			this.ContextMenuEdit.Size = new System.Drawing.Size(61, 4);
+			this.ContextMenuEdit.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStub_Opening);
 			// 
 			// ToolStripMain
 			// 
@@ -687,7 +716,7 @@ namespace AgentCharacterEditor
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
 			this.ClientSize = new System.Drawing.Size(982, 555);
-			this.ContextMenuStrip = this.ContextMenuStub;
+			this.ContextMenuStrip = this.ContextMenuEdit;
 			this.Controls.Add(this.MenuStripMain);
 			this.Controls.Add(this.ToolStripMain);
 			this.Controls.Add(this.ToolStripContainerMain);
@@ -759,11 +788,14 @@ namespace AgentCharacterEditor
 		public AgentCharacterEditor.Panels.FramePanel PanelFrame;
 		public AgentCharacterEditor.Panels.BranchingPanel PanelBranching;
 		public AgentCharacterEditor.Panels.OverlayPanel PanelOverlays;
-		public System.Windows.Forms.ContextMenuStrip ContextMenuStub;
+		public Global.ContextMenuEdit ContextMenuEdit;
 		private AgentCharacterEditor.Panels.PartsTreePanel PanelPartsTree;
 		private DoubleAgent.ToolStripEx ToolStripNavigation;
 		private DoubleAgent.ToolStripButtonCompat ToolButtonNavigateBack;
 		private DoubleAgent.ToolStripButtonCompat ToolButtonNavigateForward;
+		private System.Windows.Forms.ToolStripMenuItem MenuItemView;
+		private System.Windows.Forms.ToolStripMenuItem MenuItemNavigateBack;
+		private System.Windows.Forms.ToolStripMenuItem MenuItemNavigateForward;
 	}
 }
 

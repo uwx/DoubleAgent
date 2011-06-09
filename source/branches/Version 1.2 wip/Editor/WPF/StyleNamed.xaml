@@ -49,15 +49,15 @@
 		<Setter Property="Margin"
 				Value="2" />
 		<Setter Property="UseLayoutRounding"
-				Value="true" />
+				Value="True" />
 	</Style>
 
 	<!-- =========================================================================== -->
 
 	<SolidColorBrush x:Key="HeaderTextBrush"
-					 Color="{StaticResource BackgroundDarkColor}" />
+					 Color="GhostWhite" />
 	<DropShadowEffect x:Key="HeaderTextShadow"
-					  Color="GhostWhite"
+					  Color="{StaticResource BackgroundDarkColor}"
 					  ShadowDepth="1"
 					  BlurRadius="4"
 					  Opacity="1.0" />
@@ -88,7 +88,7 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type GroupBox}">
-					<Grid SnapsToDevicePixels="true">
+					<Grid SnapsToDevicePixels="True">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="10" />
 							<ColumnDefinition Width="*" />
@@ -118,10 +118,9 @@
 										  Grid.Column="1"
 										  Margin="2,2,2,7"
 										  VerticalAlignment="Top"
-										  HorizontalAlignment="Center"
+										  HorizontalAlignment="Left"
 										  RecognizesAccessKey="True"
 										  TextBlock.FontSize="16"
-										  TextBlock.FontWeight="DemiBold"
 										  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
 										  Effect="{StaticResource HeaderTextShadow}">
 						</ContentPresenter>
@@ -171,11 +170,9 @@
 	<!-- ToggleButton                                                                -->
 	<!-- =========================================================================== -->
 
-	<Geometry x:Key="ToggleButtonCheckmark">M 1,5.1 L 2.7,5.2 L 4.4,7.1 L 9,0.4 L 10.2,0 L 4.3,10.8 Z</Geometry>
+	<Geometry x:Key="ToggleButtonCheckmark">M 1,6.1 L 2.7,6.2 L 4.4,8.1 L 9,1.4 L 10.2,1 L 4.3,11.8 Z</Geometry>
 	<Duration x:Key="ToggleButtonTransitionDuration">0:0:0.2</Duration>
 
-	<Thickness x:Key="ToggleButtonHiliteThickness">1,1,1,1</Thickness>
-	<Thickness x:Key="ToggleButtonHilitePadding">2,2,2,2</Thickness>
 	<Thickness x:Key="ToggleButtonCheckMargin">0,2,2,2</Thickness>
 	<Thickness x:Key="ToggleButtonGlowMargin">-2,-2,-2,-2</Thickness>
 	<BlurEffect x:Key="ToggleButtonGlowEffect"
@@ -196,22 +193,25 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type ToggleButton}">
-					<Grid SnapsToDevicePixels="true">
+					<Grid SnapsToDevicePixels="True">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="Auto" />
 							<ColumnDefinition Width="*" />
 						</Grid.ColumnDefinitions>
-						<Border Name="BulletPress"
-								Opacity="0"
-								Background="Transparent"
-								BorderBrush="Transparent"
-								BorderThickness="0"
-								Width="{Binding ElementName=BulletBorder, Path=ActualWidth, Mode=OneWay}"
-								Height="{Binding ElementName=BulletBorder, Path=ActualHeight, Mode=OneWay}"
-								VerticalAlignment="{Binding ElementName=BulletBorder, Path=VerticalAlignment, Mode=OneWay}"
-								HorizontalAlignment="{Binding ElementName=BulletBorder, Path=HorizontalAlignment, Mode=OneWay}"
-								Margin="{Binding ElementName=BulletBorder, Path=Margin, Mode=OneWay}">
-							<Rectangle ClipToBounds="False"
+						<Grid Name="BulletBounds"
+							  Background="Transparent"
+							  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+							  HorizontalAlignment="Left"
+							  Margin="{StaticResource ToggleButtonCheckMargin}"
+							  Width="18"
+							  Height="18"
+							  SnapsToDevicePixels="True"
+							  UseLayoutRounding="false">
+							<Rectangle Name="BulletPress"
+									   Opacity="0"
+									   ClipToBounds="False"
+									   VerticalAlignment="Stretch"
+									   HorizontalAlignment="Stretch"
 									   Fill="White"
 									   Stroke="White"
 									   StrokeThickness="{StaticResource ItemSelectionStroke}"
@@ -219,27 +219,15 @@
 									   RadiusY="{StaticResource ItemSelectionRounding}"
 									   Margin="{StaticResource ToggleButtonGlowMargin}"
 									   Effect="{StaticResource ToggleButtonGlowEffect}" />
-						</Border>
-						<Rectangle Name="BulletHilite"
-								   Opacity="0"
-								   Fill="{StaticResource ItemSelectedFillBrush}"
-								   Stroke="{StaticResource ItemSelectedOuterBrush}"
-								   StrokeThickness="{StaticResource ItemSelectionStroke}"
-								   RadiusX="{StaticResource ItemSelectionRounding}"
-								   RadiusY="{StaticResource ItemSelectionRounding}"
-								   Width="{Binding ElementName=BulletBorder, Path=ActualWidth, Mode=OneWay}"
-								   Height="{Binding ElementName=BulletBorder, Path=ActualHeight, Mode=OneWay}"
-								   VerticalAlignment="{Binding ElementName=BulletBorder, Path=VerticalAlignment, Mode=OneWay}"
-								   HorizontalAlignment="{Binding ElementName=BulletBorder, Path=HorizontalAlignment, Mode=OneWay}"
-								   Margin="{Binding ElementName=BulletBorder, Path=Margin, Mode=OneWay}" />
-						<Border Name="BulletBorder"
-								Background="Transparent"
-								BorderBrush="Transparent"
-								BorderThickness="{StaticResource ToggleButtonHiliteThickness}"
-								Padding="{StaticResource ToggleButtonHilitePadding}"
-								Margin="{StaticResource ToggleButtonCheckMargin}"
-								VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-								HorizontalAlignment="Left">
+							<Rectangle Name="BulletHilite"
+									   Opacity="0"
+									   VerticalAlignment="Stretch"
+									   HorizontalAlignment="Stretch"
+									   Fill="{StaticResource ItemSelectedFillBrush}"
+									   Stroke="{StaticResource ItemSelectedOuterBrush}"
+									   StrokeThickness="{StaticResource ItemSelectionStroke}"
+									   RadiusX="{StaticResource ItemSelectionRounding}"
+									   RadiusY="{StaticResource ItemSelectionRounding}" />
 							<Path Name="Bullet"
 								  VerticalAlignment="Center"
 								  HorizontalAlignment="Center"
@@ -248,7 +236,7 @@
 								  Height="12"
 								  Fill="{StaticResource BackgroundDarkBrush}"
 								  Data="{StaticResource ToggleButtonCheckmark}" />
-						</Border>
+						</Grid>
 						<ContentPresenter Name="Content"
 										  Grid.Column="1"
 										  Margin="{TemplateBinding Padding}"
@@ -262,12 +250,12 @@
 					<ControlTemplate.Triggers>
 						<Trigger Property="HasContent"
 								 Value="false">
-							<Setter TargetName="BulletBorder"
+							<Setter TargetName="BulletBounds"
 									Property="Margin"
 									Value="0" />
 						</Trigger>
 						<Trigger Property="IsMouseOver"
-								 Value="true">
+								 Value="True">
 							<Trigger.EnterActions>
 								<BeginStoryboard>
 									<Storyboard>
@@ -290,7 +278,7 @@
 							</Trigger.ExitActions>
 						</Trigger>
 						<Trigger Property="IsPressed"
-								 Value="true">
+								 Value="True">
 							<Trigger.EnterActions>
 								<BeginStoryboard>
 									<Storyboard>
@@ -317,7 +305,7 @@
 								<Condition Property="IsChecked"
 										   Value="false" />
 								<Condition Property="IsEnabled"
-										   Value="true" />
+										   Value="True" />
 								<!--<Condition Property="IsMouseOver"
 										   Value="false" />-->
 								<!--<Condition Property="IsPressed"
@@ -433,7 +421,7 @@
 							   RadiusY="3"
 							   Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
 							   StrokeDashArray="1 2"
-							   SnapsToDevicePixels="true" />
+							   SnapsToDevicePixels="True" />
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
@@ -461,7 +449,9 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type ButtonBase}">
 					<ContentControl>
-						<Grid Background="Transparent">
+						<Grid Background="Transparent"
+							  SnapsToDevicePixels="True"
+							  UseLayoutRounding="False">
 							<Rectangle Name="Glow"
 									   Fill="White"
 									   Opacity="0"
@@ -469,43 +459,40 @@
 									   RadiusY="3"
 									   Margin="{StaticResource PushButtonGlowMargin}"
 									   Effect="{StaticResource PushButtonGlowEffect}"
-									   SnapsToDevicePixels="true"
 									   ClipToBounds="False" />
 							<Border Name="Chrome"
 									Background="{TemplateBinding Background}"
 									BorderBrush="{TemplateBinding BorderBrush}"
 									BorderThickness="{StaticResource PushButtonBorderThickness}"
 									CornerRadius="{StaticResource PushButtonRounding}"
-									Padding="{StaticResource PushButtonBorderPadding}"
-									SnapsToDevicePixels="true" />
+									Padding="{StaticResource PushButtonBorderPadding}" />
 							<Border Name="Highlite"
 									Background="{StaticResource PushButtonHighlitedFillBrush}"
 									BorderBrush="{TemplateBinding BorderBrush}"
 									BorderThickness="{StaticResource PushButtonBorderThickness}"
 									CornerRadius="{StaticResource PushButtonRounding}"
 									Padding="{StaticResource PushButtonBorderPadding}"
-									Opacity="0"
-									SnapsToDevicePixels="true" />
+									Opacity="0" />
 							<Border Background="Transparent"
 									BorderBrush="Transparent"
 									BorderThickness="{StaticResource PushButtonBorderThickness}"
 									CornerRadius="{StaticResource PushButtonRounding}"
-									Padding="{StaticResource PushButtonBorderPadding}"
-									SnapsToDevicePixels="true">
+									Padding="{StaticResource PushButtonBorderPadding}">
 								<ContentPresenter Margin="{TemplateBinding Padding}"
 												  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
 												  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
 												  RecognizesAccessKey="True"
-												  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+												  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+												  UseLayoutRounding="{TemplateBinding UseLayoutRounding}" />
 							</Border>
 						</Grid>
 					</ContentControl>
 					<ControlTemplate.Triggers>
 						<Trigger Property="IsKeyboardFocused"
-								 Value="true">
+								 Value="True">
 						</Trigger>
 						<Trigger Property="Button.IsDefault"
-								 Value="true">
+								 Value="True">
 							<Setter TargetName="Chrome"
 									Property="BorderThickness"
 									Value="2" />
@@ -520,7 +507,7 @@
 									Value="1" />
 						</Trigger>
 						<Trigger Property="IsMouseOver"
-								 Value="true">
+								 Value="True">
 							<Trigger.EnterActions>
 								<BeginStoryboard>
 									<Storyboard>
@@ -543,7 +530,7 @@
 							</Trigger.ExitActions>
 						</Trigger>
 						<Trigger Property="Button.IsPressed"
-								 Value="true">
+								 Value="True">
 							<Trigger.EnterActions>
 								<BeginStoryboard>
 									<Storyboard>
@@ -592,7 +579,7 @@
 		<Setter Property="CornerRadius"
 				Value="{StaticResource BorderRounding}" />
 		<Setter Property="SnapsToDevicePixels"
-				Value="true" />
+				Value="True" />
 		<Setter Property="BorderBrush">
 			<Setter.Value>
 				<SolidColorBrush Color="{StaticResource BorderNormalColor}" />
@@ -613,7 +600,7 @@
 		<Setter Property="CornerRadius"
 				Value="{StaticResource BorderRounding}" />
 		<Setter Property="SnapsToDevicePixels"
-				Value="true" />
+				Value="True" />
 		<Setter Property="BorderBrush">
 			<Setter.Value>
 				<SolidColorBrush Color="{StaticResource BorderFocusedColor}" />
@@ -679,9 +666,9 @@
 						<MultiTrigger>
 							<MultiTrigger.Conditions>
 								<Condition Property="IsKeyboardFocusWithin"
-										   Value="true" />
+										   Value="True" />
 								<Condition Property="IsEnabled"
-										   Value="true" />
+										   Value="True" />
 							</MultiTrigger.Conditions>
 							<MultiTrigger.EnterActions>
 								<BeginStoryboard Storyboard="{StaticResource ShowBorderFocused}" />
@@ -693,11 +680,11 @@
 						<MultiTrigger>
 							<MultiTrigger.Conditions>
 								<Condition Property="IsMouseOver"
-										   Value="true" />
+										   Value="True" />
 								<Condition Property="IsKeyboardFocusWithin"
 										   Value="false" />
 								<Condition Property="IsEnabled"
-										   Value="true" />
+										   Value="True" />
 							</MultiTrigger.Conditions>
 							<MultiTrigger.EnterActions>
 								<BeginStoryboard Storyboard="{StaticResource BorderNormalHit}" />
@@ -740,9 +727,9 @@
 						<MultiTrigger>
 							<MultiTrigger.Conditions>
 								<Condition Property="IsFocused"
-										   Value="true" />
+										   Value="True" />
 								<Condition Property="IsEnabled"
-										   Value="true" />
+										   Value="True" />
 								<Condition Property="IsReadOnly"
 										   Value="false" />
 							</MultiTrigger.Conditions>
@@ -756,11 +743,11 @@
 						<MultiTrigger>
 							<MultiTrigger.Conditions>
 								<Condition Property="IsFocused"
-										   Value="true" />
+										   Value="True" />
 								<Condition Property="IsEnabled"
-										   Value="true" />
+										   Value="True" />
 								<Condition Property="IsReadOnly"
-										   Value="true" />
+										   Value="True" />
 							</MultiTrigger.Conditions>
 							<MultiTrigger.EnterActions>
 								<BeginStoryboard Storyboard="{StaticResource BorderNormalHit}" />
@@ -772,11 +759,11 @@
 						<MultiTrigger>
 							<MultiTrigger.Conditions>
 								<Condition Property="IsMouseOver"
-										   Value="true" />
+										   Value="True" />
 								<Condition Property="IsKeyboardFocusWithin"
 										   Value="false" />
 								<Condition Property="IsEnabled"
-										   Value="true" />
+										   Value="True" />
 								<Condition Property="IsReadOnly"
 										   Value="false" />
 							</MultiTrigger.Conditions>
@@ -822,9 +809,9 @@
 						<MultiTrigger>
 							<MultiTrigger.Conditions>
 								<Condition Property="IsKeyboardFocusWithin"
-										   Value="true" />
+										   Value="True" />
 								<Condition Property="IsEnabled"
-										   Value="true" />
+										   Value="True" />
 							</MultiTrigger.Conditions>
 							<MultiTrigger.EnterActions>
 								<BeginStoryboard Storyboard="{StaticResource ShowBorderFocused}" />
@@ -836,11 +823,11 @@
 						<MultiTrigger>
 							<MultiTrigger.Conditions>
 								<Condition Property="IsMouseOver"
-										   Value="true" />
+										   Value="True" />
 								<Condition Property="IsKeyboardFocusWithin"
 										   Value="false" />
 								<Condition Property="IsEnabled"
-										   Value="true" />
+										   Value="True" />
 							</MultiTrigger.Conditions>
 							<MultiTrigger.EnterActions>
 								<BeginStoryboard Storyboard="{StaticResource BorderNormalHit}" />
@@ -875,16 +862,16 @@
 		</Grid>
 		<ControlTemplate.Triggers>
 			<Trigger Property="IsGrouping"
-					 Value="true">
+					 Value="True">
 				<Setter Property="ScrollViewer.CanContentScroll"
 						Value="false" />
 			</Trigger>
 			<MultiTrigger>
 				<MultiTrigger.Conditions>
 					<Condition Property="IsKeyboardFocusWithin"
-							   Value="true" />
+							   Value="True" />
 					<Condition Property="IsEnabled"
-							   Value="true" />
+							   Value="True" />
 				</MultiTrigger.Conditions>
 				<MultiTrigger.EnterActions>
 					<BeginStoryboard Storyboard="{StaticResource ShowBorderFocused}" />
@@ -896,11 +883,11 @@
 			<MultiTrigger>
 				<MultiTrigger.Conditions>
 					<Condition Property="IsMouseOver"
-							   Value="true" />
+							   Value="True" />
 					<Condition Property="IsKeyboardFocusWithin"
 							   Value="false" />
 					<Condition Property="IsEnabled"
-							   Value="true" />
+							   Value="True" />
 				</MultiTrigger.Conditions>
 				<MultiTrigger.EnterActions>
 					<BeginStoryboard Storyboard="{StaticResource BorderNormalHit}" />
@@ -930,7 +917,7 @@
 		<Border Background="{TemplateBinding Background}"
 				BorderBrush="{TemplateBinding BorderBrush}"
 				BorderThickness="{TemplateBinding BorderThickness}"
-				SnapsToDevicePixels="true">
+				SnapsToDevicePixels="True">
 			<Grid Background="Transparent">
 				<Rectangle Name="Bg"
 						   Fill="Transparent"
@@ -952,9 +939,9 @@
 			<MultiTrigger>
 				<MultiTrigger.Conditions>
 					<Condition Property="Focusable"
-							   Value="true" />
+							   Value="True" />
 					<Condition Property="IsMouseOver"
-							   Value="true" />
+							   Value="True" />
 				</MultiTrigger.Conditions>
 				<Setter TargetName="Bg"
 						Property="Fill"
@@ -969,9 +956,9 @@
 			<MultiTrigger>
 				<MultiTrigger.Conditions>
 					<Condition Property="Focusable"
-							   Value="true" />
+							   Value="True" />
 					<Condition Property="IsSelected"
-							   Value="true" />
+							   Value="True" />
 				</MultiTrigger.Conditions>
 				<Setter TargetName="Bg"
 						Property="Fill"
@@ -986,9 +973,9 @@
 			<MultiTrigger>
 				<MultiTrigger.Conditions>
 					<Condition Property="Focusable"
-							   Value="true" />
+							   Value="True" />
 					<Condition Property="IsSelected"
-							   Value="true" />
+							   Value="True" />
 					<Condition Property="Selector.IsSelectionActive"
 							   Value="false" />
 				</MultiTrigger.Conditions>
@@ -1015,7 +1002,7 @@
 		<Border Background="{TemplateBinding Background}"
 				BorderBrush="{TemplateBinding BorderBrush}"
 				BorderThickness="{TemplateBinding BorderThickness}"
-				SnapsToDevicePixels="true">
+				SnapsToDevicePixels="True">
 			<Grid Background="Transparent">
 				<Rectangle Name="Bg"
 						   Fill="Transparent"
@@ -1038,9 +1025,9 @@
 			<MultiTrigger>
 				<MultiTrigger.Conditions>
 					<Condition Property="Focusable"
-							   Value="true" />
+							   Value="True" />
 					<Condition Property="IsMouseOver"
-							   Value="true" />
+							   Value="True" />
 				</MultiTrigger.Conditions>
 				<Setter TargetName="Bg"
 						Property="Fill"
@@ -1055,9 +1042,9 @@
 			<MultiTrigger>
 				<MultiTrigger.Conditions>
 					<Condition Property="Focusable"
-							   Value="true" />
+							   Value="True" />
 					<Condition Property="IsSelected"
-							   Value="true" />
+							   Value="True" />
 				</MultiTrigger.Conditions>
 				<Setter TargetName="Bg"
 						Property="Fill"
@@ -1072,9 +1059,9 @@
 			<MultiTrigger>
 				<MultiTrigger.Conditions>
 					<Condition Property="Focusable"
-							   Value="true" />
+							   Value="True" />
 					<Condition Property="IsSelected"
-							   Value="true" />
+							   Value="True" />
 					<Condition Property="Selector.IsSelectionActive"
 							   Value="false" />
 				</MultiTrigger.Conditions>
@@ -1163,9 +1150,9 @@
 						<MultiTrigger>
 							<MultiTrigger.Conditions>
 								<Condition Property="IsKeyboardFocusWithin"
-										   Value="true" />
+										   Value="True" />
 								<Condition Property="IsEnabled"
-										   Value="true" />
+										   Value="True" />
 							</MultiTrigger.Conditions>
 							<MultiTrigger.EnterActions>
 								<BeginStoryboard Storyboard="{StaticResource ShowBorderFocused}" />
@@ -1177,11 +1164,11 @@
 						<MultiTrigger>
 							<MultiTrigger.Conditions>
 								<Condition Property="IsMouseOver"
-										   Value="true" />
+										   Value="True" />
 								<Condition Property="IsKeyboardFocusWithin"
 										   Value="false" />
 								<Condition Property="IsEnabled"
-										   Value="true" />
+										   Value="True" />
 							</MultiTrigger.Conditions>
 							<MultiTrigger.EnterActions>
 								<BeginStoryboard Storyboard="{StaticResource BorderNormalHit}" />
@@ -1313,7 +1300,7 @@
 								Background="{TemplateBinding Background}"
 								BorderBrush="{TemplateBinding BorderBrush}"
 								BorderThickness="{TemplateBinding BorderThickness}"
-								SnapsToDevicePixels="true"
+								SnapsToDevicePixels="True"
 								Grid.Column="1">
 							<Grid Background="Transparent">
 								<Rectangle Name="Bg"
@@ -1358,7 +1345,7 @@
 							<MultiTrigger.Conditions>
 								<Condition SourceName="PART_Header"
 										   Property="IsMouseOver"
-										   Value="true" />
+										   Value="True" />
 							</MultiTrigger.Conditions>
 							<Setter TargetName="Bg"
 									Property="Fill"
@@ -1373,7 +1360,7 @@
 						<MultiTrigger>
 							<MultiTrigger.Conditions>
 								<Condition Property="IsSelected"
-										   Value="true" />
+										   Value="True" />
 							</MultiTrigger.Conditions>
 							<Setter TargetName="Bg"
 									Property="Fill"
@@ -1386,7 +1373,7 @@
 									Value="{StaticResource ItemSelectionInnerBrush}" />
 						</MultiTrigger>
 						<!--<Trigger Property="IsSelected"
-								 Value="true">
+								 Value="True">
 							<Setter TargetName="Bd"
 									Property="Background"
 									Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
@@ -1396,7 +1383,7 @@
 						<MultiTrigger>
 							<MultiTrigger.Conditions>
 								<Condition Property="IsSelected"
-										   Value="true" />
+										   Value="True" />
 								<Condition Property="Selector.IsSelectionActive"
 										   Value="false" />
 							</MultiTrigger.Conditions>
@@ -1413,7 +1400,7 @@
 						<!--<MultiTrigger>
 							<MultiTrigger.Conditions>
 								<Condition Property="IsSelected"
-										   Value="true" />
+										   Value="True" />
 								<Condition Property="IsSelectionActive"
 										   Value="false" />
 							</MultiTrigger.Conditions>
@@ -1434,7 +1421,7 @@
 		</Setter>
 		<Style.Triggers>
 			<Trigger Property="VirtualizingStackPanel.IsVirtualizing"
-					 Value="true">
+					 Value="True">
 				<Setter Property="ItemsPanel">
 					<Setter.Value>
 						<ItemsPanelTemplate>
@@ -1453,7 +1440,7 @@
 	<Style x:Key="ComboBoxReadonlyToggleButton"
 		   TargetType="{x:Type ToggleButton}">
 		<Setter Property="OverridesDefaultStyle"
-				Value="true" />
+				Value="True" />
 		<Setter Property="IsTabStop"
 				Value="false" />
 		<Setter Property="Focusable"
@@ -1464,7 +1451,9 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type ToggleButton}">
 					<ContentControl>
-						<Grid Background="Transparent">
+						<Grid Background="Transparent"
+							  SnapsToDevicePixels="True"
+							  UseLayoutRounding="False">
 							<Rectangle Name="Glow"
 									   Fill="White"
 									   Opacity="0"
@@ -1472,29 +1461,25 @@
 									   RadiusY="3"
 									   Margin="{StaticResource ToggleButtonGlowMargin}"
 									   Effect="{StaticResource ToggleButtonGlowEffect}"
-									   SnapsToDevicePixels="true"
 									   ClipToBounds="False" />
 							<Border Name="Chrome"
 									Background="{TemplateBinding Background}"
 									BorderBrush="{TemplateBinding BorderBrush}"
 									BorderThickness="{StaticResource PushButtonBorderThickness}"
 									CornerRadius="{StaticResource PushButtonRounding}"
-									Padding="{StaticResource PushButtonBorderPadding}"
-									SnapsToDevicePixels="true" />
+									Padding="{StaticResource PushButtonBorderPadding}" />
 							<Border Name="Highlite"
 									Background="{StaticResource PushButtonHighlitedFillBrush}"
 									BorderBrush="{TemplateBinding BorderBrush}"
 									BorderThickness="{StaticResource PushButtonBorderThickness}"
 									CornerRadius="{StaticResource PushButtonRounding}"
 									Padding="{StaticResource PushButtonBorderPadding}"
-									Opacity="0"
-									SnapsToDevicePixels="true" />
+									Opacity="0" />
 							<Border Background="Transparent"
 									BorderBrush="Transparent"
 									BorderThickness="{StaticResource PushButtonBorderThickness}"
 									CornerRadius="{StaticResource PushButtonRounding}"
-									Padding="{StaticResource PushButtonBorderPadding}"
-									SnapsToDevicePixels="true">
+									Padding="{StaticResource PushButtonBorderPadding}">
 								<Grid Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"
 									  HorizontalAlignment="Right">
 									<Path Name="Arrow"
@@ -1509,7 +1494,7 @@
 					</ContentControl>
 					<ControlTemplate.Triggers>
 						<Trigger Property="IsMouseOver"
-								 Value="true">
+								 Value="True">
 							<Trigger.EnterActions>
 								<BeginStoryboard>
 									<Storyboard>
@@ -1532,7 +1517,7 @@
 							</Trigger.ExitActions>
 						</Trigger>
 						<Trigger Property="IsChecked"
-								 Value="true">
+								 Value="True">
 							<Trigger.EnterActions>
 								<BeginStoryboard>
 									<Storyboard>
@@ -1585,7 +1570,7 @@
 		<Setter Property="ScrollViewer.VerticalScrollBarVisibility"
 				Value="Auto" />
 		<Setter Property="ScrollViewer.CanContentScroll"
-				Value="true" />
+				Value="True" />
 		<Setter Property="ScrollViewer.PanningMode"
 				Value="Both" />
 		<Setter Property="Stylus.IsFlicksEnabled"
@@ -1594,7 +1579,7 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type ComboBox}">
 					<Grid Name="MainGrid"
-						  SnapsToDevicePixels="true">
+						  SnapsToDevicePixels="True">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="*" />
 							<ColumnDefinition
@@ -1602,14 +1587,16 @@
 											  Width="0" />
 						</Grid.ColumnDefinitions>
 						<Popup Name="PART_Popup"
-							   AllowsTransparency="true"
+							   AllowsTransparency="True"
 							   Grid.ColumnSpan="2"
 							   Placement="Bottom"
-							   Margin="1"
+							   HorizontalOffset="10"
+							   VerticalOffset="3"
 							   MaxHeight="{TemplateBinding MaxDropDownHeight}"
 							   IsOpen="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"
 							   PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
 							<Border x:Name="DropDownBorder"
+									Margin="10"
 									BorderThickness="1"
 									BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
 									Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
@@ -1620,7 +1607,7 @@
 								</Border.Effect>
 								<ScrollViewer Name="DropDownScrollViewer">
 									<Grid RenderOptions.ClearTypeHint="Enabled">
-										<Canvas Height="0"
+										<!--<Canvas Height="0"
 												Width="0"
 												HorizontalAlignment="Left"
 												VerticalAlignment="Top">
@@ -1628,7 +1615,7 @@
 													   Height="{Binding ElementName=DropDownBorder,Path=ActualHeight}"
 													   Width="{Binding ElementName=DropDownBorder,Path=ActualWidth}"
 													   Fill="{Binding ElementName=DropDownBorder,Path=Background}" />
-										</Canvas>
+										</Canvas>-->
 										<ItemsPresenter Name="ItemsPresenter"
 														KeyboardNavigation.DirectionalNavigation="Contained"
 														SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
@@ -1649,16 +1636,17 @@
 										  ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
 										  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
 										  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-										  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+										  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+										  UseLayoutRounding="{TemplateBinding UseLayoutRounding}" />
 					</Grid>
 					<ControlTemplate.Triggers>
-						<Trigger SourceName="PART_Popup"
+						<!--<Trigger SourceName="PART_Popup"
 								 Property="Popup.HasDropShadow"
 								 Value="false">
 							<Setter TargetName="DropDownBorder"
 									Property="Effect"
 									Value="{x:Null}" />
-						</Trigger>
+						</Trigger>-->
 						<Trigger Property="HasItems"
 								 Value="false">
 							<Setter TargetName="DropDownBorder"
@@ -1671,11 +1659,11 @@
 									Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
 						</Trigger>
 						<Trigger Property="IsGrouping"
-								 Value="true">
+								 Value="True">
 							<Setter Property="ScrollViewer.CanContentScroll"
 									Value="false" />
 						</Trigger>
-						<Trigger SourceName="DropDownScrollViewer"
+						<!--<Trigger SourceName="DropDownScrollViewer"
 								 Property="ScrollViewer.CanContentScroll"
 								 Value="false">
 							<Setter TargetName="OpaqueRect"
@@ -1684,7 +1672,7 @@
 							<Setter TargetName="OpaqueRect"
 									Property="Canvas.Left"
 									Value="{Binding ElementName=DropDownScrollViewer, Path=HorizontalOffset}" />
-						</Trigger>
+						</Trigger>-->
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
 			</Setter.Value>
@@ -1713,7 +1701,7 @@
 					<Border Background="{TemplateBinding Background}"
 							BorderBrush="{TemplateBinding BorderBrush}"
 							BorderThickness="{TemplateBinding BorderThickness}"
-							SnapsToDevicePixels="true">
+							SnapsToDevicePixels="True">
 						<Grid Background="Transparent">
 							<Rectangle Name="Bg"
 									   Fill="Transparent"
@@ -1735,7 +1723,7 @@
 						<MultiTrigger>
 							<MultiTrigger.Conditions>
 								<Condition Property="IsMouseOver"
-										   Value="true" />
+										   Value="True" />
 							</MultiTrigger.Conditions>
 							<Setter TargetName="Bg"
 									Property="Fill"
@@ -1750,7 +1738,7 @@
 						<MultiTrigger>
 							<MultiTrigger.Conditions>
 								<Condition Property="IsSelected"
-										   Value="true" />
+										   Value="True" />
 							</MultiTrigger.Conditions>
 							<Setter TargetName="Bg"
 									Property="Fill"

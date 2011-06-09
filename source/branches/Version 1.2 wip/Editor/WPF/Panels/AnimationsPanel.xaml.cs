@@ -70,54 +70,28 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowAnimationNames (String[] pAnimationNames)
 		{
-			Boolean lWasFilling = PushIsPanelFilling (true);
-
-			ListViewAnimations.SetVerticalScrollBarVisibility (ScrollBarVisibility.Disabled);
-
-			if ((pAnimationNames == null) || (pAnimationNames.Length <= 0))
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				ListViewAnimations.Items.Clear ();
-			}
-			else
-			{
-				ListViewItemCommon lItem;
-				int lNdx;
+				ListViewAnimations.SetVerticalScrollBarVisibility (ScrollBarVisibility.Disabled);
 
-				ListViewAnimations.UpdateItemCount (pAnimationNames.Length);
-
-				for (lNdx = 0; lNdx < pAnimationNames.Length; lNdx++)
+				if ((pAnimationNames == null) || (pAnimationNames.Length <= 0))
 				{
-					lItem = ListViewAnimations.Items[lNdx] as ListViewItemCommon;
-					lItem.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-					lItem.Content = pAnimationNames[lNdx];
+					ListViewAnimations.Items.Clear ();
 				}
-			}
+				else
+				{
+					ListViewItemCommon lItem;
+					int lNdx;
 
-			PopIsPanelFilling (lWasFilling);
-		}
+					ListViewAnimations.UpdateItemCount (pAnimationNames.Length);
 
-		///////////////////////////////////////////////////////////////////////////////
-
-		private void ShowAddState (Object pAddUiObject, Boolean pAddEnabled, String pAddText)
-		{
-			if (pAddUiObject is Button)
-			{
-				(pAddUiObject as Button).IsEnabled = pAddEnabled;
-				(pAddUiObject as Button).ToolTip = pAddText.NoMenuPrefix ();
-			}
-			else if (pAddUiObject is MenuItem)
-			{
-				(pAddUiObject as MenuItem).IsEnabled = pAddEnabled;
-				(pAddUiObject as MenuItem).Header = pAddText.FixMenuPrefix ();
-			}
-		}
-
-		private void ShowDeleteState (Object pDeleteUiObject, Boolean pDeleteEnabled, String pDeleteText)
-		{
-			if (pDeleteUiObject is Button)
-			{
-				(pDeleteUiObject as Button).IsEnabled = pDeleteEnabled;
-				(pDeleteUiObject as Button).ToolTip = pDeleteText.NoMenuPrefix ();
+					for (lNdx = 0; lNdx < pAnimationNames.Length; lNdx++)
+					{
+						lItem = ListViewAnimations.Items[lNdx] as ListViewItemCommon;
+						lItem.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+						lItem.Content = pAnimationNames[lNdx];
+					}
+				}
 			}
 		}
 
@@ -166,18 +140,18 @@ namespace AgentCharacterEditor.Panels
 			}
 			else
 			{
-				LabelTransparencySample.Background = pTransparencyColor.ToWPFBrush();
-				LabelTransparencySample.Foreground = GetContrastingColor (pTransparencyColor).ToWPFBrush();
-				LabelTransparency.IsEnabled = true;
+				LabelTransparencySample.Background = pTransparencyColor.ToWPFBrush ();
+				LabelTransparencySample.Foreground = GetContrastingColor (pTransparencyColor).ToWPFBrush ();
 			}
 			if (pTransparencyNdx < 0)
 			{
 				LabelTransparencySample.Content = String.Empty;
+				LabelTransparency.IsEnabled = false;
 			}
 			else
 			{
 				LabelTransparencySample.Content = pTransparencyNdx.ToString ();
-				LabelTransparency.IsEnabled = false;
+				LabelTransparency.IsEnabled = !Program.FileIsReadOnly;
 			}
 		}
 
@@ -191,7 +165,7 @@ namespace AgentCharacterEditor.Panels
 			else
 			{
 				LabelColorSample.Background = pTransparencyColor.ToWPFBrush ();
-				LabelColorSample.Foreground = GetContrastingColor (pTransparencyColor).ToWPFBrush();
+				LabelColorSample.Foreground = GetContrastingColor (pTransparencyColor).ToWPFBrush ();
 				LabelColorSample.Content = pTransparencyNdx.ToString ();
 				LabelColorSample.Visibility = Visibility.Visible;
 				LabelTransparencyClick.Visibility = Program.FileIsReadOnly ? Visibility.Collapsed : Visibility.Visible;
@@ -251,7 +225,8 @@ namespace AgentCharacterEditor.Panels
 			}
 			else
 			{
-				ShowAddState (MenuItemAdd);
+				MenuItemAdd.IsEnabled = CanAddAnimation;
+				MenuItemAdd.SetTitle (AddAnimationTitle);
 			}
 		}
 
@@ -259,25 +234,19 @@ namespace AgentCharacterEditor.Panels
 
 		private void ButtonAdd_Click (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleAddAnimation ();
-			}
+			HandleAddAnimation ();
 		}
 
 		private void ButtonDelete_Click (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleDeleteAnimation ();
-			}
+			HandleDeleteAnimation ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void NumericFrameWidth_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && NumericFrameWidth.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (NumericFrameWidth.IsModified)
 			{
 				HandleUpdateFrameWidth ();
 			}
@@ -286,7 +255,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void NumericFrameHeight_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && NumericFrameHeight.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (NumericFrameHeight.IsModified)
 			{
 				HandleUpdateFrameHeight ();
 			}
@@ -297,18 +266,16 @@ namespace AgentCharacterEditor.Panels
 
 		private void TextBoxPaletteFile_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelFilling && TextBoxPaletteFile.IsModified && !IsPanelEmpty && !Program.FileIsReadOnly)
+			if (TextBoxPaletteFile.IsModified)
 			{
 				HandleUpdatePaletteFile ();
 			}
+			TextBoxPaletteFile.IsModified = false;
 		}
 
 		private void ButtonPaletteImport_Click (object sender, RoutedEventArgs e)
 		{
-			if (!IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleImportPalette ();
-			}
+			HandleImportPalette ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -325,12 +292,14 @@ namespace AgentCharacterEditor.Panels
 
 		private void ImagePalette_MouseDown (object sender, MouseButtonEventArgs e)
 		{
-			if (!IsPanelEmpty && !Program.FileIsReadOnly)
-			{
-				HandleUpdatePaletteTransparency (PaletteMouseColorNdx (e.GetPosition (ImagePalette)));
-			}
+			HandleUpdatePaletteTransparency (PaletteMouseColorNdx (e.GetPosition (ImagePalette)));
 		}
 
 		#endregion
+
+		private void ListViewAnimations_MouseUp (object sender, MouseButtonEventArgs e)
+		{
+			System.Diagnostics.Debug.Print ("ListViewAnimations_MouseUp");
+		}
 	}
 }

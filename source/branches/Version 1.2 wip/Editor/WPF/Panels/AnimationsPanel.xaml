@@ -10,16 +10,16 @@
 					  d:DesignWidth="600">
 	<Control.CommandBindings>
 		<CommandBinding Command="Copy"
-						CanExecute="CanEditCopy"
+						CanExecute="OnCanEditCopy"
 						Executed="OnEditCopy" />
 		<CommandBinding Command="Cut"
-						CanExecute="CanEditCut"
+						CanExecute="OnCanEditCut"
 						Executed="OnEditCut" />
 		<CommandBinding Command="Delete"
-						CanExecute="CanEditDelete"
+						CanExecute="OnCanEditDelete"
 						Executed="OnEditDelete" />
 		<CommandBinding Command="Paste"
-						CanExecute="CanEditPaste"
+						CanExecute="OnCanEditPaste"
 						Executed="OnEditPaste" />
 	</Control.CommandBindings>
 	<Grid Style="{StaticResource PanelMainGrid}">
@@ -50,9 +50,9 @@
 							ToolTip="Add new animation"
 							Click="ButtonAdd_Click">
 						<Image Source="{StaticResource ImgFileNew}"
-							   Stretch="None"
-							   Width="Auto"
-							   Height="Auto"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16"
 							   HorizontalAlignment="Center"
 							   VerticalAlignment="Center"></Image>
 					</Button>
@@ -63,9 +63,9 @@
 							ToolTip="Delete animation"
 							Click="ButtonDelete_Click">
 						<Image Source="{StaticResource ImgEditDelete}"
-							   Stretch="None"
-							   Width="Auto"
-							   Height="Auto"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16"
 							   HorizontalAlignment="Center"
 							   VerticalAlignment="Center"></Image>
 					</Button>
@@ -83,6 +83,7 @@
 								  VerticalAlignment="Center"
 								  Width="200"
 								  Style="{StaticResource PanelTextBox}"
+								  ContextMenu="{StaticResource ContextMenuTextBox}"
 								  MaxLines="1"
 								  TextChanged="TextBoxNewName_TextChanged"
 								  Margin="2,0,2,2" />
@@ -94,7 +95,8 @@
 						  SelectionChanged="ListViewAnimations_SelectionChanged"
 						  MouseDoubleClick="ListViewAnimations_MouseDoubleClick"
 						  SelectionMode="Single"
-						  ContextMenuOpening="ListViewAnimations_ContextMenuOpening">
+						  ContextMenuOpening="ListViewAnimations_ContextMenuOpening"
+						  MouseUp="ListViewAnimations_MouseUp">
 					<ListView.ItemsPanel>
 						<ItemsPanelTemplate>
 							<WrapPanel Orientation="Vertical" />
@@ -106,7 +108,10 @@
 									  Name="MenuItemAdd"
 									  Click="ButtonAdd_Click">
 								<MenuItem.Icon>
-									<Image Source="{StaticResource ImgFileNew}" />
+									<Image Source="{StaticResource ImgFileNew}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 								</MenuItem.Icon>
 							</MenuItem>
 							<Separator />
@@ -114,28 +119,40 @@
 									  Command="ApplicationCommands.Cut"
 									  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 								<MenuItem.Icon>
-									<Image Source="{StaticResource ImgEditCut}" />
+									<Image Source="{StaticResource ImgEditCut}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 								</MenuItem.Icon>
 							</MenuItem>
 							<MenuItem Header="_Copy"
 									  Command="ApplicationCommands.Copy"
 									  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 								<MenuItem.Icon>
-									<Image Source="{StaticResource ImgEditCopy}" />
+									<Image Source="{StaticResource ImgEditCopy}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 								</MenuItem.Icon>
 							</MenuItem>
 							<MenuItem Header="_Paste"
 									  Command="ApplicationCommands.Paste"
 									  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 								<MenuItem.Icon>
-									<Image Source="{StaticResource ImgEditPaste}" />
+									<Image Source="{StaticResource ImgEditPaste}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 								</MenuItem.Icon>
 							</MenuItem>
 							<MenuItem Header="_Delete"
 									  Command="ApplicationCommands.Delete"
 									  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 								<MenuItem.Icon>
-									<Image Source="{StaticResource ImgEditDelete}" />
+									<Image Source="{StaticResource ImgEditDelete}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 								</MenuItem.Icon>
 							</MenuItem>
 						</ContextMenu>
@@ -154,6 +171,7 @@
 					<custom:NumericUpDown x:Name="NumericFrameWidth"
 										  Width="40"
 										  Style="{StaticResource PanelTextBox}"
+										  ContextMenu="{StaticResource ContextMenuTextBox}"
 										  HorizontalAlignment="Left"
 										  VerticalAlignment="Center"
 										  MaxLines="1"
@@ -168,6 +186,7 @@
 					<custom:NumericUpDown x:Name="NumericFrameHeight"
 										  Width="40"
 										  Style="{StaticResource PanelTextBox}"
+										  ContextMenu="{StaticResource ContextMenuTextBox}"
 										  MaxLines="1"
 										  HorizontalAlignment="Left"
 										  VerticalAlignment="Center"
@@ -201,6 +220,7 @@
 									  x:Name="TextBoxPaletteFile"
 									  VerticalAlignment="Center"
 									  Style="{StaticResource PanelTextBox}"
+									  ContextMenu="{StaticResource ContextMenuTextBox}"
 									  MaxLines="1"
 									  IsModifiedChanged="TextBoxPaletteFile_IsModifiedChanged" />
 					<StackPanel Grid.Column="2"
@@ -215,12 +235,12 @@
 								VerticalAlignment="Center"
 								Width="Auto"
 								Click="ButtonPaletteImport_Click">
-							<Image Height="Auto"
+							<Image Source="{StaticResource ImgFileOpen}"
+								   Stretch="UniformToFill"
+								   Width="16"
+								   Height="16"
 								   HorizontalAlignment="Center"
-								   Source="{StaticResource ImgFileOpen}"
-								   Stretch="None"
-								   VerticalAlignment="Center"
-								   Width="Auto" />
+								   VerticalAlignment="Center" />
 						</Button>
 						<Button Focusable="false"
 								Height="Auto"
@@ -229,12 +249,12 @@
 								Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 								VerticalAlignment="Center"
 								Width="Auto">
-							<Image Height="Auto"
+							<Image Source="{StaticResource ImgFileSave}"
+								   Stretch="UniformToFill"
+								   Width="16"
+								   Height="16"
 								   HorizontalAlignment="Center"
-								   Source="{StaticResource ImgFileSave}"
-								   Stretch="None"
-								   VerticalAlignment="Center"
-								   Width="Auto" />
+								   VerticalAlignment="Center" />
 						</Button>
 					</StackPanel>
 				</Grid>
@@ -304,8 +324,7 @@
 							<TextBlock Text="Click to set the Transparency"
 									   Width="100"
 									   TextWrapping="Wrap"
-									   FontSize="14"
-									   FontWeight="Bold" />
+									   FontSize="14" />
 						</Label>
 						<Label Height="100"
 							   Name="LabelColorSample"

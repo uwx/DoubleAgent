@@ -97,8 +97,6 @@ namespace AgentCharacterEditor.Panels
 			// CheckBoxWordBalloon
 			// 
 			this.CheckBoxWordBalloon.AutoSize = true;
-			this.CheckBoxWordBalloon.IsChecked = false;
-			this.CheckBoxWordBalloon.IsEnabled = true;
 			this.CheckBoxWordBalloon.Location = new System.Drawing.Point(9, 9);
 			this.CheckBoxWordBalloon.Margin = new System.Windows.Forms.Padding(9);
 			this.CheckBoxWordBalloon.Name = "CheckBoxWordBalloon";
@@ -126,7 +124,6 @@ namespace AgentCharacterEditor.Panels
 			this.GroupBoxBalloonDisplay.Controls.Add(this.NumericCharsPerLine);
 			this.GroupBoxBalloonDisplay.Controls.Add(this.LabelCharsPerLine);
 			this.GroupBoxBalloonDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.GroupBoxBalloonDisplay.IsEnabled = true;
 			this.GroupBoxBalloonDisplay.Location = new System.Drawing.Point(0, 48);
 			this.GroupBoxBalloonDisplay.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
 			this.GroupBoxBalloonDisplay.MaximumSize = new System.Drawing.Size(730, 10000);
@@ -187,8 +184,6 @@ namespace AgentCharacterEditor.Panels
 			// CheckBoxAutoPace
 			// 
 			this.CheckBoxAutoPace.AutoSize = true;
-			this.CheckBoxAutoPace.IsChecked = false;
-			this.CheckBoxAutoPace.IsEnabled = true;
 			this.CheckBoxAutoPace.Location = new System.Drawing.Point(12, 144);
 			this.CheckBoxAutoPace.Name = "CheckBoxAutoPace";
 			this.CheckBoxAutoPace.Size = new System.Drawing.Size(95, 21);
@@ -210,8 +205,6 @@ namespace AgentCharacterEditor.Panels
 			// CheckBoxAutoHide
 			// 
 			this.CheckBoxAutoHide.AutoSize = true;
-			this.CheckBoxAutoHide.IsChecked = false;
-			this.CheckBoxAutoHide.IsEnabled = true;
 			this.CheckBoxAutoHide.Location = new System.Drawing.Point(12, 117);
 			this.CheckBoxAutoHide.Name = "CheckBoxAutoHide";
 			this.CheckBoxAutoHide.Size = new System.Drawing.Size(91, 21);
@@ -268,8 +261,6 @@ namespace AgentCharacterEditor.Panels
 			// RadioButtonSizeToText
 			// 
 			this.RadioButtonSizeToText.AutoSize = true;
-			this.RadioButtonSizeToText.IsChecked = false;
-			this.RadioButtonSizeToText.IsEnabled = true;
 			this.RadioButtonSizeToText.Location = new System.Drawing.Point(12, 85);
 			this.RadioButtonSizeToText.Name = "RadioButtonSizeToText";
 			this.RadioButtonSizeToText.Size = new System.Drawing.Size(98, 21);
@@ -282,8 +273,6 @@ namespace AgentCharacterEditor.Panels
 			// RadioButtonNumLines
 			// 
 			this.RadioButtonNumLines.AutoSize = true;
-			this.RadioButtonNumLines.IsChecked = false;
-			this.RadioButtonNumLines.IsEnabled = true;
 			this.RadioButtonNumLines.Location = new System.Drawing.Point(12, 58);
 			this.RadioButtonNumLines.Name = "RadioButtonNumLines";
 			this.RadioButtonNumLines.Size = new System.Drawing.Size(128, 21);
@@ -332,12 +321,11 @@ namespace AgentCharacterEditor.Panels
 			this.GroupBoxBalloonPreview.Controls.Add(this.WordBalloonPreview);
 			this.GroupBoxBalloonPreview.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GroupBoxBalloonPreview.Enabled = false;
-			this.GroupBoxBalloonPreview.IsEnabled = true;
 			this.GroupBoxBalloonPreview.Location = new System.Drawing.Point(0, 237);
 			this.GroupBoxBalloonPreview.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
 			this.GroupBoxBalloonPreview.MaximumSize = new System.Drawing.Size(730, 10000);
 			this.GroupBoxBalloonPreview.Name = "GroupBoxBalloonPreview";
-			this.GroupBoxBalloonPreview.Padding = new System.Windows.Forms.Padding(6, 9, 6, 6);
+			this.GroupBoxBalloonPreview.Padding = new System.Windows.Forms.Padding(12, 15, 12, 12);
 			this.GroupBoxBalloonPreview.Size = new System.Drawing.Size(582, 363);
 			this.GroupBoxBalloonPreview.TabIndex = 2;
 			this.GroupBoxBalloonPreview.TabStop = false;
@@ -346,9 +334,9 @@ namespace AgentCharacterEditor.Panels
 			// WordBalloonPreview
 			// 
 			this.WordBalloonPreview.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.WordBalloonPreview.Location = new System.Drawing.Point(6, 24);
+			this.WordBalloonPreview.Location = new System.Drawing.Point(12, 30);
 			this.WordBalloonPreview.Name = "WordBalloonPreview";
-			this.WordBalloonPreview.Size = new System.Drawing.Size(570, 333);
+			this.WordBalloonPreview.Size = new System.Drawing.Size(558, 321);
 			this.WordBalloonPreview.TabIndex = 0;
 			this.WordBalloonPreview.TabStop = false;
 			// 

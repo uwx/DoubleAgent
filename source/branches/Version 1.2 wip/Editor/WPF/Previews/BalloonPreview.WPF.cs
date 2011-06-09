@@ -5,6 +5,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using DoubleAgent;
 using DoubleAgent.Character;
 using AgentCharacterEditor.Global;
 
@@ -18,10 +19,8 @@ namespace AgentCharacterEditor.Previews
 		private CharacterFile mCharacterFile;
 		private DoubleAgent.BalloonPreview mBalloonPreview = new DoubleAgent.BalloonPreview ();
 		private Visual mBalloonVisual = null;
-		private Timer mAutoPaceTimer = null;
-		private Timer mAutoScrollTimer = null;
-		private AsyncOperation mAutoPaceAsync = null;
-		private AsyncOperation mAutoScrollAsync = null;
+		private AsyncTimer mAutoPaceTimer = null;
+		private AsyncTimer mAutoScrollTimer = null;
 
 		public BalloonPreview ()
 		{
@@ -113,7 +112,9 @@ namespace AgentCharacterEditor.Previews
 #if DEBUG_NOT
 					System.Diagnostics.Debug.Print ("StartAutoPace [{0}]", lAutoPaceTime);
 #endif
-					mAutoPaceTimer = new Timer (AutoPaceTimerCallback, mAutoPaceAsync = AsyncOperationManager.CreateOperation (this), lAutoPaceTime, lAutoPaceTime);
+					mAutoPaceTimer = new AsyncTimer ();
+					mAutoPaceTimer.TimerPulse +=new AsyncTimer.TimerPulseHandler(AutoPaceTimerPulse);
+					mAutoPaceTimer.Start (lAutoPaceTime, lAutoPaceTime);
 					lRet = true;
 				}
 			}
@@ -150,20 +151,6 @@ namespace AgentCharacterEditor.Previews
 				mAutoPaceTimer = null;
 				lRet = true;
 			}
-			if (mAutoPaceAsync != null)
-			{
-#if DEBUG_NOT
-				System.Diagnostics.Debug.Print ("StopAutoPaceAsync");
-#endif
-				try
-				{
-					mAutoPaceAsync.OperationCompleted ();
-				}
-				catch
-				{
-				}
-				mAutoPaceAsync = null;
-			}
 			if (lRet && mBalloonPreview.AutoPaceStopped ())
 			{
 				Refresh ();
@@ -195,7 +182,9 @@ namespace AgentCharacterEditor.Previews
 #if DEBUG_NOT
 					System.Diagnostics.Debug.Print ("StartAutoScroll [{0}]", lAutoScrollTime);
 #endif
-					mAutoScrollTimer = new Timer (AutoScrollTimerCallback, mAutoScrollAsync = AsyncOperationManager.CreateOperation (this), lAutoScrollTime, lAutoScrollTime);
+					mAutoScrollTimer = new AsyncTimer();
+					mAutoScrollTimer.TimerPulse +=new AsyncTimer.TimerPulseHandler(AutoScrollTimerPulse);
+					mAutoScrollTimer.Start (lAutoScrollTime, lAutoScrollTime);
 					lRet = true;
 				}
 			}
@@ -232,20 +221,6 @@ namespace AgentCharacterEditor.Previews
 				mAutoScrollTimer = null;
 				lRet = true;
 			}
-			if (mAutoScrollAsync != null)
-			{
-#if DEBUG_NOT
-				System.Diagnostics.Debug.Print ("StopAutoScrollAsync");
-#endif
-				try
-				{
-					mAutoScrollAsync.OperationCompleted ();
-				}
-				catch
-				{
-				}
-				mAutoScrollAsync = null;
-			}
 			if (lRet && mBalloonPreview.AutoScrollStopped ())
 			{
 				Refresh ();
@@ -255,35 +230,16 @@ namespace AgentCharacterEditor.Previews
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private void AutoPaceTimerCallback (Object state)
-		{
-#if DEBUG_NOT
-			System.Diagnostics.Debug.Print ("AutoPaceTimerCallback");
-#endif
-			try
-			{
-				(state as AsyncOperation).Post (AutoPaceTimerTick, null);
-			}
-#if DEBUG
-			catch (Exception pException)
-			{
-				System.Diagnostics.Debug.Print (pException.Message);
-			}
-#else
-			catch {}
-#endif
-		}
-
-		private void AutoPaceTimerTick (Object state)
+		private void AutoPaceTimerPulse (object sender, AsyncTimer.TimerEventArgs e)
 		{
 			Boolean lRefresh = false;
 #if DEBUG_NOT
-			System.Diagnostics.Debug.Print ("AutoPaceTimerTick");
+			System.Diagnostics.Debug.Print ("AutoPaceTimerPulse");
 #endif
 			if (IsEnabled && IsVisible && mBalloonPreview.OnAutoPace (ref lRefresh))
 			{
 #if DEBUG_NOT
-				System.Diagnostics.Debug.Print ("AutoPaceTimerTick [{0}]", lRefresh);
+				System.Diagnostics.Debug.Print ("AutoPaceTimerPulse [{0}]", lRefresh);
 #endif
 				if (lRefresh)
 				{
@@ -303,45 +259,28 @@ namespace AgentCharacterEditor.Previews
 			}
 		}
 
-		private void AutoScrollTimerCallback (Object state)
-		{
-#if DEBUG_NOT
-			System.Diagnostics.Debug.Print ("AutoScrollTimerCallback");
-#endif
-			try
-			{
-				(state as AsyncOperation).Post (AutoScrollTimerTick, null);
-			}
-#if DEBUG
-			catch (Exception pException)
-			{
-				System.Diagnostics.Debug.Print (pException.Message);
-			}
-#else
-			catch {}
-#endif
-		}
-
-		private void AutoScrollTimerTick (Object state)
+		private void AutoScrollTimerPulse (object sender, AsyncTimer.TimerEventArgs e)
 		{
 			Boolean lRefresh = false;
 #if DEBUG_NOT
-			System.Diagnostics.Debug.Print ("AutoScrollTimerTick");
+			System.Diagnostics.Debug.Print ("AutoScrollTimerPulse");
 #endif
 			if (IsEnabled && IsVisible && mBalloonPreview.OnAutoScroll (ref lRefresh))
 			{
 #if DEBUG_NOT
-				System.Diagnostics.Debug.Print ("AutoScrollTimerTick [{0}]", lRefresh);
+				System.Diagnostics.Debug.Print ("AutoScrollTimerPulse [{0}]", lRefresh);
 #endif
 				if (lRefresh)
 				{
+					StopAutoPace (); // Restart AutoPace every time we scroll (so we don't get ahead of ourselves)
 					Refresh ();
+					StartAutoPace ();
 				}
 			}
 			else
 			{
 #if DEBUG_NOT
-				System.Diagnostics.Debug.Print ("AutoScrollTimerTick END");
+				System.Diagnostics.Debug.Print ("AutoScrollTimerPulse END");
 #endif
 				StopAutoScroll ();
 			}
