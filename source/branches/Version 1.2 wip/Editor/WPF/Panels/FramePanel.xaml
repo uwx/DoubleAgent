@@ -88,8 +88,9 @@
 								  VerticalAlignment="Center"
 								  MaxLines="1"
 								  IsReadOnly="True"
-								  Style="{StaticResource PanelTextBox}"
-								  ContextMenu="{StaticResource ContextMenuTextBox}" />
+								  ContextMenu="{StaticResource ContextMenuTextBox}"
+								  IsTabStop="False"
+								  IsUndoEnabled="False" />
 				<Label Content="Duration"
 					   Grid.Row="1"
 					   HorizontalAlignment="Left"
@@ -99,11 +100,11 @@
 				<StackPanel Grid.Row="1"
 							Grid.Column="1"
 							Orientation="Horizontal">
-					<custom:NumericUpDown x:Name="NumericDuration"
+					<custom:NumericUpDown Style="{StaticResource NumericUpDown}"
+										  x:Name="NumericDuration"
 										  Width="60"
 										  HorizontalAlignment="Left"
 										  VerticalAlignment="Center"
-										  Style="{StaticResource PanelTextBox}"
 										  ContextMenu="{StaticResource ContextMenuTextBox}"
 										  IsModifiedChanged="NumericDuration_IsModifiedChanged" />
 					<Label Content="(1/100 seconds)"
@@ -115,13 +116,22 @@
 				</StackPanel>
 				<Border Grid.Column="2"
 						Grid.Row="2"
-						BorderThickness="1"
-						BorderBrush="{StaticResource {x:Static SystemColors.ControlDarkDarkBrushKey}}"
 						Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
 						HorizontalAlignment="Left"
 						VerticalAlignment="Top"
-						Margin="2,5,2,0">
-					<local:FrameSample x:Name="ImageFrameSample" />
+						Margin="2,5,2,0"
+						Focusable="False"
+						Style="{StaticResource BorderNormal}"
+						Padding="0"
+						UseLayoutRounding="False">
+					<ContentControl IsTabStop="False"
+									SnapsToDevicePixels="False"
+									UseLayoutRounding="False"
+									ClipToBounds="True">
+						<local:FrameSample x:Name="ImageFrameSample"
+										   UseLayoutRounding="False"
+										   SnapsToDevicePixels="False" />
+					</ContentControl>
 				</Border>
 			</Grid>
 		</GroupBox>
@@ -135,233 +145,288 @@
 									  MaxWidth="500" />
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
-				<Grid>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="*" />
-					</Grid.RowDefinitions>
-					<StackPanel Orientation="Horizontal"
-								HorizontalAlignment="Left"
-								VerticalAlignment="Top"
-								Name="ToolStripImages"
-								Margin="0,0,0,5">
-						<Button  Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-								 Name="ButtonAdd"
-								 ToolTip="Add a new image"
-								 Focusable="False"
-								 HorizontalAlignment="Left"
-								 Click="ButtonAdd_Click">
-							<Image Source="{StaticResource ImgFileNew}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center" />
-						</Button>
-						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-								Name="ButtonDelete"
-								ToolTip="Delete"
-								Focusable="False"
-								HorizontalAlignment="Left"
-								Click="ButtonDelete_Click">
-							<Image Source="{StaticResource ImgEditDelete}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center" />
-						</Button>
-						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-								Name="ButtonChooseFile"
-								ToolTip="Choose image file"
-								Focusable="False"
-								HorizontalAlignment="Left"
-								Click="ButtonChooseFile_Click">
-							<Image Source="{StaticResource ImgFileOpen}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center" />
-						</Button>
-						<Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-								Name="ButtonMoveUp"
-								ToolTip="Move image up"
-								Focusable="False"
-								HorizontalAlignment="Left"
-								Click="ButtonMoveUp_Click">
-							<Image Source="{StaticResource ImgMoveUp}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center" />
-						</Button>
-						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-								Name="ButtonMoveDown"
-								ToolTip="Move image down"
-								Focusable="False"
-								HorizontalAlignment="Left"
-								Click="ButtonMoveDown_Click">
-							<Image Source="{StaticResource ImgMoveDown}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center" />
-						</Button>
-					</StackPanel>
-					<ContentControl Name="Images"
-									Grid.Row="1"
-									Style="{StaticResource PanelContent}"
-									Background="Transparent"
-									HorizontalContentAlignment="Stretch"
-									VerticalContentAlignment="Stretch"
-									LayoutUpdated="Images_LayoutUpdated">
-						<ScrollViewer Name="ImagesScroller"
-									  Grid.IsSharedSizeScope="true"
-									  Margin="0,0,1,1"
-									  HorizontalScrollBarVisibility="Auto"
-									  VerticalScrollBarVisibility="Auto"
-									  CanContentScroll="False">
-							<Grid>
-								<Grid.RowDefinitions>
-									<RowDefinition Height="Auto" />
-									<RowDefinition Height="*" />
-								</Grid.RowDefinitions>
-								<ContentControl Name="ImagesHeader"
-												Grid.Row="0"
-												HorizontalAlignment="Left"
-												Width="{Binding ElementName=ListViewImages, Path=ActualWidth}">
-									<Grid Name="ImagesHeaderItems"
-										  Margin="2,0"
-										  SnapsToDevicePixels="true">
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition SharedSizeGroup="ImageIndex" />
-											<ColumnDefinition SharedSizeGroup="Offset" />
-											<ColumnDefinition SharedSizeGroup="Dimensions" />
-											<ColumnDefinition SharedSizeGroup="Path" />
-										</Grid.ColumnDefinitions>
-										<Label Name="ImagesHeaderIndex"
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+				<ToolBar Style="{StaticResource PanelToolBar}"
+						 HorizontalAlignment="Left"
+						 VerticalAlignment="Top"
+						 Margin="2,0,2,2"
+						 Grid.ColumnSpan="2">
+					<Button  Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							 Name="ButtonAdd"
+							 ToolTip="Add a new image"
+							 Focusable="False"
+							 HorizontalAlignment="Left"
+							 Click="ButtonAdd_Click">
+						<Image Source="{StaticResource ImgFileNew}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center" />
+					</Button>
+					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							Name="ButtonDelete"
+							ToolTip="Delete"
+							Focusable="False"
+							HorizontalAlignment="Left"
+							Click="ButtonDelete_Click">
+						<Image Source="{StaticResource ImgEditDelete}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center" />
+					</Button>
+					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							Name="ButtonChooseFile"
+							ToolTip="Choose image file"
+							Focusable="False"
+							HorizontalAlignment="Left"
+							Click="ButtonChooseFile_Click">
+						<Image Source="{StaticResource ImgFileOpen}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center" />
+					</Button>
+					<Separator Style="{StaticResource PanelToolBarSeparator}" />
+					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							Name="ButtonMoveUp"
+							ToolTip="Move image up"
+							Focusable="False"
+							HorizontalAlignment="Left"
+							Click="ButtonMoveUp_Click">
+						<Image Source="{StaticResource ImgMoveUp}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center" />
+					</Button>
+					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							Name="ButtonMoveDown"
+							ToolTip="Move image down"
+							Focusable="False"
+							HorizontalAlignment="Left"
+							Click="ButtonMoveDown_Click">
+						<Image Source="{StaticResource ImgMoveDown}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center" />
+					</Button>
+				</ToolBar>
+				<ContentControl Name="Images"
+								IsTabStop="False"
+								Grid.Row="1"
+								Style="{StaticResource PanelContent}"
+								Background="Transparent"
+								HorizontalContentAlignment="Stretch"
+								VerticalContentAlignment="Stretch"
+								LayoutUpdated="Images_LayoutUpdated">
+					<ScrollViewer Name="ImagesScroller"
+								  Grid.IsSharedSizeScope="true"
+								  Margin="0,0,1,1"
+								  HorizontalScrollBarVisibility="Auto"
+								  VerticalScrollBarVisibility="Auto"
+								  CanContentScroll="False">
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" />
+								<RowDefinition Height="*" />
+							</Grid.RowDefinitions>
+							<ContentControl Name="ImagesHeader"
+											IsTabStop="False"
+											Grid.Row="0"
+											HorizontalAlignment="Left"
+											Width="{Binding ElementName=ListViewImages, Path=ActualWidth}">
+								<Grid Name="ImagesHeaderItems"
+									  Margin="2,0"
+									  SnapsToDevicePixels="true">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition SharedSizeGroup="ImageIndex" />
+										<ColumnDefinition SharedSizeGroup="Offset" />
+										<ColumnDefinition SharedSizeGroup="Dimensions" />
+										<ColumnDefinition SharedSizeGroup="Path" />
+									</Grid.ColumnDefinitions>
+									<Label Name="ImagesHeaderIndex"
+										   Grid.Column="0"
+										   Content="Image"
+										   Style="{StaticResource PanelLabel}"
+										   Padding="5,2"
+										   VerticalContentAlignment="Center"
+										   HorizontalContentAlignment="Left" />
+									<Label Name="ImagesHeaderOffset"
+										   Grid.Column="1"
+										   Content="Offset"
+										   Style="{StaticResource PanelLabel}"
+										   Padding="5,2"
+										   VerticalContentAlignment="Center"
+										   HorizontalContentAlignment="Left" />
+									<Label Name="ImagesHeaderDimensions"
+										   Grid.Column="2"
+										   Content="Dimensions"
+										   Style="{StaticResource PanelLabel}"
+										   Padding="5,2"
+										   VerticalContentAlignment="Center"
+										   HorizontalContentAlignment="Left" />
+									<Label Name="ImagesHeaderPath"
+										   Grid.Column="3"
+										   Content="Path"
+										   Style="{StaticResource PanelLabel}"
+										   Padding="5,2"
+										   VerticalContentAlignment="Center"
+										   HorizontalContentAlignment="Left" />
+								</Grid>
+							</ContentControl>
+							<ListView Name="ListViewImages"
+									  OverridesDefaultStyle="True"
+									  Grid.Row="1"
+									  Margin="0"
+									  SelectionMode="Single"
+									  ItemContainerStyle="{StaticResource ListViewItemNpNm}"
+									  IsTextSearchEnabled="False"
+									  IsTabStop="False"
+									  Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
+									  Foreground="{StaticResource {x:Static SystemColors.WindowTextBrushKey}}"
+									  HorizontalAlignment="Left"
+									  VerticalContentAlignment="Center"
+									  HorizontalContentAlignment="Left"
+									  ItemTemplate="{StaticResource ImageListItem}"
+									  ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=panels:FramePanel, AncestorLevel=1}, Path=ImageListItems}"
+									  KeyboardNavigation.TabNavigation="None"
+									  SelectionChanged="ListViewImages_SelectionChanged"
+									  MouseDoubleClick="ListViewImages_MouseDoubleClick"
+									  ContextMenuOpening="ListViewImages_ContextMenuOpening"
+									  PreviewMouseLeftButtonDown="ListViewImages_PreviewMouseLeftButtonDown">
+								<ListView.Template>
+									<ControlTemplate>
+										<ItemsPresenter Name="ItemsHost"
+														SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+									</ControlTemplate>
+								</ListView.Template>
+								<ListView.ItemsPanel>
+									<ItemsPanelTemplate>
+										<StackPanel Name="ItemsHost"
+													Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
+													Orientation="Vertical"
+													IsItemsHost="True">
+										</StackPanel>
+									</ItemsPanelTemplate>
+								</ListView.ItemsPanel>
+								<ListView.ContextMenu>
+									<ContextMenu>
+										<MenuItem Header="Add a new image"
+												  Name="MenuItemAdd"
+												  Click="ButtonAdd_Click">
+											<MenuItem.Icon>
+												<Image Source="{StaticResource ImgFileNew}"
+													   Stretch="UniformToFill"
+													   Width="16"
+													   Height="16" />
+											</MenuItem.Icon>
+										</MenuItem>
+										<MenuItem Header="Open image file"
+												  Name="MenuItemChooseFile"
+												  Click="ButtonChooseFile_Click">
+											<MenuItem.Icon>
+												<Image Source="{StaticResource ImgFileOpen}"
+													   Stretch="UniformToFill"
+													   Width="16"
+													   Height="16" />
+											</MenuItem.Icon>
+										</MenuItem>
+										<Separator />
+										<MenuItem Header="Move image up"
+												  Name="MenuItemMoveUp"
+												  Click="ButtonMoveUp_Click">
+											<MenuItem.Icon>
+												<Image Source="{StaticResource ImgMoveUp}"
+													   Stretch="UniformToFill"
+													   Width="16"
+													   Height="16" />
+											</MenuItem.Icon>
+										</MenuItem>
+										<MenuItem Header="Move image down"
+												  Name="MenuItemMoveDown"
+												  Click="ButtonMoveDown_Click">
+											<MenuItem.Icon>
+												<Image Source="{StaticResource ImgMoveDown}"
+													   Stretch="UniformToFill"
+													   Width="16"
+													   Height="16" />
+											</MenuItem.Icon>
+										</MenuItem>
+										<Separator />
+										<MenuItem Style="{StaticResource MenuItemCut}" />
+										<MenuItem Style="{StaticResource MenuItemCopy}" />
+										<MenuItem Style="{StaticResource MenuItemPaste}" />
+										<MenuItem Style="{StaticResource MenuItemDelete}" />
+									</ContextMenu>
+								</ListView.ContextMenu>
+							</ListView>
+							<ContentControl Name="ImagesColumns"
+											IsTabStop="False"
+											IsHitTestVisible="False"
+											Grid.RowSpan="2"
+											HorizontalAlignment="Left"
+											Width="{Binding ElementName=ImagesHeader, Path=ActualWidth}">
+								<Grid Name="ImagesColumnLines"
+									  Width="{Binding ElementName=ImagesHeaderItems, Path=ActualWidth}"
+									  Margin="{Binding ElementName=ImagesHeaderItems, Path=Margin}"
+									  SnapsToDevicePixels="{Binding ElementName=ImagesHeaderItems, Path=SnapsToDevicePixels}">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Name="ImagesColumnIndex"
+														  Width="{Binding ElementName=ImagesHeaderIndex, Path=ActualWidth}" />
+										<ColumnDefinition Name="ImagesColumnOffset"
+														  Width="{Binding ElementName=ImagesHeaderOffset, Path=ActualWidth}" />
+										<ColumnDefinition Name="ImagesColumnDimensions"
+														  Width="{Binding ElementName=ImagesHeaderDimensions, Path=ActualWidth}" />
+										<ColumnDefinition />
+									</Grid.ColumnDefinitions>
+									<Rectangle Name="ImagesLineIndex"
 											   Grid.Column="0"
-											   Content="Image"
-											   Style="{StaticResource PanelLabel}"
-											   Padding="5,2"
-											   VerticalContentAlignment="Center"
-											   HorizontalContentAlignment="Left" />
-										<Label Name="ImagesHeaderOffset"
+											   HorizontalAlignment="Right"
+											   VerticalAlignment="Stretch"
+											   Stroke="{StaticResource BackgroundDarkishBrush}"
+											   Opacity="0.25" />
+									<Rectangle Name="ImagesLineOffset"
 											   Grid.Column="1"
-											   Content="Offset"
-											   Style="{StaticResource PanelLabel}"
-											   Padding="5,2"
-											   VerticalContentAlignment="Center"
-											   HorizontalContentAlignment="Left" />
-										<Label Name="ImagesHeaderDimensions"
+											   HorizontalAlignment="Right"
+											   VerticalAlignment="Stretch"
+											   Stroke="{StaticResource BackgroundDarkishBrush}"
+											   Opacity="0.25" />
+									<Rectangle Name="ImagesLineDimensions"
 											   Grid.Column="2"
-											   Content="Dimensions"
-											   Style="{StaticResource PanelLabel}"
-											   Padding="5,2"
-											   VerticalContentAlignment="Center"
-											   HorizontalContentAlignment="Left" />
-										<Label Name="ImagesHeaderPath"
-											   Grid.Column="3"
-											   Content="Path"
-											   Style="{StaticResource PanelLabel}"
-											   Padding="5,2"
-											   VerticalContentAlignment="Center"
-											   HorizontalContentAlignment="Left" />
-									</Grid>
-								</ContentControl>
-								<ListView Name="ListViewImages"
-										  Grid.Row="1"
-										  SelectionMode="Single"
-										  ItemContainerStyle="{StaticResource ListViewItemCommonNpNm}"
-										  IsTextSearchEnabled="False"
-										  IsTabStop="False"
-										  Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
-										  Foreground="{StaticResource {x:Static SystemColors.WindowTextBrushKey}}"
-										  HorizontalAlignment="Left"
-										  VerticalContentAlignment="Center"
-										  HorizontalContentAlignment="Left"
-										  ItemTemplate="{StaticResource ImageListItem}"
-										  ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=panels:FramePanel, AncestorLevel=1}, Path=ImageListItems}"
-										  SelectionChanged="ListViewImages_SelectionChanged"
-										  MouseDoubleClick="ListViewImages_MouseDoubleClick">
-									<ListView.Template>
-										<ControlTemplate>
-											<ItemsPresenter Name="ItemsHost"
-															SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-										</ControlTemplate>
-									</ListView.Template>
-									<ListView.ItemsPanel>
-										<ItemsPanelTemplate>
-											<StackPanel Name="ItemsHost"
-														Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
-														Orientation="Vertical"
-														IsItemsHost="True">
-											</StackPanel>
-										</ItemsPanelTemplate>
-									</ListView.ItemsPanel>
-								</ListView>
-								<ContentControl Name="ImagesColumns"
-												Grid.RowSpan="2"
-												HorizontalAlignment="Left"
-												Width="{Binding ElementName=ImagesHeader, Path=ActualWidth}">
-									<Grid Name="ImagesColumnLines"
-										  Width="{Binding ElementName=ImagesHeaderItems, Path=ActualWidth}"
-										  Margin="{Binding ElementName=ImagesHeaderItems, Path=Margin}"
-										  SnapsToDevicePixels="{Binding ElementName=ImagesHeaderItems, Path=SnapsToDevicePixels}">
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition Name="ImagesColumnIndex"
-															  Width="{Binding ElementName=ImagesHeaderIndex, Path=ActualWidth}" />
-											<ColumnDefinition Name="ImagesColumnOffset"
-															  Width="{Binding ElementName=ImagesHeaderOffset, Path=ActualWidth}" />
-											<ColumnDefinition Name="ImagesColumnDimensions"
-															  Width="{Binding ElementName=ImagesHeaderDimensions, Path=ActualWidth}" />
-											<ColumnDefinition />
-										</Grid.ColumnDefinitions>
-										<Rectangle Name="ImagesLineIndex"
-												   Grid.Column="0"
-												   HorizontalAlignment="Right"
-												   VerticalAlignment="Stretch"
-												   Stroke="{StaticResource BackgroundDarkishBrush}"
-												   Opacity="0.25" />
-										<Rectangle Name="ImagesLineOffset"
-												   Grid.Column="1"
-												   HorizontalAlignment="Right"
-												   VerticalAlignment="Stretch"
-												   Stroke="{StaticResource BackgroundDarkishBrush}"
-												   Opacity="0.25" />
-										<Rectangle Name="ImagesLineDimensions"
-												   Grid.Column="2"
-												   HorizontalAlignment="Right"
-												   VerticalAlignment="Stretch"
-												   Stroke="{StaticResource BackgroundDarkishBrush}"
-												   Opacity="0.25" />
-									</Grid>
-								</ContentControl>
-							</Grid>
-						</ScrollViewer>
-					</ContentControl>
-				</Grid>
+											   HorizontalAlignment="Right"
+											   VerticalAlignment="Stretch"
+											   Stroke="{StaticResource BackgroundDarkishBrush}"
+											   Opacity="0.25" />
+								</Grid>
+							</ContentControl>
+						</Grid>
+					</ScrollViewer>
+				</ContentControl>
 				<StackPanel Grid.Column="1"
 							HorizontalAlignment="Left"
-							Margin="10,0,0,0">
-					<Canvas Name="Spacer"
-							Height="{Binding ElementName=ToolStripImages, Path=ActualHeight, Mode=OneWay}"
-							Margin="0,0,0,5"></Canvas>
+							Margin="10,0,0,0"
+							Grid.Row="1">
 					<StackPanel Orientation="Horizontal">
 						<Label Content="X Offset"
 							   Name="LabelOffsetX"
 							   VerticalAlignment="Center"
 							   HorizontalAlignment="Left"
 							   Style="{StaticResource PanelLabel}" />
-						<custom:NumericUpDown x:Name="NumericOffsetX"
+						<custom:NumericUpDown Style="{StaticResource NumericUpDown}"
+											  x:Name="NumericOffsetX"
 											  Width="60"
 											  HorizontalAlignment="Left"
 											  VerticalAlignment="Center"
-											  Style="{StaticResource PanelTextBox}"
 											  ContextMenu="{StaticResource ContextMenuTextBox}"
 											  IsModifiedChanged="NumericOffsetX_IsModifiedChanged" />
 						<Label Content="Y Offset"
@@ -369,11 +434,11 @@
 							   HorizontalAlignment="Left"
 							   VerticalAlignment="Center"
 							   Style="{StaticResource PanelLabel}" />
-						<custom:NumericUpDown x:Name="NumericOffsetY"
+						<custom:NumericUpDown Style="{StaticResource NumericUpDown}"
+											  x:Name="NumericOffsetY"
 											  Width="60"
 											  HorizontalAlignment="Left"
 											  VerticalAlignment="Center"
-											  Style="{StaticResource PanelTextBox}"
 											  ContextMenu="{StaticResource ContextMenuTextBox}"
 											  IsModifiedChanged="NumericOffsetY_IsModifiedChanged" />
 					</StackPanel>
@@ -395,69 +460,82 @@
 							<ColumnDefinition  Width="5" />
 							<ColumnDefinition Width="Auto" />
 						</Grid.ColumnDefinitions>
-						<RepeatButton Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-									  Name="ButtonShiftUp"
-									  Grid.Column="2"
-									  HorizontalAlignment="Stretch"
-									  Click="ButtonShiftUp_Click">
+						<custom:RepeatButtonEx Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+											   x:Name="ButtonShiftUp"
+											   Grid.Column="2"
+											   HorizontalAlignment="Stretch"
+											   Click="ButtonShiftUp_Click"
+											   RepeatEnd="ButtonShiftUp_RepeatEnd">
 							<Image Source="{StaticResource ImgShiftUp}"
 								   Stretch="UniformToFill"
 								   Width="16"
 								   Height="16"
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center" />
-						</RepeatButton>
-						<RepeatButton Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-									  Name="ButtonShiftDown"
-									  Grid.Column="2"
-									  Grid.Row="4"
-									  HorizontalAlignment="Stretch"
-									  Click="ButtonShiftDown_Click">
+						</custom:RepeatButtonEx>
+						<custom:RepeatButtonEx Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+											   x:Name="ButtonShiftDown"
+											   Grid.Column="2"
+											   Grid.Row="4"
+											   HorizontalAlignment="Stretch"
+											   Click="ButtonShiftDown_Click"
+											   RepeatEnd="ButtonShiftDown_RepeatEnd">
 							<Image Source="{StaticResource ImgShiftDown}"
 								   Stretch="UniformToFill"
 								   Width="16"
 								   Height="16"
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center" />
-						</RepeatButton>
-						<RepeatButton Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-									  Name="ButtonShiftLeft"
-									  Grid.Row="2"
-									  VerticalAlignment="Stretch"
-									  Click="ButtonShiftLeft_Click">
+						</custom:RepeatButtonEx>
+						<custom:RepeatButtonEx Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+											   x:Name="ButtonShiftLeft"
+											   Grid.Row="2"
+											   VerticalAlignment="Stretch"
+											   Click="ButtonShiftLeft_Click"
+											   RepeatEnd="ButtonShiftLeft_RepeatEnd">
 							<Image Source="{StaticResource ImgShiftLeft}"
 								   Stretch="UniformToFill"
 								   Width="16"
 								   Height="16"
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center" />
-						</RepeatButton>
-						<RepeatButton Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-									  Name="ButtonShiftRight"
-									  Grid.Column="4"
-									  Grid.Row="2"
-									  VerticalAlignment="Stretch"
-									  Click="ButtonShiftRight_Click">
+						</custom:RepeatButtonEx>
+						<custom:RepeatButtonEx Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+											   x:Name="ButtonShiftRight"
+											   Grid.Column="4"
+											   Grid.Row="2"
+											   VerticalAlignment="Stretch"
+											   Click="ButtonShiftRight_Click"
+											   RepeatEnd="ButtonShiftRight_RepeatEnd">
 							<Image Source="{StaticResource ImgShiftRight}"
 								   Stretch="UniformToFill"
 								   Width="16"
 								   Height="16"
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center" />
-						</RepeatButton>
+						</custom:RepeatButtonEx>
 						<Border Grid.Column="2"
 								Grid.Row="2"
-								BorderThickness="1"
-								BorderBrush="{StaticResource {x:Static SystemColors.ControlDarkDarkBrushKey}}"
-								Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}">
-							<local:FrameSample x:Name="ImageSample" />
+								Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
+								Focusable="False"
+								Style="{StaticResource BorderNormal}"
+								Padding="0"
+								UseLayoutRounding="False">
+							<ContentControl IsTabStop="False"
+											SnapsToDevicePixels="False"
+											UseLayoutRounding="False"
+											ClipToBounds="True">
+								<local:FrameSample x:Name="ImageSample"
+												   SnapsToDevicePixels="False"
+												   UseLayoutRounding="False" />
+							</ContentControl>
 						</Border>
 					</Grid>
 					<CheckBox Content="Show transparency"
 							  Name="CheckBoxTransparent"
 							  HorizontalAlignment="Left"
 							  VerticalAlignment="Top"
-							  Style="{StaticResource PanelToggleButton}"
+							  Style="{StaticResource PanelToggleButtonAlt}"
 							  Checked="CheckBoxTransparent_CheckChanged"
 							  Unchecked="CheckBoxTransparent_CheckChanged" />
 				</StackPanel>
@@ -473,34 +551,40 @@
 					<ColumnDefinition />
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
-				<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-						Height="Auto"
-						Name="ButtonSoundPreview"
-						Width="Auto"
-						HorizontalAlignment="Right"
-						VerticalAlignment="Top"
-						Focusable="false"
-						Click="ButtonSoundPreview_Click"
-						ToolTip="Preview">
-					<Image Source="{StaticResource ImgPlay}"
-						   Stretch="UniformToFill"
-						   Width="16"
-						   Height="16"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Center"></Image>
-				</Button>
+				<ToolBar Style="{StaticResource PanelToolBar}"
+						 HorizontalAlignment="Left"
+						 VerticalAlignment="Center"
+						 Margin="2,0">
+					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							Height="Auto"
+							Name="ButtonSoundPreview"
+							Width="Auto"
+							HorizontalAlignment="Right"
+							VerticalAlignment="Top"
+							Focusable="false"
+							Click="ButtonSoundPreview_Click"
+							ToolTip="Preview">
+						<Image Source="{StaticResource ImgPlay}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center"></Image>
+					</Button>
+				</ToolBar>
 				<custom:TextBoxEx x:Name="TextBoxSoundFile"
-								  Margin="5,0,2,0"
+								  Margin="2,0"
 								  HorizontalAlignment="Stretch"
 								  VerticalAlignment="Center"
 								  TabIndex="4"
 								  IsModifiedChanged="TextBoxSoundFile_IsModifiedChanged"
-								  Style="{StaticResource PanelTextBox}"
 								  ContextMenu="{StaticResource ContextMenuTextBox}"
 								  Grid.Column="1" />
-				<StackPanel Orientation="Horizontal"
-							VerticalAlignment="Center"
-							Grid.Column="2">
+				<ToolBar Style="{StaticResource PanelToolBar}"
+						 HorizontalAlignment="Right"
+						 VerticalAlignment="Center"
+						 Grid.Column="2"
+						 Margin="2,0">
 					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 							Height="Auto"
 							Name="ButtonSoundImport"
@@ -532,7 +616,7 @@
 							   HorizontalAlignment="Center"
 							   VerticalAlignment="Center"></Image>
 					</Button>
-				</StackPanel>
+				</ToolBar>
 			</Grid>
 		</GroupBox>
 	</Grid>

@@ -828,7 +828,9 @@ System::Windows::Media::Visual^ BalloonPreview::MakeVisual ()
 		System::Windows::Media::Drawing^		lDrawing;
 		System::Windows::Media::DrawingVisual^	lDrawingVisual;
 		DrawingContext^							lDrawingContext;
+#if	(__CLR_VER >= 40000000)
 		DropShadowEffect^						lDropShadow;
+#endif		
 		
 		if	(
 				(lDrawing = MakeDrawing ())
@@ -839,11 +841,13 @@ System::Windows::Media::Visual^ BalloonPreview::MakeVisual ()
 			lDrawingContext->DrawDrawing (lDrawing);
 			lDrawingContext->Close ();
 
+#if	(__CLR_VER >= 40000000)
 			if	(lDropShadow = gcnew DropShadowEffect ())
 			{
 				lDropShadow->Opacity = 0.25;
 				lDrawingVisual->Effect = lDropShadow;
 			}
+#endif
 			lRet = lDrawingVisual;
 		}
 	}

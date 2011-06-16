@@ -605,7 +605,7 @@ namespace AgentCharacterEditor.Panels
             this.MenuItemAdd,
             this.MenuItemChooseFile,
             toolStripSeparator1});
-			this.ContextMenuOverlaysList.Name = "OverlaysList";
+			this.ContextMenuOverlaysList.Name = "ContextMenuOverlaysList";
 			this.ContextMenuOverlaysList.Size = new System.Drawing.Size(217, 200);
 			this.ContextMenuOverlaysList.Opening += new System.ComponentModel.CancelEventHandler (ContextMenuOverlaysList_Opening);
 			// 

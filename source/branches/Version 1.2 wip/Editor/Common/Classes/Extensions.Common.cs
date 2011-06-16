@@ -173,7 +173,7 @@ namespace AgentCharacterEditor.Global
 
 	///////////////////////////////////////////////////////////////////////////////
 
-	public static class ImageExtensions
+	public static partial class ImageExtensions
 	{
 		public static System.Drawing.SizeF GuessScreenResolution ()
 		{
@@ -197,6 +197,29 @@ namespace AgentCharacterEditor.Global
 			catch
 			{
 			}
+		}
+
+		static public System.Windows.Size PreserveAspectRatio (this System.Windows.Size pSize, System.Windows.Size pAspectRatio)
+		{
+			try
+			{
+				if (Math.Round (pSize.Width / pAspectRatio.Width * 1000.0) != Math.Round (pSize.Height / pAspectRatio.Height * 1000.0))
+				{
+					if ((pSize.Width / pAspectRatio.Width) > (pSize.Height / pAspectRatio.Height))
+					{
+						return new System.Windows.Size (pSize.Width * pAspectRatio.Width / pAspectRatio.Height, pSize.Height);
+					}
+					else
+					{
+						return new System.Windows.Size (pSize.Width, pSize.Height * pAspectRatio.Height / pAspectRatio.Width);
+					}
+				}
+			}
+			catch (Exception pException)
+			{
+				System.Diagnostics.Debug.Print (pException.Message);
+			}
+			return pSize;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

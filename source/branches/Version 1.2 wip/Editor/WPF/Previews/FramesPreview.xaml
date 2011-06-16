@@ -20,6 +20,42 @@
 							IsItemsHost="True" />
 			</ControlTemplate>
 		</ListView.Template>
+		<ListView.ContextMenu>
+			<ContextMenu>
+				<MenuItem Header="Add a new Frame"
+						  Name="MenuItemAdd">
+					<MenuItem.Icon>
+						<Image Source="{StaticResource ImgFileNew}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Header="Move frame up"
+						  Name="MenuItemMoveUp">
+					<MenuItem.Icon>
+						<Image Source="{StaticResource ImgMoveUp}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Header="Move frame down"
+						  Name="MenuItemMoveDown">
+					<MenuItem.Icon>
+						<Image Source="{StaticResource ImgMoveDown}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<Separator />
+				<MenuItem Style="{StaticResource MenuItemCut}" />
+				<MenuItem Style="{StaticResource MenuItemCopy}" />
+				<MenuItem Style="{StaticResource MenuItemPaste}" />
+				<MenuItem Style="{StaticResource MenuItemDelete}" />
+			</ContextMenu>
+		</ListView.ContextMenu>
 	</previews:FramesListView>
 
 </ScrollViewer>

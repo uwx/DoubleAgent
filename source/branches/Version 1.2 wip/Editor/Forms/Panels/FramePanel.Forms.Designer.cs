@@ -542,6 +542,7 @@ namespace AgentCharacterEditor.Panels
 			this.ListViewImages.View = System.Windows.Forms.View.Details;
 			this.ListViewImages.ItemActivate += new System.EventHandler(this.ListViewImages_ItemActivate);
 			this.ListViewImages.SelectedIndexChanged += new System.EventHandler(this.ListViewImages_SelectedIndexChanged);
+			this.ListViewImages.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ListViewImages_MouseUp);
 			// 
 			// ColumnHeaderImage
 			// 
@@ -572,7 +573,7 @@ namespace AgentCharacterEditor.Panels
             this.MenuItemMoveUp,
             this.MenuItemMoveDown,
             toolStripSeparator3});
-			this.ContextMenuImages.Name = "ContextMenuEdit";
+			this.ContextMenuImages.Name = "ContextMenuImages";
 			this.ContextMenuImages.Size = new System.Drawing.Size(222, 150);
 			this.ContextMenuImages.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuImages_Opening);
 			// 

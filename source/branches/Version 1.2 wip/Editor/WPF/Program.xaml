@@ -11,10 +11,20 @@
 				<ResourceDictionary Source="StyleNamed.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 
+			<!-- =========================================================================== -->
+
 			<BitmapImage x:Key="ImgNavigateBack"
 						 UriSource="Resources/NavigateBack.png" />
 			<BitmapImage x:Key="ImgNavigateForward"
 						 UriSource="Resources/NavigateForward.png" />
+			<BitmapImage x:Key="ImgNavigateBackHot"
+						 UriSource="Resources/NavigateBackHot.png" />
+			<BitmapImage x:Key="ImgNavigateForwardHot"
+						 UriSource="Resources/NavigateForwardHot.png" />
+			<BitmapImage x:Key="ImgNavigateBackPressed"
+						 UriSource="Resources/NavigateBackPressed.png" />
+			<BitmapImage x:Key="ImgNavigateForwardPressed"
+						 UriSource="Resources/NavigateForwardPressed.png" />
 			<BitmapImage x:Key="ImgFileNew"
 						 UriSource="Resources/FileNew.png" />
 			<BitmapImage x:Key="ImgFileOpen"
@@ -101,88 +111,167 @@
 						 UriSource="Resources/SmallFont.png" />
 			<BitmapImage x:Key="IconDoubleAgent"
 						 UriSource="Resources/DoubleAgent.ico" />
+			<BitmapImage x:Key="IconPlay"
+						 UriSource="Resources/Play.ico" />
+			<BitmapImage x:Key="IconStop"
+						 UriSource="Resources/Stop.ico" />
+			<BitmapImage x:Key="IconPause"
+						 UriSource="Resources/Pause.ico" />
+			<BitmapImage x:Key="IconSkipBack"
+						 UriSource="Resources/SkipBack.ico" />
+			<BitmapImage x:Key="IconSkipForward"
+						 UriSource="Resources/SkipForward.ico" />
+			<BitmapImage x:Key="IconRepeat"
+						 UriSource="Resources/Repeat.ico" />
+			<BitmapImage x:Key="IconMute"
+						 UriSource="Resources/Mute.ico" />
 
-			<ContextMenu x:Key="ContextMenuEdit">
-				<MenuItem Header="_Cut"
-						  Command="ApplicationCommands.Cut"
-						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-					<MenuItem.Icon>
+			<!-- =========================================================================== -->
+
+			<Style x:Key="MenuItemCut"
+				   TargetType="MenuItem">
+				<Setter Property="Header"
+						Value="_Cut" />
+				<Setter Property="Command"
+						Value="ApplicationCommands.Cut" />
+				<Setter Property="CommandParameter"
+						Value="{Binding RelativeSource={RelativeSource Mode=Self}}" />
+				<Setter Property="Icon">
+					<Setter.Value>
 						<Image Source="{StaticResource ImgEditCut}"
 							   Stretch="UniformToFill"
 							   Width="16"
 							   Height="16" />
-					</MenuItem.Icon>
-				</MenuItem>
-				<MenuItem Header="_Copy"
-						  Command="ApplicationCommands.Copy"
-						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-					<MenuItem.Icon>
+					</Setter.Value>
+				</Setter>
+			</Style>
+
+			<Style x:Key="MenuItemCopy"
+				   TargetType="MenuItem">
+				<Setter Property="Header"
+						Value="_Copy" />
+				<Setter Property="Command"
+						Value="ApplicationCommands.Copy" />
+				<Setter Property="CommandParameter"
+						Value="{Binding RelativeSource={RelativeSource Mode=Self}}" />
+				<Setter Property="Icon">
+					<Setter.Value>
 						<Image Source="{StaticResource ImgEditCopy}"
 							   Stretch="UniformToFill"
 							   Width="16"
 							   Height="16" />
-					</MenuItem.Icon>
-				</MenuItem>
-				<MenuItem Header="_Paste"
-						  Command="ApplicationCommands.Paste"
-						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-					<MenuItem.Icon>
+					</Setter.Value>
+				</Setter>
+			</Style>
+
+			<Style x:Key="MenuItemPaste"
+				   TargetType="MenuItem">
+				<Setter Property="Header"
+						Value="_Paste" />
+				<Setter Property="Command"
+						Value="ApplicationCommands.Paste" />
+				<Setter Property="CommandParameter"
+						Value="{Binding RelativeSource={RelativeSource Mode=Self}}" />
+				<Setter Property="Icon">
+					<Setter.Value>
 						<Image Source="{StaticResource ImgEditPaste}"
 							   Stretch="UniformToFill"
 							   Width="16"
 							   Height="16" />
-					</MenuItem.Icon>
-				</MenuItem>
-				<MenuItem Header="_Delete"
-						  Command="ApplicationCommands.Delete"
-						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-					<MenuItem.Icon>
+					</Setter.Value>
+				</Setter>
+			</Style>
+
+			<Style x:Key="MenuItemDelete"
+				   TargetType="MenuItem">
+				<Setter Property="Header"
+						Value="_Delete" />
+				<Setter Property="Command"
+						Value="ApplicationCommands.Delete" />
+				<Setter Property="CommandParameter"
+						Value="{Binding RelativeSource={RelativeSource Mode=Self}}" />
+				<Setter Property="Icon">
+					<Setter.Value>
 						<Image Source="{StaticResource ImgEditDelete}"
 							   Stretch="UniformToFill"
 							   Width="16"
 							   Height="16" />
-					</MenuItem.Icon>
-				</MenuItem>
+					</Setter.Value>
+				</Setter>
+			</Style>
+
+			<ContextMenu x:Key="ContextMenuEdit">
+				<MenuItem Style="{StaticResource MenuItemCut}" />
+				<MenuItem Style="{StaticResource MenuItemCopy}" />
+				<MenuItem Style="{StaticResource MenuItemPaste}" />
+				<MenuItem Style="{StaticResource MenuItemDelete}" />
 			</ContextMenu>
 
+			<!-- =========================================================================== -->
+
 			<ContextMenu x:Key="ContextMenuTextBox">
-				<MenuItem Header="_Cut"
-						  Command="ApplicationCommands.Cut"
-						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditCut}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
-					</MenuItem.Icon>
-				</MenuItem>
-				<MenuItem Header="_Copy"
-						  Command="ApplicationCommands.Copy"
-						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditCopy}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
-					</MenuItem.Icon>
-				</MenuItem>
-				<MenuItem Header="_Paste"
-						  Command="ApplicationCommands.Paste"
-						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditPaste}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
-					</MenuItem.Icon>
-				</MenuItem>
+				<MenuItem Style="{StaticResource MenuItemCut}" />
+				<MenuItem Style="{StaticResource MenuItemCopy}" />
+				<MenuItem Style="{StaticResource MenuItemPaste}" />
 			</ContextMenu>
 
 			<Style x:Key="{x:Type custom:TextBoxEx}"
 				   TargetType="{x:Type custom:TextBoxEx}"
 				   BasedOn="{StaticResource {x:Type TextBox}}">
-				<Setter Property="ContextMenu" Value="{StaticResource ContextMenuTextBox}"/>
+				<Setter Property="ContextMenu"
+						Value="{StaticResource ContextMenuTextBox}" />
 			</Style>
+
+			<!-- =========================================================================== -->
+			<!-- ToolBarButton (defined here because ImageState is in this assembly)         -->
+			<!-- =========================================================================== -->
+
+			<Style x:Key="ImageStateButton"
+				   BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+				   TargetType="{x:Type ButtonBase}">
+				<Setter Property="Padding"
+						Value="0" />
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type ButtonBase}">
+							<Border Name="Bd"
+									Background="Transparent"
+									BorderBrush="Transparent"
+									BorderThickness="{TemplateBinding BorderThickness}"
+									Padding="{TemplateBinding Padding}"
+									SnapsToDevicePixels="true">
+								<ContentPresenter Name="Content"
+												  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+												  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+												  SnapsToDevicePixels="False"
+												  UseLayoutRounding="False" />
+							</Border>
+							<ControlTemplate.Triggers>
+								<Trigger Property="IsEnabled"
+										 Value="false">
+									<Setter Property="Foreground"
+											Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+								</Trigger>
+								<MultiTrigger>
+									<MultiTrigger.Conditions>
+										<Condition Property="IsEnabled"
+												   Value="false" />
+										<Condition SourceName="Content"
+												   Property="custom:ImageState.DisabledSource"
+												   Value="{x:Null}" />
+									</MultiTrigger.Conditions>
+									<Setter TargetName="Content"
+											Property="Opacity"
+											Value="0.3" />
+								</MultiTrigger>
+							</ControlTemplate.Triggers>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style>
+
+			<!-- =========================================================================== -->
+
 		</ResourceDictionary>
 	</Application.Resources>
 </Application>

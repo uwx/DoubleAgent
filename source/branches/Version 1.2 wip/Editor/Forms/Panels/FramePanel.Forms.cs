@@ -343,6 +343,14 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
+		private void ListViewImages_MouseUp (object sender, MouseEventArgs e)
+		{
+			if (ListViewImages.SelectedIndex < 0)
+			{
+				ShowSelectedImage ();
+			}
+		}
+
 		private void ListViewImages_ItemActivate (object sender, EventArgs e)
 		{
 			UpdateSelectedImage (GetSelectedImage (false));

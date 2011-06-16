@@ -1,4 +1,8 @@
-﻿using System;
+﻿#if DEBUG_NOT
+#define	DEBUG_SCALE
+#endif
+
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -220,14 +224,17 @@ namespace AgentCharacterEditor
 			{
 				this.Title = String.Format (mCharacterFile.IsDirty ? AppResources.Resources.TitleDirtyFile : AppResources.Resources.TitleOpenFile, Program.AssemblyTitle, String.IsNullOrEmpty (mCharacterFile.Path) ? AppResources.Resources.TitleNewFile : mCharacterFile.Path);
 			}
+			CommandManager.InvalidateRequerySuggested ();
 		}
 
 		private void ShowEditState ()
 		{
+			CommandManager.InvalidateRequerySuggested ();
 		}
 
 		private void ShowNavigateState ()
 		{
+			CommandManager.InvalidateRequerySuggested ();
 		}
 
 		#endregion
@@ -427,8 +434,13 @@ namespace AgentCharacterEditor
 
 						if ((lResolution.Width >= 96.0) || (lResolution.Height >= 96.0))
 						{
+#if DEBUG_SCALE
+							MainGrid.LayoutTransform = new System.Windows.Media.ScaleTransform (144.0 / lResolution.Width, 144.0 / lResolution.Width);
+							ToolBarPanel.LayoutTransform = new System.Windows.Media.ScaleTransform (144.0 / lResolution.Width, 144.0 / lResolution.Width);
+#else
 							MainGrid.LayoutTransform = new System.Windows.Media.ScaleTransform (120.0 / lResolution.Width, 120.0 / lResolution.Width);
 							ToolBarPanel.LayoutTransform = new System.Windows.Media.ScaleTransform (120.0 / lResolution.Width, 120.0 / lResolution.Width);
+#endif
 						}
 						else
 						{
@@ -507,6 +519,9 @@ namespace AgentCharacterEditor
 				CanViewLarge = true;
 				DefaultViewLarge = false;
 			}
+#if DEBUG_SCALE
+			DefaultViewLarge = false;
+#endif
 		}
 
 		#endregion
@@ -623,41 +638,26 @@ namespace AgentCharacterEditor
 
 		private void PreviewCanEditCut (object sender, CanExecuteRoutedEventArgs e)
 		{
-			if ((e.Source is Button) || (e.Source is MenuItem))
-			{
-				e.PutCutTitle ();
-			}
+			e.PutCutTitle ();
 		}
 		private void PreviewCanEditCopy (object sender, CanExecuteRoutedEventArgs e)
 		{
-			if ((e.Source is Button) || (e.Source is MenuItem))
-			{
-				e.PutCopyTitle ();
-			}
+			e.PutCopyTitle ();
 		}
 		private void PreviewCanEditDelete (object sender, CanExecuteRoutedEventArgs e)
 		{
-			if ((e.Source is Button) || (e.Source is MenuItem))
-			{
-				e.PutDeleteTitle ();
-			}
+			e.PutDeleteTitle ();
 		}
 		private void PreviewCanEditPaste (object sender, CanExecuteRoutedEventArgs e)
 		{
-			if ((e.Source is Button) || (e.Source is MenuItem))
-			{
-				e.PutPasteTitle ();
-			}
+			e.PutPasteTitle ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		private void PreviewCanEditUndo (object sender, CanExecuteRoutedEventArgs e)
 		{
-			if ((e.Source is Button) || (e.Source is MenuItem))
-			{
-				e.PutUndoTitle ();
-			}
+			e.PutUndoTitle ();
 		}
 		private void OnCanEditUndo (object sender, CanExecuteRoutedEventArgs e)
 		{
@@ -680,10 +680,7 @@ namespace AgentCharacterEditor
 
 		private void PreviewCanEditRedo (object sender, CanExecuteRoutedEventArgs e)
 		{
-			if ((e.Source is Button) || (e.Source is MenuItem))
-			{
-				e.PutRedoTitle ();
-			}
+			e.PutRedoTitle ();
 		}
 		private void OnCanEditRedo (object sender, CanExecuteRoutedEventArgs e)
 		{

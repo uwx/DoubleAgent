@@ -60,6 +60,9 @@
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
     <Manifest />
+    <PostBuildEvent>
+      <Command>sn -R "$(TargetPath)" "$(SolutionDir)Managed\CinSoft.snk"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

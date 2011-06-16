@@ -49,7 +49,7 @@ namespace AgentCharacterEditor.Panels
 			}
 			else
 			{
-				//AnimationPreview.StopAnimation ();
+				AnimationPreview.StopAnimation ();
 			}
 		}
 
@@ -144,24 +144,27 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowReturnAnimation ()
 		{
-			if (IsPanelEmpty)
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				ComboBoxReturn.SelectedIndex = mReturnItemNone;
-			}
-			else if (Animation.ReturnType == 1)
-			{
-				ComboBoxReturn.SelectedIndex = mReturnItemExit;
-			}
-			else if ((Animation.ReturnType != 0) || (String.IsNullOrEmpty (Animation.ReturnName)))
-			{
-				ComboBoxReturn.SelectedIndex = mReturnItemNone;
-			}
-			else
-			{
-				ComboBoxReturn.SelectedIndex = ComboBoxReturn.FindStringExact (Animation.ReturnName);
-				if (ComboBoxReturn.SelectedIndex < 0)
+				if (IsPanelEmpty)
 				{
 					ComboBoxReturn.SelectedIndex = mReturnItemNone;
+				}
+				else if (Animation.ReturnType == 1)
+				{
+					ComboBoxReturn.SelectedIndex = mReturnItemExit;
+				}
+				else if ((Animation.ReturnType != 0) || (String.IsNullOrEmpty (Animation.ReturnName)))
+				{
+					ComboBoxReturn.SelectedIndex = mReturnItemNone;
+				}
+				else
+				{
+					ComboBoxReturn.SelectedIndex = ComboBoxReturn.FindStringExact (Animation.ReturnName);
+					if (ComboBoxReturn.SelectedIndex < 0)
+					{
+						ComboBoxReturn.SelectedIndex = mReturnItemNone;
+					}
 				}
 			}
 		}
@@ -464,6 +467,138 @@ namespace AgentCharacterEditor.Panels
 			{
 				FramesView.RecalcLayout (FramesPreview.ImageScaleType.Large);
 				ShowFramesState ();
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		private void ShowPreviewState ()
+		{
+			PreviewButtonPlay.IsEnabled = !IsPanelEmpty && (Animation.Frames.Count > 1);
+			PreviewButtonPause.IsEnabled = !IsPanelEmpty && AnimationPreview.IsPlaying;
+			PreviewButtonStop.IsEnabled = !IsPanelEmpty && AnimationPreview.IsPlaying;
+			PreviewButtonRepeat.IsEnabled = PreviewButtonPlay.IsEnabled && !AnimationPreview.IsPlaying;
+			PreviewButtonMute.IsEnabled = PreviewButtonPlay.IsEnabled && !AnimationPreview.IsPlaying;
+
+			if (AnimationPreview.IsAnimated)
+			{
+				PreviewButtonPause.IsChecked = PreviewButtonPause.IsEnabled && AnimationPreview.IsPaused;
+				PreviewButtonRepeat.IsChecked = PreviewButtonPlay.IsEnabled && AnimationPreview.IsRepeating;
+			}
+			else
+			{
+				PreviewButtonPause.IsChecked = false;
+			}
+			ShowPreviewSkipState ();
+#if DEBUG_NOT
+			System.Diagnostics.Debug.Print ("PreviewState Animating [{0}] Playing [{1}] Paused [{2}] Repeating [{3}] Rate [{4}]]", AnimationPreview.IsAnimated, AnimationPreview.IsPlaying, AnimationPreview.IsPaused, AnimationPreview.IsRepeating, AnimationPreview.AnimationRate);
+			System.Diagnostics.Debug.Print ("             Play [{0}] Pause [{1} {2}] Stop [{3}] Repeat [{4} {5}] Back [{6}] Forward [{7}]", PreviewButtonPlay.IsEnabled, PreviewButtonPause.IsEnabled, PreviewButtonPause.IsChecked, PreviewButtonStop.IsEnabled, PreviewButtonRepeat.IsEnabled, PreviewButtonRepeat.IsChecked, PreviewButtonSkipBack.IsEnabled, PreviewButtonSkipForward.IsEnabled);
+#endif
+		}
+
+		private void ShowPreviewSkipState ()
+		{
+			if (AnimationPreview.IsPlaying)
+			{
+				ShowPreviewSkipState (-1);
+			}
+			else
+			{
+				ShowPreviewSkipState (FramesView.Frames.SelectedIndex);
+			}
+		}
+
+		private void ShowPreviewSkipState (int pFrameIndex)
+		{
+			PreviewButtonSkipBack.IsEnabled = PreviewButtonPlay.IsEnabled && (pFrameIndex > 0);
+			PreviewButtonSkipForward.IsEnabled = PreviewButtonPlay.IsEnabled && (pFrameIndex >= 0) && (pFrameIndex < FramesView.Frames.Items.Count - 1);
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		private void HandlePreviewPlay ()
+		{
+			if (AnimationPreview.IsAnimated)
+			{
+				AnimationPreview.StopAnimation ();
+				AnimationPreview.IsPaused = false;
+				AnimationPreview.IsRepeating = PreviewButtonRepeat.IsChecked.Value;
+				AnimationPreview.AnimationRate = (double)SliderRate.Value;
+#if DEBUG_NOT
+				System.Diagnostics.Debug.Print ("StartAnimation Repeat [{0}] Rate [{1}]", AnimationPreview.AnimationIsRepeating, AnimationPreview.AnimationRate);		
+#endif
+				PushSelectedFrame ();
+				AnimationPreview.StartAnimation ();
+			}
+			ShowPreviewState ();
+		}
+
+		private void HandlePreviewPause ()
+		{
+			if (AnimationPreview.IsPlaying)
+			{
+				AnimationPreview.IsPaused = PreviewButtonPause.IsChecked.Value;
+				ShowPreviewSkipState ();
+			}
+		}
+
+		private void HandlePreviewStop ()
+		{
+			AnimationPreview.StopAnimation ();
+			ShowPreviewState ();
+		}
+
+		private void HandlePreviewSkipBack ()
+		{
+			if (AnimationPreview.IsPlaying)
+			{
+				//AnimationPreviewHost.CurrentFrameIndex--;
+			}
+			else if (!IsPanelEmpty)
+			{
+				if (FramesView.Frames.SelectedIndex > 0)
+				{
+					FramesView.Frames.SelectedIndex--;
+				}
+			}
+		}
+
+		private void HandlePreviewSkipForward ()
+		{
+			if (AnimationPreview.IsPlaying)
+			{
+				//AnimationPreviewHost.CurrentFrameIndex++;
+			}
+			else if (!IsPanelEmpty)
+			{
+				if ((FramesView.Frames.SelectedIndex >= 0) && (FramesView.Frames.SelectedIndex < FramesView.Frames.Items.Count - 1))
+				{
+					FramesView.Frames.SelectedIndex++;
+				}
+			}
+		}
+
+		private void HandlePreviewRepeat ()
+		{
+			if (!AnimationPreview.IsPlaying)
+			{
+				AnimationPreview.IsRepeating = PreviewButtonRepeat.IsChecked.Value;
+			}
+		}
+
+		private void HandlePreviewMute ()
+		{
+			if (!AnimationPreview.IsPlaying)
+			{
+				AnimationPreview.DeleteAnimation ();
+			}
+		}
+
+		private void HandlePreviewRateChanged ()
+		{
+			if (AnimationPreview.IsAnimated)
+			{
+				AnimationPreview.AnimationRate = (double)SliderRate.Value;
 			}
 		}
 

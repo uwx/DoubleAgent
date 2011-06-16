@@ -41,13 +41,15 @@ namespace AgentCharacterEditor.Previews
 			}
 			set
 			{
+				StopAutoPace ();
+				StopAutoScroll ();
+
 				mCharacterFile = value;
+
 				if (mCharacterFile == null)
 				{
 					mBalloonPreview.Style = CharacterStyle.None;
 					mBalloonPreview.Balloon = null;
-					StopAutoPace ();
-					StopAutoScroll ();
 				}
 				else
 				{

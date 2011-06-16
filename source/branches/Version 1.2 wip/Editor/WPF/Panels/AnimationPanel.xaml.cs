@@ -19,10 +19,13 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 using System;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using AgentCharacterEditor.Navigation;
 using AgentCharacterEditor.Previews;
 using AgentCharacterEditor.Properties;
+using AgentCharacterEditor.Global;
 using DoubleAgent;
 using DoubleAgent.Character;
 
@@ -45,6 +48,13 @@ namespace AgentCharacterEditor.Panels
 
 			FramesView.Frames.SelectionChanged += new System.Windows.Controls.SelectionChangedEventHandler (FramesView_SelectionChanged);
 			FramesView.Frames.MouseDoubleClick += new System.Windows.Input.MouseButtonEventHandler (FramesView_MouseDoubleClick);
+			FramesView.Frames.ContextMenuOpening += new System.Windows.Controls.ContextMenuEventHandler (FramesView_ContextMenuOpening);
+			FramesView.MenuItemAdd.Click += new RoutedEventHandler (ButtonAdd_Click);
+			FramesView.MenuItemMoveUp.Click += new RoutedEventHandler (ButtonMoveUp_Click);
+			FramesView.MenuItemMoveDown.Click += new RoutedEventHandler (ButtonMoveDown_Click);
+
+			AnimationPreview.AnimationStateChanged += new EventHandler (AnimationPreview_StateChanged);
+			AnimationPreview.AnimationImageChanged += new EventHandler (AnimationPreview_ImageChanged);
 		}
 
 		protected override void OnLoadConfig (object sender, EventArgs e)
@@ -163,38 +173,45 @@ namespace AgentCharacterEditor.Panels
 
 						FramesView.ShowAnimationFrames (CharacterFile, Animation);
 						FramesView.IsEnabled = true;
+						FramesView.Frames.SelectedIndex = Math.Max (FramesView.Frames.SelectedIndex, 0);
 
 						ShowFramesState ();
 						ShowSelectedFrame ();
 					}
 				}
 
-				//AnimationPreview.DeleteAnimation ();
+				AnimationPreview.DeleteAnimation ();
 			}
 		}
 
 		private void ShowSelectedFrame ()
 		{
-			//FramesView.Frames.EnsureVisible (FramesView.Frames.SelectedOrFocusedIndex);
+			FramesView.Frames.ScrollIntoView (FramesView.Frames.SelectedItem);
 
 			ShowSelectionState ();
 
-			//AnimationPreview.StopAnimation ();
-			//AnimationPreview.ShowAnimationFrame (CharacterFile, GetSelectedFrame (true));
+			AnimationPreview.StopAnimation ();
+			AnimationPreview.ShowAnimationFrame (CharacterFile, GetSelectedFrame (true), PreviewImageSize);
 			ShowPreviewState ();
 		}
 
-		private void ShowPreviewState ()
+		private System.Windows.Size PreviewImageSize
 		{
+			get
+			{
+				Size lImageSize = (CharacterFile != null) ? CharacterFile.Header.ImageSize.ToWPF () : FrameSample.DefaultImageSize.ToWPF ();
+				return lImageSize.TransformToScreenResolution (Program.MainWindow.CurrentView.Inverse);
+			}
 		}
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Event Handlers
 
-		void OnViewChanged (object sender, EventArgs e)
+		private void OnViewChanged (object sender, EventArgs e)
 		{
 			ShowAnimationFrames ();
+			ShowSelectedFrame ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -224,7 +241,27 @@ namespace AgentCharacterEditor.Panels
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		void FramesView_SelectionChanged (object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+		private void FramesView_PreviewMouseLeftButtonDown (object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			for (UIElement lHitTest = FramesViewContainer.InputHitTest (e.GetPosition (FramesViewContainer)) as UIElement; lHitTest != null; lHitTest = lHitTest = VisualTreeHelper.GetParent (lHitTest) as UIElement)
+			{
+				if (lHitTest is ListViewItem)
+				{
+					break;
+				}
+				else if ((lHitTest != FramesView) && FramesView.IsAncestorOf (lHitTest))
+				{
+					break;
+				}
+				else
+				{
+					FramesView.Frames.SelectedItem = null;
+					break;
+				}
+			}
+		}
+
+		private void FramesView_SelectionChanged (object sender, System.Windows.Controls.SelectionChangedEventArgs e)
 		{
 			if (!IsPanelEmpty && !IsPanelFilling)
 			{
@@ -232,7 +269,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		void FramesView_MouseDoubleClick (object sender, System.Windows.Input.MouseButtonEventArgs e)
+		private void FramesView_MouseDoubleClick (object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			if (!IsPanelEmpty && (Navigate != null))
 			{
@@ -250,6 +287,25 @@ namespace AgentCharacterEditor.Panels
 				}
 			}
 		}
+
+		private void FramesView_ContextMenuOpening (object sender, System.Windows.Controls.ContextMenuEventArgs e)
+		{
+			if (IsPanelEmpty)
+			{
+				e.Handled = true;
+			}
+			else
+			{
+				FramesView.MenuItemAdd.IsEnabled = CanAddFrame;
+				FramesView.MenuItemMoveUp.IsEnabled = CanMoveFrameUp;
+				FramesView.MenuItemMoveDown.IsEnabled = CanMoveFrameDown;
+
+				FramesView.MenuItemMoveUp.SetTitle (MoveFrameUpTitle);
+				FramesView.MenuItemMoveDown.SetTitle (MoveFrameDownTitle);
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
 
 		private void ListViewStates_MouseDoubleClick (object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
@@ -323,42 +379,120 @@ namespace AgentCharacterEditor.Panels
 
 		private void PreviewButtonPlay_Click (object sender, System.Windows.RoutedEventArgs e)
 		{
-
+			if (!AnimationPreview.IsAnimated)
+			{
+				using (CursorState lCursorState = new CursorState (Program.MainWindow))
+				{
+					lCursorState.ShowWait ();
+					AnimationPreview.CreateAnimation (CharacterFile, Animation, PreviewImageSize, !PreviewButtonMute.IsChecked.Value);
+				}
+			}
+			HandlePreviewPlay ();
 		}
 
 		private void PreviewButtonPause_Click (object sender, System.Windows.RoutedEventArgs e)
 		{
-
+			HandlePreviewPause ();
 		}
 
 		private void PreviewButtonStop_Click (object sender, System.Windows.RoutedEventArgs e)
 		{
-
+			HandlePreviewStop ();
 		}
 
 		private void PreviewButtonSkipBack_Click (object sender, System.Windows.RoutedEventArgs e)
 		{
-
+			HandlePreviewSkipBack ();
 		}
 
 		private void PreviewButtonSkipForward_Click (object sender, System.Windows.RoutedEventArgs e)
 		{
-
+			HandlePreviewSkipForward ();
 		}
 
 		private void PreviewButtonRepeat_Click (object sender, System.Windows.RoutedEventArgs e)
 		{
-
+			if (AnimationPreview.IsPlaying)
+			{
+				System.Media.SystemSounds.Beep.Play ();
+			}
+			else
+			{
+				HandlePreviewRepeat ();
+			}
 		}
 
 		private void PreviewButtonMute_Click (object sender, System.Windows.RoutedEventArgs e)
 		{
-
+			if (AnimationPreview.IsPlaying)
+			{
+				System.Media.SystemSounds.Beep.Play ();
+			}
+			else
+			{
+				HandlePreviewMute ();
+			}
 		}
 
 		private void SliderRate_ValueChanged (object sender, System.Windows.RoutedPropertyChangedEventArgs<double> e)
 		{
+			HandlePreviewRateChanged ();
+		}
 
+		///////////////////////////////////////////////////////////////////////////////
+
+		void AnimationPreview_StateChanged (object sender, EventArgs e)
+		{
+#if DEBUG_NOT
+			try
+			{
+				System.Windows.Media.Animation.ClockGroup lClock = sender as System.Windows.Media.Animation.ClockGroup;
+				System.Diagnostics.Debug.Print ("PreviewState [{0}] Time [{1}] Progress [{2}] Iteration [{3}]", lClock.CurrentState, lClock.CurrentTime, lClock.CurrentProgress, lClock.CurrentIteration);
+			}
+			catch (Exception pException)
+			{
+				System.Diagnostics.Debug.Print (pException.Message);
+			}
+#endif
+			try
+			{
+				if (AnimationPreview.IsPlaying)
+				{
+					ShowPreviewState ();
+				}
+				else
+				{
+					PopSelectedFrame ();
+					ShowSelectedFrame ();
+				}
+			}
+			catch (Exception pException)
+			{
+				System.Diagnostics.Debug.Print (pException.Message);
+			}
+		}
+
+		void AnimationPreview_ImageChanged (object sender, EventArgs e)
+		{
+			if (AnimationPreview.IsPlaying)
+			{
+				try
+				{
+					int lFrameNdx = AnimationPreview.CurrentFrameIndex;
+					if (lFrameNdx >= 0)
+					{
+						using (PanelFillingState lFillingState = new PanelFillingState (this))
+						{
+							FramesView.Frames.SelectedIndex = lFrameNdx;
+							FramesView.Frames.ScrollIntoView (FramesView.Frames.SelectedItem);
+						}
+					}
+				}
+				catch (Exception pException)
+				{
+					System.Diagnostics.Debug.Print (pException.Message);
+				}
+			}
 		}
 
 		#endregion

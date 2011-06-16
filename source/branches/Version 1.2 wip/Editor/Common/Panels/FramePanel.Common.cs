@@ -160,7 +160,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowSelectedImage ()
 		{
-			ShowFrameImage (GetSelectedImage (true));
+			ShowFrameImage (GetSelectedImage (false));
 
 			ButtonAdd.IsEnabled = CanAddImage;
 			ButtonDelete.IsEnabled = CanDeleteImage;
@@ -189,7 +189,7 @@ namespace AgentCharacterEditor.Panels
 			get
 			{
 				FileFrameImage lFrameImage = GetSelectedImage (false);
-				return !IsPanelEmpty && !Program.FileIsReadOnly && (lFrameImage != null);
+				return !IsPanelEmpty && !Program.FileIsReadOnly && (lFrameImage != null) && (Frame.ImageCount > 1);
 			}
 		}
 		private String DeleteImageTitle
@@ -447,7 +447,7 @@ namespace AgentCharacterEditor.Panels
 
 				if (lFrameImage != null)
 				{
-					pEventArgs.PutCopyTitle (Titles.ImageFrameAnimation (lFrameImage).Quoted ());
+					pEventArgs.PutCopyTitle (pEventArgs.IsContextMenu ? Titles.Image(lFrameImage) : Titles.ImageFrameAnimation (lFrameImage).Quoted ());
 				}
 				return true;
 			}
@@ -474,9 +474,9 @@ namespace AgentCharacterEditor.Panels
 			{
 				FileFrameImage lFrameImage = GetSelectedImage (false);
 
-				if (lFrameImage != null)
+				if ((lFrameImage != null) && (Frame.ImageCount > 1))
 				{
-					pEventArgs.PutCutTitle (Titles.ImageFrameAnimation (lFrameImage).Quoted ());
+					pEventArgs.PutCutTitle (pEventArgs.IsContextMenu ? Titles.Image (lFrameImage) : Titles.ImageFrameAnimation (lFrameImage).Quoted ());
 				}
 				return true;
 			}
@@ -488,7 +488,7 @@ namespace AgentCharacterEditor.Panels
 			{
 				FileFrameImage lFrameImage = GetSelectedImage (false);
 
-				if (lFrameImage != null)
+				if ((lFrameImage != null) && (Frame.ImageCount > 1))
 				{
 					if (pEventArgs.PutCopyObject (lFrameImage))
 					{
@@ -506,9 +506,9 @@ namespace AgentCharacterEditor.Panels
 			{
 				FileFrameImage lFrameImage = GetSelectedImage (false);
 
-				if (lFrameImage != null)
+				if ((lFrameImage != null) && (Frame.ImageCount > 1))
 				{
-					pEventArgs.PutDeleteTitle (Titles.ImageFrameAnimation (lFrameImage).Quoted ());
+					pEventArgs.PutDeleteTitle (pEventArgs.IsContextMenu ? Titles.Image (lFrameImage) : Titles.ImageFrameAnimation (lFrameImage).Quoted ());
 				}
 				return true;
 			}
@@ -520,7 +520,7 @@ namespace AgentCharacterEditor.Panels
 			{
 				FileFrameImage lFrameImage = GetSelectedImage (false);
 
-				if (lFrameImage != null)
+				if ((lFrameImage != null) && (Frame.ImageCount > 1))
 				{
 					DeleteSelectedImage (lFrameImage, false);
 					return true;
@@ -541,7 +541,7 @@ namespace AgentCharacterEditor.Panels
 				}
 				else
 				{
-					pEventArgs.PutPasteTitle (Titles.PasteTypeTitle (lFrameImage, Titles.Image (lFrameImage), AppResources.Resources.EditPasteImageSource));
+					pEventArgs.PutPasteTitle (Titles.PasteTypeTitle (lFrameImage, pEventArgs.IsContextMenu ? Titles.Image (lFrameImage) : Titles.ImageFrameAnimation (lFrameImage).Quoted (), AppResources.Resources.EditPasteImageSource));
 				}
 				return true;
 			}

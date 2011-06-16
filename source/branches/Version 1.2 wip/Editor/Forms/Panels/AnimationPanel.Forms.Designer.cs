@@ -96,7 +96,7 @@ namespace AgentCharacterEditor.Panels
 			this.PreviewButtonSkipForward = new DoubleAgent.ToolStripButtonCompat();
 			this.PreviewButtonRepeat = new DoubleAgent.ToolStripButtonCompat();
 			this.PreviewButtonMute = new DoubleAgent.ToolStripButtonCompat();
-			this.AnimationPreview = new AgentCharacterEditor.Previews.AnimationPreview();
+			this.AnimationPreview = new AgentCharacterEditor.Previews.AnimationPreviewHost();
 			toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -627,8 +627,8 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripPreview.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.ToolStripPreview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.PreviewButtonPlay,
-            this.PreviewButtonPause,
             this.PreviewButtonStop,
+            this.PreviewButtonPause,
             toolStripSeparator4,
             this.PreviewButtonSkipBack,
             this.PreviewButtonSkipForward,
@@ -719,7 +719,7 @@ namespace AgentCharacterEditor.Panels
 			this.PreviewButtonMute.Text = "Mute";
 			this.PreviewButtonMute.Click += new System.EventHandler(this.PreviewButtonMute_Click);
 			// 
-			// AnimationPreview
+			// AnimationPreviewHost
 			// 
 			this.AnimationPreview.AutoSize = true;
 			this.AnimationPreview.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -730,7 +730,7 @@ namespace AgentCharacterEditor.Panels
 			this.AnimationPreview.Margin = new System.Windows.Forms.Padding(0, 0, 12, 0);
 			this.AnimationPreview.MaximumSize = new System.Drawing.Size(258, 258);
 			this.AnimationPreview.MinimumSize = new System.Drawing.Size(18, 18);
-			this.AnimationPreview.Name = "AnimationPreview";
+			this.AnimationPreview.Name = "AnimationPreviewHost";
 			this.AnimationPreview.Size = new System.Drawing.Size(130, 130);
 			this.AnimationPreview.TabIndex = 0;
 			this.AnimationPreview.TabStop = false;
@@ -799,7 +799,7 @@ namespace AgentCharacterEditor.Panels
 		private System.Windows.Forms.TableLayoutPanel PanelMain;
 		private DoubleAgent.GroupBoxCompat GroupBoxPreview;
 		private System.Windows.Forms.TableLayoutPanel PanelPreview;
-		private AgentCharacterEditor.Previews.AnimationPreview AnimationPreview;
+		private AgentCharacterEditor.Previews.AnimationPreviewHost AnimationPreview;
 		private System.Windows.Forms.TableLayoutPanel PanelPreviewControls;
 		private System.Windows.Forms.TrackBar SliderRate;
 		private DoubleAgent.ToolStripEx ToolStripPreview;

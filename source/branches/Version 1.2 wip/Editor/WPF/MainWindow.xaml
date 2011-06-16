@@ -1,6 +1,11 @@
 ﻿<Window x:Class="AgentCharacterEditor.MainWindow"
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:custom="clr-namespace:DoubleAgent"
+		xmlns:panels="clr-namespace:AgentCharacterEditor.Panels"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		mc:Ignorable="d"
 		Title="Double Agent Character Editor"
 		Icon="{StaticResource IconDoubleAgent}"
 		WindowStyle="SingleBorderWindow"
@@ -9,15 +14,11 @@
 		Background="{StaticResource BackgroundLighterBrush}"
 		Foreground="{StaticResource {x:Static SystemColors.WindowTextBrushKey}}"
 		UseLayoutRounding="True"
-		mc:Ignorable="d"
-		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		Height="600"
 		Width="1000"
 		Initialized="Window_Initialized"
 		Loaded="Window_Loaded"
-		Closing="Window_Closing"
-		xmlns:panels="clr-namespace:AgentCharacterEditor.Panels">
+		Closing="Window_Closing">
 	<Window.CommandBindings>
 		<CommandBinding Command="ApplicationCommands.New"
 						Executed="OnFileNew" />
@@ -170,28 +171,36 @@
 					 ToolBarTray.IsLocked="true">
 			<ToolBar Name="ToolBarMain">
 				<Button Name="ButtonNavigateBack"
+						Style="{StaticResource ImageStateButton}"
 						ToolTip="Back"
 						Command="BrowseBack"
 						Focusable="False"
 						IsTabStop="False">
-					<Image Source="{StaticResource ImgNavigateBack}"
-						   Stretch="None"
-						   Width="16"
-						   Height="16"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Center"></Image>
+					<custom:ImageState Source="{StaticResource ImgNavigateBack}"
+									   NormalSource="{StaticResource ImgNavigateBack}"
+									   HotSource="{StaticResource ImgNavigateBackHot}"
+									   PressedSource="{StaticResource ImgNavigateBackPressed}"
+									   Stretch="UniformToFill"
+									   Width="20"
+									   Height="20"
+									   HorizontalAlignment="Center"
+									   VerticalAlignment="Center" />
 				</Button>
 				<Button Name="ButtonNavigateForward"
+						Style="{StaticResource ImageStateButton}"
 						ToolTip="Forward"
 						Command="BrowseForward"
 						Focusable="False"
 						IsTabStop="False">
-					<Image Source="{StaticResource ImgNavigateForward}"
-						   Stretch="None"
-						   Width="16"
-						   Height="16"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Center"></Image>
+					<custom:ImageState Source="{StaticResource ImgNavigateForward}"
+									   NormalSource="{StaticResource ImgNavigateForward}"
+									   HotSource="{StaticResource ImgNavigateForwardHot}"
+									   PressedSource="{StaticResource ImgNavigateForwardPressed}"
+									   Stretch="UniformToFill"
+									   Width="20"
+									   Height="20"
+									   HorizontalAlignment="Center"
+									   VerticalAlignment="Center" />
 				</Button>
 				<Separator />
 				<Button Name="ButtonFileNew"
@@ -439,50 +448,10 @@
 					</MenuItem.Icon>
 				</MenuItem>
 				<Separator Style="{StaticResource {x:Static MenuItem.SeparatorStyleKey}}" />
-				<MenuItem Name="MenuItemEditCut"
-						  Header="_Cut"
-						  Command="ApplicationCommands.Cut"
-						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditCut}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
-					</MenuItem.Icon>
-				</MenuItem>
-				<MenuItem Name="MenuItemEditCopy"
-						  Header="_Copy"
-						  Command="ApplicationCommands.Copy"
-						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditCopy}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
-					</MenuItem.Icon>
-				</MenuItem>
-				<MenuItem Name="MenuItemEditPaste"
-						  Header="_Paste"
-						  Command="ApplicationCommands.Paste"
-						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditPaste}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
-					</MenuItem.Icon>
-				</MenuItem>
-				<MenuItem Name="MenuItemEditDelete"
-						  Header="_Delete"
-						  Command="ApplicationCommands.Delete"
-						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditDelete}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
-					</MenuItem.Icon>
-				</MenuItem>
+				<MenuItem Style="{StaticResource MenuItemCut}" />
+				<MenuItem Style="{StaticResource MenuItemCopy}" />
+				<MenuItem Style="{StaticResource MenuItemPaste}" />
+				<MenuItem Style="{StaticResource MenuItemDelete}" />
 			</MenuItem>
 			<MenuItem Header="_View"
 					  Name="MenuItemView"

@@ -55,7 +55,6 @@
 									  HorizontalAlignment="Stretch"
 									  x:Name="TextBoxName"
 									  VerticalAlignment="Center"
-									  Style="{StaticResource PanelTextBox}"
 									  ContextMenu="{StaticResource ContextMenuTextBox}"
 									  IsModifiedChanged="TextBoxName_IsModifiedChanged" />
 					<Label Content="Return animation"
@@ -71,8 +70,6 @@
 							  VerticalAlignment="Center"
 							  Grid.Row="1"
 							  Margin="2"
-							  Style="{StaticResource PanelComboBox}"
-							  ItemContainerStyle="{StaticResource PanelComboBoxItem}"
 							  SelectionChanged="ComboBoxReturn_SelectionChanged" />
 				</Grid>
 				<Label Grid.Column="1"
@@ -94,8 +91,8 @@
 						  SelectionMode="Single"
 						  ScrollViewer.HorizontalScrollBarVisibility="Hidden"
 						  ScrollViewer.VerticalScrollBarVisibility="Auto"
-						  Style="{StaticResource PanelListView}"
 						  Height="70"
+						  ItemContainerStyle="{StaticResource ListViewItemCommon}"
 						  MouseDoubleClick="ListViewStates_MouseDoubleClick">
 					<ListView.ItemsPanel>
 						<ItemsPanelTemplate>
@@ -114,17 +111,17 @@
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
-				<Grid>
+				<Grid Margin="0,0,0,2">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition />
 						<ColumnDefinition Width="Auto" />
 						<ColumnDefinition Width="Auto" />
 						<ColumnDefinition Width="Auto" />
 					</Grid.ColumnDefinitions>
-					<StackPanel HorizontalAlignment="Left"
-								VerticalAlignment="Top"
-								Orientation="Horizontal"
-								Margin="0,0,0,5">
+					<ToolBar Style="{StaticResource PanelToolBar}"
+							 HorizontalAlignment="Left"
+							 VerticalAlignment="Top"
+							 Margin="2,0">
 						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 								Height="Auto"
 								Name="ButtonAdd"
@@ -178,7 +175,7 @@
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center"></Image>
 						</Button>
-						<Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+						<Separator Style="{StaticResource PanelToolBarSeparator}" />
 						<CheckBox Style="{StaticResource {x:Static ToolBar.CheckBoxStyleKey}}"
 								  Height="Auto"
 								  Name="ButtonShowBranching"
@@ -209,7 +206,7 @@
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center"></Image>
 						</CheckBox>
-						<Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+						<Separator Style="{StaticResource PanelToolBarSeparator}" />
 						<RadioButton Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
 									 Height="Auto"
 									 Name="ButtonViewSmall"
@@ -253,23 +250,23 @@
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center"></Image>
 						</RadioButton>
-					</StackPanel>
+					</ToolBar>
 					<Label Content="New frame duration"
 						   Grid.Column="1"
 						   HorizontalAlignment="Right"
 						   Name="LabelDuration"
 						   VerticalAlignment="Center"
-						   Style="{StaticResource PanelLabel}"
-						   Padding="2,0,5,2" />
-					<custom:NumericUpDown Grid.Column="2"
+						   Style="{StaticResource PanelLabel}" />
+					<custom:NumericUpDown Style="{StaticResource NumericUpDown}"
+										  Grid.Column="2"
 										  HorizontalAlignment="Right"
 										  x:Name="NumericFrameDuration"
 										  VerticalAlignment="Center"
 										  Width="60"
-										  Style="{StaticResource PanelTextBox}"
 										  ContextMenu="{StaticResource ContextMenuTextBox}"
 										  Minimum="0"
-										  IsModifiedChanged="NumericFrameDuration_IsModifiedChanged" />
+										  IsModifiedChanged="NumericFrameDuration_IsModifiedChanged"
+										  Margin="2,0" />
 					<Label Content="(1/100 sec)"
 						   Grid.Column="3"
 						   HorizontalAlignment="Right"
@@ -277,9 +274,12 @@
 						   VerticalAlignment="Center"
 						   Style="{StaticResource PanelLabel}" />
 				</Grid>
-				<ContentControl Grid.Row="1"
+				<ContentControl Name="FramesViewContainer"
+								IsTabStop="False"
+								Grid.Row="1"
 								Style="{StaticResource PanelContent}"
-								Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}">
+								Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
+								PreviewMouseLeftButtonDown="FramesView_PreviewMouseLeftButtonDown">
 					<previews:FramesPreview x:Name="FramesView" />
 				</ContentControl>
 			</Grid>
@@ -294,45 +294,43 @@
 					<ColumnDefinition  Width="Auto" />
 					<ColumnDefinition />
 				</Grid.ColumnDefinitions>
-				<Rectangle Height="128"
-						   HorizontalAlignment="Left"
-						   Name="AnimationPreview"
-						   Stroke="Black"
-						   VerticalAlignment="Top"
-						   Width="128"
-						   Margin="0,0,15,0"
-						   Fill="{StaticResource {x:Static SystemColors.WindowBrushKey}}" />
-				<Grid Grid.Column="1">
+				<ContentControl HorizontalAlignment="Left"
+								VerticalAlignment="Top"
+								Style="{StaticResource PanelContent}"
+								Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
+								Margin="2,0,2,2"
+								HorizontalContentAlignment="Stretch"
+								VerticalContentAlignment="Stretch"
+								Focusable="False"
+								IsTabStop="False">
+					<previews:AnimationPreview x:Name="AnimationPreview"
+											   Width="128"
+											   Height="128"
+											   MinWidth="16"
+											   MinHeight="16"
+											   MaxWidth="256"
+											   MaxHeight="256"
+											   ClipToBounds="True" />
+				</ContentControl>
+				<Grid Grid.Column="1"
+					  Margin="12,0,0,0">
 					<Grid.RowDefinitions>
 						<RowDefinition Height="Auto" />
 						<RowDefinition />
 					</Grid.RowDefinitions>
-					<StackPanel HorizontalAlignment="Left"
-								VerticalAlignment="Top"
-								Orientation="Horizontal">
+					<ToolBar Style="{StaticResource PanelToolBar}"
+							 HorizontalAlignment="Left"
+							 VerticalAlignment="Top">
 						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 								Height="Auto"
 								Name="PreviewButtonPlay"
 								Width="Auto"
 								ToolTip="Play"
 								Click="PreviewButtonPlay_Click">
-							<Image Source="{StaticResource ImgPlay}"
+							<Image Source="{StaticResource IconPlay}"
 								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
-						</Button>
-						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-								Height="Auto"
-								Name="PreviewButtonPause"
-								Width="Auto"
-								ToolTip="Pause"
-								Click="PreviewButtonPause_Click">
-							<Image Source="{StaticResource ImgPause}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
+								   Width="24"
+								   Height="24"
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center"></Image>
 						</Button>
@@ -342,24 +340,37 @@
 								Width="Auto"
 								ToolTip="Stop"
 								Click="PreviewButtonStop_Click">
-							<Image Source="{StaticResource ImgStop}"
+							<Image Source="{StaticResource IconStop}"
 								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
+								   Width="24"
+								   Height="24"
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center"></Image>
 						</Button>
-						<Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+						<CheckBox Style="{StaticResource {x:Static ToolBar.CheckBoxStyleKey}}"
+								  Height="Auto"
+								  Name="PreviewButtonPause"
+								  Width="Auto"
+								  ToolTip="Pause"
+								  Click="PreviewButtonPause_Click">
+							<Image Source="{StaticResource IconPause}"
+								   Stretch="UniformToFill"
+								   Width="24"
+								   Height="24"
+								   HorizontalAlignment="Center"
+								   VerticalAlignment="Center"></Image>
+						</CheckBox>
+						<Separator Style="{StaticResource PanelToolBarSeparator}" />
 						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 								Height="Auto"
 								Name="PreviewButtonSkipBack"
 								Width="Auto"
 								ToolTip="Back"
 								Click="PreviewButtonSkipBack_Click">
-							<Image Source="{StaticResource ImgSkipBack}"
+							<Image Source="{StaticResource IconSkipBack}"
 								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
+								   Width="24"
+								   Height="24"
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center"></Image>
 						</Button>
@@ -369,24 +380,24 @@
 								Width="Auto"
 								ToolTip="Forward"
 								Click="PreviewButtonSkipForward_Click">
-							<Image Source="{StaticResource ImgSkipForward}"
+							<Image Source="{StaticResource IconSkipForward}"
 								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
+								   Width="24"
+								   Height="24"
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center"></Image>
 						</Button>
-						<Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+						<Separator Style="{StaticResource PanelToolBarSeparator}" />
 						<CheckBox Style="{StaticResource {x:Static ToolBar.CheckBoxStyleKey}}"
 								  Height="Auto"
 								  Name="PreviewButtonRepeat"
 								  Width="Auto"
 								  ToolTip="Repeat"
 								  Click="PreviewButtonRepeat_Click">
-							<Image Source="{StaticResource ImgRepeat}"
+							<Image Source="{StaticResource IconRepeat}"
 								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
+								   Width="24"
+								   Height="24"
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center"></Image>
 						</CheckBox>
@@ -396,14 +407,14 @@
 								  Width="Auto"
 								  ToolTip="Mute"
 								  Click="PreviewButtonMute_Click">
-							<Image Source="{StaticResource ImgMute}"
+							<Image Source="{StaticResource IconMute}"
 								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
+								   Width="24"
+								   Height="24"
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center"></Image>
 						</CheckBox>
-					</StackPanel>
+					</ToolBar>
 					<Grid VerticalAlignment="Top"
 						  Grid.Row="1"
 						  Margin="0,20,0,0">

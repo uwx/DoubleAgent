@@ -42,7 +42,8 @@
 						 Name="TextBoxName"
 						 VerticalAlignment="Center"
 						 IsReadOnly="True"
-						 Style="{StaticResource PanelTextBox}"
+						 IsTabStop="False"
+						 IsUndoEnabled="False"
 						 ContextMenu="{StaticResource ContextMenuTextBox}" />
 			</Grid>
 		</GroupBox>
@@ -52,7 +53,6 @@
 				  Style="{StaticResource PanelGroupBox}">
 			<Grid>
 				<ListView Name="ListViewAnimations"
-						  Style="{StaticResource PanelListView}"
 						  SelectionMode="Single">
 					<ListView.ItemsPanel>
 						<ItemsPanelTemplate>

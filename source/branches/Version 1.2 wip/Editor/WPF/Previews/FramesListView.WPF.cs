@@ -52,19 +52,7 @@ namespace AgentCharacterEditor.Previews
 			}
 			set
 			{
-				mImageSize= value;
-
-				try
-				{
-					Size lResolution = ImageExtensions.GuessScreenResolution ().ToWPF ();
-					Point lTransformed = Program.MainWindow.CurrentView.Inverse.Transform (new Point (mImageSize.Width * 96.0 / lResolution.Width, mImageSize.Height * 96.0 / lResolution.Height));
-					mImageSize.Width = lTransformed.X;
-					mImageSize.Height = lTransformed.Y;
-				}
-				catch (Exception pException)
-				{
-					System.Diagnostics.Debug.Print (pException.Message);
-				}
+				mImageSize = value.TransformToScreenResolution (Program.MainWindow.CurrentView.Inverse);
 
 				foreach (FramesListItem lListItem in Items)
 				{

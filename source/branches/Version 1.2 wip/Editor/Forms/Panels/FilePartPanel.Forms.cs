@@ -37,8 +37,10 @@ namespace AgentCharacterEditor.Panels
 			InitializeCommon ();
 		}
 
-		protected virtual void OnVisibleChanged (object sender, EventArgs e)
+		protected override void OnVisibleChanged (EventArgs e)
 		{
+			base.OnVisibleChanged (e);
+
 			if (Program.MainWindow != null)
 			{
 				Program.MainWindow.CanEdit -= new Global.CanEditEventHandler (OnCanEdit);

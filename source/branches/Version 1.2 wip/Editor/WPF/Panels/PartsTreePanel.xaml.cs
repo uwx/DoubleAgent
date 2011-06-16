@@ -50,26 +50,29 @@ namespace AgentCharacterEditor.Panels
 
 			if (lSettings.IsValid)
 			{
-				TreeViewItem lTreeItem;
+				using (PanelFillingState lFillingState = new PanelFillingState (this))
+				{
+					TreeViewItem lTreeItem;
 
-				lTreeItem = GetRootItem (ItemNameCharacter);
-				if (lTreeItem != null)
-				{
-					lTreeItem.IsExpanded = lSettings.CharacterNodeExpanded;
-					lTreeItem.IsSelected = true;
-				}
-				lTreeItem = GetRootItem (ItemNameAnimations);
-				if (lTreeItem != null)
-				{
-					lTreeItem.IsExpanded = lSettings.AnimationsNodeExpanded;
-				}
-				lTreeItem = GetRootItem (ItemNameStates);
-				if (lTreeItem != null)
-				{
-					lTreeItem.IsExpanded = lSettings.StatesNodeExpanded;
-				}
+					lTreeItem = GetRootItem (ItemNameCharacter);
+					if (lTreeItem != null)
+					{
+						lTreeItem.IsExpanded = lSettings.CharacterNodeExpanded;
+						TreeViewMain.SetSelectedItem (lTreeItem);
+					}
+					lTreeItem = GetRootItem (ItemNameAnimations);
+					if (lTreeItem != null)
+					{
+						lTreeItem.IsExpanded = lSettings.AnimationsNodeExpanded;
+					}
+					lTreeItem = GetRootItem (ItemNameStates);
+					if (lTreeItem != null)
+					{
+						lTreeItem.IsExpanded = lSettings.StatesNodeExpanded;
+					}
 
-				TreeViewMain.InvalidateVisual ();
+					TreeViewMain.InvalidateArrange ();
+				}
 			}
 		}
 
@@ -239,7 +242,7 @@ namespace AgentCharacterEditor.Panels
 			{
 				if (lSelectedItem != null)
 				{
-					lSelectedItem.IsSelected = true;
+					TreeViewMain.SetSelectedItem (lSelectedItem);
 				}
 				lSelectedItem = TreeViewMain.SelectedItem as TreeViewItem;
 				if (lSelectedItem == null)
@@ -247,7 +250,7 @@ namespace AgentCharacterEditor.Panels
 					lSelectedItem = GetRootItem (ItemNameCharacter);
 					if (lSelectedItem != null)
 					{
-						lSelectedItem.IsSelected = true;
+						TreeViewMain.SetSelectedItem (lSelectedItem);
 					}
 				}
 			}
@@ -414,7 +417,7 @@ namespace AgentCharacterEditor.Panels
 				{
 					using (PanelFillingState lFillingState = new PanelFillingState (this))
 					{
-						lPartItem.IsSelected = true;
+						TreeViewMain.SetSelectedItem (lPartItem);
 					}
 					return true;
 				}
@@ -458,17 +461,21 @@ namespace AgentCharacterEditor.Panels
 				{
 					Navigate (this, new AgentCharacterEditor.Navigation.NavigationEventArgs (SelectedPart));
 				}
-				catch
+				catch (Exception pException)
 				{
+					System.Diagnostics.Debug.Print (pException.Message);
 				}
 			}
 		}
 
-		#endregion
-
-		private void TreeViewMain_MouseUp (object sender, System.Windows.Input.MouseButtonEventArgs e)
+		private void TreeViewMain_MouseDown (object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
-			System.Diagnostics.Debug.Print ("TreeViewMain_MouseUp");
+			if (!TreeViewMain.IsKeyboardFocusWithin)
+			{
+			    TreeViewMain.Focus ();
+			}
 		}
+
+		#endregion
 	}
 }

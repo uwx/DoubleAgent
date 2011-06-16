@@ -327,7 +327,7 @@ namespace AgentCharacterEditor.Panels
 			this.ContextMenuAnimations.Items.AddRange (new System.Windows.Forms.ToolStripItem[] {
             this.MenuItemAdd,
             toolStripSeparator1});
-			this.ContextMenuAnimations.Name = "ContextMenuEdit";
+			this.ContextMenuAnimations.Name = "ContextMenuAnimations";
 			this.ContextMenuAnimations.Size = new System.Drawing.Size (230, 38);
 			this.ContextMenuAnimations.Opening += new System.ComponentModel.CancelEventHandler (this.ContextMenuAnimations_Opening);
 			// 

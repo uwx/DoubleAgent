@@ -26,6 +26,11 @@ namespace DoubleAgent
 			set
 			{
 				SetValue (IsModifiedProperty, value);
+				if (!value)
+				{
+					UndoLimit = 0;
+					UndoLimit = -1;
+				}
 			}
 		}
 
@@ -43,7 +48,7 @@ namespace DoubleAgent
 
 		protected void OnIsModifiedChanged ()
 		{
-			RaiseEvent (new RoutedEventArgs (TextBoxEx.IsModifiedChangedEvent));
+			RaiseEvent (new RoutedEventArgs (TextBoxEx.IsModifiedChangedEvent, this));
 		}
 
 		private static object CoerceIsModified (DependencyObject pObject, object pValue)

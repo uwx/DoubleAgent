@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 
 namespace DoubleAgent
 {
-	public class NumericUpDown : TextBoxEx
+	public class NumericUpDown : TextBoxEx, IDisposable
 	{
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
 		private AsyncTimer mWheelTimer = null;
+		private AsyncTimer mRepeatTimer = null;
 
 		public NumericUpDown ()
 		{
@@ -20,11 +22,25 @@ namespace DoubleAgent
 			this.Minimum = decimal.MinValue;
 			this.Maximum = decimal.MaxValue;
 			this.MaxLines = 1;
+
+			this.CommandBindings.Add (new CommandBinding (ScrollBar.LineUpCommand, OnIncrement, OnCanIncrement));
+			this.CommandBindings.Add (new CommandBinding (ScrollBar.LineDownCommand, OnDecrement, OnCanDecrement));
 		}
 
 		~NumericUpDown ()
 		{
+			Dispose (false);
+		}
+
+		public void Dispose ()
+		{
+			Dispose (true);
+			GC.SuppressFinalize (this);
+		}
+		protected virtual void Dispose (bool disposing)
+		{
 			StopWheelTimer ();
+			StopRepeatTimer ();
 		}
 
 		#endregion
@@ -136,6 +152,7 @@ namespace DoubleAgent
 				if (base.Text != value.ToString ())
 				{
 					base.Text = value.ToString ();
+					CommandManager.InvalidateRequerySuggested ();
 				}
 			}
 		}
@@ -159,6 +176,7 @@ namespace DoubleAgent
 		protected override void OnMouseWheel (MouseWheelEventArgs e)
 		{
 			base.OnMouseWheel (e);
+			StopRepeatTimer ();
 			StopWheelTimer ();
 
 #if DEBUG_NOT
@@ -230,13 +248,107 @@ namespace DoubleAgent
 		protected override void OnGotFocus (RoutedEventArgs e)
 		{
 			StopWheelTimer ();
+			StopRepeatTimer ();
 			base.OnGotFocus (e);
 		}
 
 		protected override void OnLostFocus (RoutedEventArgs e)
 		{
 			StopWheelTimer ();
+			StopRepeatTimer ();
 			base.OnLostFocus (e);
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		protected void OnCanIncrement (object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = (Value < Maximum);
+			e.Handled = true;
+		}
+		protected void OnIncrement (object sender, ExecutedRoutedEventArgs e)
+		{
+			StopWheelTimer ();
+
+			if (e.OriginalSource is RepeatButton)
+			{
+				StartRepeatTimer (e.OriginalSource as RepeatButton);
+			}
+			else
+			{
+				StopRepeatTimer ();
+			}
+			if (Value < Maximum)
+			{
+				Value++;
+			}
+			e.Handled = true;
+		}
+
+		protected void OnCanDecrement (object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = (Value > Minimum);
+			e.Handled = true;
+		}
+		protected void OnDecrement (object sender, ExecutedRoutedEventArgs e)
+		{
+			StopWheelTimer ();
+
+			if (e.OriginalSource is RepeatButton)
+			{
+				StartRepeatTimer (e.OriginalSource as RepeatButton);
+			}
+			else
+			{
+				StopRepeatTimer ();
+			}
+			if (Value > Minimum)
+			{
+				Value--;
+			}
+			e.Handled = true;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		private void StartRepeatTimer (RepeatButton pRepeatButton)
+		{
+			if (mRepeatTimer == null)
+			{
+				mRepeatTimer = new AsyncTimer ();
+				mRepeatTimer.TimerPulse += new AsyncTimer.TimerPulseHandler (ShiftRepeatTimer_TimerPulse);
+			}
+			if (mRepeatTimer != null)
+			{
+				mRepeatTimer.Stop ();
+				mRepeatTimer.Start (pRepeatButton.Delay, pRepeatButton);
+			}
+		}
+
+		private void StopRepeatTimer ()
+		{
+			if (mRepeatTimer != null)
+			{
+				mRepeatTimer.Dispose ();
+				mRepeatTimer = null;
+			}
+		}
+
+		private void ShiftRepeatTimer_TimerPulse (object sender, AsyncTimer.TimerEventArgs e)
+		{
+			try
+			{
+				RepeatButton lRepeatButton = e.TimerId as RepeatButton;
+
+				if (!lRepeatButton.IsPressed && HasChanged && !IsModified)
+				{
+					HasChanged = false;
+					IsModified = true;
+				}
+			}
+			catch
+			{
+			}
 		}
 
 		#endregion

@@ -68,7 +68,7 @@
             this.MenuItemMoveUp,
             this.MenuItemMoveDown,
             toolStripSeparator1});
-			this.ContextMenuFrames.Name = "ContextMenuEdit";
+			this.ContextMenuFrames.Name = "ContextMenuFrames";
 			this.ContextMenuFrames.Size = new System.Drawing.Size(219, 116);
 			// 
 			// MenuItemAdd

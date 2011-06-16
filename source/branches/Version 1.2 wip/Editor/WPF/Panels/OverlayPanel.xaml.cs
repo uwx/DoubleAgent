@@ -18,8 +18,6 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
-		private AsyncTimer mShiftRepeatTimer = null;
-
 		public OverlayPanel ()
 		{
 			InitializeComponent ();
@@ -27,11 +25,6 @@ namespace AgentCharacterEditor.Panels
 			{
 				Program.MainWindow.ViewChanged += new EventHandler (OnViewChanged);
 			}
-		}
-
-		~OverlayPanel ()
-		{
-			StopShiftRepeat ();
 		}
 
 		#endregion
@@ -196,7 +189,7 @@ namespace AgentCharacterEditor.Panels
 			ArrangeOverlaysList ();
 		}
 
-		void OnViewChanged (object sender, EventArgs e)
+		private void OnViewChanged (object sender, EventArgs e)
 		{
 			ShowSelectedOverlay ();
 		}
@@ -214,6 +207,21 @@ namespace AgentCharacterEditor.Panels
 		private void ListViewOverlays_MouseDoubleClick (object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			UpdateSelectedOverlay (GetSelectedOverlay (false));
+		}
+
+		private void ListViewOverlays_ContextMenuOpening (object sender, ContextMenuEventArgs e)
+		{
+			if (IsPanelEmpty)
+			{
+				e.Handled = true;
+			}
+			else
+			{
+				MenuItemAdd.IsEnabled = CanAddOverlay;
+				MenuItemAdd.SetTitle (AddOverlayTitle);
+				MenuItemChooseFile.IsEnabled = CanChooseOverlayFile;
+				MenuItemChooseFile.SetTitle (ChooseOverlayFileTitle);
+			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -262,60 +270,38 @@ namespace AgentCharacterEditor.Panels
 
 		private void ButtonShiftUp_Click (object sender, RoutedEventArgs e)
 		{
-			StartShiftRepeat (ButtonShiftUp);
 			HandleShiftUpClick (1);
+		}
+		private void ButtonShiftUp_RepeatEnd (object sender, RoutedEventArgs e)
+		{
+			HandleShiftComplete ();
 		}
 
 		private void ButtonShiftDown_Click (object sender, RoutedEventArgs e)
 		{
-			StartShiftRepeat (ButtonShiftDown);
 			HandleShiftDownClick (1);
+		}
+		private void ButtonShiftDown_RepeatEnd (object sender, RoutedEventArgs e)
+		{
+			HandleShiftComplete ();
 		}
 
 		private void ButtonShiftLeft_Click (object sender, RoutedEventArgs e)
 		{
-			StartShiftRepeat (ButtonShiftLeft);
 			HandleShiftLeftClick (1);
+		}
+		private void ButtonShiftLeft_RepeatEnd (object sender, RoutedEventArgs e)
+		{
+			HandleShiftComplete ();
 		}
 
 		private void ButtonShiftRight_Click (object sender, RoutedEventArgs e)
 		{
-			StartShiftRepeat (ButtonShiftRight);
 			HandleShiftRightClick (1);
 		}
-
-		private void ShiftRepeatTimer_TimerPulse (object sender, AsyncTimer.TimerEventArgs e)
+		private void ButtonShiftRight_RepeatEnd (object sender, RoutedEventArgs e)
 		{
-			RepeatButton lRepeatButton = e.TimerId as RepeatButton;
-			if (!lRepeatButton.IsPressed)
-			{
-				HandleShiftComplete ();
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		private void StartShiftRepeat (RepeatButton pRepeatButton)
-		{
-			if (mShiftRepeatTimer == null)
-			{
-				mShiftRepeatTimer = new AsyncTimer ();
-				mShiftRepeatTimer.TimerPulse += new AsyncTimer.TimerPulseHandler (ShiftRepeatTimer_TimerPulse);
-			}
-			if (mShiftRepeatTimer != null)
-			{
-				mShiftRepeatTimer.Stop ();
-				mShiftRepeatTimer.Start (pRepeatButton.Delay, pRepeatButton);
-			}
-		}
-
-		private void StopShiftRepeat ()
-		{
-			if (mShiftRepeatTimer != null)
-			{
-				mShiftRepeatTimer.Dispose ();
-				mShiftRepeatTimer = null;
-			}
+			HandleShiftComplete ();
 		}
 
 		#endregion

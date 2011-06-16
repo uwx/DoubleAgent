@@ -136,11 +136,11 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (pTransparencyColor.Equals (System.Drawing.Color.Empty))
 			{
-				LabelTransparencySample.Background = Background;
+				BorderTransparencySample.Background = Background;
 			}
 			else
 			{
-				LabelTransparencySample.Background = pTransparencyColor.ToWPFBrush ();
+				BorderTransparencySample.Background = pTransparencyColor.ToWPFBrush ();
 				LabelTransparencySample.Foreground = GetContrastingColor (pTransparencyColor).ToWPFBrush ();
 			}
 			if (pTransparencyNdx < 0)
@@ -159,15 +159,15 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (pTransparencyNdx < 0)
 			{
-				LabelColorSample.Visibility = Visibility.Hidden;
+				BorderColorSample.Visibility = Visibility.Hidden;
 				LabelTransparencyClick.Visibility = Program.FileIsReadOnly ? Visibility.Collapsed : Visibility.Hidden;
 			}
 			else
 			{
-				LabelColorSample.Background = pTransparencyColor.ToWPFBrush ();
+				BorderColorSample.Background = pTransparencyColor.ToWPFBrush ();
 				LabelColorSample.Foreground = GetContrastingColor (pTransparencyColor).ToWPFBrush ();
 				LabelColorSample.Content = pTransparencyNdx.ToString ();
-				LabelColorSample.Visibility = Visibility.Visible;
+				BorderColorSample.Visibility = Visibility.Visible;
 				LabelTransparencyClick.Visibility = Program.FileIsReadOnly ? Visibility.Collapsed : Visibility.Visible;
 			}
 		}
@@ -193,9 +193,27 @@ namespace AgentCharacterEditor.Panels
 			ShowAddState ();
 		}
 
+		///////////////////////////////////////////////////////////////////////////////
+
 		private void ListViewAnimations_SelectionChanged (object sender, SelectionChangedEventArgs e)
 		{
 			ShowDeleteState ();
+		}
+
+		private void ListViewAnimations_PreviewMouseLeftButtonDown (object sender, MouseButtonEventArgs e)
+		{
+			for (UIElement lHitTest = ListViewAnimations.InputHitTest (e.GetPosition (ListViewAnimations)) as UIElement; lHitTest != null; lHitTest = lHitTest = VisualTreeHelper.GetParent(lHitTest) as UIElement)
+			{
+				if (lHitTest is ListViewItem)
+				{
+					break;
+				}
+				else if (!ListViewAnimations.IsAncestorOf (lHitTest))
+				{
+					ListViewAnimations.SelectedItem = null;
+					break;
+				}
+			}
 		}
 
 		private void ListViewAnimations_MouseDoubleClick (object sender, MouseButtonEventArgs e)
@@ -296,10 +314,5 @@ namespace AgentCharacterEditor.Panels
 		}
 
 		#endregion
-
-		private void ListViewAnimations_MouseUp (object sender, MouseButtonEventArgs e)
-		{
-			System.Diagnostics.Debug.Print ("ListViewAnimations_MouseUp");
-		}
 	}
 }

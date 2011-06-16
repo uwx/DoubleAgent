@@ -36,12 +36,12 @@
 		<CheckBox Name="CheckBoxWordBalloon"
 				  Content="Use the Word Balloon"
 				  Style="{StaticResource PanelToggleButton}"
-				  Foreground="{StaticResource BackgroundDarkishBrush}"
+				  Foreground="{StaticResource BackgroundDarkBrush}"
 				  HorizontalAlignment="Left"
 				  VerticalAlignment="Top"
 				  VerticalContentAlignment="Center"
 				  Margin="4,0,4,0"
-				  Padding="2,0,2,2"
+				  Padding="2"
 				  FontSize="16"
 				  TabIndex="0"
 				  Checked="CheckBoxWordBalloon_CheckChanged"
@@ -61,79 +61,76 @@
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition SharedSizeGroup="Labels" />
-							<ColumnDefinition Width="*" />
+							<ColumnDefinition   SharedSizeGroup="Edits" />
 						</Grid.ColumnDefinitions>
 						<Label Content="Characters per line"
 							   Name="LabelCharsPerLine"
 							   HorizontalAlignment="Left"
 							   VerticalAlignment="Center"
 							   Style="{StaticResource PanelLabel}" />
-						<custom:NumericUpDown x:Name="NumericCharsPerLine"
-											  Width="30"
+						<custom:NumericUpDown Style="{StaticResource NumericUpDown}"
+											  x:Name="NumericCharsPerLine"
+											  Width="50"
 											  Text="8"
 											  HorizontalAlignment="Left"
 											  VerticalAlignment="Center"
-											  Margin="10,2"
 											  TabIndex="1"
 											  Grid.Column="1"
 											  IsModifiedChanged="NumericCharsPerLine_IsModifiedChanged"
-											  Style="{StaticResource PanelTextBox}"
 											  ContextMenu="{StaticResource ContextMenuTextBox}" />
 					</Grid>
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition SharedSizeGroup="Labels" />
-							<ColumnDefinition Width="*" />
+							<ColumnDefinition   SharedSizeGroup="Edits" />
 						</Grid.ColumnDefinitions>
 						<RadioButton Content="Number of lines"
 									 Name="RadioButtonNumLines"
 									 HorizontalAlignment="Left"
 									 VerticalAlignment="Center"
-									 Margin="0,2,2,2"
 									 GroupName="SizeToText"
-									 Grid.ColumnSpan="2"
 									 TabIndex="2"
-									 Style="{StaticResource PanelToggleButton}"
-									 Checked="RadioButtonNumLines_Checked" />
-						<custom:NumericUpDown x:Name="NumericNumLines"
-											  Width="30"
+									 Style="{StaticResource PanelToggleButtonAlt}"
+									 Checked="RadioButtonNumLines_Checked"
+									 Margin="2,0" />
+						<custom:NumericUpDown Style="{StaticResource NumericUpDown}"
+											  x:Name="NumericNumLines"
+											  Width="50"
 											  HorizontalAlignment="Left"
 											  VerticalAlignment="Center"
-											  Margin="10,2"
 											  Text="2"
 											  Grid.Column="1"
 											  TabIndex="3"
 											  IsModifiedChanged="NumericNumLines_IsModifiedChanged"
-											  Style="{StaticResource PanelTextBox}"
 											  ContextMenu="{StaticResource ContextMenuTextBox}" />
 					</Grid>
 					<RadioButton Content="Size to text"
 								 Name="RadioButtonSizeToText"
 								 HorizontalAlignment="Left"
-								 Margin="0,0,0,2"
+								 Margin="2,0"
 								 GroupName="SizeToText"
 								 TabIndex="3"
-								 Style="{StaticResource PanelToggleButton}"
+								 Style="{StaticResource PanelToggleButtonAlt}"
 								 Checked="RadioButtonSizeToText_Checked" />
 					<CheckBox Content="Auto-hide"
 							  Name="CheckBoxAutoHide"
 							  HorizontalAlignment="Left"
-							  Margin="0,7,0,2"
-							  Foreground="GhostWhite"
+							  Margin="2,8,2,2"
 							  TabIndex="4"
 							  Checked="CheckBoxAutoHide_CheckChanged"
 							  Unchecked="CheckBoxAutoHide_CheckChanged"
-							  Style="{StaticResource PanelToggleButton}" />
+							  Style="{StaticResource PanelToggleButtonAlt}" />
 					<CheckBox Content="Auto-pace"
 							  Name="CheckBoxAutoPace"
-							  Margin="0,2"
+							  Margin="2,0"
 							  HorizontalAlignment="Left"
 							  TabIndex="5"
 							  Checked="CheckBoxAutoPace_CheckChanged"
 							  Unchecked="CheckBoxAutoPace_CheckChanged"
-							  Style="{StaticResource PanelToggleButton}" />
+							  Style="{StaticResource PanelToggleButtonAlt}" />
 				</StackPanel>
-				<StackPanel Grid.Column="1">
+				<StackPanel Grid.Column="1"
+							Margin="12,0,0,0">
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="Auto" />
@@ -146,7 +143,6 @@
 								VerticalAlignment="Top"
 								Margin="5"
 								TabIndex="6"
-								Style="{StaticResource PanelPushButton}"
 								Click="ButtonBalloonFont_Click" />
 						<Label Name="LabelBalloonFontSample"
 							   HorizontalAlignment="Left"
@@ -172,7 +168,6 @@
 								VerticalAlignment="Center"
 								Margin="5"
 								TabIndex="7"
-								Style="{StaticResource PanelPushButton}"
 								Click="ButtonBalloonForeground_Click" />
 						<Label Name="LabelBalloonForegroundSample"
 							   BorderBrush="{StaticResource BackgroundDarkBrush}"
@@ -196,7 +191,6 @@
 								VerticalAlignment="Center"
 								Margin="5"
 								TabIndex="8"
-								Style="{StaticResource PanelPushButton}"
 								Click="ButtonBalloonBackground_Click" />
 						<Label Name="LabelBalloonBackgroundSample"
 							   BorderBrush="{StaticResource BackgroundDarkBrush}"
@@ -220,7 +214,6 @@
 								VerticalAlignment="Center"
 								Margin="5"
 								TabIndex="9"
-								Style="{StaticResource PanelPushButton}"
 								Click="ButtonBalloonBorder_Click" />
 						<Label Name="LabelBalloonBorderSample"
 							   BorderBrush="{StaticResource BackgroundDarkBrush}"

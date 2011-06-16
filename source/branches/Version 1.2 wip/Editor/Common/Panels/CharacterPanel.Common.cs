@@ -419,7 +419,7 @@ namespace AgentCharacterEditor.Panels
 
 				if ((lName != null) && !mLangDefault.PrimaryLanguageEqual (lName))
 				{
-					pEventArgs.PutCutTitle (Titles.CharacterName (lName.Language));
+					pEventArgs.PutDeleteTitle (Titles.CharacterName (lName.Language));
 				}
 				return true;
 			}

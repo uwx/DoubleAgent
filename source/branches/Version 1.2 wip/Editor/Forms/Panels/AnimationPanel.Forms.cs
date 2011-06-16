@@ -56,7 +56,6 @@ namespace AgentCharacterEditor.Panels
 
 			AnimationPreview.AnimationStateChanged += new EventHandler (AnimationPreview_StateChanged);
 			AnimationPreview.AnimationImageChanged += new EventHandler (AnimationPreview_ImageChanged);
-
 		}
 
 		protected override void OnLoadConfig (object sender, EventArgs e)
@@ -194,6 +193,7 @@ namespace AgentCharacterEditor.Panels
 
 						FramesView.ShowAnimationFrames (CharacterFile, Animation);
 						FramesView.Enabled = true;
+						FramesView.Frames.SelectedIndex = Math.Max (FramesView.Frames.SelectedIndex, 0);
 
 						ShowFramesState ();
 						ShowSelectedFrame ();
@@ -211,63 +211,16 @@ namespace AgentCharacterEditor.Panels
 			ShowSelectionState ();
 
 			AnimationPreview.StopAnimation ();
-			AnimationPreview.ShowAnimationFrame (CharacterFile, GetSelectedFrame (true));
+			AnimationPreview.ShowAnimationFrame (CharacterFile, GetSelectedFrame (true), PreviewImageSize);
 			ShowPreviewState ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
-
-		private void ShowPreviewState ()
+		private System.Drawing.Size PreviewImageSize
 		{
-			ShowPreviewState (false);
-		}
-
-		private void ShowPreviewState (Boolean pUpdateNow)
-		{
-			PreviewButtonPlay.Enabled = !IsPanelEmpty && (Animation.Frames.Count > 1);
-			PreviewButtonPause.Enabled = !IsPanelEmpty && AnimationPreview.IsPlaying;
-			PreviewButtonStop.Enabled = !IsPanelEmpty && AnimationPreview.IsPlaying;
-			PreviewButtonRepeat.Enabled = PreviewButtonPlay.Enabled && !AnimationPreview.IsPlaying;
-			PreviewButtonMute.Enabled = PreviewButtonPlay.Enabled && !AnimationPreview.IsPlaying;
-
-			if (AnimationPreview.IsAnimated)
+			get
 			{
-				PreviewButtonPause.Checked = PreviewButtonPause.Enabled && AnimationPreview.IsPaused;
-				PreviewButtonRepeat.Checked = PreviewButtonPlay.Enabled && AnimationPreview.IsRepeating;
+				return (CharacterFile != null) ? CharacterFile.Header.ImageSize : FrameSample.DefaultImageSize;
 			}
-			else
-			{
-				PreviewButtonPause.Checked = false;
-			}
-			ShowPreviewSkipState ();
-
-			if (pUpdateNow)
-			{
-				ToolStripPreview.Update ();
-			}
-#if DEBUG_NOT
-			System.Diagnostics.Debug.Print ("PreviewState Animating [{0}] Playing [{1}] Paused [{2}] Repeating [{3}] Rate [{4}]]", AnimationPreview.IsAnimating, AnimationPreview.AnimationIsPlaying, AnimationPreview.AnimationIsPaused, AnimationPreview.AnimationIsRepeating, AnimationPreview.AnimationRate);
-			System.Diagnostics.Debug.Print ("             Play [{0}] Pause [{1} {2}] Stop [{3}] Repeat [{4} {5}] Back [{6}] Forward [{7}]", PreviewButtonPlay.Enabled, PreviewButtonPause.Enabled, PreviewButtonPause.Checked, PreviewButtonStop.Enabled, PreviewButtonRepeat.Enabled, PreviewButtonRepeat.Checked, PreviewButtonSkipBack.Enabled, PreviewButtonSkipForward.Enabled);
-#endif
-		}
-
-		private void ShowPreviewSkipState ()
-		{
-			if (AnimationPreview.IsPlaying)
-			{
-				//ShowPreviewSkipState (AnimationPreview.CurrentFrameIndex);
-				ShowPreviewSkipState (-1);
-			}
-			else
-			{
-				ShowPreviewSkipState (FramesView.Frames.SelectedIndex);
-			}
-		}
-
-		private void ShowPreviewSkipState (int pFrameIndex)
-		{
-			PreviewButtonSkipBack.Enabled = PreviewButtonPlay.Enabled && (pFrameIndex > 0);
-			PreviewButtonSkipForward.Enabled = PreviewButtonPlay.Enabled && (pFrameIndex >= 0) && (pFrameIndex < FramesView.Frames.Items.Count - 1);
 		}
 
 		#endregion
@@ -422,71 +375,33 @@ namespace AgentCharacterEditor.Panels
 				using (CursorState lCursorState = new CursorState (Program.MainWindow))
 				{
 					lCursorState.ShowWait ();
-					AnimationPreview.CreateAnimation (CharacterFile, Animation, !PreviewButtonMute.Checked);
+					AnimationPreview.CreateAnimation (CharacterFile, Animation, PreviewImageSize, !PreviewButtonMute.Checked);
 				}
 			}
-
-			if (AnimationPreview.IsAnimated)
-			{
-				AnimationPreview.StopAnimation ();
-				AnimationPreview.IsPaused = false;
-				AnimationPreview.IsRepeating = PreviewButtonRepeat.Checked;
-				AnimationPreview.AnimationRate = (double)SliderRate.Value;
-#if DEBUG_NOT
-				System.Diagnostics.Debug.Print ("StartAnimation Repeat [{0}] Rate [{1}]", AnimationPreview.AnimationIsRepeating, AnimationPreview.AnimationRate);		
-#endif
-				PushSelectedFrame ();
-				AnimationPreview.StartAnimation ();
-			}
-			ShowPreviewState (true);
-		}
-
-		private void PreviewButtonStop_Click (object sender, EventArgs e)
-		{
-			AnimationPreview.StopAnimation ();
-			ShowPreviewState (true);
+			HandlePreviewPlay ();
+			ToolStripPreview.Update ();
 		}
 
 		private void PreviewButtonPause_Click (object sender, EventArgs e)
 		{
 			PreviewButtonPause.Checked = !PreviewButtonPause.Checked;
-			if (AnimationPreview.IsPlaying)
-			{
-				AnimationPreview.IsPaused = PreviewButtonPause.Checked;
-				ShowPreviewSkipState ();
-			}
+			HandlePreviewPause ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		private void PreviewButtonStop_Click (object sender, EventArgs e)
+		{
+			HandlePreviewStop ();
+			ToolStripPreview.Update ();
+		}
 
 		private void PreviewButtonSkipBack_Click (object sender, EventArgs e)
 		{
-			if (AnimationPreview.IsPlaying)
-			{
-				//AnimationPreview.CurrentFrameIndex--;
-			}
-			else if (!IsPanelEmpty)
-			{
-				if (FramesView.Frames.SelectedIndex > 0)
-				{
-					FramesView.Frames.SelectedIndex--;
-				}
-			}
+			HandlePreviewSkipBack ();
 		}
 
 		private void PreviewButtonSkipForward_Click (object sender, EventArgs e)
 		{
-			if (AnimationPreview.IsPlaying)
-			{
-				//AnimationPreview.CurrentFrameIndex++;
-			}
-			else if (!IsPanelEmpty)
-			{
-				if ((FramesView.Frames.SelectedIndex >= 0) && (FramesView.Frames.SelectedIndex < FramesView.Frames.Items.Count - 1))
-				{
-					FramesView.Frames.SelectedIndex++;
-				}
-			}
+			HandlePreviewSkipForward ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -500,7 +415,7 @@ namespace AgentCharacterEditor.Panels
 			else
 			{
 				PreviewButtonRepeat.Checked = !PreviewButtonRepeat.Checked;
-				AnimationPreview.IsRepeating = PreviewButtonRepeat.Checked;
+				HandlePreviewRepeat ();
 			}
 		}
 
@@ -513,16 +428,13 @@ namespace AgentCharacterEditor.Panels
 			else
 			{
 				PreviewButtonMute.Checked = !PreviewButtonMute.Checked;
-				AnimationPreview.DeleteAnimation ();
+				HandlePreviewMute ();
 			}
 		}
 
 		private void TrackBarRate_Scroll (object sender, EventArgs e)
 		{
-			if (AnimationPreview.IsAnimated)
-			{
-				AnimationPreview.AnimationRate = (double)SliderRate.Value;
-			}
+			HandlePreviewRateChanged ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -544,7 +456,8 @@ namespace AgentCharacterEditor.Panels
 			{
 				if (AnimationPreview.IsPlaying)
 				{
-					ShowPreviewState (true);
+					ShowPreviewState ();
+					ToolStripPreview.Update ();
 				}
 				else
 				{
@@ -567,10 +480,11 @@ namespace AgentCharacterEditor.Panels
 					int lFrameNdx = AnimationPreview.CurrentFrameIndex;
 					if (lFrameNdx >= 0)
 					{
-						CausesValidation = false;
-						FramesView.Frames.SelectedIndex = lFrameNdx;
-						FramesView.Frames.EnsureVisible (lFrameNdx, true);
-						CausesValidation = Visible;
+						using (PanelFillingState lFillingState = new PanelFillingState (this))
+						{
+							FramesView.Frames.SelectedIndex = lFrameNdx;
+							FramesView.Frames.EnsureVisible (lFrameNdx, true);
+						}
 					}
 				}
 				catch (Exception pException)

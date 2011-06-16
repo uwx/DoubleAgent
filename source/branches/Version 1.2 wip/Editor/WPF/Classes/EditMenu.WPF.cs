@@ -96,6 +96,17 @@ namespace AgentCharacterEditor.Global
 			get;
 			protected set;
 		}
+		public Boolean IsContextMenu
+		{
+			get
+			{
+				if ((RoutedEventArgs.Parameter is MenuItem) && (FocusManager.GetFocusScope (RoutedEventArgs.Parameter as MenuItem) is ContextMenu))
+				{
+					return true;
+				}
+				return false;
+			}
+		}
 
 		/////////////////////////////////////////////////////////////////////////////
 
@@ -160,7 +171,7 @@ namespace AgentCharacterEditor.Global
 
 		public static void SetTitle (this Button pButton, String pTitle)
 		{
-			pButton.ToolTip = pTitle.NoMenuPrefix();
+			pButton.ToolTip = pTitle.NoMenuPrefix ();
 		}
 
 		public static void SetTitle (this MenuItem pMenuItem, String pTitle)
@@ -357,7 +368,14 @@ namespace AgentCharacterEditor.Global
 			{
 				if (String.IsNullOrEmpty (pObjectTitle))
 				{
-					(pEventArgs.Parameter as Button).ToolTip = AppResources.Resources.EditUndo.NoMenuPrefix ();
+					if ((pEventArgs.OriginalSource is TextBoxBase) && (pEventArgs.OriginalSource as TextBoxBase).CanUndo)
+					{
+						(pEventArgs.Parameter as Button).ToolTip = AppResources.Resources.EditUndoText.NoMenuPrefix ();
+					}
+					else
+					{
+						(pEventArgs.Parameter as Button).ToolTip = AppResources.Resources.EditUndo.NoMenuPrefix ();
+					}
 				}
 				else
 				{
@@ -368,7 +386,14 @@ namespace AgentCharacterEditor.Global
 			{
 				if (String.IsNullOrEmpty (pObjectTitle))
 				{
-					(pEventArgs.Parameter as MenuItem).Header = AppResources.Resources.EditUndo.FixMenuPrefix ();
+					if ((pEventArgs.OriginalSource is TextBoxBase) && (pEventArgs.OriginalSource as TextBoxBase).CanUndo)
+					{
+						(pEventArgs.Parameter as MenuItem).Header = AppResources.Resources.EditUndoText.FixMenuPrefix ();
+					}
+					else
+					{
+						(pEventArgs.Parameter as MenuItem).Header = AppResources.Resources.EditUndo.FixMenuPrefix ();
+					}
 				}
 				else
 				{
@@ -394,7 +419,14 @@ namespace AgentCharacterEditor.Global
 			{
 				if (String.IsNullOrEmpty (pObjectTitle))
 				{
-					(pEventArgs.Parameter as Button).ToolTip = AppResources.Resources.EditRedo.NoMenuPrefix ();
+					if ((pEventArgs.OriginalSource is TextBoxBase) && (pEventArgs.OriginalSource as TextBoxBase).CanRedo)
+					{
+						(pEventArgs.Parameter as Button).ToolTip = AppResources.Resources.EditRedoText.NoMenuPrefix ();
+					}
+					else
+					{
+						(pEventArgs.Parameter as Button).ToolTip = AppResources.Resources.EditRedo.NoMenuPrefix ();
+					}
 				}
 				else
 				{
@@ -405,7 +437,14 @@ namespace AgentCharacterEditor.Global
 			{
 				if (String.IsNullOrEmpty (pObjectTitle))
 				{
-					(pEventArgs.Parameter as MenuItem).Header = AppResources.Resources.EditRedo.FixMenuPrefix ();
+					if ((pEventArgs.OriginalSource is TextBoxBase) && (pEventArgs.OriginalSource as TextBoxBase).CanRedo)
+					{
+						(pEventArgs.Parameter as MenuItem).Header = AppResources.Resources.EditRedoText.FixMenuPrefix ();
+					}
+					else
+					{
+						(pEventArgs.Parameter as MenuItem).Header = AppResources.Resources.EditRedo.FixMenuPrefix ();
+					}
 				}
 				else
 				{

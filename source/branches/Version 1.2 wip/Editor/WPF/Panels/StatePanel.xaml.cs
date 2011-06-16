@@ -80,8 +80,12 @@ namespace AgentCharacterEditor.Panels
 					lListItem.IsTabStop = false;
 					lListItem.Focusable = false;
 					lListItem.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+					lListItem.Margin = new Thickness (0);
+					lListItem.Padding = new Thickness (0);
 					lListItem.Content = lListItemContent;
 
+					lListItemContent.Style = TryFindResource ("PanelToggleButton") as Style;
+					lListItemContent.Margin = new Thickness (2,0,2,0);
 					lListItemContent.Content = lAnimation;
 					lListItemContent.IsEnabled = !Program.FileIsReadOnly;
 					lListItemContent.Checked += new RoutedEventHandler (ListItemContent_CheckedChanged);

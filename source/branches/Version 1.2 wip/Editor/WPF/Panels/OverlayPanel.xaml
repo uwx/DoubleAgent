@@ -89,7 +89,7 @@
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="100" />
-					<ColumnDefinition Width="*" />
+					<ColumnDefinition />
 				</Grid.ColumnDefinitions>
 				<Label Content="Frame"
 					   HorizontalAlignment="Left"
@@ -101,7 +101,8 @@
 								  VerticalAlignment="Center"
 								  MaxLines="1"
 								  IsReadOnly="True"
-								  Style="{StaticResource PanelTextBox}"
+								  IsTabStop="False"
+								  IsUndoEnabled="False"
 								  ContextMenu="{StaticResource ContextMenuTextBox}" />
 			</Grid>
 		</GroupBox>
@@ -110,251 +111,284 @@
 				  Grid.Row="1"
 				  Style="{StaticResource PanelGroupBox}">
 			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition />
+				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*"
 									  MaxWidth="500" />
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
-				<Grid>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="*" />
-					</Grid.RowDefinitions>
-					<StackPanel Orientation="Horizontal"
-								HorizontalAlignment="Left"
+				<ToolBar Style="{StaticResource PanelToolBar}"
+						 HorizontalAlignment="Left"
+						 VerticalAlignment="Top"
+						 Margin="2,0,2,2"
+						 Grid.ColumnSpan="2">
+					<Button  Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							 Name="ButtonAdd"
+							 ToolTip="Add"
+							 Focusable="False"
+							 HorizontalAlignment="Left"
+							 Click="ButtonAdd_Click">
+						<Image Source="{StaticResource ImgFileNew}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center" />
+					</Button>
+					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							Name="ButtonDelete"
+							ToolTip="Delete"
+							Focusable="False"
+							HorizontalAlignment="Left"
+							Click="ButtonDelete_Click">
+						<Image Source="{StaticResource ImgEditDelete}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center" />
+					</Button>
+					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							Name="ButtonChooseFile"
+							ToolTip="Choose image file"
+							Focusable="False"
+							HorizontalAlignment="Left"
+							Click="ButtonChooseFile_Click">
+						<Image Source="{StaticResource ImgFileOpen}"
+							   Stretch="UniformToFill"
+							   Width="16"
+							   Height="16"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center" />
+					</Button>
+				</ToolBar>
+				<ContentControl Name="Overlays"
+								IsTabStop="False"
+								Grid.Row="1"
+								Style="{StaticResource PanelContent}"
+								Background="Transparent"
 								VerticalAlignment="Top"
-								Name="ToolStripImages"
-								Margin="0,0,0,5">
-						<Button  Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-								 Name="ButtonAdd"
-								 ToolTip="Add"
-								 Focusable="False"
-								 HorizontalAlignment="Left"
-								 Click="ButtonAdd_Click">
-							<Image Source="{StaticResource ImgFileNew}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center" />
-						</Button>
-						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-								Name="ButtonDelete"
-								ToolTip="Delete"
-								Focusable="False"
-								HorizontalAlignment="Left"
-								Click="ButtonDelete_Click">
-							<Image Source="{StaticResource ImgEditDelete}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center" />
-						</Button>
-						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-								Name="ButtonChooseFile"
-								ToolTip="Choose image file"
-								Focusable="False"
-								HorizontalAlignment="Left"
-								Click="ButtonChooseFile_Click">
-							<Image Source="{StaticResource ImgFileOpen}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center" />
-						</Button>
-					</StackPanel>
-					<ContentControl Name="Overlays"
-									Grid.Row="1"
-									Style="{StaticResource PanelContent}"
-									Background="Transparent"
-									VerticalAlignment="Top"
-									HorizontalContentAlignment="Stretch"
-									LayoutUpdated="Overlays_LayoutUpdated">
-						<ScrollViewer Name="OverlaysScroller"
-									  Grid.IsSharedSizeScope="true"
-									  Margin="0,0,1,1"
-									  HorizontalScrollBarVisibility="Auto"
-									  VerticalScrollBarVisibility="Auto"
-									  CanContentScroll="False">
-							<Grid>
-								<Grid.RowDefinitions>
-									<RowDefinition Height="Auto" />
-									<RowDefinition Height="*" />
-								</Grid.RowDefinitions>
-								<ContentControl Name="OverlaysHeader"
-												Grid.Row="0"
-												HorizontalAlignment="Left"
-												Width="{Binding ElementName=ListViewOverlays, Path=ActualWidth}">
-									<Grid Name="OverlaysHeaderItems"
-										  Margin="2,0"
-										  SnapsToDevicePixels="true">
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition SharedSizeGroup="Mouth" />
-											<ColumnDefinition SharedSizeGroup="Offset" />
-											<ColumnDefinition SharedSizeGroup="Replace" />
-											<ColumnDefinition SharedSizeGroup="Path" />
-										</Grid.ColumnDefinitions>
-										<Label Name="OverlaysHeaderMouth"
+								HorizontalContentAlignment="Stretch"
+								LayoutUpdated="Overlays_LayoutUpdated">
+					<ScrollViewer Name="OverlaysScroller"
+								  Grid.IsSharedSizeScope="true"
+								  Margin="0,0,1,1"
+								  HorizontalScrollBarVisibility="Auto"
+								  VerticalScrollBarVisibility="Auto"
+								  CanContentScroll="False">
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" />
+								<RowDefinition Height="*" />
+							</Grid.RowDefinitions>
+							<ContentControl Name="OverlaysHeader"
+											IsTabStop="False"
+											Grid.Row="0"
+											HorizontalAlignment="Left"
+											Width="{Binding ElementName=ListViewOverlays, Path=ActualWidth}">
+								<Grid Name="OverlaysHeaderItems"
+									  Margin="2,0"
+									  SnapsToDevicePixels="true">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition SharedSizeGroup="Mouth" />
+										<ColumnDefinition SharedSizeGroup="Offset" />
+										<ColumnDefinition SharedSizeGroup="Replace" />
+										<ColumnDefinition SharedSizeGroup="Path" />
+									</Grid.ColumnDefinitions>
+									<Label Name="OverlaysHeaderMouth"
+										   Grid.Column="0"
+										   Content="Mouth"
+										   Style="{StaticResource PanelLabel}"
+										   Padding="5,2"
+										   VerticalContentAlignment="Center"
+										   HorizontalContentAlignment="Left" />
+									<Label Name="OverlaysHeaderOffset"
+										   Grid.Column="1"
+										   Content="Offset"
+										   Style="{StaticResource PanelLabel}"
+										   Padding="5,2"
+										   VerticalContentAlignment="Center"
+										   HorizontalContentAlignment="Left" />
+									<Label Name="OverlaysHeaderReplace"
+										   Grid.Column="2"
+										   Content="Replace?"
+										   Style="{StaticResource PanelLabel}"
+										   Padding="5,2"
+										   VerticalContentAlignment="Center"
+										   HorizontalContentAlignment="Left" />
+									<Label Name="OverlaysHeaderPath"
+										   Grid.Column="3"
+										   Content="Path"
+										   Style="{StaticResource PanelLabel}"
+										   Padding="5,2"
+										   VerticalContentAlignment="Center"
+										   HorizontalContentAlignment="Left" />
+								</Grid>
+							</ContentControl>
+							<ListView Name="ListViewOverlays"
+									  OverridesDefaultStyle="True"
+									  Grid.Row="1"
+									  Margin="0"
+									  SelectionMode="Single"
+									  ItemTemplate="{StaticResource OverlayListItem}"
+									  ItemContainerStyle="{StaticResource ListViewItemNpNm}"
+									  IsTextSearchEnabled="False"
+									  IsTabStop="False"
+									  Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
+									  Foreground="{StaticResource {x:Static SystemColors.WindowTextBrushKey}}"
+									  HorizontalAlignment="Left"
+									  VerticalContentAlignment="Center"
+									  HorizontalContentAlignment="Left"
+									  KeyboardNavigation.TabNavigation="None"
+									  SelectionChanged="ListViewOverlays_SelectionChanged"
+									  MouseDoubleClick="ListViewOverlays_MouseDoubleClick"
+									  ContextMenuOpening="ListViewOverlays_ContextMenuOpening">
+								<ListView.Template>
+									<ControlTemplate>
+										<ItemsPresenter Name="ItemsHost"
+														SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+									</ControlTemplate>
+								</ListView.Template>
+								<ListView.ItemsPanel>
+									<ItemsPanelTemplate>
+										<StackPanel Name="ItemsHost"
+													Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
+													Orientation="Vertical"
+													IsItemsHost="True">
+										</StackPanel>
+									</ItemsPanelTemplate>
+								</ListView.ItemsPanel>
+								<ListView.ContextMenu>
+									<ContextMenu>
+										<MenuItem Header="Add"
+												  Name="MenuItemAdd"
+												  Click="ButtonAdd_Click">
+											<MenuItem.Icon>
+												<Image Source="{StaticResource ImgFileNew}"
+													   Stretch="UniformToFill"
+													   Width="16"
+													   Height="16" />
+											</MenuItem.Icon>
+										</MenuItem>
+										<MenuItem Header="Open image file"
+												  Name="MenuItemChooseFile"
+												  Click="ButtonChooseFile_Click">
+											<MenuItem.Icon>
+												<Image Source="{StaticResource ImgFileOpen}"
+													   Stretch="UniformToFill"
+													   Width="16"
+													   Height="16" />
+											</MenuItem.Icon>
+										</MenuItem>
+										<Separator />
+										<MenuItem Style="{StaticResource MenuItemCut}" />
+										<MenuItem Style="{StaticResource MenuItemCopy}" />
+										<MenuItem Style="{StaticResource MenuItemPaste}" />
+										<MenuItem Style="{StaticResource MenuItemDelete}" />
+									</ContextMenu>
+								</ListView.ContextMenu>
+								<local:ListViewItemCommon Style="{StaticResource ListViewItemNpNm}"
+														  ContentTemplate="{StaticResource OverlayListItem}">
+									<ListViewItem.Content>
+										<panels:OverlayListItem Overlay="{StaticResource OverlayClosed}" />
+									</ListViewItem.Content>
+								</local:ListViewItemCommon>
+								<local:ListViewItemCommon Style="{StaticResource ListViewItemNpNm}"
+														  ContentTemplate="{StaticResource OverlayListItem}">
+									<ListViewItem.Content>
+										<panels:OverlayListItem Overlay="{StaticResource OverlayWide1}" />
+									</ListViewItem.Content>
+								</local:ListViewItemCommon>
+								<local:ListViewItemCommon Style="{StaticResource ListViewItemNpNm}"
+														  ContentTemplate="{StaticResource OverlayListItem}">
+									<ListViewItem.Content>
+										<panels:OverlayListItem Overlay="{StaticResource OverlayWide2}" />
+									</ListViewItem.Content>
+								</local:ListViewItemCommon>
+								<local:ListViewItemCommon Style="{StaticResource ListViewItemNpNm}"
+														  ContentTemplate="{StaticResource OverlayListItem}">
+									<ListViewItem.Content>
+										<panels:OverlayListItem Overlay="{StaticResource OverlayWide3}" />
+									</ListViewItem.Content>
+								</local:ListViewItemCommon>
+								<local:ListViewItemCommon Style="{StaticResource ListViewItemNpNm}"
+														  ContentTemplate="{StaticResource OverlayListItem}">
+									<ListViewItem.Content>
+										<panels:OverlayListItem Overlay="{StaticResource OverlayWide4}" />
+									</ListViewItem.Content>
+								</local:ListViewItemCommon>
+								<local:ListViewItemCommon Style="{StaticResource ListViewItemNpNm}"
+														  ContentTemplate="{StaticResource OverlayListItem}">
+									<ListViewItem.Content>
+										<panels:OverlayListItem Overlay="{StaticResource OverlayMedium}" />
+									</ListViewItem.Content>
+								</local:ListViewItemCommon>
+								<local:ListViewItemCommon Style="{StaticResource ListViewItemNpNm}"
+														  ContentTemplate="{StaticResource OverlayListItem}">
+									<ListViewItem.Content>
+										<panels:OverlayListItem Overlay="{StaticResource OverlayNarrow}" />
+									</ListViewItem.Content>
+								</local:ListViewItemCommon>
+							</ListView>
+							<ContentControl Name="OverlaysColumns"
+											IsTabStop="False"
+											IsHitTestVisible="False"
+											Grid.RowSpan="2"
+											HorizontalAlignment="Left"
+											Width="{Binding ElementName=OverlaysHeader, Path=ActualWidth}">
+								<Grid Name="OverlaysColumnLines"
+									  Width="{Binding ElementName=OverlaysHeaderItems, Path=ActualWidth}"
+									  Margin="{Binding ElementName=OverlaysHeaderItems, Path=Margin}"
+									  SnapsToDevicePixels="{Binding ElementName=OverlaysHeaderItems, Path=SnapsToDevicePixels}">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Name="OverlaysColumnMouth"
+														  Width="{Binding ElementName=OverlaysHeaderMouth, Path=ActualWidth}" />
+										<ColumnDefinition Name="OverlaysColumnOffset"
+														  Width="{Binding ElementName=OverlaysHeaderOffset, Path=ActualWidth}" />
+										<ColumnDefinition Name="OverlaysColumnReplace"
+														  Width="{Binding ElementName=OverlaysHeaderReplace, Path=ActualWidth}" />
+									</Grid.ColumnDefinitions>
+									<Rectangle Name="OverlaysLineMouth"
 											   Grid.Column="0"
-											   Content="Mouth"
-											   Style="{StaticResource PanelLabel}"
-											   Padding="5,2"
-											   VerticalContentAlignment="Center"
-											   HorizontalContentAlignment="Left" />
-										<Label Name="OverlaysHeaderOffset"
+											   HorizontalAlignment="Right"
+											   VerticalAlignment="Stretch"
+											   Stroke="{StaticResource BackgroundDarkishBrush}"
+											   Opacity="0.25" />
+									<Rectangle Name="OverlaysLineOffset"
 											   Grid.Column="1"
-											   Content="Offset"
-											   Style="{StaticResource PanelLabel}"
-											   Padding="5,2"
-											   VerticalContentAlignment="Center"
-											   HorizontalContentAlignment="Left" />
-										<Label Name="OverlaysHeaderReplace"
+											   HorizontalAlignment="Right"
+											   VerticalAlignment="Stretch"
+											   Stroke="{StaticResource BackgroundDarkishBrush}"
+											   Opacity="0.25" />
+									<Rectangle Name="OverlaysLineReplace"
 											   Grid.Column="2"
-											   Content="Replace?"
-											   Style="{StaticResource PanelLabel}"
-											   Padding="5,2"
-											   VerticalContentAlignment="Center"
-											   HorizontalContentAlignment="Left" />
-										<Label Name="OverlaysHeaderPath"
-											   Grid.Column="3"
-											   Content="Path"
-											   Style="{StaticResource PanelLabel}"
-											   Padding="5,2"
-											   VerticalContentAlignment="Center"
-											   HorizontalContentAlignment="Left" />
-									</Grid>
-								</ContentControl>
-								<ListView Name="ListViewOverlays"
-										  Grid.Row="1"
-										  SelectionMode="Single"
-										  ItemTemplate="{StaticResource OverlayListItem}"
-										  ItemContainerStyle="{StaticResource ListViewItemCommonNpNm}"
-										  IsTextSearchEnabled="False"
-										  IsTabStop="False"
-										  Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
-										  Foreground="{StaticResource {x:Static SystemColors.WindowTextBrushKey}}"
-										  HorizontalAlignment="Left"
-										  VerticalContentAlignment="Center"
-										  HorizontalContentAlignment="Left"
-										  SelectionChanged="ListViewOverlays_SelectionChanged"
-										  MouseDoubleClick="ListViewOverlays_MouseDoubleClick">
-									<ListView.Template>
-										<ControlTemplate>
-											<ItemsPresenter Name="ItemsHost"
-															SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-										</ControlTemplate>
-									</ListView.Template>
-									<ListView.ItemsPanel>
-										<ItemsPanelTemplate>
-											<StackPanel Name="ItemsHost"
-														Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
-														Orientation="Vertical"
-														IsItemsHost="True">
-											</StackPanel>
-										</ItemsPanelTemplate>
-									</ListView.ItemsPanel>
-									<local:ListViewItemCommon Style="{StaticResource ListViewItemCommonNpNm}"
-															  ContentTemplate="{StaticResource OverlayListItem}">
-										<ListViewItem.Content>
-											<panels:OverlayListItem Overlay="{StaticResource OverlayClosed}" />
-										</ListViewItem.Content>
-									</local:ListViewItemCommon>
-									<local:ListViewItemCommon Style="{StaticResource ListViewItemCommonNpNm}"
-															  ContentTemplate="{StaticResource OverlayListItem}">
-										<ListViewItem.Content>
-											<panels:OverlayListItem Overlay="{StaticResource OverlayWide1}" />
-										</ListViewItem.Content>
-									</local:ListViewItemCommon>
-									<local:ListViewItemCommon Style="{StaticResource ListViewItemCommonNpNm}"
-															  ContentTemplate="{StaticResource OverlayListItem}">
-										<ListViewItem.Content>
-											<panels:OverlayListItem Overlay="{StaticResource OverlayWide2}" />
-										</ListViewItem.Content>
-									</local:ListViewItemCommon>
-									<local:ListViewItemCommon Style="{StaticResource ListViewItemCommonNpNm}"
-															  ContentTemplate="{StaticResource OverlayListItem}">
-										<ListViewItem.Content>
-											<panels:OverlayListItem Overlay="{StaticResource OverlayWide3}" />
-										</ListViewItem.Content>
-									</local:ListViewItemCommon>
-									<local:ListViewItemCommon Style="{StaticResource ListViewItemCommonNpNm}"
-															  ContentTemplate="{StaticResource OverlayListItem}">
-										<ListViewItem.Content>
-											<panels:OverlayListItem Overlay="{StaticResource OverlayWide4}" />
-										</ListViewItem.Content>
-									</local:ListViewItemCommon>
-									<local:ListViewItemCommon Style="{StaticResource ListViewItemCommonNpNm}"
-															  ContentTemplate="{StaticResource OverlayListItem}">
-										<ListViewItem.Content>
-											<panels:OverlayListItem Overlay="{StaticResource OverlayMedium}" />
-										</ListViewItem.Content>
-									</local:ListViewItemCommon>
-									<local:ListViewItemCommon Style="{StaticResource ListViewItemCommonNpNm}"
-															  ContentTemplate="{StaticResource OverlayListItem}">
-										<ListViewItem.Content>
-											<panels:OverlayListItem Overlay="{StaticResource OverlayNarrow}" />
-										</ListViewItem.Content>
-									</local:ListViewItemCommon>
-								</ListView>
-								<ContentControl Name="OverlaysColumns"
-												Grid.RowSpan="2"
-												HorizontalAlignment="Left"
-												Width="{Binding ElementName=OverlaysHeader, Path=ActualWidth}">
-									<Grid Name="OverlaysColumnLines"
-										  Width="{Binding ElementName=OverlaysHeaderItems, Path=ActualWidth}"
-										  Margin="{Binding ElementName=OverlaysHeaderItems, Path=Margin}"
-										  SnapsToDevicePixels="{Binding ElementName=OverlaysHeaderItems, Path=SnapsToDevicePixels}">
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition Name="OverlaysColumnMouth"
-															  Width="{Binding ElementName=OverlaysHeaderMouth, Path=ActualWidth}" />
-											<ColumnDefinition Name="OverlaysColumnOffset"
-															  Width="{Binding ElementName=OverlaysHeaderOffset, Path=ActualWidth}" />
-											<ColumnDefinition Name="OverlaysColumnReplace"
-															  Width="{Binding ElementName=OverlaysHeaderReplace, Path=ActualWidth}" />
-										</Grid.ColumnDefinitions>
-										<Rectangle Name="OverlaysLineMouth"
-												   Grid.Column="0"
-												   HorizontalAlignment="Right"
-												   VerticalAlignment="Stretch"
-												   Stroke="{StaticResource BackgroundDarkishBrush}"
-												   Opacity="0.25" />
-										<Rectangle Name="OverlaysLineOffset"
-												   Grid.Column="1"
-												   HorizontalAlignment="Right"
-												   VerticalAlignment="Stretch"
-												   Stroke="{StaticResource BackgroundDarkishBrush}"
-												   Opacity="0.25" />
-										<Rectangle Name="OverlaysLineReplace"
-												   Grid.Column="2"
-												   HorizontalAlignment="Right"
-												   VerticalAlignment="Stretch"
-												   Stroke="{StaticResource BackgroundDarkishBrush}"
-												   Opacity="0.25" />
-									</Grid>
-								</ContentControl>
-							</Grid>
-						</ScrollViewer>
-					</ContentControl>
-				</Grid>
+											   HorizontalAlignment="Right"
+											   VerticalAlignment="Stretch"
+											   Stroke="{StaticResource BackgroundDarkishBrush}"
+											   Opacity="0.25" />
+								</Grid>
+							</ContentControl>
+						</Grid>
+					</ScrollViewer>
+				</ContentControl>
 				<StackPanel Grid.Column="1"
 							HorizontalAlignment="Left"
-							Margin="10,0,0,0">
-					<Canvas Name="Spacer"
-							Height="{Binding ElementName=ToolStripImages, Path=ActualHeight, Mode=OneWay}"
-							Margin="0,0,0,5"></Canvas>
+							Margin="10,0,0,0"
+							Grid.Row="1">
 					<StackPanel Orientation="Horizontal">
 						<Label Content="X Offset"
 							   Name="LabelOffsetX"
 							   VerticalAlignment="Center"
 							   HorizontalAlignment="Left"
 							   Style="{StaticResource PanelLabel}" />
-						<custom:NumericUpDown x:Name="NumericOffsetX"
+						<custom:NumericUpDown Style="{StaticResource NumericUpDown}"
+											  x:Name="NumericOffsetX"
 											  Width="60"
 											  HorizontalAlignment="Left"
 											  VerticalAlignment="Center"
-											  Style="{StaticResource PanelTextBox}"
 											  ContextMenu="{StaticResource ContextMenuTextBox}"
 											  IsModifiedChanged="NumericOffsetX_IsModifiedChanged" />
 						<Label Content="Y Offset"
@@ -362,11 +396,11 @@
 							   HorizontalAlignment="Left"
 							   VerticalAlignment="Center"
 							   Style="{StaticResource PanelLabel}" />
-						<custom:NumericUpDown x:Name="NumericOffsetY"
+						<custom:NumericUpDown Style="{StaticResource NumericUpDown}"
+											  x:Name="NumericOffsetY"
 											  Width="60"
 											  HorizontalAlignment="Left"
 											  VerticalAlignment="Center"
-											  Style="{StaticResource PanelTextBox}"
 											  ContextMenu="{StaticResource ContextMenuTextBox}"
 											  IsModifiedChanged="NumericOffsetY_IsModifiedChanged" />
 					</StackPanel>
@@ -388,68 +422,82 @@
 							<ColumnDefinition  Width="5" />
 							<ColumnDefinition Width="Auto" />
 						</Grid.ColumnDefinitions>
-						<RepeatButton Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-									  Name="ButtonShiftUp"
-									  Grid.Column="2"
-									  HorizontalAlignment="Stretch"
-									  Click="ButtonShiftUp_Click">
+						<custom:RepeatButtonEx Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+											   x:Name="ButtonShiftUp"
+											   Grid.Column="2"
+											   HorizontalAlignment="Stretch"
+											   Click="ButtonShiftUp_Click"
+											   RepeatEnd="ButtonShiftUp_RepeatEnd">
 							<Image Source="{StaticResource ImgShiftUp}"
 								   Stretch="UniformToFill"
 								   Width="16"
 								   Height="16"
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center" />
-						</RepeatButton>
-						<RepeatButton Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-									  Name="ButtonShiftDown"
-									  Grid.Column="2"
-									  Grid.Row="4"
-									  HorizontalAlignment="Stretch"
-									  Click="ButtonShiftDown_Click">
+						</custom:RepeatButtonEx>
+						<custom:RepeatButtonEx Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+											   x:Name="ButtonShiftDown"
+											   Grid.Column="2"
+											   Grid.Row="4"
+											   HorizontalAlignment="Stretch"
+											   Click="ButtonShiftDown_Click"
+											   RepeatEnd="ButtonShiftDown_RepeatEnd">
 							<Image Source="{StaticResource ImgShiftDown}"
 								   Stretch="UniformToFill"
 								   Width="16"
 								   Height="16"
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center" />
-						</RepeatButton>
-						<RepeatButton Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-									  Name="ButtonShiftLeft"
-									  Grid.Row="2"
-									  VerticalAlignment="Stretch"
-									  Click="ButtonShiftLeft_Click">
+						</custom:RepeatButtonEx>
+						<custom:RepeatButtonEx Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+											   x:Name="ButtonShiftLeft"
+											   Grid.Row="2"
+											   VerticalAlignment="Stretch"
+											   Click="ButtonShiftLeft_Click"
+											   RepeatEnd="ButtonShiftLeft_RepeatEnd">
 							<Image Source="{StaticResource ImgShiftLeft}"
 								   Stretch="UniformToFill"
 								   Width="16"
 								   Height="16"
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center" />
-						</RepeatButton>
-						<RepeatButton Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-									  Name="ButtonShiftRight"
-									  Grid.Column="4"
-									  Grid.Row="2"
-									  VerticalAlignment="Stretch"
-									  Click="ButtonShiftRight_Click">
+						</custom:RepeatButtonEx>
+						<custom:RepeatButtonEx Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+											   x:Name="ButtonShiftRight"
+											   Grid.Column="4"
+											   Grid.Row="2"
+											   VerticalAlignment="Stretch"
+											   Click="ButtonShiftRight_Click"
+											   RepeatEnd="ButtonShiftRight_RepeatEnd">
 							<Image Source="{StaticResource ImgShiftRight}"
 								   Stretch="UniformToFill"
 								   Width="16"
 								   Height="16"
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center" />
-						</RepeatButton>
+						</custom:RepeatButtonEx>
 						<Border Grid.Column="2"
 								Grid.Row="2"
-								BorderThickness="1"
-								BorderBrush="{StaticResource {x:Static SystemColors.ControlDarkDarkBrushKey}}">
-							<local:FrameSample x:Name="ImageSample" />
+								Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
+								Focusable="False"
+								Style="{StaticResource BorderNormal}"
+								Padding="0"
+								UseLayoutRounding="False">
+							<ContentControl IsTabStop="False"
+											SnapsToDevicePixels="False"
+											UseLayoutRounding="False"
+											ClipToBounds="True">
+								<local:FrameSample x:Name="ImageSample"
+												   SnapsToDevicePixels="False"
+												   UseLayoutRounding="False" />
+							</ContentControl>
 						</Border>
 					</Grid>
 					<CheckBox Content="Replace the frame's top image"
 							  Name="CheckBoxReplace"
 							  HorizontalAlignment="Left"
 							  VerticalAlignment="Top"
-							  Style="{StaticResource PanelToggleButton}"
+							  Style="{StaticResource PanelToggleButtonAlt}"
 							  Checked="CheckBoxReplace_CheckChanged"
 							  Unchecked="CheckBoxReplace_CheckChanged" />
 				</StackPanel>

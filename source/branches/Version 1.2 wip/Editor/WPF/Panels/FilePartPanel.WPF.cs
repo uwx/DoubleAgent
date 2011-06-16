@@ -63,14 +63,18 @@ namespace AgentCharacterEditor.Panels
 			}
 			set
 			{
+				Fader.Dispose ();
+				Fader = new PanelFader (this);
+
 				if (value)
 				{
-					Opacity = 1;
-					Visibility = Visibility.Visible;
+					SetCurrentValue (OpacityProperty, 1.0);
+					SetCurrentValue (VisibilityProperty, Visibility.Visible);
 				}
 				else
 				{
-					Visibility = Visibility.Collapsed;
+					SetCurrentValue (VisibilityProperty, Visibility.Collapsed);
+					SetCurrentValue (OpacityProperty, 0.0);
 				}
 			}
 		}
@@ -129,7 +133,24 @@ namespace AgentCharacterEditor.Panels
 
 		protected Boolean IsControlFocused (Control pControl)
 		{
-			return (pControl == null) ? this.IsKeyboardFocusWithin : pControl.IsKeyboardFocusWithin;
+			if (pControl == null)
+			{
+				return IsControlFocused (this);
+			}
+			else if ((pControl.IsKeyboardFocused) || (pControl.IsKeyboardFocusWithin))
+			{
+				return true;
+			}
+			else
+			{
+				IInputElement lFocusElement = FocusManager.GetFocusedElement (FocusManager.GetFocusScope (Parent));
+
+				if ((lFocusElement is DependencyObject) && ((lFocusElement == pControl) || pControl.IsAncestorOf (lFocusElement as DependencyObject)))
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 
 		protected Control GetFocusedControl ()
@@ -147,6 +168,13 @@ namespace AgentCharacterEditor.Panels
 
 		protected Boolean IsControlEditTarget (Control pControl, Global.CanEditEventArgs e)
 		{
+#if false
+			System.Diagnostics.Debug.Print ("{0} IsControlEditTarget {1}", pControl.Name, IsControlFocused (pControl));
+			System.Diagnostics.Debug.Print ("   Source [{0}]", e.RoutedEventArgs.Source);
+			System.Diagnostics.Debug.Print ("   Param  [{0}]", e.RoutedEventArgs.Parameter);
+			System.Diagnostics.Debug.Print ("   Focus  [{0}]", Keyboard.FocusedElement);
+			System.Diagnostics.Debug.Print ("   Focus  [{0}]", FocusManager.GetFocusedElement (FocusManager.GetFocusScope (pControl)));
+#endif
 			return IsControlFocused (pControl) || pControl.IsAncestorOf (e.RoutedEventArgs.Source as DependencyObject);
 		}
 

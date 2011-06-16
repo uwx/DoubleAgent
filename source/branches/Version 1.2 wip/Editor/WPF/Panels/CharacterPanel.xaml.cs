@@ -99,8 +99,9 @@ namespace AgentCharacterEditor.Panels
 					((ImageIconSmall.Parent as FrameworkElement).Effect as DropShadowEffect).Opacity = (ImageIconSmall.Source == null) ? 0.0 : 0.5;
 				}
 			}
-			catch
+			catch (Exception pException)
 			{
+				System.Diagnostics.Debug.Print (pException.Message);
 			}
 		}
 
@@ -114,8 +115,9 @@ namespace AgentCharacterEditor.Panels
 					((ImageIconLarge.Parent as FrameworkElement).Effect as DropShadowEffect).Opacity = (ImageIconLarge.Source == null) ? 0.0 : 0.5;
 				}
 			}
-			catch
+			catch (Exception pException)
 			{
+				System.Diagnostics.Debug.Print (pException.Message);
 			}
 		}
 

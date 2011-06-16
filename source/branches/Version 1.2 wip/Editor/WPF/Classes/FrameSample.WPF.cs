@@ -26,6 +26,9 @@ namespace AgentCharacterEditor
 			this.MinHeight = 16;
 			this.MaxWidth = MaximumImageSize.Width;
 			this.MaxHeight = MaximumImageSize.Height;
+			this.SnapsToDevicePixels = false;
+			this.UseLayoutRounding = false;
+			this.ClipToBounds = true;
 		}
 
 		#endregion
@@ -60,24 +63,38 @@ namespace AgentCharacterEditor
 
 		protected override Size MeasureOverride (Size constraint)
 		{
-			Size lRet = new Size ();
+			Size lRet;
+			Size lSize;
+			Point lMin = new Point (MinWidth, MinHeight);
+			Point lMax = new Point (constraint.Width, constraint.Height);
+
+			try
+			{
+				GeneralTransform lTransform = LayoutTransform.Inverse;
+				lMin = lTransform.Transform (lMin);
+				lMax = lTransform.Transform (lMax);
+			}
+			catch
+			{
+			}
+
 			if (Source == null)
 			{
-				lRet = ImageExtensions.GuessScreenResolution ().ToWPF ();
-				lRet.Width = Math.Min (Math.Max (DefaultImageSize.Width * 96.0 / lRet.Width, MinWidth), constraint.Width);
-				lRet.Height = Math.Min (Math.Max (DefaultImageSize.Height * 96.0 / lRet.Height, MinHeight), constraint.Height);
+				lSize = DefaultImageSize.ToWPF ().ScaleToScreenResolution ();
 			}
 			else
 			{
-				lRet.Width = Math.Min (Math.Max (Source.Width, MinWidth), constraint.Width);
-				lRet.Height = Math.Min (Math.Max (Source.Height, MinHeight), constraint.Height);
+				lSize = new Size (Source.Width, Source.Height);
 			}
+
+			lRet = new Size (Math.Min (Math.Max (lSize.Width, lMin.X), lMax.X), Math.Min (Math.Max (lSize.Height, lMin.Y), lMax.Y));
+			lRet = lRet.PreserveAspectRatio (lSize);
 #if DEBUG_NOT
 			try
 			{
 				double lSourceWidth = (Source == null) ? 0 : Source.Width;
 				double lSourceHeight = (Source == null) ? 0 : Source.Height;
-				System.Diagnostics.Debug.Print ("{0} Measure [{1} {2}] Return [{3} {4}] Source [{5} {6}] Min [{7} {8}] max [{9} {10}] Transform [{11}]", Name, constraint.Width, constraint.Height, lRet.Width, lRet.Height, lSourceWidth, lSourceHeight, MinWidth, MinHeight, MaxWidth, MaxHeight, LayoutTransform.ToString());
+				System.Diagnostics.Debug.Print ("{0} Measure [{1} {2}] Return [{3} {4}] Source [{5} {6}] Min [{7} {8}] max [{9} {10}] Transform [{11}]", Name, constraint.Width, constraint.Height, lRet.Width, lRet.Height, lSourceWidth, lSourceHeight, MinWidth, MinHeight, MaxWidth, MaxHeight, LayoutTransform.ToString ());
 			}
 			catch
 			{

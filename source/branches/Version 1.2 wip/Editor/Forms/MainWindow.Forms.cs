@@ -381,7 +381,7 @@ namespace AgentCharacterEditor
 		{
 			if (CanEdit != null)
 			{
-				Global.CanEditEventArgs lEventArgs = new Global.CanEditEventArgs ();
+				Global.CanEditEventArgs lEventArgs = new Global.CanEditEventArgs (pContextMenu);
 
 				try
 				{

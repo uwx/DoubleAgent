@@ -74,7 +74,6 @@
 									  TabIndex="1"
 									  MaxLines="1"
 									  IsModifiedChanged="TextBoxName_IsModifiedChanged"
-									  Style="{StaticResource PanelTextBox}"
 									  ContextMenu="{StaticResource ContextMenuTextBox}" />
 					<custom:TextBoxEx Grid.Column="1"
 									  Grid.Row="1"
@@ -84,7 +83,6 @@
 									  AcceptsReturn="True"
 									  IsModifiedChanged="TextBoxDescription_IsModifiedChanged"
 									  DataContext="{Binding}"
-									  Style="{StaticResource PanelTextBox}"
 									  ContextMenu="{StaticResource ContextMenuTextBox}" />
 					<custom:TextBoxEx Grid.Column="1"
 									  Grid.Row="2"
@@ -92,7 +90,6 @@
 									  TabIndex="3"
 									  AcceptsReturn="True"
 									  IsModifiedChanged="TextBoxExtra_IsModifiedChanged"
-									  Style="{StaticResource PanelTextBox}"
 									  ContextMenu="{StaticResource ContextMenuTextBox}" />
 				</Grid>
 				<ListView Name="ListViewLanguage"
@@ -101,8 +98,10 @@
 						  IsTabStop="True"
 						  SelectionChanged="ListViewLanguage_SelectionChanged"
 						  Width="150"
-						  Style="{StaticResource PanelListView}"
-						  SelectionMode="Single">
+						  ContextMenu="{StaticResource ContextMenuEdit}"
+						  SelectionMode="Single"
+						  IsTextSearchEnabled="False"
+						  KeyboardNavigation.TabNavigation="None">
 					<local:ListViewItemCommon Content="Arabic"
 											  Tag="ar-SA-0401" />
 					<local:ListViewItemCommon Content="Basque"
@@ -214,18 +213,18 @@
 						   Height="32" />
 				</Border>
 				<custom:TextBoxEx x:Name="TextBoxIconFile"
-								  Margin="5,0,2,0"
+								  Margin="2,0"
 								  HorizontalAlignment="Stretch"
 								  Grid.Column="2"
 								  VerticalAlignment="Center"
 								  TabIndex="4"
 								  IsModifiedChanged="TextBoxIconFile_IsModifiedChanged"
-								  Style="{StaticResource PanelTextBox}"
 								  ContextMenu="{StaticResource ContextMenuTextBox}" />
-				<StackPanel Grid.Column="3"
-							Orientation="Horizontal"
-							HorizontalAlignment="Right"
-							VerticalAlignment="Center">
+				<ToolBar Grid.Column="3"
+						 Style="{StaticResource PanelToolBar}"
+						 HorizontalAlignment="Right"
+						 VerticalAlignment="Center"
+						 Margin="2,0">
 					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 							Height="Auto"
 							Name="ButtonIconImport"
@@ -257,7 +256,7 @@
 							   HorizontalAlignment="Center"
 							   VerticalAlignment="Center"></Image>
 					</Button>
-				</StackPanel>
+				</ToolBar>
 			</Grid>
 		</GroupBox>
 		<GroupBox Grid.Row="2"
@@ -283,7 +282,6 @@
 								  IsUndoEnabled="False"
 								  MaxLines="1"
 								  TabIndex="7"
-								  Style="{StaticResource PanelTextBox}"
 								  ContextMenu="{StaticResource ContextMenuTextBox}" />
 				<Button Content="New GUID"
 						Height="Auto"

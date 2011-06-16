@@ -19,7 +19,10 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 using System;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 
 namespace AgentCharacterEditor.Global
 {
@@ -65,28 +68,28 @@ namespace AgentCharacterEditor.Global
 
 		static public System.Windows.Size ToWPF (this System.Drawing.Size pSize)
 		{
-			return new System.Windows.Size (pSize.Width, pSize.Width);
+			return new System.Windows.Size (pSize.Width, pSize.Height);
 		}
 		static public System.Windows.Size ToWPF (this System.Drawing.SizeF pSize)
 		{
-			return new System.Windows.Size (pSize.Width, pSize.Width);
+			return new System.Windows.Size (pSize.Width, pSize.Height);
 		}
 		static public System.Drawing.SizeF FromWPF (this System.Windows.Size pSize)
 		{
-			return new System.Drawing.SizeF ((Single)pSize.Width, (Single)pSize.Width);
+			return new System.Drawing.SizeF ((Single)pSize.Width, (Single)pSize.Height);
 		}
 
 		static public System.Windows.Rect ToWPF (this System.Drawing.Rectangle pRect)
 		{
-			return new System.Windows.Rect (pRect.X, pRect.Y, pRect.Width, pRect.Width);
+			return new System.Windows.Rect (pRect.X, pRect.Y, pRect.Width, pRect.Height);
 		}
 		static public System.Windows.Rect ToWPF (this System.Drawing.RectangleF pRect)
 		{
-			return new System.Windows.Rect (pRect.X, pRect.Y, pRect.Width, pRect.Width);
+			return new System.Windows.Rect (pRect.X, pRect.Y, pRect.Width, pRect.Height);
 		}
 		static public System.Drawing.RectangleF FromWPF (this System.Windows.Rect pRect)
 		{
-			return new System.Drawing.RectangleF ((Single)pRect.X, (Single)pRect.Y, (Single)pRect.Width, (Single)pRect.Width);
+			return new System.Drawing.RectangleF ((Single)pRect.X, (Single)pRect.Y, (Single)pRect.Width, (Single)pRect.Height);
 		}
 
 		static public System.Windows.Media.Color ToWPF (this System.Drawing.Color pColor)
@@ -100,6 +103,40 @@ namespace AgentCharacterEditor.Global
 		static public System.Drawing.Color FromWPF (this System.Windows.Media.Color pColor)
 		{
 			return System.Drawing.Color.FromArgb (pColor.A, pColor.R, pColor.G, pColor.B);
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+
+	public static partial class ImageExtensions
+	{
+		static public System.Windows.Size ScaleToScreenResolution (this System.Windows.Size pSize)
+		{
+			try
+			{
+				Size lResolution = ImageExtensions.GuessScreenResolution ().ToWPF ();
+				return new Size (pSize.Width * 96.0 / lResolution.Width, pSize.Height * 96.0 / lResolution.Height);
+			}
+			catch (Exception pException)
+			{
+				System.Diagnostics.Debug.Print (pException.Message);
+			}
+			return pSize;
+		}
+
+		static public System.Windows.Size TransformToScreenResolution (this System.Windows.Size pSize, System.Windows.Media.GeneralTransform pTransform)
+		{
+			try
+			{
+				Size lResolution = ImageExtensions.GuessScreenResolution ().ToWPF ();
+				Point lTransformed = pTransform.Transform (new Point (pSize.Width * 96.0 / lResolution.Width, pSize.Height * 96.0 / lResolution.Height));
+				return new Size (lTransformed.X, lTransformed.Y);
+			}
+			catch (Exception pException)
+			{
+				System.Diagnostics.Debug.Print (pException.Message);
+			}
+			return pSize;
 		}
 	}
 
@@ -210,6 +247,59 @@ namespace AgentCharacterEditor.Global
 
 	///////////////////////////////////////////////////////////////////////////////
 
+	public static partial class TreeViewExtensions
+	{
+		public static void SetSelectedItem (this TreeView pTreeView, TreeViewItem pTreeViewItem)
+		{
+			SetSelectedItem (pTreeView, pTreeViewItem, true);
+		}
+
+		public static void SetSelectedItem (this TreeView pTreeView, TreeViewItem pTreeViewItem, Boolean pEnsureVisible)
+		{
+			if (pTreeViewItem != pTreeView.SelectedItem)
+			{
+				TreeViewItem lSelectedItem = pTreeView.SelectedItem as TreeViewItem;
+				TreeViewItem lParentItem;
+#if DEBUG_NOT
+				System.Diagnostics.Debug.Print ("OldSelectedItem [{0}]", lSelectedItem);
+				System.Diagnostics.Debug.Print ("OldFocusedItem  [{0}]", FocusManager.GetFocusedElement (FocusManager.GetFocusScope (pTreeView)));
+				System.Diagnostics.Debug.Print ("SetSelectedItem [{0}]", pTreeViewItem);
+#endif
+
+				if (pTreeViewItem != null)
+				{
+					for (lParentItem = pTreeViewItem.Parent as TreeViewItem; lParentItem != null; lParentItem = lParentItem.Parent as TreeViewItem)
+					{
+						lParentItem.IsExpanded = true;
+					}
+					if (pEnsureVisible)
+					{
+						pTreeViewItem.BringIntoView ();
+					}
+					pTreeViewItem.IsSelected = true;
+				}
+				if (lSelectedItem != null)
+				{
+					lSelectedItem.IsSelected = false;
+				}
+#if DEBUG_NOT
+
+				System.Diagnostics.Debug.Print ("NewSelectedItem [{0}]", lSelectedItem);
+				System.Diagnostics.Debug.Print ("NewFocusedItem  [{0}]", FocusManager.GetFocusedElement (FocusManager.GetFocusScope (pTreeView)));
+#endif
+				if (pTreeView.IsKeyboardFocusWithin && (pTreeView.SelectedItem != null))
+				{
+					(pTreeView.SelectedItem as TreeViewItem).Focus ();
+				}
+#if DEBUG_NOT
+				System.Diagnostics.Debug.Print ("NewFocusedItem  [{0}]", FocusManager.GetFocusedElement (FocusManager.GetFocusScope (pTreeView)));
+#endif
+			}
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+
 	public static partial class ComboBoxExtensions
 	{
 		public static void BeginUpdate (this ComboBox pComboBox)
@@ -237,4 +327,73 @@ namespace AgentCharacterEditor.Global
 			return -1;
 		}
 	}
+
+	///////////////////////////////////////////////////////////////////////////////
+#if DEBUG
+	///////////////////////////////////////////////////////////////////////////////
+
+	public static partial class DebuggingExtensions
+	{
+		public static void DebugPrint (this UIElement pRootElement)
+		{
+			DebugPrint (pRootElement, String.Empty);
+		}
+
+		public static void DebugPrint (this UIElement pRootElement, String pIndent)
+		{
+			DebugPrint (pRootElement, String.Empty, String.Empty);
+		}
+
+		public static void DebugPrint (this UIElement pRootElement, String pTitle, String pIndent)
+		{
+			String lTitle = String.IsNullOrEmpty (pTitle) ? String.Empty : pTitle + " ";
+
+			if (pRootElement == null)
+			{
+				System.Diagnostics.Debug.Print ("{0}{1}<null>", pIndent, lTitle);
+			}
+			else
+			{
+				if (pRootElement is FrameworkElement)
+				{
+					System.Diagnostics.Debug.Print ("{0}{1}{2} [{3}] [{4}] Size [{5} {6}] Margin [{7} {8} {9} {10}]", pIndent, lTitle, pRootElement.GetType ().Name, (pRootElement as FrameworkElement).Name, pRootElement.Visibility, Math.Round ((pRootElement as FrameworkElement).ActualWidth), Math.Round ((pRootElement as FrameworkElement).ActualHeight), (pRootElement as FrameworkElement).Margin.Left, (pRootElement as FrameworkElement).Margin.Top, (pRootElement as FrameworkElement).Margin.Right, (pRootElement as FrameworkElement).Margin.Bottom);
+				}
+				else
+				{
+					System.Diagnostics.Debug.Print ("{0}{1}{2} [{3}]", pIndent, lTitle, pRootElement.GetType ().Name, pRootElement.Visibility);
+				}
+
+				if (pRootElement is Label)
+				{
+					System.Diagnostics.Debug.Print ("{0}  Label [{1}]", pIndent, (pRootElement as Label).Content);
+				}
+				else if (pRootElement is TextBox)
+				{
+					System.Diagnostics.Debug.Print ("{0}  Text [{1}]", pIndent, (pRootElement as TextBox).Text);
+				}
+				else if (pRootElement is ToggleButton)
+				{
+					System.Diagnostics.Debug.Print ("{0}  Checked [{1}] Content [{2}]", pIndent, (pRootElement as ToggleButton).IsChecked, (pRootElement as ToggleButton).Content);
+				}
+				else if (pRootElement is ContentControl)
+				{
+					DebugPrint ((pRootElement as ContentControl).Content as UIElement, "Content", pIndent + "  ");
+				}
+				else if (pRootElement is Panel)
+				{
+					UIElementCollection lChildren = (pRootElement as Panel).Children;
+					String lIndent = pIndent + "  ";
+
+					foreach (UIElement lChild in lChildren)
+					{
+						DebugPrint (lChild, "Child", lIndent);
+					}
+				}
+			}
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+#endif
+	///////////////////////////////////////////////////////////////////////////////
 }

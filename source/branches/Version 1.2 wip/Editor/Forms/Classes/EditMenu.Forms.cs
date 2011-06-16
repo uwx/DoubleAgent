@@ -163,6 +163,11 @@ namespace AgentCharacterEditor.Global
 		{
 			PasteTypeTitle = AppResources.Resources.EditPasteThis;
 		}
+		public CanEditEventArgs (ContextMenuStrip pContextMenu)
+		{
+			ContextMenu = pContextMenu;
+			PasteTypeTitle = AppResources.Resources.EditPasteThis;
+		}
 
 		public override Boolean IsUsed
 		{
@@ -174,6 +179,18 @@ namespace AgentCharacterEditor.Global
 			{
 				base.IsUsed = value;
 			}
+		}
+		public Boolean IsContextMenu
+		{
+			get
+			{
+				return ContextMenu != null;
+			}
+		}
+		public ContextMenuStrip ContextMenu
+		{
+			get;
+			protected set;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

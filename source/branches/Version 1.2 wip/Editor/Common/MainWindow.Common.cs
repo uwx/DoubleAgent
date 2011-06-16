@@ -43,6 +43,7 @@ namespace AgentCharacterEditor
 		{
 			PanelPartsTree.Navigate += new NavigationEventHandler (OnNavigate);
 			PanelAnimations.Navigate += new NavigationEventHandler (OnNavigate);
+			PanelAnimation.Navigate += new NavigationEventHandler (OnNavigate);
 			PanelState.Navigate += new NavigationEventHandler (OnNavigate);
 
 			mRecentFiles.RecentItemClick += new RecentFileList.RecentItemClickEventHandler (RecentFiles_RecentItemClick);
@@ -369,7 +370,11 @@ namespace AgentCharacterEditor
 			{
 				try
 				{
+#if false
 					pFilePath = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (mCharacterFile.Path), "*" + System.IO.Path.GetExtension (mCharacterFile.Path));
+#else
+					pFilePath = mCharacterFile.Path;
+#endif
 				}
 				catch
 				{

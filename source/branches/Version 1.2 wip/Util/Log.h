@@ -239,7 +239,12 @@ static inline void LogCliException (UINT pLogLevel, System::Exception^ pExceptio
 			lMsg = PtrToStringChars (pException->ToString());
 			LogMessage (pLogLevel, _T("Exception [%s] at %hs %d"), (const System::Char*)lMsg, pFile, pLine);
 
-			lTypeLoadException = safe_cast <System::Reflection::ReflectionTypeLoadException^> (pException);
+			try
+			{
+				lTypeLoadException = safe_cast <System::Reflection::ReflectionTypeLoadException^> (pException);
+			}
+			catch (...)
+			{}
 			if	(
 					(lTypeLoadException != nullptr)
 				&&	(lTypeLoadException->LoaderExceptions != nullptr)

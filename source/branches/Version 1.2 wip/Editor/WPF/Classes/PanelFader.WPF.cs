@@ -25,7 +25,7 @@ using System.Windows.Media.Animation;
 
 namespace AgentCharacterEditor
 {
-	public class PanelFader
+	public class PanelFader : IDisposable
 	{
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
@@ -34,6 +34,31 @@ namespace AgentCharacterEditor
 		{
 			Panel = pPanel;
 			FadeDuration = new Duration (new TimeSpan (0, 0, 0, 0, 150));
+		}
+
+		~PanelFader ()
+		{
+			Dispose (true);
+		}
+
+		public void Dispose ()
+		{
+			Dispose (false);
+			GC.SuppressFinalize (this);
+		}
+
+		protected void Dispose (bool disposing)
+		{
+			if (FadeInStoryboard != null)
+			{
+				StopStoryboard (FadeInStoryboard);
+				FadeInStoryboard = null;
+			}
+			if (FadeOutStoryboard != null)
+			{
+				StopStoryboard (FadeOutStoryboard);
+				FadeOutStoryboard = null;
+			}
 		}
 
 		#endregion

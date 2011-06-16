@@ -79,6 +79,7 @@ namespace DoubleAgent
 			{
 				if (this.Window != null)
 				{
+					Mouse.OverrideCursor = null;
 					this.Window.Cursor = this.SavedCursor;
 					this.Window = null;
 				}
@@ -137,7 +138,12 @@ namespace DoubleAgent
 		/// <seealso cref="ShowCursor"/>
 		public Boolean ShowWait ()
 		{
-			return ShowCursor (System.Windows.Input.Cursors.Wait);
+			if (ShowCursor (System.Windows.Input.Cursors.Wait))
+			{
+				Mouse.OverrideCursor = this.Window.Cursor;
+				return true;
+			}
+			return false;
 		}
 	}
 }

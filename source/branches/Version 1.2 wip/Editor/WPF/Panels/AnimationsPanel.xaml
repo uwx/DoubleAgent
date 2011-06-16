@@ -34,69 +34,67 @@
 					<RowDefinition />
 					<RowDefinition  Height="Auto" />
 				</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition />
-					<ColumnDefinition  Width="Auto" />
-					<ColumnDefinition  Width="Auto" />
-				</Grid.ColumnDefinitions>
-				<StackPanel HorizontalAlignment="Left"
-							VerticalAlignment="Top"
-							Orientation="Horizontal"
-							Margin="0,0,0,5">
-					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-							Height="Auto"
-							Name="ButtonAdd"
-							Width="Auto"
-							ToolTip="Add new animation"
-							Click="ButtonAdd_Click">
-						<Image Source="{StaticResource ImgFileNew}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16"
-							   HorizontalAlignment="Center"
-							   VerticalAlignment="Center"></Image>
-					</Button>
-					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-							Height="Auto"
-							Name="ButtonDelete"
-							Width="Auto"
-							ToolTip="Delete animation"
-							Click="ButtonDelete_Click">
-						<Image Source="{StaticResource ImgEditDelete}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16"
-							   HorizontalAlignment="Center"
-							   VerticalAlignment="Center"></Image>
-					</Button>
-				</StackPanel>
-				<Label Content="New animation name"
-					   Grid.Column="1"
-					   HorizontalAlignment="Right"
-					   Name="LabelNewName"
-					   VerticalAlignment="Center"
-					   Style="{StaticResource PanelLabel}"
-					   Padding="2,0,5,2" />
-				<custom:TextBoxEx Grid.Column="2"
-								  HorizontalAlignment="Right"
-								  x:Name="TextBoxNewName"
-								  VerticalAlignment="Center"
-								  Width="200"
-								  Style="{StaticResource PanelTextBox}"
-								  ContextMenu="{StaticResource ContextMenuTextBox}"
-								  MaxLines="1"
-								  TextChanged="TextBoxNewName_TextChanged"
-								  Margin="2,0,2,2" />
-				<ListView Grid.ColumnSpan="3"
-						  Grid.Row="1"
+				<Grid Margin="0,0,0,2">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition />
+						<ColumnDefinition  Width="Auto" />
+						<ColumnDefinition  Width="Auto" />
+					</Grid.ColumnDefinitions>
+					<ToolBar Style="{StaticResource PanelToolBar}"
+							 HorizontalAlignment="Left"
+							 VerticalAlignment="Top"
+							 Margin="2,0">
+						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+								Height="Auto"
+								Name="ButtonAdd"
+								Width="Auto"
+								ToolTip="Add new animation"
+								Click="ButtonAdd_Click">
+							<Image Source="{StaticResource ImgFileNew}"
+								   Stretch="UniformToFill"
+								   Width="16"
+								   Height="16"
+								   HorizontalAlignment="Center"
+								   VerticalAlignment="Center"></Image>
+						</Button>
+						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+								Height="Auto"
+								Name="ButtonDelete"
+								Width="Auto"
+								ToolTip="Delete animation"
+								Click="ButtonDelete_Click">
+							<Image Source="{StaticResource ImgEditDelete}"
+								   Stretch="UniformToFill"
+								   Width="16"
+								   Height="16"
+								   HorizontalAlignment="Center"
+								   VerticalAlignment="Center"></Image>
+						</Button>
+					</ToolBar>
+					<Label Content="New animation name"
+						   Grid.Column="1"
+						   HorizontalAlignment="Right"
+						   Name="LabelNewName"
+						   VerticalAlignment="Center"
+						   Style="{StaticResource PanelLabel}" />
+					<custom:TextBoxEx Grid.Column="2"
+									  HorizontalAlignment="Right"
+									  x:Name="TextBoxNewName"
+									  VerticalAlignment="Center"
+									  Width="200"
+									  ContextMenu="{StaticResource ContextMenuTextBox}"
+									  MaxLines="1"
+									  TextChanged="TextBoxNewName_TextChanged"
+									  Margin="2,0" />
+				</Grid>
+				<ListView Grid.Row="1"
 						  Name="ListViewAnimations"
 						  VerticalAlignment="Stretch"
-						  Style="{StaticResource PanelListView}"
+						  SelectionMode="Single"
 						  SelectionChanged="ListViewAnimations_SelectionChanged"
 						  MouseDoubleClick="ListViewAnimations_MouseDoubleClick"
-						  SelectionMode="Single"
 						  ContextMenuOpening="ListViewAnimations_ContextMenuOpening"
-						  MouseUp="ListViewAnimations_MouseUp">
+						  PreviewMouseLeftButtonDown="ListViewAnimations_PreviewMouseLeftButtonDown">
 					<ListView.ItemsPanel>
 						<ItemsPanelTemplate>
 							<WrapPanel Orientation="Vertical" />
@@ -115,51 +113,14 @@
 								</MenuItem.Icon>
 							</MenuItem>
 							<Separator />
-							<MenuItem Header="_Cut"
-									  Command="ApplicationCommands.Cut"
-									  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-								<MenuItem.Icon>
-									<Image Source="{StaticResource ImgEditCut}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16" />
-								</MenuItem.Icon>
-							</MenuItem>
-							<MenuItem Header="_Copy"
-									  Command="ApplicationCommands.Copy"
-									  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-								<MenuItem.Icon>
-									<Image Source="{StaticResource ImgEditCopy}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16" />
-								</MenuItem.Icon>
-							</MenuItem>
-							<MenuItem Header="_Paste"
-									  Command="ApplicationCommands.Paste"
-									  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-								<MenuItem.Icon>
-									<Image Source="{StaticResource ImgEditPaste}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16" />
-								</MenuItem.Icon>
-							</MenuItem>
-							<MenuItem Header="_Delete"
-									  Command="ApplicationCommands.Delete"
-									  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-								<MenuItem.Icon>
-									<Image Source="{StaticResource ImgEditDelete}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16" />
-								</MenuItem.Icon>
-							</MenuItem>
+							<MenuItem Style="{StaticResource MenuItemCut}" />
+							<MenuItem Style="{StaticResource MenuItemCopy}" />
+							<MenuItem Style="{StaticResource MenuItemPaste}" />
+							<MenuItem Style="{StaticResource MenuItemDelete}" />
 						</ContextMenu>
 					</ListView.ContextMenu>
 				</ListView>
-				<StackPanel Grid.ColumnSpan="3"
-							Grid.Row="2"
+				<StackPanel Grid.Row="2"
 							HorizontalAlignment="Left"
 							VerticalAlignment="Bottom"
 							Orientation="Horizontal">
@@ -168,9 +129,9 @@
 						   Style="{StaticResource PanelLabel}"
 						   HorizontalAlignment="Left"
 						   VerticalAlignment="Center" />
-					<custom:NumericUpDown x:Name="NumericFrameWidth"
-										  Width="40"
-										  Style="{StaticResource PanelTextBox}"
+					<custom:NumericUpDown Style="{StaticResource NumericUpDown}"
+										  x:Name="NumericFrameWidth"
+										  Width="55"
 										  ContextMenu="{StaticResource ContextMenuTextBox}"
 										  HorizontalAlignment="Left"
 										  VerticalAlignment="Center"
@@ -183,9 +144,9 @@
 						   HorizontalAlignment="Left"
 						   VerticalAlignment="Center"
 						   Margin="10,0,0,0" />
-					<custom:NumericUpDown x:Name="NumericFrameHeight"
-										  Width="40"
-										  Style="{StaticResource PanelTextBox}"
+					<custom:NumericUpDown Style="{StaticResource NumericUpDown}"
+										  x:Name="NumericFrameHeight"
+										  Width="55"
 										  ContextMenu="{StaticResource ContextMenuTextBox}"
 										  MaxLines="1"
 										  HorizontalAlignment="Left"
@@ -219,14 +180,15 @@
 					<custom:TextBoxEx Grid.Column="1"
 									  x:Name="TextBoxPaletteFile"
 									  VerticalAlignment="Center"
-									  Style="{StaticResource PanelTextBox}"
 									  ContextMenu="{StaticResource ContextMenuTextBox}"
 									  MaxLines="1"
-									  IsModifiedChanged="TextBoxPaletteFile_IsModifiedChanged" />
-					<StackPanel Grid.Column="2"
-								Orientation="Horizontal"
-								VerticalAlignment="Center"
-								HorizontalAlignment="Right">
+									  IsModifiedChanged="TextBoxPaletteFile_IsModifiedChanged"
+									  Margin="2,0" />
+					<ToolBar Style="{StaticResource PanelToolBar}"
+							 Grid.Column="2"
+							 VerticalAlignment="Center"
+							 HorizontalAlignment="Right"
+							 Margin="2,0">
 						<Button Focusable="false"
 								Height="Auto"
 								HorizontalAlignment="Right"
@@ -256,7 +218,7 @@
 								   HorizontalAlignment="Center"
 								   VerticalAlignment="Center" />
 						</Button>
-					</StackPanel>
+					</ToolBar>
 				</Grid>
 				<Grid Grid.Row="1"
 					  VerticalAlignment="Bottom"
@@ -266,16 +228,17 @@
 						<ColumnDefinition  Width="Auto" />
 						<ColumnDefinition />
 					</Grid.ColumnDefinitions>
-					<Border BorderBrush="Black"
-							BorderThickness="1"
-							Grid.RowSpan="4"
+					<Border Grid.RowSpan="4"
 							HorizontalAlignment="Left"
 							Name="PictureBoxPalette"
 							VerticalAlignment="Top"
-							Margin="0,0,10,0">
+							Margin="2,0,10,0"
+							UseLayoutRounding="False"
+							Style="{StaticResource BorderNormal}"
+							Padding="0">
 						<Image Height="200"
 							   Name="ImagePalette"
-							   Stretch="Uniform"
+							   Stretch="Fill"
 							   Width="200"
 							   MinWidth="200"
 							   MinHeight="200"
@@ -283,7 +246,9 @@
 							   MaxHeight="200"
 							   MouseMove="ImagePalette_MouseMove"
 							   MouseLeave="ImagePalette_MouseLeave"
-							   MouseDown="ImagePalette_MouseDown" />
+							   MouseDown="ImagePalette_MouseDown"
+							   UseLayoutRounding="False"
+							   SnapsToDevicePixels="False" />
 					</Border>
 					<Grid Grid.Column="1">
 						<Grid.RowDefinitions>
@@ -301,19 +266,42 @@
 							   Style="{StaticResource PanelLabel}"
 							   Width="100"
 							   Margin="0"
-							   Padding="0,0,0,2" />
-						<Label Height="30"
-							   Name="LabelTransparencySample"
-							   Width="100"
-							   Grid.Row="1"
-							   HorizontalAlignment="Left"
-							   VerticalAlignment="Top"
-							   BorderThickness="1"
-							   BorderBrush="Black"
-							   Padding="0"
-							   IsHitTestVisible="False"
-							   HorizontalContentAlignment="Center"
-							   VerticalContentAlignment="Center" />
+							   Padding="2,0,2,2" />
+						<Border Name="BorderTransparencySample"
+								Style="{StaticResource BorderNormal}"
+								Width="100"
+								Height="30"
+								Grid.Row="1"
+								HorizontalAlignment="Left"
+								VerticalAlignment="Top"
+								Margin="0,2,0,0"
+								Padding="0"
+								UseLayoutRounding="False">
+							<Label Name="LabelTransparencySample"
+								   Padding="0"
+								   IsHitTestVisible="False"
+								   HorizontalContentAlignment="Center"
+								   VerticalContentAlignment="Center"
+								   SnapsToDevicePixels="False"
+								   UseLayoutRounding="False" />
+						</Border>
+						<Border Name="BorderColorSample"
+								Style="{StaticResource BorderNormal}"
+								Width="100"
+								Height="100"
+								HorizontalAlignment="Left"
+								VerticalAlignment="Top"
+								Grid.Row="2"
+								Padding="0"
+								Margin="0,10,0,2"
+								UseLayoutRounding="False">
+							<Label Name="LabelColorSample"
+								   BorderThickness="1"
+								   HorizontalContentAlignment="Center"
+								   VerticalContentAlignment="Center"
+								   SnapsToDevicePixels="False"
+								   UseLayoutRounding="False" />
+						</Border>
 						<Label Grid.Row="3"
 							   HorizontalAlignment="Left"
 							   Name="LabelTransparencyClick"
@@ -326,18 +314,6 @@
 									   TextWrapping="Wrap"
 									   FontSize="14" />
 						</Label>
-						<Label Height="100"
-							   Name="LabelColorSample"
-							   Width="100"
-							   Grid.Row="2"
-							   HorizontalAlignment="Left"
-							   VerticalAlignment="Center"
-							   Padding="0"
-							   BorderThickness="1"
-							   BorderBrush="Black"
-							   Margin="0,10,0,2"
-							   HorizontalContentAlignment="Center"
-							   VerticalContentAlignment="Center" />
 					</Grid>
 				</Grid>
 			</Grid>

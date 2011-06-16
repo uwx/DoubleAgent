@@ -244,7 +244,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			get
 			{
-				return CanChooseOverlayFile ? String.Format (AppResources.Resources.EditChooseThisFile.NoMenuPrefix (), Titles.OverlayTypeName (GetSelectedOverlay (false))) : AppResources.Resources.EditChooseFile.NoMenuPrefix ();
+				return CanChooseOverlayFile ? String.Format (AppResources.Resources.EditChooseThisFile.NoMenuPrefix (), Titles.Overlay (GetSelectedOverlay (false)).Quoted()) : AppResources.Resources.EditChooseFile.NoMenuPrefix ();
 			}
 		}
 
@@ -390,7 +390,7 @@ namespace AgentCharacterEditor.Panels
 
 				if (lFrameOverlay != null)
 				{
-					pEventArgs.PutCopyTitle (Titles.OverlayFrameAnimation (lFrameOverlay).Quoted ());
+					pEventArgs.PutCopyTitle (pEventArgs.IsContextMenu ? Titles.Overlay (lFrameOverlay) : Titles.OverlayFrameAnimation (lFrameOverlay).Quoted ());
 				}
 				return true;
 			}
@@ -419,7 +419,7 @@ namespace AgentCharacterEditor.Panels
 
 				if (lFrameOverlay != null)
 				{
-					pEventArgs.PutCutTitle (Titles.OverlayFrameAnimation (lFrameOverlay).Quoted ());
+					pEventArgs.PutCutTitle (pEventArgs.IsContextMenu ? Titles.Overlay (lFrameOverlay) : Titles.OverlayFrameAnimation (lFrameOverlay).Quoted ());
 				}
 				return true;
 			}
@@ -451,7 +451,7 @@ namespace AgentCharacterEditor.Panels
 
 				if (lFrameOverlay != null)
 				{
-					pEventArgs.PutDeleteTitle (Titles.OverlayFrameAnimation (lFrameOverlay).Quoted ());
+					pEventArgs.PutDeleteTitle (pEventArgs.IsContextMenu ? Titles.Overlay (lFrameOverlay) : Titles.OverlayFrameAnimation (lFrameOverlay).Quoted ());
 				}
 				return true;
 			}
@@ -476,7 +476,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (ListViewOverlays, pEventArgs) && !Program.FileIsReadOnly && (pEventArgs.GetPasteObject () is FileFrameOverlay))
 			{
-				pEventArgs.PutPasteTitle (Titles.PasteTypeTitle (pEventArgs.GetPasteObject () as FileFrameOverlay, Titles.Overlay ((pEventArgs.GetPasteObject () as FileFrameOverlay).OverlayType), Titles.Overlay ((MouthOverlay)ListViewOverlays.SelectedIndex)));
+				pEventArgs.PutPasteTitle (Titles.PasteTypeTitle (pEventArgs.GetPasteObject () as FileFrameOverlay, Titles.Overlay ((pEventArgs.GetPasteObject () as FileFrameOverlay).OverlayType), pEventArgs.IsContextMenu ? Titles.Overlay ((MouthOverlay)ListViewOverlays.SelectedIndex) : Titles.OverlayFrameAnimation (Frame, (MouthOverlay)ListViewOverlays.SelectedIndex).Quoted ()));
 				return true;
 			}
 			return false;

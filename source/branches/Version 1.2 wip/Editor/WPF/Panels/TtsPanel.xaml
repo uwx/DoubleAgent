@@ -35,12 +35,12 @@
 		<CheckBox Name="CheckBoxUseTTS"
 				  Content="Use Text-to-Speech for voice output"
 				  Style="{StaticResource PanelToggleButton}"
-				  Foreground="{StaticResource BackgroundDarkishBrush}"
+				  Foreground="{StaticResource BackgroundDarkBrush}"
 				  HorizontalAlignment="Left"
 				  VerticalAlignment="Top"
 				  VerticalContentAlignment="Center"
 				  Margin="4,0,4,0"
-				  Padding="2,0,2,2"
+				  Padding="2"
 				  FontSize="16"
 				  TabIndex="0"
 				  Checked="CheckBoxUseTTS_CheckChanged"
@@ -77,8 +77,9 @@
 								  Grid.ColumnSpan="3"
 								  Margin="2"
 								  TabIndex="2"
-								  Style="{StaticResource PanelTextBox}"
-								  ContextMenu="{StaticResource ContextMenuTextBox}" />
+								  ContextMenu="{StaticResource ContextMenuTextBox}"
+								  IsTabStop="False"
+								  IsUndoEnabled="False" />
 				<Label Content="Gender"
 					   HorizontalAlignment="Left"
 					   Name="LabelGender"
@@ -95,8 +96,9 @@
 								  Grid.Row="1"
 								  Margin="2,2,0,0"
 								  TabIndex="3"
-								  Style="{StaticResource PanelTextBox}"
-								  ContextMenu="{StaticResource ContextMenuTextBox}" />
+								  ContextMenu="{StaticResource ContextMenuTextBox}"
+								  IsTabStop="False"
+								  IsUndoEnabled="False" />
 				<Label Content="Vendor"
 					   HorizontalAlignment="Left"
 					   Name="LabelVendor"
@@ -113,8 +115,9 @@
 								  Grid.ColumnSpan="3"
 								  Margin="2"
 								  TabIndex="5"
-								  Style="{StaticResource PanelTextBox}"
-								  ContextMenu="{StaticResource ContextMenuTextBox}" />
+								  ContextMenu="{StaticResource ContextMenuTextBox}"
+								  IsTabStop="False"
+								  IsUndoEnabled="False" />
 				<Label Content="Name"
 					   HorizontalAlignment="Left"
 					   Name="LabelName"
@@ -138,8 +141,9 @@
 								  VerticalAlignment="Center"
 								  TabIndex="4"
 								  DataContext="{Binding}"
-								  Style="{StaticResource PanelTextBox}"
-								  ContextMenu="{StaticResource ContextMenuTextBox}" />
+								  ContextMenu="{StaticResource ContextMenuTextBox}"
+								  IsTabStop="False"
+								  IsUndoEnabled="False" />
 				<ComboBox Grid.Column="1"
 						  Grid.ColumnSpan="3"
 						  Grid.Row="3"
@@ -147,9 +151,7 @@
 						  VerticalAlignment="Top"
 						  Margin="2,12,2,2"
 						  TabIndex="1"
-						  SelectionChanged="ComboBoxName_SelectionChanged"
-						  Style="{StaticResource PanelComboBox}"
-						  ItemContainerStyle="{StaticResource PanelComboBoxItem}" />
+						  SelectionChanged="ComboBoxName_SelectionChanged" />
 			</Grid>
 		</GroupBox>
 	</Grid>

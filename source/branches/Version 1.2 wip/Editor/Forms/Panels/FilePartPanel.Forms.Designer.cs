@@ -38,7 +38,6 @@
 			this.Name = "FilePartPanel";
 			this.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
 			this.Size = new System.Drawing.Size(650, 600);
-			this.VisibleChanged += new System.EventHandler(this.OnVisibleChanged);
 			this.ResumeLayout(false);
 
 		}

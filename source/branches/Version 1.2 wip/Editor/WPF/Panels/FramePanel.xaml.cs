@@ -17,8 +17,6 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
-		private AsyncTimer mShiftRepeatTimer = null;
-
 		public FramePanel ()
 		{
 			ImageListItems = new ImageListItems ();
@@ -27,11 +25,6 @@ namespace AgentCharacterEditor.Panels
 			{
 				Program.MainWindow.ViewChanged += new EventHandler (OnViewChanged);
 			}
-		}
-
-		~FramePanel ()
-		{
-			StopShiftRepeat ();
 		}
 
 		#endregion
@@ -155,6 +148,7 @@ namespace AgentCharacterEditor.Panels
 				{
 					System.Diagnostics.Debug.Print (pException.Message);
 				}
+
 				try
 				{
 					ImageSample.LayoutTransform = Program.MainWindow.CurrentView.Inverse as Transform;
@@ -162,6 +156,16 @@ namespace AgentCharacterEditor.Panels
 				catch (Exception pException)
 				{
 					System.Diagnostics.Debug.Print (pException.Message);
+				}
+
+				if (lBitmap == null)
+				{
+					ImageSample.RenderTransform = Transform.Identity;
+				}
+				else
+				{
+					ImageSample.UpdateLayout ();
+					ImageSample.RenderTransform = new TranslateTransform (pFrameImage.Offset.X * ImageSample.DesiredSize.Width / lBitmap.Width, pFrameImage.Offset.Y * ImageSample.DesiredSize.Height / lBitmap.Height);
 				}
 			}
 		}
@@ -175,7 +179,7 @@ namespace AgentCharacterEditor.Panels
 			ArrangeImagesList ();
 		}
 
-		void OnViewChanged (object sender, EventArgs e)
+		private void OnViewChanged (object sender, EventArgs e)
 		{
 			ShowFrameSample ();
 			ShowSelectedImage ();
@@ -185,15 +189,47 @@ namespace AgentCharacterEditor.Panels
 
 		private void ListViewImages_SelectionChanged (object sender, SelectionChangedEventArgs e)
 		{
-			if (ListViewImages.SelectedIndex >= 0)
+			ShowSelectedImage ();
+		}
+
+		private void ListViewImages_PreviewMouseLeftButtonDown (object sender, MouseButtonEventArgs e)
+		{
+			for (UIElement lHitTest = ListViewImages.InputHitTest (e.GetPosition (ListViewImages)) as UIElement; lHitTest != null; lHitTest = lHitTest = VisualTreeHelper.GetParent (lHitTest) as UIElement)
 			{
-				ShowSelectedImage ();
+				if (lHitTest is ListViewItem)
+				{
+					break;
+				}
+				else if (!ListViewImages.IsAncestorOf (lHitTest))
+				{
+					ListViewImages.SelectedItem = null;
+					break;
+				}
 			}
 		}
 
 		private void ListViewImages_MouseDoubleClick (object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			UpdateSelectedImage (GetSelectedImage (false));
+		}
+
+		private void ListViewImages_ContextMenuOpening (object sender, ContextMenuEventArgs e)
+		{
+			if (IsPanelEmpty)
+			{
+				e.Handled = true;
+			}
+			else
+			{
+				MenuItemAdd.IsEnabled = CanAddImage;
+				MenuItemChooseFile.IsEnabled = CanChooseImageFile;
+				MenuItemMoveUp.IsEnabled = CanMoveImageUp;
+				MenuItemMoveDown.IsEnabled = CanMoveImageDown;
+
+				MenuItemChooseFile.SetTitle (ChooseImageFileTitle);
+				MenuItemMoveUp.SetTitle (MoveImageUpTitle);
+				MenuItemMoveDown.SetTitle (MoveImageDownTitle);
+			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -283,8 +319,14 @@ namespace AgentCharacterEditor.Panels
 #if DEBUG_NOT
 			System.Diagnostics.Debug.Print ("ButtonShiftUp_Click [{0} {1}]", ButtonShiftUp.Delay, ButtonShiftUp.Interval);
 #endif
-			StartShiftRepeat (ButtonShiftUp);
 			HandleShiftUpClick (1);
+		}
+		private void ButtonShiftUp_RepeatEnd (object sender, RoutedEventArgs e)
+		{
+#if DEBUG_NOT
+			System.Diagnostics.Debug.Print ("ButtonShiftUp_RepeatEnd [{0} {1}]", ButtonShiftUp.Delay, ButtonShiftUp.Interval);
+#endif
+			HandleShiftComplete ();
 		}
 
 		private void ButtonShiftDown_Click (object sender, RoutedEventArgs e)
@@ -292,57 +334,29 @@ namespace AgentCharacterEditor.Panels
 #if DEBUG_NOT
 			System.Diagnostics.Debug.Print ("ButtonShiftDown_Click [{0} {1}]", ButtonShiftUp.Delay, ButtonShiftUp.Interval);
 #endif
-			StartShiftRepeat (ButtonShiftDown);
 			HandleShiftDownClick (1);
+		}
+		private void ButtonShiftDown_RepeatEnd (object sender, RoutedEventArgs e)
+		{
+			HandleShiftComplete ();
 		}
 
 		private void ButtonShiftLeft_Click (object sender, RoutedEventArgs e)
 		{
-			StartShiftRepeat (ButtonShiftLeft);
 			HandleShiftLeftClick (1);
+		}
+		private void ButtonShiftLeft_RepeatEnd (object sender, RoutedEventArgs e)
+		{
+			HandleShiftComplete ();
 		}
 
 		private void ButtonShiftRight_Click (object sender, RoutedEventArgs e)
 		{
-			StartShiftRepeat (ButtonShiftRight);
 			HandleShiftRightClick (1);
 		}
-
-		private void ShiftRepeatTimer_TimerPulse (object sender, AsyncTimer.TimerEventArgs e)
+		private void ButtonShiftRight_RepeatEnd (object sender, RoutedEventArgs e)
 		{
-			RepeatButton lRepeatButton = e.TimerId as RepeatButton;
-#if DEBUG_NOT
-			System.Diagnostics.Debug.Print ("ShiftRepeatTimer_TimerPulse [{0}] [{1}]", lRepeatButton.Name, lRepeatButton.IsPressed);
-#endif
-			if (!lRepeatButton.IsPressed)
-			{
-				HandleShiftComplete ();
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		private void StartShiftRepeat (RepeatButton pRepeatButton)
-		{
-			if (mShiftRepeatTimer == null)
-			{
-				mShiftRepeatTimer = new AsyncTimer ();
-				mShiftRepeatTimer.TimerPulse += new AsyncTimer.TimerPulseHandler (ShiftRepeatTimer_TimerPulse);
-			}
-			if (mShiftRepeatTimer != null)
-			{
-				mShiftRepeatTimer.Stop ();
-				mShiftRepeatTimer.Start (pRepeatButton.Delay, pRepeatButton);
-			}
-		}
-
-		private void StopShiftRepeat ()
-		{
-			if (mShiftRepeatTimer != null)
-			{
-				mShiftRepeatTimer.Dispose ();
-				mShiftRepeatTimer = null;
-			}
+			HandleShiftComplete ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

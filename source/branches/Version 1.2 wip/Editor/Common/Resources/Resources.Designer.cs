@@ -340,6 +340,15 @@ namespace AgentCharacterEditor.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &amp;Redo typing.
+        /// </summary>
+        internal static string EditRedoText {
+            get {
+                return ResourceManager.GetString("EditRedoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &amp;Redo {0}.
         /// </summary>
         internal static string EditRedoThis {

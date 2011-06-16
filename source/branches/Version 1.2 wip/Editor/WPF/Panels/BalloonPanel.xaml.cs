@@ -61,6 +61,8 @@ namespace AgentCharacterEditor.Panels
 				}
 				else
 				{
+					LabelBalloonFontSample.Content = TextBalloonFontSample;
+
 					if (FileBalloon.Font == null)
 					{
 						TextBalloonFontSample.Text = String.Empty;
@@ -75,9 +77,8 @@ namespace AgentCharacterEditor.Panels
 					{
 						System.Drawing.Font lFont = FileBalloon.Font;
 						DoubleAgent.FontProperties lFontProperties = new DoubleAgent.FontProperties (lFont);
-
 #if DEBUG_NOT
-					System.Diagnostics.Debug.Print ("Font [{0}] Size [{1}] [{2} {3}] [{4} {5}]", GetFontFamilyName (lFont), lFont.SizeInPoints, lFont.Size, lFont.Unit, lFont.GetHeight(), lFont.GetHeight(96.0f));
+						System.Diagnostics.Debug.Print ("Font [{0}] Size [{1}] [{2} {3}] [{4} {5}]", GetFontFamilyName (lFont), lFont.SizeInPoints, lFont.Size, lFont.Unit, lFont.GetHeight (), lFont.GetHeight (96.0f));
 #endif
 						TextBalloonFontSample.Text = FormatFontName (lFont);
 						TextBalloonFontSample.FontFamily = lFontProperties.Typeface.FontFamily;
@@ -87,9 +88,13 @@ namespace AgentCharacterEditor.Panels
 						TextBalloonFontSample.FontStretch = lFontProperties.Typeface.Stretch;
 						TextBalloonFontSample.TextDecorations = lFontProperties.TextDecorations;
 						TextBalloonFontSample.TextEffects = lFontProperties.TextEffects;
+#if DEBUG_NOT
+						System.Diagnostics.Debug.Print ("Font [{0}] [{1}] [{2}] [{3}] [{4}]", TextBalloonFontSample.Text, TextBalloonFontSample.FontFamily, TextBalloonFontSample.FontSize, TextBalloonFontSample.FontStyle, TextBalloonFontSample.FontWeight);
+#endif
 					}
 					ButtonBalloonFont.IsEnabled = !Program.FileIsReadOnly;
 				}
+				LabelBalloonFontSample.InvalidateArrange();
 			}
 		}
 
@@ -138,14 +143,14 @@ namespace AgentCharacterEditor.Panels
 				{
 					GroupBoxBalloonPreview.IsEnabled = false;
 					WordBalloonPreview.CharacterFile = null;
+					WordBalloonPreview.Visibility = Visibility.Collapsed;
 				}
 				else
 				{
 					GroupBoxBalloonPreview.IsEnabled = true;
 					WordBalloonPreview.CharacterFile = CharacterFile;
+					WordBalloonPreview.Visibility = Visibility.Visible;
 				}
-				WordBalloonPreview.InvalidateArrange ();
-				WordBalloonPreview.InvalidateVisual ();
 			}
 		}
 
