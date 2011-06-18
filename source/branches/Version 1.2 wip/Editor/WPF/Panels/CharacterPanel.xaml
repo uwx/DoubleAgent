@@ -234,12 +234,12 @@
 							Focusable="false"
 							Click="ButtonIconImport_Click"
 							ToolTip="Open icon file">
-						<Image Source="{StaticResource ImgFileOpen}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16"
-							   HorizontalAlignment="Center"
-							   VerticalAlignment="Center"></Image>
+						<custom:ImageState NormalSource="{StaticResource ImgFileOpen}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16"
+										   HorizontalAlignment="Center"
+										   VerticalAlignment="Center" />
 					</Button>
 					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 							Height="Auto"
@@ -249,12 +249,12 @@
 							VerticalAlignment="Top"
 							Focusable="false"
 							ToolTip="Save icon">
-						<Image Source="{StaticResource ImgFileSave}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16"
-							   HorizontalAlignment="Center"
-							   VerticalAlignment="Center"></Image>
+						<custom:ImageState NormalSource="{StaticResource ImgFileSave}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16"
+										   HorizontalAlignment="Center"
+										   VerticalAlignment="Center" />
 					</Button>
 				</ToolBar>
 			</Grid>

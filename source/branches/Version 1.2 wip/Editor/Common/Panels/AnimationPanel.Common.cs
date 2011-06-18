@@ -613,6 +613,7 @@ namespace AgentCharacterEditor.Panels
 				AddDeleteAnimationFrame lUpdate = new AddDeleteAnimationFrame (pFrame, pForClipboard);
 				if (AddDeleteAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimationFrame, this))
 				{
+					FramesView.Frames.SelectedIndex = Math.Min (lUpdate.FrameNdx, FramesView.Frames.Items.Count - 1);
 					return lUpdate;
 				}
 			}
@@ -635,6 +636,7 @@ namespace AgentCharacterEditor.Panels
 					}
 					if ((lUpdate != null) && AddDeleteAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimationFrame, this))
 					{
+						FramesView.Frames.SelectedIndex = lUpdate.FrameNdx;
 						return lUpdate;
 					}
 				}
@@ -845,6 +847,7 @@ namespace AgentCharacterEditor.Panels
 				AddDeleteAnimationFrame lUpdate = new AddDeleteAnimationFrame (Animation, (lSelNdx >= 0) ? lSelNdx + 1 : Animation.FrameCount, false);
 
 				AddDeleteAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimationFrame, this);
+				FramesView.Frames.SelectedIndex = lUpdate.FrameNdx;
 			}
 		}
 
@@ -873,6 +876,7 @@ namespace AgentCharacterEditor.Panels
 				{
 					lUpdate = new ReorderAnimationFrame (lFrame, lSelNdx - 1);
 					ReorderAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as ReorderAnimationFrame, this);
+					FramesView.Frames.SelectedIndex = Animation.Frames.IndexOf (lFrame);
 				}
 			}
 		}
@@ -889,6 +893,7 @@ namespace AgentCharacterEditor.Panels
 				{
 					lUpdate = new ReorderAnimationFrame (lFrame, lSelNdx + 1);
 					ReorderAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as ReorderAnimationFrame, this);
+					FramesView.Frames.SelectedIndex = Animation.Frames.IndexOf (lFrame);
 				}
 			}
 		}
@@ -898,6 +903,7 @@ namespace AgentCharacterEditor.Panels
 		protected override void UpdateApplied (Object pUpdate)
 		{
 			UpdateAnimation lUpdateAnimation = pUpdate as UpdateAnimation;
+			AddDeleteAnimation lAddDeleteAnimation = pUpdate as AddDeleteAnimation;
 			UpdateCharacterHeader lUpdateCharacter = pUpdate as UpdateCharacterHeader;
 			AddDeleteAnimationFrame lAddDeleteFrame = pUpdate as AddDeleteAnimationFrame;
 			ReorderAnimationFrame lReorderFrame = pUpdate as ReorderAnimationFrame;
@@ -905,6 +911,8 @@ namespace AgentCharacterEditor.Panels
 			AddDeleteFrameImage lAddDeleteImage = pUpdate as AddDeleteFrameImage;
 			ReorderFrameImage lReorderImage = pUpdate as ReorderFrameImage;
 			UpdateFrameImage lUpdateImage = pUpdate as UpdateFrameImage;
+			AddDeleteStateAnimation lAddDeleteStateAnimation = pUpdate as AddDeleteStateAnimation;
+			UpdateAllStateAnimations lUpdateAllStateAnimations = pUpdate as UpdateAllStateAnimations;
 
 			if ((lUpdateAnimation != null) && (lUpdateAnimation.Target == Animation))
 			{
@@ -923,19 +931,38 @@ namespace AgentCharacterEditor.Panels
 					ShowReturnAnimation ();
 				}
 			}
+			else if ((lUpdateAnimation != null) && (lUpdateAnimation.CharacterFile == CharacterFile) && lUpdateAnimation.NameChanged)
+			{
+				ShowReturnAnimations ();
+				ShowReturnAnimation ();
+			}
+			else if ((lAddDeleteAnimation != null) && (lAddDeleteAnimation.CharacterFile == CharacterFile))
+			{
+				ShowReturnAnimations ();
+				ShowReturnAnimation ();
+			}
 			else if ((lUpdateCharacter != null) && (lUpdateCharacter.CharacterFile == CharacterFile))
 			{
-				ShowDefaultFrameDuration ();
+				if (lUpdateCharacter.NewFrameDurationChanged)
+				{
+					ShowDefaultFrameDuration ();
+				}
+				if (lUpdateCharacter.ImageSizeChanged || lUpdateCharacter.PaletteChanged || lUpdateCharacter.PaletteTransparencyChanged)
+				{
+					ShowAnimationFrames ();
+				}
 			}
 			else if ((lAddDeleteFrame != null) && (lAddDeleteFrame.Animation == Animation))
 			{
+				PanelContext lContext = new PanelContext (this);
 				ShowAnimationFrames ();
-				FramesView.Frames.SelectedIndex = lAddDeleteFrame.FrameNdx;
+				lContext.RestoreContext (this);
 			}
 			else if ((lReorderFrame != null) && (lReorderFrame.Animation == Animation))
 			{
+				PanelContext lContext = new PanelContext (this);
 				ShowAnimationFrames ();
-				FramesView.Frames.SelectedIndex = Animation.Frames.IndexOf (lReorderFrame.Target);
+				lContext.RestoreContext (this);
 			}
 			else if ((lUpdateFrame != null) && (lUpdateFrame.Animation == Animation))
 			{
@@ -955,6 +982,14 @@ namespace AgentCharacterEditor.Panels
 			else if ((lUpdateImage != null) && (lUpdateImage.Animation == Animation))
 			{
 				ShowAnimationFrames ();
+			}
+			else if ((lAddDeleteStateAnimation != null) && (lAddDeleteStateAnimation.CharacterFile == CharacterFile))
+			{
+				ShowAnimationStates ();
+			}
+			else if ((lUpdateAllStateAnimations != null) && (lAddDeleteStateAnimation.CharacterFile == CharacterFile))
+			{
+				ShowAnimationStates ();
 			}
 		}
 

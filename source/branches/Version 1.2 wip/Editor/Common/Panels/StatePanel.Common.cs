@@ -183,16 +183,22 @@ namespace AgentCharacterEditor.Panels
 		{
 			AddDeleteStateAnimation lAddDeleteStateAnimation = pUpdate as AddDeleteStateAnimation;
 			UpdateAllStateAnimations lUpdateAllStateAnimations = pUpdate as UpdateAllStateAnimations;
+			AddDeleteAnimation lAddDeleteAnimation = pUpdate as AddDeleteAnimation;
+			UpdateAnimation lUpdateAnimation = pUpdate as UpdateAnimation;
 
-			if ((lAddDeleteStateAnimation != null) && (lAddDeleteStateAnimation.StateName == StateName))
+			if ((lAddDeleteStateAnimation != null) && (lAddDeleteStateAnimation.CharacterFile == CharacterFile) && (lAddDeleteStateAnimation.StateName == StateName))
 			{
 				ShowStateAnimations ();
 			}
-			else if ((lUpdateAllStateAnimations != null) && (lUpdateAllStateAnimations.StateName == StateName))
+			else if ((lUpdateAllStateAnimations != null) && (lAddDeleteStateAnimation.CharacterFile == CharacterFile) && (lUpdateAllStateAnimations.StateName == StateName))
 			{
 				ShowStateAnimations ();
 			}
-			else if ((pUpdate is AddDeleteAnimation) || (pUpdate is UpdateAnimation))
+			else if ((lAddDeleteAnimation != null) && (lAddDeleteAnimation.CharacterFile == CharacterFile))
+			{
+				ShowStateAnimations ();
+			}
+			else if ((lUpdateAnimation != null) && (lUpdateAnimation.CharacterFile == CharacterFile) && lUpdateAnimation.NameChanged)
 			{
 				ShowStateAnimations ();
 			}

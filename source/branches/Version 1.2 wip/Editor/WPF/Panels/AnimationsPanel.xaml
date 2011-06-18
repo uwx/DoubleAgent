@@ -50,12 +50,12 @@
 								Width="Auto"
 								ToolTip="Add new animation"
 								Click="ButtonAdd_Click">
-							<Image Source="{StaticResource ImgFileNew}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
+							<custom:ImageState NormalSource="{StaticResource ImgFileNew}"
+											   Stretch="UniformToFill"
+											   Width="16"
+											   Height="16"
+											   HorizontalAlignment="Center"
+											   VerticalAlignment="Center" />
 						</Button>
 						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 								Height="Auto"
@@ -63,12 +63,12 @@
 								Width="Auto"
 								ToolTip="Delete animation"
 								Click="ButtonDelete_Click">
-							<Image Source="{StaticResource ImgEditDelete}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
+							<custom:ImageState NormalSource="{StaticResource ImgEditDelete}"
+											   Stretch="UniformToFill"
+											   Width="16"
+											   Height="16"
+											   HorizontalAlignment="Center"
+											   VerticalAlignment="Center" />
 						</Button>
 					</ToolBar>
 					<Label Content="New animation name"
@@ -106,10 +106,10 @@
 									  Name="MenuItemAdd"
 									  Click="ButtonAdd_Click">
 								<MenuItem.Icon>
-									<Image Source="{StaticResource ImgFileNew}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16" />
+									<custom:ImageState NormalSource="{StaticResource ImgFileNew}"
+													   Stretch="UniformToFill"
+													   Width="16"
+													   Height="16" />
 								</MenuItem.Icon>
 							</MenuItem>
 							<Separator />
@@ -197,12 +197,12 @@
 								VerticalAlignment="Center"
 								Width="Auto"
 								Click="ButtonPaletteImport_Click">
-							<Image Source="{StaticResource ImgFileOpen}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center" />
+							<custom:ImageState NormalSource="{StaticResource ImgFileOpen}"
+											   Stretch="UniformToFill"
+											   Width="16"
+											   Height="16"
+											   HorizontalAlignment="Center"
+											   VerticalAlignment="Center" />
 						</Button>
 						<Button Focusable="false"
 								Height="Auto"
@@ -211,12 +211,12 @@
 								Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 								VerticalAlignment="Center"
 								Width="Auto">
-							<Image Source="{StaticResource ImgFileSave}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center" />
+							<custom:ImageState NormalSource="{StaticResource ImgFileSave}"
+											   Stretch="UniformToFill"
+											   Width="16"
+											   Height="16"
+											   HorizontalAlignment="Center"
+											   VerticalAlignment="Center" />
 						</Button>
 					</ToolBar>
 				</Grid>

@@ -259,7 +259,7 @@ namespace AgentCharacterEditor.Properties
 		{
 			if (pOverlay == null)
 			{
-				return String.Format (AppResources.Resources.TitleOverlay, String.Empty).Trim ();
+				return AppResources.Resources.TitleOverlay;
 			}
 			else
 			{
@@ -269,14 +269,14 @@ namespace AgentCharacterEditor.Properties
 
 		static public String Overlay (MouthOverlay pOverlayType)
 		{
-			return String.Format (AppResources.Resources.TitleOverlay, OverlayTypeName (pOverlayType));
+			return String.Format (AppResources.Resources.TitleOverlayType, OverlayTypeName (pOverlayType));
 		}
 
 		static public String OverlayFrameAnimation (FileFrameOverlay pOverlay)
 		{
 			if (pOverlay == null)
 			{
-				return String.Format (AppResources.Resources.TitleOverlay, String.Empty).Trim ();
+				return String.Format (AppResources.Resources.TitleOverlayType, String.Empty).Trim ();
 			}
 			else
 			{
@@ -288,7 +288,7 @@ namespace AgentCharacterEditor.Properties
 		{
 			if (pFrame == null)
 			{
-				return String.Format (AppResources.Resources.TitleOverlay, String.Empty).Trim ();
+				return String.Format (AppResources.Resources.TitleOverlayType, String.Empty).Trim ();
 			}
 			else
 			{

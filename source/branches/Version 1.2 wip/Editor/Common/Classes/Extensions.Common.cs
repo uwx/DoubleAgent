@@ -201,25 +201,30 @@ namespace AgentCharacterEditor.Global
 
 		static public System.Windows.Size PreserveAspectRatio (this System.Windows.Size pSize, System.Windows.Size pAspectRatio)
 		{
+			System.Windows.Size lRet = pSize;
+
 			try
 			{
 				if (Math.Round (pSize.Width / pAspectRatio.Width * 1000.0) != Math.Round (pSize.Height / pAspectRatio.Height * 1000.0))
 				{
 					if ((pSize.Width / pAspectRatio.Width) > (pSize.Height / pAspectRatio.Height))
 					{
-						return new System.Windows.Size (pSize.Width * pAspectRatio.Width / pAspectRatio.Height, pSize.Height);
+						lRet = new System.Windows.Size (pSize.Height * pAspectRatio.Width / pAspectRatio.Height, pSize.Height);
 					}
 					else
 					{
-						return new System.Windows.Size (pSize.Width, pSize.Height * pAspectRatio.Height / pAspectRatio.Width);
+						lRet = new System.Windows.Size (pSize.Width, pSize.Width * pAspectRatio.Height / pAspectRatio.Width);
 					}
 				}
+#if DEBUG_NOT
+				System.Diagnostics.Debug.Print ("[{0} {1}] PreserveAspectRatio [{2} {3}] Return [{4} {5}]", pSize.Width, pSize.Height, pAspectRatio.Width, pAspectRatio.Height, lRet.Width, lRet.Height);
+#endif
 			}
 			catch (Exception pException)
 			{
 				System.Diagnostics.Debug.Print (pException.Message);
 			}
-			return pSize;
+			return lRet;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

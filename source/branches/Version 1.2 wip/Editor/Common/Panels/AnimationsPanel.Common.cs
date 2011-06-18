@@ -531,6 +531,7 @@ namespace AgentCharacterEditor.Panels
 				if ((lAnimation != null) && IsControlEditTarget (ListViewAnimations, pEventArgs))
 				{
 					pEventArgs.PutPasteTitle (Titles.PasteTypeTitle (lAnimation, Titles.Animation (lAnimation), Titles.Animation (pEventArgs.GetPasteObject () as FileAnimation)));
+					return true;
 				}
 				else if (IsControlEditTarget (ListViewAnimations, pEventArgs) || IsControlEditTarget (TextBoxNewName, pEventArgs))
 				{
@@ -540,11 +541,12 @@ namespace AgentCharacterEditor.Panels
 					}
 					else
 					{
-						pEventArgs.PutPasteTitle (null, AppResources.Resources.EditPasteAnimation0);
+						pEventArgs.PutPasteTitle (AppResources.Resources.EditPasteAnimation0, null);
 					}
+					return true;
 				}
 			}
-			return true;
+			return false;
 		}
 		protected override bool HandleEditPaste (Global.EditEventArgs pEventArgs)
 		{
@@ -560,6 +562,7 @@ namespace AgentCharacterEditor.Panels
 				else if (HasNewAnimationName)
 				{
 					PasteSelectedAnimation (null, pEventArgs.GetPasteObject () as FileAnimation);
+					return true;
 				}
 			}
 			return false;
@@ -706,9 +709,9 @@ namespace AgentCharacterEditor.Panels
 
 			if ((lAddDeleteAnimation != null) && (lAddDeleteAnimation.CharacterFile == CharacterFile))
 			{
-				int lSelNdx = ListViewAnimations.SelectedIndex;
+				PanelContext lContext = new PanelContext (this);
 				ShowAnimationNames ();
-				ListViewAnimations.SelectedIndex = lSelNdx;
+				lContext.RestoreContext (this);
 			}
 
 			if ((lUpdateAnimation != null) && lUpdateAnimation.NameChanged)

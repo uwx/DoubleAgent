@@ -55,7 +55,7 @@ namespace AgentCharacterEditor.Navigation
 		public Boolean TargetContained
 		{
 			get;
-			protected set;
+			internal set;
 		}
 		protected T CachedTarget
 		{

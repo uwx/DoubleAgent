@@ -622,6 +622,7 @@ namespace AgentCharacterEditor.Panels
 
 		protected override void UpdateApplied (object pUpdate)
 		{
+			UpdateCharacterHeader lUpdateCharacter = pUpdate as UpdateCharacterHeader;
 			UpdateAnimation lUpdateAnimation = pUpdate as UpdateAnimation;
 			AddDeleteFrameOverlay lAddDeleteOverlay = pUpdate as AddDeleteFrameOverlay;
 			UpdateFrameOverlay lUpdateOverlay = pUpdate as UpdateFrameOverlay;
@@ -630,6 +631,13 @@ namespace AgentCharacterEditor.Panels
 			if ((lUpdateAnimation != null) && (lUpdateAnimation.Target == this.Animation) && lUpdateAnimation.NameChanged)
 			{
 				ShowFrameName ();
+			}
+			else if ((lUpdateCharacter != null) && (lUpdateCharacter.CharacterFile == CharacterFile))
+			{
+				if (lUpdateCharacter.ImageSizeChanged || lUpdateCharacter.PaletteChanged || lUpdateCharacter.PaletteTransparencyChanged)
+				{
+				ShowSelectedOverlay ();
+				}
 			}
 			else if ((lAddDeleteOverlay != null) && (lAddDeleteOverlay.Frame == Frame))
 			{

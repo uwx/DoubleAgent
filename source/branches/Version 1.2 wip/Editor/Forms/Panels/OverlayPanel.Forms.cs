@@ -197,6 +197,7 @@ namespace AgentCharacterEditor.Panels
 			{
 				System.Drawing.Bitmap lBitmap = null;
 
+				GroupBoxImage.Text = Titles.Overlay (pFrameOverlay);
 				PanelSample.SuspendLayout ();
 
 				if (pFrameOverlay == null)
@@ -295,13 +296,11 @@ namespace AgentCharacterEditor.Panels
 		private void NumericOffsetX_Validated (object sender, EventArgs e)
 		{
 			HandleOffsetXChanged ();
-			NumericOffsetX.IsModified = false;
 		}
 
 		private void NumericOffsetY_Validated (object sender, EventArgs e)
 		{
 			HandleOffsetYChanged ();
-			NumericOffsetY.IsModified = false;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

@@ -138,13 +138,11 @@ namespace AgentCharacterEditor.Panels
 		private void NumericCharsPerLine_Validated (object sender, EventArgs e)
 		{
 			HandleCharsPerLineChanged ();
-			NumericCharsPerLine.IsModified = false;
 		}
 
 		private void NumericNumLines_Validated (object sender, EventArgs e)
 		{
 			HandleNumLinesChanged ();
-			NumericNumLines.IsModified = false;
 		}
 
 		private void RadioButtonNumLines_CheckedChanged (object sender, EventArgs e)

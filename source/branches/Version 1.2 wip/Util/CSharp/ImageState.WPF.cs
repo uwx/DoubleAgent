@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -55,7 +56,8 @@ namespace DoubleAgent
 			{
 				try
 				{
-					ImageSource lImage = null;
+					ImageSource lSourceImage = null;
+					ImageBrush lOpacityMask = OpacityMask as ImageBrush;
 #if DEBUG_NOT
 					System.Diagnostics.Debug.Print ("Property [{0}] from [{1}] to [{2}]", e.Property, e.OldValue, e.NewValue);
 					System.Diagnostics.Debug.Print ("  IsPressed [{0}] IsHot [{1}] IsChecked [{2}] IsEnabled [{3}]", IsPressed, IsHot, IsChecked, IsEnabled);
@@ -64,35 +66,51 @@ namespace DoubleAgent
 					{
 						if (IsPressed)
 						{
-							lImage = PressedSource;
+							lSourceImage = PressedSource;
 						}
 						else if (IsHot)
 						{
-							lImage = HotSource;
+							lSourceImage = HotSource;
 						}
 						else if (IsChecked.HasValue && IsChecked.Value)
 						{
-							lImage = CheckedSource;
+							lSourceImage = CheckedSource;
 						}
 					}
 					else
 					{
-						lImage = DisabledSource;
+						lSourceImage = DisabledSource;
 					}
-					if (lImage == null)
+					if (lSourceImage == null)
 					{
-						lImage = NormalSource;
+						lSourceImage = NormalSource;
 					}
-					if (lImage == null)
+					if (lSourceImage == null)
 					{
-						lImage = Source;
+						lSourceImage = Source;
+					}
+					if (!IsEnabled && (lSourceImage is BitmapSource) && !(lSourceImage is FormatConvertedBitmap) && (DisabledSource == null))
+					{
+						try
+						{
+							lOpacityMask = new ImageBrush (lSourceImage);
+							lSourceImage = new FormatConvertedBitmap (lSourceImage as BitmapSource, PixelFormats.Gray32Float, null, 0);
+						}
+						catch (Exception pException)
+						{
+							System.Diagnostics.Debug.Print (pException.Message);
+						}
 					}
 #if DEBUG_NOT
-					System.Diagnostics.Debug.Print ("  Image [{0}] Source [{1}]", lImage, Source);
+					System.Diagnostics.Debug.Print ("  Image [{0}] Source [{1}]", lSourceImage, Source);
 #endif
-					if (lImage != Source)
+					if (lSourceImage != Source)
 					{
-						SetCurrentValue (SourceProperty, lImage);
+						SetCurrentValue (SourceProperty, lSourceImage);
+					}
+					if (lOpacityMask != OpacityMask)
+					{
+						SetCurrentValue (OpacityMaskProperty, lOpacityMask);
 					}
 #if DEBUG_NOT
 					System.Diagnostics.Debug.Print ("  Image [{0}] Source [{1}]", lImage, Source);

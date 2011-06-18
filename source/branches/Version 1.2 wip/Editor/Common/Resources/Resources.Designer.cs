@@ -610,7 +610,7 @@ namespace AgentCharacterEditor.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} overlay.
+        ///   Looks up a localized string similar to Overlay.
         /// </summary>
         internal static string TitleOverlay {
             get {
@@ -624,6 +624,15 @@ namespace AgentCharacterEditor.Resources {
         internal static string TitleOverlayFrame {
             get {
                 return ResourceManager.GetString("TitleOverlayFrame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} overlay.
+        /// </summary>
+        internal static string TitleOverlayType {
+            get {
+                return ResourceManager.GetString("TitleOverlayType", resourceCulture);
             }
         }
         

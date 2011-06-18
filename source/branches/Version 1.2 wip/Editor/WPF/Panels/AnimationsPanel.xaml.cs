@@ -191,6 +191,7 @@ namespace AgentCharacterEditor.Panels
 		private void TextBoxNewName_TextChanged (object sender, TextChangedEventArgs e)
 		{
 			ShowAddState ();
+			CommandManager.InvalidateRequerySuggested ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

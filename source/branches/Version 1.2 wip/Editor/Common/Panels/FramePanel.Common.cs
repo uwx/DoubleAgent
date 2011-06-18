@@ -93,6 +93,29 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Navigation
+
+		public override object NavigationContext
+		{
+			get
+			{
+				return new PanelContext (this);
+			}
+			set
+			{
+				if (value is PanelContext)
+				{
+					(value as PanelContext).RestoreContext (this);
+				}
+				else
+				{
+					base.NavigationContext = value;
+				}
+			}
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
 		private void ShowFrameName ()
@@ -345,6 +368,7 @@ namespace AgentCharacterEditor.Panels
 
 				if (AddDeleteFrameImage.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteFrameImage, this))
 				{
+					ListViewImages.SelectedIndex = Math.Min (lUpdate.ImageNdx, ListViewImages.Items.Count - 1);
 					return lUpdate;
 				}
 			}
@@ -367,6 +391,7 @@ namespace AgentCharacterEditor.Panels
 					}
 					if ((lUpdate != null) && AddDeleteFrameImage.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteFrameImage, this))
 					{
+						ListViewImages.SelectedIndex = lUpdate.ImageNdx;
 						return lUpdate;
 					}
 				}
@@ -400,6 +425,7 @@ namespace AgentCharacterEditor.Panels
 					{
 						lUpdate = new AddDeleteFrameImage (Frame, lFilePath, false);
 						AddDeleteFrameImage.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteFrameImage, this);
+						ListViewImages.SelectedIndex = lUpdate.ImageNdx;
 					}
 				}
 			}
@@ -417,6 +443,7 @@ namespace AgentCharacterEditor.Panels
 				{
 					lUpdate = new ReorderFrameImage (lFrameImage, lSelNdx - 1);
 					ReorderFrameImage.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as ReorderFrameImage, this);
+					ListViewImages.SelectedIndex = Frame.Images.IndexOf (lFrameImage);
 				}
 			}
 		}
@@ -433,6 +460,7 @@ namespace AgentCharacterEditor.Panels
 				{
 					lUpdate = new ReorderFrameImage (lFrameImage, lSelNdx + 1);
 					ReorderFrameImage.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as ReorderFrameImage, this);
+					ListViewImages.SelectedIndex = Frame.Images.IndexOf (lFrameImage);
 				}
 			}
 		}
@@ -447,7 +475,7 @@ namespace AgentCharacterEditor.Panels
 
 				if (lFrameImage != null)
 				{
-					pEventArgs.PutCopyTitle (pEventArgs.IsContextMenu ? Titles.Image(lFrameImage) : Titles.ImageFrameAnimation (lFrameImage).Quoted ());
+					pEventArgs.PutCopyTitle (pEventArgs.IsContextMenu ? Titles.Image (lFrameImage) : Titles.ImageFrameAnimation (lFrameImage).Quoted ());
 				}
 				return true;
 			}
@@ -531,7 +559,7 @@ namespace AgentCharacterEditor.Panels
 
 		protected override bool HandleCanEditPaste (CanEditEventArgs pEventArgs)
 		{
-			if (IsControlEditTarget (ListViewImages, pEventArgs) && !Program.FileIsReadOnly && (pEventArgs.GetPasteObject () is FileFrameImage))
+			if (IsControlEditTarget (ImagePasteTarget, pEventArgs) && !Program.FileIsReadOnly && (pEventArgs.GetPasteObject () is FileFrameImage))
 			{
 				FileFrameImage lFrameImage = GetSelectedImage (false);
 
@@ -549,7 +577,7 @@ namespace AgentCharacterEditor.Panels
 		}
 		protected override bool HandleEditPaste (Global.EditEventArgs pEventArgs)
 		{
-			if (IsControlEditTarget (ListViewImages, pEventArgs) && !Program.FileIsReadOnly)
+			if (IsControlEditTarget (ImagePasteTarget, pEventArgs) && !Program.FileIsReadOnly)
 			{
 				if (pEventArgs.GetPasteObject () is FileFrameImage)
 				{
@@ -717,6 +745,7 @@ namespace AgentCharacterEditor.Panels
 
 		protected override void UpdateApplied (object pUpdate)
 		{
+			UpdateCharacterHeader lUpdateCharacter = pUpdate as UpdateCharacterHeader;
 			UpdateAnimation lUpdateAnimation = pUpdate as UpdateAnimation;
 			UpdateAnimationFrame lUpdateFrame = pUpdate as UpdateAnimationFrame;
 			AddDeleteFrameImage lAddDeleteImage = pUpdate as AddDeleteFrameImage;
@@ -726,6 +755,14 @@ namespace AgentCharacterEditor.Panels
 			if ((lUpdateAnimation != null) && (lUpdateAnimation.Target == this.Animation) && lUpdateAnimation.NameChanged)
 			{
 				ShowFrameName ();
+			}
+			else if ((lUpdateCharacter != null) && (lUpdateCharacter.CharacterFile == CharacterFile))
+			{
+				if (lUpdateCharacter.ImageSizeChanged || lUpdateCharacter.PaletteChanged || lUpdateCharacter.PaletteTransparencyChanged)
+				{
+					ShowSelectedImage ();
+					ShowFrameSample ();
+				}
 			}
 			else if ((lUpdateFrame != null) && (lUpdateFrame.Target == Frame))
 			{
@@ -740,15 +777,17 @@ namespace AgentCharacterEditor.Panels
 			}
 			else if ((lAddDeleteImage != null) && (lAddDeleteImage.Frame == Frame))
 			{
+				PanelContext lContext = new PanelContext (this);
 				ShowFrameImages ();
-				ListViewImages.SelectedIndex = lAddDeleteImage.ImageNdx;
+				lContext.RestoreContext (this);
 				ShowSelectedImage ();
 				ShowFrameSample ();
 			}
 			else if ((lReorderImage != null) && (lReorderImage.Frame == Frame))
 			{
+				PanelContext lContext = new PanelContext (this);
 				ShowFrameImages ();
-				ListViewImages.SelectedIndex = Frame.Images.IndexOf (lReorderImage.Target);
+				lContext.RestoreContext (this);
 				ShowSelectedImage ();
 				ShowFrameSample ();
 			}

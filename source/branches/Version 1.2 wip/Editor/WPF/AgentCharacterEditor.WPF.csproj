@@ -418,33 +418,6 @@
     <Resource Include="..\Common\Resources\MouthWide4.png">
       <Link>Resources\MouthWide4.png</Link>
     </Resource>
-    <Resource Include="..\Common\Resources\Pause.png">
-      <Link>Resources\Pause.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\Play.png">
-      <Link>Resources\Play.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\Repeat.png">
-      <Link>Resources\Repeat.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\Run.png">
-      <Link>Resources\Run.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\ShowBranching.png">
-      <Link>Resources\ShowBranching.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\ShowExitBranching.png">
-      <Link>Resources\ShowExitBranching.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\SkipBack.png">
-      <Link>Resources\SkipBack.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\SkipForward.png">
-      <Link>Resources\SkipForward.png</Link>
-    </Resource>
-    <Resource Include="..\Common\Resources\Stop.png">
-      <Link>Resources\Stop.png</Link>
-    </Resource>
     <Resource Include="..\Common\Resources\ViewLarge.png">
       <Link>Resources\ViewLarge.png</Link>
     </Resource>
@@ -478,7 +451,6 @@
     <Resource Include="Resources\MoveLeft.png" />
     <Resource Include="Resources\MoveRight.png" />
     <Resource Include="Resources\MoveUp.png" />
-    <Resource Include="Resources\Mute.Png" />
     <Resource Include="Resources\ShiftDown.png" />
     <Resource Include="Resources\ShiftLeft.png" />
     <Resource Include="Resources\ShiftRight.png" />
@@ -523,6 +495,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Mute.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ShowBranching.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ShowExitBranching.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -57,7 +57,7 @@ namespace AgentCharacterEditor.Global
 
 		static public Boolean OpenPaletteFile (ref String pFilePath)
 		{
-			if ( OpenExistingFile (ref pFilePath, SoundFileFilter, SoundFileDefaultExt))
+			if (OpenExistingFile (ref pFilePath, PaletteFileFilter, PaletteFileDefaultExt))
 			{
 				Bitmap lBitmap = null;
 				ColorPalette lPalette = null;

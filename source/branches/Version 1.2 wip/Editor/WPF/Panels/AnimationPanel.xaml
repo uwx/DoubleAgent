@@ -128,12 +128,12 @@
 								Width="Auto"
 								ToolTip="Add a new Frame"
 								Click="ButtonAdd_Click">
-							<Image Source="{StaticResource ImgFileNew}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
+							<custom:ImageState NormalSource="{StaticResource ImgFileNew}"
+											   Stretch="UniformToFill"
+											   Width="16"
+											   Height="16"
+											   HorizontalAlignment="Center"
+											   VerticalAlignment="Center" />
 						</Button>
 						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 								Height="Auto"
@@ -141,12 +141,12 @@
 								Width="Auto"
 								ToolTip="Delete frame"
 								Click="ButtonDelete_Click">
-							<Image Source="{StaticResource ImgEditDelete}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
+							<custom:ImageState NormalSource="{StaticResource ImgEditDelete}"
+											   Stretch="UniformToFill"
+											   Width="16"
+											   Height="16"
+											   HorizontalAlignment="Center"
+											   VerticalAlignment="Center" />
 						</Button>
 						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 								Height="Auto"
@@ -155,12 +155,12 @@
 								ToolTip="Move frame up"
 								Margin="5,0,0,0"
 								Click="ButtonMoveUp_Click">
-							<Image Source="{StaticResource ImgMoveLeft}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
+							<custom:ImageState NormalSource="{StaticResource ImgMoveLeft}"
+											   Stretch="UniformToFill"
+											   Width="16"
+											   Height="16"
+											   HorizontalAlignment="Center"
+											   VerticalAlignment="Center" />
 						</Button>
 						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 								Height="Auto"
@@ -168,12 +168,12 @@
 								Width="Auto"
 								ToolTip="Move frame down"
 								Click="ButtonMoveDown_Click">
-							<Image Source="{StaticResource ImgMoveRight}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
+							<custom:ImageState NormalSource="{StaticResource ImgMoveRight}"
+											   Stretch="UniformToFill"
+											   Width="16"
+											   Height="16"
+											   HorizontalAlignment="Center"
+											   VerticalAlignment="Center" />
 						</Button>
 						<Separator Style="{StaticResource PanelToolBarSeparator}" />
 						<CheckBox Style="{StaticResource {x:Static ToolBar.CheckBoxStyleKey}}"
@@ -184,12 +184,12 @@
 								  IsChecked="True"
 								  Checked="ButtonShowBranching_CheckChanged"
 								  Unchecked="ButtonShowBranching_CheckChanged">
-							<Image Source="{StaticResource ImgShowBranching}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
+							<custom:ImageState NormalSource="{StaticResource ImgShowBranching}"
+											   Stretch="UniformToFill"
+											   Width="16"
+											   Height="16"
+											   HorizontalAlignment="Center"
+											   VerticalAlignment="Center" />
 						</CheckBox>
 						<CheckBox Style="{StaticResource {x:Static ToolBar.CheckBoxStyleKey}}"
 								  Height="Auto"
@@ -199,12 +199,12 @@
 								  IsChecked="True"
 								  Checked="ButtonShowExitBranching_CheckChanged"
 								  Unchecked="ButtonShowExitBranching_CheckChanged">
-							<Image Source="{StaticResource ImgShowExitBranching}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
+							<custom:ImageState NormalSource="{StaticResource ImgShowExitBranching}"
+											   Stretch="UniformToFill"
+											   Width="16"
+											   Height="16"
+											   HorizontalAlignment="Center"
+											   VerticalAlignment="Center" />
 						</CheckBox>
 						<Separator Style="{StaticResource PanelToolBarSeparator}" />
 						<RadioButton Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
@@ -214,12 +214,12 @@
 									 ToolTip="Small"
 									 GroupName="View"
 									 Checked="ButtonViewSmall_Checked">
-							<Image Source="{StaticResource ImgViewSmall}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
+							<custom:ImageState NormalSource="{StaticResource ImgViewSmall}"
+											   Stretch="UniformToFill"
+											   Width="16"
+											   Height="16"
+											   HorizontalAlignment="Center"
+											   VerticalAlignment="Center" />
 						</RadioButton>
 						<RadioButton Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
 									 Height="Auto"
@@ -229,12 +229,12 @@
 									 GroupName="View"
 									 IsChecked="True"
 									 Checked="ButtonViewMedium_Checked">
-							<Image Source="{StaticResource ImgViewMedium}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
+							<custom:ImageState NormalSource="{StaticResource ImgViewMedium}"
+											   Stretch="UniformToFill"
+											   Width="16"
+											   Height="16"
+											   HorizontalAlignment="Center"
+											   VerticalAlignment="Center" />
 						</RadioButton>
 						<RadioButton Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
 									 Height="Auto"
@@ -243,12 +243,12 @@
 									 ToolTip="Large"
 									 GroupName="View"
 									 Checked="ButtonViewLarge_Checked">
-							<Image Source="{StaticResource ImgViewLarge}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
+							<custom:ImageState NormalSource="{StaticResource ImgViewLarge}"
+											   Stretch="UniformToFill"
+											   Width="16"
+											   Height="16"
+											   HorizontalAlignment="Center"
+											   VerticalAlignment="Center" />
 						</RadioButton>
 					</ToolBar>
 					<Label Content="New frame duration"

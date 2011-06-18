@@ -50,13 +50,18 @@ namespace AgentCharacterEditor.Previews
 			}
 			set
 			{
-				StopAutoPace ();
-				StopAutoScroll ();
+				if (mCharacterFile != value)
+				{
+					StopAutoPace ();
+					StopAutoScroll ();
+				}
 
 				mCharacterFile = value;
 
 				if (mCharacterFile == null)
 				{
+					StopAutoPace ();
+					StopAutoScroll ();
 					mBalloonPreview.Style = CharacterStyle.None;
 					mBalloonPreview.Balloon = null;
 				}
@@ -74,6 +79,8 @@ namespace AgentCharacterEditor.Previews
 						StartAutoScroll ();
 					}
 				}
+
+				Refresh ();
 			}
 		}
 
@@ -115,7 +122,7 @@ namespace AgentCharacterEditor.Previews
 					System.Diagnostics.Debug.Print ("StartAutoPace [{0}]", lAutoPaceTime);
 #endif
 					mAutoPaceTimer = new AsyncTimer ();
-					mAutoPaceTimer.TimerPulse +=new AsyncTimer.TimerPulseHandler(AutoPaceTimerPulse);
+					mAutoPaceTimer.TimerPulse += new AsyncTimer.TimerPulseHandler (AutoPaceTimerPulse);
 					mAutoPaceTimer.Start (lAutoPaceTime, lAutoPaceTime);
 					lRet = true;
 				}
@@ -184,8 +191,8 @@ namespace AgentCharacterEditor.Previews
 #if DEBUG_NOT
 					System.Diagnostics.Debug.Print ("StartAutoScroll [{0}]", lAutoScrollTime);
 #endif
-					mAutoScrollTimer = new AsyncTimer();
-					mAutoScrollTimer.TimerPulse +=new AsyncTimer.TimerPulseHandler(AutoScrollTimerPulse);
+					mAutoScrollTimer = new AsyncTimer ();
+					mAutoScrollTimer.TimerPulse += new AsyncTimer.TimerPulseHandler (AutoScrollTimerPulse);
 					mAutoScrollTimer.Start (lAutoScrollTime, lAutoScrollTime);
 					lRet = true;
 				}
@@ -295,8 +302,8 @@ namespace AgentCharacterEditor.Previews
 #if DEBUG_NOT
             System.Diagnostics.Debug.Print ("Refresh [{0} {1}] [{2}]", ActualWidth, ActualHeight, RenderSize);
 #endif
-            try
-            {
+			try
+			{
 				if (mBalloonVisual != null)
 				{
 					RemoveVisualChild (mBalloonVisual);
@@ -305,51 +312,51 @@ namespace AgentCharacterEditor.Previews
 				{
 					AddVisualChild (mBalloonVisual);
 				}
-            }
+			}
 #if DEBUG
-            catch (Exception pException)
-            {
-                System.Diagnostics.Debug.Print (pException.Message);
-            }
+			catch (Exception pException)
+			{
+				System.Diagnostics.Debug.Print (pException.Message);
+			}
 #else
             catch {}
 #endif
 		}
 
-        protected override int VisualChildrenCount
-        {
-            get
-            {
+		protected override int VisualChildrenCount
+		{
+			get
+			{
 				int lRet = base.VisualChildrenCount;
 				if (mBalloonVisual != null)
 				{
 					lRet++;
 				}
 				return lRet;
-            }
-        }
+			}
+		}
 
-        protected override Visual GetVisualChild (int index)
-        {
-            if  (index == base.VisualChildrenCount)
-            {
-                return mBalloonVisual;
-            }
-            return base.GetVisualChild (index);
-        }
+		protected override Visual GetVisualChild (int index)
+		{
+			if (index == base.VisualChildrenCount)
+			{
+				return mBalloonVisual;
+			}
+			return base.GetVisualChild (index);
+		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
 		protected override System.Windows.Size MeasureOverride (System.Windows.Size constraint)
 		{
-		    base.MeasureOverride (constraint);
-		    return constraint;
+			base.MeasureOverride (constraint);
+			return constraint;
 		}
 
 		protected override System.Windows.Size ArrangeOverride (System.Windows.Size arrangeSize)
 		{
-		    base.ArrangeOverride (arrangeSize);
-		    return arrangeSize;
+			base.ArrangeOverride (arrangeSize);
+			return arrangeSize;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

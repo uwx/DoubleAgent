@@ -9,6 +9,7 @@
 
 	<Duration x:Key="StateAnimationDuration">0:0:0.2</Duration>
 	<Duration x:Key="FastAnimationDuration">0:0:0.2</Duration>
+	<sys:Double x:Key="ItemDisabledOpacity">0.3</sys:Double>
 
 	<!-- =========================================================================== -->
 
@@ -16,28 +17,37 @@
 	<Thickness x:Key="ItemSelectionMargin">1,1,1,1</Thickness>
 	<sys:Double x:Key="ItemSelectionStroke">0.8</sys:Double>
 	<sys:Double x:Key="ItemSelectionRounding">2</sys:Double>
+
 	<Color x:Key="ItemSelectedOuterColor">#FF8AD2F4</Color>
 	<!--133 200 180-->
-	<Color x:Key="ItemSelectedTopColor">#FFDCF0FA</Color>
-	<!--133 180 220-->
+	<Color x:Key="ItemSelectedTopColor">#FFEDF7FC</Color>
+	<!--133 180 230-->
 	<Color x:Key="ItemSelectedBottomColor">#FFC5E6F7</Color>
 	<!--133 180 210-->
-
-	<SolidColorBrush x:Key="ItemSelectionInnerBrush"
-					 Color="White"
-					 Opacity="0.25" />
+	<Color x:Key="ItemHighlitedOuterColor">#FF8AD2F4</Color>
+	<!--133 200 180-->
+	<Color x:Key="ItemHighlitedTopColor">#FFDCF0FA</Color>
+	<!--133 180 220-->
+	<Color x:Key="ItemHighlitedBottomColor">#FF8FD0EF</Color>
+	<!--133 180 180-->
+	<Color x:Key="ItemUnfocusedOuterColor">#FF6399CF</Color>
+	<!--140 128 144-->
+	<Color x:Key="ItemUnfocusedTopColor">#FFDEEAF5</Color>
+	<!--140 128 220-->
+	<Color x:Key="ItemUnfocusedBottomColor">#FF6C9FD2</Color>
+	<!--140 128 150-->
 
 	<SolidColorBrush x:Key="ItemHighlitedOuterBrush"
-					 Color="{StaticResource ItemSelectedOuterColor}"
+					 Color="{StaticResource ItemHighlitedOuterColor}"
 					 Opacity="0.6" />
 	<LinearGradientBrush x:Key="ItemHighlitedFillBrush"
 						 StartPoint="0,0"
 						 EndPoint="0,1"
 						 Opacity="0.3">
 		<LinearGradientBrush.GradientStops>
-			<GradientStop Color="{StaticResource ItemSelectedTopColor}"
+			<GradientStop Color="{StaticResource ItemHighlitedTopColor}"
 						  Offset="0" />
-			<GradientStop Color="{StaticResource ItemSelectedBottomColor}"
+			<GradientStop Color="{StaticResource ItemHighlitedBottomColor}"
 						  Offset="1" />
 		</LinearGradientBrush.GradientStops>
 	</LinearGradientBrush>
@@ -55,35 +65,24 @@
 		</LinearGradientBrush.GradientStops>
 	</LinearGradientBrush>
 
-	<!--<SolidColorBrush x:Key="ItemUnfocusedOuterBrush"
-					 Color="{StaticResource {x:Static SystemColors.ControlDarkDarkColorKey}}"
-					 Opacity="0.6" />
-	<LinearGradientBrush x:Key="ItemUnfocusedFillBrush"
-						 StartPoint="0,0"
-						 EndPoint="0,1"
-						 Opacity="0.3">
-		<LinearGradientBrush.GradientStops>
-			<GradientStop Color="{StaticResource {x:Static SystemColors.ControlDarkColorKey}}"
-						  Offset="0" />
-			<GradientStop Color="{StaticResource {x:Static SystemColors.ControlDarkDarkColorKey}}"
-						  Offset="1" />
-		</LinearGradientBrush.GradientStops>
-	</LinearGradientBrush>-->
-
 	<SolidColorBrush x:Key="ItemUnfocusedOuterBrush"
-					 Color="#FF6399CF"
+					 Color="{StaticResource ItemUnfocusedOuterColor}"
 					 Opacity="0.6" />
 	<LinearGradientBrush x:Key="ItemUnfocusedFillBrush"
 						 StartPoint="0,0"
 						 EndPoint="0,1"
 						 Opacity="0.3">
 		<LinearGradientBrush.GradientStops>
-			<GradientStop Color="#FFDEEAF5"
+			<GradientStop Color="{StaticResource ItemUnfocusedTopColor}"
 						  Offset="0" />
-			<GradientStop Color="#FFADCAE7"
+			<GradientStop Color="{StaticResource ItemUnfocusedBottomColor}"
 						  Offset="1" />
 		</LinearGradientBrush.GradientStops>
 	</LinearGradientBrush>
+
+	<SolidColorBrush x:Key="ItemSelectionInnerBrush"
+					 Color="White" />
+	<sys:Double x:Key="ItemSelectionInnerOpacity">0.25</sys:Double>
 
 	<!-- =========================================================================== -->
 
@@ -548,8 +547,9 @@
 					   StrokeThickness="{StaticResource ItemSelectionStroke}"
 					   RadiusX="{StaticResource ItemSelectionRounding}"
 					   RadiusY="{StaticResource ItemSelectionRounding}" />
-			<Rectangle x:Name="InnerBorder"
+			<Rectangle Name="InnerBorder"
 					   Margin="1"
+					   Opacity="{StaticResource ItemSelectionInnerOpacity}"
 					   RadiusX="{StaticResource ItemSelectionRounding}"
 					   RadiusY="{StaticResource ItemSelectionRounding}" />
 			<DockPanel>
@@ -675,7 +675,7 @@
 						Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
 				<Setter TargetName="Icon"
 						Property="Opacity"
-						Value="0.3" />
+						Value="{StaticResource ItemDisabledOpacity}" />
 				<Setter TargetName="GlyphPanel"
 						Property="Fill"
 						Value="{StaticResource MenuItemGlyphDisabledBrush}" />
@@ -694,8 +694,9 @@
 					   StrokeThickness="{StaticResource ItemSelectionStroke}"
 					   RadiusX="{StaticResource ItemSelectionRounding}"
 					   RadiusY="{StaticResource ItemSelectionRounding}" />
-			<Rectangle x:Name="InnerBorder"
+			<Rectangle Name="InnerBorder"
 					   Margin="1"
+					   Opacity="{StaticResource ItemSelectionInnerOpacity}"
 					   RadiusX="{StaticResource ItemSelectionRounding}"
 					   RadiusY="{StaticResource ItemSelectionRounding}" />
 			<Grid>
@@ -783,7 +784,7 @@
 						Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
 				<Setter TargetName="Icon"
 						Property="Opacity"
-						Value="0.3" />
+						Value="{StaticResource ItemDisabledOpacity}" />
 				<Setter TargetName="GlyphPanel"
 						Property="Background"
 						Value="{StaticResource MenuItemGlyphDisabledBackgroundBrush}" />
@@ -806,8 +807,9 @@
 					   StrokeThickness="{StaticResource ItemSelectionStroke}"
 					   RadiusX="{StaticResource ItemSelectionRounding}"
 					   RadiusY="{StaticResource ItemSelectionRounding}" />
-			<Rectangle x:Name="InnerBorder"
+			<Rectangle Name="InnerBorder"
 					   Margin="1"
+					   Opacity="{StaticResource ItemSelectionInnerOpacity}"
 					   RadiusX="{StaticResource ItemSelectionRounding}"
 					   RadiusY="{StaticResource ItemSelectionRounding}" />
 			<Grid>
@@ -953,7 +955,7 @@
 						Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
 				<Setter TargetName="Icon"
 						Property="Opacity"
-						Value="0.3" />
+						Value="{StaticResource ItemDisabledOpacity}" />
 				<Setter TargetName="GlyphPanel"
 						Property="Background"
 						Value="{StaticResource MenuItemGlyphDisabledBackgroundBrush}" />
@@ -968,7 +970,109 @@
 	</ControlTemplate>
 
 	<!-- =========================================================================== -->
-	<!-- ToolBars                                                                    -->
+	<!-- ToolBar                                                                     -->
+	<!-- =========================================================================== -->
+
+	<Color x:Key="ToolBarLightFillColor">#FFF7F7FF</Color>
+	<Color x:Key="ToolBarMediumFillColor">#FFD6DBE7</Color>
+	<Color x:Key="ToolBarDarkFillColor">#FF99CCFF</Color>
+	<Color x:Key="ToolBarDisabledFillColor">#FFF7F7F7</Color>
+	<Color x:Key="ToolBarDisabledBorderColor">#FFB5B2B5</Color>
+	<Color x:Key="ToolBarSeparatorFillColor">#FFC6C6C6</Color>
+
+	<SolidColorBrush x:Key="ToolBarLightFill"
+					 Color="{StaticResource ToolBarLightFillColor}" />
+	<SolidColorBrush x:Key="ToolBarMediumFill"
+					 Color="{StaticResource ToolBarMediumFillColor}" />
+	<SolidColorBrush x:Key="ToolBarDarkFill"
+					 Color="{StaticResource ToolBarDarkFillColor}" />
+	<SolidColorBrush x:Key="ToolBarDisabledFill"
+					 Color="{StaticResource ToolBarDisabledFillColor}" />
+	<SolidColorBrush x:Key="ToolBarDisabledBorder"
+					 Color="{StaticResource ToolBarDisabledBorderColor}" />
+	<SolidColorBrush x:Key="ToolBarSeparatorFill"
+					 Color="{StaticResource ToolBarSeparatorFillColor}" />
+
+	<Color x:Key="ToolBarButtonBorderColor">#FFB1D5F8</Color>
+	<!--140 200 200-->
+	<Color x:Key="ToolBarButtonTopColor">#FFEDF4FC</Color>
+	<!--140 180 230-->
+	<Color x:Key="ToolBarButtonBottomColor">#FFC8DFF7</Color>
+	<!--140 180 210-->
+	<Color x:Key="ToolBarButtonHoverBorderColor">#FF8ABFF4</Color>
+	<!--140 200 180-->
+	<Color x:Key="ToolBarButtonHoverTopColor">#FFF5FAFE</Color>
+	<!--140 180 235-->
+	<Color x:Key="ToolBarButtonHoverBottomColor">#FFDAEAFA</Color>
+	<!--140 180 220-->
+	<Color x:Key="ToolBarButtonPressedBorderColor">#FF3399FF</Color>
+	<!--140 240 144-->
+	<Color x:Key="ToolBarButtonPressedTopColor">#FFE3EFFB</Color>
+	<!--140 180 225-->
+	<Color x:Key="ToolBarButtonPressedBottomColor">#FFB5D5F4</Color>
+	<!--140 180 200-->
+	<Color x:Key="ToolBarButtonCheckedBorderColor">#FF3399FF</Color>
+	<!--140 240 144-->
+	<Color x:Key="ToolBarButtonCheckedTopColor">#FFD5EAFF</Color>
+	<!--140 240 220-->
+	<Color x:Key="ToolBarButtonCheckedBottomColor">#FFAAD5FF</Color>
+	<!--140 240 200-->
+
+	<SolidColorBrush x:Key="ToolBarButtonBorder"
+					 Color="{StaticResource ToolBarButtonBorderColor}" />
+	<LinearGradientBrush x:Key="ToolBarButtonFill"
+						 StartPoint="0,0"
+						 EndPoint="0,1">
+		<LinearGradientBrush.GradientStops>
+			<GradientStop Color="{StaticResource ToolBarButtonTopColor}"
+						  Offset="0" />
+			<GradientStop Color="{StaticResource ToolBarButtonBottomColor}"
+						  Offset="1" />
+		</LinearGradientBrush.GradientStops>
+	</LinearGradientBrush>
+	<SolidColorBrush x:Key="ToolBarButtonHoverBorder"
+					 Color="{StaticResource ToolBarButtonHoverBorderColor}" />
+	<LinearGradientBrush x:Key="ToolBarButtonHover"
+						 StartPoint="0,0"
+						 EndPoint="0,1">
+		<LinearGradientBrush.GradientStops>
+			<GradientStop Color="{StaticResource ToolBarButtonHoverTopColor}"
+						  Offset="0" />
+			<GradientStop Color="{StaticResource ToolBarButtonHoverBottomColor}"
+						  Offset="1" />
+		</LinearGradientBrush.GradientStops>
+	</LinearGradientBrush>
+	<SolidColorBrush x:Key="ToolBarButtonCheckedBorder"
+					 Color="{StaticResource ToolBarButtonCheckedBorderColor}" />
+	<LinearGradientBrush x:Key="ToolBarButtonChecked"
+						 StartPoint="0,0"
+						 EndPoint="0,1">
+		<LinearGradientBrush.GradientStops>
+			<GradientStop Color="{StaticResource ToolBarButtonCheckedTopColor}"
+						  Offset="0" />
+			<GradientStop Color="{StaticResource ToolBarButtonCheckedBottomColor}"
+						  Offset="1" />
+		</LinearGradientBrush.GradientStops>
+	</LinearGradientBrush>
+	<SolidColorBrush x:Key="ToolBarButtonPressedBorder"
+					 Color="{StaticResource ToolBarButtonPressedBorderColor}" />
+	<LinearGradientBrush x:Key="ToolBarButtonPressed"
+						 StartPoint="0,0"
+						 EndPoint="0,1">
+		<LinearGradientBrush.GradientStops>
+			<GradientStop Color="{StaticResource ToolBarButtonPressedTopColor}"
+						  Offset="0" />
+			<GradientStop Color="{StaticResource ToolBarButtonPressedBottomColor}"
+						  Offset="1" />
+		</LinearGradientBrush.GradientStops>
+	</LinearGradientBrush>
+
+	<Thickness x:Key="ToolBarButtonGlowMargin">-1,-1,-1,-1</Thickness>
+	<BlurEffect x:Key="ToolBarButtonGlowEffect"
+				Radius="3"
+				RenderingBias="Quality"
+				KernelType="Gaussian" />
+
 	<!-- =========================================================================== -->
 
 	<Style x:Key="{x:Type ToolBar}"
@@ -989,43 +1093,30 @@
 				Value="Collapsed" />
 	</Style>-->
 
+	<Style x:Key="{x:Static ToolBar.SeparatorStyleKey}"
+		   TargetType="{x:Type Separator}">
+		<Setter Property="Background"
+				Value="{StaticResource ToolBarSeparatorFill}" />
+		<Setter Property="MinWidth"
+				Value="1" />
+		<Setter Property="MinHeight"
+				Value="1" />
+		<Setter Property="Margin"
+				Value="2,2,2,2" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Separator}">
+					<Border Background="{TemplateBinding Background}"
+							BorderBrush="{TemplateBinding BorderBrush}"
+							BorderThickness="{TemplateBinding BorderThickness}"
+							SnapsToDevicePixels="true" />
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
 	<!-- =========================================================================== -->
-
-	<Color x:Key="ToolBarLightFillColor">#FFF7F7FF</Color>
-	<Color x:Key="ToolBarMediumFillColor">#FFD6DBE7</Color>
-	<Color x:Key="ToolBarDarkFillColor">#FF99CCFF</Color>
-	<Color x:Key="ToolBarDisabledFillColor">#FFF7F7F7</Color>
-	<Color x:Key="ToolBarDisabledBorderColor">#FFB5B2B5</Color>
-	<Color x:Key="ToolBarSeparatorFillColor">#FFC6C7C6</Color>
-	<Color x:Key="ToolBarButtonHoverColor">#FFE6F0FA</Color>
-	<Color x:Key="ToolBarButtonHoverBorderColor">#FF3399FF</Color>
-	<Color x:Key="ToolBarButtonCheckedColor">#FFC2E0FF</Color>
-	<Color x:Key="ToolBarButtonPressedColor">#FF99CCFF</Color>
-	<Color x:Key="ToolBarButtonPressedBorderColor">#FF3399FF</Color>
-
-	<SolidColorBrush x:Key="ToolBarLightFill"
-					 Color="{StaticResource ToolBarLightFillColor}" />
-	<SolidColorBrush x:Key="ToolBarMediumFill"
-					 Color="{StaticResource ToolBarMediumFillColor}" />
-	<SolidColorBrush x:Key="ToolBarDarkFill"
-					 Color="{StaticResource ToolBarDarkFillColor}" />
-	<SolidColorBrush x:Key="ToolBarDisabledFill"
-					 Color="{StaticResource ToolBarDisabledFillColor}" />
-	<SolidColorBrush x:Key="ToolBarDisabledBorder"
-					 Color="{StaticResource ToolBarDisabledBorderColor}" />
-	<SolidColorBrush x:Key="ToolBarSeparatorFill"
-					 Color="{StaticResource ToolBarSeparatorFillColor}" />
-	<SolidColorBrush x:Key="ToolBarButtonHover"
-					 Color="{StaticResource ToolBarButtonHoverColor}" />
-	<SolidColorBrush x:Key="ToolBarButtonHoverBorder"
-					 Color="{StaticResource ToolBarButtonHoverBorderColor}" />
-	<SolidColorBrush x:Key="ToolBarButtonChecked"
-					 Color="{StaticResource ToolBarButtonCheckedColor}" />
-	<SolidColorBrush x:Key="ToolBarButtonPressed"
-					 Color="{StaticResource ToolBarButtonPressedColor}" />
-	<SolidColorBrush x:Key="ToolBarButtonPressedBorder"
-					 Color="{StaticResource ToolBarButtonPressedBorderColor}" />
-
+	<!-- ToolBar Buttons                                                             -->
 	<!-- =========================================================================== -->
 
 	<Style x:Key="{x:Static ToolBar.ButtonStyleKey}"
@@ -1034,10 +1125,12 @@
 				Value="true" />
 		<Setter Property="Foreground"
 				Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+		<Setter Property="Margin"
+				Value="1,0,1,0" />
 		<Setter Property="Padding"
-				Value="2" />
+				Value="3" />
 		<Setter Property="BorderThickness"
-				Value="1" />
+				Value="0" />
 		<Setter Property="Background"
 				Value="Transparent" />
 		<Setter Property="BorderBrush"
@@ -1061,47 +1154,94 @@
 							Background="{TemplateBinding Background}"
 							BorderBrush="{TemplateBinding BorderBrush}"
 							BorderThickness="{TemplateBinding BorderThickness}"
-							Padding="{TemplateBinding Padding}"
 							SnapsToDevicePixels="true">
-						<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-										  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-										  SnapsToDevicePixels="False"
-										  UseLayoutRounding="False" />
+						<Grid Background="Transparent">
+							<Rectangle Name="Glow"
+									   Opacity="0"
+									   ClipToBounds="False"
+									   Fill="White"
+									   Stroke="White"
+									   StrokeThickness="{StaticResource ItemSelectionStroke}"
+									   RadiusX="{StaticResource ItemSelectionRounding}"
+									   RadiusY="{StaticResource ItemSelectionRounding}"
+									   Margin="{StaticResource ToolBarButtonGlowMargin}"
+									   Effect="{StaticResource ToolBarButtonGlowEffect}" />
+							<Rectangle Name="Bg"
+									   Fill="{StaticResource ToolBarButtonFill}"
+									   Stroke="{StaticResource ToolBarButtonBorder}"
+									   StrokeThickness="{StaticResource ItemSelectionStroke}"
+									   RadiusX="{StaticResource ItemSelectionRounding}"
+									   RadiusY="{StaticResource ItemSelectionRounding}" />
+							<Rectangle Name="InnerBorder"
+									   Margin="1"
+									   Opacity="{StaticResource ItemSelectionInnerOpacity}"
+									   Stroke="{StaticResource ItemSelectionInnerBrush}"
+									   RadiusX="{StaticResource ItemSelectionRounding}"
+									   RadiusY="{StaticResource ItemSelectionRounding}" />
+							<ContentPresenter Margin="{TemplateBinding Padding}"
+											  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+											  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+											  SnapsToDevicePixels="False"
+											  UseLayoutRounding="False" />
+						</Grid>
 					</Border>
 					<ControlTemplate.Triggers>
 						<Trigger Property="IsMouseOver"
 								 Value="true">
-							<Setter TargetName="Bd"
-									Property="BorderBrush"
+							<Setter TargetName="Bg"
+									Property="Stroke"
 									Value="{StaticResource ToolBarButtonHoverBorder}" />
-							<Setter TargetName="Bd"
-									Property="Background"
+							<Setter TargetName="Bg"
+									Property="Fill"
 									Value="{StaticResource ToolBarButtonHover}" />
 						</Trigger>
 						<Trigger Property="IsKeyboardFocused"
 								 Value="true">
-							<Setter TargetName="Bd"
-									Property="BorderBrush"
+							<Setter TargetName="Bg"
+									Property="Stroke"
 									Value="{StaticResource ToolBarButtonHoverBorder}" />
-							<Setter TargetName="Bd"
-									Property="Background"
+							<Setter TargetName="Bg"
+									Property="Fill"
 									Value="{StaticResource ToolBarButtonHover}" />
 						</Trigger>
 						<Trigger Property="IsPressed"
 								 Value="true">
-							<Setter TargetName="Bd"
-									Property="BorderBrush"
+							<Setter TargetName="Bg"
+									Property="Stroke"
 									Value="{StaticResource ToolBarButtonPressedBorder}" />
-							<Setter TargetName="Bd"
-									Property="Background"
+							<Setter TargetName="Bg"
+									Property="Fill"
 									Value="{StaticResource ToolBarButtonPressed}" />
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Glow"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource StateAnimationDuration}"
+														 To="1" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Glow"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource StateAnimationDuration}"
+														 To="0" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
 						</Trigger>
 						<Trigger Property="IsEnabled"
 								 Value="false">
 							<Setter Property="Foreground"
 									Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
 							<Setter Property="Opacity"
-									Value="0.3" />
+									Value="{StaticResource ItemDisabledOpacity}" />
+							<Setter TargetName="InnerBorder"
+									Property="Visibility"
+									Value="Hidden" />
 						</Trigger>
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
@@ -1117,10 +1257,12 @@
 				Value="true" />
 		<Setter Property="Foreground"
 				Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+		<Setter Property="Margin"
+				Value="1,0,1,0" />
 		<Setter Property="Padding"
-				Value="2" />
+				Value="3" />
 		<Setter Property="BorderThickness"
-				Value="1" />
+				Value="0" />
 		<Setter Property="Background"
 				Value="Transparent" />
 		<Setter Property="BorderBrush"
@@ -1143,32 +1285,65 @@
 					<Border Background="{TemplateBinding Background}"
 							BorderBrush="{TemplateBinding BorderBrush}"
 							BorderThickness="{TemplateBinding BorderThickness}"
-							Padding="{TemplateBinding Padding}"
 							SnapsToDevicePixels="true">
-						<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-										  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-										  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+						<Grid Background="Transparent">
+							<Rectangle Name="Glow"
+									   Opacity="0"
+									   ClipToBounds="False"
+									   Fill="White"
+									   Stroke="White"
+									   StrokeThickness="{StaticResource ItemSelectionStroke}"
+									   RadiusX="{StaticResource ItemSelectionRounding}"
+									   RadiusY="{StaticResource ItemSelectionRounding}"
+									   Margin="{StaticResource ToolBarButtonGlowMargin}"
+									   Effect="{StaticResource ToolBarButtonGlowEffect}" />
+							<Rectangle Name="Bg"
+									   Fill="{StaticResource ToolBarButtonFill}"
+									   Stroke="{StaticResource ToolBarButtonBorder}"
+									   StrokeThickness="{StaticResource ItemSelectionStroke}"
+									   RadiusX="{StaticResource ItemSelectionRounding}"
+									   RadiusY="{StaticResource ItemSelectionRounding}" />
+							<Rectangle Name="InnerBorder"
+									   Margin="1"
+									   Opacity="{StaticResource ItemSelectionInnerOpacity}"
+									   Stroke="{StaticResource ItemSelectionInnerBrush}"
+									   RadiusX="{StaticResource ItemSelectionRounding}"
+									   RadiusY="{StaticResource ItemSelectionRounding}" />
+							<ContentPresenter Margin="{TemplateBinding Padding}"
+											  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+											  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+											  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+						</Grid>
 					</Border>
 					<ControlTemplate.Triggers>
 						<Trigger Property="IsChecked"
 								 Value="true">
-							<Setter Property="BorderBrush"
-									Value="{StaticResource ToolBarButtonHoverBorder}" />
-							<Setter Property="Background"
+							<Setter TargetName="Bg"
+									Property="Stroke"
+									Value="{StaticResource ToolBarButtonCheckedBorder}" />
+							<Setter TargetName="Bg"
+									Property="Fill"
 									Value="{StaticResource ToolBarButtonChecked}" />
+							<Setter TargetName="InnerBorder"
+									Property="Opacity"
+									Value="0.5" />
 						</Trigger>
 						<Trigger Property="IsMouseOver"
 								 Value="true">
-							<Setter Property="BorderBrush"
+							<Setter TargetName="Bg"
+									Property="Stroke"
 									Value="{StaticResource ToolBarButtonHoverBorder}" />
-							<Setter Property="Background"
+							<Setter TargetName="Bg"
+									Property="Fill"
 									Value="{StaticResource ToolBarButtonHover}" />
 						</Trigger>
 						<Trigger Property="IsKeyboardFocused"
 								 Value="true">
-							<Setter Property="BorderBrush"
+							<Setter TargetName="Bg"
+									Property="Stroke"
 									Value="{StaticResource ToolBarButtonHoverBorder}" />
-							<Setter Property="Background"
+							<Setter TargetName="Bg"
+									Property="Fill"
 									Value="{StaticResource ToolBarButtonHover}" />
 						</Trigger>
 						<MultiTrigger>
@@ -1178,9 +1353,11 @@
 								<Condition Property="IsChecked"
 										   Value="true" />
 							</MultiTrigger.Conditions>
-							<Setter Property="BorderBrush"
+							<Setter TargetName="Bg"
+									Property="Stroke"
 									Value="{StaticResource ToolBarButtonPressedBorder}" />
-							<Setter Property="Background"
+							<Setter TargetName="Bg"
+									Property="Fill"
 									Value="{StaticResource ToolBarButtonPressed}" />
 						</MultiTrigger>
 						<MultiTrigger>
@@ -1190,24 +1367,51 @@
 								<Condition Property="IsChecked"
 										   Value="true" />
 							</MultiTrigger.Conditions>
-							<Setter Property="BorderBrush"
+							<Setter TargetName="Bg"
+									Property="Stroke"
 									Value="{StaticResource ToolBarButtonPressedBorder}" />
-							<Setter Property="Background"
+							<Setter TargetName="Bg"
+									Property="Fill"
 									Value="{StaticResource ToolBarButtonPressed}" />
 						</MultiTrigger>
 						<Trigger Property="IsPressed"
 								 Value="true">
-							<Setter Property="BorderBrush"
+							<Setter TargetName="Bg"
+									Property="Stroke"
 									Value="{StaticResource ToolBarButtonPressedBorder}" />
-							<Setter Property="Background"
+							<Setter TargetName="Bg"
+									Property="Fill"
 									Value="{StaticResource ToolBarButtonPressed}" />
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Glow"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource StateAnimationDuration}"
+														 To="1" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Glow"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource StateAnimationDuration}"
+														 To="0" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
 						</Trigger>
 						<Trigger Property="IsEnabled"
 								 Value="false">
 							<Setter Property="Foreground"
 									Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
 							<Setter Property="Opacity"
-									Value="0.3" />
+									Value="{StaticResource ItemDisabledOpacity}" />
+							<Setter TargetName="InnerBorder"
+									Property="Visibility"
+									Value="Hidden" />
 						</Trigger>
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
@@ -2262,8 +2466,9 @@
 						   StrokeThickness="{StaticResource ItemSelectionStroke}"
 						   RadiusX="{StaticResource ItemSelectionRounding}"
 						   RadiusY="{StaticResource ItemSelectionRounding}" />
-				<Rectangle x:Name="InnerBorder"
+				<Rectangle Name="InnerBorder"
 						   Margin="1"
+						   Opacity="{StaticResource ItemSelectionInnerOpacity}"
 						   RadiusX="{StaticResource ItemSelectionRounding}"
 						   RadiusY="{StaticResource ItemSelectionRounding}" />
 				<ContentPresenter Margin="{TemplateBinding Padding}"
@@ -2369,8 +2574,9 @@
 						   StrokeThickness="{StaticResource ItemSelectionStroke}"
 						   RadiusX="{StaticResource ItemSelectionRounding}"
 						   RadiusY="{StaticResource ItemSelectionRounding}" />
-				<Rectangle x:Name="InnerBorder"
+				<Rectangle Name="InnerBorder"
 						   Margin="1"
+						   Opacity="{StaticResource ItemSelectionInnerOpacity}"
 						   RadiusX="{StaticResource ItemSelectionRounding}"
 						   RadiusY="{StaticResource ItemSelectionRounding}" />
 				<GridViewRowPresenter Columns="{TemplateBinding GridView.ColumnCollection}"
@@ -2748,8 +2954,9 @@
 										   StrokeThickness="{StaticResource ItemSelectionStroke}"
 										   RadiusX="{StaticResource ItemSelectionRounding}"
 										   RadiusY="{StaticResource ItemSelectionRounding}" />
-								<Rectangle x:Name="InnerBorder"
+								<Rectangle Name="InnerBorder"
 										   Margin="1"
+										   Opacity="{StaticResource ItemSelectionInnerOpacity}"
 										   RadiusX="{StaticResource ItemSelectionRounding}"
 										   RadiusY="{StaticResource ItemSelectionRounding}" />
 								<ContentPresenter x:Name="PART_Header"
@@ -3147,8 +3354,9 @@
 									   StrokeThickness="{StaticResource ItemSelectionStroke}"
 									   RadiusX="{StaticResource ItemSelectionRounding}"
 									   RadiusY="{StaticResource ItemSelectionRounding}" />
-							<Rectangle x:Name="InnerBorder"
+							<Rectangle Name="InnerBorder"
 									   Margin="1"
+									   Opacity="{StaticResource ItemSelectionInnerOpacity}"
 									   RadiusX="{StaticResource ItemSelectionRounding}"
 									   RadiusY="{StaticResource ItemSelectionRounding}" />
 							<ContentPresenter Margin="{TemplateBinding Padding}"

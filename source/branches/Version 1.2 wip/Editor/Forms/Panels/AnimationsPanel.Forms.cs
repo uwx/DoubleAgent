@@ -260,13 +260,11 @@ namespace AgentCharacterEditor.Panels
 		private void NumericFrameWidth_Validated (object sender, EventArgs e)
 		{
 			HandleUpdateFrameWidth ();
-			NumericFrameWidth.IsModified = false;
 		}
 
 		private void NumericFrameHeight_Validated (object sender, EventArgs e)
 		{
 			HandleUpdateFrameHeight ();
-			NumericFrameHeight.IsModified = false;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

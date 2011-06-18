@@ -161,23 +161,37 @@
 							   VerticalAlignment="Stretch"
 							   Visibility="Hidden" />
 		</Grid>
-		<ToolBarTray Height="Auto"
-					 HorizontalAlignment="Stretch"
-					 Name="ToolBarPanel"
-					 VerticalAlignment="Top"
-					 Width="Auto"
-					 Orientation="Horizontal"
+		<ToolBarTray Name="ToolBarPanel"
 					 Grid.Row="1"
+					 Width="Auto"
+					 Height="Auto"
+					 HorizontalAlignment="Stretch"
+					 VerticalAlignment="Top"
+					 Orientation="Horizontal"
 					 ToolBarTray.IsLocked="true">
-			<ToolBar Name="ToolBarMain">
+			<ToolBarTray.Background>
+				<LinearGradientBrush StartPoint="0,0"
+									 EndPoint="0,1">
+					<LinearGradientBrush.GradientStops>
+						<GradientStop Color="{StaticResource BackgroundToolBarColor}"
+									  Offset="0" />
+						<GradientStop Color="{StaticResource BackgroundToolBarColor}"
+									  Offset="0.9" />
+						<GradientStop Color="{StaticResource BackgroundLighterColor}"
+									  Offset="1" />
+					</LinearGradientBrush.GradientStops>
+				</LinearGradientBrush>
+			</ToolBarTray.Background>
+			<ToolBar Name="ToolBarMain"
+					 Background="Transparent"
+					 Margin="0,0,0,1">
 				<Button Name="ButtonNavigateBack"
 						Style="{StaticResource ImageStateButton}"
 						ToolTip="Back"
 						Command="BrowseBack"
 						Focusable="False"
 						IsTabStop="False">
-					<custom:ImageState Source="{StaticResource ImgNavigateBack}"
-									   NormalSource="{StaticResource ImgNavigateBack}"
+					<custom:ImageState NormalSource="{StaticResource ImgNavigateBack}"
 									   HotSource="{StaticResource ImgNavigateBackHot}"
 									   PressedSource="{StaticResource ImgNavigateBackPressed}"
 									   Stretch="UniformToFill"
@@ -192,8 +206,7 @@
 						Command="BrowseForward"
 						Focusable="False"
 						IsTabStop="False">
-					<custom:ImageState Source="{StaticResource ImgNavigateForward}"
-									   NormalSource="{StaticResource ImgNavigateForward}"
+					<custom:ImageState NormalSource="{StaticResource ImgNavigateForward}"
 									   HotSource="{StaticResource ImgNavigateForwardHot}"
 									   PressedSource="{StaticResource ImgNavigateForwardPressed}"
 									   Stretch="UniformToFill"
@@ -202,130 +215,130 @@
 									   HorizontalAlignment="Center"
 									   VerticalAlignment="Center" />
 				</Button>
-				<Separator />
+				<Separator Style="{StaticResource PanelToolBarSeparator}" />
 				<Button Name="ButtonFileNew"
 						ToolTip="New"
 						Command="New"
 						Focusable="False"
 						IsTabStop="False">
-					<Image Source="{StaticResource ImgFileNew}"
-						   Stretch="UniformToFill"
-						   Width="16"
-						   Height="16"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Center"></Image>
+					<custom:ImageState NormalSource="{StaticResource ImgFileNew}"
+									   Stretch="UniformToFill"
+									   Width="16"
+									   Height="16"
+									   HorizontalAlignment="Center"
+									   VerticalAlignment="Center" />
 				</Button>
 				<Button Name="ButtonFileOpen"
 						ToolTip="Open"
 						Command="Open"
 						Focusable="False"
 						IsTabStop="False">
-					<Image Source="{StaticResource ImgFileOpen}"
-						   Stretch="UniformToFill"
-						   Width="16"
-						   Height="16"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Center"></Image>
+					<custom:ImageState NormalSource="{StaticResource ImgFileOpen}"
+									   Stretch="UniformToFill"
+									   Width="16"
+									   Height="16"
+									   HorizontalAlignment="Center"
+									   VerticalAlignment="Center" />
 				</Button>
 				<Button Name="ButtonFileSave"
 						ToolTip="Save"
 						Command="Save"
 						Focusable="False"
 						IsTabStop="False">
-					<Image Source="{StaticResource ImgFileSave}"
-						   Stretch="UniformToFill"
-						   Width="16"
-						   Height="16"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Center"></Image>
+					<custom:ImageState NormalSource="{StaticResource ImgFileSave}"
+									   Stretch="UniformToFill"
+									   Width="16"
+									   Height="16"
+									   HorizontalAlignment="Center"
+									   VerticalAlignment="Center" />
 				</Button>
-				<Separator />
+				<Separator Style="{StaticResource PanelToolBarSeparator}" />
 				<Button Name="ButtonEditUndo"
 						Command="Undo"
 						CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
 						Focusable="False"
 						IsTabStop="False">
-					<Image Source="{StaticResource ImgEditUndo}"
-						   Stretch="UniformToFill"
-						   Width="16"
-						   Height="16"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Center"></Image>
+					<custom:ImageState NormalSource="{StaticResource ImgEditUndo}"
+									   Stretch="UniformToFill"
+									   Width="16"
+									   Height="16"
+									   HorizontalAlignment="Center"
+									   VerticalAlignment="Center" />
 				</Button>
 				<Button Name="ButtonEditRedo"
 						Command="Redo"
 						CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
 						Focusable="False"
 						IsTabStop="False">
-					<Image Source="{StaticResource ImgEditRedo}"
-						   Stretch="UniformToFill"
-						   Width="16"
-						   Height="16"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Center"></Image>
+					<custom:ImageState NormalSource="{StaticResource ImgEditRedo}"
+									   Stretch="UniformToFill"
+									   Width="16"
+									   Height="16"
+									   HorizontalAlignment="Center"
+									   VerticalAlignment="Center" />
 				</Button>
-				<Separator />
+				<Separator Style="{StaticResource PanelToolBarSeparator}" />
 				<Button Name="ButtonEditCut"
 						Command="Cut"
 						CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
 						Focusable="False"
 						IsTabStop="False">
-					<Image Source="{StaticResource ImgEditCut}"
-						   Stretch="UniformToFill"
-						   Width="16"
-						   Height="16"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Center"></Image>
+					<custom:ImageState NormalSource="{StaticResource ImgEditCut}"
+									   Stretch="UniformToFill"
+									   Width="16"
+									   Height="16"
+									   HorizontalAlignment="Center"
+									   VerticalAlignment="Center" />
 				</Button>
 				<Button Name="ButtonEditCopy"
 						Command="Copy"
 						CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
 						Focusable="False"
 						IsTabStop="False">
-					<Image Source="{StaticResource ImgEditCopy}"
-						   Stretch="UniformToFill"
-						   Width="16"
-						   Height="16"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Center"></Image>
+					<custom:ImageState NormalSource="{StaticResource ImgEditCopy}"
+									   Stretch="UniformToFill"
+									   Width="16"
+									   Height="16"
+									   HorizontalAlignment="Center"
+									   VerticalAlignment="Center" />
 				</Button>
 				<Button Name="ButtonEditPaste"
 						Command="Paste"
 						CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
 						Focusable="False"
 						IsTabStop="False">
-					<Image Source="{StaticResource ImgEditPaste}"
-						   Stretch="UniformToFill"
-						   Width="16"
-						   Height="16"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Center"></Image>
+					<custom:ImageState NormalSource="{StaticResource ImgEditPaste}"
+									   Stretch="UniformToFill"
+									   Width="16"
+									   Height="16"
+									   HorizontalAlignment="Center"
+									   VerticalAlignment="Center" />
 				</Button>
 				<Button Name="ButtonEditDelete"
 						Command="Delete"
 						CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
 						Focusable="False"
 						IsTabStop="False">
-					<Image Source="{StaticResource ImgEditDelete}"
-						   Stretch="UniformToFill"
-						   Width="16"
-						   Height="16"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Center"></Image>
+					<custom:ImageState NormalSource="{StaticResource ImgEditDelete}"
+									   Stretch="UniformToFill"
+									   Width="16"
+									   Height="16"
+									   HorizontalAlignment="Center"
+									   VerticalAlignment="Center" />
 				</Button>
-				<Separator />
+				<Separator Style="{StaticResource PanelToolBarSeparator}" />
 				<ToggleButton Name="ButtonViewSmall"
 							  ToolTip="View small"
 							  Command="DecreaseZoom"
 							  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
 							  Focusable="False"
 							  IsTabStop="False">
-					<Image Source="{StaticResource ImgSmallFont}"
-						   Stretch="UniformToFill"
-						   Width="16"
-						   Height="16"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Center"></Image>
+					<custom:ImageState NormalSource="{StaticResource ImgSmallFont}"
+									   Stretch="UniformToFill"
+									   Width="16"
+									   Height="16"
+									   HorizontalAlignment="Center"
+									   VerticalAlignment="Center" />
 				</ToggleButton>
 				<ToggleButton Name="ButtonViewLarge"
 							  ToolTip="View large"
@@ -333,12 +346,12 @@
 							  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
 							  Focusable="False"
 							  IsTabStop="False">
-					<Image Source="{StaticResource ImgLargeFont}"
-						   Stretch="UniformToFill"
-						   Width="16"
-						   Height="16"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Center"></Image>
+					<custom:ImageState NormalSource="{StaticResource ImgLargeFont}"
+									   Stretch="UniformToFill"
+									   Width="16"
+									   Height="16"
+									   HorizontalAlignment="Center"
+									   VerticalAlignment="Center" />
 				</ToggleButton>
 			</ToolBar>
 		</ToolBarTray>
@@ -355,20 +368,20 @@
 						  Header="_New"
 						  Name="MenuItemFileNew">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgFileNew}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource ImgFileNew}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Command="Open"
 						  Header="_Open"
 						  Name="MenuItemFileOpen">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgFileOpen}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource ImgFileOpen}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<Separator />
@@ -376,20 +389,20 @@
 						  Header="_Save"
 						  Name="MenuItemFileSave">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgFileSave}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource ImgFileSave}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Command="SaveAs"
 						  Header="Save _As..."
 						  Name="MenuItemFileSaveAs">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgFileSaveAs}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource ImgFileSaveAs}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<Separator />
@@ -398,10 +411,10 @@
 						  IsEnabled="False"
 						  Name="MenuItemFilePrint">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgFilePrint}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource ImgFilePrint}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Command="PrintPreview"
@@ -409,10 +422,10 @@
 						  IsEnabled="False"
 						  Name="MenuItemFilePrintPreview">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgFilePrintPreview}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource ImgFilePrintPreview}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<Separator />
@@ -430,10 +443,10 @@
 						  Command="ApplicationCommands.Undo"
 						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditUndo}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource ImgEditUndo}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Name="MenuItemEditRedo"
@@ -441,10 +454,10 @@
 						  Command="ApplicationCommands.Redo"
 						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgEditRedo}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource ImgEditRedo}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<Separator Style="{StaticResource {x:Static MenuItem.SeparatorStyleKey}}" />
@@ -461,10 +474,10 @@
 						  Command="NavigationCommands.BrowseBack"
 						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgNavigateBack}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource ImgNavigateBack}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Name="MenuItemNavigateForward"
@@ -472,10 +485,10 @@
 						  Command="NavigationCommands.BrowseForward"
 						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgNavigateForward}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource ImgNavigateForward}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<Separator />
@@ -484,10 +497,10 @@
 						  Command="DecreaseZoom"
 						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgSmallFont}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource ImgSmallFont}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Name="MenuItemViewLarge"
@@ -495,10 +508,10 @@
 						  Command="IncreaseZoom"
 						  CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgLargeFont}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource ImgLargeFont}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 			</MenuItem>
@@ -509,10 +522,10 @@
 						  Name="MenuItemHelpAbout"
 						  Click="OnHelpAbout">
 					<MenuItem.Icon>
-						<Image Source="{StaticResource ImgHelpAbout}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource ImgHelpAbout}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 					</MenuItem.Icon>
 				</MenuItem>
 			</MenuItem>

@@ -304,8 +304,19 @@ namespace AgentCharacterEditor.Panels
 			{
 				System.Windows.Forms.FontDialog lFontDialog = new System.Windows.Forms.FontDialog ();
 
-				lFontDialog.ShowEffects = true;
 				lFontDialog.Font = FileBalloon.Font;
+				lFontDialog.ShowEffects = true;
+				lFontDialog.AllowVectorFonts = true;
+				lFontDialog.AllowVerticalFonts = false;
+				lFontDialog.AllowSimulations = true;
+				lFontDialog.AllowScriptChange = true;
+				lFontDialog.FixedPitchOnly = false;
+				lFontDialog.FontMustExist = false;
+				lFontDialog.ScriptsOnly = false;
+				lFontDialog.ShowHelp = false;
+				lFontDialog.ShowApply = false;
+				lFontDialog.ShowColor = false;
+
 				if (lFontDialog.ShowDialog () == System.Windows.Forms.DialogResult.OK)
 				{
 					UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
@@ -324,6 +335,7 @@ namespace AgentCharacterEditor.Panels
 
 				lColorDialog.Color = FileBalloon.FgColor;
 				lColorDialog.FullOpen = true;
+
 				if (lColorDialog.ShowDialog () == System.Windows.Forms.DialogResult.OK)
 				{
 					UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
@@ -342,6 +354,7 @@ namespace AgentCharacterEditor.Panels
 
 				lColorDialog.Color = FileBalloon.BkColor;
 				lColorDialog.FullOpen = true;
+
 				if (lColorDialog.ShowDialog () == System.Windows.Forms.DialogResult.OK)
 				{
 					UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();
@@ -360,6 +373,7 @@ namespace AgentCharacterEditor.Panels
 
 				lColorDialog.Color = FileBalloon.BrColor;
 				lColorDialog.FullOpen = true;
+
 				if (lColorDialog.ShowDialog () == System.Windows.Forms.DialogResult.OK)
 				{
 					UpdateCharacterBalloon lUpdate = new UpdateCharacterBalloon ();

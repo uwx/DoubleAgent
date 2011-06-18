@@ -31,10 +31,40 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
 
+		private Control ImagePasteTarget
+		{
+			get {return ImagesContainer;}
+		}
+
 		public ImageListItems ImageListItems
 		{
 			get;
 			protected set;
+		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region Navigation
+
+		public new class PanelContext : FilePartPanel.PanelContext
+		{
+			public PanelContext (FramePanel pPanel)
+				: base (pPanel)
+			{
+				SelectedImage = pPanel.ListViewImages.SelectedIndex;
+			}
+
+			public void RestoreContext (FramePanel pPanel)
+			{
+				base.RestoreContext (pPanel);
+				pPanel.ListViewImages.SelectedIndex = SelectedImage;
+			}
+
+			public int SelectedImage
+			{
+				get;
+				protected set;
+			}
 		}
 
 		#endregion

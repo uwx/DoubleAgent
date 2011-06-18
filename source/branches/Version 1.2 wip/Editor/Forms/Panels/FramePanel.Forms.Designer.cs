@@ -49,32 +49,21 @@ namespace AgentCharacterEditor.Panels
 		private void InitializeComponent ()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+			System.Windows.Forms.Panel PanelFrame;
 			System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 			System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+			System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+			System.Windows.Forms.TableLayoutPanel PanelMiddle;
+			System.Windows.Forms.TableLayoutPanel PanelImage;
+			System.Windows.Forms.TableLayoutPanel PanelSound;
+			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
 			this.LabelFrameName = new DoubleAgent.LabelCompat();
-			this.PanelOverlayOffset = new System.Windows.Forms.Panel();
-			this.LabelOffsetX = new DoubleAgent.LabelCompat();
-			this.NumericOffsetX = new DoubleAgent.NumericUpDownEx();
-			this.LabelOffsetY = new DoubleAgent.LabelCompat();
-			this.NumericOffsetY = new DoubleAgent.NumericUpDownEx();
 			this.TextBoxFrameName = new DoubleAgent.TextBoxEx();
+			this.LabelDuration = new DoubleAgent.LabelCompat();
+			this.NumericDuration = new DoubleAgent.NumericUpDownEx();
+			this.LabelDurationUnits = new DoubleAgent.LabelCompat();
 			this.GroupBoxImages = new DoubleAgent.GroupBoxCompat();
 			this.PanelImages = new System.Windows.Forms.TableLayoutPanel();
-			this.FlowLayoutRight = new System.Windows.Forms.FlowLayoutPanel();
-			this.PanelSample = new System.Windows.Forms.TableLayoutPanel();
-			this.PanelImageClip = new System.Windows.Forms.Panel();
-			this.PictureBoxImageSample = new AgentCharacterEditor.FrameSample();
-			this.ToolStripShiftUp = new DoubleAgent.ToolStripEx();
-			this.ButtonShiftUp = new DoubleAgent.ToolStripButtonEx();
-			this.ToolStripShiftRight = new DoubleAgent.ToolStripEx();
-			this.ButtonShiftRight = new DoubleAgent.ToolStripButtonEx();
-			this.ToolStripShiftDown = new DoubleAgent.ToolStripEx();
-			this.ButtonShiftDown = new DoubleAgent.ToolStripButtonEx();
-			this.ToolStripShiftLeft = new DoubleAgent.ToolStripEx();
-			this.ButtonShiftLeft = new DoubleAgent.ToolStripButtonEx();
-			this.CheckBoxTransparent = new DoubleAgent.CheckBoxCompat();
-			this.PanelImagesLeft = new System.Windows.Forms.Panel();
 			this.ListViewImages = new DoubleAgent.ListViewEx();
 			this.ColumnHeaderImage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.ColumnHeaderPosition = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -91,28 +80,55 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonChooseFile = new DoubleAgent.ToolStripButtonCompat();
 			this.ButtonMoveUp = new DoubleAgent.ToolStripButtonCompat();
 			this.ButtonMoveDown = new DoubleAgent.ToolStripButtonCompat();
-			this.LabelDurationUnits = new DoubleAgent.LabelCompat();
-			this.LabelDuration = new DoubleAgent.LabelCompat();
+			this.GroupBoxFrame = new System.Windows.Forms.GroupBox();
+			this.PictureBoxFrameSample = new AgentCharacterEditor.FrameSample();
+			this.GroupBoxImage = new System.Windows.Forms.GroupBox();
+			this.PanelImageDetails = new System.Windows.Forms.Panel();
+			this.LabelOffsetX = new DoubleAgent.LabelCompat();
+			this.NumericOffsetX = new DoubleAgent.NumericUpDownEx();
+			this.LabelOffsetY = new DoubleAgent.LabelCompat();
+			this.NumericOffsetY = new DoubleAgent.NumericUpDownEx();
+			this.CheckBoxTransparent = new DoubleAgent.CheckBoxCompat();
+			this.PanelSample = new System.Windows.Forms.TableLayoutPanel();
+			this.PanelImageClip = new System.Windows.Forms.Panel();
+			this.PictureBoxImageSample = new AgentCharacterEditor.FrameSample();
+			this.ToolStripShiftUp = new DoubleAgent.ToolStripEx();
+			this.ButtonShiftUp = new DoubleAgent.ToolStripButtonEx();
+			this.ToolStripShiftRight = new DoubleAgent.ToolStripEx();
+			this.ButtonShiftRight = new DoubleAgent.ToolStripButtonEx();
+			this.ToolStripShiftDown = new DoubleAgent.ToolStripEx();
+			this.ButtonShiftDown = new DoubleAgent.ToolStripButtonEx();
+			this.ToolStripShiftLeft = new DoubleAgent.ToolStripEx();
+			this.ButtonShiftLeft = new DoubleAgent.ToolStripButtonEx();
 			this.GroupBoxSound = new DoubleAgent.GroupBoxCompat();
 			this.ToolStripSound = new DoubleAgent.ToolStripEx();
 			this.ButtonSoundPreview = new DoubleAgent.ToolStripButtonCompat();
+			this.TextBoxSoundFile = new DoubleAgent.TextBoxEx();
 			this.ToolStripSoundFile = new DoubleAgent.ToolStripEx();
 			this.ButtonSoundImport = new DoubleAgent.ToolStripButtonCompat();
 			this.ButtonSoundExport = new DoubleAgent.ToolStripButtonCompat();
-			this.TextBoxSoundFile = new DoubleAgent.TextBoxEx();
-			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
-			this.PanelTop = new System.Windows.Forms.Panel();
-			this.NumericDuration = new DoubleAgent.NumericUpDownEx();
-			this.PictureBoxFrameSample = new AgentCharacterEditor.FrameSample();
-			toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			PanelFrame = new System.Windows.Forms.Panel();
 			toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-			this.PanelOverlayOffset.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetX)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetY)).BeginInit();
+			toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			PanelMiddle = new System.Windows.Forms.TableLayoutPanel();
+			PanelImage = new System.Windows.Forms.TableLayoutPanel();
+			PanelSound = new System.Windows.Forms.TableLayoutPanel();
+			this.PanelMain.SuspendLayout();
+			PanelFrame.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.NumericDuration)).BeginInit();
 			this.GroupBoxImages.SuspendLayout();
 			this.PanelImages.SuspendLayout();
-			this.FlowLayoutRight.SuspendLayout();
+			this.ContextMenuImages.SuspendLayout();
+			this.ToolStripImages.SuspendLayout();
+			PanelMiddle.SuspendLayout();
+			this.GroupBoxFrame.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.PictureBoxFrameSample)).BeginInit();
+			this.GroupBoxImage.SuspendLayout();
+			PanelImage.SuspendLayout();
+			this.PanelImageDetails.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetX)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetY)).BeginInit();
 			this.PanelSample.SuspendLayout();
 			this.PanelImageClip.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxImageSample)).BeginInit();
@@ -120,32 +136,50 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripShiftRight.SuspendLayout();
 			this.ToolStripShiftDown.SuspendLayout();
 			this.ToolStripShiftLeft.SuspendLayout();
-			this.PanelImagesLeft.SuspendLayout();
-			this.ContextMenuImages.SuspendLayout();
-			this.ToolStripImages.SuspendLayout();
 			this.GroupBoxSound.SuspendLayout();
+			PanelSound.SuspendLayout();
 			this.ToolStripSound.SuspendLayout();
 			this.ToolStripSoundFile.SuspendLayout();
-			this.PanelMain.SuspendLayout();
-			this.PanelTop.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.NumericDuration)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.PictureBoxFrameSample)).BeginInit();
 			this.SuspendLayout();
 			// 
-			// toolStripSeparator1
+			// PanelMain
 			// 
-			toolStripSeparator1.Name = "toolStripSeparator1";
-			toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
+			this.PanelMain.ColumnCount = 1;
+			this.PanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.Controls.Add(PanelFrame, 0, 0);
+			this.PanelMain.Controls.Add(this.GroupBoxImages, 0, 1);
+			this.PanelMain.Controls.Add(PanelMiddle, 0, 2);
+			this.PanelMain.Controls.Add(this.GroupBoxSound, 0, 3);
+			this.PanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+			this.PanelMain.Location = new System.Drawing.Point(9, 0);
+			this.PanelMain.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelMain.Name = "PanelMain";
+			this.PanelMain.RowCount = 4;
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.PanelMain.Size = new System.Drawing.Size(682, 650);
+			this.PanelMain.TabIndex = 0;
 			// 
-			// toolStripSeparator2
+			// PanelFrame
 			// 
-			toolStripSeparator2.Name = "toolStripSeparator2";
-			toolStripSeparator2.Size = new System.Drawing.Size(218, 6);
-			// 
-			// toolStripSeparator3
-			// 
-			toolStripSeparator3.Name = "toolStripSeparator3";
-			toolStripSeparator3.Size = new System.Drawing.Size(218, 6);
+			PanelFrame.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			PanelFrame.AutoSize = true;
+			PanelFrame.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			PanelFrame.Controls.Add(this.LabelFrameName);
+			PanelFrame.Controls.Add(this.TextBoxFrameName);
+			PanelFrame.Controls.Add(this.LabelDuration);
+			PanelFrame.Controls.Add(this.NumericDuration);
+			PanelFrame.Controls.Add(this.LabelDurationUnits);
+			PanelFrame.Location = new System.Drawing.Point(0, 0);
+			PanelFrame.Margin = new System.Windows.Forms.Padding(0);
+			PanelFrame.Name = "PanelFrame";
+			PanelFrame.Size = new System.Drawing.Size(682, 28);
+			PanelFrame.TabIndex = 0;
 			// 
 			// LabelFrameName
 			// 
@@ -153,368 +187,101 @@ namespace AgentCharacterEditor.Panels
 			this.LabelFrameName.Location = new System.Drawing.Point(0, 6);
 			this.LabelFrameName.Name = "LabelFrameName";
 			this.LabelFrameName.Size = new System.Drawing.Size(48, 17);
-			this.LabelFrameName.TabIndex = 1;
+			this.LabelFrameName.TabIndex = 0;
 			this.LabelFrameName.Text = "Frame";
-			// 
-			// PanelOverlayOffset
-			// 
-			this.PanelOverlayOffset.AutoSize = true;
-			this.PanelOverlayOffset.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.PanelOverlayOffset.Controls.Add(this.LabelOffsetX);
-			this.PanelOverlayOffset.Controls.Add(this.NumericOffsetX);
-			this.PanelOverlayOffset.Controls.Add(this.LabelOffsetY);
-			this.PanelOverlayOffset.Controls.Add(this.NumericOffsetY);
-			this.PanelOverlayOffset.Location = new System.Drawing.Point(12, 29);
-			this.PanelOverlayOffset.Margin = new System.Windows.Forms.Padding(0, 29, 0, 12);
-			this.PanelOverlayOffset.Name = "PanelOverlayOffset";
-			this.PanelOverlayOffset.Size = new System.Drawing.Size(236, 28);
-			this.PanelOverlayOffset.TabIndex = 0;
-			// 
-			// LabelOffsetX
-			// 
-			this.LabelOffsetX.AutoSize = true;
-			this.LabelOffsetX.Location = new System.Drawing.Point(3, 5);
-			this.LabelOffsetX.Name = "LabelOffsetX";
-			this.LabelOffsetX.Size = new System.Drawing.Size(59, 17);
-			this.LabelOffsetX.TabIndex = 0;
-			this.LabelOffsetX.Text = "X Offset";
-			// 
-			// NumericOffsetX
-			// 
-			this.NumericOffsetX.DefaultBackColor = System.Drawing.SystemColors.Window;
-			this.NumericOffsetX.HighlightBackColor = System.Drawing.Color.Pink;
-			this.NumericOffsetX.Location = new System.Drawing.Point(68, 3);
-			this.NumericOffsetX.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-			this.NumericOffsetX.Minimum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            -2147483648});
-			this.NumericOffsetX.Name = "NumericOffsetX";
-			this.NumericOffsetX.Size = new System.Drawing.Size(47, 22);
-			this.NumericOffsetX.TabIndex = 1;
-			this.NumericOffsetX.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.NumericOffsetX.Validated += new System.EventHandler(this.NumericOffsetX_Validated);
-			// 
-			// LabelOffsetY
-			// 
-			this.LabelOffsetY.AutoSize = true;
-			this.LabelOffsetY.Location = new System.Drawing.Point(121, 5);
-			this.LabelOffsetY.Name = "LabelOffsetY";
-			this.LabelOffsetY.Size = new System.Drawing.Size(59, 17);
-			this.LabelOffsetY.TabIndex = 2;
-			this.LabelOffsetY.Text = "Y Offset";
-			// 
-			// NumericOffsetY
-			// 
-			this.NumericOffsetY.DefaultBackColor = System.Drawing.SystemColors.Window;
-			this.NumericOffsetY.HighlightBackColor = System.Drawing.Color.Pink;
-			this.NumericOffsetY.Location = new System.Drawing.Point(186, 3);
-			this.NumericOffsetY.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-			this.NumericOffsetY.Minimum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            -2147483648});
-			this.NumericOffsetY.Name = "NumericOffsetY";
-			this.NumericOffsetY.Size = new System.Drawing.Size(47, 22);
-			this.NumericOffsetY.TabIndex = 3;
-			this.NumericOffsetY.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.NumericOffsetY.Validated += new System.EventHandler(this.NumericOffsetY_Validated);
 			// 
 			// TextBoxFrameName
 			// 
 			this.TextBoxFrameName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.TextBoxFrameName.Location = new System.Drawing.Point(132, 3);
+			this.TextBoxFrameName.Location = new System.Drawing.Point(131, 3);
 			this.TextBoxFrameName.MaximumSize = new System.Drawing.Size(600, 50);
 			this.TextBoxFrameName.Name = "TextBoxFrameName";
 			this.TextBoxFrameName.ReadOnly = true;
-			this.TextBoxFrameName.Size = new System.Drawing.Size(550, 22);
-			this.TextBoxFrameName.TabIndex = 2;
+			this.TextBoxFrameName.Size = new System.Drawing.Size(296, 22);
+			this.TextBoxFrameName.TabIndex = 1;
+			// 
+			// LabelDuration
+			// 
+			this.LabelDuration.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.LabelDuration.AutoSize = true;
+			this.LabelDuration.Location = new System.Drawing.Point(433, 6);
+			this.LabelDuration.Name = "LabelDuration";
+			this.LabelDuration.Size = new System.Drawing.Size(62, 17);
+			this.LabelDuration.TabIndex = 2;
+			this.LabelDuration.Text = "Duration";
+			// 
+			// NumericDuration
+			// 
+			this.NumericDuration.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.NumericDuration.AutoSize = true;
+			this.NumericDuration.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericDuration.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericDuration.Location = new System.Drawing.Point(501, 3);
+			this.NumericDuration.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+			this.NumericDuration.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.NumericDuration.Name = "NumericDuration";
+			this.NumericDuration.Size = new System.Drawing.Size(64, 22);
+			this.NumericDuration.TabIndex = 3;
+			this.NumericDuration.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.NumericDuration.Validated += new System.EventHandler(this.NumericDuration_Validated);
+			// 
+			// LabelDurationUnits
+			// 
+			this.LabelDurationUnits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.LabelDurationUnits.AutoSize = true;
+			this.LabelDurationUnits.Location = new System.Drawing.Point(571, 6);
+			this.LabelDurationUnits.Name = "LabelDurationUnits";
+			this.LabelDurationUnits.Size = new System.Drawing.Size(111, 17);
+			this.LabelDurationUnits.TabIndex = 4;
+			this.LabelDurationUnits.Text = "(1/100 seconds)";
 			// 
 			// GroupBoxImages
 			// 
 			this.GroupBoxImages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.GroupBoxImages.AutoSize = true;
+			this.GroupBoxImages.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.GroupBoxImages.Controls.Add(this.PanelImages);
-			this.GroupBoxImages.Location = new System.Drawing.Point(0, 197);
+			this.GroupBoxImages.Location = new System.Drawing.Point(0, 37);
 			this.GroupBoxImages.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
 			this.GroupBoxImages.Name = "GroupBoxImages";
 			this.GroupBoxImages.Padding = new System.Windows.Forms.Padding(6, 9, 6, 6);
-			this.GroupBoxImages.Size = new System.Drawing.Size(682, 382);
+			this.GroupBoxImages.Size = new System.Drawing.Size(682, 223);
 			this.GroupBoxImages.TabIndex = 0;
 			this.GroupBoxImages.TabStop = false;
 			this.GroupBoxImages.Text = "Images";
 			// 
 			// PanelImages
 			// 
-			this.PanelImages.ColumnCount = 2;
-			this.PanelImages.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
-			this.PanelImages.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
-			this.PanelImages.Controls.Add(this.FlowLayoutRight, 1, 0);
-			this.PanelImages.Controls.Add(this.PanelImagesLeft, 0, 0);
+			this.PanelImages.AutoSize = true;
+			this.PanelImages.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.PanelImages.ColumnCount = 1;
+			this.PanelImages.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelImages.Controls.Add(this.ListViewImages, 0, 1);
+			this.PanelImages.Controls.Add(this.ToolStripImages, 0, 0);
 			this.PanelImages.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PanelImages.Location = new System.Drawing.Point(6, 24);
 			this.PanelImages.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelImages.Name = "PanelImages";
-			this.PanelImages.RowCount = 1;
+			this.PanelImages.RowCount = 2;
+			this.PanelImages.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.PanelImages.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.PanelImages.Size = new System.Drawing.Size(670, 352);
+			this.PanelImages.Size = new System.Drawing.Size(670, 193);
 			this.PanelImages.TabIndex = 0;
-			// 
-			// FlowLayoutRight
-			// 
-			this.FlowLayoutRight.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.FlowLayoutRight.Controls.Add(this.PanelOverlayOffset);
-			this.FlowLayoutRight.Controls.Add(this.PanelSample);
-			this.FlowLayoutRight.Controls.Add(this.CheckBoxTransparent);
-			this.FlowLayoutRight.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-			this.FlowLayoutRight.Location = new System.Drawing.Point(402, 0);
-			this.FlowLayoutRight.Margin = new System.Windows.Forms.Padding(0);
-			this.FlowLayoutRight.Name = "FlowLayoutRight";
-			this.FlowLayoutRight.Padding = new System.Windows.Forms.Padding(12, 0, 6, 6);
-			this.FlowLayoutRight.Size = new System.Drawing.Size(268, 352);
-			this.FlowLayoutRight.TabIndex = 1;
-			this.FlowLayoutRight.WrapContents = false;
-			// 
-			// PanelSample
-			// 
-			this.PanelSample.AutoSize = true;
-			this.PanelSample.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.PanelSample.ColumnCount = 3;
-			this.PanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-			this.PanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.PanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-			this.PanelSample.Controls.Add(this.PanelImageClip, 1, 1);
-			this.PanelSample.Controls.Add(this.ToolStripShiftUp, 1, 0);
-			this.PanelSample.Controls.Add(this.ToolStripShiftRight, 2, 1);
-			this.PanelSample.Controls.Add(this.ToolStripShiftDown, 1, 2);
-			this.PanelSample.Controls.Add(this.ToolStripShiftLeft, 0, 1);
-			this.PanelSample.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-			this.PanelSample.Location = new System.Drawing.Point(12, 69);
-			this.PanelSample.Margin = new System.Windows.Forms.Padding(0);
-			this.PanelSample.Name = "PanelSample";
-			this.PanelSample.RowCount = 3;
-			this.PanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-			this.PanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.PanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-			this.PanelSample.Size = new System.Drawing.Size(186, 186);
-			this.PanelSample.TabIndex = 1;
-			// 
-			// PanelImageClip
-			// 
-			this.PanelImageClip.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-			this.PanelImageClip.BackColor = System.Drawing.SystemColors.ControlDark;
-			this.PanelImageClip.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.PanelImageClip.Controls.Add(this.PictureBoxImageSample);
-			this.PanelImageClip.Location = new System.Drawing.Point(28, 28);
-			this.PanelImageClip.Margin = new System.Windows.Forms.Padding(0);
-			this.PanelImageClip.Name = "PanelImageClip";
-			this.PanelImageClip.Size = new System.Drawing.Size(130, 130);
-			this.PanelImageClip.TabIndex = 4;
-			// 
-			// PictureBoxImageSample
-			// 
-			this.PictureBoxImageSample.BackColor = System.Drawing.SystemColors.Window;
-			this.PictureBoxImageSample.Location = new System.Drawing.Point(0, 0);
-			this.PictureBoxImageSample.Margin = new System.Windows.Forms.Padding(0);
-			this.PictureBoxImageSample.Name = "PictureBoxImageSample";
-			this.PictureBoxImageSample.Size = new System.Drawing.Size(128, 128);
-			this.PictureBoxImageSample.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-			this.PictureBoxImageSample.TabIndex = 2;
-			this.PictureBoxImageSample.TabStop = false;
-			// 
-			// ToolStripShiftUp
-			// 
-			this.ToolStripShiftUp.AllowMerge = false;
-			this.ToolStripShiftUp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.ToolStripShiftUp.AutoSize = false;
-			this.ToolStripShiftUp.BackColor = System.Drawing.SystemColors.Control;
-			this.ToolStripShiftUp.CanOverflow = false;
-			this.ToolStripShiftUp.Dock = System.Windows.Forms.DockStyle.None;
-			this.ToolStripShiftUp.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-			this.ToolStripShiftUp.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ButtonShiftUp});
-			this.ToolStripShiftUp.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Table;
-			this.ToolStripShiftUp.Location = new System.Drawing.Point(28, 0);
-			this.ToolStripShiftUp.MaximumSize = new System.Drawing.Size(10000, 23);
-			this.ToolStripShiftUp.MinimumSize = new System.Drawing.Size(0, 23);
-			this.ToolStripShiftUp.Name = "ToolStripShiftUp";
-			this.ToolStripShiftUp.Padding = new System.Windows.Forms.Padding(0);
-			this.ToolStripShiftUp.Size = new System.Drawing.Size(130, 23);
-			this.ToolStripShiftUp.TabIndex = 0;
-			// 
-			// ButtonShiftUp
-			// 
-			this.ButtonShiftUp.AutoSize = false;
-			this.ButtonShiftUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonShiftUp.Image = global::AgentCharacterEditor.Properties.Resources.ImgShiftUp;
-			this.ButtonShiftUp.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-			this.ButtonShiftUp.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonShiftUp.Margin = new System.Windows.Forms.Padding(0);
-			this.ButtonShiftUp.Name = "ButtonShiftUp";
-			this.ButtonShiftUp.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-			this.ButtonShiftUp.Padding = new System.Windows.Forms.Padding(2);
-			this.ButtonShiftUp.RepeatEnabled = true;
-			this.ButtonShiftUp.Size = new System.Drawing.Size(24, 24);
-			this.ButtonShiftUp.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftUp_RepeatEnd);
-			this.ButtonShiftUp.Click += new System.EventHandler(this.ButtonShiftUp_Click);
-			// 
-			// ToolStripShiftRight
-			// 
-			this.ToolStripShiftRight.AllowMerge = false;
-			this.ToolStripShiftRight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.ToolStripShiftRight.AutoSize = false;
-			this.ToolStripShiftRight.BackColor = System.Drawing.Color.Transparent;
-			this.ToolStripShiftRight.CanOverflow = false;
-			this.ToolStripShiftRight.Dock = System.Windows.Forms.DockStyle.None;
-			this.ToolStripShiftRight.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-			this.ToolStripShiftRight.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ButtonShiftRight});
-			this.ToolStripShiftRight.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Table;
-			this.ToolStripShiftRight.Location = new System.Drawing.Point(163, 28);
-			this.ToolStripShiftRight.MaximumSize = new System.Drawing.Size(23, 10000);
-			this.ToolStripShiftRight.MinimumSize = new System.Drawing.Size(23, 0);
-			this.ToolStripShiftRight.Name = "ToolStripShiftRight";
-			this.ToolStripShiftRight.Padding = new System.Windows.Forms.Padding(0);
-			this.ToolStripShiftRight.Size = new System.Drawing.Size(23, 130);
-			this.ToolStripShiftRight.TabIndex = 2;
-			// 
-			// ButtonShiftRight
-			// 
-			this.ButtonShiftRight.AutoSize = false;
-			this.ButtonShiftRight.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonShiftRight.Image = global::AgentCharacterEditor.Properties.Resources.ImgShiftRight;
-			this.ButtonShiftRight.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-			this.ButtonShiftRight.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonShiftRight.Margin = new System.Windows.Forms.Padding(0);
-			this.ButtonShiftRight.Name = "ButtonShiftRight";
-			this.ButtonShiftRight.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-			this.ButtonShiftRight.Padding = new System.Windows.Forms.Padding(2);
-			this.ButtonShiftRight.RepeatEnabled = true;
-			this.ButtonShiftRight.Size = new System.Drawing.Size(24, 24);
-			this.ButtonShiftRight.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftRight_RepeatEnd);
-			this.ButtonShiftRight.Click += new System.EventHandler(this.ButtonShiftRight_Click);
-			// 
-			// ToolStripShiftDown
-			// 
-			this.ToolStripShiftDown.AllowMerge = false;
-			this.ToolStripShiftDown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.ToolStripShiftDown.AutoSize = false;
-			this.ToolStripShiftDown.BackColor = System.Drawing.Color.Transparent;
-			this.ToolStripShiftDown.CanOverflow = false;
-			this.ToolStripShiftDown.Dock = System.Windows.Forms.DockStyle.None;
-			this.ToolStripShiftDown.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-			this.ToolStripShiftDown.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ButtonShiftDown});
-			this.ToolStripShiftDown.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Table;
-			this.ToolStripShiftDown.Location = new System.Drawing.Point(28, 163);
-			this.ToolStripShiftDown.MaximumSize = new System.Drawing.Size(10000, 23);
-			this.ToolStripShiftDown.MinimumSize = new System.Drawing.Size(0, 23);
-			this.ToolStripShiftDown.Name = "ToolStripShiftDown";
-			this.ToolStripShiftDown.Padding = new System.Windows.Forms.Padding(0);
-			this.ToolStripShiftDown.Size = new System.Drawing.Size(130, 23);
-			this.ToolStripShiftDown.TabIndex = 3;
-			// 
-			// ButtonShiftDown
-			// 
-			this.ButtonShiftDown.AutoSize = false;
-			this.ButtonShiftDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonShiftDown.Image = global::AgentCharacterEditor.Properties.Resources.ImgShiftDown;
-			this.ButtonShiftDown.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-			this.ButtonShiftDown.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonShiftDown.Margin = new System.Windows.Forms.Padding(0);
-			this.ButtonShiftDown.Name = "ButtonShiftDown";
-			this.ButtonShiftDown.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-			this.ButtonShiftDown.Padding = new System.Windows.Forms.Padding(2);
-			this.ButtonShiftDown.RepeatEnabled = true;
-			this.ButtonShiftDown.Size = new System.Drawing.Size(24, 24);
-			this.ButtonShiftDown.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftDown_RepeatEnd);
-			this.ButtonShiftDown.Click += new System.EventHandler(this.ButtonShiftDown_Click);
-			// 
-			// ToolStripShiftLeft
-			// 
-			this.ToolStripShiftLeft.AllowMerge = false;
-			this.ToolStripShiftLeft.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-			this.ToolStripShiftLeft.AutoSize = false;
-			this.ToolStripShiftLeft.BackColor = System.Drawing.Color.Transparent;
-			this.ToolStripShiftLeft.CanOverflow = false;
-			this.ToolStripShiftLeft.Dock = System.Windows.Forms.DockStyle.None;
-			this.ToolStripShiftLeft.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-			this.ToolStripShiftLeft.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ButtonShiftLeft});
-			this.ToolStripShiftLeft.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Table;
-			this.ToolStripShiftLeft.Location = new System.Drawing.Point(0, 28);
-			this.ToolStripShiftLeft.MaximumSize = new System.Drawing.Size(23, 10000);
-			this.ToolStripShiftLeft.MinimumSize = new System.Drawing.Size(23, 0);
-			this.ToolStripShiftLeft.Name = "ToolStripShiftLeft";
-			this.ToolStripShiftLeft.Padding = new System.Windows.Forms.Padding(0);
-			this.ToolStripShiftLeft.Size = new System.Drawing.Size(23, 130);
-			this.ToolStripShiftLeft.TabIndex = 1;
-			// 
-			// ButtonShiftLeft
-			// 
-			this.ButtonShiftLeft.AutoSize = false;
-			this.ButtonShiftLeft.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonShiftLeft.Image = global::AgentCharacterEditor.Properties.Resources.ImgShiftLeft;
-			this.ButtonShiftLeft.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-			this.ButtonShiftLeft.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonShiftLeft.Margin = new System.Windows.Forms.Padding(0);
-			this.ButtonShiftLeft.Name = "ButtonShiftLeft";
-			this.ButtonShiftLeft.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-			this.ButtonShiftLeft.Padding = new System.Windows.Forms.Padding(2);
-			this.ButtonShiftLeft.RepeatEnabled = true;
-			this.ButtonShiftLeft.Size = new System.Drawing.Size(24, 24);
-			this.ButtonShiftLeft.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftLeft_RepeatEnd);
-			this.ButtonShiftLeft.Click += new System.EventHandler(this.ButtonShiftLeft_Click);
-			// 
-			// CheckBoxTransparent
-			// 
-			this.CheckBoxTransparent.AutoSize = true;
-			this.CheckBoxTransparent.Location = new System.Drawing.Point(15, 267);
-			this.CheckBoxTransparent.Margin = new System.Windows.Forms.Padding(3, 12, 3, 3);
-			this.CheckBoxTransparent.Name = "CheckBoxTransparent";
-			this.CheckBoxTransparent.Size = new System.Drawing.Size(151, 21);
-			this.CheckBoxTransparent.TabIndex = 2;
-			this.CheckBoxTransparent.Text = "Show transparency";
-			this.CheckBoxTransparent.UseVisualStyleBackColor = true;
-			this.CheckBoxTransparent.CheckedChanged += new System.EventHandler(this.CheckBoxTransparent_CheckedChanged);
-			// 
-			// PanelImagesLeft
-			// 
-			this.PanelImagesLeft.Controls.Add(this.ListViewImages);
-			this.PanelImagesLeft.Controls.Add(this.ToolStripImages);
-			this.PanelImagesLeft.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PanelImagesLeft.Location = new System.Drawing.Point(0, 0);
-			this.PanelImagesLeft.Margin = new System.Windows.Forms.Padding(0);
-			this.PanelImagesLeft.Name = "PanelImagesLeft";
-			this.PanelImagesLeft.Size = new System.Drawing.Size(402, 352);
-			this.PanelImagesLeft.TabIndex = 2;
 			// 
 			// ListViewImages
 			// 
@@ -531,12 +298,15 @@ namespace AgentCharacterEditor.Panels
 			this.ListViewImages.GridLines = true;
 			this.ListViewImages.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.ListViewImages.HideSelection = false;
-			this.ListViewImages.Location = new System.Drawing.Point(0, 29);
+			this.ListViewImages.Location = new System.Drawing.Point(0, 30);
+			this.ListViewImages.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
+			this.ListViewImages.MaximumSize = new System.Drawing.Size(10000, 400);
+			this.ListViewImages.MinimumSize = new System.Drawing.Size(200, 100);
 			this.ListViewImages.MultiSelect = false;
 			this.ListViewImages.Name = "ListViewImages";
 			this.ListViewImages.ShowGroups = false;
 			this.ListViewImages.ShowItemToolTips = true;
-			this.ListViewImages.Size = new System.Drawing.Size(402, 323);
+			this.ListViewImages.Size = new System.Drawing.Size(670, 163);
 			this.ListViewImages.TabIndex = 1;
 			this.ListViewImages.UseCompatibleStateImageBehavior = false;
 			this.ListViewImages.View = System.Windows.Forms.View.Details;
@@ -574,7 +344,7 @@ namespace AgentCharacterEditor.Panels
             this.MenuItemMoveDown,
             toolStripSeparator3});
 			this.ContextMenuImages.Name = "ContextMenuImages";
-			this.ContextMenuImages.Size = new System.Drawing.Size(222, 150);
+			this.ContextMenuImages.Size = new System.Drawing.Size(222, 128);
 			this.ContextMenuImages.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuImages_Opening);
 			// 
 			// MenuItemAdd
@@ -595,6 +365,11 @@ namespace AgentCharacterEditor.Panels
 			this.MenuItemChooseFile.Text = "Open image file";
 			this.MenuItemChooseFile.Click += new System.EventHandler(this.ButtonOpen_Click);
 			// 
+			// toolStripSeparator2
+			// 
+			toolStripSeparator2.Name = "toolStripSeparator2";
+			toolStripSeparator2.Size = new System.Drawing.Size(218, 6);
+			// 
 			// MenuItemMoveUp
 			// 
 			this.MenuItemMoveUp.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveUp;
@@ -612,6 +387,11 @@ namespace AgentCharacterEditor.Panels
 			this.MenuItemMoveDown.Size = new System.Drawing.Size(221, 28);
 			this.MenuItemMoveDown.Text = "Move image down";
 			this.MenuItemMoveDown.Click += new System.EventHandler(this.ButtonMoveDown_Click);
+			// 
+			// toolStripSeparator3
+			// 
+			toolStripSeparator3.Name = "toolStripSeparator3";
+			toolStripSeparator3.Size = new System.Drawing.Size(218, 6);
 			// 
 			// ToolStripImages
 			// 
@@ -665,6 +445,11 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonChooseFile.Text = "Open image file";
 			this.ButtonChooseFile.Click += new System.EventHandler(this.ButtonOpen_Click);
 			// 
+			// toolStripSeparator1
+			// 
+			toolStripSeparator1.Name = "toolStripSeparator1";
+			toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
+			// 
 			// ButtonMoveUp
 			// 
 			this.ButtonMoveUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -687,29 +472,381 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonMoveDown.Text = "Move image down";
 			this.ButtonMoveDown.Click += new System.EventHandler(this.ButtonMoveDown_Click);
 			// 
-			// LabelDurationUnits
+			// PanelMiddle
 			// 
-			this.LabelDurationUnits.AutoSize = true;
-			this.LabelDurationUnits.Location = new System.Drawing.Point(202, 33);
-			this.LabelDurationUnits.Name = "LabelDurationUnits";
-			this.LabelDurationUnits.Size = new System.Drawing.Size(111, 17);
-			this.LabelDurationUnits.TabIndex = 4;
-			this.LabelDurationUnits.Text = "(1/100 seconds)";
+			PanelMiddle.AutoSize = true;
+			PanelMiddle.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			PanelMiddle.ColumnCount = 2;
+			PanelMiddle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			PanelMiddle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			PanelMiddle.Controls.Add(this.GroupBoxFrame, 1, 0);
+			PanelMiddle.Controls.Add(this.GroupBoxImage, 0, 0);
+			PanelMiddle.Dock = System.Windows.Forms.DockStyle.Fill;
+			PanelMiddle.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+			PanelMiddle.Location = new System.Drawing.Point(0, 260);
+			PanelMiddle.Margin = new System.Windows.Forms.Padding(0);
+			PanelMiddle.Name = "PanelMiddle";
+			PanelMiddle.RowCount = 1;
+			PanelMiddle.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			PanelMiddle.Size = new System.Drawing.Size(682, 319);
+			PanelMiddle.TabIndex = 3;
 			// 
-			// LabelDuration
+			// GroupBoxFrame
 			// 
-			this.LabelDuration.AutoSize = true;
-			this.LabelDuration.Location = new System.Drawing.Point(0, 33);
-			this.LabelDuration.Name = "LabelDuration";
-			this.LabelDuration.Size = new System.Drawing.Size(62, 17);
-			this.LabelDuration.TabIndex = 2;
-			this.LabelDuration.Text = "Duration";
+			this.GroupBoxFrame.AutoSize = true;
+			this.GroupBoxFrame.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.GroupBoxFrame.Controls.Add(this.PictureBoxFrameSample);
+			this.GroupBoxFrame.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.GroupBoxFrame.Location = new System.Drawing.Point(373, 9);
+			this.GroupBoxFrame.Margin = new System.Windows.Forms.Padding(9, 9, 0, 0);
+			this.GroupBoxFrame.Name = "GroupBoxFrame";
+			this.GroupBoxFrame.Padding = new System.Windows.Forms.Padding(6, 9, 6, 6);
+			this.GroupBoxFrame.Size = new System.Drawing.Size(309, 310);
+			this.GroupBoxFrame.TabIndex = 4;
+			this.GroupBoxFrame.TabStop = false;
+			this.GroupBoxFrame.Text = "Frame";
+			// 
+			// PictureBoxFrameSample
+			// 
+			this.PictureBoxFrameSample.BackColor = System.Drawing.SystemColors.Window;
+			this.PictureBoxFrameSample.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.PictureBoxFrameSample.Location = new System.Drawing.Point(6, 24);
+			this.PictureBoxFrameSample.Margin = new System.Windows.Forms.Padding(0);
+			this.PictureBoxFrameSample.MaximumSize = new System.Drawing.Size(258, 258);
+			this.PictureBoxFrameSample.Name = "PictureBoxFrameSample";
+			this.PictureBoxFrameSample.Size = new System.Drawing.Size(128, 128);
+			this.PictureBoxFrameSample.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.PictureBoxFrameSample.TabIndex = 2;
+			this.PictureBoxFrameSample.TabStop = false;
+			// 
+			// GroupBoxImage
+			// 
+			this.GroupBoxImage.AutoSize = true;
+			this.GroupBoxImage.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.GroupBoxImage.Controls.Add(PanelImage);
+			this.GroupBoxImage.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.GroupBoxImage.Location = new System.Drawing.Point(0, 9);
+			this.GroupBoxImage.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
+			this.GroupBoxImage.Name = "GroupBoxImage";
+			this.GroupBoxImage.Padding = new System.Windows.Forms.Padding(6, 9, 6, 6);
+			this.GroupBoxImage.Size = new System.Drawing.Size(364, 310);
+			this.GroupBoxImage.TabIndex = 4;
+			this.GroupBoxImage.TabStop = false;
+			this.GroupBoxImage.Text = "Image %1";
+			// 
+			// PanelImage
+			// 
+			PanelImage.AutoSize = true;
+			PanelImage.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			PanelImage.ColumnCount = 2;
+			PanelImage.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			PanelImage.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			PanelImage.Controls.Add(this.PanelImageDetails, 1, 0);
+			PanelImage.Controls.Add(this.PanelSample, 0, 0);
+			PanelImage.Dock = System.Windows.Forms.DockStyle.Fill;
+			PanelImage.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+			PanelImage.Location = new System.Drawing.Point(6, 24);
+			PanelImage.Margin = new System.Windows.Forms.Padding(0);
+			PanelImage.Name = "PanelImage";
+			PanelImage.RowCount = 1;
+			PanelImage.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			PanelImage.Size = new System.Drawing.Size(352, 280);
+			PanelImage.TabIndex = 2;
+			// 
+			// PanelImageDetails
+			// 
+			this.PanelImageDetails.AutoSize = true;
+			this.PanelImageDetails.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.PanelImageDetails.Controls.Add(this.LabelOffsetX);
+			this.PanelImageDetails.Controls.Add(this.NumericOffsetX);
+			this.PanelImageDetails.Controls.Add(this.LabelOffsetY);
+			this.PanelImageDetails.Controls.Add(this.NumericOffsetY);
+			this.PanelImageDetails.Controls.Add(this.CheckBoxTransparent);
+			this.PanelImageDetails.Location = new System.Drawing.Point(198, 27);
+			this.PanelImageDetails.Margin = new System.Windows.Forms.Padding(12, 27, 0, 0);
+			this.PanelImageDetails.Name = "PanelImageDetails";
+			this.PanelImageDetails.Size = new System.Drawing.Size(154, 89);
+			this.PanelImageDetails.TabIndex = 3;
+			// 
+			// LabelOffsetX
+			// 
+			this.LabelOffsetX.AutoSize = true;
+			this.LabelOffsetX.Location = new System.Drawing.Point(0, 2);
+			this.LabelOffsetX.Name = "LabelOffsetX";
+			this.LabelOffsetX.Size = new System.Drawing.Size(59, 17);
+			this.LabelOffsetX.TabIndex = 0;
+			this.LabelOffsetX.Text = "X Offset";
+			// 
+			// NumericOffsetX
+			// 
+			this.NumericOffsetX.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericOffsetX.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericOffsetX.Location = new System.Drawing.Point(69, 0);
+			this.NumericOffsetX.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+			this.NumericOffsetX.Minimum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            -2147483648});
+			this.NumericOffsetX.Name = "NumericOffsetX";
+			this.NumericOffsetX.Size = new System.Drawing.Size(47, 22);
+			this.NumericOffsetX.TabIndex = 1;
+			this.NumericOffsetX.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.NumericOffsetX.Validated += new System.EventHandler(this.NumericOffsetX_Validated);
+			// 
+			// LabelOffsetY
+			// 
+			this.LabelOffsetY.AutoSize = true;
+			this.LabelOffsetY.Location = new System.Drawing.Point(0, 30);
+			this.LabelOffsetY.Name = "LabelOffsetY";
+			this.LabelOffsetY.Size = new System.Drawing.Size(59, 17);
+			this.LabelOffsetY.TabIndex = 2;
+			this.LabelOffsetY.Text = "Y Offset";
+			// 
+			// NumericOffsetY
+			// 
+			this.NumericOffsetY.DefaultBackColor = System.Drawing.SystemColors.Window;
+			this.NumericOffsetY.HighlightBackColor = System.Drawing.Color.Pink;
+			this.NumericOffsetY.Location = new System.Drawing.Point(69, 28);
+			this.NumericOffsetY.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+			this.NumericOffsetY.Minimum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            -2147483648});
+			this.NumericOffsetY.Name = "NumericOffsetY";
+			this.NumericOffsetY.Size = new System.Drawing.Size(47, 22);
+			this.NumericOffsetY.TabIndex = 3;
+			this.NumericOffsetY.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.NumericOffsetY.Validated += new System.EventHandler(this.NumericOffsetY_Validated);
+			// 
+			// CheckBoxTransparent
+			// 
+			this.CheckBoxTransparent.AutoSize = true;
+			this.CheckBoxTransparent.Location = new System.Drawing.Point(0, 65);
+			this.CheckBoxTransparent.Margin = new System.Windows.Forms.Padding(3, 12, 3, 3);
+			this.CheckBoxTransparent.Name = "CheckBoxTransparent";
+			this.CheckBoxTransparent.Size = new System.Drawing.Size(151, 21);
+			this.CheckBoxTransparent.TabIndex = 2;
+			this.CheckBoxTransparent.Text = "Show transparency";
+			this.CheckBoxTransparent.UseVisualStyleBackColor = true;
+			this.CheckBoxTransparent.CheckedChanged += new System.EventHandler(this.CheckBoxTransparent_CheckedChanged);
+			// 
+			// PanelSample
+			// 
+			this.PanelSample.AutoSize = true;
+			this.PanelSample.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.PanelSample.ColumnCount = 3;
+			this.PanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+			this.PanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.PanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+			this.PanelSample.Controls.Add(this.PanelImageClip, 1, 1);
+			this.PanelSample.Controls.Add(this.ToolStripShiftUp, 1, 0);
+			this.PanelSample.Controls.Add(this.ToolStripShiftRight, 2, 1);
+			this.PanelSample.Controls.Add(this.ToolStripShiftDown, 1, 2);
+			this.PanelSample.Controls.Add(this.ToolStripShiftLeft, 0, 1);
+			this.PanelSample.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+			this.PanelSample.Location = new System.Drawing.Point(0, 0);
+			this.PanelSample.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelSample.Name = "PanelSample";
+			this.PanelSample.RowCount = 3;
+			this.PanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+			this.PanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+			this.PanelSample.Size = new System.Drawing.Size(186, 186);
+			this.PanelSample.TabIndex = 1;
+			// 
+			// PanelImageClip
+			// 
+			this.PanelImageClip.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+			this.PanelImageClip.BackColor = System.Drawing.SystemColors.ControlDark;
+			this.PanelImageClip.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.PanelImageClip.Controls.Add(this.PictureBoxImageSample);
+			this.PanelImageClip.Location = new System.Drawing.Point(28, 28);
+			this.PanelImageClip.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelImageClip.Name = "PanelImageClip";
+			this.PanelImageClip.Size = new System.Drawing.Size(130, 130);
+			this.PanelImageClip.TabIndex = 4;
+			// 
+			// PictureBoxImageSample
+			// 
+			this.PictureBoxImageSample.BackColor = System.Drawing.SystemColors.Window;
+			this.PictureBoxImageSample.Location = new System.Drawing.Point(0, 0);
+			this.PictureBoxImageSample.Margin = new System.Windows.Forms.Padding(0);
+			this.PictureBoxImageSample.Name = "PictureBoxImageSample";
+			this.PictureBoxImageSample.Size = new System.Drawing.Size(128, 128);
+			this.PictureBoxImageSample.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.PictureBoxImageSample.TabIndex = 2;
+			this.PictureBoxImageSample.TabStop = false;
+			// 
+			// ToolStripShiftUp
+			// 
+			this.ToolStripShiftUp.AllowMerge = false;
+			this.ToolStripShiftUp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.ToolStripShiftUp.AutoSize = false;
+			this.ToolStripShiftUp.BackColor = System.Drawing.SystemColors.Control;
+			this.ToolStripShiftUp.CanOverflow = false;
+			this.ToolStripShiftUp.Dock = System.Windows.Forms.DockStyle.None;
+			this.ToolStripShiftUp.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.ToolStripShiftUp.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ButtonShiftUp});
+			this.ToolStripShiftUp.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Table;
+			this.ToolStripShiftUp.Location = new System.Drawing.Point(28, 0);
+			this.ToolStripShiftUp.MaximumSize = new System.Drawing.Size(10000, 24);
+			this.ToolStripShiftUp.MinimumSize = new System.Drawing.Size(0, 24);
+			this.ToolStripShiftUp.Name = "ToolStripShiftUp";
+			this.ToolStripShiftUp.Padding = new System.Windows.Forms.Padding(0);
+			this.ToolStripShiftUp.Size = new System.Drawing.Size(130, 24);
+			this.ToolStripShiftUp.TabIndex = 0;
+			// 
+			// ButtonShiftUp
+			// 
+			this.ButtonShiftUp.AutoSize = false;
+			this.ButtonShiftUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonShiftUp.Image = global::AgentCharacterEditor.Properties.Resources.ImgShiftUp;
+			this.ButtonShiftUp.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+			this.ButtonShiftUp.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonShiftUp.Margin = new System.Windows.Forms.Padding(0);
+			this.ButtonShiftUp.Name = "ButtonShiftUp";
+			this.ButtonShiftUp.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+			this.ButtonShiftUp.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonShiftUp.RepeatEnabled = true;
+			this.ButtonShiftUp.Size = new System.Drawing.Size(24, 24);
+			this.ButtonShiftUp.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftUp_RepeatEnd);
+			this.ButtonShiftUp.Click += new System.EventHandler(this.ButtonShiftUp_Click);
+			// 
+			// ToolStripShiftRight
+			// 
+			this.ToolStripShiftRight.AllowMerge = false;
+			this.ToolStripShiftRight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.ToolStripShiftRight.AutoSize = false;
+			this.ToolStripShiftRight.BackColor = System.Drawing.Color.Transparent;
+			this.ToolStripShiftRight.CanOverflow = false;
+			this.ToolStripShiftRight.Dock = System.Windows.Forms.DockStyle.None;
+			this.ToolStripShiftRight.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.ToolStripShiftRight.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ButtonShiftRight});
+			this.ToolStripShiftRight.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Table;
+			this.ToolStripShiftRight.Location = new System.Drawing.Point(162, 28);
+			this.ToolStripShiftRight.MaximumSize = new System.Drawing.Size(24, 10000);
+			this.ToolStripShiftRight.MinimumSize = new System.Drawing.Size(24, 0);
+			this.ToolStripShiftRight.Name = "ToolStripShiftRight";
+			this.ToolStripShiftRight.Padding = new System.Windows.Forms.Padding(0);
+			this.ToolStripShiftRight.Size = new System.Drawing.Size(24, 130);
+			this.ToolStripShiftRight.TabIndex = 2;
+			// 
+			// ButtonShiftRight
+			// 
+			this.ButtonShiftRight.AutoSize = false;
+			this.ButtonShiftRight.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonShiftRight.Image = global::AgentCharacterEditor.Properties.Resources.ImgShiftRight;
+			this.ButtonShiftRight.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+			this.ButtonShiftRight.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonShiftRight.Margin = new System.Windows.Forms.Padding(0);
+			this.ButtonShiftRight.Name = "ButtonShiftRight";
+			this.ButtonShiftRight.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+			this.ButtonShiftRight.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonShiftRight.RepeatEnabled = true;
+			this.ButtonShiftRight.Size = new System.Drawing.Size(24, 24);
+			this.ButtonShiftRight.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftRight_RepeatEnd);
+			this.ButtonShiftRight.Click += new System.EventHandler(this.ButtonShiftRight_Click);
+			// 
+			// ToolStripShiftDown
+			// 
+			this.ToolStripShiftDown.AllowMerge = false;
+			this.ToolStripShiftDown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.ToolStripShiftDown.AutoSize = false;
+			this.ToolStripShiftDown.BackColor = System.Drawing.Color.Transparent;
+			this.ToolStripShiftDown.CanOverflow = false;
+			this.ToolStripShiftDown.Dock = System.Windows.Forms.DockStyle.None;
+			this.ToolStripShiftDown.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.ToolStripShiftDown.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ButtonShiftDown});
+			this.ToolStripShiftDown.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Table;
+			this.ToolStripShiftDown.Location = new System.Drawing.Point(28, 162);
+			this.ToolStripShiftDown.MaximumSize = new System.Drawing.Size(10000, 24);
+			this.ToolStripShiftDown.MinimumSize = new System.Drawing.Size(0, 24);
+			this.ToolStripShiftDown.Name = "ToolStripShiftDown";
+			this.ToolStripShiftDown.Padding = new System.Windows.Forms.Padding(0);
+			this.ToolStripShiftDown.Size = new System.Drawing.Size(130, 24);
+			this.ToolStripShiftDown.TabIndex = 3;
+			// 
+			// ButtonShiftDown
+			// 
+			this.ButtonShiftDown.AutoSize = false;
+			this.ButtonShiftDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonShiftDown.Image = global::AgentCharacterEditor.Properties.Resources.ImgShiftDown;
+			this.ButtonShiftDown.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+			this.ButtonShiftDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonShiftDown.Margin = new System.Windows.Forms.Padding(0);
+			this.ButtonShiftDown.Name = "ButtonShiftDown";
+			this.ButtonShiftDown.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+			this.ButtonShiftDown.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonShiftDown.RepeatEnabled = true;
+			this.ButtonShiftDown.Size = new System.Drawing.Size(24, 24);
+			this.ButtonShiftDown.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftDown_RepeatEnd);
+			this.ButtonShiftDown.Click += new System.EventHandler(this.ButtonShiftDown_Click);
+			// 
+			// ToolStripShiftLeft
+			// 
+			this.ToolStripShiftLeft.AllowMerge = false;
+			this.ToolStripShiftLeft.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+			this.ToolStripShiftLeft.AutoSize = false;
+			this.ToolStripShiftLeft.BackColor = System.Drawing.Color.Transparent;
+			this.ToolStripShiftLeft.CanOverflow = false;
+			this.ToolStripShiftLeft.Dock = System.Windows.Forms.DockStyle.None;
+			this.ToolStripShiftLeft.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.ToolStripShiftLeft.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ButtonShiftLeft});
+			this.ToolStripShiftLeft.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Table;
+			this.ToolStripShiftLeft.Location = new System.Drawing.Point(0, 28);
+			this.ToolStripShiftLeft.MaximumSize = new System.Drawing.Size(24, 10000);
+			this.ToolStripShiftLeft.MinimumSize = new System.Drawing.Size(24, 0);
+			this.ToolStripShiftLeft.Name = "ToolStripShiftLeft";
+			this.ToolStripShiftLeft.Padding = new System.Windows.Forms.Padding(0);
+			this.ToolStripShiftLeft.Size = new System.Drawing.Size(24, 130);
+			this.ToolStripShiftLeft.TabIndex = 1;
+			// 
+			// ButtonShiftLeft
+			// 
+			this.ButtonShiftLeft.AutoSize = false;
+			this.ButtonShiftLeft.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonShiftLeft.Image = global::AgentCharacterEditor.Properties.Resources.ImgShiftLeft;
+			this.ButtonShiftLeft.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+			this.ButtonShiftLeft.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonShiftLeft.Margin = new System.Windows.Forms.Padding(0);
+			this.ButtonShiftLeft.Name = "ButtonShiftLeft";
+			this.ButtonShiftLeft.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+			this.ButtonShiftLeft.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonShiftLeft.RepeatEnabled = true;
+			this.ButtonShiftLeft.Size = new System.Drawing.Size(24, 24);
+			this.ButtonShiftLeft.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftLeft_RepeatEnd);
+			this.ButtonShiftLeft.Click += new System.EventHandler(this.ButtonShiftLeft_Click);
 			// 
 			// GroupBoxSound
 			// 
-			this.GroupBoxSound.Controls.Add(this.ToolStripSound);
-			this.GroupBoxSound.Controls.Add(this.ToolStripSoundFile);
-			this.GroupBoxSound.Controls.Add(this.TextBoxSoundFile);
+			this.GroupBoxSound.Controls.Add(PanelSound);
 			this.GroupBoxSound.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GroupBoxSound.Location = new System.Drawing.Point(0, 588);
 			this.GroupBoxSound.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
@@ -721,6 +858,27 @@ namespace AgentCharacterEditor.Panels
 			this.GroupBoxSound.TabStop = false;
 			this.GroupBoxSound.Text = "Sound Effect";
 			// 
+			// PanelSound
+			// 
+			PanelSound.AutoSize = true;
+			PanelSound.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			PanelSound.ColumnCount = 3;
+			PanelSound.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			PanelSound.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			PanelSound.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			PanelSound.Controls.Add(this.ToolStripSound, 0, 0);
+			PanelSound.Controls.Add(this.TextBoxSoundFile, 1, 0);
+			PanelSound.Controls.Add(this.ToolStripSoundFile, 2, 0);
+			PanelSound.Dock = System.Windows.Forms.DockStyle.Fill;
+			PanelSound.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+			PanelSound.Location = new System.Drawing.Point(6, 24);
+			PanelSound.Margin = new System.Windows.Forms.Padding(0);
+			PanelSound.Name = "PanelSound";
+			PanelSound.RowCount = 1;
+			PanelSound.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			PanelSound.Size = new System.Drawing.Size(670, 32);
+			PanelSound.TabIndex = 4;
+			// 
 			// ToolStripSound
 			// 
 			this.ToolStripSound.BackColor = System.Drawing.Color.Transparent;
@@ -729,7 +887,7 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripSound.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.ToolStripSound.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ButtonSoundPreview});
-			this.ToolStripSound.Location = new System.Drawing.Point(6, 25);
+			this.ToolStripSound.Location = new System.Drawing.Point(0, 0);
 			this.ToolStripSound.Name = "ToolStripSound";
 			this.ToolStripSound.Size = new System.Drawing.Size(27, 27);
 			this.ToolStripSound.TabIndex = 0;
@@ -746,6 +904,19 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonSoundPreview.Text = "Preview";
 			this.ButtonSoundPreview.Click += new System.EventHandler(this.ButtonSoundPreview_Click);
 			// 
+			// TextBoxSoundFile
+			// 
+			this.TextBoxSoundFile.AcceptsReturn = true;
+			this.TextBoxSoundFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.TextBoxSoundFile.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+			this.TextBoxSoundFile.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
+			this.TextBoxSoundFile.Location = new System.Drawing.Point(30, 3);
+			this.TextBoxSoundFile.Name = "TextBoxSoundFile";
+			this.TextBoxSoundFile.Size = new System.Drawing.Size(586, 22);
+			this.TextBoxSoundFile.TabIndex = 1;
+			this.TextBoxSoundFile.Validated += new System.EventHandler(this.TextBoxSoundFile_Validated);
+			// 
 			// ToolStripSoundFile
 			// 
 			this.ToolStripSoundFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -756,7 +927,7 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripSoundFile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ButtonSoundImport,
             this.ButtonSoundExport});
-			this.ToolStripSoundFile.Location = new System.Drawing.Point(619, 25);
+			this.ToolStripSoundFile.Location = new System.Drawing.Point(619, 0);
 			this.ToolStripSoundFile.Name = "ToolStripSoundFile";
 			this.ToolStripSoundFile.Size = new System.Drawing.Size(51, 27);
 			this.ToolStripSoundFile.TabIndex = 2;
@@ -783,92 +954,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonSoundExport.Size = new System.Drawing.Size(24, 24);
 			this.ButtonSoundExport.Text = "Save sound";
 			// 
-			// TextBoxSoundFile
-			// 
-			this.TextBoxSoundFile.AcceptsReturn = true;
-			this.TextBoxSoundFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.TextBoxSoundFile.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-			this.TextBoxSoundFile.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
-			this.TextBoxSoundFile.Location = new System.Drawing.Point(35, 27);
-			this.TextBoxSoundFile.Name = "TextBoxSoundFile";
-			this.TextBoxSoundFile.Size = new System.Drawing.Size(583, 22);
-			this.TextBoxSoundFile.TabIndex = 1;
-			this.TextBoxSoundFile.Validated += new System.EventHandler(this.TextBoxSoundFile_Validated);
-			// 
-			// PanelMain
-			// 
-			this.PanelMain.ColumnCount = 1;
-			this.PanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.PanelMain.Controls.Add(this.PanelTop, 0, 0);
-			this.PanelMain.Controls.Add(this.GroupBoxImages, 0, 2);
-			this.PanelMain.Controls.Add(this.GroupBoxSound, 0, 3);
-			this.PanelMain.Controls.Add(this.PictureBoxFrameSample, 0, 1);
-			this.PanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-			this.PanelMain.Location = new System.Drawing.Point(9, 0);
-			this.PanelMain.Margin = new System.Windows.Forms.Padding(0);
-			this.PanelMain.Name = "PanelMain";
-			this.PanelMain.RowCount = 4;
-			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.PanelMain.Size = new System.Drawing.Size(682, 650);
-			this.PanelMain.TabIndex = 0;
-			// 
-			// PanelTop
-			// 
-			this.PanelTop.Controls.Add(this.LabelFrameName);
-			this.PanelTop.Controls.Add(this.LabelDuration);
-			this.PanelTop.Controls.Add(this.TextBoxFrameName);
-			this.PanelTop.Controls.Add(this.LabelDurationUnits);
-			this.PanelTop.Controls.Add(this.NumericDuration);
-			this.PanelTop.Location = new System.Drawing.Point(0, 0);
-			this.PanelTop.Margin = new System.Windows.Forms.Padding(0);
-			this.PanelTop.Name = "PanelTop";
-			this.PanelTop.Size = new System.Drawing.Size(682, 60);
-			this.PanelTop.TabIndex = 2;
-			// 
-			// NumericDuration
-			// 
-			this.NumericDuration.AutoSize = true;
-			this.NumericDuration.DefaultBackColor = System.Drawing.SystemColors.Window;
-			this.NumericDuration.HighlightBackColor = System.Drawing.Color.Pink;
-			this.NumericDuration.Location = new System.Drawing.Point(132, 31);
-			this.NumericDuration.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-			this.NumericDuration.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.NumericDuration.Name = "NumericDuration";
-			this.NumericDuration.Size = new System.Drawing.Size(64, 22);
-			this.NumericDuration.TabIndex = 3;
-			this.NumericDuration.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.NumericDuration.Validated += new System.EventHandler(this.NumericDuration_Validated);
-			// 
-			// PictureBoxFrameSample
-			// 
-			this.PictureBoxFrameSample.BackColor = System.Drawing.SystemColors.Window;
-			this.PictureBoxFrameSample.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.PictureBoxFrameSample.Location = new System.Drawing.Point(132, 60);
-			this.PictureBoxFrameSample.Margin = new System.Windows.Forms.Padding(132, 0, 0, 0);
-			this.PictureBoxFrameSample.MaximumSize = new System.Drawing.Size(258, 258);
-			this.PictureBoxFrameSample.Name = "PictureBoxFrameSample";
-			this.PictureBoxFrameSample.Size = new System.Drawing.Size(128, 128);
-			this.PictureBoxFrameSample.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-			this.PictureBoxFrameSample.TabIndex = 2;
-			this.PictureBoxFrameSample.TabStop = false;
-			// 
 			// FramePanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -876,14 +961,30 @@ namespace AgentCharacterEditor.Panels
 			this.Controls.Add(this.PanelMain);
 			this.Name = "FramePanel";
 			this.Size = new System.Drawing.Size(700, 650);
-			this.PanelOverlayOffset.ResumeLayout(false);
-			this.PanelOverlayOffset.PerformLayout();
+			this.PanelMain.ResumeLayout(false);
+			this.PanelMain.PerformLayout();
+			PanelFrame.ResumeLayout(false);
+			PanelFrame.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.NumericDuration)).EndInit();
+			this.GroupBoxImages.ResumeLayout(false);
+			this.GroupBoxImages.PerformLayout();
+			this.PanelImages.ResumeLayout(false);
+			this.PanelImages.PerformLayout();
+			this.ContextMenuImages.ResumeLayout(false);
+			this.ToolStripImages.ResumeLayout(false);
+			this.ToolStripImages.PerformLayout();
+			PanelMiddle.ResumeLayout(false);
+			PanelMiddle.PerformLayout();
+			this.GroupBoxFrame.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.PictureBoxFrameSample)).EndInit();
+			this.GroupBoxImage.ResumeLayout(false);
+			this.GroupBoxImage.PerformLayout();
+			PanelImage.ResumeLayout(false);
+			PanelImage.PerformLayout();
+			this.PanelImageDetails.ResumeLayout(false);
+			this.PanelImageDetails.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetX)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetY)).EndInit();
-			this.GroupBoxImages.ResumeLayout(false);
-			this.PanelImages.ResumeLayout(false);
-			this.FlowLayoutRight.ResumeLayout(false);
-			this.FlowLayoutRight.PerformLayout();
 			this.PanelSample.ResumeLayout(false);
 			this.PanelImageClip.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxImageSample)).EndInit();
@@ -895,22 +996,14 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripShiftDown.PerformLayout();
 			this.ToolStripShiftLeft.ResumeLayout(false);
 			this.ToolStripShiftLeft.PerformLayout();
-			this.PanelImagesLeft.ResumeLayout(false);
-			this.PanelImagesLeft.PerformLayout();
-			this.ContextMenuImages.ResumeLayout(false);
-			this.ToolStripImages.ResumeLayout(false);
-			this.ToolStripImages.PerformLayout();
 			this.GroupBoxSound.ResumeLayout(false);
 			this.GroupBoxSound.PerformLayout();
+			PanelSound.ResumeLayout(false);
+			PanelSound.PerformLayout();
 			this.ToolStripSound.ResumeLayout(false);
 			this.ToolStripSound.PerformLayout();
 			this.ToolStripSoundFile.ResumeLayout(false);
 			this.ToolStripSoundFile.PerformLayout();
-			this.PanelMain.ResumeLayout(false);
-			this.PanelTop.ResumeLayout(false);
-			this.PanelTop.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.NumericDuration)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.PictureBoxFrameSample)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -918,7 +1011,6 @@ namespace AgentCharacterEditor.Panels
 		#endregion
 
 		private DoubleAgent.LabelCompat LabelFrameName;
-		private DoubleAgent.TextBoxEx TextBoxFrameName;
 		private DoubleAgent.GroupBoxCompat GroupBoxImages;
 		private DoubleAgent.GroupBoxCompat GroupBoxSound;
 		private DoubleAgent.ToolStripEx ToolStripImages;
@@ -954,20 +1046,20 @@ namespace AgentCharacterEditor.Panels
 		private DoubleAgent.ToolStripButtonEx ButtonShiftLeft;
 		private DoubleAgent.ToolStripButtonEx ButtonShiftRight;
 		private FrameSample PictureBoxFrameSample;
-		private System.Windows.Forms.TableLayoutPanel PanelMain;
 		private System.Windows.Forms.Panel PanelImageClip;
-		private System.Windows.Forms.FlowLayoutPanel FlowLayoutRight;
-		private System.Windows.Forms.Panel PanelImagesLeft;
 		private System.Windows.Forms.TableLayoutPanel PanelImages;
 		private DoubleAgent.ToolStripButtonCompat ButtonChooseFile;
 		private System.Windows.Forms.TableLayoutPanel PanelSample;
-		private System.Windows.Forms.Panel PanelOverlayOffset;
 		private DoubleAgent.CheckBoxCompat CheckBoxTransparent;
-		private System.Windows.Forms.Panel PanelTop;
 		private Global.ContextMenuEdit ContextMenuImages;
 		private System.Windows.Forms.ToolStripMenuItem MenuItemAdd;
 		private System.Windows.Forms.ToolStripMenuItem MenuItemChooseFile;
 		private System.Windows.Forms.ToolStripMenuItem MenuItemMoveUp;
 		private System.Windows.Forms.ToolStripMenuItem MenuItemMoveDown;
+		private System.Windows.Forms.GroupBox GroupBoxImage;
+		private System.Windows.Forms.TableLayoutPanel PanelMain;
+		private System.Windows.Forms.Panel PanelImageDetails;
+		private DoubleAgent.TextBoxEx TextBoxFrameName;
+		private System.Windows.Forms.GroupBox GroupBoxFrame;
 	}
 }

@@ -48,6 +48,7 @@ namespace AgentCharacterEditor.Panels
 		/// </summary>
 		private void InitializeComponent ()
 		{
+			this.PanelFrame = new System.Windows.Forms.Panel();
 			this.LabelFrameName = new System.Windows.Forms.Label();
 			this.TextBoxFrameName = new DoubleAgent.TextBoxEx();
 			this.GroupBoxBranching = new DoubleAgent.GroupBoxCompat();
@@ -70,6 +71,8 @@ namespace AgentCharacterEditor.Panels
 			this.FlowLayoutExit = new System.Windows.Forms.FlowLayoutPanel();
 			this.CheckBoxExit = new DoubleAgent.CheckBoxCompat();
 			this.NumericTargetExit = new DoubleAgent.NumericUpDownEx();
+			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
+			this.PanelFrame.SuspendLayout();
 			this.GroupBoxBranching.SuspendLayout();
 			this.FlowLayoutNot.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericBranchingNot)).BeginInit();
@@ -85,12 +88,27 @@ namespace AgentCharacterEditor.Panels
 			this.GroupBoxExit.SuspendLayout();
 			this.FlowLayoutExit.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericTargetExit)).BeginInit();
+			this.PanelMain.SuspendLayout();
 			this.SuspendLayout();
+			// 
+			// PanelFrame
+			// 
+			this.PanelFrame.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.PanelFrame.AutoSize = true;
+			this.PanelFrame.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.PanelFrame.Controls.Add(this.LabelFrameName);
+			this.PanelFrame.Controls.Add(this.TextBoxFrameName);
+			this.PanelFrame.Location = new System.Drawing.Point(0, 0);
+			this.PanelFrame.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelFrame.Name = "PanelFrame";
+			this.PanelFrame.Size = new System.Drawing.Size(582, 28);
+			this.PanelFrame.TabIndex = 0;
 			// 
 			// LabelFrameName
 			// 
 			this.LabelFrameName.AutoSize = true;
-			this.LabelFrameName.Location = new System.Drawing.Point(9, 6);
+			this.LabelFrameName.Location = new System.Drawing.Point(0, 6);
 			this.LabelFrameName.Name = "LabelFrameName";
 			this.LabelFrameName.Size = new System.Drawing.Size(48, 17);
 			this.LabelFrameName.TabIndex = 0;
@@ -100,11 +118,11 @@ namespace AgentCharacterEditor.Panels
 			// 
 			this.TextBoxFrameName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.TextBoxFrameName.Location = new System.Drawing.Point(140, 3);
+			this.TextBoxFrameName.Location = new System.Drawing.Point(131, 3);
 			this.TextBoxFrameName.MaximumSize = new System.Drawing.Size(600, 50);
 			this.TextBoxFrameName.Name = "TextBoxFrameName";
 			this.TextBoxFrameName.ReadOnly = true;
-			this.TextBoxFrameName.Size = new System.Drawing.Size(448, 22);
+			this.TextBoxFrameName.Size = new System.Drawing.Size(451, 22);
 			this.TextBoxFrameName.TabIndex = 1;
 			// 
 			// GroupBoxBranching
@@ -115,13 +133,13 @@ namespace AgentCharacterEditor.Panels
 			this.GroupBoxBranching.Controls.Add(this.FlowLayout3);
 			this.GroupBoxBranching.Controls.Add(this.FlowLayout2);
 			this.GroupBoxBranching.Controls.Add(this.FlowLayout1);
-			this.GroupBoxBranching.Location = new System.Drawing.Point(9, 37);
+			this.GroupBoxBranching.Location = new System.Drawing.Point(0, 37);
 			this.GroupBoxBranching.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
 			this.GroupBoxBranching.MaximumSize = new System.Drawing.Size(730, 10000);
 			this.GroupBoxBranching.Name = "GroupBoxBranching";
 			this.GroupBoxBranching.Padding = new System.Windows.Forms.Padding(6, 9, 6, 6);
-			this.GroupBoxBranching.Size = new System.Drawing.Size(582, 160);
-			this.GroupBoxBranching.TabIndex = 2;
+			this.GroupBoxBranching.Size = new System.Drawing.Size(582, 167);
+			this.GroupBoxBranching.TabIndex = 1;
 			this.GroupBoxBranching.TabStop = false;
 			this.GroupBoxBranching.Text = "Normal Branching";
 			// 
@@ -131,7 +149,7 @@ namespace AgentCharacterEditor.Panels
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.FlowLayoutNot.Controls.Add(this.NumericBranchingNot);
 			this.FlowLayoutNot.Controls.Add(this.LabelBranchingNot);
-			this.FlowLayoutNot.Location = new System.Drawing.Point(9, 123);
+			this.FlowLayoutNot.Location = new System.Drawing.Point(6, 123);
 			this.FlowLayoutNot.Margin = new System.Windows.Forms.Padding(0);
 			this.FlowLayoutNot.Name = "FlowLayoutNot";
 			this.FlowLayoutNot.Size = new System.Drawing.Size(567, 33);
@@ -170,7 +188,7 @@ namespace AgentCharacterEditor.Panels
 			this.FlowLayout3.Controls.Add(this.NumericBranching2);
 			this.FlowLayout3.Controls.Add(this.LabelBranching3);
 			this.FlowLayout3.Controls.Add(this.NumericTarget2);
-			this.FlowLayout3.Location = new System.Drawing.Point(9, 90);
+			this.FlowLayout3.Location = new System.Drawing.Point(6, 90);
 			this.FlowLayout3.Margin = new System.Windows.Forms.Padding(0);
 			this.FlowLayout3.Name = "FlowLayout3";
 			this.FlowLayout3.Size = new System.Drawing.Size(567, 33);
@@ -234,7 +252,7 @@ namespace AgentCharacterEditor.Panels
 			this.FlowLayout2.Controls.Add(this.NumericBranching1);
 			this.FlowLayout2.Controls.Add(this.LabelBranching2);
 			this.FlowLayout2.Controls.Add(this.NumericTarget1);
-			this.FlowLayout2.Location = new System.Drawing.Point(9, 57);
+			this.FlowLayout2.Location = new System.Drawing.Point(6, 57);
 			this.FlowLayout2.Margin = new System.Windows.Forms.Padding(0);
 			this.FlowLayout2.Name = "FlowLayout2";
 			this.FlowLayout2.Size = new System.Drawing.Size(567, 33);
@@ -298,7 +316,7 @@ namespace AgentCharacterEditor.Panels
 			this.FlowLayout1.Controls.Add(this.NumericBranching0);
 			this.FlowLayout1.Controls.Add(this.LabelBranching1);
 			this.FlowLayout1.Controls.Add(this.NumericTarget0);
-			this.FlowLayout1.Location = new System.Drawing.Point(9, 24);
+			this.FlowLayout1.Location = new System.Drawing.Point(6, 24);
 			this.FlowLayout1.Margin = new System.Windows.Forms.Padding(0);
 			this.FlowLayout1.Name = "FlowLayout1";
 			this.FlowLayout1.Size = new System.Drawing.Size(567, 33);
@@ -360,13 +378,13 @@ namespace AgentCharacterEditor.Panels
 			this.GroupBoxExit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.GroupBoxExit.Controls.Add(this.FlowLayoutExit);
-			this.GroupBoxExit.Location = new System.Drawing.Point(9, 206);
+			this.GroupBoxExit.Location = new System.Drawing.Point(0, 213);
 			this.GroupBoxExit.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
 			this.GroupBoxExit.MaximumSize = new System.Drawing.Size(730, 10000);
 			this.GroupBoxExit.Name = "GroupBoxExit";
 			this.GroupBoxExit.Padding = new System.Windows.Forms.Padding(6, 9, 6, 6);
-			this.GroupBoxExit.Size = new System.Drawing.Size(582, 59);
-			this.GroupBoxExit.TabIndex = 3;
+			this.GroupBoxExit.Size = new System.Drawing.Size(582, 65);
+			this.GroupBoxExit.TabIndex = 2;
 			this.GroupBoxExit.TabStop = false;
 			this.GroupBoxExit.Text = "Exit Branching";
 			// 
@@ -376,7 +394,7 @@ namespace AgentCharacterEditor.Panels
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.FlowLayoutExit.Controls.Add(this.CheckBoxExit);
 			this.FlowLayoutExit.Controls.Add(this.NumericTargetExit);
-			this.FlowLayoutExit.Location = new System.Drawing.Point(9, 24);
+			this.FlowLayoutExit.Location = new System.Drawing.Point(6, 24);
 			this.FlowLayoutExit.Margin = new System.Windows.Forms.Padding(0);
 			this.FlowLayoutExit.Name = "FlowLayoutExit";
 			this.FlowLayoutExit.Size = new System.Drawing.Size(567, 30);
@@ -420,16 +438,35 @@ namespace AgentCharacterEditor.Panels
             0});
 			this.NumericTargetExit.Validated += new System.EventHandler(this.NumericTargetExit_Validated);
 			// 
+			// PanelMain
+			// 
+			this.PanelMain.ColumnCount = 1;
+			this.PanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.Controls.Add(this.GroupBoxExit, 0, 2);
+			this.PanelMain.Controls.Add(this.GroupBoxBranching, 0, 1);
+			this.PanelMain.Controls.Add(this.PanelFrame, 0, 0);
+			this.PanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+			this.PanelMain.Location = new System.Drawing.Point(9, 0);
+			this.PanelMain.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelMain.Name = "PanelMain";
+			this.PanelMain.RowCount = 4;
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.Size = new System.Drawing.Size(582, 600);
+			this.PanelMain.TabIndex = 0;
+			// 
 			// BranchingPanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this.GroupBoxExit);
-			this.Controls.Add(this.GroupBoxBranching);
-			this.Controls.Add(this.LabelFrameName);
-			this.Controls.Add(this.TextBoxFrameName);
+			this.Controls.Add(this.PanelMain);
 			this.Name = "BranchingPanel";
 			this.Size = new System.Drawing.Size(600, 600);
+			this.PanelFrame.ResumeLayout(false);
+			this.PanelFrame.PerformLayout();
 			this.GroupBoxBranching.ResumeLayout(false);
 			this.FlowLayoutNot.ResumeLayout(false);
 			this.FlowLayoutNot.PerformLayout();
@@ -450,8 +487,9 @@ namespace AgentCharacterEditor.Panels
 			this.FlowLayoutExit.ResumeLayout(false);
 			this.FlowLayoutExit.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericTargetExit)).EndInit();
+			this.PanelMain.ResumeLayout(false);
+			this.PanelMain.PerformLayout();
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 
@@ -479,6 +517,8 @@ namespace AgentCharacterEditor.Panels
 		private System.Windows.Forms.FlowLayoutPanel FlowLayoutExit;
 		private DoubleAgent.CheckBoxCompat CheckBoxExit;
 		private DoubleAgent.NumericUpDownEx NumericTargetExit;
+		private System.Windows.Forms.TableLayoutPanel PanelMain;
+		private System.Windows.Forms.Panel PanelFrame;
 
 	}
 }

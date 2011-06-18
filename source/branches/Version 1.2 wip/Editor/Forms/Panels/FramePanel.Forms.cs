@@ -62,26 +62,16 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Navigation
+		#region Properties
 
-		public override object NavigationContext
+		private Control ImagePasteTarget
 		{
-			get
-			{
-				return new PanelContext (this);
-			}
-			set
-			{
-				if (value is PanelContext)
-				{
-					(value as PanelContext).RestoreContext (this);
-				}
-				else
-				{
-					base.NavigationContext = value;
-				}
-			}
+			get {return ListViewImages;}
 		}
+
+		#endregion
+		///////////////////////////////////////////////////////////////////////////////
+		#region Navigation
 
 		public new class PanelContext : FilePartPanel.PanelContext
 		{
@@ -226,6 +216,8 @@ namespace AgentCharacterEditor.Panels
 				FileImage lFrameImage = null;
 				System.Drawing.Bitmap lBitmap = null;
 
+				GroupBoxImage.Text = Titles.Image (pFrameImage);
+
 				if (pFrameImage != null)
 				{
 					try
@@ -302,11 +294,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void NumericDuration_Validated (object sender, EventArgs e)
 		{
-			if (NumericDuration.IsModified)
-			{
-				HandleDurationChanged ();
-			}
-			NumericDuration.IsModified = false;
+			HandleDurationChanged ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -389,20 +377,12 @@ namespace AgentCharacterEditor.Panels
 
 		private void NumericOffsetX_Validated (object sender, EventArgs e)
 		{
-			if (NumericOffsetX.IsModified)
-			{
-				HandleOffsetXChanged ();
-			}
-			NumericOffsetX.IsModified = false;
+			HandleOffsetXChanged ();
 		}
 
 		private void NumericOffsetY_Validated (object sender, EventArgs e)
 		{
-			if (NumericOffsetY.IsModified)
-			{
-				HandleOffsetYChanged ();
-			}
-			NumericOffsetY.IsModified = false;
+			HandleOffsetYChanged ();
 		}
 
 		///////////////////////////////////////////////////////////////////////////////

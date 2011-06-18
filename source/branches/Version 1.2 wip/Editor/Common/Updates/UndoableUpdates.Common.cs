@@ -1184,11 +1184,16 @@ namespace AgentCharacterEditor.Updates
 #endif
 			if (IsDelete)
 			{
+				lApplied = new AddDeleteAnimationFrame (lTarget, ForClipboard);
 				if (Animation.Frames.Remove (lTarget))
 				{
-					lApplied = new AddDeleteAnimationFrame (lTarget, ForClipboard);
+					(lApplied.RawTarget as ResolveAnimationFrame).TargetContained = false;
 					lApplied.IsDelete = false;
 					lApplied.IsRedo = !IsRedo;
+				}
+				else
+				{
+					lApplied = null;
 				}
 			}
 			else
@@ -1208,6 +1213,9 @@ namespace AgentCharacterEditor.Updates
 			}
 			if (lApplied != null)
 			{
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Applied {0}", lApplied.DebugString);
+#endif
 				return OnApplied (lApplied);
 			}
 			return null;
@@ -1283,6 +1291,9 @@ namespace AgentCharacterEditor.Updates
 			{
 				FrameNdxFrom = lTarget.Container.IndexOf (lTarget);
 				FrameNdxTo = lSwap;
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Applied {0}", DebugString);
+#endif
 				return OnApplied (this);
 			}
 			return null;
@@ -1293,7 +1304,7 @@ namespace AgentCharacterEditor.Updates
 		{
 			get
 			{
-				return String.Format ("{0} [{1}] [{2:D} to {3:D}]]", ActionDescription, AnimationName, FrameNdxFrom, FrameNdxTo);
+				return String.Format ("{0} [{1}] [{2:D} to {3:D}]", ChangeDescription, AnimationName, FrameNdxFrom, FrameNdxTo);
 			}
 		}
 #endif
@@ -1582,6 +1593,7 @@ namespace AgentCharacterEditor.Updates
 				lApplied = new AddDeleteFrameImage (lTarget, ForClipboard);
 				if (lFrame.Images.Remove (lTarget))
 				{
+					(lApplied.RawTarget as ResolveFrameImage).TargetContained = false;
 					lApplied.IsDelete = false;
 					lApplied.IsRedo = !IsRedo;
 				}
@@ -1608,6 +1620,9 @@ namespace AgentCharacterEditor.Updates
 			}
 			if (lApplied != null)
 			{
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Apply {0}", lApplied.DebugString);
+#endif
 				return OnApplied (lApplied);
 			}
 			return null;
@@ -1699,6 +1714,9 @@ namespace AgentCharacterEditor.Updates
 			{
 				ImageNdxFrom = lTarget.Container.IndexOf (lTarget);
 				ImageNdxTo = lSwap;
+#if DEBUG
+				System.Diagnostics.Debug.Print ("Applied {0}", DebugString);
+#endif
 				return OnApplied (this);
 			}
 			return null;
@@ -1709,7 +1727,7 @@ namespace AgentCharacterEditor.Updates
 		{
 			get
 			{
-				return String.Format ("{0} [{1} ({2:D})] [{3:D} to {4:D}]]", ActionDescription, AnimationName, FrameNdx, ImageNdxFrom, ImageNdxTo);
+				return String.Format ("{0} [{1} ({2:D})] [{3:D} to {4:D}]", ChangeDescription, AnimationName, FrameNdx, ImageNdxFrom, ImageNdxTo);
 			}
 		}
 #endif

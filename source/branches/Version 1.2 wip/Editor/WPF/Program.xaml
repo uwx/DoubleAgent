@@ -67,20 +67,6 @@
 						 UriSource="Resources/ShiftRight.png" />
 			<BitmapImage x:Key="ImgShiftUp"
 						 UriSource="Resources/ShiftUp.png" />
-			<BitmapImage x:Key="ImgMute"
-						 UriSource="Resources/Mute.png" />
-			<BitmapImage x:Key="ImgPause"
-						 UriSource="Resources/Pause.png" />
-			<BitmapImage x:Key="ImgPlay"
-						 UriSource="Resources/Play.png" />
-			<BitmapImage x:Key="ImgRepeat"
-						 UriSource="Resources/Repeat.png" />
-			<BitmapImage x:Key="ImgSkipBack"
-						 UriSource="Resources/SkipBack.png" />
-			<BitmapImage x:Key="ImgSkipForward"
-						 UriSource="Resources/SkipForward.png" />
-			<BitmapImage x:Key="ImgStop"
-						 UriSource="Resources/Stop.png" />
 			<BitmapImage x:Key="ImgViewLarge"
 						 UriSource="Resources/ViewLarge.png" />
 			<BitmapImage x:Key="ImgViewMedium"
@@ -138,10 +124,10 @@
 						Value="{Binding RelativeSource={RelativeSource Mode=Self}}" />
 				<Setter Property="Icon">
 					<Setter.Value>
-						<Image Source="{StaticResource ImgEditCut}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource ImgEditCut}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 					</Setter.Value>
 				</Setter>
 			</Style>
@@ -156,10 +142,10 @@
 						Value="{Binding RelativeSource={RelativeSource Mode=Self}}" />
 				<Setter Property="Icon">
 					<Setter.Value>
-						<Image Source="{StaticResource ImgEditCopy}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource ImgEditCopy}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 					</Setter.Value>
 				</Setter>
 			</Style>
@@ -174,10 +160,10 @@
 						Value="{Binding RelativeSource={RelativeSource Mode=Self}}" />
 				<Setter Property="Icon">
 					<Setter.Value>
-						<Image Source="{StaticResource ImgEditPaste}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource ImgEditPaste}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 					</Setter.Value>
 				</Setter>
 			</Style>
@@ -192,10 +178,10 @@
 						Value="{Binding RelativeSource={RelativeSource Mode=Self}}" />
 				<Setter Property="Icon">
 					<Setter.Value>
-						<Image Source="{StaticResource ImgEditDelete}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource ImgEditDelete}"
+										   Stretch="UniformToFill"
+										   Width="16"
+										   Height="16" />
 					</Setter.Value>
 				</Setter>
 			</Style>
@@ -220,54 +206,6 @@
 				   BasedOn="{StaticResource {x:Type TextBox}}">
 				<Setter Property="ContextMenu"
 						Value="{StaticResource ContextMenuTextBox}" />
-			</Style>
-
-			<!-- =========================================================================== -->
-			<!-- ToolBarButton (defined here because ImageState is in this assembly)         -->
-			<!-- =========================================================================== -->
-
-			<Style x:Key="ImageStateButton"
-				   BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-				   TargetType="{x:Type ButtonBase}">
-				<Setter Property="Padding"
-						Value="0" />
-				<Setter Property="Template">
-					<Setter.Value>
-						<ControlTemplate TargetType="{x:Type ButtonBase}">
-							<Border Name="Bd"
-									Background="Transparent"
-									BorderBrush="Transparent"
-									BorderThickness="{TemplateBinding BorderThickness}"
-									Padding="{TemplateBinding Padding}"
-									SnapsToDevicePixels="true">
-								<ContentPresenter Name="Content"
-												  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-												  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-												  SnapsToDevicePixels="False"
-												  UseLayoutRounding="False" />
-							</Border>
-							<ControlTemplate.Triggers>
-								<Trigger Property="IsEnabled"
-										 Value="false">
-									<Setter Property="Foreground"
-											Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
-								</Trigger>
-								<MultiTrigger>
-									<MultiTrigger.Conditions>
-										<Condition Property="IsEnabled"
-												   Value="false" />
-										<Condition SourceName="Content"
-												   Property="custom:ImageState.DisabledSource"
-												   Value="{x:Null}" />
-									</MultiTrigger.Conditions>
-									<Setter TargetName="Content"
-											Property="Opacity"
-											Value="0.3" />
-								</MultiTrigger>
-							</ControlTemplate.Triggers>
-						</ControlTemplate>
-					</Setter.Value>
-				</Setter>
 			</Style>
 
 			<!-- =========================================================================== -->
