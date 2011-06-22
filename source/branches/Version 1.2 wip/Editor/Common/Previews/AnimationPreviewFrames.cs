@@ -171,7 +171,7 @@ namespace AgentCharacterEditor.Previews
 			return null;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public FileAnimationFrame TimeToFrame (TimeSpan pTime)
 		{
@@ -202,16 +202,16 @@ namespace AgentCharacterEditor.Previews
 			return -1;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public FileAnimationFrame TimeToFrame (TimeSpan? pTime)
 		{
-			return (pTime.HasValue) ? TimeToFrame (pTime.Value) : null;
+			return pTime.HasValue ? TimeToFrame (pTime.Value) : null;
 		}
 
 		public int TimeToFrameIndex (TimeSpan? pTime)
 		{
-			return (pTime.HasValue) ? TimeToFrameIndex (pTime.Value) : -1;
+			return pTime.HasValue ? TimeToFrameIndex (pTime.Value) : -1;
 		}
 
 		#endregion
@@ -307,7 +307,7 @@ namespace AgentCharacterEditor.Previews
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override bool FreezeCore (bool isChecking)
 		{

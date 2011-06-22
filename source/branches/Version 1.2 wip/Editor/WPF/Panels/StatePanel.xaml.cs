@@ -112,31 +112,6 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Navigation
-
-		public new class PanelContext : FilePartPanel.PanelContext
-		{
-			public PanelContext (StatePanel pPanel)
-				: base (pPanel)
-			{
-				SelectedAnimation = pPanel.ListViewAnimations.SelectedIndex;
-			}
-
-			public void RestoreContext (StatePanel pPanel)
-			{
-				base.RestoreContext (pPanel);
-				pPanel.ListViewAnimations.SelectedIndex = SelectedAnimation;
-			}
-
-			public int SelectedAnimation
-			{
-				get;
-				protected set;
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
 		#region EventHandlers
 
 		void ListItemContent_CheckedChanged (object sender, RoutedEventArgs e)

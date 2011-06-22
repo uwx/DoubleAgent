@@ -47,14 +47,13 @@ namespace AgentCharacterEditor.Panels
 			{
 				return base.FilePart;
 			}
-			set
+			protected set
 			{
 				base.FilePart = value;
 				if (FilePart is ResolveCharacter)
 				{
 					(FilePart as ResolveCharacter).Scope = ResolveCharacter.ScopeType.ScopeCharacter;
 				}
-				ShowFileProperties ();
 			}
 		}
 
@@ -105,6 +104,12 @@ namespace AgentCharacterEditor.Panels
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
+
+		public override void ShowFilePart (ResolvePart pFilePart)
+		{
+			FilePart = pFilePart;
+			ShowFileProperties ();
+		}
 
 		private void ShowFileProperties ()
 		{
@@ -199,7 +204,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowCharacterIcon ()
 		{
@@ -243,7 +248,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowNameStates ()
 		{
@@ -274,7 +279,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private FileCharacterName LangIDName (UInt16 pLangID, Boolean pExactMatch)
 		{
@@ -372,7 +377,7 @@ namespace AgentCharacterEditor.Panels
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override Boolean HandleCanEditCut (CanEditEventArgs pEventArgs)
 		{
@@ -409,7 +414,7 @@ namespace AgentCharacterEditor.Panels
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override Boolean HandleCanEditDelete (CanEditEventArgs pEventArgs)
 		{
@@ -443,7 +448,7 @@ namespace AgentCharacterEditor.Panels
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override Boolean HandleCanEditPaste (CanEditEventArgs pEventArgs)
 		{
@@ -496,7 +501,7 @@ namespace AgentCharacterEditor.Panels
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected void HandleNameChanged ()
 		{
@@ -566,7 +571,7 @@ namespace AgentCharacterEditor.Panels
 			TextBoxExtra.IsModified = false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected void HandleIconFileChanged ()
 		{
@@ -607,7 +612,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override void UpdateApplied (Object pUpdate)
 		{

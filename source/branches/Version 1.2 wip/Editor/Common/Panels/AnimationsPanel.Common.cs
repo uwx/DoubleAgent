@@ -39,16 +39,13 @@ namespace AgentCharacterEditor.Panels
 			{
 				return base.FilePart;
 			}
-			set
+			protected set
 			{
 				base.FilePart = value;
 				if (FilePart is ResolveCharacter)
 				{
 					(FilePart as ResolveCharacter).Scope = ResolveCharacter.ScopeType.ScopeAnimations;
 				}
-				ShowAnimationNames ();
-				ShowFrameProperties ();
-				ShowPalette ();
 			}
 		}
 
@@ -89,12 +86,44 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
+		public new class PanelContext : FilePartPanel.PanelContext
+		{
+			public PanelContext (AnimationsPanel pPanel)
+				: base (pPanel)
+			{
+				SelectedAnimation = pPanel.ListViewAnimations.SelectedIndex;
+			}
+
+			public void RestoreContext (AnimationsPanel pPanel)
+			{
+				base.RestoreContext (pPanel);
+				pPanel.ListViewAnimations.SelectedIndex = SelectedAnimation;
+			}
+
+			public int SelectedAnimation
+			{
+				get;
+				protected set;
+			}
+		}
+
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
+		public override void ShowFilePart (ResolvePart pFilePart)
+		{
+			FilePart = pFilePart;
+
+			ShowAnimationNames ();
+			ShowFrameProperties ();
+			ShowPalette ();
+		}
+
 		private void ShowAnimationNames ()
 		{
+			PanelContext lContext = IsPanelFilling ? null : new PanelContext (this);
+
 			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
 				if (IsPanelEmpty)
@@ -112,12 +141,16 @@ namespace AgentCharacterEditor.Panels
 					TextBoxNewName.IsEnabled = !Program.FileIsReadOnly;
 					LabelNewName.IsEnabled = !Program.FileIsReadOnly;
 				}
+				if (lContext != null)
+				{
+					lContext.RestoreContext (this);
+				}
 				ShowAddState ();
 				ShowDeleteState ();
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowAddState ()
 		{
@@ -131,7 +164,7 @@ namespace AgentCharacterEditor.Panels
 			ButtonDelete.SetTitle (DeleteAnimationTitle);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private Boolean CanAddAnimation
 		{
@@ -180,7 +213,7 @@ namespace AgentCharacterEditor.Panels
 				}
 				else
 				{
-					return (GetSelectedAnimation (false) != null);
+					return (GetSelectedAnimation () != null);
 				}
 			}
 		}
@@ -194,12 +227,12 @@ namespace AgentCharacterEditor.Panels
 				}
 				else
 				{
-					return String.Format (AppResources.Resources.EditDeleteThis.NoMenuPrefix (), Titles.Animation (GetSelectedAnimation (false)));
+					return String.Format (AppResources.Resources.EditDeleteThis.NoMenuPrefix (), Titles.Animation (GetSelectedAnimation ()));
 				}
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		internal String NewAnimationName
 		{
@@ -216,7 +249,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowFrameProperties ()
 		{
@@ -247,7 +280,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowPalette ()
 		{
@@ -307,7 +340,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private static System.Drawing.Bitmap MakePaletteBitmap (System.Drawing.Imaging.ColorPalette pPalette)
 		{
@@ -365,11 +398,14 @@ namespace AgentCharacterEditor.Panels
 		{
 			if ((pAnimation != null) && !Program.FileIsReadOnly)
 			{
-				AddDeleteAnimation lUpdate = new AddDeleteAnimation (pAnimation, pForClipboard);
-
-				if (AddDeleteAnimation.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimation, this))
+				using (PanelFillingState lFillingState = new PanelFillingState (this))
 				{
-					return lUpdate;
+					AddDeleteAnimation lUpdate = new AddDeleteAnimation (pAnimation, pForClipboard);
+
+					if (AddDeleteAnimation.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimation, this))
+					{
+						return lUpdate;
+					}
 				}
 			}
 			return null;
@@ -403,10 +439,13 @@ namespace AgentCharacterEditor.Panels
 						}
 						if (lUpdate != null)
 						{
-							if (AddDeleteAnimation.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimation, this))
+							using (PanelFillingState lFillingState = new PanelFillingState (this))
 							{
-								SelectAnimation (lAnimationName);
-								return lUpdate;
+								if (AddDeleteAnimation.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimation, this))
+								{
+									SelectAnimation (lAnimationName);
+									return lUpdate;
+								}
 							}
 						}
 					}
@@ -426,13 +465,13 @@ namespace AgentCharacterEditor.Panels
 			return null;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override bool HandleCanEditCopy (CanEditEventArgs pEventArgs)
 		{
 			if (IsControlEditTarget (ListViewAnimations, pEventArgs))
 			{
-				FileAnimation lAnimation = GetSelectedAnimation (false);
+				FileAnimation lAnimation = GetSelectedAnimation ();
 
 				if (lAnimation != null)
 				{
@@ -446,7 +485,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (ListViewAnimations, pEventArgs))
 			{
-				FileAnimation lAnimation = GetSelectedAnimation (false);
+				FileAnimation lAnimation = GetSelectedAnimation ();
 
 				if (lAnimation != null)
 				{
@@ -461,7 +500,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (ListViewAnimations, pEventArgs) && !Program.FileIsReadOnly)
 			{
-				FileAnimation lAnimation = GetSelectedAnimation (false);
+				FileAnimation lAnimation = GetSelectedAnimation ();
 
 				if (lAnimation != null)
 				{
@@ -475,7 +514,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (ListViewAnimations, pEventArgs) && !Program.FileIsReadOnly)
 			{
-				FileAnimation lAnimation = GetSelectedAnimation (false);
+				FileAnimation lAnimation = GetSelectedAnimation ();
 
 				if (lAnimation != null)
 				{
@@ -493,7 +532,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (ListViewAnimations, pEventArgs) && !Program.FileIsReadOnly)
 			{
-				FileAnimation lAnimation = GetSelectedAnimation (false);
+				FileAnimation lAnimation = GetSelectedAnimation ();
 
 				if (lAnimation != null)
 				{
@@ -507,7 +546,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (ListViewAnimations, pEventArgs) && !Program.FileIsReadOnly)
 			{
-				FileAnimation lAnimation = GetSelectedAnimation (false);
+				FileAnimation lAnimation = GetSelectedAnimation ();
 
 				if (lAnimation != null)
 				{
@@ -526,7 +565,7 @@ namespace AgentCharacterEditor.Panels
 
 				if (IsControlEditTarget (ListViewAnimations, pEventArgs))
 				{
-					lAnimation = GetSelectedAnimation (false);
+					lAnimation = GetSelectedAnimation ();
 				}
 				if ((lAnimation != null) && IsControlEditTarget (ListViewAnimations, pEventArgs))
 				{
@@ -554,7 +593,7 @@ namespace AgentCharacterEditor.Panels
 			{
 				if (IsControlEditTarget (ListViewAnimations, pEventArgs))
 				{
-					FileAnimation lAnimation = GetSelectedAnimation (false);
+					FileAnimation lAnimation = GetSelectedAnimation ();
 
 					PasteSelectedAnimation (lAnimation, pEventArgs.GetPasteObject () as FileAnimation);
 					return true;
@@ -568,7 +607,7 @@ namespace AgentCharacterEditor.Panels
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void HandleAddAnimation ()
 		{
@@ -587,14 +626,17 @@ namespace AgentCharacterEditor.Panels
 				}
 				else
 				{
-					lUpdate = new AddDeleteAnimation (lAnimationName, false);
-					if (AddDeleteAnimation.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimation, this))
+					using (PanelFillingState lFillingState = new PanelFillingState (this))
 					{
-						SelectAnimation (lAnimationName);
-					}
-					else
-					{
-						System.Media.SystemSounds.Beep.Play ();
+						lUpdate = new AddDeleteAnimation (lAnimationName, false);
+						if (AddDeleteAnimation.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimation, this))
+						{
+							SelectAnimation (lAnimationName);
+						}
+						else
+						{
+							System.Media.SystemSounds.Beep.Play ();
+						}
 					}
 				}
 			}
@@ -609,7 +651,7 @@ namespace AgentCharacterEditor.Panels
 
 				if (DeleteSelectedAnimation (lAnimation, false) != null)
 				{
-					ListViewAnimations.SelectedIndex = lSelNdx;
+					ListViewAnimations.SelectedIndex = Math.Min (lSelNdx, ListViewAnimations.Items.Count - 1);
 				}
 				else
 				{
@@ -618,7 +660,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void HandleUpdateFrameWidth ()
 		{
@@ -687,7 +729,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override void UpdateApplied (Object pUpdate)
 		{
@@ -706,15 +748,15 @@ namespace AgentCharacterEditor.Panels
 					ShowPalette ();
 				}
 			}
-
-			if ((lAddDeleteAnimation != null) && (lAddDeleteAnimation.CharacterFile == CharacterFile))
+			else if ((lAddDeleteAnimation != null) && (lAddDeleteAnimation.CharacterFile == CharacterFile))
 			{
-				PanelContext lContext = new PanelContext (this);
 				ShowAnimationNames ();
-				lContext.RestoreContext (this);
+				if (IsPanelFilling && !lAddDeleteAnimation.IsDelete)
+				{
+					SelectAnimation (lAddDeleteAnimation.Target.Name);
+				}
 			}
-
-			if ((lUpdateAnimation != null) && lUpdateAnimation.NameChanged)
+			else if ((lUpdateAnimation != null) && lUpdateAnimation.NameChanged)
 			{
 				ShowAnimationNames ();
 			}

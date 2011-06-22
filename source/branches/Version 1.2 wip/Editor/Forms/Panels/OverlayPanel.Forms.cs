@@ -63,42 +63,12 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Navigation
-
-		public new class PanelContext : FilePartPanel.PanelContext
-		{
-			public PanelContext (OverlayPanel pPanel)
-				: base (pPanel)
-			{
-				SelectedOverlay = pPanel.ListViewOverlays.SelectedIndex;
-				FocusedOverlay = pPanel.ListViewOverlays.FocusedIndex;
-			}
-
-			public void RestoreContext (OverlayPanel pPanel)
-			{
-				base.RestoreContext (pPanel);
-				pPanel.ListViewOverlays.SelectedIndex = SelectedOverlay;
-				pPanel.ListViewOverlays.FocusedIndex = FocusedOverlay;
-			}
-
-			public int SelectedOverlay
-			{
-				get;
-				protected set;
-			}
-			public int FocusedOverlay
-			{
-				get;
-				protected set;
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
 		private void ShowFrameOverlays ()
 		{
+			PanelContext lContext = IsPanelFilling ? null : new PanelContext (this);
+
 			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
 				if (IsPanelEmpty)
@@ -106,7 +76,6 @@ namespace AgentCharacterEditor.Panels
 					BeginListUpdate ();
 					EndListUpdate ();
 					ListViewOverlays.Enabled = false;
-					ShowFrameOverlay (null);
 				}
 				else
 				{
@@ -122,6 +91,14 @@ namespace AgentCharacterEditor.Panels
 
 					EndListUpdate ();
 					ListViewOverlays.Enabled = true;
+				}
+				if (lContext != null)
+				{
+					lContext.RestoreContext (this);
+				}
+				if (IsPanelEmpty)
+				{
+					ShowFrameOverlay (null);
 				}
 			}
 		}
@@ -161,7 +138,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void BeginListUpdate ()
 		{
@@ -189,7 +166,7 @@ namespace AgentCharacterEditor.Panels
 			ListViewOverlays.Size = new Size (ListViewOverlays.Size.Width, lListViewHeight);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowFrameSample (FileFrameOverlay pFrameOverlay)
 		{
@@ -259,11 +236,11 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ListViewImages_SelectedIndexChanged (object sender, EventArgs e)
 		{
-			if (ListViewOverlays.SelectedIndex >= 0)
+			if (!IsPanelFilling && (ListViewOverlays.SelectedIndex >= 0))
 			{
 				ShowSelectedOverlay ();
 			}
@@ -271,27 +248,27 @@ namespace AgentCharacterEditor.Panels
 
 		private void ListViewOverlays_ItemActivate (object sender, EventArgs e)
 		{
-			UpdateSelectedOverlay (GetSelectedOverlay (false));
+			UpdateSelectedOverlay (GetSelectedOverlay ());
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ButtonAdd_Click (object sender, EventArgs e)
 		{
-			UpdateSelectedOverlay (GetSelectedOverlay (false));
+			UpdateSelectedOverlay (GetSelectedOverlay ());
 		}
 
 		private void ButtonDelete_Click (object sender, EventArgs e)
 		{
-			DeleteSelectedOverlay (GetSelectedOverlay (false), false);
+			DeleteSelectedOverlay (GetSelectedOverlay (), false);
 		}
 
 		private void ButtonOpen_Click (object sender, EventArgs e)
 		{
-			UpdateSelectedOverlay (GetSelectedOverlay (false));
+			UpdateSelectedOverlay (GetSelectedOverlay ());
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void NumericOffsetX_Validated (object sender, EventArgs e)
 		{
@@ -303,7 +280,7 @@ namespace AgentCharacterEditor.Panels
 			HandleOffsetYChanged ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ButtonShiftUp_Click (object sender, EventArgs e)
 		{
@@ -341,7 +318,7 @@ namespace AgentCharacterEditor.Panels
 			HandleShiftComplete ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void CheckBoxReplace_Click (object sender, EventArgs e)
 		{

@@ -136,11 +136,7 @@
 							 HorizontalAlignment="Left"
 							 Click="ButtonAdd_Click">
 						<custom:ImageState NormalSource="{StaticResource ImgFileNew}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16"
-										   HorizontalAlignment="Center"
-										   VerticalAlignment="Center" />
+										   Style="{StaticResource ToolButtonImage}" />
 					</Button>
 					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 							Name="ButtonDelete"
@@ -149,11 +145,7 @@
 							HorizontalAlignment="Left"
 							Click="ButtonDelete_Click">
 						<custom:ImageState NormalSource="{StaticResource ImgEditDelete}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16"
-										   HorizontalAlignment="Center"
-										   VerticalAlignment="Center" />
+										   Style="{StaticResource ToolButtonImage}" />
 					</Button>
 					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 							Name="ButtonChooseFile"
@@ -162,11 +154,7 @@
 							HorizontalAlignment="Left"
 							Click="ButtonChooseFile_Click">
 						<custom:ImageState NormalSource="{StaticResource ImgFileOpen}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16"
-										   HorizontalAlignment="Center"
-										   VerticalAlignment="Center" />
+										   Style="{StaticResource ToolButtonImage}" />
 					</Button>
 					<Separator Style="{StaticResource PanelToolBarSeparator}" />
 					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
@@ -175,12 +163,8 @@
 							Focusable="False"
 							HorizontalAlignment="Left"
 							Click="ButtonMoveUp_Click">
-						<custom:ImageState NormalSource="{StaticResource ImgMoveUp}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16"
-										   HorizontalAlignment="Center"
-										   VerticalAlignment="Center" />
+						<custom:ImageState NormalSource="{StaticResource IconMoveUp}"
+										   Style="{StaticResource ToolButtonImage}" />
 					</Button>
 					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 							Name="ButtonMoveDown"
@@ -188,12 +172,8 @@
 							Focusable="False"
 							HorizontalAlignment="Left"
 							Click="ButtonMoveDown_Click">
-						<custom:ImageState NormalSource="{StaticResource ImgMoveDown}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16"
-										   HorizontalAlignment="Center"
-										   VerticalAlignment="Center" />
+						<custom:ImageState NormalSource="{StaticResource IconMoveDown}"
+										   Style="{StaticResource ToolButtonImage}" />
 					</Button>
 				</ToolBar>
 				<ContentControl Name="ImagesContainer"
@@ -302,9 +282,7 @@
 												  Click="ButtonAdd_Click">
 											<MenuItem.Icon>
 												<custom:ImageState NormalSource="{StaticResource ImgFileNew}"
-																   Stretch="UniformToFill"
-																   Width="16"
-																   Height="16" />
+																   Style="{StaticResource MenuItemImage}" />
 											</MenuItem.Icon>
 										</MenuItem>
 										<MenuItem Header="Open image file"
@@ -312,9 +290,7 @@
 												  Click="ButtonChooseFile_Click">
 											<MenuItem.Icon>
 												<custom:ImageState NormalSource="{StaticResource ImgFileOpen}"
-																   Stretch="UniformToFill"
-																   Width="16"
-																   Height="16" />
+																   Style="{StaticResource MenuItemImage}" />
 											</MenuItem.Icon>
 										</MenuItem>
 										<Separator />
@@ -322,20 +298,16 @@
 												  Name="MenuItemMoveUp"
 												  Click="ButtonMoveUp_Click">
 											<MenuItem.Icon>
-												<custom:ImageState NormalSource="{StaticResource ImgMoveUp}"
-																   Stretch="UniformToFill"
-																   Width="16"
-																   Height="16" />
+												<custom:ImageState NormalSource="{StaticResource IconMoveUp}"
+																   Style="{StaticResource MenuItemImage}" />
 											</MenuItem.Icon>
 										</MenuItem>
 										<MenuItem Header="Move image down"
 												  Name="MenuItemMoveDown"
 												  Click="ButtonMoveDown_Click">
 											<MenuItem.Icon>
-												<custom:ImageState NormalSource="{StaticResource ImgMoveDown}"
-																   Stretch="UniformToFill"
-																   Width="16"
-																   Height="16" />
+												<custom:ImageState NormalSource="{StaticResource IconMoveDown}"
+																   Style="{StaticResource MenuItemImage}" />
 											</MenuItem.Icon>
 										</MenuItem>
 										<Separator />
@@ -426,11 +398,7 @@
 											   Click="ButtonShiftUp_Click"
 											   RepeatEnd="ButtonShiftUp_RepeatEnd">
 							<Image Source="{StaticResource ImgShiftUp}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center" />
+								   Style="{StaticResource ToolButtonImage}" />
 						</custom:RepeatButtonEx>
 						<custom:RepeatButtonEx Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 											   x:Name="ButtonShiftDown"
@@ -440,11 +408,7 @@
 											   Click="ButtonShiftDown_Click"
 											   RepeatEnd="ButtonShiftDown_RepeatEnd">
 							<Image Source="{StaticResource ImgShiftDown}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center" />
+								   Style="{StaticResource ToolButtonImage}" />
 						</custom:RepeatButtonEx>
 						<custom:RepeatButtonEx Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 											   x:Name="ButtonShiftLeft"
@@ -453,11 +417,7 @@
 											   Click="ButtonShiftLeft_Click"
 											   RepeatEnd="ButtonShiftLeft_RepeatEnd">
 							<Image Source="{StaticResource ImgShiftLeft}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center" />
+								   Style="{StaticResource ToolButtonImage}" />
 						</custom:RepeatButtonEx>
 						<custom:RepeatButtonEx Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 											   x:Name="ButtonShiftRight"
@@ -467,11 +427,7 @@
 											   Click="ButtonShiftRight_Click"
 											   RepeatEnd="ButtonShiftRight_RepeatEnd">
 							<Image Source="{StaticResource ImgShiftRight}"
-								   Stretch="UniformToFill"
-								   Width="16"
-								   Height="16"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center" />
+								   Style="{StaticResource ToolButtonImage}" />
 						</custom:RepeatButtonEx>
 						<Border Grid.Column="2"
 								Grid.Row="2"
@@ -584,11 +540,7 @@
 							Click="ButtonSoundPreview_Click"
 							ToolTip="Preview">
 						<custom:ImageState NormalSource="{StaticResource IconPlay}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16"
-										   HorizontalAlignment="Center"
-										   VerticalAlignment="Center" />
+										   Style="{StaticResource ToolButtonImage}" />
 					</Button>
 				</ToolBar>
 				<custom:TextBoxEx x:Name="TextBoxSoundFile"
@@ -614,11 +566,7 @@
 							Click="ButtonSoundImport_Click"
 							ToolTip="Open sound file">
 						<custom:ImageState NormalSource="{StaticResource ImgFileOpen}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16"
-										   HorizontalAlignment="Center"
-										   VerticalAlignment="Center" />
+										   Style="{StaticResource ToolButtonImage}" />
 					</Button>
 					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 							Height="Auto"
@@ -629,11 +577,7 @@
 							Focusable="false"
 							ToolTip="Save sound">
 						<custom:ImageState NormalSource="{StaticResource ImgFileSave}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16"
-										   HorizontalAlignment="Center"
-										   VerticalAlignment="Center" />
+										   Style="{StaticResource ToolButtonImage}" />
 					</Button>
 				</ToolBar>
 			</Grid>

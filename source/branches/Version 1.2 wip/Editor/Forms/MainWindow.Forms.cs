@@ -77,7 +77,7 @@ namespace AgentCharacterEditor
 			pContextMenu.MenuItemPaste.Click += new EventHandler (MenuItemEditPaste_Click);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void LoadWindowState ()
 		{
@@ -125,7 +125,7 @@ namespace AgentCharacterEditor
 			mRecentFiles.ShowPaths (MenuItemFile.DropDown, MenuItemFilePrintPreview);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void SaveSettings ()
 		{
@@ -395,7 +395,7 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		internal Control GetActiveControl ()
 		{
@@ -465,7 +465,7 @@ namespace AgentCharacterEditor
 			return lActive;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public new Boolean ValidateChildren ()
 		{
@@ -500,7 +500,7 @@ namespace AgentCharacterEditor
 			IsWindowShowing = false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		void Application_Idle (object sender, EventArgs e)
 		{
@@ -527,7 +527,7 @@ namespace AgentCharacterEditor
 			HandleNavigateForward ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ToolButtonFileNew_Click (object sender, EventArgs e)
 		{
@@ -598,7 +598,7 @@ namespace AgentCharacterEditor
 			HandleNavigateForward ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void MenuItemFileNew_Click (object sender, EventArgs e)
 		{
@@ -620,7 +620,7 @@ namespace AgentCharacterEditor
 			HandleFileSaveAs ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void MenuItemFilePrint_Click (object sender, EventArgs e)
 		{
@@ -632,7 +632,7 @@ namespace AgentCharacterEditor
 			MessageBox.Show ("Not implemented", Program.AssemblyTitle, MessageBoxButtons.OK);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void MenuItemEditUndo_Click (object sender, EventArgs e)
 		{
@@ -659,7 +659,7 @@ namespace AgentCharacterEditor
 			HandleEditRedo ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void MenuItemEditCopy_Click (object sender, EventArgs e)
 		{

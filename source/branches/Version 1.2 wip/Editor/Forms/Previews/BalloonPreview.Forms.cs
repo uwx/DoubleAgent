@@ -144,7 +144,7 @@ namespace AgentCharacterEditor.Previews
 			return lRet;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private bool IsAutoScrolling
 		{
@@ -202,7 +202,7 @@ namespace AgentCharacterEditor.Previews
 			return lRet;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		void AutoPaceTimer_Tick (object sender, EventArgs e)
 		{
@@ -242,7 +242,7 @@ namespace AgentCharacterEditor.Previews
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override void OnPaint (PaintEventArgs e)
 		{
@@ -261,7 +261,7 @@ namespace AgentCharacterEditor.Previews
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override void OnEnabledChanged (EventArgs e)
 		{

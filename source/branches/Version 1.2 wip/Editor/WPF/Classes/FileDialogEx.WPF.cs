@@ -42,7 +42,7 @@ namespace AgentCharacterEditor.Global
 			InitFilterIndex (lDialog);
 
 			lDialogResult = lDialog.ShowDialog ();
-			if (lDialogResult.HasValue && lDialogResult.Value)
+			if (lDialogResult ?? false)
 			{
 				pFilePath = lDialog.FileName;
 				return true;
@@ -62,7 +62,7 @@ namespace AgentCharacterEditor.Global
 			InitFilterIndex (lDialog);
 
 			lDialogResult = lDialog.ShowDialog ();
-			if (lDialogResult.HasValue && lDialogResult.Value)
+			if (lDialogResult ?? false)
 			{
 				pFilePath = lDialog.FileName;
 				return true;
@@ -70,7 +70,7 @@ namespace AgentCharacterEditor.Global
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		static protected void InitFilePath (Microsoft.Win32.FileDialog pFileDialog, String pFilePath)
 		{
@@ -108,7 +108,7 @@ namespace AgentCharacterEditor.Global
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		static private void ShowPaletteError (String pFilePath)
 		{

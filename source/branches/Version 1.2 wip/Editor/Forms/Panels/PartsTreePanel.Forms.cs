@@ -40,7 +40,7 @@ namespace AgentCharacterEditor.Panels
 			InitializeComponent ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public void LoadExpansion ()
 		{
@@ -116,7 +116,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void InitNodeTags ()
 		{
@@ -181,8 +181,10 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
-		public void ShowFilePart ()
+		public override void ShowFilePart (ResolvePart pFilePart)
 		{
+			FilePart = pFilePart;
+
 			InitNodeTags ();
 			ShowAnimationNames ();
 			if (TreeViewMain.SelectedNode != null)
@@ -315,7 +317,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		internal TreeNode GetRootNode (String pNodeName)
 		{
@@ -398,7 +400,7 @@ namespace AgentCharacterEditor.Panels
 			return lObjectNode;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public Boolean SelectPartNode (ResolvePart pPart)
 		{

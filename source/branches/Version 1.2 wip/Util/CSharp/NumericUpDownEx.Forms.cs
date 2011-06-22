@@ -106,7 +106,7 @@ namespace DoubleAgent
 			set;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		/// <summary>
 		/// The default background color.
@@ -165,7 +165,7 @@ namespace DoubleAgent
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		/// <summary>
 		/// This is an override of <see cref="NumericUpDown.Value"/>.  Instead of throwing an exception when the value is out of range, it highlights the control.
@@ -253,7 +253,7 @@ namespace DoubleAgent
 			base.OnValidated (e);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		/// <summary>
 		/// Sets up the internal event handlers and retrieves the contained TextBox.
@@ -333,7 +333,7 @@ namespace DoubleAgent
 			ValidateNow ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void UpDownButtons_MouseCaptureChanged (object sender, EventArgs e)
 		{

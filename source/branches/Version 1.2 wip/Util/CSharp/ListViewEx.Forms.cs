@@ -65,55 +65,23 @@ namespace DoubleAgent
 		{
 			get
 			{
-				return GetSelectedItem (false);
+				return GetSelectedItem ();
 			}
 			set
 			{
-				if (value == null)
-				{
-					SelectedItems.Clear ();
-				}
-				else if (Items.Contains (value))
-				{
-					if ((SelectedItems.Count != 1) || (!SelectedItems.Contains (value)))
-					{
-						SelectedItems.Clear ();
-					}
-					value.Selected = true;
-					value.Focused = true;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Gets the selected <see cref="ListViewItem"/> in single-selection mode.
-		/// If there is no selection, the <see cref="ListView.FocusedItem"/> is returned.
-		/// </summary>
-		[System.ComponentModel.Browsable (false)]
-		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
-		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-		public ListViewItem SelectedOrFocusedItem
-		{
-			get
-			{
-				return GetSelectedItem (true);
+				SetSelectedItem (value);
 			}
 		}
 
 		/// <summary>
 		/// Retrieves the selected <see cref="ListViewItem"/> in single-selection mode.
 		/// </summary>
-		/// <param name="pIncludeFocus">True if the <see cref="ListView.FocusedItem"/> should be returned when there is no selected item.</param>
-		/// <returns>The selected (or focused) item, or null if not found.</returns>
-		public ListViewItem GetSelectedItem (Boolean pIncludeFocus)
+		/// <returns>The selected item, or null if not found.</returns>
+		public ListViewItem GetSelectedItem ()
 		{
 			if (SelectedIndices.Count == 1)
 			{
 				return SelectedItems[0];
-			}
-			else if (pIncludeFocus)
-			{
-				return FocusedItem;
 			}
 			else
 			{
@@ -121,7 +89,24 @@ namespace DoubleAgent
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		public void SetSelectedItem (ListViewItem pSelectedItem)
+		{
+			if (pSelectedItem == null)
+			{
+				SelectedItems.Clear ();
+			}
+			else if (Items.Contains (pSelectedItem))
+			{
+				if ((SelectedItems.Count != 1) || (!SelectedItems.Contains (pSelectedItem)))
+				{
+					SelectedItems.Clear ();
+				}
+				pSelectedItem.Selected = true;
+				pSelectedItem.Focused = true;
+			}
+		}
+
+		//=============================================================================
 
 		/// <summary>
 		/// Gets or sets the index of the selected <see cref="ListViewItem"/> in single-selection mode.
@@ -134,51 +119,23 @@ namespace DoubleAgent
 		{
 			get
 			{
-				return GetSelectedIndex (false);
+				return GetSelectedIndex ();
 			}
 			set
 			{
-				value = Math.Min (value, Items.Count - 1);
-				if ((value >= 0) && (value < Items.Count))
-				{
-					SelectedItem = Items[value];
-				}
-				else if (value < 0)
-				{
-					SelectedItem = null;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Gets the index of the selected <see cref="ListViewItem"/> in single-selection mode.
-		/// If there is no selection, the <see cref="ListView.FocusedItem"/> is returned.
-		/// </summary>
-		[System.ComponentModel.Browsable (false)]
-		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
-		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-		public int SelectedOrFocusedIndex
-		{
-			get
-			{
-				return GetSelectedIndex (true);
+				SetSelectedIndex (value);
 			}
 		}
 
 		/// <summary>
 		/// Retrieves the index of the selected <see cref="ListViewItem"/> in single-selection mode.
 		/// </summary>
-		/// <param name="pIncludeFocus">True if the <see cref="ListView.FocusedItem"/> should be returned when there is no selected item.</param>
-		/// <returns>The index of the selected (or focused) item, or -1 if not found.</returns>
-		public int GetSelectedIndex (Boolean pIncludeFocus)
+		/// <returns>The index of the selected item, or -1 if not found.</returns>
+		public int GetSelectedIndex ()
 		{
 			if (SelectedIndices.Count == 1)
 			{
 				return SelectedIndices[0];
-			}
-			else if (pIncludeFocus && (FocusedItem != null))
-			{
-				return FocusedItem.Index;
 			}
 			else
 			{
@@ -186,7 +143,20 @@ namespace DoubleAgent
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		public void SetSelectedIndex (int pSelectedIndex)
+		{
+			pSelectedIndex = Math.Min (pSelectedIndex, Items.Count - 1);
+			if (pSelectedIndex >= 0)
+			{
+				SelectedItem = Items[pSelectedIndex];
+			}
+			else
+			{
+				SelectedItem = null;
+			}
+		}
+
+		//=============================================================================
 
 		/// <summary>
 		/// Gets the index of the <see cref="ListView.FocusedItem"/>.

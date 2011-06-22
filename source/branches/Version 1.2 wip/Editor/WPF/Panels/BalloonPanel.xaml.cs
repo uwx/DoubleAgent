@@ -98,7 +98,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowBalloonColors ()
 		{
@@ -133,7 +133,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowBalloonPreview ()
 		{
@@ -163,7 +163,7 @@ namespace AgentCharacterEditor.Panels
 			HandleEnabledChanged ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void NumericCharsPerLine_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
@@ -183,7 +183,7 @@ namespace AgentCharacterEditor.Panels
 			NumericNumLines.IsModified = false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void RadioButtonNumLines_Checked (object sender, RoutedEventArgs e)
 		{
@@ -205,7 +205,7 @@ namespace AgentCharacterEditor.Panels
 			HandleAutoPaceChanged ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ButtonBalloonFont_Click (object sender, RoutedEventArgs e)
 		{

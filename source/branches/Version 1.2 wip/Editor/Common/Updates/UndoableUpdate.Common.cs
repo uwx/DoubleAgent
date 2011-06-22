@@ -63,7 +63,7 @@ namespace AgentCharacterEditor.Updates
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override UndoUnit OnApplied (UndoUnit pRedoUnit, System.EventArgs pEventArgs)
 		{
@@ -105,7 +105,7 @@ namespace AgentCharacterEditor.Updates
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public override String ToString ()
 		{
@@ -263,7 +263,7 @@ namespace AgentCharacterEditor.Updates
 			this.UpdateStart = null;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public void PutUpdate (T pUpdate, int pRepeatNum)
 		{

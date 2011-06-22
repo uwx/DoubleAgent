@@ -113,7 +113,7 @@ namespace AgentCharacterEditor.Global
 			set;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public Boolean PutCopyObject (Object pCopyObject)
 		{
@@ -193,7 +193,7 @@ namespace AgentCharacterEditor.Global
 			protected set;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public void UpdateMenuItems (ToolStripMenuItem pCopyItem, ToolStripMenuItem pCutItem, ToolStripMenuItem pDeleteItem, ToolStripMenuItem pPasteItem)
 		{
@@ -329,7 +329,7 @@ namespace AgentCharacterEditor.Global
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public String CopyObjectTitle
 		{
@@ -360,7 +360,7 @@ namespace AgentCharacterEditor.Global
 			set;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public void PutCutTitle (String pObjectTitle)
 		{

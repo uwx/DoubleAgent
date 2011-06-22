@@ -252,7 +252,7 @@ namespace DoubleAgent
 		public delegate void RepeatEndEventHandler (object sender, EventArgs e);
 		public event RepeatEndEventHandler RepeatEnd;
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override void OnMouseDown (MouseEventArgs e)
 		{
@@ -333,7 +333,7 @@ namespace DoubleAgent
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override void OnRenderToolStripBorder (ToolStripRenderEventArgs e)
 		{

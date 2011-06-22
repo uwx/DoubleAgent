@@ -29,59 +29,43 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Navigation
-
-		public new class PanelContext : FilePartPanel.PanelContext
-		{
-			public PanelContext (OverlayPanel pPanel)
-				: base (pPanel)
-			{
-				SelectedOverlay = pPanel.ListViewOverlays.SelectedIndex;
-			}
-
-			public void RestoreContext (OverlayPanel pPanel)
-			{
-				base.RestoreContext (pPanel);
-				pPanel.ListViewOverlays.SelectedIndex = SelectedOverlay;
-			}
-
-			public int SelectedOverlay
-			{
-				get;
-				protected set;
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
 		private void ShowFrameOverlays ()
 		{
-			foreach (ListViewItem lOverlayItem in ListViewOverlays.Items)
+			PanelContext lContext = IsPanelFilling ? null : new PanelContext (this);
+
+			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				OverlayListItem lListItem = lOverlayItem.Content as OverlayListItem;
-				MouthOverlay lOverlayType = lListItem.Overlay.OverlayType;
-
-				if (!IsPanelEmpty && (Frame.Overlays != null) && (Frame.Overlays.Contains (lOverlayType)))
+				foreach (ListViewItem lOverlayItem in ListViewOverlays.Items)
 				{
-					lListItem.Overlay = Frame.Overlays[lOverlayType];
+					OverlayListItem lListItem = lOverlayItem.Content as OverlayListItem;
+					MouthOverlay lOverlayType = lListItem.Overlay.OverlayType;
+
+					if (!IsPanelEmpty && (Frame.Overlays != null) && (Frame.Overlays.Contains (lOverlayType)))
+					{
+						lListItem.Overlay = Frame.Overlays[lOverlayType];
+					}
+					else
+					{
+						lListItem.Overlay = new FileFrameOverlay ();
+						lListItem.Overlay.OverlayType = lOverlayType;
+					}
+
+					lListItem.OverlayChanged ();
 				}
-				else
+
+				ArrangeOverlaysList ();
+				ListViewOverlays.IsEnabled = !IsPanelEmpty;
+
+				if (lContext != null)
 				{
-					lListItem.Overlay = new FileFrameOverlay ();
-					lListItem.Overlay.OverlayType = lOverlayType;
+					lContext.RestoreContext (this);
 				}
-
-				lListItem.OverlayChanged ();
-			}
-
-			ArrangeOverlaysList ();
-			ListViewOverlays.IsEnabled = !IsPanelEmpty;
-
-			if (IsPanelEmpty)
-			{
-				ShowFrameOverlay (null);
+				if (IsPanelEmpty)
+				{
+					ShowFrameOverlay (null);
+				}
 			}
 		}
 
@@ -119,7 +103,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowFrameSample (FileFrameOverlay pFrameOverlay)
 		{
@@ -194,11 +178,11 @@ namespace AgentCharacterEditor.Panels
 			ShowSelectedOverlay ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ListViewOverlays_SelectionChanged (object sender, SelectionChangedEventArgs e)
 		{
-			if (ListViewOverlays.SelectedIndex >= 0)
+			if (!IsPanelFilling)
 			{
 				ShowSelectedOverlay ();
 			}
@@ -206,7 +190,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ListViewOverlays_MouseDoubleClick (object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
-			UpdateSelectedOverlay (GetSelectedOverlay (false));
+			UpdateSelectedOverlay (GetSelectedOverlay ());
 		}
 
 		private void ListViewOverlays_ContextMenuOpening (object sender, ContextMenuEventArgs e)
@@ -224,24 +208,24 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ButtonAdd_Click (object sender, RoutedEventArgs e)
 		{
-			UpdateSelectedOverlay (GetSelectedOverlay (false));
+			UpdateSelectedOverlay (GetSelectedOverlay ());
 		}
 
 		private void ButtonDelete_Click (object sender, RoutedEventArgs e)
 		{
-			DeleteSelectedOverlay (GetSelectedOverlay (false), false);
+			DeleteSelectedOverlay (GetSelectedOverlay (), false);
 		}
 
 		private void ButtonChooseFile_Click (object sender, RoutedEventArgs e)
 		{
-			UpdateSelectedOverlay (GetSelectedOverlay (false));
+			UpdateSelectedOverlay (GetSelectedOverlay ());
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void NumericOffsetX_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
@@ -266,7 +250,7 @@ namespace AgentCharacterEditor.Panels
 			HandleReplaceChanged ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ButtonShiftUp_Click (object sender, RoutedEventArgs e)
 		{
@@ -316,7 +300,7 @@ namespace AgentCharacterEditor.Panels
 		{
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public FileFrameOverlay Overlay
 		{
@@ -331,7 +315,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public ImageSource OverlayTypeImage
 		{
@@ -396,7 +380,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public void OverlayChanged ()
 		{

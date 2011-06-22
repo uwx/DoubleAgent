@@ -37,13 +37,10 @@ namespace AgentCharacterEditor.Panels
 			{
 				return base.FilePart;
 			}
-			set
+			protected set
 			{
 				base.FilePart = value;
 				State = (FilePart is ResolveState) ? (FilePart as ResolveState).Target : null;
-
-				ShowStateName ();
-				ShowStateAnimations ();
 			}
 		}
 
@@ -105,6 +102,27 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
+		public new class PanelContext : FilePartPanel.PanelContext
+		{
+			public PanelContext (StatePanel pPanel)
+				: base (pPanel)
+			{
+				SelectedAnimation = pPanel.ListViewAnimations.SelectedIndex;
+			}
+
+			public void RestoreContext (StatePanel pPanel)
+			{
+				base.RestoreContext (pPanel);
+				pPanel.ListViewAnimations.SelectedIndex = SelectedAnimation;
+			}
+
+			public int SelectedAnimation
+			{
+				get;
+				protected set;
+			}
+		}
+
 		private void NavigateToItem (String pAnimationName)
 		{
 			if (!IsPanelEmpty && (Navigate != null) && CharacterFile.Gestures.Contains (pAnimationName))
@@ -122,6 +140,14 @@ namespace AgentCharacterEditor.Panels
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
+
+		public override void ShowFilePart (ResolvePart pFilePart)
+		{
+			FilePart = pFilePart;
+
+			ShowStateName ();
+			ShowStateAnimations ();
+		}
 
 		private void ShowStateName ()
 		{
@@ -157,7 +183,7 @@ namespace AgentCharacterEditor.Panels
 			return lUpdate;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void HandleItemChecked (String pAnimationName, Boolean pItemChecked)
 		{
@@ -177,7 +203,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override void UpdateApplied (object pUpdate)
 		{

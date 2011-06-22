@@ -72,7 +72,7 @@ namespace DoubleAgent
 						{
 							lSourceImage = HotSource;
 						}
-						else if (IsChecked.HasValue && IsChecked.Value)
+						else if (IsChecked ?? false)
 						{
 							lSourceImage = CheckedSource;
 						}
@@ -213,14 +213,7 @@ namespace DoubleAgent
 			}
 			set
 			{
-				if (value.HasValue)
-				{
-					SetValue (IsCheckedProperty, value.Value);
-				}
-				else
-				{
-					SetValue (IsCheckedProperty, null);
-				}
+				SetValue (IsCheckedProperty, value ?? null);
 			}
 		}
 

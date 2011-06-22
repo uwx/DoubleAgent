@@ -22,6 +22,7 @@ using System;
 using AgentCharacterEditor.Navigation;
 using AgentCharacterEditor.Updates;
 using AgentCharacterEditor.Properties;
+using AgentCharacterEditor.Global;
 using DoubleAgent;
 using DoubleAgent.Character;
 
@@ -38,7 +39,7 @@ namespace AgentCharacterEditor.Panels
 			{
 				return base.FilePart;
 			}
-			set
+			protected set
 			{
 				base.FilePart = value;
 				if (FilePart is ResolveAnimationFrame)
@@ -46,10 +47,6 @@ namespace AgentCharacterEditor.Panels
 					(FilePart as ResolveAnimationFrame).Scope = ResolveAnimationFrame.ScopeType.ScopeBranching;
 				}
 				Frame = (base.FilePart is ResolveAnimationFrame) ? (base.FilePart as ResolveAnimationFrame).Target : null;
-
-				ShowFrameName ();
-				ShowFrameBranching ();
-				ShowExitFrame ();
 			}
 		}
 
@@ -86,6 +83,15 @@ namespace AgentCharacterEditor.Panels
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
+
+		public override void ShowFilePart (ResolvePart pFilePart)
+		{
+			FilePart = pFilePart;
+
+			ShowFrameName ();
+			ShowFrameBranching ();
+			ShowExitFrame ();
+		}
 
 		private void ShowFrameName ()
 		{
@@ -130,7 +136,7 @@ namespace AgentCharacterEditor.Panels
 				{
 					Int16 lRemainder = 100;
 
-					if ((Frame.Branching != null) && (Frame.Branching.Length >= 1))
+					if (Frame.GetBranchingCount () >= 1)
 					{
 						NumericTarget0.Maximum = this.Animation.Frames.Count;
 						NumericTarget0.Value = Frame.Branching[0].mFrameNdx + 1;
@@ -142,7 +148,7 @@ namespace AgentCharacterEditor.Panels
 						NumericTarget0.Clear ();
 						NumericBranching0.Value = 0;
 					}
-					if ((Frame.Branching != null) && (Frame.Branching.Length >= 2))
+					if (Frame.GetBranchingCount () >= 2)
 					{
 						NumericTarget1.Maximum = this.Animation.Frames.Count;
 						NumericTarget1.Value = Frame.Branching[1].mFrameNdx + 1;
@@ -154,7 +160,7 @@ namespace AgentCharacterEditor.Panels
 						NumericTarget1.Clear ();
 						NumericBranching1.Value = 0;
 					}
-					if ((Frame.Branching != null) && (Frame.Branching.Length >= 3))
+					if (Frame.GetBranchingCount () >= 3)
 					{
 						NumericTarget2.Maximum = this.Animation.Frames.Count;
 						NumericTarget2.Value = Frame.Branching[2].mFrameNdx + 1;
@@ -281,7 +287,7 @@ namespace AgentCharacterEditor.Panels
 						}
 					}
 				}
-				if (!UpdateAnimationFrame.BranchingEqual (Frame.Branching, lBranching))
+				if (!Frame.IsBranchingEqual (lBranching))
 				{
 					UpdateAnimationFrame lUpdate = new UpdateAnimationFrame (Frame, false);
 
@@ -300,7 +306,7 @@ namespace AgentCharacterEditor.Panels
 			return lRet;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void HandleExitTypeChanged ()
 		{
@@ -346,7 +352,7 @@ namespace AgentCharacterEditor.Panels
 			NumericTargetExit.IsModified = false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override void UpdateApplied (object pUpdate)
 		{

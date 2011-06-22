@@ -69,6 +69,7 @@ namespace AgentCharacterEditor.Previews
 				}
 				if ((mBranchingVisual = DrawBranching ()) != null)
 				{
+					mBranchingVisual.Offset = new Vector (mBranchingVisual.Offset.X, mBranchingVisual.Offset.Y + lFramesMargin.Top);
 					AddVisualChild (mBranchingVisual);
 					lFramesMargin.Top += mBranchingVisual.ContentBounds.Height;
 				}
@@ -157,7 +158,7 @@ namespace AgentCharacterEditor.Previews
 			return lVisual;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private class DrawingStuff : IDisposable
 		{
@@ -192,7 +193,7 @@ namespace AgentCharacterEditor.Previews
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private Point DrawBranchingLine (Double pOffsetY, BranchingItem pBranching, DrawingStuff pDrawingStuff)
 		{
@@ -270,7 +271,7 @@ namespace AgentCharacterEditor.Previews
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private System.Windows.Media.DrawingVisual mBranchingVisual = null;
 		private System.Windows.Media.DrawingVisual mExitBranchingVisual = null;

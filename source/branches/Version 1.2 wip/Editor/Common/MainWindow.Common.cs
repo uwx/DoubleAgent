@@ -52,7 +52,7 @@ namespace AgentCharacterEditor
 			Program.UndoManager.Redone += new UndoManager.RedoneEventHandler (UndoManager_Redone);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void LoadAllConfig ()
 		{
@@ -106,7 +106,7 @@ namespace AgentCharacterEditor
 		public event EventHandler SaveConfig;
 		public event UndoUnit.AppliedEventHandler UpdateApplied;
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public void OnUpdateApplied (object sender, EventArgs e)
 		{
@@ -130,7 +130,7 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private Boolean OpenCharacterFile (String pFilePath)
 		{
@@ -215,16 +215,16 @@ namespace AgentCharacterEditor
 						ShowEditState ();
 						ShowNavigateState ();
 
-						PanelPartsTree.FilePart = new ResolveCharacter ();
-						PanelCharacter.FilePart = new ResolveCharacter ();
-						PanelBalloon.FilePart = new ResolveBalloon ();
-						PanelTts.FilePart = new ResolveTts ();
-						PanelAnimations.FilePart = new ResolveCharacter ();
-						PanelAnimation.FilePart = new ResolveCharacter ();
-						PanelFrame.FilePart = new ResolveCharacter ();
-						PanelBranching.FilePart = new ResolveCharacter ();
-						PanelOverlays.FilePart = new ResolveCharacter ();
-						PanelState.FilePart = new ResolveCharacter ();
+						PanelPartsTree.ShowFilePart (new ResolveCharacter ());
+						PanelCharacter.ShowFilePart (new ResolveCharacter ());
+						PanelBalloon.ShowFilePart (new ResolveBalloon ());
+						PanelTts.ShowFilePart (new ResolveTts ());
+						PanelAnimations.ShowFilePart (new ResolveCharacter ());
+						PanelAnimation.ShowFilePart (new ResolveCharacter ());
+						PanelFrame.ShowFilePart (new ResolveCharacter ());
+						PanelBranching.ShowFilePart (new ResolveCharacter ());
+						PanelOverlays.ShowFilePart (new ResolveCharacter ());
+						PanelState.ShowFilePart (new ResolveCharacter ());
 
 						PanelPartsTree.LoadExpansion ();
 						ShowSelectedPart ();
@@ -343,7 +343,7 @@ namespace AgentCharacterEditor
 			return lRet;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private Boolean GetOpenPath (ref String pFilePath)
 		{
@@ -448,7 +448,7 @@ namespace AgentCharacterEditor
 			}
 			else if (pSelectedPart is ResolveAnimation)
 			{
-				PanelAnimation.FilePart = pSelectedPart;
+				PanelAnimation.ShowFilePart (pSelectedPart);
 				lSelectedPanel = PanelAnimation;
 			}
 			else if (pSelectedPart is ResolveAnimationFrame)
@@ -458,19 +458,19 @@ namespace AgentCharacterEditor
 				{
 					case ResolveAnimationFrame.ScopeType.ScopeFrame:
 						{
-							PanelFrame.FilePart = pSelectedPart;
+							PanelFrame.ShowFilePart (pSelectedPart);
 							lSelectedPanel = PanelFrame;
 						}
 						break;
 					case ResolveAnimationFrame.ScopeType.ScopeBranching:
 						{
-							PanelBranching.FilePart = pSelectedPart;
+							PanelBranching.ShowFilePart (pSelectedPart);
 							lSelectedPanel = PanelBranching;
 						}
 						break;
 					case ResolveAnimationFrame.ScopeType.ScopeOverlays:
 						{
-							PanelOverlays.FilePart = pSelectedPart;
+							PanelOverlays.ShowFilePart (pSelectedPart);
 							lSelectedPanel = PanelOverlays;
 						}
 						break;
@@ -478,7 +478,7 @@ namespace AgentCharacterEditor
 			}
 			else if (pSelectedPart is ResolveState)
 			{
-				PanelState.FilePart = pSelectedPart;
+				PanelState.ShowFilePart (pSelectedPart);
 				lSelectedPanel = PanelState;
 			}
 
@@ -505,7 +505,7 @@ namespace AgentCharacterEditor
 			PanelState.IsPanelVisible = Object.ReferenceEquals (PanelState, pSelectedPanel);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private KeyValuePair<FilePartPanel, Object> GetNavigationContext ()
 		{
@@ -645,7 +645,7 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void HandleEditUndo ()
 		{
@@ -679,7 +679,7 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private Boolean CanHandleNavigateBack
 		{

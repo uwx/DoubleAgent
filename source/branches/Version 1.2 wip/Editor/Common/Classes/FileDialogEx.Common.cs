@@ -38,7 +38,7 @@ namespace AgentCharacterEditor.Global
 			return OpenSaveFile (ref pFilePath, CharacterFileFilter, CharacterFileDefaultExt);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		static public Boolean OpenImageFile (ref String pFilePath)
 		{
@@ -83,7 +83,7 @@ namespace AgentCharacterEditor.Global
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		static public String CharacterFileFilter
 		{
@@ -186,7 +186,7 @@ namespace AgentCharacterEditor.Global
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		static protected void GetPathDefaults (String pFilePath, ref String pInitialDirectory, ref String pFileName, ref String pDefaultExt)
 		{
@@ -239,7 +239,7 @@ namespace AgentCharacterEditor.Global
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		static public String FileExtTypeName (String pFileExt)
 		{

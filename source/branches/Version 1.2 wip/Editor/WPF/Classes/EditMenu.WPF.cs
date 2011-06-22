@@ -40,7 +40,7 @@ namespace AgentCharacterEditor.Global
 			protected set;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public Boolean PutCopyObject (Object pCopyObject)
 		{
@@ -108,7 +108,7 @@ namespace AgentCharacterEditor.Global
 			}
 		}
 
-		/////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public void PutCutTitle (String pObjectTitle)
 		{
@@ -134,7 +134,7 @@ namespace AgentCharacterEditor.Global
 			RoutedEventArgs.PutPasteTitle (pPasteTypeTitle, pObjectTitle);
 		}
 
-		/////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public Object GetPasteObject ()
 		{
@@ -179,7 +179,7 @@ namespace AgentCharacterEditor.Global
 			pMenuItem.Header = pTitle;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public static void SetTipText (this Control pControl, String pTipText)
 		{
@@ -213,7 +213,7 @@ namespace AgentCharacterEditor.Global
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public static void SetTipText (this CanExecuteRoutedEventArgs pEventArgs, String pTipText)
 		{
@@ -247,7 +247,7 @@ namespace AgentCharacterEditor.Global
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		static public void PutCutTitle (this CanExecuteRoutedEventArgs pEventArgs)
 		{
@@ -270,7 +270,7 @@ namespace AgentCharacterEditor.Global
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		static public void PutCopyTitle (this CanExecuteRoutedEventArgs pEventArgs)
 		{
@@ -293,7 +293,7 @@ namespace AgentCharacterEditor.Global
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		static public void PutDeleteTitle (this CanExecuteRoutedEventArgs pEventArgs)
 		{
@@ -316,7 +316,7 @@ namespace AgentCharacterEditor.Global
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		static public void PutPasteTitle (this CanExecuteRoutedEventArgs pEventArgs)
 		{
@@ -355,7 +355,7 @@ namespace AgentCharacterEditor.Global
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		static public void PutUndoTitle (this CanExecuteRoutedEventArgs pEventArgs)
 		{
@@ -406,7 +406,7 @@ namespace AgentCharacterEditor.Global
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		static public void PutRedoTitle (this CanExecuteRoutedEventArgs pEventArgs)
 		{

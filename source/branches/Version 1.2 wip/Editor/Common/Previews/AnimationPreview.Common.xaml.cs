@@ -80,7 +80,7 @@ namespace AgentCharacterEditor.Previews
 			protected set;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		[System.ComponentModel.Browsable (false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
@@ -198,7 +198,7 @@ namespace AgentCharacterEditor.Previews
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		[System.ComponentModel.Browsable (false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
@@ -294,7 +294,7 @@ namespace AgentCharacterEditor.Previews
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		[System.ComponentModel.Browsable (false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
@@ -408,7 +408,7 @@ namespace AgentCharacterEditor.Previews
 			return lRet;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public Boolean StartAnimation ()
 		{
@@ -505,7 +505,7 @@ namespace AgentCharacterEditor.Previews
 			return lRet;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public void ShowAnimationFrame (CharacterFile pCharacterFile, FileAnimationFrame pFrame)
 		{
@@ -543,7 +543,7 @@ namespace AgentCharacterEditor.Previews
 #endif
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override void OnRender (DrawingContext drawingContext)
 		{

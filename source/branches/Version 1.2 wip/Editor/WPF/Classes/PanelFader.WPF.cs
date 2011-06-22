@@ -155,7 +155,7 @@ namespace AgentCharacterEditor
 			set;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public Storyboard FadeInStoryboard
 		{
@@ -258,7 +258,7 @@ namespace AgentCharacterEditor
 			return lFadeOut;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public Boolean StartStoryboard (Storyboard pStoryboard)
 		{

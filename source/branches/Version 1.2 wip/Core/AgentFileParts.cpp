@@ -2350,27 +2350,28 @@ Boolean CAgentFileFrame::CopyTo (CAgentFileFrame^ pTarget, Boolean pDeepCopy)
 			pTarget->mSoundNdx = mSoundNdx;
 		}
 
+		if	(mBranching)
+		{
+			pTarget->mBranching = gcnew array <CAgentFileFrameBranch> (mBranching->Length);
+			for	(int lNdx = 0; lNdx < mBranching->Length; lNdx++)
+			{
+				pTarget->mBranching [lNdx].mFrameNdx = mBranching [lNdx].mFrameNdx;
+				pTarget->mBranching [lNdx].mProbability = mBranching [lNdx].mProbability;
+			}
+#ifdef	_DEBUG_COPY
+			LogMessage (_DEBUG_COPY, _T("  Branching [%d] [%d]"), mBranching->Length, pTarget->mBranching->Length);
+#endif
+		}
+		else
+		{
+			pTarget->mBranching = nullptr;
+		}
+
 		if	(pDeepCopy)
 		{
 #ifdef	_DEBUG_COPY
 			LogMessage (_DEBUG_COPY, _T("  Deep"));
 #endif
-			if	(mBranching)
-			{
-				pTarget->mBranching = gcnew array <CAgentFileFrameBranch> (mBranching->Length);
-				for	(int lNdx = 0; lNdx < mBranching->Length; lNdx++)
-				{
-					pTarget->mBranching [lNdx] = mBranching [lNdx];
-				}
-#ifdef	_DEBUG_COPY
-				LogMessage (_DEBUG_COPY, _T("  Branching [%d] [%d]"), mBranching->Length, pTarget->mBranching->Length);
-#endif
-			}
-			else
-			{
-				pTarget->mBranching = nullptr;
-			}
-
 			if	(mImages)
 			{
 				pTarget->mImages = gcnew CAgentFileFrameImages (pTarget->mOwner, pTarget);
@@ -2446,7 +2447,7 @@ Boolean CAgentFileFrame::CopyTo (CAgentFileFrame^ pTarget, Boolean pDeepCopy)
 
 System::String^ CAgentFileFrame::ToString ()
 {
-    return String::Format ("Frame {0:D} Images {1:D} Overlays {2:D} Sound {3:D}", Duration, ImageCount, OverlayCount, SoundNdx);
+    return String::Format ("Frame {0:D}({1:D}) Images {2:D} Overlays {3:D} Sound {4:D}", Container?Container->IndexOf(this):-1, Duration, ImageCount, OverlayCount, SoundNdx);
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -47,10 +47,9 @@ namespace AgentCharacterEditor.Panels
 			{
 				return base.FilePart;
 			}
-			set
+			protected set
 			{
 				base.FilePart = value;
-				ShowTtsProperties ();
 			}
 		}
 
@@ -73,6 +72,14 @@ namespace AgentCharacterEditor.Panels
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
+
+		public override void ShowFilePart (ResolvePart pFilePart)
+		{
+			FilePart = pFilePart;
+			ShowTtsProperties ();
+		}
+
+		//=============================================================================
 
 		class VoiceComboItem
 		{
@@ -101,7 +108,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowTtsProperties ()
 		{
@@ -148,7 +155,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private int VoiceComboNdx (Guid pModeId)
 		{
@@ -205,7 +212,7 @@ namespace AgentCharacterEditor.Panels
 			return null;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected void HandleEnabledChanged ()
 		{
@@ -240,7 +247,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override void UpdateApplied (Object pUpdate)
 		{

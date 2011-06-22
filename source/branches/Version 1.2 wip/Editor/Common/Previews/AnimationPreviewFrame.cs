@@ -134,7 +134,7 @@ namespace AgentCharacterEditor.Previews
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override void GetAsFrozenCore (System.Windows.Freezable source)
 		{

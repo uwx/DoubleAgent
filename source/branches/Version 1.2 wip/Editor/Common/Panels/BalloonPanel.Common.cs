@@ -37,10 +37,9 @@ namespace AgentCharacterEditor.Panels
 			{
 				return base.FilePart;
 			}
-			set
+			protected set
 			{
 				base.FilePart = value;
-				ShowBalloonProperties ();
 			}
 		}
 
@@ -63,6 +62,12 @@ namespace AgentCharacterEditor.Panels
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
+
+		public override void ShowFilePart (ResolvePart pFilePart)
+		{
+			FilePart = pFilePart;
+			ShowBalloonProperties ();
+		}
 
 		private void ShowBalloonProperties ()
 		{
@@ -87,7 +92,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowBalloonStyle ()
 		{
@@ -136,7 +141,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected String GetFontFamilyName (System.Drawing.Font pFont)
 		{
@@ -179,7 +184,7 @@ namespace AgentCharacterEditor.Panels
 			return null;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected void HandleEnabledChanged ()
 		{
@@ -296,7 +301,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected void HandleUpdateFont ()
 		{
@@ -384,7 +389,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override void UpdateApplied (Object pUpdate)
 		{

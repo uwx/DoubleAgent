@@ -42,7 +42,7 @@ namespace AgentCharacterEditor.Panels
 			InitializeComponent ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public void LoadExpansion ()
 		{
@@ -98,7 +98,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void InitItemTags ()
 		{
@@ -163,8 +163,10 @@ namespace AgentCharacterEditor.Panels
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
-		public void ShowFilePart ()
+		public override void ShowFilePart (ResolvePart pFilePart)
 		{
+			FilePart = pFilePart;
+
 			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
 				InitItemTags ();
@@ -310,7 +312,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		internal TreeViewItem GetRootItem (String pItemName)
 		{
@@ -405,7 +407,7 @@ namespace AgentCharacterEditor.Panels
 			return lObjectItem;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public Boolean SelectPartItem (ResolvePart pPart)
 		{
@@ -472,7 +474,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!TreeViewMain.IsKeyboardFocusWithin)
 			{
-			    TreeViewMain.Focus ();
+				TreeViewMain.Focus ();
 			}
 		}
 

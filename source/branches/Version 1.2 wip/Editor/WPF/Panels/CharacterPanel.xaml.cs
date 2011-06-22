@@ -87,7 +87,7 @@ namespace AgentCharacterEditor.Panels
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowSmallIcon (System.Drawing.Bitmap pIcon)
 		{
@@ -142,7 +142,7 @@ namespace AgentCharacterEditor.Panels
 			TextBoxName.IsModified = false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void TextBoxDescription_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
@@ -162,7 +162,7 @@ namespace AgentCharacterEditor.Panels
 			TextBoxExtra.IsModified = false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void TextBoxIconFile_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
@@ -178,7 +178,7 @@ namespace AgentCharacterEditor.Panels
 			HandleIconImport ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ButtonNewGUID_Click (object sender, RoutedEventArgs e)
 		{

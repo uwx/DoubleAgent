@@ -87,12 +87,11 @@ namespace AgentCharacterEditor.Previews
 			{
 				foreach (FileAnimationFrame lFrame in Animation.Frames)
 				{
-					ListViewItem lListItem;
+					ListViewItemCommon lListItem;
 
-					lListItem = new ListViewItem (String.Format ("{0} ({1:D})", Titles.Frame (lFrame), lFrame.Duration));
+					lListItem = new ListViewItemCommon (String.Format ("{0} ({1:D})", Titles.Frame (lFrame), lFrame.Duration));
 					lListItem.Tag = null;
 					Items.Add (lListItem);
-					GetItemImage (lListItem); // Pre-cache all images now - all images drawn immediately anyway.
 				}
 			}
 
@@ -100,7 +99,25 @@ namespace AgentCharacterEditor.Previews
 			EndUpdate ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		protected void FrameImageChanged (FileAnimationFrame pFrame)
+		{
+			if ((pFrame != null) && (pFrame.Container != null))
+			{
+				int lFrameNdx = pFrame.Container.IndexOf (pFrame);
+
+				foreach (ListViewItemCommon lListItem in Items)
+				{
+					if (lListItem.Index == lFrameNdx)
+					{
+						lListItem.Tag = null;
+						RedrawItems (lListItem.Index, lListItem.Index, true);
+						break;
+					}
+				}
+			}
+		}
+
+		//=============================================================================
 
 		public new void EnsureVisible (int pItemIndex)
 		{
@@ -155,13 +172,12 @@ namespace AgentCharacterEditor.Previews
 				lImageRect = new RectangleF (lItemRect.Left, lItemRect.Top, lItemRect.Width, lItemRect.Height);
 				lImageRect.Width = lImage.Width * lImageRect.Height / (float)lImage.Height;
 				lImageRect.Offset (((float)lItemRect.Width - lImageRect.Width) / 2.0f, 0.0f);
-				//System.Diagnostics.Debug.Print ("Draw {0} in {1}", lImage.Size, lImageRect);
 
 				e.Graphics.DrawImage (lImage, lImageRect);
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public Bitmap GetItemImage (ListViewItem pItem)
 		{
@@ -179,7 +195,7 @@ namespace AgentCharacterEditor.Previews
 			{
 				try
 				{
-					lImage = GetFrameImage (CharacterFile, Animation.Frames[pItemIndex]);
+					lImage = GetFrameImageAsync (Animation.Frames[pItemIndex]);
 				}
 				catch
 				{

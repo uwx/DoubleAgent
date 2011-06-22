@@ -321,7 +321,7 @@ namespace AgentCharacterEditor.Navigation
 		public ResolveAnimationFrame (FileAnimationFrame pFrame)
 		{
 			Animation = new ResolveAnimation (pFrame.Animation);
-			FrameNdx = (pFrame.Container != null) ? pFrame.Container.IndexOf (pFrame) : -1;
+			FrameNdx = pFrame.GetFrameIndex ();
 			CachedTarget = pFrame;
 			TargetContained = (Animation.TargetContained) && (pFrame.Container != null) && pFrame.Container.Contains (pFrame);
 		}
@@ -387,7 +387,7 @@ namespace AgentCharacterEditor.Navigation
 		public ResolveFrameImage (FileFrameImage pImage)
 		{
 			Frame = new ResolveAnimationFrame (pImage.Container.Frame);
-			ImageNdx = (pImage.Container != null) ? pImage.Container.IndexOf (pImage) : -1;
+			ImageNdx = pImage.GetImageIndex ();
 			CachedTarget = pImage;
 			TargetContained = (Frame.TargetContained) && (pImage.Container != null) && pImage.Container.Contains (pImage);
 		}

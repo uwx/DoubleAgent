@@ -51,11 +51,7 @@
 								ToolTip="Add new animation"
 								Click="ButtonAdd_Click">
 							<custom:ImageState NormalSource="{StaticResource ImgFileNew}"
-											   Stretch="UniformToFill"
-											   Width="16"
-											   Height="16"
-											   HorizontalAlignment="Center"
-											   VerticalAlignment="Center" />
+											   Style="{StaticResource ToolButtonImage}" />
 						</Button>
 						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 								Height="Auto"
@@ -64,11 +60,7 @@
 								ToolTip="Delete animation"
 								Click="ButtonDelete_Click">
 							<custom:ImageState NormalSource="{StaticResource ImgEditDelete}"
-											   Stretch="UniformToFill"
-											   Width="16"
-											   Height="16"
-											   HorizontalAlignment="Center"
-											   VerticalAlignment="Center" />
+											   Style="{StaticResource ToolButtonImage}" />
 						</Button>
 					</ToolBar>
 					<Label Content="New animation name"
@@ -107,9 +99,7 @@
 									  Click="ButtonAdd_Click">
 								<MenuItem.Icon>
 									<custom:ImageState NormalSource="{StaticResource ImgFileNew}"
-													   Stretch="UniformToFill"
-													   Width="16"
-													   Height="16" />
+													   Style="{StaticResource MenuItemImage}" />
 								</MenuItem.Icon>
 							</MenuItem>
 							<Separator />
@@ -198,11 +188,7 @@
 								Width="Auto"
 								Click="ButtonPaletteImport_Click">
 							<custom:ImageState NormalSource="{StaticResource ImgFileOpen}"
-											   Stretch="UniformToFill"
-											   Width="16"
-											   Height="16"
-											   HorizontalAlignment="Center"
-											   VerticalAlignment="Center" />
+											   Style="{StaticResource ToolButtonImage}" />
 						</Button>
 						<Button Focusable="false"
 								Height="Auto"
@@ -212,11 +198,7 @@
 								VerticalAlignment="Center"
 								Width="Auto">
 							<custom:ImageState NormalSource="{StaticResource ImgFileSave}"
-											   Stretch="UniformToFill"
-											   Width="16"
-											   Height="16"
-											   HorizontalAlignment="Center"
-											   VerticalAlignment="Center" />
+											   Style="{StaticResource ToolButtonImage}" />
 						</Button>
 					</ToolBar>
 				</Grid>

@@ -59,7 +59,10 @@ namespace AgentCharacterEditor.Panels
 		{
 			Settings lSettings = Settings.Default;
 
-			lSettings.SelectedNameLanguage = (Int16)ListItemLangID (ListViewLanguage.SelectedOrFocusedItem as ListViewItemCommon);
+			if (ListViewLanguage.SelectedItem != null)
+			{
+				lSettings.SelectedNameLanguage = (Int16)ListItemLangID (ListViewLanguage.SelectedItem as ListViewItemCommon);
+			}
 		}
 
 		#endregion
@@ -84,7 +87,7 @@ namespace AgentCharacterEditor.Panels
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowSmallIcon (System.Drawing.Bitmap pIcon)
 		{
@@ -114,7 +117,7 @@ namespace AgentCharacterEditor.Panels
 			TextBoxName.Modified = false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void TextBoxDescription_Validated (object sender, EventArgs e)
 		{
@@ -134,7 +137,7 @@ namespace AgentCharacterEditor.Panels
 			TextBoxExtra.Modified = false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void TextBoxIconFile_Validated (object sender, EventArgs e)
 		{
@@ -150,7 +153,7 @@ namespace AgentCharacterEditor.Panels
 			HandleIconImport ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ButtonNewGUID_Click (object sender, EventArgs e)
 		{

@@ -47,38 +47,6 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Navigation
-
-		public new class PanelContext : FilePartPanel.PanelContext
-		{
-			public PanelContext (AnimationsPanel pPanel)
-				: base (pPanel)
-			{
-				SelectedAnimation = pPanel.ListViewAnimations.SelectedIndex;
-				FocusedAnimation = pPanel.ListViewAnimations.FocusedIndex;
-			}
-
-			public void RestoreContext (AnimationsPanel pPanel)
-			{
-				base.RestoreContext (pPanel);
-				pPanel.ListViewAnimations.SelectedIndex = SelectedAnimation;
-				pPanel.ListViewAnimations.FocusedIndex = FocusedAnimation;
-			}
-
-			public int SelectedAnimation
-			{
-				get;
-				protected set;
-			}
-			public int FocusedAnimation
-			{
-				get;
-				protected set;
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
 		private void ShowAnimationNames (String[] pAnimationNames)
@@ -106,7 +74,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private ListViewItemCommon SelectAnimation (String pAnimationName)
 		{
@@ -121,9 +89,9 @@ namespace AgentCharacterEditor.Panels
 			return null;
 		}
 
-		private FileAnimation GetSelectedAnimation (Boolean pIncludeFocus)
+		private FileAnimation GetSelectedAnimation ()
 		{
-			return GetSelectedAnimation (ListViewAnimations.GetSelectedItem (pIncludeFocus) as ListViewItemCommon);
+			return GetSelectedAnimation (ListViewAnimations.SelectedItem as ListViewItemCommon);
 		}
 		private FileAnimation GetSelectedAnimation (ListViewItemCommon pItem)
 		{
@@ -136,7 +104,7 @@ namespace AgentCharacterEditor.Panels
 			return lAnimation;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowPaletteImage (System.Drawing.Bitmap pPaletteBitmap)
 		{
@@ -183,7 +151,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private int PaletteMouseColorNdx (System.Drawing.Point pMousePos)
 		{
@@ -213,7 +181,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelEmpty && (Navigate != null))
 			{
-				FileAnimation lAnimation = GetSelectedAnimation (false);
+				FileAnimation lAnimation = GetSelectedAnimation ();
 
 				if (lAnimation != null)
 				{
@@ -243,7 +211,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ButtonAdd_Click (object sender, EventArgs e)
 		{
@@ -255,7 +223,7 @@ namespace AgentCharacterEditor.Panels
 			HandleDeleteAnimation ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void NumericFrameWidth_Validated (object sender, EventArgs e)
 		{
@@ -267,7 +235,7 @@ namespace AgentCharacterEditor.Panels
 			HandleUpdateFrameHeight ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void TextBoxPaletteFile_Validated (object sender, EventArgs e)
 		{
@@ -283,7 +251,7 @@ namespace AgentCharacterEditor.Panels
 			HandleImportPalette ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void PictureBoxPalette_MouseMove (object sender, MouseEventArgs e)
 		{

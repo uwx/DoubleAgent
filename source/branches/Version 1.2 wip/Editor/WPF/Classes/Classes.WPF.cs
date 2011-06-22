@@ -47,7 +47,7 @@ namespace AgentCharacterEditor
 			this.Content = text;
 		}
 
-		/////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected virtual void InitializeComponent ()
 		{

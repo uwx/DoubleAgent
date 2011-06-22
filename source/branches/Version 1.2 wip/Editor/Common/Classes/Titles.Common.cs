@@ -28,6 +28,9 @@ namespace AgentCharacterEditor.Properties
 {
 	public static class Titles
 	{
+		///////////////////////////////////////////////////////////////////////////////
+		#region Character
+
 		static public String CharacterName (FileCharacterName pName)
 		{
 			if (pName == null)
@@ -61,7 +64,9 @@ namespace AgentCharacterEditor.Properties
 			}
 		}
 
+		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Animation
 
 		static public String Animation (FileAnimation pAnimation)
 		{
@@ -80,7 +85,9 @@ namespace AgentCharacterEditor.Properties
 			return String.Format (AppResources.Resources.TitleAnimation, pAnimationName.Quoted ());
 		}
 
+		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Frame
 
 		static public String Frame (FileAnimationFrame pFrame)
 		{
@@ -133,7 +140,9 @@ namespace AgentCharacterEditor.Properties
 			return String.Format (AppResources.Resources.TitleFrameAnimation, pFrameTitle, pAnimationName);
 		}
 
+		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Image
 
 		static public String Image (FileFrameImage pImage)
 		{
@@ -225,7 +234,9 @@ namespace AgentCharacterEditor.Properties
 			return String.Format (AppResources.Resources.TitleImageFrame, pImageTitle, pFrameTitle);
 		}
 
+		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Overlay
 
 		static public String OverlayTypeName (MouthOverlay pOverlayType)
 		{
@@ -296,7 +307,9 @@ namespace AgentCharacterEditor.Properties
 			}
 		}
 
+		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region State
 
 		static public String State (FileState pState)
 		{
@@ -315,7 +328,9 @@ namespace AgentCharacterEditor.Properties
 			return String.Format (AppResources.Resources.TitleState, pStateName.Quoted ());
 		}
 
+		#endregion
 		///////////////////////////////////////////////////////////////////////////////
+		#region Edit Menu
 
 		static public String PasteAddTitle
 		{
@@ -351,5 +366,7 @@ namespace AgentCharacterEditor.Properties
 				return String.Format (AppResources.Resources.EditPasteOver, pSourceTitle, pTargetTitle);
 			}
 		}
+
+		#endregion
 	}
 }

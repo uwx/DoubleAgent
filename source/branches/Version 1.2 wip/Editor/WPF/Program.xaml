@@ -51,14 +51,14 @@
 						 UriSource="Resources/EditRedo.png" />
 			<BitmapImage x:Key="ImgHelpAbout"
 						 UriSource="Resources/About.png" />
-			<BitmapImage x:Key="ImgMoveDown"
-						 UriSource="Resources/MoveDown.png" />
-			<BitmapImage x:Key="ImgMoveLeft"
-						 UriSource="Resources/MoveLeft.png" />
-			<BitmapImage x:Key="ImgMoveRight"
-						 UriSource="Resources/MoveRight.png" />
-			<BitmapImage x:Key="ImgMoveUp"
-						 UriSource="Resources/MoveUp.png" />
+			<BitmapImage x:Key="IconMoveDown"
+						 UriSource="Resources/MoveDown.ico" />
+			<BitmapImage x:Key="IconMoveLeft"
+						 UriSource="Resources/MoveLeft.ico" />
+			<BitmapImage x:Key="IconMoveRight"
+						 UriSource="Resources/MoveRight.ico" />
+			<BitmapImage x:Key="IconMoveUp"
+						 UriSource="Resources/MoveUp.ico" />
 			<BitmapImage x:Key="ImgShiftDown"
 						 UriSource="Resources/ShiftDown.png" />
 			<BitmapImage x:Key="ImgShiftLeft"
@@ -67,6 +67,8 @@
 						 UriSource="Resources/ShiftRight.png" />
 			<BitmapImage x:Key="ImgShiftUp"
 						 UriSource="Resources/ShiftUp.png" />
+			<BitmapImage x:Key="IconSwap"
+						 UriSource="Resources/Swap.ico" />
 			<BitmapImage x:Key="ImgViewLarge"
 						 UriSource="Resources/ViewLarge.png" />
 			<BitmapImage x:Key="ImgViewMedium"
@@ -111,6 +113,8 @@
 						 UriSource="Resources/Repeat.ico" />
 			<BitmapImage x:Key="IconMute"
 						 UriSource="Resources/Mute.ico" />
+			<BitmapImage x:Key="IconLock"
+						 UriSource="Resources/Lock.ico" />
 
 			<!-- =========================================================================== -->
 
@@ -125,9 +129,7 @@
 				<Setter Property="Icon">
 					<Setter.Value>
 						<custom:ImageState NormalSource="{StaticResource ImgEditCut}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16" />
+										   Style="{StaticResource MenuItemImage}" />
 					</Setter.Value>
 				</Setter>
 			</Style>
@@ -143,9 +145,7 @@
 				<Setter Property="Icon">
 					<Setter.Value>
 						<custom:ImageState NormalSource="{StaticResource ImgEditCopy}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16" />
+										   Style="{StaticResource MenuItemImage}" />
 					</Setter.Value>
 				</Setter>
 			</Style>
@@ -161,9 +161,7 @@
 				<Setter Property="Icon">
 					<Setter.Value>
 						<custom:ImageState NormalSource="{StaticResource ImgEditPaste}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16" />
+										   Style="{StaticResource MenuItemImage}" />
 					</Setter.Value>
 				</Setter>
 			</Style>
@@ -179,9 +177,7 @@
 				<Setter Property="Icon">
 					<Setter.Value>
 						<custom:ImageState NormalSource="{StaticResource ImgEditDelete}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16" />
+										   Style="{StaticResource MenuItemImage}" />
 					</Setter.Value>
 				</Setter>
 			</Style>

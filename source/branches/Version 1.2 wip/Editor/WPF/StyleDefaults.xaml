@@ -8,7 +8,7 @@
 	<!-- =========================================================================== -->
 
 	<Duration x:Key="StateAnimationDuration">0:0:0.2</Duration>
-	<Duration x:Key="FastAnimationDuration">0:0:0.2</Duration>
+	<Duration x:Key="FastAnimationDuration">0:0:0.15</Duration>
 	<sys:Double x:Key="ItemDisabledOpacity">0.3</sys:Double>
 
 	<!-- =========================================================================== -->
@@ -1073,6 +1073,19 @@
 				RenderingBias="Quality"
 				KernelType="Gaussian" />
 
+	<Storyboard x:Key="ShowButtonGlow">
+		<DoubleAnimation Storyboard.TargetName="Glow"
+						 Storyboard.TargetProperty="Opacity"
+						 Duration="{StaticResource StateAnimationDuration}"
+						 To="1" />
+	</Storyboard>
+	<Storyboard x:Key="HideButtonGlow">
+		<DoubleAnimation Storyboard.TargetName="Glow"
+						 Storyboard.TargetProperty="Opacity"
+						 Duration="{StaticResource StateAnimationDuration}"
+						 To="0" />
+	</Storyboard>
+
 	<!-- =========================================================================== -->
 
 	<Style x:Key="{x:Type ToolBar}"
@@ -1213,24 +1226,10 @@
 									Property="Fill"
 									Value="{StaticResource ToolBarButtonPressed}" />
 							<Trigger.EnterActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="Glow"
-														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource StateAnimationDuration}"
-														 To="1" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource ShowButtonGlow}" />
 							</Trigger.EnterActions>
 							<Trigger.ExitActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="Glow"
-														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource StateAnimationDuration}"
-														 To="0" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource HideButtonGlow}" />
 							</Trigger.ExitActions>
 						</Trigger>
 						<Trigger Property="IsEnabled"
@@ -1383,24 +1382,10 @@
 									Property="Fill"
 									Value="{StaticResource ToolBarButtonPressed}" />
 							<Trigger.EnterActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="Glow"
-														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource StateAnimationDuration}"
-														 To="1" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource ShowButtonGlow}" />
 							</Trigger.EnterActions>
 							<Trigger.ExitActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="Glow"
-														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource StateAnimationDuration}"
-														 To="0" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource HideButtonGlow}" />
 							</Trigger.ExitActions>
 						</Trigger>
 						<Trigger Property="IsEnabled"
@@ -1950,8 +1935,8 @@
 		</Setter>
 	</Style>
 
-	<Style x:Key="{x:Type Button}"
-		   TargetType="{x:Type Button}">
+	<Style x:Key="PushStyle"
+		   TargetType="{x:Type ButtonBase}">
 		<Setter Property="FocusVisualStyle"
 				Value="{StaticResource PushButtonFocusVisual}" />
 		<Setter Property="Background"
@@ -2053,24 +2038,10 @@
 						<Trigger Property="Button.IsPressed"
 								 Value="True">
 							<Trigger.EnterActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="Glow"
-														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource StateAnimationDuration}"
-														 To="1" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource ShowButtonGlow}" />
 							</Trigger.EnterActions>
 							<Trigger.ExitActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="Glow"
-														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource StateAnimationDuration}"
-														 To="0" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource HideButtonGlow}" />
 							</Trigger.ExitActions>
 						</Trigger>
 						<Trigger Property="IsEnabled"
@@ -2087,6 +2058,11 @@
 		</Setter>
 	</Style>
 
+	<Style x:Key="{x:Type Button}"
+		   BasedOn="{StaticResource PushStyle}"
+		   TargetType="{x:Type Button}">
+	</Style>
+
 	<!-- =========================================================================== -->
 	<!-- ToggleButton                                                                -->
 	<!-- =========================================================================== -->
@@ -2101,6 +2077,11 @@
 				Radius="4"
 				RenderingBias="Quality"
 				KernelType="Gaussian" />
+
+	<Style x:Key="PushStyleToggleButton"
+		   BasedOn="{StaticResource PushStyle}"
+		   TargetType="{x:Type ToggleButton}">
+	</Style>
 
 	<!-- =========================================================================== -->
 	<!-- TextBox                                                                     -->
@@ -2458,7 +2439,8 @@
 		<Border Background="{TemplateBinding Background}"
 				BorderBrush="{TemplateBinding BorderBrush}"
 				BorderThickness="{TemplateBinding BorderThickness}"
-				SnapsToDevicePixels="True">
+				SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+				UseLayoutRounding="{TemplateBinding UseLayoutRounding}">
 			<Grid Background="Transparent">
 				<Rectangle Name="Bg"
 						   Fill="Transparent"
@@ -3163,24 +3145,10 @@
 						<Trigger Property="IsChecked"
 								 Value="True">
 							<Trigger.EnterActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="Glow"
-														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource StateAnimationDuration}"
-														 To="1" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource ShowButtonGlow}" />
 							</Trigger.EnterActions>
 							<Trigger.ExitActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="Glow"
-														 Storyboard.TargetProperty="Opacity"
-														 Duration="{StaticResource StateAnimationDuration}"
-														 To="0" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{StaticResource HideButtonGlow}" />
 							</Trigger.ExitActions>
 						</Trigger>
 						<Trigger Property="IsEnabled"

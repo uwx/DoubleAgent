@@ -235,11 +235,7 @@
 							Click="ButtonIconImport_Click"
 							ToolTip="Open icon file">
 						<custom:ImageState NormalSource="{StaticResource ImgFileOpen}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16"
-										   HorizontalAlignment="Center"
-										   VerticalAlignment="Center" />
+										   Style="{StaticResource ToolButtonImage}" />
 					</Button>
 					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 							Height="Auto"
@@ -250,11 +246,7 @@
 							Focusable="false"
 							ToolTip="Save icon">
 						<custom:ImageState NormalSource="{StaticResource ImgFileSave}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16"
-										   HorizontalAlignment="Center"
-										   VerticalAlignment="Center" />
+										   Style="{StaticResource ToolButtonImage}" />
 					</Button>
 				</ToolBar>
 			</Grid>

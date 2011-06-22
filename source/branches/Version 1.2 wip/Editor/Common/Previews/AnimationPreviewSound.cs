@@ -292,7 +292,7 @@ namespace AgentCharacterEditor.Previews
 #endif
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 #if DEBUG
 		void Player_MediaOpened (object sender, EventArgs e)

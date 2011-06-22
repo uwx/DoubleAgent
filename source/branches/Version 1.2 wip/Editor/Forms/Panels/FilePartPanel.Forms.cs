@@ -127,7 +127,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected Boolean IsControlFocused (Control pControl)
 		{
@@ -168,7 +168,7 @@ namespace AgentCharacterEditor.Panels
 			return IsControlFocused (pControl);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void OnCanEdit (object sender, Global.CanEditEventArgs e)
 		{
@@ -184,7 +184,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void OnEditCopy (object sender, Global.EditEventArgs e)
 		{

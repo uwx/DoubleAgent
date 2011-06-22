@@ -58,7 +58,7 @@ namespace AgentCharacterEditor.Panels
 			base.PopIsPanelFilling (pWasPanelFilling);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowAllVoices ()
 		{

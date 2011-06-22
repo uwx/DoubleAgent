@@ -41,31 +41,6 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Navigation
-
-		public new class PanelContext : FilePartPanel.PanelContext
-		{
-			public PanelContext (AnimationsPanel pPanel)
-				: base (pPanel)
-			{
-				SelectedAnimation = pPanel.ListViewAnimations.SelectedIndex;
-			}
-
-			public void RestoreContext (AnimationsPanel pPanel)
-			{
-				base.RestoreContext (pPanel);
-				pPanel.ListViewAnimations.SelectedIndex = SelectedAnimation;
-			}
-
-			public int SelectedAnimation
-			{
-				get;
-				protected set;
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
 		private void ShowAnimationNames (String[] pAnimationNames)
@@ -95,7 +70,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private ListViewItemCommon SelectAnimation (String pAnimationName)
 		{
@@ -110,7 +85,7 @@ namespace AgentCharacterEditor.Panels
 			return null;
 		}
 
-		private FileAnimation GetSelectedAnimation (Boolean pIncludeFocus)
+		private FileAnimation GetSelectedAnimation ()
 		{
 			return GetSelectedAnimation (ListViewAnimations.SelectedItem as ListViewItemCommon);
 		}
@@ -125,7 +100,7 @@ namespace AgentCharacterEditor.Panels
 			return lAnimation;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowPaletteImage (System.Drawing.Bitmap pPaletteBitmap)
 		{
@@ -172,7 +147,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private int PaletteMouseColorNdx (System.Windows.Point pMousePos)
 		{
@@ -194,7 +169,7 @@ namespace AgentCharacterEditor.Panels
 			CommandManager.InvalidateRequerySuggested ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ListViewAnimations_SelectionChanged (object sender, SelectionChangedEventArgs e)
 		{
@@ -221,7 +196,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelEmpty && (Navigate != null))
 			{
-				FileAnimation lAnimation = GetSelectedAnimation (false);
+				FileAnimation lAnimation = GetSelectedAnimation ();
 
 				if (lAnimation != null)
 				{
@@ -249,7 +224,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ButtonAdd_Click (object sender, RoutedEventArgs e)
 		{
@@ -261,7 +236,7 @@ namespace AgentCharacterEditor.Panels
 			HandleDeleteAnimation ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void NumericFrameWidth_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
@@ -281,7 +256,7 @@ namespace AgentCharacterEditor.Panels
 			NumericFrameHeight.IsModified = false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void TextBoxPaletteFile_IsModifiedChanged (object sender, RoutedEventArgs e)
 		{
@@ -297,7 +272,7 @@ namespace AgentCharacterEditor.Panels
 			HandleImportPalette ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ImagePalette_MouseMove (object sender, MouseEventArgs e)
 		{

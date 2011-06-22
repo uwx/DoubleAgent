@@ -124,11 +124,7 @@
 							 HorizontalAlignment="Left"
 							 Click="ButtonAdd_Click">
 						<custom:ImageState NormalSource="{StaticResource ImgFileNew}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16"
-										   HorizontalAlignment="Center"
-										   VerticalAlignment="Center" />
+										   Style="{StaticResource ToolButtonImage}" />
 					</Button>
 					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 							Name="ButtonDelete"
@@ -137,11 +133,7 @@
 							HorizontalAlignment="Left"
 							Click="ButtonDelete_Click">
 						<custom:ImageState NormalSource="{StaticResource ImgEditDelete}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16"
-										   HorizontalAlignment="Center"
-										   VerticalAlignment="Center" />
+										   Style="{StaticResource ToolButtonImage}" />
 					</Button>
 					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 							Name="ButtonChooseFile"
@@ -150,11 +142,7 @@
 							HorizontalAlignment="Left"
 							Click="ButtonChooseFile_Click">
 						<custom:ImageState NormalSource="{StaticResource ImgFileOpen}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16"
-										   HorizontalAlignment="Center"
-										   VerticalAlignment="Center" />
+										   Style="{StaticResource ToolButtonImage}" />
 					</Button>
 				</ToolBar>
 				<ContentControl Name="OverlaysContainer"
@@ -259,9 +247,7 @@
 												  Click="ButtonAdd_Click">
 											<MenuItem.Icon>
 												<custom:ImageState NormalSource="{StaticResource ImgFileNew}"
-																   Stretch="UniformToFill"
-																   Width="16"
-																   Height="16" />
+																   Style="{StaticResource MenuItemImage}" />
 											</MenuItem.Icon>
 										</MenuItem>
 										<MenuItem Header="Open image file"
@@ -269,9 +255,7 @@
 												  Click="ButtonChooseFile_Click">
 											<MenuItem.Icon>
 												<custom:ImageState NormalSource="{StaticResource ImgFileOpen}"
-																   Stretch="UniformToFill"
-																   Width="16"
-																   Height="16" />
+																   Style="{StaticResource MenuItemImage}" />
 											</MenuItem.Icon>
 										</MenuItem>
 										<Separator />
@@ -397,11 +381,7 @@
 										   Click="ButtonShiftUp_Click"
 										   RepeatEnd="ButtonShiftUp_RepeatEnd">
 						<Image Source="{StaticResource ImgShiftUp}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16"
-							   HorizontalAlignment="Center"
-							   VerticalAlignment="Center" />
+							   Style="{StaticResource ToolButtonImage}" />
 					</custom:RepeatButtonEx>
 					<custom:RepeatButtonEx Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 										   x:Name="ButtonShiftDown"
@@ -411,11 +391,7 @@
 										   Click="ButtonShiftDown_Click"
 										   RepeatEnd="ButtonShiftDown_RepeatEnd">
 						<Image Source="{StaticResource ImgShiftDown}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16"
-							   HorizontalAlignment="Center"
-							   VerticalAlignment="Center" />
+							   Style="{StaticResource ToolButtonImage}" />
 					</custom:RepeatButtonEx>
 					<custom:RepeatButtonEx Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 										   x:Name="ButtonShiftLeft"
@@ -424,11 +400,7 @@
 										   Click="ButtonShiftLeft_Click"
 										   RepeatEnd="ButtonShiftLeft_RepeatEnd">
 						<Image Source="{StaticResource ImgShiftLeft}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16"
-							   HorizontalAlignment="Center"
-							   VerticalAlignment="Center" />
+							   Style="{StaticResource ToolButtonImage}" />
 					</custom:RepeatButtonEx>
 					<custom:RepeatButtonEx Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 										   x:Name="ButtonShiftRight"
@@ -438,11 +410,7 @@
 										   Click="ButtonShiftRight_Click"
 										   RepeatEnd="ButtonShiftRight_RepeatEnd">
 						<Image Source="{StaticResource ImgShiftRight}"
-							   Stretch="UniformToFill"
-							   Width="16"
-							   Height="16"
-							   HorizontalAlignment="Center"
-							   VerticalAlignment="Center" />
+							   Style="{StaticResource ToolButtonImage}" />
 					</custom:RepeatButtonEx>
 					<Border Grid.Column="2"
 							Grid.Row="2"

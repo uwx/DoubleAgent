@@ -475,6 +475,363 @@
 		</Setter>
 	</Style>
 
+	<Style x:Key="ImageStateButtonGlow"
+		   BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+		   TargetType="{x:Type ButtonBase}">
+		<Setter Property="Padding"
+				Value="0" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ButtonBase}">
+					<Border Name="Bd"
+							Background="Transparent"
+							BorderBrush="Transparent"
+							BorderThickness="{TemplateBinding BorderThickness}"
+							SnapsToDevicePixels="true">
+						<Grid SnapsToDevicePixels="False"
+							  UseLayoutRounding="False">
+							<Grid Name="Glow"
+								  Opacity="0"
+								  ClipToBounds="False">
+								<Rectangle Fill="White"
+										   Stroke="Transparent"
+										   StrokeThickness="0">
+									<Rectangle.OpacityMask>
+										<VisualBrush Visual="{Binding ElementName=Content}" />
+									</Rectangle.OpacityMask>
+									<Rectangle.Effect>
+										<BlurEffect Radius="5"
+													KernelType="Gaussian" />
+									</Rectangle.Effect>
+								</Rectangle>
+								<Rectangle Fill="White"
+										   Stroke="Transparent"
+										   StrokeThickness="0">
+									<Rectangle.OpacityMask>
+										<VisualBrush Visual="{Binding ElementName=Content}" />
+									</Rectangle.OpacityMask>
+									<Rectangle.Effect>
+										<BlurEffect Radius="5"
+													KernelType="Gaussian" />
+									</Rectangle.Effect>
+								</Rectangle>
+							</Grid>
+							<ContentPresenter Name="Content"
+											  Margin="{TemplateBinding Padding}"
+											  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+											  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+											  SnapsToDevicePixels="False"
+											  UseLayoutRounding="False" />
+						</Grid>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsPressed"
+								 Value="true">
+							<Trigger.EnterActions>
+								<BeginStoryboard Storyboard="{StaticResource ShowButtonGlow}" />
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard Storyboard="{StaticResource HideButtonGlow}" />
+							</Trigger.ExitActions>
+						</Trigger>
+						<Trigger Property="IsEnabled"
+								 Value="false">
+							<Setter Property="Foreground"
+									Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+							<Setter Property="Opacity"
+									Value="{StaticResource ItemDisabledOpacity}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<!-- =========================================================================== -->
+
+	<Style x:Key="ImageStateButtonAll"
+		   BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+		   TargetType="{x:Type ButtonBase}">
+		<Setter Property="Padding"
+				Value="0" />
+		<Setter Property="Margin"
+				Value="2,1,2,1" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ButtonBase}">
+					<Border Name="Bd"
+							Background="Transparent"
+							BorderBrush="Transparent"
+							BorderThickness="{TemplateBinding BorderThickness}"
+							SnapsToDevicePixels="true">
+						<Grid SnapsToDevicePixels="False"
+							  UseLayoutRounding="False">
+							<Rectangle Name="CheckBg"
+									   Opacity="0"
+									   ClipToBounds="False"
+									   Margin="-2,-2,-2,-2"
+									   Fill="{StaticResource ToolBarButtonChecked}"
+									   Stroke="{StaticResource ToolBarButtonCheckedBorder}"
+									   StrokeThickness="{StaticResource ItemSelectionStroke}"
+									   RadiusX="{StaticResource ItemSelectionRounding}"
+									   RadiusY="{StaticResource ItemSelectionRounding}" />
+							<Grid Name="Glow"
+								  Opacity="0"
+								  ClipToBounds="False">
+								<Rectangle Fill="White"
+										   Stroke="Transparent"
+										   StrokeThickness="0">
+									<Rectangle.OpacityMask>
+										<VisualBrush Visual="{Binding ElementName=Content}" />
+									</Rectangle.OpacityMask>
+									<Rectangle.Effect>
+										<BlurEffect Radius="5"
+													KernelType="Gaussian" />
+									</Rectangle.Effect>
+								</Rectangle>
+								<Rectangle Fill="White"
+										   Stroke="Transparent"
+										   StrokeThickness="0">
+									<Rectangle.OpacityMask>
+										<VisualBrush Visual="{Binding ElementName=Content}" />
+									</Rectangle.OpacityMask>
+									<Rectangle.Effect>
+										<BlurEffect Radius="5"
+													KernelType="Gaussian" />
+									</Rectangle.Effect>
+								</Rectangle>
+							</Grid>
+							<ContentPresenter Name="Content"
+											  Margin="{TemplateBinding Padding}"
+											  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+											  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+											  SnapsToDevicePixels="False"
+											  UseLayoutRounding="False" />
+							<Rectangle Name="Hilite"
+									   Fill="White"
+									   Stroke="Transparent"
+									   StrokeThickness="0"
+									   Opacity="0">
+								<Rectangle.OpacityMask>
+									<VisualBrush Visual="{Binding ElementName=Content}" />
+								</Rectangle.OpacityMask>
+							</Rectangle>
+						</Grid>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver"
+								 Value="true">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Hilite"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource FastAnimationDuration}"
+														 To="0.12" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Hilite"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource FastAnimationDuration}"
+														 To="0" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<Trigger Property="IsPressed"
+								 Value="true">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Glow"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource StateAnimationDuration}"
+														 To="1" />
+										<DoubleAnimation Storyboard.TargetName="Hilite"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource StateAnimationDuration}"
+														 To="0" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Glow"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource StateAnimationDuration}"
+														 To="0" />
+										<DoubleAnimation Storyboard.TargetName="Hilite"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource StateAnimationDuration}"
+														 From="0" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<Trigger Property="ToggleButton.IsChecked"
+								 Value="true">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="CheckBg"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource FastAnimationDuration}"
+														 To="1" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="CheckBg"
+														 Storyboard.TargetProperty="Opacity"
+														 Duration="{StaticResource FastAnimationDuration}"
+														 To="0" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<Trigger Property="IsEnabled"
+								 Value="false">
+							<Setter Property="Foreground"
+									Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+							<Setter Property="Opacity"
+									Value="{StaticResource ItemDisabledOpacity}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<!-- =========================================================================== -->
+	<!-- ToolBar Images                                                              -->
+	<!-- =========================================================================== -->
+
+	<Style x:Key="ToolButtonImage"
+		   TargetType="{x:Type Image}">
+		<Setter Property="Width"
+				Value="16" />
+		<Setter Property="Height"
+				Value="16" />
+		<Setter Property="HorizontalAlignment"
+				Value="Center" />
+		<Setter Property="VerticalAlignment"
+				Value="Center" />
+		<Setter Property="Stretch"
+				Value="UniformToFill" />
+	</Style>
+
+	<Style x:Key="ToolButtonImageLarge"
+		   TargetType="{x:Type Image}">
+		<Setter Property="Width"
+				Value="24" />
+		<Setter Property="Height"
+				Value="24" />
+		<Setter Property="HorizontalAlignment"
+				Value="Center" />
+		<Setter Property="VerticalAlignment"
+				Value="Center" />
+		<Setter Property="Stretch"
+				Value="UniformToFill" />
+	</Style>
+
+	<Style x:Key="MenuItemImage"
+		   TargetType="{x:Type Image}">
+		<Setter Property="Width"
+				Value="16" />
+		<Setter Property="Height"
+				Value="16" />
+		<Setter Property="HorizontalAlignment"
+				Value="Left" />
+		<Setter Property="VerticalAlignment"
+				Value="Center" />
+		<Setter Property="Stretch"
+				Value="UniformToFill" />
+	</Style>
+
+	<!-- =========================================================================== -->
+	<!-- ToolBar DropDown                                                            -->
+	<!-- =========================================================================== -->
+
+	<Style x:Key="DropButton"
+		   TargetType="{x:Type Expander}">
+		<Setter Property="Foreground"
+				Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+		<Setter Property="Margin"
+				Value="1,0,1,0" />
+		<Setter Property="Padding"
+				Value="0" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Expander}">
+					<DockPanel Margin="{TemplateBinding Margin}">
+						<ContentPresenter Name="Header"
+										  DockPanel.Dock="Left"
+										  Content="{TemplateBinding Header}"
+										  ContentTemplate="{TemplateBinding HeaderTemplate}"
+										  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+										  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+						<ToggleButton Name="DropDownButton"
+									  DockPanel.Dock="Right"
+									  Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}"
+									  Foreground="{TemplateBinding Foreground}"
+									  VerticalAlignment="Stretch"
+									  Margin="0"
+									  IsEnabled="{Binding Path=Header.IsEnabled,Mode=OneWay,RelativeSource={RelativeSource TemplatedParent}}"
+									  IsChecked="{Binding Path=IsExpanded,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}">
+							<Path Name="Arrow"
+								  Fill="{TemplateBinding Foreground}"
+								  Data="{StaticResource MenuDownArrow}"
+								  HorizontalAlignment="Center"
+								  VerticalAlignment="Center" />
+						</ToggleButton>
+						<Popup Name="DropDown"
+							   AllowsTransparency="True"
+							   StaysOpen="False"
+							   Placement="Bottom"
+							   HorizontalOffset="0"
+							   VerticalOffset="1"
+							   IsOpen="{Binding Path=IsExpanded,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
+							   PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
+							<Border x:Name="DropDownBorder"
+									Margin="10"
+									BorderThickness="1"
+									BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
+									Background="{DynamicResource BackgroundLighterBrush}">
+								<Border.Effect>
+									<DropShadowEffect Color="Black"
+													  ShadowDepth="3"
+													  Opacity="0.5" />
+								</Border.Effect>
+								<ContentPresenter Name="Content"
+												  Content="{TemplateBinding Content}"
+												  ContentTemplate="{TemplateBinding ContentTemplate}"
+												  Margin="{TemplateBinding Padding}"
+												  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+												  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+							</Border>
+						</Popup>
+					</DockPanel>
+					<ControlTemplate.Triggers>
+						<Trigger SourceName="DropDown"
+								 Property="Popup.HasDropShadow"
+								 Value="false">
+							<Setter TargetName="DropDownBorder"
+									Property="Effect"
+									Value="{x:Null}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
 	<!-- =========================================================================== -->
 	<!-- ContentControl                                                              -->
 	<!-- =========================================================================== -->

@@ -49,7 +49,7 @@ namespace DoubleAgent
 			set;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		/// <summary>
 		/// Constructor
@@ -89,7 +89,7 @@ namespace DoubleAgent
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		/// <summary>
 		/// Sets the managed <see cref="Window"/>'s current <see cref="System.Windows.Input.Cursor"/>.
@@ -129,7 +129,7 @@ namespace DoubleAgent
 			return lRet;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		/// <summary>
 		/// Sets the managed <see cref="Window"/>'s current <see cref="System.Windows.Input.Cursor"/> to <see cref="System.Windows.Input.Cursors.Wait"/>.

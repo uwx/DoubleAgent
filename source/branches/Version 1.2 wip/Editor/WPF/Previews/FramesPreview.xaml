@@ -8,6 +8,8 @@
 			  CanContentScroll="False"
 			  ClipToBounds="True">
 	<previews:FramesListView x:Name="Frames"
+							 Margin="0"
+							 Padding="0"
 							 BorderBrush="Transparent"
 							 BorderThickness="0"
 							 ScrollViewer.HorizontalScrollBarVisibility="Hidden"
@@ -27,27 +29,21 @@
 						  Name="MenuItemAdd">
 					<MenuItem.Icon>
 						<custom:ImageState NormalSource="{StaticResource ImgFileNew}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16" />
+										   Style="{StaticResource MenuItemImage}" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Header="Move frame up"
 						  Name="MenuItemMoveUp">
 					<MenuItem.Icon>
-						<custom:ImageState NormalSource="{StaticResource ImgMoveUp}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource IconMoveLeft}"
+										   Style="{StaticResource MenuItemImage}" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Header="Move frame down"
 						  Name="MenuItemMoveDown">
 					<MenuItem.Icon>
-						<custom:ImageState NormalSource="{StaticResource ImgMoveDown}"
-										   Stretch="UniformToFill"
-										   Width="16"
-										   Height="16" />
+						<custom:ImageState NormalSource="{StaticResource IconMoveRight}"
+										   Style="{StaticResource MenuItemImage}" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<Separator />

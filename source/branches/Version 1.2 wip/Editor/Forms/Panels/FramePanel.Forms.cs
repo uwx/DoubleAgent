@@ -66,38 +66,9 @@ namespace AgentCharacterEditor.Panels
 
 		private Control ImagePasteTarget
 		{
-			get {return ListViewImages;}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
-		#region Navigation
-
-		public new class PanelContext : FilePartPanel.PanelContext
-		{
-			public PanelContext (FramePanel pPanel)
-				: base (pPanel)
+			get
 			{
-				SelectedImage = pPanel.ListViewImages.SelectedIndex;
-				FocusedImage = pPanel.ListViewImages.FocusedIndex;
-			}
-
-			public void RestoreContext (FramePanel pPanel)
-			{
-				base.RestoreContext (pPanel);
-				pPanel.ListViewImages.SelectedIndex = SelectedImage;
-				pPanel.ListViewImages.FocusedIndex = FocusedImage;
-			}
-
-			public int SelectedImage
-			{
-				get;
-				protected set;
-			}
-			public int FocusedImage
-			{
-				get;
-				protected set;
+				return ListViewImages;
 			}
 		}
 
@@ -121,10 +92,12 @@ namespace AgentCharacterEditor.Panels
 			PanelMain.ResumeLayout (true);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowFrameImages ()
 		{
+			PanelContext lContext = IsPanelFilling ? null : new PanelContext (this);
+
 			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
 				if (IsPanelEmpty)
@@ -134,7 +107,6 @@ namespace AgentCharacterEditor.Panels
 					EndListUpdate ();
 					ListViewImages.Enabled = false;
 					ToolStripImages.Enabled = false;
-					ShowFrameImage (null);
 				}
 				else
 				{
@@ -158,9 +130,15 @@ namespace AgentCharacterEditor.Panels
 					EndListUpdate ();
 					ListViewImages.Enabled = true;
 					ToolStripImages.Enabled = !Program.FileIsReadOnly;
+				}
 
+				if (lContext != null)
+				{
+					lContext.RestoreContext (this);
+				}
+				if (ListViewImages.Items.Count > 0)
+				{
 					ListViewImages.SelectedIndex = Math.Max (ListViewImages.SelectedIndex, 0);
-					ShowSelectedImage ();
 				}
 			}
 		}
@@ -191,7 +169,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void BeginListUpdate ()
 		{
@@ -207,7 +185,7 @@ namespace AgentCharacterEditor.Panels
 			ListViewImages.EndUpdate ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowFrameImageSample (FileFrameImage pFrameImage)
 		{
@@ -297,7 +275,7 @@ namespace AgentCharacterEditor.Panels
 			HandleDurationChanged ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void TextBoxSoundFile_Validated (object sender, EventArgs e)
 		{
@@ -321,11 +299,11 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ListViewImages_SelectedIndexChanged (object sender, EventArgs e)
 		{
-			if (ListViewImages.SelectedIndex >= 0)
+			if (!IsPanelFilling && (ListViewImages.SelectedIndex >= 0))
 			{
 				ShowSelectedImage ();
 			}
@@ -341,15 +319,15 @@ namespace AgentCharacterEditor.Panels
 
 		private void ListViewImages_ItemActivate (object sender, EventArgs e)
 		{
-			UpdateSelectedImage (GetSelectedImage (false));
+			UpdateSelectedImage (GetSelectedImage ());
 		}
 
 		private void ButtonOpen_Click (object sender, EventArgs e)
 		{
-			UpdateSelectedImage (GetSelectedImage (false));
+			UpdateSelectedImage (GetSelectedImage ());
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ButtonAdd_Click (object sender, EventArgs e)
 		{
@@ -358,10 +336,10 @@ namespace AgentCharacterEditor.Panels
 
 		private void ButtonDelete_Click (object sender, EventArgs e)
 		{
-			DeleteSelectedImage (GetSelectedImage (false), false);
+			DeleteSelectedImage (GetSelectedImage (), false);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ButtonMoveUp_Click (object sender, EventArgs e)
 		{
@@ -373,7 +351,7 @@ namespace AgentCharacterEditor.Panels
 			MoveImageDown ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void NumericOffsetX_Validated (object sender, EventArgs e)
 		{
@@ -385,7 +363,7 @@ namespace AgentCharacterEditor.Panels
 			HandleOffsetYChanged ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ButtonShiftUp_Click (object sender, EventArgs e)
 		{
@@ -423,7 +401,7 @@ namespace AgentCharacterEditor.Panels
 			HandleShiftComplete ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void CheckBoxTransparent_CheckedChanged (object sender, EventArgs e)
 		{

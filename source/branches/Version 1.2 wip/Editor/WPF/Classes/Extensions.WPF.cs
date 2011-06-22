@@ -180,19 +180,37 @@ namespace AgentCharacterEditor.Global
 			return lRet;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
-		public static ListViewItem GetSelectedItem (this ListView pListView, Boolean pIncludeFocus)
+		public static ListViewItem GetSelectedItem (this ListView pListView)
 		{
 			return pListView.SelectedItem as ListViewItem;
 		}
 
-		public static int GetSelectedIndex (this ListView pListView, Boolean pIncludeFocus)
+		public static int GetSelectedIndex (this ListView pListView)
 		{
 			return pListView.SelectedIndex;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		public static void SetSelectedItem (this ListView pListView, ListViewItem pSelectedItem)
+		{
+			pListView.SelectedItem = pSelectedItem;
+			if (pListView.IsKeyboardFocusWithin && (pListView.SelectedItem != null))
+			{
+				(pListView.SelectedItem as ListViewItem).Focus ();
+			}
+		}
+
+		public static void SetSelectedIndex (this ListView pListView, int pSelectedIndex)
+		{
+			pListView.SelectedIndex = Math.Min (pSelectedIndex, pListView.Items.Count - 1);
+			if (pListView.IsKeyboardFocusWithin && (pListView.SelectedItem != null))
+			{
+				(pListView.SelectedItem as ListViewItem).Focus ();
+			}
+		}
+
+		//=============================================================================
 
 		public static ScrollBarVisibility GetVerticalScrollBarVisibility (this ListView pListView)
 		{
@@ -356,11 +374,38 @@ namespace AgentCharacterEditor.Global
 			{
 				if (pRootElement is FrameworkElement)
 				{
-					System.Diagnostics.Debug.Print ("{0}{1}{2} [{3}] [{4}] Size [{5} {6}] Margin [{7} {8} {9} {10}]", pIndent, lTitle, pRootElement.GetType ().Name, (pRootElement as FrameworkElement).Name, pRootElement.Visibility, Math.Round ((pRootElement as FrameworkElement).ActualWidth), Math.Round ((pRootElement as FrameworkElement).ActualHeight), (pRootElement as FrameworkElement).Margin.Left, (pRootElement as FrameworkElement).Margin.Top, (pRootElement as FrameworkElement).Margin.Right, (pRootElement as FrameworkElement).Margin.Bottom);
+					FrameworkElement lFrameworkElement = pRootElement as FrameworkElement;
+					System.Diagnostics.Debug.Print ("{0}{1}{2} [{3}] [{4}] Size [{5} {6}] Margin [{7} {8} {9} {10}] DevPxl/LayRnd [{11} {12}]", pIndent, lTitle, pRootElement.GetType ().Name, lFrameworkElement.Name, pRootElement.Visibility, Math.Round (lFrameworkElement.ActualWidth), Math.Round (lFrameworkElement.ActualHeight), lFrameworkElement.Margin.Left, lFrameworkElement.Margin.Top, lFrameworkElement.Margin.Right, lFrameworkElement.Margin.Bottom, lFrameworkElement.SnapsToDevicePixels, lFrameworkElement.UseLayoutRounding);
 				}
 				else
 				{
 					System.Diagnostics.Debug.Print ("{0}{1}{2} [{3}]", pIndent, lTitle, pRootElement.GetType ().Name, pRootElement.Visibility);
+				}
+
+				if ((Grid.GetRow (pRootElement) != 0) || (Grid.GetColumn (pRootElement) != 0) || (Grid.GetRowSpan (pRootElement) != 1) || (Grid.GetColumnSpan (pRootElement) != 1))
+				{
+					System.Diagnostics.Debug.Print ("{0}  Row [{1}] Span [{2}] Col [{3}] Span [{4}]", pIndent, Grid.GetRow (pRootElement), Grid.GetRowSpan (pRootElement), Grid.GetColumn (pRootElement), Grid.GetColumnSpan (pRootElement));
+				}
+
+				if (pRootElement is Grid)
+				{
+					Grid lGrid = pRootElement as Grid;
+					if (lGrid.RowDefinitions != null)
+					{
+						System.Diagnostics.Debug.Print ("{0}  {1} Rows", pIndent, lGrid.RowDefinitions.Count);
+						foreach (RowDefinition lRow in lGrid.RowDefinitions)
+						{
+							System.Diagnostics.Debug.Print ("{0}      Row [{1}] Actual [{2}]", pIndent, lRow.Height, lRow.ActualHeight);
+						}
+					}
+					if (lGrid.ColumnDefinitions != null)
+					{
+						System.Diagnostics.Debug.Print ("{0}  {1} Cols", pIndent, lGrid.ColumnDefinitions.Count);
+						foreach (ColumnDefinition lCol in lGrid.ColumnDefinitions)
+						{
+							System.Diagnostics.Debug.Print ("{0}      Col [{1}] Actual [{2}]", pIndent, lCol.Width, lCol.ActualWidth);
+						}
+					}
 				}
 
 				if (pRootElement is Label)

@@ -39,38 +39,6 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Navigation
-
-		public new class PanelContext : FilePartPanel.PanelContext
-		{
-			public PanelContext (StatePanel pPanel)
-				: base (pPanel)
-			{
-				SelectedAnimation = pPanel.ListViewAnimations.SelectedIndex;
-				FocusedAnimation = pPanel.ListViewAnimations.FocusedIndex;
-			}
-
-			public void RestoreContext (StatePanel pPanel)
-			{
-				base.RestoreContext (pPanel);
-				pPanel.ListViewAnimations.SelectedIndex = SelectedAnimation;
-				pPanel.ListViewAnimations.FocusedIndex = FocusedAnimation;
-			}
-
-			public int SelectedAnimation
-			{
-				get;
-				protected set;
-			}
-			public int FocusedAnimation
-			{
-				get;
-				protected set;
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
 		#region Display
 
 		private void ShowStateAnimations ()

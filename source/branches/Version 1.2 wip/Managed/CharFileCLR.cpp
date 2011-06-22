@@ -40,6 +40,9 @@ using namespace System::Security::Permissions;
 [assembly:AssemblyTrademarkAttribute("")];
 [assembly:AssemblyCultureAttribute("")];
 
+[assembly:AssemblyKeyFileAttribute("Managed\\CinSoft.snk")]
+[assembly:AssemblyDelaySignAttribute(true)]
+
 //
 // Version information for an assembly consists of the following four values:
 //

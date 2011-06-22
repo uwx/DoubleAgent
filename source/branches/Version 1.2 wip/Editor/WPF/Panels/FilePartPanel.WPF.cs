@@ -41,7 +41,7 @@ namespace AgentCharacterEditor.Panels
 			Fader = new PanelFader (this);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected virtual void OnIsVisibleChanged (object sender, DependencyPropertyChangedEventArgs e)
 		{
@@ -129,7 +129,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected Boolean IsControlFocused (Control pControl)
 		{
@@ -183,7 +183,7 @@ namespace AgentCharacterEditor.Panels
 			return IsControlFocused (pControl) || pControl.IsAncestorOf (e.RoutedEventArgs.Source as DependencyObject);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected void OnCanEditCut (object sender, CanExecuteRoutedEventArgs e)
 		{
@@ -217,7 +217,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected void OnEditCut (object sender, ExecutedRoutedEventArgs e)
 		{

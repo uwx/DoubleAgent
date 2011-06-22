@@ -62,7 +62,7 @@ namespace AgentCharacterEditor.Global
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		static public void InitFilePath (System.Windows.Forms.FileDialog pFileDialog, String pFilePath)
 		{
@@ -100,7 +100,7 @@ namespace AgentCharacterEditor.Global
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		static private void ShowPaletteError (String pFilePath)
 		{

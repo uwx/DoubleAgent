@@ -79,6 +79,81 @@ namespace AgentCharacterEditor.Global
 
 	///////////////////////////////////////////////////////////////////////////////
 
+	public static class FilePartExtensions
+	{
+		public static int GetFrameIndex (this FileAnimationFrame pFrame)
+		{
+			return ((pFrame == null) || (pFrame.Container == null)) ? -1 : pFrame.Container.IndexOf (pFrame);
+		}
+
+		public static int GetImageIndex (this FileFrameImage pImage)
+		{
+			return ((pImage == null) || (pImage.Container == null)) ? -1 : pImage.Container.IndexOf (pImage);
+		}
+
+		//=============================================================================
+
+		public static Boolean HasBranching (this FileAnimationFrame pFrame)
+		{
+			return (pFrame.ExitFrame >= 0) || ((pFrame.Branching != null) && (pFrame.Branching.Length > 0));
+		}
+
+		public static Boolean HasBranching (this FileAnimationFrame pFrame, int pFrameNdx)
+		{
+			if (pFrame.ExitFrame == pFrameNdx)
+			{
+				return true;
+			}
+			else
+				if (pFrame.Branching != null)
+				{
+					foreach (FileFrameBranch lBranching in pFrame.Branching)
+					{
+						if (lBranching.mFrameNdx == pFrameNdx)
+						{
+							return true;
+						}
+					}
+				}
+			return false;
+		}
+
+		public static int GetBranchingCount (this FileAnimationFrame pFrame)
+		{
+			return (pFrame.Branching == null) ? 0 : pFrame.Branching.Length;
+		}
+
+		public static Boolean IsBranchingEqual (this FileAnimationFrame pFrame, FileFrameBranch[] pTarget)
+		{
+			return IsBranchingEqual (pFrame.Branching, pTarget);
+		}
+
+		public static Boolean IsBranchingEqual (FileFrameBranch[] pSource, FileFrameBranch[] pTarget)
+		{
+			if ((pSource == null) != (pTarget == null))
+			{
+				return false;
+			}
+			if ((pSource != null) && (pTarget != null))
+			{
+				if (pSource.Length != pTarget.Length)
+				{
+					return false;
+				}
+				for (int lNdx = 0; lNdx < pSource.Length; lNdx++)
+				{
+					if ((pSource[lNdx].mFrameNdx != pTarget[lNdx].mFrameNdx) || (pSource[lNdx].mProbability != pTarget[lNdx].mProbability))
+					{
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+
 	public static class SizeExtensions
 	{
 
@@ -132,7 +207,7 @@ namespace AgentCharacterEditor.Global
 			return lScaledSize;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		static public Boolean EitherLT (this System.Drawing.Size pSize, System.Drawing.Size pMaxSize)
 		{
@@ -227,7 +302,7 @@ namespace AgentCharacterEditor.Global
 			return lRet;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public static System.Windows.Media.ImageSource MakeImageSource (this System.Drawing.Bitmap pBitmap)
 		{

@@ -19,13 +19,15 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 using System;
+using System.ComponentModel;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using AgentCharacterEditor.Global;
 using AgentCharacterEditor.Navigation;
 using AgentCharacterEditor.Previews;
 using AgentCharacterEditor.Properties;
-using AgentCharacterEditor.Global;
 using DoubleAgent;
 using DoubleAgent.Character;
 
@@ -45,6 +47,11 @@ namespace AgentCharacterEditor.Panels
 			{
 				Program.MainWindow.ViewChanged += new EventHandler (OnViewChanged);
 			}
+
+			ToolBarFrames.ButtonAdd.Click +=new RoutedEventHandler(ButtonAdd_Click);
+			ToolBarFrames.ButtonDelete.Click+=new RoutedEventHandler(ButtonDelete_Click);
+			ToolBarFrames.ButtonMoveUp.Click+=new RoutedEventHandler(ButtonMoveUp_Click);
+			ToolBarFrames.ButtonMoveDown.Click+=new RoutedEventHandler(ButtonMoveDown_Click);
 
 			FramesView.Frames.SelectionChanged += new System.Windows.Controls.SelectionChangedEventHandler (FramesView_SelectionChanged);
 			FramesView.Frames.MouseDoubleClick += new System.Windows.Input.MouseButtonEventHandler (FramesView_MouseDoubleClick);
@@ -72,9 +79,12 @@ namespace AgentCharacterEditor.Panels
 				catch
 				{
 				}
+
 				SliderRate.Value = Math.Min (Math.Max (lSettings.AnimationPreviewRate, SliderRate.Minimum), SliderRate.Maximum);
 				PreviewButtonRepeat.IsChecked = lSettings.AnimationPreviewRepeat;
 				PreviewButtonMute.IsChecked = lSettings.AnimationPreviewMute;
+
+				ToolBarFrames.LoadConfig ();
 			}
 		}
 
@@ -88,38 +98,8 @@ namespace AgentCharacterEditor.Panels
 			lSettings.AnimationPreviewRate = (int)SliderRate.Value;
 			lSettings.AnimationPreviewRepeat = PreviewButtonRepeat.IsChecked.Value;
 			lSettings.AnimationPreviewMute = PreviewButtonMute.IsChecked.Value;
-		}
 
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
-		#region Navigation
-
-		public new class PanelContext : FilePartPanel.PanelContext
-		{
-			public PanelContext (AnimationPanel pPanel)
-				: base (pPanel)
-			{
-				SelectedState = pPanel.ListViewStates.SelectedIndex;
-				//SelectedFrame = pPanel.FramesView.Frames.SelectedIndex;
-			}
-
-			public void RestoreContext (AnimationPanel pPanel)
-			{
-				base.RestoreContext (pPanel);
-				pPanel.ListViewStates.SelectedIndex = SelectedState;
-				//pPanel.FramesView.Frames.SelectedIndex = SelectedFrame;
-			}
-
-			public int SelectedState
-			{
-				get;
-				protected set;
-			}
-			public int SelectedFrame
-			{
-				get;
-				protected set;
-			}
+			ToolBarFrames.SaveConfig ();
 		}
 
 		#endregion
@@ -158,6 +138,8 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowAnimationFrames ()
 		{
+			PanelContext lContext = IsPanelFilling ? null : new PanelContext (this);
+
 			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
 				if (IsPanelEmpty)
@@ -173,6 +155,10 @@ namespace AgentCharacterEditor.Panels
 
 						FramesView.ShowAnimationFrames (CharacterFile, Animation);
 						FramesView.IsEnabled = true;
+						if (lContext != null)
+						{
+							lContext.RestoreContext (this);
+						}
 						FramesView.Frames.SelectedIndex = Math.Max (FramesView.Frames.SelectedIndex, 0);
 
 						ShowFramesState ();
@@ -188,10 +174,12 @@ namespace AgentCharacterEditor.Panels
 		{
 			FramesView.Frames.ScrollIntoView (FramesView.Frames.SelectedItem);
 
-			ShowSelectionState ();
+			ToolBarFrames.FramesPreview = IsPanelEmpty ? null : FramesView;
+			ToolBarFrames.Frame = GetSelectedFrame ();
+			ToolBarFrames.RefreshState ();
 
 			AnimationPreview.StopAnimation ();
-			AnimationPreview.ShowAnimationFrame (CharacterFile, GetSelectedFrame (true), PreviewImageSize);
+			AnimationPreview.ShowAnimationFrame (CharacterFile, GetSelectedFrame (Math.Max (FramesView.Frames.SelectedIndex, 0)), PreviewImageSize);
 			ShowPreviewState ();
 		}
 
@@ -214,7 +202,7 @@ namespace AgentCharacterEditor.Panels
 			ShowSelectedFrame ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void TextBoxName_IsModifiedChanged (object sender, System.Windows.RoutedEventArgs e)
 		{
@@ -239,7 +227,7 @@ namespace AgentCharacterEditor.Panels
 			NumericFrameDuration.IsModified = false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void FramesView_PreviewMouseLeftButtonDown (object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
@@ -273,7 +261,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelEmpty && (Navigate != null))
 			{
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
+				FileAnimationFrame lFrame = GetSelectedFrame ();
 
 				if (lFrame != null)
 				{
@@ -296,16 +284,16 @@ namespace AgentCharacterEditor.Panels
 			}
 			else
 			{
-				FramesView.MenuItemAdd.IsEnabled = CanAddFrame;
-				FramesView.MenuItemMoveUp.IsEnabled = CanMoveFrameUp;
-				FramesView.MenuItemMoveDown.IsEnabled = CanMoveFrameDown;
+				FramesView.MenuItemAdd.IsEnabled = ToolBarFrames.CanAddFrame;
+				FramesView.MenuItemMoveUp.IsEnabled = ToolBarFrames.CanMoveFrameUp;
+				FramesView.MenuItemMoveDown.IsEnabled = ToolBarFrames.CanMoveFrameDown;
 
-				FramesView.MenuItemMoveUp.SetTitle (MoveFrameUpTitle);
-				FramesView.MenuItemMoveDown.SetTitle (MoveFrameDownTitle);
+				FramesView.MenuItemMoveUp.SetTitle (ToolBarFrames.MoveFrameUpTitle);
+				FramesView.MenuItemMoveDown.SetTitle (ToolBarFrames.MoveFrameDownTitle);
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ListViewStates_MouseDoubleClick (object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
@@ -326,7 +314,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ButtonAdd_Click (object sender, System.Windows.RoutedEventArgs e)
 		{
@@ -348,7 +336,7 @@ namespace AgentCharacterEditor.Panels
 			HandleMoveFrameDown ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ButtonShowBranching_CheckChanged (object sender, System.Windows.RoutedEventArgs e)
 		{
@@ -375,7 +363,7 @@ namespace AgentCharacterEditor.Panels
 			HandleViewLarge ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void PreviewButtonPlay_Click (object sender, System.Windows.RoutedEventArgs e)
 		{
@@ -439,7 +427,7 @@ namespace AgentCharacterEditor.Panels
 			HandlePreviewRateChanged ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		void AnimationPreview_StateChanged (object sender, EventArgs e)
 		{

@@ -40,7 +40,7 @@ namespace AgentCharacterEditor.Panels
 			{
 				return base.FilePart;
 			}
-			set
+			protected set
 			{
 				base.FilePart = value;
 				if (FilePart is ResolveAnimationFrame)
@@ -48,14 +48,6 @@ namespace AgentCharacterEditor.Panels
 					(FilePart as ResolveAnimationFrame).Scope = ResolveAnimationFrame.ScopeType.ScopeOverlays;
 				}
 				Frame = (FilePart is ResolveAnimationFrame) ? (FilePart as ResolveAnimationFrame).Target : null;
-
-				ShowFrameName ();
-				ShowFrameOverlays ();
-				if (!IsPanelEmpty)
-				{
-					SelectFirstOverlay ();
-					ShowSelectedOverlay ();
-				}
 			}
 		}
 
@@ -112,9 +104,43 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
+		public new class PanelContext : FilePartPanel.PanelContext
+		{
+			public PanelContext (OverlayPanel pPanel)
+				: base (pPanel)
+			{
+				SelectedOverlay = pPanel.ListViewOverlays.SelectedIndex;
+			}
+
+			public void RestoreContext (OverlayPanel pPanel)
+			{
+				base.RestoreContext (pPanel);
+				pPanel.ListViewOverlays.SelectedIndex = SelectedOverlay;
+			}
+
+			public int SelectedOverlay
+			{
+				get;
+				protected set;
+			}
+		}
+
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
+
+		public override void ShowFilePart (ResolvePart pFilePart)
+		{
+			FilePart = pFilePart;
+
+			ShowFrameName ();
+			ShowFrameOverlays ();
+			if (!IsPanelEmpty)
+			{
+				SelectUsedOverlay (-1);
+				ShowSelectedOverlay ();
+			}
+		}
 
 		private void ShowFrameName ()
 		{
@@ -133,7 +159,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowFrameOverlay (FileFrameOverlay pFrameOverlay)
 		{
@@ -172,7 +198,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowSelectedOverlay ()
 		{
-			ShowFrameOverlay (GetSelectedOverlay (true));
+			ShowFrameOverlay (GetSelectedOverlay ());
 
 			ButtonAdd.IsEnabled = CanAddOverlay;
 			ButtonDelete.IsEnabled = CanDeleteOverlay;
@@ -183,13 +209,13 @@ namespace AgentCharacterEditor.Panels
 			ButtonChooseFile.SetTipText (ChooseOverlayFileTitle);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public Boolean CanAddOverlay
 		{
 			get
 			{
-				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay ();
 				if (lFrameOverlay == null)
 				{
 					return !IsPanelEmpty && !Program.FileIsReadOnly && (ListViewOverlays.SelectedIndex >= 0);
@@ -212,7 +238,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			get
 			{
-				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay ();
 				if (lFrameOverlay != null)
 				{
 					return !Program.FileIsReadOnly && !String.IsNullOrEmpty (lFrameOverlay.ImageFilePath);
@@ -224,7 +250,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			get
 			{
-				return CanDeleteOverlay ? String.Format (AppResources.Resources.EditDeleteThis.NoMenuPrefix (), Titles.Overlay (GetSelectedOverlay (false))) : AppResources.Resources.EditDelete.NoMenuPrefix ();
+				return CanDeleteOverlay ? String.Format (AppResources.Resources.EditDeleteThis.NoMenuPrefix (), Titles.Overlay (GetSelectedOverlay ())) : AppResources.Resources.EditDelete.NoMenuPrefix ();
 			}
 		}
 
@@ -232,7 +258,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			get
 			{
-				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay ();
 				if (lFrameOverlay != null)
 				{
 					return !Program.FileIsReadOnly && !String.IsNullOrEmpty (lFrameOverlay.ImageFilePath);
@@ -244,14 +270,25 @@ namespace AgentCharacterEditor.Panels
 		{
 			get
 			{
-				return CanChooseOverlayFile ? String.Format (AppResources.Resources.EditChooseThisFile.NoMenuPrefix (), Titles.Overlay (GetSelectedOverlay (false)).Quoted()) : AppResources.Resources.EditChooseFile.NoMenuPrefix ();
+				return CanChooseOverlayFile ? String.Format (AppResources.Resources.EditChooseThisFile.NoMenuPrefix (), Titles.Overlay (GetSelectedOverlay ()).Quoted ()) : AppResources.Resources.EditChooseFile.NoMenuPrefix ();
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
-		private Boolean SelectFirstOverlay ()
+		private Boolean SelectUsedOverlay (int pStartOverlayNdx)
 		{
+			if (pStartOverlayNdx >= 0)
+			{
+				for (int lNdx = pStartOverlayNdx; lNdx < ListViewOverlays.Items.Count; lNdx++)
+				{
+					if (GetSelectedOverlay (lNdx) != null)
+					{
+						ListViewOverlays.SelectedIndex = lNdx;
+						return true;
+					}
+				}
+			}
 			for (int lNdx = 0; lNdx < ListViewOverlays.Items.Count; lNdx++)
 			{
 				if (GetSelectedOverlay (lNdx) != null)
@@ -263,9 +300,9 @@ namespace AgentCharacterEditor.Panels
 			return false;
 		}
 
-		private FileFrameOverlay GetSelectedOverlay (Boolean pIncludeFocus)
+		private FileFrameOverlay GetSelectedOverlay ()
 		{
-			return GetSelectedOverlay (ListViewOverlays.GetSelectedIndex (pIncludeFocus));
+			return GetSelectedOverlay (ListViewOverlays.SelectedIndex);
 		}
 
 		private FileFrameOverlay GetSelectedOverlay (int pOverlayNdx)
@@ -288,7 +325,7 @@ namespace AgentCharacterEditor.Panels
 
 		private RepeatingUpdate<UpdateFrameOverlay, FileFrameOverlay> mRepeatUpdateFrameOverlay = new RepeatingUpdate<UpdateFrameOverlay, FileFrameOverlay> ();
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private UndoableUpdate UpdateSelectedOverlay (FileFrameOverlay pFrameOverlay)
 		{
@@ -315,11 +352,14 @@ namespace AgentCharacterEditor.Panels
 					}
 					else if ((lOverlayNdx >= 0) && !String.IsNullOrEmpty (lFilePath))
 					{
-						AddDeleteFrameOverlay lUpdate = new AddDeleteFrameOverlay (Frame, (MouthOverlay)lOverlayNdx, lFilePath, false);
-
-						if (AddDeleteFrameOverlay.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteFrameOverlay, this))
+						using (PanelFillingState lFillingState = new PanelFillingState (this))
 						{
-							return lUpdate;
+							AddDeleteFrameOverlay lUpdate = new AddDeleteFrameOverlay (Frame, (MouthOverlay)lOverlayNdx, lFilePath, false);
+
+							if (AddDeleteFrameOverlay.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteFrameOverlay, this))
+							{
+								return lUpdate;
+							}
 						}
 					}
 				}
@@ -331,11 +371,14 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelEmpty && !Program.FileIsReadOnly && (pFrameOverlay != null))
 			{
-				AddDeleteFrameOverlay lUpdate = new AddDeleteFrameOverlay (pFrameOverlay, pForClipboard);
-
-				if (AddDeleteFrameOverlay.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteFrameOverlay, this))
+				using (PanelFillingState lFillingState = new PanelFillingState (this))
 				{
-					return lUpdate;
+					AddDeleteFrameOverlay lUpdate = new AddDeleteFrameOverlay (pFrameOverlay, pForClipboard);
+
+					if (AddDeleteFrameOverlay.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteFrameOverlay, this))
+					{
+						return lUpdate;
+					}
 				}
 			}
 			return null;
@@ -359,9 +402,12 @@ namespace AgentCharacterEditor.Panels
 							pPasteOverlay.CopyTo (lUpdate.Target);
 							lUpdate = lUpdate.Apply () as AddDeleteFrameOverlay;
 						}
-						if ((lUpdate != null) && AddDeleteFrameOverlay.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteFrameOverlay, this))
+						using (PanelFillingState lFillingState = new PanelFillingState (this))
 						{
-							return lUpdate;
+							if ((lUpdate != null) && AddDeleteFrameOverlay.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteFrameOverlay, this))
+							{
+								return lUpdate;
+							}
 						}
 					}
 				}
@@ -380,13 +426,13 @@ namespace AgentCharacterEditor.Panels
 			return null;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override bool HandleCanEditCopy (CanEditEventArgs pEventArgs)
 		{
 			if (IsControlEditTarget (ListViewOverlays, pEventArgs))
 			{
-				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay ();
 
 				if (lFrameOverlay != null)
 				{
@@ -400,7 +446,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (ListViewOverlays, pEventArgs))
 			{
-				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay ();
 
 				if (lFrameOverlay != null)
 				{
@@ -415,7 +461,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (ListViewOverlays, pEventArgs) && !Program.FileIsReadOnly)
 			{
-				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay ();
 
 				if (lFrameOverlay != null)
 				{
@@ -429,7 +475,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (ListViewOverlays, pEventArgs) && !Program.FileIsReadOnly)
 			{
-				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay ();
 
 				if (lFrameOverlay != null)
 				{
@@ -447,7 +493,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (ListViewOverlays, pEventArgs) && !Program.FileIsReadOnly)
 			{
-				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay ();
 
 				if (lFrameOverlay != null)
 				{
@@ -461,7 +507,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (ListViewOverlays, pEventArgs) && !Program.FileIsReadOnly)
 			{
-				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay ();
 
 				if (lFrameOverlay != null)
 				{
@@ -485,19 +531,19 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (ListViewOverlays, pEventArgs) && !Program.FileIsReadOnly && (pEventArgs.GetPasteObject () is FileFrameOverlay))
 			{
-				PasteSelectedOverlay (GetSelectedOverlay (false), pEventArgs.GetPasteObject () as FileFrameOverlay);
+				PasteSelectedOverlay (GetSelectedOverlay (), pEventArgs.GetPasteObject () as FileFrameOverlay);
 				return true;
 			}
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void HandleOffsetXChanged ()
 		{
 			if (!IsPanelFilling && !Program.FileIsReadOnly)
 			{
-				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay ();
 				UpdateFrameOverlay lUpdate;
 
 				if (lFrameOverlay != null)
@@ -514,7 +560,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelFilling && !Program.FileIsReadOnly)
 			{
-				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay ();
 				UpdateFrameOverlay lUpdate;
 
 				if (lFrameOverlay != null)
@@ -531,7 +577,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay ();
 				UpdateFrameOverlay lUpdate;
 
 				if (lFrameOverlay != null)
@@ -543,13 +589,13 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void HandleShiftUpClick (int pRepeatNum)
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay ();
 				UpdateFrameOverlay lUpdate;
 
 				if (lFrameOverlay != null)
@@ -566,7 +612,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay ();
 				UpdateFrameOverlay lUpdate;
 
 				if (lFrameOverlay != null)
@@ -583,7 +629,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay ();
 				UpdateFrameOverlay lUpdate;
 
 				if (lFrameOverlay != null)
@@ -600,7 +646,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				FileFrameOverlay lFrameOverlay = GetSelectedOverlay (false);
+				FileFrameOverlay lFrameOverlay = GetSelectedOverlay ();
 				UpdateFrameOverlay lUpdate;
 
 				if (lFrameOverlay != null)
@@ -618,7 +664,7 @@ namespace AgentCharacterEditor.Panels
 			mRepeatUpdateFrameOverlay.EndUpdate ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override void UpdateApplied (object pUpdate)
 		{
@@ -636,14 +682,16 @@ namespace AgentCharacterEditor.Panels
 			{
 				if (lUpdateCharacter.ImageSizeChanged || lUpdateCharacter.PaletteChanged || lUpdateCharacter.PaletteTransparencyChanged)
 				{
-				ShowSelectedOverlay ();
+					ShowSelectedOverlay ();
 				}
 			}
 			else if ((lAddDeleteOverlay != null) && (lAddDeleteOverlay.Frame == Frame))
 			{
-				PanelContext lContext = new PanelContext (this);
 				ShowFrameOverlays ();
-				lContext.RestoreContext (this);
+				if (IsPanelFilling || IsPanelVisible)
+				{
+					SelectUsedOverlay ((int)lAddDeleteOverlay.OverlayType);
+				}
 				ShowSelectedOverlay ();
 			}
 			else if ((lUpdateOverlay != null) && (lUpdateOverlay.Frame == Frame))
@@ -653,9 +701,7 @@ namespace AgentCharacterEditor.Panels
 			}
 			else if ((lUpdateFrame != null) && (lUpdateFrame.Target == Frame) && lUpdateFrame.ForClipboard)
 			{
-				PanelContext lContext = new PanelContext (this);
 				ShowFrameOverlays ();
-				lContext.RestoreContext (this);
 				ShowSelectedOverlay ();
 			}
 		}

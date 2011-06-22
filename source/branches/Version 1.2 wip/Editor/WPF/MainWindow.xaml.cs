@@ -29,7 +29,7 @@ namespace AgentCharacterEditor
 			InitializeComponent ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void LoadWindowState ()
 		{
@@ -90,7 +90,7 @@ namespace AgentCharacterEditor
 			mRecentFiles.ShowPaths (MenuItemFile, MenuItemFilePrintPreview);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void SaveSettings ()
 		{
@@ -212,7 +212,7 @@ namespace AgentCharacterEditor
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowFileState ()
 		{
@@ -319,7 +319,7 @@ namespace AgentCharacterEditor
 #endif
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private Storyboard GetPanelFadeIn (FilePartPanel pPanel)
 		{
@@ -343,7 +343,7 @@ namespace AgentCharacterEditor
 			return lPanelStoryboard;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void PutPanelFadeIn (Storyboard pFadeIn, FilePartPanel pPanel)
 		{
@@ -413,7 +413,7 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public Boolean ViewLarge ()
 		{
@@ -499,7 +499,7 @@ namespace AgentCharacterEditor
 			return lRet;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void InitializeViewSize ()
 		{
@@ -612,7 +612,7 @@ namespace AgentCharacterEditor
 			Close ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void OnCanBrowseBack (object sender, CanExecuteRoutedEventArgs e)
 		{
@@ -634,7 +634,7 @@ namespace AgentCharacterEditor
 			HandleNavigateForward ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void PreviewCanEditCut (object sender, CanExecuteRoutedEventArgs e)
 		{
@@ -653,7 +653,7 @@ namespace AgentCharacterEditor
 			e.PutPasteTitle ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void PreviewCanEditUndo (object sender, CanExecuteRoutedEventArgs e)
 		{
@@ -701,7 +701,7 @@ namespace AgentCharacterEditor
 			HandleEditRedo ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void OnHelpAbout (object sender, RoutedEventArgs e)
 		{
@@ -711,7 +711,7 @@ namespace AgentCharacterEditor
 			lDialog.ShowDialog ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void OnCanViewLarge (object sender, CanExecuteRoutedEventArgs e)
 		{

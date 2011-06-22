@@ -54,7 +54,7 @@
     <ManifestTimestampUrl>http://timestamp.comodoca.com/authenticode</ManifestTimestampUrl>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>CinSoft.snk</AssemblyOriginatorKeyFile>
@@ -63,6 +63,7 @@
     <Reference Include="DaCharFileCLR, Version=1.2.0.51, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\BinDa\Bin\Debug(x86)\v4.0\DaCharFileCLR.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="PresentationFramework.Classic" />
@@ -241,6 +242,9 @@
     <Compile Include="Previews\FramesPreview.xaml.cs">
       <DependentUpon>FramesPreview.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Previews\FramesToolBar.xaml.cs">
+      <DependentUpon>FramesToolBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -256,13 +260,17 @@
       <Link>Classes\Titles.Common.cs</Link>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="..\Common\Previews\FramesToolBar.Common.cs">
+      <Link>Previews\FramesToolBar.Common.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="..\Common\Previews\FramesPreview.Common.cs">
       <Link>Previews\FramesPreview.Common.cs</Link>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="..\Common\Previews\FramesListView.Common.cs">
       <Link>Previews\FramesListView.Common.cs</Link>
-      <SubType>Code</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="..\Common\Previews\AnimationPreviewFrames.cs">
       <Link>Previews\AnimationPreviewFrames.cs</Link>
@@ -309,6 +317,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Previews\FramesPreview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Previews\FramesToolBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -447,10 +459,6 @@
     <Resource Include="Resources\EditUndo.Png" />
     <Resource Include="Resources\About.Png" />
     <Resource Include="Resources\LargeFont.Png" />
-    <Resource Include="Resources\MoveDown.png" />
-    <Resource Include="Resources\MoveLeft.png" />
-    <Resource Include="Resources\MoveRight.png" />
-    <Resource Include="Resources\MoveUp.png" />
     <Resource Include="Resources\ShiftDown.png" />
     <Resource Include="Resources\ShiftLeft.png" />
     <Resource Include="Resources\ShiftRight.png" />
@@ -501,6 +509,24 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\ShowExitBranching.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Lock.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\MoveDown.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\MoveLeft.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\MoveRight.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\MoveUp.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Swap.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

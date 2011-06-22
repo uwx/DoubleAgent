@@ -63,7 +63,7 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		/// <summary>
 		/// Gets or sets the control's client area dimensions.<para>Override of <see cref="System.Windows.Forms.Control.ClientSize"/>.</para>
@@ -133,7 +133,7 @@ namespace AgentCharacterEditor
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		/// <summary>
 		/// Converts a <see cref="System.Drawing.Point"/> from Image coordinates to Client coordinates.
@@ -187,7 +187,7 @@ namespace AgentCharacterEditor
 			return Size.Round (lScaledSize);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		/// <summary>
 		/// The suggested default dimensions of a sample image.

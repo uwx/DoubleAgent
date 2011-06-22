@@ -104,7 +104,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowBalloonPreview ()
 		{
@@ -133,7 +133,7 @@ namespace AgentCharacterEditor.Panels
 			HandleEnabledChanged ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void NumericCharsPerLine_Validated (object sender, EventArgs e)
 		{
@@ -165,7 +165,7 @@ namespace AgentCharacterEditor.Panels
 			HandleAutoPaceChanged ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ButtonBalloonFont_Click (object sender, EventArgs e)
 		{

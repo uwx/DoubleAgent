@@ -44,7 +44,7 @@ namespace AgentCharacterEditor.Panels
 			{
 				return base.FilePart;
 			}
-			set
+			protected set
 			{
 				base.FilePart = value;
 				if (FilePart is ResolveAnimationFrame)
@@ -52,12 +52,6 @@ namespace AgentCharacterEditor.Panels
 					(FilePart as ResolveAnimationFrame).Scope = ResolveAnimationFrame.ScopeType.ScopeFrame;
 				}
 				Frame = (FilePart is ResolveAnimationFrame) ? (FilePart as ResolveAnimationFrame).Target : null;
-
-				ShowFrameName ();
-				ShowFrameDuration ();
-				ShowFrameSample ();
-				ShowFrameImages ();
-				ShowFrameSound ();
 			}
 		}
 
@@ -114,9 +108,42 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
+		public new class PanelContext : FilePartPanel.PanelContext
+		{
+			public PanelContext (FramePanel pPanel)
+				: base (pPanel)
+			{
+				SelectedImage = pPanel.ListViewImages.SelectedIndex;
+			}
+
+			public void RestoreContext (FramePanel pPanel)
+			{
+				base.RestoreContext (pPanel);
+				pPanel.ListViewImages.SelectedIndex = SelectedImage;
+			}
+
+			public int SelectedImage
+			{
+				get;
+				protected set;
+			}
+		}
+
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
+
+		public override void ShowFilePart (ResolvePart pFilePart)
+		{
+			FilePart = pFilePart;
+
+			ShowFrameName ();
+			ShowFrameDuration ();
+			ShowFrameSample ();
+			ShowFrameImages ();
+			ShowSelectedImage ();
+			ShowFrameSound ();
+		}
 
 		private void ShowFrameName ()
 		{
@@ -150,7 +177,7 @@ namespace AgentCharacterEditor.Panels
 			NumericDuration.IsModified = false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowFrameImage (FileFrameImage pFrameImage)
 		{
@@ -183,7 +210,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ShowSelectedImage ()
 		{
-			ShowFrameImage (GetSelectedImage (false));
+			ShowFrameImage (GetSelectedImage ());
 
 			ButtonAdd.IsEnabled = CanAddImage;
 			ButtonDelete.IsEnabled = CanDeleteImage;
@@ -197,7 +224,7 @@ namespace AgentCharacterEditor.Panels
 			ButtonMoveDown.SetTipText (MoveImageDownTitle);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private Boolean CanAddImage
 		{
@@ -211,7 +238,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			get
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 				return !IsPanelEmpty && !Program.FileIsReadOnly && (lFrameImage != null) && (Frame.ImageCount > 1);
 			}
 		}
@@ -219,7 +246,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			get
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 				return CanDeleteImage ? String.Format (AppResources.Resources.EditDeleteThis.NoMenuPrefix (), Titles.Image (lFrameImage)) : AppResources.Resources.EditDelete.NoMenuPrefix ();
 			}
 		}
@@ -228,7 +255,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			get
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 				return !IsPanelEmpty && !Program.FileIsReadOnly && (lFrameImage != null);
 			}
 		}
@@ -236,7 +263,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			get
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 				return CanChooseImageFile ? String.Format (AppResources.Resources.EditChooseThisFile.NoMenuPrefix (), Titles.Image (lFrameImage)) : AppResources.Resources.EditChooseFile.NoMenuPrefix ();
 			}
 		}
@@ -253,7 +280,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			get
 			{
-				FileFrameImage lFrameImage = CanMoveImageUp ? GetSelectedImage (false) : null;
+				FileFrameImage lFrameImage = CanMoveImageUp ? GetSelectedImage () : null;
 				return String.Format (AppResources.Resources.EditMoveImageUp.NoMenuPrefix (), Titles.Image (lFrameImage));
 			}
 		}
@@ -270,16 +297,16 @@ namespace AgentCharacterEditor.Panels
 		{
 			get
 			{
-				FileFrameImage lFrameImage = CanMoveImageDown ? GetSelectedImage (false) : null;
+				FileFrameImage lFrameImage = CanMoveImageDown ? GetSelectedImage () : null;
 				return String.Format (AppResources.Resources.EditMoveImageDown.NoMenuPrefix (), Titles.Image (lFrameImage));
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
-		private FileFrameImage GetSelectedImage (Boolean pIncludeFocus)
+		private FileFrameImage GetSelectedImage ()
 		{
-			return GetSelectedImage (ListViewImages.GetSelectedIndex (pIncludeFocus));
+			return GetSelectedImage (ListViewImages.SelectedIndex);
 		}
 		private FileFrameImage GetSelectedImage (int pImageNdx)
 		{
@@ -295,7 +322,7 @@ namespace AgentCharacterEditor.Panels
 			return lFrameImage;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowFrameSound ()
 		{
@@ -364,12 +391,14 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelEmpty && !Program.FileIsReadOnly && (pFrameImage != null))
 			{
-				AddDeleteFrameImage lUpdate = new AddDeleteFrameImage (pFrameImage, pForClipboard);
-
-				if (AddDeleteFrameImage.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteFrameImage, this))
+				using (PanelFillingState lFillingState = new PanelFillingState (this))
 				{
-					ListViewImages.SelectedIndex = Math.Min (lUpdate.ImageNdx, ListViewImages.Items.Count - 1);
-					return lUpdate;
+					AddDeleteFrameImage lUpdate = new AddDeleteFrameImage (pFrameImage, pForClipboard);
+
+					if (AddDeleteFrameImage.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteFrameImage, this))
+					{
+						return lUpdate;
+					}
 				}
 			}
 			return null;
@@ -389,10 +418,12 @@ namespace AgentCharacterEditor.Panels
 						pPasteImage.CopyTo (lUpdate.Target);
 						lUpdate = lUpdate.Apply () as AddDeleteFrameImage;
 					}
-					if ((lUpdate != null) && AddDeleteFrameImage.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteFrameImage, this))
+					using (PanelFillingState lFillingState = new PanelFillingState (this))
 					{
-						ListViewImages.SelectedIndex = lUpdate.ImageNdx;
-						return lUpdate;
+						if ((lUpdate != null) && AddDeleteFrameImage.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteFrameImage, this))
+						{
+							return lUpdate;
+						}
 					}
 				}
 				else
@@ -410,7 +441,7 @@ namespace AgentCharacterEditor.Panels
 			return null;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void AddNewImage ()
 		{
@@ -423,9 +454,11 @@ namespace AgentCharacterEditor.Panels
 				{
 					if (!String.IsNullOrEmpty (lFilePath))
 					{
-						lUpdate = new AddDeleteFrameImage (Frame, lFilePath, false);
-						AddDeleteFrameImage.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteFrameImage, this);
-						ListViewImages.SelectedIndex = lUpdate.ImageNdx;
+						using (PanelFillingState lFillingState = new PanelFillingState (this))
+						{
+							lUpdate = new AddDeleteFrameImage (Frame, lFilePath, false);
+							AddDeleteFrameImage.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteFrameImage, this);
+						}
 					}
 				}
 			}
@@ -435,15 +468,17 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 				int lSelNdx = ListViewImages.SelectedIndex;
 				ReorderFrameImage lUpdate;
 
 				if ((lFrameImage != null) && (lSelNdx > 0))
 				{
-					lUpdate = new ReorderFrameImage (lFrameImage, lSelNdx - 1);
-					ReorderFrameImage.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as ReorderFrameImage, this);
-					ListViewImages.SelectedIndex = Frame.Images.IndexOf (lFrameImage);
+					using (PanelFillingState lFillingState = new PanelFillingState (this))
+					{
+						lUpdate = new ReorderFrameImage (lFrameImage, lSelNdx - 1);
+						ReorderFrameImage.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as ReorderFrameImage, this);
+					}
 				}
 			}
 		}
@@ -452,26 +487,28 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 				int lSelNdx = ListViewImages.SelectedIndex;
 				ReorderFrameImage lUpdate;
 
 				if ((lFrameImage != null) && (lSelNdx >= 0) && (lSelNdx < Frame.Images.Count - 1))
 				{
-					lUpdate = new ReorderFrameImage (lFrameImage, lSelNdx + 1);
-					ReorderFrameImage.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as ReorderFrameImage, this);
-					ListViewImages.SelectedIndex = Frame.Images.IndexOf (lFrameImage);
+					using (PanelFillingState lFillingState = new PanelFillingState (this))
+					{
+						lUpdate = new ReorderFrameImage (lFrameImage, lSelNdx + 1);
+						ReorderFrameImage.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as ReorderFrameImage, this);
+					}
 				}
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override bool HandleCanEditCopy (CanEditEventArgs pEventArgs)
 		{
 			if (IsControlEditTarget (ListViewImages, pEventArgs))
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 
 				if (lFrameImage != null)
 				{
@@ -485,7 +522,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (ListViewImages, pEventArgs))
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 
 				if (lFrameImage != null)
 				{
@@ -500,7 +537,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (ListViewImages, pEventArgs) && !Program.FileIsReadOnly)
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 
 				if ((lFrameImage != null) && (Frame.ImageCount > 1))
 				{
@@ -514,7 +551,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (ListViewImages, pEventArgs) && !Program.FileIsReadOnly)
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 
 				if ((lFrameImage != null) && (Frame.ImageCount > 1))
 				{
@@ -532,7 +569,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (ListViewImages, pEventArgs) && !Program.FileIsReadOnly)
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 
 				if ((lFrameImage != null) && (Frame.ImageCount > 1))
 				{
@@ -546,7 +583,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (ListViewImages, pEventArgs) && !Program.FileIsReadOnly)
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 
 				if ((lFrameImage != null) && (Frame.ImageCount > 1))
 				{
@@ -561,7 +598,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (ImagePasteTarget, pEventArgs) && !Program.FileIsReadOnly && (pEventArgs.GetPasteObject () is FileFrameImage))
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 
 				if (lFrameImage == null)
 				{
@@ -581,14 +618,14 @@ namespace AgentCharacterEditor.Panels
 			{
 				if (pEventArgs.GetPasteObject () is FileFrameImage)
 				{
-					PasteSelectedImage (GetSelectedImage (false), pEventArgs.GetPasteObject () as FileFrameImage);
+					PasteSelectedImage (GetSelectedImage (), pEventArgs.GetPasteObject () as FileFrameImage);
 					return true;
 				}
 			}
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void HandleDurationChanged ()
 		{
@@ -606,7 +643,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 
 				if (lFrameImage != null)
 				{
@@ -623,7 +660,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 
 				if (lFrameImage != null)
 				{
@@ -636,13 +673,13 @@ namespace AgentCharacterEditor.Panels
 			NumericOffsetY.IsModified = false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void HandleShiftUpClick (int pRepeatNum)
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 
 				if (lFrameImage != null)
 				{
@@ -659,7 +696,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 
 				if (lFrameImage != null)
 				{
@@ -676,7 +713,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 
 				if (lFrameImage != null)
 				{
@@ -693,7 +730,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				FileFrameImage lFrameImage = GetSelectedImage (false);
+				FileFrameImage lFrameImage = GetSelectedImage ();
 
 				if (lFrameImage != null)
 				{
@@ -711,7 +748,7 @@ namespace AgentCharacterEditor.Panels
 			mRepeatUpdateFrameImage.EndUpdate ();
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void HandleSoundFileChanged ()
 		{
@@ -741,7 +778,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override void UpdateApplied (object pUpdate)
 		{
@@ -777,17 +814,21 @@ namespace AgentCharacterEditor.Panels
 			}
 			else if ((lAddDeleteImage != null) && (lAddDeleteImage.Frame == Frame))
 			{
-				PanelContext lContext = new PanelContext (this);
 				ShowFrameImages ();
-				lContext.RestoreContext (this);
+				if (IsPanelFilling)
+				{
+					ListViewImages.SelectedIndex = Math.Min (lAddDeleteImage.ImageNdx, ListViewImages.Items.Count - 1);
+				}
 				ShowSelectedImage ();
 				ShowFrameSample ();
 			}
 			else if ((lReorderImage != null) && (lReorderImage.Frame == Frame))
 			{
-				PanelContext lContext = new PanelContext (this);
 				ShowFrameImages ();
-				lContext.RestoreContext (this);
+				if (IsPanelFilling)
+				{
+					ListViewImages.SelectedIndex = Frame.Images.IndexOf (lReorderImage.Target);
+				}
 				ShowSelectedImage ();
 				ShowFrameSample ();
 			}

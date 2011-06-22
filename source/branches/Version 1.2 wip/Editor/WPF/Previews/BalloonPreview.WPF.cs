@@ -167,7 +167,7 @@ namespace AgentCharacterEditor.Previews
 			return lRet;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private bool IsAutoScrolling
 		{
@@ -237,7 +237,7 @@ namespace AgentCharacterEditor.Previews
 			return lRet;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void AutoPaceTimerPulse (object sender, AsyncTimer.TimerEventArgs e)
 		{
@@ -295,7 +295,7 @@ namespace AgentCharacterEditor.Previews
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected void Refresh ()
 		{
@@ -345,7 +345,7 @@ namespace AgentCharacterEditor.Previews
 			return base.GetVisualChild (index);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override System.Windows.Size MeasureOverride (System.Windows.Size constraint)
 		{
@@ -359,7 +359,7 @@ namespace AgentCharacterEditor.Previews
 			return arrangeSize;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void HandleIsEnabledChanged (object sender, DependencyPropertyChangedEventArgs e)
 		{

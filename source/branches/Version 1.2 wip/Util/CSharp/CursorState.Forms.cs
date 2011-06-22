@@ -48,7 +48,7 @@ namespace DoubleAgent
 			set;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		/// <summary>
 		/// Constructor
@@ -88,7 +88,7 @@ namespace DoubleAgent
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		/// <summary>
 		/// Sets the managed <see cref="Form"/>'s current <see cref="System.Windows.Forms.Cursor"/>.
@@ -128,7 +128,7 @@ namespace DoubleAgent
 			return lRet;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		/// <summary>
 		/// Sets the managed <see cref="Form"/>'s current <see cref="System.Windows.Forms.Cursor"/> to <see cref="System.Windows.Forms.Cursors.WaitCursor"/>.

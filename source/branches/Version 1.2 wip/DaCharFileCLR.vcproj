@@ -28,6 +28,7 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -56,7 +57,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)\Da$(ProjectName).dll"
-				KeyFile="$(InputDir)Managed\CinSoft.snk"
+				KeyFile="Managed\CinSoft.snk"
+				DelaySign="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -78,6 +80,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Signing the code..."
+				CommandLine="sn -Ra &quot;$(TargetPath)&quot; &quot;$(SolutionDir)Managed\CinSoft.snk&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -93,6 +97,7 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -121,7 +126,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)\Da$(ProjectName).dll"
-				KeyFile="$(InputDir)Managed\CinSoft.snk"
+				KeyFile="Managed\CinSoft.snk"
+				DelaySign="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -143,6 +149,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="sn -Ra &quot;$(TargetPath)&quot; &quot;$(SolutionDir)Managed\CinSoft.snk&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetPath)&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>

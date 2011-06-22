@@ -113,69 +113,20 @@
 				</Grid.RowDefinitions>
 				<Grid Margin="0,0,0,2">
 					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
 						<ColumnDefinition />
 						<ColumnDefinition Width="Auto" />
 						<ColumnDefinition Width="Auto" />
 						<ColumnDefinition Width="Auto" />
 					</Grid.ColumnDefinitions>
-					<ToolBar Style="{StaticResource PanelToolBar}"
+					<previews:FramesToolBar x:Name="ToolBarFrames" HorizontalAlignment="Left"
+											VerticalAlignment="Top"
+											Margin="2,0" />
+					<ToolBar Grid.Column="1"
+							 Style="{StaticResource PanelToolBar}"
 							 HorizontalAlignment="Left"
 							 VerticalAlignment="Top"
 							 Margin="2,0">
-						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-								Height="Auto"
-								Name="ButtonAdd"
-								Width="Auto"
-								ToolTip="Add a new Frame"
-								Click="ButtonAdd_Click">
-							<custom:ImageState NormalSource="{StaticResource ImgFileNew}"
-											   Stretch="UniformToFill"
-											   Width="16"
-											   Height="16"
-											   HorizontalAlignment="Center"
-											   VerticalAlignment="Center" />
-						</Button>
-						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-								Height="Auto"
-								Name="ButtonDelete"
-								Width="Auto"
-								ToolTip="Delete frame"
-								Click="ButtonDelete_Click">
-							<custom:ImageState NormalSource="{StaticResource ImgEditDelete}"
-											   Stretch="UniformToFill"
-											   Width="16"
-											   Height="16"
-											   HorizontalAlignment="Center"
-											   VerticalAlignment="Center" />
-						</Button>
-						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-								Height="Auto"
-								Name="ButtonMoveUp"
-								Width="Auto"
-								ToolTip="Move frame up"
-								Margin="5,0,0,0"
-								Click="ButtonMoveUp_Click">
-							<custom:ImageState NormalSource="{StaticResource ImgMoveLeft}"
-											   Stretch="UniformToFill"
-											   Width="16"
-											   Height="16"
-											   HorizontalAlignment="Center"
-											   VerticalAlignment="Center" />
-						</Button>
-						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-								Height="Auto"
-								Name="ButtonMoveDown"
-								Width="Auto"
-								ToolTip="Move frame down"
-								Click="ButtonMoveDown_Click">
-							<custom:ImageState NormalSource="{StaticResource ImgMoveRight}"
-											   Stretch="UniformToFill"
-											   Width="16"
-											   Height="16"
-											   HorizontalAlignment="Center"
-											   VerticalAlignment="Center" />
-						</Button>
-						<Separator Style="{StaticResource PanelToolBarSeparator}" />
 						<CheckBox Style="{StaticResource {x:Static ToolBar.CheckBoxStyleKey}}"
 								  Height="Auto"
 								  Name="ButtonShowBranching"
@@ -185,11 +136,7 @@
 								  Checked="ButtonShowBranching_CheckChanged"
 								  Unchecked="ButtonShowBranching_CheckChanged">
 							<custom:ImageState NormalSource="{StaticResource ImgShowBranching}"
-											   Stretch="UniformToFill"
-											   Width="16"
-											   Height="16"
-											   HorizontalAlignment="Center"
-											   VerticalAlignment="Center" />
+											   Style="{StaticResource ToolButtonImage}" />
 						</CheckBox>
 						<CheckBox Style="{StaticResource {x:Static ToolBar.CheckBoxStyleKey}}"
 								  Height="Auto"
@@ -200,11 +147,7 @@
 								  Checked="ButtonShowExitBranching_CheckChanged"
 								  Unchecked="ButtonShowExitBranching_CheckChanged">
 							<custom:ImageState NormalSource="{StaticResource ImgShowExitBranching}"
-											   Stretch="UniformToFill"
-											   Width="16"
-											   Height="16"
-											   HorizontalAlignment="Center"
-											   VerticalAlignment="Center" />
+											   Style="{StaticResource ToolButtonImage}" />
 						</CheckBox>
 						<Separator Style="{StaticResource PanelToolBarSeparator}" />
 						<RadioButton Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
@@ -215,11 +158,7 @@
 									 GroupName="View"
 									 Checked="ButtonViewSmall_Checked">
 							<custom:ImageState NormalSource="{StaticResource ImgViewSmall}"
-											   Stretch="UniformToFill"
-											   Width="16"
-											   Height="16"
-											   HorizontalAlignment="Center"
-											   VerticalAlignment="Center" />
+											   Style="{StaticResource ToolButtonImage}" />
 						</RadioButton>
 						<RadioButton Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
 									 Height="Auto"
@@ -230,11 +169,7 @@
 									 IsChecked="True"
 									 Checked="ButtonViewMedium_Checked">
 							<custom:ImageState NormalSource="{StaticResource ImgViewMedium}"
-											   Stretch="UniformToFill"
-											   Width="16"
-											   Height="16"
-											   HorizontalAlignment="Center"
-											   VerticalAlignment="Center" />
+											   Style="{StaticResource ToolButtonImage}" />
 						</RadioButton>
 						<RadioButton Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
 									 Height="Auto"
@@ -244,21 +179,17 @@
 									 GroupName="View"
 									 Checked="ButtonViewLarge_Checked">
 							<custom:ImageState NormalSource="{StaticResource ImgViewLarge}"
-											   Stretch="UniformToFill"
-											   Width="16"
-											   Height="16"
-											   HorizontalAlignment="Center"
-											   VerticalAlignment="Center" />
+											   Style="{StaticResource ToolButtonImage}" />
 						</RadioButton>
 					</ToolBar>
 					<Label Content="New frame duration"
-						   Grid.Column="1"
+						   Grid.Column="2"
 						   HorizontalAlignment="Right"
 						   Name="LabelDuration"
 						   VerticalAlignment="Center"
 						   Style="{StaticResource PanelLabel}" />
 					<custom:NumericUpDown Style="{StaticResource NumericUpDown}"
-										  Grid.Column="2"
+										  Grid.Column="3"
 										  HorizontalAlignment="Right"
 										  x:Name="NumericFrameDuration"
 										  VerticalAlignment="Center"
@@ -268,7 +199,7 @@
 										  IsModifiedChanged="NumericFrameDuration_IsModifiedChanged"
 										  Margin="2,0" />
 					<Label Content="(1/100 sec)"
-						   Grid.Column="3"
+						   Grid.Column="4"
 						   HorizontalAlignment="Right"
 						   Name="LabelDurationDesc"
 						   VerticalAlignment="Center"
@@ -321,98 +252,70 @@
 					<ToolBar Style="{StaticResource PanelToolBar}"
 							 HorizontalAlignment="Left"
 							 VerticalAlignment="Top">
-						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+						<Button Style="{StaticResource ImageStateButtonAll}"
 								Height="Auto"
 								Name="PreviewButtonPlay"
 								Width="Auto"
 								ToolTip="Play"
 								Click="PreviewButtonPlay_Click">
-							<Image Source="{StaticResource IconPlay}"
-								   Stretch="UniformToFill"
-								   Width="24"
-								   Height="24"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
+							<custom:ImageState NormalSource="{StaticResource IconPlay}"
+											   Style="{StaticResource ToolButtonImageLarge}" />
 						</Button>
-						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+						<Button Style="{StaticResource ImageStateButtonAll}"
 								Height="Auto"
 								Name="PreviewButtonStop"
 								Width="Auto"
 								ToolTip="Stop"
 								Click="PreviewButtonStop_Click">
-							<Image Source="{StaticResource IconStop}"
-								   Stretch="UniformToFill"
-								   Width="24"
-								   Height="24"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
+							<custom:ImageState NormalSource="{StaticResource IconStop}"
+											   Style="{StaticResource ToolButtonImageLarge}" />
 						</Button>
-						<CheckBox Style="{StaticResource {x:Static ToolBar.CheckBoxStyleKey}}"
+						<CheckBox Style="{StaticResource ImageStateButtonAll}"
 								  Height="Auto"
 								  Name="PreviewButtonPause"
 								  Width="Auto"
 								  ToolTip="Pause"
 								  Click="PreviewButtonPause_Click">
-							<Image Source="{StaticResource IconPause}"
-								   Stretch="UniformToFill"
-								   Width="24"
-								   Height="24"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
+							<custom:ImageState NormalSource="{StaticResource IconPause}"
+											   Style="{StaticResource ToolButtonImageLarge}" />
 						</CheckBox>
 						<Separator Style="{StaticResource PanelToolBarSeparator}" />
-						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+						<Button Style="{StaticResource ImageStateButtonAll}"
 								Height="Auto"
 								Name="PreviewButtonSkipBack"
 								Width="Auto"
 								ToolTip="Back"
 								Click="PreviewButtonSkipBack_Click">
-							<Image Source="{StaticResource IconSkipBack}"
-								   Stretch="UniformToFill"
-								   Width="24"
-								   Height="24"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
+							<custom:ImageState NormalSource="{StaticResource IconSkipBack}"
+											   Style="{StaticResource ToolButtonImageLarge}" />
 						</Button>
-						<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+						<Button Style="{StaticResource ImageStateButtonAll}"
 								Height="Auto"
 								Name="PreviewButtonSkipForward"
 								Width="Auto"
 								ToolTip="Forward"
 								Click="PreviewButtonSkipForward_Click">
-							<Image Source="{StaticResource IconSkipForward}"
-								   Stretch="UniformToFill"
-								   Width="24"
-								   Height="24"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
+							<custom:ImageState NormalSource="{StaticResource IconSkipForward}"
+											   Style="{StaticResource ToolButtonImageLarge}" />
 						</Button>
 						<Separator Style="{StaticResource PanelToolBarSeparator}" />
-						<CheckBox Style="{StaticResource {x:Static ToolBar.CheckBoxStyleKey}}"
+						<CheckBox Style="{StaticResource ImageStateButtonAll}"
 								  Height="Auto"
 								  Name="PreviewButtonRepeat"
 								  Width="Auto"
 								  ToolTip="Repeat"
 								  Click="PreviewButtonRepeat_Click">
-							<Image Source="{StaticResource IconRepeat}"
-								   Stretch="UniformToFill"
-								   Width="24"
-								   Height="24"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
+							<custom:ImageState NormalSource="{StaticResource IconRepeat}"
+											   Style="{StaticResource ToolButtonImageLarge}" />
 						</CheckBox>
-						<CheckBox Style="{StaticResource {x:Static ToolBar.CheckBoxStyleKey}}"
+						<CheckBox Style="{StaticResource ImageStateButtonAll}"
 								  Height="Auto"
 								  Name="PreviewButtonMute"
 								  Width="Auto"
 								  ToolTip="Mute"
 								  Click="PreviewButtonMute_Click">
-							<Image Source="{StaticResource IconMute}"
-								   Stretch="UniformToFill"
-								   Width="24"
-								   Height="24"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"></Image>
+							<custom:ImageState NormalSource="{StaticResource IconMute}"
+											   Style="{StaticResource ToolButtonImageLarge}" />
 						</CheckBox>
 					</ToolBar>
 					<Grid VerticalAlignment="Top"

@@ -53,23 +53,6 @@ namespace AgentCharacterEditor.Panels
 
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
-		#region Properties
-
-		public override ResolvePart FilePart
-		{
-			get
-			{
-				return base.FilePart;
-			}
-			set
-			{
-				base.FilePart = value;
-				ShowFilePart ();
-			}
-		}
-
-		#endregion
-		///////////////////////////////////////////////////////////////////////////////
 		#region Events
 
 		public event NavigationEventHandler Navigate;
@@ -126,7 +109,7 @@ namespace AgentCharacterEditor.Panels
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override Boolean HandleCanEditCut (CanEditEventArgs pEventArgs)
 		{
@@ -175,7 +158,7 @@ namespace AgentCharacterEditor.Panels
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override Boolean HandleCanEditDelete (CanEditEventArgs pEventArgs)
 		{
@@ -218,7 +201,7 @@ namespace AgentCharacterEditor.Panels
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override Boolean HandleCanEditPaste (CanEditEventArgs pEventArgs)
 		{
@@ -326,7 +309,7 @@ namespace AgentCharacterEditor.Panels
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override void UpdateApplied (object pUpdate)
 		{

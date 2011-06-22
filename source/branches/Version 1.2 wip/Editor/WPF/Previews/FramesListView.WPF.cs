@@ -19,6 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -76,7 +77,7 @@ namespace AgentCharacterEditor.Previews
 			{
 				foreach (FileAnimationFrame lFrame in Animation.Frames)
 				{
-					FramesListItem lListItem = new FramesListItem (CharacterFile, lFrame);
+					FramesListItem lListItem = new FramesListItem (this, CharacterFile, lFrame);
 
 					lListItem.Image.Width = mImageSize.Width;
 					lListItem.Image.Height = mImageSize.Height;
@@ -84,6 +85,22 @@ namespace AgentCharacterEditor.Previews
 				}
 			}
 			InvalidateArrange ();
+		}
+
+		protected void FrameImageChanged (FileAnimationFrame pFrame)
+		{
+			if (pFrame != null)
+			{
+				foreach (FramesListItem lListItem in Items)
+				{
+					if (lListItem.Frame == pFrame)
+					{
+						lListItem.Image.Source = lListItem.GetFrameImageSource ();
+						lListItem.InvalidateVisual ();
+						break;
+					}
+				}
+			}
 		}
 
 		#endregion
@@ -96,28 +113,30 @@ namespace AgentCharacterEditor.Previews
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
-		public FramesListItem (CharacterFile pCharacterFile, FileAnimationFrame pFrame)
+		public FramesListItem (FramesListView pListView, CharacterFile pCharacterFile, FileAnimationFrame pFrame)
 		{
+			ListView = pListView;
 			CharacterFile = pCharacterFile;
 			Frame = pFrame;
 			InitializeComponent ();
 		}
 
-		protected override void InitializeComponent ()
+		protected new void InitializeComponent ()
 		{
-			base.InitializeComponent ();
-
 			StackPanel lStackPanel = new StackPanel ();
 			this.Content = lStackPanel;
+			this.Padding = new Thickness (2);
+			this.Margin = new Thickness (2, 0, 2, 0);
 
 			Image = new Image ();
-			Image.Margin = new System.Windows.Thickness (2, 2, 2, 0);
+			Image.Margin = new Thickness (2, 2, 2, 0);
 			Image.Width = 32;
 			Image.Height = 32;
 			Image.Stretch = System.Windows.Media.Stretch.Uniform;
 			Image.Source = GetFrameImageSource ();
 
 			Label = new Label ();
+			Label.Margin = new Thickness (1);
 			Label.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center;
 			Label.VerticalContentAlignment = System.Windows.VerticalAlignment.Top;
 			if (Frame != null)
@@ -132,7 +151,11 @@ namespace AgentCharacterEditor.Previews
 
 		public ImageSource GetFrameImageSource ()
 		{
-			System.Drawing.Bitmap lBitmap = (Frame == null) ? null : FramesListView.GetFrameImage (CharacterFile, Frame);
+			System.Drawing.Bitmap lBitmap = null;
+			if (ListView != null)
+			{
+			    lBitmap = ListView.GetFrameImageAsync (Frame);
+			}
 			return (lBitmap == null) ? null : lBitmap.MakeImageSource ();
 		}
 
@@ -143,10 +166,19 @@ namespace AgentCharacterEditor.Previews
 		[System.ComponentModel.Browsable (false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
 		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public FramesListView ListView
+		{
+			get;
+			protected set;
+		}
+
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 		public CharacterFile CharacterFile
 		{
 			get;
-			set;
+			protected set;
 		}
 
 		[System.ComponentModel.Browsable (false)]
@@ -155,10 +187,10 @@ namespace AgentCharacterEditor.Previews
 		public FileAnimationFrame Frame
 		{
 			get;
-			set;
+			protected set;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public System.Windows.Controls.Image Image
 		{

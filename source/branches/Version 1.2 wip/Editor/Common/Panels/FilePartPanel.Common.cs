@@ -69,7 +69,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected virtual void OnLoadConfig (object sender, EventArgs e)
 		{
@@ -92,7 +92,7 @@ namespace AgentCharacterEditor.Panels
 			{
 				return mFilePart;
 			}
-			set
+			protected set
 			{
 				mFilePart = value;
 				CharacterFile = (mFilePart != null) ? mFilePart.CharacterFile : null;
@@ -142,7 +142,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected virtual Boolean TrackUpdatesWhenHidden
 		{
@@ -155,6 +155,11 @@ namespace AgentCharacterEditor.Panels
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
+
+		public virtual void ShowFilePart (ResolvePart pFilePart)
+		{
+			FilePart = pFilePart;
+		}
 
 		protected virtual Boolean PushIsPanelFilling (Boolean pIsPanelFilling)
 		{
@@ -219,7 +224,7 @@ namespace AgentCharacterEditor.Panels
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected virtual Boolean HandleEditCopy (Global.EditEventArgs pEventArgs)
 		{

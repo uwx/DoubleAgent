@@ -63,17 +63,10 @@ namespace AgentCharacterEditor.Panels
 			{
 				return base.FilePart;
 			}
-			set
+			protected set
 			{
 				base.FilePart = value;
 				Animation = (FilePart is ResolveAnimation) ? (FilePart as ResolveAnimation).Target : null;
-
-				ShowAnimationName ();
-				ShowReturnAnimations ();
-				ShowReturnAnimation ();
-				ShowDefaultFrameDuration ();
-				ShowAnimationStates ();
-				ShowAnimationFrames ();
 			}
 		}
 
@@ -120,9 +113,49 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
+		public new class PanelContext : FilePartPanel.PanelContext
+		{
+			public PanelContext (AnimationPanel pPanel)
+				: base (pPanel)
+			{
+				SelectedState = pPanel.ListViewStates.SelectedIndex;
+				SelectedFrame = pPanel.FramesView.Frames.SelectedIndex;
+			}
+
+			public void RestoreContext (AnimationPanel pPanel)
+			{
+				base.RestoreContext (pPanel);
+				pPanel.ListViewStates.SelectedIndex = SelectedState;
+				pPanel.FramesView.Frames.SelectedIndex = SelectedFrame;
+			}
+
+			public int SelectedState
+			{
+				get;
+				protected set;
+			}
+			public int SelectedFrame
+			{
+				get;
+				protected set;
+			}
+		}
+
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
+
+		public override void ShowFilePart (ResolvePart pFilePart)
+		{
+			FilePart = pFilePart;
+
+			ShowAnimationName ();
+			ShowReturnAnimations ();
+			ShowReturnAnimation ();
+			ShowDefaultFrameDuration ();
+			ShowAnimationStates ();
+			ShowAnimationFrames ();
+		}
 
 		private void ShowAnimationName ()
 		{
@@ -187,7 +220,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void InitAnimationStates ()
 		{
@@ -258,18 +291,11 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
-		private FileAnimationFrame GetSelectedFrame (Boolean pIncludeFocus)
+		private FileAnimationFrame GetSelectedFrame ()
 		{
-			if (pIncludeFocus)
-			{
-				return GetSelectedFrame (Math.Min (Math.Max (FramesView.Frames.GetSelectedIndex (true), 0), FramesView.Frames.Items.Count - 1));
-			}
-			else
-			{
-				return GetSelectedFrame (FramesView.Frames.SelectedIndex);
-			}
+			return GetSelectedFrame (FramesView.Frames.SelectedIndex);
 		}
 		private FileAnimationFrame GetSelectedFrame (int pFrameNdx)
 		{
@@ -280,7 +306,7 @@ namespace AgentCharacterEditor.Panels
 			return null;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private int mLastSelectedFrameNdx = -1;
 
@@ -301,7 +327,7 @@ namespace AgentCharacterEditor.Panels
 			mLastSelectedFrameNdx = -1;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowFramesState ()
 		{
@@ -335,79 +361,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		private void ShowSelectionState ()
-		{
-			ButtonAdd.IsEnabled = CanAddFrame;
-			ButtonDelete.IsEnabled = CanDeleteFrame;
-			ButtonMoveUp.IsEnabled = CanMoveFrameUp;
-			ButtonMoveDown.IsEnabled = CanMoveFrameDown;
-
-			ButtonDelete.SetTipText (DeleteFrameTitle);
-			ButtonMoveUp.SetTipText (MoveFrameUpTitle);
-			ButtonMoveDown.SetTipText (MoveFrameDownTitle);
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-
-		private Boolean CanAddFrame
-		{
-			get
-			{
-				return !IsPanelEmpty && !Program.FileIsReadOnly;
-			}
-		}
-
-		private Boolean CanDeleteFrame
-		{
-			get
-			{
-				return !IsPanelEmpty && !Program.FileIsReadOnly && (GetSelectedFrame (false) != null);
-			}
-		}
-		private String DeleteFrameTitle
-		{
-			get
-			{
-				FileAnimationFrame lFrame = CanDeleteFrame ? GetSelectedFrame (false) : null;
-				return String.Format (AppResources.Resources.EditDeleteThis.NoMenuPrefix (), Titles.Frame (lFrame));
-			}
-		}
-
-		private Boolean CanMoveFrameUp
-		{
-			get
-			{
-				int lSelectedIndex = FramesView.Frames.SelectedIndex;
-				return !IsPanelEmpty && !Program.FileIsReadOnly && (lSelectedIndex > 0) && (lSelectedIndex < FramesView.Frames.Items.Count);
-			}
-		}
-		private String MoveFrameUpTitle
-		{
-			get
-			{
-				FileAnimationFrame lFrame = CanDeleteFrame ? GetSelectedFrame (false) : null;
-				return String.Format (AppResources.Resources.EditMoveFrameUp.NoMenuPrefix (), Titles.Frame (lFrame));
-			}
-		}
-
-		private Boolean CanMoveFrameDown
-		{
-			get
-			{
-				int lSelectedIndex = FramesView.Frames.SelectedIndex;
-				return !IsPanelEmpty && !Program.FileIsReadOnly && (lSelectedIndex >= 0) && (lSelectedIndex < FramesView.Frames.Items.Count - 1);
-			}
-		}
-		private String MoveFrameDownTitle
-		{
-			get
-			{
-				FileAnimationFrame lFrame = CanDeleteFrame ? GetSelectedFrame (false) : null;
-				return String.Format (AppResources.Resources.EditMoveFrameDown.NoMenuPrefix (), Titles.Frame (lFrame));
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void HandleShowBranching ()
 		{
@@ -470,7 +424,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void ShowPreviewState ()
 		{
@@ -514,7 +468,7 @@ namespace AgentCharacterEditor.Panels
 			PreviewButtonSkipForward.IsEnabled = PreviewButtonPlay.IsEnabled && (pFrameIndex >= 0) && (pFrameIndex < FramesView.Frames.Items.Count - 1);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void HandlePreviewPlay ()
 		{
@@ -610,11 +564,14 @@ namespace AgentCharacterEditor.Panels
 		{
 			if ((pFrame != null) && !Program.FileIsReadOnly)
 			{
-				AddDeleteAnimationFrame lUpdate = new AddDeleteAnimationFrame (pFrame, pForClipboard);
-				if (AddDeleteAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimationFrame, this))
+				using (PanelFillingState lFillingState = new PanelFillingState (this))
 				{
-					FramesView.Frames.SelectedIndex = Math.Min (lUpdate.FrameNdx, FramesView.Frames.Items.Count - 1);
-					return lUpdate;
+					//TODO - Reorder branching
+					AddDeleteAnimationFrame lUpdate = new AddDeleteAnimationFrame (pFrame, pForClipboard);
+					if (AddDeleteAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimationFrame, this))
+					{
+						return lUpdate;
+					}
 				}
 			}
 			return null;
@@ -634,10 +591,13 @@ namespace AgentCharacterEditor.Panels
 						pPasteFrame.CopyTo (lUpdate.Target, true);
 						lUpdate = lUpdate.Apply () as AddDeleteAnimationFrame;
 					}
-					if ((lUpdate != null) && AddDeleteAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimationFrame, this))
+					using (PanelFillingState lFillingState = new PanelFillingState (this))
 					{
-						FramesView.Frames.SelectedIndex = lUpdate.FrameNdx;
-						return lUpdate;
+						//TODO - Reorder branching
+						if ((lUpdate != null) && AddDeleteAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimationFrame, this))
+						{
+							return lUpdate;
+						}
 					}
 				}
 				else
@@ -655,13 +615,13 @@ namespace AgentCharacterEditor.Panels
 			return null;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override bool HandleCanEditCopy (CanEditEventArgs pEventArgs)
 		{
 			if (IsControlEditTarget (FramesView.Frames, pEventArgs))
 			{
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
+				FileAnimationFrame lFrame = GetSelectedFrame ();
 
 				if (lFrame != null)
 				{
@@ -676,7 +636,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (IsControlEditTarget (FramesView.Frames, pEventArgs))
 			{
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
+				FileAnimationFrame lFrame = GetSelectedFrame ();
 
 				if (lFrame != null)
 				{
@@ -691,7 +651,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!Program.FileIsReadOnly && IsControlEditTarget (FramesView.Frames, pEventArgs))
 			{
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
+				FileAnimationFrame lFrame = GetSelectedFrame ();
 
 				if (lFrame != null)
 				{
@@ -705,7 +665,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!Program.FileIsReadOnly && IsControlEditTarget (FramesView.Frames, pEventArgs))
 			{
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
+				FileAnimationFrame lFrame = GetSelectedFrame ();
 
 				if (lFrame != null)
 				{
@@ -723,7 +683,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!Program.FileIsReadOnly && IsControlEditTarget (FramesView.Frames, pEventArgs))
 			{
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
+				FileAnimationFrame lFrame = GetSelectedFrame ();
 
 				if (lFrame != null)
 				{
@@ -737,7 +697,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!Program.FileIsReadOnly && IsControlEditTarget (FramesView.Frames, pEventArgs))
 			{
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
+				FileAnimationFrame lFrame = GetSelectedFrame ();
 
 				if (lFrame != null)
 				{
@@ -752,7 +712,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!Program.FileIsReadOnly && IsControlEditTarget (FramesView.Frames, pEventArgs) && (pEventArgs.GetPasteObject () is FileAnimationFrame))
 			{
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
+				FileAnimationFrame lFrame = GetSelectedFrame ();
 				if (lFrame == null)
 				{
 					pEventArgs.PutPasteTitle (Titles.PasteTypeTitle (lFrame, AppResources.Resources.EditPasteFrameSource));
@@ -769,19 +729,13 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!Program.FileIsReadOnly && IsControlEditTarget (FramesView.Frames, pEventArgs) && (pEventArgs.GetPasteObject () is FileAnimationFrame))
 			{
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
-
-				PasteSelectedFrame (Animation, lFrame, pEventArgs.GetPasteObject () as FileAnimationFrame);
-				if (lFrame == null)
-				{
-					FramesView.Frames.SelectedItem = null;
-				}
+				PasteSelectedFrame (Animation, GetSelectedFrame (), pEventArgs.GetPasteObject () as FileAnimationFrame);
 				return true;
 			}
 			return false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void HandleAnimationNameChanged ()
 		{
@@ -837,7 +791,7 @@ namespace AgentCharacterEditor.Panels
 			NumericFrameDuration.IsModified = false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void HandleAddFrame ()
 		{
@@ -846,8 +800,11 @@ namespace AgentCharacterEditor.Panels
 				int lSelNdx = FramesView.Frames.SelectedIndex;
 				AddDeleteAnimationFrame lUpdate = new AddDeleteAnimationFrame (Animation, (lSelNdx >= 0) ? lSelNdx + 1 : Animation.FrameCount, false);
 
-				AddDeleteAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimationFrame, this);
-				FramesView.Frames.SelectedIndex = lUpdate.FrameNdx;
+				using (PanelFillingState lFillingState = new PanelFillingState (this))
+				{
+					//TODO - Reorder branching
+					AddDeleteAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimationFrame, this);
+				}
 			}
 		}
 
@@ -855,7 +812,7 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
+				FileAnimationFrame lFrame = GetSelectedFrame ();
 
 				if (lFrame != null)
 				{
@@ -869,14 +826,17 @@ namespace AgentCharacterEditor.Panels
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
 				int lSelNdx = FramesView.Frames.SelectedIndex;
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
+				FileAnimationFrame lFrame = GetSelectedFrame ();
 				ReorderAnimationFrame lUpdate;
 
 				if ((lFrame != null) && (lSelNdx > 0))
 				{
-					lUpdate = new ReorderAnimationFrame (lFrame, lSelNdx - 1);
-					ReorderAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as ReorderAnimationFrame, this);
-					FramesView.Frames.SelectedIndex = Animation.Frames.IndexOf (lFrame);
+					using (PanelFillingState lFillingState = new PanelFillingState (this))
+					{
+						lUpdate = new ReorderAnimationFrame (lFrame, lSelNdx - 1);
+						lUpdate.SwapBranching (ToolBarFrames.MoveUpMovesBranchingSource, ToolBarFrames.MoveUpMovesBranchingTarget);
+						ReorderAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as ReorderAnimationFrame, this);
+					}
 				}
 			}
 		}
@@ -886,19 +846,22 @@ namespace AgentCharacterEditor.Panels
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
 				int lSelNdx = FramesView.Frames.SelectedIndex;
-				FileAnimationFrame lFrame = GetSelectedFrame (false);
+				FileAnimationFrame lFrame = GetSelectedFrame ();
 				ReorderAnimationFrame lUpdate;
 
 				if ((lFrame != null) && (lSelNdx >= 0) && (lSelNdx < Animation.Frames.Count - 1))
 				{
-					lUpdate = new ReorderAnimationFrame (lFrame, lSelNdx + 1);
-					ReorderAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as ReorderAnimationFrame, this);
-					FramesView.Frames.SelectedIndex = Animation.Frames.IndexOf (lFrame);
+					using (PanelFillingState lFillingState = new PanelFillingState (this))
+					{
+						lUpdate = new ReorderAnimationFrame (lFrame, lSelNdx + 1);
+						lUpdate.SwapBranching (ToolBarFrames.MoveDownMovesBranchingSource, ToolBarFrames.MoveDownMovesBranchingTarget);
+						ReorderAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as ReorderAnimationFrame, this);
+					}
 				}
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		protected override void UpdateApplied (Object pUpdate)
 		{
@@ -954,15 +917,21 @@ namespace AgentCharacterEditor.Panels
 			}
 			else if ((lAddDeleteFrame != null) && (lAddDeleteFrame.Animation == Animation))
 			{
-				PanelContext lContext = new PanelContext (this);
 				ShowAnimationFrames ();
-				lContext.RestoreContext (this);
+				if (IsPanelFilling)
+				{
+					FramesView.Frames.SelectedIndex = Math.Min (lAddDeleteFrame.FrameNdx, FramesView.Frames.Items.Count - 1);
+				}
+				ShowSelectedFrame ();
 			}
 			else if ((lReorderFrame != null) && (lReorderFrame.Animation == Animation))
 			{
-				PanelContext lContext = new PanelContext (this);
 				ShowAnimationFrames ();
-				lContext.RestoreContext (this);
+				if (IsPanelFilling)
+				{
+					FramesView.Frames.SelectedIndex = Animation.Frames.IndexOf (lReorderFrame.Target);
+				}
+				ShowSelectedFrame ();
 			}
 			else if ((lUpdateFrame != null) && (lUpdateFrame.Animation == Animation))
 			{

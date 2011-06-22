@@ -101,7 +101,7 @@ namespace AgentCharacterEditor.Panels
 			NumericTarget2.IsModified = false;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private void CheckBoxExit_Click (object sender, EventArgs e)
 		{

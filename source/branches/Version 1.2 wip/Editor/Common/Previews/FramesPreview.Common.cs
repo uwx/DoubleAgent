@@ -69,7 +69,7 @@ namespace AgentCharacterEditor.Previews
 			protected set;
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public enum ImageScaleType
 		{
@@ -118,7 +118,7 @@ namespace AgentCharacterEditor.Previews
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public Boolean ShowBranching
 		{
@@ -155,7 +155,7 @@ namespace AgentCharacterEditor.Previews
 			RecalcLayout (ImageScale);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private class BranchingItem
 		{
@@ -291,7 +291,7 @@ namespace AgentCharacterEditor.Previews
 		private int mExitBranchingHeight = 0;
 		private System.Drawing.Size mBranchingOffset = new System.Drawing.Size ();
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		public void BuildBranchingGraphs (int pDefaultBranchingHeight)
 		{
@@ -388,7 +388,7 @@ namespace AgentCharacterEditor.Previews
 			return (mBranching.Length > 0) || (mExitBranching.Length > 0);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 		private Boolean InitBranching ()
 		{
@@ -637,7 +637,7 @@ namespace AgentCharacterEditor.Previews
 #endif
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		//=============================================================================
 
 #if DEBUG_BRANCHING
 		static private String DebugName (BranchingItem pBranching)
