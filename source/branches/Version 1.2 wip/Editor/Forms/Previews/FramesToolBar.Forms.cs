@@ -48,7 +48,10 @@ namespace AgentCharacterEditor.Previews
 		private void AddShiftsBranchingChanged ()
 		{
 		}
-		private void DeleteShiftsBranchingChanged ()
+		private void DeleteBranchingSourceChanged ()
+		{
+		}
+		private void DeleteBranchingTargetChanged ()
 		{
 		}
 		private void MoveUpBranchingSourceChanged ()

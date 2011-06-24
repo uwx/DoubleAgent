@@ -21,8 +21,6 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Input;
 
 namespace AgentCharacterEditor.Global
 {
@@ -345,100 +343,4 @@ namespace AgentCharacterEditor.Global
 			return -1;
 		}
 	}
-
-	///////////////////////////////////////////////////////////////////////////////
-#if DEBUG
-	///////////////////////////////////////////////////////////////////////////////
-
-	public static partial class DebuggingExtensions
-	{
-		public static void DebugPrint (this UIElement pRootElement)
-		{
-			DebugPrint (pRootElement, String.Empty);
-		}
-
-		public static void DebugPrint (this UIElement pRootElement, String pIndent)
-		{
-			DebugPrint (pRootElement, String.Empty, String.Empty);
-		}
-
-		public static void DebugPrint (this UIElement pRootElement, String pTitle, String pIndent)
-		{
-			String lTitle = String.IsNullOrEmpty (pTitle) ? String.Empty : pTitle + " ";
-
-			if (pRootElement == null)
-			{
-				System.Diagnostics.Debug.Print ("{0}{1}<null>", pIndent, lTitle);
-			}
-			else
-			{
-				if (pRootElement is FrameworkElement)
-				{
-					FrameworkElement lFrameworkElement = pRootElement as FrameworkElement;
-					System.Diagnostics.Debug.Print ("{0}{1}{2} [{3}] [{4}] Size [{5} {6}] Margin [{7} {8} {9} {10}] DevPxl/LayRnd [{11} {12}]", pIndent, lTitle, pRootElement.GetType ().Name, lFrameworkElement.Name, pRootElement.Visibility, Math.Round (lFrameworkElement.ActualWidth), Math.Round (lFrameworkElement.ActualHeight), lFrameworkElement.Margin.Left, lFrameworkElement.Margin.Top, lFrameworkElement.Margin.Right, lFrameworkElement.Margin.Bottom, lFrameworkElement.SnapsToDevicePixels, lFrameworkElement.UseLayoutRounding);
-				}
-				else
-				{
-					System.Diagnostics.Debug.Print ("{0}{1}{2} [{3}]", pIndent, lTitle, pRootElement.GetType ().Name, pRootElement.Visibility);
-				}
-
-				if ((Grid.GetRow (pRootElement) != 0) || (Grid.GetColumn (pRootElement) != 0) || (Grid.GetRowSpan (pRootElement) != 1) || (Grid.GetColumnSpan (pRootElement) != 1))
-				{
-					System.Diagnostics.Debug.Print ("{0}  Row [{1}] Span [{2}] Col [{3}] Span [{4}]", pIndent, Grid.GetRow (pRootElement), Grid.GetRowSpan (pRootElement), Grid.GetColumn (pRootElement), Grid.GetColumnSpan (pRootElement));
-				}
-
-				if (pRootElement is Grid)
-				{
-					Grid lGrid = pRootElement as Grid;
-					if (lGrid.RowDefinitions != null)
-					{
-						System.Diagnostics.Debug.Print ("{0}  {1} Rows", pIndent, lGrid.RowDefinitions.Count);
-						foreach (RowDefinition lRow in lGrid.RowDefinitions)
-						{
-							System.Diagnostics.Debug.Print ("{0}      Row [{1}] Actual [{2}]", pIndent, lRow.Height, lRow.ActualHeight);
-						}
-					}
-					if (lGrid.ColumnDefinitions != null)
-					{
-						System.Diagnostics.Debug.Print ("{0}  {1} Cols", pIndent, lGrid.ColumnDefinitions.Count);
-						foreach (ColumnDefinition lCol in lGrid.ColumnDefinitions)
-						{
-							System.Diagnostics.Debug.Print ("{0}      Col [{1}] Actual [{2}]", pIndent, lCol.Width, lCol.ActualWidth);
-						}
-					}
-				}
-
-				if (pRootElement is Label)
-				{
-					System.Diagnostics.Debug.Print ("{0}  Label [{1}]", pIndent, (pRootElement as Label).Content);
-				}
-				else if (pRootElement is TextBox)
-				{
-					System.Diagnostics.Debug.Print ("{0}  Text [{1}]", pIndent, (pRootElement as TextBox).Text);
-				}
-				else if (pRootElement is ToggleButton)
-				{
-					System.Diagnostics.Debug.Print ("{0}  Checked [{1}] Content [{2}]", pIndent, (pRootElement as ToggleButton).IsChecked, (pRootElement as ToggleButton).Content);
-				}
-				else if (pRootElement is ContentControl)
-				{
-					DebugPrint ((pRootElement as ContentControl).Content as UIElement, "Content", pIndent + "  ");
-				}
-				else if (pRootElement is Panel)
-				{
-					UIElementCollection lChildren = (pRootElement as Panel).Children;
-					String lIndent = pIndent + "  ";
-
-					foreach (UIElement lChild in lChildren)
-					{
-						DebugPrint (lChild, "Child", lIndent);
-					}
-				}
-			}
-		}
-	}
-
-	///////////////////////////////////////////////////////////////////////////////
-#endif
-	///////////////////////////////////////////////////////////////////////////////
 }

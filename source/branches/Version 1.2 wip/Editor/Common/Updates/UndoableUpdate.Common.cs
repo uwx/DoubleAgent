@@ -31,7 +31,7 @@ namespace AgentCharacterEditor.Updates
 	{
 		protected UndoableUpdate (Boolean pForClipboard)
 		{
-			this.ForClipboard = pForClipboard;
+			this.IsForClipboard = pForClipboard;
 		}
 
 		public CharacterFile CharacterFile
@@ -46,7 +46,7 @@ namespace AgentCharacterEditor.Updates
 			get;
 			protected set;
 		}
-		public Boolean ForClipboard
+		public Boolean IsForClipboard
 		{
 			get;
 			protected set;
@@ -55,7 +55,7 @@ namespace AgentCharacterEditor.Updates
 		{
 			get
 			{
-				if (this.ForClipboard)
+				if (this.IsForClipboard)
 				{
 					return AppResources.Resources.UndoActionPaste;
 				}
@@ -187,28 +187,28 @@ namespace AgentCharacterEditor.Updates
 		{
 			this.IsDelete = false;
 			this.IsRedo = false;
-			this.ForClipboard = false;
+			this.IsForClipboard = false;
 		}
 		public UndoableAddDelete (Object pTarget)
 			: base (pTarget)
 		{
 			this.IsDelete = (pTarget is T);
 			this.IsRedo = false;
-			this.ForClipboard = false;
+			this.IsForClipboard = false;
 		}
 		public UndoableAddDelete (Boolean pForClipboard)
 			: base (default (T))
 		{
 			this.IsDelete = false;
 			this.IsRedo = false;
-			this.ForClipboard = pForClipboard;
+			this.IsForClipboard = pForClipboard;
 		}
 		public UndoableAddDelete (Object pTarget, Boolean pForClipboard)
 			: base (pTarget)
 		{
 			this.IsDelete = (pTarget is T);
 			this.IsRedo = false;
-			this.ForClipboard = pForClipboard;
+			this.IsForClipboard = pForClipboard;
 		}
 
 		public Boolean IsDelete
@@ -225,7 +225,7 @@ namespace AgentCharacterEditor.Updates
 		{
 			get
 			{
-				return (IsDelete == !IsRedo) ? this.ForClipboard ? AppResources.Resources.UndoActionCut : AppResources.Resources.UndoActionDelete : this.ForClipboard ? AppResources.Resources.UndoActionPaste : AppResources.Resources.UndoActionAdd;
+				return (IsDelete == !IsRedo) ? this.IsForClipboard ? AppResources.Resources.UndoActionCut : AppResources.Resources.UndoActionDelete : this.IsForClipboard ? AppResources.Resources.UndoActionPaste : AppResources.Resources.UndoActionAdd;
 			}
 		}
 #if DEBUG

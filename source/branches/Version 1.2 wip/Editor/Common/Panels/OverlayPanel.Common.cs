@@ -699,7 +699,7 @@ namespace AgentCharacterEditor.Panels
 				RefreshOverlayItem (lUpdateOverlay.Target);
 				ShowSelectedOverlay ();
 			}
-			else if ((lUpdateFrame != null) && (lUpdateFrame.Target == Frame) && lUpdateFrame.ForClipboard)
+			else if ((lUpdateFrame != null) && (lUpdateFrame.Target == Frame) && lUpdateFrame.IsForClipboard)
 			{
 				ShowFrameOverlays ();
 				ShowSelectedOverlay ();

@@ -322,13 +322,13 @@ namespace AgentCharacterEditor.Panels
 			{
 				ShowAnimationNames ();
 			}
-			else if ((lUpdateAnimation != null) && (lUpdateAnimation.NameChanged || lUpdateAnimation.ForClipboard))
+			else if ((lUpdateAnimation != null) && (lUpdateAnimation.NameChanged || lUpdateAnimation.IsForClipboard))
 			{
 				if (lUpdateAnimation.NameChanged)
 				{
 					RefreshAnimationName (lUpdateAnimation.Target);
 				}
-				if (lUpdateAnimation.ForClipboard)
+				if (lUpdateAnimation.IsForClipboard)
 				{
 					RefreshAnimationFrames (lUpdateAnimation.Target);
 				}

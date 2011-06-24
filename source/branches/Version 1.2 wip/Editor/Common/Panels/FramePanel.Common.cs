@@ -805,7 +805,7 @@ namespace AgentCharacterEditor.Panels
 			{
 				ShowFrameDuration ();
 				ShowFrameSound ();
-				if (lUpdateFrame.ForClipboard)
+				if (lUpdateFrame.IsForClipboard)
 				{
 					ShowFrameImages ();
 					ShowSelectedImage ();

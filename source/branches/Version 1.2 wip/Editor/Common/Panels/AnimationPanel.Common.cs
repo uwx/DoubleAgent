@@ -798,7 +798,7 @@ namespace AgentCharacterEditor.Panels
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
 				int lSelNdx = FramesView.Frames.SelectedIndex;
-				AddDeleteAnimationFrame lUpdate = new AddDeleteAnimationFrame (Animation, (lSelNdx >= 0) ? lSelNdx + 1 : Animation.FrameCount, false);
+				AddDeleteAnimationFrame lUpdate = new AddDeleteAnimationFrame (Animation, (lSelNdx >= 0) ? lSelNdx : Animation.FrameCount, false);
 
 				using (PanelFillingState lFillingState = new PanelFillingState (this))
 				{
@@ -879,7 +879,7 @@ namespace AgentCharacterEditor.Panels
 
 			if ((lUpdateAnimation != null) && (lUpdateAnimation.Target == Animation))
 			{
-				if ((lUpdateAnimation != null) && lUpdateAnimation.ForClipboard)
+				if ((lUpdateAnimation != null) && lUpdateAnimation.IsForClipboard)
 				{
 					ShowAnimationName ();
 					ShowReturnAnimation ();

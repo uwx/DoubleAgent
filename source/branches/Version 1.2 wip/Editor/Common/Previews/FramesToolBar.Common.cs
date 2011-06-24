@@ -212,7 +212,7 @@ namespace AgentCharacterEditor.Previews
 			}
 			set
 			{
-				AddShiftsBranchingTarget =  !value;
+				AddShiftsBranchingTarget = !value;
 			}
 		}
 
@@ -227,8 +227,19 @@ namespace AgentCharacterEditor.Previews
 				if (mDeleteShiftsBranchingTarget != value)
 				{
 					mDeleteShiftsBranchingTarget = value;
-					DeleteShiftsBranchingChanged ();
+					DeleteBranchingTargetChanged ();
 				}
+			}
+		}
+		public Boolean DeleteKeepsBranchingTarget
+		{
+			get
+			{
+				return !DeleteShiftsBranchingTarget;
+			}
+			set
+			{
+				DeleteShiftsBranchingTarget = !value;
 			}
 		}
 		public Boolean DeleteMovesBranchingUp
@@ -246,7 +257,7 @@ namespace AgentCharacterEditor.Previews
 					{
 						mDeleteMovesBranchingDown = false;
 					}
-					DeleteShiftsBranchingChanged ();
+					DeleteBranchingSourceChanged ();
 				}
 			}
 		}
@@ -265,7 +276,22 @@ namespace AgentCharacterEditor.Previews
 					{
 						mDeleteMovesBranchingUp = false;
 					}
-					DeleteShiftsBranchingChanged ();
+					DeleteBranchingSourceChanged ();
+				}
+			}
+		}
+		public Boolean DeleteDeletesBranching
+		{
+			get
+			{
+				return (!DeleteMovesBranchingUp || !CanMoveFrameUp) && (!DeleteMovesBranchingDown || !CanMoveFrameDown);
+			}
+			set
+			{
+				if (value)
+				{
+					DeleteMovesBranchingUp = false;
+					DeleteMovesBranchingDown = false;
 				}
 			}
 		}

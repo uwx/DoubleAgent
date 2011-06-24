@@ -131,6 +131,10 @@
       <Link>MainWindow.Common.cs</Link>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="..\..\Util\CSharp\Debug.WPF.cs">
+      <Link>Classes\Debug.WPF.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="..\..\Util\CSharp\TextBoxEx.WPF.cs">
       <Link>Classes\TextBoxEx.WPF.cs</Link>
       <SubType>Code</SubType>

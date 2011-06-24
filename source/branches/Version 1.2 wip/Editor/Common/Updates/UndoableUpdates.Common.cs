@@ -237,7 +237,7 @@ namespace AgentCharacterEditor.Updates
 			{
 				if (CharacterFile.Names.Remove (lTarget))
 				{
-					lApplied = new AddDeleteCharacterName (lTarget, false, ForClipboard);
+					lApplied = new AddDeleteCharacterName (lTarget, false, IsForClipboard);
 					lApplied.IsRedo = !IsRedo;
 				}
 			}
@@ -248,7 +248,7 @@ namespace AgentCharacterEditor.Updates
 				if (lName != null)
 				{
 					lTarget.CopyTo (lName);
-					lApplied = new AddDeleteCharacterName (lName, true, ForClipboard);
+					lApplied = new AddDeleteCharacterName (lName, true, IsForClipboard);
 					lApplied.IsRedo = !IsRedo;
 				}
 			}
@@ -333,7 +333,7 @@ namespace AgentCharacterEditor.Updates
 		{
 			get
 			{
-				return ForClipboard ? base.ActionDescription : AppResources.Resources.UndoActionChange;
+				return IsForClipboard ? base.ActionDescription : AppResources.Resources.UndoActionChange;
 			}
 		}
 
@@ -930,7 +930,7 @@ namespace AgentCharacterEditor.Updates
 			{
 				if (CharacterFile.Gestures.Remove (AnimationName))
 				{
-					lApplied = new AddDeleteAnimation (lTarget, ForClipboard);
+					lApplied = new AddDeleteAnimation (lTarget, IsForClipboard);
 					lApplied.IsDelete = false;
 					lApplied.IsRedo = !IsRedo;
 				}
@@ -945,7 +945,7 @@ namespace AgentCharacterEditor.Updates
 					{
 						lTarget.CopyTo (lAnimation);
 					}
-					lApplied = new AddDeleteAnimation (lAnimation, ForClipboard);
+					lApplied = new AddDeleteAnimation (lAnimation, IsForClipboard);
 					lApplied.IsDelete = true;
 					lApplied.IsRedo = !IsRedo;
 				}
@@ -1034,7 +1034,7 @@ namespace AgentCharacterEditor.Updates
 		{
 			get
 			{
-				if (ForClipboard)
+				if (IsForClipboard)
 				{
 					return base.ActionDescription;
 				}
@@ -1056,7 +1056,7 @@ namespace AgentCharacterEditor.Updates
 		{
 			get
 			{
-				if (ForClipboard)
+				if (IsForClipboard)
 				{
 					return base.ChangeDescription;
 				}
@@ -1083,7 +1083,7 @@ namespace AgentCharacterEditor.Updates
 #endif
 			if (NameChanged)
 			{
-				lApplied = new UpdateAnimation (Target, ForClipboard);
+				lApplied = new UpdateAnimation (Target, IsForClipboard);
 				Target.Name = Name;
 				Name = lApplied.Name;
 				lApplied.IsRedo = !IsRedo;
@@ -1199,7 +1199,7 @@ namespace AgentCharacterEditor.Updates
 #endif
 			if (IsDelete)
 			{
-				lApplied = new AddDeleteAnimationFrame (lTarget, ForClipboard);
+				lApplied = new AddDeleteAnimationFrame (lTarget, IsForClipboard);
 				if (Animation.Frames.Remove (lTarget))
 				{
 					(lApplied.RawTarget as ResolveAnimationFrame).TargetContained = false;
@@ -1217,11 +1217,11 @@ namespace AgentCharacterEditor.Updates
 
 				if (lFrame != null)
 				{
-					if (lTarget != null)
+					if ((lTarget != null) && (IsRedo || IsForClipboard))
 					{
 						lTarget.CopyTo (lFrame);
 					}
-					lApplied = new AddDeleteAnimationFrame (lFrame, ForClipboard);
+					lApplied = new AddDeleteAnimationFrame (lFrame, IsForClipboard);
 					lApplied.IsDelete = true;
 					lApplied.IsRedo = !IsRedo;
 				}
@@ -1467,7 +1467,7 @@ namespace AgentCharacterEditor.Updates
 		{
 			get
 			{
-				if (ForClipboard)
+				if (IsForClipboard)
 				{
 					return base.ChangeDescription;
 				}
@@ -1722,7 +1722,7 @@ namespace AgentCharacterEditor.Updates
 #endif
 			if (IsDelete)
 			{
-				lApplied = new AddDeleteFrameImage (lTarget, ForClipboard);
+				lApplied = new AddDeleteFrameImage (lTarget, IsForClipboard);
 				if (lFrame.Images.Remove (lTarget))
 				{
 					(lApplied.RawTarget as ResolveFrameImage).TargetContained = false;
@@ -1745,7 +1745,7 @@ namespace AgentCharacterEditor.Updates
 					{
 						lTarget.CopyTo (lFrameImage);
 					}
-					lApplied = new AddDeleteFrameImage (lFrameImage, ForClipboard);
+					lApplied = new AddDeleteFrameImage (lFrameImage, IsForClipboard);
 					lApplied.IsDelete = true;
 					lApplied.IsRedo = !IsRedo;
 				}
@@ -1949,7 +1949,7 @@ namespace AgentCharacterEditor.Updates
 		{
 			get
 			{
-				if (ForClipboard)
+				if (IsForClipboard)
 				{
 					return base.ChangeDescription;
 				}
@@ -2073,7 +2073,7 @@ namespace AgentCharacterEditor.Updates
 			{
 				if (lFrame.Overlays.Contains (lTarget))
 				{
-					lApplied = new AddDeleteFrameOverlay (lTarget, ForClipboard);
+					lApplied = new AddDeleteFrameOverlay (lTarget, IsForClipboard);
 					if (lFrame.Overlays.Remove (lTarget))
 					{
 						lApplied.IsDelete = false;
@@ -2095,7 +2095,7 @@ namespace AgentCharacterEditor.Updates
 					{
 						lTarget.CopyTo (lFrameOverlay);
 					}
-					lApplied = new AddDeleteFrameOverlay (lFrameOverlay, ForClipboard);
+					lApplied = new AddDeleteFrameOverlay (lFrameOverlay, IsForClipboard);
 					lApplied.IsDelete = true;
 					lApplied.IsRedo = !IsRedo;
 				}
@@ -2213,7 +2213,7 @@ namespace AgentCharacterEditor.Updates
 		{
 			get
 			{
-				if (ForClipboard)
+				if (IsForClipboard)
 				{
 					return base.ChangeDescription;
 				}

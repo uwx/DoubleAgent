@@ -440,6 +440,24 @@
 	<!-- ToolBar Button                                                              -->
 	<!-- =========================================================================== -->
 
+	<Style x:Key="ImageStateGlow"
+		   TargetType="{x:Type Rectangle}">
+		<Setter Property="ClipToBounds"
+				Value="False" />
+		<Setter Property="Fill"
+				Value="White" />
+		<Setter Property="Stroke"
+				Value="Transparent" />
+		<Setter Property="StrokeThickness"
+				Value="0" />
+		<Setter Property="Rectangle.Effect">
+			<Setter.Value>
+				<BlurEffect Radius="5"
+							KernelType="Gaussian" />
+			</Setter.Value>
+		</Setter>
+	</Style>
+
 	<Style x:Key="ImageStateButton"
 		   BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 		   TargetType="{x:Type ButtonBase}">
@@ -493,28 +511,16 @@
 							<Grid Name="Glow"
 								  Opacity="0"
 								  ClipToBounds="False">
-								<Rectangle Fill="White"
-										   Stroke="Transparent"
-										   StrokeThickness="0">
+								<Rectangle Name="GlowRect"
+										   Style="{StaticResource ImageStateGlow}">
 									<Rectangle.OpacityMask>
 										<VisualBrush Visual="{Binding ElementName=Content}" />
 									</Rectangle.OpacityMask>
-									<Rectangle.Effect>
-										<BlurEffect Radius="5"
-													KernelType="Gaussian" />
-									</Rectangle.Effect>
 								</Rectangle>
-								<Rectangle Fill="White"
-										   Stroke="Transparent"
-										   StrokeThickness="0">
-									<Rectangle.OpacityMask>
-										<VisualBrush Visual="{Binding ElementName=Content}" />
-									</Rectangle.OpacityMask>
-									<Rectangle.Effect>
-										<BlurEffect Radius="5"
-													KernelType="Gaussian" />
-									</Rectangle.Effect>
-								</Rectangle>
+								<Rectangle Style="{StaticResource ImageStateGlow}"
+										   OpacityMask="{Binding ElementName=GlowRect, Path=OpacityMask}" />
+								<Rectangle Style="{StaticResource ImageStateGlow}"
+										   OpacityMask="{Binding ElementName=GlowRect, Path=OpacityMask}" />
 							</Grid>
 							<ContentPresenter Name="Content"
 											  Margin="{TemplateBinding Padding}"
@@ -578,28 +584,16 @@
 							<Grid Name="Glow"
 								  Opacity="0"
 								  ClipToBounds="False">
-								<Rectangle Fill="White"
-										   Stroke="Transparent"
-										   StrokeThickness="0">
+								<Rectangle Name="GlowRect"
+										   Style="{StaticResource ImageStateGlow}">
 									<Rectangle.OpacityMask>
 										<VisualBrush Visual="{Binding ElementName=Content}" />
 									</Rectangle.OpacityMask>
-									<Rectangle.Effect>
-										<BlurEffect Radius="5"
-													KernelType="Gaussian" />
-									</Rectangle.Effect>
 								</Rectangle>
-								<Rectangle Fill="White"
-										   Stroke="Transparent"
-										   StrokeThickness="0">
-									<Rectangle.OpacityMask>
-										<VisualBrush Visual="{Binding ElementName=Content}" />
-									</Rectangle.OpacityMask>
-									<Rectangle.Effect>
-										<BlurEffect Radius="5"
-													KernelType="Gaussian" />
-									</Rectangle.Effect>
-								</Rectangle>
+								<Rectangle Style="{StaticResource ImageStateGlow}"
+										   OpacityMask="{Binding ElementName=GlowRect, Path=OpacityMask}" />
+								<Rectangle Style="{StaticResource ImageStateGlow}"
+										   OpacityMask="{Binding ElementName=GlowRect, Path=OpacityMask}" />
 							</Grid>
 							<ContentPresenter Name="Content"
 											  Margin="{TemplateBinding Padding}"
