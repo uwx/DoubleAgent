@@ -1,4 +1,7 @@
-﻿/////////////////////////////////////////////////////////////////////////////
+﻿#if DEBUG
+//#define	DEBUG_ANIMATIONS
+#endif
+/////////////////////////////////////////////////////////////////////////////
 //	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
@@ -41,6 +44,11 @@ namespace AgentCharacterEditor.Previews
 		public FramesToolBar ()
 		{
 			InitializeComponent ();
+
+			mAddAnimation = new ExpanderAddOverlay (this);
+			mDeleteAnimation = new ExpanderDeleteOverlay (this);
+			mMovePrevAnimation = new ExpanderMovePrevOverlay (this);
+			mMoveNextAnimation = new ExpanderMoveNextOverlay (this);
 		}
 
 		public void LoadConfig ()
@@ -51,12 +59,12 @@ namespace AgentCharacterEditor.Previews
 			{
 				AddShiftsBranchingTarget = lSettings.AddFrameShiftsBranchingTarget;
 				DeleteShiftsBranchingTarget = lSettings.DeleteFrameShiftsBranchingTarget;
-				DeleteMovesBranchingUp = lSettings.DeleteFrameShiftsBranchingUp;
-				DeleteMovesBranchingDown = lSettings.DeleteFrameShiftsBranchingDown;
-				MoveUpMovesBranchingSource = lSettings.MoveFrameUpMovesBranchingSource;
-				MoveUpMovesBranchingTarget = lSettings.MoveFrameUpMovesBranchingTarget;
-				MoveDownMovesBranchingSource = lSettings.MoveFrameDownMovesBranchingSource;
-				MoveDownMovesBranchingTarget = lSettings.MoveFrameDownMovesBranchingTarget;
+				DeleteMovesBranchingPrev = lSettings.DeleteFrameMovesBranchingPrev;
+				DeleteMovesBranchingNext = lSettings.DeleteFrameMovesBranchingNext;
+				MovePrevMovesBranchingSource = lSettings.MoveFramePrevMovesBranchingSource;
+				MovePrevMovesBranchingTarget = lSettings.MoveFramePrevMovesBranchingTarget;
+				MoveNextMovesBranchingSource = lSettings.MoveFrameNextMovesBranchingSource;
+				MoveNextMovesBranchingTarget = lSettings.MoveFrameNextMovesBranchingTarget;
 			}
 		}
 
@@ -66,12 +74,12 @@ namespace AgentCharacterEditor.Previews
 
 			lSettings.AddFrameShiftsBranchingTarget = AddShiftsBranchingTarget;
 			lSettings.DeleteFrameShiftsBranchingTarget = DeleteShiftsBranchingTarget;
-			lSettings.DeleteFrameShiftsBranchingUp = DeleteMovesBranchingUp;
-			lSettings.DeleteFrameShiftsBranchingDown = MoveUpMovesBranchingSource;
-			lSettings.MoveFrameUpMovesBranchingSource = MoveUpMovesBranchingSource;
-			lSettings.MoveFrameUpMovesBranchingTarget = MoveUpMovesBranchingTarget;
-			lSettings.MoveFrameDownMovesBranchingSource = MoveDownMovesBranchingSource;
-			lSettings.MoveFrameDownMovesBranchingTarget = MoveDownMovesBranchingTarget;
+			lSettings.DeleteFrameMovesBranchingPrev = DeleteMovesBranchingPrev;
+			lSettings.DeleteFrameMovesBranchingNext = MovePrevMovesBranchingSource;
+			lSettings.MoveFramePrevMovesBranchingSource = MovePrevMovesBranchingSource;
+			lSettings.MoveFramePrevMovesBranchingTarget = MovePrevMovesBranchingTarget;
+			lSettings.MoveFrameNextMovesBranchingSource = MoveNextMovesBranchingSource;
+			lSettings.MoveFrameNextMovesBranchingTarget = MoveNextMovesBranchingTarget;
 		}
 
 		#endregion
@@ -151,14 +159,14 @@ namespace AgentCharacterEditor.Previews
 		{
 			get
 			{
-				return Program.FileIsReadOnly ? Visibility.Collapsed : (AddShiftsBranchingTarget && CanMoveFrameDown) ? Visibility.Visible : Visibility.Hidden;
+				return Program.FileIsReadOnly ? Visibility.Collapsed : (AddShiftsBranchingTarget && CanMoveFrameNext) ? Visibility.Visible : Visibility.Hidden;
 			}
 		}
 		public Visibility ShowAddKeepsBranchingTarget
 		{
 			get
 			{
-				return Program.FileIsReadOnly ? Visibility.Collapsed : (AddKeepsBranchingTarget && CanMoveFrameDown) ? Visibility.Visible : Visibility.Hidden;
+				return Program.FileIsReadOnly ? Visibility.Collapsed : (AddKeepsBranchingTarget && CanMoveFrameNext) ? Visibility.Visible : Visibility.Hidden;
 			}
 		}
 
@@ -166,42 +174,35 @@ namespace AgentCharacterEditor.Previews
 		{
 			get
 			{
-				return Program.FileIsReadOnly ? Visibility.Collapsed : (DeleteShiftsBranchingTarget && CanMoveFrameDown) ? Visibility.Visible : Visibility.Hidden;
-			}
-		}
-		public Visibility ShowDeleteShiftsBranchingTargetUp
-		{
-			get
-			{
-				return Program.FileIsReadOnly ? Visibility.Collapsed : (DeleteShiftsBranchingTarget && !CanMoveFrameDown && CanMoveFrameUp) ? Visibility.Visible : Visibility.Hidden;
+				return Program.FileIsReadOnly ? Visibility.Collapsed : (DeleteShiftsBranchingTarget && (CanMoveFrameNext || CanMoveFramePrev)) ? Visibility.Visible : Visibility.Hidden;
 			}
 		}
 		public Visibility ShowDeleteKeepsBranchingTarget
 		{
 			get
 			{
-				return Program.FileIsReadOnly ? Visibility.Collapsed : (DeleteKeepsBranchingTarget && CanMoveFrameDown) ? Visibility.Visible : Visibility.Hidden;
+				return Program.FileIsReadOnly ? Visibility.Collapsed : (DeleteKeepsBranchingTarget && (CanMoveFrameNext || CanMoveFramePrev)) ? Visibility.Visible : Visibility.Hidden;
 			}
 		}
-		public Visibility ShowDeleteMovesBranchingUp
+		public Visibility ShowDeleteMovesBranchingPrev
 		{
 			get
 			{
-				return Program.FileIsReadOnly ? Visibility.Collapsed : (DeleteMovesBranchingUp && CanMoveFrameUp && FrameIsBranchingSource (Frame)) ? Visibility.Visible : Visibility.Hidden;
+				return Program.FileIsReadOnly ? Visibility.Collapsed : (DeleteMovesBranchingPrev && CanMoveFramePrev && FrameIsBranchingSource (Frame)) ? Visibility.Visible : Visibility.Hidden;
 			}
 		}
-		public Visibility ShowDeleteMovesBranchingDown
+		public Visibility ShowDeleteMovesBranchingNext
 		{
 			get
 			{
-				return Program.FileIsReadOnly ? Visibility.Collapsed : (DeleteMovesBranchingDown && CanMoveFrameDown && FrameIsBranchingSource (Frame)) ? Visibility.Visible : Visibility.Hidden;
+				return Program.FileIsReadOnly ? Visibility.Collapsed : (DeleteMovesBranchingNext && CanMoveFrameNext && FrameIsBranchingSource (Frame)) ? Visibility.Visible : Visibility.Hidden;
 			}
 		}
 		public Visibility ShowDeleteDeletesBranching
 		{
 			get
 			{
-				return Program.FileIsReadOnly ? Visibility.Collapsed : ((!DeleteMovesBranchingUp || !CanMoveFrameUp) && (!DeleteMovesBranchingDown || !CanMoveFrameDown) && FrameIsBranchingSource (Frame)) ? Visibility.Visible : Visibility.Hidden;
+				return Program.FileIsReadOnly ? Visibility.Collapsed : ((!DeleteMovesBranchingPrev || !CanMoveFramePrev) && (!DeleteMovesBranchingNext || !CanMoveFrameNext) && FrameIsBranchingSource (Frame)) ? Visibility.Visible : Visibility.Hidden;
 			}
 		}
 
@@ -236,14 +237,14 @@ namespace AgentCharacterEditor.Previews
 				return String.Empty;
 			}
 		}
-		public String SayDeleteMovesBranchingUp
+		public String SayDeleteMovesBranchingPrev
 		{
 			get
 			{
 				return String.Empty;
 			}
 		}
-		public String SayDeleteMovesBranchingDown
+		public String SayDeleteMovesBranchingNext
 		{
 			get
 			{
@@ -260,90 +261,90 @@ namespace AgentCharacterEditor.Previews
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		public Visibility ShowMoveUpMovesBranchingSource
+		public Visibility ShowMovePrevMovesBranchingSource
 		{
 			get
 			{
-				return Program.FileIsReadOnly ? Visibility.Collapsed : (MoveUpMovesBranchingSource && FrameIsBranchingSource (Frame)) ? Visibility.Visible : Visibility.Hidden;
+				return Program.FileIsReadOnly ? Visibility.Collapsed : (MovePrevMovesBranchingSource && FrameIsBranchingSource (Frame)) ? Visibility.Visible : Visibility.Hidden;
 			}
 		}
-		public Visibility ShowMoveUpKeepsBranchingSource
+		public Visibility ShowMovePrevKeepsBranchingSource
 		{
 			get
 			{
-				return Program.FileIsReadOnly ? Visibility.Collapsed : (MoveUpKeepsBranchingSource && FrameIsBranchingSource (Frame)) ? Visibility.Visible : Visibility.Hidden;
+				return Program.FileIsReadOnly ? Visibility.Collapsed : (MovePrevKeepsBranchingSource && FrameIsBranchingSource (Frame)) ? Visibility.Visible : Visibility.Hidden;
 			}
 		}
-		public Visibility ShowMoveUpMovesBranchingTarget
+		public Visibility ShowMovePrevMovesBranchingTarget
 		{
 			get
 			{
-				return Program.FileIsReadOnly ? Visibility.Collapsed : (MoveUpMovesBranchingTarget && FrameIsBranchingTarget (Frame)) ? Visibility.Visible : Visibility.Hidden;
+				return Program.FileIsReadOnly ? Visibility.Collapsed : (MovePrevMovesBranchingTarget && FrameIsBranchingTarget (Frame)) ? Visibility.Visible : Visibility.Hidden;
 			}
 		}
-		public Visibility ShowMoveUpKeepsBranchingTarget
+		public Visibility ShowMovePrevKeepsBranchingTarget
 		{
 			get
 			{
-				return Program.FileIsReadOnly ? Visibility.Collapsed : (MoveUpKeepsBranchingTarget && FrameIsBranchingTarget (Frame)) ? Visibility.Visible : Visibility.Hidden;
-			}
-		}
-
-		//=============================================================================
-
-		public Visibility ShowMoveDownMovesBranchingSource
-		{
-			get
-			{
-				return Program.FileIsReadOnly ? Visibility.Collapsed : (MoveDownMovesBranchingSource && FrameIsBranchingSource (Frame)) ? Visibility.Visible : Visibility.Hidden;
-			}
-		}
-		public Visibility ShowMoveDownKeepsBranchingSource
-		{
-			get
-			{
-				return Program.FileIsReadOnly ? Visibility.Collapsed : (MoveDownKeepsBranchingSource && FrameIsBranchingSource (Frame)) ? Visibility.Visible : Visibility.Hidden;
-			}
-		}
-		public Visibility ShowMoveDownMovesBranchingTarget
-		{
-			get
-			{
-				return Program.FileIsReadOnly ? Visibility.Collapsed : (MoveDownMovesBranchingTarget && FrameIsBranchingTarget (Frame)) ? Visibility.Visible : Visibility.Hidden;
-			}
-		}
-		public Visibility ShowMoveDownKeepsBranchingTarget
-		{
-			get
-			{
-				return Program.FileIsReadOnly ? Visibility.Collapsed : (MoveDownKeepsBranchingTarget && FrameIsBranchingTarget (Frame)) ? Visibility.Visible : Visibility.Hidden;
+				return Program.FileIsReadOnly ? Visibility.Collapsed : (MovePrevKeepsBranchingTarget && FrameIsBranchingTarget (Frame)) ? Visibility.Visible : Visibility.Hidden;
 			}
 		}
 
 		//=============================================================================
 
-		public String SayMoveUpMovesBranchingSource
+		public Visibility ShowMoveNextMovesBranchingSource
+		{
+			get
+			{
+				return Program.FileIsReadOnly ? Visibility.Collapsed : (MoveNextMovesBranchingSource && FrameIsBranchingSource (Frame)) ? Visibility.Visible : Visibility.Hidden;
+			}
+		}
+		public Visibility ShowMoveNextKeepsBranchingSource
+		{
+			get
+			{
+				return Program.FileIsReadOnly ? Visibility.Collapsed : (MoveNextKeepsBranchingSource && FrameIsBranchingSource (Frame)) ? Visibility.Visible : Visibility.Hidden;
+			}
+		}
+		public Visibility ShowMoveNextMovesBranchingTarget
+		{
+			get
+			{
+				return Program.FileIsReadOnly ? Visibility.Collapsed : (MoveNextMovesBranchingTarget && FrameIsBranchingTarget (Frame)) ? Visibility.Visible : Visibility.Hidden;
+			}
+		}
+		public Visibility ShowMoveNextKeepsBranchingTarget
+		{
+			get
+			{
+				return Program.FileIsReadOnly ? Visibility.Collapsed : (MoveNextKeepsBranchingTarget && FrameIsBranchingTarget (Frame)) ? Visibility.Visible : Visibility.Hidden;
+			}
+		}
+
+		//=============================================================================
+
+		public String SayMovePrevMovesBranchingSource
 		{
 			get
 			{
 				return (Frame == null) ? "Keep the frame's branching at its original position" : FrameIsBranchingSource (Frame) ? String.Format ("Swap {0}'s branching with frame {1}", Titles.Frame (Frame), FramesPreview.Frames.SelectedIndex) : String.Format ("{0} has no branching", Titles.Frame (Frame));
 			}
 		}
-		public String SayMoveUpKeepsBranchingSource
+		public String SayMovePrevKeepsBranchingSource
 		{
 			get
 			{
 				return (Frame == null) ? "Move the frame's branching with it" : FrameIsBranchingSource (Frame) ? String.Format ("Keep {0}'s branching when it's moved", Titles.Frame (Frame)) : String.Format ("{0} has no branching", Titles.Frame (Frame));
 			}
 		}
-		public String SayMoveUpMovesBranchingTarget
+		public String SayMovePrevMovesBranchingTarget
 		{
 			get
 			{
 				return (Frame == null) ? "Change branching destinations to the frame's new position" : FrameIsBranchingTarget (Frame) ? String.Format ("Swap branching destinations for frames {0} and {1}", FramesPreview.Frames.SelectedIndex + 1, FramesPreview.Frames.SelectedIndex) : String.Format ("{0} is not a branching destination", Titles.Frame (Frame));
 			}
 		}
-		public String SayMoveUpKeepsBranchingTarget
+		public String SayMovePrevKeepsBranchingTarget
 		{
 			get
 			{
@@ -353,28 +354,28 @@ namespace AgentCharacterEditor.Previews
 
 		//=============================================================================
 
-		public String SayMoveDownMovesBranchingSource
+		public String SayMoveNextMovesBranchingSource
 		{
 			get
 			{
 				return (Frame == null) ? "Keep the frame's branching at its original position" : FrameIsBranchingSource (Frame) ? String.Format ("Swap {0}'s branching with frame {1}", Titles.Frame (Frame), FramesPreview.Frames.SelectedIndex + 2) : String.Format ("{0} has no branching", Titles.Frame (Frame));
 			}
 		}
-		public String SayMoveDownKeepsBranchingSource
+		public String SayMoveNextKeepsBranchingSource
 		{
 			get
 			{
 				return (Frame == null) ? "Move the frame's branching with it" : FrameIsBranchingSource (Frame) ? String.Format ("Keep {0}'s branching when it's moved", Titles.Frame (Frame)) : String.Format ("{0} has no branching", Titles.Frame (Frame));
 			}
 		}
-		public String SayMoveDownMovesBranchingTarget
+		public String SayMoveNextMovesBranchingTarget
 		{
 			get
 			{
 				return (Frame == null) ? "Change branching destinations to the frame's new position" : FrameIsBranchingTarget (Frame) ? String.Format ("Swap branching destinations for frames {0} and {1}", FramesPreview.Frames.SelectedIndex + 1, FramesPreview.Frames.SelectedIndex + 2) : String.Format ("{0} is not a branching destination", Titles.Frame (Frame));
 			}
 		}
-		public String SayMoveDownKeepsBranchingTarget
+		public String SayMoveNextKeepsBranchingTarget
 		{
 			get
 			{
@@ -398,18 +399,18 @@ namespace AgentCharacterEditor.Previews
 				return !Program.FileIsReadOnly && !DeleteBranchingDefaultOptions;
 			}
 		}
-		public Boolean EnableMoveUpBranchingDefaultOptions
+		public Boolean EnableMovePrevBranchingDefaultOptions
 		{
 			get
 			{
-				return !Program.FileIsReadOnly && !MoveUpBranchingDefaultOptions;
+				return !Program.FileIsReadOnly && !MovePrevBranchingDefaultOptions;
 			}
 		}
-		public Boolean EnableMoveDownBranchingDefaultOptions
+		public Boolean EnableMoveNextBranchingDefaultOptions
 		{
 			get
 			{
-				return !Program.FileIsReadOnly && !MoveDownBranchingDefaultOptions;
+				return !Program.FileIsReadOnly && !MoveNextBranchingDefaultOptions;
 			}
 		}
 
@@ -455,14 +456,14 @@ namespace AgentCharacterEditor.Previews
 			{
 				UpdateDeleteAnimation (-1);
 
-				NotifyPropertyChanged ("DeleteMovesBranchingUp");
-				NotifyPropertyChanged ("DeleteMovesBranchingDown");
+				NotifyPropertyChanged ("DeleteMovesBranchingPrev");
+				NotifyPropertyChanged ("DeleteMovesBranchingNext");
 				NotifyPropertyChanged ("DeleteDeletesBranching");
-				NotifyPropertyChanged ("ShowDeleteMovesBranchingUp");
-				NotifyPropertyChanged ("ShowDeleteMovesBranchingDown");
+				NotifyPropertyChanged ("ShowDeleteMovesBranchingPrev");
+				NotifyPropertyChanged ("ShowDeleteMovesBranchingNext");
 				NotifyPropertyChanged ("ShowDeleteDeletesBranching");
-				NotifyPropertyChanged ("SayDeleteMovesBranchingUp");
-				NotifyPropertyChanged ("SayDeleteMovesBranchingDown");
+				NotifyPropertyChanged ("SayDeleteMovesBranchingPrev");
+				NotifyPropertyChanged ("SayDeleteMovesBranchingNext");
 				NotifyPropertyChanged ("SayDeleteDeletesBranching");
 
 				NotifyPropertyChanged ("DeleteBranchingDefaultOptions");
@@ -481,7 +482,6 @@ namespace AgentCharacterEditor.Previews
 				NotifyPropertyChanged ("DeleteShiftsBranchingTarget");
 				NotifyPropertyChanged ("DeleteKeepsBranchingTarget");
 				NotifyPropertyChanged ("ShowDeleteShiftsBranchingTarget");
-				NotifyPropertyChanged ("ShowDeleteShiftsBranchingTargetUp");
 				NotifyPropertyChanged ("ShowDeleteKeepsBranchingTarget");
 				NotifyPropertyChanged ("SayDeleteShiftsBranchingTarget");
 				NotifyPropertyChanged ("SayDeleteKeepsBranchingTarget");
@@ -495,80 +495,80 @@ namespace AgentCharacterEditor.Previews
 
 		//=============================================================================
 
-		private void MoveUpBranchingSourceChanged ()
+		private void MovePrevBranchingSourceChanged ()
 		{
 			if (PropertyChanged != null)
 			{
-				UpdateMoveUpAnimation (-1);
+				UpdateMovePrevAnimation (-1);
 
-				NotifyPropertyChanged ("MoveUpMovesBranchingSource");
-				NotifyPropertyChanged ("MoveUpKeepsBranchingSource");
-				NotifyPropertyChanged ("ShowMoveUpMovesBranchingSource");
-				NotifyPropertyChanged ("ShowMoveUpKeepsBranchingSource");
-				NotifyPropertyChanged ("SayMoveUpMovesBranchingSource");
-				NotifyPropertyChanged ("SayMoveUpKeepsBranchingSource");
+				NotifyPropertyChanged ("MovePrevMovesBranchingSource");
+				NotifyPropertyChanged ("MovePrevKeepsBranchingSource");
+				NotifyPropertyChanged ("ShowMovePrevMovesBranchingSource");
+				NotifyPropertyChanged ("ShowMovePrevKeepsBranchingSource");
+				NotifyPropertyChanged ("SayMovePrevMovesBranchingSource");
+				NotifyPropertyChanged ("SayMovePrevKeepsBranchingSource");
 
-				NotifyPropertyChanged ("MoveUpBranchingDefaultOptions");
-				NotifyPropertyChanged ("EnableMoveUpBranchingDefaultOptions");
+				NotifyPropertyChanged ("MovePrevBranchingDefaultOptions");
+				NotifyPropertyChanged ("EnableMovePrevBranchingDefaultOptions");
 
-				UpdateMoveUpAnimation (100);
+				UpdateMovePrevAnimation (100);
 			}
 		}
-		private void MoveUpBranchingTargetChanged ()
+		private void MovePrevBranchingTargetChanged ()
 		{
 			if (PropertyChanged != null)
 			{
-				UpdateMoveUpAnimation (-1);
+				UpdateMovePrevAnimation (-1);
 
-				NotifyPropertyChanged ("MoveUpMovesBranchingTarget");
-				NotifyPropertyChanged ("MoveUpKeepsBranchingTarget");
-				NotifyPropertyChanged ("ShowMoveUpMovesBranchingTarget");
-				NotifyPropertyChanged ("ShowMoveUpKeepsBranchingTarget");
-				NotifyPropertyChanged ("SayMoveUpMovesBranchingTarget");
-				NotifyPropertyChanged ("SayMoveUpKeepsBranchingTarget");
+				NotifyPropertyChanged ("MovePrevMovesBranchingTarget");
+				NotifyPropertyChanged ("MovePrevKeepsBranchingTarget");
+				NotifyPropertyChanged ("ShowMovePrevMovesBranchingTarget");
+				NotifyPropertyChanged ("ShowMovePrevKeepsBranchingTarget");
+				NotifyPropertyChanged ("SayMovePrevMovesBranchingTarget");
+				NotifyPropertyChanged ("SayMovePrevKeepsBranchingTarget");
 
-				NotifyPropertyChanged ("MoveUpBranchingDefaultOptions");
-				NotifyPropertyChanged ("EnableMoveUpBranchingDefaultOptions");
+				NotifyPropertyChanged ("MovePrevBranchingDefaultOptions");
+				NotifyPropertyChanged ("EnableMovePrevBranchingDefaultOptions");
 
-				UpdateMoveUpAnimation (100);
+				UpdateMovePrevAnimation (100);
 			}
 		}
-		private void MoveDownBranchingSourceChanged ()
+		private void MoveNextBranchingSourceChanged ()
 		{
 			if (PropertyChanged != null)
 			{
-				UpdateMoveDownAnimation (-1);
+				UpdateMoveNextAnimation (-1);
 
-				NotifyPropertyChanged ("MoveDownMovesBranchingSource");
-				NotifyPropertyChanged ("MoveDownKeepsBranchingSource");
-				NotifyPropertyChanged ("ShowMoveDownMovesBranchingSource");
-				NotifyPropertyChanged ("ShowMoveDownKeepsBranchingSource");
-				NotifyPropertyChanged ("SayMoveDownMovesBranchingSource");
-				NotifyPropertyChanged ("SayMoveDownKeepsBranchingSource");
+				NotifyPropertyChanged ("MoveNextMovesBranchingSource");
+				NotifyPropertyChanged ("MoveNextKeepsBranchingSource");
+				NotifyPropertyChanged ("ShowMoveNextMovesBranchingSource");
+				NotifyPropertyChanged ("ShowMoveNextKeepsBranchingSource");
+				NotifyPropertyChanged ("SayMoveNextMovesBranchingSource");
+				NotifyPropertyChanged ("SayMoveNextKeepsBranchingSource");
 
-				NotifyPropertyChanged ("MoveDownBranchingDefaultOptions");
-				NotifyPropertyChanged ("EnableMoveDownBranchingDefaultOptions");
+				NotifyPropertyChanged ("MoveNextBranchingDefaultOptions");
+				NotifyPropertyChanged ("EnableMoveNextBranchingDefaultOptions");
 
-				UpdateMoveDownAnimation (100);
+				UpdateMoveNextAnimation (100);
 			}
 		}
-		private void MoveDownBranchingTargetChanged ()
+		private void MoveNextBranchingTargetChanged ()
 		{
 			if (PropertyChanged != null)
 			{
-				UpdateMoveDownAnimation (-1);
+				UpdateMoveNextAnimation (-1);
 
-				NotifyPropertyChanged ("MoveDownMovesBranchingTarget");
-				NotifyPropertyChanged ("MoveDownKeepsBranchingTarget");
-				NotifyPropertyChanged ("ShowMoveDownMovesBranchingTarget");
-				NotifyPropertyChanged ("ShowMoveDownKeepsBranchingTarget");
-				NotifyPropertyChanged ("SayMoveDownMovesBranchingTarget");
-				NotifyPropertyChanged ("SayMoveDownKeepsBranchingTarget");
+				NotifyPropertyChanged ("MoveNextMovesBranchingTarget");
+				NotifyPropertyChanged ("MoveNextKeepsBranchingTarget");
+				NotifyPropertyChanged ("ShowMoveNextMovesBranchingTarget");
+				NotifyPropertyChanged ("ShowMoveNextKeepsBranchingTarget");
+				NotifyPropertyChanged ("SayMoveNextMovesBranchingTarget");
+				NotifyPropertyChanged ("SayMoveNextKeepsBranchingTarget");
 
-				NotifyPropertyChanged ("MoveDownBranchingDefaultOptions");
-				NotifyPropertyChanged ("EnableMoveDownBranchingDefaultOptions");
+				NotifyPropertyChanged ("MoveNextBranchingDefaultOptions");
+				NotifyPropertyChanged ("EnableMoveNextBranchingDefaultOptions");
 
-				UpdateMoveDownAnimation (100);
+				UpdateMoveNextAnimation (100);
 			}
 		}
 
@@ -578,8 +578,8 @@ namespace AgentCharacterEditor.Previews
 		{
 			if (PropertyChanged != null)
 			{
-				NotifyPropertyChanged ("CanMoveFrameUp");
-				NotifyPropertyChanged ("CanMoveFrameDown");
+				NotifyPropertyChanged ("CanMoveFramePrev");
+				NotifyPropertyChanged ("CanMoveFrameNext");
 				NotifyPropertyChanged ("FrameTitle");
 				NotifyPropertyChanged ("FrameNoneTitle");
 				NotifyPropertyChanged ("FrameSourceTitle");
@@ -591,10 +591,10 @@ namespace AgentCharacterEditor.Previews
 				AddShiftsBranchingChanged ();
 				DeleteBranchingSourceChanged ();
 				DeleteBranchingTargetChanged ();
-				MoveUpBranchingSourceChanged ();
-				MoveUpBranchingTargetChanged ();
-				MoveDownBranchingSourceChanged ();
-				MoveDownBranchingTargetChanged ();
+				MovePrevBranchingSourceChanged ();
+				MovePrevBranchingTargetChanged ();
+				MoveNextBranchingSourceChanged ();
+				MoveNextBranchingTargetChanged ();
 			}
 		}
 
@@ -602,504 +602,499 @@ namespace AgentCharacterEditor.Previews
 		///////////////////////////////////////////////////////////////////////////////
 		#region Animations
 
-		private ExpanderContentOverlay mAddAnimation = null;
-		private AsyncTimer mAddAnimationDelay = null;
+		private ExpanderAddOverlay mAddAnimation = null;
 
-		private void AddGrid_LayoutUpdated (object sender, EventArgs e)
+		private class ExpanderAddOverlay : ExpanderContentOverlay
 		{
-			if (ExpanderAdd.IsExpanded)
+			public ExpanderAddOverlay (FramesToolBar pOwner)
+				: base (pOwner.ExpanderAdd, pOwner.EAddContent, pOwner.EAddCanvas)
+			{
+				Owner = pOwner;
+			}
+			public FramesToolBar Owner
+			{
+				get;
+				set;
+			}
+
+			public override Boolean DefineOverlayAnimation ()
 			{
 				try
 				{
-					if (mAddAnimation == null)
-					{
-						mAddAnimation = new ExpanderContentOverlay (ExpanderAdd, AddContent, AddCanvas);
-					}
-					if (mAddAnimation.PrepareOverlay (AddFill))
+					if (PrepareOverlay (Owner.EAddFill))
 					{
 						Storyboard lStoryboard = new Storyboard ();
 						Storyboard lPartAnimation;
 						ParallelTimeline lAnimationGroup;
 
-						lStoryboard.Children.Add (mAddAnimation.MakeFlashAnimation (AddGlow));
+						lStoryboard.Children.Add (MakeFlashAnimation (Owner.EAddGlow));
 
 						lPartAnimation = new Storyboard ();
-						lPartAnimation.Children.Add (mAddAnimation.MakeSwapAnimation (mAddAnimation.MakeAnimationVisual (AddBlt1), AddBlt2, AnimationOverlay.DefaultRestRatio));
-						lPartAnimation.Children.Add (mAddAnimation.MakeSwapAnimation (mAddAnimation.MakeAnimationVisual (AddBlt2), AddBlt3, AnimationOverlay.DefaultRestRatio));
-						mAddAnimation.SetPartAnimation (0, lPartAnimation);
+						lPartAnimation.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EAddTrgLine1), Owner.EAddTrgLine2));
+						lPartAnimation.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EAddTrgLine2), Owner.EAddTrgLine3));
+						SetPartAnimation (0, lPartAnimation);
 
-						lStoryboard.Children.Add (mAddAnimation.MakeFadeAnimation (mAddAnimation.MakeAnimationVisual (AddBt0), true, AnimationOverlay.DefaultRestRatio));
+						Owner.EAddTrg0.Visibility = Visibility.Visible;
+						lStoryboard.Children.Add (MakeFadeAnimation (MakeAnimationVisual (Owner.EAddTrg0), true));
 
 						lAnimationGroup = new ParallelTimeline ();
-						lAnimationGroup.Children.Add (mAddAnimation.MakeSwapAnimation (mAddAnimation.MakeAnimationVisual (AddBt1), AddBt2, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mAddAnimation.MakeFadeAnimation (AddBt1T1, false, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mAddAnimation.MakeFadeAnimation (AddBt1T2, true, AnimationOverlay.DefaultRestRatio));
+						lAnimationGroup.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EAddTrg1), Owner.EAddTrg2));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EAddTrg1Txt1, false));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EAddTrg1Txt2, true));
 						lStoryboard.Children.Add (lAnimationGroup);
 
 						lAnimationGroup = new ParallelTimeline ();
-						lAnimationGroup.Children.Add (mAddAnimation.MakeSwapAnimation (mAddAnimation.MakeAnimationVisual (AddBt2), AddBt3, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mAddAnimation.MakeFadeAnimation (AddBt2T1, false, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mAddAnimation.MakeFadeAnimation (AddBt2T2, true, AnimationOverlay.DefaultRestRatio));
+						lAnimationGroup.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EAddTrg2), Owner.EAddTrg3));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EAddTrg2Txt1, false));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EAddTrg2Txt2, true));
 						lStoryboard.Children.Add (lAnimationGroup);
 
-						UpdateAddAnimation ();
-						mAddAnimation.StartOverlayAnimation (lStoryboard);
+						CompleteOverlay (lStoryboard);
+						return true;
 					}
 				}
 				catch (Exception pException)
 				{
 					System.Diagnostics.Debug.Print (pException.Message);
 				}
+				return false;
+			}
+
+			public override void UpdateOverlayAnimation ()
+			{
+				if (Owner.Frame != null)
+				{
+					SetPartEnabled (0, Owner.AddShiftsBranchingTarget);
+					OverlayElement.Visibility = Visibility.Visible;
+					StartOverlayAnimation ();
+				}
+				else
+				{
+					StopOverlayAnimation ();
+					OverlayElement.Visibility = Visibility.Hidden;
+				}
 			}
 		}
 
-		//=============================================================================
+		private void UpdateAddExpander ()
+		{
+			if (IsValid)
+			{
+				if (Frame != null)
+				{
+					EAddTrg2.Visibility = CanMoveFrameNext ? Visibility.Visible : Visibility.Hidden;
+					EAddTrgLine2.Visibility = CanMoveFrameNext ? Visibility.Visible : Visibility.Hidden;
+					EAddTrg0Txt1.Visibility = AddShiftsBranchingTarget ? Visibility.Hidden : Visibility.Visible;
+					EAddTrg0Txt2.Visibility = AddShiftsBranchingTarget ? Visibility.Visible : Visibility.Hidden;
+
+					AddKeepBranchingTarget.Visibility = Visibility.Visible;
+					AddShiftBranchingTarget.Visibility = Visibility.Visible;
+					AddDefaults.Visibility = Visibility.Visible;
+					AddNone.Visibility = Visibility.Collapsed;
+				}
+				else
+				{
+					AddKeepBranchingTarget.Visibility = Visibility.Hidden;
+					AddShiftBranchingTarget.Visibility = Visibility.Hidden;
+					AddDefaults.Visibility = Visibility.Collapsed;
+					AddNone.Visibility = Visibility.Visible;
+				}
+			}
+		}
 
 		private void UpdateAddAnimation ()
 		{
-			if (Frame != null)
+			if (IsValid)
 			{
+				UpdateAddExpander ();
 				if (mAddAnimation != null)
 				{
-					AddBt2.Visibility = CanMoveFrameDown ? Visibility.Visible : Visibility.Hidden;
-					AddBlt2.Visibility = CanMoveFrameDown ? Visibility.Visible : Visibility.Hidden;
-					AddBt0T1.Visibility = AddShiftsBranchingTarget ? Visibility.Hidden : Visibility.Visible;
-					AddBt0T2.Visibility = AddShiftsBranchingTarget ? Visibility.Visible : Visibility.Hidden;
-
-					mAddAnimation.SetPartEnabled (0, AddShiftsBranchingTarget);
-					mAddAnimation.OverlayElement.Visibility = Visibility.Visible;
-					mAddAnimation.StartOverlayAnimation (mAddAnimation.Animation);
+					mAddAnimation.UpdateOverlayAnimation ();
 				}
-				AddKeepBranchingTarget.Visibility = Visibility.Visible;
-				AddShiftBranchingTarget.Visibility = Visibility.Visible;
-				AddDefaults.Visibility = Visibility.Visible;
-				AddNone.Visibility = Visibility.Collapsed;
-			}
-			else
-			{
-				if (mAddAnimation != null)
-				{
-					mAddAnimation.StopOverlayAnimation ();
-					mAddAnimation.OverlayElement.Visibility = Visibility.Hidden;
-				}
-				AddKeepBranchingTarget.Visibility = Visibility.Hidden;
-				AddShiftBranchingTarget.Visibility = Visibility.Hidden;
-				AddDefaults.Visibility = Visibility.Collapsed;
-				AddNone.Visibility = Visibility.Visible;
 			}
 		}
-
-		//=============================================================================
-
 		private void UpdateAddAnimation (int pDelay)
 		{
-			if (pDelay == 0)
+			if (IsValid)
 			{
-				UpdateAddAnimation ();
-			}
-			else if (pDelay < 0)
-			{
-				mAddAnimationDelay = null;
-			}
-			else
-			{
-				if (mAddAnimationDelay == null)
+				UpdateAddExpander ();
+				if (mAddAnimation != null)
 				{
-					mAddAnimationDelay = new AsyncTimer ();
-					mAddAnimationDelay.TimerPulse += new AsyncTimer.TimerPulseHandler (AddAnimationDelay_TimerPulse);
-					mAddAnimationDelay.Start (pDelay);
+					mAddAnimation.UpdateOverlayAnimation (pDelay);
 				}
-			}
-		}
-
-		void AddAnimationDelay_TimerPulse (object sender, AsyncTimer.TimerEventArgs e)
-		{
-			if (mAddAnimationDelay != null)
-			{
-				mAddAnimationDelay = null;
-				UpdateAddAnimation ();
 			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private ExpanderContentOverlay mDeleteAnimation = null;
-		private AsyncTimer mDeleteAnimationDelay = null;
+		private ExpanderDeleteOverlay mDeleteAnimation = null;
 
-		private void DelGrid_LayoutUpdated (object sender, EventArgs e)
+		private class ExpanderDeleteOverlay : ExpanderContentOverlay
 		{
-			if (ExpanderDelete.IsExpanded)
+			public ExpanderDeleteOverlay (FramesToolBar pOwner)
+				: base (pOwner.ExpanderDelete, pOwner.EDelContent, pOwner.EDelCanvas)
+			{
+				Owner = pOwner;
+			}
+			public FramesToolBar Owner
+			{
+				get;
+				set;
+			}
+
+			public override Boolean DefineOverlayAnimation ()
 			{
 				try
 				{
-					if (mDeleteAnimation == null)
-					{
-						mDeleteAnimation = new ExpanderContentOverlay (ExpanderDelete, DelContent, DelCanvas);
-					}
-					if (mDeleteAnimation.PrepareOverlay (DelFill))
+					if (PrepareOverlay (Owner.EDelFill))
 					{
 						Storyboard lStoryboard = new Storyboard ();
 						Storyboard lPartAnimation;
 						ParallelTimeline lAnimationGroup;
 						Rectangle lAnimationVisual;
 
-						lStoryboard.Children.Add (mDeleteAnimation.MakeFlashAnimation (DelGlow));
+						lStoryboard.Children.Add (MakeFlashAnimation (Owner.EDelGlow));
 
 						lPartAnimation = new Storyboard ();
-						lPartAnimation.Children.Add (mDeleteAnimation.MakeFadeAnimation (lAnimationVisual = mDeleteAnimation.MakeAnimationVisual (DelBls1), false, AnimationOverlay.DefaultRestRatio));
-						mDeleteAnimation.SetPartAnimation (0, lPartAnimation);
+						lPartAnimation.Children.Add (MakeFadeAnimation (lAnimationVisual = MakeAnimationVisual (Owner.EDelSrcLine1), false));
+						SetPartAnimation (0, lPartAnimation);
 
 						lPartAnimation = new Storyboard ();
-						lPartAnimation.Children.Add (mDeleteAnimation.MakeSwapAnimation (lAnimationVisual, DelBls0, AnimationOverlay.DefaultRestRatio));
-						mDeleteAnimation.SetPartAnimation (1, lPartAnimation);
+						lPartAnimation.Children.Add (MakeSwapAnimation (lAnimationVisual, Owner.EDelSrcLine0));
+						SetPartAnimation (1, lPartAnimation);
 
 						lPartAnimation = new Storyboard ();
-						lPartAnimation.Children.Add (mDeleteAnimation.MakeSwapAnimation (mDeleteAnimation.MakeAnimationVisual (DelBls2), DelBls1, AnimationOverlay.DefaultRestRatio));
-						mDeleteAnimation.SetPartAnimation (2, lPartAnimation);
+						lPartAnimation.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EDelSrcLine2), Owner.EDelSrcLine1));
+						SetPartAnimation (2, lPartAnimation);
 
 						lPartAnimation = new Storyboard ();
-						lPartAnimation.Children.Add (mDeleteAnimation.MakeSwapAnimation (mDeleteAnimation.MakeAnimationVisual (DelBlt2), DelBlt1, AnimationOverlay.DefaultRestRatio));
-						mDeleteAnimation.SetPartAnimation (3, lPartAnimation);
+						lPartAnimation.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EDelTrgLine2), Owner.EDelTrgLine1));
+						SetPartAnimation (3, lPartAnimation);
 
 						lPartAnimation = new Storyboard ();
-						lPartAnimation.Children.Add (mDeleteAnimation.MakeSwapAnimation (mDeleteAnimation.MakeAnimationVisual (DelBlt1), DelBlt0, AnimationOverlay.DefaultRestRatio));
-						mDeleteAnimation.SetPartAnimation (4, lPartAnimation);
+						lPartAnimation.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EDelTrgLine1), Owner.EDelTrgLine0));
+						SetPartAnimation (4, lPartAnimation);
 
 						lAnimationGroup = new ParallelTimeline ();
-						lAnimationGroup.Children.Add (mDeleteAnimation.MakeFadeAnimation (mDeleteAnimation.MakeAnimationVisual (DelBs1), false, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mDeleteAnimation.MakeFadeAnimation (mDeleteAnimation.MakeAnimationVisual (DelBt1), false, AnimationOverlay.DefaultRestRatio));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (MakeAnimationVisual (Owner.EDelSrc1), false));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (MakeAnimationVisual (Owner.EDelTrg1), false));
 						lStoryboard.Children.Add (lAnimationGroup);
 
 						lAnimationGroup = new ParallelTimeline ();
-						lAnimationGroup.Children.Add (mDeleteAnimation.MakeSwapAnimation (mDeleteAnimation.MakeAnimationVisual (DelBs2), DelBs1, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mDeleteAnimation.MakeFadeAnimation (DelBs2T1, false, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mDeleteAnimation.MakeFadeAnimation (DelBs2T2, true, AnimationOverlay.DefaultRestRatio));
+						lAnimationGroup.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EDelSrc2), Owner.EDelSrc1));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EDelSrc2Txt1, false));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EDelSrc2Txt2, true));
 						lStoryboard.Children.Add (lAnimationGroup);
 
 						lPartAnimation = new Storyboard ();
-						lPartAnimation.Children.Add (mDeleteAnimation.MakeSwapAnimation (mDeleteAnimation.MakeAnimationVisual (DelBt2), DelBt1, AnimationOverlay.DefaultRestRatio));
-						lPartAnimation.Children.Add (mDeleteAnimation.MakeFadeAnimation (DelBt2T1, false, AnimationOverlay.DefaultRestRatio));
-						lPartAnimation.Children.Add (mDeleteAnimation.MakeFadeAnimation (DelBt2T2, true, AnimationOverlay.DefaultRestRatio));
-						mDeleteAnimation.SetPartAnimation (5, lPartAnimation);
+						lPartAnimation.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EDelTrg2), Owner.EDelTrg1));
+						lPartAnimation.Children.Add (MakeFadeAnimation (Owner.EDelTrg2Txt1, false));
+						lPartAnimation.Children.Add (MakeFadeAnimation (Owner.EDelTrg2Txt2, true));
+						SetPartAnimation (5, lPartAnimation);
 
-						mDeleteAnimation.MakeAnimationVisual (DelBs0);
-						mDeleteAnimation.MakeAnimationVisual (DelBt0);
+						lPartAnimation = new Storyboard ();
+						lPartAnimation.Children.Add (MakeFadeAnimation (Owner.EDelTrg1Err, true, DefaultStartRest * 2));
+						SetPartAnimation (6, lPartAnimation);
 
-						UpdateDeleteAnimation ();
-						mDeleteAnimation.StartOverlayAnimation (lStoryboard);
+						lPartAnimation = new Storyboard ();
+						lPartAnimation.Children.Add (MakeFadeAnimation (Owner.EDelTrg2Err, true, DefaultStartRest * 2));
+						SetPartAnimation (7, lPartAnimation);
+
+						MakeAnimationVisual (Owner.EDelSrc0);
+						MakeAnimationVisual (Owner.EDelTrg0);
+						MakeAnimationVisual (Owner.EDelTrg1Err);
+						MakeAnimationVisual (Owner.EDelTrg2Err);
+
+						CompleteOverlay (lStoryboard);
+						return true;
 					}
 				}
 				catch (Exception pException)
 				{
 					System.Diagnostics.Debug.Print (pException.Message);
 				}
+				return false;
 			}
-		}
 
-		//=============================================================================
-
-		private void UpdateDeleteAnimation ()
-		{
-			if (CanMoveFrameDown || CanMoveFrameUp)
+			public override void UpdateOverlayAnimation ()
 			{
-				DelBs0.Visibility = CanMoveFrameUp ? Visibility.Visible : Visibility.Hidden;
-				DelBls0.Visibility = CanMoveFrameUp ? Visibility.Visible : Visibility.Hidden;
-				DelBs2.Visibility = CanMoveFrameDown ? Visibility.Visible : Visibility.Hidden;
-				DelBls2.Visibility = CanMoveFrameDown ? Visibility.Visible : Visibility.Hidden;
-				DelBt0.Visibility = CanMoveFrameDown ? Visibility.Hidden : Visibility.Visible;
-				DelBt2.Visibility = CanMoveFrameDown ? Visibility.Visible : Visibility.Hidden;
-				DelBlt2.Visibility = CanMoveFrameDown ? Visibility.Visible : Visibility.Hidden;
-
-				if (CanMoveFrameDown)
+				if (Owner.CanMoveFrameNext || Owner.CanMoveFramePrev)
 				{
-					Grid.SetColumn (DeleteKeepBranchingTarget, Grid.GetColumn (DeleteMoveBranchingDown));
-					Grid.SetColumn (DeleteShiftBranchingTarget, Grid.GetColumn (DeleteMoveBranchingDown));
+					SetPartEnabled (0, Owner.DeleteDeletesBranching);
+					SetPartEnabled (1, Owner.DeleteMovesBranchingPrev && Owner.CanMoveFramePrev);
+					SetPartEnabled (2, Owner.CanMoveFrameNext);
+					SetPartEnabled (3, Owner.DeleteShiftsBranchingTarget && Owner.CanMoveFrameNext);
+					SetPartEnabled (4, Owner.DeleteShiftsBranchingTarget && !Owner.CanMoveFrameNext);
+					SetPartEnabled (5, Owner.CanMoveFrameNext);
+					SetPartEnabled (6, Owner.DeleteKeepsBranchingTarget && !Owner.CanMoveFrameNext);
+					SetPartEnabled (7, Owner.DeleteKeepsBranchingTarget && Owner.CanMoveFrameNext);
+					OverlayElement.Visibility = Visibility.Visible;
+					StartOverlayAnimation ();
 				}
 				else
 				{
-					Grid.SetColumn (DeleteKeepBranchingTarget, Grid.GetColumn (DeleteMoveBranchingUp));
-					Grid.SetColumn (DeleteShiftBranchingTarget, Grid.GetColumn (DeleteMoveBranchingUp));
+					StopOverlayAnimation ();
+					OverlayElement.Visibility = Visibility.Hidden;
 				}
-
-				if (mDeleteAnimation != null)
-				{
-					mDeleteAnimation.SetPartEnabled (0, DeleteDeletesBranching);
-					mDeleteAnimation.SetPartEnabled (1, DeleteMovesBranchingUp && CanMoveFrameUp);
-					mDeleteAnimation.SetPartEnabled (2, CanMoveFrameDown);
-					mDeleteAnimation.SetPartEnabled (3, DeleteShiftsBranchingTarget && CanMoveFrameDown);
-					mDeleteAnimation.SetPartEnabled (4, DeleteShiftsBranchingTarget && !CanMoveFrameDown);
-					mDeleteAnimation.SetPartEnabled (5, CanMoveFrameDown);
-					mDeleteAnimation.OverlayElement.Visibility = Visibility.Visible;
-					mDeleteAnimation.StartOverlayAnimation (mDeleteAnimation.Animation);
-				}
-
-				DeleteDefaults.Visibility = Visibility.Visible;
-				DelNone.Visibility = Visibility.Collapsed;
-			}
-			else
-			{
-				if (mDeleteAnimation != null)
-				{
-					mDeleteAnimation.StopOverlayAnimation ();
-					mDeleteAnimation.OverlayElement.Visibility = Visibility.Hidden;
-				}
-
-				DeleteDefaults.Visibility = Visibility.Collapsed;
-				DelNone.Visibility = Visibility.Visible;
 			}
 		}
 
-		//=============================================================================
+		private void UpdateDeleteExpander ()
+		{
+			if (IsValid)
+			{
+				if (CanMoveFrameNext || CanMoveFramePrev)
+				{
+					EDelSrc0.Visibility = CanMoveFramePrev ? Visibility.Visible : Visibility.Hidden;
+					EDelSrcLine0.Visibility = CanMoveFramePrev ? Visibility.Visible : Visibility.Hidden;
+					EDelSrc2.Visibility = CanMoveFrameNext ? Visibility.Visible : Visibility.Hidden;
+					EDelSrcLine2.Visibility = CanMoveFrameNext ? Visibility.Visible : Visibility.Hidden;
+					EDelTrg0.Visibility = CanMoveFrameNext ? Visibility.Hidden : Visibility.Visible;
+					EDelTrg2.Visibility = CanMoveFrameNext ? Visibility.Visible : Visibility.Hidden;
+					EDelTrgLine2.Visibility = CanMoveFrameNext ? Visibility.Visible : Visibility.Hidden;
 
+					if (CanMoveFrameNext)
+					{
+						Grid.SetColumn (DeleteKeepBranchingTarget, Grid.GetColumn (DeleteMoveBranchingNext));
+						Grid.SetColumn (DeleteShiftBranchingTarget, Grid.GetColumn (DeleteMoveBranchingNext));
+					}
+					else
+					{
+						Grid.SetColumn (DeleteKeepBranchingTarget, Grid.GetColumn (DeleteMoveBranchingPrev));
+						Grid.SetColumn (DeleteShiftBranchingTarget, Grid.GetColumn (DeleteMoveBranchingPrev));
+					}
+
+					DeleteDefaults.Visibility = Visibility.Visible;
+					EDelNone.Visibility = Visibility.Collapsed;
+				}
+				else
+				{
+					DeleteDefaults.Visibility = Visibility.Collapsed;
+					EDelNone.Visibility = Visibility.Visible;
+				}
+			}
+		}
+
+		private void UpdateDeleteAnimation ()
+		{
+			if (IsValid)
+			{
+				UpdateDeleteExpander ();
+				if (mDeleteAnimation != null)
+				{
+					mDeleteAnimation.UpdateOverlayAnimation ();
+				}
+			}
+		}
 		private void UpdateDeleteAnimation (int pDelay)
 		{
-			if (pDelay == 0)
+			if (IsValid)
 			{
-				UpdateDeleteAnimation ();
-			}
-			else if (pDelay < 0)
-			{
-				mDeleteAnimationDelay = null;
-			}
-			else
-			{
-				if (mDeleteAnimationDelay == null)
+				UpdateDeleteExpander ();
+				if (mDeleteAnimation != null)
 				{
-					mDeleteAnimationDelay = new AsyncTimer ();
-					mDeleteAnimationDelay.TimerPulse += new AsyncTimer.TimerPulseHandler (DeleteAnimationDelay_TimerPulse);
-					mDeleteAnimationDelay.Start (pDelay);
+					mDeleteAnimation.UpdateOverlayAnimation (pDelay);
 				}
-			}
-		}
-
-		void DeleteAnimationDelay_TimerPulse (object sender, AsyncTimer.TimerEventArgs e)
-		{
-			if (mDeleteAnimationDelay != null)
-			{
-				mDeleteAnimationDelay = null;
-				UpdateDeleteAnimation ();
 			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private ExpanderContentOverlay mMoveUpAnimation = null;
-		private AsyncTimer mMoveUpAnimationDelay = null;
+		private ExpanderMovePrevOverlay mMovePrevAnimation = null;
 
-		private void MuGrid_LayoutUpdated (object sender, System.EventArgs e)
+		private class ExpanderMovePrevOverlay : ExpanderContentOverlay
 		{
-			if (ExpanderMoveUp.IsExpanded)
+			public ExpanderMovePrevOverlay (FramesToolBar pOwner)
+				: base (pOwner.ExpanderMovePrev, pOwner.EMovPrvContent, pOwner.EMovPrvCanvas)
+			{
+				Owner = pOwner;
+			}
+			public FramesToolBar Owner
+			{
+				get;
+				set;
+			}
+
+			public override Boolean DefineOverlayAnimation ()
 			{
 				try
 				{
-					if (mMoveUpAnimation == null)
-					{
-						mMoveUpAnimation = new ExpanderContentOverlay (ExpanderMoveUp, MuContent, MuCanvas);
-					}
-					if (mMoveUpAnimation.PrepareOverlay (MuFill))
+					if (PrepareOverlay (Owner.EMovPrvFill))
 					{
 						Storyboard lStoryboard = new Storyboard ();
 						Storyboard lPartAnimation;
 						ParallelTimeline lAnimationGroup;
 
-						lStoryboard.Children.Add (mMoveUpAnimation.MakeFlashAnimation (MuGlow));
+						lStoryboard.Children.Add (MakeFlashAnimation (Owner.EMovePrvGlow));
 
 						lPartAnimation = new Storyboard ();
-						lPartAnimation.Children.Add (mMoveUpAnimation.MakeSwapAnimation (mMoveUpAnimation.MakeAnimationVisual (MuBls1), MuBls2, AnimationOverlay.DefaultRestRatio));
-						lPartAnimation.Children.Add (mMoveUpAnimation.MakeSwapAnimation (mMoveUpAnimation.MakeAnimationVisual (MuBls2), MuBls1, AnimationOverlay.DefaultRestRatio));
-						mMoveUpAnimation.SetPartAnimation (0, lPartAnimation);
+						lPartAnimation.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EMovePrvSrcLine1), Owner.EMovePrvSrcLine2));
+						lPartAnimation.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EMovePrvSrcLine2), Owner.EMovePrvSrcLine1));
+						SetPartAnimation (0, lPartAnimation);
 
 						lPartAnimation = new Storyboard ();
-						lPartAnimation.Children.Add (mMoveUpAnimation.MakeSwapAnimation (mMoveUpAnimation.MakeAnimationVisual (MuBlt2), MuBlt1, AnimationOverlay.DefaultRestRatio));
-						lPartAnimation.Children.Add (mMoveUpAnimation.MakeSwapAnimation (mMoveUpAnimation.MakeAnimationVisual (MuBlt1), MuBlt2, AnimationOverlay.DefaultRestRatio));
-						mMoveUpAnimation.SetPartAnimation (1, lPartAnimation);
+						lPartAnimation.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EMovePrvTrgLine1), Owner.EMovePrvTrgLine2));
+						lPartAnimation.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EMovePrvTrgLine2), Owner.EMovePrvTrgLine1));
+						SetPartAnimation (1, lPartAnimation);
 
 						lAnimationGroup = new ParallelTimeline ();
-						lAnimationGroup.Children.Add (mMoveUpAnimation.MakeSwapAnimation (mMoveUpAnimation.MakeAnimationVisual (MuBs1), MuBs2, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveUpAnimation.MakeSwapAnimation (mMoveUpAnimation.MakeAnimationVisual (MuBs2), MuBs1, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveUpAnimation.MakeFadeAnimation (MuBs1T1, false, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveUpAnimation.MakeFadeAnimation (MuBs1T2, true, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveUpAnimation.MakeFadeAnimation (MuBs2T1, false, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveUpAnimation.MakeFadeAnimation (MuBs2T2, true, AnimationOverlay.DefaultRestRatio));
+						lAnimationGroup.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EMovePrvSrc1), Owner.EMovePrvSrc2));
+						lAnimationGroup.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EMovePrvSrc2), Owner.EMovePrvSrc1));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EMovePrvSrc1Txt1, false));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EMovePrvSrc1Txt2, true));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EMovePrvSrc2Txt1, false));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EMovePrvSrc2Txt2, true));
 						lStoryboard.Children.Add (lAnimationGroup);
 
 						lAnimationGroup = new ParallelTimeline ();
-						lAnimationGroup.Children.Add (mMoveUpAnimation.MakeSwapAnimation (mMoveUpAnimation.MakeAnimationVisual (MuBt1), MuBt2, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveUpAnimation.MakeSwapAnimation (mMoveUpAnimation.MakeAnimationVisual (MuBt2), MuBt1, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveUpAnimation.MakeFadeAnimation (MuBt1T1, false, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveUpAnimation.MakeFadeAnimation (MuBt1T2, true, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveUpAnimation.MakeFadeAnimation (MuBt2T1, false, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveUpAnimation.MakeFadeAnimation (MuBt2T2, true, AnimationOverlay.DefaultRestRatio));
+						lAnimationGroup.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EMovePrvTrg1), Owner.EMovePrvTrg2));
+						lAnimationGroup.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EMovePrvTrg2), Owner.EMovePrvTrg1));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EMovePrvTrg1Txt1, false));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EMovePrvTrg1Txt2, true));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EMovePrvTrg2Txt1, false));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EMovePrvTrg2Txt2, true));
 						lStoryboard.Children.Add (lAnimationGroup);
-#if DEBUG_NOT
-						MdContent.UpdateLayout ();
-						MuContent.DebugPrint ();
+#if DEBUG_ANIMATIONS_NOT
+						EMovNxtContent.UpdateLayout ();
+						EMovPrvContent.DebugPrint ();
 #endif
-						UpdateMoveUpAnimation ();
-						mMoveUpAnimation.StartOverlayAnimation (lStoryboard);
+						CompleteOverlay (lStoryboard);
+						return true;
 					}
 				}
 				catch (Exception pException)
 				{
 					System.Diagnostics.Debug.Print (pException.Message);
 				}
+				return false;
+			}
+
+			public override void UpdateOverlayAnimation ()
+			{
+				SetPartEnabled (0, !Owner.MovePrevMovesBranchingSource);
+				SetPartEnabled (1, Owner.MovePrevMovesBranchingTarget);
+				StartOverlayAnimation ();
 			}
 		}
 
-		//=============================================================================
-
-		private void UpdateMoveUpAnimation ()
+		private void UpdateMovePrevAnimation ()
 		{
-			if (mMoveUpAnimation != null)
+			if (IsValid)
 			{
-				mMoveUpAnimation.SetPartEnabled (0, !MoveUpMovesBranchingSource);
-				mMoveUpAnimation.SetPartEnabled (1, MoveUpMovesBranchingTarget);
-				mMoveUpAnimation.StartOverlayAnimation (mMoveUpAnimation.Animation);
-			}
-		}
-
-		//=============================================================================
-
-		private void UpdateMoveUpAnimation (int pDelay)
-		{
-			if (pDelay == 0)
-			{
-				UpdateMoveUpAnimation ();
-			}
-			else if (pDelay < 0)
-			{
-				mMoveUpAnimationDelay = null;
-			}
-			else
-			{
-				if (mMoveUpAnimationDelay == null)
+				if (mMovePrevAnimation != null)
 				{
-					mMoveUpAnimationDelay = new AsyncTimer ();
-					mMoveUpAnimationDelay.TimerPulse += new AsyncTimer.TimerPulseHandler (MoveUpAnimationDelay_TimerPulse);
-					mMoveUpAnimationDelay.Start (pDelay);
+					mMovePrevAnimation.UpdateOverlayAnimation ();
 				}
 			}
 		}
-
-		void MoveUpAnimationDelay_TimerPulse (object sender, AsyncTimer.TimerEventArgs e)
+		private void UpdateMovePrevAnimation (int pDelay)
 		{
-			if (mMoveUpAnimationDelay != null)
+			if (IsValid)
 			{
-				mMoveUpAnimationDelay = null;
-				UpdateMoveUpAnimation ();
+				if (mMovePrevAnimation != null)
+				{
+					mMovePrevAnimation.UpdateOverlayAnimation (pDelay);
+				}
 			}
 		}
 
 		/////////////////////////////////////////////////////////////////////////////
 
-		private ExpanderContentOverlay mMoveDownAnimation = null;
-		private AsyncTimer mMoveDownAnimationDelay = null;
+		private ExpanderMoveNextOverlay mMoveNextAnimation = null;
 
-		private void MdGrid_LayoutUpdated (object sender, EventArgs e)
+		private class ExpanderMoveNextOverlay : ExpanderContentOverlay
 		{
-			if (ExpanderMoveDown.IsExpanded)
+			public ExpanderMoveNextOverlay (FramesToolBar pOwner)
+				: base (pOwner.ExpanderMoveNext, pOwner.EMovNxtContent, pOwner.EMovNxtCanvas)
+			{
+				Owner = pOwner;
+			}
+			public FramesToolBar Owner
+			{
+				get;
+				set;
+			}
+
+			public override Boolean DefineOverlayAnimation ()
 			{
 				try
 				{
-					if (mMoveDownAnimation == null)
-					{
-						mMoveDownAnimation = new ExpanderContentOverlay (ExpanderMoveDown, MdContent, MdCanvas);
-					}
-					if (mMoveDownAnimation.PrepareOverlay (MdFill))
+					if (PrepareOverlay (Owner.EMovNxtFill))
 					{
 						Storyboard lStoryboard = new Storyboard ();
 						Storyboard lPartAnimation;
 						ParallelTimeline lAnimationGroup;
 
-						lStoryboard.Children.Add (mMoveDownAnimation.MakeFlashAnimation (MdGlow));
+						lStoryboard.Children.Add (MakeFlashAnimation (Owner.EMovNxtGlow));
 
 						lPartAnimation = new Storyboard ();
-						lPartAnimation.Children.Add (mMoveDownAnimation.MakeSwapAnimation (mMoveDownAnimation.MakeAnimationVisual (MdBls1), MdBls2, AnimationOverlay.DefaultRestRatio));
-						lPartAnimation.Children.Add (mMoveDownAnimation.MakeSwapAnimation (mMoveDownAnimation.MakeAnimationVisual (MdBls2), MdBls1, AnimationOverlay.DefaultRestRatio));
-						mMoveDownAnimation.SetPartAnimation (0, lPartAnimation);
+						lPartAnimation.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EMovNxtSrcLine1), Owner.EMovNxtSrcLine2));
+						lPartAnimation.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EMovNxtSrcLine2), Owner.EMovNxtSrcLine1));
+						SetPartAnimation (0, lPartAnimation);
 
 						lPartAnimation = new Storyboard ();
-						lPartAnimation.Children.Add (mMoveDownAnimation.MakeSwapAnimation (mMoveDownAnimation.MakeAnimationVisual (MdBlt1), MdBlt2, AnimationOverlay.DefaultRestRatio));
-						lPartAnimation.Children.Add (mMoveDownAnimation.MakeSwapAnimation (mMoveDownAnimation.MakeAnimationVisual (MdBlt2), MdBlt1, AnimationOverlay.DefaultRestRatio));
-						mMoveDownAnimation.SetPartAnimation (1, lPartAnimation);
+						lPartAnimation.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EMovNxtTrgLine1), Owner.EMovNxtTrgLine2));
+						lPartAnimation.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EMovNxtTrgLine2), Owner.EMovNxtTrgLine1));
+						SetPartAnimation (1, lPartAnimation);
 
 						lAnimationGroup = new ParallelTimeline ();
-						lAnimationGroup.Children.Add (mMoveDownAnimation.MakeSwapAnimation (mMoveDownAnimation.MakeAnimationVisual (MdBs1), MdBs2, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveDownAnimation.MakeSwapAnimation (mMoveDownAnimation.MakeAnimationVisual (MdBs2), MdBs1, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveDownAnimation.MakeFadeAnimation (MdBs1T1, false, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveDownAnimation.MakeFadeAnimation (MdBs1T2, true, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveDownAnimation.MakeFadeAnimation (MdBs2T1, false, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveDownAnimation.MakeFadeAnimation (MdBs2T2, true, AnimationOverlay.DefaultRestRatio));
+						lAnimationGroup.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EMovNxtSrc1), Owner.EMovNxtSrc2));
+						lAnimationGroup.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EMovNxtSrc2), Owner.EMovNxtSrc1));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EMovNxtSrc1Txt1, false));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EMovNxtSrc1Txt2, true));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EMovNxtSrc2Txt1, false));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EMovNxtSrc2Txt2, true));
 						lStoryboard.Children.Add (lAnimationGroup);
 
 						lAnimationGroup = new ParallelTimeline ();
-						lAnimationGroup.Children.Add (mMoveDownAnimation.MakeSwapAnimation (mMoveDownAnimation.MakeAnimationVisual (MdBt1), MdBt2, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveDownAnimation.MakeSwapAnimation (mMoveDownAnimation.MakeAnimationVisual (MdBt2), MdBt1, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveDownAnimation.MakeFadeAnimation (MdBt1T1, false, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveDownAnimation.MakeFadeAnimation (MdBt1T2, true, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveDownAnimation.MakeFadeAnimation (MdBt2T1, false, AnimationOverlay.DefaultRestRatio));
-						lAnimationGroup.Children.Add (mMoveDownAnimation.MakeFadeAnimation (MdBt2T2, true, AnimationOverlay.DefaultRestRatio));
+						lAnimationGroup.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EMovNxtTrg1), Owner.EMovNxtTrg2));
+						lAnimationGroup.Children.Add (MakeSwapAnimation (MakeAnimationVisual (Owner.EMovNxtTrg2), Owner.EMovNxtTrg1));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EMovNxtTrg1Txt1, false));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EMovNxtTrg1Txt2, true));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EMovNxtTrg2Txt1, false));
+						lAnimationGroup.Children.Add (MakeFadeAnimation (Owner.EMovNxtTrg2Txt2, true));
 						lStoryboard.Children.Add (lAnimationGroup);
-#if DEBUG_NOT
-						MdContent.UpdateLayout ();
-						MdContent.DebugPrint ();
+#if DEBUG_ANIMATIONS_NOT
+						EMovNxtContent.UpdateLayout ();
+						EMovNxtContent.DebugPrint ();
 #endif
-						UpdateMoveDownAnimation ();
-						mMoveDownAnimation.StartOverlayAnimation (lStoryboard);
-#if DEBUG_NOT
-						mMoveDownAnimation.DumpAnimations ();
-						mMoveDownAnimation.DumpClocks ();
-#endif
+						CompleteOverlay (lStoryboard);
+						return true;
 					}
 				}
 				catch (Exception pException)
 				{
 					System.Diagnostics.Debug.Print (pException.Message);
 				}
+				return false;
+			}
+
+			public override void UpdateOverlayAnimation ()
+			{
+				SetPartEnabled (0, !Owner.MoveNextMovesBranchingSource);
+				SetPartEnabled (1, Owner.MoveNextMovesBranchingTarget);
+				StartOverlayAnimation ();
 			}
 		}
 
-		//=============================================================================
-
-		private void UpdateMoveDownAnimation ()
+		private void UpdateMoveNextAnimation ()
 		{
-			if (mMoveDownAnimation != null)
+			if (IsValid)
 			{
-				mMoveDownAnimation.SetPartEnabled (0, !MoveDownMovesBranchingSource);
-				mMoveDownAnimation.SetPartEnabled (1, MoveDownMovesBranchingTarget);
-				mMoveDownAnimation.StartOverlayAnimation (mMoveDownAnimation.Animation);
-			}
-		}
-
-		//=============================================================================
-
-		private void UpdateMoveDownAnimation (int pDelay)
-		{
-			if (pDelay == 0)
-			{
-				UpdateMoveDownAnimation ();
-			}
-			else if (pDelay < 0)
-			{
-				mMoveDownAnimationDelay = null;
-			}
-			else
-			{
-				if (mMoveDownAnimationDelay == null)
+				if (mMoveNextAnimation != null)
 				{
-					mMoveDownAnimationDelay = new AsyncTimer ();
-					mMoveDownAnimationDelay.TimerPulse += new AsyncTimer.TimerPulseHandler (MoveDownAnimationDelay_TimerPulse);
-					mMoveDownAnimationDelay.Start (pDelay);
+					mMoveNextAnimation.UpdateOverlayAnimation ();
 				}
 			}
 		}
-
-		void MoveDownAnimationDelay_TimerPulse (object sender, AsyncTimer.TimerEventArgs e)
+		private void UpdateMoveNextAnimation (int pDelay)
 		{
-			if (mMoveDownAnimationDelay != null)
+			if (IsValid)
 			{
-				mMoveDownAnimationDelay = null;
-				UpdateMoveDownAnimation ();
+				if (mMoveNextAnimation != null)
+				{
+					mMoveNextAnimation.UpdateOverlayAnimation (pDelay);
+				}
 			}
 		}
 
@@ -1113,9 +1108,9 @@ namespace AgentCharacterEditor.Previews
 		///////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
-		public AnimationOverlay (FrameworkElement pBaseElement, Canvas pOverlayElement)
+		public AnimationOverlay (FrameworkElement pContentElement, Canvas pOverlayElement)
 		{
-			BaseElement = pBaseElement;
+			ContentElement = pContentElement;
 			OverlayElement = pOverlayElement;
 		}
 
@@ -1123,31 +1118,31 @@ namespace AgentCharacterEditor.Previews
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
 
-		public FrameworkElement BaseElement
+		public FrameworkElement ContentElement
 		{
 			get;
-			protected set;
+			private set;
 		}
 		public Canvas OverlayElement
 		{
 			get;
-			protected set;
+			private set;
 		}
 		public Rectangle BackgroundElement
 		{
 			get;
-			protected set;
+			private set;
 		}
 
 		public Storyboard Animation
 		{
 			get;
-			protected set;
+			private set;
 		}
 		public Clock AnimationClock
 		{
 			get;
-			protected set;
+			private set;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -1232,11 +1227,18 @@ namespace AgentCharacterEditor.Previews
 				return new Duration (TimeSpan.FromSeconds (5));
 			}
 		}
-		public static Double DefaultRestRatio
+		public static Double DefaultStartRest
 		{
 			get
 			{
 				return 0.2;
+			}
+		}
+		public static Double DefaultEndRest
+		{
+			get
+			{
+				return 0.4;
 			}
 		}
 
@@ -1246,7 +1248,7 @@ namespace AgentCharacterEditor.Previews
 
 		public Boolean PrepareOverlay (Rectangle pBackgroundElement)
 		{
-			if ((OverlayElement.Children.Count <= 0) && (BaseElement.ActualWidth > 0) && (BaseElement.ActualHeight > 0))
+			if ((OverlayElement.Children.Count <= 0) && (ContentElement.ActualWidth > 0) && (ContentElement.ActualHeight > 0))
 			{
 				BackgroundElement = MakeAnimationBackground (pBackgroundElement);
 				return true;
@@ -1254,55 +1256,15 @@ namespace AgentCharacterEditor.Previews
 			return false;
 		}
 
-		//=============================================================================
-
-		public Boolean StartOverlayAnimation (Storyboard pAnimation)
+		public Boolean CompleteOverlay (Storyboard pAnimation)
 		{
-			StopOverlayAnimation ();
-
-			if ((pAnimation != null) && (pAnimation != Animation))
+			if ((pAnimation != null) && (Animation == null))
 			{
 				InitOverlayAnimation (pAnimation);
 				pAnimation.RepeatBehavior = RepeatBehavior.Forever;
-				pAnimation.Name = String.Format ("{0}_A", BaseElement.Name);
-			}
-
-			if (pAnimation != null)
-			{
-				try
-				{
-					Clock lClock;
-#if DEBUG
-					System.Diagnostics.Debug.Print ("Start Animation {0}", pAnimation.Name);
-#endif
-					foreach (PartAnimation lPartAnimation in mPartAnimations)
-					{
-						if (lPartAnimation.Enabled)
-						{
-							if (!pAnimation.Children.Contains (lPartAnimation.Animation))
-							{
-								pAnimation.Children.Add (lPartAnimation.Animation);
-							}
-						}
-						else
-						{
-							if (pAnimation.Children.Contains (lPartAnimation.Animation))
-							{
-								pAnimation.Children.Remove (lPartAnimation.Animation);
-							}
-						}
-					}
-
-					lClock = pAnimation.CreateClock (true);
-					pAnimation.Begin (OverlayElement, HandoffBehavior.SnapshotAndReplace, true);
-					Animation = pAnimation;
-					AnimationClock = lClock;
-					return true;
-				}
-				catch (Exception pException)
-				{
-					System.Diagnostics.Debug.Print (pException.Message);
-				}
+				pAnimation.Name = String.Format ("{0}_A", ContentElement.Name);
+				Animation = pAnimation;
+				return true;
 			}
 			return false;
 		}
@@ -1319,13 +1281,58 @@ namespace AgentCharacterEditor.Previews
 
 		//=============================================================================
 
+		public virtual Boolean StartOverlayAnimation ()
+		{
+			StopOverlayAnimation ();
+
+			if (Animation != null)
+			{
+				try
+				{
+					Clock lClock;
+#if DEBUG_ANIMATIONS
+					System.Diagnostics.Debug.Print ("Start Animation {0}", Animation.Name);
+#endif
+					foreach (PartAnimation lPartAnimation in mPartAnimations)
+					{
+						if (lPartAnimation.Enabled)
+						{
+							if (!Animation.Children.Contains (lPartAnimation.Animation))
+							{
+								Animation.Children.Add (lPartAnimation.Animation);
+							}
+						}
+						else
+						{
+							if (Animation.Children.Contains (lPartAnimation.Animation))
+							{
+								Animation.Children.Remove (lPartAnimation.Animation);
+							}
+						}
+					}
+
+					lClock = Animation.CreateClock (true);
+					Animation.Begin (OverlayElement, HandoffBehavior.SnapshotAndReplace, true);
+					AnimationClock = lClock;
+					return true;
+				}
+				catch (Exception pException)
+				{
+					System.Diagnostics.Debug.Print (pException.Message);
+				}
+			}
+			return false;
+		}
+
+		//=============================================================================
+
 		public void StopOverlayAnimation ()
 		{
 			try
 			{
 				if (Animation != null)
 				{
-#if DEBUG
+#if DEBUG_ANIMATIONS
 					System.Diagnostics.Debug.Print ("Stop Animation {0}", Animation.Name);
 #endif
 					Animation.Stop (OverlayElement);
@@ -1356,7 +1363,7 @@ namespace AgentCharacterEditor.Previews
 			{
 				if (Animation != null)
 				{
-#if DEBUG
+#if DEBUG_ANIMATIONS
 					System.Diagnostics.Debug.Print ("Pause Animation {0}", Animation.Name);
 #endif
 					Animation.Pause (OverlayElement);
@@ -1374,7 +1381,7 @@ namespace AgentCharacterEditor.Previews
 			{
 				if ((AnimationClock != null) && (AnimationClock.Controller != null))
 				{
-#if DEBUG
+#if DEBUG_ANIMATIONS
 					System.Diagnostics.Debug.Print ("Remove Animation {0}", Animation.Name);
 #endif
 					AnimationClock.Controller.Remove ();
@@ -1426,7 +1433,7 @@ namespace AgentCharacterEditor.Previews
 
 				lAnimationElement.Name = String.Format ("{0}_A", pSourceElement.Name);
 				lAnimationElement.SnapsToDevicePixels = false;
-				lAnimationElement.UseLayoutRounding = false;
+				lAnimationElement.UseLayoutRounding = pSourceElement.UseLayoutRounding;
 
 				LayoutAnimationElement (pSourceElement, lAnimationElement);
 				pSourceElement.LayoutUpdated += (object sender, EventArgs e) =>
@@ -1452,10 +1459,13 @@ namespace AgentCharacterEditor.Previews
 
 		public AnimationTimeline MakeSwapAnimation (Rectangle pAnimationVisual, FrameworkElement pTargetElement)
 		{
-			return MakeSwapAnimation (pAnimationVisual, pTargetElement, null);
+			return MakeSwapAnimation (pAnimationVisual, pTargetElement, DefaultStartRest);
 		}
-
-		public AnimationTimeline MakeSwapAnimation (Rectangle pAnimationVisual, FrameworkElement pTargetElement, Double? pRestRatio)
+		public AnimationTimeline MakeSwapAnimation (Rectangle pAnimationVisual, FrameworkElement pTargetElement, Double? pStartRest)
+		{
+			return MakeSwapAnimation (pAnimationVisual, pTargetElement, pStartRest, DefaultEndRest);
+		}
+		public AnimationTimeline MakeSwapAnimation (Rectangle pAnimationVisual, FrameworkElement pTargetElement, Double? pStartRest, Double? pEndRest)
 		{
 			try
 			{
@@ -1464,7 +1474,7 @@ namespace AgentCharacterEditor.Previews
 				DoubleAnimationOverride lAnimation = new DoubleAnimationOverride (lOrigin, lDestination.X);
 
 				lAnimation.Duration = DefaultDuration;
-				lAnimation.InitializeRewind (pRestRatio);
+				lAnimation.InitializeRewind (pStartRest, pEndRest);
 
 #if DEBUG_NOT
 				lAnimation.CurrentTimeInvalidated += (object sender, EventArgs e) =>
@@ -1550,39 +1560,43 @@ namespace AgentCharacterEditor.Previews
 
 		public AnimationTimeline MakeFadeAnimation (FrameworkElement pText, Boolean pFadeIn)
 		{
-			if (pFadeIn)
-			{
-				return MakeFadeAnimation (pText, 0.0, 1.0, (Double?)null);
-			}
-			else
-			{
-				return MakeFadeAnimation (pText, 1.0, 0.0, (Double?)null);
-			}
+			return MakeFadeAnimation (pText, pFadeIn, DefaultStartRest);
 		}
-		public AnimationTimeline MakeFadeAnimation (FrameworkElement pText, Boolean pFadeIn, Double? pRestRatio)
+		public AnimationTimeline MakeFadeAnimation (FrameworkElement pText, Boolean pFadeIn, Double? pStartRest)
+		{
+			return MakeFadeAnimation (pText, pFadeIn, pStartRest, DefaultEndRest);
+		}
+		public AnimationTimeline MakeFadeAnimation (FrameworkElement pText, Boolean pFadeIn, Double? pStartRest, Double? pEndRest)
 		{
 			if (pFadeIn)
 			{
-				return MakeFadeAnimation (pText, 0.0, 1.0, pRestRatio);
+				return MakeFadeAnimation (pText, 0.0, 1.0, pStartRest, pEndRest);
 			}
 			else
 			{
-				return MakeFadeAnimation (pText, 1.0, 0.0, pRestRatio);
+				return MakeFadeAnimation (pText, 1.0, 0.0, pStartRest, pEndRest);
 			}
 		}
-		public AnimationTimeline MakeFadeAnimation (FrameworkElement pText, Double pFrom, Double pTo, Double? pRestRatio)
+		public AnimationTimeline MakeFadeAnimation (FrameworkElement pText, Double pFrom, Double pTo, Double? pStartRest, Double? pEndRest)
 		{
 			try
 			{
-				if (pRestRatio.HasValue)
+				if ((pStartRest.HasValue && pStartRest.Value > 0) || (pEndRest.HasValue && pEndRest.Value > 0))
 				{
 					DoubleAnimationUsingKeyFrames lAnimation = new DoubleAnimationUsingKeyFrames ();
 
 					lAnimation.Duration = DefaultDuration;
 					lAnimation.FillBehavior = FillBehavior.Stop;
 					lAnimation.KeyFrames.Add (new DiscreteDoubleKeyFrame (pFrom, KeyTime.FromPercent (0)));
-					lAnimation.KeyFrames.Add (new DiscreteDoubleKeyFrame (pFrom, KeyTime.FromPercent (pRestRatio.Value)));
-					lAnimation.KeyFrames.Add (new LinearDoubleKeyFrame (pTo, KeyTime.FromPercent (1.0 - pRestRatio.Value)));
+					if (pStartRest.HasValue && pStartRest.Value > 0)
+					{
+						lAnimation.KeyFrames.Add (new DiscreteDoubleKeyFrame (pFrom, KeyTime.FromPercent (pStartRest.Value)));
+					}
+					if (pEndRest.HasValue && pEndRest.Value > 0)
+					{
+						lAnimation.KeyFrames.Add (new LinearDoubleKeyFrame (pTo, KeyTime.FromPercent (1.0 - pEndRest.Value)));
+					}
+					lAnimation.KeyFrames.Add (new LinearDoubleKeyFrame (pTo, KeyTime.FromPercent (1.0)));
 
 					Storyboard.SetTarget (lAnimation, pText);
 					Storyboard.SetTargetProperty (lAnimation, new PropertyPath (FrameworkElement.OpacityProperty));
@@ -1617,7 +1631,7 @@ namespace AgentCharacterEditor.Previews
 			{
 				DoubleAnimationUsingKeyFrames lAnimation = new DoubleAnimationUsingKeyFrames ();
 				TimeSpan lDuration = DefaultDuration.TimeSpan;
-				TimeSpan lRestTime = TimeSpan.FromSeconds ((lDuration.TotalSeconds * DefaultRestRatio) - 0.3);
+				TimeSpan lRestTime = TimeSpan.FromSeconds ((lDuration.TotalSeconds * DefaultStartRest) - 0.3);
 
 				lAnimation.Duration = DefaultDuration;
 				lAnimation.FillBehavior = FillBehavior.Stop;
@@ -1701,12 +1715,13 @@ namespace AgentCharacterEditor.Previews
 		/////////////////////////////////////////////////////////////////////////////
 		#region Initialization
 
-		public ExpanderContentOverlay (Expander pExpander, FrameworkElement pBaseElement, Canvas pOverlayElement)
-			: base (pBaseElement, pOverlayElement)
+		public ExpanderContentOverlay (Expander pExpander, FrameworkElement pContentElement, Canvas pOverlayElement)
+			: base (pContentElement, pOverlayElement)
 		{
 			Expander = pExpander;
 			Expander.Expanded += new RoutedEventHandler (Expander_Expanded);
 			Expander.Collapsed += new RoutedEventHandler (Expander_Collapsed);
+			ContentElement.LayoutUpdated += new EventHandler (Content_LayoutUpdated);
 		}
 
 		public Expander Expander
@@ -1717,19 +1732,88 @@ namespace AgentCharacterEditor.Previews
 
 		#endregion
 		/////////////////////////////////////////////////////////////////////////////
+		#region Methods
+
+		public virtual Boolean DefineOverlayAnimation ()
+		{
+			return false;
+		}
+
+		public virtual void UpdateOverlayAnimation ()
+		{
+			StartOverlayAnimation ();
+		}
+
+		public override Boolean StartOverlayAnimation ()
+		{
+			if (Expander.IsExpanded)
+			{
+				return base.StartOverlayAnimation ();
+			}
+			else
+			{
+				StopOverlayAnimation ();
+				return false;
+			}
+		}
+
+		//=============================================================================
+
+		public void UpdateOverlayAnimation (int pDelay)
+		{
+			if (pDelay == 0)
+			{
+				UpdateOverlayAnimation ();
+			}
+			else if (pDelay < 0)
+			{
+				mAnimationDelay = null;
+			}
+			else
+			{
+				if (mAnimationDelay == null)
+				{
+					mAnimationDelay = new AsyncTimer ();
+					mAnimationDelay.TimerPulse += new AsyncTimer.TimerPulseHandler (AnimationDelay_TimerPulse);
+					mAnimationDelay.Start (pDelay);
+				}
+			}
+		}
+
+		private void AnimationDelay_TimerPulse (object sender, AsyncTimer.TimerEventArgs e)
+		{
+			if (mAnimationDelay != null)
+			{
+				mAnimationDelay = null;
+				UpdateOverlayAnimation ();
+			}
+		}
+
+		private AsyncTimer mAnimationDelay = null;
+
+		#endregion
+		/////////////////////////////////////////////////////////////////////////////
 		#region Event Handlers
+
+		private void Content_LayoutUpdated (object sender, EventArgs e)
+		{
+			if (Expander.IsExpanded)
+			{
+				DefineOverlayAnimation ();
+			}
+		}
 
 		private void Expander_Expanded (object sender, RoutedEventArgs e)
 		{
-#if DEBUG
+#if DEBUG_ANIMATIONS
 			System.Diagnostics.Debug.Print ("{0} Expanded", Expander.Name);
 #endif
-			StartOverlayAnimation (Animation);
+			UpdateOverlayAnimation (200);
 		}
 
 		private void Expander_Collapsed (object sender, RoutedEventArgs e)
 		{
-#if DEBUG
+#if DEBUG_ANIMATIONS
 			System.Diagnostics.Debug.Print ("{0} Collapsed", Expander.Name);
 #endif
 			RemoveOverlayAnimation ();
@@ -1974,29 +2058,33 @@ namespace AgentCharacterEditor.Previews
 		/////////////////////////////////////////////////////////////////////////////
 		#region Implementation
 
-		public void InitializeRewind (Double? pRestRatio)
+		public void InitializeRewind ()
 		{
-			InitializeRewind (pRestRatio, false);
+			InitializeRewind (null, null);
 		}
-
-		public void InitializeRewind (Double? pRestRatio, Boolean pRepeatRewind)
+		public void InitializeRewind (Double? pStartRest)
+		{
+			InitializeRewind (pStartRest, null);
+		}
+		public void InitializeRewind (Double? pStartRest, Double? pEndRest)
+		{
+			InitializeRewind (pStartRest, pEndRest, false);
+		}
+		public void InitializeRewind (Double? pStartRest, Double? pEndRest, Boolean pRepeatRewind)
 		{
 			mRepeatRewind = pRepeatRewind;
 			FillBehavior = FillBehavior.Stop;
 			KeyFrames.Add (new LinearDoubleKeyFrame (mOrigin, KeyTime.FromPercent (RewindRatio)));
 
-			if (pRestRatio.HasValue)
+			if ((pStartRest.HasValue) && (pStartRest.Value > RewindRatio))
 			{
-				if (pRestRatio.Value > RewindRatio)
-				{
-					KeyFrames.Add (new DiscreteDoubleKeyFrame (mOrigin, KeyTime.FromPercent (pRestRatio.Value - RewindRatio)));
-				}
-				KeyFrames.Add (new LinearDoubleKeyFrame (mDestination, KeyTime.FromPercent (1.0 - Math.Max (pRestRatio.Value, RewindRatio))));
+				KeyFrames.Add (new DiscreteDoubleKeyFrame (mOrigin, KeyTime.FromPercent (pStartRest.Value)));
 			}
-			else
+			if ((pEndRest.HasValue) && (pEndRest.Value > 0))
 			{
-				KeyFrames.Add (new LinearDoubleKeyFrame (mDestination, KeyTime.FromPercent (1.0 - RewindRatio)));
+				KeyFrames.Add (new LinearDoubleKeyFrame (mDestination, KeyTime.FromPercent (1.0 - pEndRest.Value)));
 			}
+			KeyFrames.Add (new LinearDoubleKeyFrame (mDestination, KeyTime.FromPercent (1.0)));
 		}
 
 		protected override Duration GetNaturalDurationCore (Clock clock)

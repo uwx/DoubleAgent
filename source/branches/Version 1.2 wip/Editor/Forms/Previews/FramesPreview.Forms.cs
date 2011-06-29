@@ -150,7 +150,7 @@ namespace AgentCharacterEditor.Previews
 		private PointF DrawBranchingLine (int pAnchorY, int pOffsetY, BranchingItem pBranching, LineDrawStuff pLineStuff)
 		{
 			PointF lLineCenter = new PointF ();
-
+			//TODO - invalid branching targets
 			try
 			{
 				Rectangle lItemRect;
@@ -190,11 +190,11 @@ namespace AgentCharacterEditor.Previews
 				lRect.Offset (lRect.Size.Width / -2.0f, lRect.Size.Height / -2.0f);
 				if (pBranching.LabelOffset < 0)
 				{
-					lCenter.X -= lRect.Size.Width + ((Single)pBranching.LabelOffset * (Single)mBranchingOffset.Width);
+					lCenter.X -= (lRect.Size.Width / 2.0f) - ((Single)pBranching.LabelOffset * (Single)mBranchingOffset.Width);
 				}
 				else if (pBranching.LabelOffset > 0)
 				{
-					lCenter.X += lRect.Size.Width + ((Single)pBranching.LabelOffset * (Single)mBranchingOffset.Width);
+					lCenter.X += (lRect.Size.Width / 2.0f) + ((Single)pBranching.LabelOffset * (Single)mBranchingOffset.Width);
 				}
 				lRect.Offset (lCenter);
 

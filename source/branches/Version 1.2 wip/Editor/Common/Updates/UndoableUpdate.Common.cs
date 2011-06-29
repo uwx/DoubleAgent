@@ -171,7 +171,7 @@ namespace AgentCharacterEditor.Updates
 				RawTarget = value;
 			}
 		}
-		protected Object RawTarget
+		internal Object RawTarget
 		{
 			get;
 			private set;

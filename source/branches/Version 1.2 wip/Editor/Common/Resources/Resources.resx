@@ -165,10 +165,10 @@
   <data name="EditDeleteThis" xml:space="preserve">
     <value>&amp;Delete {0}</value>
   </data>
-  <data name="EditMoveFrameDown" xml:space="preserve">
+  <data name="EditMoveFrameNext" xml:space="preserve">
     <value>Make {0} later</value>
   </data>
-  <data name="EditMoveFrameUp" xml:space="preserve">
+  <data name="EditMoveFramePrev" xml:space="preserve">
     <value>Make {0} earlier</value>
   </data>
   <data name="EditMoveImageDown" xml:space="preserve">

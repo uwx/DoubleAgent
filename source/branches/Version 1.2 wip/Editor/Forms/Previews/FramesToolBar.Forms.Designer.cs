@@ -31,8 +31,8 @@
 			System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 			this.ButtonAdd = new DoubleAgent.ToolStripButtonCompat();
 			this.ButtonDelete = new DoubleAgent.ToolStripButtonCompat();
-			this.ButtonMoveUp = new DoubleAgent.ToolStripButtonCompat();
-			this.ButtonMoveDown = new DoubleAgent.ToolStripButtonCompat();
+			this.ButtonMovePrev = new DoubleAgent.ToolStripButtonCompat();
+			this.ButtonMoveNext = new DoubleAgent.ToolStripButtonCompat();
 			toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.SuspendLayout();
 			// 
@@ -61,25 +61,25 @@
 			this.ButtonDelete.Size = new System.Drawing.Size(24, 24);
 			this.ButtonDelete.Text = "Delete frame";
 			// 
-			// ButtonMoveUp
+			// ButtonMovePrev
 			// 
-			this.ButtonMoveUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonMoveUp.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveLeft;
-			this.ButtonMoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonMoveUp.Name = "ButtonMoveUp";
-			this.ButtonMoveUp.Padding = new System.Windows.Forms.Padding(2);
-			this.ButtonMoveUp.Size = new System.Drawing.Size(24, 24);
-			this.ButtonMoveUp.Text = "Move frame up";
+			this.ButtonMovePrev.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonMovePrev.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveLeft;
+			this.ButtonMovePrev.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonMovePrev.Name = "ButtonMovePrev";
+			this.ButtonMovePrev.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonMovePrev.Size = new System.Drawing.Size(24, 24);
+			this.ButtonMovePrev.Text = "Move frame up";
 			// 
-			// ButtonMoveDown
+			// ButtonMoveNext
 			// 
-			this.ButtonMoveDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonMoveDown.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveRight;
-			this.ButtonMoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonMoveDown.Name = "ButtonMoveDown";
-			this.ButtonMoveDown.Padding = new System.Windows.Forms.Padding(2);
-			this.ButtonMoveDown.Size = new System.Drawing.Size(24, 24);
-			this.ButtonMoveDown.Text = "Move frame down";
+			this.ButtonMoveNext.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonMoveNext.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveRight;
+			this.ButtonMoveNext.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonMoveNext.Name = "ButtonMoveNext";
+			this.ButtonMoveNext.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonMoveNext.Size = new System.Drawing.Size(24, 24);
+			this.ButtonMoveNext.Text = "Move frame down";
 			// 
 			// FramesToolBar
 			// 
@@ -89,8 +89,8 @@
             this.ButtonAdd,
             this.ButtonDelete,
             toolStripSeparator1,
-            this.ButtonMoveUp,
-            this.ButtonMoveDown});
+            this.ButtonMovePrev,
+            this.ButtonMoveNext});
 			this.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.Name = "ToolBarFrames";
 			this.Size = new System.Drawing.Size(237, 27);
@@ -101,7 +101,7 @@
 		#endregion
 		public DoubleAgent.ToolStripButtonCompat ButtonAdd;
 		public DoubleAgent.ToolStripButtonCompat ButtonDelete;
-		public DoubleAgent.ToolStripButtonCompat ButtonMoveUp;
-		public DoubleAgent.ToolStripButtonCompat ButtonMoveDown;
+		public DoubleAgent.ToolStripButtonCompat ButtonMovePrev;
+		public DoubleAgent.ToolStripButtonCompat ButtonMoveNext;
 	}
 }

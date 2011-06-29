@@ -159,31 +159,33 @@ namespace AgentCharacterEditor.Previews
 
 		private class BranchingItem
 		{
-			public int SrcFrameNdx;
-			public int DstFrameNdx;
+			public int SrcFrameNdx = -1;
+			public int DstFrameNdx = -1;
 			public int SrcOffset = 0;
 			public int DstOffset = 0;
 			public int LabelOffset = 0;
 			public int Height = 1;
+			public Boolean IsValid;
 
-			public BranchingItem (int pSrcFrameNdx, int pDstFrameNdx)
+			public BranchingItem (int pSrcFrameNdx, int pDstFrameNdx, Boolean pIsValid)
 			{
 				SrcFrameNdx = pSrcFrameNdx;
 				DstFrameNdx = pDstFrameNdx;
+				IsValid = pIsValid;
 			}
 
 			public int MinFrameNdx
 			{
 				get
 				{
-					return Math.Min (SrcFrameNdx, DstFrameNdx);
+					return IsValid ? Math.Min (SrcFrameNdx, DstFrameNdx) : SrcFrameNdx;
 				}
 			}
 			public int MaxFrameNdx
 			{
 				get
 				{
-					return Math.Max (SrcFrameNdx, DstFrameNdx);
+					return IsValid ? Math.Max (SrcFrameNdx, DstFrameNdx) : SrcFrameNdx;
 				}
 			}
 
@@ -230,23 +232,30 @@ namespace AgentCharacterEditor.Previews
 			{
 				get
 				{
-					return "exit";
+					return IsValid ? "exit" : String.Format ("exit ({0})", DstFrameNdx + 1);
 				}
 			}
 
 			public Boolean Overlaps (BranchingItem pItem)
 			{
-				if ((MaxFrameNdx <= pItem.MinFrameNdx) || (MinFrameNdx >= pItem.MaxFrameNdx))
+				if (IsValid && pItem.IsValid)
 				{
-					return false;
+					if ((MaxFrameNdx <= pItem.MinFrameNdx) || (MinFrameNdx >= pItem.MaxFrameNdx))
+					{
+						return false;
+					}
+					return true;
 				}
-				return true;
+				return false;
 			}
 			public Boolean Contains (BranchingItem pItem)
 			{
-				if ((MinFrameNdx <= pItem.MinFrameNdx) && (MaxFrameNdx >= pItem.MaxFrameNdx))
+				if (IsValid && pItem.IsValid)
 				{
-					return true;
+					if ((MinFrameNdx <= pItem.MinFrameNdx) && (MaxFrameNdx >= pItem.MaxFrameNdx))
+					{
+						return true;
+					}
 				}
 				return false;
 			}
@@ -255,8 +264,8 @@ namespace AgentCharacterEditor.Previews
 		{
 			public int Probability;
 
-			public BranchingItemP (int pSrcFrameNdx, int pDstFrameNdx, int pProbability)
-				: base (pSrcFrameNdx, pDstFrameNdx)
+			public BranchingItemP (int pSrcFrameNdx, int pDstFrameNdx, int pProbability, Boolean pIsValid)
+				: base (pSrcFrameNdx, pDstFrameNdx, pIsValid)
 			{
 				Probability = pProbability;
 			}
@@ -265,7 +274,7 @@ namespace AgentCharacterEditor.Previews
 			{
 				get
 				{
-					return String.Format ("{0}%", Probability);
+					return IsValid ? String.Format ("{0}%", Probability) : String.Format ("{0}% ({1})", Probability, DstFrameNdx + 1);
 				}
 			}
 		}
@@ -355,25 +364,59 @@ namespace AgentCharacterEditor.Previews
 				if (ShowBranching)
 				{
 					ArrangeBranchingY (mBranching);
-					ArrangeBranchingX (mBranching);
+					foreach (BranchingItem lBranching in mBranching)
+					{
+						if (lBranching.IsValid)
+						{
+							pMaxBranchingOffset.Y = Math.Max (pMaxBranchingOffset.Y, lBranching.Height);
+						}
+					}
+					foreach (BranchingItem lBranching in mBranching)
+					{
+						if (!lBranching.IsValid)
+						{
+							lBranching.Height = pMaxBranchingOffset.Y + 3;
+						}
+					}
+					foreach (BranchingItem lBranching in mBranching)
+					{
+						pMaxBranchingOffset.Y = Math.Max (pMaxBranchingOffset.Y, lBranching.Height);
+					}
 
+					ArrangeBranchingX (mBranching);
 					foreach (BranchingItem lBranching in mBranching)
 					{
 						pMaxBranchingOffset.X = Math.Max (pMaxBranchingOffset.X, Math.Abs (lBranching.SrcOffset));
 						pMaxBranchingOffset.X = Math.Max (pMaxBranchingOffset.X, Math.Abs (lBranching.DstOffset));
-						pMaxBranchingOffset.Y = Math.Max (pMaxBranchingOffset.Y, lBranching.Height);
 					}
 				}
 				if (ShowExitBranching)
 				{
 					ArrangeBranchingY (mExitBranching);
-					ArrangeBranchingX (mExitBranching);
+					foreach (BranchingItem lBranching in mExitBranching)
+					{
+						if (lBranching.IsValid)
+						{
+							pMaxExitBranchingOffset.Y = Math.Max (pMaxExitBranchingOffset.Y, lBranching.Height);
+						}
+					}
+					foreach (BranchingItem lBranching in mExitBranching)
+					{
+						if (!lBranching.IsValid)
+						{
+							lBranching.Height = pMaxExitBranchingOffset.Y + 3;
+						}
+					}
+					foreach (BranchingItem lBranching in mExitBranching)
+					{
+						pMaxExitBranchingOffset.Y = Math.Max (pMaxExitBranchingOffset.Y, lBranching.Height);
+					}
 
+					ArrangeBranchingX (mExitBranching);
 					foreach (BranchingItem lBranching in mExitBranching)
 					{
 						pMaxExitBranchingOffset.X = Math.Max (pMaxExitBranchingOffset.X, Math.Abs (lBranching.SrcOffset));
 						pMaxExitBranchingOffset.X = Math.Max (pMaxExitBranchingOffset.X, Math.Abs (lBranching.DstOffset));
-						pMaxExitBranchingOffset.Y = Math.Max (pMaxExitBranchingOffset.Y, lBranching.Height);
 					}
 				}
 			}
@@ -408,12 +451,12 @@ namespace AgentCharacterEditor.Previews
 					{
 						foreach (FileFrameBranch lFrameBranch in lFrame.Branching)
 						{
-							lBranching.Add (new BranchingItemP (lFrameNdx, lFrameBranch.mFrameNdx, lFrameBranch.mProbability));
+							lBranching.Add (new BranchingItemP (lFrameNdx, lFrameBranch.mFrameNdx, lFrameBranch.mProbability, (lFrameBranch.mFrameNdx < Animation.FrameCount)));
 						}
 					}
 					if (ShowExitBranching && (lFrame.ExitFrame >= 0))
 					{
-						lExitBranching.Add (new BranchingItem (lFrameNdx, lFrame.ExitFrame));
+						lExitBranching.Add (new BranchingItem (lFrameNdx, lFrame.ExitFrame, (lFrame.ExitFrame < Animation.FrameCount)));
 					}
 				}
 			}
@@ -457,7 +500,7 @@ namespace AgentCharacterEditor.Previews
 						lOverlap = new KeyValuePair<BranchingItem, BranchingItem> (lBranching2, lBranching);
 						lOverlaps[lOverlap] = true;
 #if DEBUG_BRANCHING
-							System.Diagnostics.Debug.Print ("{0} contains {1}", DebugName (lBranching2), DebugName (lBranching));
+						System.Diagnostics.Debug.Print ("{0} contains {1}", DebugName (lBranching2), DebugName (lBranching));
 #endif
 					}
 				}
@@ -481,7 +524,7 @@ namespace AgentCharacterEditor.Previews
 						}
 						lOverlaps[lOverlap] = false;
 #if DEBUG_BRANCHING
-							System.Diagnostics.Debug.Print ("{0} overlaps {1}", DebugName (lBranching2), DebugName (lBranching));
+						System.Diagnostics.Debug.Print ("{0} overlaps {1}", DebugName (lBranching2), DebugName (lBranching));
 #endif
 					}
 				}
@@ -491,7 +534,7 @@ namespace AgentCharacterEditor.Previews
 			{
 				lOverlap.Key.Height = GetOverlapHeight (lOverlap.Key, lOverlaps, lUsedKeys);
 #if DEBUG_BRANCHING
-					System.Diagnostics.Debug.Print ("{0} Height {1}", DebugName (lOverlap.Key), lOverlap.Key.Height);
+				System.Diagnostics.Debug.Print ("{0} Height {1}", DebugName (lOverlap.Key), lOverlap.Key.Height);
 #endif
 			}
 
@@ -553,7 +596,7 @@ namespace AgentCharacterEditor.Previews
 					{
 						lMinBranches[lFrameNdx].Add (lBranching);
 					}
-					if (lBranching.MaxFrameNdx == lFrameNdx)
+					if (lBranching.IsValid && (lBranching.MaxFrameNdx == lFrameNdx))
 					{
 						lMaxBranches[lFrameNdx].Add (lBranching);
 					}
@@ -573,7 +616,7 @@ namespace AgentCharacterEditor.Previews
 					{
 						lBranching.MinOffset = lOffset;
 #if DEBUG_BRANCHING
-							System.Diagnostics.Debug.Print ("{0} MinOffset [{1}]", DebugName (lBranching), lBranching.MinOffset);
+						System.Diagnostics.Debug.Print ("{0} MinOffset [{1}]", DebugName (lBranching), lBranching.MinOffset);
 #endif
 						lOffset += 2;
 					}
@@ -589,7 +632,7 @@ namespace AgentCharacterEditor.Previews
 					{
 						lBranching.MaxOffset = lOffset;
 #if DEBUG_BRANCHING
-							System.Diagnostics.Debug.Print ("{0} MaxOffset [{1}]", DebugName (lBranching), lBranching.MaxOffset);
+						System.Diagnostics.Debug.Print ("{0} MaxOffset [{1}]", DebugName (lBranching), lBranching.MaxOffset);
 #endif
 						lOffset -= 2;
 					}
@@ -602,7 +645,7 @@ namespace AgentCharacterEditor.Previews
 				{
 					foreach (BranchingItem lMinBranching in lMinBranches[lFrameNdx])
 					{
-						if (lMinBranching.Height >= lMidBranching.Height)
+						if ((lMinBranching != lMidBranching) && (lMinBranching.Height >= lMidBranching.Height))
 						{
 							lMidBranching.LabelOffset = Math.Min (lMidBranching.LabelOffset, lMinBranching.MinOffset - 1);
 							if (lMidBranching.LabelOffset == 0)
@@ -613,7 +656,7 @@ namespace AgentCharacterEditor.Previews
 					}
 					foreach (BranchingItem lMaxBranching in lMaxBranches[lFrameNdx])
 					{
-						if (lMaxBranching.Height >= lMidBranching.Height)
+						if ((lMaxBranching != lMidBranching) && (lMaxBranching.Height >= lMidBranching.Height))
 						{
 							lMidBranching.LabelOffset = Math.Max (lMidBranching.LabelOffset, lMaxBranching.MaxOffset + 1);
 							if (lMidBranching.LabelOffset == 0)
@@ -623,7 +666,7 @@ namespace AgentCharacterEditor.Previews
 						}
 					}
 #if DEBUG_BRANCHING
-						System.Diagnostics.Debug.Print ("{0} LabelOffset [{1}]", DebugName (lMidBranching), lMidBranching.LabelOffset);
+					System.Diagnostics.Debug.Print ("{0} LabelOffset [{1}]", DebugName (lMidBranching), lMidBranching.LabelOffset);
 #endif
 				}
 			}
@@ -639,7 +682,7 @@ namespace AgentCharacterEditor.Previews
 
 		//=============================================================================
 
-#if DEBUG_BRANCHING
+#if DEBUG
 		static private String DebugName (BranchingItem pBranching)
 		{
 			if (pBranching is BranchingItemP)

@@ -207,18 +207,18 @@ namespace AgentCharacterEditor.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Make {0} later.
         /// </summary>
-        internal static string EditMoveFrameDown {
+        internal static string EditMoveFrameNext {
             get {
-                return ResourceManager.GetString("EditMoveFrameDown", resourceCulture);
+                return ResourceManager.GetString("EditMoveFrameNext", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Make {0} earlier.
         /// </summary>
-        internal static string EditMoveFrameUp {
+        internal static string EditMoveFramePrev {
             get {
-                return ResourceManager.GetString("EditMoveFrameUp", resourceCulture);
+                return ResourceManager.GetString("EditMoveFramePrev", resourceCulture);
             }
         }
         

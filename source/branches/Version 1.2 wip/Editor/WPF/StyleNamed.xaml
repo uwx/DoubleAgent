@@ -790,7 +790,7 @@
 							   StaysOpen="False"
 							   Placement="Bottom"
 							   HorizontalOffset="0"
-							   VerticalOffset="1"
+							   VerticalOffset="2"
 							   IsOpen="{Binding Path=IsExpanded,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
 							   PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
 							<Border x:Name="DropDownBorder"

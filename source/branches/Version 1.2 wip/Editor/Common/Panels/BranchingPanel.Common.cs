@@ -358,8 +358,9 @@ namespace AgentCharacterEditor.Panels
 		{
 			UpdateAnimation lUpdateAnimation = pUpdate as UpdateAnimation;
 			UpdateAnimationFrame lUpdateFrame = pUpdate as UpdateAnimationFrame;
+			AddDeleteAnimationFrame lAddDeleteFrame = pUpdate as AddDeleteAnimationFrame;
 
-			if ((lUpdateAnimation != null) && (lUpdateAnimation.Target == this.Animation) && lUpdateAnimation.NameChanged)
+			if ((lUpdateAnimation != null) && (lUpdateAnimation.Target == Animation) && lUpdateAnimation.NameChanged)
 			{
 				ShowFrameName ();
 			}
@@ -373,6 +374,11 @@ namespace AgentCharacterEditor.Panels
 				{
 					ShowExitFrame ();
 				}
+			}
+			else if ((lAddDeleteFrame != null) && (lAddDeleteFrame.Animation == Animation))
+			{
+				ShowFrameBranching ();
+				ShowExitFrame ();
 			}
 		}
 

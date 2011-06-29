@@ -93,11 +93,29 @@ namespace AgentCharacterEditor.Global
 
 		//=============================================================================
 
+		public static Boolean CanMovePrev (this FileAnimationFrame pFrame)
+		{
+			if ((pFrame != null) && (pFrame.Container != null))
+			{
+				return (pFrame.Container.IndexOf (pFrame) > 0);
+			}
+			return false;
+		}
+		public static Boolean CanMoveNext (this FileAnimationFrame pFrame)
+		{
+			if ((pFrame != null) && (pFrame.Container != null))
+			{
+				return (pFrame.Container.IndexOf (pFrame) < pFrame.Container.Count - 1);
+			}
+			return false;
+		}
+
+		//=============================================================================
+
 		public static Boolean HasBranching (this FileAnimationFrame pFrame)
 		{
 			return (pFrame.ExitFrame >= 0) || ((pFrame.Branching != null) && (pFrame.Branching.Length > 0));
 		}
-
 		public static Boolean HasBranching (this FileAnimationFrame pFrame, int pFrameNdx)
 		{
 			if (pFrame.ExitFrame == pFrameNdx)
@@ -127,7 +145,6 @@ namespace AgentCharacterEditor.Global
 		{
 			return IsBranchingEqual (pFrame.Branching, pTarget);
 		}
-
 		public static Boolean IsBranchingEqual (FileFrameBranch[] pSource, FileFrameBranch[] pTarget)
 		{
 			if ((pSource == null) != (pTarget == null))
@@ -149,6 +166,18 @@ namespace AgentCharacterEditor.Global
 				}
 			}
 			return true;
+		}
+
+		public static FileFrameBranch[] CopyBranching (this FileAnimationFrame pFrame)
+		{
+			FileFrameBranch[] lBranching = null;
+
+			if ((pFrame.Branching != null) && (pFrame.Branching.Length > 0))
+			{
+				lBranching = new FileFrameBranch[pFrame.Branching.Length];
+				Array.Copy (pFrame.Branching, lBranching, lBranching.Length);
+			}
+			return lBranching;
 		}
 	}
 

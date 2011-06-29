@@ -239,48 +239,48 @@ namespace AgentCharacterEditor.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool MoveFrameUpMovesBranchingSource {
+        public bool MoveFramePrevMovesBranchingSource {
             get {
-                return ((bool)(this["MoveFrameUpMovesBranchingSource"]));
+                return ((bool)(this["MoveFramePrevMovesBranchingSource"]));
             }
             set {
-                this["MoveFrameUpMovesBranchingSource"] = value;
+                this["MoveFramePrevMovesBranchingSource"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool MoveFrameUpMovesBranchingTarget {
+        public bool MoveFramePrevMovesBranchingTarget {
             get {
-                return ((bool)(this["MoveFrameUpMovesBranchingTarget"]));
+                return ((bool)(this["MoveFramePrevMovesBranchingTarget"]));
             }
             set {
-                this["MoveFrameUpMovesBranchingTarget"] = value;
+                this["MoveFramePrevMovesBranchingTarget"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool MoveFrameDownMovesBranchingSource {
+        public bool MoveFrameNextMovesBranchingSource {
             get {
-                return ((bool)(this["MoveFrameDownMovesBranchingSource"]));
+                return ((bool)(this["MoveFrameNextMovesBranchingSource"]));
             }
             set {
-                this["MoveFrameDownMovesBranchingSource"] = value;
+                this["MoveFrameNextMovesBranchingSource"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool MoveFrameDownMovesBranchingTarget {
+        public bool MoveFrameNextMovesBranchingTarget {
             get {
-                return ((bool)(this["MoveFrameDownMovesBranchingTarget"]));
+                return ((bool)(this["MoveFrameNextMovesBranchingTarget"]));
             }
             set {
-                this["MoveFrameDownMovesBranchingTarget"] = value;
+                this["MoveFrameNextMovesBranchingTarget"] = value;
             }
         }
         
@@ -298,25 +298,25 @@ namespace AgentCharacterEditor.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DeleteFrameShiftsBranchingUp {
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DeleteFrameMovesBranchingPrev {
             get {
-                return ((bool)(this["DeleteFrameShiftsBranchingUp"]));
+                return ((bool)(this["DeleteFrameMovesBranchingPrev"]));
             }
             set {
-                this["DeleteFrameShiftsBranchingUp"] = value;
+                this["DeleteFrameMovesBranchingPrev"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DeleteFrameShiftsBranchingDown {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DeleteFrameMovesBranchingNext {
             get {
-                return ((bool)(this["DeleteFrameShiftsBranchingDown"]));
+                return ((bool)(this["DeleteFrameMovesBranchingNext"]));
             }
             set {
-                this["DeleteFrameShiftsBranchingDown"] = value;
+                this["DeleteFrameMovesBranchingNext"] = value;
             }
         }
         

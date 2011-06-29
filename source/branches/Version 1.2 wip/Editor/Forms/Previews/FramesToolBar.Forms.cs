@@ -54,16 +54,16 @@ namespace AgentCharacterEditor.Previews
 		private void DeleteBranchingTargetChanged ()
 		{
 		}
-		private void MoveUpBranchingSourceChanged ()
+		private void MovePrevBranchingSourceChanged ()
 		{
 		}
-		private void MoveUpBranchingTargetChanged ()
+		private void MovePrevBranchingTargetChanged ()
 		{
 		}
-		private void MoveDownBranchingSourceChanged ()
+		private void MoveNextBranchingSourceChanged ()
 		{
 		}
-		private void MoveDownBranchingTargetChanged ()
+		private void MoveNextBranchingTargetChanged ()
 		{
 		}
 

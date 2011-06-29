@@ -241,12 +241,12 @@ namespace AgentCharacterEditor.Panels
 			{
 				MenuItemAdd.IsEnabled = CanAddImage;
 				MenuItemChooseFile.IsEnabled = CanChooseImageFile;
-				MenuItemMoveUp.IsEnabled = CanMoveImageUp;
-				MenuItemMoveDown.IsEnabled = CanMoveImageDown;
+				MenuItemMovePrev.IsEnabled = CanMoveImageUp;
+				MenuItemMoveNext.IsEnabled = CanMoveImageDown;
 
 				MenuItemChooseFile.SetTitle (ChooseImageFileTitle);
-				MenuItemMoveUp.SetTitle (MoveImageUpTitle);
-				MenuItemMoveDown.SetTitle (MoveImageDownTitle);
+				MenuItemMovePrev.SetTitle (MoveImageUpTitle);
+				MenuItemMoveNext.SetTitle (MoveImageDownTitle);
 			}
 		}
 
@@ -296,12 +296,12 @@ namespace AgentCharacterEditor.Panels
 			UpdateSelectedImage (GetSelectedImage ());
 		}
 
-		private void ButtonMoveUp_Click (object sender, RoutedEventArgs e)
+		private void ButtonMovePrev_Click (object sender, RoutedEventArgs e)
 		{
 			MoveImageUp ();
 		}
 
-		private void ButtonMoveDown_Click (object sender, RoutedEventArgs e)
+		private void ButtonMoveNext_Click (object sender, RoutedEventArgs e)
 		{
 			MoveImageDown ();
 		}

@@ -34,8 +34,8 @@
 			this.Frames = new AgentCharacterEditor.Previews.FramesListView();
 			this.ContextMenuFrames = new AgentCharacterEditor.Global.ContextMenuEdit(this.components);
 			this.MenuItemAdd = new System.Windows.Forms.ToolStripMenuItem();
-			this.MenuItemMoveUp = new System.Windows.Forms.ToolStripMenuItem();
-			this.MenuItemMoveDown = new System.Windows.Forms.ToolStripMenuItem();
+			this.MenuItemMovePrev = new System.Windows.Forms.ToolStripMenuItem();
+			this.MenuItemMoveNext = new System.Windows.Forms.ToolStripMenuItem();
 			columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.ContextMenuFrames.SuspendLayout();
@@ -65,8 +65,8 @@
 			// 
 			this.ContextMenuFrames.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuItemAdd,
-            this.MenuItemMoveUp,
-            this.MenuItemMoveDown,
+            this.MenuItemMovePrev,
+            this.MenuItemMoveNext,
             toolStripSeparator1});
 			this.ContextMenuFrames.Name = "ContextMenuFrames";
 			this.ContextMenuFrames.Size = new System.Drawing.Size(219, 116);
@@ -79,21 +79,21 @@
 			this.MenuItemAdd.Size = new System.Drawing.Size(218, 28);
 			this.MenuItemAdd.Text = "Add a new Frame";
 			// 
-			// MenuItemMoveUp
+			// MenuItemMovePrev
 			// 
-			this.MenuItemMoveUp.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveLeft;
-			this.MenuItemMoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.MenuItemMoveUp.Name = "MenuItemMoveUp";
-			this.MenuItemMoveUp.Size = new System.Drawing.Size(218, 28);
-			this.MenuItemMoveUp.Text = "Move frame up";
+			this.MenuItemMovePrev.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveLeft;
+			this.MenuItemMovePrev.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.MenuItemMovePrev.Name = "MenuItemMovePrev";
+			this.MenuItemMovePrev.Size = new System.Drawing.Size(218, 28);
+			this.MenuItemMovePrev.Text = "Move frame up";
 			// 
-			// MenuItemMoveDown
+			// MenuItemMoveNext
 			// 
-			this.MenuItemMoveDown.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveRight;
-			this.MenuItemMoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.MenuItemMoveDown.Name = "MenuItemMoveDown";
-			this.MenuItemMoveDown.Size = new System.Drawing.Size(218, 28);
-			this.MenuItemMoveDown.Text = "Move frame down";
+			this.MenuItemMoveNext.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveRight;
+			this.MenuItemMoveNext.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.MenuItemMoveNext.Name = "MenuItemMoveNext";
+			this.MenuItemMoveNext.Size = new System.Drawing.Size(218, 28);
+			this.MenuItemMoveNext.Text = "Move frame down";
 			// 
 			// toolStripSeparator1
 			// 
@@ -125,7 +125,7 @@
 		public FramesListView Frames;
 		public Global.ContextMenuEdit ContextMenuFrames;
 		public System.Windows.Forms.ToolStripMenuItem MenuItemAdd;
-		public System.Windows.Forms.ToolStripMenuItem MenuItemMoveUp;
-		public System.Windows.Forms.ToolStripMenuItem MenuItemMoveDown;
+		public System.Windows.Forms.ToolStripMenuItem MenuItemMovePrev;
+		public System.Windows.Forms.ToolStripMenuItem MenuItemMoveNext;
 	}
 }

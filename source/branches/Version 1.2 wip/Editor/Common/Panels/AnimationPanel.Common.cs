@@ -566,8 +566,10 @@ namespace AgentCharacterEditor.Panels
 			{
 				using (PanelFillingState lFillingState = new PanelFillingState (this))
 				{
-					//TODO - Reorder branching
 					AddDeleteAnimationFrame lUpdate = new AddDeleteAnimationFrame (pFrame, pForClipboard);
+					lUpdate.MoveBranchingSources (ToolBarFrames.DeleteMovesBranchingPrev, ToolBarFrames.DeleteMovesBranchingNext);
+					lUpdate.ShiftBranchingTargets (ToolBarFrames.DeleteShiftsBranchingTarget, false);
+
 					if (AddDeleteAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimationFrame, this))
 					{
 						return lUpdate;
@@ -591,12 +593,15 @@ namespace AgentCharacterEditor.Panels
 						pPasteFrame.CopyTo (lUpdate.Target, true);
 						lUpdate = lUpdate.Apply () as AddDeleteAnimationFrame;
 					}
-					using (PanelFillingState lFillingState = new PanelFillingState (this))
+					if (lUpdate != null)
 					{
-						//TODO - Reorder branching
-						if ((lUpdate != null) && AddDeleteAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimationFrame, this))
+						using (PanelFillingState lFillingState = new PanelFillingState (this))
 						{
-							return lUpdate;
+							lUpdate.ShiftBranchingTargets (false, ToolBarFrames.AddShiftsBranchingTarget);
+							if (AddDeleteAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimationFrame, this))
+							{
+								return lUpdate;
+							}
 						}
 					}
 				}
@@ -802,7 +807,7 @@ namespace AgentCharacterEditor.Panels
 
 				using (PanelFillingState lFillingState = new PanelFillingState (this))
 				{
-					//TODO - Reorder branching
+					lUpdate.ShiftBranchingTargets (false, ToolBarFrames.AddShiftsBranchingTarget);
 					AddDeleteAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as AddDeleteAnimationFrame, this);
 				}
 			}
@@ -821,7 +826,7 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		private void HandleMoveFrameUp ()
+		private void HandleMoveFramePrev ()
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
@@ -834,14 +839,14 @@ namespace AgentCharacterEditor.Panels
 					using (PanelFillingState lFillingState = new PanelFillingState (this))
 					{
 						lUpdate = new ReorderAnimationFrame (lFrame, lSelNdx - 1);
-						lUpdate.SwapBranching (ToolBarFrames.MoveUpMovesBranchingSource, ToolBarFrames.MoveUpMovesBranchingTarget);
+						lUpdate.SwapBranching (ToolBarFrames.MovePrevMovesBranchingSource, ToolBarFrames.MovePrevMovesBranchingTarget);
 						ReorderAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as ReorderAnimationFrame, this);
 					}
 				}
 			}
 		}
 
-		private void HandleMoveFrameDown ()
+		private void HandleMoveFrameNext ()
 		{
 			if (!IsPanelFilling && !IsPanelEmpty && !Program.FileIsReadOnly)
 			{
@@ -854,7 +859,7 @@ namespace AgentCharacterEditor.Panels
 					using (PanelFillingState lFillingState = new PanelFillingState (this))
 					{
 						lUpdate = new ReorderAnimationFrame (lFrame, lSelNdx + 1);
-						lUpdate.SwapBranching (ToolBarFrames.MoveDownMovesBranchingSource, ToolBarFrames.MoveDownMovesBranchingTarget);
+						lUpdate.SwapBranching (ToolBarFrames.MoveNextMovesBranchingSource, ToolBarFrames.MoveNextMovesBranchingTarget);
 						ReorderAnimationFrame.PutUndo (lUpdate.Apply (Program.MainWindow.OnUpdateApplied) as ReorderAnimationFrame, this);
 					}
 				}
@@ -935,7 +940,7 @@ namespace AgentCharacterEditor.Panels
 			}
 			else if ((lUpdateFrame != null) && (lUpdateFrame.Animation == Animation))
 			{
-				if (lUpdateFrame.DurationChanged || lUpdateFrame.BranchingChanged)
+				if (lUpdateFrame.DurationChanged || lUpdateFrame.BranchingChanged || lUpdateFrame.ExitFrameChanged)
 				{
 					ShowAnimationFrames ();
 				}

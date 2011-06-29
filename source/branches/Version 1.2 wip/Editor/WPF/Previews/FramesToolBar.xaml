@@ -312,14 +312,14 @@
 									   Style="{StaticResource ToolButtonImage}"
 									   VerticalAlignment="Bottom" />
 					<custom:ImageState Visibility="{Binding Path=ShowAddShiftsBranchingTarget}"
-									   Grid.Row="0"
+									   Grid.Row="1"
 									   Grid.Column="1"
 									   NormalSource="{StaticResource IconMoveRight}"
 									   Style="{StaticResource ToolButtonImage}"
 									   Width="8"
 									   Height="8" />
 					<custom:ImageState Visibility="{Binding Path=ShowAddKeepsBranchingTarget}"
-									   Grid.Row="0"
+									   Grid.Row="1"
 									   Grid.Column="1"
 									   NormalSource="{StaticResource IconLock}"
 									   Style="{StaticResource ToolButtonImage}"
@@ -329,18 +329,17 @@
 			</Button>
 		</Expander.Header>
 		<Expander.Content>
-			<Grid Name="AddContent"
+			<Grid Name="EAddContent"
 				  Margin="6,2,6,6"
 				  SnapsToDevicePixels="False"
 				  UseLayoutRounding="False"
 				  Grid.IsSharedSizeScope="True"
-				  RenderOptions.ClearTypeHint="Enabled"
-				  LayoutUpdated="AddGrid_LayoutUpdated">
+				  RenderOptions.ClearTypeHint="Enabled">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto"
-								   Name="AddTitle" />
+								   Name="EAddTitle" />
 					<RowDefinition Height="Auto"
-								   Name="AddSubTitle" />
+								   Name="EAddSubTitle" />
 					<RowDefinition Height="25" />
 					<RowDefinition Height="Auto"
 								   SharedSizeGroup="FullButton" />
@@ -374,30 +373,31 @@
 					   Content="Update branching" />
 				<Grid Grid.Row="1"
 					  Grid.Column="1">
-					<Grid Name="AddGlow"
+					<Grid Name="EAddGlow"
 						  Opacity="0">
-						<Rectangle Name="AddGlowRect"
+						<Rectangle Name="EAddGlowRect"
 								   Style="{StaticResource BranchingImageGlow}">
 							<Rectangle.OpacityMask>
-								<VisualBrush Visual="{Binding ElementName=AddImage}" />
+								<VisualBrush Visual="{Binding ElementName=EAddImage}" />
 							</Rectangle.OpacityMask>
 						</Rectangle>
 						<Rectangle Style="{StaticResource BranchingImageGlow}"
-								   OpacityMask="{Binding ElementName=AddGlowRect, Path=OpacityMask}" />
+								   OpacityMask="{Binding ElementName=EAddGlowRect, Path=OpacityMask}" />
 						<Rectangle Style="{StaticResource BranchingImageGlow}"
-								   OpacityMask="{Binding ElementName=AddGlowRect, Path=OpacityMask}" />
+								   OpacityMask="{Binding ElementName=EAddGlowRect, Path=OpacityMask}" />
 					</Grid>
-					<Image Name="AddImage"
+					<Image Name="EAddImage"
 						   Style="{StaticResource BranchingImage}"
 						   Source="{StaticResource ImgFileNew}" />
 				</Grid>
-				<Rectangle Name="AddFill"
+				<Rectangle Name="EAddFill"
 						   Grid.Row="2"
 						   Grid.RowSpan="5"
 						   Grid.ColumnSpan="9"
+						   Margin="0,1,0,0"
 						   Style="{StaticResource BranchingFill}" />
 
-				<Grid Name="AddBlt1"
+				<Grid Name="EAddTrgLine1"
 					  Grid.Row="2"
 					  Grid.RowSpan="4"
 					  Grid.Column="1"
@@ -405,7 +405,7 @@
 					<Line Style="{StaticResource BranchingLine}" />
 					<Path Style="{StaticResource BranchingArrow}" />
 				</Grid>
-				<Grid Name="AddBlt2"
+				<Grid Name="EAddTrgLine2"
 					  Grid.Row="2"
 					  Grid.RowSpan="4"
 					  Grid.Column="4"
@@ -414,7 +414,7 @@
 					<Path Style="{StaticResource BranchingArrow}" />
 				</Grid>
 				<!-- Just a placeholder -->
-				<Grid Name="AddBlt3"
+				<Grid Name="EAddTrgLine3"
 					  Visibility="Hidden"
 					  Grid.Row="2"
 					  Grid.RowSpan="4"
@@ -424,60 +424,61 @@
 					<Path Style="{StaticResource BranchingArrow}" />
 				</Grid>
 
-				<ListBoxItem Name="AddBt0"
+				<ListBoxItem Name="EAddTrg0"
+							 Visibility="Hidden"
 							 Grid.Row="6"
 							 Grid.Column="0"
 							 Grid.ColumnSpan="3"
 							 Style="{StaticResource BranchingTarget}">
 					<Grid>
-						<TextBlock Name="AddBt0T1"
+						<TextBlock Name="EAddTrg0Txt1"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameTargetTitle}" />
-						<TextBlock Name="AddBt0T2"
+						<TextBlock Name="EAddTrg0Txt2"
 								   Visibility="Hidden"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameTitle}" />
 					</Grid>
 				</ListBoxItem>
-				<ListBoxItem Name="AddBt1"
+				<ListBoxItem Name="EAddTrg1"
 							 Grid.Row="6"
 							 Grid.Column="0"
 							 Grid.ColumnSpan="3"
 							 Style="{StaticResource BranchingTarget}">
 					<Grid>
-						<TextBlock Name="AddBt1T1"
+						<TextBlock Name="EAddTrg1Txt1"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameTargetTitle}" />
-						<TextBlock Name="AddBt1T2"
+						<TextBlock Name="EAddTrg1Txt2"
 								   Opacity="0"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameTargetTitleNext}" />
 					</Grid>
 				</ListBoxItem>
-				<ListBoxItem Name="AddBt2"
+				<ListBoxItem Name="EAddTrg2"
 							 Grid.Row="6"
 							 Grid.Column="3"
 							 Grid.ColumnSpan="3"
 							 Style="{StaticResource BranchingTarget}">
 					<Grid>
-						<TextBlock Name="AddBt2T1"
+						<TextBlock Name="EAddTrg2Txt1"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameTargetTitleNext}" />
-						<TextBlock Name="AddBt2T2"
+						<TextBlock Name="EAddTrg2Txt2"
 								   Opacity="0"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameTargetTitleNext2}" />
 					</Grid>
 				</ListBoxItem>
 				<!-- Just a placeholder -->
-				<ListBoxItem Name="AddBt3"
+				<ListBoxItem Name="EAddTrg3"
 							 Visibility="Hidden"
 							 Grid.Row="6"
 							 Grid.Column="6"
 							 Grid.ColumnSpan="3"
 							 Style="{StaticResource BranchingTarget}" />
 
-				<Canvas Name="AddCanvas"
+				<Canvas Name="EAddCanvas"
 						Grid.Row="2"
 						Grid.RowSpan="5"
 						Grid.ColumnSpan="9" />
@@ -559,13 +560,6 @@
 					<custom:ImageState Visibility="{Binding Path=ShowDeleteShiftsBranchingTarget}"
 									   Grid.Row="10"
 									   Grid.Column="1"
-									   NormalSource="{StaticResource IconMoveRight}"
-									   Style="{StaticResource ToolButtonImage}"
-									   Width="8"
-									   Height="8" />
-					<custom:ImageState Visibility="{Binding Path=ShowDeleteShiftsBranchingTargetUp}"
-									   Grid.Row="10"
-									   Grid.Column="1"
 									   NormalSource="{StaticResource IconMoveLeft}"
 									   Style="{StaticResource ToolButtonImage}"
 									   Width="8"
@@ -577,14 +571,14 @@
 									   Style="{StaticResource ToolButtonImage}"
 									   Width="8"
 									   Height="8" />
-					<custom:ImageState Visibility="{Binding Path=ShowDeleteMovesBranchingUp}"
+					<custom:ImageState Visibility="{Binding Path=ShowDeleteMovesBranchingPrev}"
 									   Grid.Row="0"
 									   Grid.Column="1"
 									   NormalSource="{StaticResource IconMoveLeft}"
 									   Style="{StaticResource ToolButtonImage}"
 									   Width="8"
 									   Height="8" />
-					<custom:ImageState Visibility="{Binding Path=ShowDeleteMovesBranchingDown}"
+					<custom:ImageState Visibility="{Binding Path=ShowDeleteMovesBranchingNext}"
 									   Grid.Row="0"
 									   Grid.Column="1"
 									   NormalSource="{StaticResource IconMoveRight}"
@@ -602,18 +596,17 @@
 			</Button>
 		</Expander.Header>
 		<Expander.Content>
-			<Grid Name="DelContent"
+			<Grid Name="EDelContent"
 				  Margin="6,2,6,6"
 				  SnapsToDevicePixels="False"
 				  UseLayoutRounding="False"
 				  Grid.IsSharedSizeScope="True"
-				  RenderOptions.ClearTypeHint="Enabled"
-				  LayoutUpdated="DelGrid_LayoutUpdated">
+				  RenderOptions.ClearTypeHint="Enabled">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto"
-								   Name="DelTitle" />
+								   Name="EDelTitle" />
 					<RowDefinition Height="Auto"
-								   Name="DelSubTitle" />
+								   Name="EDelSubTitle" />
 					<RowDefinition Height="Auto"
 								   SharedSizeGroup="Endpoint" />
 					<RowDefinition Height="25" />
@@ -653,30 +646,30 @@
 					   Content="Update branching" />
 				<Grid Grid.Row="1"
 					  Grid.Column="4">
-					<Grid Name="DelGlow"
+					<Grid Name="EDelGlow"
 						  Opacity="0">
-						<Rectangle Name="DelGlowRect"
+						<Rectangle Name="EDelGlowRect"
 								   Style="{StaticResource BranchingImageGlow}">
 							<Rectangle.OpacityMask>
-								<VisualBrush Visual="{Binding ElementName=DelImage}" />
+								<VisualBrush Visual="{Binding ElementName=EDelImage}" />
 							</Rectangle.OpacityMask>
 						</Rectangle>
 						<Rectangle Style="{StaticResource BranchingImageGlow}"
-								   OpacityMask="{Binding ElementName=DelGlowRect, Path=OpacityMask}" />
+								   OpacityMask="{Binding ElementName=EDelGlowRect, Path=OpacityMask}" />
 						<Rectangle Style="{StaticResource BranchingImageGlow}"
-								   OpacityMask="{Binding ElementName=DelGlowRect, Path=OpacityMask}" />
+								   OpacityMask="{Binding ElementName=EDelGlowRect, Path=OpacityMask}" />
 					</Grid>
-					<Image Name="DelImage"
+					<Image Name="EDelImage"
 						   Style="{StaticResource BranchingImage}"
 						   Source="{StaticResource ImgEditDelete}" />
 				</Grid>
-				<Rectangle Name="DelFill"
+				<Rectangle Name="EDelFill"
 						   Grid.Row="2"
 						   Grid.RowSpan="9"
 						   Grid.ColumnSpan="9"
 						   Style="{StaticResource BranchingFill}" />
 
-				<Grid Name="DelBls0"
+				<Grid Name="EDelSrcLine0"
 					  Grid.Row="3"
 					  Grid.RowSpan="3"
 					  Grid.Column="1"
@@ -687,7 +680,7 @@
 						  Fill="Transparent"
 						  Stroke="Transparent" />
 				</Grid>
-				<Grid Name="DelBls1"
+				<Grid Name="EDelSrcLine1"
 					  Grid.Row="3"
 					  Grid.RowSpan="3"
 					  Grid.Column="4"
@@ -698,7 +691,7 @@
 						  Fill="Transparent"
 						  Stroke="Transparent" />
 				</Grid>
-				<Grid Name="DelBls2"
+				<Grid Name="EDelSrcLine2"
 					  Grid.Row="3"
 					  Grid.RowSpan="3"
 					  Grid.Column="7"
@@ -710,7 +703,7 @@
 						  Stroke="Transparent" />
 				</Grid>
 				<!-- Just a placeholder -->
-				<Grid Name="DelBlt0"
+				<Grid Name="EDelTrgLine0"
 					  Visibility="Hidden"
 					  Grid.Row="6"
 					  Grid.RowSpan="4"
@@ -719,7 +712,7 @@
 					<Line Style="{StaticResource BranchingLine}" />
 					<Path Style="{StaticResource BranchingArrow}" />
 				</Grid>
-				<Grid Name="DelBlt1"
+				<Grid Name="EDelTrgLine1"
 					  Grid.Row="6"
 					  Grid.RowSpan="4"
 					  Grid.Column="4"
@@ -727,7 +720,7 @@
 					<Line Style="{StaticResource BranchingLine}" />
 					<Path Style="{StaticResource BranchingArrow}" />
 				</Grid>
-				<Grid Name="DelBlt2"
+				<Grid Name="EDelTrgLine2"
 					  Grid.Row="6"
 					  Grid.RowSpan="4"
 					  Grid.Column="7"
@@ -736,7 +729,7 @@
 					<Path Style="{StaticResource BranchingArrow}" />
 				</Grid>
 
-				<ListBoxItem Name="DelBs0"
+				<ListBoxItem Name="EDelSrc0"
 							 Grid.Row="2"
 							 Grid.Column="0"
 							 Grid.ColumnSpan="3"
@@ -747,7 +740,7 @@
 								   Text="{Binding Path=FrameSourceTitlePrev}" />
 					</Grid>
 				</ListBoxItem>
-				<ListBoxItem Name="DelBs1"
+				<ListBoxItem Name="EDelSrc1"
 							 Grid.Row="2"
 							 Grid.Column="3"
 							 Grid.ColumnSpan="3"
@@ -758,24 +751,24 @@
 								   Text="{Binding Path=FrameSourceTitle}" />
 					</Grid>
 				</ListBoxItem>
-				<ListBoxItem Name="DelBs2"
+				<ListBoxItem Name="EDelSrc2"
 							 Grid.Row="2"
 							 Grid.Column="6"
 							 Grid.ColumnSpan="3"
 							 Style="{StaticResource BranchingSource}">
 					<Grid>
-						<TextBlock Name="DelBs2T1"
+						<TextBlock Name="EDelSrc2Txt1"
 								   TextAlignment="Center"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameSourceTitleNext}" />
-						<TextBlock Name="DelBs2T2"
+						<TextBlock Name="EDelSrc2Txt2"
 								   Opacity="0"
 								   TextAlignment="Center"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameSourceTitle}" />
 					</Grid>
 				</ListBoxItem>
-				<ListBoxItem Name="DelBt0"
+				<ListBoxItem Name="EDelTrg0"
 							 Grid.Row="10"
 							 Grid.Column="0"
 							 Grid.ColumnSpan="3"
@@ -784,7 +777,7 @@
 							   Style="{StaticResource BranchingEndpointText}"
 							   Text="{Binding Path=FrameTargetTitlePrev}" />
 				</ListBoxItem>
-				<ListBoxItem Name="DelBt1"
+				<ListBoxItem Name="EDelTrg1"
 							 Grid.Row="10"
 							 Grid.Column="3"
 							 Grid.ColumnSpan="3"
@@ -795,29 +788,43 @@
 								   Text="{Binding Path=FrameTargetTitle}" />
 					</Grid>
 				</ListBoxItem>
-				<ListBoxItem Name="DelBt2"
+				<ListBoxItem Name="EDelTrg2"
 							 Grid.Row="10"
 							 Grid.Column="6"
 							 Grid.ColumnSpan="3"
 							 Style="{StaticResource BranchingTarget}">
 					<Grid>
-						<TextBlock Name="DelBt2T1"
+						<TextBlock Name="EDelTrg2Txt1"
 								   TextAlignment="Center"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameTargetTitleNext}" />
-						<TextBlock Name="DelBt2T2"
+						<TextBlock Name="EDelTrg2Txt2"
 								   Opacity="0"
 								   TextAlignment="Center"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameTargetTitle}" />
 					</Grid>
 				</ListBoxItem>
+				<Image Name="EDelTrg1Err"
+					   Grid.Row="10"
+					   Grid.Column="4"
+					   VerticalAlignment="Top"
+					   Opacity="0"
+					   Style="{StaticResource BranchingImage}"
+					   Source="{StaticResource IconError}" />
+				<Image Name="EDelTrg2Err"
+					   Grid.Row="10"
+					   Grid.Column="7"
+					   VerticalAlignment="Top"
+					   Opacity="0"
+					   Style="{StaticResource BranchingImage}"
+					   Source="{StaticResource IconError}" />
 
-				<Canvas Name="DelCanvas"
+				<Canvas Name="EDelCanvas"
 						Grid.Row="2"
 						Grid.RowSpan="9"
 						Grid.ColumnSpan="9" />
-				<Grid Name="DelNone"
+				<Grid Name="EDelNone"
 					  Visibility="Collapsed"
 					  Grid.Row="2"
 					  Grid.RowSpan="9"
@@ -835,44 +842,41 @@
 					  Grid.ColumnSpan="9"
 					  Style="{StaticResource BranchingInterruptBottom}" />
 
-				<RadioButton Name="DeleteMoveBranchingUp"
+				<CheckBox Name="DeleteMoveBranchingPrev"
 							 Grid.Row="4"
 							 Grid.Column="2"
 							 Grid.ColumnSpan="2"
-							 GroupName="DelSource"
-							 Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
-							 IsEnabled="{Binding Path=CanMoveFrameUp}"
-							 IsChecked="{Binding Path=DeleteMovesBranchingUp}"
-							 ToolTip="{Binding Path=SayDeleteMovesBranchingUp}"
+							 Style="{StaticResource {x:Static ToolBar.CheckBoxStyleKey}}"
+							 IsEnabled="{Binding Path=CanMoveFramePrev}"
+							 IsChecked="{Binding Path=DeleteMovesBranchingPrev}"
+							 ToolTip="{Binding Path=SayDeleteMovesBranchingPrev}"
 							 Margin="1">
 					<custom:ImageState NormalSource="{StaticResource IconMoveLeft}"
 									   Style="{StaticResource ToolButtonImage}" />
-				</RadioButton>
-				<RadioButton Name="DeleteDeleteBranching"
+				</CheckBox>
+				<CheckBox Name="DeleteDeleteBranching"
 							 Grid.Row="4"
 							 Grid.Column="4"
 							 Grid.ColumnSpan="1"
-							 GroupName="DelSource"
-							 Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
+							 Style="{StaticResource {x:Static ToolBar.CheckBoxStyleKey}}"
 							 IsChecked="{Binding Path=DeleteDeletesBranching}"
 							 ToolTip="{Binding Path=SayDeleteDeletesBranching}"
 							 Margin="1">
 					<custom:ImageState NormalSource="{StaticResource ImgEditDelete}"
 									   Style="{StaticResource ToolButtonImage}" />
-				</RadioButton>
-				<RadioButton Name="DeleteMoveBranchingDown"
+				</CheckBox>
+				<CheckBox Name="DeleteMoveBranchingNext"
 							 Grid.Row="4"
 							 Grid.Column="5"
 							 Grid.ColumnSpan="2"
-							 GroupName="DelSource"
-							 Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
-							 IsEnabled="{Binding Path=CanMoveFrameDown}"
-							 IsChecked="{Binding Path=DeleteMovesBranchingDown}"
-							 ToolTip="{Binding Path=SayDeleteMovesBranchingDown}"
+							 Style="{StaticResource {x:Static ToolBar.CheckBoxStyleKey}}"
+							 IsEnabled="{Binding Path=CanMoveFrameNext}"
+							 IsChecked="{Binding Path=DeleteMovesBranchingNext}"
+							 ToolTip="{Binding Path=SayDeleteMovesBranchingNext}"
 							 Margin="1">
 					<custom:ImageState NormalSource="{StaticResource IconMoveRight}"
 									   Style="{StaticResource ToolButtonImage}" />
-				</RadioButton>
+				</CheckBox>
 				<RadioButton Name="DeleteKeepBranchingTarget"
 							 Grid.Row="7"
 							 Grid.Column="5"
@@ -910,10 +914,10 @@
 		</Expander.Content>
 	</Expander>
 	<Separator Style="{StaticResource PanelToolBarSeparator}" />
-	<Expander Name="ExpanderMoveUp"
+	<Expander Name="ExpanderMovePrev"
 			  Style="{StaticResource DropButton}">
 		<Expander.Header>
-			<Button Name="ButtonMoveUp"
+			<Button Name="ButtonMovePrev"
 					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 					Height="Auto"
 					Width="Auto"
@@ -934,28 +938,28 @@
 									   NormalSource="{StaticResource IconMoveLeft}"
 									   Style="{StaticResource ToolButtonImage}"
 									   VerticalAlignment="Bottom" />
-					<custom:ImageState Visibility="{Binding Path=ShowMoveUpMovesBranchingSource}"
+					<custom:ImageState Visibility="{Binding Path=ShowMovePrevMovesBranchingSource}"
 									   Grid.Row="0"
 									   Grid.Column="1"
 									   NormalSource="{StaticResource IconSwap}"
 									   Style="{StaticResource ToolButtonImage}"
 									   Width="8"
 									   Height="8" />
-					<custom:ImageState Visibility="{Binding Path=ShowMoveUpKeepsBranchingSource}"
+					<custom:ImageState Visibility="{Binding Path=ShowMovePrevKeepsBranchingSource}"
 									   Grid.Row="0"
 									   Grid.Column="1"
 									   NormalSource="{StaticResource IconLock}"
 									   Style="{StaticResource ToolButtonImage}"
 									   Width="8"
 									   Height="8" />
-					<custom:ImageState Visibility="{Binding Path=ShowMoveUpMovesBranchingTarget}"
+					<custom:ImageState Visibility="{Binding Path=ShowMovePrevMovesBranchingTarget}"
 									   Grid.Row="1"
 									   Grid.Column="1"
 									   NormalSource="{StaticResource IconSwap}"
 									   Style="{StaticResource ToolButtonImage}"
 									   Width="8"
 									   Height="8" />
-					<custom:ImageState  Visibility="{Binding Path=ShowMoveUpKeepsBranchingTarget}"
+					<custom:ImageState  Visibility="{Binding Path=ShowMovePrevKeepsBranchingTarget}"
 										Grid.Row="1"
 										Grid.Column="1"
 										NormalSource="{StaticResource IconLock}"
@@ -966,18 +970,17 @@
 			</Button>
 		</Expander.Header>
 		<Expander.Content>
-			<Grid Name="MuContent"
+			<Grid Name="EMovPrvContent"
 				  Margin="6,2,6,6"
 				  SnapsToDevicePixels="False"
 				  UseLayoutRounding="False"
 				  Grid.IsSharedSizeScope="True"
-				  RenderOptions.ClearTypeHint="Enabled"
-				  LayoutUpdated="MuGrid_LayoutUpdated">
+				  RenderOptions.ClearTypeHint="Enabled">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto"
-								   Name="MuTitle" />
+								   Name="EMovPrvTitle" />
 					<RowDefinition Height="Auto"
-								   Name="MuSubTitle" />
+								   Name="EMovPrvSubTitle" />
 					<RowDefinition Height="Auto"
 								   SharedSizeGroup="Endpoint" />
 					<RowDefinition Height="25" />
@@ -1014,30 +1017,30 @@
 					   Content="Update branching" />
 				<Grid Grid.Row="1"
 					  Grid.Column="4">
-					<Grid Name="MuGlow"
+					<Grid Name="EMovePrvGlow"
 						  Opacity="0">
-						<Rectangle Name="MuGlowRect"
+						<Rectangle Name="EMovePrvGlowRect"
 								   Style="{StaticResource BranchingImageGlow}">
 							<Rectangle.OpacityMask>
-								<VisualBrush Visual="{Binding ElementName=MuImage}" />
+								<VisualBrush Visual="{Binding ElementName=EMovePrvImage}" />
 							</Rectangle.OpacityMask>
 						</Rectangle>
 						<Rectangle Style="{StaticResource BranchingImageGlow}"
-								   OpacityMask="{Binding ElementName=MuGlowRect, Path=OpacityMask}" />
+								   OpacityMask="{Binding ElementName=EMovePrvGlowRect, Path=OpacityMask}" />
 						<Rectangle Style="{StaticResource BranchingImageGlow}"
-								   OpacityMask="{Binding ElementName=MuGlowRect, Path=OpacityMask}" />
+								   OpacityMask="{Binding ElementName=EMovePrvGlowRect, Path=OpacityMask}" />
 					</Grid>
-					<Image Name="MuImage"
+					<Image Name="EMovePrvImage"
 						   Style="{StaticResource BranchingImage}"
 						   Source="{StaticResource IconMoveLeft}" />
 				</Grid>
-				<Rectangle Name="MuFill"
+				<Rectangle Name="EMovPrvFill"
 						   Grid.Row="2"
 						   Grid.RowSpan="10"
 						   Grid.ColumnSpan="6"
 						   Style="{StaticResource BranchingFill}" />
 
-				<Grid Name="MuBls1"
+				<Grid Name="EMovePrvSrcLine1"
 					  Grid.Row="3"
 					  Grid.RowSpan="4"
 					  Grid.Column="1"
@@ -1048,7 +1051,7 @@
 						  Fill="Transparent"
 						  Stroke="Transparent" />
 				</Grid>
-				<Grid Name="MuBlt1"
+				<Grid Name="EMovePrvTrgLine1"
 					  Grid.Row="7"
 					  Grid.RowSpan="4"
 					  Grid.Column="1"
@@ -1056,7 +1059,7 @@
 					<Line Style="{StaticResource BranchingLine}" />
 					<Path Style="{StaticResource BranchingArrow}" />
 				</Grid>
-				<Grid Name="MuBls2"
+				<Grid Name="EMovePrvSrcLine2"
 					  Grid.Row="3"
 					  Grid.RowSpan="4"
 					  Grid.Column="4"
@@ -1067,7 +1070,7 @@
 						  Fill="Transparent"
 						  Stroke="Transparent" />
 				</Grid>
-				<Grid Name="MuBlt2"
+				<Grid Name="EMovePrvTrgLine2"
 					  Grid.Row="7"
 					  Grid.RowSpan="4"
 					  Grid.Column="4"
@@ -1076,68 +1079,68 @@
 					<Path Style="{StaticResource BranchingArrow}" />
 				</Grid>
 
-				<ListBoxItem Name="MuBs1"
+				<ListBoxItem Name="EMovePrvSrc1"
 							 Grid.Row="2"
 							 Grid.Column="0"
 							 Grid.ColumnSpan="3"
 							 Style="{StaticResource BranchingSource}">
 					<Grid>
-						<TextBlock Name="MuBs1T1"
+						<TextBlock Name="EMovePrvSrc1Txt1"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameSourceTitlePrev}" />
-						<TextBlock Name="MuBs1T2"
+						<TextBlock Name="EMovePrvSrc1Txt2"
 								   Opacity="0"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameSourceTitle}" />
 					</Grid>
 				</ListBoxItem>
-				<ListBoxItem Name="MuBs2"
+				<ListBoxItem Name="EMovePrvSrc2"
 							 Grid.Row="2"
 							 Grid.Column="3"
 							 Grid.ColumnSpan="3"
 							 Style="{StaticResource BranchingSource}">
 					<Grid>
-						<TextBlock Name="MuBs2T1"
+						<TextBlock Name="EMovePrvSrc2Txt1"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameSourceTitle}" />
-						<TextBlock Name="MuBs2T2"
+						<TextBlock Name="EMovePrvSrc2Txt2"
 								   Opacity="0"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameSourceTitlePrev}" />
 					</Grid>
 				</ListBoxItem>
-				<ListBoxItem Name="MuBt1"
+				<ListBoxItem Name="EMovePrvTrg1"
 							 Grid.Row="11"
 							 Grid.Column="0"
 							 Grid.ColumnSpan="3"
 							 Style="{StaticResource BranchingTarget}">
 					<Grid>
-						<TextBlock Name="MuBt1T1"
+						<TextBlock Name="EMovePrvTrg1Txt1"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameTargetTitlePrev}" />
-						<TextBlock Name="MuBt1T2"
+						<TextBlock Name="EMovePrvTrg1Txt2"
 								   Opacity="0"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameTargetTitle}" />
 					</Grid>
 				</ListBoxItem>
-				<ListBoxItem Name="MuBt2"
+				<ListBoxItem Name="EMovePrvTrg2"
 							 Grid.Row="11"
 							 Grid.Column="3"
 							 Grid.ColumnSpan="3"
 							 Style="{StaticResource BranchingTarget}">
 					<Grid>
-						<TextBlock Name="MuBt2T1"
+						<TextBlock Name="EMovePrvTrg2Txt1"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameTargetTitle}" />
-						<TextBlock Name="MuBt2T2"
+						<TextBlock Name="EMovePrvTrg2Txt2"
 								   Opacity="0"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameTargetTitlePrev}" />
 					</Grid>
 				</ListBoxItem>
 
-				<Canvas Name="MuCanvas"
+				<Canvas Name="EMovPrvCanvas"
 						Grid.Row="2"
 						Grid.RowSpan="10"
 						Grid.ColumnSpan="6" />
@@ -1149,70 +1152,70 @@
 					  Grid.ColumnSpan="6"
 					  Style="{StaticResource BranchingInterruptBottom}" />
 
-				<RadioButton Name="MoveUpKeepSource"
+				<RadioButton Name="MovePrevKeepSource"
 							 Grid.Row="4"
 							 Grid.Column="2"
 							 Grid.ColumnSpan="2"
-							 GroupName="MoveUpSource"
+							 GroupName="MovePrevSource"
 							 Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
-							 IsChecked="{Binding Path=MoveUpKeepsBranchingSource}"
-							 ToolTip="{Binding Path=SayMoveUpKeepsBranchingSource}"
+							 IsChecked="{Binding Path=MovePrevKeepsBranchingSource}"
+							 ToolTip="{Binding Path=SayMovePrevKeepsBranchingSource}"
 							 Margin="1">
 					<custom:ImageState NormalSource="{StaticResource IconLock}"
 									   Style="{StaticResource ToolButtonImage}" />
 				</RadioButton>
-				<RadioButton Name="MoveUpMoveSource"
+				<RadioButton Name="MovePrevMoveSource"
 							 Grid.Row="5"
 							 Grid.Column="2"
 							 Grid.ColumnSpan="2"
-							 GroupName="MoveUpSource"
+							 GroupName="MovePrevSource"
 							 Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
-							 IsChecked="{Binding Path=MoveUpMovesBranchingSource}"
-							 ToolTip="{Binding Path=SayMoveUpMovesBranchingSource}"
+							 IsChecked="{Binding Path=MovePrevMovesBranchingSource}"
+							 ToolTip="{Binding Path=SayMovePrevMovesBranchingSource}"
 							 Margin="1">
 					<custom:ImageState NormalSource="{StaticResource IconSwap}"
 									   Style="{StaticResource ToolButtonImage}" />
 				</RadioButton>
-				<RadioButton Name="MoveUpMoveTarget"
+				<RadioButton Name="MovePrevMoveTarget"
 							 Grid.Row="8"
 							 Grid.Column="2"
 							 Grid.ColumnSpan="2"
-							 GroupName="MoveUpTarget"
+							 GroupName="MovePrevTarget"
 							 Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
-							 IsChecked="{Binding Path=MoveUpMovesBranchingTarget}"
-							 ToolTip="{Binding Path=SayMoveUpMovesBranchingTarget}"
+							 IsChecked="{Binding Path=MovePrevMovesBranchingTarget}"
+							 ToolTip="{Binding Path=SayMovePrevMovesBranchingTarget}"
 							 Margin="1">
 					<custom:ImageState NormalSource="{StaticResource IconSwap}"
 									   Style="{StaticResource ToolButtonImage}" />
 				</RadioButton>
-				<RadioButton Name="MoveUpKeepTarget"
+				<RadioButton Name="MovePrevKeepTarget"
 							 Grid.Row="9"
 							 Grid.Column="2"
 							 Grid.ColumnSpan="2"
-							 GroupName="MoveUpTarget"
+							 GroupName="MovePrevTarget"
 							 Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
-							 IsChecked="{Binding Path=MoveUpKeepsBranchingTarget}"
-							 ToolTip="{Binding Path=SayMoveUpKeepsBranchingTarget}"
+							 IsChecked="{Binding Path=MovePrevKeepsBranchingTarget}"
+							 ToolTip="{Binding Path=SayMovePrevKeepsBranchingTarget}"
 							 Margin="1">
 					<custom:ImageState NormalSource="{StaticResource IconLock}"
 									   Style="{StaticResource ToolButtonImage}" />
 				</RadioButton>
 
-				<CheckBox Name="MoveUpDefaults"
+				<CheckBox Name="MovePrevDefaults"
 						  Style="{StaticResource PushStyleToggleButton}"
 						  Grid.Row="12"
 						  Grid.ColumnSpan="6"
 						  Margin="0,6,0,2"
-						  IsChecked="{Binding Path=MoveUpBranchingDefaultOptions}"
-						  IsEnabled="{Binding Path=EnableMoveUpBranchingDefaultOptions}"
+						  IsChecked="{Binding Path=MovePrevBranchingDefaultOptions}"
+						  IsEnabled="{Binding Path=EnableMovePrevBranchingDefaultOptions}"
 						  Content="Use defaults" />
 			</Grid>
 		</Expander.Content>
 	</Expander>
-	<Expander Name="ExpanderMoveDown"
+	<Expander Name="ExpanderMoveNext"
 			  Style="{StaticResource DropButton}">
 		<Expander.Header>
-			<Button Name="ButtonMoveDown"
+			<Button Name="ButtonMoveNext"
 					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 					Height="Auto"
 					Width="Auto"
@@ -1232,28 +1235,28 @@
 									   Margin="0,0,2,0"
 									   NormalSource="{StaticResource IconMoveRight}"
 									   Style="{StaticResource ToolButtonImage}" />
-					<custom:ImageState Visibility="{Binding Path=ShowMoveDownMovesBranchingSource}"
+					<custom:ImageState Visibility="{Binding Path=ShowMoveNextMovesBranchingSource}"
 									   Grid.Row="0"
 									   Grid.Column="1"
 									   NormalSource="{StaticResource IconSwap}"
 									   Style="{StaticResource ToolButtonImage}"
 									   Width="8"
 									   Height="8" />
-					<custom:ImageState Visibility="{Binding Path=ShowMoveDownKeepsBranchingSource}"
+					<custom:ImageState Visibility="{Binding Path=ShowMoveNextKeepsBranchingSource}"
 									   Grid.Row="0"
 									   Grid.Column="1"
 									   NormalSource="{StaticResource IconLock}"
 									   Style="{StaticResource ToolButtonImage}"
 									   Width="8"
 									   Height="8" />
-					<custom:ImageState Visibility="{Binding Path=ShowMoveDownMovesBranchingTarget}"
+					<custom:ImageState Visibility="{Binding Path=ShowMoveNextMovesBranchingTarget}"
 									   Grid.Row="1"
 									   Grid.Column="1"
 									   NormalSource="{StaticResource IconSwap}"
 									   Style="{StaticResource ToolButtonImage}"
 									   Width="8"
 									   Height="8" />
-					<custom:ImageState Visibility="{Binding Path=ShowMoveDownKeepsBranchingTarget}"
+					<custom:ImageState Visibility="{Binding Path=ShowMoveNextKeepsBranchingTarget}"
 									   Grid.Row="1"
 									   Grid.Column="1"
 									   NormalSource="{StaticResource IconLock}"
@@ -1264,18 +1267,17 @@
 			</Button>
 		</Expander.Header>
 		<Expander.Content>
-			<Grid Name="MdContent"
+			<Grid Name="EMovNxtContent"
 				  Margin="6,2,6,6"
 				  SnapsToDevicePixels="False"
 				  UseLayoutRounding="False"
 				  Grid.IsSharedSizeScope="True"
-				  RenderOptions.ClearTypeHint="Enabled"
-				  LayoutUpdated="MdGrid_LayoutUpdated">
+				  RenderOptions.ClearTypeHint="Enabled">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto"
-								   Name="MdTitle" />
+								   Name="EMovNxtTitle" />
 					<RowDefinition Height="Auto"
-								   Name="MdSubTitle" />
+								   Name="EMovNxtSubTitle" />
 					<RowDefinition Height="Auto"
 								   SharedSizeGroup="Endpoint" />
 					<RowDefinition Height="25" />
@@ -1312,30 +1314,30 @@
 					   Content="Update branching" />
 				<Grid Grid.Row="1"
 					  Grid.Column="1">
-					<Grid Name="MdGlow"
+					<Grid Name="EMovNxtGlow"
 						  Opacity="0">
-						<Rectangle Name="MdGlowRect"
+						<Rectangle Name="EMovNxtGlowRect"
 								   Style="{StaticResource BranchingImageGlow}">
 							<Rectangle.OpacityMask>
-								<VisualBrush Visual="{Binding ElementName=MdImage}" />
+								<VisualBrush Visual="{Binding ElementName=EMovNxtImage}" />
 							</Rectangle.OpacityMask>
 						</Rectangle>
 						<Rectangle Style="{StaticResource BranchingImageGlow}"
-								   OpacityMask="{Binding ElementName=MdGlowRect, Path=OpacityMask}" />
+								   OpacityMask="{Binding ElementName=EMovNxtGlowRect, Path=OpacityMask}" />
 						<Rectangle Style="{StaticResource BranchingImageGlow}"
-								   OpacityMask="{Binding ElementName=MdGlowRect, Path=OpacityMask}" />
+								   OpacityMask="{Binding ElementName=EMovNxtGlowRect, Path=OpacityMask}" />
 					</Grid>
-					<Image Name="MdImage"
+					<Image Name="EMovNxtImage"
 						   Style="{StaticResource BranchingImage}"
 						   Source="{StaticResource IconMoveRight}" />
 				</Grid>
-				<Rectangle Name="MdFill"
+				<Rectangle Name="EMovNxtFill"
 						   Grid.Row="2"
 						   Grid.RowSpan="10"
 						   Grid.ColumnSpan="6"
 						   Style="{StaticResource BranchingFill}" />
 
-				<Grid Name="MdBls1"
+				<Grid Name="EMovNxtSrcLine1"
 					  Grid.Row="3"
 					  Grid.RowSpan="4"
 					  Grid.Column="1"
@@ -1346,7 +1348,7 @@
 						  Fill="Transparent"
 						  Stroke="Transparent" />
 				</Grid>
-				<Grid Name="MdBlt1"
+				<Grid Name="EMovNxtTrgLine1"
 					  Grid.Row="7"
 					  Grid.RowSpan="4"
 					  Grid.Column="1"
@@ -1354,7 +1356,7 @@
 					<Line Style="{StaticResource BranchingLine}" />
 					<Path Style="{StaticResource BranchingArrow}" />
 				</Grid>
-				<Grid Name="MdBls2"
+				<Grid Name="EMovNxtSrcLine2"
 					  Grid.Row="3"
 					  Grid.RowSpan="4"
 					  Grid.Column="4"
@@ -1365,7 +1367,7 @@
 						  Fill="Transparent"
 						  Stroke="Transparent" />
 				</Grid>
-				<Grid Name="MdBlt2"
+				<Grid Name="EMovNxtTrgLine2"
 					  Grid.Row="7"
 					  Grid.RowSpan="4"
 					  Grid.Column="4"
@@ -1373,68 +1375,68 @@
 					<Line Style="{StaticResource BranchingLine}" />
 					<Path Style="{StaticResource BranchingArrow}" />
 				</Grid>
-				<ListBoxItem Name="MdBs1"
+				<ListBoxItem Name="EMovNxtSrc1"
 							 Grid.Row="2"
 							 Grid.Column="0"
 							 Grid.ColumnSpan="3"
 							 Style="{StaticResource BranchingSource}">
 					<Grid>
-						<TextBlock Name="MdBs1T1"
+						<TextBlock Name="EMovNxtSrc1Txt1"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameSourceTitle}" />
-						<TextBlock Name="MdBs1T2"
+						<TextBlock Name="EMovNxtSrc1Txt2"
 								   Opacity="0"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameSourceTitleNext}" />
 					</Grid>
 				</ListBoxItem>
-				<ListBoxItem Name="MdBs2"
+				<ListBoxItem Name="EMovNxtSrc2"
 							 Grid.Row="2"
 							 Grid.Column="3"
 							 Grid.ColumnSpan="3"
 							 Style="{StaticResource BranchingSource}">
 					<Grid>
-						<TextBlock Name="MdBs2T1"
+						<TextBlock Name="EMovNxtSrc2Txt1"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameSourceTitleNext}" />
-						<TextBlock Name="MdBs2T2"
+						<TextBlock Name="EMovNxtSrc2Txt2"
 								   Opacity="0"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameSourceTitle}" />
 					</Grid>
 				</ListBoxItem>
-				<ListBoxItem Name="MdBt1"
+				<ListBoxItem Name="EMovNxtTrg1"
 							 Grid.Row="11"
 							 Grid.Column="0"
 							 Grid.ColumnSpan="3"
 							 Style="{StaticResource BranchingTarget}">
 					<Grid>
-						<TextBlock Name="MdBt1T1"
+						<TextBlock Name="EMovNxtTrg1Txt1"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameTargetTitle}" />
-						<TextBlock Name="MdBt1T2"
+						<TextBlock Name="EMovNxtTrg1Txt2"
 								   Opacity="0"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameTargetTitleNext}" />
 					</Grid>
 				</ListBoxItem>
-				<ListBoxItem Name="MdBt2"
+				<ListBoxItem Name="EMovNxtTrg2"
 							 Grid.Row="11"
 							 Grid.Column="3"
 							 Grid.ColumnSpan="3"
 							 Style="{StaticResource BranchingTarget}">
 					<Grid>
-						<TextBlock Name="MdBt2T1"
+						<TextBlock Name="EMovNxtTrg2Txt1"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameTargetTitleNext}" />
-						<TextBlock Name="MdBt2T2"
+						<TextBlock Name="EMovNxtTrg2Txt2"
 								   Opacity="0"
 								   Style="{StaticResource BranchingEndpointText}"
 								   Text="{Binding Path=FrameTargetTitle}" />
 					</Grid>
 				</ListBoxItem>
 
-				<Canvas Name="MdCanvas"
+				<Canvas Name="EMovNxtCanvas"
 						Grid.Row="2"
 						Grid.RowSpan="10"
 						Grid.ColumnSpan="6" />
@@ -1446,62 +1448,62 @@
 					  Grid.ColumnSpan="6"
 					  Style="{StaticResource BranchingInterruptBottom}" />
 
-				<RadioButton Name="MoveDownKeepSource"
+				<RadioButton Name="MoveNextKeepSource"
 							 Grid.Row="4"
 							 Grid.Column="2"
 							 Grid.ColumnSpan="2"
-							 GroupName="MoveDownSource"
+							 GroupName="MoveNextSource"
 							 Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
-							 IsChecked="{Binding Path=MoveDownKeepsBranchingSource}"
-							 ToolTip="{Binding Path=SayMoveDownKeepsBranchingSource}"
+							 IsChecked="{Binding Path=MoveNextKeepsBranchingSource}"
+							 ToolTip="{Binding Path=SayMoveNextKeepsBranchingSource}"
 							 Margin="1">
 					<custom:ImageState NormalSource="{StaticResource IconLock}"
 									   Style="{StaticResource ToolButtonImage}" />
 				</RadioButton>
-				<RadioButton Name="MoveDownMoveSource"
+				<RadioButton Name="MoveNextMoveSource"
 							 Grid.Row="5"
 							 Grid.Column="2"
 							 Grid.ColumnSpan="2"
-							 GroupName="MoveDownSource"
+							 GroupName="MoveNextSource"
 							 Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
-							 IsChecked="{Binding Path=MoveDownMovesBranchingSource}"
-							 ToolTip="{Binding Path=SayMoveDownMovesBranchingSource}"
+							 IsChecked="{Binding Path=MoveNextMovesBranchingSource}"
+							 ToolTip="{Binding Path=SayMoveNextMovesBranchingSource}"
 							 Margin="1">
 					<custom:ImageState NormalSource="{StaticResource IconSwap}"
 									   Style="{StaticResource ToolButtonImage}" />
 				</RadioButton>
-				<RadioButton Name="MoveDownMoveTarget"
+				<RadioButton Name="MoveNextMoveTarget"
 							 Grid.Row="8"
 							 Grid.Column="2"
 							 Grid.ColumnSpan="2"
-							 GroupName="MoveDownTarget"
+							 GroupName="MoveNextTarget"
 							 Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
-							 IsChecked="{Binding Path=MoveDownMovesBranchingTarget}"
-							 ToolTip="{Binding Path=SayMoveDownMovesBranchingTarget}"
+							 IsChecked="{Binding Path=MoveNextMovesBranchingTarget}"
+							 ToolTip="{Binding Path=SayMoveNextMovesBranchingTarget}"
 							 Margin="1">
 					<custom:ImageState NormalSource="{StaticResource IconSwap}"
 									   Style="{StaticResource ToolButtonImage}" />
 				</RadioButton>
-				<RadioButton Name="MoveDownKeepTarget"
+				<RadioButton Name="MoveNextKeepTarget"
 							 Grid.Row="9"
 							 Grid.Column="2"
 							 Grid.ColumnSpan="2"
-							 GroupName="MoveDownTarget"
+							 GroupName="MoveNextTarget"
 							 Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
-							 IsChecked="{Binding Path=MoveDownKeepsBranchingTarget}"
-							 ToolTip="{Binding Path=SayMoveDownKeepsBranchingTarget}"
+							 IsChecked="{Binding Path=MoveNextKeepsBranchingTarget}"
+							 ToolTip="{Binding Path=SayMoveNextKeepsBranchingTarget}"
 							 Margin="1">
 					<custom:ImageState NormalSource="{StaticResource IconLock}"
 									   Style="{StaticResource ToolButtonImage}" />
 				</RadioButton>
 
-				<CheckBox Name="MoveDownDefaults"
+				<CheckBox Name="MoveNextDefaults"
 						  Style="{StaticResource PushStyleToggleButton}"
 						  Grid.Row="12"
 						  Grid.ColumnSpan="6"
 						  Margin="0,6,0,2"
-						  IsChecked="{Binding Path=MoveDownBranchingDefaultOptions}"
-						  IsEnabled="{Binding Path=EnableMoveDownBranchingDefaultOptions}"
+						  IsChecked="{Binding Path=MoveNextBranchingDefaultOptions}"
+						  IsEnabled="{Binding Path=EnableMoveNextBranchingDefaultOptions}"
 						  Content="Use defaults" />
 			</Grid>
 		</Expander.Content>

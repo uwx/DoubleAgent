@@ -115,6 +115,8 @@
 						 UriSource="Resources/Mute.ico" />
 			<BitmapImage x:Key="IconLock"
 						 UriSource="Resources/Lock.ico" />
+			<BitmapImage x:Key="IconError"
+						 UriSource="Resources/Error.ico" />
 
 			<!-- =========================================================================== -->
 

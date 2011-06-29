@@ -33,14 +33,14 @@
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Header="Move frame up"
-						  Name="MenuItemMoveUp">
+						  Name="MenuItemMovePrev">
 					<MenuItem.Icon>
 						<custom:ImageState NormalSource="{StaticResource IconMoveLeft}"
 										   Style="{StaticResource MenuItemImage}" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem Header="Move frame down"
-						  Name="MenuItemMoveDown">
+						  Name="MenuItemMoveNext">
 					<MenuItem.Icon>
 						<custom:ImageState NormalSource="{StaticResource IconMoveRight}"
 										   Style="{StaticResource MenuItemImage}" />

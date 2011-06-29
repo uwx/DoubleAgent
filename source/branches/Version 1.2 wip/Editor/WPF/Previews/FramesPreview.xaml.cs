@@ -166,8 +166,10 @@ namespace AgentCharacterEditor.Previews
 			public DrawingContext DrawingContext;
 			public Brush BackgroundBrush;
 			public Brush ForegroundBrush;
+			public Brush ErrorBrush;
 			public Pen BackgroundPen;
 			public Pen ForegroundPen;
+			public Pen ErrorPen;
 			public Size ArrowSize = new Size (2, 4);
 
 			public DrawingStuff (FramesListView pFrames, DrawingVisual pVisual)
@@ -177,10 +179,14 @@ namespace AgentCharacterEditor.Previews
 
 				BackgroundBrush = pFrames.Background;
 				ForegroundBrush = pFrames.Foreground;
+				ErrorBrush = Brushes.Red;
 				BackgroundPen = new Pen (BackgroundBrush, 5.0);
 				ForegroundPen = new Pen (ForegroundBrush, 0.5);
 				ForegroundPen.StartLineCap = PenLineCap.Flat;
 				ForegroundPen.EndLineCap = PenLineCap.Flat;
+				ErrorPen = new Pen (ErrorBrush, 0.5);
+				ErrorPen.StartLineCap = PenLineCap.Flat;
+				ErrorPen.EndLineCap = PenLineCap.Flat;
 			}
 			~DrawingStuff ()
 			{
@@ -198,28 +204,42 @@ namespace AgentCharacterEditor.Previews
 		private Point DrawBranchingLine (Double pOffsetY, BranchingItem pBranching, DrawingStuff pDrawingStuff)
 		{
 			Point lCenterPoint = new Point ();
-
+			//TODO - invalid branching targets
 			try
 			{
 				FramesListItem lSrcItem = Frames.Items[pBranching.SrcFrameNdx] as FramesListItem;
-				FramesListItem lDstItem = Frames.Items[pBranching.DstFrameNdx] as FramesListItem;
 				PathGeometry lLineGeometry = new PathGeometry ();
 				PolyLineSegment lLineSegment = new PolyLineSegment ();
 				PathFigure lLineFigure = new PathFigure ();
 				PolyLineSegment lArrowSegment = new PolyLineSegment ();
 				PathFigure lArrowFigure = new PathFigure ();
 
-				lLineFigure.StartPoint = new Point ((lSrcItem.ActualWidth / 2.0) + (Double)(pBranching.SrcOffset * mBranchingOffset.Width), 0);
-				lLineSegment.Points.Add (new Point ((lDstItem.ActualWidth / 2.0) + (Double)(pBranching.DstOffset * mBranchingOffset.Width), 0));
-				lLineFigure.StartPoint = lSrcItem.TranslatePoint (lLineFigure.StartPoint, this);
-				lLineSegment.Points[0] = lDstItem.TranslatePoint (lLineSegment.Points[0], this);
-				lLineFigure.StartPoint = new Point (lLineFigure.StartPoint.X + HorizontalOffset, lLineFigure.StartPoint.Y + VerticalOffset);
-				lLineSegment.Points[0] = new Point (lLineSegment.Points[0].X + HorizontalOffset, lLineSegment.Points[0].Y + VerticalOffset);
-				lLineSegment.Points.Insert (0, new Point (lLineFigure.StartPoint.X, lLineFigure.StartPoint.Y + (pBranching.Height * mBranchingOffset.Height * pOffsetY)));
-				lLineSegment.Points.Insert (1, new Point (lLineSegment.Points[1].X, lLineSegment.Points[0].Y));
+				if (pBranching.IsValid)
+				{
+					FramesListItem lDstItem = Frames.Items[pBranching.DstFrameNdx] as FramesListItem;
 
-				lCenterPoint.X = (lLineSegment.Points[0].X + lLineSegment.Points[1].X) / 2.0;
-				lCenterPoint.Y = lLineSegment.Points[0].Y;
+					lLineFigure.StartPoint = new Point ((lSrcItem.ActualWidth / 2.0) + (Double)(pBranching.SrcOffset * mBranchingOffset.Width), 0);
+					lLineSegment.Points.Add (new Point ((lDstItem.ActualWidth / 2.0) + (Double)(pBranching.DstOffset * mBranchingOffset.Width), 0));
+					lLineFigure.StartPoint = lSrcItem.TranslatePoint (lLineFigure.StartPoint, this);
+					lLineSegment.Points[0] = lDstItem.TranslatePoint (lLineSegment.Points[0], this);
+					lLineFigure.StartPoint = new Point (lLineFigure.StartPoint.X + HorizontalOffset, lLineFigure.StartPoint.Y + VerticalOffset);
+					lLineSegment.Points[0] = new Point (lLineSegment.Points[0].X + HorizontalOffset, lLineSegment.Points[0].Y + VerticalOffset);
+					lLineSegment.Points.Insert (0, new Point (lLineFigure.StartPoint.X, lLineFigure.StartPoint.Y + (pBranching.Height * mBranchingOffset.Height * pOffsetY)));
+					lLineSegment.Points.Insert (1, new Point (lLineSegment.Points[1].X, lLineSegment.Points[0].Y));
+
+					lCenterPoint.X = (lLineSegment.Points[0].X + lLineSegment.Points[1].X) / 2.0;
+					lCenterPoint.Y = lLineSegment.Points[0].Y;
+				}
+				else
+				{
+					lLineFigure.StartPoint = new Point ((lSrcItem.ActualWidth / 2.0) + (Double)(pBranching.SrcOffset * mBranchingOffset.Width), 0);
+					lLineFigure.StartPoint = lSrcItem.TranslatePoint (lLineFigure.StartPoint, this);
+					lLineFigure.StartPoint = new Point (lLineFigure.StartPoint.X + HorizontalOffset, lLineFigure.StartPoint.Y + VerticalOffset);
+					lLineSegment.Points.Add (new Point (lLineFigure.StartPoint.X, lLineFigure.StartPoint.Y + (pBranching.Height * mBranchingOffset.Height * pOffsetY)));
+
+					lCenterPoint.X = lLineSegment.Points[0].X;
+					lCenterPoint.Y = lLineSegment.Points[0].Y - (mBranchingOffset.Height * pOffsetY);
+				}
 
 				lLineFigure.IsClosed = false;
 				lLineFigure.IsFilled = false;
@@ -228,14 +248,23 @@ namespace AgentCharacterEditor.Previews
 
 				lArrowFigure.IsClosed = true;
 				lArrowFigure.IsFilled = true;
-				lArrowFigure.StartPoint = lLineSegment.Points[lLineSegment.Points.Count - 1];
-				lArrowSegment.Points.Add (new Point (lArrowFigure.StartPoint.X - pDrawingStuff.ArrowSize.Width, lArrowFigure.StartPoint.Y + (pDrawingStuff.ArrowSize.Height * pOffsetY)));
-				lArrowSegment.Points.Add (new Point (lArrowFigure.StartPoint.X + pDrawingStuff.ArrowSize.Width, lArrowFigure.StartPoint.Y + (pDrawingStuff.ArrowSize.Height * pOffsetY)));
+				if (pBranching.IsValid)
+				{
+					lArrowFigure.StartPoint = lLineSegment.Points[lLineSegment.Points.Count - 1];
+					lArrowSegment.Points.Add (new Point (lArrowFigure.StartPoint.X - pDrawingStuff.ArrowSize.Width, lArrowFigure.StartPoint.Y + (pDrawingStuff.ArrowSize.Height * pOffsetY)));
+					lArrowSegment.Points.Add (new Point (lArrowFigure.StartPoint.X + pDrawingStuff.ArrowSize.Width, lArrowFigure.StartPoint.Y + (pDrawingStuff.ArrowSize.Height * pOffsetY)));
+				}
+				else
+				{
+					lArrowFigure.StartPoint = lLineSegment.Points[lLineSegment.Points.Count - 1];
+					lArrowSegment.Points.Add (new Point (lArrowFigure.StartPoint.X - pDrawingStuff.ArrowSize.Width, lArrowFigure.StartPoint.Y - (pDrawingStuff.ArrowSize.Height * pOffsetY)));
+					lArrowSegment.Points.Add (new Point (lArrowFigure.StartPoint.X + pDrawingStuff.ArrowSize.Width, lArrowFigure.StartPoint.Y - (pDrawingStuff.ArrowSize.Height * pOffsetY)));
+				}
 				lArrowSegment.IsStroked = false;
 				lArrowFigure.Segments.Add (lArrowSegment);
 				lLineGeometry.Figures.Add (lArrowFigure);
 
-				pDrawingStuff.DrawingContext.DrawGeometry (pDrawingStuff.ForegroundBrush, pDrawingStuff.ForegroundPen, lLineGeometry);
+				pDrawingStuff.DrawingContext.DrawGeometry (pBranching.IsValid ? pDrawingStuff.ForegroundBrush : pDrawingStuff.ErrorBrush, pBranching.IsValid ? pDrawingStuff.ForegroundPen : pDrawingStuff.ErrorPen, lLineGeometry);
 			}
 			catch
 			{
@@ -255,11 +284,11 @@ namespace AgentCharacterEditor.Previews
 
 				if (pBranching.LabelOffset < 0)
 				{
-					lCenter.X -= lText.Width + ((Double)pBranching.LabelOffset * (Double)mBranchingOffset.Width);
+					lCenter.X -= (lText.Width / 2.0) - ((Double)pBranching.LabelOffset * (Double)mBranchingOffset.Width) + pDrawingStuff.BackgroundPen.Thickness;
 				}
 				else if (pBranching.LabelOffset > 0)
 				{
-					lCenter.X += lText.Width + ((Double)pBranching.LabelOffset * (Double)mBranchingOffset.Width);
+					lCenter.X += (lText.Width / 2.0) + ((Double)pBranching.LabelOffset * (Double)mBranchingOffset.Width) + pDrawingStuff.BackgroundPen.Thickness;
 				}
 				lCenter.Y -= lText.Height / 2.0;
 

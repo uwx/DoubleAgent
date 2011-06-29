@@ -72,14 +72,14 @@ namespace AgentCharacterEditor.Panels
 			this.ContextMenuImages = new AgentCharacterEditor.Global.ContextMenuEdit(this.components);
 			this.MenuItemAdd = new System.Windows.Forms.ToolStripMenuItem();
 			this.MenuItemChooseFile = new System.Windows.Forms.ToolStripMenuItem();
-			this.MenuItemMoveUp = new System.Windows.Forms.ToolStripMenuItem();
-			this.MenuItemMoveDown = new System.Windows.Forms.ToolStripMenuItem();
+			this.MenuItemMovePrev = new System.Windows.Forms.ToolStripMenuItem();
+			this.MenuItemMoveNext = new System.Windows.Forms.ToolStripMenuItem();
 			this.ToolStripImages = new DoubleAgent.ToolStripEx();
 			this.ButtonAdd = new DoubleAgent.ToolStripButtonCompat();
 			this.ButtonDelete = new DoubleAgent.ToolStripButtonCompat();
 			this.ButtonChooseFile = new DoubleAgent.ToolStripButtonCompat();
-			this.ButtonMoveUp = new DoubleAgent.ToolStripButtonCompat();
-			this.ButtonMoveDown = new DoubleAgent.ToolStripButtonCompat();
+			this.ButtonMovePrev = new DoubleAgent.ToolStripButtonCompat();
+			this.ButtonMoveNext = new DoubleAgent.ToolStripButtonCompat();
 			this.GroupBoxFrame = new System.Windows.Forms.GroupBox();
 			this.PictureBoxFrameSample = new AgentCharacterEditor.FrameSample();
 			this.GroupBoxImage = new System.Windows.Forms.GroupBox();
@@ -340,8 +340,8 @@ namespace AgentCharacterEditor.Panels
             this.MenuItemAdd,
             this.MenuItemChooseFile,
             toolStripSeparator2,
-            this.MenuItemMoveUp,
-            this.MenuItemMoveDown,
+            this.MenuItemMovePrev,
+            this.MenuItemMoveNext,
             toolStripSeparator3});
 			this.ContextMenuImages.Name = "ContextMenuImages";
 			this.ContextMenuImages.Size = new System.Drawing.Size(222, 128);
@@ -370,23 +370,23 @@ namespace AgentCharacterEditor.Panels
 			toolStripSeparator2.Name = "toolStripSeparator2";
 			toolStripSeparator2.Size = new System.Drawing.Size(218, 6);
 			// 
-			// MenuItemMoveUp
+			// MenuItemMovePrev
 			// 
-			this.MenuItemMoveUp.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveUp;
-			this.MenuItemMoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.MenuItemMoveUp.Name = "MenuItemMoveUp";
-			this.MenuItemMoveUp.Size = new System.Drawing.Size(221, 28);
-			this.MenuItemMoveUp.Text = "Move image up";
-			this.MenuItemMoveUp.Click += new System.EventHandler(this.ButtonMoveUp_Click);
+			this.MenuItemMovePrev.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveUp;
+			this.MenuItemMovePrev.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.MenuItemMovePrev.Name = "MenuItemMovePrev";
+			this.MenuItemMovePrev.Size = new System.Drawing.Size(221, 28);
+			this.MenuItemMovePrev.Text = "Move image up";
+			this.MenuItemMovePrev.Click += new System.EventHandler(this.ButtonMovePrev_Click);
 			// 
-			// MenuItemMoveDown
+			// MenuItemMoveNext
 			// 
-			this.MenuItemMoveDown.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveDown;
-			this.MenuItemMoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.MenuItemMoveDown.Name = "MenuItemMoveDown";
-			this.MenuItemMoveDown.Size = new System.Drawing.Size(221, 28);
-			this.MenuItemMoveDown.Text = "Move image down";
-			this.MenuItemMoveDown.Click += new System.EventHandler(this.ButtonMoveDown_Click);
+			this.MenuItemMoveNext.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveDown;
+			this.MenuItemMoveNext.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.MenuItemMoveNext.Name = "MenuItemMoveNext";
+			this.MenuItemMoveNext.Size = new System.Drawing.Size(221, 28);
+			this.MenuItemMoveNext.Text = "Move image down";
+			this.MenuItemMoveNext.Click += new System.EventHandler(this.ButtonMoveNext_Click);
 			// 
 			// toolStripSeparator3
 			// 
@@ -404,8 +404,8 @@ namespace AgentCharacterEditor.Panels
             this.ButtonDelete,
             this.ButtonChooseFile,
             toolStripSeparator1,
-            this.ButtonMoveUp,
-            this.ButtonMoveDown});
+            this.ButtonMovePrev,
+            this.ButtonMoveNext});
 			this.ToolStripImages.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.ToolStripImages.Location = new System.Drawing.Point(0, 0);
 			this.ToolStripImages.Name = "ToolStripImages";
@@ -450,27 +450,27 @@ namespace AgentCharacterEditor.Panels
 			toolStripSeparator1.Name = "toolStripSeparator1";
 			toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
 			// 
-			// ButtonMoveUp
+			// ButtonMovePrev
 			// 
-			this.ButtonMoveUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonMoveUp.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveUp;
-			this.ButtonMoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonMoveUp.Name = "ButtonMoveUp";
-			this.ButtonMoveUp.Padding = new System.Windows.Forms.Padding(2);
-			this.ButtonMoveUp.Size = new System.Drawing.Size(24, 24);
-			this.ButtonMoveUp.Text = "Move image up";
-			this.ButtonMoveUp.Click += new System.EventHandler(this.ButtonMoveUp_Click);
+			this.ButtonMovePrev.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonMovePrev.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveUp;
+			this.ButtonMovePrev.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonMovePrev.Name = "ButtonMovePrev";
+			this.ButtonMovePrev.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonMovePrev.Size = new System.Drawing.Size(24, 24);
+			this.ButtonMovePrev.Text = "Move image up";
+			this.ButtonMovePrev.Click += new System.EventHandler(this.ButtonMovePrev_Click);
 			// 
-			// ButtonMoveDown
+			// ButtonMoveNext
 			// 
-			this.ButtonMoveDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonMoveDown.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveDown;
-			this.ButtonMoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonMoveDown.Name = "ButtonMoveDown";
-			this.ButtonMoveDown.Padding = new System.Windows.Forms.Padding(2);
-			this.ButtonMoveDown.Size = new System.Drawing.Size(24, 24);
-			this.ButtonMoveDown.Text = "Move image down";
-			this.ButtonMoveDown.Click += new System.EventHandler(this.ButtonMoveDown_Click);
+			this.ButtonMoveNext.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonMoveNext.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveDown;
+			this.ButtonMoveNext.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonMoveNext.Name = "ButtonMoveNext";
+			this.ButtonMoveNext.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonMoveNext.Size = new System.Drawing.Size(24, 24);
+			this.ButtonMoveNext.Text = "Move image down";
+			this.ButtonMoveNext.Click += new System.EventHandler(this.ButtonMoveNext_Click);
 			// 
 			// PanelMiddle
 			// 
@@ -1021,8 +1021,8 @@ namespace AgentCharacterEditor.Panels
 		private System.Windows.Forms.ColumnHeader ColumnHeaderPath;
 		private DoubleAgent.ToolStripButtonCompat ButtonAdd;
 		private DoubleAgent.ToolStripButtonCompat ButtonDelete;
-		private DoubleAgent.ToolStripButtonCompat ButtonMoveUp;
-		private DoubleAgent.ToolStripButtonCompat ButtonMoveDown;
+		private DoubleAgent.ToolStripButtonCompat ButtonMovePrev;
+		private DoubleAgent.ToolStripButtonCompat ButtonMoveNext;
 		private DoubleAgent.TextBoxEx TextBoxSoundFile;
 		private DoubleAgent.ToolStripEx ToolStripSoundFile;
 		private DoubleAgent.ToolStripButtonCompat ButtonSoundImport;
@@ -1054,8 +1054,8 @@ namespace AgentCharacterEditor.Panels
 		private Global.ContextMenuEdit ContextMenuImages;
 		private System.Windows.Forms.ToolStripMenuItem MenuItemAdd;
 		private System.Windows.Forms.ToolStripMenuItem MenuItemChooseFile;
-		private System.Windows.Forms.ToolStripMenuItem MenuItemMoveUp;
-		private System.Windows.Forms.ToolStripMenuItem MenuItemMoveDown;
+		private System.Windows.Forms.ToolStripMenuItem MenuItemMovePrev;
+		private System.Windows.Forms.ToolStripMenuItem MenuItemMoveNext;
 		private System.Windows.Forms.GroupBox GroupBoxImage;
 		private System.Windows.Forms.TableLayoutPanel PanelMain;
 		private System.Windows.Forms.Panel PanelImageDetails;

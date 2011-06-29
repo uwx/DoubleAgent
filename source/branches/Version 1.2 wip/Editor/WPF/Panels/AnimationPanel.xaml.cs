@@ -50,15 +50,15 @@ namespace AgentCharacterEditor.Panels
 
 			ToolBarFrames.ButtonAdd.Click +=new RoutedEventHandler(ButtonAdd_Click);
 			ToolBarFrames.ButtonDelete.Click+=new RoutedEventHandler(ButtonDelete_Click);
-			ToolBarFrames.ButtonMoveUp.Click+=new RoutedEventHandler(ButtonMoveUp_Click);
-			ToolBarFrames.ButtonMoveDown.Click+=new RoutedEventHandler(ButtonMoveDown_Click);
+			ToolBarFrames.ButtonMovePrev.Click+=new RoutedEventHandler(ButtonMovePrev_Click);
+			ToolBarFrames.ButtonMoveNext.Click+=new RoutedEventHandler(ButtonMoveNext_Click);
 
 			FramesView.Frames.SelectionChanged += new System.Windows.Controls.SelectionChangedEventHandler (FramesView_SelectionChanged);
 			FramesView.Frames.MouseDoubleClick += new System.Windows.Input.MouseButtonEventHandler (FramesView_MouseDoubleClick);
 			FramesView.Frames.ContextMenuOpening += new System.Windows.Controls.ContextMenuEventHandler (FramesView_ContextMenuOpening);
 			FramesView.MenuItemAdd.Click += new RoutedEventHandler (ButtonAdd_Click);
-			FramesView.MenuItemMoveUp.Click += new RoutedEventHandler (ButtonMoveUp_Click);
-			FramesView.MenuItemMoveDown.Click += new RoutedEventHandler (ButtonMoveDown_Click);
+			FramesView.MenuItemMovePrev.Click += new RoutedEventHandler (ButtonMovePrev_Click);
+			FramesView.MenuItemMoveNext.Click += new RoutedEventHandler (ButtonMoveNext_Click);
 
 			AnimationPreview.AnimationStateChanged += new EventHandler (AnimationPreview_StateChanged);
 			AnimationPreview.AnimationImageChanged += new EventHandler (AnimationPreview_ImageChanged);
@@ -285,11 +285,11 @@ namespace AgentCharacterEditor.Panels
 			else
 			{
 				FramesView.MenuItemAdd.IsEnabled = ToolBarFrames.CanAddFrame;
-				FramesView.MenuItemMoveUp.IsEnabled = ToolBarFrames.CanMoveFrameUp;
-				FramesView.MenuItemMoveDown.IsEnabled = ToolBarFrames.CanMoveFrameDown;
+				FramesView.MenuItemMovePrev.IsEnabled = ToolBarFrames.CanMoveFramePrev;
+				FramesView.MenuItemMoveNext.IsEnabled = ToolBarFrames.CanMoveFrameNext;
 
-				FramesView.MenuItemMoveUp.SetTitle (ToolBarFrames.MoveFrameUpTitle);
-				FramesView.MenuItemMoveDown.SetTitle (ToolBarFrames.MoveFrameDownTitle);
+				FramesView.MenuItemMovePrev.SetTitle (ToolBarFrames.MoveFramePrevTitle);
+				FramesView.MenuItemMoveNext.SetTitle (ToolBarFrames.MoveFrameNextTitle);
 			}
 		}
 
@@ -326,14 +326,14 @@ namespace AgentCharacterEditor.Panels
 			HandleDeleteFrame ();
 		}
 
-		private void ButtonMoveUp_Click (object sender, System.Windows.RoutedEventArgs e)
+		private void ButtonMovePrev_Click (object sender, System.Windows.RoutedEventArgs e)
 		{
-			HandleMoveFrameUp ();
+			HandleMoveFramePrev ();
 		}
 
-		private void ButtonMoveDown_Click (object sender, System.Windows.RoutedEventArgs e)
+		private void ButtonMoveNext_Click (object sender, System.Windows.RoutedEventArgs e)
 		{
-			HandleMoveFrameDown ();
+			HandleMoveFrameNext ();
 		}
 
 		//=============================================================================

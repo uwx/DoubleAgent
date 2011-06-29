@@ -56,26 +56,26 @@
     <Setting Name="ViewSmall" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="MoveFrameUpMovesBranchingSource" Type="System.Boolean" Scope="User">
+    <Setting Name="MoveFramePrevMovesBranchingSource" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="MoveFrameUpMovesBranchingTarget" Type="System.Boolean" Scope="User">
+    <Setting Name="MoveFramePrevMovesBranchingTarget" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="MoveFrameDownMovesBranchingSource" Type="System.Boolean" Scope="User">
+    <Setting Name="MoveFrameNextMovesBranchingSource" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="MoveFrameDownMovesBranchingTarget" Type="System.Boolean" Scope="User">
+    <Setting Name="MoveFrameNextMovesBranchingTarget" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="AddFrameShiftsBranchingTarget" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="DeleteFrameShiftsBranchingUp" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="DeleteFrameShiftsBranchingDown" Type="System.Boolean" Scope="User">
+    <Setting Name="DeleteFrameMovesBranchingPrev" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DeleteFrameMovesBranchingNext" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="DeleteFrameShiftsBranchingTarget" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

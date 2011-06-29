@@ -158,20 +158,20 @@
 					</Button>
 					<Separator Style="{StaticResource PanelToolBarSeparator}" />
 					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-							Name="ButtonMoveUp"
+							Name="ButtonMovePrev"
 							ToolTip="Move image up"
 							Focusable="False"
 							HorizontalAlignment="Left"
-							Click="ButtonMoveUp_Click">
+							Click="ButtonMovePrev_Click">
 						<custom:ImageState NormalSource="{StaticResource IconMoveUp}"
 										   Style="{StaticResource ToolButtonImage}" />
 					</Button>
 					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-							Name="ButtonMoveDown"
+							Name="ButtonMoveNext"
 							ToolTip="Move image down"
 							Focusable="False"
 							HorizontalAlignment="Left"
-							Click="ButtonMoveDown_Click">
+							Click="ButtonMoveNext_Click">
 						<custom:ImageState NormalSource="{StaticResource IconMoveDown}"
 										   Style="{StaticResource ToolButtonImage}" />
 					</Button>
@@ -295,16 +295,16 @@
 										</MenuItem>
 										<Separator />
 										<MenuItem Header="Move image up"
-												  Name="MenuItemMoveUp"
-												  Click="ButtonMoveUp_Click">
+												  Name="MenuItemMovePrev"
+												  Click="ButtonMovePrev_Click">
 											<MenuItem.Icon>
 												<custom:ImageState NormalSource="{StaticResource IconMoveUp}"
 																   Style="{StaticResource MenuItemImage}" />
 											</MenuItem.Icon>
 										</MenuItem>
 										<MenuItem Header="Move image down"
-												  Name="MenuItemMoveDown"
-												  Click="ButtonMoveDown_Click">
+												  Name="MenuItemMoveNext"
+												  Click="ButtonMoveNext_Click">
 											<MenuItem.Icon>
 												<custom:ImageState NormalSource="{StaticResource IconMoveDown}"
 																   Style="{StaticResource MenuItemImage}" />

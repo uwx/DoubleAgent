@@ -215,13 +215,13 @@ namespace AgentCharacterEditor.Panels
 			ButtonAdd.IsEnabled = CanAddImage;
 			ButtonDelete.IsEnabled = CanDeleteImage;
 			ButtonChooseFile.IsEnabled = CanChooseImageFile;
-			ButtonMoveUp.IsEnabled = CanMoveImageUp;
-			ButtonMoveDown.IsEnabled = CanMoveImageDown;
+			ButtonMovePrev.IsEnabled = CanMoveImageUp;
+			ButtonMoveNext.IsEnabled = CanMoveImageDown;
 
 			ButtonDelete.SetTipText (DeleteImageTitle);
 			ButtonChooseFile.SetTipText (ChooseImageFileTitle);
-			ButtonMoveUp.SetTipText (MoveImageUpTitle);
-			ButtonMoveDown.SetTipText (MoveImageDownTitle);
+			ButtonMovePrev.SetTipText (MoveImageUpTitle);
+			ButtonMoveNext.SetTipText (MoveImageDownTitle);
 		}
 
 		//=============================================================================

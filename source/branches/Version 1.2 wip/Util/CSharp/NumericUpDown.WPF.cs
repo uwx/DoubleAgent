@@ -142,7 +142,7 @@ namespace DoubleAgent
 			{
 				if ((value < Minimum) || (value > Maximum))
 				{
-					value = Math.Min (Math.Max (value, Minimum), Maximum);
+					//value = Math.Min (Math.Max (value, Minimum), Maximum);
 					this.IsHighlighted = true;
 				}
 				else
@@ -172,6 +172,12 @@ namespace DoubleAgent
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Implementation
+
+		public new void Clear ()
+		{
+			base.Clear ();
+			IsHighlighted = false;
+		}
 
 		protected override void OnMouseWheel (MouseWheelEventArgs e)
 		{

@@ -131,7 +131,7 @@ namespace AgentCharacterEditor.Previews
 		[System.ComponentModel.Browsable (false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
 		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-		public Boolean CanMoveFrameUp
+		public Boolean CanMoveFramePrev
 		{
 			get
 			{
@@ -146,18 +146,18 @@ namespace AgentCharacterEditor.Previews
 		[System.ComponentModel.Browsable (false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
 		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-		public String MoveFrameUpTitle
+		public String MoveFramePrevTitle
 		{
 			get
 			{
-				return String.Format (AppResources.Resources.EditMoveFrameUp.NoMenuPrefix (), Titles.Frame (CanMoveFrameUp ? Frame : null));
+				return String.Format (AppResources.Resources.EditMoveFramePrev.NoMenuPrefix (), Titles.Frame (CanMoveFramePrev ? Frame : null));
 			}
 		}
 
 		[System.ComponentModel.Browsable (false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
 		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-		public Boolean CanMoveFrameDown
+		public Boolean CanMoveFrameNext
 		{
 			get
 			{
@@ -172,11 +172,11 @@ namespace AgentCharacterEditor.Previews
 		[System.ComponentModel.Browsable (false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
 		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-		public String MoveFrameDownTitle
+		public String MoveFrameNextTitle
 		{
 			get
 			{
-				return String.Format (AppResources.Resources.EditMoveFrameDown.NoMenuPrefix (), Titles.Frame (CanMoveFrameDown ? Frame : null));
+				return String.Format (AppResources.Resources.EditMoveFrameNext.NoMenuPrefix (), Titles.Frame (CanMoveFrameNext ? Frame : null));
 			}
 		}
 
@@ -184,8 +184,8 @@ namespace AgentCharacterEditor.Previews
 
 		private Boolean mAddShiftsBranchingTarget = true;
 		private Boolean mDeleteShiftsBranchingTarget = true;
-		private Boolean mDeleteMovesBranchingUp = false;
-		private Boolean mDeleteMovesBranchingDown = true;
+		private Boolean mDeleteMovesBranchingPrev = true;
+		private Boolean mDeleteMovesBranchingNext = false;
 
 		//=============================================================================
 
@@ -242,39 +242,62 @@ namespace AgentCharacterEditor.Previews
 				DeleteShiftsBranchingTarget = !value;
 			}
 		}
-		public Boolean DeleteMovesBranchingUp
+
+		public Boolean DeleteMovesBranchingPrev
 		{
 			get
 			{
-				return mDeleteMovesBranchingUp;
+				if (IsValid && CanMoveFramePrev && !CanMoveFrameNext && mDeleteMovesBranchingNext)
+				{
+					return mDeleteMovesBranchingNext;
+				}
+				else
+				{
+					return mDeleteMovesBranchingPrev;
+				}
 			}
 			set
 			{
-				if (mDeleteMovesBranchingUp != value)
+				if (IsValid && !CanMoveFramePrev)
 				{
-					mDeleteMovesBranchingUp = value;
-					if (mDeleteMovesBranchingUp)
+					System.Diagnostics.Debug.Print ("Ignore DeleteMovesBranchingPrev {0}", value); 
+				}
+				else if (mDeleteMovesBranchingPrev != value)
+				{
+					mDeleteMovesBranchingPrev = value;
+					if (mDeleteMovesBranchingPrev)
 					{
-						mDeleteMovesBranchingDown = false;
+						mDeleteMovesBranchingNext = false;
 					}
 					DeleteBranchingSourceChanged ();
 				}
 			}
 		}
-		public Boolean DeleteMovesBranchingDown
+		public Boolean DeleteMovesBranchingNext
 		{
 			get
 			{
-				return mDeleteMovesBranchingDown;
+				if (IsValid && CanMoveFrameNext && !CanMoveFramePrev && mDeleteMovesBranchingPrev)
+				{
+					return mDeleteMovesBranchingPrev;
+				}
+				else
+				{
+					return mDeleteMovesBranchingNext;
+				}
 			}
 			set
 			{
-				if (mDeleteMovesBranchingDown != value)
+				if (IsValid && !CanMoveFrameNext)
 				{
-					mDeleteMovesBranchingDown = value;
-					if (mDeleteMovesBranchingDown)
+					System.Diagnostics.Debug.Print ("Ignore DeleteMovesBranchingNext {0}", value); 
+				}
+				else if (mDeleteMovesBranchingNext != value)
+				{
+					mDeleteMovesBranchingNext = value;
+					if (mDeleteMovesBranchingNext)
 					{
-						mDeleteMovesBranchingUp = false;
+						mDeleteMovesBranchingPrev = false;
 					}
 					DeleteBranchingSourceChanged ();
 				}
@@ -284,132 +307,133 @@ namespace AgentCharacterEditor.Previews
 		{
 			get
 			{
-				return (!DeleteMovesBranchingUp || !CanMoveFrameUp) && (!DeleteMovesBranchingDown || !CanMoveFrameDown);
+				return (!DeleteMovesBranchingPrev && !DeleteMovesBranchingNext) || (!CanMoveFramePrev && !CanMoveFrameNext);
 			}
 			set
 			{
-				if (value)
+				if (value && (mDeleteMovesBranchingPrev || mDeleteMovesBranchingNext))
 				{
-					DeleteMovesBranchingUp = false;
-					DeleteMovesBranchingDown = false;
+					mDeleteMovesBranchingPrev = false;
+					mDeleteMovesBranchingNext = false;
+					DeleteBranchingSourceChanged ();
 				}
 			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private Boolean mMoveUpMovesBranchingSource = false;
-		private Boolean mMoveUpMovesBranchingTarget = true;
-		private Boolean mMoveDownMovesBranchingSource = false;
-		private Boolean mMoveDownMovesBranchingTarget = true;
+		private Boolean mMovePrevMovesBranchingSource = false;
+		private Boolean mMovePrevMovesBranchingTarget = true;
+		private Boolean mMoveNextMovesBranchingSource = false;
+		private Boolean mMoveNextMovesBranchingTarget = true;
 
 		//=============================================================================
 
-		public Boolean MoveUpMovesBranchingSource
+		public Boolean MovePrevMovesBranchingSource
 		{
 			get
 			{
-				return mMoveUpMovesBranchingSource;
+				return mMovePrevMovesBranchingSource;
 			}
 			set
 			{
-				if (mMoveUpMovesBranchingSource != value)
+				if (mMovePrevMovesBranchingSource != value)
 				{
-					mMoveUpMovesBranchingSource = value;
-					MoveUpBranchingSourceChanged ();
+					mMovePrevMovesBranchingSource = value;
+					MovePrevBranchingSourceChanged ();
 				}
 			}
 		}
-		public Boolean MoveUpKeepsBranchingSource
+		public Boolean MovePrevKeepsBranchingSource
 		{
 			get
 			{
-				return !MoveUpMovesBranchingSource;
+				return !MovePrevMovesBranchingSource;
 			}
 			set
 			{
-				MoveUpMovesBranchingSource = !value;
+				MovePrevMovesBranchingSource = !value;
 			}
 		}
-		public Boolean MoveUpMovesBranchingTarget
+		public Boolean MovePrevMovesBranchingTarget
 		{
 			get
 			{
-				return mMoveUpMovesBranchingTarget;
+				return mMovePrevMovesBranchingTarget;
 			}
 			set
 			{
-				if (mMoveUpMovesBranchingTarget != value)
+				if (mMovePrevMovesBranchingTarget != value)
 				{
-					mMoveUpMovesBranchingTarget = value;
-					MoveUpBranchingTargetChanged ();
+					mMovePrevMovesBranchingTarget = value;
+					MovePrevBranchingTargetChanged ();
 				}
 			}
 		}
-		public Boolean MoveUpKeepsBranchingTarget
+		public Boolean MovePrevKeepsBranchingTarget
 		{
 			get
 			{
-				return !MoveUpMovesBranchingTarget;
+				return !MovePrevMovesBranchingTarget;
 			}
 			set
 			{
-				MoveUpMovesBranchingTarget = !value;
+				MovePrevMovesBranchingTarget = !value;
 			}
 		}
 
 		//=============================================================================
 
-		public Boolean MoveDownMovesBranchingSource
+		public Boolean MoveNextMovesBranchingSource
 		{
 			get
 			{
-				return mMoveDownMovesBranchingSource;
+				return mMoveNextMovesBranchingSource;
 			}
 			set
 			{
-				if (mMoveDownMovesBranchingSource != value)
+				if (mMoveNextMovesBranchingSource != value)
 				{
-					mMoveDownMovesBranchingSource = value;
-					MoveDownBranchingSourceChanged ();
+					mMoveNextMovesBranchingSource = value;
+					MoveNextBranchingSourceChanged ();
 				}
 			}
 		}
-		public Boolean MoveDownKeepsBranchingSource
+		public Boolean MoveNextKeepsBranchingSource
 		{
 			get
 			{
-				return !MoveDownMovesBranchingSource;
+				return !MoveNextMovesBranchingSource;
 			}
 			set
 			{
-				MoveDownMovesBranchingSource = !value;
+				MoveNextMovesBranchingSource = !value;
 			}
 		}
-		public Boolean MoveDownMovesBranchingTarget
+		public Boolean MoveNextMovesBranchingTarget
 		{
 			get
 			{
-				return mMoveDownMovesBranchingTarget;
+				return mMoveNextMovesBranchingTarget;
 			}
 			set
 			{
-				if (mMoveDownMovesBranchingTarget != value)
+				if (mMoveNextMovesBranchingTarget != value)
 				{
-					mMoveDownMovesBranchingTarget = value;
-					MoveDownBranchingTargetChanged ();
+					mMoveNextMovesBranchingTarget = value;
+					MoveNextBranchingTargetChanged ();
 				}
 			}
 		}
-		public Boolean MoveDownKeepsBranchingTarget
+		public Boolean MoveNextKeepsBranchingTarget
 		{
 			get
 			{
-				return !MoveDownMovesBranchingTarget;
+				return !MoveNextMovesBranchingTarget;
 			}
 			set
 			{
-				MoveDownMovesBranchingTarget = !value;
+				MoveNextMovesBranchingTarget = !value;
 			}
 		}
 
@@ -433,45 +457,45 @@ namespace AgentCharacterEditor.Previews
 		{
 			get
 			{
-				return DeleteShiftsBranchingTarget && !DeleteMovesBranchingUp && DeleteMovesBranchingDown;
+				return DeleteShiftsBranchingTarget && DeleteMovesBranchingPrev && !DeleteMovesBranchingNext;
 			}
 			set
 			{
 				if (value)
 				{
 					DeleteShiftsBranchingTarget = true;
-					DeleteMovesBranchingUp = false;
-					DeleteMovesBranchingDown = true;
+					DeleteMovesBranchingPrev = true;
+					DeleteMovesBranchingNext = false;
 				}
 			}
 		}
-		public Boolean MoveUpBranchingDefaultOptions
+		public Boolean MovePrevBranchingDefaultOptions
 		{
 			get
 			{
-				return !MoveUpMovesBranchingSource && MoveUpMovesBranchingTarget;
+				return !MovePrevMovesBranchingSource && MovePrevMovesBranchingTarget;
 			}
 			set
 			{
 				if (value)
 				{
-					MoveUpMovesBranchingSource = false;
-					MoveUpMovesBranchingTarget = true;
+					MovePrevMovesBranchingSource = false;
+					MovePrevMovesBranchingTarget = true;
 				}
 			}
 		}
-		public Boolean MoveDownBranchingDefaultOptions
+		public Boolean MoveNextBranchingDefaultOptions
 		{
 			get
 			{
-				return !MoveDownMovesBranchingSource && MoveDownMovesBranchingTarget;
+				return !MoveNextMovesBranchingSource && MoveNextMovesBranchingTarget;
 			}
 			set
 			{
 				if (value)
 				{
-					MoveDownMovesBranchingSource = false;
-					MoveDownMovesBranchingTarget = true;
+					MoveNextMovesBranchingSource = false;
+					MoveNextMovesBranchingTarget = true;
 				}
 			}
 		}
@@ -520,12 +544,12 @@ namespace AgentCharacterEditor.Previews
 		{
 			ButtonAdd.IsEnabled = CanAddFrame;
 			ButtonDelete.IsEnabled = CanDeleteFrame;
-			ButtonMoveUp.IsEnabled = CanMoveFrameUp;
-			ButtonMoveDown.IsEnabled = CanMoveFrameDown;
+			ButtonMovePrev.IsEnabled = CanMoveFramePrev;
+			ButtonMoveNext.IsEnabled = CanMoveFrameNext;
 
 			ButtonDelete.SetTipText (DeleteFrameTitle);
-			ButtonMoveUp.SetTipText (MoveFrameUpTitle);
-			ButtonMoveDown.SetTipText (MoveFrameDownTitle);
+			ButtonMovePrev.SetTipText (MoveFramePrevTitle);
+			ButtonMoveNext.SetTipText (MoveFrameNextTitle);
 
 			OnFrameStateChanged ();
 			if (SelectedFrameState != null)

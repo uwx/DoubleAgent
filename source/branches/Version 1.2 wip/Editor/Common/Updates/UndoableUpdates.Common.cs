@@ -91,6 +91,8 @@ namespace AgentCharacterEditor.Updates
 			}
 		}
 
+		//=============================================================================
+
 		public override UndoUnit Apply ()
 		{
 			UpdateCharacterHeader lApplied = null;
@@ -145,6 +147,8 @@ namespace AgentCharacterEditor.Updates
 			}
 			return null;
 		}
+
+		//=============================================================================
 
 		public Boolean ImageSizeChanged
 		{
@@ -201,7 +205,7 @@ namespace AgentCharacterEditor.Updates
 #endif
 	}
 
-	///////////////////////////////////////////////////////////////////////////////
+	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 	internal class AddDeleteCharacterName : UndoableAddDelete<FileCharacterName>
 	{
@@ -225,6 +229,8 @@ namespace AgentCharacterEditor.Updates
 				return Titles.CharacterName (Target);
 			}
 		}
+
+		//=============================================================================
 
 		public override UndoUnit Apply ()
 		{
@@ -259,6 +265,8 @@ namespace AgentCharacterEditor.Updates
 			return null;
 		}
 
+		//=============================================================================
+
 #if DEBUG
 		public override string DebugString
 		{
@@ -269,6 +277,8 @@ namespace AgentCharacterEditor.Updates
 		}
 #endif
 	}
+
+	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 	internal class UpdateCharacterName : UndoableUpdate<FileCharacterName>
 	{
@@ -794,6 +804,8 @@ namespace AgentCharacterEditor.Updates
 #endif
 	}
 
+	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 	internal class UpdateAllStateAnimations : UndoableUpdate<FileState>
 	{
 		public UpdateAllStateAnimations (String pStateName, String[] pAnimationNames)
@@ -967,6 +979,8 @@ namespace AgentCharacterEditor.Updates
 		}
 #endif
 	}
+
+	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 	internal class UpdateAnimation : UndoableUpdate<FileAnimation>
 	{
@@ -1145,7 +1159,6 @@ namespace AgentCharacterEditor.Updates
 
 	internal class AddDeleteAnimationFrame : UndoableAddDelete<FileAnimationFrame>
 	{
-		//TODO - Reorder branching
 		public AddDeleteAnimationFrame (FileAnimation pAnimation, int pFrameNdx, Boolean pForClipboard)
 			: base (new ResolveAnimationFrame (pAnimation, pFrameNdx), pForClipboard)
 		{
@@ -1188,9 +1201,102 @@ namespace AgentCharacterEditor.Updates
 			}
 		}
 
+		//=============================================================================
+
+		public void ShiftBranchingTargets (Boolean pShiftPrev, Boolean pShiftNext)
+		{
+			if ((pShiftPrev || pShiftNext) && (Animation != null))
+			{
+				Dictionary<FileAnimationFrame, UpdateAnimationFrame> lUpdates = new Dictionary<FileAnimationFrame, UpdateAnimationFrame> ();
+
+				if (BranchingUpdates != null)
+				{
+					foreach (UpdateAnimationFrame lUpdate in BranchingUpdates)
+					{
+						lUpdates[lUpdate.Target] = lUpdate;
+					}
+				}
+
+				if (pShiftPrev)
+				{
+					UpdateAnimationFrame.ShiftFrameBranchingTargets (Animation.Frames, Math.Min (FrameNdx + 1, Animation.Frames.Count - 1), -1, ref lUpdates);
+				}
+				else if (pShiftNext)
+				{
+					UpdateAnimationFrame.ShiftFrameBranchingTargets (Animation.Frames, FrameNdx, 1, ref lUpdates);
+				}
+				if (lUpdates.Count > 0)
+				{
+					BranchingUpdates = new UpdateAnimationFrame[lUpdates.Count];
+					lUpdates.Values.CopyTo (BranchingUpdates, 0);
+				}
+			}
+		}
+
+		public String MoveBranchingSources (Boolean pMovePrev, Boolean pMoveNext)
+		{
+			String lError = null;
+
+			if ((pMovePrev || pMoveNext) && (Animation != null))
+			{
+				Dictionary<FileAnimationFrame, UpdateAnimationFrame> lUpdates = new Dictionary<FileAnimationFrame, UpdateAnimationFrame> ();
+
+				if (BranchingUpdates != null)
+				{
+					foreach (UpdateAnimationFrame lUpdate in BranchingUpdates)
+					{
+						lUpdates[lUpdate.Target] = lUpdate;
+					}
+				}
+
+				if (pMovePrev && (FrameNdx > 0))
+				{
+					lError = UpdateAnimationFrame.MergeFrameBranching (Target, Animation.Frames[FrameNdx - 1], ref lUpdates);
+				}
+				else if (pMoveNext && (FrameNdx < Animation.Frames.Count - 1))
+				{
+					lError = UpdateAnimationFrame.MergeFrameBranching (Target, Animation.Frames[FrameNdx + 1], ref lUpdates);
+				}
+				if ((lError == null) && (lUpdates.Count > 0))
+				{
+					BranchingUpdates = new UpdateAnimationFrame[lUpdates.Count];
+					lUpdates.Values.CopyTo (BranchingUpdates, 0);
+				}
+			}
+			return lError;
+		}
+
+		private UpdateAnimationFrame[] ApplyBranchingUpdates (UpdateAnimationFrame[] pBranchingUpdates)
+		{
+			UpdateAnimationFrame[] lAppliedUpdates = null;
+
+			if (pBranchingUpdates != null)
+			{
+				lAppliedUpdates = new UpdateAnimationFrame[pBranchingUpdates.Length];
+
+				for (int lNdx = 0; lNdx < pBranchingUpdates.Length; lNdx++)
+				{
+					if (pBranchingUpdates[lNdx] != null)
+					{
+						lAppliedUpdates[lNdx] = pBranchingUpdates[lNdx].Apply () as UpdateAnimationFrame;
+					}
+				}
+			}
+			return lAppliedUpdates;
+		}
+
+		private UpdateAnimationFrame[] BranchingUpdates
+		{
+			get;
+			set;
+		}
+
+		//=============================================================================
+
 		public override UndoUnit Apply ()
 		{
 			AddDeleteAnimationFrame lApplied = null;
+			UpdateAnimationFrame[] lAppliedBranchingUpdates = null;
 			FileAnimation lAnimation = Animation;
 			FileAnimationFrame lTarget = Target;
 			int lFrameNdx = FrameNdx;
@@ -1199,15 +1305,18 @@ namespace AgentCharacterEditor.Updates
 #endif
 			if (IsDelete)
 			{
+				lAppliedBranchingUpdates = ApplyBranchingUpdates (BranchingUpdates);
 				lApplied = new AddDeleteAnimationFrame (lTarget, IsForClipboard);
 				if (Animation.Frames.Remove (lTarget))
 				{
 					(lApplied.RawTarget as ResolveAnimationFrame).TargetContained = false;
 					lApplied.IsDelete = false;
 					lApplied.IsRedo = !IsRedo;
+					lApplied.BranchingUpdates = lAppliedBranchingUpdates;
 				}
 				else
 				{
+					ApplyBranchingUpdates (lAppliedBranchingUpdates);
 					lApplied = null;
 				}
 			}
@@ -1224,6 +1333,7 @@ namespace AgentCharacterEditor.Updates
 					lApplied = new AddDeleteAnimationFrame (lFrame, IsForClipboard);
 					lApplied.IsDelete = true;
 					lApplied.IsRedo = !IsRedo;
+					lApplied.BranchingUpdates = ApplyBranchingUpdates (BranchingUpdates);
 				}
 			}
 			if (lApplied != null)
@@ -1236,6 +1346,8 @@ namespace AgentCharacterEditor.Updates
 			return null;
 		}
 
+		//=============================================================================
+
 #if DEBUG
 		public override string DebugString
 		{
@@ -1247,9 +1359,10 @@ namespace AgentCharacterEditor.Updates
 #endif
 	}
 
+	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 	internal class ReorderAnimationFrame : UndoableUpdate<FileAnimationFrame>
 	{
-		//TODO - Reorder branching
 		public ReorderAnimationFrame (FileAnimationFrame pFrame, int pFrameNdxTo)
 			: base (new ResolveAnimationFrame (pFrame))
 		{
@@ -1322,6 +1435,20 @@ namespace AgentCharacterEditor.Updates
 			}
 		}
 
+		private void ApplyBranchingUpdates ()
+		{
+			if (BranchingUpdates != null)
+			{
+				for (int lNdx = 0; lNdx < BranchingUpdates.Length; lNdx++)
+				{
+					if (BranchingUpdates[lNdx] != null)
+					{
+						BranchingUpdates[lNdx] = BranchingUpdates[lNdx].Apply () as UpdateAnimationFrame;
+					}
+				}
+			}
+		}
+
 		private UpdateAnimationFrame[] BranchingUpdates
 		{
 			get;
@@ -1344,17 +1471,7 @@ namespace AgentCharacterEditor.Updates
 #if DEBUG
 				System.Diagnostics.Debug.Print ("Applied {0}", DebugString);
 #endif
-				if (BranchingUpdates != null)
-				{
-					for (int lNdx = 0; lNdx < BranchingUpdates.Length; lNdx++)
-					{
-						if (BranchingUpdates[lNdx] != null)
-						{
-							BranchingUpdates[lNdx] = BranchingUpdates[lNdx].Apply () as UpdateAnimationFrame;
-						}
-					}
-				}
-
+				ApplyBranchingUpdates ();
 				return OnApplied (this);
 			}
 			return null;
@@ -1373,7 +1490,7 @@ namespace AgentCharacterEditor.Updates
 #endif
 	}
 
-	///////////////////////////////////////////////////////////////////////////////
+	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 	internal class UpdateAnimationFrame : UndoableUpdate<FileAnimationFrame>
 	{
@@ -1478,6 +1595,8 @@ namespace AgentCharacterEditor.Updates
 			}
 		}
 
+		//=============================================================================
+
 		public override UndoUnit Apply ()
 		{
 			UndoUnit lApplied = null;
@@ -1501,6 +1620,8 @@ namespace AgentCharacterEditor.Updates
 			}
 			return null;
 		}
+
+		//=============================================================================
 
 		public Boolean DurationChanged
 		{
@@ -1555,7 +1676,8 @@ namespace AgentCharacterEditor.Updates
 			return lString.ToString ().Trim ();
 		}
 #endif
-		//=============================================================================
+
+		///////////////////////////////////////////////////////////////////////////////
 
 		public static Boolean SwapFrameBranchingSources (FileAnimationFrame pFrame1, FileAnimationFrame pFrame2, ref Dictionary<FileAnimationFrame, UpdateAnimationFrame> pUpdates)
 		{
@@ -1600,11 +1722,10 @@ namespace AgentCharacterEditor.Updates
 
 						if (lFrame.Branching != null)
 						{
-							FileFrameBranch[] lBranching = new FileFrameBranch[lFrame.Branching.Length];
+							FileFrameBranch[] lBranching = lFrame.CopyBranching ();
 
 							for (int lNdx = 0; lNdx < lFrame.Branching.Length; lNdx++)
 							{
-								lBranching[lNdx] = lFrame.Branching[lNdx];
 								if (lFrame.Branching[lNdx].mFrameNdx == lFrameNdx1)
 								{
 									lBranching[lNdx].mFrameNdx = (Int16)lFrameNdx2;
@@ -1616,7 +1737,6 @@ namespace AgentCharacterEditor.Updates
 									lRet = true;
 								}
 							}
-
 							if (lRet)
 							{
 								lUpdate.Branching = lBranching;
@@ -1640,6 +1760,202 @@ namespace AgentCharacterEditor.Updates
 				}
 			}
 			return lRet;
+		}
+
+		//=============================================================================
+
+		public static Boolean ShiftFrameBranchingTargets (FileFrames pFrames, int pStartIndex, int pShift, ref Dictionary<FileAnimationFrame, UpdateAnimationFrame> pUpdates)
+		{
+			Boolean lRet = false;
+
+			if (pFrames != null)
+			{
+				foreach (FileAnimationFrame lFrame in pFrames)
+				{
+					if (ShiftFrameBranchingTargets (lFrame, pStartIndex, pShift, ref pUpdates))
+					{
+						lRet = true;
+					}
+				}
+			}
+			return lRet;
+		}
+
+		public static Boolean ShiftFrameBranchingTargets (FileAnimationFrame pFrame, int pStartIndex, int pShift, ref Dictionary<FileAnimationFrame, UpdateAnimationFrame> pUpdates)
+		{
+			Boolean lRet = false;
+
+			if ((pFrame != null) && (pShift != 0))
+			{
+				UpdateAnimationFrame lUpdate = pUpdates.ContainsKey (pFrame) ? pUpdates[pFrame] : null;
+				FileFrameBranch[] lBranching = null;
+
+				if ((lUpdate != null) && (lUpdate.Branching != null))
+				{
+					lBranching = new FileFrameBranch[lUpdate.Branching.Length];
+				}
+				else if (pFrame.Branching != null)
+				{
+					foreach (FileFrameBranch lBranch in pFrame.Branching)
+					{
+						if (lBranch.mFrameNdx >= pStartIndex)
+						{
+							lUpdate = pUpdates.ContainsKey (pFrame) ? pUpdates[pFrame] : new UpdateAnimationFrame (pFrame, false);
+							lBranching = new FileFrameBranch[lUpdate.Branching.Length];
+							break;
+						}
+					}
+				}
+				if ((lUpdate == null) && (pFrame.ExitFrame >= pStartIndex))
+				{
+					lUpdate = pUpdates.ContainsKey (pFrame) ? pUpdates[pFrame] : new UpdateAnimationFrame (pFrame, false);
+				}
+
+				if (lUpdate != null)
+				{
+					pUpdates[pFrame] = lUpdate;
+#if DEBUG_NOT
+					System.Diagnostics.Debug.Print ("    Put {0}", lUpdate.DebugString);
+#endif
+					if (lBranching != null)
+					{
+						for (int lNdx = 0; lNdx < lUpdate.Branching.Length; lNdx++)
+						{
+							lBranching[lNdx] = lUpdate.Branching[lNdx];
+
+							if (lUpdate.Branching[lNdx].mFrameNdx >= pStartIndex)
+							{
+								lBranching[lNdx].mFrameNdx += (Int16)pShift;
+								lRet = true;
+							}
+						}
+						if (lRet)
+						{
+							lUpdate.Branching = lBranching;
+						}
+					}
+
+					if (lUpdate.ExitFrame >= pStartIndex)
+					{
+						lUpdate.ExitFrame += (Int16)pShift;
+						lRet = true;
+					}
+#if DEBUG_NOT
+					System.Diagnostics.Debug.Print ("    Put {0}", lUpdate.DebugString);
+#endif
+				}
+			}
+			return lRet;
+		}
+
+		//=============================================================================
+
+		public static String MergeFrameBranching (FileAnimationFrame pSource, FileAnimationFrame pTarget, ref Dictionary<FileAnimationFrame, UpdateAnimationFrame> pUpdates)
+		{
+			String lError = null;
+
+			if ((pSource != null) && (pTarget != null))
+			{
+				UpdateAnimationFrame lUpdate = pUpdates.ContainsKey (pTarget) ? pUpdates[pTarget] : null;
+
+				if ((pSource.ExitFrame >= 0) && (pTarget.ExitFrame < 0))
+				{
+					lUpdate = pUpdates.ContainsKey (pTarget) ? pUpdates[pTarget] : new UpdateAnimationFrame (pTarget, false);
+				}
+				else if ((pSource.Branching != null) && ((pTarget.Branching == null) || !pTarget.IsBranchingEqual (pSource.Branching)))
+				{
+					lUpdate = pUpdates.ContainsKey (pTarget) ? pUpdates[pTarget] : new UpdateAnimationFrame (pTarget, false);
+				}
+
+				if (lUpdate != null)
+				{
+					pUpdates[pTarget] = lUpdate;
+#if DEBUG//_NOT
+					System.Diagnostics.Debug.Print ("    Put {0}", lUpdate.DebugString);
+#endif
+					if (pSource.ExitFrame >= 0)
+					{
+						if (lUpdate.ExitFrame < 0)
+						{
+							lUpdate.ExitFrame = pSource.ExitFrame;
+						}
+						else if (lUpdate.ExitFrame != pSource.ExitFrame)
+						{
+							lError = "Exit frame conflict";
+						}
+					}
+					if ((lError == null) && (pSource.Branching != null))
+					{
+						if (lUpdate.Branching == null)
+						{
+							lUpdate.Branching = pSource.CopyBranching ();
+						}
+						else
+						{
+							FileFrameBranch[] lBranching = new FileFrameBranch[pSource.Branching.Length + lUpdate.Branching.Length];
+							int lRemainder = 100;
+							int lSourceNdx;
+							int lTargetNdx;
+							int lUpdateNdx = 0;
+
+							for (lSourceNdx = 0; lSourceNdx < pSource.Branching.Length; lSourceNdx++)
+							{
+								if (pSource.Branching[lSourceNdx].mFrameNdx >= 0)
+								{
+									lRemainder -= pSource.Branching[lSourceNdx].mProbability;
+									lBranching[lUpdateNdx++] = pSource.Branching[lSourceNdx];
+								}
+							}
+							for (lTargetNdx = 0; lTargetNdx < lUpdate.Branching.Length; lTargetNdx++)
+							{
+								if (lUpdate.Branching[lTargetNdx].mFrameNdx >= 0)
+								{
+									for (lSourceNdx = 0; lSourceNdx < lBranching.Length; lSourceNdx++)
+									{
+										if (lBranching[lSourceNdx].mFrameNdx == lUpdate.Branching[lTargetNdx].mFrameNdx)
+										{
+											lRemainder -= lUpdate.Branching[lTargetNdx].mProbability;
+											lBranching[lSourceNdx].mProbability += lUpdate.Branching[lTargetNdx].mProbability;
+											break;
+										}
+										else if (lSourceNdx == lUpdateNdx)
+										{
+											lRemainder -= lUpdate.Branching[lTargetNdx].mProbability;
+											lBranching[lUpdateNdx++] = lUpdate.Branching[lTargetNdx];
+											break;
+										}
+									}
+								}
+							}
+
+							if (lUpdateNdx > 3)
+							{
+								lError = "Too many branches";
+							}
+							else if (lRemainder < 0)
+							{
+								lError = "Total probability > 100";
+							}
+							else
+							{
+								Array.Resize (ref lBranching, lUpdateNdx);
+								lUpdate.Branching = lBranching;
+							}
+						}
+					}
+#if DEBUG//_NOT
+					if (lError == null)
+					{
+						System.Diagnostics.Debug.Print ("    Put {0}", lUpdate.DebugString);
+					}
+					else
+					{
+						System.Diagnostics.Debug.Print ("    Error {0}", lError);
+					}
+#endif
+				}
+			}
+			return lError;
 		}
 	}
 
@@ -1771,6 +2087,8 @@ namespace AgentCharacterEditor.Updates
 #endif
 	}
 
+	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 	internal class ReorderFrameImage : UndoableUpdate<FileFrameImage>
 	{
 		public ReorderFrameImage (FileFrameImage pImage, int pImageNdxTo)
@@ -1864,6 +2182,8 @@ namespace AgentCharacterEditor.Updates
 		}
 #endif
 	}
+
+	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 	internal class UpdateFrameImage : UndoableUpdate<FileFrameImage>
 	{
@@ -2117,6 +2437,8 @@ namespace AgentCharacterEditor.Updates
 		}
 #endif
 	}
+
+	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 	internal class UpdateFrameOverlay : UndoableUpdate<FileFrameOverlay>
 	{
