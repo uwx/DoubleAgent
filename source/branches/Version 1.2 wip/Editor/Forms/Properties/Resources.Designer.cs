@@ -200,6 +200,13 @@ namespace AgentCharacterEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap ImgLock {
+            get {
+                object obj = ResourceManager.GetObject("ImgLock", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap ImgMouthClosed {
             get {
                 object obj = ResourceManager.GetObject("ImgMouthClosed", resourceCulture);
@@ -385,6 +392,13 @@ namespace AgentCharacterEditor.Properties {
         internal static System.Drawing.Bitmap ImgStop {
             get {
                 object obj = ResourceManager.GetObject("ImgStop", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgSwap {
+            get {
+                object obj = ResourceManager.GetObject("ImgSwap", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -47,10 +47,10 @@ namespace AgentCharacterEditor.Panels
 				Program.MainWindow.InitializeContextMenu (FramesView.ContextMenuFrames);
 			}
 
-			ToolBarFrames.ButtonAdd.Click +=new EventHandler(ButtonAdd_Click);
-			ToolBarFrames.ButtonDelete.Click +=new EventHandler(ButtonDelete_Click);
-			ToolBarFrames.ButtonMovePrev.Click+=new EventHandler(ButtonMovePrev_Click);
-			ToolBarFrames.ButtonMoveNext.Click+=new EventHandler(ButtonMoveNext_Click);
+			ToolBarFrames.ButtonAdd.ButtonClick += new EventHandler (ButtonAdd_Click);
+			ToolBarFrames.ButtonDelete.ButtonClick += new EventHandler (ButtonDelete_Click);
+			ToolBarFrames.ButtonMovePrev.ButtonClick += new EventHandler (ButtonMovePrev_Click);
+			ToolBarFrames.ButtonMoveNext.ButtonClick += new EventHandler (ButtonMoveNext_Click);
 
 			FramesView.Frames.ItemActivate += new System.EventHandler (FramesView_ItemActivate);
 			FramesView.Frames.SelectedIndexChanged += new System.EventHandler (FramesView_SelectedIndexChanged);

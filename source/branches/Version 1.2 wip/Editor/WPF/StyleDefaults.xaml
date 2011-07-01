@@ -1121,7 +1121,7 @@
 				<ControlTemplate TargetType="{x:Type Separator}">
 					<Border Background="{TemplateBinding Background}"
 							BorderBrush="{TemplateBinding BorderBrush}"
-							BorderThickness="{TemplateBinding BorderThickness}"
+							BorderThickness="{TemplateBinding BorderThickness}" 
 							SnapsToDevicePixels="true" />
 				</ControlTemplate>
 			</Setter.Value>

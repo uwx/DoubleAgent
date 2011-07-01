@@ -345,7 +345,7 @@ HRESULT CAgentFileAcs::LoadFile (LPCTSTR pPath)
 		}
 #endif
 #ifdef	_DEBUG_BLOCKS
-		if	(IsAcsFile ())
+		if	(IsAcsFile)
 		{
 			DumpBlocks (MaxLogLevel (mLogLevel,_DEBUG_BLOCKS));
 		}
@@ -2556,16 +2556,18 @@ CAgentFileImage* CAgentFileAcs::ReadAcsImage (DWORD pOffset, DWORD pSize, UINT p
 						lImageBits = &l32BitImage->mBits[lTrgNdx];
 						if	(lRet->mBits [lSrcNdx] == mHeader->mTransparency)
 						{
-							if	(
-									(pBkColor != Color::Empty)
-								&&	(pBkColor != Color::Transparent)
-								)
+							if	(pBkColor == Color::Transparent)
 							{
-								*(LPCOLORREF)(LPBYTE)lImageBits = pBkColor.ToArgb() | 0xFF000000;
+								*(LPCOLORREF)(LPBYTE)lImageBits = 0;
+							}
+							else 
+							if	(pBkColor == Color::Empty)
+							{
+								*(LPCOLORREF)(LPBYTE)lImageBits = mHeader->mPalette->Entries [(long)lRet->mBits [lSrcNdx]].ToArgb() | 0xFF000000;
 							}
 							else
 							{
-								*(LPCOLORREF)(LPBYTE)lImageBits = 0;
+								*(LPCOLORREF)(LPBYTE)lImageBits = pBkColor.ToArgb() | 0xFF000000;
 							}
 						}
 						else
@@ -3018,6 +3020,7 @@ LPVOID CAgentFileAcs::WriteAcsSound (LPVOID pBuffer, array <BYTE>^ pSound)
 
 void CAgentFileAcs::FreeUnusedImages ()
 {
+//TODO ?
 #if	FALSE
 	if	(
 			(mImageIndex)
@@ -3133,6 +3136,7 @@ void CAgentFileAcs::FreeUnusedImages ()
 
 void CAgentFileAcs::FreeUnusedSounds ()
 {
+//TODO ?
 #if	FALSE
 	if	(
 			(mSoundIndex)

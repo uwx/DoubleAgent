@@ -174,6 +174,9 @@ namespace AgentCharacterEditor.Panels
 					TextBoxDescription.IsEnabled = true;
 					TextBoxExtra.IsEnabled = true;
 				}
+
+				ShowCharacterNameState (pName, pLangID);
+
 				TextBoxName.IsModified = false;
 				TextBoxDescription.IsModified = false;
 				TextBoxExtra.IsModified = false;

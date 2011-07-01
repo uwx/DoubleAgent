@@ -48,10 +48,10 @@ namespace AgentCharacterEditor.Panels
 				Program.MainWindow.ViewChanged += new EventHandler (OnViewChanged);
 			}
 
-			ToolBarFrames.ButtonAdd.Click +=new RoutedEventHandler(ButtonAdd_Click);
-			ToolBarFrames.ButtonDelete.Click+=new RoutedEventHandler(ButtonDelete_Click);
-			ToolBarFrames.ButtonMovePrev.Click+=new RoutedEventHandler(ButtonMovePrev_Click);
-			ToolBarFrames.ButtonMoveNext.Click+=new RoutedEventHandler(ButtonMoveNext_Click);
+			ToolBarFrames.ButtonAdd.Click += new RoutedEventHandler (ButtonAdd_Click);
+			ToolBarFrames.ButtonDelete.Click += new RoutedEventHandler (ButtonDelete_Click);
+			ToolBarFrames.ButtonMovePrev.Click += new RoutedEventHandler (ButtonMovePrev_Click);
+			ToolBarFrames.ButtonMoveNext.Click += new RoutedEventHandler (ButtonMoveNext_Click);
 
 			FramesView.Frames.SelectionChanged += new System.Windows.Controls.SelectionChangedEventHandler (FramesView_SelectionChanged);
 			FramesView.Frames.MouseDoubleClick += new System.Windows.Input.MouseButtonEventHandler (FramesView_MouseDoubleClick);
@@ -63,6 +63,16 @@ namespace AgentCharacterEditor.Panels
 			AnimationPreview.AnimationStateChanged += new EventHandler (AnimationPreview_StateChanged);
 			AnimationPreview.AnimationImageChanged += new EventHandler (AnimationPreview_ImageChanged);
 		}
+
+		protected override Size ArrangeOverride (Size arrangeBounds)
+		{
+			MainRight.Width = GridLength.Auto;
+			base.ArrangeOverride (arrangeBounds);
+			MainRight.Width = new GridLength (Math.Max (MainGrid.ActualWidth - MainLeft.ActualWidth, 0));
+			return base.ArrangeOverride (arrangeBounds);
+		}
+
+		//=============================================================================
 
 		protected override void OnLoadConfig (object sender, EventArgs e)
 		{

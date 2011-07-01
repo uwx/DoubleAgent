@@ -74,6 +74,26 @@ namespace AgentCharacterEditor.Panels
 			pItem.ForeColor = pPresent ? SystemColors.HotTrack : ListViewLanguage.ForeColor;
 		}
 
+		private void ShowCharacterNameState (FileCharacterName pName, UInt16 pLangID)
+		{
+			System.Globalization.CultureInfo lCulture = (pName == null) ? new System.Globalization.CultureInfo (mLangDefault) : new System.Globalization.CultureInfo (pName.Language);
+
+			TextBoxName.RightToLeft = lCulture.TextInfo.IsRightToLeft ? RightToLeft.Yes : RightToLeft.No;
+			TextBoxDescription.RightToLeft = lCulture.TextInfo.IsRightToLeft ? RightToLeft.Yes : RightToLeft.No;
+			TextBoxExtra.RightToLeft = lCulture.TextInfo.IsRightToLeft ? RightToLeft.Yes : RightToLeft.No;
+
+			if ((pName == null) || pLangID.PrimaryLanguageEqual (pName))
+			{
+				TextBoxDescription.ForeColor = SystemColors.WindowText;
+				TextBoxExtra.ForeColor = SystemColors.WindowText;
+			}
+			else
+			{
+				TextBoxDescription.ForeColor = SystemColors.GrayText;
+				TextBoxExtra.ForeColor = SystemColors.GrayText;
+			}
+		}
+
 		private Boolean SelectLangIDItem (UInt16 pLangID)
 		{
 			ListViewItemCommon lItem = ListLangIDItem (pLangID);

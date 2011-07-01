@@ -36,6 +36,7 @@ namespace AgentCharacterEditor.Previews
 		public AnimationPreview ()
 		{
 			InitializeComponent ();
+			RenderOptions.SetBitmapScalingMode (this, BitmapScalingMode.HighQuality);
 			this.Image = new System.Windows.Media.ImageDrawing ();
 			this.Image.Changed += new EventHandler (Image_ImageChanged);
 		}

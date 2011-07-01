@@ -269,6 +269,12 @@
   <data name="ImgViewSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\Common\Resources\ViewSmall.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ImgLock" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Common\Resources\Lock.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImgSwap" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Common\Resources\Swap.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="LicenseDetails" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\Common\Resources\LicenseDetails.rtf;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>

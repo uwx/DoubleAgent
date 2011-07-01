@@ -48,6 +48,7 @@ namespace AgentCharacterEditor.Panels
 		/// </summary>
 		private void InitializeComponent ()
 		{
+			System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 			System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 			System.Windows.Forms.Panel PanelTopLeft;
 			System.Windows.Forms.Panel PanelTopRight;
@@ -92,6 +93,7 @@ namespace AgentCharacterEditor.Panels
 			this.PreviewButtonRepeat = new DoubleAgent.ToolStripButtonCompat();
 			this.PreviewButtonMute = new DoubleAgent.ToolStripButtonCompat();
 			this.AnimationPreview = new AgentCharacterEditor.Previews.AnimationPreviewHost();
+			toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			PanelTopLeft = new System.Windows.Forms.Panel();
 			PanelTopRight = new System.Windows.Forms.Panel();
@@ -114,6 +116,11 @@ namespace AgentCharacterEditor.Panels
 			this.PanelPreviewControls.SuspendLayout();
 			this.ToolStripPreview.SuspendLayout();
 			this.SuspendLayout();
+			// 
+			// toolStripSeparator1
+			// 
+			toolStripSeparator1.Name = "toolStripSeparator1";
+			toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
 			// 
 			// toolStripSeparator3
 			// 
@@ -408,6 +415,7 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripFramesView.Dock = System.Windows.Forms.DockStyle.None;
 			this.ToolStripFramesView.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.ToolStripFramesView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            toolStripSeparator1,
             this.ButtonShowBranching,
             this.ButtonShowExitBranching,
             toolStripSeparator3,

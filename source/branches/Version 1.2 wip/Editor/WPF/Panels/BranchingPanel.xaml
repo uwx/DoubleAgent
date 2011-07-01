@@ -23,6 +23,10 @@
 						Executed="OnEditPaste" />
 	</Control.CommandBindings>
 	<Grid Style="{StaticResource PanelMainGrid}">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"
+							  MaxWidth="600" />
+		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />

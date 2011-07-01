@@ -54,43 +54,46 @@ FontProperties::FontProperties (System::Drawing::Font^ pFont, System::Windows::M
 
 void FontProperties::CommonConstruct (System::Drawing::Font^ pFont)
 {
-	mHintingEmSize = pFont->SizeInPoints;
-	mRenderingEmSize = pFont->GetHeight (96.0);
-	mTypeface = nullptr;
-	mDecorations = nullptr;
-
-	try
+	if	(pFont)
 	{
-		System::Windows::FontStyle			lFontStyle  = (((int)pFont->Style & (int)System::Drawing::FontStyle::Italic) != 0) ? System::Windows::FontStyles::Italic : System::Windows::FontStyles::Normal;
-		System::Windows::FontWeight			lFontWeight = pFont->Bold ? System::Windows::FontWeights::Bold : System::Windows::FontWeights::Normal;
-		System::Windows::Media::Typeface^	lTypeface;
+		mHintingEmSize = pFont->SizeInPoints;
+		mRenderingEmSize = pFont->GetHeight (96.0);
+		mTypeface = nullptr;
+		mDecorations = nullptr;
 
-		if	(mTypeface = gcnew System::Windows::Media::Typeface (String::IsNullOrEmpty (pFont->OriginalFontName) ? pFont->Name : pFont->OriginalFontName))
+		try
 		{
-			if	(lTypeface = gcnew System::Windows::Media::Typeface (mTypeface->FontFamily, lFontStyle, lFontWeight, mTypeface->Stretch))
+			System::Windows::FontStyle			lFontStyle  = (((int)pFont->Style & (int)System::Drawing::FontStyle::Italic) != 0) ? System::Windows::FontStyles::Italic : System::Windows::FontStyles::Normal;
+			System::Windows::FontWeight			lFontWeight = pFont->Bold ? System::Windows::FontWeights::Bold : System::Windows::FontWeights::Normal;
+			System::Windows::Media::Typeface^	lTypeface;
+
+			if	(mTypeface = gcnew System::Windows::Media::Typeface (String::IsNullOrEmpty (pFont->OriginalFontName) ? pFont->Name : pFont->OriginalFontName))
 			{
-				mTypeface = lTypeface;
-			}
-			if	(
-					(
-						(pFont->Underline)
-					||	(pFont->Strikeout)
-					)
-				&&	(mDecorations = gcnew System::Windows::TextDecorationCollection)
-				)
-			{
-				if	(pFont->Underline)
+				if	(lTypeface = gcnew System::Windows::Media::Typeface (mTypeface->FontFamily, lFontStyle, lFontWeight, mTypeface->Stretch))
 				{
-					mDecorations->Add (gcnew System::Windows::TextDecoration (TextDecorationLocation::Underline, nullptr, 0, TextDecorationUnit::FontRecommended, TextDecorationUnit::FontRecommended));
+					mTypeface = lTypeface;
 				}
-				if	(pFont->Strikeout)
+				if	(
+						(
+							(pFont->Underline)
+						||	(pFont->Strikeout)
+						)
+					&&	(mDecorations = gcnew System::Windows::TextDecorationCollection)
+					)
 				{
-					mDecorations->Add (gcnew System::Windows::TextDecoration (TextDecorationLocation::Strikethrough, nullptr, 0, TextDecorationUnit::FontRecommended, TextDecorationUnit::FontRecommended));
+					if	(pFont->Underline)
+					{
+						mDecorations->Add (gcnew System::Windows::TextDecoration (TextDecorationLocation::Underline, nullptr, 0, TextDecorationUnit::FontRecommended, TextDecorationUnit::FontRecommended));
+					}
+					if	(pFont->Strikeout)
+					{
+						mDecorations->Add (gcnew System::Windows::TextDecoration (TextDecorationLocation::Strikethrough, nullptr, 0, TextDecorationUnit::FontRecommended, TextDecorationUnit::FontRecommended));
+					}
 				}
 			}
 		}
+		catch AnyExceptionSilent
 	}
-	catch AnyExceptionSilent
 }
 
 /////////////////////////////////////////////////////////////////////////////

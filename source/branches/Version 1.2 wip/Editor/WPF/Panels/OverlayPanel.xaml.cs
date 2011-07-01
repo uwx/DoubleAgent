@@ -27,6 +27,14 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
+		protected override Size ArrangeOverride (Size arrangeBounds)
+		{
+			MainRight.Width = GridLength.Auto;
+			base.ArrangeOverride (arrangeBounds);
+			MainRight.Width = new GridLength (Math.Max (MainGrid.ActualWidth - MainLeft.ActualWidth, 0));
+			return base.ArrangeOverride (arrangeBounds);
+		}
+
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display

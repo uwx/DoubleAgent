@@ -80,7 +80,14 @@
 			</Grid>
 		</DataTemplate>
 	</Control.Resources>
-	<Grid Style="{StaticResource PanelMainGrid}">
+	<Grid Name="MainGrid"
+		  Style="{StaticResource PanelMainGrid}">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Name="MainLeft"
+							  MaxWidth="600" />
+			<ColumnDefinition Name="MainRight"
+							  Width="Auto" />
+		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition  Height="Auto" />
@@ -110,6 +117,7 @@
 		<GroupBox Header="Mouth Overlays"
 				  Name="GroupBoxImages"
 				  Grid.Row="1"
+				  Grid.ColumnSpan="2"
 				  Style="{StaticResource PanelGroupBox}">
 			<StackPanel Orientation="Vertical">
 				<ToolBar Style="{StaticResource PanelToolBar}"
@@ -351,9 +359,10 @@
 				</ContentControl>
 			</StackPanel>
 		</GroupBox>
-		<GroupBox Grid.Row="2"
+		<GroupBox Name="GroupBoxOverlay"
+				  Grid.Row="2"
+				  Grid.ColumnSpan="2"
 				  Header="Overlay"
-				  Name="GroupBoxOverlay"
 				  Style="{StaticResource PanelGroupBox}">
 			<StackPanel Orientation="Horizontal">
 				<Grid Name="PanelSample"

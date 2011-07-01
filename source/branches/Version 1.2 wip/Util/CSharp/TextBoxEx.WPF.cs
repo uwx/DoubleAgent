@@ -47,10 +47,11 @@ namespace DoubleAgent
 			set
 			{
 				SetValue (IsModifiedProperty, value);
-				if (!value)
+				if (!IsModified)
 				{
 					UndoLimit = 0;
 					UndoLimit = -1;
+					HasChanged = false;
 				}
 			}
 		}

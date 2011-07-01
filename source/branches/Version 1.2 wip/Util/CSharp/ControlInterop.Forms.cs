@@ -351,6 +351,46 @@ namespace DoubleAgent
 
 	///////////////////////////////////////////////////////////////////////////////
 
+	public class ToolStripDropDownButtonCompat : System.Windows.Forms.ToolStripDropDownButton
+	{
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public Boolean IsEnabled
+		{
+			get
+			{
+				return Enabled;
+			}
+			set
+			{
+				Enabled = value;
+			}
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+
+	public class ToolStripSplitButtonCompat : System.Windows.Forms.ToolStripSplitButton
+	{
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public Boolean IsEnabled
+		{
+			get
+			{
+				return Enabled;
+			}
+			set
+			{
+				Enabled = value;
+			}
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+
 	public class LabelCompat : System.Windows.Forms.Label
 	{
 		[System.ComponentModel.Browsable (false)]

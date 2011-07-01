@@ -61,7 +61,14 @@
 			</Grid>
 		</DataTemplate>
 	</Control.Resources>
-	<Grid Style="{StaticResource PanelMainGrid}">
+	<Grid Name="MainGrid"
+		  Style="{StaticResource PanelMainGrid}">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Name="MainLeft"
+							  MaxWidth="600" />
+			<ColumnDefinition Name="MainRight"
+							  Width="Auto" />
+		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
@@ -116,6 +123,7 @@
 		<GroupBox Style="{StaticResource PanelGroupBox}"
 				  Name="GroupBoxImages"
 				  Grid.Row="1"
+				  Grid.ColumnSpan="2"
 				  Header="Images"
 				  MinHeight="180"
 				  MaxHeight="250">
@@ -362,7 +370,8 @@
 				</ContentControl>
 			</Grid>
 		</GroupBox>
-		<Grid Grid.Row="2">
+		<Grid Grid.Row="2"
+			  Grid.ColumnSpan="2">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition Width="*" />
@@ -436,11 +445,16 @@
 								Style="{StaticResource BorderNormal}"
 								Padding="0"
 								UseLayoutRounding="False">
-							<ContentControl IsTabStop="False"
+							<ContentControl Name="ImageContainer"
+											HorizontalContentAlignment="Left"
+											VerticalContentAlignment="Top"
+											IsTabStop="False"
 											SnapsToDevicePixels="False"
 											UseLayoutRounding="False"
 											ClipToBounds="True">
 								<local:FrameSample x:Name="ImageSample"
+												   HorizontalAlignment="Left"
+												   VerticalAlignment="Top"
 												   MaxWidth="256"
 												   MaxHeight="256"
 												   SnapsToDevicePixels="False"

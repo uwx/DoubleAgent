@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
+using DoubleAgent;
 using DoubleAgent.Character;
 
 namespace AgentCharacterEditor.Previews
@@ -192,17 +193,14 @@ namespace AgentCharacterEditor.Previews
 
 	///////////////////////////////////////////////////////////////////////////////
 
-	internal partial class FrameImageWorker : BackgroundWorker
+	internal partial class FrameImageWorker : BackgroundWorkerEx
 	{
 		private Queue<FileAnimationFrame> mFrames = null;
 		private Dictionary<FileAnimationFrame, System.Drawing.Bitmap> mImages = null;
-		private int mWaitForWork = 0;
 		private Object mLock = new Object ();
 
 		public FrameImageWorker (CharacterFile pCharacterFile)
 		{
-			WorkerReportsProgress = true;
-			WorkerSupportsCancellation = true;
 			Reset (pCharacterFile);
 		}
 
@@ -335,41 +333,7 @@ namespace AgentCharacterEditor.Previews
 
 				if (FrameCount > 0)
 				{
-#if DEBUG
-					Boolean lThreadEnding = false;
-					if (IsBusy && WaitForWork <= 0)
-					{
-						System.Diagnostics.Debug.Print ("!!! Worker thread ending [{0}]", pFrame);
-						lThreadEnding = true;
-					}
-#endif
-
-					WaitForWork = 100;
-#if DEBUG_NOT
-					System.Diagnostics.Debug.Print ("MakeAsyncImages [{0}] [{1}]", FrameCount, WaitForWork);
-#endif
-					try
-					{
-						RunWorkerAsync ();
-					}
-#if DEBUG
-					catch (Exception pException)
-					{
-						if (lThreadEnding)
-						{
-							System.Diagnostics.Debug.Print (pException.Message);
-						}
-					}
-					//#if DEBUG_NOT
-					//catch (Exception pException)
-					//{
-					//    System.Diagnostics.Debug.Print (pException.Message);
-					//}
-#else
-					catch
-					{
-					}
-#endif
+					lRet = StartWork ();
 				}
 			}
 			return lRet;
@@ -377,36 +341,18 @@ namespace AgentCharacterEditor.Previews
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private int WaitForWork
-		{
-			get
-			{
-				int lRet = 0;
-				lock (mLock)
-				{
-					lRet = mWaitForWork;
-				}
-				return lRet;
-			}
-			set
-			{
-				lock (mLock)
-				{
-					mWaitForWork = value;
-				}
-			}
-		}
-
 		protected override void OnDoWork (DoWorkEventArgs e)
 		{
 #if DEBUG_NOT
 			System.Diagnostics.Debug.Print ("  StartAsyncImages [{0}] [{1}]", FrameCount, WaitForWork);
 #endif
-			while (WaitForWork-- > 0 && !e.Cancel)
+			while (!CancelWorkCycle (e) && (StartWorkCycle () > 0))
 			{
 				FileAnimationFrame lFrame = null;
 				System.Drawing.Bitmap lBitmap = null;
 				int lProgress = 0;
+
+				IsWorking = true;
 
 				lock (mLock)
 				{
@@ -420,18 +366,21 @@ namespace AgentCharacterEditor.Previews
 					}
 				}
 
-				if (CancellationPending)
+				if (CancelWorkCycle (e))
 				{
-					e.Cancel = true;
 					break;
 				}
 				else if (lFrame == null)
 				{
-					Thread.Sleep (10);
-					continue;
+					IsWorking = false;
+					if (!WaitForWork (e))
+					{
+						break;
+					}
 				}
 				else
 				{
+
 					try
 					{
 						lBitmap = FramesListView.GetFrameImage (CharacterFile, lFrame);
@@ -440,38 +389,39 @@ namespace AgentCharacterEditor.Previews
 					{
 						System.Diagnostics.Debug.Print (pException.Message);
 					}
-				}
 
-				if (CancellationPending)
-				{
-					e.Cancel = true;
-					break;
-				}
-				else if (lBitmap != null)
-				{
-					lock (mLock)
+					if (CancelWorkCycle (e))
 					{
+						break;
+					}
+					else if (lBitmap != null)
+					{
+						lock (mLock)
+						{
+							try
+							{
+								mImages[lFrame] = lBitmap;
+#if DEBUG_NOT
+								System.Diagnostics.Debug.Print ("    PutAsyncImage [{0}] [{1}]", lProgress, lFrame);
+#endif
+							}
+							catch
+							{
+							}
+						}
 						try
 						{
-							mImages[lFrame] = lBitmap;
-#if DEBUG_NOT
-							System.Diagnostics.Debug.Print ("    PutAsyncImage [{0}] [{1}]", lProgress, lFrame);
-#endif
+							ReportProgress (lProgress, lFrame);
 						}
-						catch
+						catch (Exception pException)
 						{
+							System.Diagnostics.Debug.Print (pException.Message);
 						}
-					}
-					try
-					{
-						ReportProgress (lProgress, lFrame);
-					}
-					catch (Exception pException)
-					{
-						System.Diagnostics.Debug.Print (pException.Message);
 					}
 				}
 			}
+
+			IsWorking = false;
 #if DEBUG_NOT
 			System.Diagnostics.Debug.Print ("  EndAsyncImages [{0}] [{1}] [{2}]", FrameCount, WaitForWork, e.Cancel);
 #endif

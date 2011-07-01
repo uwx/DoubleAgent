@@ -24,6 +24,10 @@
 						Executed="OnEditPaste" />
 	</Control.CommandBindings>
 	<Grid Style="{StaticResource PanelMainGrid}">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"
+							  MaxWidth="600" />
+		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition />
 			<RowDefinition Height="Auto" />
@@ -83,14 +87,16 @@
 									  AcceptsReturn="True"
 									  IsModifiedChanged="TextBoxDescription_IsModifiedChanged"
 									  DataContext="{Binding}"
-									  ContextMenu="{StaticResource ContextMenuTextBox}" />
+									  ContextMenu="{StaticResource ContextMenuTextBox}"
+									  TextWrapping="Wrap" />
 					<custom:TextBoxEx Grid.Column="1"
 									  Grid.Row="2"
 									  x:Name="TextBoxExtra"
 									  TabIndex="3"
 									  AcceptsReturn="True"
 									  IsModifiedChanged="TextBoxExtra_IsModifiedChanged"
-									  ContextMenu="{StaticResource ContextMenuTextBox}" />
+									  ContextMenu="{StaticResource ContextMenuTextBox}"
+									  TextWrapping="Wrap" />
 				</Grid>
 				<ListView Name="ListViewLanguage"
 						  TabIndex="0"
@@ -185,33 +191,28 @@
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
-				<Border HorizontalAlignment="Left"
-						VerticalAlignment="Top"
-						Margin="0,0,2,0"
-						BorderThickness="1"
-						BorderBrush="{StaticResource {x:Static SystemColors.WindowFrameBrushKey}}"
-						Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
-						Grid.RowSpan="2"
-						Effect="{StaticResource LabelTextShadow}">
+				<ContentControl Style="{StaticResource IconImageFrame}"
+								Grid.Column="0"
+								Grid.RowSpan="2"
+								HorizontalAlignment="Left"
+								VerticalAlignment="Top"
+								Margin="0,0,2,0">
 					<Image Name="ImageIconSmall"
-						   Stretch="Uniform"
+						   Style="{StaticResource IconImage}"
 						   Width="16"
 						   Height="16" />
-				</Border>
-				<Border HorizontalAlignment="Left"
-						VerticalAlignment="Top"
-						Grid.Column="1"
-						Margin="2,0,5,0"
-						BorderThickness="1"
-						BorderBrush="{StaticResource {x:Static SystemColors.WindowFrameBrushKey}}"
-						Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
-						Grid.RowSpan="2"
-						Effect="{StaticResource LabelTextShadow}">
+				</ContentControl>
+				<ContentControl Style="{StaticResource IconImageFrame}"
+								Grid.Column="1"
+								Grid.RowSpan="2"
+								HorizontalAlignment="Left"
+								VerticalAlignment="Top"
+								Margin="2,0,5,0">
 					<Image Name="ImageIconLarge"
-						   Stretch="Uniform"
+						   Style="{StaticResource IconImage}"
 						   Width="32"
 						   Height="32" />
-				</Border>
+				</ContentControl>
 				<custom:TextBoxEx x:Name="TextBoxIconFile"
 								  Margin="2,0"
 								  HorizontalAlignment="Stretch"

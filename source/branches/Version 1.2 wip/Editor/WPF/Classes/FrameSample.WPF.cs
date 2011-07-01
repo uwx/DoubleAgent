@@ -29,6 +29,7 @@ namespace AgentCharacterEditor
 			this.SnapsToDevicePixels = false;
 			this.UseLayoutRounding = false;
 			this.ClipToBounds = true;
+			RenderOptions.SetBitmapScalingMode (this, BitmapScalingMode.HighQuality);
 		}
 
 		#endregion

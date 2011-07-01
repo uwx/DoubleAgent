@@ -74,6 +74,26 @@ namespace AgentCharacterEditor.Panels
 			pItem.Foreground = pPresent ? SystemColors.HotTrackBrush : ListViewLanguage.Foreground;
 		}
 
+		private void ShowCharacterNameState (FileCharacterName pName, UInt16 pLangID)
+		{
+			System.Globalization.CultureInfo lCulture = (pName==null) ? new	System.Globalization.CultureInfo (mLangDefault)  : new	System.Globalization.CultureInfo (pName.Language);
+
+			TextBoxName.FlowDirection =  lCulture.TextInfo.IsRightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+			TextBoxDescription.FlowDirection =  lCulture.TextInfo.IsRightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+			TextBoxExtra.FlowDirection =  lCulture.TextInfo.IsRightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+
+			if ((pName == null) || pLangID.PrimaryLanguageEqual (pName))
+			{
+				TextBoxDescription.Background = SystemColors.WindowBrush;
+				TextBoxExtra.Background = SystemColors.WindowBrush;
+			}
+			else
+			{
+				TextBoxDescription.Background = Program.MainWindow.Background;
+				TextBoxExtra.Background = Program.MainWindow.Background;
+			}
+		}
+
 		private Boolean SelectLangIDItem (UInt16 pLangID)
 		{
 			ListViewItemCommon lItem = ListLangIDItem (pLangID);
@@ -92,33 +112,11 @@ namespace AgentCharacterEditor.Panels
 		private void ShowSmallIcon (System.Drawing.Bitmap pIcon)
 		{
 			ImageIconSmall.Source = (pIcon == null) ? null : pIcon.MakeImageSource ();
-			try
-			{
-				if ((ImageIconSmall.Parent as FrameworkElement).Effect is DropShadowEffect)
-				{
-					((ImageIconSmall.Parent as FrameworkElement).Effect as DropShadowEffect).Opacity = (ImageIconSmall.Source == null) ? 0.0 : 0.5;
-				}
-			}
-			catch (Exception pException)
-			{
-				System.Diagnostics.Debug.Print (pException.Message);
-			}
 		}
 
 		private void ShowLargeIcon (System.Drawing.Bitmap pIcon)
 		{
 			ImageIconLarge.Source = (pIcon == null) ? null : pIcon.MakeImageSource ();
-			try
-			{
-				if ((ImageIconLarge.Parent as FrameworkElement).Effect is DropShadowEffect)
-				{
-					((ImageIconLarge.Parent as FrameworkElement).Effect as DropShadowEffect).Opacity = (ImageIconLarge.Source == null) ? 0.0 : 0.5;
-				}
-			}
-			catch (Exception pException)
-			{
-				System.Diagnostics.Debug.Print (pException.Message);
-			}
 		}
 
 		#endregion
@@ -127,7 +125,7 @@ namespace AgentCharacterEditor.Panels
 
 		private void ListViewLanguage_SelectionChanged (object sender, SelectionChangedEventArgs e)
 		{
-			if (!IsPanelFilling && !Program.FileIsReadOnly)
+			if (!IsPanelFilling)
 			{
 				mLangCurrent = ShowCharacterName ();
 			}

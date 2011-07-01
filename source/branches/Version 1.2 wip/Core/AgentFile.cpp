@@ -931,7 +931,7 @@ CAgentFileImage^ CAgentFile::GetImage (int pImageNdx)
 
 CAgentFileImage^ CAgentFile::GetImage (int pImageNdx, bool p32Bit)
 {
-	return GetImage (pImageNdx, p32Bit, Color::Empty);
+	return GetImage (pImageNdx, p32Bit, Color::Transparent);
 }
 
 CAgentFileImage^ CAgentFile::GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor)
@@ -1092,7 +1092,7 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, CAgentFileFrame^ pFrame)
 
 UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, CAgentFileFrame^ pFrame, bool p32Bit)
 {
-	return GetFrameBits (pImageBits, pFrame, p32Bit, Color::Empty);
+	return GetFrameBits (pImageBits, pFrame, p32Bit, Color::Transparent);
 }
 
 UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, CAgentFileFrame^ pFrame, bool p32Bit, System::Drawing::Color pBkColor)
@@ -1358,23 +1358,31 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame,
 #endif
 								)
 							{
-								if	(lImageNdx == lMaxNdx)
-								{
 #ifdef	__cplusplus_cli
-									if	(
-											(pBkColor != Color::Empty)
-										&&	(pBkColor != Color::Transparent)
-										)
-									{
-										*(COLORREF*)(pImageBits + lTrgNdx) = pBkColor.ToArgb() | 0xFF000000;
-									}
-#else
-									if	(pBkColor)
-									{
-										*(COLORREF*)(pImageBits + lTrgNdx) = *pBkColor | 0xFF000000;
-									}
-#endif
+								if	(
+										(lImageNdx == 0)
+									&&	(pBkColor == Color::Empty)
+									)
+								{
+									*(COLORREF*)(pImageBits + lTrgNdx) = lPalette->Entries [lImageBits [lSrcNdx]].ToArgb() | 0xFF000000;
 								}
+								else
+								if	(
+										(lImageNdx == lMaxNdx)
+									&&	(pBkColor != Color::Transparent)
+									)
+								{
+									*(COLORREF*)(pImageBits + lTrgNdx) = pBkColor.ToArgb() | 0xFF000000;
+								}
+#else
+								if	(
+										(lImageNdx == lMaxNdx)
+									&&	(pBkColor)
+									)
+								{
+									*(COLORREF*)(pImageBits + lTrgNdx) = *pBkColor | 0xFF000000;
+								}
+#endif
 							}
 							else
 							{
@@ -1419,7 +1427,7 @@ System::Drawing::Bitmap^ CAgentFile::GetImageBitmap (int pImageNdx)
 
 System::Drawing::Bitmap^ CAgentFile::GetImageBitmap (int pImageNdx, bool p32Bit)
 {
-	return GetImageBitmap (pImageNdx, p32Bit, Color::Empty);
+	return GetImageBitmap (pImageNdx, p32Bit, Color::Transparent);
 }
 
 System::Drawing::Bitmap^ CAgentFile::GetImageBitmap (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor)
@@ -1466,7 +1474,7 @@ System::Drawing::Bitmap^ CAgentFile::GetFrameBitmap (CAgentFileFrame^ pFrame)
 
 System::Drawing::Bitmap^ CAgentFile::GetFrameBitmap (CAgentFileFrame^ pFrame, bool p32Bit)
 {
-	return GetFrameBitmap (pFrame, p32Bit, Color::Empty);
+	return GetFrameBitmap (pFrame, p32Bit, Color::Transparent);
 }
 
 System::Drawing::Bitmap^ CAgentFile::GetFrameBitmap (CAgentFileFrame^ pFrame, bool p32Bit, System::Drawing::Color pBkColor)

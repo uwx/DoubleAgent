@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="EditAdd" xml:space="preserve">
     <value>&amp;Add</value>
@@ -224,6 +224,66 @@
   </data>
   <data name="EditUndoThis" xml:space="preserve">
     <value>&amp;Undo {0}</value>
+  </data>
+  <data name="FrameAddKeepsBranchingTarget" xml:space="preserve">
+    <value>Maintain the current branching destinations regardless of the new Frame positions</value>
+  </data>
+  <data name="FrameAddShiftsBranchingTarget" xml:space="preserve">
+    <value>Change branching destinations to the new Frame positions</value>
+  </data>
+  <data name="FrameDeleteDeletesBranching" xml:space="preserve">
+    <value>Delete {0}'s branching with it</value>
+  </data>
+  <data name="FrameDeleteDeletesBranching0" xml:space="preserve">
+    <value>Delete the frame's branching with it</value>
+  </data>
+  <data name="FrameDeleteKeepsBranchingTarget" xml:space="preserve">
+    <value>Maintain the current branching destinations regardless of the new Frame positions</value>
+  </data>
+  <data name="FrameDeleteMovesBranchingNext" xml:space="preserve">
+    <value>Merge {0}'s branching with Frame {1}</value>
+  </data>
+  <data name="FrameDeleteMovesBranchingNext0" xml:space="preserve">
+    <value>Merge the frame's branching with the next frame</value>
+  </data>
+  <data name="FrameDeleteMovesBranchingPrev" xml:space="preserve">
+    <value>Merge {0}'s branching with Frame {1}</value>
+  </data>
+  <data name="FrameDeleteMovesBranchingPrev0" xml:space="preserve">
+    <value>Merge the frame's branching with the previous frame</value>
+  </data>
+  <data name="FrameDeleteShiftsBranchingTarget" xml:space="preserve">
+    <value>Change branching destinations to the new Frame positions</value>
+  </data>
+  <data name="FrameMoveBranchingSourceNone" xml:space="preserve">
+    <value>{0} has no branching</value>
+  </data>
+  <data name="FrameMoveBranchingTargetNone" xml:space="preserve">
+    <value>{0} is not a branching destination</value>
+  </data>
+  <data name="FrameMoveKeepsBranchingSource" xml:space="preserve">
+    <value>Move {0}'s branching with it</value>
+  </data>
+  <data name="FrameMoveKeepsBranchingSource0" xml:space="preserve">
+    <value>Move the Frame's branching with it</value>
+  </data>
+  <data name="FrameMoveKeepsBranchingTarget" xml:space="preserve">
+    <value>Don't change any branching destinations when {0} is moved</value>
+  </data>
+  <data name="FrameMoveKeepsBranchingTarget0" xml:space="preserve">
+    <value>Keep branching destinations at the Frame's original position</value>
+  </data>
+  <data name="FrameMoveMovesBranchingSource" xml:space="preserve">
+    <value>Swap {0}'s branching with Frame {1}</value>
+  </data>
+  <data name="FrameMoveMovesBranchingSource0" xml:space="preserve">
+    <value>Keep the Frame's branching at its original position</value>
+  </data>
+  <data name="FrameMoveMovesBranchingTarget" xml:space="preserve">
+    <value>Swap branching destinations for Frames {0} and {1}</value>
+  </data>
+  <data name="FrameMoveMovesBranchingTarget0" xml:space="preserve">
+    <value>Change branching destinations to the Frame's new position</value>
   </data>
   <data name="MouthOverlay" xml:space="preserve">
     <value>Mouth</value>

@@ -36,6 +36,7 @@ namespace AgentCharacterEditor.Previews
 
 		public FramesListView ()
 		{
+			RenderOptions.SetBitmapScalingMode (this, BitmapScalingMode.HighQuality);
 		}
 
 		#endregion

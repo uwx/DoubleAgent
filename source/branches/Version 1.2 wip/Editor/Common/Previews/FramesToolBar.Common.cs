@@ -23,6 +23,7 @@ using System.ComponentModel;
 using System.Threading;
 using AgentCharacterEditor.Global;
 using AgentCharacterEditor.Properties;
+using DoubleAgent;
 using DoubleAgent.Character;
 using AppResources = AgentCharacterEditor.Resources;
 
@@ -60,7 +61,7 @@ namespace AgentCharacterEditor.Previews
 					if (!IsEmpty && (SelectedFrameState == null))
 					{
 						SelectedFrameState = new FrameStateWorker ();
-						SelectedFrameState.RunWorkerCompleted += new RunWorkerCompletedEventHandler (FrameStateWorker_RunWorkerCompleted);
+						SelectedFrameState.ProgressChanged += new ProgressChangedEventHandler (FrameStateWorker_ProgressChanged);
 					}
 					if (SelectedFrameState != null)
 					{
@@ -71,6 +72,7 @@ namespace AgentCharacterEditor.Previews
 				}
 			}
 		}
+
 		private FileAnimationFrame mFrame = null;
 
 		[System.ComponentModel.Browsable (false)]
@@ -180,11 +182,27 @@ namespace AgentCharacterEditor.Previews
 			}
 		}
 
+		[System.ComponentModel.Browsable (false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
+		[System.ComponentModel.DesignerSerializationVisibility (System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+		public Boolean CanMoveNextFrameNext
+		{
+			get
+			{
+				if (IsValid)
+				{
+					int lSelectedIndex = FramesPreview.Frames.SelectedIndex;
+					return !Program.FileIsReadOnly && (lSelectedIndex >= 0) && (lSelectedIndex < FramesPreview.Frames.Items.Count - 2);
+				}
+				return false;
+			}
+		}
+
 		///////////////////////////////////////////////////////////////////////////////
 
 		private Boolean mAddShiftsBranchingTarget = true;
 		private Boolean mDeleteShiftsBranchingTarget = true;
-		private Boolean mDeleteMovesBranchingPrev = true;
+		private Boolean mDeleteMovesBranchingPrev = false;
 		private Boolean mDeleteMovesBranchingNext = false;
 
 		//=============================================================================
@@ -260,7 +278,7 @@ namespace AgentCharacterEditor.Previews
 			{
 				if (IsValid && !CanMoveFramePrev)
 				{
-					System.Diagnostics.Debug.Print ("Ignore DeleteMovesBranchingPrev {0}", value); 
+					System.Diagnostics.Debug.Print ("Ignore DeleteMovesBranchingPrev {0}", value);
 				}
 				else if (mDeleteMovesBranchingPrev != value)
 				{
@@ -290,7 +308,7 @@ namespace AgentCharacterEditor.Previews
 			{
 				if (IsValid && !CanMoveFrameNext)
 				{
-					System.Diagnostics.Debug.Print ("Ignore DeleteMovesBranchingNext {0}", value); 
+					System.Diagnostics.Debug.Print ("Ignore DeleteMovesBranchingNext {0}", value);
 				}
 				else if (mDeleteMovesBranchingNext != value)
 				{
@@ -457,15 +475,14 @@ namespace AgentCharacterEditor.Previews
 		{
 			get
 			{
-				return DeleteShiftsBranchingTarget && DeleteMovesBranchingPrev && !DeleteMovesBranchingNext;
+				return DeleteShiftsBranchingTarget && DeleteDeletesBranching;
 			}
 			set
 			{
 				if (value)
 				{
 					DeleteShiftsBranchingTarget = true;
-					DeleteMovesBranchingPrev = true;
-					DeleteMovesBranchingNext = false;
+					DeleteDeletesBranching = true;
 				}
 			}
 		}
@@ -500,6 +517,155 @@ namespace AgentCharacterEditor.Previews
 			}
 		}
 
+		///////////////////////////////////////////////////////////////////////////////
+
+		public Boolean EnableAddBranchingDefaultOptions
+		{
+			get
+			{
+				return !Program.FileIsReadOnly && !AddBranchingDefaultOptions;
+			}
+		}
+		public Boolean EnableDeleteBranchingDefaultOptions
+		{
+			get
+			{
+				return !Program.FileIsReadOnly && !DeleteBranchingDefaultOptions;
+			}
+		}
+		public Boolean EnableMovePrevBranchingDefaultOptions
+		{
+			get
+			{
+				return !Program.FileIsReadOnly && !MovePrevBranchingDefaultOptions;
+			}
+		}
+		public Boolean EnableMoveNextBranchingDefaultOptions
+		{
+			get
+			{
+				return !Program.FileIsReadOnly && !MoveNextBranchingDefaultOptions;
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+
+		public String SayAddShiftsBranchingTarget
+		{
+			get
+			{
+				return AppResources.Resources.FrameAddShiftsBranchingTarget;
+			}
+		}
+		public String SayAddKeepsBranchingTarget
+		{
+			get
+			{
+				return AppResources.Resources.FrameAddKeepsBranchingTarget;
+			}
+		}
+
+		//=============================================================================
+
+		public String SayDeleteShiftsBranchingTarget
+		{
+			get
+			{
+				return AppResources.Resources.FrameDeleteShiftsBranchingTarget;
+			}
+		}
+		public String SayDeleteKeepsBranchingTarget
+		{
+			get
+			{
+				return AppResources.Resources.FrameDeleteKeepsBranchingTarget;
+			}
+		}
+
+		public String SayDeleteMovesBranchingPrev
+		{
+			get
+			{
+				return (Frame == null) ? AppResources.Resources.FrameDeleteMovesBranchingPrev0 : FrameIsBranchingSource (Frame) ? String.Format (AppResources.Resources.FrameDeleteMovesBranchingPrev, Titles.Frame (Frame), FramesPreview.Frames.SelectedIndex) : String.Format (AppResources.Resources.FrameMoveBranchingSourceNone, Titles.Frame (Frame));
+			}
+		}
+		public String SayDeleteMovesBranchingNext
+		{
+			get
+			{
+				return (Frame == null) ? AppResources.Resources.FrameDeleteMovesBranchingNext0 : FrameIsBranchingSource (Frame) ? String.Format (AppResources.Resources.FrameDeleteMovesBranchingNext, Titles.Frame (Frame), FramesPreview.Frames.SelectedIndex + 2) : String.Format (AppResources.Resources.FrameMoveBranchingSourceNone, Titles.Frame (Frame));
+			}
+		}
+		public String SayDeleteDeletesBranching
+		{
+			get
+			{
+				return (Frame == null) ? AppResources.Resources.FrameDeleteDeletesBranching0 : FrameIsBranchingSource (Frame) ? String.Format (AppResources.Resources.FrameDeleteDeletesBranching, Titles.Frame (Frame)) : String.Format (AppResources.Resources.FrameMoveBranchingSourceNone, Titles.Frame (Frame));
+			}
+		}
+
+		//=============================================================================
+
+		public String SayMovePrevMovesBranchingSource
+		{
+			get
+			{
+				return (Frame == null) ? AppResources.Resources.FrameMoveMovesBranchingSource0 : FrameIsBranchingSource (Frame) ? String.Format (AppResources.Resources.FrameMoveMovesBranchingSource, Titles.Frame (Frame), FramesPreview.Frames.SelectedIndex) : String.Format (AppResources.Resources.FrameMoveBranchingSourceNone, Titles.Frame (Frame));
+			}
+		}
+		public String SayMovePrevKeepsBranchingSource
+		{
+			get
+			{
+				return (Frame == null) ? AppResources.Resources.FrameMoveKeepsBranchingSource0 : FrameIsBranchingSource (Frame) ? String.Format (AppResources.Resources.FrameMoveKeepsBranchingSource, Titles.Frame (Frame)) : String.Format (AppResources.Resources.FrameMoveBranchingSourceNone, Titles.Frame (Frame));
+			}
+		}
+		public String SayMovePrevMovesBranchingTarget
+		{
+			get
+			{
+				return (Frame == null) ? AppResources.Resources.FrameMoveMovesBranchingTarget0 : FrameIsBranchingTarget (Frame) ? String.Format (AppResources.Resources.FrameMoveMovesBranchingTarget, FramesPreview.Frames.SelectedIndex + 1, FramesPreview.Frames.SelectedIndex) : String.Format (AppResources.Resources.FrameMoveBranchingTargetNone, Titles.Frame (Frame));
+			}
+		}
+		public String SayMovePrevKeepsBranchingTarget
+		{
+			get
+			{
+				return (Frame == null) ? AppResources.Resources.FrameMoveKeepsBranchingTarget0 : FrameIsBranchingTarget (Frame) ? String.Format (AppResources.Resources.FrameMoveKeepsBranchingTarget, Titles.Frame (Frame)) : String.Format (AppResources.Resources.FrameMoveBranchingTargetNone, Titles.Frame (Frame));
+			}
+		}
+
+		//=============================================================================
+
+		public String SayMoveNextMovesBranchingSource
+		{
+			get
+			{
+				return (Frame == null) ? AppResources.Resources.FrameMoveMovesBranchingSource0 : FrameIsBranchingSource (Frame) ? String.Format (AppResources.Resources.FrameMoveMovesBranchingSource, Titles.Frame (Frame), FramesPreview.Frames.SelectedIndex + 2) : String.Format (AppResources.Resources.FrameMoveBranchingSourceNone, Titles.Frame (Frame));
+			}
+		}
+		public String SayMoveNextKeepsBranchingSource
+		{
+			get
+			{
+				return (Frame == null) ? AppResources.Resources.FrameMoveKeepsBranchingSource0 : FrameIsBranchingSource (Frame) ? String.Format (AppResources.Resources.FrameMoveKeepsBranchingSource, Titles.Frame (Frame)) : String.Format (AppResources.Resources.FrameMoveBranchingSourceNone, Titles.Frame (Frame));
+			}
+		}
+		public String SayMoveNextMovesBranchingTarget
+		{
+			get
+			{
+				return (Frame == null) ? AppResources.Resources.FrameMoveMovesBranchingTarget0 : FrameIsBranchingTarget (Frame) ? String.Format (AppResources.Resources.FrameMoveMovesBranchingTarget, FramesPreview.Frames.SelectedIndex + 1, FramesPreview.Frames.SelectedIndex + 2) : String.Format (AppResources.Resources.FrameMoveBranchingTargetNone, Titles.Frame (Frame));
+			}
+		}
+		public String SayMoveNextKeepsBranchingTarget
+		{
+			get
+			{
+				return (Frame == null) ? AppResources.Resources.FrameMoveKeepsBranchingTarget0 : FrameIsBranchingTarget (Frame) ? String.Format (AppResources.Resources.FrameMoveKeepsBranchingTarget, Titles.Frame (Frame)) : String.Format (AppResources.Resources.FrameMoveBranchingTargetNone, Titles.Frame (Frame));
+			}
+		}
+
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Methods
@@ -510,7 +676,7 @@ namespace AgentCharacterEditor.Previews
 			{
 				return false;
 			}
-			else if ((SelectedFrameState != null) && (SelectedFrameState.Frame == pFrame) && (!SelectedFrameState.IsBusy))
+			else if ((SelectedFrameState != null) && (SelectedFrameState.Frame == pFrame) && (!SelectedFrameState.IsWorking))
 			{
 				return SelectedFrameState.FrameIsBranchingSource;
 			}
@@ -527,7 +693,7 @@ namespace AgentCharacterEditor.Previews
 			{
 				return false;
 			}
-			else if ((SelectedFrameState != null) && (SelectedFrameState.Frame == pFrame) && (!SelectedFrameState.IsBusy))
+			else if ((SelectedFrameState != null) && (SelectedFrameState.Frame == pFrame) && (!SelectedFrameState.IsWorking))
 			{
 				return SelectedFrameState.FrameIsBranchingTarget;
 			}
@@ -568,15 +734,12 @@ namespace AgentCharacterEditor.Previews
 			set;
 		}
 
-		void FrameStateWorker_RunWorkerCompleted (object sender, RunWorkerCompletedEventArgs e)
+		void FrameStateWorker_ProgressChanged (object sender, ProgressChangedEventArgs e)
 		{
 #if DEBUG_NOT
-			System.Diagnostics.Debug.Print ("FrameStateWorker_RunWorkerCompleted [{0}] Frame [{1}] FrameIsBranchingSource [{2}] FrameIsBranchingTarget [{3}]", e.Cancelled, SelectedFrameState.Frame, SelectedFrameState.FrameIsBranchingSource, SelectedFrameState.FrameIsBranchingTarget);
+			System.Diagnostics.Debug.Print ("FrameStateWorker_ProgressChanged Frame [{0}] FrameIsBranchingSource [{1}] FrameIsBranchingTarget [{2}]", SelectedFrameState.Frame, SelectedFrameState.FrameIsBranchingSource, SelectedFrameState.FrameIsBranchingTarget);
 #endif
-			if (!e.Cancelled)
-			{
-				OnFrameStateChanged ();
-			}
+			OnFrameStateChanged ();
 		}
 
 		#endregion
@@ -584,18 +747,15 @@ namespace AgentCharacterEditor.Previews
 
 	///////////////////////////////////////////////////////////////////////////////
 
-	internal class FrameStateWorker : BackgroundWorker
+	internal class FrameStateWorker : BackgroundWorkerEx
 	{
 		private FileAnimationFrame mFrame = null;
 		private Boolean mFrameIsBranchingSource = false;
 		private Boolean mFrameIsBranchingTarget = false;
-		private int mWaitForWork = 0;
 		private Object mLock = new Object ();
 
 		public FrameStateWorker ()
 		{
-			WorkerReportsProgress = false;
-			WorkerSupportsCancellation = true;
 		}
 
 		public FileAnimationFrame Frame
@@ -685,187 +845,170 @@ namespace AgentCharacterEditor.Previews
 		{
 			if (Frame == null)
 			{
-				CancelAsync ();
-				FrameIsBranchingSource = false;
-				FrameIsBranchingTarget = false;
+				StopWork ();
 			}
 			else
 			{
-#if DEBUG
-				Boolean lThreadEnding = false;
-				if (IsBusy && WaitForWork <= 0)
-				{
-					System.Diagnostics.Debug.Print ("!!! Worker thread ending");
-					lThreadEnding = true;
-				}
-#endif
-				WaitForWork = 100;
-
-				try
-				{
-					RunWorkerAsync ();
-				}
-#if DEBUG
-				catch (Exception pException)
-				{
-					if (lThreadEnding)
-					{
-						System.Diagnostics.Debug.Print (pException.Message);
-					}
-				}
-				//#if DEBUG_NOT
-				//    catch (Exception pException)
-				//    {
-				//        System.Diagnostics.Debug.Print (pException.Message);
-				//    }
-#else
-				catch
-				{
-				}
-#endif
+				StartWork ();
 			}
+		}
+
+		protected override Boolean StartWork ()
+		{
+			FrameIsBranchingSource = false;
+			FrameIsBranchingTarget = false;
+			IsWorking = true;
+			return base.StartWork ();
+		}
+
+		protected override Boolean StopWork ()
+		{
+			Boolean lRet = base.StopWork ();
+			IsWorking = false;
+			FrameIsBranchingSource = false;
+			FrameIsBranchingTarget = false;
+			return lRet;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
 
-		private int WaitForWork
-		{
-			get
-			{
-				int lRet = 0;
-				lock (mLock)
-				{
-					lRet = mWaitForWork;
-				}
-				return lRet;
-			}
-			set
-			{
-				lock (mLock)
-				{
-					mWaitForWork = value;
-				}
-			}
-		}
-
-		//=============================================================================
-
 		protected override void OnDoWork (DoWorkEventArgs e)
 		{
-			while ((WaitForWork > 0) && !e.Cancel)
+			UInt32 lWorkCycle;
+
+			IsWorking = true;
+
+			do
 			{
-				int lWaitForWork = --WaitForWork;
+				lWorkCycle = StartWorkCycle ();
 
-				try
+				if ((lWorkCycle > 0) && IsWorking && !CancelWorkCycle (e))
 				{
-					FileAnimation lAnimation = null;
-					FileAnimationFrame lTargetFrame = Frame;
-					int lTargetNdx = -1;
-					int lBranchingNdx;
+					try
+					{
+						FileAnimation lAnimation = null;
+						FileAnimationFrame lTargetFrame = Frame;
+						int lTargetNdx = -1;
+						int lBranchingNdx;
 
-					FrameIsBranchingSource = false;
-					FrameIsBranchingTarget = false;
+						FrameIsBranchingSource = false;
+						FrameIsBranchingTarget = false;
 
-					if (CancellationPending)
-					{
-						e.Cancel = true;
-						break;
-					}
-					else if (WaitForWork > lWaitForWork)
-					{
-						continue;
-					}
-					else if (lTargetFrame != null)
-					{
-						if (lTargetFrame.ExitFrame >= 0)
+						if (CancelWorkCycle (e))
 						{
-							FrameIsBranchingSource = true;
+							break;
 						}
-						else if (lTargetFrame.Branching != null)
+						else if (HasNewWork (lWorkCycle))
 						{
-							for (lBranchingNdx = 0; lBranchingNdx < lTargetFrame.Branching.Length; lBranchingNdx++)
-							{
-								if (lTargetFrame.Branching[lBranchingNdx].mProbability > 0)
-								{
-									FrameIsBranchingSource = true;
-									break;
-								}
-							}
+							continue;
 						}
-					}
-
-					if (CancellationPending)
-					{
-						e.Cancel = true;
-						break;
-					}
-					else if (WaitForWork > lWaitForWork)
-					{
-						continue;
-					}
-					else if ((lTargetFrame != null) && ((lAnimation = lTargetFrame.Animation) != null) && (lAnimation.Frames.Contains (lTargetFrame)))
-					{
-						lTargetNdx = lAnimation.Frames.IndexOf (lTargetFrame);
-					}
-
-					if (CancellationPending)
-					{
-						e.Cancel = true;
-						break;
-					}
-					else if (WaitForWork > lWaitForWork)
-					{
-						continue;
-					}
-					else if (lTargetNdx >= 0)
-					{
-						foreach (FileAnimationFrame lSourceFrame in lAnimation.Frames)
+						else if (lTargetFrame != null)
 						{
-							if (CancellationPending)
+							if (lTargetFrame.ExitFrame >= 0)
 							{
-								e.Cancel = true;
-								break;
+								FrameIsBranchingSource = true;
 							}
-							else if (WaitForWork > lWaitForWork)
+							else if (lTargetFrame.Branching != null)
 							{
-								break;
-							}
-							else if (lSourceFrame != lTargetFrame)
-							{
-								if (lSourceFrame.ExitFrame == lTargetNdx)
+								for (lBranchingNdx = 0; lBranchingNdx < lTargetFrame.Branching.Length; lBranchingNdx++)
 								{
-									FrameIsBranchingTarget = true;
-									break;
-								}
-								else if (lSourceFrame.Branching != null)
-								{
-									for (lBranchingNdx = 0; lBranchingNdx < lSourceFrame.Branching.Length; lBranchingNdx++)
+									if (lTargetFrame.Branching[lBranchingNdx].mProbability > 0)
 									{
-										if ((lSourceFrame.Branching[lBranchingNdx].mProbability > 0) && (lSourceFrame.Branching[lBranchingNdx].mFrameNdx == lTargetNdx))
-										{
-											FrameIsBranchingTarget = true;
-											break;
-										}
+										FrameIsBranchingSource = true;
+										break;
 									}
 								}
-								if (FrameIsBranchingTarget)
+							}
+						}
+
+						if (CancelWorkCycle (e))
+						{
+							break;
+						}
+						else if (HasNewWork (lWorkCycle))
+						{
+							continue;
+						}
+						else if ((lTargetFrame != null) && ((lAnimation = lTargetFrame.Animation) != null) && (lAnimation.Frames.Contains (lTargetFrame)))
+						{
+							lTargetNdx = lAnimation.Frames.IndexOf (lTargetFrame);
+						}
+
+						if (CancelWorkCycle (e))
+						{
+							break;
+						}
+						else if (HasNewWork (lWorkCycle))
+						{
+							continue;
+						}
+						else if (lTargetNdx >= 0)
+						{
+							foreach (FileAnimationFrame lSourceFrame in lAnimation.Frames)
+							{
+								if (CancelWorkCycle (e))
 								{
 									break;
+								}
+								else if (HasNewWork (lWorkCycle))
+								{
+									break;
+								}
+								else if (lSourceFrame != lTargetFrame)
+								{
+									if (lSourceFrame.ExitFrame == lTargetNdx)
+									{
+										FrameIsBranchingTarget = true;
+										break;
+									}
+									else if (lSourceFrame.Branching != null)
+									{
+										for (lBranchingNdx = 0; lBranchingNdx < lSourceFrame.Branching.Length; lBranchingNdx++)
+										{
+											if ((lSourceFrame.Branching[lBranchingNdx].mProbability > 0) && (lSourceFrame.Branching[lBranchingNdx].mFrameNdx == lTargetNdx))
+											{
+												FrameIsBranchingTarget = true;
+												break;
+											}
+										}
+									}
+									if (FrameIsBranchingTarget)
+									{
+										break;
+									}
 								}
 							}
 						}
 					}
-				}
-				catch (Exception pException)
-				{
-					System.Diagnostics.Debug.Print (pException.Message);
-				}
+					catch (Exception pException)
+					{
+						System.Diagnostics.Debug.Print (pException.Message);
+					}
 
-				if (!e.Cancel && (WaitForWork == lWaitForWork))
-				{
-					Thread.Sleep (10);
+					IsWorking = false;
+
+					if (CancelWorkCycle (e))
+					{
+						break;
+					}
+					else if (HasNewWork (lWorkCycle))
+					{
+						continue;
+					}
+					else
+					{
+						try
+						{
+							ReportProgress (100);
+						}
+						catch (Exception pException)
+						{
+							System.Diagnostics.Debug.Print (pException.Message);
+						}
+					}
 				}
 			}
+			while (WaitForWork (lWorkCycle, e));
 		}
 	}
 }

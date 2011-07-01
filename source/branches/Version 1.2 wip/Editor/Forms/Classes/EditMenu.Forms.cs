@@ -409,5 +409,15 @@ namespace AgentCharacterEditor.Global
 		{
 			pMenuItem.Text = pTitle;
 		}
+
+		public static void SetTipText (this ToolStripItem pItem, String pTipText)
+		{
+			pItem.Text = pTipText;
+		}
+
+		public static void SetTitle (this ToolStripItem pItem, String pTitle)
+		{
+			pItem.Text = pTitle.NoMenuPrefix ();
+		}
 	}
 }

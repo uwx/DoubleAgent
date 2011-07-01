@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Interop;
 using System.Reflection;
 using DoubleAgent;
 
@@ -11,6 +13,7 @@ namespace AgentCharacterEditor
 	{
 		public Program ()
 		{
+			//RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
 #if DEBUG
 			System.IO.File.Delete ("C:\\Users\\Don\\Desktop\\DoubleACE.Log");
 			System.Diagnostics.Debug.Listeners.Add (new System.Diagnostics.TextWriterTraceListener (System.IO.Path.Combine (System.Environment.GetFolderPath (Environment.SpecialFolder.DesktopDirectory), "DoubleACE.Log")));

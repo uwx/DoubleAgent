@@ -27,6 +27,14 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
+		protected override Size ArrangeOverride (Size arrangeBounds)
+		{
+			MainRight.Width = GridLength.Auto;
+			base.ArrangeOverride (arrangeBounds);
+			MainRight.Width = new GridLength (Math.Max (MainGrid.ActualWidth - MainLeft.ActualWidth, 0));
+			return base.ArrangeOverride (arrangeBounds);
+		}
+
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
@@ -53,14 +61,13 @@ namespace AgentCharacterEditor.Panels
 		{
 			try
 			{
-				if (IsPanelEmpty || (Frame.Images == null))
+				System.Drawing.Bitmap lBitmap = null;
+
+				if (!IsPanelEmpty && (Frame.Images != null))
 				{
-					ImageFrameSample.Source = null;
+					lBitmap = CharacterFile.GetFrameBitmap (Frame, true, System.Drawing.Color.Transparent);
 				}
-				else
-				{
-					ImageFrameSample.Source = CharacterFile.GetFrameBitmap (Frame, true, System.Drawing.Color.Transparent).MakeImageSource ();
-				}
+				ImageFrameSample.Source = (lBitmap == null) ? null : lBitmap.MakeImageSource ();
 			}
 			catch (Exception pException)
 			{
@@ -82,8 +89,7 @@ namespace AgentCharacterEditor.Panels
 
 			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				ImageListItems.Frame = Frame;
-				ImageListItems.Refresh ();
+				ImageListItems.Refresh (CharacterFile, Frame);
 				ArrangeImagesList ();
 
 				if (lContext != null)
@@ -128,7 +134,23 @@ namespace AgentCharacterEditor.Panels
 		{
 			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
+				Size lImageSize;
+				Size lContainerSize;
 				System.Drawing.Bitmap lBitmap = null;
+
+				if (pFrameImage == null)
+				{
+					lImageSize = FrameSample.DefaultImageSize.ToWPF ();
+				}
+				else
+				{
+					lImageSize = CharacterFile.Header.ImageSize.ToWPF ();
+				}
+
+				lContainerSize = new Size (Math.Min (Math.Max (lImageSize.Width, ImageSample.MinWidth), ImageSample.MaxWidth), Math.Min (Math.Max (lImageSize.Height, ImageSample.MinHeight), ImageSample.MaxHeight));
+				lContainerSize = lContainerSize.ScaleToScreenResolution ().PreserveAspectRatio (lImageSize);
+				ImageContainer.Width = lContainerSize.Width;
+				ImageContainer.Height = lContainerSize.Height;
 
 				if (pFrameImage == null)
 				{
@@ -153,10 +175,12 @@ namespace AgentCharacterEditor.Panels
 					if (lBitmap == null)
 					{
 						ImageSample.Source = null;
+						ImageSample.RenderTransform = Transform.Identity;
 					}
 					else
 					{
 						ImageSample.Source = lBitmap.MakeImageSource ();
+						ImageSample.RenderTransform = new TranslateTransform (pFrameImage.Offset.X * lContainerSize.Width / lImageSize.Width, pFrameImage.Offset.Y * lContainerSize.Height / lImageSize.Height);
 					}
 				}
 				catch (Exception pException)
@@ -166,21 +190,11 @@ namespace AgentCharacterEditor.Panels
 
 				try
 				{
-					ImageSample.LayoutTransform = Program.MainWindow.CurrentView.Inverse as Transform;
+					ImageContainer.LayoutTransform = Program.MainWindow.CurrentView.Inverse as Transform;
 				}
 				catch (Exception pException)
 				{
 					System.Diagnostics.Debug.Print (pException.Message);
-				}
-
-				if (lBitmap == null)
-				{
-					ImageSample.RenderTransform = Transform.Identity;
-				}
-				else
-				{
-					ImageSample.UpdateLayout ();
-					ImageSample.RenderTransform = new TranslateTransform (pFrameImage.Offset.X * ImageSample.DesiredSize.Width / lBitmap.Width, pFrameImage.Offset.Y * ImageSample.DesiredSize.Height / lBitmap.Height);
 				}
 			}
 		}
@@ -395,13 +409,19 @@ namespace AgentCharacterEditor.Panels
 		public ImageListItem ()
 		{
 		}
-		public ImageListItem (FileFrameImage pImage)
+		public ImageListItem (CharacterFile pCharacterFile, FileFrameImage pImage)
 		{
+			CharacterFile = pCharacterFile;
 			Image = pImage;
 		}
 
 		//=============================================================================
 
+		public CharacterFile CharacterFile
+		{
+			get;
+			protected set;
+		}
 		public FileFrameImage Image
 		{
 			get;
@@ -442,17 +462,14 @@ namespace AgentCharacterEditor.Panels
 		{
 			get
 			{
-				if (Exists)
+				if (Exists && (CharacterFile != null))
 				{
 					try
 					{
-						if (Image.Owner != null)
+						FileImage lFrameImage = CharacterFile.GetImage ((int)Image.ImageNdx);
+						if (lFrameImage != null)
 						{
-							FileImage lFrameImage = Image.Owner.GetImage ((int)Image.ImageNdx);
-							if (lFrameImage != null)
-							{
-								return String.Format ("{0}, {1}", lFrameImage.ImageSize.Width, lFrameImage.ImageSize.Height);
-							}
+							return String.Format ("{0}, {1}", lFrameImage.ImageSize.Width, lFrameImage.ImageSize.Height);
 						}
 					}
 					catch
@@ -487,21 +504,16 @@ namespace AgentCharacterEditor.Panels
 		public ImageListItems ()
 		{
 		}
-		public FileAnimationFrame Frame
-		{
-			get;
-			set;
-		}
 
-		public void Refresh ()
+		public void Refresh (CharacterFile pCharacterFile, FileAnimationFrame pFrame)
 		{
 			Clear ();
 
-			if ((Frame != null) && (Frame.ImageCount > 0))
+			if ((pFrame != null) && (pFrame.ImageCount > 0))
 			{
-				foreach (FileFrameImage lImage in Frame.Images)
+				foreach (FileFrameImage lImage in pFrame.Images)
 				{
-					Add (new ImageListItem (lImage));
+					Add (new ImageListItem (pCharacterFile, lImage));
 				}
 			}
 		}

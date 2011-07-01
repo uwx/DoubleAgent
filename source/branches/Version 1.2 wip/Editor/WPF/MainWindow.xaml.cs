@@ -504,7 +504,7 @@ namespace AgentCharacterEditor
 		private void InitializeViewSize ()
 		{
 			Size lResolution = ImageExtensions.GuessScreenResolution ().ToWPF ();
-#if DEBUG
+#if DEBUG_NOT
 			System.Diagnostics.Debug.Print ("ScreenResolution [{0}]", lResolution);
 #endif
 			if ((lResolution.Width > 96) && (lResolution.Height > 96))
