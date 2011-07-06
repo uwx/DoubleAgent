@@ -1754,7 +1754,7 @@ Boolean AcfFileAnimation::CopyTo (FileAnimation^ pTarget, Boolean pDeepCopy)
 System::String^ AcfFileAnimation::ToString()
 {
 	EnsureIsLoaded ();	
-    return String::Format ("{0} [{1}]", __super::ToString(), mFileName);
+    return String::Format ("{0} file \"{1}\"", __super::ToString(), mFileName);
 }
 
 /////////////////////////////////////////////////////////////////////////////

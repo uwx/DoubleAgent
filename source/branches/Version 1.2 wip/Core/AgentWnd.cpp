@@ -50,7 +50,7 @@
 #define	_LOG_QUEUE_OPS			(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 //#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
 //#define	_TRACE_RESOURCES_EX		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)
-#define	_TRACE_BUSY_TIME		LogIfActive|LogTimeMs|LogHighVolume
+//#define	_TRACE_BUSY_TIME		LogIfActive|LogTimeMs|LogHighVolume
 #endif
 
 #ifndef	_LOG_QUEUE_OPS
@@ -1042,10 +1042,10 @@ bool CAgentWnd::ShowGesture (LPCTSTR pGestureName, LPCTSTR pForState, bool pStop
 				{
 					lStreamInfo->SequenceAnimationExit (lPrevAnimationNdx, lPrevFrameNdx);
 				}
-#ifdef	_LOG_ANIMATE_OPS_NOT
+#ifdef	_DEBUG_ANIMATE_OPS
 				if	(LogIsActive (_DEBUG_ANIMATE_OPS))
 				{
-					lStreamInfo->LogAnimationSequence (_DEBUG_ANIMATE_OPS, _T("  Sequenced [%s] from [%d %d]"), GetFileGestures()[lPrevAnimationNdx]->mName, lPrevAnimationNdx, lPrevFrameNdx);
+					lStreamInfo->LogAnimationSequence (_DEBUG_ANIMATE_OPS, _T("  Sequenced exit [%s] from [%d %d]"), GetFileGestures().mAnimations[lPrevAnimationNdx]->Name, lPrevAnimationNdx, lPrevFrameNdx);
 				}
 #endif
 			}
@@ -2832,7 +2832,7 @@ bool CAgentWnd::EnableIdle (bool pEnable)
 			}
 #endif
 
-			mIdleTimer = SetTimer ((UINT_PTR)&mIdleTimer, 1000, NULL);
+			mIdleTimer = SetTimer ((UINT_PTR)&mIdleTimer, 750, NULL);
 #ifdef	_DEBUG_IDLE
 			if	(LogIsActive (_DEBUG_IDLE))
 			{

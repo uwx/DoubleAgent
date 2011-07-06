@@ -529,9 +529,6 @@ HRESULT CAgentFileV15::ReadHeaderStream ()
 						LogMessage (mLogLevel, _T("  [%s] Version [%hu %hu]"), _B(mPath), mVersionMajor, mVersionMinor);
 					}
 #endif
-#ifdef	__cplusplus_cli
-					LogMessage (LogDebug, _T("  [%s] Version [%hu %hu]"), _B(mPath), mVersionMajor, mVersionMinor);
-#endif
 					if	(
 							(lByte = (LPCBYTE)ReadBufferAnimations (lByte, lDecodedSize-(DWORD)(lByte-(LPCBYTE)lDecoded)))
 						&&	(lByte = (LPCBYTE)ReadBufferIdentity (lByte, lDecodedSize-(DWORD)(lByte-(LPCBYTE)lDecoded)))
@@ -651,6 +648,11 @@ HRESULT CAgentFileV15::ReadAnimationStream (CAgentFileAnimation* pAnimation)
 #endif
 						}
 					}
+					else
+					if	(LogIsActive ())
+					{
+						LogMessage (LogIfActive, _T("[%s] [%s] [%s] Decode failed"), _B(mPath), _B(pAnimation->mName), _B(pAnimation->mFileName));
+					}
 				}
 			}
 			catch AnyExceptionDebug
@@ -769,11 +771,7 @@ LPCVOID CAgentFileV15::ReadBufferHeader (LPCVOID pBuffer, DWORD pBufferSize)
 			lByte = (LPCBYTE)ReadBufferBalloon (lByte, (DWORD)(lByte-(LPCBYTE)pBuffer));
 		}
 
-#ifdef	__cplusplus_cli
-		LPCWORD lWord = (LPCWORD)lByte;
-		LogMessage (LogDebug, _T("  HeaderSomething [%4.4X (%hd)]"), lWord[0], lWord[0]);
-#endif
-		lByte += sizeof(WORD);
+		lByte += sizeof(WORD); // Unknown - always zero
 
 		return lByte;
 	}
@@ -796,15 +794,20 @@ LPCVOID CAgentFileV15::ReadBufferTts (LPCVOID pBuffer, DWORD pBufferSize)
 #else
 		mTts.mEngine = *(LPCGUID)lByte;
 #endif
-		lByte += sizeof (GUID);
+		lByte += sizeof(GUID);
 #ifdef	__cplusplus_cli
 		mTts->mMode = System::Guid (*(LPCDWORD)lByte, *(LPCWORD)(lByte+4), *(LPCWORD)(lByte+6), lByte[8], lByte[9], lByte[10], lByte[11], lByte[12], lByte[13], lByte[14], lByte[15]);
 #else
 		mTts.mMode = *(LPCGUID)lByte;
 #endif
-		lByte += sizeof (GUID);
+		lByte += sizeof(GUID);
 
+#ifdef	__cplusplus_cli
 		LogMessage (mLogLevel, _T("  TtsSomething [%2.2X (%hu)]"), lByte[0], lByte[0]);
+		LogDump (mLogLevel|LogHighVolume, lByte-sizeof(GUID)-sizeof(GUID), sizeof(GUID), _T("      "));
+		LogDump (mLogLevel|LogHighVolume, lByte-sizeof(GUID), sizeof(GUID), _T("      "));
+		LogDump (mLogLevel|LogHighVolume, lByte+1, sizeof(long)+sizeof(short), _T("      "));
+#endif
 		lByte++;
 
 #ifdef	__cplusplus_cli
@@ -1073,12 +1076,6 @@ LPCVOID CAgentFileV15::ReadBufferPalette (LPCVOID pBuffer, DWORD pBufferSize)
 			}
 			lByte += lPaletteSize * sizeof(COLORREF);
 #endif
-
-#ifdef	__cplusplus_cli
-			LPCWORD lWord = (LPCWORD)lByte;
-			LogMessage (LogDebugFast, _T("  PaletteSomething [%4.4X (%hd)]"), lWord[0], lWord[0]);
-#endif
-			lByte += sizeof(WORD);
 		}
 		else
 		{
@@ -1145,13 +1142,19 @@ LPCVOID CAgentFileV15::ReadBufferAnimations (LPCVOID pBuffer, DWORD pBufferSize)
 			lAnimation = gcnew V15FileAnimation (this, mGestures);
 #else
 			lAnimation = new CAgentFileAnimation;
-#endif			
+#endif
 			lByte = (LPCBYTE)CAgentFileBinary::ReadBufferString (lByte, false, lAnimation->mName);
 			lByte = (LPCBYTE)CAgentFileBinary::ReadBufferString (lByte, false, lAnimation->mFileName);
 			lByte = (LPCBYTE)CAgentFileBinary::ReadBufferString (lByte, false, lAnimation->mReturnName);
 			lAnimation->mFileCheckSum = *(LPDWORD)lByte;
 			lByte += sizeof(DWORD);
 			
+#ifdef	__cplusplus_cli
+			lAnimation->mReturnType = String::IsNullOrEmpty (lAnimation->mReturnName) ? 2 : 0;
+#else
+			lAnimation->mReturnType = lAnimation->mReturnName.IsEmpty () ? 2 : 0;
+#endif
+
 #ifdef	__cplusplus_cli
 			mGestures->Add (lAnimation);
 #else			
@@ -1161,6 +1164,47 @@ LPCVOID CAgentFileV15::ReadBufferAnimations (LPCVOID pBuffer, DWORD pBufferSize)
 			lAnimationCount--;
 		}
 
+#if	FALSE		
+		try
+		{
+#ifdef	__cplusplus_cli
+			for each (CAgentFileAnimation^ lAnimation in mGestures)
+#else
+			CAgentFileAnimation *	lAnimation;
+			for (int lNdx = 0; lAnimation = mGestures.mAnimations (lNdx); lNdx++)
+#endif
+			{
+#ifdef	__cplusplus_cli
+				if	(String::IsNullOrEmpty (lAnimation->mReturnName))
+#else
+				if	(lAnimation->mReturnName.IsEmpty())
+#endif								
+				{
+#ifdef	__cplusplus_cli
+					String^		lReturnName = String::Format ("{0}Return", lAnimation->mName);
+#else
+					CAtlString	lReturnName ((BSTR)lAnimation->mName);
+					
+					lReturnName += _T("Return");
+#endif
+#ifdef	__cplusplus_cli
+					if	(mGestures->Contains (lReturnName))
+#else
+					if	(FindAnimation (lReturnName) >= 0)
+#endif					
+					{
+#ifdef	__cplusplus_cli
+						lAnimation->mReturnName = lReturnName;
+#else
+						lAnimation->mReturnName = lReturnName.AllocSysString();
+#endif
+						lAnimation->mReturnType = 0;
+					}					
+				}
+			}
+		}
+		catch AnyExceptionDebug
+#endif
 		return lByte;
 	}
 	catch AnyExceptionDebug
@@ -1173,8 +1217,15 @@ LPCVOID CAgentFileV15::ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize)
 	try
 	{
 		LPCBYTE	lByte = (LPCBYTE)pBuffer;
+		WORD	lStateCount;
 
-		while	(lByte < ((LPCBYTE)pBuffer + pBufferSize))
+		lStateCount = *(LPCWORD)lByte;
+		lByte += sizeof(WORD);
+
+		while	(
+					(lStateCount > 0)
+				&&	(lByte < ((LPCBYTE)pBuffer + pBufferSize))
+				)
 		{
 #ifdef	__cplusplus_cli
 			String^			lState;
@@ -1234,6 +1285,7 @@ LPCVOID CAgentFileV15::ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize)
 #ifdef	__cplusplus_cli
 			mStates->Add (lState, lGestures->ToArray());
 #endif
+			lStateCount--;
 		}
 
 #ifdef	_DEBUG_LOAD
@@ -1275,9 +1327,9 @@ LPCVOID CAgentFileV15::ReadBufferSounds (CAgentFileAnimation* pAnimation, LPCVOI
 		lSoundCount = *(LPCWORD)lByte;
 		lByte += sizeof (WORD);
 
-//#ifdef	__cplusplus_cli
-//		LogMessage (mLogLevel|LogHighVolume, _T("[%s] Sounds [%hu] Starting [%u]"), _B(pAnimation->mName), lSoundCount, mStreamSounds->Count);
-//#endif
+#ifdef	__cplusplus_cli_NOT
+		LogMessage (mLogLevel|LogHighVolume, _T("[%s] Sounds [%hu] Starting [%u]"), _B(pAnimation->mName), lSoundCount, mStreamSounds->Count);
+#endif
 #ifdef	_DEBUG_LOAD
 		if	(LogIsActive (mLogLevel))
 		{
@@ -1289,9 +1341,9 @@ LPCVOID CAgentFileV15::ReadBufferSounds (CAgentFileAnimation* pAnimation, LPCVOI
 			lByteCount = *(LPCDWORD)lByte;
 			lByte += sizeof(DWORD);
 
-//#ifdef	__cplusplus_cli
-//			LogMessage (mLogLevel|LogHighVolume, _T("  Sound [%hu (%hu)] of [%hu]"), lSoundNum, mStreamSounds->Count, lByteCount);
-//#endif
+#ifdef	__cplusplus_cli_NOT
+			LogMessage (mLogLevel|LogHighVolume, _T("  Sound [%hu (%hu)] of [%hu]"), lSoundNum, mStreamSounds->Count, lByteCount);
+#endif
 #ifdef	_DEBUG_LOAD
 			if	(LogIsActive (mLogLevel))
 			{
@@ -1355,9 +1407,9 @@ LPCVOID CAgentFileV15::ReadBufferImages (CAgentFileAnimation* pAnimation, LPCVOI
 		lImageCount = *(LPCWORD)lByte;
 		lByte += sizeof (WORD);
 
-//#ifdef	__cplusplus_cli
-//		LogMessage (mLogLevel|LogHighVolume, _T("[%s] Images [%hu] Starting [%u]"), _B(pAnimation->mName), lImageCount, mStreamImages->Count);
-//#endif
+#ifdef	__cplusplus_cli_NOT
+		LogMessage (mLogLevel|LogHighVolume, _T("[%s] Images [%hu] Starting [%u]"), _B(pAnimation->mName), lImageCount, mStreamImages->Count);
+#endif
 #ifdef	_DEBUG_LOAD
 		if	(LogIsActive (mLogLevel))
 		{
@@ -1370,7 +1422,6 @@ LPCVOID CAgentFileV15::ReadBufferImages (CAgentFileAnimation* pAnimation, LPCVOI
 			lByte += sizeof(DWORD);
 
 #ifdef	__cplusplus_cli
-			//LogMessage (mLogLevel|LogHighVolume, _T("  Image [%hu (%hu)] of [%hu] ImageSomething [%2.2X] [%u]"), lImageNum, mStreamImages->Count, lByteCount, *lByte, *lByte);
 			if	(!lByte)
 			{
 				LogMessage (mLogLevel|LogHighVolume, _T("  Image [%hu] ImageSomething [%2.2X] [%u]"), lImageNum, *lByte, *lByte);
@@ -1450,9 +1501,9 @@ LPCVOID CAgentFileV15::ReadBufferFrames (CAgentFileAnimation* pAnimation, LPCVOI
 		lFrameCount = *(LPCWORD)lByte;
 		lByte += sizeof(WORD);
 
-//#ifdef	__cplusplus_cli
-//		LogMessage (LogDebugFast, _T("[%s] [%s] Frames [%hu]"), _B(mPath), _B(pAnimation->mName), lFrameCount);
-//#endif
+#ifdef	__cplusplus_cli_NOT
+		LogMessage (LogDebugFast, _T("[%s] [%s] Frames [%hu]"), _B(mPath), _B(pAnimation->mName), lFrameCount);
+#endif
 #ifdef	_DEBUG_ANIMATION
 		if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_ANIMATION)))
 		{
@@ -1479,6 +1530,7 @@ LPCVOID CAgentFileV15::ReadBufferFrames (CAgentFileAnimation* pAnimation, LPCVOI
 #else				
 				CAgentFileFrame*	lFrame = &pAnimation->mFrames [(short)(long)lFrameNum];
 #endif				
+				WORD				lBranchCount;
 				WORD				lOverlayCount;
 				WORD				lOverlayNum = 0;
 
@@ -1511,7 +1563,7 @@ LPCVOID CAgentFileV15::ReadBufferFrames (CAgentFileAnimation* pAnimation, LPCVOI
 				lFrame->mDuration = *(LPCWORD)lByte;
 				lByte += sizeof(WORD);
 
-#ifdef	__cplusplus_cli
+#ifdef	__cplusplus_cli_NOT
 				{
 					LPCWORD lWord = (LPCWORD)lByte;
 					if	(lWord[0] || lWord[1])
@@ -1520,19 +1572,57 @@ LPCVOID CAgentFileV15::ReadBufferFrames (CAgentFileAnimation* pAnimation, LPCVOI
 					}
 				}
 #endif
-				lByte += sizeof(WORD)*3;
+				lByte += sizeof(WORD)*2;
 
-				if	(lByte[-2])
-				{
+				lBranchCount = *lByte;
+				lByte++;
 #ifdef	__cplusplus_cli
-					LogMessage (LogDebug, _T("[%s] [%s] Frame [%d] FrameSomething [%hu]"), _B(mPath), _B(pAnimation->mName), pAnimation->mFrames->Count, lByte[-2]);
-					LogDumpWords (LogDebugFast, lByte, lByte[-2]*4, _T("  "), true);
-#endif
-					lByte += (DWORD)lByte[-2] * 4;
+				if	(lBranchCount > 0)
+				{
+					lFrame->mBranching = gcnew array <CAgentFileFrameBranch> (lBranchCount);
 				}
-				else
+#endif					
+				if	(lBranchCount > 0)
+				{
+					lFrame->mBranching [0].mFrameNdx = LOWORD(((LPCDWORD)lByte) [0]);
+					lFrame->mBranching [0].mProbability = HIWORD(((LPCDWORD)lByte) [0]);
+				}
+				if	(lBranchCount > 1)
+				{
+					lFrame->mBranching [1].mFrameNdx = LOWORD(((LPCDWORD)lByte) [1]);
+					lFrame->mBranching [1].mProbability = HIWORD(((LPCDWORD)lByte) [1]);
+				}
+				if	(lBranchCount > 2)
+				{
+					lFrame->mBranching [2].mFrameNdx = LOWORD(((LPCDWORD)lByte) [2]);
+					lFrame->mBranching [2].mProbability = HIWORD(((LPCDWORD)lByte) [2]);
+				}
+#ifdef	__cplusplus_cli_NOT
+				if	(lBranchCount > 0)
+				{
+					LPCWORD lWord = (LPCWORD)lByte;
+					String^	lWords = String::Format (" [{0:X4} ({0:D} {1:D} {2:D})] [{3:X4} ({3:D} {4:D} {5:D})]", lWord[0], LOBYTE(lWord[0]), HIBYTE(lWord[0]), lWord[1], LOBYTE(lWord[1]), HIBYTE(lWord[1]));
+					if	(lBranchCount>1)
+					{
+						lWord+=2;
+						lWords += String::Format (" [{0:X4} ({0:D} {1:D} {2:D})] [{3:X4} ({3:D} {4:D} {5:D})]", lWord[0], LOBYTE(lWord[0]), HIBYTE(lWord[0]), lWord[1], LOBYTE(lWord[1]), HIBYTE(lWord[1]));
+					}
+					if	(lBranchCount>2)
+					{
+						lWord+=2;
+						lWords += String::Format (" [{0:X4} ({0:D} {1:D} {2:D})] [{3:X4} ({3:D} {4:D} {5:D})]", lWord[0], LOBYTE(lWord[0]), HIBYTE(lWord[0]), lWord[1], LOBYTE(lWord[1]), HIBYTE(lWord[1]));
+					}
+					LogMessage (LogDebug, _T("[%s] [%s] Frame [%d] Branching [%hu]%s"), _B(mPath), _B(pAnimation->mName), pAnimation->mFrames->Count, lByte[-2], _B(lWords));
+					LogDumpWords (LogDebugFast, lByte, lBranchCount*4, _T("  "), true);
+				}
+#endif
+				lByte += sizeof(WORD)*lBranchCount*2;
+
+				lOverlayCount = *lByte;
+				lByte++;
+
 				if	(
-						(lOverlayCount = (WORD)lByte[-1])
+						(lOverlayCount > 0)
 #ifdef	__cplusplus_cli
 					&&	(lFrame->mOverlays = gcnew CAgentFileFrameOverlays (this, lFrame))
 #else
@@ -1541,9 +1631,9 @@ LPCVOID CAgentFileV15::ReadBufferFrames (CAgentFileAnimation* pAnimation, LPCVOI
 #endif						
 					)
 				{
-//#ifdef	__cplusplus_cli
-//					LogMessage (LogDebug, _T("[%s] [%s] Frame [%d] Overlays [%u]"), _B(mPath), _B(pAnimation->mName), pAnimation->mFrames->Count, lOverlayCount);
-//#endif
+#ifdef	__cplusplus_cli_NOT
+					LogMessage (LogDebug, _T("[%s] [%s] Frame [%d] Overlays [%u]"), _B(mPath), _B(pAnimation->mName), pAnimation->mFrames->Count, lOverlayCount);
+#endif
 					while	(lOverlayCount > 0)
 					{
 						BYTE	lOverlayType;
@@ -1626,7 +1716,7 @@ LPCVOID CAgentFileV15::ReadBufferFrames (CAgentFileAnimation* pAnimation, LPCVOI
 						}
 						else
 						{
-#ifdef	__cplusplus_cli
+#ifdef	__cplusplus_cli_NOT
 							LogMessage (LogDebugFast, _T("[%s] [%s] Frame [%d] Overlay [%u] [%u] [%u]"), _B(mPath), _B(pAnimation->mName), pAnimation->mFrames->Count, lOverlayNum, lOverlayType, lOverlaySize);
 #endif							
 						}
@@ -1857,7 +1947,7 @@ Boolean V15FileAnimation::CopyTo (FileAnimation^ pTarget, Boolean pDeepCopy)
 System::String^ V15FileAnimation::ToString()
 {
 	EnsureIsLoaded ();	
-    return String::Format ("{0} [{1}]", __super::ToString(), mFileName);
+    return String::Format ("{0} stream \"{1}\"", __super::ToString(), mFileName);
 }
 
 /////////////////////////////////////////////////////////////////////////////

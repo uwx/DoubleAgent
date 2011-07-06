@@ -1718,10 +1718,11 @@ LPCVOID CAgentFileBinary::ReadBufferString (LPCVOID pBuffer, bool pNullTerminate
 #ifdef	_DEBUG
 		if	(
 				(lStrLen > 2048)
-			||	(IsBadStringPtr ((LPCWSTR)lByte, 2048))
+			||	(IsBadStringPtr ((LPCWSTR)lByte, min(lStrLen,2048)))
 			)
 		{
-			LogComErr (LogIfActive, HRESULT_FROM_WIN32 (ERROR_INVALID_DATA));
+			LogComErrAnon (LogIfActive, HRESULT_FROM_WIN32 (ERROR_INVALID_DATA), _T("ReadBufferString [%u]"), lStrLen);
+			LogDump (LogIfActive|LogHighVolume, lByte, min(lStrLen,16), _T("      "));
 		}
 #endif
 		pString = gcnew String ((LPCWSTR)lByte, 0, lStrLen);
@@ -2025,7 +2026,7 @@ ULONG CAgentFileBinary::DecodeData (LPCVOID pSrcData, ULONG pSrcSize, LPVOID pTr
 #ifdef	_DEBUG
 	if	(lTrgPtr - (LPBYTE)pTrgData != pTrgSize)
 	{
-		LogMessage (LogDebug, _T("Decoded [%u] of [%u]"), lTrgPtr - (LPBYTE)pTrgData, pTrgSize);
+		LogMessage (LogNormal|LogHighVolume, _T("Decoded [%u] of [%u] from [%u]"), lTrgPtr - (LPBYTE)pTrgData, pTrgSize, pSrcSize);
 	}
 #endif
 	return (ULONG)(lTrgPtr - (LPBYTE)pTrgData);

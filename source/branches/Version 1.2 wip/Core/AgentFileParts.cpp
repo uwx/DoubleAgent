@@ -2914,7 +2914,8 @@ Boolean CAgentFileAnimation::CopyTo (CAgentFileAnimation^ pTarget, Boolean pDeep
 
 System::String^ CAgentFileAnimation::ToString ()
 {
-    return String::Format ("Animation \"{0}\"", Name);
+	String^	lReturnName = (mReturnType == 1) ? gcnew String("<exit branching>") : (mReturnType == 2) ? gcnew String("<none>") : String::Format ("\"{0}\"", mReturnName);
+    return String::Format ("Animation \"{0}\" frames {1} return {2}", Name, mFrames ? mFrames->Count.ToString() : "<null>", lReturnName);
 }
 #endif
 

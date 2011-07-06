@@ -620,7 +620,7 @@ bool CAnimationTestDlg::ShowSelGesture (bool pStopFirst)
 			{
 				lResult = mMsCharacter->Play (_bstr_t(lSelGesture), &mLastAnimationReqID);
 			}
-			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Play [%s] [%d]"), mCharacterId, lSelGesture, mLastAnimationReqID)))
+			if	(SUCCEEDED (LogComErrAnon (LogAlways, lResult, _T("[%d] Play [%s] [%d]"), mCharacterId, lSelGesture, mLastAnimationReqID)))
 			{
 				lRet = true;
 #if	FALSE
@@ -755,7 +755,7 @@ bool CAnimationTestDlg::ShowSelState (bool pStopFirst)
 				{
 					lResult = mMsCharacter->GestureAt ((short)lCharRect.CenterPoint().x, (short)lCharRect.bottom, &mLastAnimationReqID);
 				}
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] GestureDown [%d]"), mCharacterId, mLastAnimationReqID);
+				LogComErrAnon (LogAlways, lResult, _T("[%d] GestureDown [%d]"), mCharacterId, mLastAnimationReqID);
 			}
 			else
 			if	(lSelState.CompareNoCase (_T("GESTURINGUP")) == 0)
@@ -769,7 +769,7 @@ bool CAnimationTestDlg::ShowSelState (bool pStopFirst)
 				{
 					lResult = mMsCharacter->GestureAt ((short)lCharRect.CenterPoint().x, (short)lCharRect.top, &mLastAnimationReqID);
 				}
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] GestureUp [%d]"), mCharacterId, mLastAnimationReqID);
+				LogComErrAnon (LogAlways, lResult, _T("[%d] GestureUp [%d]"), mCharacterId, mLastAnimationReqID);
 			}
 			else
 			if	(lSelState.CompareNoCase (_T("GESTURINGRIGHT")) == 0)
@@ -783,7 +783,7 @@ bool CAnimationTestDlg::ShowSelState (bool pStopFirst)
 				{
 					lResult = mMsCharacter->GestureAt ((short)lCharRect.left, (short)lCharRect.CenterPoint().y, &mLastAnimationReqID);
 				}
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] GestureRight [%d]"), mCharacterId, mLastAnimationReqID);
+				LogComErrAnon (LogAlways, lResult, _T("[%d] GestureRight [%d]"), mCharacterId, mLastAnimationReqID);
 			}
 			else
 			if	(lSelState.CompareNoCase (_T("GESTURINGLEFT")) == 0)
@@ -797,7 +797,7 @@ bool CAnimationTestDlg::ShowSelState (bool pStopFirst)
 				{
 					lResult = mMsCharacter->GestureAt ((short)lCharRect.right, (short)lCharRect.CenterPoint().y, &mLastAnimationReqID);
 				}
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] GestureLeft [%d]"), mCharacterId, mLastAnimationReqID);
+				LogComErrAnon (LogAlways, lResult, _T("[%d] GestureLeft [%d]"), mCharacterId, mLastAnimationReqID);
 			}
 			else
 			if	(lSelState.CompareNoCase (_T("MOVINGDOWN")) == 0)
@@ -811,7 +811,7 @@ bool CAnimationTestDlg::ShowSelState (bool pStopFirst)
 				{
 					lResult = mMsCharacter->MoveTo ((short)lCharRect.left, (short)lCharRect.top+lCharRect.Height()*2, 1000, &mLastAnimationReqID);
 				}
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] MoveDown [%d]"), mCharacterId, mLastAnimationReqID);
+				LogComErrAnon (LogAlways, lResult, _T("[%d] MoveDown [%d]"), mCharacterId, mLastAnimationReqID);
 			}
 			else
 			if	(lSelState.CompareNoCase (_T("MOVINGUP")) == 0)
@@ -825,7 +825,7 @@ bool CAnimationTestDlg::ShowSelState (bool pStopFirst)
 				{
 					lResult = mMsCharacter->MoveTo ((short)lCharRect.left, (short)lCharRect.top-lCharRect.Height()*2, 1000, &mLastAnimationReqID);
 				}
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] MoveUp [%d]"), mCharacterId, mLastAnimationReqID);
+				LogComErrAnon (LogAlways, lResult, _T("[%d] MoveUp [%d]"), mCharacterId, mLastAnimationReqID);
 			}
 			else
 			if	(lSelState.CompareNoCase (_T("MOVINGRIGHT")) == 0)
@@ -839,7 +839,7 @@ bool CAnimationTestDlg::ShowSelState (bool pStopFirst)
 				{
 					lResult = mMsCharacter->MoveTo ((short)lCharRect.left-lCharRect.Width()*2, (short)lCharRect.top, 1000, &mLastAnimationReqID);
 				}
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] MoveRight [%d]"), mCharacterId, mLastAnimationReqID);
+				LogComErrAnon (LogAlways, lResult, _T("[%d] MoveRight [%d]"), mCharacterId, mLastAnimationReqID);
 			}
 			else
 			if	(lSelState.CompareNoCase (_T("MOVINGLEFT")) == 0)
@@ -853,7 +853,7 @@ bool CAnimationTestDlg::ShowSelState (bool pStopFirst)
 				{
 					lResult = mMsCharacter->MoveTo ((short)lCharRect.left+lCharRect.Width()*2, (short)lCharRect.top, 1000, &mLastAnimationReqID);
 				}
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] MoveLeft [%d]"), mCharacterId, mLastAnimationReqID);
+				LogComErrAnon (LogAlways, lResult, _T("[%d] MoveLeft [%d]"), mCharacterId, mLastAnimationReqID);
 			}
 			else
 			if	(lSelState.CompareNoCase (_T("HIDING")) == 0)
@@ -867,7 +867,7 @@ bool CAnimationTestDlg::ShowSelState (bool pStopFirst)
 				{
 					lResult = mMsCharacter->Hide (FALSE, &mHideReqID);
 				}
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Hide [%d]"), mCharacterId, mHideReqID);
+				LogComErrAnon (LogAlways, lResult, _T("[%d] Hide [%d]"), mCharacterId, mHideReqID);
 			}
 			else
 			if	(lSelState.CompareNoCase (_T("SHOWING")) == 0)
@@ -883,7 +883,7 @@ bool CAnimationTestDlg::ShowSelState (bool pStopFirst)
 					lResult = mMsCharacter->Hide (TRUE, &mLastAnimationReqID);
 					lResult = mMsCharacter->Show (FALSE, &mLastAnimationReqID);
 				}
-				LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Show [%d]"), mCharacterId, mLastAnimationReqID);
+				LogComErrAnon (LogAlways, lResult, _T("[%d] Show [%d]"), mCharacterId, mLastAnimationReqID);
 			}
 
 			if	(lResult == S_OK)
